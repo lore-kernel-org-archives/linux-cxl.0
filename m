@@ -2,376 +2,183 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483FACD37B0
-	for <linux-cxl@archiver.kernel.org>; Mon, 18 Sep 2023 17:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6679CD37B0
+	for <linux-cxl@archiver.kernel.org>; Mon, 18 Sep 2023 17:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjIRRqj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 18 Sep 2023 13:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
+        id S229561AbjIRRtn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 18 Sep 2023 13:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbjIRRqg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Sep 2023 13:46:36 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB699103;
-        Mon, 18 Sep 2023 10:46:29 -0700 (PDT)
+        with ESMTP id S230127AbjIRRtn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Sep 2023 13:49:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5132A103
+        for <linux-cxl@vger.kernel.org>; Mon, 18 Sep 2023 10:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695059190; x=1726595190;
+  t=1695059377; x=1726595377;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=g1bOw09U1xWfJu+HrV1A8bKpnvL17/3F4+AfcXqr3Mw=;
-  b=Sb1qaiyuOxtKjxijJZLr1Ur+pVKPHouQKNJ3HxWkrQdze19w15lUNFii
-   DWP4A1A9F9SIByTiicRuxlx2YC8Wq001IVl2lHr441rlZD8gIi/uc1mmh
-   ZUSXx93PwTEImE+gwg7gje5sAVxULjqkvW3MsHReWEAo4iN36XQT8Q1fQ
-   atQFrRonyPhA1WMw7N14YoPgxXFEtKvYTal9+DUlBon9NtZSQhiJ4Zttf
-   KvW4YplS3kSt5TGTv0PzwDcBCSLMf5FovP3QOmlbhFWO4tKXXr7u7RxrF
-   LyecRFo4TsbhQMmZoyaBBaFI6oSse4SHgDyh1t5zuNoAbTGygrPnWF5EA
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="378637148"
+   in-reply-to:mime-version;
+  bh=VzetWLB6fgcNcF4Sv9ziZZ+IPEx3Je2LX2GeWhFwz5w=;
+  b=COQZut4BirCarDGaPiW0mIVfpIXziVlFGvbGUvmWqkmplPqFAXYMDC/j
+   ZSpi51sLPcxkdOyU/qoc4N5KL3+7oKcVqlVgC4//UlSCZeK9sNfcqCvTT
+   0AjllucymUjfei2sL9ABQYseAhj9fqTLBCPdHf/N3WCNsyb++HWuHRwZg
+   44oJ6dj7DmqvIDS1qf4/m5Aw/zc9482geemqxZ4ACpVgWIYv2igzBbfAj
+   6xJ9U7M58m1IOAdB4flHx3VrXp2/Uyq+VYCKSIizk3tpJnpLvhKxE9HXT
+   rkeG3+m2nZwm1OlJcTsvSWQp5ICltIM7sGOX2a8dI5WDU9ywTqY6f6TwN
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="359981610"
 X-IronPort-AV: E=Sophos;i="6.02,157,1688454000"; 
-   d="scan'208";a="378637148"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 10:46:03 -0700
+   d="scan'208";a="359981610"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 10:49:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="1076672556"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="780989710"
 X-IronPort-AV: E=Sophos;i="6.02,157,1688454000"; 
-   d="scan'208";a="1076672556"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Sep 2023 10:46:03 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="780989710"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Sep 2023 10:49:36 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 18 Sep 2023 10:46:02 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.32; Mon, 18 Sep 2023 10:49:36 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 18 Sep 2023 10:46:02 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ 15.1.2507.32; Mon, 18 Sep 2023 10:49:35 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 18 Sep 2023 10:46:02 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Mon, 18 Sep 2023 10:49:35 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 18 Sep 2023 10:46:02 -0700
+ 15.1.2507.32; Mon, 18 Sep 2023 10:49:35 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IvkFUHQq9O0FrkihrigXv5CuLhbKW2mCfvAR3Yw+OFIrF7LWoplAb4v/sRuZwbVfhF1lZTeigORDaPbF0EgpYGUtaEhMLCMm3Zzu4nbGMZ0XpCpszKcc6rZTWmWMQWZzycTTzHAy20LzEH15vaFlaTPpY5exa3yZbCjQY5fwGPcUGlXW4GoW4L0sA/LAM+LNa6AEvk27wl1SLWQUW5s4GtMp/jBqYkElXWSn4HbZ7w6Mo9YKM8HuxzkfgknZfU73rDRiSpV5cd16xY3H8V9HhN3wC7tqfLbLuqkLPkevVEaheO5LyBognZYpiRa+6Mo2RWV6pLGMT5gQ1U8kHUzzLA==
+ b=PxC2jRQoxxOKyJIVqpAEp9f5vVHQCQDc8dAzHbFq7akKzvnAe8Hk/BiOApjzAmklxFYQBRUqN2QXdVkdiHNOYvYHx6/PgtDGBAp6A6tLnPCfExlFmX3d4jZZfRxvH0G7ygeebt73bJtWqYTodTKcQAUnF1j9k3EBRRBnut13xnhcvF8SClbWG+6fFnTOwE8qrrRBT6OQTA26tT7nKxw6oQj7iSQOOXrtRHmaX0p56rsHOwwipKIWVzKi66oN3uAQ9UQCKSzE8eKskrEK2aM7oyh+HO3ktUD9q/LT1LAFWyv+716j/uI1ZDZuOVjvAhSG/vWztpu5p2lToPhgGmdejw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zARtddHgh22zgMEIWy5g4AXpOFBmY/ugPr1RHMOYbGM=;
- b=b9DpDp5Qf4yeG221Nfi1qsdQhlpx8QKHVrs6uk/iD3poTRIRF1ZQ357qqyhVg32DEvaz1trdbnFW5kiub9gq+hSvDPRN2yI6e1IKsMmEdACJCbVdpPE2aRZdfOVoilhyT2U5KPlX+MwamXIwj6/X6BZCChUUUxa4fTwVPeNqhYkxMpaxJZ4qbJUHxwTuMsoLZBeFSgCriQIATQgVGEicLuHJCrQOtWRC1eKlJAcm66kNQyYDSdLJ4ZuX9KSqQIU4W1/4NFFz+TtRv1OHfcuEMZtm2e/Mj2FB53dSKq1H2VEG8m69SNYJvCQW1U2WnLLEjwIxtQuSZoBoq8LxBS+CXA==
+ bh=pWqMDUjOchZcU5M9XSvjr9V+qqSBtXxLst427F9+X9k=;
+ b=WrwiJy0sxVlwCO8hTO8UGu0jKK+ZTJyRYblrz5Gy0jFfY23+sxSj1YLeJcvncdtR7EmAiEvX9v9q8o6CKYFk4Kc9jgN0oeeIuUjj0bCtUrP9jDNJUwMSqZQFEHm7MV1fB8YJSTKJzawEE1S9S69n+XERSeRej88mc4rwGFH7zxVIrB5qWsgHqw0xT2/OsH9eQrdqxfZUUpvWj1byQZzujKOMbZ11jGdA4AvHYFruaSxQcfuk0YtZ0QJ4aBp21iP1yIqvylUJ9DTOuCQcs+mCpEuX/inVIvH1wts13VAu9gwwKJcLapZSAW50c9WnmfbgaoqJDFtaS2KjNQ9CgP9H/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SN7PR11MB7589.namprd11.prod.outlook.com (2603:10b6:806:34a::14) with
+ by IA1PR11MB8174.namprd11.prod.outlook.com (2603:10b6:208:450::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Mon, 18 Sep
- 2023 17:45:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Mon, 18 Sep
+ 2023 17:49:32 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6792.026; Mon, 18 Sep 2023
- 17:45:59 +0000
-Date:   Mon, 18 Sep 2023 10:45:54 -0700
+ 17:49:32 +0000
+Date:   Mon, 18 Sep 2023 10:49:28 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
-To:     =?iso-8859-1?Q?J=F8rgen?= Hansen <Jorgen.Hansen@wdc.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 12/18] cxl/region: Notify regions of DC changes
-Message-ID: <65088cd28d3ab_3921be29453@iweiny-mobl.notmuch>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
- <20230604-dcd-type2-upstream-v2-12-f740c47e7916@intel.com>
- <c6d4bd17-46c5-e77b-5dc1-ca5b9c9bf5d0@wdc.com>
-Content-Type: text/plain; charset="iso-8859-1"
+To:     Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        <linux-cxl@vger.kernel.org>
+CC:     <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/2] cxl: Move command enumeration from dev_dbg() to
+ traceevent
+Message-ID: <65088da8ea533_3921be29438@iweiny-mobl.notmuch>
+References: <169480882977.2690926.2796694282356938267.stgit@djiang5-mobl3>
+ <6504d69a10453_37d9bb294a1@iweiny-mobl.notmuch>
+ <1b66b8ae-143d-b227-27de-988ee9f0ce04@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6d4bd17-46c5-e77b-5dc1-ca5b9c9bf5d0@wdc.com>
-X-ClientProxiedBy: BY5PR16CA0022.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::35) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <1b66b8ae-143d-b227-27de-988ee9f0ce04@intel.com>
+X-ClientProxiedBy: BYAPR07CA0098.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::39) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB7589:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35fc9647-49dc-420c-fb8a-08dbb86f1e3f
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA1PR11MB8174:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3c9f39d-847c-45b6-9a22-08dbb86f9d68
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: er21wiqRegUquLpEnXYdk1qcuDkJ+LP7piy6DG4ocW7A5wcxFjdHugPj4MjGI5uEqxeXsta71NxssjgjZ1i8sxeenudDoEAQhESH7Q2/lpUcckSfGZRjVtY12I/yZd3glvQZHZOOFFCxAgR/qN0jmLsK0NfK3rmiVcWueeNHlucbCJKfgk7tMm4BsINmXq99ZwGFzwpdnGN7tcgVaIXpXKO+vCHSDbF4+XBIR/UlT0SWQdktsvGBrgjDRw/N/+nNO0Dx6D28iUWfhT75ha4J4get4xAqlFySVDGHfuABBAY1oBZw9EjXuy+0+CrMpEztIMcXOqu2SicPd5gsuoL9ZT4RpbbQIMODM7bE6RbtXlN6QMWkqenY2aPCEdz82rtuC3B5jYs45cwzz5M8F+3vtRzzTDL3dvjvwtdafiEH5DDwIwdZ+0SPMuXnyZxNt34Ag1wBKuDttMidvI3jcAy5oueIEjH/g9wy6pHoQ4iO5IdEbJt5HzSDsDtBp0c3qQo+T9+kr1vxNXGmB1TC3i4lPVWg8C64srAO68QdxmcN8Ws10zYCzqItWngeqWsnoF/b
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(136003)(366004)(396003)(186009)(1800799009)(451199024)(53546011)(6486002)(6506007)(6666004)(478600001)(83380400001)(26005)(9686003)(6512007)(66574015)(2906002)(41300700001)(66556008)(6636002)(316002)(4326008)(66476007)(44832011)(54906003)(66946007)(5660300002)(110136005)(8676002)(8936002)(86362001)(38100700002)(82960400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: yUvMvx9T7MG2SaYyp3tOuRWNe2Zrs+W4ZXbBVO7asoGQuDMsNH3f1w5Wqy+ruYu9sZ2je0PLLrUbod+zJKb0Y5UbeIHsxjD4yof/aWYGjhG97t9VUgDfUsFsNLhCCeiYJWmf7K3Q45PT4RL4WAB+RA5GRzECfPxLguGpFwd47R5MJqL3geYeZwBOs/IZIiEZjRAUjiErG+augFZ7RClWKM8AVtBu8Mvk5kI0WiSqWAOV4U6HA9rzIa9gVx8Fo78GT5yjFmSEgZC3M8WWm3we5mSanMbvIqOuy3QvJUf2lI7C9AUTraMdJprbQj2FZDBXhVX82daPuGSiCwVCwDSErQfBY6gT732cRARGiGPaTpfkDJD6Z20Z0ckA7Q4e+XUiqCnCuYP4XyutioTrdiv9hqkPpvNx6thvh6orEj78rDt2H/geFjokdK7FsF1qZj82LgqVElIVTeJRp5D2+q+qhhyuCA+CmlhL/se5TAhLT0s+6xc0nnxfClWqNvKTEAHD/Fx9uSeIhgGryq+8b5qkgDpPrarH5OIRK9tL/70hVBk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(346002)(136003)(376002)(186009)(1800799009)(451199024)(26005)(107886003)(6506007)(6486002)(53546011)(9686003)(6512007)(82960400001)(86362001)(38100700002)(83380400001)(44832011)(5660300002)(110136005)(478600001)(966005)(41300700001)(66946007)(66476007)(66556008)(316002)(8676002)(8936002)(4326008)(6666004)(2906002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?5+dEsPk2RoJzltW1zV9PW52gX3vkvKPChn7wIM6bqiqni1fKHjkqpXaG2+?=
- =?iso-8859-1?Q?jJNI/Y2IWujidNq6Ku0GkCS9Rq9trYyd+ghFxjReXf8ryoGBQLb3xOnNmz?=
- =?iso-8859-1?Q?xOjN9PCGhxhWeZCA58OpKSXksVYmiOmpXZZxKWg2lfbTOYlQ2iIzWFpBK5?=
- =?iso-8859-1?Q?fsM9WhE7YZs3H+Vl3Y6lMdAOSCFDzEOC79mabrDp2Rc2Tez4JH11ZOAYCK?=
- =?iso-8859-1?Q?AReq+Hljzn63Y1TUv0GVqUUoev53onZJINAvZ5G5wPyLl4+G8BklWnByA+?=
- =?iso-8859-1?Q?LJDRATKT0ikky0ui1n7xDxP5ZZrSg6X0IXpU8p2kp05IQkbxwMF+8Pv/cX?=
- =?iso-8859-1?Q?lbGTD4nPDJanxX7uaUbxyU/V6C1yXHV711i4WXvwcBD+HRJgHLmLyM6dKx?=
- =?iso-8859-1?Q?M2iMP1RYaYIXQxBOuJdqdVstZUlhCPJGuHQmMwV8bpDYkZ5OawjOi0ImYr?=
- =?iso-8859-1?Q?wkdlJQm1mVyUUVb0EYEjf161qztiverJeOp1kUKWPNdV9Py5nbwxdZWQwb?=
- =?iso-8859-1?Q?DMcvI0TndwLVUf2kBueYfHkDU8Jjh8EvV6M/VR5+u2TbAxn3u5Law1TIL/?=
- =?iso-8859-1?Q?Rv60j1c8zIEAJ1j+aF0agaAM0XEGeKteTOpbu78IoGvJbzoyiZB62Ds9K/?=
- =?iso-8859-1?Q?D59xBkS7NNOSqgpBiD048fxTHw0NJLEROrCg60lWoHftnpDDgulAAzN48J?=
- =?iso-8859-1?Q?EFgHbEA184RTMJQQdVTaZ6XMRj8/kEfAZek19WIdpNybBEA7ylo1HS6pQI?=
- =?iso-8859-1?Q?BUjLJex7h9SF2YCHDOhszi4XQ6tc0qaBvebTOr5SaSh0BlyXwonT0xF3eN?=
- =?iso-8859-1?Q?AaLFVZu7Jl0SObi2WvNF5pAe3FoQV6NLN0CZ2qVnxKqIHEvLSsx3WpnSmu?=
- =?iso-8859-1?Q?ZRlog0t1ToK+CjoGTSpgFw+MDi+3SHRkbzkTIXHGa7uOwi7tiATMm1f34e?=
- =?iso-8859-1?Q?AXoxsMdHfWEwPM8CHDFmjNHzc2SuAbKtZJEvRKHaXptH0w333ry9dETQ2V?=
- =?iso-8859-1?Q?xQk4DKsF7CtDTKOkmP/DUii2MBVZluqPMuwU1LVWsPn0+/NUu2Ti/BFUGA?=
- =?iso-8859-1?Q?1KXJauoo6UfNjVRSsJk5E8eMWAs8nBDpL01l9uzULQZZbxed8i/tUnKssZ?=
- =?iso-8859-1?Q?wVgD/q02zyX/VxaHQPgmO7tyYgDdj5uDpAz+/9VEKBAt+G1VLMDzuTNepH?=
- =?iso-8859-1?Q?fEeSiuCXY9V8mN4mSKnS18XFuKGl6KoKpIpbtxE4AMLFHO1BbSG3owIFBI?=
- =?iso-8859-1?Q?OdFnvwUTywLS237udv/Y1bymm/YPzkGzpKy/+hKyU4fp2JyjFZNwBhtXc2?=
- =?iso-8859-1?Q?eMgCH2wI1bJrDYtKNN2kFv9zzqu8IzmadrDa77hkz0cJILwVHemZexTQDl?=
- =?iso-8859-1?Q?IYHWj92mP0qwZUi+YxF5PRg6dfwkvoUTijv6KnVqdPLp1AGCRz/jm8jxtE?=
- =?iso-8859-1?Q?YaEn7p2HP1W9qFgeVZqaD5nKfaignNZ/HJ2pYjZ3p/HWWKGi9RGRxdODKi?=
- =?iso-8859-1?Q?GB96kx1KavxuFL0ok+CF6YwIwCYSG/wi6ryR0k9G+Tfq+2/6fwFxUPv83E?=
- =?iso-8859-1?Q?stqOdJjFSfi9eZVOX31iWnHOYn+YN0XTj0IfU0PvpJ0qrLBe1Om4MmLXFV?=
- =?iso-8859-1?Q?P2L4wXCP7LmSoJtLfKvpqjzQYzvYgM2hNM?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35fc9647-49dc-420c-fb8a-08dbb86f1e3f
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?leAChtVQeAiZycEvjvzxcXDOJ0PHXWSz/JzawUZbpoY0J0ru9DMmL8r+Y4fC?=
+ =?us-ascii?Q?v0TZ+2xpOdIryUTfCywdggAqdAcgHTiYpXiWiVoczxRGpCSlL6I/M5sy3UlF?=
+ =?us-ascii?Q?HYSwEHB8uvgvkHlaodOwsf2sIwBmwXZanuxOJpJcKlA728/e7rddDXq2bnFp?=
+ =?us-ascii?Q?h/irjfGjj9afF9XYjLGjTXtt/dwbfuJeagAIxoBY1AwYrefTYvjmAFO26UR4?=
+ =?us-ascii?Q?rUZyfqHefnFLPf9IYCJU6788TOFCrN53/HJmMXYF9PLFie9z67rQJXMEnNub?=
+ =?us-ascii?Q?tM4c263+fbHe+9GkEAHDziy8L+lQvYIzWxSWOACyBQ/Ykj5pkvoLcNsKJxs+?=
+ =?us-ascii?Q?44LndCj/eWY3kBA68xFvogtQn1Ci9Vibbi+jr3D7A3lkSGMhxrbB9WBVm/lM?=
+ =?us-ascii?Q?7lPfjSS8ehHQL2V+Y21ahMfcy9DzULvu7taWleBCLQ5KkpkmS3hgOib4AnP7?=
+ =?us-ascii?Q?7dVzfkdAhMHXkXULq0hmMGuzN1C4z8j2vLjP9azg9AN2QCRhM13JQn0mGkrk?=
+ =?us-ascii?Q?8hZyNjw89CuaeuYcjCWQ5CnuUPT3gMjJAY21RVkqqK/BR+/16R0YOiqy1d+1?=
+ =?us-ascii?Q?fJovrDgwPmrj/YK7LJNugKgjeR5sZ9ddgYcpP8xRA6hw5UbpBXEDniWJsfxW?=
+ =?us-ascii?Q?wwACECxuWCAIdXh26/D4APOGDZTCxQf+rsYjeWbUpkafAAhqVjCOAvGGgpa0?=
+ =?us-ascii?Q?ggYzrZfTRXuOiaoyd0N45vjyb7bYa9G2T6HBoWNymPEcLpj7qLNQwKU6JNYb?=
+ =?us-ascii?Q?jOWNxpr/n3l9hL8mG2lRF8oKErp30AZTNXDrp99iFc23q6hSvmjW38htEPpE?=
+ =?us-ascii?Q?o86EdS3ILsd+dPzP5HgHVvgdAZJ2cHvlYl+28YqvV6IwqS107AgEaYE34sZO?=
+ =?us-ascii?Q?ddNwBWrsAcD/qVnPVx98IRZNNEGZOWz3hV+RELuSiAhQQQNEpifYFAvHJTok?=
+ =?us-ascii?Q?TITbZi74jRXC4aB+is6I9hyrCO8/tXXzbeo6e4pkFNQbD72WKoqJ9kE2YRWT?=
+ =?us-ascii?Q?XfpTqal2jf1BBp268jelAJw5BJkntZmvA8a697r/iqLAW47XuCqes7qor05B?=
+ =?us-ascii?Q?CBZppIwdTSt0OQWeeb/jEXr/Gt8XZnVsM8g6fWwrFFSxX+RNqGIv+OGxvtTT?=
+ =?us-ascii?Q?cbuUtkBclw3mzqC3eccx/FcdBd6i5C4lqjQjC1JjHfbpE668YPgaetOE6HYh?=
+ =?us-ascii?Q?b5oSTmQRpjHVCGFwU/4Gfg8oIuiqLUwhpjDI/ytOlQvzzR6BEsz9rLQaewOZ?=
+ =?us-ascii?Q?bKhFhlXIxNmeSYzwlAUp7357Wx/JAionW3fYO0xNktKbQn7p2uIWYtaK+V0M?=
+ =?us-ascii?Q?SNej/ozZPHV/VLHvrOi/+fnUjXnIjTGBJmx21hzTEWdxtUogtwoxeJKeVkms?=
+ =?us-ascii?Q?7Sp1K9L1EHVC6sCN5McHHfP87BmjPnHaSeWBRr3D5rcXbgw/B0m7MvszwBC4?=
+ =?us-ascii?Q?zEKcAAzn3CfbvZ2EhfQHs652HYQ3uuN+AeTXTXusFrnmJ28Ei/lpZohpdXeN?=
+ =?us-ascii?Q?Y2JA+TswEcLqgvbEXN7rO9V8vzIP2kRIVPy7R36Yhh4RSk4wiZEQyLJ4wxdY?=
+ =?us-ascii?Q?Do67IeysvWh53ZnuW92kUFGYJH/A201dYkwGSe4p?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3c9f39d-847c-45b6-9a22-08dbb86f9d68
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 17:45:59.4807
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 17:49:32.6590
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4WjNux24j7x7SAeQgL3RFV8UsqGUXhsk+1V/gVfwd66nt7jNePsDGZUw9bPdmt0W6krsIiNX1cF4xK8tJALhUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7589
+X-MS-Exchange-CrossTenant-UserPrincipalName: GDFn4LS4twcKbgggGqtXPn/ZIyKF5FxT0ugY6M8YctGNPXEM2JyE3vD3EMrsDmmQ/3a6f69XlW0hT1BEzvAz/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8174
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jørgen Hansen wrote:
-> On 8/29/23 07:21, Ira Weiny wrote:
-> > 
-> > In order for a user to use dynamic capacity effectively they need to
-> > know when dynamic capacity is available.  Thus when Dynamic Capacity
-> > (DC) extents are added or removed by a DC device the regions affected
-> > need to be notified.  Ultimately the DAX region uses the memory
-> > associated with DC extents.  However, remember that CXL DAX regions
-> > maintain any interleave details between devices.
-> > 
-> > When a DCD event occurs, iterate all CXL endpoint decoders and notify
-> > regions which contain the endpoints affected by the event.  In turn
-> > notify the DAX regions of the changes to the DAX region extents.
-> > 
-> > For now interleave is handled by creating simple 1:1 mappings between
-> > the CXL DAX region and DAX region layers.  Future implementations will
-> > need to resolve when to actually surface a DAX region extent and pass
-> > the notification along.
-> > 
-> > Remember that adding capacity is safe because there is no chance of the
-> > memory being in use.  Also remember at this point releasing capacity is
-> > straight forward because DAX devices do not yet have references to the
-> > extents.  Future patches will handle that complication.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from v1:
-> > [iweiny: Rewrite]
-> > ---
-> >   drivers/cxl/core/mbox.c   |  39 +++++++++++++--
-> >   drivers/cxl/core/region.c | 123 +++++++++++++++++++++++++++++++++++++++++-----
-> >   drivers/cxl/cxl.h         |  22 +++++++++
-> >   drivers/cxl/mem.c         |  50 +++++++++++++++++++
-> >   drivers/dax/cxl.c         |  99 ++++++++++++++++++++++++++++++-------
-> >   drivers/dax/dax-private.h |   3 ++
-> >   drivers/dax/extent.c      |  14 ++++++
-> >   7 files changed, 317 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 5472ab1d0370..9d9c13e13ecf 100644
+Dave Jiang wrote:
 > 
-> [snip]
 > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 0aeea50550f6..a0c1f2793dd7 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1547,8 +1547,8 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
-> >          return 0;
-> >   }
+> On 9/15/23 15:11, Ira Weiny wrote:
+> > Dave Jiang wrote:
 > > 
-> > -static bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
-> > -                               struct cxl_dc_extent_data *extent)
-> > +bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
-> > +                        struct cxl_dc_extent_data *extent)
-> >   {
-> >          struct range dpa_range = (struct range){
-> >                  .start = extent->dpa_start,
-> > @@ -1567,14 +1567,66 @@ static bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
-> >          return (cxled->dpa_res->start <= dpa_range.start &&
-> >                  dpa_range.end <= cxled->dpa_res->end);
-> >   }
-> > +EXPORT_SYMBOL_NS_GPL(cxl_dc_extent_in_ed, CXL);
-> > +
-> > +static int cxl_region_notify_extent(struct cxl_endpoint_decoder *cxled,
-> > +                                   enum dc_event event,
-> > +                                   struct cxl_dr_extent *cxl_dr_ext)
-> > +{
-> > +       struct cxl_dax_region *cxlr_dax;
-> > +       struct device *dev;
-> > +       int rc = 0;
-> > +
-> > +       cxlr_dax = cxled->cxld.region->cxlr_dax;
-> > +       dev = &cxlr_dax->dev;
-> > +       dev_dbg(dev, "Trying notify: type %d HPA:%llx LEN:%llx\n",
-> > +               event, cxl_dr_ext->hpa_offset, cxl_dr_ext->hpa_length);
-> > +
-> > +       device_lock(dev);
-> > +       if (dev->driver) {
-> > +               struct cxl_driver *reg_drv = to_cxl_drv(dev->driver);
-> > +               struct cxl_drv_nd nd = (struct cxl_drv_nd) {
-> > +                       .event = event,
-> > +                       .cxl_dr_ext = cxl_dr_ext,
-> > +               };
-> > +
-> > +               if (reg_drv->notify) {
-> > +                       dev_dbg(dev, "Notify: type %d HPA:%llx LEN:%llx\n",
-> > +                               event, cxl_dr_ext->hpa_offset,
-> > +                               cxl_dr_ext->hpa_length);
-> > +                       rc = reg_drv->notify(dev, &nd);
-> > +               }
-> > +       }
-> > +       device_unlock(dev);
-> > +       return rc;
-> > +}
-> > +
-> > +static resource_size_t
-> > +cxl_dc_extent_to_hpa_offset(struct cxl_endpoint_decoder *cxled,
-> > +                           struct cxl_dc_extent_data *extent)
-> > +{
-> > +       struct cxl_dax_region *cxlr_dax;
-> > +       resource_size_t dpa_offset, hpa;
-> > +       struct range *ed_hpa_range;
-> > +
-> > +       cxlr_dax = cxled->cxld.region->cxlr_dax;
-> > +
-> > +       /*
-> > +        * Without interleave...
-> > +        * HPA offset == DPA offset
-> > +        * ... but do the math anyway
-> > +        */
-> > +       dpa_offset = extent->dpa_start - cxled->dpa_res->start;
-> > +       ed_hpa_range = &cxled->cxld.hpa_range;
-> > +       hpa = ed_hpa_range->start + dpa_offset;
-> > +       return hpa - cxlr_dax->hpa_range.start;
-> > +}
+
+[snip]
+
+> > My gut reaction was to nak this patch because I'm not sure how to enable
+> > trace events prior to module load.  Then I realized that this is in the
+> > cxl_core and is only triggered by driver loads.  So I've not tested this
+> > patch but I think the following sequence will work for these 2 patches.
 > > 
-> >   static int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
-> >                                   struct cxl_dc_extent_data *extent)
-> >   {
-> >          struct cxl_dr_extent *cxl_dr_ext;
-> >          struct cxl_dax_region *cxlr_dax;
-> > -       resource_size_t dpa_offset, hpa;
-> > -       struct range *ed_hpa_range;
-> >          struct device *dev;
-> >          int rc;
-> > 
-> > @@ -1601,15 +1653,7 @@ static int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
-> >          cxl_dr_ext->extent = extent;
-> >          kref_init(&cxl_dr_ext->region_ref);
-> > 
-> > -       /*
-> > -        * Without interleave...
-> > -        * HPA offset == DPA offset
-> > -        * ... but do the math anyway
-> > -        */
-> > -       dpa_offset = extent->dpa_start - cxled->dpa_res->start;
-> > -       ed_hpa_range = &cxled->cxld.hpa_range;
-> > -       hpa = ed_hpa_range->start + dpa_offset;
-> > -       cxl_dr_ext->hpa_offset = hpa - cxlr_dax->hpa_range.start;
-> > +       cxl_dr_ext->hpa_offset = cxl_dc_extent_to_hpa_offset(cxled, extent);
-> > 
-> >          /* Without interleave carry length and label through */
-> >          cxl_dr_ext->hpa_length = extent->length;
-> > @@ -1626,6 +1670,7 @@ static int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
-> >          }
-> >          /* Put in cxl_dr_release() */
-> >          cxl_dc_extent_get(cxl_dr_ext->extent);
-> > +       cxl_region_notify_extent(cxled, DCD_ADD_CAPACITY, cxl_dr_ext);
-> >          return 0;
-> >   }
-> > 
-> > @@ -1663,6 +1708,58 @@ static int cxl_ed_add_extents(struct cxl_endpoint_decoder *cxled)
-> >          return 0;
-> >   }
-> > 
-> > +static int cxl_ed_rm_dc_extent(struct cxl_endpoint_decoder *cxled,
-> > +                              enum dc_event event,
-> > +                              struct cxl_dc_extent_data *extent)
-> > +{
-> > +       struct cxl_region *cxlr = cxled->cxld.region;
-> > +       struct cxl_dax_region *cxlr_dax = cxlr->cxlr_dax;
-> > +       struct cxl_dr_extent *cxl_dr_ext;
-> > +       resource_size_t hpa_offset;
-> > +
-> > +       hpa_offset = cxl_dc_extent_to_hpa_offset(cxled, extent);
-> > +
-> > +       /*
-> > +        * NOTE on Interleaving: There is no need to 'break up' the cxl_dr_ext.
-> > +        * If one of the extents comprising it is gone it should be removed
-> > +        * from the region to prevent future use.  Later code may save other
-> > +        * extents for future processing.  But for now the corelation is 1:1:1
-> > +        * so just erase the extent.
-> > +        */
-> > +       cxl_dr_ext = xa_erase(&cxlr_dax->extents, hpa_offset);
-> > +
-> > +       dev_dbg(&cxlr_dax->dev, "Remove DAX region ext HPA:%llx\n",
-> > +               cxl_dr_ext->hpa_offset);
-> > +       cxl_region_notify_extent(cxled, event, cxl_dr_ext);
-> > +       cxl_dr_extent_put(cxl_dr_ext);
-> > +       return 0;
-> > +}
-> > +
-> > +int cxl_ed_notify_extent(struct cxl_endpoint_decoder *cxled,
-> > +                        struct cxl_drv_nd *nd)
-> > +{
-> > +       int rc = 0;
-> > +
-> > +       switch (nd->event) {
-> > +       case DCD_ADD_CAPACITY:
-> > +               if (cxl_dc_extent_get_not_zero(nd->extent)) {
-> > +                       rc = cxl_ed_add_one_extent(cxled, nd->extent);
-> > +                       if (rc)
-> > +                               cxl_dc_extent_put(nd->extent);
+> > $ modprobe cxl_core
+> > $ echo 1 > /sys/kernel/tracing/events/cxl/cxl_log_type/enable
+> > $ modprobe cxl_pci
 > 
-> Hi,
-> when playing around with adding and releasing DCD extents through the 
-> qmp interface for the QEMU DCD emulation, I noticed that extents weren't 
-> handed back to the device. It looks like there is a refcounting issue, 
-> as the kref never drops below 2 for the dc extents. So I was wondering 
-> whether we should only put the dc extent here on error or maybe always 
-> put it?  cxl_ed_add_one_extent() also grabs a reference to the dc 
-> extent, and that one is put in cxl_dr_release(), but I couldn't find a 
-> matching put for this get_not_zero.
+> I don't see any other way to do this. I saw this [1] but it doesn't appeared to be upstream.
+> 
+> [1]: https://lwn.net/Articles/432186/
+> 
+> > 
+> > Is that how you tested this?  It seems like a pain.  But perhaps that pain
+> > is fine because these debug messages are not as useful as others?
+> > Especially for all the unsupported messages mentioned in patch 2?
+> 
+> Yes. Alison mentioned seeing maybe 500+ of those.
 
-This is a bug I have fixed in the next version.
+Ok it seems reasonable to me.  But perhaps we can document the above method
+somewhere?  Not sure if the commit message is the best place but it is better
+than nothing.
 
-Yes the put needs to happen regardless of the return value.
-
-...
-        case DCD_ADD_CAPACITY:
-                if (cxl_dc_extent_get_not_zero(nd->extent)) {
-                        rc = cxl_ed_add_one_extent(cxled, nd->extent);
-                        cxl_dc_extent_put(nd->extent);
-                }
-...
-
-Please let me know if that does not work.  And thanks for the testing,
+Thanks,
 Ira
