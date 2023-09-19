@@ -2,174 +2,275 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436C5CD5BD3
-	for <linux-cxl@archiver.kernel.org>; Tue, 19 Sep 2023 15:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF5CE79AA
+	for <linux-cxl@archiver.kernel.org>; Tue, 19 Sep 2023 15:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232939AbjISPIY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 19 Sep 2023 11:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50254 "EHLO
+        id S233219AbjISP54 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 19 Sep 2023 11:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232994AbjISPIX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Sep 2023 11:08:23 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84F2BE;
-        Tue, 19 Sep 2023 08:08:17 -0700 (PDT)
+        with ESMTP id S233218AbjISP5z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Sep 2023 11:57:55 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2066.outbound.protection.outlook.com [40.107.223.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29297AC;
+        Tue, 19 Sep 2023 08:57:48 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jLdeljhtbgCK4hpZgF+WrZltIZdCYMhMNAbjjcnQeCTDjOQ6Fr+3EWCPYvQY5PXCsB2LecKPRoTpI2urQ9vlSCoXqjgjDK1xT5bNnEolsujUcJOHX/C4ilUchk8XrbXhdQh9J1NanR5W7hHrqFPUU1isQcZkgUW/WifSJ16m28tD1J+7RnSTmEc3Qppm1DvzWo/AQihxDLVWCPhkBV3nRv/jLa93mmFtww4XzdEIwzxdyPYxcRQ9yFpnR7EH8E2a2CaIixx3BsUt3Gzf8ZDqOVmQgLU6quZ+4OiLPyhq4swH4uPEw//bcItlwBJAHUYXbK3jyzQgVG9IgML6my//BQ==
+ b=QqeXH+mzrf2iafS9ejlEkPpJ0xTv0hgnQDupx9r9Jq14tDa8d59GdoK3hz2OzqyWDV9vJ+Ko07kcRHT7LQecAn4wJSiX8FzySep8Ki+OAslmdujW+adtLigTldimAUFt/oV5Mi4cZguXKHP3jIEAxxEWUCIxR1/kYXPdnSrnZa4ipasa5XnHTjRapu5N1D/dutW2yVjRM+999piI/7I6x7qUZRLKC7NTIIVTyHZt54sc06FOsLOkBWXxfRHSg8cThvml0MC+C/We3ko54UK+1NTr+jPhSBLCAVjBFGzLvb1Fbhx3iUhpkb4jF5uMtnecbA+w06igrWhLNXhuhEs/Aw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pAlMbrOY1Ti72v7BGT1BXGVI3MNsaXEvV4JB6CgEC7s=;
- b=ZUcrX3EHSjz9DCreRkXXHr34QCLsP7zwIrQF6SOAI6TVu3uIWa/+MkGQ36zVnLJFGPJZRpMG/1f1IRPLj3ZpgthEeBpFzNl0JPTsPhIf2UL5+QSh6HjuMcbNR02mtuDrDZSBDjnKmWQ6zUPQMu9kpmsyL18jYmeE2MG0WLUqrfY8tsnpOrlqw7EvZHmd+sm2fUDHg8T6r3oyvd2E/Ihz/MQfEb9O82GoE2ubYMmi/t0TPHwmfOWxNjrg0sT3/3qq0YK3EGNOisFUepMSmfDySQGi666xa6Oc1wUMrwVTYS6fyj4bZbEWO82Zp0ofKJTKjLzX4wS+XDkDGo7oBY9eHA==
+ bh=NbH6tPn/vPDdhaBvxg8RiAZqdUNviWBk/UVhRkyHdDc=;
+ b=Xp5qDhlHssQizLtAEO/s5E8rSA4bP8NrJ7+1b/WyPum9FwQqSNG0J+ZuXtWjJpQ3+Ll3ImdjiaCgzxHINXwpKOm6yWn7S8PCQGY6acX7he+DRhocOzEq6AsLdk6rGBJwX5C4kZT5EL+Cdl00GUvH4Dp2oU5x2g9VmcbCcp985efjY2WZ8Rmw3SwrLrZ1MvryYz0JBjLFJN3gkhN691WbpK3NzXCuOxNY+v3bApaD7wmvBww256P18bcmoY1FpCZ/k2rm8vlxegMzwU9y/Eb7weWBkUAmV1i4eL9ksxDSuNHi1MKVPqpBoT1jp6hG4BfTxg1vD61Zb3YQTg7TC0y3iA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pAlMbrOY1Ti72v7BGT1BXGVI3MNsaXEvV4JB6CgEC7s=;
- b=hwkqxcbsa1602cEMuN0i7lt+uhCmIY3LVU5+rPOCV/TFv3OhKQi1ZbTNDGdIxl2RnUXvx/EOCLtAb+lpYdgg+SOu/l9dgB98R7uq4sfDbIxJQDRMOrfqLIaqKoZ1S8IZO8zFayP+82MQIV06aDBoJJR2nQHyjEB/WlLKH1K5isE=
+ bh=NbH6tPn/vPDdhaBvxg8RiAZqdUNviWBk/UVhRkyHdDc=;
+ b=Tia56GVp5hvqoOlXlec/UcR9sHdi0veMPYug2C8Q8fMorP9pp/zwLV1DlS7SKBvVdFFzNwgie1Vx2pYU68hBFZ/ZbVnWi1zNq0CuVdKI+Bl9o2L37LaVbpEJkjF3Ll+CZ9FuupEqevXRx0UYR7pAvTP4Vaj2qRLj9BkgdwS1yT0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- PH7PR12MB9175.namprd12.prod.outlook.com (2603:10b6:510:2e6::14) with
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by SJ0PR17MB6522.namprd17.prod.outlook.com (2603:10b6:a03:4d4::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.20; Tue, 19 Sep
- 2023 15:08:13 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::5b90:dbf9:e0a5:64cc]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::5b90:dbf9:e0a5:64cc%6]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
- 15:08:13 +0000
-Message-ID: <f27f685c-6b53-8955-735f-e9c0c04354a5@amd.com>
-Date:   Tue, 19 Sep 2023 10:08:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v10 12/15] cxl/pci: Disable root port interrupts in RCH
- mode
-To:     Dan Williams <dan.j.williams@intel.com>,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
-Cc:     rrichter@amd.com, linux-kernel@vger.kernel.org, bhelgaas@google.com
-References: <20230831170248.185078-1-terry.bowman@amd.com>
- <20230831170248.185078-5-terry.bowman@amd.com>
- <6504a5e23cee9_d7cc8294b7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From:   Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <6504a5e23cee9_d7cc8294b7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0016.namprd13.prod.outlook.com
- (2603:10b6:806:21::21) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Tue, 19 Sep
+ 2023 15:57:42 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::f4e8:df0d:9be8:88cc]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::f4e8:df0d:9be8:88cc%6]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
+ 15:57:42 +0000
+Date:   Tue, 19 Sep 2023 11:57:34 -0400
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Gregory Price <gourry.memverge@gmail.com>,
+        linux-mm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-cxl@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        arnd@arndb.de, akpm@linux-foundation.org, x86@kernel.org
+Subject: Re: [RFC PATCH 3/3] mm/migrate: Create move_phys_pages syscall
+Message-ID: <ZQnE7i7tYOPnrL3w@memverge.com>
+References: <20230907075453.350554-1-gregory.price@memverge.com>
+ <20230907075453.350554-4-gregory.price@memverge.com>
+ <877conxbhw.ffs@tglx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877conxbhw.ffs@tglx>
+X-ClientProxiedBy: BYAPR08CA0058.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::35) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|PH7PR12MB9175:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6548868-d04e-4d85-9b07-08dbb9223e58
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB6522:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1712260-8337-4309-d44e-08dbb9292838
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: f8Ewvv+9PeWb/Qo3mOdePzifV9UwK/1ojbLviszxXSt1ysRr9LBXg+qUgyPKLcUF6KScNEnV6oAg8ijnj2uUtbWcTXgxkF5XOMihb7uaJz0J4CMFm8mHkl9lfL4diOSCSGqg+x4QO6D3lDW3qVEjgztaE8d6z1MZT0SPeXgfEjNgv8tf+vCI51FlaIQsuBwaaoKBnwEVAzvX+0+Yw4OmaFk7L7rcxC6heQsUjWjs1QTKC3uOMdgZ/gRCchCkX/5tS+9ojxbbxc3d/9VmX/waO/tkITCMvZy/L1LrYG/HIITvze6aACOMJ+Cvw9m9jaq8+8DvOz/2a6OEbfzZym53Hwbo7vM7uCE7icCBs4uaDmVVRzf5qIcTgWILLYJfTyIUSHKcPhuZBhioRI3FFTuzpW4rh/REzIyC5r1FBCoJgcKzb65xKtzXlbnNHXyYpjS3bTqOscVI9QXMSCI1YrrNsTZoc8H5DLRVyphiOax1nredvpKsGftGSLyW5sDbTvRDy4cHZg9t8ucu85Xr7RNj8SpMXSDnY1p7juQ+YkrHxjWEb7LOik+8ax6cgywGfTYXRx65Xm+M2Q05TxvwilBc7avBEXRXqjmsJDGCVd0mkJC4BXtt+WxZrAKaI4t3GIQkYrWvJ06TvNHrhI+urBbfuw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(376002)(39860400002)(396003)(1800799009)(186009)(451199024)(66946007)(36756003)(6486002)(2906002)(6506007)(53546011)(26005)(83380400001)(478600001)(2616005)(8676002)(8936002)(4326008)(7416002)(66556008)(66476007)(316002)(41300700001)(6512007)(38100700002)(31696002)(86362001)(5660300002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: gTwNc3znxnhs6mak6yi49dSy7LKNO3k+DzaWGfJMPvrfh8CaO8XTO6oj3rFuxmL2+C4zU5OQRUPl94vIYepb7oWgGlCY3n47RWHGEoC8/NXzMYGyGmTjsrye7NpOnh+13ReugkPmfgpsVzOq2t2hIca6q90URoBV9u3Ss+0xciuPTKhwZ6C4MVzmXPj+/mhk9BdSCTwPTd//6+9Ve6Kwe1xCmoJCbVY2tLucDy6ZUOUJdMjq80QNCDAnrE1vhWGoPpvUTw6A3Cn2Rh3rne2lOQmYN7d7k4GqLvgswT08pIt9tl/pVtCNHkXTkPvjb0W2u0HSnlBzzBAzGHQAnimcnpF7r06SFNgpI4C39mkI02IGhnlhAQMwX+Bo0KyjnC7Mjfln4ICffxyzrG5VXB+IGm6VbH8ajzO5WBDbLVMniQZl+98sC71xA6BKVhANxrXvuQkJrqlJMSZaV11mRxUFBjGOdICGfIBLbGMWzlyIssF7XP8WCq+UWcgyzAAkSxKS7d9DW66ds9UqyFF0GJxGEQvcsRM1ewCW0jpeGIzdeTM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(136003)(346002)(39850400004)(451199024)(186009)(1800799009)(44832011)(4326008)(5660300002)(8676002)(6486002)(6506007)(8936002)(316002)(7416002)(41300700001)(66556008)(6916009)(66946007)(66476007)(478600001)(966005)(6666004)(2906002)(6512007)(26005)(83380400001)(2616005)(36756003)(38100700002)(66899024)(86362001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WXhjTjZmUzBCM2xRa0pDa3lTdkpvQXZvZW40K3ZGOUNPdFhWbXFSOU1xTm5R?=
- =?utf-8?B?SERINnVyQVVJcXAxZzRHVVM1UFJpVnZINk0rT3ZzcG5RMUU3ZUFuMFUzN1dv?=
- =?utf-8?B?VFFQWFlSSU9xdndOOFlYaEJXR2s1eWxpWm9KQitQQStORDFrU1BMdHM3WVM0?=
- =?utf-8?B?SGY5R1JucWJVZ1V5MFFkL2xQM040NEFqMHgrMWdRckZySEk3ZVBaMHdmSDFD?=
- =?utf-8?B?R2VxUWlIZkhEbFdUUWNrZFhxV1kyRjhFRFlqVTF3eFZiakZadnQxK1JPT1VB?=
- =?utf-8?B?ZmNseWpSK3hxMXVnWU5nTUhKcEVWdzhrYmFtTnhhSnpaWFJHOGZaaFppQS96?=
- =?utf-8?B?UG5TRXNqelZjVGduWDFVWmtucDVsZnlVVXVrdmQ0SWFYdGVSYytDT0YxdjF6?=
- =?utf-8?B?T2xZVkNDWFpzUmFqa1E3WmhyWnR0RHA2QXZKNFErU3lqZ3F4OTRrWVEzSm1Q?=
- =?utf-8?B?ZUZqOFJ5NmhKZGJMVVp0bWZEQ1hQWlRRVmxRTW5LR3RDams1eFlSdXkvWGpw?=
- =?utf-8?B?SzZvTUxrY2xqU2M1ZDk3b1J3Sk9Rb0ZsVS9WWUxZWi9iQm9XOXIxYnhtSU82?=
- =?utf-8?B?cU9xaGM1NnFGUjMzWXVuMUQxcXgvVXBqdXpYZENLNTZ5NmszbEtvZ1BEWDBj?=
- =?utf-8?B?MnJKbkVtVVhSOVUwV2hhNU1qbCt5VUJsZS8yc2gxSEVQNTFuMHpqaDFrbkE4?=
- =?utf-8?B?RFQyUGNMMG93Q292ZDkvL2FMUm5WQlZoQWJ1b1BnTkFJWkcyQ2VWd1VFTVd2?=
- =?utf-8?B?T0NCNjFaOTBpWVFrc0FKQlUwU1Fadk5MNDB1anJMVGpIUnZFaTNGYnFXby9P?=
- =?utf-8?B?STUraWJzMnhlYWI5THIyUFhyU1UxMVJ0eWRFMm81VTlOOUNFWUxzR3AyWWdH?=
- =?utf-8?B?b1pFYlo2QjZjekxtdzZPVXNjOEFJU2xtVUthdkZjUGpMdUc1U2NvQ21WTEV2?=
- =?utf-8?B?MS9nTVZKTlJUeG1JN0t2VFhJWnJmSzZtWUFualBDbmR3TktRVlhvWjloSXM5?=
- =?utf-8?B?S25qMjhkUDcwc2NteXV1RTI4MlRzN2c2Vm81YW5CclVJL0I3UFdGRWk5dVFq?=
- =?utf-8?B?blh2VmJaMFlFdDEvSGNwb3pHa3VmaWxDd3o3QVJJNnQxbjJCelRtdUdKbkli?=
- =?utf-8?B?R0ZLVnBjM0ZpUFVPVC9nTEZaZGhHT2dpMFU2dnhZUXoxNVhFbXFXZ2lMZDl4?=
- =?utf-8?B?U3g5TkJvbzNtWWc4V1hhSjFIVncraWF4RFJRaTRFZ3hvaVNoak9RMk5NbmxQ?=
- =?utf-8?B?b2MzVlljOVFuYSs4Y3R4eVZMS1dIWnhNaGNCMm9tRWQ5NzlDSU1COENqVFZu?=
- =?utf-8?B?Y2YzQ3lQaWtvSGVGZkhFbStCL0VCc3Bqc1EyQlVUTFZmSXQxUU9xNUZwOWhM?=
- =?utf-8?B?b2UyaFU2RnlOY2F5MWs2MHJibFFTdkIxYXdxZlpqdkQrcFpBYXVucHoyR1A4?=
- =?utf-8?B?NlY0enhRcGs3MzJNbHNZeER4aFZSbll0VjJGdkhZby9tQnZ5OUs2dWIyM0N2?=
- =?utf-8?B?L2piRTNUaExETERFQ0IzT1NoV0JpLzc1aHJadXZnSkExcmhmZ3pDVFVRajR0?=
- =?utf-8?B?YVN2WE5FT0g5ZUpueVRWTlZKQ2xwbFc4NUoyczMzM1d3NHBXak5SOVpBdXBE?=
- =?utf-8?B?TE9zeHVlM09Fc1QxUnhkeGpxUTZMbWoyVjV6VkYzU3NpdDJZRzViWjN3Nmda?=
- =?utf-8?B?bXI5RkpZYlFrWnIzTm1VVDMwbjdaTUwzWkRrbmVjaFRtWkgyendwNmpSUzB5?=
- =?utf-8?B?MkJGNXd0Wkxlb1YrQmFsMXlJdnpBVjQzNTQrUFpjTFFETUZJN0xwSHFsMEx1?=
- =?utf-8?B?TXlHT2RIWnVHb1EvRnNmRzQzR0tMTlNVSFlBUTBZVUtGWk9LUkFmUFFMamVX?=
- =?utf-8?B?RTVhTDh0US9rOGdWVjlNUEozdWFNUkk4aXRnTithbzJyeldnRml2OTh1UDND?=
- =?utf-8?B?TGlzN3VTWkN4WWFFalJtbTNZMUZVRTI3MU1xL2E2cW1NcCtMNVF3TnF4QUtt?=
- =?utf-8?B?STZPRzV5S1haR0JQOHFSV201NFZYVWhNVW03VUVYSk1rdEtLanRTYkhEMTd2?=
- =?utf-8?B?bTVvVnRiT0pNNjNlNVVaaGFqOWhzeVpuNDh6WWtYRDBkS2tpakJuejJlb3Vo?=
- =?utf-8?Q?QobCCHwwRvRddUPctaNRdDFld?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6548868-d04e-4d85-9b07-08dbb9223e58
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JPwpC6lstxOOSf32lyotMa7LTvjyJb+igCkO6HXVkjEoNi6kJ54vu/WwJEEl?=
+ =?us-ascii?Q?R47lKA8BDSe2JqoGx3mTULW35qdy19Svcp7H7i37r6Nm0VVUN/32b6rYg2x/?=
+ =?us-ascii?Q?snXM0pLNxE18Jp5+hc9+WYXA8YtdDNq1BbPEx32D38X/0KTlhWuX28skq8cb?=
+ =?us-ascii?Q?n+P8WEfCSgOTnWth+u7egqVLWCN6pqgvgXK73O51x7OC3Fa86S+EnoSDOG3O?=
+ =?us-ascii?Q?rTMc86P3FatV7IdxYZ4OsybrwZMNLwWlcWjMKzEpCEN8FlENIZvFyol9Ok95?=
+ =?us-ascii?Q?0Vm5e1jCrPJZ3MAwiW06CDxaPjl6nyXhtSD/3BUDKnN7zBfgVsKIz5qtj4yU?=
+ =?us-ascii?Q?BaTD0vN5WMvukP/iEcBI+X2rmyr6Yy9SLtQ/5KNq7+QKUkt2jY0amy8VmsMo?=
+ =?us-ascii?Q?t8KAxHnTP7Y7stJ6Kcc+EaBZeDbFwnqXUVPjEP0AlK0xnODEWaCMomDg4eA0?=
+ =?us-ascii?Q?eDn3egKVFEc++PnnhXiRE8/wvRvCk8gLCQ1EEXLP3tzAsAAmXvkO1TJN2heN?=
+ =?us-ascii?Q?TeEir6bulze2q4fLPXw4fMTBTFe5X2DEQ6gpfDsGm2rxTJwIqON+Fs9jFw+K?=
+ =?us-ascii?Q?p+eUIT1a04A5f6NLOVol6qpVL6W7pUfA32Tr1iClyr98r1KSE497Q4m4AruF?=
+ =?us-ascii?Q?rDDg9jGvW+Ymvc3EzgD7LA1XNDbMI1xk3TlkWueR9/cTHDndk7MvXe2PdiYD?=
+ =?us-ascii?Q?d5Fy8DskNj3v4J3E9RFoALbeEXpTmn1JmLODZRy2Zos2rwGH55E1dHmRDd2D?=
+ =?us-ascii?Q?18lUR+HYG/EmuqEj5ROzhkvm0uq1ceCvjb3utl5DgH7XVFrx0lB/8tfpUZag?=
+ =?us-ascii?Q?jsm09RBVu05FNSH24vtol6a3W4BKHhiTPiYYH3C3fgx7Hothtzp+XrjFMbq0?=
+ =?us-ascii?Q?OiMEz4ssxZzAS/+QnFtiqtKqh2PMHU7b806QgFUh4WgCKTW/27Aq9PLNiss5?=
+ =?us-ascii?Q?dmfhEvLdPudLwqppfBBJ62yTj39flrERMhd72IsSL81TXdFjm8MU2v1UWv7R?=
+ =?us-ascii?Q?CMfDkq19XUyGNJhbZBsNULzPfO8mj1rXIL/sDohA4fhfFH7Z3sJ1+bXu5yfX?=
+ =?us-ascii?Q?Q32FAYXhTK0P4unpGGBfcvu8BPGMNP8kdXB48s7JT24K5zI9UiEjfN62nmm1?=
+ =?us-ascii?Q?xHFYRmXGelHHnvBGY9h6/zwZ2ZmkBWfSuCgOngrN5IIMRohOLmO1gczPMoax?=
+ =?us-ascii?Q?uef+IY1po4Z001NrWJFMmYN9yaFwYSyVlPDPiHfM5CAzks7el9oeAvPEv4sy?=
+ =?us-ascii?Q?pZlWOzUlhAjuJaF57G88XgSXSwBwA8oaXxpsScQByjJMsSaIfE8FLmn5kDSY?=
+ =?us-ascii?Q?whcqUB7RShcTJomLLo03QXmDBRZ28sha69jDepGQt46glfUPeMpgmK3bXW8v?=
+ =?us-ascii?Q?GzMaYblwbn01LW9h53x66BMHlL+oj57GyE91ZnE8zjD6gbBEXN/RaunX+fLp?=
+ =?us-ascii?Q?9yE5V+5sAnFNe03HXL6VTF6VpaoEdxtjrjmyawrrazqHXyLa1CPAp78O9SJE?=
+ =?us-ascii?Q?tBDl+SfPc7ilGTKJA5qk+nzC2qd/FsMKHyBmESC7UJBGiNK5SZLLBxDzN34i?=
+ =?us-ascii?Q?fbjJMFSphMrG9CGRqINNml7kTv1YLwTfHP0bVuxpEc8HKzpx/n88uqA5XwYd?=
+ =?us-ascii?Q?2w=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1712260-8337-4309-d44e-08dbb9292838
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 15:08:13.0438
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 15:57:42.5255
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Uu+t8x2MRKosP0XNPpOEo+qLJW01Jwi43x7LArs1lhsQQtFKD2C2arI4OOPi6HBtTugxALuQlKMZ+mxPH9f7UA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9175
+X-MS-Exchange-CrossTenant-UserPrincipalName: Di0FeeRc/UupUgcBKZTf0IZ4y40bHaxujCDI4vYJI0onnB760mWQta69CtHMqeulE3ACzBWFr6dyBsvt8NuFWhdoU35t0ewJ+kjfGy9/k7k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB6522
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Dan,
-
-I added comments below.
-
-On 9/15/23 13:43, Dan Williams wrote:
-> Terry Bowman wrote:
->> The RCH root port contains root command AER registers that should not be
->> enabled.[1] Disable these to prevent root port interrupts.
->>
->> [1] CXL 3.0 - 12.2.1.1 RCH Downstream Port-detected Errors
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Robert Richter <rrichter@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> [..]
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 2a22a7ed4704..d195af72ed65 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -1042,6 +1042,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->>  
->>  	cxl_dport_map_regs(dport);
->>  
->> +	if (dport->rch)
->> +		cxl_disable_rch_root_ints(dport);
->> +
+On Tue, Sep 19, 2023 at 02:17:15AM +0200, Thomas Gleixner wrote:
+> On Thu, Sep 07 2023 at 03:54, Gregory Price wrote:
+> > Similar to the move_pages system call, instead of taking a pid and
+> > list of virtual addresses, this system call takes a list of physical
+> > addresses.
 > 
-> Similar to the comment about cxl_dport_map_regs() not being appropriate
-> in an enumeration routine, this also needs to move out of _add_dport. It
-> occurs to me that it should also be undone on driver detach just like
-> other device "enables".
+> Silly question. Where are these physical addresses coming from?
+> 
+> In my naive understanding user space deals with virtual addresses for a
+> reason.
+> 
+> Exposing access to physical addresses is definitely helpful to write
+> more powerful exploits, so what are the restriction applied to this?
+> 
 
-Ok. I will move out of enumeration. 
+There are a variety of sources from which userspace can acquire physical
+addresses, most require SYS_CAP_ADMIN.
 
-Per the 'undo' request: This is a RCH downstream port (dport) with PCIe root port 
-capability. PCI spec states root port error reporting is disabled by default at 
-powerup. And SW does *not* enable the root port errors because the RCH dport is *not* 
-bound to a root port driver (missing BDF, etc). This mask is added to follow the 
-CXL spec precisely and if the rest of the system behaves as expected should not 
-be necessary. 
+I should probably add this list explicitly to the RFC for clarification:
 
-I don't believe masking should be 'undone' in driver detach or elsewhere. Adding 
-the 'undo' masking would potentially introduce RCH dport root port interrupt 
-reporting which is incorrect for the RCH/RCD mode. Only CXL components (device, 
-uport, switch) may reside under the RCH dport and never want RCH dport reporting 
-root port errors. RCEC reports the root complex errors in RCH/RCD mode.
+1) /proc/pid/pagemap: can be used to do page table translation.
+     This is only really useful for testing, and it requires
+     CAP_SYS_ADMIN.
 
-Regards,
-Terry
+2) X86:  IBS (AMD) and PEBS (Intel) can be configured to return
+     physical, virtual, or both physical and virtual adressing.
+     This requires CAP_SYS_ADMIN.
+
+3) zoneinfo:  /proc/zoneinfo exposes the start PFN of zones. Not largely
+     useful in this context, but noteably it does expose a PFN does not
+     require privilege.
+
+4) /sys/kernel/mm/page_idle:  A way to query whether a PFN is idle.
+     One tiering strategy can be to use idle information to move
+     less-used pages to "lower tiers" of memory.
+
+     With page_idle, you can query page_idle migrate based on PFN,
+     without the need to know which process it belongs to.  Obviously
+     migrations must still respect memcg restrictions, which is why
+     iterating through each mapping VMA is required.
+
+     https://docs.kernel.org/admin-guide/mm/idle_page_tracking.html
+
+5) CXL (Proposed): a CXL memory device on the PCIe bus may provide
+     hot/cold information about its memory.  If a heatmap is provided,
+     for example, it would have to be a device address (0-based) or a
+     physical address (some base defined by the kernel and programmed
+     into device decoders such that it can convert them to 0-based).
+
+     This is presently being proposed but has not been agreed upon yet.
+
+
+> > +	if (flags & ~(MPOL_MF_MOVE|MPOL_MF_MOVE_ALL))
+> > +		return -EINVAL;
+> > +
+> > +	if ((flags & MPOL_MF_MOVE_ALL) && !capable(CAP_SYS_NICE))
+> > +		return -EPERM;
+> 
+> According to this logic here MPOL_MF_MOVE is unrestricted, right?
+> 
+> But how is an unpriviledged process knowing which physical address the
+> pages have? Confused....
+> 
+
+Someone else pointed this out as well, I should have a SYS_CAP_ADMIN
+check here that i neglected to add, I have a v2 of the RFC with a test
+and fixes, and I am working on a sample man page.
+
+This entire syscall should require SYS_CAP_ADMIN, though there may be an
+argument for CAP_SYS_NICE.  I personally am of the opinion that ADMIN is
+the right choice, because you're right that operations on physical
+addresses are a major security issue.
+
+> > +	/* All tasks mapping each page is checked in phys_page_migratable */
+> > +	nodes_setall(target_nodes);
+> 
+> How is the comment related to nodes_setall() and why is nodes_setall()
+> unconditional when target_nodes is only used in the @nodes != NULL case?
+> 
+
+Yeah this comment is confusing.  This is a bit of a wart that comes from
+trying to re-use the existing do_pages_move to ensure correctness, and
+I really should have added this information directly in the comments.
+
+The relevant code is here:
+
+static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+                         unsigned long nr_pages,
+                         const void __user * __user *pages,
+                         const int __user *nodes,
+                         int __user *status, int flags)
+{
+...
+	err = -EACCES;
+	if (!node_isset(node, task_nodes))
+		goto out_flush;
+...
+	if (mm)
+		err = add_virt_page_for_migration(mm, p, current_node, &pagelist,
+					     flags & MPOL_MF_MOVE_ALL);
+	else
+		err = add_phys_page_for_migration(p, current_node, &pagelist,
+				flags & MPOL_MF_MOVE_ALL);
+
+
+do_pages_move was originally written to check that the memcg contained
+the node as a valid destination for the entire request. This nodemask
+is aquired from find_mm_struct in a call to cpuset_mems_allowed(task).
+
+e.g. if memcg.valid_nodes=0,1 and you attempt a move_pages(task, 2), then
+the entire syscall will error out with -EACCES.
+
+The first chunk above checks this condition.
+
+The second chunk (add_virt/phys...), these calls check that individual
+pages are actually migratable, and if so removes them from the LRU and
+places them onto the list of pages to migrate in-bulk at a later time.
+
+In the physical addressing path, there is no pid/task provided by the
+user, because physical addresses are not associated directly with task.
+We must look up each VMA, and each owner of that VMA, and validate
+the intersection of the allowed nodes defined by that set contain the
+requested node.
+
+This is implemented here:
+
+static int add_phys_page_for_migration(const void __user *p, int node,
+                                       struct list_head *pagelist,
+                                       bool migrate_all)
+...
+        pfn = ((unsigned long)p) >> PAGE_SHIFT;
+        page = pfn_to_online_page(pfn);
+        if (!page || PageTail(page))
+                return -ENOENT;
+
+        folio = phys_migrate_get_folio(page);
+        if (folio) {
+                rmap_walk(folio, &rwc); <---- per-vma walk
+                folio_put(folio);
+        }
+
+
+static bool phys_page_migratable(struct folio *folio,
+                                 struct vm_area_struct *vma,
+                                 unsigned long address,
+                                 void *arg)
+{
+        struct rmap_page_ctxt *ctxt = (struct rmap_page_ctxt *)arg;
+        struct task_struct *owner = vma->vm_mm->owner;
+        nodemask_t task_nodes = cpuset_mems_allowed(owner);
+... the actual node check here ...
+        ctxt->node_allowed &= node_isset(ctxt->node, task_nodes);
+
+
+
+I will add some better comments that lay this out.
+
+~Gregory
+
+
 
