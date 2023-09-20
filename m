@@ -2,106 +2,81 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C629CE79AB
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 09:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65001CE79CE
+	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 12:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233968AbjITJhM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Sep 2023 05:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
+        id S235607AbjITMTQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 20 Sep 2023 08:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234122AbjITJhK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Sep 2023 05:37:10 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D7ECF;
-        Wed, 20 Sep 2023 02:37:03 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id D77E6320034E;
-        Wed, 20 Sep 2023 05:37:01 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 20 Sep 2023 05:37:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1695202621; x=1695289021; bh=JN
-        1ZzaiwVFExq/3/5UGUuW9E0CnaSmXvojZmxi01Kcc=; b=Pm8O1gOEIViOo1Budb
-        3EuwADD286hOxA3J0GYhoMDrkIH2t+PFfEvg0aXIhz0gunW1x4kkTzPTdL6SYqwP
-        51VKokd80Hj0RKh5FRGxLiBRHUzF9obSnYMI9afTQHdZ1rTx4fisINLeMvhCevFd
-        Bj8hrQ7WU4yFBfMYTG8mPuf/f7xJpGFXIszmhFNUvkuQN9ZqWeIcnQzxlMusZEUJ
-        bk9Hmaio42ziipwIOrrQ8eV45RBWqhlD8mJVj2SEcSsnmMrInFbhuUGxsXWfWw8e
-        v6/Fy91qyfbQJaZ8SBcAC88Oj4dTC5X+ZfBwcUZ/E/ATPWljbBKmwdAY+G9nhfgm
-        tVPw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1695202621; x=1695289021; bh=JN1ZzaiwVFExq
-        /3/5UGUuW9E0CnaSmXvojZmxi01Kcc=; b=oTLvY1yG2kMqEXf+HxPvuLCeLFu2a
-        yc7o2PutX7FVP+lscX+cfS/PXM4eaUK4e0tOpFtx7QeQ3xBfgEZY+Ld0bSFQlKUm
-        7pWSMhxBJGuFH161aX1ClZtZfOuohRiYr0D05oEyaO5CGJfNw91UhzmngSsmGccX
-        70O7NCkbEpnCUFi1QUkbNbHX7cUQeCE9aQkF6+VrYJIu7CowvpblQkkIP54GteUS
-        rXnSxAxt7/L0ReZMCDvZmbo/dEayKb6f/cq0HA49K1BFEi8D8cZW5BKmU04V3McE
-        BqPA/P5oypt8f0hu3unvgt0vtaIXK2BRC8a3oJKSnkmzHm/2Vm83ywBUQ==
-X-ME-Sender: <xms:PL0KZb6lhtH46k9GGSDj5yk3j3mZCRrBS_Y1L90S1ZtH339ksLcHiw>
-    <xme:PL0KZQ5iWwZ1otcgXt1LERwxEL9Pnw5fYYFBdfbcKEZGIAuEoxrteY-4aE83qCFLt
-    r0ChJoV6Gf7daf8cFM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudekfedgudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:PL0KZSesSU9ywtQ-tngRXbTJzPcxuA5Y4tWyJOpAnBc3oR4QgLSlUQ>
-    <xmx:PL0KZcLC4L0R3ZVR_u8sCugVuSFd1G8xcy7oRTLxNHilU6r7CSCTZA>
-    <xmx:PL0KZfL8yMrsJ4QfdwTs9P7QEPSw5txNRgGXNKJysQ6QXmT5ii8DIQ>
-    <xmx:Pb0KZZBQfFXY91QZ2moim8ARvgr9ZxEf03fqNy_kz4cHxc8rreKIhQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 14CB2B60089; Wed, 20 Sep 2023 05:37:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-761-gece9e40c48-fm-20230913.001-gece9e40c
+        with ESMTP id S235610AbjITMTP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Sep 2023 08:19:15 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A3AC2
+        for <linux-cxl@vger.kernel.org>; Wed, 20 Sep 2023 05:19:06 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RrHb14NY5z6HJd2;
+        Wed, 20 Sep 2023 20:17:01 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 20 Sep
+ 2023 13:19:03 +0100
+Date:   Wed, 20 Sep 2023 13:19:02 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC:     linux-cxl <linux-cxl@vger.kernel.org>
+Subject: Re: A confusion about cxl.mem in CXL drivers
+Message-ID: <20230920131902.0000504f@Huawei.com>
+In-Reply-To: <2023092018244461102314@phytium.com.cn>
+References: <2023082215220191352877@phytium.com.cn>
+        <2023092018244461102314@phytium.com.cn>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Message-Id: <e43c9fb0-1869-4328-a984-33b35caf58ba@app.fastmail.com>
-In-Reply-To: <20230919230909.530174-2-gregory.price@memverge.com>
-References: <20230919230909.530174-1-gregory.price@memverge.com>
- <20230919230909.530174-2-gregory.price@memverge.com>
-Date:   Wed, 20 Sep 2023 05:36:39 -0400
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Gregory Price" <gourry.memverge@gmail.com>,
-        linux-mm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>, x86@kernel.org,
-        "Gregory Price" <gregory.price@memverge.com>
-Subject: Re: [RFC v2 1/5] mm/migrate: fix do_pages_move for compat pointers
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Sep 19, 2023, at 19:09, Gregory Price wrote:
-> do_pages_move does not handle compat pointers for the page list.
-> correctly.  Add in_compat_syscall check and appropriate get_user
-> fetch when iterating the page list.
->
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Co-developed-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, 20 Sep 2023 18:24:46 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-Looks correct to me, thanks for fixing it!
+> Hi, Jonathan
+> 
+> There jumped a silly confusion when I am analyzing cxl drivers: 
+> Since Host to access the cxl device memory and to access its mmio registers
+> both use load/store instructions, how system software distinguish 
+> with cxl.io and cxl.mem protocols?
+> 
+> Many thanks
+> Yuquan
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Hi Yuquan
 
-You can also blame me for breaking it in the first place
+I'm afraid I don't really understand the question.  So I'm guessing a bit whilst
+trying to answer.
 
-Fixes: 5b1b561ba73c ("mm: simplify compat_sys_move_pages")
+Is it about the kernel side of things, or more on what we are doing in QEMU
+where we use iomem regions for both CXL.io and CXL.mem? For CXL.mem that
+is done in QEMU to give us the ability to do fine grained address decoding
+(below page level) but it doesn't in practice matter to the OS on top. It's
+just an implementation detail in QEMU. There are knock on effects if you run with
+KVM though as instructions can end up being read from the memory
+(so that's not advised!).
+However for both CXL.io and CXL.mem it is a host physical address range
+and how the OS deals with it is dependent on how it is mapped.
 
-      Arnd
+So from driver side of things, the CXL.IO stuff is either in ECAM (for config
+space) or mapped as PCIe BARs.  The CXL.mem stuff is mapped via the Host Physical
+Addresses described in a CXL Fixed Memory Window.
+
+So the right type of access is used based on the underlying hardware performing
+the routing for the appropriate Host Physical Address range.  Same applies
+on top of QEMU.
+
+Jonathan
