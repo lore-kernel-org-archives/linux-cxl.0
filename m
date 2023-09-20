@@ -2,155 +2,106 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC73CE79A8
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 00:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C629CE79AB
+	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 09:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjITAPC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 19 Sep 2023 20:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        id S233968AbjITJhM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 20 Sep 2023 05:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjITAPC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Sep 2023 20:15:02 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752CE9D
-        for <linux-cxl@vger.kernel.org>; Tue, 19 Sep 2023 17:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695168896; x=1726704896;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YnUv5s50ZxbLfk5nYJNeeaA0GkIw7XjVD1XlzesInKQ=;
-  b=j1sEZrB3nfFLY/eM0HU5g+5Vrso1fCi8wMof+AjqJgGSUbGQkBD0THtK
-   bwPbjYFWHBIl7KXBOrg9V3OjjQTfRgq9CPR+pvX9veeKG2FGZJ0YYSBBD
-   Ki9CN2Su7JUJ2QEzjuljQkk3oLc1ioKilP0u4Rusr/SAS4TXaj1VGNPed
-   Eyb82YroKcKurUPSL72sW5qmWtRUpceVCyJiMFB0BrxALzr7mWaAuUJug
-   J444ME0oI+lGy3E3B/RDzjeI6rIsOYccmv/tDbeWXJQaoEVao7w9/99kk
-   3Qr7b6naUj3gNhO6xo7bKEszuL8kH09kJZN48+CESYe0wSZa+0IbK0aRa
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="444180656"
-X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
-   d="scan'208";a="444180656"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 17:14:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="746431077"
-X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
-   d="scan'208";a="746431077"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.121.236])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 17:14:55 -0700
-Subject: [PATCH v2] cxl: Move opcode reporting from dev_dbg() to traceevent
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dave@stgolabs.net, jonathan.cameron@huawei.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, dan.j.williams@intel.com
-Date:   Tue, 19 Sep 2023 17:14:54 -0700
-Message-ID: <169516889447.3000874.6411946866257133358.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+        with ESMTP id S234122AbjITJhK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Sep 2023 05:37:10 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D7ECF;
+        Wed, 20 Sep 2023 02:37:03 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id D77E6320034E;
+        Wed, 20 Sep 2023 05:37:01 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 20 Sep 2023 05:37:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1695202621; x=1695289021; bh=JN
+        1ZzaiwVFExq/3/5UGUuW9E0CnaSmXvojZmxi01Kcc=; b=Pm8O1gOEIViOo1Budb
+        3EuwADD286hOxA3J0GYhoMDrkIH2t+PFfEvg0aXIhz0gunW1x4kkTzPTdL6SYqwP
+        51VKokd80Hj0RKh5FRGxLiBRHUzF9obSnYMI9afTQHdZ1rTx4fisINLeMvhCevFd
+        Bj8hrQ7WU4yFBfMYTG8mPuf/f7xJpGFXIszmhFNUvkuQN9ZqWeIcnQzxlMusZEUJ
+        bk9Hmaio42ziipwIOrrQ8eV45RBWqhlD8mJVj2SEcSsnmMrInFbhuUGxsXWfWw8e
+        v6/Fy91qyfbQJaZ8SBcAC88Oj4dTC5X+ZfBwcUZ/E/ATPWljbBKmwdAY+G9nhfgm
+        tVPw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1695202621; x=1695289021; bh=JN1ZzaiwVFExq
+        /3/5UGUuW9E0CnaSmXvojZmxi01Kcc=; b=oTLvY1yG2kMqEXf+HxPvuLCeLFu2a
+        yc7o2PutX7FVP+lscX+cfS/PXM4eaUK4e0tOpFtx7QeQ3xBfgEZY+Ld0bSFQlKUm
+        7pWSMhxBJGuFH161aX1ClZtZfOuohRiYr0D05oEyaO5CGJfNw91UhzmngSsmGccX
+        70O7NCkbEpnCUFi1QUkbNbHX7cUQeCE9aQkF6+VrYJIu7CowvpblQkkIP54GteUS
+        rXnSxAxt7/L0ReZMCDvZmbo/dEayKb6f/cq0HA49K1BFEi8D8cZW5BKmU04V3McE
+        BqPA/P5oypt8f0hu3unvgt0vtaIXK2BRC8a3oJKSnkmzHm/2Vm83ywBUQ==
+X-ME-Sender: <xms:PL0KZb6lhtH46k9GGSDj5yk3j3mZCRrBS_Y1L90S1ZtH339ksLcHiw>
+    <xme:PL0KZQ5iWwZ1otcgXt1LERwxEL9Pnw5fYYFBdfbcKEZGIAuEoxrteY-4aE83qCFLt
+    r0ChJoV6Gf7daf8cFM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudekfedgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:PL0KZSesSU9ywtQ-tngRXbTJzPcxuA5Y4tWyJOpAnBc3oR4QgLSlUQ>
+    <xmx:PL0KZcLC4L0R3ZVR_u8sCugVuSFd1G8xcy7oRTLxNHilU6r7CSCTZA>
+    <xmx:PL0KZfL8yMrsJ4QfdwTs9P7QEPSw5txNRgGXNKJysQ6QXmT5ii8DIQ>
+    <xmx:Pb0KZZBQfFXY91QZ2moim8ARvgr9ZxEf03fqNy_kz4cHxc8rreKIhQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 14CB2B60089; Wed, 20 Sep 2023 05:37:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-761-gece9e40c48-fm-20230913.001-gece9e40c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Message-Id: <e43c9fb0-1869-4328-a984-33b35caf58ba@app.fastmail.com>
+In-Reply-To: <20230919230909.530174-2-gregory.price@memverge.com>
+References: <20230919230909.530174-1-gregory.price@memverge.com>
+ <20230919230909.530174-2-gregory.price@memverge.com>
+Date:   Wed, 20 Sep 2023 05:36:39 -0400
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Gregory Price" <gourry.memverge@gmail.com>,
+        linux-mm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>, x86@kernel.org,
+        "Gregory Price" <gregory.price@memverge.com>
+Subject: Re: [RFC v2 1/5] mm/migrate: fix do_pages_move for compat pointers
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alison has reported that against certain hardware devices the opcode
-discovery dev_dbg() can emit several hundred "unsupported by driver"
-messages while parsing the CEL. Move the emission to traceevent to reduce
-dmesg spamming and let software parse the output if there are interested
-parties.
+On Tue, Sep 19, 2023, at 19:09, Gregory Price wrote:
+> do_pages_move does not handle compat pointers for the page list.
+> correctly.  Add in_compat_syscall check and appropriate get_user
+> fetch when iterating the page list.
+>
+> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Co-developed-by: Arnd Bergmann <arnd@arndb.de>
 
-Due to the change is in cxl/core, the enabling of the traceevent must be
-done after cxl_core is loaded but before other cxl modules are loaded.
+Looks correct to me, thanks for fixing it!
 
-$ modprobe cxl_core
-$ echo 1 > /sys/kernel/tracing/events/cxl/cxl_log_type/enable
-$ modprobe cxl_pci
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Reported-by: Alison Schofield <alison.schofield@intel.com>
-Suggested-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+You can also blame me for breaking it in the first place
 
----
-v2:
-Add enabling note in commit log (Ira)
----
- drivers/cxl/core/mbox.c  |    7 +++----
- drivers/cxl/core/trace.h |   30 ++++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 4 deletions(-)
+Fixes: 5b1b561ba73c ("mm: simplify compat_sys_move_pages")
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index ca60bb8114f2..038bf70c01a6 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -707,7 +707,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- {
- 	struct cxl_cel_entry *cel_entry;
- 	const int cel_entries = size / sizeof(*cel_entry);
--	struct device *dev = mds->cxlds.dev;
-+	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
- 	int i;
- 
- 	cel_entry = (struct cxl_cel_entry *) cel;
-@@ -718,8 +718,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 
- 		if (!cmd && (!cxl_is_poison_command(opcode) ||
- 			     !cxl_is_security_command(opcode))) {
--			dev_dbg(dev,
--				"Opcode 0x%04x unsupported by driver\n", opcode);
-+			trace_cxl_opcode(cxlmd, opcode, false);
- 			continue;
- 		}
- 
-@@ -732,7 +731,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 		if (cxl_is_security_command(opcode))
- 			cxl_set_security_cmd_enabled(&mds->security, opcode);
- 
--		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
-+		trace_cxl_opcode(cxlmd, opcode, true);
- 	}
- }
- 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index a0b5819bc70b..993fdf3b71e5 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -703,6 +703,36 @@ TRACE_EVENT(cxl_poison,
- 	)
- );
- 
-+TRACE_EVENT(cxl_opcode,
-+
-+	TP_PROTO(const struct cxl_memdev *cxlmd, u16 opcode, bool enabled),
-+
-+	TP_ARGS(cxlmd, opcode, enabled),
-+
-+	TP_STRUCT__entry(
-+		__string(memdev, dev_name(&cxlmd->dev))
-+		__string(host, dev_name(cxlmd->dev.parent))
-+		__field(u64, serial)
-+		__field(u16, opcode)
-+		__field(bool, enabled)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(memdev, dev_name(&cxlmd->dev));
-+		__assign_str(host, dev_name(cxlmd->dev.parent));
-+		__entry->serial = cxlmd->cxlds->serial;
-+		__entry->opcode = opcode;
-+		__entry->enabled = enabled;
-+	),
-+
-+	TP_printk("memdev=%s host=%s serial=%lld opcode=%d state=%s",
-+		  __get_str(memdev),
-+		  __get_str(host),
-+		  __entry->serial,
-+		  __entry->opcode,
-+		  __entry->enabled ? "enabled" : "unsupported"
-+	)
-+);
- #endif /* _CXL_EVENTS_H */
- 
- #define TRACE_INCLUDE_FILE trace
-
-
+      Arnd
