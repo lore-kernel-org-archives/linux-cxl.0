@@ -2,48 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55DFCE79A8
-	for <linux-cxl@archiver.kernel.org>; Tue, 19 Sep 2023 23:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC73CE79A8
+	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 00:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233468AbjISXwg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 19 Sep 2023 19:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37884 "EHLO
+        id S229521AbjITAPC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 19 Sep 2023 20:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233371AbjISXwg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Sep 2023 19:52:36 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E3CAD
-        for <linux-cxl@vger.kernel.org>; Tue, 19 Sep 2023 16:52:30 -0700 (PDT)
+        with ESMTP id S229590AbjITAPC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Sep 2023 20:15:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752CE9D
+        for <linux-cxl@vger.kernel.org>; Tue, 19 Sep 2023 17:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695167550; x=1726703550;
+  t=1695168896; x=1726704896;
   h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=37L/MlNcYtMxuHg0ZEF1Lu/hFaYYcERlvMSwjX73R/U=;
-  b=EMHYWJzQ/djvIuvMURaruOsZHHwyh9SLbYJHsEzevjrsJ+6Imvb+edzH
-   TjfMp0eaqm8WbMupf1pMVO1xQT2CObuGLjEqHlkcYHUHZMLI+poMrvlPX
-   2DNgHiMf9VX9kAWWjjj4xyFpXVniNv8iKNc4+bZ3OySK/2/+lxrG8TlDc
-   kukFud8sGk5cO/EK4XUUeHNmd2mMavcSmdZ2LmofFEh4V3gujtLVp7T9x
-   za+V+o/+ZVdsj1/nWOmqv4IryUHcCt/6YTsMuSF0CruPCjRFCd1eJUP2p
-   oNd/62aRmelBZVRiGHdkHkylMrmth7B8cXU7pRyDBjAi1weTSVPtiErd9
+  bh=YnUv5s50ZxbLfk5nYJNeeaA0GkIw7XjVD1XlzesInKQ=;
+  b=j1sEZrB3nfFLY/eM0HU5g+5Vrso1fCi8wMof+AjqJgGSUbGQkBD0THtK
+   bwPbjYFWHBIl7KXBOrg9V3OjjQTfRgq9CPR+pvX9veeKG2FGZJ0YYSBBD
+   Ki9CN2Su7JUJ2QEzjuljQkk3oLc1ioKilP0u4Rusr/SAS4TXaj1VGNPed
+   Eyb82YroKcKurUPSL72sW5qmWtRUpceVCyJiMFB0BrxALzr7mWaAuUJug
+   J444ME0oI+lGy3E3B/RDzjeI6rIsOYccmv/tDbeWXJQaoEVao7w9/99kk
+   3Qr7b6naUj3gNhO6xo7bKEszuL8kH09kJZN48+CESYe0wSZa+0IbK0aRa
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="359470140"
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="444180656"
 X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
-   d="scan'208";a="359470140"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 16:52:29 -0700
+   d="scan'208";a="444180656"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 17:14:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="749671811"
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="746431077"
 X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
-   d="scan'208";a="749671811"
+   d="scan'208";a="746431077"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.121.236])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 16:52:29 -0700
-Subject: [NDCTL PATCH] cxl/region: Add -f option for disable-region
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 17:14:55 -0700
+Subject: [PATCH v2] cxl: Move opcode reporting from dev_dbg() to traceevent
 From:   Dave Jiang <dave.jiang@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Tue, 19 Sep 2023 16:52:28 -0700
-Message-ID: <169516754868.2998393.297443133671590500.stgit@djiang5-mobl3>
+To:     linux-cxl@vger.kernel.org
+Cc:     dave@stgolabs.net, jonathan.cameron@huawei.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com
+Date:   Tue, 19 Sep 2023 17:14:54 -0700
+Message-ID: <169516889447.3000874.6411946866257133358.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,113 +54,103 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The current operation for disable_region does not check if the memory
-covered by a region is online before attempting to disable the cxl region.
-Provide a -f option for the region to force offlining of currently online
-memory before disabling the region. Also add a check to fail the operation
-entirely if the memory is non-movable.
+Alison has reported that against certain hardware devices the opcode
+discovery dev_dbg() can emit several hundred "unsupported by driver"
+messages while parsing the CEL. Move the emission to traceevent to reduce
+dmesg spamming and let software parse the output if there are interested
+parties.
 
+Due to the change is in cxl/core, the enabling of the traceevent must be
+done after cxl_core is loaded but before other cxl modules are loaded.
+
+$ modprobe cxl_core
+$ echo 1 > /sys/kernel/tracing/events/cxl/cxl_log_type/enable
+$ modprobe cxl_pci
+
+Reported-by: Alison Schofield <alison.schofield@intel.com>
+Suggested-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/cxl/cxl-disable-region.txt |    5 +++
- cxl/region.c                             |   49 +++++++++++++++++++++++++++++-
- 2 files changed, 53 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/cxl-disable-region.txt b/Documentation/cxl/cxl-disable-region.txt
-index 6a39aee6ea69..1778ec3a0f3f 100644
---- a/Documentation/cxl/cxl-disable-region.txt
-+++ b/Documentation/cxl/cxl-disable-region.txt
-@@ -25,6 +25,11 @@ OPTIONS
- -------
- include::bus-option.txt[]
+---
+v2:
+Add enabling note in commit log (Ira)
+---
+ drivers/cxl/core/mbox.c  |    7 +++----
+ drivers/cxl/core/trace.h |   30 ++++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index ca60bb8114f2..038bf70c01a6 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -707,7 +707,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ {
+ 	struct cxl_cel_entry *cel_entry;
+ 	const int cel_entries = size / sizeof(*cel_entry);
+-	struct device *dev = mds->cxlds.dev;
++	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+ 	int i;
  
-+-f::
-+--force::
-+	Force offline of memory if they are online before disabling the active
-+	region. This does not allow offline of unmovable memory.
-+
- include::decoder-option.txt[]
+ 	cel_entry = (struct cxl_cel_entry *) cel;
+@@ -718,8 +718,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
  
- include::debug-option.txt[]
-diff --git a/cxl/region.c b/cxl/region.c
-index bcd703956207..79a5fb81c257 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -14,6 +14,7 @@
- #include <util/parse-options.h>
- #include <ccan/minmax/minmax.h>
- #include <ccan/short_types/short_types.h>
-+#include <daxctl/libdaxctl.h>
+ 		if (!cmd && (!cxl_is_poison_command(opcode) ||
+ 			     !cxl_is_security_command(opcode))) {
+-			dev_dbg(dev,
+-				"Opcode 0x%04x unsupported by driver\n", opcode);
++			trace_cxl_opcode(cxlmd, opcode, false);
+ 			continue;
+ 		}
  
- #include "filter.h"
- #include "json.h"
-@@ -95,6 +96,8 @@ static const struct option enable_options[] = {
+@@ -732,7 +731,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 		if (cxl_is_security_command(opcode))
+ 			cxl_set_security_cmd_enabled(&mds->security, opcode);
  
- static const struct option disable_options[] = {
- 	BASE_OPTIONS(),
-+	OPT_BOOLEAN('f', "force", &param.force,
-+		    "disable region even if memory currently online"),
- 	OPT_END(),
- };
- 
-@@ -789,13 +792,57 @@ static int destroy_region(struct cxl_region *region)
- 	return cxl_region_delete(region);
+-		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
++		trace_cxl_opcode(cxlmd, opcode, true);
+ 	}
  }
  
-+static int disable_region(struct cxl_region *region)
-+{
-+	const char *devname = cxl_region_get_devname(region);
-+	struct daxctl_region *dax_region;
-+	struct daxctl_memory *mem;
-+	struct daxctl_dev *dev;
-+	int rc;
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index a0b5819bc70b..993fdf3b71e5 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -703,6 +703,36 @@ TRACE_EVENT(cxl_poison,
+ 	)
+ );
+ 
++TRACE_EVENT(cxl_opcode,
 +
-+	dax_region = cxl_region_get_daxctl_region(region);
-+	if (!dax_region)
-+		goto out;
++	TP_PROTO(const struct cxl_memdev *cxlmd, u16 opcode, bool enabled),
 +
-+	daxctl_dev_foreach(dax_region, dev) {
-+		mem = daxctl_dev_get_memory(dev);
-+		if (!mem)
-+			return -ENXIO;
++	TP_ARGS(cxlmd, opcode, enabled),
 +
-+		if (daxctl_memory_online_no_movable(mem)) {
-+			log_err(&rl, "%s: memory unmovable for %s\n",
-+					devname,
-+					daxctl_dev_get_devname(dev));
-+			return -EPERM;
-+		}
++	TP_STRUCT__entry(
++		__string(memdev, dev_name(&cxlmd->dev))
++		__string(host, dev_name(cxlmd->dev.parent))
++		__field(u64, serial)
++		__field(u16, opcode)
++		__field(bool, enabled)
++	),
 +
-+		/*
-+		 * If memory is still online and user wants to force it, attempt
-+		 * to offline it.
-+		 */
-+		if (daxctl_memory_is_online(mem) && param.force) {
-+			rc = daxctl_memory_offline(mem);
-+			if (rc) {
-+				log_err(&rl, "%s: unable to offline %s: %s\n",
-+					devname,
-+					daxctl_dev_get_devname(dev),
-+					strerror(abs(rc)));
-+				return rc;
-+			}
-+		}
-+	}
++	TP_fast_assign(
++		__assign_str(memdev, dev_name(&cxlmd->dev));
++		__assign_str(host, dev_name(cxlmd->dev.parent));
++		__entry->serial = cxlmd->cxlds->serial;
++		__entry->opcode = opcode;
++		__entry->enabled = enabled;
++	),
 +
-+out:
-+	return cxl_region_disable(region);
-+}
-+
- static int do_region_xable(struct cxl_region *region, enum region_actions action)
- {
- 	switch (action) {
- 	case ACTION_ENABLE:
- 		return cxl_region_enable(region);
- 	case ACTION_DISABLE:
--		return cxl_region_disable(region);
-+		return disable_region(region);
- 	case ACTION_DESTROY:
- 		return destroy_region(region);
- 	default:
++	TP_printk("memdev=%s host=%s serial=%lld opcode=%d state=%s",
++		  __get_str(memdev),
++		  __get_str(host),
++		  __entry->serial,
++		  __entry->opcode,
++		  __entry->enabled ? "enabled" : "unsupported"
++	)
++);
+ #endif /* _CXL_EVENTS_H */
+ 
+ #define TRACE_INCLUDE_FILE trace
 
 
