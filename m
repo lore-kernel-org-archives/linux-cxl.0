@@ -2,169 +2,148 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597A3CD4935
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Sep 2023 22:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996CACD4938
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Sep 2023 02:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjITW5x (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Sep 2023 18:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
+        id S229475AbjIUCsq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 20 Sep 2023 22:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjITW5x (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Sep 2023 18:57:53 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA64C1
-        for <linux-cxl@vger.kernel.org>; Wed, 20 Sep 2023 15:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695250667; x=1726786667;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QkC/y4/2NQg3uYm6BWWtgtb4APj7mQXM+aIwQ9VqJNk=;
-  b=BBoNwq2g2uoQSoTQE0k5RcYpTEhhr7zUlPw2o09F9v1pZBsRird/0zGt
-   k31J8nRKKEN5pcaQLFHNCtzi5B9u48AiLzJ9yjewd+tTOE8XFKP/r5LZD
-   SiyWGjkbgL2IW5OsRljk/FXM5fhjxP+/CDB6ori0RSJU0dS9xbAVRXpQF
-   2I5F9OFkMu4egUAx1MxtsEgLQHUm5Fd7gdClqNKfquldRXwE3e+1sMh2L
-   fO08mH8s+g6UatfZt58efL96vHjjoXvuWVGNAjjTrCok5gCC7/sRo0SJl
-   l0+atz9gcix2WOaMvZG+vm9+MiZuXPeQ1IHFW1tOdVZ2xnC9+sMbRqjO/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="444462139"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="444462139"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 15:57:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="781905440"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="781905440"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.114.229])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 15:57:29 -0700
-Subject: [NDCTL PATCH v2] cxl/region: Add -f option for disable-region
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Wed, 20 Sep 2023 15:57:29 -0700
-Message-ID: <169525064907.3085225.2583864429793298106.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+        with ESMTP id S229456AbjIUCsq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Sep 2023 22:48:46 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8ABDD
+        for <linux-cxl@vger.kernel.org>; Wed, 20 Sep 2023 19:48:36 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230921024833epoutp014026d82301339c222d5adcefbc2e0396~Gyhfq24Mx1495214952epoutp01h
+        for <linux-cxl@vger.kernel.org>; Thu, 21 Sep 2023 02:48:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230921024833epoutp014026d82301339c222d5adcefbc2e0396~Gyhfq24Mx1495214952epoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1695264513;
+        bh=JsGFPRSyn0agbiv2BsE55C5s//NowQKDPVALOSXvPFc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RsmWTtqYa/K6ZstkAwfICFKd9eqcdUQctc5DlKN1yRE+2iVY5j8PaAGNtu2OlwFJM
+         KtZQmld7d/o3WeWjty8dO8wWUPITO3c5xJPYE2As9OAWx2HrMrQn0YW/+8lfVzpqlu
+         by0g4WX/YveWlSQZWkvnecjRE35yoX70RT5sj9eM=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230921024833epcas2p38de9ac9ff5a072c27b9b7ce4dd688eba~Gyhe_EWrA2379423794epcas2p30;
+        Thu, 21 Sep 2023 02:48:33 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.97]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4Rrfwc5BJmz4x9QB; Thu, 21 Sep
+        2023 02:48:32 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2D.AE.09649.00FAB056; Thu, 21 Sep 2023 11:48:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230921024832epcas2p3677e522ed0175b83c1a56e36a730ce97~GyheJd-Vw2379423794epcas2p3w;
+        Thu, 21 Sep 2023 02:48:32 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230921024832epsmtrp17d96bf194d512a6bdb7bdbf9965d156f~GyheFPkw30473204732epsmtrp1G;
+        Thu, 21 Sep 2023 02:48:32 +0000 (GMT)
+X-AuditID: b6c32a46-943ff700000025b1-ca-650baf001e11
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A4.D7.18916.FFEAB056; Thu, 21 Sep 2023 11:48:31 +0900 (KST)
+Received: from jtpark-7920.dsn.sec.samsung.com (unknown [10.229.83.56]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230921024831epsmtip2c025d707382acb4bdbdd10b52e7cea8d~Gyhd0MWoQ2027220272epsmtip2b;
+        Thu, 21 Sep 2023 02:48:31 +0000 (GMT)
+From:   Jeongtae Park <jtp.park@samsung.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Wonjae Lee <wj28.lee@samsung.com>,
+        Hojin Nam <hj96.nam@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>,
+        Jeongtae Park <jeongtae.park@gmail.com>,
+        Jeongtae Park <jtp.park@samsung.com>
+Subject: [PATCH 4/7] cxl: Fix a checkpatch error
+Date:   Thu, 21 Sep 2023 11:51:07 +0900
+Message-Id: <20230921025110.3717583-5-jtp.park@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230921025110.3717583-1-jtp.park@samsung.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHve+1rw+WzmcVvGuCsjfdAqHYVqAPBzqjMV2EhIWFhP3qHu1L
+        IdAf6SuLW+IECo6RgBhhrEUYQoixlPEjlQEzwUEZuIk0wGYKlmF1IFSworgRN7eWh5v/nXPy
+        +X7PPefei6OicUyM5+nNjElPF5BYOK9nKEYh2dLxEiP13HmD8t5xY5TlXAug6mrdgBr1FGNU
+        m8cBqJI2L5+ytHRgVOD+Mx511V8koK6PLfIp+4VfMcrV/gtCtQx/jVLDV3Bq3PYTj5rsP49R
+        09U/IlTXbyvYWyJln80rUJa6lvnKliuLiLLb/iWmHGhwCJRVTjtQ1tafUj7q3pWBv5efksvQ
+        GsYUzejVBk2eXptKHs9UHVElJkllElkypSCj9bSOSSWPpmVIjuUVBEchoz+hCwqDpQyaZcl9
+        B1NMhkIzE51rYM2pJGPUFBgVxniW1rGFem28njEfkEml8sQg+HF+rvvPUcRowU48ninjF4FK
+        fgUIwyGRAG8V1aAVIBwXEb0ADnt6+FyyCuCCs10QojaSbyrx54rS2X4BB/UBWH+rBHDQXwDO
+        unWhGCNiYZ21aMNpB3EbgX1LVUgoQQkfAh+OLqEhajshhY5Od1CN4zxiL1wvl4TKQuJNOOn5
+        XcB12w0HfhjbwMOIFHjj3gTCMdvgNetdXihGg4zlcj3K8aM49H13OGQJiaOwvl3BlbfDpRHn
+        pqUYLp45vTEAJCwA+hemeFxSCuC3M72b1H644lngh4xQIgZ29O/jPF+DrunNti/D8qG/BVxZ
+        CMtPizghCRtbGzdPA+FEg3MzVsKmJhfg9nYGwJ/PN/OrQbTthWlsL0xj+79xE0DtIJIxsjot
+        w8qN8v8uWG3QdYONlx17rBfULAfiBwGCg0EAcZTcIVSvhjMioYb+9DPGZFCZCgsYdhAkBld9
+        FhVHqA3Br6E3q2QJydKEpCSZQp4oVZA7hbNlDRoRoaXNTD7DGBnTcx2Ch4mLkIRdvUhtzYi1
+        4/BOXOY7/o6lYcSPt64d2eP9ZznGkL6WopnH47QCefLcNcUlVwU5p83KdJqqdjtal9mTN9Zz
+        Xp1TPbm5J6cq4qIkrLNyS5rm0v75cx/2uCLvPnMJqsyZndkPcuaKsxV7nTPxSz7r5RFLjjfr
+        qTi5NHO5S02kJ91zN3cfvCq4zthWFtORqNuHfPXNBx5/QPdZA1Frq36hJKpGPd311f233X+E
+        jX8um3j9qXikEYs8pTub/sVQ8vuErNp+0pZdUtb6UaCuuO37tEDgUXPu1kNro08aHHHm7K0Z
+        izlu37b5/Fci7GjczYcP1ien3s2akrsHFqwn0LFmP8ljc2lZLGpi6X8BTROm6GIEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJXpdhPXeqwRFTi7uPL7BZNE9ezGgx
+        feoFRosTNxvZLFbfXMNo0bT6LqtF8+L1bBYf3vxjsTjwuoHd4szZl6wWqxZeY7M4svYqk8Xi
+        ozOYLY7u4bA4P+sUi8XlXXPYLG5NOMZksfH+OzYHIY+ds+6ye7QcecvqsXjPSyaPTas62Tz2
+        z13D7tG3ZRWjx9TZ9R6fN8kFcERx2aSk5mSWpRbp2yVwZVz4cYKpoJmt4svtVtYGxl7WLkZO
+        DgkBE4mWe7vYuxi5OIQEtjNKbP63gAkiISGxfMMLKFtY4n7LEVaIol+MEh+OnGUDSbAJaElM
+        n9kAlhAReM4kcfLNKUYQh1ngFZNE7//rzCBVwgIGEms2XABKcHCwCKhK/OzQBQnzClhLXL75
+        lB1ig7zE/oNnwco5BWwkzr24BLZZCKhm+aW9bBD1ghInZz5hAbGZgeqbt85mnsAoMAtJahaS
+        1AJGplWMoqkFxbnpuckFhnrFibnFpXnpesn5uZsYwXGlFbSDcdn6v3qHGJk4GA8xSnAwK4nw
+        Jn/iShXiTUmsrEotyo8vKs1JLT7EKM3BoiTOq5zTmSIkkJ5YkpqdmlqQWgSTZeLglGpgmq6q
+        6+ZVkzG/yWLnQxluuds/P/5/NrXf1/instAqly1Nkp/SGtqDzj4VSEi/tyepunuW4+1avZnR
+        O3N2PzNcGcH2zutRzQWhox9392/3ajnwo3zbPrXvPJtdjMwitz7miZb7XC6Se9rwkU3F+/Sc
+        JSc1XB5bfZkRKjGd7WlXbu2huzO3Pzp3peIE8/qvPyzsdz50y3AxSJQ4MltdYk1p9j3Bmumi
+        CYz/stmf3NYJelsz10nhkJOW7PWWEpnvy3cYKDz6ZOOdoxXOcuCpbcde5tAdU/fqcE+zZNna
+        v+L1Sva8R58esj5+q69gbKvFcTj+xs5qJe5TnRaMdhcD1vtpGNYs7jgyxcbrmby0cUONEktx
+        RqKhFnNRcSIAxmh3RRoDAAA=
+X-CMS-MailID: 20230921024832epcas2p3677e522ed0175b83c1a56e36a730ce97
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230921024832epcas2p3677e522ed0175b83c1a56e36a730ce97
+References: <20230921025110.3717583-1-jtp.park@samsung.com>
+        <CGME20230921024832epcas2p3677e522ed0175b83c1a56e36a730ce97@epcas2p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The current operation for disable_region does not check if the memory
-covered by a region is online before attempting to disable the cxl region.
-Provide a -f option for the region to force offlining of currently online
-memory before disabling the region. Also add a check to fail the operation
-entirely if the memory is non-movable.
+ERROR: Macros with complex values should be enclosed in parentheses
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
+Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
 ---
-v2:
-- Update documentation and help output. (Vishal)
----
- Documentation/cxl/cxl-disable-region.txt |    7 ++++
- cxl/region.c                             |   49 +++++++++++++++++++++++++++++-
- 2 files changed, 55 insertions(+), 1 deletion(-)
+ drivers/cxl/cxl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/cxl-disable-region.txt b/Documentation/cxl/cxl-disable-region.txt
-index 6a39aee6ea69..9b98d4d8745a 100644
---- a/Documentation/cxl/cxl-disable-region.txt
-+++ b/Documentation/cxl/cxl-disable-region.txt
-@@ -25,6 +25,13 @@ OPTIONS
- -------
- include::bus-option.txt[]
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 76d92561af29..545381355efb 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -142,7 +142,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+ #define CXL_RAS_CAPABILITY_LENGTH 0x58
+ #define CXL_HEADERLOG_SIZE SZ_512
+-#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
++#define CXL_HEADERLOG_SIZE_U32 (SZ_512 / sizeof(u32))
  
-+-f::
-+--force::
-+	Attempt to offline any memory that has been hot-added into the system
-+	via the CXL region before disabling the region. This won't be attempted
-+	if the memory was not added as 'movable', and may still fail even if it
-+	was movable.
-+
- include::decoder-option.txt[]
- 
- include::debug-option.txt[]
-diff --git a/cxl/region.c b/cxl/region.c
-index bcd703956207..f8303869727a 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -14,6 +14,7 @@
- #include <util/parse-options.h>
- #include <ccan/minmax/minmax.h>
- #include <ccan/short_types/short_types.h>
-+#include <daxctl/libdaxctl.h>
- 
- #include "filter.h"
- #include "json.h"
-@@ -95,6 +96,8 @@ static const struct option enable_options[] = {
- 
- static const struct option disable_options[] = {
- 	BASE_OPTIONS(),
-+	OPT_BOOLEAN('f', "force", &param.force,
-+		    "attempt to offline memory before disabling the region"),
- 	OPT_END(),
- };
- 
-@@ -789,13 +792,57 @@ static int destroy_region(struct cxl_region *region)
- 	return cxl_region_delete(region);
- }
- 
-+static int disable_region(struct cxl_region *region)
-+{
-+	const char *devname = cxl_region_get_devname(region);
-+	struct daxctl_region *dax_region;
-+	struct daxctl_memory *mem;
-+	struct daxctl_dev *dev;
-+	int rc;
-+
-+	dax_region = cxl_region_get_daxctl_region(region);
-+	if (!dax_region)
-+		goto out;
-+
-+	daxctl_dev_foreach(dax_region, dev) {
-+		mem = daxctl_dev_get_memory(dev);
-+		if (!mem)
-+			return -ENXIO;
-+
-+		if (daxctl_memory_online_no_movable(mem)) {
-+			log_err(&rl, "%s: memory unmovable for %s\n",
-+					devname,
-+					daxctl_dev_get_devname(dev));
-+			return -EPERM;
-+		}
-+
-+		/*
-+		 * If memory is still online and user wants to force it, attempt
-+		 * to offline it.
-+		 */
-+		if (daxctl_memory_is_online(mem) && param.force) {
-+			rc = daxctl_memory_offline(mem);
-+			if (rc) {
-+				log_err(&rl, "%s: unable to offline %s: %s\n",
-+					devname,
-+					daxctl_dev_get_devname(dev),
-+					strerror(abs(rc)));
-+				return rc;
-+			}
-+		}
-+	}
-+
-+out:
-+	return cxl_region_disable(region);
-+}
-+
- static int do_region_xable(struct cxl_region *region, enum region_actions action)
- {
- 	switch (action) {
- 	case ACTION_ENABLE:
- 		return cxl_region_enable(region);
- 	case ACTION_DISABLE:
--		return cxl_region_disable(region);
-+		return disable_region(region);
- 	case ACTION_DESTROY:
- 		return destroy_region(region);
- 	default:
-
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+-- 
+2.34.1
 
