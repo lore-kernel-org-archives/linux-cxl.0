@@ -2,50 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A55CE7AB9
-	for <linux-cxl@archiver.kernel.org>; Mon, 25 Sep 2023 18:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A04CD54BF
+	for <linux-cxl@archiver.kernel.org>; Mon, 25 Sep 2023 19:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbjIYSHE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 25 Sep 2023 14:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42856 "EHLO
+        id S231730AbjIYTVD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 25 Sep 2023 15:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjIYSHD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Sep 2023 14:07:03 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA789B
-        for <linux-cxl@vger.kernel.org>; Mon, 25 Sep 2023 11:06:57 -0700 (PDT)
+        with ESMTP id S229481AbjIYTVC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Sep 2023 15:21:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD8BBE
+        for <linux-cxl@vger.kernel.org>; Mon, 25 Sep 2023 12:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695665217; x=1727201217;
+  t=1695669656; x=1727205656;
   h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=Y6IaDQPPRxEM9g/APXC1Fl2gCSLiqq1MxIHTjfeQIMA=;
-  b=eCEPwxTZJbWcgggNt3QPNU29GY3vQ6rpLQdZ++VVAO+P6olasnRVB0Dh
-   zttuxoVf/UFCZr8iHyUaEsz/2N6YQmiQw/mN8QctRmd/hDxzop602+eq5
-   f0wNFUUIBRQa6A9rmqqAUjGG6IoHoKgUtx/pOyXhP6mjiq5tPNkiqrj8K
-   3HEji5ZakUry00DBPf7dD5SBiR8eWJiYLraUHEv2/vW98/xPcVQSVaaaY
-   iXIw7+VxvH0qxIxAZDndYqwB0NRojQdeas6R/YNJxUlLqhntdAN7LXTYc
-   RGJhfEtVPo6EGfvW4LoUEnzB3b5hCKEiXpEWjCsYbRfaQsS1c5GnSDcZy
+  bh=cDOL2eXoZSza+lnGD6m5Vo6JPrvw/3wUjDKfPXsQ1Cg=;
+  b=m7s51OdXpiiZD9+tHlV0scdLc06e6MBnHWnqH/LgJqqe0A8LvKUjcta8
+   +bcjFuNb3tsgdO/OCz8rqe4qJJrC838vfyNM7Odn38r+Eg/yus7+2O+OZ
+   0eiDdepRXpga9ZCt7Fr2CYga4Fdln1vCnutVidFaGMnSQzYm2VOqH+Ufa
+   eWw7wjgPFWfAuMHFTdeYxZAU50bEDhkGgAui0ze/vYz4g74rGpJau+a2y
+   Br4X7CptKeL7upRyAA6O/dstpqX6ebnuEAy0TGW9jeQite8Yb0aCtzWro
+   1atlz2e2NrsfVur4xUmXAUKJYRqf5AKMnjAdA/sMR1Yjkz5onwDCHOXzu
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="381231754"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380223063"
 X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
-   d="scan'208";a="381231754"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 11:06:01 -0700
+   d="scan'208";a="380223063"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 12:20:35 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922077440"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="995504780"
 X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
-   d="scan'208";a="922077440"
+   d="scan'208";a="995504780"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.161.86])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 11:05:56 -0700
-Subject: [PATCH] cxl: Add committed sysfs attribute to CXL decoder
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 12:20:34 -0700
+Subject: [PATCH 1/2] cxl: Save the decoder committed state
 From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dave@stgolabs.net, jonathan.cameron@huawei.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, dan.j.williams@intel.com
-Date:   Mon, 25 Sep 2023 11:05:56 -0700
-Message-ID: <169566515694.3697523.714600762835841180.stgit@djiang5-mobl3>
+To:     vishal.l.verma@intel.com
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        lizhijian@fujitsu.com, yangx.jy@fujitsu.com, caoqq@fujitsu.com
+Date:   Mon, 25 Sep 2023 12:20:34 -0700
+Message-ID: <169566963425.3704458.5249885814603187091.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,62 +53,122 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Expose the committed status of a CXL decoder. The status assists CXL CLI in
-determining as a sure way whether a region is active. Of coruse this is
-still best effort as it's a snapshot of the state and not atomic for the
-user region disable operation.
+Save the decoder committed state exported by the kernel to the libcxl
+decoder context. The attribute is helpful for determing if a region is active.
+Add libcxl API to determine if decoder is committed.
+Add the committed state to the decoder for cxl list command.
 
+Links: https://lore.kernel.org/linux-cxl/169566515694.3697523.714600762835841180.stgit@djiang5-mobl3/
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |    7 +++++++
- drivers/cxl/core/port.c                 |   11 +++++++++++
- 2 files changed, 18 insertions(+)
+ Documentation/cxl/lib/libcxl.txt |    4 ++++
+ cxl/json.c                       |    4 ++++
+ cxl/lib/libcxl.c                 |    9 +++++++++
+ cxl/lib/libcxl.sym               |    5 +++++
+ cxl/lib/private.h                |    1 +
+ cxl/libcxl.h                     |    1 +
+ 6 files changed, 24 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 087f762ebfd5..ef3fc9fe9d0d 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -369,6 +369,13 @@ Description:
- 		provided it is currently idle / not bound to a driver.
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index 31bc85511270..4a2d1affa5a7 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -424,6 +424,7 @@ bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
++bool cxl_decoder_is_committed(struct cxl_decoder *decoder);
+ ----
+ The kernel protects the enumeration of the physical address layout of
+ the system. Without CAP_SYS_ADMIN cxl_decoder_get_resource() returns
+@@ -449,6 +450,9 @@ Platform firmware may setup the CXL decode hierarchy before the OS
+ boots, and may additionally require that the OS not change the decode
+ settings. This property is indicated by the cxl_decoder_is_locked() API.
  
- 
-+What:		/sys/bus/cxl/devices/decoderX.Y/committed
-+Date:		Sep, 2023
-+KernelVersion:	v6.7
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Indicates whether the decoder is committed.
++cxl_decoder_is_committed() provides a snapshot of the decoder state
++from the OS indicating if the decoder is committed or free.
 +
- What:		/sys/bus/cxl/devices/regionZ/uuid
- Date:		May, 2022
- KernelVersion:	v6.0
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 724be8448eb4..ab5b9bc26d56 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -277,12 +277,23 @@ static ssize_t interleave_ways_show(struct device *dev,
+ When a decoder is associated with a region cxl_decoder_get_region()
+ returns that region object. Note that it is only applicable to switch
+ and endpoint decoders as root decoders have a 1:N relationship with
+diff --git a/cxl/json.c b/cxl/json.c
+index 7678d02020b6..56ab42c747a0 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -857,6 +857,10 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 					       jobj);
+ 	}
  
- static DEVICE_ATTR_RO(interleave_ways);
++	jobj = json_object_new_boolean(cxl_decoder_is_committed(decoder));
++	if (jobj)
++		json_object_object_add(jdecoder, "committed", jobj);
++
+ 	json_object_set_userdata(jdecoder, decoder, NULL);
+ 	return jdecoder;
+ }
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index af4ca44eae19..094e14d6be8f 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -2116,6 +2116,10 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 	else
+ 		decoder->interleave_ways = strtoul(buf, NULL, 0);
  
-+static ssize_t committed_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
++	sprintf(path, "%s/committed", cxldecoder_base);
++	if (sysfs_read_attr(ctx, path, buf) == 0)
++		decoder->committed = !!strtoul(buf, NULL, 0);
++
+ 	switch (port->type) {
+ 	case CXL_PORT_ENDPOINT:
+ 		sprintf(path, "%s/dpa_resource", cxldecoder_base);
+@@ -2464,6 +2468,11 @@ CXL_EXPORT bool cxl_decoder_is_locked(struct cxl_decoder *decoder)
+ 	return decoder->locked;
+ }
+ 
++CXL_EXPORT bool cxl_decoder_is_committed(struct cxl_decoder *decoder)
 +{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+
-+	return sysfs_emit(buf, "%d\n", !!(cxld->flags & CXL_DECODER_F_ENABLE));
++	return decoder->committed;
 +}
 +
-+static DEVICE_ATTR_RO(committed);
+ CXL_EXPORT unsigned int
+ cxl_decoder_get_interleave_granularity(struct cxl_decoder *decoder)
+ {
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 8fa1cca3d0d7..eb8b5829851d 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -264,3 +264,8 @@ global:
+ 	cxl_memdev_update_fw;
+ 	cxl_memdev_cancel_fw_update;
+ } LIBCXL_5;
 +
- static struct attribute *cxl_decoder_base_attrs[] = {
- 	&dev_attr_start.attr,
- 	&dev_attr_size.attr,
- 	&dev_attr_locked.attr,
- 	&dev_attr_interleave_granularity.attr,
- 	&dev_attr_interleave_ways.attr,
-+	&dev_attr_committed.attr,
- 	NULL,
- };
- 
++LIBCXL_7 {
++global:
++	cxl_decoder_is_committed;
++} LIBCXL_6;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index a641727000f1..c79190827258 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -139,6 +139,7 @@ struct cxl_decoder {
+ 	bool mem_capable;
+ 	bool accelmem_capable;
+ 	bool locked;
++	bool committed;
+ 	enum cxl_decoder_target_type target_type;
+ 	int regions_init;
+ 	struct list_head targets;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 0f4f4b2648fb..a7fad3e30055 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -245,6 +245,7 @@ bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
++bool cxl_decoder_is_committed(struct cxl_decoder *decoder);
+ unsigned int
+ cxl_decoder_get_interleave_granularity(struct cxl_decoder *decoder);
+ unsigned int cxl_decoder_get_interleave_ways(struct cxl_decoder *decoder);
 
 
