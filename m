@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2177ACE7A9B
-	for <linux-cxl@archiver.kernel.org>; Mon, 25 Sep 2023 16:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B1CE7A9B
+	for <linux-cxl@archiver.kernel.org>; Mon, 25 Sep 2023 16:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233173AbjIYQLf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 25 Sep 2023 12:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56568 "EHLO
+        id S231226AbjIYQMG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 25 Sep 2023 12:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233213AbjIYQLe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Sep 2023 12:11:34 -0400
+        with ESMTP id S233168AbjIYQMF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Sep 2023 12:12:05 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE88ACE
-        for <linux-cxl@vger.kernel.org>; Mon, 25 Sep 2023 09:11:25 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RvSVT6nzcz6DBCC;
-        Tue, 26 Sep 2023 00:09:05 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4E1C0
+        for <linux-cxl@vger.kernel.org>; Mon, 25 Sep 2023 09:11:55 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RvSS04LF6z6K9h6;
+        Tue, 26 Sep 2023 00:06:56 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 25 Sep 2023 17:11:22 +0100
+ 15.1.2507.31; Mon, 25 Sep 2023 17:11:53 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
         Michael Tsirkin <mst@redhat.com>
@@ -31,10 +31,12 @@ CC:     <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
         Klaus Jensen <its@irrelevant.dk>,
         Corey Minyard <cminyard@mvista.com>,
         Klaus Jensen <k.jensen@samsung.com>
-Subject: [PATCH 00/19] QEMU: CXL mailbox rework and features
-Date:   Mon, 25 Sep 2023 17:11:05 +0100
-Message-ID: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 01/19] hw/cxl/mbox: Pull the payload out of struct cxl_cmd and make instances constant
+Date:   Mon, 25 Sep 2023 17:11:06 +0100
+Message-ID: <20230925161124.18940-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
+References: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -46,183 +48,424 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Based on: [PATCH] hw/cxl: Fix local variable shadowing of cap_hdrs
-Based on: [PATCH v2 0/3] hw/cxl: Add dummy ACPI QTG DSM
-Based on: [PATCH V2] hw/pci-bridge/cxl-upstream: Add serial number extended capability support
-Based on: [PATCH v3 0/4] hw/cxl: Line length reduction and related
-Based on: [PATCH v6 0/3] hw/{i2c,nvme}: mctp endpoint, nvme management interface model
+Putting the pointer in the structure for command handling puts a single
+variable element inside an otherwise constant structure. Move it out as
+a directly passed variable and take the cxl_cmd structures constant.
 
-I'm assuming this last dependency will go via a different tree though there
-is an outstanding request for tests. That equally applies to the CXL setup,
-but there are lot of moving parts. I'll experiment with basic testing
-of the MCTP I2C device whilst this is being reviewed.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ include/hw/cxl/cxl_device.h |  13 ++++
+ hw/cxl/cxl-mailbox-utils.c  | 121 +++++++++++++++++++-----------------
+ 2 files changed, 78 insertions(+), 56 deletions(-)
 
-Based on: Message ID: 20230904161847.18468-1-Jonathan.Cameron@huawei.com
-Based on: Message ID: 20230913133615.29876-1-Jonathan.Cameron@huawei.com
-Based on: Message ID: 20230919093434.1194-1-Jonathan.Cameron@huawei.com
-Based on: Message ID: 20230925152258.5444-1-Jonathan.Cameron@huawei.com
-Based on: Message ID: 20230914-nmi-i2c-v6-0-11bbb4f74d18@samsung.com
-
-I've been carrying most of this series on our CXL staging tree
-https://gitlab.com/jic23/qemu for some time and a lot of more recent
-work around Multi Head Devices and Dynamic Capacity that we need for
-Linux kernel enabling are backed up behind it. Hence I reorganized my
-queue to try and land this before other less 'central' features such
-as CXL PMUs and arm/virt support.
-
-This series is focused on enabling the Fabric Management (FM) aspects of
-CXL to enable orchestration and tooling development and also to enable
-testing of related kernel features. That requires some substantial
-reworking of existing mailbox handling (improving a few things along
-the way).
-
-Features:
-1. Rework the Component Command Interface (CCI) implementation to extract
-   generic parts from the existing CXL Primary Mailbox (in PCI BAR
-   space).
-2. Add CXL Switch Mailbox CCI function support. This CXL r3.0 feature
-   enables an in band PCI path to control switch configuration.
-   It is basically a CXL primary mailbox in a separate PCI function.
-   On many systems this would be wired to a BMC, but as it is a normal
-   PCI function we can make it an option for an emulated host providing
-   us with a useful interface for testing some Fabric Mnagement
-   features of CXL. In particular this will be useful for tunneling
-   Fabric Management commands to Type 3 memory devices (via
-   MCTP over PCI VDM)
-3. Via MCTP over I2C and the two CXL MCTP bindings (FM-API and
-   Memory Device) provide an alternative control interface.
-   For now this can only be used with an aspeed-i2c controller.
-   (There are hacks to enable this controller on CXL host systems
-    but they are not suitable for upstreaming - so in upstream
-    it's either MCTP access, or inband access depending on
-    machine used). This is primarily implemented to enable work
-   on the very different Linux kernel interface for MCTP (network
-   socket based) to the IOCTL interface for the Switch Mailbox CCI.
-4. A set of example commands to explore how to get access to various
-   information. Additional commands will be added in future series.
-   This one is big enough already!  One or two bits are made up
-   for now.  Fidelity may therefore improve in future patch sets.
-5. Davidlohr's work on background operations (only for the CXL
-   type 3 primary mailbox for now. This wasn't directly related
-   to the above series but was based on the early rework and is a
-   simple feature.  Background support for MCTP interfaces and the
-   Switch Mailbox CCI is left for future series.
-
-Note that we are currently only implement a simple fixed configuration
-single VH switch. If anyone is interested in working on expanding that
-to deal with the high degree of configurability of topology that
-vPPBs bring then let me know.
-
-A few areas that might be of interest to reviewers:
-1) The target=XXX approach to linking the 'interfaces' up with the
-   underlying CXL devices.
-2) The walking of various PCIe structures and similar to fill in
-   the data needed for some commands.  I'm still using some
-   fake data for now, but ultimately all this stuff is probably
-   discoverable.
-3) Tunneling fun in the final patch.  That gives an idea of
-   one of the more complex corners of the Fabric Management part
-   of the CXL spec and perhaps best illustrates the reason we
-   have so many CCI instances inside one device a they all require
-   separate state and can present different available commands.
-
-A typical QEMU command line snippet for testing the Switch Mailbox CCI.
-
- -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=256M,align=256M \
- -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M \
- -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=256M,align=256M \
- -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M \
- -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
- -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
- -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
- -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
- -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
- -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
- -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
- -device cxl-type3,bus=swport1,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
- -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2
-
-A snippet for testing the i2c_mctp_cxl (on a suitable aspeed machine,
-or with the hacks on gitlab.com/jic23/qemu to add an aspeed controller to
-i386/pc).
-
- -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=256M,align=256M \
- -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M \
- -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=256M,align=256M \
- -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M \
- -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
- -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
- -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
- -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
- -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
- -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
- -device cxl-type3,bus=swport1,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
- -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2
-
-Rather than ending up with a very long cover letter, I'll post
-where to find test userspace code to talk to the switch-cci and the
-i2c_mctp_cxl device + tunnel to the devices below them separately
-along with pointers to the kernel series needed (for the switch
-mailbox CCI).
-
-I'll shortly push out a fresh tree including dependencies for this set
-and everything we currently have on top of it at
-
-gitlab.com/jic23/qemu cxl-2023-09-26
-
-Davidlohr Bueso (3):
-  hw/cxl/mbox: Add support for background operations
-  hw/cxl/mbox: Wire up interrupts for background completion
-  hw/cxl: Add support for device sanitation
-
-Gregory Price (1):
-  hw/cxl/type3: Cleanup multiple CXL_TYPE3() calls in read/write
-    functions
-
-Jonathan Cameron (15):
-  hw/cxl/mbox: Pull the payload out of struct cxl_cmd and make instances
-    constant
-  hw/cxl/mbox: Split mailbox command payload into separate input and
-    output
-  hw/cxl/mbox: Pull the CCI definition out of the CXLDeviceState
-  hw/cxl/mbox: Generalize the CCI command processing
-  hw/pci-bridge/cxl_upstream: Move defintion of device to header.
-  hw/cxl/i2c_mctp_cxl: Initial device emulation
-  hw/cxl/mbox: Add Information and Status / Identify command
-  docs: cxl: Add example commandline for MCTP CXL CCIs
-  hw/cxl/mbox: Add Physical Switch Identify command.
-  hw/cxl: Add a switch mailbox CCI function
-  hw/pci-bridge/cxl_downstream: Set default link width and link speed
-  hw/cxl: Implement Physical Ports status retrieval
-  hw/cxl/mbox: Add Get Background Operation Status Command
-  hw/cxl: Add dummy security state get
-  hw/cxl: Add tunneled command support to mailbox for switch cci/mctp.
-
- docs/system/devices/cxl.rst               |   27 +
- include/hw/cxl/cxl.h                      |    6 +
- include/hw/cxl/cxl_component.h            |    3 +-
- include/hw/cxl/cxl_device.h               |  110 ++-
- include/hw/pci-bridge/cxl_upstream_port.h |   20 +
- hw/cxl/cxl-device-utils.c                 |  120 ++-
- hw/cxl/cxl-events.c                       |    2 +-
- hw/cxl/cxl-mailbox-utils.c                | 1038 ++++++++++++++++++---
- hw/cxl/i2c_mctp_cxl.c                     |  290 ++++++
- hw/cxl/switch-mailbox-cci.c               |  111 +++
- hw/mem/cxl_type3.c                        |   32 +-
- hw/pci-bridge/cxl_downstream.c            |   18 +-
- hw/pci-bridge/cxl_upstream.c              |   11 +-
- hw/cxl/Kconfig                            |    4 +
- hw/cxl/meson.build                        |    2 +
- 15 files changed, 1609 insertions(+), 185 deletions(-)
- create mode 100644 include/hw/pci-bridge/cxl_upstream_port.h
- create mode 100644 hw/cxl/i2c_mctp_cxl.c
- create mode 100644 hw/cxl/switch-mailbox-cci.c
-
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 007ddaf078..556953469c 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -111,6 +111,18 @@ typedef enum {
+     CXL_MBOX_MAX = 0x17
+ } CXLRetCode;
+ 
++typedef struct cxl_device_state CXLDeviceState;
++struct cxl_cmd;
++typedef CXLRetCode (*opcode_handler)(const struct cxl_cmd *cmd,
++                                     uint8_t *payload,
++                                     CXLDeviceState *cxl_dstate, uint16_t *len);
++struct cxl_cmd {
++    const char *name;
++    opcode_handler handler;
++    ssize_t in;
++    uint16_t effect; /* Reported in CEL */
++};
++
+ typedef struct CXLEvent {
+     CXLEventRecordRaw data;
+     QSIMPLEQ_ENTRY(CXLEvent) node;
+@@ -178,6 +190,7 @@ typedef struct cxl_device_state {
+     uint64_t pmem_size;
+     uint64_t vmem_size;
+ 
++    const struct cxl_cmd (*cxl_cmd_set)[256];
+     CXLEventLog event_logs[CXL_EVENT_TYPE_MAX];
+ } CXLDeviceState;
+ 
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index ab082ec9de..c02de06943 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -69,18 +69,9 @@ enum {
+         #define CLEAR_POISON           0x2
+ };
+ 
+-struct cxl_cmd;
+-typedef CXLRetCode (*opcode_handler)(struct cxl_cmd *cmd,
+-                                   CXLDeviceState *cxl_dstate, uint16_t *len);
+-struct cxl_cmd {
+-    const char *name;
+-    opcode_handler handler;
+-    ssize_t in;
+-    uint16_t effect; /* Reported in CEL */
+-    uint8_t *payload;
+-};
+ 
+-static CXLRetCode cmd_events_get_records(struct cxl_cmd *cmd,
++static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
++                                         uint8_t *payload,
+                                          CXLDeviceState *cxlds,
+                                          uint16_t *len)
+ {
+@@ -92,9 +83,9 @@ static CXLRetCode cmd_events_get_records(struct cxl_cmd *cmd,
+         return CXL_MBOX_INVALID_INPUT;
+     }
+ 
+-    log_type = *((uint8_t *)cmd->payload);
++    log_type = payload[0];
+ 
+-    pl = (CXLGetEventPayload *)cmd->payload;
++    pl = (CXLGetEventPayload *)payload;
+     memset(pl, 0, sizeof(*pl));
+ 
+     max_recs = (cxlds->payload_size - CXL_EVENT_PAYLOAD_HDR_SIZE) /
+@@ -106,25 +97,27 @@ static CXLRetCode cmd_events_get_records(struct cxl_cmd *cmd,
+     return cxl_event_get_records(cxlds, pl, log_type, max_recs, len);
+ }
+ 
+-static CXLRetCode cmd_events_clear_records(struct cxl_cmd *cmd,
++static CXLRetCode cmd_events_clear_records(const struct cxl_cmd *cmd,
++                                           uint8_t *payload,
+                                            CXLDeviceState *cxlds,
+                                            uint16_t *len)
+ {
+     CXLClearEventPayload *pl;
+ 
+-    pl = (CXLClearEventPayload *)cmd->payload;
++    pl = (CXLClearEventPayload *)payload;
+     *len = 0;
+     return cxl_event_clear_records(cxlds, pl);
+ }
+ 
+-static CXLRetCode cmd_events_get_interrupt_policy(struct cxl_cmd *cmd,
++static CXLRetCode cmd_events_get_interrupt_policy(const struct cxl_cmd *cmd,
++                                                  uint8_t *payload,
+                                                   CXLDeviceState *cxlds,
+                                                   uint16_t *len)
+ {
+     CXLEventInterruptPolicy *policy;
+     CXLEventLog *log;
+ 
+-    policy = (CXLEventInterruptPolicy *)cmd->payload;
++    policy = (CXLEventInterruptPolicy *)payload;
+     memset(policy, 0, sizeof(*policy));
+ 
+     log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
+@@ -157,7 +150,8 @@ static CXLRetCode cmd_events_get_interrupt_policy(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_events_set_interrupt_policy(struct cxl_cmd *cmd,
++static CXLRetCode cmd_events_set_interrupt_policy(const struct cxl_cmd *cmd,
++                                                  uint8_t *payload,
+                                                   CXLDeviceState *cxlds,
+                                                   uint16_t *len)
+ {
+@@ -168,7 +162,7 @@ static CXLRetCode cmd_events_set_interrupt_policy(struct cxl_cmd *cmd,
+         return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+     }
+ 
+-    policy = (CXLEventInterruptPolicy *)cmd->payload;
++    policy = (CXLEventInterruptPolicy *)payload;
+ 
+     log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
+     log->irq_enabled = (policy->info_settings & CXL_EVENT_INT_MODE_MASK) ==
+@@ -200,7 +194,8 @@ static CXLRetCode cmd_events_set_interrupt_policy(struct cxl_cmd *cmd,
+ }
+ 
+ /* 8.2.9.2.1 */
+-static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
++static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
++                                               uint8_t *payload,
+                                                CXLDeviceState *cxl_dstate,
+                                                uint16_t *len)
+ {
+@@ -221,7 +216,7 @@ static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
+         return CXL_MBOX_INTERNAL_ERROR;
+     }
+ 
+-    fw_info = (void *)cmd->payload;
++    fw_info = (void *)payload;
+     memset(fw_info, 0, sizeof(*fw_info));
+ 
+     fw_info->slots_supported = 2;
+@@ -234,27 +229,29 @@ static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
+ }
+ 
+ /* 8.2.9.3.1 */
+-static CXLRetCode cmd_timestamp_get(struct cxl_cmd *cmd,
++static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
++                                    uint8_t *payload,
+                                     CXLDeviceState *cxl_dstate,
+                                     uint16_t *len)
+ {
+     uint64_t final_time = cxl_device_get_timestamp(cxl_dstate);
+ 
+-    stq_le_p(cmd->payload, final_time);
++    stq_le_p(payload, final_time);
+     *len = 8;
+ 
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+ /* 8.2.9.3.2 */
+-static CXLRetCode cmd_timestamp_set(struct cxl_cmd *cmd,
+-                                  CXLDeviceState *cxl_dstate,
+-                                  uint16_t *len)
++static CXLRetCode cmd_timestamp_set(const struct cxl_cmd *cmd,
++                                    uint8_t *payload,
++                                    CXLDeviceState *cxl_dstate,
++                                    uint16_t *len)
+ {
+     cxl_dstate->timestamp.set = true;
+     cxl_dstate->timestamp.last_set = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
+ 
+-    cxl_dstate->timestamp.host_set = le64_to_cpu(*(uint64_t *)cmd->payload);
++    cxl_dstate->timestamp.host_set = le64_to_cpu(*(uint64_t *)payload);
+ 
+     *len = 0;
+     return CXL_MBOX_SUCCESS;
+@@ -267,7 +264,8 @@ static const QemuUUID cel_uuid = {
+ };
+ 
+ /* 8.2.9.4.1 */
+-static CXLRetCode cmd_logs_get_supported(struct cxl_cmd *cmd,
++static CXLRetCode cmd_logs_get_supported(const struct cxl_cmd *cmd,
++                                         uint8_t *payload,
+                                          CXLDeviceState *cxl_dstate,
+                                          uint16_t *len)
+ {
+@@ -278,7 +276,7 @@ static CXLRetCode cmd_logs_get_supported(struct cxl_cmd *cmd,
+             QemuUUID uuid;
+             uint32_t size;
+         } log_entries[1];
+-    } QEMU_PACKED *supported_logs = (void *)cmd->payload;
++    } QEMU_PACKED *supported_logs = (void *)payload;
+     QEMU_BUILD_BUG_ON(sizeof(*supported_logs) != 0x1c);
+ 
+     supported_logs->entries = 1;
+@@ -290,7 +288,8 @@ static CXLRetCode cmd_logs_get_supported(struct cxl_cmd *cmd,
+ }
+ 
+ /* 8.2.9.4.2 */
+-static CXLRetCode cmd_logs_get_log(struct cxl_cmd *cmd,
++static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
++                                   uint8_t *payload,
+                                    CXLDeviceState *cxl_dstate,
+                                    uint16_t *len)
+ {
+@@ -298,7 +297,9 @@ static CXLRetCode cmd_logs_get_log(struct cxl_cmd *cmd,
+         QemuUUID uuid;
+         uint32_t offset;
+         uint32_t length;
+-    } QEMU_PACKED QEMU_ALIGNED(16) *get_log = (void *)cmd->payload;
++    } QEMU_PACKED QEMU_ALIGNED(16) *get_log;
++
++    get_log = (void *)payload;
+ 
+     /*
+      * 8.2.9.4.2
+@@ -324,14 +325,15 @@ static CXLRetCode cmd_logs_get_log(struct cxl_cmd *cmd,
+     /* Store off everything to local variables so we can wipe out the payload */
+     *len = get_log->length;
+ 
+-    memmove(cmd->payload, cxl_dstate->cel_log + get_log->offset,
++    memmove(payload, cxl_dstate->cel_log + get_log->offset,
+            get_log->length);
+ 
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+ /* 8.2.9.5.1.1 */
+-static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
++static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
++                                             uint8_t *payload,
+                                              CXLDeviceState *cxl_dstate,
+                                              uint16_t *len)
+ {
+@@ -361,7 +363,7 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+         return CXL_MBOX_INTERNAL_ERROR;
+     }
+ 
+-    id = (void *)cmd->payload;
++    id = (void *)payload;
+     memset(id, 0, sizeof(*id));
+ 
+     snprintf(id->fw_revision, 0x10, "BWFW VERSION %02d", 0);
+@@ -382,7 +384,8 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
++static CXLRetCode cmd_ccls_get_partition_info(const struct cxl_cmd *cmd,
++                                              uint8_t *payload,
+                                               CXLDeviceState *cxl_dstate,
+                                               uint16_t *len)
+ {
+@@ -391,7 +394,7 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
+         uint64_t active_pmem;
+         uint64_t next_vmem;
+         uint64_t next_pmem;
+-    } QEMU_PACKED *part_info = (void *)cmd->payload;
++    } QEMU_PACKED *part_info = (void *)payload;
+     QEMU_BUILD_BUG_ON(sizeof(*part_info) != 0x20);
+ 
+     if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
+@@ -414,7 +417,8 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_ccls_get_lsa(struct cxl_cmd *cmd,
++static CXLRetCode cmd_ccls_get_lsa(const struct cxl_cmd *cmd,
++                                   uint8_t *payload,
+                                    CXLDeviceState *cxl_dstate,
+                                    uint16_t *len)
+ {
+@@ -426,7 +430,7 @@ static CXLRetCode cmd_ccls_get_lsa(struct cxl_cmd *cmd,
+     CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+     uint32_t offset, length;
+ 
+-    get_lsa = (void *)cmd->payload;
++    get_lsa = (void *)payload;
+     offset = get_lsa->offset;
+     length = get_lsa->length;
+ 
+@@ -439,7 +443,8 @@ static CXLRetCode cmd_ccls_get_lsa(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
++static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
++                                   uint8_t *payload,
+                                    CXLDeviceState *cxl_dstate,
+                                    uint16_t *len)
+ {
+@@ -448,7 +453,7 @@ static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
+         uint32_t rsvd;
+         uint8_t data[];
+     } QEMU_PACKED;
+-    struct set_lsa_pl *set_lsa_payload = (void *)cmd->payload;
++    struct set_lsa_pl *set_lsa_payload = (void *)payload;
+     CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+     CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+     const size_t hdr_len = offsetof(struct set_lsa_pl, data);
+@@ -474,7 +479,8 @@ static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
+  * make this stateful. We may want to allow longer poison lists to aid
+  * testing that kernel functionality.
+  */
+-static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
++static CXLRetCode cmd_media_get_poison_list(const struct cxl_cmd *cmd,
++                                            uint8_t *payload,
+                                             CXLDeviceState *cxl_dstate,
+                                             uint16_t *len)
+ {
+@@ -496,8 +502,8 @@ static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
+         } QEMU_PACKED records[];
+     } QEMU_PACKED;
+ 
+-    struct get_poison_list_pl *in = (void *)cmd->payload;
+-    struct get_poison_list_out_pl *out = (void *)cmd->payload;
++    struct get_poison_list_pl *in = (void *)payload;
++    struct get_poison_list_out_pl *out = (void *)payload;
+     CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+     uint16_t record_count = 0, i = 0;
+     uint64_t query_start, query_length;
+@@ -550,7 +556,8 @@ static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
++static CXLRetCode cmd_media_inject_poison(const struct cxl_cmd *cmd,
++                                          uint8_t *payload,
+                                           CXLDeviceState *cxl_dstate,
+                                           uint16_t *len_unused)
+ {
+@@ -560,7 +567,7 @@ static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
+     struct inject_poison_pl {
+         uint64_t dpa;
+     };
+-    struct inject_poison_pl *in = (void *)cmd->payload;
++    struct inject_poison_pl *in = (void *)payload;
+     uint64_t dpa = ldq_le_p(&in->dpa);
+     CXLPoison *p;
+ 
+@@ -589,7 +596,8 @@ static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
++static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
++                                         uint8_t *payload,
+                                          CXLDeviceState *cxl_dstate,
+                                          uint16_t *len_unused)
+ {
+@@ -603,7 +611,7 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
+     CXLPoison *ent;
+     uint64_t dpa;
+ 
+-    struct clear_poison_pl *in = (void *)cmd->payload;
++    struct clear_poison_pl *in = (void *)payload;
+ 
+     dpa = ldq_le_p(&in->dpa);
+     if (dpa + CXL_CACHE_LINE_SIZE > cxl_dstate->mem_size) {
+@@ -673,7 +681,7 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+ #define IMMEDIATE_LOG_CHANGE (1 << 4)
+ 
+-static struct cxl_cmd cxl_cmd_set[256][256] = {
++static const struct cxl_cmd cxl_cmd_set[256][256] = {
+     [EVENTS][GET_RECORDS] = { "EVENTS_GET_RECORDS",
+         cmd_events_get_records, 1, 0 },
+     [EVENTS][CLEAR_RECORDS] = { "EVENTS_CLEAR_RECORDS",
+@@ -709,21 +717,21 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+ {
+     uint16_t ret = CXL_MBOX_SUCCESS;
+-    struct cxl_cmd *cxl_cmd;
+-    uint64_t status_reg;
++    const struct cxl_cmd *cxl_cmd;
++    uint64_t status_reg = 0;
+     opcode_handler h;
+     uint64_t command_reg = cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD];
+ 
+     uint8_t set = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND_SET);
+     uint8_t cmd = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND);
+     uint16_t len = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH);
+-    cxl_cmd = &cxl_cmd_set[set][cmd];
++    uint8_t *pl = cxl_dstate->mbox_reg_state + A_CXL_DEV_CMD_PAYLOAD;
++
++    cxl_cmd = &cxl_dstate->cxl_cmd_set[set][cmd];
+     h = cxl_cmd->handler;
+     if (h) {
+         if (len == cxl_cmd->in || cxl_cmd->in == ~0) {
+-            cxl_cmd->payload = cxl_dstate->mbox_reg_state +
+-                A_CXL_DEV_CMD_PAYLOAD;
+-            ret = (*h)(cxl_cmd, cxl_dstate, &len);
++            ret = (*h)(cxl_cmd, pl, cxl_dstate, &len);
+             assert(len <= cxl_dstate->payload_size);
+         } else {
+             ret = CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+@@ -752,10 +760,11 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+ 
+ void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
+ {
++    cxl_dstate->cxl_cmd_set = cxl_cmd_set;
+     for (int set = 0; set < 256; set++) {
+         for (int cmd = 0; cmd < 256; cmd++) {
+-            if (cxl_cmd_set[set][cmd].handler) {
+-                struct cxl_cmd *c = &cxl_cmd_set[set][cmd];
++            if (cxl_dstate->cxl_cmd_set[set][cmd].handler) {
++                const struct cxl_cmd *c = &cxl_dstate->cxl_cmd_set[set][cmd];
+                 struct cel_log *log =
+                     &cxl_dstate->cel_log[cxl_dstate->cel_size];
+ 
 -- 
 2.39.2
 
