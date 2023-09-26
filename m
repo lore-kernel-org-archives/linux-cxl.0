@@ -2,80 +2,76 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61574E7F14C
-	for <linux-cxl@archiver.kernel.org>; Tue, 26 Sep 2023 23:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A89E7F150
+	for <linux-cxl@archiver.kernel.org>; Wed, 27 Sep 2023 00:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232338AbjIZXmm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 26 Sep 2023 19:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39828 "EHLO
+        id S229640AbjI0AqE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 26 Sep 2023 20:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231838AbjIZXkj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 26 Sep 2023 19:40:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F7118E8A;
-        Tue, 26 Sep 2023 15:53:45 -0700 (PDT)
+        with ESMTP id S229990AbjI0AoD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 26 Sep 2023 20:44:03 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F43626BC;
+        Tue, 26 Sep 2023 16:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695768825; x=1727304825;
+  t=1695772717; x=1727308717;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=39fzGLIIAGR05sKPRvzfrSou3lJZpQbhfYLcfP/SSpQ=;
-  b=AqWsSXnX7Q4bvrLauDkb9yebLJixrBLmdDTkYblx+b4aLTqztr5KDesE
-   RfZgnV7Lx0pEuix6Gg9K9eiGd2P/NwElVA2zsI6VkUY+4+esuwYWTnorR
-   94kLnV0b+2In11akW8ior7EPisH32N/JxQS/xOfQYEpuWhpcnesADeWfV
-   OmiN40egoRacixEKzP57bcaTEXCSGPWyUNNhh+E6wAhykoNvSnEB+V9+Q
-   AKgg8373H04EWZpfaYwTI0by2luhVFFEW3GVn4Nx93xZOXL4TY1+l2pNR
-   Wlajnj+HHVPd44qQqBYWChdiKhaMKJ19f9Wp5GqIig7IgO+wMKcHV2Gsp
+  bh=wfra2jLiPyiHlESxiT/CZwWVpGtg3pvgEuxDq/qUfpA=;
+  b=M+w4iUqPO42akNtY8JBPHq466aeTMPe47Bc/mspDxymlT1O+teCuOMY9
+   yIW9siF1hkWyJPWvSxX+G4YdkT0RdO1wTxB9uLuyQSFdJPT22OuXwzSsu
+   7BaCk0UK9HhGO6DUZDzlLYw4FjEOwLy83uSpsLRL21+NsTbvxKFtC8GWH
+   xdTEAs4K3OltFpxxhQ0QNQHbZ+9t0ohubJOJ9nwVy5OGgZGPog7SEmoFF
+   4w55OZmPfvoSAoSH+Io8vcuyOmz4XuJW0tcUt9MR/G4DG2SVCIBDb2O/q
+   2cq25mxayVGPJvTbNZISO3oJSh1RqZISyFP879TwINiud1Djc9RFTV0vS
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="380544765"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="361074320"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="380544765"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 14:47:08 -0700
+   d="scan'208";a="361074320"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 16:58:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="872648557"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="748990253"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="872648557"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Sep 2023 14:47:07 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="748990253"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Sep 2023 16:58:36 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Tue, 26 Sep 2023 14:47:06 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.32; Tue, 26 Sep 2023 16:58:36 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Tue, 26 Sep 2023 14:47:06 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Tue, 26 Sep 2023 14:47:06 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Tue, 26 Sep 2023 16:58:36 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Tue, 26 Sep 2023 14:47:06 -0700
+ 15.1.2507.32; Tue, 26 Sep 2023 16:58:36 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YRMxg1Jx19zOg4WEfo7jYyRqRjwvWZObbJ3MhLV5phquPf89a/x7Icwh30aI+w+4WcnAaWBeUQIESpP12CHia6mdwxFPhXC1p1hP0acDSB+T2cW5n4yS+XgEkReJXe2JFaEXwaOtQbTSlZman6dL/r+CF1sA6f3zWNOlPshpLXk4zgDadFT1R8hlqRbRuFYqgUUroUTftmav3xQIup1d5enMXYIaaIi2x2UG0FG1jhFsAVAHJFSKL+0BNK8TnLiDzVFpGzKsXsrKWgxvqq7KCD9xd9KLHnr/5B0UlRHQlrJ5nEjtPDj+GsiUxPc1EWbbGpVxdlDqcz2MeCzXmcExLA==
+ b=E/AF8GkX5BlZWE95/+7nHWP32oeQR1a8Hopy4QCmvc1BpGAEgIoGocWKNROaS9Pi31XseiiYHiWpM8QwnoZDJMTSXIMxW2GNUK4HpnkVRMksDZ0WtGskY0cY0Hn5EuQPh1oxC/i8li7mRQjXu4doQgqtNWDtUMsl9ZxxDcsP4hykUcat47l2pnTllGnm0xilvVPWnIV4blbOf0+l8/UZbzx0UmFMHEdSEFHbucfsodF7QZx9DppOGPsTZNmM56czp9H8WnXTZAcuFFWIoy2RGC91mJiopEyyZVn9uYD84fWNnOpGA5TNrBuv64H9aQLKW9zd+FKvZOwpxwGcUdBwdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mkYFO/idGsFlfk3LL/LTCj45TdGZjf51oPZyUiRyCqA=;
- b=HApw7Xu0UFVWz8nbSrwbTUkW+Ntziq2dWVOUKu2EJFwQLOx9lP4RdzCqf/+RSthrs+Mfn3+XWZqcC1sDZDPUXW/5wOX7fEfJ6DO0ZrVy4C+n8Tu4acuJyaf7dAs8EHKksoWPbVsT3MVxe8BTJWwacd45SCn4KF7irPFfL9/a2XJYL8i0i9F3KfUTQraO34k6gQdVe+Zh7gcZ4Tfr2mMivhZ85JtmNptR87l2HmrndvtweAlhvU6dolkxRx32DeEirAMLg7ASCsZs+4BXbLD5wbL/uav9cpJmRjpToSam17HF1IVWqs+z15/xOexnv7hgTlDLHinADervsTOxdEu2iQ==
+ bh=BEBnmpMNjJWWnIsbwtEB2q1X4cIRff9Uc7WrU52jtRY=;
+ b=O5WCaUA2oIhz3w0jJpRxJcHJvdNUWcaBZVuOKIuP5/l9zYFS1dY183sdFIgPvLX+Qz1UhApiZfH/VsyxbYhUlfmtXpCbv9FkCLeaZmGR7d9j3y9ZtILfzVrLkorMwlyfrGps3+ZXeZcKyLr+lVEMgJHoDfZYeMlqxyhjiaC2g1XuSpIOnn+yMv25+moVFI4CV1baeZi55kDVDOeHCzOiaG3UG3t1y4iSwFUN6iZa4tYg0FZe+OMjokyOzwAsla0FVdwrMDAcV5hWdKq+GfeAediX+nYpgCjnUS3fWmKcr1ken5NCq1za9Trt/M/1LQiWSxi5G7zumlB3QdspV8qTkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BN9PR11MB5307.namprd11.prod.outlook.com (2603:10b6:408:118::9) with
+ by MW3PR11MB4713.namprd11.prod.outlook.com (2603:10b6:303:2f::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Tue, 26 Sep
- 2023 21:47:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Tue, 26 Sep
+ 2023 23:58:34 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6792.026; Tue, 26 Sep 2023
- 21:47:04 +0000
-Date:   Tue, 26 Sep 2023 14:47:01 -0700
+ 23:58:34 +0000
+Date:   Tue, 26 Sep 2023 16:58:30 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Terry Bowman <Terry.Bowman@amd.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -84,69 +80,70 @@ To:     Terry Bowman <Terry.Bowman@amd.com>,
         <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
         <linux-cxl@vger.kernel.org>
 CC:     <rrichter@amd.com>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>
-Subject: Re: [PATCH v10 12/15] cxl/pci: Disable root port interrupts in RCH
- mode
-Message-ID: <6513515526995_bf9129471@dwillia2-xfh.jf.intel.com.notmuch>
+        <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v10 13/15] PCI/AER: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <6513702648e6_bf9129415@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20230831170248.185078-1-terry.bowman@amd.com>
- <20230831170248.185078-5-terry.bowman@amd.com>
- <6504a5e23cee9_d7cc8294b7@dwillia2-xfh.jf.intel.com.notmuch>
- <f27f685c-6b53-8955-735f-e9c0c04354a5@amd.com>
+ <20230831170248.185078-6-terry.bowman@amd.com>
+ <64f0f9984932b_31c2db29461@dwillia2-xfh.jf.intel.com.notmuch>
+ <cfa1aaca-49f1-cb8c-f4d9-f96e5bdc9892@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <f27f685c-6b53-8955-735f-e9c0c04354a5@amd.com>
-X-ClientProxiedBy: MW4PR03CA0266.namprd03.prod.outlook.com
- (2603:10b6:303:b4::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <cfa1aaca-49f1-cb8c-f4d9-f96e5bdc9892@amd.com>
+X-ClientProxiedBy: MW4PR03CA0164.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::19) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5307:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1bac2512-146e-4415-cb49-08dbbeda1f44
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4713:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad52b296-06fd-4484-f658-08dbbeec7dbb
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K6Yegh6KCi//SQ6CIljHkmX7qFgtRzmeoZGbr0OyDk2hygTpSAzGlfkA2In3ZrS5HeaySCN4iqwzSXpTzKws2QYio2/6I1CdvSsYuo8Y6qSYlS2auBbIZSuWzgyODA5gv+n8AmJhFvnG7E+6YrDBB1KdStstiJu3DKEPZJcxj0gvy2z9gyzyKa6lhlXiqEZAxDHv4pHED0leyvR8wh1XKigWTt5Ysz9NPHnKoZbBFM58kb/C9mJijmj+X+GoXn+hTBx03P6f7CsHtiTnyvYfpssmzq+Z70i3eusNsYeYmaI/SooRO5YKztuXIbwfq7UjIh+oy1eWSaDaHNq+aGoh4AvFmtUj+q+4eXGk40ta35Nln5OX+vXtPLezl7v3rLdIFSPdvnAFIt4Mjh3lKoRL0FltT+6g/0PLCzYG/9CCslsuW+l3nf2/HVuFaAXBD/v7AY49zvAVY4P08ToFIIl6YsRxdeAb2FaBsKXCxsIsYNDZZ7JLqcv5qR3snBCJiFbPkwhKrM2IDE7xzbgAO8nRwkAhNlnCpBcFF1TZAvyMnkFHabPx3Wx4hAjqukPfA4KJg+XBLExpc7XFU08fJWaNfQsConA2Rn3Uufe6KHmqW7U=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(396003)(376002)(366004)(346002)(230922051799003)(186009)(451199024)(1800799009)(53546011)(6506007)(6512007)(9686003)(6486002)(38100700002)(6666004)(86362001)(82960400001)(83380400001)(26005)(66476007)(2906002)(8936002)(8676002)(316002)(41300700001)(4326008)(66556008)(66946007)(478600001)(110136005)(5660300002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: bOFS3zqQskBekW6lSA0ZVaDZYYv9FYd50VihaNjYCHCQWuXfVNmMY5Wz/u+qf9iP9bbucokd78pO6OhzI3LW6oT0hl09aRQ6SG3fBWjdzFJNOgryjfqwlVkArW4nH0ODbRTrrmmvLHDMmVDb8b77A2ksBAFtbIWV8NWxzUspb5tjfQbs4X8grMMQjwDC6LLVfxyLiqpUtQAP2CI9ah+PNtUb8ldXlxMsj4WGEP4oTWzf9DLQd3DQtDiT3GeIFW6buGNwFhovabIdP+nOKrAXa4mpsikOP5apHXSbcxLEJflifUATrs60uK+OowssW/vx2TRfdH+BX59XV+e64PVaBezuT2uXnCdJhTpYqDKREsX6ErLk+A4JExLRCcqise/2tvf6X5o6tx6xzhP1g+LNEb8IV/QK43nt/tmhndfHFS2RA9nlvvBLRixcnIOlBPrF1NydcE5PkhTN3uTnBE+CFRQ0YsMQYW7JNlrQw2/XouPZndMyYUKjowPUiBrcTmRaHomV2LmxPs8b0LyWDP5/WguSDWC/7F0Lq0dAijR4mPk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(39860400002)(346002)(136003)(230922051799003)(1800799009)(186009)(451199024)(2906002)(7416002)(110136005)(5660300002)(66476007)(66556008)(478600001)(966005)(6666004)(6512007)(53546011)(9686003)(66946007)(6486002)(6506007)(26005)(8936002)(8676002)(41300700001)(4326008)(316002)(83380400001)(38100700002)(86362001)(82960400001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EARsAhRax+yIU/ePGZlR0/kBSCkJLjrqm9UHVf/3tc866HbjxwzReJiTxvOt?=
- =?us-ascii?Q?mlIJ2C6zyejSToioai1A9twaurdPvblZVAQpATgiP7GRv6Ys5pUHMQJiO7XK?=
- =?us-ascii?Q?UDfOideh1Kd1bNqX8qjna5k3kTlGEQDmr4/EhCLVCmwV/gmtILiXFweOo2oQ?=
- =?us-ascii?Q?bam4MICCXGLvYHUzHvvFtfSWnMUMPTMdBSdPOt9vuu5wX0Oi4DIcG2WL53Tv?=
- =?us-ascii?Q?54X/K0C/E0TXnzSQe0tBawhQFDS7Hv5Co2bIWpY89nvotMkGlCWRyzJcBW7L?=
- =?us-ascii?Q?QCnS/3M2Y55J0I75OLiQI7rO2RSQBIDRMS3RIbM4yOtKwNlu5xTgqX2aX8c2?=
- =?us-ascii?Q?989KfX9pNBcKLkZl6c/8drgNnKoJBU1pedL7i6PlFQo77eI+Iot81VuzBLNE?=
- =?us-ascii?Q?JSpfIWG7mkyUWOtgPVEAuZ8f56nWIZHx5bipsznbYW9O3OAc6lAbjl6VUGRA?=
- =?us-ascii?Q?VTypJWys5o+0vlLza2M2Du8xvVJhDCEdc1B2uDfzHZrdORMP5C7qFyPPTLDd?=
- =?us-ascii?Q?fLAFjbK9TqkTdWs+PfpxzcIAUHeTrR5uyS4JW4A0tya5jiBb50NN1ZxvQMe/?=
- =?us-ascii?Q?RyqgENGJ8exrenYLqQL9B6bPbZd3WgKUL0rQvURn7fycXYBkAG5+1WbzI3KN?=
- =?us-ascii?Q?l3eZNeKZoFhRNy4dps7HorS7/MLM1jXUErcOHbttz/wT1M6WL9VtCjwRtttj?=
- =?us-ascii?Q?rdWXDlzU3cQExUcrOTq4bmxKdwPOhpWgO4aCV4G6r1yabflE26DGafdyCTpU?=
- =?us-ascii?Q?k4fzL6BSg0cdwdvzBun/ckxDA2H2GLHQ0RIMhYDhAXF4dWRE2utw01uzDRrM?=
- =?us-ascii?Q?nO9g6xWF4uJD+uTUNOFe+nqgmNAzVe3fQo6IULr6r1GAYc5jIaZya5NcjwOP?=
- =?us-ascii?Q?gZ3dU3WwA9uQ9PfAEUOO0hiJI/N9gyF2Zy4Oc8tueOsHUoaPkG9Ww9j8W3+U?=
- =?us-ascii?Q?wIgsMg4hIRBpHGfgdklGGQf5c4NAignxSdshbXSUhbQW9bY6nqo+YxWo9Vx0?=
- =?us-ascii?Q?FF3mNkWrznzXm4pV0163lzbLNYXhh6Y49qr6a5sWKoADWjilxiy7bZYJvqIB?=
- =?us-ascii?Q?pkRjBm/jGBvj8R2jvom0mFLo3qrGlRinzU/hINm0Ol3DrHliKy9SMVueSMHd?=
- =?us-ascii?Q?eg6/KbGKXFf1mFx9LDg7fA+rzOZIrufQDsbN2MYoUFRMQ4x0qM3IIc33N0Nw?=
- =?us-ascii?Q?4StATULXNWtfSOS4C94WnGvfQnLSd1ZM6XKn28nbHzdo23lnnxbsYUYYWCKn?=
- =?us-ascii?Q?HG50Rcu+y6Dl9JQdlsjaN7zjCNC/78zUnvws8LdS5iliIvxU6x+NyZIvGIkZ?=
- =?us-ascii?Q?5uUz7Zg8P0hsJxkTU6bzcnEcOq9xlzNtK2BnyyHxOn9NaG6tb6uLUDF4WqiK?=
- =?us-ascii?Q?kgaLH05Zh9L3i6ES727FYLdD2EHJfAt8kgZqKKhf6jPwguFTD6VDXgplyxe8?=
- =?us-ascii?Q?y3n0nIg4EjVZ4vPQCbIRbj0dIl5KfssNF3yi6q36kT36kLh84hFjuMpRPBb0?=
- =?us-ascii?Q?/c0N3lgxvhv0UgqzShAUe2u/deCDra9cL2q6X+VlOtfpEHNaCowFADKy3/kX?=
- =?us-ascii?Q?UgvgX+zYbKFYuz+7KyLon9D4CYvTVCzshlaTjtotRBk+8IbN5kly+wZxkabT?=
- =?us-ascii?Q?/g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bac2512-146e-4415-cb49-08dbbeda1f44
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GJjtjNrEjgsRX+cNPSS28CRaNOkr3WBwC5HU78on4WLPAcJBxDd9Kg64IKBF?=
+ =?us-ascii?Q?JixpXfr1dqbPCJPEnh5bnIVdYpzsAw53iKfii1TD/+e5AwTXoX65M7UiRSeh?=
+ =?us-ascii?Q?14vjC/WsFpJr7fww9qGc4i6jjTAmy1JeXS+2XfpnFwZsHdYcuhCnQClmqwJy?=
+ =?us-ascii?Q?Uzq/dnWEhOeI0u6QimO25F2Ac43uyxX9gMtSxRl+UMcrdjzb/aF+eHz6Cmr4?=
+ =?us-ascii?Q?UoAxTY/oknvd3hsHdt787jkMw/xICc6qC9i5UHphxDbTMm9Lca4Sl7YwdWX3?=
+ =?us-ascii?Q?MrinSKcak+VytrpVjw6Gc/D/WuxKGmUm0x1MAnVmi8j2SchZTNe3sJxP2xN1?=
+ =?us-ascii?Q?BXpXdT1TCCFYiJksdQZDVRXdzyG19Xpd7vSSnbWHxIlxepfHrPKSVnJGChfR?=
+ =?us-ascii?Q?PbwapD4PEt0BXxrpfblLM+p47Mwnp8zF2TjFumTSUdZEiui7gny2qAvDSl1W?=
+ =?us-ascii?Q?Bhu5NIR0GevxqOYQ9kzDuFAyyKws6SVPb49NijTm0huitl/4SrLNwOEJCl1l?=
+ =?us-ascii?Q?jWyjF2ki6vS5mgA/Pc3RykOVLkfXpo/+J22evk7zvnqP1Oc1+6jJUGrMt7R6?=
+ =?us-ascii?Q?l5CTqRu7Wol3bNOJdU8ru/w1MVak9jVmyi5U98G2tmYxP594X10lVBJ6V11n?=
+ =?us-ascii?Q?hBj9SqLnVeSSdVo3aX4MJjd+87USoOA8gCtvmNPPp1Em/9oNNaIrgil5iKO6?=
+ =?us-ascii?Q?akzq9rC9DG6N5FfMcqJdN2Pzg+Vr9n+Y+ApNXcLIt2Zd50ouyd7A86WpaiGx?=
+ =?us-ascii?Q?zpv0na2HLNpKdOJRWRQ90EoxRw3oiZZN7h2YsvXKc/I6F2corcSZVKndxidv?=
+ =?us-ascii?Q?6k85qaqSsvEGhVS7ijRwvizMX0osP8BQFK/xBy/6TVmYKCGF+xC0RwdbX/l7?=
+ =?us-ascii?Q?DEIMIjlXsjkEVTS/+qPihw9KHcN4g7FKpOJLkrHGAbvDEj8CyP6+7zt9ITc6?=
+ =?us-ascii?Q?BWqy9ibPJzNx0ifTwNDy0418++eHkLaKdi6kuek/0AMzSU6urFGReRcL9+9O?=
+ =?us-ascii?Q?KDsNZ7lKLAB5ruK1ZGPGGqupzftghHjWxQNhu1V+r9eDmwqu7N3ekUoK+QF2?=
+ =?us-ascii?Q?5S7+cLdFD3I4iKUS3kNfZvgtoQFYcpAs19qNl6VaJzdrhQegF5SINcIvGhyj?=
+ =?us-ascii?Q?2EEeBq3gMwvxOEL94/r9y32/CV0uLgPmUyo/8FABPcF7XlFX+qjXhX2Da3Bu?=
+ =?us-ascii?Q?bqsP7hEXUy8aBxbVREENlfql5FTdBRxSRhqvLONsz6EZnxDgrHvdhA0mFgDV?=
+ =?us-ascii?Q?c29jb/AGZXVITdlh7WZfcxug4gxWuvZoxrarBhndxQH0kWc0WQBr3R/Wc6mC?=
+ =?us-ascii?Q?6p3lvGlxup9MXUxpEDjDWG6YVI4tgzjxOpe8efk2wgE1fdpG8Vw3JAvHlUfz?=
+ =?us-ascii?Q?UwXeFNuPqCHvNTGkF7rnrXX3JDrk7QcjEZ6yt0O1yeLqa3+/AoLFA8T1zPB6?=
+ =?us-ascii?Q?j2lkriATggX+GK/LdLE4a3b3djxFG8KckFzcEn/zF4Xj9nt3hNTnSOilmCs5?=
+ =?us-ascii?Q?bwYJR1jWqlH8YimZVhUwXrieUXYEJGHlXN5R5QEjUt518alxOGn/+Ry1hH/G?=
+ =?us-ascii?Q?Mt/gc08i1PzTrvj7pkxBiqSpwGSOP1OVoQWG1njwBCG+x+ZdvVA4zQUYbXET?=
+ =?us-ascii?Q?MQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad52b296-06fd-4484-f658-08dbbeec7dbb
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2023 21:47:04.1922
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2023 23:58:33.5957
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S+STk7BoOwwOQOYiSO81HDcBkPOcuWmJUtgjJVSN+Z92TbmBWvBg9VpoDIPKW77V5YchwnUUNwuo8mFT8VpvF14xYn+FoX2V/zPgl4OYAaw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5307
+X-MS-Exchange-CrossTenant-UserPrincipalName: H4Q6yTiWDO0LmORnGG4pFWFf91UBymDLOLNNaLzZNUdN7OjqMWcWxKCCSAIPIOdgsZJMqfJ8Pt6DYNn9pYV+yNsP/iIssx2jviGKswhkw7I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4713
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -155,56 +152,233 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 Terry Bowman wrote:
 > Hi Dan,
 > 
-> I added comments below.
-> 
-> On 9/15/23 13:43, Dan Williams wrote:
+> On 8/31/23 15:35, Dan Williams wrote:
 > > Terry Bowman wrote:
-> >> The RCH root port contains root command AER registers that should not be
-> >> enabled.[1] Disable these to prevent root port interrupts.
+> >> From: Robert Richter <rrichter@amd.com>
 > >>
-> >> [1] CXL 3.0 - 12.2.1.1 RCH Downstream Port-detected Errors
+> >> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+> >> RCiEP, but CXL downstream and upstream ports are not enumerated and
+> >> not visible in the PCIe hierarchy. [1] Protocol and link errors from
+> >> these non-enumerated ports are signaled as internal AER errors, either
+> >> Uncorrectable Internal Error (UIE) or Corrected Internal Errors (CIE)
+> >> via an RCEC.
 > >>
+> >> Restricted CXL host (RCH) downstream port-detected errors have the
+> >> Requester ID of the RCEC set in the RCEC's AER Error Source ID
+> >> register. A CXL handler must then inspect the error status in various
+> >> CXL registers residing in the dport's component register space (CXL
+> >> RAS capability) or the dport's RCRB (PCIe AER extended
+> >> capability). [2]
+> >>
+> >> Errors showing up in the RCEC's error handler must be handled and
+> >> connected to the CXL subsystem. Implement this by forwarding the error
+> >> to all CXL devices below the RCEC. Since the entire CXL device is
+> >> controlled only using PCIe Configuration Space of device 0, function
+> >> 0, only pass it there [3]. The error handling is limited to currently
+> >> supported devices with the Memory Device class code set (CXL Type 3
+> >> Device, PCI_CLASS_MEMORY_CXL, 502h), handle downstream port errors in
+> >> the device's cxl_pci driver. Support for other CXL Device Types
+> >> (e.g. a CXL.cache Device) can be added later.
+> >>
+> >> To handle downstream port errors in addition to errors directed to the
+> >> CXL endpoint device, a handler must also inspect the CXL RAS and PCIe
+> >> AER capabilities of the CXL downstream port the device is connected
+> >> to.
+> >>
+> >> Since CXL downstream port errors are signaled using internal errors,
+> >> the handler requires those errors to be unmasked. This is subject of a
+> >> follow-on patch.
+> >>
+> >> The reason for choosing this implementation is that the AER service
+> >> driver claims the RCEC device, but does not allow it to register a
+> >> custom specific handler to support CXL. Connecting the RCEC hard-wired
+> >> with a CXL handler does not work, as the CXL subsystem might not be
+> >> present all the time. The alternative to add an implementation to the
+> >> portdrv to allow the registration of a custom RCEC error handler isn't
+> >> worth doing it as CXL would be its only user. Instead, just check for
+> >> an CXL RCEC and pass it down to the connected CXL device's error
+> >> handler. With this approach the code can entirely be implemented in
+> >> the PCIe AER driver and is independent of the CXL subsystem. The CXL
+> >> driver only provides the handler.
+> >>
+> >> [1] CXL 3.0 spec: 9.11.8 CXL Devices Attached to an RCH
+> >> [2] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
+> >> [3] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
+> >>
+> >> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
 > >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > >> Signed-off-by: Robert Richter <rrichter@amd.com>
+> >> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> >> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >> Cc: linuxppc-dev@lists.ozlabs.org
+> >> Cc: linux-pci@vger.kernel.org
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > >> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > [..]
-> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> >> index 2a22a7ed4704..d195af72ed65 100644
-> >> --- a/drivers/cxl/core/port.c
-> >> +++ b/drivers/cxl/core/port.c
-> >> @@ -1042,6 +1042,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+> >> ---
+> >>  drivers/pci/pcie/Kconfig | 12 +++++
+> >>  drivers/pci/pcie/aer.c   | 96 +++++++++++++++++++++++++++++++++++++++-
+> >>  2 files changed, 106 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> >> index 228652a59f27..4f0e70fafe2d 100644
+> >> --- a/drivers/pci/pcie/Kconfig
+> >> +++ b/drivers/pci/pcie/Kconfig
+> >> @@ -49,6 +49,18 @@ config PCIEAER_INJECT
+> >>  	  gotten from:
+> >>  	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
 > >>  
-> >>  	cxl_dport_map_regs(dport);
-> >>  
-> >> +	if (dport->rch)
-> >> +		cxl_disable_rch_root_ints(dport);
-> >> +
+> >> +config PCIEAER_CXL
+> >> +	bool "PCI Express CXL RAS support for Restricted Hosts (RCH)"
 > > 
-> > Similar to the comment about cxl_dport_map_regs() not being appropriate
-> > in an enumeration routine, this also needs to move out of _add_dport. It
-> > occurs to me that it should also be undone on driver detach just like
-> > other device "enables".
+> > Why the "for Restricted Hosts (RCH)" clarification? I am seeing nothing
+> > that prevents this from working with RCECs on VH topologies.
+> > 
 > 
-> Ok. I will move out of enumeration. 
+> The same option can be used in VH mode. Will remove the RCH reference.
 > 
-> Per the 'undo' request: This is a RCH downstream port (dport) with PCIe root port 
-> capability. PCI spec states root port error reporting is disabled by default at 
-> powerup. And SW does *not* enable the root port errors because the RCH dport is *not* 
-> bound to a root port driver (missing BDF, etc). This mask is added to follow the 
-> CXL spec precisely and if the rest of the system behaves as expected should not 
-> be necessary. 
+> > 
+> >> +	default y
+> > 
+> > Minor, but I think "default PCIEAER" makes it slightly clearer that CXL
+> > error handling comes along for the ride with PCIE AER.
+> >
+> 
+> We found Kconfig entries do not typically list a dependancy and the default 
+> to be the same. We prefer to leave as 'default y'. If you want we can make 
+> your requested change. 
 
-Ah, got it perhaps add a comment to sanity check that the hardware is in
-the per-spec state. Are you certain that even in firmware-first error
-handling it is safe for the driver to unconditionally disable these
-interrupts?
+The tie breaker would be to follow whatever the local precedent is.
+Indeed, it looks like "depends with default y" is consistent with other
+drivers/pci/pcie/Kconfig entries. So I retract my comment.
 
-> I don't believe masking should be 'undone' in driver detach or elsewhere. Adding 
-> the 'undo' masking would potentially introduce RCH dport root port interrupt 
-> reporting which is incorrect for the RCH/RCD mode. Only CXL components (device, 
-> uport, switch) may reside under the RCH dport and never want RCH dport reporting 
-> root port errors. RCEC reports the root complex errors in RCH/RCD mode.
+> 
+> >> +	depends on PCIEAER && CXL_PCI
+> >> +	help
+> >> +	  Enables error handling of downstream ports of a CXL host
+> >> +	  that is operating in RCD mode (Restricted CXL Host, RCH).
+> >> +	  The downstream port reports AER errors to a given RCEC.
+> >> +	  Errors are handled by the CXL memory device driver.
+> >> +
+> >> +	  If unsure, say Y.
+> >> +
+> >>  #
+> >>  # PCI Express ECRC
+> >>  #
+> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> >> index d3344fcf1f79..c354ca5e8f2b 100644
+> >> --- a/drivers/pci/pcie/aer.c
+> >> +++ b/drivers/pci/pcie/aer.c
+> >> @@ -946,14 +946,100 @@ static bool find_source_device(struct pci_dev *parent,
+> >>  	return true;
+> >>  }
+> >>  
+> >> +#ifdef CONFIG_PCIEAER_CXL
+> >> +
+> >> +static bool is_cxl_mem_dev(struct pci_dev *dev)
+> >> +{
+> >> +	/*
+> >> +	 * The capability, status, and control fields in Device 0,
+> >> +	 * Function 0 DVSEC control the CXL functionality of the
+> >> +	 * entire device (CXL 3.0, 8.1.3).
+> >> +	 */
+> >> +	if (dev->devfn != PCI_DEVFN(0, 0))
+> >> +		return false;
+> >> +
+> >> +	/*
+> >> +	 * CXL Memory Devices must have the 502h class code set (CXL
+> >> +	 * 3.0, 8.1.12.1).
+> >> +	 */
+> >> +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> >> +		return false;
+> > 
+> > Type-2 devices are going to support the same error flows but without
+> > advertising the CXL class code. Should this perhaps be something that
+> > CXL drivers can opt into by setting a flag in the pci_dev? It is already
+> > the case that the driver needs to be attached for the error handler to
+> > be found, so might as well allow the CXL AER handling to be opted-in by
+> > the driver as well.
+> > 
+> 
+> At the momment type-2 devices are unsupported and the drivers are not 
+> available. The absence of CXL class information in type-2 devices will present 
+> a challenge in identifying here. We would like to defer making change here 
+> and address this in a future a patchset. 
 
-Ok, that also seems to suggest that even in the firmware-first case the
-driver should make sure they are off per-spec.
+Fair enough.
+
+> 
+> >> +
+> >> +	return true;
+> >> +}
+> >> +
+> >> +static bool cxl_error_is_native(struct pci_dev *dev)
+> >> +{
+> >> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> >> +
+> >> +	if (pcie_ports_native)
+> >> +		return true;
+> >> +
+> >> +	return host->native_aer && host->native_cxl_error;
+> >> +}
+> >> +
+> >> +static bool is_internal_error(struct aer_err_info *info)
+> >> +{
+> >> +	if (info->severity == AER_CORRECTABLE)
+> >> +		return info->status & PCI_ERR_COR_INTERNAL;
+> >> +
+> >> +	return info->status & PCI_ERR_UNC_INTN;
+> >> +}
+> >> +
+> >> +static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+> >> +{
+> >> +	struct aer_err_info *info = (struct aer_err_info *)data;
+> >> +	const struct pci_error_handlers *err_handler;
+> >> +
+> >> +	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+> >> +		return 0;
+> >> +
+> >> +	/* protect dev->driver */
+> >> +	device_lock(&dev->dev);
+> >> +
+> >> +	err_handler = dev->driver ? dev->driver->err_handler : NULL;
+> >> +	if (!err_handler)
+> >> +		goto out;
+> >> +
+> >> +	if (info->severity == AER_CORRECTABLE) {
+> >> +		if (err_handler->cor_error_detected)
+> >> +			err_handler->cor_error_detected(dev);
+> >> +	} else if (err_handler->error_detected) {
+> >> +		if (info->severity == AER_NONFATAL)
+> >> +			err_handler->error_detected(dev, pci_channel_io_normal);
+> >> +		else if (info->severity == AER_FATAL)
+> >> +			err_handler->error_detected(dev, pci_channel_io_frozen);
+> >> +	}
+> >> +out:
+> >> +	device_unlock(&dev->dev);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> >> +{
+> >> +	/*
+> >> +	 * Internal errors of an RCEC indicate an AER error in an
+> >> +	 * RCH's downstream port. Check and handle them in the CXL.mem
+> >> +	 * device driver.
+> >> +	 */
+> >> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> >> +	    is_internal_error(info))
+> >> +		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> > 
+> > This would seem to work generically for RCEC reported errors in a VH
+> > topology, so I think the "_rch" distinction can be dropped.
+> > 
+> 
+> The pcie_walk_rcec() filters on PCI_EXP_TYPE_RC_END devices. As a result this 
+> iterator will not apply to VH mode devices (PCI_EXP_TYPE_ENDPOINT, PCI_EXP_TYPE_ROOT_PORT,
+> PCI_EXP_TYPE_DOWNSTREAM). This series is focused on RCH mode. VH mode port error 
+> handling will be addressed in future patchset. 
+
+True, yeah, makes sense. My concern was potential cases where there is
+an RCEC that needs to be consulted on VH protocol errors, but that can
+be addressed as you say in a future patchset.
