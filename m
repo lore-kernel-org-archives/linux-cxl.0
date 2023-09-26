@@ -2,36 +2,35 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A5E7D27F
-	for <linux-cxl@archiver.kernel.org>; Tue, 26 Sep 2023 11:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D81E7D27F
+	for <linux-cxl@archiver.kernel.org>; Tue, 26 Sep 2023 11:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234397AbjIZLFt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 26 Sep 2023 07:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
+        id S234397AbjIZLH6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 26 Sep 2023 07:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234140AbjIZLFt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 26 Sep 2023 07:05:49 -0400
+        with ESMTP id S234140AbjIZLH5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 26 Sep 2023 07:07:57 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32DE95;
-        Tue, 26 Sep 2023 04:05:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BDC95
+        for <linux-cxl@vger.kernel.org>; Tue, 26 Sep 2023 04:07:51 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RvxhW2RCtz6K9hk;
-        Tue, 26 Sep 2023 19:04:27 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rvxjj18Phz6D9YK;
+        Tue, 26 Sep 2023 19:05:29 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 26 Sep
- 2023 12:05:40 +0100
-Date:   Tue, 26 Sep 2023 12:05:39 +0100
+ 2023 12:07:48 +0100
+Date:   Tue, 26 Sep 2023 12:07:47 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC:     <rafael@kernel.org>, <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <bhelgaas@google.com>, <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v5 3/3] ACPI, APEI, EINJ: Update EINJ documentation
-Message-ID: <20230926120539.00000a4a@Huawei.com>
-In-Reply-To: <20230925200127.504256-4-Benjamin.Cheatham@amd.com>
-References: <20230925200127.504256-1-Benjamin.Cheatham@amd.com>
-        <20230925200127.504256-4-Benjamin.Cheatham@amd.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH] cxl: Add committed sysfs attribute to CXL decoder
+Message-ID: <20230926120747.0000462f@Huawei.com>
+In-Reply-To: <169566515694.3697523.714600762835841180.stgit@djiang5-mobl3>
+References: <169566515694.3697523.714600762835841180.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -45,94 +44,79 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 25 Sep 2023 15:01:27 -0500
-Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+On Mon, 25 Sep 2023 11:05:56 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Update EINJ documentation to include CXL errors in available_error_types
-> table and usage of the types.
-> 
-> Also fix a formatting error in the param4 file description that caused
-> the description to be on the same line as the bullet point.
-> 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-A trivial comment inline.
+> Expose the committed status of a CXL decoder. The status assists CXL CLI in
+> determining as a sure way whether a region is active. Of coruse this is
 
+Spell check.
+
+> still best effort as it's a snapshot of the state and not atomic for the
+> user region disable operation.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+One passing comment inline.
+
+Seems reasonable to me.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  .../firmware-guide/acpi/apei/einj.rst         | 25 ++++++++++++++++---
->  1 file changed, 21 insertions(+), 4 deletions(-)
+>  Documentation/ABI/testing/sysfs-bus-cxl |    7 +++++++
+>  drivers/cxl/core/port.c                 |   11 +++++++++++
+>  2 files changed, 18 insertions(+)
 > 
-> diff --git a/Documentation/firmware-guide/acpi/apei/einj.rst b/Documentation/firmware-guide/acpi/apei/einj.rst
-> index d6b61d22f525..c6f28118c48b 100644
-> --- a/Documentation/firmware-guide/acpi/apei/einj.rst
-> +++ b/Documentation/firmware-guide/acpi/apei/einj.rst
-> @@ -32,6 +32,9 @@ configuration::
->    CONFIG_ACPI_APEI
->    CONFIG_ACPI_APEI_EINJ
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 087f762ebfd5..ef3fc9fe9d0d 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -369,6 +369,13 @@ Description:
+>  		provided it is currently idle / not bound to a driver.
 >  
-> +To use CXL error types ``CONFIG_CXL_ACPI`` needs to be set to the same
-> +value as ``CONFIG_ACPI_APEI_EINJ`` (either "y" or "m").
+>  
+> +What:		/sys/bus/cxl/devices/decoderX.Y/committed
+> +Date:		Sep, 2023
+> +KernelVersion:	v6.7
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) Indicates whether the decoder is committed.
 > +
->  The EINJ user interface is in <debugfs mount point>/apei/einj.
+>  What:		/sys/bus/cxl/devices/regionZ/uuid
+>  Date:		May, 2022
+>  KernelVersion:	v6.0
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 724be8448eb4..ab5b9bc26d56 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -277,12 +277,23 @@ static ssize_t interleave_ways_show(struct device *dev,
 >  
->  The following files belong to it:
-> @@ -40,9 +43,9 @@ The following files belong to it:
+>  static DEVICE_ATTR_RO(interleave_ways);
 >  
->    This file shows which error types are supported:
->  
-> -  ================  ===================================
-> +  ================  =========================================
->    Error Type Value	Error Description
-> -  ================  ===================================
-> +  ================  =========================================
->    0x00000001        Processor Correctable
->    0x00000002        Processor Uncorrectable non-fatal
->    0x00000004        Processor Uncorrectable fatal
-> @@ -55,7 +58,13 @@ The following files belong to it:
->    0x00000200        Platform Correctable
->    0x00000400        Platform Uncorrectable non-fatal
->    0x00000800        Platform Uncorrectable fatal
-> -  ================  ===================================
-> +  0x00001000        CXL.cache Protocol Correctable
-> +  0x00002000        CXL.cache Protocol Uncorrectable non-fatal
-> +  0x00004000        CXL.cache Protocol Uncorrectable fatal
-> +  0x00008000        CXL.mem Protocol Correctable
-> +  0x00010000        CXL.mem Protocol Uncorrectable non-fatal
-> +  0x00020000        CXL.mem Protocol Uncorrectable fatal
-> +  ================  =========================================
->  
->    The format of the file contents are as above, except present are only
->    the available error types.
-> @@ -106,6 +115,7 @@ The following files belong to it:
->    Used when the 0x1 bit is set in "flags" to specify the APIC id
->  
->  - param4
+> +static ssize_t committed_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
 > +
+> +	return sysfs_emit(buf, "%d\n", !!(cxld->flags & CXL_DECODER_F_ENABLE));
 
-#Unrelated change.  Probably reasonable but should be separate patch really.
+Could use FIELD_GET() though as it's not been used for these
+before that I could quickly find, fair enough to maintain
+consistent style
 
->    Used when the 0x4 bit is set in "flags" to specify target PCIe device
+> +}
+> +
+> +static DEVICE_ATTR_RO(committed);
+> +
+>  static struct attribute *cxl_decoder_base_attrs[] = {
+>  	&dev_attr_start.attr,
+>  	&dev_attr_size.attr,
+>  	&dev_attr_locked.attr,
+>  	&dev_attr_interleave_granularity.attr,
+>  	&dev_attr_interleave_ways.attr,
+> +	&dev_attr_committed.attr,
+>  	NULL,
+>  };
 >  
->  - notrigger
-> @@ -159,6 +169,13 @@ and param2 (1 = PROCESSOR, 2 = MEMORY, 4 = PCI). See your BIOS vendor
->  documentation for details (and expect changes to this API if vendors
->  creativity in using this feature expands beyond our expectations).
->  
-> +CXL error types are supported from ACPI 6.5 onwards. To use these error
-> +types you need the MMIO address of a CXL 1.1 downstream port. You can
-> +find the address of dportY in /sys/bus/cxl/devices/portX/dportY/cxl_rcrb_addr
-> +(it's possible that the dport is under the CXL root, in that case the
-> +path would be /sys/us/cxl/devices/rootX/dportY/cxl_rcrb_addr).
-> +From there, write the address to param1 and continue as you would for a
-> +memory error type.
->  
->  An error injection example::
->  
-> @@ -201,4 +218,4 @@ The following sequence can be used:
->    7) Read from the virtual address. This will trigger the error
->  
->  For more information about EINJ, please refer to ACPI specification
-> -version 4.0, section 17.5 and ACPI 5.0, section 18.6.
-> +version 4.0, section 17.5 and ACPI 6.5, section 18.6.
+> 
+> 
 
