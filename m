@@ -2,195 +2,165 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A52E7E62B
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Sep 2023 04:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01856E810B1
+	for <linux-cxl@archiver.kernel.org>; Wed, 27 Sep 2023 09:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbjI0ETx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Sep 2023 00:19:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41740 "EHLO
+        id S230004AbjI0Jue (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 27 Sep 2023 05:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjI0ESz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Sep 2023 00:18:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D2493D0;
-        Tue, 26 Sep 2023 15:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695766482; x=1727302482;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=40ktvuTyli1b/XSnzu06m+oPFBOuzJNWaRiDGdKNZuA=;
-  b=Bcqhh6Jn1qd2+NGMg+7n5dpyD9qYkYWAj8827xmdCOI0ZFPhirr5CtMz
-   Owsg1eQYsuEoosSWaInZkLdXGkDPsPRxUYvDTAnlo2w2q8it8I9anhT4k
-   jyr2tTUyG/gd91EFhXzj0HnC81DCTOsRpYIELGotXQC/2om2pCPt+yHto
-   aSSerc53zOfACVcquL3zuxzLI4PbwnTMKRP7Tx5cBeeOcf7NsQbzlLfu5
-   bmuwLfDdCi1NcQ97VdTjf7yapHDX1YQ2Rh2SbCr4iAlCre4joKYk0yMOf
-   KjGs05OH3Vi1aIacAxafvM21O3jd70KYBvKIDsyrd5gYN+qsvdBtBnOBl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="385526027"
-X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="385526027"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 14:36:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="305327"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Sep 2023 14:36:14 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Tue, 26 Sep 2023 14:36:43 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Tue, 26 Sep 2023 14:36:43 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Tue, 26 Sep 2023 14:36:43 -0700
+        with ESMTP id S229509AbjI0Jue (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Sep 2023 05:50:34 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2088.outbound.protection.outlook.com [40.107.94.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1121AE;
+        Wed, 27 Sep 2023 02:50:31 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFMPuNwnd/avMY3d9jXvQE9z/97WBO0ALRllCVOA/OPt2y3DAswXtkw8ZojvCYjJ28pQFjekh0/QD1j7X92hxvKBF079m3WzjhHFbdNOzBHWD5RryKinz0kLm45kAPF2jVJFOtPUBgtVU9+snfxtKldwTyBnTpPOVURg3crYOC3+nMopKgTBKUuQdZBmOiLHGg8lYY1la7SZCYAqwCeW0xPqf5LHla9Ka9uq+AbWXQrjlr4TZwog0txB9k5OVYlNQVq7OHvR0V8s3G/WZV45+8E1I8bM+kQStNcWtBE2EyN/pKD0c3en6v3sRxhwYndOihgVnAHTwFSaGoHZn9xQ+g==
+ b=KIPQ/7x0jHokAt0F1xeeAEzyBqiGQLFAwnonjSlAFA76eVhOAj+uWssArci5hjiIjh8Tz5WShW1fjJ0p+8nretNIUYA7E+tDYS4HnIOEDUxiPHYauKbjdkFiOHhP8VDx9EhDTJk22BDBSNdNAOGQXT/1cUd5fKQgHho2NlqWmil1+eBIfH2QfnMRCBNW8tYzi8Z7aqcy+fkn8E98KaNmNcrKaJs86SZ5+QUOyiGx2SAFdYXoeGPAKf318wWASOaxL1SDO1vg0WCU/0Mz4uqH3XMQDibRgEQb3TRke1yzxXefHkmd3ek1NX3iSr7pUOAW5Uowyd6aHx8Vzc9IDRsnnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DSxS/2nVHaVfmeVXe6IzUeyNgfNX5GI4HbOY4vsGa2E=;
- b=EhD+8Z5u6WcTnxsbwIR2n1bPWS2ASO0QhCmFdVgBpMdyGadZlAIXYrAhoiLIz3OiC0uwS2eAhyln3PBMiZXX2/R3SNs/XpXhaKcFuaHl19y1G9PvIK15a1luu1UDi58OI1g8rMBKoBcjVIVOF+dbesPgXG1mNnYp3XOZqgA6GnguIQImIIID+H0zH8LaF3pfxO471yW/paRZoFyC6G++Vj4k3VtLLvCDHS0cBKyWSx3pZccXMbtG4fnJwOA46DXfxngQJ7GNQzxp/nUXYJ2P2g8UBhgao3FQPzgPEaKDsWr57oIfmRsfobqK4THKnb+pxEx3Y1AImOmf5zxcSEjoAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ2PR11MB8369.namprd11.prod.outlook.com (2603:10b6:a03:53d::16) with
+ bh=6a9/12WgCgZMTWXMzVNEZXcO1CrVBtcJsx8yF/T3UpA=;
+ b=lP7Q13zdqcL2IWTl+TsO8C8goutCR5vHL94zO29xy/UOowJDO7GJqr5ZEIer5A+Uea+FeeDgzSN1SwuPPf4FBN6wmIv65Z6HqvG4Wb+h4qiJUeGEKeljmPJY6eZb5P4NO5Cd9TjyvyVHLUP/9BCfVz2xBpcNPlXx/uMwUIF4ibI0lkAKslyKgxgx6FMZ80HZoaNLIP1Q5+51SFuSS733l0sbpFGyM5RlkV/TrNMMl4LYhOe1jcH9XAq5REoymWPaQDrQ9Z2oMcNUpKFr3GAiVcZvhg8OVuDVfcXq9gzx60fAtOTd0AP2lrutUZSsVPQTREioHTm0UjTOcl5hvi3ULg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6a9/12WgCgZMTWXMzVNEZXcO1CrVBtcJsx8yF/T3UpA=;
+ b=UQdLHMmanbNFLFmggey3pyKi0+B+MUIjhFr8FM9N8hgoVKsIdRFbTT3qwjSGkzihoM1alHsSn+oIx4VoIURpI+LaHoaRmpVv1jw46RAS0BHZKfzMpmHR6oULiNrjWlFSoXWsT3R5TL3+DRg2mfcQhcauRA8gfE3eVHDyuNmaU+JmTWAc0Z7Fzx1U08XeA2gWCuWfy6mYh2QL5y8aeZR1zxdfTe0qLL7TK4snKqDDJBugyEQxbZX8oL0BrJzko5tsgtTCwPhNeM/VUQgLHPrMQR/K67OJPUP4/UvYHt+2Icb181A0MAuwM+S8B+kFRFVYtXDjksPx/srd7DW1T7pP9g==
+Received: from MW4PR04CA0218.namprd04.prod.outlook.com (2603:10b6:303:87::13)
+ by BL3PR08MB7300.namprd08.prod.outlook.com (2603:10b6:208:353::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Tue, 26 Sep
- 2023 21:36:41 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6792.026; Tue, 26 Sep 2023
- 21:36:41 +0000
-Date:   Tue, 26 Sep 2023 14:36:38 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Ben Cheatham <Benjamin.Cheatham@amd.com>, <rafael@kernel.org>,
-        <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>
-CC:     <bhelgaas@google.com>, <benjamin.cheatham@amd.com>,
-        <yazen.ghannam@amd.com>
-Subject: RE: [PATCH v5 2/3] ACPI, APEI, EINJ: Add CXL 1.1 EINJ error type
- support
-Message-ID: <65134ee675c1c_bf9129451@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230925200127.504256-1-Benjamin.Cheatham@amd.com>
- <20230925200127.504256-3-Benjamin.Cheatham@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230925200127.504256-3-Benjamin.Cheatham@amd.com>
-X-ClientProxiedBy: MW4PR04CA0044.namprd04.prod.outlook.com
- (2603:10b6:303:6a::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.31; Wed, 27 Sep
+ 2023 09:50:26 +0000
+Received: from CO1PEPF000044EE.namprd05.prod.outlook.com
+ (2603:10b6:303:87:cafe::6d) by MW4PR04CA0218.outlook.office365.com
+ (2603:10b6:303:87::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.22 via Frontend
+ Transport; Wed, 27 Sep 2023 09:50:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
+ smtp.mailfrom=micron.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=micron.com;
+Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
+ 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.201.242.130; helo=mail.micron.com; pr=C
+Received: from mail.micron.com (137.201.242.130) by
+ CO1PEPF000044EE.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6838.14 via Frontend Transport; Wed, 27 Sep 2023 09:50:25 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by
+ BOW36EX1902.micron.com (137.201.85.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.16; Wed, 27 Sep 2023 03:50:23 -0600
+Received: from VENKATARAVI-LAP.micron.com (10.70.32.235) by
+ RestrictedRelay17EX19B.micron.com (137.201.21.219) with Microsoft SMTP Server
+ id 15.2.1258.12 via Frontend Transport; Wed, 27 Sep 2023 03:50:17 -0600
+From:   Ravi Jonnalagadda <ravis.opensrc@micron.com>
+To:     <linux-mm@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <luto@kernel.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dietmar.eggemann@arm.com>, <vincent.guittot@linaro.org>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
+        <akpm@linux-foundation.org>, <x86@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <gregory.price@memverge.com>,
+        <ying.huang@intel.com>, <jgroves@micron.com>,
+        <ravis.opensrc@micron.com>, <sthanneeru@micron.com>,
+        <emirakhur@micron.com>, <vtanna@micron.com>
+Subject: [RFC PATCH 0/2] mm: mempolicy: Multi-tier interleaving
+Date:   Wed, 27 Sep 2023 15:20:00 +0530
+Message-ID: <20230927095002.10245-1-ravis.opensrc@micron.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB8369:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5402bc56-b49c-4708-6e29-08dbbed8ac15
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044EE:EE_|BL3PR08MB7300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4514ed98-6195-47e8-228f-08dbbf3f2cad
+X-EXT-ByPass: 1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: skACMdrkVA937gAlsw6V49HB5H00zQLsk/AJAwihuuB+6m72wo3NLFjE/2hCpgbyzMeAM7bpVAK6I6zPcQAO77OOAgv0lD5aUXe/nC28tB1tP2tE5JBjt0zp0TAvsBYt5Js5l6AjtDbMqRz8EZTtQfcDgEsjJ6Z/byVo2r8C4LoTkHnXmwdzFImcbJ1jXhjJMyd/7vl+LcO6oTMIw+gqsn7VCoozlNDPDMJuPQ9bFG3OEPHoxq0RlzRU0BrE4r9rizDRY9dPjGsWfCVj2Y8PHvD0AYarFrMpzsYIzmKTo+O4ObAXmATvpaD7URc5rACW3wAqvepYCxhyFic1QOt+U1IwSr3J8axxN8PCCZQQzGsI0OiHxLDsmeaYM5MqWrNXwCyl/DkaeMZoAQk6S0pK9BYlOyK3Xk5w1qKR9JnvEh3ZiLyDV9UFVN013xIZ2MkszfJMcLl9TEmQpIze829KqCexipMClgFfaaYk5LU2tTtCPIKDDoY/YTUUhQJKcEHGuukl9hlvN5KneaptE2OBJuXyYd5nwwEzFT5A7amWQu8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(376002)(136003)(39860400002)(230922051799003)(186009)(1800799009)(451199024)(9686003)(6512007)(316002)(66946007)(2906002)(66476007)(66556008)(41300700001)(4326008)(8676002)(8936002)(478600001)(6666004)(5660300002)(38100700002)(6506007)(83380400001)(966005)(26005)(66899024)(6486002)(82960400001)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nMqwmUgiRUB8KBUk/6kVDKE2elXP1iFm8QoFhECQH2Aj86sImw7rLytbuo2k?=
- =?us-ascii?Q?B8KGjLQ+zt15VfkKi2uHgJslWhBH3AZxoO7sjPXeuvQgxE6GaKGa+v1Dn34t?=
- =?us-ascii?Q?bNw00B7TFdvlxe1LVQfSc0SZfIrJzU/Ew+3oekf5jAE6wGCz62ecp8qMTdI5?=
- =?us-ascii?Q?G79Mxp0sRBa9ZLRcFuQAQe4b2rrTL6wj/iqPQMY82ptl9QAIYCyaH0phXS9f?=
- =?us-ascii?Q?jAXIm+pAFj+73QLM0WyUmdcnhGNo+Fy7GmsOJyKMJNTV8u8Cl4EZahwns8E+?=
- =?us-ascii?Q?cFyalCNTFb4ka5L3k11FTo61pwaLAtiPp4/1On9uypd31CZGDCNNYKm8Worq?=
- =?us-ascii?Q?CCcGtxoL9/elXnkfPI3TlLCAphIHyWKCq/vEj0qRCPpnMYfslJGFqV0HB7YS?=
- =?us-ascii?Q?tLS438lQ0H2lui6BQV8hrJTXexMO6Fk/xgyZ+oNdNOUojAWzojV1Ljsdx688?=
- =?us-ascii?Q?3CJJL54VuR6kdq+kRx6W8JOjK+5Y6gnZfnr2KQZaWElDDJLUy9wLeGWyblyg?=
- =?us-ascii?Q?Nnu8ecLLE+dpwwvkmzFv+WNhwhXLK/6WWidKGkzGd4cqUOnXcBvdK0IzsTo6?=
- =?us-ascii?Q?KMbF/bG4O+37X4K0Roc+sXAasGzA4zK6ClscSu+nvLZVCnWfafpxjKrSMMQM?=
- =?us-ascii?Q?w3OoDfrGPFdg0R+EuryTgANYcb0rcziYHdmFubXaLHrKVsUsq+GDv1DzZkz/?=
- =?us-ascii?Q?1LbuXhJWqT810O4VKYyHTpPkGrRDZjxQB7eu4CxHwfhoL1Tm4XNd7DSwVhMM?=
- =?us-ascii?Q?5JR0zsHV/9sFC5jnPsduBdG/PhV7FG34SWNT+xyw+6/v8arLxCUABzO0YC5n?=
- =?us-ascii?Q?65bO9rr5lOrLEFhH5+1mqhiAaQD4PRf75xTiSvHyYPTKBcPE4Ti7YOEnGTdi?=
- =?us-ascii?Q?Eo6gxRRSJH1K4DNUln+djKAziVv08w0nRUpHvUPmYqzpBCwCxLT/3Q9j72+x?=
- =?us-ascii?Q?R88h0H+0YbQzp8zLqtLsuUJjFBsBxlkHodIvfMMbmJxEMK8nRdoQA4IPAzr2?=
- =?us-ascii?Q?GRKQvPhe8PmaiLbKJiVXzYBS/JxneIEF3/cJrPP2yLAvYVVIT43JXfc8l/uq?=
- =?us-ascii?Q?VaR/GXsQeYxPV1XXGfcZe0Njwc+UEexmUmk7kwPKPv/d9yd2X9fiQxsAWthR?=
- =?us-ascii?Q?bMoELQwY2SvsjMHxBZnMtsa0WBq4DCvA92BMGGcVamdVxZO166ZwrYRKueVg?=
- =?us-ascii?Q?d44Xc8Qj8q8jfXIs5xwv+TZR9U8Dy3iaphaU5HEe1LunBGAbGlNQ5XbSM92r?=
- =?us-ascii?Q?195RW7w71+rao9C4cF8M/3i4zDaINzTWk+RMGzpgqssOZfwbj5vBOVspfrf6?=
- =?us-ascii?Q?czHeQnfKclck3LxOYm6kVwOLzmOey7TUSZ/ypmYNo5CNaf1FO3/Nq/7l12so?=
- =?us-ascii?Q?NQBQrNR5Mhlp0v9P9yypbO2SiQHAFmq3Y1DNy252kQ4Rw6nhOxGMT2lYW6FD?=
- =?us-ascii?Q?HTBm4K0OlgWgTkitu/bbXI3LEMmm/4Hzv9WgV300abuyF6xpi3GVX4CRmCvO?=
- =?us-ascii?Q?Nf/mjqUsG3CRf6eYQ9STU5OIv41YPAab4v3caTMGf+0NS6u0lZSNcjtjr4uH?=
- =?us-ascii?Q?t6BiO8WrWlHKLxmqoODrk0MtZiEkH6bXRlAZgudmhKFAIf3mf9bEYY0RZngq?=
- =?us-ascii?Q?Cw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5402bc56-b49c-4708-6e29-08dbbed8ac15
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2023 21:36:41.4931
+X-Microsoft-Antispam-Message-Info: jkJACQMgCBEtHMNXUL+bWBnflAhl+ptNnYlsuQ+uaZ264LHa2n4vVWf9X8iozlL9rFaU6BQhdQnomcYYcNniP3wCWQB7Xvap6zTovfbbvp9Ul5wTF0R1Ts98ErRMKLlYobZNerADpBouhvVWtbmy2mQ4DlD4bbJlle8NxzvL1QTpTHLWTulWiVqtd6rfe+I8gx5uczUY7ZSipfzaLnyYIGS2E9iJ5R2GpbpiFnED4qZHhuNEPl6WndH89xNjIYugPGYc37hA0OMofCAeH6InpqNeYD6DQB9YfdZIjlUd/WnW8m32aXeEM53NMV6ZHYhN6cRCuCeb7LtQVzIfB5XXLauNnNg9iIr9jDyMpGNK2q/cA7e95klk+z3ryol1dEUtZ2iErQnsPfp30Dab9ZM5k2MkqDwRRb1b2aM5dkfp7xyOr/em26rqUlaXI5YmRbaJKQRTkH8j0ZGIJNRq2n35g5GanyzGEZ4BBwW/rrRNZ2kz1P0/SKYDEle5FacOHCuGJD3ENxxNE7w/UkUfKgucXwB5Oz83A99Z4yzw47RxqcaumQqq8Oc/nvqOYspRCwXZlHrgVGDWrayHnhJPplUKSu1QGaukKWi5nHfhN8sr7l5LaMApXPGdcnBObVYiF1PXmgLNZ9U+JIAqGPdMyZAgCNb10k98a1fXmeSRAcBYvs68x68M5dYkwvnGv0Q/H4uapI0EKhJYd/A0gLPcOyOsH+QSFLb8mTGgyBpQAvfyLbU=
+X-Forefront-Antispam-Report: CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(396003)(39860400002)(346002)(230922051799003)(1800799009)(82310400011)(186009)(451199024)(46966006)(40470700004)(36840700001)(40480700001)(426003)(6666004)(7696005)(70586007)(40460700003)(5660300002)(36756003)(107886003)(7636003)(2616005)(41300700001)(26005)(336012)(1076003)(356005)(478600001)(70206006)(54906003)(316002)(110136005)(86362001)(82740400003)(7416002)(966005)(2906002)(83380400001)(47076005)(4326008)(8936002)(8676002)(36860700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2023 09:50:25.5352
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /5coksY89N10zZmowd62bZVYmTCmJlTxIJ/Aq8/yy0igdMgSkIR2sRj26WIrdvsFLXKKkM3AFTxkD/t4D3MuCgrU7PBxmtERvHPAI826WZc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8369
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4514ed98-6195-47e8-228f-08dbbf3f2cad
+X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044EE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR08MB7300
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ben Cheatham wrote:
-> Add support for CXL EINJ error types for CXL 1.1 hosts added in ACPI
-> v6.5. Because these error types target memory-mapped CXL 1.1 compliant
-> downstream ports and not physical (normal/persistent) memory, these
-> error types are not currently  allowed through the memory range
-> validation done by the EINJ driver.
-> 
-> The MMIO address of a CXL 1.1 downstream port can be found in the
-> cxl_rcrb_addr file in the corresponding dport directory under
-> /sys/bus/cxl/devices/portX. CXL 1.1 error types follow the same
-> procedure as a memory error type, but with param1 set to the
-> downstream port MMIO address.
-> 
-> Example usage:
-> $ cd /sys/kernel/debug/apei/einj
-> $ cat available_error_type
->     0x00000008      Memory Correctable
->     0x00000010      Memory Uncorrectable non-fatal
->     0x00000020      Memory Uncorrectable fatal
->     0x00000040      PCI Express Correctable
->     0x00000080      PCI Express Uncorrectable non-fatal
->     0x00000100      PCI Express Uncorrectable fatal
->     0x00008000      CXL.mem Protocol Correctable
->     0x00020000      CXL.mem Protocol Uncorrectable fatal
-> $ echo 0x8000 > error_type
-> $ echo 0xfffffffffffff000 > param2
-> $ echo 0x2 > flags
-> $ cat /sys/bus/cxl/devices/portX/dportY/cxl_rcrb_addr
-> 0xb2f00000
-> $ echo 0xb2f00000 > param1
-> $ echo 1 > error_inject
+From: Ravi Shankar <ravis.opensrc@micron.com>
 
-I have the same reaction to this as I did before:
+Hello,
 
-http://lore.kernel.org/r/647817212bcf1_e067a2945@dwillia2-xfh.jf.intel.com.notmuch
+The current interleave policy operates by interleaving page requests
+among nodes defined in the memory policy. To accommodate the
+introduction of memory tiers for various memory types (e.g., DDR, CXL,
+HBM, PMEM, etc.), a mechanism is needed for interleaving page requests
+across these memory types or tiers.
 
-Why is per-port error injection being driven from this legacy global
-interface where userspace needs to take information from sysfs and walk
-it over to this other interface? Especially since "rcrb" is an
-implementation detail that will be invalidated with CXL VH topologies?
+This can be achieved by implementing an interleaving method that
+considers the tier weights.
+The tier weight will determine the proportion of nodes to select from
+those specified in the memory policy.
+A tier weight can be assigned to each memory type within the system.
 
-What I would like to see, since this is a new capability with no need to
-be beholden to legacy is to disaggregate the interface to be per-port.
+Hasan Al Maruf had put forth a proposal for interleaving between two
+tiers, namely the top tier and the low tier. However, this patch was
+not adopted due to constraints on the number of available tiers.
 
-For example:
+https://lore.kernel.org/linux-mm/YqD0%2FtzFwXvJ1gK6@cmpxchg.org/T/
 
-/sys/kernel/debug/cxl/$mem/{inject,clear}_poison is already established
-for memory device poison injection. Why not add something like:
+New proposed changes:
 
-/sys/kernel/debug/cxl/$port/einj_{type,inject}
+1. Introducea sysfs entry to allow setting the interleave weight for each
+memory tier.
+2. Each tier with a default weight of 1, indicating a standard 1:1
+proportion.
+3. Distribute the weight of that tier in a uniform manner across all nodes.
+4. Modifications to the existing interleaving algorithm to support the
+implementation of multi-tier interleaving based on tier-weights.
 
-For triggering errors by the CXL subsystem device name, and unburden
-userspace from needing to deal in magic numbers.
+This is inline with Huang, Ying's presentation in lpc22, 16th slide in
+https://lpc.events/event/16/contributions/1209/attachments/1042/1995/\
+Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
+
+Observed a significant increase (165%) in bandwidth utilization
+with the newly proposed multi-tier interleaving compared to the
+traditional 1:1 interleaving approach between DDR and CXL tier nodes,
+where 85% of the bandwidth is allocated to DDR tier and 15% to CXL
+tier with MLC -w2 option.
+
+Usage Example:
+
+1. Set weights for DDR (tier4) and CXL(teir22) tiers.
+echo 85 > /sys/devices/virtual/memory_tiering/memory_tier4/interleave_weight
+echo 15 > /sys/devices/virtual/memory_tiering/memory_tier22/interleave_weight
+
+2. Interleave between DRR(tier4, node-0) and CXL (tier22, node-1) using numactl
+numactl -i0,1 mlc --loaded_latency W2
+
+Srinivasulu Thanneeru (2):
+  memory tier: Introduce sysfs for tier interleave weights.
+  mm: mempolicy: Interleave policy for tiered memory nodes
+
+ include/linux/memory-tiers.h |  27 ++++++++-
+ include/linux/sched.h        |   2 +
+ mm/memory-tiers.c            |  67 +++++++++++++++-------
+ mm/mempolicy.c               | 107 +++++++++++++++++++++++++++++++++--
+ 4 files changed, 174 insertions(+), 29 deletions(-)
+
+-- 
+2.39.3
+
