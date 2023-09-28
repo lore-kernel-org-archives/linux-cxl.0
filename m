@@ -2,259 +2,275 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCC5CE7AFC
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00879E732FD
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 18:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231701AbjI1SRF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Sep 2023 14:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33220 "EHLO
+        id S230390AbjI1SWR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Sep 2023 14:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231584AbjI1SRE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 14:17:04 -0400
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C96AC;
-        Thu, 28 Sep 2023 11:17:01 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id 0A72F10029AE0;
-        Thu, 28 Sep 2023 20:16:59 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id B232060DFEBD;
-        Thu, 28 Sep 2023 20:16:58 +0200 (CEST)
-X-Mailbox-Line: From 467bff0c4bab93067b1e353e5b8a92f1de353a3f Mon Sep 17 00:00:00 2001
-Message-Id: <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
-In-Reply-To: <cover.1695921656.git.lukas@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Thu, 28 Sep 2023 19:32:42 +0200
-Subject: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
- authentication
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
+        with ESMTP id S230139AbjI1SWQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 14:22:16 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5615698
+        for <linux-cxl@vger.kernel.org>; Thu, 28 Sep 2023 11:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us; s=s31663417;
+ t=1695925300; x=1696530100; i=fan.ni@gmx.us;
+ bh=UfOI6vyIRiGBHe7ZCWPGemrwVXXsHLD0DBk4/NEoACY=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=HKJdM3tsqeLJGXxT6kOQteNUMXjM559B1zyR94+ukuoe9U3U1XNa3w9kUgRWWGOoQp31n68QBoe
+ jbmmYFq/Ny92xPtB12xG/aKkw9/0Op1rE+F3bfJwMAZzzIyjlcQG321gPDGdoQXKi6aJjNuQ/knQw
+ hzoD3pWLj612pNhzQeDZPkBXhT1117z2LosmKyf1B8eiffNfOe1VbcGLxKwzWXLS46LnhVJCie6Aa
+ IE563mDkPc/EUnXpNPFAlOPL4vT580MxY4oyN3TYLwGNOzb5cJ3A6exbebjnc3LcqJ1slepYoELLA
+ QY/ErvXv2O2SYxZUdvmI4sMR7/nry3qLDNRQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MQeA2-1qyWZh0Dbi-00Nlm1; Thu, 28
+ Sep 2023 20:21:39 +0200
+Date:   Thu, 28 Sep 2023 11:21:31 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+        Michael Tsirkin <mst@redhat.com>, linuxarm@huawei.com,
+        Fan Ni <fan.ni@samsung.com>,
+        Philippe Mathieu-Daud? <philmd@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Gregory Price <gregory.price@memverge.com>,
+        Klaus Jensen <its@irrelevant.dk>,
+        Corey Minyard <cminyard@mvista.com>,
+        Klaus Jensen <k.jensen@samsung.com>
+Subject: Re: [PATCH 04/19] hw/cxl/mbox: Generalize the CCI command processing
+Message-ID: <ZRXEKxUTwrP_8U0v@debian>
+References: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
+ <20230925161124.18940-5-Jonathan.Cameron@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230925161124.18940-5-Jonathan.Cameron@huawei.com>
+X-Provags-ID: V03:K1:Z697vS6oUizMDH2lC6ZsefviT1+WwjEhiUg5aj9tgUvpW4xhXu2
+ f6dNdgSA+DegwvvD12wdmFqBiFpquzmfKJxqhbYKRlODfv/rtBq3cViXt7kh6Majo6MC5rr
+ KDmJEUjl/ZG9uC4hUdU2+NdpWG0mzZ1RkIEhXDAUtwZpBs+4UJSMyrOIExcuHE0eozjDYRe
+ JMJItK3sf+yGg+CGazX4A==
+UI-OutboundReport: notjunk:1;M01:P0:LU/SxjILlNU=;pjNCpyyanKvO1tp3QYnlC+6ueoc
+ VLEF6v9HX0ov8waxCwV5iuw2i/T46VM0FaJh3IYwW/C12MeeVlKG0zDHAdG/cwrjuuRemKm7m
+ ZOxcQSkYkLDEQvNrp5EwfMYWoQphhF0eUoRtx6Gedn17hYDigZwzAcymnXs8w12fYcqwrKf15
+ hnR/Zv2PqHT6b5ucZRMpUI9V/xLoM6NXZTMcnLR/YAEocn+DuKi9pyKwxzNhuGrutoWCrA+tG
+ NCSwfHxDTItudQ16eU+SCKLgs1m6hluTt7GjsJ+jVmjNMfg05Nv8aZ2AeZIwvKKWeFrJm7ENt
+ dINgj5v5WJ/1vaFRh2wVXvpWX478hF8pH6Qscumeo8yjGm/ISqgUAfYQva+iVEiIe7Cnw8tRo
+ 5BMD94vVCHnBhZHMmhTKQ6dEetNc1JlqQVlbYNMgEYeVUllN6xSF7Ebdif0bB63bn1LNy60zL
+ wnm0uWSaWy30oPBCe/F7ph37nyO/wLI2eRU9FhqRdqhQNpqLMDCtkfWQaFQusOs+Dh6HOLxWZ
+ ThG+2Tyx/o3YyrdPhcHO8GkefbHUa0y3ss3UHT1Cs7cjjES4Dw3fseXpToizKNmpdYX50u2w7
+ s2fXNLuv2ldGiv4/OdKgiXqF3tjeKb2vz1gGw/nCSTMBXUMRdsVOmtmwmZVs2I1cNejI1wdhM
+ LOc9Cse2elyIojfAOPL5Hq74bnesKgsV6jKAAKDpN64yZ9la3nNMv22TuukjrYeoGQ08R5rV3
+ NPqpNX8FrPGThJYY0CACJHDPCpEitPrGBPBWKgiSHapDssO6kt12Gb5cH4cZEBP8Kij/4dDDm
+ vX5CUiR3EqyscQMGzfuyAnFYI+Gy4GeYJVecdmYtRWP/myBg3dQPwDWhx/fLui4s4h/bSg4gq
+ x43jQ1ab4PsJtk2kagUc0HNNFTVVAloSGgwqgQQsJlYfKWfTBwTGF/ECsFc7ZfUGZCyW21aJb
+ PPVlUzwQ+vy6G/AvVoinHqv1kFg=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-At any given time, only a single entity in a physical system may have
-an SPDM connection to a device.  That's because the GET_VERSION request
-(which begins an authentication sequence) resets "the connection and all
-context associated with that connection" (SPDM 1.3.0 margin no 158).
+On Mon, Sep 25, 2023 at 05:11:09PM +0100, Jonathan Cameron wrote:
+> By moving the parts of the mailbox command handling that are CCI type
+> specific out to the caller, make the main handling code generic. Rename =
+it
+> to cxl_process_cci_message() to reflect this new generality.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-Thus, when a device is passed through to a guest and the guest has
-authenticated it, a subsequent authentication by the host would reset
-the device's CMA-SPDM session behind the guest's back.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-Prevent by letting the guest claim exclusive CMA ownership of the device
-during passthrough.  Refuse CMA reauthentication on the host as long.
-After passthrough has concluded, reauthenticate the device on the host.
-
-Store the flag indicating guest ownership in struct pci_dev's priv_flags
-to avoid the concurrency issues observed by commit 44bda4b7d26e ("PCI:
-Fix is_added/is_busmaster race condition").
-
-Side note:  The Data Object Exchange r1.1 ECN (published Oct 11 2022)
-retrofits DOE with Connection IDs.  In theory these allow simultaneous
-CMA-SPDM connections by multiple entities to the same device.  But the
-first hardware generation capable of CMA-SPDM only supports DOE r1.0.
-The specification also neglects to reserve unique Connection IDs for
-hosts and guests, which further limits its usefulness.
-
-In general, forcing the transport to compensate for SPDM's lack of a
-connection identifier feels like a questionable layering violation.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/pci/cma.c                | 41 ++++++++++++++++++++++++++++++++
- drivers/pci/pci.h                |  1 +
- drivers/vfio/pci/vfio_pci_core.c |  9 +++++--
- include/linux/pci.h              |  8 +++++++
- include/linux/spdm.h             |  2 ++
- lib/spdm_requester.c             | 11 +++++++++
- 6 files changed, 70 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
-index c539ad85a28f..b3eee137ffe2 100644
---- a/drivers/pci/cma.c
-+++ b/drivers/pci/cma.c
-@@ -82,9 +82,50 @@ int pci_cma_reauthenticate(struct pci_dev *pdev)
- 	if (!pdev->cma_capable)
- 		return -ENOTTY;
- 
-+	if (test_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags))
-+		return -EPERM;
-+
- 	return spdm_authenticate(pdev->spdm_state);
- }
- 
-+#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
-+/**
-+ * pci_cma_claim_ownership() - Claim exclusive CMA-SPDM control for guest VM
-+ * @pdev: PCI device
-+ *
-+ * Claim exclusive CMA-SPDM control for a guest virtual machine before
-+ * passthrough of @pdev.  The host refrains from performing CMA-SPDM
-+ * authentication of the device until passthrough has concluded.
-+ *
-+ * Necessary because the GET_VERSION request resets the SPDM connection
-+ * and DOE r1.0 allows only a single SPDM connection for the entire system.
-+ * So the host could reset the guest's SPDM connection behind the guest's back.
-+ */
-+void pci_cma_claim_ownership(struct pci_dev *pdev)
-+{
-+	set_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags);
-+
-+	if (pdev->cma_capable)
-+		spdm_await(pdev->spdm_state);
-+}
-+EXPORT_SYMBOL(pci_cma_claim_ownership);
-+
-+/**
-+ * pci_cma_return_ownership() - Relinquish CMA-SPDM control to the host
-+ * @pdev: PCI device
-+ *
-+ * Relinquish CMA-SPDM control to the host after passthrough of @pdev to a
-+ * guest virtual machine has concluded.
-+ */
-+void pci_cma_return_ownership(struct pci_dev *pdev)
-+{
-+	clear_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags);
-+
-+	pci_cma_reauthenticate(pdev);
-+}
-+EXPORT_SYMBOL(pci_cma_return_ownership);
-+#endif
-+
- void pci_cma_destroy(struct pci_dev *pdev)
- {
- 	if (pdev->spdm_state)
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index d80cc06be0cc..05ae6359b152 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -388,6 +388,7 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- #define PCI_DEV_ADDED 0
- #define PCI_DPC_RECOVERED 1
- #define PCI_DPC_RECOVERING 2
-+#define PCI_CMA_OWNED_BY_GUEST 3
- 
- static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
- {
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 1929103ee59a..6f300664a342 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -487,10 +487,12 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 	if (ret)
- 		goto out_power;
- 
-+	pci_cma_claim_ownership(pdev);
-+
- 	/* If reset fails because of the device lock, fail this path entirely */
- 	ret = pci_try_reset_function(pdev);
- 	if (ret == -EAGAIN)
--		goto out_disable_device;
-+		goto out_cma_return;
- 
- 	vdev->reset_works = !ret;
- 	pci_save_state(pdev);
-@@ -549,7 +551,8 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- out_free_state:
- 	kfree(vdev->pci_saved_state);
- 	vdev->pci_saved_state = NULL;
--out_disable_device:
-+out_cma_return:
-+	pci_cma_return_ownership(pdev);
- 	pci_disable_device(pdev);
- out_power:
- 	if (!disable_idle_d3)
-@@ -678,6 +681,8 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
- 
- 	vfio_pci_dev_set_try_reset(vdev->vdev.dev_set);
- 
-+	pci_cma_return_ownership(pdev);
-+
- 	/* Put the pm-runtime usage counter acquired during enable */
- 	if (!disable_idle_d3)
- 		pm_runtime_put(&pdev->dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2c5fde81bb85..c14ea0e74fc4 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2386,6 +2386,14 @@ static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int res
- static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
- #endif
- 
-+#ifdef CONFIG_PCI_CMA
-+void pci_cma_claim_ownership(struct pci_dev *pdev);
-+void pci_cma_return_ownership(struct pci_dev *pdev);
-+#else
-+static inline void pci_cma_claim_ownership(struct pci_dev *pdev) { }
-+static inline void pci_cma_return_ownership(struct pci_dev *pdev) { }
-+#endif
-+
- #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
- void pci_hp_create_module_link(struct pci_slot *pci_slot);
- void pci_hp_remove_module_link(struct pci_slot *pci_slot);
-diff --git a/include/linux/spdm.h b/include/linux/spdm.h
-index 69a83bc2eb41..d796127fbe9a 100644
---- a/include/linux/spdm.h
-+++ b/include/linux/spdm.h
-@@ -34,6 +34,8 @@ int spdm_authenticate(struct spdm_state *spdm_state);
- 
- bool spdm_authenticated(struct spdm_state *spdm_state);
- 
-+void spdm_await(struct spdm_state *spdm_state);
-+
- void spdm_destroy(struct spdm_state *spdm_state);
- 
- #endif
-diff --git a/lib/spdm_requester.c b/lib/spdm_requester.c
-index b2af2074ba6f..99424d6aebf5 100644
---- a/lib/spdm_requester.c
-+++ b/lib/spdm_requester.c
-@@ -1483,6 +1483,17 @@ struct spdm_state *spdm_create(struct device *dev, spdm_transport *transport,
- }
- EXPORT_SYMBOL_GPL(spdm_create);
- 
-+/**
-+ * spdm_await() - Wait for ongoing spdm_authenticate() to finish
-+ *
-+ * @spdm_state: SPDM session state
-+ */
-+void spdm_await(struct spdm_state *spdm_state)
-+{
-+	mutex_lock(&spdm_state->lock);
-+	mutex_unlock(&spdm_state->lock);
-+}
-+
- /**
-  * spdm_destroy() - Destroy SPDM session
-  *
--- 
-2.40.1
-
+>  include/hw/cxl/cxl_device.h |  5 +++-
+>  hw/cxl/cxl-device-utils.c   | 51 ++++++++++++++++++++++++++++++++++++-
+>  hw/cxl/cxl-mailbox-utils.c  | 43 ++++++++-----------------------
+>  3 files changed, 64 insertions(+), 35 deletions(-)
+>
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index c883d9dd8f..0e3f6c3c0b 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -270,7 +270,10 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE=
+,
+>
+>  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payl=
+oad_max);
+>  void cxl_init_cci(CXLCCI *cci, size_t payload_max);
+> -void cxl_process_mailbox(CXLCCI *cci);
+> +int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> +                            size_t len_in, uint8_t *pl_in,
+> +                            size_t *len_out, uint8_t *pl_out,
+> +                            bool *bg_started);
+>
+>  #define cxl_device_cap_init(dstate, reg, cap_id, ver)                  =
+    \
+>      do {                                                               =
+    \
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index 327949a805..f3a6e17154 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -79,6 +79,25 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr=
+ offset, unsigned size)
+>      case 4:
+>          return cxl_dstate->mbox_reg_state32[offset / size];
+>      case 8:
+> +        if (offset =3D=3D A_CXL_DEV_BG_CMD_STS) {
+> +            uint64_t bg_status_reg;
+> +            bg_status_reg =3D FIELD_DP64(0, CXL_DEV_BG_CMD_STS, OP,
+> +                                       cci->bg.opcode);
+> +            bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_=
+STS,
+> +                                       PERCENTAGE_COMP, cci->bg.complet=
+e_pct);
+> +            bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_=
+STS,
+> +                                       RET_CODE, cci->bg.ret_code);
+> +            /* endian? */
+> +            cxl_dstate->mbox_reg_state64[offset / size] =3D bg_status_r=
+eg;
+> +        }
+> +        if (offset =3D=3D A_CXL_DEV_MAILBOX_STS) {
+> +            uint64_t status_reg =3D cxl_dstate->mbox_reg_state64[offset=
+ / size];
+> +            if (cci->bg.complete_pct) {
+> +                status_reg =3D FIELD_DP64(status_reg, CXL_DEV_MAILBOX_S=
+TS, BG_OP,
+> +                                        0);
+> +                cxl_dstate->mbox_reg_state64[offset / size] =3D status_=
+reg;
+> +            }
+> +        }
+>          return cxl_dstate->mbox_reg_state64[offset / size];
+>      default:
+>          g_assert_not_reached();
+> @@ -157,7 +176,37 @@ static void mailbox_reg_write(void *opaque, hwaddr =
+offset, uint64_t value,
+>
+>      if (ARRAY_FIELD_EX32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_=
+CTRL,
+>                           DOORBELL)) {
+> -        cxl_process_mailbox(cci);
+> +        uint64_t command_reg =3D
+> +            cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD];
+> +        uint8_t cmd_set =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD=
+,
+> +                                     COMMAND_SET);
+> +        uint8_t cmd =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, CO=
+MMAND);
+> +        size_t len_in =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, =
+LENGTH);
+> +        uint8_t *pl =3D cxl_dstate->mbox_reg_state + A_CXL_DEV_CMD_PAYL=
+OAD;
+> +        size_t len_out;
+> +        uint64_t status_reg;
+> +        bool bg_started;
+> +        int rc;
+> +
+> +        rc =3D cxl_process_cci_message(cci, cmd_set, cmd, len_in, pl,
+> +                                     &len_out, pl, &bg_started);
+> +
+> +        /* Set bg and the return code */
+> +        status_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_STS, BG_OP,
+> +                                bg_started ? 1 : 0);
+> +        status_reg =3D FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, ERRN=
+O, rc);
+> +        /* Set the return length */
+> +        command_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_CMD, COMMAND_SET,=
+ cmd_set);
+> +        command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD,
+> +                                 COMMAND, cmd);
+> +        command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD,
+> +                                 LENGTH, len_out);
+> +
+> +        cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD] =3D command=
+_reg;
+> +        cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_STS] =3D status_=
+reg;
+> +        /* Tell the host we're done */
+> +        ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_=
+CTRL,
+> +                         DOORBELL, 0);
+>      }
+>  }
+>
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 376367c118..239acc659d 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -754,50 +754,27 @@ static const struct cxl_cmd cxl_cmd_set[256][256] =
+=3D {
+>          cmd_media_clear_poison, 72, 0 },
+>  };
+>
+> -void cxl_process_mailbox(CXLCCI *cci)
+> +int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> +                            size_t len_in, uint8_t *pl_in, size_t *len_=
+out,
+> +                            uint8_t *pl_out, bool *bg_started)
+>  {
+> -    uint16_t ret =3D CXL_MBOX_SUCCESS;
+>      const struct cxl_cmd *cxl_cmd;
+> -    uint64_t status_reg =3D 0;
+>      opcode_handler h;
+> -    CXLDeviceState *cxl_dstate =3D &CXL_TYPE3(cci->d)->cxl_dstate;
+> -    uint64_t command_reg =3D cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAI=
+LBOX_CMD];
+> -
+> -    uint8_t set =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAN=
+D_SET);
+> -    uint8_t cmd =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAN=
+D);
+> -    uint16_t len_in =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, LE=
+NGTH);
+> -    uint8_t *pl =3D cxl_dstate->mbox_reg_state + A_CXL_DEV_CMD_PAYLOAD;
+> -    size_t len_out =3D 0;
+>
+> +    *len_out =3D 0;
+>      cxl_cmd =3D &cci->cxl_cmd_set[set][cmd];
+>      h =3D cxl_cmd->handler;
+> -    if (h) {
+> -        if (len_in =3D=3D cxl_cmd->in || cxl_cmd->in =3D=3D ~0) {
+> -            ret =3D (*h)(cxl_cmd, pl, len_in, pl, &len_out, cci);
+> -            assert(len_out <=3D cci->payload_max);
+> -        } else {
+> -            ret =3D CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> -        }
+> -    } else {
+> +    if (!h) {
+>          qemu_log_mask(LOG_UNIMP, "Command %04xh not implemented\n",
+>                        set << 8 | cmd);
+> -        ret =3D CXL_MBOX_UNSUPPORTED;
+> +        return CXL_MBOX_UNSUPPORTED;
+>      }
+>
+> -    /* Set the return code */
+> -    status_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_STS, ERRNO, ret);
+> -
+> -    /* Set the return length */
+> -    command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAN=
+D_SET, 0);
+> -    command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAN=
+D, 0);
+> -    command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH=
+, len_out);
+> -
+> -    cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD] =3D command_reg=
+;
+> -    cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_STS] =3D status_reg;
+> +    if (len_in !=3D cxl_cmd->in && cxl_cmd->in !=3D ~0) {
+> +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> +    }
+>
+> -    /* Tell the host we're done */
+> -    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL=
+,
+> -                     DOORBELL, 0);
+> +    return (*h)(cxl_cmd, pl_in, len_in, pl_out, len_out, cci);
+>  }
+>
+>  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> --
+> 2.39.2
+>
