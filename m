@@ -2,140 +2,324 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53975E732FD
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 18:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32309CE7B08
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 18:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230239AbjI1SM1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Sep 2023 14:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
+        id S232032AbjI1SNv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Sep 2023 14:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbjI1SM0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 14:12:26 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2063.outbound.protection.outlook.com [40.107.95.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B5811F
-        for <linux-cxl@vger.kernel.org>; Thu, 28 Sep 2023 11:12:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TdeILbEXxSEQpPAL6vQk4cuRQv2y+1842Yjm4GIRwwkLkOIEKaBUTdcjPMPURNmIQQ30yfufQZY7P/jVVYfKqX8BSXvQfYRaxIH4+z2nhydT0iWXot2/A1WeLH4vKlum4N58/PXCkaqT+HUcQMtlOhPbN7Vs0mPhc8WKW1DKzZEOWtkZoNkOTXSBgtcVe8lAhjHT63BQeK3yUgUWcmOhdSA9458UoZ1/yWWzQctihIagqsgjVddQ8qTLnt7rJ3ola6HEF+1Wy0S29RQSA08ZtCpI72zm1VI0HOlLTR05wCJ46hFR6wKsTy6w2HWGC1tbSuSg80XCpNkFoNbBEOkSHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5HuVN19hIgq+VhbXsgSmxBOlyfmUpipRtMS+zRwTi0k=;
- b=FNv8fGoolQEctz4UAXn+ZlADJ8wDwJlbKMgHtktzNLhgoOVA6IJsCm+/O3bObwsYeEvnDeWt6jfWsulHqEuKu0JnQn1OA9+8dWFcSanxcRawBPYWLHWQtPN5aJEIxoexe3LjawnL1nnMzVXU/H96Uj+v/naFaWI4B3xgyVBCpHyRQFusf7C8AbRN7sqJlCGroNzlKM9zwoT2y1pwNTYqLG+PIV4bjkZraogFiTIGbVvL9M2vBMJ6Blp6iGVO1stWmhY0EiAedAxkSsD/xP+kTlg/zT149fJ9epzx7JytiEyItcpc1hE7vCiAayQt7afy0J2BKeG2VCaecnRTUiSyqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5HuVN19hIgq+VhbXsgSmxBOlyfmUpipRtMS+zRwTi0k=;
- b=Yp8ZiiwqxXaEVBpOX2gEVWnwhpwLKnLPi/Cqoj2fhw+ibdfjjU9ovkSwADXK2JSoCOEDk32kq2rFxNiBiyoVgZ6Ue2m6tANpNIAjNmWHMNv6wXki+0/lyfOB+JB7ncYtjDpu2NBq8o/50s6p+7WkFQKrXc7vnLJY6a9RnBU/uWY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by IA1PR17MB6951.namprd17.prod.outlook.com (2603:10b6:208:44c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.25; Thu, 28 Sep
- 2023 18:12:21 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5565:d559:61b0:e2df]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5565:d559:61b0:e2df%6]) with mapi id 15.20.6813.027; Thu, 28 Sep 2023
- 18:12:21 +0000
-Date:   Thu, 28 Sep 2023 14:12:14 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-        Michael Tsirkin <mst@redhat.com>, linuxarm@huawei.com,
-        Fan Ni <fan.ni@samsung.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Klaus Jensen <its@irrelevant.dk>,
-        Corey Minyard <cminyard@mvista.com>,
-        Klaus Jensen <k.jensen@samsung.com>
-Subject: Re: [PATCH 00/19] QEMU: CXL mailbox rework and features
-Message-ID: <ZRXB/lCASRX5/w0j@memverge.com>
-References: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: BYAPR21CA0018.namprd21.prod.outlook.com
- (2603:10b6:a03:114::28) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|IA1PR17MB6951:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d12f5d6-994c-40b2-9ad9-08dbc04e7574
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EXfKsCn2izlX7FFJWUQ++4dGPq5UOCwkKg/IUonGxLg0rvjYPmA1K5jegK6Kiz6O2aAMKRCrBaLPPUDnL6w17E+s3LR1CBlvFeNE2iAM+PEx/qJmtXL1Qii8Qb1Hqz0w4cdIKzOG8Pw3ckLfAJmJHL8MWJjNohOiOHybdGqpHPRyC6gV8UVuDOoavfJ3i94t905KogufvOvFZpwq/sP7WKXPqMhWKYTz25Uho1ysrbTEgb+/xIDQyQPKfSe4hdlPQizDaT5jlrxsYgkn3YUDnPLSu2MO2sxsxPBjR4kWrGxWU5eLbA63BzLknKwiZmLiL567ybCtvP3uEXuorlCEMcjoZAZPbQmcCCeqNAPoDQ2uTXnW8mDW/BH5kZB6IdU9Qa8GEWpX/iz+OxFauI5QN3VwyzLMC1drvQLg+Fnw4Z4LQgIIb5JCRLynxEGqFgqLQ3p+qskIzmXXb4ZQM3yD4FQWXlrzvzBqCNWv8YDo2A7nP/C8k2Dr8ohems6NTMLRI1eNgeC+o01q9eXCB3KoLCar7wHTp9K22Qcr55kTFKc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(376002)(136003)(346002)(366004)(396003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(26005)(86362001)(6512007)(4326008)(6486002)(2616005)(6506007)(36756003)(38100700002)(8676002)(83380400001)(41300700001)(6916009)(316002)(8936002)(66476007)(66946007)(66556008)(5660300002)(478600001)(2906002)(7416002)(15650500001)(44832011)(6666004)(54906003)(966005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oyrn8BdcLCtrQNMe8Re+i5s56XANFq8ThDfrCboYivLiKDsf0QTPdxY3ijzp?=
- =?us-ascii?Q?JK1RutgK0RiNqXZBNz6qUFHSEQ8zIO08EEDbESVMylKhoOLj1qGXAg5734P8?=
- =?us-ascii?Q?z2XqEf3qHDDc/TJL/+2yCLooERU6n78XP/kIbry0XaNAKBR/95WgCXR5Rvh4?=
- =?us-ascii?Q?qNZnNg+5b7nWFkZP3dS5AzSsfDMhqfEe/wVunPAdptxBuFa83lQGU/gNhPv1?=
- =?us-ascii?Q?fq0UeAYLua4JUT1UubsiNE4Oibvp0+pBMkoDc6QQV8huvK16ioM2RRdXeBJc?=
- =?us-ascii?Q?loybwiRpBIK8X4BW+H0n8GBcnLKduYhh35D8oZvrgT7cuIA8YAqPJlW9aneq?=
- =?us-ascii?Q?fSy7fUz3eaPUz2tURNLgl9E9o+vuxiZyLCyfK04SMSF8LH1+xv0rwk8pTlCm?=
- =?us-ascii?Q?MVvvceYMzGMEqcBAhEklzxTDYtu+R9EBZrBJ3AhsdA0zqGz/Ly4FmplCZVXl?=
- =?us-ascii?Q?JT6bIEg2CYdUpR8RdPJgGtRTHstDKMIcoPcLoGM7XG8tUSkb4EcYAW+sA3yt?=
- =?us-ascii?Q?PDKE2+cZsSwe0aHd9Av9mhAXB0Z1kkjbhGZs9/8elHFcVwbd4PACXDmwtfWw?=
- =?us-ascii?Q?GyFv3WfRu8W6S53bpEtwhyq5iMQ95X0WZUmYP9R77oEzRtpgis0zenEzUiqg?=
- =?us-ascii?Q?1o2fuyEhZ8gBrYJww0vNa/vfcjW2c1PFgjnxVPYiYuFaACCsoQc4LDghneml?=
- =?us-ascii?Q?6TIzuwDBh7FFP1k6ZWseC3zHafosSTwnbzZO6BLUUKcjXy+hcmPbDttEOpqu?=
- =?us-ascii?Q?z7s1nnPZlipObUdsU/DRYmTc9RhB7XQo+Ty8gS4rMp/iaOwZ+nY0tIHnW83k?=
- =?us-ascii?Q?mbLysWzbSIBCgfO2cXSebHAeH6WXVFch2YARXF3oKoPr/XO9efPPxQnC/Tzw?=
- =?us-ascii?Q?ASkCdH88yQA1Rz7kLzrdCBisV5vh5f6Ko4DD4pGYcu1bzvp1RZ6XMEMRxOFk?=
- =?us-ascii?Q?u1mjsqKQ0N2C9roejwHoCkaVC1gaRSs4lXHf0Q9wZwbhwcIMUzT0khn0AE1g?=
- =?us-ascii?Q?X5vkTEQOv2a7aZvrhg4plxnLMvA+tbhL0aQuIJdFs3kfakYXcNEAhm23CoPQ?=
- =?us-ascii?Q?IkXwnUytQXtI9CUTMox38fJaxfH2sN2KH+o6q7kMuGY581ORIAGt5IRWqHHU?=
- =?us-ascii?Q?kd0SAzlbiuPVuEr1QzC3vTIM/81EotgKVSU1loNrGOe7LgC4VxOBRrsijZd4?=
- =?us-ascii?Q?jqT6hoTvGihYHv/ezs9e8Nu7DETy38kCdJxNhwDv0FIwabSvzNwF6+UHFqNB?=
- =?us-ascii?Q?gSSdYQDXx8vBVUHKJGISF0CH7KR0+Vl+hTM7kexGX+WEJe4neuNRcxrZOIsD?=
- =?us-ascii?Q?Y1UsY/e2BB+r+g/rHON73xlGIHBb8cDtIPmYeLHUNtXTTtqdpG4DqH+rrfn4?=
- =?us-ascii?Q?/AGolGL2mMGuLVk1V663gA4U240QVjknvbKvsDPywrjAqf7OHq9mFIRxaKDd?=
- =?us-ascii?Q?OublkSUx4kdTEV2s4yks5f5TtQkNRplFsbH/H+iQBPIxCJ6CpZ0Pc6/w08gB?=
- =?us-ascii?Q?XAbpFNlkpbBjhgadr6IEHpmjxrkvfQgPDjh5A0uhE6pNFVlBT6YeACAbsiWq?=
- =?us-ascii?Q?jdOq6bwjJlG0EXHpsfoqnaIWT+p+1onsXMDTnwi+d5o26uiFTIKna/ucbnhy?=
- =?us-ascii?Q?YQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d12f5d6-994c-40b2-9ad9-08dbc04e7574
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2023 18:12:21.5542
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Iw2TIb6l6tD4451W+GeBHFAHX9l7fHegBfbyjpBpYpAYjcXgi7LqSHoj4ic59Y2WvI7EYNe75yCrt8FrxWbZwGuHuMY2W3sOc01gQ1GIgV8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR17MB6951
+        with ESMTP id S231965AbjI1SNv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 14:13:51 -0400
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ee9:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8E398;
+        Thu, 28 Sep 2023 11:13:47 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id A8EA11018978B;
+        Thu, 28 Sep 2023 20:13:45 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 7BE1F60DFEBD;
+        Thu, 28 Sep 2023 20:13:45 +0200 (CEST)
+X-Mailbox-Line: From 821682573e57e0384162f365652171e5ee1e6611 Mon Sep 17 00:00:00 2001
+Message-Id: <821682573e57e0384162f365652171e5ee1e6611.1695921657.git.lukas@wunner.de>
+In-Reply-To: <cover.1695921656.git.lukas@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Thu, 28 Sep 2023 19:32:41 +0200
+Subject: [PATCH 11/12] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 05:11:05PM +0100, Jonathan Cameron wrote:
-> I've been carrying most of this series on our CXL staging tree
-> https://gitlab.com/jic23/qemu for some time and a lot of more recent
-> work around Multi Head Devices and Dynamic Capacity that we need for
-> Linux kernel enabling are backed up behind it. Hence I reorganized my
-> queue to try and land this before other less 'central' features such
-> as CXL PMUs and arm/virt support.
-... 
-> 
-> Jonathan Cameron (15):
->   hw/cxl/mbox: Pull the payload out of struct cxl_cmd and make instances
->     constant
->   hw/cxl/mbox: Split mailbox command payload into separate input and
->     output
->   hw/cxl/mbox: Pull the CCI definition out of the CXLDeviceState
->   hw/cxl/mbox: Generalize the CCI command processing
->   hw/pci-bridge/cxl_upstream: Move defintion of device to header.
+The PCI core has just been amended to authenticate CMA-capable devices
+on enumeration and store the result in an "authenticated" bit in struct
+pci_dev->spdm_state.
 
-To save some list spam, I can't say i've reviewed and tested the entire
-set, but this patch series to help model the Niagara work so please add
-my tags as appropriate to the above.
+Expose the bit to user space through an eponymous sysfs attribute.
 
-Reviewed-by: Gregory Price <gregory.price@memverge.com>
-Tested-by: Gregory Price <gregory.price@memverge.com>
+Allow user space to trigger reauthentication (e.g. after it has updated
+the CMA keyring) by writing to the sysfs attribute.
 
-~Gregory
+Subject to further discussion, a future commit might add a user-defined
+policy to forbid driver binding to devices which failed authentication,
+similar to the "authorized" attribute for USB.
+
+Alternatively, authentication success might be signaled to user space
+through a uevent, whereupon it may bind a (blacklisted) driver.
+A uevent signaling authentication failure might similarly cause user
+space to unbind or outright remove the potentially malicious device.
+
+Traffic from devices which failed authentication could also be filtered
+through ACS I/O Request Blocking Enable (PCIe r6.1 sec 7.7.11.3) or
+through Link Disable (PCIe r6.1 sec 7.5.3.7).  Unlike an IOMMU, that
+will not only protect the host, but also prevent malicious peer-to-peer
+traffic to other devices.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ Documentation/ABI/testing/sysfs-bus-pci | 27 +++++++++
+ drivers/pci/Kconfig                     |  3 +
+ drivers/pci/Makefile                    |  1 +
+ drivers/pci/cma-sysfs.c                 | 73 +++++++++++++++++++++++++
+ drivers/pci/cma.c                       |  2 +
+ drivers/pci/doe.c                       |  2 +
+ drivers/pci/pci-sysfs.c                 |  3 +
+ drivers/pci/pci.h                       |  1 +
+ include/linux/pci.h                     |  2 +
+ 9 files changed, 114 insertions(+)
+ create mode 100644 drivers/pci/cma-sysfs.c
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index ecf47559f495..2ea9b8deffcc 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -500,3 +500,30 @@ Description:
+ 		console drivers from the device.  Raw users of pci-sysfs
+ 		resourceN attributes must be terminated prior to resizing.
+ 		Success of the resizing operation is not guaranteed.
++
++What:		/sys/bus/pci/devices/.../authenticated
++Date:		September 2023
++Contact:	Lukas Wunner <lukas@wunner.de>
++Description:
++		This file contains 1 if the device authenticated successfully
++		with CMA-SPDM (PCIe r6.1 sec 6.31).  It contains 0 if the
++		device failed authentication (and may thus be malicious).
++
++		Writing anything to this file causes reauthentication.
++		That may be opportune after updating the .cma keyring.
++
++		The file is not visible if authentication is unsupported
++		by the device.
++
++		If the kernel could not determine whether authentication is
++		supported because memory was low or DOE communication with
++		the device was not working, the file is visible but accessing
++		it fails with error code ENOTTY.
++
++		This prevents downgrade attacks where an attacker consumes
++		memory or disturbs DOE communication in order to create the
++		appearance that a device does not support authentication.
++
++		The reason why authentication support could not be determined
++		is apparent from "dmesg".  To probe for authentication support
++		again, exercise the "remove" and "rescan" attributes.
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index c9aa5253ac1f..51df3be3438e 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -129,6 +129,9 @@ config PCI_CMA
+ 	  A PCI DOE mailbox is used as transport for DMTF SPDM based
+ 	  attestation, measurement and secure channel establishment.
+ 
++config PCI_CMA_SYSFS
++	def_bool PCI_CMA && SYSFS
++
+ config PCI_DOE
+ 	bool
+ 
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index a18812b8832b..612ae724cd2d 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_PCI_DOE)		+= doe.o
+ obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
+ 
+ obj-$(CONFIG_PCI_CMA)		+= cma.o cma-x509.o cma.asn1.o
++obj-$(CONFIG_PCI_CMA_SYSFS)	+= cma-sysfs.o
+ $(obj)/cma-x509.o:		$(obj)/cma.asn1.h
+ $(obj)/cma.asn1.o:		$(obj)/cma.asn1.c $(obj)/cma.asn1.h
+ 
+diff --git a/drivers/pci/cma-sysfs.c b/drivers/pci/cma-sysfs.c
+new file mode 100644
+index 000000000000..b2d45f96601a
+--- /dev/null
++++ b/drivers/pci/cma-sysfs.c
+@@ -0,0 +1,73 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Component Measurement and Authentication (CMA-SPDM, PCIe r6.1 sec 6.31)
++ *
++ * Copyright (C) 2023 Intel Corporation
++ */
++
++#include <linux/pci.h>
++#include <linux/spdm.h>
++#include <linux/sysfs.h>
++
++#include "pci.h"
++
++static ssize_t authenticated_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t count)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	ssize_t rc;
++
++	if (!pdev->cma_capable &&
++	    (pdev->cma_init_failed || pdev->doe_init_failed))
++		return -ENOTTY;
++
++	rc = pci_cma_reauthenticate(pdev);
++	if (rc)
++		return rc;
++
++	return count;
++}
++
++static ssize_t authenticated_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (!pdev->cma_capable &&
++	    (pdev->cma_init_failed || pdev->doe_init_failed))
++		return -ENOTTY;
++
++	return sysfs_emit(buf, "%u\n", spdm_authenticated(pdev->spdm_state));
++}
++static DEVICE_ATTR_RW(authenticated);
++
++static struct attribute *pci_cma_attrs[] = {
++	&dev_attr_authenticated.attr,
++	NULL
++};
++
++static umode_t pci_cma_attrs_are_visible(struct kobject *kobj,
++					 struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	/*
++	 * If CMA or DOE initialization failed, CMA attributes must be visible
++	 * and return an error on access.  This prevents downgrade attacks
++	 * where an attacker disturbs memory allocation or DOE communication
++	 * in order to create the appearance that CMA is unsupported.
++	 * The attacker may achieve that by simply hogging memory.
++	 */
++	if (!pdev->cma_capable &&
++	    !pdev->cma_init_failed && !pdev->doe_init_failed)
++		return 0;
++
++	return a->mode;
++}
++
++const struct attribute_group pci_cma_attr_group = {
++	.attrs  = pci_cma_attrs,
++	.is_visible = pci_cma_attrs_are_visible,
++};
+diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
+index 89d23fdc37ec..c539ad85a28f 100644
+--- a/drivers/pci/cma.c
++++ b/drivers/pci/cma.c
+@@ -52,6 +52,7 @@ void pci_cma_init(struct pci_dev *pdev)
+ 	int rc;
+ 
+ 	if (!pci_cma_keyring) {
++		pdev->cma_init_failed = true;
+ 		return;
+ 	}
+ 
+@@ -67,6 +68,7 @@ void pci_cma_init(struct pci_dev *pdev)
+ 				       PCI_DOE_MAX_PAYLOAD, pci_cma_keyring,
+ 				       pci_cma_validate);
+ 	if (!pdev->spdm_state) {
++		pdev->cma_init_failed = true;
+ 		return;
+ 	}
+ 
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 79f0336eb0c3..fabbda68edac 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -686,6 +686,7 @@ void pci_doe_init(struct pci_dev *pdev)
+ 						      PCI_EXT_CAP_ID_DOE))) {
+ 		doe_mb = pci_doe_create_mb(pdev, offset);
+ 		if (IS_ERR(doe_mb)) {
++			pdev->doe_init_failed = true;
+ 			pci_err(pdev, "[%x] failed to create mailbox: %ld\n",
+ 				offset, PTR_ERR(doe_mb));
+ 			continue;
+@@ -693,6 +694,7 @@ void pci_doe_init(struct pci_dev *pdev)
+ 
+ 		rc = xa_insert(&pdev->doe_mbs, offset, doe_mb, GFP_KERNEL);
+ 		if (rc) {
++			pdev->doe_init_failed = true;
+ 			pci_err(pdev, "[%x] failed to insert mailbox: %d\n",
+ 				offset, rc);
+ 			pci_doe_destroy_mb(doe_mb);
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index d9eede2dbc0e..7024e08e1b9a 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1655,6 +1655,9 @@ static const struct attribute_group *pci_dev_attr_groups[] = {
+ #endif
+ #ifdef CONFIG_PCIEASPM
+ 	&aspm_ctrl_attr_group,
++#endif
++#ifdef CONFIG_PCI_CMA_SYSFS
++	&pci_cma_attr_group,
+ #endif
+ 	NULL,
+ };
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 71092ccf4fbd..d80cc06be0cc 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -328,6 +328,7 @@ void pci_cma_destroy(struct pci_dev *pdev);
+ int pci_cma_reauthenticate(struct pci_dev *pdev);
+ struct x509_certificate;
+ int pci_cma_validate(struct device *dev, struct x509_certificate *leaf_cert);
++extern const struct attribute_group pci_cma_attr_group;
+ #else
+ static inline void pci_cma_init(struct pci_dev *pdev) { }
+ static inline void pci_cma_destroy(struct pci_dev *pdev) { }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 2bc11d8b567e..2c5fde81bb85 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -516,10 +516,12 @@ struct pci_dev {
+ #endif
+ #ifdef CONFIG_PCI_DOE
+ 	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
++	unsigned int	doe_init_failed:1;
+ #endif
+ #ifdef CONFIG_PCI_CMA
+ 	struct spdm_state *spdm_state;	/* Security Protocol and Data Model */
+ 	unsigned int	cma_capable:1;	/* Authentication supported */
++	unsigned int	cma_init_failed:1;
+ #endif
+ 	u16		acs_cap;	/* ACS Capability offset */
+ 	phys_addr_t	rom;		/* Physical address if not from BAR */
+-- 
+2.40.1
+
