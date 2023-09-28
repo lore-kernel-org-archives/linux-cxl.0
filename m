@@ -2,133 +2,141 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E90E82CC1
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 01:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37049CE7AFE
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 04:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbjI1Bcq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Sep 2023 21:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
+        id S230160AbjI1Esv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Sep 2023 00:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbjI1Bco (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Sep 2023 21:32:44 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2C1AC;
-        Wed, 27 Sep 2023 18:32:43 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id D07D6901E34;
-        Thu, 28 Sep 2023 01:32:42 +0000 (UTC)
-Received: from pdx1-sub0-mail-a245.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 39D709012B1;
-        Thu, 28 Sep 2023 01:32:42 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1695864762; a=rsa-sha256;
-        cv=none;
-        b=EObbCsYePKJdFgdQ3aR0jhf1Zc4+RwEWqb306qQ3SJnbf3RoLMDeUpxLX8JfIGucJoD039
-        cJfxx3zyqqHg2XSVIk2hvR00yIQkJQQDoptSpS2AEW2c5iwI5Zapsf06MGMFVoZSEvaNiL
-        RWnn5gubEI5QZXMCRp6f9IfesyoIdSe+z59rxmeKzGqMpq7IjRmziQt7rfRmVcy3fhCaGe
-        n8ILrBgi9Yg4ooVizOsQhAiRaLczhJSc0seLbqT2wuz7AvvcRZQ3lgTiop53MPvVrc6Z/q
-        CqPWbLWcHPw1dYp31uBjTp2yKla4UKeoe6ltROyUEgWCkIdAQWCvVl1KPanS1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1695864762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=aoMM+ecrUHruHy0xNndpz4cJ9IdeHiZqtMr+bAYPNcU=;
-        b=I93n44Le0NvDjV/gK4LuHWJv9vBwlF0EySyeNaYcXyQv3fv8P7iIvGMrga9/nEtv7AUaul
-        0FI5a7waegx/YykAyOOfoRnWQQSPrksDRMTkyDXoOtFL6hM+06Avc181wxwu8blxZB4sp9
-        QKIO6xEoLOIRbt2VgGqO2RaAVYYBrpvO2ue/O4An3cGEyJyxj5EJFwIT/G0j3jx8TdqQNM
-        VRMwBv24Oc5zk0Mxpr/vq9zoxZcCjfywZcyGYgv/iDL6aTDuFbUsf0iyTmCvYwDfRF2XER
-        2KkAdE81YVtbIZw/NDB9c0MeIYQUFPmleUf8r49sz0gzh567UCTmGfvjPeSQEg==
-ARC-Authentication-Results: i=1;
-        rspamd-7d5dc8fd68-qxxm7;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Little-Minister: 7ca387024b77a229_1695864762639_230044770
-X-MC-Loop-Signature: 1695864762638:2213682086
-X-MC-Ingress-Time: 1695864762638
-Received: from pdx1-sub0-mail-a245.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.101.166.200 (trex/6.9.1);
-        Thu, 28 Sep 2023 01:32:42 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a245.dreamhost.com (Postfix) with ESMTPSA id 4Rwwvs0kwhz2l;
-        Wed, 27 Sep 2023 18:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1695864762;
-        bh=aoMM+ecrUHruHy0xNndpz4cJ9IdeHiZqtMr+bAYPNcU=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Z/DLACN/18M6imAt+EFXbYxWWkjAVBX3GqQ1aysyAb0TuEAqTRo0pFQ5AV1DWCRfr
-         DK7GamF+cAUz/9bJmpeFLmnPuNYcFKq9qWrnFkingF2mteWFDlCKmuFbzrh3z9jXzS
-         nKeR2XAWN/vB2SglKKWys89DC1HrRZ+lU1jQiLfrTjDOoup8vKTeRR0qYC+pzfCEJf
-         I/Q1iLvY0IeP9KmFgglu0sIMeFnd0SdU8v1ashvIZTC3h2X+VUdsg8cYsKrZgkKpcV
-         0iapjx5KDk4+DYlBxS4cZW7WwgWu3m1KXyFPQS/glFjDmle9kjwtk8BaBqXkBBp+gA
-         hXer2q7C4czSQ==
-Date:   Wed, 27 Sep 2023 18:32:38 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jeongtae Park <jtp.park@samsung.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S229445AbjI1Esu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 00:48:50 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A0D121
+        for <linux-cxl@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-533cbbd0153so11711286a12.0
+        for <linux-cxl@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695876525; x=1696481325; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
+        b=iFtUSMQ2WG+o3eku0DMh8DgE/Lz1f2VH6+eYClR1+G8JlIHRsTFy84+FWsSdyZxq21
+         8fL4JATtWSDiuj9CnY1bYHTy++1A6GWWFmsoGOheEGiQst3VVIPGcD1C40Wljbcu6qSE
+         XaXvL55UpA3b/JOh7C305laFdjoJnz3TpRU0lJ+jAUBzbDf0bLapd9z4Bhyokn21YZRU
+         9B6wfV55CiHS8oxLsRv6FjDi+PeD83EqF/7yvZrGQNvcv1nllpA2UnD8Vt71Ffls44wI
+         ogqyU2GIDRKtW3WNPPy8z8NIOZgYVx1R0CjLfkDIzEESSCCd6ii9LZZeomD5gbjwUk30
+         Wz7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695876525; x=1696481325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
+        b=HUyeEnvzAmHvk3hWeCIMDB6wVRWaQA4Mtt7S04vHM9V9DsDhfUxrhWw83uNRCLxc+X
+         mrG6Jb4mXD8tknN8gQTLJhrPty5dmT0UyUFNzU1iZjz4wWXZlo8qBKqpVz/33OnF01Nw
+         u19s1ty6F0UdxBfDIdS3ARgibP15sTwcbKlCfWNMxZfBEuNzGdaQXk4X3fVTrXz/jy5N
+         jJQa270PLndyKHFyYAtOHMHhftMPsANYnxra0Vn+6Z038rDAVjUQCOED4I62zkwag9CS
+         PRbqS2T89KeIL0zg9CKq/d2ne5brFX042pudTy9tiRxZoEiem0voaM48Vh7knWmXuB9p
+         kwaA==
+X-Gm-Message-State: AOJu0Yyq1+BQZDQ2a0YZBOWMv/bC9ZycbeRsTgJ+lV7rEVuGm3h4WPbP
+        O4d8IfGGmcG3lgqJkWl8z8kRq/dh+TZmapQN6NccpRx9CrK3ZFAtEqOcgA==
+X-Google-Smtp-Source: AGHT+IGiiFxnaM49SGb+63NiClG0YLueyxu9CNO9+fTK7ufBWNBl6F+BFa5pFCOChXf1fAyEMh5KUhanvrUUAun0FOY=
+X-Received: by 2002:a17:906:8a77:b0:9ae:5848:3f8e with SMTP id
+ hy23-20020a1709068a7700b009ae58483f8emr150816ejc.49.1695876525470; Wed, 27
+ Sep 2023 21:48:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230922175319.work.096-kees@kernel.org>
+In-Reply-To: <20230922175319.work.096-kees@kernel.org>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Thu, 28 Sep 2023 13:48:34 +0900
+Message-ID: <CAFhGd8qdBmqwxAWsxDmmRYweOTRK33nFXWdM_QpqHtv6=bOcOQ@mail.gmail.com>
+Subject: Re: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with __counted_by
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        Wonjae Lee <wj28.lee@samsung.com>,
-        Hojin Nam <hj96.nam@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>,
-        Jehoon Park <jehoon.park@samsung.com>,
-        Jeongtae Park <jeongtae.park@gmail.com>
-Subject: Re: [PATCH v2 4/7] cxl: Fix a checkpatch error
-Message-ID: <cuhdyshfzw6mt64ohfbuxmoic5fvaayn73gx6be2vvjtezzwgm@lwqe2dyfmw57>
-References: <CGME20230922113317epcas2p4f6b9ee86aeead4ce8b19473379ecf4bb@epcas2p4.samsung.com>
- <20230922113604.3300468-1-jtp.park@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230922113604.3300468-1-jtp.park@samsung.com>
-User-Agent: NeoMutt/20230517
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 22 Sep 2023, Jeongtae Park wrote:
-
->ERROR: Macros with complex values should be enclosed in parentheses
+On Sat, Sep 23, 2023 at 2:53=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
 >
->Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
->Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-
->---
-> drivers/cxl/cxl.h | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
+S
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 >
->diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->index 76d92561af29..545381355efb 100644
->--- a/drivers/cxl/cxl.h
->+++ b/drivers/cxl/cxl.h
->@@ -142,7 +142,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
-> #define CXL_RAS_HEADER_LOG_OFFSET 0x18
-> #define CXL_RAS_CAPABILITY_LENGTH 0x58
-> #define CXL_HEADERLOG_SIZE SZ_512
->-#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
->+#define CXL_HEADERLOG_SIZE_U32 (SZ_512 / sizeof(u32))
+> As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 >
-> /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-> #define CXLDEV_CAP_ARRAY_OFFSET 0x0
->--
->2.34.1
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
+ounted_by.cocci
+>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-cxl@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Looks good.
+
+The reordering of the count assignment is crucial here otherwise
+the runtime checks will trip when `cximsd->xormaps` is used as
+memcpy destination.
+
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+> ---
+>  drivers/cxl/acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index d1c559879dcc..40d055560e52 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -14,7 +14,7 @@
+>
+>  struct cxl_cxims_data {
+>         int nr_maps;
+> -       u64 xormaps[];
+> +       u64 xormaps[] __counted_by(nr_maps);
+>  };
+>
+>  /*
+> @@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_header=
+s *header, void *arg,
+>                               GFP_KERNEL);
+>         if (!cximsd)
+>                 return -ENOMEM;
+> +       cximsd->nr_maps =3D nr_maps;
+>         memcpy(cximsd->xormaps, cxims->xormap_list,
+>                nr_maps * sizeof(*cximsd->xormaps));
+> -       cximsd->nr_maps =3D nr_maps;
+>         cxlrd->platform_data =3D cximsd;
+>
+>         return 0;
+> --
+> 2.34.1
+>
 >
