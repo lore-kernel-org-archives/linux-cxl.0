@@ -2,141 +2,147 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37049CE7AFE
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 04:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F184BCE7AFF
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 06:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230160AbjI1Esv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Sep 2023 00:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
+        id S230270AbjI1GTK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Sep 2023 02:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjI1Esu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 00:48:50 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A0D121
-        for <linux-cxl@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-533cbbd0153so11711286a12.0
-        for <linux-cxl@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695876525; x=1696481325; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
-        b=iFtUSMQ2WG+o3eku0DMh8DgE/Lz1f2VH6+eYClR1+G8JlIHRsTFy84+FWsSdyZxq21
-         8fL4JATtWSDiuj9CnY1bYHTy++1A6GWWFmsoGOheEGiQst3VVIPGcD1C40Wljbcu6qSE
-         XaXvL55UpA3b/JOh7C305laFdjoJnz3TpRU0lJ+jAUBzbDf0bLapd9z4Bhyokn21YZRU
-         9B6wfV55CiHS8oxLsRv6FjDi+PeD83EqF/7yvZrGQNvcv1nllpA2UnD8Vt71Ffls44wI
-         ogqyU2GIDRKtW3WNPPy8z8NIOZgYVx1R0CjLfkDIzEESSCCd6ii9LZZeomD5gbjwUk30
-         Wz7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695876525; x=1696481325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
-        b=HUyeEnvzAmHvk3hWeCIMDB6wVRWaQA4Mtt7S04vHM9V9DsDhfUxrhWw83uNRCLxc+X
-         mrG6Jb4mXD8tknN8gQTLJhrPty5dmT0UyUFNzU1iZjz4wWXZlo8qBKqpVz/33OnF01Nw
-         u19s1ty6F0UdxBfDIdS3ARgibP15sTwcbKlCfWNMxZfBEuNzGdaQXk4X3fVTrXz/jy5N
-         jJQa270PLndyKHFyYAtOHMHhftMPsANYnxra0Vn+6Z038rDAVjUQCOED4I62zkwag9CS
-         PRbqS2T89KeIL0zg9CKq/d2ne5brFX042pudTy9tiRxZoEiem0voaM48Vh7knWmXuB9p
-         kwaA==
-X-Gm-Message-State: AOJu0Yyq1+BQZDQ2a0YZBOWMv/bC9ZycbeRsTgJ+lV7rEVuGm3h4WPbP
-        O4d8IfGGmcG3lgqJkWl8z8kRq/dh+TZmapQN6NccpRx9CrK3ZFAtEqOcgA==
-X-Google-Smtp-Source: AGHT+IGiiFxnaM49SGb+63NiClG0YLueyxu9CNO9+fTK7ufBWNBl6F+BFa5pFCOChXf1fAyEMh5KUhanvrUUAun0FOY=
-X-Received: by 2002:a17:906:8a77:b0:9ae:5848:3f8e with SMTP id
- hy23-20020a1709068a7700b009ae58483f8emr150816ejc.49.1695876525470; Wed, 27
- Sep 2023 21:48:45 -0700 (PDT)
+        with ESMTP id S229453AbjI1GTJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 02:19:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4D899;
+        Wed, 27 Sep 2023 23:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695881946; x=1727417946;
+  h=from:to:cc:subject:references:date:in-reply-to:
+   message-id:mime-version;
+  bh=yPoRTff1W8kHOZj6MIgWTa4FPEtV7El2Duzf1zGYqoI=;
+  b=XCmh6lMezJrCbdiEj6brvfLLN+4eo4r0uPrIBptu38VyOV1oYDG6UJI9
+   do2V5wVo0YxP/em7YTb0rKomZqAHoHKP41Ccv47kW5MBFB+2yfnlkNq51
+   X92JODOz5PFxUzxfwKV8rpdrpjK8KZzBv2eRlgo1VElZIbBAVyVOKHmYF
+   qkCX1Ouz4f0JUTsZDmhFmI1J+5p6CkzjhiqQAp9t1Lp0lJ/hR+L1U1GN9
+   52bTwBaeQPbrzcJJwMlwZdlsNl3oLkQpDlY+EqhGSw1QFTmPb/9NvfYRw
+   yPYbFY6TUoFZOuJ9yQnlDf9U80BK6g7a25NLdazkyARnsmTJB3cvNAGIu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="446139326"
+X-IronPort-AV: E=Sophos;i="6.03,183,1694761200"; 
+   d="scan'208";a="446139326"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 23:19:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="726120975"
+X-IronPort-AV: E=Sophos;i="6.03,183,1694761200"; 
+   d="scan'208";a="726120975"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 23:19:00 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Ravi Jonnalagadda <ravis.opensrc@micron.com>
+Cc:     <linux-mm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <luto@kernel.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dietmar.eggemann@arm.com>, <vincent.guittot@linaro.org>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
+        <akpm@linux-foundation.org>, <x86@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <gregory.price@memverge.com>,
+        <jgroves@micron.com>, <sthanneeru@micron.com>,
+        <emirakhur@micron.com>, <vtanna@micron.com>
+Subject: Re: [RFC PATCH 0/2] mm: mempolicy: Multi-tier interleaving
+References: <20230927095002.10245-1-ravis.opensrc@micron.com>
+Date:   Thu, 28 Sep 2023 14:14:32 +0800
+In-Reply-To: <20230927095002.10245-1-ravis.opensrc@micron.com> (Ravi
+        Jonnalagadda's message of "Wed, 27 Sep 2023 15:20:00 +0530")
+Message-ID: <87v8burfhz.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20230922175319.work.096-kees@kernel.org>
-In-Reply-To: <20230922175319.work.096-kees@kernel.org>
-From:   Justin Stitt <justinstitt@google.com>
-Date:   Thu, 28 Sep 2023 13:48:34 +0900
-Message-ID: <CAFhGd8qdBmqwxAWsxDmmRYweOTRK33nFXWdM_QpqHtv6=bOcOQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with __counted_by
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ascii
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, Sep 23, 2023 at 2:53=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->
-> As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
->
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi, Ravi,
 
-Looks good.
+Thanks for the patch!
 
-The reordering of the count assignment is crucial here otherwise
-the runtime checks will trip when `cximsd->xormaps` is used as
-memcpy destination.
+Ravi Jonnalagadda <ravis.opensrc@micron.com> writes:
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+> From: Ravi Shankar <ravis.opensrc@micron.com>
+>
+> Hello,
+>
+> The current interleave policy operates by interleaving page requests
+> among nodes defined in the memory policy. To accommodate the
+> introduction of memory tiers for various memory types (e.g., DDR, CXL,
+> HBM, PMEM, etc.), a mechanism is needed for interleaving page requests
+> across these memory types or tiers.
 
-> ---
->  drivers/cxl/acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Why do we need interleaving page allocation among memory tiers?  I think
+that you need to make it more explicit.  I guess that it's to increase
+maximal memory bandwidth for workloads?
+
+> This can be achieved by implementing an interleaving method that
+> considers the tier weights.
+> The tier weight will determine the proportion of nodes to select from
+> those specified in the memory policy.
+> A tier weight can be assigned to each memory type within the system.
+
+What is the problem of the original interleaving?  I think you need to
+make it explicit too.
+
+> Hasan Al Maruf had put forth a proposal for interleaving between two
+> tiers, namely the top tier and the low tier. However, this patch was
+> not adopted due to constraints on the number of available tiers.
 >
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index d1c559879dcc..40d055560e52 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -14,7 +14,7 @@
+> https://lore.kernel.org/linux-mm/YqD0%2FtzFwXvJ1gK6@cmpxchg.org/T/
 >
->  struct cxl_cxims_data {
->         int nr_maps;
-> -       u64 xormaps[];
-> +       u64 xormaps[] __counted_by(nr_maps);
->  };
+> New proposed changes:
 >
->  /*
-> @@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_header=
-s *header, void *arg,
->                               GFP_KERNEL);
->         if (!cximsd)
->                 return -ENOMEM;
-> +       cximsd->nr_maps =3D nr_maps;
->         memcpy(cximsd->xormaps, cxims->xormap_list,
->                nr_maps * sizeof(*cximsd->xormaps));
-> -       cximsd->nr_maps =3D nr_maps;
->         cxlrd->platform_data =3D cximsd;
+> 1. Introducea sysfs entry to allow setting the interleave weight for each
+> memory tier.
+> 2. Each tier with a default weight of 1, indicating a standard 1:1
+> proportion.
+> 3. Distribute the weight of that tier in a uniform manner across all nodes.
+> 4. Modifications to the existing interleaving algorithm to support the
+> implementation of multi-tier interleaving based on tier-weights.
 >
->         return 0;
-> --
-> 2.34.1
+> This is inline with Huang, Ying's presentation in lpc22, 16th slide in
+> https://lpc.events/event/16/contributions/1209/attachments/1042/1995/\
+> Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
+
+Thanks to refer to the original work about this.
+
+> Observed a significant increase (165%) in bandwidth utilization
+> with the newly proposed multi-tier interleaving compared to the
+> traditional 1:1 interleaving approach between DDR and CXL tier nodes,
+> where 85% of the bandwidth is allocated to DDR tier and 15% to CXL
+> tier with MLC -w2 option.
+
+It appears that "mlc" isn't an open source software.  Better to use a
+open source software to test.  And, even better to use a more practical
+workloads instead of a memory bandwidth/latency measurement tool.
+
+> Usage Example:
 >
+> 1. Set weights for DDR (tier4) and CXL(teir22) tiers.
+> echo 85 > /sys/devices/virtual/memory_tiering/memory_tier4/interleave_weight
+> echo 15 > /sys/devices/virtual/memory_tiering/memory_tier22/interleave_weight
 >
+> 2. Interleave between DRR(tier4, node-0) and CXL (tier22, node-1) using numactl
+> numactl -i0,1 mlc --loaded_latency W2
+>
+> Srinivasulu Thanneeru (2):
+>   memory tier: Introduce sysfs for tier interleave weights.
+>   mm: mempolicy: Interleave policy for tiered memory nodes
+>
+>  include/linux/memory-tiers.h |  27 ++++++++-
+>  include/linux/sched.h        |   2 +
+>  mm/memory-tiers.c            |  67 +++++++++++++++-------
+>  mm/mempolicy.c               | 107 +++++++++++++++++++++++++++++++++--
+>  4 files changed, 174 insertions(+), 29 deletions(-)
+
+--
+Best Regards,
+Huang, Ying
