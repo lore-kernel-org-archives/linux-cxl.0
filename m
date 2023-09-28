@@ -2,146 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1643E732FD
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 18:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E31E743C0
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Sep 2023 20:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230239AbjI1S1l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Sep 2023 14:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52426 "EHLO
+        id S231921AbjI1Uaw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Sep 2023 16:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbjI1S1l (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 14:27:41 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA8299
-        for <linux-cxl@vger.kernel.org>; Thu, 28 Sep 2023 11:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us; s=s31663417;
- t=1695925631; x=1696530431; i=fan.ni@gmx.us;
- bh=BY5/Yi6hpYhJcOvd/lg8K4i4ioKWF2ZBhExNg1EG9ac=;
- h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=XRRoEVHynCzU2fomvFD9C/2I90LVZEQ9HY2lxWiJTXosnr6Vk5QofY55Ame6R/8hJwxF8w+w9cT
- ntfi4d2PofvOV8ZnbQIg+PQvK+z85TfKQ48WUgQOemjGjMMT9kQRv33TtcefYZWEu3Qwp1CU6L26H
- AwxLirzDUNNXPDQ2/VJzpRaW3odHG6zWAazQjNhPD/YqF39wBkxZWNarzgesowtU0s7UbIPtyhsbp
- HAk6xsK6DUuUJoHVOmLpheCBtNWHVGPMAnhO0cYL1Y9Cxqt5rnf5yRCZnOuDZwfVt1t++vXUuKN+r
- bI/iARqQqB5Zt5PS33Q/b0aWZsEeYMu9IFWg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MHXBj-1qq6Zz1P7Z-00DU7L; Thu, 28
- Sep 2023 20:27:11 +0200
-Date:   Thu, 28 Sep 2023 11:26:57 -0700
-From:   Fan Ni <fan.ni@gmx.us>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-        Michael Tsirkin <mst@redhat.com>, linuxarm@huawei.com,
-        Fan Ni <fan.ni@samsung.com>,
-        Philippe Mathieu-Daud? <philmd@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Gregory Price <gregory.price@memverge.com>,
-        Klaus Jensen <its@irrelevant.dk>,
-        Corey Minyard <cminyard@mvista.com>,
-        Klaus Jensen <k.jensen@samsung.com>
-Subject: Re: [PATCH 05/19] hw/pci-bridge/cxl_upstream: Move defintion of
- device to header.
-Message-ID: <ZRXFcX0-3UnqycYe@debian>
-References: <20230925161124.18940-1-Jonathan.Cameron@huawei.com>
- <20230925161124.18940-6-Jonathan.Cameron@huawei.com>
+        with ESMTP id S230251AbjI1Uav (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Sep 2023 16:30:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77DC193;
+        Thu, 28 Sep 2023 13:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695933049; x=1727469049;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=cAy0mCyyU34BrYjzihAk6QBEdSFRsmrEsY5ivGjaggs=;
+  b=QMUsHl739ekDWK7c9cHUlvPYZ75/TBKEaB6hmJnsyObFqlf2PEqT41hb
+   gWTTEblkJsDrncd0jvNLu+7GT54Y4RglIt9VL3Me892dN/8nDtYpc8Lq2
+   OPnHAGRnF2o3fDmDecJuM3QFWXx+yOvdBj6BuBGm3Ps3co4iE/y4KWhse
+   ppXp0eCSZ3qHi+2CPFeJm1uSJeUST5lqwmpD3ZQBKHv7PCcB6mtdPLU4L
+   2kmMLp6/a/zpGjbQEib8ArmspDctljrbvr46JbjikB1tspdUmbb4deFyt
+   uRAlL5svvTivMIzX/YN1vX7ZTUJ8JtFRYkN2q5UgeFRI/ytM5rFEtwEuf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="367229664"
+X-IronPort-AV: E=Sophos;i="6.03,185,1694761200"; 
+   d="scan'208";a="367229664"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 13:30:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="815374351"
+X-IronPort-AV: E=Sophos;i="6.03,185,1694761200"; 
+   d="scan'208";a="815374351"
+Received: from bdsebast-mobl1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.125.211])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 13:30:30 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v4 0/2] mm: use memmap_on_memory semantics for dax/kmem
+Date:   Thu, 28 Sep 2023 14:30:09 -0600
+Message-Id: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230925161124.18940-6-Jonathan.Cameron@huawei.com>
-X-Provags-ID: V03:K1:DBvQ3XVtw87a1DwgOnKvweizGDOHaBqEWkQBkYt5Cr0wejGYIal
- HzqZsVdZzkSmmxI8QuU3chBgP6eMUQ3bhs0klLH5JgTVECdvaGoFsfOEjZfWNn8OSH4E7ml
- HbQqQt4IYoXqiCLofIAoZzEkLlHXJxVtLKgcGA67shiYw2oM7DoMUClq16BkBJkhO71dwtJ
- VzluIOaPmP5BiEByGfi1w==
-UI-OutboundReport: notjunk:1;M01:P0:d7iw3oy8PFk=;fbg16xwDAkVrk+jDxf+dLu+8XLw
- PQ7jUJwzwg+Hvun9JB9DwItwRwMS3J9DdeEnfvEtVr1Z2HhpZKRz+krNqLhOH/9IDCqatFbl2
- CsdL3lYS1nm5eotrRL7U///OfZVVsijy3Ilt+2iFi9/9M48gAnneSQiJoSUjEoejky5fKqSu4
- 7Qggha7KEygwKsEDX1evuBZh/FT2XxB5m6e2IwnEpFWEboxDX7GrSyoqIZI9K/AbBSm+Lu4Uc
- O+DmdQlUB0ki9n9Si+7NWfwJT4MtvBU3vxR2nAC/NABgQTWmevO0O6t6DdzEZ0UqfYETqgpdc
- Dnan9wGFZFo61KxZPv/0O0HOM8Wo6PYK6IqKXRyRlb2OrAbnkP7KgOda4JOQ4/Mq6YD7i9pJD
- fPrGfZ1V13TmiqKa818JYQpWhfYeArXYBn4Q4bCL313UX4H5airFZT3TtuepTz+llsBAFNgJC
- bXXYP8nFaVN6Aw9NsjIWm5EKsURuo/8ZMwG9SzO/3wFAdpOt6YdWiLajFpRTr++51QN6hTkP4
- N4weGJwDu11DPW8O6+ZEl99UFAYVNCpslcsDvKvRPzuJfB6Sajpfd55jTDKA7tExViu6at96n
- 67WwFUMUjAPBZlEgnOJGl2HCoRJjY517F7bBAM9UKJw1g/9Tf5eCqEcYx9v4XTGlkDXjbsqEW
- 1Y5HeYtXj9sfX2PnYed5p78hVdYv4whuxBEYM0DxhMKE3YH/pwJYaUKuifV0cQyie2Q4ph/ex
- XddiCnpSBbMXKT5O42Wvyoi7/8V9E+R8dmGmd4cOzgYMbQ+GHNa6FJyXFRil8sRYwJ5LnaiJF
- ybtGgVXOkK6KNuPxk9TGQHszdTZ1q0mZtqVjzHgKbZcBLZSjYCVB/YyhhNElfAeWvlqiW51hd
- C1ldlPJu98nchnEeX0ne3kj/+jOG2QverPA9lc5O0D5/EP6hyS6r+7yS0X/S3TFZVE91dCEsA
- WUKP3kdzfNGv2b3RPsYFDgqa4Hs=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFHiFWUC/3XNQQ7CIBAF0KsY1mIoIIIr72GMmdKpJbbUgBKN6
+ d0d3Wg0Lmbxf/L+3FnGFDCz9ezOEpaQwxgp6PmM+Q7iAXloKDMppBKmUrwUfhxw2NMNcOJLbZW
+ 3jdBy5RihGjLyOkH0HbF46XsqTwnbcH192e4odyGfx3R7PS3Vs/27XyoueGsadN5AK73ZhHjGf
+ uHHgT2ninzzlRQ/XBK3tm4AaqWdU99cvbkV1Q9XxLUw6ADapbHuk0/T9ACKqImFPwEAAA==
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3152;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=cAy0mCyyU34BrYjzihAk6QBEdSFRsmrEsY5ivGjaggs=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDKmij4Itwm6bPF8XxpAX828Kx6+++ga1a8WXpk/iy1n0q
+ 9o+Vd+po5SFQYyLQVZMkeXvno+Mx+S25/MEJjjCzGFlAhnCwMUpABOpamFk2HH85zqnqsfuZSuE
+ s9LX79q9c3Vz0pKJW9756Ng/MWt568LI8C+Uf5KPdvLpIs+jV226St8k1mfPY7Ker2L8XCI48fN
+ xDgA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 05:11:10PM +0100, Jonathan Cameron wrote:
-> To avoid repetition of switch upstream port specific data in the
-> CXLDeviceState structure it will be necessary to access the switch USP
-> specific data from mailbox callbacks. Hence move it to cxl_device.h so i=
-t
-> is no longer an opaque structure.
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+The dax/kmem driver can potentially hot-add large amounts of memory
+originating from CXL memory expanders, or NVDIMMs, or other 'device
+memories'. There is a chance there isn't enough regular system memory
+available to fit the memmap for this new memory. It's therefore
+desirable, if all other conditions are met, for the kmem managed memory
+to place its memmap on the newly added memory itself.
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+The main hurdle for accomplishing this for kmem is that memmap_on_memory
+can only be done if the memory being added is equal to the size of one
+memblock. To overcome this, allow the hotplug code to split an add_memory()
+request into memblock-sized chunks, and try_remove_memory() to also
+expect and handle such a scenario.
 
->  include/hw/pci-bridge/cxl_upstream_port.h | 18 ++++++++++++++++++
->  hw/pci-bridge/cxl_upstream.c              | 11 +----------
->  2 files changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-=
-bridge/cxl_upstream_port.h
-> new file mode 100644
-> index 0000000000..b02aa8f659
-> --- /dev/null
-> +++ b/include/hw/pci-bridge/cxl_upstream_port.h
-> @@ -0,0 +1,18 @@
-> +
-> +#ifndef CXL_USP_H
-> +#define CXL_USP_H
-> +#include "hw/pci/pcie.h"
-> +#include "hw/pci/pcie_port.h"
-> +#include "hw/cxl/cxl.h"
-> +
-> +typedef struct CXLUpstreamPort {
-> +    /*< private >*/
-> +    PCIEPort parent_obj;
-> +
-> +    /*< public >*/
-> +    CXLComponentState cxl_cstate;
-> +    DOECap doe_cdat;
-> +    uint64_t sn;
-> +} CXLUpstreamPort;
-> +
-> +#endif /* CXL_SUP_H */
-> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> index b81bb5fec9..36737189c6 100644
-> --- a/hw/pci-bridge/cxl_upstream.c
-> +++ b/hw/pci-bridge/cxl_upstream.c
-> @@ -14,6 +14,7 @@
->  #include "hw/pci/msi.h"
->  #include "hw/pci/pcie.h"
->  #include "hw/pci/pcie_port.h"
-> +#include "hw/pci-bridge/cxl_upstream_port.h"
->  /*
->   * Null value of all Fs suggested by IEEE RA guidelines for use of
->   * EU, OUI and CID
-> @@ -30,16 +31,6 @@
->  #define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
->      (CXL_UPSTREAM_PORT_SN_OFFSET + PCI_EXT_CAP_DSN_SIZEOF)
->
-> -typedef struct CXLUpstreamPort {
-> -    /*< private >*/
-> -    PCIEPort parent_obj;
-> -
-> -    /*< public >*/
-> -    CXLComponentState cxl_cstate;
-> -    DOECap doe_cdat;
-> -    uint64_t sn;
-> -} CXLUpstreamPort;
-> -
->  CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
->  {
->      return &usp->cxl_cstate;
-> --
-> 2.39.2
->
+Patch 1 teaches the memory_hotplug code to allow for splitting
+add_memory() and remove_memory() requests over memblock sized chunks.
+
+Patch 2 adds a sysfs control for the kmem driver that would
+allow an opt-out of using memmap_on_memory for the memory being added.
+
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+Changes in v4:
+- Rebase to Aneesh's PPC64 memmap_on_memory series v8 [2].
+- Tweak a goto / error path in add_memory_create_devices() (Jonathan)
+- Retain the old behavior for dax devices, only default to
+  memmap_on_memory for CXL (Jonathan)
+- Link to v3: https://lore.kernel.org/r/20230801-vv-kmem_memmap-v3-0-406e9aaf5689@intel.com
+
+[2]: https://lore.kernel.org/linux-mm/20230808091501.287660-1-aneesh.kumar@linux.ibm.com
+
+Changes in v3:
+- Rebase on Aneesh's patches [1]
+- Drop Patch 1 - it is not needed since [1] allows for dynamic setting
+  of the memmap_on_memory param (David)
+- Link to v2: https://lore.kernel.org/r/20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com
+
+[1]: https://lore.kernel.org/r/20230801044116.10674-1-aneesh.kumar@linux.ibm.com
+
+Changes in v2:
+- Drop the patch to create an override path for the memmap_on_memory
+  module param (David)
+- Move the chunking into memory_hotplug.c so that any caller of
+  add_memory() can request this behavior. (David)
+- Handle remove_memory() too. (David, Ying)
+- Add a sysfs control in the kmem driver for memmap_on_memory semantics
+  (David, Jonathan)
+- Add a #else case to define mhp_supports_memmap_on_memory() if
+  CONFIG_MEMORY_HOTPLUG is unset. (0day report)
+- Link to v1: https://lore.kernel.org/r/20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com
+
+---
+Vishal Verma (2):
+      mm/memory_hotplug: split memmap_on_memory requests across memblocks
+      dax/kmem: allow kmem to add memory with memmap_on_memory
+
+ drivers/dax/bus.h         |   1 +
+ drivers/dax/dax-private.h |   1 +
+ drivers/dax/bus.c         |  38 +++++++++++
+ drivers/dax/cxl.c         |   1 +
+ drivers/dax/hmem/hmem.c   |   1 +
+ drivers/dax/kmem.c        |   8 ++-
+ drivers/dax/pmem.c        |   1 +
+ mm/memory_hotplug.c       | 165 ++++++++++++++++++++++++++++------------------
+ 8 files changed, 150 insertions(+), 66 deletions(-)
+---
+base-commit: 25b5b1a0646c3d39e1d885e27c10be1c9e202bf2
+change-id: 20230613-vv-kmem_memmap-5483c8d04279
+
+Best regards,
+-- 
+Vishal Verma <vishal.l.verma@intel.com>
+
