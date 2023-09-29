@@ -2,50 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD4AE77347
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Sep 2023 23:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD48E77347
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Sep 2023 23:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjI2XJr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Sep 2023 19:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        id S230063AbjI2XJ4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Sep 2023 19:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230063AbjI2XJr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Sep 2023 19:09:47 -0400
+        with ESMTP id S230165AbjI2XJz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Sep 2023 19:09:55 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283FEE6
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Sep 2023 16:09:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EABF7
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Sep 2023 16:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696028985; x=1727564985;
+  t=1696028992; x=1727564992;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Nc5jQpp6R0sD2LAPV3rEK+Kfd6TmVd7I3i+IbEkCF20=;
-  b=jaujVZvmLTbTO6V0yWcPodduLUnI3pEZ5A8xvq0YYQ7YK1xHSF4Ko8Bd
-   Ka0h78C0xB9dYlwhTkTg54otsdeJ7FGZtZXf50YuEMnk/yziI6ldoD8Oo
-   KquKZvUaE9ymv+fGuT1Y5oJh/s/2bAyMTGYw7Abiy2URA/ptK1ZmHjJNw
-   QBKA36lSkxq6hxbjDiYAD757TD9fRUKIKFhTj9h8qOJeg6N6+BrJ7Evcp
-   XCznOVHveDdAguf7cb9+DtnLDEU3am3vWXVxl1vJ3wk61/fuNSuVTVbLF
-   HSUsc/PV7HplWX+T01hr1vPb5JAZ9vOZY9H+IkAoPQtCsI/mlR6MjXwEP
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="381279679"
+  bh=4mH1m+H45/oAaMzuzdMJu716WCHdaF3Gco4nkLXM1yo=;
+  b=F7pWz3/0wZtl+dZ/U/7MOzojDSO4VGd4aoY3lCawAb4OGNb95do2ZLgJ
+   yL108lAc3lMV5f6O6cRm1Y94q9P2cfRHpNptDZFXII6mg6EccszQCNeHY
+   wehSU8gp5WeP9a1iPMqBGs1ZnZYNSjDL18Z1ee8o1+I6Epv7JY8o/MJSX
+   l55jzmws1SF0xuDjt/22JDU7gxR4uIZ+YMLqS54q+NEuqko3tGQ2b+ZJY
+   ndS37kQ5jQwE+7isprFUJA0HfP4gaPm2b+68t6+fTjdhpyL0qe/3guWTk
+   cY4nceidkCGi/qyg9ZFvY7e0nfGYLnWyYxbumu9tHre75fWA6XcwrARFt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="381279704"
 X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="381279679"
+   d="scan'208";a="381279704"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:44 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="743572070"
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="743572099"
 X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="743572070"
+   d="scan'208";a="743572099"
 Received: from thamvo-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.56.79])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:44 -0700
-Subject: [PATCH v2 3/4] cxl/pci: Fix sanitize notifier setup
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:50 -0700
+Subject: [PATCH v2 4/4] cxl/mem: Fix shutdown order
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, ira.weiny@intel.com
-Date:   Fri, 29 Sep 2023 16:09:44 -0700
-Message-ID: <169602898447.904193.4454973423100628922.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, ira.weiny@intel.com
+Date:   Fri, 29 Sep 2023 16:09:49 -0700
+Message-ID: <169602898991.904193.3059334392093961032.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
 References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -56,165 +54,70 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fix a race condition between the mailbox-background command interrupt
-firing and the security-state sysfs attribute being removed.
+Ira reports that removing cxl_mock_mem causes a crash with the following
+trace:
 
-The race is difficult to see due to the awkward placement of the
-sanitize-notifier setup code and the multiple places the teardown calls
-are made, cxl_memdev_security_init() and cxl_memdev_security_shutdown().
+ BUG: kernel NULL pointer dereference, address: 0000000000000044
+ [..]
+ RIP: 0010:cxl_region_decode_reset+0x7f/0x180 [cxl_core]
+ [..]
+ Call Trace:
+  <TASK>
+  cxl_region_detach+0xe8/0x210 [cxl_core]
+  cxl_decoder_kill_region+0x27/0x40 [cxl_core]
+  cxld_unregister+0x29/0x40 [cxl_core]
+  devres_release_all+0xb8/0x110
+  device_unbind_cleanup+0xe/0x70
+  device_release_driver_internal+0x1d2/0x210
+  bus_remove_device+0xd7/0x150
+  device_del+0x155/0x3e0
+  device_unregister+0x13/0x60
+  devm_release_action+0x4d/0x90
+  ? __pfx_unregister_port+0x10/0x10 [cxl_core]
+  delete_endpoint+0x121/0x130 [cxl_core]
+  devres_release_all+0xb8/0x110
+  device_unbind_cleanup+0xe/0x70
+  device_release_driver_internal+0x1d2/0x210
+  bus_remove_device+0xd7/0x150
+  device_del+0x155/0x3e0
+  ? lock_release+0x142/0x290
+  cdev_device_del+0x15/0x50
+  cxl_memdev_unregister+0x54/0x70 [cxl_core]
 
-Unify setup in one place, cxl_sanitize_setup_notifier(). Arrange for
-the paired cxl_sanitize_teardown_notifier() to safely quiet the notifier
-and let the cxl_memdev + irq be unregistered later in the flow.
+This crash is due to the clearing out the cxl_memdev's driver context
+(@cxlds) before the subsystem is done with it. This is ultimately due to
+the region(s), that this memdev is a member, being torn down and expecting
+to be able to de-reference @cxlds, like here:
 
-This fix is also needed as a preparation fix for a memdev unregistration
-crash.
+static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+...
+                if (cxlds->rcd)
+                        goto endpoint_reset;
+...
 
-Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
+Fix it by keeping the driver context valid until memdev-device
+unregistration, and subsequently the entire stack of related
+dependencies, unwinds.
+
+Fixes: 9cc238c7a526 ("cxl/pci: Introduce cdevm_file_operations")
+Reported-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/memdev.c |   42 ----------------------------------------
- drivers/cxl/pci.c         |   47 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 42 deletions(-)
+ drivers/cxl/core/memdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 2a7a07f6d165..a950091e5640 100644
+index a950091e5640..e78b5ead14fa 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
-@@ -556,20 +556,11 @@ void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- }
- EXPORT_SYMBOL_NS_GPL(clear_exclusive_cxl_commands, CXL);
+@@ -570,8 +570,8 @@ static void cxl_memdev_unregister(void *_cxlmd)
+ 	struct cxl_memdev *cxlmd = _cxlmd;
+ 	struct device *dev = &cxlmd->dev;
  
--static void cxl_memdev_security_shutdown(struct device *dev)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
--
--	cancel_delayed_work_sync(&mds->security.poll_dwork);
--}
--
- static void cxl_memdev_shutdown(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 
- 	down_write(&cxl_memdev_rwsem);
--	cxl_memdev_security_shutdown(dev);
- 	cxlmd->cxlds = NULL;
- 	up_write(&cxl_memdev_rwsem);
- }
-@@ -1001,35 +992,6 @@ static const struct file_operations cxl_memdev_fops = {
- 	.llseek = noop_llseek,
- };
- 
--static void put_sanitize(void *data)
--{
--	struct cxl_memdev_state *mds = data;
--
--	sysfs_put(mds->security.sanitize_node);
--}
--
--static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
--{
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct device *dev = &cxlmd->dev;
--	struct kernfs_node *sec;
--
--	sec = sysfs_get_dirent(dev->kobj.sd, "security");
--	if (!sec) {
--		dev_err(dev, "sysfs_get_dirent 'security' failed\n");
--		return -ENODEV;
--	}
--	mds->security.sanitize_node = sysfs_get_dirent(sec, "state");
--	sysfs_put(sec);
--	if (!mds->security.sanitize_node) {
--		dev_err(dev, "sysfs_get_dirent 'state' failed\n");
--		return -ENODEV;
--	}
--
--	return devm_add_action_or_reset(cxlds->dev, put_sanitize, mds);
-- }
--
- struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
- {
- 	struct cxl_memdev *cxlmd;
-@@ -1058,10 +1020,6 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
- 	if (rc)
- 		goto err;
- 
--	rc = cxl_memdev_security_init(cxlmd);
--	if (rc)
--		goto err;
--
- 	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
- 	if (rc)
- 		return ERR_PTR(rc);
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index ac4e434b0806..b0023e479315 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -165,6 +165,49 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
- 	mutex_unlock(&mds->mbox_mutex);
+-	cxl_memdev_shutdown(dev);
+ 	cdev_device_del(&cxlmd->cdev, dev);
++	cxl_memdev_shutdown(dev);
+ 	put_device(dev);
  }
  
-+static void cxl_sanitize_teardown_notifier(void *data)
-+{
-+	struct cxl_memdev_state *mds = data;
-+	struct kernfs_node *state;
-+
-+	/*
-+	 * Prevent new irq triggered invocations of the workqueue and
-+	 * flush inflight invocations.
-+	 */
-+	mutex_lock(&mds->mbox_mutex);
-+	state = mds->security.sanitize_node;
-+	mds->security.sanitize_node = NULL;
-+	mutex_unlock(&mds->mbox_mutex);
-+
-+	cancel_delayed_work_sync(&mds->security.poll_dwork);
-+	sysfs_put(state);
-+}
-+
-+static int cxl_sanitize_setup_notifier(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct device *dev = cxlds->dev;
-+	struct kernfs_node *sec;
-+
-+	if (!test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds))
-+		return 0;
-+
-+	sec = sysfs_get_dirent(dev->kobj.sd, "security");
-+	if (!sec) {
-+		dev_err(dev, "sanitize notification setup failure\n");
-+		return -ENOENT;
-+	}
-+	mds->security.sanitize_node = sysfs_get_dirent(sec, "state");
-+	sysfs_put(sec);
-+	if (!mds->security.sanitize_node) {
-+		dev_err(dev, "sanitize notification setup failure\n");
-+		return -ENOENT;
-+	}
-+
-+	return devm_add_action_or_reset(dev, cxl_sanitize_teardown_notifier, mds);
-+}
-+
- /**
-  * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
-  * @mds: The memory device driver data
-@@ -875,6 +918,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_sanitize_setup_notifier(cxlmd);
-+	if (rc)
-+		return rc;
-+
- 	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
- 	for (i = 0; i < pmu_count; i++) {
- 		struct cxl_pmu_regs pmu_regs;
 
