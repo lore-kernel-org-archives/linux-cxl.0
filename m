@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A2E7734B
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Sep 2023 23:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C5EE77347
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Sep 2023 23:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbjI2XJb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Sep 2023 19:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38246 "EHLO
+        id S229769AbjI2XJi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Sep 2023 19:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2XJb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Sep 2023 19:09:31 -0400
+        with ESMTP id S229508AbjI2XJh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Sep 2023 19:09:37 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5071DDD
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Sep 2023 16:09:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AF0DD
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Sep 2023 16:09:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696028969; x=1727564969;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=aM2+he98UA7qY7pmOoe3cPfMSGWs+8p7VFLlR+hRt0o=;
-  b=KCjRA3mQXV0fEiA37Gu+WZZPUHwdkz1OArvF7OE+vmXDWrPyunBrC2HT
-   Au1OZkc6BVVCm3hIaggzknfvtqJxqNe1361vEt/NHzU6p5pqn3Oaeu6zj
-   KE2sq9Es+tx38bmET1NlLX7IMILuCYEtn6B7YOCkiWiNo8oHs79RLeP0q
-   eZHmquN76mR3d1sHHJG8LApiV3iKndq/bsYrzVk1LE++1lq2osmGbQKMM
-   talna/mye/V7UA4ukducM770GgVXAPvp4DPaE1Tgy14l710vZrI9hijgP
-   gBeEPQkzwn1Zl4C6etSoByIKa77P6IyoZhqWpBhiM4gTdOhMEP8hN0Dlr
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="381279637"
+  t=1696028974; x=1727564974;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=I+pGIPYdvlTDz4UX+LrZQ0OshunMoGGi5Wn+AimK7UA=;
+  b=WnTn7Pg53Xqan5HGOvImCiW2GEzNQqK5QpJk9nJWjxIpoq4e7XuEi0j7
+   J/gg65kYURaNibmCI0oNzJpIl4S2tn3OHzbID0kpro0nWZ6yQFi+HrK9u
+   DzyAL+5oovDygDXdhQvaPDLFVj49ol92tf6bWUBvG7RRHsgaSBk5nRjUW
+   5VHZe6+OiKeQJtFUvm4sKoWbouICEx6NAZEzklp8YOhcYmAso6b+yfsSy
+   8o7QKM8iwU0ZZuWAUlnGyEXP+ADTCP6pCmoNAeJGCbrq7nT5E8PJPp3Sz
+   aH/EO9QpiT/nW13xzjYPdJWZ3xPLF42paOKT2Dk45cX4sWh00mUzgPH76
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="381279649"
 X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="381279637"
+   d="scan'208";a="381279649"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:28 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="743571973"
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="743572005"
 X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="743571973"
+   d="scan'208";a="743572005"
 Received: from thamvo-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.56.79])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:28 -0700
-Subject: [PATCH v2 0/4] cxl/mem: Fix shutdown order
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:09:33 -0700
+Subject: [PATCH v2 1/4] cxl/pci: Remove unnecessary device reference
+ management in sanitize work
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, ira.weiny@intel.com
-Date:   Fri, 29 Sep 2023 16:09:27 -0700
-Message-ID: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     ira.weiny@intel.com
+Date:   Fri, 29 Sep 2023 16:09:33 -0700
+Message-ID: <169602897366.904193.9449207727775648546.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,38 +55,38 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While fixing a crash where the cxlmd->cxlds validity needed to be
-maintained over the span of the memdev being unregistered, I made a note
-to come back and cleanup sanitize notifier setup/shutdown
-implementation. Jonathan went further and noticed that the fix needs
-that rework first. So the changes since v1 [1] are reworking the
-sanitize notifier setup to be more idiomatic with how other driver
-mechanisms are managed.
+Given that any particular put_device() could be the final put of the
+device, the fact that there are usages of cxlds->dev after
+put_device(cxlds->dev) is a red flag. Drop the reference counting since
+the device is pinned by being registered and will not be unregistered
+without triggering the driver + workqueue to shutdown.
 
-The special wrinkle of the sanitize notifier is that it interacts with
-interrupts, which are enabled early in the flow, and it interacts with
-memdev sysfs which is not initialized until late in the flow.
-
-After some other cleanups, a self contained
-cxl_sanitize_setup_notifier() is introduced to centralize that
-incremental setup work, and leave cxl_memdev_shutdown() alone to
-coordinate closing down the ioctl path relative to the unregister event
-of the memdev.
-
-[1]: http://lore.kernel.org/r/169596542307.790108.11339208844199665348.stgit@dwillia2-xfh.jf.intel.com
-
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
+ drivers/cxl/pci.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
-Dan Williams (4):
-      cxl/pci: Remove unnecessary device reference management in sanitize work
-      cxl/pci: Cleanup 'sanitize' to always poll
-      cxl/pci: Fix sanitize notifier setup
-      cxl/mem: Fix shutdown order
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 44a21ab7add5..aa1b3dd9e64c 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -152,8 +152,6 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
+ 	mutex_lock(&mds->mbox_mutex);
+ 	if (cxl_mbox_background_complete(cxlds)) {
+ 		mds->security.poll_tmo_secs = 0;
+-		put_device(cxlds->dev);
+-
+ 		if (mds->security.sanitize_node)
+ 			sysfs_notify_dirent(mds->security.sanitize_node);
+ 
+@@ -296,9 +294,6 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+ 		 */
+ 		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+ 			if (mds->security.poll) {
+-				/* hold the device throughout */
+-				get_device(cxlds->dev);
+-
+ 				/* give first timeout a second */
+ 				timeout = 1;
+ 				mds->security.poll_tmo_secs = timeout;
 
-
- drivers/cxl/core/memdev.c |   45 ------------------
- drivers/cxl/cxlmem.h      |    2 -
- drivers/cxl/pci.c         |  112 +++++++++++++++++++++++++++++----------------
- 3 files changed, 73 insertions(+), 86 deletions(-)
-
-base-commit: 6465e260f48790807eef06b583b38ca9789b6072
