@@ -2,200 +2,122 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B24CE7849E
-	for <linux-cxl@archiver.kernel.org>; Sun,  1 Oct 2023 22:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B36E784AF
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 09:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234289AbjJAWbr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 1 Oct 2023 18:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49074 "EHLO
+        id S235965AbjJBJWf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 05:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234381AbjJAWbq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 1 Oct 2023 18:31:46 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90E5D9
-        for <linux-cxl@vger.kernel.org>; Sun,  1 Oct 2023 15:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696199503; x=1727735503;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=akNBQPskrM8djdz7UCrD/NyGZShfvvdEJHx6llS4OvU=;
-  b=fQE+thGmM4hhj6dQmxLZ5cxa+s2ZX1l7xblNydEaU/ZTyUijOzSeDSMy
-   TKRoHGWt8DYHUcUx5LFhUCFNp6X4Fwn67om630fllOeAIHJjSFDOduDEA
-   vnMXwRkoeiUIYzGz43w3qaWJ890p12NBXgy1WYwV3cAjC7D4uFKfF8A5k
-   jsPx0nZaJpof4YtxZt8zO+pT6hBPCqzZszMfVxcxyVQvvjjZjBJ8pgy9x
-   D9eEe4IpEg1UDafNL2uGzeUJbOxW/kFQDCJS8aUEX+tnN6LlkzYIH+B/s
-   w5hRtRN+k73GSnbv7uowQE6ufTK3GGFnvIuD28rInNodX/sJ0641+/KRI
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="367618324"
-X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
-   d="scan'208";a="367618324"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 15:31:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="779781976"
-X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
-   d="scan'208";a="779781976"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.251.20.198])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 15:31:40 -0700
-From:   alison.schofield@intel.com
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v2 5/5] cxl/test: add cxl-poison.sh unit test
-Date:   Sun,  1 Oct 2023 15:31:35 -0700
-Message-Id: <51fdd212d139d203506cc2ee18abb362e5859e3e.1696196382.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1696196382.git.alison.schofield@intel.com>
-References: <cover.1696196382.git.alison.schofield@intel.com>
+        with ESMTP id S236014AbjJBJWe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 05:22:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8F483
+        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 02:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696238510;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9SMs8mHNoKs8/KwUwp2IfY8WHFPaduo12w1Xi37QfxA=;
+        b=F7mBxVAFQGRBo/Izhsf9Xz1z5AUd4No666aFLrWvRdet+Ngp0xqqJDRRsxi3Afdrcwkg1t
+        QclE8DdcUMaK0F+635o8L85wD3zGopy2TNgd8gnsegIZW9o+R0CMlKK+YkODfwblI73da3
+        7Q1HWtAz01PJmslA8M6GcMVJO7ifp9g=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-428-9GeOWpZzMIarM5Okfyk-2w-1; Mon, 02 Oct 2023 05:21:49 -0400
+X-MC-Unique: 9GeOWpZzMIarM5Okfyk-2w-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-402cd372b8bso150915765e9.2
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Oct 2023 02:21:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696238508; x=1696843308;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9SMs8mHNoKs8/KwUwp2IfY8WHFPaduo12w1Xi37QfxA=;
+        b=tt5bVikJaHkUm+ng9Zq34Xn90bpAERukiUQ2McdjM9C1yd0i0u3yg97g8BEPiKxVBK
+         NRI6ulVAYZuVMtxGe64MBVrmvgbs07y+kM3eG25I5r0h/aOws8o6Gt+YRVMSUg12nyzK
+         jwe3ZGT7PHdyL2k27Ao6klbBUJWrqMqarmTfwJZziDzjMqQ/tmIsshp2a9sX5pN6hssN
+         HUvTNYrE+R/t6fvGDY9wjRD30CjlEJ15dOldLJbju/kw+YO+ksRCgN4h+6dwVUdxsZCM
+         VtvDBTxZ5T3KiKCYUSOfHpx8XiAPTuSI8verA43+Z0k9eCxXtAgOrfX5jL7hrNV7lLiZ
+         ZxEA==
+X-Gm-Message-State: AOJu0YyDQITDXGX/uzso4MVv8rjFC0D8shq4phLJcfwUnLsXMtl1oZzp
+        PRORPx44fQSeqLBLO4CF8R9mdTleuE6qMN/vxToq7xM70RSVSr7ZdFLGW6aBup8VBOkAqBwTGUz
+        HJSDDr5HHpXEgiciWVqUs
+X-Received: by 2002:a1c:f215:0:b0:401:8225:14ee with SMTP id s21-20020a1cf215000000b00401822514eemr9384957wmc.41.1696238508094;
+        Mon, 02 Oct 2023 02:21:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpoIYDU+1jiVcXrF63R4snLKaA9DHdUaPschGkCCIHkpc4jwwbfh1yuXRNn7DbT9sCTvXBqw==
+X-Received: by 2002:a1c:f215:0:b0:401:8225:14ee with SMTP id s21-20020a1cf215000000b00401822514eemr9384934wmc.41.1696238507655;
+        Mon, 02 Oct 2023 02:21:47 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c735:f200:cb49:cb8f:88fc:9446? (p200300cbc735f200cb49cb8f88fc9446.dip0.t-ipconnect.de. [2003:cb:c735:f200:cb49:cb8f:88fc:9446])
+        by smtp.gmail.com with ESMTPSA id p8-20020a7bcc88000000b003fbe4cecc3bsm6791845wma.16.2023.10.02.02.21.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Oct 2023 02:21:47 -0700 (PDT)
+Message-ID: <0b6f739b-723a-bc53-03a3-f4a793f339b4@redhat.com>
+Date:   Mon, 2 Oct 2023 11:21:46 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 2/2] dax/kmem: allow kmem to add memory with
+ memmap_on_memory
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jeff Moyer <jmoyer@redhat.com>
+References: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
+ <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On 28.09.23 22:30, Vishal Verma wrote:
+> Large amounts of memory managed by the kmem driver may come in via CXL,
+> and it is often desirable to have the memmap for this memory on the new
+> memory itself.
+> 
+> Enroll kmem-managed memory for memmap_on_memory semantics if the dax
+> region originates via CXL. For non-CXL dax regions, retain the existing
+> default behavior of hot adding without memmap_on_memory semantics.
+> 
+> Add a sysfs override under the dax device to control this behavior and
+> override either default.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
 
-Exercise cxl list, libcxl, and driver pieces of the get poison list
-pathway. Inject and clear poison using debugfs and use cxl-cli to
-read the poison list by memdev and by region.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/cxl-poison.sh | 103 +++++++++++++++++++++++++++++++++++++++++++++
- test/meson.build   |   2 +
- 2 files changed, 105 insertions(+)
- create mode 100644 test/cxl-poison.sh
-
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-new file mode 100644
-index 000000000000..3c424532da7b
---- /dev/null
-+++ b/test/cxl-poison.sh
-@@ -0,0 +1,103 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2022 Intel Corporation. All rights reserved.
-+
-+. $(dirname $0)/common
-+
-+rc=77
-+
-+set -ex
-+
-+trap 'err $LINENO' ERR
-+
-+check_prereq "jq"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test
-+cxl list
-+
-+# THEORY OF OPERATION: Exercise cxl-cli and cxl driver ability to
-+# inject, clear, and get the poison list. Do it by memdev and by region.
-+# Based on current cxl-test topology.
-+
-+create_region()
-+{
-+	region=$($CXL create-region -d $decoder -m $memdevs | jq -r ".region")
-+
-+	if [[ ! $region ]]; then
-+		echo "create-region failed for $decoder"
-+		err "$LINENO"
-+	fi
-+}
-+
-+setup_x2_region()
-+{
-+        # Find an x2 decoder
-+        decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+          select(.pmem_capable == true) |
-+          select(.nr_targets == 2) |
-+          .decoder")
-+
-+        # Find a memdev for each host-bridge interleave position
-+        port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
-+            .targets | .[] | select(.position == 0) | .target")
-+        port_dev1=$($CXL list -T -d $decoder | jq -r ".[] |
-+            .targets | .[] | select(.position == 1) | .target")
-+        mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
-+        mem1=$($CXL list -M -p $port_dev1 | jq -r ".[0].memdev")
-+        memdevs="$mem0 $mem1"
-+}
-+
-+find_media_errors()
-+{
-+	nr=$(echo $json | jq -r ".nr_poison_records")
-+	if [[ $nr -ne $NR_ERRS ]]; then
-+		echo "$mem: $NR_ERRS poison records expected, $nr found"
-+		err "$LINENO"
-+	fi
-+}
-+
-+# Turn Tracing ON
-+# Note that 'cxl list --poison' does toggle the tracing, so
-+# turning it on here is to enable the test user to view inject
-+# and clear trace events, if they wish.
-+echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
-+
-+# Using DEBUGFS:
-+# When cxl-cli support for inject and clear arrives, replace
-+# the writes to /sys/kernel/debug with the new cxl commands
-+# that wrap them.
-+
-+# Poison by memdev: inject, list, clear, list.
-+# Inject 2 into pmem and 2 into ram partition.
-+echo 0x40000000 > /sys/kernel/debug/cxl/mem1/inject_poison
-+echo 0x40001000 > /sys/kernel/debug/cxl/mem1/inject_poison
-+echo 0x0 	> /sys/kernel/debug/cxl/mem1/inject_poison
-+echo 0x600	> /sys/kernel/debug/cxl/mem1/inject_poison
-+NR_ERRS=4
-+json=$("$CXL" list -m mem1 --poison | jq -r '.[].poison')
-+find_media_errors
-+echo 0x40000000 > /sys/kernel/debug/cxl/mem1/clear_poison
-+echo 0x40001000 > /sys/kernel/debug/cxl/mem1/clear_poison
-+echo 0x0 	> /sys/kernel/debug/cxl/mem1/clear_poison
-+echo 0x600	> /sys/kernel/debug/cxl/mem1/clear_poison
-+NR_ERRS=0
-+json=$("$CXL" list -m mem1 --poison | jq -r '.[].poison')
-+find_media_errors
-+
-+# Poison by region: inject, list, clear, list.
-+setup_x2_region
-+create_region
-+echo 0x40000000 > /sys/kernel/debug/cxl/"$mem0"/inject_poison
-+echo 0x40000000 > /sys/kernel/debug/cxl/"$mem1"/inject_poison
-+NR_ERRS=2
-+json=$("$CXL" list -r "$region" --poison | jq -r '.[].poison')
-+find_media_errors
-+echo 0x40000000 > /sys/kernel/debug/cxl/"$mem0"/clear_poison
-+echo 0x40000000 > /sys/kernel/debug/cxl/"$mem1"/clear_poison
-+NR_ERRS=0
-+json=$("$CXL" list -r "$region" --poison | jq -r '.[].poison')
-+find_media_errors
-+
-+check_dmesg "$LINENO"
-+modprobe -r cxl-test
-diff --git a/test/meson.build b/test/meson.build
-index 224adaf41fcc..2706fa5d633c 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -157,6 +157,7 @@ cxl_create_region = find_program('cxl-create-region.sh')
- cxl_xor_region = find_program('cxl-xor-region.sh')
- cxl_update_firmware = find_program('cxl-update-firmware.sh')
- cxl_events = find_program('cxl-events.sh')
-+cxl_poison = find_program('cxl-poison.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -186,6 +187,7 @@ tests = [
-   [ 'cxl-create-region.sh',   cxl_create_region,  'cxl'   ],
-   [ 'cxl-xor-region.sh',      cxl_xor_region,     'cxl'   ],
-   [ 'cxl-events.sh',          cxl_events,         'cxl'   ],
-+  [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
 -- 
-2.37.3
+Cheers,
+
+David / dhildenb
 
