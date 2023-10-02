@@ -2,118 +2,105 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A0E784BB
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 15:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B99E784BD
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 15:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237920AbjJBPBa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 11:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
+        id S237886AbjJBP2L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 11:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237950AbjJBPB3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 11:01:29 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642E49F;
-        Mon,  2 Oct 2023 08:01:24 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkdK54sXz6K62g;
-        Mon,  2 Oct 2023 22:59:49 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 16:01:21 +0100
-Date:   Mon, 2 Oct 2023 16:01:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v11 20/20] cxl/core/regs: Rework cxl_map_pmu_regs() to
- use map->dev for devm
-Message-ID: <20231002160120.000002a2@Huawei.com>
-In-Reply-To: <20230927154339.1600738-21-rrichter@amd.com>
-References: <20230927154339.1600738-1-rrichter@amd.com>
-        <20230927154339.1600738-21-rrichter@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S237923AbjJBP2L (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 11:28:11 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE04F99
+        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 08:28:07 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 74BD07A10C3;
+        Mon,  2 Oct 2023 15:28:06 +0000 (UTC)
+Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id CFF227A1F30;
+        Mon,  2 Oct 2023 15:28:05 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1696260485; a=rsa-sha256;
+        cv=none;
+        b=pGIQMRjA2O1VkYAPjT0e+q3QX/ypI/gvmo+R9/fLtGsPqNwjEfDGgit6EdM8TjjrQaEdVr
+        BMqCTCl+rIUVpX8BaQowt+8TC5lBfIFpnzkqDEtCyWl9QwQVOdC4FQNJUKw+azW8Lm/Z2B
+        3QFe/gU3fOyXaaqfLqiSpap7kuGL2pqLq/F/UtsR8+WWdHvfGA8SFZdFhpzEDP6iPQejFP
+        m/a/IckhgdVOhY8pah+3jzkyn/F9SbyBrAyIe2n5DCG/N/8L0oBnCRCAM70BIiYcfL2qPq
+        8vnddWRdGCnDOqG2ueW60dqrJw2mzNagjy66WNiniHz7aZcG9Nh+4gexYTq5WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1696260485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=+EQuAgV1BeuyIlzTuVFIE+uJuAsTZDucmIlsBv6OiFs=;
+        b=62m5ga4QxFX4iX6E2XjfcUkfga7YBtdbj1vj3QEVc0rZWpvHfecaP/0qzv6dWWlaUMGE0O
+        GPHu3/zAvKj98XarLdwGBaFDfdAk6wQsDkZceIufpiLwSruPJzXFy4DODRq/9JPMHMTrQC
+        sjWaIUXGzlMD9oBrcOk72pKdetgsY3ebIdD4cal24BPIccFVovbLgMbsbqPWXYLpZQ0heM
+        kjYE3Ui9/pFHYdvFVahRSLzx/aVtWeE756/fWOzQKggot4bTK0gfjBuIKGhVKTcapmHBAV
+        CsQhwBa0lswIscaZqViF9udmy26P6hXyor30plDngwGZU60EiMCHytquPSH8mA==
+ARC-Authentication-Results: i=1;
+        rspamd-7c449d4847-xl7vq;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Fearful-Exultant: 6e967f2509641572_1696260486232_956790160
+X-MC-Loop-Signature: 1696260486232:1080798612
+X-MC-Ingress-Time: 1696260486231
+Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.122.94.6 (trex/6.9.1);
+        Mon, 02 Oct 2023 15:28:06 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4RzlFx33lQz6s;
+        Mon,  2 Oct 2023 08:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1696260485;
+        bh=+EQuAgV1BeuyIlzTuVFIE+uJuAsTZDucmIlsBv6OiFs=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=JTl4cXVYXeEnqK3r5AsVMS7KTkbkKhIhsxNxjy3cqAp8eIFLQv80gr9TdMjZjsqer
+         wbydt3PJlMJEJMW+GYL15XECrG6sdb69fUPjCR7ji9wGTMgMVRAbpnDy42YnQRHKjI
+         pgSk1rCcGHgsCvQwV8KlBybVUYo25frcuDD74byhoGzjFR2uUz8KRBmBhWrdbn2xBk
+         OEIrLWJGUdiyj7juY9iTtz5A0J0jpIRbNcx2Cr9jOrx1kRp6ngwZN+NF3LKDGZVggm
+         Z3nFVeLFqpZGJmBi43Inv2eyfPsAHbe/n5le7z7YvMqHo+UjY7t8Vf/mmOmi/SEX4d
+         0B6LlxznK2qYQ==
+Date:   Mon, 2 Oct 2023 08:27:53 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com
+Subject: Re: [PATCH v2 1/4] cxl/pci: Remove unnecessary device reference
+ management in sanitize work
+Message-ID: <ovckirfdbuo7wu5cbuky37cqxc66ut3o7him4do6chphxbeixe@7n4dw4wd2dk5>
+References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+ <169602897366.904193.9449207727775648546.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <169602897366.904193.9449207727775648546.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 27 Sep 2023 17:43:39 +0200
-Robert Richter <rrichter@amd.com> wrote:
+On Fri, 29 Sep 2023, Dan Williams wrote:
 
-> struct cxl_register_map carries a @dev parameter for devm operations.
-> Simplify the function interface to use that instead of a separate @dev
-> argument.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-Seems reasonable.
+>Given that any particular put_device() could be the final put of the
+>device, the fact that there are usages of cxlds->dev after
+>put_device(cxlds->dev) is a red flag. Drop the reference counting since
+>the device is pinned by being registered and will not be unregistered
+>without triggering the driver + workqueue to shutdown.
+>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+If the refcounting is unnecessary, great.
 
-> ---
->  drivers/cxl/core/regs.c | 5 ++---
->  drivers/cxl/cxl.h       | 3 +--
->  drivers/cxl/pci.c       | 2 +-
->  3 files changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 7b56f6f28ab1..b668be617fd7 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -386,10 +386,9 @@ int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, CXL);
->  
-> -int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
-> -		     struct cxl_register_map *map)
-> +int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
->  {
-> -	struct device *dev = &pdev->dev;
-> +	struct device *dev = map->host;
->  	resource_size_t phys_addr;
->  
->  	phys_addr = map->resource;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 7c2c195592d6..ed90ca8ed79e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -286,8 +286,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   unsigned long map_mask);
->  int cxl_map_device_regs(const struct cxl_register_map *map,
->  			struct cxl_device_regs *regs);
-> -int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
-> -		     struct cxl_register_map *map);
-> +int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
->  
->  enum cxl_regloc_type;
->  int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 037792e941f2..fa94bc61af25 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -898,7 +898,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  			break;
->  		}
->  
-> -		rc = cxl_map_pmu_regs(pdev, &pmu_regs, &map);
-> +		rc = cxl_map_pmu_regs(&map, &pmu_regs);
->  		if (rc) {
->  			dev_dbg(&pdev->dev, "Could not map PMU regs\n");
->  			break;
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
