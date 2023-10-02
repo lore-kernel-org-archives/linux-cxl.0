@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CE8E784B7
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A0E784BB
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 15:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236077AbjJBO5H (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 10:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58274 "EHLO
+        id S237920AbjJBPBa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 11:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237911AbjJBO5H (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:57:07 -0400
+        with ESMTP id S237950AbjJBPB3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 11:01:29 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52382B3;
-        Mon,  2 Oct 2023 07:57:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642E49F;
+        Mon,  2 Oct 2023 08:01:24 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkW23kZgz6HJX9;
-        Mon,  2 Oct 2023 22:54:22 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkdK54sXz6K62g;
+        Mon,  2 Oct 2023 22:59:49 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 15:56:59 +0100
-Date:   Mon, 2 Oct 2023 15:56:58 +0100
+ 2023 16:01:21 +0100
+Date:   Mon, 2 Oct 2023 16:01:20 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -34,12 +34,12 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v11 14/20] cxl/pci: Map RCH downstream AER registers for
- logging protocol errors
-Message-ID: <20231002155658.00004ac0@Huawei.com>
-In-Reply-To: <20230927154339.1600738-15-rrichter@amd.com>
+Subject: Re: [PATCH v11 20/20] cxl/core/regs: Rework cxl_map_pmu_regs() to
+ use map->dev for devm
+Message-ID: <20231002160120.000002a2@Huawei.com>
+In-Reply-To: <20230927154339.1600738-21-rrichter@amd.com>
 References: <20230927154339.1600738-1-rrichter@amd.com>
-        <20230927154339.1600738-15-rrichter@amd.com>
+        <20230927154339.1600738-21-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -53,132 +53,67 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 27 Sep 2023 17:43:33 +0200
+On Wed, 27 Sep 2023 17:43:39 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> From: Terry Bowman <terry.bowman@amd.com>
+> struct cxl_register_map carries a @dev parameter for devm operations.
+> Simplify the function interface to use that instead of a separate @dev
+> argument.
 > 
-> The restricted CXL host (RCH) error handler will log protocol errors
-> using AER and RAS status registers. The AER and RAS registers need to
-> be virtually memory mapped before enabling interrupts. Create the
-> initializer function devm_cxl_setup_parent_dport() for this when the
-> endpoint is connected with the dport. The initialization sets up the
-> RCH RAS and AER mappings.
-> 
-> Add 'struct cxl_regs' to 'struct cxl_dport' for saving a pointer to
-> the RCH downstream port's AER and RAS registers.
-> 
-> Co-developed-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-As before. Co-dev just before SoB. 
-
-https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst#L521
-This example looks like what you have here.
-
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-Otherwise, LGTM
+Seems reasonable.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/core/pci.c | 36 ++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h      | 10 ++++++++++
->  2 files changed, 46 insertions(+)
+>  drivers/cxl/core/regs.c | 5 ++---
+>  drivers/cxl/cxl.h       | 3 +--
+>  drivers/cxl/pci.c       | 2 +-
+>  3 files changed, 4 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 2b8883288539..2af7ad77b273 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -5,6 +5,7 @@
->  #include <linux/delay.h>
->  #include <linux/pci.h>
->  #include <linux/pci-doe.h>
-> +#include <linux/aer.h>
->  #include <cxlpci.h>
->  #include <cxlmem.h>
->  #include <cxl.h>
-> @@ -730,6 +731,38 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->  
->  #ifdef CONFIG_PCIEAER_CXL
->  
-> +static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> +{
-> +	struct cxl_rcrb_info *ri = &dport->rcrb;
-> +	void __iomem *dport_aer = NULL;
-> +	resource_size_t aer_phys;
-> +	struct device *host;
-> +
-> +	if (dport->rch && ri->aer_cap) {
-> +		host = dport->reg_map.host;
-> +		aer_phys = ri->aer_cap + ri->base;
-> +		dport_aer = devm_cxl_iomap_block(host, aer_phys,
-> +				sizeof(struct aer_capability_regs));
-> +	}
-> +
-> +	dport->regs.dport_aer = dport_aer;
-> +}
-> +
-> +static void cxl_dport_map_regs(struct cxl_dport *dport)
-> +{
-> +	struct cxl_register_map *map = &dport->reg_map;
-> +	struct device *dev = dport->dport_dev;
-> +
-> +	if (!map->component_map.ras.valid)
-> +		dev_dbg(dev, "RAS registers not found\n");
-> +	else if (cxl_map_component_regs(map, &dport->regs.component,
-> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(dev, "Failed to map RAS capability.\n");
-> +
-> +	if (dport->rch)
-> +		cxl_dport_map_rch_aer(dport);
-> +}
-> +
->  void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
->  {
->  	struct device *dport_dev = dport->dport_dev;
-> @@ -738,6 +771,9 @@ void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
->  	host_bridge = to_pci_host_bridge(dport_dev);
->  	if (host_bridge->native_cxl_error)
->  		dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
-> +
-> +	dport->reg_map.host = host;
-> +	cxl_dport_map_regs(dport);
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 7b56f6f28ab1..b668be617fd7 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -386,10 +386,9 @@ int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
 >  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_parent_dport, CXL);
+>  EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, CXL);
 >  
+> -int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
+> -		     struct cxl_register_map *map)
+> +int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
+>  {
+> -	struct device *dev = &pdev->dev;
+> +	struct device *dev = map->host;
+>  	resource_size_t phys_addr;
+>  
+>  	phys_addr = map->resource;
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index cfa2f6bede41..7c2c195592d6 100644
+> index 7c2c195592d6..ed90ca8ed79e 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -221,6 +221,14 @@ struct cxl_regs {
->  	struct_group_tagged(cxl_pmu_regs, pmu_regs,
->  		void __iomem *pmu;
->  	);
-> +
-> +	/*
-> +	 * RCH downstream port specific RAS register
-> +	 * @aer: CXL 3.0 8.2.1.1 RCH Downstream Port RCRB
-> +	 */
-> +	struct_group_tagged(cxl_rch_regs, rch_regs,
-> +		void __iomem *dport_aer;
-> +	);
->  };
+> @@ -286,8 +286,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			   unsigned long map_mask);
+>  int cxl_map_device_regs(const struct cxl_register_map *map,
+>  			struct cxl_device_regs *regs);
+> -int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
+> -		     struct cxl_register_map *map);
+> +int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
 >  
->  struct cxl_reg_map {
-> @@ -623,6 +631,7 @@ struct cxl_rcrb_info {
->   * @rcrb: Data about the Root Complex Register Block layout
->   * @rch: Indicate whether this dport was enumerated in RCH or VH mode
->   * @port: reference to cxl_port that contains this downstream port
-> + * @regs: Dport parsed register blocks
->   */
->  struct cxl_dport {
->  	struct device *dport_dev;
-> @@ -631,6 +640,7 @@ struct cxl_dport {
->  	struct cxl_rcrb_info rcrb;
->  	bool rch;
->  	struct cxl_port *port;
-> +	struct cxl_regs regs;
->  };
+>  enum cxl_regloc_type;
+>  int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 037792e941f2..fa94bc61af25 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -898,7 +898,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  			break;
+>  		}
 >  
->  /**
+> -		rc = cxl_map_pmu_regs(pdev, &pmu_regs, &map);
+> +		rc = cxl_map_pmu_regs(&map, &pmu_regs);
+>  		if (rc) {
+>  			dev_dbg(&pdev->dev, "Could not map PMU regs\n");
+>  			break;
 
