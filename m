@@ -2,143 +2,88 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA17E784AF
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 09:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D5E7849A
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 09:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236084AbjJBJ3c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 05:29:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
+        id S236215AbjJBJzY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 05:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236074AbjJBJ3c (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 05:29:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AD7A4
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 02:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696238929;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AJJ/7KPwaOb8i7teRUVDmyTyd/EZIX0vx+LShsb9z+w=;
-        b=a+dSmxnG21gSW3Ax1FZg4quhY5IOr7PANjy6SuHaAoJX9bk6TeWyU7wGRR2dlYMmmb6xen
-        /aVRcig3zrBcyLGt0g6KwFVmPqWFcDnynEUvCNRj1kLQAX0KvOvKmZZapZEy3eTFjD/9E2
-        Xucs6FXIlcdi5uH4SRnuEM+b2XJwHMs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-621-xcocKt7rOtas9czAlvd_Eg-1; Mon, 02 Oct 2023 05:28:48 -0400
-X-MC-Unique: xcocKt7rOtas9czAlvd_Eg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4065ca278b3so20452245e9.3
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Oct 2023 02:28:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696238927; x=1696843727;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AJJ/7KPwaOb8i7teRUVDmyTyd/EZIX0vx+LShsb9z+w=;
-        b=hLHHr03qlW2amQgn0VmzJmViIhXtKbqH4HaqIL5Kaucdnonub4VjfbO4Nl9m3kM5Xa
-         BPFFZTRmiqgy5XR0StybG/Ztfo7j4/dPzHWIY1iXsD+mQMs8bnI6vq0EFiucjt8qoPU6
-         h0RvOzyWgSfeDZYGqX+XkGE24Zj1G69ZN3HOCUzmErRqQ4AvriKHaW8fGo3DEn+Ers5q
-         v6WJuk2dUKV23kD5jhPN6l+R/2qqqZD5SR2QlySqd94YBao+jDNPUXM0pcOYXOZYEcvb
-         qJ4ueSCvcyB/NnKtAe1MmxCw4dfRG1wHCnIXrh+jytCTzaPABV3d7Adj8peSJqI0o9pX
-         XCMw==
-X-Gm-Message-State: AOJu0YzPx5mtoc+UhVtu7YxgI0E4kxnSBhgISOOL3Z8B+G8eTAwlYRT+
-        rjbs3+iNvZz/iQNu0KnfCeVdx35eAC33tqYWZ7goBc/dDnH56O/kuOvVOMc3mcU2AxFOFjJGrcV
-        W0htqI7uK569GUVIk9yh2
-X-Received: by 2002:a7b:cbc8:0:b0:3ff:ca80:eda3 with SMTP id n8-20020a7bcbc8000000b003ffca80eda3mr8982373wmi.10.1696238927137;
-        Mon, 02 Oct 2023 02:28:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEmhn8B8uW4T+AICrNUjuxaqcAcDPKrxy0MVMZxpv82pLtYtPKE8QMU+0CJ7y3jMcfBPVswXw==
-X-Received: by 2002:a7b:cbc8:0:b0:3ff:ca80:eda3 with SMTP id n8-20020a7bcbc8000000b003ffca80eda3mr8982347wmi.10.1696238926766;
-        Mon, 02 Oct 2023 02:28:46 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c735:f200:cb49:cb8f:88fc:9446? (p200300cbc735f200cb49cb8f88fc9446.dip0.t-ipconnect.de. [2003:cb:c735:f200:cb49:cb8f:88fc:9446])
-        by smtp.gmail.com with ESMTPSA id j17-20020a05600c489100b003fc16ee2864sm6835636wmp.48.2023.10.02.02.28.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Oct 2023 02:28:46 -0700 (PDT)
-Message-ID: <efe2acfd-f22f-f856-cd2a-32374af2053a@redhat.com>
-Date:   Mon, 2 Oct 2023 11:28:44 +0200
+        with ESMTP id S236112AbjJBJzX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 05:55:23 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6FB8E
+        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 02:55:19 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rzbsn1fGmz67L0F;
+        Mon,  2 Oct 2023 17:55:09 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
+ 2023 10:55:15 +0100
+Date:   Mon, 2 Oct 2023 10:55:14 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 1/4] cxl/pci: Remove unnecessary device reference
+ management in sanitize work
+Message-ID: <20231002105514.00006e8e@Huawei.com>
+In-Reply-To: <169602897366.904193.9449207727775648546.stgit@dwillia2-xfh.jf.intel.com>
+References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+        <169602897366.904193.9449207727775648546.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 1/2] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-To:     Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Jeff Moyer <jmoyer@redhat.com>
-References: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
- <20230928-vv-kmem_memmap-v4-1-6ff73fec519a@intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230928-vv-kmem_memmap-v4-1-6ff73fec519a@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 29 Sep 2023 16:09:33 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> +
-> +static int __ref try_remove_memory(u64 start, u64 size)
-> +{
-> +	int rc, nid = NUMA_NO_NODE;
-> +
-> +	BUG_ON(check_hotplug_memory_range(start, size));
-> +
-> +	/*
-> +	 * All memory blocks must be offlined before removing memory.  Check
-> +	 * whether all memory blocks in question are offline and return error
-> +	 * if this is not the case.
-> +	 *
-> +	 * While at it, determine the nid. Note that if we'd have mixed nodes,
-> +	 * we'd only try to offline the last determined one -- which is good
-> +	 * enough for the cases we care about.
-> +	 */
-> +	rc = walk_memory_blocks(start, size, &nid, check_memblock_offlined_cb);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * For memmap_on_memory, the altmaps could have been added on
-> +	 * a per-memblock basis. Loop through the entire range if so,
-> +	 * and remove each memblock and its altmap.
-> +	 */
-> +	if (mhp_memmap_on_memory()) {
-> +		unsigned long memblock_size = memory_block_size_bytes();
-> +		u64 cur_start;
-> +
-> +		for (cur_start = start; cur_start < start + size;
-> +		     cur_start += memblock_size)
-> +			__try_remove_memory(nid, cur_start, memblock_size);
-> +	} else {
-> +		__try_remove_memory(nid, start, size);
-> +	}
-> +
->   	return 0;
->   }
+> Given that any particular put_device() could be the final put of the
+> device, the fact that there are usages of cxlds->dev after
+> put_device(cxlds->dev) is a red flag. Drop the reference counting since
+> the device is pinned by being registered and will not be unregistered
+> without triggering the driver + workqueue to shutdown.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Makes sense
 
-Why is the firmware, memblock and nid handling not kept in this outer 
-function?
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-We really shouldn't be doing per memory block what needs to be done per 
-memblock: remove_memory_block_devices() and arch_remove_memory().
-
-
--- 
-Cheers,
-
-David / dhildenb
+> ---
+>  drivers/cxl/pci.c |    5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 44a21ab7add5..aa1b3dd9e64c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -152,8 +152,6 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
+>  	mutex_lock(&mds->mbox_mutex);
+>  	if (cxl_mbox_background_complete(cxlds)) {
+>  		mds->security.poll_tmo_secs = 0;
+> -		put_device(cxlds->dev);
+> -
+>  		if (mds->security.sanitize_node)
+>  			sysfs_notify_dirent(mds->security.sanitize_node);
+>  
+> @@ -296,9 +294,6 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+>  		 */
+>  		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+>  			if (mds->security.poll) {
+> -				/* hold the device throughout */
+> -				get_device(cxlds->dev);
+> -
+>  				/* give first timeout a second */
+>  				timeout = 1;
+>  				mds->security.poll_tmo_secs = timeout;
+> 
 
