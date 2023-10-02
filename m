@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF59E784B6
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BAEE784B9
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237639AbjJBOel (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 10:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37346 "EHLO
+        id S237844AbjJBOn7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 10:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237538AbjJBOek (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:34:40 -0400
+        with ESMTP id S237823AbjJBOn7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:43:59 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CAE5B4;
-        Mon,  2 Oct 2023 07:34:37 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rzk436LWDz67fjR;
-        Mon,  2 Oct 2023 22:34:27 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E46EB7;
+        Mon,  2 Oct 2023 07:43:55 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkGn2yJ5z67Zjl;
+        Mon,  2 Oct 2023 22:43:45 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 15:34:34 +0100
-Date:   Mon, 2 Oct 2023 15:34:34 +0100
+ 2023 15:43:52 +0100
+Date:   Mon, 2 Oct 2023 15:43:51 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -34,12 +34,12 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v11 04/20] cxl/port: Rename @comp_map to @reg_map in
- struct cxl_register_map
-Message-ID: <20231002153434.000073b9@Huawei.com>
-In-Reply-To: <20230927154339.1600738-5-rrichter@amd.com>
+Subject: Re: [PATCH v11 07/20] cxl/hdm: Use stored Component Register
+ mappings to map HDM decoder capability
+Message-ID: <20231002154351.0000136a@Huawei.com>
+In-Reply-To: <20230927154339.1600738-8-rrichter@amd.com>
 References: <20230927154339.1600738-1-rrichter@amd.com>
-        <20230927154339.1600738-5-rrichter@amd.com>
+        <20230927154339.1600738-8-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -53,61 +53,134 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 27 Sep 2023 17:43:23 +0200
+On Wed, 27 Sep 2023 17:43:26 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> Name the field @reg_map, because @reg_map->host will be used for
-> mapping operations beyond component registers (i.e. AER registers).
-> This is valid for all occurrences of @comp_map. Change them all.
+> Now, that the Component Register mappings are stored, use them to
+> enable and map the HDM decoder capabilities. The Component Registers
+> do not need to be probed again for this, remove probing code.
 > 
+> The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
+> Endpoint's component register mappings are located in the cxlds and
+> else in the port's structure. Duplicate the cxlds->reg_map in
+> port->reg_map for endpoint ports.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-Makes sense.  Can we pull the one I moaned about in the previous
-patch into this one?
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> [rework to drop cxl_port_get_comp_map()]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+A few comments inline.
 
-That way the renames are all together.
+Also, Dan's SoB doesn't make sense if you are the Author and he's not
+the one sending the email.  The fun of patches bounced back and forwards
+is sometimes you have to tweak this stuff on each posting... :(
 
-If not, I'm fine with just moaning :)  Whichever patch split
-you go with across this and previous...
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.co>
 > ---
->  drivers/cxl/core/port.c | 2 +-
->  drivers/cxl/cxl.h       | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/hdm.c  | 48 ++++++++++++++++-------------------------
+>  drivers/cxl/core/port.c | 29 +++++++++++++++++++------
+>  drivers/cxl/mem.c       |  5 ++---
+>  3 files changed, 43 insertions(+), 39 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 99df86d72dbc..b993dea61436 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -712,7 +712,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
->  {
->  	if (dev_is_platform(port->uport_dev))
->  		return 0;
-> -	return cxl_setup_comp_regs(&port->dev, &port->comp_map,
-> +	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
->  				   component_reg_phys);
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 11d9971f3e8c..14a0d0017df3 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>  		cxlhdm->interleave_mask |= GENMASK(14, 12);
 >  }
 >  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 68abf9944383..3a51b58a66d0 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -572,7 +572,7 @@ struct cxl_dax_region {
->   * @regions: cxl_region_ref instances, regions mapped by this port
->   * @parent_dport: dport that points to this port in the parent
->   * @decoder_ida: allocator for decoder ids
-> - * @comp_map: component register capability mappings
-> + * @reg_map: component and ras register mapping parameters
->   * @nr_dports: number of entries in @dports
->   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
->   * @commit_end: cursor to track highest committed decoder for commit ordering
-> @@ -592,7 +592,7 @@ struct cxl_port {
->  	struct xarray regions;
->  	struct cxl_dport *parent_dport;
->  	struct ida decoder_ida;
-> -	struct cxl_register_map comp_map;
-> +	struct cxl_register_map reg_map;
->  	int nr_dports;
->  	int hdm_end;
->  	int commit_end;
+> -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+> -				struct cxl_component_regs *regs)
+> -{
+> -	struct cxl_register_map map = {
+> -		.host = &port->dev,
+> -		.resource = port->component_reg_phys,
+> -		.base = crb,
+> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
+> -	};
+> -
+> -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
+> -	if (!map.component_map.hdm_decoder.valid) {
+> -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+> -		/* unique error code to indicate no HDM decoder capability */
+> -		return -ENODEV;
+> -	}
+> -
+> -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+> -}
+> -
+>  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  {
+>  	struct cxl_hdm *cxlhdm;
+> @@ -155,7 +135,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  {
+>  	struct device *dev = &port->dev;
+>  	struct cxl_hdm *cxlhdm;
+> -	void __iomem *crb;
+> +	struct cxl_register_map *reg_map;
+>  	int rc;
+>  
+>  	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
+> @@ -164,19 +144,29 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  	cxlhdm->port = port;
+>  	dev_set_drvdata(dev, cxlhdm);
+>  
+> -	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+> -	if (!crb && info && info->mem_enabled) {
+> -		cxlhdm->decoder_count = info->ranges;
+> -		return cxlhdm;
+> -	} else if (!crb) {
+> +	reg_map = &port->reg_map;
+
+Could you set this where it's defined above?
+
+> +	if (reg_map->resource == CXL_RESOURCE_NONE) {
+
+A reminder comment on why/when this happens might be a good addition.
+
+> +		if (info && info->mem_enabled) {
+> +			cxlhdm->decoder_count = info->ranges;
+> +			return cxlhdm;
+> +		}
+
+Trivial (and true before this patch) but I'd rather see the error path out of line
+
+
+		if (!info || !info->mem_enabled) {
+			WARN_ON(1);
+			dev_err(dev, "No ...
+			...
+		}
+
+		cxlhdm->decoder_count = info->ranges;
+		return cxlhdm;
+	}
+
+
+> +		WARN_ON(1);
+>  		dev_err(dev, "No component registers mapped\n");
+>  		return ERR_PTR(-ENXIO);
+>  	}
+>  
+> -	rc = map_hdm_decoder_regs(port, crb, &cxlhdm->regs);
+> -	iounmap(crb);
+> -	if (rc)
+> +	if (!reg_map->component_map.hdm_decoder.valid) {
+> +		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+> +		/* unique error code to indicate no HDM decoder capability */
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	rc = cxl_map_component_regs(reg_map, &cxlhdm->regs,
+> +				    BIT(CXL_CM_CAP_CAP_ID_HDM));
+> +	if (rc) {
+> +		dev_dbg(dev, "Failed to map HDM capability.\n");
+dev_err() seems appropriate here.
+
+>  		return ERR_PTR(rc);
+> +	}
+>  
+>  	parse_hdm_decoder_caps(cxlhdm);
+>  	if (cxlhdm->decoder_count == 0) {
 
