@@ -2,322 +2,345 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23580E784AB
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 16:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D336CE784AB
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 16:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237982AbjJBQ7T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 12:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43002 "EHLO
+        id S238566AbjJBQ76 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 12:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236742AbjJBQ7S (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 12:59:18 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6B2A9
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 09:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696265955; x=1727801955;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=7weu15f99GSni0qM9JMoK1RSgFgeNGX3YqVES03pJLo=;
-  b=KEaQepW3XkXnVGv1e1HkR2Ht1srJGCf/hCYSCkQdOgb4tZXLRXp5Pr5W
-   L7oPfkV1LKQUYLPFwQI5fgd0HEMI7UIvk57H8y0JthpL/IG3iMskWYw7H
-   d2IMuNsY51JE0rW8xAw3StkNUPJKjBo8E7JsE0sFeOvSM8WwEoPfgRX9o
-   HvqZZ3G22DbjmwzAv2DI8H5416027ZfDvfXhYdKYASGEq2duadEO7zx4P
-   6mxdrdsbXFZw59Q6iP/DX4QntPfAPHpaHvQoMfcBVxeaDWctcB4FoVHPI
-   8fn3lWT8W9KSARWZAF8SfQwHywOOM6X2+9T6yfCb3PUQhHQq3OD/Fdlqx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="362957655"
-X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
-   d="scan'208";a="362957655"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 09:59:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="997686378"
-X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
-   d="scan'208";a="997686378"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Oct 2023 09:59:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 2 Oct 2023 09:59:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 2 Oct 2023 09:59:14 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 2 Oct 2023 09:59:14 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 2 Oct 2023 09:59:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cCgVkL4lA2AMGtTWotkd+D3mfWdYnMGBMoTnWsWk4AgNR/ewSwXKtZMS7C+w62zz1bHTQEEu2ZcUtI9zmNkED5Y94fTAO29gwF9wNCnipm3mdph/MMJhY469bzAwSabjIMQxMX1tFMJoQTzJvuKf0GA/J9BAxFb7U2YgZMSCGO/nkjqPTYPM6S47bWMbwnPgf3YbdS8RnNeAaVjMDL+0rSXGQCs+Ych/+Ufg5bnBAlmW8ZQAlgp4Z41vuIrOWoDVL+iR5lFGvl6gCvDNOHGUsdq8xkBL8O6cSJg9vZQecrePVZaqh6IYxAVPwifepAO4/JObadHvL4FiHa5IQUXRng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XBor4s79ve4sAegqdD1lzoHsiI+/O/Xmg2TKYjUO3SU=;
- b=hSRC7ix1pj07tB8xgBf/x3U7pCr0WGP6VLUVZa82IO5vOhVNAbszmiOaVod7uX31f9EItkSQtP9yehWXYIDGJsj7PxIGMAcUkHpAZx8H1SC/swpVfqhcxzKOr6Rz04puYPMZUBPLvhSPdGlYFcXioaxAb6NJ6Yo+rWS5m6bdtXeNU4hlO9iURRXfVIf0V1FPhzlvnnijqnv0OKAs+WE8myBvdWc4TrUL8dwGQRphfAg1pxhUKTqKFEZqJGO6qRTKagvK1Wmc9AjTFMKw69FkKj7snaMtGoVvCIXaV1ZSeQtRbpIyVipq7genuAEbpFVOK0ocOt5YTXJbP+qgP8xJ2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by SA3PR11MB8119.namprd11.prod.outlook.com (2603:10b6:806:2f2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.28; Mon, 2 Oct
- 2023 16:59:12 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::e9ca:a5a7:ada1:6ee8]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::e9ca:a5a7:ada1:6ee8%5]) with mapi id 15.20.6838.029; Mon, 2 Oct 2023
- 16:59:12 +0000
-Message-ID: <0644eaeb-7222-4bef-9acd-cd881fb5db30@intel.com>
-Date:   Mon, 2 Oct 2023 09:59:09 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v2 3/4] cxl/pci: Fix sanitize notifier setup
-To:     Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-CC:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, <ira.weiny@intel.com>
-References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
- <169602898447.904193.4454973423100628922.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <169602898447.904193.4454973423100628922.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR11CA0044.namprd11.prod.outlook.com
- (2603:10b6:a03:80::21) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+        with ESMTP id S238453AbjJBQ76 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 12:59:58 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88681D7;
+        Mon,  2 Oct 2023 09:59:53 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RznDn3tWYz67V3m;
+        Tue,  3 Oct 2023 00:57:13 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
+ 2023 17:59:50 +0100
+Date:   Mon, 2 Oct 2023 17:59:50 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 05/12] crypto: akcipher - Support more than one
+ signature encoding
+Message-ID: <20231002175950.0000541d@Huawei.com>
+In-Reply-To: <f4a63091203d09e275c3df983692b630ffca4bca.1695921657.git.lukas@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+        <f4a63091203d09e275c3df983692b630ffca4bca.1695921657.git.lukas@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SA3PR11MB8119:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90f66dff-4d6a-4d5f-32c8-08dbc368e6cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xjwWAdaHuxkMDgLun6g3sAubOzThxvgLEK2AoimEIyiajz8+F2Yp9WViqcgZL3c3L69BMvTm8/AMubU/Ax7LG8j8pxXYl6B8AxKpKzW5XaelbVsiu0PdTPTRrKuBPok4Zp/DJCdp9dCSEgfXFundcSYRtdfqs6CjV/+Dl0PrHaVMglCuWXOxYqWAC6garu0XcmIukd5uSBma2yyXz6V1MvHVZ2ZGpHHi++nP9SFtKPVqkYcHBA5EJcOQ2VoN8hmH8hHRmJH85nchTIJ2P/amUT8qaRB09CzoT3D4XD2xKzHOQ3pL41+Y02lrzi8EOP8GHAojRz9eCTBbscMvg7ltPhSnTCO49kf/Svj7Pm3MfT8PGBhvKYGo4c/uILlqe6FZh3eDcUOFymP5bQsb/X4tiPORaSculEF2Y3k5Vw6aPIcUcyeSubsJH84d8zBVIbFdueoEam7mD6EGZDu3Ii1f4FMnj1JTj5a3XM8yvlNDKgwZpxUIAiIMszx/q1Bc9zXGvUJtM7dRxoWfxD2cHf1beA7BX8wmi5t/QfxwTa/kbo9YPpR6B+GhADghmXDmkONeE4ccSI7Gxr2wYAwNRi1h9FHmj5OtYt34RvHVdI0CVAJu1iNIQVW12nmM2rFfd6Cz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(136003)(346002)(396003)(39860400002)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(4326008)(8936002)(8676002)(31696002)(2906002)(86362001)(26005)(2616005)(53546011)(107886003)(6506007)(36756003)(6486002)(6666004)(82960400001)(38100700002)(83380400001)(6512007)(478600001)(5660300002)(44832011)(316002)(66946007)(66476007)(66556008)(41300700001)(54906003)(31686004)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q2Y2cUlLZ0M5WlMzR1lMamk1ekZuMnc3ejRCNW9wUU9xUjJ0bGg2OVc5OHFC?=
- =?utf-8?B?YmozcXBGY1c4WkZ4TnRJTFEvREZiRHhqZFMrMHBKNXRTRmpkOWJRQ2IzUEtX?=
- =?utf-8?B?Q0t0R2dGOS9kaytmYW1ycndwemt0QjBqYzMwemtWQk5mdHh1K2NxcWxoREMz?=
- =?utf-8?B?WHNzWVpFL3FxSE8raHdiL1pJRWpRNzJsdFdkTGlKUHczMG5YNHlZMmxyaTZi?=
- =?utf-8?B?My9CRXNpQ0ZoZ1dmZGhMeUZTcTJQajR6YS94U1JaTlU2THk1YkhTK1pNYXF3?=
- =?utf-8?B?RjNONC9rMzEzUnV3SHd3ZHNaNjMvdFF4YnpHb1dMUTB3bmpJYVpaQnlNWEJZ?=
- =?utf-8?B?cy9MZWk0NXBiclFpQmovVTB6RnFmaldmcUxtc2RpQU03SWRiVVZQbjR1cVpt?=
- =?utf-8?B?d3N6Z0ZXS2Q2Mmt6dktUeERIU1U0MFE4UHdPSzVSYXpFMkpxOC83QnRGbE5C?=
- =?utf-8?B?V1JVSkVDd1Z4MXpoQ1lUSUNJWUdMRXBya2FNYlQ1MGxWbUQvbFRpRFRkb05S?=
- =?utf-8?B?NzA2ZER1dTJRTDZJaVkxMDBrcG5zcTV0OEFKdWhVUUFGNnFoQ0FnRlNKcEpS?=
- =?utf-8?B?UTJ4NXJsaTFXU1dxS2VPQTlDVVVOZWlmcWtDZHlCbVZQVVRPSHArQ09ZWk9m?=
- =?utf-8?B?SHpmbExBL2dWMlVDU1B2eEs4N0xJOEl5SDVlRTBVZ0poMEVrWEoraTFZazY2?=
- =?utf-8?B?M1RoSWZhWHpoM0lwTkVtYjhvRm1PdlBVMng1Y0V4TDRZMk9WajdEMW5zamZ0?=
- =?utf-8?B?QnJwcktXRXBzUmkxaGNLNU9GeHJDSzFMbzFXV3RRSm00MDM4bDNyMkhXVjdY?=
- =?utf-8?B?elFFaSs1U1pjaTkyZlVEQmtOSWQ3TkdZMG1VdE5VK2NqNkxVZVRlMEVrMjFL?=
- =?utf-8?B?eDhDVVlXRVVhSTdPc3ZjKzYvdEVZa1lYcEhXSkY5aTBIMkdXQzlycXBVNDd3?=
- =?utf-8?B?clB4eDFUZENIWE53UFBjMTFmU0VUaCtoeHJRakdDQ0Vha2ZjaGM1Mk9VRGp5?=
- =?utf-8?B?MmJGbWVwUlJOM3RNSnh1dHh2VmFHZ0RGNDF5RGszV0R4TzVjTkpaMXBwRGpU?=
- =?utf-8?B?V0x2cCtJeFM5Ni8reExZZEJ6MmUwZUdzb2FFWkJvT2ZiWEh2WW4vRi9KY2Nm?=
- =?utf-8?B?SXBnRmRtSmVQWTZVQXdLdy9BWThmdEtXOGpaTjNJais4SzZzck9QVDZXYi9Q?=
- =?utf-8?B?a0NPRnhqekVJaWYvUExJMEsxb2UvK25URmJEK0ZxZkt0eGVpL3lIeC8rSGc2?=
- =?utf-8?B?ZXJBUHpZWEhZaWtFT2poekpYNVVOaVloUm1RMmUxYTc0YVRnOWIrNXRxcjkx?=
- =?utf-8?B?eWRibGV1bmZWL1VabytrM1hma1QwU1lTRFl3QzN0OEdhQ29SNTZjblRqYWVE?=
- =?utf-8?B?Mlp3am5aQUhaQTVlWXBXZG4yeFVFUkY3dFNZZForVklPVFQ4YkYvendlckVR?=
- =?utf-8?B?SjM5M2RtUitFMTEyamdMVXBoeXV2VmdQc004QW9saWFTL1dUWm11SzRHUVhV?=
- =?utf-8?B?ejJaSnlpamo3aDZuUXZuemRaay9iYTN2MDBPQkErWll6MlN6dDJZcm9OT2Jt?=
- =?utf-8?B?SzduQlI5aDlOZzM1SUJjNFY4ajVJL1dRcFVsMTRJSUQybmt2NTZUY0t5Rysy?=
- =?utf-8?B?OEtoQ05HL3Q0b0NBODdkSXdtK2hneVh0a0QrUDFNR28yWmUxUzNjVy9XV2ZV?=
- =?utf-8?B?dDNndE1GM1dXam9oRTJDQTZkRjVkWTQ5WWppNmxOT0ZIaVpaQjhSZmtmcitU?=
- =?utf-8?B?ZWFlb3dhVzZiZ2Qrd0VjV2RPUnJLVGZoS3k4STBvRVBhbE1xbXkzWU01Z1Av?=
- =?utf-8?B?Mis4VnVCL2w2NnBlZTdqM1VSa3F3WXloQmNrNzhZemc0RXpRTGxJYlFlM0NR?=
- =?utf-8?B?SEZ0ZE1KeFlPODR2cVFFZnBGN3dPbDJINlpSK0VQcmNXdDl0cXhCNGNLZ3Ez?=
- =?utf-8?B?eVBqaU9UWXJGbDl6NS9rYjVXcUxQYU52d084ekFUcnFtKzQyVXo4a2NLZmJi?=
- =?utf-8?B?enRKOVUrdUlNdTZrbGhHcjh4RXhZVGdQZXNWYkhHZWh6UEd0MDNMeU4wdEZa?=
- =?utf-8?B?aitJcTcyZ0pYNEZhZmMzS3FMY0g2UzhabGR5THc1ZTkwQkloTFlHRjMvd2Nr?=
- =?utf-8?Q?rTWS0U82k+uhPBofa9SvJgJZq?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90f66dff-4d6a-4d5f-32c8-08dbc368e6cc
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2023 16:59:12.0919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nb+cW1UEZiEqPK1eVPvgVd7wmIogizsVaGF5yhsd9mSzoqIYYPVkF99oIyBzDZgo5i4dHE6GNPJvfHpupD3wJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8119
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, 28 Sep 2023 19:32:35 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
 
+> Currently only a single default signature encoding is supported per
+> akcipher.
+> 
+> A subsequent commit will allow a second encoding for ecdsa, namely P1363
+> alternatively to X9.62.
+> 
+> To accommodate for that, amend struct akcipher_request and struct
+> crypto_akcipher_sync_data to store the desired signature encoding for
+> verify and sign ops.
+> 
+> Amend akcipher_request_set_crypt(), crypto_sig_verify() and
+> crypto_sig_sign() with an additional parameter which specifies the
+> desired signature encoding.  Adjust all callers.
+> 
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-On 9/29/23 16:09, Dan Williams wrote:
-> Fix a race condition between the mailbox-background command interrupt
-> firing and the security-state sysfs attribute being removed.
-> 
-> The race is difficult to see due to the awkward placement of the
-> sanitize-notifier setup code and the multiple places the teardown calls
-> are made, cxl_memdev_security_init() and cxl_memdev_security_shutdown().
-> 
-> Unify setup in one place, cxl_sanitize_setup_notifier(). Arrange for
-> the paired cxl_sanitize_teardown_notifier() to safely quiet the notifier
-> and let the cxl_memdev + irq be unregistered later in the flow.
-> 
-> This fix is also needed as a preparation fix for a memdev unregistration
-> crash.
-> 
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/core/memdev.c |   42 ----------------------------------------
->  drivers/cxl/pci.c         |   47 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+), 42 deletions(-)
+>  crypto/akcipher.c                   |  2 +-
+>  crypto/asymmetric_keys/public_key.c |  4 ++--
+>  crypto/internal.h                   |  1 +
+>  crypto/rsa-pkcs1pad.c               | 11 +++++++----
+>  crypto/sig.c                        |  6 ++++--
+>  crypto/testmgr.c                    |  8 +++++---
+>  crypto/testmgr.h                    |  1 +
+>  include/crypto/akcipher.h           | 10 +++++++++-
+>  include/crypto/sig.h                |  6 ++++--
+>  9 files changed, 34 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 2a7a07f6d165..a950091e5640 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -556,20 +556,11 @@ void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  }
->  EXPORT_SYMBOL_NS_GPL(clear_exclusive_cxl_commands, CXL);
+> diff --git a/crypto/akcipher.c b/crypto/akcipher.c
+> index 52813f0b19e4..88501c0886d2 100644
+> --- a/crypto/akcipher.c
+> +++ b/crypto/akcipher.c
+> @@ -221,7 +221,7 @@ int crypto_akcipher_sync_prep(struct crypto_akcipher_sync_data *data)
+>  	sg = &data->sg;
+>  	sg_init_one(sg, buf, mlen);
+>  	akcipher_request_set_crypt(req, sg, data->dst ? sg : NULL,
+> -				   data->slen, data->dlen);
+> +				   data->slen, data->dlen, data->enc);
 >  
-> -static void cxl_memdev_security_shutdown(struct device *dev)
-> -{
-> -	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> -	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> -
-> -	cancel_delayed_work_sync(&mds->security.poll_dwork);
-> -}
-> -
->  static void cxl_memdev_shutdown(struct device *dev)
+>  	crypto_init_wait(&data->cwait);
+>  	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP,
+> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+> index abeecb8329b3..7f96e8e501db 100644
+> --- a/crypto/asymmetric_keys/public_key.c
+> +++ b/crypto/asymmetric_keys/public_key.c
+> @@ -354,7 +354,7 @@ static int software_key_eds_op(struct kernel_pkey_params *params,
+>  		if (!issig)
+>  			break;
+>  		ret = crypto_sig_sign(sig, in, params->in_len,
+> -				      out, params->out_len);
+> +				      out, params->out_len, params->encoding);
+>  		break;
+>  	default:
+>  		BUG();
+> @@ -438,7 +438,7 @@ int public_key_verify_signature(const struct public_key *pkey,
+>  		goto error_free_key;
+>  
+>  	ret = crypto_sig_verify(tfm, sig->s, sig->s_size,
+> -				sig->digest, sig->digest_size);
+> +				sig->digest, sig->digest_size, sig->encoding);
+>  
+>  error_free_key:
+>  	kfree_sensitive(key);
+> diff --git a/crypto/internal.h b/crypto/internal.h
+> index 63e59240d5fb..268315b13ccd 100644
+> --- a/crypto/internal.h
+> +++ b/crypto/internal.h
+> @@ -41,6 +41,7 @@ struct crypto_akcipher_sync_data {
+>  	void *dst;
+>  	unsigned int slen;
+>  	unsigned int dlen;
+> +	const char *enc;
+>  
+>  	struct akcipher_request *req;
+>  	struct crypto_wait cwait;
+> diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+> index d2e5e104f8cf..5f9313a3b01e 100644
+> --- a/crypto/rsa-pkcs1pad.c
+> +++ b/crypto/rsa-pkcs1pad.c
+> @@ -262,7 +262,8 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+>  
+>  	/* Reuse output buffer */
+>  	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
+> -				   req->dst, ctx->key_size - 1, req->dst_len);
+> +				   req->dst, ctx->key_size - 1, req->dst_len,
+> +				   NULL);
+>  
+>  	err = crypto_akcipher_encrypt(&req_ctx->child_req);
+>  	if (err != -EINPROGRESS && err != -EBUSY)
+> @@ -362,7 +363,7 @@ static int pkcs1pad_decrypt(struct akcipher_request *req)
+>  	/* Reuse input buffer, output to a new buffer */
+>  	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
+>  				   req_ctx->out_sg, req->src_len,
+> -				   ctx->key_size);
+> +				   ctx->key_size, NULL);
+>  
+>  	err = crypto_akcipher_decrypt(&req_ctx->child_req);
+>  	if (err != -EINPROGRESS && err != -EBUSY)
+> @@ -419,7 +420,8 @@ static int pkcs1pad_sign(struct akcipher_request *req)
+>  
+>  	/* Reuse output buffer */
+>  	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
+> -				   req->dst, ctx->key_size - 1, req->dst_len);
+> +				   req->dst, ctx->key_size - 1, req->dst_len,
+> +				   req->enc);
+>  
+>  	err = crypto_akcipher_decrypt(&req_ctx->child_req);
+>  	if (err != -EINPROGRESS && err != -EBUSY)
+> @@ -551,7 +553,8 @@ static int pkcs1pad_verify(struct akcipher_request *req)
+>  
+>  	/* Reuse input buffer, output to a new buffer */
+>  	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
+> -				   req_ctx->out_sg, sig_size, ctx->key_size);
+> +				   req_ctx->out_sg, sig_size, ctx->key_size,
+> +				   req->enc);
+>  
+>  	err = crypto_akcipher_encrypt(&req_ctx->child_req);
+>  	if (err != -EINPROGRESS && err != -EBUSY)
+> diff --git a/crypto/sig.c b/crypto/sig.c
+> index 224c47019297..4fc1a8f865e4 100644
+> --- a/crypto/sig.c
+> +++ b/crypto/sig.c
+> @@ -89,7 +89,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_maxsize);
+>  
+>  int crypto_sig_sign(struct crypto_sig *tfm,
+>  		    const void *src, unsigned int slen,
+> -		    void *dst, unsigned int dlen)
+> +		    void *dst, unsigned int dlen, const char *enc)
 >  {
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
+>  	struct crypto_akcipher_sync_data data = {
+> @@ -98,6 +98,7 @@ int crypto_sig_sign(struct crypto_sig *tfm,
+>  		.dst = dst,
+>  		.slen = slen,
+>  		.dlen = dlen,
+> +		.enc = enc,
+>  	};
 >  
->  	down_write(&cxl_memdev_rwsem);
-> -	cxl_memdev_security_shutdown(dev);
->  	cxlmd->cxlds = NULL;
->  	up_write(&cxl_memdev_rwsem);
->  }
-> @@ -1001,35 +992,6 @@ static const struct file_operations cxl_memdev_fops = {
->  	.llseek = noop_llseek,
+>  	return crypto_akcipher_sync_prep(&data) ?:
+> @@ -108,7 +109,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_sign);
+>  
+>  int crypto_sig_verify(struct crypto_sig *tfm,
+>  		      const void *src, unsigned int slen,
+> -		      const void *digest, unsigned int dlen)
+> +		      const void *digest, unsigned int dlen, const char *enc)
+>  {
+>  	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
+>  	struct crypto_akcipher_sync_data data = {
+> @@ -116,6 +117,7 @@ int crypto_sig_verify(struct crypto_sig *tfm,
+>  		.src = src,
+>  		.slen = slen,
+>  		.dlen = dlen,
+> +		.enc = enc,
+>  	};
+>  	int err;
+>  
+> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> index 216878c8bc3d..d5dd715673dd 100644
+> --- a/crypto/testmgr.c
+> +++ b/crypto/testmgr.c
+> @@ -4154,11 +4154,12 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+>  			goto free_all;
+>  		memcpy(xbuf[1], c, c_size);
+>  		sg_set_buf(&src_tab[2], xbuf[1], c_size);
+> -		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size);
+> +		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size,
+> +					   vecs->enc);
+>  	} else {
+>  		sg_init_one(&dst, outbuf_enc, out_len_max);
+>  		akcipher_request_set_crypt(req, src_tab, &dst, m_size,
+> -					   out_len_max);
+> +					   out_len_max, NULL);
+>  	}
+>  	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+>  				      crypto_req_done, &wait);
+> @@ -4217,7 +4218,8 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+>  	sg_init_one(&src, xbuf[0], c_size);
+>  	sg_init_one(&dst, outbuf_dec, out_len_max);
+>  	crypto_init_wait(&wait);
+> -	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max);
+> +	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max,
+> +				   vecs->enc);
+>  
+>  	err = crypto_wait_req(vecs->siggen_sigver_test ?
+>  			      /* Run asymmetric signature generation */
+> diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+> index 5ca7a412508f..ad57e7af2e14 100644
+> --- a/crypto/testmgr.h
+> +++ b/crypto/testmgr.h
+> @@ -153,6 +153,7 @@ struct akcipher_testvec {
+>  	const unsigned char *params;
+>  	const unsigned char *m;
+>  	const unsigned char *c;
+> +	const char *enc;
+>  	unsigned int key_len;
+>  	unsigned int param_len;
+>  	unsigned int m_size;
+> diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
+> index 670508f1dca1..00bbec69af3b 100644
+> --- a/include/crypto/akcipher.h
+> +++ b/include/crypto/akcipher.h
+> @@ -30,6 +30,8 @@
+>   *		In case of error where the dst sgl size was insufficient,
+>   *		it will be updated to the size required for the operation.
+>   *		For verify op this is size of digest part in @src.
+> + * @enc:	For verify op it's the encoding of the signature part of @src.
+> + *		For sign op it's the encoding of the signature in @dst.
+>   * @__ctx:	Start of private context data
+>   */
+>  struct akcipher_request {
+> @@ -38,6 +40,7 @@ struct akcipher_request {
+>  	struct scatterlist *dst;
+>  	unsigned int src_len;
+>  	unsigned int dst_len;
+> +	const char *enc;
+>  	void *__ctx[] CRYPTO_MINALIGN_ATTR;
 >  };
 >  
-> -static void put_sanitize(void *data)
-> -{
-> -	struct cxl_memdev_state *mds = data;
-> -
-> -	sysfs_put(mds->security.sanitize_node);
-> -}
-> -
-> -static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
-> -{
-> -	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> -	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> -	struct device *dev = &cxlmd->dev;
-> -	struct kernfs_node *sec;
-> -
-> -	sec = sysfs_get_dirent(dev->kobj.sd, "security");
-> -	if (!sec) {
-> -		dev_err(dev, "sysfs_get_dirent 'security' failed\n");
-> -		return -ENODEV;
-> -	}
-> -	mds->security.sanitize_node = sysfs_get_dirent(sec, "state");
-> -	sysfs_put(sec);
-> -	if (!mds->security.sanitize_node) {
-> -		dev_err(dev, "sysfs_get_dirent 'state' failed\n");
-> -		return -ENODEV;
-> -	}
-> -
-> -	return devm_add_action_or_reset(cxlds->dev, put_sanitize, mds);
-> - }
-> -
->  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> @@ -272,17 +275,22 @@ static inline void akcipher_request_set_callback(struct akcipher_request *req,
+>   * @src_len:	size of the src input scatter list to be processed
+>   * @dst_len:	size of the dst output scatter list or size of signature
+>   *		portion in @src for verify op
+> + * @enc:	encoding of signature portion in @src for verify op,
+> + *		encoding of signature in @dst for sign op,
+> + *		NULL for encrypt and decrypt op
+>   */
+>  static inline void akcipher_request_set_crypt(struct akcipher_request *req,
+>  					      struct scatterlist *src,
+>  					      struct scatterlist *dst,
+>  					      unsigned int src_len,
+> -					      unsigned int dst_len)
+> +					      unsigned int dst_len,
+> +					      const char *enc)
 >  {
->  	struct cxl_memdev *cxlmd;
-> @@ -1058,10 +1020,6 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  	if (rc)
->  		goto err;
->  
-> -	rc = cxl_memdev_security_init(cxlmd);
-> -	if (rc)
-> -		goto err;
-> -
->  	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
->  	if (rc)
->  		return ERR_PTR(rc);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index ac4e434b0806..b0023e479315 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -165,6 +165,49 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
->  	mutex_unlock(&mds->mbox_mutex);
+>  	req->src = src;
+>  	req->dst = dst;
+>  	req->src_len = src_len;
+>  	req->dst_len = dst_len;
+> +	req->enc = enc;
 >  }
 >  
-> +static void cxl_sanitize_teardown_notifier(void *data)
-> +{
-> +	struct cxl_memdev_state *mds = data;
-> +	struct kernfs_node *state;
-> +
-> +	/*
-> +	 * Prevent new irq triggered invocations of the workqueue and
-> +	 * flush inflight invocations.
-> +	 */
-> +	mutex_lock(&mds->mbox_mutex);
-> +	state = mds->security.sanitize_node;
-> +	mds->security.sanitize_node = NULL;
-> +	mutex_unlock(&mds->mbox_mutex);
-> +
-> +	cancel_delayed_work_sync(&mds->security.poll_dwork);
-> +	sysfs_put(state);
-> +}
-> +
-> +static int cxl_sanitize_setup_notifier(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct device *dev = cxlds->dev;
-> +	struct kernfs_node *sec;
-> +
-> +	if (!test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds))
-> +		return 0;
-> +
-> +	sec = sysfs_get_dirent(dev->kobj.sd, "security");
-> +	if (!sec) {
-> +		dev_err(dev, "sanitize notification setup failure\n");
-> +		return -ENOENT;
-> +	}
-> +	mds->security.sanitize_node = sysfs_get_dirent(sec, "state");
-> +	sysfs_put(sec);
-> +	if (!mds->security.sanitize_node) {
-> +		dev_err(dev, "sanitize notification setup failure\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	return devm_add_action_or_reset(dev, cxl_sanitize_teardown_notifier, mds);
-> +}
-> +
 >  /**
->   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
->   * @mds: The memory device driver data
-> @@ -875,6 +918,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
+> diff --git a/include/crypto/sig.h b/include/crypto/sig.h
+> index 641b4714c448..1df18005c854 100644
+> --- a/include/crypto/sig.h
+> +++ b/include/crypto/sig.h
+> @@ -81,12 +81,13 @@ int crypto_sig_maxsize(struct crypto_sig *tfm);
+>   * @slen:	source length
+>   * @dst:	destinatino obuffer
+>   * @dlen:	destination length
+> + * @enc:	signature encoding
+>   *
+>   * Return: zero on success; error code in case of error
+>   */
+>  int crypto_sig_sign(struct crypto_sig *tfm,
+>  		    const void *src, unsigned int slen,
+> -		    void *dst, unsigned int dlen);
+> +		    void *dst, unsigned int dlen, const char *enc);
 >  
-> +	rc = cxl_sanitize_setup_notifier(cxlmd);
-> +	if (rc)
-> +		return rc;
-> +
->  	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
->  	for (i = 0; i < pmu_count; i++) {
->  		struct cxl_pmu_regs pmu_regs;
-> 
+>  /**
+>   * crypto_sig_verify() - Invoke signature verification
+> @@ -99,12 +100,13 @@ int crypto_sig_sign(struct crypto_sig *tfm,
+>   * @slen:	source length
+>   * @digest:	digest
+>   * @dlen:	digest length
+> + * @enc:	signature encoding
+>   *
+>   * Return: zero on verification success; error code in case of error.
+>   */
+>  int crypto_sig_verify(struct crypto_sig *tfm,
+>  		      const void *src, unsigned int slen,
+> -		      const void *digest, unsigned int dlen);
+> +		      const void *digest, unsigned int dlen, const char *enc);
+>  
+>  /**
+>   * crypto_sig_set_pubkey() - Invoke set public key operation
+
