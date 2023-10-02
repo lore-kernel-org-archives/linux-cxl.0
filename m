@@ -2,40 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A5E784B3
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478DCE784AC
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237660AbjJBOJc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 10:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49236 "EHLO
+        id S237539AbjJBOOu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 10:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237662AbjJBOJb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:09:31 -0400
+        with ESMTP id S237479AbjJBOOu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:14:50 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F36B7;
-        Mon,  2 Oct 2023 07:09:28 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzjS861dVz67ydC;
-        Mon,  2 Oct 2023 22:06:48 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AE5AD;
+        Mon,  2 Oct 2023 07:14:46 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzjbW6tMyz67ZgC;
+        Mon,  2 Oct 2023 22:13:11 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 15:09:25 +0100
-Date:   Mon, 2 Oct 2023 15:09:24 +0100
+ 2023 15:14:44 +0100
+Date:   Mon, 2 Oct 2023 15:14:43 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gourry.memverge@gmail.com>
-CC:     <linux-mm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arch@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <luto@kernel.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
-        <akpm@linux-foundation.org>, <x86@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>
-Subject: Re: [RFC v2 5/5] ktest: sys_move_phys_pages ktest
-Message-ID: <20231002150924.00006a7b@Huawei.com>
-In-Reply-To: <20230919230909.530174-6-gregory.price@memverge.com>
-References: <20230919230909.530174-1-gregory.price@memverge.com>
-        <20230919230909.530174-6-gregory.price@memverge.com>
+To:     Robert Richter <rrichter@amd.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v11 01/20] cxl/port: Fix release of RCD endpoints
+Message-ID: <20231002151443.000017d5@Huawei.com>
+In-Reply-To: <20230927154339.1600738-2-rrichter@amd.com>
+References: <20230927154339.1600738-1-rrichter@amd.com>
+        <20230927154339.1600738-2-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,97 +52,49 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 19 Sep 2023 19:09:08 -0400
-Gregory Price <gourry.memverge@gmail.com> wrote:
+On Wed, 27 Sep 2023 17:43:20 +0200
+Robert Richter <rrichter@amd.com> wrote:
 
-> Implement simple ktest that looks up the physical address via
-> /proc/self/pagemap and migrates the page based on that information.
+> Binding and unbindind RCD endpoints (e.g. mem0 device) caused the
+> corresponding endpoint not being released. Reason for that is the
+> wrong port discovered for RCD endpoints. See cxl_mem_probe() for
+> proper endpoint parent detection. Fix delete_endpoint() respectively.
 > 
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-One trivial comment inline.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+I wondered briefly if an access function of some type could be
+used to hide this detail away. However it's messy enough that
+that is a little tricky so I think we should just keep it
+explicit in each location.  So as you have it here.
 
 > ---
->  tools/testing/selftests/mm/migration.c | 101 +++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
+>  drivers/cxl/core/port.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/mm/migration.c b/tools/testing/selftests/mm/migration.c
-> index 6908569ef406..67fbae243f94 100644
-> --- a/tools/testing/selftests/mm/migration.c
-> +++ b/tools/testing/selftests/mm/migration.c
-> @@ -5,6 +5,8 @@
->   */
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 7ca01a834e18..d4572a02989a 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1222,12 +1222,17 @@ static void delete_endpoint(void *data)
+>  	struct cxl_memdev *cxlmd = data;
+>  	struct cxl_port *endpoint = cxlmd->endpoint;
+>  	struct cxl_port *parent_port;
+> +	struct cxl_dport *dport;
+>  	struct device *parent;
 >  
->  #include "../kselftest_harness.h"
-> +#include <stdint.h>
-> +#include <stdio.h>
->  #include <strings.h>
->  #include <pthread.h>
->  #include <numa.h>
-> @@ -14,11 +16,17 @@
->  #include <sys/types.h>
->  #include <signal.h>
->  #include <time.h>
-> +#include <unistd.h>
+> -	parent_port = cxl_mem_find_port(cxlmd, NULL);
+> +	parent_port = cxl_mem_find_port(cxlmd, &dport);
+>  	if (!parent_port)
+>  		goto out;
+> -	parent = &parent_port->dev;
+> +
+> +	if (dport->rch)
+> +		parent = parent_port->uport_dev;
+> +	else
+> +		parent = &parent_port->dev;
 >  
->  #define TWOMEG (2<<20)
->  #define RUNTIME (20)
->  
-> +#define GET_BIT(X, Y) ((X & ((uint64_t)1<<Y)) >> Y)
-> +#define GET_PFN(X) (X & 0x7FFFFFFFFFFFFFull)
->  #define ALIGN(x, a) (((x) + (a - 1)) & (~((a) - 1)))
-> +#define PAGEMAP_ENTRY 8
-> +const int __endian_bit = 1;
-> +#define is_bigendian() ((*(char *)&__endian_bit) == 0)
->  
->  FIXTURE(migration)
->  {
-> @@ -94,6 +102,47 @@ int migrate(uint64_t *ptr, int n1, int n2)
->  	return 0;
->  }
->  
-> +
-Trivial, but 3 lines definitely more than needed.
-
-> +
-> +int migrate_phys(uint64_t paddr, int n1, int n2)
-> +{
-> +	int ret, tmp;
-> +	int status = 0;
-> +	struct timespec ts1, ts2;
-> +
-> +	if (clock_gettime(CLOCK_MONOTONIC, &ts1))
-> +		return -1;
-> +
-> +	while (1) {
-> +		if (clock_gettime(CLOCK_MONOTONIC, &ts2))
-> +			return -1;
-> +
-> +		if (ts2.tv_sec - ts1.tv_sec >= RUNTIME)
-> +			return 0;
-> +
-> +		/*
-> +		 * FIXME: move_phys_pages was syscall 454 during RFC.
-> +		 * Update this when an official syscall number is adopted
-> +		 * and the libnuma interface is implemented.
-> +		 */
-> +		ret = syscall(454, 1, (void **) &paddr, &n2, &status,
-> +			      MPOL_MF_MOVE_ALL);
-> +		if (ret) {
-> +			if (ret > 0)
-> +				printf("Didn't migrate %d pages\n", ret);
-> +			else
-> +				perror("Couldn't migrate pages");
-> +			return -2;
-> +		}
-> +
-> +		tmp = n2;
-> +		n2 = n1;
-> +		n1 = tmp;
-> +	}
-> +
-> +	return 0;
-> +}
-
+>  	device_lock(parent);
+>  	if (parent->driver && !endpoint->dead) {
 
