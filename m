@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BAEE784B9
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3496E784BA
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237844AbjJBOn7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 10:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
+        id S237856AbjJBOqg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 10:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237823AbjJBOn7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:43:59 -0400
+        with ESMTP id S237832AbjJBOqf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:46:35 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E46EB7;
-        Mon,  2 Oct 2023 07:43:55 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkGn2yJ5z67Zjl;
-        Mon,  2 Oct 2023 22:43:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C7BAD;
+        Mon,  2 Oct 2023 07:46:32 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkKp4Jg4z6K6h7;
+        Mon,  2 Oct 2023 22:46:22 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 15:43:52 +0100
-Date:   Mon, 2 Oct 2023 15:43:51 +0100
+ 2023 15:46:29 +0100
+Date:   Mon, 2 Oct 2023 15:46:28 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -34,153 +34,106 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v11 07/20] cxl/hdm: Use stored Component Register
- mappings to map HDM decoder capability
-Message-ID: <20231002154351.0000136a@Huawei.com>
-In-Reply-To: <20230927154339.1600738-8-rrichter@amd.com>
+Subject: Re: [PATCH v11 10/20] cxl/pci: Introduce config option PCIEAER_CXL
+Message-ID: <20231002154628.00004f9b@Huawei.com>
+In-Reply-To: <20230927154339.1600738-11-rrichter@amd.com>
 References: <20230927154339.1600738-1-rrichter@amd.com>
-        <20230927154339.1600738-8-rrichter@amd.com>
+        <20230927154339.1600738-11-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 27 Sep 2023 17:43:26 +0200
+On Wed, 27 Sep 2023 17:43:29 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> Now, that the Component Register mappings are stored, use them to
-> enable and map the HDM decoder capabilities. The Component Registers
-> do not need to be probed again for this, remove probing code.
+> CXL error handling depends on AER.
 > 
-> The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
-> Endpoint's component register mappings are located in the cxlds and
-> else in the port's structure. Duplicate the cxlds->reg_map in
-> port->reg_map for endpoint ports.
+> Introduce config option PCIEAER_CXL in preparation of the AER dport
+> error handling. Also, introduce the stub function
+> devm_cxl_setup_parent_dport() to setup dports.
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> This is in preparation of follow on patches.
+> 
+> Note the Kconfg part of the option is added in a later patch to enable
+> it once coding of the feature is complete.
+> 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> [rework to drop cxl_port_get_comp_map()]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-A few comments inline.
 
-Also, Dan's SoB doesn't make sense if you are the Author and he's not
-the one sending the email.  The fun of patches bounced back and forwards
-is sometimes you have to tweak this stuff on each posting... :(
+Feels like it should just be combined with a later patch that fills
+some of this in as on it's own it's just a weird snippet of code :)
+
+Still, one comment inline anyway.
+
 
 > ---
->  drivers/cxl/core/hdm.c  | 48 ++++++++++++++++-------------------------
->  drivers/cxl/core/port.c | 29 +++++++++++++++++++------
->  drivers/cxl/mem.c       |  5 ++---
->  3 files changed, 43 insertions(+), 39 deletions(-)
+>  drivers/cxl/core/pci.c | 9 +++++++++
+>  drivers/cxl/cxl.h      | 7 +++++++
+>  drivers/cxl/mem.c      | 2 ++
+>  3 files changed, 18 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 11d9971f3e8c..14a0d0017df3 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index c7a7887ebdcf..6ba3b7370816 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -718,6 +718,15 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+>  	return true;
 >  }
 >  
-> -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
-> -				struct cxl_component_regs *regs)
-> -{
-> -	struct cxl_register_map map = {
-> -		.host = &port->dev,
-> -		.resource = port->component_reg_phys,
-> -		.base = crb,
-> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
-> -	};
-> -
-> -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
-> -	if (!map.component_map.hdm_decoder.valid) {
-> -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> -		/* unique error code to indicate no HDM decoder capability */
-> -		return -ENODEV;
-> -	}
-> -
-> -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
-> -}
-> -
->  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
->  {
->  	struct cxl_hdm *cxlhdm;
-> @@ -155,7 +135,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
->  {
->  	struct device *dev = &port->dev;
->  	struct cxl_hdm *cxlhdm;
-> -	void __iomem *crb;
-> +	struct cxl_register_map *reg_map;
->  	int rc;
->  
->  	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
-> @@ -164,19 +144,29 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
->  	cxlhdm->port = port;
->  	dev_set_drvdata(dev, cxlhdm);
->  
-> -	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
-> -	if (!crb && info && info->mem_enabled) {
-> -		cxlhdm->decoder_count = info->ranges;
-> -		return cxlhdm;
-> -	} else if (!crb) {
-> +	reg_map = &port->reg_map;
-
-Could you set this where it's defined above?
-
-> +	if (reg_map->resource == CXL_RESOURCE_NONE) {
-
-A reminder comment on why/when this happens might be a good addition.
-
-> +		if (info && info->mem_enabled) {
-> +			cxlhdm->decoder_count = info->ranges;
-> +			return cxlhdm;
-> +		}
-
-Trivial (and true before this patch) but I'd rather see the error path out of line
-
-
-		if (!info || !info->mem_enabled) {
-			WARN_ON(1);
-			dev_err(dev, "No ...
-			...
-		}
-
-		cxlhdm->decoder_count = info->ranges;
-		return cxlhdm;
-	}
-
-
-> +		WARN_ON(1);
->  		dev_err(dev, "No component registers mapped\n");
->  		return ERR_PTR(-ENXIO);
->  	}
->  
-> -	rc = map_hdm_decoder_regs(port, crb, &cxlhdm->regs);
-> -	iounmap(crb);
-> -	if (rc)
-> +	if (!reg_map->component_map.hdm_decoder.valid) {
-> +		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> +		/* unique error code to indicate no HDM decoder capability */
-> +		return ERR_PTR(-ENODEV);
-> +	}
+> +#ifdef CONFIG_PCIEAER_CXL
 > +
-> +	rc = cxl_map_component_regs(reg_map, &cxlhdm->regs,
-> +				    BIT(CXL_CM_CAP_CAP_ID_HDM));
-> +	if (rc) {
-> +		dev_dbg(dev, "Failed to map HDM capability.\n");
-dev_err() seems appropriate here.
-
->  		return ERR_PTR(rc);
-> +	}
+> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+> +{
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_parent_dport, CXL);
+> +
+> +#endif
+> +
+>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  				    pci_channel_state_t state)
+>  {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index c07064e0c136..cfa2f6bede41 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -704,6 +704,13 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+>  					 struct device *dport_dev, int port_id,
+>  					 resource_size_t rcrb);
 >  
->  	parse_hdm_decoder_caps(cxlhdm);
->  	if (cxlhdm->decoder_count == 0) {
+> +#ifdef CONFIG_PCIEAER_CXL
+> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
+> +#else
+> +static inline void devm_cxl_setup_parent_dport(struct device *host,
+> +					       struct cxl_dport *dport) { }
+> +#endif
+> +
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
+>  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 04107058739b..61ca21c020fa 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -157,6 +157,8 @@ static int cxl_mem_probe(struct device *dev)
+>  	else
+>  		endpoint_parent = &parent_port->dev;
+>  
+> +	devm_cxl_setup_parent_dport(dev, dport);
+
+devm calls can always fail (because if nothing else you have to register
+some cleanup and that involves an allocation.  If you want to ignore
+that I'd expect a comment here.
+
+> +
+>  	device_lock(endpoint_parent);
+>  	if (!endpoint_parent->driver) {
+>  		dev_err(dev, "CXL port topology %s not enabled\n",
 
