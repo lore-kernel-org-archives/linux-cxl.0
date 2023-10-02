@@ -2,67 +2,67 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B36E784AF
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 09:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA17E784AF
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 09:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235965AbjJBJWf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 05:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
+        id S236084AbjJBJ3c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 05:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236014AbjJBJWe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 05:22:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8F483
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 02:21:51 -0700 (PDT)
+        with ESMTP id S236074AbjJBJ3c (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 05:29:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AD7A4
+        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 02:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696238510;
+        s=mimecast20190719; t=1696238929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9SMs8mHNoKs8/KwUwp2IfY8WHFPaduo12w1Xi37QfxA=;
-        b=F7mBxVAFQGRBo/Izhsf9Xz1z5AUd4No666aFLrWvRdet+Ngp0xqqJDRRsxi3Afdrcwkg1t
-        QclE8DdcUMaK0F+635o8L85wD3zGopy2TNgd8gnsegIZW9o+R0CMlKK+YkODfwblI73da3
-        7Q1HWtAz01PJmslA8M6GcMVJO7ifp9g=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=AJJ/7KPwaOb8i7teRUVDmyTyd/EZIX0vx+LShsb9z+w=;
+        b=a+dSmxnG21gSW3Ax1FZg4quhY5IOr7PANjy6SuHaAoJX9bk6TeWyU7wGRR2dlYMmmb6xen
+        /aVRcig3zrBcyLGt0g6KwFVmPqWFcDnynEUvCNRj1kLQAX0KvOvKmZZapZEy3eTFjD/9E2
+        Xucs6FXIlcdi5uH4SRnuEM+b2XJwHMs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-428-9GeOWpZzMIarM5Okfyk-2w-1; Mon, 02 Oct 2023 05:21:49 -0400
-X-MC-Unique: 9GeOWpZzMIarM5Okfyk-2w-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-402cd372b8bso150915765e9.2
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Oct 2023 02:21:49 -0700 (PDT)
+ us-mta-621-xcocKt7rOtas9czAlvd_Eg-1; Mon, 02 Oct 2023 05:28:48 -0400
+X-MC-Unique: xcocKt7rOtas9czAlvd_Eg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4065ca278b3so20452245e9.3
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Oct 2023 02:28:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696238508; x=1696843308;
+        d=1e100.net; s=20230601; t=1696238927; x=1696843727;
         h=content-transfer-encoding:in-reply-to:organization:from:references
          :cc:to:content-language:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9SMs8mHNoKs8/KwUwp2IfY8WHFPaduo12w1Xi37QfxA=;
-        b=tt5bVikJaHkUm+ng9Zq34Xn90bpAERukiUQ2McdjM9C1yd0i0u3yg97g8BEPiKxVBK
-         NRI6ulVAYZuVMtxGe64MBVrmvgbs07y+kM3eG25I5r0h/aOws8o6Gt+YRVMSUg12nyzK
-         jwe3ZGT7PHdyL2k27Ao6klbBUJWrqMqarmTfwJZziDzjMqQ/tmIsshp2a9sX5pN6hssN
-         HUvTNYrE+R/t6fvGDY9wjRD30CjlEJ15dOldLJbju/kw+YO+ksRCgN4h+6dwVUdxsZCM
-         VtvDBTxZ5T3KiKCYUSOfHpx8XiAPTuSI8verA43+Z0k9eCxXtAgOrfX5jL7hrNV7lLiZ
-         ZxEA==
-X-Gm-Message-State: AOJu0YyDQITDXGX/uzso4MVv8rjFC0D8shq4phLJcfwUnLsXMtl1oZzp
-        PRORPx44fQSeqLBLO4CF8R9mdTleuE6qMN/vxToq7xM70RSVSr7ZdFLGW6aBup8VBOkAqBwTGUz
-        HJSDDr5HHpXEgiciWVqUs
-X-Received: by 2002:a1c:f215:0:b0:401:8225:14ee with SMTP id s21-20020a1cf215000000b00401822514eemr9384957wmc.41.1696238508094;
-        Mon, 02 Oct 2023 02:21:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpoIYDU+1jiVcXrF63R4snLKaA9DHdUaPschGkCCIHkpc4jwwbfh1yuXRNn7DbT9sCTvXBqw==
-X-Received: by 2002:a1c:f215:0:b0:401:8225:14ee with SMTP id s21-20020a1cf215000000b00401822514eemr9384934wmc.41.1696238507655;
-        Mon, 02 Oct 2023 02:21:47 -0700 (PDT)
+        bh=AJJ/7KPwaOb8i7teRUVDmyTyd/EZIX0vx+LShsb9z+w=;
+        b=hLHHr03qlW2amQgn0VmzJmViIhXtKbqH4HaqIL5Kaucdnonub4VjfbO4Nl9m3kM5Xa
+         BPFFZTRmiqgy5XR0StybG/Ztfo7j4/dPzHWIY1iXsD+mQMs8bnI6vq0EFiucjt8qoPU6
+         h0RvOzyWgSfeDZYGqX+XkGE24Zj1G69ZN3HOCUzmErRqQ4AvriKHaW8fGo3DEn+Ers5q
+         v6WJuk2dUKV23kD5jhPN6l+R/2qqqZD5SR2QlySqd94YBao+jDNPUXM0pcOYXOZYEcvb
+         qJ4ueSCvcyB/NnKtAe1MmxCw4dfRG1wHCnIXrh+jytCTzaPABV3d7Adj8peSJqI0o9pX
+         XCMw==
+X-Gm-Message-State: AOJu0YzPx5mtoc+UhVtu7YxgI0E4kxnSBhgISOOL3Z8B+G8eTAwlYRT+
+        rjbs3+iNvZz/iQNu0KnfCeVdx35eAC33tqYWZ7goBc/dDnH56O/kuOvVOMc3mcU2AxFOFjJGrcV
+        W0htqI7uK569GUVIk9yh2
+X-Received: by 2002:a7b:cbc8:0:b0:3ff:ca80:eda3 with SMTP id n8-20020a7bcbc8000000b003ffca80eda3mr8982373wmi.10.1696238927137;
+        Mon, 02 Oct 2023 02:28:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmhn8B8uW4T+AICrNUjuxaqcAcDPKrxy0MVMZxpv82pLtYtPKE8QMU+0CJ7y3jMcfBPVswXw==
+X-Received: by 2002:a7b:cbc8:0:b0:3ff:ca80:eda3 with SMTP id n8-20020a7bcbc8000000b003ffca80eda3mr8982347wmi.10.1696238926766;
+        Mon, 02 Oct 2023 02:28:46 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c735:f200:cb49:cb8f:88fc:9446? (p200300cbc735f200cb49cb8f88fc9446.dip0.t-ipconnect.de. [2003:cb:c735:f200:cb49:cb8f:88fc:9446])
-        by smtp.gmail.com with ESMTPSA id p8-20020a7bcc88000000b003fbe4cecc3bsm6791845wma.16.2023.10.02.02.21.46
+        by smtp.gmail.com with ESMTPSA id j17-20020a05600c489100b003fc16ee2864sm6835636wmp.48.2023.10.02.02.28.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Oct 2023 02:21:47 -0700 (PDT)
-Message-ID: <0b6f739b-723a-bc53-03a3-f4a793f339b4@redhat.com>
-Date:   Mon, 2 Oct 2023 11:21:46 +0200
+        Mon, 02 Oct 2023 02:28:46 -0700 (PDT)
+Message-ID: <efe2acfd-f22f-f856-cd2a-32374af2053a@redhat.com>
+Date:   Mon, 2 Oct 2023 11:28:44 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v4 2/2] dax/kmem: allow kmem to add memory with
- memmap_on_memory
+Subject: Re: [PATCH v4 1/2] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
 To:     Vishal Verma <vishal.l.verma@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
@@ -77,10 +77,10 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Jeff Moyer <jmoyer@redhat.com>
 References: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
- <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
+ <20230928-vv-kmem_memmap-v4-1-6ff73fec519a@intel.com>
 From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat
-In-Reply-To: <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
+In-Reply-To: <20230928-vv-kmem_memmap-v4-1-6ff73fec519a@intel.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -90,31 +90,52 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 28.09.23 22:30, Vishal Verma wrote:
-> Large amounts of memory managed by the kmem driver may come in via CXL,
-> and it is often desirable to have the memmap for this memory on the new
-> memory itself.
-> 
-> Enroll kmem-managed memory for memmap_on_memory semantics if the dax
-> region originates via CXL. For non-CXL dax regions, retain the existing
-> default behavior of hot adding without memmap_on_memory semantics.
-> 
-> Add a sysfs override under the dax device to control this behavior and
-> override either default.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+> +
+> +static int __ref try_remove_memory(u64 start, u64 size)
+> +{
+> +	int rc, nid = NUMA_NO_NODE;
+> +
+> +	BUG_ON(check_hotplug_memory_range(start, size));
+> +
+> +	/*
+> +	 * All memory blocks must be offlined before removing memory.  Check
+> +	 * whether all memory blocks in question are offline and return error
+> +	 * if this is not the case.
+> +	 *
+> +	 * While at it, determine the nid. Note that if we'd have mixed nodes,
+> +	 * we'd only try to offline the last determined one -- which is good
+> +	 * enough for the cases we care about.
+> +	 */
+> +	rc = walk_memory_blocks(start, size, &nid, check_memblock_offlined_cb);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * For memmap_on_memory, the altmaps could have been added on
+> +	 * a per-memblock basis. Loop through the entire range if so,
+> +	 * and remove each memblock and its altmap.
+> +	 */
+> +	if (mhp_memmap_on_memory()) {
+> +		unsigned long memblock_size = memory_block_size_bytes();
+> +		u64 cur_start;
+> +
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size)
+> +			__try_remove_memory(nid, cur_start, memblock_size);
+> +	} else {
+> +		__try_remove_memory(nid, start, size);
+> +	}
+> +
+>   	return 0;
+>   }
+
+Why is the firmware, memblock and nid handling not kept in this outer 
+function?
+
+We really shouldn't be doing per memory block what needs to be done per 
+memblock: remove_memory_block_devices() and arch_remove_memory().
+
 
 -- 
 Cheers,
