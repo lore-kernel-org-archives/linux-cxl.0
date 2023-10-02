@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3496E784BA
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF2E784B9
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 14:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237856AbjJBOqg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 10:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
+        id S237630AbjJBOxl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 10:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237832AbjJBOqf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:46:35 -0400
+        with ESMTP id S237886AbjJBOxk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 10:53:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C7BAD;
-        Mon,  2 Oct 2023 07:46:32 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkKp4Jg4z6K6h7;
-        Mon,  2 Oct 2023 22:46:22 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E26B9D;
+        Mon,  2 Oct 2023 07:53:37 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzkSL5JBsz6K5sF;
+        Mon,  2 Oct 2023 22:52:02 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 15:46:29 +0100
-Date:   Mon, 2 Oct 2023 15:46:28 +0100
+ 2023 15:53:34 +0100
+Date:   Mon, 2 Oct 2023 15:53:34 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -34,106 +34,155 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v11 10/20] cxl/pci: Introduce config option PCIEAER_CXL
-Message-ID: <20231002154628.00004f9b@Huawei.com>
-In-Reply-To: <20230927154339.1600738-11-rrichter@amd.com>
+Subject: Re: [PATCH v11 11/20] cxl/pci: Add RCH downstream port AER register
+ discovery
+Message-ID: <20231002155334.00004e58@Huawei.com>
+In-Reply-To: <20230927154339.1600738-12-rrichter@amd.com>
 References: <20230927154339.1600738-1-rrichter@amd.com>
-        <20230927154339.1600738-11-rrichter@amd.com>
+        <20230927154339.1600738-12-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 27 Sep 2023 17:43:29 +0200
+On Wed, 27 Sep 2023 17:43:30 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> CXL error handling depends on AER.
+> From: Terry Bowman <terry.bowman@amd.com>
 > 
-> Introduce config option PCIEAER_CXL in preparation of the AER dport
-> error handling. Also, introduce the stub function
-> devm_cxl_setup_parent_dport() to setup dports.
+> Restricted CXL host (RCH) downstream port AER information is not currently
+> logged while in the error state. One problem preventing the error logging
+> is the AER and RAS registers are not accessible. The CXL driver requires
+> changes to find RCH downstream port AER and RAS registers for purpose of
+> error logging.
 > 
-> This is in preparation of follow on patches.
+> RCH downstream ports are not enumerated during a PCI bus scan and are
+> instead discovered using system firmware, ACPI in this case.[1] The
+> downstream port is implemented as a Root Complex Register Block (RCRB).
+> The RCRB is a 4k memory block containing PCIe registers based on the PCIe
+> root port.[2] The RCRB includes AER extended capability registers used for
+> reporting errors. Note, the RCH's AER Capability is located in the RCRB
+> memory space instead of PCI configuration space, thus its register access
+> is different. Existing kernel PCIe AER functions can not be used to manage
+> the downstream port AER capabilities and RAS registers because the port was
+> not enumerated during PCI scan and the registers are not PCI config
+> accessible.
 > 
-> Note the Kconfg part of the option is added in a later patch to enable
-> it once coding of the feature is complete.
+> Discover RCH downstream port AER extended capability registers. Use MMIO
+> accesses to search for extended AER capability in RCRB register space.
 > 
+> [1] CXL 3.0 Spec, 9.11.2 - System Firmware View of CXL 1.1 Hierarchy
+> [2] CXL 3.0 Spec, 8.2.1.1 - RCH Downstream Port RCRB
+> 
+> Co-developed-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Feels like it should just be combined with a later patch that fills
-some of this in as on it's own it's just a weird snippet of code :)
+This doesn't look right. IIRC Co-dev tag should be just
+before the SoB.
 
-Still, one comment inline anyway.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+New day, fresh questions....
 
 
 > ---
->  drivers/cxl/core/pci.c | 9 +++++++++
->  drivers/cxl/cxl.h      | 7 +++++++
->  drivers/cxl/mem.c      | 2 ++
->  3 files changed, 18 insertions(+)
+>  drivers/cxl/core/core.h |  1 +
+>  drivers/cxl/core/pci.c  |  6 ++++++
+>  drivers/cxl/core/regs.c | 35 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 42 insertions(+)
 > 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 45e7e044cf4a..f470ef5c0a6a 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -73,6 +73,7 @@ struct cxl_rcrb_info;
+>  resource_size_t __rcrb_to_component(struct device *dev,
+>  				    struct cxl_rcrb_info *ri,
+>  				    enum cxl_rcrb which);
+> +u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+>  
+>  extern struct rw_semaphore cxl_dpa_rwsem;
+>  
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index c7a7887ebdcf..6ba3b7370816 100644
+> index 6ba3b7370816..4c6c5c7ba5a3 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -718,6 +718,15 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
->  	return true;
->  }
+> @@ -722,6 +722,12 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
 >  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +
-> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
-> +{
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_parent_dport, CXL);
-> +
-> +#endif
-> +
->  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  				    pci_channel_state_t state)
+>  void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
 >  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c07064e0c136..cfa2f6bede41 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -704,6 +704,13 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->  					 struct device *dport_dev, int port_id,
->  					 resource_size_t rcrb);
->  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
-> +#else
-> +static inline void devm_cxl_setup_parent_dport(struct device *host,
-> +					       struct cxl_dport *dport) { }
-> +#endif
+> +	struct device *dport_dev = dport->dport_dev;
+> +	struct pci_host_bridge *host_bridge;
 > +
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 04107058739b..61ca21c020fa 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -157,6 +157,8 @@ static int cxl_mem_probe(struct device *dev)
->  	else
->  		endpoint_parent = &parent_port->dev;
+> +	host_bridge = to_pci_host_bridge(dport_dev);
+> +	if (host_bridge->native_cxl_error)
+> +		dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_parent_dport, CXL);
 >  
-> +	devm_cxl_setup_parent_dport(dev, dport);
-
-devm calls can always fail (because if nothing else you have to register
-some cleanup and that involves an allocation.  If you want to ignore
-that I'd expect a comment here.
-
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index e0fbe964f6f0..6e502f02899b 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -470,6 +470,41 @@ int cxl_setup_regs(struct cxl_register_map *map)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_setup_regs, CXL);
+>  
+> +u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
+> +{
+> +	void __iomem *addr;
+> +	u16 offset = 0;
+> +	u32 cap_hdr;
 > +
->  	device_lock(endpoint_parent);
->  	if (!endpoint_parent->driver) {
->  		dev_err(dev, "CXL port topology %s not enabled\n",
+> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
+> +		return 0;
+> +
+> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> +		return 0;
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr) {
+
+Given this handling exists, below, perhaps a goto?
+Also, why isn't this an error?  A comment would be good for that.
+
+> +		release_mem_region(rcrb, SZ_4K);
+> +		return 0;
+> +	}
+> +
+> +	cap_hdr = readl(addr + offset);
+> +	while (PCI_EXT_CAP_ID(cap_hdr) != PCI_EXT_CAP_ID_ERR) {
+> +		offset = PCI_EXT_CAP_NEXT(cap_hdr);
+> +		if (!offset)
+> +			break;
+> +		cap_hdr = readl(addr + offset);
+> +	}
+> +
+> +	if (offset)
+
+Add a comment / specification reference for why an offset of 0 is not valid.
+Of the top of my head I'm not sure though there may be a requirement for
+something else coming first...
+
+> +		dev_dbg(dev, "found AER extended capability (0x%x)\n", offset);
+> +
+> +	iounmap(addr);
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return offset;
+> +}
+> +
+>  resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
+>  				    enum cxl_rcrb which)
+>  {
 
