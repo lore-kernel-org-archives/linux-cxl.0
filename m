@@ -2,172 +2,112 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8B7E743C3
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1113E748E9
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Oct 2023 15:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238114AbjJBPbF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Oct 2023 11:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
+        id S238274AbjJBPzg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Oct 2023 11:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238112AbjJBPbD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 11:31:03 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2078.outbound.protection.outlook.com [40.107.223.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BBBDC;
-        Mon,  2 Oct 2023 08:30:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D2rszhlbya7MJigbir+2EuyC4f12+6KEQy+ysHw9VEs4og3fKy6/gLknPt7rzWhTXuodKpS1V8/lkhEHIibdS+JJbqQyNfKOYRlCCBNgDO2/Kxk6u8QG0JswG0nGk68VCF6M4V+4A+09h6BpLm2x8WfpZ9J/yndm8hEeiYxHlj4iGrG5Cnn655L6tSnQ/fGWYO2jB+c2QsE737w3Z9twQVQV0Gn6YOBPc/ScI4Qa2m4QpjFWIOD2IZO0UU4CelwKGJt6Sn4qFGD2S8b0wRcpi8+Anda87jrvRFeV/J5CrAfc+J6zk1ZLmfuHukPDYy9rH8lbQHV8Ozl6klKGsraSng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LY0CJR7qert7RGJgCFAZaGLTA4B265M68sbeAwasCBU=;
- b=HTCF9WPP0vrXee3dbCIFokvKAMA0OEuR1fmkkMi976qfXpCdT+FT+YpwoRK8Qcux1qoXfxllSbT8v60Y0X7qxfP3paq6s6ZNdnUFdT5syDhYdfGccFb/yVEbdF7b/uZ6b7sA8IqLgf7Cw54fGnbXPxk7P+gejqpKqQcMuFnTSbG0c6MuNU2BD9yrwnEnN7UsC9Kq8OuqSPKy9mf4UyYo6ZbldwQUgxMkLPfTcu7N0ik+1zfB2EHlggsC121Zj2I5Jmgf0koZeDex4gFCCScDAV82+Pygc/DkKVIzL6xQ3+JP5b9sBU32HC/yBW0EzCQ3u0PqpPO4EawfTFQ2J0v7nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LY0CJR7qert7RGJgCFAZaGLTA4B265M68sbeAwasCBU=;
- b=NDAeCkxepWzwPoWIE3V/8ee0dQ7ueUb+Hjh/969tU1Uy3zhZOxfK+7GxBBHEqTwdXou6iQk9bQyFEUXVTbsHnDVfIciSK7YDYH4EXT/ky/1in6PoE4nZb+21Q4uwUEmIrT7Uw7spO1l7PK28McPBPP/R2uYpqlM0mEwplxApwSw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by DM6PR17MB3755.namprd17.prod.outlook.com (2603:10b6:5:22c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Mon, 2 Oct
- 2023 15:30:51 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5565:d559:61b0:e2df]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5565:d559:61b0:e2df%6]) with mapi id 15.20.6813.027; Mon, 2 Oct 2023
- 15:30:51 +0000
-Date:   Mon, 2 Oct 2023 11:30:42 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Gregory Price <gourry.memverge@gmail.com>,
-        linux-mm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-cxl@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, arnd@arndb.de, akpm@linux-foundation.org,
-        x86@kernel.org
-Subject: Re: [RFC PATCH 2/3] mm/mempolicy: Implement set_mempolicy2 and
- get_mempolicy2 syscalls
-Message-ID: <ZRriIpYETsRdWZet@memverge.com>
-References: <20230914235457.482710-1-gregory.price@memverge.com>
- <20230914235457.482710-3-gregory.price@memverge.com>
- <20231002143008.000038ac@Huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231002143008.000038ac@Huawei.com>
-X-ClientProxiedBy: SJ0PR03CA0265.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::30) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+        with ESMTP id S238269AbjJBPzf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Oct 2023 11:55:35 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1148BD
+        for <linux-cxl@vger.kernel.org>; Mon,  2 Oct 2023 08:55:32 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id AB72CC1F9E;
+        Mon,  2 Oct 2023 15:49:47 +0000 (UTC)
+Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 370D9C1CC1;
+        Mon,  2 Oct 2023 15:49:47 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1696261787; a=rsa-sha256;
+        cv=none;
+        b=Knm8AY00uUm4d2Vo987xRInxc7MpZwsD18irOpknFIjMHnrPM7arxI7ETtbeZat02y+0it
+        F4I8Nd0aOHoW2hr7VZNDbZG9ihbwO2HREIXU8YH/wFIiranDK2oB0ZPL705d/xpwajpaXH
+        XpQqNKG95GXdmq0xU07xTTeOt2Za+btmCi/SiOrxz0NzkQF0upZyBCsdq1UqqTf5LT9vEf
+        kUNe5/7mmFcqyZrUXocRRPIvkytt2mwd7rmnWR/acW4WsS72i5yZDkAra39+xveGH6FRKM
+        aZX985u5ZL4GZYYx1LfdwJraUx8uaEkZB+qgOdLi9MBcyARZ4iL8x1Ho60hxrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1696261787;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=j5qT5m3XDOuyV0HIcfg2JacnkVWddUz1SShpaJFxsWw=;
+        b=9/TiOr0DgzKN918lZ2ys12UMP4FwHuWadIosvYNF0MO+X8nOkpwzQDBN/BY9aT2yx8ygsY
+        PuQ3hu/rmYcd33PlYWvnMjEDFM6XJO9dIKwRRCNOBOPFmxdVrUjFN7kXNmlBd77WKSTNE+
+        0HF212E1sArLxGmOuZrueLiWxbU2FwmmrwKb+I84hx32zEvKvu0XHOo2c8+WcDlrX6qX6l
+        mwsi1H1kvepuLLTUIAfl/KFoqhB0885zp3HhOw1yyzhTB9IJcxzCExE1qhN2G9mxBS3aia
+        y8TGq0Fy2RlSYciYq4yUaF53dT1Esj25y7pb+uQ4V/TPycpiX0xAw5ZtayqzCw==
+ARC-Authentication-Results: i=1;
+        rspamd-7d5dc8fd68-7jvhx;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Shelf-Towering: 04fced7c2089358e_1696261787485_144509975
+X-MC-Loop-Signature: 1696261787485:507935012
+X-MC-Ingress-Time: 1696261787485
+Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.109.140.241 (trex/6.9.1);
+        Mon, 02 Oct 2023 15:49:47 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4Rzlky56XFz6b;
+        Mon,  2 Oct 2023 08:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1696261786;
+        bh=j5qT5m3XDOuyV0HIcfg2JacnkVWddUz1SShpaJFxsWw=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=PFBlmp5HODNIU97CZpZ62LL6vwCiaSuy6YYKnOctODOVamW5DE8+6xVV/d5NG53YT
+         0R5dNHYXrRexWZrSnEDBLggsycjlveDYMEbbwbWHrkWSMx54n7iJGRMQpowl8FSEDq
+         dAwgbBXIDeB+VDA/thCpKqLdtHjKbLdfAx/whLa6f8SpMi8VtcOgEL3rNxgpJRT3ez
+         Te27HKBy4ZQj4v80BS7pAaSkAJG/EvsJsCvrPPS5stD4URR8oEAIxhCZG+scGbDXO8
+         ylaVS/ji+XLq1iJShAqfyVSntc9b1/EpgUUQ1Jq3sEm3ovdvEr08+JYJaoWP9t/aT8
+         fMF0tS2xLoZ1w==
+Date:   Mon, 2 Oct 2023 08:49:43 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com
+Subject: Re: [PATCH v2 2/4] cxl/pci: Cleanup 'sanitize' to always poll
+Message-ID: <xqouql3fxo5zyyjqjoxn5g7nmupwh6qei7opsb6cymcvb5a3ou@gg5z2ebxeq7t>
+References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+ <169602897906.904193.9057960720070253436.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DM6PR17MB3755:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc26fb84-4cf9-48e3-786a-08dbc35c8f26
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oaDIe0CPxLJntsLjiUrcvg8JJEgzWG+ZJairwVW/sj0idPrL4CMxj7EHQtt8gh2sWmJ4dzBHMnreS8AodZ+hjbMLRK7B+DFmBLOUoU/5u8eacgPnmFrqxi+Q3+7feBjF+0jcHhditLAVJXlq6Afevh8nQdb1pGqD1YIxHPrP8rJn67kzgqFqa0KfPBZqJf/eL0q79yY3KrIpnEN9a9mUU9pHCJ08VHe5v/oj24lMmHPBb+I/Tm+3Gi/tvBXVG10UJRGxoxdEbfkzFWFTe7I7+sAdKGMEoRA+RVUYx0gPMsF+94l1zk5InaOWOPy09MZtZDM8mDwdQZRpQ19y0aPRzO3OTHIzaIA+CpJaKlkbd8X0oVVxC4yjMSoMufoFl8GI4HPgY7/gNvXr9DzGw2Qy5utT+mOq/2Y33FpXniJNLDzojRkLzV+s+OM2DoOMF5Oa68G8OVaWMPeW2F/YrQTfiZ/3NxDItepJP0wq8qrMWvmI5Hyz3E4XuElanrSx1/wvli8UPffiuuSPVX+kH/chk5whhxmyEJ8OOtvZ7lVKvEEwY68yRWUtQWmKY+/ztByi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(39840400004)(366004)(136003)(230922051799003)(1800799009)(451199024)(64100799003)(186009)(66556008)(66476007)(66946007)(316002)(6916009)(2906002)(478600001)(2616005)(8936002)(8676002)(4326008)(26005)(44832011)(5660300002)(6506007)(6512007)(6666004)(7416002)(6486002)(41300700001)(36756003)(38100700002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w9k70vMeDI6pRh0gtk8C4d9eW5IFcwXJYW65r+XfUpBpPxoU7z9YIXVa3kiL?=
- =?us-ascii?Q?vPYnVjHS/4aD1SdR88Ifd2T3zmdhJ6cIB+Snzv1Eig5nQoDV6kNrqrHpZMNf?=
- =?us-ascii?Q?gaAfnu2FRfd4N80sNPgoQ+SVr2zl0VEcyAg1LSUjvMiRO+sDAKGaJ2+4Vx9Y?=
- =?us-ascii?Q?r0KHWZIDYJT8xtOcoFMGNvjK+0EKlLbOtb9PuEDhB2P8ix5LsElph1o+yiVX?=
- =?us-ascii?Q?7fIVpbMotf1dPTbcdSzER1Xijj3rC9ZbVWRlepQAfr9EOCfNXj6mX9Qc4RVd?=
- =?us-ascii?Q?lOWVN7qyYyr1wVmXqbdg4QEv9jYCU16HtH81Flc98lvoU2Wjf6zKXLNSY/oA?=
- =?us-ascii?Q?zcX/5bdRuG5XE9JFcLPwvLozNnFe8FuonwCE0CylHBKtd2vXW/upJxJyDnwU?=
- =?us-ascii?Q?b49/h9bdul9nrkU1vUfNz8gMoTG+eWmRN3BrY47DIT5ipCpuj4QuB34BTqDH?=
- =?us-ascii?Q?AYPsp2SmCzwq7L+o9STKCpMgjUlJdvsr4gyZYgeNLzZIGORuA3t+xVPlCBA1?=
- =?us-ascii?Q?2ka/BJVlWpd6nDDCJkVq7rEDkq5deu6Ac54CzIY3W4Z4tnrxyplm0X7ImiXl?=
- =?us-ascii?Q?Fs0uQVNsFconRHBuG3Zr/hSR7vPzyqpF8xWVy4WFv/MbylsPxUU0gxnBQ++F?=
- =?us-ascii?Q?/PpOZUJlA/PUrpbpGFIRogfAvO+8SKJ2PnSacD37c9BQn7aHhMqcSuaGfRis?=
- =?us-ascii?Q?sK1MkcvvbiM7lMov9b3KA8nLqAIPS1betllNsbmPixgJLZZ4ldLXlbDMQmh0?=
- =?us-ascii?Q?DdHEVzjHiU7x/YGVni8ilvdd0tzzX1Xn+wDkNWdOOlfGqwFdmGF2f9Pculym?=
- =?us-ascii?Q?9fo0mRmr1M0YXo8oGl7Ds6wbOdltT3xQ5gY6rflHxONCbKmIxvA69A88L2JU?=
- =?us-ascii?Q?Dk17cBTbNh5V78hYG8xBDh80I9s/bLx/Lk+qcfnurJXDgMsVqkqDMseYWq9g?=
- =?us-ascii?Q?hZhWSzwKXlyEiC+uuTc2KaGSjo7PHGD3J+8sSS9JXC/rY5ubL4ecXWdqfomr?=
- =?us-ascii?Q?JEHxGlQHRfK4mi0HxFZV1B/525P8pb03px1PQGWpwFlooPT8+mCryKs6amrl?=
- =?us-ascii?Q?gXd6IqJtxsiaLdRb1VeUes6bztVyPwV819e02WIpjAA4aAdPO0jNFvf9wB23?=
- =?us-ascii?Q?DWgUmshcJdZ652BGz/iRUWWJj4NIvl56ajA9IP4yPDyUlzW9hFLMQUEAeyac?=
- =?us-ascii?Q?MrYi1zFaI/5zy+Lwl/iKgpNVyk4yl6CzVg3Rcv9s8lxsJq2ZWh2v5Hc3iAb2?=
- =?us-ascii?Q?6AhUQhPy8Pe4x/hvyK7GC3b60vlhh+Acyz8sLQ+5V0zR4WmoXi4NIyyXfXxu?=
- =?us-ascii?Q?AmGte7hNj1g37o2LLYQljXhsj/B3GIKkvWy2XNcF8piWe1ESb4yds5YUH5Ng?=
- =?us-ascii?Q?vEDaIPJRuU0kx5I0JTytHBhD1EL4Yd9fHCGiyxecscVKiPMKEIsqJ5F62dGQ?=
- =?us-ascii?Q?MzDEmdIW1+lVZUyOM8Oy3oxNFxObS8ylEdSR1zVgSElni08ME6IDjFi/uJMy?=
- =?us-ascii?Q?8mrhR2X0p8RyEEYrmr+uuNA2h6d0HmLbRJr9xko3D0zlA8OaBrSLqCzdUcmV?=
- =?us-ascii?Q?LVYO3hc3ZoLQJdmHYQcK9U+MQFYX+YDy0NBASrUOFtzGUmvUgBupFTMAV1Fv?=
- =?us-ascii?Q?NQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc26fb84-4cf9-48e3-786a-08dbc35c8f26
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2023 15:30:51.1241
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y3/A5cqQHETY8ZOIKkVI2+yXikaANhQqdMpH2kOrqIeWGidyOtzYMjIDMP9hPBQazy6KQyWA+Ihcg0kVxj4SxWv1c1Jkg4Ts53xDblyDD5s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR17MB3755
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <169602897906.904193.9057960720070253436.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Oct 02, 2023 at 02:30:08PM +0100, Jonathan Cameron wrote:
-> On Thu, 14 Sep 2023 19:54:56 -0400
-> Gregory Price <gourry.memverge@gmail.com> wrote:
-> 
-> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> > index abe087c53b4b..397dcf804941 100644
-> > --- a/include/uapi/asm-generic/unistd.h
-> > +++ b/include/uapi/asm-generic/unistd.h
-> > ...
-> >  #undef __NR_syscalls
-> > -#define __NR_syscalls 453
-> > +#define __NR_syscalls 456
-> +3 for 2 additions?
-> 
+On Fri, 29 Sep 2023, Dan Williams wrote:
 
-When i'd originally written this, there was a partially merged syscall
-colliding with 453, and this hadn't been incremented yet.  Did a quick
-grep and it seems like that might have been reverted, so yeah this would
-drop down to 453/454 & __NR=455.
-
-> > +	/* Legacy modes are routed through the legacy interface */
-> > +	if (kargs->mode <= MPOL_LEGACY)
-> > +		return false;
-> > +
-> > +	if (kargs->mode >= MPOL_MAX)
-> > +		return false;
-> > +
-> > +	return true;
-> 
-> This is a range check, so I think equally clear (and shorter) as..
-> 	/* Legacy modes are routed through the legacy interface */
-> 	return kargs->mode > MPOL_LEGACY && kargs->mode < MPOL_MAX;
+>In preparation for fixing the init/teardown of the 'sanitize' workqueue
+>and sysfs notification mechanism, arrange for cxl_mbox_sanitize_work()
+>to be the single location where the sysfs attribute is notified. With
+>that change there is no distinction between polled mode and interrupt
+>mode. All the interrupt does is accelerate the polling interval.
 >
+>The change to check for "mds->security.sanitize_node" under the lock is
+>there to ensure that the interrupt, the work routine and the
+>setup/teardown code can all have a consistent view of the registered
+>notifier and the workqueue state. I.e. the expectation is that the
+>interrupt is live past the point that the sanitize sysfs attribute is
+>published, and it may race teardown, so it must be consulted under a
+>lock.
 
-I'll combine the range, but i left the two true/false conditions
-separate because it's intended that follow on patches will add logic
-before true is returned.
+That makes sense, but this is currently under hardirq, so we'd need the
+threaded flavor instead to take the mutex.
 
-> > +		kargs->get.allowed.err = err ? err : 0;
-> > +		kargs->err |= err ? err : 1;
-> 		if (err) {
-> 			kargs->get.allowed.err = err;
-> 			kargs->err |= err;
-> 		} else {
-> 			kargs->get.allowed.err = 0;
-> 			kargs->err = 1;
-> 	Not particularly obvious why 1 and if you get an error later it's going to be messy
->         as will 1 |= err_code
-
-My original intent was to just allow each section to error separately,
-but honestly this seems overly complicated and somewhat against the
-design of almost every other syscall, so i'm going to rip all these
-error code spaces out and instead just have everything return on error.
-
-Thanks!
-Gregory
+Thanks,
+Davidlohr
