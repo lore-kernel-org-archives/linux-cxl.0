@@ -2,278 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703C3E7AD6E
-	for <linux-cxl@archiver.kernel.org>; Tue,  3 Oct 2023 15:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27360E7AD77
+	for <linux-cxl@archiver.kernel.org>; Tue,  3 Oct 2023 17:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231766AbjJCPk6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 3 Oct 2023 11:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
+        id S231285AbjJCRk2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 3 Oct 2023 13:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231691AbjJCPk6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 Oct 2023 11:40:58 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3DEA6;
-        Tue,  3 Oct 2023 08:40:53 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S0MR60mWpz67Ct8;
-        Tue,  3 Oct 2023 23:38:10 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 3 Oct
- 2023 16:40:50 +0100
-Date:   Tue, 3 Oct 2023 16:40:48 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
- authentication
-Message-ID: <20231003164048.0000148c@Huawei.com>
-In-Reply-To: <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230202AbjJCRk2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 Oct 2023 13:40:28 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78182A6
+        for <linux-cxl@vger.kernel.org>; Tue,  3 Oct 2023 10:40:19 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id AE48D4C2805;
+        Tue,  3 Oct 2023 17:40:15 +0000 (UTC)
+Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 089D34C2E51;
+        Tue,  3 Oct 2023 17:40:15 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1696354815; a=rsa-sha256;
+        cv=none;
+        b=Q6vfRKxLsCzLc1SxJUoxZs5jTf+60DPQupvSS6Xj24THnZHeRT65aqOI+RtI4H0TzX+NRQ
+        C0bdkvX8dX9NzaE7kOd9CPt9xdwmH1z/jS0/S9UaaFEAkuTifJQ/CG1xH7u32ssevGvh+V
+        0juoN1eBT3k/OFlevYgV0jn75QEc+iiRIUyO9zxTVJZEawk/rCA7msM9MhlnYE/IEyn6HZ
+        p/skNoeRvh5KybkoOKCFijA6pqCJGkzj7tOZR6W5+Nqfj8JRE8dILar9DcJiVq5SjtRfJH
+        BJTZMQ8jT2OXWHDUjrCnPM6dxCZBXtR9ezDxR9ViNzr41jjcbqqGZMOExhk3uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1696354815;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=aPw5lIR70AMawRF3JtAYBAN94XPTnWt97skPBxymU58=;
+        b=D3xAKSlCR4fDTxYemTRhNEtiXD8VZKAdnvvAy+VN6e+Bdh6SAYFs/BWSLkTbtDvPIAvYOy
+        gw5t8cdoQ1JZvk7FmbcpWROGKAvYIJHQRSiU3RGremC9hECAhRR5GErSCPm4dUW0WRsusw
+        /Gihgn9Yi6jPC3Ruh4JOFvOk85dq2pwQR0FC3KNkv4gHDZ8z2w6l0BOULbElXGxZEGeRyW
+        B8jOd5qXMINKij4K8uwUPnLhtnCyPfF6CrBPw+S4kx7A9AO1eRjUQb30NcnEkWm4uTVua4
+        7FCELJbvmS0F1LFusKcyI9IrSJKk/BE9nXMX5osOXQGxcxm4ObK0FpZ/PoWD0w==
+ARC-Authentication-Results: i=1;
+        rspamd-7c449d4847-6dlvz;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Spicy-Cellar: 5773f8fd7a8bdc94_1696354815535_213324791
+X-MC-Loop-Signature: 1696354815535:621290474
+X-MC-Ingress-Time: 1696354815534
+Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.104.112.135 (trex/6.9.1);
+        Tue, 03 Oct 2023 17:40:15 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4S0Q7y4TYJzWP;
+        Tue,  3 Oct 2023 10:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1696354814;
+        bh=aPw5lIR70AMawRF3JtAYBAN94XPTnWt97skPBxymU58=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=PcEn/PIMglmWbtUg/k5fws2vrH5fXhyP10eM4wCmY/lAhdqqo2aRVGVwKgs7msVtF
+         3AMlWULwg9EM9ckOLQO7bp9GSMv4psPgQMY7xaqF+j4W27vIqkuWnngKAhV1XVNHzN
+         Nv9iX2I5R6ii2Shf1NZWjG+yE/L6+q6GACMaBITvfsDpZoKFG38Awgc2Z+pZvaCfat
+         XCl7cGJB3j4X0BclHqRsCA469ASOduHJlcPH7Hh0doYKpw3eGaJC1RNbEm+sdnzXh0
+         Q5oR/LFVS5OGeBmARDRWRkwwvpwlz0RsLtGPjDCTZUgC1ZpoHye35L8qB3fj8JiQ8a
+         tdLX02Kw6onzg==
+Date:   Tue, 3 Oct 2023 10:40:11 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 4/4] cxl/mem: Fix shutdown order
+Message-ID: <agfhiujmhd7ru53byxtadglrloegf7kme25p4jhpq77s36veid@mj36iv5mpad4>
+References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
+ <169602898991.904193.3059334392093961032.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <169602898991.904193.3059334392093961032.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 28 Sep 2023 19:32:42 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+On Fri, 29 Sep 2023, Dan Williams wrote:
 
-> At any given time, only a single entity in a physical system may have
-> an SPDM connection to a device.  That's because the GET_VERSION request
-> (which begins an authentication sequence) resets "the connection and all
-> context associated with that connection" (SPDM 1.3.0 margin no 158).
-> 
-> Thus, when a device is passed through to a guest and the guest has
-> authenticated it, a subsequent authentication by the host would reset
-> the device's CMA-SPDM session behind the guest's back.
-> 
-> Prevent by letting the guest claim exclusive CMA ownership of the device
-> during passthrough.  Refuse CMA reauthentication on the host as long.
-> After passthrough has concluded, reauthenticate the device on the host.
-> 
-> Store the flag indicating guest ownership in struct pci_dev's priv_flags
-> to avoid the concurrency issues observed by commit 44bda4b7d26e ("PCI:
-> Fix is_added/is_busmaster race condition").
-> 
-> Side note:  The Data Object Exchange r1.1 ECN (published Oct 11 2022)
-> retrofits DOE with Connection IDs.  In theory these allow simultaneous
-> CMA-SPDM connections by multiple entities to the same device.  But the
-> first hardware generation capable of CMA-SPDM only supports DOE r1.0.
-> The specification also neglects to reserve unique Connection IDs for
-> hosts and guests, which further limits its usefulness.
-> 
-> In general, forcing the transport to compensate for SPDM's lack of a
-> connection identifier feels like a questionable layering violation.
+>Ira reports that removing cxl_mock_mem causes a crash with the following
+>trace:
+>
+> BUG: kernel NULL pointer dereference, address: 0000000000000044
+> [..]
+> RIP: 0010:cxl_region_decode_reset+0x7f/0x180 [cxl_core]
+> [..]
+> Call Trace:
+>  <TASK>
+>  cxl_region_detach+0xe8/0x210 [cxl_core]
+>  cxl_decoder_kill_region+0x27/0x40 [cxl_core]
+>  cxld_unregister+0x29/0x40 [cxl_core]
+>  devres_release_all+0xb8/0x110
+>  device_unbind_cleanup+0xe/0x70
+>  device_release_driver_internal+0x1d2/0x210
+>  bus_remove_device+0xd7/0x150
+>  device_del+0x155/0x3e0
+>  device_unregister+0x13/0x60
+>  devm_release_action+0x4d/0x90
+>  ? __pfx_unregister_port+0x10/0x10 [cxl_core]
+>  delete_endpoint+0x121/0x130 [cxl_core]
+>  devres_release_all+0xb8/0x110
+>  device_unbind_cleanup+0xe/0x70
+>  device_release_driver_internal+0x1d2/0x210
+>  bus_remove_device+0xd7/0x150
+>  device_del+0x155/0x3e0
+>  ? lock_release+0x142/0x290
+>  cdev_device_del+0x15/0x50
+>  cxl_memdev_unregister+0x54/0x70 [cxl_core]
+>
+>This crash is due to the clearing out the cxl_memdev's driver context
+>(@cxlds) before the subsystem is done with it. This is ultimately due to
+>the region(s), that this memdev is a member, being torn down and expecting
+>to be able to de-reference @cxlds, like here:
+>
+>static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>...
+>                if (cxlds->rcd)
+>                        goto endpoint_reset;
+>...
+>
+>Fix it by keeping the driver context valid until memdev-device
+>unregistration, and subsequently the entire stack of related
+>dependencies, unwinds.
+>
+>Fixes: 9cc238c7a526 ("cxl/pci: Introduce cdevm_file_operations")
+>Reported-by: Ira Weiny <ira.weiny@intel.com>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Is there anything stopping a PF presenting multiple CMA capable DOE
-instances?  I'd expect them to have their own contexts if they do..
-
-Something for the future if such a device shows up perhaps.
-
-Otherwise this looks superficially fine to me, but I'll leave
-giving tags to those more familiar with the VFIO side of things
-and potential use cases etc.
-
-Jonathan
-
-
-
-
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/pci/cma.c                | 41 ++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h                |  1 +
->  drivers/vfio/pci/vfio_pci_core.c |  9 +++++--
->  include/linux/pci.h              |  8 +++++++
->  include/linux/spdm.h             |  2 ++
->  lib/spdm_requester.c             | 11 +++++++++
->  6 files changed, 70 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
-> index c539ad85a28f..b3eee137ffe2 100644
-> --- a/drivers/pci/cma.c
-> +++ b/drivers/pci/cma.c
-> @@ -82,9 +82,50 @@ int pci_cma_reauthenticate(struct pci_dev *pdev)
->  	if (!pdev->cma_capable)
->  		return -ENOTTY;
->  
-> +	if (test_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags))
-> +		return -EPERM;
-> +
->  	return spdm_authenticate(pdev->spdm_state);
->  }
->  
-> +#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
-> +/**
-> + * pci_cma_claim_ownership() - Claim exclusive CMA-SPDM control for guest VM
-> + * @pdev: PCI device
-> + *
-> + * Claim exclusive CMA-SPDM control for a guest virtual machine before
-> + * passthrough of @pdev.  The host refrains from performing CMA-SPDM
-> + * authentication of the device until passthrough has concluded.
-> + *
-> + * Necessary because the GET_VERSION request resets the SPDM connection
-> + * and DOE r1.0 allows only a single SPDM connection for the entire system.
-> + * So the host could reset the guest's SPDM connection behind the guest's back.
-> + */
-> +void pci_cma_claim_ownership(struct pci_dev *pdev)
-> +{
-> +	set_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags);
-> +
-> +	if (pdev->cma_capable)
-> +		spdm_await(pdev->spdm_state);
-> +}
-> +EXPORT_SYMBOL(pci_cma_claim_ownership);
-> +
-> +/**
-> + * pci_cma_return_ownership() - Relinquish CMA-SPDM control to the host
-> + * @pdev: PCI device
-> + *
-> + * Relinquish CMA-SPDM control to the host after passthrough of @pdev to a
-> + * guest virtual machine has concluded.
-> + */
-> +void pci_cma_return_ownership(struct pci_dev *pdev)
-> +{
-> +	clear_bit(PCI_CMA_OWNED_BY_GUEST, &pdev->priv_flags);
-> +
-> +	pci_cma_reauthenticate(pdev);
-> +}
-> +EXPORT_SYMBOL(pci_cma_return_ownership);
-> +#endif
-> +
->  void pci_cma_destroy(struct pci_dev *pdev)
->  {
->  	if (pdev->spdm_state)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d80cc06be0cc..05ae6359b152 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -388,6 +388,7 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
->  #define PCI_DEV_ADDED 0
->  #define PCI_DPC_RECOVERED 1
->  #define PCI_DPC_RECOVERING 2
-> +#define PCI_CMA_OWNED_BY_GUEST 3
->  
->  static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
->  {
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 1929103ee59a..6f300664a342 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -487,10 +487,12 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  	if (ret)
->  		goto out_power;
->  
-> +	pci_cma_claim_ownership(pdev);
-> +
->  	/* If reset fails because of the device lock, fail this path entirely */
->  	ret = pci_try_reset_function(pdev);
->  	if (ret == -EAGAIN)
-> -		goto out_disable_device;
-> +		goto out_cma_return;
->  
->  	vdev->reset_works = !ret;
->  	pci_save_state(pdev);
-> @@ -549,7 +551,8 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  out_free_state:
->  	kfree(vdev->pci_saved_state);
->  	vdev->pci_saved_state = NULL;
-> -out_disable_device:
-> +out_cma_return:
-> +	pci_cma_return_ownership(pdev);
->  	pci_disable_device(pdev);
->  out_power:
->  	if (!disable_idle_d3)
-> @@ -678,6 +681,8 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
->  
->  	vfio_pci_dev_set_try_reset(vdev->vdev.dev_set);
->  
-> +	pci_cma_return_ownership(pdev);
-> +
->  	/* Put the pm-runtime usage counter acquired during enable */
->  	if (!disable_idle_d3)
->  		pm_runtime_put(&pdev->dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 2c5fde81bb85..c14ea0e74fc4 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2386,6 +2386,14 @@ static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int res
->  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
->  #endif
->  
-> +#ifdef CONFIG_PCI_CMA
-> +void pci_cma_claim_ownership(struct pci_dev *pdev);
-> +void pci_cma_return_ownership(struct pci_dev *pdev);
-> +#else
-> +static inline void pci_cma_claim_ownership(struct pci_dev *pdev) { }
-> +static inline void pci_cma_return_ownership(struct pci_dev *pdev) { }
-> +#endif
-> +
->  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
->  void pci_hp_create_module_link(struct pci_slot *pci_slot);
->  void pci_hp_remove_module_link(struct pci_slot *pci_slot);
-> diff --git a/include/linux/spdm.h b/include/linux/spdm.h
-> index 69a83bc2eb41..d796127fbe9a 100644
-> --- a/include/linux/spdm.h
-> +++ b/include/linux/spdm.h
-> @@ -34,6 +34,8 @@ int spdm_authenticate(struct spdm_state *spdm_state);
->  
->  bool spdm_authenticated(struct spdm_state *spdm_state);
->  
-> +void spdm_await(struct spdm_state *spdm_state);
-> +
->  void spdm_destroy(struct spdm_state *spdm_state);
->  
->  #endif
-> diff --git a/lib/spdm_requester.c b/lib/spdm_requester.c
-> index b2af2074ba6f..99424d6aebf5 100644
-> --- a/lib/spdm_requester.c
-> +++ b/lib/spdm_requester.c
-> @@ -1483,6 +1483,17 @@ struct spdm_state *spdm_create(struct device *dev, spdm_transport *transport,
->  }
->  EXPORT_SYMBOL_GPL(spdm_create);
->  
-> +/**
-> + * spdm_await() - Wait for ongoing spdm_authenticate() to finish
-> + *
-> + * @spdm_state: SPDM session state
-> + */
-> +void spdm_await(struct spdm_state *spdm_state)
-> +{
-> +	mutex_lock(&spdm_state->lock);
-> +	mutex_unlock(&spdm_state->lock);
-> +}
-> +
->  /**
->   * spdm_destroy() - Destroy SPDM session
->   *
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
