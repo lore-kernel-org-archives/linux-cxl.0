@@ -2,159 +2,132 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CD8E8FDC3
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 01:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D752E8FDC7
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 05:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232316AbjJDBNb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 3 Oct 2023 21:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36684 "EHLO
+        id S241063AbjJDFNH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Oct 2023 01:13:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232262AbjJDBNb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 Oct 2023 21:13:31 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F66AB
-        for <linux-cxl@vger.kernel.org>; Tue,  3 Oct 2023 18:13:27 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 79C6481C60;
-        Wed,  4 Oct 2023 01:13:27 +0000 (UTC)
-Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id F2EAA81A89;
-        Wed,  4 Oct 2023 01:13:26 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1696382007; a=rsa-sha256;
-        cv=none;
-        b=tVLwn1G2jnQ9o21Hvjnowr1pPCC5bu98Mh6PAqiF0kocGfkFRATCsxjGEt8GHVbZrh9qwN
-        cN1PPMlTsCFGYxPRn+q66TuCkhrH54RYk9VmnYhZDXRTlMFgzF9yES5gA7nsGZKCxLDdG4
-        D1F+msjzaBPigdiWPDod+JJOxtk9D8bRjF7wNw+QJo8nXI5/dmA9EUEftAvYuHO2qZGFdk
-        PM48I8JjO/O64xWsGRJ1aq5MpciSpWciTYEi9toXMr+mveXEFnryrZg2Avihwi189rEt3/
-        TOlxyaYRuUvA+j3BC9MNHV9toEmGa+dUK8PQL92dYqwmBg3qfp6HJTjp7CH6GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1696382007;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=WrsP/HpUs1ommhRepoh0GftVa17ZvJZ2Mj3b7rAm1SA=;
-        b=X5cM+FeVS0tiiqgrF11LHUvrKCjIJgvwqFuMbIDj9/GHKFQAr4VeAgJDjVxF8LUlYtBgS1
-        XanhC6qwT66mfLN79KsbGnU3fRdzRYFbv0uu1LRdCqPwwe4FqrvtzOUgZKctnBAVdHSPfb
-        mFa3z4SRubnUHKPEPx/IFWlasyj0pSXmYM4OAYtjUvkhJ7MlwqmPCQK6aBkF9WRCX+yypT
-        9EVOsWwTkyuIpnP33SNJSZFp+DO3mk+gwHNt1+m1eVHKYh1a2d7ZA4L9Z7VArMaccV8hK9
-        fPf7JhLH7iceIPBktmrefgXQj+UAVW1CQfkTLNrJ1XxjN7hyT5+/CAH0HpxWcw==
-ARC-Authentication-Results: i=1;
-        rspamd-7d5dc8fd68-wtc42;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Wide-Eyed-Sponge: 2c5e82072794f6bf_1696382007269_3056228352
-X-MC-Loop-Signature: 1696382007269:1779616179
-X-MC-Ingress-Time: 1696382007268
-Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.120.41.146 (trex/6.9.1);
-        Wed, 04 Oct 2023 01:13:27 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4S0cBt46z2z76;
-        Tue,  3 Oct 2023 18:13:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1696382006;
-        bh=WrsP/HpUs1ommhRepoh0GftVa17ZvJZ2Mj3b7rAm1SA=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=CChMwxv7Sy1gLTqSy8S8i4YJa8/OcRfPkEtP878UyWBV1V8EVxl6JvPYZGGlcfAlD
-         AB267wEj7V/Y7S9yJ045LhWJZMiHGdwEE3H7C1CxVsuRdbapljTKTA4JhYRjzwo3xV
-         WMYKPS8pio3cojmGzrN1MaSqjepOgcSMIHI3kylmXNuSeYsQcDFHih8TmKXAucsQZa
-         3BW/tkG3Yqh/pwYkkXmwiPIxnSJXJHr8TkH54qa6eATYtplh9yFQEVwztzBOiU3Rre
-         lxZCwD3MpQ7NfESLIWl1I01U6v+JoPmup9dgn8Rshw5eS9jn0boZHpOmAFK4I7gxoJ
-         dplJuMfbQHLUw==
-Date:   Tue, 3 Oct 2023 18:13:23 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com
-Subject: Re: [PATCH v2 2/4] cxl/pci: Cleanup 'sanitize' to always poll
-Message-ID: <6egif53ircc3t3qvb6xfraadmx4h7l4ajwnxrnrnfr6k2kq3y3@zzochkls6mcr>
-References: <169602896768.904193.11292185494339980455.stgit@dwillia2-xfh.jf.intel.com>
- <169602897906.904193.9057960720070253436.stgit@dwillia2-xfh.jf.intel.com>
- <xqouql3fxo5zyyjqjoxn5g7nmupwh6qei7opsb6cymcvb5a3ou@gg5z2ebxeq7t>
- <651cb95aa1af5_ae7e729438@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S231154AbjJDFNG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Oct 2023 01:13:06 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC4890;
+        Tue,  3 Oct 2023 22:13:02 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39456UMb029838;
+        Wed, 4 Oct 2023 05:12:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=9oXZNhn6w+pg5hULt5s1+fcnfjNHQQlRIHLopRjYlqo=;
+ b=K1MLwyCVZM7DFSZulbMUZVQDUPV5Tnusq586Zhsl9Z8D25gRdP2lb1R5JTz2ZuCfz4+Z
+ z2DZxzfKlqGwAOX5vSBkwJaHAJm4gSV4tL6buZU77YH4LZeqkzu38OHWd0RH3y9K/33E
+ Pc465HLhDKNpJnrbPiM8cDBqhNHuAaMDy5H7ADh/tTvnSsh05OMTytLIootRTh8JwPou
+ nTsDiso2sywz0IFbuicdcRTREQ44z5VDxijt1oZ4a8ema7LvgXZUzFq0BzF7zOh/2AS1
+ O7CXrSeiFkP8QJJeDLJNqcdzJHQ0AyALQZSKby0h0H/fb9Fa/ewhOT9avvNZuUJrt1sx aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3th0y290c0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Oct 2023 05:12:26 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39456X66030400;
+        Wed, 4 Oct 2023 05:12:26 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3th0y290bs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Oct 2023 05:12:26 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3944Qi3j010941;
+        Wed, 4 Oct 2023 05:12:25 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tf0q1qyf0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Oct 2023 05:12:25 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3945CN8W23397092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Oct 2023 05:12:23 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F06A20043;
+        Wed,  4 Oct 2023 05:12:23 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2738220040;
+        Wed,  4 Oct 2023 05:12:21 +0000 (GMT)
+Received: from [9.109.212.144] (unknown [9.109.212.144])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Oct 2023 05:12:20 +0000 (GMT)
+Message-ID: <6e636e70-cbe5-45a7-8918-abdf196d5437@linux.ibm.com>
+Date:   Wed, 4 Oct 2023 10:42:20 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] dax/kmem: allow kmem to add memory with
+ memmap_on_memory
+Content-Language: en-US
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "david@redhat.com" <david@redhat.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc:     "Hocko, Michal" <mhocko@suse.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jmoyer@redhat.com" <jmoyer@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+References: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
+ <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
+ <73bdc58d-edc1-4344-b42a-4b83ca885329@linux.ibm.com>
+ <e1600e8d3986b1ed371847d4863628b8d7ad2091.camel@intel.com>
+From:   Aneesh Kumar K V <aneesh.kumar@linux.ibm.com>
+In-Reply-To: <e1600e8d3986b1ed371847d4863628b8d7ad2091.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lwr6gmcUVDz9kvKRX2_JLfm8fM4InJpt
+X-Proofpoint-ORIG-GUID: q9xukhjGvTEJd5H1i7EYqmnB_Vay5YoE
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <651cb95aa1af5_ae7e729438@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20230517
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-04_01,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=664 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310040035
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 03 Oct 2023, Dan Williams wrote:
-
->Davidlohr Bueso wrote:
->> On Fri, 29 Sep 2023, Dan Williams wrote:
+On 10/4/23 5:18 AM, Verma, Vishal L wrote:
+> On Tue, 2023-10-03 at 09:34 +0530, Aneesh Kumar K V wrote:
+>> On 9/29/23 2:00 AM, Vishal Verma wrote:
+>>> Large amounts of memory managed by the kmem driver may come in via CXL,
+>>> and it is often desirable to have the memmap for this memory on the new
+>>> memory itself.
+>>>
+>>> Enroll kmem-managed memory for memmap_on_memory semantics if the dax
+>>> region originates via CXL. For non-CXL dax regions, retain the existing
+>>> default behavior of hot adding without memmap_on_memory semantics.
+>>>
 >>
->> >In preparation for fixing the init/teardown of the 'sanitize' workqueue
->> >and sysfs notification mechanism, arrange for cxl_mbox_sanitize_work()
->> >to be the single location where the sysfs attribute is notified. With
->> >that change there is no distinction between polled mode and interrupt
->> >mode. All the interrupt does is accelerate the polling interval.
->> >
->> >The change to check for "mds->security.sanitize_node" under the lock is
->> >there to ensure that the interrupt, the work routine and the
->> >setup/teardown code can all have a consistent view of the registered
->> >notifier and the workqueue state. I.e. the expectation is that the
->> >interrupt is live past the point that the sanitize sysfs attribute is
->> >published, and it may race teardown, so it must be consulted under a
->> >lock.
+>> Are we not looking at doing altmap space for CXL DAX regions? Last discussion around
+>> this was suggesting we look at doing this via altmap reservation so that
+>> we get contigous space for device memory enabling us to map them
+>> via 1G direct mapping entries? 
 >>
->> That makes sense, but this is currently under hardirq, so we'd need the
->> threaded flavor instead to take the mutex.
->
->Yes I missed that, will fix.
+> Hey Aneesh - was this on a previous posting or something - do you have
+> a link so I can refresh myself on what the discussion was?
+> 
+> If it is enabling something in CXL similar to the --map=mem mode for
+> pmem + device dax, that could be incremental to this.
 
-With the following this seem to be running just fine along with locking
-debugging on (just need to confirm that the sysfs notification works with
-polling in userspace upon completion).
+Yes. Agree that we can do that incremental to this. 
 
-root@cxl:/sys/bus/cxl/devices/mem0# cat security/state
-disabled
-root@cxl:/sys/bus/cxl/devices/mem0# echo 1 > security/sanitize
-[   77.641857] cxl_pci:__cxl_pci_mbox_send_cmd:297: cxl_pci 0000:0d:00.0: Sending command: 0x4500
-[   77.648236] cxl_pci:cxl_pci_mbox_wait_for_doorbell:72: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-[   77.656379] cxl_pci:__cxl_pci_mbox_send_cmd:297: cxl_pci 0000:0d:00.0: Sending command: 0x4400
-[   77.662616] cxl_pci:cxl_pci_mbox_wait_for_doorbell:72: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-[   77.669227] cxl_pci:__cxl_pci_mbox_send_cmd:343: cxl_pci 0000:0d:00.0: Sanitization operation started
-root@cxl:/sys/bus/cxl/devices/mem0# cat security/state
-sanitize
-root@cxl:/sys/bus/cxl/devices/mem0# echo 1 > security/sanitize
-[   81.705796] cxl_pci 0000:0d:00.0: Failed to get security state : -16 -bash: echo: write error: Device or resource busy
-[   85.761560] cxl_pci:cxl_mbox_sanitize_work:158: cxl_pci 0000:0d:00.0: Sanitization operation ended
+https://lore.kernel.org/linux-mm/b6753402-2de9-25b2-36e9-eacd49752b19@redhat.com
 
-
-----
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index b0023e479315..b8f69ce883be 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -187,7 +187,7 @@ static int cxl_sanitize_setup_notifier(struct cxl_memdev *cxlmd)
-  {
-	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct device *dev = cxlds->dev;
-+	struct device *dev = &cxlmd->dev;
-	struct kernfs_node *sec;
-
-	if (!test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds))
-@@ -483,7 +483,7 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
-	if (irq < 0)
-		return 0;
-
--	if (cxl_request_irq(cxlds, irq, cxl_pci_mbox_irq, NULL))
-+	if (cxl_request_irq(cxlds, irq, NULL, cxl_pci_mbox_irq))
-		return 0;
-
-	dev_dbg(cxlds->dev, "Mailbox interrupts enabled\n");
+-aneesh
