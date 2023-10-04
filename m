@@ -2,132 +2,163 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D752E8FDC7
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 05:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5985E8FDDD
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 08:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241063AbjJDFNH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 4 Oct 2023 01:13:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
+        id S232554AbjJDI6L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Oct 2023 04:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231154AbjJDFNG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Oct 2023 01:13:06 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC4890;
-        Tue,  3 Oct 2023 22:13:02 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39456UMb029838;
-        Wed, 4 Oct 2023 05:12:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=9oXZNhn6w+pg5hULt5s1+fcnfjNHQQlRIHLopRjYlqo=;
- b=K1MLwyCVZM7DFSZulbMUZVQDUPV5Tnusq586Zhsl9Z8D25gRdP2lb1R5JTz2ZuCfz4+Z
- z2DZxzfKlqGwAOX5vSBkwJaHAJm4gSV4tL6buZU77YH4LZeqkzu38OHWd0RH3y9K/33E
- Pc465HLhDKNpJnrbPiM8cDBqhNHuAaMDy5H7ADh/tTvnSsh05OMTytLIootRTh8JwPou
- nTsDiso2sywz0IFbuicdcRTREQ44z5VDxijt1oZ4a8ema7LvgXZUzFq0BzF7zOh/2AS1
- O7CXrSeiFkP8QJJeDLJNqcdzJHQ0AyALQZSKby0h0H/fb9Fa/ewhOT9avvNZuUJrt1sx aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3th0y290c0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Oct 2023 05:12:26 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39456X66030400;
-        Wed, 4 Oct 2023 05:12:26 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3th0y290bs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Oct 2023 05:12:26 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3944Qi3j010941;
-        Wed, 4 Oct 2023 05:12:25 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tf0q1qyf0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Oct 2023 05:12:25 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3945CN8W23397092
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Oct 2023 05:12:23 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F06A20043;
-        Wed,  4 Oct 2023 05:12:23 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2738220040;
-        Wed,  4 Oct 2023 05:12:21 +0000 (GMT)
-Received: from [9.109.212.144] (unknown [9.109.212.144])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Oct 2023 05:12:20 +0000 (GMT)
-Message-ID: <6e636e70-cbe5-45a7-8918-abdf196d5437@linux.ibm.com>
-Date:   Wed, 4 Oct 2023 10:42:20 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] dax/kmem: allow kmem to add memory with
- memmap_on_memory
-Content-Language: en-US
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "david@redhat.com" <david@redhat.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc:     "Hocko, Michal" <mhocko@suse.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmoyer@redhat.com" <jmoyer@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-References: <20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com>
- <20230928-vv-kmem_memmap-v4-2-6ff73fec519a@intel.com>
- <73bdc58d-edc1-4344-b42a-4b83ca885329@linux.ibm.com>
- <e1600e8d3986b1ed371847d4863628b8d7ad2091.camel@intel.com>
-From:   Aneesh Kumar K V <aneesh.kumar@linux.ibm.com>
-In-Reply-To: <e1600e8d3986b1ed371847d4863628b8d7ad2091.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lwr6gmcUVDz9kvKRX2_JLfm8fM4InJpt
-X-Proofpoint-ORIG-GUID: q9xukhjGvTEJd5H1i7EYqmnB_Vay5YoE
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S241858AbjJDI6J (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Oct 2023 04:58:09 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA15A7
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Oct 2023 01:58:05 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231004085802epoutp031b242a3810b94e318c8eb9d865c34468~K28zY762x1059810598epoutp03I
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Oct 2023 08:58:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231004085802epoutp031b242a3810b94e318c8eb9d865c34468~K28zY762x1059810598epoutp03I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1696409882;
+        bh=PnexwO17P7mZdYz62S6iNLFHUko7AzJywD1aqF6b4xg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Uy4hOlDaCby6FaUoIihezki+mOQvr9fkJ20hSKrqClW3CQ/0QCeIHhpCoHvtRcOIg
+         SHs3ATi4/a1TJIE9ZDN/UO9tp/6vk7iaqxByB+yN8p5NSAP6Onh89xdYSnVgVVHK7z
+         op4QEAgM6fU0KXNPsYiAcxzj0PkZHhS4lRbFKl6E=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20231004085801epcas2p21b957a43f957aee47e0f99b36607aa2d~K28yzFz9A0082800828epcas2p2e;
+        Wed,  4 Oct 2023 08:58:01 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.68]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4S0pVx2Vdtz4x9Q0; Wed,  4 Oct
+        2023 08:58:01 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EE.1E.09649.9192D156; Wed,  4 Oct 2023 17:58:01 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20231004085800epcas2p48c4109cb15c80c3075744946d8619b5d~K28xwrhav2638826388epcas2p45;
+        Wed,  4 Oct 2023 08:58:00 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20231004085800epsmtrp10b05eaf25f32b9a7bf61a0923ed0533b~K28xvqpaT3168631686epsmtrp1_;
+        Wed,  4 Oct 2023 08:58:00 +0000 (GMT)
+X-AuditID: b6c32a46-b9ffa700000025b1-bc-651d2919736c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BE.19.18916.8192D156; Wed,  4 Oct 2023 17:58:00 +0900 (KST)
+Received: from jtpark-7920 (unknown [10.229.83.56]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20231004085800epsmtip17d28a07b4b7a3a789a99b315ee5eca2f~K28xisCQy2725527255epsmtip1d;
+        Wed,  4 Oct 2023 08:58:00 +0000 (GMT)
+Date:   Wed, 4 Oct 2023 18:00:55 +0900
+From:   Jeongtae Park <jtp.park@samsung.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Wonjae Lee <wj28.lee@samsung.com>,
+        Hojin Nam <hj96.nam@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>,
+        Jeongtae Park <jeongtae.park@gmail.com>
+Subject: Re: [PATCH v2 7/7] cxl/memdev: Fix a whitespace warning
+Message-ID: <ZR0px9AZD2IZ7Mgl@jtpark-7920>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-04_01,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=664 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310040035
+In-Reply-To: <zj4pigcxmpycmqqrfym7hhvc7s3gk5juhkziehvyjduydlt226@bke4pkczaxyt>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHc/t+9EHS8UTZrgwNebAsZQPbjsITwZDISDMWBjEh0bGwSh8t
+        ob/W1/pzG91gBJRNyEC02gaGoBTECNiUH8uwBSsDFVAYP8Y2mFKQYZxzmoGQtbQa//vcc7/f
+        c869514CCR7EQ4l8tZ7RqaVKCg9EbU6+OHorfxsjsN0Komf+HMbpou/rAV1TPQzoG5Nf4XTz
+        ZAugv26eweii+ss4/eivdZTuXTJy6aGbixhtrRvH6fr+0wjd30PQt00/o/SdrnM4PVVxnUNf
+        +f0hnrxJ0mma4UqK+5YxSX3PIkfSZi3DJT+ZW7iS7zqsQFJ9tlDyT9v2DGJ/QaKCkcoYXTij
+        ztXI8tXyJCptb86eHHGcQBgt3EnHU+FqqYpJolI+zIhOzVd6TkGFH5QqDZ5QhpRlqR27E3Ua
+        g54JV2hYfRLFaGVKbbw2hpWqWINaHqNm9AlCgUAk9gg/LVBUN17jaqsDD98fFxmBkzgOAghI
+        xsKy1Ur0OAgkgkk7gCU3uzHf4jGAQ0P/Ii8XK5PF4IXliaud69voBNA83+S3LAD4w2o56lWh
+        ZCT8b3me42WcjII1Z4yYl7eQb0PLpWngNSDkUxTaqqY9NQhiM5kMXaN6L/I8+t6VSK+cR26C
+        A2fubaQMINNh75Jto1dI3iDgxRODmK+jFPiHbYLr483wgavDz6Fw8WQJ12coAnDJfdfvLgaw
+        ddruV70HH066NzIhpAKeO1XD9XYByQjYN4X6wq/BUueaP8yDpSXBPicFLQ0WxMcQjpo7/CyB
+        Ix1u/w3dAfBaaRm3Amw3vXIg0yvVfPwurO1+jJs8JRDyTXhhnfAhH17u2lELMCt4ndGyKjnD
+        irSilxPO1ajawMarjkq1g6rlRzEOwCGAA0ACobbw5MYwJpgnkx45yug0OTqDkmEdQOwZTiUS
+        GpKr8XwLtT5HGLtTEBsXJ4wXiQXx1Bu8374xy4JJuVTPFDCMltG98HGIgFAj54vDs9FNJfaD
+        uwe2zbMx+/kHnljfkn373PUsK3Ji1weurLLnsri4+LQmfcj1TPPC+WO/hgzHfnaiMdxytnD2
+        UpvcmvLlgaB9ptCE1b1Y1pxQ1iKoTLCtH3IOHnWTfaeE6WNX7L8Y2tfGpg61rt7btYJxkpHT
+        F8IWEt9pkM+WW3orgtDMRkNvtqL5alonbw8bze+ve5AdcUTgan8/vUefCaYdt9onuiO6up7l
+        TTcN1H287xhZ7jCOFPUPuefH/6axcRZVrKDnO69mNi19ft8RxjQUVBa3ivg/2ufGPtqKfpJl
+        vz1ysWo0QhVSOKXqyF47+bS8Nm95DmsR3w0acy6k5lEoq5AKoxAdK/0fMS12FF4EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJTldCUzbVoPmBhsXdxxfYLJonL2a0
+        mD71AqPFiZuNbBarb65htGhafZfVonnxejaLD2/+sVgceN3AbnHm7EtWi1ULr7FZLD46g9ni
+        6B4Oi/OzTrFYXN41h83i1oRjTBYb779jcxD02DnrLrtHy5G3rB6L97xk8ti0qpPNY//cNewe
+        fVtWMXpMnV3v8XmTXABHFJdNSmpOZllqkb5dAlfG3YeHGAuuslfMvnuHuYFxDlsXIyeHhICJ
+        xJfjm9lBbCGB7YwSK89rQMQlJJZveMEEYQtL3G85wgpR84xR4vu8EBCbRUBF4ufbZ2A1bAJa
+        EtNnNoDViAioS8xbe5uxi5GLg1ngD4tEV0cj0DIODmEBB4njl0pATF6g+gO/VEBKhAQuM0o0
+        zTrBDNLLKyAocXLmExYQmxmo5sa/l0wg9cwC0hLL/3GAhDkF/CQOvN7GMoFRYBaSjllIOmYh
+        dCxgZF7FKJpaUJybnptcYKhXnJhbXJqXrpecn7uJERxdWkE7GJet/6t3iJGJg/EQowQHs5II
+        b3qDTKoQb0piZVVqUX58UWlOavEhRmkOFiVxXuWczhQhgfTEktTs1NSC1CKYLBMHp1QD00aF
+        D5Hvf4vn3tgqxT81oNkzaPWUKLFWZpbZVUfUljcH/DTSeDNxdcaxr/5/d29pecPBveuKjeqP
+        g8l3/Jo2yivkLmv4KbQo/s9Ly5tz30dkPlXYVM55696vriUXJdqCObIuRKZo3m6vn1ed3/th
+        T8uBf2nTLl+ZI/OuxcwxQSdSfk9ceP+/acvPFOgdqAx44Re3Rv52/81ZrH1Lld47CUg/nDkx
+        pdnkwCzuQtar56UbJq+t62VV+Sgg0c1nG7bccfMh9WVzlm6R/R/K+WBd3raCloh1l64G6V/l
+        DerMZbwX4PQ9adrF35/0pu/c0WKU6jX7f/OysHP+K8V/H7+0qTpA9r9M9qPGeW5dwadyk5VY
+        ijMSDbWYi4oTASjX8PkdAwAA
+X-CMS-MailID: 20231004085800epcas2p48c4109cb15c80c3075744946d8619b5d
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----fhEHFYu7RNsFUiSWfAq-IjQ-VzC.j9Pzsqf7lJgctIRm.Jgh=_8ee0f_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230922113404epcas2p3995ec7890319931c33b0a549214c95ca
+References: <CGME20230922113404epcas2p3995ec7890319931c33b0a549214c95ca@epcas2p3.samsung.com>
+        <20230922113650.3301992-1-jtp.park@samsung.com>
+        <zj4pigcxmpycmqqrfym7hhvc7s3gk5juhkziehvyjduydlt226@bke4pkczaxyt>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 10/4/23 5:18 AM, Verma, Vishal L wrote:
-> On Tue, 2023-10-03 at 09:34 +0530, Aneesh Kumar K V wrote:
->> On 9/29/23 2:00 AM, Vishal Verma wrote:
->>> Large amounts of memory managed by the kmem driver may come in via CXL,
->>> and it is often desirable to have the memmap for this memory on the new
->>> memory itself.
->>>
->>> Enroll kmem-managed memory for memmap_on_memory semantics if the dax
->>> region originates via CXL. For non-CXL dax regions, retain the existing
->>> default behavior of hot adding without memmap_on_memory semantics.
->>>
->>
->> Are we not looking at doing altmap space for CXL DAX regions? Last discussion around
->> this was suggesting we look at doing this via altmap reservation so that
->> we get contigous space for device memory enabling us to map them
->> via 1G direct mapping entries? 
->>
-> Hey Aneesh - was this on a previous posting or something - do you have
-> a link so I can refresh myself on what the discussion was?
+------fhEHFYu7RNsFUiSWfAq-IjQ-VzC.j9Pzsqf7lJgctIRm.Jgh=_8ee0f_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+
+On Wed, Sep 27, 2023 at 06:31:37PM -0700, Davidlohr Bueso wrote:
+> On Fri, 22 Sep 2023, Jeongtae Park wrote:
 > 
-> If it is enabling something in CXL similar to the --map=mem mode for
-> pmem + device dax, that could be incremental to this.
+> > WARNING: please, no spaces at the start of a line
+> > 
+> > Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+> > ---
+> > drivers/cxl/core/memdev.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index 7e8fca4707c0..ce67df163452 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -1010,7 +1010,7 @@ static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
+> > 	}
+> > 
+> > 	return devm_add_action_or_reset(cxlds->dev, put_sanitize, mds);
+> > - }
+> > +}
+> 
+> While nothing wrong, I do prefer this being corrected via
+> 
+> https://lore.kernel.org/linux-cxl/20230811025755.15103-1-dave@stgolabs.net/
 
-Yes. Agree that we can do that incremental to this. 
+That's better, I didn't know there was a related fix. Thanks for letting me know.
 
-https://lore.kernel.org/linux-mm/b6753402-2de9-25b2-36e9-eacd49752b19@redhat.com
+> 
+> Thanks,
+> Davidlohr
 
--aneesh
+------fhEHFYu7RNsFUiSWfAq-IjQ-VzC.j9Pzsqf7lJgctIRm.Jgh=_8ee0f_
+Content-Type: text/plain; charset="utf-8"
+
+
+------fhEHFYu7RNsFUiSWfAq-IjQ-VzC.j9Pzsqf7lJgctIRm.Jgh=_8ee0f_--
