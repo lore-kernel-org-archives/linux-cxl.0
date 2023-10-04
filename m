@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFFCE936EB
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 22:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5A9E936ED
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Oct 2023 22:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230133AbjJDWCf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 4 Oct 2023 18:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
+        id S230169AbjJDWDb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Oct 2023 18:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbjJDWCf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Oct 2023 18:02:35 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864C0C9
-        for <linux-cxl@vger.kernel.org>; Wed,  4 Oct 2023 15:02:31 -0700 (PDT)
+        with ESMTP id S229973AbjJDWDa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Oct 2023 18:03:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD33DC9
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Oct 2023 15:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696456951; x=1727992951;
+  t=1696457006; x=1727993006;
   h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
   bh=RyPxMOYTcXCAD+qR0D5OPIEf5iK6psJ/d8Wo11hpRKM=;
-  b=Jhaa8ibXCZ3FtVbRKp8vuv3HPC7oJWXuRFKL/cag0+nFRSrbsSVbxgkr
-   FUa28nz3t76qNq92ebBd0HiCQpeYLE2r3/HT4gLH5zQycWOEdq3OXZBqT
-   oJVgozcZ7nL2sHlxt+s9AfSlpAisE1oTM9FLRhvTU7QBWkQvWCMmm7e69
-   XwQywKBFAXDax9O3HOyREMN+gvw8R65odyXCvzkBeQotX4KxekGVi23Wm
-   yZzriJVUreFl860qS32Vpls8Pz5jOowD5j0t101AZ/UWc+lHfuckcAVwq
-   Mw8UGh/0d1mxWF4O82Zmb7QHBXChwSmaP+l8hL7+0cOR9ic/Vl3m98hGb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="414267231"
+  b=SNV65XTos2aSkWDBIFJRuQxhLhktbZJnyNC8eEwT5l5G/qoYJpuYlrLE
+   kTpxon9+/hY5haqoxhiMUHZ+gwtGBZLdMO8IS6+HkbyzHXG3iNG7Nk8th
+   dbDyr1ZJzrWLxKLGN3S+Z8KGKqrNGoK6j3UsUuKoJpe0BdXXoc/Yl/adA
+   y8cNbhGJZkYO1nnpXgFWHawKX8HyBRvPj4QRGfuKhbzaCVM9X2yAJVs16
+   HAVJUmwsuAquCTets56NFZGYo6f4r0KzfoKgKrWDRCyjJ3Y0cyW9ySIIt
+   VaWfO1prj+IAu8wdATZX12e5iagJ0lbp31swpbT1GNZCmPKt1ksVaCgrm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="383222847"
 X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="414267231"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 15:02:28 -0700
+   d="scan'208";a="383222847"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 15:03:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="755118492"
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="895154798"
 X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="755118492"
+   d="scan'208";a="895154798"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.170.46])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 15:02:27 -0700
-Subject: [PATCH] cxl: Add cxl_decoders_committed() helper
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 15:01:57 -0700
+Subject: [PATCH RESEND 1/2] cxl: Add cxl_decoders_committed() helper
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dave@stgolabs.net, jonathan.cameron@huawei.com,
         alison.schofield@intel.com, vishal.l.verma@intel.com,
         ira.weiny@intel.com, dan.j.williams@intel.com
-Date:   Wed, 04 Oct 2023 15:02:26 -0700
-Message-ID: <169645694613.622744.16961380551670781524.stgit@djiang5-mobl3>
+Date:   Wed, 04 Oct 2023 15:03:24 -0700
+Message-ID: <169645700414.623072.3893376765415910289.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
