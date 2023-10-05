@@ -2,74 +2,124 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F6AE92718
-	for <linux-cxl@archiver.kernel.org>; Thu,  5 Oct 2023 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A513E9271C
+	for <linux-cxl@archiver.kernel.org>; Thu,  5 Oct 2023 15:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235735AbjJEPwF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 5 Oct 2023 11:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47770 "EHLO
+        id S236170AbjJEP6C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 5 Oct 2023 11:58:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233887AbjJEPvE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 5 Oct 2023 11:51:04 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7356079C;
-        Thu,  5 Oct 2023 07:07:44 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5974C07615;
-        Thu,  5 Oct 2023 08:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696493325;
-        bh=qLeVgfgZJEmrFma/amtkhUpxRQ1srUhrQuDmfTF5dUA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YVTL7e04co6xgBFeCLv7WoOknxhJ1Ks5e5DCxjIU62hXA/l9T/sQ5s8ldyUXhhBmO
-         l0H6YhiAicGHXUvnZ9kYgHBFylrMYSCgvaO7Ku9KHELyrVNX8nu0XE77Qo3m8QMzVJ
-         Jb7MiEg9ShKeZV024Q7pJ/hPVyB9D1sCkeQv6/kM=
-Date:   Thu, 5 Oct 2023 10:08:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jeongtae Park <jtp.park@samsung.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        with ESMTP id S234417AbjJEP4q (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 5 Oct 2023 11:56:46 -0400
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5782E9ED4;
+        Thu,  5 Oct 2023 07:04:49 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 7B1A62800BBF3;
+        Thu,  5 Oct 2023 16:04:47 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 662DD4DD3BE; Thu,  5 Oct 2023 16:04:47 +0200 (CEST)
+Date:   Thu, 5 Oct 2023 16:04:47 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+        linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        Wonjae Lee <wj28.lee@samsung.com>,
-        Hojin Nam <hj96.nam@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>,
-        Jehoon Park <jehoon.park@samsung.com>,
-        Jeongtae Park <jeongtae.park@gmail.com>
-Subject: Re: [PATCH v2 0/7] cxl: Fix checkpatch issues
-Message-ID: <2023100506-arena-sip-e5da@gregkh>
-References: <CGME20230922113157epcas2p212c253d8fe4f6935ee5cbe284254cc68@epcas2p2.samsung.com>
- <20230922113443.3297726-1-jtp.park@samsung.com>
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 09/12] PCI/CMA: Validate Subject Alternative Name in
+ certificates
+Message-ID: <20231005140447.GA23472@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <bc1efd945f5d76587787f8351199e1ea45eaf2ef.1695921657.git.lukas@wunner.de>
+ <20231003160455.00001a4f@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230922113443.3297726-1-jtp.park@samsung.com>
+In-Reply-To: <20231003160455.00001a4f@Huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 22, 2023 at 08:34:43PM +0900, Jeongtae Park wrote:
-> Changes since v1: [1]
-> - Seperate a fix for whitespace error/warnings in memdev (Dave)
-> - Drop a fix for a traceevent macro (Dave)
-> - Add reviewed-by tags
+On Tue, Oct 03, 2023 at 04:04:55PM +0100, Jonathan Cameron wrote:
+> On Thu, 28 Sep 2023 19:32:39 +0200 Lukas Wunner <lukas@wunner.de> wrote:
+> > PCIe r6.1 sec 6.31.3 stipulates requirements for X.509 Leaf Certificates
+> > presented by devices, in particular the presence of a Subject Alternative
+> > Name extension with a name that encodes the Vendor ID, Device ID, Device
+> > Serial Number, etc.
 > 
-> [1]: https://lore.kernel.org/lkml/20230921025110.3717583-1-jtp.park@samsung.com/
+> Lets you do any of
+> * What you have here
+> * Reference Integrity Manifest, e.g. see Trusted Computing Group
+> * A pointer to a location where such a Reference Integrity Manifest can be
+>   obtained.
 > 
-> ---
-> Cover letter same as v1
+> So this text feels a little strong though I'm fine with only support the
+> Subject Alternative Name bit for now. Whoever has one of the other options
+> can add that support :)
 
-None of these emails were properly threaded (look at lore.kernel.org for
-proof.)
+I intend to amend the commit message as follows.  If anyone believes
+this is inaccurate, please let me know:
 
-Please fix your email client to do this properly, your v1 of this series
-was threaded correctly, so something changed here :(
+    Side note:  Instead of a Subject Alternative Name, Leaf Certificates may
+    include "a Reference Integrity Manifest, e.g., see Trusted Computing
+    Group" or "a pointer to a location where such a Reference Integrity
+    Manifest can be obtained" (PCIe r6.1 sec 6.31.3).
 
-thanks,
+    A Reference Integrity Manifest contains "golden" measurements which can
+    be compared to actual measurements retrieved from a device.  It serves a
+    different purpose than the Subject Alternative Name, hence it is unclear
+    why the spec says only either of them is necessary.  It is also unclear
+    how a Reference Integrity Manifest shall be encoded into a certificate.
 
-greg k-h
+    Ignore the Reference Integrity Manifest requirement until this confusion
+    is resolved by a spec update.
+
+
+> I haven't looked asn.1 recently enough to have any confidence on
+> a review of that bit...
+> So, for everything except the asn.1
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+In case it raises the confidence in that portion of the patch,
+I have tested it successfully not just with certificates containing
+a single CMA otherName, but also:
+
+- a single otherName with a different OID
+- multiple otherNames with a mix of CMA and other OIDs
+- multiple otherNames plus additional unrelated dNSNames
+- no Subject Alternative Name
+
+Getting the IMPLICIT annotations right was a bit nontrivial.
+It turned out that the existing crypto/asymmetric_keys/x509_akid.asn1
+got that wrong as well, so I fixed it up as a byproduct of this series:
+
+https://git.kernel.org/herbert/cryptodev-2.6/c/a1e452026e6d
+
+The debug experience made me appreciate the kernel's ASN.1 compiler
+and parser though:  Their code is surprisingly small, the generated
+output of the compiler is quite readable and the split architecture
+with a compiler+parser feels much safer than what openssl does.
+
+Thanks,
+
+Lukas
