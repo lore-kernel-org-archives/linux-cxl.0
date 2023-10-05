@@ -2,87 +2,209 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F2FE92705
-	for <linux-cxl@archiver.kernel.org>; Thu,  5 Oct 2023 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BDE92727
+	for <linux-cxl@archiver.kernel.org>; Thu,  5 Oct 2023 14:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235017AbjJEOih (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 5 Oct 2023 10:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
+        id S234135AbjJEOnE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 5 Oct 2023 10:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235948AbjJEOgQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 5 Oct 2023 10:36:16 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25E240F81
-        for <linux-cxl@vger.kernel.org>; Thu,  5 Oct 2023 06:58:54 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3248ac76acbso925801f8f.1
-        for <linux-cxl@vger.kernel.org>; Thu, 05 Oct 2023 06:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696514331; x=1697119131; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wn6Em+o0gkIpmb/ObfPSgCvA3m73Mu1ZDj4fK+nToG4=;
-        b=myUhvOYUMD9mCSNtAfme9GJ7ioBDJQvjDoYy06CCw0iCYUpFdNc5Y3zLpDk96JPCI1
-         1sgSkhKqiEtXM9PzVHzscew6aDo6G/qmohduHzYiqpKJISoQTeS65Ss3rriJ+T0FTWtf
-         nLmDJb3k3GQ40h/XFru4IkFMa7ytdvp3mKiS/V5Zn9MeXJmzdDAiAlUzefUsjBnVfkaa
-         Xz+aWmbQjK4G7M1mTKjt6IFQqh6qE1ZhSwE2DMkRJB8MR0yQvP7zziUo2i/Jy5MiNcey
-         jp0dqgNXXv9TSS4R7f6mCFc9HxCphTz8CIaqFSXCckBD1GLdmRPHJ5QKFvvhUeg0Pzg2
-         iZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696514331; x=1697119131;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wn6Em+o0gkIpmb/ObfPSgCvA3m73Mu1ZDj4fK+nToG4=;
-        b=BBXi8iGDb6Kb68q5++BDRTTLxl4FL2ZEHv6Tm6hgKD5KQyR9eSzbfOqmK01M1O0cXZ
-         ERp2K4Fn8yehWkbvTHyN5L4gtiXxdmyR831h11mCoybgjAGOIdftaBXExnE9k3t9+aU7
-         NhGpzG2fTusWqo4GApX6VCiKvT4op4TMR5s1wwMuWDKLSdVjQUjv06pnG3iUbosbipc4
-         HqBEhQf91ewCHTG69RRReZTf3YiYNxjA6VeVKwZNSZwVspvvuBrDk3Vn1ujq74Xbqhnc
-         8ljEaTyfb2dn70EvRvNErO+DQJ81AjyCqTQJ6wZYRSfRJ6dyFGYcA6WqA8US7j4l8SQW
-         VB4w==
-X-Gm-Message-State: AOJu0YwTsuBOam97QA+vjm27Thdp2ryr6k1SXGa7rarplFpYHl5AjvlR
-        DFJUEw+eGHzSMPB9sgN1z0wHYw==
-X-Google-Smtp-Source: AGHT+IEm8BURx2Ll1byyK8uUf5yHWTqN0Cz1KB7q4EUDkoypWK0U6H3oDODp3tRIwZmxWiHDt38ZpA==
-X-Received: by 2002:adf:e406:0:b0:31a:e6c2:7705 with SMTP id g6-20020adfe406000000b0031ae6c27705mr4615866wrm.50.1696514331718;
-        Thu, 05 Oct 2023 06:58:51 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id v11-20020adfedcb000000b0031fd849e797sm1845899wro.105.2023.10.05.06.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 06:58:51 -0700 (PDT)
-Date:   Thu, 5 Oct 2023 16:58:48 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dax: remove unnecessary check
-Message-ID: <554b10f3-dbd5-46a2-8d98-9b3ecaf9465a@moroto.mountain>
+        with ESMTP id S236878AbjJEOhR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 5 Oct 2023 10:37:17 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693934E354
+        for <linux-cxl@vger.kernel.org>; Thu,  5 Oct 2023 07:03:16 -0700 (PDT)
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231005080537epoutp03de306d895b7d9a10ec791f6c40736116~LJ4U0pC990331803318epoutp03k
+        for <linux-cxl@vger.kernel.org>; Thu,  5 Oct 2023 08:05:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231005080537epoutp03de306d895b7d9a10ec791f6c40736116~LJ4U0pC990331803318epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1696493137;
+        bh=HCaPv8vnab2WsCcpJQSxA5m17wuV3wZsDl03fye1R40=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MoiTIS0TOdLbnn2uIxHNUc4WYZUHBgJVruHELMSjU7sq3W7BbzvAOpVMCdRfeUQCc
+         BIr6/nZI8sJYd5geR/7ZLWDfsfC5glLqp91gVHx1fSpCq5420/b5ZWGG08pc0fQsoZ
+         2tw50lPPHXR+9OvQEbjIalEAz6DfWz+rv7+4OSG0=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20231005080536epcas2p17f0ad039a4013cc17f41c135694fda51~LJ4UGLCsf0805808058epcas2p1x;
+        Thu,  5 Oct 2023 08:05:36 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.90]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4S1PJ02Khhz4x9Q7; Thu,  5 Oct
+        2023 08:05:36 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        57.42.09649.05E6E156; Thu,  5 Oct 2023 17:05:36 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20231005080535epcas2p277cd4296cc3ce911e4e413b684ed7acf~LJ4TEHo1D2605926059epcas2p2E;
+        Thu,  5 Oct 2023 08:05:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20231005080535epsmtrp2a1f570b342982271d9c16756d5ce29d6~LJ4TDK2KU2359823598epsmtrp2-;
+        Thu,  5 Oct 2023 08:05:35 +0000 (GMT)
+X-AuditID: b6c32a46-b9ffa700000025b1-2b-651e6e50bf5d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.BA.08742.F4E6E156; Thu,  5 Oct 2023 17:05:35 +0900 (KST)
+Received: from jtpark-7920 (unknown [10.229.83.56]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20231005080535epsmtip202bf93ccd5fb586e0f789e09d7b2d0af~LJ4SzgdHl2366523665epsmtip2A;
+        Thu,  5 Oct 2023 08:05:35 +0000 (GMT)
+Date:   Thu, 5 Oct 2023 17:08:34 +0900
+From:   Jeongtae Park <jtp.park@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Wonjae Lee <wj28.lee@samsung.com>,
+        Hojin Nam <hj96.nam@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>,
+        Jeongtae Park <jeongtae.park@gmail.com>
+Subject: Re: [PATCH v2 2/7] cxl/region: Fix a checkpatch warning
+Message-ID: <ZR5vAgpn9ZfTaKFt@jtpark-7920>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <20230925110745.00001127@Huawei.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDJsWRmVeSWpSXmKPExsWy7bCmhW5AnlyqwdlDfBZ3H19gs2ievJjR
+        YvrUC4wWJ242slmsvrmG0aJp9V1Wi+bF69ksPrz5x2Jx4HUDu8WZsy9ZLVYtvMZmsfjoDGaL
+        o3s4LM7POsVicXnXHDaLWxOOMVlsvP+OzUHQY+esu+weLUfesnos3vOSyWPTqk42j/1z17B7
+        9G1ZxegxdXa9x+dNcgEcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koKeYm5
+        qbZKLj4Bum6ZOUBfKCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKzAv0ihNzi0vz
+        0vXyUkusDA0MjEyBChOyM/692sFWcEG04lTDBdYGxs8CXYycHBICJhI7rjxg6WLk4hAS2MEo
+        0Xz/NBuE84lRoq+tkQnC+cYosbJlGmsXIwdYy7P58RDxvYwSu2f+YAEZJSTwglHi06UMEJtF
+        QEXi06SzYHE2AS2J6TMbWEFsEQEjiXc3JjGCNDMLvGSRWN54mw0kISzgIHF3+XFmEJsXqGHr
+        2mmMELagxMmZT8AGcQoYSry9OgPsPAmBCxwSmze9ZYV4wkVizuM/LBC2sMSr41vYIWwpic/v
+        9kI1NDNKvH5+hQXCaWGUWHd7B1SVscS7m8/BJjELZEg8P/aCBeJPZYkjt1ggwnwSHYf/skOE
+        eSU62oQgOpUk5i2dxwxhS0hcmrsFyvaQuL3uNDskiLYxSpzZ1Ms2gVFuFpKHZiHZBmHrSCzY
+        /YltFtAKZgFpieX/OCBMTYn1u/QXMLKuYhRLLSjOTU8tNiowgkdxcn7uJkZwstZy28E45e0H
+        vUOMTByMhxglOJiVRHjTG2RShXhTEiurUovy44tKc1KLDzGaAqNnIrOUaHI+MF/klcQbmlga
+        mJiZGZobmRqYK4nz3mudmyIkkJ5YkpqdmlqQWgTTx8TBKdXA5HiSZUu5+NRoyyc8HBrHH3fs
+        3Mvs4TFry2G2feuuLfiu8FL1h3uXUM/vDW0JF35XqMSG/2jbf861uvqy2J1za+oT67XV9igo
+        hv6aXXzh9361XQf9Ntm941sUIpRl/d61P2R2w6WAAEHn12u+yC6SCl09M5Utwm095/Vav7jU
+        Hd01J6y0zNPqevZ5MUrW5QpVSVyxfVyrvlelteiiw8Hdfz64mr0x6xIKzF9kxOL3Wc6jN+2N
+        wX5zpV8/3kcv1LSaxPt3XqdALpea/XS5pnvT1eZZhd095+5/J5NH/4f4vQed2xrsQ7OjZSrT
+        +liDSkS7s97f/J4WPE90q3m3rFxYs+e/TS8uWQfyLjkfuFGJpTgj0VCLuag4EQC2/1o4XwQA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWy7bCSvK5/nlyqwctlmhZ3H19gs2ievJjR
+        YvrUC4wWJ242slmsvrmG0aJp9V1Wi+bF69ksPrz5x2Jx4HUDu8WZsy9ZLVYtvMZmsfjoDGaL
+        o3s4LM7POsVicXnXHDaLWxOOMVlsvP+OzUHQY+esu+weLUfesnos3vOSyWPTqk42j/1z17B7
+        9G1ZxegxdXa9x+dNcgEcUVw2Kak5mWWpRfp2CVwZO18cYiyYIFxx+P52xgbGM3xdjBwcEgIm
+        Es/mx3cxcnEICexmlPj7ZR97FyMnUFxCYvmGF0wQtrDE/ZYjrBBFzxglNvfMYARJsAioSHya
+        dJYFxGYT0JKYPrOBFcQWETCSeHdjEiNIA7PARxaJX/PnghUJCzhI3F1+nBnE5gVq2Lp2GiPE
+        1G2MEhevnGaBSAhKnJz5BMxmBiq68e8lE8ipzALSEsv/cYCEOQUMJd5encE2gVFgFpKOWUg6
+        ZiF0LGBkXsUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERxrWpo7GLev+qB3iJGJg/EQ
+        owQHs5IIb3qDTKoQb0piZVVqUX58UWlOavEhRmkOFiVxXvEXvSlCAumJJanZqakFqUUwWSYO
+        TqkGpnV/Lf75qjNFfcvT+phTNiPtUijLGeZyuY+udw7oenjUGkk7t52xvbqgcs4Boc/3XkaH
+        JJzI9j6wd0acaKrR96cLTnV2Rd8Rjp4XcK1Y+KPHGtO9y6V/FqeuiLngJ9a/LuyRcImtptyK
+        Rlubr3yvmkz/Tu6f2WoTvbVsmdGRfj4v7daQv7cCwuXmCy6r9f4ftChbW/ZByrG+j54dyete
+        5PiLGydXV5/vnpYawBRYkqyjPf/YfrXwl7nXeTQrmaWfRrsLs5iGBVee1LP5Vjit97dzs+Ld
+        O1IHbB+HTTrFMPfUFfXPy3N/Wz2+vvvnrwuHM6XqnJ+vkRR6pmK14RuL6YwMnXVTzKamxOkp
+        NCxVYinOSDTUYi4qTgQA1EGPHSQDAAA=
+X-CMS-MailID: 20231005080535epcas2p277cd4296cc3ce911e4e413b684ed7acf
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----E9vxk1eHFJMo0Hi_Q_rTTD2vXp5VKj0nvvVRz8vbSgBSYVSL=_9a285_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230922113233epcas2p2cd57df10dde36b0da3b2fc5a916132e8
+References: <CGME20230922113233epcas2p2cd57df10dde36b0da3b2fc5a916132e8@epcas2p2.samsung.com>
+        <20230922113520.3298976-1-jtp.park@samsung.com>
+        <20230925110745.00001127@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-We know that "rc" is zero so there is no need to check.
+------E9vxk1eHFJMo0Hi_Q_rTTD2vXp5VKj0nvvVRz8vbSgBSYVSL=_9a285_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/dax/bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Sep 25, 2023 at 11:07:45AM +0100, Jonathan Cameron wrote:
+> On Fri, 22 Sep 2023 20:35:20 +0900
+> Jeongtae Park <jtp.park@samsung.com> wrote:
+> 
+> > WARNING: else is not generally useful after a break or return
+> > 
+> > Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> This one is a little ugly. I'd prefer to see the error
+> condition remain out of line (vs the warning one)
+> 
+> 		if (!IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)) {
+> 			dev_err(&cxlr->dev,
+> 				"Failed ...");
+> 			return -ENOXIO
+> 		}
+> 
+> 		dev_warn_once(...
+> 
+> 		return 0;
+> 
+> Or keep the else.
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 1d818401103b..ea7298d8da99 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1300,7 +1300,7 @@ static ssize_t memmap_on_memory_store(struct device *dev,
- 	dev_dax->memmap_on_memory = val;
- 
- 	device_unlock(dax_region->dev);
--	return rc == 0 ? len : rc;
-+	return len;
- }
- static DEVICE_ATTR_RW(memmap_on_memory);
- 
--- 
-2.39.2
+I think I changed it too mechanically ignoring the meanings.
+Your comment made me think about it a bit more. If we don't
+really need the error message to be printed every calling,
+how about remove it and modify the condition statements like
+below. It would make more efficient or small codes
+when 'CONFIG_CXL_REGION_INVALIDATION_TEST' is not set.
 
+static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
+{
+        if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)
+                        && cpu_cache_has_invalidate_memregion()) {
+                dev_warn_once(&cxlr->dev,
+                        "Bypassing cpu_cache_invalidate_memregion() for testing!\n");
+                return 0;
+        }
+
+        return cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+}
+
+> 
+> Not that important though as code is small enough that less
+> than ideal in / out of line doesn't matter that much to readability.
+> 
+> Jonathan
+> 
+> 
+> > ---
+> >  drivers/cxl/core/region.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index e115ba382e04..1fc9d01c1ac0 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -133,11 +133,10 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
+> >  				&cxlr->dev,
+> >  				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
+> >  			return 0;
+> > -		} else {
+> > -			dev_err(&cxlr->dev,
+> > -				"Failed to synchronize CPU cache state\n");
+> > -			return -ENXIO;
+> >  		}
+> > +
+> > +		dev_err(&cxlr->dev, "Failed to synchronize CPU cache state\n");
+> > +		return -ENXIO;
+> >  	}
+> >  
+> >  	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> 
+
+------E9vxk1eHFJMo0Hi_Q_rTTD2vXp5VKj0nvvVRz8vbSgBSYVSL=_9a285_
+Content-Type: text/plain; charset="utf-8"
+
+
+------E9vxk1eHFJMo0Hi_Q_rTTD2vXp5VKj0nvvVRz8vbSgBSYVSL=_9a285_--
