@@ -1,514 +1,227 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3A52771A
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 20:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAE1450C8
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 22:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hz0wAxK5"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF68BE;
-	Fri,  6 Oct 2023 13:34:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcxB4zxc"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E9FDE;
+	Fri,  6 Oct 2023 15:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696624469; x=1728160469;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=iJytUC0utTJTMUR9fX2HEvRZjHviiFTVfW5ca79Z34U=;
-  b=hz0wAxK5viqqZoPWklgyoV2zs9KCrcuz2Dy6mOvoarHYRrP4wgesVqFI
-   SC3n3VhMFSr9Sns5406iGrRmxDzGF9D+awNwV79XJYMv7aevehNU4CinD
-   m6T0fHRL2jT7y9jqPIq5umN49GOpw41TU1EWa5SRvCPc1aGnPEsLd9gbP
-   KtTCBFuaeYd9BGaKmIdtj0LpDPrfs+EJCGHcSOjuE/es9rJqrgKH+2DIL
-   TTDyxC4/oy58ONACgIVyyYW0ff0VuJH9lo4z9w9NFErvvlXVaJoAqzX1o
-   UMMQfAEj05ic55r+6IAZur2+8hjIaua21NU/uqftlBpaNlo10jkJuu/oL
+  t=1696629722; x=1728165722;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=oyIsRa1Gnj8PG5kSKPvD6l39v4UEo4zy64Sg9vyCUfk=;
+  b=kcxB4zxcKs+A59Cw07rBIyNwj6UR0TNXPoxYUFHT8oFFvMf41fJPPghM
+   A4LlqZpZx02sdSdTmcR2v8ErXLwq5IEx+h1Ppoa8nwWEuTYv34DMKYMkG
+   sJKmApu4Qvkeuh3sn2DBXGEn3OpuLpGF1uL5JEpYR+lB1tj0E/OaT97i6
+   H07DTzET4gfcr9goFtjJGnbOstX5ifHz6itXmZZhzJ4LrdkskQeDts2HD
+   RJXBCR/lEsQKTk+ZUJGwbttVHVJqXEHbq1m37Dx4hpvWwSkuLPyTrH0wH
+   r+MrN7iuCiBt/K0CHJihuzDqt0HIu2Xrq1bolGXJ/PyLWdOx9WQ3O9QeI
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="386658436"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="470110250"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="386658436"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 13:34:29 -0700
+   d="scan'208";a="470110250"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 15:01:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="896014069"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="876092551"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="896014069"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Oct 2023 13:32:56 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+   d="scan'208";a="876092551"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Oct 2023 15:01:41 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 6 Oct 2023 13:34:28 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2507.32; Fri, 6 Oct 2023 15:01:41 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Fri, 6 Oct 2023 13:34:28 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Fri, 6 Oct 2023 15:01:40 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.105)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Fri, 6 Oct 2023 13:34:28 -0700
+ 15.1.2507.32; Fri, 6 Oct 2023 15:01:40 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HEB4qw954p7fIox5/kT1rXEMt9ZWSpQdWNIomfPPV70fWqwwugnsLWWJtwkg9vA6d9mw/yI4ShwQqcfGMp78BX3Ecm4cGVU0stQJkr1IzrEVTJIvqMC4TTvp9yZP+VrZ9NpeRfZtzjmkUIrlVrcebTHoQRH25KwucmYU0VXrA/2Ocm/OMV6LclM/d91CI7/NCIhFAmClMcwPSqQojsVISGuV+vNwCBcVAw1iUfEYPU/3eF4SiRcD1kDR9vkxZejXmuV9zwS52/FAP9yzTjYx9h96aeAu/Qd8bYjDKerLLL9b3YZMDt3NTH8PzzbgnjyOHQ1eFQ0V6DyHxlW6HrA0Jg==
+ b=eky5gKOAfVH+MR0sYLJ3lr1rzTsO9+fTiKlNILo3zb7de17e31JWipDesqBAdnlh4bPWTbA++/i5Ak6LGfrVqfqgW98l/S5/ln2tG7HWN/6riO7YP6p9FCLLgmOymRdZ1sFmp/IGUJl/7MiWYfpAZcW/tyKz6dS1GvhGDRRi8swhGiNrTpj24Uz8AaNi2jcUs055tX9vM4F8pb5bCsU6+u5UXo2Zi4CSaTS9cZhBP6oLiGpgApfIiJX4vkuHGX1AxFypKIFqiZzb+0ZHhXXqqI91sjvYbPjebnJBZDWXaNJE6ATlOH0hzT1zQEZAq/lr6Kxbe4f3XNt+1DFu/9LrtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xZ98nqlhH5sHTTLJxDRrv33NK4kjh/RHm1GkcIKes5o=;
- b=mU0aRQiYL3aUjx889e4DTJWJWY7RakVku+kdW2m/b/KGTqHftr8GRu69Z5Z7VFeRAosbyD53JxAUDFZc/YZ8HXi9emrm9Rg0Y85n1cTdabFqsfzS2u98Wx9Iu3xIiNZep67UpQsZudiWcC2xtrRNWegZ9Vc7ZZlDH/m3oQiNBxbgMzdLz3aLsaQUzvplDs9pXhS1TUJP6sa/lW+jIwKqBRzuguzLHqe+LhSQkG8De5MjMn7KE3XxGpZW+HawNXxigw6ZW/Tpoth/jKO/9Ho2Yg09CMuGgGqNz1Ty+YP8G5rBg/Bq9qOZVK5NX/jZfUNSMdQZyMmI7TmtkZ8dFCdOYg==
+ bh=oyIsRa1Gnj8PG5kSKPvD6l39v4UEo4zy64Sg9vyCUfk=;
+ b=mEnKPkBtOJXoCSZLH/CZupeI3x8BXKTn/LejcqBtJAauCKbhgzwAOWnL1GLO1tcpEHz4kW7bKDCFDTbyop8T1ONnd3bgVn9idmjbK+e7BnSN9jFBgkH8Y6zI4ued2UVdQ2bEBTlhXiV9Jus9oPvvsPKi55HdZxNMXVUugsc25fWGH4lHvB3Umz7O/NndBdTH8W2B8mKuHGFn9To1Is3y2XuXTQBjLGgqB3Ww8INmrH7NbJkvOnD7QtE+aSiEycr0sP6DSqIENKy0umPqLO23AxwUBnWIHmYKbgl7y2y7uNKiTg7ka837yMJBZbQcwANyk6gwDwtUC1VlV2IUL/QA2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB7288.namprd11.prod.outlook.com (2603:10b6:8:13b::14) with
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
+ by CO1PR11MB5060.namprd11.prod.outlook.com (2603:10b6:303:93::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.37; Fri, 6 Oct
- 2023 20:34:25 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6838.033; Fri, 6 Oct 2023
- 20:34:24 +0000
-Date: Fri, 6 Oct 2023 13:34:20 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, "David
- Howells" <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>,
-	"Herbert Xu" <herbert@gondor.apana.org.au>, "David S. Miller"
-	<davem@davemloft.net>, Alex Williamson <alex.williamson@redhat.com>,
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <linuxarm@huawei.com>,
-	David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
-	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, "Wilfred
- Mallawa" <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, "Tom
- Lendacky" <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: RE: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <65206f4c7f0ae_ae7e729444@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1695921656.git.lukas@wunner.de>
- <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
-X-ClientProxiedBy: MW4PR04CA0235.namprd04.prod.outlook.com
- (2603:10b6:303:87::30) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.35; Fri, 6 Oct
+ 2023 22:01:19 +0000
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::3693:a1b6:b431:4827]) by MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::3693:a1b6:b431:4827%3]) with mapi id 15.20.6813.041; Fri, 6 Oct 2023
+ 22:01:19 +0000
+From: "Verma, Vishal L" <vishal.l.verma@intel.com>
+To: "Williams, Dan J" <dan.j.williams@intel.com>, "Jiang, Dave"
+	<dave.jiang@intel.com>, "osalvador@suse.de" <osalvador@suse.de>,
+	"david@redhat.com" <david@redhat.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>
+CC: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "Huang, Ying"
+	<ying.huang@intel.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Hocko, Michal"
+	<mhocko@suse.com>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"jmoyer@redhat.com" <jmoyer@redhat.com>, "Jonathan.Cameron@Huawei.com"
+	<Jonathan.Cameron@Huawei.com>
+Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
+Thread-Topic: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory
+ requests across memblocks
+Thread-Index: AQHZ97pKI6hvp9K6YUusBrDLSLOwW7A8uGcAgACZZ4A=
+Date: Fri, 6 Oct 2023 22:01:19 +0000
+Message-ID: <45cfd268da63eeddb741e9c9c3026b0e15eade4b.camel@intel.com>
+References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
+	 <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
+	 <4ad40b9b-086b-e31f-34bd-c96550bb73e9@redhat.com>
+In-Reply-To: <4ad40b9b-086b-e31f-34bd-c96550bb73e9@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|CO1PR11MB5060:EE_
+x-ms-office365-filtering-correlation-id: 9de06923-57d1-4a55-e0ea-08dbc6b7c526
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HtW4vz7cGF6wtolynCNDds/ayiYpyN+WuEyDe38Pfl39aKySbgWmeg1qO0FJ2MaTDLMTAFi+/T/HIzyjHyHv/qCOZGEL7xuq89dvpF0P5vVR/iRJNV/raFOlNp8e1Mx5fV6rjyRNHGoEoQum/2Ke1N2+O8/qsq7DBC2dumn0cAKNwEP+bJ6+disQwep9kUGz19xqxQr+p7SwyEu4Fgv8cQlX1h2n4XPT3QjaKOWTNt1pOB90ghCS/VWwevDh82zodlGEyXWS2/54hlrHgLj58yI46pE9nxdLvEB+6WdqB55xVPWjhijowwxoKuKIYKc8irSkhZPVbM1joIAn48+11QoDgnltkKriGXNDtkvyvZW45uhgLn/s/XqaaZ7C2xxIJ9GHdT1/2F3W3mV9LldChcJ+kKc19kTWvGmo4SHRylgdpQpfjAkMqM4dC3CEs9IqgwAZqytibLU2aAvjx8hOa7LyeafXPKXJ0EkeJ8G0UdFAdgxPpzsS5jeCmfkzsRYKq+d+bxx9JVlJm3PLBxFrlcLlugF9MGOI6qFKl1PzrH7LBd/bq76M3yeu/PouuuBg61MoyU+DKubk1/h0GLBVDXXfXCpRNc3WNXKbamIGMSH3t1Lwc3F8hl8f8UTNmaAS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(366004)(346002)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(66446008)(64756008)(41300700001)(66556008)(66476007)(53546011)(66946007)(316002)(54906003)(76116006)(122000001)(71200400001)(6506007)(36756003)(6512007)(478600001)(38100700002)(38070700005)(6486002)(86362001)(82960400001)(83380400001)(110136005)(26005)(7416002)(2906002)(2616005)(5660300002)(8936002)(4326008)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OHBTUTU0bWZCY3J6TWFqaEFSYTN0TzY1WWlmNFhMNVc4L29nWGIrYUs3YW10?=
+ =?utf-8?B?U3BUQTlOcFhJdDlVSC8rVHlMRXJLMGZ1NHhWV1h6UzBpaXdQc05VS0pyVERv?=
+ =?utf-8?B?bDErdkgyQi84NUhUZGdqcEQvMWhucVY5YWdGbXJqQnhNa1crMm5iN2FsNnd6?=
+ =?utf-8?B?TkYxcm00V2NKTWFZbWx2L1lBd0NIZzh6aDJ3MkMxS0FCT1I2enVIdzBVR3N4?=
+ =?utf-8?B?N01ja3lSUnBkN3R5ZWpRbFRlM3YxVHRYa3hUWU1jYVZFQkJqR0o1VG8zZUxr?=
+ =?utf-8?B?cHdzOXlXZUVTcExBS1Y2SWhzL0EwR3UxWUdYTnhiKzIzNFlaZFFJUWMxclBr?=
+ =?utf-8?B?bGM1ekdQWG5RU2kzb3MrWWpmMFpiMVVWQ0I3V2FUUjhTYURiSXpOZXo3QWJL?=
+ =?utf-8?B?dkpEMldQT3A0WXphTlVIRHRzS3NGWmNBNTdWcHFGZHFDTDdiQUN1MW9OOXZk?=
+ =?utf-8?B?YzZyL2p0VjZRczZybytObEZFbzh4UWp4YVhKVm1FRC9sam1PamE5R2pQSDhi?=
+ =?utf-8?B?RENEQ1g5VlJ6aDhvWDdYR3JDOFZjZHU5MTk5dlF3U29OczdSSUlPMUtOd1Fx?=
+ =?utf-8?B?bnBTS1lSajhjamV4Z3o4dm5ONlhDQ2dXSXE4S2dqRDBZN0pkenpUSi9zSGlp?=
+ =?utf-8?B?Ykp4NzJrYUpjR2RGWmpJR1FnT0F0TVB6Q2plc2xaKzU2OUFzMUljMVBJWDhz?=
+ =?utf-8?B?M29MdUx2c0xNZjllN1AxSHYrczZVSHB4QmFrOHh2MndodjVucnlOWUJ0dTlP?=
+ =?utf-8?B?UjZUWWowaUROcUk0K2N3WCtuekcxVWJOR0puNzROU3gyb1NhUGhjQVAwWWRh?=
+ =?utf-8?B?Ulk1ejRVRzlEczc3K2F6WmdWRkdlbEduZ3NTZ1dFbjhLZU1pMHNZMS8rSGE5?=
+ =?utf-8?B?MHhKaEhUbG5XMHFzdXN2dnpIWlRmdXc1dXZTWVFSbW1pckNuWTduVTFVdzJz?=
+ =?utf-8?B?T2JiaU5hZUJ1cmxUMkF1NkpZMGFWa2pIVDA4RkFqN3NKOFA4VFpocjNLYU1M?=
+ =?utf-8?B?MnVJVHc1aFBwVUZxcUdjWnM2cy9oeXNsVXNrQ0JRZnpMdWVaOFBZcDhwdVhu?=
+ =?utf-8?B?SWRsbVArUlNBVWJyVDlHZThpZ1drNm9WenhiVXJpUVZVT0xlcHJsMW5lWmVJ?=
+ =?utf-8?B?aDF3cGFzU2J0U3NoaTNnVTN1ai9FTkRhUGIranFCTmZQdW1neHRhTTdFOEZW?=
+ =?utf-8?B?YzUxMEhtVERCY1RlTzBvbDhCRFZYdFpNaklOemtPRWErbGZCb3VmL0pVUzBv?=
+ =?utf-8?B?VlpqR2Yzb00vdDlYNHZ3UFZRdmJDaFVkZWs2OTRrTmFweERrUFJodDZWT3gw?=
+ =?utf-8?B?RkRrc1ZSOTNmNWFnTThjbzA0TTFpZmhZQ1NQbWk0Qnd6ZHRGQy9VRGFNbzVL?=
+ =?utf-8?B?REJiS1VYakhHQmhQanZRZkVsOFYvMG5mYVRnY2xEdklxZDF6ZG1oRWtjaXg4?=
+ =?utf-8?B?THFVKzRtVFZFckZhQWh5QjZtMjdKNTEzdUhVTTN0aE9PcXg2UzF5VUxqaHky?=
+ =?utf-8?B?MDF2bWtVNmM5MjBNMlltajVnYmJDS0NkMWE1R21IbDM3Y3NOUkx3eHNMRjJS?=
+ =?utf-8?B?eDc1MGxaKzh0dVQ1V3dVYnU3WnhLTGZPK1dyWVdWQUtEZjRORFRjZWJTakV5?=
+ =?utf-8?B?aXhmVDZXc0UyalFlWHhNV0JNbDNld1lZNlphRGp0STJRazBuNmdaL1lhamNG?=
+ =?utf-8?B?cG44c2padUI5NHRKQ0dXMG5ieUNLU21nQkQ2NmMzNHpkdDk1eEdoZHcyQy9K?=
+ =?utf-8?B?aGtFOFdpNmxCY2huM3ZVQWRITzllWWhlbTFrTlBvZks1MGxENlM5REtYWUJO?=
+ =?utf-8?B?VDFiYTlLTXY5T0pBTEYrWkhHYXQ4eE1WSUlOR1RxbnlWQllRWUxnMm9FUys0?=
+ =?utf-8?B?ZGI1bzI4dFd2QTB3aEFIaklFUytyZDQ5VmpZMmloSUJ0MVRKa0xucUloMCtM?=
+ =?utf-8?B?bGpHbUNXRmVTSmw1VlpKVDA1V2xuaGM3N3dDY0ZubStMRTBaKzA0VGRQaktK?=
+ =?utf-8?B?MHV6L2hwRTFzaGJmN002V00xZjU0bmlBR0tLU0VhbkJHYmErWGwvdktLd0RC?=
+ =?utf-8?B?VDJKK2tibzY5S2FEQ21qYzhnQkZjdXdSd09ZQW1nVlpBYTNqN2lQVlpSS0lj?=
+ =?utf-8?B?ajNOcTNVd1dNUjc0TXpoYnZ5T0JBSEpmcWlSeTB2N2t0bHRkcUlEcmNoZHFL?=
+ =?utf-8?B?U3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <918A316112C5DD4CA425BEB9F72EF4EB@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7288:EE_
-X-MS-Office365-Filtering-Correlation-Id: d573b79b-3110-4d96-d12d-08dbc6aba06d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MZi0R5C4Yln6rnFcV/tL4Hwjc3W3SM9yoAIe1hPyeiZnS8ZBrwoKlk4Ujkv86sCqU+zwudvAZFqn2cMiHbPk+O0Ra2v5wPb5l1pfxMuIH263k+o/VUflwuhTmZ0lYq7crvN7Ky12Opanyai4/lf/sioeeoCsGkaRhX+lQKVl1LMWl87xGZay9cTVCiL025CC830XBoVkQGjpusQZhZbFH+h3+tz3jXnopdqF9YMiJHlfgBiY/64uDcoMYXFxBPFTSdaarwYDWBlLnfKq1wCrqn80HPbxVbg0ueaFS5d0+LMVAjIdWjaFzqukViZz8ZrmqkjQNNo+738WbS5Hd7qt1OVgS50M/a/JeJHu5Ii8c2e7ox4obnkjfmfiuZh8taExZgivmCtG+cTQNvUyW1KlW4BPlpp0sJcZ0kqrVXtvYNeWr3XwwWp0XAPr0MGd6oshq2gl6yhampZypZkUOYZU4uLLmwTDb/89HHXH3bE0hokxw0mv5ie9e+bcKNQolgmk0Il0R5UBEglYF3VaISM0YQ/BNXPJlL+h3yWV5boS9IF2jDi9nqhwlKM/A4HqlIP8ta0WeCZnTNSHu7CF12iU52OpWmaOelIPXy6AnLWBXIrQ+NH38JV3f4Yr0e3gegn7
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(39860400002)(396003)(376002)(230922051799003)(1800799009)(451199024)(64100799003)(186009)(7416002)(5660300002)(8676002)(30864003)(2906002)(4326008)(8936002)(41300700001)(66899024)(316002)(66946007)(66476007)(54906003)(66556008)(110136005)(6666004)(6506007)(26005)(6512007)(9686003)(478600001)(82960400001)(38100700002)(921005)(83380400001)(86362001)(6486002)(966005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Ek58uPlQtUyCqC+YvdOn8l0saWGG2uBjs+gqvA74GazcpXL2sJIFN4abkA1j?=
- =?us-ascii?Q?2nZ2/xT5jdGJqHrAFF73OTp69VEwU8Cl/CsWsAyrMnyBWHgrG1tMNvjKR/kh?=
- =?us-ascii?Q?4wqombC6zxWLkAYi6CcrPccRDggSi1K3LOGg1D0uSeBae7I8q/Nhwa6N8Am/?=
- =?us-ascii?Q?6sRWqIbMdkGkUVqdL0u2UKrt9vh1xcK9vQEW/CctWaDEU8Dgz/U8G9rO5kMG?=
- =?us-ascii?Q?x2njp51MfY6t47+/T9CL5OCE/r882QyLgxgcOtP6xGxrXQQA+r/0Al+yCFRY?=
- =?us-ascii?Q?ntiwGJcRC7NYnfM1iV+gu2G3ZrqbcbLZInySwUXhD1L29FkZFGIX3TWWxCjx?=
- =?us-ascii?Q?04FL1KNLgutK+0p6vBzWmooKYUW+2mxLXH8EvLJ2rbEOz2d7d570GxlbGKDY?=
- =?us-ascii?Q?XLH95NTT0mYmG07H6rTITMwxNoiFNzYAvIIo+gvBWPRPdrHjQKglz1yF1CqD?=
- =?us-ascii?Q?p6tCeA7JARQTa804dU7ZMuDxaHfD+tyG6+HMZh6QHWWFg77WeUOlSjGha1x2?=
- =?us-ascii?Q?tX9fzKig9DqTsU8usWKlprwt6PGProUlzfUkH7LNICl6JAhIHL4CtE1Gx2Jc?=
- =?us-ascii?Q?7zN8e/BWjYZdKBTuIRiVp2MX+DTeXMlByX/ZRpQZyUHJgNDAx7kW33l9HPcM?=
- =?us-ascii?Q?TERIVp92nGY4vSsQTOCO9MxV0ZJsZXSi6WCQCpiVQqZmh6SWnwVcMZkGv3AT?=
- =?us-ascii?Q?ZfE7bLlCjjAsLCrQm2PtP8rC8ZNr1esKxVPHAuICXvgqw5JmUFD1v1OsmwLy?=
- =?us-ascii?Q?KEjjU90Cy1PNbfX4dUxScLKrcQh0PddWgm7/xFUCPbxdQxCmy/iJTrr9AzHd?=
- =?us-ascii?Q?tQ4jHxOWj3tlFIvoGwuoaYWc6i/qlUpFK8166chpZFQIoqWg+Qvkt349tEmb?=
- =?us-ascii?Q?yZzefpIQh2+lGYqZ649i97QAUkayRNsuE3vOvXsIFIbNsajaqpCgaWIhcbkB?=
- =?us-ascii?Q?6uBpDYGlIoAq7vux28FYG7CZB+NDhBtFLqfAoOMgWYPh0ZRrEynQ1U4ann+P?=
- =?us-ascii?Q?u/l/5gLnUpV/pnCewTqOurna4gOr7LJLiP8Z+usMonie0RJ+SMolVvgLTgK4?=
- =?us-ascii?Q?RPN3ikqluj2pERLgk9pxGbe3NbSDTeBvBBOJV9sG41eycM5e3Z4GlXiUboaD?=
- =?us-ascii?Q?tgn/8dfky8vD9guo3hK9VZVQO845DUQQrFh7rykIiuqWV6LvM18tj+9hNvjz?=
- =?us-ascii?Q?J9XOiVyrlZ4hh/7l/w7etd2ZpY1D6jjjlzjsnz1WxaxaLQZVujjC29bmpDmU?=
- =?us-ascii?Q?wcryQvQg6KzjvHUmkPyjdz6MTFlircAg/nO0EDI+j30T0yDClq6KZu7VZJAp?=
- =?us-ascii?Q?6eN2ZFQ1B7RjI5Ue/+uEd3vYbIOTnxR9iq+9OQSgy9pcw3OyBIt4yWXQQoZk?=
- =?us-ascii?Q?SwuZKp2HG1tu0kjE3IZCBBpkC/CNlwhqrFRohp4hRm+7TUbuT1kpvsKgCs5b?=
- =?us-ascii?Q?0Ghsr5cI5fDGZtGp5HG24T8+kL9KZMLUO9iR+5AbLA8FIm3gTgkVQYKFDCLi?=
- =?us-ascii?Q?A3TIN0CTDU4G7/7TSqMLp8C0Wo0P5mIrhQJxPYITHEz21cbb41LRciPIaigH?=
- =?us-ascii?Q?1VBFzDI7s2thhZKlAIZ7fpv2rlEw31JkslyNZuZpdYIduhQMsFs6WsDs7Wi5?=
- =?us-ascii?Q?/w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d573b79b-3110-4d96-d12d-08dbc6aba06d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2023 20:34:23.8321
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9de06923-57d1-4a55-e0ea-08dbc6b7c526
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2023 22:01:19.1724
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F/EC0jn5fJddtP0mPjvnKzw34YwE6XopvuAyNjPnbEmtAZvx81wbLbjmCEe7L3b3DBAVjgXNiC+IPMENpdiulBPJ/Jfn4VFXwCRhV+K1uaI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7288
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vRlEQzEqlpp+iyVXyVzgyF7t6+yPeGwJ5Rrtji1tki7QdYNSsI2z4FnO5yoxO4uH66Maenj2PqFyzqkOKIn6NCtu/iFNQEhXenGQQObEzbw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5060
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Lukas Wunner wrote:
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> The Security Protocol and Data Model (SPDM) allows for authentication,
-> measurement, key exchange and encrypted sessions with devices.
-> 
-> A commonly used term for authentication and measurement is attestation.
-> 
-> SPDM was conceived by the Distributed Management Task Force (DMTF).
-> Its specification defines a request/response protocol spoken between
-> host and attached devices over a variety of transports:
-> 
->   https://www.dmtf.org/dsp/DSP0274
-> 
-> This implementation supports SPDM 1.0 through 1.3 (the latest version).
-> It is designed to be transport-agnostic as the kernel already supports
-> two different SPDM-capable transports:
-> 
-> * PCIe Data Object Exchange (PCIe r6.1 sec 6.30, drivers/pci/doe.c)
-> * Management Component Transport Protocol (MCTP,
->   Documentation/networking/mctp.rst)
-> 
-> Use cases for SPDM include, but are not limited to:
-> 
-> * PCIe Component Measurement and Authentication (PCIe r6.1 sec 6.31)
-> * Compute Express Link (CXL r3.0 sec 14.11.6)
-> * Open Compute Project (Attestation of System Components r1.0)
->   https://www.opencompute.org/documents/attestation-v1-0-20201104-pdf
-> 
-> The initial focus of this implementation is enabling PCIe CMA device
-> authentication.  As such, only a subset of the SPDM specification is
-> contained herein, namely the request/response sequence GET_VERSION,
-> GET_CAPABILITIES, NEGOTIATE_ALGORITHMS, GET_DIGESTS, GET_CERTIFICATE
-> and CHALLENGE.
-> 
-> A simple API is provided for subsystems wishing to authenticate devices:
-> spdm_create(), spdm_authenticate() (can be called repeatedly for
-> reauthentication) and spdm_destroy().  Certificates presented by devices
-> are validated against an in-kernel keyring of trusted root certificates.
-> A pointer to the keyring is passed to spdm_create().
-> 
-> The set of supported cryptographic algorithms is limited to those
-> declared mandatory in PCIe r6.1 sec 6.31.3.  Adding more algorithms
-> is straightforward as long as the crypto subsystem supports them.
-> 
-> Future commits will extend this implementation with support for
-> measurement, key exchange and encrypted sessions.
-> 
-> So far, only the SPDM requester role is implemented.  Care was taken to
-> allow for effortless addition of the responder role at a later stage.
-> This could be needed for a PCIe host bridge operating in endpoint mode.
-> The responder role will be able to reuse struct definitions and helpers
-> such as spdm_create_combined_prefix().  Those can be moved to
-> spdm_common.{h,c} files upon introduction of the responder role.
-> For now, all is kept in a single source file to avoid polluting the
-> global namespace with unnecessary symbols.
-
-Since you are raising design considerations for the future reuse of this
-code in the responder role, I will raise some considerations for future
-reuse of this code with platform security modules (the TDISP specification
-calls them TSMs).
-
-> 
-> Credits:  Jonathan wrote a proof-of-concept of this SPDM implementation.
-> Lukas reworked it for upstream.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> ---
->  MAINTAINERS          |    9 +
->  include/linux/spdm.h |   35 +
->  lib/Kconfig          |   15 +
->  lib/Makefile         |    2 +
->  lib/spdm_requester.c | 1487 ++++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 1548 insertions(+)
->  create mode 100644 include/linux/spdm.h
->  create mode 100644 lib/spdm_requester.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 90f13281d297..2591d2217d65 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19299,6 +19299,15 @@ M:	Security Officers <security@kernel.org>
->  S:	Supported
->  F:	Documentation/process/security-bugs.rst
->  
-> +SECURITY PROTOCOL AND DATA MODEL (SPDM)
-> +M:	Jonathan Cameron <jic23@kernel.org>
-> +M:	Lukas Wunner <lukas@wunner.de>
-> +L:	linux-cxl@vger.kernel.org
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	include/linux/spdm.h
-> +F:	lib/spdm*
-> +
->  SECURITY SUBSYSTEM
->  M:	Paul Moore <paul@paul-moore.com>
->  M:	James Morris <jmorris@namei.org>
-> diff --git a/include/linux/spdm.h b/include/linux/spdm.h
-> new file mode 100644
-> index 000000000000..e824063793a7
-> --- /dev/null
-> +++ b/include/linux/spdm.h
-> @@ -0,0 +1,35 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * DMTF Security Protocol and Data Model (SPDM)
-> + * https://www.dmtf.org/dsp/DSP0274
-> + *
-> + * Copyright (C) 2021-22 Huawei
-> + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> + *
-> + * Copyright (C) 2022-23 Intel Corporation
-> + */
-> +
-> +#ifndef _SPDM_H_
-> +#define _SPDM_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct key;
-> +struct device;
-> +struct spdm_state;
-> +
-> +typedef int (spdm_transport)(void *priv, struct device *dev,
-> +			     const void *request, size_t request_sz,
-> +			     void *response, size_t response_sz);
-
-TIL that even though "typedef <type> (*<name>)" is the predominant kernel
-style of declaring function pointer types, significant parts of the kernel
-use this "typedef <type> (<name>)" and declare it a pointer at the usage
-site.
-
-> +
-> +struct spdm_state *spdm_create(struct device *dev, spdm_transport *transport,
-> +			       void *transport_priv, u32 transport_sz,
-> +			       struct key *keyring);
-> +
-> +int spdm_authenticate(struct spdm_state *spdm_state);
-> +
-> +bool spdm_authenticated(struct spdm_state *spdm_state);
-> +
-> +void spdm_destroy(struct spdm_state *spdm_state);
-> +
-> +#endif
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index c686f4adc124..3516cf1dad16 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -764,3 +764,18 @@ config ASN1_ENCODER
->  
->  config POLYNOMIAL
->         tristate
-> +
-> +config SPDM_REQUESTER
-> +	tristate
-> +	select KEYS
-> +	select ASYMMETRIC_KEY_TYPE
-> +	select ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> +	select X509_CERTIFICATE_PARSER
-> +	help
-> +	 The Security Protocol and Data Model (SPDM) allows for authentication,
-> +	 measurement, key exchange and encrypted sessions with devices.  This
-> +	 option enables support for the SPDM requester role.
-> +
-> +	 Crypto algorithms offered to SPDM responders are limited to those
-> +	 enabled in .config.  Drivers selecting SPDM_REQUESTER need to also
-> +	 select any algorithms they deem mandatory.
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 740109b6e2c8..d9ae58a9ca83 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -315,6 +315,8 @@ obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
->  obj-$(CONFIG_ASN1) += asn1_decoder.o
->  obj-$(CONFIG_ASN1_ENCODER) += asn1_encoder.o
->  
-> +obj-$(CONFIG_SPDM_REQUESTER) += spdm_requester.o
-> +
->  obj-$(CONFIG_FONT_SUPPORT) += fonts/
->  
->  hostprogs	:= gen_crc32table
-> diff --git a/lib/spdm_requester.c b/lib/spdm_requester.c
-> new file mode 100644
-> index 000000000000..407041036599
-> --- /dev/null
-> +++ b/lib/spdm_requester.c
-[..]
-> +struct spdm_error_rsp {
-> +	u8 version;
-> +	u8 code;
-> +	enum spdm_error_code error_code:8;
-> +	u8 error_data;
-> +
-> +	u8 extended_error_data[];
-> +} __packed;
-> +
-> +static int spdm_err(struct device *dev, struct spdm_error_rsp *rsp)
-> +{
-
-Why not an error_code_to_string() helper and then use dev_err() directly at
-the call site? rsp->error_data could be conveyed uncoditionally, but maybe
-that belies that I do not understand the need for filtering ->error_data.
-
-> +	switch (rsp->error_code) {
-> +	case spdm_invalid_request:
-> +		dev_err(dev, "Invalid request\n");
-
-Setting the above comment aside, do you suspect these need to be
-dev_err_ratelimited() if only because it is unclear whether a user of this
-library will trigger screaming error messages?
-
-
-> +		return -EINVAL;
-> +	case spdm_invalid_session:
-> +		if (rsp->version == 0x11) {
-> +			dev_err(dev, "Invalid session %#x\n", rsp->error_data);
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case spdm_busy:
-> +		dev_err(dev, "Busy\n");
-> +		return -EBUSY;
-> +	case spdm_unexpected_request:
-> +		dev_err(dev, "Unexpected request\n");
-> +		return -EINVAL;
-> +	case spdm_unspecified:
-> +		dev_err(dev, "Unspecified error\n");
-> +		return -EINVAL;
-> +	case spdm_decrypt_error:
-> +		dev_err(dev, "Decrypt error\n");
-> +		return -EIO;
-> +	case spdm_unsupported_request:
-> +		dev_err(dev, "Unsupported request %#x\n", rsp->error_data);
-> +		return -EINVAL;
-> +	case spdm_request_in_flight:
-> +		dev_err(dev, "Request in flight\n");
-> +		return -EINVAL;
-> +	case spdm_invalid_response_code:
-> +		dev_err(dev, "Invalid response code\n");
-> +		return -EINVAL;
-> +	case spdm_session_limit_exceeded:
-> +		dev_err(dev, "Session limit exceeded\n");
-> +		return -EBUSY;
-> +	case spdm_session_required:
-> +		dev_err(dev, "Session required\n");
-> +		return -EINVAL;
-> +	case spdm_reset_required:
-> +		dev_err(dev, "Reset required\n");
-> +		return -ERESTART;
-> +	case spdm_response_too_large:
-> +		dev_err(dev, "Response too large\n");
-> +		return -EINVAL;
-> +	case spdm_request_too_large:
-> +		dev_err(dev, "Request too large\n");
-> +		return -EINVAL;
-> +	case spdm_large_response:
-> +		dev_err(dev, "Large response\n");
-> +		return -EMSGSIZE;
-> +	case spdm_message_lost:
-> +		dev_err(dev, "Message lost\n");
-> +		return -EIO;
-> +	case spdm_invalid_policy:
-> +		dev_err(dev, "Invalid policy\n");
-> +		return -EINVAL;
-> +	case spdm_version_mismatch:
-> +		dev_err(dev, "Version mismatch\n");
-> +		return -EINVAL;
-> +	case spdm_response_not_ready:
-> +		dev_err(dev, "Response not ready\n");
-> +		return -EINPROGRESS;
-> +	case spdm_request_resynch:
-> +		dev_err(dev, "Request resynchronization\n");
-> +		return -ERESTART;
-> +	case spdm_operation_failed:
-> +		dev_err(dev, "Operation failed\n");
-> +		return -EINVAL;
-> +	case spdm_no_pending_requests:
-> +		return -ENOENT;
-> +	case spdm_vendor_defined_error:
-> +		dev_err(dev, "Vendor defined error\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_err(dev, "Undefined error %#x\n", rsp->error_code);
-> +	return -EINVAL;
-> +}
-> +
-[..]
-> +/**
-> + * spdm_authenticate() - Authenticate device
-> + *
-> + * @spdm_state: SPDM session state
-> + *
-> + * Authenticate a device through a sequence of GET_VERSION, GET_CAPABILITIES,
-> + * NEGOTIATE_ALGORITHMS, GET_DIGESTS, GET_CERTIFICATE and CHALLENGE exchanges.
-> + *
-> + * Perform internal locking to serialize multiple concurrent invocations.
-> + * Can be called repeatedly for reauthentication.
-> + *
-> + * Return 0 on success or a negative errno.  In particular, -EPROTONOSUPPORT
-> + * indicates that authentication is not supported by the device.
-> + */
-> +int spdm_authenticate(struct spdm_state *spdm_state)
-> +{
-> +	size_t transcript_sz;
-> +	void *transcript;
-> +	int rc = -ENOMEM;
-> +	u8 slot;
-> +
-> +	mutex_lock(&spdm_state->lock);
-> +	spdm_reset(spdm_state);
-> +
-> +	/*
-> +	 * For CHALLENGE_AUTH signature verification, a hash is computed over
-> +	 * all exchanged messages to detect modification by a man-in-the-middle
-> +	 * or media error.  However the hash algorithm is not known until the
-> +	 * NEGOTIATE_ALGORITHMS response has been received.  The preceding
-> +	 * GET_VERSION and GET_CAPABILITIES exchanges are therefore stashed
-> +	 * in a transcript buffer and consumed once the algorithm is known.
-> +	 * The buffer size is sufficient for the largest possible messages with
-> +	 * 255 version entries and the capability fields added by SPDM 1.2.
-> +	 */
-> +	transcript = kzalloc(struct_size_t(struct spdm_get_version_rsp,
-> +					   version_number_entries, 255) +
-> +			     sizeof(struct spdm_get_capabilities_reqrsp) * 2,
-> +			     GFP_KERNEL);
-> +	if (!transcript)
-> +		goto unlock;
-> +
-> +	rc = spdm_get_version(spdm_state, transcript, &transcript_sz);
-> +	if (rc)
-> +		goto unlock;
-> +
-> +	rc = spdm_get_capabilities(spdm_state, transcript + transcript_sz,
-> +				   &transcript_sz);
-> +	if (rc)
-> +		goto unlock;
-> +
-> +	rc = spdm_negotiate_algs(spdm_state, transcript, transcript_sz);
-> +	if (rc)
-> +		goto unlock;
-> +
-> +	rc = spdm_get_digests(spdm_state);
-> +	if (rc)
-> +		goto unlock;
-> +
-> +	for_each_set_bit(slot, &spdm_state->slot_mask, SPDM_SLOTS) {
-> +		rc = spdm_get_certificate(spdm_state, slot);
-
-A forward looking comment here, how to structure this code for reuse when
-end users opt their kernel into coordinating with a platform TSM? Since the
-DOE mailbox can only be owned by 1 entity, I expect sdpdm_state could grow
-additional operations beyond the raw transport. These operations would be
-for higher-order flows, like "get certificates", where that operation may
-be forwarded from guest-to-VMM-to-TSM, and where VMM and TSM manage the raw
-transport to return the result to the guest.
-
-Otherwise no other implementation comments from me, my eyes are not well
-trained to spot misuse of the crypto apis.
+T24gRnJpLCAyMDIzLTEwLTA2IGF0IDE0OjUyICswMjAwLCBEYXZpZCBIaWxkZW5icmFuZCB3cm90
+ZToKPiBPbiAwNS4xMC4yMyAyMDozMSwgVmlzaGFsIFZlcm1hIHdyb3RlOgo+ID4gCjwuLj4KPiA+
+IEBAIC0yMTY3LDQ3ICsyMjIxLDI4IEBAIHN0YXRpYyBpbnQgX19yZWYgdHJ5X3JlbW92ZV9tZW1v
+cnkodTY0IHN0YXJ0LCB1NjQgc2l6ZSkKPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmMpCj4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByYzsKPiA+IMKgIAo+ID4gK8Kg
+wqDCoMKgwqDCoMKgbWVtX2hvdHBsdWdfYmVnaW4oKTsKPiA+ICsKPiA+IMKgwqDCoMKgwqDCoMKg
+wqAvKgo+ID4gLcKgwqDCoMKgwqDCoMKgICogV2Ugb25seSBzdXBwb3J0IHJlbW92aW5nIG1lbW9y
+eSBhZGRlZCB3aXRoIE1IUF9NRU1NQVBfT05fTUVNT1JZIGluCj4gPiAtwqDCoMKgwqDCoMKgwqAg
+KiB0aGUgc2FtZSBncmFudWxhcml0eSBpdCB3YXMgYWRkZWQgLSBhIHNpbmdsZSBtZW1vcnkgYmxv
+Y2suCj4gPiArwqDCoMKgwqDCoMKgwqAgKiBGb3IgbWVtbWFwX29uX21lbW9yeSwgdGhlIGFsdG1h
+cHMgY291bGQgaGF2ZSBiZWVuIGFkZGVkIG9uCj4gPiArwqDCoMKgwqDCoMKgwqAgKiBhIHBlci1t
+ZW1ibG9jayBiYXNpcy4gTG9vcCB0aHJvdWdoIHRoZSBlbnRpcmUgcmFuZ2UgaWYgc28sCj4gPiAr
+wqDCoMKgwqDCoMKgwqAgKiBhbmQgcmVtb3ZlIGVhY2ggbWVtYmxvY2sgYW5kIGl0cyBhbHRtYXAu
+Cj4gPiDCoMKgwqDCoMKgwqDCoMKgICovCj4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKG1ocF9tZW1t
+YXBfb25fbWVtb3J5KCkpIHsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByYyA9
+IHdhbGtfbWVtb3J5X2Jsb2NrcyhzdGFydCwgc2l6ZSwgJm1lbSwgdGVzdF9oYXNfYWx0bWFwX2Ni
+KTsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocmMpIHsKPiA+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHNpemUgIT0gbWVt
+b3J5X2Jsb2NrX3NpemVfYnl0ZXMoKSkgewo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcHJfd2FybigiUmVmdXNlIHRvIHJl
+bW92ZSAlI2xseCAtICUjbGx4LCIKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAid3JvbmcgZ3Jh
+bnVsYXJpdHlcbiIsCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RhcnQsIHN0YXJ0ICsgc2l6
+ZSk7Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqByZXR1cm4gLUVJTlZBTDsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBhbHRtYXAgPSBtZW0tPmFsdG1hcDsKPiA+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLyoKPiA+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICogTWFyayBhbHRtYXAgTlVMTCBzbyB0
+aGF0IHdlIGNhbiBhZGQgYSBkZWJ1Zwo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgKiBjaGVjayBvbiBtZW1ibG9jayBmcmVlLgo+ID4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKi8KPiA+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtLT5hbHRtYXAgPSBOVUxMOwo+
+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBsb25nIG1lbWJsb2NrX3NpemUgPSBtZW1vcnlfYmxvY2tf
+c2l6ZV9ieXRlcygpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHU2NCBjdXJf
+c3RhcnQ7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm9yIChjdXJf
+c3RhcnQgPSBzdGFydDsgY3VyX3N0YXJ0IDwgc3RhcnQgKyBzaXplOwo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cl9zdGFydCArPSBtZW1ibG9ja19zaXplKQo+
+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZW1vdmVf
+bWVtb3J5X2Jsb2NrX2FuZF9hbHRtYXAobmlkLCBjdXJfc3RhcnQsCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtZW1ibG9ja19zaXplKTsKPiA+
+ICvCoMKgwqDCoMKgwqDCoH0gZWxzZSB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmVtb3ZlX21lbW9yeV9ibG9ja19hbmRfYWx0bWFwKG5pZCwgc3RhcnQsIHNpemUpOwo+IAo+
+IEJldHRlciBjYWxsIHJlbW92ZV9tZW1vcnlfYmxvY2tfZGV2aWNlcygpIGFuZCBhcmNoX3JlbW92
+ZV9tZW1vcnkoc3RhcnQsIAo+IHNpemUsIGFsdG1hcCkgaGVyZSBleHBsaWNpdGx5IGluc3RlYWQg
+b2YgdXNpbmcgCj4gcmVtb3ZlX21lbW9yeV9ibG9ja19hbmRfYWx0bWFwKCkgdGhhdCByZWFsbHkg
+Y2FuIG9ubHkgaGFuZGxlIGEgc2luZ2xlCj4gbWVtb3J5IGJsb2NrIHdpdGggYW55IGlucHV0cy4K
+PiAKSSdtIG5vdCBzdXJlIEkgZm9sbG93LiBFdmVuIGluIHRoZSBub24gbWVtbWFwX29uX21lbW9y
+eSBjYXNlLCB3ZSdkIGhhdmUKdG8gd2Fsa19tZW1vcnlfYmxvY2tzKCkgdG8gZ2V0IHRvIHRoZSBt
+ZW1vcnlfYmxvY2stPmFsdG1hcCwgcmlnaHQ/CgpPciBpcyB0aGVyZSBhIG1vcmUgZGlyZWN0IHdh
+eT8gSWYgd2UgaGF2ZSB0byB3YWxrX21lbW9yeV9ibG9ja3MsIHdoYXQncwp0aGUgYWR2YW50YWdl
+IG9mIGNhbGxpbmcgdGhvc2UgZGlyZWN0bHkgaW5zdGVhZCBvZiBjYWxsaW5nIHRoZSBoZWxwZXIK
+Y3JlYXRlZCBhYm92ZT8KCkFncmVlZCB3aXRoIGFuZCBmaXhlZCB1cCBhbGwgdGhlIG90aGVyIGNv
+bW1lbnRzLgo=
