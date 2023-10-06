@@ -1,133 +1,379 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F2C14F77
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 10:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eOpIG6Q9"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CC1F1
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 03:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696587074; x=1728123074;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gWyN3EqzVzw4L7rRN5ptGG7jS2JKY4p4z/mDEUA73x4=;
-  b=eOpIG6Q9z2MG6EFzKTYwLHnqpXg5Rsw1sBsTXZKkKEg1wiLdh2Es75Sa
-   c/X/Hh5u/Rf6JqfT8sTCq/nLqWat0DFxi1zyJh3I2xolT5E/sSTI3zjzi
-   JajAfTOi/AyG85APOdBv/Rx7fxOBEwzC9eGt1+506RTuWpxoi1gEAavIg
-   DoRDjvigTvUZEbZS9r8KIa2er/6o07DKzzXo5sqPcGMtdhea2PFl404aZ
-   q3SH+SNAQuPObPDjetC7E4PxN4r1J0zkB53xaTwttoA25QBacUJLeZgEX
-   4o2khfYFzdEwbI4D35E0rBe0TZJ0VAEhpWSh25e2rIvx5WsyCaMoS4T5n
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382589511"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="382589511"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:11:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="1083402019"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="1083402019"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Oct 2023 03:11:11 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qohnZ-000MUi-1j;
-	Fri, 06 Oct 2023 10:11:09 +0000
-Date: Fri, 6 Oct 2023 18:10:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup
- locking
-Message-ID: <202310061706.JTytkmZT-lkp@intel.com>
-References: <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67341CABE
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 12:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D640DC2
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 05:09:43 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S26bw2vkjz6HJ6B;
+	Fri,  6 Oct 2023 20:06:52 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 6 Oct
+ 2023 13:09:40 +0100
+Date: Fri, 6 Oct 2023 13:09:39 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+CC: Dave Jiang <dave.jiang@intel.com>, <thuth@redhat.com>,
+	<qemu-devel@nongnu.org>, <peter.maydell@linaro.org>, <imammedo@redhat.com>,
+	<anisinha@redhat.com>, <marcel.apfelbaum@gmail.com>, <pbonzini@redhat.com>,
+	<richard.henderson@linaro.org>, <eduardo@habkost.net>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3] hw/cxl: Add QTG _DSM support for ACPI0017 device
+Message-ID: <20231006130939.00007a69@Huawei.com>
+In-Reply-To: <20231005122736-mutt-send-email-mst@kernel.org>
+References: <20231004180529-mutt-send-email-mst@kernel.org>
+	<169646094762.643966.16021192876985391476.stgit@djiang5-mobl3>
+	<20231004230132-mutt-send-email-mst@kernel.org>
+	<12874c03-7de0-474f-9378-7d3ab8572d8d@intel.com>
+	<20231005122736-mutt-send-email-mst@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Dan,
+On Thu, 5 Oct 2023 12:32:11 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> On Thu, Oct 05, 2023 at 09:11:15AM -0700, Dave Jiang wrote:
+> > 
+> > 
+> > On 10/4/23 20:36, Michael S. Tsirkin wrote:  
+> > > 
+> > > On Wed, Oct 04, 2023 at 04:09:07PM -0700, Dave Jiang wrote:  
+> > >> Add a simple _DSM call support for the ACPI0017 device to return a fake QTG
+> > >> ID value of 0 in all cases. The enabling is for _DSM plumbing testing
+> > >> from the OS.  
+> > > 
+> > > 
+> > > the enabling -> this  
+> > 
+> > will update  
+> > >   
+> > >>
+> > >> Following edited for readbility only  
+> > > 
+> > > readbility only -> readability  
+> > 
+> > will update  
+> > > 
+> > >   
+> > >>
+> > >> Device (CXLM)
+> > >> {
+> > >>     Name (_HID, "ACPI0017")  // _HID: Hardware ID
+> > >> ...
+> > >>     Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
+> > >>     {
+> > >>         If ((Arg0 == ToUUID ("f365f9a6-a7de-4071-a66a-b40c0b4f8e52")))
+> > >>         {
+> > >>             If ((Arg2 == Zero))
+> > >>             {
+> > >>                 Return (Buffer (One) { 0x01 })
+> > >>             }
+> > >>
+> > >>             If ((Arg2 == One))  
+> > >   
+> > >>             {
+> > >>                 Return (Package (0x02)
+> > >>                 {
+> > >>                     Buffer (0x02)
+> > >>                     { 0x01, 0x00 },
+> > >>                     Package (0x01)
+> > >>                     {
+> > >>                         Buffer (0x02)
+> > >>                         { 0x00, 0x00 }
+> > >>                     }
+> > >>                 })
+> > >>             }
+> > >>         }
+> > >>     }
+> > >>
+> > >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > >>
+> > >> --
+> > >> v3: Fix output assignment to be BE host friendly. Fix typo in comment.
+> > >> According to the CXL spec, the DSM output should be 1 WORD to indicate
+> > >> the max suppoted QTG ID and a package of 0 or more WORDs for the QTG IDs.
+> > >> In this dummy impementation, we have first WORD with a 1 to indcate max
+> > >> supprted QTG ID of 1. And second WORD in a package to indicate the QTG
+> > >> ID of 0.
+> > >>
+> > >> v2: Minor edit to drop reference to switches in patch description.
+> > >> Message-Id: <20230904161847.18468-3-Jonathan.Cameron@huawei.com>
+> > >> Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
+> > >> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > >> ---
+> > >>  hw/acpi/cxl.c         |   55 +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >>  hw/i386/acpi-build.c  |    1 +
+> > >>  include/hw/acpi/cxl.h |    1 +
+> > >>  3 files changed, 57 insertions(+)
+> > >>
+> > >> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+> > >> index 92b46bc9323b..cce12d5bc81c 100644
+> > >> --- a/hw/acpi/cxl.c
+> > >> +++ b/hw/acpi/cxl.c
+> > >> @@ -30,6 +30,61 @@
+> > >>  #include "qapi/error.h"
+> > >>  #include "qemu/uuid.h"
+> > >>  
+> > >> +void build_cxl_dsm_method(Aml *dev)
+> > >> +{
+> > >> +    Aml *method, *ifctx, *ifctx2;
+> > >> +
+> > >> +    method = aml_method("_DSM", 4, AML_SERIALIZED);
+> > >> +    {
+> > >> +        Aml *function, *uuid;
+> > >> +
+> > >> +        uuid = aml_arg(0);
+> > >> +        function = aml_arg(2);
+> > >> +        /* CXL spec v3.0 9.17.3.1 *  
+> > > 
+> > > 
+> > > drop this * please
+> > >   
+> > >> , QTG ID _DSM  
+> > 
+> > Ooops. git format-patch mangled this and I didn't catch. Will fix
+> >   
+> > > 
+> > > 
+> > > this is not the name of this paragraph. pls make it match
+> > > exactly so people can search
+> > >   
+> > >> */
+> > >> +        ifctx = aml_if(aml_equal(
+> > >> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
+> > >> +
+> > >> +        /* Function 0, standard DSM query function */
+> > >> +        ifctx2 = aml_if(aml_equal(function, aml_int(0)));
+> > >> +        {
+> > >> +            uint8_t byte_list[1] = { 0x01 }; /* functions 1 only */  
+> > > 
+> > > function 1?  
+> > 
+> > Yes, will fix
+> >   
+> > >   
+> > >> +
+> > >> +            aml_append(ifctx2,
+> > >> +                       aml_return(aml_buffer(sizeof(byte_list), byte_list)));
+> > >> +        }
+> > >> +        aml_append(ifctx, ifctx2);
+> > >> +
+> > >> +        /*
+> > >> +         * Function 1
+> > >> +         * A return value of {1, {0}} indicates that
+> > >> +         * max supported QTG ID of 1 and recommended QTG is 0.
+> > >> +         * The values here are faked to simplify emulation.  
+> > > 
+> > > again pls quote spec directly do not paraphrase  
+> > 
+> > Here it's not paraphrasing from the spec. I'm just describing the dummy value that will be provided.
+> >   
+> > >   
+> > >> +         */
+> > >> +        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
+> > >> +        {
+> > >> +            uint16_t word_list = cpu_to_le16(1);
+> > >> +            uint16_t word_list2 = 0;
+> > >> +            Aml *pak, *pak1;
+> > >> +
+> > >> +            /*
+> > >> +             * The return package is a package of a WORD
+> > >> and another package.
+> > >> +             * The embedded package contains 0 or more WORDs for the
+> > >> +             * recommended QTG IDs.  
+> > > 
+> > > 
+> > > 
+> > > pls quote the spec directly  
+> > 
+> > Will do.
+> >   
+> > > 
+> > > what does "a WORD" mean is unclear - do you match what hardware does
+> > > when you use aml_buffer? pls mention this in commit log, and
+> > > show actual hardware dump for comparison.  
+> > The CXL spec says WORD without much qualification. It's a 16bit value AFAICT. I'll add additional comment. Currently I do not have access to actual hardware unfortunately. I'm constructing this purely based on spec description.  
+> 
 
-[auto build test WARNING on 6465e260f48790807eef06b583b38ca9789b6072]
+WORD does seem to be clearly defined in the ACPI spec as uint16
+and as this is describing a DSDT blob I think we can safe that
+it means that.  Also lines up with the fixed sizes in CEDT.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/cxl-pci-Remove-unnecessary-device-reference-management-in-sanitize-work/20231006-152823
-base:   6465e260f48790807eef06b583b38ca9789b6072
-patch link:    https://lore.kernel.org/r/169657719974.1491153.15276451196916291864.stgit%40dwillia2-xfh.jf.intel.com
-patch subject: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup locking
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20231006/202310061706.JTytkmZT-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231006/202310061706.JTytkmZT-lkp@intel.com/reproduce)
+> It's not clear buffer is actually word though.
+> 
+> Jonathan do you have hardware access?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310061706.JTytkmZT-lkp@intel.com/
+No.  +CC linux-cxl to see if anyone else has hardware + BIOS with
+QTG implemented...  There will be lots of implementations soon so I'd make
+not guarantee they will all interpret this the same.
 
-All warnings (new ones prefixed by >>):
+Aim here is Linux kernel enablement support, and unfortunately that almost
+always means we are ahead of easy availability of hardware. If it exists
+its probably prototypes in a lab, in which case no guarantees on the
+BIOS tables presented...
 
->> drivers/cxl/core/mbox.c:1190: warning: Function parameter or member 'cxlmd' not described in 'cxl_mem_sanitize'
->> drivers/cxl/core/mbox.c:1190: warning: Excess function parameter 'mds' description in 'cxl_mem_sanitize'
+> 
+> Also, possible to get clarification from the spec committee?
+
+I'm unclear what we are clarifying.  As I read it current implementation
+is indeed wrong and I failed to notice this earlier :(
+
+Ultimately data encoding (ACPI 6.5 section 20.2..3 Data Objects Encoding)
+should I think be
+
+0x0B 0x00 0x00
+WordPrefix then data : note if you try a 0x0001 and feed
+it to iasl it will squash it into a byte instead and indeed if you
+force the binary to the above it will decode it as 0x0000 but recompile
+that and you will be back to just
+0x00 (as bytes don't need a prefix..)
+
+Currently it would be.
+0x11     0x05 0x0a 0x02 0x00 0x01
+BufferOp 
+
+Btw I built a minimal DSDT file to test this and iasl isn't happy with
+the fact the _DSM doesn't return anything at all if ARG2 isn't 1 or 2.
+Whilst that's imdef territory as not covered by the CXL spec, we should
+return 'something' ;)
+
+Anyhow, to do this as per the CXL spec we need an aml_word()
+that just implements the word case from aml_int()
+
+Chance are that it never matters if we get an ecoding that is
+only single byte (because the value is small) but who knows what
+other AML parsers might do.
+
+Something simple like (copy typed from test machine..)
+
+Aml *aml_word(const uint16_t val)
+{
+    Aml *var = aml_alloc();
+    build_append_byte(var->buf, 0x0B);
+    build_append_int_noprefix(var->buf, val, 2);
+    return var;
+}
+
+and one blob in acpi/cxl.c becomes
+
+        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
+        {
+             Aml *pak, *pac1;
+
+	     pak1 = aml_package(1)
+	     aml_append(pak1, aml_word(0));
+             pak = aml_package(2);
+             aml_append(pack, aml_word(0x1));
+             aml_append(pak, pak1);
+
+             aml_append(ifctx2, aml_return(pak));
+        }
+        aml_append(ifctx, ifctx2);
+...
+
+ 
+        }
+
+Give something like
+If ((Arg2 == One))
+{
+    Return (Package (0x02)
+    {
+        0x0001,
+        Package (0x01)
+        {
+            0x0000
+        }
+    })
+}
 
 
-vim +1190 drivers/cxl/core/mbox.c
+Binary encoding then clearly uses packages of words.
 
-  1173	
-  1174	
-  1175	/**
-  1176	 * cxl_mem_sanitize() - Send a sanitization command to the device.
-  1177	 * @mds: The device for the operation
-  1178	 * @cmd: The specific sanitization command opcode
-  1179	 *
-  1180	 * Return: 0 if the command was executed successfully, regardless of
-  1181	 * whether or not the actual security operation is done in the background,
-  1182	 * such as for the Sanitize case.
-  1183	 * Error return values can be the result of the mailbox command, -EINVAL
-  1184	 * when security requirements are not met or invalid contexts, or -EBUSY
-  1185	 * if the sanitize operation is already in flight.
-  1186	 *
-  1187	 * See CXL 3.0 @8.2.9.8.5.1 Sanitize and @8.2.9.8.5.2 Secure Erase.
-  1188	 */
-  1189	int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
-> 1190	{
-  1191		struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-  1192		struct cxl_port  *endpoint;
-  1193		int rc;
-  1194	
-  1195		/* synchronize with cxl_mem_probe() and decoder write operations */
-  1196		device_lock(&cxlmd->dev);
-  1197		endpoint = cxlmd->endpoint;
-  1198		down_read(&cxl_region_rwsem);
-  1199		/*
-  1200		 * Require an endpoint to be safe otherwise the driver can not
-  1201		 * be sure that the device is unmapped.
-  1202		 */
-  1203		if (endpoint && endpoint->commit_end == -1)
-  1204			rc = __cxl_mem_sanitize(mds, cmd);
-  1205		else
-  1206			rc = -EBUSY;
-  1207		up_read(&cxl_region_rwsem);
-  1208		device_unlock(&cxlmd->dev);
-  1209	
-  1210		return rc;
-  1211	}
-  1212	
+12      0b        02         0b    01 00     12    05    01        0b    00 00
+PkgOp   len       elements   word  0x0001    pkgOp len   elements  word  0x0000
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+(note I cheated an added a marker in one of the values and didn't decode
+the whole thing by hand ;)
+
+> 
+> >   
+> > > 
+> > >   
+> > >> +             */
+> > >> +            pak1 = aml_package(1);
+> > >> +            aml_append(pak1, aml_buffer(sizeof(uint16_t), word_list2));
+> > >> +            pak = aml_package(2);
+> > >> +            aml_append(pak, aml_buffer(sizeof(uint16_t), word_list));  
+> > > 
+> > > 
+> > > It does not look like this patch compiles.
+> > > 
+> > > So how did you test it?
+> > > 
+> > > Please do not post untested patches.
+> > > 
+> > > If you do at least minimal testing
+> > > you would also see failures in bios table test
+> > > and would follow the procedure described there to
+> > > post it.  
+> > 
+> > Sorry about that. I compiled successfully but did not test.  
+> 
+> I don't see how it can compile either. In fact I just applied and build
+> fails.
+> 
+> > The following chunk is tested. However, is it the correct way to do this? The comment is direct spec verbiage. I'm not familiar with constructing ACPI tables in QEMU and tried my best by looking at other ACPI code in QEMU.   
+> 
+> To do what? create a buffer with a two byte word?
+> For example:
+> 	word = aml_buffer(0, NULL);
+> 	build_append_int_noprefix(word->buf, 2, 0x1);
+> 
+> 
+> 
+> but again it is not clear at all what does spec mean.
+> an integer up to 0xfffff? a buffer as you did? just two bytes?
+> 
+> could be any of these.
+
+The best we have in the way of description is the multiple QTG example
+where it's
+Package() {2, 1} combined with it being made up of WORDs
+
+whereas in general that will get squashed to a pair of bytes...
+So I'm thinking WORDs is max size rather than only size but
+given ambiguity we should encode them as words anyway.
+
+Note this breaks Dave's current kernel proposal which is assuming
+a buffer...
+https://lore.kernel.org/all/168695172301.3031571.9812118774299137032.stgit@djiang5-mobl3/
+
+Hohum. Dave, can you sanity check with the appropriate SSWG person (MN IIRC)
+I can do it you'd prefer - just let me know.
+
+Jonathan
+
+
