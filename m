@@ -1,35 +1,31 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67341CABE
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 12:09:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7F42F58
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 12:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D640DC2
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 05:09:43 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S26bw2vkjz6HJ6B;
-	Fri,  6 Oct 2023 20:06:52 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F50C2
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 05:14:26 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S26jN1yCQz6HJRk;
+	Fri,  6 Oct 2023 20:11:36 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 6 Oct
- 2023 13:09:40 +0100
-Date: Fri, 6 Oct 2023 13:09:39 +0100
+ 2023 13:14:24 +0100
+Date: Fri, 6 Oct 2023 13:14:23 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <thuth@redhat.com>,
-	<qemu-devel@nongnu.org>, <peter.maydell@linaro.org>, <imammedo@redhat.com>,
-	<anisinha@redhat.com>, <marcel.apfelbaum@gmail.com>, <pbonzini@redhat.com>,
-	<richard.henderson@linaro.org>, <eduardo@habkost.net>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3] hw/cxl: Add QTG _DSM support for ACPI0017 device
-Message-ID: <20231006130939.00007a69@Huawei.com>
-In-Reply-To: <20231005122736-mutt-send-email-mst@kernel.org>
-References: <20231004180529-mutt-send-email-mst@kernel.org>
-	<169646094762.643966.16021192876985391476.stgit@djiang5-mobl3>
-	<20231004230132-mutt-send-email-mst@kernel.org>
-	<12874c03-7de0-474f-9378-7d3ab8572d8d@intel.com>
-	<20231005122736-mutt-send-email-mst@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>
+Subject: Re: [PATCH v7 04/11] cxl: Add support for _DSM Function for
+ retrieving QTG ID
+Message-ID: <20231006131423.00005657@Huawei.com>
+In-Reply-To: <168695172301.3031571.9812118774299137032.stgit@djiang5-mobl3>
+References: <168695160531.3031571.4875512229068707023.stgit@djiang5-mobl3>
+	<168695172301.3031571.9812118774299137032.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,330 +46,376 @@ X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, 5 Oct 2023 12:32:11 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Fri, 16 Jun 2023 14:42:03 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> On Thu, Oct 05, 2023 at 09:11:15AM -0700, Dave Jiang wrote:
-> > 
-> > 
-> > On 10/4/23 20:36, Michael S. Tsirkin wrote:  
-> > > 
-> > > On Wed, Oct 04, 2023 at 04:09:07PM -0700, Dave Jiang wrote:  
-> > >> Add a simple _DSM call support for the ACPI0017 device to return a fake QTG
-> > >> ID value of 0 in all cases. The enabling is for _DSM plumbing testing
-> > >> from the OS.  
-> > > 
-> > > 
-> > > the enabling -> this  
-> > 
-> > will update  
-> > >   
-> > >>
-> > >> Following edited for readbility only  
-> > > 
-> > > readbility only -> readability  
-> > 
-> > will update  
-> > > 
-> > >   
-> > >>
-> > >> Device (CXLM)
-> > >> {
-> > >>     Name (_HID, "ACPI0017")  // _HID: Hardware ID
-> > >> ...
-> > >>     Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-> > >>     {
-> > >>         If ((Arg0 == ToUUID ("f365f9a6-a7de-4071-a66a-b40c0b4f8e52")))
-> > >>         {
-> > >>             If ((Arg2 == Zero))
-> > >>             {
-> > >>                 Return (Buffer (One) { 0x01 })
-> > >>             }
-> > >>
-> > >>             If ((Arg2 == One))  
-> > >   
-> > >>             {
-> > >>                 Return (Package (0x02)
-> > >>                 {
-> > >>                     Buffer (0x02)
-> > >>                     { 0x01, 0x00 },
-> > >>                     Package (0x01)
-> > >>                     {
-> > >>                         Buffer (0x02)
-> > >>                         { 0x00, 0x00 }
-> > >>                     }
-> > >>                 })
-> > >>             }
-> > >>         }
-> > >>     }
-> > >>
-> > >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >>
-> > >> --
-> > >> v3: Fix output assignment to be BE host friendly. Fix typo in comment.
-> > >> According to the CXL spec, the DSM output should be 1 WORD to indicate
-> > >> the max suppoted QTG ID and a package of 0 or more WORDs for the QTG IDs.
-> > >> In this dummy impementation, we have first WORD with a 1 to indcate max
-> > >> supprted QTG ID of 1. And second WORD in a package to indicate the QTG
-> > >> ID of 0.
-> > >>
-> > >> v2: Minor edit to drop reference to switches in patch description.
-> > >> Message-Id: <20230904161847.18468-3-Jonathan.Cameron@huawei.com>
-> > >> Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
-> > >> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > >> ---
-> > >>  hw/acpi/cxl.c         |   55 +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >>  hw/i386/acpi-build.c  |    1 +
-> > >>  include/hw/acpi/cxl.h |    1 +
-> > >>  3 files changed, 57 insertions(+)
-> > >>
-> > >> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-> > >> index 92b46bc9323b..cce12d5bc81c 100644
-> > >> --- a/hw/acpi/cxl.c
-> > >> +++ b/hw/acpi/cxl.c
-> > >> @@ -30,6 +30,61 @@
-> > >>  #include "qapi/error.h"
-> > >>  #include "qemu/uuid.h"
-> > >>  
-> > >> +void build_cxl_dsm_method(Aml *dev)
-> > >> +{
-> > >> +    Aml *method, *ifctx, *ifctx2;
-> > >> +
-> > >> +    method = aml_method("_DSM", 4, AML_SERIALIZED);
-> > >> +    {
-> > >> +        Aml *function, *uuid;
-> > >> +
-> > >> +        uuid = aml_arg(0);
-> > >> +        function = aml_arg(2);
-> > >> +        /* CXL spec v3.0 9.17.3.1 *  
-> > > 
-> > > 
-> > > drop this * please
-> > >   
-> > >> , QTG ID _DSM  
-> > 
-> > Ooops. git format-patch mangled this and I didn't catch. Will fix
-> >   
-> > > 
-> > > 
-> > > this is not the name of this paragraph. pls make it match
-> > > exactly so people can search
-> > >   
-> > >> */
-> > >> +        ifctx = aml_if(aml_equal(
-> > >> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
-> > >> +
-> > >> +        /* Function 0, standard DSM query function */
-> > >> +        ifctx2 = aml_if(aml_equal(function, aml_int(0)));
-> > >> +        {
-> > >> +            uint8_t byte_list[1] = { 0x01 }; /* functions 1 only */  
-> > > 
-> > > function 1?  
-> > 
-> > Yes, will fix
-> >   
-> > >   
-> > >> +
-> > >> +            aml_append(ifctx2,
-> > >> +                       aml_return(aml_buffer(sizeof(byte_list), byte_list)));
-> > >> +        }
-> > >> +        aml_append(ifctx, ifctx2);
-> > >> +
-> > >> +        /*
-> > >> +         * Function 1
-> > >> +         * A return value of {1, {0}} indicates that
-> > >> +         * max supported QTG ID of 1 and recommended QTG is 0.
-> > >> +         * The values here are faked to simplify emulation.  
-> > > 
-> > > again pls quote spec directly do not paraphrase  
-> > 
-> > Here it's not paraphrasing from the spec. I'm just describing the dummy value that will be provided.
-> >   
-> > >   
-> > >> +         */
-> > >> +        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
-> > >> +        {
-> > >> +            uint16_t word_list = cpu_to_le16(1);
-> > >> +            uint16_t word_list2 = 0;
-> > >> +            Aml *pak, *pak1;
-> > >> +
-> > >> +            /*
-> > >> +             * The return package is a package of a WORD
-> > >> and another package.
-> > >> +             * The embedded package contains 0 or more WORDs for the
-> > >> +             * recommended QTG IDs.  
-> > > 
-> > > 
-> > > 
-> > > pls quote the spec directly  
-> > 
-> > Will do.
-> >   
-> > > 
-> > > what does "a WORD" mean is unclear - do you match what hardware does
-> > > when you use aml_buffer? pls mention this in commit log, and
-> > > show actual hardware dump for comparison.  
-> > The CXL spec says WORD without much qualification. It's a 16bit value AFAICT. I'll add additional comment. Currently I do not have access to actual hardware unfortunately. I'm constructing this purely based on spec description.  
+> CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
 > 
-
-WORD does seem to be clearly defined in the ACPI spec as uint16
-and as this is describing a DSDT blob I think we can safe that
-it means that.  Also lines up with the fixed sizes in CEDT.
-
-> It's not clear buffer is actually word though.
+> Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
+> an input of an ACPI package with 4 dwords (read latency, write latency,
+> read bandwidth, write bandwidth). The call returns a package with 1 WORD
+> that provides the max supported QTG ID and a package that may contain 0 or
+> more WORDs as the recommended QTG IDs in the recommended order.
 > 
-> Jonathan do you have hardware access?
-
-No.  +CC linux-cxl to see if anyone else has hardware + BIOS with
-QTG implemented...  There will be lots of implementations soon so I'd make
-not guarantee they will all interpret this the same.
-
-Aim here is Linux kernel enablement support, and unfortunately that almost
-always means we are ahead of easy availability of hardware. If it exists
-its probably prototypes in a lab, in which case no guarantees on the
-BIOS tables presented...
-
+> Create a cxl_root container for the root cxl_port and provide a callback
+> ->get_qos_class() in order to retrieve the QoS class. For the ACPI case,  
+> the _DSM helper is used to retrieve the QTG ID and returned. A
+> devm_cxl_add_root() function is added for root port setup and registration
+> of the cxl_root callback operation(s).
 > 
-> Also, possible to get clarification from the spec committee?
-
-I'm unclear what we are clarifying.  As I read it current implementation
-is indeed wrong and I failed to notice this earlier :(
-
-Ultimately data encoding (ACPI 6.5 section 20.2..3 Data Objects Encoding)
-should I think be
-
-0x0B 0x00 0x00
-WordPrefix then data : note if you try a 0x0001 and feed
-it to iasl it will squash it into a byte instead and indeed if you
-force the binary to the above it will decode it as 0x0000 but recompile
-that and you will be back to just
-0x00 (as bytes don't need a prefix..)
-
-Currently it would be.
-0x11     0x05 0x0a 0x02 0x00 0x01
-BufferOp 
-
-Btw I built a minimal DSDT file to test this and iasl isn't happy with
-the fact the _DSM doesn't return anything at all if ARG2 isn't 1 or 2.
-Whilst that's imdef territory as not covered by the CXL spec, we should
-return 'something' ;)
-
-Anyhow, to do this as per the CXL spec we need an aml_word()
-that just implements the word case from aml_int()
-
-Chance are that it never matters if we get an ecoding that is
-only single byte (because the value is small) but who knows what
-other AML parsers might do.
-
-Something simple like (copy typed from test machine..)
-
-Aml *aml_word(const uint16_t val)
-{
-    Aml *var = aml_alloc();
-    build_append_byte(var->buf, 0x0B);
-    build_append_int_noprefix(var->buf, val, 2);
-    return var;
-}
-
-and one blob in acpi/cxl.c becomes
-
-        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
-        {
-             Aml *pak, *pac1;
-
-	     pak1 = aml_package(1)
-	     aml_append(pak1, aml_word(0));
-             pak = aml_package(2);
-             aml_append(pack, aml_word(0x1));
-             aml_append(pak, pak1);
-
-             aml_append(ifctx2, aml_return(pak));
-        }
-        aml_append(ifctx, ifctx2);
-...
-
- 
-        }
-
-Give something like
-If ((Arg2 == One))
-{
-    Return (Package (0x02)
-    {
-        0x0001,
-        Package (0x01)
-        {
-            0x0000
-        }
-    })
-}
-
-
-Binary encoding then clearly uses packages of words.
-
-12      0b        02         0b    01 00     12    05    01        0b    00 00
-PkgOp   len       elements   word  0x0001    pkgOp len   elements  word  0x0000
-
-(note I cheated an added a marker in one of the values and didn't decode
-the whole thing by hand ;)
-
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v7:
+> - Fix stray lines in commit log. (Jonathan)
+> v5:
+> - Make the helper a callback for the CXL root. (Dan)
+> - Drop the addition of core/acpi.c. (Dan)
+> - Add endiness handling. (Jonathan)
+> - Refactor error exits. (Jonathan)
+> - Update evaluate function description. (Jonathan)
+> - Make uuid static. (Dan)
+> v2:
+> - Reorder var declaration and use C99 style. (Jonathan)
+> - Allow >2 ACPI objects in package for future expansion. (Jonathan)
+> - Check QTG IDs against MAX QTG ID provided by output package. (Jonathan)
+> ---
+>  drivers/cxl/acpi.c      |  146 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/core/port.c |   41 ++++++++++++-
+>  drivers/cxl/cxl.h       |   36 ++++++++++++
+>  3 files changed, 215 insertions(+), 8 deletions(-)
 > 
-> >   
-> > > 
-> > >   
-> > >> +             */
-> > >> +            pak1 = aml_package(1);
-> > >> +            aml_append(pak1, aml_buffer(sizeof(uint16_t), word_list2));
-> > >> +            pak = aml_package(2);
-> > >> +            aml_append(pak, aml_buffer(sizeof(uint16_t), word_list));  
-> > > 
-> > > 
-> > > It does not look like this patch compiles.
-> > > 
-> > > So how did you test it?
-> > > 
-> > > Please do not post untested patches.
-> > > 
-> > > If you do at least minimal testing
-> > > you would also see failures in bios table test
-> > > and would follow the procedure described there to
-> > > post it.  
-> > 
-> > Sorry about that. I compiled successfully but did not test.  
-> 
-> I don't see how it can compile either. In fact I just applied and build
-> fails.
-> 
-> > The following chunk is tested. However, is it the correct way to do this? The comment is direct spec verbiage. I'm not familiar with constructing ACPI tables in QEMU and tried my best by looking at other ACPI code in QEMU.   
-> 
-> To do what? create a buffer with a two byte word?
-> For example:
-> 	word = aml_buffer(0, NULL);
-> 	build_append_int_noprefix(word->buf, 2, 0x1);
-> 
-> 
-> 
-> but again it is not clear at all what does spec mean.
-> an integer up to 0xfffff? a buffer as you did? just two bytes?
-> 
-> could be any of these.
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index e063df2bf876..8247df06d683 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -17,6 +17,10 @@ struct cxl_cxims_data {
+>  	u64 xormaps[];
+>  };
+>  
+> +static const guid_t acpi_cxl_qtg_id_guid =
+> +	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
+> +		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
+> +
+>  /*
+>   * Find a targets entry (n) in the host bridge interleave list.
+>   * CXL Specification 3.0 Table 9-22
+> @@ -194,6 +198,140 @@ struct cxl_cfmws_context {
+>  	int id;
+>  };
+>  
+> +/**
+> + * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
+> + * @handle: ACPI handle
+> + * @input: bandwidth and latency data
+> + *
+> + * Return: qos_class output or ERRPTR of -errno
+> + *
+> + * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
+> + * the QTG IDs that are suitable for the performance point in order of most
+> + * suitable to least suitable. Return first QTG ID.
+> + */
+> +static struct qos_class *
+> +cxl_acpi_evaluate_qtg_dsm(acpi_handle handle, struct qtg_dsm_input *input)
+> +{
+> +	union acpi_object *out_obj, *out_buf, *pkg;
+> +	union acpi_object in_buf = {
+> +		.buffer = {
+> +			.type = ACPI_TYPE_BUFFER,
+> +			.pointer = (u8 *)input,
+> +			.length = cpu_to_le32(sizeof(*input)),
+> +		},
+> +	};
+> +	union acpi_object in_obj = {
+> +		.package = {
+> +			.type = ACPI_TYPE_PACKAGE,
+> +			.count = cpu_to_le32(1),
+> +			.elements = &in_buf
+> +		},
+> +	};
+> +	struct qos_class *output;
+> +	u16 max_qtg;
+> +	__le16 *ent;
+> +	int entries;
+> +	int i, len;
+> +	int rc = 0;
+> +
+> +	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
+> +	if (!out_obj)
+> +		return ERR_PTR(-ENXIO);
+> +
+> +	if (out_obj->type != ACPI_TYPE_PACKAGE) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	/* Check Max QTG ID */
+> +	pkg = &out_obj->package.elements[0];
+> +	if (pkg->type != ACPI_TYPE_BUFFER) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	if (le32_to_cpu(pkg->buffer.length) != sizeof(u16)) {
 
-The best we have in the way of description is the multiple QTG example
-where it's
-Package() {2, 1} combined with it being made up of WORDs
+FYI a bit of last minute QEMU feedback meant we took a closer look at
+the implementation vs specification.
 
-whereas in general that will get squashed to a pair of bytes...
-So I'm thinking WORDs is max size rather than only size but
-given ambiguity we should encode them as words anyway.
+It's not clear that buffer is the appropriate type here. 
+My interpretation is that is should be a WORD though in most cases
+ACPI tooling squashes small integers into bytes and provides no easy
+way to enforce the 0x0B prefix that means it is a word.
 
-Note this breaks Dave's current kernel proposal which is assuming
-a buffer...
-https://lore.kernel.org/all/168695172301.3031571.9812118774299137032.stgit@djiang5-mobl3/
+If anyone has real firmware already that supports this shout now as we
+will want to make the kernel code flexible enough to cope with it!
 
-Hohum. Dave, can you sanity check with the appropriate SSWG person (MN IIRC)
-I can do it you'd prefer - just let me know.
+https://lore.kernel.org/all/20231006130939.00007a69@Huawei.com/
+Includes a proposal to always use the 0x0B prefix which requires
+an int_word() function being added to the qemu AML building code.
 
 Jonathan
 
+p.s. As I may have mentioned, I'm not a lover of AML and the spec
+dive was definitely not an ideal Friday activity..
+
+
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	max_qtg = le16_to_cpu(*(__le16 *)pkg->buffer.pointer);
+> +
+> +	/* Retrieve QTG IDs package */
+> +	pkg = &out_obj->package.elements[1];
+> +	if (pkg->type != ACPI_TYPE_PACKAGE) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	out_buf = &pkg->package.elements[0];
+> +	if (out_buf->type != ACPI_TYPE_BUFFER) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	len = le32_to_cpu(out_buf->buffer.length);
+> +
+> +	/* It's legal to have 0 QTG entries */
+> +	if (len == 0) {
+> +		rc = -EEXIST;
+> +		goto out;
+> +	}
+> +
+> +	/* Malformed package, not multiple of WORD size */
+> +	if (len % sizeof(__le16)) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	entries = len / sizeof(__le16);
+> +	output = kmalloc(sizeof(*output) + entries * sizeof(int), GFP_KERNEL);
+> +	if (!output) {
+> +		rc = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ent = (__le16 *)out_buf->buffer.pointer;
+> +	for (i = 0; i < entries; i++) {
+> +		int qtg_id = le16_to_cpu(ent[i]);
+> +
+> +		if (qtg_id > max_qtg)
+> +			pr_warn("QTG ID %u greater than MAX %u\n",
+> +				qtg_id, max_qtg);
+> +
+> +		output->entries[i] = qtg_id;
+> +	}
+> +	output->nr = entries;
+> +
+> +out:
+> +	ACPI_FREE(out_obj);
+> +	if (rc)
+> +		output = ERR_PTR(rc);
+> +	return output;
+> +}
+> +
+> +static struct qos_class *
+> +cxl_acpi_get_qos_class(struct cxl_port *root_port, struct qtg_dsm_input *input)
+> +{
+> +	acpi_handle handle;
+> +	struct device *dev;
+> +
+> +	dev = root_port->uport;
+> +
+> +	if (!dev_is_platform(dev))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	handle = ACPI_HANDLE(dev);
+> +	if (!handle)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return cxl_acpi_evaluate_qtg_dsm(handle, input);
+> +}
+> +
+> +static const struct cxl_root_ops acpi_root_ops = {
+> +	.get_qos_class = cxl_acpi_get_qos_class,
+> +};
+> +
+>  static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>  			   const unsigned long end)
+>  {
+> @@ -631,6 +769,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>  {
+>  	int rc;
+>  	struct resource *cxl_res;
+> +	struct cxl_root *cxl_root;
+>  	struct cxl_port *root_port;
+>  	struct device *host = &pdev->dev;
+>  	struct acpi_device *adev = ACPI_COMPANION(host);
+> @@ -650,9 +789,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>  	cxl_res->end = -1;
+>  	cxl_res->flags = IORESOURCE_MEM;
+>  
+> -	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+> -	if (IS_ERR(root_port))
+> -		return PTR_ERR(root_port);
+> +	cxl_root = devm_cxl_add_root(host, &acpi_root_ops);
+> +	if (IS_ERR(cxl_root))
+> +		return PTR_ERR(cxl_root);
+> +	root_port = &cxl_root->port;
+>  
+>  	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+>  			      add_host_bridge_dport);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 3cf84e456d67..dd18c6eb3833 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -525,7 +525,10 @@ static void cxl_port_release(struct device *dev)
+>  	xa_destroy(&port->dports);
+>  	xa_destroy(&port->regions);
+>  	ida_free(&cxl_port_ida, port->id);
+> -	kfree(port);
+> +	if (is_cxl_root(port))
+> +		kfree(to_cxl_root(port));
+> +	else
+> +		kfree(port);
+>  }
+>  
+>  static const struct attribute_group *cxl_port_attribute_groups[] = {
+> @@ -628,13 +631,22 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>  				       resource_size_t component_reg_phys,
+>  				       struct cxl_dport *parent_dport)
+>  {
+> +	struct cxl_root *cxl_root = NULL;
+>  	struct cxl_port *port;
+>  	struct device *dev;
+>  	int rc;
+>  
+> -	port = kzalloc(sizeof(*port), GFP_KERNEL);
+> -	if (!port)
+> -		return ERR_PTR(-ENOMEM);
+> +	/* No parent_dport, root cxl_port */
+> +	if (!parent_dport) {
+> +		cxl_root = kzalloc(sizeof(*cxl_root), GFP_KERNEL);
+> +		if (!cxl_root)
+> +			return ERR_PTR(-ENOMEM);
+> +		port = &cxl_root->port;
+> +	} else {
+> +		port = kzalloc(sizeof(*port), GFP_KERNEL);
+> +		if (!port)
+> +			return ERR_PTR(-ENOMEM);
+> +	}
+>  
+>  	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
+>  	if (rc < 0)
+> @@ -692,7 +704,10 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>  	return port;
+>  
+>  err:
+> -	kfree(port);
+> +	if (cxl_root)
+> +		kfree(cxl_root);
+> +	else
+> +		kfree(port);
+>  	return ERR_PTR(rc);
+>  }
+>  
+> @@ -777,6 +792,22 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+>  
+> +struct cxl_root *devm_cxl_add_root(struct device *host,
+> +				   const struct cxl_root_ops *ops)
+> +{
+> +	struct cxl_root *cxl_root;
+> +	struct cxl_port *port;
+> +
+> +	port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+> +	if (IS_ERR(port))
+> +		return (struct cxl_root *)port;
+> +
+> +	cxl_root = to_cxl_root(port);
+> +	cxl_root->ops = ops;
+> +	return cxl_root;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_root, CXL);
+> +
+>  struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port)
+>  {
+>  	/* There is no pci_bus associated with a CXL platform-root port */
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 952778230d5f..6733569afac3 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -586,6 +586,40 @@ struct cxl_port {
+>  	bool cdat_available;
+>  };
+>  
+> +struct qtg_dsm_input {
+> +	__le32 rd_lat;
+> +	__le32 wr_lat;
+> +	__le32 rd_bw;
+> +	__le32 wr_bw;
+> +};
+> +
+> +struct qos_class {
+> +	int nr;
+> +	int entries[];
+> +};
+> +
+> +struct cxl_root_ops {
+> +	struct qos_class *(*get_qos_class)(struct cxl_port *root_port,
+> +					  struct qtg_dsm_input *input);
+> +};
+> +
+> +/**
+> + * struct cxl_root - logical collection of root cxl_port items
+> + *
+> + * @port: cxl_port member
+> + * @ops: cxl root operations
+> + */
+> +struct cxl_root {
+> +	struct cxl_port port;
+> +	const struct cxl_root_ops *ops;
+> +};
+> +
+> +static inline struct cxl_root *
+> +to_cxl_root(const struct cxl_port *port)
+> +{
+> +	return container_of(port, struct cxl_root, port);
+> +}
+> +
+>  static inline struct cxl_dport *
+>  cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>  {
+> @@ -665,6 +699,8 @@ struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port);
+>  struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  				   resource_size_t component_reg_phys,
+>  				   struct cxl_dport *parent_dport);
+> +struct cxl_root *devm_cxl_add_root(struct device *host,
+> +				   const struct cxl_root_ops *ops);
+>  struct cxl_port *find_cxl_root(struct cxl_port *port);
+>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+>  void cxl_bus_rescan(void);
+> 
+> 
 
