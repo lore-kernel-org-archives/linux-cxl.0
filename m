@@ -1,257 +1,203 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A411D55F
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 12:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7681126E0D
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 16:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BymR253D"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D40C6
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 05:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696596739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8n0TI4SHYWR8D0+rFw5ZDTzVGQmlQiFrCFjY/Y1ZyN8=;
-	b=BymR253DRkU9RRvqih7PO6rQt+DJtTFs9ov2gC/GPCf9LQ/A3xaNHPqE0R5XxVghn12rnv
-	qKGTW1FMReikjiI6NmfqoOqYy6WtAywU+62mEBo2Q+n0IN/C8CXgS2Qqsl0NnKz9MvijfR
-	ZzSxIifsmF8mpHgAB+6jnGa1w61byDQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-101-i1EXxFPiNKCZ5UQ9a-fx8g-1; Fri, 06 Oct 2023 08:52:17 -0400
-X-MC-Unique: i1EXxFPiNKCZ5UQ9a-fx8g-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-32320b9d671so1531352f8f.3
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Oct 2023 05:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696596736; x=1697201536;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8n0TI4SHYWR8D0+rFw5ZDTzVGQmlQiFrCFjY/Y1ZyN8=;
-        b=VzmuIZwKBGuKFAUmM68MpRXqIC1rYRbRNYyABGteRnDBSF+Ady7Me2N0BF9KUUgZ0S
-         OemPzLeT3oa4Od9CSujx1Z25YNjM78JEbpw5oj+zur7p7d+jyh/N6v9NSu0+yfU36yi5
-         HLsYunE0RzyS43tJ0DbW/uRIi93mI++geZx/5bKUSlPRctFQhbZsUQLF0xpsItk3TpMf
-         4vFnO+bYLF3jUV+2zj0xT0OGLtzQnPx2u/L9ZcGl06ywFYQk9By+UwJEKlR4IVeTYwWR
-         31PIVIUsOHh2DKnWCfiOtA5bmdt+bqkFslvRrOXecsYEB+f9g+wex/QjCOwFh3goOm5K
-         Iqrw==
-X-Gm-Message-State: AOJu0YwYfyrbvuI2iYenN3n6VSmsBytA6ayFVe40YmuL7WWhw7KSjlws
-	tgDHn/wnu9KI+e10BbwP+prqqBhXftCBBSJplzh81c+b8jLKPJDnyIkqPlNdpgeVa5Mww/iYdQl
-	dl8wtjBLU/7tH62REtTlw
-X-Received: by 2002:adf:fd46:0:b0:31c:7001:3873 with SMTP id h6-20020adffd46000000b0031c70013873mr7396140wrs.60.1696596736392;
-        Fri, 06 Oct 2023 05:52:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMUjFqwG0bWRjll9bNskCayaIMukTFBBWv6LIwzEtvDAwr4vsLCz67BNLL4G0+qfj7f4GDKw==
-X-Received: by 2002:adf:fd46:0:b0:31c:7001:3873 with SMTP id h6-20020adffd46000000b0031c70013873mr7396109wrs.60.1696596735883;
-        Fri, 06 Oct 2023 05:52:15 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c715:ee00:4e24:cf8e:3de0:8819? (p200300cbc715ee004e24cf8e3de08819.dip0.t-ipconnect.de. [2003:cb:c715:ee00:4e24:cf8e:3de0:8819])
-        by smtp.gmail.com with ESMTPSA id a9-20020adfe5c9000000b003142e438e8csm1601359wrn.26.2023.10.06.05.52.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 05:52:15 -0700 (PDT)
-Message-ID: <4ad40b9b-086b-e31f-34bd-c96550bb73e9@redhat.com>
-Date: Fri, 6 Oct 2023 14:52:14 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPoJCN0V"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9D5B6;
+	Fri,  6 Oct 2023 09:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696608484; x=1728144484;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=75bnDpHB1P6CVkGZ5JO5om66CcTmP0Th0MgOjcd1M3A=;
+  b=OPoJCN0VXKstd8gJny1Ny2QlTKFthh9007Vx5rxSQlXz7UiltNSJ3wYu
+   F0kAIh1SSfOQJF4p48/wQ+6OuFUhpz7R+RPUd2/A7JWn7RfHlZiXlC4ZU
+   s4hNNTQxXhNt+WshAAqhRxJCg8dwnxQX8ra16Z78dJbTuVIFVMfFr06eX
+   1RGy+Ubq2Avg3YGuwWhBDrEfMRuChv7Vc4STDhdEYtAUSrJMtdrx/Zx+P
+   ZTvOfgtP9psGq7cM+2Y1HGTApCEeDeYQRURV43KGmgigb9DxGPZ3NC9FY
+   y5W7NqWnuCEEFLbVdw6/0/uKQtqj18KusTeemQK5/KKZzbJg5ZJi372V1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="368853815"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="368853815"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 09:06:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="895939976"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="895939976"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Oct 2023 09:04:49 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 6 Oct 2023 09:06:21 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Fri, 6 Oct 2023 09:06:21 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Fri, 6 Oct 2023 09:06:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JUt/jlhannskvehxCLMrSTsHM7e2LeQtTFvSo/+OBvsnFizvuE403ugMG99IsI/yElbeAg8Nfpf+OlGCDwmwvq4DRkFagbhh772TIXu/qqHKBBhxnJ+KcTVIPbjFg57Bi+2nGUMS7WBx7lO2IlUUkPAGnYc6kRhF2vY4VaUp5NbSkOqQyPC2JuK0RUCfL9JBaNuAneCxVggOwEw7CI4l5q17ONOARedc8duIVeSCGKReb7Z7FBidhZ3HeeUtP3CCwG5vF6C/4K4z13ZKeV+cSCrcZIRFTDCjV8qloAknnZXfSW73kiSiBu8tT+6vqsrAfYM5W46nW42kxE5zDtDTZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hyFpocWSDdhKBCwhlBJkRaD58U/F0qQUO/MsIgygkhY=;
+ b=jZT4RbDwOhU7oka99znFsIMkeKgKAqshri1P0Oi+jI0C2TNXOk4PnEyZ4AXcyZVcx/FF2VCxIf1vsUoxY6xji44LwmdfP9G01vax1ojtGN4VTjD8Zlu5TgUR85NakQEeyl/CSS249GVELVTgB05hy1ugYrstDfrzhg4/tppXUqZfRkiSU5SUyZ4vUpKUi/PWWpcb2pBCYy7rK4nBPumfkywmsJTUABKXnj/B17SsewEcNFuWv+6SXF24HZCEug+kG7LgZdS1B+ExZHFHhGnvkw3oVQRehjyuBoqPvVKTcZvAZK4ZMZaX0WaXJJAC6YYi6y8mKet0Ew7YxTVNHfbKqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB7541.namprd11.prod.outlook.com (2603:10b6:510:26d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.31; Fri, 6 Oct
+ 2023 16:06:18 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6838.033; Fri, 6 Oct 2023
+ 16:06:17 +0000
+Date: Fri, 6 Oct 2023 09:06:13 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, "David
+ Howells" <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>,
+	"Herbert Xu" <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, Alex Williamson <alex.williamson@redhat.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <linuxarm@huawei.com>,
+	David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
+	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, "Wilfred
+ Mallawa" <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, "Tom
+ Lendacky" <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: RE: [PATCH 00/12] PCI device authentication
+Message-ID: <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1695921656.git.lukas@wunner.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1695921656.git.lukas@wunner.de>
+X-ClientProxiedBy: MW4PR04CA0361.namprd04.prod.outlook.com
+ (2603:10b6:303:81::6) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-To: Vishal Verma <vishal.l.verma@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Dan Williams <dan.j.williams@intel.com>,
- Dave Jiang <dave.jiang@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Huang Ying <ying.huang@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
- Michal Hocko <mhocko@suse.com>,
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Jeff Moyer <jmoyer@redhat.com>
-References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
- <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-In-Reply-To: <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB7541:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbc741d7-84d4-497e-5c25-08dbc6862c19
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TDAiDAMAv1mhetfphhyHee+ePYwnrtJhBkTMmtS/gbT+m4+9DYUp1U4vI/1TJ9ae9B3kPuFsHbeG7XsYPovsBFpoZ8QAMT19PenLKO6wNvar3n5Ex7kCxgZFDz/iAAMe2RoA2T4f18x8+7AffaafuKOtU90kIl2T4Ie+VTbeHgcZm6TGGyd73jBdmnT5j6xxRiI0f4fJhV1Ts5g7pkbBwm355iH0d7QtpYfcxIDMr0UWH5SOYc0Xl5I1U3M3yxR4rE1/cOJh72Dqy6vkex3c2iG8LviFm8oPQQQGQzzxRE2YC5ORvBmKPmfxpG7qgBJTRcC8/21B4jjWr1AE4y18KoWtFXJK9FgiV4JbvOVvJzst85+gD0mnUx41k61Hb9zsvkrP3xJjooWQzLNrURK20sZmJkjNkdF1tQ7yERNk3JC/SBvc0Od22Ah0s/q3Qkd3Xv0D6hMXFA3llfLVyPjV47itWUe8xLEcr7RCrXBUQ9YmNyXRDWvloMO1iyEG3KwftHohGNZA3cTMhkkC6gkeI9pV3x425tExEgQQrhCpRBFl1YKLt1LYgr++c8b634Z8iYAK++9gFd597ZiXyWr/qA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(39860400002)(346002)(396003)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(26005)(9686003)(6512007)(83380400001)(921005)(82960400001)(86362001)(38100700002)(66556008)(66476007)(478600001)(7416002)(5660300002)(66946007)(54906003)(966005)(6486002)(316002)(41300700001)(110136005)(4326008)(8936002)(6506007)(6666004)(8676002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uH4Yto7NDt9Qr9wFIHmUQJm4JNpXDgtRVOo9izLE0bGYHihXP+40ij1VQQ7v?=
+ =?us-ascii?Q?AV9sJdqtmf4HQ3Mee0ZKS/e1aCFwVq0fdSksX/KJnflcxLRgjgyLfZ8KV6/p?=
+ =?us-ascii?Q?/GVdEO0WgzToYlEQ/VjTMWZwXiDpQ036jtWw6EkXqLlxiIL3KbuBvPM8q5kg?=
+ =?us-ascii?Q?Q51ir8zT2rmPjBvQTu3n77M0kDDPg5Nhn2lsIMbTzmpeDagSjah1nYcidh+r?=
+ =?us-ascii?Q?L3/1X84eJS6S4RvG2gZ30xMoZdvn3oYRYLFY9X44GBixwcPpZZz5F6UlY9La?=
+ =?us-ascii?Q?K1zMOYtubk68ikRu2damnS+hOw50D6fl9X4XxfvGgyrsGC7bBclnmsgj8pVx?=
+ =?us-ascii?Q?11BjnK0mmfsNSXmUuvz14U1skBt+M2iiR71PvBrNc7/RSoAEa05es1zN1OfE?=
+ =?us-ascii?Q?PcfS3Gkku/ziItP7QKMpQ1vHgvFml+rQKgctbCwA6G2SiKf7T/Ws4hwi4cns?=
+ =?us-ascii?Q?D+AJjYfoeQUujO91/NW5lAIwgVoIYdfsmOJkvavqkQm+nXsCtTTdUwGRFyvg?=
+ =?us-ascii?Q?0/dOSZAvP2epTdyBICQ95mIvHFzZbmDVx+GTBSkN7xT1yTzC+YGmW8u1nFY0?=
+ =?us-ascii?Q?r+xDZJN786JfuER0gdDygt3xKECvmYSrHiZ32WA86TN8NYtc/r6cugBztjMn?=
+ =?us-ascii?Q?bBXpiGgbBwtG4NP14E7PllCVBQhd49HnOjr1cjXPfruvFzbLJppWntjkGFgI?=
+ =?us-ascii?Q?S8cSIPKgcqCDY5W79AONW+URLzmF5me+d9LyF2RcN0++z2AZnOZvkQcN5Zvf?=
+ =?us-ascii?Q?mFMpO368qM55Q/qx/y3LmpiAF2HBKrN8EVHEsypMJcCy7gNsVqwhJnBKsBI6?=
+ =?us-ascii?Q?5qMBkUZZIwcFm2+ZdcKzd3dhyaq+43hicFkmXmKBo09a6IJ4zFATKZMf0Q3A?=
+ =?us-ascii?Q?Zmy913hDffb2pom4gDJNMQiH3T54mEGM9c0FroS7Jbep9f8JinccHEPlDWTN?=
+ =?us-ascii?Q?KGimkJ/vK2+z9LjKJ4A20RNtZ8oB5hq9P853NeGlfG+wS2Ya1IRKnQXr2WXL?=
+ =?us-ascii?Q?ydyH7WheqUTxqcTvT2UHOIXBxXG+/5clcX/MyPW8DKvcQ7N/xA1G9jnuwIUL?=
+ =?us-ascii?Q?3OY6+gxp1nGOiubc1fhVvGiMj3cgTkzVMLYNFuMu1nHxH1Ps5s6YXt+0aAQ8?=
+ =?us-ascii?Q?fUEuqm+o8Xv5yBYkkoHEcVjgdmYyYrEuEdmxwdsXU4K+CtmL4Bj5yXqb4gP4?=
+ =?us-ascii?Q?Unx7Pcl7MCyKXchblPQU8l+lckjL/dHIXU3Hhn8c/in2lBvWdY7/9lkF436q?=
+ =?us-ascii?Q?blCxiFbjY+ewzazRhZ5ibZS2MBKKPvBufSUANW9EqTfw9N536RWoF+D6RThx?=
+ =?us-ascii?Q?MOeLlAYEiJblA54RsnfYMc2RlARl/rFtlTCtM0ySfs19DflOArfs+CZHXj40?=
+ =?us-ascii?Q?dc2MgCkfX1g8AZxXBGqFsNVxczGac6XUQEzrtgYwoxMMMLTUkz/A4FPWiRg6?=
+ =?us-ascii?Q?YE2jeU0dgX1pqrJEsyyAPOpDxn4PUXbbolmsUJIwq2jt/BbeZRa3eShE6B2P?=
+ =?us-ascii?Q?CE4rENqvlckff9hP7v7jewn4/ykUbAbhXdWXQZiXmfgW/OhMQDCpgKDYl3M7?=
+ =?us-ascii?Q?pJVZezH1FKFJRwSit1lBLzJV2MJDAL0Bh0fZmD6BOQ6CPYdK7IT0ELCI+tLU?=
+ =?us-ascii?Q?9g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbc741d7-84d4-497e-5c25-08dbc6862c19
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2023 16:06:17.7557
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Etm5y+aLlnAC/GrJQTGrP4xZ3+EzT6qkhuse7Rq4Zo4UcIJTYcxgUoQ/81CwrY6RUHUu2CN4sXMhXrYRgIkXzDGu2pGNzkatmvmJIsuO4sE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7541
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 05.10.23 20:31, Vishal Verma wrote:
-> The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is restricted to
-> 'memblock_size' chunks of memory being added. Adding a larger span of
-> memory precludes memmap_on_memory semantics.
+This looks great Lukas, some forward looking review comments below.
+
+Lukas Wunner wrote:
+> Authenticate PCI devices with CMA-SPDM (PCIe r6.1 sec 6.31) and
+> expose the result in sysfs.  This enables user-defined policies
+> such as forbidding driver binding to devices which failed
+> authentication.
 > 
-> For users of hotplug such as kmem, large amounts of memory might get
-> added from the CXL subsystem. In some cases, this amount may exceed the
-> available 'main memory' to store the memmap for the memory being added.
-> In this case, it is useful to have a way to place the memmap on the
-> memory being added, even if it means splitting the addition into
-> memblock-sized chunks.
+> CMA-SPDM forms the basis for PCI encryption (PCIe r6.1 sec 6.33),
+> which will be submitted later.
 > 
-> Change add_memory_resource() to loop over memblock-sized chunks of
-> memory if caller requested memmap_on_memory, and if other conditions for
-> it are met. Teach try_remove_memory() to also expect that a memory
-> range being removed might have been split up into memblock sized chunks,
-> and to loop through those as needed.
+> The meat of the series is in patches [07/12] and [08/12], which contain
+> the SPDM library and the CMA glue code (the PCI-adaption of SPDM).
 > 
-
-Maybe add that this implies that we're not making use of PUD mappings in 
-the direct map yet, and link to the proposal on how we could optimize 
-that eventually in the future.
-[...]
-
->   
-> -static int __ref try_remove_memory(u64 start, u64 size)
-> +static void __ref remove_memory_block_and_altmap(int nid, u64 start, u64 size)
-
-
-You shouldn't need the nid, right?
-
->   {
-> +	int rc = 0;
->   	struct memory_block *mem;
-> -	int rc = 0, nid = NUMA_NO_NODE;
->   	struct vmem_altmap *altmap = NULL;
->   
-
-
-> +	rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
-> +	if (rc) {
-> +		altmap = mem->altmap;
-> +		/*
-> +		 * Mark altmap NULL so that we can add a debug
-> +		 * check on memblock free.
-> +		 */
-> +		mem->altmap = NULL;
-> +	}
-> +
-> +	/*
-> +	 * Memory block device removal under the device_hotplug_lock is
-> +	 * a barrier against racing online attempts.
-> +	 */
-> +	remove_memory_block_devices(start, size);
-
-We're now calling that under the memory hotplug lock. I assume this is 
-fine, but I remember some ugly lockdep details ...should be alright I guess.
-
-> +
-> +	arch_remove_memory(start, size, altmap);
-> +
-> +	/* Verify that all vmemmap pages have actually been freed. */
-> +	if (altmap) {
-> +		WARN(altmap->alloc, "Altmap not fully unmapped");
-> +		kfree(altmap);
-> +	}
-> +}
-> +
-> +static int __ref try_remove_memory(u64 start, u64 size)
-> +{
-> +	int rc, nid = NUMA_NO_NODE;
-> +
->   	BUG_ON(check_hotplug_memory_range(start, size));
->   
->   	/*
-> @@ -2167,47 +2221,28 @@ static int __ref try_remove_memory(u64 start, u64 size)
->   	if (rc)
->   		return rc;
->   
-> +	mem_hotplug_begin();
-> +
->   	/*
-> -	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
-> -	 * the same granularity it was added - a single memory block.
-> +	 * For memmap_on_memory, the altmaps could have been added on
-> +	 * a per-memblock basis. Loop through the entire range if so,
-> +	 * and remove each memblock and its altmap.
->   	 */
->   	if (mhp_memmap_on_memory()) {
-> -		rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
-> -		if (rc) {
-> -			if (size != memory_block_size_bytes()) {
-> -				pr_warn("Refuse to remove %#llx - %#llx,"
-> -					"wrong granularity\n",
-> -					start, start + size);
-> -				return -EINVAL;
-> -			}
-> -			altmap = mem->altmap;
-> -			/*
-> -			 * Mark altmap NULL so that we can add a debug
-> -			 * check on memblock free.
-> -			 */
-> -			mem->altmap = NULL;
-> -		}
-> +		unsigned long memblock_size = memory_block_size_bytes();
-> +		u64 cur_start;
-> +
-> +		for (cur_start = start; cur_start < start + size;
-> +		     cur_start += memblock_size)
-> +			remove_memory_block_and_altmap(nid, cur_start,
-> +						       memblock_size);
-> +	} else {
-> +		remove_memory_block_and_altmap(nid, start, size);
-
-Better call remove_memory_block_devices() and arch_remove_memory(start, 
-size, altmap) here explicitly instead of using 
-remove_memory_block_and_altmap() that really can only handle a single 
-memory block with any inputs.
-
-
->   	}
->   
->   	/* remove memmap entry */
->   	firmware_map_remove(start, start + size, "System RAM");
-
-Can we continue doing that in the old order? (IOW before taking the lock?).
-
->   
-> -	/*
-> -	 * Memory block device removal under the device_hotplug_lock is
-> -	 * a barrier against racing online attempts.
-> -	 */
-> -	remove_memory_block_devices(start, size);
-> -
-> -	mem_hotplug_begin();
-> -
-> -	arch_remove_memory(start, size, altmap);
-> -
-> -	/* Verify that all vmemmap pages have actually been freed. */
-> -	if (altmap) {
-> -		WARN(altmap->alloc, "Altmap not fully unmapped");
-> -		kfree(altmap);
-> -	}
-> -
->   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
->   		memblock_phys_free(start, size);
->   		memblock_remove(start, size);
-> @@ -2219,6 +2254,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
->   		try_offline_node(nid);
->   
->   	mem_hotplug_done();
-> +
-
-Unrelated change.
-
->   	return 0;
->   }
->   
+> The reason why SPDM is done in-kernel is provided in patch [10/12]:
+> Briefly, when devices are reauthenticated on resume from system sleep,
+> user space is not yet available.  Same when reauthenticating after
+> recovery from reset.
 > 
+> One use case for CMA-SPDM and PCI encryption is confidential access
+> to passed-through devices:  Neither the host nor other guests are
+> able to eavesdrop on device accesses, in particular if guest memory
+> is encrypted as well.
 
--- 
-Cheers,
+Note, only for traffic over the SPDM session. In order for private MMIO and
+T=1 traffic to private memory, coordination with the platform TSM is
+mandated by all the known TSM (CPU/Platform security modules). This has
+implications for policy decisions later in this series.
 
-David / dhildenb
+> Further use cases for the SPDM library are appearing on the horizon:
+> Alistair Francis and Wilfred Mallawa from WDC are interested in using
+> it for SCSI/SATA.  David Box from Intel has implemented measurement
+> retrieval over SPDM.
+> 
+> The root of trust is initially an in-kernel key ring of certificates.
+> We can discuss linking the system key ring into it, thereby allowing
+> EFI to pass trusted certificates to the kernel for CMA.  Alternatively,
+> a bundle of trusted certificates could be loaded from the initrd.
+> I envision that we'll add TPMs or remote attestation services such as
+> https://keylime.dev/ to create an ecosystem of various trust sources.
 
+Linux also has an interest in accommodating opt-in to using platform
+managed keys, so the design requires that key management and session
+ownership is a system owner policy choice.
+
+> If you wish to play with PCI device authentication but lack capable
+> hardware, Wilfred has written a guide how to test with qemu:
+> https://github.com/twilfredo/spdm-emulation-guide-b
+> 
