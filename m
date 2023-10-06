@@ -1,128 +1,133 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5741DF9DF
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 09:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614CDC6;
-	Fri,  6 Oct 2023 02:30:25 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S23462Dsgz6HJbf;
-	Fri,  6 Oct 2023 17:27:34 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 6 Oct
- 2023 10:30:22 +0100
-Date: Fri, 6 Oct 2023 10:30:20 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Alex
- Williamson <alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <linuxarm@huawei.com>, David Box
-	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
-	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred
- Mallawa <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, Tom
- Lendacky <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
- authentication
-Message-ID: <20231006103020.0000174f@Huawei.com>
-In-Reply-To: <20231003193058.GA16417@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-	<467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
-	<20231003164048.0000148c@Huawei.com>
-	<20231003193058.GA16417@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F2C14F77
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 10:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eOpIG6Q9"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CC1F1
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 03:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696587074; x=1728123074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gWyN3EqzVzw4L7rRN5ptGG7jS2JKY4p4z/mDEUA73x4=;
+  b=eOpIG6Q9z2MG6EFzKTYwLHnqpXg5Rsw1sBsTXZKkKEg1wiLdh2Es75Sa
+   c/X/Hh5u/Rf6JqfT8sTCq/nLqWat0DFxi1zyJh3I2xolT5E/sSTI3zjzi
+   JajAfTOi/AyG85APOdBv/Rx7fxOBEwzC9eGt1+506RTuWpxoi1gEAavIg
+   DoRDjvigTvUZEbZS9r8KIa2er/6o07DKzzXo5sqPcGMtdhea2PFl404aZ
+   q3SH+SNAQuPObPDjetC7E4PxN4r1J0zkB53xaTwttoA25QBacUJLeZgEX
+   4o2khfYFzdEwbI4D35E0rBe0TZJ0VAEhpWSh25e2rIvx5WsyCaMoS4T5n
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382589511"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="382589511"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:11:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="1083402019"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="1083402019"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Oct 2023 03:11:11 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qohnZ-000MUi-1j;
+	Fri, 06 Oct 2023 10:11:09 +0000
+Date: Fri, 6 Oct 2023 18:10:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup
+ locking
+Message-ID: <202310061706.JTytkmZT-lkp@intel.com>
+References: <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, 3 Oct 2023 21:30:58 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+Hi Dan,
 
-> On Tue, Oct 03, 2023 at 04:40:48PM +0100, Jonathan Cameron wrote:
-> > On Thu, 28 Sep 2023 19:32:42 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > At any given time, only a single entity in a physical system may have
-> > > an SPDM connection to a device.  That's because the GET_VERSION request
-> > > (which begins an authentication sequence) resets "the connection and all
-> > > context associated with that connection" (SPDM 1.3.0 margin no 158).
-> > > 
-> > > Thus, when a device is passed through to a guest and the guest has
-> > > authenticated it, a subsequent authentication by the host would reset
-> > > the device's CMA-SPDM session behind the guest's back.
-> > > 
-> > > Prevent by letting the guest claim exclusive CMA ownership of the device
-> > > during passthrough.  Refuse CMA reauthentication on the host as long.
-> > > After passthrough has concluded, reauthenticate the device on the host.  
-> > 
-> > Is there anything stopping a PF presenting multiple CMA capable DOE
-> > instances?  I'd expect them to have their own contexts if they do..  
-> 
-> The spec does not seem to *explicitly* forbid a PF having multiple
-> CMA-capable DOE instances, but PCIe r6.1 sec 6.31.3 says:
-> "The instance of DOE used for CMA-SPDM must support ..."
-> 
-> Note the singular ("The instance").  It seems to suggest that the
-> spec authors assumed there's only a single DOE instance for CMA-SPDM.
+kernel test robot noticed the following build warnings:
 
-It's a little messy and a bit of American vs British English I think.
-If it said
-"The instance of DOE used for a specific CMA-SPDM must support..." 
-then it would clearly allow multiple instances.  However, conversely,
-I don't read that sentence as blocking multiple instances (even though
-I suspect you are right and the author was thinking of there being one).
+[auto build test WARNING on 6465e260f48790807eef06b583b38ca9789b6072]
 
-> 
-> Could you (as an English native speaker) comment on the clarity of the
-> two sentences "Prevent ... as long." above, as Ilpo objected to them?
-> 
-> The antecedent of "Prevent" is the undesirable behaviour in the preceding
-> sentence (host resets guest's SPDM connection).
-> 
-> The antecedent of "as long" is "during passthrough" in the preceding
-> sentence.
-> 
-> Is that clear and understandable for an English native speaker or
-> should I rephrase?
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/cxl-pci-Remove-unnecessary-device-reference-management-in-sanitize-work/20231006-152823
+base:   6465e260f48790807eef06b583b38ca9789b6072
+patch link:    https://lore.kernel.org/r/169657719974.1491153.15276451196916291864.stgit%40dwillia2-xfh.jf.intel.com
+patch subject: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup locking
+config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20231006/202310061706.JTytkmZT-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231006/202310061706.JTytkmZT-lkp@intel.com/reproduce)
 
-Not clear enough to me as it stands.  That "as long" definitely feels
-like there is more to follow it as Ilpo noted.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310061706.JTytkmZT-lkp@intel.com/
 
-Maybe reword as something like 
+All warnings (new ones prefixed by >>):
 
-Prevent this by letting the guest claim exclusive ownership of the device
-during passthrough ensuring problematic CMA reauthentication by the host
-is blocked.
+>> drivers/cxl/core/mbox.c:1190: warning: Function parameter or member 'cxlmd' not described in 'cxl_mem_sanitize'
+>> drivers/cxl/core/mbox.c:1190: warning: Excess function parameter 'mds' description in 'cxl_mem_sanitize'
 
-Also combine this with previous paragraph to make the 'this' more obvious
-refer to the problem described in that paragraph.
 
-Jonathan
+vim +1190 drivers/cxl/core/mbox.c
 
-> 
-> Thanks,
-> 
-> Lukas
-> 
+  1173	
+  1174	
+  1175	/**
+  1176	 * cxl_mem_sanitize() - Send a sanitization command to the device.
+  1177	 * @mds: The device for the operation
+  1178	 * @cmd: The specific sanitization command opcode
+  1179	 *
+  1180	 * Return: 0 if the command was executed successfully, regardless of
+  1181	 * whether or not the actual security operation is done in the background,
+  1182	 * such as for the Sanitize case.
+  1183	 * Error return values can be the result of the mailbox command, -EINVAL
+  1184	 * when security requirements are not met or invalid contexts, or -EBUSY
+  1185	 * if the sanitize operation is already in flight.
+  1186	 *
+  1187	 * See CXL 3.0 @8.2.9.8.5.1 Sanitize and @8.2.9.8.5.2 Secure Erase.
+  1188	 */
+  1189	int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+> 1190	{
+  1191		struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+  1192		struct cxl_port  *endpoint;
+  1193		int rc;
+  1194	
+  1195		/* synchronize with cxl_mem_probe() and decoder write operations */
+  1196		device_lock(&cxlmd->dev);
+  1197		endpoint = cxlmd->endpoint;
+  1198		down_read(&cxl_region_rwsem);
+  1199		/*
+  1200		 * Require an endpoint to be safe otherwise the driver can not
+  1201		 * be sure that the device is unmapped.
+  1202		 */
+  1203		if (endpoint && endpoint->commit_end == -1)
+  1204			rc = __cxl_mem_sanitize(mds, cmd);
+  1205		else
+  1206			rc = -EBUSY;
+  1207		up_read(&cxl_region_rwsem);
+  1208		device_unlock(&cxlmd->dev);
+  1209	
+  1210		return rc;
+  1211	}
+  1212	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
