@@ -1,46 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EECA6FB6
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 07:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1FF63CC
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 07:27:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W7aAAKOV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jy0601Vl"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA67F1
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 00:26:47 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A57FE4
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 00:27:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696577207; x=1728113207;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eBR2cmL2NYIOonh4VvZWdAhYxEFKkkvfvPzj5dqaF+4=;
-  b=W7aAAKOVzqViLPsIW1H4mxp7z/sgwVJqjvkKg1FdRoT8AJbcXjIsUKRB
-   W/uiB9pgbgv19ee2gIbDEJ7tpie7DM1a6HL7u1w1YSXnlSBGEDl75JNeF
-   P5ysIoX0XwIckCnTMg6IRC3ejx4P5LxXle8irpJ8ps/u3wqBBDP1x6fv0
-   yr6WkvTWdLF4xSmrJkVvTofZstpYEqMNewZplTC2fbxFGSWfmNaTtjTXt
-   RzLJ2ZLuZIo0RwFkIV2QuWPHvmW8Ea8G9f8BIze5gSKIRceHSTgbMKRhE
-   zuoQnQqoQUzGK3Z/v3n7eiNR/dmUI2Fix4K/LBnjNmtbam1LMo96VcjfG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="368775202"
+  t=1696577248; x=1728113248;
+  h=subject:from:to:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=izer0WWtU2ooSNIjXS5t0PkZBaz2vSUwUJBtOCcSu3c=;
+  b=jy0601VlHUJ3/ntIN2HFzTLq1tKJlSsGNq3eqg7CCaChG5DybDpfltF5
+   AnPIDhoqkS39nAD82KYqqP3weD6L5E5Zt/g2ETb7wte39zH0SinGnmG5Q
+   GljvLU1GQvTAPR1QcoZn+reYmT56LUs+UuLlZL1zwhysRyWYkJAOewPOv
+   r5GYOS0TCCqPDIGIVUGpIC7QUnk5iAqlxUZ05m0Ge9C6bWUdOSfb6B7A8
+   HKNYUKHg9YR4bSv9nv31l8cZ2OXT5wsky8qoXpNA4uZ1bt0w0EuT7WyBI
+   aSooWOYkKWKyIkfEWdASIZtf/vQt2LYWTOXFVy9oj+mh4GHO5v7+K1FOj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="368775246"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="368775202"
+   d="scan'208";a="368775246"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 00:26:46 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 00:27:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="842735507"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="842735530"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="842735507"
+   d="scan'208";a="842735530"
 Received: from wbleichn-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.147.24])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 00:26:46 -0700
-Subject: [PATCH v3 08/10] cxl/mem: Fix shutdown order
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 00:26:52 -0700
+Subject: [PATCH v3 09/10] tools/testing/cxl: Make cxl_memdev_state available
+ to other command emulation
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 06 Oct 2023 00:26:45 -0700
-Message-ID: <169657720558.1491153.15670462991242849575.stgit@dwillia2-xfh.jf.intel.com>
+Date: Fri, 06 Oct 2023 00:26:51 -0700
+Message-ID: <169657721157.1491153.10282227094664408585.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <169657715790.1491153.3612164287133860191.stgit@dwillia2-xfh.jf.intel.com>
 References: <169657715790.1491153.3612164287133860191.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -59,75 +56,59 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Ira reports that removing cxl_mock_mem causes a crash with the following
-trace:
+Move @mds out of the event specific 'struct mock_event_store' and into
+the base 'struct cxl_mockmem_data' directly. This is in preparation for
+enabling cxl_test to exercise the notifier flow for 'sanitize' operation
+completion.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000044
- [..]
- RIP: 0010:cxl_region_decode_reset+0x7f/0x180 [cxl_core]
- [..]
- Call Trace:
-  <TASK>
-  cxl_region_detach+0xe8/0x210 [cxl_core]
-  cxl_decoder_kill_region+0x27/0x40 [cxl_core]
-  cxld_unregister+0x29/0x40 [cxl_core]
-  devres_release_all+0xb8/0x110
-  device_unbind_cleanup+0xe/0x70
-  device_release_driver_internal+0x1d2/0x210
-  bus_remove_device+0xd7/0x150
-  device_del+0x155/0x3e0
-  device_unregister+0x13/0x60
-  devm_release_action+0x4d/0x90
-  ? __pfx_unregister_port+0x10/0x10 [cxl_core]
-  delete_endpoint+0x121/0x130 [cxl_core]
-  devres_release_all+0xb8/0x110
-  device_unbind_cleanup+0xe/0x70
-  device_release_driver_internal+0x1d2/0x210
-  bus_remove_device+0xd7/0x150
-  device_del+0x155/0x3e0
-  ? lock_release+0x142/0x290
-  cdev_device_del+0x15/0x50
-  cxl_memdev_unregister+0x54/0x70 [cxl_core]
-
-This crash is due to the clearing out the cxl_memdev's driver context
-(@cxlds) before the subsystem is done with it. This is ultimately due to
-the region(s), that this memdev is a member, being torn down and expecting
-to be able to de-reference @cxlds, like here:
-
-static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
-...
-                if (cxlds->rcd)
-                        goto endpoint_reset;
-...
-
-Fix it by keeping the driver context valid until memdev-device
-unregistration, and subsequently the entire stack of related
-dependencies, unwinds.
-
-Fixes: 9cc238c7a526 ("cxl/pci: Introduce cdevm_file_operations")
-Reported-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Tested-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/memdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/cxl/test/mem.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index a02061028b71..fed9573cf355 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -559,8 +559,8 @@ static void cxl_memdev_unregister(void *_cxlmd)
- 	struct cxl_memdev *cxlmd = _cxlmd;
- 	struct device *dev = &cxlmd->dev;
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 68118c37f0b5..ab311b59899a 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -133,7 +133,6 @@ struct mock_event_log {
+ };
  
--	cxl_memdev_shutdown(dev);
- 	cdev_device_del(&cxlmd->cdev, dev);
-+	cxl_memdev_shutdown(dev);
- 	put_device(dev);
+ struct mock_event_store {
+-	struct cxl_memdev_state *mds;
+ 	struct mock_event_log mock_logs[CXL_EVENT_TYPE_MAX];
+ 	u32 ev_status;
+ };
+@@ -150,6 +149,7 @@ struct cxl_mockmem_data {
+ 	int user_limit;
+ 	int master_limit;
+ 	struct mock_event_store mes;
++	struct cxl_memdev_state *mds;
+ 	u8 event_buf[SZ_4K];
+ 	u64 timestamp;
+ };
+@@ -326,7 +326,7 @@ static void cxl_mock_event_trigger(struct device *dev)
+ 			event_reset_log(log);
+ 	}
+ 
+-	cxl_mem_get_event_records(mes->mds, mes->ev_status);
++	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
  }
  
+ struct cxl_event_record_raw maint_needed = {
+@@ -1415,6 +1415,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (IS_ERR(mds))
+ 		return PTR_ERR(mds);
+ 
++	mdata->mds = mds;
+ 	mds->mbox_send = cxl_mock_mbox_send;
+ 	mds->payload_size = SZ_4K;
+ 	mds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
+@@ -1447,7 +1448,6 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
+-	mdata->mes.mds = mds;
+ 	cxl_mock_add_event_logs(&mdata->mes);
+ 
+ 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
 
