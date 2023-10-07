@@ -1,187 +1,126 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C41D358AA
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 15:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD9110A36
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 15:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eLXfk4Ei"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C183E10CA
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 08:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696864543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lxbkxsdepLAwI//Nw1rXTrNsOKPrZ+J+qWsPA89lw+E=;
-	b=eLXfk4EiO6rPrDkPGAZJWgUcDa1WjtTK9zyH0+VPq3Ct4rqc8AhkXOGyCCPkGVzlVP5RwT
-	LA+KP5C/FxsGE9OthZGgziH+CtXN1/fxz2v6QTxfWTa54i6dhIFPtT3S5HREfB8NlX2WGO
-	v5RgU+dUnx9ZnfnlcJgXZL85TWVCVyY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-G7udroy4NOqlI9aSDS4EAA-1; Mon, 09 Oct 2023 11:15:42 -0400
-X-MC-Unique: G7udroy4NOqlI9aSDS4EAA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3232c3df248so2913096f8f.3
-        for <linux-cxl@vger.kernel.org>; Mon, 09 Oct 2023 08:15:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696864541; x=1697469341;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lxbkxsdepLAwI//Nw1rXTrNsOKPrZ+J+qWsPA89lw+E=;
-        b=kC8KFM4Y7oIEv64RwimDwXL0mJIQKVfYrUGGuBPe9pJoDtDHt1EeM1c2uPhQJskR8B
-         eQmpCB45q3WwQAYt17mIhrUz5O+skbsjeAIsjxj5QyZBLBRw+vPa2GX2fPnxyqgVNXg7
-         x+V1bQe+KorPv6oNVJs+t62jmeJZq7fnvgyuzrgj56gxuNaPOXSa2Q3b2Lm6lNGXXm9E
-         XcdfoSeu+0KZuSObsD8mYkx8aqq+zEwohEumHsh/MwZZgSKdoLGGgIRtUgFycKdTtEDo
-         UFyTJbFzaOg13scslC/gqYlaf9uG9Ofs9dDm3R50sp6mAGDPRWkg1GFDj5/kWtQf7aSD
-         fuyA==
-X-Gm-Message-State: AOJu0YySkRvvmZ61YZ9phEDseM4goGWXr/ORq9J3Q47W8qSxlaarQ9DI
-	m9qN0qWhdu/SaQvyTUZmta+awK36b0EazvI1mFMSMjs7sFc4VklAlnTpR6W8HJCO024AvQuA/uW
-	f/9VrxUH3KxSgLjbSeU0v
-X-Received: by 2002:a5d:4942:0:b0:323:1a0c:a5e0 with SMTP id r2-20020a5d4942000000b003231a0ca5e0mr13395346wrs.13.1696864541275;
-        Mon, 09 Oct 2023 08:15:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF7b2lwzlp+uSM9hiBU+z/Mq/3Q8Bio+XwSc3ICD2i4PuZSt2i99eOmikwZ+NaXx3+BddMdfQ==
-X-Received: by 2002:a5d:4942:0:b0:323:1a0c:a5e0 with SMTP id r2-20020a5d4942000000b003231a0ca5e0mr13395322wrs.13.1696864540855;
-        Mon, 09 Oct 2023 08:15:40 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c733:6400:ae10:4bb7:9712:8548? (p200300cbc7336400ae104bb797128548.dip0.t-ipconnect.de. [2003:cb:c733:6400:ae10:4bb7:9712:8548])
-        by smtp.gmail.com with ESMTPSA id j13-20020adfe50d000000b003196b1bb528sm9921911wrm.64.2023.10.09.08.15.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 08:15:40 -0700 (PDT)
-Message-ID: <0bc29e93-7efe-4bce-ee3f-1fdf76104843@redhat.com>
-Date: Mon, 9 Oct 2023 17:15:39 +0200
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="OCdDsAK8"
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA669E
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 08:24:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LjT+ozTKbOMMW4CSjXZTo56Q2sDXf4gis1Xd6i1LLVxy+Ajihdijy3b7Man0loAyiwu1hHQMEZwX6WiIF61aNEk9JLofQZYH1vwDIbeF4yqcAI3DIq+4KQhtqwPydXpjqbmF8YfjlHLFHRqSpJ5KstbM6BmKtO7ixTS0sPejxqeEUbDTD3FDjsLDqgPAmIrBRAm4CpGv6j7+FG1+YhqTiukOIW0qK4WM1T5v0zwDE4XXnhIeNSSS+SIfjk6yfOowtslv1K4fL5FvTzC/u9oAXrqifTmL89JCshAm0Bm+WKqXx8BzXPZSXcLYWMaKGfC2pHXa9vIfE1fL0hW+YBODcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r1aOY2NnXf/pj6GPo0K1Y5AMjZ9FoqSYuzwaQCODRsw=;
+ b=CKiV5ibrjf9u2mbFSZGQK9MmKHkn8Bz1F1A+DfA3iIiB2HLZaP2X4HkJXq7Ix0gqPIE6mc4zZPD3nnEYmLX8nXs2qJQQl1S00RbHTCNa8tcrxBpP77srDsFLi8F4Ms/0ZKKp8FOSt/oDnVrLfnRWR+j6YCnFYnye2TLp/24bPts3CIuvTUkVi2n7SIxNZwS4pvvqJecyBQQ5lBBestiscJL9dPSOMxTSzpw2q9xKf6z4Zjgndwt1oyTzqr5+TRn0PBMQVf492jSqr/Q4DhamTMQnR0FsmMBPBj5l9ecpgTFa7fAbPjRha2WNu6lt9zkR/042RjR2QYOZzGyg+GikhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r1aOY2NnXf/pj6GPo0K1Y5AMjZ9FoqSYuzwaQCODRsw=;
+ b=OCdDsAK8RZ5XL3f1KMCW/bREYnG9+nmgrXZ4y5nMbkznIIw5+rs7fsR3zU4rCSx5yYXpJz8or27Xv00N1P22xzt064xGz/7OqOC0BanKZ+4xb76Lhx+2F+iPZuE/tSJW5sLAPfEYXzgSWXBHH7uv1MX3vRwe8IIe7CJ621Np9So=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by PH0PR17MB5754.namprd17.prod.outlook.com (2603:10b6:510:111::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Mon, 9 Oct
+ 2023 15:23:59 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::bdfd:7c88:7f47:2ecd]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::bdfd:7c88:7f47:2ecd%6]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
+ 15:23:59 +0000
+Date: Sat, 7 Oct 2023 06:56:38 -0400
+From: Gregory Price <gregory.price@memverge.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dimitrios.palyvos@zptcorp.com, linux-cxl@vger.kernel.org
+Subject: Re: Questions about the memory of CXL Type3 device offline
+Message-ID: <ZSE5ZltphjSJzaGo@memverge.com>
+References: <20231009123947.951689-1-wangyuquan1236@phytium.com.cn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231009123947.951689-1-wangyuquan1236@phytium.com.cn>
+X-ClientProxiedBy: BYAPR01CA0024.prod.exchangelabs.com (2603:10b6:a02:80::37)
+ To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
- "Williams, Dan J" <dan.j.williams@intel.com>,
- "Jiang, Dave" <dave.jiang@intel.com>, "osalvador@suse.de"
- <osalvador@suse.de>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "Huang, Ying" <ying.huang@intel.com>, "linux-mm@kvack.org"
- <linux-mm@kvack.org>, "aneesh.kumar@linux.ibm.com"
- <aneesh.kumar@linux.ibm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "Hocko, Michal" <mhocko@suse.com>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "jmoyer@redhat.com" <jmoyer@redhat.com>,
- "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
-References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
- <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
- <4ad40b9b-086b-e31f-34bd-c96550bb73e9@redhat.com>
- <45cfd268da63eeddb741e9c9c3026b0e15eade4b.camel@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-In-Reply-To: <45cfd268da63eeddb741e9c9c3026b0e15eade4b.camel@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|PH0PR17MB5754:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1fde0d07-81b9-4431-cb04-08dbc8dbc2b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	jKe/rsaXxCOopr+ibeUASPdJ6dkdyvWuWlmyotgdqAp6l9+GCz8gRLOVSnZj55PZQCX5W3jny9THRnv4vT3YsGNgQmqBgZOteapKMlgM0Otq6VA4Yb+N1lTjUvyyP/3ZW1S73RLO5w+1xp50Ztqp81YVHJaKaIFqyAoDXztPT4Ifcylx3fOoDrvEImn9Va6q5H73p8pPTTg6VbkjYWn77QRq1YHARMe1X+0K2t7i3S29iWMAqu8x7xg3mvZv4nBfRJ7k4Q9Qd9aQT1h2wgej6eM7ajRoM70q6y0a2Cu0k2ahCIfd8XpNJN5iyr6QabpG2U+W6qH35WdCKKXpzktODdSxQm+Ja3dIWj3nuu1bTOO8ty8/dAmQTc1VcBYlj7cXv73VdN0QzN3sSSliolU0GN9lEnfGPHplyw1T5wUnZ+r2KC1B+SnfcmjWDRPkBl79vGoiwvY6U7ibq36x+qepEHZ8/H1LaPD6Ywg4VqIydAbXul/TtTVzC6nSld2qrJjXKEVhCuLtR6cLPHOcmTLoJXwaxqi5lAmo3pPsbOvKEIpJDr3XD8TaJFZVM3JgOU05
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(136003)(396003)(39840400004)(376002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(36756003)(26005)(38100700002)(6506007)(6666004)(5660300002)(478600001)(83380400001)(6486002)(4326008)(8936002)(8676002)(2616005)(2906002)(41300700001)(4744005)(44832011)(66476007)(66556008)(66946007)(86362001)(6512007)(6916009)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8dtnmVk4yW3AFR4efnJ92GUMB8XPy0lhDQucECviNPpt1XzNetQW5waeBHY5?=
+ =?us-ascii?Q?mj7uv833ZO3Ag5KW8ptw8YnyZcI1RHtVuRqITwe0wduMOsCJiNiWkVvHNkgF?=
+ =?us-ascii?Q?0DOWtbJMekUZzQKybN0u1+0D6wNVDYgC4dNR03ZlSIXAtToPvcS2/Ib25+IW?=
+ =?us-ascii?Q?JUuyzNZ9Dq6T+RJgSmBpXaFkISxEggemVT2NGrNrJu9sfTi1PwsomEBo6PoE?=
+ =?us-ascii?Q?4Z9hbQaqLh/8gVTK5jXjFTB8X33yP/teobsgTz+eT2lK3nu1OOMcSBtzfXnN?=
+ =?us-ascii?Q?l3JpftvwfFEdFwhIA0kbIWcgkxku4frp2QIZEZpOnKn0D7SYk0JVh5a6VvqH?=
+ =?us-ascii?Q?j8UZSGZWVTxL2drlA+88fS89my7P0G/1BkW/GFSORzTBJzkxTil4c4nxgHbU?=
+ =?us-ascii?Q?1l8H1tCQqVk3JVPq6kd4maSpZYIF12DiEAf48SV63hB4MEwTiNn8z7G/8Vpl?=
+ =?us-ascii?Q?QK13RnS95M33bDjpJ9Yprbhsn0ttj4K0PK7a/gK8r2Z72qMj/qRPlCwhd5Ku?=
+ =?us-ascii?Q?rVjtcEkNQWY48v3rcmVPhoe967n5QcwdHohI9+s1pHNkkGb+4riGG8d/Sar4?=
+ =?us-ascii?Q?ocAT7tfeKVUkOrUbKV5+losU0Uv6gQbzkXpNrp/SFQZfUCvUzuMcXxZHdkgh?=
+ =?us-ascii?Q?0qYyvm2MmTy6/UctCOZanQ58iXBQDETcuROF2aojwvgOnrAlNe5qPArYGf/E?=
+ =?us-ascii?Q?77e2X+9Kt2OBvdLbIguMkFrCeDONjJamzCVDhavIvqwM6fSfm2tq5A2uFAWV?=
+ =?us-ascii?Q?ccugLNSFo42sXsR8ensPlbP28KYU6m2lU3Uu0qAH/1IL5Nt555NSQnV/f7rV?=
+ =?us-ascii?Q?ZyqDPtsYZhPErIzeUZpu49E57pAZnX3Dg3TBcWP0DHSGJtNDjAUJMzK0YloG?=
+ =?us-ascii?Q?TGSq3//kottcy3UDiIKUqfVkVVMF+XW/zJxMmFDFtULSDjF1nLrKI+Plq4Pb?=
+ =?us-ascii?Q?DuB/W5geSZw6R+AfM7iBZXRoLURLydIzGsPmu77YhwNQxigwi/+qVg4PaJeO?=
+ =?us-ascii?Q?BiEF75Qeo91AbWihl0t6Qm1gWhOor7dx+zZaLdYvwXjpgkCyazP+GgA3EZBq?=
+ =?us-ascii?Q?7IwVJjOgQ9y4SPVlOFq+fPGHl6ajuqpAuEU6ZLM1tjPWdOCUF/hnjw13wFSI?=
+ =?us-ascii?Q?MftCUeBZT9Ll1Ioh5++rBHRnCmtSLOlBB8Hx0f4An0KO/Qhu7q5zvdKz4Dz8?=
+ =?us-ascii?Q?O8oDWUGQclF3FQSfekV4MBXn7SnLg0q7QvuvFHREurcSRWCCL8Iw9rLWkJa+?=
+ =?us-ascii?Q?MM9NjFnXOu0Uxg6ayKMnGQc1BtRuEHuCRjNnojD2EQRh7HfnEFj6GGmZI9m1?=
+ =?us-ascii?Q?HgcvERuh9Su2+oekI+zmHpSYYs5WWMCahJVtBWccBd2tB/9I7gmxbTBbLpfc?=
+ =?us-ascii?Q?dXU1YcIF/8Ywtby8ILeV2vXCeoiLTEXU/BupGR4JeTlWT3iwr1HZigJKAuc8?=
+ =?us-ascii?Q?QmzJnHq47zY2wnLuTW+6QCQvkvAV7r+vmeE8eEAP7N5KsLcuLETxZNlQhUt/?=
+ =?us-ascii?Q?MLDqvkvGl37DZetPSRRT8XRCuAAwuus1gmVf+p/0IOmPhGDi8eB7i32HsWVu?=
+ =?us-ascii?Q?rLsAzdMWUz9c3lVCYTbIilXmR1tYVoTsjy/oZR+7XYygzvSItpI0Zds+CGgm?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fde0d07-81b9-4431-cb04-08dbc8dbc2b8
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 15:23:59.4680
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EQHPgho86Cc1TzZz0O1N6+noxofGQjKPhk1+JfC3tn8BbiPG0dNfSNWyP7NqFt7grTqB3SDsXurogTqYgxr2Qn3ypsar8nrbGocHQkq1mWQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB5754
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 07.10.23 00:01, Verma, Vishal L wrote:
-> On Fri, 2023-10-06 at 14:52 +0200, David Hildenbrand wrote:
->> On 05.10.23 20:31, Vishal Verma wrote:
->>>
-> <..>
->>> @@ -2167,47 +2221,28 @@ static int __ref try_remove_memory(u64 start, u64 size)
->>>          if (rc)
->>>                  return rc;
->>>    
->>> +       mem_hotplug_begin();
->>> +
->>>          /*
->>> -        * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
->>> -        * the same granularity it was added - a single memory block.
->>> +        * For memmap_on_memory, the altmaps could have been added on
->>> +        * a per-memblock basis. Loop through the entire range if so,
->>> +        * and remove each memblock and its altmap.
->>>           */
->>>          if (mhp_memmap_on_memory()) {
->>> -               rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
->>> -               if (rc) {
->>> -                       if (size != memory_block_size_bytes()) {
->>> -                               pr_warn("Refuse to remove %#llx - %#llx,"
->>> -                                       "wrong granularity\n",
->>> -                                       start, start + size);
->>> -                               return -EINVAL;
->>> -                       }
->>> -                       altmap = mem->altmap;
->>> -                       /*
->>> -                        * Mark altmap NULL so that we can add a debug
->>> -                        * check on memblock free.
->>> -                        */
->>> -                       mem->altmap = NULL;
->>> -               }
->>> +               unsigned long memblock_size = memory_block_size_bytes();
->>> +               u64 cur_start;
->>> +
->>> +               for (cur_start = start; cur_start < start + size;
->>> +                    cur_start += memblock_size)
->>> +                       remove_memory_block_and_altmap(nid, cur_start,
->>> +                                                      memblock_size);
->>> +       } else {
->>> +               remove_memory_block_and_altmap(nid, start, size);
->>
->> Better call remove_memory_block_devices() and arch_remove_memory(start,
->> size, altmap) here explicitly instead of using
->> remove_memory_block_and_altmap() that really can only handle a single
->> memory block with any inputs.
->>
-> I'm not sure I follow. Even in the non memmap_on_memory case, we'd have
-> to walk_memory_blocks() to get to the memory_block->altmap, right?
-
-See my other reply to, at least with mhp_memmap_on_memory()==false, we 
-don't have to worry about the altmap.
-
+On Mon, Oct 09, 2023 at 08:39:47PM +0800, Yuquan Wang wrote:
+> Hello, everyone!
 > 
-> Or is there a more direct way? If we have to walk_memory_blocks, what's
-> the advantage of calling those directly instead of calling the helper
-> created above?
+> Questions:
+> 1)Why the meomory of CXL node is still offline?
 
-I think we have two cases to handle
+because you likely have auto-online of new memory blocks sets to false.
 
-1) All have an altmap. Remove them block-by-block. Probably we should 
-call a function remove_memory_blocks(altmap=true) [or alternatively 
-remove_memory_blocks_and_altmaps()] and just handle iterating internally.
+use `daxctl list` and  `daxctl online-memory [dax-device]` to online the memory
 
-2) All don't have an altmap. We can remove them in one go. Probably we 
-should call that remove_memory_blocks(altmap=false) [or alternatively 
-remove_memory_blocks_no_altmaps()].
+> 2)Is my configuration process standard?
 
-I guess it's best to do a walk upfront to make sure either all have an 
-altmap or none has one. Then we can branch off to the right function 
-knowing whether we have to process altmaps or not.
-
-The existing
-
-if (mhp_memmap_on_memory()) {
-	...
-}
-
-Can be extended for that case.
-
-Please let me know if I failed to express what I mean, then I can 
-briefly prototype it on top of your changes.
-
--- 
-Cheers,
-
-David / dhildenb
-
+looks fine to me 
