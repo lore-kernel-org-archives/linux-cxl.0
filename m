@@ -1,410 +1,341 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6BC163
-	for <linux-cxl@vger.kernel.org>; Sat,  7 Oct 2023 00:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07CD156D2
+	for <linux-cxl@vger.kernel.org>; Sat,  7 Oct 2023 08:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d9khzyM+"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7771BE
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 17:07:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VVbeo/C/"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9F5BB;
+	Sat,  7 Oct 2023 01:57:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696637225; x=1728173225;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wOJhRKsXhh0h5Qd/IkT5/In9a+GO0koizA+yYAhahlk=;
-  b=d9khzyM+U/qsHJYjzSqAd6EAnVlpY55t0wch15p4mTQIWDwGBgYeehuI
-   vJGrgpJJIYZyXpM8SWWo5D/C/Yz835ANhW4WBaPwt5kq6Gh8w+QKmuiDA
-   +ucF8ryFG0e/GcHMZNMw0N37lzHdQX3O5VV4FN3OsCflGp3Pk9GwobMYm
-   4H08K6aiFDMyVGvAoD2KE8O3EHB7/lnS2pH/hkUzwIc0o9MpWzOaEfpn4
-   1qwrXMWc1iqarfp1//hWWVOD30C0HOfid2+2VXFlGdvz4lL1RwYercCk9
-   XyPXhpRjwdJ+uOCn9jYzR9qZmd0SnkDVEsavqvdgzfuur5DFmSIPzs1ap
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383743450"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="383743450"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 17:07:04 -0700
+  t=1696669047; x=1728205047;
+  h=from:to:cc:subject:references:date:in-reply-to:
+   message-id:mime-version;
+  bh=zZfpmpOa9xub7U4t7n92Ku/R19iFPsHPDUZaIQJfc8A=;
+  b=VVbeo/C/c0ak1Dgv21AWQQkdFv1IG1SDu3fPrCD7eyHyrqJ4bx3TB3Lg
+   NDbvHdPjvDH4g3yPaHIouyw2VmOGXxMvOfIbyfmxZ1If8bzjENDfcxwil
+   v4VfIw1O0VLeu5xL4NMHbA6Fph0d0hUwAYsPfgTvu/+nVr8JfTYrxdoRc
+   tu8nW8mY+c34LErCFER8CLxTP+0d5sW/hTUHUzWPEkpJ+nKvbbknwBn/G
+   MZ8xxZKNq+p4aqsy85LgyzP24DZbT7W6K6JIkwN2n+F1yJQqeV1cRSz9h
+   18uFERvpgtWiV83Aex/RIvJg4a3JU17Zra9ZGRXXoPQHDJN+AzmRSjlZI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="470176975"
+X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
+   d="scan'208";a="470176975"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 01:57:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="781822550"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="781822550"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.13.39])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 17:07:01 -0700
-Subject: [PATCH v9 04/11] cxl: Add support for _DSM Function for retrieving
- QTG ID
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
- mst@redhat.com
-Date: Fri, 06 Oct 2023 17:07:00 -0700
-Message-ID: <169663722059.1290891.13642410179800503051.stgit@djiang5-mobl3>
-In-Reply-To: <20231006131423.00005657@Huawei.com>
-References: <20231006131423.00005657@Huawei.com>
-User-Agent: StGit/1.5
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="746140872"
+X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
+   d="scan'208";a="746140872"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 01:57:23 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
+ <david@redhat.com>,  Oscar Salvador <osalvador@suse.de>,  Dan Williams
+ <dan.j.williams@intel.com>,  Dave Jiang <dave.jiang@intel.com>,
+  <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
+  <nvdimm@lists.linux.dev>,  <linux-cxl@vger.kernel.org>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  "Aneesh Kumar K.V"
+ <aneesh.kumar@linux.ibm.com>,  Michal Hocko <mhocko@suse.com>,  Jonathan
+ Cameron <Jonathan.Cameron@Huawei.com>,  Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory
+ requests across memblocks
+References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
+	<20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
+Date: Sat, 07 Oct 2023 16:55:19 +0800
+In-Reply-To: <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com> (Vishal
+	Verma's message of "Thu, 5 Oct 2023 12:31:39 -0600")
+Message-ID: <87jzrylslk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=ascii
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
+Vishal Verma <vishal.l.verma@intel.com> writes:
 
-Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
-an input of an ACPI package with 4 dwords (read latency, write latency,
-read bandwidth, write bandwidth). The call returns a package with 1 WORD
-that provides the max supported QTG ID and a package that may contain 0 or
-more WORDs as the recommended QTG IDs in the recommended order.
+> The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is restricted to
+> 'memblock_size' chunks of memory being added. Adding a larger span of
+> memory precludes memmap_on_memory semantics.
+>
+> For users of hotplug such as kmem, large amounts of memory might get
+> added from the CXL subsystem. In some cases, this amount may exceed the
+> available 'main memory' to store the memmap for the memory being added.
+> In this case, it is useful to have a way to place the memmap on the
+> memory being added, even if it means splitting the addition into
+> memblock-sized chunks.
+>
+> Change add_memory_resource() to loop over memblock-sized chunks of
+> memory if caller requested memmap_on_memory, and if other conditions for
+> it are met. Teach try_remove_memory() to also expect that a memory
+> range being removed might have been split up into memblock sized chunks,
+> and to loop through those as needed.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  mm/memory_hotplug.c | 162 ++++++++++++++++++++++++++++++++--------------------
+>  1 file changed, 99 insertions(+), 63 deletions(-)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index f8d3e7427e32..77ec6f15f943 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1380,6 +1380,44 @@ static bool mhp_supports_memmap_on_memory(unsigned long size)
+>  	return arch_supports_memmap_on_memory(vmemmap_size);
+>  }
+>  
+> +static int add_memory_create_devices(int nid, struct memory_group *group,
+> +				     u64 start, u64 size, mhp_t mhp_flags)
+> +{
+> +	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	struct vmem_altmap mhp_altmap = {
+> +		.base_pfn =  PHYS_PFN(start),
+> +		.end_pfn  =  PHYS_PFN(start + size - 1),
+> +	};
+> +	int ret;
+> +
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY)) {
+> +		mhp_altmap.free = memory_block_memmap_on_memory_pages();
+> +		params.altmap = kmalloc(sizeof(struct vmem_altmap), GFP_KERNEL);
+> +		if (!params.altmap)
+> +			return -ENOMEM;
+> +
+> +		memcpy(params.altmap, &mhp_altmap, sizeof(mhp_altmap));
+> +	}
+> +
+> +	/* call arch's memory hotadd */
+> +	ret = arch_add_memory(nid, start, size, &params);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	/* create memory block devices after memory was added */
+> +	ret = create_memory_block_devices(start, size, params.altmap, group);
+> +	if (ret)
+> +		goto err_bdev;
+> +
+> +	return 0;
+> +
+> +err_bdev:
+> +	arch_remove_memory(start, size, NULL);
+> +error:
+> +	kfree(params.altmap);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+>   * and online/offline operations (triggered e.g. by sysfs).
+> @@ -1388,14 +1426,10 @@ static bool mhp_supports_memmap_on_memory(unsigned long size)
+>   */
+>  int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  {
+> -	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	unsigned long memblock_size = memory_block_size_bytes();
+>  	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+> -	struct vmem_altmap mhp_altmap = {
+> -		.base_pfn =  PHYS_PFN(res->start),
+> -		.end_pfn  =  PHYS_PFN(res->end),
+> -	};
+>  	struct memory_group *group = NULL;
+> -	u64 start, size;
+> +	u64 start, size, cur_start;
+>  	bool new_node = false;
+>  	int ret;
+>  
+> @@ -1436,28 +1470,21 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  	/*
+>  	 * Self hosted memmap array
+>  	 */
+> -	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
+> -		if (mhp_supports_memmap_on_memory(size)) {
+> -			mhp_altmap.free = memory_block_memmap_on_memory_pages();
+> -			params.altmap = kmalloc(sizeof(struct vmem_altmap), GFP_KERNEL);
+> -			if (!params.altmap)
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
+> +	    mhp_supports_memmap_on_memory(memblock_size)) {
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size) {
+> +			ret = add_memory_create_devices(nid, group, cur_start,
+> +							memblock_size,
+> +							mhp_flags);
+> +			if (ret)
+>  				goto error;
+> -
+> -			memcpy(params.altmap, &mhp_altmap, sizeof(mhp_altmap));
+>  		}
+> -		/* fallback to not using altmap  */
+> -	}
+> -
+> -	/* call arch's memory hotadd */
+> -	ret = arch_add_memory(nid, start, size, &params);
+> -	if (ret < 0)
+> -		goto error_free;
+> -
+> -	/* create memory block devices after memory was added */
+> -	ret = create_memory_block_devices(start, size, params.altmap, group);
+> -	if (ret) {
+> -		arch_remove_memory(start, size, NULL);
+> -		goto error_free;
+> +	} else {
+> +		ret = add_memory_create_devices(nid, group, start, size,
+> +						mhp_flags);
+> +		if (ret)
+> +			goto error;
+>  	}
+>  
+>  	if (new_node) {
+> @@ -1494,8 +1521,6 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  		walk_memory_blocks(start, size, NULL, online_memory_block);
+>  
+>  	return ret;
+> -error_free:
+> -	kfree(params.altmap);
+>  error:
+>  	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+>  		memblock_remove(start, size);
+> @@ -2146,12 +2171,41 @@ void try_offline_node(int nid)
+>  }
+>  EXPORT_SYMBOL(try_offline_node);
+>  
+> -static int __ref try_remove_memory(u64 start, u64 size)
+> +static void __ref remove_memory_block_and_altmap(int nid, u64 start, u64 size)
+>  {
+> +	int rc = 0;
+>  	struct memory_block *mem;
+> -	int rc = 0, nid = NUMA_NO_NODE;
+>  	struct vmem_altmap *altmap = NULL;
+>  
+> +	rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
+> +	if (rc) {
+> +		altmap = mem->altmap;
+> +		/*
+> +		 * Mark altmap NULL so that we can add a debug
+> +		 * check on memblock free.
+> +		 */
+> +		mem->altmap = NULL;
+> +	}
+> +
+> +	/*
+> +	 * Memory block device removal under the device_hotplug_lock is
+> +	 * a barrier against racing online attempts.
+> +	 */
+> +	remove_memory_block_devices(start, size);
+> +
+> +	arch_remove_memory(start, size, altmap);
+> +
+> +	/* Verify that all vmemmap pages have actually been freed. */
+> +	if (altmap) {
+> +		WARN(altmap->alloc, "Altmap not fully unmapped");
+> +		kfree(altmap);
+> +	}
+> +}
+> +
+> +static int __ref try_remove_memory(u64 start, u64 size)
+> +{
+> +	int rc, nid = NUMA_NO_NODE;
+> +
+>  	BUG_ON(check_hotplug_memory_range(start, size));
+>  
+>  	/*
+> @@ -2167,47 +2221,28 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>  	if (rc)
+>  		return rc;
+>  
+> +	mem_hotplug_begin();
+> +
+>  	/*
+> -	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
+> -	 * the same granularity it was added - a single memory block.
+> +	 * For memmap_on_memory, the altmaps could have been added on
+> +	 * a per-memblock basis. Loop through the entire range if so,
+> +	 * and remove each memblock and its altmap.
+>  	 */
+>  	if (mhp_memmap_on_memory()) {
 
-Create a cxl_root container for the root cxl_port and provide a callback
-->get_qos_class() in order to retrieve the QoS class. For the ACPI case,
-the _DSM helper is used to retrieve the QTG ID and returned. A
-devm_cxl_add_root() function is added for root port setup and registration
-of the cxl_root callback operation(s).
+IIUC, even if mhp_memmap_on_memory() returns true, it's still possible
+that the memmap is put in DRAM after [2/2].  So that,
+arch_remove_memory() are called for each memory block unnecessarily.  Can
+we detect this (via altmap?) and call remove_memory_block_and_altmap()
+for the whole range?
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v9:
-- Fix input to 4 ints instead of using buffers. (Dan)
-- Remove all endien conversion inside acpi handling code. (Dan)
-v8:
-- Change DSM return package parsing to use integers.
-v7:
-- Fix stray lines in commit log. (Jonathan)
-v5:
-- Make the helper a callback for the CXL root. (Dan)
-- Drop the addition of core/acpi.c. (Dan)
-- Add endiness handling. (Jonathan)
-- Refactor error exits. (Jonathan)
-- Update evaluate function description. (Jonathan)
-- Make uuid static. (Dan)
-v2:
-- Reorder var declaration and use C99 style. (Jonathan)
-- Allow >2 ACPI objects in package for future expansion. (Jonathan)
-- Check QTG IDs against MAX QTG ID provided by output package. (Jonathan)
----
- drivers/cxl/acpi.c      |  143 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/core/port.c |   41 ++++++++++++-
- drivers/cxl/cxl.h       |   36 ++++++++++++
- 3 files changed, 212 insertions(+), 8 deletions(-)
+> -		rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
+> -		if (rc) {
+> -			if (size != memory_block_size_bytes()) {
+> -				pr_warn("Refuse to remove %#llx - %#llx,"
+> -					"wrong granularity\n",
+> -					start, start + size);
+> -				return -EINVAL;
+> -			}
+> -			altmap = mem->altmap;
+> -			/*
+> -			 * Mark altmap NULL so that we can add a debug
+> -			 * check on memblock free.
+> -			 */
+> -			mem->altmap = NULL;
+> -		}
+> +		unsigned long memblock_size = memory_block_size_bytes();
+> +		u64 cur_start;
+> +
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size)
+> +			remove_memory_block_and_altmap(nid, cur_start,
+> +						       memblock_size);
+> +	} else {
+> +		remove_memory_block_and_altmap(nid, start, size);
+>  	}
+>  
+>  	/* remove memmap entry */
+>  	firmware_map_remove(start, start + size, "System RAM");
+>  
+> -	/*
+> -	 * Memory block device removal under the device_hotplug_lock is
+> -	 * a barrier against racing online attempts.
+> -	 */
+> -	remove_memory_block_devices(start, size);
+> -
+> -	mem_hotplug_begin();
+> -
+> -	arch_remove_memory(start, size, altmap);
+> -
+> -	/* Verify that all vmemmap pages have actually been freed. */
+> -	if (altmap) {
+> -		WARN(altmap->alloc, "Altmap not fully unmapped");
+> -		kfree(altmap);
+> -	}
+> -
+>  	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+>  		memblock_phys_free(start, size);
+>  		memblock_remove(start, size);
+> @@ -2219,6 +2254,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>  		try_offline_node(nid);
+>  
+>  	mem_hotplug_done();
+> +
+>  	return 0;
+>  }
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 2034eb4ce83f..9fe50eb98106 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -17,6 +17,10 @@ struct cxl_cxims_data {
- 	u64 xormaps[] __counted_by(nr_maps);
- };
- 
-+static const guid_t acpi_cxl_qtg_id_guid =
-+	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
-+		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
-+
- /*
-  * Find a targets entry (n) in the host bridge interleave list.
-  * CXL Specification 3.0 Table 9-22
-@@ -194,6 +198,137 @@ struct cxl_cfmws_context {
- 	int id;
- };
- 
-+/**
-+ * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
-+ * @handle: ACPI handle
-+ * @input: bandwidth and latency data
-+ *
-+ * Return: qos_class output or ERRPTR of -errno
-+ *
-+ * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
-+ * the QTG IDs that are suitable for the performance point in order of most
-+ * suitable to least suitable. Return first QTG ID.
-+ */
-+static struct qos_class *
-+cxl_acpi_evaluate_qtg_dsm(acpi_handle handle, struct qtg_dsm_input *input)
-+{
-+	union acpi_object *out_obj, *out_buf, *pkg;
-+	union acpi_object in_array[4] = {
-+		[0] = {
-+			.integer.type = ACPI_TYPE_INTEGER,
-+			.integer.value = input->rd_lat,
-+		},
-+		[1] = {
-+			.integer.type = ACPI_TYPE_INTEGER,
-+			.integer.value = input->wr_lat,
-+		},
-+		[2] = {
-+			.integer.type = ACPI_TYPE_INTEGER,
-+			.integer.value = input->rd_bw,
-+		},
-+		[3] = {
-+			.integer.type = ACPI_TYPE_INTEGER,
-+			.integer.value = input->wr_bw,
-+		},
-+	};
-+	union acpi_object in_obj = {
-+		.package = {
-+			.type = ACPI_TYPE_PACKAGE,
-+			.count = 4,
-+			.elements = in_array,
-+		},
-+	};
-+	struct qos_class *output;
-+	int entries, i;
-+	u16 max_qtg;
-+	int rc = 0;
-+
-+	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
-+	if (!out_obj)
-+		return ERR_PTR(-ENXIO);
-+
-+	if (out_obj->type != ACPI_TYPE_PACKAGE) {
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	/* Check Max QTG ID */
-+	pkg = &out_obj->package.elements[0];
-+	if (pkg->type != ACPI_TYPE_INTEGER) {
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	max_qtg = pkg->integer.value;
-+
-+	/* It's legal to have 0 QTG entries */
-+	entries = out_obj->package.count;
-+	if (entries <= 1) {
-+		rc = -EEXIST;
-+		goto out;
-+	}
-+
-+	/* Retrieve QTG IDs package */
-+	pkg = &out_obj->package.elements[1];
-+	if (pkg->type != ACPI_TYPE_PACKAGE) {
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	entries = pkg->package.count;
-+	output = kmalloc(sizeof(*output) + entries * sizeof(int), GFP_KERNEL);
-+	if (!output) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < entries; i++) {
-+		u16 qtg_id;
-+
-+		out_buf = &pkg->package.elements[i];
-+		if (out_buf->type != ACPI_TYPE_INTEGER) {
-+			rc = -ENXIO;
-+			goto out;
-+		}
-+
-+		qtg_id = out_buf->integer.value;
-+		if (qtg_id > max_qtg)
-+			pr_warn("QTG ID %u greater than MAX %u\n",
-+				qtg_id, max_qtg);
-+
-+		output->entries[i] = qtg_id;
-+	}
-+	output->nr = entries;
-+
-+out:
-+	ACPI_FREE(out_obj);
-+	if (rc)
-+		output = ERR_PTR(rc);
-+	return output;
-+}
-+
-+static struct qos_class *
-+cxl_acpi_get_qos_class(struct cxl_port *root_port, struct qtg_dsm_input *input)
-+{
-+	acpi_handle handle;
-+	struct device *dev;
-+
-+	dev = root_port->uport_dev;
-+
-+	if (!dev_is_platform(dev))
-+		return ERR_PTR(-ENODEV);
-+
-+	handle = ACPI_HANDLE(dev);
-+	if (!handle)
-+		return ERR_PTR(-ENODEV);
-+
-+	return cxl_acpi_evaluate_qtg_dsm(handle, input);
-+}
-+
-+static const struct cxl_root_ops acpi_root_ops = {
-+	.get_qos_class = cxl_acpi_get_qos_class,
-+};
-+
- static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			   const unsigned long end)
- {
-@@ -656,6 +791,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- {
- 	int rc;
- 	struct resource *cxl_res;
-+	struct cxl_root *cxl_root;
- 	struct cxl_port *root_port;
- 	struct device *host = &pdev->dev;
- 	struct acpi_device *adev = ACPI_COMPANION(host);
-@@ -675,9 +811,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	cxl_res->end = -1;
- 	cxl_res->flags = IORESOURCE_MEM;
- 
--	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
--	if (IS_ERR(root_port))
--		return PTR_ERR(root_port);
-+	cxl_root = devm_cxl_add_root(host, &acpi_root_ops);
-+	if (IS_ERR(cxl_root))
-+		return PTR_ERR(cxl_root);
-+	root_port = &cxl_root->port;
- 
- 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
- 			      add_host_bridge_dport);
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index fc31ff8954c0..23403538505b 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -528,7 +528,10 @@ static void cxl_port_release(struct device *dev)
- 	xa_destroy(&port->dports);
- 	xa_destroy(&port->regions);
- 	ida_free(&cxl_port_ida, port->id);
--	kfree(port);
-+	if (is_cxl_root(port))
-+		kfree(to_cxl_root(port));
-+	else
-+		kfree(port);
- }
- 
- static const struct attribute_group *cxl_port_attribute_groups[] = {
-@@ -632,13 +635,22 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
- 				       resource_size_t component_reg_phys,
- 				       struct cxl_dport *parent_dport)
- {
-+	struct cxl_root *cxl_root = NULL;
- 	struct cxl_port *port;
- 	struct device *dev;
- 	int rc;
- 
--	port = kzalloc(sizeof(*port), GFP_KERNEL);
--	if (!port)
--		return ERR_PTR(-ENOMEM);
-+	/* No parent_dport, root cxl_port */
-+	if (!parent_dport) {
-+		cxl_root = kzalloc(sizeof(*cxl_root), GFP_KERNEL);
-+		if (!cxl_root)
-+			return ERR_PTR(-ENOMEM);
-+		port = &cxl_root->port;
-+	} else {
-+		port = kzalloc(sizeof(*port), GFP_KERNEL);
-+		if (!port)
-+			return ERR_PTR(-ENOMEM);
-+	}
- 
- 	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
- 	if (rc < 0)
-@@ -697,7 +709,10 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
- 	return port;
- 
- err:
--	kfree(port);
-+	if (cxl_root)
-+		kfree(cxl_root);
-+	else
-+		kfree(port);
- 	return ERR_PTR(rc);
- }
- 
-@@ -821,6 +836,22 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
- 
-+struct cxl_root *devm_cxl_add_root(struct device *host,
-+				   const struct cxl_root_ops *ops)
-+{
-+	struct cxl_root *cxl_root;
-+	struct cxl_port *port;
-+
-+	port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
-+	if (IS_ERR(port))
-+		return (struct cxl_root *)port;
-+
-+	cxl_root = to_cxl_root(port);
-+	cxl_root->ops = ops;
-+	return cxl_root;
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_add_root, CXL);
-+
- struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port)
- {
- 	/* There is no pci_bus associated with a CXL platform-root port */
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 2d1fd6d0cce5..a65f68764d6d 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -611,6 +611,40 @@ struct cxl_port {
- 	bool cdat_available;
- };
- 
-+struct qtg_dsm_input {
-+	__le32 rd_lat;
-+	__le32 wr_lat;
-+	__le32 rd_bw;
-+	__le32 wr_bw;
-+};
-+
-+struct qos_class {
-+	int nr;
-+	int entries[];
-+};
-+
-+struct cxl_root_ops {
-+	struct qos_class *(*get_qos_class)(struct cxl_port *root_port,
-+					  struct qtg_dsm_input *input);
-+};
-+
-+/**
-+ * struct cxl_root - logical collection of root cxl_port items
-+ *
-+ * @port: cxl_port member
-+ * @ops: cxl root operations
-+ */
-+struct cxl_root {
-+	struct cxl_port port;
-+	const struct cxl_root_ops *ops;
-+};
-+
-+static inline struct cxl_root *
-+to_cxl_root(const struct cxl_port *port)
-+{
-+	return container_of(port, struct cxl_root, port);
-+}
-+
- static inline struct cxl_dport *
- cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
- {
-@@ -696,6 +730,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
- 				   struct device *uport_dev,
- 				   resource_size_t component_reg_phys,
- 				   struct cxl_dport *parent_dport);
-+struct cxl_root *devm_cxl_add_root(struct device *host,
-+				   const struct cxl_root_ops *ops);
- struct cxl_port *find_cxl_root(struct cxl_port *port);
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
- void cxl_bus_rescan(void);
-
-
+--
+Best Regards,
+Huang, Ying
