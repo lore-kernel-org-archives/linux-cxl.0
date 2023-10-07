@@ -1,38 +1,38 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9169D9CA5B
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 22:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6BC163
+	for <linux-cxl@vger.kernel.org>; Sat,  7 Oct 2023 00:07:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CGNO+Tty"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B36DAC
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 15:46:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d9khzyM+"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7771BE
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Oct 2023 17:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696632362; x=1728168362;
+  t=1696637225; x=1728173225;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6+dOApzTgVc8ku+2nFXEAZrvVuMHVxQqB1iVbGwlVA4=;
-  b=CGNO+TtyEXYOpTYaRPduGIo2HOBapfCvhUwXELZIL3QDU0TypDtcWCKH
-   dWHhLADkh8w1oXblTbNWAICJwLfuI4Thv3NEF6Iljx+PrrjKR4QzEx/0v
-   bD5yC2UbADjFq17VRDl3WVc6gGFN0xY1BWzyBBCaexnWmYwETDE+roA45
-   0QzzaNuEfYwiYt5+WTzaogvtjJe3zSCOY96n5I8+ZsswnNzGcaF7fiNab
-   Hvo74ijl9M2bfwAIRR+3wzS7L4YtUax03TUZVILPrQBpnv/XbAApiIA5Z
-   g+e84N2C3FbbMFeS2JNPprEJWpQy7qgJ/tTQ3sHO55WZIm9CdgC+OxzQQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="387723403"
+  bh=wOJhRKsXhh0h5Qd/IkT5/In9a+GO0koizA+yYAhahlk=;
+  b=d9khzyM+U/qsHJYjzSqAd6EAnVlpY55t0wch15p4mTQIWDwGBgYeehuI
+   vJGrgpJJIYZyXpM8SWWo5D/C/Yz835ANhW4WBaPwt5kq6Gh8w+QKmuiDA
+   +ucF8ryFG0e/GcHMZNMw0N37lzHdQX3O5VV4FN3OsCflGp3Pk9GwobMYm
+   4H08K6aiFDMyVGvAoD2KE8O3EHB7/lnS2pH/hkUzwIc0o9MpWzOaEfpn4
+   1qwrXMWc1iqarfp1//hWWVOD30C0HOfid2+2VXFlGdvz4lL1RwYercCk9
+   XyPXhpRjwdJ+uOCn9jYzR9qZmd0SnkDVEsavqvdgzfuur5DFmSIPzs1ap
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383743450"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="387723403"
+   d="scan'208";a="383743450"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 15:46:01 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 17:07:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="781803601"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="781822550"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="781803601"
+   d="scan'208";a="781822550"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.13.39])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 15:46:00 -0700
-Subject: [PATCH v8 04/11] cxl: Add support for _DSM Function for retrieving
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 17:07:01 -0700
+Subject: [PATCH v9 04/11] cxl: Add support for _DSM Function for retrieving
  QTG ID
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
@@ -40,8 +40,8 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, ira.weiny@intel.com,
  vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
  mst@redhat.com
-Date: Fri, 06 Oct 2023 15:45:59 -0700
-Message-ID: <169663235991.1272540.17246997472259583827.stgit@djiang5-mobl3>
+Date: Fri, 06 Oct 2023 17:07:00 -0700
+Message-ID: <169663722059.1290891.13642410179800503051.stgit@djiang5-mobl3>
 In-Reply-To: <20231006131423.00005657@Huawei.com>
 References: <20231006131423.00005657@Huawei.com>
 User-Agent: StGit/1.5
@@ -53,10 +53,9 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -77,6 +76,9 @@ of the cxl_root callback operation(s).
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
+v9:
+- Fix input to 4 ints instead of using buffers. (Dan)
+- Remove all endien conversion inside acpi handling code. (Dan)
 v8:
 - Change DSM return package parsing to use integers.
 v7:
@@ -93,13 +95,13 @@ v2:
 - Allow >2 ACPI objects in package for future expansion. (Jonathan)
 - Check QTG IDs against MAX QTG ID provided by output package. (Jonathan)
 ---
- drivers/cxl/acpi.c      |  131 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/core/port.c |   41 +++++++++++++--
- drivers/cxl/cxl.h       |   36 +++++++++++++
- 3 files changed, 200 insertions(+), 8 deletions(-)
+ drivers/cxl/acpi.c      |  143 ++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/port.c |   41 ++++++++++++-
+ drivers/cxl/cxl.h       |   36 ++++++++++++
+ 3 files changed, 212 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 2034eb4ce83f..0ab97bbc1cc6 100644
+index 2034eb4ce83f..9fe50eb98106 100644
 --- a/drivers/cxl/acpi.c
 +++ b/drivers/cxl/acpi.c
 @@ -17,6 +17,10 @@ struct cxl_cxims_data {
@@ -113,7 +115,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
  /*
   * Find a targets entry (n) in the host bridge interleave list.
   * CXL Specification 3.0 Table 9-22
-@@ -194,6 +198,125 @@ struct cxl_cfmws_context {
+@@ -194,6 +198,137 @@ struct cxl_cfmws_context {
  	int id;
  };
  
@@ -132,22 +134,34 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
 +cxl_acpi_evaluate_qtg_dsm(acpi_handle handle, struct qtg_dsm_input *input)
 +{
 +	union acpi_object *out_obj, *out_buf, *pkg;
-+	union acpi_object in_buf = {
-+		.buffer = {
-+			.type = ACPI_TYPE_BUFFER,
-+			.pointer = (u8 *)input,
-+			.length = cpu_to_le32(sizeof(*input)),
++	union acpi_object in_array[4] = {
++		[0] = {
++			.integer.type = ACPI_TYPE_INTEGER,
++			.integer.value = input->rd_lat,
++		},
++		[1] = {
++			.integer.type = ACPI_TYPE_INTEGER,
++			.integer.value = input->wr_lat,
++		},
++		[2] = {
++			.integer.type = ACPI_TYPE_INTEGER,
++			.integer.value = input->rd_bw,
++		},
++		[3] = {
++			.integer.type = ACPI_TYPE_INTEGER,
++			.integer.value = input->wr_bw,
 +		},
 +	};
 +	union acpi_object in_obj = {
 +		.package = {
 +			.type = ACPI_TYPE_PACKAGE,
-+			.count = cpu_to_le32(1),
-+			.elements = &in_buf
++			.count = 4,
++			.elements = in_array,
 +		},
 +	};
 +	struct qos_class *output;
-+	int max_qtg, entries, i;
++	int entries, i;
++	u16 max_qtg;
 +	int rc = 0;
 +
 +	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
@@ -166,10 +180,10 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
 +		goto out;
 +	}
 +
-+	max_qtg = le64_to_cpu(pkg->integer.value);
++	max_qtg = pkg->integer.value;
 +
 +	/* It's legal to have 0 QTG entries */
-+	entries = le32_to_cpu(out_obj->package.count);
++	entries = out_obj->package.count;
 +	if (entries <= 1) {
 +		rc = -EEXIST;
 +		goto out;
@@ -182,7 +196,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
 +		goto out;
 +	}
 +
-+	entries = le32_to_cpu(pkg->package.count);
++	entries = pkg->package.count;
 +	output = kmalloc(sizeof(*output) + entries * sizeof(int), GFP_KERNEL);
 +	if (!output) {
 +		rc = -ENOMEM;
@@ -190,7 +204,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
 +	}
 +
 +	for (i = 0; i < entries; i++) {
-+		int qtg_id;
++		u16 qtg_id;
 +
 +		out_buf = &pkg->package.elements[i];
 +		if (out_buf->type != ACPI_TYPE_INTEGER) {
@@ -198,7 +212,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
 +			goto out;
 +		}
 +
-+		qtg_id = le64_to_cpu(out_buf->integer.value);
++		qtg_id = out_buf->integer.value;
 +		if (qtg_id > max_qtg)
 +			pr_warn("QTG ID %u greater than MAX %u\n",
 +				qtg_id, max_qtg);
@@ -239,7 +253,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
  static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
  			   const unsigned long end)
  {
-@@ -656,6 +779,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+@@ -656,6 +791,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
  {
  	int rc;
  	struct resource *cxl_res;
@@ -247,7 +261,7 @@ index 2034eb4ce83f..0ab97bbc1cc6 100644
  	struct cxl_port *root_port;
  	struct device *host = &pdev->dev;
  	struct acpi_device *adev = ACPI_COMPANION(host);
-@@ -675,9 +799,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+@@ -675,9 +811,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
  	cxl_res->end = -1;
  	cxl_res->flags = IORESOURCE_MEM;
  
