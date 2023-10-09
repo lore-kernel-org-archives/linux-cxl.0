@@ -1,122 +1,160 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DE72593
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 11:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0164698
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 12:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4848594;
-	Mon,  9 Oct 2023 04:33:40 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S3xjq4l38z6K918;
-	Mon,  9 Oct 2023 19:33:19 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 9 Oct
- 2023 12:33:36 +0100
-Date: Mon, 9 Oct 2023 12:33:35 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
-	<helgaas@kernel.org>, David Howells <dhowells@redhat.com>, David Woodhouse
-	<dwmw2@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S.
- Miller" <davem@davemloft.net>, Alex Williamson <alex.williamson@redhat.com>,
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>, <linuxarm@huawei.com>,
-	David Box <david.e.box@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Li,
- Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>, Alistair Francis
-	<alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, Alexey
- Kardashevskiy <aik@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, Sean
- Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231009123335.00006d3d@Huawei.com>
-In-Reply-To: <20231007100433.GA7596@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-	<652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
-	<20231007100433.GA7596@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B07194
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 05:40:20 -0700 (PDT)
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwB3f2uz9CNlgvIBBg--.47561S2;
+	Mon, 09 Oct 2023 20:40:19 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBnrlyx9CNlOH0AAA--.857S3;
+	Mon, 09 Oct 2023 20:40:18 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: dan.j.williams@intel.com,
+	Jonathan.Cameron@Huawei.com,
+	dimitrios.palyvos@zptcorp.com
+Cc: linux-cxl@vger.kernel.org
+Subject: Questions about the memory of CXL Type3 device offline
+Date: Mon,  9 Oct 2023 20:39:47 +0800
+Message-Id: <20231009123947.951689-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwBnrlyx9CNlOH0AAA--.857S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAHAWUi-yYFtAAIsg
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFyUAF18AF15Cry5Kr4rXwb_yoW5Cr4Upa
+	42yr18KFWrJF1UWw10vFWrGFyjqrsakay8XrWUJr4UAr1rGF1Utr4Fyryakas7trZYg3ZF
+	q3WkJwsYqw1Ut3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, 7 Oct 2023 12:04:33 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+Hello, everyone!
 
-> On Fri, Oct 06, 2023 at 09:06:13AM -0700, Dan Williams wrote:
-> > Lukas Wunner wrote:  
-> > > The root of trust is initially an in-kernel key ring of certificates.
-> > > We can discuss linking the system key ring into it, thereby allowing
-> > > EFI to pass trusted certificates to the kernel for CMA.  Alternatively,
-> > > a bundle of trusted certificates could be loaded from the initrd.
-> > > I envision that we'll add TPMs or remote attestation services such as
-> > > https://keylime.dev/ to create an ecosystem of various trust sources.  
-> > 
-> > Linux also has an interest in accommodating opt-in to using platform
-> > managed keys, so the design requires that key management and session
-> > ownership is a system owner policy choice.  
-> 
-> You're pointing out a gap in the specification:
-> 
-> There's an existing mechanism to negotiate which PCI features are
-> handled natively by the OS and which by platform firmware and that's
-> the _OSC Control Field (PCI Firmware Spec r3.3 table 4-5 and 4-6).
-> 
-> There are currently 10 features whose ownership is negotiated with _OSC,
-> examples are Hotplug control and DPC configuration control.
-> 
-> I propose adding an 11th bit to negotiate ownership of the CMA-SPDM
-> session.
-> 
-> Once that's added to the PCI Firmware Spec, amending the implementation
-> to honor it is trivial:  Just check for platform ownership at the top
-> of pci_cma_init() and return.
+I have used Qemu to do some CXL tests and I failed with configuring
+a CXL region and numa node. 
 
-This might want to be a control over the specific DOE instance instead
-of a general purpose CMA control (or maybe we want both).
+My qemu command line:
+qemu-system-x86_64 \
+-M q35,nvdimm=on,cxl=on \
+-m 4G \
+-smp 4 \
+-object memory-backend-ram,size=2G,id=mem0 \
+-numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+-object memory-backend-ram,size=2G,id=mem1 \
+-numa node,nodeid=1,cpus=2-3,memdev=mem1 \
+-object memory-backend-ram,size=256M,id=cxl-mem1 \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,addr=04 \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+-device cxl-type3,bus=root_port13,volatile-memdev=cxl-mem1,id=cxl-mem1 \
+-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
+-hda ./disk/ubuntu_x86_test_dup.qcow2 \
+-nographic 
 
-There is no safe way to access a DOE to find out if it supports CMA
-that doesn't potentially break another entity using the mailbox.
-Given the DOE instances might be for something entirely different we
-can't just decide not to use them at all based on a global control.
+Qemu version: 8.1.50, commit-9ef497755afc252fb8e060c9ea6b0987abfd20b6
+Kernel version: 6.5.0
+ndctl version: 77
 
-Any such control becomes messy when hotplug is taken into account.
-I suppose we could do a _DSM based on BDF / path to device (to remain
-stable across reenumeration) and config space offset to allow the OS
-to say 'Hi other entity / firmware are you using this DOE instance?"
-Kind of an OSC with parameters.  Also includes the other way around that
-the question tells the firmware that if it says "no you can't" the OS
-will leave it alone until a reboot or similar - that potentially avoids
-the problem that we access DOE instances already without taking care
-about this (I dropped ball on this having raised it way back near start
-of us adding DOE support.)
+My steps in the Linux system:
+1) root@mali:/home/mali# ./cxl list
+[
+  {
+    "memdev":"mem0",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:0d:00.0"
+  }
+]
 
-If we do want to do any of these, which spec is appropriate?  Link it to PCI
-and propose a PCI firmware spec update? (not sure they have a code
-first process available) or make it somewhat generic and propose an
-ACPI Code first change?
+2) root@mali:/home/mali# numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0 1
+node 0 size: 1921 MB
+node 0 free: 1705 MB
+node 1 cpus: 2 3
+node 1 size: 2014 MB
+node 1 free: 1834 MB
+node distances:
+node   0   1 
+  0:  10  20 
+  1:  20  10 
 
-Jonathan
+3) root@mali:/home/mali# ./cxl create-region -d decoder0.0 -t ram
+{
+  "region":"region0",
+  "resource":"0x190000000",
+  "size":"256.00 MiB (268.44 MB)",
+  "type":"ram",
+  "interleave_ways":1,
+  "interleave_granularity":256,
+  "decode_state":"commit",
+  "mappings":[
+    {
+      "position":0,
+      "memdev":"mem0",
+      "decoder":"decoder2.0"
+    }
+  ]
+}
+cxl region: cmd_create_region: created 1 region
+[  126.862782] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
+[  126.916152] Fallback order for Node 2: 2 0 1 
+[  126.916699] Built 2 zonelists, mobility grouping on.  Total pages: 982290
+[  126.916877] Policy zone: Normal
 
-> 
-> Thanks,
-> 
-> Lukas
-> 
-> 
+The results:
+root@mali:/home/mali# numactl -H
+available: 3 nodes (0-2)
+node 0 cpus: 0 1
+node 0 size: 1950 MB
+node 0 free: 1785 MB
+node 1 cpus: 2 3
+node 1 size: 1985 MB
+node 1 free: 1790 MB
+node 2 cpus:
+node 2 size: 0 MB
+node 2 free: 0 MB
+node distances:
+node   0   1   2 
+  0:  10  20  20 
+  1:  20  10  20 
+  2:  20  20  10 
+
+root@mali:/home/mali# lsmem --output-all
+RANGE                                  SIZE   STATE REMOVABLE BLOCK NODE          ZONES
+0x0000000000000000-0x0000000007ffffff  128M  online       yes     0    0           None
+0x0000000008000000-0x000000007fffffff  1.9G  online       yes  1-15    0          DMA32
+0x0000000100000000-0x000000017fffffff    2G  online       yes 32-47    1         Normal
+0x0000000190000000-0x000000019fffffff  256M offline           50-51    2 Normal/Movable
+
+root@mali:/home/mali# cat /proc/iomem
+190000000-28fffffff : CXL Window 0
+  190000000-19fffffff : region0
+    190000000-19fffffff : dax0.0
+      190000000-19fffffff : System RAM (kmem)
+2c0000000-abfffffff : PCI Bus 0000:00
+fd00000000-ffffffffff : Reserved
+
+Questions:
+1)Why the meomory of CXL node is still offline?
+2)Is my configuration process standard?
+Hope I can get some helps here, any help will be greatly appreciated.
+
+Many thanks
+Yuquan
 
