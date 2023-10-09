@@ -1,43 +1,42 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979A1358A0
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 14:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B45358A5
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 14:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1unzTRlL"
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2041.outbound.protection.outlook.com [40.107.223.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62BB7C5;
-	Mon,  9 Oct 2023 07:27:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1bt3a2tY"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6D7A3;
+	Mon,  9 Oct 2023 07:35:17 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0dQfuP97LW1DkYPhVugPP4lDc2/mbNu1tCjso9dEhZyzcSBEuYj1G9+6351hZ/3ZZ+WKZFguNZI6t+kYqZoXc2eqwNs5Jhnn4h5c7ybzg6QhaeGHAGPSgOpzh0iaWjpboN67iYKRhnCTSrr3/JZQqqW8XIrX9CDNPMYsDcs3igyCaEMlmRtzhKo0t3jFXPbKHohtvXuOYtLbLzGMvYRxAC63q03UZIeezDP7C39OSqip7eJar69suNp6AKURZFpuzbnCGHivDX/uxOyyYxFdhlMPWi9Bq+RRHI9jmZoOCLajWon4qLsUPSWkgfuuvzx9Gx7bIIVWNIUSw/9pbefqw==
+ b=BIepu62zrT2IAG7N7ZrGt7sUVgnVH0TEGBLN8C3F3qrdj0fc2P13QMu8vGE6xbbKdUkiy6lqaXRVPiO+xSqp0aAamD9Yti0GT2M6AvHmRdnlL9Oyoj+47tsM7lMfta4+N8qDX+KMZP0tK7yuFhEgSWhmGms9KtIsYbojmgrj7RiNvaln6AThScxx8onKOjZvyCGfO1OB8jSqJOaJf1NNKVZqJ6wBhbZZoA9uG8sGZt8eyyiHAtnJdxgGmdK90Z0erWkoMSW5BDalZM9kJNmXV1iOK6m33ToPjcwK8RIh4H2J6vcZKQYhIevyNvV019ZRKax/nwkFR+foJPMlSLBYhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5diiM82jbHUYkOJ48eJks7jgS7GmoFUorUGIGBIyQWk=;
- b=ZBIw1jL0rKhRv2FMcx/kxqvlLBZOrVPBoimgt/efV1mJEvT0DFsTJ2r6QoB8eYfDTOjJ82KYiABnGeRcrhQ6uEBDog1wKEmV3sAqNAx05AgDokSDtXFcgr6ncT4qWpom2LVsMPbPGkQskQn436EDK4SQygOKIxbwZHCCAohio+iHRHCVAhzkpCHF0cltYHpEhanm889f8ylMeTBiMtG1ATtid8jym7NVoSa1mxokhK+QY805TJ+auloV2dVLh9syELAKch9qzS+2J/sfsvG0uhQs3gZwNfCkoy3YunmqxRKkz9DRV6SnuyiHpAg6XlQCrPAc8lWsrBcFnrAXPozdew==
+ bh=Y8JS6hC2N9mCuJ2Bca/wLRyyjGUgs0/s2mE3Xi8eeQk=;
+ b=j5yNZ42hFzQb4Mc2v6RJI3wbm6GCSk21P7XtdRd91lTLLc0oZrbhFrWAGqqoECoUtZn8+Fmv2U3LPuqoURABWbxY9IR0iycfozcScBCIVK8yQlpWM2kboXPVOEG/xSq5cPGOpACBJr0+LwwfdKHCmwB+41mFEo87HCRozIdB7ex1cKBXMNpoBSDC/XFWYxl2oThrXXCI70ggQKDGoS8X6YHj8LXuzovK/tPiV9Y+EDaVWN5GoZUCbTgjTDosB8CLOxSmWQFEB60iBlSKWf8btJwPt3INoR0vJk8q3Dsl3ORZJpXHulSWd1d7yICvCivGWfveI50jZkSHvZCSqHKRdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5diiM82jbHUYkOJ48eJks7jgS7GmoFUorUGIGBIyQWk=;
- b=1unzTRlLM+lnKJg/l58RzuptE3q0o5a2e+l06s+0gvfCkdS4ucXAGqUXJCjbOEtkJ4VWImzxDFBEHgtxnwLukcgQ4U0wa/o5iegvH7FeCPqnnYBnYkXOOcXuV8fw1MEQGw+I4KInARAyBMCY7EufYvbasqssAflYzWOtaAQRCu0=
+ bh=Y8JS6hC2N9mCuJ2Bca/wLRyyjGUgs0/s2mE3Xi8eeQk=;
+ b=1bt3a2tYfviLttom++ao1Hkd9PXv90KNLYRNwe5Ri4+L+AmgF/vNKUBUvoeHL9BM54sb+YrIbzSbvn0de8gkzwhPLSdnnMd/leTC6Qi+6idwRrYG6wDWccLewJNZQ1ON4LbT57syNJuKXpCeVGZqcnIIN9ayCVLlHWOhMe2ua8o=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- SJ2PR12MB9140.namprd12.prod.outlook.com (2603:10b6:a03:55f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.37; Mon, 9 Oct
- 2023 14:27:13 +0000
+ DM4PR12MB5055.namprd12.prod.outlook.com (2603:10b6:5:39a::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6863.37; Mon, 9 Oct 2023 14:35:14 +0000
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::bc87:8b0e:246d:5d85]) by DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::bc87:8b0e:246d:5d85%7]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
- 14:27:12 +0000
-Message-ID: <64379000-de39-40c5-90a6-da932c7da602@amd.com>
-Date: Mon, 9 Oct 2023 09:27:11 -0500
+ 14:35:14 +0000
+Message-ID: <fc3bfa6b-3635-4185-a28c-3e1ea76e5970@amd.com>
+Date: Mon, 9 Oct 2023 09:35:10 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 04/20] cxl/port: Rename @comp_map to @reg_map in
- struct cxl_register_map
+Subject: Re: [PATCH v11 07/20] cxl/hdm: Use stored Component Register mappings
+ to map HDM decoder capability
 Content-Language: en-US
 To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
  Robert Richter <rrichter@amd.com>
@@ -48,14 +47,14 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
  linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  Bjorn Helgaas <bhelgaas@google.com>
 References: <20230927154339.1600738-1-rrichter@amd.com>
- <20230927154339.1600738-5-rrichter@amd.com>
- <20231002153434.000073b9@Huawei.com>
+ <20230927154339.1600738-8-rrichter@amd.com>
+ <20231002154351.0000136a@Huawei.com>
 From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <20231002153434.000073b9@Huawei.com>
+In-Reply-To: <20231002154351.0000136a@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR21CA0002.namprd21.prod.outlook.com
- (2603:10b6:5:174::12) To DS0PR12MB6390.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM6PR13CA0042.namprd13.prod.outlook.com
+ (2603:10b6:5:134::19) To DS0PR12MB6390.namprd12.prod.outlook.com
  (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -64,64 +63,64 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ2PR12MB9140:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39c5a314-f107-4ff3-58fa-08dbc8d3d43d
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM4PR12MB5055:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5fd785b7-33fc-47a5-a77a-08dbc8d4f303
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	PjpJl6WrKm/2NaAf6LPTgprP9gQItUKsW8i9yAeJfHWN10cdLevzBtdoszcmGmVoF/s+XcDyQQj0KfTHdVb1IzaLq42rgPcOdhYVgUUqw/LU4ANsIZew1ez+chpJ5P2FNjaulJyOEV1aY8rHSFszwnuPzD649jg0HanhShxaJ30+6L0tVWtbjC1/w2L3mOi0YCqDWkMWTv3jqJjyhV1RlGr50rKbj0X8T4KNdqB9ZkLS+EhmZaPgTC18vvbQRnTHG6MdmuV9US06+ZQkdJ4GP2Zu30i2B8t990I3lijgZt3EaQqlSOI7n/NQ095kxrXdNTqbFj0kTbcdK7BtMuIOWW1F/p9hES53rDzje2MTqilBWN7b/FNFnLOjuOj47a7ZXrJwE4xntPhDeOIuViquvrazoOh9K5AlP8kycKG10Y9ILU9kA8ednArnFlFcYHE1JZS3H/zlHcqT0ReIGvl6BAveLROIxKPwIbBqX5y9vL6ucZInsZLRKOJ1xFwq6xO3pjJMOOFA0EGIGeYqr3amxSFIXSa1S3MPl8aTDlLrZUyIQsmhoLTd/1od/dqwxaH6Os/6AdobpSYjLNOSd8P200PedPJ93kcEq8xusCeIxiveQnzipmn4AecQ09MphXL4PPMZG5fEPPeT5739t4r9hw==
+	4PMqLOAYvcXAbZaQkbJWgCq7X+L5y85Td+XFibZp6dsxH+DXjoe2NPlSLPuOXWB3N91uxV3VBDh+BeRGKlw9VaTbwcblJa5a50E5HsJF5lWK1xkH3qEsxs/pSPZZJZh6egag5JklUjDoX3JX+HHSnnN8mqbshflL+XZjYSxukWk2UUO8bnJ+bVoFS3RO/aC4xN09G34sY0Mft/iGeKcrM9owgR++bi8mWixLZuA3sg2SYYmnSoLrnpiuWpU3obL7VDu5MdWPpOKz/dUQA8+d8vOCV7Ssbi/2p+1cS1mVqie60gW5kU/fay6N7mIkIb9UorC7jZbXjllJYFQk05z5u+ALCpE0jmg9Szx/VksMEXErhm+j1FtIXyHr2ifjY85JroCWPmGssKAP5WGP0UFNigp6amsuC6IfKMZJa3UXi1rWIenFlfrvva22EZnTHH7cb92cfKaWFNcILEZTFJboK8DbcR8FflaPhcS0F6yr9sFTPSqUsHBF4JQYb3kl3qrjxO/90o8L8v8ABYREt2GJu8oTFIPoGMP5hBW5T6QtS+q2J14UE0Ubp8NTcVuXoRj7ho4WZ4nZyTlskcPK4gDfNXEossuAPKRwn7Rf8U+1azLZRLh+65ETMgCm6hvl4zY6yJIRzZ9MVVpHjT3iKdYHng==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(136003)(376002)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(31686004)(53546011)(6506007)(2616005)(6512007)(31696002)(36756003)(86362001)(38100700002)(26005)(83380400001)(7416002)(2906002)(6486002)(41300700001)(478600001)(316002)(8676002)(4326008)(8936002)(5660300002)(110136005)(66476007)(66556008)(6636002)(54906003)(66946007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(396003)(366004)(376002)(230922051799003)(64100799003)(451199024)(186009)(1800799009)(478600001)(6486002)(316002)(6636002)(41300700001)(83380400001)(4326008)(8676002)(8936002)(5660300002)(7416002)(110136005)(66556008)(66476007)(31686004)(6666004)(54906003)(66946007)(2906002)(6506007)(53546011)(6512007)(2616005)(36756003)(26005)(38100700002)(31696002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M1o4eE1FY2Z3eGZIKzYyRHkyK3lqeXBNVU9HdkpWVGt6WGtobVZsY3VCSEEx?=
- =?utf-8?B?SDB1OHg2TWsyRVJJM2hJT0RwL005ZjFGOTVzOFlsN0hjMHZJSjdTaUQ0QUlw?=
- =?utf-8?B?QlRsd25lQlRoaVlOVjFweWZUQ3dKR0s1THJmamI2c3IzUE1ZN2RtY2hXR1dJ?=
- =?utf-8?B?alJLVlU3Z0IrZm1aZ0Jtc1dhM0VvMWRaV2VVRVNvQjFrS3pXSU9YR3FQMzE4?=
- =?utf-8?B?Q1BEaFd0czRkU1hzWHBsTlJ6ZFR2eUM1OFBoM2FjS3JMZExJakl4WXhCQkl6?=
- =?utf-8?B?L213N0hxcitXRkQ5SmZsQi9KZC9mamlHSFJiVGhFSmViUU5aMFJLd0tleWIx?=
- =?utf-8?B?dTc0bFZnTno5V0tpU0F4bHY4dzYxOVViN3hiR1Z0MVY2Y2xSMVFsZlNnZ1Uy?=
- =?utf-8?B?eUY4eUxlZHhaeGNVTnRzSWdCaDI3aERwdmNObCtWL09pQkVYK3JDV2hPTDQy?=
- =?utf-8?B?cng5WmI3ZXZib0EzbG45ajhjYlUwU01yUUFFMTk5WXpqVkwxYldsK3prRCtt?=
- =?utf-8?B?enI5UmF6WUtuQWV0UGIwSStSL2RDdTdlNUlRWkMyaWxPVXd2WHlabHBsRldr?=
- =?utf-8?B?TTEwRW96RGJrUUxNYjJmQnRBcE9RQUhpZGlyK3pvOXh1TCtrNkY0MWhLNzRo?=
- =?utf-8?B?aVhUYVMrMUJCejI0UG9uN0ZKdFFSaEFYV2hWRWdqWnBqY2IyNjYyOVdKUEJp?=
- =?utf-8?B?M0dGdnFLeWtPcEw3b3FSSWlTN3YvUC9Xc1dEenFtOHU1Z3ZoeFlmNlJuL0hq?=
- =?utf-8?B?dDh4dVhZVW40TTZpZ3VCNHVwYzJUdTJYTjFlbDBZaU1mb2RGMnJIVEJuVndM?=
- =?utf-8?B?Q3pCUXJ2SXdxb1l4b1pVdzRNc1Q5UWNmd3FKaG01czhWVFpZc2tseWdDMmFN?=
- =?utf-8?B?emt3OXc2d2ZCNzVkZ2cwZG5RTCsycXFxYzNJb1lsV21BSzdXelFIeTlxNUt6?=
- =?utf-8?B?MUFJc29VK01JRUtlQm92aUdBaHhxZjZkMVJ0YTBHMjZrTDk0akYwRnFFcnht?=
- =?utf-8?B?K3c0ZHY1K0UrK3M5SnYwTVlXTnlad1RxY3ExQkRzNGcvcmVPN055VzlzK0Zr?=
- =?utf-8?B?N1crbGplemZZb1U2MXVzbXRYQ3EyWGp3Nk1wdzB3cmhTYmRrcjRpVC9zcUo5?=
- =?utf-8?B?ZDFWSEwvQVRzbUVTNEZpdnFMUmQvN2hvRkhtd2hmd0hKVU9Eb1hPL2lRTkVn?=
- =?utf-8?B?a1NKVVl3Zkx6N3ZFbW4zNks5RDl4ZVIxM3hhM3drZUdqd3dVWk9RT3BhR0N1?=
- =?utf-8?B?aGJkZ1FDMHllVGNKMnNlSC8yQkpWcjhBV0o0cWJPZFM4alVnU3N1OHlScDZ4?=
- =?utf-8?B?N3NWcmpkZDUrNUxxdnh3S2VPL0ZmaXNiZml4c3ZuUkUwVzlNYk12c0s2MFZq?=
- =?utf-8?B?dnlGOWZxWGFhYitHMXFlY2xnalFxWG00RXovbGwwelBhV2ZJdmJjTENMMFFr?=
- =?utf-8?B?VVlvYXFudENwODlqS3pNeTRKblU4d2o1SHJyL1pVWXhOUk1ReDhjQmhhMXcz?=
- =?utf-8?B?ZjBIS1J1SWJ3UEQ1dENRcElaWnpmUTdMMXd5bjJ5K2FWdXhaMitQamVzRENK?=
- =?utf-8?B?eUNJM3FTTTQrS3ZEbnZCY0tGcXdVanA0Zm9jUGRhR05xaEJCTzg0ZStiV1lu?=
- =?utf-8?B?Z29DUWZZLzloWitweFpxOFgraERQRHZKVXJWTWhoVkZSY1hDL2Z4K0VEelhO?=
- =?utf-8?B?RWJvWFZIcytlaGFSN0FZQ2xUQU5aQi9tZDdWbE9qMlFCKzhDUEc5YktMNnJ2?=
- =?utf-8?B?cHBDZW9vcTM1dEY3ZlpTSEgvMHJ2aDU2U0hkRzFiVk9xcXYxNjdRTElXbnZ0?=
- =?utf-8?B?cEp4SUxrZXcySGZtbTZNei9BTGtkZll2bEp2ZlZZRzFKcVI3WkQ4VHJ4UUxh?=
- =?utf-8?B?RHUrRzNZWGIrb1IzaWFBZDRnbzdvUjZYMEYweGpEZFNnZkhLam5BVElvV01X?=
- =?utf-8?B?YlhOWCt6ZWlJWTF0SFpGWkg4WmNySFJvZ1g3cXg2WGl0STg1aG56b2s1a2V4?=
- =?utf-8?B?WXZ2ZjZFRU1jRTFhdG5rWlRTYWxKZWpPZitzaGhFQ2pweDlGOURaM2RZalpU?=
- =?utf-8?B?cEtvVFIvNUJJNHpmOVk1SkNtRGxsTUt2SkpGY2tRZDF2bk1Dc2MwS0V2a3FS?=
- =?utf-8?Q?BAHtypvOLyc5yHBQjFcMwavN0?=
+	=?utf-8?B?bDlnS3ZXYnRrZnZvazZEYkZRU21MdmZKZW5ESG90Mkt0SFlNRGpDeFp5RU9x?=
+ =?utf-8?B?OHBqZ0hmN2hhRHB6VDZJck90aGs4WjI1UTROK0k1aTFzeVY2QWZYMWNIWkx0?=
+ =?utf-8?B?NlJramxMWG9hOE52TzJYRGgyeGlKSUJrbXdxaUxWYkd4OEJZU01HMVE3eVBY?=
+ =?utf-8?B?Y3BHL2U3WmhoWm5GNGR2RWV2UnJpSWZPc1hjMEVkRGxtNEtjeTFRRGlGdmxX?=
+ =?utf-8?B?RGI4Z1FnWFRVV09DN2RwK2lDeGwrWmN4dEJ0VUZTSFpiL3RtSlJwOW1sVlRZ?=
+ =?utf-8?B?TUVuK2hkUlk4a2YzdndzK3lPKzJSVFdxSUVBMVZLV1NBYVZYOEw2YzVaeTBz?=
+ =?utf-8?B?Q3RCZ2p4YkNVSXBTMUhpeVBuUXZUTDNPOGdvRDlRa1IrRk5tZG1HZjBhWVNa?=
+ =?utf-8?B?RGlUR1ZoU0xOM3hBd1lRejVJVUV1TjJlQzNEaWNOaERXcExZTk5HRDVpaFQ0?=
+ =?utf-8?B?N1l4TTJIU2RWbVptYUR5T1BrUHVaNlBRNmM4ZGNBN3g2aG5kMGdtM01SdjF3?=
+ =?utf-8?B?NmZYYS9iclJLTS9RZGFaUHRCeWJyaEEzVm5WYWkzR1NDWTBYWWh1UHNJcCt4?=
+ =?utf-8?B?UUs3TmliektISUJXZGp2VHB0c2dhc2M2NnJmTTg0elJMTi9aTUdYcllZTm9H?=
+ =?utf-8?B?OEtsaFZ1M1EyOVlKL09oTHBwdlVLaDRqN2FUdHFwNm1XWGRpUnZaU3JFY1pT?=
+ =?utf-8?B?djNGSEwxa0RzVEIrZGxseklvRnN6blY1dTJqcjdkcHJBU3RQcXYxMW5hdVhW?=
+ =?utf-8?B?dU5jb0pXYitvYjlwVFJMeGZGdWRTNDdNRGY4SHpJc3pQTHVRLy9IU0M1ZGRx?=
+ =?utf-8?B?elhpZ0x5c29NcjZkcVh1dlBibHlsalBmMk1ERFRzZ3A5VFB1cjFSMHZET1Nu?=
+ =?utf-8?B?MjM0aWd4WEh6TmNiVUIwd2NPR0hBK3dsTFVqcndFV3VnYTNGZzNsUUI5YytH?=
+ =?utf-8?B?VGMzTG9rb1IyZSswbk9wcFQxMXhxOHFXQUlQeUJGVGlqZXU2KzdENjhaSktj?=
+ =?utf-8?B?THA4N3drbDFFSk1CR3g0eCtOTjlLUjVpRVoycWRVcTBnK0hRV2w0VTR3VFl6?=
+ =?utf-8?B?T1ZsQjhTWEhMRmVpN1RLZmhKWE4rNG1TR3RTaEEwdEwwVnhXUDhkUTlrdkJu?=
+ =?utf-8?B?d2hNaU9XOEdKd1RxWTF2TnVVeWxhb1hwakw4UWNaMWJMQktyd2pDL1V2dk9D?=
+ =?utf-8?B?UnhDKzhGK210U0ViN0ZqU3N2T0FBTXJrVnBPNHlRWDJ6bCtZc1YxUzkySGJZ?=
+ =?utf-8?B?ZTJRTk1EeTIxMEp0cTJ0N3ZRanBJdWY0bDZLckNEWlkrTFJ3c1hrZWpHcHNl?=
+ =?utf-8?B?Vi9lU2NyU2NLSDB4dlZKSTJYV1pFTjB2VXZ2MkdVd1Jya1JQejhFci8rUWFq?=
+ =?utf-8?B?NFVVK05INzMrWVJweE1PZ3hVb0pWSzZzaEMyS29uWVVwaEN2Wmhyd3JFZHIz?=
+ =?utf-8?B?OWpDUHBacFg5UlY0d0N3RkFaamRPMUJrRHQ4UHQwU0NWM245SWdEY2ZiWFJD?=
+ =?utf-8?B?SDZGS252WnRwZW5qc2pkOTlrWDVFaHhSRUhFNWpvZU4rK25RNHdLNVU0b0FU?=
+ =?utf-8?B?M1JjR0IrZTNHeTk3RWVPNmJqWWZ1TEpCUXZ3L2NHNnN3VE9MWC95d1BIZmlu?=
+ =?utf-8?B?RTdqSi90NWYwdVRlUGZyYXE5cnhGTm9aVTdXczZKVGRxNHdHUlVlQlhVbUR6?=
+ =?utf-8?B?aWtTWVdNd3F2TVl2WDRCVENCaytYSzlNdktXK09GY0lhV3FBQ3l3SEROcEto?=
+ =?utf-8?B?T1BEWDNENHczZDE2aDJXN29la3B6VmhpblZ3SlBWK3JQS0VMUkJ0REJ6Y2k5?=
+ =?utf-8?B?cm9mYTkybG92Z1dTdnU1L3IwUmZBZkh6N081NGtNaVBtblV3cDlCdnhROVY5?=
+ =?utf-8?B?MzI1bWdOeUdmVVlvVFAvUFVMWkt5VnNXMEhCZG1QY2JBYzZGZk03c0ZBck9q?=
+ =?utf-8?B?NTgrNEVmTTNvd3pvUjRwR3dLTjl1N1NmYWptWXVSbk9tSmJITlFDMURFZUt6?=
+ =?utf-8?B?dTRqK1J6aEVsUmVEcHFlUWlKOGd0dnFtK3ltUGFPdlZuVllndDU5S3NHOTZt?=
+ =?utf-8?B?SW5HWHFIeXVOak0yTWFFTGs2dEROOXZ2c3BtcUJzZGQvUVFZK2RVbUMybVBt?=
+ =?utf-8?Q?t3njyi3pjuP7XayK2AGLmQeII?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39c5a314-f107-4ff3-58fa-08dbc8d3d43d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fd785b7-33fc-47a5-a77a-08dbc8d4f303
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 14:27:12.8540
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 14:35:13.9987
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TvGP20rFGeSoc3ICnua2U2GdIZDjQwC3sb74p0V4CL4G/16ddd/i+foECw7ByBDZvrbtq0ACP6F6O/0rnUiu5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9140
+X-MS-Exchange-CrossTenant-UserPrincipalName: U0QwnEpXo7uqdL2Te93RilkqR05nM09+8HTs8eziGecyfn7mqLyKdaEcvoNpqN3KWfSC/XbyYMm3WOqFDtJW3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5055
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
 	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -129,72 +128,155 @@ X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Johnathan,
+Hi Jonathan,
 
-Thanks for the review comments.
+I added responses below.
 
-On 10/2/23 09:34, Jonathan Cameron wrote:
-> On Wed, 27 Sep 2023 17:43:23 +0200
+On 10/2/23 09:43, Jonathan Cameron wrote:
+> On Wed, 27 Sep 2023 17:43:26 +0200
 > Robert Richter <rrichter@amd.com> wrote:
 > 
->> Name the field @reg_map, because @reg_map->host will be used for
->> mapping operations beyond component registers (i.e. AER registers).
->> This is valid for all occurrences of @comp_map. Change them all.
+>> Now, that the Component Register mappings are stored, use them to
+>> enable and map the HDM decoder capabilities. The Component Registers
+>> do not need to be probed again for this, remove probing code.
 >>
+>> The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
+>> Endpoint's component register mappings are located in the cxlds and
+>> else in the port's structure. Duplicate the cxlds->reg_map in
+>> port->reg_map for endpoint ports.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 >> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Makes sense.  Can we pull the one I moaned about in the previous
-> patch into this one?
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> [rework to drop cxl_port_get_comp_map()]
+>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> A few comments inline.
 > 
-> That way the renames are all together.
+> Also, Dan's SoB doesn't make sense if you are the Author and he's not
+> the one sending the email.  The fun of patches bounced back and forwards
+> is sometimes you have to tweak this stuff on each posting... :(
+> 
+>> ---
+>>  drivers/cxl/core/hdm.c  | 48 ++++++++++++++++-------------------------
+>>  drivers/cxl/core/port.c | 29 +++++++++++++++++++------
+>>  drivers/cxl/mem.c       |  5 ++---
+>>  3 files changed, 43 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>> index 11d9971f3e8c..14a0d0017df3 100644
+>> --- a/drivers/cxl/core/hdm.c
+>> +++ b/drivers/cxl/core/hdm.c
+>> @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>>  		cxlhdm->interleave_mask |= GENMASK(14, 12);
+>>  }
+>>  
+>> -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+>> -				struct cxl_component_regs *regs)
+>> -{
+>> -	struct cxl_register_map map = {
+>> -		.host = &port->dev,
+>> -		.resource = port->component_reg_phys,
+>> -		.base = crb,
+>> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
+>> -	};
+>> -
+>> -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
+>> -	if (!map.component_map.hdm_decoder.valid) {
+>> -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+>> -		/* unique error code to indicate no HDM decoder capability */
+>> -		return -ENODEV;
+>> -	}
+>> -
+>> -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+>> -}
+>> -
+>>  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>>  {
+>>  	struct cxl_hdm *cxlhdm;
+>> @@ -155,7 +135,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>>  {
+>>  	struct device *dev = &port->dev;
+>>  	struct cxl_hdm *cxlhdm;
+>> -	void __iomem *crb;
+>> +	struct cxl_register_map *reg_map;
+>>  	int rc;
+>>  
+>>  	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
+>> @@ -164,19 +144,29 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>>  	cxlhdm->port = port;
+>>  	dev_set_drvdata(dev, cxlhdm);
+>>  
+>> -	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+>> -	if (!crb && info && info->mem_enabled) {
+>> -		cxlhdm->decoder_count = info->ranges;
+>> -		return cxlhdm;
+>> -	} else if (!crb) {
+>> +	reg_map = &port->reg_map;
+> 
+> Could you set this where it's defined above?
 > 
 
-Yes, we will move the previous patch's variable rename into this patch
+Yes.
+
+>> +	if (reg_map->resource == CXL_RESOURCE_NONE) {
+> 
+> A reminder comment on why/when this happens might be a good addition.
+>
+
+Yes, we will add.
+ 
+>> +		if (info && info->mem_enabled) {
+>> +			cxlhdm->decoder_count = info->ranges;
+>> +			return cxlhdm;
+>> +		}
+> 
+> Trivial (and true before this patch) but I'd rather see the error path out of line
+> 
+
+Ok, we will change the conditional check to be for the error case and the default path 
+for success.
+
+> 
+> 		if (!info || !info->mem_enabled) {
+> 			WARN_ON(1);
+> 			dev_err(dev, "No ...
+> 			...
+> 		}
+> 
+> 		cxlhdm->decoder_count = info->ranges;
+> 		return cxlhdm;
+> 	}
+> 
+> 
+>> +		WARN_ON(1);
+>>  		dev_err(dev, "No component registers mapped\n");
+>>  		return ERR_PTR(-ENXIO);
+>>  	}
+>>  
+>> -	rc = map_hdm_decoder_regs(port, crb, &cxlhdm->regs);
+>> -	iounmap(crb);
+>> -	if (rc)
+>> +	if (!reg_map->component_map.hdm_decoder.valid) {
+>> +		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+>> +		/* unique error code to indicate no HDM decoder capability */
+>> +		return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	rc = cxl_map_component_regs(reg_map, &cxlhdm->regs,
+>> +				    BIT(CXL_CM_CAP_CAP_ID_HDM));
+>> +	if (rc) {
+>> +		dev_dbg(dev, "Failed to map HDM capability.\n");
+> dev_err() seems appropriate here.
+> 
+
+Yes, we will change dev_dbg() here to use dev_err().
 
 Regards,
 Terry
 
-> If not, I'm fine with just moaning :)  Whichever patch split
-> you go with across this and previous...
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.co>
->> ---
->>  drivers/cxl/core/port.c | 2 +-
->>  drivers/cxl/cxl.h       | 4 ++--
->>  2 files changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 99df86d72dbc..b993dea61436 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -712,7 +712,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
->>  {
->>  	if (dev_is_platform(port->uport_dev))
->>  		return 0;
->> -	return cxl_setup_comp_regs(&port->dev, &port->comp_map,
->> +	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
->>  				   component_reg_phys);
->>  }
+>>  		return ERR_PTR(rc);
+>> +	}
 >>  
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 68abf9944383..3a51b58a66d0 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -572,7 +572,7 @@ struct cxl_dax_region {
->>   * @regions: cxl_region_ref instances, regions mapped by this port
->>   * @parent_dport: dport that points to this port in the parent
->>   * @decoder_ida: allocator for decoder ids
->> - * @comp_map: component register capability mappings
->> + * @reg_map: component and ras register mapping parameters
->>   * @nr_dports: number of entries in @dports
->>   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
->>   * @commit_end: cursor to track highest committed decoder for commit ordering
->> @@ -592,7 +592,7 @@ struct cxl_port {
->>  	struct xarray regions;
->>  	struct cxl_dport *parent_dport;
->>  	struct ida decoder_ida;
->> -	struct cxl_register_map comp_map;
->> +	struct cxl_register_map reg_map;
->>  	int nr_dports;
->>  	int hdm_end;
->>  	int commit_end;
+>>  	parse_hdm_decoder_caps(cxlhdm);
+>>  	if (cxlhdm->decoder_count == 0) {
 > 
