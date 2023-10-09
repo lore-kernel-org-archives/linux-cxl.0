@@ -1,37 +1,32 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEB418E35
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 15:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C54199CC
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 15:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2C6A6
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 08:44:37 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S43HP3RYxz6J7Yy;
-	Mon,  9 Oct 2023 23:44:17 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB4D9C
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 08:48:02 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S43KT00znz6K6gQ;
+	Mon,  9 Oct 2023 23:46:04 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 9 Oct
- 2023 16:44:35 +0100
-Date: Mon, 9 Oct 2023 16:44:34 +0100
+ 2023 16:47:59 +0100
+Date: Mon, 9 Oct 2023 16:47:58 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: "Michael S. Tsirkin" <mst@redhat.com>, Dave Jiang <dave.jiang@intel.com>,
-	<thuth@redhat.com>, <qemu-devel@nongnu.org>, <peter.maydell@linaro.org>,
-	<imammedo@redhat.com>, <anisinha@redhat.com>, <marcel.apfelbaum@gmail.com>,
-	<pbonzini@redhat.com>, <richard.henderson@linaro.org>, <eduardo@habkost.net>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3] hw/cxl: Add QTG _DSM support for ACPI0017 device
-Message-ID: <20231009164434.00006711@Huawei.com>
-In-Reply-To: <652048e465c8d_ae7e7294e9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231004180529-mutt-send-email-mst@kernel.org>
-	<169646094762.643966.16021192876985391476.stgit@djiang5-mobl3>
-	<20231004230132-mutt-send-email-mst@kernel.org>
-	<12874c03-7de0-474f-9378-7d3ab8572d8d@intel.com>
-	<20231005122736-mutt-send-email-mst@kernel.org>
-	<20231006130939.00007a69@Huawei.com>
-	<652048e465c8d_ae7e7294e9@dwillia2-xfh.jf.intel.com.notmuch>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <mst@redhat.com>, <thuth@redhat.com>, <qemu-devel@nongnu.org>,
+	<peter.maydell@linaro.org>, <imammedo@redhat.com>, <anisinha@redhat.com>,
+	<marcel.apfelbaum@gmail.com>, <pbonzini@redhat.com>,
+	<richard.henderson@linaro.org>, <eduardo@habkost.net>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4] hw/cxl: Add QTG _DSM support for ACPI0017 device
+Message-ID: <20231009164758.00001e43@Huawei.com>
+In-Reply-To: <169663055629.1214042.8019806314058171125.stgit@djiang5-mobl3>
+References: <652048e465c8d_ae7e7294e9@dwillia2-xfh.jf.intel.com.notmuch>
+	<169663055629.1214042.8019806314058171125.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -52,125 +47,181 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 6 Oct 2023 10:50:28 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 06 Oct 2023 15:15:56 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> [..]
-> > > > > 
-> > > > > what does "a WORD" mean is unclear - do you match what hardware does
-> > > > > when you use aml_buffer? pls mention this in commit log, and
-> > > > > show actual hardware dump for comparison.    
-> > > > The CXL spec says WORD without much qualification. It's a 16bit value AFAICT. I'll add additional comment. Currently I do not have access to actual hardware unfortunately. I'm constructing this purely based on spec description.    
-> > >   
-> > 
-> > WORD does seem to be clearly defined in the ACPI spec as uint16
-> > and as this is describing a DSDT blob I think we can safe that
-> > it means that.  Also lines up with the fixed sizes in CEDT.  
+> Add a simple _DSM call support for the ACPI0017 device to return fake QTG
+> ID values of 0 and 1 in all cases. This for _DSM plumbing testing from the OS.
 > 
-> I am not sure it means that, the ACPI specification indicates that packages
-> can hold "integers" and integers can be any size up to 64-bits.
+> Following edited for readability
+> 
+> Device (CXLM)
+> {
+>     Name (_HID, "ACPI0017")  // _HID: Hardware ID
+> ...
+>     Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
+>     {
+>         If ((Arg0 == ToUUID ("f365f9a6-a7de-4071-a66a-b40c0b4f8e52")))
+>         {
+>             If ((Arg2 == Zero))
+>             {
+>                 Return (Buffer (One) { 0x01 })
+>             }
+> 
+>             If ((Arg2 == One))
+>             {
+>                 Return (Package (0x02)
+>                 {
+>                     One,
+>                     Package (0x02)
+>                     {
+>                         Zero,
+>                         One
+>                     }
+>                 })
+>             }
+>         }
+>     }
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> --
 
-I agree that intent might be more general than an AML WORD
-but was being paranoid on the basis using one was definitely never
-wrong ;)
+You've picked up my bad habit / typo.  Needs to be ---
+to stop git picking up this text...
 
+> v4: Change to package of ints rather than buffers. Also moved to 2 QTG IDs
+> to improve kernel side testing. Tested on x86 qemu guest against kernel
+> QTG ID _DSM parsing code to be upstreamed.
 > 
-> > > It's not clear buffer is actually word though.
-> > > 
-> > > Jonathan do you have hardware access?  
-> > 
-> > No.  +CC linux-cxl to see if anyone else has hardware + BIOS with
-> > QTG implemented...  There will be lots of implementations soon so I'd make
-> > not guarantee they will all interpret this the same.
-> > 
-> > Aim here is Linux kernel enablement support, and unfortunately that almost
-> > always means we are ahead of easy availability of hardware. If it exists
-> > its probably prototypes in a lab, in which case no guarantees on the
-> > BIOS tables presented...  
+> v3: Fix output assignment to be BE host friendly. Fix typo in comment.
+> According to the CXL spec, the DSM output should be 1 WORD to indicate
+> the max suppoted QTG ID and a package of 0 or more WORDs for the QTG IDs.
+> In this dummy impementation, we have first WORD with a 1 to indcate max
+> supprted QTG ID of 1. And second WORD in a package to indicate the QTG
+> ID of 0.
 > 
-> From a pre-production system the ASL is putting the result of SizeOf
-> directly into the first element in the return package:
-> 
-> 	Local1 = SizeOf (CXQI)
-> 	Local0 [0x00] = Local1
-> 
-> ...where CXQI appears to be a fixed table of QTG ids for the platform, and
-> SizeOf() returns an integer type with no restriction that it be a 16-bit
-> value.
-> 
-> So I think the specification is misleading by specifying WORD when ACPI
-> "Package" objects convey "Integers" where the size of the integer can be a
-> u8 to a u64.
+> v2: Minor edit to drop reference to switches in patch description.
+> Message-Id: <20230904161847.18468-3-Jonathan.Cameron@huawei.com>
+> Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Given it's changed in significant way should drop these.
 
-Good, that's simpler.
+Anyhow, the tests also need updating.  I can do that and push out
+a v5 with tests as well once I've tested.
 
-> 
-> > > Also, possible to get clarification from the spec committee?  
-> > 
-> > I'm unclear what we are clarifying.  As I read it current implementation
-> > is indeed wrong and I failed to notice this earlier :(
-> > 
-> > Ultimately data encoding (ACPI 6.5 section 20.2..3 Data Objects Encoding)
-> > should I think be
-> > 
-> > 0x0B 0x00 0x00
-> > WordPrefix then data : note if you try a 0x0001 and feed
-> > it to iasl it will squash it into a byte instead and indeed if you
-> > force the binary to the above it will decode it as 0x0000 but recompile
-> > that and you will be back to just
-> > 0x00 (as bytes don't need a prefix..)
-> > 
-> > Currently it would be.
-> > 0x11     0x05 0x0a 0x02 0x00 0x01
-> > BufferOp 
-> > 
-> > Btw I built a minimal DSDT file to test this and iasl isn't happy with
-> > the fact the _DSM doesn't return anything at all if ARG2 isn't 1 or 2.
-> > Whilst that's imdef territory as not covered by the CXL spec, we should
-> > return 'something' ;)
-> > 
-> > Anyhow, to do this as per the CXL spec we need an aml_word()
-> > that just implements the word case from aml_int()  
-> 
-> If I understand correctly, aml_int() is sufficient since this is not a
-> Field() where access size matters.
-> 
-> > Chance are that it never matters if we get an ecoding that is
-> > only single byte (because the value is small) but who knows what
-> > other AML parsers might do.  
-> 
-> I expect the reason WORD is used in the specification is because of the
-> size of the QTG ID field in the CFMWS. ACPI could support returning more
-> than USHRT_MAX in an Integer field in a Package, but those IDs above
-> USHRT_MAX could not be represented in CFMWS.
+I'm assuming need tweaked kernel code to test?
 
-Agreed that's probably the cause and if anyone does use an AML WORD
-by forcing the prefix, it does no harm for software stacks that
-assume INTEGER.
+> ---
+>  hw/acpi/cxl.c         |   69 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  hw/i386/acpi-build.c  |    1 +
+>  include/hw/acpi/cxl.h |    1 +
+>  3 files changed, 71 insertions(+)
+> 
+> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+> index 92b46bc9323b..9cd7905ea25a 100644
+> --- a/hw/acpi/cxl.c
+> +++ b/hw/acpi/cxl.c
+> @@ -30,6 +30,75 @@
+>  #include "qapi/error.h"
+>  #include "qemu/uuid.h"
+>  
+> +void build_cxl_dsm_method(Aml *dev)
+> +{
+> +    Aml *method, *ifctx, *ifctx2;
+> +
+> +    method = aml_method("_DSM", 4, AML_SERIALIZED);
+> +    {
+> +        Aml *function, *uuid;
+> +
+> +        uuid = aml_arg(0);
+> +        function = aml_arg(2);
+> +        /* CXL spec v3.0 9.17.3.1 _DSM Function for Retrieving QTG ID */
+> +        ifctx = aml_if(aml_equal(
+> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
+> +
+> +        /* Function 0, standard DSM query function */
+> +        ifctx2 = aml_if(aml_equal(function, aml_int(0)));
+> +        {
+> +            uint8_t byte_list[1] = { 0x01 }; /* function 1 only */
+> +
+> +            aml_append(ifctx2,
+> +                       aml_return(aml_buffer(sizeof(byte_list), byte_list)));
+> +        }
+> +        aml_append(ifctx, ifctx2);
+> +
+> +        /*
+> +         * Function 1
+> +         * Creating a package with static values. The max supported QTG ID will
+> +         * be 1 and recommended QTG IDs are 0 and then 1.
+> +         * The values here are statically created to simplify emulation. Values
+> +         * from a real BIOS would be determined by the performance of all the
+> +         * present CXL memory and then assigned.
+> +         */
+> +        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
+> +        {
+> +            Aml *pak, *pak1;
+> +
+> +            /*
+> +             * Return: A package containing two elements - a WORD that returns
+> +             * the maximum throttling group that the platform supports, and a
+> +             * package containing the QTG ID(s) that the platform recommends.
+> +             * Package {
+> +             *     Max Supported QTG ID
+> +             *     Package {QTG Recommendations}
+> +             * }
+> +             *
+> +             * While the SPEC specified WORD that hints at the value being
+> +             * 16bit, the ACPI dump of BIOS DSDT table showed that the values
+> +             * are integers with no specific size specification. aml_int() will
+> +             * be used for the values.
+> +             */
+> +            pak1 = aml_package(2);
+> +            /* Set QTG ID of 0 */
+> +            aml_append(pak1, aml_int(0));
+> +            /* Set QTG ID of 1 */
+> +            aml_append(pak1, aml_int(1));
+> +
+> +            pak = aml_package(2);
+> +            /* Set Max QTG 1 */
+> +            aml_append(pak, aml_int(1));
+> +            aml_append(pak, pak1);
+> +
+> +            aml_append(ifctx2, aml_return(pak));
+> +        }
+> +        aml_append(ifctx, ifctx2);
+> +    }
+> +    aml_append(method, ifctx);
+> +    aml_append(dev, method);
+> +}
+> +
+>  static void cedt_build_chbs(GArray *table_data, PXBCXLDev *cxl)
+>  {
+>      PXBDev *pxb = PXB_DEV(cxl);
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index 95199c89008a..692af40b1a75 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -1422,6 +1422,7 @@ static void build_acpi0017(Aml *table)
+>      method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+>      aml_append(method, aml_return(aml_int(0x01)));
+>      aml_append(dev, method);
+> +    build_cxl_dsm_method(dev);
+>  
+>      aml_append(scope, dev);
+>      aml_append(table, scope);
+> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
+> index acf441888683..8f22c71530d8 100644
+> --- a/include/hw/acpi/cxl.h
+> +++ b/include/hw/acpi/cxl.h
+> @@ -25,5 +25,6 @@ void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
+>                      BIOSLinker *linker, const char *oem_id,
+>                      const char *oem_table_id, CXLState *cxl_state);
+>  void build_cxl_osc_method(Aml *dev);
+> +void build_cxl_dsm_method(Aml *dev);
+>  
+>  #endif
+> 
+> 
 
-> 
-> [..]
-> > > but again it is not clear at all what does spec mean.
-> > > an integer up to 0xfffff? a buffer as you did? just two bytes?
-> > > 
-> > > could be any of these.  
-> > 
-> > The best we have in the way of description is the multiple QTG example
-> > where it's
-> > Package() {2, 1} combined with it being made up of WORDs
-> > 
-> > whereas in general that will get squashed to a pair of bytes...
-> > So I'm thinking WORDs is max size rather than only size but
-> > given ambiguity we should encode them as words anyway.  
-> 
-> My assertion is that for the Package format the size of the integer does
-> not matter because the Package.Integer type can convey up to 64-bit values.
-> For being compatible with the *usage* of that max id, values that do not
-> fit into 16-bits are out of spec, but nothing prevents the Package from
-> using any size integer, afaics.
-> 
-Works for me, though we should do the leg work to get the spec tweaked
-to clarify this..
-
-Jonathan
