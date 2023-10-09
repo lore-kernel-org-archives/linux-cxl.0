@@ -1,87 +1,88 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854F81FC9
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 03:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1426F1FC9
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 04:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/xZsh+c"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE28AA3
-	for <linux-cxl@vger.kernel.org>; Sun,  8 Oct 2023 20:51:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BGNlehb1"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EE3A4
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Oct 2023 21:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696823496; x=1728359496;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=Nv9S1BsiltsYA4JsS7iFmXs+4NOSErBybvSDLbPXcZQ=;
-  b=M/xZsh+cAOz7ohUNpWKfWT2YivJBfIPOwPj0U+FjTaGfrqItQLqb/PMp
-   XIE74rJsu7FtrcRqK+bwCx3Tzjj185SgBVXcpbsalIG4JSc3WWUFFiuLp
-   2JPO6ew9IwvVE5kdaQMIxlv7UAEe8M41jQFA2WS4fg/jwgb5Y5vMIvYsk
-   GKdL5XWIwv92YMIqhK9dlPI4MPMyy44AOmfZ5pcikLlEEws8lUKqZQCuK
-   0wAiwlIzJrUL1goXFSXmcJWBpI11T3TkpeyuHXXAcaEyOSnaj2JSZaim+
-   q5rtnZ1BHUP8WiqeE7BoALCGF2/tQJyXMot1m7aC3vg42KUil6P42rZ0K
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="363419705"
+  t=1696825061; x=1728361061;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=joSOAxpKrYgmg8TzlYDSs5J85c3Wsn8xN3Cz35ZXpmE=;
+  b=BGNlehb1XbWI7p3Y5wl6YIic9LQdMrCw72U1xG6cgHJlxPabr2BK9azd
+   ScsspO2E1ziqaaMHKa69sG9+7vun7ed68Wf1E63ZrnJCUYXyUIY1TBw8d
+   Ye7W69TY6n7l/yAMhjQIiqNNNkmrgtRtrbLeHSxrL4uYKsNSTzXH8OMRu
+   x0zrOZG/5JrcXJcrhkiil5WBLXpPn6zOWSso0vlAHrCG+K/tLWQ5UcYdv
+   iKYv9pwLVxARue9hPnlPxIQPXu7269Q58UlLAUPvwOHjBJTYadu20ZMqJ
+   3TD173Ubq9BxXlOaA6ZhoBFmX3u6OdCIv2y0g2RiykUgmYl4WPAiSgD2T
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="448259590"
 X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
-   d="scan'208";a="363419705"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2023 20:51:36 -0700
+   d="scan'208";a="448259590"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2023 21:17:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="702749833"
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="869086190"
 X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
-   d="scan'208";a="702749833"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Oct 2023 20:51:35 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+   d="scan'208";a="869086190"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Oct 2023 21:17:39 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Sun, 8 Oct 2023 20:51:35 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.32; Sun, 8 Oct 2023 21:17:39 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Sun, 8 Oct 2023 20:51:34 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.32; Sun, 8 Oct 2023 21:17:38 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Sun, 8 Oct 2023 20:51:34 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Sun, 8 Oct 2023 21:17:38 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Sun, 8 Oct 2023 20:51:08 -0700
+ 15.1.2507.32; Sun, 8 Oct 2023 21:17:38 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GiuauV45uiSzKfO9cfkWr0IjT0womIM43yw2H+8jbmxXjrWrYOuBmNE+mGrOAy8FDSyGd37HrCCKAnId0TwKgNGRyY9u0qmzmS2ZDCRjqHOPrEBbWmV5/EsQIITw8aYvdYEN0w3+5WfDIwmtMMC7uJ5jr29J+EeMFxTMEKZ5p9H7TWLRGcQfUvklsl8WOiDZZoq4RVOMtZmNcegNVNQkLij+HIs5c9u8nH01X1Y6Eonq3KMFqJmpDmuLTuE/7mBuZH1pDOIYXRiVJnB52TlRiH4O8v1Q8YC9JuHwAZRkYkYVG2ILi6O+8evJ2RJSDiD4NbVlc1oboJyQx37PrRBbTA==
+ b=IaTz4ad9/FAxy4rwdl2nmMAQDrog+OlFLFJlj7hdDawJzXcalIjS+8+q08I6AHOthWNDQT2KmuUXC+2EDm0Zd8cyS/e5H4uQpk7sBz/fCkIzy9XXb7ytQ4WVY+Oii5ACHFCBTPKeXQeYFuLIAhfDBdSAUQ3XSFjqBjnFCybUKQRWrAK/ZOUFL8XRNbirW+pRh91TqCOYe6nTqeX83c7b0fLiE6JCS7qlMCP+ThiALkjCUsLOXq6pnWPcL1nVxhR+Djv5RK3/AHoiRPlrNA28L0+oFZOEoe/SgSDbGoaflUY2gqTro1dp79W/KSk3Ux/lOxewddqLiTQri6lKK4LVfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AhnNXUhrB4V1XhCbLsXK4FdXjBF/vicyco7CumIrm/c=;
- b=hmeoPAhvbG3raO8G1l3N9P74hUUm7ZAsC7YQqpWLS9gw0KYrvGk+DkAoB2s+tnEIAQ8BLyQW2tXY/IPn+zvSw234/x9quA7vA8enTTaHxT8zFsMdCtCpQj+Pf3OGtticoFma8y/npyx3RtBl1EUtw/ONcQPEEQeEVdSElkpDsJfqbH8qZCLm/+nxkzPIbAYRHuoh16STTp9bAcHi6JxXBNld0JlXgvuFv9t3sEcCfFjXn0iCvxLLIJ5ZJUSpcazOtHFy+xxb1PtQLXHxvusICeFehVG5av8vwJaCpReYAb1Rk/5c6TfAFaDDZaQVwxEI2vXYMHUpxyJD5sRQ/ux8fQ==
+ bh=PUhlj+sWPyRlAQ58Q+p3mBcCoCeBmoT/+54xAL5Q3i4=;
+ b=dEnsmbbfHEaEa4cf6SvkFv83e/P0goActjB0ZWB32A4fjrnviYN3q9i3LFq48sYbSaEWlV+SjxAbGcdb0o1LkR5EeQgNrq5sKYb5BnHtoImhuj2LjA1enqHcwNnFq2QeFcOOQ+Lo31DYLSg/6MQxNPQPga+9I2MICFeXe5bdI2j3BfNWTxpooVfw2tL8XoaGOS7+BJBEuZZgO54a8Fjsg/DKvKGhUc6mHrQWHZlVJkVp0xjykGfH39ugdH4K4SsSucNJrGI2BQ89Dj/QcWHaieX3cokQChiLwKB3SVLRvb1ojn8QvYtZvel8tsTovFQNV15Pldp/yMiGo6LnnCjNJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DM6PR11MB4675.namprd11.prod.outlook.com (2603:10b6:5:2ac::17) with
+ by PH8PR11MB7968.namprd11.prod.outlook.com (2603:10b6:510:25f::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.36; Mon, 9 Oct
- 2023 03:51:06 +0000
+ 2023 04:17:37 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::c5a0:a0ec:2d4:995e]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::c5a0:a0ec:2d4:995e%4]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
- 03:51:06 +0000
-Date: Sun, 8 Oct 2023 20:50:57 -0700
+ 04:17:37 +0000
+Date: Sun, 8 Oct 2023 21:17:34 -0700
 From: Ira Weiny <ira.weiny@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 05/10] cxl/pci: Clarify devm host for memdev relative
- setup
-Message-ID: <652378a1aa4a0_1d98842941c@iweiny-mobl.notmuch>
+CC: Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup
+ locking
+Message-ID: <65237eded9811_1d988429470@iweiny-mobl.notmuch>
 References: <169657715790.1491153.3612164287133860191.stgit@dwillia2-xfh.jf.intel.com>
- <169657718805.1491153.2457900463470349092.stgit@dwillia2-xfh.jf.intel.com>
+ <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <169657718805.1491153.2457900463470349092.stgit@dwillia2-xfh.jf.intel.com>
-X-ClientProxiedBy: SJ0PR05CA0168.namprd05.prod.outlook.com
- (2603:10b6:a03:339::23) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: BYAPR07CA0039.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::16) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -90,197 +91,102 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM6PR11MB4675:EE_
-X-MS-Office365-Filtering-Correlation-Id: 010165a1-baa7-471a-0d8d-08dbc87af721
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH8PR11MB7968:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1d58f7c-3094-4b57-093b-08dbc87eab4c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Gr+iiHV/X4ilwPmrubVQ5F8TnoqtpQbkTN0faFBXTSIIqJWo6Etgsnwy72xUqHYB0bltaqJLCryXq6b+taY+ro0S+cfRNlZZomR9VWKhaVwidhr3mkLpKO8fETJz9pOUJ54IGLeYN+f/BH5KNyeLPusHAuVK7N/CaRDmIMbQzUUVZ5adO37xWTzxzcjbRDj7stPSMc6o+4w7K3NCv48n3La3DbnYCU+3hOtj/Vy6/YR7wF+CdcwUyO3zSq7YJfDuO+YtGAmdVb4C7FRnsC9t3noVUbtgGGB6C5KoeTOHVjrJf55fItPL/QXBqHrt7bWcIN0scQPVF//NkPcB03Flw+JaLU8Zk4iyEKmcdqCB/2EQnO06KBdza/OobBFx02DnJnELpNA/k4B9GrIo++rwrLelG64+GuhKSbdrGL9/hI92gzE7L8mqpL0kDuHRNH/mp3Ffxa/RLq+PhMkwwfur1SGni585XTXpApdgCOOhBdz5iXhjfQzD0JY9oVsDmGrWX9uype7BZrh8irZ9CecDcnA1b3Wy4vSv0F4FcUWSx+h9QjC3GBGv6baaYLdAa+1x
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(396003)(39860400002)(366004)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(38100700002)(82960400001)(86362001)(2906002)(9686003)(6512007)(6486002)(478600001)(5660300002)(41300700001)(8936002)(8676002)(6666004)(44832011)(83380400001)(6506007)(66556008)(66476007)(66946007)(316002)(26005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: KPvk8aPWO2Dndbvqjcza8+AFwHjA/uqc9kqXIozSIFwe8Jtk3mYL7IBXpnTHZVWXJB2yHLlHpynkg1puPMFF6gqnB8RDlecRl5D9Rd181Y9/hwrDN2HlW0iVhUmC4dP8rm6964QHaQYx0nbY8nlgR8dSCsO20xZGcndCgI4SnX+nHmeogbH3MIuVpkGlxjey5PnH9uQnYtNur4QzpS0jm6hMR8SaN915XgAn0l6T4y2K6H0u5Kbl4qDjIFlfItYxzePKH9XxKe6ShCoFbKkLRgf/VUWsgQ1VvDCpv1/fu/aBuk5VD77yudqczW87HX16SWEOb8wUjD9vanyfcBFGbX6KhHQoekMjbzUcDUibkGL/o2L5qBvSBf+laltf1tEzH8ckY9pZ18ZEBnh/c42zu7NcvD6mhVRRv2ZCnQ3l5OvZxoknLfXibzLvaaiiUWvLGCskC7Gi6x6OfrOei8HScsbVssbtgFbb9ENfFqgLElymsMQC+BBC2PZAORTZYr7pJjz3BGtIU2xopBVZZhcz+ysW3Ot50MXk8PyZkPWx0tqzga1nKZUkoUJFaBtN05c2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(376002)(136003)(39860400002)(346002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(26005)(478600001)(6666004)(8676002)(6506007)(6512007)(83380400001)(2906002)(4326008)(66556008)(66946007)(66476007)(6486002)(5660300002)(44832011)(8936002)(316002)(41300700001)(82960400001)(38100700002)(86362001)(9686003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OckhUUnKpd6uppoLFFRzkfRLbMQFuzVIkwg02ytcnLej4w1vcU1rxy4E9iNp?=
- =?us-ascii?Q?DISp3/9QXG5J/Ju9g2buEC1DUepaVz9A9FBImWKK6Z7hpF0btjq6r2tTmds+?=
- =?us-ascii?Q?WkBTlvQ81GzxVW+NYn7m7Bs7rsjo5ieU1MkC2L34GHA3CYwnihPZlNNp3kC1?=
- =?us-ascii?Q?57D++3/ly1hZVDDFm1RPQVN2hzJlNJc36wpHxMi9ZPne8muftcrSTl2dJmZm?=
- =?us-ascii?Q?3xlYxogRsbDcLheAtuGhlcWrrIjs96g+CF4G7Od3R9HGTu1KqT/AtEmBTaP9?=
- =?us-ascii?Q?Df89iapv4ZxAsuQPBBJvPafcc8VeFIHojHYI7WtvF4LXZio05EJ8sndeG7IF?=
- =?us-ascii?Q?6qTtAHJdrsNaqNBY3AZEZIrXGSEbW1NDYaFUJ35FEEJPbC0gq1c4u7rtS3Ck?=
- =?us-ascii?Q?n+ZsZjQw+VKsQUtQEgwuOzaFN8hgEWyc/3pbnG/C57lf3qGnHANwIugTk8YW?=
- =?us-ascii?Q?PVW/UttzQG/nLqmyUGw1gjFH6Gd1z7wnD6UFG4Uz00AFixcbgGIMm8P0Qr7i?=
- =?us-ascii?Q?99FRpnWNdYYIBlgS3k8jY+oRbgAzUaak+d5GjukZ/lA7kO37GqxVJ6pR+gH1?=
- =?us-ascii?Q?iTSoXVCvDlYmWT644Ghz6muVEL735J9iFM6lRkqt+mTxmJ4FTl92vqDxDnF+?=
- =?us-ascii?Q?DmkuQCmBAlUf0AIX9ob23eTCWBFp7a1TXpUwc8/e0kzHMqoiufT5PnRo44Ex?=
- =?us-ascii?Q?/2msSSvX/7aJbxUP06guxdUMGaFVrZ9I7wXqw1+wWLmwdDar2FVeNTC+JeoL?=
- =?us-ascii?Q?sWNavaMIXejLu88oGXRepyVNtasNvMMA3x+E85wMHAam5YWTZAAx2DFZd/Jz?=
- =?us-ascii?Q?iGXth1W/m2glz3QojKGv09Kg2c/wJczdk0lTkUN1J6sSA7XI0AMBDnwMpmxN?=
- =?us-ascii?Q?PJq/6gmU1kJpsWqz1uNzVTsQi03ZNn17P91uU9dm3bpwxxnJOhlLCpxMFd3V?=
- =?us-ascii?Q?GGK0T842P52s5kGPfpHbWmgkWGgudAvntSgrf/5QSXhXFBQsgjeags/pmZ2G?=
- =?us-ascii?Q?aNlyOArIy8CMo84GNHiL8pyzR2vz+ix6auRBoCrQB+vGnCPRVg35UWPG/vHW?=
- =?us-ascii?Q?fLUBaUMRif1hBBkbYhJoYUg765CGH3l6w9KY3dw9rW7NxxoqpXxcu1H9otTI?=
- =?us-ascii?Q?xXo4Lg4TmY8RdkbnS8dCs2zkzGTo7jEGPC0DDgZ7DgRv3vxVJA2J4F7b4MpS?=
- =?us-ascii?Q?zv/auoks+6wfnHtkEWlAhd2BSa39Icgmi7kY51DEuWK/d3IEjgXgLOeWlF/G?=
- =?us-ascii?Q?mlam4+cU6R/TlXav1s+72IahkjMVF7selkd2Ms1LULd/+zTQp7ntN4sIt4TJ?=
- =?us-ascii?Q?TvnQiGjvF7PH9rcSEL29Vpdc3O8FQifmicNO9pAqOdktkL5BRBLeSwAKh4eY?=
- =?us-ascii?Q?SyW7YrFpn2yT8LXe3Vr7Gg8x+JSXW/rwgr5+R/IBcPcIrrwguXKhB8zOLf2D?=
- =?us-ascii?Q?LAiL9foKDD2lGS9siVfDB0tYqrngCA3G8l+m+Fk5vvus2tENsDUjnGx5S6sI?=
- =?us-ascii?Q?8G6riI2Fib9Y72x+naaZ3QAVebClmFu6nPPTATRsdHJGjYIONlbXTmcYLlDM?=
- =?us-ascii?Q?Y7BTADGUyFx/Not1vB4w92Ad76u2Y7XQ0w/j1osO?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 010165a1-baa7-471a-0d8d-08dbc87af721
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?42BIP86yD8UwvgTu/L9Ckg85i+uvnceateKonsX+h0Dv3jR27x28nXf4PUog?=
+ =?us-ascii?Q?sPemJX6HbwUmlfvUjm4ZvD5Q4PSjw89LkbS4tiQ4V1tt+OvmwMzkay3hbKqe?=
+ =?us-ascii?Q?0P5PUitHir5M0ywylQwYz2prd5FOt2u47XMrVwbh6GOKwq8AjrUyv7UbnACN?=
+ =?us-ascii?Q?Xdum/x2LDPWkXmFK65UiIbJPkrhoXxOOI85Tzdnw0oGntqayakipx3dUKXOl?=
+ =?us-ascii?Q?4YGU0l67qNr/rhmNM6oMnFB1jFob7xdCMHzQKQ1+FDTrqXhrMdpYlLfgi05x?=
+ =?us-ascii?Q?BZoYUW2SZ2fbwn0o5ORTdReT4NFmWMs44i1mAb5ZCvb97JDNpaS/BgZoxQc8?=
+ =?us-ascii?Q?slGNbhfEpE0YhQXJggZ38/NKALGaU2S4WIciQ0+Dv85KMBf7q7nCE5A1iLIc?=
+ =?us-ascii?Q?ns6dUM0Ltk8j8nNI/aFhGrSor7bvjmJXwVZZEom/3UcDijK1DwvJR5SBe/b/?=
+ =?us-ascii?Q?vKAmHXrxdvnndasV8+0b2408+dNqI0jr7DiOUu+kc+CmQFZMgKVJHaNrCv0x?=
+ =?us-ascii?Q?h1fxAIb3DYqeC6x9qQA45UKNzPcnktfHc2muDsXGCIoME6HaIgHMGUTzUUAO?=
+ =?us-ascii?Q?jdJwpOCXAkuhrKIYmTE23OIlk6XBAgB3rOZaHRh7T8OgtJKN8qViYGCPMrtA?=
+ =?us-ascii?Q?3SYxvekaKu6l2sDcmXHyVbb5QcU5vtqty8xIGm/PWg0nqAuIoq+zkOFiPO0o?=
+ =?us-ascii?Q?m+Yw83PgSyxdR3x+mFTeGaPk57hAEXhFYdvVf9u1ZpvgU63DEdoIEoMmu2iy?=
+ =?us-ascii?Q?tDPUEFhoRvuwANXCHOMZuX8yd9LRDQSXOLyWjf3uXPZ6qPXm5QG75MfOuuNF?=
+ =?us-ascii?Q?QgFphEcZFDmLII/cCU6ATeWOUs6QU5n0Bs2l/4FiJQiuKikD0jsIl8X9iU9p?=
+ =?us-ascii?Q?PRZFnLHaBdrL/r/G6K17AEmtll/CDTD0QSy2oS0uRU7Ic4rtBDyl+Lni++3r?=
+ =?us-ascii?Q?YZL8v0WxV3/pj6SvvHZKTIngDLkHgkby/vW6uJGYb+kvEC/ppLceKTYIRcDx?=
+ =?us-ascii?Q?obJFn1dffhdswevd1NJiul8e4okZmLpCnhcaU/JyPLPKP0WbforAFleUiqYY?=
+ =?us-ascii?Q?uL/qBfteUDM/GHvDFPW6ny3281zAa/RA+jvzMeNyd0sInFJAcuwPLtW5OszF?=
+ =?us-ascii?Q?6foJ3DJeD9fTX+Ky8+/5JzaBi1FXa2Cq0ExT3YHDR8d/wIvfTrjdoEJypbGp?=
+ =?us-ascii?Q?Jl6cIEQ6Mzbsa8v/xvcJtyXIlkxx6C3CgGGSJEfiFLP+cOMRdNbxPJZ1ds6V?=
+ =?us-ascii?Q?/5h5M5aEQfGP+RZYCBNBcb2qneJCek7Dvu3ZrqJa+2f7jjwDhVfo6KuxDXWS?=
+ =?us-ascii?Q?Yw6XzWKQg1GRIxFaZ2tU6tsReuw1FvLbol2vlWWZP7GtxwIyLt8KW4aNIlSD?=
+ =?us-ascii?Q?/EBj6NBzwH0XIaCluUgyFh2DnlvKxHcH00RM2RUuzg/Q86T/oOO8yK0fG/5f?=
+ =?us-ascii?Q?tbUql3y/WFkxvshF9VcuuEB3i3RralMCkuRwe2FTKoZBG1kFpe1czPEHltqU?=
+ =?us-ascii?Q?4o2MVDAcdfqO8wKqo+gmWBhGdq1xpLAMWLq97NBglLBvX3dSriH8yWuUzA42?=
+ =?us-ascii?Q?RVfhoPB5OozD+/pVi98iztfZGdnuUHwNFFvAc1D8?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1d58f7c-3094-4b57-093b-08dbc87eab4c
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 03:51:06.2606
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 04:17:36.9649
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ldUhk/Jp2ZYgjqbmb7O0aJBaZ/TCLoQq/kelMGw2mu+pZk8wFEtMgESyQQsofRPf3qK6Iddq7kybY5L4oXYnLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4675
+X-MS-Exchange-CrossTenant-UserPrincipalName: 89PDWbW/IV7TEJk4gQc2odDieVJghk38FFKwj4o00NshZ/YX5bRI62fhMbeG/QJ6FavmPlLWf07bTShxOCxXXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7968
 X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 Dan Williams wrote:
-> It is all too easy to get confused about @dev usage in the CXL driver
-> stack. Before adding a new cxl_pci_probe() setup operation that has a
-> devm lifetime dependent on @cxlds->dev binding, but also references
-> @cxlmd->dev, and prints messages, rework the devm_cxl_add_memdev() and
-> cxl_memdev_setup_fw_upload() function signatures to make this
-> distinction explicit. I.e. pass in the devm context as an @host argument
-> rather than infer it from other objects.
+> The sanitize operation is destructive and the expectation is that the
+> device is unmapped while in progress. The current implementation does a
+> lockless check for decoders being active, but then does nothing to
+> prevent decoders from racing to be committed. Introduce state tracking
+> to resolve this race.
 > 
-> This is in preparation for adding a devm_cxl_sanitize_setup_notifier().
+> This incidentally cleans up unpriveleged userspace from triggering mmio
+> read cycles by spinning on reading the 'securiry/state' attribute. Which
+> at a minimum is a waste since the kernel state machine can cache the
+> completion result.
 > 
-> Note the whitespace fixup near the change of the devm_cxl_add_memdev()
-> signature. That uncaught typo originated in the patch that added
-> cxl_memdev_security_init().
+> Lastly cxl_mem_sanitize() was mistakenly marked EXPORT_SYMBOL() in the
+> original implementation, but an export was never required.
 > 
+> Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/cxl/core/memdev.c    |   16 ++++++++--------
->  drivers/cxl/cxlmem.h         |    5 +++--
->  drivers/cxl/pci.c            |    4 ++--
->  tools/testing/cxl/test/mem.c |    4 ++--
->  4 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 6efe4e2a2cf5..63353d990374 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -960,12 +960,12 @@ static const struct fw_upload_ops cxl_memdev_fw_ops = {
->          .cleanup = cxl_fw_cleanup,
->  };
->  
-> -static void devm_cxl_remove_fw_upload(void *fwl)
-> +static void cxl_remove_fw_upload(void *fwl)
 
-Technically this drop of devm (and add to the setup call below) is not
-covered in the cover letter.  However, I like it.
+[snip]
 
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
->  {
->  	firmware_upload_unregister(fwl);
->  }
->  
-> -int cxl_memdev_setup_fw_upload(struct cxl_memdev_state *mds)
-> +int devm_cxl_setup_fw_upload(struct device *host, struct cxl_memdev_state *mds)
->  {
->  	struct cxl_dev_state *cxlds = &mds->cxlds;
->  	struct device *dev = &cxlds->cxlmd->dev;
-> @@ -978,10 +978,9 @@ int cxl_memdev_setup_fw_upload(struct cxl_memdev_state *mds)
->  				       &cxl_memdev_fw_ops, mds);
->  	if (IS_ERR(fwl))
->  		return PTR_ERR(fwl);
-> -
-> -	return devm_add_action_or_reset(cxlds->dev, devm_cxl_remove_fw_upload, fwl);
-> +	return devm_add_action_or_reset(host, cxl_remove_fw_upload, fwl);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_memdev_setup_fw_upload, CXL);
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_fw_upload, CXL);
->  
->  static const struct file_operations cxl_memdev_fops = {
->  	.owner = THIS_MODULE,
-> @@ -1019,9 +1018,10 @@ static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -650,6 +650,25 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  		return -EBUSY;
 >  	}
 >  
->  	return devm_add_action_or_reset(cxlds->dev, put_sanitize, mds);
-> - }
-> +}
->  
-> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
-> +struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
-> +				       struct cxl_dev_state *cxlds)
->  {
->  	struct cxl_memdev *cxlmd;
->  	struct device *dev;
-> @@ -1053,7 +1053,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  	if (rc)
->  		goto err;
->  
-> -	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
-> +	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
->  	if (rc)
->  		return ERR_PTR(rc);
->  	return cxlmd;
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 55f00ad17a77..fdb2c8dd98d0 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -84,9 +84,10 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
->  	return is_cxl_memdev(port->uport_dev);
->  }
->  
-> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds);
-> +struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
-> +				       struct cxl_dev_state *cxlds);
->  struct cxl_memdev_state;
-> -int cxl_memdev_setup_fw_upload(struct cxl_memdev_state *mds);
-> +int devm_cxl_setup_fw_upload(struct device *host, struct cxl_memdev_state *mds);
->  int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->  			 resource_size_t base, resource_size_t len,
->  			 resource_size_t skipped);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index dc665b12be8f..7c117eb62750 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -867,11 +867,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> -	cxlmd = devm_cxl_add_memdev(cxlds);
-> +	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> -	rc = cxl_memdev_setup_fw_upload(mds);
-> +	rc = devm_cxl_setup_fw_upload(&pdev->dev, mds);
->  	if (rc)
->  		return rc;
->  
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 464fc39ed277..68118c37f0b5 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1450,11 +1450,11 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  	mdata->mes.mds = mds;
->  	cxl_mock_add_event_logs(&mdata->mes);
->  
-> -	cxlmd = devm_cxl_add_memdev(cxlds);
-> +	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> -	rc = cxl_memdev_setup_fw_upload(mds);
-> +	rc = devm_cxl_setup_fw_upload(&pdev->dev, mds);
->  	if (rc)
->  		return rc;
->  
-> 
-> 
+> +	/*
+> +	 * For endpoint decoders hosted on CXL memory devices that
+> +	 * support the sanitize operation, make sure sanitize is not in-flight.
+> +	 */
+> +	if (is_endpoint_decoder(&cxld->dev)) {
+> +		struct cxl_endpoint_decoder *cxled =
+> +			to_cxl_endpoint_decoder(&cxld->dev);
+> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +		struct cxl_memdev_state *mds =
+> +			to_cxl_memdev_state(cxlmd->cxlds);
+> +
+> +		if (mds && mds->security.sanitize_active) {
 
+I'm curious why this check does not need to hold the mds->mbox_mutex?  Or
+how this may be protected by the cxl_dpa_rwsem?
 
+Ira
+
+[snip]
