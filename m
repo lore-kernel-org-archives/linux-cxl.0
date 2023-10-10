@@ -1,118 +1,150 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4D93D9F
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A0C97;
-	Tue, 10 Oct 2023 01:19:14 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3F1AE2800A273;
-	Tue, 10 Oct 2023 10:19:13 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3176D58BE4D; Tue, 10 Oct 2023 10:19:13 +0200 (CEST)
-Date: Tue, 10 Oct 2023 10:19:13 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231010081913.GA24050@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EADB3D9F
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ady6suh7"
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F892A7
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 01:23:27 -0700 (PDT)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231010082323epoutp01bb41ff7953e775877811bfcefd6d8c36~MsWQrOg0M2371623716epoutp01c
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:23:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231010082323epoutp01bb41ff7953e775877811bfcefd6d8c36~MsWQrOg0M2371623716epoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1696926203;
+	bh=dGxmS/KBK2vjw8fTdA2H0+jeYD6Sf29f/JkO+nkrNVw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ady6suh7BufvLKcV504NC7A/MtX98IDx3QBMBRPEbe75JS0CGiVHfEkD5Bv2vrZIi
+	 vlNq9Mu7QsEIPXDvvYI+wP5iuiseI+HMn5GoK5HjN3k7grNXtAuf5Hycl3jgrrNhLJ
+	 bxGg2LbZqLBDIBH/j7erwnKBOdTNWOgv3v96XSF8=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231010082322epcas2p447808e5a68048400b86aa4e4faa4f612~MsWQHs-vr2036320363epcas2p4z;
+	Tue, 10 Oct 2023 08:23:22 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.69]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4S4TSB0Zzpz4x9Ps; Tue, 10 Oct
+	2023 08:23:22 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8D.89.09660.9F905256; Tue, 10 Oct 2023 17:23:21 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231010082321epcas2p26c6ba3f7298bd8266c59761e080cc732~MsWO_a4vF1534015340epcas2p2I;
+	Tue, 10 Oct 2023 08:23:21 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231010082321epsmtrp1680899064e1f9b09931b9db5b1cb321b~MsWO9b6Vk1187111871epsmtrp1f;
+	Tue, 10 Oct 2023 08:23:21 +0000 (GMT)
+X-AuditID: b6c32a47-d5dfa700000025bc-48-652509f95ad5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6A.CE.08649.9F905256; Tue, 10 Oct 2023 17:23:21 +0900 (KST)
+Received: from jtpark-7920.dsn.sec.samsung.com (unknown [10.229.83.56]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20231010082321epsmtip260c297943c46c2fdac318e82b27cf022~MsWOrFWFy0746607466epsmtip2D;
+	Tue, 10 Oct 2023 08:23:21 +0000 (GMT)
+From: Jeongtae Park <jtp.park@samsung.com>
+To: Dan Williams <dan.j.williams@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ben
+	Widawsky <bwidawsk@kernel.org>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Davidlohr
+	Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>,
+	linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Kyungsan Kim <ks0204.kim@samsung.com>, Wonjae
+	Lee <wj28.lee@samsung.com>, Hojin Nam <hj96.nam@samsung.com>, Junhyeok Im
+	<junhyeok.im@samsung.com>, Jehoon Park <jehoon.park@samsung.com>, Jeongtae
+	Park <jeongtae.park@gmail.com>, Jeongtae Park <jtp.park@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3 4/6] cxl: Fix a checkpatch error
+Date: Tue, 10 Oct 2023 17:26:06 +0900
+Message-Id: <20231010082608.859137-5-jtp.park@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231010082608.859137-1-jtp.park@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMJsWRmVeSWpSXmKPExsWy7bCmme5PTtVUg8XnrC3uPr7AZtE8eTGj
+	xfSpFxgtTtxsZLNYfXMNo0XT6rusFs2L17NZfHjzj8XiwOsGdoszZ1+yWqxaeI3N4sjaq0wW
+	i4/OYLY4uofD4vysUywWl3fNYbO4NeEYk8XG++/YHIQ8ds66y+7RcuQtq8fiPS+ZPDat6mTz
+	2D93DbtH35ZVjB5TZ9d7fN4kF8ARlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlh
+	rqSQl5ibaqvk4hOg65aZA/SKkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAvECv
+	ODG3uDQvXS8vtcTK0MDAyBSoMCE74+2lnYwFi9grzrVtZmpgnMvWxcjJISFgIrFs3n3WLkYu
+	DiGBHYwST/93sUE4nxgltrYdYYdwvjFKPJu0Ha7l/I9VUIm9jBIz5jcwQzh/GCWuP+1lB6li
+	E9CSmD6zAWywiMBDJomdr/qYQBxmgSnMEp2ztgJlODiEBYwlZl42BWlgEVCVaJ11EmwFr4CV
+	xJlfXYwQ6+Ql9h88ywxicwpYSzyc/xaqRlDi5MwnLCA2M1BN89bZYFdICFzgkDjcOIkFotlF
+	4v6MF1C2sMSr41vYIWwpiZf9bewQDc2MEq+fX2GBcFoYJdbd3gFVZSzx7uZzsEuZBTQl1u/S
+	BzElBJQljtyCWswn0XH4LztEmFeio00IolFJYt7SecwQtoTEpblboGwPiaZtF6FB18co0T9h
+	MesERoVZSP6ZheSfWQiLFzAyr2IUSy0ozk1PLTYqMIZHcnJ+7iZGcOrWct/BOOPtB71DjEwc
+	jIcYJTiYlUR4H2WqpArxpiRWVqUW5ccXleakFh9iNAWG9kRmKdHkfGD2yCuJNzSxNDAxMzM0
+	NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1Oqgcl1mcDl/YeK3wp1RtnrV9yR6M294/9/
+	5qdpkZcv3/1m3nuqZ4G99rrKlsxyT6vv7WxOJp1ixtNLtjfHNHOKnEz6Ics6Y/eyB8HuB6NV
+	l9SHzWSRis/MuNraUqtyYDvvmbqVi381Ba+rq9g3s3CJVpetM2va2QmXLxxfMatS6alUVsjV
+	vsAAm9/tpku9TSu+JdkIp2v8PZajFWvxK/nk6cizbScO163iF43aU+m7vCfmZNrtrwfeHr+2
+	bfV0+QAm4xzW56cfhK7X7+1L9soUMOH5y6V+1fdEm/vmm7s2vYmwL5rs+cmI98DEW4q/bATO
+	zxftLMtTPDEneP2SA5ejdvLF2vvfSf1R/PT1or6cGiWW4oxEQy3mouJEAFQgKjpmBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJXvcnp2qqwZpOKYu7jy+wWTRPXsxo
+	MX3qBUaLEzcb2SxW31zDaNG0+i6rRfPi9WwWH978Y7E48LqB3eLM2ZesFqsWXmOzOLL2KpPF
+	4qMzmC2O7uGwOD/rFIvF5V1z2CxuTTjGZLHx/js2ByGPnbPusnu0HHnL6rF4z0smj02rOtk8
+	9s9dw+7Rt2UVo8fU2fUenzfJBXBEcdmkpOZklqUW6dslcGW8vbSTsWARe8W5ts1MDYxz2boY
+	OTkkBEwkzv9Yxd7FyMUhJLCbUWLb9CaohITE8g0vmCBsYYn7LUdYIYp+MUpsWbqcBSTBJqAl
+	MX1mA1hCROA5k8TJN6cYQRxmgTnMEoc7XwLN5eAQFjCWmHnZFKSBRUBVonXWSbANvAJWEmd+
+	dTFCbJCX2H/wLDOIzSlgLfFw/luwGiGgmm0H26HqBSVOznwCtpgZqL5562zmCYwCs5CkZiFJ
+	LWBkWsUomVpQnJuem2xYYJiXWq5XnJhbXJqXrpecn7uJERxhWho7GO/N/6d3iJGJg/EQowQH
+	s5II76NMlVQh3pTEyqrUovz4otKc1OJDjNIcLErivIYzZqcICaQnlqRmp6YWpBbBZJk4OKUa
+	mM5+/Ky77VbZleiIAm23UxO/b3JsXrbuhWx6o/bMz0EvPoVEn1hl1Ogd5HuiYHdq/UcT5i07
+	3bueGpQ+DhXsKxHMnqJcsN7sxoxNP2PPrF7w2NN1dfoD7dO9N12kw5Pvh85MYJ7/aHuVUDZ3
+	2zlL5trXa68EMfBZfLBurvjvwvX7g7fYi+xYVWG7Fcz3D/TzNteen1JhOXtv98KM6cFL10xS
+	aXm1f7/o1p4TaUqq6w/pXG+7s+fWjVNmons3NLz8Y/JkttGcJzxarHM/Wysr3TLkD8xaOvPR
+	mf+bO+rbs/azXl/j9U/BNCNo0mrLz1dVz4T3XjOOnW1fWccov8vlmll0zPxqhgmyJxO2a/Bk
+	SiqxFGckGmoxFxUnAgD8pVrAHwMAAA==
+X-CMS-MailID: 20231010082321epcas2p26c6ba3f7298bd8266c59761e080cc732
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231010082321epcas2p26c6ba3f7298bd8266c59761e080cc732
+References: <20231010082608.859137-1-jtp.park@samsung.com>
+	<CGME20231010082321epcas2p26c6ba3f7298bd8266c59761e080cc732@epcas2p2.samsung.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
-> On 10/10/23 00:49, Lukas Wunner wrote:
-> > PCI Firmware Spec would seem to be appropriate.  However this can't
-> > be solved by the kernel community.
-> 
-> How so? It is up to the user to decide whether it is SPDM/CMA in the kernel
-> or   the firmware + coco, both are quite possible (it is IDE which is not
-> possible without the firmware on AMD but we are not there yet).
+ERROR: Macros with complex values should be enclosed in parentheses
 
-The user can control ownership of CMA-SPDM e.g. through a BIOS knob.
-And that BIOS knob then influences the outcome of the _OSC negotiation
-between platform and OS.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+---
+ drivers/cxl/cxl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 76d92561af29..545381355efb 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -142,7 +142,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+ #define CXL_RAS_CAPABILITY_LENGTH 0x58
+ #define CXL_HEADERLOG_SIZE SZ_512
+-#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
++#define CXL_HEADERLOG_SIZE_U32 (SZ_512 / sizeof(u32))
+ 
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+-- 
+2.34.1
 
-> But the way SPDM is done now is that if the user (as myself) wants to let
-> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> parameters), and does not provide a sysfs knob to control its tentacles.
-
-The problem is every single vendor thinks they can come up with
-their own idea of who owns the SPDM session:
-
-I've looked at the Nvidia driver and they've hacked libspdm into it,
-so their idea is that the device driver owns the SPDM session.
-
-AMD wants the host to proxy DOE but not own the SPDM session.
-
-We have *standards* for a reason.  So that products are interoperable.
-
-If the kernel tries to accommodate to every vendor's idea of SPDM ownership
-we'll end up with an unmaintainable mess of quirks, plus sysfs knobs
-which were once intended as a stopgap but can never be removed because
-they're userspace ABI.
-
-This needs to be solved in the *specification*.
-
-And the existing solution for who owns a particular PCI feature is _OSC.
-Hence this needs to be taken up with the Firmware Working Group at the
-PCISIG.
-
-
-> Note, this PSP firmware is not BIOS (which runs on the same core and has
-> same access to PCI as the host OS), it is a separate platform processor
-> which only programs IDE keys to the PCI RC (via some some internal bus
-> mechanism) but does not do anything on the bus itself and relies on the host
-> OS proxying DOE, and there is no APCI between the core and the psp.
-
-Somewhat tangentially, would it be possible in your architecture
-that the host or guest asks PSP to program IDE keys into the Root Port?
-Or alternatively, access the key registers directly without PSP involvement?
-
-Thanks,
-
-Lukas
