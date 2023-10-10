@@ -1,259 +1,130 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF30621
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 01:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B85E390
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 03:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vo/aXdw7"
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15F8B7;
-	Mon,  9 Oct 2023 18:35:16 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-7b0ec7417bdso1577623241.2;
-        Mon, 09 Oct 2023 18:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696901716; x=1697506516; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PCAZZqWA7W34+FGu9Ma++VOrVCcKUa0dLdOQIBbdvOg=;
-        b=Vo/aXdw75CUU09LGI521cdrFYFpqvySCGKdAuTT3ySLqW4ITMkZ2dFTBztyIbhxA6n
-         dfyKU9PmEP8onH69KaWtzRMRoYoApZPOvOKAt6/vYBSKLr6qTuOdcxRy0g6dlk1M1IzR
-         lvXvTkw52nbVyqsT/EWlMLl9tlJmnP21xYJntvP75O+ZrmVQ3vcF+RdxtnQY44RbIuxS
-         i2Odkt0rPrrjtQeB/rJGc/VRbCjm71K0089/TVWS46GNWZjoWVB2OA9ysk4LwqqWwvST
-         fJBRvgrA0Gnb4aZ3OYiq4narzKuw+RahY8dBG/C0rLyih1OCe46/5SnzF7YMp/35BYM6
-         dEow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696901716; x=1697506516;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PCAZZqWA7W34+FGu9Ma++VOrVCcKUa0dLdOQIBbdvOg=;
-        b=gKTvLGoErwNl/pH/zsSrc02EoTBIiOYuwSi9QIeT16+rz6eY7H/El+fwWqScuU2e7w
-         dAlppMnGl8EEi5ezjQoDrSJw3MhVQD8Y+bxHgBJPyGZbx52m3YodsbDh+E69Af0bneyx
-         jFGySE8OH/3mSE5voGG+SUbEhE5jA/md5tulvJ+lDy1NNo0PGI2m6X9VzzmbrCIqhVhR
-         MzqBI7InmTDt0mrFuyDmhjzBd3ZgUkJIJF5JV1Y2NwSfFHY2VmyQXDzdI7INZkgkc5jl
-         tYSJSAw5p/f0Oy+QD5UxMFsEpe0pA11Oe4Bfe8HM3bKIuk3cMNt82AsYMPu8IhEXfO3J
-         a4Mw==
-X-Gm-Message-State: AOJu0YwE15TnMZorr/NtBZNI9sxPsdTrPKy2Rxjtfc6KWMqKLgH8SkCA
-	VvzWXDBVkk4vGDA1g4DemayBRXKLgy47ORghDkjeXL8BhHFbcQ==
-X-Google-Smtp-Source: AGHT+IEut4+8+Z49thmsIFFh4fyKsHauFIJ1lzCZ8BgcshepaYfEYGxa95v2w2ueKfUdHTDpUZBMLcZbb9EdqBshZqA=
-X-Received: by 2002:a05:6102:34ce:b0:44e:9a71:279e with SMTP id
- a14-20020a05610234ce00b0044e9a71279emr14141727vst.31.1696901715764; Mon, 09
- Oct 2023 18:35:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ORbCy4L2"
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00339E
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 20:14:10 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 718DB7A0839;
+	Tue, 10 Oct 2023 03:14:06 +0000 (UTC)
+Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id DBFFA7A05A2;
+	Tue, 10 Oct 2023 03:14:05 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1696907646; a=rsa-sha256;
+	cv=none;
+	b=A/Z8sEwti3/SPs5vocSXRM6xxAMXwMVljA9faKekI0DmYvo12hrHBIj89i3xvtjhhM6r0g
+	rP0rWXg3Bo51MYZgfgzAM7eiO5Qy+Ga6Rsq3E+GdyXJdFgmQ4eXbW9A/ybD4FxcggI/3Xh
+	ZV936LEWsr8WrpTe6dNhh0i9VAr172R+u26yxh0YPR0yIpB258Af3R80UqzX2htn7+CUX2
+	B0O3ZkcEvZUCn5g9n3n2EBMVSO9RVuNlSB2h8R4QitKh7tU46GZoaYLIT7IAomiUK9uvBI
+	6S/djxN8DtzFSZXmaa/yVR1thPg/+b8ZInDgijAi3tfdfJOlwpfl362WljEQ1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1696907646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=H+SZN67++GyUSiUcgaw3Eqe/dc3FXjQ0GRoUofM930w=;
+	b=4/RRscuosMMpJUug0T26V+UN6BqjxcFM9OHL43ug3/MyMGv7n0VypzrF96+9fz+V1wgMeg
+	EZ9QOjP75a89g1Ock9PBR0J4SiT7nxRQNF28b25BIlJ4u1wJEmPEDMGqHf8bkzTb4G5ygP
+	MK0K5/z8X/PuDXgx/IcqC0ZOqqpU0DaDOJx+yA+yGVCrHYgGU9Anan9L0lLFlEHF2hXjwg
+	IDPkEwdYoK3MH8jCtsgp4fcHBZEcT/voRAStOAGyBNBVpksiRNXX1r2x8iplyMq7S6Gm7Q
+	GEjXPXtJtM9APGCDxuPVmyyOjBTkAfFN67vOi+BDq2+xh0Oixe6CHRzHRnIF5A==
+ARC-Authentication-Results: i=1;
+	rspamd-7c449d4847-7psdc;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Oafish-Industry: 2a4356147b765099_1696907646257_2743175540
+X-MC-Loop-Signature: 1696907646256:3500760118
+X-MC-Ingress-Time: 1696907646256
+Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.102.135.46 (trex/6.9.1);
+	Tue, 10 Oct 2023 03:14:06 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4S4LbK0pHFz2D;
+	Mon,  9 Oct 2023 20:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1696907645;
+	bh=H+SZN67++GyUSiUcgaw3Eqe/dc3FXjQ0GRoUofM930w=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=ORbCy4L2D6Y4pS15KZgycoVT17KzfEBeF0zfvDA8C17Y2p1vOnYB5e3CT9Ffd2FcC
+	 TCTE+jZi+8FImt5sBmRDEI9vW45OLLVziddpun6L4iZUosw6KIZHUeMu9MB9EtQzAE
+	 FltbOppnNSWlMspN3ItH5/X0wMREPQOCu54tzfGWTmSDoiJYX2iZhNG1QaSFdhS2yw
+	 MiKEomyHafFHwxSOiNv80FAhwsfVs18qH8d9VfGCiYZ6fO2RNHQLYhQgARaVP3rASJ
+	 hecgjB9SGUG9bu8W21gW01AqSYkommsD07EMCUBKZWp6r4+y4UVFe0fskRUMHExdmJ
+	 w93CryJnt/6uQ==
+Date: Mon, 9 Oct 2023 20:14:02 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jehoon Park <jehoon.park@samsung.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Kyungsan Kim <ks0204.kim@samsung.com>, Junhyeok Im <junhyeok.im@samsung.com>
+Subject: Re: [ndctl PATCH v3 0/2] add support for Set Alert Configuration
+ mailbox command
+Message-ID: <3qqfaoruluq7jd2cnz4mhpq632wov5x7cfizuarlfyjedkwi5v@aimuecxmqgvy>
+References: <CGME20230918045208epcas2p36f0c80940e86e5165a3036414a32d7f6@epcas2p3.samsung.com>
+ <20230918045514.6709-1-jehoon.park@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date: Tue, 10 Oct 2023 10:35:03 +0900
-Message-ID: <CAB=+i9S4NSJ7iNvqguWKvFvo=cMQC21KeNETsqmJoEpj+iDmig@mail.gmail.com>
-Subject: Accessing emulated CXL memory is unstable
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-	HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230918045514.6709-1-jehoon.park@samsung.com>
+User-Agent: NeoMutt/20230517
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello folks,
+On Mon, 18 Sep 2023, Jehoon Park wrote:
 
-I experienced strange application crashes/internal KVM errors
-while playing with emulated type 3 CXL memory. I would like to know
-if this is a real issue or I missed something during setup.
+>CXL 3.0 Spec 8.2.9.8.3.3 defines Set Alert Configuration mailbox command,
+>which configures device's warning alerts.
+>This patchset adds support for the command.
+>
+>The implementation is based on the 'ndctl-inject-smart'. Variable and function
+>names are aligned with the implementation of 'Get Alert Configuration'.
+>
+>Changes in v3
+>- Reorganize cover letter and commit message (Davidlohr)
+>- Update details of the example in man page
+>- Move 'verbose' option to the end in man page (Davidlohr)
+>- Link to v2: https://lore.kernel.org/r/20230807063335.5891-1-jehoon.park@samsung.com
+>
+>Changes in v2
+>- Rebase on the latest pending branch
+>- Remove full usage text in the commit message (Vishal)
+>- Correct texts in document and log_info() (Vishal)
+>- Change strncmp() to strcmp() for parsing params (Vishal)
+>- Link to v1: https://lore.kernel.org/r/20230711071019.7151-1-jehoon.park@samsung.com
+>
+>*** BLURB HERE ***
+>
+>Jehoon Park (2):
+>  libcxl: add support for Set Alert Configuration mailbox command
+>  cxl: add 'set-alert-config' command to cxl tool
 
-TL;DR: applications crash when accessing emulated CXL memory,
-and stressing VM subsystem causes KVM internal error
-(stressing via stress-ng --bigheap)
+Looks good, for the series feel free to add:
 
-[ Details ]
-qemu version is 8.1.50,
-kernel version is 6.5.0,
-ndctl version is 78.
-
-the qemu command line is:
-qemu-system-x86_64 \
-       -accel kvm \
-        -cpu host \
-        -smp 1 \
-        -M q35,cxl=on \
-        -m 4G,maxmem=8G,slots=4 \
-        -object memory-backend-ram,id=vmem0,share=on,size=4G \
-        -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-        -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-        -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0 \
-        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
-        -kernel ../linux/arch/x86/boot/bzImage \
-        -append 'console=ttyS0 nokaslr root=/dev/vda5' \
-        -netdev user,id=n1 \
-        -device virtio-net,netdev=n1,bus=pcie.0 \
-        -blockdev
-driver=qcow2,file.filename=./rocky.qcow2,file.driver=file,node-name=blk1
-\
-        -device virtio-blk,drive=blk1,bus=pcie.0 \
-        -nographic
-
-[ Before creating a CXL RAM Region ]
-
-# free -h
-               total        used        free      shared  buff/cache   available
-Mem:           3.8Gi       275Mi       3.6Gi       8.0Mi       120Mi       3.6Gi
-Swap:             0B          0B          0B
-# numactl --hardware
-available: 1 nodes (0)
-node 0 cpus: 0
-node 0 size: 3923 MB
-node 0 free: 3713 MB
-node distances:
-node   0
-  0:  10
-
-[ After creating a CXL RAM Region ]
-
-# cxl enable-memdev mem0
-# cxl create-region -t ram -m mem0 -w 1 -d decoder0.0
-
-I enabled DEV_DAX_CXL=y and DEV_DAX_KMEM=y so when I create a CXL RAM Region,
-so it is onlined right away.
-
-# free -h
-               total        used        free      shared  buff/cache   available
-Mem:           7.8Gi       389Mi       7.5Gi       8.0Mi       122Mi       7.5Gi
-Swap:             0B          0B          0B
-
-# numactl --hardware
-available: 2 nodes (0-1)
-node 0 cpus: 0
-node 0 size: 3923 MB
-node 0 free: 3631 MB
-node 1 cpus:
-node 1 size: 4096 MB
-node 1 free: 4096 MB
-node distances:
-node   0   1
-  0:  10  20
-  1:  20  10
-
-So far, everything looks fine,
-until an application actually accesses this onlined CXL memory.
-
-# numactl --membind=1 --show
-[  139.495065] traps: numactl[493] trap invalid opcode ip:7f58d44b8f64
-sp:7ffc2a273128 error:0 in libc.so.6[7f58d4428000+175000]
-Illegal instruction (core dumped)
-
-Hmm... it crashed, and it's 'invalid opcode'.
-Is this because the fetched instruction is different from what's
-written to memory during exec()?
-
-I don't know yet, but let's just continue.
-
-Let's stress the VM subsystem by allocating lots of heap memory:
-# stress-ng --bigheap 1
-
-stress-ng: info:  [496] defaulting to a 86400 second (1 day, 0.00
-secs) run per stressor
-stress-ng: info:  [496] dispatching hogs: 1 bigheap
-
-^C
-KVM internal error. Suberror: 1
-extra data[0]: 0x0000000000000001
-extra data[1]: 0x41c03127ae0f480f
-extra data[2]: 0x8b4865ca010fc489
-extra data[3]: 0x0000000000000031
-extra data[4]: 0x0000000000000000
-extra data[5]: 0x0000000000000000
-extra data[6]: 0x0000000000000000
-extra data[7]: 0x0000000000000000
-emulation failure
-RAX=0000000000000207 RBX=ffff88810cfb6a80 RCX=0000000000000000
-RDX=0000000000000000
-RSI=0000000000000207 RDI=00007f526d41b540 RBP=00007f526d41b540
-RSP=ffffc90000a23d90
-R8 =ffffc90000a23e88 R9 =0000000008000000 R10=0000000000000000
-R11=0000000000000001
-R12=0000000000000207 R13=00007f526d41b540 R14=0000000000000000
-R15=ffff88810cfb5e80
-RIP=ffffffff8103e626 RFL=00050246 [---Z-P-] CPL=0 II=0 A20=1 SMM=0 HLT=0
-ES =0000 0000000000000000 ffffffff 00c00000
-CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
-SS =0000 0000000000000000 ffffffff 00c00000
-DS =0000 0000000000000000 ffffffff 00c00000
-FS =0000 00007f526d41c740 ffffffff 00c00000
-GS =0000 ffff88817bc00000 ffffffff 00c00000
-LDT=0000 0000000000000000 ffffffff 00c00000
-TR =0040 fffffe0000003000 00004087 00008b00 DPL=0 TSS64-busy
-GDT=     fffffe0000001000 0000007f
-IDT=     fffffe0000000000 00000fff
-CR0=80050033 CR2=00007f526d41b740 CR3=0000000104e62000 CR4=00750ef0
-DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000
-DR3=0000000000000000
-DR6=00000000ffff0ff0 DR7=0000000000000400
-EFER=0000000000000d01
-Code=5a 14 00 00 0f 01 cb 4c 89 e2 48 89 ef 44 89 e0 48 c1 ea 20 <48>
-0f ae 27 31 c0 41 89 c4 0f 01 ca 65 48 8b 04 25 c0 ac 02 00 83 a8 54
-0a 00 00 01 be 00
-
-This time I pressed CTRL+C and it caused KVM internal error 1.
-
-Hmm on another try I increased the number of threads and just waited,
-and then KVM internal error 3 occurred.
-
-# stress-ng --bigheap 12
-stress-ng: info:  [484] defaulting to a 86400 second (1 day, 0.00
-secs) run per stressor
-stress-ng: info:  [484] dispatching hogs: 12 bigheap
-
-[   15.408360] traps: setroubleshootd[251] trap invalid opcode
-ip:7fc7e92ff3eb sp:7ffc760f98a0 error:0 in
-libpython3.9.so.1.0[7fc7e925a000+1b5000]
-qemu-system-x86_64: virtio: bogus descriptor or out of resources
-[   16.526518] virtio_blk virtio1: [vda] new size: 209715200 512-byte
-logical blocks (107 GB/100 GiB)
-[   16.611852] traps: systemd-udevd[131] trap invalid opcode
-ip:7fe3c84bc58f sp:7ffefca00588 error:0 in
-libc.so.6[7fe3c8428000+175000]
-[   16.625903] traps: systemd[1] trap invalid opcode ip:7fe89c6ba1c0
-sp:7ffdd9331b88 error:0 in libc.so.6[7fe89c628000+175000]
-
-KVM internal error. Suberror: 3
-extra data[0]: 0x0000000080000b0e
-extra data[1]: 0x0000000000000031
-extra data[2]: 0x0000000000000d82
-extra data[3]: 0x0000000418442c90
-extra data[4]: 0x0000000000000008
-RAX=aaaaaaaaaaaaaaab RBX=0000000000000000 RCX=000000000000000c
-RDX=0000000000000533
-RSI=ffffffff828c80a0 RDI=ffffc900008bf018 RBP=ffffffff81f5bd54
-RSP=ffffc900008bf000
-R8 =ffffffff81f5bd50 R9 =0000000000000000 R10=0000000000000000
-R11=0000000000000000
-R12=000000000000000e R13=ffffffff81f5bd54 R14=ffffc900008bf0c8
-R15=0000000000000001
-RIP=ffffffff815dfbe8 RFL=00010096 [--S-AP-] CPL=0 II=0 A20=1 SMM=0 HLT=0
-ES =0000 0000000000000000 ffffffff 00c00000
-CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
-SS =0000 0000000000000000 ffffffff 00c00000
-DS =0000 0000000000000000 ffffffff 00c00000
-FS =0000 00007fe89c80cb40 ffffffff 00c00000
-GS =0000 ffff88817bc00000 ffffffff 00c00000
-LDT=0000 0000000000000000 ffffffff 00c00000
-TR =0040 fffffe0000003000 00004087 00008b00 DPL=0 TSS64-busy
-GDT=     fffffe0000001000 0000007f
-IDT=     fffffe0000000000 00000fff
-CR0=80050033 CR2=ffffffff815dfbe8 CR3=0000000418442000 CR4=00750ef0
-DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000
-DR3=0000000000000000
-DR6=00000000ffff0ff0 DR7=0000000000000400
-EFER=0000000000000d01
-Code=90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 57 41 56 <41>
-55 41 54 55 53 48 83 ec 08 4c 89 04 24 48 85 d2 74 4d 49 89 ff 49 89
-f5 48 89 d3 49 89
-
---
-Hyeonggon
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
