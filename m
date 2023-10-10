@@ -1,124 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEAB65C
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 06:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4D93D9F
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CAD99181
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 23:47:29 -0700 (PDT)
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBXcs9x8yRlvbIcBg--.38192S2;
-	Tue, 10 Oct 2023 14:47:13 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBncMRr8yRlQFYAAA--.299S3;
-	Tue, 10 Oct 2023 14:47:08 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: gregory.price@memverge.com,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dimitrios.palyvos@zptcorp.com
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: Questions about the memory of CXL Type3 device offline
-Date: Tue, 10 Oct 2023 14:46:48 +0800
-Message-Id: <20231010064648.1103157-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A0C97;
+	Tue, 10 Oct 2023 01:19:14 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3F1AE2800A273;
+	Tue, 10 Oct 2023 10:19:13 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3176D58BE4D; Tue, 10 Oct 2023 10:19:13 +0200 (CEST)
+Date: Tue, 10 Oct 2023 10:19:13 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+	Zhi Wang <zhi.a.wang@intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 00/12] PCI device authentication
+Message-ID: <20231010081913.GA24050@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+ <20231007100433.GA7596@wunner.de>
+ <20231009123335.00006d3d@Huawei.com>
+ <20231009134950.GA7097@wunner.de>
+ <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwBncMRr8yRlQFYAAA--.299S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAHAWUi-yYFtAArsD
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWw1fGr13WrWrGF1fArW5KFg_yoW5Xw48pa
-	1xtryjkr4xJrnrWa4kJFnxXryYvw1Fvan8GryDAr4Dur18try8Ar1xtas0kFWYvryfGr12
-	qan5JF1vgw1kJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 2023-10-07 18:56,  gregory.price@memverge.com wrote:
-> because you likely have auto-online of new memory blocks sets to false.
+On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
+> On 10/10/23 00:49, Lukas Wunner wrote:
+> > PCI Firmware Spec would seem to be appropriate.  However this can't
+> > be solved by the kernel community.
 > 
-> use `daxctl list` and  `daxctl online-memory [dax-device]` to online the memory
+> How so? It is up to the user to decide whether it is SPDM/CMA in the kernel
+> or   the firmware + coco, both are quite possible (it is IDE which is not
+> possible without the firmware on AMD but we are not there yet).
 
-Thank you Gregory. It works! :)
-
-BTW, I aslo did the same test in 'virt'(arm64) on Jonathan's development branch, 
-however, it would automatically allcate CXL memory to numa node 0:
-
-root@debian-bullseye-arm64:~# cxl create-region -d decoder0.0 -t ram
-[   68.653873] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
-[   68.660568] Unknown target node for memory at 0x10000000000, assuming node 0
-{
-  "region":"region0",
-  "resource":"0x10000000000",
-  "size":"256.00 MiB (268.44 MB)",
-  "type":"ram",
-  "interleave_ways":1,
-  "interleave_granularity":256,
-  "decode_state":"commit",
-  "mappings":[
-    {
-      "position":0,
-      "memdev":"mem0",
-      "decoder":"decoder2.0"
-    }
-  ]
-}
-cxl region: cmd_create_region: created 1 region
-
-In addition, with 'daxclt online-memory' I can online the memory on node 0:
-1)root@debian-bullseye-arm64:~# daxctl online-memory dax0.0
-[  144.137685] Fallback order for Node 0: 0 1 
-[  144.137819] Fallback order for Node 1: 1 0 
-[  144.137872] Built 2 zonelists, mobility grouping on.  Total pages: 1011494
-[  144.139050] Policy zone: Normal
-onlined memory for 1 device
-
-2)root@debian-bullseye-arm64:~# lsmem --output-all
-RANGE                                  SIZE  STATE REMOVABLE     BLOCK NODE ZONES
-0x0000000040000000-0x00000000bfffffff    2G online       yes      8-23    0 
-0x00000000c0000000-0x000000013fffffff    2G online       yes     24-39    1 
-0x0000010000000000-0x000001000fffffff  256M online       yes 8192-8193    0 
-
-Memory block size:       128M
-Total online memory:     4.3G
-Total offline memory:      0B
-
-With Jonathan's qemu branch(cxl-2023-09-26):https://gitlab.com/jic23/qemu.git
-My qemu command line:
-qemu-system-aarch64 \   
--M virt,gic-version=3,cxl=on \
--m 4G \
--object memory-backend-ram,size=2G,id=mem0 \
--numa node,nodeid=0,cpus=0-3,memdev=mem0 \
--object memory-backend-ram,size=2G,id=mem1 \
--numa node,nodeid=1,cpus=4-7,memdev=mem1 \
--cpu cortex-a57 \
--bios QEMU_EFI.fd \
--smp 8 \
--device virtio-blk-pci,drive=hd,bus=pcie.0 \
--drive if=none,id=hd,file=./disk/full-rootfs-debian-bullseye-arm64.ext4 \
--nographic \
--object memory-backend-ram,size=256M,id=cxl-mem1 \
--device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
--device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
--device cxl-type3,bus=root_port13,volatile-memdev=cxl-mem1,id=cxl-mem1 \
--M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
-
-Is there anything else I missed in this environment?
-Maybe Jonathan has already helped someone else with a similar problem :)
+The user can control ownership of CMA-SPDM e.g. through a BIOS knob.
+And that BIOS knob then influences the outcome of the _OSC negotiation
+between platform and OS.
 
 
-Many thanks
-Yuquan
+> But the way SPDM is done now is that if the user (as myself) wants to let
+> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
+> as CMA is not a (un)loadable module or built-in (with some "blacklist"
+> parameters), and does not provide a sysfs knob to control its tentacles.
 
+The problem is every single vendor thinks they can come up with
+their own idea of who owns the SPDM session:
+
+I've looked at the Nvidia driver and they've hacked libspdm into it,
+so their idea is that the device driver owns the SPDM session.
+
+AMD wants the host to proxy DOE but not own the SPDM session.
+
+We have *standards* for a reason.  So that products are interoperable.
+
+If the kernel tries to accommodate to every vendor's idea of SPDM ownership
+we'll end up with an unmaintainable mess of quirks, plus sysfs knobs
+which were once intended as a stopgap but can never be removed because
+they're userspace ABI.
+
+This needs to be solved in the *specification*.
+
+And the existing solution for who owns a particular PCI feature is _OSC.
+Hence this needs to be taken up with the Firmware Working Group at the
+PCISIG.
+
+
+> Note, this PSP firmware is not BIOS (which runs on the same core and has
+> same access to PCI as the host OS), it is a separate platform processor
+> which only programs IDE keys to the PCI RC (via some some internal bus
+> mechanism) but does not do anything on the bus itself and relies on the host
+> OS proxying DOE, and there is no APCI between the core and the psp.
+
+Somewhat tangentially, would it be possible in your architecture
+that the host or guest asks PSP to program IDE keys into the Root Port?
+Or alternatively, access the key registers directly without PSP involvement?
+
+Thanks,
+
+Lukas
