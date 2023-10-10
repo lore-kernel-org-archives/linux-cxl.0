@@ -1,157 +1,138 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A4332188
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 19:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439FD32186;
+	Tue, 10 Oct 2023 20:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m1D54o1C"
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12FEC8E
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 12:46:56 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231010194652usoutp01ffc569c0b85556c65795bc457b42df6c~M1rBqGQOy0461504615usoutp015
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 19:46:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231010194652usoutp01ffc569c0b85556c65795bc457b42df6c~M1rBqGQOy0461504615usoutp015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1696967212;
-	bh=DKulgDOhqDGb2LvRUqQ4oXC0DPFqc7debbS8avsAYFE=;
-	h=From:To:Subject:Date:References:From;
-	b=m1D54o1CjHXJJc/2eceOpzBNU5Zo5QH8j8u1HQWULAsuKPvXZDNrY9vVEX/Xd8M1I
-	 ksCUG5ILfZLXBedwXVLStTfhhV8ADnVcROL6gLFGwcWZLUDnJcUMVFrh2FWTSArXGv
-	 5q14dLSnN+f84Rl8cICwdxd+UnZzx8G0aKoXwQJg=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231010194652uscas1p106d23afab737b076da6eb7ae43578e58~M1rBjnQV81430314303uscas1p1K
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 19:46:52 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id BF.00.62237.C2AA5256; Tue,
-	10 Oct 2023 15:46:52 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa~M1rBUbGkI2995229952uscas1p1R
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 19:46:52 +0000 (GMT)
-X-AuditID: cbfec370-b17ff7000001f31d-ee-6525aa2c0bf7
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.146]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 14.79.31410.C2AA5256; Tue,
-	10 Oct 2023 15:46:52 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Tue, 10 Oct 2023 12:46:51 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-	10 Oct 2023 12:46:51 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: [PATCH] cxl/region: Refactor logic around check_last_peer()
-Thread-Topic: [PATCH] cxl/region: Refactor logic around check_last_peer()
-Thread-Index: AQHZ+7KD8XRbpEWITUunMxlNnk7zRw==
-Date: Tue, 10 Oct 2023 19:46:51 +0000
-Message-ID: <169696721124.1190606.18028412676865061799.stgit@bgt-140510-bm03.eng.stellus.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EFAABC49F0DF6743AFFCCF69703C18AA@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZABM6UWl"
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2081.outbound.protection.outlook.com [40.107.94.81])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58373CF;
+	Tue, 10 Oct 2023 13:03:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IKS5wB2Zhj9jF1WH87KikVNOeChHdVfe5+6ru9lDqhzm2uznJGLkWoaU8vynBrUhT5H2PKHN1mot67WF3bPsyEsTdQ/smoe2se+tTio9DVjwrPpgIl8FGHQFjydvX5l6+75yOlhjWP8g0gxKTb3iYxAO5i0ymk92Jd9XF67+wXB9nVQFFLrRG/LUYOsqPqAkolAdw/y1OIGSFxL0y/pmuCq++OrGidwyPOY30mnWX1zq6j32I9T83QMwcRk5RUjbQ/gHgN9USZr5LvxFP4q6WUOSAMs+ewG33iuAWlXwImU7syHR0/p6p8D9EAi4kjpxmJDhb8/pBzzikF5ZfeJ0zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OH3CYiLVgCawzg1RpXy5QE1S+kncjemUHZcThcYFOjI=;
+ b=C8kPCx7W5Q4nINnUo8fBBMhU0z6KxSolkD3r6bXoEK2mMK4/sdnOa6QVrj519JyOwPT6SnYla0MN/zVxqxakdv4dW8Nj0oTOoFezZn1bpdz2zVv4KcHtwVyZCUqG+bVPPGhqCdHUZbfYnpFCSfWIqHPoMtKxg5AIAyvN5wWKlf15Fyl2/LWbsIfFeTi81o22P/zcmWbfPhuMAML56o5PX7YQdbBLYAG1vmzbplSkJXIBsxcvUQYMnpEGDRE0uL/4OqHgjjfgBh65XvEG0hvKCTud1D/obsctfv7lyxu0+SU+mdfmPAw6shOrgUY3Mm8nby/qsviaBU0pRMSEYVUCcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OH3CYiLVgCawzg1RpXy5QE1S+kncjemUHZcThcYFOjI=;
+ b=ZABM6UWlboyx0l8Q3DHjK5P0mLstCNQ+FT+JLh3dmT7LQoWK3IMzpaV65eQsMtigAfF/2hmZksXPDOreMbfD8Iw0aq50ABLnuuk0KG5L5yo7NL5WXY6PoOa0FWrT4ZZfnNY9T+au+ntj3CrTvmApfMJB4P4CkOf/m5uUK++lzRM=
+Received: from CH2PR19CA0004.namprd19.prod.outlook.com (2603:10b6:610:4d::14)
+ by CH3PR12MB8546.namprd12.prod.outlook.com (2603:10b6:610:15f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Tue, 10 Oct
+ 2023 20:03:04 +0000
+Received: from DS2PEPF00003439.namprd02.prod.outlook.com
+ (2603:10b6:610:4d:cafe::2c) by CH2PR19CA0004.outlook.office365.com
+ (2603:10b6:610:4d::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.27 via Frontend
+ Transport; Tue, 10 Oct 2023 20:03:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003439.mail.protection.outlook.com (10.167.18.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6838.14 via Frontend Transport; Tue, 10 Oct 2023 20:03:02 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 10 Oct 2023 15:03:01 -0500
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <rafael@kernel.org>, <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC: <benjamin.cheatham@amd.com>, <yazen.ghannam@amd.com>
+Subject: [PATCH v6 0/5] CXL, ACPI, APEI, EINJ: Update EINJ for CXL error types
+Date: Tue, 10 Oct 2023 15:02:49 -0500
+Message-ID: <20231010200254.764273-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKIsWRmVeSWpSXmKPExsWy7djX87o6q1RTDXouqVmcn3WKxYHR4/Mm
-	uQDGKC6blNSczLLUIn27BK6MOwsnMBackqvYMvUVYwPjE9kuRg4OCQETieZjUl2MXBxCAisZ
-	JQ5u3MoE4Sxlkmjdv5Sxi5ETrOjInLNsEIm1jBJvvl1lgXA+MUocezKLBaRKSGAZo0TLIwkQ
-	m01AU+LXlTVMILaIgLXEhIYlbCC2sICLxMX9O1gh4p4S/3+cgKrRk/jf+xNsG4uAqsSHQyuY
-	QWxegRiJuzu2gMUZBcQkvp+CmMksIC5x68l8JojrBCUWzd7DDGGLSfzb9ZANwlaUuP/9JTvI
-	m8xA96zfpQ/RaiexcPldFghbUWJK90N2iFWCEidnPmGBaJWUOLjiBtiPEgIv2SW2/t4MDQkX
-	iU3XH7JC2NIS09dchmrIlli5voMJEqQFEg1HgiDC1hIL/6yHOplP4u+vR4wQJbwSHW1CExiV
-	ZiF5ZhbCobOQHDoLyaGzkBy6gJF1FaN4aXFxbnpqsXFearlecWJucWleul5yfu4mRmDKOP3v
-	cMEOxlu3PuodYmTiYDzEKMHBrCTC+yhTJVWINyWxsiq1KD++qDQntfgQozQHi5I4r6HtyWQh
-	gfTEktTs1NSC1CKYLBMHp1QDU1WL7vqIIuamg54rIi++5kzfZGucrLru+MTSRw+OprE52aqf
-	/nPi0cOLV4w2Td61eun5tqymdRW3qy6EzghQXiKhKbv15Mqve+3vxznbPbtQrL9lRrUPr/TK
-	82FT7BS3hFzZ0crA+yes7umKb5skZ/alJ/LyvUqsyF277qvhDt61P9+LL+XUM62/vPTN5Sb3
-	rxs4f5xfqh3zoeJtftCWb4x3De8+1ki/OnvW5qZ9niyTyjbu/9vpcjV7ydmSNsVNnaf8PqvX
-	CKhcufDz/Bm9I5v/yGg6WpYINE5juPa2wnbRfJ/K8F+HLhnfnKrUuuTFQgaWssXvBRpqTql7
-	rKiSbdgSF1lgJDQrx+dhnsudi0JKLMUZiYZazEXFiQCFhi+PiAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWS2cA0SVdnlWqqwaebIhbnZ51icWD0+LxJ
-	LoAxissmJTUnsyy1SN8ugSvjzsIJjAWn5Cq2TH3F2MD4RLaLkZNDQsBE4sics2xdjFwcQgKr
-	GSWW7nrLCuF8YpT4dXEHK0iVkMAyRommJVogNpuApsSvK2uYQGwRAWuJCQ1L2EBsYQEXiYv7
-	IepFBDwl/v84AVWjJ/G/9ycjiM0ioCrx4dAKZhCbVyBG4u6OLWBxRgExie+nIGYyC4hL3Hoy
-	nwniOgGJJXvOM0PYohIvH/9jhbAVJe5/f8nexcgBVK8psX6XPkSrncTC5XdZIGxFiSndD9kh
-	VglKnJz5hAWiVVLi4IobLBMYRWch2TYLYdIsJJNmIZk0C8mkBYysqxjFS4uLc9Mrio3zUsv1
-	ihNzi0vz0vWS83M3MQJj5fS/wzE7GO/d+qh3iJGJg/EQowQHs5II76NMlVQh3pTEyqrUovz4
-	otKc1OJDjNIcLErivDumXEwREkhPLEnNTk0tSC2CyTJxcEo1MDmfOe1XMdfITKL81WYG14vc
-	F2NYWhtsri04/sRa/rS8/ZlPb25fyT+yqIKh5HrItxT+zk7uHWWX5/su9GjI4BUqe6al3GK1
-	LJKD2zDyd1SaaDfbjb0i995O1ovPDpvraGQdzXDxQV2ctoyxefKRC7llFS9++by8/u/wbMEH
-	G6/tiTc/U3nfMbtvwrylt8Rr51RpVilUCLB2zlit+tuJXeLcvwPcV1hc2ISOnO3YO+HXX8ce
-	dZ9nDx79W3jA2Jf93+MUreDZbEbcm0LyJzJuus3y5vgV/ZsJJo3BRtOkfzxe5PpNtvrr9BWz
-	2G2qwpelTb5zc3r7nHlBVdmx8SUVdb1mIc+Y7lzS+vBYdaHoPSWW4oxEQy3mouJEAOLFM90E
-	AwAA
-X-CMS-MailID: 20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa
-References: <CGME20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa@uscas1p1.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003439:EE_|CH3PR12MB8546:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3dc0c75-c963-4961-6328-08dbc9cbe92b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	iL+W7M5oyYMw2Mag55OYpBMhhOorxUgrgy4Z5Ju1rJ6KpYNymFooRcPxkKcYio46kk34tS67DLI2ckML7skl1c+tbFBNhowQX/Hdai4qogvJGXYEwTpuaPkWX/3JC0b9Q51/vwT2D6Nwt9GNtziSRPKmsp+WkJWagjp7t4R3sHQiX7xZhMgbswaKEY28nDW2gorK+caHkJ395Rx9PKwWHsvPMSFaWNzoz2NPcxc/ZzaB/FOaq9ucOjWEDGqN0JR/mTXSv5wSxFMjhku4r484c76Bq3xlVuTNBW7WDes7CPSNNNH1M24XHm0CWjLY2n2+XZGQN/HS5RXMv5BxJ95rfUyb6QKrTs9f1gUc3A6rb6uROB3gEcWTjtCcYF/mNCk7y8K0RP1onev2tNUv+wu5tIJ7vi8G+JQ6rvPh0Ao7APzc4X1fou3TxoyUBOlGTABD45rncN2ZjO3dV+V0Uip/+K7r0YiAZeGx9UKIFAgM9fHuEhwFsY9QAqTAkpZB0ORQfV/UIUNaKi7sm9Sm4w/s+t/2XC7D6/CPqE5zduMk5WPcOaFafcBpehqFyAoKZuov1u//nzWpG9bn03LVVza0jOHIpy6arLI3W15K5Txr3TK/j/S//j6oQhLaCb180Cf6qNIHpnjj5r6eGIYYr/rk+NtGkKB7F2MXq83nzpmpopZ9SMAwIvQMoXv9DrblnJevP46kZqua9GIZifSAzewHMkwI57lIf5/FoJGWureDFXXiovGmelVVfB5+IV05IWOh3mu2X/uBNazVEf28D3Jncg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(39860400002)(396003)(136003)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(82310400011)(46966006)(36840700001)(40470700004)(2616005)(478600001)(26005)(1076003)(16526019)(40480700001)(316002)(70586007)(70206006)(110136005)(7696005)(54906003)(5660300002)(83380400001)(4326008)(336012)(41300700001)(426003)(8936002)(8676002)(6666004)(36756003)(86362001)(15650500001)(47076005)(2906002)(36860700001)(40460700003)(82740400003)(81166007)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 20:03:02.9598
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3dc0c75-c963-4961-6328-08dbc9cbe92b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003439.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8546
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-J2Rpc3RhbmNlJyBpcyBlcXVpdmFsZW50IHRvIHRoZSBpbnRlcmxlYXZlX3dheXMgb2YgdGhlIHN3
-aXRjaCBkZWNvZGVyCm9mIHRoZSBwb3J0IHdlIGFyZSBzZXR0aW5nIHVwIGluIGN4bF9wb3J0X3Nl
-dHVwX3RhcmdldHMoKS4KCldlIGNhbiBhbHNvIGVsaW1pbmF0ZSB0aGUgc3BlY2lhbCBjYXNlIGZv
-ciBwYXNzdGhyb3VnaCBkZWNvZGVycyAoaS5lLgppbnRlcmxlYXZlX3dheXMgPT0gMSkgLSBjaGVj
-a19sYXN0X3BlZXIoKSB3aWxsIGp1c3QgY29tcGFyZSB0aGlzCmVuZHBvaW50J3MgZHBvcnQgd2l0
-aCB0aGUgZHBvcnQgb2YgdGhlIGltbWVkaWF0ZWx5IHByZWNlZGluZyBlbmRwb2ludApiYXNlZCBv
-biBwb3NpdGlvbi4KClNpZ25lZC1vZmYtYnk6IEppbSBIYXJyaXMgPGppbS5oYXJyaXNAc2Ftc3Vu
-Zy5jb20+Ci0tLQogZHJpdmVycy9jeGwvY29yZS9yZWdpb24uYyB8ICAgMjUgKysrKysrKysrKyst
-LS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDE0IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMgYi9kcml2ZXJz
-L2N4bC9jb3JlL3JlZ2lvbi5jCmluZGV4IDZkNjNiODc5OGMyOS4uMGRjMWM3ODc3MmYxIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jCisrKyBiL2RyaXZlcnMvY3hsL2NvcmUv
-cmVnaW9uLmMKQEAgLTEwNDMsMTAgKzEwNDMsMTAgQEAgc3RhdGljIHZvaWQgY3hsX3BvcnRfZGV0
-YWNoX3JlZ2lvbihzdHJ1Y3QgY3hsX3BvcnQgKnBvcnQsCiB9CiAKIHN0YXRpYyBpbnQgY2hlY2tf
-bGFzdF9wZWVyKHN0cnVjdCBjeGxfZW5kcG9pbnRfZGVjb2RlciAqY3hsZWQsCi0JCQkgICBzdHJ1
-Y3QgY3hsX2VwICplcCwgc3RydWN0IGN4bF9yZWdpb25fcmVmICpjeGxfcnIsCi0JCQkgICBpbnQg
-ZGlzdGFuY2UpCisJCQkgICBzdHJ1Y3QgY3hsX2VwICplcCwgc3RydWN0IGN4bF9yZWdpb25fcmVm
-ICpjeGxfcnIpCiB7CiAJc3RydWN0IGN4bF9tZW1kZXYgKmN4bG1kID0gY3hsZWRfdG9fbWVtZGV2
-KGN4bGVkKTsKKwlpbnQgc3dpdGNoX2l3ID0gY3hsX3JyLT5kZWNvZGVyLT5pbnRlcmxlYXZlX3dh
-eXM7CiAJc3RydWN0IGN4bF9yZWdpb24gKmN4bHIgPSBjeGxfcnItPnJlZ2lvbjsKIAlzdHJ1Y3Qg
-Y3hsX3JlZ2lvbl9wYXJhbXMgKnAgPSAmY3hsci0+cGFyYW1zOwogCXN0cnVjdCBjeGxfZW5kcG9p
-bnRfZGVjb2RlciAqY3hsZWRfcGVlcjsKQEAgLTEwNTcsMTYgKzEwNTcsMTYgQEAgc3RhdGljIGlu
-dCBjaGVja19sYXN0X3BlZXIoc3RydWN0IGN4bF9lbmRwb2ludF9kZWNvZGVyICpjeGxlZCwKIAog
-CS8qCiAJICogSWYgdGhpcyBwb3NpdGlvbiB3YW50cyB0byBzaGFyZSBhIGRwb3J0IHdpdGggdGhl
-IGxhc3QgZW5kcG9pbnQgbWFwcGVkCi0JICogdGhlbiB0aGF0IGVuZHBvaW50LCBhdCBpbmRleCAn
-cG9zaXRpb24gLSBkaXN0YW5jZScsIG11c3QgYWxzbyBiZQorCSAqIHRoZW4gdGhhdCBlbmRwb2lu
-dCwgYXQgaW5kZXggJ3Bvc2l0aW9uIC0gc3dpdGNoX2l3JywgbXVzdCBhbHNvIGJlCiAJICogbWFw
-cGVkIGJ5IHRoaXMgZHBvcnQuCiAJICovCi0JaWYgKHBvcyA8IGRpc3RhbmNlKSB7CisJaWYgKHBv
-cyA8IHN3aXRjaF9pdykgewogCQlkZXZfZGJnKCZjeGxyLT5kZXYsICIlczolczogY2Fubm90IGhv
-c3QgJXM6JXMgYXQgJWRcbiIsCiAJCQlkZXZfbmFtZShwb3J0LT51cG9ydF9kZXYpLCBkZXZfbmFt
-ZSgmcG9ydC0+ZGV2KSwKIAkJCWRldl9uYW1lKCZjeGxtZC0+ZGV2KSwgZGV2X25hbWUoJmN4bGVk
-LT5jeGxkLmRldiksIHBvcyk7CiAJCXJldHVybiAtRU5YSU87CiAJfQotCWN4bGVkX3BlZXIgPSBw
-LT50YXJnZXRzW3BvcyAtIGRpc3RhbmNlXTsKKwljeGxlZF9wZWVyID0gcC0+dGFyZ2V0c1twb3Mg
-LSBzd2l0Y2hfaXddOwogCWN4bG1kX3BlZXIgPSBjeGxlZF90b19tZW1kZXYoY3hsZWRfcGVlcik7
-CiAJZXBfcGVlciA9IGN4bF9lcF9sb2FkKHBvcnQsIGN4bG1kX3BlZXIpOwogCWlmIChlcC0+ZHBv
-cnQgIT0gZXBfcGVlci0+ZHBvcnQpIHsKQEAgLTExMTEsMjAgKzExMTEsMTcgQEAgc3RhdGljIGlu
-dCBjeGxfcG9ydF9zZXR1cF90YXJnZXRzKHN0cnVjdCBjeGxfcG9ydCAqcG9ydCwKIAogCWN4bHNk
-ID0gdG9fY3hsX3N3aXRjaF9kZWNvZGVyKCZjeGxkLT5kZXYpOwogCWlmIChjeGxfcnItPm5yX3Rh
-cmdldHNfc2V0KSB7Ci0JCWludCBpLCBkaXN0YW5jZTsKKwkJaW50IGk7CiAKIAkJLyoKLQkJICog
-UGFzc3Rocm91Z2ggZGVjb2RlcnMgaW1wb3NlIG5vIGRpc3RhbmNlIHJlcXVpcmVtZW50cyBiZXR3
-ZWVuCi0JCSAqIHBlZXJzCisJCSAqIENoZWNrIGlmIHRoaXMgZW5kcG9pbnQncyBkcG9ydCBpcyBh
-bHJlYWR5IGluIHRoZQorCQkgKiBzd2l0Y2ggZGVjb2RlcidzIHRhcmdldCBsaXN0LCBhbmQgaWYg
-c28gY2hlY2sgdGhhdAorCQkgKiBpdCBpcyBwb3NpdGlvbmVkIGNvcnJlY3RseSBiYXNlZCBvbiB0
-aGUgc3dpdGNoJ3MKKwkJICogaW50ZXJsZWF2ZS4KIAkJICovCi0JCWlmIChjeGxfcnItPm5yX3Rh
-cmdldHMgPT0gMSkKLQkJCWRpc3RhbmNlID0gMDsKLQkJZWxzZQotCQkJZGlzdGFuY2UgPSBwLT5u
-cl90YXJnZXRzIC8gY3hsX3JyLT5ucl90YXJnZXRzOwogCQlmb3IgKGkgPSAwOyBpIDwgY3hsX3Jy
-LT5ucl90YXJnZXRzX3NldDsgaSsrKQogCQkJaWYgKGVwLT5kcG9ydCA9PSBjeGxzZC0+dGFyZ2V0
-W2ldKSB7Ci0JCQkJcmMgPSBjaGVja19sYXN0X3BlZXIoY3hsZWQsIGVwLCBjeGxfcnIsCi0JCQkJ
-CQkgICAgIGRpc3RhbmNlKTsKKwkJCQlyYyA9IGNoZWNrX2xhc3RfcGVlcihjeGxlZCwgZXAsIGN4
-bF9ycik7CiAJCQkJaWYgKHJjKQogCQkJCQlyZXR1cm4gcmM7CiAJCQkJZ290byBvdXRfdGFyZ2V0
-X3NldDsKCg==
+v6 Changes:
+	- Reworked to have CXL error types under /sys/kernel/debug/cxl (Dan)
+		- Removed CXL error types from legacy EINJ interface in favor of
+		new interface
+	- Removed cxl_rcrb_addr file
+	- Added optional patch for CXL error type #defines (patch 2/5)
+	- Changes to documentation updates to match rework
+	- Change base to cxl-fixes branch
+
+The new CXL error types will use the Memory Address field in the
+SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+compliant memory-mapped downstream port. The value of the memory address
+will be in the port's MMIO range, and it will not represent physical
+(normal or persistent) memory.
+
+Add the functionality for injecting CXL 1.1 errors to the EINJ module,
+but not through the EINJ legacy interface under /sys/kernel/debug/apei/einj.
+Instead, make the error types available under /sys/kernel/debug/cxl.
+This allows for validating the MMIO address for a CXL 1.1 error type
+while also not making the user responsible for finding it.
+
+Ben Cheatham (5):
+  cxl/port: Add EINJ debugfs files and callback support
+  ACPI: Add CXL protocol error defines
+  EINJ: Separate CXL errors from other EINJ errors
+  cxl/port, EINJ: Add CXL EINJ callback functions
+  EINJ: Update EINJ documentation
+
+ Documentation/ABI/testing/debugfs-cxl         |  27 ++++
+ .../firmware-guide/acpi/apei/einj.rst         |  12 ++
+ drivers/acpi/apei/Kconfig                     |   3 +
+ drivers/acpi/apei/einj.c                      | 149 ++++++++++++++++--
+ drivers/cxl/core/port.c                       |  84 ++++++++++
+ drivers/cxl/cxl.h                             |  10 ++
+ include/acpi/actbl1.h                         |   6 +
+ 7 files changed, 281 insertions(+), 10 deletions(-)
+
+base-commit: c66650d29764e228eba40b7a59fdb70fa6567daa
+-- 
+2.34.1
+
