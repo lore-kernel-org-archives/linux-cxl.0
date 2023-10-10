@@ -1,171 +1,223 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB49156E3
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0EC1F170
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 12:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NNUuKSmx"
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497FDB0
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 01:23:27 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231010082322epoutp03cc816e67a6ab28e380f427f8b249b5de~MsWQHufP21942719427epoutp03q
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 08:23:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231010082322epoutp03cc816e67a6ab28e380f427f8b249b5de~MsWQHufP21942719427epoutp03q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1696926202;
-	bh=GpZy6Q+tXeZU5uccB0dIFaz7/p+CFzhMH/eTY6zV/SY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NNUuKSmxwRRBuvLAoViacekqjQj9Nq+9ekGljdjLSO4LF7fbnwMXEvV6QhpiniWqa
-	 adHo8nVciB5/s61K34oxHMb0SfXa+PBYzCofW8QewVzoaq6sd+F3ok81/UZgolNDB6
-	 cLkNoXtE95bd6YTpRJ10dy6f8XMrSXtpRU7DO8gU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-	20231010082322epcas2p15e5de4639d4c453edf9e0523049a08b3~MsWPdkCSl3103731037epcas2p1c;
-	Tue, 10 Oct 2023 08:23:22 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.68]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4S4TS95TwXz4x9Q0; Tue, 10 Oct
-	2023 08:23:21 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9C.FA.09693.9F905256; Tue, 10 Oct 2023 17:23:21 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231010082321epcas2p13641bd794b1c26d2137bb51093fd49f7~MsWOsYoiJ1887818878epcas2p1K;
-	Tue, 10 Oct 2023 08:23:21 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231010082321epsmtrp279925121211d7579921935bbd7e39f5c~MsWOrR01p2242122421epsmtrp2Y;
-	Tue, 10 Oct 2023 08:23:21 +0000 (GMT)
-X-AuditID: b6c32a45-84fff700000025dd-97-652509f99038
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	28.CE.08649.9F905256; Tue, 10 Oct 2023 17:23:21 +0900 (KST)
-Received: from jtpark-7920.dsn.sec.samsung.com (unknown [10.229.83.56]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231010082320epsmtip2cb008db60fb2feb5e219fa0cc4f670c6~MsWOb2Mo_0722107221epsmtip2D;
-	Tue, 10 Oct 2023 08:23:20 +0000 (GMT)
-From: Jeongtae Park <jtp.park@samsung.com>
-To: Dan Williams <dan.j.williams@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ben
-	Widawsky <bwidawsk@kernel.org>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Davidlohr
-	Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>,
-	linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Kyungsan Kim <ks0204.kim@samsung.com>, Wonjae
-	Lee <wj28.lee@samsung.com>, Hojin Nam <hj96.nam@samsung.com>, Junhyeok Im
-	<junhyeok.im@samsung.com>, Jehoon Park <jehoon.park@samsung.com>, Jeongtae
-	Park <jeongtae.park@gmail.com>, Jeongtae Park <jtp.park@samsung.com>
-Subject: [PATCH v3 2/6] cxl/region: Fix a checkpatch warning
-Date: Tue, 10 Oct 2023 17:26:04 +0900
-Message-Id: <20231010082608.859137-3-jtp.park@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231010082608.859137-1-jtp.park@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0l0f6o0W"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8CAB4;
+	Tue, 10 Oct 2023 05:53:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fWOiiDDp6Ha+YttfnflYBO20krMzHolBKZOHLgUmXxyDRvCep5Ek6nQhPuZ9UMaHx+dyVdq+uYAx54WHkAXFwZmjFf26OpgGTXTO+b7abLRt28TiIqKJVqc5Kej+cyPAJBwJHu1oZreNfMrakwWFSfvz/bgcpV6TtZmEfs8rjaB3LiwBiPh6yhDY/IAiJNtmbr627AFcW/zibViQfWQJhqaIyQuMA7IbA1PnCRIyAkhUBhjtafU3S7jyBtu/uY5iR4AdHg6hGlgP/Y3VE3a90Zi/C8YwXie39wJDLo7CqqVRUvZK2UT43qgYb8+kV4/C4/DlaZjnTb/aGZ5UCS/BHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=feQBOLwSu+tjrOw9JyUuvSfWWF55ZRNCgjceaK/xEHs=;
+ b=Ox7T/GgB23YTe9aMzGv9S9IMArkP+zEPlMW5j7RPaysE/L9HcKhoFhdDlW4Cjs8FP6BWZLHdywkSM1ZBDKXmTvoyZOdWQkZIZWZn0AShWzuPkJ83gN+jg6UREJZL1RY6AZz5W00Nj8d5gCJYwvOlARWZ3IFu92f/2YwF+GtaVOLN8xGI7ELoe9f38oV7D3sKi8if2Fr1nD7mKFCwYp9o3NfUvXeVsF8YmmXTMSgu+Eykmf3R3bZp3BjAFii96nUkv9+FqQUXbhoB6qsOuUFuZvP3JxPsUA0/2poECsJRDj8jdUE99p0285JuRBPdosnnZklKp/dUDce8FV1T3jK3ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=feQBOLwSu+tjrOw9JyUuvSfWWF55ZRNCgjceaK/xEHs=;
+ b=0l0f6o0Wko1U7FJ8FcJu63WpR0ZH3wyu6UGEbhosWfyY5JyViAX2YuYvB0ISruQnZ6yOQMy9td2bnhAaVs/UD8UmlInHZmxJbdXCpygox+giNEuJEC6/ll4LPLv5rL0BcXA+IcQpU8sY1jx826JGxR3zPl/j9U+AFCol4fkZ5fs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DM4PR12MB5389.namprd12.prod.outlook.com (2603:10b6:5:39e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Tue, 10 Oct
+ 2023 12:53:31 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::16da:8b28:d454:ad5a]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::16da:8b28:d454:ad5a%3]) with mapi id 15.20.6863.032; Tue, 10 Oct 2023
+ 12:53:31 +0000
+Message-ID: <2a21b730-9ad4-4585-b636-9aa139266f94@amd.com>
+Date: Tue, 10 Oct 2023 23:53:16 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/12] PCI device authentication
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Alex Williamson <alex.williamson@redhat.com>, linux-pci@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-coco@lists.linux.dev,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+ linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+ Zhi Wang <zhi.a.wang@intel.com>, Alistair Francis
+ <alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+ <20231007100433.GA7596@wunner.de> <20231009123335.00006d3d@Huawei.com>
+ <20231009134950.GA7097@wunner.de>
+ <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+ <20231010081913.GA24050@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <20231010081913.GA24050@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0176.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c4::12) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xbVRze6b29vTxKrh26Q8mwXsUGFkpbeVwmbE7GcpW5IP5h3B/iDdwA
-	o7RNb8FXokUemWTykCDQCYww3OyAhYqkTAjvyQQyGJMIrpsFBo4KQTuYKGO2vaj77/f9zvfl
-	y/edc3BEMoVJ8WytkTVoGQ2J+aJdQ2ExEVs+oayytfp5yr4wiVGFVc2AqqmeBNTobAFGXZpt
-	BdQnl+xCqrD5Mkat/7aDUv1Ok4gan7gnpCxNMxg13PajgGoeqUWokR6cum7+AaWmr3yJUXMV
-	VwVUx5017CUJ3W22i+ii4VUh3dxzT0BbLZ9idF99q4gu67QAuvrsx7TLGpKCn8yJz2KZDNYg
-	Y7XpuoxsbWYCmfxGWmJadIxSFaGKo2JJmZbJZRPIo8dTIo5la9xRSFk+o8lzr1IYjiMjD8Ub
-	dHlGVpal44wJJKvP0Ohj9QqOyeXytJkKLWs8qFIq1dFu4js5WXPmPH27/3s3uvxMwOpbCnAc
-	ElHw0WRQKfDFJYQNQNPfjSgP/gCw8Kc1IQ82AXxUuSMqBT5exfm7jRh/0AvgXxcviniwDWB5
-	zefAw8KIcFhTZ/LKAwmHAHavlAk8ACHmBfD30RXEw9pLxMO6chvqmVEiFC42NHs9xMRBuGUf
-	EvJ+T8O+gQkv34d4EToaVzGe8wS8Vrfo1SJuTuG3ZxGPASTGcTiy1IXy4qOwf6kI4ee9cOX7
-	zt0QUuha68V4QSGAzuWbKA+KAGz/2bbLegGuzS4LPUUhRBi8fCWS7+xZODy3axwATw89FPFr
-	MTxdIuGFJGxoadi1hfBGfefuTMO5+56GPHWVAbjx0CqoADLzY3nMj+Ux/298DiAW8BSr53Iz
-	WU6tV/13xem6XCvwvu3wJBuoWl1XDAIBDgYBxBEyUDyf/RwrEWcw73/AGnRphjwNyw2CaHfb
-	lYj0yXSd+3NojWmqqDhlVEyMKlYdrYwl94lvF9dnSIhMxsjmsKyeNfyrE+A+UpMg7pXUBHO8
-	0KZ/sBmmUFfJt05saVrLT8pPfLd5fabtdneIXT4jLy+umKedb2/4p8s/g/vnDQt7hvYMtCDU
-	Pp+42ogE5PUev8OOL64dmBVYh0ZTHcOBllBbcof0Ankg6N0cBRNET7g2+jvHZP5S5i2LvGGh
-	uPZmcOKDXtOZAbPwF+f+0I4l+4d+ju1bakl+OZfZQjTNXJ0wN53/Jql9GB//1WkMW07sW791
-	5lzJa2l1qSniu4v+qUeansmNpqZr3wzYms7vNB55+dT9ZIdrTHR4Z92JVKpDAi4E//lV5Kt3
-	8o9tk/OuQMWpguC2kqDE40lLyfkfoQXo1NTgoTCmauxrEuWyGFU4YuCYfwB+4Z+DZAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXvcnp2qqwdo2Dou7jy+wWTRPXsxo
-	MX3qBUaLEzcb2SxW31zDaNG0+i6rRfPi9WwWH978Y7E48LqB3eLM2ZesFqsWXmOzOLL2KpPF
-	4qMzmC2O7uGwOD/rFIvF5V1z2CxuTTjGZLHx/js2ByGPnbPusnu0HHnL6rF4z0smj02rOtk8
-	9s9dw+7Rt2UVo8fU2fUenzfJBXBEcdmkpOZklqUW6dslcGXcmlVasI6n4tI27gbGTVxdjJwc
-	EgImEkuezmcDsYUEdjNKvJ1sCxGXkFi+4QUThC0scb/lCGsXIxdQzS9Gicebr7CCJNgEtCSm
-	z2wAS4gIPGeSOPnmFCOIwyzwikmi9/91ZpAqYQEbiZn9O1hAbBYBVYkn8xazg9i8AlYSP+8e
-	ZoVYIS+x/+BZsHpOAWuJh/PfQp1kJbHtYDsbRL2gxMmZT8DmMAPVN2+dzTyBUWAWktQsJKkF
-	jEyrGCVTC4pz03OTDQsM81LL9YoTc4tL89L1kvNzNzGCo0tLYwfjvfn/9A4xMnEwHmKU4GBW
-	EuF9lKmSKsSbklhZlVqUH19UmpNafIhRmoNFSZzXcMbsFCGB9MSS1OzU1ILUIpgsEwenVAMT
-	+/rJP2T2Ptqsc/B9mNYTobU/T4cbvlFbN5PH3Kacsd1U9ffet5zz11plXxbstRaefrW3fOoX
-	hkD7pNiNNos/ZrI3/lIN1vlUXxT+38zsnJNo0t/kZoePnmYH6i/LaYQv771598PDzOnRyfPt
-	f8i0aR8Mu3jhs5zozRl8LxViFpxX+2uYzvr+n1uvS9xrwQMNX48/fP1d1L1FJrA7+Wtp9pkP
-	grlmmy0O171N3rmW8Xrrq1ufSiIq2KfcSl8gnjt5pnpHTKya+sIUV/M7uY9Y69/dEs2+evza
-	JJkrh28UXnz15dmBX/GSp5zWSh44n1VZ9mi9f8vsiG8b4yJi606f5N/Xs3xi7tvvcefbUvp2
-	KrEUZyQaajEXFScCAMZvt8QdAwAA
-X-CMS-MailID: 20231010082321epcas2p13641bd794b1c26d2137bb51093fd49f7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231010082321epcas2p13641bd794b1c26d2137bb51093fd49f7
-References: <20231010082608.859137-1-jtp.park@samsung.com>
-	<CGME20231010082321epcas2p13641bd794b1c26d2137bb51093fd49f7@epcas2p1.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM4PR12MB5389:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8f27cbf-815c-4f94-3790-08dbc98fe7da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	G946Cg5LwMHJbtVSq922vA1lLi74SL0eMxvcOJ88g3k1WsdYOc++PoN39x6Me/7u33DDQv5P6P8QjNrti8kEz9ubPUVCa8174s/J+wrWBz9wE2PUcspNdNx4oj8np19bCyvzMEDYAIjN2Ffd5sAR0tVvMksjFemmb/L1vm+Xxtljy+Y59BE0Ed3gc9tN0kFdV4WxUlXKjYCtltZ7rXWln+hhysyDHS/b00PEAhVJQVIBhsMn82WtgviOLFITLW/qmvp+UpkgPSUZFd2dgt0JedplRi+SRf5XFOfVI2XF4OcdBs2saSZDptv5zur9byHwuQ2RyhGR6magH0uTSER2xoeCNklUNwY7/yd/XIRsACa8E0YRz9QC6bx4pRnKg4KaA+8PKad6gBBTFYLv26frnS4rymQR3tm7cXOv28F/ovdBFKoimycPJn0RZkUKUUrhyRTV7fySVNpklCW9ME6SS/YwpErgIK5KMnrofPHsqRxw8N1NWUxg1lU2qJFNDBlWiXu17r3z8jhny/evMmlvcZQHMNRHjZtbAn0kCbKJ47TMJTzOcrwbUeUno8J2KWVfpy1SDTyghwcH8tkEURL+N6VS5peGZRbRSzRdWrsItkv1EhiqOXR1DavAENHmbkAJF5GSnfcH5QzCZIMKKAMjPA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(136003)(366004)(39860400002)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(31686004)(53546011)(6512007)(36756003)(31696002)(38100700002)(26005)(2906002)(7416002)(83380400001)(6486002)(6666004)(2616005)(6506007)(478600001)(316002)(4326008)(6916009)(8936002)(8676002)(41300700001)(5660300002)(66556008)(66946007)(54906003)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QVl3ZzRQOUVLckljbyt6T2xiNzZuelB2Vm9nZDhIekg5YkZTeGdYUkZidFBV?=
+ =?utf-8?B?TC9oVXFZOTdIZUttSUhBdnRwb2NOZldRRTV2UWhRcWk5MGNreEJlbGVjOWFm?=
+ =?utf-8?B?UUNKRkNvWERDSDcrMFdIM3NnSkNzaGhQZ3JNMTJESjlCQ01DNllZRmVPVUxX?=
+ =?utf-8?B?YjhsZ3Jib0IwUkw0UmtTSWlTV3ZvNVU1dHVWMWxBUGZMNEFjQ2VRam9jdk1H?=
+ =?utf-8?B?YVlQK1hKU0JJTVMxemNEWUJIcDhEU1g5MTlLUkhmOWtjUzlIa3JyMzg2WDRZ?=
+ =?utf-8?B?SkVsL2p0VEIwbE05STV5UHh6UXVLbENxbVFrWG5pTS91dUl2eGN5Tms1YzVn?=
+ =?utf-8?B?UlQ3ZmZqVnBxSzdzTU1KSDlrd2JpYktkUUNRQWhaQi95dXF2MUN6VXNOQndh?=
+ =?utf-8?B?QTlIZ1RvRjYzNDl6bGpETi94cE0rYjRBdkxubllLcm50L2tlSkJtbndMU09M?=
+ =?utf-8?B?cXJaR0MxU3BzWkQ4czZEM3JYQ2NQdzI5c0FCOWxFQjNlajhzTVlJcjBGSGMy?=
+ =?utf-8?B?Mk1zS0JTaXNsUEFhckMvQlk1djhIbW1rNStBNGdCT1hyTEdRZEQxU245LzhS?=
+ =?utf-8?B?QmZDcklpWlBybEVvb05NODc4bzR2UEM3R3JoZ3NrdU1rT1ZGN25BWEdRODhX?=
+ =?utf-8?B?aDVpbTNQYjYybjIyWm9jdi9vY0VaQUNCSk9sNHhLRjlMZFlYNWZHekNYa3Uz?=
+ =?utf-8?B?VkpRVjVEeVBrL1J1YTZFVk5GTGhoNk1DYmhDN3VZNUhzLzh1NFJVdTUwR2lr?=
+ =?utf-8?B?SzNCeFpveHR6UmRXT3JSYUtlMlA4dDloM0ZOZjRJcDAvbS83VFN3VTJpWVoy?=
+ =?utf-8?B?bzNJUDh0SkF2RS8rM0xjR1dCamdvcFZpVmRUQmdwR3R3WFRCZG0zZmh0RXkv?=
+ =?utf-8?B?c0lMUjh1WnVHZWh0b0hrNFI3U0lweW83dTlpVCtaaVJSYlArSVdkRE4xYzcr?=
+ =?utf-8?B?bG9WbkxjbXFwU2VSVEg0L2ZnT080R2Z3dGdmK1VkM0NEVENkOGFKRnNZNHA5?=
+ =?utf-8?B?bEoweGszQ2ZaYXprcE1GOWRzQ3QzMmlXTEdjVjM3U203WU43bjBVaTRtVHdq?=
+ =?utf-8?B?djlQUUdqY1Zlc0dXVGRwb0JkSUQzS3VhcDg4R1JlNlloTzFrYUlXY1NlbEpx?=
+ =?utf-8?B?YnZTMGR3QUhFaHBCQmx3U2crUG9pZUVHa29zRHVZQVBLdDNHMHR3eW1LSEpX?=
+ =?utf-8?B?aHJxT25QcEtlVytuMTFKUURRVWFhNm5nUy9XclJUMzVLWFIvcDVieUtBajhm?=
+ =?utf-8?B?NUgzVnR0NWZZOXUzdkJjT0VyMmt0R3ZsUStNM1diY29ha01sRGhBMUdVaC9q?=
+ =?utf-8?B?RTRXU3pUb1VZOVBlMFIwYWZjVHlDTm8wRjR5OExrMFZ3SFlhQTZ5dmNWdlE5?=
+ =?utf-8?B?Sk5vR2R1N1Mvd2NwT0ZtNTVsYXNJSVpvaEVMRUlpQ2RJZ29rNVJBNFo2bHV6?=
+ =?utf-8?B?WGszcUhlWk9xaXJTcnY2ditSM1RoSDhhVjYrb1VMVXZ5dlcweWxyTk1GU2Vq?=
+ =?utf-8?B?c3djMUd3dDFwa0RwM0hvWUFpU3ZieGJtNCtoRVlqK2tyMmNpQ1pDVEEwcTJL?=
+ =?utf-8?B?dW9EaEJQOHlWeXV6bmVVeTI0SWhhTmlETy9JVEtjY0srRGJ2VWxrd0dqRnBq?=
+ =?utf-8?B?V2h6Q2doUVFZMG1lZ0xHNjd6Zjd3ZmFtNW12OHJJNkpyS210MDdOK3p5ZFdu?=
+ =?utf-8?B?K3FNMFRsTG9jUzdvYWltODVlVkxSNTZkTkp0UlFLWWxVK3ZsclM0L3JqNFY5?=
+ =?utf-8?B?UGVzWnAvN21NU3hicU0xc3NhNDVldi8yTWg1bktPYzdFbG1GK2U2OXdYdFhy?=
+ =?utf-8?B?YWE3UjljUXhhRVRnblFBK2Q4U2xpWHJRdlUreG50UExhZkR2RUhhOFV6SDNS?=
+ =?utf-8?B?azhmTlF1WTA3eWEwYlVCa3FYTjZOcUt1RnE5RGhUSWpQMDUzemloM04yS1dh?=
+ =?utf-8?B?YmlTc0lDRjdLZ0FldUgrRUZ1YUtRRGM4aDBicE9PTW5pSm41eGk4d21YYlN2?=
+ =?utf-8?B?OUhJbUtWTVEra3h1Z0VGdmJud2NNRklKc0prWUdrY3Fmak52eVgrVUtaTVFi?=
+ =?utf-8?B?TExPQ0dCNEpuVnNyMzNRem81dEN3M0NGZWxoMWJCaGxid2VaaHR3RWxPUWo0?=
+ =?utf-8?Q?VVFLH+6MBev54jtI/mC7EtIv4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8f27cbf-815c-4f94-3790-08dbc98fe7da
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 12:53:31.1923
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rtHXf5Cd4YHKeT0xfncnVvUbN794KB74B3cSCz822Iqxm+GEN7apIMcc2ZFLHnOdsE07O687c2QCFx2GV3sb7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5389
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-WARNING: else is not generally useful after a break or return
 
-Since cpu_cache_invalidate_memregion() already checks for
-support of invalidaton operation, it can be removed.
-This change would make more efficient or small codes
-when 'CONFIG_CXL_REGION_INVALIDATION_TEST' is not set.
+On 10/10/23 19:19, Lukas Wunner wrote:
+> On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
+>> On 10/10/23 00:49, Lukas Wunner wrote:
+>>> PCI Firmware Spec would seem to be appropriate.  However this can't
+>>> be solved by the kernel community.
+>>
+>> How so? It is up to the user to decide whether it is SPDM/CMA in the kernel
+>> or   the firmware + coco, both are quite possible (it is IDE which is not
+>> possible without the firmware on AMD but we are not there yet).
+> 
+> The user can control ownership of CMA-SPDM e.g. through a BIOS knob.
+> And that BIOS knob then influences the outcome of the _OSC negotiation
+> between platform and OS.
+> 
+> 
+>> But the way SPDM is done now is that if the user (as myself) wants to let
+>> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
+>> as CMA is not a (un)loadable module or built-in (with some "blacklist"
+>> parameters), and does not provide a sysfs knob to control its tentacles.
+> 
+> The problem is every single vendor thinks they can come up with
+> their own idea of who owns the SPDM session:
+> 
+> I've looked at the Nvidia driver and they've hacked libspdm into it,
+> so their idea is that the device driver owns the SPDM session.
+ >
+> AMD wants the host to proxy DOE but not own the SPDM session.
+ >
+> We have *standards* for a reason.  So that products are interoperable.
 
-Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
----
- drivers/cxl/core/region.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+There is no "standard PCI ethernet device", somehow we survive ;)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e115ba382e04..0eb7a12badb9 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -127,21 +127,15 @@ static struct cxl_region_ref *cxl_rr_load(struct cxl_port *port,
- 
- static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
- {
--	if (!cpu_cache_has_invalidate_memregion()) {
--		if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)) {
--			dev_warn_once(
--				&cxlr->dev,
--				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
--			return 0;
--		} else {
--			dev_err(&cxlr->dev,
--				"Failed to synchronize CPU cache state\n");
--			return -ENXIO;
--		}
-+	if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)
-+			&& cpu_cache_has_invalidate_memregion()) {
-+		dev_warn_once(
-+			&cxlr->dev,
-+			"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
-+		return 0;
- 	}
- 
--	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
--	return 0;
-+	return cpu_cache_invalidate_memregion(IORES_DESC_CXL);
- }
- 
- static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+> If the kernel tries to accommodate to every vendor's idea of SPDM ownership
+> we'll end up with an unmaintainable mess of quirks, plus sysfs knobs
+> which were once intended as a stopgap but can never be removed because
+> they're userspace ABI.
+
+The host kernel needs to accommodate the idea that it is not trusted, 
+and neither is the BIOS.
+
+> This needs to be solved in the *specification*.
+ >
+> And the existing solution for who owns a particular PCI feature is _OSC.
+> Hence this needs to be taken up with the Firmware Working Group at the
+> PCISIG.
+
+I do like the general idea of specifying things, etc but this place does 
+not sound right. The firmware you are talking about has full access to 
+PCI, the PSP firmware does not have any (besides the IDE keys 
+programming), is there any example of such firmware in the PCI Firmware 
+spec? From the BIOS standpoint, the host OS owns DOE and whatever is 
+sent over it (on AMD SEV TIO). The host OS chooses not to compose these 
+SPDM packets itself (while it could) in order to be able to run guests 
+without having them to trust the host OS.
+
+>> Note, this PSP firmware is not BIOS (which runs on the same core and has
+>> same access to PCI as the host OS), it is a separate platform processor
+>> which only programs IDE keys to the PCI RC (via some some internal bus
+>> mechanism) but does not do anything on the bus itself and relies on the host
+>> OS proxying DOE, and there is no APCI between the core and the psp.
+> 
+> Somewhat tangentially, would it be possible in your architecture
+> that the host or guest asks PSP to program IDE keys into the Root Port?
+
+Sure it is possible to implement. But this does not help our primary use 
+case which is confidential VMs where the host OS is not trusted with the 
+keys.
+
+> Or alternatively, access the key registers directly without PSP involvement?
+
+No afaik, for the reason above.
+
+
+> 
+> Thanks,
+> 
+> Lukas
+
 -- 
-2.34.1
+Alexey
+
 
