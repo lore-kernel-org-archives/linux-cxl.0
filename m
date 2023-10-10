@@ -1,208 +1,259 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9633C45F46
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 22:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF30621
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 01:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="elj931EJ"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587559D
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Oct 2023 15:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696890773; x=1728426773;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=E3Y3zB6fyC2QFJZJfHCpKCpaEZ9SfoiBGsnxTv9hUrQ=;
-  b=elj931EJIhw4Yjc5TPxHxOdzbw3OFMXq8gFOtlXXCmT+kp35Mto70dIA
-   wdFaE1DMHlX6eR9bAW5szt82WRndkmktth8pU61mFEIatNqs8yqgELkS+
-   wJvsDQOl/HaU6hKPXYW7njsnP4BjZQswLVF89oAo5p/VH1uCjr2MpZ7gv
-   tk/sN1zbB6NPcZlOPozTnUIWAUOuadFcVrziiXYoVyEp7NpLIQSapedGO
-   SmqJslyK7yc/hzt9AchNuElyJmcwxqslK5YPD54pJMwqzjYOYVKtXoPpW
-   iMqAfeozRorYZn3XSkeAuD9+QqAc5gAQxcDu130CylFQOHR5FFOE5fQ+5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="470521821"
-X-IronPort-AV: E=Sophos;i="6.03,211,1694761200"; 
-   d="scan'208";a="470521821"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 15:32:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="926898702"
-X-IronPort-AV: E=Sophos;i="6.03,211,1694761200"; 
-   d="scan'208";a="926898702"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Oct 2023 15:32:52 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 9 Oct 2023 15:32:52 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 9 Oct 2023 15:32:51 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 9 Oct 2023 15:32:51 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 9 Oct 2023 15:32:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JVWG8lNOp2BVnmqeFN5CNp+HasDQkj8Xvxb1Ca7kCXjsll+yoZRYNGJSzPGQtnXJV28YbNTB4T1gHcwmLObqwa9fk1jaZwTSvFewD52KQdXkjp6DVXBwZ/pwBLX2osTto3TcpOg+EOVRWblnvM96WSSdTOqw150J/1bvyMQeQzTAdJltqKZHU6WGdSBUSPRqmwmUYVcHR/gM5hiPgHx0d9yoajCHSkFsMe/bAEBVQHhoRTv2RlUDfN5TJTK63qPfLZT1r/aO5NtGb6WUH2Yu3ahSmx5OYXdV/dNlLbqKQDqG2rhgoqo5dt4oyDC/OQT8L4rbwoLFRGUNrPJfcTpG+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B+oduT7OxY+QefmV4On5wvUwrd/RbHYqB9QtK+5BYGE=;
- b=NrcKuxGqo8Gl2YfwATSby3uTA0l0TAXbntLfBjgVCSgFmIBmcZo78fxirFwXwONSKVNwhmmlJNXmvVj73EWD1lkzBFFPfmyqiQ0F0l1QyJIJGUbp1KESJXWVIdxrFOGJouiUvyvVy+o7s9AhAIdDdOMwRhxGdlDV8F96CiXL1DjL3YtWDcRCZmHhbVrs0M7dFlUSDhqFigcM2Bf/56IVB3Qh8fxb7D+8tECVJ1k1JjqzhCwPkRF3K6hRAIC8DYjMO+3aYBNPkARtDUXW5OBZ6WdbG1X6FQ8kR+pPBGY2Z22u0tZLvfw3sj1ao82KpMn7zThAlV3hGhGCMb6y+wllug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB5064.namprd11.prod.outlook.com (2603:10b6:510:3b::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.41; Mon, 9 Oct
- 2023 22:32:45 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6838.040; Mon, 9 Oct 2023
- 22:32:45 +0000
-Date: Mon, 9 Oct 2023 15:32:42 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>
-CC: Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH v3 07/10] cxl/memdev: Fix sanitize vs decoder setup
- locking
-Message-ID: <65247f8aa6890_1a0a29467@dwillia2-xfh.jf.intel.com.notmuch>
-References: <169657715790.1491153.3612164287133860191.stgit@dwillia2-xfh.jf.intel.com>
- <169657719974.1491153.15276451196916291864.stgit@dwillia2-xfh.jf.intel.com>
- <65237eded9811_1d988429470@iweiny-mobl.notmuch>
- <652444042bd98_ae7e7294ad@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <652444042bd98_ae7e7294ad@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: MW4PR03CA0125.namprd03.prod.outlook.com
- (2603:10b6:303:8c::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vo/aXdw7"
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15F8B7;
+	Mon,  9 Oct 2023 18:35:16 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-7b0ec7417bdso1577623241.2;
+        Mon, 09 Oct 2023 18:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696901716; x=1697506516; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PCAZZqWA7W34+FGu9Ma++VOrVCcKUa0dLdOQIBbdvOg=;
+        b=Vo/aXdw75CUU09LGI521cdrFYFpqvySCGKdAuTT3ySLqW4ITMkZ2dFTBztyIbhxA6n
+         dfyKU9PmEP8onH69KaWtzRMRoYoApZPOvOKAt6/vYBSKLr6qTuOdcxRy0g6dlk1M1IzR
+         lvXvTkw52nbVyqsT/EWlMLl9tlJmnP21xYJntvP75O+ZrmVQ3vcF+RdxtnQY44RbIuxS
+         i2Odkt0rPrrjtQeB/rJGc/VRbCjm71K0089/TVWS46GNWZjoWVB2OA9ysk4LwqqWwvST
+         fJBRvgrA0Gnb4aZ3OYiq4narzKuw+RahY8dBG/C0rLyih1OCe46/5SnzF7YMp/35BYM6
+         dEow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696901716; x=1697506516;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PCAZZqWA7W34+FGu9Ma++VOrVCcKUa0dLdOQIBbdvOg=;
+        b=gKTvLGoErwNl/pH/zsSrc02EoTBIiOYuwSi9QIeT16+rz6eY7H/El+fwWqScuU2e7w
+         dAlppMnGl8EEi5ezjQoDrSJw3MhVQD8Y+bxHgBJPyGZbx52m3YodsbDh+E69Af0bneyx
+         jFGySE8OH/3mSE5voGG+SUbEhE5jA/md5tulvJ+lDy1NNo0PGI2m6X9VzzmbrCIqhVhR
+         MzqBI7InmTDt0mrFuyDmhjzBd3ZgUkJIJF5JV1Y2NwSfFHY2VmyQXDzdI7INZkgkc5jl
+         tYSJSAw5p/f0Oy+QD5UxMFsEpe0pA11Oe4Bfe8HM3bKIuk3cMNt82AsYMPu8IhEXfO3J
+         a4Mw==
+X-Gm-Message-State: AOJu0YwE15TnMZorr/NtBZNI9sxPsdTrPKy2Rxjtfc6KWMqKLgH8SkCA
+	VvzWXDBVkk4vGDA1g4DemayBRXKLgy47ORghDkjeXL8BhHFbcQ==
+X-Google-Smtp-Source: AGHT+IEut4+8+Z49thmsIFFh4fyKsHauFIJ1lzCZ8BgcshepaYfEYGxa95v2w2ueKfUdHTDpUZBMLcZbb9EdqBshZqA=
+X-Received: by 2002:a05:6102:34ce:b0:44e:9a71:279e with SMTP id
+ a14-20020a05610234ce00b0044e9a71279emr14141727vst.31.1696901715764; Mon, 09
+ Oct 2023 18:35:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB5064:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97cf1ce5-2ca3-48d0-9471-08dbc917a85d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ux4dhPzSSbOUzBhlbZf+dJlvPg/L7iN6oIxEg7rJubb/qC0NLsnZVOJmNV3HgHjGO1iPpAGESd5nwN+eI/C+zp0T+EDuLifEVxWCdTY62g9vPPt8lI9cjhHKyTykzLM/GbzdF4sRAmwq82jIlClfIOCfnlthSfqTDe94ojKk8nhyMWfEaqUch0dSy9RvzzoJUWb+dvR+kxXWgAC19Qr0ILN0Ni5lM9HeGhTfATacN5g+DCh1MkiOUES5SEGL+K4Qz+7q6sP7sWTjOoIyn7B7rQcjimWQKlJGps6J6dFz1TLby+XQDkQIvmqYNR7x0q4F+KJhHg+IBAje1pwrc1HZyaMbKPAeiUr2ADnU4G4jLEeCPbYnbGHqvryBw9w7Eap/ZWW2rpB6h8C1MA5RjDtOzMOGW4EWLqCbaKSfS43GuebU233uM+eR73dsL8ZtH1uKx3yL9r33oRz7GEpFWI+tBCMxPVLYwhIzPSiNomZ8htxIErPl6oi51u7sVCRMWveaqNhaRD7H94XBJ3UWV1TklPz9vqnpvRkQRqMINhnNIQQY9rSDOaexjQPcT8ioASrM
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(366004)(376002)(396003)(346002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(6512007)(9686003)(6506007)(8676002)(6486002)(4326008)(478600001)(6666004)(2906002)(83380400001)(110136005)(66946007)(66556008)(8936002)(316002)(66476007)(41300700001)(5660300002)(86362001)(82960400001)(38100700002)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?I+fOcVo8hHg2YuXqC1AIFTqIzPykE3c+nZavfQfyela4YLCI4p4RDKuDWVpp?=
- =?us-ascii?Q?rwoDPQ7Ih1YZj/S5sRoZtqLk+fE6qmQtRzAgp5HGqdGCPnn0sUKHZFBG2Gmc?=
- =?us-ascii?Q?L4eu8m6jljLlExJvvZHeStJ6teUXFj/8guLPWgu547/eEQjxSugHgGZQlLsL?=
- =?us-ascii?Q?kGoD0ao1v9TVTCH0Qs3QLmaCiJ7E8+D9NskheLStpF+bm0Rr+Ml1rZigRSKz?=
- =?us-ascii?Q?qWC7eHXO2kB0BUXZooH5uSrS4N1q0bWTmrQyIj+x48Kj2Hfb+BuMilZXEgAL?=
- =?us-ascii?Q?v0CVJj041QqWCX7Trtw534ViqunEjD7r+KqHCocxOThylFJoOqvMLqBfoOgo?=
- =?us-ascii?Q?L/vWDOVZgbXX/xaaqbbq/tf2zpx2tcnQQVDPdfn90zKmVybgTJ+af1g+zKjr?=
- =?us-ascii?Q?HNtm5QU395BedqQbh35Z+J0dndRBFJNEMW0ZINLYGOzVDJLQ4YieV2tksXVe?=
- =?us-ascii?Q?2GhD6UMj3L1IONHtbGHK9EtMq6ULCGIpCr2DSaMQskZ66osao7NzrZGs2QCh?=
- =?us-ascii?Q?UCMpV+mz+NdzpxJtgXZCKT31xA1kFZ0WiZXMdEZOmnDJGj5qT2nQahzE6bQ7?=
- =?us-ascii?Q?A7j0LMyMN6e83eG9w0iYu9jOMOrrhRLlaWU/Y9mdZGpI6KCuJnpBTZ/5PnQG?=
- =?us-ascii?Q?/Ptv+V3MXAKwaZI+xauz5P7nQdrwkZoiUvuJxJKFf0U7xyKSQW/kYPFRjrUD?=
- =?us-ascii?Q?gUWGqrSWga4oqEu2AkfTwIpySrmiwildQvHIZWkCL42e0BTqAwB2AuV2Y2Gn?=
- =?us-ascii?Q?Onzju9NJYOgmQ60E8+ITEKnA560aQAwEVFMvMOJN129xNi/1VxGV7Zlhxny9?=
- =?us-ascii?Q?UXwmmqSOO5WXUhU0p5JR6TiwBB8CD+poXDmDp5doPhoYki+lLaIcoAJUV+wY?=
- =?us-ascii?Q?sBS/omU0UFflXSHkSp4hrNHMljCNdT//mA/SMkZNuyoGPRFhGrh8g1kNaNFI?=
- =?us-ascii?Q?1ZfiUyyPdwtxCTbnDNpwIPqskXuzouqK90cUEwNixy48qnp6u/dTtOgOAM7v?=
- =?us-ascii?Q?sWVDRKG5K8Fu9mHuLvKsKhDvic8sNda8XBWw4CjnH9CSM+qlhfJaJMxpKgW1?=
- =?us-ascii?Q?iDRG8WWjng+dhUztOo9jufH8yMFcZkFsSfNaXF/VZWJAMT3iNqG2qKUmpMUe?=
- =?us-ascii?Q?yTU/GH8blOYezQFdxeup41FHjEN15US9JvdXUey29OpOl/wiIZa7li5UiMXx?=
- =?us-ascii?Q?27dzCMxlsvRL6vJrfP4+jEM7akP+awztjh5PL1z37r2MLv7DXcdHdvc0u5Ld?=
- =?us-ascii?Q?oOagdLeUKsHTBrZbWqL1iF9uPu3FXvT5ps8nIwA7wHwBmYWpqKgJFq96qq7i?=
- =?us-ascii?Q?TgdK8nth2th4ooWYwkvyHfmvQDwAt4I6walNJe1FJ49XCW6WxHIXo4OHOmWp?=
- =?us-ascii?Q?JjCWnIzuySGQkipEh9yUnhePQiflBcwer3lONAiGL1N7NcUyyLC1T8AfpLA7?=
- =?us-ascii?Q?+u4QmL82/PtHjypv43DUU1KrdKW+DyNanVZ9OJ6RJwxucogIB4gw2qQJtVUV?=
- =?us-ascii?Q?AV2uwsJRdDoTiCT6FBhiTOXC14Ajxw+mBiSHwYKXpHYEBJJKvA5T1YtGSgHn?=
- =?us-ascii?Q?mYb4Ky3TyRj6oraxCgoqrck9sb4ri5u92GDmbqpAQjoNaHmE3TbKakIx+aRl?=
- =?us-ascii?Q?nw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97cf1ce5-2ca3-48d0-9471-08dbc917a85d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 22:32:45.1090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mfmsx/YRLUi1SlagUUUbuXWg/DuMTw4rWUlPvNegMynxPf/ca/jqxUt6GSpZUDn57vqWESHtl00HYa+tnXh+IkBTeQZUGHBOk//GvKaNsAw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5064
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Date: Tue, 10 Oct 2023 10:35:03 +0900
+Message-ID: <CAB=+i9S4NSJ7iNvqguWKvFvo=cMQC21KeNETsqmJoEpj+iDmig@mail.gmail.com>
+Subject: Accessing emulated CXL memory is unstable
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+	HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Dan Williams wrote:
-> Ira Weiny wrote:
-> > Dan Williams wrote:
-> > > The sanitize operation is destructive and the expectation is that the
-> > > device is unmapped while in progress. The current implementation does a
-> > > lockless check for decoders being active, but then does nothing to
-> > > prevent decoders from racing to be committed. Introduce state tracking
-> > > to resolve this race.
-> > > 
-> > > This incidentally cleans up unpriveleged userspace from triggering mmio
-> > > read cycles by spinning on reading the 'securiry/state' attribute. Which
-> > > at a minimum is a waste since the kernel state machine can cache the
-> > > completion result.
-> > > 
-> > > Lastly cxl_mem_sanitize() was mistakenly marked EXPORT_SYMBOL() in the
-> > > original implementation, but an export was never required.
-> > > 
-> > > Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
-> > > Cc: Davidlohr Bueso <dave@stgolabs.net>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > 
-> > [snip]
-> > 
-> > > --- a/drivers/cxl/core/hdm.c
-> > > +++ b/drivers/cxl/core/hdm.c
-> > > @@ -650,6 +650,25 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
-> > >  		return -EBUSY;
-> > >  	}
-> > >  
-> > > +	/*
-> > > +	 * For endpoint decoders hosted on CXL memory devices that
-> > > +	 * support the sanitize operation, make sure sanitize is not in-flight.
-> > > +	 */
-> > > +	if (is_endpoint_decoder(&cxld->dev)) {
-> > > +		struct cxl_endpoint_decoder *cxled =
-> > > +			to_cxl_endpoint_decoder(&cxld->dev);
-> > > +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > > +		struct cxl_memdev_state *mds =
-> > > +			to_cxl_memdev_state(cxlmd->cxlds);
-> > > +
-> > > +		if (mds && mds->security.sanitize_active) {
-> > 
-> > I'm curious why this check does not need to hold the mds->mbox_mutex?  Or
-> > how this may be protected by the cxl_dpa_rwsem?
-> 
-> ...because cxl_decoder_commit() knows it is holding the cxl_dpa_rwsem for
+Hello folks,
 
-s/cxl_dpa_rwsem/cxl_region_rwsem/
+I experienced strange application crashes/internal KVM errors
+while playing with emulated type 3 CXL memory. I would like to know
+if this is a real issue or I missed something during setup.
 
-> write which means that sanitize_active can not transition from false to
-> true in cxl_mem_sanitize().
-> 
-> It does mean that in-flight completions may race, but that's a benign race
-> where whatever triggered cxl_decoder_commit() is already in the position of
-> needing to wait for cxl_mbox_sanitize_work() to fire.
+TL;DR: applications crash when accessing emulated CXL memory,
+and stressing VM subsystem causes KVM internal error
+(stressing via stress-ng --bigheap)
 
+[ Details ]
+qemu version is 8.1.50,
+kernel version is 6.5.0,
+ndctl version is 78.
 
+the qemu command line is:
+qemu-system-x86_64 \
+       -accel kvm \
+        -cpu host \
+        -smp 1 \
+        -M q35,cxl=on \
+        -m 4G,maxmem=8G,slots=4 \
+        -object memory-backend-ram,id=vmem0,share=on,size=4G \
+        -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+        -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+        -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0 \
+        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
+        -kernel ../linux/arch/x86/boot/bzImage \
+        -append 'console=ttyS0 nokaslr root=/dev/vda5' \
+        -netdev user,id=n1 \
+        -device virtio-net,netdev=n1,bus=pcie.0 \
+        -blockdev
+driver=qcow2,file.filename=./rocky.qcow2,file.driver=file,node-name=blk1
+\
+        -device virtio-blk,drive=blk1,bus=pcie.0 \
+        -nographic
+
+[ Before creating a CXL RAM Region ]
+
+# free -h
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       275Mi       3.6Gi       8.0Mi       120Mi       3.6Gi
+Swap:             0B          0B          0B
+# numactl --hardware
+available: 1 nodes (0)
+node 0 cpus: 0
+node 0 size: 3923 MB
+node 0 free: 3713 MB
+node distances:
+node   0
+  0:  10
+
+[ After creating a CXL RAM Region ]
+
+# cxl enable-memdev mem0
+# cxl create-region -t ram -m mem0 -w 1 -d decoder0.0
+
+I enabled DEV_DAX_CXL=y and DEV_DAX_KMEM=y so when I create a CXL RAM Region,
+so it is onlined right away.
+
+# free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       389Mi       7.5Gi       8.0Mi       122Mi       7.5Gi
+Swap:             0B          0B          0B
+
+# numactl --hardware
+available: 2 nodes (0-1)
+node 0 cpus: 0
+node 0 size: 3923 MB
+node 0 free: 3631 MB
+node 1 cpus:
+node 1 size: 4096 MB
+node 1 free: 4096 MB
+node distances:
+node   0   1
+  0:  10  20
+  1:  20  10
+
+So far, everything looks fine,
+until an application actually accesses this onlined CXL memory.
+
+# numactl --membind=1 --show
+[  139.495065] traps: numactl[493] trap invalid opcode ip:7f58d44b8f64
+sp:7ffc2a273128 error:0 in libc.so.6[7f58d4428000+175000]
+Illegal instruction (core dumped)
+
+Hmm... it crashed, and it's 'invalid opcode'.
+Is this because the fetched instruction is different from what's
+written to memory during exec()?
+
+I don't know yet, but let's just continue.
+
+Let's stress the VM subsystem by allocating lots of heap memory:
+# stress-ng --bigheap 1
+
+stress-ng: info:  [496] defaulting to a 86400 second (1 day, 0.00
+secs) run per stressor
+stress-ng: info:  [496] dispatching hogs: 1 bigheap
+
+^C
+KVM internal error. Suberror: 1
+extra data[0]: 0x0000000000000001
+extra data[1]: 0x41c03127ae0f480f
+extra data[2]: 0x8b4865ca010fc489
+extra data[3]: 0x0000000000000031
+extra data[4]: 0x0000000000000000
+extra data[5]: 0x0000000000000000
+extra data[6]: 0x0000000000000000
+extra data[7]: 0x0000000000000000
+emulation failure
+RAX=0000000000000207 RBX=ffff88810cfb6a80 RCX=0000000000000000
+RDX=0000000000000000
+RSI=0000000000000207 RDI=00007f526d41b540 RBP=00007f526d41b540
+RSP=ffffc90000a23d90
+R8 =ffffc90000a23e88 R9 =0000000008000000 R10=0000000000000000
+R11=0000000000000001
+R12=0000000000000207 R13=00007f526d41b540 R14=0000000000000000
+R15=ffff88810cfb5e80
+RIP=ffffffff8103e626 RFL=00050246 [---Z-P-] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ES =0000 0000000000000000 ffffffff 00c00000
+CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
+SS =0000 0000000000000000 ffffffff 00c00000
+DS =0000 0000000000000000 ffffffff 00c00000
+FS =0000 00007f526d41c740 ffffffff 00c00000
+GS =0000 ffff88817bc00000 ffffffff 00c00000
+LDT=0000 0000000000000000 ffffffff 00c00000
+TR =0040 fffffe0000003000 00004087 00008b00 DPL=0 TSS64-busy
+GDT=     fffffe0000001000 0000007f
+IDT=     fffffe0000000000 00000fff
+CR0=80050033 CR2=00007f526d41b740 CR3=0000000104e62000 CR4=00750ef0
+DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000
+DR3=0000000000000000
+DR6=00000000ffff0ff0 DR7=0000000000000400
+EFER=0000000000000d01
+Code=5a 14 00 00 0f 01 cb 4c 89 e2 48 89 ef 44 89 e0 48 c1 ea 20 <48>
+0f ae 27 31 c0 41 89 c4 0f 01 ca 65 48 8b 04 25 c0 ac 02 00 83 a8 54
+0a 00 00 01 be 00
+
+This time I pressed CTRL+C and it caused KVM internal error 1.
+
+Hmm on another try I increased the number of threads and just waited,
+and then KVM internal error 3 occurred.
+
+# stress-ng --bigheap 12
+stress-ng: info:  [484] defaulting to a 86400 second (1 day, 0.00
+secs) run per stressor
+stress-ng: info:  [484] dispatching hogs: 12 bigheap
+
+[   15.408360] traps: setroubleshootd[251] trap invalid opcode
+ip:7fc7e92ff3eb sp:7ffc760f98a0 error:0 in
+libpython3.9.so.1.0[7fc7e925a000+1b5000]
+qemu-system-x86_64: virtio: bogus descriptor or out of resources
+[   16.526518] virtio_blk virtio1: [vda] new size: 209715200 512-byte
+logical blocks (107 GB/100 GiB)
+[   16.611852] traps: systemd-udevd[131] trap invalid opcode
+ip:7fe3c84bc58f sp:7ffefca00588 error:0 in
+libc.so.6[7fe3c8428000+175000]
+[   16.625903] traps: systemd[1] trap invalid opcode ip:7fe89c6ba1c0
+sp:7ffdd9331b88 error:0 in libc.so.6[7fe89c628000+175000]
+
+KVM internal error. Suberror: 3
+extra data[0]: 0x0000000080000b0e
+extra data[1]: 0x0000000000000031
+extra data[2]: 0x0000000000000d82
+extra data[3]: 0x0000000418442c90
+extra data[4]: 0x0000000000000008
+RAX=aaaaaaaaaaaaaaab RBX=0000000000000000 RCX=000000000000000c
+RDX=0000000000000533
+RSI=ffffffff828c80a0 RDI=ffffc900008bf018 RBP=ffffffff81f5bd54
+RSP=ffffc900008bf000
+R8 =ffffffff81f5bd50 R9 =0000000000000000 R10=0000000000000000
+R11=0000000000000000
+R12=000000000000000e R13=ffffffff81f5bd54 R14=ffffc900008bf0c8
+R15=0000000000000001
+RIP=ffffffff815dfbe8 RFL=00010096 [--S-AP-] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ES =0000 0000000000000000 ffffffff 00c00000
+CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
+SS =0000 0000000000000000 ffffffff 00c00000
+DS =0000 0000000000000000 ffffffff 00c00000
+FS =0000 00007fe89c80cb40 ffffffff 00c00000
+GS =0000 ffff88817bc00000 ffffffff 00c00000
+LDT=0000 0000000000000000 ffffffff 00c00000
+TR =0040 fffffe0000003000 00004087 00008b00 DPL=0 TSS64-busy
+GDT=     fffffe0000001000 0000007f
+IDT=     fffffe0000000000 00000fff
+CR0=80050033 CR2=ffffffff815dfbe8 CR3=0000000418442000 CR4=00750ef0
+DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000
+DR3=0000000000000000
+DR6=00000000ffff0ff0 DR7=0000000000000400
+EFER=0000000000000d01
+Code=90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 57 41 56 <41>
+55 41 54 55 53 48 83 ec 08 4c 89 04 24 48 85 d2 74 4d 49 89 ff 49 89
+f5 48 89 d3 49 89
+
+--
+Hyeonggon
