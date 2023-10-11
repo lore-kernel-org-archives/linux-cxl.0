@@ -1,37 +1,32 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB053A26E
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 20:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC5C12E6D
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 20:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6117090;
-	Wed, 11 Oct 2023 13:23:06 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5PJc0MPNz67VcY;
-	Thu, 12 Oct 2023 04:20:00 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F56291
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 13:41:14 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5PjX2nxGz67VcY;
+	Thu, 12 Oct 2023 04:38:08 +0800 (CST)
 Received: from localhost (10.126.175.8) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
- 2023 21:23:03 +0100
-Date: Wed, 11 Oct 2023 21:23:01 +0100
+ 2023 21:41:11 +0100
+Date: Wed, 11 Oct 2023 21:41:10 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Jeongtae Park <jtp.park@samsung.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ben
- Widawsky" <bwidawsk@kernel.org>, Dave Jiang <dave.jiang@intel.com>, Davidlohr
- Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Kyungsan Kim
-	<ks0204.kim@samsung.com>, "Wonjae Lee" <wj28.lee@samsung.com>, Hojin Nam
-	<hj96.nam@samsung.com>, Junhyeok Im <junhyeok.im@samsung.com>, Jehoon Park
-	<jehoon.park@samsung.com>, "Jeongtae Park" <jeongtae.park@gmail.com>
-Subject: Re: [PATCH v3 2/6] cxl/region: Fix a checkpatch warning
-Message-ID: <20231011212301.000027e2@Huawei.com>
-In-Reply-To: <20231010082608.859137-3-jtp.park@samsung.com>
-References: <20231010082608.859137-1-jtp.park@samsung.com>
-	<CGME20231010082321epcas2p13641bd794b1c26d2137bb51093fd49f7@epcas2p1.samsung.com>
-	<20231010082608.859137-3-jtp.park@samsung.com>
+To: Jim Harris <jim.harris@samsung.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2] cxl/region: don't try to cleanup after
+ cxl_region_setup_targets() fails
+Message-ID: <20231011214110.0000365b@Huawei.com>
+In-Reply-To: <169703589120.1202031.14696100866518083806.stgit@bgt-140510-bm03.eng.stellus.in>
+References: <169696311899.1171696.7812961484055097837.stgit@bgt-140510-bm03.eng.stellus.in>
+	<CGME20231011145132uscas1p13e9fb6dadfa3d5b61fc410449122a013@uscas1p1.samsung.com>
+	<169703589120.1202031.14696100866518083806.stgit@bgt-140510-bm03.eng.stellus.in>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -43,7 +38,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.126.175.8]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
@@ -52,64 +47,88 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, 10 Oct 2023 17:26:04 +0900
-Jeongtae Park <jtp.park@samsung.com> wrote:
+On Wed, 11 Oct 2023 14:51:31 +0000
+Jim Harris <jim.harris@samsung.com> wrote:
 
-> WARNING: else is not generally useful after a break or return
+> Patch 5e42bcbc ("cxl/region: decrement ->nr_targets on error in
+> cxl_region_attach()") tried to avoid 'eiw' initialization errors when
+> ->nr_targets exceeded 16, by just decrementing ->nr_targets when  
+> cxl_region_setup_targets() failed. Patch 86987c76 ("cxl/region: Cleanup
+> target list on attach error") extended that cleanup to also clear
+> cxled->pos and p->targets[pos].
 > 
-> Since cpu_cache_invalidate_memregion() already checks for
-> support of invalidaton operation, it can be removed.
-> This change would make more efficient or small codes
-> when 'CONFIG_CXL_REGION_INVALIDATION_TEST' is not set.
-
-Oddly short line wrap - aim for 75 chars ish.
-
+> The initialization error was incidentally fixed separately by patch
+> 8d4285425 ("cxl/region: Fix port setup uninitialized variable warnings")
+> which was merged a few days after 5e42bcbc.
 > 
-> Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+> But now the original cleanup when cxl_region_setup_targets() fails
+> prevents endpoint and switch decoder resources from being reused:
+> 
+> 1) the cleanup does not set the decoder's region to NULL, which results
+>    in future dpa_size_store() calls returning -EBUSY
+> 2) the decoder is not properly freed, which results in future commit
+>    errors associated with the upstream switch
+> 
+> Now that the initialization errors were fixed separately, the proper
+> cleanup for this case is to just return immediately. Then the resources
+> associated with this target get cleanup up as normal when the failed
+> region is deleted.
+> 
+> The ->nr_targets decrement in the error case also helped prevent
+> a p->targets[] array overflow, so add a new check to prevent against
+> that overflow.
+> 
+> Tested by trying to create an invalid region for a 2 switch * 2 endpoint
+> topology, and then following up with creating a valid region.
+> 
+> Signed-off-by: Jim Harris <jim.harris@samsung.com>
+
+I agree with your analysis and that this seems to fix the cases you've called out.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
 > ---
->  drivers/cxl/core/region.c | 20 +++++++-------------
->  1 file changed, 7 insertions(+), 13 deletions(-)
+>  drivers/cxl/core/region.c |   14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e115ba382e04..0eb7a12badb9 100644
+> index 6d63b8798c29..2b3b3c62d0a7 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -127,21 +127,15 @@ static struct cxl_region_ref *cxl_rr_load(struct cxl_port *port,
->  
->  static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
->  {
-> -	if (!cpu_cache_has_invalidate_memregion()) {
-> -		if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)) {
-> -			dev_warn_once(
-> -				&cxlr->dev,
-> -				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
-> -			return 0;
-> -		} else {
-> -			dev_err(&cxlr->dev,
-> -				"Failed to synchronize CPU cache state\n");
-> -			return -ENXIO;
-> -		}
-> +	if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)
-> +			&& cpu_cache_has_invalidate_memregion()) {
-> +		dev_warn_once(
-> +			&cxlr->dev,
-> +			"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
-> +		return 0;
+> @@ -1658,6 +1658,12 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		return -ENXIO;
 >  	}
 >  
-> -	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-> -	return 0;
-> +	return cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-
-This is an arch specific call.  Whilst today on x86 (only option) the only way to
-return an error is if it's not supported, that's not necessarily going to be the
-case for other architectures. So I'd prefer to keep the dev_err if this fails.
-
-Jonathan
-
+> +	if (p->nr_targets >= p->interleave_ways) {
+> +		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+> +			p->nr_targets);
+> +		return -EINVAL;
+> +	}
+> +
+>  	ep_port = cxled_to_port(cxled);
+>  	root_port = cxlrd_to_port(cxlrd);
+>  	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
+> @@ -1750,7 +1756,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  	if (p->nr_targets == p->interleave_ways) {
+>  		rc = cxl_region_setup_targets(cxlr);
+>  		if (rc)
+> -			goto err_decrement;
+> +			return rc;
+>  		p->state = CXL_CONFIG_ACTIVE;
+>  	}
+>  
+> @@ -1762,12 +1768,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  	};
+>  
+>  	return 0;
+> -
+> -err_decrement:
+> -	p->nr_targets--;
+> -	cxled->pos = -1;
+> -	p->targets[pos] = NULL;
+> -	return rc;
 >  }
 >  
->  static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>  static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
+> 
 
