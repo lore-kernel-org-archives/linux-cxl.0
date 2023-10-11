@@ -1,31 +1,31 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02661F182
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 13:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06781F198
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 13:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0533290
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 06:19:37 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5Cx95fCNz6K6HR;
-	Wed, 11 Oct 2023 21:17:33 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C126B0
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 06:26:30 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5D570CZ4z6K61w;
+	Wed, 11 Oct 2023 21:24:27 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
- 2023 14:19:34 +0100
-Date: Wed, 11 Oct 2023 14:19:33 +0100
+ 2023 14:26:27 +0100
+Date: Wed, 11 Oct 2023 14:26:26 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+CC: <linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>,
 	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
 	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v10 20/22] cxl: Store QTG IDs and related info to the
- CXL memory device context
-Message-ID: <20231011141933.000028fb@Huawei.com>
-In-Reply-To: <169698641993.1991735.8821776839011657844.stgit@djiang5-mobl3>
+Subject: Re: [PATCH v10 21/22] cxl: Export sysfs attributes for memory
+ device QoS class
+Message-ID: <20231011142626.00002b16@Huawei.com>
+In-Reply-To: <169698642598.1991735.4883136743132463123.stgit@djiang5-mobl3>
 References: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
-	<169698641993.1991735.8821776839011657844.stgit@djiang5-mobl3>
+	<169698642598.1991735.4883136743132463123.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -37,7 +37,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
@@ -46,98 +46,104 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, 10 Oct 2023 18:06:59 -0700
+On Tue, 10 Oct 2023 18:07:06 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
-> the return package. Create a list of entries in the cxl_memdev context and
-> store the QTG ID as qos_class token and the associated DPA range. This
-> information can be exposed to user space via sysfs in order to help region
-> setup for hot-plugged CXL memory devices.
+> Export qos_class sysfs attributes for the CXL memory device. The QoS clas
+> should show up as /sys/bus/cxl/devices/memX/ram/qos_class0 for the volatile
+> partition and /sys/bus/cxl/devices/memX/pmem/qos_class0 for the persistent
+> partition. The QTG ID is retrieved via _DSM after supplying the
+> calculated bandwidth and latency for the entire CXL path from device to
+> the CPU. This ID is used to match up to the root decoder QoS class to
+> determine which CFMWS the memory range of a hotplugged CXL mem device
+> should be assigned under.
 > 
+> While there may be multiple DSMAS exported by the device CDAT, the driver
+> will only expose the first QTG ID per partition in sysfs for now. In the
+> future when multiple QTG IDs are necessary, they can be exposed. [1]
+
+I'm not sure this will extent cleanly if we get a two dimensional set to describle
+1) Multiple DSMAS entries for RAM (so multiple inputs to pass to the _DSM)
+   One nice thing here might be to ensure we have the first one seen.
+   So if in future we do need to extent it this corresponds to the 0th one
+   described.
+2) Want to describe less ideal QTG values from _DSM 
+
+
+Maybe it's too early to come to any conclusion and the single 0 is enough.
+The cynic in me suggests we call it. qos_class0_0 though to give us the space.
+If we needs DSMAS ranges, then we describe those using first index,
+and second is the priority index if we have multiple answers from _DSM.
+For now it's always 0_0
+
+
+Jonathan
+
+> 
+> [1]: https://lore.kernel.org/linux-cxl/167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local/T/#md2a47b1ead3e1ba08f50eab29a4af1aed1d215ab
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > 
 > ---
 > v10:
-> - Store single qos_class value. (Dan)
-
-I'm fine with doing this, but I'd like a print if more than one is
-provided by the DSMAS (e.g. multiple DSMAS entries for a given region)
-Mostly so we have something to let us know if anyone is shipping such a
-device.
-
-Otherwise a couple of minor comments inline.
-
-Jonathan
-
-
-> - Rename cxl_memdev_set_qtg() to cxl_memdev_set_qos_class()
+> - Export only qos_class0, the first entry. Additional qos_class entries can be
+>   exported later as needed. (Dan)
+> - Have the sysfs attrib return -ENOENT unless driver is attached. (Dan)
 > - Removed Jonathan's review tag due to code changes.
-
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 99a619360bc5..049a16b7eb1f 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -105,6 +105,40 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
->  	return 0;
->  }
->  
-> +static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-> +				     struct list_head *dsmas_list)
-> +{
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct range pmem_range = {
-> +		.start = cxlds->pmem_res.start,
-> +		.end = cxlds->pmem_res.end,
-> +	};
-> +	struct range ram_range = {
-> +		.start = cxlds->ram_res.start,
-> +		.end = cxlds->ram_res.end,
-> +	};
-> +	struct perf_prop_entry *perf;
-> +	struct dsmas_entry *dent;
-> +
-> +	list_for_each_entry(dent, dsmas_list, list) {
-> +		perf = devm_kzalloc(cxlds->dev, sizeof(*perf), GFP_KERNEL);
-> +		if (!perf)
-> +			return;
-> +
-> +		perf->dpa_range = dent->dpa_range;
-> +		perf->coord = dent->coord;
-> +		perf->qos_class = dent->qos_class;
-> +		list_add_tail(&perf->list, &mds->perf_list);
-> +
-> +		if (resource_size(&cxlds->ram_res) &&
-> +		    range_contains(&ram_range, &dent->dpa_range))
-> +			mds->ram_qos_class = perf->qos_class;
-
-So this assumes one DSMAS per memory type.
-Not an unreasonable starting place, but I think this should 
-print something to the log if it does see more that one.
-
-> +		else if (resource_size(&cxlds->pmem_res) &&
-> +			 range_contains(&pmem_range, &dent->dpa_range))
-> +			mds->pmem_qos_class = perf->qos_class;
-> +	}
-> +}
-> +
->  static int cxl_switch_port_probe(struct cxl_port *port)
->  {
->  	struct cxl_hdm *cxlhdm;
-> @@ -201,6 +235,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->  			if (rc)
->  				dev_dbg(&port->dev,
->  					"Failed to do perf coord calculations.\n");
-> +			else
-> +				cxl_memdev_set_qos_class(cxlds, &dsmas_list);
-
-This is getting a bit deeply nested.  Perhaps a follow up patch to factor
-it out makes sense so we can use a goto to cleanup the dmsmas_list without
-that label being nested as well.
-
->  		}
->  
->  		cxl_cdat_dsmas_list_destroy(&dsmas_list);
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl |   34 +++++++++++++++++++++++++++++++
+>  drivers/cxl/core/memdev.c               |   34 +++++++++++++++++++++++++++++++
+>  2 files changed, 68 insertions(+)
 > 
-> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 44ffbbb36654..dd613f5987b5 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -28,6 +28,23 @@ Description:
+>  		Payload in the CXL-2.0 specification.
+>  
+>  
+> +What:		/sys/bus/cxl/devices/memX/ram/qos_class0
+> +Date:		May, 2023
+> +KernelVersion:	v6.7
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) For CXL host platforms that support "QoS Telemmetry"
+> +		this attribute conveys a comma delimited list of platform
+> +		specific cookies that identifies a QoS performance class
+> +		for the volatile partition of the CXL mem device. These
+> +		class-ids can be compared against a similar "qos_class"
+> +		published for a root decoder. While it is not required
+> +		that the endpoints map their local memory-class to a
+> +		matching platform class, mismatches are not recommended
+> +		and there are platform specific performance related
+> +		side-effects that may result. First class-id is displayed.
+> +
+> +
+>  What:		/sys/bus/cxl/devices/memX/pmem/size
+>  Date:		December, 2020
+>  KernelVersion:	v5.12
+> @@ -38,6 +55,23 @@ Description:
+>  		Payload in the CXL-2.0 specification.
+>  
+>  
+> +What:		/sys/bus/cxl/devices/memX/pmem/qos_class0
+> +Date:		May, 2023
+> +KernelVersion:	v6.7
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) For CXL host platforms that support "QoS Telemmetry"
+> +		this attribute conveys a comma delimited list of platform
+> +		specific cookies that identifies a QoS performance class
+> +		for the persistent partition of the CXL mem device. These
+> +		class-ids can be compared against a similar "qos_class"
+> +		published for a root decoder. While it is not required
+> +		that the endpoints map their local memory-class to a
+> +		matching platform class, mismatches are not recommended
+> +		and there are platform specific performance related
+> +		side-effects that may result. First class-id is displayed.
+> +
+> +
+
 
