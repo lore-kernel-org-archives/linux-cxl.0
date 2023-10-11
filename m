@@ -1,30 +1,30 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2381F920
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 13:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE110DF6C;
+	Wed, 11 Oct 2023 13:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A990293
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 06:29:27 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5D8Y0G9lz6K5hF;
-	Wed, 11 Oct 2023 21:27:25 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBAEA4;
+	Wed, 11 Oct 2023 06:40:40 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5DNG58Fvz6JB5N;
+	Wed, 11 Oct 2023 21:37:34 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
- 2023 14:29:25 +0100
-Date: Wed, 11 Oct 2023 14:29:24 +0100
+ 2023 14:40:37 +0100
+Date: Wed, 11 Oct 2023 14:40:36 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v10 22/22] cxl: Check qos_class validity on memdev probe
-Message-ID: <20231011142924.00006060@Huawei.com>
-In-Reply-To: <169698643180.1991735.11469426905286068135.stgit@djiang5-mobl3>
-References: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
-	<169698643180.1991735.11469426905286068135.stgit@djiang5-mobl3>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <rafael@kernel.org>, <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<yazen.ghannam@amd.com>
+Subject: Re: [PATCH v6 0/5] CXL, ACPI, APEI, EINJ: Update EINJ for CXL error
+ types
+Message-ID: <20231011144036.00004376@Huawei.com>
+In-Reply-To: <20231010200254.764273-1-Benjamin.Cheatham@amd.com>
+References: <20231010200254.764273-1-Benjamin.Cheatham@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -45,114 +45,53 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, 10 Oct 2023 18:07:11 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Tue, 10 Oct 2023 15:02:49 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-> Add a check to make sure the qos_class for the device will match one of
-> the root decoders qos_class. If no match is found, then the qos_class for
-> the device is set to invalid.
+> v6 Changes:
+> 	- Reworked to have CXL error types under /sys/kernel/debug/cxl (Dan)
+> 		- Removed CXL error types from legacy EINJ interface in favor of
+> 		new interface
+> 	- Removed cxl_rcrb_addr file
+> 	- Added optional patch for CXL error type #defines (patch 2/5)
+> 	- Changes to documentation updates to match rework
+> 	- Change base to cxl-fixes branch
+
+New approach looks good to me and I took a look at the implementation.
+Couldn't find any problems to call out in the individual patches. 
+Feel free to add
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/mem.c |   68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> The new CXL error types will use the Memory Address field in the
+> SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+> compliant memory-mapped downstream port. The value of the memory address
+> will be in the port's MMIO range, and it will not represent physical
+> (normal or persistent) memory.
 > 
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 317c7548e4e9..3495119d2edf 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -104,6 +104,70 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
->  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
->  			 cxl_debugfs_poison_clear, "%llx\n");
->  
-> +struct qos_class_ctx {
-> +	bool matched;
-> +	int dev_qos_class;
-> +};
-> +
-> +static int match_cxlrd_qos_class(struct device *dev, void *data)
-> +{
-> +	struct qos_class_ctx *ctx = data;
-> +	struct cxl_root_decoder *cxlrd;
-> +
-> +	if (ctx->matched)
-> +		return 0;
-> +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
-> +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
-> +	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
-> +		return 0;
-> +
-> +	if (cxlrd->qos_class == ctx->dev_qos_class)
-> +		ctx->matched = 1;
-If matched, why not terminate the bus_for_each_dev()
-That is return 1 and amend check to be if (rc < 0)
-Not that this ever returns < 0 anyway.  It might in
-future though so that test makes sense as defensive measure.
-
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-> +{
-> +	struct device *dev = &cxlmd->dev;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct qos_class_ctx ctx;
-> +	int rc;
-> +
-> +	if (mds->ram_qos_class != CXL_QOS_CLASS_INVALID) {
-> +		ctx.matched = false;
-> +		ctx.dev_qos_class =  mds->ram_qos_class;
-> +		rc = bus_for_each_dev(dev->bus, NULL, &ctx, match_cxlrd_qos_class);
-> +		if (rc)
-> +			return rc;
-> +
-> +		if (ctx.matched)
-> +			return 0;
-Early return doesn't make sense to me given not checked the pmem one yet.
-> +
-> +		mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-> +	}
-> +
-> +	if (mds->pmem_qos_class != CXL_QOS_CLASS_INVALID) {
-> +		ctx.matched = false;
-> +		ctx.dev_qos_class = mds->pmem_qos_class;
-> +		rc = bus_for_each_dev(dev->bus, NULL, &ctx, match_cxlrd_qos_class);
-> +		if (rc)
-> +			return rc;
-> +
-> +		if (ctx.matched)
-> +			return 0;
-> +
-> +		mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-
-pmem_qos_class?
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_mem_probe(struct device *dev)
->  {
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> @@ -181,6 +245,10 @@ static int cxl_mem_probe(struct device *dev)
->  			return rc;
->  	}
->  
-> +	rc = cxl_qos_class_verify(cxlmd);
-> +	if (rc)
-> +		return rc;
-> +
->  	/*
->  	 * The kernel may be operating out of CXL memory on this device,
->  	 * there is no spec defined way to determine whether this device
+> Add the functionality for injecting CXL 1.1 errors to the EINJ module,
+> but not through the EINJ legacy interface under /sys/kernel/debug/apei/einj.
+> Instead, make the error types available under /sys/kernel/debug/cxl.
+> This allows for validating the MMIO address for a CXL 1.1 error type
+> while also not making the user responsible for finding it.
 > 
+> Ben Cheatham (5):
+>   cxl/port: Add EINJ debugfs files and callback support
+>   ACPI: Add CXL protocol error defines
+>   EINJ: Separate CXL errors from other EINJ errors
+>   cxl/port, EINJ: Add CXL EINJ callback functions
+>   EINJ: Update EINJ documentation
 > 
+>  Documentation/ABI/testing/debugfs-cxl         |  27 ++++
+>  .../firmware-guide/acpi/apei/einj.rst         |  12 ++
+>  drivers/acpi/apei/Kconfig                     |   3 +
+>  drivers/acpi/apei/einj.c                      | 149 ++++++++++++++++--
+>  drivers/cxl/core/port.c                       |  84 ++++++++++
+>  drivers/cxl/cxl.h                             |  10 ++
+>  include/acpi/actbl1.h                         |   6 +
+>  7 files changed, 281 insertions(+), 10 deletions(-)
+> 
+> base-commit: c66650d29764e228eba40b7a59fdb70fa6567daa
 
