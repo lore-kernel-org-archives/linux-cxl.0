@@ -1,181 +1,261 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141AB388
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 00:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83C220E0
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 01:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7xosZE8"
-Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7CA92;
-	Tue, 10 Oct 2023 17:50:20 -0700 (PDT)
-Received: by mail-vs1-xe29.google.com with SMTP id ada2fe7eead31-4527d7f7305so2474880137.1;
-        Tue, 10 Oct 2023 17:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696985419; x=1697590219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rPKgkr91uM5AObuWaBYVQhYKDTMWlaMX8cV3B9ISbDc=;
-        b=g7xosZE8iy+oUI4GaEdotdQmpu2PwB53NJRtqjyQ6x6H7uRd7kqsDbNmGiEK1zTAJX
-         2qcAjeLrCSimh6aQv4XGoNhgQX5ZHHl87q73QSlTQ6uwDnEIXidtKjGCWWpnsgFzEABs
-         A4Vf0qrouj7vmJENoxYF+tDxrU8AVwYtbNtSdp2t3DntJLq1juQJB4M/RKYzSo1hkjyQ
-         Xg2o0GNB5+HIEbh9+rleVTko95Ij4oCnBnSE3NgdGydRElQi+ejZwqQfyzerH7WdkL6Y
-         LSLKxpdRnKNktVyHrySFtCi868ogOnAp3L/VqIAiZvgE33PdMHpcJjWS+JSHWVnao9/x
-         uT5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696985419; x=1697590219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rPKgkr91uM5AObuWaBYVQhYKDTMWlaMX8cV3B9ISbDc=;
-        b=rCQbk9b/m7LEeewZDYqNA5FeufDZJEa5tbbB5C5XEBs1MVkNupzvjMWBq6/ZJfrM+q
-         2l7KE6sNd4phGYyqXoAxNDZ8ZZhsxDoBUvohBuwlnpcSsb0I8yUt9G7t89s2ZkjP2S7o
-         2LQmAsF8hs32qfW2KTdTdvdCqcffj0I5IJfenx//fh3XthhF+pAmCFZRIRK0lJFF31MF
-         69GrJVD/lYJMyf60IyRNVwUwc9397nJbyXJsy2ceytHfbnz583ImC+HRRXu9XGN61VID
-         jkR90MAWW7nQe0EiBAS7RZXWTThrWXYgwNvNPQlzmpJq6+ITefPEPZFDmSO8An6AZ9aU
-         1B5w==
-X-Gm-Message-State: AOJu0YxsXVACOpMOA+eaDybIasg4tNp3zDpwkKWa5H/867OlH6eDEZ2M
-	YTz2BAA65DPMr3KGO4nxdOm+oOswE6el4CJhcGk=
-X-Google-Smtp-Source: AGHT+IH0+uz17t03KroJwYQWYgJWtkEyt4arP89HpZ6Zo55Q8JtOleCM3pI4UUxZYvAf4kyHQuWXnOwZuylTagfXCYs=
-X-Received: by 2002:a67:cd95:0:b0:452:6c9d:89e8 with SMTP id
- r21-20020a67cd95000000b004526c9d89e8mr19040600vsl.21.1696985419293; Tue, 10
- Oct 2023 17:50:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhW7eJDp"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B960F8F
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 18:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696986299; x=1728522299;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+uq6HucECPYYDQBS9Y1qahVrVZjMlibXYnDXciPSJos=;
+  b=WhW7eJDpkE6pU3PxQGV4KIdaKZxx4RNZjV6A5K/+6SH4U1KkVX7l3Hox
+   wEJuNPOoaceantZ8zKBV2KSg6tH/S3tmB3NYOAWxZTLrwY45Y+xg5jtTN
+   Kpd54/7IO/4DK2UMIxvS+bahj88cw+uGNdHJdmYPgBmflMsQwKnwgIP/P
+   cAWin4q17wXEq5zFKc8VQhbxW9Hf/52O0tIp9+BltDokIkCrs4m3Selfa
+   HtBSXgWAmmubekyCR0UNK5IjZ5X2xWg52pW7XLABzM2e2SWroMDSIeC2F
+   q3qsMY7e6O5935lz88OC+zlGAkLK/ldPohDxTP52VHOKpAEF/86uTYxSL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="451043177"
+X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
+   d="scan'208";a="451043177"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:04:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="877466669"
+X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
+   d="scan'208";a="877466669"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.35.251])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:04:57 -0700
+Subject: [PATCH v10 00/22] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Hanjun Guo <guohanjun@huawei.com>, Len Brown <lenb@kernel.org>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, dan.j.williams@intel.com,
+ ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date: Tue, 10 Oct 2023 18:04:56 -0700
+Message-ID: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAB=+i9S4NSJ7iNvqguWKvFvo=cMQC21KeNETsqmJoEpj+iDmig@mail.gmail.com>
- <ZSKupRw+mRrASUaY@memverge.com>
-In-Reply-To: <ZSKupRw+mRrASUaY@memverge.com>
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date: Wed, 11 Oct 2023 09:50:07 +0900
-Message-ID: <CAB=+i9S_uAUfPWSR2mJ=EzB-O2w-puK232CxbgWn8mx+YpMJCQ@mail.gmail.com>
-Subject: Re: Accessing emulated CXL memory is unstable
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-	HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 11, 2023 at 12:54=E2=80=AFAM Gregory Price
-<gregory.price@memverge.com> wrote:
->
-> On Tue, Oct 10, 2023 at 10:35:03AM +0900, Hyeonggon Yoo wrote:
-> > Hello folks,
-> >
-> > I experienced strange application crashes/internal KVM errors
-> > while playing with emulated type 3 CXL memory. I would like to know
-> > if this is a real issue or I missed something during setup.
-> >
-> > TL;DR: applications crash when accessing emulated CXL memory,
-> > and stressing VM subsystem causes KVM internal error
-> > (stressing via stress-ng --bigheap)
-> >
-> ...
-> >
-> > Hmm... it crashed, and it's 'invalid opcode'.
-> > Is this because the fetched instruction is different from what's
-> > written to memory during exec()?
-> >
->
-> This is a known issue, and the working theory is 2 issues:
+v10:
+- Remove memory allocation in DSM handler. Add input parameters to request number of ids
+  to return. (Dan)
+- Only export a single qos_class sysfs attribute, qos_class0 for devices. (Dan)
+- Add sanity check of device qos_class against root decoders (Dan)
+- Recombine all relevant patches for cxl upstream merge
+- Rebased against v6.6-rc4
 
-Okay, at least it's a known issue. Thank you for confirming that!
+v9:
+- Correct DSM input package to use integers. (Dan)
+- Remove all endien conversions. (Dan)
 
->
-> 1) CXL devices are implemented on top of an MMIO-style dispatch system
->    and as a result memory from CXL is non-cacheable.  We think there
->    may be an issue with this in KVM but it hasn't been investigated
->    fully.
->
-> 2) When we originally got CXL memory support, we discovered an edge case
->    where code pages hosted on CXL memory would cause a crash whenever an
->    instruction spanned across a page barrier.  A similar issue could
->    affect KVM.
->
-> We haven't done much research into the problem beyond this.  For now, we
-> all just turn KVM off while we continue development.
+v8:
+- Correct DSM return package parsing to use integers
 
-Thank you for summarizing the current state of the issue.
-Hope it will be resolved! ;)
+v7:
+- Minor changes. Please see specific patches for log entries addressing comments
+  from v6.
 
-But I'm not sure if turning off KVM solves the problem.
-`numactl --membind=3D1 --show` works fine, but other basic UNIX commands li=
-ke ls
-crashes QEMU when it's bind to the CXL NUMA node.
+v6:
+- Please see specific patches for log entries addressing comments from v5.
+- Use CDAT sub-table structs as is, adjust w/o common header. Changing causes
+  significant ACPICA code changes.
+- Deal with table header now that is a union. (Jonathan)
+- Move DSMAS list destroy to core/cdat.c. (Jonathan)
+- Retain and display entire QTG ID list from _DSM. (Jonathan)
 
-[root@localhost ~]# numactl --membind=3D1 --show
-policy: bind
-preferred node: 1
-physcpubind: 0
-cpubind: 0
-nodebind: 0
-membind: 1
-[root@localhost ~]# numactl --membind=3D1 ls
+v5:
+- Please see specific patches for log entries addressing comments from v4.
+- Split out ACPI and generic node code to send separately to respective maintainers
+- Reworked to use ACPI tables code for CDAT parsing (Dan)
+- Cache relevant perf data under dports (Dan)
+- Add cxl root callback for QTG ID _DSM (Dan)
+- Rename 'node_hmem_attr' to 'access_coordinate' (Dan)
+- Change qtg_id sysfs attrib to qos_class (Dan)
 
-qemu: fatal: cpu_io_recompile: could not find TB for pc=3D(nil)
-RAX=3D0000777f80000000 RBX=3D0000000000000000 RCX=3D0000000000000028
-RDX=3D0000000000000000
-RSI=3D0000000000000354 RDI=3D0000000000000000 RBP=3Dffff88810628af40
-RSP=3Dffffc900008cfd20
-R8 =3Dffff88810628af40 R9 =3Dffffc900008cfcc4 R10=3D000000000000000d
-R11=3D0000000000000000
-R12=3D0000000390440000 R13=3Dffff888107a464c0 R14=3D0000000000000000
-R15=3Dffff88810a49cd18
-RIP=3Dffffffff810743e6 RFL=3D00000007 [-----PC] CPL=3D0 II=3D0 A20=3D1 SMM=
-=3D0 HLT=3D0
-ES =3D0000 0000000000000000 00000000 00000000
-CS =3D0010 0000000000000000 ffffffff 00af9b00 DPL=3D0 CS64 [-RA]
-SS =3D0000 0000000000000000 00000000 00000000
-DS =3D0000 0000000000000000 00000000 00000000
-FS =3D0000 0000000000000000 00000000 00000000
-GS =3D0000 ffff88817bc00000 00000000 00000000
-LDT=3D0000 0000000000000000 00000000 00008200 DPL=3D0 LDT
-TR =3D0040 fffffe0000003000 00004087 00008900 DPL=3D0 TSS64-avl
-GDT=3D     fffffe0000001000 0000007f
-IDT=3D     fffffe0000000000 00000fff
-CR0=3D80050033 CR2=3D00007fcb2504641c CR3=3D0000000390440000 CR4=3D007506f0
-DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000
-DR3=3D0000000000000000
-DR6=3D00000000ffff0ff0 DR7=3D0000000000000400
-CCS=3D0000777f80000000 CCD=3D0000000390440000 CCO=3DADDQ
-EFER=3D0000000000000d01
-FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
-FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
-FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
-FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
-FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
-YMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM04=3D0000000000000000 0000000000000000 00006968705f6e6f 657800006c6c6577
-YMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-YMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000
-cxl2.sh: line 24:  5386 Aborted                 (core dumped) $QEMU
--cpu Cascadelake-Server -smp 1 -M q35,cxl=3Don -m 4G,maxmem=3D8G,slots=3D4
--object memory-backend-ram,id=3Dvmem0,share=3Don,size=3D4G -device pxb-cc
+v4:
+- Reworked PCIe link path latency calculation
+- 0-day fixes
+- Removed unused qos_list from cxl_memdev and its stray usages
+
+v3:
+- Please see specific patches for log entries addressing comments from v2.
+- Refactor cxl_port_probe() additions. (Alison)
+- Convert to use 'struct node_hmem_attrs'
+- Refactor to use common code for genport target allocation.
+- Add third array entry for target hmem_attrs to store genport locality data.
+- Go back to per partition QTG ID. (Dan)
+
+v2:
+- Please see specific patches for log entries addressing comments from v1.
+- Removed ACPICA code usages.
+- Removed PCI subsystem helpers for latency and bandwidth.
+- Add CXL switch CDAT parsing support (SSLBIS)
+- Add generic port SRAT+HMAT support (ACPI)
+- Export a single QTG ID via sysfs per memory device (Dan)
+- Provide rest of DSMAS range info in debugfs (Dan)
+
+Hi Dan,
+Please consider taking the entire series including the CXL bits for the next
+convenient merge window. Thanks!
+
+This series adds the retrieval of QoS Throttling Group (QTG) IDs for the CXL Fixed
+Memory Window Structure (CFMWS) and the CXL memory device. It provides the QTG IDs
+to user space to provide some guidance with putting the proper DPA range under the
+appropriate CFMWS window for a hot-plugged CXL memory device.
+
+The CFMWS structure contains a QTG ID that is associated with the memory window that the
+structure exports. On Linux, the CFMWS is represented as a CXL root decoder. The QTG
+ID will be attached to the CXL root decoder and exported as a sysfs attribute (qos_class).
+
+The QTG IDs for a device is retrieved via sending a _DSM method to the ACPI0017 device.
+The _DSM expects an input package of 4 DWORDS that contains the read latency, write
+latency, read bandwidth, and write banwidth. These are the caluclated numbers for the
+path between the CXL device and the CPU. The list of QTG IDs are also exported as a sysfs
+attribute under the mem device memory partition type:
+/sys/bus/cxl/devices/memX/ram/qos_class
+/sys/bus/cxl/devices/memX/pmem/qos_class
+A mapping of DPA ranges and it's correlated QTG IDs are found under
+/sys/kernel/debug/cxl/memX/qtgmap. Each DSMAS from the device CDAT will provide a DPA
+range.
+
+The latency numbers are the aggregated latencies for the path between the CXL device and
+the CPU. If a CXL device is directly attached to the CXL HB, the latency
+would be the aggregated latencies from the device Coherent Device Attribute Table (CDAT),
+the caluclated PCIe link latency between the device and the HB, and the generic port data
+from ACPI SRAT+HMAT. The bandwidth in this configuration would be the minimum between the
+CDAT bandwidth number, link bandwidth between the device and the HB, and the bandwidth data
+from the generic port data via ACPI SRAT+HMAT.
+
+If a configuration has a switch in between then the latency would be the aggregated
+latencies from the device CDAT, the link latency between device and switch, the
+latency from the switch CDAT, the link latency between switch and the HB, and the
+generic port latency between the CPU and the CXL HB. The bandwidth calculation would be the
+min of device CDAT bandwidth, link bandwith between device and switch, switch CDAT
+bandwidth, the link bandwidth between switch and HB, and the generic port bandwidth
+
+There can be 0 or more switches between the CXL device and the CXL HB. There are detailed
+examples on calculating bandwidth and latency in the CXL Memory Device Software Guide [4].
+
+The CDAT provides Device Scoped Memory Affinity Structures (DSMAS) that contains the
+Device Physical Address (DPA) range and the related Device Scoped Latency and Bandwidth
+Informat Stuctures (DSLBIS). Each DSLBIS provides a latency or bandwidth entry that is
+tied to a DSMAS entry via a per DSMAS unique DSMAD handle.
+
+Test setup is done with runqemu genport support branch [6]. The setup provides 2 CXL HBs
+with one HB having a CXL switch underneath. It also provides generic port support detailed
+below.
+
+A hacked up qemu branch is used to support generic port SRAT and HMAT [7].
+
+To create the appropriate HMAT entries for generic port, the following qemu paramters must
+be added:
+
+-object genport,id=$X -numa node,genport=genport$X,nodeid=$Y,initiator=$Z
+-numa hmat-lb,initiator=$Z,target=$X,hierarchy=memory,data-type=access-latency,latency=$latency
+-numa hmat-lb,initiator=$Z,target=$X,hierarchy=memory,data-type=access-bandwidth,bandwidth=$bandwidthM
+for ((i = 0; i < total_nodes; i++)); do
+	for ((j = 0; j < cxl_hbs; j++ )); do	# 2 CXL HBs
+		-numa dist,src=$i,dst=$X,val=$dist
+	done
+done
+
+See the genport run_qemu branch for full details.
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+[3]: https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
+[4]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
+[5]: https://lore.kernel.org/linux-cxl/20230313195530.GA1532686@bhelgaas/T/#t
+[6]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+[7]: https://github.com/pmem/run_qemu/tree/djiang/genport
+[8]: https://github.com/davejiang/qemu/tree/genport
+
+---
+
+base-commit: 178e1ea6a68f12967ee0e9afc4d79a2939acd43c
+
+---
+Dave Jiang (22):
+      cxl: Export QTG ids from CFMWS to sysfs as qos_class attribute
+      cxl: Add checksum verification to CDAT from CXL
+      cxl: Add support for reading CXL switch CDAT table
+      acpi: Move common tables helper functions to common lib
+      lib/firmware_table: tables: Add CDAT table parsing support
+      base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
+      acpi: numa: Create enum for memory_target access coordinates indexing
+      acpi: numa: Add genport target allocation to the HMAT parsing
+      acpi: Break out nesting for hmat_parse_locality()
+      acpi: numa: Add setting of generic port system locality attributes
+      acpi: numa: Add helper function to retrieve the performance attributes
+      cxl: Add callback to parse the DSMAS subtables from CDAT
+      cxl: Add callback to parse the DSLBIS subtable from CDAT
+      cxl: Add callback to parse the SSLBIS subtable from CDAT
+      cxl: Add support for _DSM Function for retrieving QTG ID
+      cxl: Calculate and store PCI link latency for the downstream ports
+      cxl: Store the access coordinates for the generic ports
+      cxl: Add helper function that calculate performance data for downstream ports
+      cxl: Compute the entire CXL path latency and bandwidth data
+      cxl: Store QTG IDs and related info to the CXL memory device context
+      cxl: Export sysfs attributes for memory device QoS class
+      cxl: Check qos_class validity on memdev probe
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  49 +++++
+ MAINTAINERS                             |   2 +
+ drivers/acpi/Kconfig                    |   1 +
+ drivers/acpi/numa/hmat.c                | 172 +++++++++++++---
+ drivers/acpi/tables.c                   | 178 +----------------
+ drivers/base/node.c                     |  12 +-
+ drivers/cxl/Kconfig                     |   1 +
+ drivers/cxl/acpi.c                      | 151 +++++++++++++-
+ drivers/cxl/core/Makefile               |   1 +
+ drivers/cxl/core/cdat.c                 | 249 ++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c                 |   1 +
+ drivers/cxl/core/memdev.c               |  34 ++++
+ drivers/cxl/core/pci.c                  | 125 ++++++++++--
+ drivers/cxl/core/port.c                 | 124 +++++++++++-
+ drivers/cxl/cxl.h                       |  74 +++++++
+ drivers/cxl/cxlmem.h                    |  23 +++
+ drivers/cxl/cxlpci.h                    |  15 ++
+ drivers/cxl/mem.c                       |  68 +++++++
+ drivers/cxl/port.c                      | 109 +++++++++++
+ include/linux/acpi.h                    |  54 +++--
+ include/linux/fw_table.h                |  52 +++++
+ include/linux/node.h                    |   8 +-
+ lib/Kconfig                             |   3 +
+ lib/Makefile                            |   2 +
+ lib/fw_table.c                          | 237 ++++++++++++++++++++++
+ 25 files changed, 1478 insertions(+), 267 deletions(-)
+ create mode 100644 drivers/cxl/core/cdat.c
+ create mode 100644 include/linux/fw_table.h
+ create mode 100644 lib/fw_table.c
 
 --
-Cheers,
-Hyeonggon
+
