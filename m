@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CF9814
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 01:05:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2309A39A
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 01:05:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aPp6RdoW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kox7L5x7"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB1A8B0
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 18:05:40 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3048F
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Oct 2023 18:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696986340; x=1728522340;
+  t=1696986347; x=1728522347;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aKn0SPEHGlZv/ogsxW74cETbi4HUtSWJPu7/P3VITpo=;
-  b=aPp6RdoWRSq9PjgtqJv22GmBKyEFJwp+dYX7YR6J6UYwPWtQ3+eVw8fT
-   NE5crpmSyJOpVxXXv+Rmo6qhKRRdX01EEkMc7gsCpiLoRgvHCIo19X0/l
-   G4/QXTjLSOnNZM6zi4hFBW0ekpw3w9yU+HYd2N5TFFRnFkVrMYtlmDy3r
-   3CA/lKzufqtRhI8k8b/fiC/LnJoCiUG6BoHncN5n8CODqvcUo5gMdyPY3
-   vUkt9n+d/hcnEXeEoYFfqoYZERiJP1PQkbxiJB9TrMWO+jseEhmYAYw2h
-   6iQV5PIfQxa8s03JhlJ5Q3WtwfX3OHJwQod32ZQzWYPwyZEyCBXaCZscE
+  bh=Pz40fMWdMjoAs2AbjWz6UwcHMDscPFrw+hiFpp2L15Y=;
+  b=kox7L5x7lSRpZ5KH2dYJ/pwrG9Omh4G2MTI1Zah7cZ9N1rEkI8q+tX8v
+   NVvTpcvO/Dt3rEdCgRTOcP2nRV/nYh1m7K0ZgZXYFmXxFCOJ0LHmFoMtO
+   ue6uRmoPJIfXMED+XzCAHngrLjF+X+/3B/AJAW4jyDfirxxGZhx0YcBmY
+   9SWlGhcsOncrCmP5gwkHSsel5ODVNh2Ao7lhqot0aFdD/TfnF/XXNCd2j
+   Qov5BCjyxPA8wvyTzOuu5gEbPKgzfNhslqT4Wwy+qmZD0BjwoKYqI/cUF
+   RT0MiZfkZ16h+RGTL43HLHa+6XBYMzp8IYV35cRFUvn/SbtmRynZ21Z4L
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="374893240"
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="374893249"
 X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="374893240"
+   d="scan'208";a="374893249"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:05:40 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:05:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="730307045"
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="730307050"
 X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="730307045"
+   d="scan'208";a="730307050"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.35.251])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:05:40 -0700
-Subject: [PATCH v10 07/22] acpi: numa: Create enum for memory_target access
- coordinates indexing
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:05:46 -0700
+Subject: [PATCH v10 08/22] acpi: numa: Add genport target allocation to the
+ HMAT parsing
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Tue, 10 Oct 2023 18:05:39 -0700
-Message-ID: <169698633971.1991735.34513057888809594.stgit@djiang5-mobl3>
+Date: Tue, 10 Oct 2023 18:05:45 -0700
+Message-ID: <169698634579.1991735.14956370099755014359.stgit@djiang5-mobl3>
 In-Reply-To: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
 References: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -61,114 +61,127 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Create enums to provide named indexing for the access coordinate array.
-This is in preparation for adding generic port support which will add a
-third index in the array to keep the generic port attributes separate from
-the memory attributes.
+Add SRAT parsing for the HMAT init in order to collect the device handle
+from the Generic Port Affinity Structure. The device handle will serve as
+the key to search for target data.
+
+Consoliate the common code with alloc_memory_target() in a helper function
+alloc_target().
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/numa/hmat.c |   35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ drivers/acpi/numa/hmat.c |   55 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 52 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index f9ff992038fa..abed728bf09d 100644
+index abed728bf09d..8380460cfee2 100644
 --- a/drivers/acpi/numa/hmat.c
 +++ b/drivers/acpi/numa/hmat.c
-@@ -57,12 +57,18 @@ struct target_cache {
- 	struct node_cache_attrs cache_attrs;
- };
- 
-+enum {
-+	NODE_ACCESS_CLASS_0 = 0,
-+	NODE_ACCESS_CLASS_1,
-+	NODE_ACCESS_CLASS_MAX,
-+};
-+
- struct memory_target {
- 	struct list_head node;
- 	unsigned int memory_pxm;
- 	unsigned int processor_pxm;
- 	struct resource memregions;
--	struct access_coordinate coord[2];
-+	struct access_coordinate coord[NODE_ACCESS_CLASS_MAX];
+@@ -71,6 +71,7 @@ struct memory_target {
+ 	struct access_coordinate coord[NODE_ACCESS_CLASS_MAX];
  	struct list_head caches;
  	struct node_cache_attrs cache_attrs;
++	u8 gen_port_device_handle[ACPI_SRAT_DEVICE_HANDLE_SIZE];
  	bool registered;
-@@ -338,10 +344,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
- 			if (mem_hier == ACPI_HMAT_MEMORY) {
- 				target = find_mem_target(targs[targ]);
- 				if (target && target->processor_pxm == inits[init]) {
--					hmat_update_target_access(target, type, value, 0);
-+					hmat_update_target_access(target, type, value,
-+								  NODE_ACCESS_CLASS_0);
- 					/* If the node has a CPU, update access 1 */
- 					if (node_state(pxm_to_node(inits[init]), N_CPU))
--						hmat_update_target_access(target, type, value, 1);
-+						hmat_update_target_access(target, type, value,
-+									  NODE_ACCESS_CLASS_1);
- 				}
- 			}
- 		}
-@@ -600,10 +608,12 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 	 */
- 	if (target->processor_pxm != PXM_INVAL) {
- 		cpu_nid = pxm_to_node(target->processor_pxm);
--		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-+		register_memory_node_under_compute_node(mem_nid, cpu_nid,
-+							NODE_ACCESS_CLASS_0);
- 		access0done = true;
- 		if (node_state(cpu_nid, N_CPU)) {
--			register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
-+			register_memory_node_under_compute_node(mem_nid, cpu_nid,
-+								NODE_ACCESS_CLASS_1);
- 			return;
- 		}
- 	}
-@@ -644,12 +654,13 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 			}
- 			if (best)
- 				hmat_update_target_access(target, loc->hmat_loc->data_type,
--							  best, 0);
-+							  best, NODE_ACCESS_CLASS_0);
- 		}
+ };
  
- 		for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
- 			cpu_nid = pxm_to_node(i);
--			register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-+			register_memory_node_under_compute_node(mem_nid, cpu_nid,
-+								NODE_ACCESS_CLASS_0);
- 		}
- 	}
- 
-@@ -681,11 +692,13 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 				clear_bit(initiator->processor_pxm, p_nodes);
- 		}
- 		if (best)
--			hmat_update_target_access(target, loc->hmat_loc->data_type, best, 1);
-+			hmat_update_target_access(target, loc->hmat_loc->data_type, best,
-+						  NODE_ACCESS_CLASS_1);
- 	}
- 	for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
- 		cpu_nid = pxm_to_node(i);
--		register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
-+		register_memory_node_under_compute_node(mem_nid, cpu_nid,
-+							NODE_ACCESS_CLASS_1);
- 	}
+@@ -125,8 +126,7 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+ 	list_add_tail(&initiator->node, &initiators);
  }
  
-@@ -746,8 +759,8 @@ static void hmat_register_target(struct memory_target *target)
- 	if (!target->registered) {
- 		hmat_register_target_initiators(target);
- 		hmat_register_target_cache(target);
--		hmat_register_target_perf(target, 0);
--		hmat_register_target_perf(target, 1);
-+		hmat_register_target_perf(target, NODE_ACCESS_CLASS_0);
-+		hmat_register_target_perf(target, NODE_ACCESS_CLASS_1);
- 		target->registered = true;
+-static __init void alloc_memory_target(unsigned int mem_pxm,
+-		resource_size_t start, resource_size_t len)
++static __init struct memory_target *alloc_target(unsigned int mem_pxm)
+ {
+ 	struct memory_target *target;
+ 
+@@ -134,7 +134,7 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 	if (!target) {
+ 		target = kzalloc(sizeof(*target), GFP_KERNEL);
+ 		if (!target)
+-			return;
++			return NULL;
+ 		target->memory_pxm = mem_pxm;
+ 		target->processor_pxm = PXM_INVAL;
+ 		target->memregions = (struct resource) {
+@@ -147,6 +147,19 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 		INIT_LIST_HEAD(&target->caches);
  	}
- 	mutex_unlock(&target_lock);
+ 
++	return target;
++}
++
++static __init void alloc_memory_target(unsigned int mem_pxm,
++				       resource_size_t start,
++				       resource_size_t len)
++{
++	struct memory_target *target;
++
++	target = alloc_target(mem_pxm);
++	if (!target)
++		return;
++
+ 	/*
+ 	 * There are potentially multiple ranges per PXM, so record each
+ 	 * in the per-target memregions resource tree.
+@@ -157,6 +170,18 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 				start, start + len, mem_pxm);
+ }
+ 
++static __init void alloc_genport_target(unsigned int mem_pxm, u8 *handle)
++{
++	struct memory_target *target;
++
++	target = alloc_target(mem_pxm);
++	if (!target)
++		return;
++
++	memcpy(target->gen_port_device_handle, handle,
++	       ACPI_SRAT_DEVICE_HANDLE_SIZE);
++}
++
+ static __init const char *hmat_data_type(u8 type)
+ {
+ 	switch (type) {
+@@ -498,6 +523,23 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
+ 	return 0;
+ }
+ 
++static __init int srat_parse_genport_affinity(union acpi_subtable_headers *header,
++					      const unsigned long end)
++{
++	struct acpi_srat_generic_affinity *ga = (void *)header;
++
++	if (!ga)
++		return -EINVAL;
++
++	if (!(ga->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
++		return 0;
++
++	alloc_genport_target(ga->proximity_domain,
++			     (u8 *)ga->device_handle);
++
++	return 0;
++}
++
+ static u32 hmat_initiator_perf(struct memory_target *target,
+ 			       struct memory_initiator *initiator,
+ 			       struct acpi_hmat_locality *hmat_loc)
+@@ -848,6 +890,13 @@ static __init int hmat_init(void)
+ 				ACPI_SRAT_TYPE_MEMORY_AFFINITY,
+ 				srat_parse_mem_affinity, 0) < 0)
+ 		goto out_put;
++
++	if (acpi_table_parse_entries(ACPI_SIG_SRAT,
++				     sizeof(struct acpi_table_srat),
++				     ACPI_SRAT_TYPE_GENERIC_PORT_AFFINITY,
++				     srat_parse_genport_affinity, 0) < 0)
++		goto out_put;
++
+ 	acpi_put_table(tbl);
+ 
+ 	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
 
 
