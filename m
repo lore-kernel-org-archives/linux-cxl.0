@@ -1,204 +1,148 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0B20323
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 14:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C3D90;
-	Wed, 11 Oct 2023 07:10:54 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5F6H5xhmz6K6hC;
-	Wed, 11 Oct 2023 22:10:31 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
- 2023 15:10:52 +0100
-Date: Wed, 11 Oct 2023 15:10:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-CC: Gregory Price <gregory.price@memverge.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Paolo
- Bonzini" <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: Accessing emulated CXL memory is unstable
-Message-ID: <20231011151051.0000343c@Huawei.com>
-In-Reply-To: <CAB=+i9S_uAUfPWSR2mJ=EzB-O2w-puK232CxbgWn8mx+YpMJCQ@mail.gmail.com>
-References: <CAB=+i9S4NSJ7iNvqguWKvFvo=cMQC21KeNETsqmJoEpj+iDmig@mail.gmail.com>
-	<ZSKupRw+mRrASUaY@memverge.com>
-	<CAB=+i9S_uAUfPWSR2mJ=EzB-O2w-puK232CxbgWn8mx+YpMJCQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BE8208A6
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 14:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FmbPrY5B"
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1875790
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Oct 2023 07:31:52 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231011143149usoutp020b7e92fbe25056f2621162ac6be70bc2~NFBPH-zSB2429524295usoutp02K;
+	Wed, 11 Oct 2023 14:31:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231011143149usoutp020b7e92fbe25056f2621162ac6be70bc2~NFBPH-zSB2429524295usoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1697034709;
+	bh=FEQWoFMrNQIdXb368wNOnARQvfkckW2OvJsmeDcDL3w=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=FmbPrY5BQWJA+BjRejtSwXycytl7MEpI2iv0qOYXo+SrUhxzA18ZFXPaPAOj5UYMU
+	 GXXMJ7H61+RimjZvqDk2Sl+sXcvRR2HBbMqwtzJJML5zgModzeB9QvZSRBmtrKAZAU
+	 wd73qno8psSdt4Uj8KWKIh+i+U+1gfVJFJynFgVA=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20231011143149uscas1p1ac67d91e48adc92df236c9f42b7b7716~NFBO7JY472669226692uscas1p1_;
+	Wed, 11 Oct 2023 14:31:49 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+	ussmges3new.samsung.com (USCPEMTA) with SMTP id BA.7F.62237.5D1B6256; Wed,
+	11 Oct 2023 10:31:49 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+	[203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231011143149uscas1p22a0c7bf455fd42d45b588990f1d39772~NFBOqkJ5L2802828028uscas1p2f;
+	Wed, 11 Oct 2023 14:31:49 +0000 (GMT)
+X-AuditID: cbfec370-b17ff7000001f31d-fc-6526b1d5a032
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
+	ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 8F.83.28590.4D1B6256; Wed,
+	11 Oct 2023 10:31:49 -0400 (EDT)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2375.24; Wed, 11 Oct 2023 07:31:48 -0700
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
+	11 Oct 2023 07:31:48 -0700
+From: Jim Harris <jim.harris@samsung.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Jim Harris <jim.harris@samsung.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>
+Subject: Re: [PATCH] cxl/region: don't try to cleanup after
+ cxl_region_setup_targets() fails
+Thread-Topic: [PATCH] cxl/region: don't try to cleanup after
+	cxl_region_setup_targets() fails
+Thread-Index: AQHZ+6j8MpVLjV1hUUCWKxMwxFDyyrBFFdKAgAAHfgA=
+Date: Wed, 11 Oct 2023 14:31:48 +0000
+Message-ID: <6AEE1954-A5E0-4026-BCD3-3603362215FF@ssi.samsung.com>
+In-Reply-To: <f3b613eb-b948-498d-bdda-9038c7cf595c@kadam.mountain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DDAA4C05617CA4184B40566E9D81F89@ssi.samsung.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42LZduzred2rG9VSDTbOkLH4MK+V3WL61AuM
+	FudnnWJxYPZYvOclk8eda3vYPD5vkgtgjuKySUnNySxLLdK3S+DKOPz6AHvBL+GKa50XmRoY
+	dwh3MXJwSAiYSMw/b9vFyMUhJLCSUeLFtU5WCKeVSeL5u9lsXYycYEVPDn5ih0isZZQ48mYi
+	VNUnRom1z1+yQTjLGCUufH0E1sImoCnx68oaJhBbREBH4t/fySwgRcwCsxklru1+ywqSEBaI
+	k7i95DgzRFG8xIc1X6BsK4knh2+CNbMIqEpMWbuUFeRYXgEniZMTM0DCnEBmx9W9YLsYBcQk
+	vp+C2MUsIC5x68l8JoizBSUWzd7DDGGLSfzb9RDqHUWJ+99fsoOMZAa6c/0ufYhWO4lZ6zez
+	Q9iKElO6H4LZvEBjTs58wgLRKilxcMUNsFckBNZySLw8fBhqvovE8n3HGCFsaYmr16dCxbMl
+	Vq7vYIKEdYFEw5EgiLC1xMI/65kmMKrMQnL1LISLZiG5aBaSi2YhuWgBI+sqRvHS4uLc9NRi
+	47zUcr3ixNzi0rx0veT83E2MwPRy+t/hgh2Mt2591DvEyMTBeIhRgoNZSYT3UaZKqhBvSmJl
+	VWpRfnxRaU5q8SFGaQ4WJXFeQ9uTyUIC6YklqdmpqQWpRTBZJg5OqQamHZOCw4+1LHz/bo+7
+	W8CNlBf+lmqBi5tddudMn1YwuXEF67ogZ72O+83C//h1X0erTWaS/aNbqLPgrJT2/Wl9f0XX
+	nmc6fMKrJYjxUV/UxCPrmHuupAQ/75oxXeBK5jqhBbParfQOrl7Q+zT3+sIbhuy/HL62XLh4
+	fnvULMXS0+Y+979NiQwwXf3pj5ZBtVS95JJzbk8+syUKvVfpsincNvWY9PXk5QvuF7uw3Vmy
+	eX35QQPeAA7PqJ7KuVedNJIn8j22drlVK3ld/6KmkXlRRqL1N/1Zewv2OWxfyrt6hcPG7ML0
+	9CUHOS6sV9PekHxG5OacSRwiUwsL790S+aO8yOanfMBWxkOZMr2Mp84+UGIpzkg01GIuKk4E
+	ABnXljqeAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsWS2cA0SffqRrVUg/dfOC0+zGtlt5g+9QKj
+	xflZp1gcmD0W73nJ5HHn2h42j8+b5AKYo7hsUlJzMstSi/TtErgyDr8+wF7wS7jiWudFpgbG
+	HcJdjJwcEgImEk8OfmLvYuTiEBJYzSixf/ZMKOcTo8Sd6T+YIZxljBIzPq5iBGlhE9CU+HVl
+	DROILSKgI/Hv72QWkCJmgdmMEtd2v2UFSQgLxEncXnKcGaIoXqL5wANWCNtK4snhm2DNLAKq
+	ElPWLgWKc3DwCjhJnJyYAbHsOaPEy/c/wWo4geIdV/eygdiMAmIS309BLGYWEJe49WQ+E8QP
+	AhJL9pxnhrBFJV4+/scKYStK3P/+kh1kPjPQ0et36UO02knMWr+ZHcJWlJjS/RDM5hUQlDg5
+	8wkLRKukxMEVN1gmMErMQrJtFsKkWUgmzUIyaRaSSQsYWVcxipcWF+emVxQb5qWW6xUn5haX
+	5qXrJefnbmIExufpf4cjdzAevfVR7xAjEwfjIUYJDmYlEd5HmSqpQrwpiZVVqUX58UWlOanF
+	hxilOViUxHl3TLmYIiSQnliSmp2aWpBaBJNl4uCUamAyDH/twf9fd+9+zy1fTEJZdZ/KG8RG
+	7AjbI+YwKYY1blvqxe+P5J8slv7Aelg4ZsfLP5lp/d2Puu6dvulmse3Lk+X7zF4ZPfUIYvsq
+	0W19tfbEy7+JTu0sZyIKDnuYrupu7+t/dFrnwNyTLN2ut06xpPxVuZjoHGr4lslV+D7HsdRd
+	y1P22vsVHTrvM9veQ593ncKS8x37aq9vluB+VqOYu1n+4ekm6ch7kqlLHJQCdq9vW7Wotab7
+	ttrzZ5ar11s2m8g2fJh+/aax97Z0yVfMjeUn1AJl38dqBj18z2vTwellenxWveI6e7dNNYKz
+	j9vlLfx0MSy41twt5qPE/qUecZ7vLVbuWj1tdTPj6kAlluKMREMt5qLiRADhInyRPgMAAA==
+X-CMS-MailID: 20231011143149uscas1p22a0c7bf455fd42d45b588990f1d39772
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20231010183840uscas1p294532ae60e6014508efd897fef14fffd
+References: <CGME20231010183840uscas1p294532ae60e6014508efd897fef14fffd@uscas1p2.samsung.com>
+	<169696311899.1171696.7812961484055097837.stgit@bgt-140510-bm03.eng.stellus.in>
+	<f3b613eb-b948-498d-bdda-9038c7cf595c@kadam.mountain>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, 11 Oct 2023 09:50:07 +0900
-Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-
-> On Wed, Oct 11, 2023 at 12:54=E2=80=AFAM Gregory Price
-> <gregory.price@memverge.com> wrote:
-> >
-> > On Tue, Oct 10, 2023 at 10:35:03AM +0900, Hyeonggon Yoo wrote: =20
-> > > Hello folks,
-> > >
-> > > I experienced strange application crashes/internal KVM errors
-> > > while playing with emulated type 3 CXL memory. I would like to know
-> > > if this is a real issue or I missed something during setup.
-> > >
-> > > TL;DR: applications crash when accessing emulated CXL memory,
-> > > and stressing VM subsystem causes KVM internal error
-> > > (stressing via stress-ng --bigheap)
-> > > =20
-> > ... =20
-> > >
-> > > Hmm... it crashed, and it's 'invalid opcode'.
-> > > Is this because the fetched instruction is different from what's
-> > > written to memory during exec()?
-> > > =20
-> >
-> > This is a known issue, and the working theory is 2 issues: =20
->=20
-> Okay, at least it's a known issue. Thank you for confirming that!
-Yeah - have an outstanding request in my list to at least print a
-warning on this.  There are usecases where you want to use KVM
-and the emulated support but there are gremlins as you discovered.
-
->=20
-> >
-> > 1) CXL devices are implemented on top of an MMIO-style dispatch system
-> >    and as a result memory from CXL is non-cacheable.  We think there
-> >    may be an issue with this in KVM but it hasn't been investigated
-> >    fully.
-> >
-> > 2) When we originally got CXL memory support, we discovered an edge case
-> >    where code pages hosted on CXL memory would cause a crash whenever an
-> >    instruction spanned across a page barrier.  A similar issue could
-> >    affect KVM.
-
-The TCG case was thought to be fixed.  KVM will indeed blow up if you
-try to run instructions out of the emulated CXL memory whether or not they
-cross page boundaries.  That could be fixed by a caching layer inbetween
-so KVM thought it was running on page based translation but CXL was
-doing some interesting write back stuff underneath. Can sort of see how
-it might work but it's complex.
-
-> >
-> > We haven't done much research into the problem beyond this.  For now, we
-> > all just turn KVM off while we continue development. =20
->=20
-> Thank you for summarizing the current state of the issue.
-> Hope it will be resolved! ;)
-
-Any resolution whilst retaining the full routing / decoder emulation in
-QEMU is tricky to put it lightly.  No one has taken it on yet as mostly
-TCG get's us going.
-
->=20
-> But I'm not sure if turning off KVM solves the problem.
-> `numactl --membind=3D1 --show` works fine, but other basic UNIX commands =
-like ls
-> crashes QEMU when it's bind to the CXL NUMA node.
-
-Hmm. This is new if KVM is definitely off?
-
->=20
-> [root@localhost ~]# numactl --membind=3D1 --show
-> policy: bind
-> preferred node: 1
-> physcpubind: 0
-> cpubind: 0
-> nodebind: 0
-> membind: 1
-> [root@localhost ~]# numactl --membind=3D1 ls
->=20
-> qemu: fatal: cpu_io_recompile: could not find TB for pc=3D(nil)
-> RAX=3D0000777f80000000 RBX=3D0000000000000000 RCX=3D0000000000000028
-> RDX=3D0000000000000000
-> RSI=3D0000000000000354 RDI=3D0000000000000000 RBP=3Dffff88810628af40
-> RSP=3Dffffc900008cfd20
-> R8 =3Dffff88810628af40 R9 =3Dffffc900008cfcc4 R10=3D000000000000000d
-> R11=3D0000000000000000
-> R12=3D0000000390440000 R13=3Dffff888107a464c0 R14=3D0000000000000000
-> R15=3Dffff88810a49cd18
-> RIP=3Dffffffff810743e6 RFL=3D00000007 [-----PC] CPL=3D0 II=3D0 A20=3D1 SM=
-M=3D0 HLT=3D0
-> ES =3D0000 0000000000000000 00000000 00000000
-> CS =3D0010 0000000000000000 ffffffff 00af9b00 DPL=3D0 CS64 [-RA]
-> SS =3D0000 0000000000000000 00000000 00000000
-> DS =3D0000 0000000000000000 00000000 00000000
-> FS =3D0000 0000000000000000 00000000 00000000
-> GS =3D0000 ffff88817bc00000 00000000 00000000
-> LDT=3D0000 0000000000000000 00000000 00008200 DPL=3D0 LDT
-> TR =3D0040 fffffe0000003000 00004087 00008900 DPL=3D0 TSS64-avl
-> GDT=3D     fffffe0000001000 0000007f
-> IDT=3D     fffffe0000000000 00000fff
-> CR0=3D80050033 CR2=3D00007fcb2504641c CR3=3D0000000390440000 CR4=3D007506=
-f0
-> DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000
-> DR3=3D0000000000000000
-> DR6=3D00000000ffff0ff0 DR7=3D0000000000000400
-> CCS=3D0000777f80000000 CCD=3D0000000390440000 CCO=3DADDQ
-> EFER=3D0000000000000d01
-> FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
-> FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
-> FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
-> FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
-> FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
-> YMM00=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM01=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM02=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM03=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM04=3D0000000000000000 0000000000000000 00006968705f6e6f 657800006c6c65=
-77
-> YMM05=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM06=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM07=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM08=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM09=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM10=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM11=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM12=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM13=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM14=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> YMM15=3D0000000000000000 0000000000000000 0000000000000000 00000000000000=
-00
-> cxl2.sh: line 24:  5386 Aborted                 (core dumped) $QEMU
-> -cpu Cascadelake-Server -smp 1 -M q35,cxl=3Don -m 4G,maxmem=3D8G,slots=3D4
-> -object memory-backend-ram,id=3Dvmem0,share=3Don,size=3D4G -device pxb-cc
->=20
-> --
-> Cheers,
-> Hyeonggon
->=20
-
+DQoNCj4gT24gT2N0IDExLCAyMDIzLCBhdCA3OjA04oCvQU0sIERhbiBDYXJwZW50ZXIgPGRhbi5j
+YXJwZW50ZXJAbGluYXJvLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBUdWUsIE9jdCAxMCwgMjAyMyBh
+dCAwNjozODozOVBNICswMDAwLCBKaW0gSGFycmlzIHdyb3RlOg0KPj4gUGF0Y2ggNWU0MmJjYmMg
+KCJjeGwvcmVnaW9uOiBkZWNyZW1lbnQgLT5ucl90YXJnZXRzIG9uIGVycm9yIGluDQo+PiBjeGxf
+cmVnaW9uX2F0dGFjaCgpIikgdHJpZWQgdG8gYXZvaWQgJ2VpdycgaW5pdGlhbGl6YXRpb24gZXJy
+b3JzIHdoZW4NCj4+IC0+bnJfdGFyZ2V0cyBleGNlZWRlZCAxNiwgYnkganVzdCBkZWNyZW1lbnRp
+bmcgLT5ucl90YXJnZXRzIHdoZW4NCj4+IGN4bF9yZWdpb25fc2V0dXBfdGFyZ2V0cygpIGZhaWxl
+ZC4NCj4gDQo+IEkgbWVhbiB0aGF0J3Mgd2hhdCBJIHdyb3RlIGJ1dCBJIGZhaXJseSBzdXJlIHRo
+YXQgSSB3YXMgY29uY2VybmVkIGFib3V0DQo+IC0+bnJfdGFyZ2V0cyBnZXR0aW5nIGluY3JlbWVu
+dGVkIHRvIGFuIGludmFsaWQgdmFsdWUuDQo+IA0KPiBkcml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5j
+DQo+ICAxNzQ2ICAgICAgICAgIHAtPnRhcmdldHNbcG9zXSA9IGN4bGVkOw0KPiAgICAgICAgICAg
+ICAgICBeXl5eXl5eXl5eXl5eXl4NCj4gVGhpcyBhcnJheSBoYXMgQ1hMX0RFQ09ERVJfTUFYX0lO
+VEVSTEVBVkUgKDE2KSBlbGVtZW50cy4NCg0KQWdyZWVkLCB3ZSBuZWVkIHRvIGd1YXJkIGFnYWlu
+c3QgdGhlIGFycmF5IG92ZXJmbG93IHRvby4NCg0KPiANCj4gQnV0IEkgd2FzIGp1c3QgZ29pbmcg
+ZnJvbSBzdGF0aWMgYW5hbHlzaXMgYW5kIGNvZGUgcmV2aWV3IGFuZCBub3QNCj4gdGVzdGluZyBh
+bmQgb2J2aW91c2x5IHlvdSBoYXZlIHRlc3RlZCB0aGlzLiAgQSBzaW1wbGUgZml4IGZvciBteQ0K
+PiBjb25jZXJuIHdvdWxkIGJlIHRvIGRvIHRoaXM6DQo+IA0KPiByZWdhcmRzLA0KPiBkYW4gY2Fy
+cGVudGVyDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jeGwvY29yZS9yZWdpb24uYyBiL2Ry
+aXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMNCj4gaW5kZXggNmQ2M2I4Nzk4YzI5Li41OTQ4YzRhMDE3
+NDUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMNCj4gKysrIGIvZHJp
+dmVycy9jeGwvY29yZS9yZWdpb24uYw0KPiBAQCAtMTY0OSw2ICsxNjQ5LDExIEBAIHN0YXRpYyBp
+bnQgY3hsX3JlZ2lvbl9hdHRhY2goc3RydWN0IGN4bF9yZWdpb24gKmN4bHIsDQo+IHJldHVybiAt
+RU5PREVWOw0KPiB9DQo+IA0KPiArIGlmIChwLT5ucl90YXJnZXRzID49IHAtPmludGVybGVhdmVf
+d2F5cykgew0KPiArIGRldl9kYmcoJmN4bHItPmRldiwgIiVzIHRvbyBtYW55IHJlZ2lvbnNcbiIs
+IGRldl9uYW1lKCZjeGxlZC0+Y3hsZC5kZXYpKTsNCj4gKyByZXR1cm4gLUVJTlZBTDsNCj4gKyB9
+DQo+ICsNCj4gLyogYWxsIGZ1bGwgb2YgbWVtYmVycywgb3IgaW50ZXJsZWF2ZSBjb25maWcgbm90
+IGVzdGFibGlzaGVkPyAqLw0KPiBpZiAocC0+c3RhdGUgPiBDWExfQ09ORklHX0lOVEVSTEVBVkVf
+QUNUSVZFKSB7DQo+IGRldl9kYmcoJmN4bHItPmRldiwgInJlZ2lvbiBhbHJlYWR5IGFjdGl2ZVxu
+4oCdKTsNCg0KSeKAmWxsIHB1c2ggYSB2Mi4NCg0KSSBoYWQgdG8gY29udmluY2UgbXlzZWxmIHRo
+YXQgd2UgZGlkbuKAmXQgYWxzbyBuZWVkIGEgY29tcGFyaXNvbiBhZ2FpbnN0DQpDWExfREVDT0RF
+Ul9NQVhfSU5URVJMRUFWRS4gQnV0IGludGVybGVhdmVfd2F5c19zdG9yZSgpIHdpbGwgZmFpbCB3
+aXRoDQphIHZhbHVlID4gMTYgdmlhIHRoZSB3YXlzX3RvX2VpdygpIGNhbGwsIHNvIHRoZSBwLT5p
+bnRlcmxlYXZlX3dheXMgY2hlY2sNCmlzIHN1ZmZpY2llbnQuDQoNCg0K
