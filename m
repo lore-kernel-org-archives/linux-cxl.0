@@ -1,99 +1,165 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D489B208D5
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 09:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1EC20B2F
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C274ED;
-	Thu, 12 Oct 2023 02:15:45 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id DACAF100DCEF1;
-	Thu, 12 Oct 2023 11:15:42 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 8BED2224D1; Thu, 12 Oct 2023 11:15:42 +0200 (CEST)
-Date: Thu, 12 Oct 2023 11:15:42 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231012091542.GA22596@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FE491
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 04:04:55 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5mvD6ff9z6K6B0;
+	Thu, 12 Oct 2023 19:02:48 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 12 Oct
+ 2023 12:04:52 +0100
+Date: Thu, 12 Oct 2023 12:04:51 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v10 21/22] cxl: Export sysfs attributes for memory
+ device QoS class
+Message-ID: <20231012120451.000051a9@Huawei.com>
+In-Reply-To: <48be28cb-ed68-45c4-a271-bf9492c75eb4@intel.com>
+References: <169698612949.1991735.1140524325982776941.stgit@djiang5-mobl3>
+	<169698642598.1991735.4883136743132463123.stgit@djiang5-mobl3>
+	<20231011142626.00002b16@Huawei.com>
+	<48be28cb-ed68-45c4-a271-bf9492c75eb4@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
-> But the way SPDM is done now is that if the user (as myself) wants to let
-> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> parameters), and does not provide a sysfs knob to control its tentacles.
-> Kinda harsh.
+On Wed, 11 Oct 2023 14:43:14 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-*before* it is passed through to a guest?  If so, why does it do that?
+> On 10/11/23 06:26, Jonathan Cameron wrote:
+> > On Tue, 10 Oct 2023 18:07:06 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> Export qos_class sysfs attributes for the CXL memory device. The QoS clas
+> >> should show up as /sys/bus/cxl/devices/memX/ram/qos_class0 for the volatile
+> >> partition and /sys/bus/cxl/devices/memX/pmem/qos_class0 for the persistent
+> >> partition. The QTG ID is retrieved via _DSM after supplying the
+> >> calculated bandwidth and latency for the entire CXL path from device to
+> >> the CPU. This ID is used to match up to the root decoder QoS class to
+> >> determine which CFMWS the memory range of a hotplugged CXL mem device
+> >> should be assigned under.
+> >>
+> >> While there may be multiple DSMAS exported by the device CDAT, the driver
+> >> will only expose the first QTG ID per partition in sysfs for now. In the
+> >> future when multiple QTG IDs are necessary, they can be exposed. [1]  
+> > 
+> > I'm not sure this will extent cleanly if we get a two dimensional set to describle
+> > 1) Multiple DSMAS entries for RAM (so multiple inputs to pass to the _DSM)
+> >    One nice thing here might be to ensure we have the first one seen.
+> >    So if in future we do need to extent it this corresponds to the 0th one
+> >    described.
+> > 2) Want to describe less ideal QTG values from _DSM 
+> > 
+> > 
+> > Maybe it's too early to come to any conclusion and the single 0 is enough.
+> > The cynic in me suggests we call it. qos_class0_0 though to give us the space.
+> > If we needs DSMAS ranges, then we describe those using first index,
+> > and second is the priority index if we have multiple answers from _DSM.
+> > For now it's always 0_0  
+> 
+> I talked to Dan and it seems he prefers the simplest form for the current version until we have a need to move towards something more complex. So qos_class0 -> qos_class. We can move to qos_classN_M when there is a need.
+> 
+> 
+Ok.   We would need to maintain the qos_class interface as whatever it
+is today, but that's fine.
 
-Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-i.e. the TSM should only have the need to perform SPDM exchanges with
-the device when it is passed through.
+J
+> > 
+> > 
+> > Jonathan
+> >   
+> >>
+> >> [1]: https://lore.kernel.org/linux-cxl/167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local/T/#md2a47b1ead3e1ba08f50eab29a4af1aed1d215ab
+> >>
+> >> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> >>
+> >> ---
+> >> v10:
+> >> - Export only qos_class0, the first entry. Additional qos_class entries can be
+> >>   exported later as needed. (Dan)
+> >> - Have the sysfs attrib return -ENOENT unless driver is attached. (Dan)
+> >> - Removed Jonathan's review tag due to code changes.
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-cxl |   34 +++++++++++++++++++++++++++++++
+> >>  drivers/cxl/core/memdev.c               |   34 +++++++++++++++++++++++++++++++
+> >>  2 files changed, 68 insertions(+)
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> >> index 44ffbbb36654..dd613f5987b5 100644
+> >> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> >> @@ -28,6 +28,23 @@ Description:
+> >>  		Payload in the CXL-2.0 specification.
+> >>  
+> >>  
+> >> +What:		/sys/bus/cxl/devices/memX/ram/qos_class0
+> >> +Date:		May, 2023
+> >> +KernelVersion:	v6.7
+> >> +Contact:	linux-cxl@vger.kernel.org
+> >> +Description:
+> >> +		(RO) For CXL host platforms that support "QoS Telemmetry"
+> >> +		this attribute conveys a comma delimited list of platform
+> >> +		specific cookies that identifies a QoS performance class
+> >> +		for the volatile partition of the CXL mem device. These
+> >> +		class-ids can be compared against a similar "qos_class"
+> >> +		published for a root decoder. While it is not required
+> >> +		that the endpoints map their local memory-class to a
+> >> +		matching platform class, mismatches are not recommended
+> >> +		and there are platform specific performance related
+> >> +		side-effects that may result. First class-id is displayed.
+> >> +
+> >> +
+> >>  What:		/sys/bus/cxl/devices/memX/pmem/size
+> >>  Date:		December, 2020
+> >>  KernelVersion:	v5.12
+> >> @@ -38,6 +55,23 @@ Description:
+> >>  		Payload in the CXL-2.0 specification.
+> >>  
+> >>  
+> >> +What:		/sys/bus/cxl/devices/memX/pmem/qos_class0
+> >> +Date:		May, 2023
+> >> +KernelVersion:	v6.7
+> >> +Contact:	linux-cxl@vger.kernel.org
+> >> +Description:
+> >> +		(RO) For CXL host platforms that support "QoS Telemmetry"
+> >> +		this attribute conveys a comma delimited list of platform
+> >> +		specific cookies that identifies a QoS performance class
+> >> +		for the persistent partition of the CXL mem device. These
+> >> +		class-ids can be compared against a similar "qos_class"
+> >> +		published for a root decoder. While it is not required
+> >> +		that the endpoints map their local memory-class to a
+> >> +		matching platform class, mismatches are not recommended
+> >> +		and there are platform specific performance related
+> >> +		side-effects that may result. First class-id is displayed.
+> >> +
+> >> +  
+> > 
+> >   
+> 
 
-So the host enumerates the DOE protocols and authenticates the device.
-When the device is passed through, patch 12/12 ensures that the host
-keeps its hands off of the device, thus affording the TSM exclusive
-SPDM control.
-
-I agree that the commit message of 12/12 is utterly misleading in that
-it says "the guest" is granted exclusive control.  It should say "the TSM"
-instead.  (There might be implementations where the guest itself has
-the role of the TSM and authenticates the device on its own behalf,
-but PCIe r6.1 sec 11 uses the term "TSM" so that's what the commit
-message needs to use.)
-
-However apart from the necessary rewrite of the commit message and
-perhaps a rename of the PCI_CMA_OWNED_BY_GUEST flag, I think patch 12/12
-should already be doing exactly what you need -- provided that the
-PSP doesn't perform SPDM exchanges before passthrough.  If it already
-performs them, say, on boot, I'd like to understand the reason.
-
-Thanks,
-
-Lukas
