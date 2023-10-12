@@ -1,93 +1,226 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C45DDDB
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 07:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEC29D;
-	Thu, 12 Oct 2023 00:16:31 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 904BD2800B1AF;
-	Thu, 12 Oct 2023 09:16:29 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 821D9224D1; Thu, 12 Oct 2023 09:16:29 +0200 (CEST)
-Date: Thu, 12 Oct 2023 09:16:29 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alistair Francis <Alistair.Francis@wdc.com>
-Cc: "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	"graf@amazon.com" <graf@amazon.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"ming4.li@intel.com" <ming4.li@intel.com>,
-	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-	"helgaas@kernel.org" <helgaas@kernel.org>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-	"dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-	"aik@amd.com" <aik@amd.com>,
-	"david.e.box@intel.com" <david.e.box@intel.com>,
-	"linuxarm@huawei.com" <linuxarm@huawei.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"dhowells@redhat.com" <dhowells@redhat.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <20231012071629.GA6305@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
- <20231003153937.000034ca@Huawei.com>
- <caf11c28d21382cc1a81d84a23cbca9e70805a87.camel@wdc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0BC1EA73
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 08:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWUyTjuQ"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E63C0
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 01:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697100056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oUu9gspJCKmtseGxPT5e7VM//lOrd9x+RY45RlgrqZo=;
+	b=QWUyTjuQztQ/LsQsa0q9IgBE1+D1o6AhBmD0bUmscq7ZbQFHbmUYENugfzKDSh6w9C5+N7
+	USqiDfzM5JfpLbylYBjXaFmmUlC6KotKAS6cqzRL7fX/5c8qGeKaRhIFtrdtXVp5r98L4R
+	py9U+AlKeTxULcjkrZWb5mgjabTB9L4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-502-pqYQDo2sP2ic6OtBm-4EjA-1; Thu, 12 Oct 2023 04:40:53 -0400
+X-MC-Unique: pqYQDo2sP2ic6OtBm-4EjA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4055ce1e8c4so8343555e9.0
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 01:40:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697100052; x=1697704852;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oUu9gspJCKmtseGxPT5e7VM//lOrd9x+RY45RlgrqZo=;
+        b=cy8PmWYgGK+4VkfdMhbPeD3kwF2XrNw4KAi2/i7Uh3K7YSK8k2U5s+Vt1SCRyzmVOr
+         y2fZXttmIwKDgfmFLiJMqnCJFDwJyUw37etnc8Gypg1UTm4WahxfejgPW81ka9+CdbtT
+         J/WcHb/kSsDIclrlihgKTSxd0H/R0mFVdPcMdFDO5Dj+p4a9wKX6ND8HBCuRecu/mWk2
+         LteMhkH2c5zHCvTTTfBUgKR7rdx2/sdYGeZkL5N16+lEY5k07KFB5LM7dRPWCVj2rhqL
+         HJZFeEz8ZqcOlq0BDrz/l+HbWrTNVTGQ1/7K02YQc4zlADksO21lVjAgBa+/ERXtNm8Q
+         wwVA==
+X-Gm-Message-State: AOJu0YxhpC2oMdvH3Oa1n4PtK+8ABJ3o/y/Vx+20sxhfijYHwfzrCb6D
+	ljQpekNHARd9qN01z0P/Se274CEv+4lk0/ej+kDtGy6jJq6oDEdUmSfSHNTztmW6QtzXvqtYsnJ
+	Hcj9cxh2WTZ22JlK5UDCW
+X-Received: by 2002:adf:fd0d:0:b0:32d:92fc:a625 with SMTP id e13-20020adffd0d000000b0032d92fca625mr724716wrr.24.1697100052413;
+        Thu, 12 Oct 2023 01:40:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHnsVLUc9SJqZHyOsUziQY+Ca/ePvrWEabXeptfmw7K7cVLyJaUKLY9iF+clfj3wVEPiBqd5w==
+X-Received: by 2002:adf:fd0d:0:b0:32d:92fc:a625 with SMTP id e13-20020adffd0d000000b0032d92fca625mr724682wrr.24.1697100051973;
+        Thu, 12 Oct 2023 01:40:51 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70d:ee00:b271:fb6c:a931:4769? (p200300cbc70dee00b271fb6ca9314769.dip0.t-ipconnect.de. [2003:cb:c70d:ee00:b271:fb6c:a931:4769])
+        by smtp.gmail.com with ESMTPSA id g8-20020a5d5408000000b0031c5b380291sm17680891wrv.110.2023.10.12.01.40.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 01:40:51 -0700 (PDT)
+Message-ID: <748d40cb-35f4-98d6-a940-055de88bbc8b@redhat.com>
+Date: Thu, 12 Oct 2023 10:40:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <caf11c28d21382cc1a81d84a23cbca9e70805a87.camel@wdc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "Huang, Ying" <ying.huang@intel.com>
+Cc: "Hocko, Michal" <mhocko@suse.com>, "Jiang, Dave" <dave.jiang@intel.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "osalvador@suse.de" <osalvador@suse.de>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Williams, Dan J" <dan.j.williams@intel.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "jmoyer@redhat.com" <jmoyer@redhat.com>,
+ "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
+References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
+ <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
+ <87jzrylslk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <831b9b12-08fe-f5dc-f21d-83284b0aee8a@redhat.com>
+ <f0d385f1c1961a17499e5acccf3ae7cdadb942cb.camel@intel.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
+In-Reply-To: <f0d385f1c1961a17499e5acccf3ae7cdadb942cb.camel@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+	SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 03:26:44AM +0000, Alistair Francis wrote:
-> On Tue, 2023-10-03 at 15:39 +0100, Jonathan Cameron wrote:
-> > On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:
-> > > This implementation supports SPDM 1.0 through 1.3 (the latest
-> > > version).
-> > 
-> > I've no strong objection in allowing 1.0, but I think we do need
-> > to control min version accepted somehow as I'm not that keen to get
-> > security folk analyzing old version...
+On 12.10.23 07:53, Verma, Vishal L wrote:
+> On Mon, 2023-10-09 at 17:04 +0200, David Hildenbrand wrote:
+>> On 07.10.23 10:55, Huang, Ying wrote:
+>>> Vishal Verma <vishal.l.verma@intel.com> writes:
+>>>
+>>>> @@ -2167,47 +2221,28 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>>>>          if (rc)
+>>>>                  return rc;
+>>>>    
+>>>> +       mem_hotplug_begin();
+>>>> +
+>>>>          /*
+>>>> -        * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
+>>>> -        * the same granularity it was added - a single memory block.
+>>>> +        * For memmap_on_memory, the altmaps could have been added on
+>>>> +        * a per-memblock basis. Loop through the entire range if so,
+>>>> +        * and remove each memblock and its altmap.
+>>>>           */
+>>>>          if (mhp_memmap_on_memory()) {
+>>>
+>>> IIUC, even if mhp_memmap_on_memory() returns true, it's still possible
+>>> that the memmap is put in DRAM after [2/2].  So that,
+>>> arch_remove_memory() are called for each memory block unnecessarily.  Can
+>>> we detect this (via altmap?) and call remove_memory_block_and_altmap()
+>>> for the whole range?
+>>
+>> Good point. We should handle memblock-per-memblock onny if we have to
+>> handle the altmap. Otherwise, just call a separate function that doesn't
+>> care about -- e.g., called remove_memory_blocks_no_altmap().
+>>
+>> We could simply walk all memory blocks and make sure either all have an
+>> altmap or none has an altmap. If there is a mix, we should bail out with
+>> WARN_ON_ONCE().
+>>
+> Ok I think I follow - based on both of these threads, here's my
+> understanding in an incremental diff from the original patches (may not
+> apply directly as I've already committed changes from the other bits of
+> feedback - but this should provide an idea of the direction) -
 > 
-> Agreed. I'm not sure we even need to support 1.0
+> ---
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 507291e44c0b..30addcb063b4 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -2201,6 +2201,40 @@ static void __ref remove_memory_block_and_altmap(u64 start, u64 size)
+>   	}
+>   }
+>   
+> +static bool memblocks_have_altmaps(u64 start, u64 size)
+> +{
+> +	unsigned long memblock_size = memory_block_size_bytes();
+> +	u64 num_altmaps = 0, num_no_altmaps = 0;
+> +	struct memory_block *mem;
+> +	u64 cur_start;
+> +	int rc = 0;
+> +
+> +	if (!mhp_memmap_on_memory())
+> +		return false;
 
-According to PCIe r6.1 page 115 ("Reference Documents"):
+Probably can remove that, checked by the caller. (or drop the one in the 
+caller)
 
-   "CMA requires SPDM Version 1.0 or above.  IDE requires SPDM Version 1.1
-    or above.  TDISP requires version 1.2 or above."
+> +
+> +	for (cur_start = start; cur_start < start + size;
+> +	     cur_start += memblock_size) {
+> +		if (walk_memory_blocks(cur_start, memblock_size, &mem,
+> +				       test_has_altmap_cb))
+> +			num_altmaps++;
+> +		else
+> +			num_no_altmaps++;
+> +	}
 
-This could be interpreted as SPDM 1.0 support being mandatory to be
-spec-compliant.  Even if we drop support for 1.0 from the initial
-bringup patches, someone could later come along and propose a patch
-to re-add it on the grounds of the above-quoted spec section.
-So I think we can't avoid it.
+You should do that without the outer loop, by doing the counting in the 
+callback function instead.	
 
-Thanks,
+> +
+> +	if (!num_altmaps && num_no_altmaps > 0)
+> +		return false;
+> +
+> +	if (!num_no_altmaps && num_altmaps > 0)
+> +		return true;
+> +
+> +	/*
+> +	 * If there is a mix of memblocks with and without altmaps,
+> +	 * something has gone very wrong. WARN and bail.
+> +	 */
+> +	WARN_ONCE(1, "memblocks have a mix of missing and present altmaps");
 
-Lukas
+It would be better if we could even make try_remove_memory() fail in 
+this case.
+
+> +	return false;
+> +}
+> +
+>   static int __ref try_remove_memory(u64 start, u64 size)
+>   {
+>   	int rc, nid = NUMA_NO_NODE;
+> @@ -2230,7 +2264,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>   	 * a per-memblock basis. Loop through the entire range if so,
+>   	 * and remove each memblock and its altmap.
+>   	 */
+> -	if (mhp_memmap_on_memory()) {
+> +	if (mhp_memmap_on_memory() && memblocks_have_altmaps(start, size)) {
+>   		unsigned long memblock_size = memory_block_size_bytes();
+>   		u64 cur_start;
+>   
+> @@ -2239,7 +2273,8 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>   			remove_memory_block_and_altmap(cur_start,
+>   						       memblock_size);
+
+^ probably cleaner move the loop into remove_memory_block_and_altmap() 
+and call it remove_memory_blocks_and_altmaps(start, size) instead.
+
+>   	} else {
+> -		remove_memory_block_and_altmap(start, size);
+> +		remove_memory_block_devices(start, size);
+> +		arch_remove_memory(start, size, NULL);
+>   	}
+>   
+>   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> 
+
+-- 
+Cheers,
+
+David / dhildenb
+
