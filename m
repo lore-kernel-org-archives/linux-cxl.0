@@ -1,218 +1,121 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859BE2AB39
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369903D008
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 23:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TYfinP+i"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A16083
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697136944; x=1728672944;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Us4xbz1jEw5CIMuHHOMNuigmLVLkQCoc0iTk+tbOmYA=;
-  b=TYfinP+iweWeeVwlYEFnVKa2ZG8Ii1GfFGBPwCOWfQHRMlKnOgEXNr/Z
-   Mz9lTB7jA2WaRu6dOuhIRYkPUOFwavTMJ/Kx+0/MlgzuHJh8scSKtOMQX
-   acMMXGYqcP/XUUusiwQQJPS1HnS4rYGW8x+SZFsSFgpqbkOGYFUd37N5M
-   9y4BeLUzKIcAKdGy2wlI+Hnm0QfcXah7+OIyU+kc3F3AirHQhhJYDnktG
-   B63rpUEj49ckPZv36mRc8bOiP7QRhGpnOQlao8Kp6dbiYOPkSLjK/cI+a
-   YKTEzHJq+W6JVT4UBEEbS1DZV51wY004eOSSW2R1yIy34R6M/6fOW4U8u
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="388880518"
-X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="388880518"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="870711774"
-X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="870711774"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.15.16])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:42 -0700
-Subject: [PATCH v11 22/22] cxl: Check qos_class validity on memdev probe
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 12 Oct 2023 11:55:41 -0700
-Message-ID: <169713694184.2205276.9863653630713216825.stgit@djiang5-mobl3>
-In-Reply-To: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
-References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jxCbiDDg"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B73E107;
+	Thu, 12 Oct 2023 16:03:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kftVyhn+hiTYcnTa4rXXIgRH2/o37lkWnSxOfp2vmTTvWO5lOzeDaiqAJAGyKWEmmNqW34poIb7Q2+U98ggxm7alz4meqZgoILC5RwYz3AgbH/7LETLADnVZlI6wctzyDaGPWy+GY6nashFPqy0ErRbFwyYjD4tOaJy1Xhh9UQwRtUqI/ChWrGOpno9RgucAX4X3724X9ypCfCJGdDuCS7a5OXcSqQ8MILfyj/Rb+eyn0jzBRECRehwC9U+9altkZKbuj5Azn2qwSjUrZaYCsA0gdwS+Kcu+r393WU+XaHNRT+h1gHe/Xf7Lti/bUJLMjD0mEuiVYEvgWK0pVQAXBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p9bg4gxPY8sTxr7lBipM/rfcpj27DWcIWYQvu7aL6t0=;
+ b=KiFZaFgLc45/6PXUjDHIGfbGj2+U8pZ5MiNRPEc5fED8O1bUSXp0ssb35/eIfSOSnfed5N1al/SfMkknmTPlibOAoIDMSUcftSwwl3Tebqzhh7siRSArkzBtl53STuBQCLOddL35sSOa+hnZiu7o1RR9oNZLKJWnkwdRZ/iGSRY/X184Ot3eJ3am8nFggl8vbxU5vvtA9QvQJBEn6STpEz/bXoqJSK825JRBWSPWi+OpQMrEOKIw4ad8goVjr5+G+EhAqVrxSEaSs9LjFzwBloHFoczH8N03cqIgcjMIh1gtI8HAtlaA93f7eGUV3DPD/yVmbo1aYQNSM37+IV2pyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p9bg4gxPY8sTxr7lBipM/rfcpj27DWcIWYQvu7aL6t0=;
+ b=jxCbiDDgBfftgAFySJ2PFVAB7OJtPD4MxeG+ysR+SqwNsz+M9IY4JLFTSyevh2UCz6Ks2zyDNg2F1TBTrXZ8Ny8mZXdYFhA7IXbk5fEbmS8ljowkjdRxechDw3oO3cYvvVCYsV954S6mt5NlkpfLaKfKgf0Gy8Vd86HT+nBXXWQ=
+Received: from CY5PR15CA0090.namprd15.prod.outlook.com (2603:10b6:930:18::8)
+ by CY8PR12MB8340.namprd12.prod.outlook.com (2603:10b6:930:7a::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.44; Thu, 12 Oct
+ 2023 23:03:17 +0000
+Received: from CY4PEPF0000EE3D.namprd03.prod.outlook.com
+ (2603:10b6:930:18:cafe::d4) by CY5PR15CA0090.outlook.office365.com
+ (2603:10b6:930:18::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.27 via Frontend
+ Transport; Thu, 12 Oct 2023 23:03:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE3D.mail.protection.outlook.com (10.167.242.17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6838.22 via Frontend Transport; Thu, 12 Oct 2023 23:03:17 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 12 Oct
+ 2023 18:03:14 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH 0/3] efi/cper, cxl: Decode CXL Component Events CPER
+Date: Thu, 12 Oct 2023 23:02:58 +0000
+Message-ID: <20231012230301.58500-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3D:EE_|CY8PR12MB8340:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2cd4d30-4834-40de-d44b-08dbcb776bed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	x0pvY+HmM6tVN/2R31QzzaJ0XA0ZgFknzJ54N47RBwy0YqM42qW5yZvbfU85w8WOBzV9X+DYBTK/P/SkR2Hc2Vc3qp/9JNWpIcOvqpjSPBDS/hxWAxyKGV0c0yIddBrWb7g6zQ4RU+C3D1CwC4u7HutGovsuSZvG7rmsQt2fFReK5cx6NQgMhnpyRLqpwTohix63m3y8HY7KaP3oxeBntfRKVB/Etw8WhTXDAPOrUcyTWBP/BzNs3U4XA0Eqf2Uow1EBGS8uS4jHPYLeuzNWTY5AW0lK0myKMHiKYyLWg75YIXNNu/KLv/MEGs62Y8hO7a8XCpEVYXq9UwkeuFd+t498flBx2iK4YkYUxcY9QCEtpRV/dUyIpE3XvDVhaLv+XrYMpmYiB+Y1t2pBOwf1r6YpeKizsyWASF1C5S+TQ4vgYqkngwKgQIZo6TuiTyq6yl1ulNdNBUPyHc80IlJQCoNWJ9gt3W0uKhGt8qlzhwl/8/xm+UrhXF/5CoU9bO/NE8q8LdK2D3tHLxDVH5HJx/MCu55q62WxT9G16Gab/5f5aaQnc9Nx6KAIXZLC0p8MXVmM2aPj61ggW/Be8PQ5ld3fv4o11O+CIsfhkuvFaSQtcElvHn8V4HaVGLJAO/z7y8evktID7eOAuAoy225BpUx/ZlZFHtaNQm4YOCrgA8hxAvckrD0lwM2UwOLd1dIcM2uJjCZEITwTICZWzXLiujq5s1F30MoemYsOwzUXyKHotBp89swXLQBW8yU7kGvXuPMTqo4rHCVtax4RJdajMA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(39860400002)(376002)(136003)(230922051799003)(82310400011)(451199024)(64100799003)(186009)(1800799009)(46966006)(36840700001)(40470700004)(40460700003)(2616005)(26005)(16526019)(70586007)(82740400003)(54906003)(110136005)(70206006)(1076003)(36860700001)(40480700001)(356005)(8936002)(8676002)(4326008)(316002)(36756003)(426003)(336012)(2906002)(4744005)(7696005)(6666004)(86362001)(5660300002)(81166007)(478600001)(47076005)(41300700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 23:03:17.4258
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2cd4d30-4834-40de-d44b-08dbcb776bed
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE3D.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8340
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add a check to make sure the qos_class for the device will match one of
-the root decoders qos_class. If no match is found, then the qos_class for
-the device is set to invalid. Also add a check to ensure that the device's
-host bridge matches to one of the root decoder's downstream targets.
+This series adds decoding for the CXL Component Events Common Platform
+Error Record.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+The first patch adds decoding support to General Media Event Record.
+Second patch decodes DRAM Events.
+Third patch decodes Memory Module Event Record.
 
----
-v11:
-- Return when matched in match function (Jonathan)
-- Don't return after matched in caller function, still need to check pmem. (Jonathan)
-- Fix copy/paste error for pmem_qos_class. (Jonathan)
-- Use device_for_each_child() instead of bus_for_each_dev(). (Dan)
-- Add match of host_bridge to a root decoder target. (Dan)
----
- drivers/cxl/mem.c |  121 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 121 insertions(+)
+Smita Koralahalli (3):
+  efi/cper, cxl: Decode CXL Component Events General Media Event Record
+  efi/cper, cxl: Decode CXL Component Events DRAM Event Record
+  efi/cper, cxl: Decode CXL Component Events Memory Module Event Record
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 317c7548e4e9..74f72e37ccfc 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -104,6 +104,123 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
- 			 cxl_debugfs_poison_clear, "%llx\n");
- 
-+struct qos_class_ctx {
-+	bool matched;
-+	int dev_qos_class;
-+};
-+
-+static int match_cxlrd_qos_class(struct device *dev, void *data)
-+{
-+	struct qos_class_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
-+	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
-+		return 0;
-+
-+	if (cxlrd->qos_class == ctx->dev_qos_class) {
-+		ctx->matched = 1;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+struct qos_hb_ctx {
-+	bool matched;
-+	struct device *host_bridge;
-+};
-+
-+static int match_cxlrd_hb(struct device *dev, void *data)
-+{
-+	struct cxl_switch_decoder *cxlsd;
-+	struct qos_hb_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+	unsigned int seq;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	cxlsd = &cxlrd->cxlsd;
-+
-+	do {
-+		seq = read_seqbegin(&cxlsd->target_lock);
-+		for (int i = 0; i < cxlsd->nr_targets; i++) {
-+			if (ctx->host_bridge ==
-+			    cxlsd->target[i]->dport_dev) {
-+				ctx->matched = true;
-+				return 1;
-+			}
-+		}
-+	} while (read_seqretry(&cxlsd->target_lock, seq));
-+
-+	return 0;
-+}
-+
-+static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct qos_class_ctx ctx;
-+	struct qos_hb_ctx hbctx;
-+	struct cxl_port *root_port;
-+	int rc;
-+
-+	root_port = find_cxl_root(cxlmd->endpoint);
-+	if (!root_port)
-+		return -ENODEV;
-+
-+	/* Check that the QTG IDs are all sane between end device and root decoders */
-+	if (mds->ram_qos_class != CXL_QOS_CLASS_INVALID) {
-+		ctx = (struct qos_class_ctx) {
-+			.matched = false,
-+			.dev_qos_class =  mds->ram_qos_class,
-+		};
-+		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-+		if (rc < 0)
-+			goto out;
-+
-+		if (!ctx.matched)
-+			mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-+	}
-+
-+	if (mds->pmem_qos_class != CXL_QOS_CLASS_INVALID) {
-+		ctx = (struct qos_class_ctx) {
-+			.matched = false,
-+			.dev_qos_class =  mds->pmem_qos_class,
-+		};
-+		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-+		if (rc < 0)
-+			goto out;
-+
-+		if (!ctx.matched)
-+			mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
-+	}
-+
-+	/* Check to make sure that the device's host bridge is under a root decoder */
-+	hbctx = (struct qos_hb_ctx) {
-+		.matched = false,
-+		.host_bridge = cxlmd->endpoint->host_bridge,
-+	};
-+	rc = device_for_each_child(&root_port->dev, &hbctx, match_cxlrd_hb);
-+	if (rc < 0)
-+		goto out;
-+
-+	if (!hbctx.matched) {
-+		mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-+		mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
-+	}
-+
-+out:
-+	put_device(&root_port->dev);
-+	return rc;
-+}
-+
- static int cxl_mem_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -173,6 +290,10 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_qos_class_verify(cxlmd);
-+	if (rc < 0)
-+		return rc;
-+
- 	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
- 		rc = devm_cxl_add_nvdimm(cxlmd);
- 		if (rc == -ENODEV)
+ drivers/firmware/efi/cper.c     |  24 +++
+ drivers/firmware/efi/cper_cxl.c | 332 ++++++++++++++++++++++++++++++++
+ drivers/firmware/efi/cper_cxl.h | 122 ++++++++++++
+ 3 files changed, 478 insertions(+)
 
+-- 
+2.17.1
 
