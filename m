@@ -1,47 +1,46 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A2E2AB39
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7522AB39
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B73vk/AI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aG1DGOYi"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424A083
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:54:51 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA5983
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:54:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697136891; x=1728672891;
+  t=1697136899; x=1728672899;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jD3m7dUC7fN+KYxFKM0m9H0ocrjLWb3YoBEfn1rj+Vc=;
-  b=B73vk/AI2ktGfym2Pm9vzYOe/cpRHu9bn7rEla6M8D5wkfiSis26fkhE
-   4O/44DWrE2LZqrrkj1vtQ6MiHl2yJsiQ6vqmhXpxIshdyYqSPPY5ljyND
-   QTRx7EQoC9R345uq0bi3zQNDuDeKEhkUfurQATpuBoJErpgMJ46kBfRid
-   lmB8xCfXr32UegFBbjQLD0baMGShlZBGvIjBHy6UxgAQn/WQO+Km9k2kW
-   AzxbdS1qFs4i4aWFNsemJWi0/12tQGgLdOx0MUMEKsIM0d4ookn8G9Y2/
-   aDsq4oqF+vfuOZTiCveyuJZYjvWcMfHHrC5IR50mR0aqh4MBaUhGd5S8c
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="388880243"
+  bh=vvw6Skq+8irwDNvPcYNrT1WoIuqx7oL4Z5LZvjbOtIw=;
+  b=aG1DGOYicJIm6CckPj9U7rgk/A3m7iAXkVmV2y7Wyv4A1mKzZwsKcUo4
+   8c+9VAr8H2qj5Ezux+ZIipCyJEyNvW4/OInDuNR/waVP10X0hSiTs+oBo
+   9TvjksXCwNuu6rxP7IS28p6BUsijnTWqXNzKVDjXeX8p9VqwGzFDTfJJG
+   zKUH4pC5UrDvtQfs16ZA4U2SHYAPlDc40BY27FTDuPJr6e6OnUcbHLfe0
+   8J43vZ45K6n3u78Yn2ioVMLOehHd6F0NXbcmPhqZvPUQ8nlDAgk8Ta8Dx
+   BktJwilPQeS9zu85c+0mODEQaT9hX9SG1V95tus4+bjzd9/B4YKgejV5G
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="388880305"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="388880243"
+   d="scan'208";a="388880305"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:54:38 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:54:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="870711307"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="870711400"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="870711307"
+   d="scan'208";a="870711400"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.15.16])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:54:37 -0700
-Subject: [PATCH v11 11/22] acpi: numa: Add helper function to retrieve the
- performance attributes
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:54:43 -0700
+Subject: [PATCH v11 12/22] cxl: Add callback to parse the DSMAS subtables from
+ CDAT
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 12 Oct 2023 11:54:37 -0700
-Message-ID: <169713687744.2205276.17806838881616683926.stgit@djiang5-mobl3>
+Date: Thu, 12 Oct 2023 11:54:43 -0700
+Message-ID: <169713688328.2205276.14682106535163902532.stgit@djiang5-mobl3>
 In-Reply-To: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -60,93 +59,178 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add helper to retrieve the performance attributes based on the device
-handle.  The helper function is exported so the CXL driver can use that
-to acquire the performance data between the CPU and the CXL host bridge.
+Provide a callback function to the CDAT parser in order to parse the Device
+Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+DPA range and its associated attributes in each entry. See the CDAT
+specification for details. The device handle and the DPA range is saved and
+to be associated with the DSLBIS locality data when the DSLBIS entries are
+parsed. The list is a local list. When the total path performance data is
+calculated and storred this list can be discarded.
+
+Coherent Device Attribute Table 1.03 2.1 Device Scoped memory Affinity
+Structure (DSMAS)
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/numa/hmat.c |   35 +++++++++++++++++++++++++++++++++++
- include/linux/acpi.h     |   12 ++++++++++++
- 2 files changed, 47 insertions(+)
+ drivers/cxl/Kconfig       |    1 +
+ drivers/cxl/core/Makefile |    1 +
+ drivers/cxl/core/cdat.c   |   58 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |   23 ++++++++++++++++++
+ drivers/cxl/port.c        |   12 +++++++++
+ 5 files changed, 95 insertions(+)
+ create mode 100644 drivers/cxl/core/cdat.c
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index aabd89c79e26..e3a29ddacbca 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -107,6 +107,41 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
- 	return NULL;
- }
- 
-+static struct memory_target *acpi_find_genport_target(u8 *device_handle)
-+{
-+	struct memory_target *target;
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 8ea1d340e438..a1ae35bd1afc 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -5,6 +5,7 @@ menuconfig CXL_BUS
+ 	select FW_LOADER
+ 	select FW_UPLOAD
+ 	select PCI_DOE
++	select FIRMWARE_TABLE
+ 	help
+ 	  CXL is a bus that is electrically compatible with PCI Express, but
+ 	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 1f66b5d4d935..f4eabfdd50ce 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -13,5 +13,6 @@ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
+ cxl_core-y += hdm.o
+ cxl_core-y += pmu.o
++cxl_core-$(CONFIG_FIRMWARE_TABLE) += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+new file mode 100644
+index 000000000000..a858fd1b5744
+--- /dev/null
++++ b/drivers/cxl/core/cdat.c
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
++#include <linux/acpi.h>
++#include <linux/fw_table.h>
++#include "cxlpci.h"
++#include "cxl.h"
 +
-+	list_for_each_entry(target, &targets, node) {
-+		if (!memcmp(target->gen_port_device_handle, device_handle,
-+			    ACPI_SRAT_DEVICE_HANDLE_SIZE))
-+			return target;
++static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
++			      const unsigned long end)
++{
++	struct acpi_cdat_header *hdr = &header->cdat;
++	struct acpi_cdat_dsmas *dsmas;
++	int size = sizeof(*hdr) + sizeof(*dsmas);
++	struct list_head *dsmas_list = arg;
++	struct dsmas_entry *dent;
++	u16 len;
++
++	len = le16_to_cpu((__force __le16)hdr->length);
++	if (len != size || (unsigned long)hdr + len > end) {
++		pr_warn("Malformed DSMAS table length: (%u:%u)\n", size, len);
++		return -EINVAL;
 +	}
 +
-+	return NULL;
-+}
++	/* Skip common header */
++	dsmas = (struct acpi_cdat_dsmas *)(hdr + 1);
 +
-+/**
-+ * acpi_get_genport_coordinates - Retrieve the access coordinates for a generic port
-+ * @device_handle: Device handle string (ACPI or PCI) to match up to the gen port
-+ * @coord: The access coordinates written back out for the generic port
-+ *
-+ * Return: 0 on success. Errno on failure.
-+ */
-+int acpi_get_genport_coordinates(u8 *device_handle,
-+				 struct access_coordinate *coord)
-+{
-+	struct memory_target *target;
++	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
++	if (!dent)
++		return -ENOMEM;
 +
-+	target = acpi_find_genport_target(device_handle);
-+	if (!target)
-+		return -ENOENT;
-+
-+	*coord = target->coord[NODE_ACCESS_CLASS_GENPORT_SINK];
++	dent->handle = dsmas->dsmad_handle;
++	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
++	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
++			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
++	list_add_tail(&dent->list, dsmas_list);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(acpi_get_genport_coordinates, CXL);
 +
- static __init void alloc_memory_initiator(unsigned int cpu_pxm)
- {
- 	struct memory_initiator *initiator;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 0d334975c0c9..7ffe054befa2 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -16,6 +16,7 @@
- #include <linux/property.h>
- #include <linux/uuid.h>
- #include <linux/fw_table.h>
-+#include <linux/node.h>
++int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
++{
++	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
++				list, port->cdat.table);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
++
++void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
++{
++	struct dsmas_entry *dentry, *n;
++
++	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
++		list_del(&dentry->list);
++		kfree(dentry);
++	}
++}
++EXPORT_SYMBOL_NS_GPL(cxl_cdat_dsmas_list_destroy, CXL);
++
++MODULE_IMPORT_NS(CXL);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index eb7924648cb0..be2fd8dcb37b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -7,6 +7,7 @@
+ #include <linux/libnvdimm.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
++#include <linux/list.h>
+ #include <linux/log2.h>
+ #include <linux/io.h>
  
- struct irq_domain;
- struct irq_domain_ops;
-@@ -419,6 +420,17 @@ extern int acpi_blacklisted(void);
- extern void acpi_osi_setup(char *str);
- extern bool acpi_osi_is_win8(void);
+@@ -824,6 +825,28 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+ }
+ #endif
  
-+#ifdef CONFIG_ACPI_HMAT
-+int acpi_get_genport_coordinates(u8 *device_handle,
-+				 struct access_coordinate *coord);
++/* CDAT related bits */
++struct dsmas_entry {
++	struct list_head list;
++	struct range dpa_range;
++	u8 handle;
++};
++
++#ifdef CONFIG_FIRMWARE_TABLE
++int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
++void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list);
 +#else
-+static inline int acpi_get_genport_coordinates(u8 *device_handle,
-+					       struct access_coordinate *coord)
++static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
++					    struct list_head *list)
 +{
 +	return -EOPNOTSUPP;
 +}
++
++static inline void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
++{
++}
 +#endif
 +
- #ifdef CONFIG_ACPI_NUMA
- int acpi_map_pxm_to_node(int pxm);
- int acpi_get_node(acpi_handle handle);
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+  * of these symbols in tools/testing/cxl/.
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 47bc8e0b8590..cceee9dbae2c 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -136,6 +136,18 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+ 	device_for_each_child(&port->dev, root, discover_region);
+ 	put_device(&root->dev);
+ 
++	if (port->cdat.table) {
++		LIST_HEAD(dsmas_list);
++
++		rc = cxl_cdat_endpoint_process(port, &dsmas_list);
++		if (rc < 0)
++			dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
++
++		/* Performance data processing */
++
++		cxl_cdat_dsmas_list_destroy(&dsmas_list);
++	}
++
+ 	return 0;
+ }
+ 
 
 
