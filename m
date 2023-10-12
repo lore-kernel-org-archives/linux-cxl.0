@@ -1,135 +1,84 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFBB12B7C
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 13:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="asheKMbh"
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4BBBA
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40651a726acso9554025e9.1
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1697116414; x=1697721214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
-        b=asheKMbhbemLGughzEIK2P1pRezyMpbJ+eXyNW7ikkxvQl/0OOMsDeizR69PbNPKoD
-         gA+pFBIUZqts/JPS+Bws5bzT9t68yxmfL63rSagkjjRCZoMEA2uj1HRBrXqiU4uNTNHE
-         k02PUV5/zUrXuscDmzgYTKJmjl1BcTUn0NYKifoCEWg+LfhkfrVSsITk32iXpGHROFVR
-         fZRq+t1KWjkfRssUBOu0ZWlBOqZ7H7OVCAgvSKP9H8+k/SWoiptYMnuoAvE1ENe5Il7f
-         TxWXCbu738HD7oeLjreqERgr7eyw/nEwHaLBR//Ru6vA4N5KTDrkAUfom4og2uVqVUNm
-         26uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697116414; x=1697721214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
-        b=oexUnBhkB8GAB8qik3a2QbliGNRsHDTAETQ6N+SDMzXRBr+o6d+7PgdzZuA4FXXAfC
-         jWIXyXuSEPczzup/O845mt1Pnrd9bthc+xJB4yXcxGKA4X4IRYBjIMefMyz47fOvGMXd
-         +aERU7utdTo09IerK4F8tGVZC3TT7C6ElGflqD3Xp4jgBmvFw/+QDkk9YYEYRYbzS4Fu
-         imsT0unbebUeKqG64HmQvgl0LavS/zVT+f27DRX8JN/Qdo+lZRhh5TRCe9WZaCImhaYx
-         ShnrRTlI/Rd7kNb35lpSng2fPsOzfeTndr1fNZSgX19UEGAgOPHuHHkhJaQmg1dyqVYF
-         ad5Q==
-X-Gm-Message-State: AOJu0YzA/NjhW45lkFygDzU26XEczVpIuqZPmAtwNFZRv36Y5f4mnCKm
-	VKX/5NRKeDxY8PgS4ceylfLmnA==
-X-Google-Smtp-Source: AGHT+IFDkAeW7u7CFaRSTjjZPVGdE97IuC3OvNH39GloKvqqSstnsBhwBW7Tc7zhg48/jzIDrvVQig==
-X-Received: by 2002:a05:600c:255:b0:405:3d83:2b76 with SMTP id 21-20020a05600c025500b004053d832b76mr20973611wmj.13.1697116414527;
-        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id l17-20020a1ced11000000b0040588d85b3asm21637965wmh.15.2023.10.12.06.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
-Date: Thu, 12 Oct 2023 15:13:31 +0200
-From: Samuel Ortiz <sameo@rivosinc.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Alexey Kardashevskiy <aik@amd.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <ZSfw+xswgOSaYxgW@vermeer>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
- <20231012091542.GA22596@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7141C2AB35
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 14:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430B9BA
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 07:05:11 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5rt26K6Vz6JB23;
+	Thu, 12 Oct 2023 22:02:02 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 12 Oct 2023 15:05:08 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Michael Tsirkin
+	<mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>
+CC: <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH v4 0/4] hw/cxl: Line length reduction and related
+Date: Thu, 12 Oct 2023 15:05:10 +0100
+Message-ID: <20231012140514.3697-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012091542.GA22596@wunner.de>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
-> On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
-> > But the way SPDM is done now is that if the user (as myself) wants to let
-> > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> > as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> > parameters), and does not provide a sysfs knob to control its tentacles.
-> > Kinda harsh.
-> 
-> On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> *before* it is passed through to a guest?  If so, why does it do that?
+No dependencies. Does not overlap with the other CXL series
+[PATCH v5 0/3] hw/cxl: Add dummy ACPI QTG DSM
+so either order is fine, or they can go via different paths.
 
-SPDM exchanges would be done with the DSM, i.e. through the PF, which is
-typically *not* passed through to guests. VFs are.
+v4: Use QEMU_BUILD_BUG_ON() rather than static_assert() with
+    missing message. Thanks to Michael Tsirkin who caught this in
+    a clang build failure.
 
-The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
-some extend TDX-Connect) and expects the host to explicitly request the
-TSM to establish an SPDM connection with the DSM (PF) before passing one
-VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
-I think patch #12 does not solve our problem here. 
+Suggested-by: Michael S. Tsirkin <mst@redhat.com>
 
-> Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> i.e. the TSM should only have the need to perform SPDM exchanges with
-> the device when it is passed through.
-> 
-> So the host enumerates the DOE protocols and authenticates the device.
-> When the device is passed through, patch 12/12 ensures that the host
-> keeps its hands off of the device, thus affording the TSM exclusive
-> SPDM control.
+Michael observed that the CXL code regularly went above the 80 character
+recommendation and in many cases this was not necessary for readability.
 
-Just to re-iterate: The TSM does not talk SPDM with the passed
-through device(s), but with the corresponding PF. If the host kernel
-owns the SPDM connection when the TSM initiates the SPDM connection with
-the DSM (For IDE key setup), the connection establishment will fail.
-Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
-expect the host to explicitly ask the TSM to establish that SPDM
-connection. That request should somehow come from KVM, which then would
-have to destroy the existing CMA/SPDM connection in order to give the
-TSM a chance to successfully establish the SPDM link.
+This series is focused on tidying this up for the existing code so that
+we can maintain the preferred formatting going forwards.
 
-Cheers,
-Samuel.
+Jonathan Cameron (4):
+  hw/cxl: Use a switch to explicitly check size in caps_reg_read()
+  hw/cxl: Use switch statements for read and write of cachemem registers
+  hw/cxl: CXLDVSECPortExtensions renamed to CXLDVSECPortExt
+  hw/cxl: Line length reductions
 
-[1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
-> 
+ include/hw/cxl/cxl_component.h |   3 +-
+ include/hw/cxl/cxl_device.h    |   5 +-
+ include/hw/cxl/cxl_events.h    |   3 +-
+ include/hw/cxl/cxl_pci.h       |   6 +-
+ hw/cxl/cxl-cdat.c              |   3 +-
+ hw/cxl/cxl-component-utils.c   | 128 ++++++++++++++++++++-------------
+ hw/cxl/cxl-device-utils.c      |  11 +--
+ hw/cxl/cxl-events.c            |   9 ++-
+ hw/cxl/cxl-mailbox-utils.c     |  21 ++++--
+ hw/mem/cxl_type3.c             |  31 ++++----
+ hw/mem/cxl_type3_stubs.c       |   5 +-
+ hw/pci-bridge/cxl_downstream.c |   2 +-
+ hw/pci-bridge/cxl_root_port.c  |   2 +-
+ hw/pci-bridge/cxl_upstream.c   |   2 +-
+ 14 files changed, 143 insertions(+), 88 deletions(-)
+
+-- 
+2.39.2
+
