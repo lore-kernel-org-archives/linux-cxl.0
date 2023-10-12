@@ -1,226 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0BC1EA73
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 08:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWUyTjuQ"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E63C0
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 01:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697100056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oUu9gspJCKmtseGxPT5e7VM//lOrd9x+RY45RlgrqZo=;
-	b=QWUyTjuQztQ/LsQsa0q9IgBE1+D1o6AhBmD0bUmscq7ZbQFHbmUYENugfzKDSh6w9C5+N7
-	USqiDfzM5JfpLbylYBjXaFmmUlC6KotKAS6cqzRL7fX/5c8qGeKaRhIFtrdtXVp5r98L4R
-	py9U+AlKeTxULcjkrZWb5mgjabTB9L4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-pqYQDo2sP2ic6OtBm-4EjA-1; Thu, 12 Oct 2023 04:40:53 -0400
-X-MC-Unique: pqYQDo2sP2ic6OtBm-4EjA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4055ce1e8c4so8343555e9.0
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 01:40:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697100052; x=1697704852;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oUu9gspJCKmtseGxPT5e7VM//lOrd9x+RY45RlgrqZo=;
-        b=cy8PmWYgGK+4VkfdMhbPeD3kwF2XrNw4KAi2/i7Uh3K7YSK8k2U5s+Vt1SCRyzmVOr
-         y2fZXttmIwKDgfmFLiJMqnCJFDwJyUw37etnc8Gypg1UTm4WahxfejgPW81ka9+CdbtT
-         J/WcHb/kSsDIclrlihgKTSxd0H/R0mFVdPcMdFDO5Dj+p4a9wKX6ND8HBCuRecu/mWk2
-         LteMhkH2c5zHCvTTTfBUgKR7rdx2/sdYGeZkL5N16+lEY5k07KFB5LM7dRPWCVj2rhqL
-         HJZFeEz8ZqcOlq0BDrz/l+HbWrTNVTGQ1/7K02YQc4zlADksO21lVjAgBa+/ERXtNm8Q
-         wwVA==
-X-Gm-Message-State: AOJu0YxhpC2oMdvH3Oa1n4PtK+8ABJ3o/y/Vx+20sxhfijYHwfzrCb6D
-	ljQpekNHARd9qN01z0P/Se274CEv+4lk0/ej+kDtGy6jJq6oDEdUmSfSHNTztmW6QtzXvqtYsnJ
-	Hcj9cxh2WTZ22JlK5UDCW
-X-Received: by 2002:adf:fd0d:0:b0:32d:92fc:a625 with SMTP id e13-20020adffd0d000000b0032d92fca625mr724716wrr.24.1697100052413;
-        Thu, 12 Oct 2023 01:40:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnsVLUc9SJqZHyOsUziQY+Ca/ePvrWEabXeptfmw7K7cVLyJaUKLY9iF+clfj3wVEPiBqd5w==
-X-Received: by 2002:adf:fd0d:0:b0:32d:92fc:a625 with SMTP id e13-20020adffd0d000000b0032d92fca625mr724682wrr.24.1697100051973;
-        Thu, 12 Oct 2023 01:40:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70d:ee00:b271:fb6c:a931:4769? (p200300cbc70dee00b271fb6ca9314769.dip0.t-ipconnect.de. [2003:cb:c70d:ee00:b271:fb6c:a931:4769])
-        by smtp.gmail.com with ESMTPSA id g8-20020a5d5408000000b0031c5b380291sm17680891wrv.110.2023.10.12.01.40.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 01:40:51 -0700 (PDT)
-Message-ID: <748d40cb-35f4-98d6-a940-055de88bbc8b@redhat.com>
-Date: Thu, 12 Oct 2023 10:40:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D489B208D5
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 09:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C274ED;
+	Thu, 12 Oct 2023 02:15:45 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id DACAF100DCEF1;
+	Thu, 12 Oct 2023 11:15:42 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8BED2224D1; Thu, 12 Oct 2023 11:15:42 +0200 (CEST)
+Date: Thu, 12 Oct 2023 11:15:42 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+	Zhi Wang <zhi.a.wang@intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 00/12] PCI device authentication
+Message-ID: <20231012091542.GA22596@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+ <20231007100433.GA7596@wunner.de>
+ <20231009123335.00006d3d@Huawei.com>
+ <20231009134950.GA7097@wunner.de>
+ <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
- "Huang, Ying" <ying.huang@intel.com>
-Cc: "Hocko, Michal" <mhocko@suse.com>, "Jiang, Dave" <dave.jiang@intel.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "osalvador@suse.de" <osalvador@suse.de>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Williams, Dan J" <dan.j.williams@intel.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "jmoyer@redhat.com" <jmoyer@redhat.com>,
- "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
-References: <20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com>
- <20231005-vv-kmem_memmap-v5-1-a54d1981f0a3@intel.com>
- <87jzrylslk.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <831b9b12-08fe-f5dc-f21d-83284b0aee8a@redhat.com>
- <f0d385f1c1961a17499e5acccf3ae7cdadb942cb.camel@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v5 1/2] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-In-Reply-To: <f0d385f1c1961a17499e5acccf3ae7cdadb942cb.camel@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-	SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 12.10.23 07:53, Verma, Vishal L wrote:
-> On Mon, 2023-10-09 at 17:04 +0200, David Hildenbrand wrote:
->> On 07.10.23 10:55, Huang, Ying wrote:
->>> Vishal Verma <vishal.l.verma@intel.com> writes:
->>>
->>>> @@ -2167,47 +2221,28 @@ static int __ref try_remove_memory(u64 start, u64 size)
->>>>          if (rc)
->>>>                  return rc;
->>>>    
->>>> +       mem_hotplug_begin();
->>>> +
->>>>          /*
->>>> -        * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
->>>> -        * the same granularity it was added - a single memory block.
->>>> +        * For memmap_on_memory, the altmaps could have been added on
->>>> +        * a per-memblock basis. Loop through the entire range if so,
->>>> +        * and remove each memblock and its altmap.
->>>>           */
->>>>          if (mhp_memmap_on_memory()) {
->>>
->>> IIUC, even if mhp_memmap_on_memory() returns true, it's still possible
->>> that the memmap is put in DRAM after [2/2].  So that,
->>> arch_remove_memory() are called for each memory block unnecessarily.  Can
->>> we detect this (via altmap?) and call remove_memory_block_and_altmap()
->>> for the whole range?
->>
->> Good point. We should handle memblock-per-memblock onny if we have to
->> handle the altmap. Otherwise, just call a separate function that doesn't
->> care about -- e.g., called remove_memory_blocks_no_altmap().
->>
->> We could simply walk all memory blocks and make sure either all have an
->> altmap or none has an altmap. If there is a mix, we should bail out with
->> WARN_ON_ONCE().
->>
-> Ok I think I follow - based on both of these threads, here's my
-> understanding in an incremental diff from the original patches (may not
-> apply directly as I've already committed changes from the other bits of
-> feedback - but this should provide an idea of the direction) -
-> 
-> ---
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 507291e44c0b..30addcb063b4 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -2201,6 +2201,40 @@ static void __ref remove_memory_block_and_altmap(u64 start, u64 size)
->   	}
->   }
->   
-> +static bool memblocks_have_altmaps(u64 start, u64 size)
-> +{
-> +	unsigned long memblock_size = memory_block_size_bytes();
-> +	u64 num_altmaps = 0, num_no_altmaps = 0;
-> +	struct memory_block *mem;
-> +	u64 cur_start;
-> +	int rc = 0;
-> +
-> +	if (!mhp_memmap_on_memory())
-> +		return false;
+On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
+> But the way SPDM is done now is that if the user (as myself) wants to let
+> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
+> as CMA is not a (un)loadable module or built-in (with some "blacklist"
+> parameters), and does not provide a sysfs knob to control its tentacles.
+> Kinda harsh.
 
-Probably can remove that, checked by the caller. (or drop the one in the 
-caller)
+On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
+*before* it is passed through to a guest?  If so, why does it do that?
 
-> +
-> +	for (cur_start = start; cur_start < start + size;
-> +	     cur_start += memblock_size) {
-> +		if (walk_memory_blocks(cur_start, memblock_size, &mem,
-> +				       test_has_altmap_cb))
-> +			num_altmaps++;
-> +		else
-> +			num_no_altmaps++;
-> +	}
+Dan and I discussed this off-list and Dan is arguing for lazy attestation,
+i.e. the TSM should only have the need to perform SPDM exchanges with
+the device when it is passed through.
 
-You should do that without the outer loop, by doing the counting in the 
-callback function instead.	
+So the host enumerates the DOE protocols and authenticates the device.
+When the device is passed through, patch 12/12 ensures that the host
+keeps its hands off of the device, thus affording the TSM exclusive
+SPDM control.
 
-> +
-> +	if (!num_altmaps && num_no_altmaps > 0)
-> +		return false;
-> +
-> +	if (!num_no_altmaps && num_altmaps > 0)
-> +		return true;
-> +
-> +	/*
-> +	 * If there is a mix of memblocks with and without altmaps,
-> +	 * something has gone very wrong. WARN and bail.
-> +	 */
-> +	WARN_ONCE(1, "memblocks have a mix of missing and present altmaps");
+I agree that the commit message of 12/12 is utterly misleading in that
+it says "the guest" is granted exclusive control.  It should say "the TSM"
+instead.  (There might be implementations where the guest itself has
+the role of the TSM and authenticates the device on its own behalf,
+but PCIe r6.1 sec 11 uses the term "TSM" so that's what the commit
+message needs to use.)
 
-It would be better if we could even make try_remove_memory() fail in 
-this case.
+However apart from the necessary rewrite of the commit message and
+perhaps a rename of the PCI_CMA_OWNED_BY_GUEST flag, I think patch 12/12
+should already be doing exactly what you need -- provided that the
+PSP doesn't perform SPDM exchanges before passthrough.  If it already
+performs them, say, on boot, I'd like to understand the reason.
 
-> +	return false;
-> +}
-> +
->   static int __ref try_remove_memory(u64 start, u64 size)
->   {
->   	int rc, nid = NUMA_NO_NODE;
-> @@ -2230,7 +2264,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
->   	 * a per-memblock basis. Loop through the entire range if so,
->   	 * and remove each memblock and its altmap.
->   	 */
-> -	if (mhp_memmap_on_memory()) {
-> +	if (mhp_memmap_on_memory() && memblocks_have_altmaps(start, size)) {
->   		unsigned long memblock_size = memory_block_size_bytes();
->   		u64 cur_start;
->   
-> @@ -2239,7 +2273,8 @@ static int __ref try_remove_memory(u64 start, u64 size)
->   			remove_memory_block_and_altmap(cur_start,
->   						       memblock_size);
+Thanks,
 
-^ probably cleaner move the loop into remove_memory_block_and_altmap() 
-and call it remove_memory_blocks_and_altmaps(start, size) instead.
-
->   	} else {
-> -		remove_memory_block_and_altmap(start, size);
-> +		remove_memory_block_devices(start, size);
-> +		arch_remove_memory(start, size, NULL);
->   	}
->   
->   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
-> 
-
--- 
-Cheers,
-
-David / dhildenb
-
+Lukas
