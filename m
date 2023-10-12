@@ -1,47 +1,46 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0AF2AB39
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D3358B5
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meAs8Qi/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="II/JPzAa"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 797B383
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:53:52 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E10C2CC
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697136832; x=1728672832;
+  t=1697136836; x=1728672836;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vn/8WJWlGwbF8QwLOPLf3/SNazRSw7bVFzAGSBnmx10=;
-  b=meAs8Qi/yCwravWGO82AWeBF/zA4lfq0vgnRYRUZwxa9WDb2rFGwFWCv
-   eZCM2N6JyeeAemg1V5rpWTld9BLc/xocWIHBaBDRTR60hQhS/XeidWyCf
-   GC4xjI+TkUi0aCbZy+Q3eSM9oN1e7xtUFwxkG0RX0b5u/1BI1Tg4Z8hfR
-   yWZq4QHijByZ7af+Y71RSrvQFPfuxasfjtRwd1LDwRd7BGAkzyNpz201n
-   qsBOx+9GI6dw2e2sNubqudf18ASe44lxRhSa74Cpkt/gutxNFAp/F8U3j
-   ODrYRjFJK1YA9hUepw0nlAwmNyTrZOgG2BGqGe49dqQIHNDP0R+703nb9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="387864889"
+  bh=B4QwlekaDCmh4nU+rJqHNHFk/yzfADdGnns0sqNANpc=;
+  b=II/JPzAaSMNRKHVafKCnuamLq36J5C/MZ5geD6V0s4UxO6YzVjinALrJ
+   k9tTj1pbgbVNKr06a0NfP8Rig00x9MrG/3Cp0n7W2rHauFPK2wrs6uqbP
+   Su7q4JcsXAPoh7tveYVzNc8j2awlDsDyc3p0uwQ6RE8ebrCTznmp17dIN
+   L61BnFJxrBDb7JfJsf0HxAJ/mBVJt+Zakhc6Hvhm9UycnC/IlkJ+Iziot
+   NRDYkmFzAkJny9YrMoSei083UzTTnwcdtJgM7CYQM0/XB+Ork9e1+mFI0
+   9jhAjRmpCfwqTSgI5xaOZ/SD30VSPvZVokQuAI/20OuvqHfeCTDKVoO2n
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="387864931"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="387864889"
+   d="scan'208";a="387864931"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:53:38 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:53:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="898245583"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="898245676"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="898245583"
+   d="scan'208";a="898245676"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.15.16])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:51:48 -0700
-Subject: [PATCH v11 01/22] cxl: Export QTG ids from CFMWS to sysfs as
- qos_class attribute
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:52:00 -0700
+Subject: [PATCH v11 03/22] cxl: Add support for reading CXL switch CDAT table
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 12 Oct 2023 11:53:37 -0700
-Message-ID: <169713681699.2205276.14475306324720093079.stgit@djiang5-mobl3>
+Date: Thu, 12 Oct 2023 11:53:48 -0700
+Message-ID: <169713682855.2205276.6418370379144967443.stgit@djiang5-mobl3>
 In-Reply-To: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -60,129 +59,73 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Export the QoS Throttling Group ID from the CXL Fixed Memory Window
-Structure (CFMWS) under the root decoder sysfs attributes as qos_class.
-
-CXL rev3.0 9.17.1.3 CXL Fixed Memory Window Structure (CFMWS)
-
-cxl cli will use this id to match with the _DSM retrieved id for a
-hot-plugged CXL memory device DPA memory range to make sure that the
-DPA range is under the right CFMWS window.
+Add read_cdat_data() call in cxl_switch_port_probe() to allow
+reading of CDAT data for CXL switches. read_cdat_data() needs
+to be adjusted for the retrieving of the PCIe device depending
+on if the passed in port is endpoint or switch.
 
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |   15 +++++++++++++++
- drivers/cxl/acpi.c                      |    3 +++
- drivers/cxl/core/port.c                 |   11 +++++++++++
- drivers/cxl/cxl.h                       |    3 +++
- 4 files changed, 32 insertions(+)
+ drivers/cxl/core/pci.c |   22 +++++++++++++++++-----
+ drivers/cxl/port.c     |    3 +++
+ 2 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 087f762ebfd5..44ffbbb36654 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -369,6 +369,21 @@ Description:
- 		provided it is currently idle / not bound to a driver.
- 
- 
-+What:		/sys/bus/cxl/devices/decoderX.Y/qos_class
-+Date:		May, 2023
-+KernelVersion:	v6.5
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) For CXL host platforms that support "QoS Telemmetry" this
-+		root-decoder-only attribute conveys a platform specific cookie
-+		that identifies a QoS performance class for the CXL Window.
-+		This class-id can be compared against a similar "qos_class"
-+		published for each memory-type that an endpoint supports. While
-+		it is not required that endpoints map their local memory-class
-+		to a matching platform class, mismatches are not recommended and
-+		there are platform specific side-effects that may result.
-+
-+
- What:		/sys/bus/cxl/devices/regionZ/uuid
- Date:		May, 2022
- KernelVersion:	v6.0
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 40d055560e52..2034eb4ce83f 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -289,6 +289,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			}
- 		}
- 	}
-+
-+	cxlrd->qos_class = cfmws->qtg_id;
-+
- 	rc = cxl_decoder_add(cxld, target_map);
- err_xormap:
- 	if (rc)
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 7ca01a834e18..fc31ff8954c0 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -278,6 +278,15 @@ static ssize_t interleave_ways_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(interleave_ways);
- 
-+static ssize_t qos_class_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-+
-+	return sysfs_emit(buf, "%d\n", cxlrd->qos_class);
-+}
-+static DEVICE_ATTR_RO(qos_class);
-+
- static struct attribute *cxl_decoder_base_attrs[] = {
- 	&dev_attr_start.attr,
- 	&dev_attr_size.attr,
-@@ -297,6 +306,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	&dev_attr_cap_type2.attr,
- 	&dev_attr_cap_type3.attr,
- 	&dev_attr_target_list.attr,
-+	&dev_attr_qos_class.attr,
- 	SET_CXL_REGION_ATTR(create_pmem_region)
- 	SET_CXL_REGION_ATTR(create_ram_region)
- 	SET_CXL_REGION_ATTR(delete_region)
-@@ -1691,6 +1701,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 	}
- 
- 	atomic_set(&cxlrd->region_id, rc);
-+	cxlrd->qos_class = CXL_QOS_CLASS_INVALID;
- 	return cxlrd;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 76d92561af29..eb7924648cb0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -321,6 +321,7 @@ enum cxl_decoder_type {
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 9321a3865c30..c86bcc181a5d 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -613,18 +613,30 @@ static unsigned char cdat_checksum(void *buf, size_t size)
   */
- #define CXL_DECODER_MAX_INTERLEAVE 16
+ void read_cdat_data(struct cxl_port *port)
+ {
+-	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
+-	struct device *host = cxlmd->dev.parent;
++	struct device *uport = port->uport_dev;
+ 	struct device *dev = &port->dev;
+ 	struct pci_doe_mb *cdat_doe;
++	struct pci_dev *pdev = NULL;
++	struct cxl_memdev *cxlmd;
+ 	size_t cdat_length;
+ 	void *cdat_table;
+ 	int rc;
  
-+#define CXL_QOS_CLASS_INVALID -1
+-	if (!dev_is_pci(host))
++	if (is_cxl_memdev(uport)) {
++		struct device *host;
++
++		cxlmd = to_cxl_memdev(uport);
++		host = cxlmd->dev.parent;
++		if (dev_is_pci(host))
++			pdev = to_pci_dev(host);
++	} else if (dev_is_pci(uport)) {
++		pdev = to_pci_dev(uport);
++	}
++
++	if (!pdev)
+ 		return;
+-	cdat_doe = pci_find_doe_mailbox(to_pci_dev(host),
+-					PCI_DVSEC_VENDOR_ID_CXL,
++
++	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+ 					CXL_DOE_PROTOCOL_TABLE_ACCESS);
+ 	if (!cdat_doe) {
+ 		dev_dbg(dev, "No CDAT mailbox\n");
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 6240e05b9542..47bc8e0b8590 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -62,6 +62,9 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+ 	struct cxl_hdm *cxlhdm;
+ 	int rc;
  
- /**
-  * struct cxl_decoder - Common CXL HDM Decoder Attributes
-@@ -432,6 +433,7 @@ typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxlrd,
-  * @calc_hb: which host bridge covers the n'th position by granularity
-  * @platform_data: platform specific configuration data
-  * @range_lock: sync region autodiscovery by address range
-+ * @qos_class: QoS performance class cookie
-  * @cxlsd: base cxl switch decoder
-  */
- struct cxl_root_decoder {
-@@ -440,6 +442,7 @@ struct cxl_root_decoder {
- 	cxl_calc_hb_fn calc_hb;
- 	void *platform_data;
- 	struct mutex range_lock;
-+	int qos_class;
- 	struct cxl_switch_decoder cxlsd;
- };
- 
++	/* Cache the data early to ensure is_visible() works */
++	read_cdat_data(port);
++
+ 	rc = devm_cxl_port_enumerate_dports(port);
+ 	if (rc < 0)
+ 		return rc;
 
 
