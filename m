@@ -1,89 +1,89 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55201D68F
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 23:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2836BEA6
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 23:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z6j5SDt/"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A48EA9
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 16:35:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mu4sLQs9"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0063C0
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 16:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697153737; x=1728689737;
+  t=1697154563; x=1728690563;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=RVZvw0tEDsZXmxb1feizOxnDInOHxuZSQUQNFsFqnJU=;
-  b=Z6j5SDt/x87+oytM2NlFgWBND156k7dUaOfMvPeCVGyiSVGNY34ajHrp
-   8uttDphyfIiXVrBiMQp0ZCoo/NzYFMW9O59RiD+/P79bX9g2rPGpXEYBc
-   QT/gUJ8pzSuI+8SSgH0lWPSVoczVgntmpdx7wwWhgUWnfXkb3u0iADy3r
-   1HJ73xZG7Wx8IkEHwgjztoSrcrinU+K9ZxwqQ3O754APC3EfyytIBTB/W
-   cVaJCYzdvSX5UVKwPn8LoIti8il3yo1Ozrkdeww5WOCOm763gL4JLI9Yf
-   OFpNWjtrpbzNLlE05M70gxYDWmGUXCVsclGTXn4gRr6Wjn4gZ0Gnz+Rxp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="365324350"
+  bh=UTI10PEOiyn/UaHUYX1BPuCCxHvuu3AGCdU+/q/eUoo=;
+  b=Mu4sLQs9P//s/auyv2hHJ/oNi7alnImMiGx63Olcvxynv4ODTpufUZSs
+   LBxKsjqGl0t2khFjvkXo/7oFjCCccgu+3n5iS5+5fw1QW8naBv6lKHOxm
+   0J/BkrSg5S+nD9JSYOFV5d11zqvFmRDNwATrNWlgtUu3t4pHKW6SVGWkh
+   1nHOWUmYnuKVlLGxJRDppI7HRWuT5yjxHsVyrW0AxKrYC+NSF+ye5PPvu
+   AMP3W4W6s3JyFNQ6t1b1GOBoXbD70ZxaxG0ufNhrNBoA/hTIq4i+qptYs
+   wwsiogwrMbQ29zY6yASa23JPR+rAi8FmcmWd6P1bVW1FonaXvKPoDrsyC
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="6624921"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="365324350"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 16:35:36 -0700
+   d="scan'208";a="6624921"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 16:49:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="731112946"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="704389004"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="731112946"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Oct 2023 16:35:36 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="704389004"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Oct 2023 16:49:22 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Thu, 12 Oct 2023 16:35:36 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ 15.1.2507.32; Thu, 12 Oct 2023 16:49:21 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Thu, 12 Oct 2023 16:35:36 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Thu, 12 Oct 2023 16:49:21 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Thu, 12 Oct 2023 16:35:36 -0700
+ 15.1.2507.32; Thu, 12 Oct 2023 16:49:21 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lEBFYxdss9gOOOWqrRm+gi/iPDs1x30Svm/eKrUb9PU5hTuNLmtRBzwI2xPsOgALBphA+vcItW7JfcdIfwmM3QKBUDaCmr+ky5jLUC4nmsYpOQnT4yKUcMsQWkNR6dkvYPsxkjzv+mTfk1oiY4dTro6+ywYQorbfj2QkirhCRbx31O7sBBkifwv+83I/g8kYooTG3yvJaePW/Xf3MtRLXsgeUrT1qT9EZ7txn15DlXT0WiZHGXyeJtFeKuE6f+1pdUQzi32GOIxwkC2cYpW+2Gm+NhXLLO5sbqE2VWhJqJQcz47PbV2pk0+T8leaqiFnuDaLmvPc3YR7KY6xuZNOMQ==
+ b=M/sjf1qLa5DGne9IL9LqW7PvUPD5HIk/P0omX3z3lFliO2jnDmX2HZ6slQ130K2W/ge7yGdHTWzgcjidz681781Oo17NcD/kDDMP/Yt6f3AymjjXC1CKzr7QgceneYyj5dXoUkU1xsXYbfYwkTR1wLRCsobogNbi8quo5vkao1OOG1dOa6kBiWY2vMe38/IxtDUji1SmTPKdgi+X8yCYKOFSOExg9BChfSFqw80L+qpopHmcfiU5XfUFln8R3OMdSVo8NbC2XKYTtKtjR7eHkdaSfFkqoyQvyBlV14WF2Pov8EmQ3mreg7EcmW99AuhqLN9Bl0JOLWCuFHrepl1siA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oY8wQ5zGhZuO9qMOY+pPRgRMTV9JWZvDG1Iz1baW0cE=;
- b=NKoQZH+rcgcZzmwqMRJhyotl1A15Xada3a0cEGX2YVu/hd8/Efk2GnFHkxWLeMDJ+EEHNMhIXTAqmucIvSfCIwTumiJViktnrODxD/S8/6CfNjpsl9fbF78J7/2ZbDrpItedMXbWpaIrWQFl+rRchmtLvgolNPLebFD9rXyva8SG0y2r83t1+G+RSw0NKosmIVfdqykP4E0KiZycRez8nwcoQCdxe8bGDXFhyMXwo5LFNttIaoMP1IQYzHiMLUY1WZMG4AvgAs4pMlmPVOFUZWeV+YS1d78lCpyjmUhRZDcuuC7qTblJaD5knJEb0wNm0MJV2d0Ve3bNZl4CxGCjrA==
+ bh=0/CdcdpA+rPHI38nS6w0sH2zm38mHHZ7XHVjgW0T/1E=;
+ b=gsAlvehrtp9/zM2ocjwceZcbv4uhUtivY00b9yNP5kIdp88inlQF6xMzvkhFwEKSgxBnHmjoq0CnAL6KzvakMtSEeZTZ2fuyOJ2NoU+f0k6qBrafpDtL6guZPElLHQJLOxzD8JmsQY8CmwXo8RD3sMW0bIkN7xXmgYlmdAuX/CWRj5tuvSY972YkMS7fgrCk+c06S+g7X67876DotVtl6HX0FMKqkxkuBcpZnJerADaa6TLyOOLIcRUVgb1uqChuy04BtBlEBHmXtcDchocSn302tzy+Uge5bQzj+Mx34Xlsc3C6ggD2fNLFPtLeo0aurhTyhGT0kNvKgR1s4N+Lfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by SN7PR11MB6924.namprd11.prod.outlook.com (2603:10b6:806:2ab::9) with
+ by SJ0PR11MB8293.namprd11.prod.outlook.com (2603:10b6:a03:44f::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Thu, 12 Oct
- 2023 23:35:34 +0000
+ 2023 23:49:19 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::e9ca:a5a7:ada1:6ee8]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::e9ca:a5a7:ada1:6ee8%5]) with mapi id 15.20.6838.040; Thu, 12 Oct 2023
- 23:35:34 +0000
-Message-ID: <f15bbd8e-c3b5-4ce5-be76-4ee9ca66029b@intel.com>
-Date: Thu, 12 Oct 2023 16:35:31 -0700
+ 23:49:19 +0000
+Message-ID: <ea3c2989-2fb9-4b0d-b696-a7fe737b5bed@intel.com>
+Date: Thu, 12 Oct 2023 16:49:15 -0700
 User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 1/3] cxl/region: Prepare the decoder match range helper
- for reuse
+Subject: Re: [PATCH 2/3] cxl/region: Calculate a target position in a region
+ interleave
 To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
 	<dan.j.williams@intel.com>
 CC: <linux-cxl@vger.kernel.org>, Dmytro Adamenko <dmytro.adamenko@intel.com>
 References: <cover.1696550786.git.alison.schofield@intel.com>
- <79f1fb5c1756289d1ee02bd6581548aba0718b98.1696550786.git.alison.schofield@intel.com>
+ <5a7133e0ab7eb11f96daa73d88ec765f3536634a.1696550786.git.alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <79f1fb5c1756289d1ee02bd6581548aba0718b98.1696550786.git.alison.schofield@intel.com>
+In-Reply-To: <5a7133e0ab7eb11f96daa73d88ec765f3536634a.1696550786.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0257.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::22) To PH7PR11MB5984.namprd11.prod.outlook.com
+X-ClientProxiedBy: SJ0PR05CA0170.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::25) To PH7PR11MB5984.namprd11.prod.outlook.com
  (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -92,66 +92,65 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SN7PR11MB6924:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5caa0273-adbb-4b52-5f07-08dbcb7bee0d
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SJ0PR11MB8293:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ba6271e-7192-4c28-5bea-08dbcb7dda08
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 42yFW4HAp8gz7c1p2GGMMt/3+RRuaFoCl0cMLg9Q9dGtCax4zSFlDhDHbqlvJzeV+xkTSB2s0qwHBoZT9583456p7+UecvN36j5XIeN0sMmvHBS8BuSXk7RInhOKHjlQ5A30T+uovzBxYH+xirp9Zn5RDcOT+BbaNrQS7sMsHOp+HR2vNvLq5xJ+l8UYhXALU5TRfjccegNgfPsJqh8Y33NxmtNaeqwameFTgC8Aq6+MFz6xMPEeSBn3Rl8Q486hvUtzbX4atFxpNDu22wNc0nAkdvCJb9qcqeDOx7x6+GvC3wFDPEPTyexLvB9YVjvxELxdDD2IOnhYF5E/j3RKtOf+f6yYluhhF3SjieyE81onnrq8PmlQnuikv/1vBNWYYwmLGUm7HT+H9pdcQQ/qg8lr4HAEVTy2A+eJIZq9noTwvwo2RltyZ6AwLmkQmS3BuFE0mUhPFv97gxjALXTEwA7+DpFI2C/+Ld4V7qVuu3PCLxkzkPuKkYl2ULUEE5xuLM9GjiYOBZciBSVD0qLC4txbVPSacRz56MrhkjDVPZ5IhFWCbNbghMp+g/c1AUD1t/YQSUaauLDrNuSgkVqRRguVTG9BMK1D/xcsAwQwmM7LcUj8mmjRVAGIR6BCG8Ba
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(366004)(39860400002)(136003)(230922051799003)(1800799009)(451199024)(186009)(64100799003)(6636002)(2906002)(316002)(41300700001)(5660300002)(44832011)(8676002)(4326008)(8936002)(31696002)(36756003)(86362001)(83380400001)(107886003)(2616005)(26005)(82960400001)(6512007)(31686004)(6486002)(478600001)(66476007)(66556008)(66946007)(110136005)(53546011)(6666004)(6506007)(38100700002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: NBxTdx+VpRYcgA/Xyx1D8B2BIqRok3iugd71ayw8CyePl0qzC//KEOeDgJn74o3hraxz4HAPWLda50nN92Pxat8PTdxi/atQigA7xu3+RHeEpLb4xea2Yabx6p1DhnZ2I4T/WjOEIk2je5WerFjSISVbYBxVv+ki70OyTqIkGxJMBpvcBVhGq02Ves8ie0rfkJjVa717Np6tH/5xRnejcnPFXzq9DzN9O8pcGJmPfC+L+a0ww9jTDlMDvz91jvKkKnhdkSwQ7Ru2lJKumMzSRxBkqv3m6LZkrXpXxAsoy1iABTylYk4MjwlryNwvvXlcUKr9NxUMcQd7iNekyS830YN6C+qRvKwVPVyxgHT9sV1tsDMbdrYghAi7h0L5EDcqEIUWlBJcvibkD7JwGd5B7PQUY3RvVRviBcV/6ZKof0q/Or/wFT5rkIaFlhcRfRLxlR11q/KLK15cP/CtNpO9YsbnHEX5FpZguqq11AtGtkap0aZ/VRZJdahATUkRLL0/9I335PvJmeZRxx3Y9YLRofpW2mZ/qrk43H95zb4nZTXY/q0cGOWT1QjTE0MSlvvS/NTF1TW4L+DpbrPJtxkTXPoQGqn1GzAbEDTeWLdwJcZ9I7T3Z1sOpcGNV2Kyv8r0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(376002)(346002)(136003)(366004)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(107886003)(2616005)(53546011)(6506007)(6666004)(41300700001)(2906002)(66476007)(66946007)(66556008)(4326008)(44832011)(31686004)(26005)(5660300002)(478600001)(6512007)(6486002)(83380400001)(66899024)(316002)(6636002)(36756003)(38100700002)(8676002)(110136005)(82960400001)(8936002)(31696002)(86362001)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TnFlMG9zVm9sRy9XbGZsT0owU3ZKZWlOM3RFeHNPWW0zRUlKSWNVT0pXaDBv?=
- =?utf-8?B?UE03c05OTlU0emZpeFZjR0g1UDVzeGpOV2M2SlBERDBlZzQ5UlQzQ3ducFFr?=
- =?utf-8?B?V1F3TUxTV2hTZFdmNUdqeXBua0dmbjIycEdyeHpBNHdkc0thbzg0Tmt4THRo?=
- =?utf-8?B?T0VjTVBLNTJxT2NwNXRQc1dKSWI0WWhOakFqVm85T3QwUlhqN0hiQXkxWkhH?=
- =?utf-8?B?bURjQlVkb3JEb2Z6Z1JZQmh2QnNxaHRSWkFCN0hqTjJDOE5TNGNlQUVUYTVi?=
- =?utf-8?B?Lzl0RVBmVDlzYVJETDYvWUJ4OXgxOGpHZFRLMzI1VThSUmYyUHNROXJKaWdm?=
- =?utf-8?B?S0FERDIxLyswZlJSYlF5dFFpb09FakhsSE1uN2wzbFdxcHhoK1lQTW0yVG1x?=
- =?utf-8?B?dmpSQjZJMkJQMFB3elR2dXVxT09lNVBBbk8wTEdtaGRLeng5Q0FMN1lzQlZi?=
- =?utf-8?B?c0ZJWkcwTHdQazB3R2owZ1JSZmoybU1OWWV2Um1nR3d5WkJJNUE3U09za3Z2?=
- =?utf-8?B?M0NDRHBPZjFWOXk0KzZCTEFKd2RwVGNpOGxZVS9sNHJ2ZWdMejg2STRjV3pY?=
- =?utf-8?B?VlR4cDM2NzZuS1M0Sm9SR3NHVU5MakNaa0tXSVdwZ0Q1MllFd3dRbzlXaEJ3?=
- =?utf-8?B?U3RmVlpoRGVLQ05kMzdNNC9OL2JybStnLzdPRGZsYll4UzJhK1h0Z1Jqb3Zt?=
- =?utf-8?B?dklEaEl2ZDVEUVdZNi9VODBWNElBZE44QzlLTmxKR0FwU3VnanRNYkJxRHFC?=
- =?utf-8?B?enpPMlhMQzdaRWtsOVZYcW1PWTJSTXFwV0RnTW02dk9NVm9KU0E3bkRZRDJC?=
- =?utf-8?B?ZVBtdDNsV1BKeVZiWjU4UEJlanZTUFQyQUdwZUpiOHdhZUpGdUZHeUJVRHJy?=
- =?utf-8?B?c2ZFZkhsWTl1UENWdkMwVk94OHcxcG0wdWJpUzJ6dTdmR1o0cjY4NTlBTWpM?=
- =?utf-8?B?K0d3NjJsd2tPV3g5QTdxbHRCeGJiOWVidGRINWgxdzlWcG15dlRwYzAvK2xu?=
- =?utf-8?B?cldRNzFHMkp5QXNMM3hBcFFHOS9BZ3cySHVVT0VnNVdKbDJMcWFwbi9NdGda?=
- =?utf-8?B?eVovWjlGQWlma0VQUE93L2xPc1ZtUDZBRnBJay90ek0xcDZ1Q2NtMDM3djd2?=
- =?utf-8?B?MHVtOEZJNUw0bkRNajdqZHdaaENoUE9NZGd5ektJOUIrM3AvWnZIWkRDdlhB?=
- =?utf-8?B?c0g3M0xnZ3RXbHYyV0g1cllHdEJzeTU3MHhObEJIMU1YNExpYUhtWFplN3d5?=
- =?utf-8?B?YlcySDFjVi9MMGlMVGVka1paR1lBNHZySlp2MVBqekx6UkdLeU9ZY2hRdzdi?=
- =?utf-8?B?d1Z4Vjk2Y2ZmVDduK2NESnY5TkRqRlI1dUJKS3FHcC9FZUoyRzlBd3k2aXJr?=
- =?utf-8?B?OGhBckpKQXpQU2pJcVB2WjhJU3pRT0ZSaGhZTHBEQkFlZXh3N2xraUFrZkV5?=
- =?utf-8?B?b1dxcUk5K3lDRGVRdWRGb3VEU25SQmkxdVoyU1UvZGc5Q3hoTmxNd0dYZVdu?=
- =?utf-8?B?U09NZTlLbVhodFZtQTVhUjFRR05la2tHdnFmQ0xsM21GQ0d2d2h2azc5SzNI?=
- =?utf-8?B?L0UyODQ0N0VySGovNi9rNEU4c3gyWjJwdEtSNmZXdFVDTUlPQnBaRVVNTlJE?=
- =?utf-8?B?VnRzM3Nocnk0bzFQZlVoSXRWbUZOZmZxeHNyV05HUm93cTJKWDRnRC9xMDNF?=
- =?utf-8?B?OWl5b0p4a241MHNMZmZOMWcrNmJYdm9hRXlyK1pINklrL3BhMEhwTmQ4aWk0?=
- =?utf-8?B?Z08vQ2ZEZGpFTWxrRDFBZzVweXJlcFZueGhBMGRyYk85cDF0NTRhUHFGMDQw?=
- =?utf-8?B?ZS9GY2F1ZWpQUGVzby9HRGw4eUt3K2cvQnN3RUZacGtuM0F6M2JoQ0dZQndF?=
- =?utf-8?B?SUV0cjR4MFFrRVBrOHJzZlpUSXE0TVpzZmUvMEtSZVBOZWpmOVZ5VVBtRitN?=
- =?utf-8?B?aldzeFVvQzViS3l2ZlNITktDVitoeFRYcHorWnYxa0pXQmpCN21KT0dnTDhj?=
- =?utf-8?B?NklkdnlGQ2ZYUEpnNm5kN0ZvajNJNVFqTFcyRElaeGZTdUVuSEd6Ry95d28r?=
- =?utf-8?B?RFF0cFcvZEVPYzRoT2tSRnJrMVgzQVA3djdZb2FTdVE4QWZRRGx6eGdyWEJ6?=
- =?utf-8?Q?GRuANj2bm7FrhqjR0Y0ItJIxW?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5caa0273-adbb-4b52-5f07-08dbcb7bee0d
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RjdocmlXUlljcmk4SFM1VVVRc0FxUGdpN0NCM05yUW5LMStOQW9zRDcybmxr?=
+ =?utf-8?B?blRtcnVVdjE1UnRCSE9yQkRVR3NCU3JuZjhYUGRWWmFTMzFQUHV4VXMyYlF1?=
+ =?utf-8?B?Y0JXeFNHZ0JGSzF4RXFkVHlESzF4cGl2RW5McXNXVEFJNnI0YXNpYlFtVjJx?=
+ =?utf-8?B?NnNvcXYxNmtaZU1IekUxZ0xaT1pSWmtEQ2M1VWVRVkJlMGp3clM1dHFFWGJW?=
+ =?utf-8?B?MWloWGREaU40UkRJYkptbHpZQ0xHRUIrVjRCaWpSSkhSNldCOW5Qc3U4UGxE?=
+ =?utf-8?B?Q3RrTnRQazliVllhbE1mT3FibUtYYUIwUXRDdXFMc1hxMkl4SU9URzJZVDhZ?=
+ =?utf-8?B?bHRTMDZRN2ZKN0ZlcjRzSUlNTWQ3b25ieTkrV3g2ZmZmNmRBaWkrMmNrWExB?=
+ =?utf-8?B?ejVpTVI3bkNEeTJUQ2RFV0xPQXRXNitUZVZMcTZyNXN6MnF2TjFwenNERXQw?=
+ =?utf-8?B?c0FVckI0TEVzUW9TMDFYUisvMmFPU0twWVpNV01jSW5mR3J0REovSFo4VWQw?=
+ =?utf-8?B?T3gxMzRlVC9wTTlrclFLbGhacjJJQ2FscnhDRysveEVVNy9rTUFyRENVZ3VZ?=
+ =?utf-8?B?TGNuaUdKZjFCNWlZY3hqN0JFeC9BeTB1MjFaTWR6T1BidmxrRHY0NHJLaUh4?=
+ =?utf-8?B?amtmVEIrU3JSSFhMTEsvOTBWTThGTXpZUmRzSm1yMDFQQWVzRVRaQi9lY3BW?=
+ =?utf-8?B?TU1wSE9Wa2pNK2NwQ3NsNVNEMFVlRGY4aG13MDhVNUNNOVNaTHlacjgrdEI1?=
+ =?utf-8?B?T2JiQ20xczMrNjFMTHZVeENSbkN0WFY0NzF4T3pUcnR4emxKTXc4QjVtYVNi?=
+ =?utf-8?B?dzZ5RHp5UHRXZW5SeHpqd2JjZ3RkK1h3eXduWEVqVUdydVpvVkJUN2RSekFQ?=
+ =?utf-8?B?bGU2OURJTkJDWS9DQXBQdnFyNCtoWTl6Y0wrTE9ZWS9qNW9jQWc5V2k1Tlh2?=
+ =?utf-8?B?Mmg4ZDFobzdqZDBuNVFabkIvTFh6aStJL0xSMXZMYUpBVkhTV055TDhRYUUx?=
+ =?utf-8?B?VGJYV3p6RUVHbVhGV3dFaW5hRWFyMThuYzhHWDdmSXYrODZ0dDlodExhWE12?=
+ =?utf-8?B?QzFoVzJsZlVkRUx6YnBVRGg2Yy9TdXNiWEdRWlVtYWZ5OWYxTEJwUVE1TUlP?=
+ =?utf-8?B?Sng0QUFxZUxqMWRrNkFDQVRnNEtvV2xJTCtvUDVSOTgwbTI1SThaMno1ZHJR?=
+ =?utf-8?B?RHl3VXllTjVjbEpaVExBRnFxWElrUGh3THQvMEVoUGYwRGtGSi84Y0tHTTc2?=
+ =?utf-8?B?WVRwUTFCNG9lS3ZKZ3pKTFREY0p5SEROdzAwRVZUN3doQlFQMlhVakQzZm52?=
+ =?utf-8?B?VXE1cDY1clExeVd1SFFvNEF2Z0pzbUYya0VBK0FMZ3BJZGNHRlA3ZEY0TDdL?=
+ =?utf-8?B?NmlsdnhhZkc5R0R6ZGFLV0ZQZVRaRjdxY2NnQkVJQW84Zm9hNUNUaWZPQkpu?=
+ =?utf-8?B?RjZaSDBjNm9UZFJKOEdlc0J3eTdiTHA4djg2TXhocEJiSUV1SVN5ZHY2YWZr?=
+ =?utf-8?B?TytRRWlKMDdua3NmTmtFVEYxMUN4RG0xSjdRWkJqcnFLNUpUaVQxbkVtQ0cx?=
+ =?utf-8?B?VmFkMGZ6cUJ5WDJqdWdqQVhFcXJpK2U4ZkozR0RDMUUwMGpBdERVaUEyb0hv?=
+ =?utf-8?B?eEN0ekdxLy9UMmVWTmEzNUlWTWQzZEhiQWNpYVlIbDJkZWJobVJIUm1hcFVO?=
+ =?utf-8?B?Q3FjYzRHaUNrNEU1b0FMSlBLZWFmTHpXbENLZDl3VU03RWNrczQ3aTdNRjVB?=
+ =?utf-8?B?RU1LVEVlSTRvK1pvL2ZEWGExSTdybW1IZy9OL3FmSTlPZ3E1V21ySG1Lais0?=
+ =?utf-8?B?RzBWN2RUK1E2SFBwNTRuTy9lOWdHMHVxaUUrblNxN3BtYk1nT012cGxvQU5C?=
+ =?utf-8?B?aC9DUzkwNFVkVUY3Q1o2WlNSd2dWanhhRks4TkNmdEZHdG95QkhxMGVaNm5V?=
+ =?utf-8?B?akZzejJ4TEwyMk5Ic0t0UW9kQ0VoTjBYcE5rWG1xV0FBNGVzUmNrQURmMHI5?=
+ =?utf-8?B?SVl5NktnRWx6NFhOd0RlSHhLZzByZUZNRGdsMHN6bVFNUWhNVkpHMlgveU5z?=
+ =?utf-8?B?TGJsZ0xITkFJQms3eFhQRElQa0hSVStmSEdqQ2pKbWN2S1l5VzJHeEs5MUl4?=
+ =?utf-8?Q?9DlMx1U83jV6QsIbcRbSYpMmu?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ba6271e-7192-4c28-5bea-08dbcb7dda08
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 23:35:34.0300
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 23:49:19.3524
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +nC2TECuxVFqMADiN3Ju0UjSIfX9kmtZqxgOxHlWIxFWo6R1ad+5n2yfZiVi+l0D70UTbn27Hv7/ejPIwbC/Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6924
+X-MS-Exchange-CrossTenant-UserPrincipalName: GtJjkMO5ZunXjuFKQzX0nnwx54K/HUSr1GBeMYzvkgzwTeq7HuYPSkaFjOgAtlq1Uqu0bsfm5m4AjktqMX+TOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB8293
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -160,85 +159,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 On 10/5/23 17:43, alison.schofield@intel.com wrote:
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> match_decoder_by_range() and decoder_match_range() both determine
-> if an HPA range matches a decoder. The first does it for root
-> decoders and the second one operates on switch decoders.
+> Introduce a calculation that determines a targets position in a region
+> interleave. Perform a selftest of the calculation on user-defined
+> regions.
 > 
-> Tidy these up with clear naming and make the switch helper more
-> like the root decoder helper in style and functionality. Make it
-> take the actual range, rather than an endpoint decoder from which
-> it extracts the range.
+> The region driver users the kernel sort() function to put region
+
+s/users/uses/
+
+> targets in relative order. Positions are assigned based on each
+> targets index in that sorted list. That relative sort doesn't
+
+s/targets/target/
+
+> consider the offset of a port into its parent port causing some
+
+s/causing/which causes/
+
+> autodiscovered regions to fail creation. In one failure case,
+
+s/autodiscovered/auto-discovered/
+
+> a 2 + 2 config (2 host bridges each with 2 endpoints), the sort
+> put all targets of one port ahead of another port, when they were
+
+s/put/puts/
+s/targets/the targets/
+comma not needed
+
+> expected to be interleaved.
 > 
-> Aside from aethetics and maintainability, this is in preparation
+> In preparation for repairing the autodiscovery region assembly,
 
-s/aethetics/aesthetics/
+s/autodiscovery/auto-discovery/
 
-> for reuse.
+> introduce a new method for discovering a target position in the
+> region interleave.
+> 
+> cxl_interleave_pos() offers a method to determine a targets position
+> by ascending from an endpoint to a root decoder. The calculation starts
+> with the endpoints local position and its position in its parents port.
+> Traversing towards the root decoder and examining position and ways,
+> allows the position to be refined all the way to the root decoder.
+
+Please consider:
+It transverses towards the root decoder and examines both position and ways in order to allow the position to be refined all the way to the root decoder.
+
+> 
+> This calculation, applied iteratively, yields the correct position:
+> 
+> position = position * parent_ways + parent_pos;
+> 
+> ...when you follow these rules:
+> 
+> Rule #1 - When (parent_ways == region_ways), abort.
+> 	  position = parent_position;
+> 	  This rule is applied in calc_interleave_pos()
+> 
+> Rule #2 - Use an index into the target list when finding pos.
+> 	  This rule is applied in the helper find_pos_and_ways().
+> 
+> Include a selftest that exercises this new position calculation against
+> every successfully configured user-defined region.
 > 
 > Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
 > Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-Those two function names are definitely very confusing. 
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
->  drivers/cxl/core/region.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+>  drivers/cxl/core/region.c | 100 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 6d63b8798c29..64206fc4d99b 100644
+> index 64206fc4d99b..297b9132d5b3 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1487,16 +1487,19 @@ static struct cxl_port *next_port(struct cxl_port *port)
->  	return port->parent_dport->port;
+> @@ -1500,6 +1500,91 @@ static int match_switch_decoder_by_range(struct device *dev, void *data)
+>  	return range_contains(r1, r2);
 >  }
 >  
-> -static int decoder_match_range(struct device *dev, void *data)
-> +static int match_switch_decoder_by_range(struct device *dev, void *data)
->  {
-> -	struct cxl_endpoint_decoder *cxled = data;
-> +	struct range *r1, *r2 = data;
->  	struct cxl_switch_decoder *cxlsd;
->  
->  	if (!is_switch_decoder(dev))
->  		return 0;
->  
->  	cxlsd = to_cxl_switch_decoder(dev);
-> -	return range_contains(&cxlsd->cxld.hpa_range, &cxled->cxld.hpa_range);
-> +	r1 = &cxlsd->cxld.hpa_range;
-> +	return range_contains(r1, r2);
+> +/* Find the position of a port in it's parent and the parents ways */
+> +static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+> +			     int *pos, int *ways)
+> +{
+> +	struct cxl_switch_decoder *cxlsd;
+> +	struct cxl_port *parent;
+> +	int child_ways = *ways;
+> +	int child_pos = *pos;
+> +	struct device *dev;
+> +	int index = 0;
+> +	int rc = -1;
+> +
+> +	parent = next_port(port);
+> +	if (!parent)
+> +		return rc;
+> +
+> +	dev = device_find_child(&parent->dev, range,
+> +				match_switch_decoder_by_range);
+> +	if (!dev) {
+> +		dev_err(port->uport_dev,
+> +			"failed to find decoder mapping %#llx-%#llx\n",
+> +			range->start, range->end);
+> +		return rc;
+> +	}
+> +	cxlsd = to_cxl_switch_decoder(dev);
+> +	*ways = cxlsd->cxld.interleave_ways;
+> +
+> +	/* Use the child ways/pos as index to target list */
+> +	if (cxlsd->nr_targets > child_ways)
+> +		index = child_pos * child_ways;
+> +
+> +	for (int i = index; i < *ways; i++) {
+> +		if (cxlsd->target[i] == port->parent_dport) {
+> +			*pos = i;
+> +			rc = 0;
+> +			break;
+> +		}
+> +	}
+> +	put_device(dev);
+> +
+> +	return rc;
 > +}
 > +
+> +static int calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+> +			       int region_ways)
+> +{
+> +	struct cxl_port *iter, *port = cxled_to_port(cxled);
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct range *range = &cxled->cxld.hpa_range;
+> +	int parent_ways = 0;
+> +	int parent_pos = 0;
+> +	int rc, pos;
+> +
+> +	/* Initialize pos to its local position */
+> +	rc = find_pos_and_ways(port, range, &parent_pos, &parent_ways);
+> +	if (rc)
+> +		return -ENXIO;
+> +
+> +	pos = parent_pos;
+> +
+> +	if (parent_ways == region_ways)
+> +		goto out;
+> +
+> +	/* Iterate up the ancestral tree refining the position */
+> +	for (iter = next_port(port); iter; iter = next_port(iter)) {
+> +		if (is_cxl_root(iter))
+> +			break;
+> +
+> +		rc = find_pos_and_ways(iter, range, &parent_pos, &parent_ways);
+> +		if (rc)
+> +			return -ENXIO;
+> +
+> +		if (parent_ways == region_ways) {
+> +			pos = parent_pos;
+> +			break;
+> +		}
+> +		pos = pos * parent_ways + parent_pos;
+> +	}
+> +out:
+> +	dev_dbg(&cxlmd->dev,
+> +		"decoder:%s parent:%s port:%s range:%#llx-%#llx pos:%d\n",
+> +		dev_name(&cxled->cxld.dev), dev_name(cxlmd->dev.parent),
+> +		dev_name(&port->dev), range->start, range->end, pos);
+> +
+> +	return pos;
 >  }
 >  
 >  static void find_positions(const struct cxl_switch_decoder *cxlsd,
-> @@ -1565,7 +1568,8 @@ static int cmp_decode_pos(const void *a, const void *b)
->  		goto err;
->  	}
+> @@ -1765,6 +1850,21 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		.end = p->res->end,
+>  	};
 >  
-> -	dev = device_find_child(&port->dev, cxled_a, decoder_match_range);
-> +	dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
-> +				match_switch_decoder_by_range);
->  	if (!dev) {
->  		struct range *range = &cxled_a->cxld.hpa_range;
+> +	if (p->nr_targets != p->interleave_ways)
+> +		return 0;
+> +
+> +	/* Exercise position calculator on user-defined regions */
+> +	for (int i = 0; i < p->nr_targets; i++) {
+> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> +		int test_pos;
+> +
+> +		test_pos = calc_interleave_pos(cxled, p->interleave_ways);
+> +		dev_dbg(&cxled->cxld.dev,
+> +			"Interleave calc match %s test_pos:%d cxled->pos:%d\n",
+> +			(test_pos == cxled->pos) ? "Success" : "Fail",
+> +			test_pos, cxled->pos);
+
+Mismatch from selftest does not cause error?
+
+> +	}
+> +
+>  	return 0;
 >  
-> @@ -2696,7 +2700,7 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
->  	return rc;
->  }
->  
-> -static int match_decoder_by_range(struct device *dev, void *data)
-> +static int match_root_decoder_by_range(struct device *dev, void *data)
->  {
->  	struct range *r1, *r2 = data;
->  	struct cxl_root_decoder *cxlrd;
-> @@ -2827,7 +2831,7 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
->  	int rc;
->  
->  	cxlrd_dev = device_find_child(&root->dev, &cxld->hpa_range,
-> -				      match_decoder_by_range);
-> +				      match_root_decoder_by_range);
->  	if (!cxlrd_dev) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s no CXL window for range %#llx:%#llx\n",
+>  err_decrement:
