@@ -1,46 +1,44 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3609C2AB39
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859BE2AB39
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 18:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WWt4scM0"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54039BE
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TYfinP+i"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A16083
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 11:55:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697136938; x=1728672938;
+  t=1697136944; x=1728672944;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R0enbTvRz5kqpMulkqEk0Lfi71F21mkrstOjvIlamWY=;
-  b=WWt4scM0AWhOYjLfiQ2n3oTNC2MAiyoqh3+INcMz7l8PTI2zEYgJMswB
-   0mm6Fxgx9L5ght9/QXRzgNXKVvYFLpq6hZuzfpo/o01daitKYIQKa89A6
-   kWME/lJzskehQtEnviAVMPAtOwRTkNeOJLIqKXrJyS9o2X7NRdPbmD5Io
-   nw3OMnUhKTMp7PSIeEc6DmJddFxacV/F+PpiKH/ANl7LU7HVygAP7oQ6P
-   pjoJDNOCD/tEq3yOm5zaBMwseG0wEiN0XG2XRRn0sd678PznH1OHMIZ65
-   hzDRC9bgOv8v32VRJN8+hRlctI960N8kE6WPyUXuIsWkCb3oYBNHEX+Jq
+  bh=Us4xbz1jEw5CIMuHHOMNuigmLVLkQCoc0iTk+tbOmYA=;
+  b=TYfinP+iweWeeVwlYEFnVKa2ZG8Ii1GfFGBPwCOWfQHRMlKnOgEXNr/Z
+   Mz9lTB7jA2WaRu6dOuhIRYkPUOFwavTMJ/Kx+0/MlgzuHJh8scSKtOMQX
+   acMMXGYqcP/XUUusiwQQJPS1HnS4rYGW8x+SZFsSFgpqbkOGYFUd37N5M
+   9y4BeLUzKIcAKdGy2wlI+Hnm0QfcXah7+OIyU+kc3F3AirHQhhJYDnktG
+   B63rpUEj49ckPZv36mRc8bOiP7QRhGpnOQlao8Kp6dbiYOPkSLjK/cI+a
+   YKTEzHJq+W6JVT4UBEEbS1DZV51wY004eOSSW2R1yIy34R6M/6fOW4U8u
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="3604330"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="388880518"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="3604330"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:37 -0700
+   d="scan'208";a="388880518"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="824724692"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="870711774"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="824724692"
+   d="scan'208";a="870711774"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.15.16])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:36 -0700
-Subject: [PATCH v11 21/22] cxl: Export sysfs attributes for memory device QoS
- class
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 11:55:42 -0700
+Subject: [PATCH v11 22/22] cxl: Check qos_class validity on memdev probe
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, dan.j.williams@intel.com,
- ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
- Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 12 Oct 2023 11:55:36 -0700
-Message-ID: <169713693604.2205276.7697288344292256806.stgit@djiang5-mobl3>
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date: Thu, 12 Oct 2023 11:55:41 -0700
+Message-ID: <169713694184.2205276.9863653630713216825.stgit@djiang5-mobl3>
 In-Reply-To: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -59,152 +57,162 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Export qos_class sysfs attributes for the CXL memory device. The QoS clas
-should show up as /sys/bus/cxl/devices/memX/ram/qos_class for the volatile
-partition and /sys/bus/cxl/devices/memX/pmem/qos_class for the persistent
-partition. The QTG ID is retrieved via _DSM after supplying the
-calculated bandwidth and latency for the entire CXL path from device to
-the CPU. This ID is used to match up to the root decoder QoS class to
-determine which CFMWS the memory range of a hotplugged CXL mem device
-should be assigned under.
+Add a check to make sure the qos_class for the device will match one of
+the root decoders qos_class. If no match is found, then the qos_class for
+the device is set to invalid. Also add a check to ensure that the device's
+host bridge matches to one of the root decoder's downstream targets.
 
-While there may be multiple DSMAS exported by the device CDAT, the driver
-will only expose the first QTG ID per partition in sysfs for now. In the
-future when multiple QTG IDs are necessary, they can be exposed. [1]
-
-[1]: https://lore.kernel.org/linux-cxl/167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local/T/#md2a47b1ead3e1ba08f50eab29a4af1aed1d215ab
-
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 v11:
-- Move qos_class0 to qos_class (Dan)
-v10:
-- Export only qos_class0, the first entry. Additional qos_class entries can be
-  exported later as needed. (Dan)
-- Have the sysfs attrib return -ENOENT unless driver is attached. (Dan)
-- Removed Jonathan's review tag due to code changes.
+- Return when matched in match function (Jonathan)
+- Don't return after matched in caller function, still need to check pmem. (Jonathan)
+- Fix copy/paste error for pmem_qos_class. (Jonathan)
+- Use device_for_each_child() instead of bus_for_each_dev(). (Dan)
+- Add match of host_bridge to a root decoder target. (Dan)
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |   34 +++++++++++++++++++++++++++++++
- drivers/cxl/core/memdev.c               |   34 +++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
+ drivers/cxl/mem.c |  121 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 44ffbbb36654..97c1e6bca888 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -28,6 +28,23 @@ Description:
- 		Payload in the CXL-2.0 specification.
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 317c7548e4e9..74f72e37ccfc 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -104,6 +104,123 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
+ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
+ 			 cxl_debugfs_poison_clear, "%llx\n");
  
- 
-+What:		/sys/bus/cxl/devices/memX/ram/qos_class
-+Date:		May, 2023
-+KernelVersion:	v6.7
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) For CXL host platforms that support "QoS Telemmetry"
-+		this attribute conveys a comma delimited list of platform
-+		specific cookies that identifies a QoS performance class
-+		for the volatile partition of the CXL mem device. These
-+		class-ids can be compared against a similar "qos_class"
-+		published for a root decoder. While it is not required
-+		that the endpoints map their local memory-class to a
-+		matching platform class, mismatches are not recommended
-+		and there are platform specific performance related
-+		side-effects that may result. First class-id is displayed.
++struct qos_class_ctx {
++	bool matched;
++	int dev_qos_class;
++};
 +
-+
- What:		/sys/bus/cxl/devices/memX/pmem/size
- Date:		December, 2020
- KernelVersion:	v5.12
-@@ -38,6 +55,23 @@ Description:
- 		Payload in the CXL-2.0 specification.
- 
- 
-+What:		/sys/bus/cxl/devices/memX/pmem/qos_class
-+Date:		May, 2023
-+KernelVersion:	v6.7
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) For CXL host platforms that support "QoS Telemmetry"
-+		this attribute conveys a comma delimited list of platform
-+		specific cookies that identifies a QoS performance class
-+		for the persistent partition of the CXL mem device. These
-+		class-ids can be compared against a similar "qos_class"
-+		published for a root decoder. While it is not required
-+		that the endpoints map their local memory-class to a
-+		matching platform class, mismatches are not recommended
-+		and there are platform specific performance related
-+		side-effects that may result. First class-id is displayed.
-+
-+
- What:		/sys/bus/cxl/devices/memX/serial
- Date:		January, 2022
- KernelVersion:	v5.18
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 14b547c07f54..7a501fd25fe7 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -88,6 +88,22 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_ram_size =
- 	__ATTR(size, 0444, ram_size_show, NULL);
- 
-+static ssize_t ram_qos_class_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
++static int match_cxlrd_qos_class(struct device *dev, void *data)
 +{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct qos_class_ctx *ctx = data;
++	struct cxl_root_decoder *cxlrd;
 +
-+	if (!dev->driver)
-+		return -ENOENT;
++	if (!is_root_decoder(dev))
++		return 0;
 +
-+	return sysfs_emit(buf, "%d\n", mds->ram_qos_class);
++	cxlrd = to_cxl_root_decoder(dev);
++	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
++	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
++		return 0;
++
++	if (cxlrd->qos_class == ctx->dev_qos_class) {
++		ctx->matched = 1;
++		return 1;
++	}
++
++	return 0;
 +}
 +
-+static struct device_attribute dev_attr_ram_qos_class =
-+	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
++struct qos_hb_ctx {
++	bool matched;
++	struct device *host_bridge;
++};
 +
- static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
-@@ -101,6 +117,22 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_pmem_size =
- 	__ATTR(size, 0444, pmem_size_show, NULL);
- 
-+static ssize_t pmem_qos_class_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
++static int match_cxlrd_hb(struct device *dev, void *data)
 +{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct cxl_switch_decoder *cxlsd;
++	struct qos_hb_ctx *ctx = data;
++	struct cxl_root_decoder *cxlrd;
++	unsigned int seq;
 +
-+	if (!dev->driver)
-+		return -ENOENT;
++	if (!is_root_decoder(dev))
++		return 0;
 +
-+	return sysfs_emit(buf, "%d\n", mds->pmem_qos_class);
++	cxlrd = to_cxl_root_decoder(dev);
++	cxlsd = &cxlrd->cxlsd;
++
++	do {
++		seq = read_seqbegin(&cxlsd->target_lock);
++		for (int i = 0; i < cxlsd->nr_targets; i++) {
++			if (ctx->host_bridge ==
++			    cxlsd->target[i]->dport_dev) {
++				ctx->matched = true;
++				return 1;
++			}
++		}
++	} while (read_seqretry(&cxlsd->target_lock, seq));
++
++	return 0;
 +}
 +
-+static struct device_attribute dev_attr_pmem_qos_class =
-+	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
++static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
++{
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct qos_class_ctx ctx;
++	struct qos_hb_ctx hbctx;
++	struct cxl_port *root_port;
++	int rc;
 +
- static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
++	root_port = find_cxl_root(cxlmd->endpoint);
++	if (!root_port)
++		return -ENODEV;
++
++	/* Check that the QTG IDs are all sane between end device and root decoders */
++	if (mds->ram_qos_class != CXL_QOS_CLASS_INVALID) {
++		ctx = (struct qos_class_ctx) {
++			.matched = false,
++			.dev_qos_class =  mds->ram_qos_class,
++		};
++		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
++		if (rc < 0)
++			goto out;
++
++		if (!ctx.matched)
++			mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
++	}
++
++	if (mds->pmem_qos_class != CXL_QOS_CLASS_INVALID) {
++		ctx = (struct qos_class_ctx) {
++			.matched = false,
++			.dev_qos_class =  mds->pmem_qos_class,
++		};
++		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
++		if (rc < 0)
++			goto out;
++
++		if (!ctx.matched)
++			mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
++	}
++
++	/* Check to make sure that the device's host bridge is under a root decoder */
++	hbctx = (struct qos_hb_ctx) {
++		.matched = false,
++		.host_bridge = cxlmd->endpoint->host_bridge,
++	};
++	rc = device_for_each_child(&root_port->dev, &hbctx, match_cxlrd_hb);
++	if (rc < 0)
++		goto out;
++
++	if (!hbctx.matched) {
++		mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
++		mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
++	}
++
++out:
++	put_device(&root_port->dev);
++	return rc;
++}
++
+ static int cxl_mem_probe(struct device *dev)
  {
-@@ -439,11 +471,13 @@ static struct attribute *cxl_memdev_attributes[] = {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+@@ -173,6 +290,10 @@ static int cxl_mem_probe(struct device *dev)
+ 	if (rc)
+ 		return rc;
  
- static struct attribute *cxl_memdev_pmem_attributes[] = {
- 	&dev_attr_pmem_size.attr,
-+	&dev_attr_pmem_qos_class.attr,
- 	NULL,
- };
- 
- static struct attribute *cxl_memdev_ram_attributes[] = {
- 	&dev_attr_ram_size.attr,
-+	&dev_attr_ram_qos_class.attr,
- 	NULL,
- };
- 
++	rc = cxl_qos_class_verify(cxlmd);
++	if (rc < 0)
++		return rc;
++
+ 	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+ 		rc = devm_cxl_add_nvdimm(cxlmd);
+ 		if (rc == -ENODEV)
 
 
