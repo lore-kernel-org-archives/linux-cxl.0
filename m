@@ -1,148 +1,248 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8FF224DF
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 22:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E03C224DF
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 22:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="k3TSFGFE"
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F8DC9
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 15:57:34 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231013225733usoutp01a750cbe6b588ffa701d88ef3b7cea516~NzNXaz-vu3077130771usoutp01a;
-	Fri, 13 Oct 2023 22:57:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231013225733usoutp01a750cbe6b588ffa701d88ef3b7cea516~NzNXaz-vu3077130771usoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1697237853;
-	bh=dFfSgZe6Ro8rAwGNn96foGW+yRf2CnMAIRP70MxFop0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=k3TSFGFERZfwbDd/fqoEMU8zf5dZREI/WBFCPTA48TjgJTgiezcnrhlmybK+BkG4z
-	 psxIeezi7Sutkmu+M26NulOopeKjuK6ROi+RFQEJUcaqn7DJRbeiwJpYAtvpZ+1Kx+
-	 kTCFNE+Ynzgi3wD8VYy+52cagoA/hnvTEskLg/KY=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-	[203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231013225730uscas1p1bf5ffd28795cf0e7a31caa81f3a8d049~NzNUtgUs72120021200uscas1p1r;
-	Fri, 13 Oct 2023 22:57:30 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges1new.samsung.com (USCPEMTA) with SMTP id 89.F0.50148.A5BC9256; Fri,
-	13 Oct 2023 18:57:30 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231013225730uscas1p2ac184a4726e38e6fc3ea92a82c9a5c6d~NzNUZ-BTV2571925719uscas1p2Z;
-	Fri, 13 Oct 2023 22:57:30 +0000 (GMT)
-X-AuditID: cbfec36d-7bdff7000002c3e4-8a-6529cb5a3d3d
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id BC.6C.31200.95BC9256; Fri,
-	13 Oct 2023 18:57:30 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Fri, 13 Oct 2023 15:57:29 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
-	13 Oct 2023 15:57:29 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: Dave Jiang <dave.jiang@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dh+A2Jti"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45B4B7
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 15:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697237979; x=1728773979;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=b/HHGCxcL70iDUiCTT23ONzaMOJgVZEW2sXJGSmgxmQ=;
+  b=Dh+A2JtiZ+EBM6gUZ/udQ7vCdRaguqLLs8bBqsCjnZc0XXcLwufKjyba
+   LVmUY/KV1tctIRuu0dUKOYMYMihfHrFhGLQ+yz/PASA6K+5NzXZzS03+G
+   xGzAfNqXZ49m+rcNGuIV4umr6YQOB7DAiVEi8YKYPJYn2Rc4Ao2i5nBcf
+   3YfTnWM+R0JFZiVRs0KqoFDhA426azRzRrlie0uMv7vr8ex2t1lDmoUD1
+   HCDeynnq+9S0lV1246H3+uN8btP4uvW+4kYqPS0KU4NDfFXiOxpHqCZwG
+   1ogBHPA6mNIRnT0trRJ3aob0bMjrNEUOJBJsM+p7JceJ0oZ/PWj+bxgeF
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="6843983"
+X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
+   d="scan'208";a="6843983"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 15:59:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="748521321"
+X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
+   d="scan'208";a="748521321"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Oct 2023 15:59:30 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 13 Oct 2023 15:59:29 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 13 Oct 2023 15:59:29 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Fri, 13 Oct 2023 15:59:29 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Fri, 13 Oct 2023 15:59:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U46xI/8wxVHSXQ7GTRNwN7OBMxaZ8Fjj1K5xeYRtd2Y19k9Qw4/4v9uW1wGw6bbIxmTWjlGYDVaZI7FwIGYs74Tr/u9VLLGTjNkcLAY4ZWR1FBAyevIPyhjZB91XvcACS2ciKSCbzDQAH0xFskhtEKA0BtcHtVTEepeEOZ1GguKcxSGG2RbIE3KOeSBOz7wHxv0Hhz2mIIBGMpJ1WhROApP2l/akjiHkRlCejASlNTcjpnrbrM2ycjS6Tu9XCByBRcyPWCVRM1mh+jk4TQNqKPh+tBUxeeMzxA9dAuA9d/gBQCqS/zuzcleKTaZS+0kSs6m0MXrRalnvUNPYBvUbTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yyEI/MDFCLbqRWIyBImueh74nt5OxYE+sPRdpFrSbqo=;
+ b=X8Tic7gt2hAGKn+MIc7KeG6qDT0+E1GccNdb12CzPBEOMCbaYzygkH4MddhLqFS4z4W4XT+LB2dTkXUCgCGt/bIiBOb422SG5tguzoeT12zAfIIiM2gxHJ8IOM1Mmga12mp2ocHzqEq/7HibBewcJZaXMGbdH6wL2YHdH8fZOtB129mG13EXjhNXiRAJJHbRSpZWHR1FurTps7mht7EBwz/QjDKEnH7iVhYIWSiQi79+XI7UaEcEqfT+QTbiTHhKQgLi1C+hDf5PcCs/woeaBrMH6zFny4yxy5qx/DrDWuV2lgEGZYt2Dsr6LQUBgGHkA1a404sPiZusorGg7vtNjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by DM4PR11MB5423.namprd11.prod.outlook.com (2603:10b6:5:39b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Fri, 13 Oct
+ 2023 22:59:26 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::e9ca:a5a7:ada1:6ee8]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::e9ca:a5a7:ada1:6ee8%5]) with mapi id 15.20.6838.040; Fri, 13 Oct 2023
+ 22:59:26 +0000
+Message-ID: <14c1c609-3b26-4691-8228-902cdbd639db@intel.com>
+Date: Fri, 13 Oct 2023 15:59:22 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v2 1/2] cxl: Add cxl_decoders_committed() helper
+To: Jim Harris <jim.harris@samsung.com>
 CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dan Williams
 	<dan.j.williams@intel.com>, "Jonathan.Cameron@huawei.com"
 	<Jonathan.Cameron@huawei.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
 	"alison.schofield@intel.com" <alison.schofield@intel.com>,
 	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
 	<ira.weiny@intel.com>
-Subject: Re: [PATCH v2 2/2] cxl: Add decoders_committed sysfs attribute to
- cxl_port
-Thread-Topic: [PATCH v2 2/2] cxl: Add decoders_committed sysfs attribute to
-	cxl_port
-Thread-Index: AQHZ/hyy5QqP0fYlxU6WffpG9Jr0k7BIyluA
-Date: Fri, 13 Oct 2023 22:57:29 +0000
-Message-ID: <EA82FB5F-6C78-4DB7-853B-27DDC09AA1C8@ssi.samsung.com>
-In-Reply-To: <169723270125.66903.9705024211129163971.stgit@djiang5-mobl3>
-Accept-Language: en-US
+References: <CGME20231013213154uscas1p2995ce0b20ceed38023c42ace0b6db096@uscas1p2.samsung.com>
+ <169723269532.66903.10556183191413240496.stgit@djiang5-mobl3>
+ <3CD88963-27CD-45F7-BB00-616F44D39EF2@ssi.samsung.com>
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23FB75EB2E14FF44B7851BF743708686@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <3CD88963-27CD-45F7-BB00-616F44D39EF2@ssi.samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR05CA0113.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::28) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjlvbu73o0Gd1Pa46SiVZCSmqFxKZNRUVqBlfQlkS29beZHsrtl
-	Hz9yoVEGsSILp9Q0XWrThcWqVVQrLWe0MvvQsg/S1GyWqaxWWl6vkf8O5znnPed5eEmBzCpU
-	kOnZekaXrc5UEmLc0TjsCU9uDmXm91xR0B0fnxD0maIniH7YZiToi202RN/u6sbpmrIXBO0x
-	u3G63dSIqcj4/PteYfz5m71YfFHJwfjB+ulr8WRxbBqTmb6H0UXGbRdrPU1eLOeNdK/tUjue
-	hyzSQiQigYoGU0OlsBCJSRlVjWDU9wDnBjKqAIPDxtxCRI6L7rmDeboWge81zeu/I8i39EyY
-	rQj8I6UBnIqgQsHfasM4HETNgXf2jwQnElCDGDz47kHcIJDaACceXhZyCUHURrg6kMLrF0Bz
-	iVXIYXzM21bsHn9HQi2Fskb3OC+iEsDWXTBeFFFTwefmswSUHNo7z2H8ZlIoL7kp4PFUGHV+
-	IHg8E975egO4WMFYT7szkrfGwY1nPiGPZ8KpYx8C+FgpNBV34rw1GO5WvcK5VYBqJWG43DiR
-	tRw+fa2dyAqBkQ7rBJ8B1fYjGH/EHMi7v56nF0PZbztmQrPNk1qb/zcyT2pkntTIPKmRBQlr
-	kNzAslkaho3KZnIjWHUWa8jWRKTuzqpHY1+pefRe1jV0rX0gwoUwErkQkAJlkKRk21xGJklT
-	79vP6Han6AyZDOtCISSulEuiljSlyiiNWs9kMEwOo/s3xUiRIg+THrZ1iypj3ar+wS+1wzp3
-	uVjquxGn0D/znvVZ7uzxu46WrkvsngJFeZ1Bz1vprxKvMTyhK1Vm9RsN1yPyDSeTelfNOGSK
-	rWhI0/Q4iR+EqP5tX29VSB+GVbFlgJ/1BiTW1d5d/1K/UtiSsEO+QY8KTzu0iso1YUMtqh3l
-	ixxX5z1P6VxYPboxZrb2lv+yxHOhP3rnQaeyrqvAEdwSLTrPbElIXjDg/aLSVv1aEo12pj9N
-	a1McwPDb30JzUiKrCzbVrNacdmS8hwvBg0nFIW9n1SlGYt67YiyNzhUdQ3cqwj5Pa946tOKR
-	anNDxuOfy4z7/nhsgfaoXWeeHpeblDirVUeFCXSs+i+xCCepuQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01RfSyUcRz3e17O48Qe779ojK2JFTGrZzKpZJi1ZmPrtHLLE1ccu8fl9DK0
-	Wnn5w2vmuXIsbkJjKlOkvN45hEhODnF2o+nNMP5I3KPlv8/3+/l+Pp/vd18CtVZjjoRInEpL
-	xMJENx4fE2UihUcE/R700YIGgtLND/Oo0pJhQKm1WTyqTlsPqHcLBoyqrRznUUOsBqMm83uR
-	ICL0XvcyHvq0bREJLZFnhK40OZ/HBPyAODpRdIOWeAfG8hOG+paRlCkrWX3jJJYJKqxyAEFA
-	0g92afbnAD5hTdYB+LxsFueK3wDqB1geVygB7F6bxnKAGcEjPeDmWD2yg23Jg3CmYd44hJIr
-	CFT9HgI7hA0ZBQvUL3BuKBqWGDZ2Bb6wX6409rFtsbZMY+xbkKdhZa9mN3oKQPXbUSNhRobB
-	esN9YzIg7eG6hktGSQc4qVcYMSRJWNU2hHLYDi7O/8E57Apn1hdNd+5Et7dueOPNSQNh6+g6
-	zmFXWJz71ZTbwQr2lekxTrofdtRMYPkAsnvS2P9O7B4ndo8Tu8epAuC1wEHKMEnxMsZXTKd5
-	McIkRiqO97qSnNQEtp/d/6crpgV8mfzl1QkQAnQCSKButhbyS4doa4s4YfpNWpJ8WSJNpJlO
-	4ERgbg4WutltiowXptLXaTqFlvxjEcLMMRPxfc3POOA+1xa1Ikhjxk85CHJNFP75VLXybkSK
-	bftI3rEHJ0QhcWtF2luqlsO65kHR2KNg1L1A8CwoHYvWDaTLV0+V60pX1dUmYXdkCz3lWRew
-	kbN5LvvszU08T2bTma62Y1drTSOCP0e2nmRrq+TdKqJ1sPBDo4eqzPlxiAzTfPJzCVBe7DD1
-	NHfx7LaUxqKWtA6z73ofGDTlk/0d4qwi6fvWhsIQL/2o9Y/ZsnlyM/vMdGN00V3lz00cURva
-	i1P8rs10sK/C52wiX048qGnOup2F9/EDlMEqSQ973MnOhYpRtOk7vy0ti0uEU2z2j0Fl+LmH
-	+iXrWKLXxw1jEoQ+nqiEEf4FmeQYo1sDAAA=
-X-CMS-MailID: 20231013225730uscas1p2ac184a4726e38e6fc3ea92a82c9a5c6d
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231013213157uscas1p1f16d6c45d92a8af12d173a3f2978a174
-References: <169723269532.66903.10556183191413240496.stgit@djiang5-mobl3>
-	<CGME20231013213157uscas1p1f16d6c45d92a8af12d173a3f2978a174@uscas1p1.samsung.com>
-	<169723270125.66903.9705024211129163971.stgit@djiang5-mobl3>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DM4PR11MB5423:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff7ecc5e-1fa0-4e3e-0c6e-08dbcc400c3d
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: l3lkZGVf5d4CgokwsCci2YhYlDZkTk7jjzdf+XzeCt6W03g/lUavpzvvH3lB2/VcY5beLewA+/WuctXLVbMF+RjVrKqEZJPlWFQH85mhmDwCh/+6ny/tjbT7Ota8ErbDbPY2/hJ5bAiHFKtt7X3KF/LtaBu9WGM405eGgLNY4NseTFBqUQaIzl8Q7shUJCmI9/WjwmwD2tLYBL2aokEj0dCSkRZaXeLGta4GY+PwFVMGFrwA/X22g0l33OK4sUgdp68BdzaquxQFbh4CFt0KrFP/Mv+K1cgUjH9yNdJU83sEmS6V4FH7mMqSAVbMAoKJGT+RAywPTeqPSjrDaGUEPHebiBnuK9knZWcdcP5ljVSCOJYcmb1sYNGrJv3rKUAqlNYKzlG9veqDlkZmrDO5rlFHh7ck6T5Wbh5ZH6EvRFeSuJALTn8iIj8UeK7bDlVSrIG3MjVZlXf3DwqLXaFywF0D7A3vbMpE1fNGsfk9+P++OB9NcDhp3dwirYDDAtIoi9j7Zsakc1WX4NO3RDuvSaJs5QRryq4U/+xCpVLQb04NiVqT6pmrCav57cgWHepCkBRxaMDBA4VyViIEeS0CTbmeY3yfHUivGlgvNhj4fCRBJ5ATQZ/ASofHUSU0SR/2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(346002)(376002)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(6512007)(478600001)(83380400001)(66946007)(54906003)(316002)(66556008)(6666004)(6916009)(66476007)(86362001)(107886003)(31696002)(6486002)(36756003)(26005)(2616005)(2906002)(6506007)(44832011)(82960400001)(53546011)(41300700001)(31686004)(8936002)(38100700002)(8676002)(5660300002)(4326008)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S1FYMnU0RjdjNUFmR2dkVzJsa0l3R3JZSG1vaU8xM2lFUVBnUW5lSEU0OHo3?=
+ =?utf-8?B?K0lzNnYrSFdLR2hYWUJIMGhnc3dvdDFUcmJoMnBGS1NYWlFKUkNid1Zta1J0?=
+ =?utf-8?B?OGh6QWJOY3VSUmgzbFZyWEE4NFpFdHlUeUYxbVFwMHhONXhSajF0bGRaVm1H?=
+ =?utf-8?B?ejhrTkxXUHlqQkwzOTM5eVFBYWNqcCtqNzdwYXRtTGkrSFpJc3lBd0Q0ejVu?=
+ =?utf-8?B?aThtWEVha0tkeDNDa2xSd2sxWXFveEhVbC9haGdKZ0NzbE5XQ05aWHRkZ3Nx?=
+ =?utf-8?B?RHJKak9vY1NLYmp0MFk3M1ZoMlZoT05IV0ZDTUwweVdlRzBETGVRS3BFcUJO?=
+ =?utf-8?B?cldaTzJQOFpCN1hpYmVGdkN2d2F6NWVSSVo3WW5iejJ3NzhZc3NoZWZGbE9M?=
+ =?utf-8?B?Zmg3dWpoT3FWaldLelMxaGNiRG8vNG83TG4zNnFxUzhYd25JRmJSa25sZzJM?=
+ =?utf-8?B?azlvbkhCeHM1dkE3OURWOGNFM3FudVArVlpsaC9nSlAybWNVQTlBREFHMTFU?=
+ =?utf-8?B?ZnNTd0hLdmdXTGtXVjk4QUVpMUJoN3lwMzhXUGt1aGJicmFrQ1pZMkF4T08x?=
+ =?utf-8?B?Q2YzVXdER1pnc1liQjFiZUZicjMzS2s2bkFPVFNCMVN6YnozdFF2SWxpVS9E?=
+ =?utf-8?B?Q2R6eDhYZEhuTjF1eS9HeUhFaFkrbi9qTzdsL1c5R3dINjk0VXBYd0F4OVlo?=
+ =?utf-8?B?TDNYdmpFd1FoVWREbkEzSFZFRTNwQWRPUDRpTVQzcXo0ZkJrVEFQaGM1L0hK?=
+ =?utf-8?B?Vko3cHVVdDNuQ1ZoU0cxY0RGMXU5Ky9xVEdtOFVYTVNjQ2pick5kQ1ZHSVZr?=
+ =?utf-8?B?R205OU16a0dKa2ZvaE5VU1NNcXhNV1FCNE5rREpFS1hURXJMUW0wdUxPcGE3?=
+ =?utf-8?B?Yk1TNk5pS0J0QmtwL3VGdE9vYlBiWG9rc04zTVNRWmZvVDlrT0JUU1ZYUk5B?=
+ =?utf-8?B?bDJIR2ZrSnY2UDBoRkR4VXF3S283WjlRS0FhTDBQUC9JUG1EZWVMOHpzcDR3?=
+ =?utf-8?B?L2F4UTZLQ3IwaUZaLy94WDVkdWF4bzFZU3dBclRkcm5PT3ZmdCtPMGI1ZHcv?=
+ =?utf-8?B?ZUhPVDZIbWVqU2h1cS80dnR0MGloTElDcXBCZ2JiZTRXRTI2MFp2Tkx6Z2l6?=
+ =?utf-8?B?SVVxUmVXdFoxVzZ2R0hKb1pSc1BuUEFZbC9LYXk5Nk1lNXcwUk9PTmRFeE1U?=
+ =?utf-8?B?WXdVZis4QkRNWDc0WXFGdWpRTk4wMmpVaitRMTF0SXJGWUlhTTZVMXlIYWls?=
+ =?utf-8?B?OGtYZU1XbG1aMndtbmxjVmZVVmJ5aENpWEh6dlFnN05pbXMvZGFSWjUvZGth?=
+ =?utf-8?B?TTJiYnR1VFNTakQ0aEJZRStkbGdiNzFGYTkrZ1NFaGEyZHVNRkc2Rk9Sczkv?=
+ =?utf-8?B?SHVSWUJoVzlhamtzb1ZyZndYR2dsTkdQQi9xem02U25xRnV5ZElhV3hkWVA3?=
+ =?utf-8?B?azlNREVjODRUdU9YSS9FSDAxRk5aVmJwTHZDNjdqZ2M1NW10WlFvSjhRVlpF?=
+ =?utf-8?B?YTltaDlDdm44T1ZUNy94dFZSNHBhRC9sTUMyVmVGaHhiNU9udnpTT2NvUG84?=
+ =?utf-8?B?K1VrbGI3WXZNREJSQmJPT3VzV3dDVGdYSFYwTWV4Q1BraWZLMXNhYnBtTHhn?=
+ =?utf-8?B?bWtrbVZUbTVnaElxRi9jOWVXRkZhd2NEeUVKeE55bUdJK1ZmMVQ1UnRVTTJD?=
+ =?utf-8?B?UlJKT0pGQXNCdC82UzNzemNhWUwrMEtoanZIbU1yZ1pSdzRRYXJaaFlLNTdk?=
+ =?utf-8?B?TFRFMk82dnRKajNsYWdJTmxHNWJMcDQ3OVNNOGpOOFVnUmFqZ0ZoTXF2QnpO?=
+ =?utf-8?B?eHZwTGpQN2NEd3ZUK3hCZzJZU3A4NzFwMHBWY1RnRVNFTHEvbWtLVkFENGpL?=
+ =?utf-8?B?TXpiVkRZVHpFditrNlNXdGdVeGozR1cyZWRlelo2Ym92Z0p6NTh2UjhTKytB?=
+ =?utf-8?B?S1ROZTRvVFdCeHZETUVmQ3VGV3FhMnpOOGN5V2xGVjRVS0F4cFJwNlNCbjZV?=
+ =?utf-8?B?MGRISEIyTjVCekJaei9iV2hkTWlxZDR6dFo1UWVWV1FMdEVydEhjWnlBRW54?=
+ =?utf-8?B?RndnbmpjUWxWRHNPMkNGTmE4Z1pFU3VyUm5vRGZVdVF2bDNxRHVkSVlDVHdS?=
+ =?utf-8?B?MDVDU29xeG5Qb3VhQklpUWtHdjBTc04yRnAvZEtpbDZiemVlcVQ1elJJSE9y?=
+ =?utf-8?B?NEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff7ecc5e-1fa0-4e3e-0c6e-08dbcc400c3d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 22:59:26.0059
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xpGSMX5rqs03/D4CUx/XEOyYuvnlDCqLJJ5W3R2hUNyKXr29TOg+tMgyeCXgKTeGdT0RXa+ymKxNsGubMS6gjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5423
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-DQoNCk9uIE9jdCAxMywgMjAyMywgYXQgMjozMeKAr1BNLCBEYXZlIEppYW5nIDxkYXZlLmppYW5n
-QGludGVsLmNvbT4gd3JvdGU6DQoNClRoaXMgYXR0cmlidXRlIGFsbG93cyBjeGwtY2xpIHRvIGRl
-dGVybWluZSB3aGV0aGVyIHRoZXJlIGFyZSBkZWNvZGVycw0KY29tbWl0dGVkIHRvIGEgbWVtZGV2
-LiAgVGhpcyBpcyBvbmx5IGEgc25hcHNob3Qgb2YgdGhlIHN0YXRlLCBhbmQNCmRvZXNuJ3Qgb2Zm
-ZXIgYW55IHByb3RlY3Rpb24gb3Igc2VyaWFsaXphdGlvbiBhZ2FpbnN0IGEgY29uY3VycmVudA0K
-ZGlzYWJsZS1yZWdpb24gb3BlcmF0aW9uLg0KDQpTdWdnZXN0ZWQtYnk6IERhbiBXaWxsaWFtcyA8
-ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0KU2lnbmVkLW9mZi1ieTogRGF2ZSBKaWFuZyA8ZGF2
-ZS5qaWFuZ0BpbnRlbC5jb20+DQoNCi0tLQ0KdjI6DQotIFVzZSBjeGxfcmVnaW9uX3J3c2VtIHRv
-IHByb3RlY3QgcmVhZGluZyBvZiBkZWNvZGVyIGluZm8uIChEYW4pDQotLS0NCmRyaXZlcnMvY3hs
-L2NvcmUvcG9ydC5jIHwgICAyNSArKysrKysrKysrKysrKysrKysrKysrKysrDQoxIGZpbGUgY2hh
-bmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jeGwvY29yZS9w
-b3J0LmMgYi9kcml2ZXJzL2N4bC9jb3JlL3BvcnQuYw0KaW5kZXggZmQxY2MzMDc3NTlmLi5hNDQ4
-ZTE0MzliNjggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2N4bC9jb3JlL3BvcnQuYw0KKysrIGIvZHJp
-dmVycy9jeGwvY29yZS9wb3J0LmMNCkBAIC01MzQsOCArNTM0LDMzIEBAIHN0YXRpYyB2b2lkIGN4
-bF9wb3J0X3JlbGVhc2Uoc3RydWN0IGRldmljZSAqZGV2KQ0Ka2ZyZWUocG9ydCk7DQp9DQoNCitz
-dGF0aWMgc3NpemVfdCBkZWNvZGVyc19jb21taXR0ZWRfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYs
-DQorICAgICAgIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLCBjaGFyICpidWYpDQorew0K
-KyBzdHJ1Y3QgY3hsX3BvcnQgKnBvcnQgPSB0b19jeGxfcG9ydChkZXYpOw0KKyBpbnQgcmM7DQor
-DQorIGRvd25fcmVhZCgmY3hsX3JlZ2lvbl9yd3NlbSk7DQorIHJjID0gc3lzZnNfZW1pdChidWYs
-ICIlZFxuIiwgY3hsX2RlY29kZXJzX2NvbW1pdHRlZChwb3J0KSk7DQorIHVwX3JlYWQoJmN4bF9y
-ZWdpb25fcndzZW0pOw0KKw0KKyByZXR1cm4gcmM7DQorfQ0KKw0KK3N0YXRpYyBERVZJQ0VfQVRU
-Ul9STyhkZWNvZGVyc19jb21taXR0ZWQpOw0KKw0KK3N0YXRpYyBzdHJ1Y3QgYXR0cmlidXRlICpj
-eGxfcG9ydF9hdHRyc1tdID0gew0KKyAmZGV2X2F0dHJfZGVjb2RlcnNfY29tbWl0dGVkLmF0dHIs
-DQorIE5VTEwsDQorfTsNCisNCitzdGF0aWMgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCBjeGxfcG9y
-dF9hdHRyaWJ1dGVfZ3JvdXAgPSB7DQorIC5hdHRycyA9IGN4bF9wb3J0X2F0dHJzLA0KK307DQor
-DQpzdGF0aWMgY29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCAqY3hsX3BvcnRfYXR0cmlidXRl
-X2dyb3Vwc1tdID0gew0KJmN4bF9iYXNlX2F0dHJpYnV0ZV9ncm91cCwNCisgJmN4bF9wb3J0X2F0
-dHJpYnV0ZV9ncm91cCwNCk5VTEwsDQp9Ow0KDQoNCg0KUmV2aWV3ZWQtYnk6IEppbSBIYXJyaXMg
-PGppbS5oYXJyaXNAc2Ftc3VuZy5jb208bWFpbHRvOmppbS5oYXJyaXNAc2Ftc3VuZy5jb20+Pg0K
-DQo=
+
+
+On 10/13/23 15:48, Jim Harris wrote:
+> 
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index 67aec57cc12f..6e6a87abfa9c 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -1200,7 +1200,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>> * Require an endpoint to be safe otherwise the driver can not
+>> * be sure that the device is unmapped.
+>> */
+>> - if (endpoint && endpoint->commit_end == -1)
+>> + if (endpoint && !cxl_decoders_committed(endpoint))
+> 
+> Hi Dave,
+> 
+> Maybe compare to 0 instead? This avoids misinterpretation on whether
+> cxl_decoders_committed() returns int or bool (i.e. “are there cxl
+> decoders committed?”) without referring to the function itself.
+> 
+> cxl_num_decoders_committed() would also make that more clear.
+
+Sure I can make the changes. 
+> 
+> 
+>> rc = __cxl_mem_sanitize(mds, cmd);
+>> else
+>> rc = -EBUSY;
+>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>> index fed9573cf355..78b6e58e0a31 100644
+>> --- a/drivers/cxl/core/memdev.c
+>> +++ b/drivers/cxl/core/memdev.c
+>> @@ -231,7 +231,7 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+>> if (rc)
+>> return rc;
+>>
+>> - if (port->commit_end == -1) {
+>> + if (!cxl_decoders_committed(port)) {
+>> /* No regions mapped to this memdev */
+>> rc = cxl_get_poison_by_memdev(cxlmd);
+>> } else {
+>> @@ -282,7 +282,7 @@ static struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
+>> .dpa = dpa,
+>> };
+>> port = cxlmd->endpoint;
+>> - if (port && is_cxl_endpoint(port) && port->commit_end != -1)
+>> + if (port && is_cxl_endpoint(port) && cxl_decoders_committed(port))
+>> device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+>>
+>> return ctx.cxlr;
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index 5ba606c6e03f..fd1cc307759f 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -37,6 +37,13 @@ DECLARE_RWSEM(cxl_region_rwsem);
+>> static DEFINE_IDA(cxl_port_ida);
+>> static DEFINE_XARRAY(cxl_root_buses);
+>>
+>> +int cxl_decoders_committed(struct cxl_port *port)
+>> +{
+>> + lockdep_assert_held(&cxl_region_rwsem);
+>> +
+>> + return port->commit_end + 1;
+>> +}
+>> +
+>> static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+>>    char *buf)
+>> {
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 76d92561af29..2728700d8b33 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -679,6 +679,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>> return port->uport_dev == port->dev.parent;
+>> }
+>>
+>> +int cxl_decoders_committed(struct cxl_port *port);
+>> bool is_cxl_port(const struct device *dev);
+>> struct cxl_port *to_cxl_port(const struct device *dev);
+>> struct pci_bus;
+>>
+>>
+>>
+> 
