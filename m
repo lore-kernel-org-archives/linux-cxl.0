@@ -1,354 +1,408 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25068219F7
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 16:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF8D219E6
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 16:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qyi18v00"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF5BA9
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697215725; x=1728751725;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=mR0sfSfv4cv4jIWzgz3uRy1YlEJn0jIkwL33VAjleCY=;
-  b=Qyi18v00Xm7jDDLIygqI0gb5LdWFnmgYv974sA8jxEh3p9aEquPTf6PT
-   EYyc9Vc3evH6KE39gXFwUnAbArkTHCV+nsffP6Vra8ESGQ6XIA2Gw9F4k
-   QPFoAI66aZzW8JhqnzA1rFD4nLs29aioNlDxQfgVh9AoO7aELZqhwL4Vh
-   uxMUPqO6aUmcNg0XF14ycgEzl1XKpZYkSkAbnyP690QzSwz5ulpF1ez27
-   /rdy7km88ki6K+DRXDxF8E2ucrzwIFTXAhfB8eQzpVZBV3XOO7UA6NI20
-   GICZppdjTSlJcr6Gs0OPL7v8vNr9R0Qh1MoQOCNhC9JaqALkUAQXYDNDE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="449411358"
-X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="449411358"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 09:48:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="928484833"
-X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="928484833"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Oct 2023 09:48:43 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 13 Oct 2023 09:48:42 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 13 Oct 2023 09:48:42 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Fri, 13 Oct 2023 09:48:42 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Fri, 13 Oct 2023 09:48:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Io2+U9MBJ7IRCkSKMIQ08yjbbIY3+/0abKfh8jcdFP1iwacnChXn7R6us1sMGZ3foQjIDyjO0C6cDlalgvaodxOWD9j0Jlzi5d0VceYr7idrqoc6eSFoBzUMH0xlQxn7j/sCMI1YJaiuK91sVL5L4FzS830JqMo7hlKFb0UUVQAP3vDJxuNNc9C69Yp5VZPy3nUPzKctNHL0Hf0pV9q3bsbS1pJgLmPPHHBm5HfV7lkf4dzumQdxtILoDmrKETT7FWqNYk5RA3gtIu3whGqePUaCFHA6eINxaAHMN2kakP4wSnY5loYk6sRe1c0OzXcT2JWV7TEaLIk7rK5xBL/PiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EKBZcX/N/N84jx/2iPFzMXi07dLTQ0KO1vJLvabS2+Q=;
- b=dPm1qwg2xGBVuTAVM8XPopvzKP0MlXrXz+epHxTY/Jgnt7CHbwnssRRR6aTEvsQLJxnU8Gl1t9FX3AjMNhICNZggovGDheE0XVL4mNYuhgh3m85QkgHd5GUJx/ScaqwWz5ispv5+fjWArFi9cIpkAh6fx8OdIYinN7i5GjU03SIGBPlXMyix6mW70t/6xOBP7gJvealjE3i5NKDACN5+oVlkg5TOywYNnU+PWHMnFrDWf7z+LIoIQsQ7w41R0dAry51eE/CGep9kwLnjtZTIH0jkYzahV8Ov/v+Ttun5LQp1V6zxRPizt9wmETeqimGjDnK0CXDQNi6jvmkNpV1wMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by DS0PR11MB6421.namprd11.prod.outlook.com (2603:10b6:8:c7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Fri, 13 Oct
- 2023 16:48:36 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::e9ca:a5a7:ada1:6ee8]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::e9ca:a5a7:ada1:6ee8%5]) with mapi id 15.20.6838.040; Fri, 13 Oct 2023
- 16:48:36 +0000
-Message-ID: <aacbc76d-0111-4d21-9dec-4aa025365f06@intel.com>
-Date: Fri, 13 Oct 2023 09:48:33 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 3/3] cxl/region: Use calc_interleave_pos() with
- autodiscovered regions
-To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Dmytro Adamenko <dmytro.adamenko@intel.com>
-References: <cover.1696550786.git.alison.schofield@intel.com>
- <aa43b687f652cdb648dfba967dae9c1fecef3155.1696550786.git.alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aa43b687f652cdb648dfba967dae9c1fecef3155.1696550786.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR21CA0010.namprd21.prod.outlook.com
- (2603:10b6:a03:114::20) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X39OI60H"
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3851D6
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-5aa7fdd1420so660159a12.3
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697216206; x=1697821006; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IgV73/bZCE+j0pcmpLO58sQXuQXF3ja23XLyZlWF1ew=;
+        b=X39OI60HQxVw94hqIeSW2bblTDgnLT9+znzmhG1vJbSEnJOFKBuGdKEmBpDM192li7
+         Br4+Ww7eaAaK1Wqk3rb0Gbqd5wqD9wvFSplMFqsjfT9QcpQEi4le3LNGTx2RpCtwmARQ
+         VxeuQ7SrbtawaxFuLwppZq5HE1o/+c1v7Xgew4OlutguoO73dNVkuuI/rUJgfqrU+8Kf
+         JsW8Y/2wsyYRcqhgexOwZ+NcRVIUI58Msl5GBR4dtiivd24tpxWowBMOPPVlGf6Vd5no
+         DtjStR8WD9f3E9EnHub2U78wMEMIG5BTmhWW/w6Fi9tasbvz4UJspPQGS4fx8m5iK7xL
+         Seag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697216206; x=1697821006;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IgV73/bZCE+j0pcmpLO58sQXuQXF3ja23XLyZlWF1ew=;
+        b=PBcBsi2yhFj6XALKfaH1CFHDyNLXyHT392GMrQ7yK+IDPiafFLUUIs2R1ie5LrEKYx
+         fJk/ac86Rzs2RCpY0tl9/0Oag3g0v6H82ecbR5dYloPw/DgBmeOH2E92dJJ/Bicz5tjV
+         gj2PzLloFMDi/gxOxNB2S4exEy0Zq+F1d5mj8Ek3d8KAlE19AdspbZ01s6EUl26fvYLV
+         bziqHxPPpC2PhX93bH5gRwDW08SZuxNPTUf0inpFG+gh4oi07AuLC1u0s9RRkAJGt40A
+         DJRvnSk5t8gtRLUarc6YmZG3MKw7UL9RbdycLocui0bZxa5Kf5WZ/Vu+MkilDLxPbDAo
+         7Kow==
+X-Gm-Message-State: AOJu0YwiAe7gcVotzjPkZSBdwLUOz0lY7AdJGeS3+CR5PxCwIQIMoOpn
+	EP4QcnWkKil3ObLyy8Nj6js=
+X-Google-Smtp-Source: AGHT+IFncI/OCutdaHnUhGVL+zFM1t5prtTsGtePoM6du2LSGUuNHMw9Ml2EEe+dn1yZUdX1ZJc6zw==
+X-Received: by 2002:a05:6a20:734b:b0:14c:de3:95d6 with SMTP id v11-20020a056a20734b00b0014c0de395d6mr28410653pzc.45.1697216206080;
+        Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
+Received: from debian (99-13-228-231.lightspeed.snjsca.sbcglobal.net. [99.13.228.231])
+        by smtp.gmail.com with ESMTPSA id l18-20020a170902d35200b001c74df14e6esm4124080plk.51.2023.10.13.09.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Oct 2023 09:56:45 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Fri, 13 Oct 2023 09:56:09 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	Michael Tsirkin <mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>,
+	linuxarm@huawei.com, Fan Ni <fan.ni@samsung.com>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Subject: Re: [PATCH v4 4/4] hw/cxl: Line length reductions
+Message-ID: <ZSl2k_-hyzcC60CX@debian>
+References: <20231012140514.3697-1-Jonathan.Cameron@huawei.com>
+ <20231012140514.3697-5-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DS0PR11MB6421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e1fd260-d508-4e3a-7abc-08dbcc0c3e9a
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WQKjEaeH9YdQ5utkuxI9npguQv+UpPqX+dd9vzMXoBgvKR+5lB9y0JLNQJpSE1rwNPfHzrm0RzccYFtXOWuNKW5uyoxkCYK3XY36JzhemWt4Kb7YljogcAAXZjkDvRfCRqb97iDbjQvxWn8cnHJmDs0T6MccAB/misrFV4+2cMRYIaFvtzdAy0pWNPYK2PDzEfpc0Yqbzl4pqVhMD0U4ioOGxpc5Erm7j/3Aaxy5cGJut5VISyQjSYIxtYlEHJzBhOGkq5+dQvo5/MLZNp8fPROV+rTcTBnVVmCNiHhWFS/7gJdJKS6OPa4pznqVzb6DH0ZlAgRMGANgfTWp7ptYlhHucXbzCoIeviFCeYGFrQlgejx/7OMXMKAqE42ADfZhDT02qmq1OHkdBTMMsCu2Ksk76gm5T1b3CGyfdjhvAUMEQ1YkZ5Z4JcAsr930u0OqR62TIgzcGWCqgLT/LbMuJ1SVvAOWxIAAaYxRgduW0gBZmu6RmB6FhTupXtiU8T0iC/8J05nvKPTERHDR+KVun6sQEMz8LPcP7nILuNH1DjBmf1465t66Se7ugcfB/hKSo7I8J0YRmuLFcCOkqi6+MrFSLQSZRfkZA6Eqh6NFQX2hxxVIcws3YhcVafjd+/Xs
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(39860400002)(136003)(366004)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(26005)(31686004)(6486002)(6666004)(38100700002)(107886003)(316002)(110136005)(66946007)(6636002)(2616005)(66556008)(66476007)(41300700001)(4326008)(8676002)(8936002)(6506007)(53546011)(478600001)(6512007)(5660300002)(83380400001)(44832011)(2906002)(31696002)(82960400001)(36756003)(86362001)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZkFWaE56SVI0dDB3c0Z3R25ncm5PUXYrRWl0M2dtNXpsYVJ2cytFOVQwZGh5?=
- =?utf-8?B?c3liWkc4QXpWVkRRQlNyUjRWcWpJS3FKSHkxL0FmbGFVSTQrem5yZlVXWWNE?=
- =?utf-8?B?Q3oyY080STNpWFJnK2RXaE5xSEdMaW5wQ1p2c3JHeXI0ZXlrVUovTm5KdU5j?=
- =?utf-8?B?a0VMbFd5b3hPcDFodlJsd29yemJPYmFyME9hbFF6Wk9LL0FXMTRGSUR4RElm?=
- =?utf-8?B?M2s4Vm5BbzExTGkvZUpPb1FJMmpzZFd3c0dmWndEN3cwTUVHTDdPRU1PRzAx?=
- =?utf-8?B?TlNLS21ycnNlL3RTRnRFU3hCOXA4SjM3ak90by81TE9BWit2Z0svYWw3L2RS?=
- =?utf-8?B?QUdKczNXZ2hWcWo5UlpxeHJ2SFFwM3FKRDh0MUI1SGJTaHFHLytVUjhEeFU5?=
- =?utf-8?B?by9rWDNVcmZTdmFta0JWc0hHWmJxaDFmQlU2cFhadHFGdlFvUDZCSUVqTE51?=
- =?utf-8?B?enY4TDFjQ1BSSS9LTEljTitCdnZGcDEwSmJwRDhZWGcxdnFoWGhOUnNqZW8v?=
- =?utf-8?B?cVA1NXBZNWI1U0xHN1l0Zlp2d0dVS0dWd1hhcURDdTZqeUtVekpKMThKczd6?=
- =?utf-8?B?WFY5Q2NZNk5obzI3ckhQSWwzZmRSN1ZFanNKYkc2d3pCekJ4TTM1bW1GMGNu?=
- =?utf-8?B?ZkY5TlF5c0M5TElzZFVTTzdXQ3ZGL2dJMEJPa1pTQVJEeElXbWFvZFRzUnlB?=
- =?utf-8?B?YjVJbU0wSjhaTi8zNFFIV1poVmRGclhDQmdsRmdIWXpHcUFRbmp6S0U4ejBG?=
- =?utf-8?B?aWlIdXByWmFleWl5cjM1dlRrUW9FOHhSY1ZBeUVjeWtvMk5TdWtMTHZTVEp5?=
- =?utf-8?B?REV0WjNobUdqK1VPaWVPRGFJK3NNWGJ4VmhpOFVVSFJFOFVrMjQ1M0lVS0Ni?=
- =?utf-8?B?VStCV1RTS3dQQUk1VGxwbVU5NWxwdUNqVi9DNFQ3YThCanVoNHRaajVNWklW?=
- =?utf-8?B?MFV0SlpRRXBua2N5dEk1LzNHQ0p2N2xaT2p1SXVxaXFrMmMvZWljUXZLVkg5?=
- =?utf-8?B?akltaGtIbVVZUnhrSzZlLzB0OW9wTzRhVFFWQjlqNmdiVzBlVThNeFZYanVU?=
- =?utf-8?B?d0xwaTRiS2EvdXdUMW1CV1JxQlVCK0g4SWp0WkxYcjlndmdvVEJtWlRRNXdt?=
- =?utf-8?B?UzBCMXBnZk95ZUFUaXU0NkdVMWN5anhCRUpMdWNjN1Bka1ZLZlNlOWFXdzlw?=
- =?utf-8?B?M0I2eWRVTy9ET04zVFcxdWJkMnV4cDkwemVHVXJoaWhMbXV3T0NBRlpVWC9V?=
- =?utf-8?B?aitJZk93cndDbVNqTjlEV3NJR3d0b09CUXJ2dW5kN1pSdHJYQ21yOWI4ZEg2?=
- =?utf-8?B?Q0dIMHlMRTdCTnB3dkY1WnEvcDRNU1JDRmNYUTdmeStqZzVUNTJvaEIvQk9W?=
- =?utf-8?B?Zzk2RldEL2x0enpYbC83RDBKZ1dPL2U4V1d1YkFwWGVabUdlOFBPNndya1Rz?=
- =?utf-8?B?RStiK00xWGZ6K2E4T0o3Y2t6blkwMGZFckpucUdLMFdCdnU0eWFpb2E5TVdl?=
- =?utf-8?B?M2xiWDlVUE8wTnpVU0JwMkkzYndLOTFDNU9OSFpXS0FxdWJDUDE0RGt4QW1l?=
- =?utf-8?B?YmJXdXYyeVluemxFdFE4VUI1THM4dzZDRkhVb3NzTHQ3TDJ5WGU5NmFmOTRl?=
- =?utf-8?B?bkNSWlNWMUcxdit3c3o3K3MvUWhYRFBHZkhoWjM0ME1kQUVaQ1YwWDM4T0ZP?=
- =?utf-8?B?QzdTN0RDNlBxZjRNZXhqY0d3dDZxbHJDNmZ1UnBVRmJhNE9CTnVMTFFLYXlq?=
- =?utf-8?B?R3c1aURVOWg3Y3Y0ZVo4MzFQTHVtbUlkcWVrUHhmb0k5K1R3K29ueHhaeWpS?=
- =?utf-8?B?OUcwOHlwNXJESDRidDBpYkMwaWU0cUwzMW04ZmF2R0I1enNidGJEMDRrZnRy?=
- =?utf-8?B?RGlnQnZVTVMwaUZ6dEdRcnJJYUFmdzcvMExmQXB1RUdST3VoRE9hazg1YnU5?=
- =?utf-8?B?dkg5cVM0dXlKMlE0a3AvNlBHSEVCTThCbDFpRG9kTHFHeTd4ZkdaRm96RTJq?=
- =?utf-8?B?dHpNeldvMk5lTFI3RUlCMHVDMmVqdURFZ0dYVzJRamFxTmVaek5VS2hweDhn?=
- =?utf-8?B?cWlzUUhqcVMyM0QyMmNhSGZobHo0NXhCNHFQQUZOMlAxc1JMemcvNGpsRy9p?=
- =?utf-8?Q?XYChPIDE1FpTd5fFM3+ngIx/0?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e1fd260-d508-4e3a-7abc-08dbcc0c3e9a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 16:48:36.6653
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iFxZziOHT6hBYYLDlyQndAYBaeI9rwMlpwwGRPoA8VNmVYGZD+Ef2o7n021LSSdqb1wKlXPguQeQoec9TVAQig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6421
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012140514.3697-5-Jonathan.Cameron@huawei.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+On Thu, Oct 12, 2023 at 03:05:14PM +0100, Jonathan Cameron wrote:
+> Michael Tsirkin observed that there were some unnecessarily
+> long lines in the CXL code in a recent review.
+> This patch is intended to rectify that where it does not
+> hurt readability.
+> 
+> Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-On 10/5/23 17:43, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> For auto-discovered regions, the driver must assign each target to
-> the correct position in the region interleave set.
-> 
-> cxl_region_sort_targets() uses the kernel sort() function to put the
-> targets in relative order. Once the relative ordering is complete,
-> positions are assigned based on each targets index in that sorted list.
-> 
-> The sort() compare function does not consider the child offset into a
-> parent port. The sort put all targets of one port ahead of another
-> port when an interleave was expected, causing the region assembly to
-> fail.
-> 
-> Replace the relative sort, with calc_interleave_pos() on each target
-> in the region target list. That will find the exact position for each
-> target based on a walk up the ancestral tree from endpoint to root
-> decoder.
-> 
-> calc_interleave_pos() was introduced in a prior patch, so the work
-> here is to use in cxl_region_sort_targets().
-> 
-> Cleanup the obsolete helper functions from the prior sort().
-> 
-> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-> Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/core/region.c | 127 +++++---------------------------------
->  1 file changed, 15 insertions(+), 112 deletions(-)
+>  include/hw/cxl/cxl_component.h |  3 ++-
+>  include/hw/cxl/cxl_device.h    |  5 +++--
+>  include/hw/cxl/cxl_events.h    |  3 ++-
+>  hw/cxl/cxl-cdat.c              |  3 ++-
+>  hw/cxl/cxl-component-utils.c   | 14 ++++++++------
+>  hw/cxl/cxl-events.c            |  9 ++++++---
+>  hw/cxl/cxl-mailbox-utils.c     | 21 ++++++++++++++-------
+>  hw/mem/cxl_type3.c             | 31 +++++++++++++++++++------------
+>  hw/mem/cxl_type3_stubs.c       |  5 +++--
+>  9 files changed, 59 insertions(+), 35 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 297b9132d5b3..5a4a70ceb4ce 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1480,6 +1480,14 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
->  	return 0;
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+> index 3c795a6278..e52dd8d2b9 100644
+> --- a/include/hw/cxl/cxl_component.h
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -175,7 +175,8 @@ HDM_DECODER_INIT(3);
+>      (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
+>  #define CXL_SNOOP_REGISTERS_SIZE   0x8
+>  
+> -QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
+> +QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET +
+> +                    CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
+>                     "No space for registers");
+>  
+>  typedef struct component_registers {
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 51cd0d9ce3..007ddaf078 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -192,7 +192,7 @@ void cxl_device_register_init_common(CXLDeviceState *dev);
+>   * Documented as a 128 bit register, but 64 bit accesses and the second
+>   * 64 bits are currently reserved.
+>   */
+> -REG64(CXL_DEV_CAP_ARRAY, 0) /* Documented as 128 bit register but 64 byte accesses */
+> +REG64(CXL_DEV_CAP_ARRAY, 0)
+>      FIELD(CXL_DEV_CAP_ARRAY, CAP_ID, 0, 16)
+>      FIELD(CXL_DEV_CAP_ARRAY, CAP_VERSION, 16, 8)
+>      FIELD(CXL_DEV_CAP_ARRAY, CAP_COUNT, 32, 16)
+> @@ -361,7 +361,8 @@ struct CXLType3Class {
+>                          uint64_t offset);
+>      void (*set_lsa)(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+>                      uint64_t offset);
+> -    bool (*set_cacheline)(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data);
+> +    bool (*set_cacheline)(CXLType3Dev *ct3d, uint64_t dpa_offset,
+> +                          uint8_t *data);
+>  };
+>  
+>  MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index 089ba2091f..d778487b7e 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -92,7 +92,8 @@ typedef enum CXLEventIntMode {
+>      CXL_INT_RES      = 0x03,
+>  } CXLEventIntMode;
+>  #define CXL_EVENT_INT_MODE_MASK 0x3
+> -#define CXL_EVENT_INT_SETTING(vector) ((((uint8_t)vector & 0xf) << 4) | CXL_INT_MSI_MSIX)
+> +#define CXL_EVENT_INT_SETTING(vector) \
+> +    ((((uint8_t)vector & 0xf) << 4) | CXL_INT_MSI_MSIX)
+>  typedef struct CXLEventInterruptPolicy {
+>      uint8_t info_settings;
+>      uint8_t warn_settings;
+> diff --git a/hw/cxl/cxl-cdat.c b/hw/cxl/cxl-cdat.c
+> index d246d6885b..639a2db3e1 100644
+> --- a/hw/cxl/cxl-cdat.c
+> +++ b/hw/cxl/cxl-cdat.c
+> @@ -60,7 +60,8 @@ static void ct3_build_cdat(CDATObject *cdat, Error **errp)
+>          return;
+>      }
+>  
+> -    cdat->built_buf_len = cdat->build_cdat_table(&cdat->built_buf, cdat->private);
+> +    cdat->built_buf_len = cdat->build_cdat_table(&cdat->built_buf,
+> +                                                 cdat->private);
+>  
+>      if (!cdat->built_buf_len) {
+>          /* Build later as not all data available yet */
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> index 8ab04dbb01..80efbf6365 100644
+> --- a/hw/cxl/cxl-component-utils.c
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -240,7 +240,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 1);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_256B, 1);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_4K, 1);
+> -    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, POISON_ON_ERR_CAP, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+> +                     POISON_ON_ERR_CAP, 0);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
+>                       HDM_DECODER_ENABLE, 0);
+>      write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
+> @@ -263,15 +264,16 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>      }
 >  }
 >  
-> +static int cmp_interleave_pos(const void *a, const void *b)
-> +{
-> +	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
-> +	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
-> +
-> +	return cxled_a->pos - cxled_b->pos;
-> +}
-> +
->  static struct cxl_port *next_port(struct cxl_port *port)
+> -void cxl_component_register_init_common(uint32_t *reg_state, uint32_t *write_msk,
+> +void cxl_component_register_init_common(uint32_t *reg_state,
+> +                                        uint32_t *write_msk,
+>                                          enum reg_type type)
 >  {
->  	if (!port->parent_dport)
-> @@ -1587,131 +1595,26 @@ static int calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
->  	return pos;
+>      int caps = 0;
+>  
+>      /*
+> -     * In CXL 2.0 the capabilities required for each CXL component are such that,
+> -     * with the ordering chosen here, a single number can be used to define
+> -     * which capabilities should be provided.
+> +     * In CXL 2.0 the capabilities required for each CXL component are such
+> +     * that, with the ordering chosen here, a single number can be used to
+> +     * define which capabilities should be provided.
+>       */
+>      switch (type) {
+>      case CXL2_DOWNSTREAM_PORT:
+> @@ -448,7 +450,7 @@ void cxl_component_create_dvsec(CXLComponentState *cxl,
+>          default: /* Registers are RO for other component types */
+>              break;
+>          }
+> -        /* There are rw1cs bits in the status register but never set currently */
+> +        /* There are rw1cs bits in the status register but never set */
+>          break;
+>      }
+>  
+> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> index 3ddd6369ad..e2172b94b9 100644
+> --- a/hw/cxl/cxl-events.c
+> +++ b/hw/cxl/cxl-events.c
+> @@ -170,8 +170,10 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+>      if (log->overflow_err_count) {
+>          pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
+>          pl->overflow_err_count = cpu_to_le16(log->overflow_err_count);
+> -        pl->first_overflow_timestamp = cpu_to_le64(log->first_overflow_timestamp);
+> -        pl->last_overflow_timestamp = cpu_to_le64(log->last_overflow_timestamp);
+> +        pl->first_overflow_timestamp =
+> +            cpu_to_le64(log->first_overflow_timestamp);
+> +        pl->last_overflow_timestamp =
+> +            cpu_to_le64(log->last_overflow_timestamp);
+>      }
+>  
+>      pl->record_count = cpu_to_le16(nr);
+> @@ -180,7 +182,8 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+>      return CXL_MBOX_SUCCESS;
 >  }
 >  
-> -static void find_positions(const struct cxl_switch_decoder *cxlsd,
-> -			   const struct cxl_port *iter_a,
-> -			   const struct cxl_port *iter_b, int *a_pos,
-> -			   int *b_pos)
-> -{
-> -	int i;
-> -
-> -	for (i = 0, *a_pos = -1, *b_pos = -1; i < cxlsd->nr_targets; i++) {
-> -		if (cxlsd->target[i] == iter_a->parent_dport)
-> -			*a_pos = i;
-> -		else if (cxlsd->target[i] == iter_b->parent_dport)
-> -			*b_pos = i;
-> -		if (*a_pos >= 0 && *b_pos >= 0)
-> -			break;
-> -	}
-> -}
-> -
-> -static int cmp_decode_pos(const void *a, const void *b)
-> -{
-> -	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
-> -	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
-> -	struct cxl_memdev *cxlmd_a = cxled_to_memdev(cxled_a);
-> -	struct cxl_memdev *cxlmd_b = cxled_to_memdev(cxled_b);
-> -	struct cxl_port *port_a = cxled_to_port(cxled_a);
-> -	struct cxl_port *port_b = cxled_to_port(cxled_b);
-> -	struct cxl_port *iter_a, *iter_b, *port = NULL;
-> -	struct cxl_switch_decoder *cxlsd;
-> -	struct device *dev;
-> -	int a_pos, b_pos;
-> -	unsigned int seq;
-> -
-> -	/* Exit early if any prior sorting failed */
-> -	if (cxled_a->pos < 0 || cxled_b->pos < 0)
-> -		return 0;
-> -
-> -	/*
-> -	 * Walk up the hierarchy to find a shared port, find the decoder that
-> -	 * maps the range, compare the relative position of those dport
-> -	 * mappings.
-> -	 */
-> -	for (iter_a = port_a; iter_a; iter_a = next_port(iter_a)) {
-> -		struct cxl_port *next_a, *next_b;
-> -
-> -		next_a = next_port(iter_a);
-> -		if (!next_a)
-> -			break;
-> -
-> -		for (iter_b = port_b; iter_b; iter_b = next_port(iter_b)) {
-> -			next_b = next_port(iter_b);
-> -			if (next_a != next_b)
-> -				continue;
-> -			port = next_a;
-> -			break;
-> -		}
-> -
-> -		if (port)
-> -			break;
-> -	}
-> -
-> -	if (!port) {
-> -		dev_err(cxlmd_a->dev.parent,
-> -			"failed to find shared port with %s\n",
-> -			dev_name(cxlmd_b->dev.parent));
-> -		goto err;
-> -	}
-> -
-> -	dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
-> -				match_switch_decoder_by_range);
-> -	if (!dev) {
-> -		struct range *range = &cxled_a->cxld.hpa_range;
-> -
-> -		dev_err(port->uport_dev,
-> -			"failed to find decoder that maps %#llx-%#llx\n",
-> -			range->start, range->end);
-> -		goto err;
-> -	}
-> -
-> -	cxlsd = to_cxl_switch_decoder(dev);
-> -	do {
-> -		seq = read_seqbegin(&cxlsd->target_lock);
-> -		find_positions(cxlsd, iter_a, iter_b, &a_pos, &b_pos);
-> -	} while (read_seqretry(&cxlsd->target_lock, seq));
-> -
-> -	put_device(dev);
-> -
-> -	if (a_pos < 0 || b_pos < 0) {
-> -		dev_err(port->uport_dev,
-> -			"failed to find shared decoder for %s and %s\n",
-> -			dev_name(cxlmd_a->dev.parent),
-> -			dev_name(cxlmd_b->dev.parent));
-> -		goto err;
-> -	}
-> -
-> -	dev_dbg(port->uport_dev, "%s comes %s %s\n",
-> -		dev_name(cxlmd_a->dev.parent),
-> -		a_pos - b_pos < 0 ? "before" : "after",
-> -		dev_name(cxlmd_b->dev.parent));
-> -
-> -	return a_pos - b_pos;
-> -err:
-> -	cxled_a->pos = -1;
-> -	return 0;
-> -}
-> -
->  static int cxl_region_sort_targets(struct cxl_region *cxlr)
+> -CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds, CXLClearEventPayload *pl)
+> +CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
+> +                                   CXLClearEventPayload *pl)
 >  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	int i, rc = 0;
+>      CXLEventLog *log;
+>      uint8_t log_type;
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 434ccc5f6e..ab082ec9de 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -366,9 +366,12 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
 >  
-> -	sort(p->targets, p->nr_targets, sizeof(p->targets[0]), cmp_decode_pos,
-> -	     NULL);
-> -
->  	for (i = 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>      snprintf(id->fw_revision, 0x10, "BWFW VERSION %02d", 0);
 >  
-> +		cxled->pos = calc_interleave_pos(cxled, p->interleave_ways);
->  		/*
-> -		 * Record that sorting failed, but still continue to restore
-> -		 * cxled->pos with its ->targets[] position so that follow-on
-> -		 * code paths can reliably do p->targets[cxled->pos] to
-> -		 * self-reference their entry.
-> +		 * Record that sorting failed, but still continue to calc
-> +		 * cxled->pos so that follow-on code paths can reliably
-> +		 * do p->targets[cxled->pos] to self-reference their entry.
->  		 */
->  		if (cxled->pos < 0)
->  			rc = -ENXIO;
-> -		cxled->pos = i;
->  	}
-> +	/* Keep the cxlr target list in interleave position order */
-> +	sort(p->targets, p->nr_targets, sizeof(p->targets[0]),
-> +	     cmp_interleave_pos, NULL);
+> -    stq_le_p(&id->total_capacity, cxl_dstate->mem_size / CXL_CAPACITY_MULTIPLIER);
+> -    stq_le_p(&id->persistent_capacity, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
+> -    stq_le_p(&id->volatile_capacity, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
+> +    stq_le_p(&id->total_capacity,
+> +             cxl_dstate->mem_size / CXL_CAPACITY_MULTIPLIER);
+> +    stq_le_p(&id->persistent_capacity,
+> +             cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
+> +    stq_le_p(&id->volatile_capacity,
+> +             cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
+>      stl_le_p(&id->lsa_size, cvc->get_lsa_size(ct3d));
+>      /* 256 poison records */
+>      st24_le_p(id->poison_list_max_mer, 256);
+> @@ -396,13 +399,15 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
+>          return CXL_MBOX_INTERNAL_ERROR;
+>      }
 >  
->  	dev_dbg(&cxlr->dev, "region sort %s\n", rc ? "failed" : "successful");
->  	return rc;
+> -    stq_le_p(&part_info->active_vmem, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
+> +    stq_le_p(&part_info->active_vmem,
+> +             cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
+>      /*
+>       * When both next_vmem and next_pmem are 0, there is no pending change to
+>       * partitioning.
+>       */
+>      stq_le_p(&part_info->next_vmem, 0);
+> -    stq_le_p(&part_info->active_pmem, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
+> +    stq_le_p(&part_info->active_pmem,
+> +             cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
+>      stq_le_p(&part_info->next_pmem, 0);
+>  
+>      *len = sizeof(*part_info);
+> @@ -681,8 +686,10 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
+>          cmd_firmware_update_get_info, 0, 0 },
+>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+> -    [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8, IMMEDIATE_POLICY_CHANGE },
+> -    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0, 0 },
+> +    [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
+> +                         8, IMMEDIATE_POLICY_CHANGE },
+> +    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
+> +                              0, 0 },
+>      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
+>      [IDENTIFY][MEMORY_DEVICE] = { "IDENTIFY_MEMORY_DEVICE",
+>          cmd_identify_memory_device, 0, 0 },
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index c02be4ce45..18ad853f5b 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -208,10 +208,9 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+>      }
+>  
+>      if (nonvolatile_mr) {
+> +        uint64_t base = volatile_mr ? memory_region_size(volatile_mr) : 0;
+>          rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
+> -                                           nonvolatile_mr, true,
+> -                                           (volatile_mr ?
+> -                                            memory_region_size(volatile_mr) : 0));
+> +                                           nonvolatile_mr, true, base);
+>          if (rc < 0) {
+>              goto error_cleanup;
+>          }
+> @@ -514,7 +513,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+>      case A_CXL_RAS_UNC_ERR_STATUS:
+>      {
+>          uint32_t capctrl = ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL);
+> -        uint32_t fe = FIELD_EX32(capctrl, CXL_RAS_ERR_CAP_CTRL, FIRST_ERROR_POINTER);
+> +        uint32_t fe = FIELD_EX32(capctrl, CXL_RAS_ERR_CAP_CTRL,
+> +                                 FIRST_ERROR_POINTER);
+>          CXLError *cxl_err;
+>          uint32_t unc_err;
+>  
+> @@ -533,7 +533,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+>                   * closest to behavior of hardware not capable of multiple
+>                   * header recording.
+>                   */
+> -                QTAILQ_FOREACH_SAFE(cxl_err, &ct3d->error_list, node, cxl_next) {
+> +                QTAILQ_FOREACH_SAFE(cxl_err, &ct3d->error_list, node,
+> +                                    cxl_next) {
+>                      if ((1 << cxl_err->type) & value) {
+>                          QTAILQ_REMOVE(&ct3d->error_list, cxl_err, node);
+>                          g_free(cxl_err);
+> @@ -1072,7 +1073,8 @@ void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+>          if (((start >= p->start) && (start < p->start + p->length)) ||
+>              ((start + length > p->start) &&
+>               (start + length <= p->start + p->length))) {
+> -            error_setg(errp, "Overlap with existing poisoned region not supported");
+> +            error_setg(errp,
+> +                       "Overlap with existing poisoned region not supported");
+>              return;
+>          }
+>      }
+> @@ -1085,7 +1087,8 @@ void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+>      p = g_new0(CXLPoison, 1);
+>      p->length = length;
+>      p->start = start;
+> -    p->type = CXL_POISON_TYPE_INTERNAL; /* Different from injected via the mbox */
+> +    /* Different from injected via the mbox */
+> +    p->type = CXL_POISON_TYPE_INTERNAL;
+>  
+>      QLIST_INSERT_HEAD(&ct3d->poison_list, p, node);
+>      ct3d->poison_list_cnt++;
+> @@ -1222,7 +1225,8 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+>          return;
+>      }
+>      /* If the error is masked, nothting to do here */
+> -    if (!((1 << cxl_err_type) & ~ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK))) {
+> +    if (!((1 << cxl_err_type) &
+> +          ~ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK))) {
+>          return;
+>      }
+>  
+> @@ -1372,7 +1376,8 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+>                                 bool has_bank, uint8_t bank,
+>                                 bool has_row, uint32_t row,
+>                                 bool has_column, uint16_t column,
+> -                               bool has_correction_mask, uint64List *correction_mask,
+> +                               bool has_correction_mask,
+> +                               uint64List *correction_mask,
+>                                 Error **errp)
+>  {
+>      Object *obj = object_resolve_path(path, NULL);
+> @@ -1473,7 +1478,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+>                                          int16_t temperature,
+>                                          uint32_t dirty_shutdown_count,
+>                                          uint32_t corrected_volatile_error_count,
+> -                                        uint32_t corrected_persistent_error_count,
+> +                                        uint32_t corrected_persist_error_count,
+>                                          Error **errp)
+>  {
+>      Object *obj = object_resolve_path(path, NULL);
+> @@ -1513,8 +1518,10 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+>      module.life_used = life_used;
+>      stw_le_p(&module.temperature, temperature);
+>      stl_le_p(&module.dirty_shutdown_count, dirty_shutdown_count);
+> -    stl_le_p(&module.corrected_volatile_error_count, corrected_volatile_error_count);
+> -    stl_le_p(&module.corrected_persistent_error_count, corrected_persistent_error_count);
+> +    stl_le_p(&module.corrected_volatile_error_count,
+> +             corrected_volatile_error_count);
+> +    stl_le_p(&module.corrected_persistent_error_count,
+> +             corrected_persist_error_count);
+>  
+>      if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&module)) {
+>          cxl_event_irq_assert(ct3d);
+> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+> index 8ba5d3d1f7..3e1851e32b 100644
+> --- a/hw/mem/cxl_type3_stubs.c
+> +++ b/hw/mem/cxl_type3_stubs.c
+> @@ -33,7 +33,8 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+>                                 bool has_bank, uint8_t bank,
+>                                 bool has_row, uint32_t row,
+>                                 bool has_column, uint16_t column,
+> -                               bool has_correction_mask, uint64List *correction_mask,
+> +                               bool has_correction_mask,
+> +                               uint64List *correction_mask,
+>                                 Error **errp) {}
+>  
+>  void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+> @@ -45,7 +46,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+>                                          int16_t temperature,
+>                                          uint32_t dirty_shutdown_count,
+>                                          uint32_t corrected_volatile_error_count,
+> -                                        uint32_t corrected_persistent_error_count,
+> +                                        uint32_t corrected_persist_error_count,
+>                                          Error **errp) {}
+>  
+>  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+> -- 
+> 2.39.2
+> 
