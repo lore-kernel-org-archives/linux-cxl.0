@@ -1,408 +1,241 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF8D219E6
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 16:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61467219E5
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 16:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X39OI60H"
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3851D6
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-5aa7fdd1420so660159a12.3
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697216206; x=1697821006; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IgV73/bZCE+j0pcmpLO58sQXuQXF3ja23XLyZlWF1ew=;
-        b=X39OI60HQxVw94hqIeSW2bblTDgnLT9+znzmhG1vJbSEnJOFKBuGdKEmBpDM192li7
-         Br4+Ww7eaAaK1Wqk3rb0Gbqd5wqD9wvFSplMFqsjfT9QcpQEi4le3LNGTx2RpCtwmARQ
-         VxeuQ7SrbtawaxFuLwppZq5HE1o/+c1v7Xgew4OlutguoO73dNVkuuI/rUJgfqrU+8Kf
-         JsW8Y/2wsyYRcqhgexOwZ+NcRVIUI58Msl5GBR4dtiivd24tpxWowBMOPPVlGf6Vd5no
-         DtjStR8WD9f3E9EnHub2U78wMEMIG5BTmhWW/w6Fi9tasbvz4UJspPQGS4fx8m5iK7xL
-         Seag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697216206; x=1697821006;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IgV73/bZCE+j0pcmpLO58sQXuQXF3ja23XLyZlWF1ew=;
-        b=PBcBsi2yhFj6XALKfaH1CFHDyNLXyHT392GMrQ7yK+IDPiafFLUUIs2R1ie5LrEKYx
-         fJk/ac86Rzs2RCpY0tl9/0Oag3g0v6H82ecbR5dYloPw/DgBmeOH2E92dJJ/Bicz5tjV
-         gj2PzLloFMDi/gxOxNB2S4exEy0Zq+F1d5mj8Ek3d8KAlE19AdspbZ01s6EUl26fvYLV
-         bziqHxPPpC2PhX93bH5gRwDW08SZuxNPTUf0inpFG+gh4oi07AuLC1u0s9RRkAJGt40A
-         DJRvnSk5t8gtRLUarc6YmZG3MKw7UL9RbdycLocui0bZxa5Kf5WZ/Vu+MkilDLxPbDAo
-         7Kow==
-X-Gm-Message-State: AOJu0YwiAe7gcVotzjPkZSBdwLUOz0lY7AdJGeS3+CR5PxCwIQIMoOpn
-	EP4QcnWkKil3ObLyy8Nj6js=
-X-Google-Smtp-Source: AGHT+IFncI/OCutdaHnUhGVL+zFM1t5prtTsGtePoM6du2LSGUuNHMw9Ml2EEe+dn1yZUdX1ZJc6zw==
-X-Received: by 2002:a05:6a20:734b:b0:14c:de3:95d6 with SMTP id v11-20020a056a20734b00b0014c0de395d6mr28410653pzc.45.1697216206080;
-        Fri, 13 Oct 2023 09:56:46 -0700 (PDT)
-Received: from debian (99-13-228-231.lightspeed.snjsca.sbcglobal.net. [99.13.228.231])
-        by smtp.gmail.com with ESMTPSA id l18-20020a170902d35200b001c74df14e6esm4124080plk.51.2023.10.13.09.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 09:56:45 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Fri, 13 Oct 2023 09:56:09 -0700
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	Michael Tsirkin <mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>,
-	linuxarm@huawei.com, Fan Ni <fan.ni@samsung.com>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH v4 4/4] hw/cxl: Line length reductions
-Message-ID: <ZSl2k_-hyzcC60CX@debian>
-References: <20231012140514.3697-1-Jonathan.Cameron@huawei.com>
- <20231012140514.3697-5-Jonathan.Cameron@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SKJ/c8hz"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FE5AD
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 09:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697216259; x=1728752259;
+  h=message-id:date:subject:to:references:from:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=yaQbMUjna8FMmQFVsWf/WmmwXmvhYGlXJF1QsmLsnbc=;
+  b=SKJ/c8hz2uq56Zdl4Jd6e84imn6kAPZ/Cq9W0qf5ly66DCc69+7v55bq
+   N0LSE2qH+B5uH8qrC+5WjbtZUHSdH4ZXTL3cjEH+JH2Yg/Bex/xYKqkkt
+   bVacVvkGCeC4sWH0RCSNrCo9S7ltAYj1kyqn+O6XgFiNEpZK59THtOIO5
+   M4aZ/7GyLjzq5IoeEvDWU5HalEAS0Ah8J68y+qJ/0Tn2e+NY3edNFHQ3B
+   5Mt1u/86pgVCv1gwzyGTfQ8pKOZJVYwnWB/seDuzM8ZfMPoSe37+SerCh
+   Ft6c5q1Wd24fcaTmWJ0dV1PEb8rISTvDybKx86swfg1OyAMGcDgxSldtL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="3824605"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="3824605"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 09:57:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="731421650"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="731421650"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Oct 2023 09:57:22 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 13 Oct 2023 09:57:22 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 13 Oct 2023 09:57:21 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Fri, 13 Oct 2023 09:57:21 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Fri, 13 Oct 2023 09:57:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UBAJeEHOcT8P8bo0wfIMZbRGwrriJhjiwfissSID9NydDeKKgrv3QQKZBAWsRHO6lXxGqTy5C4c5FjteseBgHlAAtigm5IpL8AWIhqJIWWMkwEnFEX/yZaHOJmyEeC7BnP8wZ4hBFaz0DHJVMaC19QrTnWDblKsIeZsWo0FHUqvUh5rds8E77SMsNXv0nvRWfVCXT04TF/W1EjLUGNTu437lW6C1lVJpmdGxDTl+1EszVSwLhx/3sNx5f3LsB/LyVTm7n/IN/cXgAIvbdR2m55EU24KJen8c2sNI6AAqB+FOngdSm/+yqF8LRZFI0lCW7fSxmhW3J5NL3jff797Tgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=efrrJexmPqzVqeyJWP5G0gscezU7SJ3csnaEaDdRbJ4=;
+ b=QzctpOvZHCxS6DU+M/dO7tgNk1seEe7OkZB71qKlv+iiO5C77bjUa8/yILMvelKx1Ayu71RscI0Hi5embc6t0wFqoh0aR/ucAfmyUGOE4irUqsa9Rd/bGKMKJEd0pXgyhQMWtNP0GQoUIWNepao6Yr5RYVZ5Rmq2Hp99zozLJ2QOk8+anEmZZXWUv4pgfJfeociccZeManh2lCnDwSdo1x+ZTPgs2z+F/1B++oJkhHRPtUmcz0DVAgqy/wchSKV0cufGvQ/hdhPxlfwMnoY3F4BW1g4j8rqyVFaAfAyBOkxclipES2Sj1iL4c3w4oJ5/hgnTSnLQB9Q+0y2BzAOpyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by DS7PR11MB6223.namprd11.prod.outlook.com (2603:10b6:8:98::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Fri, 13 Oct
+ 2023 16:57:16 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::e9ca:a5a7:ada1:6ee8]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::e9ca:a5a7:ada1:6ee8%5]) with mapi id 15.20.6838.040; Fri, 13 Oct 2023
+ 16:57:15 +0000
+Message-ID: <6fda3467-aa30-4eac-a258-63a4876e0c82@intel.com>
+Date: Fri, 13 Oct 2023 09:57:12 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v2] cxl/region: don't try to cleanup after
+ cxl_region_setup_targets() fails
+To: Jim Harris <jim.harris@samsung.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "dan.carpenter@linaro.org"
+	<dan.carpenter@linaro.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>
+References: <169696311899.1171696.7812961484055097837.stgit@bgt-140510-bm03.eng.stellus.in>
+ <CGME20231011145132uscas1p13e9fb6dadfa3d5b61fc410449122a013@uscas1p1.samsung.com>
+ <169703589120.1202031.14696100866518083806.stgit@bgt-140510-bm03.eng.stellus.in>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <169703589120.1202031.14696100866518083806.stgit@bgt-140510-bm03.eng.stellus.in>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0153.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::8) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012140514.3697-5-Jonathan.Cameron@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DS7PR11MB6223:EE_
+X-MS-Office365-Filtering-Correlation-Id: d837fd7d-86b1-4847-8fee-08dbcc0d73fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cqzVO/9p/XPhIIKDhIsScK7NfYG+J8yrXzL6W/3BUGaoN1hcezj6v+uR1fniJ7VV5xZo96vt2ZqMeIKkD5B+BX8kmO75ilTjbER8yORPWZTOiHIB7H1e3EJHmFtHH7RLFp4QQdGIu6G9PruzhC/7sU7R/THuSvyVjTzCP6FTh3XJOTVuT/jx2oROrt5ZWpsAKnjRbVRgmAlFv4GmWroPPNouNeL99VXzVZmgjf3uwkABx9fUtxPDw2ARa3upf8ySyrq+WhereRaRvgyfC1JgEfajO8c03C72AYltmA9mGevk08lLue/7pn2yBeTw3RCu8srZpQK1Dk17s/mgn4yQU5nEKxAxoesDqZrxPW5yWm9DDxZIJjXWZp68CJObkqG4VLohHv9FbNJ6S7jjgcYiepYZdtVloomNU6SwkCX/7J361P5tyLmqeJjLNE8vEtr8Ssu4msGn93lZkTo7nrStjTK38Lrdez1Z23j55xm3LctcplHSJZz0h4nFOcz69rebiYKZgkHe4Hx8S4g+aYihWGTnh05yPo81UTHqi/NCXIpmR9qS39v4fedcfb7FCRWVmS7zAOBnusX3f9TFkM6zuoJGwnGWWEy99t3Kjso3FM0RtA0+pYHWq7C/45xv/x3b
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(376002)(136003)(39860400002)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(82960400001)(26005)(6506007)(44832011)(66556008)(316002)(66946007)(6636002)(36756003)(83380400001)(66476007)(110136005)(6512007)(2616005)(86362001)(53546011)(38100700002)(31686004)(478600001)(6486002)(31696002)(2906002)(6666004)(5660300002)(8676002)(8936002)(41300700001)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b0pjVWo5MXRHVEdSOEdKYy9IcTUwNnlaRTdRYm1nTXJMYmZhOWI2RHRuTWE0?=
+ =?utf-8?B?dllCMDh1aWUyZ3pSVHY1NG5aSDBpcXFVaXZod2V5M3AzbjFkYVVEcHg0MDBT?=
+ =?utf-8?B?ZE81RXBTS3VFQXpIMjdweTdTcDQvMXBGK1VKRkJKaXNYQVBMMkZ2bEZpZmZP?=
+ =?utf-8?B?b2JwMmRqRGFpMkM3YmdlTytIRmd3N3ZjOW9FMSt1RCszcVlVeGFpaU5HbGpK?=
+ =?utf-8?B?dWV6RHNwWlZML3ZIdWFWdkJwZkFlSUpuN0dicDc2cFBab0hNVWpNWitKMmVB?=
+ =?utf-8?B?Wnpmczc1cmF2dmlPWWlTbkY2SUxKVFZxalZvOU5BUUMveUlacnZlZWpuY1B2?=
+ =?utf-8?B?ejJlTTEvTThkMDB6elJPR1RDZVBwaGZ5REcvcTdRc3cwOUNFd3ozSFVreVFG?=
+ =?utf-8?B?ZHV6OGpERlNjbWZCeDd0OG16TjhjWjFkc3A2cnk4M1BXRkhFNitWSDJTQUFj?=
+ =?utf-8?B?M1RyV3ZuRG5KYmswbGRiMjNMWmdqMmR6WGVBYTZwZHZYdmZ4b05PTHB6Ujhh?=
+ =?utf-8?B?YUFGZ0Zjc3dsWmdmQWw5dGRyNCtkakRCRVpIemJNNE1GUTVYckxVT29EVGor?=
+ =?utf-8?B?RGw4U21GUitqMWJGQWErVlo2K0l0cWdOcU0wVmd0M2cwMWhUeHpTMXpDd1c1?=
+ =?utf-8?B?aUwyRUdWYVluMlc2TVdTMW5Ncm1PbFhjM0x0Z25mYVJ1V3IwaHJMNk44Tjhp?=
+ =?utf-8?B?OFVQZ2ZFOW1GOWVWd0tiTUNhbjRGTlJId2UzK29xS0pjbmlKREx1cHg1UXlk?=
+ =?utf-8?B?cVJERlo1L2JZY3JDeXJMb1dwb2Nzd1BteWdRaEJ6WDhIM2VnSnlMV1cwaVB5?=
+ =?utf-8?B?YTI1dlFMYVg4STl1cHp6QlVkWmcybS9kOXhiWmUxZ3NRVnQ4ZlRwOExoMmk2?=
+ =?utf-8?B?MERmVk94UWNKcmRHSUhKR01sa1R4QzNjbmhpQWk5NUFEeUUwUVhZUHg5R04w?=
+ =?utf-8?B?MnJlZVgwU0VPVGlDMXlMMnlpeGRMOEwvRjNtbGFoQ01VS1RTc01hSzZDK0lU?=
+ =?utf-8?B?KzlTckpHRklGbEdubkZmTU0ybVFYMkRTTlhUVDFyRWN5ZHRrdWZTMU9VV3Zq?=
+ =?utf-8?B?cW9nL0hwWVVUZFMrZVZSYjNRZTlvc25vVVBDdlRxUVNraTRHY3FvVGVUdmht?=
+ =?utf-8?B?Q21IeHMvNzRaZUw4dEwxaU9heGtyZE8rT2d0V2l2eUtyN3JDcG9hcFlGRnZT?=
+ =?utf-8?B?ZEZpZVlJS0szYWVNb1dtaElONVFOeWdaaUtQT3BPVXVuVElaM0p4cHZUYnJz?=
+ =?utf-8?B?TFhjd2VTM2xjYzlYaUlLQll4S3dVbWptcElhK0Q5MEgwNkxFVURuckZselY5?=
+ =?utf-8?B?YURqZEtubFdCU2tTcXBKbFhka3VQdUpkYVU3bzBONlZiNU1GbUthekFMOENO?=
+ =?utf-8?B?eXFWRXhIQ2p3TkpnWWd1R1NJbkdZR2pNQWhtWmNtVG10Zkw3WURPRXZPMG5z?=
+ =?utf-8?B?MHRwY0MyYmo4Smt5N0orOUlDRng5WGdjU0pzZC96cVVRdXVzeXFFME9qdGkv?=
+ =?utf-8?B?V1lCQUxDYTFGa094YUdadkloTGJremw3WGZFall2M2xabk5Fb05uZXZ5OWxu?=
+ =?utf-8?B?cFpLL0ZhL0JPTWozMUNQVS9WKzdWTGt5am9Zc0NxYWhtZHNNRGM0MmdnNEgy?=
+ =?utf-8?B?bG1SMS85ekVrY2wwa0N4eCtRYU9IZDFEOGdoUWs2WmlKNUc1V2hpVlpDdkRt?=
+ =?utf-8?B?c2VSS0ZIQ243UGxwaTRSSW1uNXV2emFFb3lLM01ZWFVJcjFDL2ZWYVNyZXVk?=
+ =?utf-8?B?RlhscHY4MEY4Zkp2Rng0Z3E5TGFzQ0tNaEhpMHd1WWQ0WDh4QW1tb2MyUjBY?=
+ =?utf-8?B?dzZvSmErTVpzYjhLRy9FZUJ3dVV2Tmo5NXhMWEo3dkdQb1ZCRDAvd2F0cXk1?=
+ =?utf-8?B?STVLQ20wdU9QYzFpaWdpUEFGYzJxZFVJQWxHVUo4Q1Z1L01FUjViSGt1UTdC?=
+ =?utf-8?B?bkkrUnpnWmpkWXIzOXkvR2hLZHF1TXppTlA4NVRIZVZxdXdmUWtyaDBmVzE4?=
+ =?utf-8?B?QnFYcUt4WVMvTFZ2VjFIMEJmSTNhS1RUUHU0Q0NGcjIyUWlhelVySjkxQi9m?=
+ =?utf-8?B?YjhZd2lyZXZNbjB2cHV1bThHV0pMR0E2L084ZGhEaHJNZDU2ZFdTTnhGSGRj?=
+ =?utf-8?Q?Y3e8S1cRhfU4NzAUlEKfC1lVy?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d837fd7d-86b1-4847-8fee-08dbcc0d73fc
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 16:57:15.8261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V/qX2Ar+iEyMt3E5316Dq9a8fwAgMxeG5mlMCdYikwMLSpWaNNF5XgrQig0NlArNowPk97wWdh7iYHLneMdN2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6223
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 03:05:14PM +0100, Jonathan Cameron wrote:
-> Michael Tsirkin observed that there were some unnecessarily
-> long lines in the CXL code in a recent review.
-> This patch is intended to rectify that where it does not
-> hurt readability.
-> 
-> Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
+On 10/11/23 07:51, Jim Harris wrote:
+> Patch 5e42bcbc ("cxl/region: decrement ->nr_targets on error in
+> cxl_region_attach()") tried to avoid 'eiw' initialization errors when
+> ->nr_targets exceeded 16, by just decrementing ->nr_targets when
+> cxl_region_setup_targets() failed. Patch 86987c76 ("cxl/region: Cleanup
+> target list on attach error") extended that cleanup to also clear
+> cxled->pos and p->targets[pos].
+> 
+> The initialization error was incidentally fixed separately by patch
+> 8d4285425 ("cxl/region: Fix port setup uninitialized variable warnings")
+> which was merged a few days after 5e42bcbc.
+> 
+> But now the original cleanup when cxl_region_setup_targets() fails
+> prevents endpoint and switch decoder resources from being reused:
+> 
+> 1) the cleanup does not set the decoder's region to NULL, which results
+>    in future dpa_size_store() calls returning -EBUSY
+> 2) the decoder is not properly freed, which results in future commit
+>    errors associated with the upstream switch
+> 
+> Now that the initialization errors were fixed separately, the proper
+> cleanup for this case is to just return immediately. Then the resources
+> associated with this target get cleanup up as normal when the failed
+> region is deleted.
+> 
+> The ->nr_targets decrement in the error case also helped prevent
+> a p->targets[] array overflow, so add a new check to prevent against
+> that overflow.
+> 
+> Tested by trying to create an invalid region for a 2 switch * 2 endpoint
+> topology, and then following up with creating a valid region.
+> 
+> Signed-off-by: Jim Harris <jim.harris@samsung.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  include/hw/cxl/cxl_component.h |  3 ++-
->  include/hw/cxl/cxl_device.h    |  5 +++--
->  include/hw/cxl/cxl_events.h    |  3 ++-
->  hw/cxl/cxl-cdat.c              |  3 ++-
->  hw/cxl/cxl-component-utils.c   | 14 ++++++++------
->  hw/cxl/cxl-events.c            |  9 ++++++---
->  hw/cxl/cxl-mailbox-utils.c     | 21 ++++++++++++++-------
->  hw/mem/cxl_type3.c             | 31 +++++++++++++++++++------------
->  hw/mem/cxl_type3_stubs.c       |  5 +++--
->  9 files changed, 59 insertions(+), 35 deletions(-)
+>  drivers/cxl/core/region.c |   14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-> index 3c795a6278..e52dd8d2b9 100644
-> --- a/include/hw/cxl/cxl_component.h
-> +++ b/include/hw/cxl/cxl_component.h
-> @@ -175,7 +175,8 @@ HDM_DECODER_INIT(3);
->      (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
->  #define CXL_SNOOP_REGISTERS_SIZE   0x8
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6d63b8798c29..2b3b3c62d0a7 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1658,6 +1658,12 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		return -ENXIO;
+>  	}
 >  
-> -QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
-> +QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET +
-> +                    CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
->                     "No space for registers");
+> +	if (p->nr_targets >= p->interleave_ways) {
+> +		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+> +			p->nr_targets);
+> +		return -EINVAL;
+> +	}
+> +
+>  	ep_port = cxled_to_port(cxled);
+>  	root_port = cxlrd_to_port(cxlrd);
+>  	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
+> @@ -1750,7 +1756,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  	if (p->nr_targets == p->interleave_ways) {
+>  		rc = cxl_region_setup_targets(cxlr);
+>  		if (rc)
+> -			goto err_decrement;
+> +			return rc;
+>  		p->state = CXL_CONFIG_ACTIVE;
+>  	}
 >  
->  typedef struct component_registers {
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 51cd0d9ce3..007ddaf078 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -192,7 +192,7 @@ void cxl_device_register_init_common(CXLDeviceState *dev);
->   * Documented as a 128 bit register, but 64 bit accesses and the second
->   * 64 bits are currently reserved.
->   */
-> -REG64(CXL_DEV_CAP_ARRAY, 0) /* Documented as 128 bit register but 64 byte accesses */
-> +REG64(CXL_DEV_CAP_ARRAY, 0)
->      FIELD(CXL_DEV_CAP_ARRAY, CAP_ID, 0, 16)
->      FIELD(CXL_DEV_CAP_ARRAY, CAP_VERSION, 16, 8)
->      FIELD(CXL_DEV_CAP_ARRAY, CAP_COUNT, 32, 16)
-> @@ -361,7 +361,8 @@ struct CXLType3Class {
->                          uint64_t offset);
->      void (*set_lsa)(CXLType3Dev *ct3d, const void *buf, uint64_t size,
->                      uint64_t offset);
-> -    bool (*set_cacheline)(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data);
-> +    bool (*set_cacheline)(CXLType3Dev *ct3d, uint64_t dpa_offset,
-> +                          uint8_t *data);
->  };
+> @@ -1762,12 +1768,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  	};
 >  
->  MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-> index 089ba2091f..d778487b7e 100644
-> --- a/include/hw/cxl/cxl_events.h
-> +++ b/include/hw/cxl/cxl_events.h
-> @@ -92,7 +92,8 @@ typedef enum CXLEventIntMode {
->      CXL_INT_RES      = 0x03,
->  } CXLEventIntMode;
->  #define CXL_EVENT_INT_MODE_MASK 0x3
-> -#define CXL_EVENT_INT_SETTING(vector) ((((uint8_t)vector & 0xf) << 4) | CXL_INT_MSI_MSIX)
-> +#define CXL_EVENT_INT_SETTING(vector) \
-> +    ((((uint8_t)vector & 0xf) << 4) | CXL_INT_MSI_MSIX)
->  typedef struct CXLEventInterruptPolicy {
->      uint8_t info_settings;
->      uint8_t warn_settings;
-> diff --git a/hw/cxl/cxl-cdat.c b/hw/cxl/cxl-cdat.c
-> index d246d6885b..639a2db3e1 100644
-> --- a/hw/cxl/cxl-cdat.c
-> +++ b/hw/cxl/cxl-cdat.c
-> @@ -60,7 +60,8 @@ static void ct3_build_cdat(CDATObject *cdat, Error **errp)
->          return;
->      }
->  
-> -    cdat->built_buf_len = cdat->build_cdat_table(&cdat->built_buf, cdat->private);
-> +    cdat->built_buf_len = cdat->build_cdat_table(&cdat->built_buf,
-> +                                                 cdat->private);
->  
->      if (!cdat->built_buf_len) {
->          /* Build later as not all data available yet */
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index 8ab04dbb01..80efbf6365 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -240,7 +240,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 1);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_256B, 1);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_4K, 1);
-> -    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, POISON_ON_ERR_CAP, 0);
-> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
-> +                     POISON_ON_ERR_CAP, 0);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
->                       HDM_DECODER_ENABLE, 0);
->      write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
-> @@ -263,15 +264,16 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->      }
+>  	return 0;
+> -
+> -err_decrement:
+> -	p->nr_targets--;
+> -	cxled->pos = -1;
+> -	p->targets[pos] = NULL;
+> -	return rc;
 >  }
 >  
-> -void cxl_component_register_init_common(uint32_t *reg_state, uint32_t *write_msk,
-> +void cxl_component_register_init_common(uint32_t *reg_state,
-> +                                        uint32_t *write_msk,
->                                          enum reg_type type)
->  {
->      int caps = 0;
->  
->      /*
-> -     * In CXL 2.0 the capabilities required for each CXL component are such that,
-> -     * with the ordering chosen here, a single number can be used to define
-> -     * which capabilities should be provided.
-> +     * In CXL 2.0 the capabilities required for each CXL component are such
-> +     * that, with the ordering chosen here, a single number can be used to
-> +     * define which capabilities should be provided.
->       */
->      switch (type) {
->      case CXL2_DOWNSTREAM_PORT:
-> @@ -448,7 +450,7 @@ void cxl_component_create_dvsec(CXLComponentState *cxl,
->          default: /* Registers are RO for other component types */
->              break;
->          }
-> -        /* There are rw1cs bits in the status register but never set currently */
-> +        /* There are rw1cs bits in the status register but never set */
->          break;
->      }
->  
-> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
-> index 3ddd6369ad..e2172b94b9 100644
-> --- a/hw/cxl/cxl-events.c
-> +++ b/hw/cxl/cxl-events.c
-> @@ -170,8 +170,10 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
->      if (log->overflow_err_count) {
->          pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
->          pl->overflow_err_count = cpu_to_le16(log->overflow_err_count);
-> -        pl->first_overflow_timestamp = cpu_to_le64(log->first_overflow_timestamp);
-> -        pl->last_overflow_timestamp = cpu_to_le64(log->last_overflow_timestamp);
-> +        pl->first_overflow_timestamp =
-> +            cpu_to_le64(log->first_overflow_timestamp);
-> +        pl->last_overflow_timestamp =
-> +            cpu_to_le64(log->last_overflow_timestamp);
->      }
->  
->      pl->record_count = cpu_to_le16(nr);
-> @@ -180,7 +182,8 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> -CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds, CXLClearEventPayload *pl)
-> +CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
-> +                                   CXLClearEventPayload *pl)
->  {
->      CXLEventLog *log;
->      uint8_t log_type;
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 434ccc5f6e..ab082ec9de 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -366,9 +366,12 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
->  
->      snprintf(id->fw_revision, 0x10, "BWFW VERSION %02d", 0);
->  
-> -    stq_le_p(&id->total_capacity, cxl_dstate->mem_size / CXL_CAPACITY_MULTIPLIER);
-> -    stq_le_p(&id->persistent_capacity, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
-> -    stq_le_p(&id->volatile_capacity, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
-> +    stq_le_p(&id->total_capacity,
-> +             cxl_dstate->mem_size / CXL_CAPACITY_MULTIPLIER);
-> +    stq_le_p(&id->persistent_capacity,
-> +             cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
-> +    stq_le_p(&id->volatile_capacity,
-> +             cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
->      stl_le_p(&id->lsa_size, cvc->get_lsa_size(ct3d));
->      /* 256 poison records */
->      st24_le_p(id->poison_list_max_mer, 256);
-> @@ -396,13 +399,15 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
->          return CXL_MBOX_INTERNAL_ERROR;
->      }
->  
-> -    stq_le_p(&part_info->active_vmem, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
-> +    stq_le_p(&part_info->active_vmem,
-> +             cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
->      /*
->       * When both next_vmem and next_pmem are 0, there is no pending change to
->       * partitioning.
->       */
->      stq_le_p(&part_info->next_vmem, 0);
-> -    stq_le_p(&part_info->active_pmem, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
-> +    stq_le_p(&part_info->active_pmem,
-> +             cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
->      stq_le_p(&part_info->next_pmem, 0);
->  
->      *len = sizeof(*part_info);
-> @@ -681,8 +686,10 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
->      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
->          cmd_firmware_update_get_info, 0, 0 },
->      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-> -    [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8, IMMEDIATE_POLICY_CHANGE },
-> -    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0, 0 },
-> +    [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
-> +                         8, IMMEDIATE_POLICY_CHANGE },
-> +    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
-> +                              0, 0 },
->      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
->      [IDENTIFY][MEMORY_DEVICE] = { "IDENTIFY_MEMORY_DEVICE",
->          cmd_identify_memory_device, 0, 0 },
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index c02be4ce45..18ad853f5b 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -208,10 +208,9 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->      }
->  
->      if (nonvolatile_mr) {
-> +        uint64_t base = volatile_mr ? memory_region_size(volatile_mr) : 0;
->          rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
-> -                                           nonvolatile_mr, true,
-> -                                           (volatile_mr ?
-> -                                            memory_region_size(volatile_mr) : 0));
-> +                                           nonvolatile_mr, true, base);
->          if (rc < 0) {
->              goto error_cleanup;
->          }
-> @@ -514,7 +513,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->      case A_CXL_RAS_UNC_ERR_STATUS:
->      {
->          uint32_t capctrl = ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL);
-> -        uint32_t fe = FIELD_EX32(capctrl, CXL_RAS_ERR_CAP_CTRL, FIRST_ERROR_POINTER);
-> +        uint32_t fe = FIELD_EX32(capctrl, CXL_RAS_ERR_CAP_CTRL,
-> +                                 FIRST_ERROR_POINTER);
->          CXLError *cxl_err;
->          uint32_t unc_err;
->  
-> @@ -533,7 +533,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->                   * closest to behavior of hardware not capable of multiple
->                   * header recording.
->                   */
-> -                QTAILQ_FOREACH_SAFE(cxl_err, &ct3d->error_list, node, cxl_next) {
-> +                QTAILQ_FOREACH_SAFE(cxl_err, &ct3d->error_list, node,
-> +                                    cxl_next) {
->                      if ((1 << cxl_err->type) & value) {
->                          QTAILQ_REMOVE(&ct3d->error_list, cxl_err, node);
->                          g_free(cxl_err);
-> @@ -1072,7 +1073,8 @@ void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
->          if (((start >= p->start) && (start < p->start + p->length)) ||
->              ((start + length > p->start) &&
->               (start + length <= p->start + p->length))) {
-> -            error_setg(errp, "Overlap with existing poisoned region not supported");
-> +            error_setg(errp,
-> +                       "Overlap with existing poisoned region not supported");
->              return;
->          }
->      }
-> @@ -1085,7 +1087,8 @@ void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
->      p = g_new0(CXLPoison, 1);
->      p->length = length;
->      p->start = start;
-> -    p->type = CXL_POISON_TYPE_INTERNAL; /* Different from injected via the mbox */
-> +    /* Different from injected via the mbox */
-> +    p->type = CXL_POISON_TYPE_INTERNAL;
->  
->      QLIST_INSERT_HEAD(&ct3d->poison_list, p, node);
->      ct3d->poison_list_cnt++;
-> @@ -1222,7 +1225,8 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
->          return;
->      }
->      /* If the error is masked, nothting to do here */
-> -    if (!((1 << cxl_err_type) & ~ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK))) {
-> +    if (!((1 << cxl_err_type) &
-> +          ~ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK))) {
->          return;
->      }
->  
-> @@ -1372,7 +1376,8 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
->                                 bool has_bank, uint8_t bank,
->                                 bool has_row, uint32_t row,
->                                 bool has_column, uint16_t column,
-> -                               bool has_correction_mask, uint64List *correction_mask,
-> +                               bool has_correction_mask,
-> +                               uint64List *correction_mask,
->                                 Error **errp)
->  {
->      Object *obj = object_resolve_path(path, NULL);
-> @@ -1473,7 +1478,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
->                                          int16_t temperature,
->                                          uint32_t dirty_shutdown_count,
->                                          uint32_t corrected_volatile_error_count,
-> -                                        uint32_t corrected_persistent_error_count,
-> +                                        uint32_t corrected_persist_error_count,
->                                          Error **errp)
->  {
->      Object *obj = object_resolve_path(path, NULL);
-> @@ -1513,8 +1518,10 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
->      module.life_used = life_used;
->      stw_le_p(&module.temperature, temperature);
->      stl_le_p(&module.dirty_shutdown_count, dirty_shutdown_count);
-> -    stl_le_p(&module.corrected_volatile_error_count, corrected_volatile_error_count);
-> -    stl_le_p(&module.corrected_persistent_error_count, corrected_persistent_error_count);
-> +    stl_le_p(&module.corrected_volatile_error_count,
-> +             corrected_volatile_error_count);
-> +    stl_le_p(&module.corrected_persistent_error_count,
-> +             corrected_persist_error_count);
->  
->      if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&module)) {
->          cxl_event_irq_assert(ct3d);
-> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-> index 8ba5d3d1f7..3e1851e32b 100644
-> --- a/hw/mem/cxl_type3_stubs.c
-> +++ b/hw/mem/cxl_type3_stubs.c
-> @@ -33,7 +33,8 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
->                                 bool has_bank, uint8_t bank,
->                                 bool has_row, uint32_t row,
->                                 bool has_column, uint16_t column,
-> -                               bool has_correction_mask, uint64List *correction_mask,
-> +                               bool has_correction_mask,
-> +                               uint64List *correction_mask,
->                                 Error **errp) {}
->  
->  void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-> @@ -45,7 +46,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
->                                          int16_t temperature,
->                                          uint32_t dirty_shutdown_count,
->                                          uint32_t corrected_volatile_error_count,
-> -                                        uint32_t corrected_persistent_error_count,
-> +                                        uint32_t corrected_persist_error_count,
->                                          Error **errp) {}
->  
->  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-> -- 
-> 2.39.2
+>  static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
 > 
