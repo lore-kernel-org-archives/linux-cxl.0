@@ -1,162 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F2F2903
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 05:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC8F79F8
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Oct 2023 06:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RFbKBnHD"
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEE1BE
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 22:03:06 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-3232be274a0so1847711f8f.1
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Oct 2023 22:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1697173385; x=1697778185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVpd0E4GFx6H/SM7YV3uveoOWkdUC4wwz8FAahExBkA=;
-        b=RFbKBnHDCyktRRB57c8Fy81XmruDZuU0iBvedpxokaFQAg/X3OcvG7Z8qH5+8qmLJC
-         NKIzdQfKKUec13eemPEIPSAxBCFTLPosnixtOqHzXxx0OSCK3GclprQj6R71ZMT51Uo9
-         SDkcVohf7dPmjEHSdH0DBrTHAP2Vqdk4kBKgrlR/gki1HpX55HF4iI0r82uIG4rLPo+A
-         dqCv5GabtcL0w3yaxA4aFyJdXpR9WZpULD0eveJ7Z/57nvwq/jl3szm2ZwRm/quRAEin
-         To5XH2S4eCryqXdSALjPxPYTrBnlyIld+g35x4FRfaHl04/yYCBFwnlTFcQp8Ctram0D
-         hLbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697173385; x=1697778185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UVpd0E4GFx6H/SM7YV3uveoOWkdUC4wwz8FAahExBkA=;
-        b=Cx3pJcL2if72o4F/J+5CqvGfuqK8/RPf9i//XUV1gQQMD4rEa8ugk1kGMnj0fUHiNA
-         z6Dg+4gw73Jqfu6O0IP+MPYSMDkjYWl92GC9mrt63898b0bAxS11qwnH/8VzgyDpNUmS
-         EzH2lzrBawOPt0YSJjPcg8uMd5Y/syADVDUnlfuvAqLDpc4c0WIOQ61IRcXvfj0pISV7
-         dnRvZam58mEYxDupMPnG/58kwd/NQngJ/TbGipfooa1VFnG2e+H3OcSLWosM3RsilJOO
-         8/lsQPAUnrrgB2OFHBPg60vZ0rjj7TRx9LlaOC3nbDrjafDaIABJhxRCc/hhOGdSaZ70
-         C4Jw==
-X-Gm-Message-State: AOJu0YyKEbDPG4Bza8Q9VnJLXCxRD0s1/ECnQwE+GUdsXYcfZ3ZjC/BS
-	C+i7Pr0PqxIC492zDeNSfIBy0Q==
-X-Google-Smtp-Source: AGHT+IEvea4eYbGIhMcMt7pht9MZ6rkBFbtUuvgV/OJhcSTlZKOMEd1P7WHPPrbIAstniFTyYUMHUA==
-X-Received: by 2002:adf:fb47:0:b0:318:416:a56a with SMTP id c7-20020adffb47000000b003180416a56amr17734101wrs.13.1697173384872;
-        Thu, 12 Oct 2023 22:03:04 -0700 (PDT)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id u5-20020a05600c00c500b004063c9f68f2sm1455494wmm.26.2023.10.12.22.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 22:03:04 -0700 (PDT)
-Date: Fri, 13 Oct 2023 07:03:01 +0200
-From: Samuel Ortiz <sameo@rivosinc.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <ZSjPhTJ9N0EKH5+W@vermeer>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
- <20231012091542.GA22596@wunner.de>
- <ZSfw+xswgOSaYxgW@vermeer>
- <20231012163221.000064af@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FEfAnbaJ"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C60B7;
+	Thu, 12 Oct 2023 23:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697180120; x=1728716120;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=u61Nkn59oFv60qAsEUE3QSod9li0eALta36qMzDsq10=;
+  b=FEfAnbaJm+rzbbbu5TjKL0SmlLC6RFZQok/+3UF+P/emYUlTuZ2jKZ3k
+   TZZTs6bjnLTx6fnemkTMbHuGv7QkBrWojX1uUpKOy3MycP0CYjqhPomY/
+   Hsn+0750GW1tjTLAIUZNiY6hnWFyh3fNeaH0Z1wPyvh71+8KTlfsV7sdo
+   KGdErARnvNd6tmo+l6VoCIyDR+c4spUK2oHFv0Ew2WyNYZYCorYJQbvwW
+   6L3XsmPhPMEH8awSWEVowuZXlqtsdc9RkBlTf+bh6LYOM69fs7EQKgtPb
+   O001eD0EI2i0ck5VyQ/RgbcwPmjG0JPUWtPydVBVrrJdNylBCg+bQ4AZs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="451595995"
+X-IronPort-AV: E=Sophos;i="6.03,221,1694761200"; 
+   d="scan'208";a="451595995"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 23:55:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="704512895"
+X-IronPort-AV: E=Sophos;i="6.03,221,1694761200"; 
+   d="scan'208";a="704512895"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.55.67])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 23:55:19 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH RFC 0/2] efi/cxl-cper: Report CPER CXL component events
+ through trace events
+Date: Thu, 12 Oct 2023 23:55:18 -0700
+Message-Id: <20230601-cxl-cper-v1-0-99ba43f8f770@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012163221.000064af@Huawei.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANbpKGUC/x2NQQqDQAxFryJZNzCOMNhuhR6g29LFGDM1UKeSl
+ CKId3d0+fjv81YwVmGDW7WC8l9MvrlAfamAxpjfjDIUBu9844KrkZYP0syKPqREbXOlQAGK3kd
+ j7DVmGo/DFO3HegyzcpLlbDzhce/gtW07f+BnKXgAAAA=
+To: Dan Williams <dan.j.williams@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-c6835
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697180119; l=1890;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=u61Nkn59oFv60qAsEUE3QSod9li0eALta36qMzDsq10=;
+ b=RNhOerwSICvq/FQVLw0UrMuZLrYtT+LhqucGaZp8F8/YvkIcdZe1mGBDPbiOrWkGyRbiV30U+
+ E6EnKxfFG9ACHnBTFAg7/A8U2yUWLcJac+AS8FGf1gfppotTpe/earI
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 04:32:21PM +0100, Jonathan Cameron wrote:
-> On Thu, 12 Oct 2023 15:13:31 +0200
-> Samuel Ortiz <sameo@rivosinc.com> wrote:
-> 
-> > On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
-> > > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
-> > > > But the way SPDM is done now is that if the user (as myself) wants to let
-> > > > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> > > > as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> > > > parameters), and does not provide a sysfs knob to control its tentacles.
-> > > > Kinda harsh.  
-> > > 
-> > > On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> > > *before* it is passed through to a guest?  If so, why does it do that?  
-> > 
-> > SPDM exchanges would be done with the DSM, i.e. through the PF, which is
-> > typically *not* passed through to guests. VFs are.
-> > 
-> > The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
-> > some extend TDX-Connect) and expects the host to explicitly request the
-> > TSM to establish an SPDM connection with the DSM (PF) before passing one
-> > VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
-> > I think patch #12 does not solve our problem here. 
-> > 
-> > > Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> > > i.e. the TSM should only have the need to perform SPDM exchanges with
-> > > the device when it is passed through.
-> > > 
-> > > So the host enumerates the DOE protocols and authenticates the device.
-> > > When the device is passed through, patch 12/12 ensures that the host
-> > > keeps its hands off of the device, thus affording the TSM exclusive
-> > > SPDM control.  
-> > 
-> > Just to re-iterate: The TSM does not talk SPDM with the passed
-> > through device(s), but with the corresponding PF. If the host kernel
-> > owns the SPDM connection when the TSM initiates the SPDM connection with
-> > the DSM (For IDE key setup), the connection establishment will fail.
-> > Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
-> > expect the host to explicitly ask the TSM to establish that SPDM
-> > connection. That request should somehow come from KVM, which then would
-> > have to destroy the existing CMA/SPDM connection in order to give the
-> > TSM a chance to successfully establish the SPDM link.
-> 
-> Agreed - I don't see a problem with throwing away the initial connection.
-> In these cases you are passing that role on to another entity - the
-> job of this patch set is done.
+I know that Smita has taken the initiative[1] on this but I had a
+skeleton of using notifiers to allow the CXL code to process the CPER
+records via the standard tracing code like Dan mentioned.[2]
 
-Right. As long as there's a way for the kernel to explicitly drop that
-ownership before calling into the TSM for asking it to create a new SPDM
-connection, we should be fine. Alexey, would you agree with that
-statement?
+So here is a slightly polished version of that code.  This is compile
+tested with only.  Smita, feel free to use this any way you see fit.
 
-> I'm not clear yet if we need an explicit lock out similar to the VFIO
-> one for PF pass through or if everything will happen in a 'safe' order
-> anyway. I suspect a lockout on the ability to re attest is necessary
-> if the PF driver is loaded.
->
-> Perhaps just dropping the
-> +#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
-> and letting other PF drivers or another bit of core kernel code
-> (I'm not sure where the proxy resides for the models being discussed)
-> claim ownership is enough?
+CXL Component Events, as defined by EFI 2.10 Section N.2.14, wrap a
+mostly CXL event payload in an EFI (Common Platform Error Record) CPER
+record.  If a device is configured for firmware first these CPER event
+records can be processed instead of reading the CXL Event logs directly
+from the device.
 
-If we agree that other parts of the kernel (I suspect KVM would do the
-"Connect to device" call to the TSM) should be able to tear the
-established SPDM connection, then yes, the claim/return_ownership() API
-should not be only available to VFIO.
+A number of alternatives were considered to match the memdev with the
+CPER record.  For now a simple comparison with the serial number is used
+to match a CPER record with a specific device.  Other fields in the CPER
+record could be used as well.
 
-Cheers,
-Samuel.
+[1] https://lore.kernel.org/all/20231012230301.58500-1-Smita.KoralahalliChannabasappa@amd.com/
+[2] https://lore.kernel.org/all/6528808cef2ba_780ef294c5@dwillia2-xfh.jf.intel.com.notmuch/
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+Ira Weiny (2):
+      firmware/efi: Process CXL Component Events
+      cxl/memdev: Register for and process CPER events
+
+ drivers/cxl/core/mbox.c         |  7 +++--
+ drivers/cxl/cxlmem.h            |  5 +++
+ drivers/cxl/pci.c               | 70 ++++++++++++++++++++++++++++++++++++++++-
+ drivers/firmware/efi/cper.c     | 16 ++++++++++
+ drivers/firmware/efi/cper_cxl.c | 39 +++++++++++++++++++++++
+ drivers/firmware/efi/cper_cxl.h | 29 +++++++++++++++++
+ include/linux/efi.h             | 49 +++++++++++++++++++++++++++++
+ 7 files changed, 211 insertions(+), 4 deletions(-)
+---
+base-commit: 1c8b86a3799f7e5be903c3f49fcdaee29fd385b5
+change-id: 20230601-cxl-cper-26ffc839c6c6
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
