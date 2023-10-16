@@ -1,41 +1,38 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31FEF4E5
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 11:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F7C26E10
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 12:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09424E3
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 04:04:28 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S8Dhd0y9vz6K6F0;
-	Mon, 16 Oct 2023 19:02:09 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 16 Oct
- 2023 12:04:25 +0100
-Date: Mon, 16 Oct 2023 12:04:25 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v11 22/22] cxl: Check qos_class validity on memdev probe
-Message-ID: <20231016120425.0000542a@Huawei.com>
-In-Reply-To: <169713694184.2205276.9863653630713216825.stgit@djiang5-mobl3>
-References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
-	<169713694184.2205276.9863653630713216825.stgit@djiang5-mobl3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDF7ED
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 05:53:19 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S8H544Mmdz6D8Y9;
+	Mon, 16 Oct 2023 20:50:00 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 16 Oct 2023 13:53:16 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>
+CC: <linuxarm@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/4] CXL: Standalone switch CCI driver
+Date: Mon, 16 Oct 2023 13:53:19 +0100
+Message-ID: <20231016125323.18318-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
@@ -45,174 +42,89 @@ X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, 12 Oct 2023 11:55:41 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+Note that the PCI SIG has recently release the MMPT specification which is
+similar to the CXL mailboxes. I would suggest that we don't get too
+distracted by that, but keep in mind that we may end up factoring some
+aspects of this code out into the PCI core and just use them here (at some
+future date!)
 
-> Add a check to make sure the qos_class for the device will match one of
-> the root decoders qos_class. If no match is found, then the qos_class for
-> the device is set to invalid. Also add a check to ensure that the device's
-> host bridge matches to one of the root decoder's downstream targets.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+https://members.pcisig.com/wg/PCI-SIG/document/20109?uploaded=1
 
-So, if I read this right, QTG is required for probe to succeed.
-Perhaps that's a little too heavy handed on something we haven't supported at
-all until now?
+Based on v6.6-rc6
 
-Otherwise LGTM
+Chances since rfc4. 
+- Mostly a rebase because of fixes around sanitize handling.
+- Dropped new command support. For, now RAW all the way.
+- Aim is to support getting the QEMU emulation upstream.
 
-> 
-> ---
-> v11:
-> - Return when matched in match function (Jonathan)
-> - Don't return after matched in caller function, still need to check pmem. (Jonathan)
-> - Fix copy/paste error for pmem_qos_class. (Jonathan)
-> - Use device_for_each_child() instead of bus_for_each_dev(). (Dan)
-> - Add match of host_bridge to a root decoder target. (Dan)
-> ---
->  drivers/cxl/mem.c |  121 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 121 insertions(+)
-> 
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 317c7548e4e9..74f72e37ccfc 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -104,6 +104,123 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
->  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
->  			 cxl_debugfs_poison_clear, "%llx\n");
->  
-> +struct qos_class_ctx {
-> +	bool matched;
-> +	int dev_qos_class;
-> +};
-> +
-> +static int match_cxlrd_qos_class(struct device *dev, void *data)
-> +{
-> +	struct qos_class_ctx *ctx = data;
-> +	struct cxl_root_decoder *cxlrd;
-> +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
-> +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
-> +	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
-> +		return 0;
-> +
-> +	if (cxlrd->qos_class == ctx->dev_qos_class) {
-> +		ctx->matched = 1;
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +struct qos_hb_ctx {
-> +	bool matched;
-> +	struct device *host_bridge;
-> +};
-> +
-> +static int match_cxlrd_hb(struct device *dev, void *data)
-> +{
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct qos_hb_ctx *ctx = data;
-> +	struct cxl_root_decoder *cxlrd;
-> +	unsigned int seq;
-> +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
-> +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	cxlsd = &cxlrd->cxlsd;
-> +
-> +	do {
-> +		seq = read_seqbegin(&cxlsd->target_lock);
-> +		for (int i = 0; i < cxlsd->nr_targets; i++) {
-> +			if (ctx->host_bridge ==
-> +			    cxlsd->target[i]->dport_dev) {
-> +				ctx->matched = true;
-> +				return 1;
-> +			}
-> +		}
-> +	} while (read_seqretry(&cxlsd->target_lock, seq));
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct qos_class_ctx ctx;
-> +	struct qos_hb_ctx hbctx;
-> +	struct cxl_port *root_port;
-> +	int rc;
-> +
-> +	root_port = find_cxl_root(cxlmd->endpoint);
-> +	if (!root_port)
-> +		return -ENODEV;
-> +
-> +	/* Check that the QTG IDs are all sane between end device and root decoders */
-> +	if (mds->ram_qos_class != CXL_QOS_CLASS_INVALID) {
-> +		ctx = (struct qos_class_ctx) {
-> +			.matched = false,
-> +			.dev_qos_class =  mds->ram_qos_class,
-> +		};
-> +		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-> +		if (rc < 0)
-> +			goto out;
-> +
-> +		if (!ctx.matched)
-> +			mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-> +	}
-> +
-> +	if (mds->pmem_qos_class != CXL_QOS_CLASS_INVALID) {
-> +		ctx = (struct qos_class_ctx) {
-> +			.matched = false,
-> +			.dev_qos_class =  mds->pmem_qos_class,
-> +		};
-> +		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-> +		if (rc < 0)
-> +			goto out;
-> +
-> +		if (!ctx.matched)
-> +			mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
-> +	}
-> +
-> +	/* Check to make sure that the device's host bridge is under a root decoder */
-> +	hbctx = (struct qos_hb_ctx) {
-> +		.matched = false,
-> +		.host_bridge = cxlmd->endpoint->host_bridge,
-> +	};
-> +	rc = device_for_each_child(&root_port->dev, &hbctx, match_cxlrd_hb);
-> +	if (rc < 0)
-> +		goto out;
-> +
-> +	if (!hbctx.matched) {
-> +		mds->ram_qos_class = CXL_QOS_CLASS_INVALID;
-> +		mds->pmem_qos_class = CXL_QOS_CLASS_INVALID;
-> +	}
-> +
-> +out:
-> +	put_device(&root_port->dev);
-> +	return rc;
-> +}
-> +
->  static int cxl_mem_probe(struct device *dev)
->  {
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> @@ -173,6 +290,10 @@ static int cxl_mem_probe(struct device *dev)
->  	if (rc)
->  		return rc;
->  
-> +	rc = cxl_qos_class_verify(cxlmd);
-> +	if (rc < 0)
-> +		return rc;
-> +
->  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
->  		rc = devm_cxl_add_nvdimm(cxlmd);
->  		if (rc == -ENODEV)
-> 
-> 
-> 
+I'll be posting user space code to test this against the QEMU emulation shortly.
+I just need to finish writing the documentation as getting it up and running
+is less trivial than I'd like (lots of moving parts).
+(I need this series on the list so I can point to it ;)
+
+Introduction:
+
+CXL r3.0 introduced the option for a PCI function, intended to sit on an
+upstream port of a CXL switch.  This function provides a mailbox interface
+similar to that seen on CXL type 3 devices. However, the command set is
+mostly different and intended for Fabric management. Note however that as
+we add support for multi headed devices (MHDs) a subset of commands will
+be available on selected MHD type 3 mailboxes. (tunnelling for DCD commands
+for example)
+
+See: CXL rev 3.0
+7.2.9 Switch Mailbox CCI
+8.1.13 Switch Mailbox CCI Configuration Space Layout
+8.2.8.6 Switch Mailbox CCI capability 
+
+It is probably relatively unusual that a typical host of CXL devices will
+have access to the one of these devices, in many cases they will be on a
+port connected to a BMC or similar. There are a few use cases where the
+host might be in charge of the configuration.
+
+These are very convenient for testing in conjunction with the QEMU
+emulation. CXL switch and type 3 emulation is in QEMU is not complex
+enough to make these particular interesting but that should change soon.
+
+For now don't provide any additional commands over those defined for the
+main CXL mailbox and in practice that means the RAW command path under
+CONFIG_CXL_MEM_RAW_COMMANDS is used with the IOCTL to interact with this
+device and the fabric beyond it.
+
+The foot guns are behind the same "don't enable this unless you know what
+you are doing" barrier as they are for type 3 devices. Note that the blast
+radius is far worse than for a CXL type 3 mailbox. This device can be used
+to rip memory out from under _other live hosts_.
+
+Jonathan Cameron (4):
+  cxl: mbox: Preparatory move of functions to core/mbox.c and cxlmbox.h
+  cxl: mbox: Factor out the mbox specific data for reuse in switch cci
+  PCI: Add PCI_CLASS_SERIAL_CXL_SWITCH_CCI class ID to pci_ids.h
+  cxl/pci: Add support for stand alone CXL Switch mailbox CCI
+
+ drivers/cxl/Kconfig          |  14 ++
+ drivers/cxl/Makefile         |   2 +
+ drivers/cxl/core/Makefile    |   1 +
+ drivers/cxl/core/core.h      |  12 +-
+ drivers/cxl/core/mbox.c      | 453 +++++++++++++++++++++++++++--------
+ drivers/cxl/core/memdev.c    |  44 ++--
+ drivers/cxl/core/regs.c      |  35 ++-
+ drivers/cxl/core/switchdev.c | 129 ++++++++++
+ drivers/cxl/cxl.h            |   4 +-
+ drivers/cxl/cxlmbox.h        | 201 ++++++++++++++++
+ drivers/cxl/cxlmem.h         | 176 ++------------
+ drivers/cxl/pci.c            | 442 ++++++++++------------------------
+ drivers/cxl/pmem.c           |   6 +-
+ drivers/cxl/security.c       |  13 +-
+ drivers/cxl/switch.h         |  19 ++
+ drivers/cxl/switchdev.c      | 169 +++++++++++++
+ include/linux/pci_ids.h      |   1 +
+ 17 files changed, 1123 insertions(+), 598 deletions(-)
+ create mode 100644 drivers/cxl/core/switchdev.c
+ create mode 100644 drivers/cxl/cxlmbox.h
+ create mode 100644 drivers/cxl/switch.h
+ create mode 100644 drivers/cxl/switchdev.c
+
+-- 
+2.39.2
 
