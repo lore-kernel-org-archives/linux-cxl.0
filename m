@@ -1,37 +1,37 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340E6883B
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 06:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32925125A8
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 06:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lbGJcwBP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tuit4fgH"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F7295
-	for <linux-cxl@vger.kernel.org>; Sun, 15 Oct 2023 23:02:36 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B787D9
+	for <linux-cxl@vger.kernel.org>; Sun, 15 Oct 2023 23:02:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697436156; x=1728972156;
+  t=1697436158; x=1728972158;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Y7iC3BU916l63Nv0RgXEFwH4akif7bv6VL6apK2m594=;
-  b=lbGJcwBPQwxsuYF3XrvBcyKBAUAM36BMgxjBS3pdahzUyZHOffZu8xkD
-   v/q7Dr5jAbgE/tYm/Bm/b/urW0LE/ZCyh6QgTd+0sOkicFouD00+qtt99
-   tQ2/N8/xPlDbZ0xRu1H0Y07FZGVZEGNQubiMg1sgqLTTrKMUFqJwBUGml
-   2RuoZjE0bPjrfeK+UhjWhc7rkKy3k1/9IQJ7I8H465asIpbPMVg43J7X/
-   W7N0Ai2xrf1HCaF343o+l/x4neRCY2k96MfgD2rvQ0tABA9xJStFHPImm
-   YOrpUOTQxHSeh/9C0ZbvZq/iUfDujKYmIn5mfWtL99HZ72ospJilftHVZ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="365714358"
+  bh=bBxhINDdtuc15PugRZ7gVGYr5oQmXkY9bCjaa9ikzQE=;
+  b=Tuit4fgHmB+NrQMRJ7G0dxz2at/Zmt+E1FIERdvqMTdQayv6uNFjDqXR
+   VPTlU+M7wSLm7qISJvezM5q2I/Y9YBvWqCm0Vq5yfy/UPLbieeUfSK1vt
+   7hQ+QBK12okTOQvdo9gjc3LxqIaTnUdoJTsr6KgfzVbF5NqSlZ0kRBxDT
+   /LokNKbRmXULqoAHHKIbX7u96lE+3h6WICP/5bU5Vnzocnc8r3y8MIcF1
+   mJPx1ji05z3IFLypb0y1rQP6rECROLXNGFchWytYN3FhBVykt+zSPt0G8
+   5OwpKEeK7ArDfgHV/huvTaVMeVSkLsKdB2v7xkoSP+paYW2C9G7JJJVB+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="365714363"
 X-IronPort-AV: E=Sophos;i="6.03,228,1694761200"; 
-   d="scan'208";a="365714358"
+   d="scan'208";a="365714363"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 23:02:35 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 23:02:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="899362032"
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="899362073"
 X-IronPort-AV: E=Sophos;i="6.03,228,1694761200"; 
-   d="scan'208";a="899362032"
+   d="scan'208";a="899362073"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.62.161])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 23:00:36 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 23:00:39 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -42,9 +42,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org,
 	Dmytro Adamenko <dmytro.adamenko@intel.com>
-Subject: [PATCH v2 2/3] cxl/region: Calculate a target position in a region interleave
-Date: Sun, 15 Oct 2023 23:02:27 -0700
-Message-Id: <80f80f0d26e73cd6941d8530163a4bbd731d50ec.1697433770.git.alison.schofield@intel.com>
+Subject: [PATCH v2 3/3] cxl/region: Use calc_interleave_pos() with autodiscovered regions
+Date: Sun, 15 Oct 2023 23:02:28 -0700
+Message-Id: <533d9fe49c10d7cb878ea9157232aaa5bb657ae0.1697433770.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1697433770.git.alison.schofield@intel.com>
 References: <cover.1697433770.git.alison.schofield@intel.com>
@@ -64,174 +64,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Introduce a calculation that determines a targets position in a region
-interleave. Perform a selftest of the calculation on user-defined
-regions.
+For auto-discovered regions, the driver must assign each target to
+the correct position in the region interleave set.
 
-The region driver uses the kernel sort() function to put region
-targets in relative order. Positions are assigned based on each
-targets index in that sorted list. That relative sort doesn't
-consider the offset of a port into its parent port which causes
-some auto-discovered regions to fail creation. In one failure case,
-a 2 + 2 config (2 host bridges each with 2 endpoints), the sort
-puts all the targets of one port ahead of another port when they
-were expected to be interleaved.
+cxl_region_sort_targets() uses the kernel sort() function to put the
+targets in relative order. Once the relative ordering is complete,
+positions are assigned based on each targets index in that sorted list.
 
-In preparation for repairing the autodiscovery region assembly,
-introduce a new method for discovering a target position in the
-region interleave.
+The sort() compare function does not consider the child offset into a
+parent port. The sort put all targets of one port ahead of another
+port when an interleave was expected, causing the region assembly to
+fail.
 
-cxl_interleave_pos() offers a method to determine a targets position
-by ascending from an endpoint to a root decoder. The calculation starts
-with the endpoints local position and its position in its parents port.
-It traverses towards the root decoder and examines both position and
-ways in order to allow the position to be refined all the way to the
-root decoder.
+Replace the relative sort, with calc_interleave_pos() on each target
+in the region target list. That will find the exact position for each
+target based on a walk up the ancestral tree from endpoint to root
+decoder.
 
-This calculation, applied iteratively, yields the correct position:
+calc_interleave_pos() was introduced in a prior patch, so the work
+here is to use in cxl_region_sort_targets().
 
-position = position * parent_ways + parent_pos;
-
-...with these rules:
-
-Rule #1 - When (parent_ways == region_ways), Stop!
-	  position = parent_position;
-	  This rule is applied in calc_interleave_pos()
-
-Rule #2 - Skip over siblings that come before this memdev in
-	  the decoder list when searching for the parent position.
-	  This rule is applied in the helper find_pos_and_ways().
-
-Include a selftest that exercises this new position calculation against
-every successfully configured user-defined region.
+Cleanup the obsolete helper functions from the prior sort().
 
 Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
 Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/region.c | 102 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ drivers/cxl/core/region.c | 127 +++++---------------------------------
+ 1 file changed, 15 insertions(+), 112 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 64206fc4d99b..b451d215c3c5 100644
+index b451d215c3c5..fc261c82ea4e 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1500,6 +1500,93 @@ static int match_switch_decoder_by_range(struct device *dev, void *data)
- 	return range_contains(r1, r2);
+@@ -1480,6 +1480,14 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
+ 	return 0;
  }
  
-+/* Find the position of a port in it's parent and the parents ways */
-+static int find_pos_and_ways(struct cxl_port *port, struct range *range,
-+			     int *pos, int *ways)
++static int cmp_interleave_pos(const void *a, const void *b)
 +{
-+	struct cxl_switch_decoder *cxlsd;
-+	struct cxl_port *parent;
-+	int child_ways = *ways;
-+	int child_pos = *pos;
-+	struct device *dev;
-+	int skip = 0;
-+	int rc = -1;
++	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
++	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
 +
-+	parent = next_port(port);
-+	if (!parent)
-+		return rc;
-+
-+	dev = device_find_child(&parent->dev, range,
-+				match_switch_decoder_by_range);
-+	if (!dev) {
-+		dev_err(port->uport_dev,
-+			"failed to find decoder mapping %#llx-%#llx\n",
-+			range->start, range->end);
-+		return rc;
-+	}
-+	cxlsd = to_cxl_switch_decoder(dev);
-+	*ways = cxlsd->cxld.interleave_ways;
-+
-+	/* Skip over this many siblings in the target list */
-+	if (*ways > child_ways)
-+		skip = child_pos;
-+
-+	for (int i = 0; i < *ways; i++) {
-+		if (cxlsd->target[i] == port->parent_dport) {
-+			if (skip--)
-+				continue;
-+			*pos = i;
-+			rc = 0;
-+			break;
-+		}
-+	}
-+	put_device(dev);
-+
-+	return rc;
++	return cxled_a->pos - cxled_b->pos;
 +}
 +
-+static int calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
-+			       int region_ways)
-+{
-+	struct cxl_port *iter, *port = cxled_to_port(cxled);
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct range *range = &cxled->cxld.hpa_range;
-+	int parent_ways = 0;
-+	int parent_pos = 0;
-+	int rc, pos;
-+
-+	/* Initialize pos to its local position */
-+	rc = find_pos_and_ways(port, range, &parent_pos, &parent_ways);
-+	if (rc)
-+		return -ENXIO;
-+
-+	pos = parent_pos;
-+
-+	if (parent_ways == region_ways)
-+		goto out;
-+
-+	/* Iterate up the ancestral tree refining the position */
-+	for (iter = next_port(port); iter; iter = next_port(iter)) {
-+		if (is_cxl_root(iter))
-+			break;
-+
-+		rc = find_pos_and_ways(iter, range, &parent_pos, &parent_ways);
-+		if (rc)
-+			return -ENXIO;
-+
-+		if (parent_ways == region_ways) {
-+			pos = parent_pos;
-+			break;
-+		}
-+		pos = pos * parent_ways + parent_pos;
-+	}
-+out:
-+	dev_dbg(&cxlmd->dev,
-+		"decoder:%s parent:%s port:%s range:%#llx-%#llx pos:%d\n",
-+		dev_name(&cxled->cxld.dev), dev_name(cxlmd->dev.parent),
-+		dev_name(&port->dev), range->start, range->end, pos);
-+
-+	return pos;
+ static struct cxl_port *next_port(struct cxl_port *port)
+ {
+ 	if (!port->parent_dport)
+@@ -1589,131 +1597,26 @@ static int calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+ 	return pos;
  }
  
- static void find_positions(const struct cxl_switch_decoder *cxlsd,
-@@ -1765,6 +1852,21 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		.end = p->res->end,
- 	};
+-static void find_positions(const struct cxl_switch_decoder *cxlsd,
+-			   const struct cxl_port *iter_a,
+-			   const struct cxl_port *iter_b, int *a_pos,
+-			   int *b_pos)
+-{
+-	int i;
+-
+-	for (i = 0, *a_pos = -1, *b_pos = -1; i < cxlsd->nr_targets; i++) {
+-		if (cxlsd->target[i] == iter_a->parent_dport)
+-			*a_pos = i;
+-		else if (cxlsd->target[i] == iter_b->parent_dport)
+-			*b_pos = i;
+-		if (*a_pos >= 0 && *b_pos >= 0)
+-			break;
+-	}
+-}
+-
+-static int cmp_decode_pos(const void *a, const void *b)
+-{
+-	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
+-	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
+-	struct cxl_memdev *cxlmd_a = cxled_to_memdev(cxled_a);
+-	struct cxl_memdev *cxlmd_b = cxled_to_memdev(cxled_b);
+-	struct cxl_port *port_a = cxled_to_port(cxled_a);
+-	struct cxl_port *port_b = cxled_to_port(cxled_b);
+-	struct cxl_port *iter_a, *iter_b, *port = NULL;
+-	struct cxl_switch_decoder *cxlsd;
+-	struct device *dev;
+-	int a_pos, b_pos;
+-	unsigned int seq;
+-
+-	/* Exit early if any prior sorting failed */
+-	if (cxled_a->pos < 0 || cxled_b->pos < 0)
+-		return 0;
+-
+-	/*
+-	 * Walk up the hierarchy to find a shared port, find the decoder that
+-	 * maps the range, compare the relative position of those dport
+-	 * mappings.
+-	 */
+-	for (iter_a = port_a; iter_a; iter_a = next_port(iter_a)) {
+-		struct cxl_port *next_a, *next_b;
+-
+-		next_a = next_port(iter_a);
+-		if (!next_a)
+-			break;
+-
+-		for (iter_b = port_b; iter_b; iter_b = next_port(iter_b)) {
+-			next_b = next_port(iter_b);
+-			if (next_a != next_b)
+-				continue;
+-			port = next_a;
+-			break;
+-		}
+-
+-		if (port)
+-			break;
+-	}
+-
+-	if (!port) {
+-		dev_err(cxlmd_a->dev.parent,
+-			"failed to find shared port with %s\n",
+-			dev_name(cxlmd_b->dev.parent));
+-		goto err;
+-	}
+-
+-	dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
+-				match_switch_decoder_by_range);
+-	if (!dev) {
+-		struct range *range = &cxled_a->cxld.hpa_range;
+-
+-		dev_err(port->uport_dev,
+-			"failed to find decoder that maps %#llx-%#llx\n",
+-			range->start, range->end);
+-		goto err;
+-	}
+-
+-	cxlsd = to_cxl_switch_decoder(dev);
+-	do {
+-		seq = read_seqbegin(&cxlsd->target_lock);
+-		find_positions(cxlsd, iter_a, iter_b, &a_pos, &b_pos);
+-	} while (read_seqretry(&cxlsd->target_lock, seq));
+-
+-	put_device(dev);
+-
+-	if (a_pos < 0 || b_pos < 0) {
+-		dev_err(port->uport_dev,
+-			"failed to find shared decoder for %s and %s\n",
+-			dev_name(cxlmd_a->dev.parent),
+-			dev_name(cxlmd_b->dev.parent));
+-		goto err;
+-	}
+-
+-	dev_dbg(port->uport_dev, "%s comes %s %s\n",
+-		dev_name(cxlmd_a->dev.parent),
+-		a_pos - b_pos < 0 ? "before" : "after",
+-		dev_name(cxlmd_b->dev.parent));
+-
+-	return a_pos - b_pos;
+-err:
+-	cxled_a->pos = -1;
+-	return 0;
+-}
+-
+ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	int i, rc = 0;
  
-+	if (p->nr_targets != p->interleave_ways)
-+		return 0;
-+
-+	/* Exercise position calculator on user-defined regions */
-+	for (int i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		int test_pos;
-+
-+		test_pos = calc_interleave_pos(cxled, p->interleave_ways);
-+		dev_dbg(&cxled->cxld.dev,
-+			"Interleave calc match %s test_pos:%d cxled->pos:%d\n",
-+			(test_pos == cxled->pos) ? "Success" : "Fail",
-+			test_pos, cxled->pos);
-+	}
-+
- 	return 0;
+-	sort(p->targets, p->nr_targets, sizeof(p->targets[0]), cmp_decode_pos,
+-	     NULL);
+-
+ 	for (i = 0; i < p->nr_targets; i++) {
+ 		struct cxl_endpoint_decoder *cxled = p->targets[i];
  
- err_decrement:
++		cxled->pos = calc_interleave_pos(cxled, p->interleave_ways);
+ 		/*
+-		 * Record that sorting failed, but still continue to restore
+-		 * cxled->pos with its ->targets[] position so that follow-on
+-		 * code paths can reliably do p->targets[cxled->pos] to
+-		 * self-reference their entry.
++		 * Record that sorting failed, but still continue to calc
++		 * cxled->pos so that follow-on code paths can reliably
++		 * do p->targets[cxled->pos] to self-reference their entry.
+ 		 */
+ 		if (cxled->pos < 0)
+ 			rc = -ENXIO;
+-		cxled->pos = i;
+ 	}
++	/* Keep the cxlr target list in interleave position order */
++	sort(p->targets, p->nr_targets, sizeof(p->targets[0]),
++	     cmp_interleave_pos, NULL);
+ 
+ 	dev_dbg(&cxlr->dev, "region sort %s\n", rc ? "failed" : "successful");
+ 	return rc;
 -- 
 2.37.3
 
