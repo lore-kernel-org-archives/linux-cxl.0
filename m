@@ -1,122 +1,260 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7A82AB54
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 19:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479EB3AC09
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 22:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cnWALdia"
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68FA1106
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 12:46:08 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231016194605usoutp01135b903aeb960bd6edcc9029897b62d6~OriDaNFL-1426714267usoutp01l;
-	Mon, 16 Oct 2023 19:46:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231016194605usoutp01135b903aeb960bd6edcc9029897b62d6~OriDaNFL-1426714267usoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1697485565;
-	bh=d9D7us3K37jWi9bb0GF0SroEhxoBROBzhEgeYp99FGU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=cnWALdiai/97RqFfmpB7ymNxmuWGrWTUEGEmbj3xPF+uCey1O+6uk9KDcb54YQeJh
-	 c2aR2KBTvHCogk711x8PQMtqLT6ZbyA1iZpF2jzZQmBOmlcN9Q4QT9q1xLA0s3sLXl
-	 ZRAHQWoJGvSfRpsX1hdCfTA91NNPqMHqDCVHVr9g=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231016194605uscas1p2a9d432bd0d9901fa780648e3445f712e~OriDPnwAE0982009820uscas1p2_;
-	Mon, 16 Oct 2023 19:46:05 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id FA.C8.62237.DF29D256; Mon,
-	16 Oct 2023 15:46:05 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231016194605uscas1p2ac08745283fc25e8ffa0e47bc89b47aa~OriDBnqXK3016630166uscas1p2m;
-	Mon, 16 Oct 2023 19:46:05 +0000 (GMT)
-X-AuditID: cbfec370-823ff7000001f31d-5c-652d92fd52e4
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id F9.5F.31410.CF29D256; Mon,
-	16 Oct 2023 15:46:05 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Mon, 16 Oct 2023 12:46:04 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-	16 Oct 2023 12:46:04 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dan Williams
-	<dan.j.williams@intel.com>, "Jonathan.Cameron@huawei.com"
-	<Jonathan.Cameron@huawei.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH v3 1/2] cxl: Add cxl_decoders_committed() helper
-Thread-Topic: [PATCH v3 1/2] cxl: Add cxl_decoders_committed() helper
-Thread-Index: AQHaAFpOKb1sROiTIUePBf3M5zwR7rBNR2MA
-Date: Mon, 16 Oct 2023 19:46:04 +0000
-Message-ID: <A8AE1FD2-944C-4379-80CF-53F0EC8E3C89@ssi.samsung.com>
-In-Reply-To: <169747906849.272156.1729290904857372335.stgit@djiang5-mobl3>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AF350684993E1943957AE028B2192F26@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCsxcNTj"
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54CD995
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 15:38:00 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-419c16a4209so51957971cf.0
+        for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 15:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697495879; x=1698100679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K7L9aoj9nr5/GszQMO+ElBcIyyvDITzt7cA5WzEqXY4=;
+        b=jCsxcNTjhBW5th0R9xH2R/LiNTyw7z1rG8HpF+/bhCqh2gL3ZSCkF2gjva6St59IBg
+         4x5VP/7xeyvPukkF59EN21DTeXDvc0+/UW+a4x5fWIRw7r3JmRhT2oxWuiTC8kLEGpwm
+         Y7Ydn0w2A/TJcheikHpf3yVJf4XXXLYUnrfXTqVgniHHnBvUEEgnz09FmF8QdDpEqPBQ
+         crY7iwsGCp30wdLN7ql4xLLwRprtdkLC0sEF1s4zDaSSPJCmawc6zluQ0Nfd3F7nSe71
+         XzSWLlSfhemyzoNJx8MiJibXT8q6lpLkGiohS3w1W7ENh7oBNxBG8Lh+HFLiqWUlyLVC
+         9NQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697495879; x=1698100679;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K7L9aoj9nr5/GszQMO+ElBcIyyvDITzt7cA5WzEqXY4=;
+        b=vlO6mKGwIPS3EE3+RJUNkUjhL0lQEqBDxjX47ipyUUtFZh0MlkQJJnBe6jKcsY06y2
+         yfnB4OnsSp8ju7a3KWw3WojaXl1enuofDkEjVvRpFFlO2LuZ5znWB/njTQ9P53dw/56h
+         h5ZSGPGiOssH1ZRST/4TbcVZne5l14RxxJbhxcL+1JfyG9vAN0S8h07z1Z5BtB/5zUdw
+         LGbIEIZKOrRR5LnN33jarM5C+aOLj1y1M00ygVn/XoOIyJ0WTWEv4gSHFNt1NYbxCO5N
+         QjhKRhgrKimmmTMgxdlhTQt3+85V9Lf15daDNyjBO+1zMu8uOdPRwVXOBsVDvlGkwb/U
+         h9Lw==
+X-Gm-Message-State: AOJu0YzuLWhH3Dfj7x0tSAoF0sfx85ocVFyUAstslqpB34e6RQ5AbNEU
+	xPkIYi72vQFpTxwKyteUmk8W4PccVfZfA10A1WI2540uLfFbMu2X
+X-Google-Smtp-Source: AGHT+IECTiK/yS4oysysakbTdS4lYOxqHAUUCZtkAUH/8b78CpDGR1OKg+29JGHlqabx4X98WG7nFDDDbUUH9wm7hAo=
+X-Received: by 2002:a05:6214:20af:b0:66d:1e99:6111 with SMTP id
+ 15-20020a05621420af00b0066d1e996111mr233164qvd.32.1697495879328; Mon, 16 Oct
+ 2023 15:37:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djXc7p/J+mmGkz8JGlx9/EFNovpUy8w
-	Wpy42chmsfrmGkaL/U+fs1isWniNzeL8rFMsFrcmHGNy4PBoOfKW1WPxnpdMHlNn13t83iQX
-	wBLFZZOSmpNZllqkb5fAlfF/YidLwSyWilO7NrI0MPawdDFyckgImEic2fyKvYuRi0NIYCWj
-	xIoHM5ggnFYmiS2ffrPBVP3qXswMkVjDKDF7dwMLhPOJUWLN171Q/csYJWYd2MAE0sImoCnx
-	68oaMFtEQFXi/vrHbCBFzAKfmSSOfzrPCJIQFnCRmLGtnQWiyFVibtMkVgjbSOLWg0dgNSxA
-	zQc7ZoHV8Ao4SfTO6wcbyingJXHvxlywOKOAmMT3UxDLmAXEJW49mc8EcbegxKLZe5ghbDGJ
-	f7seQv2jKHH/+0ugqzmA6jUl1u/Sh2i1k7i3aS3UGEWJKd0P2SHWCkqcnPkEGmCSEgdX3AD7
-	XkLgCodEx4qPUDNdJDb2zocqkpaYvuYylJ0tsXJ9BxPILgmBAomGI0EQYWuJhX/WM01gVJmF
-	5OpZCBfNQnLRLCQXzUJy0QJG1lWM4qXFxbnpqcXGeanlesWJucWleel6yfm5mxiByen0v8MF
-	Oxhv3fqod4iRiYPxEKMEB7OSCG96sE6qEG9KYmVValF+fFFpTmrxIUZpDhYlcV5D25PJQgLp
-	iSWp2ampBalFMFkmDk6pBibHr0LSp6Nynyz2VD6/b6Vro55k9f7Ks7K6d35+2/z2ocI71Qmq
-	E5a4m8eFLZ7WNyvkYZLYr0s7b5ZMFtTk2fHHXkt42/TDX07+s9d7sCP5o8eir9KfODb8if9X
-	caB34u81i174pZS0b/0Q11s/89flQgm/ktqNO++Eq+w3CVXmaHzRfiu1inPfhRN/WRgnTNP/
-	ItKW+uDW+d+HwxOeLQ71V3rZmHOj2MBSVkTP/lzVGaPvk5dGy300WRPUIF0RXxO54qXDdEuh
-	bO70q/5MUorynZYrGF99ejWredNCzd6cfc18Ojm//+38/Lf7vdvmSjmVya++71AUOPbt35F3
-	jca2E2y/fuT2mrhpTmr79FpLJZbijERDLeai4kQAAnplyb0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsWS2cDspPt3km6qQUsPp8XdxxfYLKZPvcBo
-	ceJmI5vF6ptrGC32P33OYrFq4TU2i/OzTrFY3JpwjMmBw6PlyFtWj8V7XjJ5TJ1d7/F5k1wA
-	SxSXTUpqTmZZapG+XQJXxv+JnSwFs1gqTu3ayNLA2MPSxcjJISFgIvGrezFzFyMXh5DAKkaJ
-	fwe3QTmfGCVONm1jg3CWMUrMvruHGaSFTUBT4teVNUwgtoiAqsT99Y/BipgFPjNJHP90nhEk
-	ISzgIjFjWzsLRJGrxNymSawQtpHErQePwGpYgJoPdswCq+EVcJLondfPBLFtLqPEsbXzwBo4
-	Bbwk7t2YC1bEKCAm8f0UxGZmAXGJW0/mM0E8ISCxZM95ZghbVOLl43+sELaixP3vL9m7GDmA
-	6jUl1u/Sh2i1k7i3aS3UGEWJKd0P2SFuEJQ4OfMJNFwkJQ6uuMEygVFiFpJtsxAmzUIyaRaS
-	SbOQTFrAyLqKUby0uDg3vaLYOC+1XK84Mbe4NC9dLzk/dxMjMLZP/zscs4Px3q2PeocYmTgY
-	DzFKcDArifCmB+ukCvGmJFZWpRblxxeV5qQWH2KU5mBREue9+0AjVUggPbEkNTs1tSC1CCbL
-	xMEp1cB0jO+UmbG54h+v12zXlmnFuEQW6TvM0pjU1/r6IeefP8pP/rw/N29i0Je/72rCehM9
-	fuX1mM/8u9Xx/irPva8+7olekLTT4PFK7g1icvsrTxbcTH3x6qerzusFav/KJnzQvCS+O3XT
-	vBr3te+zTc4bi27TsVGrD67uvNB9SYBviaWrxV6lnRq/2TM0fbNO1Z+qSFBa3pclNfmbb0Z9
-	+qzm9vOJVnM1K8WMnl9aoTO7s7xY0+2EyhLJgMQ9j1ecr9zQeUxAaW6r9sq/DYq57AG5J2b1
-	vnx4N/JJ+sPNE9bIt4lHTN7DfeG6y7+VKhJzzzzxPlwav//a+89liwK0T0ooT9hbxSR0xNY0
-	dIm7a3C3EktxRqKhFnNRcSIApF1BVFwDAAA=
-X-CMS-MailID: 20231016194605uscas1p2ac08745283fc25e8ffa0e47bc89b47aa
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231016175800uscas1p2cdf5532581e564f356b36c0126d2a25f
-References: <CGME20231016175800uscas1p2cdf5532581e564f356b36c0126d2a25f@uscas1p2.samsung.com>
-	<169747906849.272156.1729290904857372335.stgit@djiang5-mobl3>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <CAKJOkCoxLG01Dt7xMjOPWRqhyLPuaNGRUaDn-sgAFfhERtAYJA@mail.gmail.com>
+ <20231016105538.00000de5@Huawei.com>
+In-Reply-To: <20231016105538.00000de5@Huawei.com>
+From: lokesh jaliminche <lokesh.jaliminche@gmail.com>
+Date: Mon, 16 Oct 2023 15:37:49 -0700
+Message-ID: <CAKJOkCpfDPh-pbzVZ5+KnUu8C9QNB1b1VKu8bk2f+dbqUZh7PQ@mail.gmail.com>
+Subject: Re: Performance Issue with CXL-emulation
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel-request@nongnu.org, linux-cxl@vger.kernel.org, 
+	qemu-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-DQoNCj4gT24gT2N0IDE2LCAyMDIzLCBhdCAxMDo1N+KAr0FNLCBEYXZlIEppYW5nIDxkYXZlLmpp
-YW5nQGludGVsLmNvbT4gd3JvdGU6DQo+IA0KPiBBZGQgYSBoZWxwZXIgdG8gcmV0cmlldmUgdGhl
-IG51bWJlciBvZiBkZWNvZGVycyBjb21taXR0ZWQgZm9yIHRoZSBwb3J0Lg0KPiBSZXBsYWNlIGFs
-bCB0aGUgb3BlbiBjb2Rpbmcgb2YgdGhlIGNhbGN1bGF0aW9uIHdpdGggdGhlIGhlbHBlci4NCj4g
-DQo+IFN1Z2dlc3RlZC1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+
-DQo+IFNpZ25lZC1vZmYtYnk6IERhdmUgSmlhbmcgPGRhdmUuamlhbmdAaW50ZWwuY29tPg0KDQpS
-ZXZpZXdlZC1ieTogSmltIEhhcnJpcyA8amltLmhhcnJpc0BzYW1zdW5nLmNvbT4NCg0K
+Hi Jonathan,
+
+Thanks for your quick and detailed response. I'll explore these
+options further and asses if I get any performance uptick.
+
+Thanks & Regards,
+Lokesh
+
+
+On Mon, Oct 16, 2023 at 2:56=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Sun, 15 Oct 2023 10:39:46 -0700
+> lokesh jaliminche <lokesh.jaliminche@gmail.com> wrote:
+>
+> > Hi Everyone,
+> >
+> > I am facing performance issues while copying data to the CXL device
+> > (Emulated with QEMU). I get approximately 500KB/Sec. Any suggestion on =
+how
+> > to improve this?
+>
+> Hi Lokesh,
+>
+> The target so far of QEMU emulation of CXL devices has been on functional=
+ity.
+> I'm in favour of work to improve on that, but it isn't likely to be my fo=
+cus
+> - can offer some pointers on where to look though!
+>
+> The fundamental problem (probably) is address decoding in CXL for interle=
+aving
+> is at a sub page granularity. That means we can't use page table to perfo=
+rm the address
+> look ups in hardware. Note this also has the side effect that kvm won't w=
+ork if
+> there is any chance that you will run instructions out of the CXL memory =
+- it's
+> fine if you are interested in data only (DAX etc). (I've had a note in my=
+ todo list
+> to add a warning message about the KVM limitations for a while).
+>
+> There have been a few discussions (mostly when we were debugging some TCG=
+ issues
+> and considering KVM support) about how we 'might' be able to improve this=
+.  That focused
+> on a general 'fix', but there may be some lower hanging fruit.
+>
+> The options I think might work are:
+>
+> 1) Special case configurations where there is no interleave going on.
+>    I'm not entirely sure how this would fit together and it won't deal wi=
+th the
+>    more interesting cases - if it does work I'd want it to be minimally i=
+nvasive because
+>    those complex cases are the main focus of testing etc.  There is an ex=
+tension of this
+>    where we handle interleave, but only if it is 4k or above (on appropri=
+ately configured
+>    host).
+>
+> 2) Add caching layer to the CXL fixed memory windows.  That would hold co=
+pies of a
+>    number of pages that have been accessed in a software cache and setup =
+the mappings for
+>    the hardware page table walkers to find them. If the page isn't cached=
+ we'd trigger
+>    a pagefault and have to bring it into the cache. If the configuration =
+of the interleave
+>    is touched, all caches would need to be written back etc. This would n=
+eed to be optional
+>    because I don't want to have to add cache coherency protocols etc when=
+ we add shared
+>    memory support (fun though it would be ;)
+>
+> 3) Might be worth looking at the critical paths for lookups in your confi=
+guration.
+>    Maybe we can optimize the address decoders (basically a software TLB f=
+or HPA to DPA).
+>    I've not looked at the performance of those paths.  For your example t=
+he lookup is
+>    * CFMWS - nothing to do
+>    * Host bridge - nothing to do beyond a sanity check on range I think.
+>    * Nothing to to do.
+>    * Type 3 device - basic range match.
+>    So I'm not sure it is worth while - but you could do a really simple t=
+est by detecting
+>    no interleave is going on and caching the offset needed to go HPA to D=
+PA + a device reference
+>    for the first time cxl_cfmws_find_device() is called.
+>    https://elixir.bootlin.com/qemu/latest/source/hw/cxl/cxl-host.c#L129
+>
+>
+>    Then just match on hwaddr on another call of cxl_cmws_find_device() an=
+d return the device
+>    directly.  Maybe also shortcut lookups in cxl_type3_hpa_to_as_and_dpa(=
+) which does the endpoint
+>    decoding part. A quick hack would let you know if it was worth looking=
+ at something more general.
+>
+>    Gut feeling is this last approach might get you some perf uptick but n=
+ot going to solve
+>    the fundamental problem that in general we can't do the translation in=
+ hardware (unlike most
+>    other memory accesses in QEMU).
+>
+>    Not I believe all writes to file backed memory will go all the way to =
+the file. So you might want
+>    to try backing it with RAM but I as with the above, that's not going t=
+o address the fundamental
+>    problem.
+>
+>
+> Jonathan
+>
+>
+>
+>
+> >
+> > Steps to reproduce :
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > 1. QEMU Command:
+> > sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
+> > -hda ./images/ubuntu-22.04-server-cloudimg-amd64.img \
+> > -hdb ./images/user-data.img \
+> > -M q35,cxl=3Don,accel=3Dkvm,nvdimm=3Don \
+> > -smp 16 \
+> > -m 16G,maxmem=3D32G,slots=3D8 \
+> > -object
+> > memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3D/mnt/qemu_files=
+/cxltest.raw,size=3D256M
+> > \
+> > -object
+> > memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D/mnt/qemu_files=
+/lsa.raw,size=3D256M
+> > \
+> > -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> > -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port13,chassis=3D0,slot=
+=3D2 \
+> > -device
+> > cxl-type3,bus=3Droot_port13,persistent-memdev=3Dcxl-mem1,lsa=3Dcxl-lsa1=
+,id=3Dcxl-pmem0
+> > \
+> > -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+> > -nographic \
+> >
+> > 2. Configure device with fsdax mode
+> > ubuntu@ubuntu:~$ cxl list
+> > [
+> >   {
+> >     "memdevs":[
+> >       {
+> >         "memdev":"mem0",
+> >         "pmem_size":268435456,
+> >         "serial":0,
+> >         "host":"0000:0d:00.0"
+> >       }
+> >     ]
+> >   },
+> >   {
+> >     "regions":[
+> >       {
+> >         "region":"region0",
+> >         "resource":45365592064,
+> >         "size":268435456,
+> >         "type":"pmem",
+> >         "interleave_ways":1,
+> >         "interleave_granularity":1024,
+> >         "decode_state":"commit"
+> >       }
+> >     ]
+> >   }
+> > ]
+> >
+> > 3. Format the device with ext4 file system in dax mode
+> >
+> > 4. Write data to mounted device with dd
+> >
+> > ubuntu@ubuntu:~$ time sudo dd if=3D/dev/urandom
+> > of=3D/home/ubuntu/mnt/pmem0/test bs=3D1M count=3D128
+> > 128+0 records in
+> > 128+0 records out
+> > 134217728 bytes (134 MB, 128 MiB) copied, 244.802 s, 548 kB/s
+> >
+> > real    4m4.850s
+> > user    0m0.014s
+> > sys     0m0.013s
+> >
+> >
+> > Thanks & Regards,
+> > Lokesh
+> >
+>
