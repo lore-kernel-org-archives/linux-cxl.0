@@ -1,587 +1,234 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FF9E541
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 12:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DD5AB
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 05:55:21 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S8H7Q4bx3z6D8W7;
-	Mon, 16 Oct 2023 20:52:02 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 16 Oct 2023 13:55:18 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-CC: <linuxarm@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4/4] cxl/pci: Add support for stand alone CXL Switch mailbox CCI
-Date: Mon, 16 Oct 2023 13:53:23 +0100
-Message-ID: <20231016125323.18318-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231016125323.18318-1-Jonathan.Cameron@huawei.com>
-References: <20231016125323.18318-1-Jonathan.Cameron@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7832E26E16
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Oct 2023 13:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ug3KsWz2"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C25FF;
+	Mon, 16 Oct 2023 06:40:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hIoFg4VAtAhJ3P7AOwJ0PZqhWgDJ7IDevr0sDwlfamBLQOeIXAHoAAfXhyfBvgWzR9ySGicDbEZ40jV60EthaAOwEoKZPXOZmbcn0IEsnWHkt7qgKL5m0FZu3XIxQlC/0Cx1agl/UdOjWMLbjTVAyHjJ/i4aqEgBeFxANc8GbzWiv1oUtKCmVzNkvukv2+HkBvyR/BQdwiNK7UH3MdD+xOGmy85hgyzzOsV9c3iHWyLe1+UevRh+8QDBu5bSllTvwCTLVXsDSPuT+0D+zNvihw8OvdIZKIcmYVyLTQJm+R2odrG9gWk08E9MjfF8rig9Qlp8VB9pGb7zpxtca3G8vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G7jZMHlxfxWGWDwRDcjQkn0ZXLVYfGXDEOESiAPos5g=;
+ b=c+n++XDM/pt2hyqjQA+km7A88Z9KCQouiC0CqWffv19/al4WK8CCeDz5cg+Xf27RFQ7KCU8Z+PdvQi5Zy7nbYY4o5cKdTJJudn3vL9PBheP6FxYB4CeHJBULVzWJ2yKWJjDuypw4+u790lR3+gUhtgfJaO3Yv83xm75CJE3q9d1KhSQhCIhwzgS9hprmk2gEwfp/6QMcEGh6482KLxw1oW3wlTgdPxUgWB/7AKO081IpCbKAT4R9wtFixSVX9JIRsrmeC0suClLK1WgUHoUOrkAks66ELfXqyIDY5s9zzCHhW2Zz/L8CVvL7qfQeDh1cbwU2boE/7QCq5vYoSYWBsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G7jZMHlxfxWGWDwRDcjQkn0ZXLVYfGXDEOESiAPos5g=;
+ b=ug3KsWz25YaqxhhWEj22itsJwjMTHPokr+6ieBrUcBLwGqPkvqd5GZm0DawN8hN5InVNSXZqttIf08dmu9/+7UxGXFGFg7keWQ5B5D8IHMm0XVOK+xQJa6u1tdvAC1bKqMPzB8PGPd33nGIfn/AlzQSHfZJWDPTB72/bOqKB9gM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DM4PR12MB6639.namprd12.prod.outlook.com (2603:10b6:8:be::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6886.35; Mon, 16 Oct 2023 13:40:26 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::bc87:8b0e:246d:5d85]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::bc87:8b0e:246d:5d85%7]) with mapi id 15.20.6886.034; Mon, 16 Oct 2023
+ 13:40:26 +0000
+Message-ID: <da5bc564-76c4-4078-97ab-1d543933071e@amd.com>
+Date: Mon, 16 Oct 2023 08:40:23 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 10/20] cxl/pci: Introduce config option PCIEAER_CXL
+From: Terry Bowman <Terry.Bowman@amd.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Ben Widawsky <bwidawsk@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20230927154339.1600738-1-rrichter@amd.com>
+ <20230927154339.1600738-11-rrichter@amd.com>
+ <20231002154628.00004f9b@Huawei.com>
+ <21fa3d41-3585-40b4-b919-d3b66557e9d8@amd.com>
+Content-Language: en-US
+In-Reply-To: <21fa3d41-3585-40b4-b919-d3b66557e9d8@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0106.namprd05.prod.outlook.com
+ (2603:10b6:803:42::23) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM4PR12MB6639:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8590af3a-fe0c-43ca-82fa-08dbce4d73f5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kB2UUPnYEj4sPd/0taRZC32XldAS7VPW38ZirZu3apBNHqCiXL6J8b4TLxVFZmsmaG2cD5Vk1Cbgc9bmqa9dUCUzNmv/ewWBsmVqc4cj1mJvYTnQ0gQctAOtcOZR3aJHCaPcFD1e+pZxYG8YpAq4tBZxm7Me6iZ3pTYxhLJ6i8FyDMnwGakpaOaQsUlSYMbow3xVQc9ad9z8/uIRXXVHg5uxTBOeM4XZRumOcajQ71RyA9nm0lA1XZ1xDErG7lV9ZAUXt546mChkms8GZw+3R8HevOjYHOA85anyonDn9yBBESApWX2zN8io2PcGZRN9ol3rMk8HZk3CRS2sXOl1+GFR4tux6B/z2/IJuirpgVaNy0jw/2F2xkbIrD6zmzjzFCxvckS16ejWl0msiDq5WPIBu0coaaiIhpEdFZNYmnacCPfRUqs7UBDCJvLCndWX8Dg/XZjAG+mJGR7q0r5vSCqvtN1P/XkXBoJBR9jYQ4iTo0439sMPphJou4Oku4IvVHtCibyEJl0vULa6uAd5exFGyHl/0XvpPvTfawYBfNb1p8ZhyRtA0U4o+fK3Jz3Z4rhP+ZchAiY4hjTjPAHei25oDZA4BuQDU2ojTt3D3InxtakHkg7AOe+cHotyigzL3WqBdKe29oCu35ie2xYShw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(346002)(366004)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(31686004)(6486002)(478600001)(66476007)(6666004)(66556008)(66946007)(54906003)(110136005)(316002)(6636002)(83380400001)(31696002)(86362001)(38100700002)(6512007)(26005)(2616005)(53546011)(6506007)(36756003)(41300700001)(5660300002)(8676002)(8936002)(4326008)(2906002)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZDBCMHhJbW9WN2xWWlNCYUFVZ2dZKzFFUEFTM1NPUndOcFc3K0VaNWw2ZE05?=
+ =?utf-8?B?RC9TODNLTUJJMHFBd1Q5RFQ2SEtubDhPQnkwQW5ZSE13WGtIUXN2UG5MbnNx?=
+ =?utf-8?B?U1pscHV0YWg1dkdCYWRvRmZNUFZ4RWFCeEpUc2ZaYmZoUkJmT1FoYmRKWkdC?=
+ =?utf-8?B?eWpkVEpTQU4zUlRZNGI4eTUyeGFzY2ZEZUdUQnNFanZMbzBoem1ydTFQa2Fq?=
+ =?utf-8?B?UDFsN1hMUlo4WkFPaFA3NWp2Q3pGZys0ZDl1TklLclpUSmhoTy9wekROcUEx?=
+ =?utf-8?B?alp3dGFTWjVicWxIYk5oV2Vlb2hFTUJCNDZOTGhjSjJXZ1VnYWNXeXRRN0tL?=
+ =?utf-8?B?VU1UaTFLTit2b2pMZ0pqa3ZUS1JWdXJ5NnYxc0Y0V052RW5kcVQ4QnpGZEdl?=
+ =?utf-8?B?bzdmakVNQWw3em5GSU03SUpjbHUvUnZVQi9wWUd5QjVnOVU2MnVsS2ZGaGxQ?=
+ =?utf-8?B?MlJobE9CK00wYlROVkFNak5zVlNmSXFOSnAxOEdkNlJrNTRsU1AwN0ZYRnJw?=
+ =?utf-8?B?U2h1aWRMMTlPTWEyWjU0b216dGtUVU9MVjVyVTc3c1QrVHdjRzlKY3dWUk4x?=
+ =?utf-8?B?ZFgwVTd4Y0IzNGhPTXFkVDg1ZjV1bFZIVGU4NW90MGdOWGk5L0xqVmwxUmky?=
+ =?utf-8?B?c2hGbDVJS3YxREYvSkJ6Sm4yRTNYU08xWkg5c0lkQUVLUTZGMm5lSC9TSkRk?=
+ =?utf-8?B?b09lY2hhVVJDZVMwWHBPYmxEaXZLZUVodXlmd0FnQU5XeHBiVCtFaDU1M2Za?=
+ =?utf-8?B?QnZoVllyT21ZcEdiRE9UdXhNQmw4bXJIaWMvd3ExYXYvbnl0aURxbG1lK21q?=
+ =?utf-8?B?N2NYemJBL3hpbzIyOVJsU0ZpYjU0SndRcjBlS3AwYlZFL2FqQWl2emd1anFs?=
+ =?utf-8?B?bmgzM3g1WWh6UTVCWk1odDlPRFh1QVlwOWVJSE5KRFgzSGxhTjR4MG52VUZH?=
+ =?utf-8?B?UER2RXlFbzdlYVJmSUZUUHNCL0NlSVQ2OU13Ty9qSTBNaFB0Uyt2bzNZMDNq?=
+ =?utf-8?B?Mkt6Yk5VbE1ISHpxUHV0eWNUNncvRG9JYzJvOVNEajUyYWVGcjl4dlpGSUN1?=
+ =?utf-8?B?RkgzTkI1Qm5VTTNydVMvUTBjS1hWQnYvMU81VGMrM0pia2VWSWV1QUVNZHNM?=
+ =?utf-8?B?WWN5NUVTYVNpTythTVVoQmNYbWppaE5KV2lxcm5EK2lHY3VoU0pNZXRmTWVs?=
+ =?utf-8?B?d2R4WVpyK2F4b1V5U0Q2ZDhVeVR5WE11VWNDQ0NCRnNpQkZDdkpwRHM5LzlN?=
+ =?utf-8?B?VVRVOFlOYkdKOXp3WVhNZEF3bG9FeTV1SHo2SmtxZUN4K0Y4YkVhQzI0WWZS?=
+ =?utf-8?B?eFc1Zm11RGxtMUtnVGFMRDhiZ3oxUXdHSDhQanJkQ3E0RlEvV2d4eFcyQUNN?=
+ =?utf-8?B?TERrNzBpY2ZVWnFpUk9OR2lSRHVaUmNOWS9RNjQ4bm16TlZTVlQvMERCb3or?=
+ =?utf-8?B?VlBJRDFQNFdyVnJSMlU5SVA4MTRvTVFTM1czNWlCNGQxR3pyT3I2cWdMTit3?=
+ =?utf-8?B?bm85cTViZENnbkNTMmZSdmMzd1MvQTdCWkJnQjQ0Y2tCT0RrbnJhNFRGVHBK?=
+ =?utf-8?B?T05qYTNjOVNVT24zMHh1WHJ1Yy9zcTNOc24zYWdsVXI4bGU5dlozMkk5YkJ0?=
+ =?utf-8?B?N1BoNEJxSHRjbWlSWDlxY1FTWm1ubHQ4dUVRcUYyeEs1RU4yNEV4QjBxUFd1?=
+ =?utf-8?B?VUU4SFU4RzEvbEJCMWhySDhEcHd1SjFQTGVNQzdNVXp6cmxURDhkQTZmdjhs?=
+ =?utf-8?B?NVpjbEN5VE9uLzRNYmliSk5FUWhWRWxDejFCb25kR3BUZ0VMZHdsN21yLzlW?=
+ =?utf-8?B?eDVLVG42cEdXbVIrTGgwZHFLdEN3dUNFVEFrQWFWek1id0k1d2hjZVdpRHpT?=
+ =?utf-8?B?dFFIK1ppb0lwT2FiRXBXSERhWWJWUmUzRFdycmJsYjIwTHFjTVFxeWpscC9w?=
+ =?utf-8?B?c0JCL1BhSVI2YXhZeVFkQTR5WGwyTHJkZVhxUUxHNk9QTzZhYWpvYkt2NThS?=
+ =?utf-8?B?cW5uVjVSOXhnRzlaOEFUeTI4NVhXZzU4dTlyTWdYclpZU0JqRkZ4VWNxdlB6?=
+ =?utf-8?B?UGwxZkhQSGdFYmdqVUVlc01TeG5TUEo4czlYcllNb0wzM2xvd0NOVlpGbWNB?=
+ =?utf-8?Q?oXw1+DkdT1gPW+dKp97WxW1G7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8590af3a-fe0c-43ca-82fa-08dbce4d73f5
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 13:40:25.8707
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 17vKH4NM8NjGvchO7RJRxz97mU+MonCJWXoH0tyiA38rwL41pHVARk761QRV91J4vGOrDIYyDQqUESqpHG3IXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6639
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-CXL 3.0 defines a mailbox PCI function independent of any other CXL
-components. The intent is that instances of this mailbox will be found
-as additional PCI functions of upstream CXL switch ports.
+Hi Jonathan,
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I added a response below.
 
----
-Non RFC:
- - Drop adding new commands.  For now kick the security model
-   questions into the long grass but using RAW comamnds only.
----
- drivers/cxl/Kconfig          |  14 +++
- drivers/cxl/Makefile         |   2 +
- drivers/cxl/core/Makefile    |   1 +
- drivers/cxl/core/core.h      |   9 ++
- drivers/cxl/core/mbox.c      |   1 +
- drivers/cxl/core/memdev.c    |  12 +--
- drivers/cxl/core/regs.c      |   6 +-
- drivers/cxl/core/switchdev.c | 129 ++++++++++++++++++++++++++
- drivers/cxl/cxl.h            |   2 +-
- drivers/cxl/cxlmbox.h        |   1 +
- drivers/cxl/pci.c            |   7 +-
- drivers/cxl/switch.h         |  19 ++++
- drivers/cxl/switchdev.c      | 169 +++++++++++++++++++++++++++++++++++
- 13 files changed, 359 insertions(+), 13 deletions(-)
+On 10/9/23 09:44, Terry Bowman wrote:
+> Hi Jonathan,
+> 
+> I added responses inline below.
+> 
+> On 10/2/23 09:46, Jonathan Cameron wrote:
+>> On Wed, 27 Sep 2023 17:43:29 +0200
+>> Robert Richter <rrichter@amd.com> wrote:
+>>
+>>> CXL error handling depends on AER.
+>>>
+>>> Introduce config option PCIEAER_CXL in preparation of the AER dport
+>>> error handling. Also, introduce the stub function
+>>> devm_cxl_setup_parent_dport() to setup dports.
+>>>
+>>> This is in preparation of follow on patches.
+>>>
+>>> Note the Kconfg part of the option is added in a later patch to enable
+>>> it once coding of the feature is complete.
+>>>
+>>> Signed-off-by: Robert Richter <rrichter@amd.com>
+>>
+>> Feels like it should just be combined with a later patch that fills
+>> some of this in as on it's own it's just a weird snippet of code :)
+>>
+> 
+> We will look to merge with the following patch.
+> 
+>> Still, one comment inline anyway.
+>>
+>>
+>>> ---
+>>>  drivers/cxl/core/pci.c | 9 +++++++++
+>>>  drivers/cxl/cxl.h      | 7 +++++++
+>>>  drivers/cxl/mem.c      | 2 ++
+>>>  3 files changed, 18 insertions(+)
+>>>
+>>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>>> index c7a7887ebdcf..6ba3b7370816 100644
+>>> --- a/drivers/cxl/core/pci.c
+>>> +++ b/drivers/cxl/core/pci.c
+>>> @@ -718,6 +718,15 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+>>>  	return true;
+>>>  }
+>>>  
+>>> +#ifdef CONFIG_PCIEAER_CXL
+>>> +
+>>> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+>>> +{
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_parent_dport, CXL);
+>>> +
+>>> +#endif
+>>> +
+>>>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>>  				    pci_channel_state_t state)
+>>>  {
+>>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>>> index c07064e0c136..cfa2f6bede41 100644
+>>> --- a/drivers/cxl/cxl.h
+>>> +++ b/drivers/cxl/cxl.h
+>>> @@ -704,6 +704,13 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+>>>  					 struct device *dport_dev, int port_id,
+>>>  					 resource_size_t rcrb);
+>>>  
+>>> +#ifdef CONFIG_PCIEAER_CXL
+>>> +void devm_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
+>>> +#else
+>>> +static inline void devm_cxl_setup_parent_dport(struct device *host,
+>>> +					       struct cxl_dport *dport) { }
+>>> +#endif
+>>> +
+>>>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>>>  struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
+>>>  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
+>>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+>>> index 04107058739b..61ca21c020fa 100644
+>>> --- a/drivers/cxl/mem.c
+>>> +++ b/drivers/cxl/mem.c
+>>> @@ -157,6 +157,8 @@ static int cxl_mem_probe(struct device *dev)
+>>>  	else
+>>>  		endpoint_parent = &parent_port->dev;
+>>>  
+>>> +	devm_cxl_setup_parent_dport(dev, dport);
+>>
+>> devm calls can always fail (because if nothing else you have to register
+>> some cleanup and that involves an allocation.  If you want to ignore
+>> that I'd expect a comment here.
+>>
+> 
+> We will add error handling here.
+> 
+> Regards,
+> Terry
+>
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 8ea1d340e438..2acf4073febc 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -153,5 +153,19 @@ config CXL_PMU
- 	  Say 'y/m' to enable a driver that will attach to performance
- 	  monitoring units and provide standard perf based interfaces.
+Found devm_cxl_setup_parent_dport() is a NULL function without return value.
  
-+	  If unsure say 'm'.
-+
-+config CXL_SWITCH
-+	tristate "CXL switch mailbox access"
-+	help
-+	  The CXL r3.0 specification defines a "CXL switch CCI" sub-class in the
-+	  PCI "Serial" base class of devices. Device's identified by
-+	  this class code provide a mailbox interface to allow control of CXL
-+	  switch configuration over inband PCI.
-+
-+	  Say 'y/m' to enable a driver that will attach to CXL Switch CCI
-+	  devices enumerated by the CXL switch CCI class code for configuration
-+	  and management primarily via the mailbox interface.
-+
- 	  If unsure say 'm'.
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index db321f48ba52..b98babe05abf 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -5,9 +5,11 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- obj-$(CONFIG_CXL_PORT) += cxl_port.o
-+obj-$(CONFIG_CXL_SWITCH) += cxl_switchdev.o
- 
- cxl_mem-y := mem.o
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o security.o
- cxl_port-y := port.o
-+cxl_switchdev-y := switchdev.o
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1f66b5d4d935..562aa63d225f 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -13,5 +13,6 @@ cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
- cxl_core-y += pmu.o
-+cxl_core-y += switchdev.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 5491d3a3c095..676b63193080 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -87,4 +87,13 @@ enum cxl_poison_trace_type {
- 	CXL_POISON_TRACE_CLEAR,
- };
- 
-+/*
-+ * An entire PCI topology full of devices should be enough for any
-+ * config
-+ */
-+#define CXL_MEM_MAX_DEVS 65536
-+
-+extern int cxl_mem_major;
-+extern struct ida cxl_memdev_ida;
-+extern struct rw_semaphore cxl_memdev_rwsem;
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index dc59c6d1f87f..9a2f38a8a45b 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -9,6 +9,7 @@
- #include <cxlmbox.h>
- #include <cxlpci.h>
- #include <cxlmem.h>
-+#include <cxlpci.h>
- #include <cxl.h>
- 
- #include "core.h"
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 15b540bec6fa..b233d6016c55 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -11,16 +11,10 @@
- #include "trace.h"
- #include "core.h"
- 
--static DECLARE_RWSEM(cxl_memdev_rwsem);
-+DECLARE_RWSEM(cxl_memdev_rwsem);
- 
--/*
-- * An entire PCI topology full of devices should be enough for any
-- * config
-- */
--#define CXL_MEM_MAX_DEVS 65536
--
--static int cxl_mem_major;
--static DEFINE_IDA(cxl_memdev_ida);
-+int cxl_mem_major;
-+DEFINE_IDA(cxl_memdev_ida);
- 
- static void cxl_memdev_release(struct device *dev)
- {
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index b783bf89d687..aeb97daaf9ee 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -268,7 +268,7 @@ int cxl_map_device_regs(const struct cxl_register_map *map,
- EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, CXL);
- 
- int cxl_map_mbox_regs(const struct cxl_register_map *map,
--		      void __iomem **mbox_regs)
-+		      void __iomem **mbox_regs, void __iomem **status_regs)
- {
- 	struct device *dev = map->dev;
- 	resource_size_t phys_addr = map->resource;
-@@ -277,10 +277,12 @@ int cxl_map_mbox_regs(const struct cxl_register_map *map,
- 		void __iomem **addr;
- 	} mapinfo[] = {
- 		{ &map->device_map.mbox, mbox_regs, },
-+		{ &map->device_map.status, status_regs, },
- 	};
-+	int limit = status_regs ? ARRAY_SIZE(mapinfo) : 1;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
-+	for (i = 0; i < limit; i++) {
- 		struct mapinfo *mi = &mapinfo[i];
- 		resource_size_t length;
- 		resource_size_t addr;
-diff --git a/drivers/cxl/core/switchdev.c b/drivers/cxl/core/switchdev.c
-new file mode 100644
-index 000000000000..72f6b81357d9
---- /dev/null
-+++ b/drivers/cxl/core/switchdev.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include "cxlpci.h"
-+#include "switch.h"
-+#include "core.h"
-+
-+static inline struct cxl_swdev *to_cxl_swdev(struct device *dev)
-+{
-+	return container_of(dev, struct cxl_swdev, dev);
-+}
-+
-+static char *cxl_swdev_devnode(const struct device *dev, umode_t *mode, kuid_t *uid,
-+			kgid_t *gid)
-+{
-+	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
-+}
-+
-+static long __cxl_swdev_ioctl(struct cxl_swdev *cxlswd, unsigned int cmd,
-+			       unsigned long arg)
-+{
-+	switch (cmd) {
-+	case CXL_MEM_SEND_COMMAND:
-+		return cxl_send_cmd(&cxlswd->mbox, (void __user *)arg);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+static long cxl_swdev_ioctl(struct file *file, unsigned int cmd,
-+			    unsigned long arg)
-+{
-+	struct cxl_swdev *cxlswd = file->private_data;
-+	int rc = -ENXIO;
-+
-+	down_read(&cxl_memdev_rwsem);
-+	if (!cxlswd->dying)
-+		rc = __cxl_swdev_ioctl(cxlswd, cmd, arg);
-+	up_read(&cxl_memdev_rwsem);
-+
-+	return rc;
-+}
-+
-+static int cxl_swdev_open(struct inode *inode, struct file *file)
-+{
-+	struct cxl_swdev *cxlswd =
-+		container_of(inode->i_cdev, typeof(*cxlswd), cdev);
-+
-+	get_device(&cxlswd->dev);
-+	file->private_data = cxlswd;
-+
-+	return 0;
-+}
-+
-+static int cxl_swdev_release_file(struct inode *inode, struct file *file)
-+{
-+	struct cxl_swdev *cxlswd =
-+		container_of(inode->i_cdev, typeof(*cxlswd), cdev);
-+
-+	put_device(&cxlswd->dev);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations cxl_swdev_fops = {
-+	.owner = THIS_MODULE,
-+	.unlocked_ioctl = cxl_swdev_ioctl,
-+	.open = cxl_swdev_open,
-+	.release = cxl_swdev_release_file,
-+	.compat_ioctl = compat_ptr_ioctl,
-+	.llseek = noop_llseek,
-+};
-+
-+void cxl_swdev_shutdown(struct cxl_swdev *cxlswd)
-+{
-+	down_write(&cxl_memdev_rwsem);
-+	cxlswd->dying = true;
-+	up_write(&cxl_memdev_rwsem);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_swdev_shutdown, CXL);
-+
-+static void cxl_swdev_release(struct device *dev)
-+{
-+	struct cxl_swdev *cxlswd = to_cxl_swdev(dev);
-+
-+	ida_free(&cxl_memdev_ida, cxlswd->id);
-+	kfree(cxlswd);
-+}
-+
-+static const struct device_type cxl_swdev_type = {
-+	.name = "cxl_swdev",
-+	.release = cxl_swdev_release,
-+	.devnode = cxl_swdev_devnode,
-+};
-+
-+struct cxl_swdev *cxl_swdev_alloc(struct device *parent)
-+{
-+	struct cxl_swdev *cxlswd;
-+	struct device *dev;
-+	struct cdev *cdev;
-+	int rc;
-+
-+	cxlswd = kzalloc(sizeof(*cxlswd), GFP_KERNEL);
-+	if (!cxlswd)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
-+	if (rc < 0) {
-+		kfree(cxlswd);
-+		return ERR_PTR(rc);
-+	}
-+
-+	cxlswd->id = rc;
-+	dev = &cxlswd->dev;
-+	device_initialize(dev);
-+	dev->bus = &cxl_bus_type;
-+	dev->parent = parent;
-+	dev->devt = MKDEV(cxl_mem_major, cxlswd->id);
-+	dev->type = &cxl_swdev_type;
-+	device_set_pm_not_required(dev);
-+	cdev = &cxlswd->cdev;
-+	cdev_init(cdev, &cxl_swdev_fops);
-+	rc = dev_set_name(dev, "switch%d", cxlswd->id);
-+	if (rc) {
-+		put_device(dev);
-+		return ERR_PTR(rc);
-+	}
-+
-+	return cxlswd;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_swdev_alloc, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index dad80c5857f6..0f0d51730df8 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -279,7 +279,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
- int cxl_map_device_regs(const struct cxl_register_map *map,
- 			struct cxl_device_regs *regs);
- int cxl_map_mbox_regs(const struct cxl_register_map *map,
--		      void __iomem **mbox_reg);
-+		      void __iomem **mbox_reg, void __iomem **status_reg);
- int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
- 		     struct cxl_register_map *map);
- 
-diff --git a/drivers/cxl/cxlmbox.h b/drivers/cxl/cxlmbox.h
-index 3861d97729e2..d444327ef78d 100644
---- a/drivers/cxl/cxlmbox.h
-+++ b/drivers/cxl/cxlmbox.h
-@@ -155,6 +155,7 @@ static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
- 
- enum cxl_opcode {
- 	CXL_MBOX_OP_INVALID		= 0x0000,
-+	CXL_MBOX_OP_GET_BG_CMD_STATUS	= 0x0002,
- 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
- 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
- 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 7bce4ae7cd10..da3d95a91a5e 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -632,9 +632,14 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	rc = cxl_map_mbox_regs(&map, &mds->mbox.mbox);
-+	/* Status register already mapped */
-+	rc = cxl_map_mbox_regs(&map, &mds->mbox.mbox, NULL);
- 	if (rc)
- 		return rc;
-+
-+	/* Connect up the status register access for the mbox */
-+	mds->mbox.status = cxlds->regs.status;
-+
- 	/*
- 	 * If the component registers can't be found, the cxl_pci driver may
- 	 * still be useful for management functions so don't return an error.
-diff --git a/drivers/cxl/switch.h b/drivers/cxl/switch.h
-new file mode 100644
-index 000000000000..14e8e1cb87e7
---- /dev/null
-+++ b/drivers/cxl/switch.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __CXL_SWITCH_H__
-+#define __CXL_SWITCH_H__
-+
-+#include <linux/device.h>
-+#include <linux/cdev.h>
-+#include "cxlmbox.h"
-+
-+struct cxl_swdev {
-+	struct device dev;
-+	struct cdev cdev;
-+	struct cxl_mbox mbox;
-+	int id;
-+	bool dying;
-+};
-+
-+struct cxl_swdev *cxl_swdev_alloc(struct device *parent);
-+void cxl_swdev_shutdown(struct cxl_swdev *cxlswd);
-+#endif /* __CXL_SWITCH_H__ */
-diff --git a/drivers/cxl/switchdev.c b/drivers/cxl/switchdev.c
-new file mode 100644
-index 000000000000..ead003c718b8
---- /dev/null
-+++ b/drivers/cxl/switchdev.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright(c) Huawei Technologies
-+ * Based on cxl/pci.c Copyright(c) 2020 Intel Corporation. All rights reserved.
-+ */
-+
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/moduleparam.h>
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/sizes.h>
-+#include <linux/mutex.h>
-+#include <linux/list.h>
-+#include <linux/pci.h>
-+#include <linux/io.h>
-+#include "cxlpci.h"
-+#include "switch.h"
-+#include "cxl.h"
-+
-+static irqreturn_t cxl_swmb_mbox_irq(int irq, void *d)
-+{
-+	return cxl_mbox_irq(irq, d);
-+}
-+
-+static int cxl_swmb_setup_mailbox(struct cxl_mbox *mbox)
-+{
-+	const int cap = readl(mbox->mbox + CXLDEV_MBOX_CAPS_OFFSET);
-+
-+	/*
-+	 * A command may be in flight from a previous driver instance,
-+	 * think kexec, do one doorbell wait so that
-+	 * __cxl_pci_mbox_send_cmd() can assume that it is the only
-+	 * source for future doorbell busy events.
-+	 */
-+	if (cxl_pci_mbox_wait_for_doorbell(mbox) != 0) {
-+		dev_err(mbox->dev, "timeout awaiting mailbox idle");
-+
-+		return -ETIMEDOUT;
-+	}
-+
-+	mbox->payload_size =
-+		1 << FIELD_GET(CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK, cap);
-+
-+	/*
-+	 * CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register
-+	 *
-+	 * If the size is too small, mandatory commands will not work and so
-+	 * there's no point in going forward. If the size is too large, there's
-+	 * no harm is soft limiting it.
-+	 */
-+	mbox->payload_size = min_t(size_t, mbox->payload_size, SZ_1M);
-+	if (mbox->payload_size < 256) {
-+		dev_err(mbox->dev, "Mailbox is too small (%zub)",
-+			mbox->payload_size);
-+		return -ENXIO;
-+	}
-+
-+	dev_dbg(mbox->dev, "Mailbox payload sized %zu", mbox->payload_size);
-+
-+	rcuwait_init(&mbox->mbox_wait);
-+
-+	if (cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ) {
-+		u32 ctrl;
-+		int irq, msgnum, rc;
-+		struct pci_dev *pdev = to_pci_dev(mbox->dev);
-+
-+		msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
-+		irq = pci_irq_vector(pdev, msgnum);
-+		if (irq < 0)
-+			goto mbox_poll;
-+
-+		rc = devm_request_threaded_irq(mbox->dev, irq, cxl_swmb_mbox_irq,
-+					       NULL, IRQF_SHARED | IRQF_ONESHOT,
-+					       NULL, mbox);
-+		if (rc)
-+			goto mbox_poll;
-+
-+		/* enable background command mbox irq support */
-+		ctrl = readl(mbox->mbox + CXLDEV_MBOX_CTRL_OFFSET);
-+		ctrl |= CXLDEV_MBOX_CTRL_BG_CMD_IRQ;
-+		writel(ctrl, mbox->mbox + CXLDEV_MBOX_CTRL_OFFSET);
-+
-+		return 0;
-+	}
-+
-+mbox_poll:
-+
-+	dev_dbg(mbox->dev, "Mailbox interrupts are unsupported");
-+	return 0;
-+}
-+
-+
-+static int cxl_swmb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct cxl_register_map map;
-+	struct cxl_swdev *cxlswd;
-+	int rc;
-+
-+	rc = pcim_enable_device(pdev);
-+	if (rc)
-+		return rc;
-+
-+	cxlswd = cxl_swdev_alloc(&pdev->dev);
-+	if (IS_ERR(cxlswd))
-+		return PTR_ERR(cxlswd);
-+
-+	mutex_init(&cxlswd->mbox.mbox_mutex);
-+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-+	if (rc)
-+		return rc;
-+	rc = cxl_setup_regs(&map);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox, &cxlswd->mbox.status);
-+	if (rc)
-+		return rc;
-+
-+	cxlswd->mbox.dev = &pdev->dev;
-+
-+	rc = cxl_swmb_setup_mailbox(&cxlswd->mbox);
-+	if (rc)
-+		return rc;
-+
-+	pci_set_drvdata(pdev, cxlswd);
-+
-+	rc = cxl_enumerate_cmds(&cxlswd->mbox);
-+	if (rc)
-+		goto error_put_device;
-+
-+	rc = cdev_device_add(&cxlswd->cdev, &cxlswd->dev);
-+	if (rc)
-+		goto error_put_device;
-+
-+	return 0;
-+
-+error_put_device:
-+	cxl_swdev_shutdown(cxlswd);
-+	put_device(&cxlswd->dev);
-+	return rc;
-+}
-+
-+static void cxl_swbm_remove(struct pci_dev *pdev)
-+{
-+	struct cxl_swdev *cxlswd = pci_get_drvdata(pdev);
-+	struct device *dev = &cxlswd->dev;
-+
-+	cxl_swdev_shutdown(cxlswd);
-+	cdev_device_del(&cxlswd->cdev, dev);
-+	put_device(&cxlswd->dev);
-+}
-+
-+static const struct pci_device_id cxl_swmb_pci_tbl[] = {
-+	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_CXL_SWITCH_CCI, ~0) },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(pci, cxl_swmb_pci_tbl);
-+
-+static struct pci_driver cxl_swmb_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = cxl_swmb_pci_tbl,
-+	.probe = cxl_swmb_probe,
-+	.remove = cxl_swbm_remove,
-+};
-+
-+module_pci_driver(cxl_swmb_driver);
-+MODULE_DESCRIPTION("CXL Switch CCI mailbox access driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(CXL);
--- 
-2.39.2
-
+Regards,
+Terry
