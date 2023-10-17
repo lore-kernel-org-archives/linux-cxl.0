@@ -1,57 +1,57 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E34436AF
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 14:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4287D436AF
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 14:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dn1oftD7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X319JHpo"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CA8B0
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 07:39:11 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFA22D5F
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 07:49:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697553551;
+	s=mimecast20190719; t=1697554182;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bSH+w3rTE+Pz2hrnXmquLWhpkJX2eVVDKFyhnXENtfM=;
-	b=dn1oftD7F2Fi1gAhndm/Pj/D6wcLrCLUOQ0H77S6Tzbtgb5UE+duqDiXw97B36kp5A3lTS
-	OHrWa23oySvxxEJ+p31ilOPIQNcu29ZGk/9WexAzprUBZ30E140e5n3tAIqdC9DYvqCKUs
-	rUuFNJwxKNiJHeWe1Qa2AwvDjTPOJvs=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=cgiUWmuX7npTry/TKlHFAgqdXewDmk3A8hEeG0P7Xxw=;
+	b=X319JHposN8aA3qqNwkOWZwCWPG53+ErLcN5d/XgysTHyNcUSVaKxwyXj+/Lhx7OprtAOG
+	dee96nb6TjT81XDyc7isjgEQog3ZXLYdk3P8P+orNlrpW+iyjfy4D0qKGViUXHOLv/q4sS
+	/J8n1RtjUZZL+VhgUmMIIX3Irn5/dbk=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-259-3eCu3UQKMLiB0LA7AF-bBg-1; Tue, 17 Oct 2023 10:39:09 -0400
-X-MC-Unique: 3eCu3UQKMLiB0LA7AF-bBg-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2c50c873604so37584371fa.1
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 07:39:09 -0700 (PDT)
+ us-mta-589-WsMiCLqNOaqs82RpYy9XQw-1; Tue, 17 Oct 2023 10:49:41 -0400
+X-MC-Unique: WsMiCLqNOaqs82RpYy9XQw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2c520e0a9a7so22500671fa.3
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 07:49:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697553548; x=1698158348;
+        d=1e100.net; s=20230601; t=1697554180; x=1698158980;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bSH+w3rTE+Pz2hrnXmquLWhpkJX2eVVDKFyhnXENtfM=;
-        b=rB6cJJ8GBjSz6Lee5BsW2GyhOGSyiTU5vDkaX0JEa8HVh384UIM501pwyoRpCoghyn
-         sJJmGpEFjL8AkXye9IY++PrRpk43morZy2M66gtf/Ooe+71b+8lv/YcBFoJDY+27EFaN
-         co5nzZtrISoLnv55jL0bLb0bUsiWPs0XdipJ20siBejYkPnRKH3AAtpMDwfNvF1Snjyb
-         HIw+spwek0CuU2IxRtD9QM3PIUIfid+IFUSemrD12Xsc0utMbLs/LRpDjr44vfe5Yc4r
-         NQmMjFlG+FykEpl5TYyxcyIdXUSBLqd2aXk/bjDV/824K9aM2PuPfzX0ENpczJa9f7kA
-         K5SQ==
-X-Gm-Message-State: AOJu0Ywl1ff/p0SorSQDOnO8FVUY3Mfn9D8FUJG/ubbdA1ydFAued6wU
-	clQfTi0u/IBhO67AoOhKrcJFCQSXduR6H7Uvy9xlTWsW2gYmCbZA0nqO3uaVwrTUCVWt5O27JUq
-	Gt9HzaFtsbmI/8kZpdqVm
-X-Received: by 2002:a2e:5411:0:b0:2c5:d3c:8f4d with SMTP id i17-20020a2e5411000000b002c50d3c8f4dmr1717278ljb.13.1697553548157;
-        Tue, 17 Oct 2023 07:39:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeceyQoPLiG2ln4ABhwORc+ArpMpSl7lmpoS7xFx4O4tt+9zctlS/qeDjtsG4WynsxDTQVVw==
-X-Received: by 2002:a2e:5411:0:b0:2c5:d3c:8f4d with SMTP id i17-20020a2e5411000000b002c50d3c8f4dmr1717260ljb.13.1697553547724;
-        Tue, 17 Oct 2023 07:39:07 -0700 (PDT)
+        bh=cgiUWmuX7npTry/TKlHFAgqdXewDmk3A8hEeG0P7Xxw=;
+        b=bBkqH8QmgTBq6gf0DRVrW2uAVAjjHAKe+TaX3BiqvJjNmQcc2nb44yABZRDIizWFsa
+         XWMik1XxHgig7UIZ7yC/rx+mVcwfcEuzUsE26vZSC9y/aMGu7iMZn428+Com4WDXbhTs
+         TsIeSQxBYbT3KGMIOZh9UD40JQIYDDKejQ2uN1B5U5TsQ4RQiT2wHR8GkBx+2LQNQ5yM
+         KIlB8H4a8uRqQq2h45+YPdYgyZR+pGT927BWEKwvXJ4/r3dwtyaPzOwCawjk+MLXyahd
+         OarER8i5/hi8pPBeX6RaR7UT61CLy+R/UK2j/CRdIIjht2NW605aWgi1PmsTr4vi7kSn
+         QEmg==
+X-Gm-Message-State: AOJu0YwTc1ZsUY6a7GSxUc+698/hAsQgAye60E4nUZz8FFsU88CMIisQ
+	m6QyvYW6vs2EygOuxQeuHIvn6HvAwv+BHczDPworrf5HqvQqu96EPM3DMt9mKo6Fh/ZF89iTFN4
+	R/BvxMy1bfbq2MAIIPLzh
+X-Received: by 2002:a2e:bc1f:0:b0:2c5:2eaa:5397 with SMTP id b31-20020a2ebc1f000000b002c52eaa5397mr2165311ljf.11.1697554180069;
+        Tue, 17 Oct 2023 07:49:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMQwcxOXYj6opxfFZwl3ey/MUOWi8jwJ5LHdy6KJAfhwqqv/b6uaCUPrLxmB3ZbVJyaPzQQw==
+X-Received: by 2002:a2e:bc1f:0:b0:2c5:2eaa:5397 with SMTP id b31-20020a2ebc1f000000b002c52eaa5397mr2165288ljf.11.1697554179598;
+        Tue, 17 Oct 2023 07:49:39 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c743:5100:93b1:f654:ad11:cd81? (p200300cbc743510093b1f654ad11cd81.dip0.t-ipconnect.de. [2003:cb:c743:5100:93b1:f654:ad11:cd81])
-        by smtp.gmail.com with ESMTPSA id l4-20020a05600c4f0400b00405959469afsm2125712wmq.3.2023.10.17.07.39.06
+        by smtp.gmail.com with ESMTPSA id fm19-20020a05600c0c1300b00405959bbf4fsm2087849wmb.19.2023.10.17.07.49.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 07:39:07 -0700 (PDT)
-Message-ID: <3f46eefa-6415-4d7a-af91-eef898d4f77a@redhat.com>
-Date: Tue, 17 Oct 2023 16:39:05 +0200
+        Tue, 17 Oct 2023 07:49:39 -0700 (PDT)
+Message-ID: <f2720382-5374-4b8f-ad3c-f3f13e4a3767@redhat.com>
+Date: Tue, 17 Oct 2023 16:49:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,8 +59,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/3] mm/memory_hotplug: replace an open-coded kmemdup()
- in add_memory_resource()
+Subject: Re: [PATCH v6 2/3] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
 To: Vishal Verma <vishal.l.verma@intel.com>,
  Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
  <osalvador@suse.de>, Dan Williams <dan.j.williams@intel.com>,
@@ -73,7 +73,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
  Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
  Jeff Moyer <jmoyer@redhat.com>
 References: <20231016-vv-kmem_memmap-v6-0-078f0d3c0371@intel.com>
- <20231016-vv-kmem_memmap-v6-1-078f0d3c0371@intel.com>
+ <20231016-vv-kmem_memmap-v6-2-078f0d3c0371@intel.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -120,7 +120,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20231016-vv-kmem_memmap-v6-1-078f0d3c0371@intel.com>
+In-Reply-To: <20231016-vv-kmem_memmap-v6-2-078f0d3c0371@intel.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -134,43 +134,292 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 On 17.10.23 07:44, Vishal Verma wrote:
-> A review of the memmap_on_memory modifications to add_memory_resource()
-> revealed an instance of an open-coded kmemdup(). Replace it with
-> kmemdup().
+> The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is restricted to
+> 'memblock_size' chunks of memory being added. Adding a larger span of
+> memory precludes memmap_on_memory semantics.
+> 
+> For users of hotplug such as kmem, large amounts of memory might get
+> added from the CXL subsystem. In some cases, this amount may exceed the
+> available 'main memory' to store the memmap for the memory being added.
+> In this case, it is useful to have a way to place the memmap on the
+> memory being added, even if it means splitting the addition into
+> memblock-sized chunks.
+> 
+> Change add_memory_resource() to loop over memblock-sized chunks of
+> memory if caller requested memmap_on_memory, and if other conditions for
+> it are met. Teach try_remove_memory() to also expect that a memory
+> range being removed might have been split up into memblock sized chunks,
+> and to loop through those as needed.
+> 
+> This does preclude being able to use PUD mappings in the direct map; a
+> proposal to how this could be optimized in the future is laid out
+> here[1].
+> 
+> [1]: https://lore.kernel.org/linux-mm/b6753402-2de9-25b2-36e9-eacd49752b19@redhat.com/
 > 
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: David Hildenbrand <david@redhat.com>
 > Cc: Michal Hocko <mhocko@suse.com>
 > Cc: Oscar Salvador <osalvador@suse.de>
 > Cc: Dan Williams <dan.j.williams@intel.com>
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 > ---
->   mm/memory_hotplug.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   mm/memory_hotplug.c | 214 ++++++++++++++++++++++++++++++++++++----------------
+>   1 file changed, 148 insertions(+), 66 deletions(-)
 > 
 > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index f8d3e7427e32..6be7de9efa55 100644
+> index 6be7de9efa55..83e5ec377aad 100644
 > --- a/mm/memory_hotplug.c
 > +++ b/mm/memory_hotplug.c
-> @@ -1439,11 +1439,11 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->   	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
->   		if (mhp_supports_memmap_on_memory(size)) {
->   			mhp_altmap.free = memory_block_memmap_on_memory_pages();
-> -			params.altmap = kmalloc(sizeof(struct vmem_altmap), GFP_KERNEL);
-> +			params.altmap = kmemdup(&mhp_altmap,
-> +						sizeof(struct vmem_altmap),
-> +						GFP_KERNEL);
->   			if (!params.altmap)
->   				goto error;
-> -
-> -			memcpy(params.altmap, &mhp_altmap, sizeof(mhp_altmap));
->   		}
->   		/* fallback to not using altmap  */
->   	}
-> 
+> @@ -1380,6 +1380,43 @@ static bool mhp_supports_memmap_on_memory(unsigned long size)
+>   	return arch_supports_memmap_on_memory(vmemmap_size);
+>   }
+>   
+> +static int add_memory_create_devices(int nid, struct memory_group *group,
+> +				     u64 start, u64 size, mhp_t mhp_flags)
+> +{
+> +	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	struct vmem_altmap mhp_altmap = {
+> +		.base_pfn =  PHYS_PFN(start),
+> +		.end_pfn  =  PHYS_PFN(start + size - 1),
+> +	};
+> +	int ret;
+> +
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY)) {
+> +		mhp_altmap.free = memory_block_memmap_on_memory_pages();
+> +		params.altmap = kmemdup(&mhp_altmap, sizeof(struct vmem_altmap),
+> +					GFP_KERNEL);
+> +		if (!params.altmap)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	/* call arch's memory hotadd */
+> +	ret = arch_add_memory(nid, start, size, &params);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	/* create memory block devices after memory was added */
+> +	ret = create_memory_block_devices(start, size, params.altmap, group);
+> +	if (ret)
+> +		goto err_bdev;
+> +
+> +	return 0;
+> +
+> +err_bdev:
+> +	arch_remove_memory(start, size, NULL);
+> +error:
+> +	kfree(params.altmap);
+> +	return ret;
+> +}
+> +
+>   /*
+>    * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+>    * and online/offline operations (triggered e.g. by sysfs).
+> @@ -1388,14 +1425,10 @@ static bool mhp_supports_memmap_on_memory(unsigned long size)
+>    */
+>   int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>   {
+> -	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	unsigned long memblock_size = memory_block_size_bytes();
+>   	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+> -	struct vmem_altmap mhp_altmap = {
+> -		.base_pfn =  PHYS_PFN(res->start),
+> -		.end_pfn  =  PHYS_PFN(res->end),
+> -	};
+>   	struct memory_group *group = NULL;
+> -	u64 start, size;
+> +	u64 start, size, cur_start;
+>   	bool new_node = false;
+>   	int ret;
+>   
+> @@ -1436,28 +1469,21 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>   	/*
+>   	 * Self hosted memmap array
+>   	 */
+> -	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
+> -		if (mhp_supports_memmap_on_memory(size)) {
+> -			mhp_altmap.free = memory_block_memmap_on_memory_pages();
+> -			params.altmap = kmemdup(&mhp_altmap,
+> -						sizeof(struct vmem_altmap),
+> -						GFP_KERNEL);
+> -			if (!params.altmap)
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
+> +	    mhp_supports_memmap_on_memory(memblock_size)) {
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size) {
+> +			ret = add_memory_create_devices(nid, group, cur_start,
+> +							memblock_size,
+> +							mhp_flags);
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Just like on the removal part, that function doesn't make any sense to 
+be called with altmap and a bigger range.
+
+Maybe better also move that loop into a function called 
+"create_altmap_and_memory_blocks()" , to be the opposite of 
+"remove_memory_blocks_and_altmaps()".
+
+Then you can keep the existing !altmap code here in the "else" case. 
+Again, similar to the removal code below.
+
+> +			if (ret)
+>   				goto error;
+>   		}
+> -		/* fallback to not using altmap  */
+> -	}
+> -
+> -	/* call arch's memory hotadd */
+> -	ret = arch_add_memory(nid, start, size, &params);
+> -	if (ret < 0)
+> -		goto error_free;
+> -
+> -	/* create memory block devices after memory was added */
+> -	ret = create_memory_block_devices(start, size, params.altmap, group);
+> -	if (ret) {
+> -		arch_remove_memory(start, size, NULL);
+> -		goto error_free;
+> +	} else {
+> +		ret = add_memory_create_devices(nid, group, start, size,
+> +						mhp_flags);
+> +		if (ret)
+> +			goto error;
+>   	}
+>   
+>   	if (new_node) {
+> @@ -1494,8 +1520,6 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>   		walk_memory_blocks(start, size, NULL, online_memory_block);
+>   
+>   	return ret;
+> -error_free:
+> -	kfree(params.altmap);
+>   error:
+>   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+>   		memblock_remove(start, size);
+> @@ -2076,6 +2100,23 @@ static int test_has_altmap_cb(struct memory_block *mem, void *arg)
+>   	return 0;
+>   }
+
+
+[...]
+
+> +
+> +static int memblocks_have_altmaps(u64 start, u64 size)
+> +{
+> +	struct memory_range_altmap_info altmap_info = {
+> +		.num_memblocks = 0,
+> +		.num_altmaps = 0
+> +	};
+
+You can get the number of memblocks simply by "size / 
+memory_block_size_bytes()". So you can avoid the "struct" and just pass 
+an int.
+
+> +
+> +	if (!mhp_memmap_on_memory())
+> +		return 0;
+> +
+> +	walk_memory_blocks(start, size, &altmap_info,
+> +			   count_memory_range_altmaps_cb);
+> +
+> +	if (!altmap_info.num_altmaps)
+> +		return 0;
+> +
+> +	if (altmap_info.num_memblocks != altmap_info.num_altmaps) {
+> +		WARN_ONCE(1, "Not all memblocks in range have altmaps");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +static int __ref try_remove_memory(u64 start, u64 size)
+> +{
+> +	int rc, nid = NUMA_NO_NODE;
+>   
+>   	BUG_ON(check_hotplug_memory_range(start, size));
+>   
+> @@ -2167,45 +2272,21 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>   	if (rc)
+>   		return rc;
+>   
+> -	/*
+> -	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
+> -	 * the same granularity it was added - a single memory block.
+> -	 */
+> -	if (mhp_memmap_on_memory()) {
+> -		rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
+> -		if (rc) {
+> -			if (size != memory_block_size_bytes()) {
+> -				pr_warn("Refuse to remove %#llx - %#llx,"
+> -					"wrong granularity\n",
+> -					start, start + size);
+> -				return -EINVAL;
+> -			}
+> -			altmap = mem->altmap;
+> -			/*
+> -			 * Mark altmap NULL so that we can add a debug
+> -			 * check on memblock free.
+> -			 */
+> -			mem->altmap = NULL;
+> -		}
+> -	}
+> -
+>   	/* remove memmap entry */
+>   	firmware_map_remove(start, start + size, "System RAM");
+>   
+> -	/*
+> -	 * Memory block device removal under the device_hotplug_lock is
+> -	 * a barrier against racing online attempts.
+> -	 */
+
+Maybe move that comment into the else branch and not into 
+remove_memory_blocks_and_altmaps
+
+> -	remove_memory_block_devices(start, size);
+> -
+>   	mem_hotplug_begin();
+>   
+> -	arch_remove_memory(start, size, altmap);
+> -
+> -	/* Verify that all vmemmap pages have actually been freed. */
+> -	if (altmap) {
+> -		WARN(altmap->alloc, "Altmap not fully unmapped");
+> -		kfree(altmap);
+> +	rc = memblocks_have_altmaps(start, size);
+
+Don't use the term memblocks here, to not confuse it with the memblock 
+allocator.
+
+"memory blocks" or "memory block devices". it's complicated.
+
+> +	if (rc < 0) {
+> +		goto err;
+> +	} else if (rc == 0) {
+> +		/* no altmaps, do the removal directly */
+> +		remove_memory_block_devices(start, size);
+> +		arch_remove_memory(start, size, NULL);
+> +	} else {
+> +		/* all memblocks in the range have altmaps */
+> +		remove_memory_blocks_and_altmaps(start, size);
+>   	}
+>   
+>   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> @@ -2218,8 +2299,9 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>   	if (nid != NUMA_NO_NODE)
+>   		try_offline_node(nid);
+>   
+> +err:
+>   	mem_hotplug_done();
+> -	return 0;
+> +	return (rc < 0 ? rc : 0);
+>   }
+>   
+>   /**
+> 
 
 -- 
 Cheers,
