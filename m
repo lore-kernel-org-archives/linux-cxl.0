@@ -1,231 +1,179 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FC844469
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 17:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269062E3F8
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 20:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e8aOArb/"
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE59790
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 10:40:43 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231017174042usoutp02656e6097ef310d23964bdc5209af7825~O9d3iAoP_1141511415usoutp02U;
-	Tue, 17 Oct 2023 17:40:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231017174042usoutp02656e6097ef310d23964bdc5209af7825~O9d3iAoP_1141511415usoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1697564442;
-	bh=9CN4f9I//Lj3gof5YQulJXv+fdKBuubezDamrWUcHA4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=e8aOArb/xbiCvc7qIHNYVpYM32ioq4K6p4a+grPAL4/5z5CuwMJems/0OR6EWuQ8o
-	 tXj0tabcxb7r2eZb+R8tc8XnsbF/fUJFFYRplbpfrpRFaWT/jDR2PgV5K2RsVoAH6A
-	 iMTXNLWa0FEcNsVDW+TZruNCcaip+efuEhc2ddKc=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-	[203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231017174042uscas1p2dcc21ae413fe296a93bfdb9607670cc4~O9d3SVpw_1585715857uscas1p2u;
-	Tue, 17 Oct 2023 17:40:42 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges2new.samsung.com (USCPEMTA) with SMTP id 23.22.40279.A17CE256; Tue,
-	17 Oct 2023 13:40:42 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231017174042uscas1p11a95956675fc87c3c46e41633db4402d~O9d29OWvj3133531335uscas1p1J;
-	Tue, 17 Oct 2023 17:40:42 +0000 (GMT)
-X-AuditID: cbfec36f-241ff70000009d57-8a-652ec71afc64
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 5E.78.31200.917CE256; Tue,
-	17 Oct 2023 13:40:42 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Tue, 17 Oct 2023 10:40:41 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-	17 Oct 2023 10:40:41 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: "alison.schofield@intel.com" <alison.schofield@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, Dmytro Adamenko <dmytro.adamenko@intel.com>
-Subject: Re: [PATCH v2 3/3] cxl/region: Use calc_interleave_pos() with
- autodiscovered regions
-Thread-Topic: [PATCH v2 3/3] cxl/region: Use calc_interleave_pos() with
-	autodiscovered regions
-Thread-Index: AQHZ//ZkEpKIPc0XU06QGvCqGighSbBOt3kA
-Date: Tue, 17 Oct 2023 17:40:41 +0000
-Message-ID: <F9C39939-4D90-4C04-9F14-19EF309C963A@ssi.samsung.com>
-In-Reply-To: <533d9fe49c10d7cb878ea9157232aaa5bb657ae0.1697433770.git.alison.schofield@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5D3F7A734E9C5346825BAFD7291F0F46@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPR7zHSc"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84219F
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Oct 2023 13:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697575398; x=1729111398;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=KWZSUf3Sx4lu1sknu+OXDvkvk+paiZKV6KKDC8Z3dok=;
+  b=OPR7zHSc2NOsd+0I1YIWb/lMRIOfxTXb896aL/0gThSWmr1ZyyzM+uYZ
+   wsp9bgQwZWgxPIEKfAy0/u0A8JAlW0iRYkrBlkL6BtzEyWrMHFbS2d95G
+   My3eEZ/MCpVRapyfaELmMVKJ1YSrwll3vUp3M0v5c2h8DABt9SlUnXCVO
+   aOSsSBC9bL81bnWiEVIFKR2Ds4nM7Ah/fDK4Ie9ESwpq5YjgWvuvJrlEo
+   fMxQaoAOjiPv9OlQMXDA9CEVL+SbLQcyCvSd5ng9PwuttG06ToH/Kg9e8
+   9vhE/tD34nT/bKI52Pa6BBLN/N14ppjCCxqHl474JskQoHrOtybBKIgYp
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="4475220"
+X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
+   d="scan'208";a="4475220"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 13:43:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
+   d="scan'208";a="4076513"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.28.249])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 13:42:11 -0700
+Date: Tue, 17 Oct 2023 13:43:15 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Jim Harris <jim.harris@samsung.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	Dmytro Adamenko <dmytro.adamenko@intel.com>
+Subject: Re: [PATCH v2 1/3] cxl/region: Prepare the decoder match range
+ helper for reuse
+Message-ID: <ZS7x48xnvGzkyBF1@aschofie-mobl2>
+References: <cover.1697433770.git.alison.schofield@intel.com>
+ <CGME20231016060244uscas1p15e15e2d44388f12511a67c003dc2bff5@uscas1p1.samsung.com>
+ <8dd4210f464e971a7989c7c923747cf2e10409ef.1697433770.git.alison.schofield@intel.com>
+ <CDA18391-931B-4564-8B97-9DE92790C9CA@ssi.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djX87pSx/VSDR63K1rcfXyBzWL61AuM
-	FiduNrJZrL65htHizyFfi/1Pn7NYrFp4jc3i/KxTLBa3JhxjcuD0aDnyltVj8Z6XTB5TZ9d7
-	fN4kF8ASxWWTkpqTWZZapG+XwJWx7fhU1oINrhU/r35naWA849zFyMkhIWAi8f7gR8YuRi4O
-	IYGVjBJ7v/1ggnBamSRWtJxnhqk6/m0/VNUaRon9j/6zQzifGCX6zx5mhXCWMUrcXLOOEaSF
-	TUBT4teVNUwgtoiArcTl/dPB5jIL3GeS6JqxHCwhLBAvMefqPDaIogSJx11zWSBsI4nZmxez
-	g9gsAqoSP7fsAYvzCjhJrJ7cBraAUyBRYv+b92A2o4CYxPdTEMuYBcQlbj2ZzwRxt6DEotl7
-	oH4Qk/i36yEbhK0ocf/7S6D5HED1mhLrd+lDtNpJzHv5lBXCVpSY0v2QHWKtoMTJmU9YIFol
-	JQ6uuMEC8ouEwB0OiT1TeqDmu0jcmfmIFcKWlvh7dxnUDdkSK9d3MIHskhAokGg4EgQRtpZY
-	+Gc90wRGlVlIrp6FcNEsJBfNQnLRLCQXLWBkXcUoXlpcnJueWmyUl1quV5yYW1yal66XnJ+7
-	iRGYpE7/O5y/g/H6rY96hxiZOBgPMUpwMCuJ8KYH66QK8aYkVlalFuXHF5XmpBYfYpTmYFES
-	5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYLJaw3loiqfDkdSg1AOuh2XEbSstttpkmK+wb1YU
-	udTzLNzFaqV50tJD0nON7O7//l1ddvrv8oAiv69myle/q3PM76tu7vesZDRPVLm5iTNjefdK
-	js2i/7ZOCMt8kP1Mc/3/+NSDOe3bd7/N+OU0d42z7cOlAbuPr7lU5/VZSqJxk21ghkXNbqan
-	nf3q5/Ykalc2zfYzXCDjttj1RMvuMN9vu6ZdcTDg67r0UtmuiDPMsDfuY7CRctfLvfZ5DEvt
-	pkq5XD/LlMeRxmk/UXdaxIRrm/5L3tvyZb3A6hmb5wUfzp02zSLn3FTm5sADRT518+vTndTs
-	7xbUc90JcLvHJVdX2fuub4frX7f/7+83KLEUZyQaajEXFScCAMToVZLBAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWS2cDsrCt1XC/VoHkqp8XdxxfYLKZPvcBo
-	ceJmI5vF6ptrGC3+HPK12P/0OYvFqoXX2CzOzzrFYnFrwjEmB06PliNvWT0W73nJ5DF1dr3H
-	501yASxRXDYpqTmZZalF+nYJXBnbjk9lLdjgWvHz6neWBsYzzl2MnBwSAiYSx7/tZ+xi5OIQ
-	EljFKDFtTQMrhPOJUeL52z4mCGcZo8TT9//YQFrYBDQlfl1ZwwRiiwjYSlzePx2siFngPpNE
-	14zlYAlhgXiJOVfnsUEUJUi86wMZC2IbSczevJgdxGYRUJX4uWUPC4jNK+AksXpyG9QdLxgl
-	Vu3aCdbAKZAosf/Ne0YQm1FATOL7KYjNzALiEreezGeCeEJAYsme88wQtqjEy8f/WCFsRYn7
-	318CLeMAqteUWL9LH6LVTmLey6esELaixJTuh+wQNwhKnJz5hAWiVVLi4IobLBMYJWYh2TYL
-	YdIsJJNmIZk0C8mkBYysqxjFS4uLc9Mrio3yUsv1ihNzi0vz0vWS83M3MQJj/PS/w9E7GG/f
-	+qh3iJGJg/EQowQHs5IIb3qwTqoQb0piZVVqUX58UWlOavEhRmkOFiVx3rsPNFKFBNITS1Kz
-	U1MLUotgskwcnFINTNUXomKLG89pftlXyq9/zTPeyC5RKa5LVPt1ZqSa87oL2R/zE6acOMq5
-	JEP6q3r1ntCXc8I+JibVrIsWkHrS1a8371ppX0Pc0662nh8lS4zOOgueMQs/aZbUtVOb60DV
-	85ktFe2lsdYbsv0LDmzdu3yx4qZ4v1QjxqKXLm0z5UK/x2xanBbgd2DupNVrq2Z8tm116t5T
-	mrhQushg3dkNyxT9JkuyfBG5ttJnjtLZ6qLD7+P/xd2YsDI9LdW3haOY63LAIwbOr9Oij3QX
-	PHf70rLmhpHciurt/kuW+W+J8bC1c9C10F7/rz4p/4nBrweakyY1KuY58qxOjPz+xizx7ew/
-	HOEnGOTOm/FaM0xTYinOSDTUYi4qTgQACp19CmADAAA=
-X-CMS-MailID: 20231017174042uscas1p11a95956675fc87c3c46e41633db4402d
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231016060248uscas1p2b90776b9616d1e486573b6a4d5432fbd
-References: <cover.1697433770.git.alison.schofield@intel.com>
-	<CGME20231016060248uscas1p2b90776b9616d1e486573b6a4d5432fbd@uscas1p2.samsung.com>
-	<533d9fe49c10d7cb878ea9157232aaa5bb657ae0.1697433770.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CDA18391-931B-4564-8B97-9DE92790C9CA@ssi.samsung.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-DQoNCj4gT24gT2N0IDE1LCAyMDIzLCBhdCAxMTowMuKAr1BNLCBhbGlzb24uc2Nob2ZpZWxkQGlu
-dGVsLmNvbSB3cm90ZToNCj4gDQo+IEZyb206IEFsaXNvbiBTY2hvZmllbGQgPGFsaXNvbi5zY2hv
-ZmllbGRAaW50ZWwuY29tPg0KPiANCj4gRm9yIGF1dG8tZGlzY292ZXJlZCByZWdpb25zLCB0aGUg
-ZHJpdmVyIG11c3QgYXNzaWduIGVhY2ggdGFyZ2V0IHRvDQo+IHRoZSBjb3JyZWN0IHBvc2l0aW9u
-IGluIHRoZSByZWdpb24gaW50ZXJsZWF2ZSBzZXQuDQo+IA0KPiBjeGxfcmVnaW9uX3NvcnRfdGFy
-Z2V0cygpIHVzZXMgdGhlIGtlcm5lbCBzb3J0KCkgZnVuY3Rpb24gdG8gcHV0IHRoZQ0KPiB0YXJn
-ZXRzIGluIHJlbGF0aXZlIG9yZGVyLiBPbmNlIHRoZSByZWxhdGl2ZSBvcmRlcmluZyBpcyBjb21w
-bGV0ZSwNCj4gcG9zaXRpb25zIGFyZSBhc3NpZ25lZCBiYXNlZCBvbiBlYWNoIHRhcmdldHMgaW5k
-ZXggaW4gdGhhdCBzb3J0ZWQgbGlzdC4NCj4gDQo+IFRoZSBzb3J0KCkgY29tcGFyZSBmdW5jdGlv
-biBkb2VzIG5vdCBjb25zaWRlciB0aGUgY2hpbGQgb2Zmc2V0IGludG8gYQ0KPiBwYXJlbnQgcG9y
-dC4gVGhlIHNvcnQgcHV0IGFsbCB0YXJnZXRzIG9mIG9uZSBwb3J0IGFoZWFkIG9mIGFub3RoZXIN
-Cj4gcG9ydCB3aGVuIGFuIGludGVybGVhdmUgd2FzIGV4cGVjdGVkLCBjYXVzaW5nIHRoZSByZWdp
-b24gYXNzZW1ibHkgdG8NCj4gZmFpbC4NCj4gDQo+IFJlcGxhY2UgdGhlIHJlbGF0aXZlIHNvcnQs
-IHdpdGggY2FsY19pbnRlcmxlYXZlX3BvcygpIG9uIGVhY2ggdGFyZ2V0DQo+IGluIHRoZSByZWdp
-b24gdGFyZ2V0IGxpc3QuIFRoYXQgd2lsbCBmaW5kIHRoZSBleGFjdCBwb3NpdGlvbiBmb3IgZWFj
-aA0KPiB0YXJnZXQgYmFzZWQgb24gYSB3YWxrIHVwIHRoZSBhbmNlc3RyYWwgdHJlZSBmcm9tIGVu
-ZHBvaW50IHRvIHJvb3QNCj4gZGVjb2Rlci4NCj4gDQo+IGNhbGNfaW50ZXJsZWF2ZV9wb3MoKSB3
-YXMgaW50cm9kdWNlZCBpbiBhIHByaW9yIHBhdGNoLCBzbyB0aGUgd29yaw0KPiBoZXJlIGlzIHRv
-IHVzZSBpbiBjeGxfcmVnaW9uX3NvcnRfdGFyZ2V0cygpLg0KPiANCj4gQ2xlYW51cCB0aGUgb2Jz
-b2xldGUgaGVscGVyIGZ1bmN0aW9ucyBmcm9tIHRoZSBwcmlvciBzb3J0KCkuDQo+IA0KPiBGaXhl
-czogYTMyMzIwYjcxZjA4ICgiY3hsL3JlZ2lvbjogQWRkIHJlZ2lvbiBhdXRvZGlzY292ZXJ5IikN
-Cj4gUmVwb3J0ZWQtYnk6IERteXRybyBBZGFtZW5rbyA8ZG15dHJvLmFkYW1lbmtvQGludGVsLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFNjaG9maWVsZCA8YWxpc29uLnNjaG9maWVsZEBp
-bnRlbC5jb20+DQo+IFJldmlld2VkLWJ5OiBEYXZlIEppYW5nIDxkYXZlLmppYW5nQGludGVsLmNv
-bT4NCj4gLS0tDQo+IGRyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMgfCAxMjcgKysrKystLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlv
-bnMoKyksIDExMiBkZWxldGlvbnMoLSkNCg0KTmljZS4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMgYi9kcml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jDQo+IGlu
-ZGV4IGI0NTFkMjE1YzNjNS4uZmMyNjFjODJlYTRlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2N4
-bC9jb3JlL3JlZ2lvbi5jDQo+ICsrKyBiL2RyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMNCj4gQEAg
-LTE0ODAsNiArMTQ4MCwxNCBAQCBzdGF0aWMgaW50IGN4bF9yZWdpb25fYXR0YWNoX2F1dG8oc3Ry
-dWN0IGN4bF9yZWdpb24gKmN4bHIsDQo+IHJldHVybiAwOw0KPiB9DQo+IA0KPiArc3RhdGljIGlu
-dCBjbXBfaW50ZXJsZWF2ZV9wb3MoY29uc3Qgdm9pZCAqYSwgY29uc3Qgdm9pZCAqYikNCj4gK3sN
-Cj4gKyBzdHJ1Y3QgY3hsX2VuZHBvaW50X2RlY29kZXIgKmN4bGVkX2EgPSAqKHR5cGVvZihjeGxl
-ZF9hKSAqKWE7DQo+ICsgc3RydWN0IGN4bF9lbmRwb2ludF9kZWNvZGVyICpjeGxlZF9iID0gKih0
-eXBlb2YoY3hsZWRfYikgKiliOw0KPiArDQo+ICsgcmV0dXJuIGN4bGVkX2EtPnBvcyAtIGN4bGVk
-X2ItPnBvczsNCj4gK30NCj4gKw0KPiBzdGF0aWMgc3RydWN0IGN4bF9wb3J0ICpuZXh0X3BvcnQo
-c3RydWN0IGN4bF9wb3J0ICpwb3J0KQ0KPiB7DQo+IGlmICghcG9ydC0+cGFyZW50X2Rwb3J0KQ0K
-PiBAQCAtMTU4OSwxMzEgKzE1OTcsMjYgQEAgc3RhdGljIGludCBjYWxjX2ludGVybGVhdmVfcG9z
-KHN0cnVjdCBjeGxfZW5kcG9pbnRfZGVjb2RlciAqY3hsZWQsDQo+IHJldHVybiBwb3M7DQo+IH0N
-Cj4gDQo+IC1zdGF0aWMgdm9pZCBmaW5kX3Bvc2l0aW9ucyhjb25zdCBzdHJ1Y3QgY3hsX3N3aXRj
-aF9kZWNvZGVyICpjeGxzZCwNCj4gLSAgIGNvbnN0IHN0cnVjdCBjeGxfcG9ydCAqaXRlcl9hLA0K
-PiAtICAgY29uc3Qgc3RydWN0IGN4bF9wb3J0ICppdGVyX2IsIGludCAqYV9wb3MsDQo+IC0gICBp
-bnQgKmJfcG9zKQ0KPiAtew0KPiAtIGludCBpOw0KPiAtDQo+IC0gZm9yIChpID0gMCwgKmFfcG9z
-ID0gLTEsICpiX3BvcyA9IC0xOyBpIDwgY3hsc2QtPm5yX3RhcmdldHM7IGkrKykgew0KPiAtIGlm
-IChjeGxzZC0+dGFyZ2V0W2ldID09IGl0ZXJfYS0+cGFyZW50X2Rwb3J0KQ0KPiAtICphX3BvcyA9
-IGk7DQo+IC0gZWxzZSBpZiAoY3hsc2QtPnRhcmdldFtpXSA9PSBpdGVyX2ItPnBhcmVudF9kcG9y
-dCkNCj4gLSAqYl9wb3MgPSBpOw0KPiAtIGlmICgqYV9wb3MgPj0gMCAmJiAqYl9wb3MgPj0gMCkN
-Cj4gLSBicmVhazsNCj4gLSB9DQo+IC19DQo+IC0NCj4gLXN0YXRpYyBpbnQgY21wX2RlY29kZV9w
-b3MoY29uc3Qgdm9pZCAqYSwgY29uc3Qgdm9pZCAqYikNCj4gLXsNCj4gLSBzdHJ1Y3QgY3hsX2Vu
-ZHBvaW50X2RlY29kZXIgKmN4bGVkX2EgPSAqKHR5cGVvZihjeGxlZF9hKSAqKWE7DQo+IC0gc3Ry
-dWN0IGN4bF9lbmRwb2ludF9kZWNvZGVyICpjeGxlZF9iID0gKih0eXBlb2YoY3hsZWRfYikgKili
-Ow0KPiAtIHN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZF9hID0gY3hsZWRfdG9fbWVtZGV2KGN4bGVk
-X2EpOw0KPiAtIHN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZF9iID0gY3hsZWRfdG9fbWVtZGV2KGN4
-bGVkX2IpOw0KPiAtIHN0cnVjdCBjeGxfcG9ydCAqcG9ydF9hID0gY3hsZWRfdG9fcG9ydChjeGxl
-ZF9hKTsNCj4gLSBzdHJ1Y3QgY3hsX3BvcnQgKnBvcnRfYiA9IGN4bGVkX3RvX3BvcnQoY3hsZWRf
-Yik7DQo+IC0gc3RydWN0IGN4bF9wb3J0ICppdGVyX2EsICppdGVyX2IsICpwb3J0ID0gTlVMTDsN
-Cj4gLSBzdHJ1Y3QgY3hsX3N3aXRjaF9kZWNvZGVyICpjeGxzZDsNCj4gLSBzdHJ1Y3QgZGV2aWNl
-ICpkZXY7DQo+IC0gaW50IGFfcG9zLCBiX3BvczsNCj4gLSB1bnNpZ25lZCBpbnQgc2VxOw0KPiAt
-DQo+IC0gLyogRXhpdCBlYXJseSBpZiBhbnkgcHJpb3Igc29ydGluZyBmYWlsZWQgKi8NCj4gLSBp
-ZiAoY3hsZWRfYS0+cG9zIDwgMCB8fCBjeGxlZF9iLT5wb3MgPCAwKQ0KPiAtIHJldHVybiAwOw0K
-PiAtDQo+IC0gLyoNCj4gLSAqIFdhbGsgdXAgdGhlIGhpZXJhcmNoeSB0byBmaW5kIGEgc2hhcmVk
-IHBvcnQsIGZpbmQgdGhlIGRlY29kZXIgdGhhdA0KPiAtICogbWFwcyB0aGUgcmFuZ2UsIGNvbXBh
-cmUgdGhlIHJlbGF0aXZlIHBvc2l0aW9uIG9mIHRob3NlIGRwb3J0DQo+IC0gKiBtYXBwaW5ncy4N
-Cj4gLSAqLw0KPiAtIGZvciAoaXRlcl9hID0gcG9ydF9hOyBpdGVyX2E7IGl0ZXJfYSA9IG5leHRf
-cG9ydChpdGVyX2EpKSB7DQo+IC0gc3RydWN0IGN4bF9wb3J0ICpuZXh0X2EsICpuZXh0X2I7DQo+
-IC0NCj4gLSBuZXh0X2EgPSBuZXh0X3BvcnQoaXRlcl9hKTsNCj4gLSBpZiAoIW5leHRfYSkNCj4g
-LSBicmVhazsNCj4gLQ0KPiAtIGZvciAoaXRlcl9iID0gcG9ydF9iOyBpdGVyX2I7IGl0ZXJfYiA9
-IG5leHRfcG9ydChpdGVyX2IpKSB7DQo+IC0gbmV4dF9iID0gbmV4dF9wb3J0KGl0ZXJfYik7DQo+
-IC0gaWYgKG5leHRfYSAhPSBuZXh0X2IpDQo+IC0gY29udGludWU7DQo+IC0gcG9ydCA9IG5leHRf
-YTsNCj4gLSBicmVhazsNCj4gLSB9DQo+IC0NCj4gLSBpZiAocG9ydCkNCj4gLSBicmVhazsNCj4g
-LSB9DQo+IC0NCj4gLSBpZiAoIXBvcnQpIHsNCj4gLSBkZXZfZXJyKGN4bG1kX2EtPmRldi5wYXJl
-bnQsDQo+IC0gImZhaWxlZCB0byBmaW5kIHNoYXJlZCBwb3J0IHdpdGggJXNcbiIsDQo+IC0gZGV2
-X25hbWUoY3hsbWRfYi0+ZGV2LnBhcmVudCkpOw0KPiAtIGdvdG8gZXJyOw0KPiAtIH0NCj4gLQ0K
-PiAtIGRldiA9IGRldmljZV9maW5kX2NoaWxkKCZwb3J0LT5kZXYsICZjeGxlZF9hLT5jeGxkLmhw
-YV9yYW5nZSwNCj4gLSBtYXRjaF9zd2l0Y2hfZGVjb2Rlcl9ieV9yYW5nZSk7DQo+IC0gaWYgKCFk
-ZXYpIHsNCj4gLSBzdHJ1Y3QgcmFuZ2UgKnJhbmdlID0gJmN4bGVkX2EtPmN4bGQuaHBhX3Jhbmdl
-Ow0KPiAtDQo+IC0gZGV2X2Vycihwb3J0LT51cG9ydF9kZXYsDQo+IC0gImZhaWxlZCB0byBmaW5k
-IGRlY29kZXIgdGhhdCBtYXBzICUjbGx4LSUjbGx4XG4iLA0KPiAtIHJhbmdlLT5zdGFydCwgcmFu
-Z2UtPmVuZCk7DQo+IC0gZ290byBlcnI7DQo+IC0gfQ0KPiAtDQo+IC0gY3hsc2QgPSB0b19jeGxf
-c3dpdGNoX2RlY29kZXIoZGV2KTsNCj4gLSBkbyB7DQo+IC0gc2VxID0gcmVhZF9zZXFiZWdpbigm
-Y3hsc2QtPnRhcmdldF9sb2NrKTsNCj4gLSBmaW5kX3Bvc2l0aW9ucyhjeGxzZCwgaXRlcl9hLCBp
-dGVyX2IsICZhX3BvcywgJmJfcG9zKTsNCj4gLSB9IHdoaWxlIChyZWFkX3NlcXJldHJ5KCZjeGxz
-ZC0+dGFyZ2V0X2xvY2ssIHNlcSkpOw0KPiAtDQo+IC0gcHV0X2RldmljZShkZXYpOw0KPiAtDQo+
-IC0gaWYgKGFfcG9zIDwgMCB8fCBiX3BvcyA8IDApIHsNCj4gLSBkZXZfZXJyKHBvcnQtPnVwb3J0
-X2RldiwNCj4gLSAiZmFpbGVkIHRvIGZpbmQgc2hhcmVkIGRlY29kZXIgZm9yICVzIGFuZCAlc1xu
-IiwNCj4gLSBkZXZfbmFtZShjeGxtZF9hLT5kZXYucGFyZW50KSwNCj4gLSBkZXZfbmFtZShjeGxt
-ZF9iLT5kZXYucGFyZW50KSk7DQo+IC0gZ290byBlcnI7DQo+IC0gfQ0KPiAtDQo+IC0gZGV2X2Ri
-Zyhwb3J0LT51cG9ydF9kZXYsICIlcyBjb21lcyAlcyAlc1xuIiwNCj4gLSBkZXZfbmFtZShjeGxt
-ZF9hLT5kZXYucGFyZW50KSwNCj4gLSBhX3BvcyAtIGJfcG9zIDwgMCA/ICJiZWZvcmUiIDogImFm
-dGVyIiwNCj4gLSBkZXZfbmFtZShjeGxtZF9iLT5kZXYucGFyZW50KSk7DQo+IC0NCj4gLSByZXR1
-cm4gYV9wb3MgLSBiX3BvczsNCj4gLWVycjoNCj4gLSBjeGxlZF9hLT5wb3MgPSAtMTsNCj4gLSBy
-ZXR1cm4gMDsNCj4gLX0NCj4gLQ0KPiBzdGF0aWMgaW50IGN4bF9yZWdpb25fc29ydF90YXJnZXRz
-KHN0cnVjdCBjeGxfcmVnaW9uICpjeGxyKQ0KPiB7DQo+IHN0cnVjdCBjeGxfcmVnaW9uX3BhcmFt
-cyAqcCA9ICZjeGxyLT5wYXJhbXM7DQo+IGludCBpLCByYyA9IDA7DQo+IA0KPiAtIHNvcnQocC0+
-dGFyZ2V0cywgcC0+bnJfdGFyZ2V0cywgc2l6ZW9mKHAtPnRhcmdldHNbMF0pLCBjbXBfZGVjb2Rl
-X3BvcywNCj4gLSAgICAgTlVMTCk7DQo+IC0NCj4gZm9yIChpID0gMDsgaSA8IHAtPm5yX3Rhcmdl
-dHM7IGkrKykgew0KPiBzdHJ1Y3QgY3hsX2VuZHBvaW50X2RlY29kZXIgKmN4bGVkID0gcC0+dGFy
-Z2V0c1tpXTsNCj4gDQo+ICsgY3hsZWQtPnBvcyA9IGNhbGNfaW50ZXJsZWF2ZV9wb3MoY3hsZWQs
-IHAtPmludGVybGVhdmVfd2F5cyk7DQo+IC8qDQo+IC0gKiBSZWNvcmQgdGhhdCBzb3J0aW5nIGZh
-aWxlZCwgYnV0IHN0aWxsIGNvbnRpbnVlIHRvIHJlc3RvcmUNCj4gLSAqIGN4bGVkLT5wb3Mgd2l0
-aCBpdHMgLT50YXJnZXRzW10gcG9zaXRpb24gc28gdGhhdCBmb2xsb3ctb24NCj4gLSAqIGNvZGUg
-cGF0aHMgY2FuIHJlbGlhYmx5IGRvIHAtPnRhcmdldHNbY3hsZWQtPnBvc10gdG8NCj4gLSAqIHNl
-bGYtcmVmZXJlbmNlIHRoZWlyIGVudHJ5Lg0KPiArICogUmVjb3JkIHRoYXQgc29ydGluZyBmYWls
-ZWQsIGJ1dCBzdGlsbCBjb250aW51ZSB0byBjYWxjDQo+ICsgKiBjeGxlZC0+cG9zIHNvIHRoYXQg
-Zm9sbG93LW9uIGNvZGUgcGF0aHMgY2FuIHJlbGlhYmx5DQo+ICsgKiBkbyBwLT50YXJnZXRzW2N4
-bGVkLT5wb3NdIHRvIHNlbGYtcmVmZXJlbmNlIHRoZWlyIGVudHJ5Lg0KPiAqLw0KPiBpZiAoY3hs
-ZWQtPnBvcyA8IDApDQo+IHJjID0gLUVOWElPOw0KPiAtIGN4bGVkLT5wb3MgPSBpOw0KPiB9DQo+
-ICsgLyogS2VlcCB0aGUgY3hsciB0YXJnZXQgbGlzdCBpbiBpbnRlcmxlYXZlIHBvc2l0aW9uIG9y
-ZGVyICovDQo+ICsgc29ydChwLT50YXJnZXRzLCBwLT5ucl90YXJnZXRzLCBzaXplb2YocC0+dGFy
-Z2V0c1swXSksDQo+ICsgICAgIGNtcF9pbnRlcmxlYXZlX3BvcywgTlVMTCk7DQo+IA0KPiBkZXZf
-ZGJnKCZjeGxyLT5kZXYsICJyZWdpb24gc29ydCAlc1xuIiwgcmMgPyAiZmFpbGVkIiA6ICJzdWNj
-ZXNzZnVsIik7DQo+IHJldHVybiByYzsNCj4gLS0gDQo+IDIuMzcuMw0KPiANCj4gDQoNClJldmll
-d2VkLWJ5OiBKaW0gSGFycmlzIDxqaW0uaGFycmlzQHNhbXN1bmcuY29tPg0KDQo=
+On Tue, Oct 17, 2023 at 04:21:06PM +0000, Jim Harris wrote:
+> 
+> 
+> > On Oct 15, 2023, at 11:02 PM, alison.schofield@intel.com wrote:
+> > 
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > match_decoder_by_range() and decoder_match_range() both determine
+> > if an HPA range matches a decoder. The first does it for root
+> > decoders and the second one operates on switch decoders.
+> > 
+> > Tidy these up with clear naming and make the switch helper more
+> > like the root decoder helper in style and functionality. Make it
+> > take the actual range, rather than an endpoint decoder from which
+> > it extracts the range.
+> > 
+> > Aside from aesthetics and maintainability, this is in preparation
+> > for reuse.
+> > 
+> > Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
+> > Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> > drivers/cxl/core/region.c | 16 ++++++++++------
+> > 1 file changed, 10 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 6d63b8798c29..64206fc4d99b 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1487,16 +1487,19 @@ static struct cxl_port *next_port(struct cxl_port *port)
+> > return port->parent_dport->port;
+> > }
+> > 
+> > -static int decoder_match_range(struct device *dev, void *data)
+> > +static int match_switch_decoder_by_range(struct device *dev, void *data)
+> > {
+> > - struct cxl_endpoint_decoder *cxled = data;
+> > + struct range *r1, *r2 = data;
+> > struct cxl_switch_decoder *cxlsd;
+> > 
+> > if (!is_switch_decoder(dev))
+> > return 0;
+> > 
+> > cxlsd = to_cxl_switch_decoder(dev);
+> > - return range_contains(&cxlsd->cxld.hpa_range, &cxled->cxld.hpa_range);
+> > + r1 = &cxlsd->cxld.hpa_range;
+> > + return range_contains(r1, r2);
+> > +}
+> 
+> Hi Alison,
+> 
+> This stray closing brace needs to be removed from this patch.
+> 
+> Rest of the patch looks good, I agree the naming is much better with these
+> changes.
+> 
+> Reviewed-by: Jim Harris <jim.harris@samsung.com>
+>
+
+Thanks for the review.
+
+Your replies are removing the leading indentation from the original
+patch. I see it viewing in my mailer and w browser:
+https://lore.kernel.org/linux-cxl/cover.1697433770.git.alison.schofield@intel.com/T/#m1d4fba325a175520b8a43964ae44a28424177448
+
+So, I think it's something on your end.
+
+???
+
+Alison
+
+> > +
+> > }
+> > 
+> > static void find_positions(const struct cxl_switch_decoder *cxlsd,
+> > @@ -1565,7 +1568,8 @@ static int cmp_decode_pos(const void *a, const void *b)
+> > goto err;
+> > }
+> > 
+> > - dev = device_find_child(&port->dev, cxled_a, decoder_match_range);
+> > + dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
+> > + match_switch_decoder_by_range);
+> > if (!dev) {
+> > struct range *range = &cxled_a->cxld.hpa_range;
+> > 
+> > @@ -2696,7 +2700,7 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+> > return rc;
+> > }
+> > 
+> > -static int match_decoder_by_range(struct device *dev, void *data)
+> > +static int match_root_decoder_by_range(struct device *dev, void *data)
+> > {
+> > struct range *r1, *r2 = data;
+> > struct cxl_root_decoder *cxlrd;
+> > @@ -2827,7 +2831,7 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+> > int rc;
+> > 
+> > cxlrd_dev = device_find_child(&root->dev, &cxld->hpa_range,
+> > -      match_decoder_by_range);
+> > +      match_root_decoder_by_range);
+> > if (!cxlrd_dev) {
+> > dev_err(cxlmd->dev.parent,
+> > "%s:%s no CXL window for range %#llx:%#llx\n",
+> > -- 
+> > 2.37.3
+> > 
+> > 
+> 
