@@ -1,38 +1,38 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DF13D3BD
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Oct 2023 17:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E55199CE
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Oct 2023 17:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="j8r4D3/U"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2065.outbound.protection.outlook.com [40.107.237.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A3730C4;
-	Wed, 18 Oct 2023 10:18:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="djHaFSO3"
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A3F5125;
+	Wed, 18 Oct 2023 10:18:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kbIm2tHtuuDjbRgy3ZAaPdo5Oye261ziciy0OoyGRrA8uVpNBaTfDMp8iGho0sePZBaQZHFCV7O1r9sUGE3HPSXDYDBjG5f467zc7psjyz5mkuqMygzHcYb3PD7DAy8mV8wR30J3uWWuiSJ2dQDTs8Cq0TOnZMCVwNA3WHRMN6ECHOdiNSkwIWPmAPcOo94FjOke83u99G4HpJCwvXG/5cRZRUrOo16j0Lg6XFHcVbr153jICdDJHL5w+3ooYXc8vGYQ/NAE8ECu9wsNrYV1YKxOcOjuSjtJWQStFHvI1TdCbE/C6vxF+p+4EuHV75TM3Z/z3q3KXjs2GANX2E1Few==
+ b=klc5xN+z16UErMyr6tlekb7YVhicpJobOqc3RFLZlPX2azczkPau4cqRvXqzsbJuz8xB/JRm4a2GCAN/k8erNaFHX8M/h3X7ZboXw33atqkxkxRwsxnDHrlTFKH38372EP/eO0A3TODcRAlM5N9BH+UFt6yA0+6aXAQjyiQ0vchQdHgPgMMALywFiBKNThXysWudsilUQlIJYnCH21j8Vqeow/K44uus4PBLTyoJDHDWHjVbq+pTUB72RljNisVPfa8QvKtS5h7Ws8p/T1PSj5NbJ+gf5nyOHlZhggXibKF55Vb9M83LGJVH70AJmCqHX4r9qTlyQjorVIcRV60s/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NfsvuKuyDi/tXql6AZNMGDRoa5dOzFIVFGCOqCrVrFQ=;
- b=oGg7O5FLgMH1ByEpYgamUpP++7Y3rdJ9oA2+FXfaS1WP21mzCTdQL3jvYFqfYMEDlSv4MfYJCya/rVXG8BktYyGAprm4ZLmEAGn732OHWlPUZD1vWqUvJPSgQWG2CaVpWBKknw+txFHzDUjJ1LGAP6MEGA95IVXGs/BPPxrs8ASTFx3bzhoKhHr6Csu2D38ewgIXOm4gUmUq6QTUfaJgPpROQ30vn3idmR0X9rIEN+DOoS9Ca1zkn3O8wNPCvgl77xjFNwOUNOC33yZ2jFn/xHMK8yj+UBoPueOdbXpZGnp9wl3+xvlbYtwAjQgeZWJNntSFx8KoFjeRIhEhwMQRiw==
+ bh=zofwanr9EnIyAP+3VCdaF9SXvWA2UyDJmk18Yhfzufs=;
+ b=mR/ofD2Az+LPBZcWwuq+4u0jlog2g06pXMan+eAdDsZCgcRWCQVL7eltgAuG5RFVHRj7nYZWIcbQ4KFF4d8Rxp0nHFUw79+uclcgVgCcSaLDQpBQKLMAP8SxZj1D2AbR7oKi1LPl6O4QZfQCO48KmnsE7Uryz5YEzmto2re84Bx//3DIvlVHbTV+kUlNg7sthl4D/xwX9S3h0+EVuGhCESJ+709P4zZfdKHkoKB9wqtDvYuMNUle93mJeH7n8e/MmT+Uz8mr1FfBrQjHi0mg3AJ3NSx5wfHwHwdhdm3SCNB8ca7+tm+s5aYd3QkfBayz6rJm9HQsTWwqpQFvSYFzXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NfsvuKuyDi/tXql6AZNMGDRoa5dOzFIVFGCOqCrVrFQ=;
- b=j8r4D3/UDHVLkzZuSnP61Xm0Y+GcgYMsC2mAH7wAXA0WwZQFBDCQNPs33nNwF8ni+TOACGJMaczGokDwPveXveRzroFDPBybFsqgoRyM8OOo2krqA8UoVY7GU8C/1Rrh7JLeT4pas3UCnK2yzVx7sr+ahufj9T13T+PoB3vX46g=
-Received: from SN6PR2101CA0025.namprd21.prod.outlook.com
- (2603:10b6:805:106::35) by MN2PR12MB4440.namprd12.prod.outlook.com
- (2603:10b6:208:26e::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.24; Wed, 18 Oct
- 2023 17:18:08 +0000
-Received: from SN1PEPF0002529D.namprd05.prod.outlook.com
- (2603:10b6:805:106:cafe::44) by SN6PR2101CA0025.outlook.office365.com
- (2603:10b6:805:106::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.7 via Frontend
- Transport; Wed, 18 Oct 2023 17:18:08 +0000
+ bh=zofwanr9EnIyAP+3VCdaF9SXvWA2UyDJmk18Yhfzufs=;
+ b=djHaFSO33Gsq+ULsuK1tjsG2u0Q76ERpMHO1za7vDjqpqHLFULSgN9dlgRXBiMD6mbeOPnfrP6oZVmmqgkydH5mNA2r7/z6I20f1WuxQQQiUc3PVLuBqdLbcHTrBERhOf1IHFSjjawpVY62DnUi0tqfl8aELRvmprijosrUWrgQ=
+Received: from PR1P264CA0048.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:2cb::14)
+ by DM3PR12MB9286.namprd12.prod.outlook.com (2603:10b6:8:1ae::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.23; Wed, 18 Oct
+ 2023 17:18:53 +0000
+Received: from SN1PEPF0002529E.namprd05.prod.outlook.com
+ (2603:10a6:102:2cb:cafe::c1) by PR1P264CA0048.outlook.office365.com
+ (2603:10a6:102:2cb::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.21 via Frontend
+ Transport; Wed, 18 Oct 2023 17:18:52 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -40,26 +40,25 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002529D.mail.protection.outlook.com (10.167.242.4) with Microsoft
+ SN1PEPF0002529E.mail.protection.outlook.com (10.167.242.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6907.20 via Frontend Transport; Wed, 18 Oct 2023 17:18:07 +0000
+ 15.20.6907.20 via Frontend Transport; Wed, 18 Oct 2023 17:18:51 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 18 Oct
- 2023 12:18:04 -0500
+ 2023 12:18:15 -0500
 From: Robert Richter <rrichter@amd.com>
 To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
 	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
  Schofield" <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Ben Widawsky
-	<bwidawsk@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "Robert
- Richter" <rrichter@amd.com>
+	<bwidawsk@kernel.org>, Dan Williams <dan.j.williams@intel.com>
 CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Terry Bowman <terry.bowman@amd.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-Subject: [PATCH v12 01/20] cxl/port: Fix release of RCD endpoints
-Date: Wed, 18 Oct 2023 19:16:54 +0200
-Message-ID: <20231018171713.1883517-2-rrichter@amd.com>
+	<bhelgaas@google.com>, Terry Bowman <terry.bowman@amd.com>, Robert Richter
+	<rrichter@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v12 04/20] cxl/port: Rename @comp_map to @reg_map in struct cxl_register_map
+Date: Wed, 18 Oct 2023 19:16:57 +0200
+Message-ID: <20231018171713.1883517-5-rrichter@amd.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231018171713.1883517-1-rrichter@amd.com>
 References: <20231018171713.1883517-1-rrichter@amd.com>
@@ -76,26 +75,26 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002529D:EE_|MN2PR12MB4440:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3ef10a5-9709-44a6-5c8e-08dbcffe3286
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529E:EE_|DM3PR12MB9286:EE_
+X-MS-Office365-Filtering-Correlation-Id: 087203ed-b6d1-4f61-fe82-08dbcffe4cbc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	foIJOp8RvBUdJbZnpX4/T8J1HFQ3RGrFuQ2hCHOGyWvgUtlR8ujjgDXHX14Be+ZoC79TevXE41v6rCmFCWkMuEGR2chGECvePAnKqbux635lzaAFjSYM12FO0ezyD+bm4JwNdOHvKn1td3j8gwzfYJzw3x5nrxx54EoU3F5XU3eDNb1NHMBp86ntypdj5F3GxEkAD+uECmVEJMOMGuON1u9V5EUWHvgXyioty6KGEbzm1lYK+QIeVFf2Jqwxoev8YEfVC9m6HP9c6yAFkht9fsrFjOC3A9fkBy+M3UzHf+kioN6vyHn131F3Wzkd8Hpy4a5fm0dbr5A9g5xG1FI4JAMTertdDu4QIiM4UGECkn1+RWfZSIDg75/I1GHzzACPIIzJswNWZ3ZUV8GJnLgKhbDdo5FWLU65XIv/CwpaDFwCAe7is6NbTybkWvsoQGR0oKYz9jaHkM4z45rSkUpOfS515hD7bW7BOw1VhhNGt4qnKeYSCOot20nh/TrHOO3JQQ3m4j0zqgr3vOJzBhOHlvBK3Qwbl75/VYLPrpmLw0ll3ScuEgQxYR25gxkJiv/GC00uAoiJNfWxInJn4N7f1pALw6WVWFdZffiNqOFsRaWM4j5WcOW0GtDG3WWuCV6S7oordQc+apue2MSVWAGcrnGseaoUG7EfPqxfsyoH4OqmE6rwQoZjNx/hnBX3WlCtAUQTAeXPEs9TAV0mICNNOZV56OFypT5JhRDF+mFtflMFkyYUBKQb2c6mQVSr+/CTxeSeDlK596uEguQEiD2eIA==
+	pe35DhKpgQq0bevfDC+089O9R3X8Wfnl/XH0GEwlQLmjkcLWNPM6AS4FC4oRJxGDtkyy+bvc9HYrnM+U5CMWhlmYRg+eIJZxaIw8eM4KWXfwlUaeJ1zODoMc/QCaTmwwnaf2TKVg3aEMLHH73vPDqbtaXWy5IMYUiVLKmMrqSFLM2zAb0uy/LA9v2FWf0On0OI9Wj+i7pb8rrt4+E7UeX5oXDJQfxaEgTnotn/hPBS4/aCf2WeIdMlJGv7xBEUcQQDVXy9W3x1EZc/ccbTGb+PoZkqSKPvkHM7x1O8ZbDPNG8e1jp9ONn5yE7xpXQey+B9pDFLUJX98u0ZC6evuMXxPzhKKaSMRfAujaPKrCP9slCx3qPz0qmw3PRVcUmH9XR9QUyJSfz9Z+Id8ZtbD5Xd74RBCKml0Qa0XwB57nBe2WVG3QIZmBN7K51w46Ho46feQ8Gtl6ys4WUsWnxo2eXcy5rtXTIBC3wNgw7837QXfiFxRVhe0xkAO248CwAIgSuoY0dq+RuysSWIP4WJsttN8e7rjFHNuN6fNxVwBbkGTbExfpJP247pa1NpaaZPZ0s/loIA9yfk3ntbyzDYiTDxQubYt0Rx/or7NlvghY9nCU8BN1j5NTe3yzq4a51JCPV4cs8bvjMzEz9AkLUbMrBtmRW7FzxoONwTQY/4Bq1AxyzaEVzZaehqNInIVIpJ3pt54Oq/ZFI7HK8eoYhahLm9ZrHuB2wTvZrVMlOtaRXunaus3vopurS8PB9ytn1jGNXzAHOYYAJ5P1kh3phQcPGw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(39860400002)(376002)(396003)(230922051799003)(186009)(1800799009)(451199024)(82310400011)(64100799003)(46966006)(40470700004)(36840700001)(36860700001)(7049001)(426003)(336012)(26005)(16526019)(82740400003)(356005)(47076005)(40460700003)(83380400001)(7416002)(41300700001)(54906003)(8936002)(110136005)(70586007)(8676002)(4326008)(5660300002)(1076003)(70206006)(316002)(2906002)(478600001)(6666004)(40480700001)(81166007)(2616005)(36756003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(376002)(396003)(136003)(230922051799003)(82310400011)(64100799003)(186009)(451199024)(1800799009)(36840700001)(46966006)(40470700004)(54906003)(478600001)(70586007)(70206006)(110136005)(82740400003)(47076005)(6666004)(316002)(5660300002)(8676002)(1076003)(8936002)(426003)(16526019)(26005)(336012)(2616005)(4326008)(40460700003)(40480700001)(2906002)(7416002)(83380400001)(36756003)(36860700001)(81166007)(356005)(41300700001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2023 17:18:07.8584
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2023 17:18:51.8529
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3ef10a5-9709-44a6-5c8e-08dbcffe3286
+X-MS-Exchange-CrossTenant-Network-Message-Id: 087203ed-b6d1-4f61-fe82-08dbcffe4cbc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002529D.namprd05.prod.outlook.com
+	SN1PEPF0002529E.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4440
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9286
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
 	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -103,42 +102,82 @@ X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Binding and unbindind RCD endpoints (e.g. mem0 device) caused the
-corresponding endpoint not being released. Reason for that is the
-wrong port discovered for RCD endpoints. See cxl_mem_probe() for
-proper endpoint parent detection. Fix delete_endpoint() respectively.
+Name the field @reg_map, because @reg_map->host will be used for
+mapping operations beyond component registers (i.e. AER registers).
+This is valid for all occurrences of @comp_map. Change them all.
 
-Fixes: 0a19bfc8de93 ("cxl/port: Add RCD endpoint port enumeration")
 Signed-off-by: Robert Richter <rrichter@amd.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/core/port.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/cxl/core/port.c | 6 +++---
+ drivers/cxl/cxl.h       | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 7ca01a834e18..d4572a02989a 100644
+index 9b1136018f18..b993dea61436 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1222,12 +1222,17 @@ static void delete_endpoint(void *data)
- 	struct cxl_memdev *cxlmd = data;
- 	struct cxl_port *endpoint = cxlmd->endpoint;
- 	struct cxl_port *parent_port;
-+	struct cxl_dport *dport;
- 	struct device *parent;
+@@ -712,7 +712,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
+ {
+ 	if (dev_is_platform(port->uport_dev))
+ 		return 0;
+-	return cxl_setup_comp_regs(&port->dev, &port->comp_map,
++	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
+ 				   component_reg_phys);
+ }
  
--	parent_port = cxl_mem_find_port(cxlmd, NULL);
-+	parent_port = cxl_mem_find_port(cxlmd, &dport);
- 	if (!parent_port)
- 		goto out;
--	parent = &parent_port->dev;
-+
-+	if (dport->rch)
-+		parent = parent_port->uport_dev;
-+	else
-+		parent = &parent_port->dev;
+@@ -729,9 +729,9 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+ 	 * register probing, and fixup @host after the fact, since @host may be
+ 	 * NULL.
+ 	 */
+-	rc = cxl_setup_comp_regs(dport->dport_dev, &dport->comp_map,
++	rc = cxl_setup_comp_regs(dport->dport_dev, &dport->reg_map,
+ 				 component_reg_phys);
+-	dport->comp_map.host = host;
++	dport->reg_map.host = host;
+ 	return rc;
+ }
  
- 	device_lock(parent);
- 	if (parent->driver && !endpoint->dead) {
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index b5b015b661ea..3a51b58a66d0 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -572,7 +572,7 @@ struct cxl_dax_region {
+  * @regions: cxl_region_ref instances, regions mapped by this port
+  * @parent_dport: dport that points to this port in the parent
+  * @decoder_ida: allocator for decoder ids
+- * @comp_map: component register capability mappings
++ * @reg_map: component and ras register mapping parameters
+  * @nr_dports: number of entries in @dports
+  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+  * @commit_end: cursor to track highest committed decoder for commit ordering
+@@ -592,7 +592,7 @@ struct cxl_port {
+ 	struct xarray regions;
+ 	struct cxl_dport *parent_dport;
+ 	struct ida decoder_ida;
+-	struct cxl_register_map comp_map;
++	struct cxl_register_map reg_map;
+ 	int nr_dports;
+ 	int hdm_end;
+ 	int commit_end;
+@@ -620,7 +620,7 @@ struct cxl_rcrb_info {
+ /**
+  * struct cxl_dport - CXL downstream port
+  * @dport_dev: PCI bridge or firmware device representing the downstream link
+- * @comp_map: component register capability mappings
++ * @reg_map: component and ras register mapping parameters
+  * @port_id: unique hardware identifier for dport in decoder target list
+  * @rcrb: Data about the Root Complex Register Block layout
+  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+@@ -628,7 +628,7 @@ struct cxl_rcrb_info {
+  */
+ struct cxl_dport {
+ 	struct device *dport_dev;
+-	struct cxl_register_map comp_map;
++	struct cxl_register_map reg_map;
+ 	int port_id;
+ 	struct cxl_rcrb_info rcrb;
+ 	bool rch;
 -- 
 2.30.2
 
