@@ -1,128 +1,130 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470AC2FE2B
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 17:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A819F208B8
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 20:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrKw0RR8"
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C70131
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 10:08:39 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2c50906f941so99352131fa.2
-        for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 10:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697735317; x=1698340117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M5fU3atj84aVIxZ2hD5gUSw3xD4ONtl5C2S0UZC3mws=;
-        b=TrKw0RR8coIwYSVNUoviG+VqBffciiBhOHxXXorK1iR5jwQrZ+IHa0lUOnI33XxdcX
-         blzt5r4b1mp5SFzElRdzwxcfhE1e2c840UkQpZuuU/BwqTVEB2EmObLEnH8cAYmdN7kC
-         Bc9yfAgooyCX469l639Y6PB3AUdJvGBDqy2CXbPeLm47iwW16r5K3ZETCYjIMJKh8A2k
-         lI0n8MKcawHaazdfyYjon/WKSGmfoCNZCmbQ6LrRCIscTYYaDEBQrXTgOZsyp8RNsILT
-         iQPnUTw8168E2jnzVrScfGCQOwe8tbCZ0MNzxeZp2d/C3B20MfLZqinHPBLk+2Z5C6VK
-         EtYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697735317; x=1698340117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M5fU3atj84aVIxZ2hD5gUSw3xD4ONtl5C2S0UZC3mws=;
-        b=CSQ1et38+RrBtzgvc+9QytojmePj4TkwgYNTN7RB/FcFd/9vhhgoo3Esxx3RR6y1tz
-         fqwOQ58FYL4jMBWcHh8pUiSMAOhd5v6g+YOYdJM1xiyY11MVM1QiMu04v62DxVGVB9Ag
-         pfQhX61D/5GhSvuWK/WWeSxbLtOVr2XnmvcDpNmhuv5Gnnj71J2Expxn4fAARPcwOHgP
-         U5RQgqQ1casOr/uHIBuyTyClhX1Fh8VW+ThHSMe11NOIcxZgtcMvvd15ZiEMC97YZB0a
-         OKESKOGKiRxmOKid9+sq0tgfxv7agLe6AFU8/ohcCO8YAjR24gMX9E7wihKiyv99Zs+x
-         TgTA==
-X-Gm-Message-State: AOJu0Yxvb5DuwroCyx5iLILlwLNc+8kPvc/LxU9MhHiIR4BlYRVBu3HH
-	+MhdjZP1AbxpEUOfYzdO27JYDGYIyh6yH3Ws6L4=
-X-Google-Smtp-Source: AGHT+IFJAUXNspXomBcG4xIdq/z793aCzdvQsFBR+boEneZXjgD0lRVUBguPB+JyJioqtwMWNL4el7fyUSB6c97x9zA=
-X-Received: by 2002:a2e:9241:0:b0:2c5:ffa:375d with SMTP id
- v1-20020a2e9241000000b002c50ffa375dmr1906137ljg.11.1697735317144; Thu, 19 Oct
- 2023 10:08:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/VUvGCP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC3CC433C9;
+	Thu, 19 Oct 2023 20:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697748769;
+	bh=3dzWUTFAxmU3wipGFobehTK7P0p+nDlBGaKxyhwIuDs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q/VUvGCPD+aQ6/tm3hG0GsY1Wb4EyUW3sIPOHEyFhKSir6VgPDFZ2LYB60y+uYptJ
+	 PstLQ95C5kTtBd5omwncwSgHvwGBv1MhyUD7uEHyNh1acEgSjbenB/sUo6frnQbE3F
+	 T/dTLZcrnByOzjg/YJ3YBKC6G6aF+td+nXVqf8nj98yM+kCTiBCwqLA9uEYCuFO8C5
+	 VSHcEYoqE0WzAqcKCjUyo+SqBd1U003F6r8/6hjaJ4AamYyCAIb79kF1r1JmE6/x5r
+	 sQraZdU6+3TVWPrUOzkD89mUoyMI0Aqm9F+BTNF+n/uLrw6fWHrLoxW7qPzYrLP0OO
+	 cO0E+BfJD9TYQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b9338e4695so1254721fa.2;
+        Thu, 19 Oct 2023 13:52:49 -0700 (PDT)
+X-Gm-Message-State: AOJu0YymY03qzHDIDNY+TooA7Tk081N1TSRjV93nSwmnGYRA7z8I/Di8
+	6x6v/Rh7sIJwE117MiH4kBCrn+zPVXNshblVkeo=
+X-Google-Smtp-Source: AGHT+IGCrajqrcehF155RNIPexecuwUd9uUBKdOjZSmNS43fowCn8+WhCmhmhyAmsVxzLrMoZ+cjhDv3FEXPDug63Zw=
+X-Received: by 2002:a2e:bc12:0:b0:2c5:8b1:7561 with SMTP id
+ b18-20020a2ebc12000000b002c508b17561mr87872ljf.10.1697748767605; Thu, 19 Oct
+ 2023 13:52:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
- <20230810173322.0000543c@Huawei.com> <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
- <CAEvOrRzPNwNFrg4Brw7axzgxv6WFeYr0rnsDGmSSNpn9hca-3Q@mail.gmail.com>
- <20230811145223.000040de@Huawei.com> <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
- <20230823180323.000052d5@Huawei.com> <CAEvOrRyquLL6-d=vOyB9NNOPVE370qjV0zu8XBsTJmpOBx2UNw@mail.gmail.com>
- <ZPHyoJsZDnzpU7C4@memverge.com> <CAEvOrRw2e3cn=2fNXO8_iX0kg09an-OSx1fnjx7ciGGhZo9f9A@mail.gmail.com>
- <CAEvOrRy9qoydCqxq7xv1QNM+z+YQZyQORtqdDU2VcVKP42CJhA@mail.gmail.com>
- <SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
- <CAEvOrRwOWT5HuoUsjkUyt6HpXQhWVR2Hv6cxJPP+4+0xNQpM8g@mail.gmail.com> <CAEvOrRzrAu-2o9xZC+YBG_7R9hLSm_kZFuUZ98tA23NjFyAupw@mail.gmail.com>
-In-Reply-To: <CAEvOrRzrAu-2o9xZC+YBG_7R9hLSm_kZFuUZ98tA23NjFyAupw@mail.gmail.com>
-From: Ravi Kanth <mvrravikanth@gmail.com>
-Date: Thu, 19 Oct 2023 22:38:26 +0530
-Message-ID: <CAEvOrRyMqBcv+6RseVS0x_6a3aJU82tjLJagmqCrgRebx5JaZg@mail.gmail.com>
-Subject: Re: Support for CXL v3.0 spec with QEMU
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Sajjan Rao <sajjanr@gmail.com>
+References: <20231012230301.58500-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20231012230301.58500-2-Smita.KoralahalliChannabasappa@amd.com>
+ <65288e68de994_2347eb294c2@iweiny-mobl.notmuch> <d5882c60-6636-f651-2886-02c433f77ae1@amd.com>
+ <CAMj1kXFsqRuge48Ji5bujgBz_rzbPcLiN84dbXnRytH3yyJPjA@mail.gmail.com> <65302871abbc6_725832944e@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <65302871abbc6_725832944e@dwillia2-xfh.jf.intel.com.notmuch>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 19 Oct 2023 22:52:35 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGHoZS2x1u-J94P29-zxxOM=w0omN9__YZbSnj0xhUOaA@mail.gmail.com>
+Message-ID: <CAMj1kXGHoZS2x1u-J94P29-zxxOM=w0omN9__YZbSnj0xhUOaA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] efi/cper, cxl: Decode CXL Component Events General
+ Media Event Record
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Ira Weiny <ira.weiny@intel.com>, 
+	linux-efi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jonathan / Gregory,
-Just wanted to touch base on below questions and if you have any
-inputs on the same. Thanks for your help.
-
-Thanks
-Ravi
-
-On Wed, Oct 18, 2023 at 4:00=E2=80=AFPM Ravi Kanth <mvrravikanth@gmail.com>=
- wrote:
+On Wed, 18 Oct 2023 at 20:48, Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> Hi Jonathan / Gregory,
->
-> 1. Do we have the support in CXL driver to read the "Device status
-> registers" and specifically "Event status register" section 8.2.8.3
-> and 8.2.8.3.1?
-> 2. If an interrupt is posted by the device firmware, how will user
-> space applications be notified ? Do we have an interface for the same
-> in CXL driver?
->
-> If the above features are already supported in CXL driver, Can you
-> please point us to the sample code snippets to achieve the same?
->
-> Also does the switch cci function change part of the mainline?
->
-> Thanks for your help in advance.
->
-> Thanks
-> Ravi
->
-> On Sat, Sep 2, 2023 at 8:28=E2=80=AFPM Ravi Kanth <mvrravikanth@gmail.com=
-> wrote:
-> >
-> > Ok. Got it. Thanks Gregory.
-> >
-> > Ravi
-> >
-> > On Fri, Sep 1, 2023 at 10:07=E2=80=AFPM Gregory Price
-> > <gregory.price@memverge.com> wrote:
+> Ard Biesheuvel wrote:
+> > On Tue, 17 Oct 2023 at 22:52, Smita Koralahalli
+> > <Smita.KoralahalliChannabasappa@amd.com> wrote:
 > > >
+> > > Hi Ira,
 > > >
-> > > > However we saw the below crash when we sent the command for the fir=
-st time.
+> > > On 10/12/2023 5:25 PM, Ira Weiny wrote:
+> > > > Smita Koralahalli wrote:
+> > > >> Add support for decoding CXL Component Events General Media Event Record
+> > > >> as defined in CXL rev 3.0 section 8.2.9.2.1.1.
+> > > >>
+> > > >> All the event records as defined in Event Record Identifier field of the
+> > > >> Common Event Record Format in CXL rev 3.0 section 8.2.9.2.1 follow the
+> > > >> CPER format for representing the hardware errors if reported by a
+> > > >> platform.
+> > > >>
+> > > >> According to the CPER format, each event record including the General
+> > > >> Media is logged as a CXL Component Event as defined in UEFI 2.10
+> > > >> Section N.2.14 and is identified by a UUID as defined by Event Record
+> > > >> Identifier field in Common Event Record Format of CXL rev 3.0 section
+> > > >> 8.2.9.2.1. CXL Component Event Log field in Component Events Section
+> > > >> corresponds to the component/event specified by the section type UUID.
+> > > >>
+> > > >> Add support for decoding CXL Component Events as defined in UEFI 2.10
+> > > >> Section N.2.14 and decoding Common Event Record as defined in CXL rev 3.0
+> > > >> section 8.2.9.2.1.
+> > > >>
+> > > >> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> > > >
+> > > > [snip]
+> > > >
+> > > >> +
+> > > >> +/*
+> > > >> + * Compute Express Link Common Event Record
+> > > >> + * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
+> > > >> + */
+> > > >> +struct common_event_record {
+> > > >> +    u8 identifier[16];
+> > > >
+> > > > I interpreted the CPER structure as not having this identifier here.
+> > > >
+> > > >  From Section N.2.14:
+> > > >
+> > > > "For the CXL Component Event Log: Refer to the Common Event Record field
+> > > > (Offset 16) of the Events Record Format for each CXL component."
+> > > >
+> > > > This implies that the data coming from the CPER record starts at length.
 > > >
-> > > That's expected, there's an explicit warning the first time a raw com=
-mand is sent.   This is intended behavior, no crash has occurred.
+> > > Thanks for pointing this out. According to Spec, you are right. Our
+> > > records did show up the identifier. Hence, I added that field. We should
+> > > probably fix it from our end.
+> > >
+> > > Meanwhile, I'm taking a look at your patches.
+> > >
 > >
+> > Thanks
 > >
-> >
-> > --
-> > Ravi
+> > Once you've compared notes, can you please let me know how to proceed?
+> > I will not consider Ira's patches or yours for merging before that.
 >
+> Ard, I have a higher-level question. If these CPER records get routed to
+> the CXL subsystem to be emitted by code that is shared with the
+> native-driver record-retrieval mechanism, is there still motivation to
+> parse and emit them to the kernel log in the EFI code?
 >
+> The difference with these CXL memory error records vs other records like
+> CPER_SEC_PLATFORM_MEM is that the record contains device-local addresses
+> that need translation to be of use to other system-software and that
+> translation needs topology information that the CXL subsystem has
+> enumerated.
 >
-> --
-> Ravi
+> So, my proposal is that the final form of this enabling would emit the
+> record for CXL to consume, but otherwise not emit it via printk().
 
-
-
---=20
-Ravi
+Yes, that makes sense. If CXL is needed to make sense of this
+information, no point in printing the raw data.
