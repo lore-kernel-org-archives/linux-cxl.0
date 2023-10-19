@@ -1,68 +1,72 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76A52561
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 07:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6A91097C
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 07:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="LsHeqPqP"
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2082.outbound.protection.outlook.com [40.107.100.82])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34319F;
-	Thu, 19 Oct 2023 00:31:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KPNSk+w/"
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2082.outbound.protection.outlook.com [40.107.212.82])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394CD115;
+	Thu, 19 Oct 2023 00:59:17 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aEzKdbJ+HM6ewKS1jwuUmi86JaUmfgPoLvGhWVE0bRBRKbfAm3HLSgzQCU7hzwVhGjFCo9FYBn71jMe55F3hAzzcDBCYaFbO13Rm6uYVKO8Hkf0o9ocmfBs1xcUQ2pbw+EdTP2tApO2pj/QRVEueyNe7N2iiN4gAGam2CdIGqNXg6WPLdMwMdo9ZBDbkb3Ktp2VKqQuKBFFRW453TYoHuFZHZz8dU+HJlbCM/hSH3GH1dpUmV4UsyEgobvcHptbWDFnTxCWYMo3ra7z2+Cnv8z7R6NrBJWA3CO+lJ4h5qrGtdkYr4qpsi9+dtxe8NUeMNKmk/IBbSPRle1dQi8JqCg==
+ b=eXK4VG1dFhjDYtUX/cgnnSXItiLJ2tKiE6f/7IzXAQzb8Df6a8Jkz2FkZayBa6RlhIqqLMr77qM95sumVfqJ127ApLgSvcCvkF603AvsHcflOWxE3JA6TBDGJJuS/sGEsCD8u66K48l+K9jZtZJJpCJrDRT8rmiK4mbxZOMRCQBWe9GChqQtia81txkfMgVwreHc5huwaZgbO69FNVlj8SGGOywvpBZpiUdh2qVxWNb6+nzYqo46GGfwhqm3dijw1jb47AUjVp1rUnjpaNYFFpNq+y08k2SK/BzJPDXU2dOq3rovPUXcE4B9p03nYD2dS+sg69KLEVzJDATXF3GmTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EduItXhT4mFITPfq8eYZO2pXMdqsElIyXRALgboTp1A=;
- b=LVaGZfuhG4oYuXp+qFhCCv6QzgJs5T2WqYV0ycvGDxxQ6R7hJ/mqWusEEWc58o1eZW/V6fMGkjEKsIEBVzCVdtGHUq68DwbwM/IL0etSVJ8SIayJh88eWtKDyHxthMaxedm5qkIeVlfnYDOHJW3pHJeYtH3h2mxKxtH/D95cL/fl9WpfXwHfxmDgyKyIE4iKLzVxI/vrBRpJfMgV4vcCeipB9TXZ6tT7IbhsX1NLiZUTbTnlzavARYu+sSsYTZwDGeA3Mme91C0B/1geJVTYW9mLp2bYQy8U1eAof0EhDDgH3JhKYsochxMimeP6OP1+7ICmqaCAMK1h9VMSus6W3w==
+ bh=QHAmxlFJLIR2mo7V348R9DtlGxEENwP09jhhvhi6GNI=;
+ b=TkIGb/mySE5+DLQRHsPYOXMp+JI3jpL9kQSA/LRSI1BA3A33HqYrkLqMHZr33g26JcmiuFn86WZEiV3Zsrz8LvOhu+wezAtzXquGf494xxFEMf+l1K7cayNocTLrxI05U7jAMbYumkU0elkap5otQQLHnIS5MwTWOYRfK8IsYH2wRfUlxUe2edeghPVkLhXwjicEM+9LpAehJa9bvBmDJ37ZUQfJSW/K+SaN4a4rhC7TkHSukcKZb17v8+9wFZEHM9YxEa5hlK0YqoE5b8dLOMbkhd2+gkPg6PckkoGAIsXkvJGQotIS/yoVish6ziG6QuAX6t3C+haqa1Mh/jnytg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EduItXhT4mFITPfq8eYZO2pXMdqsElIyXRALgboTp1A=;
- b=LsHeqPqPQcpkvDKB3AE6rXdQcRE/n9JkHy5T94L9ypZ+fPVK/KyAkaYeo+BASw8f6XtdXyb/KUaRE5PzcxOJ7U50RS1aqP/1UahVksa3gAGkh8ocCKQivYDQMoqK/AFVCHundg59cifrAKlEzC9aCWhndiXzRbE9eAllghhZ4xQ=
+ bh=QHAmxlFJLIR2mo7V348R9DtlGxEENwP09jhhvhi6GNI=;
+ b=KPNSk+w/PKal9tKbC6xYfOulZ/QLIIlSJj7iPx2/pSiP20bspkP/rbtNngvfFMYzsvcsqrNCWa9MefGpP4Vn0zHKQaDCvEL3g1CtBQTXr0AzpAyZ564Kziw86ruXVY7+Ojblxka0KTikTsgZGggjrJ/SBzV/lho62gVDX2DmruY=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by BY5PR17MB4002.namprd17.prod.outlook.com (2603:10b6:a03:23a::8) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DS0PR12MB7630.namprd12.prod.outlook.com (2603:10b6:8:11d::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.40; Thu, 19 Oct
- 2023 07:31:41 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::3cf6:989a:f717:7c20]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::3cf6:989a:f717:7c20%4]) with mapi id 15.20.6907.022; Thu, 19 Oct 2023
- 07:31:41 +0000
-Date: Tue, 17 Oct 2023 22:47:36 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	akpm@linux-foundation.org, sthanneeru@micron.com,
-	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-	Wei Xu <weixugc@google.com>, Alistair Popple <apopple@nvidia.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Michal Hocko <mhocko@kernel.org>, Tim Chen <tim.c.chen@intel.com>,
-	Yang Shi <shy828301@gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] mm: mempolicy: Multi-tier weighted
- interleaving
-Message-ID: <ZS9HSIrblel39qrt@memverge.com>
-References: <20231009204259.875232-1-gregory.price@memverge.com>
- <87o7gzm22n.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZS3jQRnX4VIdyTL5@memverge.com>
- <87pm1cwcz5.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZS33ClT00KsHKsXQ@memverge.com>
- <87edhrunvp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87edhrunvp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: PH8PR07CA0015.namprd07.prod.outlook.com
- (2603:10b6:510:2cd::20) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.21; Thu, 19 Oct
+ 2023 07:59:13 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::16da:8b28:d454:ad5a]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::16da:8b28:d454:ad5a%3]) with mapi id 15.20.6863.043; Thu, 19 Oct 2023
+ 07:59:13 +0000
+Message-ID: <38d0c5ce-7de2-47fb-bfaf-50f900b7f747@amd.com>
+Date: Thu, 19 Oct 2023 18:58:51 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
+ authentication
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ David Woodhouse <dwmw2@infradead.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Alex Williamson <alex.williamson@redhat.com>, linux-pci@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-coco@lists.linux.dev,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+ linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+ Zhi Wang <zhi.a.wang@intel.com>, Alistair Francis
+ <alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
+ <20231003164048.0000148c@Huawei.com> <20231003193058.GA16417@wunner.de>
+ <20231006103020.0000174f@Huawei.com>
+ <653038c93a054_780ef294e9@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <653038c93a054_780ef294e9@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY4P282CA0013.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:a0::23) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,240 +74,171 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|BY5PR17MB4002:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ada4090-7b2e-4d56-4c10-08dbd0756faf
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB7630:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91ab2573-c898-4ec6-a03c-08dbd07948a0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	pHQ8a/ivJPn1+jscygJfgn722bLbfBlwUStcSO2gkwX0UVv294jSj6GrwsFcZmLeHHy6vvMEkH5m0pK/G5eEdhOFWdS15sWamxAbQSmCN5EgxSbvA9+4KEwRBakED/2APWkze/qom+CO6fT+lqYybBd14EdIaz+JB950J0fqWv665KZPvsIulR72woHu+vMWGwDh+KrpcTqmXeKm087VsspSe2Tm4W6/uZovc+rVi6h7wKW4k8p0hfKFXX0GphiJGTIJU1RNh6zVO5QccX4D2djDVOB65N3141bhLVcsumomwsu+3E7LsP1mpFN8fgyKyR5jtJEmIHN7v81eW4EbnN6wzYpnYeKc9+kxxRV952RvxBegsT+OnIkyApKtP+SqGWDdKCCbO9c59uK6NKQsFTJ1o11DImfCVjD6vwCKG9zH4J7YlkmLtiwXPE39F7Acn27zbdM1OfwmzXWtM9kKNqV0OXsbVNnB7yV/svQkYjzB3/bxnZVVONfBN5lX1sancKPv3SumQGFXORLXteJ5MVJVFTBDvpp15jqkjGihmQGvD3CddbOhT6G29nRZ3zk0CLdDDywA+tcyvUs9eLL3Q2Ij8xY0YljdrrVTBq1+PtEZtEPV5zny6benwOjdD6ll
+	IDUqrjQ1313Kb0j3POvF3LrFYK8vdz9GNEGXQuW/qHz++bBeNLrFckor3a+t0t1tt/5UChUtE5Y1zWVHLJfVl0gfM5jF3DjHryGF8eicRZy91FLpDU020D8pufhSyrwfE+B8qFkyRyqMexkS2vXsIlZOudJixsns19K5vUDR7yI+V1mE9WsKbhJNZ7f2gOFPFi9UFcXkVNZXDNDLtMKtRUfN8FVW9GsAJwrVHxYcasqqhtKFQTA4SXIolnp3lQ/UWmwIL9hRPqK0wxkJ2GVe8MwDpVyTujBSchklCPbASVns47zsBNIpsktgcYv8Y+xiMlEJfSdC9tDa2jZEtNbouCc8gWSqNnhfWOEaOPelJOLz3M0/br9/7XcLdAp2PpnAx/XwkzutapGN9PCpf7Jk71ptViECtUyQVo8zRbKThSrL/M78rWMXPGKwYfsWs/awBqCfyNbbLbob4TckxjjGKxhDaCRDrW0eDVX0YSd7bmNhqP1JmAa2lESYSPRXmawgrYngembkJKvMPl+CkF7QpUKdQGcWV62VJOL8zLZAp/X3NpXdArhH2VkK32gQiiOq5VJImuNTYqqLOF2a6uMhYEDGiIb9yY1EIFgcQr3ObJ0jz9EegQSsMJrZGOvv0iJSc8V81QZAECzvaynfbXH/TQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(136003)(39840400004)(366004)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(83380400001)(54906003)(38100700002)(2616005)(6512007)(36756003)(41300700001)(316002)(2906002)(86362001)(44832011)(6916009)(66556008)(7416002)(66476007)(66946007)(5660300002)(8936002)(4326008)(8676002)(478600001)(6666004)(6506007)(6486002)(26005)(16393002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(136003)(346002)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(41300700001)(7416002)(53546011)(5660300002)(8936002)(8676002)(4326008)(38100700002)(36756003)(31686004)(2906002)(83380400001)(31696002)(66946007)(54906003)(66556008)(66476007)(316002)(26005)(2616005)(6512007)(6666004)(110136005)(6506007)(6486002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xfCzuQA5LxDtvlscESE9Q7AlvCi+Hrl0VIt8bTmfC2FDLn9Ed5u8vkHMCBlR?=
- =?us-ascii?Q?ewjrIMoYGQBD0JfJefsvkayGB3rwFKkCZHCi6VE/iF5OaOVKjfucmHD0uJEH?=
- =?us-ascii?Q?O5brRUILWDZ5AzdtmJn9cRjAEeHb8xhkmjA0ISLeSQvzrFSHPy2y6nnX6g4H?=
- =?us-ascii?Q?qZhbXhqVZlINyY2WQN5xtvSmjYQTZ3K9eIPYa7qgeomXRim1r5u2HVS2K0Eq?=
- =?us-ascii?Q?ZLyeHtSq3pxNBkoz1uLMFhh68GpG9ZDD/gIlnrvyKuF408sLBCnI82O/kafB?=
- =?us-ascii?Q?ZvqrTaylntJGVDYn1+Bcq4yT9lXqPqhsu9p046Gfi8VuUntUSLkBXvY/igR9?=
- =?us-ascii?Q?342uCprdNd317s86qX20kmhBVNg4ZrHfbh+I01CYobpfihyzrini34+CMjIL?=
- =?us-ascii?Q?JDyM5ItorB6gkU4vt2NEdoH2fGybyaPR9U+0S3Y8b7JJJAipF4LNbhkeAsDZ?=
- =?us-ascii?Q?h4vxscliKkNLeGukaIuj9Yq1yKGv9gi3AgTCo3zaLLIKLspvTenIlS3Hyd3p?=
- =?us-ascii?Q?34T5tbjxupQpx4ltRzgJ79jEUkGQ45vNh3Nkz3p23j25iBCJRazQ5mO5GRed?=
- =?us-ascii?Q?uiXpFizzjJ7LBxh4KHZNodDP+iEOgOtnRZnhu2da2E99917lwRwKlWanLPxs?=
- =?us-ascii?Q?Tvdnhpsk/Q8FUp25rF+ANPNh907GpY3g13auC4a6hSzekCV4tSJsm9HM3nVs?=
- =?us-ascii?Q?p10YSe+zdjIoX/pxtVXx9zc1NM+EZzIwfXXArgTIr9XAIAxOWr/tg4T73dHe?=
- =?us-ascii?Q?LsZsbwlYLDr8Yzxu57l4Z3E9kdXLLXYAvaVd2OPuIVqWh9Q2QQCADsXeM09k?=
- =?us-ascii?Q?0dVGrhLVlk4vgCVDSYD+Dh5RuwXO/d1odrJU7gMwxMSdp01xk5nyvFWo5pjW?=
- =?us-ascii?Q?oJwsfLEWZ4Y1tBPmFjFDeqL3PtaNoVU3vwZR315YhHa/99JKap9vyVVrXMs+?=
- =?us-ascii?Q?st9ubqQ+jCtHrcqwaJzevZSXURk8FqcqKg4xn5tkEaLcC4fGMKHi9NY79gKI?=
- =?us-ascii?Q?hUiueSx0BBsCLBxFP3h8a3qKgq9s5mnWtzHPY7fMvYDrd0HpQaiVebLjzHu7?=
- =?us-ascii?Q?03XNepippapVUIhMigNI7NI23M2O+ikMuy+LkjFe2SZGjK0uDXaWkjwsR2mR?=
- =?us-ascii?Q?+5qUwpkYuWobv/KBTkhPPp7pybd8rdY+cC4ss0zuzsIWXuhtPDxaeLMHaygh?=
- =?us-ascii?Q?9D8TfSL7eNP4ph0EZaQy40q7nMYM3MnuXefJ7MZNGPniNvRbtjwzndi9J/lz?=
- =?us-ascii?Q?rKWhTa3X0Ip3DBSI8/szsWUTuXdyHHyPBSbbz02KdFu2J/pRGNeqoPjS7Eru?=
- =?us-ascii?Q?K2/IHecRcZg56zYVEHJZ9AW/n49yXuEuDblulrQTtvm3T6E1w1KcVwCAZNkq?=
- =?us-ascii?Q?YBTCh9mpMMn/DlGvDwVFOEdLWglH4YcJeLwv6L/B0Hma95+UIVYDuqGoKHF9?=
- =?us-ascii?Q?Cb1DNmrSyv4tkHEn5OO/hLX8bNGlgDZaHHiiX57KD/UUG4xuQp1SPbvm+ik1?=
- =?us-ascii?Q?q/BBAU3eNMm88TmA+d1f+TXKJpj/BF5r7fHnQEkeXYB+E2qmsDlC4LQQ0+3f?=
- =?us-ascii?Q?jLXvuuUt71d7QcX7Relfb93dNG2Ukzop0GP44JG81anudiGQAGk6Nts5wnoF?=
- =?us-ascii?Q?Zg=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ada4090-7b2e-4d56-4c10-08dbd0756faf
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+	=?utf-8?B?Sm9GNUVJczhLUUhXd1k2QzhNNStHbHpMT1J0dk1PWWNFM29OazgraEZyVlBE?=
+ =?utf-8?B?VTJjNzBhMHJYWDE5Tnc4TUhxZHNneVdma3dHdm9zN0xWdENwSGlLanNIMDVF?=
+ =?utf-8?B?MnA2Ynl5cm14b0FhU0tFcWJJS3hxdW5BVW5oTmZocTFRcm5YbDErdVRkcllF?=
+ =?utf-8?B?VDNObVl1RjY0SjZIeml5TnR3Y3N3UVBHSktrSE5KbmJpV1RibXg0SFpGR2h5?=
+ =?utf-8?B?M0piaDQ2MTlnWE85OVpEcElZeGxUcHRtR3N1UHZoQ0VyNkd2cmxjcWZRMFhM?=
+ =?utf-8?B?aGpiWFRPWmx0cml3aFhqQnZTR2pzRURBTVVjeGNHbVB2RDA4UzVyNnFSWE50?=
+ =?utf-8?B?NVFMQitIWnNvQmZvTVF0MThxem5xbU0rWUl3UnYrVmd3MEIxT3JaQ1ltWG9Z?=
+ =?utf-8?B?eC9CNUNnREZkY0VzczhFeDZKa0l3aUlPc29iNVNzUFpvQUNEUWg3eWtEdHFn?=
+ =?utf-8?B?VHR5MDhyUTAyRkYwUWR1anBFcUd1eE9oKzJwTjRJbTk1WWtKTFdmcS92eWVL?=
+ =?utf-8?B?Vzl0Q3VXZWtvNnZXU250eWlaa1NhU2x4aUVuVjVZWDZDMkNKUWV1c3ZaV0pL?=
+ =?utf-8?B?ZDRYTTduN1BndGJ4SFpXRmZLNjBxU2pZU3NWZXdPTDBTcThrYXVCNVdUN0oz?=
+ =?utf-8?B?Q1BxMnk3aDhieDhZN0cybHVFNHBhakVKaEdNcGU0UzBvcGJRZFJ3TXFlSElS?=
+ =?utf-8?B?Ujh3K2NWWHhFVGx3SDEwbmROM2tIVG43U1RxYjBldjIra0YycmsrWkJBaGFK?=
+ =?utf-8?B?Z3dnRHZpWkVPZmJNdnRCWlRsWHF5MUlvbUxZbE12T3FoRzB3eDBrazlnR0tq?=
+ =?utf-8?B?NDd2UDVqTzRCK3NyNUltUWxlVEc4Q1RvakhGdXlNbzgrZHBMNmxWMjM4cmM2?=
+ =?utf-8?B?OWMrZ3E3OGllZldldGpoQkxXLzYxOUtFZU1SMXJEbHgxSmtxc2J4YUR3ajdC?=
+ =?utf-8?B?ZGxyMGdoTWljdnlhMjVkdnU1dCtNeGo1dmVMWXd5RnBtb1dVY2pOSUVLY2J6?=
+ =?utf-8?B?ZEpNbG9LOHozUzllbFJPR3dMR2QzRGdobnEraUs1KzNjWjB2NkNoSWtMeCs0?=
+ =?utf-8?B?M3pMRTV6Rkw1TlRFWDhiVUozaThFKzdFSm1PMk5pZ3JEOEpDSGRuT1lwMVBO?=
+ =?utf-8?B?TkxJcHZxNzNmZDdXaW52b05wSXNwalcrSGtQVDRnUGpIVTFhMjRRV2dkd3lq?=
+ =?utf-8?B?L003TzJVelVIcjkwUWJMcEcxb25vUUp0TUNhekkzNEE5QjdiOUpYWkNTS2dG?=
+ =?utf-8?B?cmVIN3ZrMndqU2ZTZmpUUk9lYldZeWxlVUF2RnIzcm9jZGZ3SWFWNnl5SHI4?=
+ =?utf-8?B?R1ZkVDJzN21SMEVBV09Sc0daUHRYRmpEeDJ1NnU3cFZSckZoSndXNVpMTDFa?=
+ =?utf-8?B?cDJaZmtsc2xQb2djZ3A3ZWcxd29DalppSUM3R2dzckhWTm93VVI1YnFSOFI4?=
+ =?utf-8?B?dlBLNEhpUkpvKzJSbytMcFBodVFFTVQwaXFIaDF0UkxuMVJHNUZpVkgwRUdX?=
+ =?utf-8?B?enhSK0dFZVRTZmVqTUN3WjhOclNyR3d6WmI0bTNJOGd1cWpUVmltRVBkcnFF?=
+ =?utf-8?B?eDdNMEtUYWRQUjgySkMvM0ZjWmlNd2ZJYit0SjducVdiQ081ZGlYRm1UV0Na?=
+ =?utf-8?B?ZFRQc1lGY2NKOWFGUFdLcFl5WXlTVFZEYWxUT1pBSjYwUkJKczRyTldVK1lR?=
+ =?utf-8?B?N0FLRGZ5NldkYVRvV05GRGxSZ2dNR3RYTW1zS25obkk5eWZZQUt1cWRiTmdI?=
+ =?utf-8?B?dGFnelJZeEJ1bFMrQUJ6c0hkYnBDb01mdkluQ1NqZ29GaXRSYXNiQlZockFu?=
+ =?utf-8?B?Z05FeDBPZDVDYSttSE4xOUhGWkhKaThJbWJpMytQUjM5K3dsWnN2ei9CUDNU?=
+ =?utf-8?B?dTY1UnUvN0ZZcXpQdXBjaWx0TkNyYVB3QW00T2NhWUNkUlZ2RlVWeWplMXhy?=
+ =?utf-8?B?cWNTZ2VPd0QwL083YkpsVjlDMFY5blJLaXZsQVdyQkczU05zV295RDdaU0Ir?=
+ =?utf-8?B?Q1RCTlFOVWIyQjBHcHN4QXdGUG5MSGZadjd3N3RjYUx1TG5MRGorT3ZGQ1JL?=
+ =?utf-8?B?SWZYSzc2Q1VMZmZ1ZzJJVDFlYlFYRHFDZW9mK0NTcHNhRitocWhxWnFCbDVp?=
+ =?utf-8?Q?aceT1WWKd87kuq2vabtINvBzw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91ab2573-c898-4ec6-a03c-08dbd07948a0
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 07:31:41.3094
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 07:59:13.4263
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L9KMUyFp51zwM9+ldtCl9bYTTh4s5RwGOWL6OFK3hQgDHCfuKRpX+hhK5PKT2eqZKNj8BiZnbcs6Fo2EMfyJbIzE77nerAAgkObjl57k33w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR17MB4002
+X-MS-Exchange-CrossTenant-UserPrincipalName: W2ZoLnxvGDDJWF1YRbLxzGMLKxGIyOQ0HZ5l6rsIz74kGLNY+T/FTwaixa+VbbXUrvwvOTjvOEWKoIni2GBe6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7630
 
-On Thu, Oct 19, 2023 at 02:28:42PM +0800, Huang, Ying wrote:
-> Gregory Price <gregory.price@memverge.com> writes:
-> > Were you suggesting that weights should actually be part of
-> > drivers/base/node.c?
+
+On 19/10/23 06:58, Dan Williams wrote:
+> Jonathan Cameron wrote:
+>> On Tue, 3 Oct 2023 21:30:58 +0200
+>> Lukas Wunner <lukas@wunner.de> wrote:
+>>
+>>> On Tue, Oct 03, 2023 at 04:40:48PM +0100, Jonathan Cameron wrote:
+>>>> On Thu, 28 Sep 2023 19:32:42 +0200 Lukas Wunner <lukas@wunner.de> wrote:
+>>>>> At any given time, only a single entity in a physical system may have
+>>>>> an SPDM connection to a device.  That's because the GET_VERSION request
+>>>>> (which begins an authentication sequence) resets "the connection and all
+>>>>> context associated with that connection" (SPDM 1.3.0 margin no 158).
+>>>>>
+>>>>> Thus, when a device is passed through to a guest and the guest has
+>>>>> authenticated it, a subsequent authentication by the host would reset
+>>>>> the device's CMA-SPDM session behind the guest's back.
+>>>>>
+>>>>> Prevent by letting the guest claim exclusive CMA ownership of the device
+>>>>> during passthrough.  Refuse CMA reauthentication on the host as long.
+>>>>> After passthrough has concluded, reauthenticate the device on the host.
+>>>>
+>>>> Is there anything stopping a PF presenting multiple CMA capable DOE
+>>>> instances?  I'd expect them to have their own contexts if they do..
+>>>
+>>> The spec does not seem to *explicitly* forbid a PF having multiple
+>>> CMA-capable DOE instances, but PCIe r6.1 sec 6.31.3 says:
+>>> "The instance of DOE used for CMA-SPDM must support ..."
+>>>
+>>> Note the singular ("The instance").  It seems to suggest that the
+>>> spec authors assumed there's only a single DOE instance for CMA-SPDM.
+>>
+>> It's a little messy and a bit of American vs British English I think.
+>> If it said
+>> "The instance of DOE used for a specific CMA-SPDM must support..."
+>> then it would clearly allow multiple instances.  However, conversely,
+>> I don't read that sentence as blocking multiple instances (even though
+>> I suspect you are right and the author was thinking of there being one).
+>>
+>>>
+>>> Could you (as an English native speaker) comment on the clarity of the
+>>> two sentences "Prevent ... as long." above, as Ilpo objected to them?
+>>>
+>>> The antecedent of "Prevent" is the undesirable behaviour in the preceding
+>>> sentence (host resets guest's SPDM connection).
+>>>
+>>> The antecedent of "as long" is "during passthrough" in the preceding
+>>> sentence.
+>>>
+>>> Is that clear and understandable for an English native speaker or
+>>> should I rephrase?
+>>
+>> Not clear enough to me as it stands.  That "as long" definitely feels
+>> like there is more to follow it as Ilpo noted.
+>>
+>> Maybe reword as something like
+>>
+>> Prevent this by letting the guest claim exclusive ownership of the device
+>> during passthrough ensuring problematic CMA reauthentication by the host
+>> is blocked.
 > 
-> Yes.  drivers/base/node.c vs. memory tiers.
->
-
-Then yes I agree this can and probably should be placed there,
-especially since I see accessor details are now being exposed at that
-level, which can be used to auto-generate weights (assuming HMAT/CDAT
-data exposed by devices is actually accurate).
-
-> > Assuming this is your meaning, I agree and I will pivot to this.
+> My contribution to the prose here is to clarify that this mechanism is
+> less about "appoint the guest as the exslusive owner" and more about
+> "revoke the bare-metal host as the authentication owner".
 > 
-> Can you give a not-so-abstract example?  For example, on a system with
-> node 0, 1, 2, 3, memory tiers 4 (0, 1), 22 (2, 3), ....  A workload runs
-> on CPU of node 0, ...., interleaves memory on node 0, 1, ...  Then
-> compare the different behavior (including memory bandwidth) with node
-> and memory-tier based solution.
+> In fact I don't see how the guest can ever claim to "own" CMA since
+> config-space is always emulated to the guest.
 
-ah, I see.
+No difference to the PSP and the baremetal linux for this matter as the 
+PSP does not have direct access to the config space either.
 
-Example 1: A single-socket system with multiple CXL memory devices
-===
-CPU Node: node0
-CXL Nodes: node1, node2
+> So the guest will always
+> be in a situation where it needs to proxy SPDM related operations. The
+> proxy is either terminated in the host as native SPDM on behalf of the
+> guest, or further proxied to the platform-TSM.
+> 
+> So let's just clarify that at assignment, host control is revoked, and
+> the guest is afforded the opportunity to re-establish authentication
+> either by asking the host re-authenticate on the guest's behalf, or
+> asking the platform-tsm to authenticate the device on the guest's
+> behalf.
+> ...and even there the guest does not know if it is accessing a 1:1 VF:PF
+> device representation, or one VF instance of PF where the PF
+> authentication answer only occurs once for all potential VFs.
+> 
+> Actually, that brings up a question about when to revoke host
+> authentication in the VF assignment case? That seems to be a policy
+> decision that the host needs to make globally for all VFs of a PF. If
+> the guest is going to opt-in to relying on the host's authentication
+> decision then the revoking early may not make sense.
 
-Bandwidth attributes (in theory):
-node0 - 8 channels - ~307GB/s
-node1 - x16 link - 64GB/s
-node2 - x8 link - 32GB/s
+> It may be a
+> decision that needs to be deferred until the guest makes its intentions
+> clear, and the host will need to have policy around how to resolve
+> conflicts between guestA wants "native" and guestB wants "platform-TSM".
+> If the VFs those guests are using map to the same PF then only one
+> policy can be in effect.
 
-In a system like this, the optimal distribution of memory on an
-interleave for maximizing bandwidth is about 76%/16%/8%.
-
-for the sake of simplicity:  --weighted-interleave=0:76,1:16,0:8
-but realistically we could make the weights sysfs values in the node
-
-Regardless of the mechanism to engage this, the most effective way to
-capture this in the system is by applying weights to nodes, not tiers.
-If done in tiers, each node would be assigned to its own tier, making
-the mechanism equivalent. So you might as well simplify the whole thing
-and chop the memtier component out.
-
-Is this configuration realistic? *shrug* - technically possible. And in
-fact most hardware or driver based interleaving mechanisms would not
-really be able to manage an interleave region across these nodes, at
-least not without placing the x16 driver in x8 mode, or just having the
-wrong distribution %'s.
-
-
-
-Example 2: A dual-socket system with 1 CXL device per socket
-===
-CPU Nodes: node0, node1
-CXL Nodes: node2, node3 (on sockets 0 and 1 respective)
-
-Bandwidth Attributes (in theory):
-nodes 0 & 1 - 8 channels - ~307GB/s ea.
-nodes 2 & 3 - x16 link - 64GB/s ea.
-
-This is similar to example #1, but with one difference:  A task running
-on node 0 should not treat nodes 0 and 1 the same, nor nodes 2 and 3.
-This is because on access to nodes 1 and 3, the cross-socket link (UPI,
-or whatever AMD calls it) becomes a bandwidth chokepoint.
-
-So from the perspective of node 0, the "real total" available bandwidth
-is about 307GB+64GB+(41.6GB * UPI Links) in the case of intel.  so the
-best result you could get is around 307+64+164=535GB/s if you have the
-full 4 links.
-
-You'd want to distribute the cross-socket traffic proportional to UPI,
-not the total.
-
-This leaves us with weights of:
-
-node0 - 57%
-node1 - 26%
-node2 - 12%
-node3 - 5%
-
-Again, naturally nodes are the place to carry the weights here. In this
-scenario, placing it in memory-tiers would require that 1 tier per node
-existed.
+To own IDE, the guest will have to have exclusive access to the portion 
+of RC responsible for the IDE keys. Which is doable but requires passing 
+through both RC and the device and probably everything between these 
+two.  It is going to be quite different "host-native" and 
+"guest-native". How IDE keys are going to be programmed into the RC on 
+Intel?
 
 
-Example 3: A single-socket system with 2 CXL devices
-===
-Different than example 1: Both devices are the same.
-
-CPU Node: node0
-CXL Nodes: node1, node2
-
-Bandwidth attributes (in theory):
-node0 - 8 channels - ~307GB/s
-node1/2 - x16 link - 64GB/s
-
-In this case you want the weights to be: 70/15/15% respectively
-
-Caveat: A user may, in fact, use the CXL driver to implement a single
-node which naturally interleaves the 2 devices. In this case it's the
-same as a 1-socket, 1-device setup which is trivially 1-node-per-tier,
-and therefore weights should live with nodes.
-
-In the case of a single memory tier, you could simply make this 70/30.
-
-However, and this the the argument against placing it in the
-memory-tier: the user is free to hack-off any of the chosen numa nodes
-via mempolicy, which makes the aggregated weight meaningless.
-
-Example:  --weighted-interleave=0,1
-
-Under my current code, if I set the weights to 70/30 in the memory-tiers
-code, the result is that node1 inherits the full 30% defined in the
-tier, which leads to a suboptimal distribution.  What you actually want
-in this case is about 83/17% split.
-
-However, this also presents an issue for placing the weights in the
-nodes:  A node weight is meaningless outside the context of the active
-context.  If I have 2 nodes and i set their weights to 70/30, and I hack
-off node1, i can't have 70% of all memory go to node0, I have to send
-100% of the memory to node0 - making the weight functionally
-meaningless.
-
-So this would imply a single global weight set on the nodes is ALSO a
-bad solution, and instead it would be better to extend set_mempolicy
-to have a --weighted-interleave option that reads HMAT/CDAT provided
-bandwidth data and generates the weights for the selected nodes as
-part of the policy.
-
-The downside of this is that if the HMAT/CDAT data is garbage, the
-policy becomes garbage.  To mitigate this, we should consider allowing
-userland to override those values explicitly for the purpose of weighted
-interleave should the HMAT/CDAT information be garbage/lies.
-
-Another downside to this is that nodemask changes require recalculation
-of weights, which may introduce some racey conditions, but that can
-probably be managed.
+-- 
+Alexey
 
 
-Should we carry weights in node, memtier, or mempolicy?
-===
-The current analysis suggest carrying it in memory-tier would simply
-require memory-tier to make 1 tier per node - which may or may not
-be consistent with other goals of the memtier subsystem.
-
-The pros of placing a weight in node is that the "effective" weight in
-the context of the entire system can be calculated at the time nodes are
-created.  If, at interleave time, the interface required a node+nodemask
-then it's probably preferable to forego manual weighting, and simply
-calculate based on HMAT/CDAT data.
-
-The downside of placing it in nodes is that mempolicy is free to set the
-interleave set to some combination of nodes, and this would prevent any
-nodes created after process launch from being used in the interleave set
-unless the software detected the hotplug event.  I don't know how much
-of a real concern this is, but it is a limitation.
-
-The other option is to add --weighted-interleave, but have mempolicy
-generate the weights based on node-provided CDAT/HMAT data (or
-overrides), which keep almost everything inside of mempolicy except for
-a couple of interfaces to drivers/base/node.c that allow querying of
-that data.
-
-
-
-Summarize:
-===
-The weights are actually a function of bandwidth, and can probably be
-calculated on the fly - rather than being manually set. However, we may
-want to consider allowing the bandwidth attributes being exposed by
-CDAT/HMAT to be overridden should the user discover they are functionally
-incorrect. (for reference: I have seen this myself, where a device
-published 5GB/s but actually achieves 22GB/s).
-
-for reference, they are presently RO:
-
-static DEVICE_ATTR_RO(property)
-ACCESS_ATTR(read_bandwidth);
-ACCESS_ATTR(read_latency);
-ACCESS_ATTR(write_bandwidth);
-ACCESS_ATTR(write_latency);
-
-
-~Gregory
