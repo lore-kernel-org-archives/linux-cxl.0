@@ -1,130 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A819F208B8
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Oct 2023 20:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740A09468
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Oct 2023 06:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/VUvGCP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC3CC433C9;
-	Thu, 19 Oct 2023 20:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697748769;
-	bh=3dzWUTFAxmU3wipGFobehTK7P0p+nDlBGaKxyhwIuDs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q/VUvGCPD+aQ6/tm3hG0GsY1Wb4EyUW3sIPOHEyFhKSir6VgPDFZ2LYB60y+uYptJ
-	 PstLQ95C5kTtBd5omwncwSgHvwGBv1MhyUD7uEHyNh1acEgSjbenB/sUo6frnQbE3F
-	 T/dTLZcrnByOzjg/YJ3YBKC6G6aF+td+nXVqf8nj98yM+kCTiBCwqLA9uEYCuFO8C5
-	 VSHcEYoqE0WzAqcKCjUyo+SqBd1U003F6r8/6hjaJ4AamYyCAIb79kF1r1JmE6/x5r
-	 sQraZdU6+3TVWPrUOzkD89mUoyMI0Aqm9F+BTNF+n/uLrw6fWHrLoxW7qPzYrLP0OO
-	 cO0E+BfJD9TYQ==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b9338e4695so1254721fa.2;
-        Thu, 19 Oct 2023 13:52:49 -0700 (PDT)
-X-Gm-Message-State: AOJu0YymY03qzHDIDNY+TooA7Tk081N1TSRjV93nSwmnGYRA7z8I/Di8
-	6x6v/Rh7sIJwE117MiH4kBCrn+zPVXNshblVkeo=
-X-Google-Smtp-Source: AGHT+IGCrajqrcehF155RNIPexecuwUd9uUBKdOjZSmNS43fowCn8+WhCmhmhyAmsVxzLrMoZ+cjhDv3FEXPDug63Zw=
-X-Received: by 2002:a2e:bc12:0:b0:2c5:8b1:7561 with SMTP id
- b18-20020a2ebc12000000b002c508b17561mr87872ljf.10.1697748767605; Thu, 19 Oct
- 2023 13:52:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7KG96SR"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9C3D45;
+	Thu, 19 Oct 2023 23:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697782429; x=1729318429;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=emDe/46ozX0hx7U6yivMfWjRH+gZmCG3CieXsBPTIhI=;
+  b=g7KG96SR4ZMLtUeSUIkTFCoH7EuN7w6DYnicH0MhR2ZlgYP8kFtYk92x
+   /NmSI6R3yWIMoWoHeLm2kHKSHQMQ0L0YiLxElpB2h9Of7mwKgaoqFFa0X
+   0aBy+t0zH71kj/SPKHcIhk0hTHfXaUOBLH6EFVVcFFBYAlj2CC3/yKRdr
+   Ryq9VomvTXOimFbSvzE0nRuM64ZTN4ezNwwVfvANqSwIMmQAsZ0jIj3MG
+   BgLb7wK4y0gwChBzFOtcYF9kCm2uUq/GgSdhTkKepUgR5ZIUSa+lyEnRo
+   gvss6aC+KGMlMfqUCnjC2sD2u/fwq5YEfscbXLZ2b8INi/FQbF+8W9IG7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="450662736"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="450662736"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 23:13:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="827623898"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="827623898"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 23:13:43 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
+  <akpm@linux-foundation.org>,  <sthanneeru@micron.com>,  Aneesh Kumar K.V
+ <aneesh.kumar@linux.ibm.com>,  Wei Xu <weixugc@google.com>,  Alistair
+ Popple <apopple@nvidia.com>,  Dan Williams <dan.j.williams@intel.com>,
+  Dave Hansen <dave.hansen@intel.com>,  Johannes Weiner
+ <hannes@cmpxchg.org>,  "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+  Michal Hocko <mhocko@kernel.org>,  "Tim Chen" <tim.c.chen@intel.com>,
+  Yang Shi <shy828301@gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] mm: mempolicy: Multi-tier weighted interleaving
+In-Reply-To: <ZS9HSIrblel39qrt@memverge.com> (Gregory Price's message of "Tue,
+	17 Oct 2023 22:47:36 -0400")
+References: <20231009204259.875232-1-gregory.price@memverge.com>
+	<87o7gzm22n.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZS3jQRnX4VIdyTL5@memverge.com>
+	<87pm1cwcz5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZS33ClT00KsHKsXQ@memverge.com>
+	<87edhrunvp.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZS9HSIrblel39qrt@memverge.com>
+Date: Fri, 20 Oct 2023 14:11:40 +0800
+Message-ID: <87fs25g6w3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012230301.58500-1-Smita.KoralahalliChannabasappa@amd.com>
- <20231012230301.58500-2-Smita.KoralahalliChannabasappa@amd.com>
- <65288e68de994_2347eb294c2@iweiny-mobl.notmuch> <d5882c60-6636-f651-2886-02c433f77ae1@amd.com>
- <CAMj1kXFsqRuge48Ji5bujgBz_rzbPcLiN84dbXnRytH3yyJPjA@mail.gmail.com> <65302871abbc6_725832944e@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <65302871abbc6_725832944e@dwillia2-xfh.jf.intel.com.notmuch>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 19 Oct 2023 22:52:35 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGHoZS2x1u-J94P29-zxxOM=w0omN9__YZbSnj0xhUOaA@mail.gmail.com>
-Message-ID: <CAMj1kXGHoZS2x1u-J94P29-zxxOM=w0omN9__YZbSnj0xhUOaA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] efi/cper, cxl: Decode CXL Component Events General
- Media Event Record
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Ira Weiny <ira.weiny@intel.com>, 
-	linux-efi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ascii
 
-On Wed, 18 Oct 2023 at 20:48, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Ard Biesheuvel wrote:
-> > On Tue, 17 Oct 2023 at 22:52, Smita Koralahalli
-> > <Smita.KoralahalliChannabasappa@amd.com> wrote:
-> > >
-> > > Hi Ira,
-> > >
-> > > On 10/12/2023 5:25 PM, Ira Weiny wrote:
-> > > > Smita Koralahalli wrote:
-> > > >> Add support for decoding CXL Component Events General Media Event Record
-> > > >> as defined in CXL rev 3.0 section 8.2.9.2.1.1.
-> > > >>
-> > > >> All the event records as defined in Event Record Identifier field of the
-> > > >> Common Event Record Format in CXL rev 3.0 section 8.2.9.2.1 follow the
-> > > >> CPER format for representing the hardware errors if reported by a
-> > > >> platform.
-> > > >>
-> > > >> According to the CPER format, each event record including the General
-> > > >> Media is logged as a CXL Component Event as defined in UEFI 2.10
-> > > >> Section N.2.14 and is identified by a UUID as defined by Event Record
-> > > >> Identifier field in Common Event Record Format of CXL rev 3.0 section
-> > > >> 8.2.9.2.1. CXL Component Event Log field in Component Events Section
-> > > >> corresponds to the component/event specified by the section type UUID.
-> > > >>
-> > > >> Add support for decoding CXL Component Events as defined in UEFI 2.10
-> > > >> Section N.2.14 and decoding Common Event Record as defined in CXL rev 3.0
-> > > >> section 8.2.9.2.1.
-> > > >>
-> > > >> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> > > >
-> > > > [snip]
-> > > >
-> > > >> +
-> > > >> +/*
-> > > >> + * Compute Express Link Common Event Record
-> > > >> + * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-> > > >> + */
-> > > >> +struct common_event_record {
-> > > >> +    u8 identifier[16];
-> > > >
-> > > > I interpreted the CPER structure as not having this identifier here.
-> > > >
-> > > >  From Section N.2.14:
-> > > >
-> > > > "For the CXL Component Event Log: Refer to the Common Event Record field
-> > > > (Offset 16) of the Events Record Format for each CXL component."
-> > > >
-> > > > This implies that the data coming from the CPER record starts at length.
-> > >
-> > > Thanks for pointing this out. According to Spec, you are right. Our
-> > > records did show up the identifier. Hence, I added that field. We should
-> > > probably fix it from our end.
-> > >
-> > > Meanwhile, I'm taking a look at your patches.
-> > >
-> >
-> > Thanks
-> >
-> > Once you've compared notes, can you please let me know how to proceed?
-> > I will not consider Ira's patches or yours for merging before that.
->
-> Ard, I have a higher-level question. If these CPER records get routed to
-> the CXL subsystem to be emitted by code that is shared with the
-> native-driver record-retrieval mechanism, is there still motivation to
-> parse and emit them to the kernel log in the EFI code?
->
-> The difference with these CXL memory error records vs other records like
-> CPER_SEC_PLATFORM_MEM is that the record contains device-local addresses
-> that need translation to be of use to other system-software and that
-> translation needs topology information that the CXL subsystem has
-> enumerated.
->
-> So, my proposal is that the final form of this enabling would emit the
-> record for CXL to consume, but otherwise not emit it via printk().
+Gregory Price <gregory.price@memverge.com> writes:
 
-Yes, that makes sense. If CXL is needed to make sense of this
-information, no point in printing the raw data.
+[snip]
+
+> Example 1: A single-socket system with multiple CXL memory devices
+> ===
+> CPU Node: node0
+> CXL Nodes: node1, node2
+>
+> Bandwidth attributes (in theory):
+> node0 - 8 channels - ~307GB/s
+> node1 - x16 link - 64GB/s
+> node2 - x8 link - 32GB/s
+>
+> In a system like this, the optimal distribution of memory on an
+> interleave for maximizing bandwidth is about 76%/16%/8%.
+>
+> for the sake of simplicity:  --weighted-interleave=0:76,1:16,0:8
+> but realistically we could make the weights sysfs values in the node
+>
+> Regardless of the mechanism to engage this, the most effective way to
+> capture this in the system is by applying weights to nodes, not tiers.
+> If done in tiers, each node would be assigned to its own tier, making
+> the mechanism equivalent. So you might as well simplify the whole thing
+> and chop the memtier component out.
+>
+> Is this configuration realistic? *shrug* - technically possible. And in
+> fact most hardware or driver based interleaving mechanisms would not
+> really be able to manage an interleave region across these nodes, at
+> least not without placing the x16 driver in x8 mode, or just having the
+> wrong distribution %'s.
+>
+>
+>
+> Example 2: A dual-socket system with 1 CXL device per socket
+> ===
+> CPU Nodes: node0, node1
+> CXL Nodes: node2, node3 (on sockets 0 and 1 respective)
+>
+> Bandwidth Attributes (in theory):
+> nodes 0 & 1 - 8 channels - ~307GB/s ea.
+> nodes 2 & 3 - x16 link - 64GB/s ea.
+>
+> This is similar to example #1, but with one difference:  A task running
+> on node 0 should not treat nodes 0 and 1 the same, nor nodes 2 and 3.
+> This is because on access to nodes 1 and 3, the cross-socket link (UPI,
+> or whatever AMD calls it) becomes a bandwidth chokepoint.
+>
+> So from the perspective of node 0, the "real total" available bandwidth
+> is about 307GB+64GB+(41.6GB * UPI Links) in the case of intel.  so the
+> best result you could get is around 307+64+164=535GB/s if you have the
+> full 4 links.
+>
+> You'd want to distribute the cross-socket traffic proportional to UPI,
+> not the total.
+>
+> This leaves us with weights of:
+>
+> node0 - 57%
+> node1 - 26%
+> node2 - 12%
+> node3 - 5%
+>
+> Again, naturally nodes are the place to carry the weights here. In this
+> scenario, placing it in memory-tiers would require that 1 tier per node
+> existed.
+
+Does the workload run on CPU of node 0 only?  This appears unreasonable.
+If the memory bandwidth requirement of the workload is so large that CXL
+is used to expand bandwidth, why not run workload on CPU of node 1 and
+use the full memory bandwidth of node 1?
+
+If the workload run on CPU of node 0 and node 1, then the cross-socket
+traffic should be minimized if possible.  That is, threads/processes on
+node 0 should interleave memory of node 0 and node 2, while that on node
+1 should interleave memory of node 1 and node 3.
+
+But TBH, I lacks knowledge about the real life workloads.  So, my
+understanding may be wrong.  Please correct me for any mistake.
+
+--
+Best Regards,
+Huang, Ying
+
+[snip]
