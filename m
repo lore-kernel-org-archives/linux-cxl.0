@@ -1,139 +1,148 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0900C35506
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Oct 2023 22:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF71DA48
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Oct 2023 06:45:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GCGZBAiV"
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF53219E;
-	Fri, 20 Oct 2023 15:36:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hgRH63/KyvYi0sx8jEQNAca/6iu7gOWJwDii59G+0HEG0Y2m1wc2JZfo6o15DMELNEzNfBgNEdOdfDLkfAup1zGIXcr07QDn1+STBleaB8MeBis/Y0bpl3H4dY9GSTr+PaN2Vn4TVa6FbRI8Y5GXw7MlZjgvdDVzn0m/yn19zKnUcmGprPHXubTlk4DoIlFDuasKEyMTSnlat382U6po1lgaP8urlahmxFmz6IWVj0VPEVJpGc5kasPkTlix31BjZ3VTwJYhOZrE7qsketj/6IK4++/7S5GYhrU3KeyAoyaCtAAHDEcTwZDxaOaKXtSrFrkTD0/+LawZRunBllEzkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5vvBu3zF4ozbBpyzGxZfrcwbNPXq3veibqGamDvg9bc=;
- b=JT0TVE3sOIHNFa76YAJHrmGYQq2UrIgXt6C7Xn8KifKYOQSWSG95BASGiWBNlkx57i6Boq3/vQS6A6EYtAjzGXFZGK9B2KXiENENvHIp9ryU3ckg9RATQZzKcOETNBKtoQLhQcTzygHckcrILLMegmm+uTL4IT4B6MNC+88ekRgNlzJHNFMD+FrBDqTS9X30fziPk3g80XKk7IBtYGHLFTPfU9Dbztw3JtIDHAFvGKaqW6iw5PaIQDBqn0kCja2TzZWENYi3x9ImDqh4HAQxc7tssrx9B1GqA7GMkrktA5A+ej6zZl9YEyqnbgeuicc6ZdVLkGBBfMg/bu9GM6PNIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vvBu3zF4ozbBpyzGxZfrcwbNPXq3veibqGamDvg9bc=;
- b=GCGZBAiV3s87GjX4IG1/iQb0E1bhqnf00Z9/viYKK6GdlHoSZtMem6x81r46n+vbCvMqExnuM4P3TI+wi6iS4MULNDo89G4Ijt4sXHeS79r6nso+R31ZtoaG9QbUqyA3I7GhK8y9Tw6WflIqWsNs55YjgbUYZ2/hiN/e8nmTozg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by DM4PR12MB7672.namprd12.prod.outlook.com (2603:10b6:8:103::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Fri, 20 Oct
- 2023 22:36:45 +0000
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::befc:607d:b3ce:7dbd]) by DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::befc:607d:b3ce:7dbd%5]) with mapi id 15.20.6907.022; Fri, 20 Oct 2023
- 22:36:45 +0000
-Date: Sat, 21 Oct 2023 00:36:39 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Ben Widawsky <bwidawsk@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v12 10/20] cxl/pci: Introduce config option PCIEAER_CXL
-Message-ID: <ZTMA9xQTAMIifnTA@rric.localdomain>
-References: <20231018171713.1883517-1-rrichter@amd.com>
- <20231018171713.1883517-11-rrichter@amd.com>
- <20231019153045.000038cc@Huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231019153045.000038cc@Huawei.com>
-X-ClientProxiedBy: FR4P281CA0126.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b9::7) To DM6PR12MB3657.namprd12.prod.outlook.com
- (2603:10b6:5:149::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCx1AQnO"
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB3DF7
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Oct 2023 23:45:27 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c5056059e0so33486041fa.3
+        for <linux-cxl@vger.kernel.org>; Sat, 21 Oct 2023 23:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697957126; x=1698561926; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ptw826QSjW8MqX4AvipixQgQqyfj6IjrYIlsKSoPH8k=;
+        b=JCx1AQnOg+12C3d6549ktrNwS1jD3TZc1o5Fn7WTByql0U2q8NT/96WqRZLX3+EJd1
+         X7uOBaGxt8ee/YYqpyWnFBC6JB2/e6QCGprurvWYFeatul5MOcEKhoUEPZw4DlPTP9A8
+         kMikIrHMrQSB9RO/gHZhoUkm6BuHmKEQIQUQ8EuAy245ZIUDOBuRhAJWU8OXtyDWgJyc
+         YtDxO1IdP6Oyb/BEkzmm/uNMjssqp/uTrJQ/YTDmKNmIi5bArjp+R/jQmz8HDUmC/81w
+         gYS/fgTs+cqRBuztATPFUpt6m5xPqmwfCi1jPeWZtkdl8B/87R1xSvgdsNsCxmAdZBi3
+         Rqdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697957126; x=1698561926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ptw826QSjW8MqX4AvipixQgQqyfj6IjrYIlsKSoPH8k=;
+        b=bykxBgiv+VcT/mH92LP98sEGrhdErhDNdrY/OC4VfPbLgQMipJi6rY5LUVPRnEckAd
+         fRAvheae57ANJDMNVm+h6OfUsBKU1ljP8l0OyErCXs8BOVbbVdCNafxhVUtJY+ZR4epD
+         l3ZIalc8zhHiS3hyeTmBeDLzh5QU0LlVBMnv0SLsKTZ8nVp53IBdBwNCIrBFbcE1RvJ4
+         bvzhPtKjEqxdQlHfNdk26I3vw/1c56JHDlvGq21j+Nv64B+4AFl7YFRQrkyviyLzeXib
+         hex5SPmnDaS2jbHAUOTXjLkciPERJCMR6QPhyLE6cI1utwYNWVWbl1eqGz7qBlA4tSJf
+         0Iuw==
+X-Gm-Message-State: AOJu0YwXLNMZM8KggVBnaStChQW9JKVhYQ28994TgwI5df/j4zrMTKg3
+	RTsYOhypQES1YZpLjpt59pgu4Rrt9aj7MB3876Q=
+X-Google-Smtp-Source: AGHT+IEYq/B7cqgE9gjHSg8YlhiEEWgVh+S+OJQzTFk8oJfOnjuzxAOgwzxMWaaKRemepN5xv2rWKJUHnGbLsqnVl6I=
+X-Received: by 2002:a2e:9cd6:0:b0:2c5:16d4:32ef with SMTP id
+ g22-20020a2e9cd6000000b002c516d432efmr3951431ljj.46.1697957125527; Sat, 21
+ Oct 2023 23:45:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|DM4PR12MB7672:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb187f57-c4f3-42e0-5840-08dbd1bd09ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	IVU0Wn/d6VPjXl6TWEHajYjlEjSl1bJHtSC8f+41+5B3s0tjFFku+GHGBnVqM+CseNXco18Hc4xXTMaD5uqGxJnqmMfcusahskxiYBz1qFM+XpS4f1rMBgUoKKoQTiVnywx3bANeydnB9qStdvMf2RkHu0V0T/iWqZFbDVShZ8aZYvh4U/uJTsMPz1rRrJKr/23jLCbCbV7X7Mr9L3R4Npq5WqcaSfTjtd+Nzwyy3Lti3lfbRDX0jWfRN0cZIrQvaXt3jaA1gTinUG1YnFpvX5opnSpeqJOaQuS9LI1zhlD5B0ASx4ulyO3jbIDgdCAhNjud9LPcx8VlN/Gy9zSJRzSESNvwvbjyk5KYCuscGGQy1H0x6ZHV/lkGigPG8my6SKE7PoNQsuKAYHOUXElksR8MzdDfQND43biOcozgYL1+ZdDeJ2SQ8U14PxQx3VnTYRNLpT71Hpi/GsyndXSq+75odWryaBjmZkvlYzEPMKWvdFihCcHFlo5KgD2rg4IrI2Ko2t/98BiUmuumix1V/rCB+GRi/L9EigjwQaURqUlvyXoJTCaeXhj9PX6OkA2y
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39860400002)(376002)(136003)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(478600001)(66946007)(66556008)(66476007)(54906003)(6916009)(316002)(6486002)(4326008)(8936002)(7416002)(4744005)(5660300002)(8676002)(41300700001)(2906002)(38100700002)(53546011)(9686003)(6512007)(6666004)(6506007)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r8EBZ+XYSPSyMxB7Hipk77d7q2rAPI5rZ6iCQg0QWl2S3GsaAAHcRZmwe5tM?=
- =?us-ascii?Q?qcl9h8jQTofuuwPEUa1bNjBPYqAn2cD8fL304pLxMQYlybpe8ccVsin5v67M?=
- =?us-ascii?Q?dgMuuHsJU35HVF+6BxFD5a5TiwUx8Z744dwJxIRPm4C+lyzjJU6osBkwdrR+?=
- =?us-ascii?Q?EIJciQ/h1v/sjyJy1klOAlTvUPKVVUTHLpFX8XBdCgcKBBNPHb14mnjLYAle?=
- =?us-ascii?Q?EkQ6YLFwUuhs7LR/NmfIqAUWkjXW1tQuU/CrTDclMw87ACkD6Lxha1QFna43?=
- =?us-ascii?Q?bwpEVnwykyaqbSmJ2tefpIFqHL/7g4BvEaFpD1D2UA4rOmYYD5A5T7VtHeBq?=
- =?us-ascii?Q?eEoPgfJiOwPHjSMWHwHpBU9b99KiIXmPUDMZPHTqb4fCXprufBQnCCpCelvS?=
- =?us-ascii?Q?/Irwfk7m8kqJJ2F8TjRpUflSG8Nuyw306viNF9RxjdyWb8RiXTpKzcT4CFFe?=
- =?us-ascii?Q?QAvMrVevEiQRq7LhopOeWAUpbHp8VAGCwfor/97O0e6H7PM2zAtLTZIP3L+Y?=
- =?us-ascii?Q?R3518TGLvUO7Cxl+ayOvOGAsoGjYlrYIooXbqLExbDHlZd5+Nnm4DQidBpH/?=
- =?us-ascii?Q?pM6f/mvpCw6k7MT0YA/1uztPkMsoJ6AlFnkqsPHqhEvxKQHbuD0PLElc23JT?=
- =?us-ascii?Q?FdxOpiSffSKdC75MbFG5gBpajBBw2nLVGCTrGikDG77FC/lmgnc149X6rHlV?=
- =?us-ascii?Q?jsV/94g16QS7NgmzL6z70f1vh0VWt29YZc7mC6vyAC67FD/fUjjdjhC0rYRq?=
- =?us-ascii?Q?4T5d0A/irQhjQK+yhzvOApu+fGG9KrHkv5HU4dEGfJXmLOefOQolQNzxZaF7?=
- =?us-ascii?Q?Dz5U3MSxBdRU52dJ2rPRdOuj1mW4N9h7lSbCZ+/Gu2cK4SJY+9wQYTjdEXt7?=
- =?us-ascii?Q?8AxXaEQ2KXD6CAyf3b4F44mDSMJi3a5t+bRiwzKi92eZspshlSXteYjytFJi?=
- =?us-ascii?Q?M1enOAXunesGwJIxGlxjhoHppIUlVep04ZlrBpCTGrf00VrKR2bnLR70URb7?=
- =?us-ascii?Q?7+suPw1E2avadYlDXQni5yYEGDPy0CEm97d02sZIbTVg/GYeneUvJT1DPETh?=
- =?us-ascii?Q?OWHwY6FzJNkZ/TR+hpfFjMJSziiS7aG/6WR6AUZ0ZhuJoS6a6zKVrdmI6ieq?=
- =?us-ascii?Q?MLieeBT9hCTJFN9vMp0By0C598YWdEHxA4qD08xgEsj+8PjUU5uIZFiqDN/T?=
- =?us-ascii?Q?YdK4651tGILmTJ1nTYn1rk93k6FSTRu7O55WpNEyth7jrGVKkIqdNHFUuAS+?=
- =?us-ascii?Q?p2SJo6n48VlaT25SygFUkn6nWKMwIPiyIg3RgYNNd1ICRtaizpi+I0eJ09AB?=
- =?us-ascii?Q?0RfGu9yuZbyWs7DQshnwTQPcd2Ky8HR4WwKQPcn5DdCNaMM/eP7Vigi4tQuX?=
- =?us-ascii?Q?1aiAgR1jYUYkpH76Y7EZKpePbCY9RxYhCqIZ+kGjNZDesGUDubjSdjR+da74?=
- =?us-ascii?Q?qGafJZLpfJvuOD5KIMrKnLwe7F3zyHqlRTMhUPAgCVM0CqVZ8EPOd1Q0s0Qj?=
- =?us-ascii?Q?dtYPHR84SHHy4vWAFev1ZLBL7CQWiOhCU3sX/0iffr9uPBo9nWMH/YmRs14k?=
- =?us-ascii?Q?d/9kztAI0volLFzh/D+cCt1w/r9O8nH2gDRzqXRs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb187f57-c4f3-42e0-5840-08dbd1bd09ef
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2023 22:36:45.1221
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ylnJrtpmwqmVufoL1e4avWk5YGtb5McWzYKWfhog5D+4GtYrdV5qiCOUDrxIR6ch62GynxvqmydB41If9shhag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7672
+References: <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
+ <20230823180323.000052d5@Huawei.com> <CAEvOrRyquLL6-d=vOyB9NNOPVE370qjV0zu8XBsTJmpOBx2UNw@mail.gmail.com>
+ <ZPHyoJsZDnzpU7C4@memverge.com> <CAEvOrRw2e3cn=2fNXO8_iX0kg09an-OSx1fnjx7ciGGhZo9f9A@mail.gmail.com>
+ <CAEvOrRy9qoydCqxq7xv1QNM+z+YQZyQORtqdDU2VcVKP42CJhA@mail.gmail.com>
+ <SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
+ <CAEvOrRwOWT5HuoUsjkUyt6HpXQhWVR2Hv6cxJPP+4+0xNQpM8g@mail.gmail.com>
+ <CAEvOrRzrAu-2o9xZC+YBG_7R9hLSm_kZFuUZ98tA23NjFyAupw@mail.gmail.com>
+ <CAEvOrRyMqBcv+6RseVS0x_6a3aJU82tjLJagmqCrgRebx5JaZg@mail.gmail.com> <6532e53ed63b0_21a97294d@iweiny-mobl.notmuch>
+In-Reply-To: <6532e53ed63b0_21a97294d@iweiny-mobl.notmuch>
+From: Ravi Kanth <mvrravikanth@gmail.com>
+Date: Sun, 22 Oct 2023 12:15:13 +0530
+Message-ID: <CAEvOrRxLs8qLjpWM4J16xnuDQfBozYUEW7cLpbr1oHv3Zxzdow@mail.gmail.com>
+Subject: Re: Support for CXL v3.0 spec with QEMU
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Gregory Price <gregory.price@memverge.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Sajjan Rao <sajjanr@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jon,
+Thanks Ira for providing the references.
 
-On 19.10.23 15:30:45, Jonathan Cameron wrote:
-> On Wed, 18 Oct 2023 19:17:03 +0200
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > CXL error handling depends on AER.
-> > 
-> > Introduce config option PCIEAER_CXL in preparation of the AER dport
-> > error handling. Also, introduce the stub function
-> > devm_cxl_setup_parent_dport() to setup dports.
-> > 
-> > This is in preparation of follow on patches.
-> > 
-> > Note the Kconfg part of the option is added in a later patch to enable
-> > it once coding of the feature is complete.
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> LGTM
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I am specifically looking for event support for the switch CCI
+endpoint(/dev/cxl/switch) via the IOCTL interface. I could see
+cxl_swmb_setup_mailbox() in the switchdev.c file. However I am not
+able to understand how user space applications could make use of it.
 
-many thanks for all your instant reviews of that series, that helped a
-lot.
+The ndctl project does not also have references on how we could make
+use of the switch CCI endpoint to get the interrupts nor on how we can
+read "Device status registers" and specifically "Event status
+register" section 8.2.8.3 and 8.2.8.3.1 via IOCTL interface from the
+switch CCI endpoint.
 
--Robert
+- Ravi
+
+
+
+On Sat, Oct 21, 2023 at 2:08=E2=80=AFAM Ira Weiny <ira.weiny@intel.com> wro=
+te:
+>
+> Ravi Kanth wrote:
+> > Hi Jonathan / Gregory,
+> > Just wanted to touch base on below questions and if you have any
+> > inputs on the same. Thanks for your help.
+> >
+> > Thanks
+> > Ravi
+> >
+> > On Wed, Oct 18, 2023 at 4:00=E2=80=AFPM Ravi Kanth <mvrravikanth@gmail.=
+com> wrote:
+> > >
+> > > Hi Jonathan / Gregory,
+> > >
+> > > 1. Do we have the support in CXL driver to read the "Device status
+> > > registers" and specifically "Event status register" section 8.2.8.3
+> > > and 8.2.8.3.1?
+>
+> Yes the upstream driver reads this when processing the Event interrupt
+> from the device.  Then it uses the value to chose which logs to read.
+>
+> See cxl_event_thread() in the kernel source.
+>
+> > > 2. If an interrupt is posted by the device firmware, how will user
+> > > space applications be notified ? Do we have an interface for the same
+> > > in CXL driver?
+>
+> All events are reported through the trace infrastructure.
+>
+> > >
+> > > If the above features are already supported in CXL driver, Can you
+> > > please point us to the sample code snippets to achieve the same?
+>
+> ndctl has the ability to monitor these events and example C code in there=
+.
+>
+> See .../cxl/event_trace.c in the ndctl project.[1]
+>
+> [1] https://github.com/pmem/ndctl
+>
+> > >
+> > > Also does the switch cci function change part of the mainline?
+>
+> I'm not sure I parse this question but I'm also not super familiar with
+> switch cci.  So I'll let Jonathan answer this.
+>
+> Ira
+>
+> > >
+> > > Thanks for your help in advance.
+> > >
+> > > Thanks
+> > > Ravi
+> > >
+>
+> [snip]
+
+
+
+--=20
+Ravi
