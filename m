@@ -1,157 +1,122 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304DD1374
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 02:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZH8O7aJA"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D7419E;
-	Sun, 22 Oct 2023 19:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698027123; x=1729563123;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=X8PfC4/5+STlDD/lTLvT01RQNBVJUC5WbeS43Ah2Um8=;
-  b=ZH8O7aJAMAI1o4RFp3kQV1uzjybwg8uGBhEh3OsKK4HZ3Ol97GSW0C5k
-   Cbn0ep4/i7D/lHt7Gc5KLBCvO5Tngsl2M69Y0xxF5UoVtsrE6zkUei9g5
-   dVVsH+TlSTATNWPGvU8PKvRQo+S8rvjRe3c4o5VQQett3mSphBHf1XAPf
-   EiH6QmAcSE5CpW9DTmCoXMJkOQ7t8rStJ3OSIPV8Q8zXgsyMovoDpJIW/
-   QLF7JXloS0gqI8UNe+0XemUl/qNFXGlkIyCsrtR+aNfy4Inz4oXrOyrTb
-   JDjdpDOHiTrQ1OyZSGsm87aHlEZxdzl9lqnUmn+DfeMmGrW8DmIhHbCa5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="453221744"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="453221744"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 19:12:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="734510129"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="734510129"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 19:11:58 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <akpm@linux-foundation.org>,  <sthanneeru@micron.com>,  Aneesh Kumar K.V
- <aneesh.kumar@linux.ibm.com>,  Wei Xu <weixugc@google.com>,  Alistair
- Popple <apopple@nvidia.com>,  Dan Williams <dan.j.williams@intel.com>,
-  Dave Hansen <dave.hansen@intel.com>,  Johannes Weiner
- <hannes@cmpxchg.org>,  "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-  Michal Hocko <mhocko@kernel.org>,  "Tim Chen" <tim.c.chen@intel.com>,
-  Yang Shi <shy828301@gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] mm: mempolicy: Multi-tier weighted interleaving
-In-Reply-To: <ZTEud5K5T+dRQMiM@memverge.com> (Gregory Price's message of "Thu,
-	19 Oct 2023 09:26:15 -0400")
-References: <20231009204259.875232-1-gregory.price@memverge.com>
-	<87o7gzm22n.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZS3jQRnX4VIdyTL5@memverge.com>
-	<87pm1cwcz5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZS33ClT00KsHKsXQ@memverge.com>
-	<87edhrunvp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZS9HSIrblel39qrt@memverge.com>
-	<87fs25g6w3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZTEud5K5T+dRQMiM@memverge.com>
-Date: Mon, 23 Oct 2023 10:09:56 +0800
-Message-ID: <87ttqidr7v.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5533F1FD9
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 13:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32887E8
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 06:44:28 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDbvb10m8z688Cb;
+	Mon, 23 Oct 2023 21:41:47 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 23 Oct
+ 2023 14:44:25 +0100
+Date: Mon, 23 Oct 2023 14:44:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Ravi Kanth <mvrravikanth@gmail.com>, Gregory Price
+	<gregory.price@memverge.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, Sajjan Rao <sajjanr@gmail.com>
+Subject: Re: Support for CXL v3.0 spec with QEMU
+Message-ID: <20231023144424.000061f4@Huawei.com>
+In-Reply-To: <6532e53ed63b0_21a97294d@iweiny-mobl.notmuch>
+References: <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
+	<20230823180323.000052d5@Huawei.com>
+	<CAEvOrRyquLL6-d=vOyB9NNOPVE370qjV0zu8XBsTJmpOBx2UNw@mail.gmail.com>
+	<ZPHyoJsZDnzpU7C4@memverge.com>
+	<CAEvOrRw2e3cn=2fNXO8_iX0kg09an-OSx1fnjx7ciGGhZo9f9A@mail.gmail.com>
+	<CAEvOrRy9qoydCqxq7xv1QNM+z+YQZyQORtqdDU2VcVKP42CJhA@mail.gmail.com>
+	<SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
+	<CAEvOrRwOWT5HuoUsjkUyt6HpXQhWVR2Hv6cxJPP+4+0xNQpM8g@mail.gmail.com>
+	<CAEvOrRzrAu-2o9xZC+YBG_7R9hLSm_kZFuUZ98tA23NjFyAupw@mail.gmail.com>
+	<CAEvOrRyMqBcv+6RseVS0x_6a3aJU82tjLJagmqCrgRebx5JaZg@mail.gmail.com>
+	<6532e53ed63b0_21a97294d@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 
-Gregory Price <gregory.price@memverge.com> writes:
+On Fri, 20 Oct 2023 13:38:22 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Fri, Oct 20, 2023 at 02:11:40PM +0800, Huang, Ying wrote:
->> Gregory Price <gregory.price@memverge.com> writes:
->> 
->> >
-> [...snip...]
->> > Example 2: A dual-socket system with 1 CXL device per socket
->> > ===
->> > CPU Nodes: node0, node1
->> > CXL Nodes: node2, node3 (on sockets 0 and 1 respective)
->> >
-> [...snip...]
->> > This is similar to example #1, but with one difference:  A task running
->> > on node 0 should not treat nodes 0 and 1 the same, nor nodes 2 and 3.
-> [...snip...]
->> > This leaves us with weights of:
->> >
->> > node0 - 57%
->> > node1 - 26%
->> > node2 - 12%
->> > node3 - 5%
->> >
->> 
->> Does the workload run on CPU of node 0 only?  This appears unreasonable.
->
-> Depends.  if a user explicitly launches with `numactl --cpunodebind=0`
-> then yes, you can force a task (and all its children) to run on node0.
+> Ravi Kanth wrote:
+> > Hi Jonathan / Gregory,
+> > Just wanted to touch base on below questions and if you have any
+> > inputs on the same. Thanks for your help.
+> >=20
+> > Thanks
+> > Ravi
+> >=20
+> > On Wed, Oct 18, 2023 at 4:00=E2=80=AFPM Ravi Kanth <mvrravikanth@gmail.=
+com> wrote: =20
+> > >
+> > > Hi Jonathan / Gregory,
+> > >
+> > > 1. Do we have the support in CXL driver to read the "Device status
+> > > registers" and specifically "Event status register" section 8.2.8.3
+> > > and 8.2.8.3.1? =20
+>=20
+> Yes the upstream driver reads this when processing the Event interrupt
+> from the device.  Then it uses the value to chose which logs to read.
+>=20
+> See cxl_event_thread() in the kernel source.
+>=20
+> > > 2. If an interrupt is posted by the device firmware, how will user
+> > > space applications be notified ? Do we have an interface for the same
+> > > in CXL driver? =20
+>=20
+> All events are reported through the trace infrastructure.
+>=20
+> > >
+> > > If the above features are already supported in CXL driver, Can you
+> > > please point us to the sample code snippets to achieve the same? =20
+>=20
+> ndctl has the ability to monitor these events and example C code in there.
+>=20
+> See .../cxl/event_trace.c in the ndctl project.[1]
+>=20
+> [1] https://github.com/pmem/ndctl
+>=20
+> > >
+> > > Also does the switch cci function change part of the mainline? =20
+>=20
+> I'm not sure I parse this question but I'm also not super familiar with
+> switch cci.  So I'll let Jonathan answer this.
 
-IIUC, in your example, the `numactl` command line will be
+Patches posted for review only at the moment - so 6.8 at earliest given tim=
+ing.
+https://lore.kernel.org/all/20231016125323.18318-1-Jonathan.Cameron@huawei.=
+com/
 
-  numactl --cpunodebind=0 --weighted-interleave=0,1,2,3
+Main change to existing handling is that a bunch of mailbox related handlin=
+g is
+factored out for reuse.  Otherwise, it's 'just another PCI endpoint driver'.
 
-That is, the CPU is restricted to node 0, while memory is distributed to
-all nodes.  This doesn't sound like reasonable for me.
+Jonathan
 
-> If a workload multi-threaded enough to run on both sockets, then you are
-> right that you'd want to basically limit cross-socket traffic by binding
-> individual threads to nodes that don't cross sockets - if at all
-> feasible this may not be feasible).
->
-> But at that point, we're getting into the area of numa-aware software.
-> That's a bit beyond the scope of this - which is to enable a coarse
-> grained interleaving solution that can easily be accessed with something
-> like `numactl --interleave` or `numactl --weighted-interleave`.
->
->> If the memory bandwidth requirement of the workload is so large that CXL
->> is used to expand bandwidth, why not run workload on CPU of node 1 and
->> use the full memory bandwidth of node 1?
->
-> Settings are NOT one size fits all.  You can certainly come up with another
-> scenario in which these weights are not optimal.
->
-> If we're running enough threads that we need multiple sockets to run
-> them concurrently, then the memory distribution weights become much more
-> complex.  Without more precise control over task placement and
-> preventing task migration, you can't really get an "optimal" placement.
->
-> What I'm really saying is "Task placement is a more powerful function
-> for predicting performance than memory placement".  However, user
-> software would need to implement a pseudo-scheduler and explicit data
-> placement to be the most optimized.  Beyond this, there is only so much
-> we can do from a `numactl` perspective.
->
-> tl;dr: We can't get a perfect system here, because getting a best-case
-> for all possible scenarios is an probably undecidable problem. You will
-> always be able to generate an example wherein the system is not optimal.
->
->> 
->> If the workload run on CPU of node 0 and node 1, then the cross-socket
->> traffic should be minimized if possible.  That is, threads/processes on
->> node 0 should interleave memory of node 0 and node 2, while that on node
->> 1 should interleave memory of node 1 and node 3.
->
-> This can be done with set_mempolicy() with MPOL_INTERLEAVE and set the
-> nodemask to the what you describe.  Those tasks need to also prevent
-> themselves from being migrated as well.  But this can absolutely be
-> done.
->
-> In this scenario, the weights need to be re-calculated to be based on
-> the bandwidth of the nodes in the mempolicy nodemask, which is what i
-> described in the last email.
+>=20
+> Ira
+>=20
+> > >
+> > > Thanks for your help in advance.
+> > >
+> > > Thanks
+> > > Ravi
+> > > =20
+>=20
+> [snip]
+>=20
 
-IMHO, we should keep thing as simple as possible, only add complexity if
-necessary.
-
---
-Best Regards,
-Huang, Ying
