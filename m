@@ -1,28 +1,30 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E49125DD
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 14:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F003D19BC0
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 14:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBCD103
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 07:02:13 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDcLM3hZQz6K9DT;
-	Mon, 23 Oct 2023 22:01:31 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9646D73
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 07:02:44 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDcLz50p5z6K9DQ;
+	Mon, 23 Oct 2023 22:02:03 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 23 Oct 2023 15:02:10 +0100
+ 15.1.2507.31; Mon, 23 Oct 2023 15:02:40 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Michael Tsirkin
 	<mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>
 CC: <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v5 0/5] hw/cxl: Line length reduction and related
-Date: Mon, 23 Oct 2023 15:02:05 +0100
-Message-ID: <20231023140210.3089-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 1/5] hw/cxl: Use a switch to explicitly check size in caps_reg_read()
+Date: Mon, 23 Oct 2023 15:02:06 +0100
+Message-ID: <20231023140210.3089-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231023140210.3089-1-Jonathan.Cameron@huawei.com>
+References: <20231023140210.3089-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -36,45 +38,40 @@ X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 
-v5:
- - As _Static_assert() is a declaration it cannot follow a label (until
-   C23).
-   Upshot of that is to compile in clang (possibly older GCC) we need
-   to add {} to case statements that start with QEMU_BUILD_BUG_ON()
- - Add patch to handle another QEMU_BUILD_BUG_ON() case by dropping the
-   unnecessary check.
+Bring this read function inline with the others that do
+check for unexpected size values.
 
-Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+Also reduces line lengths to sub 80 chars.
 
-Michael observed that the CXL code regularly went above the 80 character
-recommendation and in many cases this was not necessary for readability.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+---
+ hw/cxl/cxl-device-utils.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-This series is focused on tidying this up for the existing code so that
-we can maintain the preferred formatting going forwards.
-
-Jonathan Cameron (5):
-  hw/cxl: Use a switch to explicitly check size in caps_reg_read()
-  hw/cxl: Use switch statements for read and write of cachemem registers
-  hw/cxl: CXLDVSECPortExtensions renamed to CXLDVSECPortExt
-  hw/cxl: Line length reductions
-  hw/cxl: Fix a QEMU_BUILD_BUG_ON() in switch statement scope issue.
-
- include/hw/cxl/cxl_component.h |   3 +-
- include/hw/cxl/cxl_device.h    |   5 +-
- include/hw/cxl/cxl_events.h    |   3 +-
- include/hw/cxl/cxl_pci.h       |   6 +-
- hw/cxl/cxl-cdat.c              |   3 +-
- hw/cxl/cxl-component-utils.c   | 130 ++++++++++++++++++++-------------
- hw/cxl/cxl-device-utils.c      |  11 ++-
- hw/cxl/cxl-events.c            |   9 ++-
- hw/cxl/cxl-mailbox-utils.c     |  21 ++++--
- hw/mem/cxl_type3.c             |  31 +++++---
- hw/mem/cxl_type3_stubs.c       |   5 +-
- hw/pci-bridge/cxl_downstream.c |   2 +-
- hw/pci-bridge/cxl_root_port.c  |   2 +-
- hw/pci-bridge/cxl_upstream.c   |   2 +-
- 14 files changed, 144 insertions(+), 89 deletions(-)
-
+diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+index bd68328032..eb7195272e 100644
+--- a/hw/cxl/cxl-device-utils.c
++++ b/hw/cxl/cxl-device-utils.c
+@@ -32,10 +32,13 @@ static uint64_t caps_reg_read(void *opaque, hwaddr offset, unsigned size)
+ {
+     CXLDeviceState *cxl_dstate = opaque;
+ 
+-    if (size == 4) {
+-        return cxl_dstate->caps_reg_state32[offset / sizeof(*cxl_dstate->caps_reg_state32)];
+-    } else {
+-        return cxl_dstate->caps_reg_state64[offset / sizeof(*cxl_dstate->caps_reg_state64)];
++    switch (size) {
++    case 4:
++        return cxl_dstate->caps_reg_state32[offset / size];
++    case 8:
++        return cxl_dstate->caps_reg_state64[offset / size];
++    default:
++        g_assert_not_reached();
+     }
+ }
+ 
 -- 
 2.39.2
 
