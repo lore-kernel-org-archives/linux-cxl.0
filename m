@@ -1,333 +1,175 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878CD18E36
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414FE10A
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 09:16:47 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDgHL0vrLz6K6Rw;
-	Tue, 24 Oct 2023 00:14:06 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 23 Oct 2023 17:16:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Michael Tsirkin
-	<mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>
-CC: <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>, Gregory Price
-	<gregory.price@memverge.com>, Davidlohr Bueso <dave@stgolabs.net>, Klaus
- Jensen <its@irrelevant.dk>, Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH v2 17/17] hw/cxl: Add tunneled command support to mailbox for switch cci.
-Date: Mon, 23 Oct 2023 17:08:06 +0100
-Message-ID: <20231023160806.13206-18-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231023160806.13206-1-Jonathan.Cameron@huawei.com>
-References: <20231023160806.13206-1-Jonathan.Cameron@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3622110D
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 17:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jCOAZSxh"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5017E94
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 10:49:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698083367; x=1729619367;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Xav6qcS4ougcoVjHe9d4XNr/uMwsK8OyhoY+dkoPPCU=;
+  b=jCOAZSxhWLk1e6uzM2whTzPdObfRMUUk73f5eb53MMy4JyJGlKg9M0b/
+   vApkgaqjXbn0IuHhE2aZkFSfABI4MRzr9nmFU6N9kjUy5ZtVPRe5SpYKC
+   2MbSznkJzMjPJfRAGiJ9g5qLSz+bwn2O6OXK60r3dDrSMSF8RcXAe/RKX
+   KTdgLNXeYfxK5XslrYV/IpaPLNSa0lBtaw3TQci8vLeEkl+sjfK8gckha
+   oKKLZ4zd+UYelFxYy79ADgJi0cMH/WQbs8lp25M7p9/nlOWj459oKSBP5
+   63ieK/aesXTwLsd7sZ/c/Iqx1v/TsrPDJw6Abjo6LR9bCneJ+2vhzfLxd
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="390778525"
+X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
+   d="scan'208";a="390778525"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 10:49:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="734746835"
+X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
+   d="scan'208";a="734746835"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.152.143])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 10:49:24 -0700
+Date: Mon, 23 Oct 2023 10:49:17 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+	vishal.l.verma@intel.com, ira.weiny@intel.com
+Subject: Re: [PATCH v3 1/2] cxl: Add cxl_decoders_committed() helper
+Message-ID: <ZTayHZgMI3nIOgcC@aschofie-mobl2>
+References: <169747906849.272156.1729290904857372335.stgit@djiang5-mobl3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169747906849.272156.1729290904857372335.stgit@djiang5-mobl3>
 
-This implementation of tunneling makes the choice that our Type 3 device is
-a Logical Device (LD) of a Multi-Logical Device (MLD) that just happens to
-only have one LD for now.
+On Mon, Oct 16, 2023 at 10:57:48AM -0700, Dave Jiang wrote:
+> Add a helper to retrieve the number of decoders committed for the port.
+> Replace all the open coding of the calculation with the helper.
 
-Tunneling is supported from a Switch Mailbox CCI (and shortly via MCTP over
-I2C connected to the switch MCTP CCI) via an outer level to the FM owned LD
-in the MLD Type 3 device. From there an inner tunnel may be used to access
-particular LDs.
 
-Protocol wise, the following is what happens in a real system but we
-don't emulate the transports - just the destinations and the payloads.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-( Host -> Switch Mailbox CCI - in band FM-API mailbox command
-  or
-  Host -> Switch MCTP CCI - MCTP over I2C using the CXL FM-API
-  MCTP Binding.
-)
-then (if a tunnel command)
-Switch -> Type 3 FM Owned LD - MCTP over PCI VDM using the
-CXL FM-API binding (addressed by switch port)
-then (if unwrapped command also a tunnel command)
-Type 3 FM Owned LD to LD0 via internal transport
-(addressed by LD number)
-
-or (added shortly)
-
-Host to Type 3 FM Owned MCTP CCI - MCTP over I2C using the
-CXL FM-API MCTP Binding.
-then (if unwrapped comand is a tunnel comamnd)
-Type 3 FM Owned LD to LD0 via internal transport.
-(addressed by LD number)
-
-It is worth noting that the tunneling commands over PCI VDM
-presumably use the appropriate MCTP binding depending on opcode.
-This may be the CXL FMAPI binding or the CXL Memory Device Binding.
-
-Additional commands will need to be added to make this
-useful beyond testing the tunneling works.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v2:
-- Fix some missing element in tunneled responses (tag, cmd, cmd_set)
-  Picked up by adding a more exhaustive test case.
-- Reordering to move the MCTP over i2c support to after this resulted
-  in various changes.
----
- include/hw/cxl/cxl_device.h |   9 ++
- hw/cxl/cxl-mailbox-utils.c  | 162 ++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3.c          |  11 +++
- 3 files changed, 182 insertions(+)
-
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 70aca9024c..61b7f897f7 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -279,6 +279,12 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-                             size_t len_in, uint8_t *pl_in,
-                             size_t *len_out, uint8_t *pl_out,
-                             bool *bg_started);
-+void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
-+                                           DeviceState *intf,
-+                                           size_t payload_max);
-+
-+void cxl_initialize_t3_ld_cci(CXLCCI *cci, DeviceState *d,
-+                              DeviceState *intf, size_t payload_max);
- 
- #define cxl_device_cap_init(dstate, reg, cap_id, ver)                      \
-     do {                                                                   \
-@@ -397,6 +403,9 @@ struct CXLType3Dev {
-     CXLComponentState cxl_cstate;
-     CXLDeviceState cxl_dstate;
-     CXLCCI cci; /* Primary PCI mailbox CCI */
-+    /* Always intialized as no way to know if a VDM might show up */
-+    CXLCCI vdm_fm_owned_ld_mctp_cci;
-+    CXLCCI ld0_cci;
- 
-     /* DOE */
-     DOECap doe_cdat;
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 693c2cbdcd..b365575097 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -82,8 +82,132 @@ enum {
-     PHYSICAL_SWITCH = 0x51,
-         #define IDENTIFY_SWITCH_DEVICE      0x0
-         #define GET_PHYSICAL_PORT_STATE     0x1
-+    TUNNEL = 0x53,
-+        #define MANAGEMENT_COMMAND     0x0
- };
- 
-+/* CCI Message Format CXL r3.0 Figure 7-19 */
-+typedef struct CXLCCIMessage {
-+    uint8_t category;
-+#define CXL_CCI_CAT_REQ 0
-+#define CXL_CCI_CAT_RSP 1
-+    uint8_t tag;
-+    uint8_t resv1;
-+    uint8_t command;
-+    uint8_t command_set;
-+    uint8_t pl_length[3];
-+    uint16_t rc;
-+    uint16_t vendor_specific;
-+    uint8_t payload[];
-+} QEMU_PACKED CXLCCIMessage;
-+
-+/* This command is only defined to an MLD FM Owned LD or an MHD */
-+static CXLRetCode cmd_tunnel_management_cmd(const struct cxl_cmd *cmd,
-+                                            uint8_t *payload_in,
-+                                            size_t len_in,
-+                                            uint8_t *payload_out,
-+                                            size_t *len_out,
-+                                            CXLCCI *cci)
-+{
-+    PCIDevice *tunnel_target;
-+    CXLCCI *target_cci;
-+    struct {
-+        uint8_t port_or_ld_id;
-+        uint8_t target_type;
-+        uint16_t size;
-+        CXLCCIMessage ccimessage;
-+    } QEMU_PACKED *in;
-+    struct {
-+        uint16_t resp_len;
-+        uint8_t resv[2];
-+        CXLCCIMessage ccimessage;
-+    } QEMU_PACKED *out;
-+    size_t pl_length, length_out;
-+    bool bg_started;
-+    int rc;
-+
-+    if (cmd->in < sizeof(*in)) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+    in = (void *)payload_in;
-+    out = (void *)payload_out;
-+
-+    /* Enough room for minimum sized message - no payload */
-+    if (in->size < sizeof(in->ccimessage)) {
-+        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-+    }
-+    /* Length of input payload should be in->size + a wrapping tunnel header */
-+    if (in->size != len_in - offsetof(typeof(*out), ccimessage)) {
-+        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-+    }
-+    if (in->ccimessage.category != CXL_CCI_CAT_REQ) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    if (in->target_type != 0) {
-+        qemu_log_mask(LOG_UNIMP,
-+                      "Tunneled Command sent to non existent FM-LD");
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    /*
-+     * Target of a tunnel unfortunately depends on type of CCI readint
-+     * the message.
-+     * If in a switch, then it's the port number.
-+     * If in an MLD it is the ld number.
-+     * If in an MHD target type indicate where we are going.
-+     */
-+    if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_TYPE3)) {
-+        CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-+        if (in->port_or_ld_id != 0) {
-+            /* Only pretending to have one for now! */
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        target_cci = &ct3d->ld0_cci;
-+    } else if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_USP)) {
-+        CXLUpstreamPort *usp = CXL_USP(cci->d);
-+
-+        tunnel_target = pcie_find_port_by_pn(&PCI_BRIDGE(usp)->sec_bus,
-+                                             in->port_or_ld_id);
-+        if (!tunnel_target) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        tunnel_target =
-+            pci_bridge_get_sec_bus(PCI_BRIDGE(tunnel_target))->devices[0];
-+        if (!tunnel_target) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        if (object_dynamic_cast(OBJECT(tunnel_target), TYPE_CXL_TYPE3)) {
-+            CXLType3Dev *ct3d = CXL_TYPE3(tunnel_target);
-+            /* Tunneled VDMs always land on FM Owned LD */
-+            target_cci = &ct3d->vdm_fm_owned_ld_mctp_cci;
-+        } else {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+    } else {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    pl_length = in->ccimessage.pl_length[2] << 16 |
-+        in->ccimessage.pl_length[1] << 8 | in->ccimessage.pl_length[0];
-+    rc = cxl_process_cci_message(target_cci,
-+                                 in->ccimessage.command_set,
-+                                 in->ccimessage.command,
-+                                 pl_length, in->ccimessage.payload,
-+                                 &length_out, out->ccimessage.payload,
-+                                 &bg_started);
-+    /* Payload should be in place. Rest of CCI header and needs filling */
-+    out->resp_len = length_out + sizeof(CXLCCIMessage);
-+    st24_le_p(out->ccimessage.pl_length, length_out);
-+    out->ccimessage.rc = rc;
-+    out->ccimessage.category = CXL_CCI_CAT_RSP;
-+    out->ccimessage.command = in->ccimessage.command;
-+    out->ccimessage.command_set = in->ccimessage.command_set;
-+    out->ccimessage.tag = in->ccimessage.tag;
-+    *len_out = length_out + sizeof(*out);
-+
-+    return CXL_MBOX_SUCCESS;
-+}
- 
- static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
-                                          uint8_t *payload_in, size_t len_in,
-@@ -1171,6 +1295,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-         cmd_identify_switch_device, 0, 0 },
-     [PHYSICAL_SWITCH][GET_PHYSICAL_PORT_STATE] = { "SWITCH_PHYSICAL_PORT_STATS",
-         cmd_get_physical_port_state, ~0, 0 },
-+    [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
-+                                     cmd_tunnel_management_cmd, ~0, 0 },
- };
- 
- /*
-@@ -1347,3 +1473,39 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
-     cci->intf = d;
-     cxl_init_cci(cci, payload_max);
- }
-+
-+static const struct cxl_cmd cxl_cmd_set_t3_ld[256][256] = {
-+    [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
-+    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0,
-+                              0 },
-+    [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-+};
-+
-+void cxl_initialize_t3_ld_cci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
-+                               size_t payload_max)
-+{
-+    cci->cxl_cmd_set = cxl_cmd_set_t3_ld;
-+    cci->d = d;
-+    cci->intf = intf;
-+    cxl_init_cci(cci, payload_max);
-+}
-+
-+static const struct cxl_cmd cxl_cmd_set_t3_fm_owned_ld_mctp[256][256] = {
-+    [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0,  0},
-+    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0,
-+                              0 },
-+    [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-+    [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-+    [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
-+                                     cmd_tunnel_management_cmd, ~0, 0 },
-+};
-+
-+void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
-+                                           DeviceState *intf,
-+                                           size_t payload_max)
-+{
-+    cci->cxl_cmd_set = cxl_cmd_set_t3_fm_owned_ld_mctp;
-+    cci->d = d;
-+    cci->intf = intf;
-+    cxl_init_cci(cci, payload_max);
-+}
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index a766c64575..52647b4ac7 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -936,6 +936,17 @@ static void ct3d_reset(DeviceState *dev)
- 
-     cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
-     cxl_device_register_init_t3(ct3d);
-+
-+    /*
-+     * Bring up an endpoint to target with MCTP over VDM.
-+     * This device is emulating an MLD with single LD for now.
-+     */
-+    cxl_initialize_t3_fm_owned_ld_mctpcci(&ct3d->vdm_fm_owned_ld_mctp_cci,
-+                                          DEVICE(ct3d), DEVICE(ct3d),
-+                                          512); /* Max payload made up */
-+    cxl_initialize_t3_ld_cci(&ct3d->ld0_cci, DEVICE(ct3d), DEVICE(ct3d),
-+                             512); /* Max payload made up */
-+
- }
- 
- static Property ct3_props[] = {
--- 
-2.39.2
-
+> 
+> Link: https://lore.kernel.org/linux-cxl/651c98472dfed_ae7e729495@dwillia2-xfh.jf.intel.com.notmuch/
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> ---
+> v3:
+> - Rename cxl_decoders_committed() to cxl_num_decoders_comitted() (Jim)
+> - Compare cxl_num_decoders_committed() to 0 to improve readability (Jim)
+> v2:
+> - Remove EXPORT_SYMBOL() (Dan)
+> - Rebase on top of Dan's Fix shutdown order series, to pick up
+>   cxl_region_rwsem export.
+> ---
+>  drivers/cxl/core/hdm.c    |    7 ++++---
+>  drivers/cxl/core/mbox.c   |    2 +-
+>  drivers/cxl/core/memdev.c |    4 ++--
+>  drivers/cxl/core/port.c   |    7 +++++++
+>  drivers/cxl/cxl.h         |    1 +
+>  5 files changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 506c9e14cdf9..7d112557c939 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -643,10 +643,11 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  	if (cxld->flags & CXL_DECODER_F_ENABLE)
+>  		return 0;
+>  
+> -	if (port->commit_end + 1 != id) {
+> +	if (cxl_num_decoders_committed(port) != id) {
+>  		dev_dbg(&port->dev,
+>  			"%s: out of order commit, expected decoder%d.%d\n",
+> -			dev_name(&cxld->dev), port->id, port->commit_end + 1);
+> +			dev_name(&cxld->dev), port->id,
+> +			cxl_num_decoders_committed(port));
+>  		return -EBUSY;
+>  	}
+>  
+> @@ -863,7 +864,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+>  		else
+>  			cxld->target_type = CXL_DECODER_DEVMEM;
+> -		if (cxld->id != port->commit_end + 1) {
+> +		if (cxld->id != cxl_num_decoders_committed(port)) {
+>  			dev_warn(&port->dev,
+>  				 "decoder%d.%d: Committed out of order\n",
+>  				 port->id, cxld->id);
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 67aec57cc12f..04033b06f75f 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1200,7 +1200,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>  	 * Require an endpoint to be safe otherwise the driver can not
+>  	 * be sure that the device is unmapped.
+>  	 */
+> -	if (endpoint && endpoint->commit_end == -1)
+> +	if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
+>  		rc = __cxl_mem_sanitize(mds, cmd);
+>  	else
+>  		rc = -EBUSY;
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index fed9573cf355..fc5c2b414793 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -231,7 +231,7 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+>  	if (rc)
+>  		return rc;
+>  
+> -	if (port->commit_end == -1) {
+> +	if (cxl_num_decoders_committed(port) == 0) {
+>  		/* No regions mapped to this memdev */
+>  		rc = cxl_get_poison_by_memdev(cxlmd);
+>  	} else {
+> @@ -282,7 +282,7 @@ static struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
+>  		.dpa = dpa,
+>  	};
+>  	port = cxlmd->endpoint;
+> -	if (port && is_cxl_endpoint(port) && port->commit_end != -1)
+> +	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
+>  		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+>  
+>  	return ctx.cxlr;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 5ba606c6e03f..d0ed98a6bade 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -37,6 +37,13 @@ DECLARE_RWSEM(cxl_region_rwsem);
+>  static DEFINE_IDA(cxl_port_ida);
+>  static DEFINE_XARRAY(cxl_root_buses);
+>  
+> +int cxl_num_decoders_committed(struct cxl_port *port)
+> +{
+> +	lockdep_assert_held(&cxl_region_rwsem);
+> +
+> +	return port->commit_end + 1;
+> +}
+> +
+>  static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+>  			    char *buf)
+>  {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 76d92561af29..36bd3f06dd90 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -679,6 +679,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  	return port->uport_dev == port->dev.parent;
+>  }
+>  
+> +int cxl_num_decoders_committed(struct cxl_port *port);
+>  bool is_cxl_port(const struct device *dev);
+>  struct cxl_port *to_cxl_port(const struct device *dev);
+>  struct pci_bus;
+> 
+> 
