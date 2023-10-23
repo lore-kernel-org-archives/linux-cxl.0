@@ -1,111 +1,127 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD58200AE
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 23:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687E324204
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 23:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CkXUppXT"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208C19C
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 16:22:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JzKg23np"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDF9CC
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 16:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698103368; x=1729639368;
+  t=1698103813; x=1729639813;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qRAEqekCplNXryi5dEri9erTXOGrgJW8rcpyq1XvUXs=;
-  b=CkXUppXTFJP6M4myvxHGsgbc/T6U7LvLAodl5j/ctDi/EicHcdsRs2ts
-   z+VZtQ5OmJDFaXoTGUd8Pmmb40KEKJW6TaKwa1HfMPVKY/ue3ZJzMw3Go
-   XyqfxsIuWVlICvx8UOt6MJ2VlfNzPIwZn2DuGv9AbE2+9GyUfNluMz2Lr
-   Bpw0tT8il6fXaH5JfRMMgejDqu2bgtUWx9yPhla2dfqsbSx7LoILyiUaf
-   TnXADr8aK7y/T4L/Zrr1kXszM4rJ1mswQktL/twSn1dySYNXMh0cuAL4T
-   iESXiqAaIz0u4BTBzCk36b+slb+hlDd7uwYd+TAoThxPSFqSYdQCK/TxR
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="367176602"
+   mime-version:in-reply-to;
+  bh=XwiDFg0DMHv3Bbj24GSFTjrNjNP4XoNl8HVJBaSAKSY=;
+  b=JzKg23np1P50hwSEJaI6majWBpvU6bxX+dJNY+uWPaOHBsZre0RTSDKF
+   e3Q0OtQSZnfIwlo91AP47u0yUewRPO2qgP5xg6eBGkXvT36zcgitUujy/
+   yCrURb+OjVVdAHoHmFeLhOZDVKbDsDj7Ff/t1Lk5ilnvDfaJLCeOd1xDF
+   bW05otKUn66YoEZHJRrBcve+61yZJAjfTlF2AOm+JPl9CJ06J7fPqw9ks
+   h2Jun6tyAZiUZCEKsd2hCXzteoLjTJ5RsjESSl7Hq3riyiKHNAFNNHta3
+   uQTk6pXCSF8VoaQuDU00k13/ZeOWNYnDZ6MBx51nppJer5+bdM3pQvg3I
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="389795235"
 X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
-   d="scan'208";a="367176602"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 16:22:47 -0700
+   d="scan'208";a="389795235"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 16:30:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="874857369"
 X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
-   d="scan'208";a="874857369"
+   d="scan'208";a="5973155"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.152.143])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 16:22:47 -0700
-Date: Mon, 23 Oct 2023 16:22:45 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 16:28:56 -0700
+Date: Mon, 23 Oct 2023 16:30:10 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Jim Harris <jim.harris@samsung.com>
+To: Dan Williams <dan.j.williams@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
 	Dmytro Adamenko <dmytro.adamenko@intel.com>
 Subject: Re: [PATCH v2 1/3] cxl/region: Prepare the decoder match range
  helper for reuse
-Message-ID: <ZTcARXZ8E7SAMbWX@aschofie-mobl2>
+Message-ID: <ZTcCAvus2giVK7ry@aschofie-mobl2>
 References: <cover.1697433770.git.alison.schofield@intel.com>
- <CGME20231016060244uscas1p15e15e2d44388f12511a67c003dc2bff5@uscas1p1.samsung.com>
  <8dd4210f464e971a7989c7c923747cf2e10409ef.1697433770.git.alison.schofield@intel.com>
- <CDA18391-931B-4564-8B97-9DE92790C9CA@ssi.samsung.com>
- <BF2AFEEE-9A92-412E-A9D4-27D82EC6AB38@ssi.samsung.com>
+ <6536dd82d3b6d_725832949a@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BF2AFEEE-9A92-412E-A9D4-27D82EC6AB38@ssi.samsung.com>
+In-Reply-To: <6536dd82d3b6d_725832949a@dwillia2-xfh.jf.intel.com.notmuch>
 
-On Tue, Oct 17, 2023 at 05:24:45PM +0000, Jim Harris wrote:
+On Mon, Oct 23, 2023 at 01:54:26PM -0700, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > match_decoder_by_range() and decoder_match_range() both determine
+> > if an HPA range matches a decoder. The first does it for root
+> > decoders and the second one operates on switch decoders.
+> > 
+> > Tidy these up with clear naming and make the switch helper more
+> > like the root decoder helper in style and functionality. Make it
+> > take the actual range, rather than an endpoint decoder from which
+> > it extracts the range.
+> > 
+> > Aside from aesthetics and maintainability, this is in preparation
+> > for reuse.
 > 
+> Some minor changelog comments:
 > 
-> > On Oct 17, 2023, at 9:20 AM, Jim Harris <jim.harris@samsung.com> wrote:
 > > 
-> > 
-> > 
-> >> On Oct 15, 2023, at 11:02 PM, alison.schofield@intel.com wrote:
-> >> 
-> >> From: Alison Schofield <alison.schofield@intel.com>
-> >> 
-> >> 
-> >> -static int decoder_match_range(struct device *dev, void *data)
-> >> +static int match_switch_decoder_by_range(struct device *dev, void *data)
-> >> {
-> >> - struct cxl_endpoint_decoder *cxled = data;
-> >> + struct range *r1, *r2 = data;
-> >> struct cxl_switch_decoder *cxlsd;
-> >> 
-> >> if (!is_switch_decoder(dev))
-> >> return 0;
-> >> 
-> >> cxlsd = to_cxl_switch_decoder(dev);
-> >> - return range_contains(&cxlsd->cxld.hpa_range, &cxled->cxld.hpa_range);
-> >> + r1 = &cxlsd->cxld.hpa_range;
-> >> + return range_contains(r1, r2);
-> >> +}
-> > 
-> > Hi Alison,
-> > 
-> > This stray closing brace needs to be removed from this patch.
-> > 
-> > Rest of the patch looks good, I agree the naming is much better with these
-> > changes.
-> > 
-> > Reviewed-by: Jim Harris <jim.harris@samsung.com>
-> > 
+> > Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
 > 
-> Looking at this again, I think this also needs to check if the switch
-> decoder is active. Non-active decoders will have range 0 to UINT64_MAX
-> which would pass the range_contains() check.
+> Save "Fixes:" for commits that need to be backported to address an
+> issue. This will be a dependency for backporting patch2, but on its own
+> it does not fix anything.
+> 
+> > Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
+> 
+> Along the same lines this probably moves to the patch that fixes the
+> report.
+> 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  drivers/cxl/core/region.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
 
-Combining this and Dan's input, changing this to check for an exact
-match on the switch decoder, so not worry about the uncommitteds.
+snip
 
-
+> > 
+> > +static int match_switch_decoder_by_range(struct device *dev, void *data)
+> >  {
+> > -	struct cxl_endpoint_decoder *cxled = data;
+> > +	struct range *r1, *r2 = data;
+> >  	struct cxl_switch_decoder *cxlsd;
+> >  
+> >  	if (!is_switch_decoder(dev))
+> >  		return 0;
+> >  
+> >  	cxlsd = to_cxl_switch_decoder(dev);
+> > -	return range_contains(&cxlsd->cxld.hpa_range, &cxled->cxld.hpa_range);
+> > +	r1 = &cxlsd->cxld.hpa_range;
+> > +	return range_contains(r1, r2);
 > 
+> I know this is just maintaining the status quo, but thinking about it a
+> bit deeper I think range_contains() is only correct for root decoders.
+> For a given region the root decoder will contain the region, but all the
+> switch decoders must be a 1:1 mapping. Linux only supports scenarios
+> where all endpoint decoders map the same HPA range and identify only 1
+> decoder per-switch port to map that region.
+> 
+> So "range_contains(r1, r2)" becomes "return *r1 == *r2".
+
+Thanks Dan - picked up your changelog suggestions and replace this
+range_contains w an 1:1 comparison.
+
+Alison
+
+
