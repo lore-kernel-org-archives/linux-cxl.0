@@ -1,19 +1,19 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697891427E
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 16:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3CC1427E
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 16:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62456103
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 09:11:11 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDg7n15z0z6JB9R;
-	Tue, 24 Oct 2023 00:07:33 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D98D10A
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Oct 2023 09:11:43 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SDg9S5msHz6K6gN;
+	Tue, 24 Oct 2023 00:09:00 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 23 Oct 2023 17:11:08 +0100
+ 15.1.2507.31; Mon, 23 Oct 2023 17:11:39 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Michael Tsirkin
 	<mst@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>
@@ -21,9 +21,9 @@ CC: <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>, Gregory Price
 	<gregory.price@memverge.com>, Davidlohr Bueso <dave@stgolabs.net>, Klaus
  Jensen <its@irrelevant.dk>, Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH v2 06/17] hw/cxl: Add a switch mailbox CCI function
-Date: Mon, 23 Oct 2023 17:07:55 +0100
-Message-ID: <20231023160806.13206-7-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 07/17] hw/cxl/mbox: Add Information and Status / Identify command
+Date: Mon, 23 Oct 2023 17:07:56 +0100
+Message-ID: <20231023160806.13206-8-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231023160806.13206-1-Jonathan.Cameron@huawei.com>
 References: <20231023160806.13206-1-Jonathan.Cameron@huawei.com>
@@ -40,315 +40,110 @@ X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 
-CXL switch CCIs were added in CXL r3.0. They are a PCI function,
-identified by class code that provides a CXL mailbox (identical
-to that previously defined for CXL type 3 memory devices) over which
-various FM-API commands may be used. Whilst the intent of this
-feature is enable switch control from a BMC attached to a switch
-upstream port, it is also useful to allow emulation of this feature
-on the upstream port connected to a host using the CXL devices as
-this greatly simplifies testing.
+Add this command that is only available via out of band CCIs. It replicates
+information that can be discovered inband via PCI config space.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v2: Fixed wrong assumption that the second number in cxl_cmd
-    was expected return length  - it's Effects Bitmap.
-    Patch reorg effects, some commands now introduced in later patches.
----
- include/hw/cxl/cxl_component.h            |   3 +-
- include/hw/cxl/cxl_device.h               |  15 +++
- include/hw/pci-bridge/cxl_upstream_port.h |   1 +
- hw/cxl/cxl-device-utils.c                 |  27 ++++++
- hw/cxl/cxl-mailbox-utils.c                |  18 ++++
- hw/cxl/switch-mailbox-cci.c               | 111 ++++++++++++++++++++++
- hw/cxl/meson.build                        |   1 +
- 7 files changed, 175 insertions(+), 1 deletion(-)
 
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index e52dd8d2b9..5227a8e833 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -26,7 +26,8 @@ enum reg_type {
-     CXL2_LOGICAL_DEVICE,
-     CXL2_ROOT_PORT,
-     CXL2_UPSTREAM_PORT,
--    CXL2_DOWNSTREAM_PORT
-+    CXL2_DOWNSTREAM_PORT,
-+    CXL3_SWITCH_MAILBOX_CCI,
- };
- 
- /*
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 6f8040b5ff..fa73ed03e5 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -211,8 +211,10 @@ void cxl_device_register_block_init(Object *obj, CXLDeviceState *dev,
-                                     CXLCCI *cci);
- 
- typedef struct CXLType3Dev CXLType3Dev;
-+typedef struct CSWMBCCIDev CSWMBCCIDev;
- /* Set up default values for the register block */
- void cxl_device_register_init_t3(CXLType3Dev *ct3d);
-+void cxl_device_register_init_swcci(CSWMBCCIDev *sw);
- 
- /*
-  * CXL 2.0 - 8.2.8.1 including errata F4
-@@ -259,6 +261,8 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
-                                           CXL_DEVICE_CAP_REG_SIZE * 2)
- 
- void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
-+void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
-+                                  DeviceState *d, size_t payload_max);
- void cxl_init_cci(CXLCCI *cci, size_t payload_max);
- int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-                             size_t len_in, uint8_t *pl_in,
-@@ -397,6 +401,17 @@ struct CXLType3Class {
-                           uint8_t *data);
- };
- 
-+struct CSWMBCCIDev {
-+    PCIDevice parent_obj;
-+    PCIDevice *target;
-+    CXLComponentState cxl_cstate;
-+    CXLDeviceState cxl_dstate;
-+    CXLCCI *cci;
-+};
-+
-+#define TYPE_CXL_SWITCH_MAILBOX_CCI "cxl-switch-mailbox-cci"
-+OBJECT_DECLARE_TYPE(CSWMBCCIDev, CSWMBCCIClass, CXL_SWITCH_MAILBOX_CCI)
-+
- MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-                            unsigned size, MemTxAttrs attrs);
- MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
-diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-index b02aa8f659..12635139f6 100644
---- a/include/hw/pci-bridge/cxl_upstream_port.h
-+++ b/include/hw/pci-bridge/cxl_upstream_port.h
-@@ -11,6 +11,7 @@ typedef struct CXLUpstreamPort {
- 
-     /*< public >*/
-     CXLComponentState cxl_cstate;
-+    CXLCCI swcci;
-     DOECap doe_cdat;
-     uint64_t sn;
- } CXLUpstreamPort;
-diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index eb86634250..f8938678c7 100644
---- a/hw/cxl/cxl-device-utils.c
-+++ b/hw/cxl/cxl-device-utils.c
-@@ -67,6 +67,9 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
- 
-     if (object_dynamic_cast(OBJECT(cci->intf), TYPE_CXL_TYPE3)) {
-         cxl_dstate = &CXL_TYPE3(cci->intf)->cxl_dstate;
-+    } else if (object_dynamic_cast(OBJECT(cci->intf),
-+                                   TYPE_CXL_SWITCH_MAILBOX_CCI)) {
-+        cxl_dstate = &CXL_SWITCH_MAILBOX_CCI(cci->intf)->cxl_dstate;
-     } else {
-         return 0;
-     }
-@@ -135,6 +138,9 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
- 
-     if (object_dynamic_cast(OBJECT(cci->intf), TYPE_CXL_TYPE3)) {
-         cxl_dstate = &CXL_TYPE3(cci->intf)->cxl_dstate;
-+    } else if (object_dynamic_cast(OBJECT(cci->intf),
-+                                   TYPE_CXL_SWITCH_MAILBOX_CCI)) {
-+        cxl_dstate = &CXL_SWITCH_MAILBOX_CCI(cci->intf)->cxl_dstate;
-     } else {
-         return;
-     }
-@@ -365,6 +371,27 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-                               CXL_MAILBOX_MAX_PAYLOAD_SIZE);
- }
- 
-+void cxl_device_register_init_swcci(CSWMBCCIDev *sw)
-+{
-+    CXLDeviceState *cxl_dstate = &sw->cxl_dstate;
-+    uint64_t *cap_h = cxl_dstate->caps_reg_state64;
-+    const int cap_count = 3;
-+
-+    /* CXL Device Capabilities Array Register */
-+    ARRAY_FIELD_DP64(cap_h, CXL_DEV_CAP_ARRAY, CAP_ID, 0);
-+    ARRAY_FIELD_DP64(cap_h, CXL_DEV_CAP_ARRAY, CAP_VERSION, 1);
-+    ARRAY_FIELD_DP64(cap_h, CXL_DEV_CAP_ARRAY, CAP_COUNT, cap_count);
-+
-+    cxl_device_cap_init(cxl_dstate, DEVICE_STATUS, 1, 2);
-+    device_reg_init_common(cxl_dstate);
-+
-+    cxl_device_cap_init(cxl_dstate, MAILBOX, 2, 1);
-+    mailbox_reg_init_common(cxl_dstate);
-+
-+    cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000, 1);
-+    memdev_reg_init_common(cxl_dstate);
-+}
-+
- uint64_t cxl_device_get_timestamp(CXLDeviceState *cxl_dstate)
- {
-     uint64_t time, delta;
+---
+v2:
+- The subsystem [vendor] ID is not set in the class if defaults
+  are used so grab it directly from the config registers.
+  I could have set this for the CXL devices, but then I'd need
+  an ID to use and as the CXL type3 devices have Intel VID it would
+  be odd to make them part of a Huawei subsystem even if I jumped
+  through the necessary hoops to get a subsystem ID assigned.
+---
+ hw/cxl/cxl-mailbox-utils.c | 55 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 239acc659d..28ea02fcbe 100644
+index 28ea02fcbe..6741698ee7 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -754,6 +754,15 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
-         cmd_media_clear_poison, 72, 0 },
- };
+@@ -11,6 +11,7 @@
+ #include "hw/cxl/cxl.h"
+ #include "hw/cxl/cxl_events.h"
+ #include "hw/pci/pci.h"
++#include "hw/pci-bridge/cxl_upstream_port.h"
+ #include "qemu/cutils.h"
+ #include "qemu/log.h"
+ #include "qemu/units.h"
+@@ -44,6 +45,8 @@
+  */
  
-+static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-+    [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-+    [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 0,
-+                         IMMEDIATE_POLICY_CHANGE },
-+    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0,
-+                              0 },
-+    [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-+};
-+
- int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-                             size_t len_in, uint8_t *pl_in, size_t *len_out,
-                             uint8_t *pl_out, bool *bg_started)
-@@ -795,6 +804,15 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
-     }
+ enum {
++    INFOSTAT    = 0x00,
++        #define IS_IDENTIFY   0x1
+     EVENTS      = 0x01,
+         #define GET_RECORDS   0x0
+         #define CLEAR_RECORDS   0x1
+@@ -203,6 +206,57 @@ static CXLRetCode cmd_events_set_interrupt_policy(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
  }
  
-+void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
-+                                  DeviceState *d, size_t payload_max)
++/* CXL r3.0 section 8.2.9.1.1: Identify (Opcode 0001h) */
++static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
++                                        uint8_t *payload_in,
++                                        size_t len_in,
++                                        uint8_t *payload_out,
++                                        size_t *len_out,
++                                        CXLCCI *cci)
 +{
-+    cci->cxl_cmd_set = cxl_cmd_set_sw;
-+    cci->d = d;
-+    cci->intf = intf;
-+    cxl_init_cci(cci, payload_max);
-+}
++    PCIDeviceClass *class = PCI_DEVICE_GET_CLASS(cci->d);
++    struct {
++        uint16_t pcie_vid;
++        uint16_t pcie_did;
++        uint16_t pcie_subsys_vid;
++        uint16_t pcie_subsys_id;
++        uint64_t sn;
++    uint8_t max_message_size;
++        uint8_t component_type;
++    } QEMU_PACKED *is_identify;
++    QEMU_BUILD_BUG_ON(sizeof(*is_identify) != 18);
 +
- void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
- {
-     cci->cxl_cmd_set = cxl_cmd_set;
-diff --git a/hw/cxl/switch-mailbox-cci.c b/hw/cxl/switch-mailbox-cci.c
-new file mode 100644
-index 0000000000..ba399c6240
---- /dev/null
-+++ b/hw/cxl/switch-mailbox-cci.c
-@@ -0,0 +1,111 @@
-+/*
-+ * SPDX-License-Identifier: GPL-2.0-or-later
-+ *
-+ * Emulation of a CXL Switch Mailbox CCI PCIe function.
-+ *
-+ * Copyright (c) 2023 Huawei Technologies.
-+ *
-+ * From www.computeexpresslink.org
-+ * Compute Express Link (CXL) Specification revision 3.0 Version 1.0
-+ */
-+#include "qemu/osdep.h"
-+#include "hw/pci/pci.h"
-+#include "hw/pci-bridge/cxl_upstream_port.h"
-+#include "qapi/error.h"
-+#include "qemu/log.h"
-+#include "qemu/module.h"
-+#include "hw/qdev-properties.h"
-+#include "hw/cxl/cxl.h"
++    is_identify = (void *)payload_out;
++    memset(is_identify, 0, sizeof(*is_identify));
++    is_identify->pcie_vid = class->vendor_id;
++    is_identify->pcie_did = class->device_id;
++    if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_USP)) {
++        is_identify->sn = CXL_USP(cci->d)->sn;
++        /* Subsystem info not defined for a USP */
++        is_identify->pcie_subsys_vid = 0;
++        is_identify->pcie_subsys_id = 0;
++        is_identify->component_type = 0x0; /* Switch */
++    } else if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_TYPE3)) {
++        PCIDevice *pci_dev = PCI_DEVICE(cci->d);
 +
-+static void cswmbcci_reset(DeviceState *dev)
-+{
-+    CSWMBCCIDev *cswmb = CXL_SWITCH_MAILBOX_CCI(dev);
-+    cxl_device_register_init_swcci(cswmb);
-+}
-+
-+static void cswbcci_realize(PCIDevice *pci_dev, Error **errp)
-+{
-+    CSWMBCCIDev *cswmb = CXL_SWITCH_MAILBOX_CCI(pci_dev);
-+    CXLComponentState *cxl_cstate = &cswmb->cxl_cstate;
-+    CXLDeviceState *cxl_dstate = &cswmb->cxl_dstate;
-+    CXLDVSECRegisterLocator *regloc_dvsec;
-+    CXLUpstreamPort *usp;
-+
-+    if (!cswmb->target) {
-+        error_setg(errp, "Target not set");
-+        return;
++        is_identify->sn = CXL_TYPE3(cci->d)->sn;
++        /*
++         * We can't always use class->subsystem_vendor_id as
++         * it is not set if the defaults are used.
++         */
++        is_identify->pcie_subsys_vid =
++            pci_get_word(pci_dev->config + PCI_SUBSYSTEM_VENDOR_ID);
++        is_identify->pcie_subsys_id =
++            pci_get_word(pci_dev->config + PCI_SUBSYSTEM_ID);
++        is_identify->component_type = 0x3; /* Type 3 */
 +    }
-+    usp = CXL_USP(cswmb->target);
 +
-+    pcie_endpoint_cap_init(pci_dev, 0x80);
-+    cxl_cstate->dvsec_offset = 0x100;
-+    cxl_cstate->pdev = pci_dev;
-+    cswmb->cci = &usp->swcci;
-+    cxl_device_register_block_init(OBJECT(pci_dev), cxl_dstate, cswmb->cci);
-+    pci_register_bar(pci_dev, 0,
-+                     PCI_BASE_ADDRESS_SPACE_MEMORY |
-+                         PCI_BASE_ADDRESS_MEM_TYPE_64,
-+                     &cxl_dstate->device_registers);
-+    regloc_dvsec = &(CXLDVSECRegisterLocator) {
-+        .rsvd         = 0,
-+        .reg0_base_lo = RBI_CXL_DEVICE_REG | 0,
-+        .reg0_base_hi = 0,
-+    };
-+    cxl_component_create_dvsec(cxl_cstate, CXL3_SWITCH_MAILBOX_CCI,
-+                               REG_LOC_DVSEC_LENGTH, REG_LOC_DVSEC,
-+                               REG_LOC_DVSEC_REVID, (uint8_t *)regloc_dvsec);
-+
-+    cxl_initialize_mailbox_swcci(cswmb->cci, DEVICE(pci_dev),
-+                                 DEVICE(cswmb->target),
-+                                 CXL_MAILBOX_MAX_PAYLOAD_SIZE);
++    /* TODO: Allow this to vary across different CCIs */
++    is_identify->max_message_size = 9; /* 512 bytes - MCTP_CXL_MAILBOX_BYTES */
++    *len_out = sizeof(*is_identify);
++    return CXL_MBOX_SUCCESS;
 +}
 +
-+static void cswmbcci_exit(PCIDevice *pci_dev)
-+{
-+    /* Nothing to do here yet */
-+}
-+
-+static Property cxl_switch_cci_props[] = {
-+    DEFINE_PROP_LINK("target", CSWMBCCIDev,
-+                     target, TYPE_CXL_USP, PCIDevice *),
-+    DEFINE_PROP_END_OF_LIST(),
-+};
-+
-+static void cswmbcci_class_init(ObjectClass *oc, void *data)
-+{
-+    DeviceClass *dc = DEVICE_CLASS(oc);
-+    PCIDeviceClass *pc = PCI_DEVICE_CLASS(oc);
-+
-+    pc->realize = cswbcci_realize;
-+    pc->exit = cswmbcci_exit;
-+    /* Serial bus, CXL Switch CCI */
-+    pc->class_id = 0x0c0b;
-+    /*
-+     * Huawei Technologies
-+     * CXL Switch Mailbox CCI - DID assigned for emulation only.
-+     * No real hardware will ever use this ID.
-+     */
-+    pc->vendor_id = 0x19e5;
-+    pc->device_id = 0xa123;
-+    pc->revision = 0;
-+    dc->desc = "CXL Switch Mailbox CCI";
-+    dc->reset = cswmbcci_reset;
-+    device_class_set_props(dc, cxl_switch_cci_props);
-+}
-+
-+static const TypeInfo cswmbcci_info = {
-+    .name = TYPE_CXL_SWITCH_MAILBOX_CCI,
-+    .parent = TYPE_PCI_DEVICE,
-+    .class_init = cswmbcci_class_init,
-+    .instance_size = sizeof(CSWMBCCIDev),
-+    .interfaces = (InterfaceInfo[]) {
-+        { INTERFACE_PCIE_DEVICE },
-+        { }
-+    },
-+};
-+
-+static void cxl_switch_mailbox_cci_register(void)
-+{
-+    type_register_static(&cswmbcci_info);
-+}
-+type_init(cxl_switch_mailbox_cci_register);
-diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
-index e261ff3881..ea0aebf6e3 100644
---- a/hw/cxl/meson.build
-+++ b/hw/cxl/meson.build
-@@ -6,6 +6,7 @@ system_ss.add(when: 'CONFIG_CXL',
-                    'cxl-host.c',
-                    'cxl-cdat.c',
-                    'cxl-events.c',
-+                   'switch-mailbox-cci.c',
-                ),
-                if_false: files(
-                    'cxl-host-stubs.c',
+ /* 8.2.9.2.1 */
+ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+                                                uint8_t *payload_in,
+@@ -755,6 +809,7 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+ };
+ 
+ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
++    [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
+     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 0,
+                          IMMEDIATE_POLICY_CHANGE },
 -- 
 2.39.2
 
