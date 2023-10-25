@@ -1,256 +1,297 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D301C683
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 17:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B5110FB
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 19:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H48eOPR+"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0284C187
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 10:31:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jp7JWaYa"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2530A10E
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 12:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698255100; x=1729791100;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J26Z3u/lu7taVdjJ0dlnJwrcRhpBawqj4/DN03ICql0=;
-  b=H48eOPR+c47HclZh8aRVoC1Tp7aVEA+YbC2WAtJRZ9aqv1bigVfdEUS+
-   YPfFbZYw7oD/ubkwlggSPgYCHyjH1Hv8ANOP6blT0G4wTS/0ByKHdceUn
-   d0p5mkgJu414B1uaeLT6oGqTqaMsn9LiifVUH2t47POoSwh7yw/MPOQ59
-   K74Beds3//xfpBQm2+OEAqAuubc9R63eFTDSwA+7DvZuFlCj25yz+u92e
-   CnGwHuSwVSo+JauKKr/MphAco+98jvz2SrtsCT38qKKsQm5qWw5WjffgW
-   Ay+FE3bThH1fcSk4oLo0e7JeWxuL01Kqxzs1aFcITOmIMZ6HJ9A6zpm/l
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="141124"
+  t=1698260739; x=1729796739;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=4wtkGSkHTuO6WtwrVjxKOdhg4PR5/zFS95na1gu8TUs=;
+  b=Jp7JWaYawPjWYe14c4ld5SPoy7GES5BXWARCd1cQLbzqvgSRdNraXq5x
+   stSDk+Z+mNd7uP1bE+ICX7UCMDfKm3XPwg9+brdpsl9T4SanoLPvutpF0
+   D4r5V08fvxumDUka3XixXLbW50rQavrG/lPDljf/eUMmRiCl4HFxR1jdE
+   mHQpuYSOHAmGiDHpw3QzyC9CO777A0cm0k1ouOkxjdInX4jLo/bASB6Ex
+   IYNfyXbB6huzesZG3PYVAUUuplX6r/Md7PxjULHPJrA7WoU7hwmXtICTJ
+   1oSF0r5V2exu22e638qaeTtaX9tL/iI3fNRsBj0fcnXDrh5sSXjSig3Vb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="372432501"
 X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="141124"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 10:31:36 -0700
+   d="scan'208";a="372432501"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 12:05:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="902608484"
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="829334420"
 X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="902608484"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.181.198])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 10:29:11 -0700
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	Dmytro Adamenko <dmytro.adamenko@intel.com>,
-	Jim Harris <jim.harris@samsung.com>
-Subject: [PATCH v3 3/3] cxl/region: Use cxl_calc_interleave_pos() for auto-discovery
-Date: Wed, 25 Oct 2023 10:31:29 -0700
-Message-Id: <843f38822178791cfe7b49d53e143b69fabfa530.1698254338.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1698254338.git.alison.schofield@intel.com>
+   d="scan'208";a="829334420"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Oct 2023 12:05:23 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 25 Oct 2023 12:05:23 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 25 Oct 2023 12:05:22 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Wed, 25 Oct 2023 12:05:22 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Wed, 25 Oct 2023 12:05:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jr72bleGWno8skKzOlColUte4Utal9tIcRUKruwLg5w0aeFjaZjJFpFsMCDEGX6UO+WqFv/BiIV3i0Am1fckzAo3wCIEoVDmBtssIBHV3W6e0bWWORGjFgUT7/DJKduKafYgl/PBnA2EALwSJ4ymorm1SAArSCFf0C4/V6FA03MeqUKu9iN1bj0mDSgCS3Xof606Zq4scDkJ1dNDij65457YAG3O9WtncO6RuMarvmEa5FetEOuUQv5VRdHOS0f7zIr+g0dLi2xEfYLpWzI1MX3x+/z/WNBT4kwQL+vBU5vNjYyLmmavqqgXvvWs9wk8szrGFj9PIEQn5kh6fOLnuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=twO1y+rKMMRG1cxlO937iqjnIdjUGfAovaCByqmetBY=;
+ b=kloVyRnZ1OGHPRsM3vmu9O4kM/rWIDl8dcnSJyOlF5QojtPunHXgJuCWAAEvqqp9gOxkTM+2MiH9U04V/sXxeesGwCQclI9NVvZzvRJDSKF/+m65htyic+840SmL4s3lWcDLth0G4NdQbJnz8WmmcrR5xpVQL1LLLlFHcPhPJvQEd+hDDtvCJiK25uUzLJs53hcswIOmzSq9huGXtfdSGL3JolH1Qv2M+JMs0W8pBPjeOttfE7yGIeCP+EjFy25/NazpxZw46Ina5GQAYBCJk9CGblyvaQQM9ygRNxoxP1EVmywJkoNjyPHcQTgDhMKm9X2GKXbDnAcqv+zjzoT4CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by BN9PR11MB5499.namprd11.prod.outlook.com (2603:10b6:408:104::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Wed, 25 Oct
+ 2023 19:05:19 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6907.032; Wed, 25 Oct 2023
+ 19:05:19 +0000
+Date: Wed, 25 Oct 2023 12:05:17 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: RE: [PATCH v3 2/3] cxl/region: Calculate a target position in a
+ region interleave
+Message-ID: <653966ed2e1ff_725832948e@dwillia2-xfh.jf.intel.com.notmuch>
 References: <cover.1698254338.git.alison.schofield@intel.com>
+ <7709896423244c523e810d9f5d2ef625e7babf3b.1698254338.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7709896423244c523e810d9f5d2ef625e7babf3b.1698254338.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW4PR04CA0056.namprd04.prod.outlook.com
+ (2603:10b6:303:6a::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5499:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7aea492a-642c-457a-8d69-08dbd58d54cc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UAOBMlv5zmtWQrsAIit6en8G+p5YOsmnQr8kseLVLUIdSz8XBESNBkfr4cATdy/kodk+nRrovCMMGvqyZtCsnO1/PXceI8EthyKUujpsqUyAn2gICXLnPZSC62Vfn82gc8rZNuIq6xxCa2FKheQUCHMS2Xy6mu5pkzt9Q46FvnfqKEbtX8G43xBZ0YHb6nKLScC3sfqVXy4u/rgxq8eTLulonOZa7Zz0I33vO7D//F7ruNsH3N5bdU4Elyzz28NGK1q3D8/NqbLThPVgGQYcvVqTV+Q8Evg0Au5DJXy3Z92SWniHGfaOIKNuYMDS/KmK9OTX7aDxCJRXLFdOV5igI1g3GHqC7ZMszBdf+J72vZyCfdO9nY9Yauy40SZv0Dg8bMSQUMp6EUQZGxESv+EvxsbVKdR8rywQJ2+ju+fiVQGZlHCD4nVEVHmdpT+S4+UYVVmA82CDjaUanDbrNW2gT6fHhoOaLDtokJIX5o2pEr6BJf8M99ibIJQlP+KXEIEt4yt8rO6DlnMNyjMz9+7kpqtZCSvY9HMRm7LhGDUaoN5zVnqltzRCejr9gR5AFIe/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(366004)(346002)(396003)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(478600001)(6506007)(6512007)(9686003)(66476007)(66556008)(66946007)(110136005)(316002)(86362001)(6486002)(26005)(82960400001)(83380400001)(38100700002)(41300700001)(8936002)(8676002)(4326008)(5660300002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bq30mX1JVcUUHJzplWTzyhrNE5+kgDHiSZloq7/vEjSNXymoNvXLOoOepSJB?=
+ =?us-ascii?Q?iFdvyIXSFuATdyowepbdQFDvUbD6zS3ILvNek5k8JqhUvCtSCJSx3Z9Z0yEz?=
+ =?us-ascii?Q?URoNdDthfkoW8yc9yB5nc58WCajXmwVO2nfObPQreQCoi+lZ2ftE/Q8891DZ?=
+ =?us-ascii?Q?x4kbpZrYDGqU8WeO+Hri4EznwSNl93tRxsRhkqo/tE/pyu6WpgMUqmy1emoA?=
+ =?us-ascii?Q?uC6DbdYmFeQZPLRLnmrNGKlHcRgxmP4QHSjwbXKCe/UaMOL3knwyaYHrWxsx?=
+ =?us-ascii?Q?3bGR1XFhBeaKJWtyazCUWHzSk0sgkPE8nW6SEOT7aWssacSIZ0xyu5YEu2Rz?=
+ =?us-ascii?Q?KSXdJqoOJokd7ASj/jCj2QVqZzL6y0N7TOPxgGReQetCgUk0aC/0RFelmKbC?=
+ =?us-ascii?Q?rvw4KepY09OtXk7iS5rC/Mgpt/IAZWj2AtjyuQHvOvaGDwci/aCUMnJlHiiy?=
+ =?us-ascii?Q?SMZ86hUniYScWuGjL57D5R7+scK2iBbcVf1MzT+SYaKeEQRobXImn0eOOP1/?=
+ =?us-ascii?Q?HxPbKpVL10o+4AT2MPzkdpta2312czPMtFqLnskdKLK2U8lYSLe82cFAzppa?=
+ =?us-ascii?Q?HcvT04OZjf9MJxRvwRY8hzcYA9e6mkK71bTKvi3jWBJhNM6pHgIo8zKtO1HT?=
+ =?us-ascii?Q?rlgsI6Ks7T/K+MoNzbX06rEBZhLbHrQzTa5v2CkY2q+N/PHwbugHJgxxs269?=
+ =?us-ascii?Q?4xV07R+NpWXD5UMbC7xWaKhtSIdz5yF+LJFGsGomzE7u2ArMf684TxWIuAE+?=
+ =?us-ascii?Q?hxTvmiCW3I/vOebGwNs84Rs5ZtFDTdVdz4IzPfiOLUifclj9iHkNSHrD/3ZZ?=
+ =?us-ascii?Q?NzsNJuO6wB8vFfiXHfNy1DQWVt2KOn3cLnL+kqQ1Nhi9gHFXHKetnoe8+S8S?=
+ =?us-ascii?Q?fLd3ntxamwPHBYNSMV+aS6qda+rMJ86PENh9A0zIgG/k3MzkHAFENSPS/631?=
+ =?us-ascii?Q?DeggDypCYwac4qN/bijQd0qT2zAWGL+RYU3xP1eFnsmcMkBxgX+9thS7OMgU?=
+ =?us-ascii?Q?VEwWz1O60uAMkam0HchEJcNPFOxQfUI3hvais88DXmM+IOB8ezl8FcxJ3ZUW?=
+ =?us-ascii?Q?kcrF4voumRJGgtMikUfWEGvYMs76b5xX9o5ARwTu4exbuFX8m9U8wC9024BP?=
+ =?us-ascii?Q?FTjDJNU+VWPti3SdM91s7AHfZ2Emery+V4WJzFqP+T4aTthK+IAy7YGXnmTh?=
+ =?us-ascii?Q?+8r9B8EZolfV+gy2aG6u+TWRaXI+THPGbVNxrTTrjtsgvs4k0obwPrHJ+4bx?=
+ =?us-ascii?Q?2ymSjz46q9GeFYoFMhxcwL2t6TaDRwaZQYFSLmSoZKHAI2NAZ2/oQaQCEEfw?=
+ =?us-ascii?Q?jR8dCOjsfuimU1WMoMNzF7yk3KIEztpWY7zmDAr71jSqam7J0IGePod1wgci?=
+ =?us-ascii?Q?vrVXhfB6ryVy4gpIfQ0OzQqP7mEzzCu4uvdEIb2zcXTSZeJw47AzN3NS+AlS?=
+ =?us-ascii?Q?1k+DtZcAjVmUUeOPZFzRC0Yqp3J7bKIf7tdkdVyFBpUlIdc1fLKV14kW4/T4?=
+ =?us-ascii?Q?2kzTGOHQgWDljvX+8E4uMPDwkFjMiJg3Kb2ET80zmmPFhOSdYAGlxrGHHt5+?=
+ =?us-ascii?Q?t4S7Ky0fCRMY8f5uRrRoD2bIganjuZC9d+yn9AWwCh4hLqFS1/W/4B5M3KbV?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aea492a-642c-457a-8d69-08dbd58d54cc
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2023 19:05:19.4431
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lrTqFUYKtus7ZRX+RpKdqWDn8HCksnTerCpOrg2PTwIhkFF6peufq7WDdqxH2vDvfgVGZjfMDXPaQ3pgYcn3KNrgndAcUpF165Os0+AeYRs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5499
+X-OriginatorOrg: intel.com
 
-From: Alison Schofield <alison.schofield@intel.com>
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Introduce a calculation to find a target's position in a region
+> interleave. Perform a self-test of the calculation on user-defined
+> regions.
+> 
+> The region driver uses the kernel sort() function to put region
+> targets in relative order. Positions are assigned based on each
+> target's index in that sorted list. That relative sort doesn't
+> consider the offset of a port into its parent port which causes
+> some auto-discovered regions to fail creation. In one failure case,
+> a 2 + 2 config (2 host bridges each with 2 endpoints), the sort
+> puts all the targets of one port ahead of another port when they
+> were expected to be interleaved.
+> 
+> In preparation for repairing the autodiscovery region assembly,
+> introduce a new method for discovering a target position in the
+> region interleave.
+> 
+> cxl_calc_interleave_pos() adds a method to find the target position by
+> ascending from an endpoint to a root decoder. The calculation starts
+> with the endpoint's local position and position in the parent port. It
+> traverses towards the root decoder and examines both position and ways
+> in order to allow the position to be refined all the way to the root
+> decoder.
+> 
+> This calculation: position = position * parent_ways + parent_pos;
+> applied iteratively yields the correct position.
+> 
+> Include a self-test that exercises this new position calculation against
+> every successfully configured user-defined region.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/region.c | 142 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index eea8e89a6860..bea43da7e8f2 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1501,6 +1501,128 @@ static int match_switch_decoder_by_range(struct device *dev, void *data)
+>  	return (r1->start == r2->start && r1->end == r2->end);
+>  }
+>  
+> +/**
+> + * cxl_find_pos_and_ways() - find the position of a port in a parent
+> + *			     and the parent interleave ways
 
-For auto-discovered regions the driver must assign each target to
-a valid position in the region interleave set based on the decoder
-topology.
+Given that this function is local to this file I do not think the cxl_
+prefix is needed, and it does not match the below which is still
+find_pos_and_ways().
 
-The current implementation fails to parse valid decode topologies,
-as it does not consider the child offset into a parent port. The sort
-put all targets of one port ahead of another port when an interleave
-was expected, causing the region assembly to fail.
+> + *
+> + * @port: the port in search of parent info
+> + * @range: the hpa range that the parent must map
+> + * @pos: the position of @port in the parent decoder target list
+> + * @ways: the interleave ways of the parent decoder
+> + *
+> + * This helper function for cxl_calc_interleave_pos() provides the
+> + * @pos and @ways used to calculate the endpoint position in a region
+> + * interleave.
+> + *
+> + * Use @range to find @port's parent port and follow that to the
+> + * parent switch decoder. Extract @ways from the switch decoder and
+> + * lookup the @port @pos in the switch decoder target list.
 
-Replace the existing relative sort with cxl_calc_interleave_pos() that
-finds the exact position in a region interleave for an endpoint based
-on a walk up the ancestral tree from endpoint to root decoder.
+Hmm, per your concern in the cover letter, yes, this
+find_pos_and_ways()() commentary is not adding much for describing the
+theory of operation. Lets just go with the calc_interleave_pos() comment
+block which is answering all my concerns about documenting what is going
+on here.
 
-cxl_calc_interleave_pos() was introduced in a prior patch, so the work
-here is to use it in cxl_region_sort_targets().
+> + *
+> + * Returns:	0: success, @pos and @ways are updated
+> + *	   -ENXIO: failed to find @pos or @ways
+> + */
+> +static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+> +			     int *pos, int *ways)
+> +{
+> +	struct cxl_switch_decoder *cxlsd;
+> +	struct cxl_port *parent;
+> +	struct device *dev;
+> +	int rc = -ENXIO;
+> +
+> +	parent = next_port(port);
+> +	if (!parent)
+> +		return rc;
+> +
+> +	dev = device_find_child(&parent->dev, range,
+> +				match_switch_decoder_by_range);
+> +	if (!dev) {
+> +		dev_err(port->uport_dev,
+> +			"failed to find decoder mapping %#llx-%#llx\n",
+> +			range->start, range->end);
+> +		return rc;
+> +	}
+> +	cxlsd = to_cxl_switch_decoder(dev);
+> +	*ways = cxlsd->cxld.interleave_ways;
+> +
+> +	for (int i = 0; i < *ways; i++) {
+> +		if (cxlsd->target[i] == port->parent_dport) {
+> +			*pos = i;
+> +			rc = 0;
+> +			break;
+> +		}
+> +	}
+> +	put_device(dev);
+> +
+> +	return rc;
+> +}
+> +
+> +/**
+> + * cxl_calc_interleave_pos() - calculate an endpoint position in a region
+> + * @cxled: the endpoint decoder
+> + *
+> + * The endpoint position is calculated by traversing from the endpoint to
+> + * the root decoder and iteratively applying this calculation:
+> + *	position = position * parent_ways + parent_pos;
+> + *
+> + * For example, the expected interleave order of the 4-way region shown
+> + * below is: mem0, mem2, mem1, mem3
+> + *
+> + *		  root_port
+> + *                 /      \
+> + *      host_bridge_0    host_bridge_1
+> + *        |    |           |    |
+> + *       mem0 mem1        mem2 mem3
+> + *
+> + * In the example the calculator will iterate twice. The first iteration
+> + * uses the mem position in the host-bridge and the ways of the host-
+> + * bridge to generate the first, or local, position. The second iteration
+> + * uses the host-bridge position in the root_port and the ways of the
+> + * root_port to refine the position.
+> + *
+> + * A trace of the calculation per endpoint looks like this:
+> + * mem0:	pos = 0 * 2 + 0		mem2:	pos = 0 * 2 + 0
+> + *		pos = 0 * 2 + 0			pos = 0 * 2 + 1
+> + *		pos: 0				pos: 1
+> + *
+> + * mem1:	pos = 0 * 2 + 1		mem3:	pos = 0 * 2 + 1
+> + *		pos = 1 * 2 + 0			pos = 1 * 2 + 1
+> + *		pos: 2				pos = 3
+> + *
+> + * Note that while this example is simple, the method applies to more
+> + * complex topologies, including those with switches.
 
-Remove the obsoleted helper functions from the prior sort.
+Looks good.
 
-Testing passes on pre-production hardware with BIOS defined regions
-that natively trigger this autodiscovery path of the region driver.
-Testing passes a CXL unit test using the dev_dbg() calculation test
-(see cxl_region_attach()) across an expanded set of region configs:
-1, 1, 1+1, 1+1+1, 2, 2+2, 2+2+2, 2+2+2+2, 4, 4+4, where each number
-represents the count of endpoints per host bridge.
-
-Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jim Harris <jim.harris@samsung.com>
----
- drivers/cxl/core/region.c | 127 +++++---------------------------------
- 1 file changed, 15 insertions(+), 112 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index bea43da7e8f2..55836fddb494 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1480,6 +1480,14 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
- 	return 0;
- }
- 
-+static int cmp_interleave_pos(const void *a, const void *b)
-+{
-+	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
-+	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
-+
-+	return cxled_a->pos - cxled_b->pos;
-+}
-+
- static struct cxl_port *next_port(struct cxl_port *port)
- {
- 	if (!port->parent_dport)
-@@ -1623,131 +1631,26 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
- 	return pos;
- }
- 
--static void find_positions(const struct cxl_switch_decoder *cxlsd,
--			   const struct cxl_port *iter_a,
--			   const struct cxl_port *iter_b, int *a_pos,
--			   int *b_pos)
--{
--	int i;
--
--	for (i = 0, *a_pos = -1, *b_pos = -1; i < cxlsd->nr_targets; i++) {
--		if (cxlsd->target[i] == iter_a->parent_dport)
--			*a_pos = i;
--		else if (cxlsd->target[i] == iter_b->parent_dport)
--			*b_pos = i;
--		if (*a_pos >= 0 && *b_pos >= 0)
--			break;
--	}
--}
--
--static int cmp_decode_pos(const void *a, const void *b)
--{
--	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
--	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
--	struct cxl_memdev *cxlmd_a = cxled_to_memdev(cxled_a);
--	struct cxl_memdev *cxlmd_b = cxled_to_memdev(cxled_b);
--	struct cxl_port *port_a = cxled_to_port(cxled_a);
--	struct cxl_port *port_b = cxled_to_port(cxled_b);
--	struct cxl_port *iter_a, *iter_b, *port = NULL;
--	struct cxl_switch_decoder *cxlsd;
--	struct device *dev;
--	int a_pos, b_pos;
--	unsigned int seq;
--
--	/* Exit early if any prior sorting failed */
--	if (cxled_a->pos < 0 || cxled_b->pos < 0)
--		return 0;
--
--	/*
--	 * Walk up the hierarchy to find a shared port, find the decoder that
--	 * maps the range, compare the relative position of those dport
--	 * mappings.
--	 */
--	for (iter_a = port_a; iter_a; iter_a = next_port(iter_a)) {
--		struct cxl_port *next_a, *next_b;
--
--		next_a = next_port(iter_a);
--		if (!next_a)
--			break;
--
--		for (iter_b = port_b; iter_b; iter_b = next_port(iter_b)) {
--			next_b = next_port(iter_b);
--			if (next_a != next_b)
--				continue;
--			port = next_a;
--			break;
--		}
--
--		if (port)
--			break;
--	}
--
--	if (!port) {
--		dev_err(cxlmd_a->dev.parent,
--			"failed to find shared port with %s\n",
--			dev_name(cxlmd_b->dev.parent));
--		goto err;
--	}
--
--	dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
--				match_switch_decoder_by_range);
--	if (!dev) {
--		struct range *range = &cxled_a->cxld.hpa_range;
--
--		dev_err(port->uport_dev,
--			"failed to find decoder that maps %#llx-%#llx\n",
--			range->start, range->end);
--		goto err;
--	}
--
--	cxlsd = to_cxl_switch_decoder(dev);
--	do {
--		seq = read_seqbegin(&cxlsd->target_lock);
--		find_positions(cxlsd, iter_a, iter_b, &a_pos, &b_pos);
--	} while (read_seqretry(&cxlsd->target_lock, seq));
--
--	put_device(dev);
--
--	if (a_pos < 0 || b_pos < 0) {
--		dev_err(port->uport_dev,
--			"failed to find shared decoder for %s and %s\n",
--			dev_name(cxlmd_a->dev.parent),
--			dev_name(cxlmd_b->dev.parent));
--		goto err;
--	}
--
--	dev_dbg(port->uport_dev, "%s comes %s %s\n",
--		dev_name(cxlmd_a->dev.parent),
--		a_pos - b_pos < 0 ? "before" : "after",
--		dev_name(cxlmd_b->dev.parent));
--
--	return a_pos - b_pos;
--err:
--	cxled_a->pos = -1;
--	return 0;
--}
--
- static int cxl_region_sort_targets(struct cxl_region *cxlr)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	int i, rc = 0;
- 
--	sort(p->targets, p->nr_targets, sizeof(p->targets[0]), cmp_decode_pos,
--	     NULL);
--
- 	for (i = 0; i < p->nr_targets; i++) {
- 		struct cxl_endpoint_decoder *cxled = p->targets[i];
- 
-+		cxled->pos = cxl_calc_interleave_pos(cxled);
- 		/*
--		 * Record that sorting failed, but still continue to restore
--		 * cxled->pos with its ->targets[] position so that follow-on
--		 * code paths can reliably do p->targets[cxled->pos] to
--		 * self-reference their entry.
-+		 * Record that sorting failed, but still continue to calc
-+		 * cxled->pos so that follow-on code paths can reliably
-+		 * do p->targets[cxled->pos] to self-reference their entry.
- 		 */
- 		if (cxled->pos < 0)
- 			rc = -ENXIO;
--		cxled->pos = i;
- 	}
-+	/* Keep the cxlr target list in interleave position order */
-+	sort(p->targets, p->nr_targets, sizeof(p->targets[0]),
-+	     cmp_interleave_pos, NULL);
- 
- 	dev_dbg(&cxlr->dev, "region sort %s\n", rc ? "failed" : "successful");
- 	return rc;
--- 
-2.37.3
-
+Just delete the find_pos_and_ways() kdoc and we can call this one good
+to go.
