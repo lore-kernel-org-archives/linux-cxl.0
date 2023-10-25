@@ -1,154 +1,186 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCB0381A8
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 22:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DF727EFD
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 22:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WptEUWoc"
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63495A1
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 15:37:44 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231025223743usoutp018c68b5949eec207aa661edb10ccc6576~RereWOBse2621526215usoutp01H;
-	Wed, 25 Oct 2023 22:37:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231025223743usoutp018c68b5949eec207aa661edb10ccc6576~RereWOBse2621526215usoutp01H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1698273463;
-	bh=odAuDXQsvT431G+Tw0+mJeMGY8yQA23ymGSC7TDR9zI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=WptEUWocJSK9aoJJ36FHXKRXFL0Tf5brOkAhij8r0jiYWuYLyR7fSGGH7vlsIrxan
-	 YWGtjcOFmBBUl1SB7PgLu6kZRsnseSoEwCuztrWuBsbxg4WGre3+EPzuTLHoisZp6D
-	 wAOGfUogrUORkN0SyyVZzRqSnyHWt6jl+ZdlBwsI=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231025223743uscas1p1a2179d6715799357c803d5d76644e120~RereJT5Rx0947409474uscas1p1J;
-	Wed, 25 Oct 2023 22:37:43 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id BD.74.62237.7B899356; Wed,
-	25 Oct 2023 18:37:43 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231025223742uscas1p1d4bb879a51387b08811d5ea4916a0348~Rerdv1Z3f3013830138uscas1p1w;
-	Wed, 25 Oct 2023 22:37:42 +0000 (GMT)
-X-AuditID: cbfec370-b17ff7000001f31d-49-653998b78887
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 64.65.31410.6B899356; Wed,
-	25 Oct 2023 18:37:42 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Wed, 25 Oct 2023 15:37:40 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-	25 Oct 2023 15:37:40 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: Refactor logic around check_last_peer()
-Thread-Topic: [PATCH] cxl/region: Refactor logic around check_last_peer()
-Thread-Index: AQHZ+7KD8XRbpEWITUunMxlNnk7zR7BaWciAgAFL44A=
-Date: Wed, 25 Oct 2023 22:37:40 +0000
-Message-ID: <ZTmYswn9afRy/SCF@ubuntu>
-In-Reply-To: <6538824b52349_7258329466@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <49BB492BC007DC4A837EF9F3D71DBC2B@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZfQz3OhJ"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB6610A;
+	Wed, 25 Oct 2023 15:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698273896; x=1729809896;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=gz3VKimBJsZyyZ3LjSgqRdUvkSLq5Ho3PrPRQJbwLaE=;
+  b=ZfQz3OhJt7G01IRgXcTIs4/JxOoVsYzUrRAYxkiwEygOi8+IU7jg9dMe
+   9GU5SNEdbKftcPmEOPcmhFDbtfv9+BjnCNNKUqza03sggwgztm6uoLW9l
+   WY9DnyLBtQVMUzBa+w6wgIVqoxAVpn5qZD/cXoXaS95tmx3k11UWxxI+1
+   0XNTS3ev02RKMeX2XUjByqRySpOvL5Rwp2fIHK4I+P39pDbuR46bt8dAa
+   K4iDF+nlHepyPhEfAXPigRv0eZI4N+GYlMYr+85OuSdR6H3XU4B0GSBBA
+   t6EewMSq7Yw6kIuG9kpgQILyLOIV5cEnDNL04fH0Mf8U6OpAgqCi6LxhK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="473650434"
+X-IronPort-AV: E=Sophos;i="6.03,252,1694761200"; 
+   d="scan'208";a="473650434"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 15:44:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="708846714"
+X-IronPort-AV: E=Sophos;i="6.03,252,1694761200"; 
+   d="scan'208";a="708846714"
+Received: from nmckubrx-mobl.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.68.190])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 15:44:48 -0700
+From: Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v7 0/3] mm: use memmap_on_memory semantics for dax/kmem
+Date: Wed, 25 Oct 2023 16:44:32 -0600
+Message-Id: <20231025-vv-kmem_memmap-v7-0-4a76d7652df5@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZduzrOd3tMyxTDXresFpMn3qB0eL8rFMs
-	Dkwei/e8ZPL4vEkugCmKyyYlNSezLLVI3y6BK+PR7X7WgvsCFbeuHWVrYHzG3cXIySEhYCLx
-	uPM4excjF4eQwEpGiRkfetggnFYmiRcbVjPBVDW/uM8CkVjDKPHvzzRGkISQwCdGiQlnWSES
-	yxglTv8+yQ6SYBPQlPh1ZQ1Yt4iAtsTEOQeZQWxmAWuJ/tNnwWxhAQ+JY1tOQNV4Svz/AWNb
-	SXzdMZkFxGYRUJWY/2UO2DJeIHv5981gNZxA9TdaN7KB2IwCYhLfT0HsYhYQl7j1ZD7U1YIS
-	i2bvYYawxST+7XrIBmErStz//pIdol5HYsHuT2wQtp3E1lW3GSFsbYllC18zQ+wVlDg58wkL
-	RK+kxMEVN8AhISEwlUNi18ydUAtcJB7M2s0KYUtLTF9zGaohW2Ll+g6ggziA7AKJhiNBEGFr
-	iYV/1jNNYFSZheTsWUhOmoXkpFlITpqF5KQFjKyrGMVLi4tz01OLjfNSy/WKE3OLS/PS9ZLz
-	czcxAtPJ6X+HC3Yw3rr1Ue8QIxMH4yFGCQ5mJRHeSB+LVCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8hrYnk4UE0hNLUrNTUwtSi2CyTBycUg1MvN/PGl69Wb6vjq1O8HXMymqnvHNB13vzP7sG
-	a2dWM9xO4pXXPejXMFlx6rLIhSVH5WRvnD2Tls9xsEbF0DHUvu/Es2DzAw2tLNPX8iYeOi7K
-	L3dmlluRwcdzxa6WadWBa/uX3fSJOVv8lG1CjtDp8s8adhe+7Pp/8mwa05e3iY9ZmZjaihZ+
-	O3NfaQW79c+XbLIaP3Zl3nxyUonBpn/LjITPL90cJ96ac2X2zztutsul+B1uTOLc9yXxru3D
-	vPDI23/uzf/6d+KsXdvvGL6ZwPG11dnyYozfSSOLVRFzVzTc1ErU//p81fWohv6DB4sfXTUM
-	Cvd9nvyI5cA5VWapoHQew/ojip4Tl/x3fnauQomlOCPRUIu5qDgRAHHUnX6WAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWS2cDsrLtthmWqQfMaTYvpUy8wWpyfdYrF
-	gclj8Z6XTB6fN8kFMEVx2aSk5mSWpRbp2yVwZTy63c9acF+g4ta1o2wNjM+4uxg5OSQETCSa
-	X9xn6WLk4hASWMUo8fTAU0YI5xOjxJ9HZ6Eyyxgl1rzuYgJpYRPQlPh1ZQ2YLSKgLTFxzkFm
-	EJtZwFqi//RZMFtYwEPi2JYTUDWeEv9/wNhWEl93TGYBsVkEVCXmf5nDCGLzAtnLv29mglj2
-	nlHiZMN6sAQnUPON1o1sIDajgJjE91MQi5kFxCVuPZnPBPGDgMSSPeeZIWxRiZeP/7FC2IoS
-	97+/ZIeo15FYsPsTG4RtJ7F11W1GCFtbYtnC18wQRwhKnJz5hAWiV1Li4IobLBMYJWYhWTcL
-	yahZSEbNQjJqFpJRCxhZVzGKlxYX56ZXFBvnpZbrFSfmFpfmpesl5+duYgTG4+l/h2N2MN67
-	9VHvECMTB+MhRgkOZiUR3kgfi1Qh3pTEyqrUovz4otKc1OJDjNIcLErivHcfaKQKCaQnlqRm
-	p6YWpBbBZJk4OKUamMoVZn/1LeqY4WJm/Ks0ryzg/az8Xs5LhcVHtm1Q2BDGdObUpqOnrKqD
-	1y/+4swoUcVXxhwvPlHOSeVqFYf4ir31i9qFs8tml+x7NutD7sMj94T264bHbKmasX1LqmsE
-	wzf3naZP3yXumt6y74PKCtd7K0XnLvWXPJkXcceX7ZzPvZenGR9UfU33NZk44c41TicpznPF
-	l7R3Woif487YcfJlMtOdZd8Y95blLlfwOPDkIWMB0y5BxQiDNtv5wkz3l1x8pCvO45BZvGnb
-	o6ZjxbtOcDTwKbPkydgEXH8eqse97H3S9it+jNvUfHtOWc7+OzWjpP2HbcG+VYzPplmcP/L7
-	x5OoMC+NaQsFFAoP/VRiKc5INNRiLipOBABIkMe6NgMAAA==
-X-CMS-MailID: 20231025223742uscas1p1d4bb879a51387b08811d5ea4916a0348
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa
-References: <CGME20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa@uscas1p1.samsung.com>
-	<169696721124.1190606.18028412676865061799.stgit@bgt-140510-bm03.eng.stellus.in>
-	<6538824b52349_7258329466@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFCaOWUC/3XOy07DMBAF0F+pvMZo/La74j8QQhM/iEWTVEmxQ
+ FX+HbcLUsViMYs70rkzV7LEOceFHA9XMseSlzyNNZinA/E9jh+R5lAz4cAFaCZoKfRziMN7nQH
+ PVEkrvA0guXGkog6XSLsZR99XNn6dTnV5nmPK3/crr28193m5TPPP/Whht+2//YVRoEmH6LzGx
+ L1+yeMlnp79NJBbVeEbNxwaziu3tguInZDOiT0XG7fAGi4ql6CjQ0xKW7fncuOO24bLynVKRqT
+ oFXO45+qPMwDVcFU5KhmYsywBNs/rB850w3XlYGyCIDwIwx75uq6/2p5LvPwBAAA=
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, 
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+ Huang Ying <ying.huang@intel.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
+ Michal Hocko <mhocko@suse.com>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
+ Jeff Moyer <jmoyer@redhat.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5215;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=gz3VKimBJsZyyZ3LjSgqRdUvkSLq5Ho3PrPRQJbwLaE=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDKmWs6JrZ+qF9p6322j1bOmdkx/C10WeM2NjWCn+YpvUq
+ 5Mng2MMO0pZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRGdwMf3h8BM5+ttaqfBCy
+ W+dW3QG25oofO94ISn6pib/C9FZ28nOGP3z/lThPeWQKVbxrlP52IaF/VV3IFWd3oVimw/kblmd
+ MZgIA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 
-On Tue, Oct 24, 2023 at 07:49:47PM -0700, Dan Williams wrote:
->=20
-> It turns out this patch fails cxl-region-sysfs.sh.
->=20
->     test/cxl-region-sysfs.sh: failed at line 94
->    =20
->     [   38.367581] check_last_peer: cxl region8: cxl_host_bridge.0:port4:=
- mem5:decoder15.1 pos 4 mismatched peer mem7:decoder17.0
->    =20
-> This patch looked so appetizing that I really wanted it to be a bug in
-> the test and not a bug in this patch, but I think it is the latter.
->=20
-> > @@ -1111,20 +1111,17 @@ static int cxl_port_setup_targets(struct cxl_po=
-rt *port,
-> > =20
-> >       cxlsd =3D to_cxl_switch_decoder(&cxld->dev);
-> >       if (cxl_rr->nr_targets_set) {
-> > -             int i, distance;
-> > +             int i;
-> > =20
-> >               /*
-> > -              * Passthrough decoders impose no distance requirements b=
-etween
-> > -              * peers
-> > +              * Check if this endpoint's dport is already in the
-> > +              * switch decoder's target list, and if so check that
-> > +              * it is positioned correctly based on the switch's
-> > +              * interleave.
-> >                */
-> > -             if (cxl_rr->nr_targets =3D=3D 1)
-> > -                     distance =3D 0;
-> > -             else
-> > -                     distance =3D p->nr_targets / cxl_rr->nr_targets;
->=20
-> This calculation is essentially doing the "top-down" version of the
-> "bottom-up" position calculation Alison introduced in her proposed region
-> assembly fixes:
->=20
->     for_each_parent_port(...)
->         pos =3D pos * parent_ways + parent_pos
->=20
-> So in a x8 region across 2x HBs with 2x switches per HB. The "distance"
-> of peers at the switch level is 4. This change makes that 2.
->=20
-> Maybe the right conceptual cleanup is to still ditch this distance
-> calculation based on "p->nr_targets / cxl_rr->nr_targets" and walk up
-> from this port and multiply the local ways by all the ancestral ways,
-> but as is this gets the answer with less steps (modulo all the work to
-> build up @ep and @cxl_rr).
+The dax/kmem driver can potentially hot-add large amounts of memory
+originating from CXL memory expanders, or NVDIMMs, or other 'device
+memories'. There is a chance there isn't enough regular system memory
+available to fit the memmap for this new memory. It's therefore
+desirable, if all other conditions are met, for the kmem managed memory
+to place its memmap on the newly added memory itself.
 
-Thanks Dan. I'll run with that and push out a v2.=
+The main hurdle for accomplishing this for kmem is that memmap_on_memory
+can only be done if the memory being added is equal to the size of one
+memblock. To overcome this, allow the hotplug code to split an add_memory()
+request into memblock-sized chunks, and try_remove_memory() to also
+expect and handle such a scenario.
+
+Patch 1 replaces an open-coded kmemdup()
+
+Patch 2 teaches the memory_hotplug code to allow for splitting
+add_memory() and remove_memory() requests over memblock sized chunks.
+
+Patch 3 allows the dax region drivers to request memmap_on_memory
+semantics. CXL dax regions default this to 'on', all others default to
+off to keep existing behavior unchanged.
+
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+Changes in v7:
+- Make the add_memory_resource() flow symmetrical w.r.t. try_remove_memory()
+  in terms of how the altmap path is taken (David Hildenbrand)
+- Move a comment, clean up usage of 'memblock' vs. 'memory_block'
+  (David Hildenbrand)
+- Don't use the altmap path for the mhp_supports_memmap_on_memory(memblock_size) == false
+  case (Huang Ying)
+- Link to v6: https://lore.kernel.org/r/20231016-vv-kmem_memmap-v6-0-078f0d3c0371@intel.com
+
+Changes in v6:
+- Add a prep patch to replace an open coded kmemdup in
+  add_memory_resource() (Dan Williams)
+- Fix ordering of firmware_map_remove w.r.t taking the hotplug lock
+  (David Hildenbrand)
+- Remove unused 'nid' variable, and a stray whitespace (David Hildenbrand)
+- Clean up and simplify the altmap vs non-altmap paths for
+  try_remove_memory (David Hildenbrand)
+- Add a note to the changelog in patch 1 linking to the PUD mappings
+  proposal (David Hildenbrand)
+- Remove the new sysfs ABI from the kmem/dax drivers until ABI
+  documentation for /sys/bus/dax can be established (will split this out
+  into a separate patchset) (Dan Williams)
+- Link to v5: https://lore.kernel.org/r/20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com
+
+Changes in v5:
+- Separate out per-memblock operations from per memory block operations
+  in try_remove_memory(), and rename the inner function appropriately.
+  This does expand the scope of the memory hotplug lock to include
+  remove_memory_block_devices(), but the alternative was to drop the
+  lock in the inner function separately for each iteration, and then
+  re-acquire it in try_remove_memory() creating a small window where
+  the lock isn't held. (David Hildenbrand)
+- Remove unnecessary rc check from the memmap_on_memory_store sysfs
+  helper in patch 2 (Dan Carpenter)
+- Link to v4: https://lore.kernel.org/r/20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com
+
+Changes in v4:
+- Rebase to Aneesh's PPC64 memmap_on_memory series v8 [2].
+- Tweak a goto / error path in add_memory_create_devices() (Jonathan)
+- Retain the old behavior for dax devices, only default to
+  memmap_on_memory for CXL (Jonathan)
+- Link to v3: https://lore.kernel.org/r/20230801-vv-kmem_memmap-v3-0-406e9aaf5689@intel.com
+
+[2]: https://lore.kernel.org/linux-mm/20230808091501.287660-1-aneesh.kumar@linux.ibm.com
+
+Changes in v3:
+- Rebase on Aneesh's patches [1]
+- Drop Patch 1 - it is not needed since [1] allows for dynamic setting
+  of the memmap_on_memory param (David)
+- Link to v2: https://lore.kernel.org/r/20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com
+
+[1]: https://lore.kernel.org/r/20230801044116.10674-1-aneesh.kumar@linux.ibm.com
+
+Changes in v2:
+- Drop the patch to create an override path for the memmap_on_memory
+  module param (David)
+- Move the chunking into memory_hotplug.c so that any caller of
+  add_memory() can request this behavior. (David)
+- Handle remove_memory() too. (David, Ying)
+- Add a sysfs control in the kmem driver for memmap_on_memory semantics
+  (David, Jonathan)
+- Add a #else case to define mhp_supports_memmap_on_memory() if
+  CONFIG_MEMORY_HOTPLUG is unset. (0day report)
+- Link to v1: https://lore.kernel.org/r/20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com
+
+---
+Vishal Verma (3):
+      mm/memory_hotplug: replace an open-coded kmemdup() in add_memory_resource()
+      mm/memory_hotplug: split memmap_on_memory requests across memblocks
+      dax/kmem: allow kmem to add memory with memmap_on_memory
+
+ drivers/dax/bus.h         |   1 +
+ drivers/dax/dax-private.h |   1 +
+ drivers/dax/bus.c         |   3 +
+ drivers/dax/cxl.c         |   1 +
+ drivers/dax/hmem/hmem.c   |   1 +
+ drivers/dax/kmem.c        |   8 +-
+ drivers/dax/pmem.c        |   1 +
+ mm/memory_hotplug.c       | 207 ++++++++++++++++++++++++++++++++--------------
+ 8 files changed, 158 insertions(+), 65 deletions(-)
+---
+base-commit: 25b5b1a0646c3d39e1d885e27c10be1c9e202bf2
+change-id: 20230613-vv-kmem_memmap-5483c8d04279
+
+Best regards,
+-- 
+Vishal Verma <vishal.l.verma@intel.com>
+
