@@ -1,256 +1,181 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06022D631
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 20:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E031D6AA
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 20:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LweWniiY"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B83C136
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 13:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="loOtBQDc"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C09DE;
+	Wed, 25 Oct 2023 13:56:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698264159; x=1729800159;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=20k6YZpL/4ffq5JLSIm2KQZx3A3S16vpLTCe7vXHfK8=;
-  b=LweWniiY9/pPo5lvl23KHQI9blRxP/NRsDA1Rh4Jl8cDVp0R5POjv+VN
-   NbiYo7hRa9f+h0JNldiGZxkycRmRmbaTfipnNAxxP5DVm+OZ7pWNEs+yA
-   A82qgpTSAdNHLtCP2Fk3UllL4WhZ98wymgORjeEOzeQlWg51KTzFpAzZd
-   b44egTbA5GY48vrwFr0wGuznhQnzcf0sqGP8YSI46p84E95tpd3SehT/2
-   5KAX1g7AXK7KPiayGk/Uk4NHXctrLRjwT3/hCOaV8AiNz0hlpVgjfNibT
-   soSElH4p8/v8hAqmRjMFydCWWCf1ATLP+Hkj2+6weAX1jdn1NjhS9tcuu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="473624497"
+  t=1698267370; x=1729803370;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=hgmQj6HwunU5WwoOJVwwoHhMSRBjDJ5DqP7WnH3AJsQ=;
+  b=loOtBQDcBT+nn1MH2Z0JRWd+ijQ7wi4xkRDdQss+W/XNrFGG+BK3X3RG
+   3QJPONd1dqHKHc2huaxvbQf3Q4Tk9bgEY9roSSqTemPJVl367WKy6aw/5
+   WHQqKxK3PozcGSmc+XxIbsy3hV+1LSPlWQCMSaJuKg2UOdcT3f9a+Eq5C
+   OnOLyTAINWWJPHJTwzoHPoVtWHey0pvnDzCdll6nvzLKCUkxKGQPR/cLw
+   RFEICo7MysUMDkPJs/1cuVTmoO4XmrcKmse60x2ZGvCZzOdteH1Af3BTi
+   ndERZb2wdV1NbqXvOMnJBKb3hoxcW+Hkc+KJXx+9UH3WID7iwqTK58HfW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="387222936"
 X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="473624497"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 13:01:40 -0700
+   d="scan'208";a="387222936"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 13:56:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="902664758"
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="882573434"
 X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="902664758"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.181.198])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 12:59:16 -0700
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	Dmytro Adamenko <dmytro.adamenko@intel.com>,
-	Jim Harris <jim.harris@samsung.com>
-Subject: [PATCH v4 3/3] cxl/region: Use cxl_calc_interleave_pos() for auto-discovery
-Date: Wed, 25 Oct 2023 13:01:34 -0700
-Message-Id: <3946cc55ddc19678733eddc9de2c317749f43f3b.1698263080.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1698263080.git.alison.schofield@intel.com>
-References: <cover.1698263080.git.alison.schofield@intel.com>
+   d="scan'208";a="882573434"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Oct 2023 13:55:57 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 25 Oct 2023 13:55:57 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 25 Oct 2023 13:55:56 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Wed, 25 Oct 2023 13:55:56 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Wed, 25 Oct 2023 13:55:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XXsayYBc4TytvBGSozL+T8QongvQS+eMvjkGEJw//DE9wtC9lJqlWSotNulE34w1XJt2TN/K/hlrXzpeIu5M/WXccufuwEEJIvm0wTq7fLgRbq1DK0tI+v7fdiuSAsNU7ajGn/Vms0LGYSX8QUz+S89hJjkpa0K1XYA9HWHhIplmD7D6Ma7bsQXuoc7n3W1H7Wx/74PXH0ZtZ0qyEMOY7KP0jDgjbcFO/vrjpMVtGwItUi2qvHwimwdSVvhHSh23XQbdr0HO8gLoxkpZX3rq8qL3HToxZto9TKWTajeLY8Zh9UJxcG09MGXiaynXWtcaw2rZPtigYLXBpN5l05YC1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7ECsPJTbxJd+2Fw1nquyr1EmAbGX5u6aX9iIvQxfG08=;
+ b=g8iURZ55RkGQwlyIiLASNGD8yTMY4KqTSETPZ9WnZo9XWkOQKe1pH0uJtCVPOrM402M7plSjwHpIjhfRUb7kCRr86necR7sxWP0wtItSgaAl5jYEAd4vBKQeFQXTRxMPyX1EQst/tT5Fik0Kph/3GHenQXf/FK2kfQR1u1OBu4ptGQqoaNM+vKkjTwZ9zZ2S2gqfJadF/vMzPPbaLNlnk+kA1zM8vCLo8ssQL7fmf8a+SUIB56+ecfy+6pYA1HJKspTdnFzTNOTmcUL3nqQr/WFeulIiif5b0LhO7CPvrdODtGPBxMekbyqZpnJD9vRfLzCaLksrI+gZ464sThtwZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SN7PR11MB6827.namprd11.prod.outlook.com (2603:10b6:806:2a2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.31; Wed, 25 Oct
+ 2023 20:55:54 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d04:2253:2a8b:5c67]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d04:2253:2a8b:5c67%5]) with mapi id 15.20.6907.025; Wed, 25 Oct 2023
+ 20:55:54 +0000
+Date: Wed, 25 Oct 2023 13:55:47 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+CC: <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
+	<fan.ni@samsung.com>, <linux-kernel@vger.kernel.org>, Li Zhijian
+	<lizhijian@fujitsu.com>
+Subject: Re: [PATCH] cxl/region: Fix cxl_region_rwsem lock held when
+ returning to user space
+Message-ID: <653980d35bdb1_14ef4e294e1@iweiny-mobl.notmuch>
+References: <20231025085450.2514906-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231025085450.2514906-1-lizhijian@fujitsu.com>
+X-ClientProxiedBy: SJ0PR03CA0082.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::27) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB6827:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ebe6d27-5def-4710-e2ad-08dbd59cc749
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bB6gpc1eqT1RrT6iJVtKf8Ar3Y/SGh3YPlBormvU+n4qo6ucJpR3KWmO9ZfznH/6nK/gN5yemVo6ORHmNrFwNlCVVa0IzdAGQD21FDSFWCoJAuo9M+f2NWy9c6PtYtgTwLXjfpw0DlIORLnplacvD7KPjb4jdq9quzWAVxdfHaEsVwuo9mIjRMEP3kIahEHf+xtuu7E/up+jVgs1CeHrIav7w0yaxv3ijWU4iGr7Br/g5SGTAKLs419JmOF2G+xqiRRUccXbPkT9okPW8mbnHTQrcaz7Y06FE4sP6T89ViMbGccJPCoTqF3Ef/JQ7Yn8bvXE36Dp0xRSiVkPKolpm57a93X8nVVz43zFCFkNsPew3HfHN/vP1W7eWEyh2pMDj6ZiKtH0003pCOhAeecJPD7gAoHaIjEZI4gm18eUK6Xz0NiwrVvhwclpYhnuNj6e9VDoYWlJ/OKCHHZwHAVqT9KCT62V1WL3gv4khnV8BCFmLbphr04xaSSv+F2EIF7NBDXCBpWhjksRJ2DhSYy7GoqSKwbWv7wxVo/yPS/37bsKk/CxosB/AAWz9tXNaL5a
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(396003)(39860400002)(366004)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(26005)(41300700001)(2906002)(44832011)(5660300002)(86362001)(8936002)(4326008)(478600001)(8676002)(82960400001)(66556008)(6666004)(6506007)(38100700002)(316002)(66946007)(66476007)(83380400001)(6512007)(6486002)(9686003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xFl3RxsF4jLZLcgHq/o9ENdS1HLmoYoBsrUU6vok5YH2IgiGhlWCu4DPW6a3?=
+ =?us-ascii?Q?Gw1Tc2QMRxqxGnpyq5XUUPUaE9kmmXp6T1Ek5qzv9d1+Q7oe5FHQuwhyhnuX?=
+ =?us-ascii?Q?2PouPYtwEGGxMhpTj94k7+rhQVI3QsbDqedqC7s6e5vM6LXgVNDhixTZJTlm?=
+ =?us-ascii?Q?yH2RJd7gkRetXKFWnckXsbU0ZrhAzaaneF9ef9WE3ciAc7WYdNsORjRLfw4y?=
+ =?us-ascii?Q?1ljj5tZzz1V4Sd3yJnYcBmRyFiQ3oQKPqMaIX6PmgZuLfL0sl+fee7lfc2Q4?=
+ =?us-ascii?Q?QvkULf1sUztorR/JQ7mAs3BH5hgHIC2fCMDv8mLatpNZs+4d+U/5shVVgnup?=
+ =?us-ascii?Q?8Cok1XlkAUsnMGBQbnBXxHvXdasLYIKxk3trPPk2BPDLcFoZ3N/2dUv29rFd?=
+ =?us-ascii?Q?U/W5lDEWQMD1Ek3oRUH2jrmPHNNC5lQPtgzLsM/tdyL1KBLVAsNAqToKsl+q?=
+ =?us-ascii?Q?sTQp56WIKiS1fvdz7wddnuE+5UdJQWCMN1wgd12j3ozHdBz5vFSusjJ1/v3Q?=
+ =?us-ascii?Q?myW2UpVp8I3K/CW6w39drfQN1WPNQ+yiqc3JqqFezJkdTNecFaGi8ToXkg/C?=
+ =?us-ascii?Q?N/KAzqaq1rCYfAeR1S8rqu9vyxa24V6bA0MHKbbzLcBH02sYbEmdoBiGc+vG?=
+ =?us-ascii?Q?lO8bwqvfE6mIOCrby/OS0K5yPXbyydAE4/uMNBPt0KkZdmKM1oYWrbARNm35?=
+ =?us-ascii?Q?DYdWeCvRTrAhXbAgCq+AN54P/LmszmE+mVjBeUFjmOE6A8FffuIt8Zeg3NMz?=
+ =?us-ascii?Q?49BF7YzfBHm6SbXFq1bdbs5V5QPS8hTx1vALtawym0dgKKONyIAPxAK7k+L3?=
+ =?us-ascii?Q?KKlbZd7nYkzkxpmRTPaSrMnqm4+LB0y4G2idhNFTY4OsU7VnsKtTbyx7EuZD?=
+ =?us-ascii?Q?x5hApqQqYKq8SqmpSnVkUzAIKEi+/oZMWSIKLBrDLIhBuwcUYEu2vDn/kBfQ?=
+ =?us-ascii?Q?VaZFTiD2/37/4pTqxS84YaUPiBuvkihTC0tC/90mPba1B3r9Aw1Vtlgi7OZN?=
+ =?us-ascii?Q?8dzhRN6M6AZrWcICDpXLqpM3xpkE1+veauNTb5v3w4V+ErpenZaf0L/+tthz?=
+ =?us-ascii?Q?hAaDUNroxjfHhvlJVRLIXu80qsvCLmecRzlZb3vJwo4101hUUjq0qOxRclvn?=
+ =?us-ascii?Q?jJTUz4Bvjo07N2WbFY35e1TNYUQVUut/WMAFQRmlfa/+zHjjoeUYJJXpYlfF?=
+ =?us-ascii?Q?BrNaWQ8MppaSHH5X4yCZsOy8hyYzyhbLteL9qxCiCDA91SfxY6WEoUaKdU8C?=
+ =?us-ascii?Q?ePVtwBfuol/EK6FHSN9Os2mTp62y12HLZzebYpWXwTcIFuL+VdFvaGMvUKoA?=
+ =?us-ascii?Q?PPiC38vy60EMtoWakKuC0Mfx1xdoI0UtC82EfvFPCfNb5NkGUeQn67Az0zWc?=
+ =?us-ascii?Q?4EswngeuxLczP3NvC2eYrJmgwFODm8DXoLrwKGB0GCrc6pEF8DEKp+5TLeuc?=
+ =?us-ascii?Q?RNLiX59msfVamhTnZRps7ILyWbiF/ZCcW7oIjiHmok5KGft4VOPuOi4xdBmH?=
+ =?us-ascii?Q?YDy6OqpWJrgBdy4tAYNL1ugroBl/g0XYsp+kd+BdyNGJj7zV9/VbPvPTwxP9?=
+ =?us-ascii?Q?R7z5Tvhns4I1MFMax0jW9hTBJIZTyHmEh+p0JOu+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ebe6d27-5def-4710-e2ad-08dbd59cc749
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2023 20:55:54.0557
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 15NA8YftPjteJanylO8BxzpgeDDzHopw6N58AsUZipcDEoESp9ytWixcQgGlneY8sSUpSBEnzVWAmHfEOguljA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6827
+X-OriginatorOrg: intel.com
 
-From: Alison Schofield <alison.schofield@intel.com>
+Li Zhijian wrote:
+> goto out to release cxl_region_rwsem. Fix below warning:
+> ================================================
+> WARNING: lock held when returning to user space!
+> 6.6.0-rc3-lizhijian+ #213 Not tainted
+> ------------------------------------------------
+> cxl/673 is leaving the kernel with locks still held!
+> 1 lock held by cxl/673:
+>  #0: ffffffffa013b9d0 (cxl_region_rwsem){++++}-{3:3}, at: commit_store+0x7d/0x3e0 [cxl_core]
+> 
+> Fixes: d1257d098a5a ("cxl/region: Move cache invalidation before region teardown, and before setup")
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 
-For auto-discovered regions the driver must assign each target to
-a valid position in the region interleave set based on the decoder
-topology.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-The current implementation fails to parse valid decode topologies,
-as it does not consider the child offset into a parent port. The sort
-put all targets of one port ahead of another port when an interleave
-was expected, causing the region assembly to fail.
+> ---
+>  drivers/cxl/core/region.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6d63b8798c29..18da77f8f22b 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -294,7 +294,7 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
+>  	 */
+>  	rc = cxl_region_invalidate_memregion(cxlr);
+>  	if (rc)
+> -		return rc;
+> +		goto out;
+>  
+>  	if (commit) {
+>  		rc = cxl_region_decode_commit(cxlr);
+> -- 
+> 2.29.2
+> 
 
-Replace the existing relative sort with cxl_calc_interleave_pos() that
-finds the exact position in a region interleave for an endpoint based
-on a walk up the ancestral tree from endpoint to root decoder.
-
-cxl_calc_interleave_pos() was introduced in a prior patch, so the work
-here is to use it in cxl_region_sort_targets().
-
-Remove the obsoleted helper functions from the prior sort.
-
-Testing passes on pre-production hardware with BIOS defined regions
-that natively trigger this autodiscovery path of the region driver.
-Testing passes a CXL unit test using the dev_dbg() calculation test
-(see cxl_region_attach()) across an expanded set of region configs:
-1, 1, 1+1, 1+1+1, 2, 2+2, 2+2+2, 2+2+2+2, 4, 4+4, where each number
-represents the count of endpoints per host bridge.
-
-Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-Reported-by: Dmytro Adamenko <dmytro.adamenko@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jim Harris <jim.harris@samsung.com>
----
- drivers/cxl/core/region.c | 127 +++++---------------------------------
- 1 file changed, 15 insertions(+), 112 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 481aab3234bf..ce421b242715 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1480,6 +1480,14 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
- 	return 0;
- }
- 
-+static int cmp_interleave_pos(const void *a, const void *b)
-+{
-+	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
-+	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
-+
-+	return cxled_a->pos - cxled_b->pos;
-+}
-+
- static struct cxl_port *next_port(struct cxl_port *port)
- {
- 	if (!port->parent_dport)
-@@ -1603,131 +1611,26 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
- 	return pos;
- }
- 
--static void find_positions(const struct cxl_switch_decoder *cxlsd,
--			   const struct cxl_port *iter_a,
--			   const struct cxl_port *iter_b, int *a_pos,
--			   int *b_pos)
--{
--	int i;
--
--	for (i = 0, *a_pos = -1, *b_pos = -1; i < cxlsd->nr_targets; i++) {
--		if (cxlsd->target[i] == iter_a->parent_dport)
--			*a_pos = i;
--		else if (cxlsd->target[i] == iter_b->parent_dport)
--			*b_pos = i;
--		if (*a_pos >= 0 && *b_pos >= 0)
--			break;
--	}
--}
--
--static int cmp_decode_pos(const void *a, const void *b)
--{
--	struct cxl_endpoint_decoder *cxled_a = *(typeof(cxled_a) *)a;
--	struct cxl_endpoint_decoder *cxled_b = *(typeof(cxled_b) *)b;
--	struct cxl_memdev *cxlmd_a = cxled_to_memdev(cxled_a);
--	struct cxl_memdev *cxlmd_b = cxled_to_memdev(cxled_b);
--	struct cxl_port *port_a = cxled_to_port(cxled_a);
--	struct cxl_port *port_b = cxled_to_port(cxled_b);
--	struct cxl_port *iter_a, *iter_b, *port = NULL;
--	struct cxl_switch_decoder *cxlsd;
--	struct device *dev;
--	int a_pos, b_pos;
--	unsigned int seq;
--
--	/* Exit early if any prior sorting failed */
--	if (cxled_a->pos < 0 || cxled_b->pos < 0)
--		return 0;
--
--	/*
--	 * Walk up the hierarchy to find a shared port, find the decoder that
--	 * maps the range, compare the relative position of those dport
--	 * mappings.
--	 */
--	for (iter_a = port_a; iter_a; iter_a = next_port(iter_a)) {
--		struct cxl_port *next_a, *next_b;
--
--		next_a = next_port(iter_a);
--		if (!next_a)
--			break;
--
--		for (iter_b = port_b; iter_b; iter_b = next_port(iter_b)) {
--			next_b = next_port(iter_b);
--			if (next_a != next_b)
--				continue;
--			port = next_a;
--			break;
--		}
--
--		if (port)
--			break;
--	}
--
--	if (!port) {
--		dev_err(cxlmd_a->dev.parent,
--			"failed to find shared port with %s\n",
--			dev_name(cxlmd_b->dev.parent));
--		goto err;
--	}
--
--	dev = device_find_child(&port->dev, &cxled_a->cxld.hpa_range,
--				match_switch_decoder_by_range);
--	if (!dev) {
--		struct range *range = &cxled_a->cxld.hpa_range;
--
--		dev_err(port->uport_dev,
--			"failed to find decoder that maps %#llx-%#llx\n",
--			range->start, range->end);
--		goto err;
--	}
--
--	cxlsd = to_cxl_switch_decoder(dev);
--	do {
--		seq = read_seqbegin(&cxlsd->target_lock);
--		find_positions(cxlsd, iter_a, iter_b, &a_pos, &b_pos);
--	} while (read_seqretry(&cxlsd->target_lock, seq));
--
--	put_device(dev);
--
--	if (a_pos < 0 || b_pos < 0) {
--		dev_err(port->uport_dev,
--			"failed to find shared decoder for %s and %s\n",
--			dev_name(cxlmd_a->dev.parent),
--			dev_name(cxlmd_b->dev.parent));
--		goto err;
--	}
--
--	dev_dbg(port->uport_dev, "%s comes %s %s\n",
--		dev_name(cxlmd_a->dev.parent),
--		a_pos - b_pos < 0 ? "before" : "after",
--		dev_name(cxlmd_b->dev.parent));
--
--	return a_pos - b_pos;
--err:
--	cxled_a->pos = -1;
--	return 0;
--}
--
- static int cxl_region_sort_targets(struct cxl_region *cxlr)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	int i, rc = 0;
- 
--	sort(p->targets, p->nr_targets, sizeof(p->targets[0]), cmp_decode_pos,
--	     NULL);
--
- 	for (i = 0; i < p->nr_targets; i++) {
- 		struct cxl_endpoint_decoder *cxled = p->targets[i];
- 
-+		cxled->pos = cxl_calc_interleave_pos(cxled);
- 		/*
--		 * Record that sorting failed, but still continue to restore
--		 * cxled->pos with its ->targets[] position so that follow-on
--		 * code paths can reliably do p->targets[cxled->pos] to
--		 * self-reference their entry.
-+		 * Record that sorting failed, but still continue to calc
-+		 * cxled->pos so that follow-on code paths can reliably
-+		 * do p->targets[cxled->pos] to self-reference their entry.
- 		 */
- 		if (cxled->pos < 0)
- 			rc = -ENXIO;
--		cxled->pos = i;
- 	}
-+	/* Keep the cxlr target list in interleave position order */
-+	sort(p->targets, p->nr_targets, sizeof(p->targets[0]),
-+	     cmp_interleave_pos, NULL);
- 
- 	dev_dbg(&cxlr->dev, "region sort %s\n", rc ? "failed" : "successful");
- 	return rc;
--- 
-2.37.3
 
