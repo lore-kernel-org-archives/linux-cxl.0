@@ -1,187 +1,201 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DCA163
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Oct 2023 00:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A18C469D
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Oct 2023 01:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IfLjpkNd"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D59DC
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 17:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698279077; x=1729815077;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=qTSe1lGEc7jsy250yIlydnNDX+KfTJlrry01W+DLmWA=;
-  b=IfLjpkNdj9KAA0Gl3AtIbSo7XgsG0F/f4g8tdt37qvwzDs2gBmAXvi/v
-   CbWiwQh0Mm9EmhbqBcmHNMNNKGsjIf6sN/mwXrMfM81eD5tlL/wRHJZQa
-   rxMgEkecalPLc3im+HqCp3ixBxtP57cTlUwY0b+QDNSDjiaJWLkJagwlC
-   volG64Uf/4knL75wwtmLPYD2avGxGBqFgpSn8s5aNU9xPpj1tpT9x9Z3n
-   /ZIpLgY7Po/Do8AjSalSiefNpxDl17nEl0oYhUOmpL0RCXO3ac9qWMR+0
-   JiDAcHSJBprU5kWrizf2MG/2StNSGQYyteoCv0bSIWGjZNz6/J7S9SRAv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="213560"
-X-IronPort-AV: E=Sophos;i="6.03,252,1694761200"; 
-   d="scan'208";a="213560"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 17:11:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,252,1694761200"; 
-   d="scan'208";a="301600"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Oct 2023 17:11:06 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Wed, 25 Oct 2023 17:11:16 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Wed, 25 Oct 2023 17:11:16 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Wed, 25 Oct 2023 17:11:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NrxpuCYwsHEWISRL8VT4YTHd6CgAgWZL4vteTeB7VtHGKk0lEg0493lRbSB3YdKe3eUDMqMxnBOb4rM66BJIu3FVcN3dEIcz9JzwlAjTglQc/4UdV4GlYUwnOcBY4qI9YGE87k2H4Jj5uTit8/hWaiyZpAYDNPYclpuMlkul/YHf0TBJckyjwbrKN6g9ZPfIPoLq944oyzC1ze6VjB8kb7WJBF3h8SadCA70dUS+ZJ9YGs+a9T6elO1KrMEE1U0lZM/KJ8QnuD4owI/hTmvTTk/IQDiZ8zDz+0uhnwgaaGcnZrQ2lZ6Pt4z6o4F542u8XZ0qPFJEmLjf0j/Ir1+OcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D1So6j6L0gM87f+E0nXa4JLQXrhyTE4gP3ztKGaSF+s=;
- b=fnn6usg2onu+f+nytUoL7eGA87kEzICFwGehedOlsyg8LD72D+X0BupxtxamRgtC8PQ4xEZuG74b8/XFx2zib2s7FGlGHdE7BOsW+Luz583gLAPJhOXmKwGQvjMZckhj48aQWOtKoJhJpTm3L3vDmWzb275Ke7lMMalA1AuTJEqbGhe6P4tj69C/HBbW0Sxe2wJQvbiL7BCEbKbFjfz2uEnejA0+GN4ZKkBDNh4qOazrMDk2OBbac5fMqwKl0n880h61YdiJ/4G3xk2zlCcapdRw5VjQvqkiHNGn4wIWmmFsD8kvjxjw7LyEA7n2BcOy+XKJtdCCEFF1q4xCu2RyAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BN9PR11MB5531.namprd11.prod.outlook.com (2603:10b6:408:104::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Thu, 26 Oct
- 2023 00:11:08 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6907.032; Thu, 26 Oct 2023
- 00:11:08 +0000
-Date: Wed, 25 Oct 2023 17:11:06 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jim Harris <jim.harris@samsung.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH v2] cxl/region: use region (not root decoder) granularity
- for calculations
-Message-ID: <6539ae9a2b37a_780ef294ba@dwillia2-xfh.jf.intel.com.notmuch>
-References: <169660931834.684402.2774329392272976121.stgit@bgt-140510-bm03.eng.stellus.in>
- <CGME20231025154855uscas1p2102cef0c09d3cd68e8f2040ca2264f00@uscas1p2.samsung.com>
- <169824893473.1403938.16110924262989774582.stgit@bgt-140510-bm03.eng.stellus.in>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <169824893473.1403938.16110924262989774582.stgit@bgt-140510-bm03.eng.stellus.in>
-X-ClientProxiedBy: MW4PR03CA0143.namprd03.prod.outlook.com
- (2603:10b6:303:8c::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMKp/oDS"
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F838BD
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 18:52:28 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-507bd19eac8so510456e87.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Oct 2023 18:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698285147; x=1698889947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vIRg2K2N7KfGems3pOwOeGJ4SeuNK1NSMvNmzZbhXZE=;
+        b=cMKp/oDS47Qv3rN1tbKWV4uM1HNWZ1YcvRRm8I5bDF6vYdF7elxLen5CM6olWDGndL
+         dgrhfEdb9j0EpKXv+Zv5YsLLM1zdE71wLzblfp/4KmJc2IFWlTNrYQEPOOQ21esPg/Ie
+         gysJ0sKDZ2lNOw5r1yy82L/kLyJwWoZ0Pg1/ILfu8uKRja7wneyAkgQfKd588h28dW2N
+         MVdcEUI6o2Zkj8tvsma+6kYaZNuVATjHCWVblf8YAPvExjz7fFThaxZRXSNiYc+ERW3Z
+         OIvDRIf2o9ctGu4hxyut5qsrJ9myse2u5lzMFgPyWIOK78XblWqRY4w7Wjws3Le6x2R4
+         TY+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698285147; x=1698889947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vIRg2K2N7KfGems3pOwOeGJ4SeuNK1NSMvNmzZbhXZE=;
+        b=bR9Xxoe9q2tiHoRnM8pE7+g08Uy1yo2A7kvD7X2d4OV7ny+cpAvEDZFFZI6r5CZJbj
+         LaUUR5BklkdH/83XH10H1x7EnfjPuJmdjsbgDr/D968dO1WSsuVj9Ng5sIWLvSS1ef89
+         2x0G+tsBF6ty/nivXzfAJI7Ca+s7Y+0NBjYa2R3d5sLI5eILuU8kLzaCSS0awz9ACpEr
+         CVTyF9jZi/jUfM00WGdGRUFX/Z5lzWCsgT5j+YZSlhM/UEmwVRNiu/ujIOtMIOj4UqBG
+         N64A+pE8vafh97Zks9DMok06JxCZXRpsrluRbn0i3eYFUYPMiMhNkgGiwOe00+X+OKGA
+         xeMA==
+X-Gm-Message-State: AOJu0YxoZIkPpjZIM+0aHkRBxgkIrzxskD0HDNbdMJDI9VGAt/0UO5Dm
+	N3q99Sqmou/WI1jwx+hnqG+oyfg4yFZmvFmpxWns8Dh9cz0=
+X-Google-Smtp-Source: AGHT+IGvTw0GNiE/K4M592ysoDOO841+3ga5A3azRvny8dQj5K5Jj9o8KYyA9lgO/mtZxES9QgnKFXJCll/SPT2jgLM=
+X-Received: by 2002:a05:651c:204:b0:2c5:22c0:582c with SMTP id
+ y4-20020a05651c020400b002c522c0582cmr11704486ljn.11.1698285146487; Wed, 25
+ Oct 2023 18:52:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5531:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a48cc42-5f1a-4f04-bece-08dbd5b80d8e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iZj9AD0aXoltDARqx2Yfno3sQNI8ZionaEZ8GfhFaORm4fcEE5GCTTx9kC5Tc743dMApVJmcEfDYAG4oIQul/OJow3G1Yf2gkgYMYznTowe3i85Hb63pdXFVFzK4EAd6l8eiW75XH+2pRpdXoOC7xde5XOX0aYyRHOYX3LyZ/sqiAarkgNz9y/ekmILSNGtl7qcEAenwdmXXvvcV2784cD3xFgB5hqh+izqCXqug7sqTpQpZFukQnFRfqR9Dl3f87JaKpY+igWF1M5Rilpf4jPoj8Jj9CUtJQsBJRkIpG1g8VgFR76WNjmJC9VUVTnt8SCFurtt5yFpHJ0CNqkdOPcSyjTP8qgLZOD2qlyMrSX90yFFHoUeGaCEbtDrHvbVHYH/o4wrWyUc8LA5FUOYXVrVqE45GdEbUtiggrMuN3X1rYYqR8SoDeu6Mm3UWPzPvQ/3ZyibltJMLFGiJ/tgee7sdPh0ywiYXmomLLjE2F5aSI1zQGQpK359UzWFHvn5VNYvrBmWo8yoNRKBFVWiWthl6UUCPzE2JVjADH2Q6LJRVaAcHShDqqI07ddG/Zoit
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(396003)(39860400002)(376002)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(8936002)(2906002)(8676002)(6486002)(82960400001)(9686003)(5660300002)(41300700001)(6512007)(6506007)(316002)(478600001)(110136005)(26005)(86362001)(66946007)(38100700002)(66476007)(66556008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xInwXFFsfp2kdPTHlDu04A0AalCIhOc6zGBFPgLO7cX95jMTkdELvQEId6hr?=
- =?us-ascii?Q?H8IBDTko2B/o4MGcbmSFpJSHqY5Nm9bi5vefsrk5D8lf4Xtg6eu41aO1UBLh?=
- =?us-ascii?Q?TT6GbPbZJYKZRJhzFT+XsVRIayZLYbhOWtOu/XGaHnT5W4HDS2Vr0UnALBWZ?=
- =?us-ascii?Q?HG7aUHPnuunmaPY4+btQcTAg0ge2lIsZtyunnll99kvAJArivunPDQWYnwQ0?=
- =?us-ascii?Q?NMcwHdrs8ekx8RIMr+w+S2QLMLM8h+F8IpyO4n+Itex8jYdugvP3Q811FaZ3?=
- =?us-ascii?Q?/h1+1Oo4cksKvN5KoH3izyYpvKaqISzbBXj7P3ZaARI+91f/q774udSOMhAc?=
- =?us-ascii?Q?O/QWJUccW25z6MJT3xP4KuLT+bXkikRVtRO9+vG2EPkagEk0FKI0zRMW9Uir?=
- =?us-ascii?Q?E6m2ppwqkUyMMAcSd4vxaf6jt6CMwYbKJQV1qXksOHd5DLkUzXqtuPasyYt8?=
- =?us-ascii?Q?6xe6YrMEd1SvzYu6qjVhlR0ASnjzmz4lRGdv2hsEGW3a7FGeulOiHwzgAa00?=
- =?us-ascii?Q?KbyDSxulWLJjbcZ6enUZHVWMDgvtWHcywLlTgLAJb8uLiCdH0o0S0y1KeLW9?=
- =?us-ascii?Q?Zs3aNUdFCeXIC7sa3yYWnMJmwjkTIRFN2hQgWMWUiosah9hIm1KRlCeQEjk1?=
- =?us-ascii?Q?pyMdH811j1xa3BGF6/jtMvqJHUZ2sxRk5j5fdXHYs5A9+1Rh/oPUHWgYU4Ug?=
- =?us-ascii?Q?lvViLqEKu8g398nnFU2GjIvVpXFfQ5NVFXSDXirGpJVy7UfActI1JJMKJZZa?=
- =?us-ascii?Q?6FBeR6IKv7LOuOV4MtOgC6KVoGjwqN+7GXaMTfZubwUVxHQSXbB1rT56XjM8?=
- =?us-ascii?Q?c4FckzUdnHOxP8WnMAbfpeK8GKPALU/TvkHmsIySsar6/dX7mtgHWylMOLFG?=
- =?us-ascii?Q?pGgEM0AUE2s6jWJJThLiaribBG/tIMDWGjo24EpwYbY9Zrt9O8xHsp4HJ320?=
- =?us-ascii?Q?VRUQf1vMay7pHTAxpEdors9GD3Xx7mbQbvqITyi8/abqVnpFonMuV5EXmK8t?=
- =?us-ascii?Q?Omc0eGF1GQ9MCaIVrVr8IBlj66IOZwgeyhdzX9P2bic2yfUYH0BKIUNIDylw?=
- =?us-ascii?Q?mLHOiX4xH+vpFB2tA4sJv7gaiJLyViW85Nh1h2KA4rQc68kvHNel1h5qpDEV?=
- =?us-ascii?Q?KOmaAE0IaXdj+EUqKi2r4KDsAYKVn9TqQ4SzBPwY/sQWLFbwylw/yD4LuAI9?=
- =?us-ascii?Q?aYjI742CwGQrATpAITSPgbMUShwpcjjbLU40lK8H04KSDdmTUvNPy9vSLP2r?=
- =?us-ascii?Q?ncERJ4LRHTHMOt8S9b4pl6AuUAhZGvYywfiyO+3jbED8/Vw0jCKGGm8PXRyb?=
- =?us-ascii?Q?GSoNRNITjBC0lM2nilvWQdJyMTRk3r1pxGsAogQgio2TqibUNiBypHi/fIfo?=
- =?us-ascii?Q?p7ANBwWtNgEk6fPJa6s4IMPKKZy40QJT4aEkaeYxjrVA8ZcXFiyeDKy3LdNA?=
- =?us-ascii?Q?dn8mZAxYtoUgJu7ah9v3AixCSbs/VXhjIzNJl4eHgYI+KiENmyYoc1/g++OJ?=
- =?us-ascii?Q?DyIZ37FVE7K48XNiso/gdoxekAIcnKNsbsE3L5wAYHQRmBhRvgIBivlux4Bi?=
- =?us-ascii?Q?hrbnanjyW4D40f5vVHgS7RRnGIvZ/IN94uWQG8keBTQKyveHN4dgg+B5JFcT?=
- =?us-ascii?Q?DA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a48cc42-5f1a-4f04-bece-08dbd5b80d8e
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2023 00:11:08.2805
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kffeTOqKhOyjVl53fMI45eIz21T4Rb7gBr+R/K1dGkkrnsAj/A9qChaQ0G5u/+LZGpIk84F2abXgJEpR27urSV4sUEbcvYtXAEYBSt1dysc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5531
-X-OriginatorOrg: intel.com
+References: <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
+ <20230823180323.000052d5@Huawei.com> <CAEvOrRyquLL6-d=vOyB9NNOPVE370qjV0zu8XBsTJmpOBx2UNw@mail.gmail.com>
+ <ZPHyoJsZDnzpU7C4@memverge.com> <CAEvOrRw2e3cn=2fNXO8_iX0kg09an-OSx1fnjx7ciGGhZo9f9A@mail.gmail.com>
+ <CAEvOrRy9qoydCqxq7xv1QNM+z+YQZyQORtqdDU2VcVKP42CJhA@mail.gmail.com>
+ <SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
+ <CAEvOrRwOWT5HuoUsjkUyt6HpXQhWVR2Hv6cxJPP+4+0xNQpM8g@mail.gmail.com>
+ <CAEvOrRzrAu-2o9xZC+YBG_7R9hLSm_kZFuUZ98tA23NjFyAupw@mail.gmail.com>
+ <CAEvOrRyMqBcv+6RseVS0x_6a3aJU82tjLJagmqCrgRebx5JaZg@mail.gmail.com>
+ <6532e53ed63b0_21a97294d@iweiny-mobl.notmuch> <CAEvOrRxLs8qLjpWM4J16xnuDQfBozYUEW7cLpbr1oHv3Zxzdow@mail.gmail.com>
+ <20231023145016.00005190@Huawei.com>
+In-Reply-To: <20231023145016.00005190@Huawei.com>
+From: Ravi Kanth <mvrravikanth@gmail.com>
+Date: Thu, 26 Oct 2023 07:22:16 +0530
+Message-ID: <CAEvOrRyfn2uEPSbD1x07pzJQNVtotNut6XTD1-FZFK5Pa05gEQ@mail.gmail.com>
+Subject: Re: Support for CXL v3.0 spec with QEMU
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ira Weiny <ira.weiny@intel.com>, Gregory Price <gregory.price@memverge.com>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Sajjan Rao <sajjanr@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jim Harris wrote:
-> Root decoder granularity must match value from CFWMS, which may not
-> be the region's granularity for non-interleaved root decoders.
-> 
-> So when calculating granularities for host bridge decoders, use the
-> region's granularity instead of the root decoder's granularity to ensure
-> the correct granularities are set for the host bridge decoders and any
-> downstream switch decoders.
-> 
-> Test configuration is 1 host bridge * 2 switches * 2 endpoints per switch.
-> 
-> Region created with 2048 granularity using following command line:
-> 
-> cxl create-region -m -d decoder0.0 -w 4 mem0 mem2 mem1 mem3 \
-> 		  -g 2048 -s 2048M
-> 
-> Use "cxl list -PDE | grep granularity" to get a view of the granularity
-> set at each level of the topology.
-> 
-> Before this patch:
->         "interleave_granularity":2048,
->         "interleave_granularity":2048,
->     "interleave_granularity":512,
->         "interleave_granularity":2048,
->         "interleave_granularity":2048,
->     "interleave_granularity":512,
-> "interleave_granularity":256,
-> 
-> After:
->         "interleave_granularity":2048,
->         "interleave_granularity":2048,
->     "interleave_granularity":4096,
->         "interleave_granularity":2048,
->         "interleave_granularity":2048,
->     "interleave_granularity":4096,
-> "interleave_granularity":2048,
-> 
-> Signed-off-by: Jim Harris <jim.harris@samsung.com>
+Thanks Jonathan. For switch devices via IOCTL, Do you mean that CXL
+driver will not have functionality to support or notify host
+applications about async events / interrupts via IOCTL or this has not
+yet been discussed?
 
-Applied, I did end up changing the subject to:
+Is it possible to provide an interface to read "Device status
+registers" and specifically "Event status register" section 8.2.8.3
+and 8.2.8.3.1 via IOCTL interface from the switch CCI endpoint via
+IOCTL using CXL driver?
 
-   "cxl/region: Fix x1 root-decoder granularity calculations"
+Ravi
 
-...and added:
+On Mon, Oct 23, 2023 at 7:20=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Sun, 22 Oct 2023 12:15:13 +0530
+> Ravi Kanth <mvrravikanth@gmail.com> wrote:
+>
+> > Thanks Ira for providing the references.
+> >
+> > I am specifically looking for event support for the switch CCI
+> > endpoint(/dev/cxl/switch) via the IOCTL interface. I could see
+> > cxl_swmb_setup_mailbox() in the switchdev.c file. However I am not
+> > able to understand how user space applications could make use of it.
+>
+> If you have all the moving parts (i.e. recent qemu + the kernel patches
+> I just linked to in another branch of this thread) then the example at:
+> https://gitlab.com/jic23/cxl-fmapi-tests
+>
+> will let you interact with the emulated switch mailbox CCI
+> via the raw ioctl command.  So far it does basic crawl out and enumerate
+> what what it finds.
+>
+> >
+> > The ndctl project does not also have references on how we could make
+> > use of the switch CCI endpoint to get the interrupts nor on how we can
+> > read "Device status registers" and specifically "Event status
+> > register" section 8.2.8.3 and 8.2.8.3.1 via IOCTL interface from the
+> > switch CCI endpoint.
+>
+> Whilst we haven't really discussed it yet, I'd not expect ndctl (which
+> is focused on host interaction) will support much in the way of specific
+> features for fabric management.
+>
+> The cxl-fmapi-tests are not intended to be used for production use cases
+> either. My expectation is that one of the projects more generally looking
+> at CXL fabric management will provide that functionality. I've not really
+> been keeping track of these but I gather there is work in various standar=
+ds
+> orgs (outside of the CXL consortium) to define how it will be done at a
+> higher level.
+>
+> Jonathan
+>
+> >
+> > - Ravi
+> >
+> >
+> >
+> > On Sat, Oct 21, 2023 at 2:08=E2=80=AFAM Ira Weiny <ira.weiny@intel.com>=
+ wrote:
+> > >
+> > > Ravi Kanth wrote:
+> > > > Hi Jonathan / Gregory,
+> > > > Just wanted to touch base on below questions and if you have any
+> > > > inputs on the same. Thanks for your help.
+> > > >
+> > > > Thanks
+> > > > Ravi
+> > > >
+> > > > On Wed, Oct 18, 2023 at 4:00=E2=80=AFPM Ravi Kanth <mvrravikanth@gm=
+ail.com> wrote:
+> > > > >
+> > > > > Hi Jonathan / Gregory,
+> > > > >
+> > > > > 1. Do we have the support in CXL driver to read the "Device statu=
+s
+> > > > > registers" and specifically "Event status register" section 8.2.8=
+.3
+> > > > > and 8.2.8.3.1?
+> > >
+> > > Yes the upstream driver reads this when processing the Event interrup=
+t
+> > > from the device.  Then it uses the value to chose which logs to read.
+> > >
+> > > See cxl_event_thread() in the kernel source.
+> > >
+> > > > > 2. If an interrupt is posted by the device firmware, how will use=
+r
+> > > > > space applications be notified ? Do we have an interface for the =
+same
+> > > > > in CXL driver?
+> > >
+> > > All events are reported through the trace infrastructure.
+> > >
+> > > > >
+> > > > > If the above features are already supported in CXL driver, Can yo=
+u
+> > > > > please point us to the sample code snippets to achieve the same?
+> > >
+> > > ndctl has the ability to monitor these events and example C code in t=
+here.
+> > >
+> > > See .../cxl/event_trace.c in the ndctl project.[1]
+> > >
+> > > [1] https://github.com/pmem/ndctl
+> > >
+> > > > >
+> > > > > Also does the switch cci function change part of the mainline?
+> > >
+> > > I'm not sure I parse this question but I'm also not super familiar wi=
+th
+> > > switch cci.  So I'll let Jonathan answer this.
+> > >
+> > > Ira
+> > >
+> > > > >
+> > > > > Thanks for your help in advance.
+> > > > >
+> > > > > Thanks
+> > > > > Ravi
+> > > > >
+> > >
+> > > [snip]
+> >
+> >
+> >
+>
 
-    Fixes: 27b3f8d13830 ("cxl/region: Program target lists")
-    Cc: <stable@vger.kernel.org>
 
-Thanks, Jim!
+--=20
+Ravi
