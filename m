@@ -1,95 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4CB3FE33
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 22:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5880838BAC
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 22:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QQsrva4h"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8B3AB;
-	Fri, 27 Oct 2023 15:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698445002; x=1729981002;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=S/6jlToaQ6jHH7sK5e3d4N02hVJImJytWM/Zcs04MWk=;
-  b=QQsrva4hvJnSmO/jfUOScgeLclU7Ahbsh47m/n9mGaftli3pZlX3kzJa
-   n/nt9yB8IlU4e3Ux9JXars5Tx7auhzWfypK9o0Hud2jWH4570sS0L0IQp
-   BvdsH6ab7tD0u1L36dnZF/gqJquBR57WgFpKIMOeIRRKAaG9pihPMxmk9
-   ceFwkcBjgZ2bSsN7BIHPLdCuM9FSBEgNoQeBh3OOKyiLcBLjW4u4XzdTp
-   y6jwVjGKvb4mhuS6AFOxfEPWi2pmj10GSVza2VGcelluAMFV21R77KIB+
-   zGbX+u+KvWNYwaID7IEPGZjwevzyNTGr/b8sgEhgs9evdMZyuQzbdtjMV
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="454326247"
-X-IronPort-AV: E=Sophos;i="6.03,257,1694761200"; 
-   d="scan'208";a="454326247"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 15:16:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="794713927"
-X-IronPort-AV: E=Sophos;i="6.03,257,1694761200"; 
-   d="scan'208";a="794713927"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Oct 2023 15:16:41 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 27 Oct 2023 15:16:40 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 27 Oct 2023 15:16:40 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Fri, 27 Oct 2023 15:16:40 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Fri, 27 Oct 2023 15:16:40 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D3Ot6Whz"
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE95D10E2;
+	Fri, 27 Oct 2023 15:55:11 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CXsZURVrKc/zXMlci09Li6qO7099r0JqTVK0BLVzMxmG6GfjQDtT9GsfuXtTJEyQO4fcNm0GrrsfS2Fqn6lXjOKlzUZaced+vrEzXE/eQ4c7G/KLqhpSybNIpxGV7hkRSYePOnBAI9YVcxQeTlfmeIDoa1Jhjjebou1lJ91IVW+XcS/Ig6tHDKJ+S/jS/U7H4CFBPuQdCwU/iun02Yo6wVgN/F4icooS6uXPcIXHrDTeVNi8m0oiUXTizEtOFcAobD88gg0zDDOwx4Rjvk0IYP6tfXbClXV5FMh5emkZq5dOQ3pIfLaiF1pL2lT2RcjntY6fPZNY72gdr8lWx8E5Yg==
+ b=J4CCKY+GyhGDhfriPtx5ndFGTjCXDIzBAi+BZ4+bQhydZ8dJJReSeQrg3EyPRzdJ8ivky5jefJBCCzFPAbxydWHCfPoasmxrZB6lMtw+ZYoJ2GC9WI0tMXYB00QwMt6lRskJ56Ye2jdAYnCdOMZ7PioMMBlmhHfH4HOfcd9vWCb+LyKHZU9ii4c6ePK9vFkmcFlFa+0dtQ41AWqW9cx73RPGcDg/AH8/Z1Hi+INXFQmgLWaQ4S/qo2pCOjzr3DnPUO6ykRkOocQ6LHBzM5hcatXNZAFxcX6MKcRtjNJXwji8hoCuddsghdTaDMSoe0Cw/mqfUb6H9OtFSRtz5P9bsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dQ5qcG3n/85ZeR1OJF5XB2KNqcDR8DLh5C1a5vQtPrc=;
- b=iOYvHKd96Y7IMxlQSB+tLNqsea8cjO+XP3xisQfHiL+CsYBLqmuK1+S8WIAcCKHlOiKLn54yNyDcCb/HJ+UcBQAEoLWsyTUv3PqdA2tUFqYHkAuE8txTc+8bqpcc+ElB8WqI9vLpd8f73h0iLSFnHPuMYXlwKyP+ngGw71GDyPw7pmiFFRivtw4uJWSK6YwMSsgxPWYVczyx0aZV+SDLJ+ZOwl7PoFB+qO/vGXiY0pvSIbPhF1juReKh/Tj3CBIW0xLrMgprqINW0VZ+/sH3qiv4cUZPgn6se4NVCT2sryue353PMwe7hEnz3t4PdUmd3NI0H91jAzmQDOhg6F/xFQ==
+ bh=J4HK5ZbtNowELZ798ixidKEsYtaRya4EmOQE6JzDLB4=;
+ b=WEYSKWpf40liUGk8YY0xC6Mv/qi/y4BUPtWiFPEvHKtOFbyVBSlkK7xKVqn6qFN/VKBSnodNHyIx40QUVEEHk1kXhG3c1jNz5520GFBjreiu2vnBge9otG6yfUtuxtguF2UGwHoHGeHOsbG9mFpeInodxrN1WJvPoip9rX3h8TY5U7UR2NUn7zrOm7mxC4fgCpLfX12SPZtclESznKb3Zwj2b/gsDQa9C/6cHOCB1yDgHzOIoBHv4TMYqubjWvkqiR3GqWv35wu8KNRCIZoQctZ4imH3bvCGiT0vO080G1tldq7oPOUB0D61BAXZ7KAmdvRh80AQTno35RuelS3nFw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J4HK5ZbtNowELZ798ixidKEsYtaRya4EmOQE6JzDLB4=;
+ b=D3Ot6Whziy6G0WC49GDTxwPUWT03xfUodHRrGhfMDTVcMNArHGSw2TSwYAGYp7RsDAJEE65KsBGtshqKnNCith0V4SMqzuCZqp0JOL72cIRmS2t+xN++ka62MgzaBiBWTi1pCfxNsBJH4aGT1atduIuA32X+rGJTiSiUQ+9ljkA=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB4832.namprd11.prod.outlook.com (2603:10b6:a03:2dd::12) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
+ by CY8PR12MB7586.namprd12.prod.outlook.com (2603:10b6:930:99::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Fri, 27 Oct
- 2023 22:16:33 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6907.032; Fri, 27 Oct 2023
- 22:16:33 +0000
-Date: Fri, 27 Oct 2023 15:16:30 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Ben
- Widawsky <bwidawsk@kernel.org>, Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Terry Bowman <terry.bowman@amd.com>, Robert Richter
-	<rrichter@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: RE: [PATCH v12 14/20] cxl/pci: Map RCH downstream AER registers for
- logging protocol errors
-Message-ID: <653c36be4b5bf_244c782942e@dwillia2-xfh.jf.intel.com.notmuch>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Fri, 27 Oct
+ 2023 22:55:08 +0000
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::302f:131b:a9e1:7751]) by DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::302f:131b:a9e1:7751%4]) with mapi id 15.20.6933.019; Fri, 27 Oct 2023
+ 22:55:07 +0000
+Date: Sat, 28 Oct 2023 00:55:01 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Ben Widawsky <bwidawsk@kernel.org>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v12 01/20] cxl/port: Fix release of RCD endpoints
+Message-ID: <ZTw_xd2_uaApAzoL@rric.localdomain>
 References: <20231018171713.1883517-1-rrichter@amd.com>
- <20231018171713.1883517-15-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+ <20231018171713.1883517-2-rrichter@amd.com>
+ <653b3299c1a33_244c8f29449@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231018171713.1883517-15-rrichter@amd.com>
-X-ClientProxiedBy: MW4PR03CA0046.namprd03.prod.outlook.com
- (2603:10b6:303:8e::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <653b3299c1a33_244c8f29449@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: FR2P281CA0101.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9c::7) To DM6PR12MB3657.namprd12.prod.outlook.com
+ (2603:10b6:5:149::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -97,95 +63,197 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB4832:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f352df0-95fe-4e6e-9dc2-08dbd73a6082
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|CY8PR12MB7586:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0908dc7a-12ba-4824-50f9-08dbd73fc3ce
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mFGcYFxTnwlBnTGX/KsKj7FCYcrXE67VSS0IDNYZJyfBP5WhMBSuKlN7pUxvxXJuYFO7mHS/JFS5VwwRH9yGENBoITTmR9QaIyyRz1n46l9i8Ammez5u1g05NFeNEUWi+tQHqYV2hjobO7/t2hMHRwWMtLB6Z7Se6eeNfLiqZFIj6bouCUZRKquIDTZb+EJxRrSK+7fANrpplSijW+KF3Q+ChOvxpioZ1jhXw2X14lPKHS5D7KMDQyu3GoygQbjQiVAbmPifrlgjxnHcf53YwmS09xdlaKLfmNLozcvaw8nvkI1d/zdC0I1VJLuvfk6uku8+X6thl57mXAqJv9SlCYArRJgIIvxg6xA1TnfDdl+RKPmRGVW3VBnBduZl72mhtQPGbb1VdpjRMEFwGVHJP0dxlIRkd2FEvsMt6wumM5XlHYaRPgtmwxYFCSinMJ3tGJKPnYJvCsqdBTEcK2GJiU0/8ljG2hd/92rdvCyEG1ApqETyd3WWD/TcorIitFgy5wo7MLyB8MPKIb0Rh7SmWEfQSiaCBjjAPTRQ5YpMG6J6gymXcK0+QhV/Kg97clE4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(39860400002)(366004)(346002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(478600001)(6486002)(66476007)(9686003)(6506007)(66556008)(6512007)(316002)(66946007)(54906003)(5660300002)(8676002)(4326008)(8936002)(110136005)(41300700001)(2906002)(82960400001)(38100700002)(83380400001)(26005)(86362001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	7B5aL8t9IN3vgaUXPq9NAG1lDphDwFAYPUmysinA9KuVAqiwSxIMDSdJ19Yk8md14jcI6kGEX9JzSzfYyPls4eqIo7dJEMexzZg5POQxtFNAa66DMHaeMGNHmSP7Dp7GyulH5GrknR27qXmp/1Xt13aCnT+Nb23Hx1vXQSH6LXtNndr0xJpqDr5rAeRThMcrtw2vbNAmzOmCzM40foJpxOeSE4m64EbD63SwH2X+LOcrZ0hPAOj+UaBz49j9q9f8UL+oz65aR7VZ4ulyvxaW/5bAFHOJcNN1RcLZlodztf5aajBueX1lkdCkcr5E0eistLwIiCS60Q+c1AfjBfX6g2ce+0H892FTksGfoukih9NK+ULFQPXjvgDCGPdiqDq0LAnLf0RBixz1m5lH5frX9ZCOfi9Smnc6u62o0IZV0UVlr4CHvZprO7ASiN3+GCiGXHDm8wuoNmSKP5zE3J1f2LOoxtc0yhe5oic1jKy+/Cu22k3H/qkAEdhxq6XzjuOOxXYNA/a49Z9W9BCk2wqGhTJJKzX+yoTbmIH3RAqW9fc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(136003)(346002)(366004)(39860400002)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(2906002)(66476007)(5660300002)(7416002)(41300700001)(4326008)(8676002)(8936002)(83380400001)(6506007)(38100700002)(6916009)(54906003)(66946007)(6666004)(316002)(66556008)(26005)(9686003)(53546011)(6512007)(6486002)(966005)(478600001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Wdj1fKGOqYvJzl0KY86WlSmTbdDt79MWl/bnUIwoACLU40MmQ2dQdg5dqtzO?=
- =?us-ascii?Q?JlfH+SRNNcHoGt4RXgXFzthRy7LCnkrItD2Lgr5mhVOm0Qnr1WGgHa9sscz0?=
- =?us-ascii?Q?pedu67G+BU677b0MKfp9imWBLxVnISNd1QwL4nQQo5mEjQ0lr2d566O/wbvV?=
- =?us-ascii?Q?24oQTJMocialuf8xFc3cI8f3EzBrsy3MkPRAP6uPOaCoZuQCgfnTXWUVIoZU?=
- =?us-ascii?Q?MHSIwc9vL/8VCuanA5Hsl7vharJBY2i3Z4xOd8YWj+ez2fu0coEvDGqBi9SL?=
- =?us-ascii?Q?vNWzoTQY9voBk8WBrigbzrmshamExuxLAnrtQ0P07b4yuMqhvnd1mCKFa/jw?=
- =?us-ascii?Q?V0uL/p6ZMvyASDpDWOiGTb/7x+fPV719XxPvZ+8tibuKCxD7J2b8hESMZKFN?=
- =?us-ascii?Q?3EuDzMAwkIu0gaicwbq3VSzgviVRbDYr9B0lizkvXBoYXLOCfx97X4Wc29sx?=
- =?us-ascii?Q?xJM/XraGrPABI5+xJNQi5xn4P0FHyGx5VRaK/Q5RHUhq98MqlNIjpgBuF/9l?=
- =?us-ascii?Q?eD54+AJSGEipU5BqIlfsNGMYYDpapFmkn5CeMmiFPrZKatsR+S+1DmnEt9Pw?=
- =?us-ascii?Q?t4So/zBFBvfOEoFBALPoNluM3vN6hSP/34wQlBmpDPw3dzXYH0E1sb8jPqNA?=
- =?us-ascii?Q?R68NepQhatuJk2AEfzvKYQG4A30cqblGdI1I4cmIlgheOZu7T1xSYtyGzUXW?=
- =?us-ascii?Q?x/ESgKBdNdRydSVrf7C4quMR50scb+6csnet1QeNgzShvvliKkVWOdL1Zytx?=
- =?us-ascii?Q?qOggyWwCOQPq5DSmla4bcXpfh0YLFJXXRGJs2TpyygivKREOJiglkl6hSXTi?=
- =?us-ascii?Q?lrF3uP/d14sMYQsMXQZebmgZF6STbe2jiV666ojRDGUmmF+4pcoEV0XnnT3X?=
- =?us-ascii?Q?Q4WXal1uYy3IaqSzybNh+KYzJ5E+Qm+d2GpUUTfYyD0mSRpRxJwZ6PAzSk1l?=
- =?us-ascii?Q?CQBc9wHZ3K4Fs2lb63g42APe+9l/S2xJCdDDkrPfaNyi2YB9M9zuby0noy9I?=
- =?us-ascii?Q?FIZX+qC9w7tzRxECKj8wDAgQf/33rrb8mfy1/PQrY/utVU4qY8ZT+jzefu1C?=
- =?us-ascii?Q?ihu18bUocD1AUgK/QLnL3xs/lrT1beLdt+PRSpRtEfgGoxIEez2IHbMwcNIp?=
- =?us-ascii?Q?EiaYVa5eLTUMA/CvDf7LR4PYrblFAOi+Pj7lhL3yrsS7ZQcjgcG2IgUr5xQ/?=
- =?us-ascii?Q?nqKgAbuYkdvBpXq/83I8/RrgnrNKVa7b929RPaGWEGbeuhWzYCFbZRE9rRvj?=
- =?us-ascii?Q?aISL4UbWPwDD5ENe+6BBbB1SqSJW0i7+baiXRYZDUIx+xZhpxcsFe3d7MfUb?=
- =?us-ascii?Q?y3isJH7aqIowQIpLP2QyToeLg9UsAqrMvxu5I5DyDpp1UVmUP/FjDR8TJzXU?=
- =?us-ascii?Q?s1MTqh9Kj/5h/ftiFXOTZ/8CnMwxjB4h9j0QiJOn5qd+fJSWru0sI0Qnp4xR?=
- =?us-ascii?Q?QP+6BnAzgxkGtAzK/q/Aolcpq20pdZigJU+pjqmwi/HKS8A8m8DQoDzODqwB?=
- =?us-ascii?Q?5t6lY3LZIFyJvextjtvzIEsH84pLTgV7QVMjrIi/uMJsMa/rnR7YIfnTDk3E?=
- =?us-ascii?Q?tPP10AKlwcINbWXRrVyg1KrKioMVunZDCc0nenZRfXrrNYWq405MexkrKQ1X?=
- =?us-ascii?Q?ng=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f352df0-95fe-4e6e-9dc2-08dbd73a6082
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?WJvMWPOG8u9X+PrmfZAjkg+VUkowxJV9K9AVBy+LM3udT256R9aJzXXRPT2x?=
+ =?us-ascii?Q?Inlt/JfAWUecuTXV673vd1LAYGEd/zMCp1TuoNVAlQoTKsuKAAekN3QrVxfo?=
+ =?us-ascii?Q?L8g076mHwTBUu9XJ5staMVFMgQndWUInRUWQ3xOP7Oy71GP0C0iyT9106S4L?=
+ =?us-ascii?Q?dffKbj6lU7CSYL837ZoGVPfLRhenXPBviAU6vDSSiui3P9gw6Z6XHyor4pwo?=
+ =?us-ascii?Q?3lkSuM+owi63FBRMjTAJ2XuqpDycxRqbyo1IDAjR6QSjA4q9ir4RSebG6jTR?=
+ =?us-ascii?Q?1AcAewQV62II8TCjhkMno2O4rGEM5Pjp9lMJR7usr2bOtNM1ao6q/c528fEZ?=
+ =?us-ascii?Q?2NMkcVAOXtqBmz3ed0woT8Th5FeaSA3JHSPGKyeb7Jahpq82lLc56ZndNgXO?=
+ =?us-ascii?Q?QdEiGN4Ix0XSQUsEgfOAclxhUBbrBJT1TGdoVEqRqmzisqC2xB6ptE+3let0?=
+ =?us-ascii?Q?VIsaKd2/BxuM7BlqiXNSvBjiXnLVvg+12gahGdCk4kPWPA5K1CY8Ysa8D0N7?=
+ =?us-ascii?Q?Uz449W/T8VtRK4Jc9F0W2v4g4MX+RNX/OrIQMFKJFtHFNGGUHzF9Y1fg3VOn?=
+ =?us-ascii?Q?nL2riFr8+PKJZEsQ+9szI4Srs3/LPNV3tiOa9gytJopuSlcfjyHZ6t/Lxp+2?=
+ =?us-ascii?Q?MckzVmyD7rrUX6UDMEjqDhhTQZReLpMl8aLMfseUzHpeCU8PumdSKP/Qo+nQ?=
+ =?us-ascii?Q?PtAjzwEDVCqOOfdGlGc3aXawERQE1iLi0T50pLirdDFPisgo5UR7ZUp74uPh?=
+ =?us-ascii?Q?x1zFiPc+GYesGLNRVP8AxR+WcIxFNCnI5suYQVY18oaGGIHzDWyJSLQkLe5T?=
+ =?us-ascii?Q?NA+/ot404xPkhSrp516tZSh/3cEz7eMEP2ZqUC6if6a6yNrGYr592uC29XXv?=
+ =?us-ascii?Q?Ojq4IDhFSA0sh4vZh2DKrgb3uuIg6GPKSWBrRbXdJdJ94NM52eZrM25Kj14f?=
+ =?us-ascii?Q?FapCswx6MiIZHzvp/L28nFjaKAdj5wjls2umfgF1wBCVcKqbO3ohOXH8EpGY?=
+ =?us-ascii?Q?YRfz13ze0xvqIUH9jmSOmuGhz1go5ODjeuikmXUphXgZXjWhzKvDfFHl+gDe?=
+ =?us-ascii?Q?DZgKaGPIzlHQKs3ySs/5+3QVSMi+/27Mliz/mGKfqSynLyfhCDh766g9TiRk?=
+ =?us-ascii?Q?I1w/IsBDjT0wSnVaOdqKTPJ+eKPkcMlweMgHqKcpUnONs7T/Z6cTg7luBhZv?=
+ =?us-ascii?Q?Z0xx/XTqOx9Aomq9s8oj7YGpgTIL+hFbw3fnMofVdHrz3QboKgaNl9ZG9Aue?=
+ =?us-ascii?Q?o6SsFpHuvsyUjW0leARe7ejQPG24zdc9l0wOIIN7hh05nUbFZfyTQUrrH4Ky?=
+ =?us-ascii?Q?XvvM643UJ6LUvBGO4JIw8T4rxfRLDJnviHfcs7HM0LBg/waYwWWXd0KvPb4I?=
+ =?us-ascii?Q?urIVmZnVWgPi6hB8FidJvvBnqBD6aVCBgKI881vVS9i7qXlLAW9i6wQ7f+Ok?=
+ =?us-ascii?Q?Vefxn8meqnmQnhky8ePE/PElKPZ9jZWwaG3QhieX3SZbDhIrP4dXLc6Be0Uu?=
+ =?us-ascii?Q?TkDSX1qEC4xBOBaJJisK9K2bmU5BvtWHPxwCCrDFB7n1pyEAGO8Eh+zF0AbK?=
+ =?us-ascii?Q?8UrcanmyKM2PCb2HR/rSacotfC9AJpgnEGPgIV8g?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0908dc7a-12ba-4824-50f9-08dbd73fc3ce
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 22:16:33.1836
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 22:55:07.2820
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VNeaf9F/FWMa3EsRbEsbcq+XH/U6cIiWG5VGI0R7/hDzZei8XLhlxqgssBQ3GcNSAFhgvjNGsBzKk/DpFRl/k9kPZBOwFNI9cmXtFoG56cE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4832
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: AC8c5IVYyjoJR/+H0UWQjT8Gf0bUUCvRRGDvDPQi4H7OUmCJhaI43stuSN7nE/7j5+UG3N3n4phS6/sy8kcTDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7586
 
-Robert Richter wrote:
-> From: Terry Bowman <terry.bowman@amd.com>
-> 
-> The restricted CXL host (RCH) error handler will log protocol errors
-> using AER and RAS status registers. The AER and RAS registers need to
-> be virtually memory mapped before enabling interrupts. Create the
-> initializer function devm_cxl_setup_parent_dport() for this when the
-> endpoint is connected with the dport. The initialization sets up the
-> RCH RAS and AER mappings.
-> 
-> Add 'struct cxl_regs' to 'struct cxl_dport' for saving a pointer to
-> the RCH downstream port's AER and RAS registers.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Co-developed-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/pci.c | 36 ++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h      | 10 ++++++++++
->  2 files changed, 46 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index d101fdafb07c..3b4bb8d05035 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -5,6 +5,7 @@
->  #include <linux/delay.h>
->  #include <linux/pci.h>
->  #include <linux/pci-doe.h>
-> +#include <linux/aer.h>
->  #include <cxlpci.h>
->  #include <cxlmem.h>
->  #include <cxl.h>
-> @@ -730,6 +731,38 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->  
->  #ifdef CONFIG_PCIEAER_CXL
+Dan,
 
-Here is more code in an ifdef block that has no compile time dependency
-on the config symbol. Please do not use ifdef blocks for runtime
-dependencies.
+On 26.10.23 20:46:33, Dan Williams wrote:
+> Robert Richter wrote:
+> > Binding and unbindind RCD endpoints (e.g. mem0 device) caused the
+> > corresponding endpoint not being released. Reason for that is the
+> > wrong port discovered for RCD endpoints. See cxl_mem_probe() for
+> > proper endpoint parent detection. Fix delete_endpoint() respectively.
+> > 
+> > Fixes: 0a19bfc8de93 ("cxl/port: Add RCD endpoint port enumeration")
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> This patch causes cxl-topology.sh to crash with use-after-free
+> signatures. I notice that this path should just be using
+> endpoint->dev.parent and is missing reference counting on the parent.
+> 
+> I will replace this path with the following:
+> 
+> -- >8 --
+> Subject: cxl/port: Fix delete_endpoint() vs parent unregistration race
+> 
+> From: Dan Williams <dan.j.williams@intel.com>
+> 
+> The CXL subsystem, at cxl_mem ->probe() time, establishes a lineage of
+> ports (struct cxl_port objects) between an endpoint and the root of a
+> CXL topology. Each port including the endpoint port is attached to the
+> cxl_port driver.
+> 
+> Given that setup it follows that when either any port in that lineage
+> goes through a cxl_port ->remove() event, or the memdev goes through a
+> cxl_mem ->remove() event. The hierarchy below the removed port, or the
+> entire hierarchy if the memdev is removed needs to come down.
+> 
+> The delete_endpoint() callback is careful to check whether it is being
+> called to tear down the hierarchy, or if it is only being called to
+> teardown the memdev because an ancestor port is going through
+> ->remove().
+> 
+> That care needs to take the device_lock() of the endpoint's parent.
+> Which requires 2 bugs to be fixed:
+> 
+> 1/ A reference on the parent is needed to prevent use-after-free
+>    scenarios like this signature:
+> 
+>     BUG: spinlock bad magic on CPU#0, kworker/u56:0/11
+>     Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20230524-3.fc38 05/24/2023
+>     Workqueue: cxl_port detach_memdev [cxl_core]
+>     RIP: 0010:spin_bug+0x65/0xa0
+>     Call Trace:
+>       do_raw_spin_lock+0x69/0xa0
+>      __mutex_lock+0x695/0xb80
+>      delete_endpoint+0xad/0x150 [cxl_core]
+>      devres_release_all+0xb8/0x110
+>      device_unbind_cleanup+0xe/0x70
+>      device_release_driver_internal+0x1d2/0x210
+>      detach_memdev+0x15/0x20 [cxl_core]
+>      process_one_work+0x1e3/0x4c0
+>      worker_thread+0x1dd/0x3d0
+> 
+> 2/ In the case of RCH topologies, the parent device that needs to be
+>    locked is not always @port->dev as returned by cxl_mem_find_port(), use
+>    endpoint->dev.parent instead.
+> 
+> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Robert Richter <rrichter@amd.com>
+> Closes: http://lore.kernel.org/r/20231018171713.1883517-2-rrichter@amd.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Again, this will need to be a post -rc1 cleanup.
+I have tested your patch.
+
+Still the endpoints are not properly released after unbinding/binding
+mem0:
+
+root@onyx7628host:~# find /sys/devices/ -name uport -ls
+   258978      0 lrwxrwxrwx   1 root     root            0 Oct 27 21:27 /sys/devices/platform/ACPI0017:00/root0/endpoint1/uport -> ../../../../pci0000:7f/0000:7f:00.0/mem0
+   258553      0 lrwxrwxrwx   1 root     root            0 Oct 27 21:27 /sys/devices/platform/ACPI0017:00/root0/uport -> ../../ACPI0017:00
+   259363      0 lrwxrwxrwx   1 root     root            0 Oct 27 21:27 /sys/devices/platform/ACPI0017:00/root0/endpoint2/uport -> ../../../../pci0000:7f/0000:7f:00.0/mem0
+
+Here the DEVRES logs:
+
+[   47.756076] cxl_acpi ACPI0017:00: DEVRES ADD 00000000b864173a cxl_acpi_lock_reset_class (16 bytes)
+[   47.776194] cxl_acpi ACPI0017:00: DEVRES ADD 00000000f2889cb8 devm_kzalloc_release (64 bytes)
+[   47.795361] cxl_acpi ACPI0017:00: DEVRES ADD 00000000456b3844 unregister_port (16 bytes)
+[   47.813519] cxl_acpi ACPI0017:00: DEVRES ADD 00000000c531ceef cxl_unlink_uport (16 bytes)
+[   47.868008] cxl_acpi ACPI0017:00: DEVRES ADD 0000000034c233ab devm_kzalloc_release (160 bytes)
+[   47.979283] cxl_acpi ACPI0017:00: DEVRES ADD 0000000028cfab8c cxl_dport_remove (16 bytes)
+[   47.997641] cxl_acpi ACPI0017:00: DEVRES ADD 00000000fce74ad0 cxl_dport_unlink (16 bytes)
+[   48.026608] cxl_acpi ACPI0017:00: DEVRES ADD 0000000087096c98 remove_cxl_resources (16 bytes)
+[   48.467055] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000439965a5 pcim_release (8 bytes)
+[   48.492875] cxl_pci 0000:7f:00.0: DEVRES ADD 000000000352019d devm_kzalloc_release (688 bytes)
+[   48.593561] cxl_pci 0000:7f:00.0: DEVRES ADD 0000000093b19b3d devm_region_release (24 bytes)
+[   48.612509] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000f2a2b9ff devm_ioremap_release (8 bytes)
+[   48.631460] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000a4df0705 devm_region_release (24 bytes)
+[   48.650416] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000a35318c5 devm_ioremap_release (8 bytes)
+[   48.669359] cxl_pci 0000:7f:00.0: DEVRES ADD 000000000411c084 devm_region_release (24 bytes)
+[   48.688302] cxl_pci 0000:7f:00.0: DEVRES ADD 000000003c2ff619 devm_ioremap_release (8 bytes)
+[   48.851787] cxl_pci 0000:7f:00.0: DEVRES ADD 0000000092a86a29 devm_region_release (24 bytes)
+[   48.918272] cxl_pci 0000:7f:00.0: DEVRES ADD 0000000029f3d56b devm_ioremap_release (8 bytes)
+[   48.943092] cxl_pci 0000:7f:00.0: DEVRES ADD 000000003a7c75bf devm_attr_group_remove (8 bytes)
+[   48.962428] cxl_pci 0000:7f:00.0: DEVRES ADD 0000000038e85a6f msi_device_data_release (104 bytes)
+[   48.991467] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000fb668702 pcim_msi_release (16 bytes)
+[   49.433956] cxl_pci 0000:7f:00.0: DEVRES ADD 00000000ceeb66f6 put_sanitize (16 bytes)
+[   49.458405] cxl_pci 0000:7f:00.0: DEVRES ADD 000000000732acf5 cxl_memdev_unregister (16 bytes)
+[   49.477751] cxl_pci 0000:7f:00.0: DEVRES ADD 0000000062830d65 free_event_buf (16 bytes)
+[   50.641360] cxl_mem mem0: DEVRES ADD 0000000053ef2f50 devm_kzalloc_release (16 bytes)
+[   50.658961] cxl_mem mem0: DEVRES ADD 00000000fba70c16 remove_debugfs (16 bytes)
+[   50.783295] cxl_port endpoint1: DEVRES ADD 00000000adbc4e00 devm_kzalloc_release (104 bytes)
+[   50.819057] cxl_port endpoint1: DEVRES ADD 000000000cad4cbf schedule_detach (16 bytes)
+[   50.845695] cxl_acpi ACPI0017:00: DEVRES ADD 00000000bd0ee305 unregister_port (16 bytes)
+[   50.863853] cxl_acpi ACPI0017:00: DEVRES ADD 0000000093e8b578 cxl_unlink_uport (16 bytes)
+[   50.882224] cxl_acpi ACPI0017:00: DEVRES ADD 00000000afea8cbc cxl_unlink_parent_dport (16 bytes)
+[   50.921823] cxl_mem mem0: DEVRES ADD 00000000acbd776c delete_endpoint (16 bytes)
+[   50.938423] cxl_mem mem0: DEVRES ADD 00000000c504d947 enable_suspend (16 bytes)
+[ 1187.191399] cxl_mem mem0: DEVRES REL 00000000c504d947 enable_suspend (16 bytes)
+[ 1187.207813] cxl_mem mem0: DEVRES REL 00000000acbd776c delete_endpoint (16 bytes)
+[ 1187.224426] cxl_mem mem0: DEVRES REL 00000000fba70c16 remove_debugfs (16 bytes)
+[ 1187.240845] cxl_mem mem0: DEVRES REL 0000000053ef2f50 devm_kzalloc_release (16 bytes)
+[ 1194.935890] cxl_mem mem0: DEVRES ADD 0000000049747689 devm_kzalloc_release (16 bytes)
+[ 1194.953479] cxl_mem mem0: DEVRES ADD 0000000025dc7c28 remove_debugfs (16 bytes)
+[ 1195.085016] cxl_port endpoint2: DEVRES ADD 00000000777769c7 devm_kzalloc_release (104 bytes)
+[ 1195.135858] cxl_port endpoint2: DEVRES ADD 000000007b7aea26 schedule_detach (16 bytes)
+[ 1195.162482] cxl_acpi ACPI0017:00: DEVRES ADD 00000000499f1a7a unregister_port (16 bytes)
+[ 1195.180650] cxl_acpi ACPI0017:00: DEVRES ADD 0000000065d85ed8 cxl_unlink_uport (16 bytes)
+[ 1195.199010] cxl_acpi ACPI0017:00: DEVRES ADD 000000003b0c1f03 cxl_unlink_parent_dport (16 bytes)
+[ 1195.229479] cxl_mem mem0: DEVRES ADD 000000009973885e delete_endpoint (16 bytes)
+[ 1195.246100] cxl_mem mem0: DEVRES ADD 00000000512c0cc7 enable_suspend (16 bytes)
+
+delete_endpoint() is called here, but the uport etc. is not unbound.
+Which means this is not true:
+
+	if (parent->driver && !endpoint->dead) {
+		...
+
+I don't remember this with my patch. The parent is there different, so
+that could be the reason.
+
+I could not yet look into more detail but wanted to let you know. Will
+continue.
+
+Thanks,
+
+-Robert
