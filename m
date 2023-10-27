@@ -1,57 +1,88 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0448B168B2
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 17:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61336AEA
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 19:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="nLyV1NUX"
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on20621.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::621])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75C81B9
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 10:18:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XOwoZITz"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB6F1A5
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 12:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698435554; x=1729971554;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KZhJn9nrt5+oow8+aS6fEocz/u1hhXCdG9YrXFLvmAQ=;
+  b=XOwoZITzrTYGGkz0pUlVbpc0HaPEH6cPfVgb7pyGzotm8uEjRQmbMS2R
+   8UYXbLO1EQ5Mn5Drf7WnFkxqtQaw/PEJizKMwgiafN9b7GKhAIZSHX3ft
+   3e1q9abB5rq8bx/m0b0jd74biPVq5m/RaqucERPVhlwDTGTD11T7TYPRJ
+   AqxCHHfRtrdFqmVi4SVaFDHEaeWbchwa9x+vM3XYMVRumnZZcV7IIwP28
+   Il4mJaU3qah+1tjpdAmhuwP6c93WnfTyKwNONJHfB6+AETiMiRP0NVq0Z
+   LAAb3Z5xHuyinxvGoKgY1h0voVx+7kR1dcBCcZNtaqCuIj8bWIGiun3go
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="385047079"
+X-IronPort-AV: E=Sophos;i="6.03,257,1694761200"; 
+   d="scan'208";a="385047079"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 12:39:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="709502425"
+X-IronPort-AV: E=Sophos;i="6.03,257,1694761200"; 
+   d="scan'208";a="709502425"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Oct 2023 12:39:14 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 27 Oct 2023 12:39:13 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Fri, 27 Oct 2023 12:39:13 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Fri, 27 Oct 2023 12:39:13 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQrFTZcaKpbp9jY2b3QSwAFfwZ7ww9S4B5E+Tih6Rc5VeegUena9WLwN4AQEoY4cc4WYqeC7Xrb9cD2wsa7rNAt65aIgeZ4Mobh+RfNaeaQ7fCOWp6O3UZaYsSCxx7YuFYFfGkwg1hQIn586+6xt973PHEpoB58gz9O0+5l7OodwBskuhrfUth+teZKcFzmOQRKJiN/fH+qEAHXPA4RQ2O5In272VTJBRqhKPkGY7eftOrVvo+4xNbLL6lNoHxZRu0hanEsvKL6LShAb7yauyQ+Xo6AQBANKSG/pqBIwPpVNuoIIzsGxUOoRTD4Y0dE1sswTBfPobnYNA3ITh0/Epg==
+ b=ZQ/ax5eg6xxW20feMg0rKYo++vOCWUT26s5APyZjTeaEF4i3GpZ/Y5nCdMjQjlT7l2txZR7fapRUjMYgeYgQ5si24sO7QKQyM6dYWqv4lhJNDY3VOp5pB++T0vNyoU3Xwe8p12MZPZOmQusdKZDUM8/9HGyC1MOjXWndJOTCSh6iwlgr8a9MjnjiQV1Jk5DuT6x/SQuUXw5iEnYew2j5TYgPJz92iZ6NEeIENN6D1LJvmnrD442tjdqWF6BqHpFkZbjEkConRCDKRC852I8gAFpjouF+yrxpD0nlXgh4pfdBe2NjQI0Yr/f0ipJUp9rqihydsVsUw4fRwUWG7IW55A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HmWuuQWIkBuy02VCITS6KKTZ662Kyg2Aa0R5Z/9eH3A=;
- b=IRKlrvb/vtz8zBwhBSPHccHL2+dBHIqDtCDu+aoTNhoVtxfTijHiCcidI5dIWK+jNPIHKskxc3IOGYJ35U/eceJeQlm9/Op22QYs6Y/s/PEXMHRdacBp5I1sdwD+vvWfHuH7zkRp6mz+DEppljx0hkK/GOOyt4UqFeq+Em3BA80P+YZMt0d3XDGx7Z1zpvy2VItWkdIPcusLX1TxQ8VgLzdPXkGQPtaPpHpLQ4y28Qo86duTG9SJ2SudMO5vvw6QTSvb2ChS/sLx+9mU7sWEMJM9Z3hX409UgDnSd2rroP0Ku2y0PBfOr2N4rY+gGdQxP0oJkoWDoVqp+mwL1K9Kbw==
+ bh=tVMil/TYuu/QXCHePIJUiQAV9adoSfm7gjxTvcZ9v/A=;
+ b=VM7k27JZEL8Jw1t5z8ZKf9KMFNGTp0A/PKpzx00N3sI6Sqz4EyBODVGrVPr0XH6T279yOeOl/CFhTXcEJlBISxRXcAsPHDsx7JW0PzVHNBBe1piJLrmapQCbt1K/Xs7KFJ0UMOmVXyknna7hut3kJRFqUJGm+3KJCYZn7vGNjmxCCWaqNRl6NXli+tDcg8GRZmfmeblXw/nHwTG4GHUXCBz6bjKiRcnxZOfh7Q0qDqoYooJ3mHTVJ40Bvpvbz/7iBRgjCUBjjfTOE4w5jDLxFYrWQSyVShBJv1UTRv3xkXpSxVLafhN2FaqyCBPwy5kcfGR2bkkKxkChBLAerRQtmA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HmWuuQWIkBuy02VCITS6KKTZ662Kyg2Aa0R5Z/9eH3A=;
- b=nLyV1NUXFRgvS6ED0j8pM6P7c+KfHwztEgXJJMvo52KawJMdh6q0Ua8IshYDPxco+WYl4EAdW6VcnbzgnEuOpkSAZNtytwXLRJat1T2jiC4n7iBHrKG2pN3kur9vRNA6mWnyqaKhyCXtwlzveEIykocDatrGjhTb69c2VE/ENFE=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by DS0PR17MB6630.namprd17.prod.outlook.com (2603:10b6:8:f6::19) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA0PR11MB4574.namprd11.prod.outlook.com (2603:10b6:806:71::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.18; Fri, 27 Oct
- 2023 17:18:02 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%4]) with mapi id 15.20.6954.011; Fri, 27 Oct 2023
- 17:18:02 +0000
-Date: Fri, 27 Oct 2023 13:17:58 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	ira.weiny@intel.com, vishal.l.verma@intel.com,
-	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net
-Subject: Re: [PATCH v11 20/22] cxl: Store QTG IDs and related info to the CXL
- memory device context
-Message-ID: <ZTvwxkOg3WCW6RFd@memverge.com>
-References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
- <169713693022.2205276.8814476945721343862.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.24; Fri, 27 Oct
+ 2023 19:39:11 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6907.032; Fri, 27 Oct 2023
+ 19:39:11 +0000
+Date: Fri, 27 Oct 2023 12:39:08 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: RE: [PATCH v4 2/3] cxl/region: Calculate a target position in a
+ region interleave
+Message-ID: <653c11dcaf694_244c8f294fc@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1698263080.git.alison.schofield@intel.com>
+ <0ac32c75cf81dd8b86bf07d70ff139d33c2300bc.1698263080.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <169713693022.2205276.8814476945721343862.stgit@djiang5-mobl3>
-X-ClientProxiedBy: BY5PR16CA0036.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::49) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+In-Reply-To: <0ac32c75cf81dd8b86bf07d70ff139d33c2300bc.1698263080.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW4PR04CA0142.namprd04.prod.outlook.com
+ (2603:10b6:303:84::27) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,104 +90,212 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DS0PR17MB6630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b1f4db8-7135-4549-07e0-08dbd710aca4
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA0PR11MB4574:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c46d6e6-1b1c-4bf9-48c1-08dbd72464ab
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	OlzjdK2d44bAomR576s72V5MvsInPjwAUealAAdIiLRwG1i2FezX/A8tZgXz2BWkW1mSpIg4ROYFWi/QSa+3shDzR5O+5prujTiu7nhiJboaYOHK1pwZOFbtWf/HlwW/oU1OJJTPeEv5V4tWrCkVgp4DDbJRN6KSMKP2yEKh4XdEi5ElGdxTFmLyIwuFCHek/fU2zZA7JP6/6ueL52ZNEj4k97Z/qJAGGZrrSXTd80X3hZeLdCKNMvaVjFq6hwgMlUH71bMI64zWQjpXpj1c1H1tAOU2Lxe/Cw3oyFHi+hRQLOIfGCAqHlEs7QIDP5Gbnbk+9eqGjuRKrKvzZ4/3IPrAiwdsmeC9GOabIcl5RJtdwAs1F2d29/70v32aOqWuf8EkL7m9wchAynpONNBkKm9eKBU8PsuR0hl4mKVVwI1qro9ke1q06OPgvqL1mptWlMS+X41vvI9K8k5mWqobQlaL01NNPfTJlqzv+p+nrfupmYcnNmvBIAHgtAF6h+yn7WdZR1ZiTksKP63CylOaHoN/n6Zlw9KgeqmmdJbzq26PZDk2CGYs/NKTSIhivbu6
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(39840400004)(136003)(366004)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(26005)(478600001)(6506007)(6512007)(6916009)(316002)(38100700002)(2616005)(66556008)(66476007)(66946007)(36756003)(86362001)(6666004)(6486002)(44832011)(8936002)(8676002)(83380400001)(4326008)(2906002)(5660300002)(41300700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: baFlhJRvi1CKi+x24P4xaPFl9bZj3y/GGGZ6na1TE9cLsCA32uxw033eW5gdGpULt9VQLg4y/SPuMUKPndERcbPyXqTxxSh6lWp+LkRTmE1bEqDr6HWn3dQfOkuQCZBgAAktw9AI2feF+zltmGljxukhsa9cUQgvdCvdNV13tyf4QcA3NQ8lnkuJlvbNHCaGB73QG2trozeiIM+fFD4X+XOc3EJFa7DzB62Oc/ajCRksgnaG2rECvK51y/gtn5d55p13nBsDz0DgqQrSTuf+LflyZF6nW5+5GcRY1OmLKiAotEoMAv9+exLl3ltqporFd9g7nUuVjT2izXl5+3IpRyZ67JB2e6szLsts0P4yrj0aLhLh6LWHzxfW3oo8VMMQld8+MzWBX8wzsNvP5eQnRD9MjXl90DOey57XPISqOMpC/+8ik2QA9AyuWdRRrylSFt7lwuiE8zmcLVGZR2R0PI4tEP+ZzcRrDb56zFNMe+qDXi4IGJATanuqxkXbuysK3KSuC4SmqHYNwD2F7tiTkHH2DLglkN0ygBKzN/3zv4OXaKv8G1GNQTAFcFotHhsh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(376002)(136003)(366004)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(2906002)(6512007)(9686003)(26005)(6506007)(478600001)(6666004)(6486002)(83380400001)(5660300002)(41300700001)(110136005)(8676002)(66946007)(4326008)(8936002)(66556008)(66476007)(316002)(38100700002)(82960400001)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Zhp6+LDUBnV/LdQ8kPZ8bY1T1czNrWUuErweueBK8OFANm87bRfwb+fSpWvt?=
- =?us-ascii?Q?e9/YD3UeWhgo2tqBH2jiF8J2hde19/fj24/0mDSnGm+OKeoBmc9xl1w0vFTC?=
- =?us-ascii?Q?NLkNXKexSue22y06n0qgSKN7z0kgXJ9frWPmT4bVxqZF1b6nTUlNAHM9Twbw?=
- =?us-ascii?Q?toE0YE/CYNgbIV52LR+96noPZGBIKlzMvSRkYkcOz2hlFH9hAARSGSK/+eJc?=
- =?us-ascii?Q?gx54OlamOqLA+WauDAkjlCgv7RTm+MumJuW1nn6FrdiDWBY+u54c7O4N5Mav?=
- =?us-ascii?Q?6roljqTBhc98KssY4P64oP6pPpxR1QwIR/182d//R4uuOzePLkSogFQWXEFR?=
- =?us-ascii?Q?yVWUGL/C6/zk3mKMS2Wr+OYLq8gJTOA+hrHS7mo8Laeu27EtEGAUY0W8fg61?=
- =?us-ascii?Q?5OMLuLmFcHdO6axxmRl4vLRT442JDzK2ie9t2c6b38gjmkP3cew9IijWyyCJ?=
- =?us-ascii?Q?Hd3lHJaKmbEsb2RhBx35jED3TvXHe69+sAZuNOtwsQR+9l/YeK06nFVxyHou?=
- =?us-ascii?Q?OoSzRKF4ZyX0ESuZpj1T/pLERkq9sbaP6CfwF2bOggydUTuhZ44qYAU4hY6n?=
- =?us-ascii?Q?GJ1mz2H/B8olLEA2idSLfFzTchNTUmjdASCYtJr0/ueOyzTvE9JrfHo6wbq+?=
- =?us-ascii?Q?z7MMAW7Voco7QRhyFPTN1Zq4RkvsyKJfgtrNkD/D3mvj5RECpAmkCdJwjMTz?=
- =?us-ascii?Q?ZrD9pTjOZgkLrtr8wwt8lebFAD0zO8LFr8Cw/42fsL6aD6yUw4ke8inxHhHy?=
- =?us-ascii?Q?vE8k5iJ74sAzx/9XvAzMHcNHKGD22FqVETgujm4kmWl5Tbuc5x3BA2Pf9OuC?=
- =?us-ascii?Q?wwvfQ6iv1/1b1FYbMnJxS8nrCc9cVMPIeChXnjKt4F8mzQgVWYhALT4LdXPc?=
- =?us-ascii?Q?KZzFf4WQL1VDr79kgpz89Ba0TPsfeIHrqeVyP8KJjnQNyfkGVQmQHk3Axddf?=
- =?us-ascii?Q?z4S4gwGPieG3zlA4GbMvHFunOoj9+Arc8aMCCrCaRhxW93fFh8Nn5SHKu4vO?=
- =?us-ascii?Q?NBNhuNVtHo9FDH20il6Rh/WmDR+ym4gqnenqjqgGCTFQDzSo/QRsk3AVig47?=
- =?us-ascii?Q?3WQh06cj2rtQTqp6G56mazLOVly0K1scb630vy5rVvjyCTB/Yn0Dy0i3x+8q?=
- =?us-ascii?Q?4TzzbnzUsM3lXL4NYJo3aYkktRvi+TeHQzZBMwcAMb7Wec5FKh7Im8Y4+/Ao?=
- =?us-ascii?Q?VVVvkCNx3raxlvfPxxRG63SbrPjG41eb0NkPTE49n1nFM0PRf4aVuxtMxtZd?=
- =?us-ascii?Q?W/l0zrxRUlgT5r5eRioH0sZBxpSiF3PCWrRHNBZskpFr5fVzUpijhx45MaNq?=
- =?us-ascii?Q?1BSjOe3yeYwvpC+eH2bbiv0xJp7XPN8HpjPR2NtgvVp3DnkhQ+9qBRm04o5F?=
- =?us-ascii?Q?LhXssUrNkRIGsSc0xAZ3LB7Vm+y4ODW97WzgryHK8TK0bTSGYbzw1WHKTQ2h?=
- =?us-ascii?Q?sPgOzhULfd+iOCYZHW9x3cnr3VBsRRCJjUHnqvkZoz+BYCXD0QBYZZaKkU7e?=
- =?us-ascii?Q?7nXABy1qjmDe6aChaPq66IHw3evaSw+u9KlRqA1sASBg75dP1pgE+quHayqR?=
- =?us-ascii?Q?IMkx7lvZSIaAfoQHHoChRCTIL3T+kjec+UrkWCsqGtPhoUCTI9lqMEa6LS64?=
- =?us-ascii?Q?zQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b1f4db8-7135-4549-07e0-08dbd710aca4
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?A64Wk7e2+4QVGI9aCKn0r2Mx2T4SoNDG2v+P0aXnUTAZq8ZEw+y6JY01t747?=
+ =?us-ascii?Q?wSrSwL+9BJeysgodNWCiE3akcCIFpdnDN7KhcNubFuUT8YicFqM12poVvLlf?=
+ =?us-ascii?Q?9e6Y83mvHp64BIZYvGJsmX0UWK03NCnmU52lm9ZpiXhPAFMxrFzurCUlUZTF?=
+ =?us-ascii?Q?yTVQDU0AWB0PlvIhsKotMHXvPrpPp/WDudMH5R+eV9mF8sVr3BNf9KXK4+TT?=
+ =?us-ascii?Q?uREFn2pDXWLOy7n/TqB0qCyIJcAgXQ9TsBzHedrYKaZx4K8nGQuIsUs+4cVA?=
+ =?us-ascii?Q?pGrSNrsey5Xb12Sxv/2hLQAheZ/VZMHxPbpDi391qHbSF4Czw3+aGXb4bhqc?=
+ =?us-ascii?Q?Nz+SH1ZGu3fM9cx5hSsmdu6S/p50dkZ9BvPNtlf4Pr1vs09txo+Kl6yNnLq9?=
+ =?us-ascii?Q?6/15Lw94FPGfMuKnKJpWqAzWR0TGiliXzuBwAXOwCQjLoYFWSwi8u+arpwla?=
+ =?us-ascii?Q?y7TPdJC2IfdTFQsUiQLlVn+yEIdbdNW8A/cdsZ/kWPQceMadzL6Uz6uiyyQL?=
+ =?us-ascii?Q?1TVz3wcA3hI6IE4jalqHqrJXjxGNe30JFiIolfcxQ8hskplpIs2lc7m2vczB?=
+ =?us-ascii?Q?vgHobmxkt46SEVifAT2Il8nJPdNpUclRaU/0Yb8qgdVHf3NuAxqUvJyRYI7J?=
+ =?us-ascii?Q?1KL4WUPCN5HAOU+tRQs1CXpCTcthWVH0IjU27mIqSshxLQlKlsvOGD3lTKXa?=
+ =?us-ascii?Q?OmTciCFGpFBRIbVB8VqY/nHc3l4hnBMJPOA15Y19TZDrF2l/KO/3pOtPEZFQ?=
+ =?us-ascii?Q?K+3B3lpOH1IQrMgE6byMQZMSXVGkRXmze6arLHY2eivimaKi+I4CrUoXoQgr?=
+ =?us-ascii?Q?+uUCTCtiKN4eteLBodO0wWaA6yOgJmG8tuN6++Nd3FWlfqV0e5XNnDLThqKB?=
+ =?us-ascii?Q?MEvEC3UMaHM8BYzyF0jheLUG6QGVZNCktXQ3baeARvJEpblM/U39/s373c6z?=
+ =?us-ascii?Q?pca6L49y6srcGsOL8YfP0cNrdTxHNnNC4y2T8cfALccNgikUz1LclP2Jct+b?=
+ =?us-ascii?Q?zJMtlHQ9REgSteq+4L+3Iciwrz+JbzOSlA+1og6FEVg59CyuGpJ9dLJBbKN0?=
+ =?us-ascii?Q?GLu/K6KxA8i2bdnxrwURWQGDh0cEUeONs1akz1M8BOY8GACCHMQ4FAaBRdlB?=
+ =?us-ascii?Q?OdE9mnq4vUU0uNyYPgQY8n1c3OgJH7yxhjqlr3wQnlETyZMvBVfiUr2IdZJs?=
+ =?us-ascii?Q?wCgfvhKbmvmP3ZI0KmHDxJY9TLLLQobsX7IqT9jOaRstNug+Fp3MwNsRcx/N?=
+ =?us-ascii?Q?Us11WEhmw2Bmtk9pZrQpZltcvibnVuOb/7kLMitQIL0VzSQLOju2sKZrjmrW?=
+ =?us-ascii?Q?nIkBxsdE1/E2F78ZMiJ6H6xbTlz0lZVf69nvQHKxoF4YDT5TSaglVVK7UUbg?=
+ =?us-ascii?Q?Yi3vEmClX94VvsTZZC85seawsE6/oegeHXcHycU7/uNurqOTVvtlTb/OwRF2?=
+ =?us-ascii?Q?P9IDjot27ZnFokZhBXm4WlG20nKqq6xCsJs4DyBYZ8iT1QYTFB9mm0kr4b53?=
+ =?us-ascii?Q?BaCMW3Lrf1+6cofP7sQEiZtUi5F6wyGcTvn31rMdT2H/duRGCQU1v0mJ+URa?=
+ =?us-ascii?Q?vY0VEdeUvqbpKVVVLQTLvceBvHlK0vUPrjOp8dUvbg6s2tbufdFX72kpkZ8U?=
+ =?us-ascii?Q?cQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c46d6e6-1b1c-4bf9-48c1-08dbd72464ab
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 17:18:02.1787
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 19:39:11.5096
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1941EuiW5c63SWnmjjOdkNmg+bcEQR7kHOXyJNuupI6BAN1u/dmt96wMUOPXqOJlneePQ56L2MVcLtxxz6WPcoO2eujLZhSDhlPMNbl2dEk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR17MB6630
+X-MS-Exchange-CrossTenant-UserPrincipalName: JIeo2eln4RDJjZzpByVnn2UguQ40050xsCAdfNRT11AqMWtSM2V+/J0KAuqHxLRqmZvpDCMa+LHS634jEflEBps8fdDYtBSw9+w7G2XMuTU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4574
+X-OriginatorOrg: intel.com
 
-On Thu, Oct 12, 2023 at 11:55:30AM -0700, Dave Jiang wrote:
-> Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
-> the return package. Create a list of entries in the cxl_memdev context and
-> store the QTG ID as qos_class token and the associated DPA range. This
-> information can be exposed to user space via sysfs in order to help region
-> setup for hot-plugged CXL memory devices.
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Introduce a calculation to find a target's position in a region
+> interleave. Perform a self-test of the calculation on user-defined
+> regions.
 > 
-[... snip ...]
->  static int cxl_switch_port_probe(struct cxl_port *port)
->  {
->  	struct cxl_hdm *cxlhdm;
-> @@ -196,17 +239,22 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->  		rc = cxl_cdat_endpoint_process(port, &dsmas_list);
->  		if (rc < 0) {
->  			dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
-> -		} else {
-> -			rc = cxl_port_perf_data_calculate(port, &dsmas_list);
-> -			if (rc)
-> -				dev_dbg(&port->dev,
-> -					"Failed to do perf coord calculations.\n");
-> +			goto out;
->  		}
->  
-> +		rc = cxl_port_perf_data_calculate(port, &dsmas_list);
-> +		if (rc) {
-> +			dev_dbg(&port->dev,
-> +				"Failed to do perf coord calculations.\n");
-> +			goto out;
-> +		}
-> +
-> +		cxl_memdev_set_qos_class(cxlds, &dsmas_list);
-> +out:
->  		cxl_cdat_dsmas_list_destroy(&dsmas_list);
->  	}
->  
-> -	return 0;
-> +	return rc;
->  }
+> The region driver uses the kernel sort() function to put region
+> targets in relative order. Positions are assigned based on each
+> target's index in that sorted list. That relative sort doesn't
+> consider the offset of a port into its parent port which causes
+> some auto-discovered regions to fail creation. In one failure case,
+> a 2 + 2 config (2 host bridges each with 2 endpoints), the sort
+> puts all the targets of one port ahead of another port when they
+> were expected to be interleaved.
+> 
+> In preparation for repairing the autodiscovery region assembly,
+> introduce a new method for discovering a target position in the
+> region interleave.
+> 
+> cxl_calc_interleave_pos() adds a method to find the target position by
+> ascending from an endpoint to a root decoder. The calculation starts
+> with the endpoint's local position and position in the parent port. It
+> traverses towards the root decoder and examines both position and ways
+> in order to allow the position to be refined all the way to the root
+> decoder.
+> 
+> This calculation: position = position * parent_ways + parent_pos;
+> applied iteratively yields the correct position.
+> 
+> Include a self-test that exercises this new position calculation against
+> every successfully configured user-defined region.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+[..]
+> +/**
+> + * cxl_calc_interleave_pos() - calculate an endpoint position in a region
+> + * @cxled: the endpoint decoder
+> + *
+> + * The endpoint position is calculated by traversing from the endpoint to
+> + * the root decoder and iteratively applying this calculation:
+> + *	position = position * parent_ways + parent_pos;
+> + *
+> + * For example, the expected interleave order of the 4-way region shown
+> + * below is: mem0, mem2, mem1, mem3
+> + *
+> + *		  root_port
+> + *                 /      \
+> + *      host_bridge_0    host_bridge_1
+> + *        |    |           |    |
+> + *       mem0 mem1        mem2 mem3
+> + *
+> + * In the example the calculator will iterate twice. The first iteration
+> + * uses the mem position in the host-bridge and the ways of the host-
+> + * bridge to generate the first, or local, position. The second iteration
+> + * uses the host-bridge position in the root_port and the ways of the
+> + * root_port to refine the position.
+> + *
+> + * A trace of the calculation per endpoint looks like this:
+> + * mem0:	pos = 0 * 2 + 0		mem2:	pos = 0 * 2 + 0
+> + *		pos = 0 * 2 + 0			pos = 0 * 2 + 1
+> + *		pos: 0				pos: 1
+> + *
+> + * mem1:	pos = 0 * 2 + 1		mem3:	pos = 0 * 2 + 1
+> + *		pos = 1 * 2 + 0			pos = 1 * 2 + 1
+> + *		pos: 2				pos = 3
 
-This causes existing devices which do not have _DSM implemented to fail
-to map without this QoS extension.  Please consider having the
-cxl_switch_port_probe function return 0 even if the QoS changes here
-fail so that existing expander mapping continues to work.
+As 0day reports, kdoc does not like formatted text, so I will fold in
+this fixup:
 
-I presume future QEMU implementations will have the appropriate _DSM
-acpi field, but older ones do not.
-
-~Gregory
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 9c714b53908d..f6be4164dfbe 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1534,43 +1534,19 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ 
+ /**
+  * cxl_calc_interleave_pos() - calculate an endpoint position in a region
+- * @cxled: the endpoint decoder
++ * @cxled: endpoint decoder member of given region
+  *
+- * The endpoint position is calculated by traversing from the endpoint to
+- * the root decoder and iteratively applying this calculation:
+- *	position = position * parent_ways + parent_pos;
++ * The endpoint position is calculated by traversing the topology from
++ * the endpoint to the root decoder and iteratively applying this
++ * calculation:
+  *
+- * For example, the expected interleave order of the 4-way region shown
+- * below is: mem0, mem2, mem1, mem3
++ *    position = position * parent_ways + parent_pos;
+  *
+- *		  root_port
+- *                 /      \
+- *      host_bridge_0    host_bridge_1
+- *        |    |           |    |
+- *       mem0 mem1        mem2 mem3
+- *
+- * In the example the calculator will iterate twice. The first iteration
+- * uses the mem position in the host-bridge and the ways of the host-
+- * bridge to generate the first, or local, position. The second iteration
+- * uses the host-bridge position in the root_port and the ways of the
+- * root_port to refine the position.
+- *
+- * A trace of the calculation per endpoint looks like this:
+- * mem0:	pos = 0 * 2 + 0		mem2:	pos = 0 * 2 + 0
+- *		pos = 0 * 2 + 0			pos = 0 * 2 + 1
+- *		pos: 0				pos: 1
+- *
+- * mem1:	pos = 0 * 2 + 1		mem3:	pos = 0 * 2 + 1
+- *		pos = 1 * 2 + 0			pos = 1 * 2 + 1
+- *		pos: 2				pos = 3
+- *
+- * Note that while this example is simple, the method applies to more
+- * complex topologies, including those with switches.
++ * ...where @position is inferred from switch and root decoder target lists.
+  *
+  * Return: position >= 0 on success
+  *	   -ENXIO on failure
+  */
+-
+ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ {
+ 	struct cxl_port *iter, *port = cxled_to_port(cxled);
+@@ -1579,6 +1555,35 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ 	int parent_ways = 0, parent_pos = 0, pos = 0;
+ 	int rc;
+ 
++	/*
++	 * Example: the expected interleave order of the 4-way region shown
++	 * below is: mem0, mem2, mem1, mem3
++	 *
++	 *		  root_port
++	 *                 /      \
++	 *      host_bridge_0    host_bridge_1
++	 *        |    |           |    |
++	 *       mem0 mem1        mem2 mem3
++	 *
++	 * In the example the calculator will iterate twice. The first iteration
++	 * uses the mem position in the host-bridge and the ways of the host-
++	 * bridge to generate the first, or local, position. The second
++	 * iteration uses the host-bridge position in the root_port and the ways
++	 * of the root_port to refine the position.
++	 *
++	 * A trace of the calculation per endpoint looks like this:
++	 * mem0: pos = 0 * 2 + 0    mem2: pos = 0 * 2 + 0
++	 *       pos = 0 * 2 + 0          pos = 0 * 2 + 1
++	 *       pos: 0                   pos: 1
++	 *
++	 * mem1: pos = 0 * 2 + 1    mem3: pos = 0 * 2 + 1
++	 *       pos = 1 * 2 + 0          pos = 1 * 2 + 1
++	 *       pos: 2                   pos = 3
++	 *
++	 * Note that while this example is simple, the method applies to more
++	 * complex topologies, including those with switches.
++	 */
++
+ 	/* Iterate from endpoint to root_port refining the position */
+ 	for (iter = port; iter; iter = next_port(iter)) {
+ 		if (is_cxl_root(iter))
