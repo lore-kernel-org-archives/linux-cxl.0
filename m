@@ -1,49 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93607171A6
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 17:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF2FE56B
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 19:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bsa3tYj0"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF58DE
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 10:28:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hyzg4SOD"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8B6CE
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 12:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698514114; x=1730050114;
+  t=1698521438; x=1730057438;
   h=date:from:to:cc:subject:message-id;
-  bh=o7ssX/jesMZAiqHzBToNaSm0zkZMv6iVEWLbE9FmK68=;
-  b=bsa3tYj0TI2WQC5G45tTuI6npa+2Q85+2Y+dGp0DXcsMSkHgDjx1cE0f
-   aBCs8DUoZxbmFJ1Mwx8hv9zjvF/kvyV/5imJ14LMpAH7iKclGFHfaxkpI
-   bVAgfQxQ3pBEynfgRTI+wUx/oGkwcb+XXz98VP6EOURY3g+K0ToecKsF7
-   HrG3UjVybRbeKJ1u5GScmRV8W4oPV7MiERk9bPqwGrreAjahsXemvt0TN
-   kuTyVi6Fjb1IyJk7PZXK0JNL590sAZLDdibb99jn7OMThSimHXRS0rTq3
-   0A0g2Gm7P2DnAqUso/dpP4NQhUqaiEfUkfzlRcQg1xS72oZ7dVUcZSBdB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="454378581"
+  bh=Vk68HIsow5sipi/k198zUGfoQWZu5A+CNWNK8cIjXpg=;
+  b=Hyzg4SODSXglgfVa2J/XwWQ6Fyp8742TS3g3aqHDiEXgiano715b91Ie
+   TnM2DEtuMr4PIaNlib6XXz4kxhnXm0TfPr4t+Eh3qp0w3K6ceuOiU+2xy
+   dJ+FjBjJHR2uqR5ycnMOb8gnk9HBFr37xzGUlRl24PLDz5o9Ps1zOMWtY
+   PhLSitMVIeQ3UucdJgH44TtJxwwfEDyHPwKsZ2tmYI5Xnv3uMVA0fLXZH
+   4Kob0OmTqhnSMh/zk++BGPT+QF4/L30TtJvOgmyQooBALdW4OQ3XTGsWH
+   8iaFiocSg3dIy/w8PqubKFH4pmf0IAJcRswyFJ+VY12hKfYK2Gx24zyUc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="729678"
 X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="454378581"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 10:28:34 -0700
+   d="scan'208";a="729678"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 12:30:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="794899367"
 X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="794899367"
+   d="scan'208";a="1098198"
 Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 28 Oct 2023 10:28:32 -0700
+  by orviesa002.jf.intel.com with ESMTP; 28 Oct 2023 12:29:59 -0700
 Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1qwn6s-000BwV-0N;
-	Sat, 28 Oct 2023 17:28:30 +0000
-Date: Sun, 29 Oct 2023 01:27:38 +0800
+	id 1qwp0z-000C1d-2Y;
+	Sat, 28 Oct 2023 19:30:33 +0000
+Date: Sun, 29 Oct 2023 03:30:09 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>,
  Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD REGRESSION
- 2630b3957abe46d7bc4ae0e26275030d76cefb94
-Message-ID: <202310290131.Z10R00pk-lkp@intel.com>
+Subject: [cxl:fixes] BUILD SUCCESS
+ 8f61d48c83f6e3525a770e44692604595693f787
+Message-ID: <202310290304.qIfDQr9Z-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,48 +50,16 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 2630b3957abe46d7bc4ae0e26275030d76cefb94  Merge branch 'for-6.7/cxl-committed' into cxl/next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: 8f61d48c83f6e3525a770e44692604595693f787  tools/testing/cxl: Slow down the mock firmware transfer
 
-Error/Warning reports:
+elapsed time: 928m
 
-https://lore.kernel.org/oe-kbuild-all/202310281921.W9lzomPk-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202310281946.qLmWjxcT-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-/usr/bin/ld: pci.c:(.text+0x720): undefined reference to `pci_print_aer'
-aarch64-linux-ld: pci.c:(.text+0xdb4): undefined reference to `pci_print_aer'
-arceb-elf-ld: pci.c:(.text+0x890): undefined reference to `pci_print_aer'
-arm-linux-gnueabi-ld: pci.c:(.text+0x1698): undefined reference to `pci_print_aer'
-drivers/cxl/core/pci.c:921: undefined reference to `pci_print_aer'
-ld: drivers/cxl/core/pci.c:921: undefined reference to `pci_print_aer'
-pci.c:(.text+0xc38): undefined reference to `pci_print_aer'
-powerpc64-linux-ld: pci.c:(.text+0x18fc): undefined reference to `pci_print_aer'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- arc-randconfig-001-20231028
-|   `-- arceb-elf-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
-|-- arm-randconfig-002-20231028
-|   `-- arm-linux-gnueabi-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
-|-- arm64-randconfig-004-20231028
-|   `-- aarch64-linux-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
-|-- loongarch-randconfig-002-20231028
-|   `-- pci.c:(.text):undefined-reference-to-pci_print_aer
-|-- powerpc64-randconfig-002-20231028
-|   `-- powerpc64-linux-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
-|-- um-randconfig-001-20231028
-|   `-- usr-bin-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
-`-- x86_64-randconfig-072-20231028
-    |-- drivers-cxl-core-pci.c:undefined-reference-to-pci_print_aer
-    `-- ld:drivers-cxl-core-pci.c:undefined-reference-to-pci_print_aer
-
-elapsed time: 724m
-
-configs tested: 156
+configs tested: 152
 configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
 tested configs:
 alpha                             allnoconfig   gcc  
@@ -105,15 +72,15 @@ arc                                 defconfig   gcc
 arc                        nsimosci_defconfig   gcc  
 arc                   randconfig-001-20231028   gcc  
 arc                           tb10x_defconfig   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                         assabet_defconfig   gcc  
+arm                         axm55xx_defconfig   gcc  
 arm                     davinci_all_defconfig   clang
 arm                                 defconfig   gcc  
-arm                        keystone_defconfig   gcc  
 arm                   randconfig-001-20231028   gcc  
-arm                         vf610m4_defconfig   gcc  
 arm64                            allmodconfig   gcc  
 arm64                             allnoconfig   gcc  
 arm64                            allyesconfig   gcc  
@@ -123,7 +90,6 @@ csky                              allnoconfig   gcc
 csky                             allyesconfig   gcc  
 csky                                defconfig   gcc  
 i386                             allmodconfig   gcc  
-i386                              allnoconfig   clang
 i386                              allnoconfig   gcc  
 i386                             allyesconfig   gcc  
 i386         buildonly-randconfig-001-20231028   gcc  
@@ -156,7 +122,7 @@ m68k                              allnoconfig   gcc
 m68k                             allyesconfig   gcc  
 m68k                                defconfig   gcc  
 m68k                        m5272c3_defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
 microblaze                       allmodconfig   gcc  
 microblaze                        allnoconfig   gcc  
 microblaze                       allyesconfig   gcc  
@@ -164,7 +130,7 @@ microblaze                          defconfig   gcc
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
-mips                     decstation_defconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -182,11 +148,8 @@ parisc64                            defconfig   gcc
 powerpc                          allmodconfig   gcc  
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   gcc  
-powerpc                      obs600_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                         ps3_defconfig   gcc  
-powerpc                     taishan_defconfig   gcc  
-powerpc                         wii_defconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                     ksi8560_defconfig   clang
 riscv                            allmodconfig   gcc  
 riscv                             allnoconfig   gcc  
 riscv                            allyesconfig   gcc  
@@ -202,12 +165,10 @@ sh                               allmodconfig   gcc
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
 sh                                  defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sh                             shx3_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc                             allnoconfig   gcc  
 sparc                            allyesconfig   gcc  
@@ -252,6 +213,7 @@ x86_64                randconfig-076-20231028   gcc
 x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
 xtensa                            allnoconfig   gcc  
+xtensa                              defconfig   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
