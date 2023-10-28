@@ -1,93 +1,90 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7517F5
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 03:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291CF7F5
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 04:09:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJnTVUzu"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5136A11B
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 20:39:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FO5C/HdM"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9844EFA
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Oct 2023 21:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698464349; x=1730000349;
+  t=1698466140; x=1730002140;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=mEoYb4GLhKOOBySoL7pmsK9+2n2XsIKkiCF0F2j/Gyk=;
-  b=ZJnTVUzuceIglhnT08l5orw8ejr6slLjjOoblrcERlpBgbSWZ02vfbL7
-   AeVm5Xjw8XFPd4TX/Gpi9rTrrA0B4CyBVgWiCEsj5J3iBvca+3TjNRzx/
-   +3F+ch6d02XVgvNjH13FFhSgjO5nzAzjkgU1ROmRjY/Z+gMV3ejmbROIe
-   JI7sYDzsNHf2g2D584CwReU3Xm0MQIJmxQ4PlXgy0GtBb4Rjf6pOw8/is
-   oBWR8sZOIs4rNMVMV1sFyknet7UEMaM2M1cuVRfcEzWubF+US1dcQyprg
-   6gkWyVtGXAMk6VEaEZNfas16drURCYm6YT18tVyd0e6OWlOMFTaKP3378
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="387690039"
+  bh=MrbpmqMlFUbhA/zjFXlHvtNQ/L5Tz2gMeryYDP3lB/Q=;
+  b=FO5C/HdM56xRJypLsb5h9W+Q3r/a8ah+uvsUlWvoil2jTRy2uTH4yOBz
+   vvT/gBtgpxNsVD0EGmhZDms1IDBSt8UQHGuNxz1ksjNiPARmvs2uf8wH+
+   XV74sDZOFCrOLibQq45kcmU02t+bbMa+2SkJHSszvg0WVKJ7/ZgdFHdDs
+   KXyyIWKY9z1dlBG3kfdg0EnZNYfJlFtiX9qJC4pURN2cmEODu6mdHJ3Fy
+   gjZRCbf9GeEIUey8H9saE5DtzkRt0y+D5yWFfNHl4sK6zvK+Sp95exVT/
+   AdUyFFIIdBZ3tj5Wc3u8cNU7KfdoCD+R//aJaagsvGRgO6KwIR9GiQiB6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="418988635"
 X-IronPort-AV: E=Sophos;i="6.03,258,1694761200"; 
-   d="scan'208";a="387690039"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 20:39:08 -0700
+   d="scan'208";a="418988635"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 21:09:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="788985067"
 X-IronPort-AV: E=Sophos;i="6.03,258,1694761200"; 
-   d="scan'208";a="788985067"
+   d="scan'208";a="1042765"
 Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Oct 2023 20:39:08 -0700
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Oct 2023 21:08:48 -0700
 Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
  fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 27 Oct 2023 20:39:07 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ 15.1.2507.34; Fri, 27 Oct 2023 21:08:59 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
  fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 27 Oct 2023 20:39:07 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ 15.1.2507.34; Fri, 27 Oct 2023 21:08:59 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Fri, 27 Oct 2023 20:39:07 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.34 via Frontend Transport; Fri, 27 Oct 2023 21:08:59 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Fri, 27 Oct 2023 20:39:06 -0700
+ 15.1.2507.34; Fri, 27 Oct 2023 21:08:59 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dKoDvKZHtXA7ND1J2bXtjrdTpubXEkFTXzeuwCuhNh3xq78NKY3Q4JiimQ0REgH7054hcX0218I6k58IrUYsfZblAq+dnmgTRg5FhfW2rHDAggZXorH8LLeYxFRd55ki5eDLvnuP6MqrbyYBZWGOa2HVsQzfYny+Xf1Kcgdim0WZoXOqh5shLgmqa5h7kbsNidZGfqI2Ttawdqm0iC//IJaoplC1lgVPw8dvUDIzKQJm9BEzIFZbFPhlNAPwBfcvoatt6lORKFf4YNOoF3WiXm5oNSf6eRRm5aArKkvhMmmDnwlPFEg7HGliZgAVg815ZEp/6DVpnao6t4L2cI9W6A==
+ b=VVPWsv1HKveSe2brGY6Z4+RqR/LqhdW8kFmOy9K9EtmleMZbobFWv+aogtR5uj8wysZg98Qrghz2mmajNsucnNG813EHKeKghPOgAQpOWVUjjqiiLJgi5E2ah1xKsyZYopFU2yGuvlJic8a/+LkCWQiuEHmXUdjZ+ssZB65sA1HGZP7YZpHLHq6/jeiRBHtW7uzxbZAL9lL9cpyaZH7K1hcy2/4veSWfl2RHt9pTEV7m8pJBHiVBazhk0UYB7A0Yf3Q+z4lHbbvA/8I8149sBooba2kPN+7VAwFPwB4twq0F01N5KhchISSHOVpbi61O9bOVSlKBWCeG5Pa8f028uA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b43vLvA224kQPCyUHNmuOV2ad2Hk/PZxMZzuOGb09Qc=;
- b=lYv9P/ZDK7cam4oPfNRvBje83QibrLGPqzm148NDKbAn/K6luQefEm9q4XOiiGF8wxNwFdUowvZG3g/RiVMSQBAiiUYDqHHlGIx9fws90pAT7BPrRkUQYjefWqhUys+mdbG2bkowfDLBOMXN6WTE1u6qdIRciKABWpTgDzpp2fK1bHYRc70TuXjc5GvPQac6BrNAxiiGcfiuNCJHvbKVRwqDNzuUfzYh8SFaGKXk8MuR1cf8hTKZR5Yg8ofjEIei2/8R1xYu88psCRFpRWAIoi2awuIvBTdB1s2LP5cxsq1ZTG+pKXUSpSvtQbSlHiZHF23ekVX60diM81JqctdGyA==
+ bh=yZvQA+zSq8kPyIFu+NAO/qZ1Ubuyvfe0vIXHaSrV5jA=;
+ b=FpIuKOB6jwTISdjOsQDMXGjmyukZLcf936E5JVOOOhvGLx7BJk5cyYvgBgKDFlzxJCWBV3d+AlB1sKMvK9Pw7DGdZC+8HvwBfshwNcUmb89sbTr74S4+dkWZcvNr0eiV5sFJHoIbEB5sMFV5l9aH29214PGmvCg2wsDa1dNT4NrQAMAxWNgT2iUlgs+/sNlHJAXGOYPbQnQpaov8UZekJd+UnmVBaMczhwt5CC4M9qqpu5FCGuS/PQnZ9gplvdjN2OawvXSSsnKOE7fdSk9bykqWjycjgiWTbitfoWNWsiNgHaMlXQxKqGT2/rxl5XEjOcg3jEZ/RBIqheJYYsySyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5152.namprd11.prod.outlook.com (2603:10b6:a03:2ae::22) with
+ by SN7PR11MB8284.namprd11.prod.outlook.com (2603:10b6:806:268::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Sat, 28 Oct
- 2023 03:39:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Sat, 28 Oct
+ 2023 04:08:57 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6907.032; Sat, 28 Oct 2023
- 03:39:04 +0000
-Date: Fri, 27 Oct 2023 20:39:01 -0700
+ 04:08:57 +0000
+Date: Fri, 27 Oct 2023 21:08:53 -0700
 From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Jim Harris <jim.harris@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH v3 2/2] cxl: Add decoders_committed sysfs attribute to
- cxl_port
-Message-ID: <653c825587190_244c8f2944c@dwillia2-xfh.jf.intel.com.notmuch>
-References: <169747906849.272156.1729290904857372335.stgit@djiang5-mobl3>
- <169747907439.272156.10261062080830155662.stgit@djiang5-mobl3>
- <20231019153843.00007850@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: RE: [PATCH v11 12/22] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Message-ID: <653c895579fd4_244c8f294bc@dwillia2-xfh.jf.intel.com.notmuch>
+References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
+ <169713688328.2205276.14682106535163902532.stgit@djiang5-mobl3>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20231019153843.00007850@Huawei.com>
-X-ClientProxiedBy: MW2PR16CA0013.namprd16.prod.outlook.com (2603:10b6:907::26)
- To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+In-Reply-To: <169713688328.2205276.14682106535163902532.stgit@djiang5-mobl3>
+X-ClientProxiedBy: MW4PR03CA0027.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::32) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -95,95 +92,259 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5152:EE_
-X-MS-Office365-Filtering-Correlation-Id: 215629ee-8901-4f78-cb28-08dbd7676e69
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB8284:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4998c59e-fe80-427b-4768-08dbd76b9a9e
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6fatXDlSx+j4h3Qea749DmqI01/rleBzZNfhzaJkuFGMH6/3Cyv08UvckEM/rTHOqK1ZIAJO67m3mWEEvfdgp61LLw2Y4xSizs5DfIUZJ4xAA2tTGiYU2JbS732YdmLN9k2ve4TFLO3bd9I0fIujOn06grYoOVdOUwS6BdMttcBXbSCzkUA/jduRY5ucMVHoxPy2Ux+j8US22WXM/NaqfgEzgWlDVJgfEbU0dGMZfF1xVKZ9pEeP6/ybzuY/P8Smq3KUFCkaV47/ibPOv+ElRLDr4/jJm3BC2oTAM0TTsDGY5gf1sfA/ePrmoXy8Jlz5AsUxtM0pfiOIZC39+x0bafLRmUPm26vrbClIP/DMERsAgTOMOzIBd/f983uUFcbtDOQPQowSWJCsKbgDY7zF34UkBq1qW/uF2ggvTBpKUJbt0aCu/mzQdI2eZ8V8sUysH0nifklNzJxB7kms2kqRzOqlaBM0S3GXl14RH46Gl22csPgZA4q28t8BiCwpMQPxFEmg6+s6fAJKcHXLMDqSAZ9awSeAQBs4LnbQaTB9FGXPEIo0aKpejILrWYci3OJJ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(366004)(39860400002)(136003)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(2906002)(66899024)(26005)(9686003)(66946007)(107886003)(86362001)(6666004)(478600001)(110136005)(6636002)(6506007)(66556008)(6486002)(6512007)(82960400001)(38100700002)(83380400001)(8936002)(316002)(66476007)(54906003)(8676002)(5660300002)(4326008)(41300700001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 8SHQZnYvBYx+fNvvjeztgroVjQAf6oCBlbjnP2MnxRAADEHQWXzVjxDcIOjiKPW/9LBP3RrKmmfAimN0qNK1FwKWh9c462UrCiBmOp9zv9nTubTLQyg/tFNeAygDo4hgzrrko2Zyp5FKS2pQ9gCSwlTI0800FOtSBSK1GIHBPkQkVjH0ADw5FInrZUlPHaBTKeO0UYBrvsAHLm6c/VHf0CLx7f+y3kj35fd0DYfPYpKjI8GKQS9KJBXGsV4kdoRyogLWHhC0HMVusaSXz83SzbcoPU9iQ4t6ufGbeG2UsZVG+GX1gL82ZZ3xLusHX0dOQoxf0eRVHTe3wlVFl2PonaREUe34ika6l6r1P7ZsOdkUW1IPbTFfJvRDBs9Y4WLJpwqsKW8luvzSKhsvyGKQ+AAmOUDg+3TJIyLEgFQ7+4uukch2QCvsoA8Jtj6xC+/xSnU69KGykCxvZYmFkAdKBJd5wV6EA/wPwSbKB3LFVVqGYsCT4gpYjEde8GWoe7JIT3Dq0HuEPVgL2AfDF8YgC4N4vA1RmjqB3uACP2fehLc4/+ycYsLHC2TzDD3k7Fei
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(346002)(366004)(39860400002)(376002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(83380400001)(6486002)(38100700002)(8676002)(4326008)(82960400001)(2906002)(26005)(8936002)(5660300002)(66476007)(316002)(9686003)(6506007)(6512007)(66946007)(41300700001)(6666004)(478600001)(86362001)(66556008);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6NzqEpUMrmer0+s5161fS79wKP+SkfTT0ZCs7iPxvSwzCxHaCIHoZ81r4nz+?=
- =?us-ascii?Q?RxnWJscaQawW+LZGgR1oj6zw/ErO800K6QPXlNCkMJcHGIRNeifdLhW5TsrS?=
- =?us-ascii?Q?+nczXSobJ37Juir+FT6HyOqWr603ppeIdH+XA7YB0WNlQSpUxF4gD1X084bx?=
- =?us-ascii?Q?eWaTN9sZMZZBbkUMmlThnzRQPlW40eR2xW6mT0oG7uyjZHq/+NMlWUNwn2cN?=
- =?us-ascii?Q?p2ZTZpfJB0kE/1qwMj1gYWie0Er0MusN+RnR6lRfswdWk+G8pQDaJji+MQAD?=
- =?us-ascii?Q?HRkBCB7buTkxuM0NjPgeZTfDpwhZkpsn9waTLcZKQXjj9DEG5E5xq/TgA10J?=
- =?us-ascii?Q?uqzse/33lOeSE+R/Be57SUZXZZqW2H+9Jylyb8O7bqxeq5VtD4gP93A/w8Bn?=
- =?us-ascii?Q?xpWl7dvYXm7ERUbcBJgQIgg47xkbuckbiV3VGwacxqDz3V72hmg7t7y0IhL/?=
- =?us-ascii?Q?lt/AZdPNCXnnkPRJW/mBAJ3OI1OJysCurR8SyRUS1eczP1WLQTlhJmGO6mlB?=
- =?us-ascii?Q?PVchJ2T5fVhkx/QJ2lrJY8OZ+1H+5vD6PPB2hzRFr4CpZmRIrVD6Fdbdy/Ge?=
- =?us-ascii?Q?E7SEMNpuUb8A6NYGXyD6H5FBf5wnJcJPaXEat5SdCcTdYiFb8F/HkVqKLYDz?=
- =?us-ascii?Q?RWaPkx1/X5SYKRFgqRl+ZG88ZKg4wPavT7OqZ10ru7YC/ghrSlw9ckS1qBRn?=
- =?us-ascii?Q?oiw7k2Mqtml1Y1ko3jtXtctX64fCNgjDoMfBtEzJuFGENzCVgYaFGvP2JgHE?=
- =?us-ascii?Q?RKTWETHDa1FZmEqhqQTzGd/MGJjujEjhQfvO36nj/izlSHjR4ujwoTF2A6eH?=
- =?us-ascii?Q?1RB6e4brOy8tarpMEOoYUBvHfLJqdKgyq8wWhUHOcXit0OhM1kYWaWMdglj/?=
- =?us-ascii?Q?wRgAuSbU5qEm3J/yph+VpQCzEhmQ+bIPgOotADoeHW9Sqh9rVqClKR4PwLZY?=
- =?us-ascii?Q?w/nL4ahNC0t0FmAIfuXjkARzitc2mgXRJ6w6+mkxoOqj6JbHdIVOVZcURa3A?=
- =?us-ascii?Q?ARbI/r4x3IMoLExb4IT0pNVrAItgdmLjHT7nIlDVtrRZQKXWQMwOfWwYHGwb?=
- =?us-ascii?Q?kEwZ+yXlmk5w1TQDM4Fn7LSuopuf+dLYr7d/Zb0cqnoKfEFMC/l3hHe2KfQX?=
- =?us-ascii?Q?AfMI7YsOPkqfVcDveFjYacTq8AFFRH9Extthu8DL6eQXSNnIsnTKItkX/cUI?=
- =?us-ascii?Q?p9TNegepiicvpMHIQbOZQ02cmZuZhkMzU/h1nzhRzT04WkxlMIOPdMSAeU7T?=
- =?us-ascii?Q?QHsJyjBhFFWVKXKxW/UNHBRmfGGPU7zOjqtk122q53Tel2zp7nrUPcVocSSs?=
- =?us-ascii?Q?psOjilrDJorxfPxAFVmSQl8YbxZ8ml00QM4qD/+xXGwF1ruW+kiSt+6Y8afk?=
- =?us-ascii?Q?J8HIXB8KBqS7MuXN5jmlm/LKy8V7NiVuDYo970dSyXfm50gvSBBdkd+WRVx0?=
- =?us-ascii?Q?tydlfOYAakmgOfePy9pGcizs2FCLrKHryC0F2OcXHJ3pGlqCwIMcmGs099l7?=
- =?us-ascii?Q?NP2sW1BUSG7Jmiilx5NU69oUcjoBLgAjPpj+Et1y6kn0YmvWRdo8Bljr7sAK?=
- =?us-ascii?Q?1RL/dfbV3FiL4ls09lpFYJkK53rwIRUTykSUwOj8xG172Xbnoga74TzHzP6B?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 215629ee-8901-4f78-cb28-08dbd7676e69
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0yU8+YrGwk92KpCAiipxyELoNipVrpnORoMjver8fagVFfiEJ9w+tBggAPsC?=
+ =?us-ascii?Q?dcbyaxMloj6iAxnCm8c4ny86RiHUmSUfxLUYLn29fSKYO/n1EcFYqvck2dyF?=
+ =?us-ascii?Q?WITHVIo9zdJjev2ScjyHswEFj6XK1IAFwHiyPvScQgzJ0l+ulDqyBI+et/Kw?=
+ =?us-ascii?Q?fE38RxxAoOcbAaRt2Fss97LcYcjk83x1KwGysrnl22aiS69J3q7OQ8qs7mzG?=
+ =?us-ascii?Q?HMQU7LnHn6CHcMHJqZKxfgRaEGW/71meigN40DlMpdkgEtQSjDvUbE2B+eck?=
+ =?us-ascii?Q?l8eUS4xHpOgHovS4qxxYryN36WgIXsqDnoPMovTkmpoBEbWGJ1MNkXP7cXr0?=
+ =?us-ascii?Q?aQHhYZZIEn+HzBHmIuYCRHvhfFF7zQYvr/suHZaH/jT7k1Wm4hJ9frGiNl30?=
+ =?us-ascii?Q?phRpTZu7sVktQUKaw3koattoDtLbJjYxz1O8U15WD02I7RpCrEbkZg6HVO5h?=
+ =?us-ascii?Q?eAnjJ39bvkxcDfFHa0Umc3Er1brhx5hRerpoXhrcJt8snj46UPkbidfmnObZ?=
+ =?us-ascii?Q?yC/Lj3UByDMk95tyXIFZoHSc8w8LHWAHH2VfMFJ9n6FM9yxW3iDeWBBYezzQ?=
+ =?us-ascii?Q?42TV+5DitMaqjDBYC5q0jOjFNFmsTDgrKsWPunPwuQERBDjL0Klt0TfnmsYG?=
+ =?us-ascii?Q?5T56sQuFVeSK9yATZ49+fWwfJuLHNR1eXZKUV0E/4aljVoeLbPGV2Avkfu04?=
+ =?us-ascii?Q?wt5928P55h/0A8aO2BFuU1HSuJQusx9oDGUjOxHe5KhwpZlKQrJ1JwP30cp9?=
+ =?us-ascii?Q?LmTqWUmsrJcvjYESrpuOTjJXr7FijfVk3Rki3Qi5GOnBDrPmDZppg4fPtJCc?=
+ =?us-ascii?Q?Hf4vo7fYPd6F+/9Hjy7GT/v0baaRstNQ01Uh0q2r2vn4rTg1CtCQikIV/M7z?=
+ =?us-ascii?Q?Ws4kwgQHGrc4M+3nBDotovdCeNZ81tchaq4Qj2nGZukltExVm+066hcz/59l?=
+ =?us-ascii?Q?xXMzR82HbvXLo3Pykc7vHP0r0oP/FwtX9pgZLPGdWFye3nrBkSPWFPSltZyU?=
+ =?us-ascii?Q?xLx/YjjmHeeTeXtb3zxnfEVxofuFRrN0hsjXFwK+dg+Iy7ocuO9ObveZMbmU?=
+ =?us-ascii?Q?SwmadpTvAi3ktxZmjswW8JXbBedA4AY6YPW1DlQIbAg2O9TS6+Towd2OztK7?=
+ =?us-ascii?Q?XY7mKSJ8JQha3mGzV1i/hbnOoAUlZqS3NbAu2h+kt76bzmQ2QOWRk6WIA7pK?=
+ =?us-ascii?Q?knONaUjT+m0h51yhmDRhza5sf6b135EN+PigFmudD5u8YQeLceFRREAECylo?=
+ =?us-ascii?Q?oF5y99BmrEdsZEhE1Frgt80U6jwQluGIqKUfrbwzqTfyB9sPHEvFggMu8kx4?=
+ =?us-ascii?Q?0odjb+NyN9hLtyhB5GhO5dC96Xil/Vu+CQgwviyRU3HY52oberXm/cgNqNVK?=
+ =?us-ascii?Q?Nv6QnVIwY1ONQkfKeGe8WKemiJdOQASkDY87iPAkEGBHyRuZwD+UbV/xjqpK?=
+ =?us-ascii?Q?u6vgo9UN+tteA+S2arxigLFUDB/rcRyuWTAJfAU7kgviwtHT5jEbHIKf4gQa?=
+ =?us-ascii?Q?2lu/g3mRzgNBBMAopU+2NlHZsIO93iRkvVUY2XMAO8luEob0mR4tgEEZJEG9?=
+ =?us-ascii?Q?JwRe5qPrpOUCZNy6plgd20AUUgdrOPyxijqMsb0CbJCFhY3PPPAmeK9KJIVq?=
+ =?us-ascii?Q?2Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4998c59e-fe80-427b-4768-08dbd76b9a9e
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2023 03:39:04.1299
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2023 04:08:56.1975
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kFiypTCKarHLvSn1lS6aelewmcCzXVo8Kwo8+a6ARGrJp0AkCIJZXvLFbGM6s3y6dt3Fiq4R2h6NZNChzagS0S2G7h5Tnmj8KP9/O6SpB64=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5152
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4H03DPcTavgxHh2LH7Lke0EocJv8acVM5HUDj1K9f5hel7Lpwvq36rUH5/vzUuvPFDC8TLbe4owEQiFp0OSPwlQqHt43renj7Ym4HfWNg0M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8284
 X-OriginatorOrg: intel.com
 
-Jonathan Cameron wrote:
-> On Mon, 16 Oct 2023 10:57:54 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
+Dave Jiang wrote:
+> Provide a callback function to the CDAT parser in order to parse the Device
+> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+> DPA range and its associated attributes in each entry. See the CDAT
+> specification for details. The device handle and the DPA range is saved and
+> to be associated with the DSLBIS locality data when the DSLBIS entries are
+> parsed. The list is a local list. When the total path performance data is
+> calculated and storred this list can be discarded.
 > 
-> > This attribute allows cxl-cli to determine whether there are decoders
-> > committed to a memdev.  This is only a snapshot of the state, and
-> > doesn't offer any protection or serialization against a concurrent
-> > disable-region operation.
-> > 
-> > Reviewed-by: Jim Harris <jim.harris@samsung.com>
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Seems reasonable, but it is adding ABI so the docs are missing.
-> Documentation/ABI/testing/sysfs-bus-cxl
+> Coherent Device Attribute Table 1.03 2.1 Device Scoped memory Affinity
+> Structure (DSMAS)
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/Kconfig       |    1 +
+>  drivers/cxl/core/Makefile |    1 +
+>  drivers/cxl/core/cdat.c   |   58 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |   23 ++++++++++++++++++
+>  drivers/cxl/port.c        |   12 +++++++++
+>  5 files changed, 95 insertions(+)
+>  create mode 100644 drivers/cxl/core/cdat.c
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 8ea1d340e438..a1ae35bd1afc 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -5,6 +5,7 @@ menuconfig CXL_BUS
+>  	select FW_LOADER
+>  	select FW_UPLOAD
+>  	select PCI_DOE
+> +	select FIRMWARE_TABLE
+>  	help
+>  	  CXL is a bus that is electrically compatible with PCI Express, but
+>  	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 1f66b5d4d935..f4eabfdd50ce 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -13,5 +13,6 @@ cxl_core-y += mbox.o
+>  cxl_core-y += pci.o
+>  cxl_core-y += hdm.o
+>  cxl_core-y += pmu.o
+> +cxl_core-$(CONFIG_FIRMWARE_TABLE) += cdat.o
 
-Agreed, folded in the following:
+CXL_BUS selects FIRMWARE_TABLE, this can just be cxl_core-y.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 087f762ebfd5..432610f41aee 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -178,6 +178,21 @@ Description:
-                hardware decoder target list.
+...and whenever drivers/cxl/core/Makefile changes,
+tools/testing/cxl/Kbuild needs updating too.
+
+>  cxl_core-$(CONFIG_TRACING) += trace.o
+>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> new file mode 100644
+> index 000000000000..a858fd1b5744
+> --- /dev/null
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -0,0 +1,58 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
+> +#include <linux/acpi.h>
+> +#include <linux/fw_table.h>
+> +#include "cxlpci.h"
+> +#include "cxl.h"
+> +
+> +static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+> +			      const unsigned long end)
+> +{
+> +	struct acpi_cdat_header *hdr = &header->cdat;
+> +	struct acpi_cdat_dsmas *dsmas;
+> +	int size = sizeof(*hdr) + sizeof(*dsmas);
+> +	struct list_head *dsmas_list = arg;
+> +	struct dsmas_entry *dent;
+> +	u16 len;
+> +
+> +	len = le16_to_cpu((__force __le16)hdr->length);
+> +	if (len != size || (unsigned long)hdr + len > end) {
+> +		pr_warn("Malformed DSMAS table length: (%u:%u)\n", size, len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Skip common header */
+> +	dsmas = (struct acpi_cdat_dsmas *)(hdr + 1);
+> +
+> +	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
+> +	if (!dent)
+> +		return -ENOMEM;
+> +
+> +	dent->handle = dsmas->dsmad_handle;
+> +	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+> +	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+> +			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+> +	list_add_tail(&dent->list, dsmas_list);
+> +
+> +	return 0;
+> +}
+> +
+> +int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
+> +{
+> +	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
+> +				list, port->cdat.table);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
+> +
+> +void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
+> +{
+> +	struct dsmas_entry *dentry, *n;
+> +
+> +	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
+> +		list_del(&dentry->list);
+> +		kfree(dentry);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_cdat_dsmas_list_destroy, CXL);
+> +
+> +MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index eb7924648cb0..be2fd8dcb37b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -7,6 +7,7 @@
+>  #include <linux/libnvdimm.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+> +#include <linux/list.h>
+>  #include <linux/log2.h>
+>  #include <linux/io.h>
+>  
+> @@ -824,6 +825,28 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+>  }
+>  #endif
+>  
+> +/* CDAT related bits */
+> +struct dsmas_entry {
+> +	struct list_head list;
+> +	struct range dpa_range;
+> +	u8 handle;
+> +};
+> +
+> +#ifdef CONFIG_FIRMWARE_TABLE
+> +int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
+> +void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list);
+> +#else
+> +static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
+> +					    struct list_head *list)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
+> +{
+> +}
+> +#endif
+
+Why is there conditional compilation if FIRMWARE_TABLE is mandatory?
+
+Folded in the following:
+
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index f4eabfdd50ce..9259bcc6773c 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -13,6 +13,6 @@ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
+ cxl_core-y += hdm.o
+ cxl_core-y += pmu.o
+-cxl_core-$(CONFIG_FIRMWARE_TABLE) += cdat.o
++cxl_core-y += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index be2fd8dcb37b..48fd7e0c5e9b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -832,20 +832,8 @@ struct dsmas_entry {
+ 	u8 handle;
+ };
  
+-#ifdef CONFIG_FIRMWARE_TABLE
+ int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
+ void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list);
+-#else
+-static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
+-					    struct list_head *list)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
+-{
+-}
+-#endif
  
-+What:          /sys/bus/cxl/devices/portX/decoders_committed
-+Date:          October, 2023
-+KernelVersion: v6.7
-+Contact:       linux-cxl@vger.kernel.org
-+Description:
-+               (RO) A memory device is considered active when any of its
-+               decoders are in the "committed" state (See CXL 3.0 8.2.4.19.7
-+               CXL HDM Decoder n Control Register). Hotplug and destructive
-+               operations like "sanitize" are blocked while device is actively
-+               decoding a Host Physical Address range. Note that this number
-+               may be elevated without any regionX objects active or even
-+               enumerated, as this may be due to decoders established by
-+               platform firwmare or a previous kernel (kexec).
-+
-+
- What:          /sys/bus/cxl/devices/decoderX.Y
- Date:          June, 2021
- KernelVersion: v5.14
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 90f3c9802ffb..e3a59b0c5564 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -58,6 +58,7 @@ cxl_core-y += $(CXL_CORE_SRC)/mbox.o
+ cxl_core-y += $(CXL_CORE_SRC)/pci.o
+ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
++cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+ cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+ cxl_core-y += config_check.o
