@@ -1,220 +1,166 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF2FE56B
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 19:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1584A33C7
+	for <linux-cxl@vger.kernel.org>; Sun, 29 Oct 2023 16:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hyzg4SOD"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8B6CE
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Oct 2023 12:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698521438; x=1730057438;
-  h=date:from:to:cc:subject:message-id;
-  bh=Vk68HIsow5sipi/k198zUGfoQWZu5A+CNWNK8cIjXpg=;
-  b=Hyzg4SODSXglgfVa2J/XwWQ6Fyp8742TS3g3aqHDiEXgiano715b91Ie
-   TnM2DEtuMr4PIaNlib6XXz4kxhnXm0TfPr4t+Eh3qp0w3K6ceuOiU+2xy
-   dJ+FjBjJHR2uqR5ycnMOb8gnk9HBFr37xzGUlRl24PLDz5o9Ps1zOMWtY
-   PhLSitMVIeQ3UucdJgH44TtJxwwfEDyHPwKsZ2tmYI5Xnv3uMVA0fLXZH
-   4Kob0OmTqhnSMh/zk++BGPT+QF4/L30TtJvOgmyQooBALdW4OQ3XTGsWH
-   8iaFiocSg3dIy/w8PqubKFH4pmf0IAJcRswyFJ+VY12hKfYK2Gx24zyUc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="729678"
-X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="729678"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 12:30:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="1098198"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 28 Oct 2023 12:29:59 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qwp0z-000C1d-2Y;
-	Sat, 28 Oct 2023 19:30:33 +0000
-Date: Sun, 29 Oct 2023 03:30:09 +0800
-From: kernel test robot <lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yElrQgEy"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2065.outbound.protection.outlook.com [40.107.237.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE13DBA;
+	Sun, 29 Oct 2023 09:17:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MPopxEBsw0i+9bZlmCSZx4ICQZVUHUFSdiwV/eAY9oYPU35njDTirmkGDNaSDWd/5HBvgH09CVXpN6CASEZXeju6tvMNuQAPhoxvxq/VUWCfF2+lmXqDtNW8wX6EEKgiZ+tr7jySYT3K4liiU5YSDhhyo8gL9NcZq8Yhx5115hijthvNf7fhd17OrMQzjQkmfHdneKJCKkTyxYbwjl0Px6GWzTzpRD2ui+QsSm3BfWpFTJ9FiCeJvZKalnfib8WL0G++489HFUyhI9OnReRq5Fm+qI0Gjm6UNrbMSNUAx9NVfbM6Z4JZhCMttuqrqedm2f3upSehNPE1dJjgokha2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VtCi6otNAwt+RbVkVQe78WHGi8VotgbIjtSmRr2r9ig=;
+ b=SxoTK9AySpev/Xh/vrRcuBgsrOH7e32eDTqGxwLMav+62ZtoxOJmJRk1a9RMQQcZhuI5oHioOqn2+Jt4uY7DQB8FS9lAqiZfTCxm3odE+DbUj3iM8fBfFNrU4bRHcCyi7kw1Wj5zdRvIxhZvXv+EVDMQWUENyiOx990Zw+xNSU6xbhqnsLDSPtBdwEQClxtcdds8gkRRnWdMiJW6Al1jofN3vUY4d0RxCnGryie4ABQIXU8zGoy+OI86rAxcTKfBRvmQzN4HwthB64jRH4Zneww80CNGV8zJNtIDc54cp+FpWb57hzn2dFbNYe96JMX9mfh1io2gwmRDWPIcX2N97Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VtCi6otNAwt+RbVkVQe78WHGi8VotgbIjtSmRr2r9ig=;
+ b=yElrQgEyz0fbO88Jkmfl79fHHBBY60fm1X3InSDkHuLNOdjyWx9v8yS/38dPepEdaw4H7Y4BsRfKnNHQkic36iun9ic4JckIjgyu7oZl136dshIxoR1A6WCk/k5ziUKzJq+2K71eU9yqWunUFNFgaL+SMiaCIo15YKTTQe/ZG9E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
+ by SA1PR12MB6774.namprd12.prod.outlook.com (2603:10b6:806:259::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.26; Sun, 29 Oct
+ 2023 16:17:46 +0000
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::302f:131b:a9e1:7751]) by DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::302f:131b:a9e1:7751%4]) with mapi id 15.20.6933.027; Sun, 29 Oct 2023
+ 16:17:45 +0000
+Date: Sun, 29 Oct 2023 17:17:38 +0100
+From: Robert Richter <rrichter@amd.com>
 To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:fixes] BUILD SUCCESS
- 8f61d48c83f6e3525a770e44692604595693f787
-Message-ID: <202310290304.qIfDQr9Z-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Ben Widawsky <bwidawsk@kernel.org>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v12 01/20] cxl/port: Fix release of RCD endpoints
+Message-ID: <ZT6Fov84g5FxrBEj@rric.localdomain>
+References: <20231018171713.1883517-1-rrichter@amd.com>
+ <20231018171713.1883517-2-rrichter@amd.com>
+ <653b3299c1a33_244c8f29449@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZTw_xd2_uaApAzoL@rric.localdomain>
+ <653c5691a2372_780ef2949b@dwillia2-xfh.jf.intel.com.notmuch>
+ <653c66507bf8d_244c8f294ea@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <653c66507bf8d_244c8f294ea@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: FR2P281CA0064.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::12) To DM6PR12MB3657.namprd12.prod.outlook.com
+ (2603:10b6:5:149::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|SA1PR12MB6774:EE_
+X-MS-Office365-Filtering-Correlation-Id: f96351c8-68a0-4be7-54d0-08dbd89a9561
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WeD7hDwpGAOhpAfWOoy0JhG4hlU/30zlbjlL/L3ctaRGqWb1iEsDDecm4Ia15GuaakljxmtmWZ1BI3LkT3R0cFwXipZjaQA4wS4hESLF2cIZ4pTJU314DOBywh+QGhK9jwOj82vBnRy29oj9nGtLZ2t8EDh7R+uRlw+UXPNkx2Dz6jdqlxg9f1AdwFWLQ42hDoi3lmFVBRtKb9+AlMSdOZeC3J9obqEGYKHpcnZz2/q5ZvoRXA03GWX9Qd5EBB5lBEHkbvOTaY99cr5dli7NPCvwcHmcWy9H3PlJ1PkWSRn0mB/imGz5IaE9Nb/hlAzHrHA4mxNbhthUHTqPdLIvwk9WPXkhjhEYWcqYYmF0f+0MLZZlJIIexZ3qwMMX3+ZBOXPJvzVSXj0mVntV8NJMbv2PGIO7Vx8YHm5xtX//Si54mFzQiQWDbsZVu3MweRNOqMVC/yxo27nN5CeJODZ+LCBbhC0wtsjncQpwlSVYNbs3PwdxcsuPPxf3AHSFmVm9YYj6pvKajlrKmL3ON6iSjpfKZva2e3LzDjGoRJuhRmKhttWIKWriGKl7nkVPbN6h
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(366004)(346002)(136003)(376002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(2906002)(41300700001)(7416002)(4326008)(8676002)(8936002)(5660300002)(478600001)(6486002)(6512007)(9686003)(38100700002)(6506007)(6666004)(53546011)(6916009)(54906003)(316002)(66476007)(66556008)(26005)(66946007)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eas75Scr/U6jlCdSxkCPCpFZp79ARUs6nQrNkzXW/2sWmEVh1gZqdyVUO54F?=
+ =?us-ascii?Q?xUTw+iz2YrQd5f39lEhZfHeM7M3mnsNOPecuIUDpZ8CLUm2gjdkBjQCh8nj2?=
+ =?us-ascii?Q?OTLojLf8+YKiKdQfZIUUVBhZ6dSySaPaSsAetof4eRSDT7HpbrICOONEYUm5?=
+ =?us-ascii?Q?cuj4TTwjPJIulsuwnqE2i/9rZ0ajKcrPh2vguYj4qIiu54K4iHePl9ByOEoB?=
+ =?us-ascii?Q?NTmE7xYiQj64llFkUKlB7BrQT857chWHhPvP4Ox5b+4yI6sPJOSqwzHJAC7y?=
+ =?us-ascii?Q?kIOsOi84oZz/sv8yqJOik1M+skhucWUFfOd0AVjVLfKj5MPNNyfLofJrKRL+?=
+ =?us-ascii?Q?xrPP/Uelz7OlbnZ3NwY8/jzTlPXgqF1Dx6uWFSgf1Gd7nZmEOFo0wY2Veuz6?=
+ =?us-ascii?Q?GIfcR/UeFEommWc4iyKbGNBSoMyYCMRTQE/X38RERLitsYu4MB7DZ6TZ6Qzi?=
+ =?us-ascii?Q?9jhXGmlXUD0b4i5JYtxBICCppuO3wsrKlBFwxAOISmPJNWZydT5/IqECHM7/?=
+ =?us-ascii?Q?23n7ndF1WMd4JLjyWvY6d+BaW2uSz81DW7HcOCpiFpVN6rLudc8iJs/hplqZ?=
+ =?us-ascii?Q?MzYcK4/5V80oqNIwcB9XuTO+4adPLvlgb73hZh/ehhIO9xRjF30pFkDWTtF7?=
+ =?us-ascii?Q?GsxCsNuTILqwM07LXA86qnaotxuey7k9S3fEljGCbvYx+yynk/nbxNj6n1VJ?=
+ =?us-ascii?Q?nrSZ1UoAk8jyKl4DRvrytUfv4mRt+K3iLUOHavcBjk3veV2PXx+zkvDegheI?=
+ =?us-ascii?Q?UbuDW1zxB8KuASer45KYeWFGxz+U705T+uIV3KwGrlh+u0KZ8///MGzangzZ?=
+ =?us-ascii?Q?rF/vd8QS/vM0IoRhJ0q6ltnDubGOX/cUcrbeXDCAJ3PeboQozvl3W+c2dLPj?=
+ =?us-ascii?Q?gF0zYu8ko+kGEE/VxPMgS5PKcincU+oK0+4ve0tCxzu+nuZPHPD4LuOiG7BG?=
+ =?us-ascii?Q?5W202UKipLrib2TFma2ZyUIANcPNMxon8+v2R0zit6gvnLcVvvL1MeubkIbB?=
+ =?us-ascii?Q?dcCRj8EWx9zTg3vEc+w6IqV9w3F7zJIn1Rc6yAETC5uGahsHVvHs4gMTv7A8?=
+ =?us-ascii?Q?gAjnTsNXjmGt5EhYSJjOyV4Q/xo7BChOdzJoGqr0zPTOD5SSCg94UsIbLyyo?=
+ =?us-ascii?Q?ptqVf6bF2CFZ8j9QHrqM6o/+PpCNqfydtqsBKdidY69sC8GdgEY5t9DO6X9L?=
+ =?us-ascii?Q?xpWDAxsNtMp2mIGQLyldns2ewbcSLsyP4Ob8dLq9Oj177W0ewQh0Rpwv1Fcd?=
+ =?us-ascii?Q?o3tvdXro3jZp+j0Mx2ETDp7KDEGDeH5z1yEKZdlcV7kJflwvN0Ay5kStwbGU?=
+ =?us-ascii?Q?XGz54LekJksKL+nwyztHz8DYJLdgRv5nU9ewwStSxZz6nrdUMzBZAQd3BpvI?=
+ =?us-ascii?Q?52srgOl/X3lgqcHI7iDHRyav0n+nRr/ceqJ8tmLbf25Ne2Y7T3oKEwN3F1hb?=
+ =?us-ascii?Q?HNP+SMwvTmFc6gES/X4l3gUv+7Zyxp4gXKBdnJFWOGCK5HwLAIlIbGJa6FLn?=
+ =?us-ascii?Q?LKlUuBvfr9az9EknUbmWDGxewEPHYV9v+J0x4k4cSCBigGdqoIaHlQNbdVQR?=
+ =?us-ascii?Q?CwaWV4zPfgy2eyVVHhQz6MXWpkIi1ck7ztUu3wJj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f96351c8-68a0-4be7-54d0-08dbd89a9561
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2023 16:17:45.1585
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g+IWNzENLxW4yaX5ynixXE814kCd4uMDBRpvvdGqL1ymouluv+ayWpmycWJ4mGJstIQU966V3hJI1OZLBciK6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6774
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: 8f61d48c83f6e3525a770e44692604595693f787  tools/testing/cxl: Slow down the mock firmware transfer
+On 27.10.23 18:39:28, Dan Williams wrote:
+> Dan Williams wrote:
+> > Robert Richter wrote:
+> > > Dan,
+> > [..]
+> > > 
+> > > delete_endpoint() is called here, but the uport etc. is not unbound.
+> > > Which means this is not true:
+> > > 
+> > > 	if (parent->driver && !endpoint->dead) {
+> > > 		...
+> > > 
+> > > I don't remember this with my patch. The parent is there different, so
+> > > that could be the reason.
+> > > 
+> > > I could not yet look into more detail but wanted to let you know. Will
+> > > continue.
+> > 
+> > Apologies, I didn't have that regression going, I think I see the issue.
+> > Thanks for the heads up.
+> 
+> Here is the incremental fix on top of the lifetime fix:
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 6230ddfc0be8..0fe915ec2cc2 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1217,30 +1217,39 @@ static struct device *grandparent(struct device *dev)
+>  	return NULL;
+>  }
+>  
+> +static struct device *endpoint_host(struct cxl_port *endpoint)
+> +{
+> +	struct cxl_port *port = to_cxl_port(endpoint->dev.parent);
+> +
+> +	if (is_cxl_root(port))
+> +		return port->uport_dev;
+> +	return &port->dev;
+> +}
 
-elapsed time: 928m
+Yes, that works.
 
-configs tested: 152
-configs skipped: 2
+Reviewed-by: Robert Richter <rrichter@amd.com>
+Tested-by: Robert Richter <rrichter@amd.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20231028   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                         assabet_defconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20231028   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231028   gcc  
-i386         buildonly-randconfig-002-20231028   gcc  
-i386         buildonly-randconfig-003-20231028   gcc  
-i386         buildonly-randconfig-004-20231028   gcc  
-i386         buildonly-randconfig-005-20231028   gcc  
-i386         buildonly-randconfig-006-20231028   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231028   gcc  
-i386                  randconfig-002-20231028   gcc  
-i386                  randconfig-003-20231028   gcc  
-i386                  randconfig-004-20231028   gcc  
-i386                  randconfig-005-20231028   gcc  
-i386                  randconfig-006-20231028   gcc  
-i386                  randconfig-011-20231028   gcc  
-i386                  randconfig-012-20231028   gcc  
-i386                  randconfig-013-20231028   gcc  
-i386                  randconfig-014-20231028   gcc  
-i386                  randconfig-015-20231028   gcc  
-i386                  randconfig-016-20231028   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231028   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5272c3_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-32bit_defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      chrp32_defconfig   gcc  
-powerpc                     ksi8560_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231028   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231028   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sh                             shx3_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231028   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231028   gcc  
-x86_64       buildonly-randconfig-002-20231028   gcc  
-x86_64       buildonly-randconfig-003-20231028   gcc  
-x86_64       buildonly-randconfig-004-20231028   gcc  
-x86_64       buildonly-randconfig-005-20231028   gcc  
-x86_64       buildonly-randconfig-006-20231028   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231028   gcc  
-x86_64                randconfig-002-20231028   gcc  
-x86_64                randconfig-003-20231028   gcc  
-x86_64                randconfig-004-20231028   gcc  
-x86_64                randconfig-005-20231028   gcc  
-x86_64                randconfig-006-20231028   gcc  
-x86_64                randconfig-011-20231028   gcc  
-x86_64                randconfig-012-20231028   gcc  
-x86_64                randconfig-013-20231028   gcc  
-x86_64                randconfig-014-20231028   gcc  
-x86_64                randconfig-015-20231028   gcc  
-x86_64                randconfig-016-20231028   gcc  
-x86_64                randconfig-071-20231028   gcc  
-x86_64                randconfig-072-20231028   gcc  
-x86_64                randconfig-073-20231028   gcc  
-x86_64                randconfig-074-20231028   gcc  
-x86_64                randconfig-075-20231028   gcc  
-x86_64                randconfig-076-20231028   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                              defconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Robert
