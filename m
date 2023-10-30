@@ -1,215 +1,205 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B95EA3
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 02:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E17F10F4
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 04:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXxupA7o"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F2FBE;
-	Sun, 29 Oct 2023 19:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698634789; x=1730170789;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=C2HcoC4EHeUL7hfMNJTjDHQJVbGTY6+k0Z4WjLTThtw=;
-  b=UXxupA7o3Aw38EeL+5HO3RdPGdpLID1r7U7jeGTCT7LXyj4rOkWX13mn
-   fUeNtD4ATZ7X/huk3/YMB1VkWSOtpJMgzXAruOh1w6BlV0UwN1b9YgQ6x
-   DeN2QBYqSG4Ooxq938c3pRQDPY2LDM0PqD3pQUHeU2is52cTfHF6SQdVu
-   YA7dJDn2MK0FRT4ARpbXs56Y9tUoHlOXfzqzmOuWV9jxN57TT33R3IFfb
-   wv+1hE2sDLfkZDJolS/RPyKKbBQ74RNSwvdCZP/KEgzeDDD88WFz5bLKL
-   XDZUPDnM2JVVxS6Iur005zeFM52QtfbkgbEbqwKNf79gIDYT/suo80LUX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10878"; a="387817396"
-X-IronPort-AV: E=Sophos;i="6.03,262,1694761200"; 
-   d="scan'208";a="387817396"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2023 19:59:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,262,1694761200"; 
-   d="scan'208";a="1386390"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2023 19:59:31 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
- <david@redhat.com>,  Oscar Salvador <osalvador@suse.de>,  Dan Williams
- <dan.j.williams@intel.com>,  Dave Jiang <dave.jiang@intel.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
-  <nvdimm@lists.linux.dev>,  <linux-cxl@vger.kernel.org>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  "Aneesh Kumar K.V"
- <aneesh.kumar@linux.ibm.com>,  Michal Hocko <mhocko@suse.com>,  Jonathan
- Cameron <Jonathan.Cameron@Huawei.com>,  Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH v7 3/3] dax/kmem: allow kmem to add memory with
- memmap_on_memory
-In-Reply-To: <20231025-vv-kmem_memmap-v7-3-4a76d7652df5@intel.com> (Vishal
-	Verma's message of "Wed, 25 Oct 2023 16:44:35 -0600")
-References: <20231025-vv-kmem_memmap-v7-0-4a76d7652df5@intel.com>
-	<20231025-vv-kmem_memmap-v7-3-4a76d7652df5@intel.com>
-Date: Mon, 30 Oct 2023 10:57:42 +0800
-Message-ID: <871qdcddg9.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="KaysYbuh"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2072.outbound.protection.outlook.com [40.107.237.72])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DBCB4;
+	Sun, 29 Oct 2023 21:24:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bCKFkpnbEKwHwotqYvw8jPIj8t4KsGb5jLxnw/xY9O7cmrRRCDjJkHNCw2rDfmyTeNAs8ob2wdQAjOjZVTcgtHTuul5busCDjTwYZufCZ1l/NoPWKvak4agupWzVgRQOvEgsQAO1WCghoTrGblBTLmG/rHgD2Dx5JyF+vjF99bRLvMZxcfrsDWPDNqanf0RC4tosl2UNJethhPtDC2w2lQeyaquKqH7dkzHE9ThpKRIQB8NDEn5UTDCe9tbJr+m0wCRNL+oSwpFftm3LLjp2nv+DGz/R1EBvc3MoUV8OJRTK+UsOAPIsq/g0eKIs7uHMm/LH6NJg4RP3nD02YX3YBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WJ9LnQ+uY3eBG7M4nyDlMzv2l2lTUtyumg2o6d1ZBVM=;
+ b=KebdP7VANGDVyGraj6ybdIcFFCGFzzOCwdszwGKzjhwcP4wGksHji16A4mBoU/AoDTH5JpOYvsWSPmf9wElKAH9yXgamWm3eIginP9rz4+mx5RphpqbxI1YdBD2Ru/zLSldEg7NBW2/L55fr8XIg9lV6Ua4IqqLpvMIxxiT43DvDZUym7jV5dypknROziB2rQvsJdJvCv4Ku6eXse8z6dbQAgBpj4aOJ7TIOIrr6ayWVfpHa+EtxM/qOSHzW//5r7j+89s/iMT6uyDvfmh8/ialYJoU9OuaqiU8xbBd5yyOkose//X2allhx+Cynfnxtvku6Lw59wbHHuVs+j5yXhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJ9LnQ+uY3eBG7M4nyDlMzv2l2lTUtyumg2o6d1ZBVM=;
+ b=KaysYbuhXkHBDUULv4YuF7u9h7HYmM5J5WDi+pEvJow44P+cj+qdjLrZn73mOa1j3rvOJss66N+hrC6dXoYZ6ahzvfsE5klXaL9MPDOdgZD02h1PJAmWNeQ7OWeDFFh5sicDxTBxlvRAZAXmDk99CjJpv2/Pg0wNkk0lZiMyeAs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by MW4PR17MB4683.namprd17.prod.outlook.com (2603:10b6:303:104::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.15; Mon, 30 Oct
+ 2023 04:24:36 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%4]) with mapi id 15.20.6954.015; Mon, 30 Oct 2023
+ 04:24:35 +0000
+Date: Mon, 30 Oct 2023 00:19:39 -0400
+From: Gregory Price <gregory.price@memverge.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	akpm@linux-foundation.org, sthanneeru@micron.com,
+	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+	Wei Xu <weixugc@google.com>, Alistair Popple <apopple@nvidia.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Michal Hocko <mhocko@kernel.org>, Tim Chen <tim.c.chen@intel.com>,
+	Yang Shi <shy828301@gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] mm: mempolicy: Multi-tier weighted
+ interleaving
+Message-ID: <ZT8u2246+vkA/4F+@memverge.com>
+References: <ZS33ClT00KsHKsXQ@memverge.com>
+ <87edhrunvp.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZS9HSIrblel39qrt@memverge.com>
+ <87fs25g6w3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZTEud5K5T+dRQMiM@memverge.com>
+ <87ttqidr7v.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZTfjqoEZXQWs/rxV@memverge.com>
+ <87lebrec82.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZTlxxR0ntEzBPwre@memverge.com>
+ <87a5s0df6p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a5s0df6p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-ClientProxiedBy: SJ0PR03CA0064.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::9) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB4683:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46c2affa-9940-4f34-2548-08dbd9001f70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	znZH7VAs9KZd9eYJGIFOoLDT7D1uipMOF+SyINFrahTWpNzXVBlfmo97IT3DPAM/wsv1G8VKO5r2azDGj887hwWvb2LgbX3niL2bymsuAbFq5xy4eAU1i4NTF8EckFYPIAv5zmhAROdIcgQlpUJ7EIBY9GkS4RDfV0TIG/xlavw7f4Sw6GA7Bj3cg6rcY4j9EmonrL39ko4MflaNOHpzrE/Gzq86/OemB2109a1e4dUBFnUeKbeyonBt0W/hJB/1aNdfnBlexRHhDE+khvJQsrHehbXXQhGm/NOJAjbfikzkDYPHh0lppK57wPC6tR5Y08pMZYxDJ6FpM8lObCbfPKxz0U+6+195zGK8GYipvVkmO8yna3TwrjDQyO0gQrvCNOsG8Ru35tohfgJ9w3CxKnFAQD/9BiasbftGwn7sq3xM/JdL9KlArCiL9y02lFf2nyc+iO52wl3H6Nt1gSab5ZJUMDscxyWhVeKJWIiLPK/u7BJlthBU4iYHxhFZbfW3zWNn40AGUgbfFLOo5pMtXYCqSo7G15Hprah/UlQTrOQ9kgUgtDIjbooAV4/9bxv2wX7NWYNF42hXn+lqtqZiOMcb79zbS+OMx6XnVMM2Icw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(376002)(39830400003)(396003)(230922051799003)(186009)(451199024)(1800799009)(64100799003)(5660300002)(41300700001)(7416002)(2906002)(54906003)(66476007)(66946007)(66556008)(8936002)(966005)(6486002)(8676002)(4326008)(44832011)(316002)(6916009)(478600001)(66899024)(38100700002)(83380400001)(86362001)(36756003)(6512007)(6506007)(26005)(2616005)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IYlhymq8cTF3qWV7CZ4qZEtW8/qv/SF8vOIsneI5FQxfwnfZt6QS1WaP/9qz?=
+ =?us-ascii?Q?HnYobMy3FUe/uo+0KSnYD5UZivpbmPH4ADvyHRaZiDtEOidYrW+8DZCN6OsM?=
+ =?us-ascii?Q?DAA5zKsHTSnE5stD+1vT4SPWSNBGC5rCsTnf+g2LaYFCyM84Yo7lQ/hlML2/?=
+ =?us-ascii?Q?Y6vhjlfqIj0j31DZIDU6rp6uOIHVxGJV37l7bo6pSzi9ZQmd5wH69YuGUcQy?=
+ =?us-ascii?Q?fi8Qv9pL6Heg59ORVb88wo518mhJGFHE66tRiDofbQp3f9QandY0YlHNGd+6?=
+ =?us-ascii?Q?TvrH+ruqhFaytSsBScj2rQeDZYz5/lMnQqyoGrguMsfZ/oowBzJpfwkoHqd3?=
+ =?us-ascii?Q?VXL9HL4o1xDaxhBGMJCIbXLf5wE8w7znxMFjkad8mT8qn1HbNetTKkqPgijw?=
+ =?us-ascii?Q?D+uHau3DDrnO5ey0OOpsOfq/eycD5Hp7IA9uR4CibyCmsnJKk0WAN85Ja9lM?=
+ =?us-ascii?Q?+CI6VGawq5S+PEZco9V0IkV1bNGfkMQ5uxjrq+9t6Qab/3y/SPSjMHj/I8VX?=
+ =?us-ascii?Q?/CJ0PyfPEs2OCFEHJ9M9FKmjArPa5jh3Iiu6tkcuvBhrOj1ZTaIJ/2jnLVcM?=
+ =?us-ascii?Q?L3K0XZ53yj/ZZUX0gAvZ3uGxBfxaEtc6s9bpTqtXhKOtBp+CfgVEiQ4kDdmn?=
+ =?us-ascii?Q?mBCJ4ZRVu2VtlcGAcoXgRyRRa+7srTXYQZ+lV2bWBWCgG1NkDhiV8g4F/x05?=
+ =?us-ascii?Q?X5Q0ORk0XKdiRaMECsiD7vaDfFplrvu331oZsDXomW9l4p4ShFsJwJuEJiwx?=
+ =?us-ascii?Q?kqffIdbspOKXLxMqhdPOEukCVS3wWI6/v/W+8v9x8iMXnOAN4RVVK4wtzPGW?=
+ =?us-ascii?Q?kUZojeCUpv90sgquWB579QzeZ3JzSC2HPijsiRxQPetTcwxP+MBGD6ZyrF0T?=
+ =?us-ascii?Q?up6wiWuUh8WGrNLa2OW+yftx4o3OZY7ezm0xjmewOAzfc5VxIXaq29Eh/AXT?=
+ =?us-ascii?Q?moTfPy+XCiRVY0aQ9q0QYa3AGcuwDL13yQ8Pd90mkbNcGOSBOWV5VxBqY1tv?=
+ =?us-ascii?Q?C36J3dICASZR562jZ/LD4ZOSIYizN/R/UnESfM8xwrX4s7x3YSFPkZ2+9pah?=
+ =?us-ascii?Q?lpRTfzBvRqyDN7eGGqRQmhv0XfFv/MZ3mTjbRV0pVtjmx04z7kJVFNQgi2Py?=
+ =?us-ascii?Q?YTj6h7ROqc1yYstCn01hNLL8NZgY4wO2Uzqp8n+eFAWC2aVul4gZEZ0tdYEZ?=
+ =?us-ascii?Q?pa469X1e5z1ZCnL7OEAYE9Eh/E73t2DR9uPVp9DbOpGICIVhZIMqzo+BqYsx?=
+ =?us-ascii?Q?9B+Zay9jBk6LysmaOE/4sRojXDc6Dd7+/76dIXeX8DTdTt6N2LRHOp9Aat1U?=
+ =?us-ascii?Q?z/wb2lKQ+uNry8Qko9WtZmh/cNQtkwHcMxgruex6HH7BlT6oK+tZYE7CQ7/Z?=
+ =?us-ascii?Q?vBcu8LSym3T60PDgw8KbMJ1zMrA2zujvOWusMrq1rH/gKZoxi6xVCh2LhVqD?=
+ =?us-ascii?Q?O/GbTz2xmJvk7qAPNfFxogOsye4IEwrlFegblGHYHG9IzS/tBqPLAlhQ86TF?=
+ =?us-ascii?Q?1M7HR5uQEVwnBALe42pOI2QSCjhp3MGPsi+OQU6x4KpX2WVUbk6CWpW3kwKq?=
+ =?us-ascii?Q?DPXtd68jlBAWOKAqNMMjiHCJkbW+yVh0+n2OSnjLecGzlQR1AqdUDa51PYbn?=
+ =?us-ascii?Q?UA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46c2affa-9940-4f34-2548-08dbd9001f70
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2023 04:24:35.5726
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wegk/qus82kCUDx0QDQzVXXKSIjHdHbl3uTs9vGun6eTx4HL3qGzyEgdfnn/Y7Cn0Mgce4qbjLZ3aaiC5BECFWINs04z7mZayOoZ1VfD138=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB4683
 
-Vishal Verma <vishal.l.verma@intel.com> writes:
+On Mon, Oct 30, 2023 at 10:20:14AM +0800, Huang, Ying wrote:
+> Gregory Price <gregory.price@memverge.com> writes:
+> 
+> The extending adds complexity to the kernel code and changes the kernel
+> ABI.  So, IMHO, we need some real life use case to prove the added
+> complexity is necessary.
+> 
+> For example, in [1], Johannes showed the use case to support to add
+> per-memory-tier interleave weight.
+> 
+> [1] https://lore.kernel.org/all/20220607171949.85796-1-hannes@cmpxchg.org/
+> 
+> --
+> Best Regards,
+> Huang, Ying
 
-> Large amounts of memory managed by the kmem driver may come in via CXL,
-> and it is often desirable to have the memmap for this memory on the new
-> memory itself.
->
-> Enroll kmem-managed memory for memmap_on_memory semantics if the dax
-> region originates via CXL. For non-CXL dax regions, retain the existing
-> default behavior of hot adding without memmap_on_memory semantics.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Sorry, I misunderstood your question.
 
-LGTM, Thanks!
+The use case is the same as the N:M interleave strategy between tiers,
+and in fact the proposal for weights was directly inspired by the patch
+you posted. We're searching for the best way to implement weights.
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+We've discussed placing these weights in:
 
-> ---
->  drivers/dax/bus.h         | 1 +
->  drivers/dax/dax-private.h | 1 +
->  drivers/dax/bus.c         | 3 +++
->  drivers/dax/cxl.c         | 1 +
->  drivers/dax/hmem/hmem.c   | 1 +
->  drivers/dax/kmem.c        | 8 +++++++-
->  drivers/dax/pmem.c        | 1 +
->  7 files changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-> index 1ccd23360124..cbbf64443098 100644
-> --- a/drivers/dax/bus.h
-> +++ b/drivers/dax/bus.h
-> @@ -23,6 +23,7 @@ struct dev_dax_data {
->  	struct dev_pagemap *pgmap;
->  	resource_size_t size;
->  	int id;
-> +	bool memmap_on_memory;
->  };
->  
->  struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data);
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index 27cf2daaaa79..446617b73aea 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -70,6 +70,7 @@ struct dev_dax {
->  	struct ida ida;
->  	struct device dev;
->  	struct dev_pagemap *pgmap;
-> +	bool memmap_on_memory;
->  	int nr_range;
->  	struct dev_dax_range {
->  		unsigned long pgoff;
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 0ee96e6fc426..ad9f821b8c78 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -367,6 +367,7 @@ static ssize_t create_store(struct device *dev, struct device_attribute *attr,
->  			.dax_region = dax_region,
->  			.size = 0,
->  			.id = -1,
-> +			.memmap_on_memory = false,
->  		};
->  		struct dev_dax *dev_dax = devm_create_dev_dax(&data);
->  
-> @@ -1400,6 +1401,8 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
->  	dev_dax->align = dax_region->align;
->  	ida_init(&dev_dax->ida);
->  
-> +	dev_dax->memmap_on_memory = data->memmap_on_memory;
-> +
->  	inode = dax_inode(dax_dev);
->  	dev->devt = inode->i_rdev;
->  	dev->bus = &dax_bus_type;
-> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> index 8bc9d04034d6..c696837ab23c 100644
-> --- a/drivers/dax/cxl.c
-> +++ b/drivers/dax/cxl.c
-> @@ -26,6 +26,7 @@ static int cxl_dax_region_probe(struct device *dev)
->  		.dax_region = dax_region,
->  		.id = -1,
->  		.size = range_len(&cxlr_dax->hpa_range),
-> +		.memmap_on_memory = true,
->  	};
->  
->  	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
-> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-> index 5d2ddef0f8f5..b9da69f92697 100644
-> --- a/drivers/dax/hmem/hmem.c
-> +++ b/drivers/dax/hmem/hmem.c
-> @@ -36,6 +36,7 @@ static int dax_hmem_probe(struct platform_device *pdev)
->  		.dax_region = dax_region,
->  		.id = -1,
->  		.size = region_idle ? 0 : range_len(&mri->range),
-> +		.memmap_on_memory = false,
->  	};
->  
->  	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index c57acb73e3db..0aa6c45a4e5a 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -12,6 +12,7 @@
->  #include <linux/mm.h>
->  #include <linux/mman.h>
->  #include <linux/memory-tiers.h>
-> +#include <linux/memory_hotplug.h>
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> @@ -56,6 +57,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  	unsigned long total_len = 0;
->  	struct dax_kmem_data *data;
->  	int i, rc, mapped = 0;
-> +	mhp_t mhp_flags;
->  	int numa_node;
->  
->  	/*
-> @@ -136,12 +138,16 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  		 */
->  		res->flags = IORESOURCE_SYSTEM_RAM;
->  
-> +		mhp_flags = MHP_NID_IS_MGID;
-> +		if (dev_dax->memmap_on_memory)
-> +			mhp_flags |= MHP_MEMMAP_ON_MEMORY;
-> +
->  		/*
->  		 * Ensure that future kexec'd kernels will not treat
->  		 * this as RAM automatically.
->  		 */
->  		rc = add_memory_driver_managed(data->mgid, range.start,
-> -				range_len(&range), kmem_name, MHP_NID_IS_MGID);
-> +				range_len(&range), kmem_name, mhp_flags);
->  
->  		if (rc) {
->  			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
-> diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-> index ae0cb113a5d3..f3c6c67b8412 100644
-> --- a/drivers/dax/pmem.c
-> +++ b/drivers/dax/pmem.c
-> @@ -63,6 +63,7 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
->  		.id = id,
->  		.pgmap = &pgmap,
->  		.size = range_len(&range),
-> +		.memmap_on_memory = false,
->  	};
->  
->  	return devm_create_dev_dax(&data);
+1) mempolicy :
+   https://lore.kernel.org/linux-cxl/20230914235457.482710-1-gregory.price@memverge.com/
+
+2) tiers
+   https://lore.kernel.org/linux-cxl/20231009204259.875232-1-gregory.price@memverge.com/
+
+and now
+3) the nodes themselves
+   RFC not posted yet
+
+The use case is the exact same as the patch you posted, which is to enable
+optimal distribution of memory to maximize memory bandwidth usage.
+
+The use case is straight forward - Consider a machine with the following
+numa nodes:
+
+1) Socket 0 - DRAM - ~400GB/s bandwidth local, less cross-socket
+2) Socket 1 - DRAM - ~400GB/s bandwidth local, less cross socket
+3) CXL Memory Attached to Socket 0 with ~64GB/s per link.
+4) CXL Memory Attached to Socket 1 with ~64GB/s per link.
+
+The goal is to enable mempolicy to implement weighted interleave such
+that a thread running on socket 0 can effectively spread its memory
+across each numa node (or some subset there-of) such that it maximizes
+its bandwidth usage across the various devices.
+
+For example, lets consider a system with only 1 & 2 (2 sockets w/ DRAM).
+
+On an Intel System with UPI, the "effective" bandwidth available for a
+task on Socket 0 is not 800GB/s, it's about 450-500GB/s split about
+300/200 between the sockets (you never get the full amount, and UPI limits
+cross-socket bandwidth).
+
+Today `numactl --interleave` will split your memory 50:50 between
+sockets, which is just blatantly suboptimal.  In this case you would
+prefer a 3:2 distribution (literally weights of 3 and 2 respectively).
+
+The extension to CXL becomes obvious then, as each individual node,
+respective to its CPU placement, has a different optimal weight.
+
+
+Of course the question becomes "what if a task uses more threads than a
+single socket has to offer", and the answer there is essentially the
+same as the answer today:  Then that process must become "numa-aware" to
+make the best use of the available resources.
+
+However, for software capable of exhausting bandwidth with from a single
+socket (which on intel takes about 16-20 threads with certain access
+patterns), then a weighted-interleave system provided via some interface
+like `numactl --weighted-interleave` with weights either set in numa
+nodes or mempolicy is sufficient.
+
+
+~Gregory
