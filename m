@@ -1,298 +1,182 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A841B10A3D
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 10:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7B118B06
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 16:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dk8nZBNM"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08D02D51
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 03:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698661227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5LK3NrzkfOof1kZmFIFKBX84P630qta/Emok9ahJO90=;
-	b=Dk8nZBNMb1FJPEtOWcW09sVNpWBQII6h/XVr0VyVcO6JyykmHAbfcX7d5ZWW4J1StOSCme
-	LnZgsWOHlyxZAkhNmXR3MvBSD4YsrGcdEefY1N1jWZxBAKyTuvy/S1J+rkW4PmDHn3MKpW
-	eeymAWTZWxGW9UgE0svVVfzkp0N3yj4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-JK2Gfs94NYS3yp7SmnZnNQ-1; Mon, 30 Oct 2023 06:20:24 -0400
-X-MC-Unique: JK2Gfs94NYS3yp7SmnZnNQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4084d0b171eso34010815e9.0
-        for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 03:20:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698661223; x=1699266023;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5LK3NrzkfOof1kZmFIFKBX84P630qta/Emok9ahJO90=;
-        b=TbilQZ9RojmY0Q5q+TOs5LK84KKGZzJY5ED6iTL8OLOFrA1Ccrn6Gu0EmXPUVmvLf8
-         000RZ3RETgq8/4w5LxF1R9rg1jcnARUeTTxyJrCI9gx3+kIoIQp6lInyrBMkOw4X3mGT
-         lySxS30+XVg38nZdhFOx///IL3KtpmOFlz+xh0EQMurR8YV89IXoCcfi9hMDMe102CZU
-         XxPAo4Cty47MyeaOymdvone+vyFX5pONa0AdAnbKxZquI6QLvmFqW7nr76rd0VXB7R91
-         z9p5c6/Wg49RLSnc+W9jQVfUuuu4tiYF0csGyGLDOAAY0hWkN10SFEmmVB00hCAkjr+I
-         /w/A==
-X-Gm-Message-State: AOJu0YylMC8yKQuw23jzL0KgA2saudYY6NQeQ9CUkGT7B8le18IHv2ie
-	sI7VqOrCeqcVBHCoWD1x72USE2a08QiutbkxdVZ+J8YqRL0EKIr6vdjOhuPzwZ0ESHO4esiWtd8
-	NTF4ttIpi4cXYcPvdPE9E
-X-Received: by 2002:a05:600c:3201:b0:407:73fc:6818 with SMTP id r1-20020a05600c320100b0040773fc6818mr15618888wmp.2.1698661223492;
-        Mon, 30 Oct 2023 03:20:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQuzuAxZtRJHs1EdjAPlMBrRwxFa4HpNj1UBuVapo4QQIwVdPIJf70fLx+5hRrBgxnofop+A==
-X-Received: by 2002:a05:600c:3201:b0:407:73fc:6818 with SMTP id r1-20020a05600c320100b0040773fc6818mr15618860wmp.2.1698661223050;
-        Mon, 30 Oct 2023 03:20:23 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73c:f800:7df6:a2c9:652e:c799? (p200300cbc73cf8007df6a2c9652ec799.dip0.t-ipconnect.de. [2003:cb:c73c:f800:7df6:a2c9:652e:c799])
-        by smtp.gmail.com with ESMTPSA id m11-20020a05600c4f4b00b0040651505684sm8840526wmq.29.2023.10.30.03.20.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Oct 2023 03:20:22 -0700 (PDT)
-Message-ID: <4df63333-de57-4a58-a110-77b4fdfa6a9e@redhat.com>
-Date: Mon, 30 Oct 2023 11:20:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ksZah2hN"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11D8C2
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 09:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698682714; x=1730218714;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OJjdfZteXZlkoUIjc29hg+EC7b4/zCelb09mvBVdpig=;
+  b=ksZah2hNY7ziKQzES9x6YliXAjFmcbc7rAPCuVGQuc0xFTs+OCfGV606
+   6PdveUWx+qJNee/D1oHtUBhly0wKIyC9NV9FciRG78fyvz2sTiXXvkz4x
+   ckrq2PbQbLS7y/hGW8nRFQx0UFT6SXrVJ07BJ9dI6TLeCzIEMZdcuc14Z
+   cw4lpVUzm4SYXoZ/tuEfr/uRFh73DM6D5G6IyV+u0xPVAnYomptnxiA9w
+   f6xdQXNBDFL3Rp4okzF9/1/fdfryppZAjYFEV5kh0YkWNeQkPX6p7YJs/
+   W280sfS7O+/Oux32LlkYMLYFjYbUAPK871q4olWdy+D/7Dt7tQZ/cQgRo
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="454568406"
+X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
+   d="scan'208";a="454568406"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 09:18:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="795309573"
+X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
+   d="scan'208";a="795309573"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Oct 2023 09:18:34 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Mon, 30 Oct 2023 09:18:33 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Mon, 30 Oct 2023 09:18:33 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Mon, 30 Oct 2023 09:18:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yj6S8W9ba/tm23sS5j5yAwx3Q99txEjaNTadaryTFr0xMmQ0+l+Q/aye14sarNDZq9CtONZ1quQ3enYyHioa6lmYG5EWuE7jfk4pb3AV+fMyM4RKVlVuYCLvYvisvInkbLrNxwqrYNJtpsR0EdkDDy+0RavIE17fqNd84a/75LzxnA7pZt2OzhPNaUfG6SunQqx0bsnjmwm6b1OKxHicZNPyHsBTPPHrzIhEvoh0rDqU5BrWEtdXnz1h53FrUQeDIEFPKhoJ64ivqrQirj/m7yqPgSbAEnS6NTS6Q7ZcddxyDRSjwqgnNDESYKTgLwvUizRsiMtRFQ3LA7HaqE6/vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EJDonZZ4ptfHNFu3mFlqimlw3W54Ul7mQ/LbIb7hoq0=;
+ b=i85xMPi1GMksnsbwWzgDmgynV9oWJuc/zPmSQAnazeGKwVsoMe9fADXPVCnyb4RT6WCdISBfEmB8Sw6674kOnzcQFUmsKU6dOIAkRPFYjpxC3LH2HHz+uf6uXQ1+o8DHbu9xfmwm05eSkf63huqJBvlbW6QdSYc35+B4mtQfcTuvFG+nHU6ZTbdpC8zIHgMDFWkDOAP48MntMM8+6KBgVc78DxXZ+9rvwohSOHZHkN2ekRthe6yUoBckWE4sp468Ig0dPC9Sp3EhCWm/zbRO8vlPpVcmFxxtxPHtJhWAWMIBfaFYBqLbT6ZFYB/svfIiY6k01Tg1t/zqTJ8DA9mMiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by IA1PR11MB6194.namprd11.prod.outlook.com (2603:10b6:208:3ea::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.22; Mon, 30 Oct
+ 2023 16:18:23 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::a353:a16f:7f8a:86aa]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::a353:a16f:7f8a:86aa%6]) with mapi id 15.20.6933.024; Mon, 30 Oct 2023
+ 16:18:23 +0000
+Message-ID: <10d61293-67da-472d-8e5d-a5b244c51170@intel.com>
+Date: Mon, 30 Oct 2023 09:18:18 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v11 00/22] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
+To: Gregory Price <gregory.price@memverge.com>
+CC: <linux-cxl@vger.kernel.org>, Len Brown <lenb@kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>, "Rafael
+ J. Wysocki" <rafael.j.wysocki@intel.com>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Hanjun
+ Guo" <guohanjun@huawei.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>
+References: <169713674328.2205276.10184241477215488339.stgit@djiang5-mobl3>
+ <ZTruDdQabRcVAG4P@memverge.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ZTruDdQabRcVAG4P@memverge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0209.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::34) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/3] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-To: Vishal Verma <vishal.l.verma@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Dan Williams <dan.j.williams@intel.com>,
- Dave Jiang <dave.jiang@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Huang Ying <ying.huang@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
- Michal Hocko <mhocko@suse.com>,
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Jeff Moyer <jmoyer@redhat.com>
-References: <20231025-vv-kmem_memmap-v7-0-4a76d7652df5@intel.com>
- <20231025-vv-kmem_memmap-v7-2-4a76d7652df5@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20231025-vv-kmem_memmap-v7-2-4a76d7652df5@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|IA1PR11MB6194:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79ecf10b-87df-467e-7a4c-08dbd963d6dc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NRnMgIA+JiQzYPmEd6jhZ+zL2WFpxBfC4pzglLtMRtnihKX4bx5TrDH/nVAJ2jy7wcv5dFFE4qirmTwNZXUfyQYfqTnZQX+SS4ACmXGRd0ewGm2KaKH1QN40ojRneFyWvTPhD5hoOYBcjUhzdIvmiolKXeG4OUaW6TJ/vXZNg9bwPcCioUwhSZ9ckZ9+7ZMY/0yGHnDcDrukgRdjAfu/C3es8RHXil5Yyh+NUYg7CiQGKkRqIzkj9nrlbI3VwcE9Vm2W0iWPsYmv9sBqzAR7kDgajg9964TwK8UB6u2ptyWCy9sa9pR5jwZslheyBJ68DyvhvGYFXKEys74Ruj/pcXXMRSCF4PRi/G9VYIaIfJ0YlXzpGuhIcdh6U3qTxJ+GQpvLHMABtqRQyYkTveG8WNM5SGUbgLer05wA9CcmbU2TEG8QpK43oxIXrVBq6UAm+jMSustC1R2I2MXP+biXzUsfOp83iQIZbBqF2Nq5iy87Fuz+nsbrjNIpuPnWcttm3sAKS0SNfD6lATOicTMNY6Yx7faC6Td9A/FrsMxemiehKTkkWSqPoa6KeaH0gWgYk/LbDC62zaVPCIehic+3zftVIyrWBSX6Ns6qj7htlpg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(376002)(366004)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(6916009)(31686004)(966005)(53546011)(6486002)(478600001)(6506007)(6512007)(38100700002)(6666004)(54906003)(31696002)(86362001)(36756003)(82960400001)(2906002)(4744005)(4326008)(41300700001)(107886003)(83380400001)(2616005)(26005)(5660300002)(66476007)(44832011)(316002)(66946007)(8936002)(66556008)(8676002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d0l1THZibzFrMVhGSnkxbDBBaFVOQ2NuMWNPNUwzcHl3ZlFqNVVUM1lVQ29Z?=
+ =?utf-8?B?RVQ5Zk1IL1UxLzJxbS9RVU5LTlB3YkFuQUJYM2QxdWVQUStYR0hNS0l2YzNi?=
+ =?utf-8?B?YXNBa1d1U0hzdDhpdm9ieEpyMnI3eXQvKzBVMWplYWFlUm44SUFlcTFUUmlt?=
+ =?utf-8?B?T3ZRSkJhMThRb0YvUXlwTWovSHFOTUpTS2JsaTFxVkVCK281RlozT0locytQ?=
+ =?utf-8?B?d1owYmp4RktlZWYrTUlLTnU1K3Qwa09TdTdzNTFjMnVRNVpralNNUFN3YitM?=
+ =?utf-8?B?dWZ6ZWQwZ2ZZSDVZaTFJSjdNV0xQdGNKMktGeUwrR2M3aGdhRFRNdnMrbnZ4?=
+ =?utf-8?B?dVQvMFBvd205QzU2eWZMUzh3VlpDM3RPakZCUnJPcVl3K2w3R0FpdzlibVdr?=
+ =?utf-8?B?bEgwbndDN2ptdE0vWmY1aDQvRXcxaTJSMkJSOHFzT0cvVTlKYXZaZjJHb3hF?=
+ =?utf-8?B?YVVMd05INCtFcDRFenhKbXVVWGFkOU5NZHgzTHNSNjlZQVdOQ0NsVHQwdUIz?=
+ =?utf-8?B?UkVqOSt6bzRmTlNVUm5Dby9oUU5QUE50c0tzMEZlQWgzam5YM3dJRlRrbWJW?=
+ =?utf-8?B?Z0g5MjVUN202Rmt5WUVjU3ZSdTlUTnlNR3ZsK25FVWVjV0ZzbzNLZERjTkNm?=
+ =?utf-8?B?aUdPRmU4TVNvNk9GTUI2cXB0WFp3RWhQa2NxUW4vYXdBNy9zVFVrUEMvWUNI?=
+ =?utf-8?B?bVliVFZCNzlBV25lRzNRek85S25WbDVVOG5PU1dJZEMzQjhDMVJZVlZBRHRN?=
+ =?utf-8?B?Ri8zYTNxb2x5WTFCVmpNUU4rdkg0QXRrbDM5M0RxSWRYYlplOWVyaWx4cmtq?=
+ =?utf-8?B?cXdqOHJMSzBXS2tEbENWbmN1c1ZmbUQrRVBoOHBnRHkrSDBYbnF4QWYrNU0y?=
+ =?utf-8?B?KzQzbll2YUYxbmpkakZob2VCSUhpZjdWS0ZRcVVXSU0xa3dKSTZuRktmQmN2?=
+ =?utf-8?B?M1Q0SGdGN2RPSGJ2SG85YXZoaC9mK25TWjI4aUNLYkI2SWt5SklHL3B0Y09C?=
+ =?utf-8?B?OHZDZVZOdy9uL2E0cWhCRkFBSWplaEhiVEs5dWNnZ0sraEFBSnhvem45M1FE?=
+ =?utf-8?B?TnhicDdTQUFTeVhCYnRRejRHZStoSTRtbENac2ZqaStvVEtXQTZJZkovTHZx?=
+ =?utf-8?B?a2ZYeElwc1RqOW5BM1E1QzlTcEdsMVhPbFhUY3NscTdPcDRIMG1yVkoxalJo?=
+ =?utf-8?B?cFdEbkhaTkRIemt3N1J1czBUZzJPaDkwRjlmWk01d1NqUGFlTUdXOXRNSkMv?=
+ =?utf-8?B?UWVSSmNuQk5nU09xZzlrWk5lOGRmcktPdnc3TnZFdURhUHFxelRsaDdoV3By?=
+ =?utf-8?B?UU5qaG5VeEtrVlByakVGTUM1dUxlTGViVEdPcFo5UEg2V2NMb2gyZ0tINDNW?=
+ =?utf-8?B?SE8yRTlzLys3VURKT3h5d0RVMkNaWE9pNkJ5S1FGbEp2TGhhTlptQ0JlODg1?=
+ =?utf-8?B?OFVMV3EySjlsZHdwQ3N4NXkySFNBbWI0c0dYR20zNzZ2Qk95M0w3bFRLOW0x?=
+ =?utf-8?B?QncrVDF6UzR2T2tWVnZDcmtYa2lSUzFXSVlmQjZVdE1CVWRhMmZnU016UzlB?=
+ =?utf-8?B?ZndNYzh4eFNUTEVFeC9lNlZsdWdUWk1mekpuYUFGbm1HNWJxdGlOYU8ybUY3?=
+ =?utf-8?B?dnFPa1k2TFE0NFZ0MGpob1JKQnhFbE9ya2QzTERsUHcwakxXWkhBcEZvWDRz?=
+ =?utf-8?B?ZFJYdHg4ZlFRakg1Tm9PNzlzdDVUTExOS0JRZnBzTzBCaExJUTNIU2E1TU4x?=
+ =?utf-8?B?cldWOFIwa0I4TGhDNStyeExNOC9rbUoxT29FNGpUKzgxSGdBbk9ZV3YwV0ZQ?=
+ =?utf-8?B?bjl3d05SZmhZYjZBd2F3aVB6VnRoanJIcDVSeURpVXVqL0QxQTg2a0tUc1NZ?=
+ =?utf-8?B?bXRvZTR1QTdiNzBmcDg2aVhhRDFiUUR2aVIwS3BVRFpUM1h0NU4vbzJHU0hG?=
+ =?utf-8?B?N1ZkSEthRVdWdVdpb010Z2xobWNSaUdEeVZGb3M4a3hrMFhxeFJpcFYrNmRK?=
+ =?utf-8?B?WFB2MGJPR0tUQVhuSzVoMllpeTNFOXMxR0hDYVg2TlBaNHdLSTVXV0tBWlF2?=
+ =?utf-8?B?RXlTTXM1QnNhL1UzRUQ2bytra0tFWTdJREludWg5bzJUaGp3NTlLR2dveVVT?=
+ =?utf-8?Q?icKJ7PwuTllGq1CBc10AuCmi+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79ecf10b-87df-467e-7a4c-08dbd963d6dc
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2023 16:18:23.5431
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gXCBUC8GB9D6lvfjoB6Mo1WjZGWCwDJ7KkkZs94a++cefqEUccvo2wr6f931CG9F5PN2Xw5Mefuf9dxWxX8/Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6194
+X-OriginatorOrg: intel.com
 
-On 26.10.23 00:44, Vishal Verma wrote:
-> The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is restricted to
-> 'memblock_size' chunks of memory being added. Adding a larger span of
-> memory precludes memmap_on_memory semantics.
+
+
+On 10/26/23 15:54, Gregory Price wrote:
+> On Thu, Oct 12, 2023 at 11:53:30AM -0700, Dave Jiang wrote:
+>> cxl: Add support for QTG ID retrieval for CXL subsystem
+>> v11:
+>> - Add debug print for multiple DSMAS entries for a partition. (Jonathan)
+>> - Change qos_class0 to qos_class. (Dan)
+>> - Add verification of endpoint device's host bridge to root decoder targets. (Dan)
+>> - See individual patches for additional changes.
+>>
+>> base-commit: 178e1ea6a68f12967ee0e9afc4d79a2939acd43c
+>> ---
 > 
-> For users of hotplug such as kmem, large amounts of memory might get
-> added from the CXL subsystem. In some cases, this amount may exceed the
-> available 'main memory' to store the memmap for the memory being added.
-> In this case, it is useful to have a way to place the memmap on the
-> memory being added, even if it means splitting the addition into
-> memblock-sized chunks.
+> Was unable to find this base commit, but the following commit is needed
+> to successfully build:
 > 
-> Change add_memory_resource() to loop over memblock-sized chunks of
-> memory if caller requested memmap_on_memory, and if other conditions for
-> it are met. Teach try_remove_memory() to also expect that a memory
-> range being removed might have been split up into memblock sized chunks,
-> and to loop through those as needed.
+> https://lore.kernel.org/linux-cxl/168677930330.2787985.15866363373310739456.stgit@djiang5-mobl3/
 > 
-> This does preclude being able to use PUD mappings in the direct map; a
-> proposal to how this could be optimized in the future is laid out
-> here[1].
+> the remaining commits from that line (1-3/4) have made it upstream but
+> this one has not yet.
 
+It went into Rafael's tree, but not upstream yet. 
 
-Almost there, I think :)
+commit 178e1ea6a68f12967ee0e9afc4d79a2939acd43c (linux-pm/acpica)
 
->   
-> +static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
-> +					    u64 start, u64 size)
-> +{
-> +	unsigned long memblock_size = memory_block_size_bytes();
-> +	u64 cur_start;
-> +	int ret;
-> +
-> +	for (cur_start = start; cur_start < start + size;
-> +	     cur_start += memblock_size) {
-> +		struct mhp_params params = { .pgprot =
-> +						     pgprot_mhp(PAGE_KERNEL) };
-> +		struct vmem_altmap mhp_altmap = {
-> +			.base_pfn = PHYS_PFN(cur_start),
-> +			.end_pfn = PHYS_PFN(cur_start + memblock_size - 1),
-> +		};
-> +
-> +		mhp_altmap.free = memory_block_memmap_on_memory_pages();
-> +		params.altmap = kmemdup(&mhp_altmap, sizeof(struct vmem_altmap),
-> +					GFP_KERNEL);
-> +		if (!params.altmap)
-> +			return -ENOMEM;
-
-Best to cleanup here instead of handling it in the caller [as noted by 
-Vishal, we might not be doing that yet]. Using 
-remove_memory_blocks_and_altmaps() on the fully processed range sounds 
-reasonable.
-
-maybe something like
-
-ret = arch_add_memory(nid, cur_start, memblock_size, &params);
-if (ret) {
-	kfree(params.altmap);
-	goto out;
-}
-
-ret = create_memory_block_devices(cur_start, memblock_size,
-				   params.altmap, group);
-if (ret) {
-	arch_remove_memory(cur_start, memblock_size, NULL);
-	kfree(params.altmap);
-	goto out;
-}
-
-if (ret && cur_start != start)
-	remove_memory_blocks_and_altmaps(start, cur_start - start);
-return ret;
-
-> +
-> +		/* call arch's memory hotadd */
-> +		ret = arch_add_memory(nid, cur_start, memblock_size, &params);
-> +		if (ret < 0) {
-> +			kfree(params.altmap);
-> +			return ret;
-> +		}
-> +
-> +		/* create memory block devices after memory was added */
-> +		ret = create_memory_block_devices(cur_start, memblock_size,
-> +						  params.altmap, group);
-> +		if (ret) {
-> +			arch_remove_memory(cur_start, memblock_size, NULL);
-> +			kfree(params.altmap);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-[...]
-
->   static int check_cpu_on_node(int nid)
->   {
->   	int cpu;
-> @@ -2146,11 +2186,69 @@ void try_offline_node(int nid)
->   }
->   EXPORT_SYMBOL(try_offline_node);
->   
-> -static int __ref try_remove_memory(u64 start, u64 size)
-> +static void __ref remove_memory_blocks_and_altmaps(u64 start, u64 size)
->   {
-> -	struct memory_block *mem;
-> -	int rc = 0, nid = NUMA_NO_NODE;
-> +	unsigned long memblock_size = memory_block_size_bytes();
->   	struct vmem_altmap *altmap = NULL;
-> +	struct memory_block *mem;
-> +	u64 cur_start;
-> +	int rc;
-> +
-> +	/*
-> +	 * For memmap_on_memory, the altmaps could have been added on
-> +	 * a per-memblock basis. Loop through the entire range if so,
-> +	 * and remove each memblock and its altmap.
-> +	 */
-
-/*
-  * altmaps where added on a per-memblock basis; we have to process
-  * each individual memory block.
-  */
-
-> +	for (cur_start = start; cur_start < start + size;
-> +	     cur_start += memblock_size) {
-> +		rc = walk_memory_blocks(cur_start, memblock_size, &mem,
-> +					test_has_altmap_cb);
-> +		if (rc) {
-> +			altmap = mem->altmap;
-> +			/*
-> +			 * Mark altmap NULL so that we can add a debug
-> +			 * check on memblock free.
-> +			 */
-> +			mem->altmap = NULL;
-> +		}
-
-Simpler (especially, we know that there must be an altmap):
-
-mem = find_memory_block(pfn_to_section_nr(cur_start));
-altmap = mem->altmap;
-mem->altmap = NULL;
-
-I think we might be able to remove test_has_altmap_cb() then.
-
-> +
-> +		remove_memory_block_devices(cur_start, memblock_size);
-> +
-> +		arch_remove_memory(cur_start, memblock_size, altmap);
-> +
-> +		/* Verify that all vmemmap pages have actually been freed. */
-> +		if (altmap) {
-
-There must be an altmap, so this can be done unconditionally.
-
-> +			WARN(altmap->alloc, "Altmap not fully unmapped");
-> +			kfree(altmap);
-> +		}
-> +	}
-> +}
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+> 
+> ~Gregory
