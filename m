@@ -1,208 +1,128 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1EC23C3
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Oct 2023 22:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D9A360
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 00:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XMHh8MMH"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10AA9FA;
-	Mon, 30 Oct 2023 15:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698703342; x=1730239342;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=gGmju2xtUvUYjNeT5s/igY7vWoMAz2AP97sPHkXg3X4=;
-  b=XMHh8MMHAaxT2IJkN/tG9jfNFSJKsdrOmx7/72qHWcveVDezGrhA7JTz
-   OiOgxwC6j88I2XjWABkdV78ZZQ7jlxuhg8HK7t5vscRbJuJiVeQ1tNZca
-   1x9E17TQ3QsqhwIev1hUfDm+Pfnb5caGZvdYpqk28W0ehQ477EJmToTj9
-   xVcVtJUuZZhb65WoJJaFp5+xL/bkdP0LWtYtFELb+hWpSjK6nHzLrL0Sk
-   cJbFEj3mepJmmS24MFIZ4GTkDnGh1qGAI5ETgMM/k96EJKI6qdjsMPuwX
-   caCSEHq06aSIX9nnsbzXi999CDURExBsaED+8x44JLPVbduJX0mQ6Q7WH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="378557898"
-X-IronPort-AV: E=Sophos;i="6.03,264,1694761200"; 
-   d="scan'208";a="378557898"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 15:02:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="933913722"
-X-IronPort-AV: E=Sophos;i="6.03,264,1694761200"; 
-   d="scan'208";a="933913722"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Oct 2023 15:02:21 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 30 Oct 2023 15:02:21 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 30 Oct 2023 15:02:20 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Mon, 30 Oct 2023 15:02:20 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Mon, 30 Oct 2023 15:02:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HOrjXXEq2q2o4FFvVogtm/dlxTaYJQbC5qtoqqm3r2AdEfAROrmeQqBFZRaCaPXXB4L0gn/CqM4hktWnVx+ddFDhAHOV1JJNfyYmo5rNpruqBSA0F+Yzwya3koSXV2jCN95hL9skiBKHkTuY0vnqKA0cfdshJ4KNAbn6XLbJ6HUjsNbnJg+eVW/bk3J73+cBgKeGulqEIG3AgA6d6NY4SDStJr1+ZZlvSOWFDE4SmeViKN7q7OPZ7gKle7/Z0ODV0KuvaMrEAQnDEUX9VGrxDJYvN3bwqGS7L2qiRehV3oZcuk5Q5jAwBikWoHJpPQPTFH6dC+eNZf6XHrbgoOwRaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jCwkCZOEGcl+ZjgeKrDObx74zkVwWun6pIUoZPS7Cbw=;
- b=hes3Ur+Cr6po4CkHDp+dEDEIUL6as5eLhICShXWgAFXUatVsohLkUaQ09GT3HVXcVl11BXgvQMW9pmqP3qG8e/ycSaT31xloKACQtcgzxCQy08AypmJ99EXHfkOXGSE5TtvzckNxHFaHiSsYUV+YY0lNBr0bVaN9SecJAIHlHpkjuLiPkSfG2aF8fF1L4Sau5Sgs7xh0F0j1gbADdBWBlfgWFGr98/kIkZWbrBIKWz3IPkOK0yom2mpQZyAD60a0yCscf8HBSdLn6UswB3c6H8zP4YAW9UXQv2F2pvQhIQvABAkmvpS3/k0dI5meQVV4Pc9EG72BuDEPPXWKmyF5Dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by LV8PR11MB8461.namprd11.prod.outlook.com (2603:10b6:408:1e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.26; Mon, 30 Oct
- 2023 22:02:18 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6933.026; Mon, 30 Oct 2023
- 22:02:18 +0000
-Date: Mon, 30 Oct 2023 15:02:14 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Ira Weiny
-	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>
-CC: Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 3/3] cxl/memdev: Register for and process CPER
- events
-Message-ID: <654027e6562a8_3f60294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20230601-cxl-cper-v2-0-314d9c36ab02@intel.com>
- <20230601-cxl-cper-v2-3-314d9c36ab02@intel.com>
- <81b90308-fdb1-3686-33a3-1e7ec42a7ef8@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <81b90308-fdb1-3686-33a3-1e7ec42a7ef8@amd.com>
-X-ClientProxiedBy: MWH0EPF00056D02.namprd21.prod.outlook.com
- (2603:10b6:30f:fff2:0:1:0:f) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dh4wFZfF"
+Received: from mail-yw1-x1143.google.com (mail-yw1-x1143.google.com [IPv6:2607:f8b0:4864:20::1143])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEABB3;
+	Mon, 30 Oct 2023 17:17:31 -0700 (PDT)
+Received: by mail-yw1-x1143.google.com with SMTP id 00721157ae682-5a87ac9d245so48984987b3.3;
+        Mon, 30 Oct 2023 17:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698711450; x=1699316250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OD4RKFVfAbTN2kU9bJZ9F+y9XLZ/Az1TURsN25S7xmg=;
+        b=Dh4wFZfFnVQAcqLeqTB3vybYBdM1EMB5VBjz/9WWuUyVMM/WJXkwFiR5B6d7cXh79K
+         Bbu5Xf2YCAHONFFjKX/To3rmm0RIDvhUs92RTILbZ46CYriRXuIpqKhMHSwdZ6BdsW34
+         VmSrOvdr0vf/IXo//TOHeejBpx7BedafDRcj7eTh4rh+J5e+1QzR4CynXUaSptQxpiNs
+         w7hp5qk3Z/j1fD9asbvOKGHPs9EqH/nNZdw4CdnE4S0GajsJVEtTpp99Lxm9zYI1S31h
+         zUfKi7aPutymMpfDoFsHWGiKu8qX7L4QGug3+BB5wmgBDyNjoYMFVRkn5+o9d4bH78/d
+         uQjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698711450; x=1699316250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OD4RKFVfAbTN2kU9bJZ9F+y9XLZ/Az1TURsN25S7xmg=;
+        b=u4SjTYqkuRya9vvPRIA9i7IIrYe2zlFmZ1djEub6E0U3Q7aFieTUVYUBVk/LknAP/l
+         T9LjuHoKSy61xj9u3N+Tmbj6hwGTQhRuh1OvwGLGwoPMboff7TArh63ZA9GcxO/xY3h3
+         p2UDaHu1eimugz6/K/hZkRDjJDTSLXsqSWccQGycm2eJSYrd65mGfBuWop8xtHCTbGUn
+         FardLFUFnOeYtzzoztbTxd6w7vTOpNpsUgk/JWT19im0tnWJSLV2kKGLp2W6GtOlDlNo
+         ZoMOSOvTlHfGaW57Eik2nqFlzOqiVsZQtRlRoCEHzo2jWfXkOv2RDwdTQhCDeZ17MGGZ
+         mOEQ==
+X-Gm-Message-State: AOJu0YwjQxYIJ49/PihprLgssV+BYWTKpPrSKbgPfE7WdJpD+XrrTe4A
+	0r+CQ8nAyOYLn2aykz84FKGFeEhxmdJ9
+X-Google-Smtp-Source: AGHT+IGzePeyJoClGwnIsWFkX4hXlTIZr0JUl/wQg+3Lp0v/LfNvyO3K6nm7n7V51FdM3fuJwQISgg==
+X-Received: by 2002:a05:690c:f13:b0:5a7:d133:370d with SMTP id dc19-20020a05690c0f1300b005a7d133370dmr14467747ywb.16.1698711450524;
+        Mon, 30 Oct 2023 17:17:30 -0700 (PDT)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id fc10-20020a05690c314a00b005a7bf9749c8sm113824ywb.4.2023.10.30.17.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Oct 2023 17:17:30 -0700 (PDT)
+From: Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org,
+	ying.huang@intel.com,
+	akpm@linux-foundation.org,
+	aneesh.kumar@linux.ibm.com,
+	weixugc@google.com,
+	apopple@nvidia.com,
+	hannes@cmpxchg.org,
+	tim.c.chen@intel.com,
+	dave.hansen@intel.com,
+	mhocko@kernel.org,
+	shy828301@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	Gregory Price <gregory.price@memverge.com>
+Subject: [RFC PATCH v3 1/4] base/node.c: initialize the accessor list before registering
+Date: Mon, 30 Oct 2023 20:17:18 -0400
+Message-Id: <20231031001721.3972-2-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20231031001721.3972-1-gregory.price@memverge.com>
+References: <20231031001721.3972-1-gregory.price@memverge.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV8PR11MB8461:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9035317-66e8-41fc-82d9-08dbd993e232
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B9lY40LD6zr070zDaTkhvNFfxXLHjmBJ2Q+9Nbut4/gFyy7SP0+KDLU/JsIQzFqnE++TZTC3rl1l80UGctMxjBVsjW5Tks3I38HHROLOoaqAFHXxpqgkGOuqI7elbT61UAV5WLj6r/VYn+lo11K5h1K8cjzdebZt4wnqgn0uoN2BCX0RaYQblsAC/qTvTr0DDWZMmVlxqoqTHomcECC5E99LLjTLltV1atCjkEeX1M1x++BSpVLGL0m4Hg151SdNQ+O/PnKDSYIpTOXSV2RDGHh8yTOAXQr0iJtVoW6axMRIgE2UY24oAuM8wIeVBvdIJE4dK3ficD5DqZNbrh3GDkCkhiGd5uAZzvrLgOK32q9cP0Qclw0V+38nlbSFobj7I2senQkcD40B2I089pKDiYQIC/hr3XrS1vB8Ddrm/AHGQAU8VPHQnX7xuMSeOF8RhU7v4d3YeE6XzarvjUDbAoatxNVawkxfcAF5DatCUmrk+hLT1UP0OaqdAiUPWC6k3Vlsi8nlIyCclkMb8sep1zbg8+J3I0pCUJvlN04gekzw7TNZyM397VNPOIKuPQIf
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(136003)(346002)(396003)(366004)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(38100700002)(5660300002)(82960400001)(86362001)(26005)(83380400001)(6506007)(6666004)(9686003)(478600001)(6512007)(6486002)(2906002)(66946007)(66556008)(66476007)(110136005)(41300700001)(8676002)(54906003)(316002)(8936002)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AH+r4yIJHvgokT0iR2T+/jf20gHaeWlEPh3mOXxMVtvOijNCBzuqXSm/kHNt?=
- =?us-ascii?Q?fxVYtydJBo74ZWzEdC552fmY5SAPGlSgm7dVe7Xoed67Sz5PfkgEkw9vl4zl?=
- =?us-ascii?Q?onSNYS/8UJZcB2Alzu/qNbUOvDa++frU9Cb59/gdawjwdKo0ns8Zq9rD6h0I?=
- =?us-ascii?Q?iFIrTBlq7m8rvZfp6OheDOoC8HkLQ12LAGxCrHmSxqO7MJBPOAB1kfnOxFuT?=
- =?us-ascii?Q?5l/LIld8AEb+DPu1VePU8Fp1z4j21xbS+vkymD1FnhA0MuspMWyL49q5hKcN?=
- =?us-ascii?Q?/d5vtk3d2eCIw0s7VIaF21Oh7RTueVtAagB2u2uYM92loBuQfSOtJ2N1FabL?=
- =?us-ascii?Q?QeVtxc0Rn01PDad9pneWu0cCvCYlir1bRNTpphnqMpR0ug3K3X1+wcY17oDe?=
- =?us-ascii?Q?3d0eh3URKnLFR/BVcsoatEmNCh7LcahdKGVrzOR4IphY20LbdcA8T9kRoAsS?=
- =?us-ascii?Q?t9fV6LYZ9UCLGdRJqPLW9hnojHi6uWw2gC+ds7tTseqsntR5BYHLJAwhV90W?=
- =?us-ascii?Q?9ThQJEVTNx+gRoRrPtjv+rLcFDhhQHkkUqIiQdsYDUEGIB6AQvFW08Y3Cuep?=
- =?us-ascii?Q?zHFvBK0AMQpiAIrlAAK1DEqakgZqMd8guEmF7S1xB4zBhZHSrxaDoARoKlhD?=
- =?us-ascii?Q?uISLVuPtCPkpKoRjrdbLb2KBjdvSnNijcOECLHccprr9E+vmEeM4kpJuLs+g?=
- =?us-ascii?Q?CcaGAX+0E87G9Z+DWxO4CeWD7M1o6G8V5zqwbayY5tqcNpBJI/BHS35qBqRI?=
- =?us-ascii?Q?W4pJUZLKkif97ZJnXt9I+VjlcKX35tYMJUSrPmhk56hmEaYjd4cSiZRVW2Qg?=
- =?us-ascii?Q?/I0wTjcXpLDTQ3Y2P+1c885I81D+vcE9s59VxB4H+UP6orHZnID/a3kPm+Xw?=
- =?us-ascii?Q?eC28yJIw37t/K5VcvyOXYEGKHrmrIs/r0dE5BeJ1CiRT1Ka4un+babAjELRq?=
- =?us-ascii?Q?/OexlNvlD4LGfXAFmuBJWjUAAY/hVCS9K+UxN0GFz0yTwOy8TJNYGdlHLXK6?=
- =?us-ascii?Q?+5QnW0dWZrGtlh5jWdniio2+3NLAC/qHOP+1gomfI+k+tp0V/oAI9mdNjFsS?=
- =?us-ascii?Q?NB/hEB81fTvMFXpNnbLhITW+5tGiwYPIjfKT1s924hopgedlsPqyA8Js0fZY?=
- =?us-ascii?Q?TGzB98mfE6I0CnDiAVIiI4eBbPXFmlu7EATJJOxOctJZeZ7b0pDU/IPgGLCR?=
- =?us-ascii?Q?nPCVU5Td1xyCRIvA5158xrraj51eGJB812/MAEOuTc9fqVdGG1uZgKxZ0n0x?=
- =?us-ascii?Q?afk9IrlZb9CatNYHZZ6O98nQCdF4lMvkxxpsZynUHA+JINdSrR61I3sOq5iQ?=
- =?us-ascii?Q?mtnqk4kBBrX8OQaQeP/gBQFdadPiOZ7XSh8SF8D+HASkY2nJ41IBlfjhmA5j?=
- =?us-ascii?Q?/PDztOGuod4Rf6COmlbco8IGlYhFaTBVWiOoRxsbAUOPI6HoWw3VBwlymQfV?=
- =?us-ascii?Q?SLWTGM0bPfGIyWI8RrU8fzfiUuM4cSWzu4i6drFTtXeKpjsPzXpk0JzRrJ41?=
- =?us-ascii?Q?bjtDmuN9dvxyGQa/0by3X5Vbx9aeyAKcMHcn7Kq0Zbt6vV/YsGf5UPTMzGNH?=
- =?us-ascii?Q?UrTErYpfYcxC2NFJ6bH+wDn1wIvFqfgXvYAGsKESEY/C0EBEw6PSEha3SqQS?=
- =?us-ascii?Q?qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9035317-66e8-41fc-82d9-08dbd993e232
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2023 22:02:18.2623
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b5gw2Jtce3QDeom82vtY8vNQBDuiPkhpdm7ILEPuSx5oAjzN5bkwzFlyiHh2fUCI9Rplt1mJl0lOTJ003T0J9+36K+Wb/pGneFDp0nk4RIg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8461
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Smita Koralahalli wrote:
-[..]
-> > +#define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
-> > +int cxl_cper_event_call(struct notifier_block *nb, unsigned long action, void *data)
-> > +{
-> > +	struct cxl_cper_notifier_data *nd = data;
-> > +	struct cxl_event_record_raw record = (struct cxl_event_record_raw) {
-> > +		.hdr.id = UUID_INIT(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-> > +	};
-> > +	enum cxl_event_log_type log_type;
-> > +	struct cxl_memdev_state *mds;
-> > +	u32 hdr_flags;
-> > +
-> > +	mds = container_of(nb, struct cxl_memdev_state, cxl_cper_nb);
-> > +
-> > +	/* Need serial number for device identification */
-> > +	if (!(nd->rec->hdr.validation_bits & CPER_CXL_DEVICE_SN_VALID))
-> > +		return NOTIFY_DONE;
-> 
-> For all the event records that I tested so far, this has never been 
-> true. That is CPER_CXL_DEVICE_SN_VALID is never set which might not log 
-> the records at all. Should we be bit more lenient here and include 
-> validating device_id (bdf) instead and check if cxlds exist?
+The current code registers the node as available in the node array
+before initializing the accessor list.  This makes it so that
+anything which might access the accessor list as a result of
+allocations will cause an undefined memory access.
 
-Agree. While I do think those devices are out of spec given CXL mandates
-a valid serial number, I think the robustness priciple applies and Linux
-should rely on bdf information. I also expect that with MH-SLDs and
-potentially other scenarios, a serial number may be duplicated so bdf is
-more reliable in that dimension as well.
+In one example, an extension to access hmat data during interleave
+caused this undefined access as a result of a bulk allocation
+that occurs during node initialization but before the accessor
+list is initialized.
 
-> > +	/* FIXME endianess and bytes of serial number need verification */
-> > +	/* FIXME Should other values be checked? */
-> > +	if (memcmp(&mds->cxlds.serial, &nd->rec->hdr.dev_serial_num,
-> > +		   sizeof(mds->cxlds.serial)))
-> > +		return NOTIFY_DONE;
-> > +
-> > +	/* ensure record can always handle the full CPER provided data */
-> > +	BUILD_BUG_ON(sizeof(record) <
-> > +		(CPER_CXL_COMP_EVENT_LOG_SIZE + sizeof(record.hdr.id)));
-> > +
-> > +	/*
-> > +	 * UEFI v2.10 defines N.2.14 defines the CXL CPER record as not
-> > +	 * including the uuid field.
-> > +	 */
-> > +	memcpy(&record.hdr.length, &nd->rec->comp_event_log,
-> > +		CPER_CXL_REC_LEN(nd->rec));
-> 
-> I'm doubtful this will do the job. I think we should copy into each 
-> field of struct cxl_event_record_hdr individually starting from length 
-> by pointer arithmetic (which is definitely bad, but I cannot think of a 
-> better way to do this) and then do memcpy for data field in struct 
-> cxl_event_record_raw..
-> 
-> Any other suggestions would be helpful as well.
-> 
-> I can make these changes and validate it on my end if that works..?
+Initialize the accessor list before making the node generally
+available to the global system.
 
-It sounds like you have a more readily available real world test
-environment for this, so that sounds good to me.
+Signed-off-by: Gregory Price <gregory.price@memverge.com>
+---
+ drivers/base/node.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 493d533f8375..4d588f4658c8 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -868,11 +868,15 @@ int __register_one_node(int nid)
+ {
+ 	int error;
+ 	int cpu;
++	struct node *node;
+ 
+-	node_devices[nid] = kzalloc(sizeof(struct node), GFP_KERNEL);
+-	if (!node_devices[nid])
++	node = kzalloc(sizeof(struct node), GFP_KERNEL);
++	if (!node)
+ 		return -ENOMEM;
+ 
++	INIT_LIST_HEAD(&node->access_list);
++	node_devices[nid] = node;
++
+ 	error = register_node(node_devices[nid], nid);
+ 
+ 	/* link cpu under this node */
+@@ -881,7 +885,6 @@ int __register_one_node(int nid)
+ 			register_cpu_under_node(cpu, nid);
+ 	}
+ 
+-	INIT_LIST_HEAD(&node_devices[nid]->access_list);
+ 	node_init_caches(nid);
+ 
+ 	return error;
+-- 
+2.39.1
+
