@@ -1,93 +1,234 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C925E179B9
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 09:54:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E7C18E3A
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 10:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZiU5eGV"
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661AD124
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 02:54:31 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-507ad511315so7908162e87.0
-        for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 02:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698746069; x=1699350869; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZU07pbgnI66N/yRyT5yyBSwPkEnTukC8jFqVdALn0X8=;
-        b=BZiU5eGV+X+mdjCmMdBqukIX03icf7W+SpBXYNkFyoYAGOCD6ACQ54Z4ZSG+ORITTJ
-         GrkLbO9mD/FZpl8Qcj+YU1o0U0zB8GwjkNMAW5F8/OG/kvjalHHclaM/67Pb4V+Nquis
-         qYZEx1k+QY7CtYVd24xzM+6h02vsK2StMuNt/l1AJ6D/zfISmQEcDRj7hKD44EXseECB
-         tJbjwoAPjbPWcPfQK02iZApCxXNax/yNPQtX3je7j87SKuLbQCaQb5wwX0YJeDaqxgfr
-         8fdUVrFlrclS1PSHMJmsAyfddS+Wi833dbeY3Z1GOeFcwlx8EcCdFFziZh6K6K3N7QU/
-         lIfg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hk2W83bI"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A3A683
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 03:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698747199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=pAQbrfQoIJNOhnUYvPhPLxk1gl1ZWcaKec9dUXNoa30=;
+	b=hk2W83bI/qnflL+5MNQMs+7zjJpp4veTjLC+jiJVvrmhusfSoQyBwkSyMdOnNvq4vRqi5+
+	MDd376Mxa22EYz7mM1R+fHy4sAjVmR8xHWC+/vpC+nB0YFI8LVCNF1pS4sOLNNMq7WfbKb
+	Dn1tkF6fr6pkD0QS4PJGGtotQ1+C1Mg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-488-OnW9_TK7OLKcXwMKFcS68A-1; Tue, 31 Oct 2023 06:13:17 -0400
+X-MC-Unique: OnW9_TK7OLKcXwMKFcS68A-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-408524e2368so38408945e9.0
+        for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 03:13:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698746069; x=1699350869;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZU07pbgnI66N/yRyT5yyBSwPkEnTukC8jFqVdALn0X8=;
-        b=w80tzIn1wlv9xwplzKRCbh/xuhTB/rYQTXk7VSlg48xwxVwEqoQJNyjZllhiImrvRj
-         pMp1vOPYEriZ3x8Tb31nPL9GzYH2XWkEIMDGuheCOuy3LbL/FsSLrdt2M6VcE1QPsyqz
-         XzBqyJQePryO5qJDzzWWeMgWfHjAxS2U8aifUVIx7M4A3y/h3tIwLK1C/h/1D+fdykih
-         HXqMTfzP+kbd6VAOesuajp0sk6x8+h2vWsE+OT3a1FZ6WdSQO2vIf+hBNX/WiSWpeEr2
-         5Rm5wFfRT0adI9E2BlPiaQbcJdOx2ieZERKoXG0honnp+fhgrT7yQ0FlLe5x2/YUGkgw
-         zBRw==
-X-Gm-Message-State: AOJu0YwOh8fNviFCEP6syRVAb8egnIpU52r+Ujq9wj8/apAi5yRbJMly
-	szPpdwJe3/8y4DmBopdSURDTyw==
-X-Google-Smtp-Source: AGHT+IHr8nE960Uc3xUzQfase2Sduc+v8EfCz56jdjXt6Q8sabke258Q3uhp/yrn2zXUrL7L3ceaBA==
-X-Received: by 2002:a05:6512:312f:b0:507:9ae3:6ba7 with SMTP id p15-20020a056512312f00b005079ae36ba7mr8585994lfd.67.1698746069663;
-        Tue, 31 Oct 2023 02:54:29 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id h13-20020a5d6e0d000000b0032dbf26e7aesm1091362wrz.65.2023.10.31.02.54.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 02:54:29 -0700 (PDT)
-Date: Tue, 31 Oct 2023 12:54:26 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/2] cxl/hdm: add unlock on error path
-Message-ID: <63295673-5d63-4919-b851-3b06d48734c0@moroto.mountain>
+        d=1e100.net; s=20230601; t=1698747196; x=1699351996;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pAQbrfQoIJNOhnUYvPhPLxk1gl1ZWcaKec9dUXNoa30=;
+        b=MWQCLRGoqLBzToz8Jumj4WSrCLF4/jYNPZw84a1ii9wcYmVHlcuT90A94C7KhrsJNF
+         4/xm2LAtKh8dCZAUYwINRSYKCiJP6L9yDwiK7PkxKH7AA47LF7BJc+1/cD5D3+mL3Vhy
+         AsXSE0UOzgiXBKKjye2dR2giLGUs84X3GsRvZUrKNO3csXDb0YV+esubaAUyETkhQLpd
+         eI2sSkIg6HKNTiW0q5oXF6dfWyARU7xSEfe/CNWsk97XMgkONURhVpKRZALDX/YQMjpo
+         Fkh0csBRGyjj0/r73Xs+3iOY4iUEJ9mRFZckGUbUQAVXB/mdYwI+rBmDtY+S7coOSyMT
+         WA5w==
+X-Gm-Message-State: AOJu0Yz82JmYLFYFxLi75Q5eRjuNG7hfX7Ex9OP873ZHGzS1xtpKzkmc
+	yyuaAeaQCpI/r1LagiIlNI27HLe7uRG/7pWjmBpwNlJq7CuKQsnofQ6C5qCNmTxXfShUq6gJWGK
+	yqwIi2m5gixQdQYyQ3ulq
+X-Received: by 2002:a05:600c:4449:b0:408:4120:bab7 with SMTP id v9-20020a05600c444900b004084120bab7mr10499392wmn.15.1698747196431;
+        Tue, 31 Oct 2023 03:13:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHevO5e8NbNMxyxVt2qma4vR7VuBnZ4MDfKV72pDE/YGANv/bYJg45/F0IcpscecHYnjWYxuQ==
+X-Received: by 2002:a05:600c:4449:b0:408:4120:bab7 with SMTP id v9-20020a05600c444900b004084120bab7mr10499373wmn.15.1698747195965;
+        Tue, 31 Oct 2023 03:13:15 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:8f00:43b0:1107:57d2:28ee? (p200300cbc7078f0043b0110757d228ee.dip0.t-ipconnect.de. [2003:cb:c707:8f00:43b0:1107:57d2:28ee])
+        by smtp.gmail.com with ESMTPSA id fb12-20020a05600c520c00b00405d9a950a2sm1281801wmb.28.2023.10.31.03.13.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Oct 2023 03:13:15 -0700 (PDT)
+Message-ID: <e5d9423e-5a61-4fbe-b971-52e4283c1afd@redhat.com>
+Date: Tue, 31 Oct 2023 11:13:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60028378-d3d5-4d6d-90fd-f915f061e731@moroto.mountain>
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/3] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "Williams, Dan J" <dan.j.williams@intel.com>,
+ "Jiang, Dave" <dave.jiang@intel.com>, "osalvador@suse.de"
+ <osalvador@suse.de>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "Huang, Ying" <ying.huang@intel.com>, "linux-mm@kvack.org"
+ <linux-mm@kvack.org>, "aneesh.kumar@linux.ibm.com"
+ <aneesh.kumar@linux.ibm.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "Hocko, Michal" <mhocko@suse.com>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "jmoyer@redhat.com" <jmoyer@redhat.com>,
+ "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
+References: <20231025-vv-kmem_memmap-v7-0-4a76d7652df5@intel.com>
+ <20231025-vv-kmem_memmap-v7-2-4a76d7652df5@intel.com>
+ <4df63333-de57-4a58-a110-77b4fdfa6a9e@redhat.com>
+ <cdeef06d81abb3fc4b5f4bea6b3fd5b83972249b.camel@intel.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <cdeef06d81abb3fc4b5f4bea6b3fd5b83972249b.camel@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This error path needs to call up_read(&cxl_dpa_rwsem).
+On 31.10.23 03:14, Verma, Vishal L wrote:
+> On Mon, 2023-10-30 at 11:20 +0100, David Hildenbrand wrote:
+>> On 26.10.23 00:44, Vishal Verma wrote:
+>>>
+> [..]
+> 
+>>> @@ -2146,11 +2186,69 @@ void try_offline_node(int nid)
+>>>    }
+>>>    EXPORT_SYMBOL(try_offline_node);
+>>>    
+>>> -static int __ref try_remove_memory(u64 start, u64 size)
+>>> +static void __ref remove_memory_blocks_and_altmaps(u64 start, u64 size)
+>>>    {
+>>> -       struct memory_block *mem;
+>>> -       int rc = 0, nid = NUMA_NO_NODE;
+>>> +       unsigned long memblock_size = memory_block_size_bytes();
+>>>          struct vmem_altmap *altmap = NULL;
+>>> +       struct memory_block *mem;
+>>> +       u64 cur_start;
+>>> +       int rc;
+>>> +
+>>> +       /*
+>>> +        * For memmap_on_memory, the altmaps could have been added on
+>>> +        * a per-memblock basis. Loop through the entire range if so,
+>>> +        * and remove each memblock and its altmap.
+>>> +        */
+>>
+>> /*
+>>    * altmaps where added on a per-memblock basis; we have to process
+>>    * each individual memory block.
+>>    */
+>>
+>>> +       for (cur_start = start; cur_start < start + size;
+>>> +            cur_start += memblock_size) {
+>>> +               rc = walk_memory_blocks(cur_start, memblock_size, &mem,
+>>> +                                       test_has_altmap_cb);
+>>> +               if (rc) {
+>>> +                       altmap = mem->altmap;
+>>> +                       /*
+>>> +                        * Mark altmap NULL so that we can add a debug
+>>> +                        * check on memblock free.
+>>> +                        */
+>>> +                       mem->altmap = NULL;
+>>> +               }
+>>
+>> Simpler (especially, we know that there must be an altmap):
+>>
+>> mem = find_memory_block(pfn_to_section_nr(cur_start));
+>> altmap = mem->altmap;
+>> mem->altmap = NULL;
+>>
+>> I think we might be able to remove test_has_altmap_cb() then.
+>>
+>>> +
+>>> +               remove_memory_block_devices(cur_start, memblock_size);
+>>> +
+>>> +               arch_remove_memory(cur_start, memblock_size, altmap);
+>>> +
+>>> +               /* Verify that all vmemmap pages have actually been freed. */
+>>> +               if (altmap) {
+>>
+>> There must be an altmap, so this can be done unconditionally.
+> 
+> Hi David,
 
-Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/cxl/core/hdm.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi!
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index af17da8230d5..0eb580245276 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -684,6 +684,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
- 		if (rc) {
- 			dev_dbg(&port->dev, "%s: target configuration error\n",
- 				dev_name(&cxld->dev));
-+			up_read(&cxl_dpa_rwsem);
- 			goto err;
- 		}
- 
+> 
+> All other comments make sense, making those changes now.
+> 
+> However for this one, does the WARN() below go away then?
+> 
+> I was wondering if maybe arch_remove_memory() is responsible for
+> freeing the altmap here, and at this stage we're just checking if that
+> happened. If it didn't WARN and then free it.
+
+I think that has to stay, to make sure arch_remove_memory() did the 
+right thing and we don't -- by BUG -- still have some altmap pages in 
+use after they should have been completely freed.
+
+> 
+> I drilled down the path, and I don't see altmap actually getting freed
+> in vmem_altmap_free(), but I wasn't sure if <something else> was meant
+> to free it as altmap->alloc went down to 0.
+
+
+vmem_altmap_free() does the "altmap->alloc -= nr_pfns", which is called 
+when arch_remove_memory() frees the vmemmap pages and detects that they 
+actually come from the altmap reserve and not from the buddy/earlyboot 
+allocator.
+
+Freeing an altmap is just unaccounting it in the altmap structure; and 
+here we make sure that we are actually back down to 0 and don't have 
+some weird altmap freeing BUG in arch_remove_memory().
+
 -- 
-2.42.0
+Cheers,
+
+David / dhildenb
 
