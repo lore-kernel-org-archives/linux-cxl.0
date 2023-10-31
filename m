@@ -1,51 +1,34 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7161DFE3
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 15:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861AA200D6;
+	Tue, 31 Oct 2023 16:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="PjG5beWQ"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9853ADA;
-	Tue, 31 Oct 2023 08:56:29 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B98021847;
-	Tue, 31 Oct 2023 15:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1698767788; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kcqO6QLqoWLHFsYYNG8GZ2WufbipJ9PS9Z8s132JUF0=;
-	b=PjG5beWQTeTrQUOfOjdE55R4tYzVI+HBaDqg4F9XzTIUY3xCwOvp/da4SK6M24HVLB0e4I
-	y3B1VUk/LfDwQXmmeQDB2K7m7IT01FTfR7/i/tMqUhI9VRq23bieV6SV9CKvYDgAoUwfoC
-	6oH5WsqCKz6cK23Mgf/Ls7Np+1d6f8Y=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 16AC2138EF;
-	Tue, 31 Oct 2023 15:56:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id ntLLAqwjQWUsQwAAMHmgww
-	(envelope-from <mhocko@suse.com>); Tue, 31 Oct 2023 15:56:28 +0000
-Date: Tue, 31 Oct 2023 16:56:27 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Gregory Price <gourry.memverge@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, linux-mm@kvack.org, 
-	ying.huang@intel.com, akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com, 
-	weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, dave.hansen@intel.com, 
-	shy828301@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	Gregory Price <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
-References: <20231031003810.4532-1-gregory.price@memverge.com>
- <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
- <20231031152142.GA3029315@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8ukv2xC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC49EC433C7;
+	Tue, 31 Oct 2023 16:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698769080;
+	bh=HCX1df8KCBHXTAnQTau8yrSKPJ1ZZEmzSDDHwuNCfSQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K8ukv2xCzOKe8u1Ay0pk568Vgiy0KmGaE6zOcWpgpdwjdD16//wndhmVNzfHDgrPp
+	 ZHPCDTqWVCqD8Ky2Ivs0b514MqOHv1+AF/hYY7TtHNXLvTaSPSpSy25/ctPvw5j+2t
+	 43QCikypsHfu09DPmbe/m9CJ/2WW+NCoB6etcNBcmS9dp9/RjYIg0rnvBgflPJs/qr
+	 RhaCxfM5dzQ5jkiThISeioN1AaoJJqIKRpA4hqMGGWnmnUicgkMVaTrEGAd0igG4Uh
+	 E3wLtLk+tRLoSYwNYHdC30Uwx1xIsu3/4NbxqqJywZAb6q9swVP6S7rVjiIEeaTFrI
+	 Rwna0lW1ysMOA==
+Date: Tue, 31 Oct 2023 11:17:57 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Robert Richter <rrichter@amd.com>, Terry Bowman <terry.bowman@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, kernel test robot <lkp@intel.com>
+Subject: Re: [linux-next:master] BUILD REGRESSION
+ c503e3eec382ac708ee7adf874add37b77c5d312
+Message-ID: <20231031161757.GA11354@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,96 +37,80 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231031152142.GA3029315@cmpxchg.org>
+In-Reply-To: <202310310457.5LusQqF6-lkp@intel.com>
 
-On Tue 31-10-23 11:21:42, Johannes Weiner wrote:
-> On Tue, Oct 31, 2023 at 10:53:41AM +0100, Michal Hocko wrote:
-> > On Mon 30-10-23 20:38:06, Gregory Price wrote:
-> > > This patchset implements weighted interleave and adds a new sysfs
-> > > entry: /sys/devices/system/node/nodeN/accessM/il_weight.
-> > > 
-> > > The il_weight of a node is used by mempolicy to implement weighted
-> > > interleave when `numactl --interleave=...` is invoked.  By default
-> > > il_weight for a node is always 1, which preserves the default round
-> > > robin interleave behavior.
-> > > 
-> > > Interleave weights may be set from 0-100, and denote the number of
-> > > pages that should be allocated from the node when interleaving
-> > > occurs.
-> > > 
-> > > For example, if a node's interleave weight is set to 5, 5 pages
-> > > will be allocated from that node before the next node is scheduled
-> > > for allocations.
-> > 
-> > I find this semantic rather weird TBH. First of all why do you think it
-> > makes sense to have those weights global for all users? What if
-> > different applications have different view on how to spred their
-> > interleaved memory?
-> > 
-> > I do get that you might have a different tiers with largerly different
-> > runtime characteristics but why would you want to interleave them into a
-> > single mapping and have hard to predict runtime behavior?
-> > 
-> > [...]
-> > > In this way it becomes possible to set an interleaving strategy
-> > > that fits the available bandwidth for the devices available on
-> > > the system. An example system:
-> > > 
-> > > Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
-> > > Node 1 - CPU+DRAM, 400GB/s BW (200 cross socket)
-> > > Node 2 - CXL Memory. 64GB/s BW, on Node 0 root complex
-> > > Node 3 - CXL Memory. 64GB/s BW, on Node 1 root complex
-> > > 
-> > > In this setup, the effective weights for nodes 0-3 for a task
-> > > running on Node 0 may be [60, 20, 10, 10].
-> > > 
-> > > This spreads memory out across devices which all have different
-> > > latency and bandwidth attributes at a way that can maximize the
-> > > available resources.
-> > 
-> > OK, so why is this any better than not using any memory policy rely
-> > on demotion to push out cold memory down the tier hierarchy?
-> > 
-> > What is the actual real life usecase and what kind of benefits you can
-> > present?
+On Tue, Oct 31, 2023 at 04:35:23AM +0800, kernel test robot wrote:
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> branch HEAD: c503e3eec382ac708ee7adf874add37b77c5d312  Add linux-next specific files for 20231030
 > 
-> There are two things CXL gives you: additional capacity and additional
-> bus bandwidth.
-> 
-> The promotion/demotion mechanism is good for the capacity usecase,
-> where you have a nice hot/cold gradient in the workingset and want
-> placement accordingly across faster and slower memory.
-> 
-> The interleaving is useful when you have a flatter workingset
-> distribution and poorer access locality. In that case, the CPU caches
-> are less effective and the workload can be bus-bound. The workload
-> might fit entirely into DRAM, but concentrating it there is
-> suboptimal. Fanning it out in proportion to the relative performance
-> of each memory tier gives better resuls.
-> 
-> We experimented with datacenter workloads on such machines last year
-> and found significant performance benefits:
-> 
-> https://lore.kernel.org/linux-mm/YqD0%2FtzFwXvJ1gK6@cmpxchg.org/T/
+> Error/Warning reports:
+> ... 
+> https://lore.kernel.org/oe-kbuild-all/202310302206.Pkr5eBDi-lkp@intel.com
 
-Thanks, this is a useful insight.
- 
-> This hopefully also explains why it's a global setting. The usecase is
-> different from conventional NUMA interleaving, which is used as a
-> locality measure: spread shared data evenly between compute
-> nodes. This one isn't about locality - the CXL tier doesn't have local
-> compute. Instead, the optimal spread is based on hardware parameters,
-> which is a global property rather than a per-workload one.
+> Error/Warning: (recently discovered and may have been fixed)
+> 
+> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/iio/imu/bosch,bma400.yaml
+> aarch64-linux-ld: drivers/cxl/core/pci.c:921:(.text+0xbbc): undefined reference to `pci_print_aer'
+> ...
+> arch/riscv/include/asm/mmio.h:67:(.text+0xd66): undefined reference to `pci_print_aer'
+> csky-linux-ld: pci.c:(.text+0x6e8): undefined reference to `pci_print_aer'
+> drivers/cxl/core/pci.c:921: undefined reference to `pci_print_aer'
+> drivers/cxl/core/pci.c:921:(.text+0xbc0): undefined reference to `pci_print_aer'
+> ...
+> ld: drivers/cxl/core/pci.c:921: undefined reference to `pci_print_aer'
+> loongarch64-linux-ld: drivers/cxl/core/pci.c:921:(.text+0xa38): undefined reference to `pci_print_aer'
+> pci.c:(.text+0x662): undefined reference to `pci_print_aer'
+> powerpc-linux-ld: pci.c:(.text+0xf10): undefined reference to `pci_print_aer'
+> riscv64-linux-ld: pci.c:(.text+0x11ec): undefined reference to `pci_print_aer'
 
-Well, I am not convinced about that TBH. Sure it is probably a good fit
-for this specific CXL usecase but it just doesn't fit into many others I
-can think of - e.g. proportional use of those tiers based on the
-workload - you get what you pay for.
+I have no idea about the above (and all the similar ones below); I
+assume they all have to do with
+https://lore.kernel.org/r/20231018171713.1883517-13-rrichter@amd.com
 
-Is there any specific reason for not having a new interleave interface
-which defines weights for the nodemask? Is this because the policy
-itself is very dynamic or is this more driven by simplicity of use?
+> Unverified Error/Warning (likely false positive, please contact us if interested):
+> 
+> drivers/pci/controller/dwc/pcie-rcar-gen4.c:439:15: warning: cast to smaller integer type 'enum dw_pcie_device_mode' from 'const void *' [-Wvoid-pointer-to-enum-cast]
 
--- 
-Michal Hocko
-SUSE Labs
+Safe but annoying.  Yoshihiro, can you fix this by adding structs for
+the of_device_id.data member instead of casting DW_PCIE_RC_TYPE and
+DW_PCIE_EP_TYPE?  Examples here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-dra7xx.c?id=v6.6#n557
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-keystone.c?id=v6.6#n1069
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-artpec6.c?id=v6.6#n452
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-designware-plat.c?id=v6.6#n159
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-keembay.c?id=v6.6#n437
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-tegra194.c?id=v6.6#n2431
+
+Siddharth, since you're looking at keystone v3.65, it looks to me like
+DW_PCIE_VER_365A is currently broken because ks_pcie_rc_of_data
+doesn't set .mode, so it defaults to zero, and it looks like we should
+end up at the INVALID device type case here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-keystone.c?id=v6.6#n1285
+
+> |-- arm64-buildonly-randconfig-r003-20220511
+> |   `-- aarch64-linux-ld:drivers-cxl-core-pci.c:(.text):undefined-reference-to-pci_print_aer
+
+> |-- csky-randconfig-001-20231030
+> |   |-- csky-linux-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
+> |   `-- pci.c:(.text):undefined-reference-to-pci_print_aer
+
+> |-- i386-randconfig-141-20231030
+> |   |-- ld:drivers-cxl-core-pci.c:undefined-reference-to-pci_print_aer
+
+> |-- loongarch-randconfig-r014-20230225
+> |   `-- drivers-cxl-core-pci.c:(.text):undefined-reference-to-pci_print_aer
+> |-- loongarch-randconfig-r032-20220926
+> |   `-- loongarch64-linux-ld:drivers-cxl-core-pci.c:(.text):undefined-reference-to-pci_print_aer
+
+> |-- powerpc-randconfig-003-20231016
+> |   `-- powerpc-linux-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
+
+> |-- riscv-randconfig-r002-20220124
+> |   `-- arch-riscv-include-asm-mmio.h:(.text):undefined-reference-to-pci_print_aer
+> |-- riscv-randconfig-r011-20220606
+> |   `-- riscv64-linux-ld:pci.c:(.text):undefined-reference-to-pci_print_aer
+
+> |-- x86_64-randconfig-x052-20230810
+> |   `-- drivers-cxl-core-pci.c:undefined-reference-to-pci_print_aer
