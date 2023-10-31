@@ -1,116 +1,106 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6E811182
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 08:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA30BD;
-	Tue, 31 Oct 2023 01:11:18 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qxjq7-0005Zb-BR; Tue, 31 Oct 2023 09:11:07 +0100
-Message-ID: <e3e9bcc3-e026-43d3-964c-5f5b51916782@leemhuis.info>
-Date: Tue, 31 Oct 2023 09:11:06 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819D4182DA
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 09:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="jXbhZ5At"
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C206D61;
+	Tue, 31 Oct 2023 02:53:43 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3FF341F38A;
+	Tue, 31 Oct 2023 09:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1698746022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hldBQeVlnzcxJxh6wOmSdWjQZeq5v7flC9grgdCposU=;
+	b=jXbhZ5At6n6gg1nSVJhvzsaRTbKUfxTAg6z30byugTH7CgJY4vtLEdIvBPpGF/tP27lR9z
+	MoblyO7DrwG11ZV3MX0jQwLEgI05yeFeZQRqga0Vue3SJ5OdlFW/+k42xv1jD+MAM8U1WR
+	eLAY64j/+JGgspqmSLOwvHa88ruOnpc=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 17C2F1391B;
+	Tue, 31 Oct 2023 09:53:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id GhjLAqbOQGWDcQAAMHmgww
+	(envelope-from <mhocko@suse.com>); Tue, 31 Oct 2023 09:53:42 +0000
+Date: Tue, 31 Oct 2023 10:53:41 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Gregory Price <gourry.memverge@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org, 
+	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com, hannes@cmpxchg.org, 
+	tim.c.chen@intel.com, dave.hansen@intel.com, shy828301@gmail.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, Gregory Price <gregory.price@memverge.com>
+Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
+Message-ID: <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
+References: <20231031003810.4532-1-gregory.price@memverge.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Oct 30 [drivers/cxl/core/cxl_core.ko]
-Content-Language: en-US, de-DE
-To: Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-References: <20231030163344.5a39a625@canb.auug.org.au>
- <dc312544-6070-4299-b9ee-903b34d7cf21@infradead.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <dc312544-6070-4299-b9ee-903b34d7cf21@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1698739878;75fd1d52;
-X-HE-SMSGID: 1qxjq7-0005Zb-BR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231031003810.4532-1-gregory.price@memverge.com>
 
-[CCing the CXL maintainers]
-
-On 31.10.23 06:04, Randy Dunlap wrote:
-> On 10/29/23 22:33, Stephen Rothwell wrote:
->>
->> Please do not add any material not destined to be merged before v6.7-rc1
->> into your linux-next included branches until after v6.7-rc1 has been
->> released.
->>
->> Changes since 20231027:
+On Mon 30-10-23 20:38:06, Gregory Price wrote:
+> This patchset implements weighted interleave and adds a new sysfs
+> entry: /sys/devices/system/node/nodeN/accessM/il_weight.
 > 
-> when CONFIG_ACPI is not set (on various ARCH):
+> The il_weight of a node is used by mempolicy to implement weighted
+> interleave when `numactl --interleave=...` is invoked.  By default
+> il_weight for a node is always 1, which preserves the default round
+> robin interleave behavior.
 > 
-> ERROR: modpost: "pci_print_aer" [drivers/cxl/core/cxl_core.ko] undefined!
+> Interleave weights may be set from 0-100, and denote the number of
+> pages that should be allocated from the node when interleaving
+> occurs.
 > 
-> Already fixed?
+> For example, if a node's interleave weight is set to 5, 5 pages
+> will be allocated from that node before the next node is scheduled
+> for allocations.
 
-Doesn't seem so, I saw that yesterday and today in my ppc64le builds for
-Fedora (based on the Fedora rawhide config). Build log, in case anyone
-cares:
-https://copr-be.cloud.fedoraproject.org/results/@kernel-vanilla/next/fedora-38-ppc64le/06583955-next-next-all/builder-live.log.gz
+I find this semantic rather weird TBH. First of all why do you think it
+makes sense to have those weights global for all users? What if
+different applications have different view on how to spred their
+interleaved memory?
 
-Seems 0day ran into this, too:
+I do get that you might have a different tiers with largerly different
+runtime characteristics but why would you want to interleave them into a
+single mapping and have hard to predict runtime behavior?
 
-https://lore.kernel.org/all/202310281921.W9lzomPk-lkp@intel.com/
-https://lore.kernel.org/all/202310290131.Z10R00pk-lkp@intel.com/
-https://lore.kernel.org/all/202310302206.Pkr5eBDi-lkp@intel.com/
-https://lore.kernel.org/all/202310310457.5LusQqF6-lkp@intel.com/
+[...]
+> In this way it becomes possible to set an interleaving strategy
+> that fits the available bandwidth for the devices available on
+> the system. An example system:
+> 
+> Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
+> Node 1 - CPU+DRAM, 400GB/s BW (200 cross socket)
+> Node 2 - CXL Memory. 64GB/s BW, on Node 0 root complex
+> Node 3 - CXL Memory. 64GB/s BW, on Node 1 root complex
+> 
+> In this setup, the effective weights for nodes 0-3 for a task
+> running on Node 0 may be [60, 20, 10, 10].
+> 
+> This spreads memory out across devices which all have different
+> latency and bandwidth attributes at a way that can maximize the
+> available resources.
 
-Ciao, Thorsten
+OK, so why is this any better than not using any memory policy rely
+on demotion to push out cold memory down the tier hierarchy?
+
+What is the actual real life usecase and what kind of benefits you can
+present?
+-- 
+Michal Hocko
+SUSE Labs
