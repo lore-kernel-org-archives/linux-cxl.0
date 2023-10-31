@@ -1,275 +1,205 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6D620B3A
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 17:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE8C208DF
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 17:46:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScieiuAf"
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02B7DA
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 10:44:48 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-579de633419so57980237b3.3
-        for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 10:44:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698774288; x=1699379088; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mE3lK5hPZIK17eIucMEUfCgzp6ul7cGl6KWb78SvjpY=;
-        b=ScieiuAfRW7jx/A+YvzfAfX+nbOXEcwFH+3R/CDsu6siBYDY5BSFlGGckL8frVXntl
-         GGS9LXUdjJ6KZwXQqVHCHY57iJwZ4ygONju8GJdBFm77I2o0i0kHbpNcq+v16JbfzHid
-         mxtDoBJKlIWVZLo13Dl03LrufoQBUeK4TYC5SIsIj6TyFQCYvZm//G8monzGSC2Bj9Z1
-         SeGIzQEtxXk2M5V2L9MyOKRNlQiY2pCU5Hs3GlaZjZbH1UYFYcCD7Ac1UqGhdidBnnYG
-         ymEABYhNN4DiSAUIfkkPziFxn1qlrqXVoDPR0LHR6/XZV+6qktUphn1spOHvPpX3fvDi
-         TDlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698774288; x=1699379088;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mE3lK5hPZIK17eIucMEUfCgzp6ul7cGl6KWb78SvjpY=;
-        b=GLf4fNg8+rogBhsklxpyJhySXj8IAQnmgAT5BVZkOc9Oh/fSOEI/apUNOCqr21hbfP
-         hxs2ABXnVorzrJPI3xAUbu8t3iSheNnUijwx6UNRk2lvUHBs4qCWh/7gv3UL/GNlAPWf
-         8ydUg2p0Us8vf9OEcaFzdRLnBftywTHcQDKZU4b/xkVg2FLLK45z8g4UCsuDHm2+RFzM
-         Y6+bC78EtqvE8EpfHlFYelUuw86dDZhV+I4/n9LUjyodUCUTIorTthotr34VTb8bB2b+
-         vHf9jZieHiRBIsKgQP/4+JY0F8btb58iPNKCjM6AgtTNl8vuqhl9oodSwIZjr5zAuMGi
-         QNYg==
-X-Gm-Message-State: AOJu0Yy/7Ik/201N323mGcJsEWLdWJ5uWSxKyPwe0dUExAJXH+2Vfcxu
-	1s04UmhxUA0bxZenS2JoDrc=
-X-Google-Smtp-Source: AGHT+IG+H4xY7VZNz/71fZvQSXRHmqL0k+p5Vaxjte54Xu8RBtv2aokHypk7HBYQMMHfvyMaGh9RhQ==
-X-Received: by 2002:a0d:d846:0:b0:5af:abe1:3d4b with SMTP id a67-20020a0dd846000000b005afabe13d4bmr13580654ywe.5.1698774287872;
-        Tue, 31 Oct 2023 10:44:47 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id w6-20020a818606000000b0059a34cfa2a5sm1076368ywf.67.2023.10.31.10.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 10:44:47 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Tue, 31 Oct 2023 10:44:31 -0700
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: fan <nifan.cxl@gmail.com>, linux-cxl@vger.kernel.org,
-	a.manzanares@samsung.com, Ira Weiny <ira.weiny@intel.com>,
-	Fan Ni <fan.ni@samsung.com>,
-	"Singh, Naveen" <naveen.c.singh@intel.com>, dave@stgolabs.net,
-	nmtadam.samsung@gmail.com
-Subject: Re: Questions about the qemu DCD support in cxl-2023-09-13
-Message-ID: <ZUE8_8Yi0OtLbRyi@debian>
-References: <650cc29ab3f64_50d07294e7@iweiny-mobl.notmuch>
- <ZTbN8mAa256JWTFE@debian>
- <ZTgTQs_HJ9Xlb0Ov@debian>
- <ZTim4UPbe2C-tC_w@debian>
- <20231026100121.00007100@Huawei.com>
- <20231026175802.00001cfc@Huawei.com>
- <ZTvmesV_Uc_0Zf6j@debian>
- <20231031171846.000050d1@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ6rx5xp"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAD4B4;
+	Tue, 31 Oct 2023 10:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698774371; x=1730310371;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=w0OByK5Bium3VnHjwIcbATSneqBzQyWbdBLOrrMB6rg=;
+  b=mZ6rx5xpd2iPwt3pfO/OkeyWjPbxuFDM2fEZpme9WkLHjJUnxxXL35q9
+   qjyncoxUmG5w0GHG/aGfw8uJboXeHdNqmp0YBKtarN9Av5g0dCp+/2dvL
+   pMUD5ljmPWqTsn5x265oznswD099Vx0ac9LKzyCnXnvHLb3CwfCnvLgqZ
+   Ir0uvOwwj1dbCexnDPyzwtdXCfq9/O1IDeBSfQSw3T6wfam08ulknHmaJ
+   CqczE2dEY87yOBmLef8itMjog2qnGz109sdliIkLVsj16xq3Ms8PZw0ti
+   kt5z1reDvwLZFcFH4WLpP8j0oKj20cUJX4/Rj9h3Pf6SFJfgFO7astc//
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="373390560"
+X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
+   d="scan'208";a="373390560"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 10:46:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="884285316"
+X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
+   d="scan'208";a="884285316"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Oct 2023 10:46:08 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 31 Oct 2023 10:46:07 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Tue, 31 Oct 2023 10:46:07 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Tue, 31 Oct 2023 10:46:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GmMEwzSisNaZxygbORgSOLn5qcdOJ0kXhQKgx02iLAhufRGS7klLb9htVQ6qHngclJM1ODSRHo7gu/z8+w4Xpygr8V+oO/xHi+oClgE1fzTzcsIYlu9c5REVQ+et2t4wfRXwI/VwyCE8o1W5XTRFwOjyTwtuo/RaxXGlmBN35z33Tae8LrX7knIMKFai8+Ja7/1q5SKNlFmYsNgnIwuxCoo7pNTrKMuZke9cTwvHlpXtH3XEV2niPmip47df7Vc6hQGdcc8e5k21J50hgLDmpZqbky29Ih4KoeTTOrIZ+0E9/3yh5IXq8SSncInDurEjOUCfrmsP9AsDReJjfSBW3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RMXGRPXgfOBTW1fmPfde63v5+kakgcmMeN5jdfKtMdw=;
+ b=kvTwWsexXXc1gxEE6eLMTvUVHFQw2LUaKdGkPnVG+NsMm0Zl1X13NVDasc1+qZS1XV6IaVwO5IXC/Y25XoLF92+Jf//M8Fb50N1UnDxIeRySDN/rYGlhhnKzA55cmtx8TthYbQ9pVWk2CDoF7l9rVeYqwqaux4maapPBR6h649OP6vlV2IpLgF4yI3YMipRSSe36YwVP28g/EjiyhCYU1OpcswGden+i55mo5m+Tjrcd/jlBjjxS7BJcbGCRxWR3gbR3T7VpEnYgcRE/oBgs7mA7eSMAcv2/SisA+f39xSVtyyaH8v/HeEpHg071ylVfnWnFAtzBcIYXPE1BHekiHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB8162.namprd11.prod.outlook.com (2603:10b6:8:166::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.28; Tue, 31 Oct
+ 2023 17:46:05 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::e75f:ec47:9be1:e9e4%4]) with mapi id 15.20.6933.026; Tue, 31 Oct 2023
+ 17:46:05 +0000
+Date: Tue, 31 Oct 2023 10:46:02 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Randy Dunlap
+	<rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, "Linux Next
+ Mailing List" <linux-next@vger.kernel.org>
+CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: linux-next: Tree for Oct 30 [drivers/cxl/core/cxl_core.ko]
+Message-ID: <65413d5ae720c_244c782942a@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20231030163344.5a39a625@canb.auug.org.au>
+ <dc312544-6070-4299-b9ee-903b34d7cf21@infradead.org>
+ <e3e9bcc3-e026-43d3-964c-5f5b51916782@leemhuis.info>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e3e9bcc3-e026-43d3-964c-5f5b51916782@leemhuis.info>
+X-ClientProxiedBy: MW4P220CA0005.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::10) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231031171846.000050d1@Huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB8162:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae870514-3dcd-4872-11b4-08dbda3941b9
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1PNfRkr04G2fuuXl5PnMZfv2vP+534rEIxhXevsiaYf74QvOEgNWb8rn/hK7nX09vbBkfZgrcPRt+Gv220vjyNsBKzVjzTH7iKDg+OM+1dpJJWUv+pJlQmh3/0bCPoStG53N226fG1bxg44GLD3sqKup7hm8VFNqPXdi0UcWxIDOKukA2kx4ZzTItMAM1I/IDKkRCeZZ+ecj/evA0Sd82z2keQv8N/5YUfbJFMBOJS0QJtDokdU1/RS0QnXBol2PxiJiqTtgvPSVw2AVPSfkjhbAs7AkiJ/sJuYDwVOrKhbvYfPdfdbnMBrIDA7b6QSLpAfT3WorHa+Qv8yeXBV8kvq/VaxsQsQJP74ELsBO7fPAJKYHLlPOaardNLpSN4ppUg/1l9EPmfyG5VU9Uq6cbTGJ9+rUZLiRc4hHdwpKaATQbtmfqtUINFajR5BJ/ur30Xqi8t6huD/muMUZY3hdgqbXjHOjwd6Pt7N4VW6OGf9tp8K6EueeKdnLTKuXzTssAy0bZCF3l92B+V5mi6vP8kGCwecmEKDigXFDxS8K1mzrKpOiIOG31A4wLTkooAy+fa+mOZ8MeCdx2iVdDsZidw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(136003)(396003)(366004)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(41300700001)(6506007)(53546011)(6666004)(6512007)(9686003)(966005)(6486002)(478600001)(26005)(2906002)(66476007)(66946007)(110136005)(4326008)(8676002)(8936002)(316002)(5660300002)(86362001)(38100700002)(82960400001)(66556008)(54906003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?31gXISXVnFu9cOHbNCiXk3k8GYQkKdvhRPC2USZVcY6LyDfkV5EQvT1tFZxK?=
+ =?us-ascii?Q?0IelxKy2YsmAZJd1QwjoL3/oNhbHSmn2Gb+6MmEFLIPli6L4PVhTrPoO7wQE?=
+ =?us-ascii?Q?0EZctwNOjnaCYbbrrCIKqRILLtO0zChS7lKMrupXahGjI5hE7un9+hfECz5S?=
+ =?us-ascii?Q?u4GFSD3jgBFp/hydctctZo8yb8wZBUIWhpqPr2A1LVlnB6pZPNZtFX7gOoAW?=
+ =?us-ascii?Q?2lC3KV7pcidoCgl4cbuQpJO/oEfBhdpgFddmk5TobSfHEq1RQ1CT3vwSLlLN?=
+ =?us-ascii?Q?gwfwADBylx3ZWnlGH8GvO8sO3sEr7q5uTdjlt3arbpMwH5aCL3wjuRF1eQ7e?=
+ =?us-ascii?Q?CeWihK8/IDCMm2GQ4pIdJJzMFJY3iymgWeckxUv323ApNrDcr5Qk24b6CUfn?=
+ =?us-ascii?Q?X9QvAPG4XcrVCSLmNhlhtQFX5XXKcF5OGvo7bYhW/v6K+nnWTdsGx08BOZmg?=
+ =?us-ascii?Q?iBJq6iNePTEEeURy4dqZZWLoBr8V6xc9mInfb7RivDNPQGR2PSuVWZeV7GbP?=
+ =?us-ascii?Q?tdGikrDqLpIO+UM/uZ9Lwhug23RZuerCYytIuaMDZSth9AXc3OEqKO46KSrx?=
+ =?us-ascii?Q?p3dRKHvuoNb84Wc4xAiupt5CVp2RBmzhJJmWKSoqb79AsJCMqtug9M1kUeJq?=
+ =?us-ascii?Q?CrYX68C0fixo/vF69pnWiWdOPPgXoLHd0Dsne15vh1URZz8fRjIfSF3HZZC4?=
+ =?us-ascii?Q?5iWvh+DcFKfnJ1Zlw467y2VKzOjjUqGTGL9MZ1xfr2AXS7YiubIi7o0Q+FuK?=
+ =?us-ascii?Q?tHSb1liprnAWNo1CWpFvPoBJCA8KYIUgjlNou9FMbHVO1CbxkL1rne4Y1leS?=
+ =?us-ascii?Q?l3tBA7uzlMrC4J2GyU3BkC9HPhXJQD1epu/ZWuVmX6YEtsI9iKnKnCfVagHB?=
+ =?us-ascii?Q?aIhV/GgSQ8VF+820n2Ccqx+pDQuXwuwxdTzRfh0Jt4NhGh/x5+7Az3w89wwo?=
+ =?us-ascii?Q?7Y2Hb5vzoGqt27fdqs3/nBdGoTXjs9r5dqhNVYozp1P3Yi7nGU4esHXAZzYV?=
+ =?us-ascii?Q?zZ7hs7LXbIJK3+gnfcj4kATvxmGD0LnvD3jAstEW5PTjyGeV2A5cvvDJaT3D?=
+ =?us-ascii?Q?lODf92ecqPJxsXeEWoMA2cA+LNFjXheqqv8APo/uFdJELmF9LneRbRtnHfjC?=
+ =?us-ascii?Q?q14v4DITOO4jaA6T4VZsEPOFKCPTRgv+d1Q2FgjG8PnlmTwxmUm9BkB2p91R?=
+ =?us-ascii?Q?X9768gbgFE9mSF9Eflf2dw3n4Mo9olvyrpvOOvvNy9QaR88z9Rl9KiVJSyMl?=
+ =?us-ascii?Q?iNmZToh6GoPDAoatxpjmKflClwp8ydYUhYBEMtAcdMmwBYsAIyHAUCY4eb61?=
+ =?us-ascii?Q?M0NWM05wBzUol651Z6UF2LRAq4R1HeXxbX6xzsvzIIRsi2LOZF4CfSFaORsH?=
+ =?us-ascii?Q?bsd4TKaHYXxIz2Mbl767R89yl2npbQvwIE5IIfIL15Wj37tKc41vm2twIDJo?=
+ =?us-ascii?Q?M14SUeVWxnNNDC0Zjrra4JkwItHD7XfznenFMqiRp9VVwDiflitqBrhl73vF?=
+ =?us-ascii?Q?0MU0tAdoO7m9AcVgUkmb7I+6jo3ANKgHIq+ACWln+PdsqIdzrzMJq18WY3Ke?=
+ =?us-ascii?Q?9XdYng4wr/Mruir+dAYizmOeD3bYu3CsVdVoIItxYOrjbCCOWTIRwMZca1iN?=
+ =?us-ascii?Q?2Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae870514-3dcd-4872-11b4-08dbda3941b9
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2023 17:46:05.5310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 13v5AMnM6cB6DF/sT/Gc+D72sCgtNy5vWHgNvGREDBr/TF5+zxueBtnjALlQymXbJWgObmp+/dJkxm+dUWLnu9efBbmaUpjRIjI1gkF3OHU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8162
+X-OriginatorOrg: intel.com
 
-On Tue, Oct 31, 2023 at 05:18:46PM +0000, Jonathan Cameron wrote:
-> On Fri, 27 Oct 2023 09:34:02 -0700
-> fan <nifan.cxl@gmail.com> wrote:
+Thorsten Leemhuis wrote:
+> [CCing the CXL maintainers]
 > 
-> > On Thu, Oct 26, 2023 at 05:58:02PM +0100, Jonathan Cameron wrote:
-> > > On Thu, 26 Oct 2023 10:01:21 +0100
-> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > >   
-> > > > On Tue, 24 Oct 2023 22:25:53 -0700
-> > > > fan <nifan.cxl@gmail.com> wrote:
-> > > >   
-> > > > > On Tue, Oct 24, 2023 at 11:56:02AM -0700, fan wrote:    
-> > > > > > On Mon, Oct 23, 2023 at 12:48:02PM -0700, fan wrote:      
-> > > > > > > On Thu, Sep 21, 2023 at 03:24:26PM -0700, Ira Weiny wrote:      
-> > > > > > > > Fan,
-> > > > > > > > 
-> > > > > > > > I'm working off of Jonathan's latest CXL branch with the DCD patches.[1]
-> > > > > > > > 
-> > > > > > > > I've been testing various things and so far I have a couple of questions.
-> > > > > > > > 
-> > > > > > > > 1) If the qmp command is used to add extents which overlap other extents
-> > > > > > > >    shouldn't that throw an error?  I don't see any validation of this and
-> > > > > > > >    I would think a real device would reject such a request from the FM.
-> > > > > > > > 
-> > > > > > > > 2) Where is CXLType3Dev->dc.total_extent_count set?  Attempting to add
-> > > > > > > >    extents prior to driver load does not seem to work.  And I think this
-> > > > > > > >    is because total_extent_count is 0 in cmd_dcd_get_dyn_cap_ext_list().
-> > > > > > > > 
-> > > > > > > > Ira
-> > > > > > > > 
-> > > > > > > > [1] https://gitlab.com/jic23/qemu/-/tree/cxl-2023-09-13      
-> > > > > > > 
-> > > > > > > Hi Ira,
-> > > > > > > FYI. I have updated the DCD emulation patch series based on feedbacks on
-> > > > > > > the previous version.
-> > > > > > > 
-> > > > > > > The new version is here:
-> > > > > > > https://github.com/moking/qemu-jic-clone/tree/dcd-dev
-> > > > > > > 
-> > > > > > > The code is based on Jonathan's branch cxl-2023-09-26.
-> > > > > > > 
-> > > > > > > The main changes include,
-> > > > > > > 
-> > > > > > > 1. Update cxl_find_dc_region to detect the case the range of
-> > > > > > > the extent cross multiple DC regions.
-> > > > > > > 2. Add comments to explain the checks performed in function
-> > > > > > > cxl_detect_malformed_extent_list. (Jonathan)
-> > > > > > > 3. Minimize the checks in cmd_dcd_add_dyn_cap_rsp.(Jonathan)
-> > > > > > > 4. Update total_extent_count in add/release dynamic capacity response function.
-> > > > > > > (Ira and Jorgen Hansen).
-> > > > > > > 5. Fix the logic issue in test_bits and renamed it to
-> > > > > > > test_any_bits_set to clear its function.
-> > > > > > > 6. Add pending extent list for add/release extent event.
-> > > > > > > 7. When add/release extent response is received, use the pending list to
-> > > > > > > verify the extents are valid.
-> > > > > > > 8. Add test_any_bits_set and cxl_insert_extent_to_extent_list declaration to
-> > > > > > > cxl_device.h so it can be used in different files.
-> > > > > > > 9. Updated ct3d_qmp_cxl_event_log_enc to include dynamic capacity event log type.
-> > > > > > > 10. Extract the functionality to delete extent from extent list to a helper
-> > > > > > > function.
-> > > > > > > 11. Move the update of the bitmap which reflects which blocks are backed with
-> > > > > > > dc extents from the moment when a dc extent is offered to the moment when it
-> > > > > > > is accepted from the host.
-> > > > > > > 
-> > > > > > > I was able to test the DCD code you sent previously, let me know if you
-> > > > > > > find any issues.
-> > > > > > > 
-> > > > > > > Fan      
-> > > > > > 
-> > > > > > FYI. 
-> > > > > > 
-> > > > > > Updated the last two commits to drop the extents for pending to
-> > > > > > release as the host can proactively release dc extents so there can be
-> > > > > > no pending-to-release extent list on the device side.
-> > > > > > 
-> > > > > > Fan      
-> > > > > 
-> > > > > Ira located a bug when testing dc extent adding with his latest DCD kernel
-> > > > > code.
-> > > > > The dpa passed in the qmp command is offset relative to the base of the
-> > > > > region where the extent is offered, we need to convert it to address relative
-> > > > > to the base address of the base of the region0 so the bit in the bitmap can
-> > > > > be correctly mapped.
-> > > > > 
-> > > > > Update the commit (commit 0ad5136: hw/cxl/events: Add qmp interfaces to
-> > > > > add/release dynamic capacity ext…) with the following changes to fix the issue.    
-> > > > 
-> > > > Hi Fan,
-> > > > 
-> > > > I hit this whilst reusing some of your code for the fmapi initiate add DC
-> > > > command.   Try adding an empty extent list..
-> > > > 
-> > > > "extents": []
-> > > > 
-> > > > boom.
-> > > > 
-> > > > Definitely need to reject that input :)  
-> > > 
-> > > Fan,
-> > > 
-> > > Another thing I noticed...
-> > > 
-> > > I would not provide a more flexible QMP interface than the FMAPI interfaces.
-> > > The key thing I've noticed so far is no need to provide option for a list
-> > > of extents in different regions.  Just provide them as separate commands if that
-> > > is what is wanted.   That is drop the region-id in QMP out of the extent and
-> > > put alongside path in the top level arguements.
-> > > 
-> > > { "execute": "cxl-add-dynamic-capcity",
-> > >   "arguements": {
-> > > 	"path": "cxl-mem1",
-> > > 	"region-id": 3,
-> > > 	"extents": [ { "dpa": 0, "len": 6 } ] }}
-> > >   }
-> > > 
-> > > 
-> > >   
-> > > > 
-> > > > Jonathan  
+> On 31.10.23 06:04, Randy Dunlap wrote:
+> > On 10/29/23 22:33, Stephen Rothwell wrote:
+> >>
+> >> Please do not add any material not destined to be merged before v6.7-rc1
+> >> into your linux-next included branches until after v6.7-rc1 has been
+> >> released.
+> >>
+> >> Changes since 20231027:
 > > 
-> > Hi Jonathan,
+> > when CONFIG_ACPI is not set (on various ARCH):
 > > 
-> > I updated my branch with the following changes:
-> > 1. Add code to detect and reject QMP requests without any extents;
-> > 2. Add code to detect and reject QMP requests where the extent len is 0.
-> > 3. Change the QMP interface as you suggested above and moved the
-> > region-id out of extents and now each command only takes care of extent
-> > add/release request in a single region.
-> > 4. Change the region bitmap length from decode_len to len.
-> 
-> Great. Looking at what I think is your newest implementation.
-> 
-> dpa is used qmp_cxl_process_dynamic_capacity() for various things that aren't
-> the device physical address (aren't relative to start of device).
-> That's confusing at times.  The FMAPI commands are all in DPA so I got a bit
-> lost.  I think you should do all the checks based on actual DPA (so for some
-> you will then need to subtract the region base).
-
-The dpa is only used as the offset to the base of current region, not to the
-start of the device. We can change it to offset if it causes confusion.
-
-> 
-> Now you only have one region, you can do the checking of overlap in that function
-> in one bit per block_size - whatever the block size happens to be.
-
-All the checks now are within a single region, and we use one bit per
-block_size already in the code.
-
-...
-
-blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
-
-https://github.com/moking/qemu-jic-clone/blob/dcd-dev/hw/mem/cxl_type3.c#L2044
-
-One more thing, I forgot to update the interface in the stub.c file for
-the new QMP interface, will update.
-
-Fan
-
-
-...
-
-> 
-> Otherwise this bit looks good to me.  My initial FMAPI stuff is going to
-> be a bit of a hack on top, but the aim is to illustrate where there
-> might be shared code rather than end up with a proper clean result.
-> 
-> Jonathan
-> 
+> > ERROR: modpost: "pci_print_aer" [drivers/cxl/core/cxl_core.ko] undefined!
 > > 
-> > Fan
-> > 
-> > > > 
-> > > >   
-> > > > > 
-> > > > > 
-> > > > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > > > > index ea88b53f41..d51f2ef9f5 100644
-> > > > > --- a/hw/mem/cxl_type3.c
-> > > > > +++ b/hw/mem/cxl_type3.c
-> > > > > @@ -1978,7 +1978,7 @@ static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,
-> > > > > 		 extents[i].shared_seq = 0;
-> > > > > 
-> > > > > 		 /* No duplicate or overlapped extents are allowed */
-> > > > > -        dpa -= dcd->dc.regions[0].base;
-> > > > > +        dpa = dpa + dcd->dc.regions[rid].base - dcd->dc.regions[0].base;
-> > > > > 		 if (test_any_bits_set(blk_bitmap, dpa / min_block_size,
-> > > > > 			 len / min_block_size)) {
-> > > > > 			 error_setg(errp, "duplicate or overlapped extents are detected");
-> > > > > 
-> > > > > 
-> > > > > Fan
-> > > > >     
-> > > > 
-> > > > 
-> > > >   
-> > >   
-> > 
-> > 
+> > Already fixed?
 > 
+> Doesn't seem so, I saw that yesterday and today in my ppc64le builds for
+> Fedora (based on the Fedora rawhide config). Build log, in case anyone
+> cares:
+> https://copr-be.cloud.fedoraproject.org/results/@kernel-vanilla/next/fedora-38-ppc64le/06583955-next-next-all/builder-live.log.gz
+> 
+> Seems 0day ran into this, too:
+> 
+> https://lore.kernel.org/all/202310281921.W9lzomPk-lkp@intel.com/
+> https://lore.kernel.org/all/202310290131.Z10R00pk-lkp@intel.com/
+> https://lore.kernel.org/all/202310302206.Pkr5eBDi-lkp@intel.com/
+> https://lore.kernel.org/all/202310310457.5LusQqF6-lkp@intel.com/
+
+Yes, apologies for the thrash. This fixes it for me. I will append this
+to the cxl/next branch:
+
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index f6ea2f57d808..3db310c19ab7 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -43,16 +43,20 @@ struct aer_capability_regs {
+ #if defined(CONFIG_PCIEAER)
+ int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+ int pcie_aer_is_native(struct pci_dev *dev);
++void pci_print_aer(struct pci_dev *dev, int aer_severity,
++                   struct aer_capability_regs *aer);
+ #else
+ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+ {
+        return -EINVAL;
+ }
+ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
++static inline void pci_print_aer(struct pci_dev *dev, int aer_severity,
++                                struct aer_capability_regs *aer)
++{
++}
+ #endif
+ 
+-void pci_print_aer(struct pci_dev *dev, int aer_severity,
+-                   struct aer_capability_regs *aer);
+ int cper_severity_to_aer(int cper_severity);
+ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+                       int severity, struct aer_capability_regs *aer_regs);
