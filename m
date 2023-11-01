@@ -1,63 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC0C7F
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 05:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714F67F
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 05:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c5OIqUZN"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nSDpIuc7"
 Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B069B9
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 22:02:22 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E124DA
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Oct 2023 22:12:50 -0700 (PDT)
 Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231101050220usoutp029b9c945ccdc77dd4da70b8b6eb88375c~TZzACgugF2476024760usoutp02a;
-	Wed,  1 Nov 2023 05:02:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231101050220usoutp029b9c945ccdc77dd4da70b8b6eb88375c~TZzACgugF2476024760usoutp02a
+	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231101051248usoutp02fb0986fbc366b00a916ce40e475ae090~TZ8JBiTWK3232832328usoutp02F;
+	Wed,  1 Nov 2023 05:12:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231101051248usoutp02fb0986fbc366b00a916ce40e475ae090~TZ8JBiTWK3232832328usoutp02F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1698814940;
-	bh=tQTHs/gYNHOcGbPEdItKPnrMO20t/d6gdKqp41xw92U=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=c5OIqUZNHAkyCVY8RI7eLHIy4kC7rp5wdFhBxSthkwsfj/iUK1BDfp1HWS5PRARC+
-	 GYyDIH0JLsGI/t3DtFY0rLQksM1qWdHYbnDB7ZpNTb1xLGKT3KxlZdykHRg9zSOFLB
-	 7I4YIUGv0N2Qh8hUl817O5+I+bxQdbdmLf6Jid0A=
+	s=mail20170921; t=1698815568;
+	bh=izXK6UGCnJMDSJ2epngJocc+stynRg6lBTVVF+oBodE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=nSDpIuc7p/3ZHrt/rwDHKvqK0nL90r33BSuk4Xfe634ZlBwQX75l3x4JBbL/uqFkf
+	 1C0gQf5hjWUlYj9jaOpVtrIl9Br6+YALVwdJ3shmpZaoK4qFMOFwZhARYeuAtASHCT
+	 wfpJ6aiM5w6N+11c+EGhI2GHHuk1MWAm6YEec2Fg=
 Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
 	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231101050220uscas1p12ab9fe8c647ea7810e1232f4d677282c~TZy-81dku1677816778uscas1p19;
-	Wed,  1 Nov 2023 05:02:20 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id A8.DF.62237.CDBD1456; Wed, 
-	1 Nov 2023 01:02:20 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231101050219uscas1p25227a9255ab06201798ca35cae137194~TZy-XI_I90056600566uscas1p2G;
-	Wed,  1 Nov 2023 05:02:19 +0000 (GMT)
-X-AuditID: cbfec370-b17ff7000001f31d-56-6541dbdccfc7
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 13.4B.31200.BDBD1456; Wed, 
-	1 Nov 2023 01:02:19 -0400 (EDT)
+	20231101051247uscas1p1a06ca1388d64884aabde1d4a1478916f~TZ8IaA5v_1365613656uscas1p1F;
+	Wed,  1 Nov 2023 05:12:47 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+	ussmges3new.samsung.com (USCPEMTA) with SMTP id F5.30.62237.F4ED1456; Wed, 
+	1 Nov 2023 01:12:47 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+	[203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20231101051247uscas1p1bd4fd16062fbeb6eb65eb87381254cbf~TZ8Hu4cqb1365613656uscas1p1E;
+	Wed,  1 Nov 2023 05:12:47 +0000 (GMT)
+X-AuditID: cbfec370-823ff7000001f31d-85-6541de4f42c5
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
+	ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 1B.3E.28590.E4ED1456; Wed, 
+	1 Nov 2023 01:12:46 -0400 (EDT)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
 	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
 	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Tue, 31 Oct 2023 22:02:18 -0700
+	15.1.2375.24; Tue, 31 Oct 2023 22:12:46 -0700
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
 	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-	31 Oct 2023 22:02:18 -0700
+	31 Oct 2023 22:12:46 -0700
 From: Jim Harris <jim.harris@samsung.com>
-To: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: [PATCH v2] cxl/region: Refactor logic around check_last_peer()
-Thread-Topic: [PATCH v2] cxl/region: Refactor logic around check_last_peer()
-Thread-Index: AQHaDICW459/0DvhCUuFzM0Q8Rjdtw==
-Date: Wed, 1 Nov 2023 05:02:18 +0000
-Message-ID: <169881493839.1770063.6493881963554580869.stgit@bgt-140510-bm03.eng.stellus.in>
-In-Reply-To: <169696721124.1190606.18028412676865061799.stgit@bgt-140510-bm03.eng.stellus.in>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/region: Refactor logic around check_last_peer()
+Thread-Topic: [PATCH] cxl/region: Refactor logic around check_last_peer()
+Thread-Index: AQHZ+7KD8XRbpEWITUunMxlNnk7zR7BaWciAgAFL44CACdxfAA==
+Date: Wed, 1 Nov 2023 05:12:46 +0000
+Message-ID: <ZUHeTLZb+od8q4EE@ubuntu>
+In-Reply-To: <ZTmYswn9afRy/SCF@ubuntu>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C91734104FC053438E1D4E33D5D8AB51@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7C36EBD6E21D5148BD15FE1215E6FF54@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,92 +65,107 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42LZduzrOd07tx1TDc5+Y7OYPvUCo8X5WadY
-	HJg8Fu95yeTxeZNcAFMUl01Kak5mWWqRvl0CV8bFK7OZCj4oVGzc9J21gbFFoYuRk0NCwETi
-	UNcc9i5GLg4hgZWMEvcfr2WEcFqZJD4u/88CUzX37TeoxBpGicl/50A5nxgl+t7uZIVwljFK
-	XJy0lgmkhU1AU+LXlTVANgeHiECJxLPTNiBhYQF3ieWPG5khwj4Sn9uSQMIiAnoSq3bOBFvG
-	IqAi0XFiItgUXoFoiRnX3jKD2JwCsRITz58DizMKiEl8P7UGzGYWEJe49WQ+E8ShghKLZu9h
-	hrDFJP7tesgGYStK3P/+kh1kLTPQZet36UO02knsu3uRFcJWlJjS/ZAdYq2gxMmZT6B+l5Q4
-	uOIGC8iHEgITOSQ2HVrFCpFwkTh7ZgM7hC0t8ffuMqgbsiVWru8A+1xCoECi4UgQRNhaYuGf
-	9VAn80n8/fWIcQKj8iwkH8xCuG4WkutmIbluFpLrFjCyrmIULy0uzk1PLTbOSy3XK07MLS7N
-	S9dLzs/dxAhMJKf/HS7YwXjr1ke9Q4xMHIyHGCU4mJVEeA+bOqQK8aYkVlalFuXHF5XmpBYf
-	YpTmYFES5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYOr+fNN85U+z/5zPzjyZ+oanxHhplUGF
-	tJDbAysF+3NSGbXRm2ZzrW1lrbq42OW6ckv6fK/EK9ebpaIX5wZLXrzo+LIon+WbxJ/LLqyG
-	CrG/9j9zXSYcsGeV1LklURKpsfs3vjj29K6GzxvFSRd/HC0o7Tn/xjt9VbzQpMltt/8WN5zO
-	UndRfHBTwOnf9vAOltmbZbv59x1ddTKhVSBdhIuhN+rV/cAucTVdnjMflvqc/mty7t39gAcz
-	KzdasNzxSg2arfng73uZBStW2WSx6O6VnbekyaBXtjW9fhHj/LW/ltUl1PI9Cv6WunqLuvrl
-	c696Pu3ZHH76zfN1lxeumNe1T+vXc/mfjz1zf+QfEY5SYinOSDTUYi4qTgQAvMquRpMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWS2cDsrHv7tmOqwcdlchbTp15gtDg/6xSL
-	A5PH4j0vmTw+b5ILYIrisklJzcksSy3St0vgyrh4ZTZTwQeFio2bvrM2MLYodDFyckgImEjM
-	ffuNsYuRi0NIYBWjxLWZ65lBEkICnxgl1k9JhUgsY5S407OFESTBJqAp8evKGqYuRg4OEYES
-	iWenbUDCwgLuEssfNzJDhH0kPrclgYRFBPQkVu2cyQJiswioSHScmMgEYvMKREvMuPYWalWM
-	RMPF7WA1nAKxEhPPnwOrYRQQk/h+ag2YzSwgLnHryXwmiJsFJJbsOc8MYYtKvHz8jxXCVpS4
-	//0lO8gJzEBXrt+lD9FqJ7Hv7kVWCFtRYkr3Q3aIEwQlTs58wgLRKilxcMUNlgmM4rOQbJuF
-	MGkWkkmzkEyahWTSAkbWVYzipcXFuekVxUZ5qeV6xYm5xaV56XrJ+bmbGIGxdvrf4egdjLdv
-	fdQ7xMjEwXiIUYKDWUmE97CpQ6oQb0piZVVqUX58UWlOavEhRmkOFiVx3rsPNFKFBNITS1Kz
-	U1MLUotgskwcnFINTGKhNdzzr/cu135/11Toue2LyIsPfSy2s7m0XH1vErq2uy37ZkHhvKfx
-	Mjf/zTjFlewTpsywgumW+eTKR60XymbfeF3wNrSpNmyWhKFMmr5rO3fArMnphxc5PjjruVfo
-	RGTk53nvPJeoTvDMi768Kvjiw1sOi9bW3/CRrJFYxpquEpVZ+EtBRtWSoZr1cNnRnZ+OMEpN
-	Z6pa9VlGYJuF2J9aRnU289Mcec+X/JIyiTlv9fllk9BMnuzGzuSnQqq/Ci+ZrvvnIf0jZ/YB
-	AcM/7kYTEhcFqgrVVn0pm3hEI5uTIU7wRsn6mczpqitdnP7prl98mOX9jQN7zqh838TIwLnc
-	e82u0v/cNz+v/BJ0U4mlOCPRUIu5qDgRAF3lh1gkAwAA
-X-CMS-MailID: 20231101050219uscas1p25227a9255ab06201798ca35cae137194
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkleLIzCtJLcpLzFFi42LZduzreV3/e46pBg1fNCymT73AaHF+1ikW
+	ByaPxXteMnl83iQXwBTFZZOSmpNZllqkb5fAlfH93THmgsdiFVe/fmNtYNwh0MXIySEhYCLx
+	b8lD5i5GLg4hgZWMEiu6b7NAOK1MEu82LATKcIBVtTzQgIivYZRYunkVVMcnRolNe08xg4wS
+	EljGKDFrjymIzSagKfHryhomEFtEQFti4pyDYDXMAtYS/afPgtnCAh4Sx7acgKrxlPj/A8Z2
+	klg7eSqYzSKgInFt8UEmkCN4BVQlXk7WAQlzCqhJ7P8+nRHEZhQQk/h+CmIVs4C4xK0n85kg
+	PhOUWDR7DzOELSbxb9dDNghbUeL+95fsEPU6Egt2f2KDsO0kzt19wAhha0ssW/garJcXaM7J
+	mU9YIHolJQ6uuAEOIAmBuRwSNx51QSVcJM61/mWFsKUlrl6fCrU4W2Ll+g4mSCAWSDQcCYII
+	W0ss/LOeaQKjyiwkZ89CctIsJCfNQnLSLCQnLWBkXcUoXlpcnJueWmycl1quV5yYW1yal66X
+	nJ+7iRGYSk7/O1ywg/HWrY96hxiZOBgPMUpwMCuJ8B42dUgV4k1JrKxKLcqPLyrNSS0+xCjN
+	waIkzmtoezJZSCA9sSQ1OzW1ILUIJsvEwSnVwDTLaH1GzQszael7EZOc6q9H+0xa1XvxxsLQ
+	+jJ5QcuF1UyR+75X+rI+advoq/fwj1fYciU2q53xkk82s6TXTDaxKjx78dG7DQ1m+ld/7Pk5
+	3dtR4pPBfN/kfL+EbQdUb/m6l2yauSR6Fzfn7wP2wRmvSucnJEqsi3lXqFj+8Ca/9YnWT4sY
+	dlkr37qxd7vDI+N/DIslT1Y88LmzuIT5lE3sqvcd87+mPonvbosXYl2z8b6LePXN22tE+nuj
+	WuSu35988PD0H3UTek/l7yy0YVt8x2LDNt0NUzbuWFqZUaBikzwn8MOtoxkxlkZaHs+f6c3f
+	9eN03hmVwzeLvh++1/2NrZqNadVtZeGeG4oHdLqUWIozEg21mIuKEwGaqYWjlAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsWS2cDspOt3zzHVYNMhK4vpUy8wWpyfdYrF
+	gclj8Z6XTB6fN8kFMEVx2aSk5mSWpRbp2yVwZXx/d4y54LFYxdWv31gbGHcIdDFycEgImEi0
+	PNDoYuTiEBJYxSix/NwsdgjnE6PEvhuX2SCcZYwS+xecZO1i5ORgE9CU+HVlDROILSKgLTFx
+	zkFmEJtZwFqi//RZMFtYwEPi2JYTUDWeEv9/wNhOEmsnTwWzWQRUJK4tPsgEcgWvgKrEy8k6
+	ELu6mSSmbv7KBlLDKaAmsf/7dEYQm1FATOL7KYi9zALiEreezAezJQQEJJbsOc8MYYtKvHz8
+	jxXCVpS4//0lO0S9jsSC3Z/YIGw7iXN3HzBC2NoSyxa+BuvlFRCUODnzCQtEr6TEwRU3WCYw
+	SsxCsm4WklGzkIyahWTULCSjFjCyrmIULy0uzk2vKDbMSy3XK07MLS7NS9dLzs/dxAiMxdP/
+	DkfuYDx666PeIUYmDsZDjBIczEoivIdNHVKFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8959oJEq
+	JJCeWJKanZpakFoEk2Xi4JRqYJo695GQYlUFZyPzwtj7zAXlhtGGEkE305XYr4vsFoz6dVW+
+	8vzEzL3XJoVqBt65/WvL+zfH5y0JsV4kKCG56+rcyymHTj654LRaO67xKOfXrMmlsyS+PPPt
+	dbx9c++9zElpsyR8zlka2k/lM1+/0vi1C5fvimWMm7S/ZWqdaZpuO4G1TmuD/j+tM7wbl891
+	/H9u2YVNay2v/Q+c5Gwd4CCoLVetEbAg3NtscoBs4qFvrMfUSyR43O9MfFkf4pTTzcJzpvXK
+	z+3sBkrCxvu0Dx33ecG4yLK4m9up89vNRUefT/F6uHUKM9dlW53zQb/r5z1Y9sWzLGjf4zJt
+	5tiA25WyUgKHzbbN0tVIuGJ5TV+JpTgj0VCLuag4EQBi3tuqNAMAAA==
+X-CMS-MailID: 20231101051247uscas1p1bd4fd16062fbeb6eb65eb87381254cbf
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20231101050219uscas1p25227a9255ab06201798ca35cae137194
-References: <169696721124.1190606.18028412676865061799.stgit@bgt-140510-bm03.eng.stellus.in>
-	<CGME20231101050219uscas1p25227a9255ab06201798ca35cae137194@uscas1p2.samsung.com>
+X-CMS-RootMailID: 20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa
+References: <CGME20231010194652uscas1p18968f3a66d8cbe6d76dd444aa3ec50aa@uscas1p1.samsung.com>
+	<169696721124.1190606.18028412676865061799.stgit@bgt-140510-bm03.eng.stellus.in>
+	<6538824b52349_7258329466@dwillia2-xfh.jf.intel.com.notmuch>
+	<ZTmYswn9afRy/SCF@ubuntu>
 
-J2Rpc3RhbmNlJyBpcyBlcXVpdmFsZW50IHRvIHRoZSBwcm9kdWN0IG9mIHRoZSBpbnRlcmxlYXZl
-X3dheXMgb2YgdGhlCiJhbmNlc3RvciIgZGVjb2RlcnMgb2YgdGhlIHBvcnQncyBkZWNvZGVyIHdl
-IGFyZSBzZXR0aW5nIHVwIGluCmN4bF9wb3J0X3NldHVwX3RhcmdldHMoKS4KClNvIHVzZSB0aGUg
-dGVybSAiYW5jZXN0cmFsX3dheXMiIGluc3RlYWQgb2YgImRpc3RhbmNlIiB0byBiZXR0ZXIKY2xh
-cmlmeSB0aGUgbWVhbmluZyBvZiB0aGlzIHZhbHVlLiBBbHNvIG1vdmUgYWxsIGxvZ2ljIGFyb3Vu
-ZCB0aGlzCnZhbHVlIGRpcmVjdGx5IGludG8gY2hlY2tfbGFzdF9wZWVyKCkgc28gdGhhdCBhbGwg
-bmVjZXNzYXJ5IGNhbGN1bGF0aW9ucwphcmUgaW4gb25lIHBsYWNlLiBJdCBhbHNvIGFsbG93cyBl
-bGltaW5hdGluZyBhIHBhcmFtZXRlciB0byB0aGF0CmZ1bmN0aW9uLgoKU2lnbmVkLW9mZi1ieTog
-SmltIEhhcnJpcyA8amltLmhhcnJpc0BzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL2N4bC9jb3Jl
-L3JlZ2lvbi5jIHwgICAzMyArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KIDEgZmls
-ZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jIGIvZHJpdmVycy9jeGwvY29yZS9yZWdpb24uYwpp
-bmRleCBhMWVhYzU5MmM2NmEuLjJlZGZjMDJiYjc2NiAxMDA2NDQKLS0tIGEvZHJpdmVycy9jeGwv
-Y29yZS9yZWdpb24uYworKysgYi9kcml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jCkBAIC0xMDM3LDgg
-KzEwMzcsNyBAQCBzdGF0aWMgdm9pZCBjeGxfcG9ydF9kZXRhY2hfcmVnaW9uKHN0cnVjdCBjeGxf
-cG9ydCAqcG9ydCwKIH0KIAogc3RhdGljIGludCBjaGVja19sYXN0X3BlZXIoc3RydWN0IGN4bF9l
-bmRwb2ludF9kZWNvZGVyICpjeGxlZCwKLQkJCSAgIHN0cnVjdCBjeGxfZXAgKmVwLCBzdHJ1Y3Qg
-Y3hsX3JlZ2lvbl9yZWYgKmN4bF9yciwKLQkJCSAgIGludCBkaXN0YW5jZSkKKwkJCSAgIHN0cnVj
-dCBjeGxfZXAgKmVwLCBzdHJ1Y3QgY3hsX3JlZ2lvbl9yZWYgKmN4bF9ycikKIHsKIAlzdHJ1Y3Qg
-Y3hsX21lbWRldiAqY3hsbWQgPSBjeGxlZF90b19tZW1kZXYoY3hsZWQpOwogCXN0cnVjdCBjeGxf
-cmVnaW9uICpjeGxyID0gY3hsX3JyLT5yZWdpb247CkBAIC0xMDQ4LDE5ICsxMDQ3LDMwIEBAIHN0
-YXRpYyBpbnQgY2hlY2tfbGFzdF9wZWVyKHN0cnVjdCBjeGxfZW5kcG9pbnRfZGVjb2RlciAqY3hs
-ZWQsCiAJc3RydWN0IGN4bF9tZW1kZXYgKmN4bG1kX3BlZXI7CiAJc3RydWN0IGN4bF9lcCAqZXBf
-cGVlcjsKIAlpbnQgcG9zID0gY3hsZWQtPnBvczsKKwlpbnQgYW5jZXN0cmFsX3dheXM7CisKKwlp
-ZiAoY3hsX3JyLT5ucl90YXJnZXRzID09IDEpIHsKKwkJLyoKKwkJICogUGFzc3Rocm91Z2ggZGVj
-b2RlcnMgaW1wb3NlIG5vIHBvc2l0aW9uaW5nIHJlcXVpcmVtZW50cworCQkgKiBiZXR3ZWVuIHBl
-ZXJzLgorCQkgKi8KKwkJcmV0dXJuIDA7CisJfQorCisJYW5jZXN0cmFsX3dheXMgPSBwLT5ucl90
-YXJnZXRzIC8gY3hsX3JyLT5ucl90YXJnZXRzOwogCiAJLyoKIAkgKiBJZiB0aGlzIHBvc2l0aW9u
-IHdhbnRzIHRvIHNoYXJlIGEgZHBvcnQgd2l0aCB0aGUgbGFzdCBlbmRwb2ludCBtYXBwZWQKLQkg
-KiB0aGVuIHRoYXQgZW5kcG9pbnQsIGF0IGluZGV4ICdwb3NpdGlvbiAtIGRpc3RhbmNlJywgbXVz
-dCBhbHNvIGJlCisJICogdGhlbiB0aGF0IGVuZHBvaW50LCBhdCBpbmRleCAncG9zaXRpb24gLSBh
-bmNlc3RyYWxfd2F5cycsIG11c3QgYWxzbyBiZQogCSAqIG1hcHBlZCBieSB0aGlzIGRwb3J0Lgog
-CSAqLwotCWlmIChwb3MgPCBkaXN0YW5jZSkgeworCWlmIChwb3MgPCBhbmNlc3RyYWxfd2F5cykg
-ewogCQlkZXZfZGJnKCZjeGxyLT5kZXYsICIlczolczogY2Fubm90IGhvc3QgJXM6JXMgYXQgJWRc
-biIsCiAJCQlkZXZfbmFtZShwb3J0LT51cG9ydF9kZXYpLCBkZXZfbmFtZSgmcG9ydC0+ZGV2KSwK
-IAkJCWRldl9uYW1lKCZjeGxtZC0+ZGV2KSwgZGV2X25hbWUoJmN4bGVkLT5jeGxkLmRldiksIHBv
-cyk7CiAJCXJldHVybiAtRU5YSU87CiAJfQotCWN4bGVkX3BlZXIgPSBwLT50YXJnZXRzW3BvcyAt
-IGRpc3RhbmNlXTsKKwljeGxlZF9wZWVyID0gcC0+dGFyZ2V0c1twb3MgLSBhbmNlc3RyYWxfd2F5
-c107CiAJY3hsbWRfcGVlciA9IGN4bGVkX3RvX21lbWRldihjeGxlZF9wZWVyKTsKIAllcF9wZWVy
-ID0gY3hsX2VwX2xvYWQocG9ydCwgY3hsbWRfcGVlcik7CiAJaWYgKGVwLT5kcG9ydCAhPSBlcF9w
-ZWVyLT5kcG9ydCkgewpAQCAtMTEwNSwyMCArMTExNSwxNSBAQCBzdGF0aWMgaW50IGN4bF9wb3J0
-X3NldHVwX3RhcmdldHMoc3RydWN0IGN4bF9wb3J0ICpwb3J0LAogCiAJY3hsc2QgPSB0b19jeGxf
-c3dpdGNoX2RlY29kZXIoJmN4bGQtPmRldik7CiAJaWYgKGN4bF9yci0+bnJfdGFyZ2V0c19zZXQp
-IHsKLQkJaW50IGksIGRpc3RhbmNlOworCQlpbnQgaTsKIAogCQkvKgotCQkgKiBQYXNzdGhyb3Vn
-aCBkZWNvZGVycyBpbXBvc2Ugbm8gZGlzdGFuY2UgcmVxdWlyZW1lbnRzIGJldHdlZW4KLQkJICog
-cGVlcnMKKwkJICogQ2hlY2sgaWYgdGhpcyBlcCBpcyBhbHJlYWR5IGluIHRoZSBzd2l0Y2ggdGFy
-Z2V0IGxpc3QgYW5kCisJCSAqIGlmIHNvIGVuc3VyZSBpdCBtZWV0cyByZWxhdGl2ZSBwb3NpdGlv
-bmluZyByZXF1aXJlbWVudHMuCiAJCSAqLwotCQlpZiAoY3hsX3JyLT5ucl90YXJnZXRzID09IDEp
-Ci0JCQlkaXN0YW5jZSA9IDA7Ci0JCWVsc2UKLQkJCWRpc3RhbmNlID0gcC0+bnJfdGFyZ2V0cyAv
-IGN4bF9yci0+bnJfdGFyZ2V0czsKIAkJZm9yIChpID0gMDsgaSA8IGN4bF9yci0+bnJfdGFyZ2V0
-c19zZXQ7IGkrKykKIAkJCWlmIChlcC0+ZHBvcnQgPT0gY3hsc2QtPnRhcmdldFtpXSkgewotCQkJ
-CXJjID0gY2hlY2tfbGFzdF9wZWVyKGN4bGVkLCBlcCwgY3hsX3JyLAotCQkJCQkJICAgICBkaXN0
-YW5jZSk7CisJCQkJcmMgPSBjaGVja19sYXN0X3BlZXIoY3hsZWQsIGVwLCBjeGxfcnIpOwogCQkJ
-CWlmIChyYykKIAkJCQkJcmV0dXJuIHJjOwogCQkJCWdvdG8gb3V0X3RhcmdldF9zZXQ7Cgo=
+On Wed, Oct 25, 2023 at 10:37:40PM +0000, Jim Harris wrote:
+> On Tue, Oct 24, 2023 at 07:49:47PM -0700, Dan Williams wrote:
+> >=20
+> > It turns out this patch fails cxl-region-sysfs.sh.
+> >=20
+> >     test/cxl-region-sysfs.sh: failed at line 94
+> >    =20
+> >     [   38.367581] check_last_peer: cxl region8: cxl_host_bridge.0:port=
+4: mem5:decoder15.1 pos 4 mismatched peer mem7:decoder17.0
+> >    =20
+> > This patch looked so appetizing that I really wanted it to be a bug in
+> > the test and not a bug in this patch, but I think it is the latter.
+> >=20
+> > > @@ -1111,20 +1111,17 @@ static int cxl_port_setup_targets(struct cxl_=
+port *port,
+> > > =20
+> > >       cxlsd =3D to_cxl_switch_decoder(&cxld->dev);
+> > >       if (cxl_rr->nr_targets_set) {
+> > > -             int i, distance;
+> > > +             int i;
+> > > =20
+> > >               /*
+> > > -              * Passthrough decoders impose no distance requirements=
+ between
+> > > -              * peers
+> > > +              * Check if this endpoint's dport is already in the
+> > > +              * switch decoder's target list, and if so check that
+> > > +              * it is positioned correctly based on the switch's
+> > > +              * interleave.
+> > >                */
+> > > -             if (cxl_rr->nr_targets =3D=3D 1)
+> > > -                     distance =3D 0;
+> > > -             else
+> > > -                     distance =3D p->nr_targets / cxl_rr->nr_targets=
+;
+> >=20
+> > This calculation is essentially doing the "top-down" version of the
+> > "bottom-up" position calculation Alison introduced in her proposed regi=
+on
+> > assembly fixes:
+> >=20
+> >     for_each_parent_port(...)
+> >         pos =3D pos * parent_ways + parent_pos
+> >=20
+> > So in a x8 region across 2x HBs with 2x switches per HB. The "distance"
+> > of peers at the switch level is 4. This change makes that 2.
+> >=20
+> > Maybe the right conceptual cleanup is to still ditch this distance
+> > calculation based on "p->nr_targets / cxl_rr->nr_targets" and walk up
+> > from this port and multiply the local ways by all the ancestral ways,
+> > but as is this gets the answer with less steps (modulo all the work to
+> > build up @ep and @cxl_rr).
+>=20
+> Thanks Dan. I'll run with that and push out a v2.
+
+I played around with this idea. Walking up from this port is easy, but we
+need the port's decoder to get the interleave_ways. That's easy too, we
+can get the decoder by doing an xa_load() on the port's regions xarray
+with the region pointer. Except that we don't attach region_refs to the
+root decoder.
+
+I have a locally-tested patch that attaches region_refs to the root decoder=
+,
+but it didn't seem warranted for just refactoring this function. So I pushe=
+d
+out a v2 that just renames "distance" to "ancestral_ways" and moved all
+of the related calculations into check_last_peer() itself.=
