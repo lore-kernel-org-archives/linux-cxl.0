@@ -1,53 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64673134C5
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 13:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFA710A09
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 14:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="us3V77aq"
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EB6110;
-	Wed,  1 Nov 2023 06:56:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RAD9DQE3"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D2783;
+	Wed,  1 Nov 2023 07:01:24 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2879C1F74A;
-	Wed,  1 Nov 2023 13:56:14 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6809E2185F;
+	Wed,  1 Nov 2023 14:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1698846974; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1698847283; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x8Km4F84mpULmElKD15zKPWF2o5JoVpwXMz8cd2khw4=;
-	b=us3V77aqb0oYcroJxa/NDISGJQJvGqjB4Llh44TPoJpDPSuAyRAeXc4Z0a86f38p9S09Pg
-	RpgLws3zQ1IvWALtBg6sEkVFlkJ94WA7n+IZGVzQt5v/RN4JuzpEt/rvxSBbr0+fKF95G9
-	R09UJn9lh7Gs7R8FcbYL602MPq3gyoU=
+	bh=HLiYVD2bRDe/aeyPHKjrOUYyw8vp2Tqf1wgU9nx85p8=;
+	b=RAD9DQE3J1toU6Qil/GtsecXIktGsbpW1JkuvpiDva+38jiSQkMKdsBsDyvlA+ZO/2tuyq
+	nOUa/n2tKDCtPduu0a4wuhwQrJoVvUJRJNp/coCFZZftzOkJCwv6Dl7Nuh27iG0+4CmIKL
+	eHnE1cd4onUjxsMAVifKkPLa8qaF3+8=
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0441F13460;
-	Wed,  1 Nov 2023 13:56:13 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4778E13460;
+	Wed,  1 Nov 2023 14:01:23 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id GLyVOP1YQmUQfAAAMHmgww
-	(envelope-from <mhocko@suse.com>); Wed, 01 Nov 2023 13:56:13 +0000
-Date: Wed, 1 Nov 2023 14:56:13 +0100
+	id FYU5DjNaQmVyfgAAMHmgww
+	(envelope-from <mhocko@suse.com>); Wed, 01 Nov 2023 14:01:23 +0000
+Date: Wed, 1 Nov 2023 15:01:22 +0100
 From: Michal Hocko <mhocko@suse.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Gregory Price <gourry.memverge@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, linux-mm@kvack.org, 
-	ying.huang@intel.com, akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com, 
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, 
+	Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com, 
 	weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, dave.hansen@intel.com, 
 	shy828301@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
 	Gregory Price <gregory.price@memverge.com>
 Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <3ilajsu7rlatugtmp63r6ussfdhqoxokj2vgmx3ki3zmx7f5po@i64b27upx5qx>
+Message-ID: <ivhxexthtfums73nkko6yoy635h3cpetv4sqaemrmqd5pbhpq6@6zrizaoxgdwi>
 References: <20231031003810.4532-1-gregory.price@memverge.com>
  <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
  <20231031152142.GA3029315@cmpxchg.org>
  <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <20231031162216.GB3029315@cmpxchg.org>
+ <87msvy6wn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,43 +56,24 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231031162216.GB3029315@cmpxchg.org>
+In-Reply-To: <87msvy6wn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
 
-On Tue 31-10-23 12:22:16, Johannes Weiner wrote:
-> On Tue, Oct 31, 2023 at 04:56:27PM +0100, Michal Hocko wrote:
+On Wed 01-11-23 10:21:47, Huang, Ying wrote:
+> Michal Hocko <mhocko@suse.com> writes:
 [...]
-> > Is there any specific reason for not having a new interleave interface
-> > which defines weights for the nodemask? Is this because the policy
-> > itself is very dynamic or is this more driven by simplicity of use?
+> > Well, I am not convinced about that TBH. Sure it is probably a good fit
+> > for this specific CXL usecase but it just doesn't fit into many others I
+> > can think of - e.g. proportional use of those tiers based on the
+> > workload - you get what you pay for.
 > 
-> A downside of *requiring* weights to be paired with the mempolicy is
-> that it's then the application that would have to figure out the
-> weights dynamically, instead of having a static host configuration. A
-> policy of "I want to be spread for optimal bus bandwidth" translates
-> between different hardware configurations, but optimal weights will
-> vary depending on the type of machine a job runs on.
+> For "pay", per my understanding, we need some cgroup based
+> per-memory-tier (or per-node) usage limit.  The following patchset is
+> the first step for that.
+> 
+> https://lore.kernel.org/linux-mm/cover.1655242024.git.tim.c.chen@linux.intel.com/
 
-I can imagine this could be achieved by numactl(8) so that the process
-management tool could set this up for the process on the start up. Sure
-it wouldn't be very dynamic after then and that is why I was asking
-about how dynamic the situation might be in practice.
+Why do we need a sysfs interface if there are plans for cgroup API?
 
-> That doesn't mean there couldn't be usecases for having weights as
-> policy as well in other scenarios, like you allude to above. It's just
-> so far such usecases haven't really materialized or spelled out
-> concretely. Maybe we just want both - a global default, and the
-> ability to override it locally. Could you elaborate on the 'get what
-> you pay for' usecase you mentioned?
-
-This is more or less just an idea that came first to my mind when
-hearing about bus bandwidth optimizations. I suspect that sooner or
-later we just learn about usecases where the optimization function
-maximizes not only bandwidth but also cost for that bandwidth. Consider
-a hosting system serving different workloads each paying different QoS.
-Do I know about anybody requiring that now? No! But we should really
-test the proposed interface for potential future extensions. If such an
-extension is not reasonable and/or we can achieve that by different
-means then great.
 -- 
 Michal Hocko
 SUSE Labs
