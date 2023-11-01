@@ -1,40 +1,39 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8941CEA6
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 02:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62863367
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Nov 2023 02:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEwdhUwd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQc/s7GK"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DB4F3;
-	Tue, 31 Oct 2023 19:23:53 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E30102;
+	Tue, 31 Oct 2023 19:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698805433; x=1730341433;
+  t=1698806179; x=1730342179;
   h=from:to:cc:subject:in-reply-to:references:date:
    message-id:mime-version;
-  bh=FJQjB45qiCqnh/iEHCzCeeIgns3EtrKJXHjHxjc0/Bg=;
-  b=SEwdhUwdgVQEP2rqp3S/oD/545Okl2swdIUoUMfaaS0TEDxJYtkIZkpl
-   a5GUSoCIGBlbMpNibAl/xmz/gCPBr0pHRhZKursWfErzvwfQIS/Ghvrhq
-   RyPsOFDhVaV9Srs+7BWIjjGgpTiAB5eeWrpNoA2jm1AaVbnQyLuCQjWp7
-   9Z0kBayMu0Os9RpZZTjyTWLA/P9V7ZA4AznBJ5xKKelMye/xoB5CwlUIf
-   gJ6pCjW8Bw+G2uys8yF1FKpFUmUSDOVvfQjZkwcNN/U0r1jsfyd5K1bgL
-   5Mp1utoWVYNihq+FILhv8qbSFZZ+KcNxqFTqz7K4MGoS7yF00Udu0ni0P
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="385598226"
+  bh=CN4PDYT+KcfignHaXej0DYuB1qouUibKHlCbKBw8oZ4=;
+  b=gQc/s7GKMisukvnLGgKJsbIqLUbiLhfBvIhbqK6PCNErbLExr4Kx9Dz3
+   DKBjnpMOXpP0g4LfXXSrMSLUrSjuj0lZBo66DNYYAFt2/00+rXV4jE8Ad
+   4PMkLcaPSYWNeCe0CEQ1iAdkl1CQNiK4Na9B/cOJRtT/FXIj1zX2YToXM
+   rREPSvzQKeKMKz2ZeHKptfgnCsqp7orpNgAjsWHVmSfxzxm2ei0/oBdwv
+   LwU46mePbmMNgqyR499pP9x2dgkpZx6JHZlFdO0WGdC96Qwflmh3YfQCE
+   X0FuhlIjW0i15t2J6lFgUOtt29aBOMidx7ZsLk9mgpJZaFDDjKk7p8OMv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="385599662"
 X-IronPort-AV: E=Sophos;i="6.03,266,1694761200"; 
-   d="scan'208";a="385598226"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 19:23:52 -0700
+   d="scan'208";a="385599662"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 19:36:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="831228900"
 X-IronPort-AV: E=Sophos;i="6.03,266,1694761200"; 
-   d="scan'208";a="831228900"
+   d="scan'208";a="1954297"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 19:23:48 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 19:36:15 -0700
 From: "Huang, Ying" <ying.huang@intel.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,  Gregory Price
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>,  Gregory Price
  <gourry.memverge@gmail.com>,  linux-kernel@vger.kernel.org,
   linux-cxl@vger.kernel.org,  linux-mm@kvack.org,
   akpm@linux-foundation.org,  aneesh.kumar@linux.ibm.com,
@@ -42,14 +41,15 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,  Gregory Price
   dave.hansen@intel.com,  shy828301@gmail.com,  gregkh@linuxfoundation.org,
   rafael@kernel.org,  Gregory Price <gregory.price@memverge.com>
 Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-In-Reply-To: <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
-	(Michal Hocko's message of "Tue, 31 Oct 2023 16:56:27 +0100")
+In-Reply-To: <20231031162216.GB3029315@cmpxchg.org> (Johannes Weiner's message
+	of "Tue, 31 Oct 2023 12:22:16 -0400")
 References: <20231031003810.4532-1-gregory.price@memverge.com>
 	<rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
 	<20231031152142.GA3029315@cmpxchg.org>
 	<jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
-Date: Wed, 01 Nov 2023 10:21:47 +0800
-Message-ID: <87msvy6wn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<20231031162216.GB3029315@cmpxchg.org>
+Date: Wed, 01 Nov 2023 10:34:12 +0800
+Message-ID: <87il6m6w2j.fsf@yhuang6-desk2.ccr.corp.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -59,97 +59,62 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ascii
 
-Michal Hocko <mhocko@suse.com> writes:
+Johannes Weiner <hannes@cmpxchg.org> writes:
 
-> On Tue 31-10-23 11:21:42, Johannes Weiner wrote:
->> On Tue, Oct 31, 2023 at 10:53:41AM +0100, Michal Hocko wrote:
->> > On Mon 30-10-23 20:38:06, Gregory Price wrote:
->> > > This patchset implements weighted interleave and adds a new sysfs
->> > > entry: /sys/devices/system/node/nodeN/accessM/il_weight.
->> > > 
->> > > The il_weight of a node is used by mempolicy to implement weighted
->> > > interleave when `numactl --interleave=...` is invoked.  By default
->> > > il_weight for a node is always 1, which preserves the default round
->> > > robin interleave behavior.
->> > > 
->> > > Interleave weights may be set from 0-100, and denote the number of
->> > > pages that should be allocated from the node when interleaving
->> > > occurs.
->> > > 
->> > > For example, if a node's interleave weight is set to 5, 5 pages
->> > > will be allocated from that node before the next node is scheduled
->> > > for allocations.
->> > 
->> > I find this semantic rather weird TBH. First of all why do you think it
->> > makes sense to have those weights global for all users? What if
->> > different applications have different view on how to spred their
->> > interleaved memory?
->> > 
->> > I do get that you might have a different tiers with largerly different
->> > runtime characteristics but why would you want to interleave them into a
->> > single mapping and have hard to predict runtime behavior?
->> > 
->> > [...]
->> > > In this way it becomes possible to set an interleaving strategy
->> > > that fits the available bandwidth for the devices available on
->> > > the system. An example system:
->> > > 
->> > > Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
->> > > Node 1 - CPU+DRAM, 400GB/s BW (200 cross socket)
->> > > Node 2 - CXL Memory. 64GB/s BW, on Node 0 root complex
->> > > Node 3 - CXL Memory. 64GB/s BW, on Node 1 root complex
->> > > 
->> > > In this setup, the effective weights for nodes 0-3 for a task
->> > > running on Node 0 may be [60, 20, 10, 10].
->> > > 
->> > > This spreads memory out across devices which all have different
->> > > latency and bandwidth attributes at a way that can maximize the
->> > > available resources.
->> > 
->> > OK, so why is this any better than not using any memory policy rely
->> > on demotion to push out cold memory down the tier hierarchy?
->> > 
->> > What is the actual real life usecase and what kind of benefits you can
->> > present?
+> On Tue, Oct 31, 2023 at 04:56:27PM +0100, Michal Hocko wrote:
+>> On Tue 31-10-23 11:21:42, Johannes Weiner wrote:
+>> > On Tue, Oct 31, 2023 at 10:53:41AM +0100, Michal Hocko wrote:
+>> > > On Mon 30-10-23 20:38:06, Gregory Price wrote:
+
+[snip]
+
+>>  
+>> > This hopefully also explains why it's a global setting. The usecase is
+>> > different from conventional NUMA interleaving, which is used as a
+>> > locality measure: spread shared data evenly between compute
+>> > nodes. This one isn't about locality - the CXL tier doesn't have local
+>> > compute. Instead, the optimal spread is based on hardware parameters,
+>> > which is a global property rather than a per-workload one.
 >> 
->> There are two things CXL gives you: additional capacity and additional
->> bus bandwidth.
+>> Well, I am not convinced about that TBH. Sure it is probably a good fit
+>> for this specific CXL usecase but it just doesn't fit into many others I
+>> can think of - e.g. proportional use of those tiers based on the
+>> workload - you get what you pay for.
 >> 
->> The promotion/demotion mechanism is good for the capacity usecase,
->> where you have a nice hot/cold gradient in the workingset and want
->> placement accordingly across faster and slower memory.
->> 
->> The interleaving is useful when you have a flatter workingset
->> distribution and poorer access locality. In that case, the CPU caches
->> are less effective and the workload can be bus-bound. The workload
->> might fit entirely into DRAM, but concentrating it there is
->> suboptimal. Fanning it out in proportion to the relative performance
->> of each memory tier gives better resuls.
->> 
->> We experimented with datacenter workloads on such machines last year
->> and found significant performance benefits:
->> 
->> https://lore.kernel.org/linux-mm/YqD0%2FtzFwXvJ1gK6@cmpxchg.org/T/
+>> Is there any specific reason for not having a new interleave interface
+>> which defines weights for the nodemask? Is this because the policy
+>> itself is very dynamic or is this more driven by simplicity of use?
 >
-> Thanks, this is a useful insight.
->  
->> This hopefully also explains why it's a global setting. The usecase is
->> different from conventional NUMA interleaving, which is used as a
->> locality measure: spread shared data evenly between compute
->> nodes. This one isn't about locality - the CXL tier doesn't have local
->> compute. Instead, the optimal spread is based on hardware parameters,
->> which is a global property rather than a per-workload one.
+> A downside of *requiring* weights to be paired with the mempolicy is
+> that it's then the application that would have to figure out the
+> weights dynamically, instead of having a static host configuration. A
+> policy of "I want to be spread for optimal bus bandwidth" translates
+> between different hardware configurations, but optimal weights will
+> vary depending on the type of machine a job runs on.
 >
-> Well, I am not convinced about that TBH. Sure it is probably a good fit
-> for this specific CXL usecase but it just doesn't fit into many others I
-> can think of - e.g. proportional use of those tiers based on the
-> workload - you get what you pay for.
+> That doesn't mean there couldn't be usecases for having weights as
+> policy as well in other scenarios, like you allude to above. It's just
+> so far such usecases haven't really materialized or spelled out
+> concretely. Maybe we just want both - a global default, and the
+> ability to override it locally.
 
-For "pay", per my understanding, we need some cgroup based
-per-memory-tier (or per-node) usage limit.  The following patchset is
-the first step for that.
+I think that this is a good idea.  The system-wise configuration with
+reasonable default makes applications life much easier.  If more control
+is needed, some kind of workload specific configuration can be added.
+And, instead of adding another memory policy, a cgroup-wise
+configuration may be easier to be used.  The per-workload weight may
+need to be adjusted when we deploying different combination of workloads
+in the system.
 
-https://lore.kernel.org/linux-mm/cover.1655242024.git.tim.c.chen@linux.intel.com/
+Another question is that should the weight be per-memory-tier or
+per-node?  In this patchset, the weight is per-source-target-node
+combination.  That is, the weight becomes a matrix instead of a vector.
+IIUC, this is used to control cross-socket memory access in addition to
+per-memory-type memory access.  Do you think the added complexity is
+necessary?
+
+> Could you elaborate on the 'get what you pay for' usecase you
+> mentioned?
 
 --
 Best Regards,
