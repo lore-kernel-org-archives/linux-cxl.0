@@ -1,36 +1,37 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384F75233
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Nov 2023 06:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D45233
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Nov 2023 06:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdR+59P2"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B0B5DB;
-	Wed,  1 Nov 2023 23:13:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PVMR6Z1A"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFC8FB;
+	Wed,  1 Nov 2023 23:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698905595; x=1730441595;
+  t=1698906236; x=1730442236;
   h=from:to:cc:subject:in-reply-to:references:date:
    message-id:mime-version;
-  bh=/i1nfGSh8lqsODaI9yo1bI1rYHQ0A82xnF/8KFBEOuc=;
-  b=TdR+59P2Yivda+0YH6r80VDP582r4Ev5KAEF/Bedd0AFozTN8k/biKc2
-   QUOFgCbiRFIKt4BxBzxricDVHPDYMLLn83boUSPk8JI1fa8Q7YffegajK
-   hYPu0zHcDLXlJRfY71zOnB6H+lGtFNP6/Ns/81B5L583TJY3ZkUQ4m7fe
-   szvKQs04MCyYhEbGp3twejwLPWQyoRzmj92ewAvKmPprMVJXRwUR2v/W1
-   jnXLfhBBhynb3eM2BrOaHhJRSgFz4LyCwkBV41dQm5n3lMmoZnN3feH51
-   bGY9cHv9asKPbnuGm05VRS3Jd2kv032yQLn7mj0nsmmYKMAupW70n6V9r
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="368852981"
+  bh=STdydUh5mAz26anwvBBVVUpUuW54oz26dqCeLmmOLA0=;
+  b=PVMR6Z1ACH2wLaUo8gFc2bzArURJjwhFFeZgMvx0GwN5G5UnILu8wGjj
+   K/1MH/Dk/K5J80rvY3nzQLkxT/wGFGkENLfiaRWGHoe2+hL+qLhpre4BQ
+   qeIJgbuWPVzbK2W42cNo5iXvYgyhne1ZyvuqFXpmFMgtSliHj2rGXJmV7
+   +bQ92m6RDqfThZ5hR7otyLC6oSc0huf73jemxxTMcr+6n3JRQqZdCdNMz
+   UMGF49esSiBF9L2gl8ww7L5xlPaODTnMaqGg+AFrLeGzQ6m1NC65e0EpR
+   77ZpwL8EJGww/lLaOLPtjsSr36x3nr2sus3egbMVDv7p5jkA/6BI4Addq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="474885220"
 X-IronPort-AV: E=Sophos;i="6.03,270,1694761200"; 
-   d="scan'208";a="368852981"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2023 23:13:15 -0700
+   d="scan'208";a="474885220"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2023 23:23:55 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="711036350"
 X-IronPort-AV: E=Sophos;i="6.03,270,1694761200"; 
-   d="scan'208";a="2329842"
+   d="scan'208";a="711036350"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2023 23:13:11 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2023 23:23:51 -0700
 From: "Huang, Ying" <ying.huang@intel.com>
 To: Michal Hocko <mhocko@suse.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,  Gregory Price
@@ -41,16 +42,16 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,  Gregory Price
   dave.hansen@intel.com,  shy828301@gmail.com,  gregkh@linuxfoundation.org,
   rafael@kernel.org,  Gregory Price <gregory.price@memverge.com>
 Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-In-Reply-To: <ivhxexthtfums73nkko6yoy635h3cpetv4sqaemrmqd5pbhpq6@6zrizaoxgdwi>
-	(Michal Hocko's message of "Wed, 1 Nov 2023 15:01:22 +0100")
+In-Reply-To: <3ilajsu7rlatugtmp63r6ussfdhqoxokj2vgmx3ki3zmx7f5po@i64b27upx5qx>
+	(Michal Hocko's message of "Wed, 1 Nov 2023 14:56:13 +0100")
 References: <20231031003810.4532-1-gregory.price@memverge.com>
 	<rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
 	<20231031152142.GA3029315@cmpxchg.org>
 	<jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
-	<87msvy6wn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ivhxexthtfums73nkko6yoy635h3cpetv4sqaemrmqd5pbhpq6@6zrizaoxgdwi>
-Date: Thu, 02 Nov 2023 14:11:09 +0800
-Message-ID: <87il6k1y82.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<20231031162216.GB3029315@cmpxchg.org>
+	<3ilajsu7rlatugtmp63r6ussfdhqoxokj2vgmx3ki3zmx7f5po@i64b27upx5qx>
+Date: Thu, 02 Nov 2023 14:21:49 +0800
+Message-ID: <87edh81xqa.fsf@yhuang6-desk2.ccr.corp.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -62,25 +63,56 @@ Content-Type: text/plain; charset=ascii
 
 Michal Hocko <mhocko@suse.com> writes:
 
-> On Wed 01-11-23 10:21:47, Huang, Ying wrote:
->> Michal Hocko <mhocko@suse.com> writes:
+> On Tue 31-10-23 12:22:16, Johannes Weiner wrote:
+>> On Tue, Oct 31, 2023 at 04:56:27PM +0100, Michal Hocko wrote:
 > [...]
->> > Well, I am not convinced about that TBH. Sure it is probably a good fit
->> > for this specific CXL usecase but it just doesn't fit into many others I
->> > can think of - e.g. proportional use of those tiers based on the
->> > workload - you get what you pay for.
+>> > Is there any specific reason for not having a new interleave interface
+>> > which defines weights for the nodemask? Is this because the policy
+>> > itself is very dynamic or is this more driven by simplicity of use?
 >> 
->> For "pay", per my understanding, we need some cgroup based
->> per-memory-tier (or per-node) usage limit.  The following patchset is
->> the first step for that.
->> 
->> https://lore.kernel.org/linux-mm/cover.1655242024.git.tim.c.chen@linux.intel.com/
+>> A downside of *requiring* weights to be paired with the mempolicy is
+>> that it's then the application that would have to figure out the
+>> weights dynamically, instead of having a static host configuration. A
+>> policy of "I want to be spread for optimal bus bandwidth" translates
+>> between different hardware configurations, but optimal weights will
+>> vary depending on the type of machine a job runs on.
 >
-> Why do we need a sysfs interface if there are plans for cgroup API?
+> I can imagine this could be achieved by numactl(8) so that the process
+> management tool could set this up for the process on the start up. Sure
+> it wouldn't be very dynamic after then and that is why I was asking
+> about how dynamic the situation might be in practice.
+>
+>> That doesn't mean there couldn't be usecases for having weights as
+>> policy as well in other scenarios, like you allude to above. It's just
+>> so far such usecases haven't really materialized or spelled out
+>> concretely. Maybe we just want both - a global default, and the
+>> ability to override it locally. Could you elaborate on the 'get what
+>> you pay for' usecase you mentioned?
+>
+> This is more or less just an idea that came first to my mind when
+> hearing about bus bandwidth optimizations. I suspect that sooner or
+> later we just learn about usecases where the optimization function
+> maximizes not only bandwidth but also cost for that bandwidth. Consider
+> a hosting system serving different workloads each paying different
+> QoS.
 
-They are for different target.  The cgroup API proposed here is to
-constrain the DRAM usage in a system with DRAM and CXL memory.  The less
-you pay, the less DRAM and more CXL memory you use.
+I don't think pure software solution can enforce the memory bandwidth
+allocation.  For that, we will need something like MBA (Memory Bandwidth
+Allocation) as in the following URL,
+
+https://www.intel.com/content/www/us/en/developer/articles/technical/introduction-to-memory-bandwidth-allocation.html
+
+At lease, something like MBM (Memory Bandwidth Monitoring) as in the
+following URL will be needed.
+
+https://www.intel.com/content/www/us/en/developer/articles/technical/introduction-to-memory-bandwidth-monitoring.html
+
+The interleave solution helps the cooperative workloads only.
+
+> Do I know about anybody requiring that now? No! But we should really
+> test the proposed interface for potential future extensions. If such an
+> extension is not reasonable and/or we can achieve that by different
+> means then great.
 
 --
 Best Regards,
