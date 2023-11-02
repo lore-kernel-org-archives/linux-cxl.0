@@ -1,225 +1,140 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7461BDD1
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Nov 2023 14:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20311D6A6
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Nov 2023 15:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="M7s4dd7P"
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FC210EA;
-	Thu,  2 Nov 2023 07:29:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="n8WhzNNa"
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA70185;
+	Thu,  2 Nov 2023 08:52:44 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z2fGzGD7+3og8eE7m7qqeCjpNw/KYNLfkqQVuO4NgBkQYUbZ2ceY6B/d9x5W2s2x3PiI7fPXmNbw2hjJunEYbfY8yNhykqKggLcnHsmhZx5hTSHufbvrZWm2T9oIhLgXUfmg5wPrUQKSvFU3dnQldgGJGiCmpwKbfFG2lhsmLa5HGq/yU90ONqbAvPtYunSWbrw7hohxwHy2BA1WawdpIvcXfgOPxi8mb2nT0ec8FeIghZCLSu/2Xjgl1GUIu08t8EPiJ4xZiCdNJi7tb65ss4b3yxM2+1YVsw/5ingxumssqMc78ag9GtE81CCPsuaWL1KD04zE6mMJwFfR2ONqIQ==
+ b=BE0u4dxS3qTDApjBWqlkfHAuqLVC6N4Tb1rORwll5UeWCmyrjLU9yXm+cKNoYBfUADTsEdPuoytEsS61A0+DKbWUzBzPJjMUxUCsp0EzsEGOT4DI71VEWbmvNisAQZJ6Nu3ShSdf357oaXWy2cESk/aqhV9LF2rwNVUABsCGWQjbxqflgoH0gkGfqXfckZfoHdxkieST7FSRtlLLPjVdnZ5w54XWsFUA7eV+//3GfduhQ8mVy5j2PVzcQ51wkp3FBImZiiONl6PToq2F3IGbibWpDIUXq3v1M1hbOueuCvf/d5JSrMhAGn0Jw4cnFIc9hppTmn6YOAPft03vh6Ru2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DxgxCLupi5kx2yqKWxg2Gyou8EYEW1+y4zHurNCGu74=;
- b=PNjR8UOeyfwnAYSpgKY+dGc0i5dHmVfFrbpeo0G50pFGXEWaKjXSQFmdrDQ/iK7H7HAsZAT8Lv27v5tpd/+sjIvPfbfKoJ84O+eiW0T5AWvYVAlLeHa2pCkWmDDOfykr+VzgZBDEAjDUF7I9enSJ/uBOAA3hjsivwWLk2LXNrotTZWl70peHqwWA5QqIAxWKDSHPMb5HqMqDI6zX7htcUoXLbGbhPwuQDtUXylLHa6BDiHBHTIWmPJxRpA/vcmjI4BcFRKa41FkBHOP+BK01lQ1QY4rGKbc/a+PvKMS8v/F1D5zb8TZOrdQtX9XIrBWNH9jY/BlsxBNpdjqgy+bZpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
+ bh=R6/nRVwpHhaZbEXYAtB7TcSXzk/2ayIoRRMXztS292I=;
+ b=WwMcOXepyIflEfY7khbMv+CXM8OaqOR1mMJRQtHJEPLbG62eCDd9ZA+gw48mGIMrUh5Sw6Rq+S4QhkvkMmVBtDFFYoSPz70DJ8+SPYcj5YwDneG0HyyIo9uwXz4KyKIYg0P4L/bhwleL3GX8olM/44d+LrgxjV/yJsMj8Wi7oaUcRDjxSMbsikOR6SdcAD5Esx1Xjgydv4FcDQZX8gilGXEqaFeC5bFQgqYA/I9Wes2DZ7dkk9DZVR0/2xWRKtKyHsZTwgFNTYIHj16eF5dYrNYBq6uqU8a1AAGDJD1ijszbccv54+LoqmRi6GhONqc5frUN2OGqrmnoTr9ORJZrIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DxgxCLupi5kx2yqKWxg2Gyou8EYEW1+y4zHurNCGu74=;
- b=M7s4dd7P8KvJt3KELpk6OWW92/BlMvviXi5KZU5mD5zJUQOO4/GrevWXUz1po7Kc9fYzbx0hFdHLIXPNvXRO7hS6g4J7kQUKjsgGhOOuNCA2OId+AOF/Qv88rBo/bYtLOVcTOgEnjU1iE2EZjB5gerUB46ZAU5WpFXu7D139FQ0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SA1PR17MB5617.namprd17.prod.outlook.com (2603:10b6:806:1cc::11) with
+ bh=R6/nRVwpHhaZbEXYAtB7TcSXzk/2ayIoRRMXztS292I=;
+ b=n8WhzNNamTRy9rYGAliJ/D6MsEhWgcRLRXX5Nv6T8d4ChonwQjCukiuvxfUP7zK9BkQvXV44bXHLu4la9ITtUQhPZlLY3QidKK/nd9yZIeG3seBBjhb4z9+FA5RY6xvQ1A75ixscZ09GpNDu0XQ1UNlz3FzCIHGHOVrcHxOWwXo=
+Received: from MN2PR20CA0021.namprd20.prod.outlook.com (2603:10b6:208:e8::34)
+ by CY8PR12MB7731.namprd12.prod.outlook.com (2603:10b6:930:86::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.16; Thu, 2 Nov
- 2023 14:29:18 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%4]) with mapi id 15.20.6954.019; Thu, 2 Nov 2023
- 14:29:18 +0000
-Date: Wed, 1 Nov 2023 23:18:59 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org,
-	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com,
-	tim.c.chen@intel.com, dave.hansen@intel.com, shy828301@gmail.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org
-Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <ZUMVI4YG7mB54u0D@memverge.com>
-References: <20231031003810.4532-1-gregory.price@memverge.com>
- <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
- <20231031152142.GA3029315@cmpxchg.org>
- <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <ZUCCGJgrqqk87aGN@memverge.com>
- <pmxrljwp4ayl3fcu7rxm6prbumgb5l3lwb75lqfipmxxxwnqfo@nb5qjcxw22gp>
- <ZUKDz5NpMsoyzWtZ@memverge.com>
- <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
-X-ClientProxiedBy: PH7PR17CA0026.namprd17.prod.outlook.com
- (2603:10b6:510:323::19) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.19; Thu, 2 Nov
+ 2023 15:52:42 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:208:e8:cafe::23) by MN2PR20CA0021.outlook.office365.com
+ (2603:10b6:208:e8::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.19 via Frontend
+ Transport; Thu, 2 Nov 2023 15:52:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6954.20 via Frontend Transport; Thu, 2 Nov 2023 15:52:38 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 2 Nov
+ 2023 10:52:37 -0500
+From: Terry Bowman <terry.bowman@amd.com>
+To: <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+	<dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
+	<linux-cxl@vger.kernel.org>
+CC: <terry.bowman@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cxl/pci: Change CXL AER support check to use native AER
+Date: Thu, 2 Nov 2023 10:52:32 -0500
+Message-ID: <20231102155232.1421261-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SA1PR17MB5617:EE_
-X-MS-Office365-Filtering-Correlation-Id: c48adaac-c3b8-4cd9-6443-08dbdbb018cd
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|CY8PR12MB7731:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18322f65-bd35-4f24-6127-08dbdbbbbf3c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	9RN6oLK19j6huK4ztPoUCx4HgI/0JDTTWo1bWO+ArrZWfmpV0AuwPFKNCVtiHHd4unWvpI0INpfC6A3WN/aCBJMMuKYlqDOIo0Ru/u0mpJQuULhMQ8a0BDCt8mk/ZD23wP/aBy7J2FJU9RmvKASqM3865NWl9fZYf2waiavo7Ye21uTYfFELnsLpV/EB2SG8iFrCOkI/ZjqD21ZPcK9Lga929ubbl8RYN+kOem2vAzdA7qdc/t57n71vJZW1lqPYNECTH+vLC0F6HpQvXfR9QuOERojLPkuIseHPosm9xYRP9MHYww7rZ8V2AU4WjX5kmOgr+bxlD5Ig7MPGDs98O0BtjqVjIoujIw1+BTWCNw9tL7bBLEiHB0h12LneDaaBpKFKBxfAc9q3XGs9CsHKHEtS3NLyYwG/EA6MC3FVLJwDnVjAcRLU01YgQmitniRnP/5XTDVWAprDUgocT0jIkvQbkTFhwl2+9a4Ie4J2VYaYj2/gh9V751UCy+AZwsHMI93buS7N9la5FzBlQviKcWmrQMqpoApL1APZyQJuyB/yenuTPPDBxaYssRKkOhscm7FtiCQq/7RP2vnycXOwjXu+EP3rO1Zfe66qGbYU11s=
+	16m/cH4mPzwof7SXTyKXBQRb03+v3Pcbp+s7qu4pRv9Pn14hnGMc/D++Jlg8D5wC4vTcyhwRp9kBKkLuqt/zb/VfmcAX5VIF6AYWSP38KThru9TRVRpb1rABCZ54cx4uxm/NY1wzhB0G0ylo80EkvJ6il95oaaIrMGfQ0SHQPoa4M+Jb7ug7gohqV4xF5ES6m8CvrOmGyXIdjLFm2CL0YXIHNl+JfD4f7t0yOmLhuxa9Abf9PAjJ1OVY1fjp5gZDOpa1DStA/EsXblg5v+eDOic04Z1UYQxzVfutOlvtkhCX3A2ydvzdAOoTO/WAE6t+5POlge5QeM7V5z8r23uQvtbIkNjXl4AyIMB6ZTitb88B6RxeJ3kgjhf8f2CuuRhjsLtlWxVQHEEojiDp/Fl2dA5TV75+Z9iTJ5fOivKWOMnReMflN4/kgK4cSoDZDnWG54BbSPrtpo5/XtWrTCE/oyU0JTfhvRJXHkhjiH2e3hFhXNaKCKTSpKVWO/gNGUMEl3GE+yUeUBk04ppTMeIZnij3FSYWMZBw+0myrVHMXEK8i03tsu8GSA3FW2uTGGIQYHc5BM6UO6c6WFkfgJd1mGjBOKgoKf9YhziqPtLkby2ARoFSWuMlj5bfd0fxvPo7YzX7BBKzLB7HrOvZVtMaNhdug7e4w953H6f3fb99NNp4zpgdmyofIju6iUrxLLQNQo5btdScZO0V5m8Q6RCGwE+hm0ysp+0cRmwePPy4F4k1LPFlvD7MNwiWB8MATr/AtABbykGWEewyK21szJd6bQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(366004)(396003)(39830400003)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(478600001)(316002)(6916009)(6506007)(83380400001)(2906002)(38100700002)(5660300002)(66946007)(7416002)(26005)(54906003)(66556008)(66476007)(4326008)(8676002)(8936002)(44832011)(6486002)(41300700001)(966005)(6512007)(2616005)(6666004)(86362001)(36756003)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4yIodDvUSF9kQ+qH64XDpoSW/1gReBS75O9I1Ar7zI914cwhthV8Z3B1DVud?=
- =?us-ascii?Q?WGatp8uWRqIWFGzrDfo/cLTnCI2JQkB/KdfxMHq8ubjEwUyYSvI/487p6W7o?=
- =?us-ascii?Q?eQW7lvU+szp4SNWu3j0ZHHLji3YeJIFUO+m3HYXKx53WeBqmDQ5//hqVea5/?=
- =?us-ascii?Q?Ihn2+nMNhLDeKm8shtozZ4cuRmiR08eZKtVwg7mjJppFFGRQYDiBbGy5V0H0?=
- =?us-ascii?Q?4adXkc9QayAjwcz0VQizK8/FSsu59yCy3zqKb7B4m03XWHeAnWDxArd/MiJK?=
- =?us-ascii?Q?vr6kocr/JElurMPEipZkyTqQxBHAoQK/PhgjF+gmDjqVdNbZ3iNn+MwuWShn?=
- =?us-ascii?Q?F0VAbrb7dZqQN97q3FzxKPvOeL6m2gYtJqJkiI57olhIVrErVUNAU0V+zfse?=
- =?us-ascii?Q?UGbH7stXtLpAB4YyY5GGN9EClBEkGgV6P9bVq+/p2DH6entTpsvrJWwLrYSd?=
- =?us-ascii?Q?wSAye35Xw7HdZ+9mS/hE0SN5Bc3FJf85QQ+6qwWu8jpSsRRF0z0HEn7SMcL0?=
- =?us-ascii?Q?vb+ZsX0lY/oMsjrC/8ouGIuHClRphgWqeQ8ezFO7t+bnkZxJ/G+9JimRXbmo?=
- =?us-ascii?Q?jhBAU/gwCNpzF2IT719REn49qLDJ6xNO4Mc6Hz9tHbja+B1mj/hrAUBWLVQD?=
- =?us-ascii?Q?HpDrl2SDW7bnCDABm+Po858HbxeaekZeq5lze2J50DILv4B9U9wUws19OH84?=
- =?us-ascii?Q?QRZoWU+ZATCfkKBB+DbFhc0ymNpHSnyRyZNILfo5AOpUknvldAc2YYcRSp4T?=
- =?us-ascii?Q?Ur0n8cVx4Rac6DBJID+9z/LlUaKH1uz0nhIbFZwaq6gm6rfkeZwFom286FTy?=
- =?us-ascii?Q?gwI/dMoz6wKV8wdrUOCBXKtFttBmCD0aj0nPOpGhxwLEtfHRtj+6DyuGaCeK?=
- =?us-ascii?Q?JWcLABKhhf/A7TKz3rEaDCit/0TaX87Z7Pnv800vswqAqjrzL+VKBa0CfnWi?=
- =?us-ascii?Q?wKqiHcoQ2zZiyHa6USffSROtIdElJmBn+WZg5UqrfmhDr4FsxGNzvSqmoO+w?=
- =?us-ascii?Q?XhbZiyzKAKLdcm3hoXlhQsmqjJJf/gkrz9ClnJ/Y//3IseJeUyaedHhRgjHP?=
- =?us-ascii?Q?c0lL+nxzeQttsNkqgDjdX4qF/Ydw2xWPAOqkuLaz/WhLxuyhGk6GTyGnwZwn?=
- =?us-ascii?Q?6tDDW+ELJPsJzUa5co9eYcZ/fAt4TZRBLdB+xP7a24pL8TWgep/sV6Xnh3fi?=
- =?us-ascii?Q?vr0C7ei5SdtUK7sxPgB0L/jCc1JxybWWZcmBGymW9lIoDHwq1CVbR5Wtp5+I?=
- =?us-ascii?Q?wVsNbuFVeXfcr9eCAotKO4oo19971EZIu5PH7J1MphkAxYEtl+0FyOA7Xnoh?=
- =?us-ascii?Q?aF0F/rWODg2Odm4NuALPdtcMlmBEB7T3kzp33qsOLjfoHm3X9x1lqnN4RLDn?=
- =?us-ascii?Q?LP645izIMuIh/asH5oTLv83wW3OXdtWJNPNzbMfL8jW3WE875wRw2wUJFBYu?=
- =?us-ascii?Q?8IrrSOvMRkCj27mR86o06vcRD/MmrXZ+g5XYhSpNJ3G7vVFM7agD8xTLqsc0?=
- =?us-ascii?Q?OCT1W5DT+51v4Lynlym7PXp+k78ctMwAr2cSZgVyHSZ99nzRKXeYhGO/K7hE?=
- =?us-ascii?Q?1eJVKN1P4dMEIIHJzY9s1UTyyGcr4erLYQRMaVDKZXiHqKf9PLbl9WS5XzS4?=
- =?us-ascii?Q?XQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c48adaac-c3b8-4cd9-6443-08dbdbb018cd
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2023 14:29:18.1687
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(136003)(376002)(230922051799003)(186009)(64100799003)(82310400011)(451199024)(1800799009)(36840700001)(46966006)(40470700004)(47076005)(40480700001)(40460700003)(36860700001)(4326008)(316002)(70206006)(110136005)(54906003)(478600001)(70586007)(6666004)(7696005)(44832011)(8676002)(41300700001)(8936002)(86362001)(5660300002)(2906002)(1076003)(2616005)(426003)(336012)(356005)(26005)(16526019)(81166007)(82740400003)(36756003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2023 15:52:38.8548
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FHcu4b8ixEBZLlXJKCCSJZGp1Kr00DwhFEp3Qd8eDJoKdllkx2qJe2N07qoglI0pPjn7feX8sLBiyyo2n6hImwtWWRka5fJOx1y+6Pyw3U4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR17MB5617
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18322f65-bd35-4f24-6127-08dbdbbbbf3c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7731
 
-On Thu, Nov 02, 2023 at 10:47:33AM +0100, Michal Hocko wrote:
-> On Wed 01-11-23 12:58:55, Gregory Price wrote:
-> > Basically consider: `numactl --interleave=all ...`
-> > 
-> > If `--weights=...`: when a node hotplug event occurs, there is no
-> > recourse for adding a weight for the new node (it will default to 1).
-> 
-> Correct and this is what I was asking about in an earlier email. How
-> much do we really need to consider this setup. Is this something nice to
-> have or does the nature of the technology requires to be fully dynamic
-> and expect new nodes coming up at any moment?
->  
+Native CXL protocol errors are delivered to the OS through AER
+reporting. The owner of AER owns CXL Protocol error management with
+respect to _OSC negotiation.[1] CXL device errors are handled by a
+separate interrupt with native control gated by _OSC control field
+'CXL Memory Error Reporting Control'.
 
-Dynamic Capacity is expected to cause a numa node to change size (in
-number of memory blocks) rather than cause numa nodes to come and go, so
-maybe handling the full node hotplug is a bit of an overreach.
+The CXL driver incorrectly checks for 'CXL Memory Error Reporting
+Control' before accessing AER registers and caching RCH downport
+AER registers. Replace the current check in these 2 cases with
+native AER checks.
 
-Good call, I'll stop considering this problem for now.
+[1] CXL 3.0 - 9.17.2 CXL _OSC, Table-9-26, Interpretation of CXL
+_OSC Support Fields, p.641
 
-> > If the node is removed from the system, I believe (need to validate
-> > this, but IIRC) the node will be removed from any registered cpusets.
-> > As a result, that falls down to mempolicy, and the node is removed.
-> 
-> I do not think we do anything like that. Userspace might decide to
-> change the numa mask when a node is offlined but I do not think we do
-> anything like that automagically.
->
+Fixes: 5d2ffbe4b81a ("cxl/port: Store the downstream port's Component Register mappings in struct cxl_dport")
+Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Reviewed-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+---
+ drivers/cxl/core/pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-mpol_rebind_policy called by update_tasks_nodemask
-https://elixir.bootlin.com/linux/latest/source/mm/mempolicy.c#L319
-https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L2016
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 01c441f2e25e..b29f6d09744b 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -812,7 +812,7 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+ 	 * the root cmd register's interrupts is required. But, PCI spec
+ 	 * shows these are disabled by default on reset.
+ 	 */
+-	if (bridge->native_cxl_error) {
++	if (bridge->native_aer) {
+ 		aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+ 				PCI_ERR_ROOT_CMD_NONFATAL_EN |
+ 				PCI_ERR_ROOT_CMD_FATAL_EN);
+@@ -828,7 +828,7 @@ void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+ 	struct pci_host_bridge *host_bridge;
+ 
+ 	host_bridge = to_pci_host_bridge(dport_dev);
+-	if (host_bridge->native_cxl_error)
++	if (host_bridge->native_aer)
+ 		dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
+ 
+ 	dport->reg_map.host = host;
+-- 
+2.34.1
 
-falls down from cpuset_hotplug_workfn:
-https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L3771
-
-/*
- * Keep top_cpuset.mems_allowed tracking node_states[N_MEMORY].
- * Call this routine anytime after node_states[N_MEMORY] changes.
- * See cpuset_update_active_cpus() for CPU hotplug handling.
- */
-static int cpuset_track_online_nodes(struct notifier_block *self,
-				unsigned long action, void *arg)
-{
-	schedule_work(&cpuset_hotplug_work);
-	return NOTIFY_OK;
-}
-
-void __init cpuset_init_smp(void)
-{
-...
-	hotplug_memory_notifier(cpuset_track_online_nodes, CPUSET_CALLBACK_PRI);
-}
-
-
-Causes 1 of 3 situations:
-MPOL_F_STATIC_NODES:   overwrite with (old & new)
-MPOL_F_RELATIVE_NODES: overwrite with a "relative" nodemask (fold+onto?)
-Default:               either does a remap or replaces old with new.
-
-My assumption based on this is that a hot-unplugged node would completely
-be removed.  Doesn't look like hot-add is handled at all, so I can just
-drop that entirely for now (except add default weight of 1 incase it is
-ever added in the future).
-
-I've been pushing agianst the weights being in memory-tiers.c for this
-reason, as a weight set per-tier is meaningless if a node disappears.
-
-Example: Tier has 2 nodes with some weight N split between them, such
-that interleave gives each node N/2 pages.  If 1 node is removed, the
-remaining node gets N pages, which is twice the allocation. Presumably
-a node is an abstraction of 1 or more devices, therefore if the node is
-removed, the weight should change.
-
-You could handle hotplug in tiers, but if a node being hotplugged forcibly
-removes the node from cpusets and mempolicy nodemasks, then it's
-irrelevant since the node can never get selected for allocation anyway.
-
-It's looking more like cgroups is the right place to put this.
-
-> 
-> Moving the global policy to cgroups would make the main cocern of
-> different workloads looking for different policy less problamatic.
-> I didn't have much time to think that through but the main question is
-> how to sanely define hierarchical properties of those weights? This is
-> more of a resource distribution than enforcement so maybe a simple
-> inherit or overwrite (if you have a more specific needs) semantic makes
-> sense and it is sufficient.
->
-
-As a user I would assume it would operate much the same way as other
-nested cgroups, which is inherit by default (with subsets) or an
-explicit overwrite that can't exceed the higher level settings.
-
-Weights could arguably allow different settings than capacity controls,
-but that could be an extension.
-
-> This is not as much about the code as it is about the proper interface
-> because that will get cast in stone once introduced. It would be really
-> bad to realize that we have a global policy that doesn't fit well and
-> have hard time to work it around without breaking anybody.
-
-o7 I concur now.  I'll take some time to rework this into a
-cgroups+mempolicy proposal based on my earlier RFCs.
-
-~Gregory
