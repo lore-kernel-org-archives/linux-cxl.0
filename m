@@ -1,67 +1,87 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC74BA42
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 15:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244D51C2AD
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 15:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="sSwMUr1j"
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2043.outbound.protection.outlook.com [40.107.220.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F804D51;
-	Fri,  3 Nov 2023 08:27:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fH9uLPF8"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E32123
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 08:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699025834; x=1730561834;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=c/lEUe7l97BrECTbKN/dzB/xk2kZqDQgs9UpmXvWO7U=;
+  b=fH9uLPF8tkw88WUDpiQHpfwFHP4X02kA5lmytL1I6lt2cMZoDH/M+FVT
+   CUA/HED+RdSIqDXLIwlwL6vAiM6vtR6eybTa10/Z6g08eHBvrln+Pr0Md
+   76V+FSdy5fBcDaQJmSIqk+akQYP3Mlp0t7eM2ox5hokSaZVUgKXYZ4vto
+   6NA1GF9fwtpIFfRyir2k+OeCKq0aXgUBVpbyH7o9eVWuUFPvtf7nVJ9Bx
+   aBzKy9azhahlJVfy1/untbr+C1e6ehMuR9G7JVUA9RbBJP/Eo4CVxMM6V
+   zzXdg05GERo/g832gNQCEegytNcsaZMCdnriv/enqpoEotbQqPm3inSBl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="420078228"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="420078228"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 08:37:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="905380731"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="905380731"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Nov 2023 08:37:13 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 3 Nov 2023 08:37:13 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Fri, 3 Nov 2023 08:37:13 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Fri, 3 Nov 2023 08:37:11 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mf1M7g4NY13endnNpQtBVt0w+BZFrbrbt/3w4r3xznmPSGm9mA/vdarts+/6zEbxyYC+RqkBFbWjV2M8X5OloZqJ3/LOQ9K10IcWxz3Lh6HfmW9IB9Uh1VGv44s/Wh9rp2vZqS5Q5iAQ11T5O6e2nq+/F9RUnag7ZSfueg9PYprgCAuQKG1fjjUK1v/JZc9Dfz0DNiW7v1/Rt2kTstxEwu/6utTjgu782VH8F9FYP3QbbCGr1EFsP9LDZMhTVTRpR0iZxkYnZaq4a5EupAgX0sUi0a+V8B7UfX4//s3iUidhXkuq7z6aU2K4BJmJBwdhisbXsDC2/gxrMkBwofZRjA==
+ b=oEPYTgPjQbuAM3yTPpZW8FI3JEkC4X/k8ChI4/ViZlKRVL9croQwHsejR2zHRRdPCgx+p6soXM3fdolE7M4HOlO46WnvoBUW/iATfTng7FUhQDMEKXKuV+A4Z7XPHDAX+elYRlGFOxWz+Q1p4tJ5/DSEci1HVfkhRmnqUdem8TjoNL3XcNT7ZM90X7udo3djUklu5B0bhI+5GqoWf81FqVNsN12zcmUrCQNplBa23vAPw/oz6kWBwgq+tVNgiluNwgAts56PWQUrfmSVSg3KPsn5AVywaOy4azRXmborOXK5NJVjGZUS7sp+/KGU9/gu+L5S824P7YcWUwZngcfcLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=erKD9e9YYvAzjw1g8dYQKNf3Jg3HnQzpRy77M9I5UVs=;
- b=TTRVUZMU2ntsqLJlpFjWYjnXIfzr61BS/pKCOj66IkADagfEEglhOntUmYuiFM2NBWigDUfTLCNhO/Y9CEb2sAlf03b9XFN9APrzngtdzW/xg2CbXQCJL7Ra8/I1vG6Ou8av4Xc6WsKHcPd1tz5ujbJlmHtABHvF2lYA06eKlClDt/jM5ofWjLoayGDw4wy1f/JG8VO/5pxwnAIlUkxRXUHbdppOxmB2pj4Y6C2pq1UPlp99cRDqD4lowK7PcVWJhLxDeymhHKx4EPNNsY2g2lZbIaX02nAiLm55CbH3VMmEIY414gVonT9BkFNmsBn+OyGRyDDCvae/vjffkA+hvg==
+ bh=64WcTtloUHT67jnzPRNEJUuShsUiXh9cbCUSVJskE2g=;
+ b=JFlHXWkFWdPLGTqUmalwXsiCnKqJOGRMyWodmhlUbNpOOVECOl6YsNyxksTXvv90ZK9ffB1lGjioR/PTgU8quR2fwhcL90UuU6tAmoeemsVmNqm9jCUvB0AXE6jqp8Nl/yGaYPaEBx2OBOLr/I0zftin8phvJari0DRkjeiVUsmQQHWJ/h81YuxIJU556vCJ8p5oV+tkOE4bdSQigv6WbiZDEQrH/US6rTvIpFlqaTJqlrGLfLJgURer0UW/Zdsf9OKfLpeEVsws69OxED6lKyRQqW6BKzJjRZkBAUHRHZoIO5wi30jH9mO2mM7g52EadUKDnhD6Wn985+bvFimqyQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=erKD9e9YYvAzjw1g8dYQKNf3Jg3HnQzpRy77M9I5UVs=;
- b=sSwMUr1jWMgataVtpGC+AnEp0it4FCujPJR01oo2eQ9WPrxHgaHiA67DCAbu5SMX64BwpdW6PeZp0fa+6so805eYgXi9iV9ZWY0yUGveiCrOGbvoQzJ4HO3QVzYCJjHIl9AT8PxFYMbHMiIsRsDdkGt0BDzUFsxZaEpon0XPfCg=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SJ0PR17MB4319.namprd17.prod.outlook.com (2603:10b6:a03:298::9) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by PH0PR11MB5878.namprd11.prod.outlook.com (2603:10b6:510:14c::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.19; Fri, 3 Nov
- 2023 15:27:08 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%4]) with mapi id 15.20.6954.019; Fri, 3 Nov 2023
- 15:27:07 +0000
-Date: Thu, 2 Nov 2023 14:21:14 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org,
-	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com,
-	tim.c.chen@intel.com, dave.hansen@intel.com, shy828301@gmail.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org
-Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <ZUPomvqNwZgDbo51@memverge.com>
-References: <20231031003810.4532-1-gregory.price@memverge.com>
- <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
- <20231031152142.GA3029315@cmpxchg.org>
- <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <ZUCCGJgrqqk87aGN@memverge.com>
- <pmxrljwp4ayl3fcu7rxm6prbumgb5l3lwb75lqfipmxxxwnqfo@nb5qjcxw22gp>
- <ZUKDz5NpMsoyzWtZ@memverge.com>
- <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
- <ZUMVI4YG7mB54u0D@memverge.com>
- <s72oio7nmez565i7h6fb4bdnhqkcablr34rz5gqteyrrf7yeux@lqrztvy35si5>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s72oio7nmez565i7h6fb4bdnhqkcablr34rz5gqteyrrf7yeux@lqrztvy35si5>
-X-ClientProxiedBy: BYAPR21CA0007.namprd21.prod.outlook.com
- (2603:10b6:a03:114::17) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+ 2023 15:37:09 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::28a6:ecda:4bb7:2f9e]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::28a6:ecda:4bb7:2f9e%6]) with mapi id 15.20.6954.021; Fri, 3 Nov 2023
+ 15:37:09 +0000
+Message-ID: <91ba034f-6fc5-47eb-a4a6-1ad34b4cef3f@intel.com>
+Date: Fri, 3 Nov 2023 08:37:06 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [ISSUE] `cxl destory-region region0` causes kernel panic when cxl
+ memory is occupied
+To: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>,
+	<vishal.l.verma@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>
+References: <0137fb34-7291-b88b-34aa-78471d57921b@fujitsu.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0137fb34-7291-b88b-34aa-78471d57921b@fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0206.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::31) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,144 +89,130 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB4319:EE_
-X-MS-Office365-Filtering-Correlation-Id: e428d061-19bc-4b71-84be-08dbdc815735
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH0PR11MB5878:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9af2370-730f-4a9e-ccd5-08dbdc82bdeb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2NO3vXn8npYD3WcNxLeZuTjWSM8h9m4LRMscEAupeUoI/YNtOzP+/34Svvi3lsI4UeSqt+SxUHMWLDuzOyVERrRmn2VLw46IBhc2khmiK3/042tbFjIOBMJOzz7K0kO3i0OVLeXIUnSQgnCLCQqyynAKUEsTwPLcO7iijTWIrw6g4qz79Dbs4Q7waMg8iQAUAZX8BWMnofBMQZY+NTtA46QyaMfCCzqbqojJ/bEhORksDYl0fEWvqx9T2wluHsyhqUWe3aMYQIedcjGAW+fpTn+eqS+Gltgti2+PRNh5qUwfIrOd5JE2KuPSvpwCCjadTzrnhZyc0JYOIZYVZ3smOkqFAjwPhQgyayLM2kXMhOgpgM8WEsBxAC9B4VVynVy9nu2DrkHy0aRqPBazaNv6YDH8iC0U+WKv/EM7+D1QWSIy2jS5U7Nfg3Wo70mtqZfcH/h5aVmBiwXK1PPREvSKFv0GrjrO1G4Ngztiu/RB87/iWQStJwTWO3BJrg8gH43ST/Wve7I9tCkS36kErqD2UeSKBh8BlHXeXStQWuK2FQSbXC3Rv3EokrOjFSC/USxNkvzHArgyysIuX6qbch4nfY9LVdgMmJhjJtCXr2c/1Jc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(366004)(39840400004)(346002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(86362001)(2906002)(26005)(2616005)(6512007)(6666004)(478600001)(83380400001)(6506007)(8676002)(66946007)(41300700001)(8936002)(54906003)(316002)(6486002)(4326008)(44832011)(6916009)(7416002)(66556008)(66476007)(38100700002)(966005)(36756003)(5660300002)(16393002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: z+wDSKEt5aE0BAsW5WI2nc9kfOHDH9T23z34jcMMGItf/yQdm5olRkbU55LOhZS39rwFvbpNxAY5UIkxnObcftPUWw2ozu2VKynfaMYJVHs/yHmZ9cz+6tsOr+MRV7HequkX6y+QzVQ6UT0FcXjgoMrlox7AESSlCJoOIr5Egbdt1tddlTumpiCb/8TkYKdGDaQKzzLoPTjC580cYIy4Cv4ksxx6P1J+8qIqemok8JOQedktwF5Ktjv8xzd/HNY0jmMLo4PYX5gADAmTitlJK2kUdrw2MaOUznGP6qMSTgIB9qZkLe/RlQ8EUHGTS24FkQJ3dSbstP4eJuV50frshqkSJxlDx/emYlnt3BIrQXNYWY/nARa+kj4/QVvZGhn9IZoyTD6w1QohCm7OY8DKqM9w6VInEhrr35sIwcvR57NGL2B7wUzQHNufbL2en+O1E8ZsbAfLGJ/G2Ad0HDr0cGuZ1t9n6WKaycYdKSLW3ChDug/PZhhBrzXuCwTf5vex/XQL0AuC8KFw/Phu0Ua4h7oxck37gwjmQ9g4YbmF+iyo+DWHEFUQBn/MPmdG7YstPm8Jf9E5T0ZCPGsrkAyNW48gjv+WHepVuQ232bb0pcNWb5kkx/AidFTEbfGVf+Z/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(366004)(376002)(136003)(396003)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(44832011)(36756003)(66899024)(5660300002)(82960400001)(38100700002)(41300700001)(2906002)(86362001)(66476007)(31696002)(2616005)(966005)(6486002)(26005)(6512007)(316002)(6636002)(66556008)(66946007)(53546011)(6666004)(6506007)(31686004)(478600001)(8936002)(8676002)(4326008)(83380400001)(81973001)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rdTJEG6NxJPNFCmp5LXuYv8+8vvnagMCxdn1bYv13a6+CyPHCb9HlVqt10+J?=
- =?us-ascii?Q?IuNhHLRlQzHOKm3fujThqtqEs5KMicJro4TbKswQ72EIkqyojaCu2MX+YYet?=
- =?us-ascii?Q?TbmatQryfsrT2171Xmyf7fASDnwASK6f0XlVS5gMxWNTdcHNy6xp4eDgR6wt?=
- =?us-ascii?Q?E/wn832nGXv2aGYK54Y7ro+tuTbinXz61o5TkwWLYSNlF3DVPeNaGp5RtTHn?=
- =?us-ascii?Q?I8bjRaY/Kr3UA/gfc51hDtF6K9goDjdvXAyEJ3Hr66ZRKl1lmzygCMku22Bh?=
- =?us-ascii?Q?26+wHo4js2psvxtMYcEfw1zdGkQhAlUQKlSM25DNqS4PG5kXIaj3LTv2aakO?=
- =?us-ascii?Q?ksMHrFlqx8aHU3L+j/3l5gzJRhKtZ1l9FRKaB1+SW4qyxEypEbBwxY6i37g+?=
- =?us-ascii?Q?rs5yWEafGb1nLtXuPJEtWxq4QuykAphv+tnfXoakR/AahGbN0Kij9cJjP5lY?=
- =?us-ascii?Q?lAUGGDRSl1da3mgfJe/Wx+Q/5loODZ5SpLJL5P0zuiQHT/Mll84G6BwcrwpV?=
- =?us-ascii?Q?RCHtS30/87ImsGnrZl5ipoQISuDxd624Gf5DxhT3k7lWjQ6Qvm3CyvGgsvMs?=
- =?us-ascii?Q?2UV6F6m/YeAIobvvVdojky/VgzP+1ZKwXg/ZDb0sawgHEV6jSNHLnsrak31B?=
- =?us-ascii?Q?WPQUkr7qgRSwv84A7RQzYFUd0eNGcoonfWyb4YtDjd3/lgkf50kyNON73Kx0?=
- =?us-ascii?Q?VQ+jfjMsqpXE8RamVJMhi+qBfmWwPRZpxZWKDoQtYfE31MoAJsFb6rqctoJP?=
- =?us-ascii?Q?UKO+DXwCBOR8AxMhOJ/fgQSXyT1VmeIw0vH88/5d29X9yPDk0GEdsLIuIDIE?=
- =?us-ascii?Q?OI2QICEzoZHzWlctppYx0PLZ0DRoroGdVfAJPybESl31M5t7CPx5jPP7+Qwg?=
- =?us-ascii?Q?+fYATXgJn/7VKxIzVSXuYLtvhR2H9noiO0FndnTQO/ZBLvlZK+AC4M4zHzuA?=
- =?us-ascii?Q?DzAf0zusjKzH/d2gJL1rKr06uTIhaOtaYgGuq3KAQh7PUaCES9hWfL8VOxeB?=
- =?us-ascii?Q?bh9KBTZ+1kV5bO0oo3MF+/3nEMdUhMAzuseZrbllkcVmtHasJ3+2N9FcPmZa?=
- =?us-ascii?Q?2cGSIukJlI9wXTJSKD10m6+NU600tzwJ/hOw5kZ4HxuvK1tj/tO+MasTEU3A?=
- =?us-ascii?Q?wgtFmlbL3I4RARqSqPqcG/T0xaBv9CmotR+/aZwvVrmUpKfmCsSQq5+EFSKe?=
- =?us-ascii?Q?hdYnVfLgc9lWf6aw4+fGjXqdI1yynSNDRwDaWPBXE1j2bkdRQzRK2+9Rte0X?=
- =?us-ascii?Q?3foCvGoYO/BPN6LwMPNQmbm2meB8LXpHkjHE4AjV7B7BQQnuNKOsYwwp4Ly1?=
- =?us-ascii?Q?oDgM76mURsw9ElkbOWPecEZdT2W1V6b3EeFFsUm7mBYesLqdwCrGTQHTiAmj?=
- =?us-ascii?Q?QPx0zBY7/pcFIlKxilZ7DlGEeFIA+3skSoP0POOfpRLbUs9NEmLFAgbLo3iB?=
- =?us-ascii?Q?knhse9CaoXnTn9Ht57MbUV3OFgqIOFP25/bXs/Y7dB8MPSmA9kfXY0aD9imA?=
- =?us-ascii?Q?q2S2RkFsqYx5Ma22i7zkTEBpGXy6850aHo4b57odLDBtZEX8uvVTU29TMg2D?=
- =?us-ascii?Q?KqSuH3e6OxrpWxJWef5N6An6EwouCnpKoZBhxD6TADJAxz3MW1Th2hiR12x/?=
- =?us-ascii?Q?bw=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e428d061-19bc-4b71-84be-08dbdc815735
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXZ1Njc5eVFoT2RMa1BaaFFSMVN1MTdKQkdzYjVEN3FQUEg4MFo3a0x3YVZY?=
+ =?utf-8?B?dVdvdVZrL1psS2FFSnVJU1Vmc1RRdDNYZ0ZVZnJJVmhCaUxaanpHRXJaSTFL?=
+ =?utf-8?B?WWIvYVM0SWZMTTUxY0RtSTRiZi91TzJmYnRYaUpzMWdScDBFeHBiaE9HS2tM?=
+ =?utf-8?B?cUZ4Y0hPSTYyNnpyK1h4aVo0clpNS3lwYXVRc2xFc1YyV1RsMmgzWUcwSkZM?=
+ =?utf-8?B?SW5hY2pEZXBtZWxNRHhzSlBlaUNOeWRwNDM3aUszQTBDV3FZMTBHMGJuK3Y4?=
+ =?utf-8?B?QkRZMGpNMTNkNkNKeDBpVzFiYXFoem5rQit1L2dUa2wzeGNiWGN3eUJsWE5Z?=
+ =?utf-8?B?TDN4N2VhQjgxSXFOYVp6UWJxSlFiYlhIbW16K2ppTTVSRVBHbkk1YllTRmJN?=
+ =?utf-8?B?cmcwbUg1YmJvMjRteXlNNEh5REtCYkJEZTBESFVKWTZhbmV4ZnhUQzJ3NGNO?=
+ =?utf-8?B?Q2MzYUVYdDJuRW5Ud1lSWnFKN2hWZ25BNTdMRVQvWTdINkhaNnBrNDJMMU84?=
+ =?utf-8?B?OWZDcUlpTzJ0TG5ldGhHbVJ1OHdqSmlZaXNRM3Fsb0VRUit5aG1nOEloNUsw?=
+ =?utf-8?B?VmRpdjArRXBKQ1FaNmM2elBiQzlaWXVFamdGLzh4bDZRTytHdXBwbkgvTWQ1?=
+ =?utf-8?B?ejhrblIxYVMwZ09Gd2dKTzgwSmhrL2RDcVNlOEZWMW1zc2QxZ2hwSVpaK2hG?=
+ =?utf-8?B?eDdkbExqSC9PRG4zaW5QQWhGK2dJUnNEalc1YUgxemVBRVIxMk84MFg3TDNk?=
+ =?utf-8?B?VVJ5OXpqYUlCakI0NFRHbTNGUEIxVXo5dlR0K3IrTy9PdkRJQnBlbzhEeVdi?=
+ =?utf-8?B?Wk1kSU1CQW1KbWF4QTNZK283V2VHWHVvUFB5UDZ3NGROYXZBVlo4ckFmZzR1?=
+ =?utf-8?B?aEJjYXRVZXZ3TEhac0krWEdhOENDMC96eTMvYjlvYkNpc3FNQ1NqeVNVSG1M?=
+ =?utf-8?B?em40RjBSYnNYSXZudUZMTy9hcFBBcVpUcVhHbFVhTmY0YXFTSm1XK0pXUG1V?=
+ =?utf-8?B?TDlDang2M3NocTZQaUNYT08yTkF4TFI3bDJScURwT1p1cnNiNEpsTHo4RmRG?=
+ =?utf-8?B?WGVabVdzWkpoN2oxVnh0YzFpWGd6UldGb0dmd3JzYUt1dmYvRzRGQlFkYUxw?=
+ =?utf-8?B?N2l0VG1RZmJvYlEzbEo2VVVqTHFIMTdrbWNSSzJkUzliWEJoRVY4R1hwS3NY?=
+ =?utf-8?B?bGZ6MStIWEF1UU13eXE3U2xpeHNSbXY0TWY5Q2g2azBubXZQck5yMktmN05J?=
+ =?utf-8?B?VVVrSEtwcWd4MWF6dnJicXJaelBudExINWdtNTJncktHSGQvSE9tRHdnN0Z2?=
+ =?utf-8?B?Q1BzZUlWSHlzcXpXZUlPd3BzQ0JENTZYTjkrNGFQbDljaUc4dUsrVnJ0bnVv?=
+ =?utf-8?B?YzQveko5WWJEQmsvUXB5QlZqbDJuUitDSGN1R0NtVUFRRzRmSHlHUlBkdlU5?=
+ =?utf-8?B?cUoza2xidWNocVVlcHdySnM0SkpxZGR6NzU1VmhKTEFhUW8xZTVkT0pVelNJ?=
+ =?utf-8?B?L1dVbnJ2QXhkaWY2Njk3Ylp5b0xMbkNYTll2dUxoWDRKTVYzQ21wV3lPU0dm?=
+ =?utf-8?B?WXVkeTBOc2pIZk1QVCsxdlhJNVdLdHNuOURuQnQzcllNNVpTeEdYT1lmK1VG?=
+ =?utf-8?B?R2RnQnBJcytSRFY4QS9sYXZHTmdCTGtVbkJTZW5MbmR2SXgxWWtCT1d0TWNS?=
+ =?utf-8?B?Q3lrTHBiY2c4TTZaVTB0c1F6bE9EcDJqdE55YlJ3WnhlYVFHTFZFc0ZmMXA4?=
+ =?utf-8?B?QmJlV1ZZQW52MmZkL2cxZERjKys5MHF5UHFGaWF5TUVTU2puaFdhQktFSmht?=
+ =?utf-8?B?eURzK1d3Mjc4NEVUU25zejkrSWRDZjdYKzF2eTUzTzBHV0lDQWkxd3M5RDQ1?=
+ =?utf-8?B?cTQ4Q3dMNVBaK2RRMjhXUWkzMTNKZTBjM0l4bGpjR2tINkw3MGNQRk55ckNR?=
+ =?utf-8?B?TEcyM1piR1crMkwxdERuc2o2NEw5TmVwejUwT2VxYm5aZDRUcWNJbjd1UGF0?=
+ =?utf-8?B?Ri9vZXo5WDZKSFd0SXZiZm50bmlMMFI0NTVFaFZSVVh1VmxPQmRLYWNod1Yv?=
+ =?utf-8?B?WkRsOGlaUnkyVHU1L3hDczUyelBBaVBtUUJkMlZKYWlJSnJtUDdtVnp1TWg1?=
+ =?utf-8?Q?Vt9YUiGIUXVEeBusIxAN9ANzF?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9af2370-730f-4a9e-ccd5-08dbdc82bdeb
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 15:27:07.7353
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 15:37:09.5283
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vl7z4qLkLB0/ZREtajeq+a7QhFDsg+LVi2k1Duv1KDLR0X2lwliCJuAWq9+BZ8vZcdQjSG1i28kMFS/XpfNe1M5+tWCriw78BsO1uIIQK+k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB4319
+X-MS-Exchange-CrossTenant-UserPrincipalName: ML7orC9YABG2R2LW7gzileLROIhrfY1LOW5/CknecJhZ58Rg7DqrohibFi3jJTeyLoQ/YG1P/SCQrglPWyov6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5878
+X-OriginatorOrg: intel.com
 
-On Fri, Nov 03, 2023 at 10:56:01AM +0100, Michal Hocko wrote:
-> On Wed 01-11-23 23:18:59, Gregory Price wrote:
-> > On Thu, Nov 02, 2023 at 10:47:33AM +0100, Michal Hocko wrote:
-> > > On Wed 01-11-23 12:58:55, Gregory Price wrote:
-> > > > Basically consider: `numactl --interleave=all ...`
-> > > > 
-> > > > If `--weights=...`: when a node hotplug event occurs, there is no
-> > > > recourse for adding a weight for the new node (it will default to 1).
-> > > 
-> > > Correct and this is what I was asking about in an earlier email. How
-> > > much do we really need to consider this setup. Is this something nice to
-> > > have or does the nature of the technology requires to be fully dynamic
-> > > and expect new nodes coming up at any moment?
-> > >  
-> > 
-> > Dynamic Capacity is expected to cause a numa node to change size (in
-> > number of memory blocks) rather than cause numa nodes to come and go, so
-> > maybe handling the full node hotplug is a bit of an overreach.
-> > 
-> > Good call, I'll stop considering this problem for now.
-> > 
-> > > > If the node is removed from the system, I believe (need to validate
-> > > > this, but IIRC) the node will be removed from any registered cpusets.
-> > > > As a result, that falls down to mempolicy, and the node is removed.
-> > > 
-> > > I do not think we do anything like that. Userspace might decide to
-> > > change the numa mask when a node is offlined but I do not think we do
-> > > anything like that automagically.
-> > >
-> > 
-> > mpol_rebind_policy called by update_tasks_nodemask
-> > https://elixir.bootlin.com/linux/latest/source/mm/mempolicy.c#L319
-> > https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L2016
-> > 
-> > falls down from cpuset_hotplug_workfn:
-> > https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L3771
+
+
+On 11/3/23 04:11, Cao, Quanquan/曹 全全 wrote:
+> Hi guys,
 > 
-> Ohh, have missed that. Thanks for the reference. Quite honestly I am not
-> sure this code is really a) necessary and b) ever exercised. For the
-> former I would argue that offline node could be treated as completely
-> depleted one. From the correctness POV it shouldn't make any difference
-> and I am rather skeptical it would have performance improvements. 
-
-Only thing I'm not sure of is what happens if mempolicy is allowed to
-select a node that doesn't exist.  I could hack up a contrived test, but
-i don't think the state is reachable at the moment.
-
-More importantly, the rebind code is needed for task migration and for
-allowing the cpusets to be change-able.  From the perspective of
-mempolicy, a node being hotplugged and the nodemask being changed due to
-cgroup cpuset changing looks very similar and comes with the same
-question:  What do i do about weights when a change to the effective
-nodemask is made.
-
-This is why i'm falling toward "cgroups seem about right", because we
-can make mempolicy ask cgroups for the weight, and also allow mempolicy
-to carry its own explicit weight array - which allows for flexiblity.
-
-I think this may end up generalizing to a cgroup-wide mempolicy interface
-ala cgroup/mempolicy/[policy, nodemask, weights, ...]
-
-but one thing as a time :]
-
-> for the latter, full node offlines are really rare from experience. I
-> would be interested about actual real life usecases which do that
-
-yeah i'm just going to drop this from my requirement list and go OBO,
-for areas where i see it may cause an issue (potential for 0-weights) i
-will do something simple (initialize weights to 1), but otherwise I
-think it's too much to expect from the kernel.
-
-> > 
-> > As a user I would assume it would operate much the same way as other
-> > nested cgroups, which is inherit by default (with subsets) or an
-> > explicit overwrite that can't exceed the higher level settings.
+> I am writing to report an issue that I have encountered while executing 'cxl destroy-region region0', causing a kernel panic when the cxl memory is occupied. I have provided a detailed description of the problem along with relevant test for reference.
 > 
-> This would make it rather impractical because a default (everything set
-> to 1) would be cast in stone. As mentioned above this this not an
-> enforcement limit. So I _think_ that a simple hierarchical rule like
-> 	cgroup_interleaving_mask(cgroup)
-> 		interleaving_mask = (cgroup->interleaving_mask) ? : cgroup_interleaving_mask(parent_cgroup(cgroup))
+> Problem Description:
 > 
-> So child cgroups could overwrite parent as they wish. If there is any
-> enforcement (like a cpuset) that would filter useable nodes and the
-> allocation policy would simply apply weights on those.
+> After 'create-region', if cxl memory is occupied using a script, then 'disable-region' without `daxctl offline-memory` firstly, it will result in a kernel panic.
+
+Hi Quanquan,
+This NDCTL change is suppose to prevent you from doing that:
+https://lore.kernel.org/linux-cxl/169878724592.82931.11180459815481606425.stgit@djiang5-mobl3/
+
+Otherwise this behavior is expected. If you don't offline the memory and force rip away the regions, you get to deal with the consequences.
+
 > 
-
-Sorry yes, this is what I intended, I'm just bad at words.
-
-~Gregory
+> I made a few investigation on this, the panic was caused during the process of resetting the region decode in preparation for removal within the "destroy_region()" function in cxl/region.c. When the value of "/sys/bus/cxl/devices/root0/decoder0.0/region0/commit" is changed from 1 to 0, it will invoke the driver code to reset the region decode, which in turn leads to a kernel panic:
+> 
+> [  397.898809] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  397.908416] systemd[1]: segfault at 0 ip 0000000000000000 sp 00007ffcdc242520 error 14 in systemd[55555aef50)
+> [  397.910578] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  397.920233] systemd[1]: segfault at 0 ip 0000000000000000 sp 00007ffcdc2416a0 error 14 in systemd[55555aef50)
+> [  397.922309] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  397.933175] systemd[1]: segfault at 0 ip 0000000000000000 sp 00007ffcdc240820 error 14 in systemd[55555aef50)
+> [  397.935553] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  397.945611] systemd[1]: segfault at 0 ip 0000000000000000 sp 00007ffcdc23f9a0 error 14 in systemd[55555aef50)
+> [  397.947751] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  400.474068] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> [  400.474583] CPU: 2 PID: 1 Comm: systemd Tainted: G           O     N 6.6.0-rc6+ #1
+> [  400.474583] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qem4
+> [  400.474583] Call Trace:
+> [  400.474583]  <TASK>
+> [  400.474583]  dump_stack_lvl+0x43/0x60
+> [  400.474583]  panic+0x32a/0x340
+> [  400.474583]  ? _raw_spin_unlock+0x15/0x30
+> [  400.474583]  do_exit+0x9a1/0xb30
+> [  400.474583]  do_group_exit+0x2d/0x80
+> [  400.474583]  get_signal+0x9c7/0xa00
+> [  400.474583]  arch_do_signal_or_restart+0x3a/0x280
+> [  400.474583]  exit_to_user_mode_prepare+0x192/0x1f0
+> [  400.474583]  irqentry_exit_to_user_mode+0x5/0x30
+> [  400.474583]  asm_exc_page_fault+0x22/0x30
+> [  400.474583] RIP: 0033:0x0
+> [  400.474583] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [  400.474583] RSP: 002b:00007ffcdc1579a0 EFLAGS: 00000207
+> [  400.474583] RAX: 0000000000000001 RBX: 0000000000000000 RCX: 00007fb10db2796d
+> [  400.474583] RDX: 00007fb10db2796d RSI: 00000000ffffffff RDI: 00007ffcdc157c70
+> [  400.474583] RBP: 000000000000000b R08: 0000000000000000 R09: 0000000000000000
+> [  400.474583] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffcdc94dce8
+> [  400.474583] R13: 00007ffcdc94dce0 R14: 00000000000004bb R15: 000000000000005d
+> [  400.474583]  </TASK>
+> [  400.474583] Kernel Offset: 0x20000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffff)
+> [  400.474583] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+> 
+> According to the panic message, the systemd process in the system encountered a segmentation fault (segfault), resulting in a kernel panic.
+> 
+> Test Example:
+> 
+> 1.echo online_movable > /sys/devices/system/memory/auto_online_blocks
+> 2.cxl create-region -t ram -d decoder0.0 -m mem0
+> 3.python consumemem.py         <------execute script
+> 4.cxl disable-region region0
+> 5.cxl destory-region region0   <------kernel panic !!!
+> 
+> Thank you very much for taking the time to look on this issue. Looking forward to your response.
+> 
+> Best regards,
+> Quanquan Cao
+> caoqq@fujitsu.com
