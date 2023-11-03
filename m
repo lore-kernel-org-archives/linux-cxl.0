@@ -1,141 +1,144 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3A279F7
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 09:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Boti3rzX"
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39C6191;
-	Fri,  3 Nov 2023 02:56:04 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 111421F8C0;
-	Fri,  3 Nov 2023 09:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1699005362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ePm7WjwbNkGtg7aZPPVJIXKZCUCupTKzceDuad9x8Qg=;
-	b=Boti3rzXvIy6GpXicVmWEQvGmOFfKkcLOYxK/Vs1qx/LvOFOCNZik2CcJI4ZDtqjYPnUt9
-	TUx62ElcRoAqB72miNFGbGnLgblzwKs4IHCvbfpL90O8ZapU9e3zW9je11NEo5PfW0kicP
-	FhjCCXDkC1IoRZxEJR5d3903OYs8/uU=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DB32513907;
-	Fri,  3 Nov 2023 09:56:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id AY2ENLHDRGUWBgAAMHmgww
-	(envelope-from <mhocko@suse.com>); Fri, 03 Nov 2023 09:56:01 +0000
-Date: Fri, 3 Nov 2023 10:56:01 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, 
-	Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org, 
-	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, 
-	dave.hansen@intel.com, shy828301@gmail.com, gregkh@linuxfoundation.org, 
-	rafael@kernel.org
-Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <s72oio7nmez565i7h6fb4bdnhqkcablr34rz5gqteyrrf7yeux@lqrztvy35si5>
-References: <20231031003810.4532-1-gregory.price@memverge.com>
- <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
- <20231031152142.GA3029315@cmpxchg.org>
- <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <ZUCCGJgrqqk87aGN@memverge.com>
- <pmxrljwp4ayl3fcu7rxm6prbumgb5l3lwb75lqfipmxxxwnqfo@nb5qjcxw22gp>
- <ZUKDz5NpMsoyzWtZ@memverge.com>
- <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
- <ZUMVI4YG7mB54u0D@memverge.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC5914F86
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 11:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD4ED49
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 04:11:28 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="117867820"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694703600"; 
+   d="scan'208";a="117867820"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 20:11:26 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id A6F2AD6187
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 20:11:23 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id E80F2D5045
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 20:11:22 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 798EDE5E53
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 20:11:22 +0900 (JST)
+Received: from [10.167.220.145] (unknown [10.167.220.145])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id F092D1A006F;
+	Fri,  3 Nov 2023 19:11:21 +0800 (CST)
+Message-ID: <0137fb34-7291-b88b-34aa-78471d57921b@fujitsu.com>
+Date: Fri, 3 Nov 2023 19:11:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUMVI4YG7mB54u0D@memverge.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+From: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>
+Subject: [ISSUE] `cxl destory-region region0` causes kernel panic when cxl
+ memory is occupied
+To: Dave Jiang <dave.jiang@intel.com>, vishal.l.verma@intel.com
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27974.007
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27974.007
+X-TMASE-Result: 10--16.218700-10.000000
+X-TMASE-MatchedRID: L+num7NHV/KGYAKJjm5IPTzXNFWi6yZNr+LsAsPJG4vkMnUVL5d0E8sl
+	jkE3iNz5A9H5R5f2ce0nLmQ5uRWv6HKFDlScjj98194/5X9VfCw1kR+05VC1hkkfDRUtgtwsxON
+	QYeoRenG87N7vzPSpUuP8oij9M8LyzroGAhCVDDUdahq+rGDn/7JEo6RFXaMB592Swrd60UkoLR
+	/490Gk8UsEkE0uT6IPMJlmIOucvXQln6i9lj9cEa+/qoWUv5IZfrTt+hmA5bLWfdTIhX4P8zSJ2
+	POnb5leSm+rcI1Om2ncCgww7x2eJ9U8BKnplvExDDTnhTOAGjVJ0h0KLwFrgDVjvc93O9dkpdTJ
+	bVI6pWCc4ocq3YBa9I0+3TlTJMyF+5MHyYkXwcr5vLCFTd9mpn0tCKdnhB58vqq8s2MNhPCb4iD
+	lO9ygjpREFUJLkadAC24oEZ6SpSk+Mqg+CyrtwA==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Wed 01-11-23 23:18:59, Gregory Price wrote:
-> On Thu, Nov 02, 2023 at 10:47:33AM +0100, Michal Hocko wrote:
-> > On Wed 01-11-23 12:58:55, Gregory Price wrote:
-> > > Basically consider: `numactl --interleave=all ...`
-> > > 
-> > > If `--weights=...`: when a node hotplug event occurs, there is no
-> > > recourse for adding a weight for the new node (it will default to 1).
-> > 
-> > Correct and this is what I was asking about in an earlier email. How
-> > much do we really need to consider this setup. Is this something nice to
-> > have or does the nature of the technology requires to be fully dynamic
-> > and expect new nodes coming up at any moment?
-> >  
-> 
-> Dynamic Capacity is expected to cause a numa node to change size (in
-> number of memory blocks) rather than cause numa nodes to come and go, so
-> maybe handling the full node hotplug is a bit of an overreach.
-> 
-> Good call, I'll stop considering this problem for now.
-> 
-> > > If the node is removed from the system, I believe (need to validate
-> > > this, but IIRC) the node will be removed from any registered cpusets.
-> > > As a result, that falls down to mempolicy, and the node is removed.
-> > 
-> > I do not think we do anything like that. Userspace might decide to
-> > change the numa mask when a node is offlined but I do not think we do
-> > anything like that automagically.
-> >
-> 
-> mpol_rebind_policy called by update_tasks_nodemask
-> https://elixir.bootlin.com/linux/latest/source/mm/mempolicy.c#L319
-> https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L2016
-> 
-> falls down from cpuset_hotplug_workfn:
-> https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L3771
+Hi guys,
 
-Ohh, have missed that. Thanks for the reference. Quite honestly I am not
-sure this code is really a) necessary and b) ever exercised. For the
-former I would argue that offline node could be treated as completely
-depleted one. From the correctness POV it shouldn't make any difference
-and I am rather skeptical it would have performance improvements. And
-for the latter, full node offlines are really rare from experience. I
-would be interested about actual real life usecases which do that
-regularly. I do remember a certain HW vendor working on a hotplugable
-system (both CPUs and memory) to reduce downtimes cause by misbehaving
-CPUs/memoryu. This has turned out very impractical because of movable
-memory requirements and also some HW limitations (like most HW attached
-to Node0 which has turned out to be single point of failure anyway).
+I am writing to report an issue that I have encountered while executing 
+'cxl destroy-region region0', causing a kernel panic when the cxl memory 
+is occupied. I have provided a detailed description of the problem along 
+with relevant test for reference.
 
-[...]
-[...]
-> > Moving the global policy to cgroups would make the main cocern of
-> > different workloads looking for different policy less problamatic.
-> > I didn't have much time to think that through but the main question is
-> > how to sanely define hierarchical properties of those weights? This is
-> > more of a resource distribution than enforcement so maybe a simple
-> > inherit or overwrite (if you have a more specific needs) semantic makes
-> > sense and it is sufficient.
-> >
-> 
-> As a user I would assume it would operate much the same way as other
-> nested cgroups, which is inherit by default (with subsets) or an
-> explicit overwrite that can't exceed the higher level settings.
+Problem Description:
 
-This would make it rather impractical because a default (everything set
-to 1) would be cast in stone. As mentioned above this this not an
-enforcement limit. So I _think_ that a simple hierarchical rule like
-	cgroup_interleaving_mask(cgroup)
-		interleaving_mask = (cgroup->interleaving_mask) ? : cgroup_interleaving_mask(parent_cgroup(cgroup))
+After 'create-region', if cxl memory is occupied using a script, then 
+'disable-region' without `daxctl offline-memory` firstly, it will result 
+in a kernel panic.
 
-So child cgroups could overwrite parent as they wish. If there is any
-enforcement (like a cpuset) that would filter useable nodes and the
-allocation policy would simply apply weights on those.
+I made a few investigation on this, the panic was caused during the 
+process of resetting the region decode in preparation for removal within 
+the "destroy_region()" function in cxl/region.c. When the value of 
+"/sys/bus/cxl/devices/root0/decoder0.0/region0/commit" is changed from 1 
+to 0, it will invoke the driver code to reset the region decode, which 
+in turn leads to a kernel panic:
 
--- 
-Michal Hocko
-SUSE Labs
+[  397.898809] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  397.908416] systemd[1]: segfault at 0 ip 0000000000000000 sp 
+00007ffcdc242520 error 14 in systemd[55555aef50)
+[  397.910578] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  397.920233] systemd[1]: segfault at 0 ip 0000000000000000 sp 
+00007ffcdc2416a0 error 14 in systemd[55555aef50)
+[  397.922309] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  397.933175] systemd[1]: segfault at 0 ip 0000000000000000 sp 
+00007ffcdc240820 error 14 in systemd[55555aef50)
+[  397.935553] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  397.945611] systemd[1]: segfault at 0 ip 0000000000000000 sp 
+00007ffcdc23f9a0 error 14 in systemd[55555aef50)
+[  397.947751] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  400.474068] Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b
+[  400.474583] CPU: 2 PID: 1 Comm: systemd Tainted: G           O     N 
+6.6.0-rc6+ #1
+[  400.474583] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 
+rel-1.16.2-0-gea1b7a073390-prebuilt.qem4
+[  400.474583] Call Trace:
+[  400.474583]  <TASK>
+[  400.474583]  dump_stack_lvl+0x43/0x60
+[  400.474583]  panic+0x32a/0x340
+[  400.474583]  ? _raw_spin_unlock+0x15/0x30
+[  400.474583]  do_exit+0x9a1/0xb30
+[  400.474583]  do_group_exit+0x2d/0x80
+[  400.474583]  get_signal+0x9c7/0xa00
+[  400.474583]  arch_do_signal_or_restart+0x3a/0x280
+[  400.474583]  exit_to_user_mode_prepare+0x192/0x1f0
+[  400.474583]  irqentry_exit_to_user_mode+0x5/0x30
+[  400.474583]  asm_exc_page_fault+0x22/0x30
+[  400.474583] RIP: 0033:0x0
+[  400.474583] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[  400.474583] RSP: 002b:00007ffcdc1579a0 EFLAGS: 00000207
+[  400.474583] RAX: 0000000000000001 RBX: 0000000000000000 RCX: 
+00007fb10db2796d
+[  400.474583] RDX: 00007fb10db2796d RSI: 00000000ffffffff RDI: 
+00007ffcdc157c70
+[  400.474583] RBP: 000000000000000b R08: 0000000000000000 R09: 
+0000000000000000
+[  400.474583] R10: 0000000000000000 R11: 0000000000000246 R12: 
+00007ffcdc94dce8
+[  400.474583] R13: 00007ffcdc94dce0 R14: 00000000000004bb R15: 
+000000000000005d
+[  400.474583]  </TASK>
+[  400.474583] Kernel Offset: 0x20000000 from 0xffffffff81000000 
+(relocation range: 0xffffffff80000000-0xffffff)
+[  400.474583] ---[ end Kernel panic - not syncing: Attempted to kill 
+init! exitcode=0x0000000b ]---
+
+According to the panic message, the systemd process in the system 
+encountered a segmentation fault (segfault), resulting in a kernel panic.
+
+Test Example:
+
+1.echo online_movable > /sys/devices/system/memory/auto_online_blocks
+2.cxl create-region -t ram -d decoder0.0 -m mem0
+3.python consumemem.py         <------execute script
+4.cxl disable-region region0
+5.cxl destory-region region0   <------kernel panic !!!
+
+Thank you very much for taking the time to look on this issue. Looking 
+forward to your response.
+
+Best regards,
+Quanquan Cao
+caoqq@fujitsu.com
