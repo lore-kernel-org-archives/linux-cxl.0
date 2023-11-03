@@ -1,83 +1,89 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29CA1C6AE
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 16:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8630A18626
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 17:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tFRHMHyI"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADCA1BC;
-	Fri,  3 Nov 2023 09:59:02 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E3027215EF;
-	Fri,  3 Nov 2023 16:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1699030740; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uksxNlyaCkPKE2rCxUqHpdRT6fah3eDwts+mbY5jJ80=;
-	b=tFRHMHyImjbSl76qgnGYfaGAQjIf2+RKyoSrDKE6JYpTj3dCCULp5IbO+HPk9WXCt3fUCF
-	Tma8lM/OV+12rR+rWRNAoHDmvTAo+dQyglzQIRQYyylAI0I5KBZMBZ+4gjZCW/UncW3qeC
-	+/gos/UZoYDWbzoJMfms4apKWMlAb2g=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BBAFB13907;
-	Fri,  3 Nov 2023 16:59:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id W9LcKtQmRWVuVgAAMHmgww
-	(envelope-from <mhocko@suse.com>); Fri, 03 Nov 2023 16:59:00 +0000
-Date: Fri, 3 Nov 2023 17:59:00 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, 
-	Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org, 
-	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, 
-	dave.hansen@intel.com, shy828301@gmail.com, gregkh@linuxfoundation.org, 
-	rafael@kernel.org
-Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <oe7s47mjbemtfsc3tbhweeiledh4srjntrsyohsvpy5m4jsgsb@xjl7u5a3p3z3>
-References: <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
- <20231031152142.GA3029315@cmpxchg.org>
- <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <ZUCCGJgrqqk87aGN@memverge.com>
- <pmxrljwp4ayl3fcu7rxm6prbumgb5l3lwb75lqfipmxxxwnqfo@nb5qjcxw22gp>
- <ZUKDz5NpMsoyzWtZ@memverge.com>
- <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
- <ZUMVI4YG7mB54u0D@memverge.com>
- <s72oio7nmez565i7h6fb4bdnhqkcablr34rz5gqteyrrf7yeux@lqrztvy35si5>
- <ZUPomvqNwZgDbo51@memverge.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUf1IVXW"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C45ED42
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 10:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699034359; x=1730570359;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ff70vid5UZ5vfChQD+3pAnSYqimTWhLczy5QWEiXrmg=;
+  b=bUf1IVXWGnVvXtLtmIvDSp+/mZpHM6+h8zuB1nBSTeMZSV24wwpfY31w
+   ASiUSbggm2xTXfQSfEKc2CquoCm7BxBugxkBHQjUJ17RIB8xolqLtdZQd
+   FJJt+wlPeHLIrGUnz6VAbrupCEwS7DLEQl8ovV5pebobO0sY9GoemqWzY
+   w09HPtV3vGqI+X72HukL3D1ZPkcaWDerLI/2MkR2S8xV6KqOUIVNojgeu
+   +FXdaK1eC0zMaiEq02qhzARKGSI+J2OH1l3JC031jW1Z8ZH5WXeYWW8vb
+   aq39cO+kdo3pT8kh+c0B9xxD4JGfHgx0LrhtA0Nebko9lPVPZ2MT0jqHs
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="368333680"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="368333680"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 10:59:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="9812539"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.174.124])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 10:59:18 -0700
+Subject: [PATCH] cxl: Add cxl_num_decoders_committed() usage to cxl_test
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>, dan.j.williams@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com
+Date: Fri, 03 Nov 2023 10:59:17 -0700
+Message-ID: <169903435790.565298.13848186970380289757.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUPomvqNwZgDbo51@memverge.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu 02-11-23 14:21:14, Gregory Price wrote:
-[...]
-> Only thing I'm not sure of is what happens if mempolicy is allowed to
-> select a node that doesn't exist.  I could hack up a contrived test, but
-> i don't think the state is reachable at the moment.
+Commit 458ba8189cb4 ("cxl: Add cxl_decoders_committed() helper") missed the
+conversion for cxl_test. Add usage of cxl_num_decoders_committed() to
+replace the open coding.
 
-There are two different kinds of doesn't exist. One is an offline node
-and the other is one with a number higher than the config option allows.
-Although we do have a concept of possible nodes N_POSSIBLE I do not
-think we do enforce that in any user interface and we only reject nodes
-outside of MAX_NODE.
+Suggested-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/port.c      |    1 +
+ tools/testing/cxl/test/cxl.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-The possible nodes concept is more about optimizing for real HW so that
-we do not over shoot when the config allows a huge number of nodes while
-only handful of them are actually used (which is the majority of cases).
--- 
-Michal Hocko
-SUSE Labs
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 38441634e4c6..26d17c205408 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -43,6 +43,7 @@ int cxl_num_decoders_committed(struct cxl_port *port)
+ 
+ 	return port->commit_end + 1;
+ }
++EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, CXL);
+ 
+ static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+ 			    char *buf)
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index b88546299902..f42ec896962a 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -669,7 +669,7 @@ static int mock_decoder_commit(struct cxl_decoder *cxld)
+ 		return 0;
+ 
+ 	dev_dbg(&port->dev, "%s commit\n", dev_name(&cxld->dev));
+-	if (port->commit_end + 1 != id) {
++	if (cxl_num_decoders_committed(port) != id) {
+ 		dev_dbg(&port->dev,
+ 			"%s: out of order commit, expected decoder%d.%d\n",
+ 			dev_name(&cxld->dev), port->id, port->commit_end + 1);
+
+
