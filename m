@@ -1,121 +1,186 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB68A2110F
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 20:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9018E225A8
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 20:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nBgAGflD"
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199F11AA;
-	Fri,  3 Nov 2023 13:18:40 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231103201836usoutp025e89f242c06b081ff5bac6a305f0d8a1~UNlktMzv93064030640usoutp02e;
-	Fri,  3 Nov 2023 20:18:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231103201836usoutp025e89f242c06b081ff5bac6a305f0d8a1~UNlktMzv93064030640usoutp02e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1699042716;
-	bh=e576S7CjUbGKecjfqTWMMj9uJ2tcdjBzvms2BDsK5HE=;
-	h=From:To:Subject:Date:References:From;
-	b=nBgAGflDJ4sG+S2Ydm84dQ4uOb8E2o5HLGxyXh4dTN+1sEsca9y4wVXOe0TIDygCp
-	 0npUkeRm+bay2I/v45YSbA5EuXTv0utfXU12CrtjEDroe+okM3EYTaStHF1vX3etj/
-	 aJowKkLz7j7h9UpkL/TlK5QQEBnW3pkYCLTD3xG4=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-	[203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231103201835uscas1p2f0d035fbdfbef7ec88cc2af5cb6355c7~UNlkVVGJO1816418164uscas1p2H;
-	Fri,  3 Nov 2023 20:18:35 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges1new.samsung.com (USCPEMTA) with SMTP id BF.B6.50148.B9555456; Fri, 
-	3 Nov 2023 16:18:35 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73~UNlkBjrnr1793517935uscas1p2I;
-	Fri,  3 Nov 2023 20:18:35 +0000 (GMT)
-X-AuditID: cbfec36d-559ff7000002c3e4-7c-6545559bddac
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id BF.39.31410.B9555456; Fri, 
-	3 Nov 2023 16:18:35 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Fri, 3 Nov 2023 13:18:34 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
-	3 Nov 2023 13:18:34 -0700
-From: Jim Harris <jim.harris@samsung.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cxl/region: fix x9 interleave typo
-Thread-Topic: [PATCH] cxl/region: fix x9 interleave typo
-Thread-Index: AQHaDpLrd95Ds0IdwU+fCUHJLUtW4w==
-Date: Fri, 3 Nov 2023 20:18:34 +0000
-Message-ID: <169904271254.204936.8580772404462743630.stgit@ubuntu>
-Accept-Language: en-US
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjP7Q+RA"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDDD18B;
+	Fri,  3 Nov 2023 13:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699043320; x=1730579320;
+  h=message-id:date:subject:to:references:from:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=ajw/secxOIwiz0sqaOqk6d2idiEvYVKK8HCv0Xpe70I=;
+  b=YjP7Q+RAfB0PdC7neq/uw8vNYSjmOY9aBtOrjCuSXQhJDw/MhXR/1gO6
+   dn1DR7pbkGySL6OdWbUEaA/PgW4ygoW18lJSsW4itlWaVGas1b+4oXkaa
+   1cN07Ch2p9Tc/kVof+HWPJ7c15agKt0NC0S0ieYObg3o2O6/9kOVVvytK
+   40+UKjVUfoTwM31KPIRRiD48oVjlAKogFf3d8gAwHloh5G80p0DVV2NMv
+   XTPiHreAMN18m3v6tHVDsacpCKl7vCuhyVDFP6LuQKgRemSLdVud6GKTN
+   xAqQYTb8/Bl0ptUmfjCvCN2D9fGrGcqSfn/rGuUtm/InF+xX4z7Ifmjed
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="392905832"
+X-IronPort-AV: E=Sophos;i="6.03,275,1694761200"; 
+   d="scan'208";a="392905832"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 13:28:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="755263427"
+X-IronPort-AV: E=Sophos;i="6.03,275,1694761200"; 
+   d="scan'208";a="755263427"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Nov 2023 13:28:36 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 3 Nov 2023 13:28:35 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 3 Nov 2023 13:28:35 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Fri, 3 Nov 2023 13:28:35 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Fri, 3 Nov 2023 13:28:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f63h9s/YLTT3XEXBQxuIQ01KL2zKV+5R2Z7sL3o/qKtBbIJaun7LRxjTmctgRtjVb3FHbubHsLwvpb573mgZIX8bbKWZrh9q8Fisp8kPpk1R1Q9Uj4x0cazMEq89uz3Y5q/HPAi9NFU2AVLg3wZzHxqSiRfpqweNay9xZMUJvPGk0BU2n3OSOqF5zSlrY6LfbthH7t2ksms6768isAAV/txbdG1UqbNatX1vjG0cMgIfvCM/g9/f8K1WIk1bwv5hxBzNnkNvPRcuRs7FcY3S53Q4olijToZUFiI6OHN0wNRfatPviCvh8RaUP4dLxlSzcRWsNwXurky8Bb4NDHOEwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n8he2BKmqm1aw+gYnsHOt1hDNgNiyqeWnB+5Lnbpw9g=;
+ b=gfZRpXEn3Pgh+mV244Ax2zzpyW31DJqC0mxwgfOphwpdA11kUmvzVZG1vMS+xDGIix7XOk0nRs1YH63UXKjjUXz+r8p4eQN/PSKEQh9N5aZWNw3fE8iTsvfL9Uqtlh+g3bKLRFxGjeflMmFlj+JVxdGzTbnau0Hud5Cir7D+aR2/DmUUamWk+VvRIfhaYMFFOrftZvgRAlP+Hlj7kiqyHiLquM0cVDa+iBrwH6jPi1G/Jta2IqyMgSyI1cVjOfm4cS6M4y0xn+S6oWs0VoVnvxAio453Op0LO7vkooSlcmTPfyFjvIMpp077YmQnrSIEBXnjbEhD9nvyU9Lb9pFQ/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by BN9PR11MB5228.namprd11.prod.outlook.com (2603:10b6:408:135::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Fri, 3 Nov
+ 2023 20:28:33 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::28a6:ecda:4bb7:2f9e]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::28a6:ecda:4bb7:2f9e%6]) with mapi id 15.20.6954.021; Fri, 3 Nov 2023
+ 20:28:33 +0000
+Message-ID: <ad8ba5fe-5078-41a5-921f-4de4c71703e7@intel.com>
+Date: Fri, 3 Nov 2023 13:28:29 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH] cxl/region: fix x9 interleave typo
+To: Jim Harris <jim.harris@samsung.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Fan Ni
+	<fan.ni@samsung.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+References: <CGME20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73@uscas1p2.samsung.com>
+ <169904271254.204936.8580772404462743630.stgit@ubuntu>
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F6CB9ED8511BF54EBEE8C50A5BD025F2@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <169904271254.204936.8580772404462743630.stgit@ubuntu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0228.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::23) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+917d70aq+taepphuTJMcDlMulSGlSOjFIuCMEiX3lSac22u
-	NKhmZE2LsodWm2jrQWZLU1bpsLRplj00yoYu7KEzW096CuIi513kf9/z+J7zOT9+FC4w80RU
-	ljKXVSvlCjHpR9xs/9UZYdwoYyP7mucyfQNPSeZ06VPEPOgtIJmrvWbENA8OEUy1yU4yXYaH
-	BPPcWk4yjpJ2LNY3/kDbZ178hSYXFl9q3Bf/oz44iUj2W5rOKrJ2suoFy1L9MjvPuJDKQuWV
-	d/eROnSGKkYUBfRCGLyztxj5UQL6CoLB1mEfLijEwOW+jBUj3/Gm9oohjCuYERyqv0hywTcE
-	Z3tO8LjgEoKjR++RHgtJz4eRbvO4RUg341BbZUGewjQ6CvpGm3CPFtIMWOuaeR4QIS2Ba9cz
-	PWmCnguOZ0U+Hs2nV0BFm2lcIzoAhh+ax5FwOhAczkovnj+cN3IjYaznj/UtyekQeD3s8vGM
-	x8d4aq0LOOsyGDlmR5wOgVOH33pX+UPHWSfBWWfA3aoewoMPdAsFL01d3plx8LHT6N0bBKfN
-	z72G7XClVo9xb6oCXdt6Lr0ETKO1XuQp4B7pR1wLH/QHBSVIbJhwjOE/qGECqGECqGEC6DnE
-	q0aBWo0mO4PVSJXsLolGnq3RKjMkaTnZ9WjsQz3605rdgBoc3yQ2hFHIhoDCxUL+8jVxrICf
-	Ls/fzapzUtRaBauxoSCKEAfypTEdaQI6Q57LbmdZFav+V8UoX5EOu6y88aIwAc9bafi+JXl2
-	SgtxcpJ2ZkCwQonxnHbBK6ttW0zSnFu2rsVR0in6pragS9gFaYLLLsq9lXhoUk3YzXPWzbqp
-	+9dawqZf7De/GVLNMoXWhQi7C1LNKvsRZWKNY5VUlv+ICqVzI+LCI9x4Hf7B/2r0DnVV5OjW
-	dxZW92MTCl8sCVpfZpImHugvcVc+Dus9JXvmnr0uueh3Z/Sv97bqHke48WXscXJtx8ryrI17
-	Mpyh82Q/BzZE55Xu89ffCZ6cViYaTIkVT5dZ8iNbv76/XTzwRN27Q+/8guU05hQVRd13HUuq
-	yUxViFZn9Yu17kpjdeEiuP0ucnljwKckMaHJlEvDcbVG/hfjY9D5vwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWS2cDspDs71DXV4E8zv8XdxxfYLKZPvcBo
-	ceJmI5vF6ptrGC32P33OYrFq4TU2i/OzTrFYXN41h83i1oRjTA6cHi1H3rJ6LN7zkslj6ux6
-	j8+b5AJYorhsUlJzMstSi/TtErgyzs14yViwhaNizpW7bA2MMzi6GDk5JARMJI7Ne87UxcjF
-	ISSwilHi/sFeZpCEkMBHRolJ8ysgEksZJXbtaGECSbAJaEr8urIGrENEYD+zxPoVWxhBEsIC
-	xhJ3/+wB6xYRsJDYtXE/axcjB5CtJ7F2QwZImEVAReLWpU52EJtXwEli3pGFYDajgJjE91Nr
-	wOYzC4hL3HoynwniOgGJJXvOM0PYohIvH/9jhbAVJe5/f8kOMp4Z6J71u/QhWu0kfvVfY4Sw
-	FSWmdD+EWiUocXLmExaIVkmJgytusExgFJ2FZNsshEmzkEyahWTSLCSTFjCyrmIULy0uzk2v
-	KDbOSy3XK07MLS7NS9dLzs/dxAiMy9P/DsfsYLx366PeIUYmDsZDjBIczEoivI7eLqlCvCmJ
-	lVWpRfnxRaU5qcWHGKU5WJTEee8+0EgVEkhPLEnNTk0tSC2CyTJxcEo1MNkrmexSWipa8WRu
-	2xHT5ZPnr/p08eYndrd37I+4lFICu79Jis/6oR366uGjSddmuTnnn5qdpaxo4fT3ufdaVUGZ
-	C5ZzDs3xYtJYU3kv9t9qI3se3mfqG5MTrjE942Z8I7FBTzE4btcDmyzx7/aTuD2CZ7xv3xiV
-	emX/dlfBT4bbeV7Pj24QZr+hvuTaz0Vf+BLVOzuCPmbXbtxcIcR4bmry5S1x5usa/WRZrvLV
-	mU+U7e/85OMeNY8nL+Qhu5xOQ6H+97sJGwVWX2Au+hZ6xMfmQxrPvm6vWyI1ebeYBOfmblMt
-	e9p3LsOKy3zD7t3dgivOr/66mdf5Qudj7UdHou79+P6+JmTp9jUTYs5MDldiKc5INNRiLipO
-	BADdnwsEOgMAAA==
-X-CMS-MailID: 20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73
-References: <CGME20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73@uscas1p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|BN9PR11MB5228:EE_
+X-MS-Office365-Filtering-Correlation-Id: da0fef57-c206-4882-f962-08dbdcab730e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +arHuAJLMB4CHay08ri+5JHQbKGZIYCwUOkdj78Lfx1jPPrcBZlJecagRDlRBoC4ykA3m48E94UFGQU+6GZBaDyZE6oFKO3Jo0i0cCbM02NR+V9YfDWXsOrUMvYOqJwex0ulK73ivh1y6CSXCdQau9ye0hGzgin7LtUpb9995O8o8MkcGGSmK2+T7IkpDJZZKpOLwBKtmYDqcZS0cCDzaJNrBbOkTYdX36wOq7jNxI8F8m68rM/oEqUp8dpPW6yG4AEO9bYGa8Sji7G2eXWB7yqx5ASRKqAR7A2NM0V1/d5lOSsu+uz3dHTwkjmubm6S2QdqtNEluvPhbLqL1mtBm4cjLk08K5vMXWUv6Ym+bfktz392HLMuvYoXsC1CcZp9JKLVysLbYGPyjXwAbOl6OplMgaXTUV5siDJ7Am5fl3cBehV4TzXTJPXYjSHp76g9AbaN0BwaruRSG/q9AHILxUq72X/ZAni8pFiwFeYRfxkVmydMqbRpct1Lpg+2k0XwV3xLG8KnQ6YeHZ8peisAfSzSDmLptTlpbEAZ6XHqSp+OD0aJSHbskDQh7jE9KPImEMcbIo1JU3fovWvmdRTjPhEd2NqaAnC65kmCj+k2tyyQNx+wiAgNiUfP/et2YmmuAZ5mDOpP7jqQ98OEiGyy4g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(376002)(396003)(136003)(346002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(41300700001)(31686004)(5660300002)(2906002)(44832011)(8676002)(8936002)(6506007)(66946007)(66476007)(6512007)(2616005)(316002)(110136005)(66556008)(6486002)(478600001)(6666004)(36756003)(26005)(921008)(83380400001)(86362001)(31696002)(82960400001)(38100700002)(53546011)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dVoxSnNTMUN3LzlNM1lKblRlVGRRemh0djEzeXVsNGkxRHhMeElDRW90eCtq?=
+ =?utf-8?B?QlYrT1c2NDBUcXkwWWFvUm9BaG5OR0pCcVFaTnJuWExEZ2NpOUlweEhTZ0tn?=
+ =?utf-8?B?Ykptc0dRMXo2MXNJR3RLTUJ5MVpxSEhWMjFsZkVQakFKNnVvc0hwVml3aDVu?=
+ =?utf-8?B?L3dwS3dqeHJpbCtTVEJkaWwxTE56aFRQNVRURFdhUzk1UVFkLy9lMm5YNkcw?=
+ =?utf-8?B?d1RPM05kSUJEWENIK1I5aWpjeFBZYzRiR0cxaHNmVVFWUzVjaXFXWDNzelBV?=
+ =?utf-8?B?c0N4cHVMK3ZmRjNrZk1rUXZkTXFhWE9UMVRWSVF4OVNyYmQ5eUx3Y1RjR0xl?=
+ =?utf-8?B?SGtEVGN6M3EySFd4cVBRU0ZsZ3BlWk9panJzVlFmNlFxYWFUU2VkSFZWZUcr?=
+ =?utf-8?B?VWk3bTVacVFwNkNsdmNaeUtjbHAvdGxCUWI4TEtzRkt2a3VvYlBieWluTFN3?=
+ =?utf-8?B?ZjY3YlVxWGhIdDhDVDIwTG1xcDhkUEkwb1I4M2ZOeFU0UElQUjJ0WWJkVUNr?=
+ =?utf-8?B?clMvYXB6TVJ6K1oxejRHcUNjZFBWSWxkNWJJcitvZkZrVXQrTFl1K1pGN3BD?=
+ =?utf-8?B?Zk9teTVkeWE2QVBzRjlLT29rc28rTURwK0paa2pzT0ErSFI3TTlZWVA3NTZP?=
+ =?utf-8?B?U2xrYXdDZWk4ZklFZysxRVlnK08rQkZleUUzdEgyamtUREsvbC91b2o1ZXlY?=
+ =?utf-8?B?SU1Fbzgxell3MkJtVHMyaTFpS2I4azdKc09IZGhWN0RETTJqTzFzTERVbjFP?=
+ =?utf-8?B?OWFNcTRBeWp3aS9MNDRaOXRFamsrUDl5Q3JQVU1MVTB6MFdNSXRJcmNhNEd6?=
+ =?utf-8?B?TEZ3K05UYkdvQzFQV1dpeTNJODlPcGVMbVhEdFRYZ1BmZ1E0K3VHTEFxQWdB?=
+ =?utf-8?B?VnNPRks2MUxlVHpQVm9YNlBDZ1dYTDdyM2dOQkhzVVBnUlJNUksvOFdXUEZX?=
+ =?utf-8?B?RHEyUlk4M3d2b0I2eGZicjU4ODF5b01tV0RCd2ZDemZROWJqTlY2TUQxbzk3?=
+ =?utf-8?B?b09GcW40ZGhNT2FwcmpsTkR6Ti8yRTNuWXg5S2VVdU1kS3FHWWJLZDltaS9a?=
+ =?utf-8?B?Q25xTkQ0SnROM2tDelBUZDhiSVVoWnVOSTU1YXdhb1BhRmd4ZTg2Zk02YWFn?=
+ =?utf-8?B?ZVNsbFhwc1lZbGs5L0dtSG9zZjN4dytRbmNjODZ6M1ordExUR0NUQnZWL000?=
+ =?utf-8?B?M2doREN4ZU9LcXNXL3dRS1A3WXNodjZPRU82RVZRbm1uOEhrZ3g4Ulk4UjhK?=
+ =?utf-8?B?SHZCMTN2L0FqNHQzNnpsYmxYOEVocWE2WENsa2I1QWozWlcrNGQzZWh3MFhZ?=
+ =?utf-8?B?MGNIK3ZaeTA3U2taSW1YME5tYTcxYnZsbUdBZy9pWDM3d3g4YWorUi9qWHJj?=
+ =?utf-8?B?UEh5ZkpnTWs4bXFsSVg3ejA2bUY3L3FhMmZaRHlBRmlyVUZDSmV1VUFKc3Ry?=
+ =?utf-8?B?WWUzaG5MMXc3WGpNa3NGNjBrcy9zQ0t6cExjN1cxeTFPMkRlUGRrRkJZZHJ5?=
+ =?utf-8?B?b0lTdzJuOTNBYUVOU2ZwNnlwWklJS1hzV3k4Y3BQSVJicm5zWUJ3ejB2bmJI?=
+ =?utf-8?B?T3lmTVh6UDNOWUNsc3hwZy9Sdnk5L3hBbURmeHVxMFFmNjFaVWZCREVCNTI5?=
+ =?utf-8?B?NmcraUU5S0JMTkhzb2FsdzFJTVpoMFZud0pTcUtEektXSHVOV3VlcTBpemx2?=
+ =?utf-8?B?TTlSUm5LNG9yTC8rc1VoeitNNEUyU1RzYVYraFBQVUNQek04R1BwVldzWXlN?=
+ =?utf-8?B?WE10L0JlbHJFNUFlcjJwK0cyNHRTQzdxRWpuU1dIZ1B6MExkaWFtcEdkeVVZ?=
+ =?utf-8?B?b1dJSUFLQ1hSdVluUXdpdUZqQzJ0VTdwT3RkQkZBSDd2TDVUd0xvOEszb0dR?=
+ =?utf-8?B?Unh3dFpPWDNwMUMybUREZzRhZXdVT3JScDlJZDlPelljeVV2TXpPbERWUWxo?=
+ =?utf-8?B?d0Rwem5IcW44RnUxK0FrbEsxb3dIa1RwRjlXeUwrcU1kNUZidmZjWTRteUpD?=
+ =?utf-8?B?SmsvTGlpZEo3cVpxMzJVbXdXUjJoS3ByRzJSNHljUUsrWU1OUjVRdzU1WEtl?=
+ =?utf-8?B?WGlrLzgyb3dja2Q0SStrUlY3MVRYQUttNHU5SWhmYkFsQXVCcnlpc1MvaTBF?=
+ =?utf-8?Q?SJGJyPaHpFQ01f1lVnpirmGaQ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: da0fef57-c206-4882-f962-08dbdcab730e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 20:28:33.3526
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hn83WLJl2d4xjXNAx+ufqx0z5HE6EIx9K/NIY14Mf/0q2+QG7r034dQXu2Vh4gmrekaesYUxS+nL3gqym1zU4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5228
+X-OriginatorOrg: intel.com
 
-Q1hMIHN1cHBvcnRzIHgzLCB4NiBhbmQgeDEyIC0gbm90IHg5LgoKRml4ZXM6IDgwZDEwYTZjZWUw
-NTAgKCJjeGwvcmVnaW9uOiBBZGQgaW50ZXJsZWF2ZSBnZW9tZXRyeSBhdHRyaWJ1dGVzIikKU2ln
-bmVkLW9mZi1ieTogSmltIEhhcnJpcyA8amltLmhhcnJpc0BzYW1zdW5nLmNvbT4KLS0tCiBkcml2
-ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jIHwgICAgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jeGwvY29yZS9yZWdp
-b24uYyBiL2RyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMKaW5kZXggNmQ2M2I4Nzk4YzI5Li5kMjk1
-YjM0ODhlNGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY3hsL2NvcmUvcmVnaW9uLmMKKysrIGIvZHJp
-dmVycy9jeGwvY29yZS9yZWdpb24uYwpAQCAtNDAzLDcgKzQwMyw3IEBAIHN0YXRpYyBzc2l6ZV90
-IGludGVybGVhdmVfd2F5c19zdG9yZShzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJCXJldHVybiByYzsK
-IAogCS8qCi0JICogRXZlbiBmb3IgeDMsIHg5LCBhbmQgeDEyIGludGVybGVhdmVzIHRoZSByZWdp
-b24gaW50ZXJsZWF2ZSBtdXN0IGJlIGEKKwkgKiBFdmVuIGZvciB4MywgeDYsIGFuZCB4MTIgaW50
-ZXJsZWF2ZXMgdGhlIHJlZ2lvbiBpbnRlcmxlYXZlIG11c3QgYmUgYQogCSAqIHBvd2VyIG9mIDIg
-bXVsdGlwbGUgb2YgdGhlIGhvc3QgYnJpZGdlIGludGVybGVhdmUuCiAJICovCiAJaWYgKCFpc19w
-b3dlcl9vZl8yKHZhbCAvIGN4bGQtPmludGVybGVhdmVfd2F5cykgfHwKCg==
+
+
+On 11/3/23 13:18, Jim Harris wrote:
+> CXL supports x3, x6 and x12 - not x9.
+> 
+> Fixes: 80d10a6cee050 ("cxl/region: Add interleave geometry attributes")
+> Signed-off-by: Jim Harris <jim.harris@samsung.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Given it's a fix to a comment, the fixes tag is probably not necessary since it's not a code bug to backport to stable. 
+
+> ---
+>  drivers/cxl/core/region.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6d63b8798c29..d295b3488e4a 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -403,7 +403,7 @@ static ssize_t interleave_ways_store(struct device *dev,
+>  		return rc;
+>  
+>  	/*
+> -	 * Even for x3, x9, and x12 interleaves the region interleave must be a
+> +	 * Even for x3, x6, and x12 interleaves the region interleave must be a
+>  	 * power of 2 multiple of the host bridge interleave.
+>  	 */
+>  	if (!is_power_of_2(val / cxld->interleave_ways) ||
+> 
