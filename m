@@ -1,57 +1,57 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AD0CA51
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 09:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3A279F7
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Nov 2023 09:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="rN1523AA"
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417071BD;
-	Fri,  3 Nov 2023 02:39:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Boti3rzX"
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39C6191;
+	Fri,  3 Nov 2023 02:56:04 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 707481FD65;
-	Fri,  3 Nov 2023 09:39:01 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 111421F8C0;
+	Fri,  3 Nov 2023 09:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1699004341; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1699005362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d4jQ1t6Qttv+buPxaS9aV1Pqc3DF6sKVx91vpC38npY=;
-	b=rN1523AAByVvwQQ/Qv9+31L7Z+WHkVB7hPMA096juan6k4125M0ZQOhzSO7JZhqZMrZ1JS
-	pFxT/lA0OJTUYGlaY1TNJ48TlWQcrVj/cDTMOytZZDztDCgBpTpSkgRd5yFDZHnBab6FTK
-	cGuwQvdUA8Ofc+FocFMkm6rdt2ZHQvA=
+	bh=ePm7WjwbNkGtg7aZPPVJIXKZCUCupTKzceDuad9x8Qg=;
+	b=Boti3rzXvIy6GpXicVmWEQvGmOFfKkcLOYxK/Vs1qx/LvOFOCNZik2CcJI4ZDtqjYPnUt9
+	TUx62ElcRoAqB72miNFGbGnLgblzwKs4IHCvbfpL90O8ZapU9e3zW9je11NEo5PfW0kicP
+	FhjCCXDkC1IoRZxEJR5d3903OYs8/uU=
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 51D3F13907;
-	Fri,  3 Nov 2023 09:39:01 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DB32513907;
+	Fri,  3 Nov 2023 09:56:01 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 2sE+EbW/RGWqewAAMHmgww
-	(envelope-from <mhocko@suse.com>); Fri, 03 Nov 2023 09:39:01 +0000
-Date: Fri, 3 Nov 2023 10:39:00 +0100
+	id AY2ENLHDRGUWBgAAMHmgww
+	(envelope-from <mhocko@suse.com>); Fri, 03 Nov 2023 09:56:01 +0000
+Date: Fri, 3 Nov 2023 10:56:01 +0100
 From: Michal Hocko <mhocko@suse.com>
-To: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>, 
 	Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com, 
-	weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, dave.hansen@intel.com, 
-	shy828301@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	Gregory Price <gregory.price@memverge.com>
+	linux-mm@kvack.org, ying.huang@intel.com, akpm@linux-foundation.org, 
+	aneesh.kumar@linux.ibm.com, weixugc@google.com, apopple@nvidia.com, tim.c.chen@intel.com, 
+	dave.hansen@intel.com, shy828301@gmail.com, gregkh@linuxfoundation.org, 
+	rafael@kernel.org
 Subject: Re: [RFC PATCH v3 0/4] Node Weights and Weighted Interleave
-Message-ID: <2i3awgkx2i4a5op7rtcqzv4yub376l66tevfvlyccf6wrjia4v@5x4ar4f6i5eh>
+Message-ID: <s72oio7nmez565i7h6fb4bdnhqkcablr34rz5gqteyrrf7yeux@lqrztvy35si5>
 References: <20231031003810.4532-1-gregory.price@memverge.com>
  <rm43wgtlvwowjolzcf6gj4un4qac4myngxqnd2jwt5yqxree62@t66scnrruttc>
  <20231031152142.GA3029315@cmpxchg.org>
  <jgh5b5bm73qe7m3qmnsjo3drazgfaix3ycqmom5u6tfp6hcerj@ij4vftrutvrt>
- <87msvy6wn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ivhxexthtfums73nkko6yoy635h3cpetv4sqaemrmqd5pbhpq6@6zrizaoxgdwi>
- <87il6k1y82.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <fe7ns7dvrhwp6o7fnn53wt7tuidsncjctgav4bdirwfmjxarne@3oyfe22mxc35>
- <87jzqzz502.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZUCCGJgrqqk87aGN@memverge.com>
+ <pmxrljwp4ayl3fcu7rxm6prbumgb5l3lwb75lqfipmxxxwnqfo@nb5qjcxw22gp>
+ <ZUKDz5NpMsoyzWtZ@memverge.com>
+ <a4f5das6ckw5lwj3qv2eaygx4nypb762b6mdnxivrjjndqlhjk@zpjao2ewfdoc>
+ <ZUMVI4YG7mB54u0D@memverge.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,51 +60,82 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87jzqzz502.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <ZUMVI4YG7mB54u0D@memverge.com>
 
-On Fri 03-11-23 15:10:37, Huang, Ying wrote:
-> Michal Hocko <mhocko@suse.com> writes:
+On Wed 01-11-23 23:18:59, Gregory Price wrote:
+> On Thu, Nov 02, 2023 at 10:47:33AM +0100, Michal Hocko wrote:
+> > On Wed 01-11-23 12:58:55, Gregory Price wrote:
+> > > Basically consider: `numactl --interleave=all ...`
+> > > 
+> > > If `--weights=...`: when a node hotplug event occurs, there is no
+> > > recourse for adding a weight for the new node (it will default to 1).
+> > 
+> > Correct and this is what I was asking about in an earlier email. How
+> > much do we really need to consider this setup. Is this something nice to
+> > have or does the nature of the technology requires to be fully dynamic
+> > and expect new nodes coming up at any moment?
+> >  
 > 
-> > On Thu 02-11-23 14:11:09, Huang, Ying wrote:
-> >> Michal Hocko <mhocko@suse.com> writes:
-> >> 
-> >> > On Wed 01-11-23 10:21:47, Huang, Ying wrote:
-> >> >> Michal Hocko <mhocko@suse.com> writes:
-> >> > [...]
-> >> >> > Well, I am not convinced about that TBH. Sure it is probably a good fit
-> >> >> > for this specific CXL usecase but it just doesn't fit into many others I
-> >> >> > can think of - e.g. proportional use of those tiers based on the
-> >> >> > workload - you get what you pay for.
-> >> >> 
-> >> >> For "pay", per my understanding, we need some cgroup based
-> >> >> per-memory-tier (or per-node) usage limit.  The following patchset is
-> >> >> the first step for that.
-> >> >> 
-> >> >> https://lore.kernel.org/linux-mm/cover.1655242024.git.tim.c.chen@linux.intel.com/
-> >> >
-> >> > Why do we need a sysfs interface if there are plans for cgroup API?
-> >> 
-> >> They are for different target.  The cgroup API proposed here is to
-> >> constrain the DRAM usage in a system with DRAM and CXL memory.  The less
-> >> you pay, the less DRAM and more CXL memory you use.
+> Dynamic Capacity is expected to cause a numa node to change size (in
+> number of memory blocks) rather than cause numa nodes to come and go, so
+> maybe handling the full node hotplug is a bit of an overreach.
+> 
+> Good call, I'll stop considering this problem for now.
+> 
+> > > If the node is removed from the system, I believe (need to validate
+> > > this, but IIRC) the node will be removed from any registered cpusets.
+> > > As a result, that falls down to mempolicy, and the node is removed.
+> > 
+> > I do not think we do anything like that. Userspace might decide to
+> > change the numa mask when a node is offlined but I do not think we do
+> > anything like that automagically.
 > >
-> > Right, but why the usage distribution requires its own interface and
-> > cannot be combined with the access control part of it?
 > 
-> Per my understanding, they are orthogonal.
+> mpol_rebind_policy called by update_tasks_nodemask
+> https://elixir.bootlin.com/linux/latest/source/mm/mempolicy.c#L319
+> https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L2016
 > 
-> Weighted-interleave is a memory allocation policy, other memory
-> allocation policies include local first, etc.
-> 
-> Usage limit is to constrain the usage of specific memory types
-> (e.g. DRAM) for a cgroup.  It can be used together with local first
-> policy and some other memory allocation policy.
+> falls down from cpuset_hotplug_workfn:
+> https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L3771
 
-Bad wording from me. Sorry for the confusion. Sure those are two
-orthogonal things and I didn't mean to suggest a single API to cover
-both. But if cgroup semantic can be reasonably defined for the usage
-enforcement can we put the interleaving behavior API under the same
-cgroup controller as well?
+Ohh, have missed that. Thanks for the reference. Quite honestly I am not
+sure this code is really a) necessary and b) ever exercised. For the
+former I would argue that offline node could be treated as completely
+depleted one. From the correctness POV it shouldn't make any difference
+and I am rather skeptical it would have performance improvements. And
+for the latter, full node offlines are really rare from experience. I
+would be interested about actual real life usecases which do that
+regularly. I do remember a certain HW vendor working on a hotplugable
+system (both CPUs and memory) to reduce downtimes cause by misbehaving
+CPUs/memoryu. This has turned out very impractical because of movable
+memory requirements and also some HW limitations (like most HW attached
+to Node0 which has turned out to be single point of failure anyway).
+
+[...]
+[...]
+> > Moving the global policy to cgroups would make the main cocern of
+> > different workloads looking for different policy less problamatic.
+> > I didn't have much time to think that through but the main question is
+> > how to sanely define hierarchical properties of those weights? This is
+> > more of a resource distribution than enforcement so maybe a simple
+> > inherit or overwrite (if you have a more specific needs) semantic makes
+> > sense and it is sufficient.
+> >
+> 
+> As a user I would assume it would operate much the same way as other
+> nested cgroups, which is inherit by default (with subsets) or an
+> explicit overwrite that can't exceed the higher level settings.
+
+This would make it rather impractical because a default (everything set
+to 1) would be cast in stone. As mentioned above this this not an
+enforcement limit. So I _think_ that a simple hierarchical rule like
+	cgroup_interleaving_mask(cgroup)
+		interleaving_mask = (cgroup->interleaving_mask) ? : cgroup_interleaving_mask(parent_cgroup(cgroup))
+
+So child cgroups could overwrite parent as they wish. If there is any
+enforcement (like a cpuset) that would filter useable nodes and the
+allocation policy would simply apply weights on those.
+
 -- 
 Michal Hocko
 SUSE Labs
