@@ -1,65 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AB928E2C
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Nov 2023 18:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9DF2D026
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Nov 2023 18:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjgvQO2f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3/ypspo"
 Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E94194;
-	Mon,  6 Nov 2023 10:28:01 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a81ab75f21so57574977b3.2;
-        Mon, 06 Nov 2023 10:28:01 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B26F8F
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Nov 2023 10:33:39 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7b91faf40so56445307b3.1
+        for <linux-cxl@vger.kernel.org>; Mon, 06 Nov 2023 10:33:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699295280; x=1699900080; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1699295618; x=1699900418; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiHuG/fT5g9xmDilldbrq0qWyx0Loz2x/M7JAocEXNM=;
-        b=PjgvQO2fNvAC+9I2C85uC8622mxEY/X3T4J/UaR6zTlecrLYq5eFJ291QOS6I3bUMT
-         sj+uT+iB/MkxiZDY0U/UHtj9igk+P759nOST7vc28p4YW+PHkSt8/bBAsS/yStWWXkpM
-         +nY/K0VREOYSY8L4uWZ873y4vFFebk8Tc2kESkTaHgbBjczcZJ/16MI/AGu+UpwYP3bV
-         47QPmQXXXz0Z8HzWdVtwAb3Q3rvOABP8MvwZTtZwBxhSmuWDlemUIQYGlm7Ibreb07py
-         rWJM0CF4gBGM257vpJ5//VeYWW+AquRxeUHsC56n6ECjHd76+sA99pdmQTOkyz35grcZ
-         U/tw==
+        bh=dio2FgrUP6bZ4O0ycK6wilgfIXhwT7BUP7Rgbml0QMc=;
+        b=M3/ypspooi9K1wweTkn5g+Y7ZLiT375vnCYIMRdmXpvbTMUpjlrxoH4mm9ha3olzdM
+         Ws3La7UixKZzRQxD1gTmhzG310cOYjbZqfkToCCGU/vVchNxqfW7qb14obWsvGvLVG9c
+         mz4l4HdyV0eiaE5czzwYR+Xz8gEtRCUcb3jz98RxpS9l9/O7TNmOpx4zMfe9B//RMbHC
+         0Y8ULHdtzuyBy90te/Ftb5jTH3omNzcKmRop2CpsKkMGpa/PC5PA1iWyX2BARju3s1EB
+         YgAn5hE2ygIcttvg+QTU1x/jPOBEAYA7SDbxPxvfLI/mb2vEq23xosSgbFq76D40Zjto
+         6q3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699295280; x=1699900080;
+        d=1e100.net; s=20230601; t=1699295618; x=1699900418;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yiHuG/fT5g9xmDilldbrq0qWyx0Loz2x/M7JAocEXNM=;
-        b=xBEiJkudyfNYOrqxQRj6XE35B+d0CV/rSE+MCdrAF4JqnxfdPbYNqAQHGPWzWaYk3h
-         Xo1Ar1i86Q24MQSOiWyIufnWrINNp82KoVHg00xlBOne3bck9XoNlLHlAn29sAbt6gJW
-         kI7XcXHWk0hdMUoJXYR4WKVQSC57itI3UyBudhvkF1Neg0etr6h755sKSsy6GcoNr/XJ
-         hoVcZhGPoM36Swjc9k9Mbh1jbhMYRnqzcTXW+La5eSwrL5hkbvIn/tI4Lp1ECv12RQpo
-         jvFDYqGcwmylWS3ATE0pzKU0gVSCksSgnfKCR2foL14WgrZhluhJ8mqCvCejH76QYLAq
-         uzOg==
-X-Gm-Message-State: AOJu0YzFNNTCy3BHbKudn8xkTeG2aN85uNhdQr6hnUhTNO5qfQrT+du/
-	ebK9638yd/VbUlENSpPuE9U=
-X-Google-Smtp-Source: AGHT+IGLpyKFoZDbHCGPb7BuzxNKsicyASbBbioV81Opbu3cH8TozOUxOR+7VmIouo+kynqD8bJ/5Q==
-X-Received: by 2002:a05:690c:95:b0:5a8:60ad:39a4 with SMTP id be21-20020a05690c009500b005a860ad39a4mr12508141ywb.3.1699295280544;
-        Mon, 06 Nov 2023 10:28:00 -0800 (PST)
+        bh=dio2FgrUP6bZ4O0ycK6wilgfIXhwT7BUP7Rgbml0QMc=;
+        b=H7NLamvhwVQn2Y9dDGwlujXB0DtO6LPbT1Ze9vp7AcI1mQLdl+EXBvD1LyPAKbuJgk
+         pSmULM2cioIpke7A+5bzvLPiHHQcvm+F39uTbl/Wt3lnew9tjO155oe2oS/DuXVN5VJv
+         B5CXiS8o5fSi7WL/fkhqUXLlFBI/IrpHz1RbY0WQmkgAewrM3PkwdDX0bADk2x1wIxMx
+         3PNg1nys5/ccTGrd5MIzxfDZBwq0g4sjbYKFNo63+UMYIM2S/69vNUanMF+OGueAmDh9
+         1qh4uUg2+OuDAuBKE9BRboTULnmhmDfAZQjoZk4+EeB8SXOarB/ypibDTnGkC7YyJNFg
+         W/RQ==
+X-Gm-Message-State: AOJu0YwVZaShK/yY94h7kvRxW512yMoOqJs0UE7Sow8w6tgihYE+eI2z
+	u4oowiUrml3XPtpUWStb88g=
+X-Google-Smtp-Source: AGHT+IFY/48a8vMqI8SxTJdSQD1UIHr+/ko5FWF1LI2GiqU1a6hjukhXiftLKHfwTcxoBX/HEqErbg==
+X-Received: by 2002:a0d:d848:0:b0:57a:8456:3401 with SMTP id a69-20020a0dd848000000b0057a84563401mr12610162ywe.29.1699295618594;
+        Mon, 06 Nov 2023 10:33:38 -0800 (PST)
 Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id w200-20020a0dd4d1000000b005a50575b1c8sm4576552ywd.26.2023.11.06.10.27.59
+        by smtp.gmail.com with ESMTPSA id bt12-20020a05690c072c00b005a7b785f66bsm4590078ywb.39.2023.11.06.10.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 10:28:00 -0800 (PST)
+        Mon, 06 Nov 2023 10:33:38 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Mon, 6 Nov 2023 10:27:32 -0800
-To: Jim Harris <jim.harris@samsung.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
+Date: Mon, 6 Nov 2023 10:33:18 -0800
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,
 	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Fan Ni <fan.ni@samsung.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: fix x9 interleave typo
-Message-ID: <ZUkwFLIKCSLXTCmq@debian>
-References: <CGME20231103201835uscas1p29ca7f76ed5e4c829bfb022a040202d73@uscas1p2.samsung.com>
- <169904271254.204936.8580772404462743630.stgit@ubuntu>
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net, vishal.l.verma@intel.com, ira.weiny@intel.com
+Subject: Re: [PATCH v3] cxl: Add cxl_num_decoders_committed() usage to
+ cxl_test
+Message-ID: <ZUkxbneWzCH5imaS@debian>
+References: <169929160525.824083.11813222229025394254.stgit@djiang5-mobl3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,31 +62,72 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169904271254.204936.8580772404462743630.stgit@ubuntu>
+In-Reply-To: <169929160525.824083.11813222229025394254.stgit@djiang5-mobl3>
 
-On Fri, Nov 03, 2023 at 08:18:34PM +0000, Jim Harris wrote:
-> CXL supports x3, x6 and x12 - not x9.
+On Mon, Nov 06, 2023 at 10:26:45AM -0700, Dave Jiang wrote:
+> Commit 458ba8189cb4 ("cxl: Add cxl_decoders_committed() helper") missed the
+> conversion for cxl_test. Add usage of cxl_num_decoders_committed() to
+> replace the open coding.
 > 
-> Fixes: 80d10a6cee050 ("cxl/region: Add interleave geometry attributes")
-> Signed-off-by: Jim Harris <jim.harris@samsung.com>
-> ---
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
->  drivers/cxl/core/region.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 6d63b8798c29..d295b3488e4a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -403,7 +403,7 @@ static ssize_t interleave_ways_store(struct device *dev,
->  		return rc;
+> ---
+> v3:
+> - Move export of symbol to cxl_test (Dan)
+> v2:
+> - Add missing changes, stg refresh foobar
+> ---
+>  tools/testing/cxl/Kbuild             |    1 +
+>  tools/testing/cxl/cxl_core_exports.c |    7 +++++++
+>  tools/testing/cxl/test/cxl.c         |    5 +++--
+>  3 files changed, 11 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/testing/cxl/cxl_core_exports.c
+> 
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 90f3c9802ffb..95dc58b94178 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -62,5 +62,6 @@ cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+>  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+>  cxl_core-y += config_check.o
+>  cxl_core-y += cxl_core_test.o
+> +cxl_core-y += cxl_core_exports.o
 >  
->  	/*
-> -	 * Even for x3, x9, and x12 interleaves the region interleave must be a
-> +	 * Even for x3, x6, and x12 interleaves the region interleave must be a
->  	 * power of 2 multiple of the host bridge interleave.
->  	 */
->  	if (!is_power_of_2(val / cxld->interleave_ways) ||
+>  obj-m += test/
+> diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
+> new file mode 100644
+> index 000000000000..077e6883921d
+> --- /dev/null
+> +++ b/tools/testing/cxl/cxl_core_exports.c
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +
+> +#include "cxl.h"
+> +
+> +/* Exporting of cxl_core symbols that are only used by cxl_test */
+> +EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, CXL);
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index b88546299902..f4e517a0c774 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -669,10 +669,11 @@ static int mock_decoder_commit(struct cxl_decoder *cxld)
+>  		return 0;
+>  
+>  	dev_dbg(&port->dev, "%s commit\n", dev_name(&cxld->dev));
+> -	if (port->commit_end + 1 != id) {
+> +	if (cxl_num_decoders_committed(port) != id) {
+>  		dev_dbg(&port->dev,
+>  			"%s: out of order commit, expected decoder%d.%d\n",
+> -			dev_name(&cxld->dev), port->id, port->commit_end + 1);
+> +			dev_name(&cxld->dev), port->id,
+> +			cxl_num_decoders_committed(port));
+>  		return -EBUSY;
+>  	}
+>  
+> 
 > 
