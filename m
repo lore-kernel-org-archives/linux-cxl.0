@@ -1,41 +1,41 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27798C2F0
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Nov 2023 07:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE01CA56
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Nov 2023 07:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N7+rvl3S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFcbiKkE"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15580C0;
-	Mon,  6 Nov 2023 23:23:16 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1311FC;
+	Mon,  6 Nov 2023 23:23:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699341797; x=1730877797;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=zxih+4WMqEN6PqGG1MzxNGemsJnW9/vzuClucSb0Eao=;
-  b=N7+rvl3ShpMQTrM8esyq6BF9a24X2OLYoG5gCSC5FS67aYNUPpcLiLWj
-   xxg0oQV8SBPNi2uJcmI649p+y02T7K+kM2TAojbLr9qQPCYx+FaqSo8WO
-   YKZw0vEmorxG05MDeM+3P5eeJOE8IsIbust26FJL/2O66r+z5yQyb0Bn8
-   bEv5A/iqYlT656DJrRY9ndnY4tBFExmBiyt5idrJpTPp/+ZXcFwr8vVxP
-   2CBO9zrMUU1Niq3Ge8EZ2Y3WrhbE7q0RHScOQ/9g0RUQoj3i2pycoxes/
-   voAptim7qELlWLA6MJJ27B7ggWUzfL/G5aKmOq1nCieI4vxEAH4lij1Hx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="475689615"
+  t=1699341799; x=1730877799;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=iJafxoDEShHWybkOtwON9JCHfE70mBFa3uJj6kdyYHc=;
+  b=JFcbiKkEenF4DzECFQVbuNF/BVjtwJzbT2o0jYGimwQfXD/lwqgWcmF4
+   zZP0pNmHxJHu+SdPGw6683bWwdWkYK8kio2VaIfshoY1LqLfMpVT7sW4W
+   xoLo6M9DR1Zpkz0IUB75qOyngRKmgsZEmt6rRbHVNmQ7gwaRBAqBB+FEt
+   C8Ah509/3PDaFGHvVHd1eYQXCMJGbLic1x+gUyzNFRXGiTEirabbFr6+z
+   kLBsqfVYJD4K8ybaOsjlPadvp958RhPmneFYSlXOcolR5u8lN0O9pWO3H
+   rQpsABXNPL9o8q7jNyIYcrDv1VpFgbkSkA/zGXJ3KGC7NCeX/sEHOx+b8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="475689654"
 X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="475689615"
+   d="scan'208";a="475689654"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:16 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:19 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="712477201"
+X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="712477244"
 X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="712477201"
+   d="scan'208";a="712477244"
 Received: from pengmich-mobl1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.96.119])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:14 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:17 -0800
 From: Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v10 0/3] mm: use memmap_on_memory semantics for dax/kmem
-Date: Tue, 07 Nov 2023 00:22:40 -0700
-Message-Id: <20231107-vv-kmem_memmap-v10-0-1253ec050ed0@intel.com>
+Date: Tue, 07 Nov 2023 00:22:42 -0700
+Subject: [PATCH v10 2/3] mm/memory_hotplug: split memmap_on_memory requests
+ across memblocks
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -44,12 +44,9 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMDlSWUC/3XQzU7DMAwH8FeZciYoifPh7MR7IITcfLCItZvaU
- YGmvTvZDnQ0cMjBf+lnxz6zKY0lTWy7ObMxzWUqh6EWUjxsWNjR8JZ4iTVgSigQVgKfZ/7ep/6
- 1vp6O3GiEgFFo5TyrqKMp8W6kIewqGz72+xoex5TL523M80utd2U6Hcav29RZXtN/+8+SC55tT
- D5YyirYpzKc0v4xHHp2bTWrhTslGq4qR+wiUQfae1hzWDgK2XCoXAubPFE2Fv2a64V7hQ3Xldu
- cHeQUjPS05uaHSyFMw03lZHSUHmUW1Hze3nFpG24rFw6ziBAEOLnm7o6rdrq77k7ORmeNitmsO
- S5c/nE6rNwkTQgAEhDX3N9z1XBfuXcQbQeEWf463eVy+QbJXVTSugIAAA==
+Message-Id: <20231107-vv-kmem_memmap-v10-2-1253ec050ed0@intel.com>
+References: <20231107-vv-kmem_memmap-v10-0-1253ec050ed0@intel.com>
+In-Reply-To: <20231107-vv-kmem_memmap-v10-0-1253ec050ed0@intel.com>
 To: Andrew Morton <akpm@linux-foundation.org>, 
  David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, 
  Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
@@ -60,150 +57,333 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
  Michal Hocko <mhocko@suse.com>, 
  Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
- Jeff Moyer <jmoyer@redhat.com>, Vishal Verma <vishal.l.verma@intel.com>, 
- Fan Ni <fan.ni@samsung.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ Jeff Moyer <jmoyer@redhat.com>, Vishal Verma <vishal.l.verma@intel.com>
 X-Mailer: b4 0.13-dev-26615
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6235;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9881;
  i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=zxih+4WMqEN6PqGG1MzxNGemsJnW9/vzuClucSb0Eao=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKmeT+8lqLYqtqmsDr58Ui/2IUt13unTWaqnk5oNgluMl
- 0RPKH3XUcrCIMbFICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgIk0rmZkmPcy0yS6s6VQ7Min
- vef3v0wzk7Fesb/n3qdnd/2FG6tYJzAyvIw8+0r8ueoH447pXOpli1/+SOlb/fHw74RT3VOOBDL
- 3sAEA
+ bh=iJafxoDEShHWybkOtwON9JCHfE70mBFa3uJj6kdyYHc=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDKmeTx/eWu/EL86d3xrNX6Gl/s5JqfpdvdxBlje6+3rMb
+ tVZ2Cp2lLIwiHExyIopsvzd85HxmNz2fJ7ABEeYOaxMIEMYuDgFYCLdMQz//bK/Lrr2KaLqB18Y
+ W/7PdF7XjVYNdycqn54zdaZ5oc4reUaGNQc+T30bczRyqbux4Zey1aKM1tWHBRkEuT5v+sSitle
+ DBQA=
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
  fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 
-The dax/kmem driver can potentially hot-add large amounts of memory
-originating from CXL memory expanders, or NVDIMMs, or other 'device
-memories'. There is a chance there isn't enough regular system memory
-available to fit the memmap for this new memory. It's therefore
-desirable, if all other conditions are met, for the kmem managed memory
-to place its memmap on the newly added memory itself.
+The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is restricted to
+'memblock_size' chunks of memory being added. Adding a larger span of
+memory precludes memmap_on_memory semantics.
 
-The main hurdle for accomplishing this for kmem is that memmap_on_memory
-can only be done if the memory being added is equal to the size of one
-memblock. To overcome this, allow the hotplug code to split an add_memory()
-request into memblock-sized chunks, and try_remove_memory() to also
-expect and handle such a scenario.
+For users of hotplug such as kmem, large amounts of memory might get
+added from the CXL subsystem. In some cases, this amount may exceed the
+available 'main memory' to store the memmap for the memory being added.
+In this case, it is useful to have a way to place the memmap on the
+memory being added, even if it means splitting the addition into
+memblock-sized chunks.
 
-Patch 1 replaces an open-coded kmemdup()
+Change add_memory_resource() to loop over memblock-sized chunks of
+memory if caller requested memmap_on_memory, and if other conditions for
+it are met. Teach try_remove_memory() to also expect that a memory
+range being removed might have been split up into memblock sized chunks,
+and to loop through those as needed.
 
-Patch 2 teaches the memory_hotplug code to allow for splitting
-add_memory() and remove_memory() requests over memblock sized chunks.
+This does preclude being able to use PUD mappings in the direct map; a
+proposal to how this could be optimized in the future is laid out
+here[1].
 
-Patch 3 allows the dax region drivers to request memmap_on_memory
-semantics. CXL dax regions default this to 'on', all others default to
-off to keep existing behavior unchanged.
+[1]: https://lore.kernel.org/linux-mm/b6753402-2de9-25b2-36e9-eacd49752b19@redhat.com/
 
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
-Changes in v10:
-- Rebase on current mainline (Andrew Morton)
-- Pick up Reviewed-by (Fan Ni)
-- Link to v9: https://lore.kernel.org/r/20231102-vv-kmem_memmap-v9-0-973d6b3a8f1a@intel.com
+ mm/memory_hotplug.c | 212 +++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 136 insertions(+), 76 deletions(-)
 
-Changes in v9:
-- Fix error unwinding for the ENOMEM case in
-  remove_memory_blocks_and_altmaps() (Ying, David)
-- Misc readability and style cleanups (David)
-- Link to v8: https://lore.kernel.org/r/20231101-vv-kmem_memmap-v8-0-5e4a83331388@intel.com
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 3ed48059a780..51d4895850ba 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1380,6 +1380,85 @@ static bool mhp_supports_memmap_on_memory(unsigned long size)
+ 	return arch_supports_memmap_on_memory(vmemmap_size);
+ }
+ 
++static void __ref remove_memory_blocks_and_altmaps(u64 start, u64 size)
++{
++	unsigned long memblock_size = memory_block_size_bytes();
++	u64 cur_start;
++
++	/*
++	 * For memmap_on_memory, the altmaps were added on a per-memblock
++	 * basis; we have to process each individual memory block.
++	 */
++	for (cur_start = start; cur_start < start + size;
++	     cur_start += memblock_size) {
++		struct vmem_altmap *altmap = NULL;
++		struct memory_block *mem;
++
++		mem = find_memory_block(pfn_to_section_nr(PFN_DOWN(cur_start)));
++		if (WARN_ON_ONCE(!mem))
++			continue;
++
++		altmap = mem->altmap;
++		mem->altmap = NULL;
++
++		remove_memory_block_devices(cur_start, memblock_size);
++
++		arch_remove_memory(cur_start, memblock_size, altmap);
++
++		/* Verify that all vmemmap pages have actually been freed. */
++		WARN(altmap->alloc, "Altmap not fully unmapped");
++		kfree(altmap);
++	}
++}
++
++static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
++					    u64 start, u64 size)
++{
++	unsigned long memblock_size = memory_block_size_bytes();
++	u64 cur_start;
++	int ret;
++
++	for (cur_start = start; cur_start < start + size;
++	     cur_start += memblock_size) {
++		struct mhp_params params = { .pgprot =
++						     pgprot_mhp(PAGE_KERNEL) };
++		struct vmem_altmap mhp_altmap = {
++			.base_pfn = PHYS_PFN(cur_start),
++			.end_pfn = PHYS_PFN(cur_start + memblock_size - 1),
++		};
++
++		mhp_altmap.free = memory_block_memmap_on_memory_pages();
++		params.altmap = kmemdup(&mhp_altmap, sizeof(struct vmem_altmap),
++					GFP_KERNEL);
++		if (!params.altmap) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		/* call arch's memory hotadd */
++		ret = arch_add_memory(nid, cur_start, memblock_size, &params);
++		if (ret < 0) {
++			kfree(params.altmap);
++			goto out;
++		}
++
++		/* create memory block devices after memory was added */
++		ret = create_memory_block_devices(cur_start, memblock_size,
++						  params.altmap, group);
++		if (ret) {
++			arch_remove_memory(cur_start, memblock_size, NULL);
++			kfree(params.altmap);
++			goto out;
++		}
++	}
++
++	return 0;
++out:
++	if (ret && cur_start != start)
++		remove_memory_blocks_and_altmaps(start, cur_start - start);
++	return ret;
++}
++
+ /*
+  * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+  * and online/offline operations (triggered e.g. by sysfs).
+@@ -1390,10 +1469,6 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ {
+ 	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+ 	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+-	struct vmem_altmap mhp_altmap = {
+-		.base_pfn =  PHYS_PFN(res->start),
+-		.end_pfn  =  PHYS_PFN(res->end),
+-	};
+ 	struct memory_group *group = NULL;
+ 	u64 start, size;
+ 	bool new_node = false;
+@@ -1436,30 +1511,22 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 	/*
+ 	 * Self hosted memmap array
+ 	 */
+-	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
+-		if (mhp_supports_memmap_on_memory(size)) {
+-			mhp_altmap.free = memory_block_memmap_on_memory_pages();
+-			params.altmap = kmemdup(&mhp_altmap,
+-						sizeof(struct vmem_altmap),
+-						GFP_KERNEL);
+-			if (!params.altmap) {
+-				ret = -ENOMEM;
+-				goto error;
+-			}
++	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
++	    mhp_supports_memmap_on_memory(memory_block_size_bytes())) {
++		ret = create_altmaps_and_memory_blocks(nid, group, start, size);
++		if (ret)
++			goto error;
++	} else {
++		ret = arch_add_memory(nid, start, size, &params);
++		if (ret < 0)
++			goto error;
++
++		/* create memory block devices after memory was added */
++		ret = create_memory_block_devices(start, size, NULL, group);
++		if (ret) {
++			arch_remove_memory(start, size, NULL);
++			goto error;
+ 		}
+-		/* fallback to not using altmap  */
+-	}
+-
+-	/* call arch's memory hotadd */
+-	ret = arch_add_memory(nid, start, size, &params);
+-	if (ret < 0)
+-		goto error_free;
+-
+-	/* create memory block devices after memory was added */
+-	ret = create_memory_block_devices(start, size, params.altmap, group);
+-	if (ret) {
+-		arch_remove_memory(start, size, NULL);
+-		goto error_free;
+ 	}
+ 
+ 	if (new_node) {
+@@ -1496,8 +1563,6 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 		walk_memory_blocks(start, size, NULL, online_memory_block);
+ 
+ 	return ret;
+-error_free:
+-	kfree(params.altmap);
+ error:
+ 	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		memblock_remove(start, size);
+@@ -2068,17 +2133,13 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
+ 	return 0;
+ }
+ 
+-static int test_has_altmap_cb(struct memory_block *mem, void *arg)
++static int count_memory_range_altmaps_cb(struct memory_block *mem, void *arg)
+ {
+-	struct memory_block **mem_ptr = (struct memory_block **)arg;
+-	/*
+-	 * return the memblock if we have altmap
+-	 * and break callback.
+-	 */
+-	if (mem->altmap) {
+-		*mem_ptr = mem;
+-		return 1;
+-	}
++	u64 *num_altmaps = (u64 *)arg;
++
++	if (mem->altmap)
++		*num_altmaps += 1;
++
+ 	return 0;
+ }
+ 
+@@ -2152,11 +2213,29 @@ void try_offline_node(int nid)
+ }
+ EXPORT_SYMBOL(try_offline_node);
+ 
++static int memory_blocks_have_altmaps(u64 start, u64 size)
++{
++	u64 num_memblocks = size / memory_block_size_bytes();
++	u64 num_altmaps = 0;
++
++	if (!mhp_memmap_on_memory())
++		return 0;
++
++	walk_memory_blocks(start, size, &num_altmaps,
++			   count_memory_range_altmaps_cb);
++
++	if (num_altmaps == 0)
++		return 0;
++
++	if (WARN_ON_ONCE(num_memblocks != num_altmaps))
++		return -EINVAL;
++
++	return 1;
++}
++
+ static int __ref try_remove_memory(u64 start, u64 size)
+ {
+-	struct memory_block *mem;
+-	int rc = 0, nid = NUMA_NO_NODE;
+-	struct vmem_altmap *altmap = NULL;
++	int rc, nid = NUMA_NO_NODE;
+ 
+ 	BUG_ON(check_hotplug_memory_range(start, size));
+ 
+@@ -2173,45 +2252,26 @@ static int __ref try_remove_memory(u64 start, u64 size)
+ 	if (rc)
+ 		return rc;
+ 
+-	/*
+-	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
+-	 * the same granularity it was added - a single memory block.
+-	 */
+-	if (mhp_memmap_on_memory()) {
+-		rc = walk_memory_blocks(start, size, &mem, test_has_altmap_cb);
+-		if (rc) {
+-			if (size != memory_block_size_bytes()) {
+-				pr_warn("Refuse to remove %#llx - %#llx,"
+-					"wrong granularity\n",
+-					start, start + size);
+-				return -EINVAL;
+-			}
+-			altmap = mem->altmap;
+-			/*
+-			 * Mark altmap NULL so that we can add a debug
+-			 * check on memblock free.
+-			 */
+-			mem->altmap = NULL;
+-		}
+-	}
+-
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+ 
+-	/*
+-	 * Memory block device removal under the device_hotplug_lock is
+-	 * a barrier against racing online attempts.
+-	 */
+-	remove_memory_block_devices(start, size);
+-
+ 	mem_hotplug_begin();
+ 
+-	arch_remove_memory(start, size, altmap);
+-
+-	/* Verify that all vmemmap pages have actually been freed. */
+-	if (altmap) {
+-		WARN(altmap->alloc, "Altmap not fully unmapped");
+-		kfree(altmap);
++	rc = memory_blocks_have_altmaps(start, size);
++	if (rc < 0) {
++		mem_hotplug_done();
++		return rc;
++	} else if (!rc) {
++		/*
++		 * Memory block device removal under the device_hotplug_lock is
++		 * a barrier against racing online attempts.
++		 * No altmaps present, do the removal directly
++		 */
++		remove_memory_block_devices(start, size);
++		arch_remove_memory(start, size, NULL);
++	} else {
++		/* all memblocks in the range have altmaps */
++		remove_memory_blocks_and_altmaps(start, size);
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
 
-Changes in v8:
-- Fix unwinding in create_altmaps_and_memory_blocks() to remove
-  partially added blocks and altmaps. (David, Ying)
-- Simplify remove_memory_blocks_and_altmaps() since an altmap is
-  assured. (David)
-- Since we remove per memory-block altmaps, the walk through  memory
-  blocks for a larger range isn't needed. Instead we can lookup the
-  memory block directly from the pfn, allowing the test_has_altmap_cb()
-  callback to be dropped and removed. (David)
-- Link to v7: https://lore.kernel.org/r/20231025-vv-kmem_memmap-v7-0-4a76d7652df5@intel.com
-
-Changes in v7:
-- Make the add_memory_resource() flow symmetrical w.r.t. try_remove_memory()
-  in terms of how the altmap path is taken (David Hildenbrand)
-- Move a comment, clean up usage of 'memblock' vs. 'memory_block'
-  (David Hildenbrand)
-- Don't use the altmap path for the mhp_supports_memmap_on_memory(memblock_size) == false
-  case (Huang Ying)
-- Link to v6: https://lore.kernel.org/r/20231016-vv-kmem_memmap-v6-0-078f0d3c0371@intel.com
-
-Changes in v6:
-- Add a prep patch to replace an open coded kmemdup in
-  add_memory_resource() (Dan Williams)
-- Fix ordering of firmware_map_remove w.r.t taking the hotplug lock
-  (David Hildenbrand)
-- Remove unused 'nid' variable, and a stray whitespace (David Hildenbrand)
-- Clean up and simplify the altmap vs non-altmap paths for
-  try_remove_memory (David Hildenbrand)
-- Add a note to the changelog in patch 1 linking to the PUD mappings
-  proposal (David Hildenbrand)
-- Remove the new sysfs ABI from the kmem/dax drivers until ABI
-  documentation for /sys/bus/dax can be established (will split this out
-  into a separate patchset) (Dan Williams)
-- Link to v5: https://lore.kernel.org/r/20231005-vv-kmem_memmap-v5-0-a54d1981f0a3@intel.com
-
-Changes in v5:
-- Separate out per-memblock operations from per memory block operations
-  in try_remove_memory(), and rename the inner function appropriately.
-  This does expand the scope of the memory hotplug lock to include
-  remove_memory_block_devices(), but the alternative was to drop the
-  lock in the inner function separately for each iteration, and then
-  re-acquire it in try_remove_memory() creating a small window where
-  the lock isn't held. (David Hildenbrand)
-- Remove unnecessary rc check from the memmap_on_memory_store sysfs
-  helper in patch 2 (Dan Carpenter)
-- Link to v4: https://lore.kernel.org/r/20230928-vv-kmem_memmap-v4-0-6ff73fec519a@intel.com
-
-Changes in v4:
-- Rebase to Aneesh's PPC64 memmap_on_memory series v8 [2].
-- Tweak a goto / error path in add_memory_create_devices() (Jonathan)
-- Retain the old behavior for dax devices, only default to
-  memmap_on_memory for CXL (Jonathan)
-- Link to v3: https://lore.kernel.org/r/20230801-vv-kmem_memmap-v3-0-406e9aaf5689@intel.com
-
-[2]: https://lore.kernel.org/linux-mm/20230808091501.287660-1-aneesh.kumar@linux.ibm.com
-
-Changes in v3:
-- Rebase on Aneesh's patches [1]
-- Drop Patch 1 - it is not needed since [1] allows for dynamic setting
-  of the memmap_on_memory param (David)
-- Link to v2: https://lore.kernel.org/r/20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com
-
-[1]: https://lore.kernel.org/r/20230801044116.10674-1-aneesh.kumar@linux.ibm.com
-
-Changes in v2:
-- Drop the patch to create an override path for the memmap_on_memory
-  module param (David)
-- Move the chunking into memory_hotplug.c so that any caller of
-  add_memory() can request this behavior. (David)
-- Handle remove_memory() too. (David, Ying)
-- Add a sysfs control in the kmem driver for memmap_on_memory semantics
-  (David, Jonathan)
-- Add a #else case to define mhp_supports_memmap_on_memory() if
-  CONFIG_MEMORY_HOTPLUG is unset. (0day report)
-- Link to v1: https://lore.kernel.org/r/20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com
-
----
-Vishal Verma (3):
-      mm/memory_hotplug: replace an open-coded kmemdup() in add_memory_resource()
-      mm/memory_hotplug: split memmap_on_memory requests across memblocks
-      dax/kmem: allow kmem to add memory with memmap_on_memory
-
- drivers/dax/bus.h         |   1 +
- drivers/dax/dax-private.h |   1 +
- drivers/dax/bus.c         |   3 +
- drivers/dax/cxl.c         |   1 +
- drivers/dax/hmem/hmem.c   |   1 +
- drivers/dax/kmem.c        |   8 +-
- drivers/dax/pmem.c        |   1 +
- mm/memory_hotplug.c       | 210 +++++++++++++++++++++++++++++-----------------
- 8 files changed, 150 insertions(+), 76 deletions(-)
----
-base-commit: d2f51b3516dade79269ff45eae2a7668ae711b25
-change-id: 20230613-vv-kmem_memmap-5483c8d04279
-
-Best regards,
 -- 
-Vishal Verma <vishal.l.verma@intel.com>
+2.41.0
 
