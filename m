@@ -1,225 +1,137 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07272CA69
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Nov 2023 07:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aGrym4D8"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F40C6;
-	Mon,  6 Nov 2023 23:23:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699341801; x=1730877801;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=njSbNfDDek+ai8e3OAg76pJEkWdQHMGuuBuvUJ8XCp0=;
-  b=aGrym4D8vOUV5O0U1iaCHBpdKqIYF8z+pWBLB+q8G3Nc7AvJWa/9tQ9f
-   nwxhHRO0P/5uEu4LlkvfBOCiiUZuUxe6wpdZzMNiBnbNR6dZ0qvPEXCEf
-   BOtr9LkdPvSUX78t7F0+zOGyWSyE2KURjTZVJoeeS89Q2eKgUfIgX9YTK
-   VraBDjNHbjX4Uc68XpD6KPCbpXv4V+6jJggAE7TLo7+NeDlcNc6lRAYyj
-   dvX8WSbY+uKrqVpAJF0MzW3oNnNzqc61nkissOj2uZqqz6lh5XBxsoO3q
-   jYgITMkKlyFfAevbNcbDGJDd9JVG2roh7RdS4CH+j0gBswYv9UhH3+QBt
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="475689670"
-X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="475689670"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="712477260"
-X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="712477260"
-Received: from pengmich-mobl1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.96.119])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 23:23:19 -0800
-From: Vishal Verma <vishal.l.verma@intel.com>
-Date: Tue, 07 Nov 2023 00:22:43 -0700
-Subject: [PATCH v10 3/3] dax/kmem: allow kmem to add memory with
- memmap_on_memory
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51169111A4;
+	Tue,  7 Nov 2023 09:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FB292;
+	Tue,  7 Nov 2023 01:38:19 -0800 (PST)
+Received: from lhrpeml100001.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SPjjl0dvWz67mKT;
+	Tue,  7 Nov 2023 17:34:51 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml100001.china.huawei.com (7.191.160.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 7 Nov 2023 09:38:16 +0000
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.031;
+ Tue, 7 Nov 2023 09:38:16 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	"Vishal Verma" <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: RE: [PATCH RFC v3 1/6] cxl/trace: Remove uuid from event trace known
+ events
+Thread-Topic: [PATCH RFC v3 1/6] cxl/trace: Remove uuid from event trace known
+ events
+Thread-Index: AQHaDQgRQ2vINXGk70OHbaqSCzYaYrBoqc8AgAAYFhCABR7LgIAAwHxA
+Date: Tue, 7 Nov 2023 09:38:16 +0000
+Message-ID: <36f2d12934d64a278f2c0313cbd01abc@huawei.com>
+References: <20230601-cxl-cper-v3-0-0189d61f7956@intel.com>
+ <20230601-cxl-cper-v3-1-0189d61f7956@intel.com>
+ <20231103142756.00000e20@Huawei.com>
+ <547d055eb85d4cee9c636c69e89a82ed@huawei.com>
+ <65496333c1dc9_90fed29479@iweiny-mobl.notmuch>
+In-Reply-To: <65496333c1dc9_90fed29479@iweiny-mobl.notmuch>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.126.168.44]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231107-vv-kmem_memmap-v10-3-1253ec050ed0@intel.com>
-References: <20231107-vv-kmem_memmap-v10-0-1253ec050ed0@intel.com>
-In-Reply-To: <20231107-vv-kmem_memmap-v10-0-1253ec050ed0@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, 
- Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
- Huang Ying <ying.huang@intel.com>, 
- Dave Hansen <dave.hansen@linux.intel.com>, 
- "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
- Michal Hocko <mhocko@suse.com>, 
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
- Jeff Moyer <jmoyer@redhat.com>, Vishal Verma <vishal.l.verma@intel.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Mailer: b4 0.13-dev-26615
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5065;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=njSbNfDDek+ai8e3OAg76pJEkWdQHMGuuBuvUJ8XCp0=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKmeTx85xLTUnbT42XOS8zafQFGt4G4X23MMh13LZubMb
- srrfiDWUcrCIMbFICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgIlM02VkWHFsxgYDo7xlNp0x
- /OKS7QdPvLjBuJb9HLdJdVtAc7b9GkaG3YK780/v+PBM25bBd4tB0309llXPCu9IBr1JsE6RzJ7
- BBwA=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+X-CFilter-Loop: Reflected
 
-Large amounts of memory managed by the kmem driver may come in via CXL,
-and it is often desirable to have the memmap for this memory on the new
-memory itself.
+Hi Ira,
 
-Enroll kmem-managed memory for memmap_on_memory semantics if the dax
-region originates via CXL. For non-CXL dax regions, retain the existing
-default behavior of hot adding without memmap_on_memory semantics.
+>-----Original Message-----
+>From: Ira Weiny <ira.weiny@intel.com>
+>Sent: 06 November 2023 22:06
+>To: Shiju Jose <shiju.jose@huawei.com>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; Ira Weiny <ira.weiny@intel.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>; Smita Koralahalli
+><Smita.KoralahalliChannabasappa@amd.com>; Yazen Ghannam
+><yazen.ghannam@amd.com>; Davidlohr Bueso <dave@stgolabs.net>; Dave
+>Jiang <dave.jiang@intel.com>; Alison Schofield <alison.schofield@intel.com=
+>;
+>Vishal Verma <vishal.l.verma@intel.com>; Ard Biesheuvel <ardb@kernel.org>;
+>linux-efi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>cxl@vger.kernel.org
+>Subject: RE: [PATCH RFC v3 1/6] cxl/trace: Remove uuid from event trace kn=
+own
+>events
+>
+>Shiju Jose wrote:
+>>
+>>
+>> >-----Original Message-----
+>> >From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> >Sent: 03 November 2023 14:28
+>> >To: Ira Weiny <ira.weiny@intel.com>
+>> >Cc: Dan Williams <dan.j.williams@intel.com>; Smita Koralahalli
+>> ><Smita.KoralahalliChannabasappa@amd.com>; Yazen Ghannam
+>> ><yazen.ghannam@amd.com>; Davidlohr Bueso <dave@stgolabs.net>; Dave
+>> >Jiang <dave.jiang@intel.com>; Alison Schofield
+>> ><alison.schofield@intel.com>; Vishal Verma
+>> ><vishal.l.verma@intel.com>; Ard Biesheuvel <ardb@kernel.org>;
+>> >linux-efi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>> >cxl@vger.kernel.org; Shiju Jose <shiju.jose@huawei.com>
+>> >Subject: Re: [PATCH RFC v3 1/6] cxl/trace: Remove uuid from event
+>> >trace known events
+>> >
+>> >On Wed, 01 Nov 2023 14:11:18 -0700
+>> >Ira Weiny <ira.weiny@intel.com> wrote:
+>> >
+>> >> The uuid printed in the well known events is redundant.  The uuid
+>> >> defines what the event was.
+>> >>
+>> >> Remove the uuid from the known events and only report it in the
+>> >> generic event as it remains informative there.
+>> >>
+>> >> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+>> >> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>> >> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>> >
+>> >Removing the print is fine, but look like this also removes the
+>> >actual trace point field.  That's userspace ABI.  Expanding it is
+>> >fine, but taking fields away is more problematic.
+>> >
+>> >Are we sure we don't break anyone?  Shiju, will rasdaemon be fine
+>> >with this change?
+>>
+>> The field hdr_uuid is removed from the common CXL_EVT_TP_entry shared
+>> by the trace events cxl_generic_event, cxl_general_media, cxl_dram and
+>cxl_memory_module .
+>> rasdaemon will break because of this while processing these trace
+>> events and also affects the corresponding error records in the SQLite da=
+ta
+>base.
+>> Rasdaemon needs update to avoid this.
+>>
+>
+>Ok we can leave the uuid field in easy enough.
+>
+>But does rasdaemon use the value of the field for anything?  In other word=
+s does
+>CPER record processing need to generate a proper UUID value?
+No. Presently used for logging purpose only in the rasdaemon.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- drivers/dax/bus.h         | 1 +
- drivers/dax/dax-private.h | 1 +
- drivers/dax/bus.c         | 3 +++
- drivers/dax/cxl.c         | 1 +
- drivers/dax/hmem/hmem.c   | 1 +
- drivers/dax/kmem.c        | 8 +++++++-
- drivers/dax/pmem.c        | 1 +
- 7 files changed, 15 insertions(+), 1 deletion(-)
+>
+>Ira
 
-diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-index 1ccd23360124..cbbf64443098 100644
---- a/drivers/dax/bus.h
-+++ b/drivers/dax/bus.h
-@@ -23,6 +23,7 @@ struct dev_dax_data {
- 	struct dev_pagemap *pgmap;
- 	resource_size_t size;
- 	int id;
-+	bool memmap_on_memory;
- };
- 
- struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data);
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index 27cf2daaaa79..446617b73aea 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -70,6 +70,7 @@ struct dev_dax {
- 	struct ida ida;
- 	struct device dev;
- 	struct dev_pagemap *pgmap;
-+	bool memmap_on_memory;
- 	int nr_range;
- 	struct dev_dax_range {
- 		unsigned long pgoff;
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 1659b787b65f..1ff1ab5fa105 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -367,6 +367,7 @@ static ssize_t create_store(struct device *dev, struct device_attribute *attr,
- 			.dax_region = dax_region,
- 			.size = 0,
- 			.id = -1,
-+			.memmap_on_memory = false,
- 		};
- 		struct dev_dax *dev_dax = devm_create_dev_dax(&data);
- 
-@@ -1400,6 +1401,8 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
- 	dev_dax->align = dax_region->align;
- 	ida_init(&dev_dax->ida);
- 
-+	dev_dax->memmap_on_memory = data->memmap_on_memory;
-+
- 	inode = dax_inode(dax_dev);
- 	dev->devt = inode->i_rdev;
- 	dev->bus = &dax_bus_type;
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index 8bc9d04034d6..c696837ab23c 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -26,6 +26,7 @@ static int cxl_dax_region_probe(struct device *dev)
- 		.dax_region = dax_region,
- 		.id = -1,
- 		.size = range_len(&cxlr_dax->hpa_range),
-+		.memmap_on_memory = true,
- 	};
- 
- 	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
-diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-index 5d2ddef0f8f5..b9da69f92697 100644
---- a/drivers/dax/hmem/hmem.c
-+++ b/drivers/dax/hmem/hmem.c
-@@ -36,6 +36,7 @@ static int dax_hmem_probe(struct platform_device *pdev)
- 		.dax_region = dax_region,
- 		.id = -1,
- 		.size = region_idle ? 0 : range_len(&mri->range),
-+		.memmap_on_memory = false,
- 	};
- 
- 	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 369c698b7706..42ee360cf4e3 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -12,6 +12,7 @@
- #include <linux/mm.h>
- #include <linux/mman.h>
- #include <linux/memory-tiers.h>
-+#include <linux/memory_hotplug.h>
- #include "dax-private.h"
- #include "bus.h"
- 
-@@ -93,6 +94,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	struct dax_kmem_data *data;
- 	struct memory_dev_type *mtype;
- 	int i, rc, mapped = 0;
-+	mhp_t mhp_flags;
- 	int numa_node;
- 	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
- 
-@@ -179,12 +181,16 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 		 */
- 		res->flags = IORESOURCE_SYSTEM_RAM;
- 
-+		mhp_flags = MHP_NID_IS_MGID;
-+		if (dev_dax->memmap_on_memory)
-+			mhp_flags |= MHP_MEMMAP_ON_MEMORY;
-+
- 		/*
- 		 * Ensure that future kexec'd kernels will not treat
- 		 * this as RAM automatically.
- 		 */
- 		rc = add_memory_driver_managed(data->mgid, range.start,
--				range_len(&range), kmem_name, MHP_NID_IS_MGID);
-+				range_len(&range), kmem_name, mhp_flags);
- 
- 		if (rc) {
- 			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
-diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-index ae0cb113a5d3..f3c6c67b8412 100644
---- a/drivers/dax/pmem.c
-+++ b/drivers/dax/pmem.c
-@@ -63,6 +63,7 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 		.id = id,
- 		.pgmap = &pgmap,
- 		.size = range_len(&range),
-+		.memmap_on_memory = false,
- 	};
- 
- 	return devm_create_dev_dax(&data);
-
--- 
-2.41.0
-
+Thanks,
+Shiju
