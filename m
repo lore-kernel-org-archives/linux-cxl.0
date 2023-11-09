@@ -1,172 +1,207 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD8020312;
-	Thu,  9 Nov 2023 16:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A753C36B19
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Nov 2023 19:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="fXWmqWmc"
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2056.outbound.protection.outlook.com [40.107.212.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C22D3ABE;
-	Thu,  9 Nov 2023 08:34:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O0AWj8IywtnqYi210/Lgu5Ih7PjQ+9Zvf85BgppYryrkV07d2ioZ5eykVD/Rf3jXyGSW+xvjdHX7rZpAy5/Oj6QNN2cfAHkLOc7n+yPmG5sNQvNDv01jPLsd02ap2bPrUl353+hNH99QXp4E/fY0IYnqhGTA92NYuEjQFEHI3mSFN+utIGxtYWF9bZ1WWFVsr0wlsIYLhjh8yhwL8dvOy0vmcEwm3KXHk0kuJ3zbfWuU+h8f/0rMuivyTzv9xEuAWnL3+ygFkCjbG56dnkSNenmg6buSqdWzvSTCZNlmO7jo+ObAxwuj9alUT2J1GczwIdaS9OStH47ocwOEZpvtvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WpzJDiABML0l+uTHZ1iTmSb+gYDET6H197+zrHl3658=;
- b=Z2PpkQxuWzni2e87qRwv06NyFeUaM6m8LHEVwkVKay7lSl2kfcJ/shidgvmN30bQOBUHGwDb3sV4uYW7rxXIscmeTi0te3iyUnYkvRFs04jvk5Tg0I4znnj8riNEXF8OqYLgdANEaRy4jdWQSkb8pGKzGgDEunZVyFTbFN03cz/AcQJ9pxGd3fTLFxzkmgBr4UHOSf6K9/gfUm31gHM8TSzQF8jPBxkKJ9gyJM2NvzjmvO0vtdzFm9cUR32/d+1VxInliTVO7Se145xCRtr/Sho+no/6QNK0M5wRm2MrrusZz5sGr5dD2vc7clnpLknEXe7PytuEJE4EIbn0VaHyKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpzJDiABML0l+uTHZ1iTmSb+gYDET6H197+zrHl3658=;
- b=fXWmqWmc/DEI70hZFaSEUpzviO1x/PebL5RcX7F4pWyUmWQJTTD32MnhBq0CZvkTGxnDXFwIKWCP2jc9eSlLWqgDNC9FKBxO7sFdBcLCz7Wh90y+/e0rv7eV0zAhv2FT85Iufm6XqxZLw69mnq2W8Qx4NN+QEMAz37tE084jLAc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CO3PR17MB5856.namprd17.prod.outlook.com (2603:10b6:303:167::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.9; Thu, 9 Nov
- 2023 16:34:09 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%4]) with mapi id 15.20.6954.019; Thu, 9 Nov 2023
- 16:34:09 +0000
-Date: Thu, 9 Nov 2023 11:34:01 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	ying.huang@intel.com, akpm@linux-foundation.org, tj@kernel.org,
-	lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
-	roman.gushchin@linux.dev, shakeelb@google.com,
-	muchun.song@linux.dev
-Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-Message-ID: <ZU0J+RU1fg8peGJH@memverge.com>
-References: <20231109002517.106829-1-gregory.price@memverge.com>
- <ZUyuL9_8PPiEflnS@tiehlicka>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUyuL9_8PPiEflnS@tiehlicka>
-X-ClientProxiedBy: SJ0PR13CA0015.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::20) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnVoJ42N"
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD7E3ABC
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Nov 2023 11:32:42 -0800 (PST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7c011e113so15221577b3.1
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Nov 2023 11:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699558361; x=1700163161; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hQXgJnErkBTO7U9SamYe262ZEbX3WawKujvUuoSNKBA=;
+        b=ZnVoJ42NZtiK0ZYz73xX4Kx2Al+na5chulsUOBHH6tY0rGAtyFtdJh9c/E8zNoEeeQ
+         3p5jseTQLdF6yOKUVqOGElLui29KIPMuhU1AkidtZeLbn1TJdu5ZE+52XlZeY6W+m417
+         lmcdcUXegYH1UbChqNcU8aArGtFpY4UaZySvnncRvykARRTFs8WjnM11f/2qUXr/GBjw
+         GeykGGHL/hsMGHH1dY/wOdqd2oH6Wrb8r6otRePY8Kg6Cbu6DQV8cPssFAtsNoqtcz0c
+         +/UG3GoFwxgk7IibK/T55NghexT6drTU6li3wPM4NDhVmvfUPEFjWtJ+/JQHnaxl0tag
+         ocbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699558361; x=1700163161;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hQXgJnErkBTO7U9SamYe262ZEbX3WawKujvUuoSNKBA=;
+        b=cBBxoqYyk0I2csVy08KkuTj/bDloHwOw0/VYEMCzBPEYFmtvke9xclp9Ur+1vt7JoS
+         Vhsf3beJbWeH5c5Xv9TidAESs/zqE74sEReNF1J4cxx1e0fxOSBKW0EUELwr8ucrksEf
+         emVZrXFayVzgv5cPN/ST+TEGfo0+csxlSFTAlXwyr9O/yGcUAH8kzO/cWUn9y/0jWYL5
+         g/oS7nbeeFAZW8XjMXzBQK3m8wqzpDwPh+d2xbNQzFUmy4c2Zvz2NmIK2cC4rfXfFtaq
+         pSIIX4iRU2wy/AVfhl424D+IiePpYBNl6CbDuDVwn0AQfUD9ezZo8GlOlpXXhBK/gnm3
+         CMZA==
+X-Gm-Message-State: AOJu0YxbZQnwKpr9tAFI9axW2koIKf/Olz7gsD43r94Gqe6bSHdRq6mH
+	aLy0WDTy/nF7SHAyemvZ3Xg=
+X-Google-Smtp-Source: AGHT+IHvL/vRqXQfRXZmA2Lomae7MK9Jd2JjbJUrzCC4TaOLfowGZTpwp/Gfv/6NUBIDG3/ohRY1eg==
+X-Received: by 2002:a25:d391:0:b0:d9a:fd25:e3ef with SMTP id e139-20020a25d391000000b00d9afd25e3efmr5648549ybf.64.1699558361244;
+        Thu, 09 Nov 2023 11:32:41 -0800 (PST)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 4-20020a251104000000b00d9cb47932a0sm7627329ybr.25.2023.11.09.11.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Nov 2023 11:32:40 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Thu, 9 Nov 2023 11:32:25 -0800
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: vishal.l.verma@intel.com, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, dan.j.williams@intel.com,
+	yangx.jy@fujitsu.com
+Subject: Re: [NDCTL PATCH v3] cxl/region: Add -f option for disable-region
+Message-ID: <ZU0zyfKYTUkAyUrk@debian>
+References: <169878724592.82931.11180459815481606425.stgit@djiang5-mobl3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CO3PR17MB5856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06bbd708-9862-47b4-995c-08dbe141b2cd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rp7/PlMAoA0mJDRummSV916Hyp7IVEdWiGYBHtq6gork0Rd0OzursKBqO3B+tofozLWgMVbU2uLj5GEZb7mCqgX7jfZornNsZiAuTH/Rj9rixBq88YZYmrofr60FuYmTyhbCpKAXSzw1ykfGIW/AdTOkXYvwgJhRMZLPTms27BiIvZxn9RE4h6FdYjT29daWeAp8DbHRFN9rpcT9VLTVdjxr0WPAVeSaVFQTmTCnGy4sRUOCt/7OpLhnqqZYDlRF3EzFASuaQuobdCu+0G/PDjnfJ+Hmoy6a4iz4TCZSwNn2nuGOLJp+XQKaL478sVMS4zJvi0kiZWcq1X7Cvlg9oqWHeprSZAT+oRtmkJthABLB7XpBhAtJqDBq+IEBb7WjXk/hwW/fpPUOR0J2xlOp0b1WYyu+grElfFiXRSoC6hJy20AcEiL4PIup8cBjpKRXWFOWivfFY6E1OvCSW335WyNbSwThctUF1MCL1oAdhsPgwQJQtzQHm6lWaAK2BGPYtTnntmR0weEE0QkQPemRHGz18ArSDSDz2YCakjl1jMRjHWTiWve+Qy/JhplQ6wnSWuM4y3k074nXz/ikL80SOmXrbmiUT6x2hKWjV3TekGB6w24yqKVMqVmfLby/tUsjc6sVFupU2l8twbJPWXEemg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(396003)(136003)(346002)(39840400004)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(36756003)(83380400001)(8936002)(26005)(316002)(6916009)(66946007)(66476007)(66556008)(2906002)(7416002)(4326008)(5660300002)(8676002)(44832011)(478600001)(6486002)(6666004)(6506007)(2616005)(6512007)(86362001)(38100700002)(41300700001)(16393002)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vs9NZx5cgJydlPnVCJfKPnGhVpgCehDKAYiU7EU/uR7NyFLoVJqCywitTxfc?=
- =?us-ascii?Q?ijvEA++TQIcCQZuSEfAJ6tgEcgjykkpfQ/ObdHSVgZVwAtLR+YtBx2nn2DVG?=
- =?us-ascii?Q?CBMwvE5BkV3FcPdirvIi9szw2nfKdJipVe7NIUf5qWi1qC+tKblT8Id0c4uJ?=
- =?us-ascii?Q?uEvGV1/q3R0UWMockffA/epVUIirscSIwb3adLJFfEuywUZIIOoEuL/yXMIX?=
- =?us-ascii?Q?wXsQ3qT43kQxB5k/XAW23V3dLCmUaqz1SR4Bq28nBINRjQ8gtzh44mFpQHPm?=
- =?us-ascii?Q?i/ceLns4QLdY8ImPBsXqVQ+eVJk6Bjvf3TLqDL4r+MDwwabcJs4F06MhgoS+?=
- =?us-ascii?Q?VOP0oh0hRfwEzkyt4RlJ6giDJDFHfDNAI7H5akZnCLn/jfpzA+sXX2WIVxbi?=
- =?us-ascii?Q?rPPylP9XR/oLdDk4izDfGiNzAnCK2E6qFnABuS1pxc8GnJqzryN4/4HbzpaP?=
- =?us-ascii?Q?0l6kVaEpj7fO6AJr6WfpCSd3AAClaEwQ0NwjlmA8qwnnCZQR9s9DAHvccQ6C?=
- =?us-ascii?Q?Eaelr09tRdzqG0SEzeQ+plAahRH4WNidG5wubPx4D3I+JwVsFX7CUxf5SN3T?=
- =?us-ascii?Q?6N1AOkVqLV5PDeqcH+QnmjuWe9dwD/V0zwLoyYZHVQJ6SVbybrxoUElyEd/Y?=
- =?us-ascii?Q?wyFXVGDIpfewqpLPpjMUpGfTA0ktUnyYgDxKEkEc+bysQmUZWbuK+uLbCxkG?=
- =?us-ascii?Q?4X/bzVqmFwmdHCIU84wie/IS20I2pYc9l3dYg8+AypFfiiV5e5Au0I11Ieov?=
- =?us-ascii?Q?zK/ReOuWmkCnXxlKVRaaCVFjsdh+g+UgJfVOuqRkj745cZJNKpxgGWLRdjJ+?=
- =?us-ascii?Q?pQ9k+mVWWvc8jjQrhH2tLu+x0ZLK/XcIwRl2hgQs86HcXBYQOm5I8LxNSaKD?=
- =?us-ascii?Q?Sc6MhfPg5iWr8fYICLyJSZ5gF14L3FBFvvj/9xZhDZE3z99FKBmWiJxyeSez?=
- =?us-ascii?Q?K0dJNWTFKnDkqLiesb1NFEr5jqIoTYYJIyrruJLoBg5UbxJYz8aSb/zHm8BR?=
- =?us-ascii?Q?wiG7m9920Cn787FS5WLp3HJFuhqXhWWp5qHM7mDUNbOKr6mmltnU2yiL+FW0?=
- =?us-ascii?Q?BadGziA1kOEsV6u8hQyNMISb4q814i2gPuyocRqeTCvm31S381hVVsUoBO2k?=
- =?us-ascii?Q?qatsHe2A/vPYOhGjZ9Y1uvnhDUQ3Ed31WEJ8VDB2TTNVrZp8MoJ3c4PbJ29i?=
- =?us-ascii?Q?81CZw86h11064b/VfR6MYkt9MBNYQ1NB1JF+tNnVVsDoxkSJE+At7BEYQGwe?=
- =?us-ascii?Q?eIb286RUjOVV+zW8yl50WqQgfyr8MjuuA460v+mw88d/CqIppC4nkkZFEjVn?=
- =?us-ascii?Q?oQ2uma06tMnkw6KRYIZgcD8LeVGRN4xfLiswE1aRmGK9HZ7sRdVwr6nKsUmh?=
- =?us-ascii?Q?jla4KHADWTdYWL1+p+6kvh1swhuWDhSy9xcx638exMZ89W9sk6nhxNeC7zXm?=
- =?us-ascii?Q?jSeSH8wiAo0c4nkdeSqXX4iCCBMBsKWPsqg5CP8WDgL1qYN6rCq9m9Ugo4T5?=
- =?us-ascii?Q?0TBSvw7EA1tLSm+hOtx7wJeOUUDLiOtaGwtxkais0Pcr8Oooayfjn79QbN18?=
- =?us-ascii?Q?xcpYUhLEduoqCCj7AYXSsG7K+ULS3HUN/CNnlDevMPaSBB2fCFItd/AnzMlY?=
- =?us-ascii?Q?UA=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06bbd708-9862-47b4-995c-08dbe141b2cd
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2023 16:34:09.3710
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vtwkTM3FZyHRMa3jh4Vge0RMDunOKAQdGEXSkrB7SQIkSrmWR3ilON8/qY9WnXFY98yhc5BYv2t6UFaMsNB+xWEtTBReeP4oLMwNAu3wzAQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO3PR17MB5856
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169878724592.82931.11180459815481606425.stgit@djiang5-mobl3>
 
-On Thu, Nov 09, 2023 at 11:02:23AM +0100, Michal Hocko wrote:
-> On Wed 08-11-23 19:25:14, Gregory Price wrote:
-> > This patchset implements weighted interleave and adds a new cgroup
-> > sysfs entry: cgroup/memory.interleave_weights (excluded from root).
+On Tue, Oct 31, 2023 at 02:20:45PM -0700, Dave Jiang wrote:
+> The current operation for disable-region does not check if the memory
+> covered by a region is online before attempting to disable the cxl region.
+> Have the tool attempt to offline the relevant memory before attempting to
+> disable the region(s). If offline fails, stop and return error.
 > 
-> Why have you chosen memory controler rather than cpuset controller?
-> TBH I do not think memcg is the best fit because traditionally memcg
-> accounts consumption rather than memory placement. This means that the
-> memory is already allocated when it is charged for a memcg. On the other
-> hand cpuset controller is the one to control the allocation placement so
-> it would seem a better fit.
-> -- 
-> Michal Hocko
-> SUSE Labs
+> Provide a -f option for the region to continue disable the region even if
+> the memory is not offlined. Add a warning to state that the physical
+> memory is being leaked and unrecoverable unless reboot due to disable without
+> offline.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Actually going to walk back my last email, memcg actually feels more
-correct than cpuset, if only because of what the admin-guide says:
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-"""
-The "memory" controller regulates distribution of memory. [... snip ...]
-
-While not completely water-tight, all major memory usages by a given
-cgroup are tracked so that the total memory consumption can be accounted
-and controlled to a reasonable extent.
-"""
-
-'And controlled to a reasonable extent' seems to fit the description of
-this mechanism better than the cpuset description:
-
-"""
-The "cpuset" controller provides a mechanism for constraining the CPU and
-memory node placement of tasks to only the resources specified in the
-cpuset interface files in a task's current cgroup.
-"""
-
-This is not a constraining interface... it's "more of a suggestion". In
-particular, anything not using interleave doesn't even care about these
-weights at all.
-
-The distribution is only enforced for allocation, it does not cause
-migrations... thought that would be a neat idea. This is explicitly
-why the interface does not allow a weight of 0 (the not should be
-omitted from the policy nodemask or cpuset instead).
-
-Even if this were designed to enforce a particular distribution of
-memory, I'm not certain that would belong in cpusets either - but I
-suppose that is a separate discussion.  It's possible this array of
-weights could be used to do both, but it seems (at least on the surface)
-that making this a hard control is an excellent way to induce OOMs where
-you may not want them.
-
-
-Anyway, summarizing:  After a bit of reading, this does seem to map
-better to the "accounting consumption" subsystem than the "constrain"
-subsystem. However, if you think it's better suited for cpuset, I'm
-happy to push in that direction.
-
-~Gregory
+> 
+> ---
+> v3:
+> - Remove movable check. (Dan)
+> - Attempt to offline if not offline. -f will disable region anyways even
+>   if memory not offline. (Dan)
+> v2:
+> - Update documentation and help output. (Vishal)
+> ---
+>  Documentation/cxl/cxl-disable-region.txt |   10 ++++++
+>  cxl/region.c                             |   54 +++++++++++++++++++++++++++++-
+>  2 files changed, 63 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/cxl/cxl-disable-region.txt b/Documentation/cxl/cxl-disable-region.txt
+> index 4b0625e40bf6..9abf19e96094 100644
+> --- a/Documentation/cxl/cxl-disable-region.txt
+> +++ b/Documentation/cxl/cxl-disable-region.txt
+> @@ -14,6 +14,10 @@ SYNOPSIS
+>  
+>  include::region-description.txt[]
+>  
+> +If there are memory blocks that are still online, the operation will attempt to
+> +offline the relevant blocks. If the offlining fails, the operation fails when not
+> +using the -f (force) parameter.
+> +
+>  EXAMPLE
+>  -------
+>  ----
+> @@ -27,6 +31,12 @@ OPTIONS
+>  -------
+>  include::bus-option.txt[]
+>  
+> +-f::
+> +--force::
+> +	Attempt to disable-region even though memory cannot be offlined successfully.
+> +	Will emit warning that operation will permanently leak phiscal address space
+> +	and cannot be recovered until a reboot.
+> +
+>  include::decoder-option.txt[]
+>  
+>  include::debug-option.txt[]
+> diff --git a/cxl/region.c b/cxl/region.c
+> index bcd703956207..5cbbf2749e2d 100644
+> --- a/cxl/region.c
+> +++ b/cxl/region.c
+> @@ -14,6 +14,7 @@
+>  #include <util/parse-options.h>
+>  #include <ccan/minmax/minmax.h>
+>  #include <ccan/short_types/short_types.h>
+> +#include <daxctl/libdaxctl.h>
+>  
+>  #include "filter.h"
+>  #include "json.h"
+> @@ -95,6 +96,8 @@ static const struct option enable_options[] = {
+>  
+>  static const struct option disable_options[] = {
+>  	BASE_OPTIONS(),
+> +	OPT_BOOLEAN('f', "force", &param.force,
+> +		    "attempt to offline memory before disabling the region"),
+>  	OPT_END(),
+>  };
+>  
+> @@ -789,13 +792,62 @@ static int destroy_region(struct cxl_region *region)
+>  	return cxl_region_delete(region);
+>  }
+>  
+> +static int disable_region(struct cxl_region *region)
+> +{
+> +	const char *devname = cxl_region_get_devname(region);
+> +	struct daxctl_region *dax_region;
+> +	struct daxctl_memory *mem;
+> +	struct daxctl_dev *dev;
+> +	int failed = 0, rc;
+> +
+> +	dax_region = cxl_region_get_daxctl_region(region);
+> +	if (!dax_region)
+> +		goto out;
+> +
+> +	daxctl_dev_foreach(dax_region, dev) {
+> +		mem = daxctl_dev_get_memory(dev);
+> +		if (!mem)
+> +			return -ENXIO;
+> +
+> +		/*
+> +		 * If memory is still online and user wants to force it, attempt
+> +		 * to offline it.
+> +		 */
+> +		if (daxctl_memory_is_online(mem)) {
+> +			rc = daxctl_memory_offline(mem);
+> +			if (rc < 0) {
+> +				log_err(&rl, "%s: unable to offline %s: %s\n",
+> +					devname,
+> +					daxctl_dev_get_devname(dev),
+> +					strerror(abs(rc)));
+> +				if (!param.force)
+> +					return rc;
+> +
+> +				failed++;
+> +			}
+> +		}
+> +	}
+> +
+> +	if (failed) {
+> +		log_err(&rl, "%s: Forcing region disable without successful offline.\n",
+> +			devname);
+> +		log_err(&rl, "%s: Physical address space has now been permanently leaked.\n",
+> +			devname);
+> +		log_err(&rl, "%s: Leaked address cannot be recovered until a reboot.\n",
+> +			devname);
+> +	}
+> +
+> +out:
+> +	return cxl_region_disable(region);
+> +}
+> +
+>  static int do_region_xable(struct cxl_region *region, enum region_actions action)
+>  {
+>  	switch (action) {
+>  	case ACTION_ENABLE:
+>  		return cxl_region_enable(region);
+>  	case ACTION_DISABLE:
+> -		return cxl_region_disable(region);
+> +		return disable_region(region);
+>  	case ACTION_DESTROY:
+>  		return destroy_region(region);
+>  	default:
+> 
+> 
