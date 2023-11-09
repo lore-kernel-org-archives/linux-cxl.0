@@ -1,121 +1,139 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EED237154
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Nov 2023 19:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A89338F9A;
+	Thu,  9 Nov 2023 22:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIy5+noh"
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940203C0D
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Nov 2023 11:58:37 -0800 (PST)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-5a7af20c488so15933137b3.1
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Nov 2023 11:58:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699559917; x=1700164717; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yyl6INtqHNJ4WnREJbikqO12UlCZNwhilevTx4TD7qc=;
-        b=EIy5+nohDZaR3uXFde6jIIOs3Ie9REhhoasQ0PEQYbP/remQOVLBk9I2OQJeEaOcxV
-         NOkI2WWqv7hez1rOhrQvakFk2DC474wSJSmNirpi5Rfauv44TMTC4VcxhkkHB9Mj5wuL
-         ge5Cq9BpwRlM3u/UgLVdqH4Feb1uUXkY5w7N+8Gq0IGPeYgHHM3H8Rl8gnxc0xYGKnpZ
-         S9DymppGsOsuJ/sXBiLtKaXdZ5pzZ+uHfVeclTlURFSuFJYAR2vdJl2hf/wfJqDFEPBK
-         PKgooXvN6CngfqQtQ0cLSh/k0/++mYhDhgUIAVkAdS25WqvDrx+Wu0wS/t1YwGaJXZTp
-         15+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699559917; x=1700164717;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yyl6INtqHNJ4WnREJbikqO12UlCZNwhilevTx4TD7qc=;
-        b=Y6UKXEXIgzjJfevkK7jGUhHttm4G0usHqU14vCuV8qdiGMuMV0H7NISWfigpfLrrY+
-         CDRi0jOG+1biRJjhENmphjF+2h15ZcjOHAOaTmUucgcTz6qVf1U8J5IK5HQ/4ZhSLUp+
-         kJsPHLY//cD9L1jEAf6OecpctIDjGFsXpNf0H7tLxP0xL7ONWb3AFpUTSRResz1ZJh1A
-         uTx0d3y4xFweR+pUoQMeo2rA/DOVvqhJ9zEMBkkzT4sUs8lJI9HDdelzHAKEyGXolo4E
-         M/huoVhPH6eMyoGlk/hvXz/WHbCdY8iLRaz9A4iufH7fzKn09GF7NYdtuoMhrdI4iw+B
-         fHhg==
-X-Gm-Message-State: AOJu0YzFNBTvPDp46u6xZN4xmyqTxtgtqC4/kKtg8ujzCAL4U/tp53a2
-	uymuhYgd3PahpoER8ox2pVY=
-X-Google-Smtp-Source: AGHT+IE7F+BZmzB0Aur4ZHmI2ATeFw9gYPCepRCYGcWJcNaKmdBpTAmT0uCNYkWLPeQUQWcAa2TrmQ==
-X-Received: by 2002:a0d:d996:0:b0:5af:66e7:e382 with SMTP id b144-20020a0dd996000000b005af66e7e382mr6894247ywe.34.1699559916660;
-        Thu, 09 Nov 2023 11:58:36 -0800 (PST)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id h13-20020a81b40d000000b0059b2be24f88sm7982204ywi.143.2023.11.09.11.58.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Nov 2023 11:58:36 -0800 (PST)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Thu, 9 Nov 2023 11:58:19 -0800
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com
-Subject: Re: [PATCH] cxl: Add cxl_region_rwsem around commit_end write during
- decoder enumeration
-Message-ID: <ZU0525jPfkigOT01@debian>
-References: <169948110840.509375.13862681045079385425.stgit@djiang5-mobl3>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NgS5+1gx"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02BB386A;
+	Thu,  9 Nov 2023 14:07:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699567640; x=1731103640;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=vFDM721BmWzXCAqHdUJ+uv7GGpaz4QADTyvOIolr30k=;
+  b=NgS5+1gx44kDB+l+TKQFsT2J6v34kjb21H7C0XbvDs5ywsA9+GK+grtr
+   RNNyocj6kduZU2ETbtwm9UWsPQ9nj2r5vuu5FApjRuzRnEsZClG3wzfTX
+   uASmJz1KeNYERH2jNsp/w5kZAmNyX79SkDeJZg69FWL9SIczvPmq75js0
+   dP5cfR4zYOvm79f1PP9fErQnfyyxpNo495pwwkfILvLWS0M0Z+DQDZAPK
+   WEEM6x6jNT0en4rry51+ejIHoANJfODSV7aFsRYNoyoabc97UIWNJKJW4
+   LiVr1FaQoSMI/qmq6mnCZVX21wimkM4Odwracyc3y7y78zIZmgAqoWqfm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="375124156"
+X-IronPort-AV: E=Sophos;i="6.03,290,1694761200"; 
+   d="scan'208";a="375124156"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 14:07:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="713453293"
+X-IronPort-AV: E=Sophos;i="6.03,290,1694761200"; 
+   d="scan'208";a="713453293"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.16.95])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 14:07:18 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH RFC v4 0/6] efi/cxl-cper: Report CPER CXL component events
+ through trace events
+Date: Thu, 09 Nov 2023 14:07:13 -0800
+Message-Id: <20230601-cxl-cper-v4-0-47bb901f135e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169948110840.509375.13862681045079385425.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABJYTWUC/3XNywrCMBAF0F8pWRvJo6aNK0HwA9yKi3Q6sYG+S
+ EqplP67aVeidHln5sydSUDvMJBzMhOPowuua2NIDwmByrQvpK6MmQgmJFOMU5hqCj16KpS1kEs
+ NChSJ54UJSAtvWqhW0JgwoF8XvUfrpq3jQe63K3nGYeXC0Pn31jvybfVfMXLKqNaFSaXNbZaxi
+ 2sHrI/QNduTUexBEaHkaalBKlMw8QvlHpQRMp7rUnGb6ZP6hsuyfABtQIidMAEAAA==
+To: Dan Williams <dan.j.williams@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+ Shiju Jose <shiju.jose@huawei.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-0f7f0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1699567638; l=2895;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=vFDM721BmWzXCAqHdUJ+uv7GGpaz4QADTyvOIolr30k=;
+ b=DzTHT08LnyJc6N7Hlb4DmGBrqHRVJx1508rCKWsyBphr3Ysg6NhjdOs+NycdlQJdgReQ4689i
+ kn3JxBda30LAKb4/oaYqwo4kD79mJFvED3UbDIY3zplfZIRH9IxpcS5
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-On Wed, Nov 08, 2023 at 03:05:08PM -0700, Dave Jiang wrote:
-> init_hdm_decoder() modifies port->commit_end without taking the
-> cxl_region_rwsem. An assert splat emitted by cxl_num_decoders_committed().
-> However looking at the code, it looks like the write version of the rwsem
-> needs to be taken due to the modification of commit_end. Wrap the write
-> version of the rwsem around reading and writing of commit_end.
-> 
-> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/hdm.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index bc8ad4a8afca..a8f960c496cb 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -854,10 +854,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
->  		else
->  			cxld->target_type = CXL_DECODER_DEVMEM;
-> +		down_write(&cxl_region_rwsem);
->  		if (cxld->id != cxl_num_decoders_committed(port)) {
->  			dev_warn(&port->dev,
->  				 "decoder%d.%d: Committed out of order\n",
->  				 port->id, cxld->id);
-> +			up_write(&cxl_region_rwsem);
->  			return -ENXIO;
->  		}
->  
-> @@ -865,9 +867,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  			dev_warn(&port->dev,
->  				 "decoder%d.%d: Committed with zero size\n",
->  				 port->id, cxld->id);
-> +			up_write(&cxl_region_rwsem);
->  			return -ENXIO;
->  		}
->  		port->commit_end = cxld->id;
-> +		up_write(&cxl_region_rwsem);
->  	} else {
->  		if (cxled) {
->  			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> 
-> 
+Series status/background
+========================
 
-I have two questions:
+This RFC should be very close to done but I'm still working on getting a
+system to test on.  Therefore, the CPER code remains compile tested
+only.  The modified event log code continues to pass cxl-test.
 
-1. There are some other locations in the code where commit_end has been
-read or updated, and not guarded by a lock, for example in
-cxl_decoder_commit. Do they need to be protected by cxl_region_rwsem
-also?
-2. Can we have a race condition here in init_hdm_decoder so commit_end
-need to be protected?
+Cover letter
+============
 
-Fan
+CXL Component Events, as defined by EFI 2.10 Section N.2.14, wrap a
+mostly CXL event payload in an EFI Common Platform Error Record (CPER)
+record.  If a device is configured for firmware first CXL event records
+are not sent directly to the host.
+
+The CXL sub-system uniquely has DPA to HPA translation information.  It
+also already has event format tracing.  Restructure the code to make
+sharing the data between CPER/event logs most efficient.  Then send the
+CXL CPER records to the CXL sub-system for processing.
+
+With event logs the events interrupt the driver directly.  In the EFI
+case events are wrapped with device information which needs to be
+matched with memdev devices.  A number of alternatives were considered
+to match the memdev with the CPER record.  The most robust was to find
+the PCI device via Bus, Device, Function and match it to the memdev
+driver data.
+
+CPER records are identified with GUID's while CXL event logs contain
+UUID's.  The UUID is reported for all events.  While the UUID is
+redundant for the known events the UUID's are already used by rasdaemon.
+To keep compatibility UUIDs are injected for CPER records based on the
+record type.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+Changes in v4:
+- Jonathan/Shiju: Put UUID back in trace points.
+- Smita: Fix packed structure
+- Smita: use PCI_DEVFN() properly
+- iweiny: update cover letter/commit messages
+- Link to v3: https://lore.kernel.org/r/20230601-cxl-cper-v3-0-0189d61f7956@intel.com
+
+---
+Ira Weiny (6):
+      cxl/trace: Pass uuid explicitly to event traces
+      cxl/events: Promote CXL event structures to a core header
+      cxl/events: Separate UUID from event structures
+      cxl/events: Create a CXL event union
+      firmware/efi: Process CXL Component Events
+      cxl/memdev: Register for and process CPER events
+
+ drivers/cxl/core/mbox.c         |  65 ++++++++++------
+ drivers/cxl/core/trace.h        |  34 ++++----
+ drivers/cxl/cxlmem.h            |  96 ++---------------------
+ drivers/cxl/pci.c               |  58 +++++++++++++-
+ drivers/firmware/efi/cper.c     |  15 ++++
+ drivers/firmware/efi/cper_cxl.c |  40 ++++++++++
+ drivers/firmware/efi/cper_cxl.h |  29 +++++++
+ include/linux/cxl-event.h       | 160 ++++++++++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/mem.c    | 166 +++++++++++++++++++++++-----------------
+ 9 files changed, 461 insertions(+), 202 deletions(-)
+---
+base-commit: 1c8b86a3799f7e5be903c3f49fcdaee29fd385b5
+change-id: 20230601-cxl-cper-26ffc839c6c6
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
