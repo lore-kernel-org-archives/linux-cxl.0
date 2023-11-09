@@ -1,95 +1,181 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C92618C3A
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Nov 2023 22:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF08360;
+	Thu,  9 Nov 2023 00:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e3mMTE14"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14620213B
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Nov 2023 14:05:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699481110; x=1731017110;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Vm4KEEJ60VtM+/xalsMFZc33JA7Haz2uaPn8iqA1FGc=;
-  b=e3mMTE14OyNXcytTtdtr9MXCqKS+9Nxlio++7dTgxC4qjoSK9e49Mxl5
-   EwnOxk9NivdCCcWQNcCYnUqHEnewShLuBqdAKRwnUEVMhvxsDBdaGttaP
-   kSCUWisJGbv4S/1Yz4NGS+s+CFDgfVqXIt9RiOKmOX3CJq9VIk5qik3RP
-   CY4KLV4TP0T+j9Bo00E5m7V6Dfhq5AOh+SeZFbdKU9FASvd08M9aM8vkh
-   3lfn2gV18VfSYhENaQvTwe4h99NlQQFxh2RT5SNMycIPKv55pziWsUQyB
-   zhvKEYuwrLWjfYTAITYyJqXwnu5VfMeIqj4jUE6ByR0ciBrgm1gTQz8WO
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="374909193"
-X-IronPort-AV: E=Sophos;i="6.03,287,1694761200"; 
-   d="scan'208";a="374909193"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 14:05:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="829107540"
-X-IronPort-AV: E=Sophos;i="6.03,287,1694761200"; 
-   d="scan'208";a="829107540"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.61])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 14:05:08 -0800
-Subject: [PATCH] cxl: Add cxl_region_rwsem around commit_end write during
- decoder enumeration
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
-Date: Wed, 08 Nov 2023 15:05:08 -0700
-Message-ID: <169948110840.509375.13862681045079385425.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHGJhXeG"
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4354D1BFF;
+	Wed,  8 Nov 2023 16:25:25 -0800 (PST)
+Received: by mail-pl1-x644.google.com with SMTP id d9443c01a7336-1cc0e78ec92so1910595ad.3;
+        Wed, 08 Nov 2023 16:25:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699489524; x=1700094324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PYg0/Bwt2k4uqOXp/QqUKQgISPeVRvmg1I3hb80MjOo=;
+        b=CHGJhXeGhweO2qVG9W6tcLH8olTOQr33shVNPBjeXwhvObqegpvfMs5T0TJ4YaMiSe
+         mI30o0kKWgq3h0bOLEpCgCS882IQf02qrgkn8lT1j6v1z7RJbQR+9YDJtP/0XvG3HXd8
+         XiX0d8r17kNe9uo8J6KdYXHSWBhzSkGi1ZoOt0cBGWJCMuocv7YPvEounGrJOiVWJUor
+         iKrtpmeTSOD1YASLt6wXgK3pVIvsM/le3azQVoPjf6b93d86oH7fJmea9gADCo19dLcj
+         s/fD4Ka0RDQnlNi1PYtbBnHw10g7ZOz0Q2uFdJJx3ZoN7bF7gJPhssBFQRm7zW+sUIV/
+         Mprg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699489524; x=1700094324;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PYg0/Bwt2k4uqOXp/QqUKQgISPeVRvmg1I3hb80MjOo=;
+        b=xJLzmNoMD8+N+lt0OeMao/mA2w7yxWdgJsYbhp8s1tuFSOMe3cY4V3FCRhaK0PyrHW
+         s3pjAyL/iIW6iy5Kh+nEgR8c2IQGPtWlw8XMRJeDZjATiu6UBjtDdL+RjHhnMsfwtrIc
+         8Bb9nKz8hCvry44Pm6b0dy9mXAsAhrXSRKpZVal/s/VAQgqqm/7ajQvQUpKsZhPrcWaR
+         HCN7cD14owaDubgXhlX602bpKdZqeAUWsiaXkzbPPCt44J5sl/horoj24+2+yrVyi4+X
+         Mq4k1Z9/EXxJZyoE7GvIfthUBGEuBe9QMSQ5V6Kz3/zjYqt7KVM+PZrsFzWHE1yjydAx
+         Y4Jw==
+X-Gm-Message-State: AOJu0YxSXnqEcala9s1G0HBCAfSuyfaT5iJsEUNgq0WAgNe9okDHdGb9
+	AzJQIAGvsM01sZMnZPsO8CweWGsFUeG3
+X-Google-Smtp-Source: AGHT+IGPnnbBYTYzVdIicc6PZI3X0xu/feSIqiTtziNRP5jwGNx+9qgUA2enN/eKVIV4FBs7qh+FHw==
+X-Received: by 2002:a17:902:ec8e:b0:1cc:482c:bc4d with SMTP id x14-20020a170902ec8e00b001cc482cbc4dmr4126391plg.5.1699489524241;
+        Wed, 08 Nov 2023 16:25:24 -0800 (PST)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id b10-20020a170902a9ca00b001bc21222e34sm2219073plr.285.2023.11.08.16.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Nov 2023 16:25:23 -0800 (PST)
+From: Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	ying.huang@intel.com,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	tj@kernel.org,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	corbet@lwn.net,
+	roman.gushchin@linux.dev,
+	shakeelb@google.com,
+	muchun.song@linux.dev,
+	Gregory Price <gregory.price@memverge.com>
+Subject: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+Date: Wed,  8 Nov 2023 19:25:14 -0500
+Message-Id: <20231109002517.106829-1-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-init_hdm_decoder() modifies port->commit_end without taking the
-cxl_region_rwsem. An assert splat emitted by cxl_num_decoders_committed().
-However looking at the code, it looks like the write version of the rwsem
-needs to be taken due to the modification of commit_end. Wrap the write
-version of the rwsem around reading and writing of commit_end.
+This patchset implements weighted interleave and adds a new cgroup
+sysfs entry: cgroup/memory.interleave_weights (excluded from root).
 
-Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/hdm.c |    4 ++++
- 1 file changed, 4 insertions(+)
+The il_weight of a node is used by mempolicy to implement weighted
+interleave when `numactl --interleave=...` is invoked.  By default
+il_weight for a node is always 1, which preserves the default round
+robin interleave behavior.
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index bc8ad4a8afca..a8f960c496cb 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -854,10 +854,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 		else
- 			cxld->target_type = CXL_DECODER_DEVMEM;
-+		down_write(&cxl_region_rwsem);
- 		if (cxld->id != cxl_num_decoders_committed(port)) {
- 			dev_warn(&port->dev,
- 				 "decoder%d.%d: Committed out of order\n",
- 				 port->id, cxld->id);
-+			up_write(&cxl_region_rwsem);
- 			return -ENXIO;
- 		}
- 
-@@ -865,9 +867,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			dev_warn(&port->dev,
- 				 "decoder%d.%d: Committed with zero size\n",
- 				 port->id, cxld->id);
-+			up_write(&cxl_region_rwsem);
- 			return -ENXIO;
- 		}
- 		port->commit_end = cxld->id;
-+		up_write(&cxl_region_rwsem);
- 	} else {
- 		if (cxled) {
- 			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+Interleave weights denote the number of pages that should be
+allocated from the node when interleaving occurs and have a range
+of 1-255.  The weight of a node can never be 0, and instead the
+preferred way to prevent allocation is to remove the node from the
+cpuset or mempolicy altogether.
 
+For example, if a node's interleave weight is set to 5, 5 pages
+will be allocated from that node before the next node is scheduled
+for allocations.
+
+# Set node weight for node 0 to 5
+echo 0:5 > /sys/fs/cgroup/user.slice/memory.interleave_weights
+
+# Set node weight for node 1 to 3
+echo 1:3 > /sys/fs/cgroup/user.slice/memory.interleave_weights
+
+# View the currently set weights
+cat /sys/fs/cgroup/user.slice/memory.interleave_weights
+0:5,1:3
+
+Weights will only be displayed for possible nodes.
+
+With this it becomes possible to set an interleaving strategy
+that fits the available bandwidth for the devices available on
+the system. An example system:
+
+Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
+Node 1 - CXL Memory. 64GB/s BW, on Node 0 root complex
+
+In this setup, the effective weights for a node set of [0,1]
+may be may be [86, 14] (86% of memory on Node 0, 14% on node 1)
+or some smaller fraction thereof to encourge quicker rounds
+for better overall distribution.
+
+This spreads memory out across devices which all have different
+latency and bandwidth attributes in a way that can maximize the
+available resources.
+
+~Gregory
+
+=============
+Version Notes:
+
+= v4 notes
+
+Moved interleave weights to cgroups from nodes.
+
+Omitted them from the root cgroup for initial testing/comment, but
+it seems like it may be a reasonable idea to place them there too.
+
+== Weighted interleave
+
+mm/mempolicy: modify interleave mempolicy to use node weights
+
+The mempolicy MPOL_INTERLEAVE utilizes the node weights defined in
+the cgroup memory.interleave_weights interfaces to implement weighted
+interleave.  By default, since all nodes default to a weight of 1,
+the original interleave behavior is retained.
+
+============
+RFC History
+
+Node based weights
+By: Gregory Price
+https://lore.kernel.org/linux-mm/20231031003810.4532-1-gregory.price@memverge.com/
+
+Memory-tier based weights
+By: Ravi Shankar
+https://lore.kernel.org/all/20230927095002.10245-1-ravis.opensrc@micron.com/
+
+Mempolicy multi-node weighting w/ set_mempolicy2:
+By: Gregory Price
+https://lore.kernel.org/all/20231003002156.740595-1-gregory.price@memverge.com/
+
+Hasan Al Maruf: N:M weighting in mempolicy
+https://lore.kernel.org/linux-mm/YqD0%2FtzFwXvJ1gK6@cmpxchg.org/T/
+
+Huang, Ying's presentation in lpc22, 16th slide in
+https://lpc.events/event/16/contributions/1209/attachments/1042/1995/\
+Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
+
+===================
+
+Gregory Price (3):
+  mm/memcontrol: implement memcg.interleave_weights
+  mm/mempolicy: implement weighted interleave
+  Documentation: sysfs entries for cgroup.memory.interleave_weights
+
+ Documentation/admin-guide/cgroup-v2.rst       |  45 +++++
+ .../admin-guide/mm/numa_memory_policy.rst     |  11 ++
+ include/linux/memcontrol.h                    |  31 ++++
+ include/linux/mempolicy.h                     |   3 +
+ mm/memcontrol.c                               | 172 ++++++++++++++++++
+ mm/mempolicy.c                                | 153 +++++++++++++---
+ 6 files changed, 387 insertions(+), 28 deletions(-)
+
+-- 
+2.39.1
 
