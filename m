@@ -1,92 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF58A1DFD2;
-	Thu,  9 Nov 2023 22:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43DA53BF;
+	Fri, 10 Nov 2023 06:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="cZ/ibDnC";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EsAaX7IC"
-Received: from a11-78.smtp-out.amazonses.com (a11-78.smtp-out.amazonses.com [54.240.11.78])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B100270B;
-	Thu,  9 Nov 2023 14:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rjayupzefgi7e6fmzxcxe4cv4arrjs35; d=jagalactic.com; t=1699570137;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=DNowovoqUNyWgLnq9TXYc0zwtLagxb8oRoqdHwSh+pY=;
-	b=cZ/ibDnCX+StsikroCheBC1n/eOgWRIHC8pXdYkfbcWrzTKF53R+KZ1uw2V73wl/
-	G3j1vuSo/F/6pMAMmk0G0zHWC7A77uvQsFGWP6UxjtJURH63VhAxWU5dM0aeg2voSrg
-	h4KRNw3rAAceh6usv5KUGW1Qhc3Negqe3SPz8Jgg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1699570137;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=DNowovoqUNyWgLnq9TXYc0zwtLagxb8oRoqdHwSh+pY=;
-	b=EsAaX7ICLKVu1kM4o2uHclVGJcN15o4scv9IbAIJP+9WfAJPpfmemlOC0AaLxvVp
-	Xm2oDFqiIwNnoJZpNTjP+UZspdlQp/IE6lcd/krk9bbd5poMiGfHiIdMsIP9Pv06s/e
-	jZ1LxHgubNUELcTFpDl18lIsmmJwUmP9KP0HZaSw=
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0Q1FRaq"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0475FF0;
+	Thu,  9 Nov 2023 22:18:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699597091; x=1731133091;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=d3E/urWJ+WAtgq1ZPh+D0M58tD9eQzNWMlKG+spWjAQ=;
+  b=K0Q1FRaqZCxOpICYU3gJY3aCIqXw1TSJmehR/7Z/YxrJW98/daRZsa1D
+   HaZm8uWPS/ALgFhbRPo8BJvsfQ4D2THMpWFDYZVsIkRKJVW9LRYPNhpPH
+   fq61qrPZ2PlXs6HuUorOADdsBg9hRzzP2QN1KjeQGh6zeAMQixdSZz46S
+   YgP265FTGBp7aY7eIp0ihLkM863tvFYAUbE6DrIlobdrK6OiMc01dpvYV
+   8+Yp3dPAOFpJIt0AWKXS/v5u8E8XTdX68sFaaQickwn7yya1C+uwNV2Mc
+   wiO6lPDMK5dApMO5TmV3dJtf161akjzmhXOYa+ZGL/vVJFNutnb4WsdyT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="389946752"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="389946752"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 22:18:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="798534270"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="798534270"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 22:18:06 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gourry.memverge@gmail.com>
+Cc: linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,
+  linux-mm@kvack.org,  cgroups@vger.kernel.org,  linux-doc@vger.kernel.org,
+  akpm@linux-foundation.org,  mhocko@kernel.org,  tj@kernel.org,
+  lizefan.x@bytedance.com,  hannes@cmpxchg.org,  corbet@lwn.net,
+  roman.gushchin@linux.dev,  shakeelb@google.com,  muchun.song@linux.dev,
+  Gregory Price <gregory.price@memverge.com>
 Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?Gregory_Price?= <gourry.memverge@gmail.com>
-Cc: 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2E?= =?UTF-8?Q?org?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-mm=40kvack=2E?= =?UTF-8?Q?org?= <linux-mm@kvack.org>, 
-	=?UTF-8?Q?cgroups=40vger=2Ekernel=2E?= =?UTF-8?Q?org?= <cgroups@vger.kernel.org>, 
-	=?UTF-8?Q?linux-doc=40vger=2Ek?= =?UTF-8?Q?ernel=2Eorg?= <linux-doc@vger.kernel.org>, 
-	=?UTF-8?Q?ying=2Ehuang=40intel=2Ecom?= <ying.huang@intel.com>, 
-	=?UTF-8?Q?akpm=40linux-foundation=2Eorg?= <akpm@linux-foundation.org>, 
-	=?UTF-8?Q?mhocko=40kernel=2Eorg?= <mhocko@kernel.org>, 
-	=?UTF-8?Q?tj=40kernel=2Eorg?= <tj@kernel.org>, 
-	=?UTF-8?Q?lizefan=2Ex=40by?= =?UTF-8?Q?tedance=2Ecom?= <lizefan.x@bytedance.com>, 
-	=?UTF-8?Q?hannes=40cmpxchg=2Eorg?= <hannes@cmpxchg.org>, 
-	=?UTF-8?Q?corbet=40lwn=2Enet?= <corbet@lwn.net>, 
-	=?UTF-8?Q?roman=2Egushch?= =?UTF-8?Q?in=40linux=2Edev?= <roman.gushchin@linux.dev>, 
-	=?UTF-8?Q?shakeelb=40google=2Ecom?= <shakeelb@google.com>, 
-	=?UTF-8?Q?muchun=2Esong=40linux=2Edev?= <muchun.song@linux.dev>, 
-	=?UTF-8?Q?Gregory_Price?= <gregory.price@memverge.com>, 
-	=?UTF-8?Q?jgroves=40micron=2Ecom?= <jgroves@micron.com>
-Date: Thu, 9 Nov 2023 22:48:56 +0000
+In-Reply-To: <20231109002517.106829-1-gregory.price@memverge.com> (Gregory
+	Price's message of "Wed, 8 Nov 2023 19:25:14 -0500")
+References: <20231109002517.106829-1-gregory.price@memverge.com>
+Date: Fri, 10 Nov 2023 14:16:05 +0800
+Message-ID: <87zfzmf80q.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20231109002517.106829-1-gregory.price@memverge.com>
-References: <20231109002517.106829-1-gregory.price@memverge.com> 
- <klhcqksrg7uvdrf6hoi5tegifycjltz2kx2d62hapmw3ulr7oa@woibsnrpgox4>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHaEqNA+ibc3vlFQhCfYQcHLvgUcQAu6sWO
-Thread-Topic: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-X-Wm-Sent-Timestamp: 1699570135
-Message-ID: <0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
-Feedback-ID: 1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2023.11.09-54.240.11.78
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 
-On 23/11/08 07:25PM, Gregory Price wrote:
+Gregory Price <gourry.memverge@gmail.com> writes:
+
 > This patchset implements weighted interleave and adds a new cgroup
 > sysfs entry: cgroup/memory.interleave_weights (excluded from root).
- 
-<snip>
+>
+> The il_weight of a node is used by mempolicy to implement weighted
+> interleave when `numactl --interleave=...` is invoked.  By default
+> il_weight for a node is always 1, which preserves the default round
+> robin interleave behavior.
 
-We at Micron think this capability is really important, and moving it into
-cgroups introduces important flexibility that was missing from prior versions
-of the patchset.
+IIUC, this makes it almost impossible to set the default weight of a
+node from the node memory bandwidth information.  This will make the
+life of users a little harder.
 
-To me this mainly represents the antidote to having system bios programming
-the memory map to be heterogeneously interleaved - which I expect will be
-an option, and some customers seem to want it. But that approach will affect
-all apps (and also the kernel), and will hide at least the interleaved
-numa nodes from Linux' view of the topology. There is a lot not to like
-about that approach...
+If so, how about use a new memory policy mode, for example
+MPOL_WEIGHTED_INTERLEAVE, etc.
 
-This approach checks all the important boxes: it only applies to apps where
-it's enabled, the weighting can vary from one app to another, the
-kernel is not affected, and the numa topology is not buried.
+> Interleave weights denote the number of pages that should be
+> allocated from the node when interleaving occurs and have a range
+> of 1-255.  The weight of a node can never be 0, and instead the
+> preferred way to prevent allocation is to remove the node from the
+> cpuset or mempolicy altogether.
+>
+> For example, if a node's interleave weight is set to 5, 5 pages
+> will be allocated from that node before the next node is scheduled
+> for allocations.
+>
+> # Set node weight for node 0 to 5
+> echo 0:5 > /sys/fs/cgroup/user.slice/memory.interleave_weights
+>
+> # Set node weight for node 1 to 3
+> echo 1:3 > /sys/fs/cgroup/user.slice/memory.interleave_weights
+>
+> # View the currently set weights
+> cat /sys/fs/cgroup/user.slice/memory.interleave_weights
+> 0:5,1:3
+>
+> Weights will only be displayed for possible nodes.
+>
+> With this it becomes possible to set an interleaving strategy
+> that fits the available bandwidth for the devices available on
+> the system. An example system:
+>
+> Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
+> Node 1 - CXL Memory. 64GB/s BW, on Node 0 root complex
+>
+> In this setup, the effective weights for a node set of [0,1]
+> may be may be [86, 14] (86% of memory on Node 0, 14% on node 1)
+> or some smaller fraction thereof to encourge quicker rounds
+> for better overall distribution.
+>
+> This spreads memory out across devices which all have different
+> latency and bandwidth attributes in a way that can maximize the
+> available resources.
+>
 
-I see Michal's comment about cpuset vs. memory, and have no opinion there.
-
-Thumbs up!
-John Groves at Micron
-
+--
+Best Regards,
+Huang, Ying
