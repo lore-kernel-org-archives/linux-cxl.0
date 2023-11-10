@@ -1,116 +1,74 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43DA53BF;
-	Fri, 10 Nov 2023 06:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096CAD506;
+	Fri, 10 Nov 2023 09:06:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0Q1FRaq"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0475FF0;
-	Thu,  9 Nov 2023 22:18:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699597091; x=1731133091;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=d3E/urWJ+WAtgq1ZPh+D0M58tD9eQzNWMlKG+spWjAQ=;
-  b=K0Q1FRaqZCxOpICYU3gJY3aCIqXw1TSJmehR/7Z/YxrJW98/daRZsa1D
-   HaZm8uWPS/ALgFhbRPo8BJvsfQ4D2THMpWFDYZVsIkRKJVW9LRYPNhpPH
-   fq61qrPZ2PlXs6HuUorOADdsBg9hRzzP2QN1KjeQGh6zeAMQixdSZz46S
-   YgP265FTGBp7aY7eIp0ihLkM863tvFYAUbE6DrIlobdrK6OiMc01dpvYV
-   8+Yp3dPAOFpJIt0AWKXS/v5u8E8XTdX68sFaaQickwn7yya1C+uwNV2Mc
-   wiO6lPDMK5dApMO5TmV3dJtf161akjzmhXOYa+ZGL/vVJFNutnb4WsdyT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="389946752"
-X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="389946752"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 22:18:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="798534270"
-X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="798534270"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 22:18:06 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gourry.memverge@gmail.com>
-Cc: linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,
-  linux-mm@kvack.org,  cgroups@vger.kernel.org,  linux-doc@vger.kernel.org,
-  akpm@linux-foundation.org,  mhocko@kernel.org,  tj@kernel.org,
-  lizefan.x@bytedance.com,  hannes@cmpxchg.org,  corbet@lwn.net,
-  roman.gushchin@linux.dev,  shakeelb@google.com,  muchun.song@linux.dev,
-  Gregory Price <gregory.price@memverge.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sne0KqHq"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE5BAF9D;
+	Fri, 10 Nov 2023 01:05:59 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F65621985;
+	Fri, 10 Nov 2023 09:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1699607158; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8N0qgXB3RuUcX93UjUsbFRBaIloZQvm/KDkU0Ajtwn8=;
+	b=sne0KqHq0rJXX7LDtvqbXYhWk908GRUoHKXnBuXPKDEgCTehK5mPq57YZVKZFjm1kS7P7C
+	lDR/X5aM9YzvcXfJnFX6zBwI8ia5Kf3T6jRtQB7SWql3inckZBrY8m1BmiFjRmcovJYw0J
+	WJrEBqd+q1m43h9aur6Q49LeuppYeLA=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0496213398;
+	Fri, 10 Nov 2023 09:05:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id PDtvOnXyTWUQPAAAMHmgww
+	(envelope-from <mhocko@suse.com>); Fri, 10 Nov 2023 09:05:57 +0000
+Date: Fri, 10 Nov 2023 10:05:57 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+	ying.huang@intel.com, akpm@linux-foundation.org, tj@kernel.org,
+	lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
+	roman.gushchin@linux.dev, shakeelb@google.com,
+	muchun.song@linux.dev
 Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-In-Reply-To: <20231109002517.106829-1-gregory.price@memverge.com> (Gregory
-	Price's message of "Wed, 8 Nov 2023 19:25:14 -0500")
+Message-ID: <ZU3ydS1Puv2OHgiE@tiehlicka>
 References: <20231109002517.106829-1-gregory.price@memverge.com>
-Date: Fri, 10 Nov 2023 14:16:05 +0800
-Message-ID: <87zfzmf80q.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <ZUyuL9_8PPiEflnS@tiehlicka>
+ <ZU0J+RU1fg8peGJH@memverge.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZU0J+RU1fg8peGJH@memverge.com>
 
-Gregory Price <gourry.memverge@gmail.com> writes:
+On Thu 09-11-23 11:34:01, Gregory Price wrote:
+[...]
+> Anyway, summarizing:  After a bit of reading, this does seem to map
+> better to the "accounting consumption" subsystem than the "constrain"
+> subsystem. However, if you think it's better suited for cpuset, I'm
+> happy to push in that direction.
 
-> This patchset implements weighted interleave and adds a new cgroup
-> sysfs entry: cgroup/memory.interleave_weights (excluded from root).
->
-> The il_weight of a node is used by mempolicy to implement weighted
-> interleave when `numactl --interleave=...` is invoked.  By default
-> il_weight for a node is always 1, which preserves the default round
-> robin interleave behavior.
-
-IIUC, this makes it almost impossible to set the default weight of a
-node from the node memory bandwidth information.  This will make the
-life of users a little harder.
-
-If so, how about use a new memory policy mode, for example
-MPOL_WEIGHTED_INTERLEAVE, etc.
-
-> Interleave weights denote the number of pages that should be
-> allocated from the node when interleaving occurs and have a range
-> of 1-255.  The weight of a node can never be 0, and instead the
-> preferred way to prevent allocation is to remove the node from the
-> cpuset or mempolicy altogether.
->
-> For example, if a node's interleave weight is set to 5, 5 pages
-> will be allocated from that node before the next node is scheduled
-> for allocations.
->
-> # Set node weight for node 0 to 5
-> echo 0:5 > /sys/fs/cgroup/user.slice/memory.interleave_weights
->
-> # Set node weight for node 1 to 3
-> echo 1:3 > /sys/fs/cgroup/user.slice/memory.interleave_weights
->
-> # View the currently set weights
-> cat /sys/fs/cgroup/user.slice/memory.interleave_weights
-> 0:5,1:3
->
-> Weights will only be displayed for possible nodes.
->
-> With this it becomes possible to set an interleaving strategy
-> that fits the available bandwidth for the devices available on
-> the system. An example system:
->
-> Node 0 - CPU+DRAM, 400GB/s BW (200 cross socket)
-> Node 1 - CXL Memory. 64GB/s BW, on Node 0 root complex
->
-> In this setup, the effective weights for a node set of [0,1]
-> may be may be [86, 14] (86% of memory on Node 0, 14% on node 1)
-> or some smaller fraction thereof to encourge quicker rounds
-> for better overall distribution.
->
-> This spreads memory out across devices which all have different
-> latency and bandwidth attributes in a way that can maximize the
-> available resources.
->
-
---
-Best Regards,
-Huang, Ying
+Maybe others see it differently but I stick with my previous position.
+Memcg is not a great fit for reasons already mentioned - most notably
+that the controller doesn't control the allocation but accounting what
+has been already allocated. Cpusets on the other hand constrains the
+allocations and that is exactly what you want to achieve. 
+-- 
+Michal Hocko
+SUSE Labs
