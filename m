@@ -1,147 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4FD1CA80;
-	Fri, 10 Nov 2023 15:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D905A33FA;
+	Fri, 10 Nov 2023 19:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="AtC1HlHH"
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2083.outbound.protection.outlook.com [40.107.94.83])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4405A37AC9;
-	Fri, 10 Nov 2023 07:26:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="p5Jk+7QK"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D56268B4;
+	Fri, 10 Nov 2023 11:54:58 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i8FHpbe85vKFDVEwHAeIIpaqthrZkZ08um/kAzOZpjHfPYI2U84ja63wTC9bk8quSurtXQArygAU7NTDx9anTwoa6+SXNgXFWRrLRDmtps9ZvWE7HMaeESNOcN7vf3MYR2KCwWFKS9ZO8thM15gwNA4rrU6/0SY6+IvcvXzCGGc4pPJn786Mh2IdMhvgB8WWzepIIZmiqA5BrnS/z+S16/drrBfUV6U2G0a0SPK/HPJNnJZbJHYcOW/138djFWzff61Ja1BQtD2l6kFEkvjaXNyHeAOTrsXFfj2Y9ZAFOC4qIHjsTBbuBXV6CMCsvk5rR4ZqDKvpPP7H/N3Nzs8cVA==
+ b=Mo3k6I3L3+GaMcPE9W8IN9T7AObg33M0tnp9fSppm7I2/LPuQ01fvN5xCzFHvPV9FklloyS2iASNPyhGljNo/hMfOzLArTkG4QBLsgFTR5QYkH0FewtmCWNe7VxrGc+An0q7hlb1jzoylRqsxKQJs/Dl9tJcRotEXOr/e0DCXxBZzzQ5anv5xjNxOoUZhlIDcZzdX/hmO5x/m3nBRGle2dHPnfWTLoZZiIK0wxyecKb7n4wDRihwomWJYB/Q49b7j/eN1OpZ97uZF3fmOZKVqJ7QGvZUfTSghLBQu/GAXYvY7yTTXO6jCyn+o3jAZhtwyvpQ1B9uWRZQ9Y2H0D+Mew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=adD0Y6g68I9viqMEMz6mnEW34J2ahp7sMOEBYwQwrmQ=;
- b=eNzngTM18fJOkbj9h4USYul1ySlsCjkzUZbpNtJEG8b/qxoR44Itnx4Tava7nvoY0W9dfKTLJGfJYeE6cWgw2Lr4AZ1ro2LIOekD0bhlOs/m0FX5ScMdQe8SD0oYou/DqA9xIAKL257ik3/Dr5CeGCnMDTjqMJppLetAOK5NQ3gcGYk+Nyy5p2WIQvkSPIGaMFbpI+qObL5+8Qjno/U4MX6IspgWS0d9303txVkLz5KNNoe1XUD6Xx6J7ZRsYIRUQwdWDYy0dadnnyswHvSdHrp/KZnbG8Cf4Kwc1LtLBrIE8Dq9N5sh70/XtamRQfwXrUx+F0TdQUYwhPHB3aKjkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=memverge.com smtp.mailfrom=micron.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ bh=5un78N5+jUds3zCNWYGkXwpUGcb9pwtuVmOvn+vG6+g=;
+ b=QHMTCL6K8zA0AUBcjUkc1CbcPCVKn6V+yfJLgCd39uD21xK6QBSGQADwxgQj/giXx7i7WPzSFZKRmEVWwS/JjO4O3xyDNxpSRxsNQ91VgwR3xMH/e//WZ/kJXbXdn/zkXDEMCeiC0jJ3CfYDl2TBK9g00+QlDVoGCX8MrW0Xv9tO/XxB53Zc/mxJSpEB92pgn5SvMryJRi7GP1OdL9Mi6L7lKpsi0C8lM3OESMJUXsLWWDU9jyl2pDC24R/Iq3ZJlOTUzPGj++bBBT414jP/PAetYQnGRdwbZ6BZ5P9CNDHlMwe1Iw3DMPSkfClV202r25e0sdtOHbYkDPIe2grkBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=adD0Y6g68I9viqMEMz6mnEW34J2ahp7sMOEBYwQwrmQ=;
- b=AtC1HlHHWxzK0vqJcGXpYTDC/XlMULWI72hsiK/Q2WktChppJ6/xufwzk25vJPR2AlShfrc6OYaKWjjmMPpEyMCF5hT+hpbiL2UOhg3EZJBEEr2BMLpf4OuAN4jOt8BWfcihK2p2hWVKuJjGIf7mMD6hoVoAQR7moFLQvsKcAG8FxaWQLKVHOr+jaJiZ3zLVUie7Y+NPmXejIUnjpoV523pZpwv81KrgSUM2XjE6puzfDjvSu6DJYp+W1QflrDPcXR0EgxWukRR0n7e4ussuweP2b/UwoGqw0vop1NQGHXabTbUxcE3ZG5fPU33hWZjauAtXr6w3iJBoNyvE9ciJaQ==
-Received: from SJ0PR13CA0193.namprd13.prod.outlook.com (2603:10b6:a03:2c3::18)
- by PH0PR08MB7132.namprd08.prod.outlook.com (2603:10b6:510:74::14) with
+ bh=5un78N5+jUds3zCNWYGkXwpUGcb9pwtuVmOvn+vG6+g=;
+ b=p5Jk+7QKKq26MxfR03EpBuuzlDUpmrXloLoD/gB8sz1hXHJffWUEUG7rOx9CVmb/EsVjDnE6moGa1539yOW+fg2GFHhTwCTn6sg1ALmlfPpXSAbCY4Bx1V7ZCaTlUglbwTVNI0fLlUsepn5h9EOHzpAfmUldG4bk0cQtwoVWhjA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by SJ0PR17MB5557.namprd17.prod.outlook.com (2603:10b6:a03:393::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.18; Fri, 10 Nov
- 2023 15:26:34 +0000
-Received: from DS3PEPF000099E0.namprd04.prod.outlook.com
- (2603:10b6:a03:2c3:cafe::e1) by SJ0PR13CA0193.outlook.office365.com
- (2603:10b6:a03:2c3::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.19 via Frontend
- Transport; Fri, 10 Nov 2023 15:26:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
- smtp.mailfrom=micron.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=micron.com;
-Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
- 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.201.242.130; helo=mail.micron.com; pr=C
-Received: from mail.micron.com (137.201.242.130) by
- DS3PEPF000099E0.mail.protection.outlook.com (10.167.17.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6977.16 via Frontend Transport; Fri, 10 Nov 2023 15:26:33 +0000
-Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW36EX19A.micron.com
- (137.201.85.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Fri, 10 Nov
- 2023 08:26:32 -0700
-Received: from VENKATARAVI-LAP.micron.com (10.3.116.60) by
- RestrictedRelay36EX19A.micron.com (137.201.85.33) with Microsoft SMTP Server
- id 15.2.1258.12 via Frontend Transport; Fri, 10 Nov 2023 08:26:25 -0700
-From: Ravi Jonnalagadda <ravis.opensrc@micron.com>
-To: <gregory.price@memverge.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-mm@kvack.org>, <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<ying.huang@intel.com>, <akpm@linux-foundation.org>, <mhocko@kernel.org>,
-	<tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<corbet@lwn.net>, <roman.gushchin@linux.dev>, <shakeelb@google.com>,
-	<muchun.song@linux.dev>, Srinivasulu Thanneeru
-	<sthanneeru.opensrc@micron.com>, Ravi Jonnalagadda <ravis.opensrc@micron.com>
-Subject: Re: [RFC PATCH v4 2/3] mm/mempolicy: implement weighted interleave
-Date: Fri, 10 Nov 2023 20:56:06 +0530
-Message-ID: <20231110152606.123-1-ravis.opensrc@micron.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231109002517.106829-3-gregory.price@memverge.com>
-References: <20231109002517.106829-3-gregory.price@memverge.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.9; Fri, 10 Nov
+ 2023 19:54:53 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7002.010; Fri, 10 Nov 2023
+ 19:54:53 +0000
+Date: Fri, 10 Nov 2023 14:54:49 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+	akpm@linux-foundation.org, mhocko@kernel.org, tj@kernel.org,
+	lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
+	roman.gushchin@linux.dev, shakeelb@google.com,
+	muchun.song@linux.dev
+Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+Message-ID: <ZU6KiRv7iy/cUY7N@memverge.com>
+References: <20231109002517.106829-1-gregory.price@memverge.com>
+ <87zfzmf80q.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfzmf80q.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-ClientProxiedBy: SJ0PR13CA0070.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::15) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-MT-Whitelisted: matched
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E0:EE_|PH0PR08MB7132:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f84d4c9-40ac-4a70-25e6-08dbe2016c13
-X-EXT-ByPass: 1
-X-MT-RULE-Whitelisted: Triggered
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB5557:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbe52eac-d646-4b7f-29ec-08dbe226e7b8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	z8guBpB1TM+wkzi7cErnBmJaItrQGkQwpOLKDUDy7NNUBd89bzcAMSVs9Zlf4SfLF1JRa2hjUTFPhBJQq0KEWuW27e0AHt1jHtuzX4mQvE/IZdC35N3bgt/g0fZJaNRWooeTOayEFrfHWvhUoBBtk8eJQ0wbiaKUx4kArnoXvBHg4xCdKwW9Nl2TE7gEKXmRBDWD9FA5SQ10VLtyJbpFWJYm92Rh8MU0Q+5JobnO+FXU5aK2Zitwzh5/7TLVioFjqaBHWKDNDm4YqdawEVkpMS/vi5nW8YAoHeNLtdfOp7Qcnw2OwkFdJomPArUe857w2N59LwTVfK+Qkm7LSIVaW/PocS1Lbwju1bYlRn2r/8SeMolTQXAX23b6OTQMkHthiZ3BAwSzt9waMvo8uDpeUbvl5JxQ31iy1mumKNomhDRv0LS2qXz4r5x2eXG75/OkscBLkLgn9ERghAFkQhuJI9c0qS1lPMOh65QASFmrKSZWKAh+psuu4FIwYegkawzAOzemH+P3iZ5qUkjIXkPTYvLCN/ADL2jrL/IVZEPdcrKZwPL8b5vG23REC22H8CsTqFXdn91oP3XNAj4JBXa4FnfM2ORoUw+poCvCZGjTanHNsnxZX/rsAJzJsN011slgCPjQNJzcId3ZauYQWtAW1amrNz/s/HgHJvcPYbHJcrvMo0WKmwQUU96M/4BMCCGt5yHySpZKBxjjXws/8LA3l8pog4m1tH98xtHVb3ACqiekjxbf7b0PFJBuDUckLp3SilNE3Yforzqvh4mntIEE4Q==
+	ygCsEckYGxQbY5Fk+kAkXixzlSI9OQqJq3C3dErJeDeXmYI7Ff9GFIqKRmZl8wPGsX04Eo+8AjLrQCEOwEbLwZXbGJbbxA01ZpC5TRflDoSwSiD7KOnY3cbVAhOzZdXoN/0zVujiJa03EqE0APEw7Xp9SyL0E7Xbkg15coSc+UXhedooPSjn6I2NrXRQnmxvTUqg6gdi5Mu3fIHmP2FzjXgddx1kcsjvuAk39PXl6a4WvUSRSQtX5eq9GW7zZ684XDwIKFnB2MuOJiY+BPNSeT3IZhu/BkbG/bxzw6LIeUK6DRl/mtwod5oaaQA6/TZOAkALZPDJBpQcrFSmHbK4mzv5bmDS3VTzuhE45dmdlSKeaYTvT0WLMTNjrlPL6jrOypy1jTPI0SnTTh4NQcca2W5AauYpGw7MMisoIs4oonTfcbEVTyV8oNhqV9bw1KUZvoOIgyRkiW4Fd8aBG+bkrcrOAQK0mvU8B+HspjcEoDFqNxlpUgirPnl5Aq2g5JbDG2ZI80Aypc+uQmruEbhpdtU4TnxGFQQf5/hyX/zPj/pq9SFzUCFDcRZfD6zap9CaCJdhvO+YKEw1LcDtcbvUzJyc0vRwBsuoTaZ6dIF4F+4LzEs7fEMYwd2//xbcnBa1
 X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(39860400002)(346002)(396003)(230922051799003)(186009)(1800799009)(82310400011)(451199024)(64100799003)(46966006)(40470700004)(36840700001)(2616005)(7696005)(7416002)(41300700001)(26005)(107886003)(1076003)(5660300002)(40460700003)(6666004)(40480700001)(426003)(336012)(2906002)(8676002)(8936002)(86362001)(6916009)(7636003)(356005)(70206006)(316002)(54906003)(70586007)(82740400003)(478600001)(47076005)(36860700001)(36756003)(4326008)(16393002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2023 15:26:33.8158
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39840400004)(136003)(346002)(376002)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(6512007)(6486002)(478600001)(2616005)(6666004)(6506007)(83380400001)(7416002)(26005)(2906002)(66476007)(41300700001)(44832011)(66556008)(66946007)(4326008)(6916009)(8676002)(8936002)(316002)(5660300002)(38100700002)(36756003)(86362001)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?khNQ6xcg1p90yHKbACXCFKc39HEbFJJisoMILo3STSYeCy0t3dpqPmjHFqZP?=
+ =?us-ascii?Q?Gp2cOQa+bwbDwJNJallvEp6VxTBzdEwdhgth0cPpU6qIlh4+V6P2NO1nS4SX?=
+ =?us-ascii?Q?VJANZVyyAThex6CqY+iB7l8PiWf22APpJz708xq1hRil8/rezuMOybjEBn7P?=
+ =?us-ascii?Q?2jRaqYxfVag/I0fe++KOexK3icwWN17XTa1UgpojBsU0jhDfKZOX9RkWICh4?=
+ =?us-ascii?Q?o+KJvPae1ir+4u3SQDPvmrDUlay0GNVuZe8mLqdIRjJcLY6HaST3EQNDw+cx?=
+ =?us-ascii?Q?zOF9OJLq3gYWdtUm352JCoGujUHCQN+eS7r0LlbevsGEhtBZGwZzEVLWJ4WT?=
+ =?us-ascii?Q?oYiZ9yZ+qPCLkw3chD4xtv6n2zAdzUlVepeGyf+k7g1FLT1cxkUNrWGns5vo?=
+ =?us-ascii?Q?5DgfHhowBdUB9XGKC9K6C0PkQMLcgRFmclQY7SGMSnRq1Vz954/mQe2MrZeX?=
+ =?us-ascii?Q?FwPalIqPIqqxYH5pEJxCNplFcEpfKpukP+VzV5c1Yks2iT2R16Ik7vD2vGmv?=
+ =?us-ascii?Q?1YZ8c3nbSlcd4tlPCPiPuK7Qvjfhq58ldVjB4K9RzwCQtL5ID13QM/K5nxOP?=
+ =?us-ascii?Q?4Kg9PwNCNhBXE+mvMnbN/HyIkxC4PzR1ho75XxKyI6DNCSYo08GYynakTwIP?=
+ =?us-ascii?Q?xY5OJ/ny4seT2vQ2I14Wf9zjtwvhLcg8/X6hV5+mj7Ja7kiCcz0P1uEhG9lw?=
+ =?us-ascii?Q?hMcvWGX8dCQX037xj9yt3f/f/VNNHva8Wtbu8+/Tbt0HQL/YyIaAsWXYtgiV?=
+ =?us-ascii?Q?daKuiVp2CHwrVcdvWIQNQoklgxXO3wQdQ/Aq6/UeBBIVEAVQkFxpkXAVcmvH?=
+ =?us-ascii?Q?qSukY544+4WWUHmtQm7q9Bi/hLPkw9AwDPZS2BHuLX0tZdt56unOirf1IbGJ?=
+ =?us-ascii?Q?dmXD4nRoWWjwz3JF+eYkE4W5+h8PtrAPWo/mscur4QgxCePI/OZ/CAinbxDj?=
+ =?us-ascii?Q?MgPvL9NH2Y3LWl90HlQcKEzdSuUS5KD8RJxss0BOP9VEO2euDEHxZXTm4ycb?=
+ =?us-ascii?Q?sykDGRzTworuitDdGId2rBc2lI1JQ7oFy5GO1OHNnuG94r6EWccqgZgG1xgD?=
+ =?us-ascii?Q?b2NvDlzMd+SujyDNHNZjHO0PuoYtT6iGsBu9VZbZmd+F6RlTo/EPLQpgMRt7?=
+ =?us-ascii?Q?N2DR4Z7mqW7EzXuzTz5sNtT6IB2EvT9Mq1EjdGegNWUnRlrCrArwgnfNk3ag?=
+ =?us-ascii?Q?0BzpqXjNzPWJAHWTuKjAWphHyU7ATZJpTVDwt1iCxfzv5OdgMjBIVubK9JhO?=
+ =?us-ascii?Q?8AgCJLG4fHASOyXkA4/TqXvcdwN+zO2wUDM+wz1FLnafOqgTly7Em/KMu59K?=
+ =?us-ascii?Q?LljvDacrNSwz7f0zpZ6ukiGzKYn8QPFZ8rQA7vkG9iu9/ZrG02q+hkuR2ghO?=
+ =?us-ascii?Q?Z2efm6sLkjQcufdxFBxlsC3VuovSezoUjyE9fGmaDzoTRHm2mcK8MkcFe8RQ?=
+ =?us-ascii?Q?vlj9/U5AU61DJVG1jONFYZ3e92yMQN/hk2HhgFBuNlYNzhiTJES0YBEa/v6N?=
+ =?us-ascii?Q?IpC9QdfWN7rO0/8e0dMQf2d2akOp5IDa93QzAhAtwOOAOPb0mSpZhPChoneL?=
+ =?us-ascii?Q?Iodep4OHQ+byx+m4LxyOx94VnL+9HE7QrV8l/kHRAr7j9KMLq+h21F6CMJuC?=
+ =?us-ascii?Q?ZA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbe52eac-d646-4b7f-29ec-08dbe226e7b8
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2023 19:54:52.9199
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f84d4c9-40ac-4a70-25e6-08dbe2016c13
-X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E0.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR08MB7132
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g6yfi5kzXhOoqRhFI+tMxURcCuLvwl21P/zV2VhUIipZZgNRsyNOQ+fwvRvarmPhjRxwA4QMted4sWmR6ZEOJ/Wfd3Nzp8YKFgvGtRO3pIM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB5557
 
->Gregory Price wrote:=0D
-=0D
->Implements interleave weighting for bandwidth optimization.=0D
->=0D
->The mempolicy MPOL_INTERLEAVE utilizes the node weights to implement=0D
->weighted interleave.=0D
->=0D
->There are 3 integration points:=0D
->=0D
->interleave_nodes:=0D
->  Counts the number of allocations as they occur, and applies the=0D
->  weight for the current node.  When the weight reaches 0, switch=0D
->  to the next node.=0D
->=0D
->offset_il_node:=0D
->  Gets the total weight of the nodemask as well as each individual=0D
->  node weight, then calculates the node based on the given index n.=0D
->=0D
->bulk_array_interleave:=0D
->  Gets the total weight of the nodemask as well as each individual=0D
->  node weight, then calculates the number of "interleave rounds" as=0D
->  well as any delta ("partial round").  Calculates the number of=0D
->  pages for each node and allocates them.=0D
->=0D
->  If a node was scheduled for interleave via interleave_nodes, the=0D
->  current weight (pol->cur_weight) will be allocated first, before=0D
->  the remaining bulk calculation is done. This simplifies the=0D
->  calculation at the cost of an additional allocation call.=0D
->=0D
->The functions mempolicy_get_il_weight and mempolicy_get_il_weights=0D
->were added so that should mempolicy be extended in the future to=0D
->include local mempolicy weights, there is a clear integration point.=0D
->=0D
->Signed-off-by: Gregory Price <gregory.price@memverge.com>=0D
-=0D
-Thank you for the collaboration.=0D
-Please add the following signatures to this commit.=0D
-Co-authored-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>=0D
-Co-authored-by: Ravi Jonnalagadda <ravis.opensrc@micron.com>=0D
-Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>=0D
-Signed-off-by: Ravi Jonnalagadda <ravis.opensrc@micron.com>=0D
-=0D
---=0D
-Best Regards,=0D
-Ravi Jonnalagadda=
+On Fri, Nov 10, 2023 at 02:16:05PM +0800, Huang, Ying wrote:
+> Gregory Price <gourry.memverge@gmail.com> writes:
+> 
+> > This patchset implements weighted interleave and adds a new cgroup
+> > sysfs entry: cgroup/memory.interleave_weights (excluded from root).
+> >
+> > The il_weight of a node is used by mempolicy to implement weighted
+> > interleave when `numactl --interleave=...` is invoked.  By default
+> > il_weight for a node is always 1, which preserves the default round
+> > robin interleave behavior.
+> 
+> IIUC, this makes it almost impossible to set the default weight of a
+> node from the node memory bandwidth information.  This will make the
+> life of users a little harder.
+> 
+> If so, how about use a new memory policy mode, for example
+> MPOL_WEIGHTED_INTERLEAVE, etc.
+>
+
+weights are also inherited from parent cgroups, so if you set them in
+parent slices you can automatically set update system settings.
+
+by default the parent slice weights will always be 1 until set
+otherwise.  Once they're set, children inherit naturally.
+
+Maybe there's an argument here for including interleave_weights in the
+root cgroup.
+
+~Gregory
