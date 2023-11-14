@@ -1,46 +1,46 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B6226AC0
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0741826AD1
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePZM185t"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axQ1AMvw"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF8CDDF
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:05:08 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9F8D0
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:05:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700003108; x=1731539108;
+  t=1700003115; x=1731539115;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OXAw+80/2GsMzJEVujkBdmSsNy+tJEEihVXz42gK0Qc=;
-  b=ePZM185t+vOoVcILgB4cKL3XP1ZbrHovZqjV0+2p3Fj0o3KhlB3SCM8U
-   ayv6zXgt/LBtRHI6DnS0S/kjMyR9aVwP79AnEJ0fGyNxPRIKw/RG2OZmD
-   e2awgpI/yRi6JHJkd3MzwLke2vRze8T/NLXKa/tKdZWqnR/1Yki+Do2KA
-   SWKdoM2gZa4aEiy9JpF4vznkVcR8TrrlDRB6HmZpQ1wlxMBy/gGcx2D7W
-   Fu0PCHAm4CM42ikxEP/QNqnFRgmRXG3yAM0xlgB0C8n9+lZbIzBG7SJSo
-   W5sBeGH/HcgxTWx243Ztjjc/bRRgFieQ4Cs1CO9GUi2bFgIyDJhb+wAVG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="389617279"
+  bh=PxZXm+0PgNw9t6CXZQp/L6saAzM893IWVcGf2nM9y0k=;
+  b=axQ1AMvww9i2l2nuN8WRbxcC6c8I8TEBEIU5ucllJGGcVgifVKJvQf7/
+   3kyMi//xt+aSLzafmFdrwgFJp4ljMBSkldAkJQs8UQlCgshf0Ethyozue
+   9VCLLEdnCxbI03QTimu1vcFlqyDSHs0eytJsmFj9kZpbyVMmLZdCrNY27
+   TjjOM+WNRZllIbYA8paaWEiqjMyhDzY71CQTAmZLuK+4gNrByTLr2Juvf
+   zOw6UamZVnGBr/OyE5+lxL0zoelI8NA/HRiHL6QE+Os20I6D9UCCVfqgV
+   pMz7dynp26UrB6HyHjmom8w3LBvWE0noNTnOKIsQ3QCXbDlmLpkP3l02m
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="389617282"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="389617279"
+   d="scan'208";a="389617282"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:08 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="764804934"
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="764804948"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="764804934"
+   d="scan'208";a="764804948"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.87.32])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:07 -0800
-Subject: [PATCH v12 10/18] cxl: Add callback to parse the SSLBIS subtable from
- CDAT
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:13 -0800
+Subject: [PATCH v12 11/18] cxl: Add support for _DSM Function for retrieving
+ QTG ID
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Tue, 14 Nov 2023 16:05:06 -0700
-Message-ID: <170000310683.1974471.17733007158430004767.stgit@djiang5-mobl3>
+Date: Tue, 14 Nov 2023 16:05:13 -0700
+Message-ID: <170000311328.1974471.15578727144454624947.stgit@djiang5-mobl3>
 In-Reply-To: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
 References: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -53,174 +53,321 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Provide a callback to parse the Switched Scoped Latency and Bandwidth
-Information Structure (SSLBIS) in the CDAT structures. The SSLBIS
-contains the bandwidth and latency information that's tied to the
-CXL switch that the data table has been read from. The extracted
-values are stored to the cxl_dport correlated by the port_id
-depending on the SSLBIS entry.
+CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
 
-Coherent Device Attribute Table 1.03 2.1 Switched Scoped Latency
-and Bandwidth Information Structure (DSLBIS)
+Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
+an input of an ACPI package with 4 dwords (read latency, write latency,
+read bandwidth, write bandwidth). The call returns a package with 1 WORD
+that provides the max supported QTG ID and a package that may contain 0 or
+more WORDs as the recommended QTG IDs in the recommended order.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Create a cxl_root container for the root cxl_port and provide a callback
+->get_qos_class() in order to retrieve the QoS class. For the ACPI case,
+the _DSM helper is used to retrieve the QTG ID and returned. A
+devm_cxl_add_root() function is added for root port setup and registration
+of the cxl_root callback operation(s).
+
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
 v12:
-- Change dport->coord to dport->sw_coord to clarify variable naming
+- Change var pkg to obj (Jonathan)
 ---
- drivers/cxl/core/cdat.c |   93 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |    3 ++
- drivers/cxl/port.c      |    6 +++
- 3 files changed, 102 insertions(+)
+ drivers/cxl/acpi.c      |  132 ++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/port.c |   41 +++++++++++++--
+ drivers/cxl/cxl.h       |   25 +++++++++
+ 3 files changed, 190 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 361983393666..48be43de2388 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -153,4 +153,97 @@ void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_cdat_dsmas_list_destroy, CXL);
- 
-+static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
-+			       const unsigned long end)
-+{
-+	struct acpi_cdat_sslbis *sslbis;
-+	int size = sizeof(header->cdat) + sizeof(*sslbis);
-+	struct cxl_port *port = arg;
-+	struct device *dev = &port->dev;
-+	struct acpi_cdat_sslbe *entry;
-+	int remain, entries, i;
-+	u16 len;
-+
-+	len = le16_to_cpu((__force __le16)header->cdat.length);
-+	remain = len - size;
-+	if (!remain || remain % sizeof(*entry) ||
-+	    (unsigned long)header + len > end) {
-+		dev_warn(dev, "Malformed SSLBIS table length: (%u)\n", len);
-+		return -EINVAL;
-+	}
-+
-+	/* Skip common header */
-+	sslbis = (struct acpi_cdat_sslbis *)((unsigned long)header +
-+					     sizeof(header->cdat));
-+
-+	/* Unrecognized data type, we can skip */
-+	if (sslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
-+		return 0;
-+
-+	entries = remain / sizeof(*entry);
-+	entry = (struct acpi_cdat_sslbe *)((unsigned long)header + sizeof(*sslbis));
-+
-+	for (i = 0; i < entries; i++) {
-+		u16 x = le16_to_cpu((__force __le16)entry->portx_id);
-+		u16 y = le16_to_cpu((__force __le16)entry->porty_id);
-+		__le64 le_base;
-+		__le16 le_val;
-+		struct cxl_dport *dport;
-+		unsigned long index;
-+		u16 dsp_id;
-+		u64 val;
-+
-+		switch (x) {
-+		case ACPI_CDAT_SSLBIS_US_PORT:
-+			dsp_id = y;
-+			break;
-+		case ACPI_CDAT_SSLBIS_ANY_PORT:
-+			switch (y) {
-+			case ACPI_CDAT_SSLBIS_US_PORT:
-+				dsp_id = x;
-+				break;
-+			case ACPI_CDAT_SSLBIS_ANY_PORT:
-+				dsp_id = ACPI_CDAT_SSLBIS_ANY_PORT;
-+				break;
-+			default:
-+				dsp_id = y;
-+				break;
-+			}
-+			break;
-+		default:
-+			dsp_id = x;
-+			break;
-+		}
-+
-+		le_base = (__force __le64)sslbis->entry_base_unit;
-+		le_val = (__force __le16)entry->latency_or_bandwidth;
-+
-+		if (check_mul_overflow(le64_to_cpu(le_base),
-+				       le16_to_cpu(le_val), &val))
-+			dev_warn(dev, "SSLBIS value overflowed!\n");
-+
-+		xa_for_each(&port->dports, index, dport) {
-+			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
-+			    dsp_id == dport->port_id)
-+				cxl_access_coordinate_set(&dport->sw_coord,
-+							  sslbis->data_type,
-+							  val);
-+		}
-+
-+		entry++;
-+	}
-+
-+	return 0;
-+}
-+
-+int cxl_cdat_switch_process(struct cxl_port *port)
-+{
-+	int rc;
-+
-+	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
-+			      port, port->cdat.table);
-+	return cdat_table_parse_output(rc);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cdat_switch_process, CXL);
-+
- MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8460fff8bae5..f971eef19fb0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -636,6 +636,7 @@ struct cxl_rcrb_info {
-  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
-  * @port: reference to cxl_port that contains this downstream port
-  * @regs: Dport parsed register blocks
-+ * @sw_coord: access coordinates (performance) for switch from CDAT
-  */
- struct cxl_dport {
- 	struct device *dport_dev;
-@@ -645,6 +646,7 @@ struct cxl_dport {
- 	bool rch;
- 	struct cxl_port *port;
- 	struct cxl_regs regs;
-+	struct access_coordinate sw_coord;
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 2034eb4ce83f..ba30b405d260 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -6,6 +6,7 @@
+ #include <linux/kernel.h>
+ #include <linux/acpi.h>
+ #include <linux/pci.h>
++#include <linux/node.h>
+ #include <asm/div64.h>
+ #include "cxlpci.h"
+ #include "cxl.h"
+@@ -17,6 +18,10 @@ struct cxl_cxims_data {
+ 	u64 xormaps[] __counted_by(nr_maps);
  };
  
- /**
-@@ -851,6 +853,7 @@ struct dsmas_entry {
- 
- int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
- void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list);
-+int cxl_cdat_switch_process(struct cxl_port *port);
- 
++static const guid_t acpi_cxl_qtg_id_guid =
++	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
++		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
++
  /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index cceee9dbae2c..f5e2be79f217 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -78,6 +78,12 @@ static int cxl_switch_port_probe(struct cxl_port *port)
- 		return PTR_ERR(cxlhdm);
- 	}
+  * Find a targets entry (n) in the host bridge interleave list.
+  * CXL Specification 3.0 Table 9-22
+@@ -194,6 +199,125 @@ struct cxl_cfmws_context {
+ 	int id;
+ };
  
-+	if (port->cdat.table) {
-+		rc = cxl_cdat_switch_process(port);
-+		if (rc < 0)
-+			dev_warn(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
++/**
++ * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
++ * @handle: ACPI handle
++ * @coord: performance access coordinates
++ * @entries: number of QTG IDs to return
++ * @qos_class: int array provided by caller to return QTG IDs
++ *
++ * Return: number of QTG IDs returned, or -errno for errors
++ *
++ * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
++ * the QTG IDs that are suitable for the performance point in order of most
++ * suitable to least suitable. Write back array of QTG IDs and return the
++ * actual number of QTG IDs written back.
++ */
++static int
++cxl_acpi_evaluate_qtg_dsm(acpi_handle handle, struct access_coordinate *coord,
++			  int entries, int *qos_class)
++{
++	union acpi_object *out_obj, *out_buf, *obj;
++	union acpi_object in_array[4] = {
++		[0].integer = { ACPI_TYPE_INTEGER, coord->read_latency },
++		[1].integer = { ACPI_TYPE_INTEGER, coord->write_latency },
++		[2].integer = { ACPI_TYPE_INTEGER, coord->read_bandwidth },
++		[3].integer = { ACPI_TYPE_INTEGER, coord->write_bandwidth },
++	};
++	union acpi_object in_obj = {
++		.package = {
++			.type = ACPI_TYPE_PACKAGE,
++			.count = 4,
++			.elements = in_array,
++		},
++	};
++	int count, pkg_entries, i;
++	u16 max_qtg;
++	int rc;
++
++	if (!entries)
++		return -EINVAL;
++
++	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
++	if (!out_obj)
++		return -ENXIO;
++
++	if (out_obj->type != ACPI_TYPE_PACKAGE) {
++		rc = -ENXIO;
++		goto out;
 +	}
 +
- 	if (rc == 1) {
- 		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
- 		return devm_cxl_add_passthrough_decoder(port);
++	/* Check Max QTG ID */
++	obj = &out_obj->package.elements[0];
++	if (obj->type != ACPI_TYPE_INTEGER) {
++		rc = -ENXIO;
++		goto out;
++	}
++
++	max_qtg = obj->integer.value;
++
++	/* It's legal to have 0 QTG entries */
++	pkg_entries = out_obj->package.count;
++	if (pkg_entries <= 1) {
++		rc = 0;
++		goto out;
++	}
++
++	/* Retrieve QTG IDs package */
++	obj = &out_obj->package.elements[1];
++	if (obj->type != ACPI_TYPE_PACKAGE) {
++		rc = -ENXIO;
++		goto out;
++	}
++
++	pkg_entries = obj->package.count;
++	count = min(entries, pkg_entries);
++	for (i = 0; i < count; i++) {
++		u16 qtg_id;
++
++		out_buf = &obj->package.elements[i];
++		if (out_buf->type != ACPI_TYPE_INTEGER) {
++			rc = -ENXIO;
++			goto out;
++		}
++
++		qtg_id = out_buf->integer.value;
++		if (qtg_id > max_qtg)
++			pr_warn("QTG ID %u greater than MAX %u\n",
++				qtg_id, max_qtg);
++
++		qos_class[i] = qtg_id;
++	}
++	rc = count;
++
++out:
++	ACPI_FREE(out_obj);
++	return rc;
++}
++
++static int cxl_acpi_get_qos_class(struct cxl_port *root_port,
++				  struct access_coordinate *coord,
++				  int entries, int *qos_class)
++{
++	acpi_handle handle;
++	struct device *dev;
++
++	dev = root_port->uport_dev;
++
++	if (!dev_is_platform(dev))
++		return -ENODEV;
++
++	handle = ACPI_HANDLE(dev);
++	if (!handle)
++		return -ENODEV;
++
++	return cxl_acpi_evaluate_qtg_dsm(handle, coord, entries, qos_class);
++}
++
++static const struct cxl_root_ops acpi_root_ops = {
++	.get_qos_class = cxl_acpi_get_qos_class,
++};
++
+ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 			   const unsigned long end)
+ {
+@@ -656,6 +780,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+ 	struct resource *cxl_res;
++	struct cxl_root *cxl_root;
+ 	struct cxl_port *root_port;
+ 	struct device *host = &pdev->dev;
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+@@ -675,9 +800,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	cxl_res->end = -1;
+ 	cxl_res->flags = IORESOURCE_MEM;
+ 
+-	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+-	if (IS_ERR(root_port))
+-		return PTR_ERR(root_port);
++	cxl_root = devm_cxl_add_root(host, &acpi_root_ops);
++	if (IS_ERR(cxl_root))
++		return PTR_ERR(cxl_root);
++	root_port = &cxl_root->port;
+ 
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_dport);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 38441634e4c6..955a99cff22d 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -541,7 +541,10 @@ static void cxl_port_release(struct device *dev)
+ 	xa_destroy(&port->dports);
+ 	xa_destroy(&port->regions);
+ 	ida_free(&cxl_port_ida, port->id);
+-	kfree(port);
++	if (is_cxl_root(port))
++		kfree(to_cxl_root(port));
++	else
++		kfree(port);
+ }
+ 
+ static ssize_t decoders_committed_show(struct device *dev,
+@@ -669,13 +672,22 @@ static struct lock_class_key cxl_port_key;
+ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+ 				       struct cxl_dport *parent_dport)
+ {
++	struct cxl_root *cxl_root = NULL;
+ 	struct cxl_port *port;
+ 	struct device *dev;
+ 	int rc;
+ 
+-	port = kzalloc(sizeof(*port), GFP_KERNEL);
+-	if (!port)
+-		return ERR_PTR(-ENOMEM);
++	/* No parent_dport, root cxl_port */
++	if (!parent_dport) {
++		cxl_root = kzalloc(sizeof(*cxl_root), GFP_KERNEL);
++		if (!cxl_root)
++			return ERR_PTR(-ENOMEM);
++		port = &cxl_root->port;
++	} else {
++		port = kzalloc(sizeof(*port), GFP_KERNEL);
++		if (!port)
++			return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
+ 	if (rc < 0)
+@@ -733,7 +745,10 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+ 	return port;
+ 
+ err:
+-	kfree(port);
++	if (cxl_root)
++		kfree(cxl_root);
++	else
++		kfree(port);
+ 	return ERR_PTR(rc);
+ }
+ 
+@@ -884,6 +899,22 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+ 
++struct cxl_root *devm_cxl_add_root(struct device *host,
++				   const struct cxl_root_ops *ops)
++{
++	struct cxl_root *cxl_root;
++	struct cxl_port *port;
++
++	port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
++	if (IS_ERR(port))
++		return (struct cxl_root *)port;
++
++	cxl_root = to_cxl_root(port);
++	cxl_root->ops = ops;
++	return cxl_root;
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_add_root, CXL);
++
+ struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port)
+ {
+ 	/* There is no pci_bus associated with a CXL platform-root port */
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f971eef19fb0..2a09fa6f3af2 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -616,6 +616,29 @@ struct cxl_port {
+ 	bool cdat_available;
+ };
+ 
++struct cxl_root_ops {
++	int (*get_qos_class)(struct cxl_port *root_port,
++			     struct access_coordinate *coord,
++			     int entries, int *qos_class);
++};
++
++/**
++ * struct cxl_root - logical collection of root cxl_port items
++ *
++ * @port: cxl_port member
++ * @ops: cxl root operations
++ */
++struct cxl_root {
++	struct cxl_port port;
++	const struct cxl_root_ops *ops;
++};
++
++static inline struct cxl_root *
++to_cxl_root(const struct cxl_port *port)
++{
++	return container_of(port, struct cxl_root, port);
++}
++
+ static inline struct cxl_dport *
+ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+ {
+@@ -704,6 +727,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+ 				   struct device *uport_dev,
+ 				   resource_size_t component_reg_phys,
+ 				   struct cxl_dport *parent_dport);
++struct cxl_root *devm_cxl_add_root(struct device *host,
++				   const struct cxl_root_ops *ops);
+ struct cxl_port *find_cxl_root(struct cxl_port *port);
+ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+ void cxl_bus_rescan(void);
 
 
