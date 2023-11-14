@@ -1,197 +1,236 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD6026AC1
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 22:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00852FC21
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihA+cDrc"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3BB93
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 14:43:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GLKTriQ2"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91E9D1
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:04:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700001834; x=1731537834;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=hvELhPnTQ4y/Vv/JgqwruG/Gpujp9+CrsB1gqlVA8tw=;
-  b=ihA+cDrcm3MFPjBM3Iq5jd+VY3GNuaO1Gcjuh/cUikit4X69X01KrOj1
-   cpdCEFtENypoGcMJmE9OY8LL3cBEVTdaQhiVswr55SqIWlrbTjALaf+YS
-   4+xAmODBz3MOIoaHycTy5Q4CCfjEtxaqVoT2yZaObnkINXY70o9DAXU8h
-   XS9C6t/A62IKhGn8boTo5r/9JVgovoZxXT8eVGy16kbdKAA1ZtHa7Rvsn
-   mDJfvvrQv6Uj2OXqeci3m1t7YfFsVFBht3ZunfewvYuOuvr9nOWgA20Mi
-   w7dAJvxDGkOeY0IUVUehLb6mWwpHwXbiVDeAfYv63uyoxWXgDbpTmd9ro
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="421860896"
+  t=1700003043; x=1731539043;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gsFwdz5zueElkJtJ+1UAr802UAqE7c/udIzaR7A1MG0=;
+  b=GLKTriQ21iNRZaOW7jJkEOFCbloXRXMsZHdSKyZV2C9dCKz7v0NqW6lR
+   CTcSjlD/TjrGZlFzHXY8J8+oMNHuw9kpBqdawEwxRvwKicYvShXrpYFQE
+   BTJJXdyP/cNzytzmKuj6emQh7tnMro/2F+ks3SXFSAXIZkikcCpoh2u5x
+   ocT6jYl9YwFaRt1PfEvFXNAbnnW+DN5tJTDDYrlOYDj5Oj5w356TvdD0Q
+   Wdf3ngCHVRcMZSoQvfEw3V14xR2vN7wRDQoLctIEq4wbJfdKzJbmoiYMv
+   RjvDtoXGJ/7jjILkkqZXj8kIMYFqXHUWXQCCLFxq6umjo1OpXWu92gUg8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="3836761"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="421860896"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 14:43:54 -0800
+   d="scan'208";a="3836761"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="741234078"
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="768399950"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="741234078"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Nov 2023 14:43:53 -0800
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Tue, 14 Nov 2023 14:43:53 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Tue, 14 Nov 2023 14:43:53 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Tue, 14 Nov 2023 14:43:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NCmIshyHo9T4u2W2ldbYZkOSLnOwxq+oOsGDeM/mv+eVW2tyaXg6EPkNKmk/huPsuCSz9DpowulduHI+lTn4d7CFgA/aSQUlqjbfZN0AmFMAoVnJO5X0+AHLeAan7dp2ohAkk6J8SSmilyCokhnscvPUWRjTPSLM1BEykYuCHb5CE7EK9npGXj8Fu8naK/nvqWS6zS16FK1LSPxxLdTtqyfkIq/CKun2/X7Rye96HBJUrn5ZfwqXa9+SRrPJ9GGt7KhXMal0B+OpvpmPezOvmwsttq4jSCHMiIAyEMbACSeA2S4dPpm4ZsTeO5lE/J26aKbfC/PLoSNq6ZCeAWi/Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hvELhPnTQ4y/Vv/JgqwruG/Gpujp9+CrsB1gqlVA8tw=;
- b=MVOTud1PEo5kvigwHeIPtFvFg8+vZ+HQQFWtLdWPxibe6uWP1M84W2ZPJY9jhNJEzckWjU2dnfTHWkjq2roYAVsT/72Ur7cfnQGdYK1DqPg0dY+8vamGFyqcnWkqWtJWLP5ZhogDqWH6cF+2CMbTlZVT+yhjTk0eoDegGoIvAVxigaPAwQIsTt0NtlliB4AZrlB82W70l+aDrGDQR6Y9MWDCMYjimUii9f+IzEyVxePnTBxER+j8lL92o+7iYVNHYNoEYNJTBo0EtIwV1okqLoEeUgMXyOlzHWfNQscf5seA3mzPoIHMiDIELQlkB9Hdre249thf1KJggOdpl5Z6ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
- by PH7PR11MB7122.namprd11.prod.outlook.com (2603:10b6:510:20d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.25; Tue, 14 Nov
- 2023 22:43:51 +0000
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::703a:a01d:8718:5694]) by MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::703a:a01d:8718:5694%7]) with mapi id 15.20.6954.025; Tue, 14 Nov 2023
- 22:43:51 +0000
-From: "Verma, Vishal L" <vishal.l.verma@intel.com>
-To: "Jiang, Dave" <dave.jiang@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [NDCTL PATCH] cxl: Augment documentation on cxl operational
- behavior
-Thread-Topic: [NDCTL PATCH] cxl: Augment documentation on cxl operational
- behavior
-Thread-Index: AQHaDDmAyV3w+UjTsUS14CYjd/nZL7B6f56A
-Date: Tue, 14 Nov 2023 22:43:50 +0000
-Message-ID: <559acb1a30b52d99cb6eea445fde938ce6a1370d.camel@intel.com>
-References: <169878439580.80025.16527732447076656149.stgit@djiang5-mobl3>
-In-Reply-To: <169878439580.80025.16527732447076656149.stgit@djiang5-mobl3>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|PH7PR11MB7122:EE_
-x-ms-office365-filtering-correlation-id: 23d3ff03-73a2-4bda-63aa-08dbe5632c41
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gdqRr7sZ3fK9C6bBrO0QkDYBmD/kyb4c6lRt4VjTZh3FFQeTqvfz3ibPMOaXtbgDxU1U3g+M+bKVW+Mm1959JE0L+4lyTw9Jb8ej22W9zJwET0mVabdEeaX782an7IBj2elr0LWZXzR3EhK0MA/8ZePSXwqm12PDd0GnR/ElRRTwq5HSbEozXb5VhbYvJkwq6YP9GFlB8IJRWEbxiCh+oq+hsxHqHCfEo7BPSAXR/DMsVgHZlyOnxHANPYBx04rV7eN5m8KVbG9zLZ+bhpRQfJZj2bvR2RrE2E7mxcloPsgHjs7ZazeqF4/ma/ZyFUhc0eTbOWdVOkllZyjAeDVUKSWoHR4E8y7e1Aubl0cZOksWuLlQpw/lLYK8LAfkzHPHlPVJRSHZ47AgkvE7K2yot7SQbi28VRioYusTHnajWNUePa4b7Hu1lI4MwATqzgfkyxpUVEjKUgr/eys24LC+VT4hOoyEGlvuvWjlFVhpTzAhLk8gP/uoDLNR+Yl7wlqrlNdJrSDq/VGCZcIfTrY2vJJoGhGpVjhKJ3zBv2nPpavS8zljSidBXI/m/0FDlEJWFV0bEaQg505pP2W2u3N7WKCaBaoiOlFnVFAbmlgoth2vNA1eHdMIMZc5V2Rykv2X
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(39860400002)(376002)(346002)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(38070700009)(6512007)(5660300002)(26005)(54906003)(38100700002)(122000001)(66476007)(66446008)(66556008)(64756008)(76116006)(6486002)(36756003)(316002)(86362001)(66946007)(71200400001)(41300700001)(83380400001)(37006003)(8936002)(6862004)(2906002)(478600001)(6636002)(4001150100001)(2616005)(6506007)(82960400001)(8676002)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TVl5blJoVFNoLzNJbE9XNzI4eGw4b0JNTGswTXlUYXJwNnpadXdMbm9kUXRj?=
- =?utf-8?B?dVltUFFrWUZqSkpRNGdJb3ZaK2kzQVg3ak96T3l5dlRTZTFRQUZmMFFLWTh5?=
- =?utf-8?B?TzA1VVErL1huNllkZnZwak5tTGVpMElyOWl3cEt4djYycUJrdlltWW9OTnpB?=
- =?utf-8?B?WUw3Yytjb2hKRFBtdXA5amFwQUx0VnVRYXQxN1ptMWQ1RTV1bGQ0NTJyRVFl?=
- =?utf-8?B?cHREdXRLVjZCMjB1QW1KclF5c3htTVRsQVM1UGtCNHZjZTY3Tm9SMlRyR2ZD?=
- =?utf-8?B?cXY4ekRVcHkrYXhtYmxJQkR5cGg3MEdnN2RCZnZvc2pHRFdaeU5xRjk5VE04?=
- =?utf-8?B?NmFsM1QrcG9tS3ZiUVBNbXJndFJvZ0FHYVZGTmF3THV4bUo2TVo2Sy9LYnRF?=
- =?utf-8?B?MFkwVlZEOVpoS1o2WmZ2ZlZ1Kzg2aEN5dEx1bUpxS2YySUl0WVpiMnNLNjA3?=
- =?utf-8?B?ckI5K01mZVNTanpHcnBwcEVJNzQwWVUwZlpqemRFZzFVWUlLM3BwTk1QZnlk?=
- =?utf-8?B?VjhnMnhPN3pNM1Zrd3FVYWlMaVFDRGdnbzE1VUthaTg5QnVvV3QvWERDdDk0?=
- =?utf-8?B?Q1JjYkVRVC9zdWdIOUc0c1N5cW5NTkEwMHBaUm92TzUwN0pkSWZXY21LSTZr?=
- =?utf-8?B?cC9OUGJyZ0dxU2t2ZzR6VHlmR0RsZVMvYmFSejZnZUptZWlYTktXdDJTVGs2?=
- =?utf-8?B?ZHgrTlc5azNUZFV2SE5oSWIxL0pNcEhpZVMwZ3BoelR4TGZaVis1K2lVeVB2?=
- =?utf-8?B?ZzNrOC9xMFF4MDdxblJyV0JTakhxZEpoNUtHTFU4MnNVM3pRWEczZmZscTEx?=
- =?utf-8?B?TE5CcGtjem9qQXdVczg4ZXg2Unc4bklXS1BlK1VDSGIrNDdEUzNNUFFRT2NK?=
- =?utf-8?B?QmJmaTFqUU9MWkpxMXIvSUNXN2h6MVhIZnNVdVFydU5iREF3NGFMcFIxK1Jp?=
- =?utf-8?B?aFhBMTR3UW9yTFUrV0lJSUxFeDd2WUVUTDdmUUZhY2h2WVdnZVdJQi9aMDRu?=
- =?utf-8?B?TjRsMThYV0wyNHo2eXQ1cCtYams1WWp1UHNZZGxFTDd6L3NBNFZzaUxkOEw4?=
- =?utf-8?B?WERTT1JCRmEvdVl4YSswRnBKOW03RHQ2NE5MYWFZamZWNGNRUDNaT0hIeFdD?=
- =?utf-8?B?TVJFZDdSTHlKL3B3RCtzQ3ZEdU16NWhpbUFBZTZnYUdBbXlBTU1scm9RNkVv?=
- =?utf-8?B?bjhWYm9DSFNlU282K1lEWjRNK3ZYck5BN1FLUDhpZG96bE42Q2tSTEcrYWl4?=
- =?utf-8?B?b2k1U0xVY2hXQU9lZkZHNno0Q1NyVE1lOE1NMVJTdXFWR3A0Mk5Hb0hPQ1Bp?=
- =?utf-8?B?TUtKQ2w4cnRTM0NsdHhMUkVqblNRYjVKNXBTUVdsWHhEU0dLblRKenJocGM3?=
- =?utf-8?B?bGNQRkZmY2ZHU1FCQ21FdVVUclpHSmhJRUtLV1BweGI0VEFTbG5VT1V2Z1F1?=
- =?utf-8?B?a0daZ0tmRnZiOEdRTHZkY0FHeWx3bitTK0tvYUhGc2o4MnBKZmdvVGlmSitn?=
- =?utf-8?B?bjQrM1g0TTNSUlY2enBxVVdPNGNDamlIeGlnbFdsSDdXNDcvS1RabHArOXlh?=
- =?utf-8?B?bWoxYjdXT3dRYmRMQXlRSzVmSmdCNDZDR0tUREIrZjhvQk5xYi9zY05nY0dl?=
- =?utf-8?B?MXZkN2plcnhCOGNRTHFoRzZFWDdtcEU2WHp1cWZRaEJ5Z0kyT1VuLzEyNWhY?=
- =?utf-8?B?SUhFdUpiTGVUZklna2FmWlN6SWtxTjF2bmNvS2VxRDRzQ0t3NjdyR09KckxR?=
- =?utf-8?B?T21VQnpqTmJZdGorTkl5KzZjeUVMM21meVd2NS9CQTFZclpLZVNDRzVCSWxm?=
- =?utf-8?B?KzhDSUR6c0wvcG0xWVpWYmJqUW0yR0VONk11UE16UVRCekJTZUpHL1JYMTBl?=
- =?utf-8?B?ODFLWjZLdFl4Ukl4WDNIZ1NQaytBaDZncTV2SmkrS1U2bE1ZNDlMek5qWkxv?=
- =?utf-8?B?K0l1V0Q4aUs2Nm9VcUJKcjZZVEhML0pRQkpBMlJXQ2hnUFJiYiszR21zb3Zj?=
- =?utf-8?B?TktyMW5OSTVxSnE4ajUrcUpyNURkdGxwU3NFajhhVUR1eWd6amVoaTFFOHZp?=
- =?utf-8?B?V21QdmZOeXZtYmF6TlhOaWc5OXBqN0ZJOGJRSGEzTnlxWVpOKzB6dnNSS2Nk?=
- =?utf-8?B?dUdXcmFRcDRHZjAyNFR4Y3d6WGxVU1NIdmZPRlp1YlBMejhkQks1QUhZVFAx?=
- =?utf-8?B?UEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E6923C346F48CC4B90ACC88EAAF37F59@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="768399950"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.87.32])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:01 -0800
+Subject: [PATCH v12 00/18] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, dan.j.williams@intel.com,
+ ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date: Tue, 14 Nov 2023 16:04:01 -0700
+Message-ID: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23d3ff03-73a2-4bda-63aa-08dbe5632c41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2023 22:43:50.9550
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xHp3talbJN9jH5mYj8jPnJdqi/QcIGUvBsbH6qj8QhigkIyvb0j+BfK7CJzkRxtMdAwgfjBMj79lASR8k/r4D//hXQ/6NFeA5mX778lCPXw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7122
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDIzLTEwLTMxIGF0IDEzOjMzIC0wNzAwLCBEYXZlIEppYW5nIHdyb3RlOg0KDQpJ
-IHRoaW5rIGEgbW9yZSBzcGVjaWZpYyBzdWJqZWN0IGxpa2U6DQoNCmN4bC9Eb2N1bWVudGF0aW9u
-OiBDbGFyaWZ5IHRoYXQgbm8tb3AgaXMgYSBzdWNjZXNzIGZvciB4YWJsZSBjb21tYW5kcw0KDQpp
-cyBiZXR0ZXI/DQoNCj4gSWYgYSBjeGwgb3BlcmF0aW9uIGlzIGV4ZWN1dGVkIHJlc3VsdGluZyBp
-biBuby1vcCwgdGhlIHRvb2wgd2lsbCBzdGlsbA0KDQouLiBjeGwgZW5hYmxlIG9yIGRpc2FibGUg
-b3BlcmF0aW9uIC4uDQoNCj4gZW1pdCB0aGUgbnVtYmVyIG9mIHRhcmdldHMgdGhlIG9wZXJhdGlv
-biBoYXMgc3VjY2VlZGVkIG9uLiBGb3IgZXhhbXBsZSwgaWYNCj4gZGlzYWJsZS1yZWdpb24gaXMg
-aXNzdWVkIGFuZCB0aGUgcmVnaW9uIGlzIGFscmVhZHkgZGlzYWJsZWQsIHRoZSB0b29sIHdpbGwN
-Cj4gc3RpbGwgcmVwb3J0IDEgcmVnaW9uIGRpc2FibGVkLiBBZGQgdmVyYmlhZ2UgdG8gbWFuIHBh
-Z2VzIHRvIGRvY3VtZW50IHRoZQ0KPiBiZWhhdmlvci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERh
-dmUgSmlhbmcgPGRhdmUuamlhbmdAaW50ZWwuY29tPg0KPiAtLS0NCj4gwqBEb2N1bWVudGF0aW9u
-L2N4bC9jeGwtZGlzYWJsZS1idXMudHh0wqDCoMKgIHzCoMKgwqAgMiArKw0KPiDCoERvY3VtZW50
-YXRpb24vY3hsL2N4bC1kaXNhYmxlLW1lbWRldi50eHQgfMKgwqDCoCAxICsNCj4gwqBEb2N1bWVu
-dGF0aW9uL2N4bC9jeGwtZGlzYWJsZS1wb3J0LnR4dMKgwqAgfMKgwqDCoCAyICsrDQo+IMKgRG9j
-dW1lbnRhdGlvbi9jeGwvY3hsLWRpc2FibGUtcmVnaW9uLnR4dCB8wqDCoMKgIDIgKysNCj4gwqBE
-b2N1bWVudGF0aW9uL2N4bC9jeGwtZW5hYmxlLW1lbWRldi50eHTCoCB8wqDCoMKgIDIgKysNCj4g
-wqBEb2N1bWVudGF0aW9uL2N4bC9jeGwtZW5hYmxlLXBvcnQudHh0wqDCoMKgIHzCoMKgwqAgMiAr
-Kw0KPiDCoERvY3VtZW50YXRpb24vY3hsL2N4bC1lbmFibGUtcmVnaW9uLnR4dMKgIHzCoMKgwqAg
-MiArKw0KPiDCoERvY3VtZW50YXRpb24vY3hsL21lc29uLmJ1aWxkwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB8wqDCoMKgIDEgKw0KPiDCoERvY3VtZW50YXRpb24vY3hsL29wZXJhdGlvbnMudHh0wqDC
-oMKgwqDCoMKgwqDCoCB8wqDCoCAxNyArKysrKysrKysrKysrKysrKw0KPiDCoDkgZmlsZXMgY2hh
-bmdlZCwgMzEgaW5zZXJ0aW9ucygrKQ0KPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2N4bC9vcGVyYXRpb25zLnR4dA0KPiANClsuLl0NCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2N4bC9vcGVyYXRpb25zLnR4dCBiL0RvY3VtZW50YXRpb24vY3hsL29wZXJhdGlv
-bnMudHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQoNCk1heWJlIGNhbGwgdGhpcyB4YWJsZS1u
-by1vcC50eHQsICdvcGVyYXRpb25zJyBzb3VuZHMgYSBiaXQgdmFndWUuDQoNCj4gaW5kZXggMDAw
-MDAwMDAwMDAwLi4wNDZlMmJjMTk1MzINCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2N4bC9vcGVyYXRpb25zLnR4dA0KPiBAQCAtMCwwICsxLDE3IEBADQo+ICsvLyBTUERY
-LUxpY2Vuc2UtSWRlbnRpZmllcjogZ3BsLTIuMA0KPiArDQo+ICtHaXZlbiBhbnkgZW4vZGlzYWJs
-aW5nIG9wZXJhdGlvbiwgaWYgdGhlIG9wZXJhdGlvbiBpcyBhIG5vLW9wIGR1ZSB0byB0aGUNCg0K
-Li5lbmFibGUgb3IgZGlzYWJsZSBjb21tYW5kLi4NCg0KPiArY3VycmVudCBzdGF0ZSBvZiBhIHRh
-cmdldCwgaXQgaXMgc3RpbGwgY29uc2lkZXJlZCBzdWNjZXNzZnVsIHdoZW4gZXhlY3V0ZWQNCj4g
-K2V2ZW4gaWYgbm8gYWN0dWFsIG9wZXJhdGlvbiBpcyBwZXJmb3JtZWQuIFRoZSB0YXJnZXQgYXBw
-bGllcyB0byBhIGJ1cywNCg0KLi4gdGhlIHRhcmdldCBjYW4gYmUgYSBidXMsIC4uDQoNCj4gK2Rl
-Y29kZXIsIG1lbWRldiwgb3IgcmVnaW9uLg0KPiArDQo+ICtGb3IgZXhhbXBsZToNCj4gK0lmIGEg
-Q1hMIHJlZ2lvbiBpcyBhbHJlYWR5IGRpc2FibGVkIGFuZCB0aGUgY3hsIGRpc2FibGUtcmVnaW9u
-IGlzIGNhbGxlZDoNCj4gKw0KPiArLS0tLQ0KPiArIyBjeGwgZGlzYWJsZS1yZWdpb24gcmVnaW9u
-MA0KPiArZGlzYWJsZWQgMSByZWdpb25zDQo+ICstLS0tDQo+ICsNCj4gK1RoZSBvcGVyYXRpb24g
-d2lsbCBzdGlsbCBzdWNjZWVkIHdpdGggdGhlIG51bWJlciBvZiByZWdpb25zIG9wZXJhdGVkIG9u
-DQo+ICtyZXBvcnRlZCwgZXZlbiBpZiB0aGUgb3BlcmF0aW9uIGlzIGEgbm9uLWFjdGlvbi4NCg0K
-TG9va2luZyBhdCB0aGUgbWFuIHBhZ2UgZm9yIHNheSBkaXNhYmxlLW1lbWRldiwgYW5kIHNlZWlu
-ZyBhIHJlZ2lvbg0KY29tbWFuZCBpbiB0aGUgZXhhbXBsZSBmZWVscyBzbGlnaHRseSBhd2t3YXJk
-Li4gSSB3b25kZXIgaWYgd2UgY2FuIGp1c3QNCmRyb3AgdGhlIGV4YW1wbGUsIGFuZCByZWx5IG9u
-bHkgb24gdGhlIHRleHQgZGVzY3JpcHRpb24uDQoNCg==
+v12:
+- Tested on hardware
+- Rebased to v6.7-rc1
+- Dropped all patches upstreamed
+- Rebased against changes from Huang Ying for abstract distance calculation
+- Do not fail if qos calculation not successful (Jonathan, Dan)
+- Match generic target device_handle with UID
+- Support storing multiple QTG IDs and match against multiple QTG IDs. (Dan)
+- Fix link latency calculation loop.
+- Add adjustment of genport latency from nsec to psec due to HMAT code normalization.
+- Make cxl/core/cdat.o as part of cxl core build.
+- See individual patches for detailed changes.
+
+v11:
+- Add debug print for multiple DSMAS entries for a partition. (Jonathan)
+- Change qos_class0 to qos_class. (Dan)
+- Add verification of endpoint device's host bridge to root decoder targets. (Dan)
+- See individual patches for additional changes.
+v10:
+- Remove memory allocation in DSM handler. Add input parameters to request number of ids
+  to return. (Dan)
+- Only export a single qos_class sysfs attribute, qos_class0 for devices. (Dan)
+- Add sanity check of device qos_class against root decoders (Dan)
+- Recombine all relevant patches for cxl upstream merge
+- Rebased against v6.6-rc4
+v9:
+- Correct DSM input package to use integers. (Dan)
+- Remove all endien conversions. (Dan)
+v8:
+- Correct DSM return package parsing to use integers
+v7:
+- Minor changes. Please see specific patches for log entries addressing comments
+  from v6.
+v6:
+- Please see specific patches for log entries addressing comments from v5.
+- Use CDAT sub-table structs as is, adjust w/o common header. Changing causes
+  significant ACPICA code changes.
+- Deal with table header now that is a union. (Jonathan)
+- Move DSMAS list destroy to core/cdat.c. (Jonathan)
+- Retain and display entire QTG ID list from _DSM. (Jonathan)
+
+v5:
+- Please see specific patches for log entries addressing comments from v4.
+- Split out ACPI and generic node code to send separately to respective maintainers
+- Reworked to use ACPI tables code for CDAT parsing (Dan)
+- Cache relevant perf data under dports (Dan)
+- Add cxl root callback for QTG ID _DSM (Dan)
+- Rename 'node_hmem_attr' to 'access_coordinate' (Dan)
+- Change qtg_id sysfs attrib to qos_class (Dan)
+
+v4:
+- Reworked PCIe link path latency calculation
+- 0-day fixes
+- Removed unused qos_list from cxl_memdev and its stray usages
+
+v3:
+- Please see specific patches for log entries addressing comments from v2.
+- Refactor cxl_port_probe() additions. (Alison)
+- Convert to use 'struct node_hmem_attrs'
+- Refactor to use common code for genport target allocation.
+- Add third array entry for target hmem_attrs to store genport locality data.
+- Go back to per partition QTG ID. (Dan)
+
+v2:
+- Please see specific patches for log entries addressing comments from v1.
+- Removed ACPICA code usages.
+- Removed PCI subsystem helpers for latency and bandwidth.
+- Add CXL switch CDAT parsing support (SSLBIS)
+- Add generic port SRAT+HMAT support (ACPI)
+- Export a single QTG ID via sysfs per memory device (Dan)
+- Provide rest of DSMAS range info in debugfs (Dan)
+
+Hi Dan,
+Please consider taking the entire series including the CXL bits for the next
+convenient merge window. Thanks!
+
+This series adds the retrieval of QoS Throttling Group (QTG) IDs for the CXL Fixed
+Memory Window Structure (CFMWS) and the CXL memory device. It provides the QTG IDs
+to user space to provide some guidance with putting the proper DPA range under the
+appropriate CFMWS window for a hot-plugged CXL memory device.
+
+The CFMWS structure contains a QTG ID that is associated with the memory window that the
+structure exports. On Linux, the CFMWS is represented as a CXL root decoder. The QTG
+ID will be attached to the CXL root decoder and exported as a sysfs attribute (qos_class).
+
+The QTG IDs for a device is retrieved via sending a _DSM method to the ACPI0017 device.
+The _DSM expects an input package of 4 DWORDS that contains the read latency, write
+latency, read bandwidth, and write banwidth. These are the caluclated numbers for the
+path between the CXL device and the CPU. The list of QTG IDs are also exported as a sysfs
+attribute under the mem device memory partition type:
+/sys/bus/cxl/devices/memX/ram/qos_class
+/sys/bus/cxl/devices/memX/pmem/qos_class
+
+The latency numbers are the aggregated latencies for the path between the CXL device and
+the CPU. If a CXL device is directly attached to the CXL HB, the latency
+would be the aggregated latencies from the device Coherent Device Attribute Table (CDAT),
+the caluclated PCIe link latency between the device and the HB, and the generic port data
+from ACPI SRAT+HMAT. The bandwidth in this configuration would be the minimum between the
+CDAT bandwidth number, link bandwidth between the device and the HB, and the bandwidth data
+from the generic port data via ACPI SRAT+HMAT.
+
+If a configuration has a switch in between then the latency would be the aggregated
+latencies from the device CDAT, the link latency between device and switch, the
+latency from the switch CDAT, the link latency between switch and the HB, and the
+generic port latency between the CPU and the CXL HB. The bandwidth calculation would be the
+min of device CDAT bandwidth, link bandwith between device and switch, switch CDAT
+bandwidth, the link bandwidth between switch and HB, and the generic port bandwidth
+
+There can be 0 or more switches between the CXL device and the CXL HB. There are detailed
+examples on calculating bandwidth and latency in the CXL Memory Device Software Guide [4].
+
+The CDAT provides Device Scoped Memory Affinity Structures (DSMAS) that contains the
+Device Physical Address (DPA) range and the related Device Scoped Latency and Bandwidth
+Informat Stuctures (DSLBIS). Each DSLBIS provides a latency or bandwidth entry that is
+tied to a DSMAS entry via a per DSMAS unique DSMAD handle.
+
+Previous series is here [5]. A git branch [6] is available as well.
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+[3]: https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
+[4]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
+[5]: https://lore.kernel.org/linux-cxl/10d61293-67da-472d-8e5d-a5b244c51170@intel.com/T/#t
+[6]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+
+base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+---
+
+Dave Jiang (18):
+      lib/firmware_table: tables: Add CDAT table parsing support
+      base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
+      acpi: numa: Create enum for memory_target access coordinates indexing
+      acpi: numa: Add genport target allocation to the HMAT parsing
+      acpi: Break out nesting for hmat_parse_locality()
+      acpi: numa: Add setting of generic port system locality attributes
+      acpi: numa: Add helper function to retrieve the performance attributes
+      cxl: Add callback to parse the DSMAS subtables from CDAT
+      cxl: Add callback to parse the DSLBIS subtable from CDAT
+      cxl: Add callback to parse the SSLBIS subtable from CDAT
+      cxl: Add support for _DSM Function for retrieving QTG ID
+      cxl: Calculate and store PCI link latency for the downstream ports
+      cxl: Store the access coordinates for the generic ports
+      cxl: Add helper function that calculate performance data for downstream ports
+      cxl: Compute the entire CXL path latency and bandwidth data
+      cxl: Store QTG IDs and related info to the CXL memory device context
+      cxl: Export sysfs attributes for memory device QoS class
+      cxl: Check qos_class validity on memdev probe
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  34 ++++
+ drivers/acpi/numa/hmat.c                | 176 ++++++++++++++---
+ drivers/acpi/tables.c                   |   5 +-
+ drivers/base/node.c                     |  12 +-
+ drivers/cxl/Kconfig                     |   1 +
+ drivers/cxl/acpi.c                      | 157 ++++++++++++++-
+ drivers/cxl/core/Makefile               |   1 +
+ drivers/cxl/core/cdat.c                 | 249 ++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c                 |   3 +
+ drivers/cxl/core/memdev.c               |  46 +++++
+ drivers/cxl/core/pci.c                  |  73 +++++++
+ drivers/cxl/core/port.c                 | 122 +++++++++++-
+ drivers/cxl/cxl.h                       |  53 +++++
+ drivers/cxl/cxlmem.h                    |  23 +++
+ drivers/cxl/cxlpci.h                    |  15 ++
+ drivers/cxl/mem.c                       | 133 +++++++++++++
+ drivers/cxl/port.c                      | 110 +++++++++++
+ include/linux/acpi.h                    |  11 ++
+ include/linux/fw_table.h                |  11 +-
+ include/linux/memory-tiers.h            |  10 +-
+ include/linux/node.h                    |   8 +-
+ lib/fw_table.c                          |  54 ++++-
+ mm/memory-tiers.c                       |  12 +-
+ tools/testing/cxl/Kbuild                |   1 +
+ 24 files changed, 1256 insertions(+), 64 deletions(-)
+ create mode 100644 drivers/cxl/core/cdat.c
+
+--
+
