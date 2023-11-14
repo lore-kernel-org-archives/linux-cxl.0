@@ -1,49 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603AA26AF5
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E2F26AC0
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cCEd0tps"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmzYLNeQ"
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B034D1
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:04:14 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF16D1
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:04:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700003055; x=1731539055;
+  t=1700003060; x=1731539060;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2b8iktmLZFD5DXR7IbzCEsjYr0/GbYmGrizo2/PjiPg=;
-  b=cCEd0tpsf6c2Ybs/P3eyk6ZJoUciKsTXsGpTDmGanM12oQ6janToS8hs
-   91gGfVSemR2tOht1hWvZoIAFuPGgHepT/BIgGATm7Wm5HGFnwQOYqkaDB
-   VA9hXZOPt+4C8B2KVL+/R6TVlqkfqKab/4FvIb6nhNlNMOE++5W7JhfHb
-   /VvW2Gn0t7YcGdWvJKk4OgyFA1pOFRMzAX/swuvxrgrtj5uS/rIpWovlm
-   qYb9l+9rltE2BtnVrr+RdRConpwhV8K8eK+nXqMceR84vog9UnhELXf4h
-   Gbcd9dvhyKY+An+FzJFR2ta1AnCKqo3AJca8mnmq64qg39WvFwOZg1dVL
+  bh=FhWwVP2pa39BQ0FcRUD/Fxj8kJP4mJEiM3+d6nJ1aq0=;
+  b=LmzYLNeQ99dP3GmJyrdYlZyNlLQaD4qFxhFfnWt1IrbdZeAceLFZDOvh
+   NPHOhK2yDjIaXSBfL+a5jChmB/VvzBYjNwQluzKwltAaNyBQsPXLtn8W1
+   8NiocjXyaXc/+vMUtoWo+SwS9liDR+LdCp9o+324e2jC6CN3FxqnJmINa
+   Uuma+1djyEsAyt0Ksqc9v7qCXcH6AP4YwPrXNBYhzdpTT0Gp+teEiqyvG
+   fiST034UVAawz/vfgi1qOoNQqx5kbmV9TckbAgTTmvRePqOAoCFOhoAtB
+   UDCH2LVAhYRt2J3rbUxEkSFNnIzIOTiDAXZhkNOtO8ytr/WOr+G9aBMgL
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="3836809"
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="3836835"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="3836809"
+   d="scan'208";a="3836835"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:14 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:20 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="768400142"
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="768400271"
 X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="768400142"
+   d="scan'208";a="768400271"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.87.32])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:13 -0800
-Subject: [PATCH v12 02/18] base/node / acpi: Change 'node_hmem_attrs' to
- 'access_coordinates'
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:04:19 -0800
+Subject: [PATCH v12 03/18] acpi: numa: Create enum for memory_target access
+ coordinates indexing
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com,
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Tue, 14 Nov 2023 16:04:13 -0700
-Message-ID: <170000305318.1974471.7487347082770579178.stgit@djiang5-mobl3>
+Date: Tue, 14 Nov 2023 16:04:19 -0700
+Message-ID: <170000305913.1974471.14765766906065681302.stgit@djiang5-mobl3>
 In-Reply-To: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
 References: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -56,305 +54,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Dan Williams suggested changing the struct 'node_hmem_attrs' to
-'access_coordinates' [1]. The struct is a container of r/w-latency and
-r/w-bandwidth numbers. Moving forward, this container will also be used by
-CXL to store the performance characteristics of each link hop in
-the PCIE/CXL topology. So, where node_hmem_attrs is just the access
-parameters of a memory-node, access_coordinates applies more broadly
-to hardware topology characteristics. The observation is that seemed like
-an exercise in having the application identify "where" it falls on a
-spectrum of bandwidth and latency needs. For the tuple of
-read/write-latency and read/write-bandwidth, "coordinates" is not a perfect
-fit. Sometimes it is just conveying values in isolation and not a
-"location" relative to other performance points, but in the end this data
-is used to identify the performance operation point of a given memory-node.
-[2]
+Create enums to provide named indexing for the access coordinate array.
+This is in preparation for adding generic port support which will add a
+third index in the array to keep the generic port attributes separate from
+the memory attributes.
 
-Link: http://lore.kernel.org/r/64471313421f7_1b66294d5@dwillia2-xfh.jf.intel.com.notmuch/
-Link: https://lore.kernel.org/linux-cxl/645e6215ee0de_1e6f2945e@dwillia2-xfh.jf.intel.com.notmuch/
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-v12:
-- Rebased against v6.7 to address the changes from the multi-tier memory
-  changes by Huang Ying.
----
- drivers/acpi/numa/hmat.c     |   28 ++++++++++++++--------------
- drivers/base/node.c          |   12 ++++++------
- include/linux/memory-tiers.h |   10 +++++-----
- include/linux/node.h         |    8 ++++----
- mm/memory-tiers.c            |   12 ++++++------
- 5 files changed, 35 insertions(+), 35 deletions(-)
+ drivers/acpi/numa/hmat.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 9ef5f1bdcfdb..83bc2b69401b 100644
+index 83bc2b69401b..ca7aedfbb5f2 100644
 --- a/drivers/acpi/numa/hmat.c
 +++ b/drivers/acpi/numa/hmat.c
-@@ -63,7 +63,7 @@ struct memory_target {
+@@ -58,12 +58,18 @@ struct target_cache {
+ 	struct node_cache_attrs cache_attrs;
+ };
+ 
++enum {
++	NODE_ACCESS_CLASS_0 = 0,
++	NODE_ACCESS_CLASS_1,
++	NODE_ACCESS_CLASS_MAX,
++};
++
+ struct memory_target {
+ 	struct list_head node;
  	unsigned int memory_pxm;
  	unsigned int processor_pxm;
  	struct resource memregions;
--	struct node_hmem_attrs hmem_attrs[2];
-+	struct access_coordinate coord[2];
+-	struct access_coordinate coord[2];
++	struct access_coordinate coord[NODE_ACCESS_CLASS_MAX];
  	struct list_head caches;
  	struct node_cache_attrs cache_attrs;
  	bool registered;
-@@ -228,24 +228,24 @@ static void hmat_update_target_access(struct memory_target *target,
- {
- 	switch (type) {
- 	case ACPI_HMAT_ACCESS_LATENCY:
--		target->hmem_attrs[access].read_latency = value;
--		target->hmem_attrs[access].write_latency = value;
-+		target->coord[access].read_latency = value;
-+		target->coord[access].write_latency = value;
- 		break;
- 	case ACPI_HMAT_READ_LATENCY:
--		target->hmem_attrs[access].read_latency = value;
-+		target->coord[access].read_latency = value;
- 		break;
- 	case ACPI_HMAT_WRITE_LATENCY:
--		target->hmem_attrs[access].write_latency = value;
-+		target->coord[access].write_latency = value;
- 		break;
- 	case ACPI_HMAT_ACCESS_BANDWIDTH:
--		target->hmem_attrs[access].read_bandwidth = value;
--		target->hmem_attrs[access].write_bandwidth = value;
-+		target->coord[access].read_bandwidth = value;
-+		target->coord[access].write_bandwidth = value;
- 		break;
- 	case ACPI_HMAT_READ_BANDWIDTH:
--		target->hmem_attrs[access].read_bandwidth = value;
-+		target->coord[access].read_bandwidth = value;
- 		break;
- 	case ACPI_HMAT_WRITE_BANDWIDTH:
--		target->hmem_attrs[access].write_bandwidth = value;
-+		target->coord[access].write_bandwidth = value;
- 		break;
- 	default:
- 		break;
-@@ -681,7 +681,7 @@ static void hmat_register_target_cache(struct memory_target *target)
- static void hmat_register_target_perf(struct memory_target *target, int access)
- {
- 	unsigned mem_nid = pxm_to_node(target->memory_pxm);
--	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
-+	node_set_perf_attrs(mem_nid, &target->coord[access], access);
- }
- 
- static void hmat_register_target_devices(struct memory_target *target)
-@@ -765,7 +765,7 @@ static int hmat_set_default_dram_perf(void)
- 	int rc;
- 	int nid, pxm;
- 	struct memory_target *target;
--	struct node_hmem_attrs *attrs;
-+	struct access_coordinate *attrs;
- 
- 	if (!default_dram_type)
- 		return -EIO;
-@@ -775,7 +775,7 @@ static int hmat_set_default_dram_perf(void)
- 		target = find_mem_target(pxm);
- 		if (!target)
- 			continue;
--		attrs = &target->hmem_attrs[1];
-+		attrs = &target->coord[1];
- 		rc = mt_set_default_dram_perf(nid, attrs, "ACPI HMAT");
- 		if (rc)
- 			return rc;
-@@ -789,7 +789,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
- {
- 	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
- 	struct memory_target *target;
--	struct node_hmem_attrs *perf;
-+	struct access_coordinate *perf;
- 	int *adist = data;
- 	int pxm;
- 
-@@ -802,7 +802,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
- 	hmat_update_target_attrs(target, p_nodes, 1);
+@@ -339,10 +345,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+ 			if (mem_hier == ACPI_HMAT_MEMORY) {
+ 				target = find_mem_target(targs[targ]);
+ 				if (target && target->processor_pxm == inits[init]) {
+-					hmat_update_target_access(target, type, value, 0);
++					hmat_update_target_access(target, type, value,
++								  NODE_ACCESS_CLASS_0);
+ 					/* If the node has a CPU, update access 1 */
+ 					if (node_state(pxm_to_node(inits[init]), N_CPU))
+-						hmat_update_target_access(target, type, value, 1);
++						hmat_update_target_access(target, type, value,
++									  NODE_ACCESS_CLASS_1);
+ 				}
+ 			}
+ 		}
+@@ -726,8 +734,8 @@ static void hmat_register_target(struct memory_target *target)
+ 	if (!target->registered) {
+ 		hmat_register_target_initiators(target);
+ 		hmat_register_target_cache(target);
+-		hmat_register_target_perf(target, 0);
+-		hmat_register_target_perf(target, 1);
++		hmat_register_target_perf(target, NODE_ACCESS_CLASS_0);
++		hmat_register_target_perf(target, NODE_ACCESS_CLASS_1);
+ 		target->registered = true;
+ 	}
  	mutex_unlock(&target_lock);
- 
--	perf = &target->hmem_attrs[1];
-+	perf = &target->coord[1];
- 
- 	if (mt_perf_to_adistance(perf, adist))
- 		return NOTIFY_OK;
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 493d533f8375..cb2b6cc7f6e6 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -74,14 +74,14 @@ static BIN_ATTR_RO(cpulist, CPULIST_FILE_MAX_BYTES);
-  * @dev:	Device for this memory access class
-  * @list_node:	List element in the node's access list
-  * @access:	The access class rank
-- * @hmem_attrs: Heterogeneous memory performance attributes
-+ * @coord:	Heterogeneous memory performance coordinates
-  */
- struct node_access_nodes {
- 	struct device		dev;
- 	struct list_head	list_node;
- 	unsigned int		access;
- #ifdef CONFIG_HMEM_REPORTING
--	struct node_hmem_attrs	hmem_attrs;
-+	struct access_coordinate	coord;
- #endif
- };
- #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
-@@ -167,7 +167,7 @@ static ssize_t property##_show(struct device *dev,			\
- 			   char *buf)					\
- {									\
- 	return sysfs_emit(buf, "%u\n",					\
--			  to_access_nodes(dev)->hmem_attrs.property);	\
-+			  to_access_nodes(dev)->coord.property);	\
- }									\
- static DEVICE_ATTR_RO(property)
- 
-@@ -187,10 +187,10 @@ static struct attribute *access_attrs[] = {
- /**
-  * node_set_perf_attrs - Set the performance values for given access class
-  * @nid: Node identifier to be set
-- * @hmem_attrs: Heterogeneous memory performance attributes
-+ * @coord: Heterogeneous memory performance coordinates
-  * @access: The access class the for the given attributes
-  */
--void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-+void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
- 			 unsigned int access)
- {
- 	struct node_access_nodes *c;
-@@ -205,7 +205,7 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
- 	if (!c)
- 		return;
- 
--	c->hmem_attrs = *hmem_attrs;
-+	c->coord = *coord;
- 	for (i = 0; access_attrs[i] != NULL; i++) {
- 		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
- 					    "initiators")) {
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 1e39d27bee41..69e781900082 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -33,7 +33,7 @@ struct memory_dev_type {
- 	struct kref kref;
- };
- 
--struct node_hmem_attrs;
-+struct access_coordinate;
- 
- #ifdef CONFIG_NUMA
- extern bool numa_demotion_enabled;
-@@ -45,9 +45,9 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype);
- int register_mt_adistance_algorithm(struct notifier_block *nb);
- int unregister_mt_adistance_algorithm(struct notifier_block *nb);
- int mt_calc_adistance(int node, int *adist);
--int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
-+int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- 			     const char *source);
--int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist);
-+int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
- #ifdef CONFIG_MIGRATION
- int next_demotion_node(int node);
- void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
-@@ -126,13 +126,13 @@ static inline int mt_calc_adistance(int node, int *adist)
- 	return NOTIFY_DONE;
- }
- 
--static inline int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
-+static inline int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- 					   const char *source)
- {
- 	return -EIO;
- }
- 
--static inline int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist)
-+static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
- {
- 	return -EIO;
- }
-diff --git a/include/linux/node.h b/include/linux/node.h
-index 427a5975cf40..25b66d705ee2 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -20,14 +20,14 @@
- #include <linux/list.h>
- 
- /**
-- * struct node_hmem_attrs - heterogeneous memory performance attributes
-+ * struct access_coordinate - generic performance coordinates container
-  *
-  * @read_bandwidth:	Read bandwidth in MB/s
-  * @write_bandwidth:	Write bandwidth in MB/s
-  * @read_latency:	Read latency in nanoseconds
-  * @write_latency:	Write latency in nanoseconds
-  */
--struct node_hmem_attrs {
-+struct access_coordinate {
- 	unsigned int read_bandwidth;
- 	unsigned int write_bandwidth;
- 	unsigned int read_latency;
-@@ -65,7 +65,7 @@ struct node_cache_attrs {
- 
- #ifdef CONFIG_HMEM_REPORTING
- void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
--void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-+void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
- 			 unsigned access);
- #else
- static inline void node_add_cache(unsigned int nid,
-@@ -74,7 +74,7 @@ static inline void node_add_cache(unsigned int nid,
- }
- 
- static inline void node_set_perf_attrs(unsigned int nid,
--				       struct node_hmem_attrs *hmem_attrs,
-+				       struct access_coordinate *coord,
- 				       unsigned access)
- {
- }
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 8d5291add2bc..5462d9e3c84c 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -109,7 +109,7 @@ static struct demotion_nodes *node_demotion __read_mostly;
- static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
- 
- static bool default_dram_perf_error;
--static struct node_hmem_attrs default_dram_perf;
-+static struct access_coordinate default_dram_perf;
- static int default_dram_perf_ref_nid = NUMA_NO_NODE;
- static const char *default_dram_perf_ref_source;
- 
-@@ -601,15 +601,15 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
- }
- EXPORT_SYMBOL_GPL(clear_node_memory_type);
- 
--static void dump_hmem_attrs(struct node_hmem_attrs *attrs, const char *prefix)
-+static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
- {
- 	pr_info(
- "%sread_latency: %u, write_latency: %u, read_bandwidth: %u, write_bandwidth: %u\n",
--		prefix, attrs->read_latency, attrs->write_latency,
--		attrs->read_bandwidth, attrs->write_bandwidth);
-+		prefix, coord->read_latency, coord->write_latency,
-+		coord->read_bandwidth, coord->write_bandwidth);
- }
- 
--int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
-+int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- 			     const char *source)
- {
- 	int rc = 0;
-@@ -666,7 +666,7 @@ int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
- 	return rc;
- }
- 
--int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist)
-+int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
- {
- 	if (default_dram_perf_error)
- 		return -EIO;
 
 
