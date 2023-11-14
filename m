@@ -1,98 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2938F6D
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 04:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E893C134BE;
+	Tue, 14 Nov 2023 09:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAAR+lRn"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B031894
-	for <linux-cxl@vger.kernel.org>; Mon, 13 Nov 2023 20:01:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699934511; x=1731470511;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/9Jt9h2Zhn8mgg/hLROhv9K3Pr7hErnxHjN3DHTe44I=;
-  b=HAAR+lRn3Iyzn+5jDLTgE27o1hHXWutrjaviwM0uCdbl0kwaHB3pnezs
-   d5NQAB2NhSDiXJyGSmPdztcsO4B3LPEmvOhlpmeWL4jRks3ibbDJ62bCS
-   tiZ+YyiYWgWutS/lW5jXxImbh90vI6u5Dye/1FY+4MEzl+KD22Ae7zBFw
-   SO0LZeWdN+Qg2zNocLUFisgw+8kSckU+jY5jnDMCvzGyC9aRdm1U92DWS
-   82boc2T8XHuAqGZRX1pGgQXkStckS8pmOqMClWtwkeWKzbQwEV0Oidw24
-   QUikQtp9ro8FRn2OTd5HEvRYp4euStGIxiQI0WyAzaTamukgdSiRvi5hc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="476786188"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="476786188"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 20:01:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="834895137"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="834895137"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.206.59])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 20:01:48 -0800
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/region: Add dev_dbg() detail on failure to allocate HPA space
-Date: Mon, 13 Nov 2023 20:01:47 -0800
-Message-Id: <20231114040147.1124696-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="NNhnrtvL"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB61194;
+	Tue, 14 Nov 2023 01:43:17 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E139721898;
+	Tue, 14 Nov 2023 09:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1699954994; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mgQsT0odT754L8z+3U8Ly6+wQgAtpd/CnwwQT/eWbGI=;
+	b=NNhnrtvLg8PfB8mUbc7N/HdOLXsPh/5OQiu6/44DHFXkC0f2rDOShtPI6i8AmkRnyQkfkf
+	f/FD25+V3Qbkqh+Rngko70mZD/q5bcV7E8Z+PLl24rZAadbP5r4k3qo3OaXj7tnRDRRtQU
+	OSy2FoNjadPlXc0Mxlo3tWXRjXaEQfg=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A731313416;
+	Tue, 14 Nov 2023 09:43:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id mqVVJzJBU2UgGAAAMHmgww
+	(envelope-from <mhocko@suse.com>); Tue, 14 Nov 2023 09:43:14 +0000
+Date: Tue, 14 Nov 2023 10:43:13 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, John Groves <john@jagalactic.com>,
+	Gregory Price <gourry.memverge@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"ying.huang@intel.com" <ying.huang@intel.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
+	"shakeelb@google.com" <shakeelb@google.com>,
+	"muchun.song@linux.dev" <muchun.song@linux.dev>,
+	"jgroves@micron.com" <jgroves@micron.com>
+Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+Message-ID: <ZVNBMW8iJIGDyp0y@tiehlicka>
+References: <20231109002517.106829-1-gregory.price@memverge.com>
+ <klhcqksrg7uvdrf6hoi5tegifycjltz2kx2d62hapmw3ulr7oa@woibsnrpgox4>
+ <0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
+ <ZU6pR46kiuzPricM@slm.duckdns.org>
+ <ZU6uxSrj75EiXise@memverge.com>
+ <ZU7vjsSkGbRLza-K@slm.duckdns.org>
+ <ZU74L9oxWOoTTfpM@memverge.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZU74L9oxWOoTTfpM@memverge.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.86
+X-Spamd-Result: default: False [-3.86 / 50.00];
+	 ARC_NA(0.00)[];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 CLAM_VIRUS_FAIL(0.00)[failed to scan and retransmits exceed];
+	 BAYES_HAM(-1.76)[93.55%];
+	 NEURAL_HAM_LONG(-3.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-1.00)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[18];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.org,jagalactic.com,gmail.com,vger.kernel.org,kvack.org,intel.com,linux-foundation.org,bytedance.com,cmpxchg.org,lwn.net,linux.dev,google.com,micron.com];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Fri 10-11-23 22:42:39, Gregory Price wrote:
+[...]
+> If I can ask, do you think it would be out of line to propose a major
+> refactor to mempolicy to enable external task's the ability to change a
+> running task's mempolicy *as well as* a cgroup-wide mempolicy component?
 
-When the region driver fails while allocating HPA space for a
-new region it can be because the parent resource, the CXL Window,
-has no more available space.
+No, I actually think this is a reasonable idea. pidfd_setmempolicy is a
+generally useful extension. The mempolicy code is heavily current task
+based and there might be some challenges but I believe this will a)
+improve the code base and b) allow more usecases.
 
-In that case, the debug user sees this message:
-cxl_core:alloc_hpa:555: cxl region2: failed to allocate HPA: -34
-
-Expand the message like this:
-cxl_core:alloc_hpa:555: cxl region8: failed to allocate HPA:-34 size:0x20000000 in CXL Window 0 [mem 0xf010000000-0xf04fffffff flags 0x200]
-
-Now the debug user can examine /proc/iomem and consider actions
-like removing other allocations in that space or reducing the
-size of their region request.
-
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/region.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 56e575c79bb4..0e6a378f1913 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -552,8 +552,9 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
- 	res = alloc_free_mem_region(cxlrd->res, size, SZ_256M,
- 				    dev_name(&cxlr->dev));
- 	if (IS_ERR(res)) {
--		dev_dbg(&cxlr->dev, "failed to allocate HPA: %ld\n",
--			PTR_ERR(res));
-+		dev_dbg(&cxlr->dev,
-+			"failed to allocate HPA:%ld size:%#llx in %s %pr\n",
-+			PTR_ERR(res), size, cxlrd->res->name, cxlrd->res);
- 		return PTR_ERR(res);
- 	}
- 
-
-base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+That being said, I still believe that a cgroup based interface is a much
+better choice over a global one. Cpusets seem to be a good fit as the
+controller does control memory placement wrt NUMA interfaces.
 -- 
-2.37.3
-
+Michal Hocko
+SUSE Labs
