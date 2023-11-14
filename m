@@ -1,116 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E893C134BE;
-	Tue, 14 Nov 2023 09:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="NNhnrtvL"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB61194;
-	Tue, 14 Nov 2023 01:43:17 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E139721898;
-	Tue, 14 Nov 2023 09:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1699954994; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mgQsT0odT754L8z+3U8Ly6+wQgAtpd/CnwwQT/eWbGI=;
-	b=NNhnrtvLg8PfB8mUbc7N/HdOLXsPh/5OQiu6/44DHFXkC0f2rDOShtPI6i8AmkRnyQkfkf
-	f/FD25+V3Qbkqh+Rngko70mZD/q5bcV7E8Z+PLl24rZAadbP5r4k3qo3OaXj7tnRDRRtQU
-	OSy2FoNjadPlXc0Mxlo3tWXRjXaEQfg=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A731313416;
-	Tue, 14 Nov 2023 09:43:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id mqVVJzJBU2UgGAAAMHmgww
-	(envelope-from <mhocko@suse.com>); Tue, 14 Nov 2023 09:43:14 +0000
-Date: Tue, 14 Nov 2023 10:43:13 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: "tj@kernel.org" <tj@kernel.org>, John Groves <john@jagalactic.com>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"ying.huang@intel.com" <ying.huang@intel.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
-	"shakeelb@google.com" <shakeelb@google.com>,
-	"muchun.song@linux.dev" <muchun.song@linux.dev>,
-	"jgroves@micron.com" <jgroves@micron.com>
-Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-Message-ID: <ZVNBMW8iJIGDyp0y@tiehlicka>
-References: <20231109002517.106829-1-gregory.price@memverge.com>
- <klhcqksrg7uvdrf6hoi5tegifycjltz2kx2d62hapmw3ulr7oa@woibsnrpgox4>
- <0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
- <ZU6pR46kiuzPricM@slm.duckdns.org>
- <ZU6uxSrj75EiXise@memverge.com>
- <ZU7vjsSkGbRLza-K@slm.duckdns.org>
- <ZU74L9oxWOoTTfpM@memverge.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C82168CF
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 12:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8879D18A
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 04:47:18 -0800 (PST)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.200])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SV5Z83NFHz6K6P0;
+	Tue, 14 Nov 2023 20:43:28 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 14 Nov 2023 12:47:15 +0000
+From: <shiju.jose@huawei.com>
+To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
+CC: <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH 0/3] hw/cxl/cxl-mailbox-utils: Add feature commands, device patrol scrub control and DDR5 ECS control features
+Date: Tue, 14 Nov 2023 20:47:08 +0800
+Message-ID: <20231114124711.1128-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZU74L9oxWOoTTfpM@memverge.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.86
-X-Spamd-Result: default: False [-3.86 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 CLAM_VIRUS_FAIL(0.00)[failed to scan and retransmits exceed];
-	 BAYES_HAM(-1.76)[93.55%];
-	 NEURAL_HAM_LONG(-3.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-1.00)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[18];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.org,jagalactic.com,gmail.com,vger.kernel.org,kvack.org,intel.com,linux-foundation.org,bytedance.com,cmpxchg.org,lwn.net,linux.dev,google.com,micron.com];
-	 RCVD_COUNT_TWO(0.00)[2];
-	 SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.122.247.234]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
 
-On Fri 10-11-23 22:42:39, Gregory Price wrote:
-[...]
-> If I can ask, do you think it would be out of line to propose a major
-> refactor to mempolicy to enable external task's the ability to change a
-> running task's mempolicy *as well as* a cgroup-wide mempolicy component?
+From: Shiju Jose <shiju.jose@huawei.com>
 
-No, I actually think this is a reasonable idea. pidfd_setmempolicy is a
-generally useful extension. The mempolicy code is heavily current task
-based and there might be some challenges but I believe this will a)
-improve the code base and b) allow more usecases.
+Add support for the feature commands, device patrol scrub control and
+DDR5 ECS control features.
+CXL spec 3.0 section 8.2.9.6 describes optional device specific features.
+CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
+feature.
+CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub (ECS)
+control feature.
 
-That being said, I still believe that a cgroup based interface is a much
-better choice over a global one. Cpusets seem to be a good fit as the
-controller does control memory placement wrt NUMA interfaces.
+The patches are available here,
+https://gitlab.com/shiju.jose/qemu/-/tree/cxl-scrub-2023-11-14
+and is based on Jonathan's branch
+https://gitlab.com/jic23/qemu/-/tree/cxl-2023-10-16
+
+Shiju Jose (3):
+  hw/cxl/cxl-mailbox-utils: Add support for feature commands (8.2.9.6)
+  hw/cxl/cxl-mailbox-utils: Add device patrol scrub control feature
+  hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS control feature
+
+ hw/cxl/cxl-mailbox-utils.c | 331 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 331 insertions(+)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.34.1
+
