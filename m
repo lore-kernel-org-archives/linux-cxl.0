@@ -1,678 +1,158 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E31F3FB34;
-	Tue, 14 Nov 2023 12:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3FC19D;
-	Tue, 14 Nov 2023 04:57:09 -0800 (PST)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.206])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SV5rW06Qtz6K9Kw;
-	Tue, 14 Nov 2023 20:55:54 +0800 (CST)
-Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 14 Nov 2023 12:57:06 +0000
-From: <shiju.jose@huawei.com>
-To: <linux-cxl@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <Vilas.Sridharan@amd.com>,
-	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <tony.luck@intel.com>, <Jon.Grimm@amd.com>,
-	<dave.hansen@linux.intel.com>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <david@redhat.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>,
-	<"pgonda@pgonda"@google.com>, <duenwen@google.com>,
-	<mike.malvestuto@intel.com>, <gthelen@google.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH 5/6] cxl/memscrub: Add CXL device DDR5 ECS control feature
-Date: Tue, 14 Nov 2023 20:56:46 +0800
-Message-ID: <20231114125648.1146-6-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20231114125648.1146-1-shiju.jose@huawei.com>
-References: <20231114125648.1146-1-shiju.jose@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AC241771;
+	Tue, 14 Nov 2023 15:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="Ygoe5pFV"
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5F0EFE;
+	Tue, 14 Nov 2023 07:51:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fBavb1OJRuhNdPmd3WZaXH8ZhV0kzJqo2XZQJsQ4F/1vkcrwFRJFSLI3OQxnG+V1AubVK8rv/hpHa7MafdAj5Wx2ktI83Z/qi9jN7ZmMrUFH73QCgf1ueyioY75B1xn7pQbx5tqlqUz6gjLt0pryECIXw7j7NUpR4gyFLtbyovvxhNZLby7hJr7rzJx6vKUk67lbBHnq6ZR+gOOJccxnW7QxAqIWsvE8qayHatuG0MW/fBepKLkgleOtipxRp7iLsxX3dr+o5Rla1Ij7b20ktyqelp3WpQLaUe2+IWSw9Tyoo7yNueAOAZlaG8WpyQccmJlXA8672DE9hFUh1SBA1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D2s5yCu+VBTc0peJFZhX9wSLIQyGUKKnAx53gD1QYE4=;
+ b=UfMPtXo2iBbwaR0C7zrDUk6t7TZaci4s4KrckfnOAo5yHQ8rrXNYRfHwHjvgRU5jtFqx+BMXBtFg4GSJsN/ozWUmna/2tCPVfW8SO07wUeCZV5IAm0TbUWzXqYud0ZY6rYcaLtUVy0q4BJqqbKEFUik1NA+NWCG1VTxDRjO8JScMoFWjTImGTSjTiaB/cqmts5a3/6BLjxVNzj1ELBlrEBRbQPye7AbCX8akh/0hSyNPAcRcyIHAelrscQgI4scySDHF4moDPn6Q1/YDoP/Wl2Ac5cFATQ0K59NGvd/XF59i8KJ2LqZ5n/vfpSgoU5H1QVY5QRxsm5MWNWfYJR1TlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D2s5yCu+VBTc0peJFZhX9wSLIQyGUKKnAx53gD1QYE4=;
+ b=Ygoe5pFVCwT/mPn9e3VJ69tteAVgmtVeKvTqkpooOitKFfx7oZKx5b9EWNpwTxmddV9oth8TGOU/5nfwzS/BRhC1BkyjR9LNQ+wpvnqsNORj4nqi8wpx2RUpypgI8RmGxz6MOo1pbSL3hetHQCC3WhtM6FZX5RUtXuI8LWrXsuI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by MN2PR17MB3966.namprd17.prod.outlook.com (2603:10b6:208:20d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Tue, 14 Nov
+ 2023 15:50:57 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7002.015; Tue, 14 Nov 2023
+ 15:50:56 +0000
+Date: Tue, 14 Nov 2023 10:50:51 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: Michal Hocko <mhocko@suse.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, John Groves <john@jagalactic.com>,
+	Gregory Price <gourry.memverge@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"ying.huang@intel.com" <ying.huang@intel.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
+	"shakeelb@google.com" <shakeelb@google.com>,
+	"muchun.song@linux.dev" <muchun.song@linux.dev>,
+	"jgroves@micron.com" <jgroves@micron.com>
+Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+Message-ID: <ZVOXWx8XNJJNC23A@memverge.com>
+References: <20231109002517.106829-1-gregory.price@memverge.com>
+ <klhcqksrg7uvdrf6hoi5tegifycjltz2kx2d62hapmw3ulr7oa@woibsnrpgox4>
+ <0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
+ <ZU6pR46kiuzPricM@slm.duckdns.org>
+ <ZU6uxSrj75EiXise@memverge.com>
+ <ZU7vjsSkGbRLza-K@slm.duckdns.org>
+ <ZU74L9oxWOoTTfpM@memverge.com>
+ <ZVNBMW8iJIGDyp0y@tiehlicka>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZVNBMW8iJIGDyp0y@tiehlicka>
+X-ClientProxiedBy: SJ0PR03CA0090.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::35) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.122.247.234]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MN2PR17MB3966:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95a65911-6084-4f78-da6e-08dbe5297d35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8Yf3xfwMMjIH4Je8NQjzjuGd7LS9ah7lpYqbWIlKS369fAoBYlfgxLKoM8V0WIj7OEVxm5FsE61UXTtbEAhKp91U4XqdArANuyYcD3tYjtBbgUwYxPSuoOtE4GTHBtZUjVxVDFr0o0992MjYsfnG1QzoDk1SAIPbEYPBFNr9eu0IXnYDKHnXQ1vOw633PJtDy9ij7mXspyN8CCspFZR5PKzOlZdaAAk7fzSTso4f3tJgJeR13jFY71KnTYz05LJV7o56npNP4KJgojfAYQIUOrjUx48Fl6LPho5uDSmFOy2OGH6taEHcfoCfqK0jF28mhQsShIRGeFY3tkmyY3QHB49MasOnGRSsBh4JG5VLOe4pcXOux251iDzo994AuV5wTYW4u3C5eBoBH6SufYnAM/e3gK/lvPsssVPBIyIBVcZ62dgMsG2vghd42raB2JkhzUimbsmYyOMMvmclXe1uEdJlR0ITe/YhS/45KxqQHCyuZINwgD7TW4J0D1rmILL5mBJj/O4LkDPTE7ykBWdXqTKbL+3D1kLacDcXJzjc3sKn4SacObWAeYtEkdmCiCeS1bw1nLpnQRgE9MVoKcuD/+ngD/n533nVd8JT/VaSn44glfUdQ2gcVCCB+tM1j7fmhF7WjtOoK9Ax/iLZjpxSOw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(39840400004)(136003)(376002)(366004)(230273577357003)(230922051799003)(230173577357003)(64100799003)(1800799009)(186009)(451199024)(66476007)(66556008)(54906003)(6916009)(66946007)(86362001)(38100700002)(36756003)(6512007)(83380400001)(26005)(2616005)(6506007)(6666004)(2906002)(41300700001)(478600001)(316002)(6486002)(966005)(44832011)(4326008)(5660300002)(7416002)(8936002)(8676002)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?N/sMedg17XLb5fEwFbeJRVFghGD9YwHBIIEAujRjxICu4CdNg8xCXUdli+rZ?=
+ =?us-ascii?Q?BcPHOC5Dyxkru7YcPHF1/Uapnru9bFEwXThJCMyS4fhjsxAY3+7WVfbJLadR?=
+ =?us-ascii?Q?uerW2RDTgCadL46jFMFG1Rr+orIR6fmePmPOT6Iqc2wZtNx88qAS9gNTg3S9?=
+ =?us-ascii?Q?hoxHmMSTsQdzR5l5Zok2iBIlojAGD6qQlJ2A7AjRh//0z59Oo2kQXk2AmSyr?=
+ =?us-ascii?Q?Tig1RwinS5Qy3uIPZOis3RgXwbbxHynp0Y0BK+xJ90YQB/Aw1R7UjT30xe15?=
+ =?us-ascii?Q?g/E72kNNwWOo1HrF+5Ed50LcXiQVSl4lSskP0LRBpOoGtJJe2fn7Xmh1MnI0?=
+ =?us-ascii?Q?hAJ2VQiPcUZ8Mser+TgIhNiOXF6bt6s59Am8GMaqiuDxKtZQw2le/BmfVjpM?=
+ =?us-ascii?Q?zQb2KUd6vzdYvSbPI/9mE+NqhyPXwpoEdTkDMS4SFTeLSgSVsv2tWB/TaFh7?=
+ =?us-ascii?Q?dMIbr2lar/mi0qyt4etTOxvQr9+6WvReqFHoRNngGQdvL/k1E3403pzixNfE?=
+ =?us-ascii?Q?ZtsDdCXsjn+jZGD8tEquaLFiCE2eNC2Q2l1UZ/uKcGX8Oi7kFhDkXaj42aXE?=
+ =?us-ascii?Q?FrmcWfLlnMjwl7HsU5yD7O17Kdn8j0fBnL9Ja7mvF71JO5JWcB9v8GgKFQq6?=
+ =?us-ascii?Q?sn0TUT8O7GEVpeYAlZ/j7vVcZ2ViPOab0tLDnAvKIAT9Ul9+cSfIf/OMQEDk?=
+ =?us-ascii?Q?5vVUYGCO7Gh0jgg2bakL+kj1ZmXbUKsKy5GIxsl6rODBgKnSCJh2+oLiAP4q?=
+ =?us-ascii?Q?x8p+gp/Si0sooBw1RYLu4nvYMcDk1oDXRFKDxupKiMc6QjkFRGWOJMvTGU1r?=
+ =?us-ascii?Q?O5SaKmSB7oIfi8TShrHu1H62F3Ym8vbEytFv+xr2YdlCxN3FJ64hH22HJPfm?=
+ =?us-ascii?Q?3TQAAooFIFfu95hUMuGGj6/ISpxJRNSJRnbMrNF6UWQOQ8yRhzQ+9Cd73sXQ?=
+ =?us-ascii?Q?a4Png8FxCcbE7WSZ5B+tE9Vjg+HgIZ2aRs+FsmoQsfolOXvb9KXEFrFVtPDd?=
+ =?us-ascii?Q?cOFrdkpHopMElqfDx1ZUFHgRCF2w62ht4xH6XpQ0MYovixWMMstT3g0CWAZV?=
+ =?us-ascii?Q?6STV5/2pNk3ifBT6VRQJyiuiAhqcKFCEIw+vMCzdj4P5V/cRjdhqR0x6kkzy?=
+ =?us-ascii?Q?aakUJOhUjY6vvf/VffOnhsoWkQjoSxCYfWWjXjfkDGNSJ/arlpJGmtk3aZuL?=
+ =?us-ascii?Q?eNHLbjit/ikVJ/yonpIeM8Kam4gqrDMsX0/7oocb9X648jmlpwK1ksyZf0Hs?=
+ =?us-ascii?Q?BFRdKOwaW5ZQMeEQmlHd30Wre+7TOGmS4SqkJ3HGE3731+THJ1NUdNanERhG?=
+ =?us-ascii?Q?hF3jh7KFLHWS5fhs2Zi+kSHXPJwhqfJ/de/VFWzB4Y8f9/j/ttEPg3zG0aKr?=
+ =?us-ascii?Q?wmzYkzjEA0loZsUBiY9fHzg6ZXiXB0gNDhDvUnrZTacXT9YBH2qOmVXEyAOT?=
+ =?us-ascii?Q?iBHy26BgVHHzGDIVQ2bIbbejLnC/TeQtikFQ3DXaC6evU3j/lPeltk42RyVJ?=
+ =?us-ascii?Q?qiCxI9GlS7Ive0Tt0qUGOpjKiO99rp11RScqvidNE+iBb44geANT22PJ5ybd?=
+ =?us-ascii?Q?yEMwxXwmSuSTaTF+oP5rCX/H6P+H6P/GoO85KMdl6BmqDxgA9QKMNGD7gDaY?=
+ =?us-ascii?Q?TA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95a65911-6084-4f78-da6e-08dbe5297d35
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 15:50:56.2024
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ygdfaZKyuKRN0kmHIX6KO4u20g8QAoo0d8eWYpPFsq+w0Cnrfgfp+O4FpONt/YcprPCRisf6jHfwzSLHiy3BU7Q7XAj3v/1mSkl1F9qVQRs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3966
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Tue, Nov 14, 2023 at 10:43:13AM +0100, Michal Hocko wrote:
+> On Fri 10-11-23 22:42:39, Gregory Price wrote:
+> [...]
+> > If I can ask, do you think it would be out of line to propose a major
+> > refactor to mempolicy to enable external task's the ability to change a
+> > running task's mempolicy *as well as* a cgroup-wide mempolicy component?
+> 
+> No, I actually think this is a reasonable idea. pidfd_setmempolicy is a
+> generally useful extension. The mempolicy code is heavily current task
+> based and there might be some challenges but I believe this will a)
+> improve the code base and b) allow more usecases.
 
-CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub (ECS)
-control feature.
+Just read up on the pidfd_set_mempolicy lore, and yes I'm seeing all the
+same problems (I know there was discussion of vma policies, but i think
+that can be a topic for later).  Have some thoughts on this, but will
+take some time to work through a few refactoring tickets first.
 
-The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-Specification (JESD79-5) and allows the DRAM to internally read, correct
-single-bit errors, and write back corrected data bits to the DRAM array
-while providing transparency to error counts. The ECS control feature
-allows the request to configure ECS input configurations during system
-boot or at run-time.
+> 
+> That being said, I still believe that a cgroup based interface is a much
+> better choice over a global one. Cpusets seem to be a good fit as the
+> controller does control memory placement wrt NUMA interfaces.
 
-The ECS control allows the requester to change the log entry type, the ECS
-threshold count provided that the request is within the definition
-specified in DDR5 mode registers, change mode between codeword mode and
-row count mode, and reset the ECS counter.
+I think cpusets is a non-starter due to the global spinlock required when
+reading informaiton from it:
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/memscrub.c | 557 +++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxlmem.h        |   2 +
- drivers/cxl/pci.c           |   2 +
- 3 files changed, 559 insertions(+), 2 deletions(-)
+https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L391
 
-diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
-index ec67ffc81363..1c7031166ba0 100644
---- a/drivers/cxl/core/memscrub.c
-+++ b/drivers/cxl/core/memscrub.c
-@@ -5,9 +5,9 @@
-  * Copyright (c) 2023 HiSilicon Limited.
-  *
-  *  - Provides functions to configure patrol scrub
-- *    feature of the CXL memory devices.
-+ *    and DDR5 ECS features of the CXL memory devices.
-  *  - Registers with the scrub driver for the
-- *    memory patrol scrub feature.
-+ *    memory patrol scrub and DDR5 ECS features.
-  */
- 
- #define pr_fmt(fmt)	"CXL_MEM_SCRUB: " fmt
-@@ -453,3 +453,556 @@ int cxl_mem_patrol_scrub_init(struct cxl_memdev *cxlmd)
- 	return ret;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_patrol_scrub_init, CXL);
-+
-+/* CXL DDR5 ECS control definitions */
-+#define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
-+#define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
-+
-+#define CXL_DDR5_ECS	"cxl_ecs"
-+
-+/* The default number of regions for CXL memory device patrol scrubber */
-+#define CXL_MEMDEV_ECS_NUM_REGIONS	1
-+
-+static const uuid_t cxl_ecs_uuid =
-+	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,     \
-+		  0x89, 0x33, 0x86);
-+
-+/* CXL DDR5 ECS control functions */
-+struct cxl_ecs_context {
-+	struct device *dev;
-+	u16 nregions;
-+	u16 get_feat_size;
-+	u16 set_feat_size;
-+};
-+
-+/**
-+ * struct cxl_memdev_ecs_params - CXL memory DDR5 ECS parameter data structure.
-+ * @log_entry_type: ECS log entry type, per DRAM or per memory media FRU.
-+ * @threshold: ECS threshold count per GB of memory cells.
-+ * @mode:	codeword/row count mode
-+ *		0 : ECS counts rows with errors
-+ *		1 : ECS counts codeword with errors
-+ * @reset_counter: [IN] reset ECC counter to default value.
-+ * @log_entry_type_avail: Supported ECS log entry types.
-+ * @threshold_avail: Supported ECS threshold counts.
-+ * @mode_avail: Supported ECS count mode.
-+ */
-+struct cxl_memdev_ecs_params {
-+	u8 log_entry_type;
-+	u16 threshold;
-+	u8 mode;
-+	bool reset_counter;
-+	char log_entry_type_avail[CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH];
-+	char threshold_avail[CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH];
-+	char mode_avail[CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH];
-+};
-+
-+enum {
-+	CXL_MEMDEV_ECS_PARAM_LOG_ENTRY_TYPE = 0,
-+	CXL_MEMDEV_ECS_PARAM_THRESHOLD,
-+	CXL_MEMDEV_ECS_PARAM_MODE,
-+	CXL_MEMDEV_ECS_PARAM_RESET_COUNTER,
-+};
-+
-+#define	CXL_MEMDEV_ECS_LOG_ENTRY_TYPE_MASK	GENMASK(1, 0)
-+#define	CXL_MEMDEV_ECS_REALTIME_REPORT_CAP_MASK	BIT(0)
-+#define	CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK	GENMASK(2, 0)
-+#define	CXL_MEMDEV_ECS_MODE_MASK	BIT(3)
-+#define	CXL_MEMDEV_ECS_RESET_COUNTER_MASK	BIT(4)
-+
-+static const u16 ecs_supp_threshold[] = { 0, 0, 0, 256, 1024, 4096 };
-+
-+enum {
-+	ECS_LOG_ENTRY_TYPE_DRAM = 0x0,
-+	ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU = 0x1,
-+};
-+
-+enum {
-+	ECS_THRESHOLD_256 = 3,
-+	ECS_THRESHOLD_1024 = 4,
-+	ECS_THRESHOLD_4096 = 5,
-+};
-+
-+enum {
-+	ECS_MODE_COUNTS_ROWS = 0,
-+	ECS_MODE_COUNTS_CODEWORDS = 1,
-+};
-+
-+struct cxl_memdev_ecs_feat_read_attrbs {
-+	u8 ecs_log_cap;
-+	u8 ecs_cap;
-+	__le16 ecs_config;
-+	u8 ecs_flags;
-+}  __packed;
-+
-+struct cxl_memdev_ecs_set_feat_pi {
-+	struct cxl_mbox_set_feat_in pi;
-+	struct cxl_memdev_ecs_feat_wr_attrbs {
-+		u8 ecs_log_cap;
-+		__le16 ecs_config;
-+	} __packed wr_attrbs[];
-+}  __packed;
-+
-+static int cxl_mem_ecs_get_attrbs(struct device *dev, int fru_id,
-+				  struct cxl_memdev_ecs_params *params)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev->parent);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_mbox_get_feat_in pi = {
-+		.uuid = cxl_ecs_uuid,
-+		.offset = 0,
-+		.selection = CXL_GET_FEAT_CURRENT_VALUE,
-+	};
-+	struct cxl_memdev_ecs_feat_read_attrbs *rd_attrbs;
-+	struct cxl_ecs_context *cxl_ecs_ctx;
-+	u8 threshold_index;
-+
-+	if (!mds)
-+		return -EFAULT;
-+	cxl_ecs_ctx = dev_get_drvdata(dev);
-+
-+	pi.count = cxl_ecs_ctx->get_feat_size;
-+	rd_attrbs = cxl_get_feature(mds, &pi);
-+	if (PTR_ERR_OR_ZERO(rd_attrbs)) {
-+		params->log_entry_type = 0;
-+		params->threshold = 0;
-+		params->mode = 0;
-+		snprintf(params->log_entry_type_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+			 "Unavailable");
-+		snprintf(params->threshold_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+			 "Unavailable");
-+		snprintf(params->mode_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+			 "Unavailable");
-+		return PTR_ERR_OR_ZERO(rd_attrbs);
-+	}
-+	params->log_entry_type = FIELD_GET(CXL_MEMDEV_ECS_LOG_ENTRY_TYPE_MASK,
-+					   rd_attrbs[fru_id].ecs_log_cap);
-+	threshold_index = FIELD_GET(CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK,
-+				    rd_attrbs[fru_id].ecs_config);
-+	params->threshold = ecs_supp_threshold[threshold_index];
-+	params->mode = FIELD_GET(CXL_MEMDEV_ECS_MODE_MASK,
-+				 rd_attrbs[fru_id].ecs_config);
-+	snprintf(params->log_entry_type_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+		 "Log Entry Type 0:per DRAM  1:per Memory Media FRU");
-+	snprintf(params->threshold_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+		 "Threshold count per Gb of memory cells: 256,1024,4096");
-+	snprintf(params->mode_avail, CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH,
-+		 "Mode 0:ECS counts rows with errors  1:ECS counts codewords with errors");
-+
-+	kvfree(rd_attrbs);
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ecs_set_attrbs(struct device *dev, int fru_id,
-+				  struct cxl_memdev_ecs_params *params, u8 param_type)
-+{
-+	int ret = 0;
-+	u32 set_pi_size;
-+	u16 nmedia_frus, count;
-+	struct cxl_memdev_ecs_set_feat_pi *set_pi;
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev->parent);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_mbox_get_feat_in pi = {
-+		.uuid = cxl_ecs_uuid,
-+		.offset = 0,
-+		.selection = CXL_GET_FEAT_CURRENT_VALUE,
-+	};
-+	struct cxl_memdev_ecs_feat_read_attrbs *rd_attrbs;
-+	struct cxl_memdev_ecs_feat_wr_attrbs *wr_attrbs;
-+	struct cxl_ecs_context *cxl_ecs_ctx;
-+	struct cxl_memdev_ecs_params rd_params;
-+
-+	if (!mds)
-+		return -EFAULT;
-+
-+	cxl_ecs_ctx = dev_get_drvdata(dev);
-+	nmedia_frus = cxl_ecs_ctx->nregions;
-+
-+	pi.count = cxl_ecs_ctx->get_feat_size;
-+	rd_attrbs = cxl_get_feature(mds, &pi);
-+	if (PTR_ERR_OR_ZERO(rd_attrbs))
-+		return PTR_ERR_OR_ZERO(rd_attrbs);
-+	set_pi_size = sizeof(struct cxl_mbox_set_feat_in) +
-+				cxl_ecs_ctx->set_feat_size;
-+	set_pi = kvmalloc(set_pi_size, GFP_KERNEL);
-+	if (!set_pi) {
-+		kvfree(rd_attrbs);
-+		return -ENOMEM;
-+	}
-+
-+	set_pi->pi.uuid = cxl_ecs_uuid;
-+	set_pi->pi.flags = CXL_SET_FEAT_FLAG_MOD_VALUE_SAVED_ACROSS_RESET |
-+				CXL_SET_FEAT_FLAG_ACTION_FULL_DATA_TRANSFER;
-+	set_pi->pi.offset = 0;
-+	set_pi->pi.version = CXL_MEMDEV_ECS_SET_FEAT_VERSION;
-+	/* Fill writable attributes from the current attributes read for all the media FRUs */
-+	count = 0;
-+	wr_attrbs = set_pi->wr_attrbs;
-+	while (count < nmedia_frus) {
-+		wr_attrbs[count].ecs_log_cap = rd_attrbs[count].ecs_log_cap;
-+		wr_attrbs[count].ecs_config = rd_attrbs[count].ecs_config;
-+		count++;
-+	}
-+	kvfree(rd_attrbs);
-+
-+	/* Fill attribute to be set for the media FRU */
-+	if (param_type == CXL_MEMDEV_ECS_PARAM_LOG_ENTRY_TYPE) {
-+		if (params->log_entry_type != ECS_LOG_ENTRY_TYPE_DRAM &&
-+		    params->log_entry_type != ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU) {
-+			dev_err(dev->parent,
-+				"Invalid CXL ECS scrub log entry type(%d) to set\n",
-+			       params->log_entry_type);
-+			dev_err(dev->parent,
-+				"Log Entry Type 0: per DRAM  1: per Memory Media FRU\n");
-+			ret = -EINVAL;
-+			goto set_attrbs_exit;
-+		}
-+		wr_attrbs[fru_id].ecs_log_cap = FIELD_PREP(CXL_MEMDEV_ECS_LOG_ENTRY_TYPE_MASK,
-+							   params->log_entry_type);
-+	} else if (param_type == CXL_MEMDEV_ECS_PARAM_THRESHOLD) {
-+		wr_attrbs[fru_id].ecs_config &= ~CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK;
-+		switch (params->threshold) {
-+		case 256:
-+			wr_attrbs[fru_id].ecs_config |= FIELD_PREP(
-+						CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_256);
-+			break;
-+		case 1024:
-+			wr_attrbs[fru_id].ecs_config |= FIELD_PREP(
-+						CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_1024);
-+			break;
-+		case 4096:
-+			wr_attrbs[fru_id].ecs_config |= FIELD_PREP(
-+						CXL_MEMDEV_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_4096);
-+			break;
-+		default:
-+			dev_err(dev->parent,
-+				"Invalid CXL ECS scrub threashol count(%d) to set\n",
-+				params->threshold);
-+			dev_err(dev->parent,
-+				"Threshold count per Gb pf memory cells: 256,1024,4096\n");
-+			ret = -EINVAL;
-+			goto set_attrbs_exit;
-+		}
-+	} else if (param_type == CXL_MEMDEV_ECS_PARAM_MODE) {
-+		if (params->mode != ECS_MODE_COUNTS_ROWS &&
-+		    params->mode != ECS_MODE_COUNTS_CODEWORDS) {
-+			dev_err(dev->parent,
-+				"Invalid CXL ECS scrub mode(%d) to set\n",
-+				params->mode);
-+			dev_err(dev->parent,
-+				"Mode 0: ECS counts rows with errors"
-+				" 1: ECS counts codewords with errors\n");
-+			ret = -EINVAL;
-+			goto set_attrbs_exit;
-+		}
-+		wr_attrbs[fru_id].ecs_config &= ~CXL_MEMDEV_ECS_MODE_MASK;
-+		wr_attrbs[fru_id].ecs_config |= FIELD_PREP(CXL_MEMDEV_ECS_MODE_MASK,
-+							  params->mode);
-+	} else if (param_type == CXL_MEMDEV_ECS_PARAM_RESET_COUNTER) {
-+		wr_attrbs[fru_id].ecs_config &= ~CXL_MEMDEV_ECS_RESET_COUNTER_MASK;
-+		wr_attrbs[fru_id].ecs_config |= FIELD_PREP(CXL_MEMDEV_ECS_RESET_COUNTER_MASK,
-+							   params->reset_counter);
-+	} else {
-+		dev_err(dev->parent, "Invalid CXL ECS parameter to set\n");
-+		ret = -EINVAL;
-+		goto set_attrbs_exit;
-+	}
-+
-+	ret = cxl_set_feature(mds, set_pi, set_pi_size);
-+	if (ret) {
-+		dev_err(dev->parent, "CXL ECS set feature fail ret=%d\n", ret);
-+		goto set_attrbs_exit;
-+	}
-+
-+	/* Verify attribute is set successfully */
-+	ret = cxl_mem_ecs_get_attrbs(dev, fru_id, &rd_params);
-+	if (ret) {
-+		dev_err(dev->parent, "Get cxlmemdev ECS params fail ret=%d\n", ret);
-+		return ret;
-+	}
-+	switch (param_type) {
-+	case CXL_MEMDEV_ECS_PARAM_LOG_ENTRY_TYPE:
-+		if (rd_params.log_entry_type != params->log_entry_type)
-+			return -EFAULT;
-+		break;
-+	case CXL_MEMDEV_ECS_PARAM_THRESHOLD:
-+		if (rd_params.threshold != params->threshold)
-+			return -EFAULT;
-+		break;
-+	case CXL_MEMDEV_ECS_PARAM_MODE:
-+		if (rd_params.mode != params->mode)
-+			return -EFAULT;
-+		break;
-+	}
-+
-+set_attrbs_exit:
-+	kvfree(set_pi);
-+	return ret;
-+}
-+
-+static int cxl_mem_ecs_log_entry_type_write(struct device *dev, int region_id, long val)
-+{
-+	int ret;
-+	struct cxl_memdev_ecs_params params;
-+
-+	params.log_entry_type = val;
-+	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
-+				     CXL_MEMDEV_ECS_PARAM_LOG_ENTRY_TYPE);
-+	if (ret) {
-+		dev_err(dev->parent, "Set CXL ECS params for log entry type fail ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ecs_threshold_write(struct device *dev, int region_id, long val)
-+{
-+	int ret;
-+	struct cxl_memdev_ecs_params params;
-+
-+	params.threshold = val;
-+	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
-+				     CXL_MEMDEV_ECS_PARAM_THRESHOLD);
-+	if (ret) {
-+		dev_err(dev->parent, "Set CXL ECS params for threshold fail ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ecs_mode_write(struct device *dev, int region_id, long val)
-+{
-+	int ret;
-+	struct cxl_memdev_ecs_params params;
-+
-+	params.mode = val;
-+	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
-+				     CXL_MEMDEV_ECS_PARAM_MODE);
-+	if (ret) {
-+		dev_err(dev->parent, "Set CXL ECS params for mode fail ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ecs_reset_counter_write(struct device *dev, int region_id, long val)
-+{
-+	int ret;
-+	struct cxl_memdev_ecs_params params;
-+
-+	params.reset_counter = val;
-+	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
-+				     CXL_MEMDEV_ECS_PARAM_RESET_COUNTER);
-+	if (ret) {
-+		dev_err(dev->parent, "Set CXL ECS params for reset ECC counter fail ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * cxl_mem_ecs_is_visible() - Callback to return attribute visibility
-+ * @drv_data: Pointer to driver-private data structure passed
-+ *	      as argument to devm_scrub_device_register().
-+ * @attr: Scrub attribute
-+ * @region_id: ID of the memory region
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+static umode_t cxl_mem_ecs_is_visible(const void *drv_data, u32 attr, int region_id)
-+{
-+	switch (attr) {
-+	case scrub_reset_counter:
-+		return 0200;
-+	case scrub_ecs_log_entry_type_per_dram:
-+	case scrub_ecs_log_entry_type_per_memory_media:
-+	case scrub_mode_counts_rows:
-+	case scrub_mode_counts_codewords:
-+	case scrub_threshold_available:
-+		return 0444;
-+	case scrub_ecs_log_entry_type:
-+	case scrub_mode:
-+	case scrub_threshold:
-+		return 0644;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+/**
-+ * cxl_mem_ecs_read() - Read callback for data attributes
-+ * @dev: Pointer to scrub device
-+ * @attr: Scrub attribute
-+ * @region_id: ID of the memory region
-+ * @val: Pointer to the returned data
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+static int cxl_mem_ecs_read(struct device *dev, u32 attr, int region_id, u64 *val)
-+{
-+	int ret;
-+	struct cxl_memdev_ecs_params params;
-+
-+	if (attr == scrub_ecs_log_entry_type ||
-+	    attr == scrub_ecs_log_entry_type_per_dram ||
-+	    attr == scrub_ecs_log_entry_type_per_memory_media ||
-+	    attr == scrub_mode ||
-+	    attr == scrub_mode_counts_rows ||
-+	    attr == scrub_mode_counts_codewords ||
-+	    attr == scrub_threshold) {
-+		ret = cxl_mem_ecs_get_attrbs(dev, region_id, &params);
-+		if (ret) {
-+			dev_err(dev->parent, "Get CXL ECS params fail ret=%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	switch (attr) {
-+	case scrub_ecs_log_entry_type:
-+		*val = params.log_entry_type;
-+		return 0;
-+	case scrub_ecs_log_entry_type_per_dram:
-+		if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_DRAM)
-+			*val = 1;
-+		else
-+			*val = 0;
-+		return 0;
-+	case scrub_ecs_log_entry_type_per_memory_media:
-+		if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
-+			*val = 1;
-+		else
-+			*val = 0;
-+		return 0;
-+	case scrub_mode:
-+		*val = params.mode;
-+		return 0;
-+	case scrub_mode_counts_rows:
-+		if (params.mode == ECS_MODE_COUNTS_ROWS)
-+			*val = 1;
-+		else
-+			*val = 0;
-+		return 0;
-+	case scrub_mode_counts_codewords:
-+		if (params.mode == ECS_MODE_COUNTS_CODEWORDS)
-+			*val = 1;
-+		else
-+			*val = 0;
-+		return 0;
-+	case scrub_threshold:
-+		*val = params.threshold;
-+		return 0;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+}
-+
-+/**
-+ * cxl_mem_ecs_write() - Write callback for data attributes
-+ * @dev: Pointer to scrub device
-+ * @attr: Scrub attribute
-+ * @region_id: ID of the memory region
-+ * @val: Value to write
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+static int cxl_mem_ecs_write(struct device *dev, u32 attr, int region_id, u64 val)
-+{
-+	switch (attr) {
-+	case scrub_ecs_log_entry_type:
-+		return cxl_mem_ecs_log_entry_type_write(dev, region_id, val);
-+	case scrub_mode:
-+		return cxl_mem_ecs_mode_write(dev, region_id, val);
-+	case scrub_reset_counter:
-+		return cxl_mem_ecs_reset_counter_write(dev, region_id, val);
-+	case scrub_threshold:
-+		return cxl_mem_ecs_threshold_write(dev, region_id, val);
-+	default:
-+		return -ENOTSUPP;
-+	}
-+}
-+
-+/**
-+ * cxl_mem_ecs_read_strings() - Read callback for DDR5 ECS string attributes
-+ * @dev: Pointer to ECS scrub device
-+ * @attr: ECS scrub attribute
-+ * @region_id: ID of the memory media FRU.
-+ * @buf: Pointer to the buffer for copying returned string
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+static int cxl_mem_ecs_read_strings(struct device *dev, u32 attr,
-+				    int region_id, char *buf)
-+{
-+
-+	switch (attr) {
-+	case scrub_threshold_available:
-+		sprintf(buf, "256,1024,4096\n");
-+		return 0;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+}
-+
-+static const struct scrub_ops cxl_ecs_ops = {
-+	.is_visible = cxl_mem_ecs_is_visible,
-+	.read = cxl_mem_ecs_read,
-+	.write = cxl_mem_ecs_write,
-+	.read_string = cxl_mem_ecs_read_strings,
-+};
-+
-+int cxl_mem_ddr5_ecs_init(struct cxl_memdev *cxlmd)
-+{
-+	int nmedia_frus; /* number of memory media FRUs in the device */
-+	int ret = 0;
-+	struct device *cxl_scrub_dev;
-+	char scrub_name[CXL_MEMDEV_MAX_NAME_LENGTH];
-+	struct cxl_mbox_supp_feat_entry feat_entry;
-+	struct cxl_ecs_context *cxl_ecs_ctx;
-+
-+	ret = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_ecs_uuid, &feat_entry);
-+	if (ret < 0)
-+		goto cxl_ecs_reg_fail;
-+
-+	if (!(feat_entry.attrb_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
-+		goto cxl_ecs_init_exit;
-+	nmedia_frus = feat_entry.get_feat_size/
-+				sizeof(struct cxl_memdev_ecs_feat_read_attrbs);
-+	if (nmedia_frus) {
-+		cxl_ecs_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx), GFP_KERNEL);
-+		if (!cxl_ecs_ctx)
-+			goto cxl_ecs_init_exit;
-+
-+		cxl_ecs_ctx->nregions = nmedia_frus;
-+		cxl_ecs_ctx->get_feat_size = feat_entry.get_feat_size;
-+		cxl_ecs_ctx->set_feat_size = feat_entry.set_feat_size;
-+
-+		snprintf(scrub_name, sizeof(scrub_name), "%s_%s",
-+			 CXL_DDR5_ECS, dev_name(&cxlmd->dev));
-+		cxl_scrub_dev = devm_scrub_device_register(&cxlmd->dev, scrub_name,
-+							  cxl_ecs_ctx, &cxl_ecs_ops,
-+							  cxl_ecs_ctx->nregions);
-+		if (PTR_ERR_OR_ZERO(cxl_scrub_dev)) {
-+			ret = PTR_ERR_OR_ZERO(cxl_scrub_dev);
-+			goto cxl_ecs_reg_fail;
-+		}
-+	}
-+
-+cxl_ecs_reg_fail:
-+cxl_ecs_init_exit:
-+	return ret;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_ddr5_ecs_init, CXL);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 1d0fad0dc5ae..4da0b0ec3b1e 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -972,8 +972,10 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
- /* cxl memory scrub functions */
- #ifdef CONFIG_CXL_SCRUB
- int cxl_mem_patrol_scrub_init(struct cxl_memdev *cxlmd);
-+int cxl_mem_ddr5_ecs_init(struct cxl_memdev *cxlmd);
- #else
- int cxl_mem_patrol_scrub_init(struct cxl_memdev *cxlmd) { return -ENOTSUP; }
-+int cxl_mem_ddr5_ecs_init(struct cxl_memdev *cxlmd) { return -ENOTSUP; }
- #endif
- 
- #ifdef CONFIG_CXL_SUSPEND
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 86bba8794bb4..75ce4f41c5c0 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -886,6 +886,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	 */
- 	if (cxl_mem_patrol_scrub_init(cxlmd))
- 		dev_dbg(&pdev->dev, "cxl_mem_patrol_scrub_init failed\n");
-+	if (cxl_mem_ddr5_ecs_init(cxlmd))
-+		dev_dbg(&pdev->dev, "cxl_mem_ddr5_ecs_init failed\n");
- 
- 	rc = devm_cxl_sanitize_setup_notifier(&pdev->dev, cxlmd);
- 	if (rc)
--- 
-2.34.1
-
+Unless the proposal is to place the weights as a global cgroups value,
+in which case I think it would be better placed in default_mempolicy :]
