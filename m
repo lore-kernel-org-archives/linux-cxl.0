@@ -1,220 +1,152 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF7826AC0
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 23:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725947E;
+	Wed, 15 Nov 2023 05:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7rW5OCY"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C04DD
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Nov 2023 15:05:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ToJD1HbZ"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E5E8E;
+	Tue, 14 Nov 2023 21:58:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700003159; x=1731539159;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Jc2F56u+9AdSoHZrfDvdsAWkwXMOOLlf6woInj4LXeg=;
-  b=K7rW5OCYNuNZncjesdd2cTiUVZvm3hwUuhRkheDusHhnSILAKiZ76a2+
-   FPMmM38Q+EwOXBB4qwKHolNs7OZF2tPHtbYjClWuyE4ssBu7Fxsqx1mMO
-   rI0bgNsROgmJURiSLxJU7HpMhpWesaRm6p0eeCDgJbp6zpPN3VjlAX6A6
-   XT1ajl0J55i8YEqtGyScL+WpBzxUZf9hDe59bI1kwE1CBKBfJkVNb1DYC
-   Uf/49Jhj4AlNo5ZBH2hLKTweQEKRkl8FE2dH2IvnRgeYkTjjemGaOloO2
-   bNW+tSHCCBMwvOT/eRK5raHQaa32QxU0d4F8sASkk6wD7JGxFrdZyWad3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="12308587"
-X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="12308587"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:58 -0800
+  t=1700027939; x=1731563939;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=NQ+2z4Rav2ZbtZH8OQfdAniDcS40hfa5W0SOiCZegZ4=;
+  b=ToJD1HbZ/UdqNEC/Ka2FUr+u241GhxeyQB0/cnMp57Lv1OypsiyOi+K7
+   73ySd4EFvpH/DxYOoMEndJa575ltwodKP4jQpLfK0HeOx6Hoz6POmMwx3
+   YoNOTJ+i/PCAKnOCXENh/XrwNugLIeVut80Qfi1IqsNomSv40Tohk2iup
+   ymA9RsWuKqdSBPOrkTdDRzHS+aH9aGXwurzZ9XrpnLgiJPKFDxi12cefe
+   5D009BqSGrdtWWo0Vm8uE82Xoxz0dQK86wGX6+JN7nlTHA77ps6sEDWza
+   BwObLscnfvPiHa2PfN07ji3X7oCOrI7GElzNUrvxHu9rsnFefbeFlfDSH
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="381212929"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="381212929"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 21:58:59 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,303,1694761200"; 
-   d="scan'208";a="12586033"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.87.32])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 15:05:58 -0800
-Subject: [PATCH v12 18/18] cxl: Check qos_class validity on memdev probe
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Tue, 14 Nov 2023 16:05:57 -0700
-Message-ID: <170000315736.1974471.2536413193288738547.stgit@djiang5-mobl3>
-In-Reply-To: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
-References: <170000290509.1974471.16084327074615798619.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="1012165444"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="1012165444"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 21:58:54 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>, Michal Hocko <mhocko@suse.com>
+Cc: "tj@kernel.org" <tj@kernel.org>,  John Groves <john@jagalactic.com>,
+  Gregory Price <gourry.memverge@gmail.com>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+  "linux-mm@kvack.org" <linux-mm@kvack.org>,  "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>,  "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>,  "akpm@linux-foundation.org"
+ <akpm@linux-foundation.org>,  "lizefan.x@bytedance.com"
+ <lizefan.x@bytedance.com>,  "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+  "corbet@lwn.net" <corbet@lwn.net>,  "roman.gushchin@linux.dev"
+ <roman.gushchin@linux.dev>,  "shakeelb@google.com" <shakeelb@google.com>,
+  "muchun.song@linux.dev" <muchun.song@linux.dev>,  "jgroves@micron.com"
+ <jgroves@micron.com>
+Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+In-Reply-To: <ZVOzMEtDYB4l8qFy@memverge.com> (Gregory Price's message of "Tue,
+	14 Nov 2023 12:49:36 -0500")
+References: <20231109002517.106829-1-gregory.price@memverge.com>
+	<klhcqksrg7uvdrf6hoi5tegifycjltz2kx2d62hapmw3ulr7oa@woibsnrpgox4>
+	<0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
+	<ZU6pR46kiuzPricM@slm.duckdns.org> <ZU6uxSrj75EiXise@memverge.com>
+	<ZU7vjsSkGbRLza-K@slm.duckdns.org> <ZU74L9oxWOoTTfpM@memverge.com>
+	<ZVNBMW8iJIGDyp0y@tiehlicka> <ZVOXWx8XNJJNC23A@memverge.com>
+	<ZVOn2T_Qg_NTKlB2@tiehlicka> <ZVOzMEtDYB4l8qFy@memverge.com>
+Date: Wed, 15 Nov 2023 13:56:53 +0800
+Message-ID: <87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-Add a check to make sure the qos_class for the device will match one of
-the root decoders qos_class. If no match is found, then the qos_class for
-the device is set to invalid. Also add a check to ensure that the device's
-host bridge matches to one of the root decoder's downstream targets.
+Gregory Price <gregory.price@memverge.com> writes:
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> On Tue, Nov 14, 2023 at 06:01:13PM +0100, Michal Hocko wrote:
+>> On Tue 14-11-23 10:50:51, Gregory Price wrote:
+>> > On Tue, Nov 14, 2023 at 10:43:13AM +0100, Michal Hocko wrote:
+>> [...]
+>> > > That being said, I still believe that a cgroup based interface is a much
+>> > > better choice over a global one. Cpusets seem to be a good fit as the
+>> > > controller does control memory placement wrt NUMA interfaces.
+>> > 
+>> > I think cpusets is a non-starter due to the global spinlock required when
+>> > reading informaiton from it:
+>> > 
+>> > https://elixir.bootlin.com/linux/latest/source/kernel/cgroup/cpuset.c#L391
+>> 
+>> Right, our current cpuset implementation indeed requires callback lock
+>> from the page allocator. But that is an implementation detail. I do not
+>> remember bug reports about the lock being a bottle neck though. If
+>> anything cpusets lock optimizations would be win also for users who do
+>> not want to use weighted interleave interface.
+>
+> Definitely agree, but that's a rather large increase of scope :[
+>
+> We could consider a push-model similar to how cpuset nodemasks are
+> pushed down to mempolicies, rather than a pull-model of having
+> mempolicy read directly from cpusets, at least until cpusets lock
+> optimization is undertaken.
+>
+> This pattern looks like a wart to me, which is why I avoided it, but the
+> locking implications on the pull-model make me sad.
+>
+> Would like to point out that Tejun pushed back on implementing weights
+> in cgroups (regardless of subcomponent), so I think we need to come
+> to a consensus on where this data should live in a "more global"
+> context (cpusets, memcg, nodes, etc) before I go mucking around
+> further.
+>
+> So far we have:
+> * mempolicy: updating weights is a very complicated undertaking,
+>              and no (good) way to do this from outside the task.
+> 	     would be better to have a coarser grained control.
+>
+>              New syscall is likely needed to add/set weights in the
+> 	     per-task mempolicy, or bite the bullet on set_mempolicy2
+> 	     and make the syscall extensible for the future.
+>
+> * memtiers: tier=node when devices are already interleaved or when all
+>             devices are different, so why add yet another layer of
+> 	    complexity if other constructs already exist.  Additionally,
+> 	    you lose task-placement relative weighting (or it becomes
+> 	    very complex to implement.
 
----
-v12:
-- Add support to match all QTG IDs (Dan)
-- Do not stop probe if match fails. (Jonathan)
----
- drivers/cxl/mem.c |  133 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 133 insertions(+)
+Because we usually have multiple nodes in one mem-tier, I still think
+mem-tier-based interface is simpler than node-based.  But, it seems more
+complex to introduce mem-tier into mempolicy.  Especially if we have
+per-task weights.  So, I am fine to go with node-based interface.
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index e087febf9af0..2bc5e7ec2723 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -103,6 +103,135 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
- 			 cxl_debugfs_poison_clear, "%llx\n");
- 
-+struct qos_class_ctx {
-+	bool matched;
-+	int dev_qos_class;
-+};
-+
-+static int match_cxlrd_qos_class(struct device *dev, void *data)
-+{
-+	struct qos_class_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
-+	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
-+		return 0;
-+
-+	if (cxlrd->qos_class == ctx->dev_qos_class) {
-+		ctx->matched = 1;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_qos_match(struct cxl_port *root_port,
-+			 struct list_head *work_list,
-+			 struct list_head *discard_list)
-+{
-+	struct perf_prop_entry *perf, *n;
-+	struct qos_class_ctx ctx;
-+	int rc;
-+
-+	if (list_empty(work_list))
-+		return 0;
-+
-+	list_for_each_entry_safe(perf, n, work_list, list) {
-+		ctx = (struct qos_class_ctx) {
-+			.matched = false,
-+			.dev_qos_class = perf->qos_class,
-+		};
-+		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-+		if (rc < 0)
-+			return -ENOENT;
-+
-+		if (!ctx.matched)
-+			list_move_tail(&perf->list, discard_list);
-+	}
-+
-+	return 0;
-+}
-+
-+struct qos_hb_ctx {
-+	bool matched;
-+	struct device *host_bridge;
-+};
-+
-+static int match_cxlrd_hb(struct device *dev, void *data)
-+{
-+	struct cxl_switch_decoder *cxlsd;
-+	struct qos_hb_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+	unsigned int seq;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	cxlsd = &cxlrd->cxlsd;
-+
-+	do {
-+		seq = read_seqbegin(&cxlsd->target_lock);
-+		for (int i = 0; i < cxlsd->nr_targets; i++) {
-+			if (ctx->host_bridge ==
-+			    cxlsd->target[i]->dport_dev) {
-+				ctx->matched = true;
-+				return 1;
-+			}
-+		}
-+	} while (read_seqretry(&cxlsd->target_lock, seq));
-+
-+	return 0;
-+}
-+
-+static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_port *root_port;
-+	struct qos_hb_ctx hbctx;
-+	int rc;
-+
-+	root_port = find_cxl_root(cxlmd->endpoint);
-+	if (!root_port)
-+		return -ENODEV;
-+
-+	/* Check that the QTG IDs are all sane between end device and root decoders */
-+	rc = cxl_qos_match(root_port, &mds->ram_perf_list,
-+			   &mds->unmatched_perf_list);
-+	if (rc < 0)
-+		goto out;
-+
-+	rc = cxl_qos_match(root_port, &mds->pmem_perf_list,
-+			   &mds->unmatched_perf_list);
-+	if (rc < 0)
-+		goto out;
-+
-+	/* Check to make sure that the device's host bridge is under a root decoder */
-+	hbctx = (struct qos_hb_ctx) {
-+		.matched = false,
-+		.host_bridge = cxlmd->endpoint->host_bridge,
-+	};
-+	rc = device_for_each_child(&root_port->dev, &hbctx, match_cxlrd_hb);
-+	if (rc < 0)
-+		goto out;
-+
-+	if (!hbctx.matched) {
-+		list_splice_tail_init(&mds->ram_perf_list,
-+				      &mds->unmatched_perf_list);
-+		list_splice_tail_init(&mds->pmem_perf_list,
-+				      &mds->unmatched_perf_list);
-+	}
-+
-+out:
-+	put_device(&root_port->dev);
-+	return rc;
-+}
-+
- static int cxl_mem_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -174,6 +303,10 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_qos_class_verify(cxlmd);
-+	if (rc < 0)
-+		dev_dbg(dev, "QoS Class verify failed\n");
-+
- 	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
- 		rc = devm_cxl_add_nvdimm(cxlmd);
- 		if (rc == -ENODEV)
+> * cgroups: "this doesn't involve dynamic resource accounting /
+>             enforcement at all" and "these aren't resource
+> 	    allocations, it's unclear what the hierarchical
+> 	    relationship mean".
+>
+> * node: too global, explore smaller scope first then expand.
 
+Why is it too global?  I understand that it doesn't cover all possible
+use cases (although I don't know whether these use cases are practical
+or not).  But it can provide a reasonable default per-node weight based
+on available node performance information (such as, HMAT, CDAT, etc.).
+And, quite some workloads can just use it.  I think this is an useful
+feature.
 
+> For now I think there is consensus that mempolicy should have weights
+> per-task regardless of how the more-global mechanism is defined, so i'll
+> go ahead and put up another RFC for some options on that in the next
+> week or so.
+>
+> The limitations on the first pass will be that only the task is capable
+> of re-weighting should cpusets.mems or the nodemask change.
+
+--
+Best Regards,
+Huang, Ying
