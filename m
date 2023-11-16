@@ -1,88 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kGBSmUHc"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B25A7
-	for <linux-cxl@vger.kernel.org>; Thu, 16 Nov 2023 06:08:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="co2OViqS"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900DD192
+	for <linux-cxl@vger.kernel.org>; Thu, 16 Nov 2023 08:27:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700143733; x=1731679733;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Iao+AcClakc7jeBh2ZJTN24RjgQ9DKx24fVJHafyebo=;
-  b=kGBSmUHccNgD/YPpZScF34AZ1a9gvPdbdII/6GeeLGw13NvgFR8UFYhC
-   wnkioR7Iuf8alGVo282R0P+9e+htBM5MGE+xgpaGJQDgt798vZUMJDKxB
-   1qlQREiWdaja6GpvJZpQjrL2xdEsXS96i4c9+Kvj3vLj1YvF0rEkTRA4o
-   Tq7CAdfpEQbNfqUJm0aXQdrSIhMv4b6Lv3mV+Fj/+/rM4KxH9hL8vV7ZH
-   PkQNAya3zhTMLlPkeIn3j5GnKdx4Qp6qEVJzjnoOGKn3Q1C4ipVF1HYOs
-   nDISyHVoz1s2GlTjmeBvaF4FeWZPpaSj6UKYktOshE7M+rheaUV/is4ep
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="376137138"
-X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="376137138"
+  t=1700152033; x=1731688033;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MsLEPscoIO4fBHzq/DuzDC5ssZpFZ/+qyRMnDHAgRg8=;
+  b=co2OViqS0Y/3etG+GeO4bvI7OfpmPDq1CA2zF2ei27Ay4qR4Ek/qM5Iw
+   j6/AgEwp2Na5xsOeyjxTLwX/isyWJu020kxjGtPAah2vQqHG/udXecDjA
+   3cBairMwz1YAhuvLq1jfU3K3suJXpkj2j3pEpWFNfNRznou6Hy0u+O8yL
+   2peWZMQjJT/sPMAUdiuJx/r4yi/r070Sch8+Yrc0T6rtTcttXLpLdyCRJ
+   rn5jTCuJPLv9Ctbvnq5akxcFAFmXQ4YmsXBSl1WzhQLDO46JkmPjxwWlF
+   v/qvE9SPtCyC0bumbm2jyM2WJIqzJwtOhIJRGikXpyHToZsvMRYcw9SCf
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="389978066"
+X-IronPort-AV: E=Sophos;i="6.04,204,1695711600"; 
+   d="scan'208";a="389978066"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 06:08:29 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 08:27:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="882759417"
-X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="882759417"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Nov 2023 06:08:28 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="882802878"
+X-IronPort-AV: E=Sophos;i="6.04,204,1695711600"; 
+   d="scan'208";a="882802878"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Nov 2023 08:27:12 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Thu, 16 Nov 2023 06:08:28 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2507.34; Thu, 16 Nov 2023 08:27:12 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Thu, 16 Nov 2023 06:08:27 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Thu, 16 Nov 2023 06:08:27 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.34 via Frontend Transport; Thu, 16 Nov 2023 08:27:12 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Thu, 16 Nov 2023 06:08:26 -0800
+ 15.1.2507.34; Thu, 16 Nov 2023 08:27:12 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N9HQOaL7z2CUrVOhxHjL8g/7mKRkJvNhdk7uEHnoKP+q27lT8q47A9c1VHt06upjPUw8xWVBFYI4u4ePON630BnHXgtGqUcNgn7XOW9LmYCuR+06cavyVvlh5luvjOZa5FmYOlE651VsTenZEwl3Rgp5nmzeltmrfMDLKlutHxS3wNACCWFze2vG3H/TVJdC6k//dmN78YDcw1OwoJzJYpPcEnVFSluuRMx0g/2c7AfFkyMFJhKlH2BGvU28EvIyfqTWqRtGKorfc9RkhRnE9YejCQcRgi75f77wC1REYCuIs96fFROsqQji72VB0EVWyiw7kgH1IGyBRt8M0KtdDg==
+ b=baJQsBzmdLoVvCd1TJ/npoLY1YjC8VtsN0u3MjEqGnnTZBiORRsToAj/qjMpMU1yGbSgwSNoefZo5tl6+lgMtCstdvGl5xfSDEVQXxHqdihRKKH1CY+XrlV6w5h61COIUGnlDyKtVWePXqq9zYdU93Ulr+N65E2xQucSC6/W2v+eSGuRddJxEnWxdfJ5smfok9ro6n3t2K5uOiq0MvGx4ytB2xOdj6xVQA7NJgbKmRnryfkH8ayDouNmb6/F03JOBYzeK26PvQn+Qv3CP6PdGRT3lgBN7+OGp703AvW3E5jKFjZLVNTSj8nUVUP4gWwiBpTT6KSYDaT/x6orwCbyjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0a2FNZv9w2OpoghvWMkxsKZ/ZtUcXBUJzAinaquPQfs=;
- b=UlLoBvySv/o6x7GCq6y8ZCUKVgMyme42eymEGDfxqpEeb+9Y/llq+RFPWlGw2nkMOxIQOsmHsMpVtlhscdtarf7OGRqfI8HSfQx9vJyFKhjVbemjfD2gRMa1ntnQ+lrj6W2J5bZlhYMxze7+fR44vo5s4kmH+5u+cMjq2P94EQvqxxOLqSs9V0D2fQMgm9YNRivlKF/552FVhv9jyD1WwkOeSef3j75DT/avm1Dtds02rPfJW2WhCLcc2XIc6g3dhI1bYyFmfKSTzrA3kBvQxSPeZ+DRYHOk4QZbDRhWgsqPGf2/X3duCgaDplqANj3d5+eLrEtD1uuq533sqR+U+w==
+ bh=FdNmHtkqtMsjsqPUOMXFHDw9R1HPJmUfyNKm3ioD4rQ=;
+ b=RvEgUgwMxzPpQT3dAZIqZTLvFuOpCS9q5L7gQlTQ57v3I6AhYRROhvp+CN+xszHZzoY5Gl8quu/lhsEbZAaOAQuWY2zeRLd/7o5zvqiJG+TjY3tRFoB5HRVbS2ZMOtCn5pahafHnkddZ1tQ9ZvWlucUeZYa8hCh1vRiMBdvNByuUPBC8aHJEPsZ4THPLqOgGQf4U0vrYprywyajE+6Jl/cnijjMNKLCNAA8SDdcrPSGNd55wA4fnxDt4zxu5INd3v8K2xlK13sVu21vPFKuq6T5s5awy2tbj/N4AaN0modM1eQ2rlmBQ7VPAc3fl7t90ZhNJUSic2V+D9kSZF/ejCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA1PR11MB7037.namprd11.prod.outlook.com (2603:10b6:806:2ba::10) with
+Received: from DS7PR11MB5990.namprd11.prod.outlook.com (2603:10b6:8:71::5) by
+ LV3PR11MB8727.namprd11.prod.outlook.com (2603:10b6:408:20d::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.20; Thu, 16 Nov
- 2023 14:08:24 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::a49a:5963:6db:77ce]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::a49a:5963:6db:77ce%5]) with mapi id 15.20.6977.029; Thu, 16 Nov 2023
- 14:08:24 +0000
-Date: Thu, 16 Nov 2023 06:08:19 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-CC: <linuxarm@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 4/4] cxl/pci: Add support for stand alone CXL Switch
- mailbox CCI
-Message-ID: <655622531e942_46f029416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20231016125323.18318-1-Jonathan.Cameron@huawei.com>
- <20231016125323.18318-5-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231016125323.18318-5-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: SJ0PR05CA0025.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::30) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2023 16:27:10 +0000
+Received: from DS7PR11MB5990.namprd11.prod.outlook.com
+ ([fe80::66f8:2b23:6ddb:e566]) by DS7PR11MB5990.namprd11.prod.outlook.com
+ ([fe80::66f8:2b23:6ddb:e566%5]) with mapi id 15.20.7002.015; Thu, 16 Nov 2023
+ 16:27:10 +0000
+Message-ID: <37212b16-9176-497b-a2e2-26943acfdcb6@intel.com>
+Date: Thu, 16 Nov 2023 09:27:07 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH] cxl: Convert pioson ops rwsem usages to scope based
+ resource management
+To: Alison Schofield <alison.schofield@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+References: <20231114025342.1123681-1-alison.schofield@intel.com>
+ <169998626910.1958731.10157698499207717733.stgit@djiang5-mobl3>
+ <ZVVVH8ITotdk1nyN@aschofie-mobl2>
+ <c35ce419-4881-4cb9-999e-d3034ecad8ab@intel.com>
+ <ZVV7nYEFHVuXskm2@aschofie-mobl2>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ZVV7nYEFHVuXskm2@aschofie-mobl2>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR02CA0069.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::46) To DS7PR11MB5990.namprd11.prod.outlook.com
+ (2603:10b6:8:71::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -90,393 +89,205 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB7037:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86708371-f9ca-494f-03d5-08dbe6ad7ed4
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5990:EE_|LV3PR11MB8727:EE_
+X-MS-Office365-Filtering-Correlation-Id: f160ef0d-7b68-4868-2037-08dbe6c0e1ff
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 70LEYgldvZTNC87WZ0aDp1jzPgnlHNd8JsBHK8hvMVPM+VlhTULDQUzfCfK/bZ9oLT1dsAdXZjjkSZXxoP/+9r+uF6VBo2VSyhjI4XsAskS9f/A1yLdL3eWl4QY0Pg9Q+Klfc/r2OhvsJUzngoGLhhS98tPvTywc4kyFELa7jznXvEjgGJbz903Ble4wrgs4PUy+ZkTlDpdhu8H1rgfCbyNVdo5dJlWkrSNiyB47xLey91T2dqhIhhBzPilrOzDdOYFcnIWwfc3lkKS5dxgIdzKsM1X5WKwYjXiYAROACXr6unNvmyD3wlfey9xgQiYqSAKfsThWka+rKnyadhqeOZeSmAXIC1XUqeGPvIVMN+j40YSjLKzQdN+1Gf5rAtoVSl/blT1G4YhIM2nJZFci1VU/P6g8ah5pi6fA6162K0qczw8PClwLVb2ocsLGrwIDs9R1rPJjc/zCiW1M1tIXDXo3UqLXBt+pTFicS0APWAWIq5R1PAu6wmJDzPj3rLa8aUntCuERgaOkZjc/gRyeVGeWceaFtTEmddejvjxE6u0t032eqaEhNtojhw7mPFwa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(346002)(396003)(366004)(136003)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(8676002)(4326008)(8936002)(6506007)(6486002)(110136005)(478600001)(86362001)(66946007)(316002)(6666004)(66556008)(66476007)(83380400001)(9686003)(6512007)(82960400001)(26005)(2906002)(30864003)(15650500001)(5660300002)(41300700001)(38100700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: ZJFyAOcGYR++OV0Gtl7mycprp9MSd100AtOvlwvRGnpja3XseJ6EFe2b5UhNO4YenWm2phqRo1X/lpjd1IWzF61ye0J3dFTKr72Fcun7Pd6pzRmbEeM4piTG9U9ujPtmFe6v00gpg2OrnJgg2IKsC93zLPizLw9CjVRfvkTVHssi4pTZXxusu8cc0JTONurLsBCCKXsWuzqbseuv48TFKVh9elw98rO/Xv2C9t/6OgH3R1XkKJYE4NaLUWEpKxVqsLrrrfXWWY+ouAU6D1PUgBxo+nKrMIKWLtRSQTFL43JV/VxvyyDuk8b6WpHIsxk+5MLIn9HBm6CUC3ZGqaojin59Ij6/hB2e3HLRjDzc0f/6gaOP8tJzHrY38Dq1S+yDarWymnNFnZX5gj28OfPb0f1vp+SHW/kFQk9FFMbpJ/p4fPviPnPoIQL3VbZrdjFT6TnkQSt85u7AAkDHr59IpiM5trG0xRsBIbDwOiFPQD7i3iFXeuKbDP1gddSoWlug1qG+j1C9t8vsYaKY7n+Qps1UDcghGsoq8Ycb0JNKmv3FOAon1RRmP/vN1b0gKKQdwoi05mIJpLSgPpgFCrSqg9CAtx/XGuh0X2/tc1MUKAyLZY2x6dCIfSqjLVpsTC+N
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5990.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(39860400002)(366004)(396003)(346002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(86362001)(6666004)(31696002)(478600001)(8676002)(6636002)(6862004)(8936002)(4326008)(53546011)(6506007)(316002)(37006003)(66476007)(2616005)(107886003)(26005)(66946007)(31686004)(66556008)(44832011)(82960400001)(6512007)(6486002)(83380400001)(5660300002)(2906002)(36756003)(38100700002)(41300700001)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1LPLvSHCbForadSMZadi9lj4Oll6XMg3WhclT1tj0Vw9ORxEK/3ft8XjfE6J?=
- =?us-ascii?Q?MwwT1ld9sVecQX4jAZvd0/AiNODSc+bkEGlc1xHl3NzhPuLKJkVcScNdaHo5?=
- =?us-ascii?Q?1vqlBkWFjG9YQrzpVOI8btUNEdHXCiZlEVbw0AfJLukHg8yM5iTKO/S9eyXt?=
- =?us-ascii?Q?KX5SQOla5RPR7fqSVeN/L9DDgjDv4pQp9ehwY9qf6VnKMqytwqIohDCY4sOv?=
- =?us-ascii?Q?+s89scHPLJI0p2MI8MrHDSdXre519h68aDRe9+lRSaIxBnXES79+nyEHwRoF?=
- =?us-ascii?Q?WQlSvhp0+9/fIn3UJmaf3Dz/kG0SzDLtUwM0AmpYFZOXJNpvfkd+ZgfIl5Bh?=
- =?us-ascii?Q?MQjGcKk5EbSWLkvWAhqhCfx4RmN+xqFeJfGbNu0s8Qo42KWyoVb+dIPwroBy?=
- =?us-ascii?Q?xLLgb5sJjwF1+vnvBy3ss35Fk8VS3ieaGhLtFC1MAwTfgeJHtPUtXYwDmB4M?=
- =?us-ascii?Q?G6oK/XSAH9vEw79qeJZZ8Wy6VIXYUt4EmJyEDoj93bnGowOpBJfXlNM+qWYk?=
- =?us-ascii?Q?qu5GIIUMawsDR9Z0j/dmE4bSDXfvX8NgGLtCeF82jwyreHHaSiOnOjBry+H3?=
- =?us-ascii?Q?XvzZTOUQsklAecZU932ANJX+WSlsoUis8ipBRxATGTd7zgflqX4HHeoC1ZpE?=
- =?us-ascii?Q?Iea94tYTqUAYkspvHyrMzjk5nvOVNZyYzR2RhlqDyu/UlbEqcAsZCDZX1Un6?=
- =?us-ascii?Q?kR0/cY1WPRt1XoToOLvoFZBsxOpKEX+x+5zhPKwqM1P+QWvaZ2qh+VfYuOpY?=
- =?us-ascii?Q?O56mtQB5Hm0gYEbyMwBiIMBffpFQJ52TXmi+zQZPCt5J9+yLif4m2MlNJ58F?=
- =?us-ascii?Q?5PuxAYnQZg5S4UJfNth58O98NVR31+mW1v/60MG2ueWrf0qfdXAju7ZhG0ju?=
- =?us-ascii?Q?bwNNnFWHVY0VMUoPxAy7ijIdQICDZvhdbdQu+yL5EYHH3Wp8Yc3bsk4EFkvA?=
- =?us-ascii?Q?w1g7zqjgFXKUFh/Nc4W4ARa5q7J+bMMuXRoIDTu4MIIMawwhmCnOHn+G51Qx?=
- =?us-ascii?Q?tSI12nP/T2n/ElH9Evq5HxzU+U8/XruLd/fmQix3g1ZH0e2NPFrAaAEsTU16?=
- =?us-ascii?Q?b+Q3pIbNWr47Ph5CuIL5Th3VPCcBEaes2Zq/Y0IX2TjVVJ0hMCepqlFXfJys?=
- =?us-ascii?Q?Uo/6rJFnZI2AOO7vTulsRKXlPckQW0Y77GyDvmikzGPhs+w4jd2FAYHCYCN5?=
- =?us-ascii?Q?ME/85gE++qW2+1PPH1AAf6jTsJY9tOPQHNYjrQJNa94Va4sNw2Jk5Lc2mrF9?=
- =?us-ascii?Q?/gL+GnuvOC2SzfEBnGZ7PcfaJl0h0QAygACmhWDeeIlx0mUIoPBmIj8oGqXF?=
- =?us-ascii?Q?LpFRseOs2Nko0XiK+Xv24Q9A/hraP5dZEvGsHC663RZpPP3UVCAx1GOnvWF2?=
- =?us-ascii?Q?N+62N/T3b4brN/3j6k992kCpMilgQFcHCuXHVlCrdmsjgdRJp/BSdQ8UzeAH?=
- =?us-ascii?Q?sUNgLytNYvCpXfe57gRkPn51GOPFwQte9nhLSW8dV6fWcK6lp1JK9jhoj1SV?=
- =?us-ascii?Q?ocxb/Dym3yjH42JTntlbIi7GXZ2M3oV3Y9rkDEE5K1sJegNY5+BzkoVM55Ad?=
- =?us-ascii?Q?Te1jtutvlVvZekh6p2lk6Qi8z84UUetjJht1pwhYFpGxTJm4af5iUJjnr8Ki?=
- =?us-ascii?Q?Hw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86708371-f9ca-494f-03d5-08dbe6ad7ed4
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V0pzdGlpTGhyK2t2djBBSTc0NzREY0tBOEVxcmVZNTN2cTkxYXlYSWFpVVFK?=
+ =?utf-8?B?eDNrNUU0WlRPcWZtYy9ZVkY4KzRiaVR4bXVBTmYrRTRmMXJtY1g1a0VIMmox?=
+ =?utf-8?B?SzFQVVZzT0s3YWV3QWRtT1Q0cXYxNlExLzVyQUJxQUZjcGx0bktHUmwrMVRL?=
+ =?utf-8?B?R0dDVzk0Ry9iU3AxRnRDdUV5M2RpRnJtNC9ZMFVENEVFZ1JHMERPcXU5Yi9k?=
+ =?utf-8?B?ZGg4VUxRWDdMa2MzaFlSZGRBQWZIaU1LdE93VmFSTmNRbi9YVUw1anE3MGZZ?=
+ =?utf-8?B?cFN0b1d5cTNqMU9QWHkyektVTFdYNGZRK3oyZWxxbW9uQ3dEU0FtRFlhZTJV?=
+ =?utf-8?B?YW82TkI2RGtSYnpVb2NCZWVLN3BjWTh6VktZaWUyNnJycHVhSUJHbkFSc1U3?=
+ =?utf-8?B?WGtHU0xRNXJXeW9QbzBVWlIrVEtZeUs4K3NWeTRTZXk2TXdhQWxtb2JlR1d0?=
+ =?utf-8?B?aTliTWdnTWlRUmlneHd2R2dsaG1hdGNHVndaMk1qLy9RTXR2WlBlb3ZWUTRt?=
+ =?utf-8?B?MlVEbS8xd0pCYVVTWEF1ZVdQZ1YwK09NV0lDbmdRWG5LYWlBaW5JS0dTakg5?=
+ =?utf-8?B?VmIzcHdtd3ZJVVBKN0p1VUMrUFpGZG14WG5IRlFsSlgvRjJzMXBKQnJKSVJZ?=
+ =?utf-8?B?SW41dk5EOXdjdWtUbmVzWTRpUEVmNUN6L1FCMmlwdXgzdE1lZjRyVDFRTkQw?=
+ =?utf-8?B?RERQZUpCeWkyMFVXVUEwYlNUYmE0TUcvNFJ2b3RIS3JhZnZnUTI4ajhuZklo?=
+ =?utf-8?B?MnZab2UvSkFVMHRnVmUwbnJsdk82R2ZRV3FlR2o2SllWM2lUcjN1b3dtQnhB?=
+ =?utf-8?B?ZTJrenBlUDF0UGhycFZtN3FRa0JkeHVhRTFYNmluZUlZdjk4aWp1Y2FCUG5u?=
+ =?utf-8?B?dE8yR3FrWklaNkRuM0N1a3F1VXNyVlEwbkxKOFJFdmpieU16RmNrZmp4KzFO?=
+ =?utf-8?B?ZUVKQ0I1R3RYa2IwTll5QUpLbWdyV3UrSDFPbUpUMHBNd25EMTNVL0JvNDJo?=
+ =?utf-8?B?anNCMEJobHpCSGdQWUVXTGFuQ2VBRTF0dExaVGs4VGQyak5EUjhMVWJKcWp3?=
+ =?utf-8?B?UHdKTFZrK0RGaENiMDd4Zlh6amtzdlVrQTRldStrcytvb3JLemtYV3M3ZUVN?=
+ =?utf-8?B?OThoYStSTytOOXR5RXJLcXk5RGNIQTRvU292SU9kM0RTczNRbG9HNkt6TlZX?=
+ =?utf-8?B?UllhSkszajRndDF2bm9QeCtHcDdsU05XNE5KNCszSER1bGJ4OFBkcHZYNDBJ?=
+ =?utf-8?B?eG1WZzRhS1ZPS1VMVzBRTTdmNFMxUkw4SitjVTZKZmV1ejJGenI2cXd6UzAr?=
+ =?utf-8?B?OGhrVDN6L01vUkxPTmV4bHVtWUFRbFB5dWpSQ1Ywc1V5M1RxNGx6RG81azhT?=
+ =?utf-8?B?SEZadzRneXdFeFo4amp0M0hWeHNxekJSVWNrVTkra2o0ejJYeTFidzlIS1hY?=
+ =?utf-8?B?NFFSUUI2OTNXc2I1OFRtL3N2aEI2Q09pWHI4Vy95VmhKRStkcTFnL0JCSFdG?=
+ =?utf-8?B?Ylg4bk1Tc0dSbnlkeTVicUVKV0hjTVhNNkpwL0RRTWhvSHBTRThQbTJ3cnF0?=
+ =?utf-8?B?ZkdnQ1EwK1ZmM1pDYTdYMXl5ZEhIVjRlSWZiT0V2MUFaUXF0ZHZiT0szWFho?=
+ =?utf-8?B?MWlNS01LbHZOVjFwU2dNd2hvUVNKemFvdmxsVEgrVmFkWVJhTUZ6ZndkaDJw?=
+ =?utf-8?B?ZHBtQi9IQjVtdlJWRDBCWXROdlFrQzc1SFNqWjZXSFpINTRwT0tsdDhYUFZ1?=
+ =?utf-8?B?dDc4WFM5TGJHWlE2QzliY2FFalgwUCtaUnBESWhQTVJ1RGJMY1I2a1VKRkds?=
+ =?utf-8?B?ZXBtRnI5bWhDUXZiWTY0YlAvZmtPT08yT1p1ZUlLelR3SnlEREc2dklZeFRo?=
+ =?utf-8?B?eGxtNFVwVDNvSlIxQW9UZmtDaThzcUIrZUpaOW9aeUZtK2g5bURpbUdzcHNX?=
+ =?utf-8?B?dkd0MG0vQXdkWm0veEZsVkd1cFdrRXVCNU95OVZUMXVkamxUWnpqYk9xNUU3?=
+ =?utf-8?B?VDlSZFFPdUErZ3pxMEpKUEYzbUJ4T3hxL0VoRWhXQ3R3UGIvV2s4TkdDTEU1?=
+ =?utf-8?B?amRKWUJlSVRkZGM3YTZmVU5UNmxwYk1vTG5oSHh6WjJRanV3YkdKRU5NTWxj?=
+ =?utf-8?Q?FMHs/hxcFcGh+dOQT5jC0wU1q?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f160ef0d-7b68-4868-2037-08dbe6c0e1ff
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5990.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 14:08:23.6613
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 16:27:10.4397
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8+WkGTCQZohhoI4r5ch0M926iBLHDjIvwBZ1xVh+X+PZJ3rzB34mUfoszLZzfcM5Jaod2JpmJFhbHGpTUhOxMi+qgmMnubfXaAudrMDB6E4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7037
+X-MS-Exchange-CrossTenant-UserPrincipalName: OYxK0qEahYQjZMzJmDSE5BbhTfx24W5eR2HHK2LICky+IT7qw6jMmQO6qjwAr+hxzinXyrL1tgrsPlVPBExZ9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8727
 X-OriginatorOrg: intel.com
 
-Jonathan Cameron wrote:
-> CXL 3.0 defines a mailbox PCI function independent of any other CXL
-> components. The intent is that instances of this mailbox will be found
-> as additional PCI functions of upstream CXL switch ports.
+
+
+On 11/15/23 19:17, Alison Schofield wrote:
+> On Wed, Nov 15, 2023 at 04:55:11PM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 11/15/23 16:32, Alison Schofield wrote:
+>>> On Tue, Nov 14, 2023 at 11:25:20AM -0700, Dave Jiang wrote:
+>>>> Cleanup the rwsem usages in the poison ops to reduce complexity and reduce
+>>>> code lines.
+>>>>
+>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>> ---
+>>>>
+>>>> Hi Alison, follow on patch to yours. Can't be backported, but nice clean
+>>>> up going forward.
+>>>
+>>> Tell me more about your backport worry.  Are we expected to avoid using
+>>> the new guard any place where there is a backport possibility?  
+>>
+>> Given that there's none of the cleanup.h support in stable kernels, I don't see how we can backport the guard() code automatically. Thus your original fix with a fixes tag plus a new cleanup patch follow on w/o backport issues seems necessary. Otherwise a separate backport patch would be needed no?
 > 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Sure, it would be needed. I guess I'm looking for why this backport
+> issue is so special. (not being sarcastic). Is there specific guidance
+> not to use the cleanup stuff if we think a patch might be backported?
+> I don't usually consider backportability when adding a Fixes tag to a
+> Patch. Have 'backport folks' asked us not to use it?
 > 
-> ---
-> Non RFC:
->  - Drop adding new commands.  For now kick the security model
->    questions into the long grass but using RAW comamnds only.
-> ---
->  drivers/cxl/Kconfig          |  14 +++
->  drivers/cxl/Makefile         |   2 +
->  drivers/cxl/core/Makefile    |   1 +
->  drivers/cxl/core/core.h      |   9 ++
->  drivers/cxl/core/mbox.c      |   1 +
->  drivers/cxl/core/memdev.c    |  12 +--
->  drivers/cxl/core/regs.c      |   6 +-
->  drivers/cxl/core/switchdev.c | 129 ++++++++++++++++++++++++++
->  drivers/cxl/cxl.h            |   2 +-
->  drivers/cxl/cxlmbox.h        |   1 +
->  drivers/cxl/pci.c            |   7 +-
->  drivers/cxl/switch.h         |  19 ++++
->  drivers/cxl/switchdev.c      | 169 +++++++++++++++++++++++++++++++++++
->  13 files changed, 359 insertions(+), 13 deletions(-)
+> I'm imagining the slippery slope of not fixing something the best way
+> because we are worried that backport folks can't figure out how to
+> merge it.
+
+Just auto backport vs manual backport. And if you don't mind doing the work, then I guess use the new calls. 
+
+
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 8ea1d340e438..2acf4073febc 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -153,5 +153,19 @@ config CXL_PMU
->  	  Say 'y/m' to enable a driver that will attach to performance
->  	  monitoring units and provide standard perf based interfaces.
->  
-> +	  If unsure say 'm'.
-> +
-> +config CXL_SWITCH
-> +	tristate "CXL switch mailbox access"
-> +	help
-> +	  The CXL r3.0 specification defines a "CXL switch CCI" sub-class in the
-> +	  PCI "Serial" base class of devices. Device's identified by
-> +	  this class code provide a mailbox interface to allow control of CXL
-> +	  switch configuration over inband PCI.
-> +
-> +	  Say 'y/m' to enable a driver that will attach to CXL Switch CCI
-> +	  devices enumerated by the CXL switch CCI class code for configuration
-> +	  and management primarily via the mailbox interface.
-> +
-
-Is there anything in cxl_core.ko that the switch driver needs?
-
->  	  If unsure say 'm'.
->  endif
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index db321f48ba52..b98babe05abf 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -5,9 +5,11 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
->  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
->  obj-$(CONFIG_CXL_PORT) += cxl_port.o
-> +obj-$(CONFIG_CXL_SWITCH) += cxl_switchdev.o
->  
->  cxl_mem-y := mem.o
->  cxl_pci-y := pci.o
->  cxl_acpi-y := acpi.o
->  cxl_pmem-y := pmem.o security.o
->  cxl_port-y := port.o
-> +cxl_switchdev-y := switchdev.o
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 1f66b5d4d935..562aa63d225f 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -13,5 +13,6 @@ cxl_core-y += mbox.o
->  cxl_core-y += pci.o
->  cxl_core-y += hdm.o
->  cxl_core-y += pmu.o
-> +cxl_core-y += switchdev.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 5491d3a3c095..676b63193080 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -87,4 +87,13 @@ enum cxl_poison_trace_type {
->  	CXL_POISON_TRACE_CLEAR,
->  };
->  
-> +/*
-> + * An entire PCI topology full of devices should be enough for any
-> + * config
-> + */
-> +#define CXL_MEM_MAX_DEVS 65536
-> +
-> +extern int cxl_mem_major;
-> +extern struct ida cxl_memdev_ida;
-> +extern struct rw_semaphore cxl_memdev_rwsem;
->  #endif /* __CXL_CORE_H__ */
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index dc59c6d1f87f..9a2f38a8a45b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -9,6 +9,7 @@
->  #include <cxlmbox.h>
->  #include <cxlpci.h>
->  #include <cxlmem.h>
-> +#include <cxlpci.h>
->  #include <cxl.h>
->  
->  #include "core.h"
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 15b540bec6fa..b233d6016c55 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -11,16 +11,10 @@
->  #include "trace.h"
->  #include "core.h"
->  
-> -static DECLARE_RWSEM(cxl_memdev_rwsem);
-> +DECLARE_RWSEM(cxl_memdev_rwsem);
->  
-> -/*
-> - * An entire PCI topology full of devices should be enough for any
-> - * config
-> - */
-> -#define CXL_MEM_MAX_DEVS 65536
-> -
-> -static int cxl_mem_major;
-> -static DEFINE_IDA(cxl_memdev_ida);
-> +int cxl_mem_major;
-> +DEFINE_IDA(cxl_memdev_ida);
->  
->  static void cxl_memdev_release(struct device *dev)
->  {
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index b783bf89d687..aeb97daaf9ee 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -268,7 +268,7 @@ int cxl_map_device_regs(const struct cxl_register_map *map,
->  EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, CXL);
->  
->  int cxl_map_mbox_regs(const struct cxl_register_map *map,
-> -		      void __iomem **mbox_regs)
-> +		      void __iomem **mbox_regs, void __iomem **status_regs)
->  {
->  	struct device *dev = map->dev;
->  	resource_size_t phys_addr = map->resource;
-> @@ -277,10 +277,12 @@ int cxl_map_mbox_regs(const struct cxl_register_map *map,
->  		void __iomem **addr;
->  	} mapinfo[] = {
->  		{ &map->device_map.mbox, mbox_regs, },
-> +		{ &map->device_map.status, status_regs, },
->  	};
-> +	int limit = status_regs ? ARRAY_SIZE(mapinfo) : 1;
->  	int i;
->  
-> -	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
-> +	for (i = 0; i < limit; i++) {
->  		struct mapinfo *mi = &mapinfo[i];
->  		resource_size_t length;
->  		resource_size_t addr;
-> diff --git a/drivers/cxl/core/switchdev.c b/drivers/cxl/core/switchdev.c
-> new file mode 100644
-> index 000000000000..72f6b81357d9
-> --- /dev/null
-> +++ b/drivers/cxl/core/switchdev.c
-
-All of this core code mostly looks like something that could be replaced
-by a miscdev. The medev ended up with not miscdev due to trying to
-combine the lifetime of the memdev in sysfs with the chardev, but if
-this is a chardev only interface then maybe it does not need to
-duplicate the cxl_memdev template?
-
-Alternatively if the operations that this is going to perform have a
-formal sysfs ABI then maybe this does not need to bother with an chardev
-at all.
-
-I guess I am missing why Linux upstream wants this. It enables wider
-testing, but to what end? What does the non-debug test bench version of
-this driver look like?
-
-[..]
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index dad80c5857f6..0f0d51730df8 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -279,7 +279,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
->  int cxl_map_device_regs(const struct cxl_register_map *map,
->  			struct cxl_device_regs *regs);
->  int cxl_map_mbox_regs(const struct cxl_register_map *map,
-> -		      void __iomem **mbox_reg);
-> +		      void __iomem **mbox_reg, void __iomem **status_reg);
->  int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
->  		     struct cxl_register_map *map);
->  
-> diff --git a/drivers/cxl/cxlmbox.h b/drivers/cxl/cxlmbox.h
-> index 3861d97729e2..d444327ef78d 100644
-> --- a/drivers/cxl/cxlmbox.h
-> +++ b/drivers/cxl/cxlmbox.h
-> @@ -155,6 +155,7 @@ static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
->  
->  enum cxl_opcode {
->  	CXL_MBOX_OP_INVALID		= 0x0000,
-> +	CXL_MBOX_OP_GET_BG_CMD_STATUS	= 0x0002,
->  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
->  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
->  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 7bce4ae7cd10..da3d95a91a5e 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -632,9 +632,14 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_map_mbox_regs(&map, &mds->mbox.mbox);
-> +	/* Status register already mapped */
-> +	rc = cxl_map_mbox_regs(&map, &mds->mbox.mbox, NULL);
->  	if (rc)
->  		return rc;
-> +
-> +	/* Connect up the status register access for the mbox */
-> +	mds->mbox.status = cxlds->regs.status;
-> +
->  	/*
->  	 * If the component registers can't be found, the cxl_pci driver may
->  	 * still be useful for management functions so don't return an error.
-> diff --git a/drivers/cxl/switch.h b/drivers/cxl/switch.h
-> new file mode 100644
-> index 000000000000..14e8e1cb87e7
-> --- /dev/null
-> +++ b/drivers/cxl/switch.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef __CXL_SWITCH_H__
-> +#define __CXL_SWITCH_H__
-> +
-> +#include <linux/device.h>
-> +#include <linux/cdev.h>
-> +#include "cxlmbox.h"
-> +
-> +struct cxl_swdev {
-> +	struct device dev;
-> +	struct cdev cdev;
-> +	struct cxl_mbox mbox;
-> +	int id;
-> +	bool dying;
-> +};
-> +
-> +struct cxl_swdev *cxl_swdev_alloc(struct device *parent);
-> +void cxl_swdev_shutdown(struct cxl_swdev *cxlswd);
-> +#endif /* __CXL_SWITCH_H__ */
-> diff --git a/drivers/cxl/switchdev.c b/drivers/cxl/switchdev.c
-> new file mode 100644
-> index 000000000000..ead003c718b8
-> --- /dev/null
-> +++ b/drivers/cxl/switchdev.c
-> @@ -0,0 +1,169 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright(c) Huawei Technologies
-> + * Based on cxl/pci.c Copyright(c) 2020 Intel Corporation. All rights reserved.
-> + */
-> +
-> +#include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/module.h>
-> +#include <linux/delay.h>
-> +#include <linux/sizes.h>
-> +#include <linux/mutex.h>
-> +#include <linux/list.h>
-> +#include <linux/pci.h>
-> +#include <linux/io.h>
-> +#include "cxlpci.h"
-> +#include "switch.h"
-> +#include "cxl.h"
-> +
-> +static irqreturn_t cxl_swmb_mbox_irq(int irq, void *d)
-> +{
-> +	return cxl_mbox_irq(irq, d);
-> +}
-> +
-> +static int cxl_swmb_setup_mailbox(struct cxl_mbox *mbox)
-> +{
-
-It feels like most of this function could be shared common setup code in
-the library.
-
-[..]
-> +}
-> +
-> +
-> +static int cxl_swmb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct cxl_register_map map;
-> +	struct cxl_swdev *cxlswd;
-> +	int rc;
-> +
-> +	rc = pcim_enable_device(pdev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	cxlswd = cxl_swdev_alloc(&pdev->dev);
-> +	if (IS_ERR(cxlswd))
-> +		return PTR_ERR(cxlswd);
-> +
-> +	mutex_init(&cxlswd->mbox.mbox_mutex);
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-> +	if (rc)
-> +		return rc;
-> +	rc = cxl_setup_regs(&map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox, &cxlswd->mbox.status);
-> +	if (rc)
-> +		return rc;
-> +
-
-I guess this points to the need to move CXL-style register enumeration
-out of cxl_core.ko as well because users of the CCI-library
-functionality care only about register enumeration and mailbox
-operation. Then cxl_core.ko is trimmed to just medev, port, and region
-concerns.
-
-> +	cxlswd->mbox.dev = &pdev->dev;
-> +
-> +	rc = cxl_swmb_setup_mailbox(&cxlswd->mbox);
-> +	if (rc)
-> +		return rc;
-> +
-> +	pci_set_drvdata(pdev, cxlswd);
-> +
-> +	rc = cxl_enumerate_cmds(&cxlswd->mbox);
-> +	if (rc)
-> +		goto error_put_device;
-
-This circles back to the concern about CCI command enumeration might
-expand beyond the "CXL" usecase, so I think cci_enumerate_cmds() starts
-to feel more natrual as part of this refactor.
+>>>
+>>> I'm thinking I should just rev the patch with your updates.
+>>>
+>>>>
+>>>>  drivers/cxl/core/memdev.c |   32 ++++++++++++--------------------
+>>>>  1 file changed, 12 insertions(+), 20 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>>> index 961da365b097..9ab748fadb38 100644
+>>>> --- a/drivers/cxl/core/memdev.c
+>>>> +++ b/drivers/cxl/core/memdev.c
+>>>> @@ -227,8 +227,8 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+>>>>  	if (!port || !is_cxl_endpoint(port))
+>>>>  		return -EINVAL;
+>>>>  
+>>>> -	down_read(&cxl_region_rwsem);
+>>>> -	down_read(&cxl_dpa_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_region_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_dpa_rwsem);
+>>>>  
+>>>>  	if (cxl_num_decoders_committed(port) == 0) {
+>>>>  		/* No regions mapped to this memdev */
+>>>> @@ -237,8 +237,6 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+>>>>  		/* Regions mapped, collect poison by endpoint */
+>>>>  		rc =  cxl_get_poison_by_endpoint(port);
+>>>>  	}
+>>>> -	up_read(&cxl_dpa_rwsem);
+>>>> -	up_read(&cxl_region_rwsem);
+>>>>  
+>>>>  	return rc;
+>>>>  }
+>>>> @@ -324,12 +322,12 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+>>>>  		return 0;
+>>>>  
+>>>> -	down_read(&cxl_region_rwsem);
+>>>> -	down_read(&cxl_dpa_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_region_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_dpa_rwsem);
+>>>>  
+>>>>  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
+>>>>  	if (rc)
+>>>> -		goto out;
+>>>> +		return rc;
+>>>>  
+>>>>  	inject.address = cpu_to_le64(dpa);
+>>>>  	mbox_cmd = (struct cxl_mbox_cmd) {
+>>>> @@ -339,7 +337,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  	};
+>>>>  	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+>>>>  	if (rc)
+>>>> -		goto out;
+>>>> +		return rc;
+>>>>  
+>>>>  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
+>>>>  	if (cxlr)
+>>>> @@ -352,11 +350,8 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  		.length = cpu_to_le32(1),
+>>>>  	};
+>>>>  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
+>>>> -out:
+>>>> -	up_read(&cxl_dpa_rwsem);
+>>>> -	up_read(&cxl_region_rwsem);
+>>>>  
+>>>> -	return rc;
+>>>> +	return 0;
+>>>>  }
+>>>>  EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
+>>>>  
+>>>> @@ -372,12 +367,12 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+>>>>  		return 0;
+>>>>  
+>>>> -	down_read(&cxl_region_rwsem);
+>>>> -	down_read(&cxl_dpa_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_region_rwsem);
+>>>> +	guard(rwsem_read)(&cxl_dpa_rwsem);
+>>>>  
+>>>>  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
+>>>>  	if (rc)
+>>>> -		goto out;
+>>>> +		return rc;
+>>>>  
+>>>>  	/*
+>>>>  	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
+>>>> @@ -396,7 +391,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  
+>>>>  	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+>>>>  	if (rc)
+>>>> -		goto out;
+>>>> +		return rc;
+>>>>  
+>>>>  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
+>>>>  	if (cxlr)
+>>>> @@ -409,11 +404,8 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>  		.length = cpu_to_le32(1),
+>>>>  	};
+>>>>  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
+>>>> -out:
+>>>> -	up_read(&cxl_dpa_rwsem);
+>>>> -	up_read(&cxl_region_rwsem);
+>>>>  
+>>>> -	return rc;
+>>>> +	return 0;
+>>>>  }
+>>>>  EXPORT_SYMBOL_NS_GPL(cxl_clear_poison, CXL);
+>>>>  
+>>>>
+>>>>
