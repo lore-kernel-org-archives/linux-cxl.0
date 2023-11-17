@@ -1,115 +1,139 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BG8NZU85"
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8445493
-	for <linux-cxl@vger.kernel.org>; Thu, 16 Nov 2023 14:14:46 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D6D19416E3;
-	Thu, 16 Nov 2023 22:14:45 +0000 (UTC)
-Received: from pdx1-sub0-mail-a201.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 6B52C41744;
-	Thu, 16 Nov 2023 22:14:45 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1700172885; a=rsa-sha256;
-	cv=none;
-	b=xLqViPa8pVmvF9A/c962swnCFCHVSu6sOJCv5FrQ20SG9wgXBSdYY7s0P5cbyc7URLPqDF
-	acT3mxH+swlfWC0jWTPiaUY4RejCnRPKk2eLmy2op1SD3TTiKq/3gV/aHwHXM8jpABnunD
-	dzkE9l7xnOkaOijdIXHa1QqoFYK0EHNrYVmfewC2C/nEkg3z3KUneoCtkKJwdLyeJTJ/BA
-	tMdC2g9g1vSreGZp4GBiigD/KiiXeNnLyKgcv4jOgl/3y+2TSq6pfa+SeGvEAKEMqL/jnc
-	YnqxYiZMvqibqOcYjC2mIImzsOuZYDL24ROKalY3FNzyRh8/QnRxqdYH1Z1VSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1700172885;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=TW2XNnoYNxdcPFiAuCgHC2+ocKnjPuXnBpNnBg7PfKc=;
-	b=1P61VNsOW/wwsA6plDe4UUE0h6orEaaYjm7KHT0ptlkzsJUGRsQqHrtLZZUGiLxanmm85J
-	ZUg4BWA2aByuymPeWtzD2045q4vmdOM2+CETq1el/2lcg3lsIY/BizX3IiXkxckyVtwxRZ
-	dIdQ0uCPX1gVvFUrURAstna5MVCE9rLcP2OUGHCPeWuLAIEOPTAbO+EJcO+d+jLX0Hz0qJ
-	+KxSOK84l4IaWujimgPQ0aU2/USFP3mdwAZop1AApFKfSlFWfoJaeVRerJSr/JojnMlomy
-	TdWGSwZiLSPES0FblP65X74iOTOVoNm1vi3CNjfyAiJN8PLqlUeiQMUOE6vDSA==
-ARC-Authentication-Results: i=1;
-	rspamd-55bcb54c45-fh4zj;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Supply-Dime: 47fe735c62431276_1700172885609_2733401949
-X-MC-Loop-Signature: 1700172885609:1333453205
-X-MC-Ingress-Time: 1700172885609
-Received: from pdx1-sub0-mail-a201.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.117.100.100 (trex/6.9.2);
-	Thu, 16 Nov 2023 22:14:45 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a201.dreamhost.com (Postfix) with ESMTPSA id 4SWZ8N5fKnz4h;
-	Thu, 16 Nov 2023 14:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1700172885;
-	bh=TW2XNnoYNxdcPFiAuCgHC2+ocKnjPuXnBpNnBg7PfKc=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=BG8NZU854aCPbUxuz2F9sS92F00fZesCbKT9Qus/TMVNWOLxI8HFlpiCUy/N9OBdN
-	 ox2ic28kgBb8Ka6SzlGmECXc/U/vnaHcbHEDlb6VL4Hv666+w6wQ1ZnmhypENBUTOo
-	 hCats/7c7IuSIzxca47/6y5+uZJ5p92kVixz1xHppdxwGFe391UHQjEHDr0qDudAoB
-	 qren8juQOgFeYunfldlxjoFfSgucYtAO3hBA7Uf51Pov5BzkkfQ5xu8kQCipVECLW4
-	 tme5ne1jFhdqBt5MYMx16EgdgsddBP383WnG9Gd4o1aXX/ov2G8TW3v+/ztzNdJ35Q
-	 1ql8w3g6ERDNg==
-Date: Thu, 16 Nov 2023 14:14:37 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: alison.schofield@intel.com
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/core: Hold the region rwsem during poison ops
-Message-ID: <tcc2pnjpfpn45nmc7vqgerm4pinjjx25j2dmcxeihoqdwjq2t4@3zk7uadynsoh>
-References: <20231114025342.1123681-1-alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROkciI2b"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123CA109;
+	Thu, 16 Nov 2023 16:03:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700179411; x=1731715411;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=mnWDfR921z2tBGWM2mu+YHLyuTCVuHhoCnMImJjBo0k=;
+  b=ROkciI2be9Qx40/WGmV48wLTDlOiRLYVPe7vuASiHdkSwBo6NiiGfyzY
+   BsR+QAery5xOkTiU74jIkK1qqRm+6xi57iS786xmIzN0DCDorviQ+5nPA
+   xagFw8ttU6+znVePeTBGqOI+c3RFfmcF4qOKqQ2SADsDRSz8YFEVHpswK
+   U2EgVp7wOB2/D5kH1t+n3Xz4NMKF20VKf20r4m2bgwJmeG23KqrlEGhhz
+   AO3wDSqllxqu/I4IveJzKCZbQl7E70VtmIdl5nQN++NBM0gNB0SOO77+l
+   vEZ3aitYGwVmrBf6SM5eY573O4Y2uChINxdv8kIW5BbNVjnQcxe7YBOWX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="370561255"
+X-IronPort-AV: E=Sophos;i="6.04,205,1695711600"; 
+   d="scan'208";a="370561255"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 16:03:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="715376900"
+X-IronPort-AV: E=Sophos;i="6.04,205,1695711600"; 
+   d="scan'208";a="715376900"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.168.188])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 16:03:29 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Thu, 16 Nov 2023 16:03:29 -0800
+Subject: [PATCH] cxl/cdat: Free correct buffer on checksum error
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20231114025342.1123681-1-alison.schofield@intel.com>
-User-Agent: NeoMutt/20231006
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com>
+X-B4-Tracking: v=1; b=H4sIANCtVmUC/x2NQQrDMAwEvxJ0rqC2Q1P6ldKDbCuJDnGLFEIh5
+ O9VepxZht3BWIUNHt0OypuYvJtDuHRQZmoTo1RniNeYQgg3HOWLpdKKlbcFR2XG3A81xdzne0r
+ gYSZzqdTKfKYL2cp6Dh9lz/9vz9dx/ABN0pQlfQAAAA==
+To: Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Fan Ni <nifan.cxl@gmail.com>, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-c6835
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1700179408; l=2409;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=mnWDfR921z2tBGWM2mu+YHLyuTCVuHhoCnMImJjBo0k=;
+ b=TCeMoscd1/Vjt58MoU0kO50swM+axmx58nKGj6nCHyDymNBP73R+POgZ0K9Q8CqzlsTG0Blar
+ RL/rriddklcBzsur+uTntwitINXWzIle1Ya+VAXwA5qPpBqFHLJfn+m
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-On Mon, 13 Nov 2023, alison.schofield@intel.com wrote:
+The new 6.7-rc1 kernel now checks the checksum on CDAT data.  While
+using a branch of Fan's DCD qemu work (and specifying DCD devices), the
+following splat was observed.
 
->From: Alison Schofield <alison.schofield@intel.com>
->
->Commit 458ba8189cb4 ("cxl: Add cxl_decoders_committed() helper")
->added a lockdep_assert_held() to make sure all callers hold the
->region state stable while doing work that depends on the number
->of committed decoders.
+	WARNING: CPU: 1 PID: 1384 at drivers/base/devres.c:1064 devm_kfree+0x4f/0x60
+	...
+	RIP: 0010:devm_kfree+0x4f/0x60
+	...
+ 	? devm_kfree+0x4f/0x60
+ 	read_cdat_data+0x1a0/0x2a0 [cxl_core]
+ 	cxl_port_probe+0xdf/0x200 [cxl_port]
+	...
 
-Unrelated, but that kind of helper would be better as a static
-inline in a header file.
+The issue in qemu is still unknown but the spat is a straight forward
+bug in the CDAT checksum processing code.  Use a CDAT buffer variable to
+ensure the devm_free() works correctly on error.
 
->
->That lockdep assert triggered in poison list, inject, and clear
->functions highlighting a gap between region attach and decoder
->commit where holding the dpa_rwsem is not enough to assure that
->a DPA is not added to a region. In such a case, if poison is
->found in at that DPA, the trace event omits the region info
->that users expect.
->
->Close the gap by snapshotting an unchangeable region state during
->all poison ops. Hold the region_rwsem in all the places that hold
->the dpa_rwsem rather than in the region specific function only.
+Cc: jonathan.cameron@huawei.com
+Cc: Fan Ni <nifan.cxl@gmail.com>
+Fixes: 670e4e88f3b1 ("cxl: Add checksum verification to CDAT from CXL")
+Cc: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ drivers/cxl/core/pci.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Makes sense and lock oder is consistent with that of attach_target().
-I do think that the interruptible semantics should be kept considering
-this is from sysfs/debugfs.
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index eff20e83d0a6..5aaa0b36c42a 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -620,7 +620,7 @@ void read_cdat_data(struct cxl_port *port)
+ 	struct pci_dev *pdev = NULL;
+ 	struct cxl_memdev *cxlmd;
+ 	size_t cdat_length;
+-	void *cdat_table;
++	void *cdat_table, *cdat_buf;
+ 	int rc;
+ 
+ 	if (is_cxl_memdev(uport)) {
+@@ -651,16 +651,16 @@ void read_cdat_data(struct cxl_port *port)
+ 		return;
+ 	}
+ 
+-	cdat_table = devm_kzalloc(dev, cdat_length + sizeof(__le32),
++	cdat_buf = devm_kzalloc(dev, cdat_length + sizeof(__le32),
+ 				  GFP_KERNEL);
+-	if (!cdat_table)
++	if (!cdat_buf)
+ 		return;
+ 
+-	rc = cxl_cdat_read_table(dev, cdat_doe, cdat_table, &cdat_length);
++	rc = cxl_cdat_read_table(dev, cdat_doe, cdat_buf, &cdat_length);
+ 	if (rc)
+ 		goto err;
+ 
+-	cdat_table = cdat_table + sizeof(__le32);
++	cdat_table = cdat_buf + sizeof(__le32);
+ 	if (cdat_checksum(cdat_table, cdat_length))
+ 		goto err;
+ 
+@@ -670,7 +670,7 @@ void read_cdat_data(struct cxl_port *port)
+ 
+ err:
+ 	/* Don't leave table data allocated on error */
+-	devm_kfree(dev, cdat_table);
++	devm_kfree(dev, cdat_buf);
+ 	dev_err(dev, "Failed to read/validate CDAT.\n");
+ }
+ EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
 
-Thanks,
-Davidlohr
+---
+base-commit: 7475e51b87969e01a6812eac713a1c8310372e8a
+change-id: 20231116-fix-cdat-devm-free-b47d32b4b833
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
