@@ -1,36 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WDvSRCoC"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC7ACB;
-	Tue, 21 Nov 2023 13:27:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a2/sX2SY"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B63A1BC;
+	Tue, 21 Nov 2023 14:52:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700602072; x=1732138072;
+  t=1700607148; x=1732143148;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=uEBVNeqKwVe2rty8DYNq8xTPRTe1IjjFFyd71FrkqFs=;
-  b=WDvSRCoCdDUmFa5DczjfJchQv20VV1gPyvO8WfZSVhgyUazk/gabLJFo
-   qDJD/wjfsoT+63S1+2857UlN3QXtYNJuo4zssCX6olgU70G3Tm2LlE8ca
-   5YMGSY+l9bQ2joIfxJbU+Tj6hMfTrLJss4+TE08pBXL/0gybNgQWJPp14
-   ykdeP0KhYF1m5G7QqT5k46EdUZqZZfHjohqj9FH6y9sKzXPTk6hBQTgvg
-   EJ/W0BcU6sOg+JJyFexl8YwszQAHTT+mb0K4Np+a2oYxLg+UEO3O27ouE
-   f8wrzBW1NUX9C1quQI1czsniQjbA561uYiOxIrf6et5k9jwroqO2HHHnV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="389080903"
-X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
-   d="scan'208";a="389080903"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 13:27:51 -0800
+  bh=LskDiBuvjSasPHzI3RZx0ZGahLutMUfdBedZf+vO8Fk=;
+  b=a2/sX2SYK6V+hOh0Tp/DHdnACIkgdfp+0/PhhYVoYunFhTjYAP+R+G4Z
+   DluBJThXiW8HqqGvitEqY87OMpwFPulVMmIBPusTZ/6cV5ESiuJSsiEZY
+   IWGHDhIcU2NYymmfXD0s2VA5pIhXBVx2LUx2QJDywVrIW0C6ZinCG0WQI
+   s9i2pWq+SLWr/ppRrXK+gPRvY1EMyRcyUvZqTrN5kUPfD30ZvN39YhMIR
+   FfZFgHGdXOozI5lP+Z4b5xCBOmhgxTqfKrojaUgEzr9hw5S7uTSrwB9Fj
+   yzBHQUyYTscsH/qyxKIX/GMCOinjtiLGr31ly5Db9rhpqXAlIZek/cVaS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="371290762"
+X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
+   d="scan'208";a="371290762"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 14:52:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
-   d="scan'208";a="15029831"
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="837191870"
+X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
+   d="scan'208";a="837191870"
 Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 21 Nov 2023 13:27:44 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 21 Nov 2023 14:52:20 -0800
 Received: from kbuild by b8de5498638e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r5YHW-0008HO-14;
-	Tue, 21 Nov 2023 21:27:42 +0000
-Date: Wed, 22 Nov 2023 05:27:15 +0800
+	id 1r5ZbO-0008Mm-0k;
+	Tue, 21 Nov 2023 22:52:18 +0000
+Date: Wed, 22 Nov 2023 06:52:17 +0800
 From: kernel test robot <lkp@intel.com>
 To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
 	dave@stgolabs.net, jonathan.cameron@huawei.com,
@@ -46,10 +47,9 @@ Cc: oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
 	jthoughton@google.com, somasundaram.a@hpe.com,
 	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
 	mike.malvestuto@intel.com
-Subject: Re: [PATCH v2 01/10] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox
- command
-Message-ID: <202311220525.o2AUzf97-lkp@intel.com>
-References: <20231121101844.1161-2-shiju.jose@huawei.com>
+Subject: Re: [PATCH v2 02/10] cxl/mbox: Add GET_FEATURE mailbox command
+Message-ID: <202311220635.mch7Y8LH-lkp@intel.com>
+References: <20231121101844.1161-3-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231121101844.1161-2-shiju.jose@huawei.com>
+In-Reply-To: <20231121101844.1161-3-shiju.jose@huawei.com>
 
 Hi,
 
@@ -72,48 +72,53 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/shiju-jose-huawei-com/cxl-mbox-Add-GET_SUPPORTED_FEATURES-mailbox-command/20231121-182247
 base:   linus/master
-patch link:    https://lore.kernel.org/r/20231121101844.1161-2-shiju.jose%40huawei.com
-patch subject: [PATCH v2 01/10] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
-config: arc-randconfig-r113-20231122 (https://download.01.org/0day-ci/archive/20231122/202311220525.o2AUzf97-lkp@intel.com/config)
+patch link:    https://lore.kernel.org/r/20231121101844.1161-3-shiju.jose%40huawei.com
+patch subject: [PATCH v2 02/10] cxl/mbox: Add GET_FEATURE mailbox command
+config: arc-randconfig-r113-20231122 (https://download.01.org/0day-ci/archive/20231122/202311220635.mch7Y8LH-lkp@intel.com/config)
 compiler: arceb-elf-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20231122/202311220525.o2AUzf97-lkp@intel.com/reproduce)
+reproduce: (https://download.01.org/0day-ci/archive/20231122/202311220635.mch7Y8LH-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311220525.o2AUzf97-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311220635.mch7Y8LH-lkp@intel.com/
 
 sparse warnings: (new ones prefixed by >>)
->> drivers/cxl/core/mbox.c:1318:31: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned int [usertype] size_out @@     got restricted __le32 [usertype] count @@
-   drivers/cxl/core/mbox.c:1318:31: sparse:     expected unsigned int [usertype] size_out
-   drivers/cxl/core/mbox.c:1318:31: sparse:     got restricted __le32 [usertype] count
+   drivers/cxl/core/mbox.c:1319:31: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned int [usertype] size_out @@     got restricted __le32 [usertype] count @@
+   drivers/cxl/core/mbox.c:1319:31: sparse:     expected unsigned int [usertype] size_out
+   drivers/cxl/core/mbox.c:1319:31: sparse:     got restricted __le32 [usertype] count
+>> drivers/cxl/core/mbox.c:1341:31: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned int [usertype] size_out @@     got restricted __le16 [usertype] count @@
+   drivers/cxl/core/mbox.c:1341:31: sparse:     expected unsigned int [usertype] size_out
+   drivers/cxl/core/mbox.c:1341:31: sparse:     got restricted __le16 [usertype] count
+>> drivers/cxl/core/mbox.c:1343:30: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned int [usertype] min_out @@     got restricted __le16 [usertype] count @@
+   drivers/cxl/core/mbox.c:1343:30: sparse:     expected unsigned int [usertype] min_out
+   drivers/cxl/core/mbox.c:1343:30: sparse:     got restricted __le16 [usertype] count
 
-vim +1318 drivers/cxl/core/mbox.c
+vim +1341 drivers/cxl/core/mbox.c
 
-  1306	
-  1307	int cxl_get_supported_features(struct cxl_memdev_state *mds,
-  1308							struct cxl_mbox_get_supp_feats_in *pi,
-  1309							void *feats_out)
-  1310	{
-  1311		struct cxl_mbox_cmd mbox_cmd;
-  1312		int rc;
-  1313	
-  1314		mbox_cmd = (struct cxl_mbox_cmd) {
-  1315			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
-  1316			.size_in = sizeof(*pi),
-  1317			.payload_in = pi,
-> 1318			.size_out = pi->count,
-  1319			.payload_out = feats_out,
-  1320			.min_out = sizeof(struct cxl_mbox_get_supp_feats_out),
-  1321		};
-  1322		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-  1323		if (rc < 0)
-  1324			return rc;
-  1325	
-  1326		return 0;
-  1327	}
-  1328	EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
-  1329	
+  1330	
+  1331	int cxl_get_feature(struct cxl_memdev_state *mds,
+  1332			    struct cxl_mbox_get_feat_in *pi, void *feat_out)
+  1333	{
+  1334		struct cxl_mbox_cmd mbox_cmd;
+  1335		int rc;
+  1336	
+  1337		mbox_cmd = (struct cxl_mbox_cmd) {
+  1338			.opcode = CXL_MBOX_OP_GET_FEATURE,
+  1339			.size_in = sizeof(*pi),
+  1340			.payload_in = pi,
+> 1341			.size_out = pi->count,
+  1342			.payload_out = feat_out,
+> 1343			.min_out = pi->count,
+  1344		};
+  1345		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+  1346		if (rc < 0)
+  1347			return rc;
+  1348	
+  1349		return 0;
+  1350	}
+  1351	EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
+  1352	
 
 -- 
 0-DAY CI Kernel Test Service
