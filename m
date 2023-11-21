@@ -1,299 +1,199 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BAAB116
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 02:32:53 -0800 (PST)
-Received: from lhrpeml100003.china.huawei.com (unknown [172.18.147.206])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SZLFP0ZXsz6K5xM;
-	Tue, 21 Nov 2023 18:28:41 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml100003.china.huawei.com (7.191.160.210) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 21 Nov 2023 10:32:50 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
- Tue, 21 Nov 2023 10:32:50 +0000
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>, "Zengtao
- (B)" <prime.zeng@hisilicon.com>, Linuxarm <linuxarm@huawei.com>,
-	"fan.ni@samsung.com" <fan.ni@samsung.com>, "a.manzanares@samsung.com"
-	<a.manzanares@samsung.com>
-Subject: RE: [RFC PATCH 1/3] hw/cxl/cxl-mailbox-utils: Add support for feature
- commands (8.2.9.6)
-Thread-Topic: [RFC PATCH 1/3] hw/cxl/cxl-mailbox-utils: Add support for
- feature commands (8.2.9.6)
-Thread-Index: AQHaFviya+dtfOI5Ykuwxyme/BxmpLCDphCAgAD1RYA=
-Date: Tue, 21 Nov 2023 10:32:50 +0000
-Message-ID: <6d1e66271e6142f88afc17cd6673a00b@huawei.com>
-References: <20231114124711.1128-1-shiju.jose@huawei.com>
- <20231114124711.1128-2-shiju.jose@huawei.com>
- <37bcqgzeu2x573n5sbec3snqekbfkgkd7zmczxr4rb2mn7jpgw@nxxhbjpkup2k>
-In-Reply-To: <37bcqgzeu2x573n5sbec3snqekbfkgkd7zmczxr4rb2mn7jpgw@nxxhbjpkup2k>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.126.175.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VmtUNFfO"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DDBB9
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 10:58:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700593134; x=1732129134;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=475C0nd9cgnN83xWfqsRcNENVDE6uggJElMQ3a6D3HQ=;
+  b=VmtUNFfOlKIcKRQsS+ZDhqQUN7XjljQ45VLF3vTBRM2BtDeZHXF7pvGy
+   eP7nYkGu0V/FYXQpXpTwV1g6epE12tBZLXudf1QgqKbF/WXJ6C0ySEKq5
+   KDKiYD6XYJ47NQ6Ro+TZECmyKUHq65rtqc2rysLKYRL5D0VNotdBEunsa
+   aB780JGAs0Y7GMfiUKJVtoG0lSWI9qPKahJH5ILz8tjFlcZt2+6swYzY6
+   Za6asfSWxwyydH12QeM1Dpgs6HZ0iyo1QN6Z+Mqw428PP2pwgtRIcQN/M
+   eCwZgvzY9eGfaLkCBZCKlsyIberyAy1MEA0mWdZ02QmXhjNWQzMd5D++Z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="376939698"
+X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
+   d="scan'208";a="376939698"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 10:58:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="743139562"
+X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
+   d="scan'208";a="743139562"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.90.75])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 10:58:53 -0800
+From: alison.schofield@intel.com
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v4 0/5] Support poison list retrieval
+Date: Tue, 21 Nov 2023 10:58:46 -0800
+Message-Id: <cover.1700591754.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 
-Hi Davidlohr,
+From: Alison Schofield <alison.schofield@intel.com>
 
-Thanks for reviewing and for the comments.
 
->-----Original Message-----
->From: Davidlohr Bueso <dave@stgolabs.net>
->Sent: 20 November 2023 19:45
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: qemu-devel@nongnu.org; linux-cxl@vger.kernel.org; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>; Linuxarm <linuxarm@huawei.com>;
->fan.ni@samsung.com; a.manzanares@samsung.com
->Subject: Re: [RFC PATCH 1/3] hw/cxl/cxl-mailbox-utils: Add support for fea=
-ture
->commands (8.2.9.6)
->
->On Tue, 14 Nov 2023, shiju.jose@huawei.com wrote:
->
->>From: Shiju Jose <shiju.jose@huawei.com>
->>
->>CXL spec 3.0 section 8.2.9.6 describes optional device specific features.
->>CXL devices supports features with changeable attributes.
->>Get Supported Features retrieves the list of supported device specific
->>features. The settings of a feature can be retrieved using Get Feature
->>and optionally modified using Set Feature.
->>
->>Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->
->Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
->
->... with some comments below.
->
->>---
->> hw/cxl/cxl-mailbox-utils.c | 140 +++++++++++++++++++++++++++++++++++++
->> 1 file changed, 140 insertions(+)
->>
->>diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->>index 6184f44339..93960afd44 100644
->>--- a/hw/cxl/cxl-mailbox-utils.c
->>+++ b/hw/cxl/cxl-mailbox-utils.c
->>@@ -66,6 +66,10 @@ enum {
->>     LOGS        =3D 0x04,
->>         #define GET_SUPPORTED 0x0
->>         #define GET_LOG       0x1
->>+    FEATURES    =3D 0x05,
->>+        #define GET_SUPPORTED 0x0
->>+        #define GET_FEATURE   0x1
->>+        #define SET_FEATURE   0x2
->>     IDENTIFY    =3D 0x40,
->>         #define MEMORY_DEVICE 0x0
->>     CCLS        =3D 0x41,
->>@@ -785,6 +789,135 @@ static CXLRetCode cmd_logs_get_log(const struct
->cxl_cmd *cmd,
->>     return CXL_MBOX_SUCCESS;
->> }
->>
->>+/* CXL r3.0 section 8.2.9.6: Features */ typedef struct
->>+CXLSupportedFeatureHeader {
->>+    uint16_t entries;
->>+    uint16_t nsuppfeats_dev;
->>+    uint32_t reserved;
->>+} QEMU_PACKED CXLSupportedFeatureHeader;
->>+
->>+typedef struct CXLSupportedFeatureEntry {
->>+    QemuUUID uuid;
->>+    uint16_t feat_index;
->>+    uint16_t get_feat_size;
->>+    uint16_t set_feat_size;
->>+    uint32_t attrb_flags;
->>+    uint8_t get_feat_version;
->>+    uint8_t set_feat_version;
->>+    uint16_t set_feat_effects;
->>+    uint8_t rsvd[18];
->>+} QEMU_PACKED CXLSupportedFeatureEntry;
->>+
->>+enum CXL_SUPPORTED_FEATURES_LIST {
->>+    CXL_FEATURE_MAX
->>+};
->>+
->>+typedef struct CXLSetFeatureInHeader {
->>+        QemuUUID uuid;
->>+        uint32_t flags;
->>+        uint16_t offset;
->>+        uint8_t version;
->>+        uint8_t rsvd[9];
->>+} QEMU_PACKED QEMU_ALIGNED(16) CXLSetFeatureInHeader;
->>+
->>+#define CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MASK   0x7
->>+#define CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER    0
->>+#define CXL_SET_FEATURE_FLAG_INITIATE_DATA_TRANSFER    1
->>+#define CXL_SET_FEATURE_FLAG_CONTINUE_DATA_TRANSFER    2
->>+#define CXL_SET_FEATURE_FLAG_FINISH_DATA_TRANSFER    3
->>+#define CXL_SET_FEATURE_FLAG_ABORT_DATA_TRANSFER    4
->
->Maybe enum here?
-Sure. I will change.
+Changes since v3:
+- Exclude poison record where address belongs to a different region
+- Add unit test case for above scenario
+- Refactor unit test handling of poison record checks (Vishal)
+- Address shellcheck complaints in the unit test (Vishal)
+- Remove empty json fields from cxl-list man page
+- Omit json "flags" field when no flags exist
+- Minor flow updates in the unit test
+- Link to v3:
+  https://lore.kernel.org/linux-cxl/cover.1700258145.git.alison.schofield@intel.com/
 
->
->>+
->>+/* CXL r3.0 section 8.2.9.6.1: Get Supported Features (Opcode 0500h)
->>+*/ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd
->*cmd,
->>+                                             uint8_t *payload_in,
->>+                                             size_t len_in,
->>+                                             uint8_t *payload_out,
->>+                                             size_t *len_out,
->>+                                             CXLCCI *cci) {
->>+    struct {
->>+        uint32_t count;
->>+        uint16_t start_index;
->>+        uint16_t reserved;
->>+    } QEMU_PACKED QEMU_ALIGNED(16) * get_feats_in =3D (void
->>+*)payload_in;
->>+
->>+    struct {
->>+        CXLSupportedFeatureHeader hdr;
->>+        CXLSupportedFeatureEntry feat_entries[];
->>+    } QEMU_PACKED QEMU_ALIGNED(16) * supported_feats =3D (void
->>+ *)payload_out;
->
->s/supported_feats/get_feats_out.
-Will change.
+Begin cover letter:
 
->
->>+    uint16_t index;
->>+    uint16_t entry, req_entries;
->>+    uint16_t feat_entries =3D 0;
->>+
->>+    if (get_feats_in->count < sizeof(CXLSupportedFeatureHeader) ||
->>+        get_feats_in->start_index > CXL_FEATURE_MAX) {
->
->Ah I see you update this to '>=3D' in the next patch.
->
->>+        return CXL_MBOX_INVALID_INPUT;
->>+    } else {
->
->This branch is not needed.
-Ok.
+Add the option to include a memory device poison list in cxl list json output.
+Examples appended below: by memdev, by region, by memdev and coincidentally
+in a region, and no poison found.
 
->
->>+        req_entries =3D (get_feats_in->count -
->>+                        sizeof(CXLSupportedFeatureHeader)) /
->>+                        sizeof(CXLSupportedFeatureEntry);
->>+    }
->>+    if (req_entries > CXL_FEATURE_MAX) {
->>+        req_entries =3D CXL_FEATURE_MAX;
->>+    }
->
->min()?
-Sure.
+Example: By memdev
+cxl list -m mem1 --poison -u
+{
+  "memdev":"mem1",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0x1",
+  "numa_node":1,
+  "host":"cxl_mem.1",
+  "poison":{
+    "nr_records":4,
+    "records":[
+      {
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0x40001000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0x600",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
 
->
->>+    supported_feats->hdr.nsuppfeats_dev =3D CXL_FEATURE_MAX;
->
->Logically this should go below, when setting the feature entries.
->
->>+    index =3D get_feats_in->start_index;
->>+
->>+    entry =3D 0;
->>+    while (entry < req_entries) {
->>+        switch (index) {
->>+        default:
->>+            break;
->>+        }
->>+        index++;
->>+        entry++;
->>+    }
->>+
->>+    supported_feats->hdr.entries =3D feat_entries;
->>+    *len_out =3D sizeof(CXLSupportedFeatureHeader) +
->>+                      feat_entries * sizeof(CXLSupportedFeatureEntry);
->>+
->>+    return CXL_MBOX_SUCCESS;
->>+}
->>+
->>+/* CXL r3.0 section 8.2.9.6.2: Get Feature (Opcode 0501h) */ static
->>+CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
->>+                                           uint8_t *payload_in,
->>+                                           size_t len_in,
->>+                                           uint8_t *payload_out,
->>+                                           size_t *len_out,
->>+                                           CXLCCI *cci) {
->>+    struct {
->>+        QemuUUID uuid;
->>+        uint16_t offset;
->>+        uint16_t count;
->>+        uint8_t selection;
->>+    } QEMU_PACKED QEMU_ALIGNED(16) * get_feature;
->>+    uint16_t bytes_to_copy =3D 0;
->>+
->>+    get_feature =3D (void *)payload_in;
->>+
->>+    if (get_feature->offset + get_feature->count > cci->payload_max) {
->>+        return CXL_MBOX_INVALID_INPUT;
->>+    }
->
->For now maybe return unsupported if a non-zero selection is passed?
-Sure.
+Example: By region
+cxl list -r region5 --poison -u
+{
+  "region":"region5",
+  "resource":"0xf110000000",
+  "size":"2.00 GiB (2.15 GB)",
+  "type":"pmem",
+  "interleave_ways":2,
+  "interleave_granularity":4096,
+  "decode_state":"commit",
+  "poison":{
+    "nr_records":2,
+    "records":[
+      {
+        "memdev":"mem1",
+        "region":"region5",
+        "hpa":"0xf110001000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "memdev":"mem0",
+        "region":"region5",
+        "hpa":"0xf110000000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
 
->
->>+
->>+    *len_out =3D bytes_to_copy;
->>+
->>+    return CXL_MBOX_SUCCESS;
->>+}
->>+
->>+/* CXL r3.0 section 8.2.9.6.3: Set Feature (Opcode 0502h) */ static
->>+CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
->>+                                           uint8_t *payload_in,
->>+                                           size_t len_in,
->>+                                           uint8_t *payload_out,
->>+                                           size_t *len_out,
->>+                                           CXLCCI *cci) {
->>+    return CXL_MBOX_SUCCESS;
->>+}
->>+
->> /* 8.2.9.5.1.1 */
->> static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
->>                                              uint8_t *payload_in, @@
->>-1954,6 +2087,13 @@ static const struct cxl_cmd cxl_cmd_set[256][256] =3D=
- {
->>     [LOGS][GET_SUPPORTED] =3D { "LOGS_GET_SUPPORTED",
->cmd_logs_get_supported,
->>                               0, 0 },
->>     [LOGS][GET_LOG] =3D { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
->>+    [FEATURES][GET_SUPPORTED] =3D { "FEATURES_GET_SUPPORTED",
->>+                                  cmd_features_get_supported, 0x8, 0 },
->>+    [FEATURES][GET_FEATURE] =3D { "FEATURES_GET_FEATURE",
->>+                                cmd_features_get_feature, 0x15, 0 },
->>+    [FEATURES][SET_FEATURE] =3D { "FEATURES_SET_FEATURE",
->>+                                cmd_features_set_feature,
->>+                                ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE
->>+ },
->
->I don't think we are actually doing anything with these, but in addition t=
-o the
->config, set_feature would need IMMEDIATE_DATA_CHANGE,
->IMMEDIATE_POLICY_CHANGE, IMMEDIATE_LOG_CHANGE and
->SECURITY_STATE_CHANGE.
-Sure. I will change.
+Example: By memdev and coincidentally in a region
+# cxl list -m mem0 --poison -u
+{
+  "memdev":"mem0",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0",
+  "numa_node":0,
+  "host":"cxl_mem.0",
+  "poison":{
+    "nr_records":1,
+    "records":[
+      {
+        "region":"region5",
+        "hpa":"0xf110000000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
 
->
->>     [IDENTIFY][MEMORY_DEVICE] =3D { "IDENTIFY_MEMORY_DEVICE",
->>         cmd_identify_memory_device, 0, 0 },
->>     [CCLS][GET_PARTITION_INFO] =3D { "CCLS_GET_PARTITION_INFO",
->>--
->>2.34.1
->>
+Example: No poison found
+cxl list -m mem9 --poison -u
+{
+  "memdev":"mem9",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0x9",
+  "numa_node":1,
+  "host":"cxl_mem.9",
+  "poison":{
+    "nr_records":0
+  }
+}
 
-Thanks,
-Shiju
+
+Alison Schofield (5):
+  libcxl: add interfaces for GET_POISON_LIST mailbox commands
+  cxl: add an optional pid check to event parsing
+  cxl/list: collect and parse the poison list records
+  cxl/list: add --poison option to cxl list
+  cxl/test: add cxl-poison.sh unit test
+
+ Documentation/cxl/cxl-list.txt |  58 +++++++++
+ cxl/event_trace.c              |   5 +
+ cxl/event_trace.h              |   1 +
+ cxl/filter.h                   |   3 +
+ cxl/json.c                     | 211 +++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.c               |  47 ++++++++
+ cxl/lib/libcxl.sym             |   6 +
+ cxl/libcxl.h                   |   2 +
+ cxl/list.c                     |   2 +
+ test/cxl-poison.sh             | 154 ++++++++++++++++++++++++
+ test/meson.build               |   2 +
+ 11 files changed, 491 insertions(+)
+ create mode 100644 test/cxl-poison.sh
+
+
+base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
+-- 
+2.37.3
+
