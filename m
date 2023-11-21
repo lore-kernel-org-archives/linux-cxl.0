@@ -1,14 +1,14 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC441715;
-	Tue, 21 Nov 2023 02:19:02 -0800 (PST)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.201])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SZKwV5KqBz689lt;
-	Tue, 21 Nov 2023 18:14:02 +0800 (CST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF40171B;
+	Tue, 21 Nov 2023 02:19:03 -0800 (PST)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SZKwX3Mwgz6J9pf;
+	Tue, 21 Nov 2023 18:14:04 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 21 Nov 2023 10:18:58 +0000
+ 15.1.2507.35; Tue, 21 Nov 2023 10:19:00 +0000
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>, <dave@stgolabs.net>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
@@ -26,10 +26,12 @@ CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 00/10] cxl: Add support for CXL feature commands, CXL device patrol scrub control and DDR5 ECS control features
-Date: Tue, 21 Nov 2023 18:18:33 +0800
-Message-ID: <20231121101844.1161-1-shiju.jose@huawei.com>
+Subject: [PATCH v2 02/10] cxl/mbox: Add GET_FEATURE mailbox command
+Date: Tue, 21 Nov 2023 18:18:35 +0800
+Message-ID: <20231121101844.1161-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
+In-Reply-To: <20231121101844.1161-1-shiju.jose@huawei.com>
+References: <20231121101844.1161-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,76 +47,119 @@ X-CFilter-Loop: Reflected
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-1. Add support for CXL feature mailbox commands.
-2. Add CXL device scrub driver supporting patrol scrub control and DDR5 ECS
-control features.
-3. Add scrub driver supports configuring memory scrubs in the system.
-4. Add scrub attributes for DDR5 ECS control to the memory scrub driver.
-5. Register CXL device patrol scrub and ECS with scrub control driver.
-6. Add documentation for CXL memory device scrub control attributes.
+Add support for GET_FEATURE mailbox command.
 
-The QEMU series to support these features is available here,
-https://lore.kernel.org/qemu-devel/20231114124711.1128-1-shiju.jose@huawei.com/T/#t
+CXL spec 3.0 section 8.2.9.6 describes optional device specific features.
+The settings of a feature can be retrieved using Get Feature command.
 
-Changes
-v1 -> v2:
-1. Changes for comments from Dave Jiang, Thanks.
- - Split patches.
- - reversed xmas tree declarations.   
- - declared flags as enums.
- - removed few unnecessary variable initializations.
- - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
- - add auto clean declarations.
- - replaced while loop with for loop. 
- - Removed allocation from cxl_get_supported_features() and 
-   cxl_get_feature() and make change to take allocated memory
-   pointer from the caller.
- - replaced if/else with switch case.
- - replaced sprintf() with sysfs_emit() in 2 places.
- - replaced goto label with return in few functions. 
-2. removed unused code for supported attributes from ecs.
-3. Included following common dependency patch for scrub configure
-   driver to this series.
-   "memory: scrub: Add scrub driver supports configuring memory scrubbers
-    in the system"
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/mbox.c      | 23 +++++++++++++++++++++++
+ drivers/cxl/cxlmem.h         | 23 +++++++++++++++++++++++
+ include/uapi/linux/cxl_mem.h |  1 +
+ 3 files changed, 47 insertions(+)
 
-Shiju Jose (10):
-  cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
-  cxl/mbox: Add GET_FEATURE mailbox command
-  cxl/mbox: Add SET_FEATURE mailbox command
-  cxl/memscrub: Add CXL device patrol scrub control feature
-  cxl/memscrub: Add CXL device DDR5 ECS control feature
-  memory: scrub: Add scrub driver supports configuring memory scrubbers
-    in the system
-  cxl/memscrub: Register CXL device patrol scrub with scrub configure
-    driver
-  memory: scrub: Add scrub control attributes for the DDR5 ECS
-  cxl/memscrub: Register CXL device DDR5 ECS with scrub configure driver
-  cxl: scrub: sysfs: Add Documentation for CXL memory device scrub
-    control attributes
-
- .../testing/sysfs-class-cxl-scrub-configure   | 135 +++
- drivers/cxl/Kconfig                           |  23 +
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/mbox.c                       |  62 ++
- drivers/cxl/core/memscrub.c                   | 993 ++++++++++++++++++
- drivers/cxl/cxlmem.h                          | 120 +++
- drivers/cxl/pci.c                             |   8 +
- drivers/memory/Kconfig                        |   1 +
- drivers/memory/Makefile                       |   1 +
- drivers/memory/scrub/Kconfig                  |  11 +
- drivers/memory/scrub/Makefile                 |   6 +
- drivers/memory/scrub/memory-scrub.c           | 484 +++++++++
- include/memory/memory-scrub.h                 |  90 ++
- include/uapi/linux/cxl_mem.h                  |   3 +
- 14 files changed, 1938 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-cxl-scrub-configure
- create mode 100644 drivers/cxl/core/memscrub.c
- create mode 100644 drivers/memory/scrub/Kconfig
- create mode 100644 drivers/memory/scrub/Makefile
- create mode 100755 drivers/memory/scrub/memory-scrub.c
- create mode 100755 include/memory/memory-scrub.h
-
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 06ec9ef50e7f..2675c616caec 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -64,6 +64,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
+ 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+ 	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
++	CXL_CMD(GET_FEATURE, 0x15, CXL_VARIABLE_PAYLOAD, 0),
+ };
+ 
+ /*
+@@ -1327,6 +1328,28 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
+ 
++int cxl_get_feature(struct cxl_memdev_state *mds,
++		    struct cxl_mbox_get_feat_in *pi, void *feat_out)
++{
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_FEATURE,
++		.size_in = sizeof(*pi),
++		.payload_in = pi,
++		.size_out = pi->count,
++		.payload_out = feat_out,
++		.min_out = pi->count,
++	};
++	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
++
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index d831dad748f5..92c1f2a44713 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -507,6 +507,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
+ 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
++	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -796,6 +797,26 @@ struct cxl_mbox_get_supp_feats_out {
+ 	struct cxl_mbox_supp_feat_entry feat_entries[];
+ } __packed;
+ 
++/* Get Feature CXL 3.0 Spec 8.2.9.6.2 */
++/*
++ * Get Feature input payload
++ * CXL rev 3.0 section 8.2.9.6.2; Table 8-79
++ */
++/* Get Feature : Payload in selection */
++enum cxl_get_feat_selection {
++	CXL_GET_FEAT_SEL_CURRENT_VALUE = 0x0,
++	CXL_GET_FEAT_SEL_DEFAULT_VALUE = 0x1,
++	CXL_GET_FEAT_SEL_SAVED_VALUE = 0x2,
++	CXL_GET_FEAT_SEL_MAX
++};
++
++struct cxl_mbox_get_feat_in {
++	uuid_t uuid;
++	__le16 offset;
++	__le16 count;
++	u8 selection;
++}  __packed;
++
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -926,6 +947,8 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ 			       struct cxl_mbox_get_supp_feats_in *pi,
+ 			       void *feats_out);
++int cxl_get_feature(struct cxl_memdev_state *mds,
++		    struct cxl_mbox_get_feat_in *pi, void *feat_out);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 656450274001..b20de60bfc71 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -47,6 +47,7 @@
+ 	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
+ 	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
+ 	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),           \
++	___C(GET_FEATURE, "Get Feature"),                                 \
+ 	___C(MAX, "invalid / last command")
+ 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 -- 
 2.34.1
 
