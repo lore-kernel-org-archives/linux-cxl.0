@@ -1,14 +1,14 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533721724;
-	Tue, 21 Nov 2023 02:19:08 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0068C1732;
+	Tue, 21 Nov 2023 02:19:09 -0800 (PST)
 Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SZL0l50JCz67n0t;
-	Tue, 21 Nov 2023 18:17:43 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SZL0n0nswz6K8tD;
+	Tue, 21 Nov 2023 18:17:45 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 21 Nov 2023 10:19:05 +0000
+ 15.1.2507.35; Tue, 21 Nov 2023 10:19:07 +0000
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>, <dave@stgolabs.net>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
@@ -26,9 +26,9 @@ CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 07/10] cxl/memscrub: Register CXL device patrol scrub with scrub configure driver
-Date: Tue, 21 Nov 2023 18:18:40 +0800
-Message-ID: <20231121101844.1161-8-shiju.jose@huawei.com>
+Subject: [PATCH v2 09/10] cxl/memscrub: Register CXL device DDR5 ECS with scrub configure driver
+Date: Tue, 21 Nov 2023 18:18:42 +0800
+Message-ID: <20231121101844.1161-10-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
 In-Reply-To: <20231121101844.1161-1-shiju.jose@huawei.com>
 References: <20231121101844.1161-1-shiju.jose@huawei.com>
@@ -48,124 +48,44 @@ X-CFilter-Loop: Reflected
 From: Shiju Jose <shiju.jose@huawei.com>
 
 Register with the scrub configure driver to expose the sysfs attributes
-to the user for configuring the CXL device memory patrol scrub. Add the
-callback functions to support configuring the CXL memory device patrol
-scrub.
+to the user for configuring the CXL memory device's ECS feature. Add
+the callback functions to support configuring the CXL memory device ECS.
 
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/Kconfig         |   6 ++
- drivers/cxl/core/memscrub.c | 189 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 195 insertions(+)
+ drivers/cxl/core/memscrub.c | 234 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 234 insertions(+)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index e91f5acc94f2..fb26e7494744 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -159,11 +159,17 @@ config CXL_SCRUB
- 	tristate "CXL: Memory scrub feature"
- 	depends on CXL_PCI
- 	depends on CXL_MEM
-+	depends on SCRUB
- 	help
- 	  The CXL memory scrub control is an optional feature allows host to
- 	  control the scrub configurations of CXL Type 3 devices, which
- 	  support patrol scrub and/or DDR5 ECS(Error Check Scrub).
- 
-+	  Register with the scrub configure driver to expose sysfs attributes
-+	  to the user for configuring the CXL device memory patrol and DDR5 ECS
-+	  scrubs. Provides the interface functions to support configuring the
-+	  CXL memory device patrol and ECS scrubs.
-+
- 	  Say 'y/m' to enable the CXL memory scrub driver that will attach to
- 	  CXL.mem devices for memory scrub control feature. See sections
- 	  8.2.9.9.11.1 and 8.2.9.9.11.2 in the CXL 3.1 specification for a
 diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
-index d4d1f5dc0a35..213be4396b98 100644
+index 213be4396b98..52fc0af20664 100644
 --- a/drivers/cxl/core/memscrub.c
 +++ b/drivers/cxl/core/memscrub.c
-@@ -6,14 +6,19 @@
-  *
-  *  - Provides functions to configure patrol scrub
-  *    and DDR5 ECS features of the CXL memory devices.
-+ *  - Registers with the scrub driver to expose
-+ *    the sysfs attributes to the user for configuring
-+ *    the memory patrol scrub and DDR5 ECS features.
-  */
+@@ -464,6 +464,11 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_patrol_scrub_init, CXL);
+ #define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
+ #define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
  
- #define pr_fmt(fmt)	"CXL_MEM_SCRUB: " fmt
- 
- #include <cxlmem.h>
-+#include <memory/memory-scrub.h>
- 
- /* CXL memory scrub feature common definitions */
- #define CXL_SCRUB_MAX_ATTRB_RANGE_LENGTH	128
-+#define CXL_MEMDEV_MAX_NAME_LENGTH	128
- 
- static int cxl_mem_get_supported_feature_entry(struct cxl_memdev *cxlmd, const uuid_t *feat_uuid,
- 					       struct cxl_mbox_supp_feat_entry *feat_entry_out)
-@@ -70,6 +75,16 @@ static int cxl_mem_get_supported_feature_entry(struct cxl_memdev *cxlmd, const u
- #define CXL_MEMDEV_PS_GET_FEAT_VERSION	0x01
- #define CXL_MEMDEV_PS_SET_FEAT_VERSION	0x01
- 
-+#define CXL_PATROL_SCRUB	"cxl_patrol_scrub"
++#define CXL_DDR5_ECS	"cxl_ecs"
 +
-+/* The default number of regions for CXL memory device patrol scrubber
-+ * Patrol scrub is a feature where the device controller scrubs the
-+ * memory at a regular interval accroding to the CXL specification.
-+ * Hence the number of memory regions to scrub assosiated to the patrol
-+ * scrub is 1.
-+ */
-+#define CXL_MEMDEV_PATROL_SCRUB_NUM_REGIONS	1
++/* The default number of regions for CXL memory device ECS */
++#define CXL_MEMDEV_ECS_NUM_REGIONS	1
 +
- static const uuid_t cxl_patrol_scrub_uuid =
- 	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,     \
- 		  0x06, 0xdb, 0x8a);
-@@ -238,11 +253,177 @@ static int cxl_mem_ps_set_attrbs(struct device *dev,
+ static const uuid_t cxl_ecs_uuid =
+ 	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,     \
+ 		  0x89, 0x33, 0x86);
+@@ -729,10 +734,231 @@ static int cxl_mem_ecs_set_attrbs(struct device *dev, int fru_id,
  	return 0;
  }
  
-+static int cxl_mem_ps_enable_write(struct device *dev, long val)
++static int cxl_mem_ecs_log_entry_type_write(struct device *dev, int region_id, long val)
 +{
-+	struct cxl_memdev_ps_params params;
++	struct cxl_memdev_ecs_params params;
 +	int ret;
 +
-+	params.enable = val;
-+	ret = cxl_mem_ps_set_attrbs(dev, &params, CXL_MEMDEV_PS_PARAM_ENABLE);
++	params.log_entry_type = val;
++	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
++				     CXL_MEMDEV_ECS_PARAM_LOG_ENTRY_TYPE);
 +	if (ret) {
-+		dev_err(dev, "CXL patrol scrub enable fail, enable=%d ret=%d\n",
-+		       params.enable, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ps_speed_read(struct device *dev, u64 *val)
-+{
-+	struct cxl_memdev_ps_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ps_get_attrbs(dev, &params);
-+	if (ret) {
-+		dev_err(dev, "Get CXL patrol scrub params fail ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+	*val = params.speed;
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_ps_speed_write(struct device *dev, long val)
-+{
-+	struct cxl_memdev_ps_params params;
-+	int ret;
-+
-+	params.speed = val;
-+	ret = cxl_mem_ps_set_attrbs(dev, &params, CXL_MEMDEV_PS_PARAM_SPEED);
-+	if (ret) {
-+		dev_err(dev, "Set CXL patrol scrub params for speed fail ret=%d\n",
++		dev_err(dev->parent, "Set CXL ECS params for log entry type fail ret=%d\n",
 +			ret);
 +		return ret;
 +	}
@@ -173,25 +93,59 @@ index d4d1f5dc0a35..213be4396b98 100644
 +	return 0;
 +}
 +
-+static int cxl_mem_ps_speed_available_read(struct device *dev, char *buf)
++static int cxl_mem_ecs_threshold_write(struct device *dev, int region_id, long val)
 +{
-+	struct cxl_memdev_ps_params params;
++	struct cxl_memdev_ecs_params params;
 +	int ret;
 +
-+	ret = cxl_mem_ps_get_attrbs(dev, &params);
++	params.threshold = val;
++	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
++				     CXL_MEMDEV_ECS_PARAM_THRESHOLD);
 +	if (ret) {
-+		dev_err(dev, "Get CXL patrol scrub params fail ret=%d\n",
++		dev_err(dev->parent, "Set CXL ECS params for threshold fail ret=%d\n",
 +			ret);
 +		return ret;
 +	}
 +
-+	sysfs_emit(buf, "%s\n", params.speed_avail);
++	return 0;
++}
++
++static int cxl_mem_ecs_mode_write(struct device *dev, int region_id, long val)
++{
++	struct cxl_memdev_ecs_params params;
++	int ret;
++
++	params.mode = val;
++	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
++				     CXL_MEMDEV_ECS_PARAM_MODE);
++	if (ret) {
++		dev_err(dev->parent, "Set CXL ECS params for mode fail ret=%d\n",
++			ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cxl_mem_ecs_reset_counter_write(struct device *dev, int region_id, long val)
++{
++	struct cxl_memdev_ecs_params params;
++	int ret;
++
++	params.reset_counter = val;
++	ret = cxl_mem_ecs_set_attrbs(dev, region_id, &params,
++				     CXL_MEMDEV_ECS_PARAM_RESET_COUNTER);
++	if (ret) {
++		dev_err(dev->parent, "Set CXL ECS params for reset ECC counter fail ret=%d\n",
++			ret);
++		return ret;
++	}
 +
 +	return 0;
 +}
 +
 +/**
-+ * cxl_mem_patrol_scrub_is_visible() - Callback to return attribute visibility
++ * cxl_mem_ecs_is_visible() - Callback to return attribute visibility
 + * @drv_data: Pointer to driver-private data structure passed
 + *	      as argument to devm_scrub_device_register().
 + * @attr: Scrub attribute
@@ -199,22 +153,20 @@ index d4d1f5dc0a35..213be4396b98 100644
 + *
 + * Returns: 0 on success, an error otherwise
 + */
-+umode_t cxl_mem_patrol_scrub_is_visible(const void *drv_data, u32 attr, int region_id)
++static umode_t cxl_mem_ecs_is_visible(const void *drv_data, u32 attr, int region_id)
 +{
-+	const struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
-+
-+	if (attr == scrub_speed_available ||
-+	    attr == scrub_speed) {
-+		if (!cxl_ps_ctx->scrub_cycle_changable)
-+			return 0;
-+	}
-+
 +	switch (attr) {
-+	case scrub_speed_available:
-+		return 0444;
-+	case scrub_enable:
++	case scrub_reset_counter:
 +		return 0200;
-+	case scrub_speed:
++	case scrub_ecs_log_entry_type_per_dram:
++	case scrub_ecs_log_entry_type_per_memory_media:
++	case scrub_mode_counts_rows:
++	case scrub_mode_counts_codewords:
++	case scrub_threshold_available:
++		return 0444;
++	case scrub_ecs_log_entry_type:
++	case scrub_mode:
++	case scrub_threshold:
 +		return 0644;
 +	default:
 +		return 0;
@@ -222,7 +174,7 @@ index d4d1f5dc0a35..213be4396b98 100644
 +}
 +
 +/**
-+ * cxl_mem_patrol_scrub_read() - Read callback for data attributes
++ * cxl_mem_ecs_read() - Read callback for data attributes
 + * @dev: Pointer to scrub device
 + * @attr: Scrub attribute
 + * @region_id: ID of the memory region
@@ -230,19 +182,68 @@ index d4d1f5dc0a35..213be4396b98 100644
 + *
 + * Returns: 0 on success, an error otherwise
 + */
-+int cxl_mem_patrol_scrub_read(struct device *dev, u32 attr, int region_id, u64 *val)
++static int cxl_mem_ecs_read(struct device *dev, u32 attr, int region_id, u64 *val)
 +{
++	struct cxl_memdev_ecs_params params;
++	int ret;
++
++	if (attr == scrub_ecs_log_entry_type ||
++	    attr == scrub_ecs_log_entry_type_per_dram ||
++	    attr == scrub_ecs_log_entry_type_per_memory_media ||
++	    attr == scrub_mode ||
++	    attr == scrub_mode_counts_rows ||
++	    attr == scrub_mode_counts_codewords ||
++	    attr == scrub_threshold) {
++		ret = cxl_mem_ecs_get_attrbs(dev, region_id, &params);
++		if (ret) {
++			dev_err(dev->parent, "Get CXL ECS params fail ret=%d\n", ret);
++			return ret;
++		}
++	}
 +
 +	switch (attr) {
-+	case scrub_speed:
-+		return cxl_mem_ps_speed_read(dev->parent, val);
++	case scrub_ecs_log_entry_type:
++		*val = params.log_entry_type;
++		break;
++	case scrub_ecs_log_entry_type_per_dram:
++		if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_DRAM)
++			*val = 1;
++		else
++			*val = 0;
++		break;
++	case scrub_ecs_log_entry_type_per_memory_media:
++		if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
++			*val = 1;
++		else
++			*val = 0;
++		break;
++	case scrub_mode:
++		*val = params.mode;
++		break;
++	case scrub_mode_counts_rows:
++		if (params.mode == ECS_MODE_COUNTS_ROWS)
++			*val = 1;
++		else
++			*val = 0;
++		break;
++	case scrub_mode_counts_codewords:
++		if (params.mode == ECS_MODE_COUNTS_CODEWORDS)
++			*val = 1;
++		else
++			*val = 0;
++		break;
++	case scrub_threshold:
++		*val = params.threshold;
++		break;
 +	default:
 +		return -ENOTSUPP;
 +	}
++
++	return 0;
 +}
 +
 +/**
-+ * cxl_mem_patrol_scrub_write() - Write callback for data attributes
++ * cxl_mem_ecs_write() - Write callback for data attributes
 + * @dev: Pointer to scrub device
 + * @attr: Scrub attribute
 + * @region_id: ID of the memory region
@@ -250,70 +251,74 @@ index d4d1f5dc0a35..213be4396b98 100644
 + *
 + * Returns: 0 on success, an error otherwise
 + */
-+int cxl_mem_patrol_scrub_write(struct device *dev, u32 attr, int region_id, u64 val)
++static int cxl_mem_ecs_write(struct device *dev, u32 attr, int region_id, u64 val)
 +{
 +	switch (attr) {
-+	case scrub_enable:
-+		return cxl_mem_ps_enable_write(dev->parent, val);
-+	case scrub_speed:
-+		return cxl_mem_ps_speed_write(dev->parent, val);
++	case scrub_ecs_log_entry_type:
++		return cxl_mem_ecs_log_entry_type_write(dev, region_id, val);
++	case scrub_mode:
++		return cxl_mem_ecs_mode_write(dev, region_id, val);
++	case scrub_reset_counter:
++		return cxl_mem_ecs_reset_counter_write(dev, region_id, val);
++	case scrub_threshold:
++		return cxl_mem_ecs_threshold_write(dev, region_id, val);
 +	default:
 +		return -ENOTSUPP;
 +	}
 +}
 +
 +/**
-+ * cxl_mem_patrol_scrub_read_strings() - Read callback for string attributes
-+ * @dev: Pointer to scrub device
-+ * @attr: Scrub attribute
-+ * @region_id: ID of the memory region
++ * cxl_mem_ecs_read_strings() - Read callback for DDR5 ECS string attributes
++ * @dev: Pointer to ECS scrub device
++ * @attr: ECS scrub attribute
++ * @region_id: ID of the memory media FRU.
 + * @buf: Pointer to the buffer for copying returned string
 + *
 + * Returns: 0 on success, an error otherwise
 + */
-+int cxl_mem_patrol_scrub_read_strings(struct device *dev, u32 attr, int region_id,
-+				      char *buf)
++static int cxl_mem_ecs_read_strings(struct device *dev, u32 attr,
++				    int region_id, char *buf)
 +{
++
 +	switch (attr) {
-+	case scrub_speed_available:
-+		return cxl_mem_ps_speed_available_read(dev->parent, buf);
++	case scrub_threshold_available:
++		return sysfs_emit(buf, "256,1024,4096\n");
 +	default:
 +		return -ENOTSUPP;
 +	}
 +}
 +
-+static const struct scrub_ops cxl_ps_scrub_ops = {
-+	.is_visible = cxl_mem_patrol_scrub_is_visible,
-+	.read = cxl_mem_patrol_scrub_read,
-+	.write = cxl_mem_patrol_scrub_write,
-+	.read_string = cxl_mem_patrol_scrub_read_strings,
++static const struct scrub_ops cxl_ecs_ops = {
++	.is_visible = cxl_mem_ecs_is_visible,
++	.read = cxl_mem_ecs_read,
++	.write = cxl_mem_ecs_write,
++	.read_string = cxl_mem_ecs_read_strings,
 +};
 +
- int cxl_mem_patrol_scrub_init(struct cxl_memdev *cxlmd)
+ int cxl_mem_ddr5_ecs_init(struct cxl_memdev *cxlmd)
  {
 +	char scrub_name[CXL_MEMDEV_MAX_NAME_LENGTH];
- 	struct cxl_patrol_scrub_context *cxl_ps_ctx;
  	struct cxl_mbox_supp_feat_entry feat_entry;
- 	struct cxl_memdev_ps_params params;
+ 	struct cxl_ecs_context *cxl_ecs_ctx;
 +	struct device *cxl_scrub_dev;
+ 	int nmedia_frus;
  	int ret;
  
- 	ret = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_patrol_scrub_uuid,
-@@ -267,6 +448,14 @@ int cxl_mem_patrol_scrub_init(struct cxl_memdev *cxlmd)
- 	}
- 	cxl_ps_ctx->scrub_cycle_changable =  params.scrub_cycle_changable;
- 
-+	snprintf(scrub_name, sizeof(scrub_name), "%s_%s",
-+		 CXL_PATROL_SCRUB, dev_name(&cxlmd->dev));
-+	cxl_scrub_dev = devm_scrub_device_register(&cxlmd->dev, scrub_name,
-+						   cxl_ps_ctx, &cxl_ps_scrub_ops,
-+						   CXL_MEMDEV_PATROL_SCRUB_NUM_REGIONS);
-+	if (IS_ERR(cxl_scrub_dev))
-+		return PTR_ERR(cxl_scrub_dev);
+@@ -752,6 +978,14 @@ int cxl_mem_ddr5_ecs_init(struct cxl_memdev *cxlmd)
+ 		cxl_ecs_ctx->nregions = nmedia_frus;
+ 		cxl_ecs_ctx->get_feat_size = feat_entry.get_feat_size;
+ 		cxl_ecs_ctx->set_feat_size = feat_entry.set_feat_size;
 +
++		snprintf(scrub_name, sizeof(scrub_name), "%s_%s",
++			 CXL_DDR5_ECS, dev_name(&cxlmd->dev));
++		cxl_scrub_dev = devm_scrub_device_register(&cxlmd->dev, scrub_name,
++							  cxl_ecs_ctx, &cxl_ecs_ops,
++							  cxl_ecs_ctx->nregions);
++		if (IS_ERR(cxl_scrub_dev))
++			return PTR_ERR(cxl_scrub_dev);
+ 	}
+ 
  	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_patrol_scrub_init, CXL);
 -- 
 2.34.1
 
