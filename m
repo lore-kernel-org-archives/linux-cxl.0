@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RIV1C2O2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0B736Is"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950FC12C
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 17:22:10 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91704DD
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 17:22:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700616130; x=1732152130;
+  t=1700616131; x=1732152131;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hZ0XT3zGZ13N2t/d/jXTzV4fQS2xTLRryKNuiKfor1c=;
-  b=RIV1C2O2D9jckO/GiLK73+bmXCQPPz5DEPlPZbyu6SMXNSye9cf8X838
-   /HVNftcPqcdHtAcc4UA/Esgn+Pwgb2CdVu8KGbQxYp5EKLYrFp/3K49iV
-   bugC2xD1ZfmcmucMlLV7wDyyd+dUMGItA6gjLyokMcSKD34V6+CB5aQ3k
-   je9OTURU3kMn6uCQmsxfmogH/kxlsYEezk2ktORCjUr/K8gDY9aR1cxWY
-   IpcARIgkpEpjbc1BbHdobbOpVf9SyXSoQ7mXiHAknqNTxMWhiqC7jj/4Q
-   r3BrowHsh7311fwsgMwIi/pp+gCGfmJ/dDSJiF3z7WGb4fFlWOwzmtt/Y
+  bh=hCQ70vdYjxDHwuJdyELr8v4z/AkpiRccZ5YJoLFptiU=;
+  b=l0B736Isb4+tk1PuYvFjJgbSC8DUiF5b9BmH+UxLiNiRnlDj15++kvry
+   hpG0zqv/pTrTibGmSvgah4AMd9xU/kf8Xenm3pmwAUV9N4/7VUQhZms83
+   /JMHv6Q0AHgc6dcVzN3ROMy3vFttpwJbUsGzpaPUDlVSjcdRE8yXPB2UX
+   8kMbDsjqQwBsIXu7Dz0LCGlIqACdG/U8rzavHTA/5qrMy6vOWL1X8o40w
+   nV0vF89qelE1C81qhEWJF1BRxR/+sFDQAnSnYRv19bQ+sAiBioKdTggzH
+   3JeaB4zYJxl+wxnEGhY1jPE4fchEBmWdQkTMvQV573uR9A2RR7Wl3XuVZ
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="376988161"
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="376988173"
 X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
-   d="scan'208";a="376988161"
+   d="scan'208";a="376988173"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:09 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:10 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="760270762"
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="760270772"
 X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
-   d="scan'208";a="760270762"
+   d="scan'208";a="760270772"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.90.75])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:08 -0800
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:10 -0800
 From: alison.schofield@intel.com
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v5 1/5] libcxl: add interfaces for GET_POISON_LIST mailbox commands
-Date: Tue, 21 Nov 2023 17:22:02 -0800
-Message-Id: <22d01bd1af9af5370d1e35094176dbd66ef20dac.1700615159.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v5 4/5] cxl/list: add --poison option to cxl list
+Date: Tue, 21 Nov 2023 17:22:05 -0800
+Message-Id: <216ab396ab0c34fc391d1c3d3797a0d832a8d563.1700615159.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1700615159.git.alison.schofield@intel.com>
 References: <cover.1700615159.git.alison.schofield@intel.com>
@@ -48,117 +48,123 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-CXL devices maintain a list of locations that are poisoned or result
-in poison if the addresses are accessed by the host.
+The --poison option to 'cxl list' retrieves poison lists from
+memory devices supporting the capability and displays the
+returned poison records in the cxl list json. This option can
+apply to memdevs or regions.
 
-Per the spec (CXL 3.1 8.2.9.9.4.1), the device returns the Poison
-List as a set of  Media Error Records that include the source of the
-error, the starting device physical address and length.
-
-Trigger the retrieval of the poison list by writing to the memory
-device sysfs attribute: trigger_poison_list. The CXL driver only
-offers triggering per memdev, so the trigger by region interface
-offered here is a convenience API that triggers a poison list
-retrieval for each memdev contributing to a region.
-
-int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
-int cxl_region_trigger_poison_list(struct cxl_region *region);
-
-The resulting poison records are logged as kernel trace events
-named 'cxl_poison'.
+Example usage in the Documentation/cxl/cxl-list.txt update.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- cxl/lib/libcxl.c   | 47 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym |  6 ++++++
- cxl/libcxl.h       |  2 ++
- 3 files changed, 55 insertions(+)
+ Documentation/cxl/cxl-list.txt | 58 ++++++++++++++++++++++++++++++++++
+ cxl/filter.h                   |  3 ++
+ cxl/list.c                     |  2 ++
+ 3 files changed, 63 insertions(+)
 
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index af4ca44eae19..cc95c2d7c94a 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1647,6 +1647,53 @@ CXL_EXPORT int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev)
- 	return 0;
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 838de4086678..ee2f1b2d9fae 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -415,6 +415,64 @@ OPTIONS
+ --region::
+ 	Specify CXL region device name(s), or device id(s), to filter the listing.
+ 
++-L::
++--poison::
++	Include poison information. The poison list is retrieved from the
++	device(s) and poison records are added to the listing. Apply this
++	option to memdevs and regions where devices support the poison
++	list capability.
++
++----
++# cxl list -m mem11 --poison
++[
++  {
++    "memdev":"mem11",
++    "pmem_size":268435456,
++    "ram_size":0,
++    "serial":0,
++    "host":"0000:37:00.0",
++    "poison":{
++      "nr_records":1,
++      "records":[
++        {
++          "dpa":0,
++          "dpa_length":64,
++          "source":"Internal",
++        }
++      ]
++    }
++  }
++]
++# cxl list -r region5 --poison
++[
++  {
++    "region":"region5",
++    "resource":1035623989248,
++    "size":2147483648,
++    "interleave_ways":2,
++    "interleave_granularity":4096,
++    "decode_state":"commit",
++    "poison":{
++      "nr_records":2,
++      "records":[
++        {
++          "memdev":"mem2",
++          "dpa":0,
++          "dpa_length":64,
++          "source":"Internal",
++        },
++        {
++          "memdev":"mem5",
++          "dpa":0,
++          "length":512,
++          "source":"Vendor",
++        }
++      ]
++    }
++  }
++]
++----
++
+ -v::
+ --verbose::
+ 	Increase verbosity of the output. This can be specified
+diff --git a/cxl/filter.h b/cxl/filter.h
+index 3f65990f835a..1241f72ccf62 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -30,6 +30,7 @@ struct cxl_filter_params {
+ 	bool fw;
+ 	bool alert_config;
+ 	bool dax;
++	bool poison;
+ 	int verbose;
+ 	struct log_ctx ctx;
+ };
+@@ -88,6 +89,8 @@ static inline unsigned long cxl_filter_to_flags(struct cxl_filter_params *param)
+ 		flags |= UTIL_JSON_ALERT_CONFIG;
+ 	if (param->dax)
+ 		flags |= UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
++	if (param->poison)
++		flags |= UTIL_JSON_MEDIA_ERRORS;
+ 	return flags;
  }
  
-+CXL_EXPORT int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev)
-+{
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	char *path = memdev->dev_buf;
-+	int len = memdev->buf_len, rc;
-+
-+	if (snprintf(path, len, "%s/trigger_poison_list",
-+		     memdev->dev_path) >= len) {
-+		err(ctx, "%s: buffer too small\n",
-+		    cxl_memdev_get_devname(memdev));
-+		return -ENXIO;
-+	}
-+	rc = sysfs_write_attr(ctx, path, "1\n");
-+	if (rc < 0) {
-+		fprintf(stderr,
-+			"%s: Failed write sysfs attr trigger_poison_list\n",
-+			cxl_memdev_get_devname(memdev));
-+		return rc;
-+	}
-+	return 0;
-+}
-+
-+CXL_EXPORT int cxl_region_trigger_poison_list(struct cxl_region *region)
-+{
-+	struct cxl_memdev_mapping *mapping;
-+	int rc;
-+
-+	cxl_mapping_foreach(region, mapping) {
-+		struct cxl_decoder *decoder;
-+		struct cxl_memdev *memdev;
-+
-+		decoder = cxl_mapping_get_decoder(mapping);
-+		if (!decoder)
-+			continue;
-+
-+		memdev = cxl_decoder_get_memdev(decoder);
-+		if (!memdev)
-+			continue;
-+
-+		rc = cxl_memdev_trigger_poison_list(memdev);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return 0;
-+}
-+
- CXL_EXPORT int cxl_memdev_enable(struct cxl_memdev *memdev)
- {
- 	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 8fa1cca3d0d7..277b7e21d6a6 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -264,3 +264,9 @@ global:
- 	cxl_memdev_update_fw;
- 	cxl_memdev_cancel_fw_update;
- } LIBCXL_5;
-+
-+LIBCXL_7 {
-+global:
-+	cxl_memdev_trigger_poison_list;
-+	cxl_region_trigger_poison_list;
-+} LIBCXL_6;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 0f4f4b2648fb..ecdffe36df2c 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -460,6 +460,8 @@ enum cxl_setpartition_mode {
- 
- int cxl_cmd_partition_set_mode(struct cxl_cmd *cmd,
- 		enum cxl_setpartition_mode mode);
-+int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
-+int cxl_region_trigger_poison_list(struct cxl_region *region);
- 
- #ifdef __cplusplus
- } /* extern "C" */
+diff --git a/cxl/list.c b/cxl/list.c
+index 93ba51ef895c..13fef8569340 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -57,6 +57,8 @@ static const struct option options[] = {
+ 		    "include memory device firmware information"),
+ 	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
+ 		    "include alert configuration information"),
++	OPT_BOOLEAN('L', "poison", &param.poison,
++		    "include poison information "),
+ 	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+ #ifdef ENABLE_DEBUG
+ 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
 -- 
 2.37.3
 
