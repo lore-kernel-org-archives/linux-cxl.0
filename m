@@ -1,230 +1,203 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="NTu6l2de"
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C278E1731;
-	Tue, 21 Nov 2023 17:09:17 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 5045D81BB6;
-	Wed, 22 Nov 2023 01:01:22 +0000 (UTC)
-Received: from pdx1-sub0-mail-a211.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 60E9681AF4;
-	Wed, 22 Nov 2023 01:01:20 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1700614880; a=rsa-sha256;
-	cv=none;
-	b=uDrlXBrGErJayNHHMxGqLoqHrW+Crrh0EwSeMwROyucg2k9wpmk43KMVDnlIKiBIk/CRcM
-	hmeKsvsOC1HjOD+kZdYj7mDlXZzMzj5Pk60zPrP/kb39xv5KN/Ccb3XUKha5I3WXaqJoP3
-	ZoG4WKuh4q+LUHn7p0SlRNolWYNe8H0QrE68yiGo0TrXSH1a/AoAV3VTDe9MgfPaoTfgG6
-	IkQCP3CR0F/vYX8l+qs8Mn5v8AEm1sTrInPbV6VwQVsbzOO3GsOmqOzdsnKXqVW3jFcP0C
-	IjRQ7plBDwnoOQT2N6+vhmckLlyD4bS/2gSBYQypsaWA9OE+BrJ3BxNSYbjwoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1700614880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=pBG5QBQev1WUx8qgrxc7+absFmgUQXr+R05r/UhTqT8=;
-	b=ktwRbYz9T60ih0byWBdI5OZr2RotJMLyXo2/Crla3sDBX5jvfzTPwI1/OsParfKZRQBlnQ
-	VMDojCSZ4BFu0Fo7MuTbVWOQGa2W0Pzf8k+Nnp3shodc5XXgH1WC7jZqEHSFDx31HETeXv
-	X6/sgAZKAMCwINAUz63viKngVrUzuNZieOWJg00EGoj5bW1dk5/uYuPux0vqHk8NVjNk69
-	nSbzPmn7yYbP4Kfpm4cx4Vui0kygLSQ8YMCCuqEsgzznVuohnneI+V/12qlJF9goEy8HF7
-	6vROcvAUQQxgXm2ww2IbKznmsCxQneV9Xoh+xqWlMTwWlKPYVwX7Jgs924nBmw==
-ARC-Authentication-Results: i=1;
-	rspamd-645fb96b5-hzw8k;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Absorbed-Abortive: 11f349ac07025e80_1700614882126_1858017920
-X-MC-Loop-Signature: 1700614882126:3891613807
-X-MC-Ingress-Time: 1700614882126
-Received: from pdx1-sub0-mail-a211.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.134.218 (trex/6.9.2);
-	Wed, 22 Nov 2023 01:01:22 +0000
-Received: from offworld (unknown [104.36.30.214])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a211.dreamhost.com (Postfix) with ESMTPSA id 4SZjcG0xmwzXs;
-	Tue, 21 Nov 2023 17:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1700614880;
-	bh=pBG5QBQev1WUx8qgrxc7+absFmgUQXr+R05r/UhTqT8=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=NTu6l2dendzv7UQwdOaVWOyt3UvJbIAWI8OJeKZ1PqMdooZF3s1umV2DF3UcQPOfn
-	 +RSExkcNV9UZdGM/iJVp8HTDbmsCALUjDIo3F9jycbP3sha6EQIREVcynth+TrOTAU
-	 PEC65yyHactoisFgWMl/UvprSu22zfPNe4OCugP0POhgQleUBNd/QuDvQqCZ9ew04w
-	 915OPd2aYtAvcWcsAS9BvTQkp5RCKluB/hqPmFdr+jQk2yu/qJ2HrzAnj2I2PBZxEC
-	 5sylbnjLL1lzUaNf2SJsI40vpJY2vpQqRr331is/JKTb6er8bisuuqUJ6pEW9FaADW
-	 sJYLkNlqvcpAg==
-Date: Tue, 21 Nov 2023 17:01:14 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org, 
-	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, david@redhat.com, 
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com, 
-	jiaqiyan@google.com, tony.luck@intel.com, Jon.Grimm@amd.com, 
-	dave.hansen@linux.intel.com, rafael@kernel.org, lenb@kernel.org, naoya.horiguchi@nec.com, 
-	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com, 
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com, mike.malvestuto@intel.com, 
-	gthelen@google.com, wschwartz@amperecomputing.com, dferguson@amperecomputing.com, 
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com, kangkang.shen@futurewei.com, 
-	wanghuiqiang@huawei.com, linuxarm@huawei.com, fan.ni@samsung.com, 
-	a.manzanares@samsung.com
-Subject: Re: [PATCH v2 03/10] cxl/mbox: Add SET_FEATURE mailbox command
-Message-ID: <l6spiq3w45fwswuz4adrhhll2w52sc3vj2gg57kys5aaulo6v4@i4pbbjzhm3aq>
-Mail-Followup-To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org, 
-	linux-mm@kvack.org, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
-	dan.j.williams@intel.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com, 
-	Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com, 
-	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org, lenb@kernel.org, 
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com, 
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com, duenwen@google.com, 
-	mike.malvestuto@intel.com, gthelen@google.com, wschwartz@amperecomputing.com, 
-	dferguson@amperecomputing.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com, 
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com, linuxarm@huawei.com, fan.ni@samsung.com, 
-	a.manzanares@samsung.com
-References: <20231121101844.1161-1-shiju.jose@huawei.com>
- <20231121101844.1161-4-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwI2bcpt"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB85D5E
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 17:22:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700616129; x=1732152129;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1xVZLtrwucujKZ7Ji7x3Sfb1q0WQABoUpO7Q9gAkGkQ=;
+  b=jwI2bcptuL1B5zAS8IP+5yeIqxFlJVOO2EkGYjqcc/190Jty0Dycaddc
+   0tAhthwUcxlBKTpAk9uDVC/LSGTVDuIexc3Y0H7WHG2VBqLmX92qN2IK5
+   xCVHrXMNUPDtJBZVS9GLW+PXb4i1nBMDTubmZcblOxdfHIehkF1aDBRcw
+   RMO8BB5ozX34hct0IP73OSYk2GkS+z6AJFzb9TzrnLF7RYsF8ExV6jJLF
+   Oy3bmEa5P0MyfXx3lyF2cfye0AxKtgyTCfaBF2igczam9cDI8p3QtwhC7
+   SXJ0O4YROuYc1+C1uWiJdHDSheNSEmaa1cCZOiw9DKVu1pjKLTvEklKwB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="376988159"
+X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
+   d="scan'208";a="376988159"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="760270759"
+X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
+   d="scan'208";a="760270759"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.90.75])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 17:22:08 -0800
+From: alison.schofield@intel.com
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v5 0/5] Support poison list retrieval
+Date: Tue, 21 Nov 2023 17:22:01 -0800
+Message-Id: <cover.1700615159.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20231121101844.1161-4-shiju.jose@huawei.com>
-User-Agent: NeoMutt/20231006
+Content-Transfer-Encoding: 8bit
 
-On Tue, 21 Nov 2023, shiju.jose@huawei.com wrote:
+From: Alison Schofield <alison.schofield@intel.com>
 
->From: Shiju Jose <shiju.jose@huawei.com>
->
->Add support for SET_FEATURE mailbox command.
->
->CXL spec 3.0 section 8.2.9.6 describes optional device specific features.
->CXL devices supports features with changeable attributes.
->The settings of a feature can be optionally modified using Set Feature
->command.
->
->Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->---
-> drivers/cxl/core/mbox.c      | 15 +++++++++++++++
-> drivers/cxl/cxlmem.h         | 27 +++++++++++++++++++++++++++
-> include/uapi/linux/cxl_mem.h |  1 +
-> 3 files changed, 43 insertions(+)
->
->diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->index 2675c616caec..d892b07446ca 100644
->--- a/drivers/cxl/core/mbox.c
->+++ b/drivers/cxl/core/mbox.c
->@@ -65,6 +65,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-> 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> 	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
-> 	CXL_CMD(GET_FEATURE, 0x15, CXL_VARIABLE_PAYLOAD, 0),
->+	CXL_CMD(SET_FEATURE, CXL_VARIABLE_PAYLOAD, 0, 0),
-> };
->
-> /*
->@@ -1350,6 +1351,20 @@ int cxl_get_feature(struct cxl_memdev_state *mds,
-> }
-> EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
->
->+int cxl_set_feature(struct cxl_memdev_state *mds, void *feat_in, size_t size)
->+{
->+	struct cxl_mbox_cmd mbox_cmd;
->+
->+	mbox_cmd = (struct cxl_mbox_cmd) {
->+		.opcode = CXL_MBOX_OP_SET_FEATURE,
->+		.size_in = size,
->+		.payload_in = feat_in,
->+	};
->+
->+	return cxl_internal_send_cmd(mds, &mbox_cmd);
->+}
->+EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
->+
-> int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> 		       struct cxl_region *cxlr)
-> {
->diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->index 92c1f2a44713..46131dcd0900 100644
->--- a/drivers/cxl/cxlmem.h
->+++ b/drivers/cxl/cxlmem.h
->@@ -508,6 +508,7 @@ enum cxl_opcode {
-> 	CXL_MBOX_OP_GET_LOG		= 0x0401,
-> 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
-> 	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
->+	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
-> 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
-> 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
-> 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
->@@ -817,6 +818,31 @@ struct cxl_mbox_get_feat_in {
-> 	u8 selection;
-> }  __packed;
->
->+/* Set Feature CXL 3.0 Spec 8.2.9.6.3 */
->+/*
->+ * Set Feature input payload
->+ * CXL rev 3.0 section 8.2.9.6.3; Table 8-81
->+ */
->+/* Set Feature : Payload in flags */
->+#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
->+enum cxl_set_feat_flag_data_transfer {
->+	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER = 0x0,
->+	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER = 0x1,
->+	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER = 0x2,
->+	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER = 0x3,
->+	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER = 0x4,
->+	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
->+};
->+#define CXL_SET_FEAT_FLAG_MOD_VALUE_SAVED_ACROSS_RESET	BIT(3)
->+
->+struct cxl_mbox_set_feat_in {
->+	uuid_t uuid;
->+	__le32 flags;
->+	__le16 offset;
->+	u8 version;
->+	u8 rsvd[9];
->+}  __packed;
->+
-> /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
-> struct cxl_mbox_poison_in {
-> 	__le64 offset;
->@@ -949,6 +975,7 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
-> 			       void *feats_out);
-> int cxl_get_feature(struct cxl_memdev_state *mds,
-> 		    struct cxl_mbox_get_feat_in *pi, void *feat_out);
->+int cxl_set_feature(struct cxl_memdev_state *mds, void *feat_in, size_t size);
-> int cxl_poison_state_init(struct cxl_memdev_state *mds);
-> int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> 		       struct cxl_region *cxlr);
->diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
->index b20de60bfc71..8c89d323cc41 100644
->--- a/include/uapi/linux/cxl_mem.h
->+++ b/include/uapi/linux/cxl_mem.h
->@@ -48,6 +48,7 @@
-> 	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
-> 	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),           \
-> 	___C(GET_FEATURE, "Get Feature"),                                 \
->+	___C(SET_FEATURE, "Set Feature"),                                 \
+Changes since v4:
+- Unit test style changes based on a chatroom review with Vishal.
+- Link to v4:
+https://lore.kernel.org/linux-cxl/cover.1700591754.git.alison.schofield@intel.com/
 
-I don't think we want to export this to userspace, and you are
-already using the scrub driver for setting feat attributes.
+Changes since v3:
+- Exclude poison record where address belongs to a different region
+- Add unit test case for above scenario
+- Refactor unit test handling of poison record checks (Vishal)
+- Address shellcheck complaints in the unit test (Vishal)
+- Remove empty json fields from cxl-list man page
+- Omit json "flags" field when no flags exist
+- Minor flow updates in the unit test
+- Link to v3:
+  https://lore.kernel.org/linux-cxl/cover.1700258145.git.alison.schofield@intel.com/
 
-> 	___C(MAX, "invalid / last command")
->
-> #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
->-- 
->2.34.1
->
+
+Begin cover letter:
+
+Add the option to include a memory device poison list in cxl list json output.
+Examples appended below: by memdev, by region, by memdev and coincidentally
+in a region, and no poison found.
+
+Example: By memdev
+cxl list -m mem1 --poison -u
+{
+  "memdev":"mem1",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0x1",
+  "numa_node":1,
+  "host":"cxl_mem.1",
+  "poison":{
+    "nr_records":4,
+    "records":[
+      {
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0x40001000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "dpa":"0x600",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
+
+Example: By region
+cxl list -r region5 --poison -u
+{
+  "region":"region5",
+  "resource":"0xf110000000",
+  "size":"2.00 GiB (2.15 GB)",
+  "type":"pmem",
+  "interleave_ways":2,
+  "interleave_granularity":4096,
+  "decode_state":"commit",
+  "poison":{
+    "nr_records":2,
+    "records":[
+      {
+        "memdev":"mem1",
+        "region":"region5",
+        "hpa":"0xf110001000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      },
+      {
+        "memdev":"mem0",
+        "region":"region5",
+        "hpa":"0xf110000000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
+
+Example: By memdev and coincidentally in a region
+# cxl list -m mem0 --poison -u
+{
+  "memdev":"mem0",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0",
+  "numa_node":0,
+  "host":"cxl_mem.0",
+  "poison":{
+    "nr_records":1,
+    "records":[
+      {
+        "region":"region5",
+        "hpa":"0xf110000000",
+        "dpa":"0x40000000",
+        "dpa_length":64,
+        "source":"Injected",
+      }
+    ]
+  }
+}
+
+Example: No poison found
+cxl list -m mem9 --poison -u
+{
+  "memdev":"mem9",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0x9",
+  "numa_node":1,
+  "host":"cxl_mem.9",
+  "poison":{
+    "nr_records":0
+  }
+}
+
+Alison Schofield (5):
+  libcxl: add interfaces for GET_POISON_LIST mailbox commands
+  cxl: add an optional pid check to event parsing
+  cxl/list: collect and parse the poison list records
+  cxl/list: add --poison option to cxl list
+  cxl/test: add cxl-poison.sh unit test
+
+ Documentation/cxl/cxl-list.txt |  58 +++++++++
+ cxl/event_trace.c              |   5 +
+ cxl/event_trace.h              |   1 +
+ cxl/filter.h                   |   3 +
+ cxl/json.c                     | 211 +++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.c               |  47 ++++++++
+ cxl/lib/libcxl.sym             |   6 +
+ cxl/libcxl.h                   |   2 +
+ cxl/list.c                     |   2 +
+ test/cxl-poison.sh             | 158 ++++++++++++++++++++++++
+ test/meson.build               |   2 +
+ 11 files changed, 495 insertions(+)
+ create mode 100644 test/cxl-poison.sh
+
+
+base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
+-- 
+2.37.3
+
