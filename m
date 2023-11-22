@@ -1,194 +1,328 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J++tyXnF"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C8918E
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Nov 2023 12:13:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700683990; x=1732219990;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=f6NrMk8HFJKFVx71sDv7HqD3wpb/Ya+X3Od5Rb0Alr0=;
-  b=J++tyXnFt5zHIaTMOoiFKdoFA+7uvx/IWI/5+qR28HmQyx3jTeQFDi5U
-   Gh4z/dgRQ0uo5cZIVtnuG+pMuuI0iyUD2T+kaQa32MjfQd84eWzw37f0d
-   NPSqQbaGdxugUzALXGGeqdypLPy7mQ/05fyB5I4dpU5gE31hKnEPp6Jne
-   616e2w4LcqxjYMi1QUOd2Hx2WmeizmebazJ5PevUMQovTZP2csBtIBMN8
-   cXC5k1WPP2AEJIV9w8kpVw/evtCXMJEFMBvu99bMv4J7ph58TECFxr5kS
-   Hhum2yiqMx7Ko7E/FH7g4bGawgr2jz69y6dYa7wLILLjFQXnfPpehmv7x
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="5332331"
-X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
-   d="scan'208";a="5332331"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 12:13:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="890559007"
-X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
-   d="scan'208";a="890559007"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Nov 2023 12:13:08 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Wed, 22 Nov 2023 12:13:08 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Wed, 22 Nov 2023 12:13:08 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Wed, 22 Nov 2023 12:13:08 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqqnMqWPzH6fa8pHNmtk12kSH3E9L5x4O/UTZ3EMlIUvFO75MiiveKrLLGiEQs01YwIpLMCEU68JQQrJWYKdgHKz+YSDg9xqmI/GbFsHDyjuH9zz37Lzkx3DwP7WsJSqv4o4syqdJ6UDsIUCZNn6Ybeexv6LKdLKlTqYfM0Mn+57AqonhB0AOiXnLAOlO8AB/B7h8LSIG9woLttIsZv6ab7Bp8gWqiFxfu9m6O+nWORykS3k4Snc3/Xw5WfoBehB6AxvgCKYnxrDMfy849CPOEiOMXvgZJReSDwo1TgE+DIraNK35aA7R5rDKGVCKEWS+hgoRpnSTsNbDukZ4EB4Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f6NrMk8HFJKFVx71sDv7HqD3wpb/Ya+X3Od5Rb0Alr0=;
- b=GgpY4RqQ6Za2SirOkaBoOGaCo+CWo/7C3FdpqcPKKEul2s2/vvMCdfU+ye3vMyJlSQ8N2saQJzrqrAbVS1nvWDRKDzAiPVMeBiSW3ABU+0NiEdNjuT7RpvH2Q3S6c3Uax0Ai700pSW5WXNvm1HVLfcF5e7kONZ0xmTuC+ba7mFyeUO71GfFs9pSr+s/ZaGXjZP9TQh0h6IEuvZjWHm8XQqupEnNUHneC1ATeZaM8HICGOUeDloMTPvm78KoKN4co/F7aoseEO7kk4hoqqiR9mMXoZa9HDHEUmw4BsiphhzEc0g/otnUuEaNLiFkPmxTwnK4tsaZ83J72S4WxKinj0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
- by PH7PR11MB5943.namprd11.prod.outlook.com (2603:10b6:510:13f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.18; Wed, 22 Nov
- 2023 20:13:04 +0000
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::703a:a01d:8718:5694]) by MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::703a:a01d:8718:5694%7]) with mapi id 15.20.7025.019; Wed, 22 Nov 2023
- 20:13:04 +0000
-From: "Verma, Vishal L" <vishal.l.verma@intel.com>
-To: "Schofield, Alison" <alison.schofield@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [ndctl PATCH] cxl/test: replace a bad root decoder usage in
- cxl-xor-region.sh
-Thread-Topic: [ndctl PATCH] cxl/test: replace a bad root decoder usage in
- cxl-xor-region.sh
-Thread-Index: AQHaHO+0CKpKWoM4p0mWKMmbMe+doLCGxrcA
-Date: Wed, 22 Nov 2023 20:13:04 +0000
-Message-ID: <b070946887be8a9abcd41235780abec69d8db39e.camel@intel.com>
-References: <20231122025753.1209527-1-alison.schofield@intel.com>
-In-Reply-To: <20231122025753.1209527-1-alison.schofield@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|PH7PR11MB5943:EE_
-x-ms-office365-filtering-correlation-id: 2452fb72-4add-401c-9365-08dbeb976f31
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ficZ8+uPVWhG3XPmHTiWNd2iIOYKHajbLjmFysPyHKwH48ALXOxeVADYBHEulbHX6FQ4+LHEvv5IsX6m9C3HldjZQwpxNRfwgB96ILuQJIyy+R14ol+Q3xlySEnEhigQnEt44MIwgcU2Ey5agA4XE+IVlfOERPbIDzc32H+CCVHnzkD5OnWhNY7/qxlWWCYQiH1REtWCnXsYua0GHVg34JU6x+cDlhucChCwN4NyeoqNIBRlIinR8rplUWu0enkb7b3lZMeR9C0/DRoAAknuctL/OiB5+rg2d5rrV1WBfySOlyy9+LcbzFx9kCqIHH2OLxDFIexl1TZzPgGpP20/jQGWUOQ8ud6mM0ZqLrP+9jH3f3oA/dQja/RmJ3m/s6VZayWbD/M/LGfKhg1ttJDwOsjVixX7I4S6525GEu4NcpYyprwSCLPzFQ93RyetrRl/1wkOas9VhbYeskwJSG6FYvo4QOG4+/w7zACmeoFN/mfs7CF82MwfBMcUEgd+jBF8oS6+pZ9sHIir2cTyiWnHcyw7t23kFSBW50ybpICDy2kJE5c59fjzalRlclgXPqQEwnRqw0I8WQ95PrNM4VmzOFfODeKB1slQKm7mpAOlMd6vOQhj5rwZVwN6vMi1CS2KEEYsr9XyZNDh7buJrLrgPw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(39860400002)(376002)(136003)(366004)(230173577357003)(230273577357003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(5660300002)(86362001)(2906002)(66946007)(66556008)(66476007)(316002)(64756008)(54906003)(6636002)(66446008)(4001150100001)(37006003)(76116006)(6862004)(8676002)(4326008)(8936002)(36756003)(38070700009)(41300700001)(6512007)(83380400001)(6486002)(966005)(478600001)(122000001)(6506007)(71200400001)(26005)(2616005)(82960400001)(38100700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OUdEV0Y1ZjlEbSt0ZHN1R0FIc0Rqc1Fld1Y0Yk9oeUt3NVBTQS9rVWFDaVVm?=
- =?utf-8?B?aHMvTWplU3VJdXRpYUFVWitpVHhSU2tDbzRxcWRVK3V4ME15ZTNSRlFnMWRp?=
- =?utf-8?B?Z3Eya3FWaUtEYnVyNWtNaHJtc0daUlhXdlhadnpySEN2U256bVU1VEpQMDN2?=
- =?utf-8?B?SUwyS0VReTE1L25vWFRGNnZVWTk4M3Faa0NGbU03Zm9ob3FEK1lBaDRRVkFh?=
- =?utf-8?B?Vlh4UzlUU2Z3RWtVZEVRb0UxTHNpczd4VzIxUFBDNHFnam4vUUtvallJM1Vw?=
- =?utf-8?B?bkFhQURsc09hdGozLzVCclJpZ3daZXE5MzBJMEppbTNUQ2o1bXVmSkFrMHNj?=
- =?utf-8?B?WFk4OXBuOHB2UmQ1azFTenlCZk5HcUhSTjIza3kxTDQrMXFwbjQxc3U2b2RU?=
- =?utf-8?B?R3Y1c1hvc1hrZzdRNFFrZUIza1FwbFl1WVFQOGkrSWU4eVBSZ0hMeVU5ajFp?=
- =?utf-8?B?dURyVlhYaUZ3V0paVGQ5MjdYUUVYS2JiaUREU0F4SVVRTXJ0RDFmeUJmK2Zm?=
- =?utf-8?B?QTNkWTBaSDAzbEZnMVZXeFNvbEdVb3VNRmkvZUMyMjg1TWd4dndUay9lTldx?=
- =?utf-8?B?Vk85N0p1M0xhTUVwNC95czlYbWIyY09lZkkzekRtempEUGpuWDlMWEgra3JZ?=
- =?utf-8?B?NEJ5dlBJY3NFb2RnVExkMjJMTi8yYkZPbXpTZnY5YmdGa3dpYnV3Z2NieEdh?=
- =?utf-8?B?TDU0Qlp3aG41VzRQc29NaHBsK2NIWFp6T2l6WTFmWGtMajVTcGlxQXltdHA2?=
- =?utf-8?B?bFVINHFCZk1zYXVIR3J3THhiU3hSdkdvM1N3TWhROCt4S1RtdDNmbjhXQmV3?=
- =?utf-8?B?cFUzS3VPWUtQTk5TdlBpSStoOFFhYkVpeWpYWXhGRXRpeDROYjRoSUFvYm4x?=
- =?utf-8?B?VkJCN05qNGxUTk5Lb2dmRWhtMWJiVXdSV3FKTnd3WWNnNEVuelFlYXIzNGxt?=
- =?utf-8?B?VnZva01RbGptUGE0TVRtZ05aZkRBZTB3NWlFZ2c3Y0Rkb2o3OWsvMENObnRU?=
- =?utf-8?B?N3MrNVlMV3VrMHJrQkVzbXc1MjhIc25WdW13NVJpa0FSbXhQb3hNcmljR1NP?=
- =?utf-8?B?bDl2Ris2UGx3UUpNMlZiTHZES0RCV295bFFObmZVNllKVWdXQ1FNYXpvZm1w?=
- =?utf-8?B?TVdNZ0F4NWk2b215SWhUUzkrQlBnUzB4NWltTERUSXBSQ2E0YjdkcERYR0R2?=
- =?utf-8?B?YnNqaFhCN2tONllqRC9yYU1WSXh5ZERTUjJHeU9lWS9EZEhZUFZ0TzJ4VTlk?=
- =?utf-8?B?REE3aThSUStBRmVONDd1VHowQ1k5cUM5eWY3YndmalhpTTB0emZFRWh6Q09r?=
- =?utf-8?B?UjlmRWpmbXBtSVoreWFGWmcxcTBYNVFuclJJdHB1UkprZkwvZGQwZ2ttZmgr?=
- =?utf-8?B?YnpUcVJpTkcwZHdaWkhuRjhNbmlzenNYL0xOajJhVkJiYjVWK3ZCc2RjejU1?=
- =?utf-8?B?OExDdVUreVVjaHpZSWN3ZStxcWVXNUlqV1ZzRjZWMVFKRkhGYTFjbElQYVlR?=
- =?utf-8?B?OUNSVGV2SldHb1d6QjBzVnJBZm9kbHFmMk9va05yellieGdwbktKVGZnNGxy?=
- =?utf-8?B?M1FOeENMbGN2THJxMEljZUNNaExOd25kU3g0MWFaZTJnY00xTjltTXNzNjFY?=
- =?utf-8?B?ZEsrcmYxMSt6OTIrM1RkUFlLSDNoR1RrWEo0ZVVCNmhqZDJNUGdCcU1HanBs?=
- =?utf-8?B?LzRmQTZHclk3ME11RTJIZmQ2QzJlR3dwLzRzKzdmcWtWbzdOVUdRSDlJV2V2?=
- =?utf-8?B?ZTc2RmtrWGlJNXd6am9YaGNHaCtoM2xEQW9HSEJRenFTQ244UlFyZ2xNY3A1?=
- =?utf-8?B?elkzVWt1RTZ1bmlnSkNmYStRcmJJWjllSU43SmN1RXpycVZUNjJ1dGFQYTBs?=
- =?utf-8?B?L3dIalkrZnMySkJrWExUelpiaFpoT3Axem1oR1ZYWm5GKzNUYTY5Rlp1Y1BP?=
- =?utf-8?B?STZhME83SVBJUTdUMExlb05PWk5tbGc2Ty9YcU9VS2JMQm80cnRSSkxQTEVT?=
- =?utf-8?B?Q2krM1JnSVdvWkNSbjFyc1hheG9GQUE2QVFnUDR0eHZUTVFmb0VWK2p5UUpu?=
- =?utf-8?B?Q3dEaldUcUVnOUZzbzFJajZ2dzlKTEk5VkU3c2YyZSs3NWJyc0ptYlNxUHVM?=
- =?utf-8?B?MU5naUY4L3p4ZUp4RDM0c1NlMklVeTRsYmFNZGJ1NlQ1MGVNZW5iQkNUM0hF?=
- =?utf-8?B?M3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F8391D09B362AE4E90AF62084BB34CFE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntADCO52"
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FC51A4;
+	Wed, 22 Nov 2023 13:31:12 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1cf6af8588fso1917155ad.0;
+        Wed, 22 Nov 2023 13:31:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700688671; x=1701293471; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T8YHcJrVA3B+7BnFIZDKn+9VseQtxV3EDqLRBy0nrns=;
+        b=ntADCO52YtfU9Ay4pXk2kO8EsKzo8ru6sncQi/EPni5ilXwMlJNXPKRVZQOv+dUM7Z
+         VOPAuhNCLuEoPp0nHDca06lyzMufoeF00lZLycn+F4jTg+xArCVmK29I426D+A330hBo
+         nhcakz3rDG64zsMvbPrXqkvnGaMMpd+PdGa2m5I5G7C6sdly0TY/PqWy/oqoyXGaJV+U
+         8shUBQ9xwL4MXPquBymLz2an/i6OJ3LGoynNG/koWnHrXdlzKY259ZOSz57bvK6ItA/P
+         IZDG30spBgSDUkKYdqMODjp4r3WdZ13uh9BNFz67Q5mPGiR6yTA9rMU/Vb+iPD4qmZNU
+         WhDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700688671; x=1701293471;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T8YHcJrVA3B+7BnFIZDKn+9VseQtxV3EDqLRBy0nrns=;
+        b=tl9cN1VoS1EJDgJ0IwFNva7+MTQ+sPLvhRpwYt57fOf2FypTRWdfoKjI/xonGr5DVn
+         Cysdm3Qoo0fHo2RQUd+55imPCrkv8XRR5NdW/7Y9E8PBalpLiSuzbaJEa28HmkmSiQql
+         i3FF4RUFaU8vbZlzhd9R1BEUFGMzuImcM1JxOTcqPSVn7HYktZtS7aKhIkPG28FgU+AA
+         DaQ6og6DGNkOLzwUr4hSQR1MW1Ye1h1gnCmnLUbmHFMofRYgEPShQox1efyJEqoEvAdx
+         XjtIvKCgNyW62CFYXwAUrS0NJy/4iI+99UYk0UhxQQQ1o3xofWWTHftOy3uJnG7WQLB3
+         oDIw==
+X-Gm-Message-State: AOJu0Yy24aU/7SW3/FTkgjQd1wqLSVaAy4r+wHltXCoCS1b6hV3vkaS4
+	+McNLqSDO/9im7BLrqrtdfA=
+X-Google-Smtp-Source: AGHT+IHMpg50GDCHwxIzCQw+0Xu3Qk1HhYDZWqMBovoQdAPUyBcR0iK37BF2NuSlokSb3jjoQ3/KiQ==
+X-Received: by 2002:a17:903:1207:b0:1cc:53d1:10b8 with SMTP id l7-20020a170903120700b001cc53d110b8mr4168520plh.50.1700688671321;
+        Wed, 22 Nov 2023 13:31:11 -0800 (PST)
+Received: from r13-u19.micron.com ([165.225.243.112])
+        by smtp.gmail.com with ESMTPSA id jl13-20020a170903134d00b001c736746d33sm134845plb.217.2023.11.22.13.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Nov 2023 13:31:10 -0800 (PST)
+Date: Wed, 22 Nov 2023 15:31:05 -0600
+From: Vinicius Petrucci <vpetrucci@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-api@vger.kernel.org, minchan@kernel.org,
+	dave.hansen@linux.intel.com, x86@kernel.org,
+	Jonathan.Cameron@huawei.com, aneesh.kumar@linux.ibm.com,
+	gregory.price@memverge.com, ying.huang@intel.com,
+	dan.j.williams@intel.com, hezhongkun.hzk@bytedance.com,
+	fvdl@google.com, surenb@google.com, rientjes@google.com,
+	hannes@cmpxchg.org, mhocko@suse.com, Hasan.Maruf@amd.com,
+	jgroves@micron.com, ravis.opensrc@micron.com, sthanneeru@micron.com,
+	emirakhur@micron.com, vtavarespetr@micron.com
+Subject: [RFC PATCH] mm/mbind: Introduce process_mbind() syscall for external
+ memory binding
+Message-ID: <ZV5zGROLefrsEcHJ@r13-u19.micron.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2452fb72-4add-401c-9365-08dbeb976f31
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2023 20:13:04.1087
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5kDQjGvv8Kgf8klGIkO67E8mZBfCAUfE6HiQ5CceBDN1TE8jXlCESjUIP2V8wyQ73zIyX7z0e60ahyB7RyGUIQJ37Q6q+6ooN5sVDefLwBA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5943
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-T24gVHVlLCAyMDIzLTExLTIxIGF0IDE4OjU3IC0wODAwLCBhbGlzb24uc2Nob2ZpZWxkQGludGVs
-LmNvbSB3cm90ZToNCj4gRnJvbTogQWxpc29uIFNjaG9maWVsZCA8YWxpc29uLnNjaG9maWVsZEBp
-bnRlbC5jb20+DQo+IA0KPiBUaGUgNC13YXkgWE9SIHJlZ2lvbiBhcyBkZWZpbmVkIGluIHRoaXMg
-dGVzdCB1c2VzIGEgcm9vdCBkZWNvZGVyIHRoYXQNCj4gaXMgY3JlYXRlZCB1c2luZyBhbiBpbXBy
-b3Blcmx5IGRlZmluZWQgQ0ZNV1MuIFRoZSBwcm9ibGVtIHdpdGggdGhlDQo+IENGTVdTIGlzIHRo
-YXQgSG9zdCBCcmlkZ2VzIHJlcGVhdCBpbiB0aGUgdGFyZ2V0IGxpc3QgbGlrZSB0aGlzOg0KPiB7
-IDAsIDEsIDAsIDEgfS4NCj4gDQo+IFN0b3AgdXNpbmcgdGhhdCByb290IGRlY29kZXIgYW5kIGNy
-ZWF0ZSBhIDQtd2F5IFhPUiByZWdpb24gdXNpbmcgYW4NCj4geDIgcm9vdCBkZWNvZGVyIHRoYXQg
-c3VwcG9ydHMgWE9SIGFyaXRobWV0aWMuDQo+IA0KPiBUaGUgdGVzdCBwYXNzZXMgcHJpb3IgdG8g
-dGhpcyBwYXRjaCBidXQgdGhlcmUgaXMgYW4gaW50ZXJsZWF2ZSBjaGVjayBbMV0NCj4gaW50cm9k
-dWNlZCBpbiB0aGUgQ1hMIHJlZ2lvbiBkcml2ZXIgdGhhdCB3aWxsIGV4cG9zZSB0aGUgYmFkIGlu
-dGVybGVhdmUNCj4gdGhpcyB0ZXN0IGNyZWF0ZXMgdmlhIGRldl9kYmcoKSBtZXNzYWdlcyBsaWtl
-IHRoaXM6DQo+IA0KPiBbIF0gY3hsX2NvcmU6Y3hsX3JlZ2lvbl9hdHRhY2g6MTgwODogY3hsIGRl
-Y29kZXIxNy4wOiBUZXN0IGN4bF9jYWxjX2ludGVybGVhdmVfcG9zKCk6IGZhaWwgdGVzdF9wb3M6
-NCBjeGxlZC0+cG9zOjINCj4gWyBdIGN4bF9jb3JlOmN4bF9yZWdpb25fYXR0YWNoOjE4MDg6IGN4
-bCBkZWNvZGVyMTguMDogVGVzdCBjeGxfY2FsY19pbnRlcmxlYXZlX3BvcygpOiBmYWlsIHRlc3Rf
-cG9zOjUgY3hsZWQtPnBvczozDQo+IA0KPiBOb3RlIHRoYXQgdGhlIENGTVdTJ3MgYXJlIGRlZmlu
-ZWQgaW4gdGhlIGtlcm5lbCBjeGwtdGVzdCBtb2R1bGUsIHNvIGENCj4ga2VybmVsIHBhdGNoIHJl
-bW92aW5nIHRoZSBiYWQgQ0ZNV1Mgd2lsbCBhbHNvIG5lZWQgdG8gYmUgbWVyZ2VkLCBidXQNCj4g
-dGhhdCBjbGVhbnVwIGNhbiBmb2xsb3cgdGhpcyBwYXRjaC4gQWxzbyBub3RlIHRoYXQgdGhlIGJh
-ZCBDRk1XUyBpcyBub3QNCj4gdXNlZCBpbiB0aGUgZGVmYXVsdCBjeGwtdGVzdCBlbnZpcm9ubWVu
-dC4gSXQgaXMgb25seSB2aXNpYmxlIHdoZW4gdGhlDQo+IGN4bC10ZXN0IG1vZHVsZSBpcyBsb2Fk
-ZWQgdXNpbmcgdGhlIHBhcmFtIGludGVybGVhdmVfYXJpdGhtZXRpYz0xLiBJdCBpcw0KPiBhIHNw
-ZWNpYWwgY29uZmlnIHRoYXQgcHJvdmlkZXMgdGhlIFhPUiBtYXRoIENGTVdTJ3MgZm9yIHRoaXMg
-dGVzdC4NCj4gDQo+IFsxXSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
-bmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD1hM2UwMGM5NjRmYjk0MzkzNGFm
-OTE2ZjQ4ZjBkZDQzYjUxMTBjODY2DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gU2Nob2Zp
-ZWxkIDxhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbT4NCj4gLS0tDQo+IA0KPiBWaXNoYWwgLSBJ
-J20gaG9waW5nIHlvdSB3aWxsIG1lcmdlIHRoaXMgaW4gbmRjdGwgdjc5IGV2ZW4gdGhvdWdoIHRo
-ZQ0KPiBleHBvc3VyZSB3aXRoIHRoZSBrZXJuZWwgZG9lc24ndCBoYXBwZW4gdW50aWwga2VybmVs
-IDYuNy4gVGhpcyB3YXkNCj4gdXNlcnMgb2YgY3hsLXRlc3QgYXJlIG5vdCBsZWFybmluZyB0byBp
-Z25vcmUgdGhlIGludGVybGVhdmUgY2FsYw0KPiB3YXJuaW5ncy4NCg0KWWVwIG1ha2VzIHNlbnNl
-IC0gSSdtIGFsc28gdGhpbmtpbmcgdGhhdCBzaW5jZSB3ZSdyZSBhdCAtcmMyLCB2NzkgY2FuDQpq
-dXN0IGJlIHRoZSB2Ni43IGVxdWl2YWxlbnQgcmVsZWFzZSAoYW5kIEknbGwgaW5jbHVkZSB0aGUg
-c2FuaXRpemUNCnBhdGNoZXMgdG9vIHNpbmNlIHRoYXQncyB0aGUgb25seSBvdGhlciBwZW5kaW5n
-IHY2Ljcgc3BlY2lmaWMgdGhpbmcuDQoNCj4gDQo+IEFsc28sIGhvcGVmdWxseSBJIGhhdmUgbm90
-IGludHJvZHVjZWQgYW55IG5ldyBzaGVsbCBpc3N1ZXMsIGJ1dA0KPiBJIGtub3cgdGhpcyB1bml0
-IHRlc3QgaGFzIGV4aXN0aW5nIHdhcm5pbmdzLiBDYW4gd2UgZG8gYSBzaGVsbA0KPiBjbGVhbnVw
-IGluIGEgZm9sbG93LW9uIHBhdGNoc2V0IGFjcm9zcyB0aGUgQ1hMIHRlc3RzPw0KPiAoYW5kIG5v
-dCBsYXN0IG1pbnV0ZSBmb3IgeW91ciBuZGN0bCByZWxlYXNlKQ0KDQpBZ3JlZWQsIHRoZXJlIGFy
-ZSBhIGZldyBzaGVsbGNoZWNrIGNvbXBsYWludHMgdGhhdCBoYXZlIHNudWNrIGluIG92ZXINCnRp
-bWUsIGZpeGluZyB0aGVzZSBhcyBhIHNlcGFyYXRlIGNsZWFudXAgaXMgZGVmaW5pdGVseSB0aGUg
-d2F5IHRvIGdvLg0KDQo+IA0KPiDCoHRlc3QvY3hsLXhvci1yZWdpb24uc2ggfCAxNCArKysrKy0t
-LS0tLS0tLQ0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25z
-KC0pDQo+IA0K
+From: Vinicius Tavares Petrucci <vtavarespetr@micron.com>
+
+This patch introduces `process_mbind()` to enable a userspace orchestrator with 
+an understanding of another process's memory layout to alter its memory policy. 
+As system memory configurations become more and more complex (e.g., DDR+HBM+CXL memories), 
+such a userspace orchestrator can explore more advanced techniques to guide memory placement
+to individual NUMA nodes across memory tiers. This allows for a more efficient allocation of 
+memory resources, leading to enhanced application performance.
+
+Alternatively, there are existing methods such as LD_PRELOAD (https://pmem.io/memkind/) or
+syscall_intercept (https://github.com/pmem/syscall_intercept), but these techniques, beyond the
+lack of portability/universality, can lead to system incompatibility issues, inconsistency in
+application behavior, potential risks due to global system-wide settings, and increased
+complexity in implementation.
+
+The concept of an external entity that understands the layout of another process's VM 
+is already present with `process_madvise()`. Thus, it seems reasonable to introduce 
+the `process_mbind` variant of `mbind`. The implementation framework of `process_mbind()` 
+is akin to `process_madvise()`. It uses pidfd of an external process to direct the memory 
+policy and supports a vector of memory address ranges.
+
+The general use case here is similar to the prior RFC `pidfd_set_mempolicy()` 
+(https://lore.kernel.org/linux-mm/20221010094842.4123037-1-hezhongkun.hzk@bytedance.com/), 
+but offers a more fine-grained external control by binding specific memory regions 
+(say, heap data structures) to specific NUMA nodes. Another concrete use case was described 
+by a prior work showing up to 2X runtime improvement (compared to AutoNUMA tiering) using
+memory object/region-based memory placement for workloads with irregular access patterns
+such as graph analytics: https://iiswc.org/iiswc2022/IISWC2022_42.pdf
+
+The proposed API is as follows:
+
+long process_mbind(int pidfd, 
+                const struct iovec *iovec, 
+                unsigned long vlen, 
+                unsigned long mode, 
+                const unsigned long *nmask,
+                unsigned int flags);
+
+The `pidfd` argument is used to select the process that is identified by the PID file 
+descriptor provided in pidfd. (See pidofd_open(2) for more information)
+
+The pointer `iovec` points to an array of iovec structures (as described in <sys/uio.h>):
+
+struct iovec {
+    void *iov_base;         /* starting address of region */
+    size_t iov_len;         /* size of region (in bytes) */
+};
+
+The `iovec` defines memory regions that start at the address (iov_base) and 
+have a size measured in bytes (iov_len).
+
+The `vlen` indicates the quantity of elements contained in iovec.
+
+Please note the initial `maxnode` parameter from `mbind` was omitted 
+to ensure the API doesn't exceed 6 arguments. Instead, the constant 
+MAX_NUMNODES was utilized.
+
+Please see the mbind(2) man page for more details about other's arguments.
+
+Additionally, it is worth noting the following:
+- Using a vector of address ranges as an argument in `process_mbind` provides more 
+flexibility than the original `mbind` system call, even when invoked from a current
+or local process.
+- In contrast to `move_pages`, which requires an array of fixed-size pages,
+`process_mbind` (with flags MPOL_MF_MOVE*) offers a more convinient and flexible page
+migration capability on a per object or region basis.
+- Similar to `process_madvise`, manipulating the memory binding of external processes
+necessitates `CAP_SYS_NICE` and `PTRACE_MODE_READ_FSCREDS` checks (refer to ptrace(2)).
+
+Suggested-by: Frank van der Linden <fvdl@google.com>
+Signed-off-by: Vinicius Tavares Petrucci <vtavarespetr@micron.com>
+Signed-off-by: Hasan Al Maruf <Hasan.Maruf@amd.com>
+---
+ arch/x86/entry/syscalls/syscall_64.tbl |  1 +
+ include/linux/syscalls.h               |  4 ++
+ include/uapi/asm-generic/unistd.h      |  4 +-
+ kernel/sys_ni.c                        |  1 +
+ mm/mempolicy.c                         | 86 +++++++++++++++++++++++++-
+ 5 files changed, 92 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 8cb8bf68721c..9d9db49a3242 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -378,6 +378,7 @@
+ 454	common	futex_wake		sys_futex_wake
+ 455	common	futex_wait		sys_futex_wait
+ 456	common	futex_requeue		sys_futex_requeue
++457	common	process_mbind		sys_process_mbind
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index fd9d12de7e92..def5250ed625 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -816,6 +816,10 @@ asmlinkage long sys_mbind(unsigned long start, unsigned long len,
+ 				const unsigned long __user *nmask,
+ 				unsigned long maxnode,
+ 				unsigned flags);
++asmlinkage long sys_process_mbind(int pidfd, const struct iovec __user *vec,
++				size_t vlen, unsigned long mode,
++				const unsigned long __user *nmask,
++				unsigned flags);
+ asmlinkage long sys_get_mempolicy(int __user *policy,
+ 				unsigned long __user *nmask,
+ 				unsigned long maxnode,
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 756b013fb832..9ed2c91940d6 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -828,9 +828,11 @@ __SYSCALL(__NR_futex_wake, sys_futex_wake)
+ __SYSCALL(__NR_futex_wait, sys_futex_wait)
+ #define __NR_futex_requeue 456
+ __SYSCALL(__NR_futex_requeue, sys_futex_requeue)
++#define __NR_process_mbind 457
++__SYSCALL(__NR_process_mbind, sys_process_mbind)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 457
++#define __NR_syscalls 458
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index e1a6e3c675c0..cc5cb5ae3ae7 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -187,6 +187,7 @@ COND_SYSCALL(process_madvise);
+ COND_SYSCALL(process_mrelease);
+ COND_SYSCALL(remap_file_pages);
+ COND_SYSCALL(mbind);
++COND_SYSCALL(process_mbind);
+ COND_SYSCALL(get_mempolicy);
+ COND_SYSCALL(set_mempolicy);
+ COND_SYSCALL(migrate_pages);
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 10a590ee1c89..91ee300fa728 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1215,11 +1215,10 @@ static struct folio *alloc_migration_target_by_mpol(struct folio *src,
+ }
+ #endif
+ 
+-static long do_mbind(unsigned long start, unsigned long len,
++static long do_mbind(struct mm_struct *mm, unsigned long start, unsigned long len,
+ 		     unsigned short mode, unsigned short mode_flags,
+ 		     nodemask_t *nmask, unsigned long flags)
+ {
+-	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma, *prev;
+ 	struct vma_iterator vmi;
+ 	struct migration_mpol mmpol;
+@@ -1465,10 +1464,84 @@ static inline int sanitize_mpol_flags(int *mode, unsigned short *flags)
+ 	return 0;
+ }
+ 
++static long kernel_mbind_process(int pidfd, const struct iovec __user *vec,
++		size_t vlen, unsigned long mode,
++		const unsigned long __user *nmask, unsigned int flags)
++{
++	ssize_t ret;
++	struct iovec iovstack[UIO_FASTIOV];
++	struct iovec *iov = iovstack;
++	struct iov_iter iter;
++	struct task_struct *task;
++	struct mm_struct *mm;
++	unsigned int f_flags;
++	unsigned short mode_flags;
++	int lmode = mode;
++	unsigned long maxnode = MAX_NUMNODES;
++	int err;
++	nodemask_t nodes;
++
++	err = sanitize_mpol_flags(&lmode, &mode_flags);
++	if (err)
++		goto out;
++
++	err = get_nodes(&nodes, nmask, maxnode);
++	if (err)
++		goto out;
++
++	ret = import_iovec(ITER_DEST, vec, vlen, ARRAY_SIZE(iovstack),
++			&iov, &iter);
++	if (ret < 0)
++		goto out;
++
++	task = pidfd_get_task(pidfd, &f_flags);
++	if (IS_ERR(task)) {
++		ret = PTR_ERR(task);
++		goto free_iov;
++	}
++
++	/* From process_madvise: Require PTRACE_MODE_READ
++	 * to avoid leaking ASLR metadata. */
++	mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
++	if (IS_ERR_OR_NULL(mm)) {
++		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
++		goto release_task;
++	}
++
++	/* From process_madvise: Require CAP_SYS_NICE for
++	 * influencing process performance. */
++	if (!capable(CAP_SYS_NICE)) {
++		ret = -EPERM;
++		goto release_mm;
++	}
++
++	while (iov_iter_count(&iter)) {
++		unsigned long start = untagged_addr(
++				(unsigned long)iter_iov_addr(&iter));
++		unsigned long len = iter_iov_len(&iter);
++
++		ret = do_mbind(mm, start, len, lmode, mode_flags,
++				&nodes, flags);
++		if (ret < 0)
++			break;
++		iov_iter_advance(&iter, iter_iov_len(&iter));
++	}
++
++release_mm:
++	mmput(mm);
++release_task:
++	put_task_struct(task);
++free_iov:
++	kfree(iov);
++out:
++	return ret;
++}
++
+ static long kernel_mbind(unsigned long start, unsigned long len,
+ 			 unsigned long mode, const unsigned long __user *nmask,
+ 			 unsigned long maxnode, unsigned int flags)
+ {
++	struct mm_struct *mm = current->mm;
+ 	unsigned short mode_flags;
+ 	nodemask_t nodes;
+ 	int lmode = mode;
+@@ -1483,7 +1556,7 @@ static long kernel_mbind(unsigned long start, unsigned long len,
+ 	if (err)
+ 		return err;
+ 
+-	return do_mbind(start, len, lmode, mode_flags, &nodes, flags);
++	return do_mbind(mm, start, len, lmode, mode_flags, &nodes, flags);
+ }
+ 
+ SYSCALL_DEFINE4(set_mempolicy_home_node, unsigned long, start, unsigned long, len,
+@@ -1553,6 +1626,13 @@ SYSCALL_DEFINE4(set_mempolicy_home_node, unsigned long, start, unsigned long, le
+ 	return err;
+ }
+ 
++SYSCALL_DEFINE6(process_mbind, int, pidfd, const struct iovec __user *, vec,
++		size_t, vlen, unsigned long, mode,
++		const unsigned long __user *, nmask, unsigned int, flags)
++{
++	return kernel_mbind_process(pidfd, vec, vlen, mode, nmask, flags);
++}
++
+ SYSCALL_DEFINE6(mbind, unsigned long, start, unsigned long, len,
+ 		unsigned long, mode, const unsigned long __user *, nmask,
+ 		unsigned long, maxnode, unsigned int, flags)
+-- 
+2.41.0
+
