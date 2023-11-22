@@ -1,125 +1,91 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AeZZLsxs"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2877181;
-	Tue, 21 Nov 2023 18:11:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRKYjcND"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F294191
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Nov 2023 18:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700619086; x=1732155086;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=joeFRjsVxmWaUuEury+J3PVtroe1ztWzYGGwNVPnXL4=;
-  b=AeZZLsxsqGFXFUFvWnO3blwrst3s1f5EEvw4Kj7eAQBExfW+lcCsEi95
-   qlDp6Ph9YGO6FJUhcCd5HftE3qS6BCb6sZfLN0jnfwlaHRclP6xbLYviw
-   6iADmNk+VSD2E4YJdaDdaeS6DYI9b4ABaUlinXuLJ7N2Zg9O2tTNplOgH
-   mavhkKBEmZ40EnoSRCmFVwgVKW0S3bk+YFtGB+IvIqzOgyuqEAG1tzikc
-   EODvTW+dnTfbY6qKHvmz4/ZzEYjan5BM+KezCFIehrA008Lh/Ghw2Ntcn
-   fWMO8LPVri4FEUEkqqbS+4Xbr5awiuLN6o45wF+NB4rRA67BxmvSasB7G
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="423054598"
+  t=1700619533; x=1732155533;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WBH1Pl8ZGp0ZAf6roXuYe/DXhp2k2xDn+eUEN7NDQO4=;
+  b=ZRKYjcNDEg3AZBo9bLkEAn1Nut1lfFK3+VC/EAF8CsSSHTqfginWX7Y/
+   QgO9xrKipld0kCqtpj4AxtPvlfcab1llMVxzS4Hz0X5mQsW0Jo7aa6yDS
+   iQRMb1Zn4y6Q9x3QAbOMjvyWxJrXfl5nvai6MDJB3lDF+p3LsNym0zhCF
+   pw+ZVyLdwF2Kujx0kAANJN9p15zPBnHtw3LmdbIU5U5dPyv+2BR268JES
+   P+A/kow180h3x6I3sHTPZ86TsIF9v4LICTi5mWVsrwsFt/w21fqyOfulf
+   bezPXyukizuYzcUdrCelonj7lgSgw3mzJqPoniUHksySikKAqNUdk/295
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="10635124"
 X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
-   d="scan'208";a="423054598"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 18:11:26 -0800
+   d="scan'208";a="10635124"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 18:18:52 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="940275290"
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="910649214"
 X-IronPort-AV: E=Sophos;i="6.04,217,1695711600"; 
-   d="scan'208";a="940275290"
-Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 21 Nov 2023 18:11:18 -0800
-Received: from kbuild by b8de5498638e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r5chj-0008X2-0C;
-	Wed, 22 Nov 2023 02:11:07 +0000
-Date: Wed, 22 Nov 2023 10:10:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, david@redhat.com,
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
-	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
-	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
-	jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	mike.malvestuto@intel.com
-Subject: Re: [PATCH v2 02/10] cxl/mbox: Add GET_FEATURE mailbox command
-Message-ID: <202311220929.CK5dLmp5-lkp@intel.com>
-References: <20231121101844.1161-3-shiju.jose@huawei.com>
+   d="scan'208";a="910649214"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.90.75])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 18:18:52 -0800
+From: alison.schofield@intel.com
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/test: validate the auto region in cxl-topology.sh
+Date: Tue, 21 Nov 2023 18:18:49 -0800
+Message-Id: <20231122021849.1208967-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231121101844.1161-3-shiju.jose@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Alison Schofield <alison.schofield@intel.com>
 
-kernel test robot noticed the following build warnings:
+The cxl-test module sets up a region to be autodiscovered in
+order to test the CXL driver handling of BIOS defined regions.
+Confirm the region exists upon load of the cxl-test module.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.7-rc2 next-20231121]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/shiju-jose-huawei-com/cxl-mbox-Add-GET_SUPPORTED_FEATURES-mailbox-command/20231121-182247
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20231121101844.1161-3-shiju.jose%40huawei.com
-patch subject: [PATCH v2 02/10] cxl/mbox: Add GET_FEATURE mailbox command
-config: alpha-randconfig-r112-20231122 (https://download.01.org/0day-ci/archive/20231122/202311220929.CK5dLmp5-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20231122/202311220929.CK5dLmp5-lkp@intel.com/reproduce)
+The region does survive the ensuing shenanigans of this test.
+The region state moves from committed to disabled and back
+again as the memdevs, ports, and host bridges are disabled
+and then re-enabled. Although that was interesting, it's not
+clear that this test should be doing region error recovery
+testing. 
+Let me know if you think otherwise?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311220929.CK5dLmp5-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/cxl/core/mbox.c:1319:31: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] size_out @@     got restricted __le32 [usertype] count @@
-   drivers/cxl/core/mbox.c:1319:31: sparse:     expected unsigned long [usertype] size_out
-   drivers/cxl/core/mbox.c:1319:31: sparse:     got restricted __le32 [usertype] count
->> drivers/cxl/core/mbox.c:1341:31: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] size_out @@     got restricted __le16 [usertype] count @@
-   drivers/cxl/core/mbox.c:1341:31: sparse:     expected unsigned long [usertype] size_out
-   drivers/cxl/core/mbox.c:1341:31: sparse:     got restricted __le16 [usertype] count
->> drivers/cxl/core/mbox.c:1343:30: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] min_out @@     got restricted __le16 [usertype] count @@
-   drivers/cxl/core/mbox.c:1343:30: sparse:     expected unsigned long [usertype] min_out
-   drivers/cxl/core/mbox.c:1343:30: sparse:     got restricted __le16 [usertype] count
+ test/cxl-topology.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-vim +1341 drivers/cxl/core/mbox.c
+diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
+index 89d01a89ccb1..e8b9f56543b5 100644
+--- a/test/cxl-topology.sh
++++ b/test/cxl-topology.sh
+@@ -21,6 +21,14 @@ rc=1
+ # tools/testing/cxl/test/cxl.c. If that model ever changes then the
+ # paired update must be made to this test.
+ 
++# validate the autodiscovered region
++region=$("$CXL" list -R | jq -r ".[] | .region")
++if [[ ! $region ]]; then
++	echo "failed to find autodiscovered region"
++	err "$LINENO"
++fi
++
++
+ # collect cxl_test root device id
+ json=$($CXL list -b cxl_test)
+ count=$(jq "length" <<< $json)
 
-  1330	
-  1331	int cxl_get_feature(struct cxl_memdev_state *mds,
-  1332			    struct cxl_mbox_get_feat_in *pi, void *feat_out)
-  1333	{
-  1334		struct cxl_mbox_cmd mbox_cmd;
-  1335		int rc;
-  1336	
-  1337		mbox_cmd = (struct cxl_mbox_cmd) {
-  1338			.opcode = CXL_MBOX_OP_GET_FEATURE,
-  1339			.size_in = sizeof(*pi),
-  1340			.payload_in = pi,
-> 1341			.size_out = pi->count,
-  1342			.payload_out = feat_out,
-> 1343			.min_out = pi->count,
-  1344		};
-  1345		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-  1346		if (rc < 0)
-  1347			return rc;
-  1348	
-  1349		return 0;
-  1350	}
-  1351	EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
-  1352	
-
+base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.37.3
+
