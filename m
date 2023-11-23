@@ -1,133 +1,134 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCM5CXlq"
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38292C1;
-	Thu, 23 Nov 2023 07:21:46 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5c1a75a4b6cso624121a12.2;
-        Thu, 23 Nov 2023 07:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700752905; x=1701357705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q70ME+Z8MA/iN3ndOUEyZrB6FW+VdFvlQgHMP5KT7Xo=;
-        b=iCM5CXlqAt6LnkAOYOhnscwAXsBbXV7C+ZTWy1y0+lqJME3AzFM04ost8zlgR61r5M
-         PrzdagkS4HXJTl50UaFQ+Q3IECUJ03ejFDjcec79B2BFVixqsLXRI6vSuDbZErn00DrE
-         t+TnrXSpuLl5jkYrkuPBU8gW/eNMhuwRD6kdGmzyqP4Oe7vel1JLRXqyfjQGaibDZUfg
-         u6Qdk0e8HKQdZPf4C8WzmJAPLGfXcGTVU8Gnd1tE4n7Zhrc2C8kRMpFR6OQQclsd+lS+
-         O7K/3bF/txOsjVMueW2xDUVSFzOtbIxLr4zBdxlr/pUoONyLFHM770WznoBSHrgjsXkf
-         XY1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700752905; x=1701357705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q70ME+Z8MA/iN3ndOUEyZrB6FW+VdFvlQgHMP5KT7Xo=;
-        b=K7H/4wA3vRaN/7cbMAiBt8w5gsNJy0M4BfaQKNgWmsgPVNzPI94nd9h8sXMWf8GfSs
-         CZ5DVguqnURC7cunaTuGB0O4kqXQXcZoj4ieqBZE5sDfU765YAlpN0cY+kr6dq9bBHpx
-         5thmd/2OKtYPrG7zU2WPc0EtFRXAWMB1w7jI2fWVJ5OtyB1SAgc088tzcqHKekD4KUM6
-         vtSijG8ReRgvH3b9kt4bJ22P1mAY7csfPyYNI8Z11mDKoHtQCkDsZMZufiMN52+1Hdrm
-         LKhVA0TgV8ofja+lNMTeazD6VSfZIOwyfyAGRUGvX+oiq54Q4E4ZsUYPjjELcyP+SOFJ
-         lK4w==
-X-Gm-Message-State: AOJu0YyYJjE+8LRzi9o2tLqqrlbARxvN2IhkEUEIUkeJG8Imduudu//f
-	j7JfZG0GGl8AWJHLPHw1gCvnHo1G/CQRnuEEy0U=
-X-Google-Smtp-Source: AGHT+IG7HjrLo+UO2gU6kyO67Qrxj1Fj9BW3CiY12ZHHr9qO2aQ6gsiGv7l3PWYv+dLAVKqIAWPZHZTysn9dpGno6g4=
-X-Received: by 2002:a17:90a:1948:b0:280:cd5f:bf90 with SMTP id
- 8-20020a17090a194800b00280cd5fbf90mr5907737pjh.23.1700752905538; Thu, 23 Nov
- 2023 07:21:45 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC3710D0;
+	Thu, 23 Nov 2023 09:44:06 -0800 (PST)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Sbln958xWz6875y;
+	Fri, 24 Nov 2023 01:42:37 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 23 Nov 2023 17:44:02 +0000
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v3 00/11] cxl: Add support for CXL feature commands, CXL device patrol scrub control and DDR5 ECS control features
+Date: Fri, 24 Nov 2023 01:43:43 +0800
+Message-ID: <20231123174355.1176-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZV5zGROLefrsEcHJ@r13-u19.micron.com> <ZV6Uhsg6WLBtNqU3@memverge.com>
-In-Reply-To: <ZV6Uhsg6WLBtNqU3@memverge.com>
-From: Vinicius Petrucci <vpetrucci@gmail.com>
-Date: Thu, 23 Nov 2023 09:21:08 -0600
-Message-ID: <CAEZ6=UNLuOYom1Qng28F2y6XocJM4cnbDG1yq3m1p8btuQ4tRQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm/mbind: Introduce process_mbind() syscall for
- external memory binding
-To: Gregory Price <gregory.price@memverge.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-api@vger.kernel.org, minchan@kernel.org, dave.hansen@linux.intel.com, 
-	x86@kernel.org, Jonathan.Cameron@huawei.com, aneesh.kumar@linux.ibm.com, 
-	ying.huang@intel.com, dan.j.williams@intel.com, hezhongkun.hzk@bytedance.com, 
-	fvdl@google.com, surenb@google.com, rientjes@google.com, hannes@cmpxchg.org, 
-	mhocko@suse.com, Hasan.Maruf@amd.com, jgroves@micron.com, 
-	ravis.opensrc@micron.com, sthanneeru@micron.com, emirakhur@micron.com, 
-	vtavarespetr@micron.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
 
-Hi Greg!
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Thanks a lot for quickly looking into this and sharing your notes here.
+1. Add support for CXL feature mailbox commands.
+2. Add CXL device scrub driver supporting patrol scrub control and DDR5 ECS
+control features.
+3. Add scrub driver supports configuring memory scrubs in the system.
+4. Add scrub attributes for DDR5 ECS control to the memory scrub driver.
+5. Register CXL device patrol scrub and ECS with scrub control driver.
+6. Add documentation for CXL memory device scrub control attributes.
 
-On Wed, Nov 22, 2023 at 5:53=E2=80=AFPM Gregory Price
-<gregory.price@memverge.com> wrote:
->
-> > Please note the initial `maxnode` parameter from `mbind` was omitted
-> > to ensure the API doesn't exceed 6 arguments. Instead, the constant
-> > MAX_NUMNODES was utilized.
-> >
->
-> I don't think this will work, users have traditionally been allowed to
-> shorten their nodemasks, and also for some level of portability.
->
-> We may want to consider an arg structure, rather than just chopping an
-> argument off.
->
+The QEMU series to support these features is available here,
+https://lore.kernel.org/qemu-devel/20231114124711.1128-1-shiju.jose@huawei.com/T/#t
 
-Yes, good point... that should be considered as a more complete
-long-term approach beyond the MVP.
+Changes
+v2 -> v3:
+1. Changes for comments from Davidlohr, Thanks.
+ - Updated cxl scrub kconfig
+ - removed usage of the flag is_support_feature from
+   the function cxl_mem_get_supported_feature_entry().
+ - corrected spelling error.
+ - removed unnecessary debug message.
+ - removed export feature commands to the userspace.
+2. Possible fix for the warnings/errors reported by kernel
+   test robot.
+3. Add documentation for the common scrub configure atrributes.
 
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 10a590ee1c89..91ee300fa728 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -1215,11 +1215,10 @@ static struct folio *alloc_migration_target_by_=
-mpol(struct folio *src,
-> >  }
-> >  #endif
-> >
-> > -static long do_mbind(unsigned long start, unsigned long len,
-> > +static long do_mbind(struct mm_struct *mm, unsigned long start, unsign=
-ed long len,
-> >                    unsigned short mode, unsigned short mode_flags,
-> >                    nodemask_t *nmask, unsigned long flags)
-> >  {
-> > -     struct mm_struct *mm =3D current->mm;
-> >       struct vm_area_struct *vma, *prev;
-> >       struct vma_iterator vmi;
-> >       struct migration_mpol mmpol;
-> > @@ -1465,10 +1464,84 @@ static inline int sanitize_mpol_flags(int *mode=
-, unsigned short *flags)
-> >       return 0;
-> >  }
->
-> This is a completely insufficient change to do_mbind.  do_mbind utilizes
-> `current` in a variety of places for nodemask (cpuset) validation and to
-> acquire the task's lock.  This will not work the way you intend it to,
-> you end up mixing up node masks between current and target task.
->
+v1 -> v2:
+1. Changes for comments from Dave Jiang, Thanks.
+ - Split patches.
+ - reversed xmas tree declarations.
+ - declared flags as enums.
+ - removed few unnecessary variable initializations.
+ - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
+ - add auto clean declarations.
+ - replaced while loop with for loop.
+ - Removed allocation from cxl_get_supported_features() and
+   cxl_get_feature() and make change to take allocated memory
+   pointer from the caller.
+ - replaced if/else with switch case.
+ - replaced sprintf() with sysfs_emit() in 2 places.
+ - replaced goto label with return in few functions.
+2. removed unused code for supported attributes from ecs.
+3. Included following common patch for scrub configure driver
+   to this series.
+   "memory: scrub: Add scrub driver supports configuring memory scrubbers
+    in the system"
 
-Oh oh. True! Good catch!
+Shiju Jose (11):
+  cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+  cxl/mbox: Add GET_FEATURE mailbox command
+  cxl/mbox: Add SET_FEATURE mailbox command
+  cxl/memscrub: Add CXL device patrol scrub control feature
+  cxl/memscrub: Add CXL device DDR5 ECS control feature
+  memory: scrub: Add scrub driver supports configuring memory scrubs in
+    the system
+  cxl/memscrub: Register CXL device patrol scrub with scrub configure
+    driver
+  memory: scrub: Add scrub control attributes for the DDR5 ECS
+  cxl/memscrub: Register CXL device DDR5 ECS with scrub configure driver
+  memory: scrub: sysfs: Add Documentation for set of common scrub
+    attributes
+  cxl: scrub: sysfs: Add Documentation for CXL memory device scrub
+    control attributes
 
-> see here:
-> https://lore.kernel.org/all/20231122211200.31620-7-gregory.price@memverge=
-.com/
->
+ .../testing/sysfs-class-cxl-scrub-configure   | 135 +++
+ .../ABI/testing/sysfs-class-scrub-configure   |  82 ++
+ drivers/cxl/Kconfig                           |  23 +
+ drivers/cxl/core/Makefile                     |   1 +
+ drivers/cxl/core/mbox.c                       |  59 ++
+ drivers/cxl/core/memscrub.c                   | 989 ++++++++++++++++++
+ drivers/cxl/cxlmem.h                          | 120 +++
+ drivers/cxl/pci.c                             |   6 +
+ drivers/memory/Kconfig                        |   1 +
+ drivers/memory/Makefile                       |   1 +
+ drivers/memory/scrub/Kconfig                  |  11 +
+ drivers/memory/scrub/Makefile                 |   6 +
+ drivers/memory/scrub/memory-scrub.c           | 481 +++++++++
+ include/memory/memory-scrub.h                 |  90 ++
+ 14 files changed, 2005 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-cxl-scrub-configure
+ create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configure
+ create mode 100644 drivers/cxl/core/memscrub.c
+ create mode 100644 drivers/memory/scrub/Kconfig
+ create mode 100644 drivers/memory/scrub/Makefile
+ create mode 100755 drivers/memory/scrub/memory-scrub.c
+ create mode 100755 include/memory/memory-scrub.h
 
-Let me go over this... Thanks!
+-- 
+2.34.1
 
-> We may want to combine this change and with my change so that your iovec
-> changes can be re-used, because that is a very nice feature.
->
-
-Sounds good. Thanks again!
-
-Best,
-
-Vinicius
