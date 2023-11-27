@@ -1,139 +1,161 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+tynN/C"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F6E8113
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Nov 2023 16:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701043800; x=1732579800;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7HG0O6z51HAU2m0klmzb15jjMXtxNMhkM01eOFe0ExA=;
-  b=K+tynN/CSkCwzkbQ5L9ZGeyJ+JoMre/kCPPfcgqRIUhulSGXayK/wB3H
-   gmu2Roentj+BuWvwwYZf0w+lniNy2gSXsEMqFKNbnd0XEe7AenxZf8FsZ
-   YlF8aOtfM5ASnuhFNb21aTTUvU42ASJ9dkgJWtTA9Sv1GQuUuJv+Y5foW
-   F4cUhyYqLvkSqWWvcQ5kOO/kd8jMcOGZ0pFyn0Ar/kdTpo13pulRQVPv0
-   xSThPzEvAL9oO6rKXmwSWaBAIqLogSYp/c/9ruoZ9I4W0trT+Aun47I+u
-   03aEk0nduebAxScnF04JmkZHjWQyLzLC4qEPwO0NHRU5UOdghKrztl3J2
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10906"; a="371969646"
-X-IronPort-AV: E=Sophos;i="6.04,229,1695711600"; 
-   d="scan'208";a="371969646"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2023 16:09:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10906"; a="885837369"
-X-IronPort-AV: E=Sophos;i="6.04,229,1695711600"; 
-   d="scan'208";a="885837369"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.90.230])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2023 16:09:34 -0800
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 2/2] cxl/memdev: Hold region_rwsem during inject and clear poison ops
-Date: Sun, 26 Nov 2023 16:09:30 -0800
-Message-Id: <08721dc1df0a51e4e38fecd02425c3475912dfd5.1701041440.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1701041440.git.alison.schofield@intel.com>
-References: <cover.1701041440.git.alison.schofield@intel.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4999D2
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 01:34:59 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10906"; a="119862861"
+X-IronPort-AV: E=Sophos;i="6.04,230,1695654000"; 
+   d="scan'208";a="119862861"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 18:34:57 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 39755DC872
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 18:34:55 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 69CCCD4F4D
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 18:34:54 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 018AD2007912C
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 18:34:53 +0900 (JST)
+Received: from [10.167.220.145] (unknown [10.167.220.145])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 627A91A0071;
+	Mon, 27 Nov 2023 17:34:53 +0800 (CST)
+Message-ID: <4910174f-4cda-a664-62ee-a6b37f96efac@fujitsu.com>
+Date: Mon, 27 Nov 2023 17:34:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [NDCTL PATCH v3] cxl/region: Add -f option for disable-region
+To: Dave Jiang <dave.jiang@intel.com>, vishal.l.verma@intel.com
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ dan.j.williams@intel.com, yangx.jy@fujitsu.com
+References: <169878724592.82931.11180459815481606425.stgit@djiang5-mobl3>
+From: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>
+In-Reply-To: <169878724592.82931.11180459815481606425.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28022.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28022.006
+X-TMASE-Result: 10--7.844900-10.000000
+X-TMASE-MatchedRID: Y0uQemhUR+GPvrMjLFD6eJTQgFTHgkhZ7/Ktm1YD8UJRXC4cX65cJItU
+	W2TdSbkol/NSQGlzTvYGE8TlUNTQBfXhWE12qWg+zr16YOzjZ136xaEr/b4wE99RjZujPiSkM/N
+	vkyt9Qust+E/D3/oNlPYxukP2XD9gAjdZzv0qrOYF7cpFXK76TUsY9G/RZ3FCNWuN5LFStoU6LC
+	39ZB+Qn4EV1Mt3/Y7E1KgPgvd6AVqTXkhSOdXFg95x7RpGJf1aBGvINcfHqhcVdewhX2WAAThbu
+	aUQKXpspFedpgCFxaUYPKESeEkoF1xxDx5qbkR9OX/V8P8ail1ZDL1gLmoa/ALDAYP4AXVR7nY5
+	1lwLq08nRE+fI6etkjzwkOTign5xsnc8TN4GKF7Bu7Frs7ZjFvJGRqNa9xDnSsMfxGFXfDeMVhw
+	qBydOrL5/6HiOECuRUAXI5UUCilzFUQg4HLF2+GUkI6wHhrBc5VXrbHg2/4JYe3/imoqI2tQTAL
+	RUDgR9z/3NrTLUMeU=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-From: Alison Schofield <alison.schofield@intel.com>
 
-Poison inject and clear are supported via debugfs where a privileged
-user can inject and clear poison to a device physical address.
 
-Commit 458ba8189cb4 ("cxl: Add cxl_decoders_committed() helper")
-added a lockdep assert that highlighted a gap in poison inject and
-clear functions where holding the dpa_rwsem does not assure that a
-a DPA is not added to a region.
+> +static int disable_region(struct cxl_region *region)
+> +{
+> +	const char *devname = cxl_region_get_devname(region);
+> +	struct daxctl_region *dax_region;
+> +	struct daxctl_memory *mem;
+> +	struct daxctl_dev *dev;
+> +	int failed = 0, rc;
+> +
+> +	dax_region = cxl_region_get_daxctl_region(region);
+> +	if (!dax_region)
+> +		goto out;
+> +
+> +	daxctl_dev_foreach(dax_region, dev) {
+> +		mem = daxctl_dev_get_memory(dev);
+> +		if (!mem)
+> +			return -ENXIO;
+> +
+> +		/*
+> +		 * If memory is still online and user wants to force it, attempt
+> +		 * to offline it.
+> +		 */
+> +		if (daxctl_memory_is_online(mem)) {
+> +			rc = daxctl_memory_offline(mem);
+> +			if (rc < 0) {
+> +				log_err(&rl, "%s: unable to offline %s: %s\n",
+> +					devname,
+> +					daxctl_dev_get_devname(dev),
+> +					strerror(abs(rc)));
+> +				if (!param.force)
+> +					return rc;
+> +
+> +				failed++;
+> +			}
+> +		}
+> +	}
+> +
+> +	if (failed) {
+> +		log_err(&rl, "%s: Forcing region disable without successful offline.\n",
+> +			devname);
+> +		log_err(&rl, "%s: Physical address space has now been permanently leaked.\n",
+> +			devname);
+> +		log_err(&rl, "%s: Leaked address cannot be recovered until a reboot.\n",
+> +			devname);
+> +	}
+> +
 
-The impact for inject and clear is that if the DPA address being
-injected or cleared has been attached to a region, but not yet
-committed, the dev_dbg() message intended to alert the debug user
-that they are acting on a mapped address is not emitted. Also, the
-cxl_poison trace event that serves as a log of the inject and clear
-activity will not include region info.
+>   static int do_region_xable(struct cxl_region *region, enum region_actions action)
+>   {
+>   	switch (action) {
+>   	case ACTION_ENABLE:
+>   		return cxl_region_enable(region);
+>   	case ACTION_DISABLE:
+> -		return cxl_region_disable(region);
+> +		return disable_region(region);
+>   	case ACTION_DESTROY:
+>   		return destroy_region(region);
+>   	default:
 
-Close this gap by snapshotting an unchangeable region state during
-poison inject and clear operations. That means holding both the
-region_rwsem and the dpa_rwsem during the inject and clear ops.
+Hi Dave
 
-Fixes: d2fbc4865802 ("cxl/memdev: Add support for the Inject Poison mailbox command")
-Fixes: 9690b07748d1 ("cxl/memdev: Add support for the Clear Poison mailbox command")
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/memdev.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+In this patch, a new function 'disable_region(region)' has been added. 
+When using the 'cxl destroy-region region0 -f' command, there's a check 
+first, followed by the 'destroy-region' operation. In terms of 
+user-friendliness, which function is more user-friendly: 
+'cxl_region_disable(region)' or 'disable_region(region)'?
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 5ad1b13e780a..2f43d368ba07 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -331,10 +331,16 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	rc = down_read_interruptible(&cxl_region_rwsem);
- 	if (rc)
- 		return rc;
- 
-+	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	if (rc) {
-+		up_read(&cxl_region_rwsem);
-+		return rc;
-+	}
-+
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
- 		goto out;
-@@ -362,6 +368,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
- out:
- 	up_read(&cxl_dpa_rwsem);
-+	up_read(&cxl_region_rwsem);
- 
- 	return rc;
- }
-@@ -379,10 +386,16 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	rc = down_read_interruptible(&cxl_region_rwsem);
- 	if (rc)
- 		return rc;
- 
-+	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	if (rc) {
-+		up_read(&cxl_region_rwsem);
-+		return rc;
-+	}
-+
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
- 		goto out;
-@@ -419,6 +432,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
- out:
- 	up_read(&cxl_dpa_rwsem);
-+	up_read(&cxl_region_rwsem);
- 
- 	return rc;
- }
--- 
-2.37.3
+Attach destroy_region section code
+static int destroy_region(struct cxl_region *region)
+{
+     const char *devname = cxl_region_get_devname(region);
+     unsigned int ways, i;
+     int rc;
+
+     /* First, unbind/disable the region if needed */
+     if (cxl_region_is_enabled(region)) {
+         if (param.force) {
+             rc = cxl_region_disable(region);
+             if (rc) {
+                 log_err(&rl, "%s: error disabling region: %s\n",
+                     devname, strerror(-rc));
+                 return rc;
+             }
+         } else {
+             log_err(&rl, "%s active. Disable it or use --force\n",
+                 devname);
+             return -EBUSY;
+         }
+     }
+
+I have considered two options for your reference:
+
+1.Assuming the user hasn't executed the 'cxl disable-region region0' 
+command and directly runs 'cxl destroy-region region0 -f', using the 
+'disable_region(region)' function to first take the region offline and 
+then disable it might be more user-friendly.
+2.If the user executes the 'cxl disable-region region0' command but 
+fails to take it offline successfully, then runs 'cxl destroy-region 
+region0 -f', using the 'cxl_region_disable(region)' function to directly 
+'disable region' and then 'destroy region' would also be reasonable.
+
+
+
+
 
