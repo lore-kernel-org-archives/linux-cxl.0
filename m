@@ -1,167 +1,120 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EoSo5ao5"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9354187;
-	Mon, 27 Nov 2023 12:48:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701118091; x=1732654091;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=nNUoA+g0CQvaCe8wrGvhIs1/OQN6Mc+y6bwebPdKXZw=;
-  b=EoSo5ao5F9JW1yLeuhbKI79/75e1xHjNkFbbAla5UzB/GnVQ+eIv5m0I
-   tqbYLdG8sUiUthRB9WC5PQixha1NeshR+G8zLTQgvmX7XhQraQSwnIbpQ
-   fM3Jqnjw3PPLxOcAUwWv+EEmvaX1kwmaguCAqxIGug70FG5yvF9d2XOC9
-   zFaFp2Q2ljxSFyLuNJl5TN/x2uYLQZYklwfmWjdNxgMnRfqWwCly4wxAf
-   oPreU9Vz3hSjCe1Nle9oicM3nAz3Fhi0YnkD75WipYyI3V/bgUbchSA+N
-   bPTEFAfIxTTGyT2FYn9cc+RkQfo5vAVbVqai5KQ9ETkuPmd+WxDS9J2Ll
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="395605150"
-X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="395605150"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 12:48:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="838831808"
-X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="838831808"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Nov 2023 12:48:11 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 27 Nov 2023 12:48:10 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 27 Nov 2023 12:48:10 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Mon, 27 Nov 2023 12:48:10 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Mon, 27 Nov 2023 12:48:10 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OT12PE0EYXzXqVqFv6+yx3jH8hFi2SX7UHjree7Sya3k/ajlnX2CfMo+9ePO4m1g45zGFGH90MdNcgkFEVsjxy6ubAFASxTem4y0Rp+ZUBWEhmR6TyAIiOvlP35OyqXlH9cYLXlKyQDEJIeHMrHCAllq//4FaKSoS91M4UPLDGTolU/F6iEcvOKOBwmmdKZaG+WY4i6LIUA+SpPe3h3TTWtBJZ6Tq4QQ9nsNF2RY6uBPGjBUyZ68R51mKDjQFiwZso2NdzjK9+ue94qenLQpwYdVEfnPDvlXCAvHvikHK9+hjN9rn8xJlI2hU5W3IAlDIn9q6Ua1faZAE2O/j/4iIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pmpMcnK3U1g0iI1ndfU7Gzx0oXvYuxUNeeixal1Zdb4=;
- b=cejFVPFoMneIEziJ6e9jkBejn22cnTLHRA3U2bo9Kwl7M1jeQf8P1dL/24tTg6XaTuO3fajL5W4rixpo0MNqRU/akreNklnHkb+RVgcBr/jXneqXMri+uIdcC6nTvnIAyr9qw0hdhJiX4qrjeEwgNiOL+/uADSYYt5NR7LO3z1Tn/db4z3189b6gtUi9baNhCJ9+I+NsW+z8KjrSlxcydy1AyUnyT5qNVOABYujKYXamWE50vIsv7GNIcP7iTC0eVg5U4A4DXZqBD8zboNXgLSmwoENbhRTRLfueiMLYS+v7D4QcJZIYcBx/bd0oZ99hxnzuT5qJ4LLA0tvVZBEftA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MW3PR11MB4731.namprd11.prod.outlook.com (2603:10b6:303:2f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Mon, 27 Nov
- 2023 20:48:08 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::d3b2:2f2:701e:e8c7]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::d3b2:2f2:701e:e8c7%5]) with mapi id 15.20.7025.022; Mon, 27 Nov 2023
- 20:48:07 +0000
-Date: Mon, 27 Nov 2023 12:48:00 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Fan Ni <nifan.cxl@gmail.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] cxl/cdat: Fix header sum value in CDAT checksum
-Message-ID: <6565008062aa8_5ec232942e@iweiny-mobl.notmuch>
-References: <20231117-fix-cdat-cs-v1-0-ffc2b116ca6c@intel.com>
- <20231117-fix-cdat-cs-v1-2-ffc2b116ca6c@intel.com>
- <962fa507-b9f5-4646-8090-cf63f737e84f@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <962fa507-b9f5-4646-8090-cf63f737e84f@intel.com>
-X-ClientProxiedBy: BYAPR08CA0045.namprd08.prod.outlook.com
- (2603:10b6:a03:117::22) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="DAYM1HJq"
+Received: from snail.cherry.relay.mailchannels.net (snail.cherry.relay.mailchannels.net [23.83.223.170])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A6419D
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 13:20:44 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8230D102B4C;
+	Mon, 27 Nov 2023 21:20:43 +0000 (UTC)
+Received: from pdx1-sub0-mail-a286.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id CF19E102AF1;
+	Mon, 27 Nov 2023 21:20:42 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1701120042; a=rsa-sha256;
+	cv=none;
+	b=BKP6KgXMxBHjkB3Zw8z87N0VWcmU1Cq7cfoW1SG8jKGoc5CKCU/yBzk+sOAD737082ihS/
+	JxiDAesLy7TK6+uuMHONptZHSTsa9Q+egkPhIf0aCUfTmKtn/gNnwHakEY/HD4ErKllmXg
+	My49L5H0azXqV70Oz252fmc9K58gCax4sZ0hnRornnIK/xMJIttSd8iiyGXbBYPM+r+u3V
+	hcXk5/pC2nhUNcpgOQ8F7LINpDihDLZqKTRSXzlhp+1yu+v7pmAyScAuY4uB/mO/N468Pl
+	xszjV7YRY4w4nv5x1+Mje9iWBOdAccHub3H52wZiGtZwKIr3g0OvoiNbLGD5bQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1701120042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=EhWnmneJWEgO9jABkWQwK2A5tmC7vjD6TGryyQg7eUY=;
+	b=TY8g3b1zxI4L1FVbtSd+8qjJ2AK60Uu7TG1hQJPsf56jTXgPl2zRtThuYWuMc+fBEU3fWU
+	4NhlwhdQP8lrnD7lehn53z4PcnxsiKwxeUlye2xHBx5ScvVSceOxHtHpKx7q9mFUTVBTu3
+	Xi4jwWs7HWAd0GFWYwpeW/2P6E3Gwqgm3O4NiW0nMz2FdbA7q35zc1exEF9OFe81gJWXEP
+	rTBzS9cd9KY12eprHwNBomtuwZmj7eDQfM1lqIKq3gYQ9+Hdy8rAp19XnU4ZpmbtIfGa6f
+	iXd2wR0sXWvA0vBCzBmH3j/dX62nX32KhhSb52w1kvEuKkBZeUxYg+VeuL8qRA==
+ARC-Authentication-Results: i=1;
+	rspamd-d88d8bd54-rthfs;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Spot-Cooperative: 4883e570041aab6c_1701120043313_2510861249
+X-MC-Loop-Signature: 1701120043313:2504087452
+X-MC-Ingress-Time: 1701120043313
+Received: from pdx1-sub0-mail-a286.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.209.6 (trex/6.9.2);
+	Mon, 27 Nov 2023 21:20:43 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a286.dreamhost.com (Postfix) with ESMTPSA id 4SfJQy0cNPz1j;
+	Mon, 27 Nov 2023 13:20:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1701120042;
+	bh=EhWnmneJWEgO9jABkWQwK2A5tmC7vjD6TGryyQg7eUY=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=DAYM1HJql0mzIWtmrb0lK4cfki8o4vYu1DMdmfCniVmlhGVGcBFdhiifYuUZdhy46
+	 2AtD3NrOcxlMTSZf9ZLyUVG/P74dsYvmw7OeSIpHhFhiLLF/5JSTmJ//ldsw/OUgFz
+	 4DlTCyoq7VEW12ncLBixMWShN+AaxQll74mof/OwmhWVdAybnc4I+Od5USl06SqaCq
+	 C2U9szNBk6Pj+2QbC7caiegUszScr/qMYbIKbzA+0FXNpjJd4TkV/YrH5eZFo66UVR
+	 oa+JtQrGUvhnTpTaBTZ2CNJkIYKtOmEY/R0l038uvEpcp4W0mrXWlDFvcP/mmQetHv
+	 BYJTHCCxPBSrg==
+Date: Mon, 27 Nov 2023 13:20:39 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: alison.schofield@intel.com
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/2] cxl/core: Always hold region_rwsem while reading
+ poison lists
+Message-ID: <20231127212039.vnbhmpnjlwsn6v3n@offworld>
+References: <cover.1701041440.git.alison.schofield@intel.com>
+ <08e8e7ec9a3413b91d51de39e385653494b1eed0.1701041440.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW3PR11MB4731:EE_
-X-MS-Office365-Filtering-Correlation-Id: 274aae29-f3c0-4f5c-fed6-08dbef8a28fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u9cdMuBkm+DjdrKThJAD6uPfqUB3cJ5B4zwcg21bZVlOeOOOPI0gWoIuPFJ2z7Dxzl5OgpI/X3tBu8Knecs5qcs/esvAQnjsGTFIMn1f6/LDaksjZ2n8j28IO+SDVOX/kZQxSnWdQ1soR8lMha7CMOc22TazC0BpXJluVq8fV8x2a8D4ZiJ9JmHmAgzdPUgxJVIHRtHX+MKKZNgAmxiaznG9RJMTHlEZLcl9ea7qfEJepjd7sw5PY7uXNZbHpafsD8enXrZdjVSSs2B4x5/QL597QVRtgjJ8kAvADm6YHbASFF1h3YPqQFJ3Bk8vYMJKyrXs5T/ZCtY73sIm8U5dLarp1TGcIq7VSofbjD/6D7zyvQxMlFBJLLdpCyXeATJkjEMKIZjJYF2ArF2VmLFdCICnsdvIpaiNAb+xBWiy34Ecc0F7rXNt1h13pWLK3kJ4AwsvjxUFFnKI2if1aTEBhC2LvcYbUb6fL6cCz5BLShDjZIfJxVyCo27IUWMZFNoSUAAJU8SRNrxASQz5mRINM1OvdtYiuZLU6rj5o4Zfwx5VZWqE+xCo1QSBVcR3gE05
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(366004)(39860400002)(396003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(38100700002)(41300700001)(86362001)(4744005)(83380400001)(5660300002)(82960400001)(26005)(44832011)(2906002)(6512007)(9686003)(6506007)(6666004)(8676002)(4326008)(8936002)(6486002)(478600001)(66946007)(110136005)(66476007)(66556008)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uz5S5vAGprgQ0C+d0uU+7E7NliuvKArnAGbVAUYD/OeZEVzHe0LqfRocQChQ?=
- =?us-ascii?Q?daVv7gdyHcfRp6RAc/Tu3xfy3zuEUjlLOjBkwKE9NiLIi/6I7VJAxj1TcbM9?=
- =?us-ascii?Q?YdNIanh7AfoECMxn4uI+dmVRLYDcdPCL3rvI5df/N0h+9ObzCt5t3wxzGSvI?=
- =?us-ascii?Q?MCUipR5EERZ7Bk81H+AbzR5daZSmbamS7qp9htrhE1Dkk6A6D9kJALJmTFWt?=
- =?us-ascii?Q?MjSQMfQ97xTAjn9Nwui4N5ecI/HTze2LTcx26qlIJx+i2zWcTi4bTExJvRzR?=
- =?us-ascii?Q?Vv4Mwo6wEaSXJZYjHzLH4vB/2z4OPQP9EI5MvHCWJPtcjRWMjtlA834i7e8b?=
- =?us-ascii?Q?IP6CWc6R94PRx5Kn7IOxbWiO+WA/xP8C+NNwVekxJoxkU4DPHvnkKusNRRvx?=
- =?us-ascii?Q?DxgMCmIadfCApkqcfFKbTZ52yyzEIfPqzj5jYeB0+hoT7Ze6/FII8A4RHW4z?=
- =?us-ascii?Q?WdQEGxCAWuuBlx8x9xMJ3IFBbv6rWkhuaw8kPwaxfBt5yWM83He0C0pWrb0+?=
- =?us-ascii?Q?gpUd6OcQWKaz5wjcxuI7wYmX2NEJrbgMs04IcjKnMhHd1Szz+WWR14kv0GjS?=
- =?us-ascii?Q?aoUSKwT/nhiqG7yeA36KTeMlE11W+lVlo2o8x+U9KfBHsl3FPaBJWVMfjPyJ?=
- =?us-ascii?Q?PKLuzi5WKRcTspsPYr7f2AWldt2WACgdRyXdftzCv2AVeJ2ZQNoQ5aWstA/A?=
- =?us-ascii?Q?cKnubXZQCH/7o1dT5GNMUbjf8X55NampbFOvMmHfZYA3r2edLJ/8obQro4BG?=
- =?us-ascii?Q?dp/NEzB+zWnwr+fvLi4QxADpRjqsz62BRcg60orlg5HnFG4aXlGj/OlAcVm3?=
- =?us-ascii?Q?mmh7VaaIl68JJWtx11CMEsXro6Hzy6b9CYuBF68o3aWmRP5zaKggMhROYxTG?=
- =?us-ascii?Q?hEFOyqOdQEtI/voLqwP9+OcrtG7BylEE+7J+IHYmFpQQRUfRPtLWj4Q085DD?=
- =?us-ascii?Q?casOHP7iP//bRuqxgA4ELaNHyZgG7JmixRI2uZKDlVKo66jPqZQ6PoEiqoq+?=
- =?us-ascii?Q?SMoKrMVLE7gujyEHUPAAoNzA28SWPVyB78S78RFWlc9gyXzo0t5V8bxacXvo?=
- =?us-ascii?Q?19Dy92BjNiHWqwAFj4JX2skR76Q8HsWlJVxvQH2ZluBE6W1JNgoQZ7WIA19P?=
- =?us-ascii?Q?AOehjkb3+y5188kBZtGtNkK1X7eLIdR0i5OUfW57R+9EM8/IRGqn9zG86C07?=
- =?us-ascii?Q?DuOPD5JEsh65XIW4+cVNBdr7m2QMUb3c2kj3REplUrgrpOmjS5o8UA2SqCKR?=
- =?us-ascii?Q?I8vF62XqW9vOY4Pk9GxGL99hy3svLG86b018mnVr+mOoLcEnDTkl2u0oL4Ws?=
- =?us-ascii?Q?LGMD1zXb4tRhLnB6CKFcRYiXbjOrnifSj5O0oSQFSHU0HjnZKRwiRWbfAZFQ?=
- =?us-ascii?Q?6rX3wI0WS3qwgHxX9CttlnT1XYiqLmrHsGwC/goPQ+j0gS6eC1WgvRHRrt09?=
- =?us-ascii?Q?lGIHySNej9fRCZMZYXW8cNYqVmuPxa/UyDxU+EVza5vkjsWfUtEn3gwGy0dZ?=
- =?us-ascii?Q?FWKHAJIxAQeKf1yj+BGcEFUTdyRUmTmO3YYVdcg/cEAnhxry60XpHm/7qZPa?=
- =?us-ascii?Q?xuqlLVKhQZw4zq9dEyVpdkqXFI2arcPgwTf7IfyI?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 274aae29-f3c0-4f5c-fed6-08dbef8a28fc
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2023 20:48:07.8166
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n/FolCF8QAQnnGF3N7rka33cBvw1/nvsxvyqcnoXM6Q/xCTIJJzIOIaovn2ZjLLXyay++v/3QjcDqyuXLoLvkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4731
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <08e8e7ec9a3413b91d51de39e385653494b1eed0.1701041440.git.alison.schofield@intel.com>
+User-Agent: NeoMutt/20220429
 
-Dave Jiang wrote:
-> 
+On Sun, 26 Nov 2023, alison.schofield@intel.com wrote:
 
-[snip]
+>From: Alison Schofield <alison.schofield@intel.com>
+>
+>A read of a device poison list is triggered via a sysfs attribute
+>and the results are logged as kernel trace events of type cxl_poison.
+>The work is managed by either: a) the region driver when one of more
+>regions map the device, or by b) the memdev driver when no regions
+>map the device.
+>
+>In the case of a) the region driver holds the region_rwsem while
+>reading the poison by committed endpoint decoder mappings and for
+>any unmapped resources. This makes sure that the cxl_poison trace
+>event trace reports valid region info. (Region name, HPA, and UUID).
+>
+>In the case of b) the memdev driver holds the dpa_rwsem preventing
+>new DPA resources from being attached to a region. However, it leaves
+>a gap between region attach and decoder commit actions. If a DPA in
+>the gap is in the poison list, the cxl_poison trace event will omit
+>the region info.
+>
+>Close the gap by holding the region_rwsem and the dpa_rwsem when
+>reading poison per memdev. Since both methods now hold both locks,
+>down_read both from the caller. Doing so also addresses the lockdep
+>assert that found this issue:
+>Commit 458ba8189cb4 ("cxl: Add cxl_decoders_committed() helper")
+>
+>Fixes: 7ff6ad107588 ("cxl/memdev: Add trigger_poison_list sysfs attribute")
+>Fixes: f0832a586396 ("cxl/region: Provide region info to the cxl_poison trace event")
+>Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-> > diff --git a/hw/cxl/cxl-cdat.c b/hw/cxl/cxl-cdat.c
-> > index 24829cf2428d..d93e2e4e64f2 100644
-> > --- a/hw/cxl/cxl-cdat.c
-> > +++ b/hw/cxl/cxl-cdat.c
-> > @@ -95,8 +95,15 @@ static void ct3_build_cdat(CDATObject *cdat, Error **errp)
-> >      /* For now, no runtime updates */
-> >      cdat_header->sequence = 0;
-> >      cdat_header->length += sizeof(CDATTableHeader);
-> > -    sum += cdat_header->revision + cdat_header->sequence +
-> > -        cdat_header->length;
-> > +
-> > +    do {
-> > +        uint8_t *buf = (uint8_t *)cdat_header;
-> > +
-> > +        for (i = 0; i < sizeof(*cdat_header); i++) {
-> > +            sum += buf[i];
-> > +        }
-> > +    } while (0);
-> 
-> Why the empty do/while loop?
-
-Because I used the loop for debugging and forgot to clean up after it was
-tested.
-
-I'll send a v2,
-Ira
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
