@@ -1,121 +1,136 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QsS56Cj0"
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20BE1A5
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Nov 2023 02:53:53 -0800 (PST)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231128105349epoutp03500ce7f165dcf2854413a7f36c08af20~bxAmh3ywh0459804598epoutp03d
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Nov 2023 10:53:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231128105349epoutp03500ce7f165dcf2854413a7f36c08af20~bxAmh3ywh0459804598epoutp03d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701168829;
-	bh=TYz1sWNTabUKV183Aq3zscGxLOboxEimK/trgMz9R4Q=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=QsS56Cj0Sv5F9/xVuRTrD80MlAczZAlF8ZfoSkIqPNgx1b0QTmF/M/ODORYLvwvQE
-	 Zexe9GHfyWgloE9CzQpPfES9Z3KmHsG5QpgSvKObf4w0Zk9+fYAByByLFcTEL4nVyT
-	 Pyoean4f7/OUavFRN/EnFgH2RjUEbVG2wO3rbcfY=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20231128105348epcas2p3bd74a8e5573fc73750a95ef2aa782e00~bxAlglmkR0458704587epcas2p3o;
-	Tue, 28 Nov 2023 10:53:48 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4SffT82K0Kz4x9Pw; Tue, 28 Nov
-	2023 10:53:48 +0000 (GMT)
-X-AuditID: b6c32a45-179ff70000002716-bb-6565c6bcf398
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4E.56.10006.CB6C5656; Tue, 28 Nov 2023 19:53:48 +0900 (KST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ddQIin2T"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6842D5B;
+	Tue, 28 Nov 2023 08:07:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZbngI0xxEj/tlAo9k5HrFjoVThOD8Fm/4+2nFJwPVU+8HTxVw6cYxFtKOXdutF99sNh8pe9OHV7IILvr0e64tVwVxTYgqMn/tlCTnAyM1NOv/r7wSJu3jgc56u32kDsmLXpdbh23o0qa7swSc+ZpvqOgaZDFeeXrb6YyyVIX1l4N/ZSrZPRfTA53AlilnqcXa1XG/1E8DWNf/umGvxfc+L0GMkH++iNcsJdHnsunPOZCWxzHgKEj92WFTlx3Ib0ZjWal+HqXnNlGn6rqflquUFcpyy5Lq5/DF0GJ3HrC1U7ZukkEJlPEIGerrzrSP9nTPplQEIV3fC48iuTLcj6IAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IyhWPjDT5OL94DNIxrTEut37EOc38L2ygt3gZjgvLYw=;
+ b=ksKotXJnNzcjGl4Bl0+sEdMLzu/nP6ULZuoYma5Y8SG54J3fh1Hd5L9+zodTvWCqcabGbgJJOAnGCzHsXhm9zr8fy63/73WjBpTRi56YiZDTvdOhKX3hW9AY689D26ZHtBARUNpku7Ncod+n1AWe14NlmCJveWMCv8SQw5BdMVlSbxkCKfdZSHccpb2+nrSZZdE3XOh+zWxmsQ5QdMv8disPwfC8yOII6PsBj3abtgAKQ7mZvlJC56h7DTqYF9+ipVugEP+jBnOkzVeH8zkzXpTGTXUxk6iEeEMsXFFFqFdVuGy51VQjTaqISkbWvQiLiPLw058SyZi9lBmgvnNV0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IyhWPjDT5OL94DNIxrTEut37EOc38L2ygt3gZjgvLYw=;
+ b=ddQIin2TDXZ8lz/snn4JLe39zXU88Bvaqbdjwd3kDEtJQC/liwTg2+CNGIQNQ4Njowvy42rU4tec4Sj4MIpl8BnZ4OEf17ZK146o/b9UynH6c++h0vuQR/6FiGJvYQvr4OS5xfvRpgNwGiqJJ1PkUaiTM/qyw6ByxdpWqxCGoEU=
+Received: from CH0PR03CA0296.namprd03.prod.outlook.com (2603:10b6:610:e6::31)
+ by PH7PR12MB7236.namprd12.prod.outlook.com (2603:10b6:510:207::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Tue, 28 Nov
+ 2023 16:07:12 +0000
+Received: from DS1PEPF0001709B.namprd05.prod.outlook.com
+ (2603:10b6:610:e6:cafe::2e) by CH0PR03CA0296.outlook.office365.com
+ (2603:10b6:610:e6::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27 via Frontend
+ Transport; Tue, 28 Nov 2023 16:07:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001709B.mail.protection.outlook.com (10.167.18.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7046.17 via Frontend Transport; Tue, 28 Nov 2023 16:07:12 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 28 Nov 2023 10:07:08 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <rafael@kernel.org>
+CC: <benjamin.cheatham@amd.com>, <yazen.ghannam@amd.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: [PATCH v7 0/5] CXL, ACPI, APEI, EINJ: Update EINJ for CXL error types
+Date: Tue, 28 Nov 2023 10:06:51 -0600
+Message-ID: <20231128160656.166609-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: Device Detection
-Reply-To: wj28.lee@samsung.com
-Sender: =?UTF-8?B?7J207JuQ7J6s?= <wj28.lee@samsung.com>
-From: =?UTF-8?B?7J207JuQ7J6s?= <wj28.lee@samsung.com>
-To: NISHAD TAKSANDE <nishadtaksande@gmail.com>
-CC: =?UTF-8?B?6rmA6rK97IKw?= <ks0204.kim@samsung.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <CAOzEdP__7TU4ES=3gVpCfiBMOChU+x_f-PUNYM8=RUGF-11ckA@mail.gmail.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20231128105347epcms2p40977dc9bf5b4cca6a19a1a907d71d562@epcms2p4>
-Date: Tue, 28 Nov 2023 19:53:47 +0900
-X-CMS-MailID: 20231128105347epcms2p40977dc9bf5b4cca6a19a1a907d71d562
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7bCmhe6eY6mpBpMm81sc3cNhcX7WKRaL
-	G3cOsjowe+ycdZfdo2/LKkaPz5vkApijsm0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUN
-	LS3MlRTyEnNTbZVcfAJ03TJzgPYoKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgrM
-	C/SKE3OLS/PS9fJSS6wMDQyMTIEKE7IzTn1tYS14xFvxafon9gbGb1xdjJwcEgImEu3TOlm7
-	GLk4hAR2MEq8mPqevYuRg4NXQFDi7w5hkBphAVmJu+efMoHYQgJyEndvn2KCiJtLLPkxkxHE
-	ZhMwlZh26BI7iC0ioCfx7/NnVhCbWaBAYtvpBlaIXbwSM9qfskDY0hLbl28F6+UUCJSYefMa
-	M0RcQ+LHsl4oW1Ti5uq37DD2+2PzGSFsEYnWe2ehagQlHvzcDRWXkvh64i9UfbFE18rTbCCv
-	SADd8OpDPURYX6Lx+ns2iA99JdZc9gQJswioSnyb/4AJosRF4u7lhewQ18tLbH87hxmknFlA
-	U2L9Ln2IgcoSR26xQFTwSXQchtnJK7Fj3hOoKUoSU9qOQN0lIdHQuJUNwvaQuLf/K+sERsVZ
-	iFCehWTXLIRdCxiZVzGKpRYU56anFhsVGMIjNjk/dxMjOLlpue5gnPz2g94hRiYOxkOMEhzM
-	SiK8eh+TU4V4UxIrq1KL8uOLSnNSiw8xmgJ9OZFZSjQ5H5he80riDU0sDUzMzAzNjUwNzJXE
-	ee+1zk0REkhPLEnNTk0tSC2C6WPi4JRqYIo0VdrsxaxafmjtH7WZi3I1nhe3VvFuCTWpzjGY
-	WRP6Zr2anr/eKfm9J4UeKVrKNGzb8PjXHk+dfSvb355s1OqOrKo/FvlSdnLFwpwbV7PL7Nuq
-	C/YnlXyv/L4wjlMt54eYaeTfArGeSZfvPVjc6LLXZ1ms6ESO9+kfmpNTdtfvOa/2bk/elY0q
-	ll9CjjNcqTLRLbv1/17qlb4XCWua0sLMLe9G7+mZWeex/Ud1VVGc3Kxdv3RTTZov+LobtZvz
-	3lt9unRiDUeplGxuSQfTy7wlmztjrgeLf3LkYZ0mGa05+XbD2ke25w9t2sN1f6NQzXUziXdJ
-	Hy/MV/piIuAx/e/DFVXn5HeanJmwIfpqrRJLcUaioRZzUXEiAB4r4vr3AwAA
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231123105943epcas2p2fc20911196eb1e064c0f9e8c110c7ed1
-References: <CAOzEdP__7TU4ES=3gVpCfiBMOChU+x_f-PUNYM8=RUGF-11ckA@mail.gmail.com>
-	<CGME20231123105943epcas2p2fc20911196eb1e064c0f9e8c110c7ed1@epcms2p4>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709B:EE_|PH7PR12MB7236:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0387c668-2ab1-4445-e723-08dbf02c14dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	aS5e77U04wMA24m/U7UHRB3OrQBAKSbWi3IsA9aJTYhV6z2KOlM1aeJ6az2tGPDaVmfrDMi0nlG7Y4w72b+/u8oCorcNQBcP1TSabiuluQc/1tcUhzz+s/ANZZHDaSUENt+0IhhDNIkXfI9dv+715v+TQpQv4nk1sniZl0sJVDeFci7wEF2JMk3BpWNtBDItgDdupEc2bodW4AN+PeZPI8W7+aHkqIv+wGpdoXRf4WOgtvxzhw34vbcNBu9AqMEVR1e/r1Bw2qWNCBdaEkqEduRlOwbyHiJyn2X8HDTCDOknAYDjt9WtKKcclCvFpw9DEDQuL2Up/oKDGLFuFhbFjl30r9x7zEPWn9PldwjoRJ9vzZ/MZuvi1uYDgq1kbIfESA9D4WuV/k6F8MgkJzXQZ+e/fXIOuy/cBE5e3kjD7mGpobdo+QyBogeYROkU2+y6yWUybdes0E1BUmLm/nlX+FHXICcTmX1iwQNzjsaEdktS5/5ieyUUrFdPukJwXMVMpAyuZnjP0q75d/FQwMx4C48Vm5zo6UvLni/X4VvlsrSHk8BQamRL+slN32+ag04Tp6/tZ/uteYvmtw9OYnMAnwPiplAQ2qrdd4ZP2T0WZyz+CYmfatJhegpIBrE8e+aGbDpTqGYk3LQYd9cvTnXa5tq6jyr5rxu9DQsSDFS0pz8gVwCzPLmJjVTyfW1iQvaUAGvs65CCx6RT84yity08N+Ig+dnAKp7W8hoQ1e/f1iKQZEWDZALQZWkPbB6pYFh9/q6JKYbpel2efXOw3KLjng==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(396003)(376002)(346002)(230922051799003)(451199024)(1800799012)(82310400011)(186009)(64100799003)(40470700004)(46966006)(36840700001)(83380400001)(40480700001)(81166007)(356005)(47076005)(82740400003)(336012)(4326008)(6666004)(7696005)(5660300002)(426003)(8936002)(70206006)(110136005)(70586007)(316002)(54906003)(8676002)(36860700001)(86362001)(15650500001)(7416002)(478600001)(41300700001)(2906002)(36756003)(16526019)(26005)(1076003)(2616005)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2023 16:07:12.1590
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0387c668-2ab1-4445-e723-08dbf02c14dd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709B.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7236
 
-On Thu, Nov 23, 2023 at 04:29:19PM +0530, NISHAD TAKSANDE wrote:
-> Hello,
->
-> We are currently in initial phase of working with CXL technology and
-> we are facing issues while enumerating our CXL 1.1 device,
-> The CXL device is connected to AMD EPYC 9004 series motherboard. The
-> device is not getting detected as a CXL device and it is not viewable
-> in lspci,
-> We wanted to know the steps we can perform for enumeration or what
-> capabilities to include so that it gets detected.
->
-> If anyone could suggest what can be done from the CXL driver package
-> available in the kernel source (we are using kernel v6.7-rc1 &
-> v6.6.2),
-> then we can implement it and get useful information through kernel
-> logs, as to what is stopping the device from getting enumerated as a
-> CXL 1.1 device.
->
-> Please also suggest if there are any CXL specific utilities we can use
-> for device detection / Enumeration.
-> Currently we have tried cxl-cli utility from ndctl and also Samsungs
-> SMDK utility
-> but we cannot see any cxl device getting detected.
->
-> Please suggest if we could provide any information which could be
-> essential for this investigation.
->
-> warm regards
->
+v7 Changes:
+	- Fixed a bug a permissions bug with einj_inject file (was using
+	  0x200 instead of 0200)
+	- Fixed a kernel test bot error
+	- Removed a "magic" number in cxl_einj_available_error_type()
+	- Bumped kernel version in debugfs documentation entries
+	- Added Jonathan's Reviewed-by
 
-Hello,
+v6 Changes:
+	- Reworked to have CXL error types under /sys/kernel/debug/cxl (Dan)
+		- Removed CXL error types from legacy EINJ interface in favor of
+		new interface
+	- Removed cxl_rcrb_addr file
+	- Added optional patch for CXL error type #defines (patch 2/5)
+	- Changes to documentation updates to match rework
+	- Change base to cxl-fixes branch
 
-In our experience, if the device is not visible via lspci after the OS boots,
-it is helpful to verify that the device enumeration was successful in the BIOS.
-As you know, you can use the pci command in the uefi shell to check if the
-device was successfully enumerated during the system firmware phase. You can
-also use memmap to check if the device's memory range is visible.
+The new CXL error types will use the Memory Address field in the
+SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+compliant memory-mapped downstream port. The value of the memory address
+will be in the port's MMIO range, and it will not represent physical
+(normal or persistent) memory.
 
-In some cases, especially depending on the BIOS version, the device may not be
-recognized. A detailed log would be helpful in identifying the cause.
+Add the functionality for injecting CXL 1.1 errors to the EINJ module,
+but not through the EINJ legacy interface under /sys/kernel/debug/apei/einj.
+Instead, make the error types available under /sys/kernel/debug/cxl.
+This allows for validating the MMIO address for a CXL 1.1 error type
+while also not making the user responsible for finding it.
 
-Thanks,
-Wonjae
+Ben Cheatham (5):
+  cxl/port: Add EINJ debugfs files and callback support
+  ACPI: Add CXL protocol error defines
+  EINJ: Separate CXL errors from other EINJ errors
+  cxl/port, EINJ: Add CXL EINJ callback functions
+  EINJ: Update EINJ documentation
+
+ Documentation/ABI/testing/debugfs-cxl         |  27 ++++
+ .../firmware-guide/acpi/apei/einj.rst         |  12 ++
+ drivers/acpi/apei/Kconfig                     |   3 +
+ drivers/acpi/apei/einj.c                      | 151 ++++++++++++++++--
+ drivers/cxl/core/port.c                       |  84 ++++++++++
+ drivers/cxl/cxl.h                             |  10 ++
+ include/acpi/actbl1.h                         |   6 +
+ 7 files changed, 283 insertions(+), 10 deletions(-)
+
+-- 
+2.34.1
+
