@@ -1,373 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fXY9pqwM"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFAC1A7
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 20:11:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701144706; x=1732680706;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dJglqphnvdxezvitIujtsqJJ6XB6KC9QjQFLQwt0L0E=;
-  b=fXY9pqwMrd2kd6KBH0GmHregk6xFRFOqPDtzqFs5T19k0ClfdvLVN1Wh
-   751parMssQ3xnt9LYbZyZFkHtEYVrfetf5IRnu62jyt9dQUsDGM0A+20T
-   uwf35LS2pgpT9JVcrNe1/fGcz4l/U1FzcuS5KdxNzNkHaeR+/sEILDkl4
-   TiaKa+NbKjjVY670gsOpc83IXaQwUTjBs0i00WMVonNAtxCs67pmzS+Iz
-   hVbw2DtdhfUctjmLLrZ/cBK0k+TwgJ5zNpwCEU2oY2hNf/ZGuwyhow/RR
-   O07NgW74L8mo1qFShskZMW5uKHHtDxH50t1p2Pj29fYdinmv3o4fDK2+t
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="390001064"
-X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
-   d="scan'208";a="390001064"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 20:11:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="891948434"
-X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
-   d="scan'208";a="891948434"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.170.56])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 20:11:45 -0800
-From: alison.schofield@intel.com
-To: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH 1/3] cxl/test: add and use cxl_common_[start|stop] helpers
-Date: Mon, 27 Nov 2023 20:11:40 -0800
-Message-Id: <d76c005105b7612dc47ccd19e102d462c0f4fc1b.1701143039.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1701143039.git.alison.schofield@intel.com>
-References: <cover.1701143039.git.alison.schofield@intel.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B3C197
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Nov 2023 22:35:23 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="141219573"
+X-IronPort-AV: E=Sophos;i="6.04,233,1695654000"; 
+   d="scan'208";a="141219573"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 15:35:21 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 2B271D618E
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Nov 2023 15:35:19 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 5D8D1D5EA1
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Nov 2023 15:35:18 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id DA5ED4119F
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Nov 2023 15:35:17 +0900 (JST)
+Received: from [10.167.220.145] (unknown [10.167.220.145])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 5AC131A0070;
+	Tue, 28 Nov 2023 14:35:17 +0800 (CST)
+Message-ID: <7eaf1057-2caf-8ec9-8b79-22ad4976ef76@fujitsu.com>
+Date: Tue, 28 Nov 2023 14:35:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [NDCTL PATCH 2/2] cxl: Add check for regions before disabling
+ memdev
+To: Dave Jiang <dave.jiang@intel.com>, vishal.l.verma@intel.com
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+References: <169645730392.624805.16511039948183288287.stgit@djiang5-mobl3>
+ <169645731012.624805.15404457479294344934.stgit@djiang5-mobl3>
+From: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>
+In-Reply-To: <169645731012.624805.15404457479294344934.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28024.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28024.005
+X-TMASE-Result: 10--6.776000-10.000000
+X-TMASE-MatchedRID: 9xvWjox81uOPvrMjLFD6eJTQgFTHgkhZXQP3X+FD21ATefx8PLB4oE1N
+	J2MN+nPka+o/S6GsElBTtuW5X/TasERV7C9ojOZ1EVuC0eNRYvKlR2Q+0FuebvmrkkH6JvZBPrT
+	BAt3E1ioXjQchKpIrqqnmDHpokNZJO4kcA8kjsz/v7rnu8XKYw8E5XPQnBzGXq8KsbROd9VR3Ib
+	SSOjBC458i2lZ/9LH/yZB8zMzex4oI72eZSqlThNjoQZHeT+6K3hng3KTHeTZ00vMXkV+kqIY2R
+	oj+9G1t4vM1YF6AJbZFi+KwZZttL1QAAzJkx/SoudR/NJw2JHcNYpvo9xW+mI6HM5rqDwqtGdvD
+	LEXul9A6HqTgIcCmlRftYM2uSlFOKiervPkw0QZpFy/hy7LLEx+PkXEi09h7k0Kz9G8k31l7DPy
+	xRFcy9Y9T4jYMgd/igokLZRKLKVGdC4HNoe3rP7Iyum16+pyZ1elfyC1yu6+FK45C57CBPA==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-From: Alison Schofield <alison.schofield@intel.com>
 
-CXL unit tests use a mostly common set of commands to setup and tear down
-their test environments. Standardize on a common set and make all unit
-tests that run as part of the CXL suite use the helpers.
+> Add a check for memdev disable to see if there are active regions present
+> before disabling the device. This is necessary now regions are present to
+> fulfill the TODO that was left there. The best way to determine if a
+> region is active is to see if there are decoders enabled for the mem
+> device. This is also best effort as the state is only a snapshot the
+> kernel provides and is not atomic WRT the memdev disable operation. The
+> expectation is the admin issuing the command has full control of the mem
+> device and there are no other agents also attempt to control the device.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>   cxl/memdev.c |   14 ++++++++++++--
+>   1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/cxl/memdev.c b/cxl/memdev.c
+> index f6a2d3f1fdca..314bac082719 100644
+> --- a/cxl/memdev.c
+> +++ b/cxl/memdev.c
+> @@ -373,11 +373,21 @@ static int action_free_dpa(struct cxl_memdev *memdev,
+>   
+>   static int action_disable(struct cxl_memdev *memdev, struct action_context *actx)
+>   {
+> +	struct cxl_endpoint *ep;
+> +	struct cxl_port *port;
+> +
+>   	if (!cxl_memdev_is_enabled(memdev))
+>   		return 0;
+>   
+> -	if (!param.force) {
+> -		/* TODO: actually detect rather than assume active */
+> +	ep = cxl_memdev_get_endpoint(memdev);
+> +	if (!ep)
+> +		return -ENODEV;
+> +
+> +	port = cxl_endpoint_get_port(ep);
+> +	if (!port)
+> +		return -ENODEV;
+> +
+> +	if (cxl_port_decoders_committed(port) && !param.force) {
+>   		log_err(&ml, "%s is part of an active region\n",
+>   			cxl_memdev_get_devname(memdev));
+>   		return -EBUSY;
+> 
+> 
+Hi Dave,
 
-This assures that each test is following the best known practice of
-set up and tear down, and that each is using the existing common
-helper - check_dmesg(). It also allows for expansion of the common
-helpers without the need to touch every unit test.
-
-Note that this makes all tests have the same execution prerequisites,
-so all tests will skip if a prerequisite for any test is not present.
-At the moment, the extra prereqs are sha256sum and dd, both used by
-cxl-update-firmware.sh. The broad requirement is a good thing, in that
-it enforces correct setup and complete runs of the entire CXL suite.
-
-cxl-security.sh was excluded from this migration as its setup has more
-in common with the nfit_test and legacy security test than with the
-other CXL unit tests.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/common                 | 23 +++++++++++++++++++++++
- test/cxl-create-region.sh   | 16 ++--------------
- test/cxl-events.sh          | 18 +++---------------
- test/cxl-labels.sh          | 16 ++--------------
- test/cxl-poison.sh          | 17 ++---------------
- test/cxl-region-sysfs.sh    | 16 ++--------------
- test/cxl-topology.sh        | 16 ++--------------
- test/cxl-update-firmware.sh | 17 ++---------------
- test/cxl-xor-region.sh      | 15 ++-------------
- 9 files changed, 40 insertions(+), 114 deletions(-)
-
-diff --git a/test/common b/test/common
-index f1023ef20f7e..7a4711593624 100644
---- a/test/common
-+++ b/test/common
-@@ -150,3 +150,26 @@ check_dmesg()
- 	grep -q "Call Trace" <<< $log && err $1
- 	true
- }
-+
-+# cxl_common_start
-+# $1: optional module parameter(s) for cxl-test
-+cxl_common_start()
-+{
-+	rc=77
-+	set -ex
-+	trap 'err $LINENO' ERR
-+	check_prereq "jq"
-+	check_prereq "dd"
-+	check_prereq "sha256sum"
-+	modprobe -r cxl_test
-+	modprobe cxl_test "$1"
-+	rc=1
-+}
-+
-+# cxl_common_end
-+# $1: line number where this is called
-+cxl_common_stop()
-+{
-+	check_dmesg "$1"
-+	modprobe -r cxl_test
-+}
-diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
-index 658b9b8ff58a..aa586b1471f6 100644
---- a/test/cxl-create-region.sh
-+++ b/test/cxl-create-region.sh
-@@ -4,17 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
-+cxl_common_start
- 
- destroy_regions()
- {
-@@ -149,6 +139,4 @@ for mem in ${mems[@]}; do
- 	create_subregions "$mem"
- done
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-events.sh b/test/cxl-events.sh
-index fe702bf98ad4..b181646d0fcb 100644
---- a/test/cxl-events.sh
-+++ b/test/cxl-events.sh
-@@ -4,24 +4,14 @@
- 
- . "$(dirname "$0")/common"
- 
-+cxl_common_start
-+
- # Results expected
- num_overflow_expected=1
- num_fatal_expected=2
- num_failure_expected=16
- num_info_expected=3
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
--
- dev_path="/sys/bus/platform/devices"
- 
- test_cxl_events()
-@@ -74,6 +64,4 @@ if [ "$num_info" -ne $num_info_expected ]; then
- 	err "$LINENO"
- fi
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
-index 36b0341c8039..c911816696c5 100644
---- a/test/cxl-labels.sh
-+++ b/test/cxl-labels.sh
-@@ -4,17 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
-+cxl_common_start
- 
- test_label_ops()
- {
-@@ -66,6 +56,4 @@ for nmem in ${nmems[@]}; do
- 	test_label_ops "$nmem"
- done
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-index 8747ffe8cff7..2f16dc11884c 100644
---- a/test/cxl-poison.sh
-+++ b/test/cxl-poison.sh
-@@ -4,18 +4,7 @@
- 
- . "$(dirname "$0")"/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--
--rc=1
-+cxl_common_start
- 
- # THEORY OF OPERATION: Exercise cxl-cli and cxl driver ability to
- # inject, clear, and get the poison list. Do it by memdev and by region.
-@@ -153,6 +142,4 @@ echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
- test_poison_by_memdev
- test_poison_by_region
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl-test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
-index 863639271afa..2c81d8f0b006 100644
---- a/test/cxl-region-sysfs.sh
-+++ b/test/cxl-region-sysfs.sh
-@@ -4,17 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
-+cxl_common_start
- 
- # THEORY OF OPERATION: Create a x8 interleave across the pmem capacity
- # of the 8 endpoints defined by cxl_test, commit the decoders (which
-@@ -163,6 +153,4 @@ readarray -t endpoint < <($CXL free-dpa -t pmem ${mem[*]} |
- 			  jq -r ".[] | .decoder.decoder")
- echo "$region released ${#endpoint[@]} targets: ${endpoint[@]}"
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
-index e8b9f56543b5..7822abada7dc 100644
---- a/test/cxl-topology.sh
-+++ b/test/cxl-topology.sh
-@@ -4,17 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
-+cxl_common_start
- 
- # THEORY OF OPERATION: Validate the hard coded assumptions of the
- # cxl_test.ko module that defines its topology in
-@@ -187,6 +177,4 @@ done
- # validate that the bus can be disabled without issue
- $CXL disable-bus $root -f
- 
--check_dmesg "$LINENO"
--
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-update-firmware.sh b/test/cxl-update-firmware.sh
-index f326868977a9..cf080150ccbc 100755
---- a/test/cxl-update-firmware.sh
-+++ b/test/cxl-update-firmware.sh
-@@ -4,19 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--check_prereq "dd"
--check_prereq "sha256sum"
--
--modprobe -r cxl_test
--modprobe cxl_test
--rc=1
-+cxl_common_start
- 
- mk_fw_file()
- {
-@@ -192,5 +180,4 @@ test_nonblocking_update
- test_multiple_memdev
- test_cancel
- 
--check_dmesg "$LINENO"
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
-diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-index 117e7a4bba61..6d74af8c98cd 100644
---- a/test/cxl-xor-region.sh
-+++ b/test/cxl-xor-region.sh
-@@ -4,18 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=77
--
--set -ex
--
--trap 'err $LINENO' ERR
--
--check_prereq "jq"
--
--modprobe -r cxl_test
--modprobe cxl_test interleave_arithmetic=1
--udevadm settle
--rc=1
-+cxl_common_start "interleave_arithmetic=1"
- 
- # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
- # option of the CXL driver. As with other cxl_test tests, changes to the
-@@ -93,4 +82,4 @@ create_and_destroy_region
- setup_x4
- create_and_destroy_region
- 
--modprobe -r cxl_test
-+cxl_common_stop "$LINENO"
--- 
-2.37.3
+Based on my understanding of the logic in the "disable_region" and 
+"destroy_region" code, in the code logic of 'disable-region -f,' after 
+the check, it proceeds with the offline operation. In the code logic of 
+'destroy-region -f,' after the check, it performs a disable operation on 
+the region. For the 'disable-memdev -f' operation, after completing the 
+check, is it also necessary to perform corresponding operations on the 
+region(such as disabling region/destroying region) before disabling memdev?
 
