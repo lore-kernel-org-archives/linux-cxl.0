@@ -1,149 +1,123 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6147D48;
-	Thu, 30 Nov 2023 11:23:38 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Sh5h13JSpz6JB68;
-	Fri,  1 Dec 2023 03:23:13 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A87414058E;
-	Fri,  1 Dec 2023 03:23:36 +0800 (CST)
-Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 30 Nov 2023 19:23:35 +0000
-From: <shiju.jose@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
-	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
-	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
-	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
-	<mike.malvestuto@intel.com>, <gthelen@google.com>,
-	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v4 11/11] cxl: scrub: sysfs: Add Documentation for CXL memory device scrub control attributes
-Date: Fri, 1 Dec 2023 03:23:13 +0800
-Message-ID: <20231130192314.1220-12-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20231130192314.1220-1-shiju.jose@huawei.com>
-References: <20231130192314.1220-1-shiju.jose@huawei.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLPRPzcd"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77CE1712
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Nov 2023 13:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701381098; x=1732917098;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=c8xfK4Lwc6GnJO84j+6EtrkLetRcmhaU8H5GJeoQv+o=;
+  b=hLPRPzcdZ1atZ1SVmUFj05qqbQWCW9m64y//uVtq6H5hR3MuNtnNY6BC
+   3y+1pSpFZhh+kLnxjEiPzZo/b9NxlIa5pi8OVCQYbE0Sw0Cu/IqriJIJy
+   Eilu9pmNSCzs+I5rmWaq8yMy2jXE3lTXLP/SLMAUJdRPkCV9jawZiPGc3
+   sCSoFrRtPKFnmrq4IzbEnX/VayzmyR617RlH8yc805CuW2Wrub7G/RaWe
+   sAsZM9i3w6aEEkqQmSVr7esCDiRXQjAFlX6LuRJ1mqnKmPUmw9P+S94JW
+   xnD5guvTwqGsJbormPwLOpx6A2TUw4PYsIvFjYIrBu6xbVfAF7FQ8hQ3C
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="373580132"
+X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
+   d="scan'208";a="373580132"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 13:51:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="745776648"
+X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
+   d="scan'208";a="745776648"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.125])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 13:51:37 -0800
+Subject: [NDCTL PATCH v3 2/2] cxl: Add check for regions before disabling
+ memdev
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Cc: vishal.l.verma@intel.com, caoqq@fujitsu.com
+Date: Thu, 30 Nov 2023 14:51:37 -0700
+Message-ID: <170138109724.2882696.123294980050048623.stgit@djiang5-mobl3>
+In-Reply-To: <766e7de9-8f08-73f2-fc7f-253930f95625@fujitsu.com>
+References: <766e7de9-8f08-73f2-fc7f-253930f95625@fujitsu.com>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Shiju Jose <shiju.jose@huawei.com>
+Add a check for memdev disable to see if there are active regions present
+before disabling the device. This is necessary now regions are present to
+fulfill the TODO that was left there. The best way to determine if a
+region is active is to see if there are decoders enabled for the mem
+device. This is also best effort as the state is only a snapshot the
+kernel provides and is not atomic WRT the memdev disable operation. The
+expectation is the admin issuing the command has full control of the mem
+device and there are no other agents also attempt to control the device.
 
-Add sysfs documentation for the CXL memory device scrub control
-attributes those are exposed in /sys/class/scrub/ by the scrub
-driver. These attributes support user configuring a CXL memory
-device scrub.
-
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Quanquan Cao <caoqq@fujitsu.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- .../testing/sysfs-class-cxl-scrub-configure   | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-cxl-scrub-configure
+v3:
+- Add emission of warning for forcing operation. (Quanquan)
+v2:
+- Warn if active region regardless of -f. (Alison)
+- Expound on -f behavior in man page. (Vishal)
+---
+ Documentation/cxl/cxl-disable-memdev.txt |    4 +++-
+ cxl/memdev.c                             |   20 +++++++++++++++++---
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-cxl-scrub-configure b/Documentation/ABI/testing/sysfs-class-cxl-scrub-configure
-new file mode 100644
-index 000000000000..3f55522134cd
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-cxl-scrub-configure
-@@ -0,0 +1,79 @@
-+See `Documentation/ABI/testing/sysfs-class-scrub-configure` for the
-+documentation of common scrub configure directory layout (/sys/class/scrub/),
-+including the attributes used for configuring the CXL patrol scrub.
-+Following are the attributes used for configuring the CXL ECS.
+diff --git a/Documentation/cxl/cxl-disable-memdev.txt b/Documentation/cxl/cxl-disable-memdev.txt
+index c4edb93ee94a..34b720288705 100644
+--- a/Documentation/cxl/cxl-disable-memdev.txt
++++ b/Documentation/cxl/cxl-disable-memdev.txt
+@@ -27,7 +27,9 @@ include::bus-option.txt[]
+ 	a device if the tool determines the memdev is in active usage. Recall
+ 	that CXL memory ranges might have been established by platform
+ 	firmware and disabling an active device is akin to force removing
+-	memory from a running system.
++	memory from a running system. Going down this path does not offline
++	active memory if they are currently online. User is recommended to
++	offline and disable the appropriate regions before disabling the memdevs.
+ 
+ -v::
+ 	Turn on verbose debug messages in the library (if libcxl was built with
+diff --git a/cxl/memdev.c b/cxl/memdev.c
+index 2dd2e7fcc4dd..ed962d478048 100644
+--- a/cxl/memdev.c
++++ b/cxl/memdev.c
+@@ -437,14 +437,28 @@ static int action_free_dpa(struct cxl_memdev *memdev,
+ 
+ static int action_disable(struct cxl_memdev *memdev, struct action_context *actx)
+ {
++	struct cxl_endpoint *ep;
++	struct cxl_port *port;
 +
-+What:		/sys/class/scrub/scrubX/regionY/ecs_log_entry_type
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RW) The log entry type of how the DDR5 ECS log is
-+		reported.
-+		00b - per DRAM.
-+		01b - per memory media FRU.
+ 	if (!cxl_memdev_is_enabled(memdev))
+ 		return 0;
+ 
+-	if (!param.force) {
+-		/* TODO: actually detect rather than assume active */
++	ep = cxl_memdev_get_endpoint(memdev);
++	if (!ep)
++		return -ENODEV;
 +
-+What:		/sys/class/scrub/scrubX/regionY/ecs_log_entry_type_per_dram
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Returns true if current log entry type of DDR5 ECS
-+		region is per DRAM.
++	port = cxl_endpoint_get_port(ep);
++	if (!port)
++		return -ENODEV;
 +
-+What:		/sys/class/scrub/scrubX/regionY/ecs_log_entry_type_per_memory_media
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Returns true if current log entry type of DDR5 ECS
-+		region is per memory media FRU.
++	if (cxl_port_decoders_committed(port)) {
+ 		log_err(&ml, "%s is part of an active region\n",
+ 			cxl_memdev_get_devname(memdev));
+-		return -EBUSY;
++		if (!param.force)
++			return -EBUSY;
 +
-+What:		/sys/class/scrub/scrubX/regionY/mode
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RW) The mode of how the DDR5 ECS counts the errors.
-+		0 - ECS counts rows with errors.
-+		1 - ECS counts codewords with errors.
-+
-+What:		/sys/class/scrub/scrubX/regionY/mode_counts_rows
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Returns true if current mode of DDR5 ECS region
-+		is counts rows with errors.
-+
-+What:		/sys/class/scrub/scrubX/regionY/mode_counts_codewords
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Returns true if current mode of DDR5 ECS region
-+		is counts codewords with errors.
-+
-+What:		/sys/class/scrub/scrubX/regionY/reset_counter
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(WO) DDR5 ECS reset ECC counter.
-+		0 - normal, ECC counter running actively.
-+		1 - reset ECC counter to the default value.
-+
-+What:		/sys/class/scrub/scrubX/regionY/threshold
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RW) DDR5 ECS threshold count per GB of memory cells.
-+
-+What:		/sys/class/scrub/scrubX/regionY/threshold_available
-+Date:		November 2023
-+KernelVersion:	6.8
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Supported list of DDR5 ECS threshold count per GB of
-+		memory cells.
--- 
-2.34.1
++		log_err(&ml, "Forcing %s disable with an active region!\n",
++			cxl_memdev_get_devname(memdev));
+ 	}
+ 
+ 	return cxl_memdev_disable_invalidate(memdev);
+
 
