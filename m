@@ -1,36 +1,35 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5BCR8q2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwyRnnRe"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2703B1722
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDE710E5
 	for <linux-cxl@vger.kernel.org>; Thu, 30 Nov 2023 20:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1701403576; x=1732939576;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=+g0XwpImUMv/l1eKPhrRYceq1i1i23dKJpdPqyh7l6Y=;
-  b=X5BCR8q2nbxtWr3HRmQQs3pDV02meUYIdkU2PX+blZJVDyxHvOSrBhkh
-   ShlpzgSUlG+jWq2OBIpJqtmLGpnNyKw1mESWMelh95B8fg8n3HyFQBqQD
-   LbAmyF8gPtg4LvVtR/ksE6RzzkWMSUSDxAByBN9zB4qOT4cuBmo6z35B5
-   RBwF7OalvLU28o8B8QD3JbcRdohQ3aVjGA1vgZOF//yGK7VRBAy6BUYuk
-   Jb8k0vyPtZnZ4HcmtWDJk184N2wiXY+cPWk96KX5Qm5hCtCsCZNT9z1OD
-   IiN7zYreeY0ICLf6qyF3bogi9YE81c4n0iHIZDyKeQFynRPy7xK7xhP4K
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="433267"
+  bh=OMGUXm0uyCiXwluHW7yP9z55uWYXvBA6zk5awABv6gM=;
+  b=SwyRnnReilDm1LlIvzHU58tHAQy4wq5OFtBHyDlxnMjBnf9qMQUmsCGU
+   2JMO+pq51wF6vXJivM1uhdGcjdUrZRVLR843Co3qK49/T3sDOCyBVrGUL
+   uetl6gSGaAPheKcFHrYl2R6DRWpd0c9IvTRUzCvmMSfAQ5iboj3mbW8V5
+   7Y9RzFyiDSlXtIZznp6YKqPm3FDCIGHKwt3Jk1zguLYtHWrbeYVLf+HCn
+   dzsAT5+9sp+f0IchG7gLQR5PCr8b6WcrOzIDAngBNS2erQGoEohwapNDA
+   7lLwfNnXuit9P7K2s5IpTsMGnr/yYR+vXEB7bO9UFKiRVtI4gVH0Ajsp6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="433265"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="433267"
+   d="scan'208";a="433265"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:16 -0800
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="769540364"
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="769540359"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="769540364"
+   d="scan'208";a="769540359"
 Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.102.178])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:15 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:14 -0800
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Thu, 30 Nov 2023 20:06:14 -0800
-Subject: [PATCH ndctl RESEND 2/2] cxl/region: Fix memory device teardown in
- disable-region
+Date: Thu, 30 Nov 2023 20:06:13 -0800
+Subject: [PATCH ndctl RESEND 1/2] ndctl/test: Add destroy region test
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,7 +38,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231130-fix-region-destroy-v1-2-7f916d2bd379@intel.com>
+Message-Id: <20231130-fix-region-destroy-v1-1-7f916d2bd379@intel.com>
 References: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
 In-Reply-To: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
 To: Vishal Verma <vishal.l.verma@intel.com>
@@ -47,94 +46,128 @@ Cc: Dave Jiang <dave.jiang@intel.com>,
  Dan Williams <dan.j.williams@intel.com>, nvdimm@lists.linux.dev, 
  linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.13-dev-0f7f0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701403573; l=2983;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701403573; l=3293;
  i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
- bh=+g0XwpImUMv/l1eKPhrRYceq1i1i23dKJpdPqyh7l6Y=;
- b=6RQH3trDu6Vqg00dg01jtmEBge6ZXp0Usglc6szQ0I/RozJRfvK1EbadE23RNon24ifIh/Cyo
- tpMzABaweBpA/fPZOMJlkXHdYfvb1s6KmU+RBuAtiLbhSIN1W6jqd5Y
+ bh=OMGUXm0uyCiXwluHW7yP9z55uWYXvBA6zk5awABv6gM=;
+ b=t3jWKdbBr1UeuqYw6qKIaj/crGvTneMM1az+H+Ax0QNH3n1cO+/87csRisYnK//3GzoeLFctV
+ Bz+RBSMhQmBDItHzzWySiHzEbshC30FHIjczdwn3i4wWCV1W38CPvbz
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-When a region is requested to be disabled, memory devices are normally
-automatically torn down.  Commit 9399aa667ab0 prevents tear down if
-memory is online without a force flag.  However, daxctl_dev_get_memory()
-may return NULL if the memory device in question is not system-ram
-capable as is the case for a region with only devdax devices.  Such
-devices do not need to be off-lined explicitly.
+Commit 9399aa667ab0 ("cxl/region: Add -f option for disable-region")
+introduced a regression when destroying a region.
 
-Skip non-system-ram devices rather than error the operation.
+Add a tests for destroying a region.
 
-Fixes: 9399aa667ab0 ("cxl/region: Add -f option for disable-region")
 Cc: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- cxl/region.c             | 3 +++
- daxctl/lib/libdaxctl.c   | 4 ++--
- daxctl/lib/libdaxctl.sym | 5 +++++
- daxctl/libdaxctl.h       | 1 +
- 4 files changed, 11 insertions(+), 2 deletions(-)
+ test/cxl-destroy-region.sh | 76 ++++++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build           |  2 ++
+ 2 files changed, 78 insertions(+)
 
-diff --git a/cxl/region.c b/cxl/region.c
-index 5cbbf2749e2d..44ac76b001e9 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -805,6 +805,9 @@ static int disable_region(struct cxl_region *region)
- 		goto out;
- 
- 	daxctl_dev_foreach(dax_region, dev) {
-+		if (!daxctl_dev_is_system_ram_capable(dev))
-+			continue;
+diff --git a/test/cxl-destroy-region.sh b/test/cxl-destroy-region.sh
+new file mode 100644
+index 000000000000..251720a98688
+--- /dev/null
++++ b/test/cxl-destroy-region.sh
+@@ -0,0 +1,76 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2023 Intel Corporation. All rights reserved.
 +
- 		mem = daxctl_dev_get_memory(dev);
- 		if (!mem)
- 			return -ENXIO;
-diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
-index 4f9aba0b09f2..9fbefe2e8329 100644
---- a/daxctl/lib/libdaxctl.c
-+++ b/daxctl/lib/libdaxctl.c
-@@ -385,7 +385,7 @@ static bool device_model_is_dax_bus(struct daxctl_dev *dev)
- 	return false;
- }
- 
--static int dev_is_system_ram_capable(struct daxctl_dev *dev)
-+DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
- {
- 	const char *devname = daxctl_dev_get_devname(dev);
- 	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
-@@ -432,7 +432,7 @@ static struct daxctl_memory *daxctl_dev_alloc_mem(struct daxctl_dev *dev)
- 	char buf[SYSFS_ATTR_SIZE];
- 	int node_num;
- 
--	if (!dev_is_system_ram_capable(dev))
-+	if (!daxctl_dev_is_system_ram_capable(dev))
- 		return NULL;
- 
- 	mem = calloc(1, sizeof(*mem));
-diff --git a/daxctl/lib/libdaxctl.sym b/daxctl/lib/libdaxctl.sym
-index fe68fd0a9cde..309881196c86 100644
---- a/daxctl/lib/libdaxctl.sym
-+++ b/daxctl/lib/libdaxctl.sym
-@@ -99,3 +99,8 @@ global:
- 	daxctl_set_config_path;
- 	daxctl_get_config_path;
- } LIBDAXCTL_8;
++. $(dirname $0)/common
 +
-+LIBDAXCTL_10 {
-+global:
-+	daxctl_dev_is_system_ram_capable;
-+} LIBDAXCTL_9;
-diff --git a/daxctl/libdaxctl.h b/daxctl/libdaxctl.h
-index 6876037a9427..53c6bbdae5c3 100644
---- a/daxctl/libdaxctl.h
-+++ b/daxctl/libdaxctl.h
-@@ -77,6 +77,7 @@ int daxctl_dev_will_auto_online_memory(struct daxctl_dev *dev);
- int daxctl_dev_has_online_memory(struct daxctl_dev *dev);
++rc=77
++
++set -ex
++
++trap 'err $LINENO' ERR
++
++check_prereq "jq"
++
++modprobe -r cxl_test
++modprobe cxl_test
++rc=1
++
++check_destroy_ram()
++{
++	mem=$1
++	decoder=$2
++
++	region=$($CXL create-region -d "$decoder" -m "$mem" | jq -r ".region")
++	if [ "$region" == "null" ]; then
++		err "$LINENO"
++	fi
++	$CXL enable-region "$region"
++
++	# default is memory is system-ram offline
++	$CXL disable-region $region
++	$CXL destroy-region $region
++}
++
++check_destroy_devdax()
++{
++	mem=$1
++	decoder=$2
++
++	region=$($CXL create-region -d "$decoder" -m "$mem" | jq -r ".region")
++	if [ "$region" == "null" ]; then
++		err "$LINENO"
++	fi
++	$CXL enable-region "$region"
++
++	dax=$($CXL list -X -r "$region" | jq -r ".[].daxregion.devices" | jq -r '.[].chardev')
++
++	$DAXCTL reconfigure-device -m devdax "$dax"
++
++	$CXL disable-region $region
++	$CXL destroy-region $region
++}
++
++# Find a memory device to create regions on to test the destroy
++readarray -t mems < <("$CXL" list -b cxl_test -M | jq -r '.[].memdev')
++for mem in ${mems[@]}; do
++        ramsize=$($CXL list -m $mem | jq -r '.[].ram_size')
++        if [ "$ramsize" == "null" ]; then
++                continue
++        fi
++        decoder=$($CXL list -b cxl_test -D -d root -m "$mem" |
++                  jq -r ".[] |
++                  select(.volatile_capable == true) |
++                  select(.nr_targets == 1) |
++                  select(.size >= ${ramsize}) |
++                  .decoder")
++        if [[ $decoder ]]; then
++		check_destroy_ram $mem $decoder
++		check_destroy_devdax $mem $decoder
++                break
++        fi
++done
++
++check_dmesg "$LINENO"
++
++modprobe -r cxl_test
+diff --git a/test/meson.build b/test/meson.build
+index 2706fa5d633c..126d663dfce2 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -158,6 +158,7 @@ cxl_xor_region = find_program('cxl-xor-region.sh')
+ cxl_update_firmware = find_program('cxl-update-firmware.sh')
+ cxl_events = find_program('cxl-events.sh')
+ cxl_poison = find_program('cxl-poison.sh')
++cxl_destroy_region = find_program('cxl-destroy-region.sh')
  
- struct daxctl_memory;
-+int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev);
- struct daxctl_memory *daxctl_dev_get_memory(struct daxctl_dev *dev);
- struct daxctl_dev *daxctl_memory_get_dev(struct daxctl_memory *mem);
- const char *daxctl_memory_get_node_path(struct daxctl_memory *mem);
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -188,6 +189,7 @@ tests = [
+   [ 'cxl-xor-region.sh',      cxl_xor_region,     'cxl'   ],
+   [ 'cxl-events.sh',          cxl_events,         'cxl'   ],
+   [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
++  [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
 
 -- 
 2.42.0
