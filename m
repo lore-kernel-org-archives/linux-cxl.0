@@ -1,161 +1,211 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="er7ebhJI"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89240171D
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Nov 2023 20:12:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701403964; x=1732939964;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=6ZEcN73Om6DVV8MYm4mkjzY0FArzY9AJdaz8B1dmwz8=;
-  b=er7ebhJIUkZz3JExtIIFDFx0zXIW/Ja13hAWdU8yFt8E7gdewJwsdn8v
-   /A+Lxsun5LorNwTA2j2/yyElDSKIFjld2mgm8iI6gWZWhJU8bVAg2gCWe
-   HXihTAAAoXJCRKrEy625SS9m1DNMu5mt4Kzz/z28bXOW6JNSQtwPmUhUZ
-   +FD6KpCW3x6upUaSE5eWqrHYIoNCJw/tBfslrBVANK0dc7JJJN6tXyrES
-   /LxTB1D6Aaf4tGShLqAp51E5OnnW/fcU7B6jFISy9kH4wkanGx/VFaAng
-   XyDpP8Ag7gBhuU+xm5Um5hMNaJhA8WvXBkeeWGfoeDdZOqC9s6Lot+E8V
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="392302307"
-X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="392302307"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:12:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="762983353"
-X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="762983353"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Nov 2023 20:12:44 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Thu, 30 Nov 2023 20:12:43 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Thu, 30 Nov 2023 20:12:43 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Thu, 30 Nov 2023 20:12:43 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LRbKhIjT4oEBl2quxUXTLVP54crPloDDE6BztmmZkszbWuf+0TW1a6YckeLdGvFTa44lT9QoQSK7bPRHgBVs6T/k50Svjph4bJWCMFivSd08RoQ5+QREWS5uN7NUWpgjO0RwPhNm7PvxbGT/OeRmGQNfTOwve4H6SwliCVsZzvKhBjJJ2WbqnMFs/JlWNcwxivmsI7/fgzQ7pz56LWv1rRH7vbWYNdFVV1ydHlqC35zjBDSCwQX9Ek7gJ0yv/oTryDPI7r0gf9a5qo0CsE9IEqpJllPe3Z+arC7Gce35GSQE4bhWmGkSahsrwuWRVeKKUJU8gG1xtLmqc56YQ+aqHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ujDuScbnn6cA4XTiGhR67ajQmhSUs3zMQ9a4sSiaEyI=;
- b=MGj1EUP/VC+i4qaqMvgfCXF3BD74ponotjFJdgWLIVyleB8sEiiVOSdkE2ReWOK6LijCncAlm/RFdVPH68O/ho51pKIz7XLMpezdWgzMQ0DHT/LPclLApwMqGhuIJcg/kjU3JDsmL+WIYlpMbXnUY+sPCKgvdtSfPeObQRgc5wdDcGSXX+/TxokkeTvo3+qnKprznP9tgK7rp2+RxIe1TS6zP3xxwv1WM/9KyZrpmZIzlZmhNW4JqDU24rRObLCJ2oSShhcv8i4MhSH1k0/VQnwy26DzVUA/ICj9QLwnvQpqhK/l+5zJg4Nyz95AhU0hQo9kHTstwlMrYobUzRejhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SJ1PR11MB6297.namprd11.prod.outlook.com (2603:10b6:a03:458::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.24; Fri, 1 Dec
- 2023 04:12:41 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c%4]) with mapi id 15.20.7046.015; Fri, 1 Dec 2023
- 04:12:41 +0000
-Date: Thu, 30 Nov 2023 20:12:36 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-To: "Xiao Yang (Fujitsu)" <yangx.jy@fujitsu.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "fan.ni@gmx.us" <fan.ni@gmx.us>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH v2] daxctl: Remove unused memory_zone and mem_zone
-Message-ID: <65695d348908f_110db929496@iweiny-mobl.notmuch>
-References: <20230811011618.17290-1-yangx.jy@fujitsu.com>
- <TYCPR01MB10023F98F51B2AFE3E6B65A0E83CEA@TYCPR01MB10023.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYCPR01MB10023F98F51B2AFE3E6B65A0E83CEA@TYCPR01MB10023.jpnprd01.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR05CA0172.namprd05.prod.outlook.com
- (2603:10b6:a03:339::27) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqTYFTgK"
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E3310F1
+	for <linux-cxl@vger.kernel.org>; Fri,  1 Dec 2023 03:03:51 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-548f0b7ab11so2317067a12.1
+        for <linux-cxl@vger.kernel.org>; Fri, 01 Dec 2023 03:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701428629; x=1702033429; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MS+2UYK3EQTSW1oHcx4zk+kHqFeQtNrxFEJ01Z1TIgY=;
+        b=FqTYFTgKXQ0OQ54HvZUPq4/Wq6/L0myI6zINwL0Y51UEQ17nponOKamSo+SEpbXfHJ
+         NsUOUYnDBhVRxxzoYheZ5t7YmDUDqZmWguopdKErHUY8SDkM1y8Qk3TvM8lb18Q+1Lge
+         z+VyswU0KOWJWj1ysuuQJVop98mkBE/uYzp2IGWDi9McU/SXFFhD7qV9jY8hdAexqPkA
+         dpdP1znjn2o3jaKPnDoV0tksHQbVIKFuWSwfMGXjHFNm97DONzWF0YlCa9MrT6CZSP7w
+         20vq5GM+jNlVLRMysmB22veD36hJKbEbxmzEuC1Iw0IxiD9RqDFppbaYfqVOgOGMcRoX
+         7Ntw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701428629; x=1702033429;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MS+2UYK3EQTSW1oHcx4zk+kHqFeQtNrxFEJ01Z1TIgY=;
+        b=mmXalJM+gv0kCC0WyOAIuYaBJLxRpj3Qx6Oe9Bju+K5BWQs76hHEKKTJkv6tKEkveQ
+         v2Wzuu4TCy/hCPu58FwDBwbsMXZRynGgezBqXjX95vJfdN9EMQOctyGif36aTQFmGcJs
+         u5T/OSS7JobIGBojrpHAL0ov38QM6GjmNjUAgiKOnGdL24esHtok/W/74mMvc0hTNfrY
+         P/0MxC6ykh75yj6DJzr2kq5OhFrXw1dwAvj8I19NIcYj2H50PBaLxQ6fDVzWMgmmbtce
+         GiB4vJ2K6m/XZSbLnE0UqjF0wv5qKuX7btiN0tsoN8h4gE14zKZqbnu1CZsEflEa8okd
+         6geQ==
+X-Gm-Message-State: AOJu0YxW1xZ2u1WASChCIXinqVEKTXij8OnDCdeDazvkHAtWGBoJFfdz
+	wkSizauz4eDh4bqzV2axihI6ydOZEhDN9edgxucLD5YDDx0=
+X-Google-Smtp-Source: AGHT+IHD/gNf384t/7KdFnQ5ZBPZ9sOfEyyPoZTyUyJS4qOYA5tMGpsjZhdTqzBHH89J/jBVa+FD+xjToCot8v3FysQ=
+X-Received: by 2002:a05:6402:28b1:b0:542:f9b3:fb0 with SMTP id
+ eg49-20020a05640228b100b00542f9b30fb0mr554253edb.34.1701428628749; Fri, 01
+ Dec 2023 03:03:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ1PR11MB6297:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32660942-3791-4517-02c6-08dbf223c248
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VKnKJWc0mDtClqFhe1UexRQ1EYv4v8JLYhoiC7vCCBWd3iV4/tDks+wzAAOBK5TJZTCMvRtrVDwLbn05Rzqwt+A7rPzovRw3KMpniUrQioWTKdZNGQ7hkO1yesV6SqDAyyMF8LZk3/c3qJUctWJzkHXWfoITL6vVcsElaLfp3jLK1IIFFoexBXlEU5bDA4t0nHbNfJXHCHSGml/KrhO35ZzaVLqeQ4LqtaKtQkxb9bQmZ2Vy6E1GlHECbj+fMnh4YWdm3kj+1Y+wWWMbVTzrhSBpJlYinfaMBlVu5djDVyXwnXC/J9m9l3wkx7vTJvd0g/ACtHIP0jV3DoWZ4EldKbEgtCppOMCzVGUp5HkDkPBcvemLbG0jWk5WOuo98dEQcJmVAvhpTC8LbHjhGGG40E0TH4VCTxuWHACoVXTdaT4ER0it8U2p2+01C2l9rH++In9QbfC5ccdqXGtphIrOGX1r0Xb7DATLWFRICqcXJ+2Lgwx/hyQBXUiezk4A8pbBvw0c9sCVNXL1dSk2UjQMbPW9l7pw9aaRo99MJtqo++CaGLrNu3GhqmppLO5qi3A6BrBvIOYBed4vP2DpAePjTQ369Ken56zPkV5C80iFoqsZfXGPR0/bcZ89dufZdkD5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(366004)(136003)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(41300700001)(38100700002)(4744005)(2906002)(86362001)(110136005)(6512007)(82960400001)(66946007)(9686003)(6666004)(478600001)(26005)(6506007)(53546011)(6486002)(83380400001)(5660300002)(44832011)(4326008)(316002)(66556008)(66476007)(8676002)(8936002)(520744002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VWxmbmhkMnpCM1F3QnZsS0RxOXdNL0hrZ0IvSndEb2tnT0loUTlBbGl3MGFa?=
- =?utf-8?B?RWpuUmpsdUtHVHBtV2IyQU9GaTRiOHRrRlFTQlJXdFJYR0JCY3NCQm9Pc09m?=
- =?utf-8?B?SHdUZERmL01yODlWMCtlZ28xMFFDMU5SNkl4MGxGaUNPTW0vSHBhY1I5TWdB?=
- =?utf-8?B?QnZoQTZpL3JtcXVCQldaVk1CZnlKUFNrb3lKeXF2RVN1Sy9CTzVzS2xnTlV5?=
- =?utf-8?B?NjE0alVORkNHNWhkcm55NWpUZExhUkE1WnNKeWdvRnBTZU1rVHQ5WjZ4MjN4?=
- =?utf-8?B?eUZzWVUwcmU2cStkdmRNQXNNbUVlNzZRRXkraUZaUmRNZEN1LytPeGJ2bkZ4?=
- =?utf-8?B?dWt6aUpuRmR6ekZlV2o4bDZ4UmxHdmE4SWdCL3dmNkFySDRxVC9jUFk2RndI?=
- =?utf-8?B?SmJTQW5IUkNvMCtDTnFiRUlwczRHaC9DcEtaSks0cDBDaTA3Qmx0NURudlI3?=
- =?utf-8?B?Z1g5c0ZWZjFwTjNDOUF4VTE3RThGUU5TK2xtOXd4eWdMeEZuS2tJUE12bTJW?=
- =?utf-8?B?NkVhYzdRU3JDeUw5cVRKSkx1Si9LZG10bzc1TDd2NnE2WEk4K2pvNnBBamRh?=
- =?utf-8?B?QU0rYmQ0aE1ZUEh2VGpsZnpsYmM2WG9XWFIzN05Db2JhQ0lNTWtVUi9yWHhC?=
- =?utf-8?B?bGtCUnpJRUM5cHQ0ZWJBeUNQN0dudWpqbGg5cldERkh4QTgwbkFhU3hnWFRJ?=
- =?utf-8?B?OGVLUFBCcEhsTWVVWXpVTVlPK2JQb3FwQk1KS2hvOGxuMlUvaDJPZnU5RVFh?=
- =?utf-8?B?NXhJaStoQ1RZRkF2dWFjN0FacmYwbFpwSHg4Z0l4dy9FRWhzMTBqVWgybVli?=
- =?utf-8?B?bUxGcXpReFMxS1M3R3RDZmpOMnNoS0ppMFNYZVZ6dzZzbXdKd0VMYThpQjRy?=
- =?utf-8?B?R2hMeUlWc3ZENFRPa1U3L2d6dVJTVWs0NWdKYWVldXdCSEZ4ZjNOZGxRZERJ?=
- =?utf-8?B?Mmo2NjdrSDhGUk95dWQzbmY3c0lHVUtibGJST2VQL21yRmFqV0ZMQUc0MUpB?=
- =?utf-8?B?TTRLNThNd25CUG5OZS9taUZYbHMwekVBZHhrdWZENFlZeTFCY3JnMk9rTlJ5?=
- =?utf-8?B?M2xBeWtZYVJ0cVhYaElXSnBrVEIwd1dLcTRVWko0YTdkS3dmMXVUdWRCTHIx?=
- =?utf-8?B?RGt1d3hzTjN0elJhbEo3YzFmOHFIZW5pRVhnVjEvUFIyekt3RXhWWk5tT3ZR?=
- =?utf-8?B?VGFjRHkrY3dMbTlNT2pBMXpVTjEzelUwMTRpaWlCcGpnWE4zM1dmWFE5ajNo?=
- =?utf-8?B?dWhYMHdObURpamk4bW8ramZnVzRWZ09Fd09MNFM3a250b21BV2hpelAyRzVx?=
- =?utf-8?B?My85M3RDMHY1d2UvMElHSkhYR2VMcEpBTjBYUG8rZU5BTEtDVU8wNmJiZytF?=
- =?utf-8?B?YmdkV3BJSUYxdU9iSld6ZnNXVzZpYkpIaTBoVWt4WmN3ZEtWbWZHNGVwUnVJ?=
- =?utf-8?B?azYzdnZvbzRZN0IxRWZrUEZ0b1hPYktnYWRaUGlCQXFra1FaMEhISE9GaUJU?=
- =?utf-8?B?ekRMNG50Ui9YanpBWFY5VXNnTWJlWUdGVUY2WEJPd2dlV3ZIWW1VWkZ6eE1K?=
- =?utf-8?B?MEFVNzgvMENvc3hmQU5wU2xMczR0dkh0djN1WjdQVzZWU0JXaC9YTmI1VUNJ?=
- =?utf-8?B?ZU9hUzVFRCtLc2ZybGxuY2dlc0xGMWpYUDgwelBIZmFVdFNYNUMvUDlUVnh4?=
- =?utf-8?B?VzJzZnRwdzRKaE5GTXVjWkNCVkRidkRMTWkydkVXVTlqYXlNTTZtU29CVWtS?=
- =?utf-8?B?SUxUNmd1VE95aFZOeW1YNlcrdGpUMTZCN3hlaXErYWxnYnhFRWE0MDdLNnU2?=
- =?utf-8?B?TGxPeWs5dUJQRGtmMnAvYm1JN0tRUFlMeW1hZW9ZWDB3NFJTNVAwM2N6T1V5?=
- =?utf-8?B?ajF4V1RMWEFCeldwc0QzRjNaZGdraHJaNCtKdVdCZkw3R0I5R0RlYWlOQnlK?=
- =?utf-8?B?MUNrQ0U2dnlyWlQ1WXVWeVlHOVRtVElMaXNZN0JpUnhBWmhOelRvWWViU1Q4?=
- =?utf-8?B?ekhScXN4RDcvTGhOSFdTbGRTMXNjeWJxNHQxSml0OVZia3dRKytreGFxVHd0?=
- =?utf-8?B?UldTZ21OOGVOd0JWeFZ3WXV0ZTNtTlVtWVplSW53WjBhamZQNThtcTVIcTgz?=
- =?utf-8?Q?5yu54DNBqDzPP/kcHR0LcQQqK?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32660942-3791-4517-02c6-08dbf223c248
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2023 04:12:40.2710
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fcpNXEYn1RS2aH1CZSthus0S74lqd8SuwV+8bxdc696qPy+/C0ILm9JTnlOx3uWAPqk32NSAP7bdyLGHy1YwGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6297
-X-OriginatorOrg: intel.com
+From: Sajjan Rao <sajjanr@gmail.com>
+Date: Fri, 1 Dec 2023 16:33:37 +0530
+Message-ID: <CAAg4PapN_SEUEo+OCwiMYtNpzcJPJDZ10gA2=ZOdc-mPyLPfQQ@mail.gmail.com>
+Subject: Kernel panic when creating interleaved region
+To: linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Xiao Yang (Fujitsu) wrote:
-> Ping. ^_^
-> 
-> -----Original Message-----
-> From: Xiao Yang <yangx.jy@fujitsu.com> 
-> Sent: 2023年8月11日 9:16
-> To: vishal.l.verma@intel.com; fan.ni@gmx.us; nvdimm@lists.linux.dev
-> Cc: linux-cxl@vger.kernel.org; Yang, Xiao/杨 晓 <yangx.jy@fujitsu.com>
-> Subject: [PATCH v2] daxctl: Remove unused memory_zone and mem_zone
-> 
-> The enum memory_zone definition and mem_zone variable have never been used so remove them.
+I am trying to set up 2 memory devices in a CXL switch configuration
+with a 2k interleave. I am using the 6.4.11 kernel.
+When I create the region, the kernel panics after a few seconds. Has
+anyone seen this?
+Is there anything wrong with my QEMU configuration?
 
-NIT: I don't know that they have never been used but they certainly seem
-to have been moved to the library.
+My QEMU command line looks like this...
 
-> 
-> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
+ -object memory-backend-ram,size=4G,id=m0 \
+ -object memory-backend-ram,size=256M,id=cxl-mem1 \
+ -object memory-backend-ram,size=256M,id=cxl-mem2 \
+ -numa node,memdev=m0,cpus=0-3,nodeid=0 \
+ -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+ -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+ -device cxl-upstream,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+ -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+ -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+ -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=8 \
+ -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem1,id=cxl-vmem1 \
+ -device cxl-type3,bus=swport1,volatile-memdev=cxl-mem2,id=cxl-vmem2 \
+ -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=512M,cxl-fmw.0.interleave-granularity=2k
+\
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+# cxl list
+[
+  {
+    "memdev":"mem2",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:0f:00.0"
+  },
+  {
+    "memdev":"mem1",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:10:00.0"
+  }
+]
+
+
+# cxl list -D
+[
+  {
+    "decoder":"decoder0.0",
+    "resource":6710886400,
+    "size":536870912,
+    "interleave_ways":1,
+    "max_available_extent":536870912,
+    "pmem_capable":true,
+    "volatile_capable":true,
+    "accelmem_capable":true,
+    "nr_targets":1
+  }
+]
+[root@cxl-test ~]#
+
+# cxl create-region -d decoder0.0 -m mem1 mem2 -w 2 -g 2048 -t ram
+[  447.515379] cxl region0: Bypassing cpu_cache_invalidate_memregion()
+for testing!
+{
+  "region":"region0",
+  "resource":"0x190000000",
+  "size":"512.00 MiB (536.87 MB)",
+  "type":"ram",
+  "interleave_ways":2,
+  "interleave_granularity":2048,
+  "decode_state":"commit",
+  "mappings":[
+    {
+      "position":1,
+      "memdev":"mem2",
+      "decoder":"decoder4.0"
+    },
+    {
+      "position":0,
+      "memdev":"mem1",
+      "decoder":"decoder3.0"
+    }
+  ]
+}
+cxl region: cmd_create_region: created 1 region
+[root@cxl-test ~]# [  447.948621] Fallback order for Node 1: 1 0
+[  447.950007] Built 1 zonelists, mobility grouping on.  Total pages: 973350
+[  447.950386] Policy zone: Normal
+[  448.007461] Fallback order for Node 0: 0 1
+[  448.007572] Fallback order for Node 1: 1 0
+[  448.011462] Built 2 zonelists, mobility grouping on.  Total pages: 1006118
+[  448.014883] Policy zone: Normal
+[  448.433721] general protection fault, probably for non-canonical
+address 0xfff788a01001ba00: 0000 [#1] PREEMPT SMP NOPTI
+[  448.433721] CPU: 1 PID: 1 Comm: systemd Tainted: G           O
+ 6.4.11 #4
+[  448.433721] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+[  448.433721] RIP: 0010:__kmem_cache_alloc_node+0x1bc/0x310
+[  448.433721] Code: 2b 14 25 28 00 00 00 0f 85 68 01 00 00 48 83 c4
+18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 41 8b 47 28 4d 8b 07
+48 01 f8 <48> 8b 18 48 89 c1 49 33 9f b8 00 00 00 48 89 f8 48 0f c9b
+[  448.433721] RSP: 0018:ffffa9dc80013d40 EFLAGS: 00000286
+[  448.433721] RAX: fff788a01001ba00 RBX: 0000000000000dc0 RCX: 0000000000000310
+[  448.433721] RDX: 0000000000bce001 RSI: 0000000000000dc0 RDI: fff788a01001b800
+[  448.433721] RBP: 0000000000000dc0 R08: 0000000000039160 R09: ffff889f8020ca10
+[  448.433721] R10: ffff889fbf7b5020 R11: 65732e302e307861 R12: 0000000000000000
+[  448.433721] R13: 00000000ffffffff R14: 0000000000000310 R15: ffff889f80042b00
+[  448.433721] FS:  00007fc881294940(0000) GS:ffff889ffbc80000(0000)
+knlGS:0000000000000000
+[  448.433721] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  448.433721] CR2: fff788a01001ba00 CR3: 000000010254e000 CR4: 00000000000006e0
+[  448.433721] Call Trace:
+[  448.433721]  <TASK>
+[  448.433721]  ? die_addr+0x36/0x90
+[  448.433721]  ? exc_general_protection+0x1c5/0x430
+[  448.433721]  ? sidtab_context_to_sid+0x3b/0x410
+[  448.433721]  ? asm_exc_general_protection+0x26/0x30
+[  448.433721]  ? __kmem_cache_alloc_node+0x1bc/0x310
+[  448.433721]  ? psi_cgroup_alloc+0x29/0xb0
+[  448.433721]  kmalloc_trace+0x2a/0xa0
+[  448.433721]  psi_cgroup_alloc+0x29/0xb0
+[  448.447603]  cgroup_mkdir+0x1f0/0x470
+[  448.447603]  kernfs_iop_mkdir+0x5b/0x80
+[  448.447603]  vfs_mkdir+0x191/0x240
+[  448.447603]  do_mkdirat+0x146/0x170
+[  448.447603]  __x64_sys_mkdir+0x49/0x70
+[  448.447603]  do_syscall_64+0x60/0x90
+[  448.447603]  ? __irq_exit_rcu+0x4b/0xf0
+[  448.447603]  entry_SYSCALL_64_after_hwframe+0x77/0xe1
+[  448.447603] RIP: 0033:0x7fc881522d6b
+[  448.450700] Code: 8b 05 a1 30 0d 00 bb ff ff ff ff 64 c7 00 16 00
+00 00 e9 62 ff ff ff e8 e3 1b 02 00 0f 1f 00 f3 0f 1e fa b8 53 00 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 69 30 0d8
+[  448.450700] RSP: 002b:00007ffc4bc7c228 EFLAGS: 00000246 ORIG_RAX:
+0000000000000053
+[  448.450700] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc881522d6b
+[  448.450700] RDX: 0000000000000000 RSI: 00000000000001ed RDI: 0000557aec888aa0
+[  448.450700] RBP: 00007ffc4bc7c260 R08: 00000000ffffff9c R09: 00007ffc4bc7c090
+[  448.450700] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc8818aeb03
+[  448.450700] R13: 0000557aec685200 R14: 0000000000000002 R15: 00000000000000a0
+[  448.450700]  </TASK>
+[  448.450700] Modules linked in: kmem device_dax dax_cxl nft_fib_inet
+nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nfg
+[  448.490411] ---[ end trace 0000000000000000 ]---
+[  448.499413] RIP: 0010:__kmem_cache_alloc_node+0x1bc/0x310
+[  448.506716] Code: 2b 14 25 28 00 00 00 0f 85 68 01 00 00 48 83 c4
+18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 41 8b 47 28 4d 8b 07
+48 01 f8 <48> 8b 18 48 89 c1 49 33 9f b8 00 00 00 48 89 f8 48 0f c9b
+[  448.519131] RSP: 0018:ffffa9dc80013d40 EFLAGS: 00000286
+[  448.525319] RAX: fff788a01001ba00 RBX: 0000000000000dc0 RCX: 0000000000000310
+[  448.531528] RDX: 0000000000bce001 RSI: 0000000000000dc0 RDI: fff788a01001b800
+[  448.538945] RBP: 0000000000000dc0 R08: 0000000000039160 R09: ffff889f8020ca10
+[  448.545020] R10: ffff889fbf7b5020 R11: 65732e302e307861 R12: 0000000000000000
+[  448.552119] R13: 00000000ffffffff R14: 0000000000000310 R15: ffff889f80042b00
+[  448.558219] FS:  00007fc881294940(0000) GS:ffff889ffbc80000(0000)
+knlGS:0000000000000000
+[  448.565881] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  448.572137] CR2: fff788a01001ba00 CR3: 000000010254e000 CR4: 00000000000006e0
+[  448.582019] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x0000000b
+[  448.582580] Kernel Offset: 0x20000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[  448.582580] ---[ end Kernel panic - not syncing: Attempted to kill
+init! exitcode=0x0000000b ]---
