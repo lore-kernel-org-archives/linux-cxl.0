@@ -1,36 +1,36 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IzBOa4wg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5BCR8q2"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732CA171C
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Nov 2023 20:06:14 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2703B1722
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Nov 2023 20:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701403575; x=1732939575;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=F8XZJNPPStE/v4ENn+4au7zLUmzAJAJ2GivmFhguYIY=;
-  b=IzBOa4wgMU5djTSIPIN4Um0b20tT+7vu/xasNta6N31cRQ0ne3QS654X
-   425QviAek/l+62gtwQ+GiZk2dGHnFFrcbN1DHccVCGyEq+Pzb/f7E5JTI
-   2JlzOdlDDh+wXzCgsXjKS2aubNufNMeH+BqAFW5QfEQSlh6CIAj012WEi
-   afQUHNc5CovmDa7UOFzNJtMpVvbg7HV8bcVvdY5ZT+E5mJocJlVBZUDjE
-   WGPYsXqZ6XSk1RQSfDdHPdO65j4j864EHzpWxa+SwW0H1Pkk1OQBjSNY6
-   eHweMgOg/PUh58ZMNRqSkTXJXWghtiaDZYwkjHJqzs+ywYOrTyL3a0GPC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="433263"
+  t=1701403576; x=1732939576;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=+g0XwpImUMv/l1eKPhrRYceq1i1i23dKJpdPqyh7l6Y=;
+  b=X5BCR8q2nbxtWr3HRmQQs3pDV02meUYIdkU2PX+blZJVDyxHvOSrBhkh
+   ShlpzgSUlG+jWq2OBIpJqtmLGpnNyKw1mESWMelh95B8fg8n3HyFQBqQD
+   LbAmyF8gPtg4LvVtR/ksE6RzzkWMSUSDxAByBN9zB4qOT4cuBmo6z35B5
+   RBwF7OalvLU28o8B8QD3JbcRdohQ3aVjGA1vgZOF//yGK7VRBAy6BUYuk
+   Jb8k0vyPtZnZ4HcmtWDJk184N2wiXY+cPWk96KX5Qm5hCtCsCZNT9z1OD
+   IiN7zYreeY0ICLf6qyF3bogi9YE81c4n0iHIZDyKeQFynRPy7xK7xhP4K
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="433267"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="433263"
+   d="scan'208";a="433267"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:14 -0800
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="769540353"
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="769540364"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="769540353"
+   d="scan'208";a="769540364"
 Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.102.178])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:13 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 20:06:15 -0800
 From: Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH ndctl RESEND 0/2] ndctl: Fix ups for region destroy
-Date: Thu, 30 Nov 2023 20:06:12 -0800
-Message-Id: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
+Date: Thu, 30 Nov 2023 20:06:14 -0800
+Subject: [PATCH ndctl RESEND 2/2] cxl/region: Fix memory device teardown in
+ disable-region
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,49 +39,103 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALRbaWUC/32OvQ6CMBSFX4Xc2WsoBUEnB1kddDQMhV6gibbml
- hAJ4d0trCaO5+fLOTN4YkMeTtEMTKPxxtkgxC6Cple2IzQ6aEjiRAohY2zNB5m6UENNfmA3oSo
- ypUWrqchrCGCtPGHNyjb9iv4Sa+nNFIJt+QG38l5eL1AFvzd+cDxth0axpf+2R4ExpvKYFSQpV
- +nhbOxAz33jXlAty/IF3H1WHuEAAAA=
+Message-Id: <20231130-fix-region-destroy-v1-2-7f916d2bd379@intel.com>
+References: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
+In-Reply-To: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>, 
  Dan Williams <dan.j.williams@intel.com>, nvdimm@lists.linux.dev, 
  linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.13-dev-0f7f0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701403573; l=881;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701403573; l=2983;
  i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
- bh=F8XZJNPPStE/v4ENn+4au7zLUmzAJAJ2GivmFhguYIY=;
- b=uZy0R1Wd1mYqRifN3cHmWSBJwESfjylZb1+TMrQuL+ouYC0XJcc0NPZpuMm/G/b5RfG7GQMXX
- 3/mOLDi4p9tAZfZBEIvQXZNAdFdAsz9SMmXiGYMzH3T7Dmv2oGEf0oz
+ bh=+g0XwpImUMv/l1eKPhrRYceq1i1i23dKJpdPqyh7l6Y=;
+ b=6RQH3trDu6Vqg00dg01jtmEBge6ZXp0Usglc6szQ0I/RozJRfvK1EbadE23RNon24ifIh/Cyo
+ tpMzABaweBpA/fPZOMJlkXHdYfvb1s6KmU+RBuAtiLbhSIN1W6jqd5Y
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-The patch to force device tear down on region disable caused a
-regression for regions without system ram.
+When a region is requested to be disabled, memory devices are normally
+automatically torn down.  Commit 9399aa667ab0 prevents tear down if
+memory is online without a force flag.  However, daxctl_dev_get_memory()
+may return NULL if the memory device in question is not system-ram
+capable as is the case for a region with only devdax devices.  Such
+devices do not need to be off-lined explicitly.
 
-Add a test for such a case and a fix to the patch.
+Skip non-system-ram devices rather than error the operation.
 
+Fixes: 9399aa667ab0 ("cxl/region: Add -f option for disable-region")
+Cc: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
-[djiang: RESEND with proper mailing lists.]
+ cxl/region.c             | 3 +++
+ daxctl/lib/libdaxctl.c   | 4 ++--
+ daxctl/lib/libdaxctl.sym | 5 +++++
+ daxctl/libdaxctl.h       | 1 +
+ 4 files changed, 11 insertions(+), 2 deletions(-)
 
----
-Ira Weiny (2):
-      ndctl/test: Add destroy region test
-      cxl/region: Fix memory device teardown in disable-region
+diff --git a/cxl/region.c b/cxl/region.c
+index 5cbbf2749e2d..44ac76b001e9 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -805,6 +805,9 @@ static int disable_region(struct cxl_region *region)
+ 		goto out;
+ 
+ 	daxctl_dev_foreach(dax_region, dev) {
++		if (!daxctl_dev_is_system_ram_capable(dev))
++			continue;
++
+ 		mem = daxctl_dev_get_memory(dev);
+ 		if (!mem)
+ 			return -ENXIO;
+diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+index 4f9aba0b09f2..9fbefe2e8329 100644
+--- a/daxctl/lib/libdaxctl.c
++++ b/daxctl/lib/libdaxctl.c
+@@ -385,7 +385,7 @@ static bool device_model_is_dax_bus(struct daxctl_dev *dev)
+ 	return false;
+ }
+ 
+-static int dev_is_system_ram_capable(struct daxctl_dev *dev)
++DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+ {
+ 	const char *devname = daxctl_dev_get_devname(dev);
+ 	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+@@ -432,7 +432,7 @@ static struct daxctl_memory *daxctl_dev_alloc_mem(struct daxctl_dev *dev)
+ 	char buf[SYSFS_ATTR_SIZE];
+ 	int node_num;
+ 
+-	if (!dev_is_system_ram_capable(dev))
++	if (!daxctl_dev_is_system_ram_capable(dev))
+ 		return NULL;
+ 
+ 	mem = calloc(1, sizeof(*mem));
+diff --git a/daxctl/lib/libdaxctl.sym b/daxctl/lib/libdaxctl.sym
+index fe68fd0a9cde..309881196c86 100644
+--- a/daxctl/lib/libdaxctl.sym
++++ b/daxctl/lib/libdaxctl.sym
+@@ -99,3 +99,8 @@ global:
+ 	daxctl_set_config_path;
+ 	daxctl_get_config_path;
+ } LIBDAXCTL_8;
++
++LIBDAXCTL_10 {
++global:
++	daxctl_dev_is_system_ram_capable;
++} LIBDAXCTL_9;
+diff --git a/daxctl/libdaxctl.h b/daxctl/libdaxctl.h
+index 6876037a9427..53c6bbdae5c3 100644
+--- a/daxctl/libdaxctl.h
++++ b/daxctl/libdaxctl.h
+@@ -77,6 +77,7 @@ int daxctl_dev_will_auto_online_memory(struct daxctl_dev *dev);
+ int daxctl_dev_has_online_memory(struct daxctl_dev *dev);
+ 
+ struct daxctl_memory;
++int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev);
+ struct daxctl_memory *daxctl_dev_get_memory(struct daxctl_dev *dev);
+ struct daxctl_dev *daxctl_memory_get_dev(struct daxctl_memory *mem);
+ const char *daxctl_memory_get_node_path(struct daxctl_memory *mem);
 
- cxl/region.c               |  3 ++
- daxctl/lib/libdaxctl.c     |  4 +--
- daxctl/lib/libdaxctl.sym   |  5 +++
- daxctl/libdaxctl.h         |  1 +
- test/cxl-destroy-region.sh | 76 ++++++++++++++++++++++++++++++++++++++++++++++
- test/meson.build           |  2 ++
- 6 files changed, 89 insertions(+), 2 deletions(-)
----
-base-commit: cbf049039482a56c2b66ede3e10d5e9c652890b7
-change-id: 20231130-fix-region-destroy-a85ad1fde87b
-
-Best regards,
 -- 
-Ira Weiny <ira.weiny@intel.com>
+2.42.0
 
