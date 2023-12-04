@@ -1,171 +1,168 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMF4sUax"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C42D8;
-	Mon,  4 Dec 2023 00:21:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701678068; x=1733214068;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=SctStx0/2r6BjPSkyNIBJr82NmxzrJUg7/EEBCUvaYM=;
-  b=cMF4sUax1Cw27Kw1kE/AQuZ12AbCLPNFK4rEZ8Pp4pa+pvPRiVpwwN4A
-   fRrfnr84T9YNan01J2gKiD45PyZHijeEffLKELxTtMIguglUvd0Lz/q6g
-   JQRi/LrRhwffHAC6YDYlK29JRwPfB38AXfcmYoozF2nQb73x/T6YwlcNC
-   aaAfJXUp3zp0zc1ECR8KL8naZkJ9N3q2ragK0RPvMAIk/1ZLVzOkYuouM
-   rGNjgNQ6ls3Puk6D77DRJj8CKFrm029QpyWnBnBnAgO2eqqTrgGV6QJvq
-   T3CClQaK1hLAGYor1tUyn71ss7mCCZZY4v9YMGrWoWa79j70UWygPbnQv
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="752026"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="752026"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 00:21:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="720242377"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="720242377"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 00:21:02 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Michal Hocko <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,  "John
- Groves" <john@jagalactic.com>,  Gregory Price <gourry.memverge@gmail.com>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-  "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-  "linux-mm@kvack.org" <linux-mm@kvack.org>,  "cgroups@vger.kernel.org"
- <cgroups@vger.kernel.org>,  "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>,  "akpm@linux-foundation.org"
- <akpm@linux-foundation.org>,  "lizefan.x@bytedance.com"
- <lizefan.x@bytedance.com>,  "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-  "corbet@lwn.net" <corbet@lwn.net>,  "roman.gushchin@linux.dev"
- <roman.gushchin@linux.dev>,  "shakeelb@google.com" <shakeelb@google.com>,
-  "muchun.song@linux.dev" <muchun.song@linux.dev>,  "jgroves@micron.com"
- <jgroves@micron.com>
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="kotUtWQm"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A379DD5;
+	Mon,  4 Dec 2023 05:50:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N8POF1RKUmgsoxhV1ES8pHt4STc8gKQFYREFI58CYUDDRLNz5B7bXTsTNIuJ5PjAoklIM/hcCLOFHUfjExIV0E/5xKhVr8O+DJyqggqC5Ns7qXJ6iBdzk2fMpylJ5pEFOC+A2iSEaLeITtKNiuOMXb+hBR9MBBK/g++1yjjIMduk/qXBql6J6b3DoZ/wQtyVxxCJz0BR4bCXJiytWt5CKqcGSN1PTBK8QYqw00Y717+7M0g3lTT4bxitrgu6SjfuVYBmeGWcmgy0TjbpnEmk+FJNBxZGwS9MamUA5JKd676bRmnjuVcic1rkFOB/v9PePx1Fd8fqJLQ3q9xF1GXz+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wqt4GTRYEk/qBH16LKiWLsnrEk42j8Be2vsfGQW3qJg=;
+ b=MrIKXYhcDzBAxZiVY80z6W6UbH7P9NwJNYOjyGiXx5z2M/4mJqqV/yiXoDuqy/jMqvBkzFjme5ZJa2bTpxv2Jp0Zm1bvRH2Q7hETDsJINn5/0EHINGBBn7xtrQ3GdmaEcQbhqrxRXaS2oJxjjWTgEyy5Iqh7BewVyQ3FJ7AEnWwE6UYrZya1RPEgu6ynVpmDcjhMXkiaazswQbsqrbw5LY+UOkx2ZmklD7yVuWWcu6wCXxSRGpJ1O088JtXgsRL/6KORYlyH8p8XgzijHCZVNtcNJLpuBb1Gw4MREw297Gac33eHRxww61Co8ETrcc9OQ3/nLSB1kvnJyUHPvLqaYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wqt4GTRYEk/qBH16LKiWLsnrEk42j8Be2vsfGQW3qJg=;
+ b=kotUtWQmcScyqCPJYuycTqGj00wsQVfPedDkQOAzvUHK0mbYBbOBXvQlRI3AyYjQ9oMx/TZ8LKfGIxlVLfuxt/pzjimG7GY6eDPLk80L0Eswm5TuDPb/kxgGSqf+hags3QSQbnGEMG922S9Tymk2KkdPZLPSh+NsBDiMkiUNZ/k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by MW4PR17MB4482.namprd17.prod.outlook.com (2603:10b6:303:73::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.23; Mon, 4 Dec
+ 2023 13:50:16 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7068.022; Mon, 4 Dec 2023
+ 13:50:16 +0000
+Date: Mon, 4 Dec 2023 08:50:12 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>, "tj@kernel.org" <tj@kernel.org>,
+	John Groves <john@jagalactic.com>,
+	Gregory Price <gourry.memverge@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
+	"shakeelb@google.com" <shakeelb@google.com>,
+	"muchun.song@linux.dev" <muchun.song@linux.dev>,
+	"jgroves@micron.com" <jgroves@micron.com>
 Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-In-Reply-To: <ZW1IdPI11nhKcdZl@memverge.com> (Gregory Price's message of "Sun,
-	3 Dec 2023 22:33:08 -0500")
-References: <0100018bb64636ef-9daaf0c0-813c-4209-94e4-96ba6854f554-000000@email.amazonses.com>
-	<ZU6pR46kiuzPricM@slm.duckdns.org> <ZU6uxSrj75EiXise@memverge.com>
-	<ZU7vjsSkGbRLza-K@slm.duckdns.org> <ZU74L9oxWOoTTfpM@memverge.com>
-	<ZVNBMW8iJIGDyp0y@tiehlicka> <ZVOXWx8XNJJNC23A@memverge.com>
-	<ZVOn2T_Qg_NTKlB2@tiehlicka> <ZVOzMEtDYB4l8qFy@memverge.com>
-	<87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZW1IdPI11nhKcdZl@memverge.com>
-Date: Mon, 04 Dec 2023 16:19:02 +0800
-Message-ID: <87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Message-ID: <ZW3ZFDeTs7xotImL@memverge.com>
+References: <ZU6uxSrj75EiXise@memverge.com>
+ <ZU7vjsSkGbRLza-K@slm.duckdns.org>
+ <ZU74L9oxWOoTTfpM@memverge.com>
+ <ZVNBMW8iJIGDyp0y@tiehlicka>
+ <ZVOXWx8XNJJNC23A@memverge.com>
+ <ZVOn2T_Qg_NTKlB2@tiehlicka>
+ <ZVOzMEtDYB4l8qFy@memverge.com>
+ <87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZW1IdPI11nhKcdZl@memverge.com>
+ <87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-ClientProxiedBy: BYAPR06CA0048.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::25) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB4482:EE_
+X-MS-Office365-Filtering-Correlation-Id: dcd3711f-09c8-457e-8c16-08dbf4cff243
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ThCoz1ld7NFGvC6W+nM4GQFs7CZTjIRaGQ8zHRCtFd0D8G2i8Q8Ok7P4H1RYD/Jy0bmYvCRjdNuwtgh6e3aPvhVnfAabhbfI6VSDL0ChsKXl/+KWIJ4z40kgDDnY8g2tSJwT08F0pOHznjC1rYkPGk2EtDHM8AIQColI6iRXE2os3anLG7zROuvCO/wBC2o/281xE0hZU3I42q3j+aGykbOW0qVa/ESmftFyFh47sVore/Ivp3EcaZAFoJqtH9hYLWIU56B9QA2aenGx85gPStmtbFJ1LZ+6VxFZcL1R2nbe0b0q9GgDAF4IWvjstW93nVLsv0mpc9qUeGbE1YUyi0D4+t1HuCP1j0hG5laK8iEEunfNIt/SMucLQDnWT/bj1HMs8VgeCdZiiqr2XaQ99mdGFpBB9oDaqt3qGjXgbJSAkQPsPffrxIJt0SLuGBpix5sFATC55GhOmiwUnHtkFkIm8urU+xsVMJ1yGWDNbg0bhuYvlGNoclNTVlRJV2unzcsoIWU9zaMzwOY0/kOsAqBAQNqKafzV9tpVTXKjEKrV2vg9vQulIqmDpob9PEo6+DW+CLE2PlrtG0OIxHQxPhmxo1ziS8ctQgDLbduV42N4GJMqYCy07hDH4EBYffnz
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(366004)(39840400004)(346002)(396003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(2616005)(8676002)(8936002)(4326008)(44832011)(86362001)(38100700002)(6506007)(6512007)(26005)(478600001)(6486002)(66899024)(54906003)(6916009)(66556008)(66946007)(66476007)(6666004)(316002)(2906002)(41300700001)(36756003)(5660300002)(7416002)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nJoxg69U4mROXt31wFMl2vOUgXax2YSHXBH+hYC1oX6HE7SbK21L3qLSgiQs?=
+ =?us-ascii?Q?RJk5Bqdv5FX5BmxGBc8gy17Atn2O5vwUwzFqkRQF4PRYV4835ptOdZpb5Inz?=
+ =?us-ascii?Q?etk/ReWN3arhenzqOC8yy6AqYtLggcCM6soXnpqclOHi2JNHbpczfN7ur8jl?=
+ =?us-ascii?Q?bKfSgBGNQfGOIB4MF6wbZvmtxZlRasAz7t+dK5cv1drhcQpv6wFGi7v8MMat?=
+ =?us-ascii?Q?QGUytGeYwp8FbV3B2SVwekWj5ETdkMWZHzKP5fn/QCQjXYIaClyN1dKbVc2Z?=
+ =?us-ascii?Q?zmLlN3yEWSxHTtZBfxG8/RPBGVaEXc5w0TLQTJjW5LI+PwVgBso9CpUu28+O?=
+ =?us-ascii?Q?4W/Bx/BTnBSVJPIhYZtig0sUphnoEf6ioFxR9yO+UoCP9n7oTMK5FygQU4bt?=
+ =?us-ascii?Q?bStkxrMiyQHQnumYYRr4V/+iKTsn6qk9tVN6D1yP14maoDbCQosTek9Ijt7b?=
+ =?us-ascii?Q?6KXMGV7HhVeD1r4y7NZN4XklrmKZ1u2K3ExUrU2GHEoqxC+OmY+uuXOeQ5PE?=
+ =?us-ascii?Q?efwaDHvoNVfCQoU8gKyhXYSsyJcPGdVdF2+CF7QbjJlowrQQIrlGAf2V7HEI?=
+ =?us-ascii?Q?5uREzhMWViJhR3IkicmHwZfJEswLR4xJBGLt7uonvHJFojzMmV+otvJATSva?=
+ =?us-ascii?Q?yRmZR3rYDYonAhDuY+t1mrHzvU/1cT/FhQP5lL2hrOCLrNaFMu53YKOVLBqp?=
+ =?us-ascii?Q?MS38MQSVODQT2xowOWjIqMRhNgzs0WClgTSnPsedr4sXaRcxiZjaNZy0nopL?=
+ =?us-ascii?Q?Xz99k9mx5fYraq4hMwAWfBjmmijpoJJtKOXMOGSTeNLWdTA8mAVskw1lozvU?=
+ =?us-ascii?Q?ZI0ZjGr5Fb9rK123G3HW5mNiIOT/dXaakd2945saJ+qmlLSGnnaflSC5m7RC?=
+ =?us-ascii?Q?qIMi+oPOE+7CtV+O/sdYRv9Yk412APzGIKl0ILpbt1qTN1s5a+knHdDW5kWB?=
+ =?us-ascii?Q?3bi6Xb0jSKoSn4YZ08sEyYSenkCzY05ecxqeLSZzCEoWli4QMYwzkmUyQPLc?=
+ =?us-ascii?Q?SmxdHL8eMehq2C8BavyUZl+kizUA7yeJAyMAV3619PibkomnMHQM8IaH6d23?=
+ =?us-ascii?Q?WY1+K5uNvg7/BfJtuPPNbdV/vSS3OSkTuwK4pN9D40EuzcE39UYFSqsWzgNf?=
+ =?us-ascii?Q?8Z0nky5+VLsILgNlTsMNkKEDhS6a3oHqCJEggyzyehHhtgxC7taw5D8Qtdp6?=
+ =?us-ascii?Q?KpCelIctXKaeVBqkPTi05bxrXC7Wbcfo7O+xQ2zUplYwJQJZJgJMySVqIop7?=
+ =?us-ascii?Q?HcVd1hNi5wSYpqj8hBT5FAmDcpe2MhB62F8HsRtE3rHSoHpMz0N76mu4a91o?=
+ =?us-ascii?Q?eV5A7eph1MzKOs3iVGA631UB6ssuG7Ffhssfg5BiiFjnLSx4nO7qQ953u0zp?=
+ =?us-ascii?Q?o6f3OQi3Dv0F5etX9Oavv7Oo26Uxos4+qfN3zi9XlazfMkyTo2P3aVmqRRVG?=
+ =?us-ascii?Q?8FzAL6SxeH+AMxLFgm2j5JQ3i2IrIzf7fG4WfPqOvOc8TuuoKqVQex5bh/tX?=
+ =?us-ascii?Q?MEzuuqfHijvEL1KAjvM+76K9vg/kbaXbjX8e+MH3cYdVsBXJX9FnKkiHVjHK?=
+ =?us-ascii?Q?uT/ydl0cegVh8fbPAyOOZEpIhqZOyHf0wT0qE2b/OTh2ozzafLLRJ1w/A/q7?=
+ =?us-ascii?Q?Zg=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcd3711f-09c8-457e-8c16-08dbf4cff243
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2023 13:50:16.4965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D6iaAjG/DPD12mnxMPuO4Hq0SUoxjRfeP5Fcxw1DIYQJbqUnpsNmi6thyWIVWHzSmZvE0CWuRkYmQ1plq7VaXskYNO6fj87EIMjZNWsnHIQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB4482
 
-Gregory Price <gregory.price@memverge.com> writes:
+On Mon, Dec 04, 2023 at 04:19:02PM +0800, Huang, Ying wrote:
+> Gregory Price <gregory.price@memverge.com> writes:
+> 
+> > If the structure is built as a matrix of (cpu_node,mem_nodes),
+> > the you can also optimize based on the node the task is running on.
+> 
+> The matrix stuff makes the situation complex.  If people do need
+> something like that, they can just use set_memorypolicy2() with user
+> specified weights.  I still believe that "make simple stuff simple, and
+> complex stuff possible".
+> 
 
-> On Wed, Nov 15, 2023 at 01:56:53PM +0800, Huang, Ying wrote:
->> Gregory Price <gregory.price@memverge.com> writes:
->>=20
->> Because we usually have multiple nodes in one mem-tier, I still think
->> mem-tier-based interface is simpler than node-based.  But, it seems more
->> complex to introduce mem-tier into mempolicy.  Especially if we have
->> per-task weights.  So, I am fine to go with node-based interface.
->>=20
->> > * cgroups: "this doesn't involve dynamic resource accounting /
->> >             enforcement at all" and "these aren't resource
->> > 	    allocations, it's unclear what the hierarchical
->> > 	    relationship mean".
->> >
->> > * node: too global, explore smaller scope first then expand.
->>=20
->> Why is it too global?  I understand that it doesn't cover all possible
->> use cases (although I don't know whether these use cases are practical
->> or not).  But it can provide a reasonable default per-node weight based
->> on available node performance information (such as, HMAT, CDAT, etc.).
->> And, quite some workloads can just use it.  I think this is an useful
->> feature.
->>
->
-> Have been sharing notes with more folks.  Michal thinks a global set of
-> weights is unintuitive and not useful, and would prefer to see the
-> per-task weights first.
->
-> Though this may have been in response to adding it as an attribute of
-> nodes directly.=20
->
-> Another proposal here suggested adding a new sysfs setting
-> https://github.com/skhynix/linux/commit/61d2fcc7a880185df186fa2544edcd2f8=
-785952a
->
->   $ tree /sys/kernel/mm/interleave_weight/
->   /sys/kernel/mm/interleave_weight/
->   =E2=94=9C=E2=94=80=E2=94=80 enabled [1]
->   =E2=94=9C=E2=94=80=E2=94=80 possible [2]
->   =E2=94=94=E2=94=80=E2=94=80 node
->       =E2=94=9C=E2=94=80=E2=94=80 node0
->       =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 interleave_weight [3]
->       =E2=94=94=E2=94=80=E2=94=80 node1
->           =E2=94=94=E2=94=80=E2=94=80 interleave_weight [3]
->
-> (this could be changed to /sys/kernel/mm/mempolicy/...)
->
-> I think the internal representation of this can be simplified greatly,
-> over what the patch provides now, but maybe this solves the "it doesn't
-> belong in these other components" issue.
->
-> Answer: Simply leave it as a static global kobject in mempolicy, which
-> also deals with many of the issues regarding race conditions.
+I don't think it's particularly complex, since we already have a
+distance matrix for numa nodes:
 
-Although personally I prefer to add interleave weight as an attribute of
-nodes.  I understand that some people think it's not appropriate to
-place anything node-specific there.  So, some place under /sys/kernel/mm
-sounds reasonable too.
+available: 2 nodes (0-1)
+... snip ...
+node distances:
+node   0   1
+  0:  10  21
+  1:  21  10
 
-> If a user provides weights, use those.  If they do not, use globals.
+This would follow the same thing, just adjustable for bandwidth.
 
-Yes.  That is the target use case.
+I personally find the (src,dst) matrix very important for flexibility.
 
-> On a cpuset rebind event (container migration, mems_allowed changes),
-> manually set weights would have to remain, so in a bad case, the
-> weights would be very out of line with the real distribution of memory.
->
-> Example: if your nodemask is (0,1,2) and a migration changes it to
-> (3,4,5), then unfortunately your weights will likely revert to [1,1,1]
->
-> If set with global weights, they could automatically adjust.  It
-> would not be perfect, but it would be better than the potential worst
-> case above.  If that same migration occurs, the next allocation would
-> simply use whatever the target node weights are in the global config.
->
-> So if globally you have weights [3,2,1,1,2,3], and you move from
-> nodemask (0,1,2) to (3,4,5), your weights change from [3,2,1] to
-> [1,2,3].
+But if there is particular pushback against it, having a one dimensional
+array is better than not having it, so I will take what I can get.
 
-That is nice.  And I prefer to emphasize the simple use case.  Users
-don't need to specify interleave weight always.  Just use
-MPOL_WEIGHTED_INTERLEAVE policy, and system will provide reasonable
-default weight.
+> > That feels very intuitive, deals with many race condition issues, and
+> > the global setting can actually be implemented without the need for
+> > set_mempolicy2 at all - which is certainly a bonus.
+> >
+> > Would love more thoughts here.  Will have a new RFC with set_mempolicy2,
+> > mbind2, and MPOL_WEIGHTED_INTERLEAVE soon that demonstrate the above.
+> 
+> Thanks for doing all these!
+> 
 
-> If the structure is built as a matrix of (cpu_node,mem_nodes),
-> the you can also optimize based on the node the task is running on.
+Someone's got to :]
 
-The matrix stuff makes the situation complex.  If people do need
-something like that, they can just use set_memorypolicy2() with user
-specified weights.  I still believe that "make simple stuff simple, and
-complex stuff possible".
-
-> That feels very intuitive, deals with many race condition issues, and
-> the global setting can actually be implemented without the need for
-> set_mempolicy2 at all - which is certainly a bonus.
->
-> Would love more thoughts here.  Will have a new RFC with set_mempolicy2,
-> mbind2, and MPOL_WEIGHTED_INTERLEAVE soon that demonstrate the above.
-
-Thanks for doing all these!
-
---
-Best Regards,
-Huang, Ying
+~Gregory
