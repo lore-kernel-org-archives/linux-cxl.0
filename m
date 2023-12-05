@@ -1,208 +1,133 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="xwAyo+S3"
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2052.outbound.protection.outlook.com [40.107.102.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D783CA;
-	Tue,  5 Dec 2023 06:48:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xh4s+N7XtBu9s2fLd/uEkFhOF7LAxGqjDkLtaHu037PMe+pqWWqUIi4rkRcS0EeUertRMATjG7P/nDb7oFvjFONcaYWL2fn/LyhUdHIAqZ+b9G8rVjIyhjDfWk11/YX4lsh1wYKFB+hpdLez07k+9gfVzqLidgnH7jhVCTrJEfE5XzARhgwK71BeMtnYYTVfd1OLS5Q/H5FRMiqqxcb6QtOYjDDzdwvluKL5tfiV4uY9DftoGMsbTfEczgR1K6y2fcYCxSIYwI/kNeaW9CPENBFFXk0tAqmeokza4LRPHz1RlgkRmfhvglHPSnQ0e6mSOxyCPSVSfokShZSUcfqSOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1CGWv/WudBoNeUlGM0tsKTwHDmH/kQnUGxqZapCt5WQ=;
- b=V3m4gElxznZdyGs1O4RjFWA7zkvccnwo39xDvB2SXrcIqC2jVW5JRMxGkteP8X2Bj7e2LNRk9TIqvbxhnoLT1ZioU7HCEJuYJBrCJLFh35SdPFjcXYPBH/3OgKhXLQvrk7DWHD/ibFoCyEJOZvXd3yv0zcg48Iy5ZHX9sXB90iaj2DnA1aLzqfPYO+amYOoCciCCx5ynPIA4+KtSbzw+ucsimXufm0cePv2JpEV1HAkmQBPmeaL8tXGmyAMTAKRgkyhP/FyJJ9jsZLvjq+IX904T5/4qiLWTszgt+zKb2rdvWawoG4HGdmVlSKgwcYwd1l1rI7OYYGjomceTk/cLQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1CGWv/WudBoNeUlGM0tsKTwHDmH/kQnUGxqZapCt5WQ=;
- b=xwAyo+S3GduO3VE6dYyio0FOVl48hL0yQwpDTGbdlxQYuVhXaWvDdLKJnjbx5cd/ilNSzhFiKD6HfvbS+6m2h13iEKg5J89xfsu3loCXH13gAFwWvhzoa1uNngHEMZMZ+iPxyRsfuno5EWMyXvT3azLKDOaz/0Mjc77tmBYZwyI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by DM4PR17MB5873.namprd17.prod.outlook.com (2603:10b6:8:41::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7068.24; Tue, 5 Dec 2023 14:48:01 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7068.022; Tue, 5 Dec 2023
- 14:48:01 +0000
-Date: Tue, 5 Dec 2023 09:47:51 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Michal Hocko <mhocko@suse.com>, "tj@kernel.org" <tj@kernel.org>,
-	John Groves <john@jagalactic.com>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
-	"shakeelb@google.com" <shakeelb@google.com>,
-	"muchun.song@linux.dev" <muchun.song@linux.dev>,
-	"jgroves@micron.com" <jgroves@micron.com>
-Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-Message-ID: <ZW84F5PUB/0yPW9d@memverge.com>
-References: <ZU74L9oxWOoTTfpM@memverge.com>
- <ZVNBMW8iJIGDyp0y@tiehlicka>
- <ZVOXWx8XNJJNC23A@memverge.com>
- <ZVOn2T_Qg_NTKlB2@tiehlicka>
- <ZVOzMEtDYB4l8qFy@memverge.com>
- <87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZW1IdPI11nhKcdZl@memverge.com>
- <87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZW3ZFDeTs7xotImL@memverge.com>
- <87fs0h2fb4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87fs0h2fb4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: SJ0PR03CA0171.namprd03.prod.outlook.com
- (2603:10b6:a03:338::26) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="EtE+7iXt"
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F55C6
+	for <linux-cxl@vger.kernel.org>; Tue,  5 Dec 2023 10:59:30 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4EE5F421C4;
+	Tue,  5 Dec 2023 18:51:08 +0000 (UTC)
+Received: from pdx1-sub0-mail-a281.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 013C44255E;
+	Tue,  5 Dec 2023 18:51:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1701802268; a=rsa-sha256;
+	cv=none;
+	b=9zxecHBdlDYW4fOyC37mn2L8ft0jSt3UD8reY5Le0VQ0X8kYxbCr2PnbSJMPkAAHLDaBMZ
+	i/Yi9qzvhAExdOvemm3DdpFPtWi/+7xD0lvs2FjQwmCBz9CjmD9yyPFuiRfzRDJiLj4zX9
+	epni40hX4z8pDiQDlJCvJBnP924E8n8kgETPEdLbWx/tNyL2CLYb5OYBTiyxZOok5Umsz0
+	9Cy+ZjEzU6oqy0fp1Rn1KkXAQbdmwJ1o/KsCEhuAush4Q7OzpN6qusV+OtyKvLSPdEbpiS
+	CFmvaYsQ2d4xwb3JuNvXLbgXvfbmB4dKg69jivK46NcouHXQhZq4oCiZuQ23VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1701802268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=TMo7dFsJXgaopSPVnTtgb3V7Du9hLP0dFmoHzDqzHac=;
+	b=zqMIYpzFD8VUo1ZAsGubDqetAtoDnLV6huhIuawFaqsrZ6N26rS4KI/SdW1iEVv7DInO8/
+	kYECEztctr45XO30WizVEyiK6K8XdYLae8GEYvyD0bxcxh+CxRoTFktnqFfZp7Bp5UkVda
+	j1bEd8dRz+50mr7x9uXdvYaSfn/nQnMJvRVMqEpMTGlGkgFcGCGCQohGjjknjduYj9gA34
+	8YdqHFKamG7VlkDlH5qpMkRXArVrgm9YmATCtfXkpFcs0Ja8KPeAp5MU9d2BJsBymbY1mq
+	32V7oDA9QmIHItBG4TscdzL697ESS8tk1DOx7guKMbPMhlRdxWghkHWekOVQYA==
+ARC-Authentication-Results: i=1;
+	rspamd-696ff67dc8-7xhck;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Plucky-Suffer: 679c76621a9752b6_1701802268123_802674693
+X-MC-Loop-Signature: 1701802268123:1753170591
+X-MC-Ingress-Time: 1701802268123
+Received: from pdx1-sub0-mail-a281.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.118.156.74 (trex/6.9.2);
+	Tue, 05 Dec 2023 18:51:08 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4Sl8kg4ZjZz3l;
+	Tue,  5 Dec 2023 10:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1701802267;
+	bh=TMo7dFsJXgaopSPVnTtgb3V7Du9hLP0dFmoHzDqzHac=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=EtE+7iXtIzbP4GBSUIezcGW2DxZmrsIOTx7LjfKyNiAIKBpZkblxn/uuKc0sutAmJ
+	 2wGUIgl2NM0nbIqju7T6sYLynTJC1UYScNgLNLKEXJObcAAo6AJvb1GtmTxCU3AktZ
+	 LzSp0GV0ZWSLV0KOTngY1NppbXNIg3vajJyZtou+KHhlOk4qGxWsELnPquavPJu1Z5
+	 2KrA0E57ykfh0PHG1OgK8DY80eO9Ez07H83gBKmzEwuNaMwM6orBLQqlyIS92oKasn
+	 167xTY4U1A3YR+UrdpM4s/RIlDGGwwFsSq6JAqekRXebrdp7MXcGxRbqCaMsveQKeZ
+	 MDOBvTBBrR1hw==
+Date: Tue, 5 Dec 2023 10:51:04 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jim Harris <jim.harris@samsung.com>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFC] Add "uunit" unit testing framework for CXL code
+Message-ID: <20231205185104.u3ghhid7nh7vxbio@offworld>
+References: <CGME20231204193337uscas1p24b1959cf528b02b8172736a61807fff1@uscas1p2.samsung.com>
+ <170171841563.162223.2230646078958595847.stgit@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DM4PR17MB5873:EE_
-X-MS-Office365-Filtering-Correlation-Id: b129dae2-e394-424d-650c-08dbf5a12dc0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	R3RcwVnuzLfPGKMve0jsEyis6E+94HvsNBUa+hCm+jGv3JeLKX48fn4keN65whD2snslszvtOZ+8Fr8XZAXTGjVrmpzLWnjxmSRoNo3LY9yndK7At71ldluLArj5EOf/JyeuHRn4Q2aE8bm2wUZlgUQ+4F5uIJKe908ml/ZBG8AGR5GvUMgjnHnU4HsViSR3tRjzOTDvgqtZuBbzJJ4SeE2C0CqaSwoO9oVEo6bNGBKz9xxz2qmOLSA4ddmjXTzUBCSAYztXgC/jp/mqHTOj+/kcJYdzBnXJ7F4GR+Lpcgt7PzQtLT+EnmWxbfvKtPW/y+exrI49jPTZbIahJXKJpkeLj6QCerd0S0gKIbP9UiGOvdeomK8w96ka+wjw1OzGR3WNJ0dBJCig5DWA5KEpPrndgIv+M1uQk9ySSty7U13lqKkDJzHw1cA1zeEqAcn4uk8tIY5FilFpt1kT0I0p4AMCAvGvjfGyZ3BzVmOmUTN3xjqyc+IwF/ED7EyLd2pYoLBgKA8D9OhbRYNaw+zv1zLqQetzcnZ9jjSIhw9GL9TDiERMihDZNmE/cKeUCrwoE3SunazEpqF1kKuGosxrGlnqcAVx/Qm58xKfrAkJG9l512L9NqzxO20sNH+Q1Z5/G/H8d8HbBHSZ3RakYK8xacnM2e1J1uGSYi9afViAZkg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(396003)(366004)(39850400004)(230922051799003)(230173577357003)(230273577357003)(64100799003)(1800799012)(451199024)(186009)(38100700002)(7416002)(2906002)(5660300002)(83380400001)(6512007)(2616005)(6506007)(6666004)(26005)(478600001)(6486002)(41300700001)(36756003)(44832011)(6916009)(54906003)(66476007)(66556008)(66946007)(316002)(8676002)(8936002)(4326008)(86362001)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mrOHwdJqJtOaczQklQ9wozP9Rxcjvl6gANjtkuH/X0r67fxD9PomQWy8EnvK?=
- =?us-ascii?Q?n72TjxZXuSiTdNtAiavYD4R8y4yK4BgccI+UxSDn0tPC4Gqd+wm442sxykyP?=
- =?us-ascii?Q?aQeoD3Cin8pehTgtFf+BzcNhSdjMH8hrjOEoWA3o28/fd54yJDo/UZxEzxW5?=
- =?us-ascii?Q?3/z/IBxtqhc0nwQUK6Bh+DeQdr9azzz3/zhldk/qLTwwwGKgsM8hdH7c0RGD?=
- =?us-ascii?Q?dQvhopB0a83cTQGGFumO1AyVzUOShKvusJlxuGoAsOWUMp/FsSY51KpyiH0E?=
- =?us-ascii?Q?EAoGUZUtfyJ1cKaKe/9FhKkhjQBb4IP+2UnH00dZ7ilsjC34ToL39CgEuWjT?=
- =?us-ascii?Q?B5fFgn5DoT54K8/IO5ax1XlmpjgT+kFCOg0+UyJ3hEMFjLoEgvh/wXpteOXv?=
- =?us-ascii?Q?TOHNtS3Rik2p4QMCumWvJxoAdLO4t8zm2ugEzwEh4hU/07/cxgur4w8sVVr0?=
- =?us-ascii?Q?/AP1X7iecEQGq7I+JvNtCsxYcdfbTdnIMNvU0ud5OV5WTftb1gLLJ+bbJqjY?=
- =?us-ascii?Q?N4VorwlgxCfnjvML94RM57BtuEqI+RkALpHc0UtlPhXDuJQ3+soXO+jdAPgV?=
- =?us-ascii?Q?QlDLfkDuYRvwK6SK/Il/9kqYkv5muZM5DDR11983Pwc4Em+eKo7ENJZ2iJz6?=
- =?us-ascii?Q?yiBvHq1tbSK8Mloxhj4zpt7n0TccEvfwYvmb4Lfqnr+lle8K2Hbfw9SeXmfX?=
- =?us-ascii?Q?9gFLwGqyzZpzRMjLu7xHZgON6VZKgHFslBhFMxuD8MAHYb8viVp6dVzANBdO?=
- =?us-ascii?Q?PBEtYmXNVdqXzAGlleT8nmhIupCmdmq34kuqOPzgEChj6BqD9TJLj6sLhVv4?=
- =?us-ascii?Q?0V8cFl4EOlmMekq2HVOgjTwrOsA6oQdE8Gm7MV38EnvFj+3f2WB65kNClMSW?=
- =?us-ascii?Q?QOQpqMgBI7ofKBKGpnq5TWGOb9Rj3dR23zYeZEW6qAcldGp06qA6mW8dCNH0?=
- =?us-ascii?Q?/sNSlVqrwBfbeI5t+9PTYLpSF25AI1OPdLnb0kB5P4MhiED5Fy4CZwkS+8U2?=
- =?us-ascii?Q?6aIb/j0WnnDYoGAPgmlHspsRF8glOKoOg6KoC4Qtiyo5BVc4tjXNSVLZcX12?=
- =?us-ascii?Q?eDOxpCe5DRKVWhq4YfIzmX0ZhsDDBYZfTAjrbuAekfYWmWhGlge9zN26cCc2?=
- =?us-ascii?Q?gbHR/UVa6vYcASli3fJiAyfIcd2PmLcdI23PkIE9GPmib6CQpkSSqPuPGKe/?=
- =?us-ascii?Q?gcy4/+OeAtocKsjmE2X7sKZ7uMFLbmt4KWqIMyHsypSkiIbgxc/Nq21aZfe8?=
- =?us-ascii?Q?P37ql+CCRNRxn1AYVjBXCQwNbTCIFNkE0RTBqISV7n/XraIejPqoYMKqKaez?=
- =?us-ascii?Q?7AhbcfsSFqq4NDzzParA+GOZYqiIMa9WhFnQCKhmOFQySRy/s6KoU8oE9zcA?=
- =?us-ascii?Q?MRGRK0w5Hi+whSAqmpk7u5rS6irWGfKkOpHV2skPvxfYhmOE8qv60O8O9y0Q?=
- =?us-ascii?Q?m/zJcPca3DkWHowur1jEOMapmQMzcHQdKyGEv3ORsRGYFnN4HLNnEbbrcLGP?=
- =?us-ascii?Q?ukqnZeTpwzof8MFkwx8oYGfkt68x9uThPXtaj6570tFpgufIUhXoGKCJWOZv?=
- =?us-ascii?Q?12zGtwp0FGbMzZ6+KMgNS2dFzYZCE0DqWO2ZXBr8d2T6iOBHS9DDHbyUzaOB?=
- =?us-ascii?Q?lA=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b129dae2-e394-424d-650c-08dbf5a12dc0
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 14:48:01.1462
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TH1K+qmAD0Hr/W1uUa15Z6E9IqmE9j6KT+ca0TYuNPGYVS6wG1VyRMl1hjD9eJmW7EkjcIvQP/Bg4mWyK9OAVQ5LoQTohj9jx0tc6s/wCQw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR17MB5873
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <170171841563.162223.2230646078958595847.stgit@ubuntu>
+User-Agent: NeoMutt/20220429
 
-On Tue, Dec 05, 2023 at 05:01:51PM +0800, Huang, Ying wrote:
-> Gregory Price <gregory.price@memverge.com> writes:
-> 
-> > On Mon, Dec 04, 2023 at 04:19:02PM +0800, Huang, Ying wrote:
-> >> Gregory Price <gregory.price@memverge.com> writes:
-> >> 
-> >> > If the structure is built as a matrix of (cpu_node,mem_nodes),
-> >> > the you can also optimize based on the node the task is running on.
-> >> 
-> >> The matrix stuff makes the situation complex.  If people do need
-> >> something like that, they can just use set_memorypolicy2() with user
-> >> specified weights.  I still believe that "make simple stuff simple, and
-> >> complex stuff possible".
-> >> 
-> >
-> > I don't think it's particularly complex, since we already have a
-> > distance matrix for numa nodes:
-> >
-> > available: 2 nodes (0-1)
-> > ... snip ...
-> > node distances:
-> > node   0   1
-> >   0:  10  21
-> >   1:  21  10
-> >
-> > This would follow the same thing, just adjustable for bandwidth.
-> 
-> We add complexity for requirement. Not there's something similar
-> already.
-> 
-> > I personally find the (src,dst) matrix very important for flexibility.
-> 
-> With set_memorypolicy2(), I think we have the needed flexibility for
-> users needs the complexity.
-> 
-> > But if there is particular pushback against it, having a one dimensional
-> > array is better than not having it, so I will take what I can get.
-> 
-> TBH, I don't think that we really need that.  Especially given we will
-> have set_memorypolicy2().
+On Mon, 04 Dec 2023, Jim Harris wrote:
+
+>uunit (userspace unit testing) generates wrappers for kernel source files
+>which are compiled and linked with necessary function stubs and executed
+>fully in userspace.
 >
+>Existing unit testing frameworks (kunit, tools/testing/cxl) have some
+>limitations that uunit alleviates:
 
-From a complexity standpoint, it is exactly as complex as the hardware
-configuration itself:  each socket has a different view of the memory
-topology. If you have a non-homogeneous memory configuration (e.g. a 
-different number of CXL expanders on one socket thant he other), a flat
-array of weights has no way of capturing this hardware configuration.
+Looks very helpful.
 
-That makes the feature significantly less useful. In fact, it makes the
-feature equivalent to set_mempolicy2 - except that weights could be
-changed at runtime from outside a process.
+>
+>* mock referenced functions without requiring modifications to those functions
+>* mock register accesses
+>* does not require execution in a running kernel
+>* no restrictions currently on CONFIG parameters
+>  (Note: some CXL code cannot run in UML with kunit due to dependencies on
+>  CONFIG_SPARSEMEM)
+>
+>This RFC contains some complex unit tests for core/region.c code, as well as
+>a simple core/hdm.c test showing how register accesses can be mocked.
 
+Documenting these tests at a high level would be useful, particularly as
+more tests are added. (actually I think this is your todo #4 :)
 
-A matrix resolves one very specific use case: task migration
+>
+>This RFC depends on CUnit, which needs to be installed on the system prior to build.
+>
+>To build the unit tests:
+>
+>  make -C tools/testing/cxl/uunit
+>
+>To run the unit tests:
+>
+>  make -C tools/testing/cxl/uunit runtests
+>
+>There is a balance currently between creating stubs for referenced functions,
+>versus just building and linking the referenced source files directly. For
+>example, CXL uses xarray extensively, so we just build and link the xarray
+>code directly into unit tests rather than creating stubs for xarray. See
+>KERNEL_SRC in the Makefile for which kernel source files are directly built
+>and linked in this manner.
 
+I would say that just making the thing bulkier is better than having to
+have stub wrappers to a lot of core-kernel machinery. This is particularly
+the case for having this under cxl-specific paths in the kernel source,
+instead of a general framework as you mention.
 
-set_mempolicy2 is not sufficient to solve this.  There is presently no
-way for an external task to change the mempolicy of an existing task.
-That means a task must become "migration aware" to use weighting in the
-context of containers where migrations are likely.
-
-Two things to consider: A task...
-   a) has no way of knowing a migration occured
-   b) may not have visibility of numa nodes outside its cpusets prior to
-      a migration - making it unlikely/not possible for them to set
-      weights correctly in the event a migration occurs.
-
-If a server with 2 sockets is set up non-homogeneously (different amount
-of CXL memory expanders on each socket), then the effective bandwidth
-distribution between sockets will be different.
-
-If a container is migrated between sockets in this situation, then tasks
-with manually set weights, or if global weights are a single array, will
-have poor memory distributions in relation to the new view of the system.
-
-Requiring the global settings to be an array basically requires global
-weights to be sub-optimal for any use cases that is not explicitly a
-single workload that consumes all the cores on the system.
-
-If the system provides a matrix, then the global settings can be optimal
-and re-weighting in response to migration happens cleanly and transparently.
-
-~Gregory
+Thanks,
+Davidlohr
