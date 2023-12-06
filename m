@@ -1,52 +1,97 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="bULd8Fgz"
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D96D6D
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Dec 2023 09:02:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ch1bEBf8"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F78CD65;
+	Wed,  6 Dec 2023 11:38:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701891527; x=1733427527;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9epjVGXDJBbZLrQ55qfQ+bEj530zLB18lLWwNRfo08s=;
+  b=Ch1bEBf8RStv/7qPveCCTl+ZE0BxklzTDiEZO96G3o7yOXbv3BZfbcys
+   hB56F5MWwrdyGMHpuO8Lxm8RSemsb/uez1FYL7Gjp11vKJW1W6npdidUq
+   3j8Mh+hhLQuKGXlG+CPmdT4ZuAIKscYPuIXsDtgQS91zhRy30d15TG0aq
+   fy/b976KqWo29tquUGdB7jvzLe3lvPFcIl4CM1X/OsuwgiZ/L6v1PCy/q
+   UFyeQimyGepj72p+J2bPc6ml5al59NbYXj8dLfzICoKFoBM3RUmL3rzGU
+   7UCNzXXMQY9tKT+kvZG9tTXKzo63UWdQudf5+5KG7FbM7UGAVM72XfJPa
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="374289485"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="374289485"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 11:38:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="721197179"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="721197179"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Dec 2023 11:38:44 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 11:38:44 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 11:38:43 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 6 Dec 2023 11:38:43 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Dec 2023 11:38:43 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kutc/XIFfKfAgeTy6G9qCY1YFcNPg+XZAooi1Di5fljytf11I5mzFBKa2tIQIlrK6w8sW3mLcOzYtsJYoqRZYmiYiOqhKDIXmbERpanqwFfX2/IDZX7sM0L63M2UbFZ7Gst6MTSgrbKa6wz81taX+RwpjHs3c5gCBBVi01ekDidYjwdBbzmIE225duBIndJkbjhmMcoQO5CRg4CBPTbRNGAMnXqFOhAfO0qyIERUYsQVg2Y3aToX2UDCG5h4KXwjdhMd2zfRAB67w/NmaAxIg601lUdZJ9v6kbuwIV2G7sn0huCJKl56QpLkYVoqqQhgq8JgrszMSdCu02L94of3UQ==
+ b=SiQ5URHDCjhUdAtRzrAsQlv5jfwc3V27ZEu+NuO2OcLjneC1iM7BSSMgDhYQlDFrqxtyWE3GFkMvuUAhaobiXdj2cmgOLhuZlFf4/fRdJGI7VNcMTQ4BtHZBBX0dHwjrpozkfJ6dAfCnHjFIQzrvBOvZUZ2tCx9wzBCZe8jvvdADBAghWA/2b3j+3ZRJy9KFLnIZtOcitOyLYPPkXdwbXKw0w8GeaeOB+OZD2fSqkoATqqaKMrwTGKBK3o+qkG/SxlMZkmWD4vmykX4Zq8IfPnWryYVHMdt7Fotkec/HWt8nBiEHAwS8oEMsGst7xNTiDcH/Nt8NfJXpp+YAuPzEVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a3zyQGFfVCHrMjRiCGzlR8g7BQM9rIiIg4mKK/kWWRo=;
- b=ZeeGv8Q/7ujvNNLEq4C/8CTAvs/DzTLqIRWY3X8+K0yCyWfctF9W6ZWoDJDEFwcx3YWBpxu47CVyJG7JaEnVpmNFJ7ijxA/osNez6mWZ/31BMPIJS5nnJIPbLJzlDQPa7VfXJq+bFOVdHUccVuN7w/VMHPh8331Kx35bw67l7j/+wzezYpfn+7UVqcVwf0/CQCdaGOd+qtzRbGAcwZftbm5S5XLY6OF+G63C+4iNIt+juLR997Rx9odu70ZCdm/VaKpKWuCij9NOsfGiqJxdl4VeYu0QinKe/OYUYmXqWc1ezQMUnOfWBMse/fhCkghAnb6gpQ0jrJPKT/pnL5p3KQ==
+ bh=tj1YchFAsScFiiLpGf5TnCq7+6YmgsDB6V6n4hBkjwA=;
+ b=SbinyWAgAIhqVPYd9nBL7gZDKzSAt61grUBxQngZ9mZMeoGYT89n4fhQDAX/dPlly0UJoQAMZYPW5YyOaC6NfWuof2oVcmCNRvBfx+kBbFlOxeR+4U8gj72e+5BBrJyN3JdEmhNcTZwaPIm6Pl3curI//duicDLv1hOg27ML80EyR9cq462DSPN+2bQkgKT/6K9WBPYCk9X68KyY2iPXWbQn3CrkWCSb2guOSmjUtD1oreiRtgwxMB1CNyz5O13d93Hf1fPV3VDB+pKEj/rs2y3B2erZzWPmrDZ55Ej1LpnEJjVIDSbwRNGp4HuwrHHe66aJjpJAae9RYj9bzv+TGg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a3zyQGFfVCHrMjRiCGzlR8g7BQM9rIiIg4mKK/kWWRo=;
- b=bULd8Fgzsj1rcb3BOToT1YN8MOMWswY/mkD5XnV4OKyeDodgnSTZoUmYKCQXjw4w4HHQm7sPgU+W2byuHOK75H2Ar0Xpz6dLgIMuI75VYrEc8rGCgvqsgkFsa/b+sDn/I46QkI5AvIuxiKYaWrg2cLBnH74kDw3dtYz1J+K4oi8=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CH2PR17MB3783.namprd17.prod.outlook.com (2603:10b6:610:88::15) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MN2PR11MB4661.namprd11.prod.outlook.com (2603:10b6:208:26b::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.25; Wed, 6 Dec
- 2023 17:02:49 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7068.022; Wed, 6 Dec 2023
- 17:02:49 +0000
-Date: Wed, 6 Dec 2023 12:02:45 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: Seungjun Ha <seungjun.ha@samsung.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	KyungSan Kim <ks0204.kim@samsung.com>,
-	Wonjae Lee <wj28.lee@samsung.com>
-Subject: Re: [RFC PATCH v2 4/4] mm/mempolicy: implement a weighted-interleave
-Message-ID: <ZXCpNfTQN7ziFrZY@memverge.com>
-References: <CGME20231206080944epcms2p76ebb230b9f4595f5cfcd2531d67ab3ce@epcms2p7>
- <20231206080944epcms2p76ebb230b9f4595f5cfcd2531d67ab3ce@epcms2p7>
-Content-Type: text/plain; charset=iso-8859-1
+ 2023 19:38:40 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7068.025; Wed, 6 Dec 2023
+ 19:38:40 +0000
+Date: Wed, 6 Dec 2023 11:38:34 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: <shiju.jose@huawei.com>, <linux-cxl@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: RE: [PATCH v4 00/11] cxl: Add support for CXL feature commands, CXL
+ device patrol scrub control and DDR5 ECS control features
+Message-ID: <6570cdbaa96e0_45e01294e0@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20231130192314.1220-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231206080944epcms2p76ebb230b9f4595f5cfcd2531d67ab3ce@epcms2p7>
-X-ClientProxiedBy: SJ0PR13CA0179.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::34) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+In-Reply-To: <20231130192314.1220-1-shiju.jose@huawei.com>
+X-ClientProxiedBy: MW4P221CA0013.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::18) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,156 +99,119 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CH2PR17MB3783:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3588fa4-f78b-42c6-1174-08dbf67d2d16
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN2PR11MB4661:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a318b6e-0019-4554-5a49-08dbf692f2bc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Y6PKROAJ2081Trngho5Ggc5XORxBuHxYF5RQENkCJeRPII1if6cGJ0mm6shhWuIcxevgSTb/pIHXx0gBhjrF3OFD44f5ZoLWg+SuNkvZj+gOu3Fw4mGRHUD0+1SKChHBwglvJOovuIHPQFweuXQh+1A4xUtqla0WcBpGVAfsPwRQ4TXAnrGZS5nRelNC6i0iabYK3QXBr5VN8NIoQxV5Yv2xBnK3RM5fBvGM2bhYRMAyd36iogetug/KA7Dwm8l+YnVi8Z+2Aph1CvsqzN4ZXm1YFHFGLYf/AHqIz8m2ENQiwUJdv3qqKlJFWbvEesS4sC26I7r2tKrITu3KGB8DP0RNY+HVI8xNwnEX8d7S2Xk5soqDwzuuKTcmmP/J7SGYY2oUZ00KYYR3NS/Di3+C7VILrG8juCjnqfxvRLH2mcha7TwlcgKEUTjzppHi7z8h2IXgMts7C0td5f2OkkktwIXKioD4LCIbplUHIp5KGgQPPQCCgA1Bg5VQs7t1Len8frT9pAFfI6vo5wJSI8nuY6FERya0slBUspnhdEHZ0h/TzalkwSg5Irx1PUjSprBcqtdkf7MOU4K4q7pi1fh342hooSLMqzM/HgcI+sEQWxE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(366004)(39840400004)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(6512007)(26005)(2616005)(478600001)(6666004)(6506007)(2906002)(83380400001)(5660300002)(44832011)(41300700001)(66946007)(6486002)(8936002)(66556008)(8676002)(316002)(66476007)(6916009)(54906003)(4326008)(38100700002)(86362001)(36756003)(16393002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: IsVRYbxOHKFm3WEz2jgb3+Ze626v/VrEVwmzLAL/1EZL1mtbrkLy/gux6Va0rCpgFFmyGtKKN6c3VmRdm4Dx7/7K/bvbPMUgUtDMS7bRBHAmVrBxvY6KQPi/hhsc4CNfNqzAxTgLl2tdkKDtZgSVXGIgBZHhASHYamQ7xo0JY5EwIe7PahtRZMsiF8xH889CTnHeEIanHykzfvI9JfxCl+1L120IMEBsrpBF4/6G1q2aJ9NloG8+X368MuYIoTrRWrEC/454St3XE7d9iTnp9gMMvuOTnXksHU2w4OIGcygXKprxh3SquDiUe3r5gJJnFemzrgZ+R8N3es8vBEzrA633p2qh+9atooPsAiCrEo3X31l4UD0qeRzI1hrwKsFBh98fa2ogD4FScrTUSRpG8UJ5daEzS0+lEx2X8QFkrt+vKlHpaaQnz5OdZQ2QFNhWLUW2v9eeKJEwi9b+s3rrsIwE0XJA2V5JozEnYkl2PdusdTagCUECTu+uIh/7g7q/vgFj0fH7kEpHqZeONGZLG2yLcYgp0oNFMRxhCUr3va0hbG/uD0zshhrSlyR+R1TtXYct1Mztf+za9JX1x7aIkpoCG2O0wZt8j+Hztg+MQF8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(366004)(396003)(136003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(38100700002)(2906002)(921008)(82960400001)(26005)(83380400001)(86362001)(5660300002)(6486002)(478600001)(6512007)(9686003)(6506007)(6666004)(8936002)(8676002)(4326008)(7416002)(7406005)(316002)(66476007)(41300700001)(66556008)(66946007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?1b+2Nt4COo90fGER9lesmTl0W3DTbs2cz7xGSyx6BAEFoUaj0ObtNbHkPF?=
- =?iso-8859-1?Q?wLBFtsUWb7PHCJQh1ibgqnrS0dQ1mYFKxyyYk4jrlO13gVqkzk858Q1Iqs?=
- =?iso-8859-1?Q?X+W1nDv5/MZcG58/x5SM12mmftrSIIYObvyf+ly4g35DnsvlcfnXR6ySmb?=
- =?iso-8859-1?Q?QeDWkPeKOykzZpL262zvN62L6oSzKpNtmM1oghM7IOX78qdydqXpCYFWGD?=
- =?iso-8859-1?Q?wqXb1Yv3oLy1XE6aEzFBrx1EFvL54Rz0bx/8EB3tyf8+ZGKzaqxWg+XnFP?=
- =?iso-8859-1?Q?aT8JhhBSdf+UziQhQP1qTfzs2+BiGaiW5BpgnGREqsh8cdBmkFSXwGel8D?=
- =?iso-8859-1?Q?nGurN/eC28Rv1aSvqUeC4faMtP6PZNqSCPgirkyjI9eimFvU6DuKf2lPZu?=
- =?iso-8859-1?Q?DdlxEI5kJ/C9i95eym0VkohJg+g9xYoYWYXOMtWsAfu4D/DgT2Pb4A+JHn?=
- =?iso-8859-1?Q?T8VXVZtYBnGeWK6iNUj30lfHwN1eieDF0LjPuuCunygWnOMeyyz2Ad0hds?=
- =?iso-8859-1?Q?pTUMmL2ykDCwmBavwkoKe+fkL4/bv6dBo+XmDJK++TieIzb1SOsa/Sbrqy?=
- =?iso-8859-1?Q?4N76A2uzhwZcYjhZBAGSwPWCEA54GPFwqkkL8ulyo+KCMgn+bhzbDUy2Co?=
- =?iso-8859-1?Q?u8qiQB4aELmiqIwiTZopa+PHjCi+yZX+JjimtSTN/BknSiO73GtkZv9EEC?=
- =?iso-8859-1?Q?RKxf+bnhP4PPP9gtGE6XxWFnBJsCTg2mKTityhcRB1qsizV4usrr02LXd9?=
- =?iso-8859-1?Q?flomxYCg+3mOIIaE9aN+siayo8Fjeb6Cz8gxyKoECO89DDGv/EtW9OoIz+?=
- =?iso-8859-1?Q?SMYZId9PFzVCEd1ENm6BLgvLruVIle+U3Lr+Cxtb8B2DFlSdMmZg3BYbBn?=
- =?iso-8859-1?Q?2VL919lSl3tMLsyhQWFHpEWXQXyKzhnvT8D+byyumk1HeTn4sEYl54Z0be?=
- =?iso-8859-1?Q?wCJHc5tYGEwArryMtw8ETwxU72YoAIeS3uOvzgAHJOyI1qo+5RLmrXKwZJ?=
- =?iso-8859-1?Q?LgcDkEopRJ7amoDgmVVEw/tnlfh0GNZ4f1J/GCiDHtZH1LxFtqgxb7HjkK?=
- =?iso-8859-1?Q?JXCUJhwgj1iYzUoFQBvwlZG3UWSbyyA/HBlkObpEkLm+kFY9Yk6r5k5xCt?=
- =?iso-8859-1?Q?FkS379/By68xWtYfwRyUewuV6yHMRYbxr4PLAWVgY+qCUk4CxyfYlb5mYD?=
- =?iso-8859-1?Q?IR8p+USwLO2o/wrEt0LMsSxrxILPDS2+Zzh7lf50/ATj06CWlglFVkERRM?=
- =?iso-8859-1?Q?gZnazA63x5NndYpwBNtjNR4uhaW/3BZ6R2utbRfjhxiPjeUD8tdha+yW+y?=
- =?iso-8859-1?Q?fNblIaM5gWVcm7NoUTpI/9D7ADdOFlEk5to3zpcaDvLA+bZdOf1ZhS8epj?=
- =?iso-8859-1?Q?KD/hx8Bvyr/oajyZltkgwV4J0t0FJCcjtIj+kiJZmvCU7/yCRSSTfXBgCI?=
- =?iso-8859-1?Q?5f01z2qQoYJa7GrcdOhi4wA6osBoLDHyX7AN8z9smMLFjbBQHY2kEilmB2?=
- =?iso-8859-1?Q?TZi7G0NK0pyuhvUP0ByTxfkZ4B4W3e8EOUNPC4uRMACtWldZOjtABaAlfr?=
- =?iso-8859-1?Q?cz4Ovr2cBbCIZDBaUL3QknaZX27G226DmUWWqDkQR1jFYE2Wr6q2oglCaQ?=
- =?iso-8859-1?Q?5W4J5uHoxDCes+i/FxDZjfuTR6RbNR35YGwEmGV+h8Zr/bCJdh4EJ1dQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3588fa4-f78b-42c6-1174-08dbf67d2d16
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PUPP/FnQJ3TsIT0uEPPCYzTZ4gByfCX4bUPW8UPv1Z4z5uV/S2wNIJr3Ddtv?=
+ =?us-ascii?Q?Xtv2MAdX+jBLw/b+TlpT9wQhPms6j1/Vu+5hTTOatahv+kv3heccRdRZHlQI?=
+ =?us-ascii?Q?3suwa/Du+fsX4pGcqBu5fp1DanQw5SB31dZnP8gNCn3fu43dDf27qBvdZFiD?=
+ =?us-ascii?Q?DUW0Z504fSBz3TATcy75jVvak1Ndzsz+BkStmrq3y34girYuEeklp4zYggzt?=
+ =?us-ascii?Q?o7qplK0b42BECee9P0JvgNCM3cty1BtwF8cKW3sNMnhpVsxP8ceXPYk5pYP4?=
+ =?us-ascii?Q?LxAZCCZA9mSQWFT+HRS+381Vj56nh/SiAdRa6xoftPtWsB0szz3Ttv2UG1N9?=
+ =?us-ascii?Q?rpB+I1pDg+QOiEQd1HOzXwJgnTvjgRFy8DjOVkPaVZxO27VTZVQFA4nl9A61?=
+ =?us-ascii?Q?jPv0H6v1ASTJYarZstb9/h0sNEB86IrdKAQo3cMh9BzcG2zzC0csZkyw4Mp+?=
+ =?us-ascii?Q?lygqnlSk4zr2zsYlIY9bXN2D+xRShyreR7Z62xYovLZ3qP+iMbFne4sPzy6x?=
+ =?us-ascii?Q?2kIenaJ8EplMpARR/sG36Ga/QUjlIVyEpMI5YWckhL9+ZDrBlr4KMf71H8rg?=
+ =?us-ascii?Q?4EEtZrWiwlowQV4qHP7ek/jq2nxSCC16mJAZyxDQOvIG7Nm7tqnqmggijssL?=
+ =?us-ascii?Q?TvdPsDlQjUCR+swCixmgq/xABkBskYc8smdcBhVmk/2mC7gqwI6vfNKhRFzj?=
+ =?us-ascii?Q?mW57j1dxCllac0elGTbSd/Ht9cXn/ADWv3qWTblpHleS0TaAWcO2I0tFen7x?=
+ =?us-ascii?Q?oo9Nd8qA3mTpcd2N0pS4Stnu2S8n9br0XJtKnb8YE8x46ufj6v7yjVc18Gug?=
+ =?us-ascii?Q?eRKk9IltwHhHGiE+eF+8ox+ryN5Y9hBBLjXO6qBKHtDuYs5YP8I72ISWPC1r?=
+ =?us-ascii?Q?K0+kcy1CvC1559sYHbqhUc7HFZaOLR3p+42yahmBA8Y8CCqgqmmaHNzIRjqv?=
+ =?us-ascii?Q?kiuPUW+S35xqt1+h0S+Sx0yc4Esrq8IsYUNIgwzS3KJjQ8rwdKnmazvwm8BA?=
+ =?us-ascii?Q?MkHfhVCatEbTOg+Ll3zQhwYZyzDukDsEvjofaS0Crbwi/zCRJSCzfc5JhNL+?=
+ =?us-ascii?Q?WNg3hetgwYjZeDvEkzp/tHyD9iF/t/V+Iqwms19pvSKaaFxaqKMjlNH5nUKv?=
+ =?us-ascii?Q?+XsEpophnn9amixV9/iVLJRd2MX7aQKfxGQEiUYG4L5JtO+Xhmszq28GOOIS?=
+ =?us-ascii?Q?W9G/KLe3xnxejICkg4uIyYNNikvL7/doHNBzfqHAdkx9X3E3YkQs/2q05Z5z?=
+ =?us-ascii?Q?JfraSOlwNaDgBlpevw/mgNImyLPTCJFGW3sOEhQ8sozHXsyeFXTvELODeAfy?=
+ =?us-ascii?Q?t3h+RDQWcuzn1Ac1R64cDGS1ItVsQNKjYVCnasWiP4cQe4aOLh8zkqGaYB4X?=
+ =?us-ascii?Q?dTGah9TeJ0mWIbAqu4lrtuuzXpdb/kiOb4Xln7jnakyUdhJsc6xA8cdiZZCm?=
+ =?us-ascii?Q?7BuZMPzZp0ysJE956HOwh22xEkQ2EN30W21t+7cDn6GbZ/3oYliJjzmRd6bL?=
+ =?us-ascii?Q?7gsh6CORKcVeygTg7rFYLzSxl28I1hnJSPsvN4OMmBY+4BgJGM7Mo4+oAePM?=
+ =?us-ascii?Q?Gn+cHADrp477s2WX9C9swvxu2cVCX9ylyI/rCJhe5P+xLaxjFl/4L+s8dEGe?=
+ =?us-ascii?Q?QQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a318b6e-0019-4554-5a49-08dbf692f2bc
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 17:02:49.2218
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 19:38:40.2850
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0Iv3OCj4wIAYGQ9eh5wr+hoTLVsJCLnLCExzZgg8XSjl180yye3RV8rGZu518dfIW6e+K/irF3TLPuFB1I7a7gdkXNlElSrBp4xtWIesVCQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR17MB3783
+X-MS-Exchange-CrossTenant-UserPrincipalName: wcd8rZiD/SlV6/oZSkGs5W0wSbv/UkwEJ64NmpZQrDdihnXjnJQrTP3AALlCqZqiWihtTV89aaVZcqlUPJ65lt4LJlZ063hV2ySTCCW+roY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4661
+X-OriginatorOrg: intel.com
 
-On Wed, Dec 06, 2023 at 05:09:44PM +0900, Seungjun Ha wrote:
-> > The weighted-interleave mempolicy implements weights per-node
-> > which are used to distribute memory while interleaving.
-> >
-> > For example:
-> >    nodes: 0,1,2
-> >    weights: 5,3,2
-> >
-> > Over 10 consecutive allocations, the following nodes will be selected:
-> > [0,0,0,0,0,1,1,1,2,2]
-> >
-> > In this example there is a 50%/30%/20% distribution of memory across
-> > the enabled nodes.
-> >
-> > If a node is enabled, the minimum weight is expected to be 0. If an
-> > enabled node ends up with a weight of 0 (as can happen if weights
-> > are being recalculated due to a cgroup mask update), a minimum
-> > of 1 is applied during the interleave mechanism.
-> 
-> I found an issue while using the RFCv2, and want to report it. 
+Hi Shiju,
 
-first, thank you very much for testing! I'll run this on my latest fork.
+I have some general feedback at this point before digging too deep into
+the details:
 
-> In my testbed, calling set_mempolicy2() causes pthread_create() failure or system hang, depending on weight combinations.
+shiju.jose@ wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
+> 1. Add support for CXL feature mailbox commands.
+> 2. Add CXL device scrub driver supporting patrol scrub control and DDR5 ECS
+> control features.
+> 3. Add scrub driver supports configuring memory scrubs in the system.
+> 4. Add scrub attributes for DDR5 ECS control to the memory scrub driver.
 
-I think this is likely because i did not handle __mpol_dup correctly.
-The newer fork changes the way weights are stored, so this should not
-but an issue, but I will use your test to validate this.
+For a new a subsystem that is meant to generically abstract a "memory
+scrub" facility the "DDR5 ECS" naming has too much precision. How much
+of this interface is DDR5 ECS specific and how much of it is applicable
+to a theoretical DDR6 scrub implementation?
 
-New RFC should hopefully be out this or next week.
+My primary reaction is to boil down this interface so that only generic
+scrub details are visible in the ABI, and DDR5 specifics are invisible
+in the sysfs ABI.
 
-> FYI please find my testbed where there are 3 memory-nodes. 
-> 
->             Node 0  Node 1  Node 2  Result
-> Weights  
->             6 >=    1       1       pthread_create error: 11(Cannot allocate memory)
->             1~5     1       1       Pass
->             1       8 >=    1       pthread_create error: 11(Cannot allocate memory)
->             1       1~7     1       Pass
->             1       1       8 >=    pthread_create error: 11(Cannot allocate memory)
->             1       1       1~7     Pass
-> 
->             6       7       7       pthread_create error: 11(Cannot allocate memory)
->             5       8       7       Pass
->             5       7       8       Pass
-> 
->             40      30      20      Kernel Hang
-> 
-> 
-> Below is the test code to reproduce the issue.
-> 
-> #define _GNU_SOURCE
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <numa.h>
-> #include <errno.h>
-> #include <numaif.h>
-> #include <unistd.h>
-> #include <pthread.h>
-> 
-> #define MPOL_WEIGHTED_INTERLEAVE MPOL_DEFAULT + 8
-> #define SET_MEMPOLICY2(a, b) syscall(454, a, b)
-> 
-> struct mempolicy_args { on this RFC... }
-> 
-> struct mempolicy_args wil_args;
-> struct bitmask *wil_nodes;
-> unsigned char *weights;
-> int total_nodes = -1;
-> pthread_t tid;
-> 
-> void set_mempolicy_call()
-> {
->         weights = (unsigned char *)calloc(total_nodes, sizeof(unsigned char));
->         wil_nodes = numa_allocate_nodemask();
-> 
->         numa_bitmask_setbit(wil_nodes, 0); weights[0] = 40;
->         numa_bitmask_setbit(wil_nodes, 1); weights[1] = 30;
->         numa_bitmask_setbit(wil_nodes, 2); weights[2] = 20;
-> 
->         wil_args.maxnode = total_nodes + 1;
->         wil_args.wil.weights = weights;
->         wil_args.nodemask = wil_nodes->maskp;
->         wil_args.mode = MPOL_WEIGHTED_INTERLEAVE;
->         wil_args.flags = 0;
-> 
->         int ret = SET_MEMPOLICY2(&wil_args, sizeof(wil_args));
->         fprintf(stderr, "set_mempolicy2 result: %d(%s)\n", ret, strerror(errno));
-> }
-> 
-> 
-> int main()
-> {
->         total_nodes = numa_max_node() + 1;
-> 
->         set_mempolicy_call();
->         pthread_create(&tid, NULL, func, NULL);
-> 
->         return 0;
-> }
+For example the Linux NVDIMM subsystem has an address-range-scrub
+facility that is independent of the specific memory technology scrub
+mechanism. That one is based on ACPI NFIT, but I realize you also looked
+at enabling the ACPI RASF scrub interface. It would be useful if this
+patchset could plausibly enable one non-CXL scrubber along with the CXL
+one.
+
+> 5. Register CXL device patrol scrub and ECS with scrub control driver.
+> 6. Add documentation for common attributes in the scrub configure driver.
+
+Going forward, please include the Documentation in the patch that adds
+the new ABI, it improves the readability / story-telling of the patches.
+It also makes it easier to analyze which code is needed for which ABI,
+and whether a given ABI is justified.
+
+The regionY nomenclature in the sysfs ABI looks like a potential
+opportunity to align with the "memregion" id scheme. See all the callers
+of memregion_alloc() where those are tagging device-backed physical
+address ranges with a common id namespace. It would be great if the
+memory-scrub ABI reported failures in terms of region-ids that correlate
+with CXL, DAX, or NVDIMM regions.
+
+> 7. Add documentation for CXL memory device scrub control attributes.
+
+Do the CXL specifics need to be in the ABI? One thing I missed was how
+the series of log entries are conveyed. For CXL in contrast to what
+NVDIMM did for address range scrub is that CXL makes use of trace-events
+to emit log records. That allows the sysfs ABI to remain relatively
+simple, but the various trace-events can get into more protocol specific
+details. For example, see cxl_trigger_poison_list() and
+trace_cxl_poison() as a way to genericly trigger the listing of a flow
+of device-specific details. In other words put the DDR5 ECS specifics in
+the trace-event, not the sysfs ABI if possible.
+
+Lastly, dynamically defined sysfs groups are less palatable than
+statically defined. See cxl_region_target_visible() for a scheme for
+statically defining a runtime variable number of attributes.
+Specifically I would like to see a way to define this new subsystem
+without scrub_create_attrs() and all the runtime attribute definition.
+
+Overall, I like the general approach to define a common subsystem for
+this, and get off the treadmill of reinventing custom scrub interfaces
+per bus, but that also requires that it be generic enough to subsume a
+number of those per-bus-scrub-types.
