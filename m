@@ -1,167 +1,161 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5JR0mXt"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DC3B9;
-	Tue,  5 Dec 2023 13:48:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nEP39hyH"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44887C6;
+	Tue,  5 Dec 2023 16:52:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701812893; x=1733348893;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=jgJBYJeIFATkuDPVTN9p3WxQBg4tDRLqMgeuZifRs+s=;
-  b=l5JR0mXt96t4xM6GrP7/qkCNo9lkOgeHnwbQEgeMv/bLwnoAnS+W7rV3
-   PvaQH+4pLaF4Dy+rJ939jKJwznV8lhs1Og2lJ/LjeLQ+ED2UM/V+qXXn/
-   rBgNvUwtBnLsHRsxCTWGbwQibebdZtqNHBgvOpxbPQ4peO7jOHX0OIvoG
-   9LsX/vt4DoTN1fcmPbr7wwXnBynM4woEsN2bAvIlvBuee2Z5xSyb+8DSO
-   jbPalZqWPc89uh2auUoq/U+Qbi4/YV+XeZBllcJM0RkgXOCh7uKLy1uur
-   FmVjuBk64k+cgPHXoQfUQDxnEk4+mFVN+mNr9j5lEt0nFO1TmsmqfUPPn
+  t=1701823948; x=1733359948;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=80ctbQu0ehO8Eb46q4E7qyIosvMkmzHirGugGzD0fGM=;
+  b=nEP39hyHfvzoRlsdcZVVjm+sRym3O/E5kVOwZZsoCdSZxLB8WvBkrY+9
+   0PJKnxrAVlR/IQ7iwyqbm8vY6A6F5e5/VZ60CR3LOyLcMtqNvXMhn3wwR
+   r4N42KS3X6gqWNGM5czJi4f5jzu0x5x0bFONLzgan+zzAwSb3rt7VKagm
+   D0diNi3uUpKO0fX+vMxnGjpGlgvooll2cNTC+q5b9hZ3HPyPEZR2N2DrL
+   AkEoKI1k1ziPAS8Vd0t5V1sojcHeT8B0bHIM2IvPDehLHt8LaHgYDhj5U
+   hXX2wQILePSXlkhco5RQ/nM781In2Vlo7eJb+lpELSON2ZLlcVv1c/Fqi
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="378984941"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="821338"
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="378984941"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:48:13 -0800
+   d="scan'208";a="821338"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 16:52:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="1018347500"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="861937995"
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="1018347500"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2023 13:48:13 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Dec 2023 13:48:12 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Dec 2023 13:48:12 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 5 Dec 2023 13:48:12 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 5 Dec 2023 13:48:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FVvZfxBYXgUhhRZcGQAtdsO9OuT2RjgBppJB0t8OA5CY5LfwcaPR2KQ5Wmu2di3rIuCa6YS9AApxMSJw+GYGqL9WTlbOz+OtbaRTVKCYcuHqlpvNbWjedNizb/oxwREMr508u0a4aScBdQ4+cba3FowMcXbusjAY7hf3UgSlmGve0wJ7rUm3nmyDBpVpM1UfNxouhN9sqF8sfBmhJ9W4PmfAwbsEhoUPvBlePqbdA6svNsKp7aX0mj/jNbGUvEYB1yFKeuiL67JlUHb+K2tQBXBB9tnJ/AYGcgaD+g1Wmz6glSaPoc5XmM541hbEl8c6PzZFpsZnTmGf5GbR0IWeZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6P2eWWqk1VZ5rRU74+B4fWghz+tYSrZAGiAuWq7LPRY=;
- b=Iid9n9ufPYNScPjVKYH6zAhsf1TKqMECJSqwrZYYNxEPnhS80bEHMrR7gp74W6qOQr+2UbHiVXZfeF3EpOB5A8RAlKXGtKuznVgIOYwOGmzaeUdjDepf/bSZLRZmTGrruiBdWwe/6DeIf1hT5hSGyz9G+k0DzPX2e8dL70jB80tRBkGoZ91eKQIM39hwAPf88SefCRjzuikrHr7mtqyI6cxeiNOhHba8rK53kAQ94DZLIngq1O5fIKd8xa4UWoDu7OvfCbpMKXAOg5SoI97jvNhZ5bAfcEVN8cnbMy0nQrXqfI5dYvLk8pBE2Ek67L60/8YtD+t+TeiUdiosl736kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SN7PR11MB6655.namprd11.prod.outlook.com (2603:10b6:806:26d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Tue, 5 Dec
- 2023 21:48:08 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c%4]) with mapi id 15.20.7046.034; Tue, 5 Dec 2023
- 21:48:08 +0000
-Date: Tue, 5 Dec 2023 13:48:04 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-To: Huaisheng Ye <huaisheng.ye@intel.com>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Huaisheng Ye
-	<huaisheng.ye@intel.com>
-Subject: Re: [PATCH] cxl/core/mbox: get next_persistent_bytes by
- next_persistent_cap
-Message-ID: <656f9a94d9b48_18297729452@iweiny-mobl.notmuch>
-References: <20231201164005.135912-1-huaisheng.ye@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231201164005.135912-1-huaisheng.ye@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0388.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::33) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+   d="scan'208";a="861937995"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 16:52:23 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Michal Hocko <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,  "John
+ Groves" <john@jagalactic.com>,  Gregory Price <gourry.memverge@gmail.com>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+  "linux-mm@kvack.org" <linux-mm@kvack.org>,  "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>,  "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>,  "akpm@linux-foundation.org"
+ <akpm@linux-foundation.org>,  "lizefan.x@bytedance.com"
+ <lizefan.x@bytedance.com>,  "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+  "corbet@lwn.net" <corbet@lwn.net>,  "roman.gushchin@linux.dev"
+ <roman.gushchin@linux.dev>,  "shakeelb@google.com" <shakeelb@google.com>,
+  "muchun.song@linux.dev" <muchun.song@linux.dev>,  "jgroves@micron.com"
+ <jgroves@micron.com>
+Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
+In-Reply-To: <ZW84F5PUB/0yPW9d@memverge.com> (Gregory Price's message of "Tue,
+	5 Dec 2023 09:47:51 -0500")
+References: <ZU74L9oxWOoTTfpM@memverge.com> <ZVNBMW8iJIGDyp0y@tiehlicka>
+	<ZVOXWx8XNJJNC23A@memverge.com> <ZVOn2T_Qg_NTKlB2@tiehlicka>
+	<ZVOzMEtDYB4l8qFy@memverge.com>
+	<87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZW1IdPI11nhKcdZl@memverge.com>
+	<87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZW3ZFDeTs7xotImL@memverge.com>
+	<87fs0h2fb4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZW84F5PUB/0yPW9d@memverge.com>
+Date: Wed, 06 Dec 2023 08:50:23 +0800
+Message-ID: <875y1c2lyo.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB6655:EE_
-X-MS-Office365-Filtering-Correlation-Id: dff2c351-215e-4bd3-4f7e-08dbf5dbde54
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qYC1i9MvnYhPkT5/kBEEjStKcZheTsa1R4Yhi4XyZPafRBrIO//y0p6MJo3JtmwIjcDFEW8Eu+c+voHARbBL8Dr8AT6d9wa1orPjjWysHUCcDgdiFJb8s3T8PCC474d6eDkxMKsjKH5bdAnQrzXXt7je88wITzq8ibXZXLvsp8DhJESjyXkMptXrMlW0hzE8NDBCP6ltSk7E5aSPNTGN3Saboj53cjXEg1UnXP0gIDq/yHJl9c4piQYQYXSEhzODVqjMc4dNYKiYz+oEMQyaG2iVhXdkjhMF4zbBBWpPp7fG/l7CQVlFaii+YHBDtpxV8sfatuVgKNGSWBPZ8PcL8/QnRzEtEUGe7gbltulTTv+GQ1T3vObVJErZSCw/nnXM+0jIjgEOvkb8+iWvV7KcgxinHXAQt0eXRGcvHl3IBfbIVvIMMlJ/vvm8TgPa2o4dt+rgJD0fxlrmHaeoaWR4WHz9mF/hWzsWHxAQaN0Uv8kDz1m/ajT1uriKtlUYiM0ajjPbNMeThfz90tWxZpuaINdH6zGO5SFIyNFl0OyAudmXPp71C4IjPxCBpQ3Xs7MX
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(346002)(136003)(39860400002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(44832011)(82960400001)(2906002)(5660300002)(4744005)(41300700001)(86362001)(6506007)(6666004)(6486002)(9686003)(6512007)(478600001)(38100700002)(83380400001)(107886003)(26005)(8676002)(4326008)(8936002)(66556008)(66476007)(66946007)(450100002)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Zt/XmRIDNk6FfHrmwCa1MAhoWSXDmQ5ejIThYl9vcvVaDjPNSPdIf3ADryin?=
- =?us-ascii?Q?mmNga0QOBKGkJjf3VLQfmnShr4C7QGkSkSWnDJvlspuUanpYkQFIBjsRNIs5?=
- =?us-ascii?Q?YhN4AGdfAOn97G/zyURuRZ8aRro67fvQfvsk9M7GV0VTt6Ozvt+r102YOaYU?=
- =?us-ascii?Q?Clzc2elrsDbr3lWoKztTb8ki2TYnw75X8692Kt55da48PPkkXBfGf68uO8BE?=
- =?us-ascii?Q?qmc/YtiWQFwLLB3ltMi9i31UkDq+vd19SWnu4/WHji+lcztppdp+ACeatIEe?=
- =?us-ascii?Q?adyTobgYKDCknk4aZ+GPDBvUjxcOpdLltYnqcOaGpwXI4OACeJb1HGB1zrSK?=
- =?us-ascii?Q?hRZVnZX+qQrW6dSclmV5xNk9K7B6mz3XkPZjLr5dPStw7TVgweyI2r1gLFcv?=
- =?us-ascii?Q?rCSFsTT9aDus1nxSjpNw5R2l1UvqqZg3OmSMO7ibvkV8IlychRb7PeMlBPcG?=
- =?us-ascii?Q?KHWGQs2YBryU2auaMrIrRYgUQSoyUm3mMguwnM5TQBHSZlwDpcA3XqWVOw95?=
- =?us-ascii?Q?ujq6gldnmq8Y2ruSmDBAnZlP7dK+gjoC8HvD6gxlffgV7CljUzCJoioikthB?=
- =?us-ascii?Q?D2RHjWLzQgrF4zFfsWxVICpPgDrNHoyOGWB1FPaxFbtEhyw5rCqrg6V3kxYD?=
- =?us-ascii?Q?2djzLGKsq5NbpVTR81s69y+rKLHYMNC9U8N8+4xi3rVZNzngbT7+hEhXOpwD?=
- =?us-ascii?Q?QP5wZpEUiOz+yPaXCukKFVx32Le3C7JxCj6scdbNGDK8NpcogSb9Wmqud2Tx?=
- =?us-ascii?Q?ELzyPJSkChAvz4SqomnQFt9l3gh6k24IOkvwALg0X8QDiigGJjk+rydsoDNt?=
- =?us-ascii?Q?qCi2bs+el1E8J/+hpz4iQAuDxbkhe8OihizNY6nfGQiJWvuJ3iofyOc5IQ+y?=
- =?us-ascii?Q?3ZGxLnXyXEkAOy41iyFZz0P5F959nBbap82CpbCb/R84bVoR8QlqltteVE6p?=
- =?us-ascii?Q?Tt4HliuraI4fPzC7LJ+DPMjOA24XDhnQpUKRY/Z96eoIJO7Rx+GAY4v85qMW?=
- =?us-ascii?Q?VUCR9pYhup5Go6JzF/rg5RHyZ16MzFcjjs+TakNypRTAjFLUh1J3zQRTdQSW?=
- =?us-ascii?Q?vMosg6r13QpPpQ5huafp1X8gD0h4W70oxq0FLsZvyIICYmljECPdHEiG7iRP?=
- =?us-ascii?Q?jiG1hYeHN0s/Htg77Ma0JpftsRVtnttxKkTyVCi3GK2hiywkdx34hY/gKs8K?=
- =?us-ascii?Q?Mos9RngVF8CqAbavjKCIn+Nn6x84iMOWmj2X6oaW2ycI+j5ZL7dOX++sNtXM?=
- =?us-ascii?Q?dSKOFnWqZLpyZd8ph4re26lCgRQW7+i0tf9QUWWPd4p3ut5P5ho7MCgwd1m4?=
- =?us-ascii?Q?Ne6vwzogchCNblO5m4wkt6CWkfRDvhN6vHJEdikF4zrBHl7kPAN6onGxb7HM?=
- =?us-ascii?Q?lJkey99n2NIThl4YnBuPfk3a+ra6une14d4qvQr99N7GASoA898qPJQTxjKY?=
- =?us-ascii?Q?fxzvc6uDMsmYDvkwV7TUXNOT7csTWpRjddqG0PrsJDFt7KqoyuD9+QZXIkss?=
- =?us-ascii?Q?DGz5YEzHctiRjBz3RxF3C62DMgkCzFb+pqoEIU43+6Yg7WTxA2Zb4ruMmnXo?=
- =?us-ascii?Q?WMo4Js8EE5VnIvhijFn+xLJsT9wt9+fN56v5oOg5?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dff2c351-215e-4bd3-4f7e-08dbf5dbde54
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 21:48:08.1023
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /X+l4qbIf34xxHSSmTD4BpUyWYQvNdf6h2npEpqp8dA2EoMmEPQcMroIsIDDCo7B9JT948aq47lKvx2EPycLqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6655
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=ascii
 
-Huaisheng Ye wrote:
-> According to CXL 2.0 8.2.9.5.2.1 table 176, the next Persistent
-> Bytes should be calculated by next Persistent Capacity.
-> 
-> Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
+Gregory Price <gregory.price@memverge.com> writes:
 
-Do we have a fixes tag for this?  Was there a bug associated with this
-find?
+> On Tue, Dec 05, 2023 at 05:01:51PM +0800, Huang, Ying wrote:
+>> Gregory Price <gregory.price@memverge.com> writes:
+>> 
+>> > On Mon, Dec 04, 2023 at 04:19:02PM +0800, Huang, Ying wrote:
+>> >> Gregory Price <gregory.price@memverge.com> writes:
+>> >> 
+>> >> > If the structure is built as a matrix of (cpu_node,mem_nodes),
+>> >> > the you can also optimize based on the node the task is running on.
+>> >> 
+>> >> The matrix stuff makes the situation complex.  If people do need
+>> >> something like that, they can just use set_memorypolicy2() with user
+>> >> specified weights.  I still believe that "make simple stuff simple, and
+>> >> complex stuff possible".
+>> >> 
+>> >
+>> > I don't think it's particularly complex, since we already have a
+>> > distance matrix for numa nodes:
+>> >
+>> > available: 2 nodes (0-1)
+>> > ... snip ...
+>> > node distances:
+>> > node   0   1
+>> >   0:  10  21
+>> >   1:  21  10
+>> >
+>> > This would follow the same thing, just adjustable for bandwidth.
+>> 
+>> We add complexity for requirement. Not there's something similar
+>> already.
+>> 
+>> > I personally find the (src,dst) matrix very important for flexibility.
+>> 
+>> With set_memorypolicy2(), I think we have the needed flexibility for
+>> users needs the complexity.
+>> 
+>> > But if there is particular pushback against it, having a one dimensional
+>> > array is better than not having it, so I will take what I can get.
+>> 
+>> TBH, I don't think that we really need that.  Especially given we will
+>> have set_memorypolicy2().
+>>
+>
+> From a complexity standpoint, it is exactly as complex as the hardware
+> configuration itself:  each socket has a different view of the memory
+> topology. If you have a non-homogeneous memory configuration (e.g. a 
+> different number of CXL expanders on one socket thant he other), a flat
+> array of weights has no way of capturing this hardware configuration.
 
-Ira
+One important task of the software is to hide the complexity of hardware
+from the users.  At least it should provide the option.  It only add
+complexity based on real requirements.
 
-> ---
->  drivers/cxl/core/mbox.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 36270dcfb42e..7b8ec73ca37f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1069,7 +1069,7 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
->  	mds->next_volatile_bytes =
->  		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
->  	mds->next_persistent_bytes =
-> -		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
-> +		le64_to_cpu(pi.next_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
->  
->  	return 0;
->  }
-> -- 
-> 2.39.0
-> 
+> That makes the feature significantly less useful. In fact, it makes the
+> feature equivalent to set_mempolicy2 - except that weights could be
+> changed at runtime from outside a process.
+>
+>
+> A matrix resolves one very specific use case: task migration
+>
+>
+> set_mempolicy2 is not sufficient to solve this.  There is presently no
+> way for an external task to change the mempolicy of an existing task.
+> That means a task must become "migration aware" to use weighting in the
+> context of containers where migrations are likely.
+>
+> Two things to consider: A task...
+>    a) has no way of knowing a migration occured
+>    b) may not have visibility of numa nodes outside its cpusets prior to
+>       a migration - making it unlikely/not possible for them to set
+>       weights correctly in the event a migration occurs.
+>
+> If a server with 2 sockets is set up non-homogeneously (different amount
+> of CXL memory expanders on each socket), then the effective bandwidth
+> distribution between sockets will be different.
+>
+> If a container is migrated between sockets in this situation, then tasks
+> with manually set weights, or if global weights are a single array, will
+> have poor memory distributions in relation to the new view of the system.
+>
+> Requiring the global settings to be an array basically requires global
+> weights to be sub-optimal for any use cases that is not explicitly a
+> single workload that consumes all the cores on the system.
+>
+> If the system provides a matrix, then the global settings can be optimal
+> and re-weighting in response to migration happens cleanly and transparently.
+
+For these complex requirements, we will have process_set_mempolicy2().
+I think that it's even more flexible than the global matrix.
+
+--
+Best Regards,
+Huang, Ying
