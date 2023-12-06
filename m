@@ -1,135 +1,195 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="KXPVFxta";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="PucXOgcb"
-Received: from a11-174.smtp-out.amazonses.com (a11-174.smtp-out.amazonses.com [54.240.11.174])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED47D6D;
-	Wed,  6 Dec 2023 13:03:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rjayupzefgi7e6fmzxcxe4cv4arrjs35; d=jagalactic.com; t=1701896584;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=3Q5/A0Rd3CgihBhNW5grEfqtjbDmPir4IkbjKQgNInM=;
-	b=KXPVFxta7vhCgeXkmZQ+qigNotTZEQUyDLmqB+GlSIS7sHS7VzIrtYx39QLC1PrM
-	ve2rplv2ZZRysJMvCOcKnX3qjaK3L7CieZxTOtUsN5cL1DDb2ExsbxM8sWNgk9kXmyU
-	3iCoAUdRE2rl3HMtcpm2Igx+VGdE2ODclbKC20io=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1701896584;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=3Q5/A0Rd3CgihBhNW5grEfqtjbDmPir4IkbjKQgNInM=;
-	b=PucXOgcbSeDkw5vQ+ndmP/azC6dLZp8uJEMsdTzGkYznh31AOjgV83CH7TGiZ2hC
-	MHzkx19HcIPBFsU9jyDEnp6l3BgdIYQx33sR3NunXewzdSUVmhEdqUUa+wOAPp0UNIz
-	mTAuVeM9VLsQ1Gh4moO63gJH6r5Qst+aLvw18bzc=
-Subject: [PATCH RFC 3/4] dev_dax_iomap: Add dax_operations to /dev/dax struct
- dax_device
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
-	=?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-Cc: =?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?nvdimm=40lists=2E?= =?UTF-8?Q?linux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40v?= =?UTF-8?Q?ger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Wed, 6 Dec 2023 21:03:04 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d23frXD8"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A04F9A
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Dec 2023 13:32:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701898325; x=1733434325;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=UsibzcJgnETtCYOnKUZyWdZdEWamX9GhPkSSMh6mtP8=;
+  b=d23frXD8TjFaPWFxXp9IUsFD0oyRtwN+zHFk9y+8WZpUFM+hKwqRtsZV
+   K9JwaKhSDVV2n/surmON15golyQZHZ2SqfAe/yin9Aeqd7lMnwYnsSmQ+
+   GGCMhJ4KsZRAmUSAXh7e4ORb6iFlkoO7fm25pz3JwOKJu9MGrTfyJipGp
+   LWiX6Iw8AGprENNI7KTDUzFxRJbNNKvFzEsoBpR3Pz89K9E+f7OceYrul
+   dd6eWYOHG2J65iHI0ITIDrcZbGlj5IYPnt7MQDLU4UITOTiQ+rgq6zP+n
+   r69g2Q+rpKumCDsGGpJ4rBIE09YYMI9ebciuuaZp7oiH0xb1F/SLjYe+q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="458455823"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="458455823"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 13:32:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="894884393"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="894884393"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Dec 2023 13:32:04 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 13:32:04 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 13:32:04 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 6 Dec 2023 13:32:04 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Dec 2023 13:32:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zy7AIUySU4Z6BlTX+REC7Hc2mIxFmWNEPASVZqy88XMyi0lQ534SU8ck591XNCyebGfjKOzNmewDvk3QAR41HjGv8gl1vZBSWyz2X/1LPl5xxJKQuZ69Wv7PYReu+9IUamsd1YUPYwnBvBvW3UxM8nnagSI4M4nxdISoi7yzRbJRg3DiCPDHAuLY2dkOJJ2NKwz7Rad6tDjWGn3uoZKve7/9prqclh20e5izTN/AISE4zydCy0XHnWMS7R4D+OAwtT2SOo2Ngr+fRgzKwSBqMlws3QljoIfSalEGVZ2AsWsEZTrsE9nz+NyJWdgQVKQ04kQjhTaqFA2pzYKgK7/E2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/9f3EO91AKuDNwmkwjCdy6P5DbhVO47d/pFOO/KTIzs=;
+ b=VC6zzzVRh22vj4gvLm7m+e0/4Z/4z52T1dQIeg+YKwAwM3parE/KLkgW7gp3PnN8eZhSDDXiYOergPhiN1AgxV5I9gDIsIgAvel+RkBOx08bndV7BdanBn/MfHGFTB8dnUDrGnLJN3hQFp8tORdYRk2xdAACw/s0i4eZI/vJuT/P0EWM3Gk/UevBTuZ971v0bdsf64e81BemsrnR5785RZBrm3EJ1POyWylsYOT3uQanPyZR1aDsMev2ZoOmtm7zB8LoY/6oAy2vWlFTFoGimc7PubSj2+/fuYqYA7HJiZlvxWOG2AuFpokRRsdFpbsa074sFdowVo6vR08hxNin2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CO6PR11MB5604.namprd11.prod.outlook.com (2603:10b6:303:138::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.36; Wed, 6 Dec
+ 2023 21:32:00 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7068.025; Wed, 6 Dec 2023
+ 21:31:59 +0000
+Date: Wed, 6 Dec 2023 13:31:54 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>, <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>, Li Zhijian <lizhijian@fujitsu.com>
+Subject: RE: [ndctl PATCH 1/3] test/cxl-region-sysfs.sh: covert size and
+ resource to hex before test
+Message-ID: <6570e84ac75da_45e01294bd@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20231123023058.2963551-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231123023058.2963551-1-lizhijian@fujitsu.com>
+X-ClientProxiedBy: MW2PR16CA0066.namprd16.prod.outlook.com
+ (2603:10b6:907:1::43) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20231206210252.52107-1-john@jagalactic.com>
-References: <20231206210252.52107-1-john@jagalactic.com> 
- <20231206210252.52107-4-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHaKIeW9Nsmb4x1TnOasHllAnJBRAAAAOOt
-Thread-Topic: [PATCH RFC 3/4] dev_dax_iomap: Add dax_operations to /dev/dax
- struct dax_device
-X-Wm-Sent-Timestamp: 1701896583
-X-Original-Mailer: git-send-email 2.39.3 (Apple Git-145)
-Message-ID: <0100018c40f0fe2d-584bc0df-f14c-49f0-ab82-b918d9e0cc72-000000@email.amazonses.com>
-Feedback-ID: 1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2023.12.06-54.240.11.174
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO6PR11MB5604:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b925867-bd3a-4a75-0efc-08dbf6a2c723
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OOsIsdvStg5dsq2JnaGzOWDeQItSX5xpiwS34rRRLZgvA+h/jxs+qedVstCf5TPRkRVfyJEpzclXIY7La3QtJlhsBDhgX67P/+cjFKx96zf0fJyVG7HRy3MebaP0EGjGqkgSE3lQsAKsuvvMDkr+HeI4+B4mIqVlBpfZcAx5i5xPpVVFeX/MGI9sc/K8HmLLyQz+2z9I6bI5Mhn010KZB48uaUFnsr6WDxDL7rLmUMkMWpecXRlDnG8uW/8E7ecfO/0JGXXNTmP2tg5k4elushd5pUu/tVY5DbWdUCPUD/S6w+WdC3D3okmmi/fe2B7CUOEv9deK71bkIZcnFTVP/HcCqEmycz0KJrk9vwizFkUfK1Di6HcqggGAzGPrbceJ9tn28JLMnJy+9rL2RjRksb4t5jpWDrm3m9PERo+5RC+1PJdOdRiIopY4tpd2qVGrCs6bKEAksXF9Dz6bhyYjxNuRE7MYbkOdfDviGA45gg+bKYMscsgbRVtdYFnuUyzXYvr2ETaL/GhR2GPEFZmIJ+3JUPolKAZiycsnUKnyTLo5HCiUojM+3kkIZXCuQLW2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(396003)(376002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(6506007)(9686003)(6512007)(26005)(66476007)(66556008)(66946007)(316002)(38100700002)(83380400001)(478600001)(6666004)(6486002)(4326008)(8936002)(82960400001)(8676002)(86362001)(5660300002)(2906002)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/VNG637RmnWSKxXy9kvqxw5pdSIfrPaVm0sOst2F2ajVTRSnU+gc8QbcFPb0?=
+ =?us-ascii?Q?4zWhVTdSPgwdT+Cf38hhnBq/KR+9ipCXWewaoSmsx1U7oRZOTdKV+uyg+n6T?=
+ =?us-ascii?Q?PDg6SrYgwAc7BMYMKzfxdpSQmOSkGjDEl0lierf1hPc2kqdqaGja1Gqi5Zpp?=
+ =?us-ascii?Q?J0p2zZ7VZ1mIiKeJeEp6LXrPUd14VldmmpPB2ciPnsRlYUPTvaeg0vINM6m1?=
+ =?us-ascii?Q?j/wV9R/6ycrP/bGyRVq5AQQyXq3gIWCud3v9ZXcdHLunVCRWxubSPPy8bkZU?=
+ =?us-ascii?Q?JV+9eJJRmHaGbMXWRYkKIa3jlrsTF3kfdBR61lRdZyGcLuKcjwuqSVc2Z74s?=
+ =?us-ascii?Q?KZ6fufi9BLWfww9bGNMj+wjiGT7F1OXRfapt5f/gRcuDUjsEwieHHBtntbKI?=
+ =?us-ascii?Q?RcYr6QVWwE3b405MI5LvmUJkhAAH2/8DzyXs3n0YeUlFi0gRbnsAs/wjDlMc?=
+ =?us-ascii?Q?/2pr7ovJfC7Gs5jqIMpjFdPfV1vQxbQ91eWobIvMwBxzao+FIsyi2k3FDk36?=
+ =?us-ascii?Q?MHmr7qSfGag4Xl+rXFZpVeDLbt0ncbwXrpHTKZdkd/5bQrrC834cR47hGsIl?=
+ =?us-ascii?Q?ovDShOG/7VT6yA3DaMf26ppSHRg0SCgJVBYWDtup44wf0tnrsIjiMWB7F3zy?=
+ =?us-ascii?Q?DpdH5o2BPh3kHv5EW2jdXOEJly884SnjiNnVQUpfwqMdsKMHe/WMKPguAMFx?=
+ =?us-ascii?Q?fx1uG9DLVHrS6dMpUGepw7Wul2nENkz2xoxfBw5oiGpimAdJ7X4Q2u7Di9yK?=
+ =?us-ascii?Q?bVlGvAyfZeQunSOcXXhg7krtvOkJdAELrYXH8lB7wfhtit95fBqPv50y/FUq?=
+ =?us-ascii?Q?jO6i8DgnZTFY8lyzPgNZWdZoXYhFRiqmM0ebEDzlk5Yw25OQxi/HlqvNiHZ/?=
+ =?us-ascii?Q?WMkZ5CNnsR9Lizd1oURtz6N7ZSk/hLkQKtsBuyerHrEXC9HyLvCWVlBrrsdT?=
+ =?us-ascii?Q?5f1Z8UIdBecbVMxnwpuwAuoH4/e+IHQFPtDk79BJACkLH3atHr/4PkMj3Aeg?=
+ =?us-ascii?Q?VdTR8UlsPVsQHctTchDc4vmMgob0555h6wn9pcRPt/HUlVYZ3MPMc/pBFOb9?=
+ =?us-ascii?Q?g5zb9oznOie3UE6wE+p65TZ2v5EseW6a3aMVzJ/SnFTP3HurIiRPdKoA9Reo?=
+ =?us-ascii?Q?RxhDMTKIpcYkBpbOdiwsa1l2rh+AZngUAO8GPkW23P+kb0YbKb8zd8ozo+ur?=
+ =?us-ascii?Q?AHmq/cyDAuu27Vn/IoWpk6lS9j1Tfm0I9d+qBUosJw4ucySMn19QU2WvMzCv?=
+ =?us-ascii?Q?mQER2teGuvA/kUvqShkSyHOEktoDB3fsjdB1YdoGEdiXFnoIb3aZl8xH+ktJ?=
+ =?us-ascii?Q?aNnA2ox+8Pn5UEuJd26mAyq8Tw6+GqehOOUKiGOz8WyaoPWhSHTh5epa+tKA?=
+ =?us-ascii?Q?/1XbsG/CgmoN2IXKo2/Dq41ewmAsdXHHrq4k1FGwoQY+AL+/0syUrDK0NHZd?=
+ =?us-ascii?Q?UkvFC9oLZ086SVodnunRIgG52ERUKphQjGKvpwmmDwIQUWSFPIN8XnRa0N70?=
+ =?us-ascii?Q?xA36WQEvyyfW56VYmpHQ3MYjGbatApktd+urihHeRwxSDzR9Swh9jepSWNpp?=
+ =?us-ascii?Q?iquKa6pyrSCHmwyGBK4sDdoAB063chCKEQlxzYSev9bHi6ipxpmjDXlGCnFq?=
+ =?us-ascii?Q?LA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b925867-bd3a-4a75-0efc-08dbf6a2c723
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 21:31:59.0838
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GndHURQUJyQeV8DHr3BcePv+a14plJvwCeqAhvsRJPKido+bhwGJ4Yh5XZUMrZ+KLV/lDFNEcmb3ZhKnAJZ5TZGRSDo0OcjvAgXy9RgzFlQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR11MB5604
+X-OriginatorOrg: intel.com
 
-From: John Groves <john@groves.net>=0D=0A=0D=0AThis is the primary conten=
-t of this rfc. Notes about this commit:=0D=0A=0D=0A* These methods are ba=
-sed somewhat loosely on pmem_dax_ops from=0D=0A  drivers/nvdimm/pmem.c=0D=
-=0A=0D=0A* dev_dax_direct_access() is physaddr based=0D=0A=0D=0A* dev_dax=
-_direct_access() works for mmap, but fails dax_copy_to_iter()=0D=0A  on p=
-osix read=0D=0A=0D=0A* dev_dax_recovery_write()  and dev_dax_zero_page_ra=
-nge() have not been=0D=0A  tested yet. I'm looking for suggestions as to =
-how to test those.=0D=0A=0D=0AI'm hoping somebody (Dan=3F) can point the =
-way to getting this working=0D=0Awith posix I/O. Does this need to go the=
- memremap route=3F=0D=0A=0D=0AThanks,=0D=0AJohn=0D=0A---=0D=0A drivers/da=
-x/bus.c | 105 ++++++++++++++++++++++++++++++++++++++++++++++=0D=0A 1 file=
- changed, 105 insertions(+)=0D=0A=0D=0Adiff --git a/drivers/dax/bus.c b/d=
-rivers/dax/bus.c=0D=0Aindex 1b55fd7aabaf..8f8c2991c7c2 100644=0D=0A--- a/=
-drivers/dax/bus.c=0D=0A+++ b/drivers/dax/bus.c=0D=0A@@ -10,6 +10,12 @@=0D=
-=0A #include "dax-private.h"=0D=0A #include "bus.h"=0D=0A=20=0D=0A+#if IS=
-_ENABLED(CONFIG_DEV_DAX_IOMAP)=0D=0A+#include <linux/backing-dev.h>=0D=0A=
-+#include <linux/pfn_t.h>=0D=0A+#include <linux/range.h>=0D=0A+#endif=0D=0A=
-+=0D=0A static DEFINE_MUTEX(dax_bus_lock);=0D=0A=20=0D=0A #define DAX_NAM=
-E_LEN 30=0D=0A@@ -1374,6 +1380,100 @@ phys_addr_t dax_pgoff_to_phys(struc=
-t dev_dax *dev_dax, pgoff_t pgoff,=0D=0A }=0D=0A=20=0D=0A=20=0D=0A+/* the=
- phys address approach */=0D=0A+long __dev_dax_direct_access(struct dax_d=
-evice *dax_dev, pgoff_t pgoff,=0D=0A+=09=09=09     long nr_pages, enum da=
-x_access_mode mode, void **kaddr,=0D=0A+=09=09=09     pfn_t *pfn)=0D=0A+{=
-=0D=0A+=09struct dev_dax *dev_dax =3D dax_get_private(dax_dev);=0D=0A+=09=
-size_t size =3D nr_pages << PAGE_SHIFT;=0D=0A+=09size_t offset =3D pgoff =
-<< PAGE_SHIFT;=0D=0A+=09long range_remainder =3D 0;=0D=0A+=09phys_addr_t =
-phys;=0D=0A+=09int i;=0D=0A+=0D=0A+=09/*=0D=0A+=09 * pmem hides dax range=
-s by mapping  to a contiguous=0D=0A+=09 * pmem->virt_addr =3D devm_mremap=
-_pages() (in pem_attach_disk()).=0D=0A+=09 * Is it legal to avoid the vma=
-p overhead (and resource consumption) and just return=0D=0A+=09 * a (pote=
-ntially partial) phys range=3F This function does this, returning the=0D=0A=
-+=09 * phys_addr with the length truncated if necessary to the range rema=
-inder=0D=0A+=09 */=0D=0A+=09phys =3D dax_pgoff_to_phys(dev_dax, pgoff, nr=
-_pages << PAGE_SHIFT);=0D=0A+=0D=0A+=09if (kaddr)=0D=0A+=09=09*kaddr =3D =
-(void *)phys;=0D=0A+=0D=0A+=09if (pfn)=0D=0A+=09=09*pfn =3D phys_to_pfn_t=
-(phys, PFN_DEV|PFN_MAP); /* are flags correct=3F */=0D=0A+=0D=0A+=09/*=0D=
-=0A+=09 * If dax_pgoff_to_phys() also returned the range remainder (range=
-_len - range_offset)=0D=0A+=09 * this loop would not be necessary=0D=0A+=09=
- */=0D=0A+=09for (i =3D 0; i < dev_dax->nr_range; i++) {=0D=0A+=09=09size=
-_t rlen =3D range_len(&(dev_dax->ranges[i].range));=0D=0A+=0D=0A+=09=09if=
- (offset < rlen) {=0D=0A+=09=09=09range_remainder =3D rlen - offset;=0D=0A=
-+=09=09=09break;=0D=0A+=09=09}=0D=0A+=09=09offset -=3D rlen;=0D=0A+=09}=0D=
-=0A+=0D=0A+=09/*=0D=0A+=09 * Return length valid at phys. Hoping callers =
-can deal with len < entire_dax_device=0D=0A+=09 * (or < npages). This ret=
-urns the remaining length in the applicable dax region.=0D=0A+=09 */=0D=0A=
-+=09return PHYS_PFN(min_t(size_t, range_remainder, size));=0D=0A+}=0D=0A+=
-=0D=0A+static int dev_dax_zero_page_range(struct dax_device *dax_dev, pgo=
-ff_t pgoff,=0D=0A+=09=09=09=09    size_t nr_pages)=0D=0A+{=0D=0A+=09long =
-resid =3D nr_pages << PAGE_SHIFT;=0D=0A+=09long offset =3D pgoff << PAGE_=
-SHIFT;=0D=0A+=0D=0A+=09/* Break into one write per dax region */=0D=0A+=09=
-while (resid > 0) {=0D=0A+=09=09void *kaddr;=0D=0A+=09=09pgoff_t poff =3D=
- offset >> PAGE_SHIFT;=0D=0A+=09=09long len =3D __dev_dax_direct_access(d=
-ax_dev, poff,=0D=0A+=09=09=09=09=09=09   nr_pages, DAX_ACCESS, &kaddr, NU=
-LL);=0D=0A+=09=09len =3D min_t(long, len, PAGE_SIZE);=0D=0A+=09=09write_d=
-ax(kaddr, ZERO_PAGE(0), offset, len);=0D=0A+=0D=0A+=09=09offset +=3D len;=
-=0D=0A+=09=09resid  -=3D len;=0D=0A+=09}=0D=0A+=09return 0;=0D=0A+}=0D=0A=
-+=0D=0A+static long dev_dax_direct_access(struct dax_device *dax_dev,=0D=0A=
-+=09=09pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,=0D=0A+=09=
-=09void **kaddr, pfn_t *pfn)=0D=0A+{=0D=0A+=09return __dev_dax_direct_acc=
-ess(dax_dev, pgoff, nr_pages, mode, kaddr, pfn);=0D=0A+}=0D=0A+=0D=0A+sta=
-tic size_t dev_dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgo=
-ff,=0D=0A+=09=09void *addr, size_t bytes, struct iov_iter *i)=0D=0A+{=0D=0A=
-+=09size_t len, off;=0D=0A+=0D=0A+=09off =3D offset_in_page(addr);=0D=0A+=
-=09len =3D PFN_PHYS(PFN_UP(off + bytes));=0D=0A+=0D=0A+=09return _copy_fr=
-om_iter_flushcache(addr, bytes, i);=0D=0A+}=0D=0A+=0D=0A+static const str=
-uct dax_operations dev_dax_ops =3D {=0D=0A+=09.direct_access =3D dev_dax_=
-direct_access,=0D=0A+=09.zero_page_range =3D dev_dax_zero_page_range,=0D=0A=
-+=09.recovery_write =3D dev_dax_recovery_write,=0D=0A+};=0D=0A+#endif /* =
-IS_ENABLED(CONFIG_DEV_DAX_IOMAP) */=0D=0A+=0D=0A struct dev_dax *devm_cre=
-ate_dev_dax(struct dev_dax_data *data)=0D=0A {=0D=0A =09struct dax_region=
- *dax_region =3D data->dax_region;=0D=0A@@ -1429,11 +1529,16 @@ struct de=
-v_dax *devm_create_dev_dax(struct dev_dax_data *data)=0D=0A =09=09}=0D=0A=
- =09}=0D=0A=20=0D=0A+#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)=0D=0A+=09/* hol=
-der_ops currently populated separately in a slightly hacky way */=0D=0A+=09=
-dax_dev =3D alloc_dax(dev_dax, &dev_dax_ops);=0D=0A+#else=0D=0A =09/*=0D=0A=
- =09 * No dax_operations since there is no access to this device outside =
-of=0D=0A =09 * mmap of the resulting character device.=0D=0A =09 */=0D=0A=
- =09dax_dev =3D alloc_dax(dev_dax, NULL);=0D=0A+#endif=0D=0A =09if (IS_ER=
-R(dax_dev)) {=0D=0A =09=09rc =3D PTR_ERR(dax_dev);=0D=0A =09=09goto err_a=
-lloc_dax;=0D=0A--=20=0D=0A2.40.1=0D=0A=0D=0A
+I would summarize this as "Fix hex vs decimal confusion"
+
+Li Zhijian wrote:
+> size and resource are both decimal
+
+Please always describe the "why" in the changelog including the
+motivation for the change and the effect of not applying the patch. I.e.
+how would someone know that they are hitting the problem that this patch
+fixes. Sample output usually helps here.
+
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+>  test/cxl-region-sysfs.sh | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
+> index 8636392..ded7aa1 100644
+> --- a/test/cxl-region-sysfs.sh
+> +++ b/test/cxl-region-sysfs.sh
+> @@ -123,6 +123,11 @@ readarray -t switch_decoders < <(echo $json | jq -r ".[].decoder")
+>  [ ${#switch_decoders[@]} -ne $nr_switch_decoders ] && err \
+>  "$LINENO: expected $nr_switch_decoders got ${#switch_decoders[@]} switch decoders"
+>  
+> +decimal_to_hex()
+> +{
+> +	printf "0x%x" $1
+> +}
+> +
+>  for i in ${switch_decoders[@]}
+>  do
+>  	decoder=$(echo $json | jq -r ".[] | select(.decoder == \"$i\")")
+> @@ -136,8 +141,8 @@ do
+>  	[ $ig -ne $((r_ig << depth)) ] && err \
+>  	"$LINENO: decoder: $i ig: $ig switch_ig: $((r_ig << depth))"
+>  
+> -	res=$(echo $decoder | jq -r ".resource")
+> -	sz=$(echo $decoder | jq -r ".size")
+> +	res=$(decimal_to_hex $(echo $decoder | jq -r ".resource"))
+> +	sz=$(decimal_to_hex $(echo $decoder | jq -r ".size"))
+
+This feels like overkill, I think bash arithmentic operations can handle
+hex conversion and decimal comparison...
+
+>  	[ $sz -ne $region_size ] && err \
+>  	"$LINENO: decoder: $i sz: $sz region_size: $region_size"
+>  	[ $res -ne $region_base ] && err \
+
+...i.e. does this solve the issue?
+
+@@ -138,9 +138,9 @@ do
+ 
+        res=$(echo $decoder | jq -r ".resource")
+        sz=$(echo $decoder | jq -r ".size")
+-       [ $sz -ne $region_size ] && err \
++       (( sz != $region_size )) && err \
+        "$LINENO: decoder: $i sz: $sz region_size: $region_size"
+-       [ $res -ne $region_base ] && err \
++       (( $res != $region_base )) && err \
+        "$LINENO: decoder: $i base: $res region_base: $region_base"
+ done
