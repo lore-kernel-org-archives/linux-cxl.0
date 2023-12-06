@@ -1,246 +1,170 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="LFBHd9Fu"
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2050.outbound.protection.outlook.com [40.107.223.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C38DBA;
-	Tue,  5 Dec 2023 18:02:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VhnCOU02"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8021A5
+	for <linux-cxl@vger.kernel.org>; Tue,  5 Dec 2023 19:00:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701831625; x=1733367625;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=nHjP/elhnHmbMduU+KDOcnQayEs2f0yk/IoJ7qkaFag=;
+  b=VhnCOU02Ecz56MLOm0KwFdSAlZ+XsamVMOjQekO4OaOWwQ71KiSDGW1F
+   sx2ZDOuWNbqyiuSZgVQjTsKWesnHBKNGfiU3WvGoJLtoVkfCIkfjZwjK1
+   TaDfijndiE/Q1v9OqTG6dI7K0NQINc5aX990munO58b2c2u6Kxfsq0r9T
+   j18K7H4Wkkda3akurLiWHaOepcfB+ofPh4Lw02Nj44j+C4u/QfHwQu7m3
+   9+aoIsQPaloXrFKzOEsQScDeEzRrR9qE/yXB47O7Fc254rbYwwdX15mm6
+   ZX5FHaRCrvfHi1Ck8dTGpQyxudVmV4S1CIHt3AXiYDN8YA68ZaEQ+yxte
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="458319362"
+X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
+   d="scan'208";a="458319362"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 19:00:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="774843316"
+X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
+   d="scan'208";a="774843316"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2023 19:00:24 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Dec 2023 19:00:24 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 5 Dec 2023 19:00:24 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Tue, 5 Dec 2023 19:00:24 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oNhF87acw9MMvCGnuukYiDqIaibFOSqNXGC9wYSq8C4SfywHlDTpBcIglYGXC0si4WTN1jd0HxUK7EOiUUr5o4mI6cC7LH1V1xnDVj50+z5HZqGdY6GpDWC0ic6G83MeKh9PO+da5B80I/i/B4Hj5CYIbbIkOAWYj07xattp9gZMsG4QdyU32b5K0NprJ6iJoZmG9x2XCyZw832oYIs4hKxgTfwXsnqvYPYjWKWHM8kX3XsQ3pgB1Mp9VkiTDhrouId4d0FMuUb+aCLOfMqgCmgMy/k/eEiOsHNxxWf0O+1lRloom6mIlVKNd1EPtDYddMBOhbWh1yw8aGrTudx5fA==
+ b=kCFyINE+AGQXCzqAoFzdt6wDOm7Twt0SGkhcILupfMfij0mLFeUuYtFOB6iYSxd00xYllOlFvKVLD4wJKkLI4Pmx8rljvz2xzZh7wIFBKHY4JL297tQifMs5b1qrK3Ubs62/uBKE5VA/h2Ln/2NesYBI1RowL9c5gE7wW6YFBZ1eh1vCFPJM7Db82ump+6X0Wim9nwgICK1B6WAGSrzgpUTWaIMWpK7ugiC3DGDuNgbmNXwrRLE2x2gH7AJebASKXhDw7wtJo1kAiVyTAbiDcsqp6zuw05eKwpYz5X3gmk1VR7i+SCOk4N+hf56wq2tUMi4sumrrO5G+JvzncVgHCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9j+qoLoOzhtEAelUrP6md3EBv44E66c7k5hDa33fkNU=;
- b=NqYHPDbSeMYt25BGlMDjXstGXC6jOWk6PMwK5HmGUND3BcxksUMiVdUJM41cKL16luAzhtxOh3Bj8YQEELFvX4L1dO1L2Pko8YuRncaZMLwOV4btw4K+f0GdA9TEJTgOA4LZBv2vu0M4A7pPIlFveClD0Kqai/t+Tp7zl9pMh+0O8UkS6SP8sIZyxDtxeqoeyMjkVS4erx7rn0BLkNEByBjlzKdqRHgYmBn7bBc8zU43lWs67sIF58Q2ZaFbcI0IkTreO5cClola91IOJK3mB5JZg0LQ5HHuXgA0pP2LNizo06hz26EVKUPJLxhoCEUMvmX763nqitqr7zZeTTKu6g==
+ bh=nHjP/elhnHmbMduU+KDOcnQayEs2f0yk/IoJ7qkaFag=;
+ b=CqCPpg/MtN2wiya5MxTiunpuL0SxcEF8sfQBxIfDAsp73iqBir/rwAISaZVbgNhRWwXljS5sG3iTUi/jkqLwYOCl1fNOZ2iWdj8BeFcJbQmcF+NKolPIKdQZfgGLYa+ky1u5vvVuxkAtsoDnCLQ3ckJT9GhtAULI1dXUqnDt0C+8O7y8AmwHON9DMRMVs39N2paVb3fFOmRsfsxzNO79R9c0DK+B9cxYxVzQQCVEW9YrDFyGWjtJN++g+yiRdGb3gGC/eGrLAb9AUhxGJCwOAUhM+0YWGo4/yE4LoYYJbRv34UV6Rd10ARQH2MoAGtEO88IwMzVyuCkrmea4KNLs2A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9j+qoLoOzhtEAelUrP6md3EBv44E66c7k5hDa33fkNU=;
- b=LFBHd9Fu2cNLiV/HtOa1AstaeOLUe6/SDtR9ZP3cdMX+McRLZT+j9JbLkTZMsebhKL2RzC2XUiiedvXUY02S1WA+VqlqTKH7GZYDu3qke+xDeL9rWRA6RTTI9xthMcNDJQRA6XXVzhXqsiCXjweNcmG4S+5uYANIbI+p47ccx14=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by MW4PR17MB5529.namprd17.prod.outlook.com (2603:10b6:303:124::17) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
+ by PH7PR11MB5957.namprd11.prod.outlook.com (2603:10b6:510:1e0::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.24; Wed, 6 Dec
- 2023 02:02:00 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7068.022; Wed, 6 Dec 2023
- 02:02:00 +0000
-Date: Tue, 5 Dec 2023 21:01:53 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Michal Hocko <mhocko@suse.com>, "tj@kernel.org" <tj@kernel.org>,
-	John Groves <john@jagalactic.com>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"lizefan.x@bytedance.com" <lizefan.x@bytedance.com>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
-	"shakeelb@google.com" <shakeelb@google.com>,
-	"muchun.song@linux.dev" <muchun.song@linux.dev>,
-	"jgroves@micron.com" <jgroves@micron.com>
-Subject: Re: [RFC PATCH v4 0/3] memcg weighted interleave mempolicy control
-Message-ID: <ZW/WEVbVnEXXCYSM@memverge.com>
-References: <ZVOXWx8XNJJNC23A@memverge.com>
- <ZVOn2T_Qg_NTKlB2@tiehlicka>
- <ZVOzMEtDYB4l8qFy@memverge.com>
- <87o7fveeze.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZW1IdPI11nhKcdZl@memverge.com>
- <87sf4i2xe1.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZW3ZFDeTs7xotImL@memverge.com>
- <87fs0h2fb4.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZW84F5PUB/0yPW9d@memverge.com>
- <875y1c2lyo.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875y1c2lyo.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: SJ0P220CA0006.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::29) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.25; Wed, 6 Dec
+ 2023 03:00:22 +0000
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::703a:a01d:8718:5694]) by MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::703a:a01d:8718:5694%7]) with mapi id 15.20.7025.022; Wed, 6 Dec 2023
+ 03:00:22 +0000
+From: "Verma, Vishal L" <vishal.l.verma@intel.com>
+To: "Schofield, Alison" <alison.schofield@intel.com>, "Weiny, Ira"
+	<ira.weiny@intel.com>
+CC: "Williams, Dan J" <dan.j.williams@intel.com>, "Jiang, Dave"
+	<dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+Subject: Re: [PATCH ndctl RESEND 1/2] ndctl/test: Add destroy region test
+Thread-Topic: [PATCH ndctl RESEND 1/2] ndctl/test: Add destroy region test
+Thread-Index: AQHaJAu/YxXs4aYmgECKHsrWa5h+gbCU1CuAgASclwCAACv7gIABnXGAgABebAA=
+Date: Wed, 6 Dec 2023 03:00:21 +0000
+Message-ID: <081a326aaa95d2b5dc355381f1f4c4895767a9c0.camel@intel.com>
+References: <20231130-fix-region-destroy-v1-0-7f916d2bd379@intel.com>
+	 <20231130-fix-region-destroy-v1-1-7f916d2bd379@intel.com>
+	 <ZWo2f2eWVtsJrYD9@aschofie-mobl2>
+	 <656e14d8285f7_16287c29422@iweiny-mobl.notmuch>
+	 <000bba54c1a3cde1aa63bc8052c01e745835468d.camel@intel.com>
+	 <656f948febeb0_182977294ec@iweiny-mobl.notmuch>
+In-Reply-To: <656f948febeb0_182977294ec@iweiny-mobl.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|PH7PR11MB5957:EE_
+x-ms-office365-filtering-correlation-id: e1247150-69e7-4545-b283-08dbf6077c77
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bKjcZ0o4xl9vVtqj0irWffUB+z2KTKtEEGBKMHB/E+VklQlmUO4SYDBO3IWpd4ZsWgpJU9q/iibfD35TPFis2jziuEh+S7m4wj/k2oUnvId5KKKwQHf+wKVFXtYOIK9Ncj+2ueR/ZrtLeeNJefYFHdsCcrar0aN+MyOr+y46AXbOEyobzbXsfvB/hsp3NOFG52nnsEKZwM+0T6YLFWZEZCnYaEOTn9Ygwh3a/VmQ5fQaDTrI94r2P8iiCCBaooT9CjKAkHIeTdr2Yn3Odpo+x1q93Z8GuiTrthYDZi8p76E96r+CqY4RCjJ1dUN+bcTjrlnV6nvLJiGS5tSewRvFbc5RWcXsLx5e6XYlvImv6fNh69moUZmLqTOTL7Blyz9GJXdsyy1b2CKY6DrX6XaR6Mih4EhsYRuUxhdEqOZaZcYmGpHRZr1idVvMVFs5FJuiLZnP1mh7Yo2wHVKE6qQTdYcQLu1ne128EHN+2ICoG/Tw2izOFJ2qObL5YX4v2dYunoTKi1gcY5ufX2vT+Hm1UprtmUHI6e3caWbbluoeTAyVOlZDqiTEvCgQ9gFX/OjxECyHxYYPTC+qUaxy3KdMKxUTCyQL7Ufmq5xgCy89AhgdqucZ9hls6lxKLY+zT/9t
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(346002)(39860400002)(376002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(478600001)(71200400001)(6486002)(122000001)(38100700002)(82960400001)(26005)(6512007)(6506007)(2616005)(4744005)(8936002)(8676002)(4326008)(2906002)(5660300002)(86362001)(36756003)(41300700001)(38070700009)(54906003)(64756008)(66446008)(66556008)(76116006)(6636002)(66946007)(66476007)(110136005)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UXJTMjRIbW16MG5OVFFXbXEzME1LaFhXWDhxS0NLSDlEK250cFFHSUV5SDhq?=
+ =?utf-8?B?L0JXaFNLeW9wbjZrOHBqczRVTXo4WVI4S0VGWVdXSGtLL2tBTWc1UDhpYWhV?=
+ =?utf-8?B?ZlVKRmZhOTUzSUlBb29mTWtEcGlxd1hHM1Z2akV6SHJGNmxYWm1CR2lBN2Zp?=
+ =?utf-8?B?YVJlOVFkd29SOW84clcrMjNCODF2blBTVnlkcVpCRDVYajVqUTVkT2VzZmt3?=
+ =?utf-8?B?QXNPaWplR0hkRk0wSU5CZ2U4SnBVd2RkM1FMRDFlMDlYTDJ6UFNZRnFrMnBn?=
+ =?utf-8?B?eWxMeWxsT3BBT1FSTDkzWmkxT0E2WUh2NmF3WmphUVV4NVNJb2lJZGsvbHFP?=
+ =?utf-8?B?QlVNL3FJMW1LWldCbTYvZlNKaG9nU0VKWXVIZDBrbkE5THRMMnBWYklZQ3Rw?=
+ =?utf-8?B?ZXl3T1N3NldnV29jdWQvOWxCd3RyZ2tQdWFBcXZQZDJqSXVzeG1RTmNoRXRE?=
+ =?utf-8?B?L1ErR0lQLzFGZy9nTzhoWXlmYVpDUTJYQWdPVU5uSHVSY0pxMlVydGgvSXk4?=
+ =?utf-8?B?TVJwZmwvbEQ0ZExPZXJpdWJCNU1UMTJ1WnpQUW5raGVKQVRPT2hNclUvWXZu?=
+ =?utf-8?B?R2ZqeHdTUElZMlc3b1IyeURpa3R4MlVuVzVFUTYyaHVpQmZyVmpUR3VCOHJ2?=
+ =?utf-8?B?WXY0ejJMME5WcW4zQUhtdW5PRVBRODdyVGpRazJJaktPeVZXMjE5YnpleGY4?=
+ =?utf-8?B?VUFJYTl2ZnhpYmVtbjNxY1ZHc2ZjSm43RXZ0ZlhaRVgyYTZvRnlhYnRGZzJD?=
+ =?utf-8?B?RU95V1pUM05kOEl1NnpuWXU2Ymk4K0pjSDRZeHlXWk9GemhxdlN1cTV0Snds?=
+ =?utf-8?B?NmpoblNzM0VQMFFWSGUzUlBoZ2w3TGxsNHBid1E3U1JFaDBCakVKYmxHZUZB?=
+ =?utf-8?B?OElaWU9GS2ZBTzlRMmI2Q1RqcFpKT3R2WmZ5akc3NmdaRjNCeFh6Z1l4bEJO?=
+ =?utf-8?B?eXdwWElDZE9XVktWZm1GWTJqaG5tYTZ4c2R4MHZMaE1PODVSTVQwb3ZybUF5?=
+ =?utf-8?B?eHp1WmNubm1kS0FzQkJ4SkZza2xHa1BiUXo2cHJyRm1YSXNES29WZUFmZFVE?=
+ =?utf-8?B?ZUxuYVlLR1hoa0hxeXZKYzNXNWdTSHZrQk5lQTd1Ly9pNk85OUhaTWdKenEy?=
+ =?utf-8?B?R0UxVmV2T1dkckZnblVkN1NabXhxUzlaLzJYdFdwSGNPbWpCL2NJV2djWEV0?=
+ =?utf-8?B?bHI2Sy9meFE1NkdHRFZUWVZpY1FjOWFZbHh2eDVRTUk4cWRsUC93K0JnNGRO?=
+ =?utf-8?B?T1VDUXpwOXA0amZkeUg5RFRPWnFVamdpMzVNaHdUUlRuYkFQVHZjOElwWHdR?=
+ =?utf-8?B?N0JuN1UzU2pPQ3FyTTk2Ty9Sa1Bpb0ZOeFJ6UmlNR09ETS9keXVHcWcvTGZH?=
+ =?utf-8?B?dlIrNXJ6QVFBMG0rSUs2NVZEOEZsamNUR1FUUGN2WjR1NXVYL2RFTE1wODRC?=
+ =?utf-8?B?bFU2a2w2bVF5bExTMElCamdJcEF4SlVodEJHZk1mbEYxWDVGRjFncHlSR2Ra?=
+ =?utf-8?B?ajBvN0tucjcyRGVHYmNBNjVPU3ZHKzY0dTBlWmJKU0xZWUtnT0pWTFBaajhB?=
+ =?utf-8?B?aWdiRlMzbmM0NnFabjBhakd0NUhlUlVwSEJzWjZldDVrRmZaaitDRWJRbjFq?=
+ =?utf-8?B?ekhjc2V0V1BNM2dQVzI5SVVXKzVRLzdOaWZVa21xblhwYkpBTE5aTTFlTVRN?=
+ =?utf-8?B?SEg2NFBjNUJxWDdDcTJCME1kZHdPVzVxS2JxRTFPVEJLWk5jUUdwMS93VlVP?=
+ =?utf-8?B?NmdHWVVreHNpVE5zdkdPQXM4b2NOb0JIZUpaL1lvUlJaTFZ5K3ZZZ3RMWjFh?=
+ =?utf-8?B?RXRycm56ZjRDT2NuS3U5N3g5dG95OEVQWkc5OHdlb2xCYjJVVFZzR1VSZm5h?=
+ =?utf-8?B?VFR1QW1kblBKOXpIaThOc1luMWc4MXZaN1VVQ2h0WVVHbTlXamV2MXl5TEUv?=
+ =?utf-8?B?ZTUvbGdEVlQxaHE0Y2svSCtxTUgySXl3aTQ5UXVCOXZJOGt1YmhxbUlSeGgr?=
+ =?utf-8?B?WWhPVWdpMURDRWdzU3JDYWdOUkFVRktLM05kOWJzZzdSYlREakdHVjR3Y3dK?=
+ =?utf-8?B?dk55UTlyMTNEQkxrR0dyV2ZIWFFBR2pIZE85SmtaT1R0R0pPemJXQ3ZNM1RQ?=
+ =?utf-8?B?MUlCWTJBMkF0bGRIZVZzczVIL3Rsb01xenJkdkNDZU5kczlPeVcvdXVFUFpB?=
+ =?utf-8?B?TlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0E2457DF75BAFA49986CCD6C915291AB@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB5529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61d5ac63-5b18-4050-c29d-08dbf5ff5559
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1RQK6CH4XINEUNIPL7vp4rrEuC8mMA/iov2ncYxDZr26IudeTdpCPpN1bh4P/gPbFazO6u2cJW50jU7CFr5SwR00iT6X+uVFHv2phavdIT0QirWWoYWjdoggpclY4hVjTdH3xTj+mV6KZ3dpffHI2cFm2PONCdjI6E0AI0mzL8naBiyN16eMXqUdCnFj+2Y/wt0Yn4aIcJvLhJenSzHX3jWF2qzV3CBSyGIJepEHgK9/UUjsm2Ll/bwNHE/oLXCzP/txj/PqFv5CP+rukqiBmoYBdhREEhz5RXE7iuU0we2P0z+/7Nrr8NTVYk19yQqPE5UwNEEBKzejXxGl9homYGf3wy6wlg8sltyydh6+C3uYRagBQ5a1IAL0Qt49UCnCNnVej9MVSN+nixYRaO6Z07TTae63ptTpbVG+iELiPBzecQxJJx1QKEeT0G8IMx9i/OHokZcRwWofe/yTBe5y9GtV7LVvTnCb/vm2TfSc5/luiupuclRstHCLGY+J9RVpjNIdxqR831VUQ4pyJDXNt/z7bzOcMvJsP8FScDfLU2LRHxIkrTPxR/h+Nl+P/RGAZ5blW2iaNd/ZRApZ1YrTz77sKYrjR7uelH2M0kiOkgQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(136003)(39850400004)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(8936002)(83380400001)(4326008)(8676002)(38100700002)(36756003)(86362001)(41300700001)(2906002)(44832011)(7416002)(5660300002)(6506007)(6666004)(6486002)(26005)(478600001)(6512007)(2616005)(6916009)(66946007)(66556008)(54906003)(66476007)(316002)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rivkT0UnoVtKlVDkNIkGsqY0SyIJwOtFHhpNug/Hk9dJacCfp4aDELQXQ2Cu?=
- =?us-ascii?Q?OWPje0eapyQ6/VBTR2mdoOcg+U8tJfVlqIL99r8ySDyND0oVsepAE4dHNwHK?=
- =?us-ascii?Q?picun6x5DQe45HJcXkSe7S9LWSjupV9gDtJ8s1+bOjo1jyPDRMuNvxco0a2w?=
- =?us-ascii?Q?BWAqE7PyfFsc0zoQPFdEP4Mv9zdRKpCDHOW4qEHOxGSjaePxy2YlldhrlEJp?=
- =?us-ascii?Q?XTSheCVEj7yrM+JRXzocv245gFFDQNk9RK5gd14SgwsiGjVAv677doRgHLM5?=
- =?us-ascii?Q?l1hsaFk/KV8MmnaBOqpxYNtxfMJG4BHDoAC5uTlfgYGCsMAPLSqRofTYMe6C?=
- =?us-ascii?Q?pYESnUyq5aFtG60ph1piwpUapYnzbMB2hfQEqhYSRPlge8jlonrqLrRKkRgn?=
- =?us-ascii?Q?YEDb1Htyo1xDrSoWqZxAsoHzdisBhFmVfQyWC6duMsrgTdhlq9QB28hNlY20?=
- =?us-ascii?Q?EH4LB82S+23mJ0zZTplheANgJJrKHIqpMpeWvXEWgOL2HqkaP6eyodqGfFuj?=
- =?us-ascii?Q?3FIlNAuQmoXCbNzJGoggjrq5VoYe2n4cKdLDYRTbXFRY8H3gUeGfh+Z/vAjm?=
- =?us-ascii?Q?DyFEPlkA8Rm3v0m7tydnlff73fSSBXJXjzD+8i4sIuTH7BwDD+U8aQBtCEnd?=
- =?us-ascii?Q?yOMi9NfpvmNOJEuK5KHXgmrjfhZShquS4bbdMxDuCULjzn0dCoZxE0a5U0VW?=
- =?us-ascii?Q?sCauVGVhuJcfjidSBoOS/9Pa4/Sba0XywuOEgwp+wQbeVWmFYhqVHNh+7kBk?=
- =?us-ascii?Q?nFlH5N1AbK6mzhUm1uVZaQBuo/hvU8V6EGCWJ9AvBQGeWNeg6jjiBv9NPO1o?=
- =?us-ascii?Q?zcrVshTkb0Ep/pWGf/cMrAPB2AIkv+JvHYQ73bybmSItodKkfl6yL0St0q60?=
- =?us-ascii?Q?eY/PHanp6Sd/O3+o7p6MnIcfoQ2tUPwztBQ2cYY4w2KLtIRpJlxsay/ukJX3?=
- =?us-ascii?Q?mp64ILFYhMojeR9yDgDg8Vc+P1D6SAUKRnAIpVPtD1PUs3czyRUyEYLz0Ajq?=
- =?us-ascii?Q?r6YOHlN/Dtgw7WR1fXB+b9nnWA9YV0bhXLszr7EGSmlsTFP9CouoBQsPxOtT?=
- =?us-ascii?Q?KJKXxerZeyNY3sltR/Hb4qNuGH68lvQuEJ6D2d1MIsx2DLsrzri0SFX5YrlI?=
- =?us-ascii?Q?NE/iVlLpdfNF5GSo1pvpNqsf3UrmCsZPCe5si9a4hPMHT1iAOZfe1BT0hwyE?=
- =?us-ascii?Q?Cfh54WdMUA/qMiwZIz/a3f3fvaz4m5mNZkQl1RmfF12gDGScJRe7Gjk9Vhl+?=
- =?us-ascii?Q?oW4tFE6Q6ep0+o4hTZSZFYO83b0H+Hg0Ugc68F8uJwE6+A+/snVKMfq4VJDl?=
- =?us-ascii?Q?uj/0KuBaAVexhVj3GDAt2m3iGjcDBZ/JCWANO/3Z3b6EtmkAF65OGIsUHWOl?=
- =?us-ascii?Q?aph7vnvPwyX+sduqtRVGk4K1exZfyZ7cch4N+p0T93PvkxqfkGuohsP/Uia3?=
- =?us-ascii?Q?wxhvJDSPEqKSXEk+Z66XwfHhjwpJ/ikQ5CyPkbspfNkw/THVPT9Z0O8YLPEd?=
- =?us-ascii?Q?PDRyyUOQUJQbo4OOo8j1hZEQY3Pm6myZ3WFhTMhxw33mOtC/CacdOGkhYRMl?=
- =?us-ascii?Q?a74X6G9dSABmSDr6ZQ0AKTr+qmFMZyGLs6pPRFZOCZUzMoub0N+2QEhyTZkY?=
- =?us-ascii?Q?VA=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61d5ac63-5b18-4050-c29d-08dbf5ff5559
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 02:02:00.3039
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1247150-69e7-4545-b283-08dbf6077c77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2023 03:00:21.6221
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0SuL5rFCdRvqI1fZfeJ/LwJrVI1wu8hGKZrlg4WovHCI1ycW5/YEWHf2O+tA4OABvk6xhL/7DtXH5iIMHmAQmf6JU2XTqRlsotWcW9+5RBQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB5529
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EUcTo/dxix4tkt8+E793Jv5KI1ht4vjI/glt9Q0gvuc5i3vmDfjAw8t98EqP0Y7ISzCBgaCShaLzJU2ouSG/jI46Ybhf0fr5eVIL8XNgmZw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5957
+X-OriginatorOrg: intel.com
 
-On Wed, Dec 06, 2023 at 08:50:23AM +0800, Huang, Ying wrote:
-> Gregory Price <gregory.price@memverge.com> writes:
-> >
-> > From a complexity standpoint, it is exactly as complex as the hardware
-> > configuration itself:  each socket has a different view of the memory
-> > topology. If you have a non-homogeneous memory configuration (e.g. a 
-> > different number of CXL expanders on one socket thant he other), a flat
-> > array of weights has no way of capturing this hardware configuration.
-> 
-> One important task of the software is to hide the complexity of hardware
-> from the users.  At least it should provide the option.  It only add
-> complexity based on real requirements.
-> 
-
-The global weights are intended to help adminstrators hide that
-complexity from actual end-users.
-
-The administrator of a system should already be aware of the hardware
-configuration, however to hide this complexity a system service can 
-be made which auto-configures these weights at system-bringup and on
-memory-device hostplug to simplify and hide the complexity even further.
-
-A system service can use ACPI HMAT (ACPI Heterogeneous Memory Attribute
-Table) information to automatically set the global weight information at
-boot time and/or on hotplug. Such extensions have already been proposed
-in prior RFCs and on the cxl mailing list.
-
-
-
-To break this down a little more explicitly into 6 example use-cases,
-lets consider the potential ways in which weighted interleave may be
-set via set_mempolicy or set_mempolicy2().
-
-1. Actual end-user software calls it directly (or through libnuma)
-   a) they can call set_mempolicy() without task-weights and accept the
-      administrator configured global weights
-   b) they can call set_mempolicy2() with task-weights and use task-local
-      defined weighting
-2. Actual end-user uses `numactl -w[weights] --interleave ...`
-   a) if weights are not defined, use global weights
-   b) if weights are defined, use task-local weights
-3. Administrator / Orchestrator opts user-software into weighted
-   interleave by wrapping their software into `numactl -w --interleave`
-   a) if weights are not defined, use global weights
-   b) if weights are not defined, use task-local weights
-
-The most common use case is likely to be (3a) - an administrator opting
-a user-workload into weighted-interleave via `numactl -w --interleave`
-or an orchestrator such as kubernetes doing something similar on
-pod/container dispatching.
-
-
-
-In all cases where the user does not define weights, they are trusting
-the administrator (or system-daemon) set weights to provide the optimal
-distribution, removing the complexity of understanding the hardware
-environment from the end-user.
-
-
-
-In all cases where the user does define weights, they are accepting the
-complexity of understanding the hardware environment.
-
-
-
-On the topic of the ACTUAL complexity of system hardware that is being
-hidden, we must consider a non-homogeneous bandwidth environment. The
-simplest form is an off the shelf Intel 2-socket server with CXL memory
-expander.
-
-Lets Consider a 2 socket system with the following configuration::
-
-DRAM on Socket0:  300GB/s local DRAM bandwidth  (node 0)
-DRAM on Socket1:  300GB/s local DRAM bandwidth  (node 1)
-CXL on socket0:   128GB/s bandwidth             (node 2)
-CXL on socket1:   128GB/s bandwidth             (node 3)
-
-A single linear array of weights is not sufficient to capture the
-complexities of bandwidth distributions on this system, because
-of the presence of a UPI link between socket0 and socket1, which
-changes the bandwidth distribution depending on where a task runs.
-
-For example, 3 links of UPI is 62.4GB/s full-duplex.
-
-From the perspective of socket 0, the following is true:
-
-Bandwidth to Socket0 DRAM:  300GB/s    (node 0)
-Bandwidth to Socket0 CXL:   100GB/s    (node 2)
-Aggregate bandwidth to nodes (1,3):  62.4GB/s
-
-From the perspective of socket 1, this changes to:
-Bandwidth to Socket0 DRAM:  300GB/s    (node 1)
-Bandwidth to Socket0 CXL:   100GB/s    (node 3)
-Aggregate bandwidth to nodes (0,2):  62.4GB/s
-
-With a single linear array of weights that apply to the entire system,
-you cannot represent this configuration.  And in fact, a single
-configuration of weights will always provide a sub-optimal distribution.
-
-The goal of simplicity defeats the entire goal of weighted interleave in
-a heterogeneous environment.
-
-> 
-> For these complex requirements, we will have process_set_mempolicy2().
-> I think that it's even more flexible than the global matrix.
->
-
-process_set_mempolicy2() has a *very* long road to exist. The problem of
-mempolicy reference counting is non-trivial, and the plumbing requires
-changes to no less than 4 subsystems.
-
-Beyond that, the complexity of actually using process_set_mempolicy2()
-is the same as any situation in which set_mempolicy2() with task-local
-weights set:  The absolute highest.
-
-The global weighting matrix actually hides this complexity entirely.
-
-> --
-> Best Regards,
-> Huang, Ying
+T24gVHVlLCAyMDIzLTEyLTA1IGF0IDEzOjIyIC0wODAwLCBJcmEgV2Vpbnkgd3JvdGU6DQo+IFZl
+cm1hLCBWaXNoYWwgTCB3cm90ZToNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiA+ID4gDQo+ID4gPiAN
+Cj4gPiBDb3JyZWN0LCB0aGUgc2V0IC1lIHdpbGwgY2F1c2UgdGhlIHNjcmlwdCB0byBhYm9ydCB3
+aXRoIGFuIGVycm9yIGV4aXQNCj4gPiBjb2RlIHdoZW5ldmVyIGEgY29tbWFuZCBmYWlscy4NCj4g
+PiANCj4gPiBJIGRvIHdvbmRlciBpZiB3ZSBuZWVkIHRoaXMgbmV3IHRlc3QgLSB3aXRoIERhdmUn
+cyBwYXRjaCBoZXJlWzFdLA0KPiANCj4gSSdtIG5vdCBzdXJlLg0KPiANCj4gPiBkZXN0cm95LXJl
+Z2lvbiBhbmQgZGlzYWJsZS1yZWdpb24gYm90aCB1c2UgdGhlIHNhbWUgaGVscGVyIHRoYXQNCj4g
+PiBwZXJmb3JtcyB0aGUgbGliZGF4Y3RsIGNoZWNrcy4NCj4gPiANCj4gPiBjeGwtY3JlYXRlLXJl
+Z2lvbi5zaCBhbHJlYWR5IGhhcyBmbG93cyB0aGF0IGNyZWF0ZSBhIHJlZ2lvbiBhbmQgdGhlbg0K
+PiA+IGRlc3Ryb3kgaXQuIFRob3NlIHNob3VsZCBub3cgY292ZXIgdGhpcyBjYXNlIGFzIHdlbGwg
+eWVhaD8NCj4gDQo+IEkgdGhvdWdodCBpdCB3b3VsZCBoYXZlIGJ1dCBJIGRvbid0IHRoaW5rIGl0
+IGNvdmVycyB0aGUgY2FzZSB3aGVyZSB0aGUgZGF4DQo+IGRldmljZSBpcyBub3Qgc3lzdGVtIHJh
+bSAodGhlIGRlZmF1bHQgd2hlbiBjcmVhdGluZyBhIHJlZ2lvbikuDQoNCk9oLCB5b3UncmUgcmln
+aHQsIHRoZSBkZXZkYXggY2FzZSBpc24ndCBjb3ZlcmVkIGJ5IHRoZSBvdGhlciB0ZXN0LiBJJ2xs
+DQprZWVwIHRoaXMgdGhlbiwgdGhhbmtzIQ0KDQo=
