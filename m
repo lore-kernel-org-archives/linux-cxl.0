@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cnvMbQGu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZDZO8lZO"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225201712
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 14:59:01 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB57C1717
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 14:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701989941; x=1733525941;
+  t=1701989947; x=1733525947;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yUK7kxhoI3Dys7IlnkobSO5fMoeFOD14FMPV4Id/eNg=;
-  b=cnvMbQGuZhlnVoniACs/bXK4k0b94N8KVRAhGpxyjvRQEYmH9wuBNtDU
-   fb6qGrS8VPwg6gGZwQdfrmw4eWoc1eZw+IpAWa7eiMHqzvjH2o6lsLaVu
-   Eejgh2CqCFyjxMrwaZto539HWNoHZm/QeKXXlvwCqNZ+hpY9hz2SP6B0M
-   i+yDCCLezioDFfmekxwtXU72+DiJKB7yPUuR+9S0tFe5308UPPMsdt3/N
-   iVSBhiNIIxSW2Ljyxbalm9waJETzBKI5Efm2qpLzKH2GgAXCb6BuSrUaf
-   CV5vUhvzBxcUAs4y20+LWb2dVgDJkBwWP+9j7GVg7oaxQ0ol7A7RU/TlI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1185190"
+  bh=L1h4pZsRE8cA79E372/T2af3oFi0A1U8DzZqm8MC8s8=;
+  b=ZDZO8lZORSp+fh9kdkTM9tt3TqYjmWv7bT8igVmw9HCVPQX/he3gmYm/
+   7coeCP6tzBJkvaXXZxRsVCXQ5HbFC0gZyYiJ6RURR/GioRrFlkaojrcGq
+   7JQMk8XubdeYYJBCBh8B6pYFGp8Ii+8RER/u+9yUKsxFgJpiVOOo65I9R
+   974sOkiDfjolc2Nc4Ou0jUs1HW0Ua8BbZ60yrHOQuxtOqHszT+FQAK4pO
+   fkSmw6myoL6gmADCuN+eoXSoObvHD2DI3X/LrSFangZzvYQMxwvyk99vc
+   rNeINJ5AUiWrTc6d7gRJAxX5gVoFcjZuq1IFQWsgqO296uUTSn+40MsBr
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1185201"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="1185190"
+   d="scan'208";a="1185201"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:01 -0800
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:07 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="842380353"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="842380397"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="842380353"
+   d="scan'208";a="842380397"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.168.225])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:00 -0800
-Subject: [PATCH v13 06/19] acpi: numa: Add setting of generic port system
- locality attributes
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:05 -0800
+Subject: [PATCH v13 07/19] acpi: numa: Add helper function to retrieve the
+ performance attributes
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 07 Dec 2023 15:58:59 -0700
-Message-ID: <170198993962.3522351.12813244732508169089.stgit@djiang5-mobl3>
+Date: Thu, 07 Dec 2023 15:59:05 -0700
+Message-ID: <170198994550.3522351.13570207300664576122.stgit@djiang5-mobl3>
 In-Reply-To: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 References: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -49,61 +49,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Add generic port support for the parsing of HMAT system locality sub-table.
-The attributes will be added to the third array member of the access
-coordinates in order to not mix with the existing memory attributes. It
-only provides the system locality attributes from initator to the
-generic port targets and is missing the rest of the data to the actual
-memory device.
-
-The complete attributes will be updated when a memory device is
-attached and the system locality information is calculated end to end.
+Add helper to retrieve the performance attributes based on the device
+handle.  The helper function is exported so the CXL driver can use that
+to acquire the performance data between the CPU and the CXL host bridge.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/numa/hmat.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/acpi/numa/hmat.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |   11 +++++++++++
+ 2 files changed, 51 insertions(+)
 
 diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 4cae2e84251a..70a6e775856d 100644
+index 70a6e775856d..31d146be4bf1 100644
 --- a/drivers/acpi/numa/hmat.c
 +++ b/drivers/acpi/numa/hmat.c
-@@ -61,6 +61,7 @@ struct target_cache {
- enum {
- 	NODE_ACCESS_CLASS_0 = 0,
- 	NODE_ACCESS_CLASS_1,
-+	NODE_ACCESS_CLASS_GENPORT_SINK,
- 	NODE_ACCESS_CLASS_MAX,
- };
- 
-@@ -327,10 +328,13 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
- {
- 	struct memory_target *target = find_mem_target(tgt_pxm);
- 
-+	if (!target)
-+		return;
-+
- 	if (mem_hier != ACPI_HMAT_MEMORY)
- 		return;
- 
--	if (target && target->processor_pxm == init_pxm) {
-+	if (target->processor_pxm == init_pxm) {
- 		hmat_update_target_access(target, type, value,
- 					  NODE_ACCESS_CLASS_0);
- 		/* If the node has a CPU, update access 1 */
-@@ -338,6 +342,11 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
- 			hmat_update_target_access(target, type, value,
- 						  NODE_ACCESS_CLASS_1);
- 	}
-+
-+	/* Update access from generic port target */
-+	if (init_pxm == 0 && *(u16 *)target->gen_port_device_handle)
-+		hmat_update_target_access(target, type, value,
-+					  NODE_ACCESS_CLASS_GENPORT_SINK);
+@@ -108,6 +108,46 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+ 	return NULL;
  }
  
- static __init int hmat_parse_locality(union acpi_subtable_headers *header,
++static struct memory_target *acpi_find_genport_target(u32 uid)
++{
++	struct memory_target *target;
++	u32 target_uid;
++	u8 *uid_ptr;
++
++	list_for_each_entry(target, &targets, node) {
++		uid_ptr = target->gen_port_device_handle + 8;
++		target_uid = *(u32 *)uid_ptr;
++		if (uid == target_uid)
++			return target;
++	}
++
++	return NULL;
++}
++
++/**
++ * acpi_get_genport_coordinates - Retrieve the access coordinates for a generic port
++ * @uid: ACPI unique id
++ * @coord: The access coordinates written back out for the generic port
++ *
++ * Return: 0 on success. Errno on failure.
++ *
++ * Only supports device handles that are ACPI. Assume ACPI0016 HID for CXL.
++ */
++int acpi_get_genport_coordinates(u32 uid,
++				 struct access_coordinate *coord)
++{
++	struct memory_target *target;
++
++	target = acpi_find_genport_target(uid);
++	if (!target)
++		return -ENOENT;
++
++	*coord = target->coord[NODE_ACCESS_CLASS_GENPORT_SINK];
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(acpi_get_genport_coordinates, CXL);
++
+ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+ {
+ 	struct memory_initiator *initiator;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 4db54e928b36..8b0761c682f9 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -15,6 +15,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/property.h>
+ #include <linux/uuid.h>
++#include <linux/node.h>
+ 
+ struct irq_domain;
+ struct irq_domain_ops;
+@@ -424,6 +425,16 @@ extern int acpi_blacklisted(void);
+ extern void acpi_osi_setup(char *str);
+ extern bool acpi_osi_is_win8(void);
+ 
++#ifdef CONFIG_ACPI_HMAT
++int acpi_get_genport_coordinates(u32 uid, struct access_coordinate *coord);
++#else
++static inline int acpi_get_genport_coordinates(u32 uid,
++					       struct access_coordinate *coord)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++
+ #ifdef CONFIG_ACPI_NUMA
+ int acpi_map_pxm_to_node(int pxm);
+ int acpi_get_node(acpi_handle handle);
 
 
