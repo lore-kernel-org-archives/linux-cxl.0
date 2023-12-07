@@ -1,162 +1,105 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="RaG5N1QY"
-Received: from esa12.fujitsucc.c3s2.iphmx.com (esa12.fujitsucc.c3s2.iphmx.com [216.71.156.125])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B65B10C3
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 01:07:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1701940046; x=1733476046;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=frhWi2Rw2nndWunqSE85Xu0zZP6ryUG0yQ0vPiGlq2U=;
-  b=RaG5N1QYNlcXXOL6Dkpd1/J9423RfRQLiEBjDqYHXRyGpGN5zIRzlee2
-   piJEIQ5KU26xBs1Qj0/MYm1DOWZthZRoNNol8dbvo9/a/hn5cobdMa69y
-   E7Ew6/XU3pTFTVWy05MLxR57OQNkPvFkwbCPGcSPsqStNvnYPjTYYCEPq
-   ZQZaTdKyrz92JoriWvO+MQxjKEgAMGcUZMhGDOA/rOXL3W8mHgSFJ+QHp
-   nBDkWWYqopVeOhKGxilJFJC4U9PIeboZYMjoLdzt89ugTtQmoqH7QMtMA
-   uTe7CSJ7EJMqpl10iG7b2tt7Q3376rF/RtNxWeAjqpatijap3ui/rMvhE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="105144840"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695654000"; 
-   d="scan'208";a="105144840"
-Received: from mail-os0jpn01lp2104.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.104])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 18:07:06 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VThX4u+GY6MRaOU6TtrWkTAMv71PXXFPKz00o657DXaqnmBmtVONXkQRNvHGYYWU3dVuEKAHjC3fHOLupIoKHqyopI2nKpW5M4vCaRe04tbFXmpd5Uk/2FoBNngBL8xx+bGipbwL4m4mHmshkgoKBGHlsoRQYt4S8joa1FZJA4AdtfAtSa3ql8m2zVa5YXwi8tvmkjmffjAmM7LW2xhxTE2tdAHBzk3oNjvd/8DJe5CxOykWMO49F/PLgp4Gz+7c9LoqHlTRvaVWk0an2DlzN1g2AU9J/ChfRYl/zROS8coqW7YhBaVgnaaPPUuLPvnYCXcvYoy7BhjieCTG9vAX/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=frhWi2Rw2nndWunqSE85Xu0zZP6ryUG0yQ0vPiGlq2U=;
- b=nb2C1isFm6Tqq4R/Iyv2i5zyzZQmrbM+fDGyHn2XXL4xa34RpTz9QdO7e3TlLUiXxfZpEEQVGlJYn4MJ9/XOku1ovjl0gRaieHrS2XnXrS6psmMTt/XAdwCTD7apRp7Qb3BhuEzVeOQxufxCKiXoB+l0ACvLU7vfWAv0bM6U65ZZQpUctgsFyoD4SPnbmtyq/LtbAPqcBu3EoeazX/sMsizHgY0HCQDz/d1rS7CuGDalhIvAtda8Q2wAcNG8u/G94QdYJFW91tNsqjKvovO34IcH9CHUR/I81WkJ83y0V6+v+2Jr5Z8vEo1VIH+pEVvpXw1BJMwBYGJDNmKSPD3hzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OS0PR01MB5442.jpnprd01.prod.outlook.com (2603:1096:604:a6::10)
- by TYCPR01MB11510.jpnprd01.prod.outlook.com (2603:1096:400:37e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.11; Thu, 7 Dec
- 2023 09:07:03 +0000
-Received: from OS0PR01MB5442.jpnprd01.prod.outlook.com
- ([fe80::c96f:52b0:dd4e:8d50]) by OS0PR01MB5442.jpnprd01.prod.outlook.com
- ([fe80::c96f:52b0:dd4e:8d50%6]) with mapi id 15.20.7046.034; Thu, 7 Dec 2023
- 09:07:03 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Dan Williams <dan.j.williams@intel.com>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH 3/3] test/cxl-region-sysfs.sh: Fix
- cxl-region-sysfs.sh: line 107: [: missing `]'
-Thread-Topic: [ndctl PATCH 3/3] test/cxl-region-sysfs.sh: Fix
- cxl-region-sysfs.sh: line 107: [: missing `]'
-Thread-Index: AQHaHbUkHGDP6kg2bkaHk00k5icJ+rCc3YWAgADAjAA=
-Date: Thu, 7 Dec 2023 09:07:03 +0000
-Message-ID: <5d6c09b9-d041-4c6c-b338-f1b4657bfbe9@fujitsu.com>
-References: <20231123023058.2963551-1-lizhijian@fujitsu.com>
- <20231123023058.2963551-3-lizhijian@fujitsu.com>
- <6570e9b1524e8_45e0129469@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <6570e9b1524e8_45e0129469@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5442:EE_|TYCPR01MB11510:EE_
-x-ms-office365-filtering-correlation-id: da3e6a2f-3e53-4136-3806-08dbf703e115
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- hxVMD1EBkD3VLfmkK46fo4FB9+j5ES/YmPvxIiKRTccL14aiEFS1cq5KeB639P6taBrfPTtQ4wPFgUBM6e2K2U4Y8Au+QJ1DWu+ctE6YpUZw4A03/LDCH0+vDvhRn0wmD2/97KfovBBg3ocoA6Lsj5kCrYoxSdurzBtrmT1I9jr0GW6olCg6Ed/P/5j73RU15uMhy7HFdFPULoZkFJcu5hVlxrJ+1EspqcNLYj6e9wM/zYtrsP76A75jFfvmWXJFt53ZmBbqLAydpllGDHWrGvCO8JEpXuVNfGyC8dB2ln/60utvEwHdT0OO64LvF0PUHp0Klx77SaJCJ4kIxBoZOYb24dTHf5yv12Wfav93b6SP8OFBa8MtvBPsUcDHt6hjxAq9NzvptQZDGcQiFmKnwj4HFPtjYNFSqYdVOJryt0r8neHZ7ie0TnLKDKlvK8vmz7NTBlMN+g++ZdjwKseNPoBU0pNchur37wf/s754fPv6iaTR6cLS5XLSZxaoRVsBHPsIRsjnZyHcJbgmsXV0+hzqD6tV0FQ/TfXIxHnTGYy27yOg7bZAUc6Vwml6eEL/fQRaF2It7aoE+2YxCU+yLLdC0EkG6k3+CK0xbnnI8cNVZP1dZ4GHpwzXMJsqvrm/oBJnjvxxt1yaE8xFn/UOOFyhsTvsZZT/MegXYPQsm83fbm6FwAr2618dBpuh9t7aqd/4kADNYwCC+RgNxXJj16CwDCUHZbwLCOaeimHsV6MRfY26Rhlv6L3AdsftrNWr
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5442.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(136003)(376002)(39860400002)(230922051799003)(1590799021)(64100799003)(451199024)(1800799012)(186009)(1580799018)(110136005)(316002)(91956017)(66946007)(66556008)(76116006)(64756008)(66476007)(66446008)(6506007)(53546011)(6512007)(26005)(41300700001)(85182001)(71200400001)(36756003)(2616005)(478600001)(6486002)(38100700002)(122000001)(31696002)(86362001)(82960400001)(83380400001)(38070700009)(2906002)(31686004)(5660300002)(66899024)(4326008)(8676002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dUl5S1AxV09Cc3F1N21TZlR3L21mRVU5L2tpL2M3WDh4RzhwaXBkbXloMHF1?=
- =?utf-8?B?WjE1ZFUyOWNmdmxmMjNReHdweFJva2xLZklhQk5BTVdIdThrZHF3Vk1hNHVY?=
- =?utf-8?B?RENqV3BTS1VLSU5Ecjg5UUNkWFE3TTlIUU9PQjRXbzNhT3ZHNGRVOFdGUkR5?=
- =?utf-8?B?SHlxcWRCYU5OUEhBZDlKTjRsL0VEa0k5MEMvQ0wrVWN6dGZlbmhoSDlqazBH?=
- =?utf-8?B?cC9vbmZaNEJZREdrRUErN3lRVklhY1RTNWtNdWJaN3VaOC9tY20xZ1BoeEtF?=
- =?utf-8?B?ZmQyVzYyYUsxZkVYMzI2ai9xQzZPOHZqY3lIRWdrRGZ0Z21TZVpyV0M3aE5F?=
- =?utf-8?B?djNDTmU1OEZvVjBwcyt0ZDNnY011d0xKdGNWeVRCQk04akhUaHBjcEovTkRJ?=
- =?utf-8?B?WmZqOGtRN2JWWThBMk1uOVVZSnF4MEQ4Yjd0bTRRZUd0Z0Fna1RaL0FhbUlH?=
- =?utf-8?B?bTlyZXhXZHFtU0g3dFY1b3ZUWnIrbEoyYnA1dXV0Q3Z2QytBMkhFZkg5MU9v?=
- =?utf-8?B?bDE4UFlkei9ncGZiSVNkZXgySkFMZnMrTml3UG5lOURQTGdPSHlxUHBKUmV0?=
- =?utf-8?B?SmczS1BoWWYrVkFpUTd3SkdXcFJzR2dSendXbEt4bWFDYU1mbFBqNTJRSHNl?=
- =?utf-8?B?QnRsenhBdnFiU1l0UWdhaUNhREZkdmhDUDMweWhwYnpWdStvbGNkblZZcDZt?=
- =?utf-8?B?Q25OME55UE1pRDZRN0pRb2Z1VGcxenR5RWI2Q0NtY3N2OGhNU2VLa3U2dC8z?=
- =?utf-8?B?eG5IZ29XQzJlTnhpOUEreWxvSTZKdmZUemx5SVRPajYvSWp6c1RJc2R3Y0pX?=
- =?utf-8?B?YWh0R0JPK2V3Wm5TRUlhMGQyZ1c2dE5QTW43Ky9yWnRWcFhjNHR3TGk0UmpQ?=
- =?utf-8?B?OCtHbzlEWjhXOEJnYTdiSXMvcHQ5VVduRi9kMWNpVGVhbDhtV2JoL1NkaWpa?=
- =?utf-8?B?aWxORzdjbFF2RzVYTnM4WEtNaW45ZnZVdE4xNjhDaDlUSjIzMGtTcXFFcXZX?=
- =?utf-8?B?THpHeVE3bGo0NW82ajNCdEh2TFF3cy9oaENyL3FrZkVKVm15K2NOQXhLOXdC?=
- =?utf-8?B?azJLUndGejIyV1JwS2VzOHZoTDI1R0VhQmxMZVpOc0xCYzJCQVdNVVlWYVRu?=
- =?utf-8?B?MEI0Z2tIUmJ1eU5lQ3N6c0tYTlU4YXdHSERjQmtXd2IrMDhFZ2toU0ZWNDlY?=
- =?utf-8?B?eUMrUW92RVIvV2RYSk8zcjZyOTUzYTlscldmbklsbUJsTlpMVGpwU0hVcG55?=
- =?utf-8?B?SWkwd3E5NmRtMmJSb0FqSERCbDRTZ3ZBaTMzcENuRHo2T3FwU2p2aVIvczBO?=
- =?utf-8?B?RFJGT0EvZUhpQnBUSUk2SmFVMFh2dHE2bTh2YzlGdGlWSFNvbW5LWVNDUS9G?=
- =?utf-8?B?R1ovNFVJcWpMVDRkZEtEb1FPTGtCbVlyWUZkc2s5RDBnd2xBclBGYjF4Lzk2?=
- =?utf-8?B?MmIrQ3U2cDY1U1VQV2I3b240YmFpblI4RFFMTitKeGR2aDc1WlBMc1E4dysr?=
- =?utf-8?B?MVhvNVc3N2hZdm1HdVhObTRwNU5GbkZ2SzlJR2FhdmQ1YnlIU3NtNnQrbGhS?=
- =?utf-8?B?MTZKTUZkRUxCT0lkMnIrRmZqaHEwMEV0UmtRbVcrYi8vWm1MYXpGYU5oNm9Q?=
- =?utf-8?B?ay9QRDZ2VTE5UW9IQVJPblU3SjRHNDROSGgxdUtRemlZaU9WVHVROVJ6UWZv?=
- =?utf-8?B?clFkQ2ZMbXJtemJNVzdldXo2R2pEUmdzbTJNTjNJbzl3MnJvVVFGMDNoZUlM?=
- =?utf-8?B?T09Eek5XRncvbUxpcXpYbC9qWXQySCttN1UvYW03NDh2TlpRWHdwQ0FvWUV3?=
- =?utf-8?B?MDQwaFRLRVJTNHZCWCtPaUpDU3p1ckIzKzRLVm9TdjJxTk9oemU5WDNPSXVI?=
- =?utf-8?B?d2paRDM3YS9wRjUvOTVreGEwWjQ2L05SMnpWLzk3UWNHUWZDdk1GcVpXdUth?=
- =?utf-8?B?YkJlaDRoNlZqekxIbVdEcjBHdU9PcWxWOGxnenpjYUVlMFZkazJwaFdYZzlt?=
- =?utf-8?B?aEhjV2t4dmp3eG56SVVKRjlWcnRGUHRyMmZCY1BEWHJSNU5sY0ExdlBsSDhB?=
- =?utf-8?B?VDdTOXdta0pnQU9WMXd5NmFjc2tJMC9KY083U0hmN1FRTHU4ZzdvVWZlNndI?=
- =?utf-8?B?eGthU0gvbmxBdU1TVUI4NE1MTEh0SHgvamE4UnAvUElZdXVSWW0zVnE3bTQ3?=
- =?utf-8?B?bGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <32A2BD8C780AE84298A8F5CAB30C18EE@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btEsKlcj"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA0310CA;
+	Thu,  7 Dec 2023 07:40:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701963634; x=1733499634;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TRQrcR82gGZ4bilKmvDQp3/BMwMwwJ+qVGy8M9ph6/E=;
+  b=btEsKlcj26vYmtsfZKYndZz0lSA8Cd/hgmpzT0edfW8AO13mAHiw+tvK
+   W3gdWMFZw+FaRzqDKSugL0M6VC+NINjpl82ppV+xAT6ILsjVFMKXgqBxN
+   7G2u44io82pWUvqPozyaYRIatkp6DQQX5nzD6n4NlbAPjU6YuQ+AlRPE3
+   oVKDgKTgQnXv/SwRE63sZxBPZVT/yO8vVnoxPZDUOo78AeJMvTwF9gqcy
+   /Psz6czL/VdNHDz7+Kj31Vb86AlH0qVH7IlYMWlHNFY2AcNI7aaIQe+Fq
+   lK8uMzYLdTK7l4Kcolg3QGVmkrAzSyGfTUrosLVMeqYo3dtUN/pV+D+7+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="393121337"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="393121337"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 07:40:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="771770862"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="771770862"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 07 Dec 2023 07:40:31 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rBGUH-000CQw-1t;
+	Thu, 07 Dec 2023 15:40:29 +0000
+Date: Thu, 7 Dec 2023 23:40:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, stable@vger.kernel.org,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH] cxl/hdm: Fix dpa translation locking
+Message-ID: <202312072350.QQTkSsY7-lkp@intel.com>
+References: <170192142664.461900.3169528633970716889.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	s80x4kKBYOicbePDgaLE7XPBXrMzokogkl8u4GFB+gvJiFWjs3KE/EFJ5LCwV3pniSHkyogugDalz+sd3FC4IXnKXLRzaR79PCxh0Hmt+HVRuRAQ70tBw4m/O9rD3WP33+BRjJ2Y6/EM84U4U6dZHaT1hUzG+M7iM2zYTmjyX9miVFVIy4qcA9I5RLJk4D1hzRkRVeeCr7rhTL6NgU5+JZXR2oaziWmp890dhhxHVkF8KsKlbdp5xJiFwWqWuePGPvjlNzSn/wnMvahwVdlGxaPa6WlrGn9hXg5hlwM1zEDIK9y4NhYAO597yRhg0PqfbFTr0eEJ/8zmqQMWAiJKUmrKjPzGG7UBf7xYwWF5g1TSMNeidwlCl4DGcNkzWUo1Hg9qtqHZgIJYcRoYT72ASyXKI2oiRmXoxTxZRG2PlVMIBRKLSGweKTk2z4fWnt5lyjezKwfUI/cSzyg1A+y8rhdKNMxQnivM8pvihYHMTuk5lBhXKR8zDBnKGsjufo771H07+KdCa2nJS64QqFnEAKWNR6RZC3st5vFD/0XfksXyCVU8G/7/Xr/BUHZ7ooGe0PnHxw5VNH9P0VqoQtsFVRyIMKp2e2IBI3LeRg6A9I2OI0PCDZkM7HN4dAgfq/RF
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5442.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da3e6a2f-3e53-4136-3806-08dbf703e115
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Dec 2023 09:07:03.5741
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g+rB8rvBg4p+Q/u3gzyfVIwVY0r3hcSdaJDmBnbaMqUqdyd1IPjjhMQjTnizbp2Of/vc64fq0AIAfdSlOV52jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11510
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170192142664.461900.3169528633970716889.stgit@dwillia2-xfh.jf.intel.com>
 
-DQoNCk9uIDA3LzEyLzIwMjMgMDU6MzcsIERhbiBXaWxsaWFtcyB3cm90ZToNCj4gTGkgWmhpamlh
-biB3cm90ZToNCj4+IFNpZ25lZC1vZmYtYnk6IExpIFpoaWppYW4gPGxpemhpamlhbkBmdWppdHN1
-LmNvbT4NCj4gDQo+IFBsZWFzZSBubyBwYXRjaGVzIHdpdGggZW1wdHkgY2hhbmdlbG9ncy4gQ29t
-bWVudGFyeSBvbiB0aGUgaW1wYWN0IG9mIHRoZQ0KPiBjaGFuZ2UgaXMgYWx3YXlzIHdlbGNvbWUu
-DQo+IA0KPiBPdGhlcndpc2UgY2hhbmdlIGxvb2tzIGdvb2QgdG8gbWUsIGFuZCBJIHdvbmRlciB3
-aHkgdGhpcyBlcnJvciBpcyBvbmx5DQo+IHRyaWdnZXJpbmcgbm93Pw0KDQoNCkkgaGF2ZSB0byBz
-YXkgY3VycmVudCBjb25kaXRpb24gY2hlY2tpbmcgMSkgZWFzaWx5IGhpZGVzICpCVUcqDQoxKSBb
-IGEgLW5lIGIgXSAmJiBlY2hvIE5HDQoNCkluc3RlYWQsIDIpIGFzIGJlbG93IGFyZSBtb3JlIHJl
-bGlhYmxlLg0KMikgWyBhIC1lcSBiIF0gfHwgZWNobyBORw0KDQoNCg0KPiANCj4gQWNrZWQtYnk6
-IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0KPiANCj4+IC0tLQ0KPj4g
-ICB0ZXN0L2N4bC1yZWdpb24tc3lzZnMuc2ggfCAyICstDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS90ZXN0L2N4
-bC1yZWdpb24tc3lzZnMuc2ggYi90ZXN0L2N4bC1yZWdpb24tc3lzZnMuc2gNCj4+IGluZGV4IDg5
-ZjIxYTMuLjM4NzgzNTEgMTAwNjQ0DQo+PiAtLS0gYS90ZXN0L2N4bC1yZWdpb24tc3lzZnMuc2gN
-Cj4+ICsrKyBiL3Rlc3QvY3hsLXJlZ2lvbi1zeXNmcy5zaA0KPj4gQEAgLTEwNCw3ICsxMDQsNyBA
-QCBkbw0KPj4gICAJaXc9JChjYXQgL3N5cy9idXMvY3hsL2RldmljZXMvJGkvaW50ZXJsZWF2ZV93
-YXlzKQ0KPj4gICAJaWc9JChjYXQgL3N5cy9idXMvY3hsL2RldmljZXMvJGkvaW50ZXJsZWF2ZV9n
-cmFudWxhcml0eSkNCj4+ICAgCVsgJGl3IC1uZSAkbnJfdGFyZ2V0cyBdICYmIGVyciAiJExJTkVO
-TzogZGVjb2RlcjogJGkgaXc6ICRpdyB0YXJnZXRzOiAkbnJfdGFyZ2V0cyINCj4+IC0JWyAkaWcg
-LW5lICRyX2lnXSAmJiBlcnIgIiRMSU5FTk86IGRlY29kZXI6ICRpIGlnOiAkaWcgcm9vdCBpZzog
-JHJfaWciDQo+PiArCVsgJGlnIC1uZSAkcl9pZyBdICYmIGVyciAiJExJTkVOTzogZGVjb2Rlcjog
-JGkgaWc6ICRpZyByb290IGlnOiAkcl9pZyINCj4+ICAgDQo+PiAgIAlzej0kKGNhdCAvc3lzL2J1
-cy9jeGwvZGV2aWNlcy8kaS9zaXplKQ0KPj4gICAJcmVzPSQoY2F0IC9zeXMvYnVzL2N4bC9kZXZp
-Y2VzLyRpL3N0YXJ0KQ0KPj4gLS0gDQo+PiAyLjQxLjANCj4+DQo+Pg0KPiANCj4g
+Hi Dan,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.7-rc4 next-20231207]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/cxl-hdm-Fix-dpa-translation-locking/20231207-115958
+base:   linus/master
+patch link:    https://lore.kernel.org/r/170192142664.461900.3169528633970716889.stgit%40dwillia2-xfh.jf.intel.com
+patch subject: [PATCH] cxl/hdm: Fix dpa translation locking
+config: i386-buildonly-randconfig-003-20231207 (https://download.01.org/0day-ci/archive/20231207/202312072350.QQTkSsY7-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231207/202312072350.QQTkSsY7-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312072350.QQTkSsY7-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/cxl/core/port.c: In function 'dpa_resource_show':
+>> drivers/cxl/core/port.c:231:37: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 3 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
+     231 |         return sysfs_emit(buf, "%#llx\n", cxl_dpa_resource_start(cxled));
+         |                                 ~~~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                     |     |
+         |                                     |     resource_size_t {aka unsigned int}
+         |                                     long long unsigned int
+         |                                 %#x
+
+
+vim +231 drivers/cxl/core/port.c
+
+   224	
+   225	static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *attr,
+   226				    char *buf)
+   227	{
+   228		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
+   229	
+   230		guard(rwsem_read)(&cxl_dpa_rwsem);
+ > 231		return sysfs_emit(buf, "%#llx\n", cxl_dpa_resource_start(cxled));
+   232	}
+   233	static DEVICE_ATTR_RO(dpa_resource);
+   234	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
