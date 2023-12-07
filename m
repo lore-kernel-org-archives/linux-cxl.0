@@ -1,41 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HV2Lko5B"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A532310EF
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 15:00:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MGjrKU0Z"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1870210EF
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 15:00:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701990012; x=1733526012;
+  t=1701990017; x=1733526017;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UCLXLaihvbAMDPvZfDF9fJM9C9wXN4gxx3IDPc/Np/4=;
-  b=HV2Lko5BO63E8u/bEtBm+Ewprj5UR0xH6s7pLnzFPBHD9+rECK/D0+eT
-   aCqj+/l19BQhy8AuUSGEiu7J//ILWEG2u1yPGoPEeFTujJBZxbpEc4+ZG
-   IXwHeQVu0EMbl3cXIbFQ5trxt2w9lPT5h/HlseMr3Wx8zSMYef5ir2vOf
-   bmanOIAtVyGvlDmT1vPeHhIrqfu1nnUxCEnC0LLlBai3XQlfQJe2Sdca+
-   +b9M975BdPuvkZwTKRsHMNQcfjIGC7RQ+1pQzTr2W7amNV6D7xHmbKw9d
-   KVxMociah4eX1P68mhe5ghq9lGY659Gj9MINL1ml2LSX1irS3HWUu6vnr
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397107827"
+  bh=NYGm8lBjQI9s1jYhIh7tEfpPU+26uIBuXLyoiN1ArqM=;
+  b=MGjrKU0ZSImMreLYt63uH9XFIDmrB2IlEcVc4r/oIWZLwMcTwKKvIY1M
+   RFAXzEGiNo34HQejDiFGxIR3m9GHzjeDygh9qCrLxTCQB+TF68noGrYfO
+   4pSO7DdWfNU66EHx4UOb8Swj3x3UeQp33Gtz1S7Y5RRV8MTuwnssznqcK
+   aEPGRPssSTy/XnZfBxyac7NixGe41+LtkYXPJFD3A4M3ouLtjbZRX4S1a
+   CF8R0qLphql1nHR3wIFkHQbtw0QEg/+CsmhEoBdlWvCXFA5uGI0H0/dy8
+   Nu1hvKzeUn84w/ugTEgThrTZZhvtVA+SFJjoG0dKpDfqpxwUv4TjiOFDT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="7679131"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="397107827"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 15:00:12 -0800
+   d="scan'208";a="7679131"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 15:00:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="895313112"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="945216858"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="895313112"
+   d="scan'208";a="945216858"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.168.225])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 15:00:09 -0800
-Subject: [PATCH v13 17/19] cxl: Store QTG IDs and related info to the CXL
- memory device context
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 15:00:15 -0800
+Subject: [PATCH v13 18/19] cxl: Export sysfs attributes for memory device QoS
+ class
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 07 Dec 2023 16:00:07 -0700
-Message-ID: <170199000744.3522351.15387313851314896921.stgit@djiang5-mobl3>
+Date: Thu, 07 Dec 2023 16:00:15 -0700
+Message-ID: <170199001526.3522351.8920834924472437407.stgit@djiang5-mobl3>
 In-Reply-To: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 References: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -48,162 +49,156 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
-the return package. Create a list of entries in the cxl_memdev context and
-store the QTG ID as qos_class token and the associated DPA range. This
-information can be exposed to user space via sysfs in order to help region
-setup for hot-plugged CXL memory devices.
+Export qos_class sysfs attributes for the CXL memory device. The QoS clas
+should show up as /sys/bus/cxl/devices/memX/ram/qos_class for the volatile
+partition and /sys/bus/cxl/devices/memX/pmem/qos_class for the persistent
+partition. The QTG ID is retrieved via _DSM after supplying the
+calculated bandwidth and latency for the entire CXL path from device to
+the CPU. This ID is used to match up to the root decoder QoS class to
+determine which CFMWS the memory range of a hotplugged CXL mem device
+should be assigned under.
 
+While there may be multiple DSMAS exported by the device CDAT, the driver
+will only expose the first QTG ID per partition in sysfs for now. In the
+future when multiple QTG IDs are necessary, they can be exposed. [1]
+
+[1]: https://lore.kernel.org/linux-cxl/167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local/T/#md2a47b1ead3e1ba08f50eab29a4af1aed1d215ab
+
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v13:
-- convert to use dsmas_xa (Dan)
----
- drivers/cxl/core/mbox.c |    3 +++
- drivers/cxl/cxlmem.h    |   23 +++++++++++++++++++++
- drivers/cxl/port.c      |   51 ++++++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 72 insertions(+), 5 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-cxl |   34 +++++++++++++++++++++++
+ drivers/cxl/core/memdev.c               |   46 +++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 36270dcfb42e..f4de0275f9dc 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1404,6 +1404,9 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->cxlds.reg_map.host = dev;
- 	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
- 	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
-+	INIT_LIST_HEAD(&mds->unmatched_perf_list);
-+	INIT_LIST_HEAD(&mds->ram_perf_list);
-+	INIT_LIST_HEAD(&mds->pmem_perf_list);
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index e76c3600607f..fff2581b8033 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -28,6 +28,23 @@ Description:
+ 		Payload in the CXL-2.0 specification.
  
- 	return mds;
- }
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index a2fcbca253f3..975fe3b03564 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -6,6 +6,7 @@
- #include <linux/cdev.h>
- #include <linux/uuid.h>
- #include <linux/rcuwait.h>
-+#include <linux/node.h>
- #include "cxl.h"
  
- /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-@@ -391,6 +392,20 @@ enum cxl_devtype {
- 	CXL_DEVTYPE_CLASSMEM,
- };
- 
-+/**
-+ * struct perf_prop - performance property entry
-+ * @list - list entry
-+ * @dpa_range - range for DPA address
-+ * @coord - QoS performance data (i.e. latency, bandwidth)
-+ * @qos_class - QoS Class cookies
-+ */
-+struct perf_prop_entry {
-+	struct list_head list;
-+	struct range dpa_range;
-+	struct access_coordinate coord;
-+	int qos_class;
-+};
++What:		/sys/bus/cxl/devices/memX/ram/qos_class
++Date:		May, 2023
++KernelVersion:	v6.8
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) For CXL host platforms that support "QoS Telemmetry"
++		this attribute conveys a comma delimited list of platform
++		specific cookies that identifies a QoS performance class
++		for the volatile partition of the CXL mem device. These
++		class-ids can be compared against a similar "qos_class"
++		published for a root decoder. While it is not required
++		that the endpoints map their local memory-class to a
++		matching platform class, mismatches are not recommended
++		and there are platform specific performance related
++		side-effects that may result. First class-id is displayed.
 +
- /**
-  * struct cxl_dev_state - The driver device state
-  *
-@@ -455,6 +470,9 @@ struct cxl_dev_state {
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-+ * @ram_perf_list: performance data entries matched to RAM
-+ * @pmem_qos_class: performance data entries matched to PMEM
-+ * @unmatched_perf_list: unmatched performance data entries list
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -475,6 +493,11 @@ struct cxl_memdev_state {
- 	u64 active_persistent_bytes;
- 	u64 next_volatile_bytes;
- 	u64 next_persistent_bytes;
 +
-+	struct list_head ram_perf_list;
-+	struct list_head pmem_perf_list;
-+	struct list_head unmatched_perf_list;
-+
- 	struct cxl_event_state event;
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 1a059d48154f..2e22d0c1f494 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -106,6 +106,42 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
- 	return 0;
- }
+ What:		/sys/bus/cxl/devices/memX/pmem/size
+ Date:		December, 2020
+ KernelVersion:	v5.12
+@@ -38,6 +55,23 @@ Description:
+ 		Payload in the CXL-2.0 specification.
  
-+static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-+				     struct xarray *dsmas_xa)
+ 
++What:		/sys/bus/cxl/devices/memX/pmem/qos_class
++Date:		May, 2023
++KernelVersion:	v6.8
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) For CXL host platforms that support "QoS Telemmetry"
++		this attribute conveys a comma delimited list of platform
++		specific cookies that identifies a QoS performance class
++		for the persistent partition of the CXL mem device. These
++		class-ids can be compared against a similar "qos_class"
++		published for a root decoder. While it is not required
++		that the endpoints map their local memory-class to a
++		matching platform class, mismatches are not recommended
++		and there are platform specific performance related
++		side-effects that may result. First class-id is displayed.
++
++
+ What:		/sys/bus/cxl/devices/memX/serial
+ Date:		January, 2022
+ KernelVersion:	v5.18
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index fc5c2b414793..4aed94c9f547 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -88,6 +88,28 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+ static struct device_attribute dev_attr_ram_size =
+ 	__ATTR(size, 0444, ram_size_show, NULL);
+ 
++static ssize_t ram_qos_class_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
 +{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
 +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct range pmem_range = {
-+		.start = cxlds->pmem_res.start,
-+		.end = cxlds->pmem_res.end,
-+	};
-+	struct range ram_range = {
-+		.start = cxlds->ram_res.start,
-+		.end = cxlds->ram_res.end,
-+	};
 +	struct perf_prop_entry *perf;
-+	struct dsmas_entry *dent;
-+	unsigned long index;
 +
-+	xa_for_each(dsmas_xa, index, dent) {
-+		perf = devm_kzalloc(cxlds->dev, sizeof(*perf), GFP_KERNEL);
-+		if (!perf)
-+			return;
++	if (!dev->driver)
++		return -ENOENT;
 +
-+		perf->dpa_range = dent->dpa_range;
-+		perf->coord = dent->coord;
-+		perf->qos_class = dent->qos_class;
++	if (list_empty(&mds->ram_perf_list))
++		return -ENOENT;
 +
-+		if (resource_size(&cxlds->ram_res) &&
-+		    range_contains(&ram_range, &dent->dpa_range))
-+			list_add_tail(&perf->list, &mds->ram_perf_list);
-+		else if (resource_size(&cxlds->pmem_res) &&
-+			 range_contains(&pmem_range, &dent->dpa_range))
-+			list_add_tail(&perf->list, &mds->pmem_perf_list);
-+		else
-+			list_add_tail(&perf->list, &mds->unmatched_perf_list);
-+	}
++	perf = list_first_entry(&mds->ram_perf_list, struct perf_prop_entry, list);
++
++	return sysfs_emit(buf, "%d\n", perf->qos_class);
 +}
 +
- static int cxl_switch_port_probe(struct cxl_port *port)
- {
- 	struct cxl_hdm *cxlhdm;
-@@ -197,13 +233,18 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		rc = cxl_cdat_endpoint_process(port, &dsmas_xa);
- 		if (rc < 0) {
- 			dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
--		} else {
--			rc = cxl_port_perf_data_calculate(port, &dsmas_xa);
--			if (rc)
--				dev_dbg(&port->dev,
--					"Failed to do perf coord calculations.\n");
-+			goto out;
-+		}
++static struct device_attribute dev_attr_ram_qos_class =
++	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
 +
-+		rc = cxl_port_perf_data_calculate(port, &dsmas_xa);
-+		if (rc) {
-+			dev_dbg(&port->dev,
-+				"Failed to do perf coord calculations.\n");
-+			goto out;
- 		}
+ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ 			      char *buf)
+ {
+@@ -101,6 +123,28 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ static struct device_attribute dev_attr_pmem_size =
+ 	__ATTR(size, 0444, pmem_size_show, NULL);
  
-+		cxl_memdev_set_qos_class(cxlds, &dsmas_xa);
-+out:
- 		cxl_cdat_dsmas_xa_destroy(&dsmas_xa);
- 	}
++static ssize_t pmem_qos_class_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct perf_prop_entry *perf;
++
++	if (!dev->driver)
++		return -ENOENT;
++
++	if (list_empty(&mds->pmem_perf_list))
++		return -ENOENT;
++
++	perf = list_first_entry(&mds->pmem_perf_list, struct perf_prop_entry, list);
++
++	return sysfs_emit(buf, "%d\n", perf->qos_class);
++}
++
++static struct device_attribute dev_attr_pmem_qos_class =
++	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
++
+ static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+ {
+@@ -428,11 +472,13 @@ static struct attribute *cxl_memdev_attributes[] = {
+ 
+ static struct attribute *cxl_memdev_pmem_attributes[] = {
+ 	&dev_attr_pmem_size.attr,
++	&dev_attr_pmem_qos_class.attr,
+ 	NULL,
+ };
+ 
+ static struct attribute *cxl_memdev_ram_attributes[] = {
+ 	&dev_attr_ram_size.attr,
++	&dev_attr_ram_qos_class.attr,
+ 	NULL,
+ };
  
 
 
