@@ -1,41 +1,41 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3w04Sgd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eEgniwqt"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0E8D5B
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 14:59:58 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6D310EF
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 14:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701989998; x=1733525998;
+  t=1701989999; x=1733525999;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7nuH4omvvsYXw7JaehmplD23BXLqgtq3Hsf4NhQ65W4=;
-  b=Q3w04Sgd7GsTTWjKgL962mi5vZEHh7iEII2NpNZ9dpKu1nbvea4hmufY
-   6BHLKG+wl+ButjRMnrQoSBmaqMcF+V/0zFVEs+ejpBGjXm9sQ6YxsXzqN
-   B3lLzWHk0c/o0KqhWhnxwsnT3YfIFKu/0OH9FljOstqD1GBjoW+H1utx0
-   YRfPUj0gt6m410h5+T/ZBX9oiG5AwXCXkpydTINw0VDjDDjoNRgPR+/Wz
-   dM80fsD4LKH3mqCGqvmyOTkV5LE2z7KGXaJlwL1rJjuI6zRN67nEReZUW
-   B+3Kzmmrp1CmNnaoljZEIkSTOvPa0RT/e7wqyaeBigFDL7df5PvPqzUzG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397107796"
+  bh=gbn963V0stoaIsWkf0jKIjG8QUw0TRTJ4hCw/mZaFD8=;
+  b=eEgniwqtSrbLQO/gcD/GXxtDPWJcII2y1UR0ZgInu/h7ywMh/dxJFA3u
+   uHPRYGYYv89eYCdpU59OldTMvxQQTpSNPPBZmVZAu8mY+Q1Lu+Kwr1UFS
+   L5RIA6St1ZfJNaWcmquZZ57uvRj+38ifwb5v6AxRe4jXlnHk8uvsLbLGA
+   VAx7DStvRJhNWmeNAWL4xY/SpmIZEpYyOm0XkomjbJ7hEk8oTaEMJ6ujT
+   37Iade7tDvesjFHCubtbTf62Qc05gQSCGZJq8Dp6aRdC9x9O+U5PL7sVa
+   /ZnhccdDPjHDKMa/N+ibVngOG1ZIZwun7fsgMnao7uKD9zT81NzMCH8Uj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397107801"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="397107796"
+   d="scan'208";a="397107801"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:49 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="895312825"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="895312888"
 X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="895312825"
+   d="scan'208";a="895312888"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.168.225])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:48 -0800
-Subject: [PATCH v13 14/19] cxl: Store the access coordinates for the generic
- ports
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 14:59:55 -0800
+Subject: [PATCH v13 15/19] cxl: Add helper function that calculate performance
+ data for downstream ports
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 07 Dec 2023 15:59:47 -0700
-Message-ID: <170198998791.3522351.9593377199566058103.stgit@djiang5-mobl3>
+Date: Thu, 07 Dec 2023 15:59:54 -0700
+Message-ID: <170198999460.3522351.3292955606506384639.stgit@djiang5-mobl3>
 In-Reply-To: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 References: <170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -48,87 +48,127 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Each CXL host bridge is represented by an ACPI0016 device. A generic port
-device handle that is an ACPI device is represented by a string of
-ACPI0016 device HID and UID. Create a device handle from the ACPI device
-and retrieve the access coordinates from the stored memory targets. The
-access coordinates are stored under the cxl_dport that is associated with
-the CXL host bridge.
-
-The access coordinates struct is dynamically allocated under cxl_dport in
-order for code later on to detect whether the data exists or not.
+The CDAT information from the switch, Switch Scoped Latency and Bandwidth
+Information Structure (SSLBIS), is parsed and stored under a cxl_dport
+based on the correlated downstream port id from the SSLBIS entry. Walk
+the entire CXL port paths and collect all the performance data. Also
+pick up the link latency number that's stored under the dports. The
+entire path PCIe bandwidth can be retrieved using the
+pcie_bandwidth_available() call.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/acpi.c |   25 +++++++++++++++++++++++++
- drivers/cxl/cxl.h  |    2 ++
- 2 files changed, 27 insertions(+)
+ drivers/cxl/core/port.c |   75 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |    3 ++
+ 2 files changed, 78 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index ba30b405d260..948b1e7eb8f7 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -513,8 +513,29 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
- 	return 0;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 9829f95ed77e..fd636c9e731b 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -9,6 +9,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/idr.h>
++#include <linux/node.h>
+ #include <cxlmem.h>
+ #include <cxlpci.h>
+ #include <cxl.h>
+@@ -2096,6 +2097,80 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
  }
+ EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
  
-+static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
++static void combine_coordinates(struct access_coordinate *c1,
++				struct access_coordinate *c2)
 +{
-+	struct acpi_device *hb = to_cxl_host_bridge(NULL, dev);
-+	u32 uid;
-+	int rc;
++		if (c2->write_bandwidth)
++			c1->write_bandwidth = min(c1->write_bandwidth,
++						  c2->write_bandwidth);
++		c1->write_latency += c2->write_latency;
 +
-+	if (kstrtou32(acpi_device_uid(hb), 0, &uid))
++		if (c2->read_bandwidth)
++			c1->read_bandwidth = min(c1->read_bandwidth,
++						 c2->read_bandwidth);
++		c1->read_latency += c2->read_latency;
++}
++
++/**
++ * cxl_endpoint_get_perf_coordinates - Retrieve performance numbers stored in dports
++ *				   of CXL path
++ * @port: endpoint cxl_port
++ * @coord: output performance data
++ *
++ * Return: errno on failure, 0 on success.
++ */
++int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
++				      struct access_coordinate *coord)
++{
++	struct access_coordinate c = {
++		.read_bandwidth = UINT_MAX,
++		.write_bandwidth = UINT_MAX,
++	};
++	struct cxl_port *iter = port;
++	struct cxl_dport *dport;
++	struct pci_dev *pdev;
++	unsigned int bw;
++
++	if (!is_cxl_endpoint(port))
 +		return -EINVAL;
 +
-+	rc = acpi_get_genport_coordinates(uid, &dport->hb_coord);
-+	if (rc < 0)
-+		return rc;
++	dport = iter->parent_dport;
 +
-+	/* Adjust back to picoseconds from nanoseconds */
-+	dport->hb_coord.read_latency *= 1000;
-+	dport->hb_coord.write_latency *= 1000;
++	/*
++	 * Exit the loop when the parent port of the current port is cxl root.
++	 * The iterative loop starts at the endpoint and gathers the
++	 * latency of the CXL link from the current iter to the next downstream
++	 * port each iteration. If the parent is cxl root then there is
++	 * nothing to gather.
++	 */
++	while (iter && !is_cxl_root(to_cxl_port(iter->dev.parent))) {
++		combine_coordinates(&c, &dport->sw_coord);
++		c.write_latency += dport->link_latency;
++		c.read_latency += dport->link_latency;
++
++		iter = to_cxl_port(iter->dev.parent);
++		dport = iter->parent_dport;
++	}
++
++	/* Augment with the generic port (host bridge) perf data */
++	combine_coordinates(&c, &dport->hb_coord);
++
++	/* Get the calculated PCI paths bandwidth */
++	pdev = to_pci_dev(port->uport_dev->parent);
++	bw = pcie_bandwidth_available(pdev, NULL, NULL, NULL);
++	if (bw == 0)
++		return -ENXIO;
++	bw /= BITS_PER_BYTE;
++
++	c.write_bandwidth = min(c.write_bandwidth, bw);
++	c.read_bandwidth = min(c.read_bandwidth, bw);
++
++	*coord = c;
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
 +
- static int add_host_bridge_dport(struct device *match, void *arg)
+ /* for user tooling to ensure port disable work has completed */
+ static ssize_t flush_store(const struct bus_type *bus, const char *buf, size_t count)
  {
-+	int ret;
- 	acpi_status rc;
- 	struct device *bridge;
- 	struct cxl_dport *dport;
-@@ -564,6 +585,10 @@ static int add_host_bridge_dport(struct device *match, void *arg)
- 	if (IS_ERR(dport))
- 		return PTR_ERR(dport);
- 
-+	ret = get_genport_coordinates(match, dport);
-+	if (ret)
-+		dev_dbg(match, "Failed to get generic port perf coordinates.\n");
-+
- 	return 0;
- }
- 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1abfc7035311..e4995cfa6822 100644
+index e4995cfa6822..dbf2a1e601bf 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -661,6 +661,7 @@ struct cxl_rcrb_info {
-  * @port: reference to cxl_port that contains this downstream port
-  * @regs: Dport parsed register blocks
-  * @sw_coord: access coordinates (performance) for switch from CDAT
-+ * @hb_coord: access coordinates (performance) from ACPI generic port (host bridge)
-  * @link_latency: calculated PCIe downstream latency
-  */
- struct cxl_dport {
-@@ -672,6 +673,7 @@ struct cxl_dport {
- 	struct cxl_port *port;
- 	struct cxl_regs regs;
- 	struct access_coordinate sw_coord;
-+	struct access_coordinate hb_coord;
- 	long link_latency;
- };
+@@ -884,6 +884,9 @@ int cxl_cdat_endpoint_process(struct cxl_port *port, struct xarray *dsmas_xa);
+ void cxl_cdat_dsmas_xa_destroy(struct xarray *dsmas_xa);
+ int cxl_cdat_switch_process(struct cxl_port *port);
  
++int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
++				      struct access_coordinate *coord);
++
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+  * of these symbols in tools/testing/cxl/.
 
 
