@@ -1,230 +1,246 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJIBpjh+"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF87110;
-	Wed,  6 Dec 2023 20:36:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i5Ox7JOE"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B84E9
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Dec 2023 20:39:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701923779; x=1733459779;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=j9znkpM/52KvUGuun0RJffYF/wG7fdqoc+th2+hzW9E=;
-  b=QJIBpjh+RtTg0bA6uFsoi5Po5zb5zWXRNb9ERW4Gf0awkZd3iXLh8ilO
-   SG1yr+3cZRTRg+r3SkHW/mWVdEbva8x8fBolSENa+efD5Wkr1zF7Nhk41
-   i4KHWf0qAIjDaWd62NtIm2L2f7XB5LP+FfmHGA0s3RwBP9aJK0sP8Tdyl
-   pJpMErX+TBwPQ78VX1U6l9dmNG8aHDgT6DDDPViCPfKeNqaXAyb9p/rdM
-   FSjPKPxqwh3inagFUtcFKPaOqO5ZHhOaVMslWINihSuEgpd4vghFh1aNC
-   gxxcIsys94rrMNQiPVG6yHkmpVp2HoAY2amGP2br5UEc8LptKWRSDed2m
+  t=1701923954; x=1733459954;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=tZejcXIcbxEzvt0BDwWvvcuzmzAtMi3OohKlBpurB6I=;
+  b=i5Ox7JOEUJy29Fu8MuE0gI4ftKAoL+s9683RJKbirBILu+3wD8iPDplG
+   x0yB5f0aQQEQsOcoz77sh5W0PjaqrdU6C/JIr7w5zhZxSoDrvd25uKuS3
+   qDI87rYqy0V2X0NA6agPMbI1UJoG9ebNQ6klp62UOxS63wvnb/h/DRAtG
+   5BYSICeooSl1IU+DsA1rgK7UDrTGF+CtN2DQB+Et1mz/HRMcymnLNtvb4
+   Q0dz6uClUsrrffJoTmbD3ssVQ/q7gpqemD0aHz47+iSvoeBXpQCLJ/3jX
+   rDebBOvC26VZcilQnJrdXlA7gJhhf3E7Q+xvpU/ZwsR1JUrCi30IO0qB8
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="1053223"
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="379190830"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="1053223"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 20:36:17 -0800
+   d="scan'208";a="379190830"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 20:39:14 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="805874512"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="19570378"
-Received: from apbrezen-mobl.amr.corp.intel.com (HELO [192.168.1.200]) ([10.213.160.175])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 20:36:18 -0800
-From: Vishal Verma <vishal.l.verma@intel.com>
-Date: Wed, 06 Dec 2023 21:36:14 -0700
-Subject: [PATCH v2 1/2] Documentatiion/ABI: Add ABI documentation for
- sys-bus-dax
+   d="scan'208";a="805874512"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Dec 2023 20:39:14 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 20:39:13 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 6 Dec 2023 20:39:13 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 6 Dec 2023 20:39:13 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 6 Dec 2023 20:39:12 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L/7qqVscLSF043Ka7H8h/BvzFCQwZJpM9xidfFtp/SSq4/WJt3sZNUaZGqCu1N3TNnD4SyI9nBhWgPscTacuDDLSct7O9GbMU4//6zCqxPf4nniV9KS3jtl+F8C5xjdobazzVMFPG49K3ZPhGVkjm0iIPtFNUD+KiJ/wCTARi16/My8NB4taUmrkNw8T/NymQpjK9qo5tLfBljRjVI6WHRm71aHUVoK4qV5dGCHdHrL6Gi7NnnPYvZ33U4ZecT5lmJcHnbtNGbvqDch1Q2vYIT0rfO0ErF7ecMjTrRcq6K2Jvi6sxxxAYpm4bbYsFnODkJpimPs22959Pbz+ejYbuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hge+4UYbl4LPNm+UbCJ076E9kPZA/F+2Xy6zv0TaUp8=;
+ b=Ax/mFh/YSlE8kuwAz8zGyoi2o+DEtnL8KK6EwF5d4Au1eMP3WULXo2q8i6Nn8Qgth2XyHr5ZADKng5s9vMlOyitRFSl7iDZF0QICcsenMVnbspxzTKKLmRHi3zqP6bY3xW63xDaO+uGPABcg7kpCiWD/k/5EA+qJiqKy2T+JYn70wlDzr+m4lMFqq/UXkAauMbQJkalxMzH2mUhBim5VNludiquli9Yu2URxqQOgfizAoSe3ZG91YNJ/o7atUYMQmxfkyHfph4fq7lXSaa0zAm+8aAhDNSaveczoRQrRbwUeSh3kWmUOzjZlbQkie3yL8lilJSJCi2NpLWgiIXa1uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB8284.namprd11.prod.outlook.com (2603:10b6:806:268::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Thu, 7 Dec
+ 2023 04:39:09 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7068.025; Thu, 7 Dec 2023
+ 04:39:09 +0000
+Date: Wed, 6 Dec 2023 20:39:07 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+CC: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [ndctl PATCH v5 3/5] cxl/list: collect and parse the poison list
+ records
+Message-ID: <65714c6b472ee_269bd29417@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <cover.1700615159.git.alison.schofield@intel.com>
+ <bf65d11d6388bcdce2e6dc35064edf4094c0c5a8.1700615159.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <bf65d11d6388bcdce2e6dc35064edf4094c0c5a8.1700615159.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW4PR03CA0128.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::13) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231206-vv-dax_abi-v2-1-f4f4f2336d08@intel.com>
-References: <20231206-vv-dax_abi-v2-0-f4f4f2336d08@intel.com>
-In-Reply-To: <20231206-vv-dax_abi-v2-0-f4f4f2336d08@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
- Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.13-dev-26615
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6438;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=j9znkpM/52KvUGuun0RJffYF/wG7fdqoc+th2+hzW9E=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKmF3vsX7HHeeebriecrAh6+O77s1pwuc9P1j5cpRiY2Z
- VWk+4smdZSyMIhxMciKKbL83fOR8Zjc9nyewARHmDmsTCBDGLg4BWAiDg4M/7T80+Qszjnv3Tq5
- 17lIovINX6yD7oErS124auzfWv2xmMXI0MbP7nS4ccaEHzWp4eUX0mtPfv08e1KfTsHLV6J+TEu
- d+AA=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB8284:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85c953ee-e094-454f-e36f-08dbf6de742a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h6rPoaQES1DSs2ghbVjMkqWVhnl4rRCOOTuyHoxsM5BzBBvmX5nuGncqT/TZyKhpVjV/xSebty8a4kWgRwRaZb6GUe8Xwn/bDmPCTU0BrTiBJ91gbQ2Vf3hfNfEqioZHgwkz/fY4Y2gsUBUnLPnVQvVtu0C4rK8YgUYPvNoMJSJL5FSgpOiz5Ba4S//0imtRlBYXg5ZRPu9Y8LsLi2GuQe1gZFLKzdkHg/I8Dxtk1IAVNSjvNoEakhvWl2GvGED2UxB+jO4Y6dXqeDZqRucPoX85aWySb0TLyrJ+bkcbjL8dTfeGe/aNNDa+nBwUlIId4XBAhmd8WKFI9+fS41CQFzWF7eFvln1FtOb3YKihbpIE7lhAdzndgMMQ0qMr+/8cSeptmfCQ2BrQXTRh7Cq/GDu3koNYwwBeO1qPhM6sHiRh1dEG/GDW9e3A6Vt+05dHbjSf/3ahdkaM+wAfuDm/bjCEVJjEYEKcFeF9d6okmkWyOkH425ugwClsJp/BEdFut+4n8lEpWCwINwS8+IN3EL4WfAfxe3aRWe34YafLPRuymcxgYnAJAgQHGGC2IP1+4X3JnRwV/StV1JSs2i//yRgsjtb15Z99A51ooAJhTYF3xQIYNeljD83Zrl5WGmDi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(136003)(346002)(376002)(230922051799003)(230273577357003)(230173577357003)(64100799003)(451199024)(1800799012)(186009)(316002)(66946007)(66556008)(66476007)(6636002)(6506007)(9686003)(6512007)(41300700001)(26005)(478600001)(6486002)(38100700002)(86362001)(82960400001)(83380400001)(2906002)(5660300002)(8936002)(6862004)(8676002)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H9pfqWG52/ppUg/wdEDBL63yIIKmM7I81nlMPlqD160SNwvVv4uKv3iS+Ae4?=
+ =?us-ascii?Q?8IQ5PV5II8+X/gwr66gkNNbQH+E9A1BDED99z9WNOEAs9r6hI6FEWi0RKZjB?=
+ =?us-ascii?Q?0frZChCda/2B5CW4M5uNBUK+oyT5g6GlI01awQHVAOURxIV4RNAjval7hTEW?=
+ =?us-ascii?Q?676U/hm4YE+86cQE5MP1vQNQXQSDEuOUHdIRuVdK7+9m+oGWTqaOdoz/7vnU?=
+ =?us-ascii?Q?jotq5ETn5kZhqrYsHjZmG1XGgqiUkMVq071iZf7KPxy78l/VGPqUBqvzuNc0?=
+ =?us-ascii?Q?gI2bF6i7OXeEQWNfTinciCliK6bYHq2uT4HoIpEtJGdr4iggAamqUGHymjnC?=
+ =?us-ascii?Q?+4Zu/v0knuvuB9oTVg95yCnw9JB6pt0ZmWjOsSHqn4zSM0BQK6vfBwe2HuDi?=
+ =?us-ascii?Q?5KplEi28wLYLINcpsIuP5k1cDA/TmGEBdLtvJGvu4JmFvnvyWg1qnDDiZROr?=
+ =?us-ascii?Q?KJ9M5Jm0ozYjGCa/kpn3uewDliTnj82vGKFJYLXhNIetGOW3f2t6j3tAArOz?=
+ =?us-ascii?Q?rJNrj8pS4b/ypvhbQQTqkKgImmLUOCuQCXiwDU0zBJKkH7c66v2BW54y/JHZ?=
+ =?us-ascii?Q?5TBa8OJqTg7d822X+tAj0U6FpCxgodbw0+H9+HeF9MasvMDdWtyYxKO673am?=
+ =?us-ascii?Q?6vCVgPI9LvHkTC3REHRMG5iUCYcNPt6nvv8noHvMbgy/S0+spObAWmD2urzi?=
+ =?us-ascii?Q?fBegpE1PswwaVj+0YLhq3GOvOIf1ymYTAVRDAEEW9RppxFgIR+NF7ZA9wzh3?=
+ =?us-ascii?Q?uPHsrB3Wp7+CpO2wglDa7wIbElJK0VJOpRinEYdB5Sw94u6jqNSN460PZTUq?=
+ =?us-ascii?Q?zx+VtPhpX10WRCJ+v6Wzqb3qokQ1QbwEfb/kdLINHHkL8ACeGBy4i0eFGFLR?=
+ =?us-ascii?Q?j2HYFcLfLebHJQS6vmTmUXk2AXb2scncZ7IkM7Wsr4myZPTtcttq/oyLuFcl?=
+ =?us-ascii?Q?4nIIfkBCoTuUQPAm3jjmKLI/fe5IwqLX9XIC9EpDWkZM2DgNxjppiIYAf89S?=
+ =?us-ascii?Q?l9uxR0BlPvyDNo1EpiILI2qBYmSakRP4eTJhZA6CXm/csbT4nJhTrZBc4B2T?=
+ =?us-ascii?Q?Ukqp5Fb8n2BsdrabE/eJUGNGP9D0oNjnckjuDmVLQubKsJqVaixSGzTzLv0z?=
+ =?us-ascii?Q?GWJXMBrhfAMH2fJ4UInu0Cm+huR+ypVPxz9ySk1ATg2ZmYzwedzczm8WBrm7?=
+ =?us-ascii?Q?cMH8jpvkjMqqd4Uc5aHqwfbaX4qOnqn7/NxQJpEHIlJYanId8wQavmbUFrM1?=
+ =?us-ascii?Q?A9/JzSJavDIySQh62kp51ByGi3qOqZ7YrwI74spP2at7rS86PVSlRPFhYLOl?=
+ =?us-ascii?Q?Oc9JX81Pds+DpWX8GFaoXvei/DeWnE1v6znaDK7Yvr5ZXEI+1qMlk/B3F7hM?=
+ =?us-ascii?Q?pNj0H4n3JDyGJuR7QCyu1q/+Ihagc7j8wxMU1uywAYZf8Pv4clQ6kxesxhGH?=
+ =?us-ascii?Q?ykRr9xfRfdH8DvYo902GZK24azI354xRvXSIkLSwWKZQSM9t9wjwRJCh/gsG?=
+ =?us-ascii?Q?GXRkyoMOCSl879hay20QbKoI42egnxSjf2s+gJwHm+qZst0AkMJKh2pYjcCN?=
+ =?us-ascii?Q?dcmaJoF5tzSjGky3AQh1JT0/TFEKz91OuZsnAeXtujAgDAN99KfCe9VGQOI7?=
+ =?us-ascii?Q?FA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85c953ee-e094-454f-e36f-08dbf6de742a
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 04:39:09.6577
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5oL3DvA82wRoh29xNP38KB/Q18/NadFzYVnTe4E/YllAUrkPavJiKiydSJqFnmzpwdYe6J+mNJAHLW733DivvK4UUiOkm9PBrbbZjk6f7sY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8284
+X-OriginatorOrg: intel.com
 
-Add the missing sysfs ABI documentation for the device DAX subsystem.
-Various ABI attributes under this have been present since v5.1, and more
-have been added over time. In preparation for adding a new attribute,
-add this file with the historical details.
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Poison list records are logged as events in the kernel tracing
+> subsystem. To prepare the poison list for cxl list, enable tracing,
+> trigger the poison list read, and parse the generated cxl_poison
+> events into a json representation.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  cxl/json.c | 211 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 211 insertions(+)
+> 
+> diff --git a/cxl/json.c b/cxl/json.c
+> index 7678d02020b6..6fb17582a1cb 100644
+> --- a/cxl/json.c
+> +++ b/cxl/json.c
+> @@ -2,15 +2,19 @@
+>  // Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
+>  #include <limits.h>
+>  #include <util/json.h>
+> +#include <util/bitmap.h>
+>  #include <uuid/uuid.h>
+>  #include <cxl/libcxl.h>
+>  #include <json-c/json.h>
+>  #include <json-c/printbuf.h>
+>  #include <ccan/short_types/short_types.h>
+> +#include <traceevent/event-parse.h>
+> +#include <tracefs/tracefs.h>
+>  
+>  #include "filter.h"
+>  #include "json.h"
+>  #include "../daxctl/json.h"
+> +#include "event_trace.h"
+>  
+>  #define CXL_FW_VERSION_STR_LEN	16
+>  #define CXL_FW_MAX_SLOTS	4
+> @@ -571,6 +575,201 @@ err_jobj:
+>  	return NULL;
+>  }
+>  
+> +/* CXL Spec 3.1 Table 8-140 Media Error Record */
+> +#define CXL_POISON_SOURCE_UNKNOWN 0
+> +#define CXL_POISON_SOURCE_EXTERNAL 1
+> +#define CXL_POISON_SOURCE_INTERNAL 2
+> +#define CXL_POISON_SOURCE_INJECTED 3
+> +#define CXL_POISON_SOURCE_VENDOR 7
+> +
+> +/* CXL Spec 3.1 Table 8-139 Get Poison List Output Payload */
+> +#define CXL_POISON_FLAG_MORE BIT(0)
+> +#define CXL_POISON_FLAG_OVERFLOW BIT(1)
+> +#define CXL_POISON_FLAG_SCANNING BIT(2)
+> +
+> +static struct json_object *
+> +util_cxl_poison_events_to_json(struct tracefs_instance *inst,
+> +			       const char *region_name, unsigned long flags)
+> +{
+> +	struct json_object *jerrors, *jpoison, *jobj = NULL;
+> +	struct jlist_node *jnode, *next;
+> +	struct event_ctx ectx = {
+> +		.event_name = "cxl_poison",
+> +		.event_pid = getpid(),
+> +		.system = "cxl",
+> +	};
+> +	int rc, count = 0;
+> +
+> +	list_head_init(&ectx.jlist_head);
+> +	rc = cxl_parse_events(inst, &ectx);
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-dax | 151 ++++++++++++++++++++++++++++++++
- 1 file changed, 151 insertions(+)
+This pattern really feels like it wants a cxl_for_each_event() -style
+helper rather than require the end caller to open code list usage.
+Basically cxl_parse_events() is a helper that should stay local to
+cxl/monitor.c. This new cxl_for_each_event() would become used
+internally by cxl_parse_events() and let
+util_cxl_poison_events_to_json() do its own per-event iteration.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-new file mode 100644
-index 000000000000..a61a7b186017
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-dax
-@@ -0,0 +1,151 @@
-+What:		/sys/bus/dax/devices/daxX.Y/align
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RW) Provides a way to specify an alignment for a dax device.
-+		Values allowed are constrained by the physical address ranges
-+		that back the dax device, and also by arch requirements.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/mapping
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(WO) Provides a way to allocate a mapping range under a dax
-+		device. Specified in the format <start>-<end>.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/start
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) A dax device may have multiple constituent discontiguous
-+		address ranges. These are represented by the different
-+		'mappingX' subdirectories. The 'start' attribute indicates the
-+		start physical address for the given range.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/end
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) A dax device may have multiple constituent discontiguous
-+		address ranges. These are represented by the different
-+		'mappingX' subdirectories. The 'end' attribute indicates the
-+		end physical address for the given range.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/page_offset
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) A dax device may have multiple constituent discontiguous
-+		address ranges. These are represented by the different
-+		'mappingX' subdirectories. The 'page_offset' attribute indicates the
-+		offset of the current range in the dax device.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/resource
-+Date:		June, 2019
-+KernelVersion:	v5.3
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The resource attribute indicates the starting physical
-+		address of a dax device. In case of a device with multiple
-+		constituent ranges, it indicates the starting address of the
-+		first range.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/size
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RW) The size attribute indicates the total size of a dax
-+		device. For creating subdivided dax devices, or for resizing
-+		an existing device, the new size can be written to this as
-+		part of the reconfiguration process.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/numa_node
-+Date:		November, 2019
-+KernelVersion:	v5.5
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) If NUMA is enabled and the platform has affinitized the
-+		backing device for this dax device, emit the CPU node
-+		affinity for this device.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/target_node
-+Date:		February, 2019
-+KernelVersion:	v5.1
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The target-node attribute is the Linux numa-node that a
-+		device-dax instance may create when it is online. Prior to
-+		being online the device's 'numa_node' property reflects the
-+		closest online cpu node which is the typical expectation of a
-+		device 'numa_node'. Once it is online it becomes its own
-+		distinct numa node.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/available_size
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The available_size attribute tracks available dax region
-+		capacity. This only applies to volatile hmem devices, not pmem
-+		devices, since pmem devices are defined by nvdimm namespace
-+		boundaries.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/size
-+Date:		July, 2017
-+KernelVersion:	v5.1
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The size attribute indicates the size of a given dax region
-+		in bytes.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/align
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The align attribute indicates alignment of the dax region.
-+		Changes on align may not always be valid, when say certain
-+		mappings were created with 2M and then we switch to 1G. This
-+		validates all ranges against the new value being attempted, post
-+		resizing.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/seed
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The seed device is a concept for dynamic dax regions to be
-+		able to split the region amongst multiple sub-instances.  The
-+		seed device, similar to libnvdimm seed devices, is a device
-+		that starts with zero capacity allocated and unbound to a
-+		driver.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/create
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RW) The create interface to the dax region provides a way to
-+		create a new unconfigured dax device under the given region, which
-+		can then be configured (with a size etc.) and then probed.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/delete
-+Date:		October, 2020
-+KernelVersion:	v5.10
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(WO) The delete interface for a dax region provides for deletion
-+		of any 0-sized and idle dax devices.
-+
-+What:		$(readlink -f /sys/bus/dax/devices/daxX.Y)/../dax_region/id
-+Date:		July, 2017
-+KernelVersion:	v5.1
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RO) The id attribute indicates the region id of a dax region.
+> +	if (rc < 0) {
+> +		fprintf(stderr, "Failed to parse events: %d\n", rc);
+> +		return NULL;
+> +	}
+> +	/* Add nr_records:0 to json */
+> +	if (list_empty(&ectx.jlist_head))
+> +		goto out;
+> +
+> +	jerrors = json_object_new_array();
+> +	if (!jerrors)
+> +		return NULL;
+> +
+> +	list_for_each_safe(&ectx.jlist_head, jnode, next, list) {
+> +		struct json_object *jp, *jval;
+> +		int source, pflags = 0;
+> +		u64 addr, len;
+> +
+> +		jp = json_object_new_object();
+> +		if (!jp)
+> +			return NULL;
+> +
+> +		/* Skip records not in this region when listing by region */
+> +		if (json_object_object_get_ex(jnode->jobj, "region", &jval)) {
+> +			const char *name;
 
--- 
-2.41.0
+So we're building a json_object internal to cxl_parse_events() only to
+turn around and extract details out of that object that tell us this
+event was not of interest, or to create yet another json object?
 
+I think this implementation has a chance to be significantly less
+complicated if the event list can be iterated directly without this
+temporary json_object parsing.
