@@ -1,54 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="taR1rxRj"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2076.outbound.protection.outlook.com [40.107.237.76])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7640910D8;
-	Fri,  8 Dec 2023 08:22:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NOQtbcX+"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB2A1729;
+	Fri,  8 Dec 2023 10:02:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702058522; x=1733594522;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=u8MwPJhrE/ITx9Q0l/uqWwqWlTPSq4HD1jGvQUApCVA=;
+  b=NOQtbcX+lqvOQrIb+jrVdrUdoDTz4COVVcp4sbV0gVuwNX0kVh1LcKuq
+   Br8JvGDTSx9iDyls+LHHzNMQ5HQH/6qNSnsIre+64GdPvdW5dQOVuwpAC
+   vQBuiDvX32p0I9utISan8bnBScFnDqlsICCyowDZdZQ7PCqhoRxssOQkQ
+   YNApszUSOHNbLEyuZRsQjI+MDwVyDPVbKS0O8SQGrhfRpF7/bYRdL8wAm
+   P/WytbuKD9kjk4FxPsIBLJfEs+tv3sDvE++ANRBnlIDDUeMQUaxWz427v
+   p4PgqbLp5hsBJRIdCo5NxDJUMvK3xdu4VHiO0p8zdgc5LuRiBBLp3r13D
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="373942885"
+X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
+   d="scan'208";a="373942885"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 10:01:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="775868400"
+X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
+   d="scan'208";a="775868400"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Dec 2023 10:01:57 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 8 Dec 2023 10:01:56 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 8 Dec 2023 10:01:56 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 8 Dec 2023 10:01:56 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aSD+/CiVEMyJqHMFKwyA4giVUjT+mZZWmerXJx5/d17zCDb72pyEHKGZ7QwTHJ2D5mMUlrdAvF1XCe6MDH95tknTSpteOVuZEbVjMbtQg/y0Ra1L1QfEAVIfHLDPKVs2wb2TIHr0k72drc77gQndziqfoFmZ8PROZfx8TpYHp8a7TEZrbDbr20rm4LVlE1L6Wol4LjG4wC6u/0EHnXuYmocqiXrzNX6o76xD/oE/hWBD2dS12FX/m8PQhLRgdeHo1F6dAupSQiZLrEihAS9rfSq4TLzMVmiSj7czUld/Y4a+jinkE+0bRr1ovFbvxIy1htuQBYYNR4HPusjU9ZJAKg==
+ b=j2gatFyk+hB/kVM4Zeah+x90YWQ3khaAJTko+SuF9LjgIJ76yY8PK/DXbfW7uQ8fsREdGqiIhQMP2bCxD72H6I/bbmNi9r4ixAUXCmWxQ2t3vohwHUpEa1lulwTZyw9vbzms9tloFKHAb6iPtZYhbsDx2Nc5vluUx5OVuDIZvjQ8eifqp5evnoIEhBrnopeVZX7PmS8uCsXC/bbIkd7/kpT4pIyGZnN0NLp8dbDZjs/XXaMYAWQsTpXhERZFw7b07zAI6lCNK1CxBhEYuR5Ci4Ji4sF8IiOizPBekJO+EuvABMbZo8brcEPPWFWRrmT6QJZy0j462egPf4SeOZ1bcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QxOvxGB7sRZcBL/FaPQyCf2RCiMoW8hcupAn4FNPT54=;
- b=ZdL+1n05jOpffMXSaQkEAy66E5VuyWI1rcvzAslLkvu2UGWDzT8coF9IGM3GqMsPseegKVHq4oJl7D6SDZg0F7XK8ttic3CAuNE1LnZQ2TpFs7sYFNjiGGS0Q/BoQNqjp5+4of3MCczUh+QmP9kAiQlDrxBwdsudHUWjvJio5mfNgzgWXltGmMrIMeI1D5lPMVT1yvINBG7ToMePCgDzcVZOkREbmZ3qsHwk26zW2ltEPf7zbXH+X+P1xDz8tCwGDocXfz0Lbxrj6B9hgIrcw7NAqxTRR4oXQdHWOyei9GZoQeraACnntgWOzMZyqYbc3o9w0oqfTqCa817Pz+sjYg==
+ bh=IiDdsYv782zbs3TTOQtMpTy2iYD73NCdEyEVvVqTJNY=;
+ b=W5M6AQZVSP3ur64OdMmy2JHJrAx/2JYhY1msze2se8XI4RgQhGvoVGhntnwCt/O0kLEgN1YecCQKGJSzVRlbmFL4JDLgnybci0nVZV5W+EadHSgspblTawGqZ/tU6CjYcwm93BeJ15jQV6/XfgPao32O+jzb1YdhLC0CLfcgLtQ5RmiZBqeCdOQ1DkjrZd7++Xdf3yt1zT/505JMILGCSFs9QyJBdbdOZt0swZJwbmdZ5yqHiCKVRwpgRQMLtJuRPqb/hatL3B3elkWnkhiT5lncMN3SLnqJm5IoiLiy2tTlveaD6l/m5/wGbSLfzhZMWIcwUcNeLw3fIM0JJfpdhw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QxOvxGB7sRZcBL/FaPQyCf2RCiMoW8hcupAn4FNPT54=;
- b=taR1rxRjnB7Ii0LulKEMr42sie5AEV29EvzouXgENDfFdrLAUPOo+w2kfqVMMwFqjTcR4OvPTlJhpOdHa7+Q8LUuRUagp1C/squ+BNbTs6R48qkRsksCkZRtu8O8ZZmN0fsUUGBXoZ6W0vzYy0otxL6g8gZuXlx89tMQ3IEJVc8=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3268.namprd12.prod.outlook.com (2603:10b6:408:6c::18)
- by SA0PR12MB4525.namprd12.prod.outlook.com (2603:10b6:806:92::10) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB6699.namprd11.prod.outlook.com (2603:10b6:510:1ad::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Fri, 8 Dec
- 2023 16:22:28 +0000
-Received: from BN8PR12MB3268.namprd12.prod.outlook.com
- ([fe80::ff1a:dd7c:4c93:d8bf]) by BN8PR12MB3268.namprd12.prod.outlook.com
- ([fe80::ff1a:dd7c:4c93:d8bf%7]) with mapi id 15.20.7068.028; Fri, 8 Dec 2023
- 16:22:28 +0000
-Message-ID: <634ead4f-f87c-439f-a685-f7c1dc5527d1@amd.com>
-Date: Fri, 8 Dec 2023 10:22:26 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/5] cxl/port, EINJ: Add CXL EINJ callback functions
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- rafael@kernel.org
-Cc: yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org
+ 2023 18:01:54 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7068.028; Fri, 8 Dec 2023
+ 18:01:54 +0000
+Date: Fri, 8 Dec 2023 10:01:50 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Ben Cheatham <benjamin.cheatham@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <rafael@kernel.org>
+CC: <yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v7 1/5] cxl/port: Add EINJ debugfs files and callback
+ support
+Message-ID: <65735a0e595e_269bd2948a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 References: <20231128160656.166609-1-Benjamin.Cheatham@amd.com>
- <20231128160656.166609-5-Benjamin.Cheatham@amd.com>
- <65725d405abf3_45e01294f2@dwillia2-xfh.jf.intel.com.notmuch>
-From: Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <65725d405abf3_45e01294f2@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN0PR04CA0068.namprd04.prod.outlook.com
- (2603:10b6:408:ea::13) To BN8PR12MB3268.namprd12.prod.outlook.com
- (2603:10b6:408:6c::18)
+ <20231128160656.166609-2-Benjamin.Cheatham@amd.com>
+ <657251b0517bc_45e0129418@dwillia2-xfh.jf.intel.com.notmuch>
+ <359bacbf-94d9-47b8-915f-dbf321cf0a9e@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <359bacbf-94d9-47b8-915f-dbf321cf0a9e@amd.com>
+X-ClientProxiedBy: MW4PR03CA0030.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::35) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,290 +89,153 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3268:EE_|SA0PR12MB4525:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91a1f29c-3c8c-4575-acfc-08dbf809df0d
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6699:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ba6ab4d-4d43-49c4-bd02-08dbf817c280
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WEl5piuuHNs7jFGXTE7uknWdhwdtTl0IZqUhbe2EjBFMP4vSMH2HmgwiXvSgPOBRrtTpNl98drSz1DSdbC9E1IkJRc80xn/EMVriWBQR79X1TxnlcHmRgQ8/yjeFvg0ks/yWcUk68qW5NDRpmTLrAz9uU0/rQD+E7BY6Emp3eldmHNUkKK08rhaByZuXsQdCj/tDYmHmcm4CBr7/VBE1gjhZMUlgkSmHzspWGlA46auAwegZQ6HiWvMjr5CAcraiztU0MvLvPQI0ojtGMw7qb2tQNzYzcJYKi7hosVJmp/tzfqPyUSC+o+/ttQ+A7uqf/gbor75dzU2Ha0IpE3ZGvnhayQhFIP8Ck5acMUo2hq9T9QBFX23tnwKPlr3lr6NK9PwpoXv08HeFk93MyImkjpi1nQEwc7+FQXyEMW2ep/ue4Xp9hCXplO7j7eFdC6bphiNgrx3ux4ltQWrcT020G6KFQrUeBB1ZoLdTk1BvAnbyzt/96rBTfA7fZMz0erRk1KPPgg90cHCAXYvXBX5hTIjG2EG5V6tmtZ/ZfSuNcL8J66TtHQ2TSz7ji+XrfYrRvR77UOBFVHNIKor9Hm/od4U/cZ7xEVOH8d/EgwynTcidduWBe0rlPhXVo4POIK9htPuCSuJ8UPBfC/ug7ZwYsg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3268.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(31686004)(26005)(6506007)(6512007)(53546011)(2616005)(38100700002)(86362001)(31696002)(36756003)(2906002)(8936002)(478600001)(7416002)(5660300002)(41300700001)(8676002)(4326008)(83380400001)(6486002)(66946007)(66476007)(316002)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: G8vKVL9nZagVYhmsp5JRUzLR6lyiIBR/l3x5aKD51+2WuWEMwAqgCCDwvzB0nxf7RK3TPDvQ2NM+aGD8tql9ojbnyBO8X+kHQQrvlmc4zcDGq+RvkswovrCmaVAae2/mmpZtf/O8uFopPld73TQohc88BDN+VbzCDk7BriX7001oBNve3/sKzS5tdGUM9rE2fcOf2x70ViGny3l6+jPcvqxuGmHkcRyb7VgSYHU4DiQIYZIsZ/Nf/CYPgTZPO4SwMSokZZEqBfetoqk3hQ+zOJig2NHCd5IfMKCzbgNME6jSdYk6c6nKPwiwgkOG9gXi2SMIyRqJj/DXu5eyvh5Ib1tz3CCcyk3BFmp7OhGG1+XjEmBAK5bHEY97+h+smIYllybQhV0tNSyspfJsCPpxi0JuZv5JXoZcK61WuNeZ7uq3o8tFeQy0KwXY5886m5w3oFtIgHWnTMDMeAAAr2qwBranhP5ESZSQYb4IG2yLIOcJjMERBkvvuwJ7/6j947y1gZ6692ThviUnKeCBRhohiB0Es4m1vMJHhbpYdA99l3I=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(346002)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(38100700002)(86362001)(41300700001)(478600001)(8676002)(8936002)(4326008)(6486002)(966005)(6506007)(6666004)(316002)(66946007)(66476007)(66556008)(2906002)(82960400001)(26005)(9686003)(5660300002)(6512007)(110136005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cmZoenVQUG05YURxU1lGNWk2ZVFDMW9Ibk9TTVkyV3J5UGpqcXBuNmorMTd6?=
- =?utf-8?B?Tk5KZ1B6YVE2TllWZVQ3bzlvR0tHZlNRbUQwQWo3VDRmL1VIZnlCOHF4eUkv?=
- =?utf-8?B?UldzRVFHTXcvdTlIUEI5bGRvRysyTzV2ZkdGSkljOW13QWxDNzBaQ0RIRW11?=
- =?utf-8?B?WFozZGQxdnFOMFJxeExOZXpycythUHlGeEEyNUJEMDJkakdCcFUwWHVkRWFC?=
- =?utf-8?B?Y1VwVlQ4dnM3Tk9BakRPQStBQzNxd2dqMUxabm5jeGVjRjgyZlJZNFBOQTN4?=
- =?utf-8?B?aWxtVHRJbGd5eUhBUmRtVkVQVFAxNWFzdzZrTmZCanFhQ3RDS3N5aFhEWEd1?=
- =?utf-8?B?dUNEdVVSY09KbUx4azUyVWlGY3VETm81ZlJWVEx1MG4xcTh5ZEJEMGxmYnp5?=
- =?utf-8?B?RWZWd1NkSHY5SUQ4TWgwS0NnWmovOVBXYXluSVRMKzM2ZW8wQjlkZVllS2Ro?=
- =?utf-8?B?TCtMcTBuaHczNTA0elE0NCtUN3FiYndGcXF1bk50RVYxcm0xNDdhSjhrKytZ?=
- =?utf-8?B?ODl0bS9LVFRaOTRDUmoyYmxoanJkbU4xN2lxN2FsTjdhcm9qRGdYTzdQWGxN?=
- =?utf-8?B?ZGdXb243YUt0cWtlSXRseG1SbVVLaUV4Q2JFZmlIbVhZRmt6c1kxYk9reGov?=
- =?utf-8?B?SjVDcXBtNW1CRWF3dXBnOWxWV1JPdncxT0JUTEJWeGhuMGtkNHlxaTJGSERw?=
- =?utf-8?B?YnNCVmJaNnZOSlNFVjB0UXh4R3dsMC9oeCtMQWl2d1BzcE9uMG9CRVRMTkJh?=
- =?utf-8?B?bkRmMzk5TXYzY0NqUnFyd1ZVaGZPN2dZNU00WFBBczNONitrb0lRTE1LVFc1?=
- =?utf-8?B?Y01yQ3M1aS82V04yZWQ5RlNieDJFTE5HeGhFRUo4VmRwVldka0hIU1kwSHJp?=
- =?utf-8?B?ejhiTzc4L0pvVTJvZkNMWDV1eldNRmZoWCt2blgya0NWUFdBbldNN0kxYkNS?=
- =?utf-8?B?b3lSaTByQllWcjdmdGpKUWpGVWcvWmFjN1dYME9pSFVCNGNWN1lFRFFGNnFk?=
- =?utf-8?B?dmZLd0tYRmRZamdoNmhYQ0J2NHc5TWgvM0pIa0JIbmRmL01xQk13d1VMeGtz?=
- =?utf-8?B?dkZPZGx3M2g1anRBaGwyZUI1eVAxQ1pLc0VhTzVQQy96WVF1dlcyeS9obVZi?=
- =?utf-8?B?anBYZmZPcVYyNlZIc0g2UU9lMmUrTGVvb3duaDRDR2dTeGFXWHBJRE83U1hS?=
- =?utf-8?B?SmtMdVprZmRVNk9TckhpU1V5eGZFQkVRY1NXOG1zRjcySHBqUEIxUGdzczZL?=
- =?utf-8?B?WC9DTUw1ZjlMSUNHenN1M0E0NXluM1Z3bzUxek12YWhDUENNMUZUd2s0Mmo4?=
- =?utf-8?B?UDUvMFBnMUpVQ1M0SjlySUJZRWxmMC8zMmkrRHd5MFRDZ2VnM1pieDVNM0pM?=
- =?utf-8?B?b1FURjhYcXlrYUNMS0hHTm1ib0NrZDU0NTZIYVphZHp6Slh5bXdhNW5DbTRl?=
- =?utf-8?B?eGx3d1E5R2MwTms0NnhYSG9GR2Y4cWw0UFZRcnFnaTZkU0JML3krQXpycWIv?=
- =?utf-8?B?b3k0ZVNjTGErU1ZiNlRmdVZRMFVKb1hNYVJkdTBraUhFR3VETGd1eG9hVmY5?=
- =?utf-8?B?MXZjWUJmTmtteExMZVdlSnBhRERLNjgvVElvWklEbHNHWGZIb1I5ekk5VjQz?=
- =?utf-8?B?MnVEeUZ0WUVySFVRc2I0Q1pMZHNxYmh3WHZ4a3hGb25QczYyZ1k3amtPRCs1?=
- =?utf-8?B?dDBmclJGd0E5NGtjNnFsYkIxUkwzU0lwb21hWHFsc3RneE44SmZXVFJoN2Rv?=
- =?utf-8?B?Q1k2aGJSVU5Kc1I4ME5XOFpHVGh0MUZWYW9PaHY3T243Sk41YXJGR3kyOHdp?=
- =?utf-8?B?MnpndzdNeWtLcEdaSjBEMEdJZnBIVnI5K1hxNDJqUXBYbjZ0SzdoNU5SVU5X?=
- =?utf-8?B?SHo3ckZUYXp5dTlyajhuOThIQ2k5b2pHSGQ1aW9rR2tOYTQ4aTRmaEpuTU03?=
- =?utf-8?B?NEV1a0I3cEIwZnk5VnhhUldqWnlIbk96cjBwQllwM1RNUDdOUnBUS1FTUUN6?=
- =?utf-8?B?dk00V1JMbDhOcXlRTU1lRHdlS29rcEc1OUFGMUp5YmJiTGJ3TW1XdmJPa29H?=
- =?utf-8?B?VTkwRmdYOUVlQnhyQ2UxQ2VOUW9qS3AxaGEwZmpHaDFCdjR5WjdMWGZHa0pl?=
- =?utf-8?Q?Cq1oUYc1EHIgNUk4q198cQG9f?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91a1f29c-3c8c-4575-acfc-08dbf809df0d
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3268.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ym0jfSPnzGh29AQOtOen+uPltsUtoI0OtnI9UEx2tsqNS8wa2+FSPGoE+Aec?=
+ =?us-ascii?Q?Dw0wTgAIG2/DRvnjMcyelmruRYYGzYokuGtn3wl469RZj+FJanpHo302W9hg?=
+ =?us-ascii?Q?oPIG+z6iqh/mKh+2TjR3vS6Q8ErDkuCcOaJW3xhgNsHpQqWHPjeb9XdgQu6Y?=
+ =?us-ascii?Q?ow8J8yvspkMQHL51xKTWklUbqin+TPlEVOqFk0kC+bwW0EOHbPI3jfs36YzZ?=
+ =?us-ascii?Q?sqiPB6GOPeV2xIajzU+83LCmY9Qowd+rG231PIuv97vh5Na4dKw6uDo2kkzp?=
+ =?us-ascii?Q?RlLasshw9UWYEIcpdX3fUMYqAxkfeIGj7S4ie2xTg1Q8pPOS8ReTzEQsVIev?=
+ =?us-ascii?Q?QEdh1bchryIlk+Cdzdu60fy6ZYFi25OukHdp99sICka8nUi9WgBg3MVNTvmu?=
+ =?us-ascii?Q?rAG2aDYTjqMTUgOkCir81IRchMVwm0Q+6bZYXbkDD26pq/5EdGrdlQRuLRP/?=
+ =?us-ascii?Q?cCjg52rzL5Bf3MewlAwgc5SnilTwsS+aTsv7MGqboFCrUy5tuq5XHh8TYSGN?=
+ =?us-ascii?Q?t615HbDqiisPWo4JQ0j7ZKQ6eoTv3XhVKh3yXPbT2rhLIFHdCW4zxI0RbEbo?=
+ =?us-ascii?Q?Hw1zz1FSBBBBvfKGi35mydx3SvCvAN97Ra5CZt3NCv/9KoKQG3SXXOgjgBbg?=
+ =?us-ascii?Q?d4EHnrcumzYbSAT7/XOJkOfhBKsdU0BorTbOwZ/eHjbAOgzhCbDRzM/jzW4B?=
+ =?us-ascii?Q?hw3+e/5zMU3DsltyCdsxxUeTPSe+bfo+TAFugxBgVGBmapD2kQ3g1GeqUhSA?=
+ =?us-ascii?Q?o9/2HJ8FVCE9KNSspdXdr5l6f6PjQF7wNBCEsReH9Ze5hgppSuo3etj0HdPr?=
+ =?us-ascii?Q?MJMzOstySN+TejgnVT7itaNYuqMfSL6wSKn5Jg/AmGiHRydC760vOwXcrkES?=
+ =?us-ascii?Q?O9+idSHYaesZ66bqXA514WYCXbu0JDzAyOdkdgH6Y0M1fdzHc6naIlwNumao?=
+ =?us-ascii?Q?h1fIlP7G4D7r4jYSKqQgpf+KyrWfJ97MGrQnEoOhFrz7YHgGwiTpVnqiGrjN?=
+ =?us-ascii?Q?D1zsvFRbd5ThHwXHwHWSmnLGZUN5lYfhnsVdZ67sY6KUWCbzBGcOCoSFq/hu?=
+ =?us-ascii?Q?RatZJMrNq+MPk5a2P3c7pD5/2PBxnAVGRWX2+edRRWDwHWbjg3HSkiG6I3zz?=
+ =?us-ascii?Q?+AdhdIRgZqjzaS+n7JeIX2o70dQXYNiKAF6GqfA9DahjESL+1gOaXlLW960A?=
+ =?us-ascii?Q?UtA7yjXjCSVzQjAi3Lgquu330IIXgOXrPlFkDb/m3tPOPIisvYdHSl5yNo5p?=
+ =?us-ascii?Q?6yu2SBCXW0PURQaLXR/thFTH1x4L/4Gjcs/5RJRKwF28efBWCqYupNuRtQ4Q?=
+ =?us-ascii?Q?DipH/+0woxA19tC+QY2JkX+8t4Z4G4+A7FEABdP3D65Y5Ltlq21qGSkW3F3w?=
+ =?us-ascii?Q?nMhCg1QhSAZB1zuQESwTQxK9HUz3uvcfXu81jI+Yw3bNvdyNkQU+QYqXHM+q?=
+ =?us-ascii?Q?sUge8ftnVSAjuct4pFYFgrCPn4weL9QbTrjsG0w9UT9nVWxECgsdyTlNkBA2?=
+ =?us-ascii?Q?Drqpn21HJE8NRzY5GJ6EEzhS+A6uQy0Ru+NO0Oka7U8fNKE+3IZa0XBkeVIO?=
+ =?us-ascii?Q?ewpokYYMnhIaF3OVI1RIO7mGAaI+/QvKUQuNsCzYZ+g/7yPCXXlzkqv+f+An?=
+ =?us-ascii?Q?Rw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ba6ab4d-4d43-49c4-bd02-08dbf817c280
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 16:22:28.4875
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 18:01:53.6295
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 298TcHD7+wV5eSsKEYPNkTMIzqKU+DQORhZdJmiF2AQf36jk9hA5i8MQtURfO00qvAks8jpiGv6bKJ6So9SYpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4525
+X-MS-Exchange-CrossTenant-UserPrincipalName: K37G5fVfnxZykJdOkmmrJUHHeb6yoo2mcxcR7KjlZECU/SYta9QUhhDRX6E4jMdfjEV+95mpy9Mq/DOhhuTWG6O68P4pyB+FmmFTIx4FzU0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6699
+X-OriginatorOrg: intel.com
 
+Ben Cheatham wrote:
+[..]
+> > This can be simplified. Have something like:
+> > 
+> > config CXL_EINJ
+> > 	default CXL_BUS
+> > 	depends on ACPI_APEI_EINJ && ACPI_APEI_EINJ=CXL_BUS
+> > 	...
+> > 
+> > Then the documentation moves to Kconfig for how to enable this and the
+> > CXL code can directly call into the EINJ module without worry.
+> > 
+> > It would of course need stubs like these in a shared header:
+> > 
+> > #ifdef CONFIG_CXL_EINJ
+> > int cxl_einj_available_error_type(struct seq_file *m, void *v);
+> > int cxl_einj_inject_error(struct cxl_dport *dport, u64 type);
+> > #else
+> > static inline int cxl_einj_available_error_type(struct seq_file *m, void *v)
+> > {
+> > 	return -ENXIO;
+> > }
+> > 
+> > int cxl_einj_inject_error(struct cxl_dport *dport, u64 type)
+> > {
+> > 	return -ENXIO;
+> > }
+> > #endif
+> > 
+> 
+> I had to go back and take a look, but I had a shared header in v5
+> (link:
+> https://lore.kernel.org/linux-cxl/20230926120418.0000575d@Huawei.com/).
+> Jonathan recommended that I instead include cxl.h directly, but that
+> was pretty much a completely different patch set at the time (and the
+> header was under include/linux/). That being said, I agree that a
+> header under drivers/cxl would make much more sense here.
 
+I agree with Jonathan that there are still cases where it makes sense to
+do the relative include thing, but cxl_pmu is an intimate extenstion of
+the CXL subsystem that just happens to live in a another directory. This
+EINJ support is a handful of functions to communicate between modules
+with no need for EINJ to understand all the gory details in cxl.h.
 
-On 12/7/23 6:03 PM, Dan Williams wrote:
-> Ben Cheatham wrote:
->> Add functions to the EINJ module to be used in the CXL module for CXL
->> protocol error injection. The callbacks implement the einj_types and
->> einj_inject files under /sys/kernel/debug/cxl/portX/dportY. These two
->> files work in the same way as the available_error_types and error_inject
->> files under /sys/kernel/debug/apei/einj, but only for CXL error types.
->> If the dport is enumerated in RCH (CXL 1.1) mode, a CXL 1.1 error is
->> injected into the dport; a CXL 2.0 error is injected otherwise.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
->> ---
->>  drivers/acpi/apei/Kconfig |   3 ++
->>  drivers/acpi/apei/einj.c  | 105 ++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 108 insertions(+)
->>
->> diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
->> index 6b18f8bc7be3..100c27beb581 100644
->> --- a/drivers/acpi/apei/Kconfig
->> +++ b/drivers/acpi/apei/Kconfig
->> @@ -11,6 +11,9 @@ config ACPI_APEI
->>  	select PSTORE
->>  	select UEFI_CPER
->>  	depends on HAVE_ACPI_APEI
->> +	imply CXL_BUS
->> +	imply CXL_ACPI
->> +	imply CXL_PORT
+[..]
+> >> +Date:               November, 2023
+> >> +KernelVersion:      v6.8
+> >> +Contact:    linux-cxl@vger.kernel.org
+> >> +Description:
+> >> +            (WO) Writing an integer to this file injects the corresponding
+> >> +            CXL protocol error into dportY (integer to type mapping is
+> >> +            available by reading from einj_types). If the dport was
+> >> +            enumerated in RCH mode, a CXL 1.1 error is injected, otherwise
+> >> +            a CXL 2.0 error is injected. This file is only visible if
+> >> +            CONFIG_ACPI_APEI_EINJ is enabled, and the EINJ module must
+> >> +            be able to reach one (or both) of the CXL_ACPI or CXL_PORT
+> >> +            modules to be functional.
+> > 
+> > Similar comments about dropping these details that can just be solved in
+> > Kconfig.
+> > 
+> > This is next comment is on EINJ ABI, but you can skip it just to
+> > maintain momentum with the status quo. Why require the user to do the
+> > string to integer conversion? Seems like a small matter of programming
+> > to allow:
+> > 
+> > echo "CXL.cache Protocol Correctable" > einj_inject
+> > 
+> > ...to do the right thing. That probably makes scripts more readable as
+> > well.
+> > 
 > 
-> This goes away with the CONFIG_CXL_EINJ scheme proposed on patch1.
-> 
->>  	help
->>  	  APEI allows to report errors (for example from the chipset)
->>  	  to the operating system. This improves NMI handling
->> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
->> index 330329ac2f1f..98d5e6d60a02 100644
->> --- a/drivers/acpi/apei/einj.c
->> +++ b/drivers/acpi/apei/einj.c
->> @@ -21,9 +21,11 @@
->>  #include <linux/nmi.h>
->>  #include <linux/delay.h>
->>  #include <linux/mm.h>
->> +#include <linux/pci.h>
->>  #include <asm/unaligned.h>
->>  
->>  #include "apei-internal.h"
->> +#include "../../cxl/cxl.h"
-> 
-> EINJ has no business knowing all of the details in cxl.h. In fact all
-> EINJ cares about is dport->dport_dev and dport->rch. I think just add
-> those to the calling convention, see below:
-> 
->>  #undef pr_fmt
->>  #define pr_fmt(fmt) "EINJ: " fmt
->> @@ -627,6 +629,25 @@ static int available_error_type_show(struct seq_file *m, void *v)
->>  
->>  DEFINE_SHOW_ATTRIBUTE(available_error_type);
->>  
->> +static int cxl_einj_available_error_type(struct seq_file *m, void *v)
->> +{
->> +	int cxl_err, rc;
->> +	u32 available_error_type = 0;
->> +
->> +	rc = einj_get_available_error_type(&available_error_type);
->> +	if (rc)
->> +		return rc;
->> +
->> +	for (int pos = 0; pos < ARRAY_SIZE(einj_cxl_error_type_string); pos++) {
->> +		cxl_err = ACPI_EINJ_CXL_CACHE_CORRECTABLE << pos;
->> +
->> +		if (available_error_type & cxl_err)
->> +			seq_puts(m, einj_cxl_error_type_string[pos]);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>  static int validate_error_type(u64 type)
->>  {
->>  	u32 tval, vendor, available_error_type = 0;
->> @@ -657,6 +678,68 @@ static int validate_error_type(u64 type)
->>  	return 0;
->>  }
->>  
->> +static int cxl_dport_get_sbdf(struct cxl_dport *dport, u64 *sbdf)
->> +{
->> +	struct pci_dev *pdev;
->> +	struct pci_bus *pbus;
->> +	struct pci_host_bridge *bridge;
->> +	u64 seg = 0, bus;
->> +
->> +	if (!dev_is_pci(dport->dport_dev))
->> +		return -EINVAL;
->> +
->> +	pdev = to_pci_dev(dport->dport_dev);
->> +	pbus = pdev->bus;
->> +	bridge = pci_find_host_bridge(pbus);
->> +
->> +	if (!bridge)
->> +		return -ENODEV;
->> +
->> +	if (bridge->domain_nr != PCI_DOMAIN_NR_NOT_SET)
->> +		seg = bridge->domain_nr << 24;
->> +
->> +	bus = pbus->number << 16;
->> +	*sbdf = seg | bus | pdev->devfn;
->> +
->> +	return 0;
->> +}
->> +
->> +static int cxl_einj_inject_error(struct cxl_dport *dport, u64 type)
-> 
-> If you split this into cxl_einj_inject_error() and
-> cxl_einj_inject_rch_error() with following prototypes:
-> 
-> static int cxl_einj_inject_error(struct pci_dev *dport_dev, u64 type)
-> static int cxl_einj_inject_rch_error(u64 rcrb, u64 type)
-> 
-> ...then you don't need any of the cxl.h definitions. The dev_is_pci()
-> and rch determination details can remain private to CXL.
-> 
+> That's a good point. I can do that, but I think it may be better to keep the
+> consistency with the EINJ module to simplify things for end users. If you feel
+> that isn't a big enough concern I can go ahead and modify it.
 
-Good suggestion. Will do!
+Oh, definitely keep the old style as well. I was thinking of something
+like:
 
-Thanks,
-Ben
+echo "CXL.cache Protocol Correctable" > einj_inject
+echo "0x1000" > einj_inject
 
->> +{
->> +	u64 param1 = 0, param2 = 0, param4 = 0;
->> +	u32 flags;
->> +	int rc;
->> +
->> +	/* Only CXL error types can be specified */
->> +	if (type & ~CXL_ERROR_MASK || (type & ACPI5_VENDOR_BIT))
->> +		return -EINVAL;
->> +
->> +	rc = validate_error_type(type);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/*
->> +	 * If dport is in restricted mode, inject a CXL 1.1 error,
->> +	 * otherwise inject a CXL 2.0 error
->> +	 */
->> +	if (dport->rch) {
->> +		if (dport->rcrb.base == CXL_RESOURCE_NONE)
->> +			return -EINVAL;
->> +
->> +		param1 = (u64) dport->rcrb.base;
->> +		param2 = 0xfffffffffffff000;
->> +		flags = 0x2;
->> +	} else {
->> +		rc = cxl_dport_get_sbdf(dport, &param4);
->> +		if (rc)
->> +			return rc;
->> +
->> +		flags = 0x4;
->> +	}
->> +
->> +	return einj_error_inject(type, flags, param1, param2, 0, param4);
->> +}
->> +
->>  static int error_type_get(void *data, u64 *val)
->>  {
->>  	*val = error_type;
->> @@ -668,6 +751,7 @@ static int error_type_set(void *data, u64 val)
->>  {
->>  	int rc;
->>  
->> +	/* CXL error types have to be injected from cxl debugfs */
->>  	if (val & CXL_ERROR_MASK && !(val & ACPI5_VENDOR_BIT))
->>  		return -EINVAL;
->>  
->> @@ -714,6 +798,7 @@ static int __init einj_init(void)
->>  {
->>  	int rc;
->>  	acpi_status status;
->> +	struct cxl_einj_ops cxl_ops;
->>  	struct apei_exec_context ctx;
->>  
->>  	if (acpi_disabled) {
->> @@ -793,6 +878,15 @@ static int __init einj_init(void)
->>  				   einj_debug_dir, &vendor_flags);
->>  	}
->>  
->> +	if (IS_REACHABLE(CONFIG_CXL_ACPI) || IS_REACHABLE(CONFIG_CXL_PORT)) {
->> +		cxl_ops = (struct cxl_einj_ops) {
->> +			.einj_type = cxl_einj_available_error_type,
->> +			.einj_inject = cxl_einj_inject_error,
->> +		};
->> +
->> +		cxl_einj_set_ops_cbs(&cxl_ops);
->> +	}
+...having the same result. Up to you though, I will still take the
+series if only the integer way works.
+
+[..]
+> >> +	snprintf(dir_name, 31, "dport%d", dport->port_id);
+> > 
+> > How about dev_name(dport->dport_dev) rather than the dynamic name?
+> > 
+> > The other benefit of this is that the dport_dev names are unique, so you
+> > can move the einj_inject file to:
+> > 
+> > /sys/kernel/debug/cxl/$dport_dev/einj_inject
+> > 
 > 
-> This goes away with the new Kconfig dependency scheme.
-> 
->> +
->>  	pr_info("Error INJection is initialized.\n");
->>  
->>  	return 0;
->> @@ -810,8 +904,18 @@ static int __init einj_init(void)
->>  
->>  static void __exit einj_exit(void)
->>  {
->> +	struct cxl_einj_ops cxl_ops;
->>  	struct apei_exec_context ctx;
->>  
->> +	if (IS_REACHABLE(CONFIG_CXL_ACPI) || IS_REACHABLE(CONFIG_CXL_PORT)) {
->> +		cxl_ops = (struct cxl_einj_ops) {
->> +			.einj_type = NULL,
->> +			.einj_inject = NULL,
->> +		};
->> +
->> +		cxl_einj_set_ops_cbs(&cxl_ops);
->> +	}
->> +
->>  	if (einj_param) {
->>  		acpi_size size = (acpi5) ?
->>  			sizeof(struct set_error_type_with_address) :
->> @@ -832,4 +936,5 @@ module_exit(einj_exit);
->>  
->>  MODULE_AUTHOR("Huang Ying");
->>  MODULE_DESCRIPTION("APEI Error INJection support");
->> +MODULE_IMPORT_NS(CXL);
-> 
-> EINJ never references a CXL symbol in the new proposed scheme.
+> I didn't realize the dport names were also unique. I'll go ahead and do that instead.
+
+Yeah, you can assume that all devices that share a bus must have unique
+names so that /sys/bus/$bus/devices can list all of them without
+name collisions.
