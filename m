@@ -1,82 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EK3gGnnt"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40C41713
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 15:35:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JDLRc6r2"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128091716;
+	Thu,  7 Dec 2023 16:03:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701992105; x=1733528105;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=StWB0UJuzWuQdgHtpBBOEsDYB6/UF6jNiHPA5v7lqLc=;
-  b=EK3gGnntZIlsJhld+uW/OEz1dbVcRjsMKUS1+0iFXYAyi0K0NCgPa7o4
-   jH8VnSU2Nng8iyDYgWryQE4X7BMe4uJL2aFrzO2Ruev5BTy86vJBuFYKU
-   wgIdd1RwxoV/8gmovpRcxEhIJ4dPhNcJ8uimb6Fty0+PzUqltJ52ZX2dg
-   bAgG3C0ZcprOIkZFvhX3+ITYNBSROzj/zQUhSjQ3hU7muHmyDAtpqri7o
-   lj7neeZu7YQiTKrMc7ur2QW32XocfeJERgsUsPX6oBkQG7B/7WcwYik5S
-   zoE1CcRSsN9nu2aLAJFrYq6aZ43cK/Nqan69tlTfQO/Yye3l6SIbw7dQI
+  t=1701993806; x=1733529806;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=zItYMTPp65m5Va0sdkI6i8+KZV/8thJa1VPyIFXJNkQ=;
+  b=JDLRc6r2ukcbYIILojhi4L+tlAyEBdqTMSS3nayDeYg343+WDAFNRNwH
+   LdiOFoYJGisIwryxA2A/A1MLdCbjcRqQBJWMyOAmugisSD6qr2bDur6Qk
+   IdQMMIv8dykVdEeP+M86rBsTtdWHfYZw1drfykGI/ofe59ytEKXjiGZIa
+   R0eIpAWalGQn0EIjcW52PjaWnDbO+9IGwVTha2K9YVEgEUgArs5tx3El0
+   AO37UNP1kpmR+3PRNUA1r70Hh5aeP1ONOS5utKOEdXZVvOw5w4M+HIJrk
+   Y4Sen9B9yugkI6NdpomAr/1c2iIJjPjV7NTlWTKGtITLTTFEKg4+obMDZ
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1406238"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="379333748"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="1406238"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 15:35:05 -0800
+   d="scan'208";a="379333748"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 16:03:23 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="862664798"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="915753264"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="862664798"
+   d="scan'208";a="915753264"
 Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Dec 2023 15:35:04 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Dec 2023 16:03:22 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
  fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Dec 2023 15:35:04 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ 15.1.2507.35; Thu, 7 Dec 2023 16:03:22 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 7 Dec 2023 15:35:04 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.35; Thu, 7 Dec 2023 16:03:22 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 7 Dec 2023 16:03:22 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Dec 2023 15:35:03 -0800
+ 15.1.2507.35; Thu, 7 Dec 2023 16:03:22 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lfuOjgd0m9XlXHxHMlDTUiKH/VNo9U/2ykeTbJq8bahi40RPl2u8NBMkffSlahEYM0Wk53VcL21So5aeWTdJNe3S760VcxSnGFO01p+W7rl8EWAyOhGWhSZARx4jCuqE1FO+5vyP0QEfqIi3o5Elpf/UUaLUM7do0h0KHts69zrgWbMBbgbEkzGODXSad8IBOnRCaeSJNYZanO6+l7lp3XtwsyePCE2DfwGvgFC74QrXrZRTMYkM/v97zimm6VDtqEeHz6T4JlP7kyPgPEeIBhzSj7UyvlH2BCZi3aeaDnV3G3f+hqqoalk2fq9g6HtBLNoI+c0hxpSSb6oLCW+LHw==
+ b=PevSAkbczFkT6FU1uA/klfrxAD60/8C7n9kzc4UlAb7o6buA2pVjAItDpl03DLlZ0sxLKPkVaA7tMw5i27e1lf/gZz5NKaZxFr7o3wDwj6BlKuHRX5rkjjERMTYoIw7assTPUo6nzobUz1mRPxxxD8BSMpamdJ0Zo4R7/URukd0jOFTjHoCg8iHZe6CpfTHzHnjUmXi9UXon9Yu01zdVFE3zgqDAD3BeRHM/v4DjKR6jiH3FSbmhU3ZO05WmVFyCEnknFz9uiu5spwpMBXyv5nRGVMPZqgpoTglabElElL4Uy8/XeBMha0au1WDzTWatYK3NPzvrUtebIlqd8kGi8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tFd2JKQgPqR2Cc974/I1Ir0YtsJCgkY7UkT5hDuZzUk=;
- b=nAeYnOrAFHPtXJpAytvyMR1U7SWDpbssXJKh8NvWzNgCN+CuxX3aUPmGDyc/GsGsvmew4qstAZtbjfl2dbxJh5TS23Udod2XtjFrc6ZQ6dd9wHakECHAp6g0CLOVj7JXMWAF0A/CjEs81KccDr4QMRTAlEnUOfbx+ToedbOILM7R9L0QgivjqtlWjlUjg0C09dDu3mvxPnXrG1jy0zm7q3gVCxH2V4DzSiPePVaMxY9Y0sdvIhQWFXJgvexyKZS4EyeED36pLpAm9tR6SmfUR6lUXSK4i+WuIPEk3QGfg9putqjvMczsNRphVJ7leFvmM8Eq2hLybloOl62Fe5zHMQ==
+ bh=S/eITzwIjF7DoBKQFjXj2V73vstsw5XNZE7isDAa8/o=;
+ b=aJT/yY5tDHiKJWRE4jgU667Bt0OXIExqIbCFEyefnaElyUU37CeksV0tUHNvdzF4jRn8pTT7i/CPVjz+s+SnmECw9rtpTClxPSSCHZwTDSwLIVPRmDQS89Hbk2Tw4XWYkLV/vk9vLE7K0XGYYh4UhEem7NS0RXZ2pVrRS8cAdCYEtVP+qALNEeUF0qxxahdnMp68XeP9yR5dNuBGPVIqvHrBhK9u7jWMyxN4Ij41ROiySjillApZ/UEvGOu96BDL2y4NZZJcVNJM8yTfIlh6GQsQ6aAIrcH5LrRn9ez2SCqYZQqZ9aowZmc1pC262ZV2LuNf8XJztOLmrwHaMLZ7kg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by IA1PR11MB6491.namprd11.prod.outlook.com (2603:10b6:208:3a5::19) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB7052.namprd11.prod.outlook.com (2603:10b6:510:20f::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Thu, 7 Dec
- 2023 23:35:01 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7068.027; Thu, 7 Dec 2023
- 23:35:01 +0000
-Message-ID: <5cb208da-8e49-4672-abdf-0c682ba4c1d9@intel.com>
-Date: Thu, 7 Dec 2023 16:34:58 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 1/3] cxl/region: Calculate performance data for a region
-From: Dave Jiang <dave.jiang@intel.com>
-To: <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<jonathan.cameron@huawei.com>, <dave@stgolabs.net>
-References: <170199183593.3543732.2735037388423785616.stgit@djiang5-mobl3>
-Content-Language: en-US
-In-Reply-To: <170199183593.3543732.2735037388423785616.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR02CA0019.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::32) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Fri, 8 Dec
+ 2023 00:03:20 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7068.025; Fri, 8 Dec 2023
+ 00:03:20 +0000
+Date: Thu, 7 Dec 2023 16:03:12 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <rafael@kernel.org>
+CC: <benjamin.cheatham@amd.com>, <yazen.ghannam@amd.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH v7 4/5] cxl/port, EINJ: Add CXL EINJ callback functions
+Message-ID: <65725d405abf3_45e01294f2@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20231128160656.166609-1-Benjamin.Cheatham@amd.com>
+ <20231128160656.166609-5-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231128160656.166609-5-Benjamin.Cheatham@amd.com>
+X-ClientProxiedBy: MW4P222CA0022.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::27) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,204 +89,271 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|IA1PR11MB6491:EE_
-X-MS-Office365-Filtering-Correlation-Id: c827fced-2132-4983-414f-08dbf77d215d
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7052:EE_
+X-MS-Office365-Filtering-Correlation-Id: 222b58c3-d849-4be5-a8b3-08dbf781165b
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KK2f3N+hPpU/rKWgZNAFWOfSfZgZ1dPPB4xIjoW1JCOVdCYhvi2ugq+mITtOuSzqsadHUA5FqfjBnNZa+ES2sFNEWNMcCF25ZccfulnqVteSg32CoRHo1OnZ2itkCzUmrXvWLGjxmMaoIItMBDaNrJ6MWESRa5WLy0JdOLDtZhJ5ZoRu0BoHkoaceXluAXLVjSJx/PYzIXtrIn5erUKE9o3L/hS2Fxv9c615kJCbipn4XfexIQWzQyzRHG7CD/e1FjR8blxLbnC7qbfNfKHJ3d/l2991+S/8224AFrplJl4OB/YHB0W1H3d958BDA7U/+VFLK3YSqkq6widpYI7Dt91CefLKmvROGpNbn0wN1j8AI9BRKUxEFH83LiP9Qn3KME/J4Hs4a3v40Woe3sHg7rDWE8UIbnx+4NLUURx/Csa2+lpXF9Wn+SG1B7JvNq1yk6fLw70AhRKGgZRNLPN0Lb68aTd2g+kUF5ekq2EhMDik6AmigTL3H5kSwvhQfuPR6QpX6GtB8BF/K0qEgakC0J5KvrMm3WETer284un1MdhxOKIGtDA4NwIs1B28y8jkXIOEbKToZj13Nc0Eh/+ns7NrufQLFp0vjWz7p95a73xF0htccGTwY4XLfMtuYfsb
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(136003)(376002)(346002)(366004)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(4326008)(2906002)(8676002)(31696002)(8936002)(86362001)(44832011)(5660300002)(36756003)(41300700001)(83380400001)(53546011)(82960400001)(6512007)(6506007)(6666004)(2616005)(26005)(38100700002)(31686004)(66556008)(66476007)(6916009)(66946007)(6486002)(478600001)(316002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: alGfFNZTxqEhmTSslF91WZ6ZG6gKW75Px7ZwvcKFThiCOORunKDLu5jYNRUHc6MJwxlr5YJpXIepw0KRxEQj/UOn3V1D2yAmt2exAwh2ljdkhxaVZTpuaC41+BXdv7f2MyKDNv2anAMZ3Wx1TRZLnmEssNfK/rgxwXS/GaR7t7/+0srhQ4BUc56Hd7iFokf0J1PVOU39DDOzkKIqn0vvtSbARk09p8lKBEkro+hrnkSjC4jAbetZs6tw8T1xKVMuF/Gkt17ohbVnnobwGeVnwwOAg41Rkyx3TW7OLOPFAtvT6T7Y9oyXWtX+sCxxde79x4EYWIc2AJ8gzvmy3cVkqavFbLVHMwQkvrslkMQsjYVyTy9yyK6XXBPSvu7uvmbBqxG8Pfk6mmzo0qtlyT5zk7Uh404JLAJJKWQYB/rzsS5nueYX27Rs5ibHx1lZ1Ii5diea58pMN2DaoZlZgclUo1NfQDaBiBknvtI2dQOhCQE8cuK4nXlAtc5EOiKibP+zv/KoWrrEGMLAfxi/SUY+xbYwdIe/hQQuxGuFYaixEwj0fdZ7wdh1GvAF6JpEZwMW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(366004)(346002)(136003)(376002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(66476007)(66556008)(86362001)(316002)(8936002)(8676002)(4326008)(66946007)(478600001)(6486002)(41300700001)(82960400001)(2906002)(83380400001)(5660300002)(38100700002)(26005)(6506007)(9686003)(6666004)(6512007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S2prbFdWdTd3UU5jYW9jMHZDWVdBRHloYU1NcERyUHcydTQrWnE3NVJBTVla?=
- =?utf-8?B?WUV0bWdkTUEyaGVvcWNSSUFqWDdxMDlpTTBsSVJIMnpzeWx2dXRJc1h2MkUy?=
- =?utf-8?B?U1VyNFJmSVF6M1NEZlA5WlhBYUpPRGpvVWd4Y0hKdUNOd2hOZzA5NE9pMU52?=
- =?utf-8?B?elJvcHE4U1JxL2xrVml6di9zdGlpV3BpUk9INjNXVnlLdHFZSUlrQUZWS2JR?=
- =?utf-8?B?SWNZL1IvKzFVWEJvaTdDN3RQY1J1NWUzUXhWRnJib3NZK0NJUzI3SnkvSWh6?=
- =?utf-8?B?NHRzSndmT0xUbDgvSmlLYlpMSFYvVjZtZnlob2RHMEJ4RmIxUWF2KzNySnJ4?=
- =?utf-8?B?aW5zdWhCeFZFdXlPSmVSQ0I3V2dldzhpa3hyUWd0b3pYTGRNOEFhdHhJN051?=
- =?utf-8?B?NEZLM3F0SW92TkQwZThzRGV1N2tpaGFLYzVDb2k4cDBPU3BnS084aXBmeDJi?=
- =?utf-8?B?eWtmbEJ1eE9jRmVpS2o2OUk0NDQ2UFFHTEU1Z3FOR252Zk1xaXczNjN5WEFJ?=
- =?utf-8?B?NjNVcWhzVDNyOEFDWERmaFI4aE9SUk1qUW5JUmVodUsycnZLZE1mNlZnOGhN?=
- =?utf-8?B?eGxxWmJrRm9UUk1FWlBwMGZzbTFrV2lNeEhJZE9wTHRiUnNuVHQra0J3WWxK?=
- =?utf-8?B?eWxqVUVZcXlkSXZjbjJ5TjI0T2hyV2tyeEhPaEpXa000V3N5RG5hVXpIejZQ?=
- =?utf-8?B?T2szdWpLaUJWRGFjbVdDTDh4R0x6a3gzVWt3ODlWVWpBWllDL1RVOVlBRFVm?=
- =?utf-8?B?WXNmdENsNTZJVXlTM2F3VndudVhLTlJFVXJXZm43NGsycVM4K2NiYTZCTStj?=
- =?utf-8?B?c3JVYUM2K0lQSXgyVGNYMHNKT1N6N1k3VDlyRUdhYUEwbU5DMlFSSHpkV0t6?=
- =?utf-8?B?UTVNRS9TT1RWUUJPSU90bVpJSnlnME1oOFJQcGlENEVXOE1XU3N2dTlsazBo?=
- =?utf-8?B?V2lObkFUQkZFZFRsZWIxRFZyQk9QSHVjTnNFMVhjK2xIUEE4UUFJQXpiaVJZ?=
- =?utf-8?B?T1lUSktqTXVlSlcyWGhWbXVZUytVcU5jVm5IS2hCNkRCTHYyVXhOaHFJaWIr?=
- =?utf-8?B?VGtWc2p1b3FkWTZHODJCVFpvSCtDMUJnSkQwZStsM3l4dHlnNGNQUG5TZ1hI?=
- =?utf-8?B?MVNjOGNQSzFITE1OZjgxWllzU3gySWtSUHNlTUxoZjZXbjN1RVNSZC9sbW5q?=
- =?utf-8?B?WTM3Sjg4VWR0UFRRdlNUaGNURWxHWTdLczlnbVdTTUNLU3B5UmJSSUQzQkhi?=
- =?utf-8?B?LzVsMHhVY3JxSHpLSmR1b3pYK01UQmJrbkhGMldka1hmVEN6VDl4bUhUMXg2?=
- =?utf-8?B?d2dLby9NZVJIVERpVHJKOWtWWlRBcE95bWhkcjJ2S05mZGtpNzFlcHp5S0tv?=
- =?utf-8?B?VmZjaU91ekpUd28vVHNtbUlROTNmdWxKZ2hxSGVpcUFiTnNISDhycDNRMThw?=
- =?utf-8?B?ell1bXZianh4RWpWZFpyR3diSUxCR3dTbVF1cHl6bjFWSmJpQTZwT2pva3cy?=
- =?utf-8?B?L2xsRVlLVlZpNVdZQTRIMkVIMmpFZEZGVVNDQW4xY1FBNW9VeU9tWS9KUU45?=
- =?utf-8?B?bWdweUwvbGVYUlFiZ1o0ejBPZ29laXFrZUpKd2VxR3ZtUUx3Y1F2NkEwRWk0?=
- =?utf-8?B?UGZzbTFCemFUQkNqb3d4Y2NpMWlaNDUxdGxDd3pRck90UUU0VGFpTVg2SGhB?=
- =?utf-8?B?V2diNmFyNVhnNGR6aFVmTVJYNjB4UkIvWEVESTNhbVBRaFVWcDVkUkwvRGxD?=
- =?utf-8?B?a2o1cWNIU0FhSkhnUFN6S2NucnpYU2YycUx5T2pXSm8rRk5uaWljQlhUSE16?=
- =?utf-8?B?NW92MHNuQXpaaytEQUlyTU5wQWVwUThpNFkzd3d1WnhEZ3F5SGdiMXRiR0Ur?=
- =?utf-8?B?Y0xjNkFWUnFvN2pvWFZFUFpwRDY4TUx4ZHZZbkpSYVRrKzNUZmY5VkthdWNJ?=
- =?utf-8?B?NHVEZVRmYkdMT01YZlQyQVR6VDd4VmxmYmdmekk5cS9INDFEQ0FvOWZjOExT?=
- =?utf-8?B?a2tvWXZiMHNMUHhpSDV0RWZUUzNqU0xLMmJaNlZ5WE55OVlVMFU0eWJNdEpp?=
- =?utf-8?B?MDkrRlFwcE1ZckRxZStqa3Yxc1VnSi9KL1pudDVYZ2pyOHg2dG1abUJ0UmJw?=
- =?utf-8?Q?cNVpyP+kMcZIts7zx6SVkwQ0i?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c827fced-2132-4983-414f-08dbf77d215d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?83NWKmxpQdH/KqQQ/YPgqwqOM4y6GIffPg3TOsd6PtbZMu1g7oQD52s9yAfE?=
+ =?us-ascii?Q?ZU+oBvNlrfbCo6pIEs6kDVnuRqdhQf/iKkZV6N92yxskq4HRRT/Rd9rjkHrD?=
+ =?us-ascii?Q?U1xYh2SnITySlCtBQ1LT27XCKGr8D6M3CFM0p46lHFUzyFSDYxXS/72rBZNr?=
+ =?us-ascii?Q?Vusyxr8dysCs+3SmBszf+ekwQJy8oJycdTvbG909yF5SyPgWSQh+a3N2eYWK?=
+ =?us-ascii?Q?byL5xrplsNREIFqkH/RmO75xpNI1QpVxWwWGjD5RNJQictLj1H2xGg/BqzJz?=
+ =?us-ascii?Q?ydr9ojvir1jon62ab7wFRR5Gy7axl7qgYCfvt9sl9bm+zUdJCeg7I/77Gat2?=
+ =?us-ascii?Q?/exNLWrtYz3JaSDRmKUYGq0tK+zZJQMgS8JmJMux20ZIH+6vxmD85CXw8egF?=
+ =?us-ascii?Q?//PS1JZKdXPyZEhOO8fUppo4r1MAg78rA0uCEQcOAJr8dxxmtxkQf4IebAJC?=
+ =?us-ascii?Q?VuDEjoAy3tFmePYIyIEzrBC7Ni8Hu5rvvRb/DxmBMXvvJFkDvtc1SBG05Cnh?=
+ =?us-ascii?Q?dWPwcWjBUpGC8h94ROCFm/R0WplbJY0F4wHNJwH/IrlU3GtNzZO9i5CILdt0?=
+ =?us-ascii?Q?mYQafjHi8eO68Ja9ngzPWdfWj6wACdSJlqTWvagzg2Likxuid5ZeYU4DRwiC?=
+ =?us-ascii?Q?Um/esp3NTk+tEDzpvWhVDJNoojqAtiFTDHGt3n6u6yiuXs1kJgRvOVha6Rdy?=
+ =?us-ascii?Q?2gshf16vN64yjAXJwl8tF/10FaX2c5SqrW8UcbhTl7tQJdJ8k57BdaKj9iLW?=
+ =?us-ascii?Q?xQBIFs22mwOOQmr6FDD7fIkY8Qe1zhg0g5DePSuzG71joO94u788ab7qcofM?=
+ =?us-ascii?Q?/HCr2picYHgKeLBajzwN7CyU63SCtLQ1ONubmB4N99JN1+jVaSzjI4VaU/hG?=
+ =?us-ascii?Q?Y+k4XalA8Fc9VO4fvS88Z+oKczOxjJC/tWlrQeR4ivonXH0wk33HuBmOO9S0?=
+ =?us-ascii?Q?8ppjn9o1A9BlFavrqLsSausuaF0q7EbiB2W6h8xgTRgflJ/f7PO1m+i19kVt?=
+ =?us-ascii?Q?snTDlLNIlqYtsB1E0gu8OGgIoCCOsYkihGA7owh7/WCfceXEhfrJd7E+u6QD?=
+ =?us-ascii?Q?kz2NBT0b625T06kuxEfKIUSuH1I0VwszbhRLhm2vg5zRVHN8pue2Or4ae/TJ?=
+ =?us-ascii?Q?4j4oWN+9+bDYyyJH/5nkkKcjqEoBsdGguU+1E3r3zmBYd6kn1gTiiP2+MJGq?=
+ =?us-ascii?Q?BlQ1CT3mIUQqyKQlET50qw0OgaFL3pbPAfxV+xdRuiFG4EkX4mxONNxbNon/?=
+ =?us-ascii?Q?9EiLlK6XCY9FhVWUlzlSDHalf6WM5ZiPjbNo4qYJhRBtOnDd34pZqZiymls9?=
+ =?us-ascii?Q?73meFWFvi1S/OlmvKX//jMbGfO4+1o1p7lynD6wjKFKyyzxsKx6BcLbTe/R+?=
+ =?us-ascii?Q?iNnDFM7h5744sJZTpzyv+8CD5cKooGYIpGFsZ4mU5SS1XBPNM+/6c8KPWzUp?=
+ =?us-ascii?Q?T/fApPSWOX9IWa4mSvqEHXbsIIH8CMEcb3f1YRGU/rTdMsmBB0KK231N+k5/?=
+ =?us-ascii?Q?tpG+3T4McUuPPOB16pX8pUfq1GaF3oEpNK4d+ejTmx9rcKPl91BZIRLqbLFl?=
+ =?us-ascii?Q?h2XZ319FmUgM0zXZopvhLhSmMdNyxBNVG5v2VU/dMIyZYbgDbzwSOwi7Ky2k?=
+ =?us-ascii?Q?9g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 222b58c3-d849-4be5-a8b3-08dbf781165b
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 23:35:00.6997
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 00:03:20.2288
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lc0hwfuU7Z1nmfFCEV9rYtUTMeIDPSLGInlu2Y4gj4+dQaYZ08WZAELUgaXARWHaEwG1MYxsjEhl7q0lUwCuZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6491
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2F6GEeKOMRloSFNZftloG9zXCHrqYq8LABbt/VkAkm5dMe7BqsFy0eeInfZ53gHoeo4T1KCH+QlFRRUKcCg1PPcwztf/4ieu34GMqRzYL0A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7052
 X-OriginatorOrg: intel.com
 
-
-
-On 12/7/23 16:30, Dave Jiang wrote:
-> Calculate and store the performance data for a CXL region. Find the worst
-> read and write latency for all the included ranges from each of the devices
-> that attributes to the region and designate that as the latency data. Sum
-> all the read and write bandwidth data for each of the device region and
-> that is the total bandwidth for the region.
+Ben Cheatham wrote:
+> Add functions to the EINJ module to be used in the CXL module for CXL
+> protocol error injection. The callbacks implement the einj_types and
+> einj_inject files under /sys/kernel/debug/cxl/portX/dportY. These two
+> files work in the same way as the available_error_types and error_inject
+> files under /sys/kernel/debug/apei/einj, but only for CXL error types.
+> If the dport is enumerated in RCH (CXL 1.1) mode, a CXL 1.1 error is
+> injected into the dport; a CXL 2.0 error is injected otherwise.
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-Please ignore and see the series. This was an accident. 
-
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 > ---
->  drivers/cxl/core/region.c |   94 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |    1 
->  2 files changed, 95 insertions(+)
+>  drivers/acpi/apei/Kconfig |   3 ++
+>  drivers/acpi/apei/einj.c  | 105 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 108 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 56e575c79bb4..d879f5702cf2 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2934,6 +2934,98 @@ static int is_system_ram(struct resource *res, void *arg)
->  	return 1;
->  }
+> diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
+> index 6b18f8bc7be3..100c27beb581 100644
+> --- a/drivers/acpi/apei/Kconfig
+> +++ b/drivers/acpi/apei/Kconfig
+> @@ -11,6 +11,9 @@ config ACPI_APEI
+>  	select PSTORE
+>  	select UEFI_CPER
+>  	depends on HAVE_ACPI_APEI
+> +	imply CXL_BUS
+> +	imply CXL_ACPI
+> +	imply CXL_PORT
+
+This goes away with the CONFIG_CXL_EINJ scheme proposed on patch1.
+
+>  	help
+>  	  APEI allows to report errors (for example from the chipset)
+>  	  to the operating system. This improves NMI handling
+> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+> index 330329ac2f1f..98d5e6d60a02 100644
+> --- a/drivers/acpi/apei/einj.c
+> +++ b/drivers/acpi/apei/einj.c
+> @@ -21,9 +21,11 @@
+>  #include <linux/nmi.h>
+>  #include <linux/delay.h>
+>  #include <linux/mm.h>
+> +#include <linux/pci.h>
+>  #include <asm/unaligned.h>
 >  
-> +static int cxl_region_perf_data_calculate(struct cxl_region *cxlr)
+>  #include "apei-internal.h"
+> +#include "../../cxl/cxl.h"
+
+EINJ has no business knowing all of the details in cxl.h. In fact all
+EINJ cares about is dport->dport_dev and dport->rch. I think just add
+those to the calling convention, see below:
+
+>  #undef pr_fmt
+>  #define pr_fmt(fmt) "EINJ: " fmt
+> @@ -627,6 +629,25 @@ static int available_error_type_show(struct seq_file *m, void *v)
+>  
+>  DEFINE_SHOW_ATTRIBUTE(available_error_type);
+>  
+> +static int cxl_einj_available_error_type(struct seq_file *m, void *v)
 > +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	unsigned int rd_bw = 0, rd_lat = 0;
-> +	unsigned int wr_bw = 0, wr_lat = 0;
-> +	struct access_coordinate *coord;
-> +	struct list_head *perf_list;
-> +	int rc = 0, i;
+> +	int cxl_err, rc;
+> +	u32 available_error_type = 0;
 > +
-> +	lockdep_assert_held(&cxl_region_rwsem);
+> +	rc = einj_get_available_error_type(&available_error_type);
+> +	if (rc)
+> +		return rc;
 > +
-> +	/* No need to proceed if hmem attributes are already present */
-> +	if (cxlr->coord)
-> +		return 0;
+> +	for (int pos = 0; pos < ARRAY_SIZE(einj_cxl_error_type_string); pos++) {
+> +		cxl_err = ACPI_EINJ_CXL_CACHE_CORRECTABLE << pos;
 > +
-> +	coord = devm_kzalloc(&cxlr->dev, sizeof(*coord), GFP_KERNEL);
-> +	if (!coord)
-> +		return -ENOMEM;
-> +
-> +	cxled = p->targets[0];
-> +
-> +	for (i = 0; i < p->nr_targets; i++) {
-> +		struct range dpa = {
-> +			.start = cxled->dpa_res->start,
-> +			.end = cxled->dpa_res->end,
-> +		};
-> +		struct cxl_memdev_state *mds;
-> +		struct perf_prop_entry *perf;
-> +		struct cxl_dev_state *cxlds;
-> +		struct cxl_memdev *cxlmd;
-> +		bool found = false;
-> +
-> +		cxled = p->targets[i];
-> +		cxlmd = cxled_to_memdev(cxled);
-> +		cxlds = cxlmd->cxlds;
-> +		mds = to_cxl_memdev_state(cxlds);
-> +
-> +		switch (cxlr->mode) {
-> +		case CXL_DECODER_RAM:
-> +			perf_list = &mds->ram_perf_list;
-> +			break;
-> +		case CXL_DECODER_PMEM:
-> +			perf_list = &mds->pmem_perf_list;
-> +			break;
-> +		default:
-> +			rc = -EINVAL;
-> +			goto err;
-> +		}
-> +
-> +		if (list_empty(perf_list)) {
-> +			rc = -ENOENT;
-> +			goto err;
-> +		}
-> +
-> +		list_for_each_entry(perf, perf_list, list) {
-> +			if (range_contains(&perf->dpa_range, &dpa)) {
-> +				found = true;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (!found) {
-> +			rc = -ENOENT;
-> +			goto err;
-> +		}
-> +
-> +		/* Get total bandwidth and the worst latency for the cxl region */
-> +		rd_lat = max_t(unsigned int, rd_lat,
-> +			       perf->coord.read_latency);
-> +		rd_bw += perf->coord.read_bandwidth;
-> +		wr_lat = max_t(unsigned int, wr_lat,
-> +			       perf->coord.write_latency);
-> +		wr_bw += perf->coord.write_bandwidth;
+> +		if (available_error_type & cxl_err)
+> +			seq_puts(m, einj_cxl_error_type_string[pos]);
 > +	}
 > +
-> +	*coord = (struct access_coordinate) {
-> +		.read_latency = rd_lat,
-> +		.read_bandwidth = rd_bw,
-> +		.write_latency = wr_lat,
-> +		.write_bandwidth = wr_bw,
-> +	};
-> +
-> +	cxlr->coord = coord;
-> +
 > +	return 0;
-> +
-> +err:
-> +	devm_kfree(&cxlr->dev, coord);
-> +	return rc;
 > +}
 > +
->  static int cxl_region_probe(struct device *dev)
+>  static int validate_error_type(u64 type)
 >  {
->  	struct cxl_region *cxlr = to_cxl_region(dev);
-> @@ -2959,6 +3051,8 @@ static int cxl_region_probe(struct device *dev)
->  		goto out;
+>  	u32 tval, vendor, available_error_type = 0;
+> @@ -657,6 +678,68 @@ static int validate_error_type(u64 type)
+>  	return 0;
+>  }
+>  
+> +static int cxl_dport_get_sbdf(struct cxl_dport *dport, u64 *sbdf)
+> +{
+> +	struct pci_dev *pdev;
+> +	struct pci_bus *pbus;
+> +	struct pci_host_bridge *bridge;
+> +	u64 seg = 0, bus;
+> +
+> +	if (!dev_is_pci(dport->dport_dev))
+> +		return -EINVAL;
+> +
+> +	pdev = to_pci_dev(dport->dport_dev);
+> +	pbus = pdev->bus;
+> +	bridge = pci_find_host_bridge(pbus);
+> +
+> +	if (!bridge)
+> +		return -ENODEV;
+> +
+> +	if (bridge->domain_nr != PCI_DOMAIN_NR_NOT_SET)
+> +		seg = bridge->domain_nr << 24;
+> +
+> +	bus = pbus->number << 16;
+> +	*sbdf = seg | bus | pdev->devfn;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_einj_inject_error(struct cxl_dport *dport, u64 type)
+
+If you split this into cxl_einj_inject_error() and
+cxl_einj_inject_rch_error() with following prototypes:
+
+static int cxl_einj_inject_error(struct pci_dev *dport_dev, u64 type)
+static int cxl_einj_inject_rch_error(u64 rcrb, u64 type)
+
+...then you don't need any of the cxl.h definitions. The dev_is_pci()
+and rch determination details can remain private to CXL.
+
+> +{
+> +	u64 param1 = 0, param2 = 0, param4 = 0;
+> +	u32 flags;
+> +	int rc;
+> +
+> +	/* Only CXL error types can be specified */
+> +	if (type & ~CXL_ERROR_MASK || (type & ACPI5_VENDOR_BIT))
+> +		return -EINVAL;
+> +
+> +	rc = validate_error_type(type);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * If dport is in restricted mode, inject a CXL 1.1 error,
+> +	 * otherwise inject a CXL 2.0 error
+> +	 */
+> +	if (dport->rch) {
+> +		if (dport->rcrb.base == CXL_RESOURCE_NONE)
+> +			return -EINVAL;
+> +
+> +		param1 = (u64) dport->rcrb.base;
+> +		param2 = 0xfffffffffffff000;
+> +		flags = 0x2;
+> +	} else {
+> +		rc = cxl_dport_get_sbdf(dport, &param4);
+> +		if (rc)
+> +			return rc;
+> +
+> +		flags = 0x4;
+> +	}
+> +
+> +	return einj_error_inject(type, flags, param1, param2, 0, param4);
+> +}
+> +
+>  static int error_type_get(void *data, u64 *val)
+>  {
+>  	*val = error_type;
+> @@ -668,6 +751,7 @@ static int error_type_set(void *data, u64 val)
+>  {
+>  	int rc;
+>  
+> +	/* CXL error types have to be injected from cxl debugfs */
+>  	if (val & CXL_ERROR_MASK && !(val & ACPI5_VENDOR_BIT))
+>  		return -EINVAL;
+>  
+> @@ -714,6 +798,7 @@ static int __init einj_init(void)
+>  {
+>  	int rc;
+>  	acpi_status status;
+> +	struct cxl_einj_ops cxl_ops;
+>  	struct apei_exec_context ctx;
+>  
+>  	if (acpi_disabled) {
+> @@ -793,6 +878,15 @@ static int __init einj_init(void)
+>  				   einj_debug_dir, &vendor_flags);
 >  	}
 >  
-> +	cxl_region_perf_data_calculate(cxlr);
+> +	if (IS_REACHABLE(CONFIG_CXL_ACPI) || IS_REACHABLE(CONFIG_CXL_PORT)) {
+> +		cxl_ops = (struct cxl_einj_ops) {
+> +			.einj_type = cxl_einj_available_error_type,
+> +			.einj_inject = cxl_einj_inject_error,
+> +		};
 > +
->  	/*
->  	 * From this point on any path that changes the region's state away from
->  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 004534cf0361..265da412c5bd 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -529,6 +529,7 @@ struct cxl_region {
->  	struct cxl_pmem_region *cxlr_pmem;
->  	unsigned long flags;
->  	struct cxl_region_params params;
-> +	struct access_coordinate *coord;
->  };
+> +		cxl_einj_set_ops_cbs(&cxl_ops);
+> +	}
+
+This goes away with the new Kconfig dependency scheme.
+
+> +
+>  	pr_info("Error INJection is initialized.\n");
 >  
->  struct cxl_nvdimm_bridge {
-> 
-> 
+>  	return 0;
+> @@ -810,8 +904,18 @@ static int __init einj_init(void)
+>  
+>  static void __exit einj_exit(void)
+>  {
+> +	struct cxl_einj_ops cxl_ops;
+>  	struct apei_exec_context ctx;
+>  
+> +	if (IS_REACHABLE(CONFIG_CXL_ACPI) || IS_REACHABLE(CONFIG_CXL_PORT)) {
+> +		cxl_ops = (struct cxl_einj_ops) {
+> +			.einj_type = NULL,
+> +			.einj_inject = NULL,
+> +		};
+> +
+> +		cxl_einj_set_ops_cbs(&cxl_ops);
+> +	}
+> +
+>  	if (einj_param) {
+>  		acpi_size size = (acpi5) ?
+>  			sizeof(struct set_error_type_with_address) :
+> @@ -832,4 +936,5 @@ module_exit(einj_exit);
+>  
+>  MODULE_AUTHOR("Huang Ying");
+>  MODULE_DESCRIPTION("APEI Error INJection support");
+> +MODULE_IMPORT_NS(CXL);
+
+EINJ never references a CXL symbol in the new proposed scheme.
