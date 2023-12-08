@@ -1,231 +1,214 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8isj7Gz"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24FD10F9
-	for <linux-cxl@vger.kernel.org>; Fri,  8 Dec 2023 03:36:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702035418;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7iZNobHl/GPobGa2I6qixx18BC281Bjl3vJdU1mmkuQ=;
-	b=M8isj7Gzmk6RnET9OXHO43zLSQApDTC6e9x/9AtxGw432CO83hkgBIL2DCZ8BZhHSosD+G
-	Z6YPZZm1/Rxm4TjQbn0Uakytrs+/gwlXV8WOhjNLb4hpUgrL+hUuusiUfXTuJOc3aEw7T/
-	hgKCXpt19JcxgZ8MGrCD84TzSRls0vg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-114-QogyxTzpO2eiqhz8QsEEGA-1; Fri, 08 Dec 2023 06:36:57 -0500
-X-MC-Unique: QogyxTzpO2eiqhz8QsEEGA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33347dc610dso1825118f8f.1
-        for <linux-cxl@vger.kernel.org>; Fri, 08 Dec 2023 03:36:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702035416; x=1702640216;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7iZNobHl/GPobGa2I6qixx18BC281Bjl3vJdU1mmkuQ=;
-        b=UHgelJljEYk9NDWjZhVFdZZNU1erhd8+LCee8SB/yxRKn/WzfA86A2VlUdHZtq/Cm6
-         Df8GAGoU4fsMd1U2sAd/1pUY/G14FRQGFeaZlMWRt44tDOI1LeSn2bRlh7OxWrUu0X9w
-         9+Hs8/7aOycOxSMXfHy9O3QsNfTFOgCYDUnjcI88L512Q7eUQ6M5Yd93IxtFPZCk48na
-         E8HSiTHEmATD0YG7CfpJrJzs3bWLZh9taUnvjE1dA5F+Fv0JZt5pNgyExDIgPpjM8Llw
-         tMmwj5JBGrYYcdmbqU/rfJ6X/9NfSXNNsoakE7/5mIHls4dw+ekKSoADyiqPeAV69C5M
-         6XUQ==
-X-Gm-Message-State: AOJu0YzL7StfGxxT1SU0PXLVV+s0dyn3a4UDOollmiEQoN44xFvC+feL
-	DkA+iXj7fbevJLvNWIYpbtylNmQ1BpgamtrAShIB9wMWkVSGY0U4l4/yNqARsLhRQh3d5Ha4eNJ
-	FBcqTkyvmRZJKgZV0ANB3
-X-Received: by 2002:a05:600c:54f1:b0:40b:5e59:ccd4 with SMTP id jb17-20020a05600c54f100b0040b5e59ccd4mr2455924wmb.181.1702035415745;
-        Fri, 08 Dec 2023 03:36:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE5LCs+9ecahCq1vp9Sw1TdZj3EbHX2btIMBL9/oJRDL+AiIApsb4Y2A2vh6l7BLPckKuqoQw==
-X-Received: by 2002:a05:600c:54f1:b0:40b:5e59:ccd4 with SMTP id jb17-20020a05600c54f100b0040b5e59ccd4mr2455915wmb.181.1702035415310;
-        Fri, 08 Dec 2023 03:36:55 -0800 (PST)
-Received: from ?IPV6:2003:cb:c724:2100:3826:4f41:d72c:dc1b? (p200300cbc724210038264f41d72cdc1b.dip0.t-ipconnect.de. [2003:cb:c724:2100:3826:4f41:d72c:dc1b])
-        by smtp.gmail.com with ESMTPSA id m29-20020a05600c3b1d00b0040b3515cdf8sm2605930wms.7.2023.12.08.03.36.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Dec 2023 03:36:54 -0800 (PST)
-Message-ID: <e9323c58-6a99-436f-b8c5-ffc68b940de3@redhat.com>
-Date: Fri, 8 Dec 2023 12:36:53 +0100
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3157D172B;
+	Fri,  8 Dec 2023 05:48:33 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SmssF151cz6JB1X;
+	Fri,  8 Dec 2023 21:47:45 +0800 (CST)
+Received: from lhrpeml500002.china.huawei.com (unknown [7.191.160.78])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9394D14011D;
+	Fri,  8 Dec 2023 21:48:30 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml500002.china.huawei.com (7.191.160.78) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 8 Dec 2023 13:48:30 +0000
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
+ Fri, 8 Dec 2023 13:48:30 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>
+CC: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v4 00/11] cxl: Add support for CXL feature commands, CXL
+ device patrol scrub control and DDR5 ECS control features
+Thread-Topic: [PATCH v4 00/11] cxl: Add support for CXL feature commands, CXL
+ device patrol scrub control and DDR5 ECS control features
+Thread-Index: AQHaI8KwgMGD3E1NJkm1EO0u0hTVFbCcsBMAgAJ2I3A=
+Date: Fri, 8 Dec 2023 13:48:30 +0000
+Message-ID: <9bc4b5fac46d4f37b675de4e0f65931b@huawei.com>
+References: <20231130192314.1220-1-shiju.jose@huawei.com>
+ <6570cdbaa96e0_45e01294e0@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <6570cdbaa96e0_45e01294e0@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] dax: add a sysfs knob to control memmap_on_memory
- behavior
-To: Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Huang Ying
- <ying.huang@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20231206-vv-dax_abi-v2-0-f4f4f2336d08@intel.com>
- <20231206-vv-dax_abi-v2-2-f4f4f2336d08@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20231206-vv-dax_abi-v2-2-f4f4f2336d08@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 07.12.23 05:36, Vishal Verma wrote:
-> Add a sysfs knob for dax devices to control the memmap_on_memory setting
-> if the dax device were to be hotplugged as system memory.
-> 
-> The default memmap_on_memory setting for dax devices originating via
-> pmem or hmem is set to 'false' - i.e. no memmap_on_memory semantics, to
-> preserve legacy behavior. For dax devices via CXL, the default is on.
-> The sysfs control allows the administrator to override the above
-> defaults if needed.
-> 
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->   drivers/dax/bus.c                       | 40 +++++++++++++++++++++++++++++++++
->   Documentation/ABI/testing/sysfs-bus-dax | 13 +++++++++++
->   2 files changed, 53 insertions(+)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 1ff1ab5fa105..11abb57cc031 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1270,6 +1270,45 @@ static ssize_t numa_node_show(struct device *dev,
->   }
->   static DEVICE_ATTR_RO(numa_node);
->   
-> +static ssize_t memmap_on_memory_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
-> +
-> +	return sprintf(buf, "%d\n", dev_dax->memmap_on_memory);
-> +}
-> +
-> +static ssize_t memmap_on_memory_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
-> +	struct dax_region *dax_region = dev_dax->region;
-> +	ssize_t rc;
-> +	bool val;
-> +
-> +	rc = kstrtobool(buf, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (dev_dax->memmap_on_memory == val)
-> +		return len;
-> +
-> +	device_lock(dax_region->dev);
-> +	if (!dax_region->dev->driver) {
-> +		device_unlock(dax_region->dev);
-> +		return -ENXIO;
-> +	}
-> +
-> +	device_lock(dev);
-> +	dev_dax->memmap_on_memory = val;
-> +	device_unlock(dev);
-> +
-> +	device_unlock(dax_region->dev);
-> +	return rc == 0 ? len : rc;
-> +}
-> +static DEVICE_ATTR_RW(memmap_on_memory);
-> +
->   static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->   {
->   	struct device *dev = container_of(kobj, struct device, kobj);
-> @@ -1296,6 +1335,7 @@ static struct attribute *dev_dax_attributes[] = {
->   	&dev_attr_align.attr,
->   	&dev_attr_resource.attr,
->   	&dev_attr_numa_node.attr,
-> +	&dev_attr_memmap_on_memory.attr,
->   	NULL,
->   };
->   
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-> index a61a7b186017..bb063a004e41 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-dax
-> +++ b/Documentation/ABI/testing/sysfs-bus-dax
-> @@ -149,3 +149,16 @@ KernelVersion:	v5.1
->   Contact:	nvdimm@lists.linux.dev
->   Description:
->   		(RO) The id attribute indicates the region id of a dax region.
-> +
-> +What:		/sys/bus/dax/devices/daxX.Y/memmap_on_memory
-> +Date:		October, 2023
-> +KernelVersion:	v6.8
-> +Contact:	nvdimm@lists.linux.dev
-> +Description:
-> +		(RW) Control the memmap_on_memory setting if the dax device
-> +		were to be hotplugged as system memory. This determines whether
-> +		the 'altmap' for the hotplugged memory will be placed on the
-> +		device being hotplugged (memmap_on+memory=1) or if it will be
-> +		placed on regular memory (memmap_on_memory=0). This attribute
-> +		must be set before the device is handed over to the 'kmem'
-> +		driver (i.e.  hotplugged into system-ram).
-> 
+Hi Dan,
 
-Should we note the dependency on other factors as given in 
-mhp_supports_memmap_on_memory(), especially, the system-wide setting and 
-some weird kernel configurations?
+Thanks  for the feedbacks.
 
--- 
-Cheers,
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 06 December 2023 19:39
+>To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org; linux-
+>mm@kvack.org; dave@stgolabs.net; Jonathan Cameron
+><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>dan.j.williams@intel.com
+>Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>tony.luck@intel.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>rafael@kernel.org; lenb@kernel.org; naoya.horiguchi@nec.com;
+>james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+>erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+>mike.malvestuto@intel.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>=
+;
+>kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+>Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+>Subject: RE: [PATCH v4 00/11] cxl: Add support for CXL feature commands, C=
+XL
+>device patrol scrub control and DDR5 ECS control features
+>
+>Hi Shiju,
+>
+>I have some general feedback at this point before digging too deep into th=
+e
+>details:
+>
+>shiju.jose@ wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> 1. Add support for CXL feature mailbox commands.
+>> 2. Add CXL device scrub driver supporting patrol scrub control and
+>> DDR5 ECS control features.
+>> 3. Add scrub driver supports configuring memory scrubs in the system.
+>> 4. Add scrub attributes for DDR5 ECS control to the memory scrub driver.
+>
+>For a new a subsystem that is meant to generically abstract a "memory scru=
+b"
+>facility the "DDR5 ECS" naming has too much precision. How much of this
+>interface is DDR5 ECS specific and how much of it is applicable to a theor=
+etical
+>DDR6 scrub implementation?
+>
+>My primary reaction is to boil down this interface so that only generic sc=
+rub
+>details are visible in the ABI, and DDR5 specifics are invisible in the sy=
+sfs ABI.
+Sure. I will check this.
 
-David / dhildenb
+>
+>For example the Linux NVDIMM subsystem has an address-range-scrub facility
+>that is independent of the specific memory technology scrub mechanism. Tha=
+t
+>one is based on ACPI NFIT, but I realize you also looked at enabling the A=
+CPI
+>RASF scrub interface. It would be useful if this patchset could plausibly =
+enable
+>one non-CXL scrubber along with the CXL one.
+Sure. I will do this. I will add ACPI RASF scrub patches to this patch set.
 
+>
+>> 5. Register CXL device patrol scrub and ECS with scrub control driver.
+>> 6. Add documentation for common attributes in the scrub configure driver=
+.
+>
+>Going forward, please include the Documentation in the patch that adds the=
+ new
+>ABI, it improves the readability / story-telling of the patches.
+>It also makes it easier to analyze which code is needed for which ABI, and
+>whether a given ABI is justified.
+I will do.
+
+>
+>The regionY nomenclature in the sysfs ABI looks like a potential opportuni=
+ty to
+>align with the "memregion" id scheme. See all the callers of memregion_all=
+oc()
+>where those are tagging device-backed physical address ranges with a commo=
+n
+>id namespace. It would be great if the memory-scrub ABI reported failures =
+in
+>terms of region-ids that correlate with CXL, DAX, or NVDIMM regions.
+For the CXL DDR5 ECS feature, presently the regionY  corresponds to the IDs=
+ of the
+memory media FRUs (1 to N),  defined in the DDR5 ECS Control Feature tables=
+ Table 8-210 and  Table 8-211.=20
+=20
+>
+>> 7. Add documentation for CXL memory device scrub control attributes.
+>
+>Do the CXL specifics need to be in the ABI? One thing I missed was how the
+Ok. I will remove. Should these DDR5 ECS specifics consider as generic and=
+=20
+be part of the memory scrub ABI?     =20
+>series of log entries are conveyed. For CXL in contrast to what NVDIMM did=
+ for
+>address range scrub is that CXL makes use of trace-events to emit log reco=
+rds.
+>That allows the sysfs ABI to remain relatively simple, but the various tra=
+ce-
+>events can get into more protocol specific details. For example, see
+>cxl_trigger_poison_list() and
+>trace_cxl_poison() as a way to genericly trigger the listing of a flow of =
+device-
+>specific details. In other words put the DDR5 ECS specifics in the trace-e=
+vent, not
+>the sysfs ABI if possible.
+Did you mean remove the readable attributes for DDR5 ECS from the sysfs?
+For example the "ECS Threshold Count per Gb of Memory Cells" and "Codeword/=
+Row Count Mode"
+in the Table 8-78 DDR5 ECS log  of  section 8.2.9.5.2.4 DDR5 Error Check Sc=
+rub (ECS) Log.
+ =20
+>
+>Lastly, dynamically defined sysfs groups are less palatable than staticall=
+y
+>defined. See cxl_region_target_visible() for a scheme for statically defin=
+ing a
+>runtime variable number of attributes.
+>Specifically I would like to see a way to define this new subsystem withou=
+t
+>scrub_create_attrs() and all the runtime attribute definition.
+>
+Sure. I will check this.
+
+>Overall, I like the general approach to define a common subsystem for this=
+, and
+>get off the treadmill of reinventing custom scrub interfaces per bus, but =
+that
+>also requires that it be generic enough to subsume a number of those per-b=
+us-
+>scrub-types.
+This is the challenging part to make the scrub interface generic because th=
+e scrub control
+varies between the scrub types, for example as seen in the CXL ECS.
+
+Thanks,
+Shiju
