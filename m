@@ -1,48 +1,46 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VKEB1lY4"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E53D10CA;
-	Thu,  7 Dec 2023 19:15:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQ7fn5bx"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D9710DF
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 19:37:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702005335; x=1733541335;
+  t=1702006640; x=1733542640;
   h=from:to:cc:subject:in-reply-to:references:date:
    message-id:mime-version;
-  bh=E1JJBuiYZ1Cuzr0elmDVx0oyEbdNnlyFecjP6yNQEvM=;
-  b=VKEB1lY4i5jj6OlktfLpMWpLT9i86NSNM5K6Flenf0UIxM+zdIkP9NN2
-   h4rxis4OOO4MO5DNoklo1fgf4ann81L2elcRHr8/xQnTYkSYZ70mv6ZAc
-   XvJaXY5/k/PyPfiA+MYyToJmZgVriluNm2WGtgDKSnbv6E5XlILMdL4Mv
-   5oP2y7/CTE34PfF5S9NnZ9R2REvbjtFbPOLtPm/0ePda7T8q/IrVh+HdO
-   P06TuzIsgTYZeBbwy1CDBWk7eNwhGkSQpRH2DzEHCxgdDNitGadTtGVf8
-   oqtIAXDqs9TVCZnmwG0kFhy8xw9L9F8g25lvueGqHPo16SDkAxsbC8y/G
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="15902082"
+  bh=fLltMYRdUhftbk2buH0AvBTh3OnYXBbI8EbrkghW9YU=;
+  b=kQ7fn5bxb0HWCPZ+1X7aBSXX+h01RDEBln0mVSy+abfgADzjhrNN26fw
+   ojMMGDg7YMBFiF1ly7FMsBjSyV7vYYgepumZLq5eAiER9OReh7M3hAXuU
+   ZQ+Y1sF4Dc18ngX4XG7JqYLeDcHfNZpeYN0wuX8Rq8h4Dc8NVTO1aXxNe
+   JNNhYzuysGQcfEnt6aCHaYe3zB7u22ae3lMWUBH4P4+xe7S51erSB4oLp
+   K7eYxkaVozTKk1r8mGx5Djzgl1YY51hbJfUwV6Diw2VXAVHBbF1+xTZ+0
+   ba/7upJJRGQ3+kHcjPJxiHg5bq1vbafOPf/TxsWph9qak7Ipuzdvt/FmQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397139757"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="15902082"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:15:35 -0800
+   d="scan'208";a="397139757"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:37:20 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="721725249"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1019202304"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="721725249"
+   d="scan'208";a="1019202304"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:15:32 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:37:17 -0800
 From: "Huang, Ying" <ying.huang@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Dan Williams
- <dan.j.williams@intel.com>,  <linux-kernel@vger.kernel.org>,
-  <nvdimm@lists.linux.dev>,  <linux-cxl@vger.kernel.org>,  David
- Hildenbrand <david@redhat.com>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  "Jonathan Cameron"
- <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 2/2] dax: add a sysfs knob to control
- memmap_on_memory behavior
-In-Reply-To: <20231206-vv-dax_abi-v2-2-f4f4f2336d08@intel.com> (Vishal Verma's
-	message of "Wed, 6 Dec 2023 21:36:15 -0700")
-References: <20231206-vv-dax_abi-v2-0-f4f4f2336d08@intel.com>
-	<20231206-vv-dax_abi-v2-2-f4f4f2336d08@intel.com>
-Date: Fri, 08 Dec 2023 11:13:32 +0800
-Message-ID: <8734wd1j4z.fsf@yhuang6-desk2.ccr.corp.intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  dan.j.williams@intel.com,  ira.weiny@intel.com,
+  vishal.l.verma@intel.com,  alison.schofield@intel.com,
+  jonathan.cameron@huawei.com,  dave@stgolabs.net
+Subject: Re: [PATCH 3/3] cxl: Add memory hotplug notifier for cxl region
+In-Reply-To: <170199192262.3543815.6979022920061286874.stgit@djiang5-mobl3>
+	(Dave Jiang's message of "Thu, 07 Dec 2023 16:32:02 -0700")
+References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
+	<170199192262.3543815.6979022920061286874.stgit@djiang5-mobl3>
+Date: Fri, 08 Dec 2023 11:35:17 +0800
+Message-ID: <87y1e5z7re.fsf@yhuang6-desk2.ccr.corp.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -52,114 +50,152 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ascii
 
-Vishal Verma <vishal.l.verma@intel.com> writes:
+Dave Jiang <dave.jiang@intel.com> writes:
 
-> Add a sysfs knob for dax devices to control the memmap_on_memory setting
-> if the dax device were to be hotplugged as system memory.
+> When the CXL region is formed, the driver would computed the performance
+> data for the region. However this data is not available at the node data
+> collection that has been populated by the HMAT during kernel
+> initialization. Add a memory hotplug notifier to update the performance
+> data to the node hmem_attrs to expose the newly calculated region
+> performance data. The CXL region is created under specific CFMWS. The
+> node for the CFMWS is created during SRAT parsing by acpi_parse_cfmws().
+> The notifier will run once only and turn itself off after the initial
+> run. Additional regions may overwrite the initial data, but since this is
+> for the same poximity domain it's a don't care for now.
 >
-> The default memmap_on_memory setting for dax devices originating via
-> pmem or hmem is set to 'false' - i.e. no memmap_on_memory semantics, to
-> preserve legacy behavior. For dax devices via CXL, the default is on.
-> The sysfs control allows the administrator to override the above
-> defaults if needed.
+> node_set_perf_attrs() is exported to allow update of perf attribs for a
+> node. Given that only CXL is using this, export only to CXL namespace.
 >
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/dax/bus.c                       | 40 +++++++++++++++++++++++++++++++++
->  Documentation/ABI/testing/sysfs-bus-dax | 13 +++++++++++
->  2 files changed, 53 insertions(+)
+>  drivers/base/node.c       |    1 +
+>  drivers/cxl/core/region.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |    2 ++
+>  3 files changed, 47 insertions(+)
 >
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 1ff1ab5fa105..11abb57cc031 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1270,6 +1270,45 @@ static ssize_t numa_node_show(struct device *dev,
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index cb2b6cc7f6e6..f5b5a3f11894 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+>  		}
+>  	}
 >  }
->  static DEVICE_ATTR_RO(numa_node);
+> +EXPORT_SYMBOL_NS_GPL(node_set_perf_attrs, CXL);
 >  
-> +static ssize_t memmap_on_memory_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
+>  /**
+>   * struct node_cache_info - Internal tracking for memory node caches
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 72c47f624d63..3794e91e12b1 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/genalloc.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> +#include <linux/memory.h>
+>  #include <linux/slab.h>
+>  #include <linux/uuid.h>
+>  #include <linux/sort.h>
+> @@ -2958,6 +2959,37 @@ static int is_system_ram(struct resource *res, void *arg)
+>  	return 1;
+>  }
+>  
+> +static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
+> +					  unsigned long action, void *arg)
 > +{
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
+> +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
+> +					       memory_notifier);
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
+> +	struct cxl_decoder *cxld = &cxled->cxld;
+> +	struct memory_notify *mnb = arg;
+> +	int nid = mnb->status_change_nid;
+> +	struct access_coordinate coord;
+> +	int region_nid;
 > +
-> +	return sprintf(buf, "%d\n", dev_dax->memmap_on_memory);
+> +	if (nid == NUMA_NO_NODE || action != MEM_ONLINE || !cxlr->coord)
+> +		return NOTIFY_STOP;
+> +
+> +	region_nid = phys_to_target_node(cxld->hpa_range.start);
+> +	if (nid != region_nid)
+> +		return NOTIFY_STOP;
+> +
+> +	/* Adjust latencies from psec to nsec to be consistent with HMAT targets */
+> +	coord = *cxlr->coord;
+> +	coord.read_latency = DIV_ROUND_UP(coord.read_latency, 1000);
+> +	coord.write_latency = DIV_ROUND_UP(coord.write_latency, 1000);
+> +
+> +	node_set_perf_attrs(nid, &coord, 0);
+> +	node_set_perf_attrs(nid, &coord, 1);
+> +
+> +	return NOTIFY_STOP;
+> +}
+
+It unfortunate that we still need to add another callback for abstract
+distance calculation.  Because the abstract distance needs to be
+calculated before hot-add the node.  But, this provides all information
+to do that, and we can add another callback for that.
+
+The patch itself looks good to me.  Feel free to add,
+
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+
+>  static int cxl_region_perf_data_calculate(struct cxl_region *cxlr)
+>  {
+>  	struct cxl_region_params *p = &cxlr->params;
+> @@ -3077,6 +3109,10 @@ static int cxl_region_probe(struct device *dev)
+>  
+>  	cxl_region_perf_data_calculate(cxlr);
+>  
+> +	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
+> +	cxlr->memory_notifier.priority = HMAT_CALLBACK_PRI;
+> +	register_memory_notifier(&cxlr->memory_notifier);
+> +
+>  	/*
+>  	 * From this point on any path that changes the region's state away from
+>  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
+> @@ -3108,9 +3144,17 @@ static int cxl_region_probe(struct device *dev)
+>  	}
+>  }
+>  
+> +static void cxl_region_remove(struct device *dev)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +
+> +	unregister_memory_notifier(&cxlr->memory_notifier);
 > +}
 > +
-> +static ssize_t memmap_on_memory_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
-> +	struct dax_region *dax_region = dev_dax->region;
-> +	ssize_t rc;
-> +	bool val;
-> +
-> +	rc = kstrtobool(buf, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (dev_dax->memmap_on_memory == val)
-> +		return len;
-> +
-> +	device_lock(dax_region->dev);
-> +	if (!dax_region->dev->driver) {
-
-This still doesn't look right.  Can we check whether the current driver
-is kmem?  And only allow change if it's not kmem?
+>  static struct cxl_driver cxl_region_driver = {
+>  	.name = "cxl_region",
+>  	.probe = cxl_region_probe,
+> +	.remove = cxl_region_remove,
+>  	.id = CXL_DEVICE_REGION,
+>  };
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 265da412c5bd..c326ee8956ec 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -6,6 +6,7 @@
+>  
+>  #include <linux/libnvdimm.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/notifier.h>
+>  #include <linux/bitops.h>
+>  #include <linux/node.h>
+>  #include <linux/log2.h>
+> @@ -530,6 +531,7 @@ struct cxl_region {
+>  	unsigned long flags;
+>  	struct cxl_region_params params;
+>  	struct access_coordinate *coord;
+> +	struct notifier_block memory_notifier;
+>  };
+>  
+>  struct cxl_nvdimm_bridge {
 
 --
 Best Regards,
 Huang, Ying
-
-> +		device_unlock(dax_region->dev);
-> +		return -ENXIO;
-> +	}
-> +
-> +	device_lock(dev);
-> +	dev_dax->memmap_on_memory = val;
-> +	device_unlock(dev);
-> +
-> +	device_unlock(dax_region->dev);
-> +	return rc == 0 ? len : rc;
-> +}
-> +static DEVICE_ATTR_RW(memmap_on_memory);
-> +
->  static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->  {
->  	struct device *dev = container_of(kobj, struct device, kobj);
-> @@ -1296,6 +1335,7 @@ static struct attribute *dev_dax_attributes[] = {
->  	&dev_attr_align.attr,
->  	&dev_attr_resource.attr,
->  	&dev_attr_numa_node.attr,
-> +	&dev_attr_memmap_on_memory.attr,
->  	NULL,
->  };
->  
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-> index a61a7b186017..bb063a004e41 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-dax
-> +++ b/Documentation/ABI/testing/sysfs-bus-dax
-> @@ -149,3 +149,16 @@ KernelVersion:	v5.1
->  Contact:	nvdimm@lists.linux.dev
->  Description:
->  		(RO) The id attribute indicates the region id of a dax region.
-> +
-> +What:		/sys/bus/dax/devices/daxX.Y/memmap_on_memory
-> +Date:		October, 2023
-> +KernelVersion:	v6.8
-> +Contact:	nvdimm@lists.linux.dev
-> +Description:
-> +		(RW) Control the memmap_on_memory setting if the dax device
-> +		were to be hotplugged as system memory. This determines whether
-> +		the 'altmap' for the hotplugged memory will be placed on the
-> +		device being hotplugged (memmap_on+memory=1) or if it will be
-> +		placed on regular memory (memmap_on_memory=0). This attribute
-> +		must be set before the device is handed over to the 'kmem'
-> +		driver (i.e.  hotplugged into system-ram).
