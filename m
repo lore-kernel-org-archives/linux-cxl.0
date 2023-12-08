@@ -1,201 +1,146 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQ7fn5bx"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D9710DF
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 19:37:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k35L+9jR"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0912120
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Dec 2023 21:42:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702006640; x=1733542640;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=fLltMYRdUhftbk2buH0AvBTh3OnYXBbI8EbrkghW9YU=;
-  b=kQ7fn5bxb0HWCPZ+1X7aBSXX+h01RDEBln0mVSy+abfgADzjhrNN26fw
-   ojMMGDg7YMBFiF1ly7FMsBjSyV7vYYgepumZLq5eAiER9OReh7M3hAXuU
-   ZQ+Y1sF4Dc18ngX4XG7JqYLeDcHfNZpeYN0wuX8Rq8h4Dc8NVTO1aXxNe
-   JNNhYzuysGQcfEnt6aCHaYe3zB7u22ae3lMWUBH4P4+xe7S51erSB4oLp
-   K7eYxkaVozTKk1r8mGx5Djzgl1YY51hbJfUwV6Diw2VXAVHBbF1+xTZ+0
-   ba/7upJJRGQ3+kHcjPJxiHg5bq1vbafOPf/TxsWph9qak7Ipuzdvt/FmQ
+  t=1702014167; x=1733550167;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=c1TEBn/2X/gSuC/6BNRmNuO2xL6V6S04qm74wlTvV4s=;
+  b=k35L+9jRbmN6vSh8LhZlbBZs/yeh+3YjJhd33gsIP2XeiDJNe7eymWsw
+   yinRqMIkNvyzv2qi/F/zA78eNEh554PI4XNjUtA101HLUJOOkk73n95Uw
+   Cz+pV9v1gvEkTwLujUEZCPhkRKaw7PmSEdNjOTF0y5iHWRw57Wgdjx1Cg
+   U1+1zdD2J4/I9I8kGk4TuMRwEPjNxh7/1JZzhXHQyn9cEVmrZPKojCpn3
+   ryGo7HCMUmHVSZMkS1W2I8w9mEXjIBe2i1EYTPlXOr5T26g+jiDNpsDt4
+   nyiwbKYFwosCnBrg54fKkRazIZkdD99urj6dcPVCD8VJLBu/RhgZjcfkV
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397139757"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="480557768"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="397139757"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:37:20 -0800
+   d="scan'208";a="480557768"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 21:42:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1019202304"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="772017289"
 X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
-   d="scan'208";a="1019202304"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 19:37:17 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  dan.j.williams@intel.com,  ira.weiny@intel.com,
-  vishal.l.verma@intel.com,  alison.schofield@intel.com,
-  jonathan.cameron@huawei.com,  dave@stgolabs.net
-Subject: Re: [PATCH 3/3] cxl: Add memory hotplug notifier for cxl region
-In-Reply-To: <170199192262.3543815.6979022920061286874.stgit@djiang5-mobl3>
-	(Dave Jiang's message of "Thu, 07 Dec 2023 16:32:02 -0700")
-References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
-	<170199192262.3543815.6979022920061286874.stgit@djiang5-mobl3>
-Date: Fri, 08 Dec 2023 11:35:17 +0800
-Message-ID: <87y1e5z7re.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="772017289"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.218.173])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 21:42:45 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Thu, 07 Dec 2023 21:42:37 -0800
+Subject: [PATCH b4] am: Build patch series when additional patches appear
+ in a thread
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20231207-series-from-non-reply-reply-v1-1-cb02de53857c@intel.com>
+X-B4-Tracking: v=1; b=H4sIAMyscmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDIwNzXYh63bSi/FzdvPw83aLUgpxKKGloaJBqYmFhmJRokKYENKGgKDU
+ tswJserRSkolSbG0tAErmMtFxAAAA
+To: tools@linux.kernel.org
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
+ Robert Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org, 
+ Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-68ec7
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1702014165; l=4051;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=c1TEBn/2X/gSuC/6BNRmNuO2xL6V6S04qm74wlTvV4s=;
+ b=GbqOlnbKqBqZxocKpGsVrCwUMAjWB+0MpoDvLPmNBc6Y5ao1p27g3ZNzGfM6VCv0C1Lw2tU9p
+ Ay2vsPkuHykDZ2cq7lI35VWzScfJZ86lzjP+R8YafnArs5FhAPpIdAh
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-Dave Jiang <dave.jiang@intel.com> writes:
+Dan reported that am/shazam cherry-pick was failing with a particular
+CXL series.[1]
 
-> When the CXL region is formed, the driver would computed the performance
-> data for the region. However this data is not available at the node data
-> collection that has been populated by the HMAT during kernel
-> initialization. Add a memory hotplug notifier to update the performance
-> data to the node hmem_attrs to expose the newly calculated region
-> performance data. The CXL region is created under specific CFMWS. The
-> node for the CFMWS is created during SRAT parsing by acpi_parse_cfmws().
-> The notifier will run once only and turn itself off after the initial
-> run. Additional regions may overwrite the initial data, but since this is
-> for the same poximity domain it's a don't care for now.
->
-> node_set_perf_attrs() is exported to allow update of perf attribs for a
-> node. Given that only CXL is using this, export only to CXL namespace.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/base/node.c       |    1 +
->  drivers/cxl/core/region.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |    2 ++
->  3 files changed, 47 insertions(+)
->
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index cb2b6cc7f6e6..f5b5a3f11894 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->  		}
->  	}
->  }
-> +EXPORT_SYMBOL_NS_GPL(node_set_perf_attrs, CXL);
->  
->  /**
->   * struct node_cache_info - Internal tracking for memory node caches
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 72c47f624d63..3794e91e12b1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -4,6 +4,7 @@
->  #include <linux/genalloc.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
-> +#include <linux/memory.h>
->  #include <linux/slab.h>
->  #include <linux/uuid.h>
->  #include <linux/sort.h>
-> @@ -2958,6 +2959,37 @@ static int is_system_ram(struct resource *res, void *arg)
->  	return 1;
->  }
->  
-> +static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
-> +					  unsigned long action, void *arg)
-> +{
-> +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-> +					       memory_notifier);
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
-> +	struct cxl_decoder *cxld = &cxled->cxld;
-> +	struct memory_notify *mnb = arg;
-> +	int nid = mnb->status_change_nid;
-> +	struct access_coordinate coord;
-> +	int region_nid;
-> +
-> +	if (nid == NUMA_NO_NODE || action != MEM_ONLINE || !cxlr->coord)
-> +		return NOTIFY_STOP;
-> +
-> +	region_nid = phys_to_target_node(cxld->hpa_range.start);
-> +	if (nid != region_nid)
-> +		return NOTIFY_STOP;
-> +
-> +	/* Adjust latencies from psec to nsec to be consistent with HMAT targets */
-> +	coord = *cxlr->coord;
-> +	coord.read_latency = DIV_ROUND_UP(coord.read_latency, 1000);
-> +	coord.write_latency = DIV_ROUND_UP(coord.write_latency, 1000);
-> +
-> +	node_set_perf_attrs(nid, &coord, 0);
-> +	node_set_perf_attrs(nid, &coord, 1);
-> +
-> +	return NOTIFY_STOP;
-> +}
+	$ b4 shazam -S -P _ 20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com
+	Grabbing thread from lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/t.mbox.gz
+	Checking for newer revisions
+	Grabbing search results from lore.kernel.org
+	Analyzing 8 messages in the thread
+	Specified msgid is not present in the series, cannot cherrypick
 
-It unfortunate that we still need to add another callback for abstract
-distance calculation.  Because the abstract distance needs to be
-calculated before hot-add the node.  But, this provides all information
-to do that, and we can add another callback for that.
+The reason is series processing failed to detect that a non reply follow
+on message containing a patch was not a replacement for the original.
+The way this patch was submitted (without a 'Re:' subject prefix) is
+actually a good thing.  This is because a reply would have implied a v2
+to the original patch rather than a follow on patch as intended.
 
-The patch itself looks good to me.  Feel free to add,
+Teach b4 to interpret a thread like this by adding the additional patch
+to the series with a warning.  The series can then be applied as normal
+or with a cherry-pick as was necessary in this case.
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+A run after the fix looks like this:
 
->  static int cxl_region_perf_data_calculate(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
-> @@ -3077,6 +3109,10 @@ static int cxl_region_probe(struct device *dev)
->  
->  	cxl_region_perf_data_calculate(cxlr);
->  
-> +	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
-> +	cxlr->memory_notifier.priority = HMAT_CALLBACK_PRI;
-> +	register_memory_notifier(&cxlr->memory_notifier);
-> +
->  	/*
->  	 * From this point on any path that changes the region's state away from
->  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-> @@ -3108,9 +3144,17 @@ static int cxl_region_probe(struct device *dev)
->  	}
->  }
->  
-> +static void cxl_region_remove(struct device *dev)
-> +{
-> +	struct cxl_region *cxlr = to_cxl_region(dev);
-> +
-> +	unregister_memory_notifier(&cxlr->memory_notifier);
-> +}
-> +
->  static struct cxl_driver cxl_region_driver = {
->  	.name = "cxl_region",
->  	.probe = cxl_region_probe,
-> +	.remove = cxl_region_remove,
->  	.id = CXL_DEVICE_REGION,
->  };
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 265da412c5bd..c326ee8956ec 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -6,6 +6,7 @@
->  
->  #include <linux/libnvdimm.h>
->  #include <linux/bitfield.h>
-> +#include <linux/notifier.h>
->  #include <linux/bitops.h>
->  #include <linux/node.h>
->  #include <linux/log2.h>
-> @@ -530,6 +531,7 @@ struct cxl_region {
->  	unsigned long flags;
->  	struct cxl_region_params params;
->  	struct access_coordinate *coord;
-> +	struct notifier_block memory_notifier;
->  };
->  
->  struct cxl_nvdimm_bridge {
+	$ b4 shazam -S -P _ 20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com
+	Grabbing thread from lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/t.mbox.gz
+	Checking for newer revisions
+	Grabbing search results from lore.kernel.org
+	Analyzing 8 messages in the thread
+	WARNING: duplicate messages found at index 1
+	   Subject 1: cxl/cdat: Free correct buffer on checksum error
+	   Subject 2: cxl/pci: Get rid of pointer arithmetic reading CDAT table
+	  2 is not a reply... assume additional patch
+	Checking attestation on all messages, may take a moment...
+	---
+	  ✓ [PATCH] cxl/cdat: Free correct buffer on checksum error
+	    ✗ No key: ed25519/ira.weiny@intel.com
+	    ✓ Signed: DKIM/intel.com
+	    + Reviewed-by: Robert Richter <rrichter@amd.com> (✓ DKIM/amd.com)
+	    + Reviewed-by: Fan Ni <fan.ni@samsung.com> (✗ DKIM/gmail.com)
+	    + Reviewed-by: Dave Jiang <dave.jiang@intel.com> (✓ DKIM/intel.com)
+	---
+	Total patches: 1 (cherrypicked: <20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com>)
+	---
+	 Base: using specified base-commit 7475e51b87969e01a6812eac713a1c8310372e8a
+	Applying: cxl/cdat: Free correct buffer on checksum error
 
---
-Best Regards,
-Huang, Ying
+[1] https://lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/
+
+Reported-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ b4/__init__.py | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/b4/__init__.py b/b4/__init__.py
+index 7d665f9e2c0a..f87daf838b4f 100644
+--- a/b4/__init__.py
++++ b/b4/__init__.py
+@@ -481,10 +481,20 @@ class LoreSeries:
+         if self.patches[lmsg.counter] is not None:
+             # Okay, weird, is the one in there a reply?
+             omsg = self.patches[lmsg.counter]
++
++            logger.warn('WARNING: duplicate messages found at index %s', lmsg.counter)
++            logger.warn('   Subject 1: %s', lmsg.subject)
++            logger.warn('   Subject 2: %s', omsg.subject)
+             if omsg.reply or (omsg.counters_inferred and not lmsg.counters_inferred):
+                 # Replace that one with this one
+-                logger.debug('  replacing existing: %s', omsg.subject)
++                logger.warn('  2 is a reply... replacing existing: %s', omsg.subject)
++                self.patches[lmsg.counter] = lmsg
++            else:
++                logger.warn('  2 is not a reply... assume additional patch')
++                self.patches.append(None)
++                self.expected = self.expected + 1
+                 self.patches[lmsg.counter] = lmsg
++                self.patches[lmsg.counter + 1] = omsg
+         else:
+             self.patches[lmsg.counter] = lmsg
+         self.complete = not (None in self.patches[1:])
+
+---
+base-commit: 433a845ce33f33c2ded6875447bf18e186ea1865
+change-id: 20231207-series-from-non-reply-reply-110e4881ba0f
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
