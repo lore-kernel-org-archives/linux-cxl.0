@@ -1,178 +1,205 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsgqkaBc"
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022F4DF
-	for <linux-cxl@vger.kernel.org>; Mon, 11 Dec 2023 01:06:53 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-3333131e08dso4803223f8f.2
-        for <linux-cxl@vger.kernel.org>; Mon, 11 Dec 2023 01:06:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJDEXWKF"
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D64C9B
+	for <linux-cxl@vger.kernel.org>; Mon, 11 Dec 2023 09:44:43 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1d053c45897so41628245ad.2
+        for <linux-cxl@vger.kernel.org>; Mon, 11 Dec 2023 09:44:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702285611; x=1702890411; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0DW+M09JuCjPa87ln7cQCVX9tIA94ugoZMo/Auhk0ls=;
-        b=RsgqkaBcVVrdV7OTMvaMXX1UBzY2n83afJQXacKhDPWB8dlDHk4jLBDU+FspQobny0
-         4+9bvnujSBwM8d7fmbvWYezEs0fWT7ininNzuDiMqi09gEvtGLhF/LNrLedkWNneNqPi
-         7/5vqH+lkGnVdt69+DEwgqndBWRXDYpPMXV6lTpL2n0aDO0MjuX7OO9EABr8oVB0CTzA
-         MPDlFAxFUbElGromNiA+4RNzzMzIhDXaK1J7GltV7ty/qNWcJfPSIwtT2wy1JpJNpZZg
-         cRe6q/+KtQxUDvtFtXFCDENkrqhtpzlJCDFaDCnUmUF8zQySvazGeIGVmzbaK508qkYd
-         u8Kg==
+        d=gmail.com; s=20230601; t=1702316682; x=1702921482; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BBHV5MPd1HV5/Jh+yFKFz4zXnjSY7uhQ7N9VQXbfgX8=;
+        b=jJDEXWKFiJg1rIkY+gemSQVm1BsHMlSX81Ul3u0TC44JXIxYzGovRTZammLb3ZHehw
+         5IDHirWqFHE9tCg8p+9W8Lj5bjRUXFaFRX4QvMKyNwWp+A1CwVrXt54EvVxG1Ii6Od57
+         uw2gNf94xi4tfAPYpQpLt/CxCtkEB7o1MSl8RUW/EAzizL6QSFfuMu7xlvtGP/pv9x0Y
+         gG9c1A4H3ur7dI4XEZrMT5i/bz077+kmT6c86iIIjulPdmKtXWVHK/F3iHnfYvgPQUmq
+         r36e1tahK5aLX8aqeAjpAwxeLJbAlLa4Ny0PO7SifdMAwk9Un6OFEJHeEOARFYkp8j3U
+         JFoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702285611; x=1702890411;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DW+M09JuCjPa87ln7cQCVX9tIA94ugoZMo/Auhk0ls=;
-        b=w9YJVsKyUMvkcnrsyW+nl1uITIxcLqKKQKoMzOHN7pcjES78ggBV2WIzXFw/ejjIK5
-         4T0UrmbruMSdXUuRkLwnTwpM+qn2Usas/428ihWHxdi/yTDbAaCriTrt0iEJEkSGL/Ik
-         WeDD2SeP7v6TUrxM6w2ZCcaDwMXLku/QBo07BoE1P5cmOkCPhY9Cg1jzIEvTYeapYGhp
-         QMzp0PjtMq3MefJg/AhitQ40+CmZu1R4ypSPYFKUDdzC4NZB5q4k6NbmdsqPc0CDYJh1
-         7IOPGnV1RCo818GGrsf8uYhTWr3in4gxkpXmAhEcpnpmWPAZ7F7EcKpNHZw2ddE0i4tJ
-         y6xQ==
-X-Gm-Message-State: AOJu0YzmNq61JxOJr0jRDr0wtCOia7q7xUawq4ZTuD1IL19yisc2mEOo
-	S4q3JBuUi0OrmPnkMccZWVOHv2EOVn2fHw==
-X-Google-Smtp-Source: AGHT+IG8G1flFcWgd7dCukBhTfYeUFWZiJwZfzwn0GQq7O2dhrPh4arWrYPv0JHkxNeHTvA/TrZ+Ng==
-X-Received: by 2002:adf:e0c3:0:b0:333:2fd2:2f0c with SMTP id m3-20020adfe0c3000000b003332fd22f0cmr1495970wri.133.1702285611052;
-        Mon, 11 Dec 2023 01:06:51 -0800 (PST)
-Received: from ?IPV6:2001:660:6102:320:b79a:47e4:aec5:5f17? ([2001:660:6102:320:b79a:47e4:aec5:5f17])
-        by smtp.gmail.com with ESMTPSA id m11-20020adfe94b000000b00333504001acsm8032270wrn.15.2023.12.11.01.06.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 01:06:50 -0800 (PST)
-Message-ID: <23a78aa8-e076-4b98-bd7c-4299aefd9895@gmail.com>
-Date: Mon, 11 Dec 2023 10:06:49 +0100
+        d=1e100.net; s=20230601; t=1702316682; x=1702921482;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BBHV5MPd1HV5/Jh+yFKFz4zXnjSY7uhQ7N9VQXbfgX8=;
+        b=WJO+dOr74e5wzMIwSGDDxVBqOVfMg9zldbIc1HmRCwKWnLVq3FipW0N5kzLH8409Jx
+         wkgeAb/ehVw4k1Mr/tbdGFLbWYADMplI7aA1wwEzx3weE11jmd8VdxxLfckVmwE1kHfS
+         dneLykS5IkAdSA3vlmqHAQN12dNqdTJqBGVLNGVtSal7yhv1+JLsr0KfMBtwowv3so2I
+         Vl3pA3kSLh/g4B0XhyJBytNRfryn/MUI6L+obvSgRMOLagJUAkbWG0pQNAmFgKyrO+nO
+         yH7UC/lUscxbSlZCSVFRPRuDFztVWay0Tz/ad7KLfGMHzPE3ZPv7h5t2P9C2CrZcWBp7
+         8Jmg==
+X-Gm-Message-State: AOJu0YzGWlw1SL4J6W2KdeBCydY0B4rtxAc/68awmZqCbErPOnpf7p4f
+	ALoKf3tgTlAgcA+UoaqGn4MQ0P4/ZaI=
+X-Google-Smtp-Source: AGHT+IFOkZay4YNYzzbba/3jEyfBKSwc4lCxs6kpewx+LrGYbi/gUCx6Cpi6K67Bbpu2pccB8sHi3Q==
+X-Received: by 2002:a17:903:187:b0:1d2:fa04:7cb7 with SMTP id z7-20020a170903018700b001d2fa047cb7mr5977447plg.5.1702316682388;
+        Mon, 11 Dec 2023 09:44:42 -0800 (PST)
+Received: from debian (c-71-202-158-162.hsd1.ca.comcast.net. [71.202.158.162])
+        by smtp.gmail.com with ESMTPSA id a22-20020a170902b59600b001d0cd351baesm6743722pls.13.2023.12.11.09.44.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 09:44:41 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Mon, 11 Dec 2023 09:44:24 -0800
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, jonathan.cameron@huawei.com,
+	dave@stgolabs.net
+Subject: Re: [PATCH 1/3] cxl/region: Calculate performance data for a region
+Message-ID: <ZXdKeOLQ8s0B08Eq@debian>
+References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
+ <170199190986.3543815.7111880145751330916.stgit@djiang5-mobl3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] cxl/region: Add sysfs attribute for locality
- attributes of CXL regions
-Content-Language: en-US
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, jonathan.cameron@huawei.com, dave@stgolabs.net
-References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
- <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
-From: Brice Goglin <brice.goglin@gmail.com>
-In-Reply-To: <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170199190986.3543815.7111880145751330916.stgit@djiang5-mobl3>
 
-Le 08/12/2023 à 00:31, Dave Jiang a écrit :
-> Add read/write latencies and bandwidth sysfs attributes for the enabled CXL
-> region. The bandwidth is the aggregated bandwidth of all devices that
-> contributes to the CXL region. The latency is the worst latency of the
-> device amongst all the devices that contributes to the CXL region.
-
-
-Hello
-
-Which initiator do these bandwidths/latencies refer to? Local CPUs near 
-the root port? This should be specified in the doc.
-
-Brice
-
-
-
->
+On Thu, Dec 07, 2023 at 04:31:49PM -0700, Dave Jiang wrote:
+> Calculate and store the performance data for a CXL region. Find the worst
+> read and write latency for all the included ranges from each of the devices
+> that attributes to the region and designate that as the latency data. Sum
+> all the read and write bandwidth data for each of the device region and
+> that is the total bandwidth for the region.
+> 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->   Documentation/ABI/testing/sysfs-bus-cxl |   40 +++++++++++++++++++++++++++++++
->   drivers/cxl/core/region.c               |   24 +++++++++++++++++++
->   2 files changed, 64 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index fff2581b8033..e96f172eb6a6 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -552,3 +552,43 @@ Description:
->   		attribute is only visible for devices supporting the
->   		capability. The retrieved errors are logged as kernel
->   		events when cxl_poison event tracing is enabled.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/read_bandwidth
-> +Date:		Apr, 2023
-> +KernelVersion:	v6.8
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The aggregated read bandwidth of the region. The number is
-> +		the accumulated read bandwidth of all CXL memory devices that
-> +		contributes to the region.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/write_bandwidth
-> +Date:		Apr, 2023
-> +KernelVersion:	v6.8
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The aggregated write bandwidth of the region. The number is
-> +		the accumulated write bandwidth of all CXL memory devices that
-> +		contributes to the region.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/read_latency
-> +Date:		Apr, 2023
-> +KernelVersion:	v6.8
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The read latency of the region. The number is
-> +		the worst read latency of all CXL memory devices that
-> +		contributes to the region.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/write_latency
-> +Date:		Apr, 2023
-> +KernelVersion:	v6.8
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The write latency of the region. The number is
-> +		the worst write latency of all CXL memory devices that
-> +		contributes to the region.
+>  drivers/cxl/core/region.c |   94 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |    1 
+>  2 files changed, 95 insertions(+)
+> 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d879f5702cf2..72c47f624d63 100644
+> index 56e575c79bb4..d879f5702cf2 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -645,6 +645,26 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->   }
->   static DEVICE_ATTR_RW(size);
->   
-> +#define ACCESS_ATTR(attrib)					\
-> +static ssize_t attrib##_show(struct device *dev,		\
-> +			   struct device_attribute *attr,	\
-> +			   char *buf)				\
-> +{								\
-> +	struct cxl_region *cxlr = to_cxl_region(dev);		\
-> +								\
-> +	if (!cxlr->coord)					\
-> +		return 0;					\
-> +								\
-> +	return sysfs_emit(buf, "%u\n",				\
-> +			  cxlr->coord->attrib);			\
-> +}								\
-> +static DEVICE_ATTR_RO(attrib)
+> @@ -2934,6 +2934,98 @@ static int is_system_ram(struct resource *res, void *arg)
+>  	return 1;
+>  }
+>  
+> +static int cxl_region_perf_data_calculate(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	unsigned int rd_bw = 0, rd_lat = 0;
+> +	unsigned int wr_bw = 0, wr_lat = 0;
+> +	struct access_coordinate *coord;
+> +	struct list_head *perf_list;
+> +	int rc = 0, i;
 > +
-> +ACCESS_ATTR(read_bandwidth);
-> +ACCESS_ATTR(read_latency);
-> +ACCESS_ATTR(write_bandwidth);
-> +ACCESS_ATTR(write_latency);
+> +	lockdep_assert_held(&cxl_region_rwsem);
 > +
->   static struct attribute *cxl_region_attrs[] = {
->   	&dev_attr_uuid.attr,
->   	&dev_attr_commit.attr,
-> @@ -653,6 +673,10 @@ static struct attribute *cxl_region_attrs[] = {
->   	&dev_attr_resource.attr,
->   	&dev_attr_size.attr,
->   	&dev_attr_mode.attr,
-> +	&dev_attr_read_bandwidth.attr,
-> +	&dev_attr_write_bandwidth.attr,
-> +	&dev_attr_read_latency.attr,
-> +	&dev_attr_write_latency.attr,
->   	NULL,
->   };
->   
->
->
->
+> +	/* No need to proceed if hmem attributes are already present */
+> +	if (cxlr->coord)
+> +		return 0;
+> +
+> +	coord = devm_kzalloc(&cxlr->dev, sizeof(*coord), GFP_KERNEL);
+> +	if (!coord)
+> +		return -ENOMEM;
+> +
+> +	cxled = p->targets[0];
+
+cxled is only used in the for loop below, maybe we can move it into the loop.
+
+Fan
+
+> +
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		struct range dpa = {
+> +			.start = cxled->dpa_res->start,
+> +			.end = cxled->dpa_res->end,
+> +		};
+> +		struct cxl_memdev_state *mds;
+> +		struct perf_prop_entry *perf;
+> +		struct cxl_dev_state *cxlds;
+> +		struct cxl_memdev *cxlmd;
+> +		bool found = false;
+> +
+> +		cxled = p->targets[i];
+> +		cxlmd = cxled_to_memdev(cxled);
+> +		cxlds = cxlmd->cxlds;
+> +		mds = to_cxl_memdev_state(cxlds);
+> +
+> +		switch (cxlr->mode) {
+> +		case CXL_DECODER_RAM:
+> +			perf_list = &mds->ram_perf_list;
+> +			break;
+> +		case CXL_DECODER_PMEM:
+> +			perf_list = &mds->pmem_perf_list;
+> +			break;
+> +		default:
+> +			rc = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		if (list_empty(perf_list)) {
+> +			rc = -ENOENT;
+> +			goto err;
+> +		}
+> +
+> +		list_for_each_entry(perf, perf_list, list) {
+> +			if (range_contains(&perf->dpa_range, &dpa)) {
+> +				found = true;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (!found) {
+> +			rc = -ENOENT;
+> +			goto err;
+> +		}
+> +
+> +		/* Get total bandwidth and the worst latency for the cxl region */
+> +		rd_lat = max_t(unsigned int, rd_lat,
+> +			       perf->coord.read_latency);
+> +		rd_bw += perf->coord.read_bandwidth;
+> +		wr_lat = max_t(unsigned int, wr_lat,
+> +			       perf->coord.write_latency);
+> +		wr_bw += perf->coord.write_bandwidth;
+> +	}
+> +
+> +	*coord = (struct access_coordinate) {
+> +		.read_latency = rd_lat,
+> +		.read_bandwidth = rd_bw,
+> +		.write_latency = wr_lat,
+> +		.write_bandwidth = wr_bw,
+> +	};
+> +
+> +	cxlr->coord = coord;
+> +
+> +	return 0;
+> +
+> +err:
+> +	devm_kfree(&cxlr->dev, coord);
+> +	return rc;
+> +}
+> +
+>  static int cxl_region_probe(struct device *dev)
+>  {
+>  	struct cxl_region *cxlr = to_cxl_region(dev);
+> @@ -2959,6 +3051,8 @@ static int cxl_region_probe(struct device *dev)
+>  		goto out;
+>  	}
+>  
+> +	cxl_region_perf_data_calculate(cxlr);
+> +
+>  	/*
+>  	 * From this point on any path that changes the region's state away from
+>  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 004534cf0361..265da412c5bd 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -529,6 +529,7 @@ struct cxl_region {
+>  	struct cxl_pmem_region *cxlr_pmem;
+>  	unsigned long flags;
+>  	struct cxl_region_params params;
+> +	struct access_coordinate *coord;
+>  };
+>  
+>  struct cxl_nvdimm_bridge {
+> 
+> 
