@@ -1,36 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mnl9ktrZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcob3Kzp"
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7941BEA;
-	Mon, 11 Dec 2023 14:52:33 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE3CC4;
+	Mon, 11 Dec 2023 14:57:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702335154; x=1733871154;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=ehImgNx/k9AKKVzaSKbOLo1Mb4OGFvOlrdKezvX51Qs=;
-  b=mnl9ktrZGwft0/ztMbnaEwHkUOfGIrXRU4xt86tHV4frmXtPYovdRLoZ
-   IMSC4a8pWqUwRubFfhtYBz0bb/MXhtcvfNmUObtHHoRHk8m643AYvw52S
-   d6Fkkcywz7i3afFoqumBy/h2G8/61m2Nva+0KJ3OsUfeBkC8ZFy0p21HR
-   6CZx4H08XPXSAtBBnVGHc45SRLlA5KKKVNo56k85wB/HslnQCsOz/SPW1
-   UO3HX0gAqDxNREqo9mDzWSeqldoIrpzcwoJb795ZFfaBdHUPT//TiSDlH
-   +HIEZnqaJE+m5z9fa7ra2d4q7F/uuGz0D9G2xf0mK6DXa3xCXhZVPzMrh
+  t=1702335465; x=1733871465;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=pO1ltlMpojjEdRLLW5K+Kn7C7Cek0sghm6CntoFK3oI=;
+  b=kcob3KzpMSaHY5Wc+yO/NHQcXPGFMBzNoE0ItrZe3Mgeu7Efs9WRRjV1
+   gA341IGhI82yiQCgoC2bghizZ6XNqHYQK6ubtrZ0z+XMbhoqkPCE+9BmJ
+   vBnGr2AN2Dw9n+jB7UGn67uxFcQkASajA3QakwZSU7HWNPqkllfPX8ipQ
+   oK2JNokplBb0yi/GFwhCu35NgjlxP4n9jzL5SIIEbq04pi3QoB3mIMxnP
+   4TJGmXyVtPGtNS104TOEPiXhWOPPkvrGGfPdyiknU1NiWWu8/Kle3bbEs
+   j1D6M47YA8K0ZTnCwGD1oTAxC/RBLCrsMudW317vtQLJF8MdoLb3tXbdf
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="8083760"
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="8084342"
 X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="8083760"
+   d="scan'208";a="8084342"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:52:31 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:57:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="946511338"
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="946513455"
 X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="946511338"
-Received: from tlyon-mobl2.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.89.19])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:52:29 -0800
-From: Vishal Verma <vishal.l.verma@intel.com>
-Date: Mon, 11 Dec 2023 15:52:18 -0700
-Subject: [PATCH v3 2/2] dax: add a sysfs knob to control memmap_on_memory
- behavior
+   d="scan'208";a="946513455"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.213.189.178])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:57:43 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v2 0/7] efi/cxl-cper: Report CPER CXL component events
+ through trace events
+Date: Mon, 11 Dec 2023 14:57:40 -0800
+Message-Id: <20231211-cxl-cper-v2-0-c116900ba658@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,141 +40,105 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231211-vv-dax_abi-v3-2-acf6cc1bde9f@intel.com>
-References: <20231211-vv-dax_abi-v3-0-acf6cc1bde9f@intel.com>
-In-Reply-To: <20231211-vv-dax_abi-v3-0-acf6cc1bde9f@intel.com>
+X-B4-Tracking: v=1; b=H4sIAOSTd2UC/3XNwW7DIAwG4FepOI8JAyWhp77H1AM4ZkFqkwiiq
+ FOVdy/kFG3L8bf9+X+xTClSZpfTiyVaYo7jUIL8ODHs3fBNPHYlMymkEkYAx+ed40SJSxMCtsq
+ iQcPKuXeZuE9uwL6Ch8szpbqYEoX43Dq+biX3Mc9j+tkqF6jTf74vwAW31jutQhuaRlzjMNP9E
+ 8dH/XkAOrABHELrvNmB2rrIoyZZoALdWVTGeSF/Q3UEVYECWtsZCI09/2nUR1AXqBvvrYAA6kx
+ 7uK7rG4kt3TyVAQAA
 To: Dan Williams <dan.j.williams@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
- linux-cxl@vger.kernel.org, David Hildenbrand <david@redhat.com>, 
- Dave Hansen <dave.hansen@linux.intel.com>, 
- Huang Ying <ying.huang@intel.com>, Li Zhijian <lizhijian@fujitsu.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Mailer: b4 0.13-dev-433a8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4067;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=ehImgNx/k9AKKVzaSKbOLo1Mb4OGFvOlrdKezvX51Qs=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKnlk9bs0Q08u36yeE9D5odPpy9eCq97f3DXZimjGV/ut
- wuXmyXv6ChlYRDjYpAVU2T5u+cj4zG57fk8gQmOMHNYmUCGMHBxCsBEWsUY/sp/05f8vH7V+2LJ
- dUduyLd3/SlOK1JcbvvFQTuv8drym+kMPxlNnmheye0rqIxzYlwU819lzccdx/O5BCPvnUnwMTD
- zZAMA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+ Shiju Jose <shiju.jose@huawei.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-2539e
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1702335462; l=3170;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=pO1ltlMpojjEdRLLW5K+Kn7C7Cek0sghm6CntoFK3oI=;
+ b=SGExsRHARsdJSNSh8Vhtqr61v6kjA69hsRkf6R2HYSSQ0RyFqjUcpIzINcVKaLlBVdbqwty5a
+ khN3+IaD5+yAYmMam5CHJsgSUdyIX7e4ehHJ5zFpUdHmW28e6RKf5gl
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-Add a sysfs knob for dax devices to control the memmap_on_memory setting
-if the dax device were to be hotplugged as system memory.
+Series status/background
+========================
 
-The default memmap_on_memory setting for dax devices originating via
-pmem or hmem is set to 'false' - i.e. no memmap_on_memory semantics, to
-preserve legacy behavior. For dax devices via CXL, the default is on.
-The sysfs control allows the administrator to override the above
-defaults if needed.
+Smita has been a great help with this series.  This includes testing the
+last RFC version.[1]
 
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Tested-by: Li Zhijian <lizhijian@fujitsu.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Unfortunately, Dan had a better idea for how to register the call
+between the efi and cxl subsystems so this is reworked for V2.
+
+[1] https://lore.kernel.org/all/7ec6d2af-c860-9b05-7eaf-c82f50f8e66e@amd.com/
+
+Cover letter
+============
+
+CXL Component Events, as defined by EFI 2.10 Section N.2.14, wrap a
+mostly CXL event payload in an EFI Common Platform Error Record (CPER)
+record.  If a device is configured for firmware first CXL event records
+are not sent directly to the host.
+
+The CXL sub-system uniquely has DPA to HPA translation information.  It
+also already has event format tracing.  Restructure the code to make
+sharing the data between CPER/event logs most efficient.  Then send the
+CXL CPER records to the CXL sub-system for processing.
+
+With event logs the events interrupt the driver directly.  In the EFI
+case events are wrapped with device information which allows the CXL
+subsystem to identify the PCI device.
+
+Previous version considered matching the memdev differently.  However,
+the most robust was to find the PCI device via Bus, Device, Function and
+use the PCI device to find the driver data.
+
+CPER records are identified with GUID's while CXL event logs contain
+UUID's.  The UUID is reported for all events.  While the UUID is
+redundant for the known events the UUID's are already used by rasdaemon.
+To keep compatibility UUIDs are injected for CPER records based on the
+record type.
+
+In addition this series cleans up the UUID defines used between the
+event processing and cxl_test code.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- drivers/dax/bus.c                       | 47 +++++++++++++++++++++++++++++++++
- Documentation/ABI/testing/sysfs-bus-dax | 17 ++++++++++++
- 2 files changed, 64 insertions(+)
+Changes in v2:
+- djbw: Clarify GUID defines
+- djbw: Clarify UUID defines
+- djbw: Use a single event callback to the CXL subsystem
+- iweiny: Minor function name clean ups
+- Link to v1: https://lore.kernel.org/r/20230601-cxl-cper-v1-0-d19f1ac18ab6@intel.com
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 1ff1ab5fa105..2871e5188f0d 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1270,6 +1270,52 @@ static ssize_t numa_node_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(numa_node);
- 
-+static ssize_t memmap_on_memory_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+
-+	return sprintf(buf, "%d\n", dev_dax->memmap_on_memory);
-+}
-+
-+static ssize_t memmap_on_memory_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t len)
-+{
-+	struct device_driver *drv = dev->driver;
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct dax_region *dax_region = dev_dax->region;
-+	struct dax_device_driver *dax_drv = to_dax_drv(drv);
-+	ssize_t rc;
-+	bool val;
-+
-+	rc = kstrtobool(buf, &val);
-+	if (rc)
-+		return rc;
-+
-+	if (dev_dax->memmap_on_memory == val)
-+		return len;
-+
-+	device_lock(dax_region->dev);
-+	if (!dax_region->dev->driver) {
-+		device_unlock(dax_region->dev);
-+		return -ENXIO;
-+	}
-+
-+	if (dax_drv->type == DAXDRV_KMEM_TYPE) {
-+		device_unlock(dax_region->dev);
-+		return -EBUSY;
-+	}
-+
-+	device_lock(dev);
-+	dev_dax->memmap_on_memory = val;
-+	device_unlock(dev);
-+
-+	device_unlock(dax_region->dev);
-+	return len;
-+}
-+static DEVICE_ATTR_RW(memmap_on_memory);
-+
- static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
-@@ -1296,6 +1342,7 @@ static struct attribute *dev_dax_attributes[] = {
- 	&dev_attr_align.attr,
- 	&dev_attr_resource.attr,
- 	&dev_attr_numa_node.attr,
-+	&dev_attr_memmap_on_memory.attr,
- 	NULL,
- };
- 
-diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-index a61a7b186017..b1fd8bf8a7de 100644
---- a/Documentation/ABI/testing/sysfs-bus-dax
-+++ b/Documentation/ABI/testing/sysfs-bus-dax
-@@ -149,3 +149,20 @@ KernelVersion:	v5.1
- Contact:	nvdimm@lists.linux.dev
- Description:
- 		(RO) The id attribute indicates the region id of a dax region.
-+
-+What:		/sys/bus/dax/devices/daxX.Y/memmap_on_memory
-+Date:		October, 2023
-+KernelVersion:	v6.8
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RW) Control the memmap_on_memory setting if the dax device
-+		were to be hotplugged as system memory. This determines whether
-+		the 'altmap' for the hotplugged memory will be placed on the
-+		device being hotplugged (memmap_on_memory=1) or if it will be
-+		placed on regular memory (memmap_on_memory=0). This attribute
-+		must be set before the device is handed over to the 'kmem'
-+		driver (i.e.  hotplugged into system-ram). Additionally, this
-+		depends on CONFIG_MHP_MEMMAP_ON_MEMORY, and a globally enabled
-+		memmap_on_memory parameter for memory_hotplug. This is
-+		typically set on the kernel command line -
-+		memory_hotplug.memmap_on_memory set to 'true' or 'force'."
+---
+Ira Weiny (7):
+      cxl/trace: Pass uuid explicitly to event traces
+      cxl/events: Promote CXL event structures to a core header
+      cxl/events: Create common event UUID defines
+      cxl/events: Separate UUID from event structures
+      cxl/events: Create a CXL event union
+      firmware/efi: Process CXL Component Events
+      cxl/memdev: Register for and process CPER events
 
+ drivers/cxl/core/mbox.c         |  77 ++++++++++---------
+ drivers/cxl/core/trace.h        |  32 ++++----
+ drivers/cxl/cxlmem.h            | 112 +++++++--------------------
+ drivers/cxl/pci.c               |  52 ++++++++++++-
+ drivers/firmware/efi/cper.c     |  15 ++++
+ drivers/firmware/efi/cper_cxl.c |  45 +++++++++++
+ drivers/firmware/efi/cper_cxl.h |  29 +++++++
+ include/linux/cxl-event.h       | 162 +++++++++++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/mem.c    | 163 +++++++++++++++++++++++-----------------
+ 9 files changed, 481 insertions(+), 206 deletions(-)
+---
+base-commit: 7475e51b87969e01a6812eac713a1c8310372e8a
+change-id: 20230601-cxl-cper-26ffc839c6c6
+
+Best regards,
 -- 
-2.41.0
+Ira Weiny <ira.weiny@intel.com>
 
