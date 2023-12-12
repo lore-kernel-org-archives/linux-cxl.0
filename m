@@ -1,289 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D77658ADA;
-	Tue, 12 Dec 2023 09:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxHmQ+4y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FBBFC433CB;
-	Tue, 12 Dec 2023 09:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702374782;
-	bh=x5x2Vt28BNZ87A+YkQlGNkExkl+Op7LxWbonnGSkuOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mxHmQ+4y+8NlyN53vheUW3IUNyqKgtqsUPFN8tyNlZadW9rRHkUULTte7thnSgDOG
-	 tyUvI9un9MjfFQr6SEwXNdMvzRQXrj1PuyEaBZcz1kB+EsnerTaSsX095Zj2nib096
-	 jd5Jyp/5EK+RXWSS90eBP45XW+J7u4iLCUIDkcRERD7H4IdrUiKbgH2iIyfxhMiu6U
-	 y1UV45PRyyiTHBVtVdVoksnRo2De8NRo1fnoIFEYsBuCnlR/9fJDiHgW/ZQ+16wwNE
-	 cnpa599TB8SDYPaTJcgFzCRmibniGQjFP12JGCDkLEMy+TyuERAjmRW6GEuYr0fT7R
-	 gKbpFtWIYlmgg==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ca1e6a94a4so70571881fa.0;
-        Tue, 12 Dec 2023 01:53:02 -0800 (PST)
-X-Gm-Message-State: AOJu0Yzhids1hesGyOcEPsmMuXejaNVwE5BpRAHNWSX3Ks4mwthPGARH
-	YSoSXnJ4yUa2LV22oLesB/XI7YHJB8BvzPHEVm8=
-X-Google-Smtp-Source: AGHT+IFrQVmnOb7fDDBe24yV44ELYK4VOrlITkWMjSN/4x/YbEISe3Vo9O63r3t2vwCf1enEHPoe68o5AZgC/4ddJxc=
-X-Received: by 2002:a2e:a22b:0:b0:2cc:207f:4783 with SMTP id
- i11-20020a2ea22b000000b002cc207f4783mr1292561ljm.18.1702374780611; Tue, 12
- Dec 2023 01:53:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hsoOBmDM"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BCC95
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 02:05:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702375558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MaFI2nLzy2BuURLvmJJteNjl3+hrowavzBk9ysSya2U=;
+	b=hsoOBmDMeBlktdsvUDrjIK+XwYW3+cDJvr9hxJBwsxroAG2YnnXwtwvJ9xcVnyOsuAxyFw
+	f8NwOTfyWPHgm4i3o0neY+jUO31JPOq8pj64qCD85aZobLnzuvSXnPjs8k6qVmUR0l/P03
+	dIukKiFlJKUahAuYmE8Ihur/yd3FT4s=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-2jHUSVhjMhefJgMleeKj2Q-1; Tue, 12 Dec 2023 05:05:56 -0500
+X-MC-Unique: 2jHUSVhjMhefJgMleeKj2Q-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3334b472196so4525178f8f.1
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 02:05:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702375555; x=1702980355;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MaFI2nLzy2BuURLvmJJteNjl3+hrowavzBk9ysSya2U=;
+        b=NC/Hi6dWEFZbzD4WFDom0KYw7nPR3Anlr/i1i6JzPpTkq3qguWPWGjkfbJSwy7az9L
+         btS+66gh0dJAXmKKP9CIFzXcHqrnQ/zXYfu+MBT15h4OEBgI0C9HGb3PIII0vGeE9d4G
+         ZaRk+pnzPrD1ku+SRHjHN7ogoc2V3cDpo/CYbZnKCgI+UP+b3WTFW9dfJC1JtghDKQlA
+         PAnEXlzQGEozuFNcSmLiU2x4a8DH96c0hO5xS2nEqnCfmQ8ky1lUl78bPemkvgV7E4oZ
+         pMgVbO6MQD+lNT8gFfIM+oo3GC7w6xLxu02eI/ex5TeOAXN2xF23OpClcD4OMeC9jDXx
+         saMQ==
+X-Gm-Message-State: AOJu0Yyx/F6Mr2JRDi+h8eiA1rGJr3T9aCB6AchHCMHIXIIjs8g0Qhfz
+	i0maL6e7T+oqtaUjB9069BnJUWmdxAqM2QlHw+OqKo/ML0g7QQRkcVFRsCn3klCkUoOhrZdbyma
+	vJFM3+x8PIRZacseMFEj0
+X-Received: by 2002:a5d:620a:0:b0:333:3c28:767a with SMTP id y10-20020a5d620a000000b003333c28767amr2470371wru.46.1702375555456;
+        Tue, 12 Dec 2023 02:05:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF5Dy61sE9ZXZtGCeZ0WlhrlSS7Rh+IeqOz5YqaPlLVTMbyBr6u2EqtyUTB9ZcBSyRZqpupdw==
+X-Received: by 2002:a5d:620a:0:b0:333:3c28:767a with SMTP id y10-20020a5d620a000000b003333c28767amr2470357wru.46.1702375554983;
+        Tue, 12 Dec 2023 02:05:54 -0800 (PST)
+Received: from ?IPV6:2003:cb:c74b:ca00:4ca2:ff2c:9092:f070? (p200300cbc74bca004ca2ff2c9092f070.dip0.t-ipconnect.de. [2003:cb:c74b:ca00:4ca2:ff2c:9092:f070])
+        by smtp.gmail.com with ESMTPSA id e18-20020a056000121200b00333404e9935sm10381362wrx.54.2023.12.12.02.05.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Dec 2023 02:05:54 -0800 (PST)
+Message-ID: <68582759-c74e-4bd8-b055-58eff81ef2e2@redhat.com>
+Date: Tue, 12 Dec 2023 11:05:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231211-cxl-cper-v2-0-c116900ba658@intel.com> <20231211-cxl-cper-v2-6-c116900ba658@intel.com>
-In-Reply-To: <20231211-cxl-cper-v2-6-c116900ba658@intel.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 12 Dec 2023 10:52:49 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGogr2hc9Ofv1WTSvh3uTjuY8rHFbcVpigfd6D19qdbvw@mail.gmail.com>
-Message-ID: <CAMj1kXGogr2hc9Ofv1WTSvh3uTjuY8rHFbcVpigfd6D19qdbvw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] firmware/efi: Process CXL Component Events
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-	Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] dax: add a sysfs knob to control memmap_on_memory
+ behavior
+To: Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
+Cc: linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+ Huang Ying <ying.huang@intel.com>, Li Zhijian <lizhijian@fujitsu.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20231211-vv-dax_abi-v3-0-acf6cc1bde9f@intel.com>
+ <20231211-vv-dax_abi-v3-2-acf6cc1bde9f@intel.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20231211-vv-dax_abi-v3-2-acf6cc1bde9f@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Dec 2023 at 23:57, Ira Weiny <ira.weiny@intel.com> wrote:
->
-> BIOS can configure memory devices as firmware first.  This will send CXL
-> events to the firmware instead of the OS.  The firmware can then send
-> these events to the OS via UEFI.
->
-> UEFI v2.10 section N.2.14 defines a Common Platform Error Record (CPER)
-> format for CXL Component Events.  The format is mostly the same as the
-> CXL Common Event Record Format.  The difference is a GUID is used in
-> the Section Type to identify the event type.
->
-> Add EFI support to detect CXL CPER records and call a notifier chain
-> with the record data blobs to be processed by the CXL code.
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
->
+On 11.12.23 23:52, Vishal Verma wrote:
+> Add a sysfs knob for dax devices to control the memmap_on_memory setting
+> if the dax device were to be hotplugged as system memory.
+> 
+> The default memmap_on_memory setting for dax devices originating via
+> pmem or hmem is set to 'false' - i.e. no memmap_on_memory semantics, to
+> preserve legacy behavior. For dax devices via CXL, the default is on.
+> The sysfs control allows the administrator to override the above
+> defaults if needed.
+> 
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Tested-by: Li Zhijian <lizhijian@fujitsu.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 > ---
-> Changes from v1:
-> [djbw: convert to single notifier callback]
-> [djbw: append _GUID to guid defines]
-> [iweiny: clean up function names]
-> ---
->  drivers/firmware/efi/cper.c     | 15 ++++++++++++
->  drivers/firmware/efi/cper_cxl.c | 45 ++++++++++++++++++++++++++++++++++++
->  drivers/firmware/efi/cper_cxl.h | 29 +++++++++++++++++++++++
->  include/linux/cxl-event.h       | 51 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 140 insertions(+)
->
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 35c37f667781..39c65733ae9b 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -22,6 +22,7 @@
->  #include <linux/aer.h>
->  #include <linux/printk.h>
->  #include <linux/bcd.h>
-> +#include <linux/cxl-event.h>
->  #include <acpi/ghes.h>
->  #include <ras/ras_event.h>
->  #include "cper_cxl.h"
-> @@ -607,6 +608,20 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
->                         cper_print_prot_err(newpfx, prot_err);
->                 else
->                         goto err_section_too_small;
-> +       } else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID) ||
-> +                  guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID) ||
-> +                  guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-> +               struct cper_cxl_event_rec *rec = acpi_hest_get_payload(gdata);
-> +
-> +               if (rec->hdr.length <= sizeof(rec->hdr))
-> +                       goto err_section_too_small;
-> +
-> +               if (rec->hdr.length > sizeof(*rec)) {
-> +                       pr_err(FW_WARN "error section length is too big\n");
-> +                       return;
-> +               }
-> +
-> +               cxl_cper_post_event(newpfx, sec_type, rec);
->         } else {
->                 const void *err = acpi_hest_get_payload(gdata);
->
-> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
-> index a55771b99a97..669983f7956f 100644
-> --- a/drivers/firmware/efi/cper_cxl.c
-> +++ b/drivers/firmware/efi/cper_cxl.c
-> @@ -8,6 +8,7 @@
->   */
->
->  #include <linux/cper.h>
-> +#include <linux/cxl-event.h>
->  #include "cper_cxl.h"
->
->  #define PROT_ERR_VALID_AGENT_TYPE              BIT_ULL(0)
-> @@ -187,3 +188,47 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
->                                sizeof(cxl_ras->header_log), 0);
->         }
->  }
-> +
-> +DECLARE_RWSEM(cxl_cper_rw_sem);
-> +static cxl_cper_notifier cper_notifier;
-> +
-> +void cxl_cper_post_event(const char *pfx, guid_t *sec_type,
-> +                        struct cper_cxl_event_rec *rec)
+>   drivers/dax/bus.c                       | 47 +++++++++++++++++++++++++++++++++
+>   Documentation/ABI/testing/sysfs-bus-dax | 17 ++++++++++++
+>   2 files changed, 64 insertions(+)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 1ff1ab5fa105..2871e5188f0d 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -1270,6 +1270,52 @@ static ssize_t numa_node_show(struct device *dev,
+>   }
+>   static DEVICE_ATTR_RO(numa_node);
+>   
+> +static ssize_t memmap_on_memory_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
 > +{
-> +       struct cxl_cper_event_data data = {
-> +               .rec = rec,
-> +       };
+> +	struct dev_dax *dev_dax = to_dev_dax(dev);
 > +
-> +       if (!(rec->hdr.validation_bits & CPER_CXL_COMP_EVENT_LOG_VALID)) {
-> +               pr_err(FW_WARN "cxl event no Component Event Log present\n");
-> +               return;
-> +       }
-> +
-> +       if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID))
-> +               data.event_type = CXL_CPER_EVENT_GEN_MEDIA;
-> +       else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID))
-> +               data.event_type = CXL_CPER_EVENT_DRAM;
-> +       else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID))
-> +               data.event_type = CXL_CPER_EVENT_MEM_MODULE;
-> +
-> +       down_read(&cxl_cper_rw_sem);
-> +       if (cper_notifier)
-> +               cper_notifier(&data);
-> +       up_read(&cxl_cper_rw_sem);
+> +	return sprintf(buf, "%d\n", dev_dax->memmap_on_memory);
 > +}
 > +
-> +void cxl_cper_register_notifier(cxl_cper_notifier notifier)
+> +static ssize_t memmap_on_memory_store(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      const char *buf, size_t len)
 > +{
-> +       down_write(&cxl_cper_rw_sem);
-> +       cper_notifier = notifier;
-> +       up_write(&cxl_cper_rw_sem);
+> +	struct device_driver *drv = dev->driver;
+> +	struct dev_dax *dev_dax = to_dev_dax(dev);
+> +	struct dax_region *dax_region = dev_dax->region;
+> +	struct dax_device_driver *dax_drv = to_dax_drv(drv);
+> +	ssize_t rc;
+> +	bool val;
+> +
+> +	rc = kstrtobool(buf, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (dev_dax->memmap_on_memory == val)
+> +		return len;
+> +
+> +	device_lock(dax_region->dev);
+> +	if (!dax_region->dev->driver) {
+> +		device_unlock(dax_region->dev);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (dax_drv->type == DAXDRV_KMEM_TYPE) {
+> +		device_unlock(dax_region->dev);
+> +		return -EBUSY;
+> +	}
+> +
+> +	device_lock(dev);
+> +	dev_dax->memmap_on_memory = val;
+> +	device_unlock(dev);
+> +
+> +	device_unlock(dax_region->dev);
+> +	return len;
 > +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_register_notifier, CXL);
+> +static DEVICE_ATTR_RW(memmap_on_memory);
 > +
-> +void cxl_cper_unregister_notifier(void)
-> +{
-> +       down_write(&cxl_cper_rw_sem);
-> +       cper_notifier = NULL;
-> +       up_write(&cxl_cper_rw_sem);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_notifier, CXL);
-> diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
-> index 86bfcf7909ec..b1b1b0514f6b 100644
-> --- a/drivers/firmware/efi/cper_cxl.h
-> +++ b/drivers/firmware/efi/cper_cxl.h
-> @@ -10,11 +10,38 @@
->  #ifndef LINUX_CPER_CXL_H
->  #define LINUX_CPER_CXL_H
->
-> +#include <linux/cxl-event.h>
+>   static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+>   {
+>   	struct device *dev = container_of(kobj, struct device, kobj);
+> @@ -1296,6 +1342,7 @@ static struct attribute *dev_dax_attributes[] = {
+>   	&dev_attr_align.attr,
+>   	&dev_attr_resource.attr,
+>   	&dev_attr_numa_node.attr,
+> +	&dev_attr_memmap_on_memory.attr,
+>   	NULL,
+>   };
+>   
+> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
+> index a61a7b186017..b1fd8bf8a7de 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-dax
+> +++ b/Documentation/ABI/testing/sysfs-bus-dax
+> @@ -149,3 +149,20 @@ KernelVersion:	v5.1
+>   Contact:	nvdimm@lists.linux.dev
+>   Description:
+>   		(RO) The id attribute indicates the region id of a dax region.
 > +
->  /* CXL Protocol Error Section */
->  #define CPER_SEC_CXL_PROT_ERR                                          \
->         GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,   \
->                   0x4B, 0x77, 0x10, 0x48)
->
-> +/* CXL Event record UUIDs are formated at GUIDs and reported in section type */
-> +/*
-> + * General Media Event Record
-> + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-> + */
-> +#define CPER_SEC_CXL_GEN_MEDIA_GUID                                    \
-> +       GUID_INIT(0xfbcd0a77, 0xc260, 0x417f,                           \
-> +                 0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6)
-> +
-> +/*
-> + * DRAM Event Record
-> + * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
-> + */
-> +#define CPER_SEC_CXL_DRAM_GUID                                         \
-> +       GUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,                           \
-> +                 0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24)
-> +
-> +/*
-> + * Memory Module Event Record
-> + * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
-> + */
-> +#define CPER_SEC_CXL_MEM_MODULE_GUID                                   \
-> +       GUID_INIT(0xfe927475, 0xdd59, 0x4339,                           \
-> +                 0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
-> +
->  #pragma pack(1)
->
->  /* Compute Express Link Protocol Error Section, UEFI v2.10 sec N.2.13 */
-> @@ -62,5 +89,7 @@ struct cper_sec_prot_err {
->  #pragma pack()
->
->  void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err);
-> +void cxl_cper_post_event(const char *pfx, guid_t *sec_type,
-> +                        struct cper_cxl_event_rec *rec);
->
->  #endif //__CPER_CXL_
-> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-> index 18dab4d90dc8..c764ff877a6d 100644
-> --- a/include/linux/cxl-event.h
-> +++ b/include/linux/cxl-event.h
-> @@ -108,4 +108,55 @@ struct cxl_event_record_raw {
->         union cxl_event event;
->  } __packed;
->
-> +enum cxl_event_type {
-> +       CXL_CPER_EVENT_GEN_MEDIA,
-> +       CXL_CPER_EVENT_DRAM,
-> +       CXL_CPER_EVENT_MEM_MODULE,
-> +};
-> +
-> +#pragma pack(1)
-> +
-> +#define CPER_CXL_DEVICE_ID_VALID               BIT(0)
-> +#define CPER_CXL_DEVICE_SN_VALID               BIT(1)
-> +#define CPER_CXL_COMP_EVENT_LOG_VALID          BIT(2)
-> +struct cper_cxl_event_rec {
-> +       struct {
-> +               u32 length;
-> +               u64 validation_bits;
-> +               struct cper_cxl_event_devid {
-> +                       u16 vendor_id;
-> +                       u16 device_id;
-> +                       u8 func_num;
-> +                       u8 device_num;
-> +                       u8 bus_num;
-> +                       u16 segment_num;
-> +                       u16 slot_num; /* bits 2:0 reserved */
-> +                       u8 reserved;
-> +               } device_id;
-> +               struct cper_cxl_event_sn {
-> +                       u32 lower_dw;
-> +                       u32 upper_dw;
-> +               } dev_serial_num;
-> +       } hdr;
-> +
-> +       union cxl_event event;
-> +};
-> +
-> +struct cxl_cper_event_data {
-> +       enum cxl_event_type event_type;
-> +       struct cper_cxl_event_rec *rec;
-> +};
-> +
-> +#pragma pack()
-> +
-> +typedef void (*cxl_cper_notifier)(struct cxl_cper_event_data *ev_data);
-> +
-> +#ifdef CONFIG_UEFI_CPER
-> +void cxl_cper_register_notifier(cxl_cper_notifier notifier);
-> +void cxl_cper_unregister_notifier(void);
-> +#else
-> +static inline void cxl_cper_register_notifier(cxl_cper_notifier notifier) { }
-> +static inline void cxl_cper_unregister_notifier(void) { }
-> +#endif
-> +
->  #endif /* _LINUX_CXL_EVENT_H */
->
-> --
-> 2.43.0
->
+> +What:		/sys/bus/dax/devices/daxX.Y/memmap_on_memory
+> +Date:		October, 2023
+> +KernelVersion:	v6.8
+> +Contact:	nvdimm@lists.linux.dev
+> +Description:
+> +		(RW) Control the memmap_on_memory setting if the dax device
+> +		were to be hotplugged as system memory. This determines whether
+> +		the 'altmap' for the hotplugged memory will be placed on the
+> +		device being hotplugged (memmap_on_memory=1) or if it will be
+> +		placed on regular memory (memmap_on_memory=0). This attribute
+> +		must be set before the device is handed over to the 'kmem'
+> +		driver (i.e.  hotplugged into system-ram). Additionally, this
+> +		depends on CONFIG_MHP_MEMMAP_ON_MEMORY, and a globally enabled
+> +		memmap_on_memory parameter for memory_hotplug. This is
+> +		typically set on the kernel command line -
+> +		memory_hotplug.memmap_on_memory set to 'true' or 'force'."
+> 
+
+Thinking about it, I wonder if we could disallow setting that property 
+to "true" if the current configuration does not allow it.
+
+That is:
+
+1) Removing the "size" parameter from mhp_supports_memmap_on_memory(), 
+it doesn't make any sense anymore.
+
+2) Exporting mhp_supports_memmap_on_memory() to modules.
+
+3) When setting memmap_on_memory, check whether 
+mhp_supports_memmap_on_memory() == true.
+
+Then, the user really gets an error when trying to set it to "true".
+
+-- 
+Cheers,
+
+David / dhildenb
+
