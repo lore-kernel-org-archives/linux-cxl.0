@@ -1,84 +1,84 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CNQ/nXbQ"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845EADC
-	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 11:30:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6pOAmIE"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EB0A6;
+	Tue, 12 Dec 2023 11:41:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702409457; x=1733945457;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=8vXmQ5vdKpAG62sUz1mxbeNRAf4X3l2PB9HnHPd4Qno=;
-  b=CNQ/nXbQb1LK/fv3dYt8l5d04Ayc7hFLmJyKUkFNsAccCjBF12J2Dq0R
-   y19ytr2udzsWxGLOorZThVU7kpUgf2tINhOL4Em6VZWnEV36eee9Juz2Y
-   G0afWzkHfptNubuw7uQfyrsXxsx+b0CKuv353Xuz1B+Ho0atn8sfB78gk
-   MPmxApUvmOc0kyG5KzcijytzBfJo1QCvH+n/jiAShplnf0sYvib/R97bB
-   QoOAJMqmPWjXS8SiAA1CE0JWxcvLj+CKZ51RH3EEYp6uijvCzszVxpCgo
-   Wu40Ttliys7VB0YwuGw/de7I5VGwbtdcdUfQWZtrgPd7wiVeMsDLPqG0G
+  t=1702410117; x=1733946117;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=vIWEtOl4Uah8SXwm6r6/k3M+wS2Pt4Yd4dbZ3qtxOTc=;
+  b=C6pOAmIEKNkFp7/BZXCzQwFxYjK3zxDnPiuSGvYc0jyPvAigqlHpbY4a
+   jhGQIOCRRhAaSc4ExFqdRLQT1148sr1jhsyhjAMZIkZfHVA2JNIgEVWKI
+   PWp1nugug6wh0+HSfq9QycifNYdxo0LZSByrQ7QUZEkO4ysJA4mtAbCmo
+   1lt4wbZFz7KmmhI4jpBTrza3XLTsuip6fN4zW0R7ZFsJdArMSIFvyKiKK
+   WFOa1zh9FC3je8YI31lgHI7vJ5EN6142+yAAuOeFhuUuZDsvwDL8+ddMS
+   X8pArrVjtIDCAegfJEgYfe2PqYoJPCE0WxHXuf7jTmiAxFAEDl+vC9OOK
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="385270697"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="1699542"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="385270697"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 11:30:56 -0800
+   d="scan'208";a="1699542"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 11:41:56 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864332592"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="15133904"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Dec 2023 11:30:57 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="864332592"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Dec 2023 11:41:55 -0800
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 12 Dec 2023 11:30:55 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2507.35; Tue, 12 Dec 2023 11:41:55 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 12 Dec 2023 11:30:54 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Tue, 12 Dec 2023 11:41:55 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 12 Dec 2023 11:30:52 -0800
+ 15.1.2507.35; Tue, 12 Dec 2023 11:41:55 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W15NsB+2VkyxU60cVfd8VimQYJ6o4657tER7bvk8CQhlQuSjy1z+QDr4xyyokFM57OTGlLmJWw+mFB3eI09T2ozXF8LfSO+0uynj4ToqKs5KyyohWAes2RZ6SNt/pe15bcK9DGhmLPt7qVNRSOAi3SlhAKKjiV+rBGU7JONAmMv9e/8fBNOnG6aY+wpWYyjGWA6WPJY3CtC7Gqw9LJoSDmElisKFjjMUcV/9LgaikBoBpIXsAnix7qI09akifjYW6Wd6bBpYz0n3xbiLIChcnpUmsErHA5hoZ6taqh0Mv1TcDgONaedHC/O62d9HV1AF70qcXRHGKCQ6Y6zaDoqBNw==
+ b=ZvcQhUByucUQxsrCEp++waU1KaE5jDmPxo7vRnPeqCV8Mafss+xECMkcDmJdFAihqV+P6M2AUTzhFGTuGvia0Lv1S4l3kgZRL0+MJlDyu2YgFlz/8h3ibf16pk+ctkZVpTjQVPW/VBSHsNJ9c4JWSysp7hh+WIdHfiJjM6DbTq7QqFkWgWNTphWqDWlDGT2B1xxsntNnc8ERRp1lnOuSOXG3JJ1jN1YzusAotX7CMzJP0gXJfr1Z+ThEShV255BsCmbGK0hhD3vo3yHFNknLaWE57EYeNx8FoPIzczou2VG26iY1U5IKwYJ3D33kC+SH892wZf6OJtpFqOR8q+lyLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GVQZssqGgJOOwJYKCUMu8421nsueeieQytUlKb0kEss=;
- b=caq+MM6p44LcfjtjtkPz8Jo/Phau+Eha5SCYl2p2csE95eAP/nYINMZbZp33RwOxR338DIBOmLNT2k5vs60E8SsO9AKqehbzZmJ3u57sgwkvPyQIidVZ9sy2m0LDU1y46DDIuhCJGVf5plPapdqtcnP9CyJpVxdUeGrLklcq3b+85zHb5RyOMt3dDSEOxdik2v7+vg4LopobGB4OinxLYggPlRlvTigMmFxb0WRhyQ/+qs2JRJeZA6GD692rjpbaubysaLT76/GHQIAdDokepMPz+zXMEBLuDRzaY+0zKsGetlaq0g9z2JyKkP0DQESw1yjalWjyn4SGc/4n3C5vIw==
+ bh=oZWNeBADV+qgMEDdakW6iBB5r3Luk3LfuKDwf3a7mPc=;
+ b=U+LZYyYI1hpQP0FaHPNG2LVkaNKN2WIHaYnsUI5xDmE9hG/Zba/P697PybMdBoJJ+xD1Zs6HbL2LO8s5Q2tL+bZ6K+iRmVJXcpWAp+wqaWUt6+X/72j7oXLKwvOlzzeMJkHtppOl7Zne75cGO1xoOEr7Zyf3ZjYzLdBcxew780WufYT/2xYI7lX+2B0v/lQKsvTTnL4FwuXJlxaRbaVrGddYUo7Kfd9fkDrKebptpahwK7AWQ5KtKdRmYvftP1ULJvRV4ZM2zq0tcpfAPTdp2/IQQLdadf6gmfNBFWu5jtDEcXReW6dCB95l9ajeUlQYNr6Ga8LZg8cDxA2zfLLX+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH0PR11MB4998.namprd11.prod.outlook.com (2603:10b6:510:32::8) with
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ0PR11MB7703.namprd11.prod.outlook.com (2603:10b6:a03:4e6::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Tue, 12 Dec
- 2023 19:30:50 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7068.031; Tue, 12 Dec 2023
- 19:30:50 +0000
-Message-ID: <500b0900-f4bb-475d-817b-6a72f18e0134@intel.com>
-Date: Tue, 12 Dec 2023 12:30:47 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 2/3] cxl/region: Add sysfs attribute for locality
- attributes of CXL regions
-To: Brice Goglin <brice.goglin@gmail.com>, <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<jonathan.cameron@huawei.com>, <dave@stgolabs.net>
-References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
- <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
- <23a78aa8-e076-4b98-bd7c-4299aefd9895@gmail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <23a78aa8-e076-4b98-bd7c-4299aefd9895@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR05CA0032.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::45) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.33; Tue, 12 Dec
+ 2023 19:41:53 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::da91:dbe5:857c:fa9c]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::da91:dbe5:857c:fa9c%4]) with mapi id 15.20.7068.031; Tue, 12 Dec 2023
+ 19:41:53 +0000
+Date: Tue, 12 Dec 2023 11:41:49 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+To: Vishal Verma <vishal.l.verma@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, David Hildenbrand <david@redhat.com>, "Dave
+ Hansen" <dave.hansen@linux.intel.com>, Huang Ying <ying.huang@intel.com>,
+	"Joao Martins" <joao.m.martins@oracle.com>
+Subject: Re: [PATCH v4 2/3] dax/bus: Introduce guard(device) for
+ device_{lock,unlock} flows
+Message-ID: <6578b77dc911e_22601629440@iweiny-mobl.notmuch>
+References: <20231212-vv-dax_abi-v4-0-1351758f0c92@intel.com>
+ <20231212-vv-dax_abi-v4-2-1351758f0c92@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231212-vv-dax_abi-v4-2-1351758f0c92@intel.com>
+X-ClientProxiedBy: SJ0PR05CA0059.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::34) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -86,179 +86,64 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH0PR11MB4998:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5089463-aaaf-4d63-ccf4-08dbfb48d909
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ0PR11MB7703:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2015c629-ecb9-4e04-e064-08dbfb4a640b
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5EbNg62hjalahmO79wawGm67vRj+Nv5OZZ0tPwdDHbv7cVail2zh6R11nJK4mmt9fXnMP7JPozLWoftG2J8+VuOD/ywy/8ajCp8IlaX5aYtJ62kag2tsNrM9i7EOslvNpXaMnUc8PIHru7jJxwtRjBB2ix/zE03E/hlKcSGEjQmYzj9jp34qLAVS1JviOMWAlpTm4WuA1K375ckD1YagPoM3xsI9cVSM5DU9PLjQypjNuSnDzV/PnXlXVBZh9UAKdOST43HLcmKSRgr2uk1rkR0gvmd9adfafBjqbrbpE3qab6zGMG1uTcW2E6gj0VohHZjcfPpFb5P/eczMtxKhXdPsvhZ1cj3Y3aLzx6VVWJN3ycyQKJ7+CbqHz/G53TNGXB90z3B+IV5FMeJHJfuGSNEIWpzYV4wqh/2pCY6aThf/utSnWcXNMQWwwFnreMcU/PNRzjkJ+GCAHV3HigWXrX/ggPZ62VsPqtGmlooGRxu+7lR8YB7J5e79fDoR6De74qLE9RtK4oBSdXTdKwKX95ynKY0g9Cb15TucgyzUU018uz/aiZiPd2uBT2gSRoFOIf0cw827ZZB2L4ACFJ0tOs8+cGkNZJONZpEpGdMzk6vuS+hYQ2+50EFZC0antDcU
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(396003)(376002)(346002)(39860400002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(31686004)(66574015)(82960400001)(66476007)(66556008)(66946007)(86362001)(36756003)(31696002)(83380400001)(26005)(6512007)(53546011)(2616005)(6506007)(6486002)(316002)(2906002)(6666004)(478600001)(5660300002)(4326008)(8936002)(8676002)(44832011)(38100700002)(41300700001)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: IqOxw8peDe0jXpXjJ9emtx1HKDF8Bv1fBM6HUxNa0OQ1mBZGKr/YRv2YDTL2zQG+9o/2l+5JDqmBbKKdin/0Mv3ZnGP+njIE8P6W81iBwPBdDqPNjesolitJcYBx19gN8p0jO+9mokih6oEzENaBnaoSyJF+404/QnZSh7YKyiNcRLJ12bjsHq7aZhvhE3VnYxxiyLU958LJwIkdbbU1Za0wpXoyJkLY5741y7vn65KFpw7BNN+zG+o6yLCopLJaLAMzBYVmYXfcbmwjcLERdKi8IiZrPiL4iv7n7U2DyYqeba0S1AAe9gg1ZdAc+5ginkDlNyZbolulLcRPE1acQkGmG8V/BKWhRmkmu7F2ZQdGG+x0yCBzAsUs+i/EXAki844yr6fFibWJN5ob7/mS4YfKNh4aSNR+i1pscX6fCPWgc3eg0Wn4sroCXkZ9Ox85fQUIVPyQaeBDcgS6LCYhBmPQFgALq6QXjpKXeligmQuSxAuDGm/mFlW9yZVzmB7vfnjCXOh/9hFmJyC+jCHLV0CnDiykulw6ZHJrOiBYYZOj+BUX6TDjbjpdD07U1cXm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(376002)(366004)(396003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(9686003)(6512007)(6506007)(5660300002)(26005)(44832011)(6636002)(54906003)(66946007)(66476007)(66556008)(4744005)(6486002)(2906002)(83380400001)(82960400001)(86362001)(478600001)(41300700001)(8936002)(8676002)(4326008)(110136005)(316002)(38100700002)(6666004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MFRsZTJ2Qnh4UDFWWC9JREVBaXNSOEpQVUd6cGNOeEN5dUwrT1BVK1RXNlhP?=
- =?utf-8?B?Mzh4alIyTHFuUm9tQUQ3VEFPTnVCa0haQkVIWWZNV1JySUhXY0FVZVpXbnor?=
- =?utf-8?B?K1hIZHA5ZDdRcC82dDhnWVR2ckpLWlI5dmxZMDllLzByVmRxN0lPRkVoQU1U?=
- =?utf-8?B?ZzVJcXRwUVEvRkQzWjdTZ014aFF5bGUrbU5GTW5RZ1FNS0NQRTNyTEhvcnha?=
- =?utf-8?B?cVVOUWNpSlFUNkxlK05udUF2UnNOWlVPWEdWR0hxWlIxbjZnYzU5K3Zlcko2?=
- =?utf-8?B?dnZMc2RmNytPY1BPMSs5eTFLZ2JIcEtUbzllRFExYjlNVnhONU45bTJIZWpS?=
- =?utf-8?B?UzQrRlFoOGVpcE9TVG9BZnlreVRTd1pDUDJZNWtkdWlEVDBCN1hWTTI1ZkNW?=
- =?utf-8?B?cWlyZWNTQWs5TG0xc1hCT1NtVnNaei9BZ1BVVHlUMnVDRDhnVXAyOFl3MmV1?=
- =?utf-8?B?TThDV0FxeW5ha3M0bllqRVhoVG5Cd0xZY3VoYndMUzQvaUk2eCtOcW51UDRt?=
- =?utf-8?B?ZEErWkwrUzV2dVNDNTZwQmQ1QmRLeUEzOGYrakwzS1JqQXNLOXlKbW9BK0Vr?=
- =?utf-8?B?SmhGNkovOW1PdTN0akFtVGoyK3orU0tldFJ6ejFBcXVWbFdBaXhQTTkzM3NN?=
- =?utf-8?B?QWVYZllIUjVFa05lNnFpMENQbHhWL0QvM2Nyc2VyTmhSVVZVVlJWZDhFZ1dl?=
- =?utf-8?B?NHpjZWhEbEFwaFdsK2V5ZklsTE9Bc3ZDUHcvQm14T2ZDSlBML0hvend1bW15?=
- =?utf-8?B?cndRODRKdjQ2TlU3Qk5yRTh5NGxqSHQvL2JrN21HYkl3RTlSMUVUK2tNTHJT?=
- =?utf-8?B?d3IzTnJGNjJvZlNzMmVPa0lsQzRXRDJNWWxkQVhsTmVRMGFocGdMckt3SHBP?=
- =?utf-8?B?ZXg1alk5cUVaZHhHWU1SbzQzbVczMTFJWHhldG5CSlIzOVUwMjVOSm9IcWtT?=
- =?utf-8?B?amVPT29rYVNRVjJVQ3hMaVVobTdmWCs5cVYvVU9tWFVORmVETDlic2xrZWZ0?=
- =?utf-8?B?T3hIV3RnVVZXRytFMWFTL2ZVVk5RTFRrMkxseVR5SkhPSWR0RkpaRjh0dE0z?=
- =?utf-8?B?Ty9xWURhalZmRzlxazFzNmI0SzVNYUxNNzRVeUFxcngwazZuU2VOanNjTGF4?=
- =?utf-8?B?aXFvT2VWQzZLWnczSnliOFFOS3dFSGhjaHNWSXpxcjd1R29BU2w4YjRBTzM5?=
- =?utf-8?B?L1JORDNoeGQ5WTNNUVRISkVQZE1QbmJpOTZaeHdzK0NCa0xOL2ZSVUZPaENk?=
- =?utf-8?B?anl3ZHNaMUVNQXp0SGhSNVNlWHB5QjJCUHdtcUpjTE8zb0gwWjQycm5NaWpO?=
- =?utf-8?B?clhuUy9MekdCQUNnYzhVeU9SUU5DY3JIWERDL0lWKzNGSWpwczRnK2QwQ3Fp?=
- =?utf-8?B?TU9wRFJxMkRJZGxHdVpKd1BtSUl5QUdDR2tVMTQrb21VUURNQVFJcDZDNXJK?=
- =?utf-8?B?cTBjNi9OSFAwbUZ1ZU1KK1JVRFFQRU1jclFmV0VURS92SmMra1E1dGN6ZVJE?=
- =?utf-8?B?ZVIwWFJZb216TXd0YStUbDhhR3RpRE44YmxoZWpWcnFhQU5odkxNV0kzOFho?=
- =?utf-8?B?eFhWMGtuR09pOWJneitkai9TZno1MnhSWjFLQldvWlRqWWNBRVN3dDRWY1VG?=
- =?utf-8?B?TW1EYWNCRDhrMjRBQ3pjWG4xNnFpUjJPTnFBRFpvZnA0c0FwVU56OEtQdFhm?=
- =?utf-8?B?dkdpYWdTeDd1M0FJRnZydHV1QzZXVVBIbng2V2dGQ1ByZFQvWDFlQUp5TUto?=
- =?utf-8?B?NlV4R2JHRzFZRW9ia3QyR2dXZytYY1hVWEh0TWRHcyt6RnJmMU9nTzBHRjhH?=
- =?utf-8?B?NndFV1hFZVd3UmlIK3lNMTFWMFZPUXFjc2pIbEwvc3JQOTArazhDY1hXZHov?=
- =?utf-8?B?eS9EbXVpMitBejQreUgvU0VZcHZ5T2s3TmtpTnMzbE9rV1IwVzhhbUhNd1BM?=
- =?utf-8?B?WGNMcjhiek5vb2huYlVBTVUzVzBERDFTbTN1L3VkM1BEOUtlWUZmanNZbUF1?=
- =?utf-8?B?K0lqWkJLRUE1ZGsvVHptYlBnc0tMN205Qi9teSt4K3VHTXFXOE9NdFY4eE83?=
- =?utf-8?B?ZEJmY256SWZYMHZYZWRpZHJYZWJkbVQrMmZzcyttNisvamZ0TWRzS0xSRXky?=
- =?utf-8?Q?ygOaNupnPZuf8MrYE1czMlKUF?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5089463-aaaf-4d63-ccf4-08dbfb48d909
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BzAstGTQ5qJ2+HhC94uA9P+WWtwwrG2H51TINnXchz4CthHDlzwDO/7XpnK9?=
+ =?us-ascii?Q?IW4z8DZ3mccChm/muw80nt1lIj8Mb1+ic/T069E0/UB6m70VX7gvtCaDSztU?=
+ =?us-ascii?Q?Jwiineag2XXnKE0Ehza7I1SrcuAX62wJeiclTkS+Rx9OqeQNUXpWAayy9+5G?=
+ =?us-ascii?Q?kQb6F6cCuGSFKBw2SmVdGlxW6rGUNFA9gAw3/iCEPHe50E/qiNpC0yQzJxnM?=
+ =?us-ascii?Q?MCggMLRwORQCKebUhqZNoEj4z7WlLetkhUcqlnpuxldCvTxok1+SIH11RIrb?=
+ =?us-ascii?Q?/BZ6xmxS8wTk/XVpOIScfhoB0C/6BsFrHe3RohkNJU5EA2PGCPiipCpbvDDa?=
+ =?us-ascii?Q?oUdYGsQzOpst55jQ88RhrbUsyGULJxfJxrtWBssQc35dypW9bHXbJ2mCLH6v?=
+ =?us-ascii?Q?Zazeu+iBkfvhN0jJzfBazLK1ndbmR5XuZfhh4WiwzPrS3n6ZJe56xyyeKmBv?=
+ =?us-ascii?Q?SzItL+y9RPV2ZUcaIQk+xUgOLC243BdAKlkBFKa06EljFwNtcUBF5sC9DdKh?=
+ =?us-ascii?Q?AAb2+LBBs96uqD2jPDi47qIj5asbEMAtUYOk2KlWiUXln8uYK7W6ujMVko3s?=
+ =?us-ascii?Q?RuYc4ZQFAHtQIzrKfu9zx4nhFNbEG2i/uROSpLvNIkwvtOx8FXsqdUN9L8Ns?=
+ =?us-ascii?Q?9A8VQE12N2fVzaNrgKnBI0Yz1Hr3h8lBKKP82m8Gjrp/kji/nVWACDl0hbfp?=
+ =?us-ascii?Q?0tyOw3N0iJM31LE/I6ZM8rjY64EVeRZQUUgsmpYBE9VWkPcLFfaU+78HUstH?=
+ =?us-ascii?Q?tNeBpMNxUtqHyvkx77GILNDqc0S0pRESaJkf5N9eaT13QNbJjLh1Dps60oJ3?=
+ =?us-ascii?Q?FcHR9iThBy4Y0OXwCQMsROWAO9CirGffKbxyPeYlBt/7RVNKda22IEORelK1?=
+ =?us-ascii?Q?Lw//FUTDCdbqUXotX3lyqzwUyuAEWf14UfUqECz21jB5DWQ1EzI5oss9IDjp?=
+ =?us-ascii?Q?84JSqSmNU4MT/sS0IgdVz65ZZSDp4Rj/ZRjomKVndtB5wynHhJEHc1d9tLG6?=
+ =?us-ascii?Q?jgl05G2OMmb5vj8RWcFQMmyddk0wShWD8KMHbMiRjOprO8Wb0z2dhBVlaBcS?=
+ =?us-ascii?Q?bZ51agyUGYIvRfcYWf3GeJhXvMMwOwBp54uvyx3InFtnEIwGSN753umb1xgC?=
+ =?us-ascii?Q?udqbb1Pu1AAhUJOFDLFntVCf8lbskeBGTgTzM46O6z9FdK54nO3mB4DIUfZz?=
+ =?us-ascii?Q?tq1tGrti5NeYEGwBVJTI2pryjPgsu/iClV/fHwgZQPmxAFn93sm1uLlWHsXy?=
+ =?us-ascii?Q?jMLzhdcQ6ab1Aq58PardA8aa8m/gJDlVFWf0XP3U2FB22tPDmOyFWKToYLei?=
+ =?us-ascii?Q?APrn//p/c1CoqkzTuW4iBZhik1rE59uqssJyDUgVP86rYOr3DTgtgbL7sgzH?=
+ =?us-ascii?Q?7NshOWDq2HatdHmBJYpycImfe3Sii/KXJ0ez2Y02UV3tH7kFm7ar7iVUsqyE?=
+ =?us-ascii?Q?1aWfdkNYcNAQ03aQ3/LN5czMb4gW4Iic5JnYrptI1FacOvWaGPFtMX1NVIyy?=
+ =?us-ascii?Q?flTjQhXsFgY4LWM6xwPmSfPVmiCktZiE0ZuXet9e9cvQUjNXXjRkqYi02V0F?=
+ =?us-ascii?Q?zWK1iP22PGbFsFyHYi6ocUZlyNRpN1rDHCU+tbGv?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2015c629-ecb9-4e04-e064-08dbfb4a640b
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 19:30:50.2247
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 19:41:52.9474
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fQkw1yzW9xxpUP5VSmhMDeMpzuCZCDq1zeVVeEw/BJ9suB1aMn29WJ9WUHlOi3NepNuIYdQSPxuk/jrK6CL+zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4998
+X-MS-Exchange-CrossTenant-UserPrincipalName: PlcqWNjKBzigE+EWEaUxwMd5bejkKAU+6eNdmVONoq6Pxm4LLCx1rPAdy7lvkHunfu4WkDKQiIouI+r8GvZV7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB7703
 X-OriginatorOrg: intel.com
 
+Vishal Verma wrote:
+> Introduce a guard(device) macro to lock a 'struct device', and unlock it
+> automatically when going out of scope using Scope Based Resource
+> Management semantics. A lot of the sysfs attribute writes in
+> drivers/dax/bus.c benefit from a cleanup using these, so change these
+> where applicable.
+> 
+> Cc: Joao Martins <joao.m.martins@oracle.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+>
 
-
-On 12/11/23 02:06, Brice Goglin wrote:
-> Le 08/12/2023 à 00:31, Dave Jiang a écrit :
->> Add read/write latencies and bandwidth sysfs attributes for the enabled CXL
->> region. The bandwidth is the aggregated bandwidth of all devices that
->> contributes to the CXL region. The latency is the worst latency of the
->> device amongst all the devices that contributes to the CXL region.
-> 
-> 
-> Hello
-> 
-> Which initiator do these bandwidths/latencies refer to? Local CPUs near the root port? This should be specified in the doc.
-
-Currently I'm only storing the numbers from initiator pxm 0 to these targets in the hmat target list. I'm open to suggestions as to if a different way would be better.
-
-> 
-> Brice
-> 
-> 
-> 
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   Documentation/ABI/testing/sysfs-bus-cxl |   40 +++++++++++++++++++++++++++++++
->>   drivers/cxl/core/region.c               |   24 +++++++++++++++++++
->>   2 files changed, 64 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
->> index fff2581b8033..e96f172eb6a6 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-cxl
->> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
->> @@ -552,3 +552,43 @@ Description:
->>           attribute is only visible for devices supporting the
->>           capability. The retrieved errors are logged as kernel
->>           events when cxl_poison event tracing is enabled.
->> +
->> +
->> +What:        /sys/bus/cxl/devices/regionZ/read_bandwidth
->> +Date:        Apr, 2023
->> +KernelVersion:    v6.8
->> +Contact:    linux-cxl@vger.kernel.org
->> +Description:
->> +        (RO) The aggregated read bandwidth of the region. The number is
->> +        the accumulated read bandwidth of all CXL memory devices that
->> +        contributes to the region.
->> +
->> +
->> +What:        /sys/bus/cxl/devices/regionZ/write_bandwidth
->> +Date:        Apr, 2023
->> +KernelVersion:    v6.8
->> +Contact:    linux-cxl@vger.kernel.org
->> +Description:
->> +        (RO) The aggregated write bandwidth of the region. The number is
->> +        the accumulated write bandwidth of all CXL memory devices that
->> +        contributes to the region.
->> +
->> +
->> +What:        /sys/bus/cxl/devices/regionZ/read_latency
->> +Date:        Apr, 2023
->> +KernelVersion:    v6.8
->> +Contact:    linux-cxl@vger.kernel.org
->> +Description:
->> +        (RO) The read latency of the region. The number is
->> +        the worst read latency of all CXL memory devices that
->> +        contributes to the region.
->> +
->> +
->> +What:        /sys/bus/cxl/devices/regionZ/write_latency
->> +Date:        Apr, 2023
->> +KernelVersion:    v6.8
->> +Contact:    linux-cxl@vger.kernel.org
->> +Description:
->> +        (RO) The write latency of the region. The number is
->> +        the worst write latency of all CXL memory devices that
->> +        contributes to the region.
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index d879f5702cf2..72c47f624d63 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -645,6 +645,26 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->>   }
->>   static DEVICE_ATTR_RW(size);
->>   +#define ACCESS_ATTR(attrib)                    \
->> +static ssize_t attrib##_show(struct device *dev,        \
->> +               struct device_attribute *attr,    \
->> +               char *buf)                \
->> +{                                \
->> +    struct cxl_region *cxlr = to_cxl_region(dev);        \
->> +                                \
->> +    if (!cxlr->coord)                    \
->> +        return 0;                    \
->> +                                \
->> +    return sysfs_emit(buf, "%u\n",                \
->> +              cxlr->coord->attrib);            \
->> +}                                \
->> +static DEVICE_ATTR_RO(attrib)
->> +
->> +ACCESS_ATTR(read_bandwidth);
->> +ACCESS_ATTR(read_latency);
->> +ACCESS_ATTR(write_bandwidth);
->> +ACCESS_ATTR(write_latency);
->> +
->>   static struct attribute *cxl_region_attrs[] = {
->>       &dev_attr_uuid.attr,
->>       &dev_attr_commit.attr,
->> @@ -653,6 +673,10 @@ static struct attribute *cxl_region_attrs[] = {
->>       &dev_attr_resource.attr,
->>       &dev_attr_size.attr,
->>       &dev_attr_mode.attr,
->> +    &dev_attr_read_bandwidth.attr,
->> +    &dev_attr_write_bandwidth.attr,
->> +    &dev_attr_read_latency.attr,
->> +    &dev_attr_write_latency.attr,
->>       NULL,
->>   };
->>  
->>
->>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
