@@ -1,52 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hsoOBmDM"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BCC95
-	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 02:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702375558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MaFI2nLzy2BuURLvmJJteNjl3+hrowavzBk9ysSya2U=;
-	b=hsoOBmDMeBlktdsvUDrjIK+XwYW3+cDJvr9hxJBwsxroAG2YnnXwtwvJ9xcVnyOsuAxyFw
-	f8NwOTfyWPHgm4i3o0neY+jUO31JPOq8pj64qCD85aZobLnzuvSXnPjs8k6qVmUR0l/P03
-	dIukKiFlJKUahAuYmE8Ihur/yd3FT4s=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-2jHUSVhjMhefJgMleeKj2Q-1; Tue, 12 Dec 2023 05:05:56 -0500
-X-MC-Unique: 2jHUSVhjMhefJgMleeKj2Q-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3334b472196so4525178f8f.1
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 02:05:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsJhzwrw"
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC39AD
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 05:46:48 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40c3fe6c08fso33195825e9.1
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 05:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702388807; x=1702993607; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CTU9K8HtW7anEeps3JC1jiOhhNJckpMX5hNxpt7E+Qw=;
+        b=IsJhzwrwe3s6oQkPQCpeejIuYjyLhURuxxTROWZahnXtlXTpuGKwmIBPFxTIAx4jTP
+         xp+mNJFCauhKEkjBtKPh5VXrbPRilRxOLNjle4jAfJdjVx9eanOVHkmUYchH9yoFBmbZ
+         FzPudP8PAzfJQqnoePLbJHpUyOjZHEUqgseYGrrptHzNoCxYZlq75E1uD2khekbXsNQn
+         VH5EHfYPKcNzS1kMDmTXfcVZb991Ee+91nt8wXDY7+YU3d0ZRlKrdYddoOGd8R5/s2UO
+         NUSA6LH9x9K3Yz1bD4hhePbaZoFYiFIFbupz/FinwWtRDolHBgTYx34utwFINK9cXTbs
+         jitA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702375555; x=1702980355;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MaFI2nLzy2BuURLvmJJteNjl3+hrowavzBk9ysSya2U=;
-        b=NC/Hi6dWEFZbzD4WFDom0KYw7nPR3Anlr/i1i6JzPpTkq3qguWPWGjkfbJSwy7az9L
-         btS+66gh0dJAXmKKP9CIFzXcHqrnQ/zXYfu+MBT15h4OEBgI0C9HGb3PIII0vGeE9d4G
-         ZaRk+pnzPrD1ku+SRHjHN7ogoc2V3cDpo/CYbZnKCgI+UP+b3WTFW9dfJC1JtghDKQlA
-         PAnEXlzQGEozuFNcSmLiU2x4a8DH96c0hO5xS2nEqnCfmQ8ky1lUl78bPemkvgV7E4oZ
-         pMgVbO6MQD+lNT8gFfIM+oo3GC7w6xLxu02eI/ex5TeOAXN2xF23OpClcD4OMeC9jDXx
-         saMQ==
-X-Gm-Message-State: AOJu0Yyx/F6Mr2JRDi+h8eiA1rGJr3T9aCB6AchHCMHIXIIjs8g0Qhfz
-	i0maL6e7T+oqtaUjB9069BnJUWmdxAqM2QlHw+OqKo/ML0g7QQRkcVFRsCn3klCkUoOhrZdbyma
-	vJFM3+x8PIRZacseMFEj0
-X-Received: by 2002:a5d:620a:0:b0:333:3c28:767a with SMTP id y10-20020a5d620a000000b003333c28767amr2470371wru.46.1702375555456;
-        Tue, 12 Dec 2023 02:05:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF5Dy61sE9ZXZtGCeZ0WlhrlSS7Rh+IeqOz5YqaPlLVTMbyBr6u2EqtyUTB9ZcBSyRZqpupdw==
-X-Received: by 2002:a5d:620a:0:b0:333:3c28:767a with SMTP id y10-20020a5d620a000000b003333c28767amr2470357wru.46.1702375554983;
-        Tue, 12 Dec 2023 02:05:54 -0800 (PST)
-Received: from ?IPV6:2003:cb:c74b:ca00:4ca2:ff2c:9092:f070? (p200300cbc74bca004ca2ff2c9092f070.dip0.t-ipconnect.de. [2003:cb:c74b:ca00:4ca2:ff2c:9092:f070])
-        by smtp.gmail.com with ESMTPSA id e18-20020a056000121200b00333404e9935sm10381362wrx.54.2023.12.12.02.05.54
+        d=1e100.net; s=20230601; t=1702388807; x=1702993607;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CTU9K8HtW7anEeps3JC1jiOhhNJckpMX5hNxpt7E+Qw=;
+        b=Hr/yiDKA9FYf/2dTp9ql9GDFZCEPXSqrjCGRq5UFn/QfkhoLd5iDGpjTd76rWpj8Oo
+         9YcJPgBuJDp+V41Fxvph5bKhOTNQIckyEPgy7aZ4WkciFOSksiyzP0eUtgxLDuZ1Pgco
+         +hHmmazpvXb7kVNzsIaC8+dk6Gyz+JGFz68G9alsG1Grfjgz/eO2zXKZbQB4Wcd2HXqt
+         ccORYfeSDLmpS4PRgTId79c8GA0UxjeCDFam2pvAtNAJKus/3RfXp+V81WFl+t0dnnbm
+         XSW2IeGL4HcZiTZmy12WrNcFpFqA+PGA/DwrtIfKDxiyAgVsMrhsmFQWAv7Y3bmvREDq
+         gKnA==
+X-Gm-Message-State: AOJu0Yx/nBSHOEVkJDCmmdVNLaMvXZGEx9sy45VuxgnnRwzzQviZqwTl
+	Q/Wia/KtUXD+Vkhp8q4ybihj6bcaFQHyzQ==
+X-Google-Smtp-Source: AGHT+IH5cbkw/YxrlQNLOxauJibq7rup3MWFr7QFOBYjxW79r7AruhxFLtMsXEmmkQR/X33bM1NCaw==
+X-Received: by 2002:a05:600c:6020:b0:40b:5e59:99bd with SMTP id az32-20020a05600c602000b0040b5e5999bdmr2073207wmb.221.1702388806620;
+        Tue, 12 Dec 2023 05:46:46 -0800 (PST)
+Received: from ?IPV6:2001:660:6102:320:8576:b1e1:1bd4:efe1? ([2001:660:6102:320:8576:b1e1:1bd4:efe1])
+        by smtp.gmail.com with ESMTPSA id o5-20020a05600c510500b0040b3e26872dsm19038356wms.8.2023.12.12.05.46.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 02:05:54 -0800 (PST)
-Message-ID: <68582759-c74e-4bd8-b055-58eff81ef2e2@redhat.com>
-Date: Tue, 12 Dec 2023 11:05:53 +0100
+        Tue, 12 Dec 2023 05:46:46 -0800 (PST)
+Message-ID: <d7d17fd4-9587-4786-af58-a68d1ebe074f@gmail.com>
+Date: Tue, 12 Dec 2023 14:46:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,202 +47,55 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] dax: add a sysfs knob to control memmap_on_memory
- behavior
-To: Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
- Huang Ying <ying.huang@intel.com>, Li Zhijian <lizhijian@fujitsu.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20231211-vv-dax_abi-v3-0-acf6cc1bde9f@intel.com>
- <20231211-vv-dax_abi-v3-2-acf6cc1bde9f@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20231211-vv-dax_abi-v3-2-acf6cc1bde9f@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH 2/3] cxl/region: Add sysfs attribute for locality
+ attributes of CXL regions
 Content-Language: en-US
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, jonathan.cameron@huawei.com, dave@stgolabs.net
+References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
+ <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
+From: Brice Goglin <brice.goglin@gmail.com>
+In-Reply-To: <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11.12.23 23:52, Vishal Verma wrote:
-> Add a sysfs knob for dax devices to control the memmap_on_memory setting
-> if the dax device were to be hotplugged as system memory.
-> 
-> The default memmap_on_memory setting for dax devices originating via
-> pmem or hmem is set to 'false' - i.e. no memmap_on_memory semantics, to
-> preserve legacy behavior. For dax devices via CXL, the default is on.
-> The sysfs control allows the administrator to override the above
-> defaults if needed.
-> 
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Tested-by: Li Zhijian <lizhijian@fujitsu.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->   drivers/dax/bus.c                       | 47 +++++++++++++++++++++++++++++++++
->   Documentation/ABI/testing/sysfs-bus-dax | 17 ++++++++++++
->   2 files changed, 64 insertions(+)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 1ff1ab5fa105..2871e5188f0d 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1270,6 +1270,52 @@ static ssize_t numa_node_show(struct device *dev,
+Le 08/12/2023 à 00:31, Dave Jiang a écrit :
+
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index d879f5702cf2..72c47f624d63 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -645,6 +645,26 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
 >   }
->   static DEVICE_ATTR_RO(numa_node);
+>   static DEVICE_ATTR_RW(size);
 >   
-> +static ssize_t memmap_on_memory_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
-> +
-> +	return sprintf(buf, "%d\n", dev_dax->memmap_on_memory);
-> +}
-> +
-> +static ssize_t memmap_on_memory_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct device_driver *drv = dev->driver;
-> +	struct dev_dax *dev_dax = to_dev_dax(dev);
-> +	struct dax_region *dax_region = dev_dax->region;
-> +	struct dax_device_driver *dax_drv = to_dax_drv(drv);
-> +	ssize_t rc;
-> +	bool val;
-> +
-> +	rc = kstrtobool(buf, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (dev_dax->memmap_on_memory == val)
-> +		return len;
-> +
-> +	device_lock(dax_region->dev);
-> +	if (!dax_region->dev->driver) {
-> +		device_unlock(dax_region->dev);
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (dax_drv->type == DAXDRV_KMEM_TYPE) {
-> +		device_unlock(dax_region->dev);
-> +		return -EBUSY;
-> +	}
-> +
-> +	device_lock(dev);
-> +	dev_dax->memmap_on_memory = val;
-> +	device_unlock(dev);
-> +
-> +	device_unlock(dax_region->dev);
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RW(memmap_on_memory);
-> +
->   static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->   {
->   	struct device *dev = container_of(kobj, struct device, kobj);
-> @@ -1296,6 +1342,7 @@ static struct attribute *dev_dax_attributes[] = {
->   	&dev_attr_align.attr,
->   	&dev_attr_resource.attr,
->   	&dev_attr_numa_node.attr,
-> +	&dev_attr_memmap_on_memory.attr,
->   	NULL,
->   };
->   
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-> index a61a7b186017..b1fd8bf8a7de 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-dax
-> +++ b/Documentation/ABI/testing/sysfs-bus-dax
-> @@ -149,3 +149,20 @@ KernelVersion:	v5.1
->   Contact:	nvdimm@lists.linux.dev
->   Description:
->   		(RO) The id attribute indicates the region id of a dax region.
-> +
-> +What:		/sys/bus/dax/devices/daxX.Y/memmap_on_memory
-> +Date:		October, 2023
-> +KernelVersion:	v6.8
-> +Contact:	nvdimm@lists.linux.dev
-> +Description:
-> +		(RW) Control the memmap_on_memory setting if the dax device
-> +		were to be hotplugged as system memory. This determines whether
-> +		the 'altmap' for the hotplugged memory will be placed on the
-> +		device being hotplugged (memmap_on_memory=1) or if it will be
-> +		placed on regular memory (memmap_on_memory=0). This attribute
-> +		must be set before the device is handed over to the 'kmem'
-> +		driver (i.e.  hotplugged into system-ram). Additionally, this
-> +		depends on CONFIG_MHP_MEMMAP_ON_MEMORY, and a globally enabled
-> +		memmap_on_memory parameter for memory_hotplug. This is
-> +		typically set on the kernel command line -
-> +		memory_hotplug.memmap_on_memory set to 'true' or 'force'."
-> 
+> +#define ACCESS_ATTR(attrib)					\
+> +static ssize_t attrib##_show(struct device *dev,		\
+> +			   struct device_attribute *attr,	\
+> +			   char *buf)				\
+> +{								\
+> +	struct cxl_region *cxlr = to_cxl_region(dev);		\
+> +								\
+> +	if (!cxlr->coord)					\
+> +		return 0;					\
+> +								\
+> +	return sysfs_emit(buf, "%u\n",				\
+> +			  cxlr->coord->attrib);			\
+> +}								\
 
-Thinking about it, I wonder if we could disallow setting that property 
-to "true" if the current configuration does not allow it.
+Hello
 
-That is:
+Latencies ares off by a factor of 1000 here (I see 586/686 for r/w attributes
+for NUMA nodes in Qemu but 1000x higher for region attributes). For NUMA node attributes,
+you're dividing latencies by a factor a 1000 in cxl_region_perf_attrs_callback():
+  
+         /* Adjust latencies from psec to nsec to be consistent with HMAT targets */
+         coord = *cxlr->coord;
+         coord.read_latency = DIV_ROUND_UP(coord.read_latency, 1000);
+         coord.write_latency = DIV_ROUND_UP(coord.write_latency, 1000);
 
-1) Removing the "size" parameter from mhp_supports_memmap_on_memory(), 
-it doesn't make any sense anymore.
+For region attributes, I think you're missing the same?
 
-2) Exporting mhp_supports_memmap_on_memory() to modules.
-
-3) When setting memmap_on_memory, check whether 
-mhp_supports_memmap_on_memory() == true.
-
-Then, the user really gets an error when trying to set it to "true".
-
--- 
-Cheers,
-
-David / dhildenb
+Brice
 
