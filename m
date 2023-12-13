@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0vzocq7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiiFWZaO"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12508E
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:41:49 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5756ED0
+	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:41:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702485709; x=1734021709;
+  t=1702485716; x=1734021716;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9CZL8c1UJVhrO20QWiZbQt93Oa3xxGYldsGV8DoldGY=;
-  b=K0vzocq7PosqCTawKC4aDWXcGKXzvwG/zH/+hCzrq4zBfuuhdD0rKmc4
-   wKleNLvVukP84mx7QA8aRtELDQKT37egLiBAUtbTKvYdvzQalYNuaQeUu
-   vH7V6CJ3UKoLeKmiovjhroASyzRvIZqmB1jKslc6CEGsiJURjJV+nSIZ+
-   lnW4WRCk80QVEWmUp0oGJhvvl8EMUmgVSp7FNETdldRZZp2RIKZc+jB7O
-   t9VLNiX4+QMULS9TtOsWafCAXYjHjDV3H9oI3yVuSMGA6nAvS+0Y8v0mc
-   fHVirpQBM5N5vyVJFlHWjsiAHdbaoqaKAIXzFenHO1oYKPL7dtPLbB6hK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="397775042"
+  bh=yUK7kxhoI3Dys7IlnkobSO5fMoeFOD14FMPV4Id/eNg=;
+  b=fiiFWZaOca+Si2y6OYYLEhSr/qJMYz/XdXRwZ8Ma1DD3L+WMnjxgDgKZ
+   NfZ4Wc9bN1hrGCjvl9oLtJKp3OkHZPss1Z2gsmK+qcSKSimwwH9edYW19
+   9wGNEbdboXxKxMEcAGStSfyrEyb3AsW7Svu6s0QFn5D8dfxnShkGBaQTH
+   pItrKgtga4IERrZqNwOWvwSUkx1biD2SRYzNxPsdy9tqen/sKRzqy7ZWV
+   Cqs7kttZsJXxrInyetN/BUoiRioz2kppZALYACeL40Y5gX1v2rc9UWB3q
+   nXqjXVkuhJw6zAnxNfR8dYZobX48wciR4tEg7Gum6XF1V4twmPNdjCBat
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="397775053"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="397775042"
+   d="scan'208";a="397775053"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:49 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="767270380"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="767270416"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="767270380"
+   d="scan'208";a="767270416"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.225])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:48 -0800
-Subject: [PATCH v14 05/19] acpi: Break out nesting for hmat_parse_locality()
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:55 -0800
+Subject: [PATCH v14 06/19] acpi: numa: Add setting of generic port system
+ locality attributes
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Wed, 13 Dec 2023 09:41:47 -0700
-Message-ID: <170248570794.801570.8161192970341075780.stgit@djiang5-mobl3>
+Date: Wed, 13 Dec 2023 09:41:54 -0700
+Message-ID: <170248571439.801570.1823321718093973626.stgit@djiang5-mobl3>
 In-Reply-To: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
 References: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -49,70 +49,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Refactor hmat_parse_locality() to break up the deep nesting of the
-function.
+Add generic port support for the parsing of HMAT system locality sub-table.
+The attributes will be added to the third array member of the access
+coordinates in order to not mix with the existing memory attributes. It
+only provides the system locality attributes from initator to the
+generic port targets and is missing the rest of the data to the actual
+memory device.
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+The complete attributes will be updated when a memory device is
+attached and the system locality information is calculated end to end.
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/numa/hmat.c |   32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/acpi/numa/hmat.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 21722cbec324..4cae2e84251a 100644
+index 4cae2e84251a..70a6e775856d 100644
 --- a/drivers/acpi/numa/hmat.c
 +++ b/drivers/acpi/numa/hmat.c
-@@ -322,11 +322,28 @@ static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
- 	}
- }
+@@ -61,6 +61,7 @@ struct target_cache {
+ enum {
+ 	NODE_ACCESS_CLASS_0 = 0,
+ 	NODE_ACCESS_CLASS_1,
++	NODE_ACCESS_CLASS_GENPORT_SINK,
+ 	NODE_ACCESS_CLASS_MAX,
+ };
  
-+static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_pxm,
-+				      u8 mem_hier, u8 type, u32 value)
-+{
-+	struct memory_target *target = find_mem_target(tgt_pxm);
-+
-+	if (mem_hier != ACPI_HMAT_MEMORY)
+@@ -327,10 +328,13 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
+ {
+ 	struct memory_target *target = find_mem_target(tgt_pxm);
+ 
++	if (!target)
 +		return;
 +
-+	if (target && target->processor_pxm == init_pxm) {
-+		hmat_update_target_access(target, type, value,
-+					  NODE_ACCESS_CLASS_0);
-+		/* If the node has a CPU, update access 1 */
-+		if (node_state(pxm_to_node(init_pxm), N_CPU))
-+			hmat_update_target_access(target, type, value,
-+						  NODE_ACCESS_CLASS_1);
-+	}
-+}
-+
- static __init int hmat_parse_locality(union acpi_subtable_headers *header,
- 				      const unsigned long end)
- {
- 	struct acpi_hmat_locality *hmat_loc = (void *)header;
--	struct memory_target *target;
- 	unsigned int init, targ, total_size, ipds, tpds;
- 	u32 *inits, *targs, value;
- 	u16 *entries;
-@@ -367,17 +384,8 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
- 				inits[init], targs[targ], value,
- 				hmat_data_type_suffix(type));
+ 	if (mem_hier != ACPI_HMAT_MEMORY)
+ 		return;
  
--			if (mem_hier == ACPI_HMAT_MEMORY) {
--				target = find_mem_target(targs[targ]);
--				if (target && target->processor_pxm == inits[init]) {
--					hmat_update_target_access(target, type, value,
--								  NODE_ACCESS_CLASS_0);
--					/* If the node has a CPU, update access 1 */
--					if (node_state(pxm_to_node(inits[init]), N_CPU))
--						hmat_update_target_access(target, type, value,
--									  NODE_ACCESS_CLASS_1);
--				}
--			}
-+			hmat_update_target(targs[targ], inits[init],
-+					   mem_hier, type, value);
- 		}
+-	if (target && target->processor_pxm == init_pxm) {
++	if (target->processor_pxm == init_pxm) {
+ 		hmat_update_target_access(target, type, value,
+ 					  NODE_ACCESS_CLASS_0);
+ 		/* If the node has a CPU, update access 1 */
+@@ -338,6 +342,11 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
+ 			hmat_update_target_access(target, type, value,
+ 						  NODE_ACCESS_CLASS_1);
  	}
++
++	/* Update access from generic port target */
++	if (init_pxm == 0 && *(u16 *)target->gen_port_device_handle)
++		hmat_update_target_access(target, type, value,
++					  NODE_ACCESS_CLASS_GENPORT_SINK);
+ }
  
+ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
 
 
