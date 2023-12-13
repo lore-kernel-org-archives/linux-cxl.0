@@ -1,129 +1,249 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BBGIq20L"
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3258B91
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:11:18 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231213161115usoutp0116e7b53157769eaed60cfa7b4cc7716b~gcBCjWpfr1901219012usoutp01G;
-	Wed, 13 Dec 2023 16:11:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231213161115usoutp0116e7b53157769eaed60cfa7b4cc7716b~gcBCjWpfr1901219012usoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702483875;
-	bh=xaPLP6ApnuwljIufXh2tki031wg5Y8seTBPK59LA0aU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=BBGIq20LiVmzBvCRlMCK/6nawIROUFccaPiSNiLrLlAM4+g84PwjDKmFu6e8l/mFn
-	 L6/eUHOJTaKhfrKmzWyoM80DgWFgg6CMQf27k0TQII4tzwbQ0U8wfFk5wi2ZGw01PF
-	 m/fHrRanmBnKvSOrcbGxyrUq+i5PDWCtuudU8zrA=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-	[203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231213161115uscas1p2cb376eba0642aa89be9cd2978af97ce2~gcBCQycKa0980209802uscas1p2o;
-	Wed, 13 Dec 2023 16:11:15 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges2new.samsung.com (USCPEMTA) with SMTP id 4C.82.09760.3A7D9756; Wed,
-	13 Dec 2023 11:11:15 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231213161115uscas1p1909966a964a3a5816fb516940c9be047~gcBB8Lj2x0889108891uscas1p1u;
-	Wed, 13 Dec 2023 16:11:15 +0000 (GMT)
-X-AuditID: cbfec36f-561ff70000002620-4e-6579d7a3cec5
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id FF.A0.09511.2A7D9756; Wed,
-	13 Dec 2023 11:11:15 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Wed, 13 Dec 2023 08:11:14 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-	13 Dec 2023 08:11:14 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Brice Goglin <Brice.Goglin@inria.fr>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: fix "x9"->"x6" interleaving in a comment
-Thread-Topic: [PATCH] cxl/region: fix "x9"->"x6" interleaving in a comment
-Thread-Index: AQHaLd3W7lG41JQyfEmfUfXnLK6KvLCnFjqA
-Date: Wed, 13 Dec 2023 16:11:14 +0000
-Message-ID: <ZXknWzn13YG/6GKC@ubuntu>
-In-Reply-To: <99e72815-2078-47e0-9276-4a6a9e8e82f9@inria.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <E6472B2A3AB726479BE44ABD0E03AA76@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bQ+C0eUE"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0337898
+	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702485679; x=1734021679;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZwNcW31/dR6VL0PVkVvp3z7XGEaBUdWFVBXd7ZYq9Jk=;
+  b=bQ+C0eUECEh4fbdlX+M5sLLRkd48W9UGhYSCx2+egOY+o61/ftuP+/g7
+   fW4zoTTPTdq7g4Yf5wR1E+UNfJWKtLfU0s5fkwBSHFesXTWbRB2oBdw24
+   3S+02uaEsNdwPX1hQSSKiQuw47PuzmjKM72O8O4HQnwaDbFojFirTo5fv
+   bUlEQZrBwwU94bZ+7+NWf3Mx9IbU6AYSgQtdsyfD6xdE9wDAMGNGs2euG
+   mZXcJD+vjOhMX/LguWt7o9cUXXc6rBmGiPz8kTouq+uACajhrCdmHG6eK
+   CxR82UPEzsf6UZBdzFo81rPTNDBUI8fFTMxaeY8Dy87LtPLcWXrsTCjPh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="398833447"
+X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
+   d="scan'208";a="398833447"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="777567001"
+X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
+   d="scan'208";a="777567001"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.225])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:17 -0800
+Subject: [PATCH v14 00/19] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com,
+ ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date: Wed, 13 Dec 2023 09:41:17 -0700
+Message-ID: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkleLIzCtJLcpLzFFi42LZduzred3F1ytTDa4dU7D4dKOF2eL8rFMs
-	Dkwek14cYvH4vEkugCmKyyYlNSezLLVI3y6BK+Pt8S0sBds4Kr50fWVuYGxh72Lk4JAQMJHY
-	u7Soi5GLQ0hgJaNE39/3rBBOK5PEr92XGLsYOcGKVu7oZoJIrGGUuL9zCjuE84lRYsfkjewg
-	VUICyxglpm0IALHZBDQlfl1ZwwRiiwhoSGx7+ZoNxGYWsJboP32WGcQWFvCUWPX8HTNEjZfE
-	3aWPoOqNJI6d+g02k0VAVWL/z3YWkFN5gexJ/3JAwpwCNhL/Lv9lAbEZBcQkvp+CWMUsIC5x
-	68l8JoijBSUWzd7DDGGLSfzb9ZANwlaUuP/9JTtEvZ7EjalToE6zk/h/djErhK0tsWzha7Be
-	XqA5J2c+YYHolZQ4uOIGC8jvEgJzOSQ2HH7KCpFwkVj1fwrUAmmJ6WsuQzVkS6xc38EECeoC
-	iYYjQRBha4mFf9YzTWBUmYXk7FlITpqF5KRZSE6aheSkBYysqxjFS4uLc9NTi43yUsv1ihNz
-	i0vz0vWS83M3MQJTyel/h/N3MF6/9VHvECMTB+MhRgkOZiUR3pM7ylOFeFMSK6tSi/Lji0pz
-	UosPMUpzsCiJ8xrankwWEkhPLEnNTk0tSC2CyTJxcEo1MHkvkvuc7eWfNn+RVkPmIYNA5eMy
-	L46WruRfva9/Wtyna+dK9gsxZTa2HH40eVVXvWel9Y12tder9s91/nPpfE/fhInqZ41l/kUo
-	d1ev/rzQteTeV2mtLzzqqrFS1Vp7l06aU8M5be+Zs4cNCw2PHnl1SUBvvTsni8E1BjGHWGGh
-	1pYXleuP3/8UGy2rzcHXVOLyMvLl3zTLM3aNuYFmOUeTjLtW+DiqJB9s/LBj8nFvi+X15Vvu
-	Cm6Y/s5X2atvIZvcnk+TXHRUuc7ae+ssEl12xlb7DftanYT+n4/sZRpjti+RSTj4W/r0hlm1
-	6aztjoK1ItMTXkT5iAY/eMf74nlHTR6/iNBXZ4OSj0cdlFiKMxINtZiLihMBxn6iOpQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsWS2cDspLv4emWqwenD7BafbrQwW5yfdYrF
-	gclj0otDLB6fN8kFMEVx2aSk5mSWpRbp2yVwZbw9voWlYBtHxZeur8wNjC3sXYycHBICJhIr
-	d3QzdTFycQgJrGKUeLxhATOE84lRov3BPnYIZxmjxKrLhxhBWtgENCV+XVnDBGKLCGhIbHv5
-	mg3EZhawlug/fZYZxBYW8JRY9fwdM0SNl8TdpY+g6o0kjp36DbaaRUBVYv/PdpYuRg4OXiB7
-	0r8ckLAQ0Jjjk5+BjeQUsJH4d/kvC4jNKCAm8f0UxFpmAXGJW0/mM0F8ICCxZM95ZghbVOLl
-	43+sELaixP3vL9kh6vUkbkydAnWmncT/s4tZIWxtiWULX4P18goISpyc+YQFoldS4uCKGywT
-	GCVmIVk3C8moWUhGzUIyahaSUQsYWVcxipcWF+emVxQb56WW6xUn5haX5qXrJefnbmIExuLp
-	f4djdjDeu/VR7xAjEwfjIUYJDmYlEd6TO8pThXhTEiurUovy44tKc1KLDzFKc7AoifPefaCR
-	KiSQnliSmp2aWpBaBJNl4uCUamCKq7ge0zZ5loFKSfbNhZwej1afvGAt/1enWSksV/yPxjS1
-	PbvvxJ3adSbg4wZD/SbXrTE5UtvSeTouHlzS9Pa4ptvj6esn220/eM2/0femfb2+os8Pp7g/
-	526+Pvqy9oea7gpjVbvvnkcuHH0YfPN0wP93ncGfHmzskbB3usPayTRDSc4zx9xGNXCu4lof
-	PobEeZGKe5hefrD+/FpN+9qtMw9KIyymivBNL6+o3uBxebt//RnLIrElO4rU7vs/KThdphB7
-	9es1j1vBq9uMVinN3HnyTgJbv2VL4vyO1zEeN9Xe1qaxWSixJHcKCGS/C/0f6ryse6HFh6Ux
-	uwx0J5xmLE00ulHnvO+/WMHeIw+VWIozEg21mIuKEwGN4TwkNAMAAA==
-X-CMS-MailID: 20231213161115uscas1p1909966a964a3a5816fb516940c9be047
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231213161115uscas1p1909966a964a3a5816fb516940c9be047
-References: <99e72815-2078-47e0-9276-4a6a9e8e82f9@inria.fr>
-	<CGME20231213161115uscas1p1909966a964a3a5816fb516940c9be047@uscas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 13, 2023 at 05:02:35PM +0100, Brice Goglin wrote:
-> Signed-off-by: Brice Goglin <Brice.Goglin@inria.fr>
-> ---
-> =A0drivers/cxl/core/region.c | 2 +-
-> =A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 56e575c79bb4..d99f6698168d 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -397,7 +397,7 @@ static ssize_t interleave_ways_store(struct device *d=
-ev,
-> =A0=A0=A0=A0 =A0=A0=A0 return rc;
->=20
-> =A0=A0=A0=A0 /*
-> -=A0=A0=A0 =A0* Even for x3, x9, and x12 interleaves the region interleav=
-e must be a
-> +=A0=A0=A0 =A0* Even for x3, x6, and x12 interleaves the region interleav=
-e must be a
-> =A0=A0=A0=A0 =A0* power of 2 multiple of the host bridge interleave.
-> =A0=A0=A0=A0 =A0*/
-> =A0=A0=A0=A0 if (!is_power_of_2(val / cxld->interleave_ways) ||
-> --=20
-> 2.42.0
->=20
->=20
+v14:
+- Fix 0day issue with fw_table usage (Dan)
+- Move all DSMAS processing local to core/cdat.c (Dan)
+- Change get_qos_class() to qos_class() (Dan)
+- Fix perf entry allocation lifetime (Dan)
+- Rename perf_prop_entry to cxl_dpa_perf (Dan)
+- Cleanup gotos using DEFINE_FREE() (Dan)
+- Move qos computation before regions arrive. (Dan)
+- Drop unmatched perf list (Dan)
+- Add target_lock locking for retrieving genport coordinates (Dan)
 
-I've pushed this same patch out a few weeks ago.
+v13:
+- Convert temp dsmas list to xarray, optimize DSLBIS matching (Dan)
+- Add a cxl_test fix for mock ACPI cxl host bridge UID.
 
-https://lore.kernel.org/linux-cxl/169904271254.204936.8580772404462743630.s=
-tgit@ubuntu/
+v12:
+- Tested on hardware
+- Rebased to v6.7-rc1
+- Dropped all patches upstreamed
+- Rebased against changes from Huang Ying for abstract distance calculation
+- Do not fail if qos calculation not successful (Jonathan, Dan)
+- Match generic target device_handle with UID
+- Support storing multiple QTG IDs and match against multiple QTG IDs. (Dan)
+- Fix link latency calculation loop.
+- Add adjustment of genport latency from nsec to psec due to HMAT code normalization.
+- Make cxl/core/cdat.o as part of cxl core build.
+- See individual patches for detailed changes.
 
-Jim=
+v11:
+- Add debug print for multiple DSMAS entries for a partition. (Jonathan)
+- Change qos_class0 to qos_class. (Dan)
+- Add verification of endpoint device's host bridge to root decoder targets. (Dan)
+- See individual patches for additional changes.
+v10:
+- Remove memory allocation in DSM handler. Add input parameters to request number of ids
+  to return. (Dan)
+- Only export a single qos_class sysfs attribute, qos_class0 for devices. (Dan)
+- Add sanity check of device qos_class against root decoders (Dan)
+- Recombine all relevant patches for cxl upstream merge
+- Rebased against v6.6-rc4
+v9:
+- Correct DSM input package to use integers. (Dan)
+- Remove all endien conversions. (Dan)
+v8:
+- Correct DSM return package parsing to use integers
+v7:
+- Minor changes. Please see specific patches for log entries addressing comments
+  from v6.
+v6:
+- Please see specific patches for log entries addressing comments from v5.
+- Use CDAT sub-table structs as is, adjust w/o common header. Changing causes
+  significant ACPICA code changes.
+- Deal with table header now that is a union. (Jonathan)
+- Move DSMAS list destroy to core/cdat.c. (Jonathan)
+- Retain and display entire QTG ID list from _DSM. (Jonathan)
+
+v5:
+- Please see specific patches for log entries addressing comments from v4.
+- Split out ACPI and generic node code to send separately to respective maintainers
+- Reworked to use ACPI tables code for CDAT parsing (Dan)
+- Cache relevant perf data under dports (Dan)
+- Add cxl root callback for QTG ID _DSM (Dan)
+- Rename 'node_hmem_attr' to 'access_coordinate' (Dan)
+- Change qtg_id sysfs attrib to qos_class (Dan)
+
+v4:
+- Reworked PCIe link path latency calculation
+- 0-day fixes
+- Removed unused qos_list from cxl_memdev and its stray usages
+
+v3:
+- Please see specific patches for log entries addressing comments from v2.
+- Refactor cxl_port_probe() additions. (Alison)
+- Convert to use 'struct node_hmem_attrs'
+- Refactor to use common code for genport target allocation.
+- Add third array entry for target hmem_attrs to store genport locality data.
+- Go back to per partition QTG ID. (Dan)
+
+v2:
+- Please see specific patches for log entries addressing comments from v1.
+- Removed ACPICA code usages.
+- Removed PCI subsystem helpers for latency and bandwidth.
+- Add CXL switch CDAT parsing support (SSLBIS)
+- Add generic port SRAT+HMAT support (ACPI)
+- Export a single QTG ID via sysfs per memory device (Dan)
+- Provide rest of DSMAS range info in debugfs (Dan)
+
+Hi Dan,
+Please consider taking the entire series including the CXL bits for the next
+convenient merge window. Thanks!
+
+This series adds the retrieval of QoS Throttling Group (QTG) IDs for the CXL Fixed
+Memory Window Structure (CFMWS) and the CXL memory device. It provides the QTG IDs
+to user space to provide some guidance with putting the proper DPA range under the
+appropriate CFMWS window for a hot-plugged CXL memory device.
+
+The CFMWS structure contains a QTG ID that is associated with the memory window that the
+structure exports. On Linux, the CFMWS is represented as a CXL root decoder. The QTG
+ID will be attached to the CXL root decoder and exported as a sysfs attribute (qos_class).
+
+The QTG IDs for a device is retrieved via sending a _DSM method to the ACPI0017 device.
+The _DSM expects an input package of 4 DWORDS that contains the read latency, write
+latency, read bandwidth, and write banwidth. These are the caluclated numbers for the
+path between the CXL device and the CPU. The list of QTG IDs are also exported as a sysfs
+attribute under the mem device memory partition type:
+/sys/bus/cxl/devices/memX/ram/qos_class
+/sys/bus/cxl/devices/memX/pmem/qos_class
+
+The latency numbers are the aggregated latencies for the path between the CXL device and
+the CPU. If a CXL device is directly attached to the CXL HB, the latency
+would be the aggregated latencies from the device Coherent Device Attribute Table (CDAT),
+the caluclated PCIe link latency between the device and the HB, and the generic port data
+from ACPI SRAT+HMAT. The bandwidth in this configuration would be the minimum between the
+CDAT bandwidth number, link bandwidth between the device and the HB, and the bandwidth data
+from the generic port data via ACPI SRAT+HMAT.
+
+If a configuration has a switch in between then the latency would be the aggregated
+latencies from the device CDAT, the link latency between device and switch, the
+latency from the switch CDAT, the link latency between switch and the HB, and the
+generic port latency between the CPU and the CXL HB. The bandwidth calculation would be the
+min of device CDAT bandwidth, link bandwith between device and switch, switch CDAT
+bandwidth, the link bandwidth between switch and HB, and the generic port bandwidth
+
+There can be 0 or more switches between the CXL device and the CXL HB. There are detailed
+examples on calculating bandwidth and latency in the CXL Memory Device Software Guide [4].
+
+The CDAT provides Device Scoped Memory Affinity Structures (DSMAS) that contains the
+Device Physical Address (DPA) range and the related Device Scoped Latency and Bandwidth
+Informat Stuctures (DSLBIS). Each DSLBIS provides a latency or bandwidth entry that is
+tied to a DSMAS entry via a per DSMAS unique DSMAD handle.
+
+Previous series is here [5]. A git branch [6] is available as well.
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+[3]: https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
+[4]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
+[5]: https://lore.kernel.org/linux-cxl/170198976423.3522351.8359845516235306693.stgit@djiang5-mobl3/T/#t
+[6]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+
+base-commit: a39b6ac3781d46ba18193c9dbb2110f31e9bffe9
+
+---
+
+Dave Jiang (19):
+      lib/firmware_table: tables: Add CDAT table parsing support
+      base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
+      acpi: numa: Create enum for memory_target access coordinates indexing
+      acpi: numa: Add genport target allocation to the HMAT parsing
+      acpi: Break out nesting for hmat_parse_locality()
+      acpi: numa: Add setting of generic port system locality attributes
+      acpi: numa: Add helper function to retrieve the performance attributes
+      cxl: Add callback to parse the DSMAS subtables from CDAT
+      cxl: Add callback to parse the DSLBIS subtable from CDAT
+      cxl: Add callback to parse the SSLBIS subtable from CDAT
+      cxl: Add support for _DSM Function for retrieving QTG ID
+      cxl: Calculate and store PCI link latency for the downstream ports
+      tools/testing/cxl: Add hostbridge UID string for cxl_test mock hb devices
+      cxl: Store the access coordinates for the generic ports
+      cxl: Add helper function that calculate performance data for downstream ports
+      cxl: Compute the entire CXL path latency and bandwidth data
+      cxl: Store QTG IDs and related info to the CXL memory device context
+      cxl: Export sysfs attributes for memory device QoS class
+      cxl: Check qos_class validity on memdev probe
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  34 ++
+ drivers/acpi/numa/hmat.c                | 177 ++++++--
+ drivers/acpi/tables.c                   |   5 +-
+ drivers/base/node.c                     |  12 +-
+ drivers/cxl/Kconfig                     |   3 +
+ drivers/cxl/acpi.c                      | 157 ++++++-
+ drivers/cxl/core/Makefile               |   1 +
+ drivers/cxl/core/cdat.c                 | 549 ++++++++++++++++++++++++
+ drivers/cxl/core/core.h                 |   2 +
+ drivers/cxl/core/mbox.c                 |   2 +
+ drivers/cxl/core/pci.c                  |  72 ++++
+ drivers/cxl/core/port.c                 | 122 +++++-
+ drivers/cxl/cxl.h                       |  40 ++
+ drivers/cxl/cxlmem.h                    |  21 +
+ drivers/cxl/cxlpci.h                    |  13 +
+ drivers/cxl/mem.c                       |  65 ++-
+ drivers/cxl/port.c                      |   3 +
+ include/linux/acpi.h                    |  11 +
+ include/linux/fw_table.h                |  21 +-
+ include/linux/memory-tiers.h            |  10 +-
+ include/linux/node.h                    |   8 +-
+ lib/fw_table.c                          |  75 +++-
+ mm/memory-tiers.c                       |  12 +-
+ tools/testing/cxl/Kbuild                |   1 +
+ tools/testing/cxl/test/cxl.c            |   4 +
+ 25 files changed, 1341 insertions(+), 79 deletions(-)
+ create mode 100644 drivers/cxl/core/cdat.c
+
+--
+
