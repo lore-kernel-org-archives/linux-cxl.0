@@ -1,42 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2ScQwVI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JRnzN9Fa"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D03D5
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:41:24 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F20CAC
+	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702485685; x=1734021685;
+  t=1702485690; x=1734021690;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qYIGk0T/CwKy5pvLvIXYCkllyHTwOAyn2VelNvj5Z4U=;
-  b=c2ScQwVINbyZt26lp7aenNcoHJqqt3atvAa5SyW9RW+Nj5Rz5trnT6LG
-   Nm43BMii3QFzecTTgAn65z+np1rwjProXIeIWi+2vgadzWtz9JhWJIc6Q
-   kVtq4pqiA/AUEFtlIN+zekxSeZM2UmdCiYMairneeDC7xyoro0PaRKixd
-   WBZh0gb6+lp79aUQVyblEM4xEM0ridXpNhNODp0Aj6eiMq3z0JnNBqNLq
-   N3XpPUKm9azORbbyCToPZmAT1Lepq0GkQUpv648Nc11DeF6QfHVcgi+I0
-   YhHikoVjvAaFbymSYwSNvtnh+mgtSAlfsfP+jiwDpLCBGrr/bwTrQlcwv
+  bh=iQGrzFfcpdij/lEz6JpNyk3i6DzvJsQmy/QcgsLfvrE=;
+  b=JRnzN9Fa/tjJaDbTLIl7j+AbFBEzgFVHze8RjG17eBCSuzX7RMPaclAC
+   fPoWG3vaM7b5YxF6QP384ydf/++VZNJw/CH+HUKCuWZyzoDYU9+NL1aDw
+   mIlkUMj6GjOohVJYnL+0PbeEgFoAeG0TRzVDHegFEnXZkbLyfIKkUvmFW
+   bjPi2YmsM4mbZtk+7Dx8dFhwn8wh2ONQvy0531b/uKrp81U4vpIeDcftA
+   8k6lkyNt6uilhGwDnKbXtRtCsi2Gkrs5DsHQI0TsOK0H7ATyngoqqwmBP
+   d8MzdBNPgzxqZ2XDOlURWWfkbGeXvcC5QljCeKtLDjpFwY42wPhlc8BNi
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="459309737"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="459309764"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="459309737"
+   d="scan'208";a="459309764"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:24 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="17675802"
+   d="scan'208";a="17675809"
 Received: from mmaccool-mobl.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:24 -0800
-Subject: [PATCH v14 01/19] lib/firmware_table: tables: Add CDAT table parsing
- support
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:41:30 -0800
+Subject: [PATCH v14 02/19] base/node / acpi: Change 'node_hmem_attrs' to
+ 'access_coordinates'
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, dan.j.williams@intel.com,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Wed, 13 Dec 2023 09:41:23 -0700
-Message-ID: <170248568326.801570.6361795234223443195.stgit@djiang5-mobl3>
+Date: Wed, 13 Dec 2023 09:41:29 -0700
+Message-ID: <170248568922.801570.9984366715180934372.stgit@djiang5-mobl3>
 In-Reply-To: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
 References: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -49,260 +50,300 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The CDAT table is very similar to ACPI tables when it comes to sub-table
-and entry structures. The helper functions can be also used to parse the
-CDAT table. Add support to the helper functions to deal with an external
-CDAT table, and also handle the endieness since CDAT can be processed by a
-BE host. Export a function cdat_table_parse() for CXL driver to parse
-a CDAT table.
+Dan Williams suggested changing the struct 'node_hmem_attrs' to
+'access_coordinates' [1]. The struct is a container of r/w-latency and
+r/w-bandwidth numbers. Moving forward, this container will also be used by
+CXL to store the performance characteristics of each link hop in
+the PCIE/CXL topology. So, where node_hmem_attrs is just the access
+parameters of a memory-node, access_coordinates applies more broadly
+to hardware topology characteristics. The observation is that seemed like
+an exercise in having the application identify "where" it falls on a
+spectrum of bandwidth and latency needs. For the tuple of
+read/write-latency and read/write-bandwidth, "coordinates" is not a perfect
+fit. Sometimes it is just conveying values in isolation and not a
+"location" relative to other performance points, but in the end this data
+is used to identify the performance operation point of a given memory-node.
+[2]
 
-In order to minimize ACPICA code changes, __force is being utilized to deal
-with the case of a big endian (BE) host parsing a CDAT. All CDAT data
-structure variables are being force casted to __leX as appropriate.
-
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
+Link: http://lore.kernel.org/r/64471313421f7_1b66294d5@dwillia2-xfh.jf.intel.com.notmuch/
+Link: https://lore.kernel.org/linux-cxl/645e6215ee0de_1e6f2945e@dwillia2-xfh.jf.intel.com.notmuch/
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v14:
-- Add __init_or_fwtbl_lib wrappers (Dan)
-https://download.01.org/0day-ci/archive/20231209/202312092036.qmxTynjF-lkp@intel.com/reproduce
-- Fix section mismatch (Dan)
-https://download.01.org/0day-ci/archive/20231209/202312092155.I071PJA4-lkp@intel.com/reproduce
----
- drivers/acpi/tables.c    |    5 ++-
- include/linux/fw_table.h |   21 ++++++++++++-
- lib/fw_table.c           |   75 +++++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 86 insertions(+), 15 deletions(-)
+ drivers/acpi/numa/hmat.c     |   28 ++++++++++++++--------------
+ drivers/base/node.c          |   12 ++++++------
+ include/linux/memory-tiers.h |   10 +++++-----
+ include/linux/node.h         |    8 ++++----
+ mm/memory-tiers.c            |   12 ++++++------
+ 5 files changed, 35 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index c1516337f668..b07f7d091d13 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -251,8 +251,9 @@ int __init_or_acpilib acpi_table_parse_entries_array(
- 		return -ENODEV;
- 	}
- 
--	count = acpi_parse_entries_array(id, table_size, table_header,
--			proc, proc_num, max_entries);
-+	count = acpi_parse_entries_array(id, table_size,
-+					 (union fw_table_header *)table_header,
-+					 proc, proc_num, max_entries);
- 
- 	acpi_put_table(table_header);
- 	return count;
-diff --git a/include/linux/fw_table.h b/include/linux/fw_table.h
-index ca49947f0a77..95421860397a 100644
---- a/include/linux/fw_table.h
-+++ b/include/linux/fw_table.h
-@@ -25,16 +25,35 @@ struct acpi_subtable_proc {
- 	int count;
- };
- 
-+union fw_table_header {
-+	struct acpi_table_header acpi;
-+	struct acpi_table_cdat cdat;
-+};
-+
- union acpi_subtable_headers {
- 	struct acpi_subtable_header common;
- 	struct acpi_hmat_structure hmat;
- 	struct acpi_prmt_module_header prmt;
- 	struct acpi_cedt_header cedt;
-+	struct acpi_cdat_header cdat;
- };
- 
- int acpi_parse_entries_array(char *id, unsigned long table_size,
--			     struct acpi_table_header *table_header,
-+			     union fw_table_header *table_header,
- 			     struct acpi_subtable_proc *proc,
- 			     int proc_num, unsigned int max_entries);
- 
-+int cdat_table_parse(enum acpi_cdat_type type,
-+		     acpi_tbl_entry_handler_arg handler_arg, void *arg,
-+		     struct acpi_table_cdat *table_header);
-+
-+/* CXL is the only non-ACPI consumer of the FIRMWARE_TABLE library */
-+#if IS_ENABLED(CONFIG_ACPI) && !IS_ENABLED(CONFIG_CXL_BUS)
-+#define EXPORT_SYMBOL_FWTBL_LIB(x) EXPORT_SYMBOL_ACPI_LIB(x)
-+#define __init_or_fwtbl_lib __init_or_acpilib
-+#else
-+#define EXPORT_SYMBOL_FWTBL_LIB(x) EXPORT_SYMBOL_NS_GPL(x, CXL)
-+#define __init_or_fwtbl_lib
-+#endif
-+
- #endif
-diff --git a/lib/fw_table.c b/lib/fw_table.c
-index 294df54e33b6..1e5e0b2f7012 100644
---- a/lib/fw_table.c
-+++ b/lib/fw_table.c
-@@ -12,12 +12,14 @@
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <linux/types.h>
-+#include <linux/fw_table.h>
- 
- enum acpi_subtable_type {
- 	ACPI_SUBTABLE_COMMON,
- 	ACPI_SUBTABLE_HMAT,
- 	ACPI_SUBTABLE_PRMT,
- 	ACPI_SUBTABLE_CEDT,
-+	CDAT_SUBTABLE,
- };
- 
- struct acpi_subtable_entry {
-@@ -25,7 +27,7 @@ struct acpi_subtable_entry {
- 	enum acpi_subtable_type type;
- };
- 
--static unsigned long __init_or_acpilib
-+static unsigned long __init_or_fwtbl_lib
- acpi_get_entry_type(struct acpi_subtable_entry *entry)
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 9ef5f1bdcfdb..83bc2b69401b 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -63,7 +63,7 @@ struct memory_target {
+ 	unsigned int memory_pxm;
+ 	unsigned int processor_pxm;
+ 	struct resource memregions;
+-	struct node_hmem_attrs hmem_attrs[2];
++	struct access_coordinate coord[2];
+ 	struct list_head caches;
+ 	struct node_cache_attrs cache_attrs;
+ 	bool registered;
+@@ -228,24 +228,24 @@ static void hmat_update_target_access(struct memory_target *target,
  {
- 	switch (entry->type) {
-@@ -37,11 +39,13 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
- 		return 0;
- 	case ACPI_SUBTABLE_CEDT:
- 		return entry->hdr->cedt.type;
-+	case CDAT_SUBTABLE:
-+		return entry->hdr->cdat.type;
- 	}
- 	return 0;
+ 	switch (type) {
+ 	case ACPI_HMAT_ACCESS_LATENCY:
+-		target->hmem_attrs[access].read_latency = value;
+-		target->hmem_attrs[access].write_latency = value;
++		target->coord[access].read_latency = value;
++		target->coord[access].write_latency = value;
+ 		break;
+ 	case ACPI_HMAT_READ_LATENCY:
+-		target->hmem_attrs[access].read_latency = value;
++		target->coord[access].read_latency = value;
+ 		break;
+ 	case ACPI_HMAT_WRITE_LATENCY:
+-		target->hmem_attrs[access].write_latency = value;
++		target->coord[access].write_latency = value;
+ 		break;
+ 	case ACPI_HMAT_ACCESS_BANDWIDTH:
+-		target->hmem_attrs[access].read_bandwidth = value;
+-		target->hmem_attrs[access].write_bandwidth = value;
++		target->coord[access].read_bandwidth = value;
++		target->coord[access].write_bandwidth = value;
+ 		break;
+ 	case ACPI_HMAT_READ_BANDWIDTH:
+-		target->hmem_attrs[access].read_bandwidth = value;
++		target->coord[access].read_bandwidth = value;
+ 		break;
+ 	case ACPI_HMAT_WRITE_BANDWIDTH:
+-		target->hmem_attrs[access].write_bandwidth = value;
++		target->coord[access].write_bandwidth = value;
+ 		break;
+ 	default:
+ 		break;
+@@ -681,7 +681,7 @@ static void hmat_register_target_cache(struct memory_target *target)
+ static void hmat_register_target_perf(struct memory_target *target, int access)
+ {
+ 	unsigned mem_nid = pxm_to_node(target->memory_pxm);
+-	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
++	node_set_perf_attrs(mem_nid, &target->coord[access], access);
  }
  
--static unsigned long __init_or_acpilib
-+static unsigned long __init_or_fwtbl_lib
- acpi_get_entry_length(struct acpi_subtable_entry *entry)
- {
- 	switch (entry->type) {
-@@ -53,11 +57,16 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
- 		return entry->hdr->prmt.length;
- 	case ACPI_SUBTABLE_CEDT:
- 		return entry->hdr->cedt.length;
-+	case CDAT_SUBTABLE: {
-+		__le16 length = (__force __le16)entry->hdr->cdat.length;
-+
-+		return le16_to_cpu(length);
-+	}
- 	}
- 	return 0;
- }
+ static void hmat_register_target_devices(struct memory_target *target)
+@@ -765,7 +765,7 @@ static int hmat_set_default_dram_perf(void)
+ 	int rc;
+ 	int nid, pxm;
+ 	struct memory_target *target;
+-	struct node_hmem_attrs *attrs;
++	struct access_coordinate *attrs;
  
--static unsigned long __init_or_acpilib
-+static unsigned long __init_or_fwtbl_lib
- acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
+ 	if (!default_dram_type)
+ 		return -EIO;
+@@ -775,7 +775,7 @@ static int hmat_set_default_dram_perf(void)
+ 		target = find_mem_target(pxm);
+ 		if (!target)
+ 			continue;
+-		attrs = &target->hmem_attrs[1];
++		attrs = &target->coord[1];
+ 		rc = mt_set_default_dram_perf(nid, attrs, "ACPI HMAT");
+ 		if (rc)
+ 			return rc;
+@@ -789,7 +789,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
  {
- 	switch (entry->type) {
-@@ -69,11 +78,13 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
- 		return sizeof(entry->hdr->prmt);
- 	case ACPI_SUBTABLE_CEDT:
- 		return sizeof(entry->hdr->cedt);
-+	case CDAT_SUBTABLE:
-+		return sizeof(entry->hdr->cdat);
- 	}
- 	return 0;
- }
+ 	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
+ 	struct memory_target *target;
+-	struct node_hmem_attrs *perf;
++	struct access_coordinate *perf;
+ 	int *adist = data;
+ 	int pxm;
  
--static enum acpi_subtable_type __init_or_acpilib
-+static enum acpi_subtable_type __init_or_fwtbl_lib
- acpi_get_subtable_type(char *id)
- {
- 	if (strncmp(id, ACPI_SIG_HMAT, 4) == 0)
-@@ -82,17 +93,32 @@ acpi_get_subtable_type(char *id)
- 		return ACPI_SUBTABLE_PRMT;
- 	if (strncmp(id, ACPI_SIG_CEDT, 4) == 0)
- 		return ACPI_SUBTABLE_CEDT;
-+	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
-+		return CDAT_SUBTABLE;
- 	return ACPI_SUBTABLE_COMMON;
- }
+@@ -802,7 +802,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
+ 	hmat_update_target_attrs(target, p_nodes, 1);
+ 	mutex_unlock(&target_lock);
  
--static __init_or_acpilib bool has_handler(struct acpi_subtable_proc *proc)
-+static unsigned long __init_or_fwtbl_lib
-+acpi_table_get_length(enum acpi_subtable_type type,
-+		      union fw_table_header *header)
-+{
-+	if (type == CDAT_SUBTABLE) {
-+		__le32 length = (__force __le32)header->cdat.length;
-+
-+		return le32_to_cpu(length);
-+	}
-+
-+	return header->acpi.length;
-+}
-+
-+static __init_or_fwtbl_lib bool has_handler(struct acpi_subtable_proc *proc)
- {
- 	return proc->handler || proc->handler_arg;
- }
+-	perf = &target->hmem_attrs[1];
++	perf = &target->coord[1];
  
--static __init_or_acpilib int call_handler(struct acpi_subtable_proc *proc,
--					  union acpi_subtable_headers *hdr,
--					  unsigned long end)
-+static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
-+					    union acpi_subtable_headers *hdr,
-+					    unsigned long end)
- {
- 	if (proc->handler)
- 		return proc->handler(hdr, end);
-@@ -124,23 +150,26 @@ static __init_or_acpilib int call_handler(struct acpi_subtable_proc *proc,
-  * On success returns sum of all matching entries for all proc handlers.
-  * Otherwise, -ENODEV or -EINVAL is returned.
+ 	if (mt_perf_to_adistance(perf, adist))
+ 		return NOTIFY_OK;
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 493d533f8375..cb2b6cc7f6e6 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -74,14 +74,14 @@ static BIN_ATTR_RO(cpulist, CPULIST_FILE_MAX_BYTES);
+  * @dev:	Device for this memory access class
+  * @list_node:	List element in the node's access list
+  * @access:	The access class rank
+- * @hmem_attrs: Heterogeneous memory performance attributes
++ * @coord:	Heterogeneous memory performance coordinates
   */
--int __init_or_acpilib
-+int __init_or_fwtbl_lib
- acpi_parse_entries_array(char *id, unsigned long table_size,
--			 struct acpi_table_header *table_header,
-+			 union fw_table_header *table_header,
- 			 struct acpi_subtable_proc *proc,
- 			 int proc_num, unsigned int max_entries)
+ struct node_access_nodes {
+ 	struct device		dev;
+ 	struct list_head	list_node;
+ 	unsigned int		access;
+ #ifdef CONFIG_HMEM_REPORTING
+-	struct node_hmem_attrs	hmem_attrs;
++	struct access_coordinate	coord;
+ #endif
+ };
+ #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
+@@ -167,7 +167,7 @@ static ssize_t property##_show(struct device *dev,			\
+ 			   char *buf)					\
+ {									\
+ 	return sysfs_emit(buf, "%u\n",					\
+-			  to_access_nodes(dev)->hmem_attrs.property);	\
++			  to_access_nodes(dev)->coord.property);	\
+ }									\
+ static DEVICE_ATTR_RO(property)
+ 
+@@ -187,10 +187,10 @@ static struct attribute *access_attrs[] = {
+ /**
+  * node_set_perf_attrs - Set the performance values for given access class
+  * @nid: Node identifier to be set
+- * @hmem_attrs: Heterogeneous memory performance attributes
++ * @coord: Heterogeneous memory performance coordinates
+  * @access: The access class the for the given attributes
+  */
+-void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
++void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+ 			 unsigned int access)
  {
- 	unsigned long table_end, subtable_len, entry_len;
- 	struct acpi_subtable_entry entry;
-+	enum acpi_subtable_type type;
- 	int count = 0;
- 	int errs = 0;
- 	int i;
+ 	struct node_access_nodes *c;
+@@ -205,7 +205,7 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+ 	if (!c)
+ 		return;
  
--	table_end = (unsigned long)table_header + table_header->length;
-+	type = acpi_get_subtable_type(id);
-+	table_end = (unsigned long)table_header +
-+		    acpi_table_get_length(type, table_header);
+-	c->hmem_attrs = *hmem_attrs;
++	c->coord = *coord;
+ 	for (i = 0; access_attrs[i] != NULL; i++) {
+ 		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
+ 					    "initiators")) {
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 1e39d27bee41..69e781900082 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -33,7 +33,7 @@ struct memory_dev_type {
+ 	struct kref kref;
+ };
  
- 	/* Parse all entries looking for a match. */
+-struct node_hmem_attrs;
++struct access_coordinate;
  
--	entry.type = acpi_get_subtable_type(id);
-+	entry.type = type;
- 	entry.hdr = (union acpi_subtable_headers *)
- 	    ((unsigned long)table_header + table_size);
- 	subtable_len = acpi_get_subtable_header_length(&entry);
-@@ -186,3 +215,25 @@ acpi_parse_entries_array(char *id, unsigned long table_size,
- 
- 	return errs ? -EINVAL : count;
+ #ifdef CONFIG_NUMA
+ extern bool numa_demotion_enabled;
+@@ -45,9 +45,9 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype);
+ int register_mt_adistance_algorithm(struct notifier_block *nb);
+ int unregister_mt_adistance_algorithm(struct notifier_block *nb);
+ int mt_calc_adistance(int node, int *adist);
+-int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
++int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+ 			     const char *source);
+-int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist);
++int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+ #ifdef CONFIG_MIGRATION
+ int next_demotion_node(int node);
+ void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+@@ -126,13 +126,13 @@ static inline int mt_calc_adistance(int node, int *adist)
+ 	return NOTIFY_DONE;
  }
-+
-+int __init_or_fwtbl_lib
-+cdat_table_parse(enum acpi_cdat_type type,
-+		 acpi_tbl_entry_handler_arg handler_arg,
-+		 void *arg,
-+		 struct acpi_table_cdat *table_header)
-+{
-+	struct acpi_subtable_proc proc = {
-+		.id		= type,
-+		.handler_arg	= handler_arg,
-+		.arg		= arg,
-+	};
-+
-+	if (!table_header)
-+		return -EINVAL;
-+
-+	return acpi_parse_entries_array(ACPI_SIG_CDAT,
-+					sizeof(struct acpi_table_cdat),
-+					(union fw_table_header *)table_header,
-+					&proc, 1, 0);
-+}
-+EXPORT_SYMBOL_FWTBL_LIB(cdat_table_parse);
+ 
+-static inline int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
++static inline int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+ 					   const char *source)
+ {
+ 	return -EIO;
+ }
+ 
+-static inline int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist)
++static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
+ {
+ 	return -EIO;
+ }
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 427a5975cf40..25b66d705ee2 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -20,14 +20,14 @@
+ #include <linux/list.h>
+ 
+ /**
+- * struct node_hmem_attrs - heterogeneous memory performance attributes
++ * struct access_coordinate - generic performance coordinates container
+  *
+  * @read_bandwidth:	Read bandwidth in MB/s
+  * @write_bandwidth:	Write bandwidth in MB/s
+  * @read_latency:	Read latency in nanoseconds
+  * @write_latency:	Write latency in nanoseconds
+  */
+-struct node_hmem_attrs {
++struct access_coordinate {
+ 	unsigned int read_bandwidth;
+ 	unsigned int write_bandwidth;
+ 	unsigned int read_latency;
+@@ -65,7 +65,7 @@ struct node_cache_attrs {
+ 
+ #ifdef CONFIG_HMEM_REPORTING
+ void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
+-void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
++void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+ 			 unsigned access);
+ #else
+ static inline void node_add_cache(unsigned int nid,
+@@ -74,7 +74,7 @@ static inline void node_add_cache(unsigned int nid,
+ }
+ 
+ static inline void node_set_perf_attrs(unsigned int nid,
+-				       struct node_hmem_attrs *hmem_attrs,
++				       struct access_coordinate *coord,
+ 				       unsigned access)
+ {
+ }
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index 8d5291add2bc..5462d9e3c84c 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -109,7 +109,7 @@ static struct demotion_nodes *node_demotion __read_mostly;
+ static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
+ 
+ static bool default_dram_perf_error;
+-static struct node_hmem_attrs default_dram_perf;
++static struct access_coordinate default_dram_perf;
+ static int default_dram_perf_ref_nid = NUMA_NO_NODE;
+ static const char *default_dram_perf_ref_source;
+ 
+@@ -601,15 +601,15 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
+ }
+ EXPORT_SYMBOL_GPL(clear_node_memory_type);
+ 
+-static void dump_hmem_attrs(struct node_hmem_attrs *attrs, const char *prefix)
++static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
+ {
+ 	pr_info(
+ "%sread_latency: %u, write_latency: %u, read_bandwidth: %u, write_bandwidth: %u\n",
+-		prefix, attrs->read_latency, attrs->write_latency,
+-		attrs->read_bandwidth, attrs->write_bandwidth);
++		prefix, coord->read_latency, coord->write_latency,
++		coord->read_bandwidth, coord->write_bandwidth);
+ }
+ 
+-int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
++int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+ 			     const char *source)
+ {
+ 	int rc = 0;
+@@ -666,7 +666,7 @@ int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
+ 	return rc;
+ }
+ 
+-int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist)
++int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
+ {
+ 	if (default_dram_perf_error)
+ 		return -EIO;
 
 
