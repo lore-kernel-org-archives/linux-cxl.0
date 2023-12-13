@@ -1,336 +1,283 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="gKv4X5l/"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2065.outbound.protection.outlook.com [40.107.237.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0A511A;
-	Wed, 13 Dec 2023 09:54:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PQKv6L3DcElaSzL/DbCr3zoN6SRPiFoshMSH3S4zU7cRr2jjCK+1irIO01VM/AsXi01lg45xEtYVDrGKt3NC7DQ3c8lOGJbeY12vM+cKn8zTzTV8sHufBhLyAWAMVLQ01aUvrWIgeWu+gO6H18bH0JgYpNLyRc1YaEvGEf+Q0UxH3mxttb2CNi9Pkf05oWubxbACk5aFFb+mP5ZZLEK57TMQk/P+ix2aHhYRv9CYos83mq14xyHxFYtUsaZpo0VkS/OJ/bSyFdPr1iykELMWIm25vcII4zOzE0UAfI0USiF+Vn+CXxG4VZt6ZD1KYEDHcOBJ1BqIdyZ2PyWsSTTuVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vTNf944D++5RAaxuPuIOcMEvY0ECfOxgHNlMz9SZ+9w=;
- b=dPcKcSmfiknRk1HEZs6KCqGA9wy77lcyFOy7YRqSFt7Vyv8cEwjx6Sjo1yChGABvXjqDmOJoKVzMPZBw+e8lL27EuOApv5oG/5/ZWE0U3BYle9TH3pMsdtpMm72NkmaGkc4oz17FA1ZB38/VuSVoYd73t5+B2XC51Ei029nYh7Am9zsF2DSR79zCHxUfT9+cfbrKQYwvz1gZgBceVY/88bgkcOj5t9C/1MVkgwBH9l5jvDc2Gzmcjs00zKziX55wdJujwUGNPHUFodYxVTlP33txhnaGALxBhHbSVuSvQdbeNa9068Ea7Xr2q0OebERuUmuVLnHDTiVonb4IvhKUCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vTNf944D++5RAaxuPuIOcMEvY0ECfOxgHNlMz9SZ+9w=;
- b=gKv4X5l/Pfu7KRGEwb0Wjx/VZANowDg4sqSQhKn5xINhsdRbMi2yEsOKhyJa5icVBaqNohmfwyamw/ddqWulTrSCFzuyz62wjHxoWne+RnwfEz2NEMjkwAfEYbQnFdI90H5Rkmm+vZceSLC8EYjV77hnNC7d5AWJBCRxK45vFIM2QFYmpOo+U6xMcZDpQCjCz6JmJRs/PTbmJkFGuiLChOaJlfaVC7a965NZKTfRmpBRBStFmXEbrKC52f4QG7xUsb8wfHy4+bUOfIEXwovLAZ7hoqvluYD1nK7gERw97BeeODvemOb7xKLWkyZdQa/173L2zHuInYKrtwvjQGZILg==
-Received: from CH0P221CA0046.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::19)
- by DM4PR08MB8673.namprd08.prod.outlook.com (2603:10b6:8:190::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.8; Wed, 13 Dec
- 2023 17:54:06 +0000
-Received: from CY4PEPF0000FCC4.namprd03.prod.outlook.com
- (2603:10b6:610:11d:cafe::d0) by CH0P221CA0046.outlook.office365.com
- (2603:10b6:610:11d::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26 via Frontend
- Transport; Wed, 13 Dec 2023 17:54:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
- smtp.mailfrom=micron.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=micron.com;
-Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
- 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.201.242.130; helo=mail.micron.com; pr=C
-Received: from mail.micron.com (137.201.242.130) by
- CY4PEPF0000FCC4.mail.protection.outlook.com (10.167.242.106) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7091.26 via Frontend Transport; Wed, 13 Dec 2023 17:54:06 +0000
-Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW36EX19A.micron.com
- (137.201.85.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Wed, 13 Dec
- 2023 10:54:02 -0700
-Received: from micron.com (10.3.116.19) by RestrictedRelay36EX19A.micron.com
- (137.201.85.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27 via Frontend
- Transport; Wed, 13 Dec 2023 10:53:56 -0700
-From: <sthanneeru.opensrc@micron.com>
-To: <sthanneeru.opensrc@micron.com>, <linux-cxl@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: <sthanneeru@micron.com>, <aneesh.kumar@linux.ibm.com>,
-	<dan.j.williams@intel.com>, <ying.huang@intel.com>,
-	<gregory.price@memverge.com>, <mhocko@suse.com>, <tj@kernel.org>,
-	<john@jagalactic.com>, <emirakhur@micron.com>, <vtavarespetr@micron.com>,
-	<Ravis.OpenSrc@micron.com>, <Jonathan.Cameron@huawei.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] memory tier: Support node migration between tiers
-Date: Wed, 13 Dec 2023 23:23:29 +0530
-Message-ID: <20231213175329.594-3-sthanneeru.opensrc@micron.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
-References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQlVXhHF"
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6E6AD
+	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 11:22:25 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-54ba86ae133so6870550a12.2
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 11:22:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702495344; x=1703100144; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mYXDysEXvvZVcUbS1eQWq8STUNNICEpV/07hi25PLao=;
+        b=kQlVXhHFjPqL28JwjWGCMAPKkDZICo1FkfFobV89/BywsHfTz28hbrh8Xef0rS/hD4
+         sxEOt68fPHEvzq8klHfdrMvZqBXcSEh3uEIUP/G/UvTRB2zuC6ADOCDiYWV7UfbylyXe
+         zoTNx/hk89yD1qfNuLwjSFRjv94gt/ivh1GA4IfFzLudyfR+7stU/7WWfdBzaAa/4Bbe
+         jErBCU9wpZlsgT2jvo9IoOZ8Tl3WtV6AxRst+fraedpX6MOBz9Om3NHgRPXsVn+WrEg1
+         ds5BJsUwXkmZmK7Kv6VNaLOsMF+mrIXxXmuz4utcjzDtfuiHlsdNYxhgts5KYFxB0sj9
+         8bgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702495344; x=1703100144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mYXDysEXvvZVcUbS1eQWq8STUNNICEpV/07hi25PLao=;
+        b=DEhyzYfpUJUFVm3YFQojkiuTNt2O4lZOwzjf+IiIsuy1hHe9jxKvfG98B8j2md3CzR
+         OGYoRLq68Gxdol7ZJABdFmkrT8L0f5u5VWeobS2ag2NHOwwh1iQBxzh8v3cDmJIxify6
+         ikr849OSM3XjBgm3qOkyn84y28t9d+GYLayiv1xUm5U+/mEV27qqqUs6HJ1lbOEZqdec
+         oWQm9rQ7X7sxo25fIlDwOCxcINSR+mvF/XPXiMBhBQ6/tUp+ECHHvR1jGLRXntCwaMjD
+         1j+j3AbJ+E7o4bazAERmNbPBwP6PVfsH9DDI3/dbZPuebGxYrM948Oov8dX2kHtl2mGM
+         KCrQ==
+X-Gm-Message-State: AOJu0YxYIlo0J0QjSTe18ETZDOiMmVtSjBkLb8jnKJRlL/DM8EYC7Ewz
+	k3RJBml9fL/vMLMnwEMRF83eUnCHy/BNw2GmLyPhGFfn
+X-Google-Smtp-Source: AGHT+IETBSQBvahNLuqrcChVmmhJntZkKoIa0z4liXLy1L9uz8OYzZNlyccpVoodbgHr3WtXH2cnN+dCEHD9g7XVlws=
+X-Received: by 2002:a50:aacf:0:b0:54b:99dd:3174 with SMTP id
+ r15-20020a50aacf000000b0054b99dd3174mr5972617edc.0.1702495343485; Wed, 13 Dec
+ 2023 11:22:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MT-Whitelisted: matched
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC4:EE_|DM4PR08MB8673:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae0d7293-1c6c-40d2-c3af-08dbfc048046
-X-LD-Processed: f38a5ecd-2813-4862-b11b-ac1d563c806f,ExtAddr
-X-EXT-ByPass: 1
-X-MT-RULE-Whitelisted: Triggered
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
- ORBEiw3+ZJXmX2+0UH0q98hwFgfOGz40DJnIjm9aBsnR5USLAUgaoMHltthNNIA8/1+zjW7dTX3iDK34rBExeJ26u40zPz/ucIzTnX5ajLROHuKtyqgWAba3jWbxhD5xkgGewJueP3RdaWsycW+DwIgVePV2Ks39PZa6gcsMATn01JHp8yEjka28dQCeHdOgQVpaR5vhh0ik4gRNKbFxmZFrRKgqpI0q4M2xoYqsg3jg5SBFEhUVBEF1SW5LDjZaPHpXasCG1INWZucOs8bv4cfdddyVm6jJrkh63aXAmuFisOorbTpj1V3O0taAFJBOVHvshmeV23ipzVEf/VPt+Id091BfoST05x0b7F6/T0dAjd9J/5Lt3XNRUmv7Rt6PjoaHUyfRZIOLAtxcmDZ7nE4UYHbS46YMZI+cCI65zLyqfs//tP7v2A/T2ueO50COC6LmGm6xq7Yxc84b9m3kQyU73Jt1yrjN0hga/mFbzweruqbjaf7VEX29LyIt1gcPt0w1QCcoRJkvNYTkBMdHDcoGO/0g2mYQ/SbZHFk5EjmC2aaPxjp0E2PGrkX4rlLijqZGjZFNBXBp84eDj5cq4l8qWVDHJ3CkASt8Jf2aABqeibfYROw/WK6fIVfQxyzG0zgngwJwIOUW+wkLoY9ZCkQiMWVANAE/GIh583pk5RYfnsZpq0eBQ4ArjTscjL7y32fNoQxsUAVPbrNZ+M8l/NyUiMiLr85FOgUeURokaHknO3IuqIQ8AlOi4kqRei0JAT20ciGtO+FaBeZKZPL+3w==
-X-Forefront-Antispam-Report:
- CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(39860400002)(346002)(230922051799003)(64100799003)(82310400011)(186009)(451199024)(1800799012)(36840700001)(40470700004)(46966006)(55016003)(40480700001)(40460700003)(70586007)(70206006)(54906003)(336012)(7636003)(82740400003)(356005)(36756003)(86362001)(36860700001)(47076005)(83380400001)(426003)(6286002)(26005)(1076003)(2616005)(2906002)(2876002)(316002)(110136005)(6666004)(478600001)(5660300002)(4326008)(8676002)(7696005)(41300700001)(8936002)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2023 17:54:06.4309
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae0d7293-1c6c-40d2-c3af-08dbfc048046
-X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000FCC4.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR08MB8673
+References: <CAAg4PapN_SEUEo+OCwiMYtNpzcJPJDZ10gA2=ZOdc-mPyLPfQQ@mail.gmail.com>
+ <20231213173546.00004265@Huawei.com>
+In-Reply-To: <20231213173546.00004265@Huawei.com>
+From: Sajjan Rao <sajjanr@gmail.com>
+Date: Thu, 14 Dec 2023 00:52:12 +0530
+Message-ID: <CAAg4PaoiM5qT8CwuQ0jHo-DVXX3OJxnZ3LKMqx40sEUvbNm91A@mail.gmail.com>
+Subject: Re: Kernel panic when creating interleaved region
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+Hi Jonathan,
 
-Node migration enables the grouping or migration of nodes
-between tiers based on nodes' latencies and bandwidth characteristics.
-Since nodes of the same memory-type can exist in different tiers and
-can migrate from one tier to another, it is necessary to maintain
-nodes per tier instead of maintaining a list of nodes grouped using
-memory type(siblings) within the tier.
+Thanks for looking into this.
 
-Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
----
- drivers/base/node.c          |  6 ++++
- include/linux/memory-tiers.h |  5 +++
- include/linux/node.h         |  5 +++
- mm/memory-tiers.c            | 66 +++++++++++++++++-------------------
- 4 files changed, 47 insertions(+), 35 deletions(-)
+KVM is disabled.
+It's X86_64 arch.
+I am using QEMU 8.2 (tip GIT)
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 788176b3585a..179d9004e4f3 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -597,6 +597,7 @@ static ssize_t memtier_override_store(struct device *dev,
- 		return size;
- 	ret = get_memtier_adistance_offset(nid, memtier);
- 	node_devices[nid]->adistance_offset = ret;
-+	node_memtier_change(nid);
- 
- 	return size;
- }
-@@ -607,6 +608,11 @@ void set_node_memtierid(int node, int memtierid)
- 	node_devices[node]->memtier = memtierid;
- }
- 
-+int get_node_adistance_offset(int node)
-+{
-+	return node_devices[node]->adistance_offset;
-+}
-+
- static struct attribute *node_dev_attrs[] = {
- 	&dev_attr_meminfo.attr,
- 	&dev_attr_numastat.attr,
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 0dba8027e785..b323c2e2e417 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -54,6 +54,7 @@ int mt_set_default_dram_perf(int nid, struct node_hmem_attrs *perf,
- 			     const char *source);
- int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist);
- int get_memtier_adistance_offset(int node, int memtier);
-+void node_memtier_change(int node);
- #ifdef CONFIG_MIGRATION
- int next_demotion_node(int node);
- void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
-@@ -142,5 +143,9 @@ static inline int mt_perf_to_adistance(struct node_hmem_attrs *perf, int *adist)
- {
- 	return -EIO;
- }
-+
-+static inline void node_memtier_change(int node)
-+{
-+}
- #endif	/* CONFIG_NUMA */
- #endif  /* _LINUX_MEMORY_TIERS_H */
-diff --git a/include/linux/node.h b/include/linux/node.h
-index 1c4f4be39db4..da679577a271 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -141,6 +141,7 @@ extern int register_memory_node_under_compute_node(unsigned int mem_nid,
- 						   unsigned int cpu_nid,
- 						   unsigned access);
- extern void set_node_memtierid(int node, int memtierid);
-+extern int get_node_adistance_offset(int nid);
- #else
- static inline void node_dev_init(void)
- {
-@@ -171,6 +172,10 @@ static inline void unregister_memory_block_under_nodes(struct memory_block *mem_
- static inline void set_node_memtierid(int node, int memtierid)
- {
- }
-+static inline int get_node_adistance_offset(int nid)
-+{
-+	return 0;
-+}
- #endif
- 
- #define to_node(device) container_of(device, struct node, dev)
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 31ed3c577836..66e1eae97e47 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -23,6 +23,8 @@ struct memory_tier {
- 	struct device dev;
- 	/* All the nodes that are part of all the lower memory tiers. */
- 	nodemask_t lower_tier_mask;
-+	/* Nodes linked to this tier*/
-+	nodemask_t nodes;
- };
- 
- struct demotion_nodes {
-@@ -120,13 +122,7 @@ static inline struct memory_tier *to_memory_tier(struct device *device)
- 
- static __always_inline nodemask_t get_memtier_nodemask(struct memory_tier *memtier)
- {
--	nodemask_t nodes = NODE_MASK_NONE;
--	struct memory_dev_type *memtype;
--
--	list_for_each_entry(memtype, &memtier->memory_types, tier_sibling)
--		nodes_or(nodes, nodes, memtype->nodes);
--
--	return nodes;
-+	return memtier->nodes;
- }
- 
- static void memory_tier_device_release(struct device *dev)
-@@ -182,33 +178,22 @@ int get_memtier_adistance_offset(int node, int memtier)
- 	return adistance_offset;
- }
- 
--static struct memory_tier *find_create_memory_tier(struct memory_dev_type *memtype)
-+static struct memory_tier *find_create_memory_tier(struct memory_dev_type *memtype,
-+						   int tier_adistance)
- {
- 	int ret;
- 	bool found_slot = false;
- 	struct memory_tier *memtier, *new_memtier;
--	int adistance = memtype->adistance;
-+	int adistance;
- 	unsigned int memtier_adistance_chunk_size = MEMTIER_CHUNK_SIZE;
- 
- 	lockdep_assert_held_once(&memory_tier_lock);
- 
--	adistance = round_down(adistance, memtier_adistance_chunk_size);
--	/*
--	 * If the memtype is already part of a memory tier,
--	 * just return that.
--	 */
--	if (!list_empty(&memtype->tier_sibling)) {
--		list_for_each_entry(memtier, &memory_tiers, list) {
--			if (adistance == memtier->adistance_start)
--				return memtier;
--		}
--		WARN_ON(1);
--		return ERR_PTR(-EINVAL);
--	}
-+	adistance = round_down(tier_adistance, memtier_adistance_chunk_size);
- 
- 	list_for_each_entry(memtier, &memory_tiers, list) {
- 		if (adistance == memtier->adistance_start) {
--			goto link_memtype;
-+			return memtier;
- 		} else if (adistance < memtier->adistance_start) {
- 			found_slot = true;
- 			break;
-@@ -238,11 +223,8 @@ static struct memory_tier *find_create_memory_tier(struct memory_dev_type *memty
- 		put_device(&new_memtier->dev);
- 		return ERR_PTR(ret);
- 	}
--	memtier = new_memtier;
- 
--link_memtype:
--	list_add(&memtype->tier_sibling, &memtier->memory_types);
--	return memtier;
-+	return new_memtier;
- }
- 
- static struct memory_tier *__node_get_memory_tier(int node)
-@@ -500,7 +482,7 @@ static struct memory_tier *set_node_memory_tier(int node)
- 	struct memory_tier *memtier;
- 	struct memory_dev_type *memtype;
- 	pg_data_t *pgdat = NODE_DATA(node);
--
-+	int tier_adistance;
- 
- 	lockdep_assert_held_once(&memory_tier_lock);
- 
-@@ -511,11 +493,15 @@ static struct memory_tier *set_node_memory_tier(int node)
- 
- 	memtype = node_memory_types[node].memtype;
- 	node_set(node, memtype->nodes);
--	memtier = find_create_memory_tier(memtype);
-+	tier_adistance = get_node_adistance_offset(node);
-+	tier_adistance = memtype->adistance + tier_adistance;
-+
-+	memtier = find_create_memory_tier(memtype, tier_adistance);
- 	if (!IS_ERR(memtier)) {
- 		rcu_assign_pointer(pgdat->memtier, memtier);
- 		set_node_memtierid(node, memtier->dev.id);
- 	}
-+	node_set(node, memtier->nodes);
- 	return memtier;
- }
- 
-@@ -551,11 +537,9 @@ static bool clear_node_memory_tier(int node)
- 		synchronize_rcu();
- 		memtype = node_memory_types[node].memtype;
- 		node_clear(node, memtype->nodes);
--		if (nodes_empty(memtype->nodes)) {
--			list_del_init(&memtype->tier_sibling);
--			if (list_empty(&memtier->memory_types))
--				destroy_memory_tier(memtier);
--		}
-+		node_clear(node, memtier->nodes);
-+		if (nodes_empty(memtier->nodes))
-+			destroy_memory_tier(memtier);
- 		cleared = true;
- 	}
- 	return cleared;
-@@ -578,7 +562,6 @@ struct memory_dev_type *alloc_memory_type(int adistance)
- 		return ERR_PTR(-ENOMEM);
- 
- 	memtype->adistance = adistance;
--	INIT_LIST_HEAD(&memtype->tier_sibling);
- 	memtype->nodes  = NODE_MASK_NONE;
- 	kref_init(&memtype->kref);
- 	return memtype;
-@@ -618,6 +601,19 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
- }
- EXPORT_SYMBOL_GPL(clear_node_memory_type);
- 
-+void node_memtier_change(int node)
-+{
-+	struct memory_tier *memtier;
-+
-+	mutex_lock(&memory_tier_lock);
-+	if (clear_node_memory_tier(node))
-+		establish_demotion_targets();
-+	memtier = set_node_memory_tier(node);
-+	if (!IS_ERR(memtier))
-+		establish_demotion_targets();
-+	mutex_unlock(&memory_tier_lock);
-+}
-+
- static void dump_hmem_attrs(struct node_hmem_attrs *attrs, const char *prefix)
- {
- 	pr_info(
--- 
-2.25.1
+Thanks,
+Sajjan
 
+
+On Wed, Dec 13, 2023 at 11:06=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Fri, 1 Dec 2023 16:33:37 +0530
+> Sajjan Rao <sajjanr@gmail.com> wrote:
+>
+> > I am trying to set up 2 memory devices in a CXL switch configuration
+> > with a 2k interleave. I am using the 6.4.11 kernel.
+> > When I create the region, the kernel panics after a few seconds. Has
+> > anyone seen this?
+> > Is there anything wrong with my QEMU configuration?
+>
+> Using KVM?  Might not be the issue, but KVM is very much not compatible w=
+ith
+> using the memory for instructions.
+>
+> The trace doesn't look related but I thought I'd check.
+>
+> Which QEMU version are you using for this so I can attempt to replicate?
+> Unfortunately we don't yet have CI up and running so could well be a prob=
+lem
+> hiding. Also, what arch?
+>
+> Busy time of year though, so not certain when I'll get to this.
+>
+> Jonathan
+>
+>
+> >
+> > My QEMU command line looks like this...
+> >
+> >  -object memory-backend-ram,size=3D4G,id=3Dm0 \
+> >  -object memory-backend-ram,size=3D256M,id=3Dcxl-mem1 \
+> >  -object memory-backend-ram,size=3D256M,id=3Dcxl-mem2 \
+> >  -numa node,memdev=3Dm0,cpus=3D0-3,nodeid=3D0 \
+> >  -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1,hdm_for_passthroug=
+h=3Dtrue \
+> >  -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=
+=3D2 \
+> >  -device cxl-upstream,bus=3Dcxl_rp_port0,id=3Dus0,addr=3D0.0,multifunct=
+ion=3Don, \
+> >  -device cxl-switch-mailbox-cci,bus=3Dcxl_rp_port0,addr=3D0.1,target=3D=
+us0 \
+> >  -device cxl-downstream,port=3D0,bus=3Dus0,id=3Dswport0,chassis=3D0,slo=
+t=3D4 \
+> >  -device cxl-downstream,port=3D1,bus=3Dus0,id=3Dswport1,chassis=3D0,slo=
+t=3D8 \
+> >  -device cxl-type3,bus=3Dswport0,volatile-memdev=3Dcxl-mem1,id=3Dcxl-vm=
+em1 \
+> >  -device cxl-type3,bus=3Dswport1,volatile-memdev=3Dcxl-mem2,id=3Dcxl-vm=
+em2 \
+> >  -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D512M,cxl-fmw.0.interle=
+ave-granularity=3D2k
+> > \
+> >
+> >
+> > # cxl list
+> > [
+> >   {
+> >     "memdev":"mem2",
+> >     "ram_size":268435456,
+> >     "serial":0,
+> >     "host":"0000:0f:00.0"
+> >   },
+> >   {
+> >     "memdev":"mem1",
+> >     "ram_size":268435456,
+> >     "serial":0,
+> >     "host":"0000:10:00.0"
+> >   }
+> > ]
+> >
+> >
+> > # cxl list -D
+> > [
+> >   {
+> >     "decoder":"decoder0.0",
+> >     "resource":6710886400,
+> >     "size":536870912,
+> >     "interleave_ways":1,
+> >     "max_available_extent":536870912,
+> >     "pmem_capable":true,
+> >     "volatile_capable":true,
+> >     "accelmem_capable":true,
+> >     "nr_targets":1
+> >   }
+> > ]
+> > [root@cxl-test ~]#
+> >
+> > # cxl create-region -d decoder0.0 -m mem1 mem2 -w 2 -g 2048 -t ram
+> > [  447.515379] cxl region0: Bypassing cpu_cache_invalidate_memregion()
+> > for testing!
+> > {
+> >   "region":"region0",
+> >   "resource":"0x190000000",
+> >   "size":"512.00 MiB (536.87 MB)",
+> >   "type":"ram",
+> >   "interleave_ways":2,
+> >   "interleave_granularity":2048,
+> >   "decode_state":"commit",
+> >   "mappings":[
+> >     {
+> >       "position":1,
+> >       "memdev":"mem2",
+> >       "decoder":"decoder4.0"
+> >     },
+> >     {
+> >       "position":0,
+> >       "memdev":"mem1",
+> >       "decoder":"decoder3.0"
+> >     }
+> >   ]
+> > }
+> > cxl region: cmd_create_region: created 1 region
+> > [root@cxl-test ~]# [  447.948621] Fallback order for Node 1: 1 0
+> > [  447.950007] Built 1 zonelists, mobility grouping on.  Total pages: 9=
+73350
+> > [  447.950386] Policy zone: Normal
+> > [  448.007461] Fallback order for Node 0: 0 1
+> > [  448.007572] Fallback order for Node 1: 1 0
+> > [  448.011462] Built 2 zonelists, mobility grouping on.  Total pages: 1=
+006118
+> > [  448.014883] Policy zone: Normal
+> > [  448.433721] general protection fault, probably for non-canonical
+> > address 0xfff788a01001ba00: 0000 [#1] PREEMPT SMP NOPTI
+> > [  448.433721] CPU: 1 PID: 1 Comm: systemd Tainted: G           O
+> >  6.4.11 #4
+> > [  448.433721] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+> > [  448.433721] RIP: 0010:__kmem_cache_alloc_node+0x1bc/0x310
+> > [  448.433721] Code: 2b 14 25 28 00 00 00 0f 85 68 01 00 00 48 83 c4
+> > 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 41 8b 47 28 4d 8b 07
+> > 48 01 f8 <48> 8b 18 48 89 c1 49 33 9f b8 00 00 00 48 89 f8 48 0f c9b
+> > [  448.433721] RSP: 0018:ffffa9dc80013d40 EFLAGS: 00000286
+> > [  448.433721] RAX: fff788a01001ba00 RBX: 0000000000000dc0 RCX: 0000000=
+000000310
+> > [  448.433721] RDX: 0000000000bce001 RSI: 0000000000000dc0 RDI: fff788a=
+01001b800
+> > [  448.433721] RBP: 0000000000000dc0 R08: 0000000000039160 R09: ffff889=
+f8020ca10
+> > [  448.433721] R10: ffff889fbf7b5020 R11: 65732e302e307861 R12: 0000000=
+000000000
+> > [  448.433721] R13: 00000000ffffffff R14: 0000000000000310 R15: ffff889=
+f80042b00
+> > [  448.433721] FS:  00007fc881294940(0000) GS:ffff889ffbc80000(0000)
+> > knlGS:0000000000000000
+> > [  448.433721] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  448.433721] CR2: fff788a01001ba00 CR3: 000000010254e000 CR4: 0000000=
+0000006e0
+> > [  448.433721] Call Trace:
+> > [  448.433721]  <TASK>
+> > [  448.433721]  ? die_addr+0x36/0x90
+> > [  448.433721]  ? exc_general_protection+0x1c5/0x430
+> > [  448.433721]  ? sidtab_context_to_sid+0x3b/0x410
+> > [  448.433721]  ? asm_exc_general_protection+0x26/0x30
+> > [  448.433721]  ? __kmem_cache_alloc_node+0x1bc/0x310
+> > [  448.433721]  ? psi_cgroup_alloc+0x29/0xb0
+> > [  448.433721]  kmalloc_trace+0x2a/0xa0
+> > [  448.433721]  psi_cgroup_alloc+0x29/0xb0
+> > [  448.447603]  cgroup_mkdir+0x1f0/0x470
+> > [  448.447603]  kernfs_iop_mkdir+0x5b/0x80
+> > [  448.447603]  vfs_mkdir+0x191/0x240
+> > [  448.447603]  do_mkdirat+0x146/0x170
+> > [  448.447603]  __x64_sys_mkdir+0x49/0x70
+> > [  448.447603]  do_syscall_64+0x60/0x90
+> > [  448.447603]  ? __irq_exit_rcu+0x4b/0xf0
+> > [  448.447603]  entry_SYSCALL_64_after_hwframe+0x77/0xe1
+> > [  448.447603] RIP: 0033:0x7fc881522d6b
+> > [  448.450700] Code: 8b 05 a1 30 0d 00 bb ff ff ff ff 64 c7 00 16 00
+> > 00 00 e9 62 ff ff ff e8 e3 1b 02 00 0f 1f 00 f3 0f 1e fa b8 53 00 00
+> > 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 69 30 0d8
+> > [  448.450700] RSP: 002b:00007ffc4bc7c228 EFLAGS: 00000246 ORIG_RAX:
+> > 0000000000000053
+> > [  448.450700] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc=
+881522d6b
+> > [  448.450700] RDX: 0000000000000000 RSI: 00000000000001ed RDI: 0000557=
+aec888aa0
+> > [  448.450700] RBP: 00007ffc4bc7c260 R08: 00000000ffffff9c R09: 00007ff=
+c4bc7c090
+> > [  448.450700] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc=
+8818aeb03
+> > [  448.450700] R13: 0000557aec685200 R14: 0000000000000002 R15: 0000000=
+0000000a0
+> > [  448.450700]  </TASK>
+> > [  448.450700] Modules linked in: kmem device_dax dax_cxl nft_fib_inet
+> > nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+> > nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nfg
+> > [  448.490411] ---[ end trace 0000000000000000 ]---
+> > [  448.499413] RIP: 0010:__kmem_cache_alloc_node+0x1bc/0x310
+> > [  448.506716] Code: 2b 14 25 28 00 00 00 0f 85 68 01 00 00 48 83 c4
+> > 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 41 8b 47 28 4d 8b 07
+> > 48 01 f8 <48> 8b 18 48 89 c1 49 33 9f b8 00 00 00 48 89 f8 48 0f c9b
+> > [  448.519131] RSP: 0018:ffffa9dc80013d40 EFLAGS: 00000286
+> > [  448.525319] RAX: fff788a01001ba00 RBX: 0000000000000dc0 RCX: 0000000=
+000000310
+> > [  448.531528] RDX: 0000000000bce001 RSI: 0000000000000dc0 RDI: fff788a=
+01001b800
+> > [  448.538945] RBP: 0000000000000dc0 R08: 0000000000039160 R09: ffff889=
+f8020ca10
+> > [  448.545020] R10: ffff889fbf7b5020 R11: 65732e302e307861 R12: 0000000=
+000000000
+> > [  448.552119] R13: 00000000ffffffff R14: 0000000000000310 R15: ffff889=
+f80042b00
+> > [  448.558219] FS:  00007fc881294940(0000) GS:ffff889ffbc80000(0000)
+> > knlGS:0000000000000000
+> > [  448.565881] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  448.572137] CR2: fff788a01001ba00 CR3: 000000010254e000 CR4: 0000000=
+0000006e0
+> > [  448.582019] Kernel panic - not syncing: Attempted to kill init!
+> > exitcode=3D0x0000000b
+> > [  448.582580] Kernel Offset: 0x20000000 from 0xffffffff81000000
+> > (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> > [  448.582580] ---[ end Kernel panic - not syncing: Attempted to kill
+> > init! exitcode=3D0x0000000b ]---
+> >
+>
