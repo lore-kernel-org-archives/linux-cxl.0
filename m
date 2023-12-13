@@ -1,222 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWwOgsOe"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5CE185
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Dec 2023 08:43:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702485797; x=1734021797;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=aU2LtPWhslWVLiwkxi8NyLXuaYYfupztAXVvhl+WoyM=;
-  b=TWwOgsOed5db4zN50npRUP3m/27whBiBI8X5CNB5HybdSqIvv+oFo7o9
-   2LoVlYP5kBzTTQNs0C3v6nJKWkHK28h7CzPpxnRVRqpLeTXzOuH4SwtoZ
-   jSjtmxIQgRfpLUehu8eOYXNvNaebs6ML2CC5sIlwlWodY7w7lkQltwFUv
-   oOhAtvfA8xR4lgaV3MsUNnlsaj/yoVoIEtdIPsumjIJX/wNota1WS39oJ
-   b13w5CtyoV4IybOAGCy4UHgIPP+EqSbKH3+f5tcwdx7Um50Ubcg73rDSE
-   3XPcSHPYc5z+EjkiYSeFOkeQ3RTcF98yNxTLRP5kMS3h024oZ89vL7T70
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="459310122"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="459310122"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:43:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="750178309"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="750178309"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.76.225])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:43:15 -0800
-Subject: [PATCH v14 19/19] cxl: Check qos_class validity on memdev probe
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Wed, 13 Dec 2023 09:43:16 -0700
-Message-ID: <170248579618.801570.17463788516390290503.stgit@djiang5-mobl3>
-In-Reply-To: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
-References: <170248552797.801570.14580769385012396142.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43252AC;
+	Wed, 13 Dec 2023 08:50:56 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Sr1g64b1Pz67pnj;
+	Thu, 14 Dec 2023 00:49:54 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AE4A1140595;
+	Thu, 14 Dec 2023 00:50:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 13 Dec
+ 2023 16:50:54 +0000
+Date: Wed, 13 Dec 2023 16:50:52 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Vishal Verma <vishal.l.verma@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>, David Hildenbrand
+	<david@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Huang Ying
+	<ying.huang@intel.com>
+Subject: Re: [PATCH v4 1/3] Documentatiion/ABI: Add ABI documentation for
+ sys-bus-dax
+Message-ID: <20231213165052.00007d74@Huawei.com>
+In-Reply-To: <20231212-vv-dax_abi-v4-1-1351758f0c92@intel.com>
+References: <20231212-vv-dax_abi-v4-0-1351758f0c92@intel.com>
+	<20231212-vv-dax_abi-v4-1-1351758f0c92@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add a check to make sure the qos_class for the device will match one of
-the root decoders qos_class. If no match is found, then the qos_class for
-the device is set to invalid. Also add a check to ensure that the device's
-host bridge matches to one of the root decoder's downstream targets.
+On Tue, 12 Dec 2023 12:08:30 -0700
+Vishal Verma <vishal.l.verma@intel.com> wrote:
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v14:
-- Move unmatched entries to discard list (Dan)
-- Update perf_prop_entry to cxl_dpa_perf (Dan)
-- Use DEFINE_FREE() in cxl_qos_class_verify to clean up code (Dan)
-- Move qos verify to core/cdat.c in order to be called before region setup
-  (Dan)
----
- drivers/cxl/core/cdat.c |  137 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+> Add the missing sysfs ABI documentation for the device DAX subsystem.
+> Various ABI attributes under this have been present since v5.1, and more
+> have been added over time. In preparation for adding a new attribute,
+> add this file with the historical details.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 8c561f1deec6..5fe57fe5e2ee 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -270,6 +270,142 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
- 	devm_add_action_or_reset(&cxlds->cxlmd->dev, free_perf_ents, mds);
- }
- 
-+struct qos_class_ctx {
-+	bool matched;
-+	int dev_qos_class;
-+};
-+
-+static int match_cxlrd_qos_class(struct device *dev, void *data)
-+{
-+	struct qos_class_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	if (cxlrd->qos_class == CXL_QOS_CLASS_INVALID ||
-+	    ctx->dev_qos_class == CXL_QOS_CLASS_INVALID)
-+		return 0;
-+
-+	if (cxlrd->qos_class == ctx->dev_qos_class) {
-+		ctx->matched = 1;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_qos_match(struct cxl_port *root_port,
-+			 struct list_head *work_list,
-+			 struct list_head *discard_list)
-+{
-+	struct cxl_dpa_perf *dpa_perf, *n;
-+	struct qos_class_ctx ctx;
-+	int rc;
-+
-+	if (list_empty(work_list))
-+		return 0;
-+
-+	list_for_each_entry_safe(dpa_perf, n, work_list, list) {
-+		ctx = (struct qos_class_ctx) {
-+			.matched = false,
-+			.dev_qos_class = dpa_perf->qos_class,
-+		};
-+		rc = device_for_each_child(&root_port->dev, &ctx, match_cxlrd_qos_class);
-+		if (rc < 0)
-+			return -ENOENT;
-+
-+		if (!ctx.matched)
-+			list_move_tail(&dpa_perf->list, discard_list);
-+	}
-+
-+	return 0;
-+}
-+
-+struct qos_hb_ctx {
-+	bool matched;
-+	struct device *host_bridge;
-+};
-+
-+static int match_cxlrd_hb(struct device *dev, void *data)
-+{
-+	struct cxl_switch_decoder *cxlsd;
-+	struct qos_hb_ctx *ctx = data;
-+	struct cxl_root_decoder *cxlrd;
-+	unsigned int seq;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	cxlrd = to_cxl_root_decoder(dev);
-+	cxlsd = &cxlrd->cxlsd;
-+
-+	do {
-+		seq = read_seqbegin(&cxlsd->target_lock);
-+		for (int i = 0; i < cxlsd->nr_targets; i++) {
-+			if (ctx->host_bridge ==
-+			    cxlsd->target[i]->dport_dev) {
-+				ctx->matched = true;
-+				return 1;
-+			}
-+		}
-+	} while (read_seqretry(&cxlsd->target_lock, seq));
-+
-+	return 0;
-+}
-+
-+static void discard_dpa_perf(struct list_head *list)
-+{
-+	struct cxl_dpa_perf *dpa_perf, *n;
-+
-+	list_for_each_entry_safe(dpa_perf, n, list, list) {
-+		list_del(&dpa_perf->list);
-+		kfree(dpa_perf);
-+	}
-+}
-+DEFINE_FREE(dpa_perf, struct list_head *, if (_T) discard_dpa_perf(_T))
-+
-+static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_port *root_port __free(put_device) = NULL;
-+	LIST_HEAD(__discard);
-+	struct list_head *discard __free(dpa_perf) = &__discard;
-+	struct qos_hb_ctx hbctx;
-+	int rc;
-+
-+	root_port = find_cxl_root(cxlmd->endpoint);
-+	if (!root_port)
-+		return -ENODEV;
-+
-+	/* Check that the QTG IDs are all sane between end device and root decoders */
-+	rc = cxl_qos_match(root_port, &mds->ram_perf_list, discard);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = cxl_qos_match(root_port, &mds->pmem_perf_list, discard);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Check to make sure that the device's host bridge is under a root decoder */
-+	hbctx = (struct qos_hb_ctx) {
-+		.matched = false,
-+		.host_bridge = cxlmd->endpoint->host_bridge,
-+	};
-+	rc = device_for_each_child(&root_port->dev, &hbctx, match_cxlrd_hb);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (!hbctx.matched) {
-+		list_splice_tail_init(&mds->ram_perf_list, discard);
-+		list_splice_tail_init(&mds->pmem_perf_list, discard);
-+	}
-+
-+	return rc;
-+}
-+
- static void discard_dsmas(struct xarray *xa)
- {
- 	unsigned long index;
-@@ -308,6 +444,7 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
- 	}
- 
- 	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
-+	cxl_qos_class_verify(cxlmd);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
- 
+Hi Vishal,  One editorial suggestions.
 
+I don't know the interface well enough to do a good review of the content
+so leaving that for Dan or others.
+
+> +What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/start
+> +Date:		October, 2020
+> +KernelVersion:	v5.10
+> +Contact:	nvdimm@lists.linux.dev
+> +Description:
+> +		(RO) A dax device may have multiple constituent discontiguous
+> +		address ranges. These are represented by the different
+> +		'mappingX' subdirectories. The 'start' attribute indicates the
+> +		start physical address for the given range.
+
+A common option for these files is to have a single entry with two What:
+lines.  Here that would avoid duplication of majority of this text across
+the start, end  and page_offset entries.  Alternatively you could do an
+entry for the mapping[0..N] directory with the shared text then separate
+entries for the 3 files under there.
+
+
+> +
+> +What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/end
+> +Date:		October, 2020
+> +KernelVersion:	v5.10
+> +Contact:	nvdimm@lists.linux.dev
+> +Description:
+> +		(RO) A dax device may have multiple constituent discontiguous
+> +		address ranges. These are represented by the different
+> +		'mappingX' subdirectories. The 'end' attribute indicates the
+> +		end physical address for the given range.
+> +
+> +What:		/sys/bus/dax/devices/daxX.Y/mapping[0..N]/page_offset
+> +Date:		October, 2020
+> +KernelVersion:	v5.10
+> +Contact:	nvdimm@lists.linux.dev
+> +Description:
+> +		(RO) A dax device may have multiple constituent discontiguous
+> +		address ranges. These are represented by the different
+> +		'mappingX' subdirectories. The 'page_offset' attribute indicates the
+> +		offset of the current range in the dax device.
 
