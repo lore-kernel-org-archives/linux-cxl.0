@@ -1,42 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WicJ5l2q"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD438E
-	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 18:02:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hRYI5zWZ"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C3CAA
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Dec 2023 18:13:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702432973; x=1733968973;
+  t=1702433624; x=1733969624;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=GrsDuNirVTBEMKyNq4B7JXEW2IrZZwFdE9aoOYJ90uY=;
-  b=WicJ5l2qfVlVaVtb4JaZi0mqSTWJ3bkjGbyVGK7NIuYZzYGHoLuHGu0m
-   gnsU9x8SS6++fquKsRHaU+qYvf7UjVok6V1siShAwGP3Pxp65CSL8/lH/
-   jKrFcT+hFOKhawBWXsaY4X+r2V5OEyxwJnWmyFarj56h3jNninv+7cfWj
-   mYtG0Ir8Sz6dkfmczYs7nI3TD0LQHhYwyQnRaEa1xnNnyA37uafpWbY0Q
-   ZIwWL7NKYkVmBVzDoz2HgxuiHZV/YrjR+D2BdtZ+JvgUHIBRdfbg1/XCv
-   +8DBAQiG2j2OD0V91MNJuRRV6Rm+q29GSxeTHczS9GvrzC3vBzBaUCqPw
+  bh=1PMAyvKAy7zoBw3d0krkf1EWrCx1NHuXddCqDc8iX9o=;
+  b=hRYI5zWZ/qNR5eg3/t+JWaVz+9EVwyytvCevi+o/nqd7MCuwCgCH6GtV
+   a7M2vr63K3MgvGXSnc3IxJrxsemBf8VKrbgfiXLBw01acLLax15DyTBlL
+   8XBCOEB1oVQIPgFXnvVK94JuAd2M7XKAKVwR/WVoSxfX+d1y8Sr9njU0P
+   wIqIcq0H20j0Nv+5pr2PmYuv2FGBHXnXB+qcb0gkbTqflqhbSC3OnNuyk
+   PX9ZGXfkKBzZwYrutWbwvOfiHHKt0E3ZAP71eH5Wn5gceJIJIDA+dlUk2
+   KTyO9DqIjU0WKyJlZUj0h0G3q6/eVTXjstwyIoyxYgJP6B/XlnAJE3i38
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="398742335"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="459220432"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="398742335"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 18:02:52 -0800
+   d="scan'208";a="459220432"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 18:13:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="844126476"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="917496528"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="844126476"
+   d="scan'208";a="917496528"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.111.12])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 18:02:52 -0800
-Date: Tue, 12 Dec 2023 18:02:50 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 18:13:43 -0800
+Date: Tue, 12 Dec 2023 18:13:42 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH v5 4/5] cxl/list: add --poison option to cxl list
-Message-ID: <ZXkQysAY9PAmbsHG@aschofie-mobl2>
+Subject: Re: [ndctl PATCH v5 3/5] cxl/list: collect and parse the poison list
+ records
+Message-ID: <ZXkTVgFroObfs4kW@aschofie-mobl2>
 References: <cover.1700615159.git.alison.schofield@intel.com>
- <216ab396ab0c34fc391d1c3d3797a0d832a8d563.1700615159.git.alison.schofield@intel.com>
- <657148ae35bce_b9912945d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <bf65d11d6388bcdce2e6dc35064edf4094c0c5a8.1700615159.git.alison.schofield@intel.com>
+ <65714c6b472ee_269bd29417@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,114 +46,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <657148ae35bce_b9912945d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <65714c6b472ee_269bd29417@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-On Wed, Dec 06, 2023 at 08:23:10PM -0800, Dan Williams wrote:
+On Wed, Dec 06, 2023 at 08:39:07PM -0800, Dan Williams wrote:
 > alison.schofield@ wrote:
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > The --poison option to 'cxl list' retrieves poison lists from
-> > memory devices supporting the capability and displays the
-> > returned poison records in the cxl list json. This option can
-> > apply to memdevs or regions.
-> > 
-> > Example usage in the Documentation/cxl/cxl-list.txt update.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  Documentation/cxl/cxl-list.txt | 58 ++++++++++++++++++++++++++++++++++
-> >  cxl/filter.h                   |  3 ++
-> >  cxl/list.c                     |  2 ++
-> >  3 files changed, 63 insertions(+)
-> > 
-> > diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-> > index 838de4086678..ee2f1b2d9fae 100644
-> > --- a/Documentation/cxl/cxl-list.txt
-> > +++ b/Documentation/cxl/cxl-list.txt
-> > @@ -415,6 +415,64 @@ OPTIONS
-> >  --region::
-> >  	Specify CXL region device name(s), or device id(s), to filter the listing.
-> >  
-> > +-L::
-> > +--poison::
-> > +	Include poison information. The poison list is retrieved from the
-> > +	device(s) and poison records are added to the listing. Apply this
-> > +	option to memdevs and regions where devices support the poison
-> > +	list capability.
-> 
-> While CXL calls it "poison" I am not convinced that's the term that end
-> users can universally use for this. This is why "ndctl list" uses -M,
-> but yeah, -M and -P are already taken. Even -E is taken for "errors".
-> 
+
+snip
+
+> > +	struct json_object *jerrors, *jpoison, *jobj = NULL;
+> > +	struct jlist_node *jnode, *next;
+> > +	struct event_ctx ectx = {
+> > +		.event_name = "cxl_poison",
+> > +		.event_pid = getpid(),
+> > +		.system = "cxl",
+> > +	};
+> > +	int rc, count = 0;
 > > +
-> > +----
-> > +# cxl list -m mem11 --poison
-> > +[
-> > +  {
-> > +    "memdev":"mem11",
-> > +    "pmem_size":268435456,
-> > +    "ram_size":0,
-> > +    "serial":0,
-> > +    "host":"0000:37:00.0",
-> > +    "poison":{
-> > +      "nr_records":1,
-> > +      "records":[
+> > +	list_head_init(&ectx.jlist_head);
+> > +	rc = cxl_parse_events(inst, &ectx);
 > 
-> One cleanup I want to see before this goes live... drop nr_records and
-> just make "poison" an array object directly. The number of records is
-> trivially determined by the jq "len" operator.
-
-The poison nr_records count is a convenience for the cmdline user,
-not for the user doing their own jq parsing. It also intends to
-explicitly show nr_records:0 when no poison is found.
-
-Say NAK again and I'll rm it all.
-
+> This pattern really feels like it wants a cxl_for_each_event() -style
+> helper rather than require the end caller to open code list usage.
+> Basically cxl_parse_events() is a helper that should stay local to
+> cxl/monitor.c. This new cxl_for_each_event() would become used
+> internally by cxl_parse_events() and let
+> util_cxl_poison_events_to_json() do its own per-event iteration.
 > 
-> Also, per above rename "poison" to "media_errors". I believe "poison" is
-> an x86'ism where "media_error" is a more generic term.
 
-OK
+snip & concat'ing your next comment:
 
+> So we're building a json_object internal to cxl_parse_events() only to
+> turn around and extract details out of that object that tell us this
+> event was not of interest, or to create yet another json object?
 > 
-> > +        {
-> > +          "dpa":0,
-> > +          "dpa_length":64,
-> > +          "source":"Internal",
-> > +        }
-> > +      ]
-> > +    }
-> > +  }
-> > +]
-> > +# cxl list -r region5 --poison
-> > +[
-> > +  {
-> > +    "region":"region5",
-> > +    "resource":1035623989248,
-> > +    "size":2147483648,
-> > +    "interleave_ways":2,
-> > +    "interleave_granularity":4096,
-> > +    "decode_state":"commit",
-> > +    "poison":{
-> > +      "nr_records":2,
-> > +      "records":[
-> > +        {
-> > +          "memdev":"mem2",
-> > +          "dpa":0,
-> > +          "dpa_length":64,
-> 
-> Does length need to be prefixed with "dpa_"?
->
+> I think this implementation has a chance to be significantly less
+> complicated if the event list can be iterated directly without this
+> temporary json_object parsing.
 
-Nope. Will remove.
+DaveJ actually already implemented a method to include a 'private'
+parsing function in the event_ctx structure. I didn't use it, but
+but rather used the generic cxl_event_to_json helper, and then
+parsed that all over again to refine for poison list output.
 
-> > +          "source":"Internal",
-> 
-> I am not sure what the end user can do with "source"? I have tended to
-> not emit things if I can't think of a use case for the field to be
-> there.
-Erwin followed w a comment on this one. Yeah, I think folks want to 
-know if error was injected at least.
+I think reorganizing w a private event_ctx->parse_event will
+streamline as you suggest.
 
 Alison
-
