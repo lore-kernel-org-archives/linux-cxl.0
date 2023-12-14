@@ -1,36 +1,36 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DHFjAJPT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YwkX20FX"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7686DA3;
-	Wed, 13 Dec 2023 23:38:12 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E04E107;
+	Wed, 13 Dec 2023 23:38:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702539492; x=1734075492;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=h6iwtR+Emw2EX9lZjGEXRQCb3JKoPyQmhXB1JkGLNZE=;
-  b=DHFjAJPTQQqzUfMwsqBd71kL8avEX6nkCsuX6jPY4NCUrGjVONKIeMFq
-   aSn/UJtPnd0u0B0NB3zbss/gTwSlKqLhftK7WMmc8tDpBm7pnMfsqKTpJ
-   fvuEgyzS/o6XinjjFAb1ynqcGMzxyeUzupyEjk0TE3euOskGU2iyIDPYR
-   wsnXCMYCOF6GkpH0ZCYf2JG3d+okEwBM7msml6/bJ4akskSRmVM+M2z/K
-   RKlTsZdCXmoFqDs1rTmmZm4G3vkUyV597cay07nQwOfyUbKJORHKOqMlD
-   vO+OxFcs4xRSTmfoO/kOehLKaiOEKYaTieHk+L/P0J/AOTZAYuxl0hE9a
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="481275504"
+  t=1702539494; x=1734075494;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=g9l8RslOMp5ad/gXCRHw+j360xuk1nb3+acdwFrlL50=;
+  b=YwkX20FX85WUILkbomoDirV2Z5k1yMSdUp9E6Ts3FuH6F4+nCsP3ZXni
+   Q6+MC4fE0X40PmFY0j5bBzji/V7JskXvjHf8dn/apZIbAlQvdxWAcpcfN
+   5E7QTbNdhA49T1oQURdDokk/HMz3rsnlf5X8PadOU70khIVYtyVEVWne+
+   RxeoGoAb4Wu9373+sQGqiguK1gDunZbmZIc5rg2cu2gVLlY3BGFOzolYu
+   i4vDQ28vVIW5t/zf5TW/5fMs+jfoeZyuhRAcHo0qQA75ANmruLp1UswZG
+   iWC6yin4mMoLMRvT1dDnblhP40FelKCnixVeTlMTbbgXNukYiohSnj4iK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="481275522"
 X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="481275504"
+   d="scan'208";a="481275522"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 23:38:12 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 23:38:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="723972055"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="723972064"
 X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="723972055"
+   d="scan'208";a="723972064"
 Received: from llblake-mobl1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.213.191.124])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 23:38:10 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 23:38:12 -0800
 From: Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v5 0/4] Add DAX ABI for memmap_on_memory
-Date: Thu, 14 Dec 2023 00:37:53 -0700
-Message-Id: <20231214-vv-dax_abi-v5-0-3f7b006960b4@intel.com>
+Date: Thu, 14 Dec 2023 00:37:55 -0700
+Subject: [PATCH v5 2/4] dax/bus: Use guard(device) in sysfs attribute
+ helpers
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,10 +39,9 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANGwemUC/3XM0QqCMBTG8VeJXbfYOZtTu+o9ImLOsxyUhsowx
- Hdv2o0Kca6+A7//yDpqPXXsfBhZS8F3vqnjSI4HZitTP4j7Mm6GAiUITHgIvDTD3RSeQ2oQcqu
- 0SDWL4N2S88MSu97irnzXN+1naQeYv78MCr3OBOCCq1RRkWWEAuzF1z09T7Z5sTkT8D/FSJ2Kh
- 1LqUmR7KlcUYENlpMY6bS0UJeVuT9Wa4oaqSEEmkCaZEzbHNZ2m6QsSnChrVQEAAA==
+Message-Id: <20231214-vv-dax_abi-v5-2-3f7b006960b4@intel.com>
+References: <20231214-vv-dax_abi-v5-0-3f7b006960b4@intel.com>
+In-Reply-To: <20231214-vv-dax_abi-v5-0-3f7b006960b4@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>, 
  Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
  Andrew Morton <akpm@linux-foundation.org>, 
@@ -52,110 +51,282 @@ Cc: linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
  Dave Hansen <dave.hansen@linux.intel.com>, 
  Huang Ying <ying.huang@intel.com>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mm@kvack.org, 
- Joao Martins <joao.m.martins@oracle.com>, Michal Hocko <mhocko@suse.com>, 
- Li Zhijian <lizhijian@fujitsu.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ Joao Martins <joao.m.martins@oracle.com>
 X-Mailer: b4 0.13-dev-433a8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3873;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7001;
  i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=h6iwtR+Emw2EX9lZjGEXRQCb3JKoPyQmhXB1JkGLNZE=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKlVG+499hN/bHjHzIXZ4f2aqSon9dUneh0P2eQcxcVfK
- /DPnkeoo5SFQYyLQVZMkeXvno+Mx+S25/MEJjjCzGFlAhnCwMUpABPJtWL4n2F/7nClCXdxvPpS
- YYsUNav9Z7eYdszbHpJ1n++8vc6BPQz/fWdYypxe3vOiMflFb6D3rHenfu58/z3m1ls3/dQ1b1e
- o8gAA
+ bh=g9l8RslOMp5ad/gXCRHw+j360xuk1nb3+acdwFrlL50=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDKlVGx4ZxJv18x/TfPRo6pLQrU05Fp3PElasO7C0qM1kr
+ 5tHY3xlRykLgxgXg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACZySoGRoZ9jz78FO0WOfBHN
+ z7hkJdKzWZrxycoHdT8NjQSDuFZGHmZk+Kn/VmUD14viH/ymS1fZFjwx1PJr9J8nFCC9Yf3cLpa
+ H7AA=
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
  fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 
-The DAX drivers were missing sysfs ABI documentation entirely.  Add this
-missing documentation for the sysfs ABI for DAX regions and Dax devices
-in patch 1. Switch to guard(device) semantics for Scope Based Resource
-Management for device_{lock,unlock} flows in drivers/dax/bus.c in patch
-2. Export mhp_supports_memmap_on_memory() in patch 3. Add a new ABI for
-toggling memmap_on_memory semantics in patch 4.
+Use the guard(device) macro to lock a 'struct device', and unlock it
+automatically when going out of scope using Scope Based Resource
+Management semantics. A lot of the sysfs attribute writes in
+drivers/dax/bus.c benefit from a cleanup using these, so change these
+where applicable.
 
-The missing ABI was spotted in [1], this series is a split of the new
-ABI additions behind the initial documentation creation.
-
-[1]: https://lore.kernel.org/linux-cxl/651f27b728fef_ae7e7294b3@dwillia2-xfh.jf.intel.com.notmuch/
-
+Cc: Joao Martins <joao.m.martins@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
-This series depends on [2] which adds the definition for guard(device).
-[2]: https://lore.kernel.org/r/170250854466.1522182.17555361077409628655.stgit@dwillia2-xfh.jf.intel.com
+ drivers/dax/bus.c | 143 ++++++++++++++++++++++--------------------------------
+ 1 file changed, 59 insertions(+), 84 deletions(-)
 
----
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index 1ff1ab5fa105..6226de131d17 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -294,13 +294,10 @@ static ssize_t available_size_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+ 	struct dax_region *dax_region = dev_get_drvdata(dev);
+-	unsigned long long size;
+ 
+-	device_lock(dev);
+-	size = dax_region_avail_size(dax_region);
+-	device_unlock(dev);
++	guard(device)(dev);
+ 
+-	return sprintf(buf, "%llu\n", size);
++	return sprintf(buf, "%llu\n", dax_region_avail_size(dax_region));
+ }
+ static DEVICE_ATTR_RO(available_size);
+ 
+@@ -309,17 +306,14 @@ static ssize_t seed_show(struct device *dev,
+ {
+ 	struct dax_region *dax_region = dev_get_drvdata(dev);
+ 	struct device *seed;
+-	ssize_t rc;
+ 
+ 	if (is_static(dax_region))
+ 		return -EINVAL;
+ 
+-	device_lock(dev);
++	guard(device)(dev);
+ 	seed = dax_region->seed;
+-	rc = sprintf(buf, "%s\n", seed ? dev_name(seed) : "");
+-	device_unlock(dev);
+ 
+-	return rc;
++	return sprintf(buf, "%s\n", seed ? dev_name(seed) : "");
+ }
+ static DEVICE_ATTR_RO(seed);
+ 
+@@ -328,24 +322,28 @@ static ssize_t create_show(struct device *dev,
+ {
+ 	struct dax_region *dax_region = dev_get_drvdata(dev);
+ 	struct device *youngest;
+-	ssize_t rc;
+ 
+ 	if (is_static(dax_region))
+ 		return -EINVAL;
+ 
+-	device_lock(dev);
++	guard(device)(dev);
+ 	youngest = dax_region->youngest;
+-	rc = sprintf(buf, "%s\n", youngest ? dev_name(youngest) : "");
+-	device_unlock(dev);
+ 
+-	return rc;
++	return sprintf(buf, "%s\n", youngest ? dev_name(youngest) : "");
+ }
+ 
+ static ssize_t create_store(struct device *dev, struct device_attribute *attr,
+ 		const char *buf, size_t len)
+ {
+ 	struct dax_region *dax_region = dev_get_drvdata(dev);
++	struct dev_dax_data data = {
++		.dax_region = dax_region,
++		.size = 0,
++		.id = -1,
++		.memmap_on_memory = false,
++	};
+ 	unsigned long long avail;
++	struct dev_dax *dev_dax;
+ 	ssize_t rc;
+ 	int val;
+ 
+@@ -358,38 +356,25 @@ static ssize_t create_store(struct device *dev, struct device_attribute *attr,
+ 	if (val != 1)
+ 		return -EINVAL;
+ 
+-	device_lock(dev);
++	guard(device)(dev);
+ 	avail = dax_region_avail_size(dax_region);
+ 	if (avail == 0)
+-		rc = -ENOSPC;
+-	else {
+-		struct dev_dax_data data = {
+-			.dax_region = dax_region,
+-			.size = 0,
+-			.id = -1,
+-			.memmap_on_memory = false,
+-		};
+-		struct dev_dax *dev_dax = devm_create_dev_dax(&data);
++		return -ENOSPC;
+ 
+-		if (IS_ERR(dev_dax))
+-			rc = PTR_ERR(dev_dax);
+-		else {
+-			/*
+-			 * In support of crafting multiple new devices
+-			 * simultaneously multiple seeds can be created,
+-			 * but only the first one that has not been
+-			 * successfully bound is tracked as the region
+-			 * seed.
+-			 */
+-			if (!dax_region->seed)
+-				dax_region->seed = &dev_dax->dev;
+-			dax_region->youngest = &dev_dax->dev;
+-			rc = len;
+-		}
+-	}
+-	device_unlock(dev);
++	dev_dax = devm_create_dev_dax(&data);
++	if (IS_ERR(dev_dax))
++		return PTR_ERR(dev_dax);
+ 
+-	return rc;
++	/*
++	 * In support of crafting multiple new devices simultaneously multiple
++	 * seeds can be created, but only the first one that has not been
++	 * successfully bound is tracked as the region seed.
++	 */
++	if (!dax_region->seed)
++		dax_region->seed = &dev_dax->dev;
++	dax_region->youngest = &dev_dax->dev;
++
++	return len;
+ }
+ static DEVICE_ATTR_RW(create);
+ 
+@@ -481,12 +466,9 @@ static int __free_dev_dax_id(struct dev_dax *dev_dax)
+ static int free_dev_dax_id(struct dev_dax *dev_dax)
+ {
+ 	struct device *dev = &dev_dax->dev;
+-	int rc;
+ 
+-	device_lock(dev);
+-	rc = __free_dev_dax_id(dev_dax);
+-	device_unlock(dev);
+-	return rc;
++	guard(device)(dev);
++	return __free_dev_dax_id(dev_dax);
+ }
+ 
+ static int alloc_dev_dax_id(struct dev_dax *dev_dax)
+@@ -908,9 +890,8 @@ static ssize_t size_show(struct device *dev,
+ 	struct dev_dax *dev_dax = to_dev_dax(dev);
+ 	unsigned long long size;
+ 
+-	device_lock(dev);
++	guard(device)(dev);
+ 	size = dev_dax_size(dev_dax);
+-	device_unlock(dev);
+ 
+ 	return sprintf(buf, "%llu\n", size);
+ }
+@@ -1080,17 +1061,16 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
+ 		return -EINVAL;
+ 	}
+ 
+-	device_lock(dax_region->dev);
+-	if (!dax_region->dev->driver) {
+-		device_unlock(dax_region->dev);
++	guard(device)(dax_region->dev);
++	if (!dax_region->dev->driver)
+ 		return -ENXIO;
+-	}
+-	device_lock(dev);
++
++	guard(device)(dev);
+ 	rc = dev_dax_resize(dax_region, dev_dax, val);
+-	device_unlock(dev);
+-	device_unlock(dax_region->dev);
++	if (rc)
++		return rc;
+ 
+-	return rc == 0 ? len : rc;
++	return len;
+ }
+ static DEVICE_ATTR_RW(size);
+ 
+@@ -1137,21 +1117,20 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = -ENXIO;
+-	device_lock(dax_region->dev);
+-	if (!dax_region->dev->driver) {
+-		device_unlock(dax_region->dev);
+-		return rc;
+-	}
+-	device_lock(dev);
++	guard(device)(dax_region->dev);
++	if (!dax_region->dev->driver)
++		return -ENXIO;
+ 
++	guard(device)(dev);
+ 	to_alloc = range_len(&r);
+-	if (alloc_is_aligned(dev_dax, to_alloc))
+-		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
+-	device_unlock(dev);
+-	device_unlock(dax_region->dev);
++	if (!alloc_is_aligned(dev_dax, to_alloc))
++		return -ENXIO;
+ 
+-	return rc == 0 ? len : rc;
++	rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
++	if (rc)
++		return rc;
++
++	return len;
+ }
+ static DEVICE_ATTR_WO(mapping);
+ 
+@@ -1196,27 +1175,23 @@ static ssize_t align_store(struct device *dev, struct device_attribute *attr,
+ 	if (!dax_align_valid(val))
+ 		return -EINVAL;
+ 
+-	device_lock(dax_region->dev);
+-	if (!dax_region->dev->driver) {
+-		device_unlock(dax_region->dev);
++	guard(device)(dax_region->dev);
++	if (!dax_region->dev->driver)
+ 		return -ENXIO;
+-	}
+ 
+-	device_lock(dev);
+-	if (dev->driver) {
+-		rc = -EBUSY;
+-		goto out_unlock;
+-	}
++	guard(device)(dev);
++	if (dev->driver)
++		return -EBUSY;
+ 
+ 	align_save = dev_dax->align;
+ 	dev_dax->align = val;
+ 	rc = dev_dax_validate_align(dev_dax);
+-	if (rc)
++	if (rc) {
+ 		dev_dax->align = align_save;
+-out_unlock:
+-	device_unlock(dev);
+-	device_unlock(dax_region->dev);
+-	return rc == 0 ? len : rc;
++		return rc;
++	}
++
++	return len;
+ }
+ static DEVICE_ATTR_RW(align);
+ 
 
-Other Logistics -
-
-Andrew, would you prefer patch 3 to go through mm? Or through the dax
-tree with an mm ack? The remaining patches are all contained to dax, but
-do depend on the memmap_on_memory set that is currently in mm-stable.
-
----
-
-Changes in v5:
-- Export and check mhp_supports_memmap_on_memory() in the DAX sysfs ABI
-  (David)
-- Obtain dax_drv under the device lock (Ying)
-- Check dax_drv for NULL before dereferencing it (Ying)
-- Clean up some repetition in sysfs-bus-dax documentation entries
-  (Jonathan)
-- A few additional cleanups enabled by guard(device) (Jonathan)
-- Drop the DEFINE_GUARD() part of patch 2, add dependency on Dan's patch
-  above so it can be backported / applied separately (Jonathan, Dan)
-- Link to v4: https://lore.kernel.org/r/20231212-vv-dax_abi-v4-0-1351758f0c92@intel.com
-
-Changes in v4:
-- Hold the device lock when checking if the dax_dev is bound to kmem
-  (Ying, Dan)
-- Remove dax region checks (and locks) as they were unnecessary.
-- Introduce guard(device) for device lock/unlock (Dan)
-- Convert the rest of drivers/dax/bus.c to guard(device)
-- Link to v3: https://lore.kernel.org/r/20231211-vv-dax_abi-v3-0-acf6cc1bde9f@intel.com
-
-Changes in v3:
-- Fix typo in ABI docs (Zhijian Li)
-- Add kernel config and module parameter dependencies to the ABI docs
-  entry (David Hildenbrand)
-- Ensure kmem isn't active when setting the sysfs attribute (Ying
-  Huang)
-- Simplify returning from memmap_on_memory_store()
-- Link to v2: https://lore.kernel.org/r/20231206-vv-dax_abi-v2-0-f4f4f2336d08@intel.com
-
-Changes in v2:
-- Fix CC lists, patch 1/2 didn't get sent correctly in v1
-- Link to v1: https://lore.kernel.org/r/20231206-vv-dax_abi-v1-0-474eb88e201c@intel.com
-
-Cc: <linux-kernel@vger.kernel.org>
-Cc: <nvdimm@lists.linux.dev>
-Cc: <linux-cxl@vger.kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <linux-mm@kvack.org>
-To: Dan Williams <dan.j.williams@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Oscar Salvador <osalvador@suse.de>
-
----
-Vishal Verma (4):
-      Documentatiion/ABI: Add ABI documentation for sys-bus-dax
-      dax/bus: Use guard(device) in sysfs attribute helpers
-      mm/memory_hotplug: export mhp_supports_memmap_on_memory()
-      dax: add a sysfs knob to control memmap_on_memory behavior
-
- include/linux/memory_hotplug.h          |   6 ++
- drivers/dax/bus.c                       | 181 +++++++++++++++++---------------
- mm/memory_hotplug.c                     |  17 ++-
- Documentation/ABI/testing/sysfs-bus-dax | 153 +++++++++++++++++++++++++++
- 4 files changed, 262 insertions(+), 95 deletions(-)
----
-base-commit: a6e0c2ca980d75d5ac6b2902c5c0028eaf094db3
-change-id: 20231025-vv-dax_abi-17a219c46076
-
-Best regards,
 -- 
-Vishal Verma <vishal.l.verma@intel.com>
+2.41.0
 
