@@ -1,28 +1,28 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3AE41C7F;
-	Mon, 18 Dec 2023 12:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D167C129EC5;
+	Mon, 18 Dec 2023 13:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4StzkV4Rqlz6K6PV;
-	Mon, 18 Dec 2023 20:33:06 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Sv0wF0wzHz6K9bZ;
+	Mon, 18 Dec 2023 21:26:37 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D26731400DB;
-	Mon, 18 Dec 2023 20:33:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4F879140B55;
+	Mon, 18 Dec 2023 21:28:39 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 18 Dec
- 2023 12:33:41 +0000
-Date: Mon, 18 Dec 2023 12:33:39 +0000
+ 2023 13:28:38 +0000
+Date: Mon, 18 Dec 2023 13:28:37 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Ira Weiny <ira.weiny@intel.com>
 CC: Fan Ni <nifan.cxl@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
 	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Huai-Cheng Kuo
 	<hchkuo@avery-design.com.tw>
 Subject: Re: [PATCH v2 2/2] cxl/cdat: Fix header sum value in CDAT checksum
-Message-ID: <20231218123339.000024fc@Huawei.com>
+Message-ID: <20231218132837.00001424@Huawei.com>
 In-Reply-To: <20231117-fix-cdat-cs-v2-2-715399976d4d@intel.com>
 References: <20231117-fix-cdat-cs-v2-0-715399976d4d@intel.com>
 	<20231117-fix-cdat-cs-v2-2-715399976d4d@intel.com>
@@ -36,7 +36,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
 On Wed, 29 Nov 2023 17:33:04 -0800
@@ -57,16 +57,6 @@ Ira Weiny <ira.weiny@intel.com> wrote:
 > Fixes: aba578bdace5 ("hw/cxl/cdat: CXL CDAT Data Object Exchange implementation")
 > Cc: Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-This only becomes a problem with the addition of DCDs so I'm not going to rush it in.
-Btw cc qemu-devel on qemu patches!
-
-
-I'll add it to my tree for now.
-
-Jonathan
-
-
 > 
 > ---
 > Changes from V1:
@@ -84,6 +74,8 @@ Jonathan
 >      g_autofree CDATEntry *cdat_st = NULL;
 >      uint8_t sum = 0;
 > +    uint8_t *buf;
+This results in a shadowing variable warning. I'll rename it to hdr_buf or something
+like that.
 >      int ent, i;
 >  
 >      /* Use default table if fopen == NULL */
