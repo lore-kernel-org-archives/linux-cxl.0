@@ -1,181 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B32A37865;
-	Mon, 18 Dec 2023 23:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6254CBE55;
+	Tue, 19 Dec 2023 03:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0m55W4A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQ0nxbo1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702943960; x=1734479960;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=d/OkIM87mtF4pGyoU3SW9/fl4xchUEwCrqW+8EnmGWI=;
-  b=e0m55W4A4YDOwz5Mei3Ti06JQYyHHBqv3xY15FjzOIv6xAAMgnGH/M2/
-   +LpUMf9+C+dbKN1fCtsj1wIRi65lCPuhFbaDwSchYVO1dG0InjxIjwSSH
-   /aBxa6AMOaSLhHBRosIO+fjJYRxpLQ3Qf315m5MzvOyF7ivUAJzMhUUK7
-   pZDpkK9siqKyXLvJCtRpe9VBBxclhrsNLE7UYRems3HWmDa9pMyOSrpCn
-   ryy4u3Q378JCYlEErV6mYJcc85u44L93h6fhlqeYPAl6Yh5ZCxFa0vC3c
-   Uk9nV2mjFA7Uv4UXBwlThjSV/sk2L/SRtJf7wxGXvoLf7ffibVCylEmak
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="8951954"
-X-IronPort-AV: E=Sophos;i="6.04,286,1695711600"; 
-   d="scan'208";a="8951954"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 15:59:19 -0800
+  t=1702958356; x=1734494356;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=3s4M1Ke7Zp6dpbGPTolOm9J70ngTk0LFGbPc1ei/amY=;
+  b=eQ0nxbo1MXmiT5C6ACUpn4NouqgpK2BG95tsLpSDo8ZiqkFho4gnZ8MO
+   +R435YpmLXIbfTBKPOeX4snjc4DTfJsD/DcU2aFM4q/AaF9poU/JNC5yf
+   +Kqnn3gsbVNuxOuwev+swv9Hb/WLCxo26WXroIp/8ymKYb51oU4XaJ3iJ
+   9cc8jqrahruoBlMGU2ooH0VuCv/2PrmOGh4kQCuYv7MLBdS9uTGUOGzrT
+   YXnaw/BvrYh2yLTCHxJFgrlSI2RYxIegRdkBahOJG4mYy8ASVO6PudC6E
+   BbbMWnNzP7AUAGlW6CEfEiLUrZwzoNVvldXPkP4akBAEGmX/7FT9A4ABe
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="386023776"
+X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
+   d="scan'208";a="386023776"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 19:59:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="1022937611"
-X-IronPort-AV: E=Sophos;i="6.04,286,1695711600"; 
-   d="scan'208";a="1022937611"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Dec 2023 15:59:18 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Dec 2023 15:59:18 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Dec 2023 15:59:17 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 18 Dec 2023 15:59:17 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 18 Dec 2023 15:59:17 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bLsnsHdpuRx4l7D4LAvpJN17SaY8sam05dYp7otgLyXYAUSm1SbDgMWqehFRw1+xdyGHTnFp1eHZPlBg8PQX5RNc73thOMv4O4I9cXFNQJnNwz6HkcaZvKqXXJYf9oMpIcpAj4niP16VLx1M4tWof+7o3hGSF5qC9YKadrcFHbLuNWXqHgL0nOddEWqpjSzS92Ob0VMKDLfc1hAcNqk7JHEuaOh/ryThR2hmSu+GNQciAw1VnDeS/x1vAzKkj6Jg+uh7cSQhV9ix95poLwxgbpZe+j5uHflBvtjzjvc2hPtuHrPYuHD8Xqkrr21eu0tTyZIdR/EYWtg0e5NfDIgD7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=krFECqD9KrmZiYEZhUbUfedC0kTHdfiYDw48UnOwsrs=;
- b=KWsCtb8A8rYi6U5PU/IOXeVON5D4GVsi+g5EBh+PxCAeXRi/u6sgExNbHZOwl8iW3e8OpxoYOeP9HkN+RGRhJJujMeHRyPDD44VgQIWAuwjOzdUymGKC9QvFIDJ3BX8w7n7J8Ey107MFN1OEy/SXdbBat2tfQtcLj1MsY2qVW7+J2maVHEpElnZWl4ls2lXGo/44D/7WIji5WcCiRKBLZo+77uoTHIrYnXsNrOqJhOmT2srosiNm1eGObDwNQ+0G52onRtnJVuYqoigs8d/qh1y9642BMkV10iZ/3kGAWmt91tgsmAtyvQNnewBamXZmFI9Pn6574iw9eAAvMKyG/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4761.namprd11.prod.outlook.com (2603:10b6:303:53::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Mon, 18 Dec
- 2023 23:59:15 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7091.034; Mon, 18 Dec 2023
- 23:59:15 +0000
-Date: Mon, 18 Dec 2023 15:59:12 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>, <dan.j.williams@intel.com>,
-	<dave@stogolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <rafael@kernel.org>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v8 2/5] ACPI, APEI, EINJ: Add wrapper __init function
-Message-ID: <6580dcd03b49c_7154929487@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20231213223702.543419-1-Benjamin.Cheatham@amd.com>
- <20231213223702.543419-3-Benjamin.Cheatham@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231213223702.543419-3-Benjamin.Cheatham@amd.com>
-X-ClientProxiedBy: MW4PR03CA0125.namprd03.prod.outlook.com
- (2603:10b6:303:8c::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="841740575"
+X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
+   d="scan'208";a="841740575"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 19:59:11 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Srinivasulu Thanneeru <sthanneeru@micron.com>
+Cc: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>,
+  "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+  "linux-mm@kvack.org" <linux-mm@kvack.org>,  "aneesh.kumar@linux.ibm.com"
+ <aneesh.kumar@linux.ibm.com>,  "dan.j.williams@intel.com"
+ <dan.j.williams@intel.com>,  gregory.price <gregory.price@memverge.com>,
+  "mhocko@suse.com" <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
+  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
+ <emirakhur@micron.com>,  Vinicius Tavares Petrucci
+ <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+  "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johannes
+ Weiner <hannes@cmpxchg.org>, Wei Xu <weixugc@google.com>
+Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
+In-Reply-To: <PH0PR08MB79551628EFA3B1B3CB55DFFEA890A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	(Srinivasulu Thanneeru's message of "Mon, 18 Dec 2023 08:56:02 +0000")
+References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
+	<87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB79551628EFA3B1B3CB55DFFEA890A@PH0PR08MB7955.namprd08.prod.outlook.com>
+Date: Tue, 19 Dec 2023 11:57:12 +0800
+Message-ID: <87o7emn8tj.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4761:EE_
-X-MS-Office365-Filtering-Correlation-Id: f91be179-47ad-487c-4e1d-08dc002556d9
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ClJnlMMR0uvvu3Hr9HZV+OAXt39CR69K4gHbzjdYRjcZ9Icic4pF4eaVNEZkjsQwz+6yHjJYWapj2jd0x0kwAvYK3XN1Ewl8gJOe7bVXdUxLhp2SmuFgVeRUVRBBt/bjDdFLVrkWTzrG0ctfVzPpWvW7kozZdto0gnAiLTJoRxY3bjsFGVL7sGwERUUU74vtAyuotjRd5YQJk3vstYnz/j2q8Gz0ZujQepJ0kwpOFBdvk37AFSsGm5pZbMpCt/wxf2eV4k87P+oprURNi5AZAzoKA5ub4Sa519LfEcSfqHmDEQI9g7iDpuuUWNxlrf7aVXwCaEDAO27kxonkBcbJnEACCI0pClMCqDvlYasi9z7WyvZh0NF0Vjmpd1GYa1wAUUHQksXHwj4BIf4RRA3B7dnL8lgoTe5wVinsLPgSJaEGyqUE/K99sNCRb3ak8BOIx5ZfQgrc7joK4uaKKYKEPKo6XP7dNMXhPHDM5NiNM0zMT1fpjla6GFKEn5YBZ5pGukApF9SwjWQjl1xDzT6VXaaVxjOBCiQDGNA4Rdx1/X1RPmsaRUzO4gET09R8w6bW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(39860400002)(366004)(346002)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(38100700002)(5660300002)(8936002)(4326008)(8676002)(6666004)(6512007)(2906002)(9686003)(66946007)(66476007)(66556008)(316002)(6506007)(41300700001)(82960400001)(478600001)(6486002)(26005)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aAH3HkP0Rf7m0azBVXV3a0aQYxajm5bvvk3SOn2RpTq41hoEHYP4jIURer2C?=
- =?us-ascii?Q?EfmROjf1qh7+1p+gsXQCSZ2mz9vv0kdIWufGIIRfc8kC48aFrTk7YParzhzM?=
- =?us-ascii?Q?pTX9K75V2wqHW75F3nsjMAtZ4SPjYXYPuoHICEishGbDcEHQK6R/XLARMjB5?=
- =?us-ascii?Q?OMvkQ2KtVSxqPGFKFVz9Re7jMuCtlECJzZTaHOhXaLL7SWwj5IEt+9JdiYP5?=
- =?us-ascii?Q?IULpJJXz0o05CaAIUBoUaybDyl5n6lFC+C7jhX52J37Kc9JY1oNhX20XG/uo?=
- =?us-ascii?Q?XL9lxoevcLIyY9+DhUjxRQLMWfuc6GpGuF2N7BHk3gVQVKhYBiLQt7shcd96?=
- =?us-ascii?Q?fHrah8AzskUBOaXblBmGegp1MBKi6xEvH9DZ3bM92VjviPnHOocJ9ByYbA9x?=
- =?us-ascii?Q?i1TrSn4ZgYTrRTbcWUGn1hl0Fq3y7OXt81+OUB3s2caH6mZbbA9j5ZlQ1Ahx?=
- =?us-ascii?Q?/L5I/VUGwwNsbynrGHTsar/j9WuzuMrzTeVwkJk5J9FWdN0TuTLybuQM90fT?=
- =?us-ascii?Q?ZQ8FhFKGAdLSphZJb/2KUJxGb+TU/X6yT5liNLWBFjXZyR+9igDdqsKCwi/+?=
- =?us-ascii?Q?Voa4oJCUjXqRtcQmXpP2mLIhAtWU9W3sx6zfhds9WMPlL0xrtj9wOyDbB0Gm?=
- =?us-ascii?Q?zihwJkwwQDQvQFFVOm3j47m9FFdICPTDcBpvBelznWkq/lk9Q1GkT5I/HyZV?=
- =?us-ascii?Q?zUrsEszcgYhTHg0B6Tz37R0BvgAuLjmRw4841YKuT8gN6TSQkOtcRnH94s9p?=
- =?us-ascii?Q?9ww3vUS5fgERK3JGhgrteAEHZisHSu8NdXkG7fGrQHB6ZoPjLMBnMCLUohTr?=
- =?us-ascii?Q?u6KByjxpNmP+uKzBNwxF6MBSbkxfWtxlKJWdD/HlLUV9a9PAdvs1NnhV3kio?=
- =?us-ascii?Q?d/wy5ioxFgNllOCdM31mHxupUn26YAjgsoLS8j5PJ8koPoi72eMe5TsKdC2w?=
- =?us-ascii?Q?e5L3CG6tcDuqIAI/MkxaH59TaZH0WMW/xd3h3hDP/QAR01gLQwfJ6B0LV8jE?=
- =?us-ascii?Q?Pop2TCiICaV4M9PXJnU7aYLXhRTwTz9kjf2IUjF9N7gx3yuxA7zzHWNENRtC?=
- =?us-ascii?Q?82Q7CpqVvlv3mw05nkgP7KQhIfrtUB6bpO6iet7aNHeseK382k44LIbrAXE4?=
- =?us-ascii?Q?ffpsd1ifEovB63YC2MzXt6y/atXL5RZCutV9JtI41hHCShJl7CN9w9MV9oGY?=
- =?us-ascii?Q?TUWRAYz24/g3DWgFW8A4r6QmR3aDz17eHMbg1uOtZdPyfolDN56oaOkXiyEb?=
- =?us-ascii?Q?B7rlsTtknZ1LMH1g7xPyI/Qc2fuUMRF8nE5tUJCNaAvVamPcyzkJSwQ+LUph?=
- =?us-ascii?Q?R7/2OJtA9SyVqMG1SUjtQ3wL6hm8yL5F5xaHRFE1mrrYRS3FTH0LJ0kBl2Ur?=
- =?us-ascii?Q?WVgrpbfcGcTT8Gi5EeokF7H4NL8nKIXXl7nCkx714VstaWWrb0QrTocq3Rut?=
- =?us-ascii?Q?/S4QALO5nALPkqSBlbzCO9T5Mkw/OLIdqJx744fWW0Ah1i8NRbTVLS0wr2YD?=
- =?us-ascii?Q?oGGlBHsSYfO7lqeW9AGhQ3hWps2qIdKZ1aoFO1IhJzo2zMIEvsk3jHyDEvBC?=
- =?us-ascii?Q?RhWtz05JD9w8KIateZMYPQitdVS5z7eowDUdiH06TRVsog8WTgMEK8L344C4?=
- =?us-ascii?Q?Vw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f91be179-47ad-487c-4e1d-08dc002556d9
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2023 23:59:15.7451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6tq0RrGtRbsJdRRHqRo709D13q9hC+xFHKX4sn6n8Crt4XzbtuNQ+po06k4/upRufkLXwAzXripIlt96+ycTX73nxhOsEvMYF2RTHo2zLOU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4761
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Ben Cheatham wrote:
-> The CXL core module should be able to load regardless of whether the
-> EINJ module initializes correctly. Instead of porting the EINJ module to
-> a library module, add a wrapper __init function around einj_init() to
+Hi, Srinivasulu,
 
-Small quibble with this wording... the larger EINJ module refactoring
-would be separating module_init() from EINJ probe(). As is this simple
-introduction of an einit_init() wrapper *is* refactoring this module to
-be used as a module dependency.
+Please use a email client that works for kernel patch review.  Your
+email is hard to read.  It's hard to identify which part is your text
+and which part is my text.  Please refer to,
 
-> pin the EINJ module even if it does not initialize correctly. This
-> should be fine since the EINJ module is only ever unloaded manually.
-> 
-> One note: since the CXL core will be calling into the EINJ module
-> directly, even though it may not have initialized, all CXL helper
-> functions *have* to check if the EINJ module is initialized before
-> doing any work.
+https://www.kernel.org/doc/html/latest/process/email-clients.html
 
-Another small quibble here, perhaps s/may not have initialized/may not
-have successfully initialized/? Because initialization will have
-definitely completed one way or the other, but callers need to abort if
-it completed in error.
+Or something similar, for example,
 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+https://elinux.org/Mail_client_tips
 
-Did Jonathan really get in and review this new patch in the series
-before me? If yes, apologies I missed it, if no I think it is best
-practice to not carry forward series Reviewed-by's if new patches appear
-in the series between revisions.
+Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
 
+> Micron Confidential
+>
+>
+>
+> Micron Confidential
+> ________________________________________
+> From: Huang, Ying <ying.huang@intel.com>
+> Sent: Friday, December 15, 2023 10:32 AM
+> To: Srinivasulu Opensrc
+> Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org; Srinivasulu
+> Thanneeru; aneesh.kumar@linux.ibm.com; dan.j.williams@intel.com;
+> gregory.price; mhocko@suse.com; tj@kernel.org; john@jagalactic.com;
+> Eishan Mirakhur; Vinicius Tavares Petrucci; Ravis OpenSrc;
+> Jonathan.Cameron@huawei.com; linux-kernel@vger.kernel.org
+> Subject: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
+>
+> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless yo=
+u recognize the sender and were expecting this message.
+>
+>
+> <sthanneeru.opensrc@micron.com> writes:
+>
+>> From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+>>
+>> The memory tiers feature allows nodes with similar memory types
+>> or performance characteristics to be grouped together in a
+>> memory tier. However, there is currently no provision for
+>> moving a node from one tier to another on demand.
+>>
+>> This patch series aims to support node migration between tiers
+>> on demand by sysadmin/root user using the provided sysfs for
+>> node migration.
+>>
+>> To migrate a node to a tier, the corresponding node=E2=80=99s sysfs
+>> memtier_override is written with target tier id.
+>>
+>> Example: Move node2 to memory tier2 from its default tier(i.e 4)
+>>
+>> 1. To check current memtier of node2
+>> $cat  /sys/devices/system/node/node2/memtier_override
+>> memory_tier4
+>>
+>> 2. To migrate node2 to memory_tier2
+>> $echo 2 > /sys/devices/system/node/node2/memtier_override
+>> $cat  /sys/devices/system/node/node2/memtier_override
+>> memory_tier2
+>>
+>> Usecases:
+>>
+>> 1. Useful to move cxl nodes to the right tiers from userspace, when
+>>    the hardware fails to assign the tiers correctly based on
+>>    memorytypes.
+>>
+>>    On some platforms we have observed cxl memory being assigned to
+>>    the same tier as DDR memory. This is arguably a system firmware
+>>    bug, but it is true that tiers represent *ranges* of performance
+>>    and we believe it's important for the system operator to have
+>>    the ability to override bad firmware or OS decisions about tier
+>>    assignment as a fail-safe against potential bad outcomes.
+>>
+>> 2. Useful if we want interleave weights to be applied on memory tiers
+>>    instead of nodes.
+>> In a previous thread, Huang Ying <ying.huang@intel.com> thought
+>> this feature might be useful to overcome limitations of systems
+>> where nodes with different bandwidth characteristics are grouped
+>> in a single tier.
+>> https://lore.kernel.org/lkml/87a5rw1wu8.fsf@yhuang6-desk2.ccr.corp.intel=
+.com/
+>>
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> Version Notes:
+>>
+>> V2 : Changed interface to memtier_override from adistance_offset.
+>> memtier_override was recommended by
+>> 1. John Groves <john@jagalactic.com>
+>> 2. Ravi Shankar <ravis.opensrc@micron.com>
+>> 3. Brice Goglin <Brice.Goglin@inria.fr>
+>
+> It appears that you ignored my comments for V1 as follows ...
+>
+> https://lore.kernel.org/lkml/87o7f62vur.fsf@yhuang6-desk2.ccr.corp.intel.=
+com/
+>
+> Thank you Huang, Ying for pointing to this.
+>
+> https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live=
+%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
+>
+> In the presentation above, the adistance_offsets are per memtype.
+> We believe that adistance_offset per node is more suitable and flexible
+> since we can change it per node. If we keep adistance_offset per memtype,
+> then we cannot change it for a specific node of a given memtype.
 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+Why do you need to change it for a specific node?  Why do you needn't to
+chagne it for all nodes of a given memtype?
 
-With above fixups, feel free to add:
+> https://lore.kernel.org/lkml/87jzpt2ft5.fsf@yhuang6-desk2.ccr.corp.intel.=
+com/
+>
+> I guess that you need to move all NUMA nodes with same performance
+> metrics together?  If so, That is why we previously proposed to place
+> the knob in "memory_type"? (From: Huang, Ying )
+>
+> Yes, memory_type would be group the related memories togather as single t=
+ier.
+> We should also have a flexibility to move nodes between tiers, to address=
+ the issues described in usecases above.
+>
+> https://lore.kernel.org/lkml/87a5qp2et0.fsf@yhuang6-desk2.ccr.corp.intel.=
+com/
+>
+> This patch provides a way to move a node to the correct tier.
+> We observed in test setups where DRAM and CXL are put under the same
+> tier (memory_tier4).
+> By using this patch, we can move the CXL node away from the DRAM-linked
+> tier4 and put it in the desired tier.
 
-Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Good!  Can you give more details?  So I can resend the patch with your
+supporting data.
+
+--
+Best Regards,
+Huang, Ying
+
+> Regards,
+> Srini
+>
+> --
+> Best Regards,
+> Huang, Ying
+>
+>> V1 : Introduced adistance_offset sysfs.
+>>
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>
+>> Srinivasulu Thanneeru (2):
+>>   base/node: Add sysfs for memtier_override
+>>   memory tier: Support node migration between tiers
+>>
+>>  Documentation/ABI/stable/sysfs-devices-node |  7 ++
+>>  drivers/base/node.c                         | 47 ++++++++++++
+>>  include/linux/memory-tiers.h                | 11 +++
+>>  include/linux/node.h                        | 11 +++
+>>  mm/memory-tiers.c                           | 85 ++++++++++++---------
+>>  5 files changed, 125 insertions(+), 36 deletions(-)
