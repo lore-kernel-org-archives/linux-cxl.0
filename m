@@ -1,34 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7021F3715D
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Dec 2023 16:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E922234CEB;
+	Tue, 19 Dec 2023 16:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SvjFY3f0wz6K62n;
-	Wed, 20 Dec 2023 00:44:01 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SvjL721hwz6K9Hf;
+	Wed, 20 Dec 2023 00:47:59 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 780AB140F7F;
-	Wed, 20 Dec 2023 00:44:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 185C4140F8A;
+	Wed, 20 Dec 2023 00:49:43 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 19 Dec
- 2023 16:44:10 +0000
-Date: Tue, 19 Dec 2023 16:44:08 +0000
+ 2023 16:49:30 +0000
+Date: Tue, 19 Dec 2023 16:49:28 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: Brice Goglin <brice.goglin@gmail.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH 2/3] cxl/region: Add sysfs attribute for locality
- attributes of CXL regions
-Message-ID: <20231219164408.0000790a@Huawei.com>
-In-Reply-To: <500b0900-f4bb-475d-817b-6a72f18e0134@intel.com>
-References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
-	<170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
-	<23a78aa8-e076-4b98-bd7c-4299aefd9895@gmail.com>
-	<500b0900-f4bb-475d-817b-6a72f18e0134@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <stable@vger.kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Dave Jiang <dave.jiang@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>
+Subject: Re: [PATCH] cxl/hdm: Fix dpa translation locking
+Message-ID: <20231219164928.00000e6f@Huawei.com>
+In-Reply-To: <170192142664.461900.3169528633970716889.stgit@dwillia2-xfh.jf.intel.com>
+References: <170192142664.461900.3169528633970716889.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -37,32 +33,112 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 12 Dec 2023 12:30:47 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, 06 Dec 2023 19:57:06 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On 12/11/23 02:06, Brice Goglin wrote:
-> > Le 08/12/2023 =E0 00:31, Dave Jiang a =E9crit=A0: =20
-> >> Add read/write latencies and bandwidth sysfs attributes for the enable=
-d CXL
-> >> region. The bandwidth is the aggregated bandwidth of all devices that
-> >> contributes to the CXL region. The latency is the worst latency of the
-> >> device amongst all the devices that contributes to the CXL region. =20
-> >=20
-> >=20
-> > Hello
-> >=20
-> > Which initiator do these bandwidths/latencies refer to? Local CPUs near=
- the root port? This should be specified in the doc. =20
->=20
-> Currently I'm only storing the numbers from initiator pxm 0 to these targ=
-ets in the hmat target list. I'm open to suggestions as to if a different w=
-ay would be better.
-Nearest node with CPUs would be better I think.
+> The helper, cxl_dpa_resource_start(), snapshots the dpa-address of an
+> endpoint-decoder after acquiring the cxl_dpa_rwsem. However, it is
+> sufficient to assert that cxl_dpa_rwsem is held rather than acquire it
+> in the helper. Otherwise, it triggers multiple lockdep reports:
+> 
+> 1/ Tracing callbacks are in an atomic context that can not acquire sleeping
+> locks:
+> 
+>     BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1525
+>     in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1288, name: bash
+>     preempt_count: 2, expected: 0
+>     RCU nest depth: 0, expected: 0
+>     [..]
+>     Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20230524-3.fc38 05/24/2023
+>     Call Trace:
+>      <TASK>
+>      dump_stack_lvl+0x71/0x90
+>      __might_resched+0x1b2/0x2c0
+>      down_read+0x1a/0x190
+>      cxl_dpa_resource_start+0x15/0x50 [cxl_core]
+>      cxl_trace_hpa+0x122/0x300 [cxl_core]
+>      trace_event_raw_event_cxl_poison+0x1c9/0x2d0 [cxl_core]
+> 
+> 2/ The rwsem is already held in the inject poison path:
+> 
+>     WARNING: possible recursive locking detected
+>     6.7.0-rc2+ #12 Tainted: G        W  OE    N
+>     --------------------------------------------
+>     bash/1288 is trying to acquire lock:
+>     ffffffffc05f73d0 (cxl_dpa_rwsem){++++}-{3:3}, at: cxl_dpa_resource_start+0x15/0x50 [cxl_core]
+> 
+>     but task is already holding lock:
+>     ffffffffc05f73d0 (cxl_dpa_rwsem){++++}-{3:3}, at: cxl_inject_poison+0x7d/0x1e0 [cxl_core]
+>     [..]
+>     Call Trace:
+>      <TASK>
+>      dump_stack_lvl+0x71/0x90
+>      __might_resched+0x1b2/0x2c0
+>      down_read+0x1a/0x190
+>      cxl_dpa_resource_start+0x15/0x50 [cxl_core]
+>      cxl_trace_hpa+0x122/0x300 [cxl_core]
+>      trace_event_raw_event_cxl_poison+0x1c9/0x2d0 [cxl_core]
+>      __traceiter_cxl_poison+0x5c/0x80 [cxl_core]
+>      cxl_inject_poison+0x1bc/0x1e0 [cxl_core]
+> 
+> This appears to have been an issue since the initial implementation and
+> uncovered by the new cxl-poison.sh test [1]. That test is now passing with
+> these changes.
+> 
+> Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
+> Link: http://lore.kernel.org/r/e4f2716646918135ddbadf4146e92abb659de734.1700615159.git.alison.schofield@intel.com [1]
+> Cc: <stable@vger.kernel.org>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Seems good other than %#pa being more appropriate for the printk.
+I'm guessing you already tidied that up though.
 
-Jonathan
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/hdm.c  |    3 +--
+>  drivers/cxl/core/port.c |    4 ++--
+>  2 files changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 529baa8a1759..7d97790b893d 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -363,10 +363,9 @@ resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
+>  {
+>  	resource_size_t base = -1;
+>  
+> -	down_read(&cxl_dpa_rwsem);
+> +	lockdep_assert_held(&cxl_dpa_rwsem);
+>  	if (cxled->dpa_res)
+>  		base = cxled->dpa_res->start;
+> -	up_read(&cxl_dpa_rwsem);
+>  
+>  	return base;
+>  }
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 38441634e4c6..f6e9b2986a9a 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -226,9 +226,9 @@ static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *at
+>  			    char *buf)
+>  {
+>  	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
+> -	u64 base = cxl_dpa_resource_start(cxled);
+>  
+> -	return sysfs_emit(buf, "%#llx\n", base);
+> +	guard(rwsem_read)(&cxl_dpa_rwsem);
+> +	return sysfs_emit(buf, "%#llx\n", cxl_dpa_resource_start(cxled));
+>  }
+>  static DEVICE_ATTR_RO(dpa_resource);
+>  
+> 
 
