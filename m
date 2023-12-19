@@ -1,33 +1,33 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B24D1C68A
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Dec 2023 14:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98901C691
+	for <linux-cxl@vger.kernel.org>; Tue, 19 Dec 2023 14:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Svflb5kNKz6K6Wl;
-	Tue, 19 Dec 2023 22:51:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SvftV35W3z6JB5y;
+	Tue, 19 Dec 2023 22:57:22 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 896D7140F76;
-	Tue, 19 Dec 2023 22:51:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2D29F140DB0;
+	Tue, 19 Dec 2023 22:58:24 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 19 Dec
- 2023 14:51:36 +0000
-Date: Tue, 19 Dec 2023 14:51:35 +0000
+ 2023 14:58:08 +0000
+Date: Tue, 19 Dec 2023 14:58:07 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Dave Jiang <dave.jiang@intel.com>
 CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
 	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
 	<alison.schofield@intel.com>, <dave@stgolabs.net>, <brice.goglin@gmail.com>,
 	<nifan.cxl@gmail.com>
-Subject: Re: [PATCH v2 1/3] cxl/region: Calculate performance data for a
- region
-Message-ID: <20231219145135.000021f6@Huawei.com>
-In-Reply-To: <170268215975.1381493.16321994239389305102.stgit@djiang5-mobl3>
+Subject: Re: [PATCH v2 2/3] cxl/region: Add sysfs attribute for locality
+ attributes of CXL regions
+Message-ID: <20231219145807.000016a8@Huawei.com>
+In-Reply-To: <170268216573.1381493.1848451783927736490.stgit@djiang5-mobl3>
 References: <170268206638.1381493.3891165173978942658.stgit@djiang5-mobl3>
-	<170268215975.1381493.16321994239389305102.stgit@djiang5-mobl3>
+	<170268216573.1381493.1848451783927736490.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -41,112 +41,152 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 15 Dec 2023 16:15:59 -0700
+On Fri, 15 Dec 2023 16:16:05 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Calculate and store the performance data for a CXL region. Find the worst
-> read and write latency for all the included ranges from each of the devices
-> that attributes to the region and designate that as the latency data. Sum
-> all the read and write bandwidth data for each of the device region and
-> that is the total bandwidth for the region.
-> 
-> The perf list is expected to be constructed before the endpoint decoders
-> are registered and thus there should be no early reading of the entries
-> from the region assemble action. The calling of the region qos calculate
-> function is under the protection of cxl_dpa_rwsem and will ensure that
-> all DPA associated work has completed.
+> Add read/write latencies and bandwidth sysfs attributes for the enabled CXL
+> region. The bandwidth is the aggregated bandwidth of all devices that
+> contribute to the CXL region. The latency is the worst latency of the
+> device amongst all the devices that contribute to the CXL region.
 > 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+A few comments inline.
 
-Trivial comments inline.  With the HMAT reference tweaked,
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Jonathan
 
 > ---
 > v2:
-> - Move cxled declaration (Fan)
-> - Move calculate function to core/cdat.c
-> - Make cxlr->coord a struct instead of allocated (Dan)
-> - Remove list_empty() check (Dan)
-> - Move calculation to cxl_region_attach() under cxl_dpa_rwsem (Dan)
-> - Normalize perf numbers to HMAT coords (Brice, Dan)
+> - Add units for documentation (Brice, Dan)
+> - Add explanation initiator/target relation. (Brice)
+> - Fix issue in commit log (Fan)
 > ---
->  drivers/cxl/core/cdat.c   |   53 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/region.c |    2 ++
->  drivers/cxl/cxl.h         |    5 ++++
->  3 files changed, 60 insertions(+)
+>  Documentation/ABI/testing/sysfs-bus-cxl |   56 +++++++++++++++++++++++++++++++
+>  drivers/cxl/core/region.c               |   24 +++++++++++++
+>  2 files changed, 80 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 5fe57fe5e2ee..29bba04306e9 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -547,3 +547,56 @@ void cxl_switch_parse_cdat(struct cxl_port *port)
->  EXPORT_SYMBOL_NS_GPL(cxl_switch_parse_cdat, CXL);
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index fff2581b8033..e859f466a6b5 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -552,3 +552,59 @@ Description:
+>  		attribute is only visible for devices supporting the
+>  		capability. The retrieved errors are logged as kernel
+>  		events when cxl_poison event tracing is enabled.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/read_bandwidth
+> +Date:		Apr, 2023
+> +KernelVersion:	v6.8
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) The aggregated read bandwidth of the region. The number is
+> +		the accumulated read bandwidth of all CXL memory devices that
+> +		contributes to the region in MB/s. Should be equivalent to
+> +		attributes in /sys/devices/system/node/nodeX/accessY/. See
+> +		Documentation/ABI/stable/sysfs-devices-node.
+> +		The host bus latency in the calculation is from proximity
+> +		domain 0 to the host bus proximity domain.
+
+If it's equivalent to /sys/devices/system/node/nodeX/accessY then it isn't
+the domain 0 value it's the domain Y one. (IIRC how that works!)
+
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/write_bandwidth
+> +Date:		Apr, 2023
+> +KernelVersion:	v6.8
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) The aggregated write bandwidth of the region. The number is
+> +		the accumulated write bandwidth of all CXL memory devices that
+> +		contributes to the region in MB/s. Should be equivalent to
+> +		attributes in /sys/devices/system/node/nodeX/accessY/. See
+> +		Documentation/ABI/stable/sysfs-devices-node.
+> +		The host bus latency in the calculation is from proximity
+> +		domain 0 to the host bus proximity domain.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/read_latency
+> +Date:		Apr, 2023
+> +KernelVersion:	v6.8
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) The read latency of the region. The number is
+> +		the worst read latency of all CXL memory devices that
+> +		contributes to the region in nanoseconds. Should be
+> +		equivalent to attributes in /sys/devices/system/node/nodeX/accessY/.
+> +		See Documentation/ABI/stable/sysfs-devices-node.
+> +		The host bus latency in the calculation is from proximity
+> +		domain 0 to the host bus proximity domain.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/write_latency
+> +Date:		Apr, 2023
+> +KernelVersion:	v6.8
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) The write latency of the region. The number is
+> +		the worst write latency of all CXL memory devices that
+> +		contributes to the region in nanoseconds. Should be
+> +		equivalent to attributes in /sys/devices/system/node/nodeX/accessY/.
+> +		See Documentation/ABI/stable/sysfs-devices-node.
+> +		The host bus latency in the calculation is from proximity
+> +		domain 0 to the host bus proximity domain.
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index be7383e74ef5..d97fa5f32e86 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -645,6 +645,26 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RW(size);
 >  
->  MODULE_IMPORT_NS(CXL);
-> +
-> +void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> +				    struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct list_head *perf_list;
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct range dpa = {
-> +			.start = cxled->dpa_res->start,
-> +			.end = cxled->dpa_res->end,
-> +	};
-> +	struct cxl_dpa_perf *perf;
-> +	bool found = false;
-> +
-> +	switch (cxlr->mode) {
-> +	case CXL_DECODER_RAM:
-> +		perf_list = &mds->ram_perf_list;
-> +		break;
-> +	case CXL_DECODER_PMEM:
-> +		perf_list = &mds->pmem_perf_list;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	list_for_each_entry(perf, perf_list, list) {
-> +		if (range_contains(&perf->dpa_range, &dpa)) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!found)
-> +		return;
+> +#define ACCESS_ATTR(attrib)					\
+> +static ssize_t attrib##_show(struct device *dev,		\
+> +			   struct device_attribute *attr,	\
+> +			   char *buf)				\
+> +{								\
+> +	struct cxl_region *cxlr = to_cxl_region(dev);		\
+> +								\
+> +	if (cxlr->coord.write_bandwidth == 0)			\
 
-Could use
-	if (list_entry_is_head())
-		return;
-and drop the found variable. Though that is a little bit specific to the
-internals of the list infrastructure so maybe adding a variable is better..
-There is precedence for both approaches in tree.
+Fun questions for long run.  Does a RO DC region ever supply a write bandwidth?
+Also, I'd prefer returning an error to say it's not provided than
+returning that it is, but the length of the string is 0.
+coord.attrib seems better in general.
 
+I'd prefer to hide these attributes entirely if the value isn't available.
+Is that tricky to do for some reason?  There is already a cxl_region_visible()
+callback.
+
+> +		return 0;					\
+> +								\
+> +	return sysfs_emit(buf, "%u\n",				\
+> +			  cxlr->coord.attrib);			\
+
+Oddly short line wrap.
+
+> +}								\
+> +static DEVICE_ATTR_RO(attrib)
 > +
-> +	/* Get total bandwidth and the worst latency for the cxl region */
-> +	cxlr->coord.read_latency = max_t(unsigned int,
-> +					 cxlr->coord.read_latency,
-> +					 perf->coord.read_latency);
-> +	cxlr->coord.write_latency = max_t(unsigned int,
-> +					  cxlr->coord.write_latency,
-> +					  perf->coord.write_latency);
-> +	cxlr->coord.read_bandwidth += perf->coord.read_bandwidth;
-> +	cxlr->coord.write_bandwidth += perf->coord.write_bandwidth;
+> +ACCESS_ATTR(read_bandwidth);
+> +ACCESS_ATTR(read_latency);
+> +ACCESS_ATTR(write_bandwidth);
+> +ACCESS_ATTR(write_latency);
 > +
-> +	/*
-> +	 * Convert latency to nanosec from picosec to be consistent with HMAT
-
-HMAT version what?  You may ask why is there a breaking change in the HMAT definition
-between 6.2 and 6.3 but I'd rather you didn't :(
-
-
-> +	 * attributes.
-> +	 */
-> +	cxlr->coord.read_latency = DIV_ROUND_UP(cxlr->coord.read_latency, 1000);
-> +	cxlr->coord.write_latency = DIV_ROUND_UP(cxlr->coord.write_latency, 1000);
-> +}
+>  static struct attribute *cxl_region_attrs[] = {
+>  	&dev_attr_uuid.attr,
+>  	&dev_attr_commit.attr,
+> @@ -653,6 +673,10 @@ static struct attribute *cxl_region_attrs[] = {
+>  	&dev_attr_resource.attr,
+>  	&dev_attr_size.attr,
+>  	&dev_attr_mode.attr,
+> +	&dev_attr_read_bandwidth.attr,
+> +	&dev_attr_write_bandwidth.attr,
+> +	&dev_attr_read_latency.attr,
+> +	&dev_attr_write_latency.attr,
+>  	NULL,
+>  };
+>  
+> 
+> 
 
