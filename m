@@ -1,34 +1,39 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E288A347B2;
-	Tue, 19 Dec 2023 16:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449DC374E7;
+	Tue, 19 Dec 2023 17:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SvjZF2xphz6JBGx;
-	Wed, 20 Dec 2023 00:58:29 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SvjrK4lPFz6K9KR;
+	Wed, 20 Dec 2023 01:10:41 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 63597140F83;
-	Wed, 20 Dec 2023 00:59:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 83AA7140F7F;
+	Wed, 20 Dec 2023 01:12:25 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 19 Dec
- 2023 16:58:47 +0000
-Date: Tue, 19 Dec 2023 16:58:45 +0000
+ 2023 17:12:11 +0000
+Date: Tue, 19 Dec 2023 17:12:10 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Ira Weiny <ira.weiny@intel.com>, Fan Ni <nifan.cxl@gmail.com>, "Dave
- Jiang" <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
-Subject: Re: [PATCH v2 2/2] cxl/cdat: Fix header sum value in CDAT checksum
-Message-ID: <20231219165845.0000100e@Huawei.com>
-In-Reply-To: <6580d606467d1_715492946@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20231117-fix-cdat-cs-v2-0-715399976d4d@intel.com>
-	<20231117-fix-cdat-cs-v2-2-715399976d4d@intel.com>
-	<20231218123339.000024fc@Huawei.com>
-	<6580d26a74294_1bbb129489@iweiny-mobl.notmuch>
-	<6580d606467d1_715492946@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, Shiju Jose <shiju.jose@huawei.com>, "Yazen
+ Ghannam" <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ard Biesheuvel" <ardb@kernel.org>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFC v4 5/6] firmware/efi: Process CXL Component Events
+Message-ID: <20231219171210.000078a6@Huawei.com>
+In-Reply-To: <657a2ff3bcc0b_25c9c7294ab@iweiny-mobl.notmuch>
+References: <20230601-cxl-cper-v4-0-47bb901f135e@intel.com>
+	<20230601-cxl-cper-v4-5-47bb901f135e@intel.com>
+	<7ec6d2af-c860-9b05-7eaf-c82f50f8e66e@amd.com>
+	<65674a71ef4d0_a1b25294e4@iweiny-mobl.notmuch>
+	<20231213171351.00004579@Huawei.com>
+	<657a2ff3bcc0b_25c9c7294ab@iweiny-mobl.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -39,51 +44,49 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 18 Dec 2023 15:30:14 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 13 Dec 2023 14:28:03 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> Ira Weiny wrote:
-> > Jonathan Cameron wrote:  
-> > > On Wed, 29 Nov 2023 17:33:04 -0800
-> > > Ira Weiny <ira.weiny@intel.com> wrote:
-> > >   
-> > 
-> > [snip]
+> Jonathan Cameron wrote:
+> > On Wed, 29 Nov 2023 06:28:01 -0800
+> > Ira Weiny <ira.weiny@intel.com> wrote:
 > >   
-> > > > [1] https://lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/
+> 
+> [snip]
+> 
+> > > > __packed attribute just for cper_cxl_event_rec still fails to properly 
+> > > > align structure elements. Looks like, __packed attribute is needed for 
+> > > > all structs (cper_cxl_event_devid and cper_cxl_event_sn) inside 
+> > > > cper_cxl_event_rec.
 > > > > 
-> > > > Fixes: aba578bdace5 ("hw/cxl/cdat: CXL CDAT Data Object Exchange implementation")
-> > > > Cc: Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > > > Seems easier to use global pragma instead.. I could test and obtain the 
+> > > > output as expected using pragma..    
 > > > 
-> > > This only becomes a problem with the addition of DCDs so I'm not going to rush it in.  
+> > > I did not know that was acceptable in the kernel but I see you used it in
+> > > cper_cxl.h before...
+> > > 
+> > > Ok I'll do that and spin again.
+> > > 
+> > > Thanks so much for testing this!  I was out last week and still don't have
+> > > a test environment.  
 > > 
-> > That makes sense.
-> >   
-> > > Btw cc qemu-devel on qemu patches!
-> > >   
+> > Easy to hack into QEMU :)  Hmm. I have a CCIX patch set from years ago
+> > somewhere that does similar. Would be easy to repurposed. Looks like
+> > I never published them (just told people to ask if they wanted them :( ).
 > > 
-> > Ah...  yea my bad.  
+> > Anyhow, if useful I can dig them out.  
 > 
-> Might I also ask for a more prominent way to quickly identify kernel vs
-> qemu patches, like a "[QEMU PATCH]" prefix? I tend to look for "hw/" in
-> the diff path names, but the kernel vs qemu question is ambiguous when
-> looking at the linux-cxl Patchwork queue.
-I'm not sure if the QEMU maintainers would be that keen on a tag there.
-Maybe just stick qemu/cxl: in the cover letter naming as a prefix?
-[PATCH 0/4] qemu/cxl: Whatever the change is
-
-> 
-> @Jonathan, what do you think of having the kernel patchwork-bot watch
-> your tree for updating patch state (if it is not happening already).
-My QEMU tree is a bit intermittent and frequently rebased as I'm juggling
-too many patches. Not sure we'd get a good match.  Mind you I've
-never tried the bot so not even sure how to configure it.
+> If you have a branch with them with a somewhat latest qemu that could work
+> too.
+They are ancient and based on GHES emulation that got reworked before being
+merged. I had a quick go at a forwards port but this is a bigger job than
+I expected. May be a little while :(
 
 Jonathan
 
-
+> 
+> Ira
 
