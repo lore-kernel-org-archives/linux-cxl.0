@@ -1,114 +1,52 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88451170D;
-	Wed, 20 Dec 2023 05:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="143487949"
-X-IronPort-AV: E=Sophos;i="6.04,290,1695654000"; 
-   d="scan'208";a="143487949"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 14:32:29 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id E6E6ED2A02;
-	Wed, 20 Dec 2023 14:32:26 +0900 (JST)
-Received: from m3004.s.css.fujitsu.com (m3004.s.css.fujitsu.com [10.128.233.124])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 1D9C0D88CE;
-	Wed, 20 Dec 2023 14:32:26 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.237.107])
-	by m3004.s.css.fujitsu.com (Postfix) with ESMTP id E96E12005352;
-	Wed, 20 Dec 2023 14:32:25 +0900 (JST)
-From: KobayashiDaisuke <kobayashi.da-06@fujitsu.com>
-To: linux-pci@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	y-goto@fujitsu.com,
-	KobayashiDaisuke <kobayashi.da-06@fujitsu.com>
-Subject: [RFC PATCH 3/3] Implement a function to get a RCRB Base address
-Date: Wed, 20 Dec 2023 14:07:38 +0900
-Message-ID: <20231220050738.178481-4-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231220050738.178481-1-kobayashi.da-06@fujitsu.com>
-References: <20231220050738.178481-1-kobayashi.da-06@fujitsu.com>
+Received: from cmccmta2.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0CF01F5E4
+	for <linux-cxl@vger.kernel.org>; Wed, 20 Dec 2023 08:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee86582a222aac-4eaac;
+	Wed, 20 Dec 2023 16:13:22 +0800 (CST)
+X-RM-TRANSID:2ee86582a222aac-4eaac
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from smtpclient.apple (unknown[10.54.5.252])
+	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee16582a22046c-b0276;
+	Wed, 20 Dec 2023 16:13:22 +0800 (CST)
+X-RM-TRANSID:2ee16582a22046c-b0276
+From: lihuawei <lihuawei@cmss.chinamobile.com>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: How to emulate write with cxl_test memX in kernel
+Date: Wed, 20 Dec 2023 16:13:11 +0800
+References: <149A1DCD-BD15-4CEB-A509-D7F2FBBF0D83@cmss.chinamobile.com>
+To: linux-cxl@vger.kernel.org
+In-Reply-To: <149A1DCD-BD15-4CEB-A509-D7F2FBBF0D83@cmss.chinamobile.com>
+Message-Id: <6FBE1CF7-F4A6-4187-8065-524DE3F55AB8@cmss.chinamobile.com>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 
-This patch adds a function to obtain the RCRB base address corresponding to
-the uid. 
+Hi everyone,
 
-In the case of a CXL1.1 device, the RCRB base address is included in the CHBS
-in the CEDT (cxl3.0 specification 9.17.1). In this function, the ACPI's CEDT 
-is explored, and the RCRB base address is obtained from the CHBS corresponding
-to the uid.
+I want to do a read/write test with cxl_test in kernel, but got an error =
+log like: "cxl memdev: action_write: mem0: has active nvdimm bridge, =
+abort label write" when executing "cxl write-labels mem0" cmd(with the =
+kernel version v6.5.0).=20
+
+Can we disable nvdimm bridge? Does cxl_test support write mem emulation =
+now?  Or other advices?
+
+I have poorly understand about the cxl_test/nvdimm/cxl now.
+
+Best Regards,
+lihuawei
 
 
-Signed-off-by: KobayashiDaisuke <kobayashi.da-06@fujitsu.com>
----
- ls-caps.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/ls-caps.c b/ls-caps.c
-index 077e8ea..cccd775 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -1438,6 +1438,51 @@ static int get_device_uid(struct device *d){
- }
- 
- static off_t get_rcrb_base(int device_uid){
-+  FILE *cedt_file = fopen("/sys/firmware/acpi/tables/CEDT", "rb");
-+  if (cedt_file == NULL)
-+    return -1;
-+
-+  struct CEDT_Header header;
-+  fread(&header, sizeof(header), 1, cedt_file);
-+  
-+  struct CHBS_Structure chbs;
-+  chbs.base = 0;
-+  size_t total_bytes_read = 0;
-+  while (total_bytes_read < header.length)
-+  {
-+    struct CEDT_Structure cedt;
-+    size_t bytes_read = fread(&cedt, sizeof(cedt), 1, cedt_file);
-+    if (bytes_read != 1)
-+    {
-+      fclose(cedt_file);
-+      return -1;
-+    }
-+    total_bytes_read += sizeof(cedt);
-+    if (cedt.type == CHBS_TYPE)
-+    {
-+      bytes_read = fread(&chbs, sizeof(chbs), 1, cedt_file);
-+      if(bytes_read != 1){
-+        fclose(cedt_file);
-+        return -1;
-+      }
-+      total_bytes_read += sizeof(chbs);
-+      if ((int)chbs.uid == device_uid){
-+        if(chbs.cxl_version == 0){
-+          fclose(cedt_file);
-+          return chbs.base;
-+        }else{
-+          fclose(cedt_file);
-+          return -1;
-+        }
-+      } 
-+    }
-+    else
-+    {
-+      fseek(cedt_file, cedt.record_length - sizeof(cedt), SEEK_SET);
-+      total_bytes_read += cedt.record_length;
-+    }
-+  }
-+  fclose(cedt_file);
-   return -1;
- }
- 
--- 
-2.43.0
 
