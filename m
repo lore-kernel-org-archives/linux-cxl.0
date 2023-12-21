@@ -1,189 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76F634F5
-	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 18:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3AE77657
+	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 22:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXMydw6p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIRz6HxD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703183016; x=1734719016;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=G2m1U43jxnt6z8wFK6jMohdSWFgC9KGp9ujY3Juy9h4=;
-  b=PXMydw6paGC/i7AVfm1JFc+e6hguaBrFTEv3IAtr4f5B5egzSUfgDQ5Y
-   +dZvS/+S6gVxGoTCntS3nT3zhIJwgvbWrM611KUe2tZrpQdym9x1jJQnp
-   OUMvm7gOsjXRBtjczu0m832y5CF74pEjHgm1HEXHF2VMY5Z7mcx26tfJh
-   3nRUVxOkILUT9nZD9quRpyXTEnRvYcLQ9vWXW+oxBrjAcuIO1aBYG8bxD
-   CYwfjG1ZH+gWN/79ASRxBja4jBnTHHr0gzCJhurTuseUcxAcxXByPTPk/
-   hg/iDkKq+mPHsaNkjQjkA4nklxQje/+9nctK6KL5vdTX+tRldjjMx96G1
+  t=1703196148; x=1734732148;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=67/44qwNRFRCbYP7s5J5stVnCj6lbOhynFqY2O+WAus=;
+  b=kIRz6HxDeMA2+n0Sce5tohQrFf81s3L48d6ffuy31UotoSUtY8qbKHjB
+   /MsiRWYwUwcEXcu+/HFBkCyLk2X6/90rgPCySZPB3J+6jeshuxY/UNFms
+   Uc2hC+mdbI+KiOvK/tFVhuRTiAImiwpK6jQoQzIR9QCsavwIFPwXvW9O/
+   0ZvgKuaohzQc+2DaJO6eJ63OEvtq9QIz/3C79MzniQVzJUhhfj7JWPnhT
+   /z2zMVku6PxceUvXfnDZep2yFOSTUcyEle4fA0tLKvGYbOHbVjd0aIMwC
+   E6X2ra1dNFWkC/aS3zgp/bq7A7nrURS2ls8c5Z5g0VbOq4HFApb9Jtqaa
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="375504146"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="14725592"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="375504146"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 10:23:30 -0800
+   d="scan'208";a="14725592"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:02:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="842702456"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="1024007920"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="842702456"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Dec 2023 10:23:29 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 21 Dec 2023 10:23:29 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 21 Dec 2023 10:23:28 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 21 Dec 2023 10:23:28 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 21 Dec 2023 10:23:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=emIl5qa2fUh/EuQSIr4120vkM8TTuGrDmstSVK9wvuxKulD1TpUfFSkTL3x8DNpVDJBYV4durZXi0QDAsA/RcS7wFE6hC3HmifzBaWXHaVWepKfpsJwxL5FMVchi6gszuDlY8mHA+FthWUfkYGZEN4a+T9pg8jjplQumfY3jteIL7yT/Vbb4rw0SAJdL68JqjOYAE8jowhY9aBqXSonS7ee41IMGZRvyiHjLV8iR8+mgKX+cyCguXGm6xPWoyQOXmYbzJZtdd+kvd7YnSJvEWhUwDnJvNC2P+a7Akv9NIzNQ3qIZQtB2QrnFD5GUVSJZ/ZT2rdLDJ4Bd9bFD7HZEgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jZJG2mvaiOvJCgdBPCkZYE3D5gcVozGRcf1oLPWUdGs=;
- b=VwGUaQD04/qSKHSiDC2A3G4RmfmPgZi9o2PQxu2LLQTH4NbXTaZMFtF/wH0YrvUOAvPRA6KxGsRJe84x7IXdY2v+BfXLtii/4Dzo0uuUVrTnrFW5jTrNkVIvotCBoc3WgmUDQJEYeIJBgzmWfIDbMFmRdEio5r6H78tiNl0XfEMpsEnRJ9/mpe0QU/S4sGnU4hPJhwvq15N0nAYln94JsBd2yZFQF1shXpfJE97Pd0TuvZN0jxv8zU1lTkZ6DUkRUU8G6qLmplcSHvoZ9qD/wFuxEVxLCr7G+PDXYyHwENIbcTQ8/+NurQn8J5vZK/bfGTNw24VehlgJdyIaf0/xLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by SA1PR11MB5827.namprd11.prod.outlook.com (2603:10b6:806:236::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20; Thu, 21 Dec
- 2023 18:23:26 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7113.019; Thu, 21 Dec 2023
- 18:23:26 +0000
-Message-ID: <0b4847b6-2531-4bfb-9b7e-bc4f0b380342@intel.com>
-Date: Thu, 21 Dec 2023 11:23:22 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 2/3] cxl/region: Add sysfs attribute for locality
- attributes of CXL regions
+   d="scan'208";a="1024007920"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.31.86])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:02:25 -0800
+Subject: [PATCH v15 00/19] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
 From: Dave Jiang <dave.jiang@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC: Brice Goglin <brice.goglin@gmail.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-References: <170199184936.3543815.17537965163543815359.stgit@djiang5-mobl3>
- <170199191618.3543815.17768111410214136858.stgit@djiang5-mobl3>
- <23a78aa8-e076-4b98-bd7c-4299aefd9895@gmail.com>
- <500b0900-f4bb-475d-817b-6a72f18e0134@intel.com>
- <20231219164408.0000790a@Huawei.com>
- <190b7c40-fa03-402d-b8e6-c2d581270bfb@intel.com>
-Content-Language: en-US
-In-Reply-To: <190b7c40-fa03-402d-b8e6-c2d581270bfb@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR07CA0093.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::34) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+To: linux-cxl@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, Len Brown <lenb@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
+ ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date: Thu, 21 Dec 2023 15:02:25 -0700
+Message-ID: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SA1PR11MB5827:EE_
-X-MS-Office365-Filtering-Correlation-Id: 642bcf28-3e32-47f6-8f6e-08dc0251ec20
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MiX+GJB9d5JVe5Y2DZWuNn0kBFEsLZw+uD6nhtalNC/kkLkjJlacQP2d/KqdZ3jCIFMMgk0JUt2/wXCTbDuoFjwvHWkB4SMNS73XqS1FVRIRvYwwW79+NSiFyFpHMQZHvavHGR3MWlbGl1cz52DiAdbyDOlj/kdM2xN9Zond5cBt/WnCcM6acrHIY5hTv46mMJ1rw2/pNg2mX83RAKS30NNxtQtbHnCPH4EnjyTT4s8JJkTfyoGnRJgZvDDkyGBSEBloAnb+hMbpJDmD9ouTKNzeq4Skurr9BHdgeMyxUheGBHWoEPF0IjobnGAeSgAIVPwi0A5i84ypuC7kJsdQj2BlbhWhnG0BAOAi/7ujVKuzQdiR9Y5i8AoQBijRB1iuRxsaPtzeapnQv3WItsyO7pAsaib6M7BsV/teBEpFjgYML2mI3HOBhZ5wWoiHL06F9UtvmKOuQU9TixnAVRwT4QzTlaXxMFWp4H23yOtECU6qGCcKsiWw4NbiXi+f1qkkonP+HQ6Z9shSTXAsx6d0Zf/QuNJu+GDVbKsj3DqY0hbKxJvIJEerqAzPAzeyGhHbFkjblBTbdRMzmp3HEpwV87NGQn09unj7U7NwLPICmZQkeK+iyrfJFnlJZyfPv/1P
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39860400002)(376002)(396003)(346002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(66946007)(6486002)(66556008)(66476007)(316002)(8936002)(6916009)(8676002)(31686004)(44832011)(4326008)(83380400001)(26005)(2616005)(38100700002)(5660300002)(41300700001)(66574015)(6506007)(86362001)(36756003)(31696002)(53546011)(6512007)(6666004)(2906002)(82960400001)(478600001)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVVVNU5sb0FiWkFpdFFab3k5d2RFWUlCZ3RaYndPQmJjK2xXNVFMenhtclIr?=
- =?utf-8?B?eWpWNGpOV3hiWVJobmhSVUxsbkhTMXhHa2IreXFUMjlpdmpyS3V3eXhPMG1E?=
- =?utf-8?B?WTI5T25HemN2bm9lQkNka0c0Unlwb3JKM2JnRmxrT3cyS0x1UTRkblAxR2Jq?=
- =?utf-8?B?UThmTFBEOVFFM2pBK0Jac2NGeFlJZ1dQbStJbFhUUW1EYXZrYWE1bFpPb0cy?=
- =?utf-8?B?NUJzMGo1dTZoNHJ1ZklxSlFxQzJWNlc2SWpKUGZiNVlIWGZhY2twV3RIcTJ4?=
- =?utf-8?B?Q3hkbCt0bFBBQXUyRG9kN2VDZ0FqeEZJdDBOb1BuVXdMT3puc3VMdjR5VHQw?=
- =?utf-8?B?VlU3MEFPZUVKU0g0dDBCWjNwVVBoVVJnaHRwc0k1Y2NId0xrb3VjY0hKSkZI?=
- =?utf-8?B?RGdDWjc0eWJVREc1R29GSXZDa2lVZmtrQXc1a29PUlcxT05rL2NtSWZSMjAw?=
- =?utf-8?B?cXJRTWdDRnByZE1tejJnRzFYRHFFa1pTcWZBd0p6d2pIVDVGelZVWGdmRTU0?=
- =?utf-8?B?YlFtMGpRdXN5NmlHNHRpd0xDdHQxbXdMUUtmVktsQWZ4SzRyZ0EyM0ZvTDFJ?=
- =?utf-8?B?Z3R5bmRrLzJVU0RZQ3BhOVF0eFJOd2tmODFxcWJwSkNNMHNKd3JCUGtGaW9t?=
- =?utf-8?B?c3BPc002VWw3VGJNQTk0ejlwWllWNHJOdHczbE05aTB1U1hxRkQ4aHJxVG14?=
- =?utf-8?B?V3FqRFJTSEtLU1ppV3BsTzlQbnN3YWNkMGhwZW1hcUJzaGhNTW9GTC94QWVp?=
- =?utf-8?B?WEJsNDRZRVdvUS9NYXZtZUVJMTdod2VHS3hiOWZQTkg4TDJWRUNwV0lzWlNw?=
- =?utf-8?B?WU5mYmx1RGJ2VUVSN2VVbXFTS3l4UUpKVm1ndW45ZUZJTzFtM0liZ2ZrQ3Jk?=
- =?utf-8?B?Y1JTUytucHJLVkNzUlE1Y3JUUHMvUE1SRzB5NW1rUmF6L0kvK2FycHg5bE4z?=
- =?utf-8?B?NHd6cEFHTGxEZ2pXR3IyT2haV2p5Y2xpdGVIVDVubDBNbTNpT1Q4bmpxdVFt?=
- =?utf-8?B?Tm5SSEFrUVNlT3p3QkVBMHFmaTNad0MwTHdPK2ZFMTE5S1ptOENUcmYwWlpy?=
- =?utf-8?B?ZVYvWE0yamsrb1FiOE9nakZQQVBWNkxIeUVjT1RjSTVaMDE2UkRhUlJoUmYr?=
- =?utf-8?B?WUJubHEzc3RHNkJqYk5ka0NkRWV2RDNlOVVWd3B1ZXFJWkVCSDdobWtJNjJC?=
- =?utf-8?B?S0ZNU0JuRDBDU3JnaENVNnV3K084TzNCaXpXYW50Ung4U3Blak5la2RaWWl5?=
- =?utf-8?B?c2FvQk82Q0NycnBJQ3FuelVSRkcwbGp4c2ZSMnBYQWNRVzNjQkhKZUkzQVZC?=
- =?utf-8?B?bXVIbTk1Y08zNGIyZk53clFRTTdSSkNBYUtrdjZESWlaSDg4L09oU3V3M2Nr?=
- =?utf-8?B?dGRFSlZSVWIvM2FFNlQ5ZGgxeFF1T21OWktyWkkrc1Y5Tkcrb2RNSVNZYjJW?=
- =?utf-8?B?YXo2QlhrMjRFaGI0cDBvK0tDRjZ4YXk0cGVwRnphSWVPRnpFNVRkdUdYekM1?=
- =?utf-8?B?KzFlRXlHWmhTWHhBeCtXbjYycC9rbzlXR2VyQ1NERFgvZEpXTUoya1lDZDFm?=
- =?utf-8?B?dnJqKzFPQXhKUFpEME1aYzUrT0JJQXIxL1JRdVBOaDZ2QklEQmZJYW9rRGRP?=
- =?utf-8?B?K1ExOTZVMk1jOW5VOTY1YmpmY0N0bGVoWDdPaE5oKzh1UTRQcTZLcnlSSGlG?=
- =?utf-8?B?L3R2YjBxOUdrTktlN3k4UVdaMDMzWWpZa3VlL2dFRG13OUhyd2JFM21PMmgw?=
- =?utf-8?B?VHlabEY0RllKSVYveUVZZmlZVlVESzRXSXdqdVFzcEk2MTRXN2ppM1pIeXZE?=
- =?utf-8?B?a29pZWh5VVg1aDI3bVg2TitENFpBSlZCQ2JZTVhSbnAvRmJjOHhnUlpLSU1z?=
- =?utf-8?B?OVpKd1ZLR1oyQkZJc2laY1FMYURwaUk0WmlWR3VsVzV6c05DTHZlaEJ4cTkz?=
- =?utf-8?B?NFV5S1hiY3FBWFFRcHRHWGJUQjI2aXJFTWE2OFlJUVpnN1JOSXd5WWtVMjJY?=
- =?utf-8?B?VG9vOXhTa0dmTWJ2ZzErMDNaMWdyUG01K2ZTandlWnQ5ZWtMeHZmWERoNk9k?=
- =?utf-8?B?ZlkvcjlDS3JCYkRtWStVbWswUDJjcEJWakF2UXAxUXExUzl1OWF5NWtac2Z1?=
- =?utf-8?Q?86SNld8KGbT4/gEByUcdfDZuC?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 642bcf28-3e32-47f6-8f6e-08dc0251ec20
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 18:23:25.9790
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vRml49L+HN2JPLya4lmzkrJ4SGtCDyZ1h/6w7aTC/q7jUfTH/D8FVNWVhk5c08/MRgZZJeMlDIACD7SFVFQSEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5827
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Jonathan and Rafael,
+Please take a look at [6/19 acpi: numa: Add setting of generic port system locality attributes].
+I have changed the way the generic target coordinates are being updated. Thank you!
+
+v15:
+- Update the hmat generic targets via hmat_update_target_attrs() to retain the best
+  performance numbers from HMAT table.
+- Refactor qos_class valid checks to simplify (Jonathan)
+
+v14:
+- Fix 0day issue with fw_table usage (Dan)
+- Move all DSMAS processing local to core/cdat.c (Dan)
+- Change get_qos_class() to qos_class() (Dan)
+- Fix perf entry allocation lifetime (Dan)
+- Rename perf_prop_entry to cxl_dpa_perf (Dan)
+- Cleanup gotos using DEFINE_FREE() (Dan)
+- Move qos computation before regions arrive. (Dan)
+- Drop unmatched perf list (Dan)
+- Add target_lock locking for retrieving genport coordinates (Dan)
+
+v13:
+- Convert temp dsmas list to xarray, optimize DSLBIS matching (Dan)
+- Add a cxl_test fix for mock ACPI cxl host bridge UID.
+
+v12:
+- Tested on hardware
+- Rebased to v6.7-rc1
+- Dropped all patches upstreamed
+- Rebased against changes from Huang Ying for abstract distance calculation
+- Do not fail if qos calculation not successful (Jonathan, Dan)
+- Match generic target device_handle with UID
+- Support storing multiple QTG IDs and match against multiple QTG IDs. (Dan)
+- Fix link latency calculation loop.
+- Add adjustment of genport latency from nsec to psec due to HMAT code normalization.
+- Make cxl/core/cdat.o as part of cxl core build.
+- See individual patches for detailed changes.
+
+v11:
+- Add debug print for multiple DSMAS entries for a partition. (Jonathan)
+- Change qos_class0 to qos_class. (Dan)
+- Add verification of endpoint device's host bridge to root decoder targets. (Dan)
+- See individual patches for additional changes.
+v10:
+- Remove memory allocation in DSM handler. Add input parameters to request number of ids
+  to return. (Dan)
+- Only export a single qos_class sysfs attribute, qos_class0 for devices. (Dan)
+- Add sanity check of device qos_class against root decoders (Dan)
+- Recombine all relevant patches for cxl upstream merge
+- Rebased against v6.6-rc4
+v9:
+- Correct DSM input package to use integers. (Dan)
+- Remove all endien conversions. (Dan)
+v8:
+- Correct DSM return package parsing to use integers
+v7:
+- Minor changes. Please see specific patches for log entries addressing comments
+  from v6.
+v6:
+- Please see specific patches for log entries addressing comments from v5.
+- Use CDAT sub-table structs as is, adjust w/o common header. Changing causes
+  significant ACPICA code changes.
+- Deal with table header now that is a union. (Jonathan)
+- Move DSMAS list destroy to core/cdat.c. (Jonathan)
+- Retain and display entire QTG ID list from _DSM. (Jonathan)
+
+v5:
+- Please see specific patches for log entries addressing comments from v4.
+- Split out ACPI and generic node code to send separately to respective maintainers
+- Reworked to use ACPI tables code for CDAT parsing (Dan)
+- Cache relevant perf data under dports (Dan)
+- Add cxl root callback for QTG ID _DSM (Dan)
+- Rename 'node_hmem_attr' to 'access_coordinate' (Dan)
+- Change qtg_id sysfs attrib to qos_class (Dan)
+
+v4:
+- Reworked PCIe link path latency calculation
+- 0-day fixes
+- Removed unused qos_list from cxl_memdev and its stray usages
+
+v3:
+- Please see specific patches for log entries addressing comments from v2.
+- Refactor cxl_port_probe() additions. (Alison)
+- Convert to use 'struct node_hmem_attrs'
+- Refactor to use common code for genport target allocation.
+- Add third array entry for target hmem_attrs to store genport locality data.
+- Go back to per partition QTG ID. (Dan)
+
+v2:
+- Please see specific patches for log entries addressing comments from v1.
+- Removed ACPICA code usages.
+- Removed PCI subsystem helpers for latency and bandwidth.
+- Add CXL switch CDAT parsing support (SSLBIS)
+- Add generic port SRAT+HMAT support (ACPI)
+- Export a single QTG ID via sysfs per memory device (Dan)
+- Provide rest of DSMAS range info in debugfs (Dan)
+
+Hi Dan,
+Please consider taking the entire series including the CXL bits for the next
+convenient merge window. Thanks!
+
+This series adds the retrieval of QoS Throttling Group (QTG) IDs for the CXL Fixed
+Memory Window Structure (CFMWS) and the CXL memory device. It provides the QTG IDs
+to user space to provide some guidance with putting the proper DPA range under the
+appropriate CFMWS window for a hot-plugged CXL memory device.
+
+The CFMWS structure contains a QTG ID that is associated with the memory window that the
+structure exports. On Linux, the CFMWS is represented as a CXL root decoder. The QTG
+ID will be attached to the CXL root decoder and exported as a sysfs attribute (qos_class).
+
+The QTG IDs for a device is retrieved via sending a _DSM method to the ACPI0017 device.
+The _DSM expects an input package of 4 DWORDS that contains the read latency, write
+latency, read bandwidth, and write banwidth. These are the caluclated numbers for the
+path between the CXL device and the CPU. The list of QTG IDs are also exported as a sysfs
+attribute under the mem device memory partition type:
+/sys/bus/cxl/devices/memX/ram/qos_class
+/sys/bus/cxl/devices/memX/pmem/qos_class
+
+The latency numbers are the aggregated latencies for the path between the CXL device and
+the CPU. If a CXL device is directly attached to the CXL HB, the latency
+would be the aggregated latencies from the device Coherent Device Attribute Table (CDAT),
+the caluclated PCIe link latency between the device and the HB, and the generic port data
+from ACPI SRAT+HMAT. The bandwidth in this configuration would be the minimum between the
+CDAT bandwidth number, link bandwidth between the device and the HB, and the bandwidth data
+from the generic port data via ACPI SRAT+HMAT.
+
+If a configuration has a switch in between then the latency would be the aggregated
+latencies from the device CDAT, the link latency between device and switch, the
+latency from the switch CDAT, the link latency between switch and the HB, and the
+generic port latency between the CPU and the CXL HB. The bandwidth calculation would be the
+min of device CDAT bandwidth, link bandwith between device and switch, switch CDAT
+bandwidth, the link bandwidth between switch and HB, and the generic port bandwidth
+
+There can be 0 or more switches between the CXL device and the CXL HB. There are detailed
+examples on calculating bandwidth and latency in the CXL Memory Device Software Guide [4].
+
+The CDAT provides Device Scoped Memory Affinity Structures (DSMAS) that contains the
+Device Physical Address (DPA) range and the related Device Scoped Latency and Bandwidth
+Informat Stuctures (DSLBIS). Each DSLBIS provides a latency or bandwidth entry that is
+tied to a DSMAS entry via a per DSMAS unique DSMAD handle.
+
+Previous series is here [5]. A git branch [6] is available as well.
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+[3]: https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
+[4]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
+[5]: https://lore.kernel.org/linux-cxl/170248552797.801570.14580769385012396142.stgit@djiang5-mobl3/T/#t
+[6]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+
+base-commit: a39b6ac3781d46ba18193c9dbb2110f31e9bffe9
+---
+
+Dave Jiang (19):
+      lib/firmware_table: tables: Add CDAT table parsing support
+      base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
+      acpi: numa: Create enum for memory_target access coordinates indexing
+      acpi: numa: Add genport target allocation to the HMAT parsing
+      acpi: Break out nesting for hmat_parse_locality()
+      acpi: numa: Add setting of generic port system locality attributes
+      acpi: numa: Add helper function to retrieve the performance attributes
+      cxl: Add callback to parse the DSMAS subtables from CDAT
+      cxl: Add callback to parse the DSLBIS subtable from CDAT
+      cxl: Add callback to parse the SSLBIS subtable from CDAT
+      cxl: Add support for _DSM Function for retrieving QTG ID
+      cxl: Calculate and store PCI link latency for the downstream ports
+      tools/testing/cxl: Add hostbridge UID string for cxl_test mock hb devices
+      cxl: Store the access coordinates for the generic ports
+      cxl: Add helper function that calculate performance data for downstream ports
+      cxl: Compute the entire CXL path latency and bandwidth data
+      cxl: Store QTG IDs and related info to the CXL memory device context
+      cxl: Export sysfs attributes for memory device QoS class
+      cxl: Check qos_class validity on memdev probe
 
 
+ Documentation/ABI/testing/sysfs-bus-cxl |  34 ++
+ drivers/acpi/numa/hmat.c                | 193 +++++++--
+ drivers/acpi/tables.c                   |   5 +-
+ drivers/base/node.c                     |  12 +-
+ drivers/cxl/Kconfig                     |   3 +
+ drivers/cxl/acpi.c                      | 157 +++++++-
+ drivers/cxl/core/Makefile               |   1 +
+ drivers/cxl/core/cdat.c                 | 515 ++++++++++++++++++++++++
+ drivers/cxl/core/core.h                 |   2 +
+ drivers/cxl/core/mbox.c                 |   2 +
+ drivers/cxl/core/pci.c                  |  72 ++++
+ drivers/cxl/core/port.c                 | 122 +++++-
+ drivers/cxl/cxl.h                       |  40 ++
+ drivers/cxl/cxlmem.h                    |  21 +
+ drivers/cxl/cxlpci.h                    |  13 +
+ drivers/cxl/mem.c                       |  67 ++-
+ drivers/cxl/port.c                      |   3 +
+ include/linux/acpi.h                    |  11 +
+ include/linux/fw_table.h                |  21 +-
+ include/linux/memory-tiers.h            |  10 +-
+ include/linux/node.h                    |   8 +-
+ lib/fw_table.c                          |  75 +++-
+ mm/memory-tiers.c                       |  12 +-
+ tools/testing/cxl/Kbuild                |   1 +
+ tools/testing/cxl/test/cxl.c            |   4 +
+ 25 files changed, 1325 insertions(+), 79 deletions(-)
+ create mode 100644 drivers/cxl/core/cdat.c
 
-On 12/20/23 13:26, Dave Jiang wrote:
-> 
-> 
-> On 12/19/23 09:44, Jonathan Cameron wrote:
->> On Tue, 12 Dec 2023 12:30:47 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> On 12/11/23 02:06, Brice Goglin wrote:
->>>> Le 08/12/2023 à 00:31, Dave Jiang a écrit :  
->>>>> Add read/write latencies and bandwidth sysfs attributes for the enabled CXL
->>>>> region. The bandwidth is the aggregated bandwidth of all devices that
->>>>> contributes to the CXL region. The latency is the worst latency of the
->>>>> device amongst all the devices that contributes to the CXL region.  
->>>>
->>>>
->>>> Hello
->>>>
->>>> Which initiator do these bandwidths/latencies refer to? Local CPUs near the root port? This should be specified in the doc.  
->>>
->>> Currently I'm only storing the numbers from initiator pxm 0 to these targets in the hmat target list. I'm open to suggestions as to if a different way would be better.
->> Nearest node with CPUs would be better I think.
-> 
-> Is it possible to discover that? The SRAT MPDAS structure indicates the association of initiator and memory target domains. But it does not seem to make such associations for generic targets.
+--
 
-Answering my own question, looks like we need to go through hmat_update_target_attrs() and retrieve the best perf numbers via that function. Will make some mods to do that and post v15. This seems to be the way linux HMAT handling code is doing for normal initiator/target setup. 
-> 
->>
->> Jonathan
->>
-> 
