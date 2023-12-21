@@ -1,45 +1,45 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293017949A
-	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 22:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7022C77F28
+	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 22:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MWVHxEl1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+q8xEmF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703196195; x=1734732195;
+  t=1703196202; x=1734732202;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IcbgluwSxdfxDflII0Z8dJY69887tA+ZsHbhWBXKtUo=;
-  b=MWVHxEl1j2dpyalQWBtDrXmhAXtmIeT/ROeTK0ELqvIG78pEi6hUm4QQ
-   Qh5xncMHmvF+j7c0/dhiHl3nc4P91ZzZSE3h8BA7VYq5K1SvCtqSQgQRh
-   425cP5czXW+Rcn6B/hIYN8Us9bFpFtCeiz0/XqxXIunuXETX90l75GNnj
-   6kkAIy9Wff05BpreynV01pvjqugbjADhhDfqPO50CJ0mDQiQbz9ISDB2r
-   YuodkJloBHpx14YmFBi57Rd4jW3X4xoBeK1TJ0FbPwaiIGkEGO93kKrdO
-   4roh5/7XSPypVzg5Jo6OUznPTOa7dabLCGC7PzL1tuJNLQFozvq14l3LW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="2873850"
+  bh=IOypDDtO+JE4XqIq3qgghg7AB3zc6LrZfQm4tprBflI=;
+  b=c+q8xEmFNElaef6ZOzvCC0Gb6Yw1Oi42LLpe1499Kvy5uc1++tKdEJ0m
+   wgcXgwWFV8EmCwVIJkYk+zU5B9+HDx6x9UXa5TSVkK0YAfVik8isPLYiR
+   HyiRKGyILsDwEvv8mK9DxjAAEFAwwtYrcWMcnAvEy68P8S9eymKirIRWz
+   u1KnvOIgTk/xlD4FsS08mGBYRG/NSYMNTmjx+56GxD/G/EuJOCsHKH+nr
+   n8HD8ap6BB5chV4vpau5qTkrlQ336zBdJYz+Gk3RV1fFR3PBPWNlX0+4s
+   neRGMp9KolQCn+WxXzJXxbGnZmSn51iDYSu7fH1pkbkop3OhLZ6HH/Hpy
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="2873861"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="2873850"
+   d="scan'208";a="2873861"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:03:15 -0800
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:03:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="770083790"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="770083799"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="770083790"
+   d="scan'208";a="770083799"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.31.86])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:03:14 -0800
-Subject: [PATCH v15 08/19] cxl: Add callback to parse the DSMAS subtables from
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:03:20 -0800
+Subject: [PATCH v15 09/19] cxl: Add callback to parse the DSLBIS subtable from
  CDAT
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 21 Dec 2023 15:03:13 -0700
-Message-ID: <170319619355.2212653.2675953129671561293.stgit@djiang5-mobl3>
+Date: Thu, 21 Dec 2023 15:03:20 -0700
+Message-ID: <170319620005.2212653.7475488478229720542.stgit@djiang5-mobl3>
 In-Reply-To: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
 References: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -52,197 +52,149 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Provide a callback function to the CDAT parser in order to parse the Device
-Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
-DPA range and its associated attributes in each entry. See the CDAT
-specification for details. The device handle and the DPA range is saved and
-to be associated with the DSLBIS locality data when the DSLBIS entries are
-parsed. The xarray is a local variable. When the total path performance data is
-calculated and storred this xarray can be discarded.
+Provide a callback to parse the Device Scoped Latency and Bandwidth
+Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
+contains the bandwidth and latency information that's tied to a DSMAS
+handle. The driver will retrieve the read and write latency and
+bandwidth associated with the DSMAS which is tied to a DPA range.
 
-Coherent Device Attribute Table 1.03 2.1 Device Scoped memory Affinity
-Structure (DSMAS)
+Coherent Device Attribute Table 1.03 2.1 Device Scoped Latency and
+Bandwidth Information Structure (DSLBIS)
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/Kconfig       |    3 +
- drivers/cxl/core/Makefile |    1 
- drivers/cxl/core/cdat.c   |   92 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h         |    2 +
- drivers/cxl/port.c        |    1 
- tools/testing/cxl/Kbuild  |    1 
- 6 files changed, 100 insertions(+)
- create mode 100644 drivers/cxl/core/cdat.c
+ drivers/cxl/core/cdat.c |  102 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 100 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 8ea1d340e438..67998dbd1d46 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -5,6 +5,7 @@ menuconfig CXL_BUS
- 	select FW_LOADER
- 	select FW_UPLOAD
- 	select PCI_DOE
-+	select FIRMWARE_TABLE
- 	help
- 	  CXL is a bus that is electrically compatible with PCI Express, but
- 	  layers three protocols on that signalling (CXL.io, CXL.cache, and
-@@ -54,8 +55,10 @@ config CXL_MEM_RAW_COMMANDS
- config CXL_ACPI
- 	tristate "CXL ACPI: Platform Support"
- 	depends on ACPI
-+	depends on ACPI_NUMA
- 	default CXL_BUS
- 	select ACPI_TABLE_LIB
-+	select ACPI_HMAT
- 	help
- 	  Enable support for host managed device memory (HDM) resources
- 	  published by a platform's ACPI CXL memory layout description.  See
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1f66b5d4d935..9259bcc6773c 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -13,5 +13,6 @@ cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
- cxl_core-y += pmu.o
-+cxl_core-y += cdat.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-new file mode 100644
-index 000000000000..9bf4f53bf77f
---- /dev/null
+index 9bf4f53bf77f..97d8ef8848c6 100644
+--- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -0,0 +1,92 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
-+#include <linux/acpi.h>
-+#include <linux/xarray.h>
-+#include <linux/fw_table.h>
-+#include "cxlpci.h"
-+#include "cxl.h"
+@@ -3,12 +3,15 @@
+ #include <linux/acpi.h>
+ #include <linux/xarray.h>
+ #include <linux/fw_table.h>
++#include <linux/node.h>
++#include <linux/overflow.h>
+ #include "cxlpci.h"
+ #include "cxl.h"
+ 
+ struct dsmas_entry {
+ 	struct range dpa_range;
+ 	u8 handle;
++	struct access_coordinate coord;
+ };
+ 
+ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+@@ -49,11 +52,106 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+ 	return 0;
+ }
+ 
++static void cxl_access_coordinate_set(struct access_coordinate *coord,
++				      int access, unsigned int val)
++{
++	switch (access) {
++	case ACPI_HMAT_ACCESS_LATENCY:
++		coord->read_latency = val;
++		coord->write_latency = val;
++		break;
++	case ACPI_HMAT_READ_LATENCY:
++		coord->read_latency = val;
++		break;
++	case ACPI_HMAT_WRITE_LATENCY:
++		coord->write_latency = val;
++		break;
++	case ACPI_HMAT_ACCESS_BANDWIDTH:
++		coord->read_bandwidth = val;
++		coord->write_bandwidth = val;
++		break;
++	case ACPI_HMAT_READ_BANDWIDTH:
++		coord->read_bandwidth = val;
++		break;
++	case ACPI_HMAT_WRITE_BANDWIDTH:
++		coord->write_bandwidth = val;
++		break;
++	}
++}
 +
-+struct dsmas_entry {
-+	struct range dpa_range;
-+	u8 handle;
-+};
-+
-+static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
-+			      const unsigned long end)
++static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
++			       const unsigned long end)
 +{
 +	struct acpi_cdat_header *hdr = &header->cdat;
-+	struct acpi_cdat_dsmas *dsmas;
-+	int size = sizeof(*hdr) + sizeof(*dsmas);
++	struct acpi_cdat_dslbis *dslbis;
++	int size = sizeof(*hdr) + sizeof(*dslbis);
 +	struct xarray *dsmas_xa = arg;
 +	struct dsmas_entry *dent;
++	__le64 le_base;
++	__le16 le_val;
++	u64 val;
 +	u16 len;
 +	int rc;
 +
 +	len = le16_to_cpu((__force __le16)hdr->length);
 +	if (len != size || (unsigned long)hdr + len > end) {
-+		pr_warn("Malformed DSMAS table length: (%u:%u)\n", size, len);
++		pr_warn("Malformed DSLBIS table length: (%u:%u)\n", size, len);
 +		return -EINVAL;
 +	}
 +
 +	/* Skip common header */
-+	dsmas = (struct acpi_cdat_dsmas *)(hdr + 1);
++	dslbis = (struct acpi_cdat_dslbis *)(hdr + 1);
 +
-+	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
-+	if (!dent)
-+		return -ENOMEM;
++	/* Skip unrecognized data type */
++	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
++		return 0;
 +
-+	dent->handle = dsmas->dsmad_handle;
-+	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
-+	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
-+			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
++	/* Not a memory type, skip */
++	if ((dslbis->flags & ACPI_HMAT_MEMORY_HIERARCHY) != ACPI_HMAT_MEMORY)
++		return 0;
 +
-+	rc = xa_insert(dsmas_xa, dent->handle, dent, GFP_KERNEL);
-+	if (rc) {
-+		kfree(dent);
-+		return rc;
++	dent = xa_load(dsmas_xa, dslbis->handle);
++	if (!dent) {
++		pr_warn("No matching DSMAS entry for DSLBIS entry.\n");
++		return 0;
 +	}
++
++	le_base = (__force __le64)dslbis->entry_base_unit;
++	le_val = (__force __le16)dslbis->entry[0];
++	rc = check_mul_overflow(le64_to_cpu(le_base),
++				le16_to_cpu(le_val), &val);
++	if (rc)
++		pr_warn("DSLBIS value overflowed.\n");
++
++	cxl_access_coordinate_set(&dent->coord, dslbis->data_type, val);
 +
 +	return 0;
 +}
 +
-+static int cxl_cdat_endpoint_process(struct cxl_port *port,
-+				     struct xarray *dsmas_xa)
++static int cdat_table_parse_output(int rc)
 +{
-+	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
-+				dsmas_xa, port->cdat.table);
++	if (rc < 0)
++		return rc;
++	if (rc == 0)
++		return -ENOENT;
++
++	return 0;
 +}
 +
-+static void discard_dsmas(struct xarray *xa)
-+{
-+	unsigned long index;
-+	void *ent;
-+
-+	xa_for_each(xa, index, ent) {
-+		xa_erase(xa, index);
-+		kfree(ent);
-+	}
-+	xa_destroy(xa);
-+}
-+DEFINE_FREE(dsmas, struct xarray *, if (_T) discard_dsmas(_T))
-+
-+void cxl_endpoint_parse_cdat(struct cxl_port *port)
-+{
-+	struct xarray __dsmas_xa;
-+	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
+ static int cxl_cdat_endpoint_process(struct cxl_port *port,
+ 				     struct xarray *dsmas_xa)
+ {
+-	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
+-				dsmas_xa, port->cdat.table);
 +	int rc;
 +
-+	xa_init(&__dsmas_xa);
-+	if (!port->cdat.table)
-+		return;
++	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
++			      dsmas_xa, port->cdat.table);
++	rc = cdat_table_parse_output(rc);
++	if (rc)
++		return rc;
 +
-+	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
-+	if (rc < 0) {
-+		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
-+		return;
-+	}
-+
-+	/* Performance data processing */
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
-+
-+MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 687043ece101..be3b5eda875c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -839,6 +839,8 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
++	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
++			      dsmas_xa, port->cdat.table);
++	return cdat_table_parse_output(rc);
  }
- #endif
  
-+void cxl_endpoint_parse_cdat(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 47bc8e0b8590..a889c4e6cb27 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -109,6 +109,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 
- 	/* Cache the data early to ensure is_visible() works */
- 	read_cdat_data(port);
-+	cxl_endpoint_parse_cdat(port);
- 
- 	get_device(&cxlmd->dev);
- 	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 90f3c9802ffb..e3a59b0c5564 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -58,6 +58,7 @@ cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += $(CXL_CORE_SRC)/pci.o
- cxl_core-y += $(CXL_CORE_SRC)/hdm.o
- cxl_core-y += $(CXL_CORE_SRC)/pmu.o
-+cxl_core-y += $(CXL_CORE_SRC)/cdat.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
- cxl_core-y += config_check.o
+ static void discard_dsmas(struct xarray *xa)
 
 
