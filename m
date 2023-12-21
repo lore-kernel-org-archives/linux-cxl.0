@@ -1,44 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525477B5A
-	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 22:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD44E77F03
+	for <linux-cxl@vger.kernel.org>; Thu, 21 Dec 2023 22:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FYDYS0NS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S4PbXwfy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703196246; x=1734732246;
+  t=1703196252; x=1734732252;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JKHQNT2JcBCxJzUHK3X7zl3GrHb2vUHUVTe13gCMFD0=;
-  b=FYDYS0NSA+W2g6DrrP7ydKc6tMJAu5xcE9mzPDhhQ3MGdgDBGvS0AFCg
-   7S0UrlExnxYkzXBQ0IcK3mTelSM8Zt1OrfsJ3mjmvk5PwDnXfKH2iH50h
-   5fMN/LRik/7ozxBtRdx0dErykFYrr/eqpWy/DQ6y3YNhyDH3WShF2UkcA
-   5cve4X6AGY7Ix0eMD1I1gcnxbkzNXVUpZyLR6RIu5l7GDjR64ZzDwP4oy
-   2kNb2mJ1bamUD76tHkI4RqwtIyjK2OoS/bnqnVqArhSmgc928U81UB9FK
-   sWfX7kP0NryGLXBNrDapQhKMgUxQOKw5CAwi33Mp+XGzzoqrFoumHViUh
+  bh=nu1wogwfHUIF97AThQpUwSJoSX2VWn48GLonQDmvuGE=;
+  b=S4PbXwfymLXQAeZqL+7mjy0pqV2AjUVNkLBJ+cS/vcXQlgWU1cDoJzMZ
+   wiBIf+7lcsJDqkktqXJ7goA4KKpn9TnLKCqpQhTioqCU9MsoelSloDHGr
+   HwnFAy2Ae0lt6SmQSjjy8cdFdo/UNQ6Lm1KiX/uYyuDZF++B6lEbUHVyu
+   4Bv4/rijz1j9w6PJKGtcm9gDA7a2T3rAulyHRdEPLNw5NgyDk4p1/d/+m
+   De4o0LlzQ9UCnwayXvfqtmJgsrK7msCb56JJz5NxYMrYcsvkc98lFUEG+
+   4aQgrWWEV6SMKLShYUr7VwM072nmWRYYWrbqQzv0nYtsOAk5p0GdL7PE9
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="376184561"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="398831632"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="376184561"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:04:06 -0800
+   d="scan'208";a="398831632"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:04:12 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="895242847"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="25116440"
+   d="scan'208";a="895242847"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.31.86])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:04:05 -0800
-Subject: [PATCH v15 16/19] cxl: Compute the entire CXL path latency and
- bandwidth data
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 14:04:11 -0800
+Subject: [PATCH v15 17/19] cxl: Store QTG IDs and related info to the CXL
+ memory device context
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dan.j.williams@intel.com,
  ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
  Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date: Thu, 21 Dec 2023 15:04:04 -0700
-Message-ID: <170319624458.2212653.13252496567443656371.stgit@djiang5-mobl3>
+Date: Thu, 21 Dec 2023 15:04:11 -0700
+Message-ID: <170319625109.2212653.11872111896220384056.stgit@djiang5-mobl3>
 In-Reply-To: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
 References: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -51,120 +52,187 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-CXL Memory Device SW Guide [1] rev1.0 2.11.2 provides instruction on how to
-calculate latency and bandwidth for CXL memory device. Calculate minimum
-bandwidth and total latency for the path from the CXL device to the root
-port. The QTG id is retrieved by providing the performance data as input
-and calling the root port callback ->get_qos_class(). The retrieved id is
-stored with the cxl_port of the CXL device.
-
-For example for a device that is directly attached to a host bus:
-Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
-		Latency + Generic Port Latency
-Min Bandwidth = Min bandwidth for link bandwidth between HB
-		and CXL device, device CDAT bandwidth, and Generic Port
-		Bandwidth
-
-For a device that has a switch in between host bus and CXL device:
-Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
-		Switch (CDAT) Latency + Switch to HB Link Latency +
-		Generic Port Latency
-Min Bandwidth = Min bandwidth for link bandwidth between CXL device
-		to CXL switch, CXL device CDAT bandwidth, CXL switch CDAT
-		bandwidth, CXL switch to HB bandwidth, and Generic Port
-		Bandwidth.
-
-[1]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
+Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
+the return package. Create a list of entries in the cxl_memdev context and
+store the QTG ID as qos_class token and the associated DPA range. This
+information can be exposed to user space via sysfs in order to help region
+setup for hot-plugged CXL memory devices.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/cdat.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 58 insertions(+), 1 deletion(-)
+v15:
+- Fix comment header for cxl_memdev_state
+---
+ drivers/cxl/core/cdat.c |   67 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c |    2 +
+ drivers/cxl/cxlmem.h    |   21 +++++++++++++++
+ 3 files changed, 90 insertions(+)
 
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index b3ab47d250e1..43dfef80fb84 100644
+index 43dfef80fb84..8c561f1deec6 100644
 --- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -12,6 +12,9 @@ struct dsmas_entry {
- 	struct range dpa_range;
- 	u8 handle;
- 	struct access_coordinate coord;
-+
-+	int entries;
-+	int qos_class;
- };
+@@ -6,6 +6,7 @@
+ #include <linux/node.h>
+ #include <linux/overflow.h>
+ #include "cxlpci.h"
++#include "cxlmem.h"
+ #include "cxl.h"
  
- static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
-@@ -154,6 +157,55 @@ static int cxl_cdat_endpoint_process(struct cxl_port *port,
- 	return cdat_table_parse_output(rc);
+ struct dsmas_entry {
+@@ -206,6 +207,69 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+ 	return 0;
  }
  
-+static int cxl_port_perf_data_calculate(struct cxl_port *port,
-+					struct xarray *dsmas_xa)
++static void add_perf_entry(struct device *dev, struct dsmas_entry *dent,
++			   struct list_head *list)
 +{
-+	struct access_coordinate c;
-+	struct cxl_port *root_port;
-+	struct cxl_root *cxl_root;
-+	struct dsmas_entry *dent;
-+	int valid_entries = 0;
-+	unsigned long index;
-+	int rc;
++	struct cxl_dpa_perf *dpa_perf;
 +
-+	rc = cxl_endpoint_get_perf_coordinates(port, &c);
-+	if (rc) {
-+		dev_dbg(&port->dev, "Failed to retrieve perf coordinates.\n");
-+		return rc;
++	dpa_perf = kzalloc(sizeof(*dpa_perf), GFP_KERNEL);
++	if (!dpa_perf) {
++		dev_dbg(dev, "failed to add entry for dsmas dpa: %#llx\n",
++			dent->dpa_range.start);
++		return;
 +	}
 +
-+	root_port = find_cxl_root(port);
-+	cxl_root = to_cxl_root(root_port);
-+	if (!cxl_root->ops || !cxl_root->ops->qos_class)
-+		return -EOPNOTSUPP;
++	dpa_perf->dpa_range = dent->dpa_range;
++	dpa_perf->coord = dent->coord;
++	dpa_perf->qos_class = dent->qos_class;
++	list_add_tail(&dpa_perf->list, list);
++}
++
++static void free_perf_ents(void *data)
++{
++	struct cxl_memdev_state *mds = data;
++	struct cxl_dpa_perf *dpa_perf, *n;
++	LIST_HEAD(discard);
++
++	list_splice_tail_init(&mds->ram_perf_list, &discard);
++	list_splice_tail_init(&mds->pmem_perf_list, &discard);
++	list_for_each_entry_safe(dpa_perf, n, &discard, list) {
++		list_del(&dpa_perf->list);
++		kfree(dpa_perf);
++	}
++}
++
++static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
++				     struct xarray *dsmas_xa)
++{
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct device *dev = cxlds->dev;
++	struct range pmem_range = {
++		.start = cxlds->pmem_res.start,
++		.end = cxlds->pmem_res.end,
++	};
++	struct range ram_range = {
++		.start = cxlds->ram_res.start,
++		.end = cxlds->ram_res.end,
++	};
++	struct dsmas_entry *dent;
++	unsigned long index;
 +
 +	xa_for_each(dsmas_xa, index, dent) {
-+		int qos_class;
-+
-+		dent->coord.read_latency = dent->coord.read_latency +
-+					   c.read_latency;
-+		dent->coord.write_latency = dent->coord.write_latency +
-+					    c.write_latency;
-+		dent->coord.read_bandwidth = min_t(int, c.read_bandwidth,
-+						   dent->coord.read_bandwidth);
-+		dent->coord.write_bandwidth = min_t(int, c.write_bandwidth,
-+						    dent->coord.write_bandwidth);
-+
-+		dent->entries = 1;
-+		rc = cxl_root->ops->qos_class(root_port, &dent->coord, 1, &qos_class);
-+		if (rc != 1)
-+			continue;
-+
-+		valid_entries++;
-+		dent->qos_class = qos_class;
++		if (resource_size(&cxlds->ram_res) &&
++		    range_contains(&ram_range, &dent->dpa_range))
++			add_perf_entry(dev, dent, &mds->ram_perf_list);
++		else if (resource_size(&cxlds->pmem_res) &&
++			 range_contains(&pmem_range, &dent->dpa_range))
++			add_perf_entry(dev, dent, &mds->pmem_perf_list);
++		else
++			dev_dbg(dev, "no partition for dsmas dpa: %#llx\n",
++				dent->dpa_range.start);
 +	}
 +
-+	if (!valid_entries)
-+		return -ENOENT;
-+
-+	return 0;
++	devm_add_action_or_reset(&cxlds->cxlmd->dev, free_perf_ents, mds);
 +}
 +
  static void discard_dsmas(struct xarray *xa)
  {
  	unsigned long index;
-@@ -183,7 +235,12 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+@@ -221,6 +285,8 @@ DEFINE_FREE(dsmas, struct xarray *, if (_T) discard_dsmas(_T))
+ 
+ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+ {
++	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct xarray __dsmas_xa;
+ 	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
+ 	int rc;
+@@ -241,6 +307,7 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
  		return;
  	}
  
--	/* Performance data processing */
-+	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
-+	if (rc) {
-+		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
-+		return;
-+	}
-+
++	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
  }
  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
  
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 36270dcfb42e..fbaa508ab245 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1404,6 +1404,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+ 	mds->cxlds.reg_map.host = dev;
+ 	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+ 	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
++	INIT_LIST_HEAD(&mds->ram_perf_list);
++	INIT_LIST_HEAD(&mds->pmem_perf_list);
+ 
+ 	return mds;
+ }
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index a2fcbca253f3..205bc2a016b2 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -6,6 +6,7 @@
+ #include <linux/cdev.h>
+ #include <linux/uuid.h>
+ #include <linux/rcuwait.h>
++#include <linux/node.h>
+ #include "cxl.h"
+ 
+ /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+@@ -391,6 +392,20 @@ enum cxl_devtype {
+ 	CXL_DEVTYPE_CLASSMEM,
+ };
+ 
++/**
++ * struct cxl_dpa_perf - DPA performance property entry
++ * @list - list entry
++ * @dpa_range - range for DPA address
++ * @coord - QoS performance data (i.e. latency, bandwidth)
++ * @qos_class - QoS Class cookies
++ */
++struct cxl_dpa_perf {
++	struct list_head list;
++	struct range dpa_range;
++	struct access_coordinate coord;
++	int qos_class;
++};
++
+ /**
+  * struct cxl_dev_state - The driver device state
+  *
+@@ -455,6 +470,8 @@ struct cxl_dev_state {
+  * @security: security driver state info
+  * @fw: firmware upload / activation state
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
++ * @ram_perf_list: performance data entries matched to RAM
++ * @pmem_perf_list: performance data entries matched to PMEM
+  *
+  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
+  * details on capacity parameters.
+@@ -475,6 +492,10 @@ struct cxl_memdev_state {
+ 	u64 active_persistent_bytes;
+ 	u64 next_volatile_bytes;
+ 	u64 next_persistent_bytes;
++
++	struct list_head ram_perf_list;
++	struct list_head pmem_perf_list;
++
+ 	struct cxl_event_state event;
+ 	struct cxl_poison_state poison;
+ 	struct cxl_security_state security;
 
 
