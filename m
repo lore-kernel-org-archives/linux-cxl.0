@@ -1,128 +1,105 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7000AD2E7
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Dec 2023 09:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA35249E5
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Dec 2023 15:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmt9VmVA"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d7f1109abcso1069339b3a.3
-        for <linux-cxl@vger.kernel.org>; Fri, 22 Dec 2023 01:01:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="TLuAxiJb"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50e3295978aso2492795e87.1
+        for <linux-cxl@vger.kernel.org>; Fri, 22 Dec 2023 07:10:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703235672; x=1703840472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W2onsigAzJZV8OA9wsWeUj+BIGS+8SDO0C+tc8HGOhY=;
-        b=lmt9VmVAaeVUuBDp6cGGmDiom88QTP9/UDAwhWEy7l7W74hzs74dWAmLAgqOD7IWLF
-         czZTQawvwwbnRH0A87zmDpu61ww/GUVIsU3NNYqMGD6my3Kn7ZJFGLxRNNdMhwGmXdR7
-         qVnSlSFBW03uFvmidlA6vTTSBrfhKrilhOXZFY859gSRvh6D6OjC5PGAsg5k/RigyBDm
-         d2AEteml15U9xufbxTqjPcR2x1mQJgOesKwnQgvlE9Hr7UEk93nxJNXW0S9mtk69/oJR
-         3M8maR4WYKVY4sM5bAjYorVK+1h900Gbz73mAEV+ZUgZmOq7biEmqv5uZ4yXkm1PLLhL
-         RBoA==
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1703257823; x=1703862623; darn=vger.kernel.org;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yhQ/XEmmEXLeuiXM3/Bddn4zy68/ON4Wk5f7h+64qNQ=;
+        b=TLuAxiJb9D0+Wljh4axbNasEvHBLGxpkbn4PLvN0tAndEL0y0JvUQuD/Ndu3ZeYucg
+         J1jEZ+JeOBI/JMrFJRa7YjgnwtZE/tn46bmZSjGqlPj2D9iv7usbnC5lIEweer5E/4wW
+         yjw3n1OboeDMlzQ3E1yJyRxa450GIVeSXktl0NwfENn02VJ5uFqBo0UOSs1CKcZBaHQ1
+         t2ykC3Q0pkI+7fyQG5oYjenlz49VBW5LNRnNrMe/R1x9dtlFq18gZthse5+J4Mwc2ouf
+         uY64ZFlFZrC/Bf08l+1B3YH1mCdsT8a/7YEWGPbufp+57rtvB+KN9HKvoYi8xlbE7hmN
+         1hZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703235672; x=1703840472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1703257823; x=1703862623;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W2onsigAzJZV8OA9wsWeUj+BIGS+8SDO0C+tc8HGOhY=;
-        b=ekV9jC959UesXco1wKZQwjqaGhQi0RmoKH1ea0C13G1U7nkZnD+AgEIdlT4WQM0F5H
-         WVfoiUvEqt8PsARDUDtM5swp7sOcTKJc57BVjSbeLwJ3g0JHXpt0Ge1TQtC/6WNJbLLJ
-         o91n+V2dvZjLxoH4ekLWZzAQu8swfDY4izXL74VzDcOXWFKfNsRF/MXhRtWsc2lm9nAE
-         JI7Y3GnCr6hqMa+iyYL9aiy/0mRnXIJmOA+KmbCrRuCMF2D97VwI4clkZUnI1G0/7bjr
-         IGBlxqVHACAKML/hXpgzBibcX3yWEK7fQeVJPCiRZ2/0SbDCcnJyrn1M0x99GTlyQqZ5
-         mlIg==
-X-Gm-Message-State: AOJu0Yy0aXb38k4CA0BbG+PKpOtBhv1svO+HN/ltjgYbSCfBfEuy31JI
-	JISzqWdcJOPCNt96DbnZ1Go=
-X-Google-Smtp-Source: AGHT+IEQy6RlE35SipM9nNEMtU2PXXoNbifceNoOLuT+BPwv1mrmvRkw2/FTJSVF4OtWawIMnyR29g==
-X-Received: by 2002:a05:6a00:e07:b0:6d0:89be:e4a8 with SMTP id bq7-20020a056a000e0700b006d089bee4a8mr834227pfb.37.1703235671523;
-        Fri, 22 Dec 2023 01:01:11 -0800 (PST)
-Received: from localhost.localdomain ([1.245.180.67])
-        by smtp.gmail.com with ESMTPSA id f23-20020a056a000b1700b006d990040342sm400560pfu.155.2023.12.22.01.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 01:01:10 -0800 (PST)
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Fan Ni <fan.ni@samsung.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH v2 4/4] hw/cxl/events: discard all event records during sanitation
-Date: Fri, 22 Dec 2023 18:00:51 +0900
-Message-Id: <20231222090051.3265307-5-42.hyeyoo@gmail.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20231222090051.3265307-1-42.hyeyoo@gmail.com>
-References: <20231222090051.3265307-1-42.hyeyoo@gmail.com>
+        bh=yhQ/XEmmEXLeuiXM3/Bddn4zy68/ON4Wk5f7h+64qNQ=;
+        b=kf0Sq5VwOpA++4x0uF4IxXnXehT6L/kEF96xXwi1zTfHDXBFfSK3wdWjrQKeTtZFy3
+         Jv5emUM7/6rHZoLd9boScQq3lQvIVgp9YetHEYpsWZmbQxvDrZFvvtrtrT2NK/mVGfoi
+         WWAGINKyHdQURf9yNQWWJSN+cMGc8T+jodLFPBbZmi/sWjCUtNO1Y4o8dzIgt+Jb+Uh5
+         bkhm/Hne9HFE99u/Bx1SvDWIs7MuJvuS0wZ5Y1n2An2n3IxRp2XEpLwLuHiWe7DDKWpx
+         UItlh+AHXYZJtI7iCX7zi7J2iFwE5jsGndxuQWSRmM5a/Y/wkwKSiDjp9aZDSLCBeQB/
+         iPNQ==
+X-Gm-Message-State: AOJu0Yyl861dd3H0ctVEEF69Myzie6LE8Nd4QraPZwodry0AkbB1QuHI
+	Zfot5Zcwu1I5N6uIMD48M8KNY1+EdKRxhg==
+X-Google-Smtp-Source: AGHT+IHwcIYCSdFNGF/2YAkJMwFMiJMPWzZghYQoj2nnWf/JTpoVlBFJsoIHX2yG6Wi7mdTSTlwCuw==
+X-Received: by 2002:a05:6512:3d88:b0:50e:3e3a:3d6e with SMTP id k8-20020a0565123d8800b0050e3e3a3d6emr951312lfv.110.1703257823108;
+        Fri, 22 Dec 2023 07:10:23 -0800 (PST)
+Received: from smtpclient.apple ([2a00:1370:81a4:169c:81af:ea21:9e46:5992])
+        by smtp.gmail.com with ESMTPSA id e1-20020a05651236c100b0050e6780dbe2sm277882lfs.196.2023.12.22.07.10.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Dec 2023 07:10:22 -0800 (PST)
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.4\))
+Subject: [RFC] Do we need dedicated LSF/MM/BPF 2024 session for CXL memory?
+Message-Id: <42978BEA-D194-41F4-A619-BAF02CE8F4FF@dubeyko.com>
+Date: Fri, 22 Dec 2023 18:10:21 +0300
+Cc: linux-cxl@vger.kernel.org
+To: Dan J Williams <dan.j.williams@intel.com>,
+ Adam Manzanares <a.manzanares@samsung.com>,
+ vhache@rambus.com,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.4)
 
-Per spec 8.2.9.9.5.1 Sanitize (Opcode 4400h), sanitize command should
-delete all event logs. Introduce cxl_discard_all_event_logs() and call
-this in __do_sanitization().
+Hello,
 
-Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
----
- hw/cxl/cxl-events.c         | 13 +++++++++++++
- hw/cxl/cxl-mailbox-utils.c  |  1 +
- include/hw/cxl/cxl_device.h |  1 +
- 3 files changed, 15 insertions(+)
+Do we need dedicated LSF/MM/BPF 2024 session for CXL memory?
+Any comments?
 
-diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
-index bee6dfaf14..837b18ab47 100644
---- a/hw/cxl/cxl-events.c
-+++ b/hw/cxl/cxl-events.c
-@@ -141,6 +141,19 @@ bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
-     return cxl_event_count(log) == 1;
- }
- 
-+void cxl_discard_all_event_records(CXLDeviceState *cxlds)
-+{
-+    CXLEventLogType log_type;
-+    CXLEventLog *log;
-+
-+    for (log_type = 0; log_type < CXL_EVENT_TYPE_MAX; log_type++) {
-+        log = &cxlds->event_logs[log_type];
-+        while (!cxl_event_empty(log)) {
-+            cxl_event_delete_head(cxlds, log_type, log);
-+        }
-+    }
-+}
-+
- CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
-                                  uint8_t log_type, int max_recs,
-                                  size_t *len)
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index efeb5f8174..2ade351d82 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1150,6 +1150,7 @@ static void __do_sanitization(CXLType3Dev *ct3d)
-             memset(lsa, 0, memory_region_size(mr));
-         }
-     }
-+    cxl_discard_all_event_records(&ct3d->cxl_dstate);
- }
- 
- /*
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 5618061ebe..8f05dd9beb 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -604,6 +604,7 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
-                                  size_t *len);
- CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
-                                    CXLClearEventPayload *pl);
-+void cxl_discard_all_event_records(CXLDeviceState *cxlds);
- 
- void cxl_event_irq_assert(CXLType3Dev *ct3d);
- 
--- 
-2.39.3
+Hi Dan,
+
+I believe we need some talk to summarize:
+(1) what we achieved during 2023 year,
+(2) what TODOs we have
+(3) etc.
+
+What do you think?
+
+Hi Adam,
+
+I assume it will be good to hear what is cooking on hardware vendor=E2=80=99=
+s side
+in the CXL memory area. Could we have some summary related to this
+(of course, what can be shared with open-source community)? How do you
+feel about it?
+
+Hi Vincent,
+
+It will be great to hear what is going on with CXL specification and =
+which activity
+has taken place in CXL Consortium. How do you feel to share some 2023 =
+year
+summary?
+
+Hi Jonathan,
+
+I think QEMU is important area of CXL memory emulation and testing.
+So, I assume we could have interesting topics and discussions here.
+Any suggestions for this? What do you think?
+
+Thanks,
+Slava.
+
+
 
