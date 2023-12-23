@@ -1,38 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A259926AE4
-	for <linux-cxl@vger.kernel.org>; Sat, 23 Dec 2023 00:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71C77EE;
+	Sat, 23 Dec 2023 00:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4MtkAOn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQhcVHaR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703289631; x=1734825631;
+  t=1703290249; x=1734826249;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=LYqTV2ECYldX4OqMmspOu6rI439ychpNxwfrdcl5/NM=;
-  b=A4MtkAOn7QmOmjq1rPU8brUL8l8tBV9iTMJznwNzAGRsCs4u9cmRiWPs
-   01vWwZG5v0XY4Cp6TFEd9/m90prgo+eTeRAXTgNHiui1CVe87z5LpO8k1
-   i9bmFKmB1S3a6aGDdipSxjOCWf9NvOJGeQylPtg6w905xAclBUsb2Ck0T
-   2v1XzedyQrrJjUehCIdmlIJaLoDYn8E48BuhwWuJGi8I/cRBK6bcJh5J5
-   2GLF00w3Fdm4oBASlUu5ZvJgBJzTx5yB3oJXn6I7SNIlZBXHfumRXUqL7
-   NPxVJqgOcfy0BnUnyn9JHz4+4P9JW5ZCqI93ahGuxokvUULMc8vx8LLe8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="376311103"
+  bh=afU5wIxdwWlNn3gp/rwS4T6JsOud7wKWimp37CFAj40=;
+  b=WQhcVHaRD7VwUO+YFCJTm+dK2fORDmmy1sU9ISXjeeIJabSLMrq5x/Ya
+   pGMqqG5JV9Jo/No7ucw8DyGYBmRrG9Y2Zy5x+jz7LlZ7/F79k2LizTIxX
+   mql8wbg1O9l5WYKjyiUmMs18OAEWVTBVVnkJh8ELttVRL1yM2qo2i4AVu
+   igfhJYH6fESnUWxPBO75h0HBMVR905bwvFn/kYo1WsO/6F/u3yacbzXa1
+   qUzSeMCx4bxBFxk4rTCd8dslZM0wv1IRjKAMri6k9IwkEXZOrLJAyjYQa
+   lL6yU7Ul7hvEGzBxt0I4eIcwum6h1OJom+XUCr9XHt7bFscGqV5gsybaR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="14850201"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="376311103"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 16:00:30 -0800
+   d="scan'208";a="14850201"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 16:10:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="1024385915"
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="900641890"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="1024385915"
-Received: from jbjohns2-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.160.53])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 16:00:30 -0800
+   d="scan'208";a="900641890"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.160.53])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 16:10:47 -0800
 From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
@@ -40,10 +42,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
 	"Huang, Ying" <ying.huang@intel.com>
-Subject: [PATCH] ACPI: NUMA: Fix overlap when extending memblks to fill CFMWS
-Date: Fri, 22 Dec 2023 16:00:25 -0800
-Message-Id: <20231223000025.1401076-1-alison.schofield@intel.com>
+Subject: [PATCH v2] ACPI: NUMA: Fix overlap when extending memblks to fill CFMWS
+Date: Fri, 22 Dec 2023 16:10:44 -0800
+Message-Id: <20231223001044.1401226-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -75,6 +78,11 @@ Reported-by: "Huang, Ying" <ying.huang@intel.com>
 Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
+
+Changes in v2:
+- Send to ACPI maintainer, reviewer, and mailing list.
+
+
  drivers/acpi/numa/srat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
