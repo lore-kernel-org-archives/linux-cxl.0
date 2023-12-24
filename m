@@ -1,288 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6869A7E4
-	for <linux-cxl@vger.kernel.org>; Sun, 24 Dec 2023 01:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8A6EEDC;
+	Sun, 24 Dec 2023 21:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNHzKCvf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3ZJcNin"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703382825; x=1734918825;
-  h=date:from:to:cc:subject:message-id;
-  bh=jj70Z3Cvxxohk7Rf3zBDcSYF5lnuXMVMZ8SI9qkHxDM=;
-  b=VNHzKCvfbEOdvV7M74i2rNQ4z9I6BwkRvocOFub03rbZGpZl8UXVY1Bw
-   Iu+f5JGOQGOEb7xA+TmlmtBxIkfuUsBmxqnL4aG36QufxpPe9fqa3M0eW
-   jtRKxtCy0GeOjMeQDdEKLG66ELRI80ktJwuoklU1GRvoFsf16QI4S0TkX
-   7lwguYiDzBYmorYkkzPxZnRn0hZ4Byd0kt9BjnGbMdwnQDSlkIsEhskrl
-   Sqh38ozlnjmkIfG64lAf4t1yKKJZxqhR5WmSzyZuFKbnrnrF90r1/iey9
-   nCWqzQiPte+Gpjx/QpcSFF0ZK5k/G9Ig0YvZgoJxymo1Ky2tw9z1kk9aY
+  t=1703454039; x=1734990039;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=TQQh45BiJQ6yfdgaV/qswu5XJQ1PRCWrbdcPw3s0/Kc=;
+  b=C3ZJcNinJlV0hd4ESZhWSm8Mm1Xz5F1/7RchufHIIG6a3hGqzu6oE484
+   WWZUVMq1Me9902zT/7EUvMorzq/3TCx69BloeF8hxLCQFiCpDcTQcQH8W
+   dMXwEZm9RhN2l6Ow4QxMwd/HXUqW20ZvZ9hCaAggkAnPrSDnKQU0aB+sA
+   gPjT3EhqIGJft/tcNDjint7L46o5Mrm2KX+sVb8Yf6JtLSxh+NwLx1KWk
+   Te3fFSzvBYiujjl1nvsBofN1gvLuMORisy6a1/9zKAadTS0DGwZW3eNt2
+   z0evdCYhLeaAJCE3VOwF8Qk9E+eKzf7CEhGgmycYdL21/Ynn/bsZFYRrS
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="3475084"
-X-IronPort-AV: E=Sophos;i="6.04,300,1695711600"; 
-   d="scan'208";a="3475084"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2023 17:53:45 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="427418323"
+X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
+   d="scan'208";a="427418323"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 13:40:37 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="777426556"
-X-IronPort-AV: E=Sophos;i="6.04,300,1695711600"; 
-   d="scan'208";a="777426556"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 23 Dec 2023 17:53:41 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHDgP-000BkB-1r;
-	Sun, 24 Dec 2023 01:53:38 +0000
-Date: Sun, 24 Dec 2023 09:52:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:pending] BUILD SUCCESS
- 185c1a489f873cb71520fc089401e02dbf302dcd
-Message-ID: <202312240936.erViZ8kv-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="1024768283"
+X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
+   d="scan'208";a="1024768283"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Dec 2023 13:40:36 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 24 Dec 2023 13:40:36 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 24 Dec 2023 13:40:35 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 24 Dec 2023 13:40:35 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 24 Dec 2023 13:40:35 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MEczTIvEcNRFnU7AErgYcOWthddT2FaIrT7wxQ+O8CzOuh6VovxI5afRuQb+q7ZSC+wPEpDKv3SpMg5Lk1aFAysnsYgZKA7kq08CFhI9jmDpR7JgOkg5x4j/Gq1O2BIEoZBYbyMC8DRQAtMTyEt4r57rOqpXBo+RXd8TE6Z1Vbm2r23WcEfNdMksHfKJenyqQlnsruXcLYBljxhSMgrOYJEbScMmNuukHl2EN7n80gThJdwIodC8FPOuFtAySiq+Dzww8uLiH+wnVnnwHit0p+3aWcquMj+mhCXqp7xX6yo97XVp++PS6maL7kmGg0731mmsKtMIs6vsJV0Ul77elg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AQR5FjMNpw/N7lvoj/8Su4dwiNFT0RxMr8uR5SRBaPM=;
+ b=iAiIijgcqV06wXIbAvLzD/Uj+REZqg/uMIwO/+M2CANbF7+yxIrdJq/HPjO7WE0LAxf7ab2SJ1m31az+ZY/q01TXe2VlN6+cY/RuWo+yLo5j+jKVpTdx3iEYoPz1VhxpXwAuS31UTblFAdrKiX4lVgU9IKHqdN9OrNG+N2sUNULDh4Qeb/yFYTBz0r3/IIBG09iknA2+kalk+lVNCmxLo8V1ow/RQOO3Vm05AVJEhn3oZI/Q5o+eZNFtfazQ3jHR4/xFMwZd6pKE+SdHskHDlCB+uIq8j8j3nUJzM2UDXDIyzqY6OOafojz47DfjEJ9OHw5O/CKsBNYmSg0UrqW+eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ1PR11MB6130.namprd11.prod.outlook.com (2603:10b6:a03:45f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.26; Sun, 24 Dec
+ 2023 21:40:33 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6362:763e:f84b:4169%5]) with mapi id 15.20.7113.023; Sun, 24 Dec 2023
+ 21:40:32 +0000
+Date: Sun, 24 Dec 2023 13:40:29 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+CC: <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael.j.wysocki@intel.com>, Dave Jiang <dave.jiang@intel.com>, Yuntao Wang
+	<ytcoode@gmail.com>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+Subject: FYI, cxl.git vs acpi.git conflict entering -next for v6.8
+Message-ID: <6588a54d5c038_180129423@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: MW4PR03CA0274.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::9) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ1PR11MB6130:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e9461b1-ef9f-4033-b549-08dc04c8f46e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pWiLNj0lpTq0RU8lAx1WO/fagY0XTjSCThUao9HdA8wZ9gqnIMz4hin7ipz18vuxOjd7J6ciX9E/6Y4nFxgLBoWf2ici/lbdSl7dhjtSAB6z49gi91WixOChHQqVP12Z/c0xptjiTcN/MZnE916Mor7bVr5taVeQqIr1/WrrHObfRFqKMDWhNvB4+wsME4I10xXj1tnOxV5bKXMPo7iaFadhRn1kW8iwfRN7ODePWH4ATmzoGLTc+CRWnq6lw+lSm4hVeZoR7f/kNteeEd6gr+hfomwW2x6qWJvhL+pPR5S0tbDuwVnom8taK0J6OVff+g74UfGAaH0SO6JpuNGPJXOuC2Bf/HuS59ykPaK1ZEc3/S92JiQKpwImBj+Ea8FuWK0IpaBb1aLpsi+SNyOV6hJ7TzGQR0hf/IvJeFYDwQRdajdTbBgMg5t2pvKkm2nTaVzFbYsca49PrY6+9Wo/NYgr2qWwR/km8MB239nI/cDytS5m7hnsXbqStU4D0sYJ9Sa1BZ+lPtcufLu6dYeqH4MH4QwhDTvhQ5PHVc4vCIg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(396003)(366004)(39860400002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(8676002)(8936002)(5660300002)(4326008)(2906002)(478600001)(9686003)(6666004)(6506007)(6512007)(66556008)(66946007)(66476007)(54906003)(316002)(6916009)(6486002)(41300700001)(84970400001)(82960400001)(38100700002)(26005)(86362001)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HqFFsskZdfTYW/5e+A9Dx06uLV6fB0eBEaK0HFU7O6SkQCIMUciAy9FrbStH?=
+ =?us-ascii?Q?svqvbEN9oK0ItU0/U13bzubu98r5znyHj55SGDw2KmGXmlR4EehlW/YAI6Zb?=
+ =?us-ascii?Q?+UpiCGfFQAVB7FuEMYYQkliGyBRWoChGkCzOIY7ICYTUpt2BW3G8vskIwn2Z?=
+ =?us-ascii?Q?ViGCs7t25jHtIv3RXA/XvpRKA0joI70dOBeESoYw9JmbK53P0mAgAE5hiyXW?=
+ =?us-ascii?Q?8fZYFF+qCh+zhN9oLn/Nsj5Hsp87QKhFkFVvt0jHHaCpc4I8DraxUgJ2Idx5?=
+ =?us-ascii?Q?9Yko6c6kf8U9NtahkBtmqLa6umobx8UnRBvgzdIYZgaqQJR5wESCAywoK121?=
+ =?us-ascii?Q?qC5Irj/QviDHqoVZzAAgd5brUXNOc/ioTZAEZheEYtGjT8AKjVYbaYJ3FITn?=
+ =?us-ascii?Q?pZ84tYrJZgSbvImlOog3eo8vObAl2I7DdlMH62SHBmZOfv5bmT9FLfC7ldWo?=
+ =?us-ascii?Q?MC/PSAfWKN4vINrctJ1ZoZ+7aXe2/n3kyBk0okAhyAGooEBk/b31veIiUJMS?=
+ =?us-ascii?Q?VnB9ywaRtkwpoB2n3QVJX+GHJ/ypfqqSUfKtXxgKMfQADBEvldPfU+/IG3wI?=
+ =?us-ascii?Q?g4TbDs+ExWnYVSErnK69JScavNvBr8Yak7OyUJhLpol5RXC0wwOmjaG/R5eq?=
+ =?us-ascii?Q?t6Paf3f/wongmtswUvcvFvkIXwObx/toipQmUoS6LwFi8gDK1N95hUWWqfBl?=
+ =?us-ascii?Q?ynbzsK+ZqDeGs/HreZaJdn7Jmlus00UBhRb1LvilzbwN7J2pYvPsO6hLMAlK?=
+ =?us-ascii?Q?dc0i75Ieux2mXh3t8USyZv5BdLWGQRvTVWoe+YvZF7Hy9RDBbazOj942zvIF?=
+ =?us-ascii?Q?0gXTx97IXNSoxAt9HpbF1aZgo/5ru5XsOSwe2pDtvEUsLjSSWbwgSag+UXy5?=
+ =?us-ascii?Q?5fpexEt9JolCh+YI2Uk1izeebRyMDpna+/MVmT+NFjbf9UrWTFibvo27CdLU?=
+ =?us-ascii?Q?dGJ3ktByA/aNEl8+qY3izZSVmY8xNhoWBr7pSyo712Lb03K2OHv6tjtPut22?=
+ =?us-ascii?Q?Op6L+GaDHOJLz7OW4YM4zld7QK/Zjf+qNp6gCT2H+TvtottzHnszgbQANTp+?=
+ =?us-ascii?Q?4HAgMayVmaVs96bKQQmuBC8Xu/z1yz5O48K0dIQKDcBWCFSLEhd8GF+czQxx?=
+ =?us-ascii?Q?HNv4XgvrcMh/IzPhRIXijw2up+J+sOmCXtRcPbOJN8lEakHfZJSLCQvXUXw4?=
+ =?us-ascii?Q?XH5T7fxFK7CqHm3kX/LeAW9wIXGPkHJgO2gwMivQVy4o/cceogBBMUlX+gdm?=
+ =?us-ascii?Q?cCA0AlIeezPcZS2VN3oAMx6rEJ6T2oh7zSHv151SCci2rIgD6yxv9/zxGdUg?=
+ =?us-ascii?Q?nP04TNqUlyo0mFGN+1vajs3CpXwO3gHzVm8G78E9/nC4H9cB26/On6EOTEiB?=
+ =?us-ascii?Q?fUaxWXbHlDAc9rJbwHJukcy4d6KR0PHrC4E2O338PBElV0HbFlMP1ho4GVBd?=
+ =?us-ascii?Q?TNtQJXdw+BBA9mqjsLFVyVtMONatGX8Rd7hbiDsnw6k4pHsd/E6hu2lRovyD?=
+ =?us-ascii?Q?G6ElmYjjI0wc4ThkDXA5pCX9OnSPTkM1JvjltE0YvF9YzQ795btlhckgh1ri?=
+ =?us-ascii?Q?qmKSCYiYZWUAreQcm2getTxg7Q7E0k74wPpfqZkJ4H6bDS3bN1Rq7m/6obyB?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e9461b1-ef9f-4033-b549-08dc04c8f46e
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2023 21:40:32.3640
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: veITYCWLfSt4sVikFq95yK3BP74ZlyP+1DPO2mC7iXN0TMvqOp0WgCxTaGiedd5ml7Tv11ZN74cvtQtrsrRt6vnrPaUU6I1kzRbYrx5QArs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6130
+X-OriginatorOrg: intel.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git pending
-branch HEAD: 185c1a489f873cb71520fc089401e02dbf302dcd  cxl: Check qos_class validity on memdev probe
+Hey Stephen,
 
-elapsed time: 1485m
+Just a heads up that you will see a conflict with current ACPI content
+with the next pull of cxl.git/next tree.
 
-configs tested: 220
-configs skipped: 8
+Here are the commits in -next that conflict:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+f47507988145 thermal: ACPI: Move the ACPI thermal library to drivers/acpi/
+4b3805daaacb ACPI: tables: Correct and clean up the logic of acpi_parse_entries_array()
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                         haps_hs_defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
-arc                   randconfig-001-20231223   gcc  
-arc                   randconfig-002-20231223   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                           h3600_defconfig   gcc  
-arm                            qcom_defconfig   gcc  
-arm                   randconfig-001-20231223   clang
-arm                   randconfig-002-20231223   clang
-arm                   randconfig-003-20231223   clang
-arm                   randconfig-004-20231223   clang
-arm                        shmobile_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231223   clang
-arm64                 randconfig-002-20231223   clang
-arm64                 randconfig-003-20231223   clang
-arm64                 randconfig-004-20231223   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231223   gcc  
-csky                  randconfig-002-20231223   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20231223   clang
-hexagon               randconfig-002-20231223   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231223   clang
-i386         buildonly-randconfig-002-20231223   clang
-i386         buildonly-randconfig-003-20231223   clang
-i386         buildonly-randconfig-004-20231223   clang
-i386         buildonly-randconfig-005-20231223   clang
-i386         buildonly-randconfig-006-20231223   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231223   clang
-i386                  randconfig-002-20231223   clang
-i386                  randconfig-003-20231223   clang
-i386                  randconfig-004-20231223   clang
-i386                  randconfig-005-20231223   clang
-i386                  randconfig-006-20231223   clang
-i386                  randconfig-011-20231223   gcc  
-i386                  randconfig-011-20231224   clang
-i386                  randconfig-012-20231223   gcc  
-i386                  randconfig-012-20231224   clang
-i386                  randconfig-013-20231223   gcc  
-i386                  randconfig-013-20231224   clang
-i386                  randconfig-014-20231223   gcc  
-i386                  randconfig-014-20231224   clang
-i386                  randconfig-015-20231223   gcc  
-i386                  randconfig-015-20231224   clang
-i386                  randconfig-016-20231223   gcc  
-i386                  randconfig-016-20231224   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231223   gcc  
-loongarch             randconfig-002-20231223   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-m68k                        m5407c3_defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
-mips                          rb532_defconfig   gcc  
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231223   gcc  
-nios2                 randconfig-002-20231223   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231223   gcc  
-parisc                randconfig-002-20231223   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                        icon_defconfig   clang
-powerpc                      mgcoge_defconfig   gcc  
-powerpc                 mpc832x_rdb_defconfig   clang
-powerpc               randconfig-001-20231223   clang
-powerpc               randconfig-002-20231223   clang
-powerpc               randconfig-003-20231223   clang
-powerpc                     taishan_defconfig   gcc  
-powerpc                     tqm5200_defconfig   clang
-powerpc64             randconfig-001-20231223   clang
-powerpc64             randconfig-002-20231223   clang
-powerpc64             randconfig-003-20231223   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231223   clang
-riscv                 randconfig-002-20231223   clang
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231223   gcc  
-s390                  randconfig-002-20231223   gcc  
-s390                       zfcpdump_defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                    randconfig-001-20231223   gcc  
-sh                    randconfig-002-20231223   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231223   gcc  
-sparc64               randconfig-002-20231223   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231223   clang
-um                    randconfig-002-20231223   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231223   clang
-x86_64       buildonly-randconfig-001-20231224   gcc  
-x86_64       buildonly-randconfig-002-20231223   clang
-x86_64       buildonly-randconfig-002-20231224   gcc  
-x86_64       buildonly-randconfig-003-20231223   clang
-x86_64       buildonly-randconfig-003-20231224   gcc  
-x86_64       buildonly-randconfig-004-20231223   clang
-x86_64       buildonly-randconfig-004-20231224   gcc  
-x86_64       buildonly-randconfig-005-20231223   clang
-x86_64       buildonly-randconfig-005-20231224   gcc  
-x86_64       buildonly-randconfig-006-20231223   clang
-x86_64       buildonly-randconfig-006-20231224   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20231223   gcc  
-x86_64                randconfig-002-20231223   gcc  
-x86_64                randconfig-003-20231223   gcc  
-x86_64                randconfig-004-20231223   gcc  
-x86_64                randconfig-005-20231223   gcc  
-x86_64                randconfig-006-20231223   gcc  
-x86_64                randconfig-011-20231223   clang
-x86_64                randconfig-011-20231224   gcc  
-x86_64                randconfig-012-20231223   clang
-x86_64                randconfig-012-20231224   gcc  
-x86_64                randconfig-013-20231223   clang
-x86_64                randconfig-013-20231224   gcc  
-x86_64                randconfig-014-20231223   clang
-x86_64                randconfig-014-20231224   gcc  
-x86_64                randconfig-015-20231223   clang
-x86_64                randconfig-015-20231224   gcc  
-x86_64                randconfig-016-20231223   clang
-x86_64                randconfig-016-20231224   gcc  
-x86_64                randconfig-071-20231223   clang
-x86_64                randconfig-071-20231224   gcc  
-x86_64                randconfig-072-20231223   clang
-x86_64                randconfig-072-20231224   gcc  
-x86_64                randconfig-073-20231223   clang
-x86_64                randconfig-073-20231224   gcc  
-x86_64                randconfig-074-20231223   clang
-x86_64                randconfig-074-20231224   gcc  
-x86_64                randconfig-075-20231223   clang
-x86_64                randconfig-075-20231224   gcc  
-x86_64                randconfig-076-20231223   clang
-x86_64                randconfig-076-20231224   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20231223   gcc  
-xtensa                randconfig-002-20231223   gcc  
+My proposed resolution below, and this branch has otherwise got a build
+success notification from 0day.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+commit 43d2e52a911396164845727e5d92f1d73c4ac195
+Merge: 39676dfe5233 185c1a489f87
+Author: Dan Williams <dan.j.williams@intel.com>
+Date:   Fri Dec 22 16:04:54 2023 -0800
+
+    Merge branch 'for-6.8/cxl-cdat' into test
+
+diff --cc include/linux/acpi.h
+index 118a18b7ff84,8b0761c682f9..b7165e52b3c6
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@@ -424,13 -425,16 +425,23 @@@ extern int acpi_blacklisted(void)
+  extern void acpi_osi_setup(char *str);
+  extern bool acpi_osi_is_win8(void);
+  
+ +#ifdef CONFIG_ACPI_THERMAL_LIB
+ +int thermal_acpi_active_trip_temp(struct acpi_device *adev, int id, int *ret_temp);
+ +int thermal_acpi_passive_trip_temp(struct acpi_device *adev, int *ret_temp);
+ +int thermal_acpi_hot_trip_temp(struct acpi_device *adev, int *ret_temp);
+ +int thermal_acpi_critical_trip_temp(struct acpi_device *adev, int *ret_temp);
+ +#endif
+ +
++ #ifdef CONFIG_ACPI_HMAT
++ int acpi_get_genport_coordinates(u32 uid, struct access_coordinate *coord);
++ #else
++ static inline int acpi_get_genport_coordinates(u32 uid,
++ 					       struct access_coordinate *coord)
++ {
++ 	return -EOPNOTSUPP;
++ }
++ #endif
++ 
+  #ifdef CONFIG_ACPI_NUMA
+  int acpi_map_pxm_to_node(int pxm);
+  int acpi_get_node(acpi_handle handle);
+diff --cc lib/fw_table.c
+index c49a09ee3853,1e5e0b2f7012..c3569d2ba503
+--- a/lib/fw_table.c
++++ b/lib/fw_table.c
+@@@ -85,9 -98,27 +98,22 @@@ acpi_get_subtable_type(char *id
+  	return ACPI_SUBTABLE_COMMON;
+  }
+  
+- static __init_or_acpilib int call_handler(struct acpi_subtable_proc *proc,
+- 					  union acpi_subtable_headers *hdr,
+- 					  unsigned long end)
++ static unsigned long __init_or_fwtbl_lib
++ acpi_table_get_length(enum acpi_subtable_type type,
++ 		      union fw_table_header *header)
++ {
++ 	if (type == CDAT_SUBTABLE) {
++ 		__le32 length = (__force __le32)header->cdat.length;
++ 
++ 		return le32_to_cpu(length);
++ 	}
++ 
++ 	return header->acpi.length;
++ }
++ 
+ -static __init_or_fwtbl_lib bool has_handler(struct acpi_subtable_proc *proc)
+ -{
+ -	return proc->handler || proc->handler_arg;
+ -}
+ -
++ static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
++ 					    union acpi_subtable_headers *hdr,
++ 					    unsigned long end)
+  {
+  	if (proc->handler)
+  		return proc->handler(hdr, end);
+@@@ -127,10 -158,14 +153,13 @@@ acpi_parse_entries_array(char *id, unsi
+  {
+  	unsigned long table_end, subtable_len, entry_len;
+  	struct acpi_subtable_entry entry;
++ 	enum acpi_subtable_type type;
+  	int count = 0;
+ -	int errs = 0;
+  	int i;
+  
+- 	table_end = (unsigned long)table_header + table_header->length;
++ 	type = acpi_get_subtable_type(id);
++ 	table_end = (unsigned long)table_header +
++ 		    acpi_table_get_length(type, table_header);
+  
+  	/* Parse all entries looking for a match. */
+  
+@@@ -168,9 -209,31 +197,31 @@@
+  	}
+  
+  	if (max_entries && count > max_entries) {
+ -		pr_warn("[%4.4s:0x%02x] found the maximum %i entries\n",
+ -			id, proc->id, count);
+ +		pr_warn("[%4.4s:0x%02x] ignored %i entries of %i found\n",
+ +			id, proc->id, count - max_entries, count);
+  	}
+  
+ -	return errs ? -EINVAL : count;
+ +	return count;
+  }
++ 
++ int __init_or_fwtbl_lib
++ cdat_table_parse(enum acpi_cdat_type type,
++ 		 acpi_tbl_entry_handler_arg handler_arg,
++ 		 void *arg,
++ 		 struct acpi_table_cdat *table_header)
++ {
++ 	struct acpi_subtable_proc proc = {
++ 		.id		= type,
++ 		.handler_arg	= handler_arg,
++ 		.arg		= arg,
++ 	};
++ 
++ 	if (!table_header)
++ 		return -EINVAL;
++ 
++ 	return acpi_parse_entries_array(ACPI_SIG_CDAT,
++ 					sizeof(struct acpi_table_cdat),
++ 					(union fw_table_header *)table_header,
++ 					&proc, 1, 0);
++ }
++ EXPORT_SYMBOL_FWTBL_LIB(cdat_table_parse);
