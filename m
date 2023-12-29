@@ -1,102 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFD217C4
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Dec 2023 00:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4XdqWiI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F76C433C8;
-	Fri, 29 Dec 2023 00:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703808256;
-	bh=fl4ToNmQ+OSfn8vP0zMMtBXF7+B4qa95KAm3ShtVGJg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=O4XdqWiIbk10seg/0JD8sWDTgZUxhJVs06WX3kLaLf/FtQnrIOlUW5R0c/puJq3zS
-	 PnsEwwKF56T0PJt1iCtGZp3y0lCPe4DjKEl3YOLyY9iaeq46cC7eMPxVfX4X/OxUHr
-	 LIqLh6nO/GSLD1PfManfXWfKJaFwQ6ZwytkMJm1u0ovcZ44Oi9qmmL30qb2f9Lf+fD
-	 yqHf28o7BPHOSbNet2vp5POlFfSP2156APocDdOT20zgTY8/b3xSvDjP1xSjWLL0kd
-	 bcWzTQR0bfrQN37nxm2X4Xp00hMdrqG3RJ+EGlsW/LosF7AuGgetq2w7zs6yuGXM/0
-	 fPMIxh3l9HoJg==
-Date: Thu, 28 Dec 2023 18:04:14 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Len Brown <lenb@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	dave@stgolabs.net
-Subject: Re: [PATCH v15 00/19] cxl: Add support for QTG ID retrieval for CXL
- subsystem
-Message-ID: <20231229000414.GA1559983@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401F612B6B;
+	Fri, 29 Dec 2023 17:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bb631656e5so1011440b6e.0;
+        Fri, 29 Dec 2023 09:43:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703871817; x=1704476617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4NCIsXvRaT4RUXj2m5CrwiiUoqF/vM7/zwxLNbADhY4=;
+        b=t/nLF1Lq7PEpuhZsisdQoswfbnssc56AlPP9A0KM6ylfydfungAmljU37HWK9B21Yq
+         PVel8KRhZxrBUR0UAuysRzJ9scsjjgERXQezGRtpLNwb5sS7r0Fm0HsisZDN6gWLAJoY
+         b1qDSK1Ta2pdw7nMP2k7SFB4UiAe1OuJnz/479a4/gBNbI/1vqGOHkByoN5cNFeNFW6o
+         tsfdYiKI1uWAkgQfwyCKnSRdDjl2tTHJCzuTQh/L7KX+V7rbz3PjOs/xYYp54PD/G0o/
+         TA1rXrWoW94aBbZ09y8hQQopiWlEOxkPx9O1pQ2I+MR+xSTQDbLIYyCMAovnBYZ+KVNq
+         j6jQ==
+X-Gm-Message-State: AOJu0YxYfqk3IIHaA+L76PL31cU1+te5aKXp27PywVJknMeOIaijg1qs
+	pWvJl4Nd5XY1DDU8mikSjy8Z1DLVmw8wqDBLB9Y=
+X-Google-Smtp-Source: AGHT+IHlVF4Xs1j4xT4Y+EVTCqK0APhhjEuh3RMTHKTTM8xckFBD6GS8pbV9tAGGzg1O3RlTR1QYjsP1Ew6IWoHW6F0=
+X-Received: by 2002:a05:6871:3a26:b0:1fb:e5f:c530 with SMTP id
+ pu38-20020a0568713a2600b001fb0e5fc530mr21569924oac.4.1703871817171; Fri, 29
+ Dec 2023 09:43:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
+References: <20231223001044.1401226-1-alison.schofield@intel.com>
+In-Reply-To: <20231223001044.1401226-1-alison.schofield@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 29 Dec 2023 18:43:26 +0100
+Message-ID: <CAJZ5v0jLkeTMDsatHB_uabj3yuyQswPm1nve=sv=kE=96qcpcg@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: NUMA: Fix overlap when extending memblks to fill CFMWS
+To: alison.schofield@intel.com
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 03:02:25PM -0700, Dave Jiang wrote:
-> v15:
-> - Update the hmat generic targets via hmat_update_target_attrs() to retain the best
->   performance numbers from HMAT table.
-> - Refactor qos_class valid checks to simplify (Jonathan)
+On Sat, Dec 23, 2023 at 1:10=E2=80=AFAM <alison.schofield@intel.com> wrote:
+>
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> When the BIOS only partially describes a CFMWS Window in the SRAT
+> the acpi driver uses numa_fill_memblks() to extend existing memblk(s)
+> to fill the entire CFMWS Window, thereby applying the proximity domain
+> to the entire CFMWS.
+>
+> The calculation of the memblks to fill has an off-by-one error, that
+> causes numa_init to fail when it sees the overlap:
+>
+> [] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x7fffffff]
+> [] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0xffffffffff]
+> [] ACPI: SRAT: Node 1 PXM 1 [mem 0x10000000000-0x1ffffffffff]
+> [] node 0 [mem 0x100000000-0xffffffffff] overlaps with node 1 [mem 0x1000=
+00000-0x1ffffffffff]
+>
+> Fix by making the 'end' parameter to numa_fill_memblks() exclusive.
+>
+> Fixes: 8f1004679987 ("ACPI/NUMA: Apply SRAT proximity domain to entire CF=
+MWS window")
+> Reported-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>
+> Changes in v2:
+> - Send to ACPI maintainer, reviewer, and mailing list.
+>
+>
+>  drivers/acpi/numa/srat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 12f330b0eac0..b99062f7c412 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -308,7 +308,7 @@ static int __init acpi_parse_cfmws(union acpi_subtabl=
+e_headers *header,
+>
+>         cfmws =3D (struct acpi_cedt_cfmws *)header;
+>         start =3D cfmws->base_hpa;
+> -       end =3D cfmws->base_hpa + cfmws->window_size;
+> +       end =3D cfmws->base_hpa + cfmws->window_size - 1;
+>
+>         /*
+>          * The SRAT may have already described NUMA details for all,
+>
+> base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+> --
 
-One of these versions apparently rebased to v6.7-rc5.
-
-> v14:
-> - Fix 0day issue with fw_table usage (Dan)
-> - Move all DSMAS processing local to core/cdat.c (Dan)
-> - Change get_qos_class() to qos_class() (Dan)
-> - Fix perf entry allocation lifetime (Dan)
-> - Rename perf_prop_entry to cxl_dpa_perf (Dan)
-> - Cleanup gotos using DEFINE_FREE() (Dan)
-> - Move qos computation before regions arrive. (Dan)
-> - Drop unmatched perf list (Dan)
-> - Add target_lock locking for retrieving genport coordinates (Dan)
-> 
-> v13:
-> - Convert temp dsmas list to xarray, optimize DSLBIS matching (Dan)
-> - Add a cxl_test fix for mock ACPI cxl host bridge UID.
-> 
-> v12:
-> - Tested on hardware
-> - Rebased to v6.7-rc1
-> ...
-
->       lib/firmware_table: tables: Add CDAT table parsing support
->       base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
->       acpi: numa: Create enum for memory_target access coordinates indexing
->       acpi: numa: Add genport target allocation to the HMAT parsing
->       acpi: Break out nesting for hmat_parse_locality()
->       acpi: numa: Add setting of generic port system locality attributes
->       acpi: numa: Add helper function to retrieve the performance attributes
-
-Drive-by comment since this series isn't for me, but "acpi:" and
-"acpi: numa:" are new prefix styles that don't match the drivers/acpi/
-history.  It looks nice in *this* series, but not quite as nice in the
-future drivers/acpi history.
-
->       cxl: Add callback to parse the DSMAS subtables from CDAT
->       cxl: Add callback to parse the DSLBIS subtable from CDAT
->       cxl: Add callback to parse the SSLBIS subtable from CDAT
->       cxl: Add support for _DSM Function for retrieving QTG ID
->       cxl: Calculate and store PCI link latency for the downstream ports
->       tools/testing/cxl: Add hostbridge UID string for cxl_test mock hb devices
->       cxl: Store the access coordinates for the generic ports
->       cxl: Add helper function that calculate performance data for downstream ports
->       cxl: Compute the entire CXL path latency and bandwidth data
->       cxl: Store QTG IDs and related info to the CXL memory device context
->       cxl: Export sysfs attributes for memory device QoS class
->       cxl: Check qos_class validity on memdev probe
-> 
-> 
->  Documentation/ABI/testing/sysfs-bus-cxl |  34 ++
->  drivers/acpi/numa/hmat.c                | 193 +++++++--
->  drivers/acpi/tables.c                   |   5 +-
+Applied as 6.8 material, thanks!
