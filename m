@@ -1,46 +1,47 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB9617C9
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Jan 2024 07:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AECA17C8
+	for <linux-cxl@vger.kernel.org>; Mon,  1 Jan 2024 07:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XYMI6ebQ"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4281808210eso10101851cf.0
-        for <linux-cxl@vger.kernel.org>; Sun, 31 Dec 2023 23:53:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IxP1qDiB"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-427eabbaf25so30361791cf.0
+        for <linux-cxl@vger.kernel.org>; Sun, 31 Dec 2023 23:53:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704095616; x=1704700416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VyV5hnp91TeiHstvaoYF9rVSsCdsGMAQzGHGfrO6Wsw=;
-        b=XYMI6ebQC9xsrIwAgxyrDDVfJZOLitpTWWBGEkdofH5vNyPZFc4KSNShjGUaNJ6rVJ
-         jNca9w5ouGZ2z9+WRx+gBweIqooXN5ynjjJT3l23Z7vOedxStPc6HLh2lUKN7pc7WVgG
-         b82QF8QKR3CPNr/8rPl4J+NGqQQZLJVfrgtmgFRR8D4e/nJdYEbRtXAvm0K7Q4B9kzCG
-         Uam6+XcZcWuAJHmltYGmi1PECCR4plKiPsuyioAgCdqdtGgH/q6toC/xe8LqL2G7GqUN
-         34HnlcfgPCcq8n6P4k1camDPTIQd9KGs7D0GZGLm+aw4qFK+Tnc7/DmVtp9SPW+62sLR
-         tMcA==
+        d=bytedance.com; s=google; t=1704095629; x=1704700429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8FUEEGnGsBaweemMprQnXlz3wR+5ydknYqnb+TOQpYo=;
+        b=IxP1qDiBtMgU6/R41KgX/f2Qn8DhrpMmDaSBkkLItRGsOFy7EnKxTkIfKfV+vVbUW+
+         vzmEHr1bemkVstndLWWw1/rjIPa6cmhxSZZ33ymH5yIOVCN2sE/HeOsOtZaYj3PuRWNr
+         ezoAfiVW6nbWtneAbgyYivU6uZoKMWoLoBN+kuolH+XQ1IsKt3xWDzh1fXR+aAnU+log
+         zbhJqLXtPYxFAh8rHf1Z18ZgALMCGIOfer2wCWwCDoCk6XKJ1xmRsb+Muz4fS7L9hWZY
+         tMMAG1eBBbfN+Sd61QTU1MnFFuU9dr6FSfMyZcS03i5MKl39UfRKBmz1gykdHO/4YdET
+         KAug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704095616; x=1704700416;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VyV5hnp91TeiHstvaoYF9rVSsCdsGMAQzGHGfrO6Wsw=;
-        b=YDO8OQeFWetXDxdWwgdHJNTTPQkW07IrSD3vATVm8RDM5JViQ94CIKA0pFSXoiAjE7
-         jYxFb0jq/1RaRVcBCahDoJKo+4Z6TpBJne7GefZbfzbffVAhrSDQfHs7Jwcuxu62s87X
-         ewT0H4KBnqOUs9X5UmDp9/PPGavqTUogbG5ahtUR0QkQjTmjjHN77LEt+RJHBspp5u8r
-         0qP2HHE+nqpJtwhbkq/kevSvCnzm/nycn0RaigKZRNrdS6otrH6CeGMZXAWprGk7rRBl
-         SWx65iz/0XEXywZAAkPef56taWMysJJyHgCGUNfUIKQY3fXTPGxmv2Q3DQNv4JIx7wrw
-         8EvA==
-X-Gm-Message-State: AOJu0Ywdq2qFn2i8wDcc7x+5mLj2KrGsK2pzqrz3gV7GNaEYuEb9zZ8O
-	eXxec9Iuzil9Ek30CNrLRsbduKvBLDVNgg==
-X-Google-Smtp-Source: AGHT+IE1gPh7c7nPqsNGj6usU8Pc4Isa5wAAybwbXhRHum8VBp1X72jKJrYzZU1Vb0UBULH3WflzzA==
-X-Received: by 2002:ac8:5e0c:0:b0:427:fa9d:e91b with SMTP id h12-20020ac85e0c000000b00427fa9de91bmr7814434qtx.30.1704095616255;
-        Sun, 31 Dec 2023 23:53:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704095629; x=1704700429;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8FUEEGnGsBaweemMprQnXlz3wR+5ydknYqnb+TOQpYo=;
+        b=Pwg2/f4As9gMlK+4AoaRhZSMBo5xUx9Cz7K1IDMms3Vg1rgmsevijpYHnRV/xHlwDh
+         15/s6aObVRHscWPQD2/IuIX0yUA6gfvsIrv5/Q/DyKlMJKdoXcx6vgJygtom9Zd8ra/7
+         pPOy0HDOxIcq22Dd5dz7yx8Ci4cHYQN8aOFZxt2m0s/XizdS0yBtw8UY8rhtuYb0GcqF
+         wxF/BcmsTSz3aOIkk3EBRAY0zNcltIT7wvS+GycqbQgMZ1WEMjO9pFzkbnB0L6lBy/1+
+         NkKxQMJbs8RrPu5dUgOSrhX5YPnpP9AmZN+SGor6c3opgQtlFzRbE5sgV9pBvkkMtu2H
+         S0eQ==
+X-Gm-Message-State: AOJu0YyQ5PL1TG8NGZeWbn64WrnNDxEsi+EXw/I8HHKGPJ8XwwhIh2lh
+	Ygi4Cvv3xshx/ZXyEgPJ0LWC/ZFFh3Rq1lN2kn/tW0rmLJg=
+X-Google-Smtp-Source: AGHT+IETp0NQPl5rZvtW0mxc9ERREZGzkHxXHcf0ZU9nXvUfuC9skWSvcJ3vGosbP2+gSBWH9Uih3w==
+X-Received: by 2002:ac8:5795:0:b0:428:1de2:e591 with SMTP id v21-20020ac85795000000b004281de2e591mr1762564qta.57.1704095629024;
+        Sun, 31 Dec 2023 23:53:49 -0800 (PST)
 Received: from n73-164-11.byted.org ([72.29.204.230])
-        by smtp.gmail.com with ESMTPSA id bx4-20020a05622a090400b00427f5c73636sm4465361qtb.27.2023.12.31.23.53.34
+        by smtp.gmail.com with ESMTPSA id bx4-20020a05622a090400b00427f5c73636sm4465361qtb.27.2023.12.31.23.53.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Dec 2023 23:53:36 -0800 (PST)
+        Sun, 31 Dec 2023 23:53:48 -0800 (PST)
 From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>,
 	"Hao Xiang" <hao.xiang@bytedance.com>,
@@ -61,10 +62,12 @@ To: "Michael S. Tsirkin" <mst@redhat.com>,
 Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
 	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
 	linux-cxl@vger.kernel.org
-Subject: [QEMU-devel][RFC PATCH 0/1] Introduce HostMemType for 'memory-backend-*'
-Date: Sun, 31 Dec 2023 23:53:14 -0800
-Message-Id: <20240101075315.43167-1-horenchuang@bytedance.com>
+Subject: [QEMU-devel][RFC PATCH 1/1] backends/hostmem: qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and its arg 'cxlram'
+Date: Sun, 31 Dec 2023 23:53:15 -0800
+Message-Id: <20240101075315.43167-2-horenchuang@bytedance.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240101075315.43167-1-horenchuang@bytedance.com>
+References: <20240101075315.43167-1-horenchuang@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -73,143 +76,25 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Heterogeneous memory setups are becoming popular. Today, we can run a server
-system combining DRAM, pmem, HBM, and CXL-attached DDR. CXL-attached DDR
-memory shares the same set of attributes as normal system DRAM but with higher
-latency and lower bandwidth. With the rapid increase in CPU core counts in
-today's server platforms, memory capacity and bandwidth become bottlenecks.
-High-capacity memory devices are very expensive and deliver poor value on a
-dollar-per-GB basis. There are a limited number of memory channels per socket,
-and hence the total memory capacity per socket is limited by cost.
+Introduce a new configuration option 'host-mem-type=' in the
+'-object memory-backend-ram', allowing users to specify
+from which type of memory to allocate.
 
-As a cloud service provider, virtual machines are a fundamental service.
-The virtual machine models have pre-set vCPU counts and memory capacity.
-Large memory capacity VM models have a higher memory capacity per vCPU.
-Delivering VM instances with the same vCPU and memory requirements
-on new-generation Intel/AMD server platforms becomes challenging as
-the CPU core count rapidly increases. With the help of CXL local
-memory expanders, we can install more DDR memory devices on a socket and
-almost double the total memory capacity per socket at a reasonable cost on
-new server platforms. Thus, we can continue to deliver existing VM models. On
-top of that, low-cost, large memory capacity VM models become a possibility.
+Users can specify 'cxlram' as an argument, and QEMU will then
+automatically locate CXL RAM NUMA nodes and use them as the backend memory.
+For example:
+	-object memory-backend-ram,id=vmem0,size=19G,host-mem-type=cxlram \
+	-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+	-device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+	-device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0 \
+	-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=19G,cxl-fmw.0.interleave-granularity=8k \
 
-CXL-attached memory (CXL type-3 device) can be used in exactly the same way
-as system-DRAM but with somewhat degraded performance. QEMU is in the process
-of supporting CXL virtualization. Currently, in QEMU, we can already create
-virtualized CXL memory devices, and a guest OS running the latest Linux kernel
-can successfully bring CXL memory online.
+In v1, we plan to move most of the implementations to util and break down
+this patch into different smaller patches.
 
-We conducted benchmark testing on VMs with three setups:
-1. VM with virtualized system-DRAM, backed by system-DRAM on
-the physical host. No virtualized CXL memory.
-2. VM with virtualized system-DRAM, backed by CXL-attached memory on
-the physical host. No virtualized CXL memory.
-3. VM with virtualized system-DRAM, backed by system-DRAM on
-the physical host, and virtualized CXL memory backed by CXL-attached memory on
-the physical host.
-
-Benchmark 1: Intel Memory Latency Checker
-Link: https://www.intel.com/content/www/us/en/developer/articles/tool/intelr-memory-latency-checker.html
-Guest VM idle latency for random access in nanoseconds:
-- System-DRAM backed by system-DRAM on the host = 116.1
-- CXL memory backed by CXL-attached DRAM on the host = 266.8
-- System-DRAM backed by CXL-attached DRAM on the host = 269.7
-From within the guest VM, read/write latency on memory backed by
-host CXL-DRAM is 2X compared to memory backed by host system-DRAM memory.
-We observe the same performance result regardless of whether memory is exposed
-as virtualized system-DRAM or virtualized CXL memory. The driving factor for
-performance is the memory backend (backing memory type: system-DRAM vs
-CXL-DRAM) on the host, not the frontend memory type (virtualized system-DRAM
-vs virtualized CXL-DRAM) exposed to the guest OS.
-
-Benchmark 2: Redis memtier benchmark
-Link: https://redis.com/blog/memtier_benchmark-a-high-throughput-benchmarking-tool-for-redis-memcached/
-Guest VM Redis concurrent read latency in milliseconds:
-- Key size = 800B, value size = 800B
-                         P50         P99         P999
-(1) System-DRAM only    13.43       40.95       243.71
-(2) CXL-DRAM only       29.18       49.15       249.85
-(3) Tiered memory       13.76       39.16       241.66
-
-- Key size = 800B, value size = 70kB
-                           P50        P99        P999
-(1) System-DRAM only     342.01     630.78      925.69
-(2) CXL-DRAM only        696.32     720.89     1007.61
-(3) Tiered memory        610.30     671.74     1011.71
-
-From within the guest VM, the Redis server is filled with a large number of
-in-memory key-value pairs. Almost all memory is used inside the VM. We then
-start a workload with concurrent read operations. For (3), we only read the
-key-value pairs located in CXL-DRAM.
-
-- The P50 latency for read operations is almost the same between tiered memory
-and system-DRAM when the value size is small (800 bytes). The performance
-results are primarily dominated by other software stacks like communication
-and CPU cache. The read workload consistently hit the key-value pairs stored
-in CXL memory. However, the P50 latency in CXL-only is >2X slower than the
-other two setups. When the value size is small, the latency for
-read operations is mostly spent in the software stack. It seems critical to
-have the guest Linux kernel running on system-DRAM backed memory for
-good performance.
-
-- The P50 latency for read operations becomes 70% worse in the tiered memory
-setup compared to system-DRAM only when the value size is large (70 KB). The
-CXL-only option consistently exhibits poor performance. When the value size is
-large, the latency for read operations is mostly spent in reading the value
-from the Redis server. The read workload consistently hit the key-value pairs
-stored in CXL memory.
-
-Please note that in our experiment, the tiered memory system didn't
-promote/demote the pages as expected. The tiered memory setup should have
-better performance as the Linux community gradually improves the page
-promotion/demotion algorithm. The Linux kernel community has developed a
-tiered memory system to better utilize various types of DRAM-like memory.
-The future of memory tiering: https://lwn.net/Articles/931421/
-
-
-Having the guest kernel running on system-DRAM-backed memory and
-application data running on CXL-backed memory shows comparable performance to
-the topline (system-DRAM only), and it is also a cost-effective solution.
-Moreover, in the near future, users will be able to benefit from memory with
-different features. Enabling the tiered memory system in the guest OS seems to
-be in the right direction. To enable these scenarios from end to end, we need
-some plumbing work in the memory backend and CXL memory virtualization stacks.
-
-- QEMU's memory backend object needs to support an option to automatically map
-guest memory to a specified type of memory on the host. Take CXL-attached
-memory for example, we can then create the virtualized CXL type-3 device as
-the frontend and automatically map it to a type of CXL memory backend. This
-patchset contains a prototype implementation that accomplishes this. 
-We introduce a new configuration option 'host-mem-type=', enabling users
-to specify the type of memory from which they want to allocate. An argument
-'cxlram' is used to automatically locate CXL-DRAM NUMA nodes on the host and
-use them as the backend memory. This provides users with great convenience.
-There is no existing API in the Linux kernel to explicitly allocate memory
-from CXL-attached memory. Therefore, we rely on the information provided by
-the dax kmem driver under the sysfs path
-'/sys/bus/cxl/devices/region[X]/dax_region[X]/dax[X]/target_node'
-in the prototype.
-
-- Kernel memory tiering uses the dax kmem driver's device probe path to query
-ACPI to obtain CXL device attributes (latency, bandwidth) and calculates its
-abstract distance. The abstract distance sets the memory to the correct tier.
-Although QEMU already provides the option "-numa hmat-lb" to set memory
-latency/bandwidth attributes, we were not able to connect the dots from end
-to end. After setting the attributes in QEMU, booting up the VM, and creating
-devdax CXL devices, the guest kernel was not able to correctly read the memory
-attributes for the devdax devices. We are still debugging that path, but we
-suspect that it's due to missing functionality in CXL virtualization support.
-
-- When creating two virtualized CXL type-3 devices and bringing them up by
-using cxl and daxctl tools, we were not able to create the
-2nd memory region/devdax device inside the VM. We are debugging this issue
-but would appreciate feedback if others are also dealing with similar
-challenges.
-
-Ho-Ren (Jack) Chuang (1):
-  backends/hostmem: qapi/qom: Add ObjectOptions for memory-backend-*
-    called HostMemType
-
+Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+---
  backends/hostmem.c       | 184 +++++++++++++++++++++++++++++++++++++++
  include/sysemu/hostmem.h |   1 +
  qapi/common.json         |  19 ++++
@@ -217,6 +102,296 @@ Ho-Ren (Jack) Chuang (1):
  qemu-options.hx          |   2 +-
  5 files changed, 206 insertions(+), 1 deletion(-)
 
+diff --git a/backends/hostmem.c b/backends/hostmem.c
+index 747e7838c0..3bede13879 100644
+--- a/backends/hostmem.c
++++ b/backends/hostmem.c
+@@ -44,6 +44,133 @@ host_memory_backend_get_name(HostMemoryBackend *backend)
+     return object_get_canonical_path(OBJECT(backend));
+ }
+ 
++#define FILE_LINE_LEN 256
++static int
++is_valid_node(const char *path) {
++    FILE *file = fopen(path, "r");
++    if (file == NULL) {
++        return -1;
++    }
++
++    char line[FILE_LINE_LEN];
++    if (fgets(line, sizeof(line), file) != NULL) {
++        int target_node = atoi(line);
++
++        if (target_node >= 0) {
++            fclose(file);
++            return target_node;
++        }
++    }
++
++    fclose(file);
++    return -1;
++}
++
++static int
++is_directory(const char *path) {
++    struct stat path_stat;
++    stat(path, &path_stat);
++    return S_ISDIR(path_stat.st_mode);
++}
++
++static int
++is_symlink(const char *path) {
++    struct stat path_stat;
++    if (lstat(path, &path_stat) == -1) {
++        return 0;
++    }
++    return S_ISLNK(path_stat.st_mode);
++}
++
++#define CXL_DEVICE_PATH "/sys/bus/cxl/devices/"
++#define REGION_PATH_LEN 307
++#define DAX_REGION_PATH_LEN 563
++#define DAX_PATH_LEN 819
++#define TARGET_FILE_PATH_LEN 831
++/*
++ * return: the number of valid numa node id found
++ */
++static int
++host_memory_backend_get_cxlram_nodes(int *valid_cxlram_nodes) {
++    DIR *base_dir = NULL, *region_dir = NULL, *dax_region_dir = NULL;
++    const char *base_dir_path = CXL_DEVICE_PATH;
++    struct dirent *entry;
++    int valid_node = 0, ret = 0;
++
++    base_dir = opendir(base_dir_path);
++    if (base_dir == NULL) {
++        return valid_node;
++    }
++
++    while ((entry = readdir(base_dir)) != NULL) {
++        char region_path[REGION_PATH_LEN];
++
++        ret = snprintf(region_path, sizeof(region_path), "%s%s",
++                                            base_dir_path, entry->d_name);
++        if (ret < 0 ||
++            !is_symlink(region_path) ||
++            strncmp(entry->d_name, "region", ARRAY_SIZE("region") - 1)) {
++            continue;
++        }
++
++        region_dir = opendir(region_path);
++        if (region_dir == NULL) {
++            goto region_exit;
++        }
++
++        while ((entry = readdir(region_dir)) != NULL) {
++            char dax_region_path[DAX_REGION_PATH_LEN];
++
++            ret = snprintf(dax_region_path, sizeof(dax_region_path), "%s/%s",
++                                                    region_path, entry->d_name);
++            if (ret < 0 ||
++                !is_directory(dax_region_path) ||
++                strncmp(entry->d_name, "dax_region",
++                            ARRAY_SIZE("dax_region") - 1)) {
++
++                continue;
++            }
++
++            dax_region_dir = opendir(dax_region_path);
++            if (dax_region_dir == NULL) {
++                goto dax_region_exit;
++            }
++
++            while ((entry = readdir(dax_region_dir)) != NULL) {
++                int target_node;
++                char dax_path[DAX_PATH_LEN];
++                char target_file_path[TARGET_FILE_PATH_LEN];
++                ret = snprintf(dax_path, sizeof(dax_path), "%s/%s",
++                                            dax_region_path, entry->d_name);
++                if (ret < 0 ||
++                    !is_directory(dax_path) ||
++                    strncmp(entry->d_name, "dax", ARRAY_SIZE("dax") - 1)) {
++                    continue;
++                }
++
++                ret = snprintf(target_file_path, sizeof(target_file_path),
++                                                    "%s/target_node", dax_path);
++                if (ret < 0) {
++                    continue;
++                }
++
++                target_node = is_valid_node(target_file_path);
++                if (target_node >= 0) {
++                    valid_cxlram_nodes[valid_node] = target_node;
++                    valid_node++;
++                }
++            }
++        }
++    }
++
++    closedir(dax_region_dir);
++dax_region_exit:
++    closedir(region_dir);
++region_exit:
++    closedir(base_dir);
++    return valid_node;
++}
++
+ static void
+ host_memory_backend_get_size(Object *obj, Visitor *v, const char *name,
+                              void *opaque, Error **errp)
+@@ -117,6 +244,12 @@ host_memory_backend_set_host_nodes(Object *obj, Visitor *v, const char *name,
+     HostMemoryBackend *backend = MEMORY_BACKEND(obj);
+     uint16List *l, *host_nodes = NULL;
+ 
++    if (backend->host_mem_type == HOST_MEM_TYPE_CXLRAM) {
++        error_setg(errp,
++            "'host-mem-type=' and 'host-nodes='/'policy=' are incompatible");
++        return;
++    }
++
+     visit_type_uint16List(v, name, &host_nodes, errp);
+ 
+     for (l = host_nodes; l; l = l->next) {
+@@ -150,6 +283,11 @@ host_memory_backend_set_policy(Object *obj, int policy, Error **errp)
+     HostMemoryBackend *backend = MEMORY_BACKEND(obj);
+     backend->policy = policy;
+ 
++    if (backend->host_mem_type == HOST_MEM_TYPE_CXLRAM) {
++        error_setg(errp,
++            "'host-mem-type=' and 'host-nodes='/'policy=' are incompatible");
++    }
++
+ #ifndef CONFIG_NUMA
+     if (policy != HOST_MEM_POLICY_DEFAULT) {
+         error_setg(errp, "NUMA policies are not supported by this QEMU");
+@@ -157,6 +295,46 @@ host_memory_backend_set_policy(Object *obj, int policy, Error **errp)
+ #endif
+ }
+ 
++static int
++host_memory_backend_get_host_mem_type(Object *obj, Error **errp G_GNUC_UNUSED)
++{
++    HostMemoryBackend *backend = MEMORY_BACKEND(obj);
++    return backend->host_mem_type;
++}
++
++static void
++host_memory_backend_set_host_mem_type(Object *obj, int host_mem_type, Error **errp)
++{
++    HostMemoryBackend *backend = MEMORY_BACKEND(obj);
++    backend->host_mem_type = host_mem_type;
++
++#ifndef CONFIG_NUMA
++    error_setg(errp, "NUMA node host memory types are not supported by this QEMU");
++#else
++    int i, valid_cxlram_nodes[MAX_NODES];
++
++    if (backend->policy > 0 ||
++        !bitmap_empty(backend->host_nodes, MAX_NODES)) {
++        error_setg(errp,
++            "'host-mem-type=' and 'host-nodes='/'policy=' are incompatible");
++        return;
++    }
++
++    if (host_memory_backend_get_cxlram_nodes(valid_cxlram_nodes) > 0) {
++        for (i = 0; i < MAX_NODES; i++) {
++            if (valid_cxlram_nodes[i] < 0) {
++                break;
++            }
++            bitmap_set(backend->host_nodes, valid_cxlram_nodes[i], 1);
++        }
++    } else {
++        error_setg(errp, "Cannot find CXL RAM on host");
++        return;
++    }
++    backend->policy = HOST_MEM_POLICY_BIND;
++#endif
++}
++
+ static bool host_memory_backend_get_merge(Object *obj, Error **errp)
+ {
+     HostMemoryBackend *backend = MEMORY_BACKEND(obj);
+@@ -536,6 +714,12 @@ host_memory_backend_class_init(ObjectClass *oc, void *data)
+         host_memory_backend_get_share, host_memory_backend_set_share);
+     object_class_property_set_description(oc, "share",
+         "Mark the memory as private to QEMU or shared");
++    object_class_property_add_enum(oc, "host-mem-type", "HostMemType",
++        &HostMemType_lookup,
++        host_memory_backend_get_host_mem_type,
++        host_memory_backend_set_host_mem_type);
++    object_class_property_set_description(oc, "host-mem-type",
++        "Set the backend host memory type");
+ #ifdef CONFIG_LINUX
+     object_class_property_add_bool(oc, "reserve",
+         host_memory_backend_get_reserve, host_memory_backend_set_reserve);
+diff --git a/include/sysemu/hostmem.h b/include/sysemu/hostmem.h
+index 39326f1d4f..afeb9b71d1 100644
+--- a/include/sysemu/hostmem.h
++++ b/include/sysemu/hostmem.h
+@@ -70,6 +70,7 @@ struct HostMemoryBackend {
+     ThreadContext *prealloc_context;
+     DECLARE_BITMAP(host_nodes, MAX_NODES + 1);
+     HostMemPolicy policy;
++    HostMemType host_mem_type;
+ 
+     MemoryRegion mr;
+ };
+diff --git a/qapi/common.json b/qapi/common.json
+index 6fed9cde1a..591fd73291 100644
+--- a/qapi/common.json
++++ b/qapi/common.json
+@@ -167,6 +167,25 @@
+ { 'enum': 'HostMemPolicy',
+   'data': [ 'default', 'preferred', 'bind', 'interleave' ] }
+ 
++##
++# @HostMemType:
++#
++# Automatically find a backend memory type on host.
++# Can be further extened to support other types such as cxlpmem, hbm.
++#
++# @none: do nothing (default).
++#
++# @cxlram: a CXL RAM backend on host.
++#
++# Note: HostMemType and HostMemPolicy/host-nodes cannot be set at the same
++# time. HostMemType is used to automatically bind with one kind of
++# host memory types.
++#
++# Since: 8.3
++##
++{ 'enum': 'HostMemType',
++  'data': [ 'none', 'cxlram' ] }
++
+ ##
+ # @NetFilterDirection:
+ #
+diff --git a/qapi/qom.json b/qapi/qom.json
+index 95516ba325..fa3bc29708 100644
+--- a/qapi/qom.json
++++ b/qapi/qom.json
+@@ -626,6 +626,7 @@
+             '*host-nodes': ['uint16'],
+             '*merge': 'bool',
+             '*policy': 'HostMemPolicy',
++            '*host-mem-type': 'HostMemType',
+             '*prealloc': 'bool',
+             '*prealloc-threads': 'uint32',
+             '*prealloc-context': 'str',
+diff --git a/qemu-options.hx b/qemu-options.hx
+index b66570ae00..39074c1aa0 100644
+--- a/qemu-options.hx
++++ b/qemu-options.hx
+@@ -5211,7 +5211,7 @@ SRST
+         (``share=off``). For this use case, we need writable RAM instead
+         of ROM, and want to also set ``rom=off``.
+ 
+-    ``-object memory-backend-ram,id=id,merge=on|off,dump=on|off,share=on|off,prealloc=on|off,size=size,host-nodes=host-nodes,policy=default|preferred|bind|interleave``
++    ``-object memory-backend-ram,id=id,merge=on|off,dump=on|off,share=on|off,prealloc=on|off,size=size,host-mem-type=cxlram,host-nodes=host-nodes,policy=default|preferred|bind|interleave``
+         Creates a memory backend object, which can be used to back the
+         guest RAM. Memory backend objects offer more control than the
+         ``-m`` option that is traditionally used to define guest RAM.
 -- 
 Regards,
 Hao Xiang and Ho-Ren (Jack) Chuang
