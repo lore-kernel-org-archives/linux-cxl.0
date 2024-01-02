@@ -1,155 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAF4F9C4
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jan 2024 13:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19EE13FF4;
+	Tue,  2 Jan 2024 15:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aMKLZfPr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704200644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=V7AwIig+ZoWr8wywEFVJNnQ4USsekIWlyGOcRxRZ22g=;
-	b=aMKLZfPrBf/wlkJiW7IpD1XzQN5gakwiXTqVWRto93XhFBmgVrbk34KmthKxxKevdD86WL
-	uRSy99pmIJp8Tg8a5cF7c8/79glH2VMWMttOqv0dK+2v3MWIXckWHpx5kWW5f+pWQ8LO3z
-	1CBfkGLL+7MLslIjuSqqmPJ/krH/w24=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-195-StyqvVxjNWGL_0oCjbd0Pg-1; Tue, 02 Jan 2024 08:03:58 -0500
-X-MC-Unique: StyqvVxjNWGL_0oCjbd0Pg-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40d27ea0165so85999645e9.1
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Jan 2024 05:03:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704200637; x=1704805437;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V7AwIig+ZoWr8wywEFVJNnQ4USsekIWlyGOcRxRZ22g=;
-        b=eY0/gRl6aI9fptckLTjSfPxFQccSu+H0KpXnkMdo3P6oqIJ+0E4mvfO67C9vfgDHhn
-         3K7ldhhJhrxMpqCEZv0CoRK0bk3TX7s6whDjW+OWqXdZEzjJIFOVR74dBGHohNI6atKZ
-         ue7My3ffnAKU1cZ+RTdG6jS58wheKPTAPCB7Nba6e5kFRssO1anifOi0f4dIKnSG/0Ot
-         bYCzNGXTuIQ79wLqkLwBkHyW/rDCEW6ERXPnciG/SYKI+vClsyeGJCOmA9xlkmHb0Qv7
-         yWekzrAD0+yLQHdFmAVXcJLAOjmnllZ9TSdJVys4oY0YM3MVaHIyiLgfzqoxDteQD7Cf
-         C78Q==
-X-Gm-Message-State: AOJu0YyysVljxEOJNGPuoF8s82Ps7w3Yx9v/gS4g9TwcLLcC2eDW62QC
-	9vvDKhmmEf618Vu4WzwHYnJA/xkJ/3hFMFB2tYdk48OxLjuXUtbSJKad3DyGvL+yeKMRXc5IxHk
-	khh9BSIazFguiSDWHNW+YsSHDA9h0
-X-Received: by 2002:a05:600c:1e8a:b0:40d:8e0e:7c9b with SMTP id be10-20020a05600c1e8a00b0040d8e0e7c9bmr123462wmb.106.1704200637395;
-        Tue, 02 Jan 2024 05:03:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEFAjmBcQVT872jzcwjf9S2r8cje/ey3h55ltl8/gm52PrMR8bYxAKdvg8tXqCJPVbYXn9vsg==
-X-Received: by 2002:a05:600c:1e8a:b0:40d:8e0e:7c9b with SMTP id be10-20020a05600c1e8a00b0040d8e0e7c9bmr123440wmb.106.1704200636944;
-        Tue, 02 Jan 2024 05:03:56 -0800 (PST)
-Received: from ?IPV6:2003:cb:c713:ba00:5d06:97c4:3fb1:e21e? (p200300cbc713ba005d0697c43fb1e21e.dip0.t-ipconnect.de. [2003:cb:c713:ba00:5d06:97c4:3fb1:e21e])
-        by smtp.gmail.com with ESMTPSA id bh20-20020a05600c3d1400b0040d8eca092esm50460wmb.47.2024.01.02.05.03.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 05:03:56 -0800 (PST)
-Message-ID: <3ecd3b5a-c4d3-4fd5-b75b-d89b1d4b45e5@redhat.com>
-Date: Tue, 2 Jan 2024 14:03:54 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VDgPd76j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BS7PopijizYniOcuHsdMjgxfLb8pD+13B8d7hRm/oWuO7lhRIj2fVN/GeXv2INApk+juzuABrPHOwfvCkepJFhZUcmK9nmhHAYfADN1kbQIw7YBtaUjOsGHFjDeXe8Ykyrgqw5NWOcfmmTt/1fNDjeJz00QV4tPW3kJYfTBiysphA3d93tTkqF1mMsuz/uI4+L0BSwijOrHD66yeTCwXBwPUgAfdPOw1Wnbu/TAnkN79zaf5x9/eqafVxOwwsxvOtFTY/pRJt+50WrzAvrffLXrMbBvN/71Oe3AgCdQ6on0xHpHdPsMrQ+CtXpy6wbvZr3uN46ZJ52STs4SSTMrPMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hrRTEe2QfuROLsMOjgmdBEJJF0cyaIww9z0gIjgksRg=;
+ b=Oeg8mKvZWpdaNSu166Lnpr6VFUZ1EKihPXU+E96zW4QSGihX2KYWt0nDhACtBd784azhLMqlg5JA9yufumppDVLti6llkSxI9BCZZYi+0I7OEMs5bYuvPZ3B7uXj/Q2leKC5JhtolVb5kl5yHBMS8KhIjPYIrnZxS02HV7nNU+KiJcRXQ7Bb5q+SFhgWNJTsM9vmrABivlmw3WK5apasCb4e5cTVFoVzXxdtcy2iloSA1+3SixO56QYdsrMWvvOdx5F5fy+ksqSHmdaqbSEvs94/fUnT79fHRSO2BfVqGVrlPTITeRuYAJEi6/qh4glDPJFHXfqbBg3Ib54sxIpEuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hrRTEe2QfuROLsMOjgmdBEJJF0cyaIww9z0gIjgksRg=;
+ b=VDgPd76jXFaeyk5rFAnadCBRBpNxSmHwbccGNU5F4/8E1rVDcDDeQl8H1Hr98tkIXisJxn4F//GU3LrCjekOspLUEKR3zbCMdX7xC+CSemWlLCof16Et1MKeMcQmE0rtwPQ++5LXh9gtOeuzxtQHRxpxcjUWSmi/afZ15RLh/DA=
+Received: from BY5PR03CA0017.namprd03.prod.outlook.com (2603:10b6:a03:1e0::27)
+ by BL1PR12MB5063.namprd12.prod.outlook.com (2603:10b6:208:31a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Tue, 2 Jan
+ 2024 15:09:46 +0000
+Received: from SJ1PEPF00001CDE.namprd05.prod.outlook.com
+ (2603:10b6:a03:1e0:cafe::96) by BY5PR03CA0017.outlook.office365.com
+ (2603:10b6:a03:1e0::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21 via Frontend
+ Transport; Tue, 2 Jan 2024 15:09:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CDE.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7159.9 via Frontend Transport; Tue, 2 Jan 2024 15:09:45 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 2 Jan
+ 2024 09:09:44 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH 0/4] acpi/ghes, cper, cxl: Trace FW-First CXL Protocol Errors
+Date: Tue, 2 Jan 2024 15:09:29 +0000
+Message-ID: <20240102150933.161009-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem: qapi/qom: Add an
- ObjectOption for memory-backend-* called HostMemType and its arg 'cxlram'
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Hao Xiang <hao.xiang@bytedance.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ben Widawsky <ben.widawsky@intel.com>,
- Gregory Price <gourry.memverge@gmail.com>, Fan Ni <fan.ni@samsung.com>,
- Ira Weiny <ira.weiny@intel.com>, =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?=
- <philmd@linaro.org>, Igor Mammedov <imammedo@redhat.com>,
- Eric Blake <eblake@redhat.com>, Markus Armbruster <armbru@redhat.com>,
- Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?=
- <berrange@redhat.com>, Eduardo Habkost <eduardo@habkost.net>,
- qemu-devel@nongnu.org
-Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
-References: <20240101075315.43167-1-horenchuang@bytedance.com>
- <20240101075315.43167-2-horenchuang@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240101075315.43167-2-horenchuang@bytedance.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDE:EE_|BL1PR12MB5063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1045f04d-f522-4244-b4ac-08dc0ba4db1d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VbB6E+kUlKyLTKEUMYNtn8zpeZOXsQKxQ3AlNx/zwWjtEXGBwIAyuhwEB/7yBmHptiHg/MNGyclbosL03Q+oS339sSXhywkw/+l7SxiM6eYP7k5n5V93LdGNTZwxrvJ9NO8eeWl6/nutnlvZ06ptZ8KMmPUVdzjs9+Fjg+L1P4iRDvHDPff1xnrUk3ue281M3/npaJtGLSiwo6Mbz6oDZxKkswkY1HaJRqtuohJbWlzr6v/0vHq5wirZvw7bTzqJUtApFHALISBHI9x6DG82jpSWfqDr5R2TSYHAgwexH4TPjt6/hgbfIC+Nx8Sdr3ggYyfUemLuqXVpeolE0cRtLKD+84UFtYjHysAh1/7tsH1RhLqDHiI0oEcRBFwr59xmAMKmLENzuFaSb9hRB+fkvT4g5+jCs774268jc83R+AhWUAEZ++M3hxbmK/cLV7ta07x076Db2Wpzz1zZDLGJ5o7ljj0eizlv7yzXgCFKgHEv63ve6iCkvmfup49EGwal8AiEciY+/9gBcGT/lYl0f4QjhtK4cEw+U3RowFVM9QV3RaYbvQLtKLjLxml0H1tykOhkctxCTBeFvm/Vh6jKhTaPRhA4xs1bOJ7tWLCxNThUM/CvektR6wMs6XjI8KV5F2+5mvMrBczSSjk76OSDULveYqVePpXx+ExVriUaS1dH+5X/yyioYOGo95U9gkYrunw3S5gX4rTwy+uB4W4nZXBliz2tqEgDHCOANQE15oFZyVunIzPTBWPV1HXbBxx7
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(396003)(376002)(346002)(230922051799003)(64100799003)(451199024)(1800799012)(82310400011)(186009)(36840700001)(46966006)(40470700004)(40480700001)(40460700003)(36756003)(6666004)(70586007)(70206006)(7696005)(86362001)(356005)(336012)(16526019)(426003)(81166007)(1076003)(83380400001)(2616005)(26005)(41300700001)(47076005)(2906002)(4744005)(5660300002)(4326008)(966005)(478600001)(36860700001)(82740400003)(110136005)(54906003)(316002)(8936002)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2024 15:09:45.7217
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1045f04d-f522-4244-b4ac-08dc0ba4db1d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5063
 
-On 01.01.24 08:53, Ho-Ren (Jack) Chuang wrote:
-> Introduce a new configuration option 'host-mem-type=' in the
-> '-object memory-backend-ram', allowing users to specify
-> from which type of memory to allocate.
-> 
-> Users can specify 'cxlram' as an argument, and QEMU will then
-> automatically locate CXL RAM NUMA nodes and use them as the backend memory.
-> For example:
-> 	-object memory-backend-ram,id=vmem0,size=19G,host-mem-type=cxlram \
-> 	-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-> 	-device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-> 	-device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0 \
-> 	-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=19G,cxl-fmw.0.interleave-granularity=8k \
-> 
+This patchset adds trace event support for FW-First Protocol Errors.
 
-You can achieve the exact same thing already simply by using memory 
-policies and detecting the node(s) before calling QEMU, no?
+This series depends on:
+https://lore.kernel.org/linux-cxl/20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com
 
-There has to be a good reason to add such a shortcut into QEMU, and it 
-should be spelled out here.
+Smita Koralahalli (4):
+  acpi/ghes, cxl: Create a common CXL struct to handle different CXL
+    CPER records
+  efi/cper, cxl: Make definitions and structures global
+  acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
+  acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
+
+ drivers/acpi/apei/ghes.c        | 26 +++++++++++++-
+ drivers/cxl/core/pci.c          | 46 ++++++++++++++++++++++++
+ drivers/cxl/cxlpci.h            |  3 ++
+ drivers/cxl/pci.c               | 13 ++++---
+ drivers/firmware/efi/cper_cxl.c | 63 +++++++++++++++++++++++++++------
+ drivers/firmware/efi/cper_cxl.h |  7 ++--
+ include/linux/cper.h            |  4 +++
+ include/linux/cxl-event.h       | 24 ++++++++++++-
+ 8 files changed, 164 insertions(+), 22 deletions(-)
 
 -- 
-Cheers,
-
-David / dhildenb
+2.17.1
 
