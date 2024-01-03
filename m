@@ -1,416 +1,360 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2063.outbound.protection.outlook.com [40.107.237.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2E717981
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jan 2024 23:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2B3168DC;
+	Wed,  3 Jan 2024 05:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLMEFvh5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704238983; x=1735774983;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=QHMiQTHAZNTCqX7JRNcmos+KnvRcmupLVmn0z0I8GVU=;
-  b=JLMEFvh5jIpdyQCdPurzNIJWPOgdxj50DS3J2vTQWZHwFRyiXkenAQqH
-   YfEhS8SyDtf1KkXo7R86knSMf+RIiOGuBBst47W9dCvHUS7qyk2ULPHXp
-   N4kP3tH4XSDrljDUiRj27VCsnDw4s89j0U5+eAV5iNPycgdoePvIOq/6E
-   fMsAEXuRKY+a3VX3EW8WQQx0bkcPye6r0y44bAWZS4zuuIYQHBzKqx2ZL
-   5sE3tokeVIN/qeevnJMIIOTteN1G26ioNG762UVtuo22xEGiI2S9dEH/d
-   M2r2fJD8xrtLF78ApU9KYTnhcigFuaVRdOnC32rMzWGZMJNgPDlaJObWJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="4280759"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="4280759"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 15:43:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="21914768"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Jan 2024 15:43:02 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jan 2024 15:43:01 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 2 Jan 2024 15:43:01 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Jan 2024 15:43:01 -0800
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="Vzo9t6ux"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aQqzAUwxDKNbxU/t6fMuWPrSRnTypRXubarlYscdW0tGyZXyUW5u2/fmAkuwooJyWJi8ydgCnVb9Dhok6BcIWUAH3a0YsevDshA2gn1klfNDEB15+ItmfLl16tUSd44dLXnrvpUTzb3QTH7AGTTBTEN5At1EYa1WlFYWGxq6I1ZmjzrClQhFZwkR9gptGh1PeL1C0sLCqf4xYBYNrlVXWzaAligHXB/EqoG8MXltGTt8if6/fUlG12tGkWcyklYcHvD50MMhhS2s76T4Z+HqjCGY9KKZr8DaP1ulLUEfKuselcuS66j7Vf8+p6fpuqxs0wI2CIpCm5rtj81+zbboGg==
+ b=XZQNs+PRHpNb6eIpp7kL50gamJyg1TweioDIU7MXmUFyqc3DmxKyiXx7pF6zDPyAAlb4CdV7brZmK7R2bO++jLxbYRySF74jlW03wX0cCZyWURFpZAm3YnMbceVV85+xAMQgVwPtx70WPuLdN/R3LVCV1rJ0ChCvgK8xL67UIEoTO2v/IjFkPe/h4gfTp5qxPts60YDU5f4tq/eLSXr7ImqXXFJ+jF6ez8DL5wX4sBTA1n0AaoKpYFiU77a6XG76xt8nfs2VjwqJAcD9JUJslWHSU5KnBtboKinwngXhkB9AG404PRZ7jCs5uI2emrPZxjaeD4JOAUck/TsMDS98QA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wvcYoG434mJOR/btDabYweECtLvaCr7Qaz/okLjYkpc=;
- b=c5Xgry8/7HrydYpC0uhtiw6Kcw077wHMa7MRQk7895preI7o0EbJxAV+5hTVQcpy5bVGAL/10OWDNbYOgOoh4SSbOcU4n7eTPSOwHjaaLj+JMoA67HqdtCWV3XTBdii7QfRaTnKq0UkMNC3M2yk5XwVixllwJjwzZh28T57Ov8xJurriQIt+OD6MVioXc5TD2dk5tRO8t8aWX2hdP/nt6VooS7o+iQd2cyxtJOXUF4qwrbaGDQpCLsDRcknmNflQcpxvVnUhZWT+TofqZdmUi+4cQazx1439wGgKvyy9dSc5F24lI45Np41RTu57bxU1HvH2mqAjzgj8KWf00yqJnA==
+ bh=zOATxj3gAn1ZUclxGASVU/0MgJ/v5O6R+ufHOv+3mk0=;
+ b=JyK7V/5bLwNddH9lfVsLVF1tH0g/zkS43sBvxdj0DxSJXhCyLfN04OdSVtCBcodBJO+Fuk3ZTCKk89EEvd2+7hAhnkI2DvGu3yhVj54GK16Cr+EQCYWOCMVCe8GSA975AgGOG60JPIyAI3LKbd1VM0SoXGhioytutQ1+xrC+5O1pvccG0etIWoIydiSKcXU1pJTpC6nOTgEkfVbfghTwlecXcMsaQFm3WF3n+x2c/YUfoUi5MRVd6D+P5yi1/ph4haRBpWq9VX+YRI6eSVaf0iBH9likcF7nNGn99SgEzi1hw6xukrCl168Fwaqt7cxhXYrHwI3jZwFaMYa/62EUxw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB5983.namprd11.prod.outlook.com (2603:10b6:510:1e2::13) with
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zOATxj3gAn1ZUclxGASVU/0MgJ/v5O6R+ufHOv+3mk0=;
+ b=Vzo9t6uxUFNOBJW8MPtBoGsDlOHH3lVY2Q9QKTA3RKXrjo28m7C296IiutFuShSAo0Baz+SAV0QZzw177xZzxZkQIWJ7IwTh2yKvpB6r6JDVjGx3KCnOkAE58V/roR7n4esQ9jRd/eaGi8LtPnCy6XCOSsdTGbhwNNnzRwImegxLtrKxo4enrkzq3U0Mgbp/YKXQtuxDVzeNi4LC5UR572xGJn8hdRsNC+0DJt+Pk3wTk/QE0QfXA0hahOlsCCXEwWhXPnDMzoGGtrMLeCNRcUGP1J8X2i5Q44FaPYmed684K3R6l5+Af/TAaYBENp6zEPk5uF11WnBbemMq6jmOVQ==
+Received: from PH0PR08MB7955.namprd08.prod.outlook.com (2603:10b6:510:11a::17)
+ by DM6PR08MB6236.namprd08.prod.outlook.com (2603:10b6:5:1e1::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.24; Tue, 2 Jan
- 2024 23:42:53 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7135.023; Tue, 2 Jan 2024
- 23:42:53 +0000
-Date: Tue, 2 Jan 2024 15:42:50 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: <alison.schofield@intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Ingo
- Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Andy
- Lutomirski" <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, "Dan
- Williams" <dan.j.williams@intel.com>, Mike Rapoport <rppt@kernel.org>,
-	"Huang, Ying" <ying.huang@intel.com>
-CC: Alison Schofield <alison.schofield@intel.com>, <x86@kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH] x86/numa: Make numa_fill_memblks() @end parameter
- exclusive
-Message-ID: <65949f79ef908_8dc68294f2@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240102213206.1493733-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240102213206.1493733-1-alison.schofield@intel.com>
-X-ClientProxiedBy: MW4P220CA0007.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:303:115::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.12; Wed, 3 Jan
+ 2024 05:26:32 +0000
+Received: from PH0PR08MB7955.namprd08.prod.outlook.com
+ ([fe80::5049:9abf:ad65:9974]) by PH0PR08MB7955.namprd08.prod.outlook.com
+ ([fe80::5049:9abf:ad65:9974%3]) with mapi id 15.20.7159.013; Wed, 3 Jan 2024
+ 05:26:32 +0000
+From: Srinivasulu Thanneeru <sthanneeru@micron.com>
+To: "Huang, Ying" <ying.huang@intel.com>, gregory.price
+	<gregory.price@memverge.com>
+CC: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "aneesh.kumar@linux.ibm.com"
+	<aneesh.kumar@linux.ibm.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "mhocko@suse.com" <mhocko@suse.com>,
+	"tj@kernel.org" <tj@kernel.org>, "john@jagalactic.com" <john@jagalactic.com>,
+	Eishan Mirakhur <emirakhur@micron.com>, Vinicius Tavares Petrucci
+	<vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johannes
+ Weiner <hannes@cmpxchg.org>, Wei Xu <weixugc@google.com>
+Subject: RE: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
+Thread-Topic: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
+Thread-Index: AQHaLe1WCWEmLbBSRk2O5Sdey42WeLCpzLPHgADTuACAA/H6xIAZGhOA
+Date: Wed, 3 Jan 2024 05:26:32 +0000
+Message-ID:
+ <PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
+	<87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZXyQIJOim1+tE0Qr@memverge.com>
+ <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_ActionId=1871acef-68e6-4a74-bff7-df01830ee16b;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_ContentBits=0;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Enabled=true;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Method=Standard;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Name=Confidential;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_SetDate=2024-01-03T05:17:36Z;MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_SiteId=f38a5ecd-2813-4862-b11b-ac1d563c806f;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=micron.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR08MB7955:EE_|DM6PR08MB6236:EE_
+x-ms-office365-filtering-correlation-id: a1ca4657-39bf-4289-4b52-08dc0c1c8bbc
+x-ld-processed: f38a5ecd-2813-4862-b11b-ac1d563c806f,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ g1qOLgjpqCV+F+lzp5mMjM1N7nPA0ADx2SJgu1fkEomtCXRki0LphVuck3hhF/ejV8qIDezE448uu8Nnn2sfpl6xLdoJKFFdFy2PNVyopoc/Qy4M1B/W5dvxrFWdRqpsl4AesYcURUkJiLthRzdze3lyKbVKdgRoBvtkcwimwt1Qk+bOLUaV8OO+G6Gq2Nd/uagMgN7airZqlCFC48c+Jb65m1tRQTZXsKf9eKchVz5IdZVd5RHo39AE5I7zVDCiKRWw9WFznWzuMrQ6sK6fLQxzpT82fHY1Kr8Sk49jw+EQzGFE3mMYklaz5LLRA0cV2ikaHMmne6fcdqj8VqBx6BwGzZ8qLlcQlw7pgpTkg/ynpLJQx/IKf/v/ecFq2ZAak/YmKMlg0ZWOzWjz/HCIu/4oUIFmzOLGB1TwoD6sBQmGHRAFO8mEh4FHx27h5szkNi3KQXqimrxQWNTIzlvLnQuaHm2TdAXK6PP4cYWKvO50TxmpflpThVQEPX+l3zwnAukhx7XWe8TbCtvF3QhXkrFyPkrcrr0b3bbZoMhoY8ImSFm0cKZETQLb4S8uzWRRB6CMdyLdY34Ah+sqhs6doO3B6sSScic++rdAx4fHaTbYP11QnlbxCksxGF4qrO7Wpo5+knj9ZhmajmgNS/TFvA==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR08MB7955.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(376002)(136003)(396003)(366004)(230173577357003)(230273577357003)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(66476007)(66446008)(76116006)(66946007)(64756008)(66556008)(4326008)(110136005)(8676002)(8936002)(54906003)(316002)(26005)(83380400001)(966005)(71200400001)(45080400002)(478600001)(9686003)(53546011)(7696005)(52536014)(2906002)(5660300002)(41300700001)(7416002)(6506007)(33656002)(38070700009)(122000001)(66899024)(38100700002)(86362001)(55016003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-7?B?Wm1nUWtqOElRUURlcEdCc1RoUFNuSnZhb2VyUnpnVzZidXJ4R0E4cVpDdmdN?=
+ =?utf-7?B?YzVuM0JESmVJZ3RtV3RFRDJBR3ZzbFhxd2ZhNldsOFhRTEJMZ1RhQmkrLVFt?=
+ =?utf-7?B?azNRTWZ4TnpzWmk0L3Zzdm0xSmxGTUpueFFjdTVDRDQvbHhYUTdURGtMNFQ=?=
+ =?utf-7?B?Ky1kQXJlUFI0bHRmQ2VJNHNPZGRocEtCTng4QkN5R3J4eE1icGVrVFVwbHJR?=
+ =?utf-7?B?LzdaKy1tNE43Mjd0MTRLTlZTL2ZLa3ZNeGtEaDY1QXZxTWl3b2c0QlYvNFBY?=
+ =?utf-7?B?THpCSEtjUVpCQ0VuV2NaYXdoY0cxa3dPcVF1L1RIYzlZcWtOak8xSzZoNDZJ?=
+ =?utf-7?B?Z1diQnJoNCstU21RVmRNTGtyYzB2TmtQQUpSaXh2OTM5WEs4M3hHNDhmTTJp?=
+ =?utf-7?B?THRXOGpEdnNvN1V1alJNSEdXVFN4ZnBIdEY2d3FRVjJ3bFN4amFEM3dPNTEv?=
+ =?utf-7?B?SVRhNnJBeXVyZkJTMy82Wm9GZElJcWpkeUh6aDJweXBsR2VGTW1XeThYQVJT?=
+ =?utf-7?B?Q0pNUVBtRlNHOUZLb2doZEh3cVh4RjBtQ2ZCZ0dxZkFLcUtjbHVHS0h4dVhY?=
+ =?utf-7?B?NWlFY2NoSUpjTDRnTW5xTTVhR0syWmRZNjlOc2pCeFkzWi93RU9mL2p0MVNs?=
+ =?utf-7?B?RVdYZTJnSGJwNnYxb3dKb0RzUEF0QVlOSnJxa0ZBdWV4Ulc1MW9NRCstSXc1?=
+ =?utf-7?B?elRvM0MxRkZMZExscXpESEtYOFpHOHFzaHY0MkZock1oOVlDVSstSEd5UExY?=
+ =?utf-7?B?d3JnMGpIMmEyRUs1NnhGWjluS2xNMnE0TjR3S0hYblBUTVNnQ04rLUczQzY=?=
+ =?utf-7?B?ZystS2hyaHBSbE1oeW5xMlNqNFVpNG9jeW9BWWV2UjVydXcxRnRvVDV3dVhu?=
+ =?utf-7?B?V0VJTUdqNzE1UUE5bUs4TG5oYzRENFMwYkVQdHk0VHBTTkpQeUQ1c3dPdTlT?=
+ =?utf-7?B?aUozZmVKb3VsNi9EemZaTXpxMXJPZ3l0aFNTbmtlL3FINlVUeFJjQW9nUjB2?=
+ =?utf-7?B?d3BCczJaT2RDS2c3SGdvYW5SZ1VtS3k0aXFYTnEvRWVHV21rbGl0M0d6L084?=
+ =?utf-7?B?ZkJhM3Nzb2daTUdqTFE5T1N5ckF2V3NTS3UwMjdxeUNOMmNSR2Q1cEF6blNU?=
+ =?utf-7?B?aW8rLW01Tk5uVDlrMFhicEVrNU05RlR6MXRDNUh0QVJPdmtmV1E5S2ZBSk43?=
+ =?utf-7?B?bVZ5RXEwYkcyUjgrLVUvbUt1UE4xY1FUenY4cXRqOEtlVk1NWXdhOGZtb1V5?=
+ =?utf-7?B?QTdhZU9OKy1DM25pM21Wc1hTOXRuQ1lld08xZmREejVFc255L3pBUEJoakdw?=
+ =?utf-7?B?QUNsblNMYWthOE9RNks3YzRiYkE3ZFNzOUswZE9waGJsQ1VSeGRxT1QvMDNq?=
+ =?utf-7?B?eG54NDhlcVFDYjdCeGN4UTZqd1dWNkhhYzY2SW1qaHRpZDRXQmlqa3NZWG1M?=
+ =?utf-7?B?VVNsV3lPMDJMemRRbVNMZkpxYmFodzJ2MUtNNUp2bistTjQwTEUrLWFKU2xU?=
+ =?utf-7?B?TmFKMUsvdGdCRTR2UnVqeEJrWng5ZXpEUXpvL2hHRHh4c1loWDVVNWFnL08=?=
+ =?utf-7?B?Ky1wbDlkS1ZXbC9oL08vQmtZNHBDZjFmU3ZVZS9mNGw2ai9vOWI3NHBNR2pr?=
+ =?utf-7?B?cCstNTc5REp5dkU0VkswMVhlYzE5ai9Qem1Rbnk3bDB5YlNwS2tycG5iVy83?=
+ =?utf-7?B?eUY0Ly8zdThCcURTN0s0SkNpRnZEckVnYURWZ1lnSS9ySUFxVE1xRVZHSXRE?=
+ =?utf-7?B?SmJnTjZqbVVsMjB1eGt1QVZMeDlQTWk0Um5leGJTR01vUWtvNjlMYkk0RU1X?=
+ =?utf-7?B?NzlWS0xLQkhHNWxkSnNLbzNaTmIxM1o5SkhTQjJtMCstNTBMYmtueistVXFR?=
+ =?utf-7?B?bjFlU3hvc25jKy05OTRkSFZNTGt4ZkJnakcxS0VJVEE2MTc2WC9JMHdlZXc4?=
+ =?utf-7?B?TERUMUFYSUM2aGJXSystbXNiTEUzdDg1Ky1QUDAxOENzMmFqN0Q5R3NsczFw?=
+ =?utf-7?B?elhRU2t2VlM3czYrLTJpVFcvSkF1bVdyTHg3TTlVZndBQUUrLVVZVkJLYkZh?=
+ =?utf-7?B?SGpNSk4zeFhkbERqNnI2WFp1TGtEb2VnY2dOVWZXdURQNU1BelcvcEZ6UXk0?=
+ =?utf-7?B?ZU53NFBldUhZKy1xbkdRZEJ5L0U3WU94MzVCbVA5ZjRZaWdYRWdhTnlEd0tn?=
+ =?utf-7?B?MWFxcVlD?=
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB5983:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2003e4c-7054-47a9-06ab-08dc0bec89ad
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0DqVVEHawpIK+CQYHM4WsC97TbkrO2nyOLWgMJgVdfBHgLKVhc03wQLfpfd7JxnThNWDcJRzzlKfFeAdM7mZd2EkI5yHDoy47eNhgISQa++/oZvU2UaE4i0DngZWlry2xhNNSuKNebFPQs6RSwCa2/GTC2Of8ngMgB13chZwRxE4NdAvV05yqn1wUZo3hHxo1vl5XlJ+itUQnGcSyehFTlERxJFmK3PbBxmgOs8HRovnZ3/jbiNjfugVlITUIKQsBqzHZR4yEyfS4O/Fh6kuT2Zp2mHbQZrAR0EQZkQdHNtKbyugis7HxQLPCRI7OegHZOUK+XuncYjxfPBniyu3h/X2u8P/+4dbflTXgqsSkXVoAuH9QCw5TG5ar9KAZW6gDOC4SZsHr7gKyLcWATcBSrbxVJRHU6xzYusqTKpvvYQH8ggixjnxXOLJ5w5X8gL1TF7Yt8tVNxDO5hg9imME8vIBUQaHFVLV+GhVRmROzvPun6sa2XC0F6FRLj8X2H1ZIgGw/2HyUeTRP/lBLWcH6W0QTjRpWmtI/8yXkp7kKg3NCSE5mgtb12BUOpVMHeI+a17iIjZkoPd+nObG8IrF7AcE1XO8AH9XopaqATzNe+Y=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(396003)(366004)(376002)(346002)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(921011)(41300700001)(2906002)(7416002)(5660300002)(4326008)(8676002)(316002)(6636002)(110136005)(66556008)(66946007)(66476007)(478600001)(38100700002)(82960400001)(8936002)(86362001)(9686003)(6506007)(26005)(6512007)(83380400001)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?n6TjfA4TcXtwMHjG719znIwMDh0m0O1JPoA7ZjNgKNm+VFRSQx+Bx5ubxtRL?=
- =?us-ascii?Q?6DCJ3vCM/JcEeSW/a+CJvAoZMKvczMzIKnx2tRmjfaLINbOhXTUSfLcz1lN/?=
- =?us-ascii?Q?FuF9lacU/48OzXbdvYhD7ToIzUiBXzj02HHtp7/ePSJX1mwHKRAdYp5D0lZz?=
- =?us-ascii?Q?QXFPFyOnfgeOBNtIeThlCaBzwLRULhdAs+7gcsS7SIas1x4M/0XuAy6Bbral?=
- =?us-ascii?Q?oDQrq1hjsmbixQmzplZ1BEH0GH0f6NdDe1lgMAYXaP/6DZ+H0DUj/PRH2Zru?=
- =?us-ascii?Q?2Lq23BHveH0yYc9JLAkRctAbGNs/YtmM9OQ0dcaWnCSHKaCiPXP57P38gjsw?=
- =?us-ascii?Q?u5wqMl1Kgbil1NGS5S64XRUpqD3xClHmkTZb6NWeRcpb29hqVrhYb47orolQ?=
- =?us-ascii?Q?ifiJyKa/FbHVVk27daIgEAnzUZUKJ5nbEZzPpBA1XMrm0WAJLWVaJ3S9viE3?=
- =?us-ascii?Q?QSfkQ/5efKf+1kACb1BUHejK9qJntCvqDKLr2zBwzLnQIpLk2E4Zj2hpQPwr?=
- =?us-ascii?Q?ZdrFvjBxFL1CncE8EWjXc+Bnn3GeeQvst/+qtNT1MlCDBajkuxz1itWATysN?=
- =?us-ascii?Q?grT/kTFc4R9PKiif83LUgEBl1sYDqXv2aKzA4kOk6jRqV8OyhHtjdE+AezYq?=
- =?us-ascii?Q?2AvXYYsUz5Q+QFmGH3ilENOXvZ3irxy2znwP5yuH6EjnaYA5Va+BkyknPabq?=
- =?us-ascii?Q?bEtK4VZYpAd3I2WFx7uajGz8+mn2YOO1WvkZ0NtgKy61wVbMteoqSaPd44ys?=
- =?us-ascii?Q?zzpJw0iTjCZLRucuOpM/ZGzxEFbAke62RAMOh+9I8pfYNJlu7QcTyoO0u5vx?=
- =?us-ascii?Q?kAeGcDmkACsEZsWOOFRN3d124gSdONV1S7ydw8N3yfEskGjLVR3DD/rsIAoU?=
- =?us-ascii?Q?eE4y+LQOJ/iHseIkqqwUusZPnEEMXT1f0dFaRsw1DSl7Dh908Debi8J4fDeY?=
- =?us-ascii?Q?c36SZ60gpMgspLEfNsJ6eV+pP/WLrpMd8+4O0bOL/DEbBfiG6uMThvdsV5LQ?=
- =?us-ascii?Q?wvrjT0T4fgloyjAcBe572yAkhnl/hMVCDBj7Z3osuq/eAKqA1y+MemPvP3Ma?=
- =?us-ascii?Q?TBDdcK/alvpdMkWmASXBUIX8qLfrJrqj+SAlunM6874u5Dk9+8cBljEdZNw0?=
- =?us-ascii?Q?Ssw9uSlo41iElpvwRNIXym5f2oq1rdm0SCXiD5cowaMNB5TIhOPW4bzb07bB?=
- =?us-ascii?Q?qsPTDauWVwRPrHya/Qe4jm1tsKPe0UF1an8WbR7ggctX6ucQ0NHKkhNt60pK?=
- =?us-ascii?Q?jI/ZwTzayi8LUKO2CfkiKaGnbDzqUKiyGY+zmLutHFDov6wYo7glhyF6dNmy?=
- =?us-ascii?Q?loBOfdidbpIO5/hN7aR2Z2yOlrwusPMeCzMZeJOIYUoB0sYNFeYXtI56/GhZ?=
- =?us-ascii?Q?4K3ml/JGVjkk4/B+0C1wliow7xXRzPjZ/bkjUI8fyX3S9CDAg74sgEGKM9L0?=
- =?us-ascii?Q?w9HVebPyj1F8EXypkblGknD7vO+0Y2QI/IVphhT+j2dWXBS5RMhHJV24VV2o?=
- =?us-ascii?Q?k7uTGF3HwbEWL9qc87Nbyxlcw04l5sF585CUmrEPMxAjRewd3oL4kUu32Uot?=
- =?us-ascii?Q?8JV5qubfTX1a5jo2adAYW05qvWJwAHqGwcpSxtE8X0mLhyWySpo+6n0rTvU4?=
- =?us-ascii?Q?yw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2003e4c-7054-47a9-06ab-08dc0bec89ad
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-OriginatorOrg: micron.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2024 23:42:53.1675
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR08MB7955.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1ca4657-39bf-4289-4b52-08dc0c1c8bbc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2024 05:26:32.2648
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c+dpg5C0nq3Qs+tM+mcvDBt9Bz/ck/EkAfOZB2RbmZEO99+W4LWLxTncQAXiWKWNBduYbh3A0vxJXao5VBeOM14+CYCT0Rrd6sGyZT2oRd4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5983
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4mqks+FTcp1EK+GfVfObFbMWoa01uuO9iFkLu86mMHfjqhOlzcZIzaFBQO+BA12qvIQEF2Zu2NboKql28sGP/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR08MB6236
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> numa_fill_memblks() expects inclusive [start, end] parameters but
-> it's only caller, acpi_parse_cfmws(), is sending an exclusive end
-> parameter. 
+Micron Confidential
 
-This reads backwards to me, numa_fill_memblks() is currently doing
-*exclusive* math on a inclusive parameter, and the fix is to make it do
-inclusive math instead, right?
+Hi Huang, Ying,
 
-> This means that numa_fill_memblks() can create an overlap
+My apologies for wrong mail reply format, my mail client settings got chang=
+ed on my PC.
+Please find comments bellow inline.
 
-Perhaps:
+Regards,
+Srini
 
-s/This means/This confusion means/
 
-s/create an overlap/create a false positive overlap/
+Micron Confidential
++AD4- -----Original Message-----
++AD4- From: Huang, Ying +ADw-ying.huang+AEA-intel.com+AD4-
++AD4- Sent: Monday, December 18, 2023 11:26 AM
++AD4- To: gregory.price +ADw-gregory.price+AEA-memverge.com+AD4-
++AD4- Cc: Srinivasulu Opensrc +ADw-sthanneeru.opensrc+AEA-micron.com+AD4AOw=
+- linux-
++AD4- cxl+AEA-vger.kernel.org+ADs- linux-mm+AEA-kvack.org+ADs- Srinivasulu =
+Thanneeru
++AD4- +ADw-sthanneeru+AEA-micron.com+AD4AOw- aneesh.kumar+AEA-linux.ibm.com=
++ADs-
++AD4- dan.j.williams+AEA-intel.com+ADs- mhocko+AEA-suse.com+ADs- tj+AEA-ker=
+nel.org+ADs-
++AD4- john+AEA-jagalactic.com+ADs- Eishan Mirakhur +ADw-emirakhur+AEA-micro=
+n.com+AD4AOw- Vinicius
++AD4- Tavares Petrucci +ADw-vtavarespetr+AEA-micron.com+AD4AOw- Ravis OpenS=
+rc
++AD4- +ADw-Ravis.OpenSrc+AEA-micron.com+AD4AOw- Jonathan.Cameron+AEA-huawei=
+.com+ADs- linux-
++AD4- kernel+AEA-vger.kernel.org+ADs- Johannes Weiner +ADw-hannes+AEA-cmpxc=
+hg.org+AD4AOw- Wei Xu
++AD4- +ADw-weixugc+AEA-google.com+AD4-
++AD4- Subject: +AFs-EXT+AF0- Re: +AFs-RFC PATCH v2 0/2+AF0- Node migration =
+between memory tiers
++AD4-
++AD4- CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unles=
+s
++AD4- you recognize the sender and were expecting this message.
++AD4-
++AD4-
++AD4- Gregory Price +ADw-gregory.price+AEA-memverge.com+AD4- writes:
++AD4-
++AD4- +AD4- On Fri, Dec 15, 2023 at 01:02:59PM +-0800, Huang, Ying wrote:
++AD4- +AD4APg- +ADw-sthanneeru.opensrc+AEA-micron.com+AD4- writes:
++AD4- +AD4APg-
++AD4- +AD4APg- +AD4- +AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0-
++AD4- +AD4APg- +AD4- Version Notes:
++AD4- +AD4APg- +AD4-
++AD4- +AD4APg- +AD4- V2 : Changed interface to memtier+AF8-override from ad=
+istance+AF8-offset.
++AD4- +AD4APg- +AD4- memtier+AF8-override was recommended by
++AD4- +AD4APg- +AD4- 1. John Groves +ADw-john+AEA-jagalactic.com+AD4-
++AD4- +AD4APg- +AD4- 2. Ravi Shankar +ADw-ravis.opensrc+AEA-micron.com+AD4-
++AD4- +AD4APg- +AD4- 3. Brice Goglin +ADw-Brice.Goglin+AEA-inria.fr+AD4-
++AD4- +AD4APg-
++AD4- +AD4APg- It appears that you ignored my comments for V1 as follows ..=
+.
++AD4- +AD4APg-
++AD4- +AD4APg-
++AD4- https://lore.k/
++AD4- ernel.org+ACU-2Flkml+ACU-2F87o7f62vur.fsf+ACU-40yhuang6-
++AD4- desk2.ccr.corp.intel.com+ACU-2F+ACY-data+AD0-05+ACU-7C02+ACU-7Csthann=
+eeru+ACU-40micron.com
++AD4- +ACU-7C5e614e5f028342b6b59c08dbff8e3e37+ACU-7Cf38a5ecd28134862b11bac1=
+d56
++AD4- 3c806f+ACU-7C0+ACU-7C0+ACU-7C638384758666895965+ACU-7CUnknown+ACU-7CT=
+WFpbGZsb3d
++AD4- 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0+ACU-=
+3
++AD4- D+ACU-7C3000+ACU-7C+ACU-7C+ACU-7C+ACY-sdata+AD0-OpMkYCar+ACU-2Fv8uHb7=
+AvXbmaNltnXeTvcNUTi
++AD4- bLhwV12Fg+ACU-3D+ACY-reserved+AD0-0
 
-> between different NUMA nodes with adjacent memblks. That overlap is
-> discovered in numa_cleanup_meminfo() and numa initialization fails
-> like this:
-> 
-> [] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0xffffffffff]
-> [] ACPI: SRAT: Node 1 PXM 1 [mem 0x10000000000-0x1ffffffffff]
-> [] node 0 [mem 0x100000000-0xffffffffff] overlaps with node 1 [mem 0x100000000-0x1ffffffffff]
-> 
-> Changing the call site to send the expected inclusive @end parameter
-> was considered and rejected. Rather numa_fill_memblks() is made to
-> handle the exclusive @end, thereby making it the same as its neighbor
-> numa_add_memblks().
-> 
-> Fixes: 8f012db27c95 ("x86/numa: Introduce numa_fill_memblks()")
-> Suggested by: "Huang, Ying" <ying.huang@intel.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  arch/x86/mm/numa.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index b29ceb19e46e..4f81f75e4328 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -974,9 +974,9 @@ static struct numa_memblk *numa_memblk_list[NR_NODE_MEMBLKS] __initdata;
->   * @start: address to begin fill
->   * @end: address to end fill
->   *
-> - * Find and extend numa_meminfo memblks to cover the @start-@end
-> + * Find and extend numa_meminfo memblks to cover the [start, end)
->   * physical address range, such that the first memblk includes
-> - * @start, the last memblk includes @end, and any gaps in between
-> + * @start, the last memblk excludes @end, and any gaps in between
->   * are filled.
->   *
->   * RETURNS:
-> @@ -1003,7 +1003,7 @@ int __init numa_fill_memblks(u64 start, u64 end)
->  	for (int i = 0; i < mi->nr_blks; i++) {
->  		struct numa_memblk *bi = &mi->blk[i];
->  
-> -		if (start < bi->end && end >= bi->start) {
-> +		if (start < bi->end && end > bi->start) {
->  			blk[count] = &mi->blk[i];
->  			count++;
->  		}
+Thank you, Huang, Ying for pointing to this.
+https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live+A=
+CU-20In+ACU-20a+ACU-20World+ACU-20With+ACU-20Multiple+ACU-20Memory+ACU-20Ty=
+pes.pdf
 
-So I realize I asked for the minimal fix before a wider cleanup to
-'struct numa_memblk' to use 'struct range', but I want to see some of
-that cleanup now. How about the below (only compile-tested) to at least
-convert numa_fill_memblks(), since it is new, and then circle back
-sometime later to move 'struct numa_memblk' to embed a 'struct range'
-directly? I.e. save touching legacy code for later, but fix the bug in
-the new code with some modernization. This also documents that
-numa_add_memblk() expects an inclusive argument.
+In the presentation above, the adistance+AF8-offsets are per memtype.
+We believe that adistance+AF8-offset per node is more suitable and flexible=
+.
+since we can change it per node. If we keep adistance+AF8-offset per memtyp=
+e,
+then we cannot change it for a specific node of a given memtype.
 
-Note that this would be 3 patches, the minimal logic fix as you have it
-without the comment changes since they become moot later, the
-introduction of range_overlaps() with namespace conflict fixup with the
-btrfs version, and using range_overlaps() to cleanup numa_fill_memblks()
++AD4- +AD4APg-
++AD4- https://lore.k/
++AD4- ernel.org+ACU-2Flkml+ACU-2F87jzpt2ft5.fsf+ACU-40yhuang6-
++AD4- desk2.ccr.corp.intel.com+ACU-2F+ACY-data+AD0-05+ACU-7C02+ACU-7Csthann=
+eeru+ACU-40micron.com
++AD4- +ACU-7C5e614e5f028342b6b59c08dbff8e3e37+ACU-7Cf38a5ecd28134862b11bac1=
+d56
++AD4- 3c806f+ACU-7C0+ACU-7C0+ACU-7C638384758666895965+ACU-7CUnknown+ACU-7CT=
+WFpbGZsb3d
++AD4- 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0+ACU-=
+3
++AD4- D+ACU-7C3000+ACU-7C+ACU-7C+ACU-7C+ACY-sdata+AD0-O0+ACU-2B6T+ACU-2FgU0=
+TicCEYBac+ACU-2FAyjOLwAeouh
++AD4- D+ACU-2BcMI+ACU-2BflOsI1M+ACU-3D+ACY-reserved+AD0-0
 
-diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
-index 1be13b2dfe8b..9e2279762eaa 100644
---- a/arch/x86/include/asm/sparsemem.h
-+++ b/arch/x86/include/asm/sparsemem.h
-@@ -37,7 +37,8 @@ extern int phys_to_target_node(phys_addr_t start);
- #define phys_to_target_node phys_to_target_node
- extern int memory_add_physaddr_to_nid(u64 start);
- #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
--extern int numa_fill_memblks(u64 start, u64 end);
-+struct range;
-+extern int numa_fill_memblks(struct range *range);
- #define numa_fill_memblks numa_fill_memblks
- #endif
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index b29ceb19e46e..ce1ccda6fee4 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -13,6 +13,7 @@
- #include <linux/sched.h>
- #include <linux/topology.h>
- #include <linux/sort.h>
-+#include <linux/range.h>
- 
- #include <asm/e820/api.h>
- #include <asm/proto.h>
-@@ -971,20 +972,17 @@ static struct numa_memblk *numa_memblk_list[NR_NODE_MEMBLKS] __initdata;
- 
- /**
-  * numa_fill_memblks - Fill gaps in numa_meminfo memblks
-- * @start: address to begin fill
-- * @end: address to end fill
-+ * @range: range to fill
-  *
-- * Find and extend numa_meminfo memblks to cover the @start-@end
-- * physical address range, such that the first memblk includes
-- * @start, the last memblk includes @end, and any gaps in between
-- * are filled.
-+ * Find and extend numa_meminfo memblks to cover the physical address
-+ * range and fill any gaps.
-  *
-  * RETURNS:
-  * 0		  : Success
-- * NUMA_NO_MEMBLK : No memblk exists in @start-@end range
-+ * NUMA_NO_MEMBLK : No memblk exists in @range
-  */
- 
--int __init numa_fill_memblks(u64 start, u64 end)
-+int __init numa_fill_memblks(struct range *range)
- {
- 	struct numa_memblk **blk = &numa_memblk_list[0];
- 	struct numa_meminfo *mi = &numa_meminfo;
-@@ -993,17 +991,17 @@ int __init numa_fill_memblks(u64 start, u64 end)
- 
- 	/*
- 	 * Create a list of pointers to numa_meminfo memblks that
--	 * overlap start, end. Exclude (start == bi->end) since
--	 * end addresses in both a CFMWS range and a memblk range
--	 * are exclusive.
--	 *
--	 * This list of pointers is used to make in-place changes
--	 * that fill out the numa_meminfo memblks.
-+	 * overlap start, end. This list is used to make in-place
-+	 * changes that fill out the numa_meminfo memblks.
- 	 */
- 	for (int i = 0; i < mi->nr_blks; i++) {
- 		struct numa_memblk *bi = &mi->blk[i];
-+		struct range bi_range = {
-+			.start = bi->start,
-+			.end = bi->end - 1,
-+		};
- 
--		if (start < bi->end && end >= bi->start) {
-+		if (range_overlaps(range, &bi_range)) {
- 			blk[count] = &mi->blk[i];
- 			count++;
- 		}
-@@ -1015,8 +1013,8 @@ int __init numa_fill_memblks(u64 start, u64 end)
- 	sort(&blk[0], count, sizeof(blk[0]), cmp_memblk, NULL);
- 
- 	/* Make sure the first/last memblks include start/end */
--	blk[0]->start = min(blk[0]->start, start);
--	blk[count - 1]->end = max(blk[count - 1]->end, end);
-+	blk[0]->start = min(blk[0]->start, range->start);
-+	blk[count - 1]->end = max(blk[count - 1]->end, range->end + 1);
- 
- 	/*
- 	 * Fill any gaps by tracking the previous memblks
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 12f330b0eac0..6213a15c2a8d 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -307,8 +307,10 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 	int node;
- 
- 	cfmws = (struct acpi_cedt_cfmws *)header;
--	start = cfmws->base_hpa;
--	end = cfmws->base_hpa + cfmws->window_size;
-+	struct range range = {
-+		.start = cfmws->base_hpa,
-+		.end = cfmws->base_hpa + cfmws->window_size - 1,
-+	};
- 
- 	/*
- 	 * The SRAT may have already described NUMA details for all,
-@@ -316,7 +318,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 	 * found for any portion of the window to cover the entire
- 	 * window.
- 	 */
--	if (!numa_fill_memblks(start, end))
-+	if (!numa_fill_memblks(&range))
- 		return 0;
- 
- 	/* No SRAT description. Create a new node. */
-@@ -327,7 +329,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	if (numa_add_memblk(node, start, end) < 0) {
-+	if (numa_add_memblk(node, range.start, range.end + 1) < 0) {
- 		/* CXL driver must handle the NUMA_NO_NODE case */
- 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
- 			node, start, end);
-diff --git a/fs/btrfs/ordered-data.c b/fs/btrfs/ordered-data.c
-index a82e1417c4d2..e6c4ffc6003d 100644
---- a/fs/btrfs/ordered-data.c
-+++ b/fs/btrfs/ordered-data.c
-@@ -111,7 +111,7 @@ static struct rb_node *__tree_search(struct rb_root *root, u64 file_offset,
- 	return NULL;
- }
- 
--static int range_overlaps(struct btrfs_ordered_extent *entry, u64 file_offset,
-+static int btrfs_range_overlaps(struct btrfs_ordered_extent *entry, u64 file_offset,
- 			  u64 len)
- {
- 	if (file_offset + len <= entry->file_offset ||
-@@ -913,7 +913,7 @@ struct btrfs_ordered_extent *btrfs_lookup_ordered_range(
- 
- 	while (1) {
- 		entry = rb_entry(node, struct btrfs_ordered_extent, rb_node);
--		if (range_overlaps(entry, file_offset, len))
-+		if (btrfs_range_overlaps(entry, file_offset, len))
- 			break;
- 
- 		if (entry->file_offset >= file_offset + len) {
-@@ -1042,12 +1042,12 @@ struct btrfs_ordered_extent *btrfs_lookup_first_ordered_range(
- 	}
- 	if (prev) {
- 		entry = rb_entry(prev, struct btrfs_ordered_extent, rb_node);
--		if (range_overlaps(entry, file_offset, len))
-+		if (btrfs_range_overlaps(entry, file_offset, len))
- 			goto out;
- 	}
- 	if (next) {
- 		entry = rb_entry(next, struct btrfs_ordered_extent, rb_node);
--		if (range_overlaps(entry, file_offset, len))
-+		if (btrfs_range_overlaps(entry, file_offset, len))
- 			goto out;
- 	}
- 	/* No ordered extent in the range */
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index a904861de800..ef35c974e5f2 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -45,7 +45,7 @@ static inline int phys_to_target_node(u64 start)
- }
- #endif
- #ifndef numa_fill_memblks
--static inline int __init numa_fill_memblks(u64 start, u64 end)
-+static inline int __init numa_fill_memblks(struct range *range)
- {
- 	return NUMA_NO_MEMBLK;
- }
-diff --git a/include/linux/range.h b/include/linux/range.h
-index 6ad0b73cb7ad..981fd4f7731e 100644
---- a/include/linux/range.h
-+++ b/include/linux/range.h
-@@ -13,11 +13,18 @@ static inline u64 range_len(const struct range *range)
- 	return range->end - range->start + 1;
- }
- 
-+/* True if r1 completely contains r2 */
- static inline bool range_contains(struct range *r1, struct range *r2)
- {
- 	return r1->start <= r2->start && r1->end >= r2->end;
- }
- 
-+/* True if any part of r1 overlaps r2 */
-+static inline bool range_overlaps(const struct range *r1, const struct range *r2)
-+{
-+       return r1->start <= r2->end && r1->end >= r2->start;
-+}
-+
- int add_range(struct range *range, int az, int nr_range,
- 		u64 start, u64 end);
- 
+Yes, memory+AF8-type would be grouping the related memories together as sin=
+gle tier.
+We should also have a flexibility to move nodes between tiers, to address t=
+he issues.
+described in use cases above.
+
++AD4- +AD4APg-
++AD4- https://lore.k/
++AD4- ernel.org+ACU-2Flkml+ACU-2F87a5qp2et0.fsf+ACU-40yhuang6-
++AD4- desk2.ccr.corp.intel.com+ACU-2F+ACY-data+AD0-05+ACU-7C02+ACU-7Csthann=
+eeru+ACU-40micron.com
++AD4- +ACU-7C5e614e5f028342b6b59c08dbff8e3e37+ACU-7Cf38a5ecd28134862b11bac1=
+d56
++AD4- 3c806f+ACU-7C0+ACU-7C0+ACU-7C638384758666895965+ACU-7CUnknown+ACU-7CT=
+WFpbGZsb3d
++AD4- 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0+ACU-=
+3
++AD4- D+ACU-7C3000+ACU-7C+ACU-7C+ACU-7C+ACY-sdata+AD0-W+ACU-2FWcAD4b9od+ACU=
+-2BS0zIak+ACU-2Bv5hkjFG1Xcf
++AD4- 6p8q3xwmspUiI+ACU-3D+ACY-reserved+AD0-0
+
+This patch provides a way to move a node to the correct tier.
+We observed in test setups where DRAM and CXL are put under the same.
+tier (memory+AF8-tier4).
+By using this patch, we can move the CXL node away from the DRAM-linked (me=
+mory+AF8-tier4)
+and put it in the desired tier.
+
++AD4- +AD4APg-
++AD4- +AD4-
++AD4- +AD4- Not speaking for the group, just chiming in because i'd discuss=
+ed it
++AD4- +AD4- with them.
++AD4- +AD4-
++AD4- +AD4- +ACI-Memory Type+ACI- is a bit nebulous.  Is a Micron Type-3 wi=
+th performance X
++AD4- +AD4- and an SK Hynix Type-3 with performance Y a +ACI-Different type=
++ACI-, or are
++AD4- +AD4- they the +ACI-Same Type+ACI- given that they're both Type 3 bac=
+ked by some form
++AD4- +AD4- of DDR?  Is socket placement of those devices relevant for dete=
+rmining
++AD4- +AD4- +ACI-Type+ACI-?  Is whether they are behind a switch relevant f=
+or determining
++AD4- +AD4- +ACI-Type+ACI-? +ACI-Type+ACI- is frustrating when everything w=
+e're talking about
++AD4- +AD4- managing is +ACI-Type-3+ACI- with difference performance.
++AD4- +AD4-
++AD4- +AD4- A concrete example:
++AD4- +AD4- To the system, a Multi-Headed Single Logical Device (MH-SLD) lo=
+oks
++AD4- +AD4- exactly the same as an standard SLD.  I may want to have some
++AD4- +AD4- combination of local memory expansion devices on the majority o=
+f my
++AD4- +AD4- expansion slots, but reserve 1 slot on each socket for a connec=
+tion to
++AD4- +AD4- the MH-SLD.   As of right now: There is no good way to differen=
+tiate the
++AD4- +AD4- devices in terms of +ACI-Type+ACI- - and even if you had that, =
+the tiering
++AD4- +AD4- system would still lump them together.
++AD4- +AD4-
++AD4- +AD4- Similarly, an initial run of switches may or may not allow enum=
+eration
++AD4- +AD4- of devices behind it (depends on the configuration), so you may=
+ end up
++AD4- +AD4- with a static numa node that +ACI-looks like+ACI- another SLD -=
+ despite it being
++AD4- +AD4- some definition of +ACI-GFAM+ACI-.  Do number of hops matter in=
+ determining
++AD4- +AD4- +ACI-Type+ACI-?
++AD4-
++AD4- In the original design, the memory devices of same memory type are
++AD4- managed by the same device driver, linked with system in same way
++AD4- (including switches), built with same media.  So, the performance is
++AD4- same too.  And, same as memory tiers, memory types are orthogonal to
++AD4- sockets.  Do you think the definition itself is clear enough?
++AD4-
++AD4- I admit +ACI-memory type+ACI- is a confusing name.  Do you have some =
+better
++AD4- suggestion?
++AD4-
++AD4- +AD4- So I really don't think +ACI-Type+ACI- is useful for determinin=
+g tier placement.
++AD4- +AD4-
++AD4- +AD4- As of right now, the system lumps DRAM nodes as one tier, and p=
+retty
++AD4- +AD4- much everything else as +ACI-the other tier+ACI-. To me, this p=
+atch set is an
++AD4- +AD4- initial pass meant to allow user-control over tier composition =
+while
++AD4- +AD4- the internal mechanism is sussed out and the environment develo=
+ps.
++AD4-
++AD4- The patchset to identify the performance of memory devices and put th=
+em
++AD4- in proper +ACI-memory types+ACI- and memory tiers via HMAT has been m=
+erged by
++AD4- v6.7-rc1.
++AD4-
++AD4-       07a8bdd4120c (memory tiering: add abstract distance calculation
++AD4- algorithms management, 2023-09-26)
++AD4-       d0376aac59a1 (acpi, hmat: refactor hmat+AF8-register+AF8-target=
++AF8-initiators(),
++AD4- 2023-09-26)
++AD4-       3718c02dbd4c (acpi, hmat: calculate abstract distance with HMAT=
+, 2023-09-
++AD4- 26)
++AD4-       6bc2cfdf82d5 (dax, kmem: calculate abstract distance with gener=
+al
++AD4- interface, 2023-09-26)
++AD4-
++AD4- +AD4- In general, a release valve that lets you redefine tiers is ver=
+y welcome
++AD4- +AD4- for testing and validation of different setups while the indust=
+ry evolves.
++AD4- +AD4-
++AD4- +AD4- Just my two cents.
++AD4-
++AD4- --
++AD4- Best Regards,
++AD4- Huang, Ying
