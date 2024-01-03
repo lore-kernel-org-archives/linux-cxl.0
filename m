@@ -1,86 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2041.outbound.protection.outlook.com [40.107.96.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFE41D545
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Jan 2024 20:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635831DA21;
+	Wed,  3 Jan 2024 21:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iW2ZXMuS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704314936; x=1735850936;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=2cqvD5GJ0cA3vHdH/bu0hBVu3nck4tVFVdKjnXRlXeE=;
-  b=iW2ZXMuSHtyabxPIl4fD7korNNvD9CUG0IC//6bYQ8HfByejIaRi+6GX
-   ak0x30665vaqch9laO6TT83PoVPYyMViZ4K+g9Fi/wQNTj13cuYJSIJ4I
-   kJJHmwZIreH9EqwiI0FSB2nnl0pj870Dkc12kvntlWPKYV9j58ucpOova
-   GV/HMY8WJjbzETafIdwOuAu7PvS4JaIT4AHMC8oRPV1pHzxXGUjtbqaUm
-   OPEaNalTS0A0YWJZIniv8ZZeI3DG9nJ6borKMhUeMhb+FI0If/LyPr+/k
-   TsUl1HY2amV7sMUYKnfsBmdzij3xFd/v7XunBnAP+3AFTn7itD8a60UE0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="428235888"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="428235888"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 12:48:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="783614889"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="783614889"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jan 2024 12:48:55 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jan 2024 12:48:54 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jan 2024 12:48:54 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Jan 2024 12:48:54 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UOKLcpbe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZxobdDVLBSWlnwzoXudml/NJHIyeiDV1nXYX72bs/F4hXYneeuwOlhvAiDRe+3J0FxKGsx64JHHOGAwxzktDwMzGCXrUsU9DqTfY7/XT5TFLEIdaUjGV6YRQvpVZRhddFNhHZJ5r/9WB18cwTd1TF+UaNGmqBlTY72x7LFWnxPvhtCB1rKPH0emArteTfYs25RbdsD+FXqRwpQ7+0LfNhB+qQXptq59H1kaNIfCVibkN9tqrdWYCN0CL/WUe5CFhOu1RRlbQmiFJMqD4Xkf8K2xKYv8dmRn6C67KO939VkaGPkkP+O0qa0YLIsINYjqRH9VviS9FLzLxII9fjbDoXg==
+ b=TGk9raQDTF/lNYw/1pR3t9jdey5tiFnCPt+zTR0kDSbYn9CU4PGFG10nw//pOqEKy7LEcl+UjJBwew2/Ao5NeOUFyIxTR93RvILUwOgS3WlUzctj/V8O4CpuRZ+TIufo14igCtBF2mJhxjyrxubQucmgUAEtXJSXahlyL6C+jmT3NFsyXoyhpeeUIozaUxPuDiUbF/7juoy4Iiwv9JmwkCn1J1xRIzrxtJk7mYGASzt7P7z2fNpkwyyKSSy8NB9GBMXs87zig1H4lYDcmsbOPN8DRyiC35uZTbzIugg4jhnGi5rgCdU80F2beVxy9nyUFT3rJqzUqsuGflKhVrDwpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nX6FV1BlJRt2xfE5ooUwcgkVqKWLw39oxVwpwKtzZNs=;
- b=NN6+NchtClmx1ld3pLzBsgXeTZKguqKJIdvtxrINpsx6rVc9QwWpG0TBo6IQ8lHo1QY2gH+zT3iP2FQew7IUL9qpyvXqeEsrwjI01sdAlaXtjRPJGxiDIg3ZAENmXxVj5RYd6+0BpLFd1l80WE6y1g29sahrgV7/MOGH+hDiqoTp2wO+uxSewBsV1397fzQzvhPmdM8GkvirPk92Y1nQBp9yXr1S8A+z8LGhQOUtwIwhothZmUygBrP8Z7S3B/LYhmf+DxKBQEm+LF+5gf/ee7GKx+Y9YaZkWdJkkNQlQnbopxi/36oUvjBLHtcNxtE60KjV8Sk7/4rh6C+hZp32Vw==
+ bh=WseXu5UVX9/EaeCoEwG2x74Mf7APPOifWZ8u77DDoQ4=;
+ b=n4CN6X9/EzWISnknXrgxjYTcIQskky/UbFRWOASHfGlzJmGD8eGuWR0FGfFk7kpq9FBHs/eYWY3pNMMSh30hVbiH+EwuBoUQr1hon4u5MI6j9HNJ/sogKFeCur/zY9/iu+8HpojCUTaY3FBSuSOHSAhDIu2khoyd4l2rGEX8aIwaVY/NNmCf7X6pm/AeA/63o0wyAubcPGtJW42J5UW+Mu9i5To05GzURJzQWSI/oT+dPL73GXYOw6EryvpcD7pIhx/5H0t42++eYOoAJIUySOrM1Cg0prZ9SwtwacO83b6HvSeONORyTHMxzL4ICIH+OEID4pKS8TkYuq5/XTZmyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WseXu5UVX9/EaeCoEwG2x74Mf7APPOifWZ8u77DDoQ4=;
+ b=UOKLcpbexUCt6XxJznsVG+QovaNr6P41kPAOpzZEyfu4kqoJojPvMNNU4TPClKTG5MQ8rmI5ScRTaZkcZGQ9RSjwUEPt9xpJsnKdjPjJRuwUiRirG6ricXfAEgC+PIiGk2f1bRIDa+kSwpAZ2jnBp64m11Tshwe5tMaJ5Gb/cKo=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA1PR11MB8428.namprd11.prod.outlook.com (2603:10b6:806:38b::20) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by MN0PR12MB6296.namprd12.prod.outlook.com (2603:10b6:208:3d3::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Wed, 3 Jan
- 2024 20:48:51 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7159.013; Wed, 3 Jan 2024
- 20:48:51 +0000
-Date: Wed, 3 Jan 2024 12:48:48 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dongsheng Yang <dongsheng.yang@easystack.cn>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <ave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: RE: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
-Message-ID: <6595c83083418_8dc6829468@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
-X-ClientProxiedBy: MW2PR2101CA0020.namprd21.prod.outlook.com
- (2603:10b6:302:1::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2024 21:12:08 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::bdc7:f7b9:a4fc:b793]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::bdc7:f7b9:a4fc:b793%4]) with mapi id 15.20.7135.023; Wed, 3 Jan 2024
+ 21:12:08 +0000
+Subject: Re: [PATCH 3/4] acpi/ghes, efi/cper: Recognize and process CXL
+ Protocol Errors.
+To: Ira Weiny <ira.weiny@intel.com>, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>
+References: <20240102150933.161009-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20240102150933.161009-4-Smita.KoralahalliChannabasappa@amd.com>
+ <65944ec1dccee_151dc1294f3@iweiny-mobl.notmuch>
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Message-ID: <66b7feb6-b151-ad97-0ee4-3fd7da7137eb@amd.com>
+Date: Wed, 3 Jan 2024 13:12:06 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+In-Reply-To: <65944ec1dccee_151dc1294f3@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR04CA0008.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::13) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -88,133 +64,254 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB8428:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e55bd5c-4f01-4287-46b2-08dc0c9d645e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|MN0PR12MB6296:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8d38f2f-691e-4cdb-ac70-08dc0ca0a4f5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mnyPXDKwH6pOENVmRoWKroW4WgDFx5F1Sdz54s/8PTAQrtnz6+Bxqu1cvKnuAFSaj5gLqWelzROLCri84B2XINjlx1Jy4Ikl+XD6mFeT/cqKGszqNRe6s7eBeSm0TfKQ8M4O2911COsW51D783+00FA2RaWyFhIK/2+0AsE4JJTDlQsF+ISC+dFxZ/2TQ5q/Xuiv80WoBt+40lB96Pj5pYzAGdwWmvoR5mr0ulnvFrqF4/OaZLh35JNR1BMtmh+bMK3kIsmwXuzBkE4LuPjPIAdSkj6iUcvhef02EK1oQb28V54w9/Aogv7+HXVSscc7QEBrd4nqCBobNR/v3Y8bfAhOI2l43t1GbricGAd3qRNIPsfI8hgcixcubBUSswFt8bnc/h6RZLVRfwCbnUkHwBb2WVPogyO2HyKjU2Ny4iIE/6c+AQjpIokBwKBGrFp+2e+CGUCx9v939EZienwLzm4VnYqJg77kRzQW1gLbgSlRWh4v8Of4CCSG959p2H56jPa5jck1LfnTlSYgS80NLqA/X0+NLpE4MMBQcNUoFec=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(366004)(39860400002)(346002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(2906002)(8676002)(8936002)(478600001)(66476007)(316002)(5660300002)(86362001)(4326008)(6486002)(966005)(9686003)(41300700001)(6512007)(6666004)(6506007)(82960400001)(66556008)(26005)(38100700002)(83380400001)(66946007);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	MtJrKU0m16eELHJ4PoNGYYX/HNy5XxChMGGYpbd+7Xjcb5jb91HQU8fNKHstCePnDdQKa8bZH3mRH1vx+ZMJewl1PzAoXoggnpkAFG0j3pAOFTQkY8wveFTcm3Z85C/nfcYkMO2H4sNGFuCNjX60/qL5ZFOtrf3P+AiIs15h3SrNMv4UvZfLwPvkVnTdmQ+ZejQeh/lVgeAY2vekU0bQQ6Lu1kYIu8ZbFtpSxlu2TZ8d5e/5BtQAK8yjvAwvqSkkKSJbqDyH2i4nBtSXkFRdqVOpe48CCGh7DOBT/QEFgGjNo47eGY3csAu+ytaWhBRuQzfiuIq0lgPe6fLKjurW8u6MFhrskZUET855J5etNPn94uKXpkRF7khaPGKZ2ZmrLwDNYYXDDZ+UVITsuQ12tF/O58gSpUWLTqslrKwKNPDhZ08EAMc7xoDHiiMprz2KKf74DvlxytgEgAP1OuIEZ5YOCjLz8gFP54FrVgIca7eJY1ifAfswOjg5OTybuUbyeguMyivgOxBdyVZChFpUknAJ+rRZ7tnHyuzHuGx0GQTGt9T0uQQWl0WCkoABASFnaC9u4ecyB99ei7FHCq/NqanOt+WI3HsZ8Ot3GOSD9dsIHQLdD/PgqBN5kCKGgco3mOqBccP82mVZVuytL4U6VQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(39860400002)(366004)(136003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(86362001)(83380400001)(26005)(6512007)(6506007)(2906002)(53546011)(2616005)(4326008)(8676002)(5660300002)(6486002)(478600001)(316002)(66476007)(54906003)(8936002)(66946007)(66556008)(41300700001)(31696002)(36756003)(38100700002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MVlqL0ZYNTlFcG12L2pUUHNjVnVLeWljL0d5NDU4OXU4c0JUeUd5ZmZ4c01s?=
- =?utf-8?B?OU5HRjJ4aldWV1UzaDd1OStvQkQ2N3lTK2hmVjd3RWlPN25MQ25oWmNhd0xk?=
- =?utf-8?B?Y0VlTUZTS3VER29mZVdnY3IzMUM1MithcW5tSlRkcENvV3pQbEViNm1mcExI?=
- =?utf-8?B?TXBYSzJXUXZxWmlTRStZSE1BSkdkRUtCT2I1dTh5dFJYaWMwd3l1ZkdNNExP?=
- =?utf-8?B?dDVxVGtqaXFNZEtnRmRxMHNYRVF0K0s5MU9qRnZEVU5XazdTUmNWSklvNzN5?=
- =?utf-8?B?VU1FM0pjOXd0b3FJZi9FTWhyd0wvNzViaTBNS2xIbk9yM0JQVGRKbk5uR1VC?=
- =?utf-8?B?YXhyeCtiMHY3b2RZa1VHTkx6ODZib1J4NVFEajNBNlNHMWRXanJ1SnlBcStJ?=
- =?utf-8?B?djhrZ2E1UDVSZVdWZytLK2taak95eEVaRmlNcVZJaE9ZUy9uTkpxSVp1ZVBH?=
- =?utf-8?B?Sk5EQk9ORlkvUVQvdjVQb1JkK3UxamdmZ0toZzRWMTlsR0FPdm1LS056dEh3?=
- =?utf-8?B?Zy9rUVNwb2c4L0NJTHhKOXZVK1JrQkFia21NSTV2Z0Y5MlpVUzNKcmVWbXha?=
- =?utf-8?B?a2NzQkdVOFFDNTk2RFdFSElWODlGTEFVMk4vNzBWWWdpanUzNGg1ZmFKN0cz?=
- =?utf-8?B?WForeGREVVdwZHRZY004Vk5mQXJHblZQQndMUEhtamJTdFZ6VXp5V05kUy9O?=
- =?utf-8?B?T3VuRFhFdUZMSURMQTFVVzllYW1VcytvbW9ZcjBUcEYxNy9Bc2VNZXVvYzFa?=
- =?utf-8?B?Q0EvVi9ZVG5JelBscVl1OHZBekc4UWN3dXU2Q1RYcHVZY1MvVGxtNXBFTFdO?=
- =?utf-8?B?MVloZlYycHRvT2o5TGhtMElQZnFMeEpBRDFaM2dTZ2VMMk9GKzU4aDdJWXZZ?=
- =?utf-8?B?ZFRNV1E5R3k3ZXhHMldSUGNQejBvd2NpSWVlMGRBUmJEVjNCV1JGYUNxSm9N?=
- =?utf-8?B?YStycExrcUI2dnFDWllGTlFyditRaEplUWJSLy9BT1Joek9RdGRveFVOWHVK?=
- =?utf-8?B?aXlIdlZGVHhMbG1ra2MzbTR0Y1l2akFybjh0V3E5NnNndC9YaU9mbzhKb3Rn?=
- =?utf-8?B?RXF0eVpJTmtFSkJiNm5vdndLMmRoVFB1UHBidG1TdWVvQzg2QU04TjJLSHp6?=
- =?utf-8?B?L3plbXNPTVFmNG14dUNHdXcwb2NjRTVaWlBBTDRpaGgweTRUMys5WDE1OVNZ?=
- =?utf-8?B?TTJwb2QyVUExSkFmYmhka0FTMWVwdXgxU3daeFcrUjFHRlY3d3dqVlNHS1Fm?=
- =?utf-8?B?T3d6c3orazBlTVFCMjE5ZlYxS1FyZWtiWHZCNE1yV25QS1JCKzZwZEVSSnZB?=
- =?utf-8?B?c25CMit4L2djT3dNdm5GRUE3S0lzanFITXFCOE9lSGxLdVpNU2U4NDhqOXlh?=
- =?utf-8?B?SE9RR0tEUGs2aWIzOUs4Y240S01qS2tEMDFnTmNycVJDVithaC9RdmVJbTVw?=
- =?utf-8?B?d294V1luTXM0S2NoZkJqK2hlNjJ1NVNlNDE3SnlQZ1pDMG1ZZ2oxbzdSMmVQ?=
- =?utf-8?B?U1R5T3JQTXFSby8vaGUxdGthMmhlTzdPRXl4QVVVNjhZV3Y5bU5ZN3d1aEhN?=
- =?utf-8?B?NlNTa01yOXpZaEIwUTJqRk82Wk1YQTZlak9yam5ka1pJWVBmMklHUVJOcW00?=
- =?utf-8?B?Z2hweVh2T2R0VVdBanU5YTE2aUc1ZWh0azhiS0NZRXFIakhlcGovSTZIaERk?=
- =?utf-8?B?Q2VXQitWWXFhK1I5ZEl6Z0xHTzJhK2JXM1VHM2paWHREaTRMdlNvZHJkcTFx?=
- =?utf-8?B?NE9lVUZoUVNnZTg4Q2VnaGVUak43dk5ZVWZiMFlSZ25aL0pWeEZFZXVkOURX?=
- =?utf-8?B?N21hK2c3ck1wcDNDazRENkFMMEM3bVp3TWZueGUzYmtZd0w4cEdYUXlsNDJT?=
- =?utf-8?B?cmJ2Nzc5TyttMlF5eW1XMGVJbk83U2FHazBGc2VWS3VqdHRxZ3N2VzBURTNT?=
- =?utf-8?B?WDFkY0czRUNlYzhRN01ZUDBzdVUxMTAvNjRSbHozbG1WWFpMM0t3ZFNjN1RI?=
- =?utf-8?B?V01XNjNEbXlMOEx0UWc0RXl2L3puQzNLcDhHek5MNEFWNE8wd21oWjVjSGpo?=
- =?utf-8?B?QnJ3cWV6eXltTWFlU1VleVNIVXlwUDIxbVZ5c2RQK3VmUlF0U1UyTllKYnBL?=
- =?utf-8?B?RHpFVE0zTUdzYVUxK3d2UGt3M1IwN0pZNVhxeVhMWCswekk0ZkZmRmQ3amNW?=
- =?utf-8?B?MFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e55bd5c-4f01-4287-46b2-08dc0c9d645e
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UlNTV2EyaHFvL2RaNWtWNnZ3VGV4OXBKT0VRa2t4MFhEcXc1bVB3NWNIVVU0?=
+ =?utf-8?B?eFVpUnpGeDJxdXh2TmtUZnhKbVlzVkZQRGpYbXpiMEZCVjFVdnAvV1VPSm8y?=
+ =?utf-8?B?SlM4bGt5U1laSGNMVjRjZnV2MlFYTms4Nk1SZS9INng3Z3dYMUUrVm90Snd1?=
+ =?utf-8?B?ZmNldUdjWkRWQU5kcllDS3RLR1RkRzUzbHoxN05WYjNvaFg2b2hDbG9wcG44?=
+ =?utf-8?B?Q3IvMDFZUVQxcW5PNU5ZK2xLdFhBZ3JGS0JiVytLdThzb0VzdFI5SS81TnA1?=
+ =?utf-8?B?ejBXdVZSeDlZWFJjZHBDME0yckJLRTRPcjBsczZGWG5OYWRJMnlkOHRFY0dE?=
+ =?utf-8?B?anpzT2c1bWN5OGMwNytJdjNRNE9yTVRQODluNk5HMlVXUCtQOUVtaTJrc3A1?=
+ =?utf-8?B?Uy9kb1BHYVBVTHUxMjM3QmZtRHJCSEoxUlk0RTE2MnV6dXF3Vnl5OFFpcjhm?=
+ =?utf-8?B?eTFBUHZMTDZIS05jd1ovYjNDS0k1clU1YUdYcGJTRkdGZHp1bkgvNWFLR3FG?=
+ =?utf-8?B?WXExY2hVSnY4NHF0TmtBL3o5M1J2VS93bi9zbUJ0QTBUYjExOUg3eUhKblIz?=
+ =?utf-8?B?SlNHVlBFQnF2VUZIOWx4OTRlcEQ5Ry9Mc2RMYlgvdkJUN0RreE1mVnRzakFs?=
+ =?utf-8?B?MHJjU24wbjJuVXAwVEQvRi9Cb2d2eEsxNmR6Y1VibmpYV0NPT1greDh6L0o5?=
+ =?utf-8?B?YjZueFF6RWw4R2JJQUpjMGJ1VVJSQkVBZDFmajJuRjU3R0VXSktVTU1oZCtG?=
+ =?utf-8?B?RzlVN0h2clEvcWw4TEVTQ1g4L1J6RnF1MUxpRFlaSnA0R2RLaURZbmFWbGlu?=
+ =?utf-8?B?dUZDOGhxL1JWY1VDV0R3bVFxZDU4UGdjcE04TTlYVXBzY2RDS2ljaUN2OTdL?=
+ =?utf-8?B?NmZZTmJ1SWZJMG9OT25IWWc1UGh6MThXWXdYK2dBYTliTHUrMW94d0QxSWtF?=
+ =?utf-8?B?TGNLdEZxd2NKMmYwRDdFT3FyeUJFL3J1NHdLUUE2MUhqMzlFMXpicUVZMWVm?=
+ =?utf-8?B?ZzZkcm9HVXpiSWExUDF3ZXNiRTZlODJ3MXRDdEwxL203QzIwUmxxWlgwdVlT?=
+ =?utf-8?B?ZkZTeUUybTlEM3hFdTdPbWlzTllwTVdsWktlS2MzQU9uMVdmcGZBYkZ2WVMx?=
+ =?utf-8?B?TVRzRXMwQ3lzQjRzRi91Y3Rsamk3c2Rja0NBTDBOa1VCNk1PRGZaSmNJUkM3?=
+ =?utf-8?B?NlpyUXh4amdkVThhSXU1RFRBc0VMVnpJTkhoU2c0djhlR3pvU2tiaHdSRklj?=
+ =?utf-8?B?ejVZaFcrbGlMaDJxTzVTc3VyYVk4NXRaRllMeEZ0MHlGREJ1TmN6SFJ0a3ZN?=
+ =?utf-8?B?UTJ2QkJhQ1g3NkdyTS9XbzhVaTBadW5hdHpVOWdrZ2FlY2VRYjh3REpJTU9z?=
+ =?utf-8?B?ckluQzZFSC9kRkoram1FSFpGbDhtaWpJNHNTUkw3VmpOS0FhYVRXYmw1VU5y?=
+ =?utf-8?B?ZW1TRDIzWHNySUdJNUgrVnQ3QmtiUU5zbWxHQzVBS1pLYXNTQnFrV2FPUzV2?=
+ =?utf-8?B?UFMwMWdYNkgrRUgvWGVWTVFkMmJZUURZRk0ya3dzMEY2bFhzbEh2bjJ0UTMy?=
+ =?utf-8?B?czVDYmVESXZaaWI3OW5kbG9jb0UwTEcyeGVjWk5BdTBTYTRORC9PRFpIQldP?=
+ =?utf-8?B?a1QyV1RRQXVINy9oQjZHcW9WN2xHU1NabS91eGxvQU5ja1lsWklRS0VBTTMr?=
+ =?utf-8?B?ekZuK3E3N3pSUzVRWllOa01ZNkZ1T01QL3lxbEJ4UlQwV1FMYXJDWm9WeTVh?=
+ =?utf-8?B?Y2h3eGhVaUc2ODN0RE5PU2FKNFRKeXBoZFhTWHZsRFVTWTNmSmlUayt1Mmt4?=
+ =?utf-8?B?cUxSNU1xTmtIa2FCMDhzaDRvYUV3TnZGcmpZQ2V1K3ppb0UxRWlVbE1PQUVm?=
+ =?utf-8?B?Wm1BZ2JnK3dhNm5lOFViTVBoaHdzY21UTnJ3bG5nZmJHR1krS3YxWXU3VXRQ?=
+ =?utf-8?B?YmpiWTFPS1NDaTg4ZldoVlo5RHE4c0ZPNlFYaitLamswbkRkRVpKK3pmbUxX?=
+ =?utf-8?B?ckppdTdjeWR4c3NxREhXbWpmVXBvZHJPeGFpRUd0L29uSWUyQmpSZEprbzhF?=
+ =?utf-8?B?dE5WdVB3ZWdsRVZvV2dNQjI3QVF6KzQ5OHIyRXFBNlN6NDFyRXIzc3RGZnpO?=
+ =?utf-8?Q?45cGkcFA8INTUEVp2Fr1oA3Bz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8d38f2f-691e-4cdb-ac70-08dc0ca0a4f5
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 20:48:51.4230
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 21:12:08.3290
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CiZQ1UG+HL7eUR2/e0bSlWE37CbZMfOgmi2qMJm5EivhfSPyeGJR9SdODffXCFHOHz4Pb+nnb0QGVRsrJP28w1jReARnwUNcGbvWcohRhx4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8428
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: zlE70MO2n0X3PaIIClCtKYT27R1OkYYgbRcgTcxJmsmbPtPR6DZUOBQxCduiMMJ1mXuHTCMKKu7jGbECphPtRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6296
 
-Dongsheng Yang wrote:
-> Hi all:
-> 	This patchset introduce cxlv module to allow user to
-> create virtual cxl device. it's based linux6.7-rc5, you can
-> get the code from https://github.com/DataTravelGuide/linux
+On 1/2/2024 9:58 AM, Ira Weiny wrote:
+> Smita Koralahalli wrote:
+>> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
+>>
+>> Add GHES support to detect CXL CPER Protocol record and cache error
+>> severity, device_id, serial number and a pointer to CXL RAS capability
+>> struct in struct cxl_cper_rec_data.
+>>
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>> ---
+>>   drivers/acpi/apei/ghes.c        | 15 ++++++++++
+>>   drivers/firmware/efi/cper_cxl.c | 52 +++++++++++++++++++++++++++++++++
+>>   include/linux/cxl-event.h       |  6 ++++
+>>   3 files changed, 73 insertions(+)
+>>
+>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+>> index d6a85fbc0a8b..6471584b2e79 100644
+>> --- a/drivers/acpi/apei/ghes.c
+>> +++ b/drivers/acpi/apei/ghes.c
+>> @@ -714,6 +714,18 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>>   		cper_callback(event_type, &data);
+>>   }
+>>   
+>> +void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
+>> +{
+>> +	struct cxl_cper_rec_data data;
+>> +
+>> +	memset(&data, 0, sizeof(data));
 > 
-> 	As the real CXL device is not widely available now, we need
-> some virtual cxl device to do uplayer software developing or
-> testing. Qemu is good for functional testing, but not good
-> for some performance testing.
+> Does this need to be done?  Could cxl_cper_handle_prot_err_info() use
+> something like this initially?
+> 
+> 	*data = (struct cxl_cper_rec_data) {
+> 		.rec.hdr.dev_serial_num.lower_dw = prot_err->dev_serial_num.lower_dw;
+> 		.rec.hdr.dev_serial_num.upper_dw = prot_err->dev_serial_num.upper_dw;
+> 	};
+> 
+> The serial number is always set even if it is not valid.
 
-How is it performance testing if it's just using host-DRAM? Is the use
-case something like pinning the benchmark on Socket0 and target DRAM on
-Socket1 as emulated CXL to approximate CXL bus latency?
+Ok will copy serial number at the beginning of 
+cxl_cper_handle_prot_err_info() and remove memset.
 
 > 
-> 	The new CXLV module allow user to use the reserved RAM[1], to
-> create virtual cxl device. When the cxlv module load, it will
-> create a directory named as "cxl_virt" under /sys/devices/virtual:
+>> +
+>> +	if (cxl_cper_handle_prot_err_info(gdata, &data))
+>> +		return;
+>> +
+>> +	data.severity = gdata->error_severity;
+>> +}
+>> +
+>>   int cxl_cper_register_callback(cxl_cper_callback callback)
+>>   {
+>>   	guard(rwsem_write)(&cxl_cper_rw_sem);
+>> @@ -768,6 +780,9 @@ static bool ghes_do_proc(struct ghes *ghes,
+>>   		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+>>   			queued = ghes_handle_arm_hw_error(gdata, sev);
+>>   		}
+>> +		else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+>> +			cxl_cper_handle_prot_err(gdata);
+>> +		}
+>>   		else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
+>>   			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+>>   
+>> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+>> index 4fd8d783993e..3bc0b9f28c9e 100644
+>> --- a/drivers/firmware/efi/cper_cxl.c
+>> +++ b/drivers/firmware/efi/cper_cxl.c
+>> @@ -8,6 +8,7 @@
+>>    */
+>>   
+>>   #include <linux/cper.h>
+>> +#include <acpi/ghes.h>
+>>   #include "cper_cxl.h"
+>>   
+>>   #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
+>> @@ -176,3 +177,54 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
+>>   			       sizeof(cxl_ras->header_log), 0);
+>>   	}
+>>   }
+>> +
+>> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+>> +				  struct cxl_cper_rec_data *data)
+>> +{
+>> +	struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+>> +	struct cper_cxl_event_devid *device_id = &data->rec.hdr.device_id;
+>> +	struct cper_cxl_event_sn *dev_serial_num =  &data->rec.hdr.dev_serial_num;
+>> +	size_t size = sizeof(*prot_err) + prot_err->dvsec_len;
+>> +
+>> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+>> +		pr_err(FW_WARN "Not a valid protocol error log\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID)) {
+>> +		pr_err(FW_WARN "Not a valid Device ID\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/*
+>> +	 * The device ID or agent address is only valid for CXL 1.1 device,
+>> +	 * CXL 2.0 device, CXL 2.0 Logical device, CXL 2.0 Fabric Manager
+>> +	 * Managed Logical Device, CXL Root Port, CXL Downstream Switch
+>> +	 * Port, or CXL Upstream Switch Port.
+>> +	 */
+>> +	if (prot_err->agent_type <= 0x7 && prot_err->agent_type != RCH_DP) {
+>> +		device_id->segment_num = prot_err->agent_addr.segment;
+>> +		device_id->bus_num = prot_err->agent_addr.bus;
+>> +		device_id->device_num = prot_err->agent_addr.device;
+>> +		device_id->func_num = prot_err->agent_addr.function;
+>> +	} else {
+>> +		pr_err(FW_WARN "Not a valid agent type\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/*
+>> +	 * The device serial number is only valid for CXL 1.1 device, CXL
+>> +	 * 2.0 device, CXL 2.0 Logical device, or CXL 2.0 Fabric Manager
+>> +	 * Managed Logical Device.
+>> +	 */
+>> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
+>> +	      prot_err->agent_type > 0x4 || prot_err->agent_type == RCH_DP)
+>> +		pr_warn(FW_WARN "No valid serial number present\n");
+>> +
+>> +	dev_serial_num->lower_dw = prot_err->dev_serial_num.lower_dw;
+>> +	dev_serial_num->upper_dw = prot_err->dev_serial_num.upper_dw;
+>> +
+>> +	data->cxl_ras = (struct cxl_ras_capability_regs *)((long)prot_err + size);
 > 
-> 	"/sys/devices/virtual/cxl_virt/"
+> I think this is ok now because the cxl trace code processes the data
+> before returning (in next patch).  But I'm a bit leary about passing a
+> pointer to data controlled by the acpi sub-system.  At some point the
+> event may get cached to be processed by another thread and it might be
+> better to copy the struct here.
+
+Ok will make the changes. Rewrote the struct in patch 1.
+
 > 
-> that's the top level device for all cxlv devices.
-> At the same time, cxlv module will create a debugfs directory:
+>> +
+>> +	return 0;
+>> +}
+>> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+>> index 90d8390a73cb..7ba2dfd6619e 100644
+>> --- a/include/linux/cxl-event.h
+>> +++ b/include/linux/cxl-event.h
+>> @@ -154,11 +154,17 @@ struct cxl_ras_capability_regs {
+>>   
+>>   struct cxl_cper_rec_data {
+>>   	struct cxl_cper_event_rec rec;
+>> +	struct cxl_ras_capability_regs *cxl_ras;
+>> +	int severity;
 > 
-> /sys/kernel/debug/cxl/cxlv
-> ├── create
-> └── remove
+> NIT: When I saw this without any addition to event type I wondered if the
+> series would bisect.  I see it does because the record is not sent until
+> the next patch.  But I wonder if the 2 patches would be best reversed.
+
+You mean to say patch 4 to be 3 and 3 to be 4?
+
+And since I haven't used severity yet,  fix it by declaring severity to 
+where it is used..
+
 > 
-> the create and remove debugfs file is the cxlv entry to create or remove
-> a cxlv device.
+> Also, should cxl_ras + severity be put in a protocol error sub-struct?
+> Does severity ever apply to event records?
+
+No, not in any of the component event records. Only place is in "Event 
+Record Flags" in Common Event Record Format (Table 8-42).
+
+Addressed in patch 1 to make a sub-struct.
+
+Thanks,
+Smita
+
 > 
-> 	Each cxlv device have its owned virtual pci related bridge and bus, cxlv
-> will create a new root_port for the new cxlv device, setup cxl ports for
-> dport and nvdimm-bridge. After that, we will add the virtual pci device,
-> that will go into the cxl_pci_probe to setup new memdev.
+> Ira
 > 
-> 	Then we can see the cxl device with cxl list and use it as a real cxl
-> device.
+>>   };
+>>   
+>>   typedef void (*cxl_cper_callback)(enum cxl_event_type type,
+>>   				  struct cxl_cper_rec_data *data);
+>>   
+>> +struct acpi_hest_generic_data;
+>> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+>> +				  struct cxl_cper_rec_data *data);
+>> +
+>>   #ifdef CONFIG_ACPI_APEI_GHES
+>>   int cxl_cper_register_callback(cxl_cper_callback callback);
+>>   int cxl_cper_unregister_callback(cxl_cper_callback callback);
+>> -- 
+>> 2.17.1
+>>
 > 
->  $ echo "memstart=$((8*1024*1024*1024)),cxltype=3,pmem=1,memsize=$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
-
-Are these ranges reserved out of the mmap at boot time? 
-
-[..]
->  14 files changed, 2388 insertions(+), 148 deletions(-)
-
-This seems like a lot of code for something that is mostly already
-supported by tools/testing/cxl/ (cxl_test). That too creates virtual CXL
-devices that support ABI flows that are difficult to support in QEMU.
-The only thing missing for "performance / functional emulation" testing
-today is backing the memory regions with accessible memory rather than
-unusable address space.
-
-It is also the case that the static nature of cxl_test topology
-definition has already started to prove too limiting for some tests. So
-an enhancement to make cxl_test more dynamic like your proposed command
-interface is appealing.
-
-One change to get cxl_test to get it to emulate with DRAM rather than
-fake address space is to just fill cxl_mock_pool with addresses backed
-by DRAM rather than addresses from an unused portion of the physical
-address map.
-
-Currently cxl_test defines address ranges that may be larger than what a
-host or VM can support, so this would be a new cxl_test mode limited by
-available / reserved memory capacity.
-
-See cxl-create-region.sh for an example of the virtual CXL regions that
-cxl_test creates today:
-
-https://github.com/pmem/ndctl/blob/main/test/cxl-create-region.sh
+> 
