@@ -1,147 +1,289 @@
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DA128E0F
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jan 2024 18:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A456728E1E;
+	Thu,  4 Jan 2024 18:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LliCg5Oe"
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20240104184333usoutp01b8557a99629a553f619802275eb973c5~nOSS8W-Z20311003110usoutp01k;
-	Thu,  4 Jan 2024 18:43:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20240104184333usoutp01b8557a99629a553f619802275eb973c5~nOSS8W-Z20311003110usoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704393813;
-	bh=QbFHyHQVH4PHq9H02Ur9O5PmMvWjpd+AfoVfri1r5og=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=LliCg5OeYRfm8i36dEqoCSjc5TcnjBIkXGPjehiToOk/dyNzjrG0L8LeIIBW38sB3
-	 dEI2pI5Ih6WFXIyXjqpxHDcypH5MzQXsYved/BY9R1oCrbc8TaniNd6bWt7seyilg8
-	 ME7mYQktkcv++C/ZPluW6XS5TmcowlMhL14K3N/k=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240104184333uscas1p24078a45e39c24fda6f27aa783661b82f~nOSStQf172954229542uscas1p2i;
-	Thu,  4 Jan 2024 18:43:33 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id 53.74.09550.55CF6956; Thu, 
-	4 Jan 2024 13:43:33 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240104184333uscas1p1a644216d30002434c33ea57ff272fce8~nOSSeTnkG1628316283uscas1p1J;
-	Thu,  4 Jan 2024 18:43:33 +0000 (GMT)
-X-AuditID: cbfec370-933ff7000000254e-cb-6596fc55cb0f
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id F8.E9.09511.55CF6956; Thu, 
-	4 Jan 2024 13:43:33 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Thu, 4 Jan 2024 10:43:32 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Thu,
-	4 Jan 2024 10:43:32 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFC] Add "uunit" unit testing framework for CXL code
-Thread-Topic: [PATCH RFC] Add "uunit" unit testing framework for CXL code
-Thread-Index: AQHaJujGLtImsgu5/E6TZ8871cwEbbDJ6SyAgACpwYCAAA5VgIAAEtyA
-Date: Thu, 4 Jan 2024 18:43:32 +0000
-Message-ID: <ZZb8U/FgJ2t1IqBT@ubuntu>
-In-Reply-To: <ZZbsgXH8n7HgJ23N@aschofie-mobl2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mGVoQv3c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704394764; x=1735930764;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Vb8vz/HoY1iDoXi740eVHYvXpN+0AljwvAZGlxxkPnQ=;
+  b=mGVoQv3cqqTdxe/T41cRUx/yHL0mapCxQUUuLkte2puek0jLPiOwLsbA
+   jzP+EQYVX7RoWN/zDLFeijxrdl6HdADLFM2F8AdgFPNgY9/QqSvTOA+Ei
+   jTGR2zMLd+gYWvnApwCDonlyChlGLoRWBEFYYTwncOOlIqzEOkRiNmEKN
+   0rQzna/Cbt7NT6oQESycxcW2gte29cnfULZp6d9OZp5LNnYI1ypuoj9ej
+   SGeG5imrPxuiWBILzNuQk6ldFQQaYWsjJLhI40ZR+/emLGJXaxxPOnZ8Z
+   jhsj3/PAuzfkGyhgi+jrhcMF4IMagrb+81UVv4VMlP5cEKDnLYfhiSFYI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="401121776"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="401121776"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:59:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="780506633"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="780506633"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jan 2024 10:59:23 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 4 Jan 2024 10:59:22 -0800
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 4 Jan 2024 10:59:22 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 4 Jan 2024 10:59:22 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 4 Jan 2024 10:59:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jnPYstqIqZe41d+zM3wvRei8Yb9OszfWAMw1926A+Wp0tAxFurCotk1wKpX0T8DXlxQ+Rt3Cw8epode/V5y5IwCHwUx2GsbWcXR3XCmZ6JW0aeWmKQhGiYHo3O61cCEgUCnKHp58Yoo9jGjQqIYo0jfmFjQpOg6MpUhgNUwDSClv3yDdjDAeYeNmJF2Um6imrP/D9vWgkbMNZzBmbSqhX00ytQPqHNgpAMg/mr58vpBRUjSSbhlJyaOBzUaTJnlx8vO1Nox7lz9BdcP2lG64F6Oc7vFAXsHqgV6j02JliPBOl44camz5D2iG8alYyI2BedGIrzYnj9jHzt2IhfqdAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pHyfDF8cqwCV0HxbEdB3maW7oeEr3sSgSnbOwmqNY/c=;
+ b=AK3AlaofzZ6iAddoH935/ztEa2cu/QbAwFPnRvJ3hsSNaBroOZsT6ix4vNJMbrHUgbKZ7gzF2HdYJ1O1MWRSpeYkima0oMy4t7wHlMGZijhS0j8rAXKm0TVF7bUkgH2DNtwG/PbeHPJeI7rt6g9BDDq+CzZ2if9x0GvMO6OJ+IsXhvJdmmqbuX/sJG+hZSnqIi1o46cnGjvlDgPiY60/AE74cIEyBcQzXgfmgHq5gppiFKI/MdJEVUGTyenSA94+OAwFuBHjaxK9E4iRiySFifeDRT0g1JByfTvlayqtVppyqUiq4UvJQ9MxdrMl/RvGGp8AyKY0Bz1si3ilFCArKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CY5PR11MB6536.namprd11.prod.outlook.com (2603:10b6:930:40::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Thu, 4 Jan
+ 2024 18:59:19 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
+ 18:59:19 +0000
+Date: Thu, 4 Jan 2024 10:59:16 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ard
+ Biesheuvel" <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v5 8/9] PCI: Define scoped based management functions
+Message-ID: <65970003ee9ef_8dc6829412@dwillia2-xfh.jf.intel.com.notmuch>
+References: <6595f9eec5986_be70229443@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240104183218.GA1820872@bhelgaas>
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EC0B0975744ACB488C94C0587B238CAF@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20240104183218.GA1820872@bhelgaas>
+X-ClientProxiedBy: MW4PR02CA0014.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduzrOd3QP9NSDZ6/Uba4+/gCm8X0qRcY
-	Lc7POsXiwOyxeM9LJo/Pm+QCmKK4bFJSczLLUov07RK4Mp4ceMpY0MtTcenFZ+YGxm2cXYzs
-	HBICJhKbqrsYuTiEBFYySpxa8ZIVwmllkvh7diNTFyMHWM2TO1DxNYwS036fZoJwPjJKzHl2
-	ihnCWcooseLkZcYuRk4ONgFNiV9X1oB1iwgYSiyYpgYSZhZIkzh85BgLiC0s4CFx6fhOJhBb
-	RMBTYt6m2WwQtpvE83tbwWpYBFQkJvV0sYPYvAKqEhsWd7OAjOQU0JN48NAWJMwoICbx/dQa
-	Jojx4hK3nswHsyUEBCUWzd7DDGGLSfzb9ZANwlaUuP/9JTtEvY7Egt2f2EBGMgvYSbzoEYUI
-	a0ssW/iaGWKroMTJmU9YIFolJQ6uuMEC8q2EwFIOid9vvkLtcpE413QRqkhaYvqay1B2tsTK
-	9R3QMCyQaDgSBBG2llj4Zz3TBEaVWUiunoXkolkIF81CctEsJBctYGRdxSheWlycm55abJyX
-	Wq5XnJhbXJqXrpecn7uJEZhMTv87XLCD8datj3qHGJk4GA8xSnAwK4nwrl83OVWINyWxsiq1
-	KD++qDQntfgQozQHi5I4r6HtyWQhgfTEktTs1NSC1CKYLBMHp1QD07R7Spcu31rSIWX1Ls54
-	m+m8e003P/brPpGtLdj3a9V00+7EylvS/q9eBhz2rpjObuun/KKH5/OK0jbXo/HXm+fYnPRe
-	1LNOvoCnf6a1QnnUVGuX8xeNNyZ7p39xu/KF6+vOr29sC1/Ni5IJFtz584yS9DPX9YcnuNZM
-	07wYGXaXz6DgN1uRbZQqr+s6YSHuM+febe95Jhr9IfaCO+N0kZsSzZIxwbtZp295eixI/8b+
-	My28W2pfMS+vei6eJ9MlnHqNO1Lt/BxHt+XmeQVrpiSkTFNY4FG2XnN9/N+QdUJvczVSWdjW
-	8FV6SMYsqXJ0NbsYJbl794RZlQFqPZzfjv28PLHXNezfjBnXnI+eVWIpzkg01GIuKk4EAIFN
-	C/eVAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWS2cDsrBv6Z1qqwbQdIhZ3H19gs5g+9QKj
-	xflZp1gcmD0W73nJ5PF5k1wAUxSXTUpqTmZZapG+XQJXxpMDTxkLenkqLr34zNzAuI2zi5GD
-	Q0LAROLJHdYuRi4OIYFVjBK/P31lgnA+Mko0fbgMlVnKKHGmdTmQw8nBJqAp8evKGiaQbhEB
-	Q4kF09RAwswCaRKHjxxjAbGFBTwkLh3fyQRiiwh4SszbNJsNwnaTeH5vK1gNi4CKxKSeLnYQ
-	m1dAVWLD4m4WiF2TmSTOPF3GAjKfU0BP4sFDW5AaRgExie+n1jBB7BKXuPVkPpgtISAgsWTP
-	eWYIW1Ti5eN/rBC2osT97y/ZIep1JBbs/sQGMpJZwE7iRY8oRFhbYtnC18wQJwhKnJz5hAWi
-	VVLi4IobLBMYJWYh2TYLyaRZCJNmIZk0C8mkBYysqxjFS4uLc9Mrio3zUsv1ihNzi0vz0vWS
-	83M3MQLj8fS/wzE7GO/d+qh3iJGJg/EQowQHs5II7/p1k1OFeFMSK6tSi/Lji0pzUosPMUpz
-	sCiJ8959oJEqJJCeWJKanZpakFoEk2Xi4JRqYNKXbNhzebu3t0izsCvfapfeZPuio28TZ9w4
-	Z3Vwo1HO0g3na3fcqj8ps3WBp4Lgh/5v4dnGiyNvl/JJ8t9c5jJfu5iX/fe2HfeWLRZqK1ux
-	1FzJW9em+qkNV839vHMLXXzXLQ7raJJ/JWztvdFk9+6s5ZPSmxtWC9Z8vV8puY2Xf/qUekH/
-	nMq1S+LPNbteeeYTGSHitqErVPhk07b9GVcCSv//YliY9SXUrTzR7u2EPaUy/UeljTdVFMvf
-	ijKuzP5y9VX3k54D51a0njz0Rtxj57Q7b2rmGnY7bNGpFfy29pFjudd2ptXmh5xzQif01SxL
-	mcMUyOx998ec56zf8/4x5b6fr7vgca1bfXfefiWW4oxEQy3mouJEANUnAjk2AwAA
-X-CMS-MailID: 20240104184333uscas1p1a644216d30002434c33ea57ff272fce8
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231204193337uscas1p24b1959cf528b02b8172736a61807fff1
-References: <CGME20231204193337uscas1p24b1959cf528b02b8172736a61807fff1@uscas1p2.samsung.com>
-	<170171841563.162223.2230646078958595847.stgit@ubuntu>
-	<65965214f008e_8dc68294d0@dwillia2-xfh.jf.intel.com.notmuch>
-	<ZZbgewv5l5LMmrTk@ubuntu> <ZZbsgXH8n7HgJ23N@aschofie-mobl2>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6536:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e1ec9bd-0592-41e4-e17a-08dc0d57417a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: paI0+82Sp3d2eNU5Ba63huE5LMNRYEaGHwkmtjW8BHS7vZShtS4lPl7p+9AkFyLXcekPf9scIZD5HfnfWOMtZhrZQppVCpLpphzVq2nLIRz+HAMV2gUPHb4lpheCRREh/i2b0ivb3Ie0UUeW4/VpdpUcdAJaUr9Y5mNSAZJNwjbMTbk+mVe9TlialoVnj2aj22b2axhHaWLhq/IJ39hoolnsPMXUJM5ssw/n9kMebJ2vqdSuIago09pAiAqEvRvxwHOHYpnikZfyHdIp77l2cLKsuPU3vxAqzh7InqFFyPorzf+LSJ+96kihQYKPP5UoygI7cZwBdXrwNdfWutxgnyxPIPOjpq5qCqpudJvEtuWlwZatMitWVBJsf76RJgB0/e+2I562xLcOlm/EzejnmQ3k3t5rsRYw+q0I7SMB6U8rel1o/jbGkscpNtTnSKgTWRctoYha9/TXVtVaOxvcDot8CtZrWgLQpQKYMiuU9vdlnj61TFZ+R1PidwiD+k5q80hDmLmpPTETFtVk/oApBckuJ5B3z4Zo4Q91BGxKkJMTtGtfVUbSrKrVcmDwpv6/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(39860400002)(366004)(346002)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(83380400001)(110136005)(26005)(38100700002)(2906002)(82960400001)(41300700001)(8676002)(316002)(8936002)(54906003)(6666004)(478600001)(7416002)(4326008)(5660300002)(66476007)(66946007)(6506007)(6486002)(9686003)(66556008)(6512007)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qyw/CCrSROKclACNcSddqsY0sQnSQ18QfxNvW1A/t5jXWZW50W0r0EePX50D?=
+ =?us-ascii?Q?He6mDVvPlALe8nm6xcfpoklqo3J6kKZpeadXPwFsFfXQc4DzCcBNbRdGuIEn?=
+ =?us-ascii?Q?k5b+YmdpwRzk/oUZGW0MaSgJfcxExqJOdf5yS+YkE6/pA4JOFz3OWCduWwAg?=
+ =?us-ascii?Q?6z34M/zrA6BY9iG5RrHEmp1l/UofT6/KdXWlEwb/r9tSv7cNcsmRRZkYfWMl?=
+ =?us-ascii?Q?WmQRwCVUbENebXsd1h+hOjw6m0w0KWuoQjGCyhHfOzceFIOotagP2lTaFtVS?=
+ =?us-ascii?Q?/fotBs5n0I0554ikl/O6hilDnue4ounor7gVhT8lWxefTPF42vjjM3Exzy/W?=
+ =?us-ascii?Q?ljrbYk1eKJjul1NQW3jVV2Zm1aEV5VpegOKphX8ocuq9TmaA4RYCSDVBBI4G?=
+ =?us-ascii?Q?jeFkmpm//3AU/ye2flZ5G4X95gGopSFayhr3FrqEL7ej9Q/MKH/yY7UiJeXp?=
+ =?us-ascii?Q?7UZh9yIErtFra9Oixu+h1UgH+xH5fuhTLd+xno1xxGDD3mdFuFo+PH3oWtuv?=
+ =?us-ascii?Q?QAb5567vx2EOUaKsAfgU/SoP1MPq8awdKrujqeOAFA5k7iR1kawCMtgtCk58?=
+ =?us-ascii?Q?3sGSKTp/CZTve1Lgsbq0X8yHw7EuBgzYgnGISS3mvh3I7UJS7DmSA36Ld1n9?=
+ =?us-ascii?Q?isIqvQ8S64YaPePWzPzpxB9f+4UhcbvSlS7qYySFjKAT3cG/NwKTlsQs22AH?=
+ =?us-ascii?Q?UKf+iaqFjL8qdDsMnmc9Mq6XQVtTpmYVsNh4DGtsWUNsQo1heRG9GM+HtR8D?=
+ =?us-ascii?Q?eu+lwfK1RFgzquNScKAoHZu+6qhYhNFWj5LOLAEi5RrdkCw+RrJNFiL6Idgs?=
+ =?us-ascii?Q?aVy6xJRba73B9mD0iSbiE7klJ9p2TA5GtiCsjHHmDmB+zblRCRY1+cWeat6V?=
+ =?us-ascii?Q?Bnn47yi9RWElP8s1DmiPJy0x7I+KTc1oLqrmApz8tOL0zO+sM5ahKQLZ6Dkk?=
+ =?us-ascii?Q?lmZm9O/QQzW99664zu9JM/FzcC6MTKDMbzPBExL06SrV4Vp9tDbfrNepwibP?=
+ =?us-ascii?Q?KjiRhJhrGt4wSoTohiKitHQVn0ZSLNv1k+p+AsFahqYSPK8E2ip0dJ5LWKxq?=
+ =?us-ascii?Q?PV2avvwQGuNvw2MeOCrNpnGLA6ziabiUovPyE1Hb8tvDx3087hlrwv2LG0Vd?=
+ =?us-ascii?Q?ryshYxv/hhuHi6ImjJ7kJohF9LuHrA0BAHSaw9rvHICAUI92ZoX6vTqm8JSe?=
+ =?us-ascii?Q?QKh+jIYq6V8j3/MSSm/+wGXhA4+Zv5NOqeqDgOGems5v90K0DpyPV4P4j86Q?=
+ =?us-ascii?Q?6wkcaeEE5J+p+1WuBBDkVJ6j2tuVcY/JaDbzIQwgbFj1acOK3XyxnMgjA5k9?=
+ =?us-ascii?Q?QsOQ1dzGrm1lEJhsmyvi9+fhAiwsIjb5RXPiytM7w391vRPuXBLROAgiLcSu?=
+ =?us-ascii?Q?SP4tRj3eCKBFVeYDWDHCb7WWueDLShRBEWotcqG5nm6Bbhe1sqqpQFGU2mqB?=
+ =?us-ascii?Q?U4L+mOIlMGM9TStyKxAkpHnmdITyuPUoFyXrEAtQWwsjON98cMIoZ6KCHPPu?=
+ =?us-ascii?Q?doPdBwpyy4EsMjpGtl69FiShfsdCB8VPJck+rdv5s1lcORuqEnqi1iajnAYC?=
+ =?us-ascii?Q?WGEwyBXgrRPYV+9FBI2eaAc7eKsjUhpYYgOoBNtWowNWjg/FD18hT59fxTDN?=
+ =?us-ascii?Q?0Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e1ec9bd-0592-41e4-e17a-08dc0d57417a
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 18:59:19.3214
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RU90qYfWcT36or7Wo6n0Tqo6nwEQcKVIf/IfGgyHS+fAw4Cub3PYTVo3WDXsBlZlr0VeleBB10p4QnROlMvRUAB4UEBUL5HogLJGsIpPvHs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6536
+X-OriginatorOrg: intel.com
 
-On Thu, Jan 04, 2024 at 09:36:01AM -0800, Alison Schofield wrote:
-> On Thu, Jan 04, 2024 at 04:44:57PM +0000, Jim Harris wrote:
->=20
-> Hi Jim,
->=20
-> Looks really useful, cutting to the part about the individual unit tests.=
-...
->=20
->=20
-> > > > 4) Improve cxl_region tests to cover error conditions and add exten=
-sive
-> > > >    comments explaining how the topology is being built. This overla=
-ps with #3.
-> > >=20
-> > > Some comments on the simple tests would help too just to get folks
-> > > ramped about what's going on.
-> >=20
-> > Ack. The comments are absolutely critical and I should have added them =
-in the
-> > v1. They'll be in the v2.
->=20
-> As you might imagine, the first thing I'd like to do with this is try
-> to spin up a simple unit test that matches something I do with cxl_test,
-> then grow from there.
->=20
-> Coming to this with cxl_test experience, it would be helpful if you
-> can draw, comment on some parallels - even to the point of showing,
-> here' what cxl/test: cxl-topology.sh (or similar) looks like in CUunit.
->=20
-> It would be helpful to separate into multiple patches showing what needed
-> to be done to add a specific unit test. I'm assuming to add core_region_u=
-t.c
-> support was added elsewhere in cxl/uunit/*.  Separate patches would make
-> that dependeny clear and help in mimicing the process of adding a new
-> test.
->=20
-> I'll try it out on next posting!
-> Thanks,
-> Alison
-=20
-Good idea Alison. I'll take a look at this before I send out the next rev.
+Bjorn Helgaas wrote:
+[..]
+> > ---
+> > PCI: Introduce cleanup helpers for device reference counts and locks
+> > 
+> > The "goto error" pattern is notorious for introducing subtle resource
+> > leaks. Use the new cleanup.h helpers for PCI device reference counts and
+> > locks.
+> > 
+> > Similar to the new put_device() and device_lock() cleanup helpers,
+> > __free(put_device) and guard(device), define the same for PCI devices,
+> > __free(pci_dev_put) and guard(pci_dev).  These helpers eliminate the
+> > need for "goto free;" and "goto unlock;" patterns. For example, A
+> > 'struct pci_dev *' instance declared as:
+> > 
+> > 	struct pci_dev *pdev __free(pci_dev_put) = NULL;
+> 
+> I see several similar __free() uses with NULL initializations in gpio,
+> but I think this idiom would be slightly improved if the __free()
+> function were more closely associated with the actual pci_dev_get():
+> 
+>   struct pci_dev *pdev __free(pci_dev_put) = pci_get_device(...);
+> 
+> Not always possible, I know, but easier to analyze when it is.
 
--Jim=
+I tend to agree, but it does lead to some long lines, for example:
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4fd1f207c84e..549ba4b8294e 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -975,15 +975,14 @@ static void cxl_cper_event_call(enum cxl_event_type ev_type,
+ 				struct cxl_cper_event_rec *rec)
+ {
+ 	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
+-	struct pci_dev *pdev __free(pci_dev_put) = NULL;
+ 	enum cxl_event_log_type log_type;
+ 	struct cxl_dev_state *cxlds;
+ 	unsigned int devfn;
+ 	u32 hdr_flags;
+ 
+ 	devfn = PCI_DEVFN(device_id->device_num, device_id->func_num);
+-	pdev = pci_get_domain_bus_and_slot(device_id->segment_num,
+-					   device_id->bus_num, devfn);
++	struct pci_dev *pdev __free(pci_dev_put) = pci_get_domain_bus_and_slot(
++		device_id->segment_num, device_id->bus_num, devfn);
+ 	if (!pdev)
+ 		return;
+ 
+...so I think people are choosing the "... __free(x) = NULL;" style for
+code density readability.
+
+> 
+> > ...will automatically call pci_dev_put() if @pdev is non-NULL when @pdev
+> > goes out of scope (automatic variable scope). If a function wants to
+> > invoke pci_dev_put() on error, but return @pdev on success, it can do:
+> > 
+> > 	return no_free_ptr(pdev);
+> > 
+> > ...or:
+> > 
+> > 	return_ptr(pdev);
+> > 
+> > For potential cleanup opportunity there are 587 open-coded calls to
+> > pci_dev_put() in the kernel with 65 instances within 10 lines of a goto
+> > statement with the CXL driver threatening to add another one.
+> > 
+> > The guard() helper holds the associated lock for the remainder of the
+> > current scope in which it was invoked. So, for example:
+> > 
+> > 	func(...)
+> > 	{
+> > 		if (...) {
+> > 			...
+> > 			guard(pci_dev); /* pci_dev_lock() invoked here */
+> > 			...
+> > 		} /* <- implied pci_dev_unlock() triggered here */
+> > 	}
+> 
+> Thanks for this!  I had skimmed cleanup.h previously, but it makes a
+> lot more sense after your description here.  
+> 
+> I think a little introduction along these lines would be even more
+> useful in cleanup.h since the concept is general and not PCI-specific.
+
+Ok, let me ponder an update here.
+
+> E.g., the motivation (avoid resource leaks with "goto error" pattern),
+> a definition of "__free() based cleanup function" (IIUC, a function to
+> be run when a variable goes out of scope), maybe something about
+> ordering (it's important in the "goto error" pattern that the cleanups
+> are done in a specific order; how does that translate to __free()?)
+
+The __free() callbacks are invoked in reverse declaration (FILO) order.
+However, as I say that another reviewer recommendation falls out. Be
+careful about the variable declaration order diverging from the init
+order. 
+
+I.e. save the reader from needing to wonder if there are intra variable
+init order dependencies by making it clear that init order ==
+declaration order.
+
+> 
+> But the commit log above is fine with me.  (It does contain tabs,
+> which get slightly mangled when "git log" indents it.)
+> 
+> > There are 15 invocations of pci_dev_unlock() in the kernel with 5
+> > instances within 10 lines of a goto statement. Again, the CXL driver is
+> > threatening to add another.
+> > 
+> > Introduce these helpers to preclude the addition of new more error prone
+> > goto put; / goto unlock; sequences. For now, these helpers are used in
+> > drivers/cxl/pci.c to allow ACPI error reports to be fed back into the
+> > CXL driver associated with the PCI device identified in the report.
+> 
+> This part is also fine but doesn't seem strictly necessary to me.  I
+> think the part about error reports being fed back needs a lot more
+> background to understand the connection, and probably only makes sense
+> in the context of that patch.
+
+Sure I can trim that out and just say that the CXL driver is one such
+occasion where a new goto for pci_dev_put() and pci_dev_unlock() was
+about to be introduced.
+
+> > As for reviewing conversions that use these new helpers, one of the
+> > gotchas I have found is that it is easy to make a mistake if a goto
+> > still exists in the function after the conversion. So unless and until
+> > all of the resources a function acquires, that currently need a goto to
+> > unwind them on error, can be converted to cleanup.h based helpers it is
+> > best not to mix styles.
+> > 
+> > I think the function documentation in include/linux/cleanup.h does a
+> > decent job of explaining how to use the helpers. However, I am happy to
+> > suggest some updates if you think it would help.
+> 
+> Thanks, Dan!
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks, Bjorn!
