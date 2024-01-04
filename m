@@ -1,183 +1,262 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEDE1DDC3;
-	Thu,  4 Jan 2024 08:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zxRlYUfW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FclJQenVelnCN39/am16dBCDAwtTbb3MptzcTy+FVQalQnSx4Wmkx98Yuxs8stfLXOdMQXfNAm2kq65IefiVkaHqqfNbz0rey/vOFiGcQ63ci02FEZ+o2+lZ79YCWrKU3WDxDCBRJB98br5FBpen9NkU69Mq5y+HdDpXLLt0Bo/kRhINAE/s4mcFjOeO2BvptQeU9v7UP4o5de9c1HtMiSR01F8Emx+fiCBSLmOazdBT1fFvlR6sRo5gIvHqBCjMNnUDqMNz3H7bel6aO55lBX0UULoIoq6BLPhjeDXytjkNZDnppa+2KL0bai9Ont4TlG+yl0J01MoaguE6q2W+Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LMGkMAcVuyEUKEuhXSUNdWPPvdRxsN061VdyA1fsVjM=;
- b=E12yv86B64WCMGgXFrJjvDbxFO/uvUI5UULYkwuSAhOGJSshHC4iogvvkW/nY3S7YvNBEO/VfC6wc1zhlsXCOIGAxW6nAV2APXk8z6NQb4uPhcL/nx8LjS0sC7nUyEsCKk1nu3pRyaTdg276uW7v60D/05tw+Si+KGUAHEoWsCtQlpkv24FUjpQ2/Rvj6H7HkvqF6/EpFkVwl3cg41QJ1irwznDbGcUxBrcjlsipFFKbe6dVdRrpPv/+cQBTq1gVMb9+OD6tW7geDOzzr49Rs6gXDJCrBcpEkQB+yfWW8UiAkMtLyIJxGez66BAt/TUetg9tWbBBzfIPJdyOOns2QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMGkMAcVuyEUKEuhXSUNdWPPvdRxsN061VdyA1fsVjM=;
- b=zxRlYUfWO8hsvUyBoNMzl/DsSyLUeg8AG8uvR+ReIR2whbClePvph60cImOjbXfDZeLCyhX4R5BSlNhGrE+iU/cvRs/XH8t2piqeEIIWDNo4DLsAasHCm6PqVI+UqXDCUr8lk8DPAhqXr3TJdWNvDYxCDwQbdxtVFE990PLS6HY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by PH7PR12MB8016.namprd12.prod.outlook.com (2603:10b6:510:26b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
- 2024 08:41:42 +0000
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::5786:22a:27df:9a70]) by DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::5786:22a:27df:9a70%7]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 08:41:42 +0000
-Date: Thu, 4 Jan 2024 09:41:37 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Fan Ni <nifan.cxl@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
-Message-ID: <ZZZvQcWKHd2Pmg3O@rric.localdomain>
-References: <20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com>
- <ZVfIaNhiSc-yQZo5@rric.localdomain>
- <ZVfJ6Fxidvw_gz7r@rric.localdomain>
- <657bd741d2961_269bd294d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <657bd741d2961_269bd294d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: FR3P281CA0029.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1c::22) To DM6PR12MB3657.namprd12.prod.outlook.com
- (2603:10b6:5:149::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0122121364;
+	Thu,  4 Jan 2024 12:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T5QGm0rYjz6K8wb;
+	Thu,  4 Jan 2024 20:03:44 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 18B4F140A86;
+	Thu,  4 Jan 2024 20:06:11 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jan
+ 2024 12:06:10 +0000
+Date: Thu, 4 Jan 2024 12:06:09 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-efi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Ben Widawsky
+	<bwidawsk@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "Yazen
+ Ghannam" <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v2 1/2] efi/cper, cxl: Decode CXL Protocol Error Section
+Message-ID: <20240104120609.00005ebd@Huawei.com>
+In-Reply-To: <20221028200950.67505-2-Smita.KoralahalliChannabasappa@amd.com>
+References: <20221028200950.67505-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20221028200950.67505-2-Smita.KoralahalliChannabasappa@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|PH7PR12MB8016:EE_
-X-MS-Office365-Filtering-Correlation-Id: e38b1026-07a3-4960-0194-08dc0d00f9e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WSrKTrt/rFIjEC3X/q/DeSz7BS8BBRrjMqoXJkmvaszbXuB1lg3Gxyz4eCVJiRFPlLgnk+49emZlpimGQ/BSJ/HICcFTjRvVdP74UvTUcr2ym0ezD6Czo8sXPmxoGF1K9y9Ls8E0cW1nFcJy5E9HrHW9A/qucEpl8gzOrRF0cuKWo7dmrbztenUx0C5qm7fE+U+s+RKfNu190cnEJQw9MhzavFrTFNjPxoDPSz5B1Hi3cxVCv/+7vBC4NbIohE3dTyb/i+cWy67OEV7PTyISk3W2lLXQy9uVhMRu4DFzJ09SyFUo1XWt0C7+ax+h0OtFWrc/sAeVL+Ls8Zj0uaHgvh6+fBhIF79J+N1NWG59hBDKyZaUN6T1m3Xt5f/SUk1bBlDIsC67SVbVtqNFYwbK6jG+5H/T2uEwuoCkV2HT0h9uAHcpGdAkhKb/W/LDFIvg5CBjWidR1kD0XlXrd+bJbvNjaiXCoKlsEVB0TczPexuMm9wmJ9WOuzfoi/IxFVgg87EQkLcQ5suQdJ3PqUEYLSAG+79zdGQO4PDKfEvULtS7nBe9COwyL05nc91yWmsOLYMiv+7qI4vAzfnG5Nl5R28GbSK4VKbHfwRsS2sEVCY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(376002)(366004)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(316002)(2906002)(54906003)(4326008)(5660300002)(7416002)(83380400001)(41300700001)(26005)(9686003)(6512007)(478600001)(6666004)(6486002)(6506007)(53546011)(8936002)(6916009)(66946007)(8676002)(66476007)(38100700002)(66556008)(26583001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CGtKJ14hF0e7aQR+QfZQqkLT3Du9Rh1xvAYoy55TWrHfZQYRNdhlBvX6Mo75?=
- =?us-ascii?Q?s21rxVF2+ijvuAMnQB9B0t7w7DVeseDsscdqY8+8Gt4PJZaES90zc3tBaO0r?=
- =?us-ascii?Q?tV7TxO9OFw8dTNqHvuJxQhoDGYVfqu8EXI1Q4lvF74SFSLRzhgesyYYing36?=
- =?us-ascii?Q?ewQYtRTSkZpoFXVdjF20jgyAymj2lplOgu3mBk5ChoAYOH8yB13YLmukZm9Y?=
- =?us-ascii?Q?hFQKYe65gOFQw4uhYiuFUTir7agMQaoW8B3ItH0ndohA0ckyNQcXIqB1HWEm?=
- =?us-ascii?Q?zC2F7d9c8m1AObgP7/RPZvm3zcGoiNGrMIYwX/7vbsWlgsaI9PUNeiT6esxR?=
- =?us-ascii?Q?lZ7778pfqfl0DoYzmAP9uJ1lzHRhkyQpjWHc74PQBxSAJAJwEcHjLreU29zH?=
- =?us-ascii?Q?JljKte3jmu+shKl0Tiu9+moOBV+sCXEhovfkoYqGn0FgL4h/768BzAWYH393?=
- =?us-ascii?Q?66wrggqMytlgmr3wo02HEWlGsXMrBvhOss9n2oqKnNMpAuKHxVERekYO9UB6?=
- =?us-ascii?Q?PPnR3h1aCQv5jXpSqgPZTx6IOgSAl8imcXMzKXwKQlh2SgiWt25MkzDyVP2O?=
- =?us-ascii?Q?9yX/Chzf8M+kEp09sR4OlYb6CxJjWzKXU41uSbADZRyqB9+NIM1Ns/6EjfYI?=
- =?us-ascii?Q?aGaiYglgfbGHOPjCqxS1RJN93SnVYb9RAC8e1ySPptsBg976SX11HBWrX3SS?=
- =?us-ascii?Q?ob8tyPZANSSrekfxfKrMtOkyvUS+udxzGKVRabUASNl9X0Ha5s6q8SYCgip+?=
- =?us-ascii?Q?CmY9UuD8qsjSk5CJA9LPokWyPpw5vePCTDnHYXOEF3+6KMGgFLxqHOgXbWrI?=
- =?us-ascii?Q?UieeYY23VKmXiFuAIksQoBncUfshG/HvGQ7XxZSWCX6mHSMqW3eu3MB6K9iT?=
- =?us-ascii?Q?iaa/x+AuhxNlPJSrjTgUECAvv5LvH40SUGc/CfaORPDpu87y/G7dr8XM8K79?=
- =?us-ascii?Q?2ST0dzEXD60mbXsc+Hf6XR7HONvFoX2MYa5J+fDWxa3Y9rB3l/Z/11+yKJDG?=
- =?us-ascii?Q?U6310V8QoOwXWLRSTXAfVYXU57k9/Pt8I/eJfyNXyYqkwDG81jnA1VLaGFAF?=
- =?us-ascii?Q?XGmPbIpGAnLzGBi273InH9qnnbyhZ/vy86DWa6sExWjX7ZSgmJ128JFLd4Fe?=
- =?us-ascii?Q?qG58FiKyg6eTDmoFP2Tul/MkkDQa/HOXsi/ILBkWmnaWy5+nMCE+FQLjWf8N?=
- =?us-ascii?Q?u9JcnLjGgliAhvDzlJDbZoD4AAaVSVh7tlNJNYYlbUKwjRUXD2Oc71Yitepq?=
- =?us-ascii?Q?0mwLFVSJU5sk18GU0S9osJjlIdJ2Sf87fq/cDXT/TJXb7tjnaXcES1xKPDsS?=
- =?us-ascii?Q?r6iox16EOSoWmU4xv6xf5GfqE+Rlf8mdAAErjNeOAiSakxQEJqn9/FvGT9Dh?=
- =?us-ascii?Q?YK6LeR2eXOS3Y7iLZpC4kNE70Q85Ua0E5BqltwhfcmRVAGqaCRSI0rKkm32o?=
- =?us-ascii?Q?qtxS9LlADBMyYxdDOxhKHCeJQ/jRN6M4TYtnC+aG3JqlBlxiJZplXaHtjcWz?=
- =?us-ascii?Q?8XWHLXbJvrraHlzWx8Kjb6Ge4D5nZ5clmrL2RC2PwPHxFWERsp8Y6AOkyoOt?=
- =?us-ascii?Q?GzCQDKyKyaD9asXNBi1Ijr6tOg+YEYtCDmvTGZhB?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e38b1026-07a3-4960-0194-08dc0d00f9e5
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 08:41:42.5419
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UKGgFbjX8BIz2irCv4aE+6XFc1L7RUbzu9hivpFlZQTgCDpA0EiCM0K40bADSYgIT24WL+zJtUvfef091DjTTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8016
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-This threat slipped away end of last year...
+On Fri, 28 Oct 2022 20:09:49 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 
-On 14.12.23 20:34:09, Dan Williams wrote:
-> Robert Richter wrote:
-> > On 17.11.23 21:09:18, Robert Richter wrote:
-> > > I will send an on-top patch for 6.8 that reworks that code area to
-> > > remove the pointer arithmetic.
-> > 
-> > Here it is:
-> > 
-> > From 13787f72c20b8c54754ae86015d982307eae0397 Mon Sep 17 00:00:00 2001
-> > From: Robert Richter <rrichter@amd.com>
-> > Subject: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
-> > 
-> > Reading the CDAT table using DOE requires a Table Access Response
-> > Header in addition to the CDAT entry. In current implementation this
-> > has caused offsets with sizeof(__le32) to the actual buffers. This led
-> > to hardly readable code and even bugs (see fix of devm_kfree() in
-> > read_cdat_data()).
-> > 
-> > Rework code to avoid calculations with sizeof(__le32). Introduce
-> > struct cdat_doe for this which contains the Table Access Response
-> > Header and a variable payload size for various data structures
-> > afterwards to access the CDAT table and its CDAT Data Structures
-> > without recalculating buffer offsets.
+> Add support for decoding CXL Protocol Error Section as defined in UEFI 2.10
+> Section N.2.13.
 > 
-> I like reworking the code to introduce an explicit type for the response
-> buffer, but as Ira points out, lets call it a "response" not a
-> "cdat_doe".
-
-Looks good.
-
+> Do the section decoding in a new cper_cxl.c file. This new file will be
+> used in the future for more CXL CPERs decode support. Add this to the
+> existing UEFI_CPER config.
 > 
-> The feedback on the flex array is accurate, but I see no reason to have
-> 3 flex arrays vs:
-> 
-> struct cdat_response {
->        __le32 doe_header;
->        union {
->                struct cdat_header header;
->                struct cdat_entry_header entry;
->                u8 table[];
->        };
-> } __packed;
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-The flex arrays are due to sizeof(*doe) which is just the size of the
-base payload without any variable data then. Another nice effect of
-this is pointer creation of @header and @entry:
+Obviously very late with this comment, but I now have a test setup running
+so a minor formatting issue became apparent that would be nice to tidy up
+I think.
 
-	doe->header vs. &doe->header etc.
+> +void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
+> +{
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
+> +		pr_info("%s agent_type: %d, %s\n", pfx, prot_err->agent_type,
+> +			prot_err->agent_type < ARRAY_SIZE(prot_err_agent_type_strs)
+> +			? prot_err_agent_type_strs[prot_err->agent_type]
+> +			: "unknown");
+> +
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS) {
+> +		switch (prot_err->agent_type) {
+> +		/*
+> +		 * According to UEFI 2.10 Section N.2.13, the term CXL Device
+> +		 * is used to refer to Restricted CXL Device, CXL Device, CXL
+> +		 * Logical Device or a CXL Fabric Manager Managed Logical
+> +		 * Device.
+> +		 */
+> +		case RCD:
+> +		case DEVICE:
+> +		case LD:
+> +		case FMLD:
+> +		case RP:
+> +		case DSP:
+> +		case USP:
+> +			pr_info("%s agent_address: %04x:%02x:%02x.%x\n",
+> +				pfx, prot_err->agent_addr.segment,
+> +				prot_err->agent_addr.bus,
+> +				prot_err->agent_addr.device,
+> +				prot_err->agent_addr.function);
+> +			break;
+> +		case RCH_DP:
+> +			pr_info("%s rcrb_base_address: 0x%016llx\n", pfx,
+> +				prot_err->agent_addr.rcrb_base_addr);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID) {
+> +		const __u8 *class_code;
+> +
+> +		switch (prot_err->agent_type) {
+> +		case RCD:
+> +		case DEVICE:
+> +		case LD:
+> +		case FMLD:
+> +		case RP:
+> +		case DSP:
+> +		case USP:
+> +			pr_info("%s slot: %d\n", pfx,
+> +				prot_err->device_id.slot >> CPER_PCIE_SLOT_SHIFT);
+> +			pr_info("%s vendor_id: 0x%04x, device_id: 0x%04x\n",
+> +				pfx, prot_err->device_id.vendor_id,
+> +				prot_err->device_id.device_id);
+> +			pr_info("%s sub_vendor_id: 0x%04x, sub_device_id: 0x%04x\n",
+> +				pfx, prot_err->device_id.subsystem_vendor_id,
+> +				prot_err->device_id.subsystem_id);
+> +			class_code = prot_err->device_id.class_code;
+> +			pr_info("%s class_code: %02x%02x\n", pfx,
+> +				class_code[1], class_code[0]);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) {
+> +		switch (prot_err->agent_type) {
+> +		case RCD:
+> +		case DEVICE:
+> +		case LD:
+> +		case FMLD:
+> +			pr_info("%s lower_dw: 0x%08x, upper_dw: 0x%08x\n", pfx,
+> +				prot_err->dev_serial_num.lower_dw,
+> +				prot_err->dev_serial_num.upper_dw);
 
-... which aligns with doe->table too.
+Doesn't say what it is the lower dw of.  Good to add a mention of serial number.
 
-This all leads to well readable code.
 
-> 
-> As far as I can see nothing outside of drivers/cxl/core/pci.c needs
-> 'struct cdat_response', so it can stay local to this C file.
-> 
-> While you are working on that I will do another lead-in cleanup to kill
-> the goto in cxl_cdat_read_table() and let you come back and kill off the
-> open-coded "+ sizeof(__le32)" that I will leave behind.
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_CAPABILITY) {
+> +		switch (prot_err->agent_type) {
+> +		case RCD:
+> +		case DEVICE:
+> +		case LD:
+> +		case FMLD:
+> +		case RP:
+> +		case DSP:
+> +		case USP:
+No heading for this.  Which means the output just ends up with something like:
 
-I briefly looked into your patch, but will send for reference a v2
-with a rebase onto cxl/next and small updates only. I could prepare a
-v3 that bases on your patch afterwards.
+    lower_dw: 0x00000004, upper_dw = 0x00000000
+   00000000: 00020010 00008000 0000000f 00000411
+   00000010: 00110000 00000000 00000000 00000000
 
-Thanks,
+etc  So also wants a space before the hex dump or indeed greater indent once that's
+added.
 
--Robert
+Similar formatting things apply to later changes to the message such as the header
+log register in the next patch.
+
+Whilst not a bug as such, pretty printing is always nice :)
+
+Jonathan
+
+
+> +			print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4,
+
+> +				       prot_err->capability,
+> +				       sizeof(prot_err->capability), 0);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (prot_err->valid_bits & PROT_ERR_VALID_DVSEC) {
+> +		pr_info("%s DVSEC length: 0x%04x\n", pfx, prot_err->dvsec_len);
+> +
+> +		pr_info("%s CXL DVSEC:\n", pfx);
+> +		print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, (prot_err + 1),
+> +			       prot_err->dvsec_len, 0);
+> +	}
+> +}
+> diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
+> new file mode 100644
+> index 000000000000..86bfcf7909ec
+> --- /dev/null
+> +++ b/drivers/firmware/efi/cper_cxl.h
+> @@ -0,0 +1,66 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * UEFI Common Platform Error Record (CPER) support for CXL Section.
+> + *
+> + * Copyright (C) 2022 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> + */
+> +
+> +#ifndef LINUX_CPER_CXL_H
+> +#define LINUX_CPER_CXL_H
+> +
+> +/* CXL Protocol Error Section */
+> +#define CPER_SEC_CXL_PROT_ERR						\
+> +	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
+> +		  0x4B, 0x77, 0x10, 0x48)
+> +
+> +#pragma pack(1)
+> +
+> +/* Compute Express Link Protocol Error Section, UEFI v2.10 sec N.2.13 */
+> +struct cper_sec_prot_err {
+> +	u64 valid_bits;
+> +	u8 agent_type;
+> +	u8 reserved[7];
+> +
+> +	/*
+> +	 * Except for RCH Downstream Port, all the remaining CXL Agent
+> +	 * types are uniquely identified by the PCIe compatible SBDF number.
+> +	 */
+> +	union {
+> +		u64 rcrb_base_addr;
+> +		struct {
+> +			u8 function;
+> +			u8 device;
+> +			u8 bus;
+> +			u16 segment;
+> +			u8 reserved_1[3];
+> +		};
+> +	} agent_addr;
+> +
+> +	struct {
+> +		u16 vendor_id;
+> +		u16 device_id;
+> +		u16 subsystem_vendor_id;
+> +		u16 subsystem_id;
+> +		u8 class_code[2];
+> +		u16 slot;
+> +		u8 reserved_1[4];
+> +	} device_id;
+> +
+> +	struct {
+> +		u32 lower_dw;
+> +		u32 upper_dw;
+> +	} dev_serial_num;
+> +
+> +	u8 capability[60];
+> +	u16 dvsec_len;
+> +	u16 err_len;
+> +	u8 reserved_2[4];
+> +};
+> +
+> +#pragma pack()
+> +
+> +void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err);
+> +
+> +#endif //__CPER_CXL_
+
