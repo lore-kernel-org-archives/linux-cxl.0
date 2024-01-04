@@ -1,196 +1,403 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981B324B20
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jan 2024 16:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99492555F
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jan 2024 16:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lE2A1Zic"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704384760; x=1735920760;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=G2mL2adhV39m1McAj6YGUUAlzwFrBZwLDHjXll54BpI=;
-  b=lE2A1Zic1kEbRRTlvNmmLU37639J29fL1GkYcUc8Souxnzo76aYYR2dY
-   blCivwFzqtD05KF5Qpu7nQWZXuSCItQQzyX+erElVMcomY3plh2uZDudn
-   yh+NNVGDxl9pLxSSWLcoO2pkmhHtsJFa7/btoG3hD31sDM75jsNBIeZUh
-   FhloFnzfxKo5uUIWt3GsWc8qdU2RA04DBcFYCx44afmWzZPNQLN6JKHOb
-   SBUv+1Se2LZ8Xk158ontST+AanSYruTxWHuPQ4Cw+X50XjMURCpL/NUbE
-   C9KLudo88/KCORZUZJHFOQAcrLfh1IvvBSBluMI+AikuyfykL38phDOV2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="387741045"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="387741045"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 08:12:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="1027490081"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="1027490081"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jan 2024 08:12:39 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 4 Jan 2024 08:12:38 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 4 Jan 2024 08:12:38 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 4 Jan 2024 08:12:33 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fWt0KhMI5QsKeTJiWlmkPd/h8HwgsvsOp2i/+vl/7jOSh5CZelz6GPpptNIOpWlWa6RtpWmgQAgMoysYreEtxu3BE3d8kwjcgNnuW8u8yFKaV/xfnFQ/Ca0tdF8n4HnSmwMR7AMWlKU+8BhKq3o0xCQRBwjn0edpZLeHmGG0BbGjaAMcr9lgotevNggviKEy4d70VqxYblSZ/lVtiQeKP6hUTPw7ZEaRw/jpM9qaA5rotGK3s8lwAeM7slpc+DDQ4bobnrDjRubS6L/1PukEGzjnvA626TGfGlxx0X30j7hcP77kEI71I+zIaatwVnqH0ZNUnxJYDPyOGRqxe662Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xnYnsarLw2tkd3HlLP64aP0SyPh8KkHe6v8gAMKlSt4=;
- b=hY6k5D9vnUnQ/W9NCnPfPKlp5/IirhMTQKt9gZUfcI2DugTYcMR62yy29YDTzeGxrv8697LBr3bL4zSeNCUOhHHprNSqoorAk16I3hm6kwLV8Zs+v4i25ceklnwlvoGGMFTuTa+egtk67SJNVPl/tc60p0stlRJyx3LeUud+7FvGwsOXJdLljOKk+1jMSYNBjWX485qObEwIedSmKHEdbIFzd1VyBRmJgJNZOm2urNGliQTXwqp5NLyw8qCZwgqf+wR2etlaazkyEvnNC9BmFkkN2reBokLtfHKF+KWTyWfQf2SOznLZs+7DX3WUHnsWW+cszSA+VySS3d9WR8CfZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by IA1PR11MB7812.namprd11.prod.outlook.com (2603:10b6:208:3f7::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Thu, 4 Jan
- 2024 16:12:30 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7135.026; Thu, 4 Jan 2024
- 16:12:30 +0000
-Message-ID: <8848eea9-2dd4-4595-8b60-9966692fd927@intel.com>
-Date: Thu, 4 Jan 2024 09:12:27 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v15 19/19] cxl: Check qos_class validity on memdev probe
-To: Robert Richter <rrichter@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <Jonathan.Cameron@huawei.com>,
-	<dave@stgolabs.net>
-References: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
- <170319626313.2212653.9021004640856081917.stgit@djiang5-mobl3>
- <ZZawa1FIpYxcyW0O@rric.localdomain>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UCBmpQE5"
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20240104164458usoutp012110250a0d34d83f2b6be0dbbb4ae720~nMqwBOjXJ0720107201usoutp01k;
+	Thu,  4 Jan 2024 16:44:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20240104164458usoutp012110250a0d34d83f2b6be0dbbb4ae720~nMqwBOjXJ0720107201usoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1704386698;
+	bh=J8QReWc6INjr8Uyi+JkS99MLKy4cMZCq5McZYztO8UE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=UCBmpQE5SXl/BrfxXgH8D/aon3uKAcykjuYTToY5O8+HytJNKEv2Ul4blk/cMvSWS
+	 zxRVuwSZv44ZZLR2nuJYhEqTt7548+UilcSDRowmiOqd1LKig5ro9K6X8LI00uoPX+
+	 fs5Fygiq9FHFYBQzpO4a0NkpB9qnlRKC4Fr2K8sk=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+	[203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240104164458uscas1p264b2806ab0cddaddf0699b199bbc67e5~nMqv7XWo51227612276uscas1p2w;
+	Thu,  4 Jan 2024 16:44:58 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+	ussmges2new.samsung.com (USCPEMTA) with SMTP id 4B.6D.09760.980E6956; Thu, 
+	4 Jan 2024 11:44:58 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240104164457uscas1p21d81b95d64dae6021d1e34ff55a3e9ef~nMqvlB5Mc1229512295uscas1p21;
+	Thu,  4 Jan 2024 16:44:57 +0000 (GMT)
+X-AuditID: cbfec36f-7f9ff70000002620-e9-6596e0891095
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
+	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id DC.B8.09813.980E6956; Thu, 
+	4 Jan 2024 11:44:57 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2375.24; Thu, 4 Jan 2024 08:44:57 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Thu,
+	4 Jan 2024 08:44:57 -0800
+From: Jim Harris <jim.harris@samsung.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFC] Add "uunit" unit testing framework for CXL code
+Thread-Topic: [PATCH RFC] Add "uunit" unit testing framework for CXL code
+Thread-Index: AQHaJujGLtImsgu5/E6TZ8871cwEbbDJ6SyAgACpwYA=
+Date: Thu, 4 Jan 2024 16:44:57 +0000
+Message-ID: <ZZbgewv5l5LMmrTk@ubuntu>
+In-Reply-To: <65965214f008e_8dc68294d0@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-US
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ZZawa1FIpYxcyW0O@rric.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0238.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::33) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DB9607B25EE52F4996BB552972670A52@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|IA1PR11MB7812:EE_
-X-MS-Office365-Filtering-Correlation-Id: 474ffad2-ac81-4d5b-be9c-08dc0d3ff39e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PzUplhBttIxiy+d23qj/Bhje6l4BiZyZpx62yIc8HyJ7kMqDAAJFib7ZdgN+QudY4PDt/g2tUseNX9uc0wWFH/Ll43zs3A8s+R/tC0VyVAkOy4PdcqFxLM8bR/vQpZkMK5JiQUzAs1ccdH5hvf2Juy+EhP7J8hcuJsRKkYAXwfiNZYAuxHY1sitBSM3AgbWxH3DWXXqoxfl3aiUnv0icI43LcXkeRW7seEJ4m4e08N6thJb+g4oSP788iWgtRu5U4rQwSb8Ff/9JQDPQ2ykH0pyzq6aM9RDu3Jk+Bc2LRqKtNfI8OefuSw+So7izsotmuJrzkj/DdAaLQHe8KKBzT/33IXpiotzLMMaeYNM2GB4bVCBG7IUE2acmmzSAYEKwM1cjgEW0//mpxaFxYnyRuVIQ2q9aPfbrHbdRs5WrPsAKXpoHlkIluFWt0QJ+d2Amtrs9Kv/ERpVk4hHMwCIZ/CZw4cOmQlxcZHE6WA1G4SGwiNMrWjhfZ5oQfyn3rYzDUA5LRwxQyFcRo2aiQQCnZEIwi/my0g2W+/zD4oHITYaSDwFsGv5NRNG1zrUP08v8c9tywhwXOcN+YHmunI0I7r4eadgmGhaeUnXzcFSFmZ4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(396003)(346002)(376002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(966005)(6486002)(478600001)(6916009)(8936002)(8676002)(316002)(66556008)(66946007)(4326008)(66476007)(83380400001)(41300700001)(6666004)(53546011)(6512007)(6506007)(2616005)(5660300002)(2906002)(44832011)(26005)(36756003)(82960400001)(38100700002)(86362001)(31696002)(31686004)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q2lXSm02SUZXQWFCWUNBcDhCOHI2a0ZNOUs3N2NzckN5TjNGckpLWm5FZUVw?=
- =?utf-8?B?Q3h2YkUvaVR2SHRPZFE4d1pQRGkyMHBzUzA5RTFlYWF3cFdzUlp2ODlIK0t6?=
- =?utf-8?B?UmxRblNUMXA4VC95Ym9uYVRpM0VvWFM5bi96VDkwMGxpZC9Ja2U1WkdweHQ2?=
- =?utf-8?B?NXRpSEhkQXpwaVRHZUtnM1lUUjA3UUwzVUxOaGtPdkJXTUk4STIwUmVFTjR1?=
- =?utf-8?B?NE5UZFR4S0xKUlNlZkdPcncxSjJHOWFsTy9mZHVBU2k1b2lqS0h5SG42ZXE4?=
- =?utf-8?B?RUR1UWhmY0l4K2paYW1lcDFwWnd1d0dyckZXV1dTRkp2ZEFBT3JJWFFYQnp1?=
- =?utf-8?B?bjg3ci8yd1RVNVBWaWZFc0ZsNUNUVUc2RWRJd0FxalRRVkUvK3BtKzkxajE1?=
- =?utf-8?B?UUQ5THl2ZXFZUE0xT1ExVER0Z0JoWkM1OTFGZnp0bDlyL0ZUTXU4RXJxWHQr?=
- =?utf-8?B?UHcrbTdBZXV4amJHOW1qS3ROSHI2TmR5RFhiZ3dlSjVwWkZNSG9DekNMN3E0?=
- =?utf-8?B?RWU3eW9vVWRRdzZ0d0lDbkRLRU5PR253WnlrUSsrSHdQa0IxaWF0Nk1rTlNt?=
- =?utf-8?B?ZkhBaHdGRFdNUlZBajgycnJKOTByeVFDR2Q0VVRzZEQ2SC9URWtPSHE4U1RV?=
- =?utf-8?B?VTk0Yk9oaUlwTzROWm1sZ1Fsb2g3K2ZEa3NhdnRjZHZLdklTTjJhRXdWYkJZ?=
- =?utf-8?B?OWhYWWE2VGdNbUdFcHRVbTRDMnZhb05jQTdqamNvQllGdkgxREJDKzNFM0hX?=
- =?utf-8?B?ejY2MTh0T3h6QXNCR281U09JcE9uaGRUVlBta3lURTJCYm1BOStXVGxwWmNG?=
- =?utf-8?B?OCt1OFFuZ29LNjBveTlxRk1sZUY1aTIvTW91Ymk3THNsRU1pY2QwU3U5REdT?=
- =?utf-8?B?eUZra0FJdS82ZkhHSGZ3S2MvSXJnaFJsc2RPdkdiektJVkRka0FJbFRFZU52?=
- =?utf-8?B?OEtWTVBXV01TdUxWQzdvbUxtaktnbHdTVXpVTHlPK3JlT1lDdGZVV3pocndq?=
- =?utf-8?B?aElDWEY0aGhtWXNMeTY3TTJqY2k3UFJxY0ovR1FFME5yUEc2WGoxTHRUeUo3?=
- =?utf-8?B?WWlWdjhTS0Jnd1ZVbUtzdkdmcjg0eHYrdHZsOVVObldRalZsU3ZVdW5ZRU1C?=
- =?utf-8?B?dHcvbXVmczhvNEZJK01UOEtPZ2lqZElESDNPNFFhbTZXcG01SnU2cnRHWjUz?=
- =?utf-8?B?cDcrMitUMkhlSU1UOHhmQ0F4djU3TzJIRXBSZjhRVlAyRU1ISjhZb2dFVjR5?=
- =?utf-8?B?Y29xMFN0ZVBKZEFaT1YvYnpabGd2WkJrdnRISVZvTStzV284SllGY0FtdGl5?=
- =?utf-8?B?MlMzNEZST0RPMzd5U1dQRERrZndOWUNYRE05OFRxYTJjbWFZZmZTUDFEU3lE?=
- =?utf-8?B?K0I2RGVXNHo1YVFrTlhXQmxnL0NXcUpiSHZOWE92M0tzMDUxeVM3Vjl5c2ow?=
- =?utf-8?B?WUxWUEU1bWgzUU9XVUtCVjIyQnRVUGlObFdUcUorY1ovRFd6TVB6K01qbDBx?=
- =?utf-8?B?QitsdDRDd0ZtajJTOEFwK1hSaUJGRExucEJnMTMydGtrbVBsODZyTHBxaFZC?=
- =?utf-8?B?Sko1bU5HQU1KK0paVjhTTkRXMTZvV01SVGo4UkR3SXJuTGk1TUpVWlZEbU5u?=
- =?utf-8?B?TXBDc2xQVGEyNE9nWkFJUHZLWFU5Y0dCRXBmdlRaSzFBUmg0SjZRMGNDT2ZI?=
- =?utf-8?B?ek0xMFlLYkppU3dSaFBPa2xubUhsc25JUmdGeE5Va3MrR1pyS1FCYmpvT2w4?=
- =?utf-8?B?bE1xTnJYK1N3T1RwU01YSWhnaU5pcmJFRWFFWjA0akpBVERJRGNPdzNwOFow?=
- =?utf-8?B?YzQ1S3NkbTNFUUcwMk5mZEtXTnNIQVVBbXlRcjZyM0ZaMUxubVI3MVMzVjRp?=
- =?utf-8?B?aEY0djBKdmxCTy93TnhZWDJlU0J6R3lsUUgyMWV3aVN2VkxYUWVvTkcyYTVH?=
- =?utf-8?B?SUkvWUhSdzVjcmxkWTRLcnJVMmFlWU5ZNXZRRVJXZHJuOG5mZHd1blRNbVhY?=
- =?utf-8?B?YVQvaDhLSEUzdFlGdUZWcVhtSFZVWDJtZS9FVFlCa1RSRnl6K09wV0lYcXlD?=
- =?utf-8?B?SUFCNXl3d0pYWWlDOEtOcUd2VndzVkN0Q3hCcTRhRXlaTlUxUUgvWHlYdW9V?=
- =?utf-8?Q?Osval1u8cvcxuj5L7lY8JaCzU?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 474ffad2-ac81-4d5b-be9c-08dc0d3ff39e
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 16:12:30.3355
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DT9JfItZOaruvFz8iPiU7U4rHK//JOzcm249xkEV2WJfv2Bct1JaRp25YDiOgOGoBOuu1AK0YhKP7XiwzFdKCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7812
-X-OriginatorOrg: intel.com
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZduzrOd2uB9NSDZr2sVpMn3qB0eL8rFMs
+	Dkwei/e8ZPL4vEkugCmKyyYlNSezLLVI3y6BK+Pr/jfMBZujKq5Ou8fawHjdo4uRg0NCwETi
+	yX+JLkYuDiGBlYwSvWeOMkI4rUwSp68dZ+li5AQr2jfrFRtEYg2jxPWLu9ghnI+MEg+W3GWF
+	cJYySqx4v5cZpIVNQFPi15U1TCC2iIC2xMQ5B8HizALWEv2nz4LZwgIeEpeO74Sq8ZSYt2k2
+	G4RtJXFt52d2EJtFQEXiy5PLjCA2r4CqxI3728HinED1Mw+vALMZBcQkvp+C2MUsIC5x68l8
+	JoizBSUWzd7DDGGLSfzb9ZANwlaUuP/9JTtEvY7Egt2f2CBsO4mGZWuh7tSWWLbwNTPEXkGJ
+	kzOfQINCUuLgihssIA9LCEzlkLh78ijUMheJI//Xs0LY0hJ/7y6DimdLrFzfwQQJ7AKJhiNB
+	EGFriYV/1jNNYFSZheTsWUhOmoXkpFlITpqF5KQFjKyrGMVLi4tz01OLjfJSy/WKE3OLS/PS
+	9ZLzczcxAtPJ6X+H83cwXr/1Ue8QIxMH4yFGCQ5mJRHe9esmpwrxpiRWVqUW5ccXleakFh9i
+	lOZgURLnNbQ9mSwkkJ5YkpqdmlqQWgSTZeLglGpg0gli/G5inGTBWcK9d77ErZvrNzAtVpyi
+	2jn59kHHtfdecj0rMdhQ77f/cuvvH49Wqec90Nj6beuDjfwTBcS4a8u45GqyQ9f5mkx7kP14
+	4QOpP+0yJlnO0a52TIYfguZ9VLeY/SFMy0x4n4D7siPTrm8Uz/ke8nPVqmTbO9l3ZjPk112f
+	cD63M+Sin1SJs9btg7yvozYs1MkOS5smvHWLZTf/dr3GHxM0jWyOn/TUztbpy6r8Gvc1zKdb
+	xOHx6hfJpn+FO7jrecXcN7ydKlW3xe12xp6dot1HPV3Wp76Vbfs4J9OUNSgwyfmc/J8zrzt5
+	dbfXMnve2D4vSONzVN2naKaSEul98db+BuLucX5KLMUZiYZazEXFiQCm1q9UlgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWS2cDsrNv5YFqqwdV5BhbTp15gtDg/6xSL
+	A5PH4j0vmTw+b5ILYIrisklJzcksSy3St0vgyvi6/w1zweaoiqvT7rE2MF736GLk5JAQMJHY
+	N+sVWxcjF4eQwCpGiUnPfrJDOB8ZJQ7e7mKGcJYySvT9+ccO0sImoCnx68oaJhBbREBbYuKc
+	g8wgNrOAtUT/6bNgtrCAh8Sl4zuhajwl5m2azQZhW0lc2/kZbA6LgIrElyeXGUFsXgFViRv3
+	t0NtvsoosWvlKrAiTqDmmYdXgNmMAmIS309BLGYWEJe49WQ+E8QPAhJL9pxnhrBFJV4+/scK
+	YStK3P/+kh2iXkdiwe5PbBC2nUTDsrVQR2tLLFv4mhniCEGJkzOfsED0SkocXHGDZQKjxCwk
+	62YhGTULyahZSEbNQjJqASPrKkbx0uLi3PSKYqO81HK94sTc4tK8dL3k/NxNjMB4PP3vcPQO
+	xtu3PuodYmTiYDzEKMHBrCTCu37d5FQh3pTEyqrUovz4otKc1OJDjNIcLErivHcfaKQKCaQn
+	lqRmp6YWpBbBZJk4OKUamHZNYA4QzH9mbbjBTn1qd5NgIvf+n4rdmdszpd0FJQWq7ENf3j02
+	541Mimm7/X4Ouwk/Nspbpa5X//BPrq5QWG/6wY97tG6I5fT1ss6fekhOuCqeVXZreZrZff5e
+	t8J8A84VrZsalzIoTrfbeKvq+HPJSROPHDlcu2rBbiuz72vkXyopBC64HtamOCH7rgRP9ifL
+	L0WqqRyvWBiabub7ewn7dS7xvhx5w+WZzPmUKz5XTk73ZHfVOxkcozBnze5P20QjHrfNL3Q5
+	9L122XNODWuGpvLO2VU9VU+6tXyOThNt465wrtSWiJ8j3r9PwrcjaHKOU1sWo73PgqhuzlgD
+	04qHrsxKd87KnEzYdE2JpTgj0VCLuag4EQBynwYDNgMAAA==
+X-CMS-MailID: 20240104164457uscas1p21d81b95d64dae6021d1e34ff55a3e9ef
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20231204193337uscas1p24b1959cf528b02b8172736a61807fff1
+References: <CGME20231204193337uscas1p24b1959cf528b02b8172736a61807fff1@uscas1p2.samsung.com>
+	<170171841563.162223.2230646078958595847.stgit@ubuntu>
+	<65965214f008e_8dc68294d0@dwillia2-xfh.jf.intel.com.notmuch>
 
+On Wed, Jan 03, 2024 at 10:37:09PM -0800, Dan Williams wrote:
 
+Dan,
 
-On 1/4/24 06:19, Robert Richter wrote:
-> On 21.12.23 15:04:23, Dave Jiang wrote:
-> 
->> +static void discard_dpa_perf(struct list_head *list)
->> +{
->> +	struct cxl_dpa_perf *dpa_perf, *n;
->> +
->> +	list_for_each_entry_safe(dpa_perf, n, list, list) {
->> +		list_del(&dpa_perf->list);
->> +		kfree(dpa_perf);
->> +	}
->> +}
->> +DEFINE_FREE(dpa_perf, struct list_head *, if (!list_empty(_T)) discard_dpa_perf(_T))
->> +
->> +static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
->> +{
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> +	struct cxl_port *root_port __free(put_device) = NULL;
-> 
-> This one was hard to follow and I hope I am not missing something
-> here, but isn't that finally calling:
-> 
-> 	put_device((struct device *dev)root_port);
-> 
-> And this only works due to:
-> 
-> struct cxl_port {
->         struct device dev;
-> 	...
-> }
-> 
-> with dev being the first member?
-> 
-> This black magic at least deserves a comment in struct cxl_port.
-> 
-> Better have a helper like put_cxl_port() or so.
+Thanks for the detailed review!
 
-Thanks Robert for pointing that out. See if this makes it better:
-https://lore.kernel.org/linux-cxl/170438448564.3436708.17525645430052031684.stgit@djiang5-mobl3/
+> Jim Harris wrote:
+> >=20
+> > There is a balance currently between creating stubs for referenced func=
+tions,
+> > versus just building and linking the referenced source files directly. =
+For
+> > example, CXL uses xarray extensively, so we just build and link the xar=
+ray
+> > code directly into unit tests rather than creating stubs for xarray. Se=
+e
+> > KERNEL_SRC in the Makefile for which kernel source files are directly b=
+uilt
+> > and linked in this manner.
+>=20
+> Explain that balance a bit more, is it mainly just a "hey I want that
+> function, oh building that new file is going to take me hours to work
+> around a bunch of new dependencies, I'll just stub the one function I
+> need."?
 
-> 
-> -Robert
-> 
+Yes, that's the general idea. You'll notice in the Makefile that 11 out of =
+the
+13 source files that are used directly are in lib/, since these are at the
+relative bottom of the dependency chart. drivers/base/ was a bit trickier,
+this original RFC builds two of those files directly, but you'll see a lot
+of stubs for other drivers/base/ files. IIRC, I tried to use
+drivers/base/core.c directly to avoid the 15-20 stubs, but that would have
+resulted in needing 30+ stubs for all of its dependencies.
+
+>=20
+> > Stubs are in uunit/stub.c, and are grouped by the kernel source file co=
+ntaining
+> > the real definition. Those groups are listed in alphabetical order.
+> >=20
+> > The build process has five primary steps:
+> >=20
+> > Capture kernel build flags - use 'make -qp' to pull LINUXINCLUDE,
+> > KBUILD_CPPFLAGS, KBUILD_CFLAGS from the top-level kernel Makefile.
+>=20
+> Did you look into stealing from tools/build/? I don't think it includes
+> those variables, but I suspect it includes some Makefile helpers that
+> are open coded. Reusing tools/build/ likely helps with selling others on
+> this uunit approach.
+
+No, I'll check that out. Thanks for the tip.
+
+> >=20
+> > Create unit test build environment - remove thunking, fentry and
+> > stack-protector options from the kernel build flags. Also provide
+> > KBUILD_XXX strings.
+> >=20
+> > Modified headers - some kernel headers require modification - don't
+> > modify them inline though, create a copy in the uunit/build directory,
+> > modify them, and set the include directories so that the build will
+> > pick up the modified copy first. Explanations for the modified headers
+> > are in the Makefile.
+> >=20
+> > Wrap and build kernel source - kernel defines many functions that are
+> > also in libc. Kernel also defines some data structures with same name
+> > as /usr/include data structures. So we wrap all kernel source files
+> > with uunit/include/pre.h and uunit/include/post.h to do some
+> > pre-processor magic to eliminate these conflicts.
+>=20
+> How much of an ongoing maintenance burden do you expect this to be? I
+> guess it all depends on how fast moving those headers are, but I worry
+> about bitrot unless we can get this into some automated environment that
+> notices that new changes heading into linux-next are breaking the uunit
+> build.
+
+I expect very little if any maintenance burden for the pre.h and post.h
+helpers. These handle conflicts for well-established function and type name=
+s.
+It's certainly possible this list will grow somewhat if this framework scal=
+es
+outside of just CXL, but generally should be very stable.
+
+The modified headers do carry some maintenance burden however, especially
+autoconf.h. I've only tested with a limited number of kernel configurations
+and architectures (x86_64, arm64) so the list of config options we need to
+disable could grow as this gets exposure to more kernel configs.
+=20
+> > Build unit test applications - found in uunit/app directory, and named
+>=20
+> NIT is "app" idiomatic for CUnit? I would otherwise just call it the
+> "test" directory for where the test executables end up.
+
+Ack.
+=20
+> > like core_region_ut.c to associate with core/region.c. The test
+> > applications include the stub.c file directly - this will enable future
+> > use cases where stubs can be configured to return specific mocked value=
+s.
+> >=20
+> > Note that this framework is not CXL-specific - it could be used to unit
+> > test a vast majority of other kernel code. Proposal is to just start
+> > with this framework in tools/testing/cxl to meet CXL-specific needs.
+>=20
+> Certainly all the pre-work you have done to process kernel headers is
+> generally useful work for others that want to adopt this test approach.
+>=20
+> The scaling challenge comes when there is disagreement about
+> stub-behavior across tests, right? Or would a test just override the
+> default stub?
+
+Ah, you're already getting into stage 2. As we find stubs that require
+modified behavior per-test, we will have variables that tests can set to
+modify that behavior.
+
+I have an RFC v2 I'm getting ready to send out, I'll add an example of this
+just to show the concept. Now that I have your extensive feedback, I'll
+probably drop the RFC tag as well.
+=20
+> > Todos:
+> >=20
+> > 1) Integrate with tools/testing/cxl Makefile
+>=20
+> I am ok if this stands alone. As I mentioned above reusing tools/build/
+> is likely more important. tools/testing/cxl/ is building a kernel
+> module, tools/build/ is there to support userpace executables built out
+> of the tools/ directory.
+
+Ack.
+
+> > 2) Break out CXL stubs separately by source file. This will be required=
+ as
+> >    we start testing more and more CXL files and need to exclude stubs t=
+hat
+> >    are defined in the source file under test.
+>=20
+> You mean like in cases where one test wants one stub behavior and
+> another has wants a different one.
+
+No, it's for the case where we have both unit tests and stubs for multiple
+source files. For example, if stub.c has port.c stubs in it, we will get
+multiple definition failures when compiling port.c unit tests.
+
+In my v2, I just wrap stubs with "#ifndef UUNIT_CORE_PORT_C", and then
+the port.c unit tests define this before including stub.c to avoid the
+multiple definitions. This seems good enough for now, but may require some
+changes if this scales outside of just CXL. Maybe we just use a fully
+qualified name like UUNIT_DRIVERS_CXL_CORE_PORT_C.
+
+>=20
+> > 3) Build common library for building up parts of the CXL topology. For =
+example,
+> >    see everything needed to set up ports, decoders, etc. to test the
+> >    region.c code. Much of this can be simplified in a way that various
+> >    topologies can be built without as much boilerplate code, not only f=
+or
+> >    region.c but other files as well.
+>=20
+> Do you mean de-duplicating some of the logic in
+> cxl_port_setup_targets_test() and cxl_region_setup_targets_test()?
+
+Exactly. I'll have a lot of this in the v2.
+
+> > 4) Improve cxl_region tests to cover error conditions and add extensive
+> >    comments explaining how the topology is being built. This overlaps w=
+ith #3.
+>=20
+> Some comments on the simple tests would help too just to get folks
+> ramped about what's going on.
+
+Ack. The comments are absolutely critical and I should have added them in t=
+he
+v1. They'll be in the v2.
+
+>=20
+> >=20
+> > Signed-off-by: Jim Harris <jim.harris@samsung.com>
+> > ---
+> >  tools/testing/cxl/uunit/Makefile             |  141 +++++++++++
+> >  tools/testing/cxl/uunit/app/core_hdm_ut.c    |   82 ++++++
+> >  tools/testing/cxl/uunit/app/core_region_ut.c |  237 ++++++++++++++++++
+> >  tools/testing/cxl/uunit/include/post.h       |   21 ++
+> >  tools/testing/cxl/uunit/include/pre.h        |   22 ++
+> >  tools/testing/cxl/uunit/stub.c               |  335 ++++++++++++++++++=
+++++++++
+> >  6 files changed, 838 insertions(+)
+> >  create mode 100644 tools/testing/cxl/uunit/Makefile
+> >  create mode 100644 tools/testing/cxl/uunit/app/core_hdm_ut.c
+> >  create mode 100644 tools/testing/cxl/uunit/app/core_region_ut.c
+> >  create mode 100644 tools/testing/cxl/uunit/include/post.h
+> >  create mode 100644 tools/testing/cxl/uunit/include/pre.h
+> >  create mode 100644 tools/testing/cxl/uunit/stub.c
+>=20
+> This overall looks promising, the tools/build/ question might be the
+> only consideration for merging in the near term.
+>=20
+> Some inline comments below:
+>=20
+> [..]
+> > +
+> > +	CU_ASSERT(add_hdm_decoder(&port, &decoder, targets) =3D=3D 0);
+>=20
+> Likely wants some commentary on why it is ok to pass uninitialized stack
+> variables into add_hdm_decoder().
+
+Ack.
+
+> > +}
+> > +
+> > +static void
+> > +cxl_settle_decoders_test(void)
+> > +{
+> > +	struct cxl_hdm hdm;
+> > +	char _regs[0x200];
+> > +	void *regs =3D _regs;
+> > +	unsigned int msecs;
+> > +
+> > +	*(long *)&_regs[CXL_HDM_DECODER0_CTRL_OFFSET(0)] =3D CXL_HDM_DECODER0=
+_CTRL_COMMITTED;
+> > +	*(long *)&_regs[CXL_HDM_DECODER0_CTRL_OFFSET(1)] =3D CXL_HDM_DECODER0=
+_CTRL_COMMITTED;
+> > +	*(long *)&_regs[CXL_HDM_DECODER0_CTRL_OFFSET(2)] =3D 0;
+>=20
+> Can this be made to look more like idiomatic kernel code? E.g.:
+>=20
+>     writel(val, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(x))
+>=20
+> ...so that code sequences can be copied from the driver into the tests?
+
+Ack.
+
+> > diff --git a/tools/testing/cxl/uunit/app/core_region_ut.c b/tools/testi=
+ng/cxl/uunit/app/core_region_ut.c
+> > new file mode 100644
+> > index 000000000000..770ec200c87f
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/uunit/app/core_region_ut.c
+> > @@ -0,0 +1,237 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include "pre.h"
+> > +#include "drivers/cxl/core/region.c"
+> > +#include "post.h"
+> > +#include "../stub.c"
+> > +
+> > +#include <CUnit/Basic.h>
+> > +#include <stdlib.h>
+> > +
+> > +DECLARE_RWSEM(cxl_dpa_rwsem);
+>=20
+> This is here because core_region_ut.c is not allowed to use stubs
+> core_hdm_ut.c?
+
+Correct. This will be fixed in v2 with the changes I referenced above.
+
+> > +	resource.start =3D 0x1000000000;
+> > +	resource.end =3D   0x2000000000;
+>=20
+> Spotted this just because of the recent debug adventure here:
+>=20
+> http://lore.kernel.org/r/6595c10982cf_8dc6829433@dwillia2-xfh.jf.intel.co=
+m.notmuch
+>=20
+> ...where that resource.end should be the exclusive "end" of 0x1fffffffff
+
+Ack.
+
+> [..]
+> > diff --git a/tools/testing/cxl/uunit/include/post.h b/tools/testing/cxl=
+/uunit/include/post.h
+> > new file mode 100644
+> > index 000000000000..231f5bc15c3a
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/uunit/include/post.h
+> [..]
+> > diff --git a/tools/testing/cxl/uunit/include/pre.h b/tools/testing/cxl/=
+uunit/include/pre.h
+> > new file mode 100644
+> > index 000000000000..1eb88e51740f
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/uunit/include/pre.h
+>=20
+> These last 2 files look like a lot of hard fought meticulous magic,
+> hence the question above about expected ongoing maintenance burden.
+
+See above. But some extra comments around this wouldn't hurt - I'll add tha=
+t
+in v2.
+
+> > diff --git a/tools/testing/cxl/uunit/stub.c b/tools/testing/cxl/uunit/s=
+tub.c
+> > new file mode 100644
+> > index 000000000000..208dab1e7d6d
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/uunit/stub.c
+>=20
+> It might be worthwhile to let clang-format do a once over on this and all
+> the other files if only to keep the automated coding-style bots from
+> tripping on these files.
+
+The formatting is horrible. I need to clean this up and will run clang-form=
+at
+before sending out the v2.
+
+-Jim=
