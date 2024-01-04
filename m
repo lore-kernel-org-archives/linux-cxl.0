@@ -1,91 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650231FA4;
-	Thu,  4 Jan 2024 00:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06161A29
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jan 2024 01:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jx3NKAH6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nklVpX6X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704327672; x=1735863672;
+  t=1704330064; x=1735866064;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=p9StygUA1+lXduofiqL3tKNhGzwJRt0DoulhLB99/WU=;
-  b=jx3NKAH6weU1b7NtirLygw9SP8jnncS71RqkIidRopnNv9nsEr9+IG0i
-   4l6tmHszrKenm0gGCYbyLeZAVg7oGpB9SmWZSUM5IJi5lHXtw2QeXvGYU
-   6OiPgQiZ8AAU9C29JminUihyy9ysHr9XmpGTPWJRzgCHyaGlKD/dwOlWS
-   NXnCOSXKJn3ACPAU2VK3MdntL27O8t78FRsY9YTQZyLYmAj1wZpbBM9Qv
-   VYmfCuII72axPvnIbZJPaGaveukE5tGG7hrX+Scia1PACo+XLEbGCfI44
-   IWzZcpHlghgacvO02+IWXXq3/46uPwYPx/CJL3MdOb7s51xQ2UcINqsXF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="387553463"
+  bh=jdmCZhldSB/1VgOZGkW8KaKfCvPNj0C9WLLWQv1ZT2A=;
+  b=nklVpX6XGq+jwlk5iooe2ZYG/wtCYq3mV/q4JXdQ3XyGcDdiD4cb2Wvi
+   wUn5vwcHHd9pEoAp5bZxiCnUTDGQcFk8h9xaqHKfu4DRZVEvyQ0ToQTmA
+   aAfTxb8w/dOj66AZpwLjqQx3M1aPQsXK5qXr4CzgrWd06NA3gqFo05AeC
+   dN0NbTmiQRlpls3lC4V40J4SJEIl3zKHUbzXaSv2fpRnMFFZ+mflmd66t
+   sFRBnW5TwW3lxvuiVi0qAQ6NZ0hm+PJNthjnFbGlDgnCQB9wqX93UxVAa
+   ZQ7J3kEGGeW3TasIKmTwltKHaAHHktSmDADN79ZcYZpDYv31QqptqkBUX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="376587688"
 X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="387553463"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 16:21:11 -0800
+   d="scan'208";a="376587688"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 17:00:59 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="923729863"
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="1027234573"
 X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="923729863"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jan 2024 16:21:10 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="1027234573"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jan 2024 17:00:58 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jan 2024 16:21:10 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ 15.1.2507.35; Wed, 3 Jan 2024 17:00:58 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jan 2024 16:21:10 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Wed, 3 Jan 2024 17:00:58 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Jan 2024 16:21:09 -0800
+ 15.1.2507.35; Wed, 3 Jan 2024 17:00:57 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VN3u10NAU4TwLMwvi3XIe4pG7wzmJ9Wh6XPeHvEYHjqt9mj33QbKXOnqbZSKgb6Clmx6LPtaHX8qpdOc8b9t/3lqOXLY0az8pBsjHrmv3HqnUvXYoeTEcgxm+hznNnayAJuC46kMB0A/HMHzwloVOVZELfee/GnVOF4JM0IgG/WR27XThIq3W0tRm/AfNxLcov8wznsXz2ghX7xXdnzE/Yo3LeBYBaJsF1Zc7gwZXpRAR9qOp38tYKoYce0YCXyOYnYcxVi2+Dn3CtH8Bjhdyv9WP7nUYE4wwnU2qZKUe8q/uLr8pkl3NSuh/8tqWZaZlMNkPHyzgBqyLnV60Qg3Ag==
+ b=VrWnkOmfdb5UVOKsG7czHLO9rfmp/J9eJzmIwcKBQmRhY0Gvu7bQ9EY5E5z1IHpGzJIikcNK8fsKOybRKQZeIu+ziyl8trmbbHxUXsqmvh/F6pVdPpZiLixHxkr9FvmkPOHfUig5j6kuOtcCmls5BL6xC2S4GvLetrHnfcFOK57yx+eoOB1friQaIt0QAKYLORsxOwp6ntvfZ1vecx9LVy47sSfgRlY3l985qKbpaCkFvIH6N546h2WMtd61ZrWz/nKhnfPhix4K478EYlezb41QYv3ifsfHEWagLdkJL1jT17K/RbB4HirlCn0nbYdQ1y5fPvqoPK/KCP6Fddbicw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oZUAJqwfdIja/y1ES/GqfJD4xUwe9KKJMJZD+bSbFMY=;
- b=gPJd+qGSRV9lW3zuLkb1euunQZquCqL90U5U0pQZyGCpclFstnvmIjKM62hZuJlKz7HMq3XBfNSZtp8BAYaeReGT1R/ltmm6dq/qkf9yBOHYZrDMbL0XrEAW8NOxFaMS3Qx7SqWrwfL8+IFeZyKpfx/609dGPiznl0UlxRgEOaPTQfkMQPyfeFLnfGjTa71FtmDJO5rdn91tC1/cEfZwlrRFJhk5A0y06RgxZm1RFhm287P91hQjIGXXAwq6fUFt4fMif30XwhdluSdIQUIP7cikz+qFUSbrDeVOPNPCyd4kTJvUjKilagB65hNI5HxkRAtVVrhETmd4g9ORVNG+gg==
+ bh=6f7+CEbD+mvA05CyIl2788SHHGTqI3zU9/cLudC5YZw=;
+ b=XMF9qA/hLfq8R7e33hIwXF/zhNXomtwKyBCll3Rvfs+AnAY9WLWeI174AmuYnvmnnGDblClBV6FS/0EG9qWURjXj38+tAKRuBzlLvtoHhR+McIEyxPc74L2SuIWgF50rt3nxzV2B8ObMrxdu2Jh3ctbSWxyeVq2atu/WUyTnERtw8qPe7RfamNjtGGFPbs7ipGYGqU8Cv+1GXwg2XN8z/dKFlGhdkC1UNBXXMpoNloZtaKrRbxJK2+TrkGSpt674/zuH+s51eU/mQI6a7Fz6KHswdbSx1ZAZCifI6OI24KmVwYly2zB9G4qxDv0ixArYutk2hA/eZHEzAXftytQkMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BN9PR11MB5436.namprd11.prod.outlook.com (2603:10b6:408:101::13) with
+ by CH0PR11MB5348.namprd11.prod.outlook.com (2603:10b6:610:bb::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Thu, 4 Jan
- 2024 00:21:07 +0000
+ 2024 01:00:55 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 00:21:07 +0000
-Date: Wed, 3 Jan 2024 16:21:02 -0800
+ 01:00:54 +0000
+Date: Wed, 3 Jan 2024 17:00:51 -0800
 From: Dan Williams <dan.j.williams@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 8/9] PCI: Define scoped based management functions
-Message-ID: <6595f9eec5986_be70229443@dwillia2-xfh.jf.intel.com.notmuch>
-References: <6595e201beb4_be7022944d@dwillia2-xfh.jf.intel.com.notmuch>
- <20240103230147.GA1800245@bhelgaas>
+To: Bjorn Helgaas <helgaas@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael.j.wysocki@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Len Brown <lenb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v15 00/19] cxl: Add support for QTG ID retrieval for CXL
+ subsystem
+Message-ID: <659603435f569_be7022944f@dwillia2-xfh.jf.intel.com.notmuch>
+References: <170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3>
+ <20231229000414.GA1559983@bhelgaas>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240103230147.GA1800245@bhelgaas>
-X-ClientProxiedBy: MW4PR03CA0004.namprd03.prod.outlook.com
- (2603:10b6:303:8f::9) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20231229000414.GA1559983@bhelgaas>
+X-ClientProxiedBy: MW4PR02CA0023.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::16) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -94,154 +91,97 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5436:EE_
-X-MS-Office365-Filtering-Correlation-Id: d70e80a6-57df-4324-08c6-08dc0cbb0b6c
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5348:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3fb6b51-2146-4bc0-09c1-08dc0cc09a26
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NLNVx1KAkScppS5H5ZE7avgGX/oHX7scjgnEqC/LWjxN8bIYVhO7/GV/zBlAeqI4Pj45C52K3NGxV4TMTlHHS7nA4BcfUKc3YryhAKpZIQ9B0Zh54uxLbvZ24EcAmC8VMaZ+1addlSP4VL537JBp5057eNMgaEBEaqcMp1i8vlqc0RLUHPx7QPelneZI49bhkZb+2zNmcm9mDGZwwexQkoDAxzQSAyNZQN+V2YcDFvmaQ2kPfcD4Q4EA5HIrr/MOm/8FUAhDEjpXG20uRyhdiOnsWgJP6dLl/vlQJVSEdm8VHLJnRVzoCMq8ibZrRLkTkCVJiSa1SQhRi/BIGx/vK/Yr0Nu31DuEd0L7XORXJer7zpF5CoaMJNxoy4uWdUy0CsFn6/DVTMQ5xvQjsWKfRc8nkkYWJ3AAXMSwc44HP/AvMrnXjvgrq9TgirmWaJEnG3iP3Eykxr2xo65f8aXXtvOdVcT19SnnvLIKyBgfZ5rwjDnZbnDu4NbadglwDBykUM/FARK8ToRq5I1gzb5Kt/FcZu25hC9CgCsxevgFq+SELXUQY5XiQKhK392dYVVh
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(136003)(366004)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(86362001)(82960400001)(6486002)(478600001)(6506007)(6666004)(66476007)(66556008)(110136005)(54906003)(66946007)(9686003)(6512007)(26005)(2906002)(7416002)(5660300002)(8676002)(8936002)(316002)(4326008)(38100700002)(83380400001)(41300700001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: Fx7Gkdmktrv15MmZmbLFfDS9Xfj+M+f890yUvJs9ajvulQZreKw0ZL7NT8Yi0tIyZC2YW3tLpJW8Zf/UCGDbT8Zl/8tC0ZNYSh/vgxsnHCJ0HdPKdR1KuCECywoSjQqrAB05VVMJH+or0OrbrvxSJN7F2m3L1UHzv3Slbk7p5PUjGeOSDgleqtd2KpKAjyOk7trDvgoJlez+LEVstyawzuGkrK6KdOeWvHhbNbmra0qpCX93ZigVQZt3WhXdtLWHVlDNKzJt4Y6+9CbSXggpqU4OgroSQvYTiRJxOyI8OUH5jJz8CWV5KJlY4zVqtwx3vNVKKuu6zq1EaGchU/REHpsz/WLW9TmqnKREiVaFuR4UQu2LHKZz+dbmAXked4uasOHTlhPCQUmz9nGts4hQJMUYAJmCQUmlSpbIWqiM9V5Frg07nH3xopaW/GDRhqErwveT/AI32esniZMswCZ813ry6UZPbG3InE+ZPILgCyW8fp7payfBsiiRAhXnE64r/X/E+WJEMJwegQSLyt9MGm0zO2GULql91IN/6gRpbop9af9TXQ9B6Smchr0lPphp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(136003)(39860400002)(346002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(66946007)(66476007)(66556008)(83380400001)(6636002)(82960400001)(478600001)(6486002)(26005)(4326008)(110136005)(316002)(54906003)(6666004)(9686003)(6506007)(41300700001)(6512007)(8936002)(8676002)(86362001)(5660300002)(2906002)(38100700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?O8aburBUOLzBiA+FO5aVrBguM3WSpdwm0HXEDA9dvuCa70Ld1tW1HlB7My+i?=
- =?us-ascii?Q?Qny/5I162jdOeT2K/S1dmkqDKzJelPKOV/QxPpmMvy1+7ELXnsP45wph3yeT?=
- =?us-ascii?Q?jt+Y+ahGggtdYHu5xbxMlxNbWT0yQumj/Z8DH0fsFYh/WLtBUkuNCKckMyjB?=
- =?us-ascii?Q?wGjEn7AyYvNytzJKsXOQ3Bp8gdFLd27+7sTR5/eQSzyDtcRj264iwEYbbHrs?=
- =?us-ascii?Q?DjO46NAO457dKyPwiF9mq6dYxbwlRYfFVr52+63Skb8O/IzDz1LjDQ9GxTcF?=
- =?us-ascii?Q?U8CFA+3yNe1rmvmJFEI8jUqfJ/AbBi6HwvsCkfW050YOKT+PcslyemQNsz3p?=
- =?us-ascii?Q?pDpZkXAx+JFyueRd3bpyZkBDeP45/1xXUnUu0vKplMPTF2cKOEOouzu9Prbs?=
- =?us-ascii?Q?jc6oTCGpEZcbmzXhHQLF3D5vgWU3zXv/O3Mg1qsGybFGBZSZvOf5WApuktd8?=
- =?us-ascii?Q?6bbtCRGG57W0lTf6j+p6q7p2Z4UgyPih5VTYO6GAgpfwJtEbASHAxdLv7VTu?=
- =?us-ascii?Q?1QuiVaAYEheI4eTmlx9igKWEfSdVVQ5KpaQipvTi6gsCBtJZlmMUwQL9whfa?=
- =?us-ascii?Q?NqpqSc6iQjx2Vjvc72GUNk/EQiuNc9FVGA++mmbw/x7iFI7hN1Uw7LSj5Ke6?=
- =?us-ascii?Q?joyqezYklMDIUJTrfT6O90Jri37OpnCcLcFXFAapkeC6g3OP9KGytpk+hccI?=
- =?us-ascii?Q?vTm3l4lCB9k7TCJUVrtwqdkudBUBsymTD9Fg0Y9wH9srBxUJoCN2Xvu3Qh7r?=
- =?us-ascii?Q?/9F5x1qM16YeuTJrsYBANJp8csgLfbeFMo6JHyw0FaXgHdoSS3iLhlowy0tY?=
- =?us-ascii?Q?nLoVE2yK7oho39Z3BXVDl8xfj53xslLlPLMTwjc0UbVSUiLIVZJSkRZdgtb3?=
- =?us-ascii?Q?w/zG/ovAUcBbdNk8lbdImyRL+w7UlkBh9vml8CM9KeCctNG499KeXcJLLdD3?=
- =?us-ascii?Q?WTaavt1uvmz2wmfXyZJHABj9NcmyEjzgf6CGFRqB0MMGSE+pURpwxKeLxd7+?=
- =?us-ascii?Q?8MZ/9FDFZRgEymRHLB8YIhZAfl3GjfknXF2KXNo4E1dNfSnq47b1YZriwVmQ?=
- =?us-ascii?Q?GciEBzXPyL/WvAyzr97UF+Vaz8Pqbz5CMJygtyFRkZvs4qyELo0+biiSSkmM?=
- =?us-ascii?Q?somA/YBnx5Sbwy3UMWPzQfbS72n/M9fo5AEAhuUsS4GqIFJUkpIvFXC+Zu67?=
- =?us-ascii?Q?9tbIZvs5usS6VNmoy41nvjKKuk/CRt412LTo2YW40jH/1ge+E30xIUdemJKm?=
- =?us-ascii?Q?UW1yc5UTrbjKmr/IE6bK/OcO6khOjZZGMkhO8nYYZI4mchgrW2/MifXOTegr?=
- =?us-ascii?Q?GtS4/ddRMBPIp4EAZQL8V4f09jnZSFTT/NZK6oQarWs/W7L3jkPBbycMfexs?=
- =?us-ascii?Q?4TJFyELO9OZyoBvX+RYwuCB8vRXw+drfAoBoZxvt+2fPomxnEhI+eFxm5oKJ?=
- =?us-ascii?Q?F0lJf7O/HDVcRbt9CsUSA3JjYCSEfzb0nQsiR3VAexZzXMAvxJxgRGwXHoVA?=
- =?us-ascii?Q?JzzpSthw1fi5JbMgV1rKlyhSyJjR4FZRCZWlgv9Gt6FOILHXcacwJEaxifDb?=
- =?us-ascii?Q?MKMQK1r+0sqg8GzC6SE/mrl13hSNmlxwf8h9nV6+1WD+eE2rW6PkOVaJIZNb?=
- =?us-ascii?Q?Jg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d70e80a6-57df-4324-08c6-08dc0cbb0b6c
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0dh+T9kPWzJDg7uMHBxVfWhNIxC9TMWfR29p5JG0nU1/sVa/OFVe/nYX5IdK?=
+ =?us-ascii?Q?3XK8Sjb4LGyDo2EyQ+BxQD8qZCjtGjY3BCktxgsErUiByIfhhcZ4l875dyku?=
+ =?us-ascii?Q?mXXg8XtUscxukWCJ/tFFTFUT3o4VD9dLJJpodbVq0n9aYB1D4r2rC0NS0yDJ?=
+ =?us-ascii?Q?gcN1S1lDUKxjoRyopU4qTMnz4nv1rp2ACBnVVFz1CwZIYrM/5rdvKnU2Z44t?=
+ =?us-ascii?Q?TAUhpINXtApMfxZuHglqPWlDPutlCe304BVWnJ5OHXyoBrbtx1DYUKFfTy+b?=
+ =?us-ascii?Q?lJvsHP7PkSUWLMlxjo1pDFnshamD2OVxfrOmbdj9wQmaTQ+YEFD/209t3ZgJ?=
+ =?us-ascii?Q?kcBGsql8+1mRtpVxGbT7jWLpvNil+6jOrx3aaJkFEe8W3DWivMILdvuWGxcA?=
+ =?us-ascii?Q?2Q+7J08Jz8J5hfXRvT9R9c15bnY7zXL5u1z20B4IslwE1dj62c97jJjVBnAa?=
+ =?us-ascii?Q?vLR+HOo29OWFCFJgZk67NYyFZ32Uz/0OHAOyZLsd9RH22ZXdZ++KA1qxEIGG?=
+ =?us-ascii?Q?R/GEGnqbU3N3lQG8kHbPXKkKL0Vv6VBiuTkq5utKruAq6wFHbJ46gfYVroEC?=
+ =?us-ascii?Q?jgQru86wAxBV0V533FCXWcnn0hHxM+AwDZAVGMT/nJfNiNaBfc4WVcw4eOjj?=
+ =?us-ascii?Q?xJGQ8zl8MUHwekDjJtfb8QQHlqXYE+QaQu7/b3NKuCW+gyKd68blCCPDwLHf?=
+ =?us-ascii?Q?5gAqsHeGcT77jKp7kT+C2v0+l/723D29KHCUlaUPjND0du9bStUWjoDvn7b0?=
+ =?us-ascii?Q?POx4x87ROYJEAOBHlc0C4wVQfBmjPlSNlXVVnOWpfOHRl8PYuRWPH8MGL7nD?=
+ =?us-ascii?Q?LNAN5rjR0dR1hl3cwqUD8w/Xx8WJovkdfcJS/uZfSkwBBccrNrckUHqdLmpP?=
+ =?us-ascii?Q?aqaay0F7CXbiMBrkhZt1SXDH1OjX+iKckLnEWohZas0o8u8X+Q0VKJWfMzuq?=
+ =?us-ascii?Q?VM++PK7jN/Mg+BcwrfH2Hy50uQfzLShWE4frcgU+6PWqtsUhx3aqwgN/06L9?=
+ =?us-ascii?Q?5l+ZfkfaWKeOnTzhM8iKDiOlMNSYPKcbYP+F2vWVWnuh1j5MS1qJ7n05ZR11?=
+ =?us-ascii?Q?/yxDL971dYUYrWjc6/6jXV6+cbAJXq+9KD7mSgafU+HrrDXjM+S1PpKx9Ewi?=
+ =?us-ascii?Q?AlOyXeAc5gdVNbX42lYMAyHA8HB8c715Jb6aAQnjVJB/gBwOTONhQFV2DxmY?=
+ =?us-ascii?Q?me7n+uo2LnpmMJ06B81g/zBZjHpMrtMJsEul3R1OvMVIwmLKIGAfdUOxMQ5G?=
+ =?us-ascii?Q?TAGwewICBaGvHP0Xcb+dhmV61w2AZ8ZZLVQA5WRtudU4DDrv70wl90E2HC6g?=
+ =?us-ascii?Q?h9rkKh7FBbFdSGFSlBFLevW9CLeru48G7yOFigYLyvJdoEOeTTlyCgl6lfkn?=
+ =?us-ascii?Q?F/0WTO641hDCLN/C7aT/Nfdd9Uf4Aw6qpPJ7m2kpMuOPIvLceJNAM7Z/JxDM?=
+ =?us-ascii?Q?H+0mmxQMXHN1yrI1ZSAc5OwYFrh2B3YFcaibWlTOIo/bFRoC4xdLsY6XKgxG?=
+ =?us-ascii?Q?Z6jyVffHUrSkTF3dpdNqy537btC+0os8qTW7DFwq8xMcUfE/BIpCttzwss6C?=
+ =?us-ascii?Q?AaIeihS4jdB5XBI49Yq/7A9Yuh8ol1OboOSFcqlI9dKBDczUysUVP6wLJk4b?=
+ =?us-ascii?Q?zQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3fb6b51-2146-4bc0-09c1-08dc0cc09a26
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 00:21:07.1117
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 01:00:54.0923
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4l1DgrOjlWk+A4DHobHnzNgfXV+GNFToGpcPF7bBbN0YY8zboNzZyhDFC3Pdv9W5xKSzmJ/XKqlGd5xgV/X/mgyiDy5h5ubsvG9HmcuiL0w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5436
+X-MS-Exchange-CrossTenant-UserPrincipalName: mZe2/qF5NkEAUlfg/V3irn90MlCKKem5yZ3XGSpENeXNn1Y4CfaIOIT2d8aGcBvMmRovAlsz1G/MKPcwS3B0groPBZ2VSFNFEq36oLmxPcg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5348
 X-OriginatorOrg: intel.com
 
 Bjorn Helgaas wrote:
-> On Wed, Jan 03, 2024 at 02:38:57PM -0800, Dan Williams wrote:
-> > Ira Weiny wrote:
-> > > Users of pci_dev_get() can benefit from a scoped based put.  Also,
-> > > locking a PCI device is often done within a single scope.
-> > > 
-> > > Define a pci_dev_put() free function and a PCI device lock guard.  These
-> > > will initially be used in new CXL event processing code but is defined
-> > > in a separate patch for others to pickup and use/backport easier.
+> On Thu, Dec 21, 2023 at 03:02:25PM -0700, Dave Jiang wrote:
+> > v15:
+> > - Update the hmat generic targets via hmat_update_target_attrs() to retain the best
+> >   performance numbers from HMAT table.
+> > - Refactor qos_class valid checks to simplify (Jonathan)
+> 
+> One of these versions apparently rebased to v6.7-rc5.
+> 
+> > v14:
+> > - Fix 0day issue with fw_table usage (Dan)
+> > - Move all DSMAS processing local to core/cdat.c (Dan)
+> > - Change get_qos_class() to qos_class() (Dan)
+> > - Fix perf entry allocation lifetime (Dan)
+> > - Rename perf_prop_entry to cxl_dpa_perf (Dan)
+> > - Cleanup gotos using DEFINE_FREE() (Dan)
+> > - Move qos computation before regions arrive. (Dan)
+> > - Drop unmatched perf list (Dan)
+> > - Add target_lock locking for retrieving genport coordinates (Dan)
 > > 
-> > Any heartburn if I take this through cxl.git with the rest in this
-> > series? Patch 9 has a dependency on this one.
+> > v13:
+> > - Convert temp dsmas list to xarray, optimize DSLBIS matching (Dan)
+> > - Add a cxl_test fix for mock ACPI cxl host bridge UID.
+> > 
+> > v12:
+> > - Tested on hardware
+> > - Rebased to v6.7-rc1
+> > ...
 > 
-> No real heartburn.  I was trying to figure out what this does
-> since I'm not familiar with the "scoped based put" idea and
-> 'git grep -i "scope.*base"' wasn't much help.
+> >       lib/firmware_table: tables: Add CDAT table parsing support
+> >       base/node / acpi: Change 'node_hmem_attrs' to 'access_coordinates'
+> >       acpi: numa: Create enum for memory_target access coordinates indexing
+> >       acpi: numa: Add genport target allocation to the HMAT parsing
+> >       acpi: Break out nesting for hmat_parse_locality()
+> >       acpi: numa: Add setting of generic port system locality attributes
+> >       acpi: numa: Add helper function to retrieve the performance attributes
 > 
-> I would kind of like the commit log to say a little more about what
-> the "scoped based put" (does that have too many past tenses in it?)
-> means and how users of pci_dev_get() will benefit.
+> Drive-by comment since this series isn't for me, but "acpi:" and
+> "acpi: numa:" are new prefix styles that don't match the drivers/acpi/
+> history.  It looks nice in *this* series, but not quite as nice in the
+> future drivers/acpi history.
 
-That is completely fair, and I should have checked to make sure that the
-changelog clarified the impact of the change.
-
-> I don't know what "locking a PCI device is often done within a single
-> scope" is trying to tell me either.  What if it's *not* done within a
-> single scope?
-> 
-> Does this change anything for callers of pci_dev_get() and
-> pci_dev_put()?
-> 
-> Does this avoid a common programming error?  I just don't know what
-> the benefit of this is yet.
-> 
-> I'm sure this is really cool stuff, but there's little documentation,
-> few existing users, and I don't know what I need to look for when
-> reviewing things.
-
-Here a is a re-write of the changelog:
-
----
-PCI: Introduce cleanup helpers for device reference counts and locks
-
-The "goto error" pattern is notorious for introducing subtle resource
-leaks. Use the new cleanup.h helpers for PCI device reference counts and
-locks.
-
-Similar to the new put_device() and device_lock() cleanup helpers,
-__free(put_device) and guard(device), define the same for PCI devices,
-__free(pci_dev_put) and guard(pci_dev).  These helpers eliminate the
-need for "goto free;" and "goto unlock;" patterns. For example, A
-'struct pci_dev *' instance declared as:
-
-	struct pci_dev *pdev __free(pci_dev_put) = NULL;
-
-...will automatically call pci_dev_put() if @pdev is non-NULL when @pdev
-goes out of scope (automatic variable scope). If a function wants to
-invoke pci_dev_put() on error, but return @pdev on success, it can do:
-
-	return no_free_ptr(pdev);
-
-...or:
-
-	return_ptr(pdev);
-
-For potential cleanup opportunity there are 587 open-coded calls to
-pci_dev_put() in the kernel with 65 instances within 10 lines of a goto
-statement with the CXL driver threatening to add another one.
-
-The guard() helper holds the associated lock for the remainder of the
-current scope in which it was invoked. So, for example:
-
-	func(...)
-	{
-		if (...) {
-			...
-			guard(pci_dev); /* pci_dev_lock() invoked here */
-			...
-		} /* <- implied pci_dev_unlock() triggered here */
-	}
-
-There are 15 invocations of pci_dev_unlock() in the kernel with 5
-instances within 10 lines of a goto statement. Again, the CXL driver is
-threatening to add another.
-
-Introduce these helpers to preclude the addition of new more error prone
-goto put; / goto unlock; sequences. For now, these helpers are used in
-drivers/cxl/pci.c to allow ACPI error reports to be fed back into the
-CXL driver associated with the PCI device identified in the report.
-
----
-
-As for reviewing conversions that use these new helpers, one of the
-gotchas I have found is that it is easy to make a mistake if a goto
-still exists in the function after the conversion. So unless and until
-all of the resources a function acquires, that currently need a goto to
-unwind them on error, can be converted to cleanup.h based helpers it is
-best not to mix styles.
-
-I think the function documentation in include/linux/cleanup.h does a
-decent job of explaining how to use the helpers. However, I am happy to
-suggest some updates if you think it would help.
+Missed this feedback over the holiday break. Will do better next time as
+I don't want to rebase to reset the age of commits this close to the
+merge window.
