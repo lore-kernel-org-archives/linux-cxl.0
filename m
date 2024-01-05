@@ -1,88 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D599735F0F
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jan 2024 22:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBAD36091
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jan 2024 22:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kfOuXNS5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704495023; x=1736031023;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=KKg0GUbNkVDFHNUETs0NsCjHYR4NgSKWNQpdTGEDnh8=;
-  b=kfOuXNS5kiPDvPcjUekeQepi/TMjbebElitXhi85ZPqJ0xpubc8fsHFL
-   NK16g9mOxlxdi4feX2viVa05wMXwu7vHYjcJEldEY+PSRwwmOvRWAQKqt
-   0Cf/cxw/3mPgdkwgK01zHxRMX37rWG5LgpsCo0XgINzbNNwMxwu2FjQ/C
-   Rk0pDJHEvutHUwyllmrLhjaGN0dg5p7tWbrxKbG7Yhtip/wwGQBsxrWyR
-   6Jij+0Nto5tVGTtU91nf9pfFEe3Jq0UEjwhtZC5wPaGxGY/P/mIJ1WSXA
-   7aaMETA8e2EpicfIO2WVpBp9QiIEPtk8+14VznLKRsuG/6djoeNNGPZmb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="428787656"
-X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
-   d="scan'208";a="428787656"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 14:50:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="899774909"
-X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
-   d="scan'208";a="899774909"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Jan 2024 14:50:18 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Jan 2024 14:50:17 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 5 Jan 2024 14:50:17 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 5 Jan 2024 14:50:17 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3nxL63eB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IJJq7iYq6t+iPJPKr8U+igpfKdTDIuPPSZEYZBn2KyOjFHUxKllFOLwmiUvudt67jXHXvLl09wbOmIyM701oiBBsYtV7nF5hPDVDM48Y4OH4bDh5ZTtee0s8pnZi9mjMQgH6LbxzQaeoQ0ycB6BCY3KfPzic8rhkioeO8qGHZtaspYxOZt4QrMqxh1/0/mYHjO+9xc3EMhL9nuOquaIGm0v6shBN4EPihbK3WucigW0rHOMqyQMwjZsTdqRZHYqzwLXx8v0e053yiVBgMyveOTn4lTD2RkCTCAMjM9+xLmO9unxNrfdDhhSlocW5H045rum40AF5wr5uGc2mqnrv+g==
+ b=oLQNNGl20Yltcp3h7TB6lcIP1B+WNKN0M7hY3ubwOwU55QbKlqf3Z66+dRGNsrsEl4Rt5SFNM32vAUIaWQ9s56n4dn336Vz2PLSR0xh3d/iYJJtRUBblXw50v0I1v/AsBNKKglxZAInXyPnWytRF1mj2/SbbhQSzRS/cryXXvkLBidbhGISz4F5XxMJ4AWm203ZFtlufbQVTiKZN4xv+m8KUrhJ5mvA7j+MdrcrbB9jHR+c7OBw4TqCnJBZ1JGyyUtff+oNMGgmZIuyJ15A+rdpfL/2iusjodYp3/Y/oMFV1JhX/cb+INOBqh3FhNayxDq0WFLbg1C+U160mhpFxGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y7XfXssGzh4VKfDgFg6r/K7cNYc+VMuUR+APH9aOn/0=;
- b=My6G+4trfUDi7V7ykxGFqLexwIeV+kO/PHd1nORdeW11L9DYwF7KZI632f0mIE6G2tUs39Tk1k9XBJ7HK0cyp++w/vdzpCwTTMHL04KuZglUY6/8jogwZ0QDR5Uvf/HBB3SXfllI0MfWtRB8wbe7cgqzPVTBzaIo+F189huBxs4eJ8hnWKd9w29nBFWGoJ/6Gm6fyR8z2EnlVoOgV9OBOqbKpDODStwvF9GW7GxLPrM6GVnH8vnmZuGzvtLdVKXXGmk82PR9f36uX83Oi+av1ZBzNkFPGszZ0bx3IVQXobm9HS156UYsA07ZgX5hbkq+TSGveKyZ7DPGazI7+ihhRQ==
+ bh=sxRQNIhkhpz1pZImloHCGfuV1OajJQdLPbpmZEXkUyQ=;
+ b=n2kNhbBGjsnEJ/HZsVQ+54RwBtu5etSqCMBjLGaFZJcNI9huClJPAbyde8zY9XH2NBswJzojcqaLYNxwQUWTxqjW0uqHgAWXdtCyNc6P+v2buR8kWWCiMMKRBoyrNTHpDGOEzUMUutL3XZ4uC+jGlExQi2l27DpP1TF+3o49PNF/Zn2V0PZJpxKRcp83ohrsEVd31YfYZgQ9Buk+ltZh9J5bO/hNsSswIJfH20QkvC1hT7Kr3QaYYxB90Reb2AFWti5vyK8L5X9I7lCOFzPYHdaOopidfwDT7HXJjk11Am+L1xQIc/kfZdymHSlyEPXc0DaiLJaUHZA4lxQDiEoiag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxRQNIhkhpz1pZImloHCGfuV1OajJQdLPbpmZEXkUyQ=;
+ b=3nxL63eBHEyCriHVNZtHqXRd9UWhiGoBHhh8y6ARQHNIsmP14IFZ0aSVEryYlk34TScsER6r4iIi0bK3Gdm71/ajPGKIbeIDWq/OR4oV6K1KawEu9tXCwIKyRDb0dQZPhqMJPY/nk1SEGDhCn8jaZbsHIYqueaJEGBFBGFcpXT0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by SJ0PR11MB5182.namprd11.prod.outlook.com (2603:10b6:a03:2ae::13) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA0PR12MB8746.namprd12.prod.outlook.com (2603:10b6:208:490::7)
+ by BN9PR12MB5228.namprd12.prod.outlook.com (2603:10b6:408:101::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16; Fri, 5 Jan
- 2024 22:50:15 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
- 22:50:15 +0000
-Message-ID: <e230cbe6-836e-4a90-b046-13ab155d2ca4@intel.com>
-Date: Fri, 5 Jan 2024 15:50:12 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v3 1/3] cxl/region: Calculate performance data for a
- region
-To: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-References: <170441200977.3574076.13110207881243626581.stgit@djiang5-mobl3>
- <170441210328.3574076.8557138214621981436.stgit@djiang5-mobl3>
- <659748504009c_8dc6829435@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <659748504009c_8dc6829435@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR16CA0031.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::44) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ 2024 22:51:31 +0000
+Received: from IA0PR12MB8746.namprd12.prod.outlook.com
+ ([fe80::bc59:981e:e6da:1806]) by IA0PR12MB8746.namprd12.prod.outlook.com
+ ([fe80::bc59:981e:e6da:1806%5]) with mapi id 15.20.7159.013; Fri, 5 Jan 2024
+ 22:51:31 +0000
+Date: Fri, 5 Jan 2024 23:51:25 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net
+Subject: Re: [PATCH v6 2/5] cxl: Convert find_cxl_root() to return a 'struct
+ cxl_root *'
+Message-ID: <ZZiH7QGDLD8DlRNu@rric.localdomain>
+References: <170449229696.3779673.18384234151739803343.stgit@djiang5-mobl3>
+ <170449246044.3779673.13035770941393418591.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170449246044.3779673.13035770941393418591.stgit@djiang5-mobl3>
+X-ClientProxiedBy: FR0P281CA0015.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::20) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -90,161 +57,293 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SJ0PR11MB5182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73839545-5f6b-4fc2-ec21-08dc0e40aec1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8746:EE_|BN9PR12MB5228:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80b13357-464f-418b-01df-08dc0e40db87
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Esq218aY7kRgfA3D5yuJepzpB6y2jUUNYMRNVzkIlSqAyx+H11B+NE4A+v6K3w+mNT2rZNROrlkYhx2yWzRL+y+DVB4ecd5rLxneMC1OgJ04hOCJFn924/1KCwfG1SuMM0NMPDXmaiWhqLjDFAfZRbLwDde0skN+jqtsL9NTNjn/X2dLyPb7eRWRtHEk6d3YwhkLWSP/htls08XMw98ll0FaCiKfqAZCPfmT/T6ZmqThQ6eW/828WdzHR9JK/O7sJpnhoMLACgl1uvAJxWFNCLpNn9YZsAvFRJcU+H2U+Coqn7/t8VLXLzI+NDpQdu8td0fSrM9zxma5hiB93NHsogIx+GAqqI4j7LoiQVvArXczUTPVzqzfYiL0z1yMXxG7FW47uMBvq+htCBHNj2qsTmEXT/L9h41mM4UK9X8rF8z8HY5+a/XJzkTYG/1r6/Mxosmn6fsbdCQUoEpOYV4OLyVN1xSvvbdcGjTnpOJJdW7532B92SwYH3h1Rjk+5o+s+ib0nfGxijcPeLpl9RJEm/pXG/UI/ZGvMDWat2FZ6j9cSiZw5GJHEIuhU7MqKHM5MBSg3srtrdOEVYCd0tK+UlNX/W+RrGyJoiikdqqXqIrLAt5Ww0o/hI+/dW3KgrW1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(396003)(136003)(39860400002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(2616005)(26005)(53546011)(6506007)(6512007)(6666004)(86362001)(83380400001)(4326008)(316002)(8936002)(8676002)(36756003)(44832011)(5660300002)(2906002)(6486002)(478600001)(66946007)(66556008)(66476007)(38100700002)(82960400001)(31686004)(31696002)(41300700001)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	RwR/J8fhGO/ak2Nhcfn3xoXslalV7D+WwvCjbiBaDuuLv4IuwSqXe54ZuR6kZUA7bWi8rwa0VogMII+5DzG9a1QYX6SuXW8RALL6WJiwa40YPXHlI8g5EqCDcoTToKS9bYTEn9KD4/NIYPnVpIQBJvT+LP7XtW2g02MESgT8iKbziaTOFlm9xqwj1wnSwaIHLLeYrenCRBQg0sKa30xO4RiE84q8AK12MFIOccK/67uHygGkFs91uekhfw0Pqf0ONP6JINi+ItkaL16qSnOTLmYopK4SLJaCQzZ3Pa856oQk2CyJ6DzjqTExpfbpqU4yVqGIQdOabhzPDDiNEyswHK1uwXdilwjNfJZv7rjXiiIOP+IL0nbVrgHnXinDMp5iM7biXFBn24zyV0IKbx4P13i/gpFFepM/YJas9o5AlSIjiUu30/omOq9Z8qc7sn+U2tDIMYKcT2zwtQMHyJOpSVeeNlFP+FBXUcOWBcpx5jI+7LuxLzZfN3P2UcgH7kUgWGy5XUHOuKxHkfil8VyOLmSaGrCtNwQ8LzeBMkLoAoXt5v/oNyl2TAQfyluziJ3H
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8746.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(136003)(396003)(366004)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(26005)(9686003)(6512007)(6486002)(6506007)(38100700002)(83380400001)(478600001)(53546011)(6666004)(54906003)(8676002)(316002)(8936002)(6916009)(66476007)(66556008)(41300700001)(2906002)(66946007)(5660300002)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UGJsQjhWdmJiQXV4dnkzNGlabjRVSzk5TzVTZXBzUE02OHZRZFlqSm01MGpq?=
- =?utf-8?B?QzJiejZLdUxDR3Z5MEljRWZaek1GeGVWcHRBdzNyN0JFQTBwWDR5SlFHT3Zw?=
- =?utf-8?B?cHFzQnJ1emg3VGducG4xSjNSWk5KQlBteVlHNCtsMXBJMDZyRFpxeGhDVWJ3?=
- =?utf-8?B?SmpPSmpoZllQK2xYUmJSZ1RGZ253YVUzN0RlL1crdXNqM3ozU01ReElyV0pH?=
- =?utf-8?B?NDJZUWl3TFI4cm1MZ2VsSDNpRVdWeGNmTjZnbTgzRG9HK3pNbE1SV2dQdGhW?=
- =?utf-8?B?QzB3WCtvaHBJanhBTk9naXFWdmI2SGZFck9UVFBSMUYzQ0JxazB0bHNKOUFM?=
- =?utf-8?B?anBNaTRBRGNDZlBUY1gvTXllc0FCZ0Z4QzQzUENBMWhKTysyQVRkM0FxcUJu?=
- =?utf-8?B?eUxXTktWTHA3MUhOeFV3V3B2am1Xdi9JTUY2eGhPcjl2bTJKbXZyR3VaYWEv?=
- =?utf-8?B?OFMzV3Q4eTZIVUNwbXlmVGFrNXNlL3JkekdLaG1qcUhKTjU1cUFVcG9ET0ov?=
- =?utf-8?B?dlJZVFZEY1FIWXliVC9TNkhGM2hZa0lLV0dQdzE4ci83bnAyMDdCcDJNZUdT?=
- =?utf-8?B?NTJVMGtvQU5NeHByQlpOL1ZEQkdrR2diZ09ZUFBTWjhaVXNySTZZdWRQbmI1?=
- =?utf-8?B?YXJtdUJ0MDk0N2RvV0EzZlNORnZ0cEV3WjVML3pSSUd5SFBLTDZKZENjSm42?=
- =?utf-8?B?UWxaWHpTQkVrS3NiWTFXenhsYWtxSTVvT04wUTdpSk1XaHZZV2dFWEJyU21z?=
- =?utf-8?B?QVlwT3p1aVZBYU02RUdxMlNaNzl2U0JhSHA1aEVrZlZUTytmRkw1K3JnTTJK?=
- =?utf-8?B?STdmYUZVVEp6Y0FkbWNYNVk3dktTUzdvNVl3Q1BWVjMySENXanJIdXRnMUN5?=
- =?utf-8?B?ZUdIcVlaeThMaVdQcDdsUnhIYXVDQTZSYnVLbUNnRE44MXZ4TktxQzBHRDVs?=
- =?utf-8?B?QXNxZDNQSnhrYWdDYjNyRDJzdG8ybHhpYWJvN0Zyd1RSL0l0SWtnVDJoZ1c5?=
- =?utf-8?B?ZnJPdUlvQ2FpZWVMbUc1ZXdEU0Vld0V0cXd6RzdqWWVzYzRiZ0oraG56U3Rt?=
- =?utf-8?B?RENibkZpR0dkNjdRS3huVitDNVlURkRHZmJzWmJnRkVXWFk5VDl4ZXAwSTdY?=
- =?utf-8?B?dEhMZXNhd24vUTNBbXhxU0lrbytHVjBvU2prSW9zSGtNKzk2ZUJlSjZTRkV4?=
- =?utf-8?B?ZVhobDlqNnJCQ0UrZ1o4Q2NmRDZvZTV1bEQ1U3lDWG5SWUsvVTNWZUI4dnI1?=
- =?utf-8?B?aUZISHh2ZllSYmdkdXZLbHVtOVdYVjZVbHVobDZrbElXTHVONzR6MzhlaE1h?=
- =?utf-8?B?ei9aTWEvdDQzWGUrOHBGR1EyblRXSzY2ZUVCV09zMkRXdVAvdEN2Ykp4OWc1?=
- =?utf-8?B?bm1lK1BuL214UlRsN0V4c3ZZYlFCZVlsdkN3dVhDRTFNdDVmMnRmT2xtS0Fk?=
- =?utf-8?B?UENuV0R2eHBMMDNuUUVyTncwMFArWkpnRlpDRzVKZFlURHNVNENDMnBOUCto?=
- =?utf-8?B?RjlBNUF1MGJRdjdiNURNWGY2TjFVREJYRDJ0NXhlNklndjdkWW1zOEg3c2FY?=
- =?utf-8?B?UkgzdXdKcWQzV0FhbU5XY2gwYkFlR001clN4ZHJmNnZwRVR6eHF0dE13MUtU?=
- =?utf-8?B?SWlQNDVuU2ZiL1BGZDJMSGlyOWNaM2xCUGRZRWxXejI0czVpWFIyU1dPNndV?=
- =?utf-8?B?OHBpdnFCMjRNd3YrVzBBVnhmVTF1UG1ONWhJMDk5a0Q1OHlWR0kwMTUxTmhp?=
- =?utf-8?B?TE4vVWNjbDg0ZTdEUkRYZk9ZUXFjR0VpNXdHa0F2OGVtaXovVDFEQzFQSmhv?=
- =?utf-8?B?TmhqTlNISFlNWnRIc3J3dE1mZFU1N0pMOUxTckloU29XRWs1NG10MWl0ZWRy?=
- =?utf-8?B?ZHU5TXNLUUxGTk5wbmE1L1MzL2tjS3NTUElmdVRFSzg2OGxjZTNVVWpTSWtT?=
- =?utf-8?B?ZnFYY0JGajF1L0hvc3Z4UWlvRHRMczBHaGxicHQrbUExS0x4MUZMMm9KREky?=
- =?utf-8?B?OEs2TzBPSEpNUVh4aHFtSDNRWlFveWExRkZyeHpFTG1KaWJieXJwejdYUHYx?=
- =?utf-8?B?cGR5ZHJReGNRdk1XQUJMVksxM0VsdDRlU1FaY1doUXNlZ1MxK2hCeFBrcjF0?=
- =?utf-8?Q?BchzsqIJtheTfDBOCxmfUxojk?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73839545-5f6b-4fc2-ec21-08dc0e40aec1
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Kcj/CdPrgTwaxkVwTDb+t86LUkXGMGeVYohDaC8S9hQew52bMhv+hirmwe1G?=
+ =?us-ascii?Q?+6LcMQeP9tlyuHneUNlQeyeEfr5BdWZpLAuuCKWpXD1wB0XUKgiAInlR2i1o?=
+ =?us-ascii?Q?vMLuVZ9iDKEaG4FASjRwaFZQ1deKYNSyvNQpDitNUDmP1g1YEjCR1Q7UXRgd?=
+ =?us-ascii?Q?lyvPe9Zc7Oak8ZBRYhkulhlbu+mfKvx35yWGGUhxDOwqBEhliFTmok9ISuOf?=
+ =?us-ascii?Q?cSPu16UYUcBe9yYw4yi3tNpUnFW2C9+msWXy8DcsyqohGwkihvVmEt5ISqpL?=
+ =?us-ascii?Q?no0N4kyzj6HZUEAXQqad1CqPhjR73q1Z0aZieqzT2SJLXn4e/NOHYkl7reP0?=
+ =?us-ascii?Q?F1bVu51Kz8ZpEh5O6ga6pcZIyvID+mHcbsTLwRiCOu4YuREZV5lFyWIILvJd?=
+ =?us-ascii?Q?cUqKGz90eudmkCF4X/894Tj1Tvp0GAqjlKwzUWGKS4wSUGb3nMJRuFvYsAEc?=
+ =?us-ascii?Q?kjIyofnbE0i8U2iilOJ8RF2WihvhJxj5nfALS6lXzNlGCTz5Ley0fk9SURPT?=
+ =?us-ascii?Q?weZgIxnrIejfmqYUn/cGcL3KVz67UbvImxe1aLw+vGU47gpYR1MWVQ92vXz9?=
+ =?us-ascii?Q?zUVKj6aYVeRxcfhtNFVCnZjqIBvVoiYkdrBSxkCXBaOTGeQEBDiWGi0H+RCO?=
+ =?us-ascii?Q?Oga9cHhlNTyqExVlQZkCGyhpzcmfZ+Phx3MDzmL38DvWVtBngQ+4LdzK45v0?=
+ =?us-ascii?Q?LIDJ97MrqIdrBJjpZMILhGBo1CUWZLnczcHAAIGVcb+mj9DAbrojsRgQ+DZh?=
+ =?us-ascii?Q?bdyhpaijFDpY6iLK6fqvAPKGw/yogTTLNuVjAyY0qblE8jJ8l3zfuBu1aBIx?=
+ =?us-ascii?Q?dUEh+5QjHSnl1UHCUsTq22FG/EIFepwoH8o15vPQU8uvuxYSXDwVP5Re+Lmy?=
+ =?us-ascii?Q?fw0rcFsZa/zml2qj7tEY2E0tkzDoD43qgJ6VzDraggZkZZaactvd8lNHClns?=
+ =?us-ascii?Q?J5Lu8BrgFmOOmwSGGf77iAboORHn+QoNqmtcgRw8qNBVJnnlT1zUDu2U8Bqh?=
+ =?us-ascii?Q?3rDPiI4xCNEmNrgejufUs3dG4tzfoNaCHKDvTNBieBhcNf/6OxuwRQMaA18e?=
+ =?us-ascii?Q?P4BED3zVILXBadKiRV2nCenwYrMnpKYcYX7611A/6V6e7F/yVVXDqMzAtjAe?=
+ =?us-ascii?Q?eE3dy0p58yFn+uihpKJHtW9/mN5UtL0QQl2/F4K7Z7d7IVYh5XIMGtgF993d?=
+ =?us-ascii?Q?KFN5M0rCNNosIUevdU5TRyREJBckekp4mDGRkTgDkD4sukFzxTo/djnweIw8?=
+ =?us-ascii?Q?gILHnXgMNncND/Etx3ZbaTDTGH0Vu5Serp+BPf6FS8gpxKcX3knxN1WJgFf5?=
+ =?us-ascii?Q?rSRJkf3JueXQoeNLbI2AfEDY00QDPgIQ5ZvlIzqN5xSEYWwbRbzIobbzSf1d?=
+ =?us-ascii?Q?0kzueB74w87oeHE7lU6hHtQUqiVtAlYfPp2mjqF4c8jbOXLsp4MN61M8v/I6?=
+ =?us-ascii?Q?VA5YzWSyR2maXNYmr+MscJP7bj7l2ke31Cvw+F8gW5+eJQq+BAs/hXuuCENK?=
+ =?us-ascii?Q?Yz1QbaEQPuU3sJVODBrDP/+Qp9hsoWTXpQEdzak27vuf047JeQ8TDX42aFXd?=
+ =?us-ascii?Q?hHohuZgkA/9dn0WCz8tfljgrYoRiSQnj/HwNU417?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80b13357-464f-418b-01df-08dc0e40db87
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 22:50:15.3837
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 22:51:31.5614
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +ImKTzGqDzDG5i5VJZLzSMqTA9XqcPOecb3O941roWNlyb3ex/4kNnBvfzOb80CtIXLrHieYlZUzLVyxF0/PPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5182
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: +XJMH9FyptEYVgaamgJ76oBX4OtCXimVC5USQTt39fuIkxR1MWwttD3sF3reT2PHD2rd66qoiNaSoCG4TiIQfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5228
 
+See comments below.
 
-
-On 1/4/24 17:07, Dan Williams wrote:
-> Dave Jiang wrote:
->> Calculate and store the performance data for a CXL region. Find the worst
->> read and write latency for all the included ranges from each of the devices
->> that attributes to the region and designate that as the latency data. Sum
->> all the read and write bandwidth data for each of the device region and
->> that is the total bandwidth for the region.
->>
->> The perf list is expected to be constructed before the endpoint decoders
->> are registered and thus there should be no early reading of the entries
->> from the region assemble action. The calling of the region qos calculate
->> function is under the protection of cxl_dpa_rwsem and will ensure that
->> all DPA associated work has completed.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v3:
->> - Clarify calculated data is same base as the coordinates computed from the
->>   HMAT tables. (Jonathan)
->> ---
->>  drivers/cxl/core/cdat.c   |   53 +++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/cxl/core/region.c |    2 ++
->>  drivers/cxl/cxl.h         |    5 ++++
->>  3 files changed, 60 insertions(+)
->>
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> index cd84d87f597a..78e1cdcb9d89 100644
->> --- a/drivers/cxl/core/cdat.c
->> +++ b/drivers/cxl/core/cdat.c
->> @@ -515,3 +515,56 @@ void cxl_switch_parse_cdat(struct cxl_port *port)
->>  EXPORT_SYMBOL_NS_GPL(cxl_switch_parse_cdat, CXL);
->>  
->>  MODULE_IMPORT_NS(CXL);
->> +
->> +void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
->> +				    struct cxl_endpoint_decoder *cxled)
->> +{
->> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> +	struct range dpa = {
->> +			.start = cxled->dpa_res->start,
->> +			.end = cxled->dpa_res->end,
->> +	};
->> +	struct list_head *perf_list;
->> +	struct cxl_dpa_perf *perf;
->> +	bool found = false;
->> +
->> +	switch (cxlr->mode) {
->> +	case CXL_DECODER_RAM:
->> +		perf_list = &mds->ram_perf_list;
->> +		break;
->> +	case CXL_DECODER_PMEM:
->> +		perf_list = &mds->pmem_perf_list;
->> +		break;
->> +	default:
->> +		return;
->> +	}
->> +
+On 05.01.24 15:07:40, Dave Jiang wrote:
+> Commit 790815902ec6 ("cxl: Add support for _DSM Function for retrieving QTG ID")
+> introduced 'struct cxl_root', however all usages have been worked
+> indirectly through cxl_port. Refactor code such as find_cxl_root()
+> function to use 'struct cxl_root' directly.
 > 
-> Given how far away this function is from any refactoring that might
-> happen in region.c, and that the locking documentation in this changelog
-> will not be readily available when reading the code later, it would be
-> nice to "document" the locking here with a:
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v6:
+> - Revert code that broke device_for_each_child() (Dan)
+> - Leave put_device() calls in this patch. (Dan)
+> v5:
+> - Squash in v4 3/6 to update the qos_class to cxl_root. (Dan)
+> - Moved the introduction of __free() for cxl_root_put from v4 1/6 to
+>   here. (Dan)
+> v4:
+> - Adjust ordering of patches to move this to 2nd place. (Dan)
+> ---
+>  drivers/cxl/acpi.c      |    6 ++----
+>  drivers/cxl/core/cdat.c |   17 ++++++++++-------
+>  drivers/cxl/core/pmem.c |    6 ++++--
+>  drivers/cxl/core/port.c |    4 ++--
+>  drivers/cxl/cxl.h       |   14 +++++++-------
+>  drivers/cxl/port.c      |    4 +++-
+>  6 files changed, 28 insertions(+), 23 deletions(-)
 > 
-> 	lockdep_assert_held(&cxl_dpa_rwsem);
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index afc712264d1c..dcf2b39e1048 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -295,14 +295,12 @@ cxl_acpi_evaluate_qtg_dsm(acpi_handle handle, struct access_coordinate *coord,
+>  	return rc;
+>  }
+>  
+> -static int cxl_acpi_qos_class(struct cxl_port *root_port,
+> +static int cxl_acpi_qos_class(struct cxl_root *cxl_root,
+>  			      struct access_coordinate *coord, int entries,
+>  			      int *qos_class)
+>  {
+> +	struct device *dev = cxl_root->port.uport_dev;
+>  	acpi_handle handle;
+> -	struct device *dev;
+> -
+> -	dev = root_port->uport_dev;
+>  
+>  	if (!dev_is_platform(dev))
+>  		return -ENODEV;
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index cd84d87f597a..0df5379cf02f 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -162,7 +162,6 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>  					struct xarray *dsmas_xa)
+>  {
+>  	struct access_coordinate c;
+> -	struct cxl_port *root_port;
+>  	struct cxl_root *cxl_root;
+>  	struct dsmas_entry *dent;
+>  	int valid_entries = 0;
+> @@ -175,8 +174,7 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>  		return rc;
+>  	}
+>  
+> -	root_port = find_cxl_root(port);
+> -	cxl_root = to_cxl_root(root_port);
+> +	cxl_root = find_cxl_root(port);
+>  	if (!cxl_root->ops || !cxl_root->ops->qos_class)
+>  		return -EOPNOTSUPP;
+>  
+> @@ -193,7 +191,8 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>  						    dent->coord.write_bandwidth);
+>  
+>  		dent->entries = 1;
+> -		rc = cxl_root->ops->qos_class(root_port, &dent->coord, 1, &qos_class);
+> +		rc = cxl_root->ops->qos_class(cxl_root, &dent->coord, 1,
+> +					      &qos_class);
+>  		if (rc != 1)
+>  			continue;
+>  
+> @@ -349,15 +348,19 @@ static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
+>  {
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> -	struct cxl_port *root_port __free(put_device) = NULL;
+>  	LIST_HEAD(__discard);
+>  	struct list_head *discard __free(dpa_perf) = &__discard;
+> +	struct cxl_port *root_port;
+>  	int rc;
+>  
+> -	root_port = find_cxl_root(cxlmd->endpoint);
+> -	if (!root_port)
+> +	struct cxl_root *cxl_root __free(put_cxl_root) =
+> +		find_cxl_root(cxlmd->endpoint);
 
-Ok I'll add.
+That's the drawback that lines get very long. Not sure if that was
+discussed before, maybe just assign NULL in the definition and then
+have the first assignment right after?
 
+Should be moved to the definitions above without a newline.
+
+> +
+> +	if (!cxl_root)
+>  		return -ENODEV;
+>  
+> +	root_port = &cxl_root->port;
+> +
+>  	/* Check that the QTG IDs are all sane between end device and root decoders */
+>  	cxl_qos_match(root_port, &mds->ram_perf_list, discard);
+>  	cxl_qos_match(root_port, &mds->pmem_perf_list, discard);
+
+It looks like cxl_qos_match() consumes a root port, so we could pass
+cxl_root here directly and get rid of root_port.
+
+> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> index fc94f5240327..da92a901b9e8 100644
+> --- a/drivers/cxl/core/pmem.c
+> +++ b/drivers/cxl/core/pmem.c
+> @@ -64,12 +64,14 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
+>  
+>  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd)
+>  {
+> -	struct cxl_port *port = find_cxl_root(cxlmd->endpoint);
+> +	struct cxl_root *cxl_root = find_cxl_root(cxlmd->endpoint);
+> +	struct cxl_port *port;
+>  	struct device *dev;
+>  
+> -	if (!port)
+> +	if (!cxl_root)
+>  		return NULL;
+>  
+> +	port = &cxl_root->port;
+>  	dev = device_find_child(&port->dev, NULL, match_nvdimm_bridge);
+
+No need for port variable here.
+
+>  	put_device(&port->dev);
+>  
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 64f30d5fe1f6..63a4e3c2baed 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -972,7 +972,7 @@ static bool dev_is_cxl_root_child(struct device *dev)
+>  	return false;
+>  }
+>  
+> -struct cxl_port *find_cxl_root(struct cxl_port *port)
+> +struct cxl_root *find_cxl_root(struct cxl_port *port)
+>  {
+>  	struct cxl_port *iter = port;
+>  
+> @@ -982,7 +982,7 @@ struct cxl_port *find_cxl_root(struct cxl_port *port)
+>  	if (!iter)
+>  		return NULL;
+>  	get_device(&iter->dev);
+> -	return iter;
+> +	return to_cxl_root(iter);
+
+I guess this is the last user of to_cxl_root() now so we can remove
+the macro entirely. Unlikely we will ever need it again and a
+container_of() call is also fairly easy.
+
+>  }
+>  EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index df3db3e43913..3a5004aab97a 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -617,12 +617,6 @@ struct cxl_port {
+>  	long pci_latency;
+>  };
+>  
+> -struct cxl_root_ops {
+> -	int (*qos_class)(struct cxl_port *root_port,
+> -			 struct access_coordinate *coord, int entries,
+> -			 int *qos_class);
+> -};
+> -
+>  /**
+>   * struct cxl_root - logical collection of root cxl_port items
+>   *
+> @@ -640,6 +634,12 @@ to_cxl_root(const struct cxl_port *port)
+>  	return container_of(port, struct cxl_root, port);
+>  }
+>  
+> +struct cxl_root_ops {
+> +	int (*qos_class)(struct cxl_root *cxl_root,
+> +			 struct access_coordinate *coord, int entries,
+> +			 int *qos_class);
+> +};
+> +
+
+Any intention to move code here in addition?
+
+>  static inline struct cxl_dport *
+>  cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>  {
+> @@ -734,7 +734,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+>  				   struct cxl_dport *parent_dport);
+>  struct cxl_root *devm_cxl_add_root(struct device *host,
+>  				   const struct cxl_root_ops *ops);
+> -struct cxl_port *find_cxl_root(struct cxl_port *port);
+> +struct cxl_root *find_cxl_root(struct cxl_port *port);
+>  void put_cxl_root(struct cxl_root *cxl_root);
+>  DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_cxl_root(_T))
+>  
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index da3c3a08bd62..4f3a08fdc9e9 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -94,6 +94,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	struct cxl_endpoint_dvsec_info info = { .port = port };
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct cxl_root *cxl_root;
+>  	struct cxl_hdm *cxlhdm;
+>  	struct cxl_port *root;
+>  	int rc;
+> @@ -130,7 +131,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	 * This can't fail in practice as CXL root exit unregisters all
+>  	 * descendant ports and that in turn synchronizes with cxl_port_probe()
+>  	 */
+> -	root = find_cxl_root(port);
+> +	cxl_root = find_cxl_root(port);
+> +	root = &cxl_root->port;
+
+Same here, no need for the root var.
+
+-Robert
+
+
+>  
+>  	/*
+>  	 * Now that all endpoint decoders are successfully enumerated, try to
 > 
->> +	list_for_each_entry(perf, perf_list, list) {
->> +		if (range_contains(&perf->dpa_range, &dpa)) {
->> +			found = true;
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (!found)
->> +		return;
->> +
->> +	/* Get total bandwidth and the worst latency for the cxl region */
->> +	cxlr->coord.read_latency = max_t(unsigned int,
->> +					 cxlr->coord.read_latency,
->> +					 perf->coord.read_latency);
->> +	cxlr->coord.write_latency = max_t(unsigned int,
->> +					  cxlr->coord.write_latency,
->> +					  perf->coord.write_latency);
->> +	cxlr->coord.read_bandwidth += perf->coord.read_bandwidth;
->> +	cxlr->coord.write_bandwidth += perf->coord.write_bandwidth;
->> +
->> +	/*
->> +	 * Convert latency to nanosec from picosec to be consistent with the
->> +	 * resulting latency coordinates computed by HMAT code.
 > 
-> Do you meen the HMEM_REPORTING code? Since access_coordinate is parsed
-> from HMAT data, it isn't the HMAT data directly.
-
-Yes. I was trying to say HMAT parsing/handling code.
