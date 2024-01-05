@@ -1,90 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2045.outbound.protection.outlook.com [40.107.212.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FF5522F
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jan 2024 04:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6A12E3F0;
+	Fri,  5 Jan 2024 14:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SiVW9a4x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704430134; x=1735966134;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Cx9PtjSK9OURRh3k9cdvpOBg0hMIQ4MYZObkGVBQcew=;
-  b=SiVW9a4xjZrxTw5cLgeuOyhIRgrZdq4tEj4DJ6AzukDeMAgkMpgFtZT2
-   NETWhGrBmq3q+8aJZRHdQB/zBWIEkmZh1MfNTEIAizVOSTvvHIdYYdjvt
-   RnjTR2YWmVT81IgVJhdP+HJODp3wEfuTxi/pePJ/+GK1kZSsrMwEH9dN9
-   HcnJ9GTFmtbF2kMwujV4i4YhzRYiMwPvoHWPAshZh9mFf4FlYheirgWox
-   SiLtYQ9yH8K+YcOEKxWol6U+brIO9UjwuMIoIZM/qYhNIRT2ujON13Dus
-   IIn5ianC2eZhvrhcVuwbGtXyXqgN4L0x2m8QvVKx1vrNKDS0M1Oh5JDWZ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="382410530"
-X-IronPort-AV: E=Sophos;i="6.04,332,1695711600"; 
-   d="scan'208";a="382410530"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 20:48:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="851027774"
-X-IronPort-AV: E=Sophos;i="6.04,332,1695711600"; 
-   d="scan'208";a="851027774"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jan 2024 20:48:53 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 4 Jan 2024 20:48:53 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 4 Jan 2024 20:48:52 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 4 Jan 2024 20:48:52 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 4 Jan 2024 20:48:52 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Lp0PKQPr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CwKiPwy0Ak8FoFnoG0MSS0coPdpqu625s8KyZU58siI7VHmbe5mxy4qlUwgqj4jBrhXXnlaXoCHX01j1Z4UX1Q3DEoFtxkvtkWyl/gpNaRnRFgtacsIJUs9Gx9Rvy6rxxesk4F0fuvcYzjaASRvEgtVyCGWHOyTX4k8IbFta8U1i/ICIE6+EL+9IRiIrx/uoxDP4bq89CZRlGNRvjrVgEDrbW6ngi2pAk1GOfqA+rCgaKi0X5eciRTdywNgKt8h8mTtWdMEXErjm1BZ3dM0qZ9OMBLS8BuyO7d7GUQJ9rswFrj8A6c3APQs7M0pyokEl7oN+nnFlTg1DJ0IkeXVxOw==
+ b=aMgvF1ubFyP1oD9dH3SEtOXhxWxIpS1TYyDvtzn2+PCmUVkc8szZvf1DACmz8gJjA7h7ClO+AaKWCvJXvwLzTd2CQ9teCuOPUYdz/gPX0h2yloqxNQnximNUj6JYC6knWmfwmo1y9iRSya4YEHlxT65dqQA4awnCVsJr7O2MHVpUhcZk79u8gspyRlH8p+E6/OUZ3elI9fe7cklRpd9ICBZw1oUp8l+jK7qJg1s5PagokqaY4PoiZo1DmmOeTzyhNRIfCMt70490ZZPKE181di2lPr3MzhLt8xuuxJURqwNPSLmPLr/O/3RvgnqdcZjiWjAuKXKLL3H4Nizk0uKmsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cx9PtjSK9OURRh3k9cdvpOBg0hMIQ4MYZObkGVBQcew=;
- b=gIL58XjT0di8uH5sLTcB7nuwfnwTH/XMT2K99U3MNMp4R/8ULfjyGqmPojgzz7hxgl6bCQ+O3zeWO3N9zNoEKNGBSjEP8Yp/bMYYZ1rcnkTCTpQ1lLBfI5s3z89qZzNAgL8tNyke2g/lgQFZoyUcn716TYmOEgVeULDEp2eCsRCC50Mo8Wl+gk3nb+XB5EWjF+XEb3RDRoKk1RcQ7LFKmtMX2fN04l/PiM5bEYFhOkNrI3rBDGd0cv3+9v/EdOgARkppmBDPDbvMDFotJACV+dGbu1pNIc5IlJVJGJzXipwZLoxjB2LngaKufLQ7iJx2WegWVM6ElfRKY33jO5JxSA==
+ bh=G6gaxjHIlLXhpsvX81KHN77DC3V58eU88r2RS2Yd6xI=;
+ b=BcdgleNF7QkfIYqte1cn9TM1EXFrC4efM8rP7AtTWYGpxoukKR005WlWHtx0BtQtTK5ylMVgQoeDOLwKvzMbo0Fhe+2YX1MPr2ZnPc4pN77ifaK6qzRJQ4BLRYV7NdMVL0Ep3/0McRjlL9Ec1c0nU9/ZabkX243bcniJU5rBWxl8/q4EktejfEnNzgW/7NWdY2wKogY/wKr7WG9fMEpdhFOL0XxKqPQBU4q5hq8FkeNGHuQhXBOuQycgT5DsgWz57OoRx3O4R2GG5AtIzQOCDArXp0Dzx81S4oY9cI7pkJ69OsjZzrPCi/1Zc1/PkCe9BHRZXxGBcWLCgc3Fask3Rg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G6gaxjHIlLXhpsvX81KHN77DC3V58eU88r2RS2Yd6xI=;
+ b=Lp0PKQPrfhcIzHuyu0UmyWym6X9DqNv/MT1SEL2RhYJS3NlZ1H4ZrTad7UxX3rAAW+RT64xpdr18sG3BhJlocgId0tPYH6mfWQQyUmsfJWYERBeeZ4sOQViuUnm8P8JW1AL749zp9JYqrtZ9DTTcAthqCklEBWx76qwkK99owf4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MN2PR11MB4757.namprd11.prod.outlook.com (2603:10b6:208:26b::19) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
+ by BN9PR12MB5212.namprd12.prod.outlook.com (2603:10b6:408:11d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Fri, 5 Jan
- 2024 04:48:50 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7159.013; Fri, 5 Jan 2024
- 04:48:50 +0000
-Date: Thu, 4 Jan 2024 20:48:28 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <rrichter@amd.com>
-Subject: RE: [PATCH v4 5/6] cxl: Refactor to use __free() for cxl_root
- allocation in cxl_find_nvdimm_bridge()
-Message-ID: <65978a1c90d13_11cc4c29440@dwillia2-xfh.jf.intel.com.notmuch>
-References: <170441738812.3632067.2103652995360101907.stgit@djiang5-mobl3>
- <170441751181.3632067.5542037427417510907.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset="us-ascii"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16; Fri, 5 Jan
+ 2024 14:49:48 +0000
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::5786:22a:27df:9a70]) by DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::5786:22a:27df:9a70%7]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
+ 14:49:48 +0000
+Date: Fri, 5 Jan 2024 15:49:42 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Fan Ni <nifan.cxl@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
+Message-ID: <ZZgXBjyh4WbVULJe@rric.localdomain>
+References: <20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com>
+ <ZVfIaNhiSc-yQZo5@rric.localdomain>
+ <ZVfJ6Fxidvw_gz7r@rric.localdomain>
+ <656648433bd82_888fe294a6@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170441751181.3632067.5542037427417510907.stgit@djiang5-mobl3>
-X-ClientProxiedBy: MW4PR03CA0114.namprd03.prod.outlook.com
- (2603:10b6:303:b7::29) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <656648433bd82_888fe294a6@iweiny-mobl.notmuch>
+X-ClientProxiedBy: FR0P281CA0081.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1e::7) To DM6PR12MB3657.namprd12.prod.outlook.com
+ (2603:10b6:5:149::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -92,60 +62,367 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN2PR11MB4757:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92778ed0-be56-4b81-984d-08dc0da990ef
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|BN9PR12MB5212:EE_
+X-MS-Office365-Filtering-Correlation-Id: 890b5746-785e-4f6b-c303-08dc0dfd9054
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MXlSYsWof+Mg2k8nHcwpsuR4Nb3GFPUXRcHOtkF6jm50S+XO+qJdUwAo84ubYbIMCNX3JFTHqQCCuiP8HMs+H7ADorxcR9PNOoxcSu4gTw9JdOGudTstL35fAVXZacK3V4GP5fu0q25Ui1+GRU6A3y7IlN4CmByNw4eeosRvtZamwgpxPuXMsnbXl03TzDTUm/fSLfSpgi6dqUEsE/OYmTC6Yz/TvcMrtY+u6A/+iqpRPYiO83+u4nlt4PQsD+xvH7urJ0jDTbEnhTRv2DE9Nkj69iZZ8oieEkvIVg//vXvZxCNJHEtM8vY7tl5N/ru3CC3x4lN4eL8aImYpQ0xBeXKTW+SdF0xrv7dELDu6ns1apPvEdjFFPGV/2fUuirVcuw6s3ka6uURaa5PTOT0k84V7/zqz8TL9BoPQ9vMK23mHP88DJeQs37Fnx3YQJnrCGi4xWEjikM8jPr3clBrsl6dwhD2+V4j1XviOcWH5QcWbYSDEHrUtJAPe2SOE9cY0xURehOuM44+w2TEDXkpjldyPPOWuHaN4aibMGvTZCb6zFilDV9UhByyjCunEUjfJ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(39860400002)(136003)(346002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(6666004)(4326008)(6506007)(38100700002)(478600001)(6486002)(26005)(9686003)(6512007)(82960400001)(316002)(66476007)(8936002)(66556008)(66946007)(8676002)(558084003)(86362001)(41300700001)(2906002)(5660300002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	UxodUKjRJEklmXHBRSf4i3GpwMNL9LeG6zhSenvbZ6bjxB7+YQ+gJ8rcOR2TC41PKU9jAFv/QzzXpUDihUyN0/yFE/ZeJfFk0Yj6eReHNZ46jXvx3+yIwM0x42vTsg7OTX6xSZ4CMYk3jlZUuVYgBH1P0Nqhd1w2fHLSIIv4UeTQG1ISVaLQHPStoZpraRPfSV160qV69BUbgsWOZ8OFnrjYQ/oObFMELKXa0G2w/ZsNHWYruLPiXZjSDyQcriZ7p1/i20SmIyCSTkXszDPsF+LwyKsJlfZU8WQdavDHXUG71MhCubhbOx/fREa4jKY8n2c1mp5EwkFDgaD/qM4FM4VUqMWOud6yJUOzBTvhhMeQsP9AZnUB/TqBVdnw1+MFZaE9qWyTtSjFzUoZ0dUrupnrDA3/N4pAmBBhWejhPr1LJwRFseJPvfhqMsmP9AshOwgiwkyzO/5GHzMD/qXn7x3SfnnYPzebTvYvcS/EJJNGrxOR73n4/KWtWAKUz6llEOlDc9HwqKtEdAhimLh0gq3vMP07XXdC2290a4Fg9eny3fog/JfIq5Rf8C7V1GuvrZnBJt8/OA/WjpmIIiXJeIVUg2UPeg1JXpbc63/azsg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(396003)(39860400002)(366004)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(26005)(53546011)(9686003)(6506007)(6486002)(478600001)(6666004)(6512007)(83380400001)(7416002)(2906002)(5660300002)(41300700001)(66476007)(54906003)(66946007)(66556008)(316002)(8676002)(8936002)(4326008)(6916009)(38100700002)(66899024)(26583001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?s37IhAmFmzG+2aFLEznSG0D5AcSPS7IqmsOT9g3o5c6VAHpl4huPgRjpArgz?=
- =?us-ascii?Q?Kx2JL0VdmrJtRvV0Un3WcOXA9AE6pYxPaTg0UZWjzO6SoTpd8sLKDXtbKxlp?=
- =?us-ascii?Q?DEHCBIg/6khe+Mcc7IE9u9/hzuy13R9k1Aqgb6H/ubfa5JtRWBNDxvjQR8T0?=
- =?us-ascii?Q?Ito4ShY4s3KqKEyC49LOmhos4fOdiDuPC2hUkJXTX/BdwlbPWinuxSFAJ89u?=
- =?us-ascii?Q?5Cs39TezVWXhkhTyvtUV1gWcKJ0ZNokqAqoO8LVARUW5ZseBj58Md17Dq8n9?=
- =?us-ascii?Q?MO2RecsMOap/+/m+NpXAimrU52I24Ka5nTtOvNs7624sEZrPgNo4z+xIx+x+?=
- =?us-ascii?Q?UEzDf/gIUDAqb9qoEbXIikdSD48CiFPDtY4XzgFY6Q92A/an0B3RXdlVEchL?=
- =?us-ascii?Q?5aCM90p6l1AJv5XtF00t0xyfjRXG/wtxc3VlvzRiOR3xngG0S7NrSFpoHbKI?=
- =?us-ascii?Q?ZysIJ4/OGK35t04Z/xTeTA6gBRcX9LimnDJSnAmdFIiGjUWkMnxRFPAoU8Up?=
- =?us-ascii?Q?nE+FYnVgsKrhp1HR3c1i71Q0mxUmOfX+QtZm24RVthk5ZiYi9u5JQpeobmHU?=
- =?us-ascii?Q?hoLPn7hL4CgiIEGT09vPfPL3Lsv6TXQMqORRWhBKL48MOIRnPoSfs4NbJf5Y?=
- =?us-ascii?Q?lKz9V3lRBQD2OSXWnId7yXAeKtA8mt2ombsIcwbgrpibMlsK9wI5p7Jf8fWG?=
- =?us-ascii?Q?eT7wS61ozPSpIwBQgp1HUyrHfWc9RbByG1kJE1i+KbMJIwFzoksj0a+i70No?=
- =?us-ascii?Q?QM/w5wnyYbtVvL8fCBOIRV9KTUuYBgc9ASLvtHAbhE8zx7iipU+FJsodQ7Zk?=
- =?us-ascii?Q?m9qqHTx7TYZgssdW+o3HsqZefjrcZEhWhh5hv4DJ6ixpnAwX683pAnoStYfe?=
- =?us-ascii?Q?zlGXQayxV9koc3lxy8i1dg/Gd8s9hBi0ndRIxZ8/YG7k/bDEEgJ/iusHA3Ua?=
- =?us-ascii?Q?aGDXR+4XubBefh+k7GeWCau9YPp7As/DTovic4qDu4T26ssR7Hi9XGvjkwvy?=
- =?us-ascii?Q?XrnZK0uMq6j4VrhRDzGY+lTEb2UMt9qVnEyijA1bHOObpt9z1p7eS5BpNYwq?=
- =?us-ascii?Q?JRrNXR/KI7i2nksKFmr5Asi2BRoYrGaTEcdhndumS3WSexUP57eOv6T93YYq?=
- =?us-ascii?Q?P4urmrfQ0MjZxJegjexQJkg5mAcMnqTjnxK0lbUay9IJqN2IdN/+FW1UWMFz?=
- =?us-ascii?Q?hUlYmCNl1IAz6l5p0hiVXstxPrynQB7Yg1m4F9W7d99lqW/9mhQb9lWPunP6?=
- =?us-ascii?Q?Im9Nj8jYiVVu6YdzC5VKP868OfLS6Mp5ZLAtkR+MouWkwVPsF2CYLoNd/1nc?=
- =?us-ascii?Q?MEa6AaPLkx7FRfogJeEXudtZsMRYIv8DU5/aQgtz8JvaF2YiIPgPJUSSw93y?=
- =?us-ascii?Q?eDXTmTlF2SSIVgLbHtAIZ9z/IXxBWPuyAyHMBQJa8RO0x5kBqSWb+yhjBYDw?=
- =?us-ascii?Q?FKqNXZzsBq6z15j62BJZ9es2TNQgnMAdtfmvXptE2OKKyIsym/k7QSFtZmCN?=
- =?us-ascii?Q?FhrT3b6mjqTWWj7aHIJtFizWSd0sSATqXb8j3U8Njhv8xzxeud2Ae/Vgg+Lw?=
- =?us-ascii?Q?efdBY3m6911sg2m6QaTFTkJC0ZRC2bz8/eTZKld5N9goqQQhAYfAJceU0qOU?=
- =?us-ascii?Q?Gg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92778ed0-be56-4b81-984d-08dc0da990ef
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lfjZOfW8WmARuDkWv545ViZIyhQ4q8hDdcqPdriWURX0h8BF926Kpkw9HuJU?=
+ =?us-ascii?Q?dvLbg0vSdt+OwGQIuz2n0u8tCGePbJApD0cPoWHjvg/b/V8qGwUXqEf2qmdw?=
+ =?us-ascii?Q?ff+2HS3RsKufQ7WfvcrqLf5P0RcE8fwMzMS/sLNYIXEHsvVTRPVS7dEGip0v?=
+ =?us-ascii?Q?N3CBOI4X9aP6zwvWD9AwZ/cruFPlNb0caDCq3ewmTkPfsVE9oPs1EmCqaFwb?=
+ =?us-ascii?Q?fD73dN3j2WbY8+z2mWIgJigx8EEthbz+I5UG+1PRloNOfUf7lFcVDI3vb/4G?=
+ =?us-ascii?Q?AIboEFZ01I1WYSoxP+PVYqTD9MGzoNvrHXp0C3qVZJ5G/C89LpZvhsV0TSnn?=
+ =?us-ascii?Q?gNKjIT5vmjF6kB1GGLuSsrMk+taDM0kB9KBxZ4m2gHhh+sSM44m2D8KR81n6?=
+ =?us-ascii?Q?lflTMIeUw4BZ0usqPJXZGUmM7/N7ctdUYsPY1WmxoVRtUluRvV2hDuAEOLZ2?=
+ =?us-ascii?Q?i/Y+jZRNXYSTrXPUGHeeX6qlw2idfCTDdJ4mzOgws5oOVkbMcAA36m/DrWIq?=
+ =?us-ascii?Q?//2nGg+GTudt/uUUQB2hNFBYoA9G0WBbJQ6qSfkbO2BV/zf/nN8A3dYYm41U?=
+ =?us-ascii?Q?7kYRFh393D5AIxupebTVeT4jMzSMkCpLlM2ooCfeZZ2vYGaGFc+L/vfqPz/l?=
+ =?us-ascii?Q?XaOj3l5mtT2HAGKGH+ZcbuoGTVel2ljDni6iXP0pupQ9KRJISLoo5Lx2Hpfu?=
+ =?us-ascii?Q?HsJV2R/ftguDy4FwUiregxXsFpZIjgFoy7F0uQc6cUyx0qaoJtE0L/bR/aYs?=
+ =?us-ascii?Q?DAFr17OAmDLUbPo68lSQVttgYTrp2Nr6EFUXZyrPEwnV8rvNP9cGNYzBztlY?=
+ =?us-ascii?Q?x/i6EUwKIixmnKFpLmYzwiBgEQsepHtFOu+CjwyTEbX7a9d7vmKehhRzcgtg?=
+ =?us-ascii?Q?8XsPaRUI7+tjTFNLQ2ivO0Po1JYUTw/VIQqiz1uWVXf6sbVHvhw1m4PU0hzZ?=
+ =?us-ascii?Q?YKuhG64E/20tx7rpy+ez5N2n8loPwfrXjo+gUiNxy9xJjgsNloUt9NZgFPdY?=
+ =?us-ascii?Q?Bm+EHyLxbdbeSmfpJt1PqFf9BY2MdzOI97sQ+P7+qUby63ROoZXUc1CW0AgU?=
+ =?us-ascii?Q?Lp5SlCaYjXSmpP8Ro6Vs+Olsl6NAeRaZfdyS/1qKVh3KBkf3448o9PTHn1gG?=
+ =?us-ascii?Q?6+We/1HDMzZBCHdEXL48ESAIFuoIZUf4d+MrHHlcbGNIT/iJElK5JKIJ372S?=
+ =?us-ascii?Q?G6TdY3fVM0YURPlChohrDdS3rCHg2kiCxtgGKSGdM3tALRUPmw8b95rZK+Jr?=
+ =?us-ascii?Q?c708dc9vDMdov/cjFlVPShkfR7QmoDK5TNBojZIzhjTDsfzK7GXrSFeloLrT?=
+ =?us-ascii?Q?REY1Wcn5pErWl9S30Poa6BHgAubdYK0TV+T65yb7R34FoZYU7DByFVgfdNbL?=
+ =?us-ascii?Q?9OS3s+kW7+N7c9eNCG9I/K1onUPMy6XNVkxQ0NzpAeSB201Xv80biBgmlCdb?=
+ =?us-ascii?Q?51OZiVL0ng6+Z2qWyXDfZWLtQ85u4IACwNiAZwDNHkqOBH2SR2r4SdlaS38F?=
+ =?us-ascii?Q?YvvMEfR8VY9Xya90yCa+XaJaQippD7AAfafyLMnVzM+Yad45SH2iwyJ/zQQ0?=
+ =?us-ascii?Q?OVegRR262ub7lmCnJna31n4UUaA1cgsnEgEQk75N?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 890b5746-785e-4f6b-c303-08dc0dfd9054
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 04:48:50.5133
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 14:49:48.1592
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7v8eWEAjf79UC1RvJ1eszEunUDs0ZxMyTv9In//oeBgUpM9SsCowCQ2t7ib+jVZmvBkTQRIoxL7pLGk9fEwHNq+obq2uGxVxZNi7Nh+5hzo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4757
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: FhONntRLx7zUWJUxhdIOwa9E0BjvIVW14s70Lrfcx04oaBEmWG1cCi23T6D+h3C44qkBB4oW+wqr3LWI4LdBuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5212
 
-Dave Jiang wrote:
-> Use scope-based resource management __free() macro to make cxl_root
-> allocation safer in cxl_find_nvdimm_bridge().
+On 28.11.23 12:06:27, Ira Weiny wrote:
+> Robert Richter wrote:
+> > On 17.11.23 21:09:18, Robert Richter wrote:
+> > > I will send an on-top patch for 6.8 that reworks that code area to
+> > > remove the pointer arithmetic.
+> > 
+> > Here it is:
+> > 
+> > From 13787f72c20b8c54754ae86015d982307eae0397 Mon Sep 17 00:00:00 2001
+> > From: Robert Richter <rrichter@amd.com>
+> > Subject: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
+> > 
+> > Reading the CDAT table using DOE requires a Table Access Response
+> > Header in addition to the CDAT entry. In current implementation this
+> > has caused offsets with sizeof(__le32) to the actual buffers. This led
+> > to hardly readable code and even bugs (see fix of devm_kfree() in
+> > read_cdat_data()).
+> > 
+> > Rework code to avoid calculations with sizeof(__le32). Introduce
+> > struct cdat_doe for this which contains the Table Access Response
+> > Header and a variable payload size for various data structures
+> > afterwards to access the CDAT table and its CDAT Data Structures
+> > without recalculating buffer offsets.
+> 
+> Thanks for this.
 
-I would say it is perfectly safe as is, but the benefit here is dropping
-the open coded put_device().
+Thanks for your comments.
 
-I think the local @port variable can go too. Fixed that up.
+> 
+> > 
+> > Cc: Lukas Wunner <lukas@wunner.de>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Fan Ni <nifan.cxl@gmail.com>
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > ---
+> >  drivers/cxl/core/pci.c | 80 ++++++++++++++++++++----------------------
+> >  drivers/cxl/cxlpci.h   | 19 ++++++++++
+> >  2 files changed, 57 insertions(+), 42 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index 5aaa0b36c42a..f900740c6dea 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -517,14 +517,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
+> >  	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
+> >  
+> >  static int cxl_cdat_get_length(struct device *dev,
+> > -			       struct pci_doe_mb *cdat_doe,
+> > +			       struct pci_doe_mb *doe_mb,
+> 
+> NIT: Why change the variable name here?
+
+There was a conflict with cdat_doe, so I renamed this. Now, that
+cdat_doe is not introduced any longer there is not really a need. On
+the other side 'doe_mb' is much more describing the actual meaning, so
+I decided to change the name anyway in the next respin but do this
+with a separate patch. This makes esp. this patch much more
+readable. And of course. Jon would complain about it. :-)
+
+> 
+> >  			       size_t *length)
+> >  {
+> >  	__le32 request = CDAT_DOE_REQ(0);
+> >  	__le32 response[2];
+> >  	int rc;
+> >  
+> > -	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> > +	rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
+> >  		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> >  		     &request, sizeof(request),
+> >  		     &response, sizeof(response));
+> > @@ -542,56 +542,54 @@ static int cxl_cdat_get_length(struct device *dev,
+> >  }
+> >  
+> >  static int cxl_cdat_read_table(struct device *dev,
+> > -			       struct pci_doe_mb *cdat_doe,
+> > -			       void *cdat_table, size_t *cdat_length)
+> > +			       struct pci_doe_mb *doe_mb,
+> > +			       struct cdat_doe *doe, size_t *length)
+> >  {
+> > -	size_t length = *cdat_length + sizeof(__le32);
+> > -	__le32 *data = cdat_table;
+> > +	size_t received, remaining = *length;
+> >  	int entry_handle = 0;
+> >  	__le32 saved_dw = 0;
+> >  
+> >  	do {
+> >  		__le32 request = CDAT_DOE_REQ(entry_handle);
+> > -		struct cdat_entry_header *entry;
+> > -		size_t entry_dw;
+> >  		int rc;
+> >  
+> > -		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> > +		rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
+> >  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> >  			     &request, sizeof(request),
+> > -			     data, length);
+> > +			     doe, sizeof(*doe) + remaining);
+> >  		if (rc < 0) {
+> >  			dev_err(dev, "DOE failed: %d", rc);
+> >  			return rc;
+> >  		}
+> >  
+> > -		/* 1 DW Table Access Response Header + CDAT entry */
+> > -		entry = (struct cdat_entry_header *)(data + 1);
+> > +		if (rc < sizeof(*doe))
+> > +			return -EIO;
+> > +
+> > +		received = rc - sizeof(*doe);
+> 
+> This is not ideal.  See comments on struct cdat_doe below.
+
+Thanks for your kernel doc pointer, I will rework the flex array
+handling.
+
+Here, there is not other way to get the header size of the struct
+(without the flexible arrays). Looking esp. at the implementation of
+struct_size() using sizeof() for actual variables is allowed and safe
+to use.
+
+> 
+> > +
+> >  		if ((entry_handle == 0 &&
+> > -		     rc != sizeof(__le32) + sizeof(struct cdat_header)) ||
+> > +		     received != sizeof(doe->header[0])) ||
+> >  		    (entry_handle > 0 &&
+> > -		     (rc < sizeof(__le32) + sizeof(*entry) ||
+> > -		      rc != sizeof(__le32) + le16_to_cpu(entry->length))))
+> > +		     (received < sizeof(doe->entry[0]) ||
+> > +		      received != le16_to_cpu(doe->entry->length))))
+> >  			return -EIO;
+> >  
+> >  		/* Get the CXL table access header entry handle */
+> >  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
+> > -					 le32_to_cpu(data[0]));
+> > -		entry_dw = rc / sizeof(__le32);
+> > -		/* Skip Header */
+> > -		entry_dw -= 1;
+> > +					 le32_to_cpu(doe->doe_header));
+> > +
+> >  		/*
+> >  		 * Table Access Response Header overwrote the last DW of
+> >  		 * previous entry, so restore that DW
+> >  		 */
+> > -		*data = saved_dw;
+> > -		length -= entry_dw * sizeof(__le32);
+> > -		data += entry_dw;
+> > -		saved_dw = *data;
+> > +		doe->doe_header = saved_dw;
+> > +		remaining -= received;
+> > +		doe = (void *)doe + received;
+> > +		saved_dw = doe->doe_header;
+> >  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
+> >  
+> >  	/* Length in CDAT header may exceed concatenation of CDAT entries */
+> > -	*cdat_length -= length - sizeof(__le32);
+> > +	*length -= remaining;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -616,11 +614,11 @@ void read_cdat_data(struct cxl_port *port)
+> >  {
+> >  	struct device *uport = port->uport_dev;
+> >  	struct device *dev = &port->dev;
+> > -	struct pci_doe_mb *cdat_doe;
+> > +	struct pci_doe_mb *doe_mb;
+> >  	struct pci_dev *pdev = NULL;
+> >  	struct cxl_memdev *cxlmd;
+> > -	size_t cdat_length;
+> > -	void *cdat_table, *cdat_buf;
+> > +	struct cdat_doe *doe;
+> 
+> Since we are trying to make this cleaner I would prefer a struct and
+> variable name of cdat_doe_rsp.
+> 
+> So...
+> 	struct cdat_doe_rsp *cdat_doe_rsp;
+
+Looks reasonable, though I will use the shorter 'rsp' for the
+variable.
+
+> 
+> > +	size_t length;
+> >  	int rc;
+> >  
+> >  	if (is_cxl_memdev(uport)) {
+> > @@ -637,40 +635,38 @@ void read_cdat_data(struct cxl_port *port)
+> >  	if (!pdev)
+> >  		return;
+> >  
+> > -	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> > -					CXL_DOE_PROTOCOL_TABLE_ACCESS);
+> > -	if (!cdat_doe) {
+> > +	doe_mb = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +				      CXL_DOE_PROTOCOL_TABLE_ACCESS);
+> > +	if (!doe_mb) {
+> >  		dev_dbg(dev, "No CDAT mailbox\n");
+> >  		return;
+> >  	}
+> >  
+> >  	port->cdat_available = true;
+> >  
+> > -	if (cxl_cdat_get_length(dev, cdat_doe, &cdat_length)) {
+> > +	if (cxl_cdat_get_length(dev, doe_mb, &length)) {
+> >  		dev_dbg(dev, "No CDAT length\n");
+> >  		return;
+> >  	}
+> >  
+> > -	cdat_buf = devm_kzalloc(dev, cdat_length + sizeof(__le32),
+> > -				  GFP_KERNEL);
+> > -	if (!cdat_buf)
+> > -		return;
+> > +	doe = devm_kzalloc(dev, sizeof(*doe) + length, GFP_KERNEL);
+> > +	if (!doe)
+> > +		goto err;
+> >  
+> > -	rc = cxl_cdat_read_table(dev, cdat_doe, cdat_buf, &cdat_length);
+> > +	rc = cxl_cdat_read_table(dev, doe_mb, doe, &length);
+> >  	if (rc)
+> >  		goto err;
+> >  
+> > -	cdat_table = cdat_buf + sizeof(__le32);
+> > -	if (cdat_checksum(cdat_table, cdat_length))
+> > +	if (cdat_checksum(doe->table, length))
+> >  		goto err;
+> >  
+> > -	port->cdat.table = cdat_table;
+> > -	port->cdat.length = cdat_length;
+> > -	return;
+> > +	port->cdat.table = doe->table;
+> 
+> As an aside: the type of port->cdat may need to change at some point too.
+> 
+> > +	port->cdat.length = length;
+> >  
+> > +	return;
+> >  err:
+> >  	/* Don't leave table data allocated on error */
+> > -	devm_kfree(dev, cdat_buf);
+> > +	devm_kfree(dev, doe);
+> >  	dev_err(dev, "Failed to read/validate CDAT.\n");
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 0fa4799ea316..d12ed9d8dec1 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -85,6 +85,25 @@ struct cdat_entry_header {
+> >  	__le16 length;
+> >  } __packed;
+> >  
+> > +/*
+> > + * Response contains the CDAT only response header of the DOE. The
+> > + * response payload is a CDAT structure (either CDAT header or entry),
+> > + * it may also mark the beginning of the CDAT table.
+> > + *
+> > + * Spec refs:
+> > + *
+> > + * CXL 3.1 Table 8-14: Read Entry Response
+> > + * CDAT Specification 1.03: 2 CDAT Data Structures
+> > + */
+> > +struct cdat_doe {
+> > +	__le32 doe_header;
+> > +	union {
+> > +		u8 table[0];
+> 
+> At a minimum we need to use flexible arrays here.  See:
+> 
+> .../Documentation/process/deprecated.rst
+> 	'Zero-length and one-element arrays'
+> 
+> > +		struct cdat_header header[0];
+> > +		struct cdat_entry_header entry[0];
+> 
+> So this would need to be:
+> 
+> 		DECLARE_FLEX_ARRAY(u8, table);
+> 		DECLARE_FLEX_ARRAY(struct cdat_header, header);
+> 		DECLARE_FLEX_ARRAY(struct cdat_entry_header, entry);
+
+Changed that.
+
+> 
+> Also I think it would be best to use sizeof_field().
+> 
+> That said I got crossed up when this structure was used to represent not
+> only the individual DOE responses but also the cdat table as a whole.
+> 
+> I think it would be best to call this cdat_doe_rsp and somehow make a
+> distinction in read_cdat_data() when assigning to the entire port cdat
+> table.
+
+I will name the table buffer's variable 'buf' and add a comment.
+
+Thanks,
+
+-Robert
+
+
+> 
+> Ira
+> 
+> > +	};
+> > +} __packed;
+> > +
+> >  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> >  struct cxl_dev_state;
+> >  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> > -- 
+> > 2.39.2
+> > 
+> > 
+> 
+> 
