@@ -1,33 +1,32 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BF33FE47
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Jan 2024 12:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9A441778
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Jan 2024 12:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T7tHk5QMhz6K9TW;
-	Mon,  8 Jan 2024 20:13:06 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T7tZ13CtSz6K9Tm;
+	Mon,  8 Jan 2024 20:25:29 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A5A3E140135;
-	Mon,  8 Jan 2024 20:15:39 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5FBC6140A86;
+	Mon,  8 Jan 2024 20:28:02 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Jan
- 2024 12:15:39 +0000
-Date: Mon, 8 Jan 2024 12:15:38 +0000
+ 2024 12:28:01 +0000
+Date: Mon, 8 Jan 2024 12:28:01 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v3 3/3] cxl: Add memory hotplug notifier for cxl region
-Message-ID: <20240108121538.00001369@Huawei.com>
-In-Reply-To: <87r0is9v6o.fsf@yhuang6-desk2.ccr.corp.intel.com>
-References: <170441200977.3574076.13110207881243626581.stgit@djiang5-mobl3>
-	<170441211484.3574076.5894396662836000435.stgit@djiang5-mobl3>
-	<87r0is9v6o.fsf@yhuang6-desk2.ccr.corp.intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dongsheng Yang <dongsheng.yang@easystack.cn>, <dave@stgolabs.net>,
+	<ave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
+Message-ID: <20240108122801.00000e47@Huawei.com>
+In-Reply-To: <659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
+References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
+	<659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -36,201 +35,186 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 08 Jan 2024 14:49:03 +0800
-"Huang, Ying" <ying.huang@intel.com> wrote:
+On Wed, 3 Jan 2024 09:22:36 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> Dave Jiang <dave.jiang@intel.com> writes:
-> 
-> > When the CXL region is formed, the driver would computed the performance
-> > data for the region. However this data is not available at the node data
-> > collection that has been populated by the HMAT during kernel
-> > initialization. Add a memory hotplug notifier to update the performance
-> > data to the node hmem_attrs to expose the newly calculated region
-> > performance data. The CXL region is created under specific CFMWS. The
-> > node for the CFMWS is created during SRAT parsing by acpi_parse_cfmws().
-> > Additional regions may overwrite the initial data, but since this is
-> > for the same proximity domain it's a don't care for now.
-> >
-> > node_set_perf_attrs() symbol is exported to allow update of perf attribs
-> > for a node. The sysfs path of
-> > /sys/devices/system/node/nodeX/access0/initiators/* is created by
-> > ndoe_set_perf_attrs() for the various attributes where nodeX is matched
-> > to the proximity domain of the CXL region.
+> Dongsheng Yang wrote:
+> > Hi all:
+> > 	This patchset introduce cxlv module to allow user to
+> > create virtual cxl device. it's based linux6.7-rc5, you can
+> > get the code from https://github.com/DataTravelGuide/linux
+> >=20
+> > 	As the real CXL device is not widely available now, we need
+> > some virtual cxl device to do uplayer software developing or
+> > testing. Qemu is good for functional testing, but not good
+> > for some performance testing. =20
+>=20
+> Do you have more details on what performance is missing from Qemu and why
+> this solution is better than a solution to fix Qemu?
+>=20
+> Long term it seems better to fix Qemu for this type of work.
 
-As per discussion below.  Why is access1 not also relevant for CXL memory?
-(it's probably more relevant than access0 in many cases!)
+I plan to look at this sometime soon, but note that the fix will be special
+cases only (no interleave!) in the short term.  Emulating interleave
+is always going to be costly - can probably be better than we have it today
+for large granularity (pages) but I'm not sure we will ever care enough
+to implement that.
 
-For historical references, I wanted access0 to be the CPU only one, but
-review feedback was that access0 was already defined as 'initiator based'
-so we couldn't just make the 0 indexed one the case most people care about.
-Hence we grew access1 to cover the CPU only case which most software cares
-about.
+For virtualization usecases, if we go with CXL emulation as the path for
+DCD then we'll just emulate direct connected devices and patch up the
+perf characteristics to cover interleave, switches etc.
 
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Rafael J. Wysocki <rafael@kernel.org>
-> > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > ---
-> > v3:
-> > - Change EXPORT_SYMBOL_NS_GPL(,CXL) to EXPORT_SYMBOL_GPL() (Jonathan)
-> > - use read_bandwidth as check for valid coords (Jonathan)
-> > - Remove setting of coord access level 1. (Jonathan)
-> > ---
-> >  drivers/base/node.c       |    1 +
-> >  drivers/cxl/core/region.c |   42 ++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxl.h         |    3 +++
-> >  3 files changed, 46 insertions(+)
-> >
-> > diff --git a/drivers/base/node.c b/drivers/base/node.c
-> > index cb2b6cc7f6e6..48e5cb292765 100644
-> > --- a/drivers/base/node.c
-> > +++ b/drivers/base/node.c
-> > @@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
-> >  		}
-> >  	}
-> >  }
-> > +EXPORT_SYMBOL_GPL(node_set_perf_attrs);
-> >  
-> >  /**
-> >   * struct node_cache_info - Internal tracking for memory node caches
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index d28d24524d41..bee65f535d6c 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -4,6 +4,7 @@
-> >  #include <linux/genalloc.h>
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> > +#include <linux/memory.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/uuid.h>
-> >  #include <linux/sort.h>
-> > @@ -2972,6 +2973,42 @@ static int is_system_ram(struct resource *res, void *arg)
-> >  	return 1;
-> >  }
-> >  
-> > +static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
-> > +					  unsigned long action, void *arg)
-> > +{
-> > +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-> > +					       memory_notifier);
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	struct cxl_endpoint_decoder *cxled = p->targets[0];
-> > +	struct cxl_decoder *cxld = &cxled->cxld;
-> > +	struct memory_notify *mnb = arg;
-> > +	int nid = mnb->status_change_nid;
-> > +	int region_nid;
-> > +
-> > +	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
-> > +		return NOTIFY_DONE;
-> > +
-> > +	region_nid = phys_to_target_node(cxld->hpa_range.start);
-> > +	if (nid != region_nid)
-> > +		return NOTIFY_DONE;
-> > +
-> > +	/* Don't set if there's no coordinate information */
-> > +	if (!cxlr->coord.write_bandwidth)
-> > +		return NOTIFY_DONE;  
-> 
-> Although you said you will use "read_bandwidth" in changelog, you
-> actually didn't do that.
-> 
-> > +
-> > +	node_set_perf_attrs(nid, &cxlr->coord, 0);
-> > +	node_set_perf_attrs(nid, &cxlr->coord, 1);  
-> 
-> And this.
-> 
-> But I don't think it's good to remove access level 1.  According to
-> commit b9fffe47212c ("node: Add access1 class to represent CPU to memory
-> characteristics").  Access level 1 is for performance from CPU to
-> memory.  So, we should keep access level 1.  For CXL memory device,
-> access level 0 and access level 1 should be equivalent.  Will the code
-> be used for something like GPU connected via CXL?  Where the access
-> level 0 may be for the performance from GPU to the memory.
-> 
-I disagree. They are no more equivalent than they are on any other complex system.
+With such limitations we can get QEMU to perform well. I'm not keen on
+separating QEMU for functional testing from QEMU for workload testing
+but meh, we can at least make it automatic to use a higher perf root
+if the interleave config allows it.
 
-e.g. A CXL root port being described using generic Port infrastructure may be
-on a different die (IO dies are a common architecture) in the package
-than the CPU cores and that IO die may well have generic initiators that
-are much nearer than the CPU cores.
-
-In those cases access0 will cover initators on the IO die but access1 will
-cover the nearest CPU cores (initiators).
-
-Both should arguably be there for CXL memory as both are as relevant as
-they are for any other memory.
-
-If / when we get some GPUs etc on CXL that are initiators this will all
-get a lot more fun but for now we can kick that into the long grass.
-
-Jonathan
-
-
-> --
-> Best Regards,
-> Huang, Ying
-> 
-> > +
-> > +	return NOTIFY_OK;
-> > +}
-> > +
-> > +static void remove_coord_notifier(void *data)
-> > +{
-> > +	struct cxl_region *cxlr = data;
-> > +
-> > +	unregister_memory_notifier(&cxlr->memory_notifier);
-> > +}
-> > +
-> >  static int cxl_region_probe(struct device *dev)
-> >  {
-> >  	struct cxl_region *cxlr = to_cxl_region(dev);
-> > @@ -2997,6 +3034,11 @@ static int cxl_region_probe(struct device *dev)
-> >  		goto out;
-> >  	}
-> >  
-> > +	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
-> > +	cxlr->memory_notifier.priority = HMAT_CALLBACK_PRI;
-> > +	register_memory_notifier(&cxlr->memory_notifier);
-> > +	rc = devm_add_action_or_reset(&cxlr->dev, remove_coord_notifier, cxlr);
-> > +
-> >  	/*
-> >  	 * From this point on any path that changes the region's state away from
-> >  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 4639d0d6ef54..2498086c8edc 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -6,6 +6,7 @@
-> >  
-> >  #include <linux/libnvdimm.h>
-> >  #include <linux/bitfield.h>
-> > +#include <linux/notifier.h>
-> >  #include <linux/bitops.h>
-> >  #include <linux/log2.h>
-> >  #include <linux/node.h>
-> > @@ -520,6 +521,7 @@ struct cxl_region_params {
-> >   * @flags: Region state flags
-> >   * @params: active + config params for the region
-> >   * @coord: QoS access coordinates for the region
-> > + * @memory_notifier: notifier for setting the access coordinates to node
-> >   */
-> >  struct cxl_region {
-> >  	struct device dev;
-> > @@ -531,6 +533,7 @@ struct cxl_region {
-> >  	unsigned long flags;
-> >  	struct cxl_region_params params;
-> >  	struct access_coordinate coord;
-> > +	struct notifier_block memory_notifier;
-> >  };
-> >  
-> >  struct cxl_nvdimm_bridge {  
-> 
+>=20
+> Are their other advantages to having this additional test infrastructure
+> in the kernel?  We already have cxl_test.
+>=20
+> Ira
+>=20
+> >=20
+> > 	The new CXLV module allow user to use the reserved RAM[1], to
+> > create virtual cxl device. When the cxlv module load, it will
+> > create a directory named as "cxl_virt" under /sys/devices/virtual:
+> >=20
+> > 	"/sys/devices/virtual/cxl_virt/"
+> >=20
+> > that's the top level device for all cxlv devices.
+> > At the same time, cxlv module will create a debugfs directory:
+> >=20
+> > /sys/kernel/debug/cxl/cxlv
+> > =E2=94=9C=E2=94=80=E2=94=80 create
+> > =E2=94=94=E2=94=80=E2=94=80 remove
+> >=20
+> > the create and remove debugfs file is the cxlv entry to create or remove
+> > a cxlv device.
+> >=20
+> > 	Each cxlv device have its owned virtual pci related bridge and bus, cx=
+lv
+> > will create a new root_port for the new cxlv device, setup cxl ports for
+> > dport and nvdimm-bridge. After that, we will add the virtual pci device,
+> > that will go into the cxl_pci_probe to setup new memdev.
+> >=20
+> > 	Then we can see the cxl device with cxl list and use it as a real cxl
+> > device.
+> >=20
+> >  $ echo "memstart=3D$((8*1024*1024*1024)),cxltype=3D3,pmem=3D1,memsize=
+=3D$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
+> >  $ cxl list
+> > [
+> >   {
+> >     "memdev":"mem0",
+> >     "pmem_size":1879048192,
+> >     "serial":0,
+> >     "numa_node":0,
+> >     "host":"0010:01:00.0"
+> >   }
+> > ]
+> >  $ cxl create-region -m mem0 -d decoder0.0 -t pmem
+> > {
+> >   "region":"region0",
+> >   "resource":"0x210000000",
+> >   "size":"1792.00 MiB (1879.05 MB)",
+> >   "type":"pmem",
+> >   "interleave_ways":1,
+> >   "interleave_granularity":256,
+> >   "decode_state":"commit",
+> >   "mappings":[
+> >     {
+> >       "position":0,
+> >       "memdev":"mem0",
+> >       "decoder":"decoder2.0"
+> >     }
+> >   ]
+> > }
+> > cxl region: cmd_create_region: created 1 region
+> >=20
+> >  $ ndctl create-namespace -r region0 -m fsdax --map dev -t pmem -b 0
+> > {
+> >   "dev":"namespace0.0",
+> >   "mode":"fsdax",
+> >   "map":"dev",
+> >   "size":"1762.00 MiB (1847.59 MB)",
+> >   "uuid":"686fd289-a252-42cf-a3a5-95a39ed5c9d5",
+> >   "sector_size":512,
+> >   "align":2097152,
+> >   "blockdev":"pmem0"
+> > }
+> >=20
+> >  $ mkfs.xfs -f /dev/pmem0=20
+> > meta-data=3D/dev/pmem0             isize=3D512    agcount=3D4, agsize=
+=3D112768
+> > blks
+> >          =3D                       sectsz=3D4096  attr=3D2, projid32bit=
+=3D1
+> >          =3D                       crc=3D1        finobt=3D1, sparse=3D=
+1,
+> > rmapbt=3D0
+> >          =3D                       reflink=3D1    bigtime=3D0 inobtcoun=
+t=3D0
+> > data     =3D                       bsize=3D4096   blocks=3D451072, imax=
+pct=3D25
+> >          =3D                       sunit=3D0      swidth=3D0 blks
+> > naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=
+=3D1
+> > log      =3Dinternal log           bsize=3D4096   blocks=3D2560, versio=
+n=3D2
+> >          =3D                       sectsz=3D4096  sunit=3D1 blks, lazy-=
+count=3D1
+> > realtime =3Dnone                   extsz=3D4096   blocks=3D0, rtextents=
+=3D0
+> >=20
+> > Any comment is welcome!
+> >=20
+> > TODO: implement cxlv command in ndctl to do cxlv device management.
+> >=20
+> > [1]: Add argument in kernel command line: "memmap=3Dnn[KMG]$ss[KMG]",
+> > detail in Documentation/driver-api/cxl/memory-devices.rst
+> >=20
+> > Thanx
+> >=20
+> > Dongsheng Yang (4):
+> >   cxl: move some function from acpi module to core module
+> >   cxl/port: allow dport host to be driver-less device
+> >   cxl/port: introduce cxl_disable_port() function
+> >   cxl: introduce CXL Virtualization module
+> >=20
+> >  MAINTAINERS                         |   6 +
+> >  drivers/cxl/Kconfig                 |  11 +
+> >  drivers/cxl/Makefile                |   1 +
+> >  drivers/cxl/acpi.c                  | 143 +-----
+> >  drivers/cxl/core/port.c             | 231 ++++++++-
+> >  drivers/cxl/cxl.h                   |   6 +
+> >  drivers/cxl/cxl_virt/Makefile       |   5 +
+> >  drivers/cxl/cxl_virt/cxlv.h         |  87 ++++
+> >  drivers/cxl/cxl_virt/cxlv_debugfs.c | 260 ++++++++++
+> >  drivers/cxl/cxl_virt/cxlv_device.c  | 311 ++++++++++++
+> >  drivers/cxl/cxl_virt/cxlv_main.c    |  67 +++
+> >  drivers/cxl/cxl_virt/cxlv_pci.c     | 710 ++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl_virt/cxlv_pci.h     | 549 +++++++++++++++++++++
+> >  drivers/cxl/cxl_virt/cxlv_port.c    | 149 ++++++
+> >  14 files changed, 2388 insertions(+), 148 deletions(-)
+> >  create mode 100644 drivers/cxl/cxl_virt/Makefile
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv.h
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_debugfs.c
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_device.c
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_main.c
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.c
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.h
+> >  create mode 100644 drivers/cxl/cxl_virt/cxlv_port.c
+> >=20
+> > --=20
+> > 2.34.1
+> >  =20
+>=20
+>=20
+>=20
 
