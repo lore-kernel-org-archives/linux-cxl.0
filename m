@@ -1,75 +1,69 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EDB53E2A;
-	Mon,  8 Jan 2024 17:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218F453E3A
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Jan 2024 17:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="f6hOR0Rw"
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="OvJKL8IV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i9rWEoMAPvxmhRSlxDSPrczOYWZ2C4pU6KaX5BnNtce2eBzMdzdwz8x9VRTbb1QifOxbttlBRE4Yq2baNZF3I6MX37CbZh8VCdvGEm1xilN9v9RQfRF2v9AaaaNpo3J9yCpDl8L4BEGGpYafaOZ4xtrXszBZ7nG7UEJlIKFa36FiFl56ARqx+T01ndy/+I/KeWX5zz4BPH02kJZiOxABfqkPnl1Dncoks3NmFnS8LG5pM4yzuKLOZQjALtJSHBK9klQQvcuBUX3dr05aRqX2JvUHaxKfZIrMXBKleGJOjh95CFMA+v5ivqmb7kRm6pKrDb3j8QNy4Ua24hSVwfR/DA==
+ b=Cj+NgIPUzZb1LDyo37IRYV2DKpUTEPPaTLlYA34scRQWEO7dgyIi225JRk3wR209ubgrzvKtMU1LB8ht4ersiVzJb/3yeZ7MAZd5wQI/qe5Q8rQMagxjU0vpt5ELswftA55ADDsHcjPQbSr/oJtGhUD6FYcEsDLsBMRY5nSH9n+akZCCmiG57RaT73wKEDEFJrbBGBGQLWJ0cRHLj/XlAc5TFE/ukF+H7WSjcvOD9FE8dnggyWrFSZbjYmYY0AxbNmuGbPd8ykAnicjrz0+mgfJqetxge9dpfpAJR5eqDb2MWBYpSFefP6vQPfiV0hPA0Z/CMMtFsOHUcVnE3dKL7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VEoSsfRbWtj26Q2RQKpLHi1B5ndwjI52C/k9+njXgXk=;
- b=eJx2gKxNGydorKH63Jxr+O1YXh8Lvgv9TKPRUAQc963tDyqy3eGUPtGyBeRKA6hyCetZTcNOSuf7G1I3wJwvB8THB5Rrm92D7cN9ezZ4FhAZuEPC1elm9Sfiwi9dWxzbf5N0GygZSWDx1mExzrmFhfOqd/KsagW42GlbqZ/XN96+1zfVWGZQi1oC2bz8SQF4Qf5qXvMuPgtjhkAdD/dPgJKtIX/+h7Hz58buG115eZrEGgnPszyZQEUVwcnLOopa7Ug07ptL0fIpIqKqJgGHsBNiFaVZBXcLHGgZydNf6JmLGzSjggN95Krkj43dwSy6JHpI9/evuLYtpiAGKHIQpA==
+ bh=gmO3T6KpGRVSYLAjdeeThnV8Prm8IFZa76lhZ0uBWDw=;
+ b=SMqqMbt7L+w80eCPWNCyTIuim1Krm+M6rAvl5slkTdZ3VcdfoZd2x2ZiLs92MxiwmbM0eUElMWLZ4gzVqjUnj7qgCsvazbqVNMbtAeDTnKF8ltsF9kRlRPHkQljI9HjOekESCOhivyq+/oZVbuZzEU3y5zkaXPia9RJ674dKgDwZ1yKwuGp2it5axUQJjI3gzvaSeUY8QrIHwcQI9FCxC03XgeldfUqi/Bcpl4bGzh/PQonSo0bVhpeEz3oWa5VPU1S46ZRSEXGsv9QqRlv+zlNpgZvEhdB9h1D/nFS5+aT3pzMiyKIN0+odGzbV/fow7TbI18apY39YDM6rrO75Eg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
  dkim=pass header.d=memverge.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VEoSsfRbWtj26Q2RQKpLHi1B5ndwjI52C/k9+njXgXk=;
- b=f6hOR0RwY4U56q2yo7akLmbmvYzkfBZalIMfEIaQh79aHjNDUzfVWLOdVFk5v3uEQwIpdKIoxt0TibhX2PXfX4FDAmPY2W9EIkjR7hSWNrkG1ag/7V/bdIjn6DQfMzTgFFa44WUPOd+cxDWFWdhKnsQBaLo9JF9WqHgk0mpS9zA=
+ bh=gmO3T6KpGRVSYLAjdeeThnV8Prm8IFZa76lhZ0uBWDw=;
+ b=OvJKL8IVzegbX/woIXLdlKcgEZfRvQlNxuBwBIh3D1ua4ZK0jBY2OJdrYmSeo7lkAwX3XK0NJrBduCdHr6t6frVbsTJbEUj2q29jj2RXBx2K6G2dGWyt5HwF9mzgwWwENJOzy9OB9mA2Kqp1cw/M/6PqOcVu/0sWeT37iNM89Xw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=memverge.com;
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by DM8PR17MB4918.namprd17.prod.outlook.com (2603:10b6:8:3c::20) with
+ by MN2PR17MB3888.namprd17.prod.outlook.com (2603:10b6:208:206::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Mon, 8 Jan
- 2024 17:04:43 +0000
+ 2024 17:15:15 +0000
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::7a04:dc86:2799:2f15]) by SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::7a04:dc86:2799:2f15%5]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
- 17:04:43 +0000
-Date: Mon, 8 Jan 2024 12:04:34 -0500
+ 17:15:15 +0000
+Date: Mon, 8 Jan 2024 12:15:06 -0500
 From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Srinivasulu Thanneeru <sthanneeru@micron.com>,
-	Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"mhocko@suse.com" <mhocko@suse.com>,
-	"tj@kernel.org" <tj@kernel.org>,
-	"john@jagalactic.com" <john@jagalactic.com>,
-	Eishan Mirakhur <emirakhur@micron.com>,
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>, Wei Xu <weixugc@google.com>,
-	Hao Xiang <hao.xiang@bytedance.com>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
-Message-ID: <ZZwrIoP9+ey7rp3C@memverge.com>
-References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
- <87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZXyQIJOim1+tE0Qr@memverge.com>
- <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
+To: Hao Xiang <hao.xiang@bytedance.com>
+Cc: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Ben Widawsky <ben.widawsky@intel.com>,
+	Gregory Price <gourry.memverge@gmail.com>,
+	Fan Ni <fan.ni@samsung.com>, Ira Weiny <ira.weiny@intel.com>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	David Hildenbrand <david@redhat.com>,
+	Igor Mammedov <imammedo@redhat.com>, Eric Blake <eblake@redhat.com>,
+	Markus Armbruster <armbru@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
+	Eduardo Habkost <eduardo@habkost.net>, qemu-devel@nongnu.org,
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
+Subject: Re: [External] Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem:
+ qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and
+ its arg 'cxlram'
+Message-ID: <ZZwtmiucNXxmrZ7S@memverge.com>
+References: <20240101075315.43167-1-horenchuang@bytedance.com>
+ <20240101075315.43167-2-horenchuang@bytedance.com>
+ <ZZXX95yvk/WTIBT/@memverge.com>
+ <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: BY3PR10CA0007.namprd10.prod.outlook.com
- (2603:10b6:a03:255::12) To SJ0PR17MB5512.namprd17.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
+X-ClientProxiedBy: BY5PR16CA0007.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::20) To SJ0PR17MB5512.namprd17.prod.outlook.com
  (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -78,125 +72,142 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DM8PR17MB4918:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2514978e-f88d-45c2-72ec-08dc106be8c9
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MN2PR17MB3888:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07ce1e4a-f2b9-4a53-6546-08dc106d6138
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	2yxa03Sz0wt/hwnN3qHVA9UtoaKdXetsK/RygeK/QuqjU0lI51EBkCvMW/tZbUUaPh2QiFb1Qp7oNNWCA+gLI4FvsTwyo90pSpxAeZIKy417yTmTCBXwpVvkNBgUZm/hPy02tWC6wLmf8GM7JMh6wSSV/Ilv0ZClvBb3GfH95shyg8O3i3sXyo3u4TCnzGy7sJxyj2vZA4+5EsLDlrmoVhRvRob/HMqOPROhuEIXcmlcyacrpyl/PwZxWejUmCtjpuzw+H7RSjWBJXFEFny5ps/Sc7N4b6B3lFVTQXuNsT9FlMSlw8l80FBCgZTIWuNOv1vJDrbyEgMn1SNWPHOebezbztlREiBXbaw6+WS4IwHaWpSPmD2aKd/a63H78f1hIYG6CA7iFT9rIDkvN0L1vCXjanXYEUx9flYvjChlGHTXcSyxChSTLuB+hRCCMJ63nXklJYOEQzNm/ce9lgqJYcuU4ZC9AqFOfMgi3wlI99xPRI2kpviPqYJZ/eJ8Y1yyzomkAxeFLC7+kEcaQCh+QBwm0Pin8B/F3WvJz68EwLNHVSLBHZ2bHdS4rgEQFyTgAd1UvQ3VztjfeG8cnVDF5QLCgC0JmNejqLCwa3RPFh8=
+	nxzPzJ7dnv/Jxo6g3qeI5p6lr3f7Tx8KzRUh4I74AerhA/dzCA6vHg/1jDz9nQaliOb6sSTQ3Vsjs3bIjOfNlJ8TU+YbsfZ2aS6R1xgC35t8L50gAzYVbu5vr83afN3viGJYsTzASbFNMKNGUDQDS5a+DHaBRJQpuD9IkZdoYdABgP3WdhPJHIW2VchoeBDHTqKEAkvO7Fz2XA4r2HMzItraL6Nf2YJ97pbs6+ib42dVJc+korAM0yaMOrmozn7ie4f5eUZpccokr2elf3rxcV54PB2N8OnzusdVWN8anoYGn7YWz7kQUeAqBkVkAvLH2+Pv5H6tF3sn5Gh9wm3uNFUBUPyKAHIOpTWtn3KNPhYA7488KOeDml5tuispWA8rFPG5l0t+FRg8Lx+ZXGW7V0Nv8cBUEOPY2iB2bX1gyG9PWfqO5WRHPHFVXNjYwsWrn36JVy+EBL53w2ILiEv6wK5BWjnTD7ez+tJXJzLjZjPOMwdomQk0vXpb6Xs/gNtAHuf8pcGMkpo6fk8vuInXxAzmlUnwnbVqv+bEF+nNs0M=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(136003)(376002)(396003)(346002)(366004)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(38100700002)(7416002)(41300700001)(2906002)(6916009)(5660300002)(54906003)(6486002)(44832011)(36756003)(86362001)(6666004)(6506007)(6512007)(316002)(8676002)(8936002)(4326008)(66946007)(66476007)(66556008)(83380400001)(966005)(26005)(478600001)(2616005)(66899024)(67856001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(39840400004)(376002)(136003)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(26005)(2616005)(53546011)(6512007)(6666004)(6506007)(478600001)(6486002)(966005)(38100700002)(86362001)(36756003)(5660300002)(7416002)(2906002)(41300700001)(83380400001)(66476007)(54906003)(66946007)(66556008)(316002)(6916009)(4326008)(8676002)(8936002)(44832011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D9wFwcSVZg+zID1cfbn9mAap174Ik85HiXOI92X4RCGvjYSIT+SyVexZLEt7?=
- =?us-ascii?Q?P2lypAGc0WWg0njkc51kRMbztMDjHQhOmBpeF52qlh1IVkPvpg9Mzot+q9c+?=
- =?us-ascii?Q?+uPvlCROm0CTJbFEilFWZtCJvdU+hWbb825xob0gN/4DUUSP84f9NTlqMn4Y?=
- =?us-ascii?Q?heCEcp6ah0jgafGbzzwZ9iziMN6pgjBDG0611fGLdfLqvdhSZotPy148umzx?=
- =?us-ascii?Q?cfMV5SOAsLeylipG0JfHTP92cEJGelFo+dEk7ZJ11H1OKYOfrTw9KttGgaP6?=
- =?us-ascii?Q?td4kQNAX0sa+wSSZgq/WVfK7f6nvTPqAbzlEIThH7cPChy5QYfX96UOm0ZPP?=
- =?us-ascii?Q?fWENK2rJwfh2GmakaU9uiqVEB0YRQ09hnIhz6QT0bqbR2pOSHw2ccRbDQgoV?=
- =?us-ascii?Q?TRt1nKvvAAqAFZh/nyDQpkndEXekxbaFvNYiHfOxr67/Vli1hh8MDy5UNxqD?=
- =?us-ascii?Q?8czyPbLJojmFkypDblzPqKZmdCbslGNp77ruTgoBUqpLbUFQwlyuhfM3xtdQ?=
- =?us-ascii?Q?Hr1Jv9LpHpOcJ1ZmoYqlK5J76bcU+nKgZApU4Ve02VbudxpVt4bAJhEtCmXi?=
- =?us-ascii?Q?IMfSzRcHNHg1sArWkKiJqCnzeWK8nlAn0mV/LI44yh2268/DREku0JUMKp5c?=
- =?us-ascii?Q?D4KPlMPFHRcPVPXFbRJuBAqRV+BIVWEClr/3H6t8PBCO79FboIiWO0gX1ZGL?=
- =?us-ascii?Q?bDz3UTwhLw8bLpWHOXih3Q3fWf9ttH+yDTzh0OmpnNddfoMbhY1rDmk8ojyi?=
- =?us-ascii?Q?ANHcnk6sdD1xPAPGYs0WOD3Bft55JiO0fvTZI/kBH/z2XDnKQ7Dm7Rgkq4rC?=
- =?us-ascii?Q?L6+m6G8RYYfR4dCFXPLfmeScoYC2lEG3cnInAwlBSD5PQKYOXNLUFHUaH9vy?=
- =?us-ascii?Q?2ZMnSGeEaEW9g6HQTOdM8/YI1EVLPwlCRwFnZqhYVN8EogVY1IPB10lT5ZUZ?=
- =?us-ascii?Q?r3cXW1JE94MFl8I1yU0zEdfUNwwC5wx64b0wXYUbeiJAllTgHzAgkPq0NdIH?=
- =?us-ascii?Q?khKxyYEQ2WMqcDtmTgtm2l/LDZVTJdNemu6Ht9EgLMUyI0kLAiMYAVn4GuYh?=
- =?us-ascii?Q?1qs54PA2pEN4EhDKdwKfyydG49cCsOi/g+TMPBV2Ue9UNLIuh8zqIRk28SQ6?=
- =?us-ascii?Q?qMzlDCU71SOkjxuT1l56YB5Sa4gIlZTA9uGoPczFiapZc9cNXOZwXUYqhp80?=
- =?us-ascii?Q?ywQ+zvnoCNZjla3IBx0VreVOTNal+03mzvqrMYZ/hFsrjcITMCccOF4wSAN5?=
- =?us-ascii?Q?EIC6bLUki3uO+fXMUMe8ZNRLvmBdWkQeceFJPwVbjOHXYRxRi+5wtvzE1fUE?=
- =?us-ascii?Q?45jQdxh+F2+Dgg2lyNO4K0kpCcVRlC8x10t9A17hmrn1TbcFUmL3bADcemgu?=
- =?us-ascii?Q?5M+2cIdRxiRQSz1H31tA1xhKAK4v6acJEmnHftuhNWfEFW6CDsvaAdlrkLgQ?=
- =?us-ascii?Q?dizEhgl+cH/RTnBsHww7gIs0frMSs9LQh3yQPkzovfhOfXpGgcbNl+aRtxz/?=
- =?us-ascii?Q?SU9nbIyORm6Sg/f05HGV2qcQSc+oS2pQD30fTfCNkt/z26+e7taD+N5LpFt7?=
- =?us-ascii?Q?vGCBGuEq0dHpkGVvYxp6tUjzidQZ+foczSL0+DoYxGwBftKSwNZu8K98tnIX?=
- =?us-ascii?Q?6Q=3D=3D?=
+	=?utf-8?B?enlqSjcrMFVyejdLM0RuaFpjYjNxSktrTklyMTFQV1UrbU9PTU50QXZ3dmJM?=
+ =?utf-8?B?YkVITEZoaHNkd1poZEFBTXFIeXRuam9JcDY1cWhpeUR2ZjNadGdkS1JRZGFh?=
+ =?utf-8?B?Tzl5V0VtanlWZ1grd3N6enhzd2lpMG41Ui9UNU1mUU95dU53RlV6ekpRUjZ1?=
+ =?utf-8?B?bTdlLzF1VExkVE42eHh0SnVNeGlpcVJ5MmxzSThNeXZPNGM1SnJUVXhCU0pT?=
+ =?utf-8?B?SWpjelIwcnZUZmwzSU1rdWRiZWZFNHBscnc5dXByQUJHQmlUWDBrcXlBeVhF?=
+ =?utf-8?B?TVJIaTMwaWRoNDk1Z0JjVVZXQXdxcHFkbVJ3R0svWGVPU0dKRGFUU0JaeXZX?=
+ =?utf-8?B?SDltOWRmNk5GNk1UbXdQQ3ZRemJEbmtZaWdrdU45SHA5QWFjMWNhSy9nanl6?=
+ =?utf-8?B?ZER2OUVMQW9IKzh2b1JESGxXTGpWSTExRTZNTStRYVJ6dnVRbHAwNUtPR1NZ?=
+ =?utf-8?B?dkZCMXFYSC9FN3dqTHgxZTlwWGFwSUUxT2Y5SXpzdUs4THJQYk5VWXJKSGxI?=
+ =?utf-8?B?bU81MXlLRHpuQ01vSzg1OWZmSisrdW4zQlB6WmwwdWJXTkZ4ZDZUVXpRTmEx?=
+ =?utf-8?B?UDN4VURvMmtvQUt6ajZLelA3V01CNFpyRDBRaUlYczhKcUJUMUgvUGVrNFQx?=
+ =?utf-8?B?ckdVTld5RTI5L2FUTTByQlUwTlZyUmkwT3ZXcVpXb1RjOHBuUXBXZDRzbmJD?=
+ =?utf-8?B?b2x1aldmWGJLSW5yNEI5enAvN2RuMGR0eVZzWC94WXkzamVDaDhnWVpFYkJ2?=
+ =?utf-8?B?V3pDNXd5K3JmWUpzYVNlSXI4RnJRMkwvbU5tekpSTmE0dmRwaFErbUQ3QUNu?=
+ =?utf-8?B?dk1CbXc3WXFqNHNsck5SRUdrb2VlMEVKOVhXLy9haUFBNXdFbjNmQUN3M2J0?=
+ =?utf-8?B?aUxxb29XaDZ5R0N1eWRwRHRQVDhCckRYelcxWjZtSmFxUWtRZUpleFRCUG04?=
+ =?utf-8?B?VkdYRFl3U1pIRHVMR2JJdTFhREJSNFZxZkowaUZoVW5nMCtVbXA5cFJTK1Az?=
+ =?utf-8?B?QTBFbkpWc01ieS9QSW1hazV2YnZxaWlvQTFVTW9jbnhtYjN5bTlacjB3NTZo?=
+ =?utf-8?B?SVV6ZUJ5clZpVmYxTjBuRHpkbWJkRlFRTWVIRm41Uk5xMThVamFHd3dnek9N?=
+ =?utf-8?B?dWxjYWh1aGMya3F4ZFBkWmg5Vk9ORFgvTTlZcEU1VHpHTS9vUG9HTWVUS3VE?=
+ =?utf-8?B?Z1kzZW4zWXp2dm5PQ25UWGp3ak9JOUVzVmErU3ZPTjdxVi92a1pQbHdDYlNU?=
+ =?utf-8?B?VHVma0xlYnpPVi9iRUVVZUhQSkg0MXlnTWdUSjJQc0puNGZVZkpBQVZVUG1j?=
+ =?utf-8?B?dTlOdW9nakVQb2VVNEg0d2hvWXQ1Q2FJZDVBeUlVWU80YmpFQkYzRDg0SGlC?=
+ =?utf-8?B?NURURjBDTUlUMkpNMFVDWjlZYzl6N0NEMGMwMlRFbGtldVhMS2RsRmFXVklo?=
+ =?utf-8?B?cWh4cWRxblh0L0ZqOEMxR3ljc01xY1hsZHJmUUhoSlFrcEpEOEVwSkx2YUJ4?=
+ =?utf-8?B?aEJpQ3o0VTgrWmY0TUcrQjdXN05qQnZwMVZlMmlZbHVweDk5ZGpiM1BzUDM1?=
+ =?utf-8?B?VSswYi9oeXlSNjRBRHR3R1QwT1BUbDdvMmxiaERNQk90bU94ekVsQTFrSlZk?=
+ =?utf-8?B?RmZxV3VGYkE1OVltU3JNUExyK2tzTDV0RFdlMDFVYjVGWTBMejBxUXd6MEhF?=
+ =?utf-8?B?UWUwS0xQWk1HeUREOFlCSGhwY1kvVmZ0THhlT2ZPT28zSFRFSXk0cVI2R0J3?=
+ =?utf-8?B?TCtwQnU2bVpBUWJZeVBSdVh1K1ZyRDlmQ2NjUWxHSjRkMlJuRDlsN0dSdS90?=
+ =?utf-8?B?L29nUlRycmZkVUhpYXg4ZDQwVG5teXVRR205bCtrVWJsdUp5bHRhZ1BXbGRY?=
+ =?utf-8?B?Z0hjM1FuY0Z1UXduZ0M5M0pKa3NOcE1qNERIT1VaZXZnUCs0dnBHY1N4eGli?=
+ =?utf-8?B?bVhkVklFMnZKcDdsa1Zsd092dkdBSjRoYjE2Y1BkekFUVCtDekVFZnRYY0sy?=
+ =?utf-8?B?NEk5eUdSUXZxaHI1d2V0ZkFjdEpPWG8reEI1VVhhNG1Wck13aTBvYktwSkti?=
+ =?utf-8?B?RXIraGl1biswT25sTlBoNTlpa1FENjZqYzloQlZ6V1dWUzJnMXRwcHhYTEZS?=
+ =?utf-8?B?R2R0TzVMZEswR09wZjltUUM5ek05eEhEdElOdm0vRVdGdHRFNHduSVRtMEd1?=
+ =?utf-8?B?dEE9PQ==?=
 X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2514978e-f88d-45c2-72ec-08dc106be8c9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07ce1e4a-f2b9-4a53-6546-08dc106d6138
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 17:04:43.4143
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 17:15:15.0511
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5HebD+YOq+L7dOXn4dnxvi9lkWrXru4NTtmBipAFE/9x+iVkrrSIffcOzrX+dAg/cD8nTYVS+4UILTNPFLClUz67c9xrmbLJWHsvltWeZ60=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR17MB4918
+X-MS-Exchange-CrossTenant-UserPrincipalName: rcI4y/9lUDcdPkWWnXZ8MHSHJn3EJz1rI02xdBPFadH1ogzlH0twF9k34QQcE4/0vT9R/gb5h6GUxbO2gpvqF7rTGkyJ5Ii8uG0/+i2xv3U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3888
 
-On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:
+On Fri, Jan 05, 2024 at 09:59:19PM -0800, Hao Xiang wrote:
+> On Wed, Jan 3, 2024 at 1:56 PM Gregory Price <gregory.price@memverge.com> wrote:
 > >
-> > From  https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
-> > abstract_distance_offset: override by users to deal with firmware issue.
+> > For a variety of performance reasons, this will not work the way you
+> > want it to.  You are essentially telling QEMU to map the vmem0 into a
+> > virtual cxl device, and now any memory accesses to that memory region
+> > will end up going through the cxl-type3 device logic - which is an IO
+> > path from the perspective of QEMU.
+> 
+> I didn't understand exactly how the virtual cxl-type3 device works. I
+> thought it would go with the same "guest virtual address ->  guest
+> physical address -> host physical address" translation totally done by
+> CPU. But if it is going through an emulation path handled by virtual
+> cxl-type3, I agree the performance would be bad. Do you know why
+> accessing memory on a virtual cxl-type3 device can't go with the
+> nested page table translation?
+>
+
+Because a byte-access on CXL memory can have checks on it that must be
+emulated by the virtual device, and because there are caching
+implications that have to be emulated as well.
+
+The cxl device you are using is an emulated CXL device - not a
+virtualization interface.  Nuanced difference:  the emulated device has
+to emulate *everything* that CXL device does.
+
+What you want is passthrough / managed access to a real device -
+virtualization.  This is not the way to accomplish that.  A better way
+to accomplish that is to simply pass the memory through as a static numa
+node as I described.
+
+> 
+> When we had a discussion with Intel, they told us to not use the KVM
+> option in QEMU while using virtual cxl type3 device. That's probably
+> related to the issue you described here? We enabled KVM though but
+> haven't seen the crash yet.
+>
+
+The crash really only happens, IIRC, if code ends up hosted in that
+memory.  I forget the exact scenario, but the working theory is it has
+to do with the way instruction caches are managed with KVM and this
+device.
+
 > >
-> > say firmware can configure the cxl node into wrong tiers, similar to
-> > that it may also configure all cxl nodes into single memtype, hence
-> > all these nodes can fall into a single wrong tier.
-> > In this case, per node adistance_offset would be good to have ?
+> > You're better off just using the `host-nodes` field of host-memory
+> > and passing bandwidth/latency attributes though via `-numa hmat-lb`
 > 
-> I think that it's better to fix the error firmware if possible.  And
-> these are only theoretical, not practical issues.  Do you have some
-> practical issues?
+> We tried this but it doesn't work from end to end right now. I
+> described the issue in another fork of this thread.
+>
+> >
+> > In that scenario, the guest software doesn't even need to know CXL
+> > exists at all, it can just read the attributes of the numa node
+> > that QEMU created for it.
 > 
-> I understand that users may want to move nodes between memory tiers for
-> different policy choices.  For that, memory_type based adistance_offset
-> should be good.
-> 
+> We thought about this before. But the current kernel implementation
+> requires a devdax device to be probed and recognized as a slow tier
+> (by reading the memory attributes). I don't think this can be done via
+> the path you described. Have you tried this before?
+>
 
-There's actually an affirmative case to change memory tiering to allow
-either movement of nodes between tiers, or at least base placement on
-HMAT information. Preferably, membership would be changable to allow
-hotplug/DCD to be managed (there's no guarantee that the memory passed
-through will always be what HMAT says on initial boot).
+Right, because the memory tiering component lumps the nodes together.
 
-https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
+Better idea:  Fix the memory tiering component
 
-This group wants to enable passing CXL memory through to KVM/QEMU
-(i.e. host CXL expander memory passed through to the guest), and
-allow the guest to apply memory tiering.
+I cc'd you on another patch line that is discussing something relevant
+to this.
 
-There are multiple issues with this, presently:
+https://lore.kernel.org/linux-mm/87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com/T/#m32d58f8cc607aec942995994a41b17ff711519c8
 
-1. The QEMU CXL virtual device is not and probably never will be
-   performant enough to be a commodity class virtualization.  The
-   reason is that the virtual CXL device is built off the I/O
-   virtualization stack, which treats memory accesses as I/O accesses.
+The point is: There's no need for this to be a dax device at all, there
+is no need for the guest to even know what is providing the memory, or
+for the guest to have any management access to the memory.  It just
+wants the memory and the ability to tier it.
 
-   KVM also seems incompatible with the design of the CXL memory device
-   in general, but this problem may or may not be a blocker.
-
-   As a result, access to virtual CXL memory device leads to QEMU
-   crawling to a halt - and this is unlikely to change.
-
-   There is presently no good way forward to create a performant virtual
-   CXL device in QEMU.  This means the memory tiering component in the
-   kernel is functionally useless for virtual CXL memory, because...
-
-2. When passing memory through as an explicit NUMA node, but not as
-   part of a CXL memory device, the nodes are lumped together in the
-   DRAM tier.
-
-None of this has to do with firmware.
-
-Memory-type is an awful way of denoting membership of a tier, but we
-have HMAT information that can be passed through via QEMU:
-
--object memory-backend-ram,size=4G,id=ram-node0 \
--object memory-backend-ram,size=4G,id=ram-node1 \
--numa node,nodeid=0,cpus=0-4,memdev=ram-node0 \
--numa node,initiator=0,nodeid=1,memdev=ram-node1 \
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,latency=10 \
--numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=10485760 \
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,latency=20 \
--numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,bandwidth=5242880
-
-Not only would it be nice if we could change tier membership based on
-this data, it's realistically the only way to allow guests to accomplish
-memory tiering w/ KVM/QEMU and CXL memory passed through to the guest.
+So we should fix the memory tiering component to work with this
+workflow.
 
 ~Gregory
