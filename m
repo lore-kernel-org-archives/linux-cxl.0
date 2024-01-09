@@ -1,164 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2089.outbound.protection.outlook.com [40.107.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F1633EE;
-	Tue,  9 Jan 2024 03:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7031B6104;
+	Tue,  9 Jan 2024 03:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2U4OK4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704771806; x=1736307806;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=EXGALg+04GjIg7VHmOoodLCutmjxuq5kzaEUQbcbKOQ=;
-  b=i2U4OK4AWF4jDzopy9a6L83jkXF73pBoJlGBP5YVSVek8R95HXeSbxwr
-   UJwEZnHEEggC9wmORgOwh1QhMgAMuQIV7trO2Ekiba1HOg1Z2JN/sbIaS
-   aovjtMfAqOcr3Q2SZ1tAOLCkxNFRXDQUNSUAvPv+ABpSI5OPs1Idei3Fr
-   ZEUey4tnVqkL0NfxASU0gA9JoWy76lA/nUvzBBrP/B3Fz6EYdsdTrp73c
-   zypIj5jEcC8SoFD8APNTFP0ucm2teGFPlPgzeS0LGkmwKf2pHW4WmX8Gm
-   0yg/i64gkCQsbPbWtJfcH564qVBK7lYxBoVJWkjgGTHg4/NrNakODrHeM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4833825"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="4833825"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 19:43:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="872099709"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="872099709"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 19:43:09 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Srinivasulu Thanneeru <sthanneeru@micron.com>,  Srinivasulu Opensrc
- <sthanneeru.opensrc@micron.com>,  "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>,  "linux-mm@kvack.org" <linux-mm@kvack.org>,
-  "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-  "dan.j.williams@intel.com" <dan.j.williams@intel.com>,  "mhocko@suse.com"
- <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
-  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
- <emirakhur@micron.com>,  "Vinicius Tavares Petrucci"
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  Johannes
- Weiner <hannes@cmpxchg.org>,  Wei Xu <weixugc@google.com>,  Hao Xiang
- <hao.xiang@bytedance.com>,  "Ho-Ren (Jack) Chuang"
- <horenchuang@bytedance.com>
-Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
-In-Reply-To: <ZZwrIoP9+ey7rp3C@memverge.com> (Gregory Price's message of "Mon,
-	8 Jan 2024 12:04:34 -0500")
-References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
-	<87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZXyQIJOim1+tE0Qr@memverge.com>
-	<87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZZwrIoP9+ey7rp3C@memverge.com>
-Date: Tue, 09 Jan 2024 11:41:11 +0800
-Message-ID: <87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nr5O4Ks2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c/cD2lQoB6pR9vUq3XyV8I7Canidwe4SstK1eOW3n23uGbUJvDs6OtWjwTiEtz8tep6+B1uhLFBFo95UeYBPQBFxNgpHCuFfbrMvLT97sJpv4CWb356XK1qvCPg/yftl30toqtIxK9BfTwKEPZ6fgkhgZMwdCiqPZgCenLEBxkIwtb4Z7PfKaen4aqsggGI5iU1PiTFH0GJL4853HSVUuwgLFlwJD4X4P9B5NnrTUJ51qO053k17/hnARtMXuBRwrRVanXKGH7oxS4aryrnHJGXKumfi1nHYPCYIkPcikS/DbjHSqSzcvuLjZqLVQAr01yvcPJpEZ1bfIcoPZS/VMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xw6Z29H1fS7gYqeMPH9VO4ZOwPu1poHxRZobEqOdXF4=;
+ b=bENQmBiv7vSdyi5OEgtU+Wzx9seH3pJsGW6sbSFyV4cAmJ/cHs8uY3TD4zesx3jhaSSNXIFZKRI7Tr4pp4jOwv4z+JJe567xGOGGSZzq6yjLMdPvWgs2PczfA5ubBzmL8MVrI9r8PiWBa8jveyEJ1whbWbgMqqYp+kVBDnTwj+6aiSqdsfbkm8SqX+hm9Ybcy9LNK6MJm18OpoB1Eor+q+OZ/4uvMftMvGGhySMZ/OEHXYlJ1SKghT0tlB73JLEuDkMPoHUNKVetZvxv8JYfRYI1h3y7RwNaUV16kv8XIFFEtX8JIE9jB3U4xTr67jG82q15f0IkPPLfRPBtdaKDBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xw6Z29H1fS7gYqeMPH9VO4ZOwPu1poHxRZobEqOdXF4=;
+ b=Nr5O4Ks2yrhFtkFK2KSkCAJa3PB5+b2n4n+ICaeb8Dl7gy6jjC3qs+010VmKKWMlL9ohVz+oSSVhZS2mo1p4nLq4U26989qWRdAYYAhSobed1+7LNTCk/u5M2oRd3Z4QnYTkZpjxuDT7vReeZ5B/5Gght1qntxA44LlgNsBrIfA=
+Received: from BYAPR02CA0012.namprd02.prod.outlook.com (2603:10b6:a02:ee::25)
+ by DS0PR12MB9398.namprd12.prod.outlook.com (2603:10b6:8:1b3::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
+ 2024 03:48:10 +0000
+Received: from SJ5PEPF000001D1.namprd05.prod.outlook.com
+ (2603:10b6:a02:ee:cafe::75) by BYAPR02CA0012.outlook.office365.com
+ (2603:10b6:a02:ee::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23 via Frontend
+ Transport; Tue, 9 Jan 2024 03:48:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001D1.mail.protection.outlook.com (10.167.242.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.12 via Frontend Transport; Tue, 9 Jan 2024 03:48:09 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 8 Jan
+ 2024 21:48:06 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v2 0/4] acpi/ghes, cper, cxl: Trace FW-First CXL Protocol Errors
+Date: Tue, 9 Jan 2024 03:47:51 +0000
+Message-ID: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D1:EE_|DS0PR12MB9398:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78a594de-ec7d-4d21-2bd4-08dc10c5cc0e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	PadBaYllaiUdavgyV2cKYjVOvXBACR8QPKmYZTkKeuk2pTNufIQjTj4WUtkYKFxRnQjsahVRpZJUNp5ODIBy1etVy82FMH+VlK2zDYytv9vCQKh41/EiXkh/NzlnADaF6LFC6xYQOkFgQE8yXLQVO7oraUogyeUfTJbYBIKTnM7jvzEfk4rtZ9spZJMKbxGdJ19g21m3xacT0L5kcSWmCBZ4V+tJAjAephGj1JZWqieMiKymf+J7xOXZ7liWtDSpYjVOXGkA7/tWQqamC2HL9SFNMz7ooBHPjjg6lKx79pMtQ+LtpMXjr76tT5tqCMMliKbiCOFQcbSc/es1GQhRjx4IFhqtRfofSQlf68zyUaA2KJf9b1zc/qlrFusrNYxbIpsK7+tI+Vt71ncyhOd1T8etir6xHsjBFxVW6cZpgJ1nLeCKqM/SB4AnEut7CZTSSnqWazu4ZTYM04HuouBQLvGwXVbbUGJ7oKlHETVup5BgXkyaxPhky11Dna9OKVeZ/4/HgmCiSmKoPsonLC3ddqEbxiklb8FGECetJqSIAR2hLZGyY+n28woKsi5Ty11QzMzFluJI6Z++OmyEYGGmslwu0j3PUXH4tiamDeYpuOYCxG9XYG4U7qbFX/ZcGmOqULl3VnQKF8dZytnBeF6fhfAMXSwxfaL51wsxtBaUuoDjR4ecY1bb0U961Qm6VrGXITmQVKrV09sUT098rGhlHrEeRKv90haLTf1vMsb/fb1Xdd+/Ne2cEyjeLb2N27PC3zwxz9w9grXCLw/O1sQSJDZRVEutyY2/CoupO2SJ4eA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(376002)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(82310400011)(186009)(40470700004)(46966006)(36840700001)(40480700001)(40460700003)(83380400001)(41300700001)(70206006)(70586007)(36756003)(81166007)(356005)(86362001)(82740400003)(36860700001)(47076005)(16526019)(426003)(336012)(1076003)(26005)(2616005)(966005)(2906002)(5660300002)(54906003)(316002)(110136005)(6666004)(7696005)(478600001)(8936002)(8676002)(4326008)(4744005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 03:48:09.5662
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78a594de-ec7d-4d21-2bd4-08dc10c5cc0e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9398
 
-Gregory Price <gregory.price@memverge.com> writes:
+This patchset adds trace event support for FW-First Protocol Errors.
 
-> On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:
->> >
->> > From  https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
->> > abstract_distance_offset: override by users to deal with firmware issue.
->> >
->> > say firmware can configure the cxl node into wrong tiers, similar to
->> > that it may also configure all cxl nodes into single memtype, hence
->> > all these nodes can fall into a single wrong tier.
->> > In this case, per node adistance_offset would be good to have ?
->> 
->> I think that it's better to fix the error firmware if possible.  And
->> these are only theoretical, not practical issues.  Do you have some
->> practical issues?
->> 
->> I understand that users may want to move nodes between memory tiers for
->> different policy choices.  For that, memory_type based adistance_offset
->> should be good.
->> 
->
-> There's actually an affirmative case to change memory tiering to allow
-> either movement of nodes between tiers, or at least base placement on
-> HMAT information. Preferably, membership would be changable to allow
-> hotplug/DCD to be managed (there's no guarantee that the memory passed
-> through will always be what HMAT says on initial boot).
+This series depends on:
+https://lore.kernel.org/linux-cxl/20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com
 
-IIUC, from Jonathan Cameron as below, the performance of memory
-shouldn't change even for DCD devices.
+Link to v1:
+https://lore.kernel.org/all/20240102150933.161009-1-Smita.KoralahalliChannabasappa@amd.com
 
-https://lore.kernel.org/linux-mm/20231103141636.000007e4@Huawei.com/
+Smita Koralahalli (4):
+  acpi/ghes, cxl: Create a common CXL struct to handle different CXL
+    CPER records
+  efi/cper, cxl: Make definitions and structures global
+  acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
+  acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
 
-It's possible to change the performance of a NUMA node changed, if we
-hot-remove a memory device, then hot-add another different memory
-device.  It's hoped that the CDAT changes too.
+ drivers/acpi/apei/ghes.c        | 22 ++++++++-
+ drivers/cxl/core/pci.c          | 29 ++++++++++++
+ drivers/cxl/cxlpci.h            |  3 ++
+ drivers/cxl/pci.c               | 13 ++++--
+ drivers/firmware/efi/cper_cxl.c | 79 ++++++++++++++++++++++++++++-----
+ drivers/firmware/efi/cper_cxl.h |  7 +--
+ include/linux/cper.h            |  4 ++
+ include/linux/cxl-event.h       | 31 ++++++++++++-
+ 8 files changed, 166 insertions(+), 22 deletions(-)
 
-So, all in all, HMAT + CDAT can help us to put the memory device in
-appropriate memory tiers.  Now, we have HMAT support in upstream.  We
-will working on CDAT support.
+-- 
+2.17.1
 
---
-Best Regards,
-Huang, Ying
-
-> https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
->
-> This group wants to enable passing CXL memory through to KVM/QEMU
-> (i.e. host CXL expander memory passed through to the guest), and
-> allow the guest to apply memory tiering.
->
-> There are multiple issues with this, presently:
->
-> 1. The QEMU CXL virtual device is not and probably never will be
->    performant enough to be a commodity class virtualization.  The
->    reason is that the virtual CXL device is built off the I/O
->    virtualization stack, which treats memory accesses as I/O accesses.
->
->    KVM also seems incompatible with the design of the CXL memory device
->    in general, but this problem may or may not be a blocker.
->
->    As a result, access to virtual CXL memory device leads to QEMU
->    crawling to a halt - and this is unlikely to change.
->
->    There is presently no good way forward to create a performant virtual
->    CXL device in QEMU.  This means the memory tiering component in the
->    kernel is functionally useless for virtual CXL memory, because...
->
-> 2. When passing memory through as an explicit NUMA node, but not as
->    part of a CXL memory device, the nodes are lumped together in the
->    DRAM tier.
->
-> None of this has to do with firmware.
->
-> Memory-type is an awful way of denoting membership of a tier, but we
-> have HMAT information that can be passed through via QEMU:
->
-> -object memory-backend-ram,size=4G,id=ram-node0 \
-> -object memory-backend-ram,size=4G,id=ram-node1 \
-> -numa node,nodeid=0,cpus=0-4,memdev=ram-node0 \
-> -numa node,initiator=0,nodeid=1,memdev=ram-node1 \
-> -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,latency=10 \
-> -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=10485760 \
-> -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,latency=20 \
-> -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,bandwidth=5242880
->
-> Not only would it be nice if we could change tier membership based on
-> this data, it's realistically the only way to allow guests to accomplish
-> memory tiering w/ KVM/QEMU and CXL memory passed through to the guest.
->
-> ~Gregory
