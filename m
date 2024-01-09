@@ -1,158 +1,214 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C6120E7
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 21:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7A3E460
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 22:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IrtigMuE"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a293f2280c7so393631766b.1
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jan 2024 13:27:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704835659; x=1705440459; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3RYRcrJ2njCxlwPi4dMGvfXtU/fOWdqaKi3X1OjueHQ=;
-        b=IrtigMuEKqbmoIm76tm6QV/kbkSVdtNhcacq3sR8320aZWNOlex4aCUXPClvAmg8Ot
-         Iw140+aSMKVoD1Z2XbGH2A/oGMS/07XKPwpsiAtxfykbkxDQ8+cEMOeiawsRGddbwZFJ
-         nvuu+NN9SIvQCWe8riYa9Mgu+tlPqqROlLTJvJKpiEn93Wby77rvKG4fJ1JvptrcZV9D
-         iBROxZVk961cg8ycKeirbE5a+20RbkbllzV6SeESBSx4GbQRzwlZ0dnNLMQrlz20IV5n
-         Xp7DeoNyYe0hBWikNCmaB3zEuwSL/aTaDDFxMtTmjdNYrocSwKFHOcbF+wcsbjeZ2SwM
-         k5Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704835659; x=1705440459;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3RYRcrJ2njCxlwPi4dMGvfXtU/fOWdqaKi3X1OjueHQ=;
-        b=E9AD00M9/mI6Av6zxlHEbZtFcammXxulbrnlZKpWl53NzBEQ+DerbP7Z4wFG0UNept
-         hD8/mJ8Cqfl3+i7TC//sO+Aot5Z5z4pHkUQ5QO37xhYZ7pXOEI/PebYpuefIb31xg3qh
-         J8rMvmEZxBfhQ2GDLF5Y2Tyy8TgfuV0wiY1VkLpYpVsLBEEuf4YKNotsvUvzV60I/XCz
-         Mju7hD7G/aIP5+2ENQlZ91kPde5J8H+rPoXZRrHcLI3SPOEQ8wYM7QaWanmxocNQ0nUF
-         O+WCMdACytefx1B4kp/EUz/6z0mvgmoBkiXykgOAFVQjug0EBkER/0ryRotPdpU/x3G6
-         nSNA==
-X-Gm-Message-State: AOJu0YyFitSTfl5IR5dEihWQmTUnjMJ6OE9FZeJA8cQTjcF7vYfSMgGR
-	DPMJyQNIeuKRZCIKosx3YGNnnEQaZcQykPVSquOvMfzw3OXh8Q==
-X-Google-Smtp-Source: AGHT+IELB2iV38lStakkc2NRWLmg3gGjNhZ/JM43UXn64f+wOsc6MGcQVY8z7Szp+mWheb9aXuWF+h3xi7kk1Q7o10k=
-X-Received: by 2002:a17:907:94c9:b0:a29:1419:f522 with SMTP id
- dn9-20020a17090794c900b00a291419f522mr40459ejc.72.1704835659487; Tue, 09 Jan
- 2024 13:27:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="GJpN5UeK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QQVDOOMfaELg2GryXZTEop8+P+vApWjK8yLpG3OxTqag/793fioALzVXS6enkPRywRwX+H4IJcmoWb64RkI2BLEUcXi+jelv9pQgSvOsQBy8tNfmx1PU3Jbxz6kwCoeLbst5kWbY+nISStW8xFPywluot7K8dEtgFabaD6qzK1NfIsx0Fz5g0BzC02ERN0/cYOp+Waq7QEisWPorNHApPEfuaqLdDT9uTbUxH07VXSOVCSlsgWjAkw2g4Hp6Y0p37+ojK2daxq4pNUYTFsEydRhpNyQZtOkChMgQbTbYX4+R8HXyc3chz1AjTiDLCWewfu8FNdJYLmc5Yqpxbvu/Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=65qihb84fqHHhm46bwIFk0YD1fMk2hM4l52W6FRIEAg=;
+ b=falVZGBbD8KKZC3wtov0O2STroVwOWwaOS/XHvsFBaq8LaPN7xHx7TVCZFQx/Lggef/YT9MP5XHsvxk53kg3/J+I4lV7C7z5DzihphJ3miWgTDr9SsJfgfLykmBSdcLpnvCqLnnuciRnZAUnl00qEGYVLNh0LqUiRu6/Q0RF2Mt7FOEq2tlCN5Q5G6MAJ9140T7wEXkI84EHtFAzmovttl1IHy1We8J7wsC/YEHzH+xEWL1pBaKNNNQKRPiSkjZbGoouExAquh9IXRjBiBCNh27TEiKzlilODVCUZJWq1zhNDDekzjPxUMdUuRLRadsCZByPOW/x6w9az53ZXT1SKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=65qihb84fqHHhm46bwIFk0YD1fMk2hM4l52W6FRIEAg=;
+ b=GJpN5UeKZ1CqksWnecuOJUgzgwjs0hqsK/dqFBE2hycOnZ1cXikz0oZNF5OVLBt0iGJn050tRGJ9PsKSqyhHU/Hbi7zsFniJtxx351UsIqlGQD2w1ZxVDsFYAMrWcL1RanNrtxs9i1rPmVGVh8rDxsLcKUKjmdqU7JNKhxcubv0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by MW4PR17MB4668.namprd17.prod.outlook.com (2603:10b6:303:105::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
+ 2024 22:13:26 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7a04:dc86:2799:2f15]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7a04:dc86:2799:2f15%5]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
+ 22:13:26 +0000
+Date: Tue, 9 Jan 2024 17:13:21 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: Hao Xiang <hao.xiang@bytedance.com>
+Cc: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gregory Price <gourry.memverge@gmail.com>,
+	Fan Ni <fan.ni@samsung.com>, Ira Weiny <ira.weiny@intel.com>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	David Hildenbrand <david@redhat.com>,
+	Igor Mammedov <imammedo@redhat.com>, Eric Blake <eblake@redhat.com>,
+	Markus Armbruster <armbru@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
+	Eduardo Habkost <eduardo@habkost.net>, qemu-devel@nongnu.org,
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
+Subject: Re: [External] Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem:
+ qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and
+ its arg 'cxlram'
+Message-ID: <ZZ3FAegN/ezu9Ghy@memverge.com>
+References: <20240101075315.43167-2-horenchuang@bytedance.com>
+ <ZZXX95yvk/WTIBT/@memverge.com>
+ <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
+ <ZZwtmiucNXxmrZ7S@memverge.com>
+ <CAAYibXhfUu8dMwvBmWz4P6N9-yLao0QwAFozk4rS_0GPsEZd7Q@mail.gmail.com>
+ <CAAYibXgf6i5+aqopCrVu5ZveDJ9WP2M2AJaUUaj5qFXFHQQxmQ@mail.gmail.com>
+ <ZZydwBTS4NeSizzb@memverge.com>
+ <CAAYibXhY5p6VN7yAMpmfAgHO+gsf51dvNw68y__RYV+43CVVLQ@mail.gmail.com>
+ <ZZ2lNoTQ8hDHADTT@memverge.com>
+ <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
+X-ClientProxiedBy: BY5PR13CA0001.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::14) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240101075315.43167-1-horenchuang@bytedance.com>
- <20240101075315.43167-2-horenchuang@bytedance.com> <ZZXX95yvk/WTIBT/@memverge.com>
- <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
- <ZZwtmiucNXxmrZ7S@memverge.com> <CAAYibXhfUu8dMwvBmWz4P6N9-yLao0QwAFozk4rS_0GPsEZd7Q@mail.gmail.com>
- <CAAYibXgf6i5+aqopCrVu5ZveDJ9WP2M2AJaUUaj5qFXFHQQxmQ@mail.gmail.com>
- <ZZydwBTS4NeSizzb@memverge.com> <CAAYibXhY5p6VN7yAMpmfAgHO+gsf51dvNw68y__RYV+43CVVLQ@mail.gmail.com>
- <ZZ2lNoTQ8hDHADTT@memverge.com>
-In-Reply-To: <ZZ2lNoTQ8hDHADTT@memverge.com>
-From: Hao Xiang <hao.xiang@bytedance.com>
-Date: Tue, 9 Jan 2024 13:27:28 -0800
-Message-ID: <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
-Subject: Re: [External] Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem:
- qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and its
- arg 'cxlram'
-To: Gregory Price <gregory.price@memverge.com>
-Cc: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Ben Widawsky <ben.widawsky@intel.com>, 
-	Gregory Price <gourry.memverge@gmail.com>, Fan Ni <fan.ni@samsung.com>, 
-	Ira Weiny <ira.weiny@intel.com>, =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	David Hildenbrand <david@redhat.com>, Igor Mammedov <imammedo@redhat.com>, Eric Blake <eblake@redhat.com>, 
-	Markus Armbruster <armbru@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	=?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
-	Eduardo Habkost <eduardo@habkost.net>, qemu-devel@nongnu.org, 
-	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB4668:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49649ec2-d783-4f23-49ca-08dc11603365
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5hedSENaD7QctPwrw84AcZnlSYUL1PoSNX7y9fPN2RpUYVkfBcbaLu78iEHaoQx4a/Lw5blMQ7nvKUky2nD2BFmt/iCihWSdckH2vCU6NHxCi8gMHYgP0YxEYtbGpRBpVpJDJm4qbfUA0QXAUKrF1AhVA1F7cTbNGBOhaAIVlrr8qK9sMrRtJbKoC3k9BMBNPNw8CJGSo6+Gh/qDobllDat1JK6OkJ6jI88bxpG/arZinFfnGlWNefs53s6CExiGhPTcMI6MDBmQrqVyuDaNeBblKsBvHWalr2MirpuOk0/tOTZ0GCTco9r7WFrCjkUhaoXrAy+B1fHcDi85fyL1KJA6zbY73etCazlkYqa6bzcwRPuvg576OR0PENEDlby1XXzvXe4qTa+p4IEK+5NdgtDRX2NVWd5iteDeg+cqeb2SG5nNoBN1C8ZqnQwHpWGoj3a+n2oCBKV1IgG/XeiOzdqOmyFmqkyqwf4+IfR1DbmdZ3RDOzu0zFmnmK3VlNB4MyLPQdE/xff6xaFAdJ/5BvGyCYls6IFyb9emYpMCcwqv37cq/7OlAHT9Cif4jK15
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39850400004)(376002)(396003)(346002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(478600001)(5660300002)(4326008)(7416002)(83380400001)(6506007)(2616005)(53546011)(66946007)(6512007)(6666004)(6486002)(6916009)(66556008)(8676002)(66476007)(26005)(8936002)(44832011)(2906002)(36756003)(54906003)(316002)(38100700002)(41300700001)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MXZBT2EwWFZnbGY3V09WZURjdDNueGJMRi9uYWxMb0tNdXQrZEdib1JnR0hz?=
+ =?utf-8?B?YitqRWdlbGpFNThjZmFDRVZCRDVLTGsxb0NtUWFJckhJbTRScWx1Kzc1ODli?=
+ =?utf-8?B?SmhTWXZpbEJNMC8zeGJuUFJKL0FGMko2Z2RnYWx1bXdJcHJTaWhIWllRWW52?=
+ =?utf-8?B?dmp0M29YSkxnVVBWeHRHSmcramxFTDVBMU9xTE5LNTU4OUI0aGhFbDhPVDN0?=
+ =?utf-8?B?QUdPcHllbmJqVjhNMnl2NGhhcmlmVnMzTHplQmxmTWtjVk0rR1o0cVBXZDhM?=
+ =?utf-8?B?Y0ZwL1hJcjdMTTZFeGxBMmlydDdLTFY2bkw4ZmdsVnVvaVFqUVdPOEQ2YnE1?=
+ =?utf-8?B?aGhZQUVsNjJFaWpmVVJERTMvWDNqTURIZjkrMXZOTFlNZEhJeHZmWGVRUDdn?=
+ =?utf-8?B?K2JTNVcxMEZXQ0JFNnpMNWN6emNNYi9UNzhTN0lPNXJXKzlBbjI0MUZPc1dz?=
+ =?utf-8?B?MDVTTlV6MWtSRmRMaVFxM1B5TDBURUZiR3lpRmV1ckQ1WFFvN1RRSGFLb1pu?=
+ =?utf-8?B?YnVvcTFXVXNHdnRvZU9jT1B3TEE1ajIyNWRFSW1ZK1dMbnIxRHRzeGpXbS83?=
+ =?utf-8?B?dnRtT3Z0dTFWVGdFVFJUdGV6TGVyQTQwajl0QTNPZzBnSEROUHRFTmdzd3I1?=
+ =?utf-8?B?OWgwcHZKMlF0dEJnQWducXRSUTM4ZG5ES1pGR3ZLQVBHdXJxNUNvdk5vNE42?=
+ =?utf-8?B?Q3VxWDRWaEhiQkpoTU9PTHpKS1ExVnduUVloYWxPMzVCUmxsNE5PTGlqQndF?=
+ =?utf-8?B?LzdVQ2E2VWhTUEwxYTRyYjh5bmtkSE4xb3pzUE9yZUZOM2JaenVhcldhKzdh?=
+ =?utf-8?B?ekp5OHlJcUdYN3FDUFU2aVI4RDkyazQwOGoxb3B3RWxVcHdlT2pEQ0ZrQjU0?=
+ =?utf-8?B?ZndaZ1E3bW9mOTFDT1A0RUN1eHYzZ0xWZHhyVzh6bUMvZ3dPT3dlUHYwWUZC?=
+ =?utf-8?B?bUpTQWFyd3BsZ1EwYyt1OVB6SENXRFhKZndOM0lhalUvZTJpRnEwdzdXVFRk?=
+ =?utf-8?B?eWJyTlVYRkxmeDJDQnhqVTg1MFNrcmpHeStYWjkyNzcvOEhpM1ozUmVuNUZP?=
+ =?utf-8?B?UHpHUDFqZFJpQS9RY2xjeEQxTlA4ZHI4R2pGWCtzQUNadGdpSU5qakpTbWFP?=
+ =?utf-8?B?WmJFM1FkRGh0TTlyWEZyZ3dSMU03YnEwYTlvRWtkakZqR1E3NUozdHR4YzJD?=
+ =?utf-8?B?UUc0bmthcDdoM01na09KbFExWkRQcHl2clF1RjRxTjlrWGdkWG0xRnlLR3hX?=
+ =?utf-8?B?MUZJbGVMMlo5cGdlYXVpdmQ4YVJGZzNNcDhmWWtucTJKZ1U4aXZOMTlscUVs?=
+ =?utf-8?B?c1VDOXFsY293NGpJdklpU2wrRTZ5YWVBNkJMSEdJbWhLZy9lUVhmWVJJU1E4?=
+ =?utf-8?B?cnYzb0JES0FpS3dFcTE2djd6c282QWRJcThjWlduOHR4RUNUV2ZoUzVvdWVN?=
+ =?utf-8?B?UHVyUjFsNzRvbUxYVDZqMENtRHRzaGQvUEpaS1k2Rk9HelVrcGM4NHpTMVJw?=
+ =?utf-8?B?eXpGRGt1N0NwcDVwUEZjWjdmVGdkOWM5eFhOcCtKTGxwNWc2N0tOOEc1SjRl?=
+ =?utf-8?B?LzZ3L2ltRXhwZDJsVUQ3d2dBSGp1Nm1ub2VMb1ExZlVRaDRodWFubUF6RmJp?=
+ =?utf-8?B?bWxqa1A1TXJvVTR6dHVEZkZJbWYvTlBqZEllbXhnM3RueUthRGlJcFJET3BW?=
+ =?utf-8?B?TUtBR1Y4Y2JIWVlMek5SMmVXQkZ0eUxkWjJYZTlNcTRsVVFzOWlQcWc3dVAz?=
+ =?utf-8?B?YkpWMU52VXhxaWVqSE1tZWdDckFxVDJyd0xzQzhERGJMRWJyS1AzOGpwdjhX?=
+ =?utf-8?B?YURWbm5aMzRmckwzU3NLdWtYZEg3NkxkYUNlUTZOTXA0dUUvazV0R0VmLzFx?=
+ =?utf-8?B?TUNjb3FlaXBkQlFhRjJlWVd1MEs4akJkUEl6YVJMZXFvOHdMdURWdFRGUFFV?=
+ =?utf-8?B?Q3hNVW9lZTdmZEpHOHJvVjl2NXVrdFZlR1Y3dHF6OG9sTWVHcnVkNmh0ZFFX?=
+ =?utf-8?B?WER5NnNNUm9wM3BqMXNvejF1UHhHZGJpMHEzdVJXY0VNNXU0UXQvVHpXeXpi?=
+ =?utf-8?B?Y1o2cGR5ZzBIbjBWaU5VdElsOEp3b2kxM3k1YmMvc2dzMy9LbitpSktpMmJE?=
+ =?utf-8?B?QzZyeVZwdUFUc0h2TElCc0xJdFlIQ1hiSHZ6enFTZlhsdWJ1UVIxUVFqdjZY?=
+ =?utf-8?B?c2c9PQ==?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49649ec2-d783-4f23-49ca-08dc11603365
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 22:13:25.8828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rsJ/ov4EaG9txgAIAHRzPuz+rWkxJXtBx2GnMfwMwuH6VvK5C5PsuN0QJL56G9BzBTXKX3TlOxh33ZOa7TxN3RmBEMzadCNKrj+ts27Myuw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB4668
 
-On Tue, Jan 9, 2024 at 11:58=E2=80=AFAM Gregory Price
-<gregory.price@memverge.com> wrote:
->
-> On Tue, Jan 09, 2024 at 11:33:04AM -0800, Hao Xiang wrote:
-> > On Mon, Jan 8, 2024 at 5:13=E2=80=AFPM Gregory Price <gregory.price@mem=
-verge.com> wrote:
+On Tue, Jan 09, 2024 at 01:27:28PM -0800, Hao Xiang wrote:
+> On Tue, Jan 9, 2024 at 11:58 AM Gregory Price
+> <gregory.price@memverge.com> wrote:
 > >
-> > Sounds like the technical details are explained on the other thread.
-> > From what I understand now, if we don't go through a complex CXL
-> > setup, it wouldn't go through the emulation path.
+> > If you drop this line:
 > >
-> > Here is our exact setup. Guest runs Linux kernel 6.6rc2
-> >
-> > taskset --cpu-list 0-47,96-143 \
-> > numactl -N 0 -m 0 ${QEMU} \
-> > -M q35,cxl=3Don,hmat=3Don \
-> > -m 64G \
-> > -smp 8,sockets=3D1,cores=3D8,threads=3D1 \
-> > -object memory-backend-ram,id=3Dram0,size=3D45G \
-> > -numa node,memdev=3Dram0,cpus=3D0-7,nodeid=3D0 \
-> > -msg timestamp=3Don -L /usr/share/seabios \
-> > -enable-kvm \
-> > -object memory-backend-ram,id=3Dvmem0,size=3D19G,host-nodes=3D${HOST_CX=
-L_NODE},policy=3Dbind
-> > \
-> > -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
-> > -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port13,chassis=3D0,slot=
-=3D2 \
-> > -device cxl-type3,bus=3Droot_port13,volatile-memdev=3Dvmem0,id=3Dcxl-vm=
-em0 \
-> > -numa node,memdev=3Dvmem0,nodeid=3D1 \
-> > -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D19G,cxl-fmw.0.interleav=
-e-granularity=3D8k
+> > -numa node,memdev=vmem0,nodeid=1
+> 
+> We tried this as well and it works after going through the cxlcli
+> process and created the devdax device. The problem is that without the
+> "nodeid=1" configuration, we cannot connect with the explicit per numa
+> node latency/bandwidth configuration "-numa hmat-lb". I glanced at the
+> code in hw/numa.c, parse_numa_hmat_lb() looks like the one passing the
+> lb information to VM's hmat.
 >
-> :] you did what i thought you did
->
-> -numa node,memdev=3Dvmem0,nodeid=3D1
->
-> """
-> Another possiblity: You mapped this memory-backend into another numa
-> node explicitly and never onlined the memory via cxlcli.  I've done
-> this, and it works, but it's a "hidden feature" that probably should
-> not exist / be supported.
-> """
->
-> You're mapping vmem0 into an explicit numa node *and* into the type3
-> device.  You don't need to do both - and technically this shouldn't be
-> allowed.
->
-> With this configuration, you can go thorugh the cxl-cli setup process
-> for the CXL device, you'll find that you can create *another* node
-> (node 2 in this case) that maps to the same memory you mapped to node1..
->
->
-> You can drop the cxl devices objects in here and the memory will still
-> come up the way you want it to.
->
-> If you drop this line:
->
-> -numa node,memdev=3Dvmem0,nodeid=3D1
 
-We tried this as well and it works after going through the cxlcli
-process and created the devdax device. The problem is that without the
-"nodeid=3D1" configuration, we cannot connect with the explicit per numa
-node latency/bandwidth configuration "-numa hmat-lb". I glanced at the
-code in hw/numa.c, parse_numa_hmat_lb() looks like the one passing the
-lb information to VM's hmat.
+Yeah, this is what Jonathan was saying - right now there isn't a good
+way (in QEMU) to pass the hmat/cdat stuff down through the device.
+Needs to be plumbed out.
 
-From what I understand so far, the guest kernel will dynamically
-create a numa node after a cxl devdax device is created. That means we
-don't know the numa node until after VM boot. 2. QEMU can only
-statically parse the lb information to the VM at boot time. How do we
-connect these two things?
+In the meantime: You should just straight up drop the cxl device from
+your QEMU config.  It doesn't actually get you anything.
 
-Assuming that the same issue applies to a physical server with CXL.
-Were you able to see a host kernel getting the correct lb information
-for a CXL devdax device?
+> From what I understand so far, the guest kernel will dynamically
+> create a numa node after a cxl devdax device is created. That means we
+> don't know the numa node until after VM boot. 2. QEMU can only
+> statically parse the lb information to the VM at boot time. How do we
+> connect these two things?
 
->
-> You have to use the CXL driver to instantiate the dax device and the
-> numa node, and at *that* point you will see the read/write functions
-> being called.
->
-> ~Gregory
+during boot, the kernel discovers all the memory regions exposed to
+bios. In this qemu configuration you have defined:
+
+region 0: CPU + DRAM node
+region 1: DRAM only node
+region 2: CXL Fixed Memory Window (the last line of the cxl stuff)
+
+The kernel reads this information on boot and reserves 1 numa node for
+each of these regions.
+
+The kernel then automatically brings up regions 0 and 1 in nodes 0 and 1
+respectively.
+
+Node2 sits dormant until you go through the cxl-cli startup sequence.
+
+
+What you're asking for is for the QEMU team to plumb hmat/cdat
+information down through the type3 device.  I *think* that is presently
+possible with a custom CDAT file - but Jonathan probably has more
+details on that.  You'll have to go digging for answers on that one.
+
+
+Now - even if you did that - the current state of the cxl-type3 device
+is *not what you want* because your memory accesses will be routed
+through the read/write functions in the emulated device.
+
+What Jonathan and I discussed on the other thread is how you might go
+about slimming this down to allow pass-through of the memory without the
+need for all the fluff.  This is a non-trivial refactor of the existing
+device, so i would not expect that any time soon.
+
+At the end of the day, quickest way to get-there-from-here is to just
+drop the cxl related lines from your QEMU config, and keep everything
+else.
+
+> 
+> Assuming that the same issue applies to a physical server with CXL.
+> Were you able to see a host kernel getting the correct lb information
+> for a CXL devdax device?
+> 
+
+Yes, if you bring up a CXL device via cxl-cli on real hardware, the
+subsequent numa node ends up in the "lower tier" of the memory-tiering
+infrastructure.
+
+~Gregory
