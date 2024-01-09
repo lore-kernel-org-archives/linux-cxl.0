@@ -1,284 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB123B1
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 02:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1303ECA;
+	Tue,  9 Jan 2024 02:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bb2pSV55"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHdQt7lI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704766636; x=1736302636;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=kQAmrcOdH8VdFXFezT5HqpafbrnKbnNm1GopsYo5InI=;
-  b=bb2pSV55JWXalh/Tm5hv3gHJUMHkjlm0Zert0LoOGJVlJU+GluN/Tdfd
-   UernT7vDiQQzyW7vKzbzKxZ8OwSLsnFpcsS98KF/qgphUmBJZ78wLc3g5
-   F1jzBdUjg0825YCoYAha9hGPnHqhnpE7d6P5CzCOgEEQLkWkTizhXJjoI
-   uPEsCJ2c6RXUWLSWF/wQCk47VrhGC8DHYEr8kuftIeFgunBnisrfC/RaV
-   3ThHOI8VIAeAptP2jCNQuld/x0Mhx5V6xK8xGpGOgBxy9LrwRDw2I17kX
-   E1WF2nh6W6UNPhI2P7YaFSaXkWeIjdNzSVkMtmcKWweGOADykQ1qTUONS
+  t=1704767539; x=1736303539;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=3FcUlkcwMHKgHK9hWNfufrufMukM0bgfeG5tL8+ZjjY=;
+  b=NHdQt7lI77ov71k3WJubFsRguZcCUHz/yjqJhrRnKG6BhMQx4qqQ89Wn
+   6Hdbq4sUlZq4GgTqHnxRmXh39+wwoBVLNzhyOVTGbuPtgFT5JzW60RMCt
+   V8Wn+af3qeiGNwb62G/aisxXGDEfVqOYH0eMfGr3Rt6XqygqpanRqkx6M
+   5z7vfNvnpUSRf4xf0GLKPTOFdUFsbyfsyt9SnvZSJpgI53t8imcXNKNsv
+   rnTSnJiYkxx2Se3HcbChY5antNFQgGSZMPi0uDNer+VjRmgNjofsgzEIr
+   dqLYoeuohA50EMmVCMcCTmqDdlmirfAeBCCTVeFE5CJauvOFvvq6njwjP
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="388501821"
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="401857279"
 X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="388501821"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 18:17:16 -0800
+   d="scan'208";a="401857279"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 18:32:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="785052524"
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="731317751"
 X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="785052524"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 18:17:13 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-  <linux-cxl@vger.kernel.org>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  <dan.j.williams@intel.com>,  <ira.weiny@intel.com>,
-  <vishal.l.verma@intel.com>,  <alison.schofield@intel.com>,
-  <dave@stgolabs.net>
-Subject: Re: [PATCH v3 3/3] cxl: Add memory hotplug notifier for cxl region
-In-Reply-To: <38be52cf-a4ea-402c-9b14-47a80427f0c8@intel.com> (Dave Jiang's
-	message of "Mon, 8 Jan 2024 11:18:33 -0700")
-References: <170441200977.3574076.13110207881243626581.stgit@djiang5-mobl3>
-	<170441211484.3574076.5894396662836000435.stgit@djiang5-mobl3>
-	<87r0is9v6o.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240108121538.00001369@Huawei.com>
-	<38be52cf-a4ea-402c-9b14-47a80427f0c8@intel.com>
-Date: Tue, 09 Jan 2024 10:15:15 +0800
-Message-ID: <87wmsj8d70.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="731317751"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Jan 2024 18:32:18 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 8 Jan 2024 18:32:17 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 8 Jan 2024 18:32:17 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 8 Jan 2024 18:32:17 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 8 Jan 2024 18:32:16 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nSnHPx4y+deJMxhaeGvCcOTPWxod0RkWmYojKf9B6NR1U6jzkjsmd3CfH8XTHeCQzgs3DsgXcxBrGalUvix0gkEdi9+/bGpey4C480Z73Y3cHFXKriqOow0CpPHTwZSsXe7/2DekxbUH0xUrcaZhiq5fY8qHKN5PHrba947VcBJi3NXEfqQRQMBhZ1CA7iIt4cToIf2Qy7rcEDz+OylbsNEDauNJoUYsQ8B2gw+FZvMlKLPUZPiyp605EFjYN5rrW4U4EFmCEBUBF0iK6Yfk8jCYAFRrTkQvAnkSnJs+iFJ2FnQwZhgMY0eip9E0KLG8XcGFuWnr4ocPubHPJ9S5Xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N4+xM1g/KgQHowmNhQhPCUJOoOHB5IDBYTo+HTVDCBA=;
+ b=jQZe9ue4LkLFajdNQWjM6OtlpW14Y4YiFmNTyLIbvRMh33oeXCZt8WvOA7HDH1DRorXDxvlBro+fmVMZYQguZ3YU/EctMNYQ7vlKy1uw/ggNvuCKJzYSvmUfa3CgmFzOgCs96ZIawvsL/vNPuWuQYcSVbnqchmrUmvcHuUOIuaGsSACZ/v15fg6xLCjgNHTpa3BGuSBCn7M5B9YFk3kBXc+hLLquud9QMjcDb4P0PuI4MA1aO0YMZWPqm0J8FV7c0K4GW981NMp0qXFcDYOSG4Uzmkgp4Rb4oL/4juKh1ZehPiWXlFo12vQ5N0E1H+rVRz+5uQVfumb6yk3wAy9qhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CH0PR11MB8216.namprd11.prod.outlook.com (2603:10b6:610:192::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
+ 2024 02:32:15 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::da91:dbe5:857c:fa9c]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::da91:dbe5:857c:fa9c%4]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
+ 02:32:14 +0000
+Date: Mon, 8 Jan 2024 18:32:09 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Ira Weiny <ira.weiny@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
+	<shiju.jose@huawei.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>
+Subject: Re: [PATCH v5 0/9] efi/cxl-cper: Report CPER CXL component events
+ through trace events
+Message-ID: <659cb0295ac1_8d749294b@iweiny-mobl.notmuch>
+References: <20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com>
+ <20240108165855.00002f5a@Huawei.com>
+ <eefc5888-4610-8e39-61ed-2d84e9ebf255@amd.com>
+ <659caa8da651c_127da22947b@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <659caa8da651c_127da22947b@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: SJ0PR03CA0251.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::16) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH0PR11MB8216:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55be26f8-e628-481e-7187-08dc10bb3108
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +282B6PCthU1d/X9m98te95euFS6VaGDYjUCIaS0yiaX/8FLIz1GV0+8i3Sxv+DcM8YqdX99BxcVYVFK+3W6yUFCR5WYYRIl/XPagY5BBMag7svONam9IWvSgN5GLokt8SJ/hvrVYNrWENgPK8Qu8cq06CCHYD2seEou8ylSzWRO0OZTDCqyervWijjIrLcBQga8IJsi+kNPeIaCkUMNB+s+Vqf/Mwbx8W8+vRN5j/H8+ZpkJYwzb8JIHKajgf8oTGfH+b5z+UKKM/QR7vjeKfdaTsDlrD0vke7fm4y+MddeXltMLkCyUoaAtT0BZtnAFSDhEq7y/g3tlyn2l8+3lOkoylQzklXyKV3vBr2Eg27lmCKkRYIN1vMeY1sHWkgUZhnJCw6N0IpNQJF1N/WQsV3xtULtIvMgRMjn4Yo2aDCr4UZvu/VnowU2EkkJ4WY0xHBe2Mpm63JIH2fSjQBmlLHeHUABnyS7ew//GDMX9TFjODhxKlH7Y1msyrjMTz9hXfO3Jn0AjOmizFhIv9KvSFUt3JZssp6HbQAVeeqKsV+yVxyXZ12SnZhC4PKFPGL+E9EIIiNmLrGSNPbNPAEU3Ka0HQJuG8Nm4kf/6mEsjZEHC/iGZgwvgGLCxunvQzHK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(396003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(83380400001)(6512007)(9686003)(53546011)(38100700002)(44832011)(8676002)(8936002)(4326008)(7416002)(5660300002)(2906002)(6486002)(6506007)(6666004)(478600001)(54906003)(110136005)(66476007)(66556008)(316002)(66946007)(41300700001)(82960400001)(86362001)(505234007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PPq1lw5+fyDMJ2GLZWp8cyY0+kfbrrgQUmtG2R03m7i8sBwloySFNDI7c36W?=
+ =?us-ascii?Q?OYabQcxCJawKEqlmu4hoJbwtF+FnYiJpiBw3Mm1meCbe4rkNCG5j1u7ti7JM?=
+ =?us-ascii?Q?P2M5lLe2hwToFG4oqlNBYH00I6rThgiTrik+xvm/nqDqF6CjwpYA8V5nAglU?=
+ =?us-ascii?Q?HSjtA+wrShKiKZmrycMq0bWm6ACO9IdQnk3n76v9hjgil1/OFjoVhQOoywke?=
+ =?us-ascii?Q?6sdLic2OGEfTLQuU95/o+k9a7EZTp3TQ3lYDVFnCaehCoktI6YozoCv7kU91?=
+ =?us-ascii?Q?S5Y9l3xJMkCas60xBOaqvRgkJDWlTloOxiSwNtdIu3NiQCnXuxH5WtuC+ZLb?=
+ =?us-ascii?Q?b6bcZx7hw8Qc4cB9tKcv1ROR0lP5C8BHjAQ6gJ7Aumd5lspHpZ3uwvV1vV34?=
+ =?us-ascii?Q?ThajEc9kQNEATN55JNwToDLzC4gcoEXT2aY9D9vbHClOJz6+gVHUtEidwEqd?=
+ =?us-ascii?Q?88xDsRb5tnROJfC2oadFhg9C0fylCTPK3K4tLt41lxU4Y8qHHNE6nYthTeDm?=
+ =?us-ascii?Q?5T2nHlh3UPzpiTYUgvchHRy93sQpDCob86EqxgocLVDc+pAhLiWejPsMwmYX?=
+ =?us-ascii?Q?hKG0EPONhPIClYf833h+LkMtWhUSFrBkQz5BxnhOyQsK1o6YxrXTQKZpp6Ck?=
+ =?us-ascii?Q?+CV8dxYKG9N7EkxlHSBbPNj1sGvIn1tvl7Xzoao+L9BWlVmuHFpYDDyhQkBE?=
+ =?us-ascii?Q?7b/rvoyNHUTYvSzqLHzGxf6FhtDJcBkVmBFqxOzv2sQ5v/azm3M+mW6PMVCj?=
+ =?us-ascii?Q?jXCakPj6INkEh0/MUQU45jWGOkUyncIICm1zs19aPvp8BNIijPvoFmLhfe/+?=
+ =?us-ascii?Q?OuESe4bOWwqGc4dLbEJPBgXClNin9J0ZzUD0C98ppcMZYD4hmOnRKnDPvGJa?=
+ =?us-ascii?Q?C/phT6DAbVI/amOqHp83xORgh3/ROApUr/jfPMtMFrfYFPtN8Cxz3WkrSQfo?=
+ =?us-ascii?Q?4TDYPfizyEhhfhltNxQyjobBgN7X6ihePstqOTy1E6HWuXdCTk0m9DjPD6h+?=
+ =?us-ascii?Q?nEiHkfm+bJWQDuzyiAejYPXPIrDzdHaULOrjdMmPFFnuxNMMmke64bzGpeAb?=
+ =?us-ascii?Q?/9ZxNCStisMrPzVDTOxb5mzgHUaKw7xUZzFnVo68NPCw5saTHVmSgAivcpsM?=
+ =?us-ascii?Q?yDw8z2JXZ+vcfn6ch0TcFipc4dY9qh2Afj2wbQDutPTKq2QvLCRFPR3EHR1J?=
+ =?us-ascii?Q?BQN6nHN9ChDchq1QUXylhuckx8Ae5nBsc9Pm+IC3PxIlu39h6/LoE+nHTL5s?=
+ =?us-ascii?Q?8fwx+NPos0whBGKZTt4O6Wg/S2PnXWOncsGFriQLkUvYlkym533YR9Yhfxsg?=
+ =?us-ascii?Q?/Sk3QLMqnzLDxOeiJQrwqm4r+oX10TWwAaRXi+UBN6iXtx61EIbl99dCRU8Z?=
+ =?us-ascii?Q?Glhz3I65cRBu0Sz+/CCvGO0d598oFmS63imbP2HnFAESxttQPAou/WRfbLKc?=
+ =?us-ascii?Q?D1XAd+MRuLYY1+qsBZJj8Uu/MktcGln1Ap7Re3VFJ3nOwCNEDU67tKy8jSy9?=
+ =?us-ascii?Q?gzkUkiSpc5O9g4QTgolgFSDfRegxwvD4myLrvykSttPI6+dDlnfyH7aAYvd2?=
+ =?us-ascii?Q?ukM9aNpVVCtJqkklWfsirSGmss2pmt1RfIl9m9hbYXO/h3JfLiN4PEpX6Cq2?=
+ =?us-ascii?Q?08cF9nnebTauiSRrKglHlm7t/tMu94v13trnim15xqyV?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55be26f8-e628-481e-7187-08dc10bb3108
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 02:32:14.9478
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nLBMafwQUWRAg8DvpiUI1efEakISf/KSIZR7IVNu9kwOlHN95fRsJu3JPiM0uQLHnVp0A9KLJYbCOfvIOc16Sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8216
+X-OriginatorOrg: intel.com
 
-Dave Jiang <dave.jiang@intel.com> writes:
+Dan Williams wrote:
+> Smita Koralahalli wrote:
+> > On 1/8/2024 8:58 AM, Jonathan Cameron wrote:
+> > > On Wed, 20 Dec 2023 16:17:27 -0800
+> > > Ira Weiny <ira.weiny@intel.com> wrote:
+> > > 
+> > >> Series status/background
+> > >> ========================
+> > >>
+> > >> Smita has been a great help with this series.  Thank you again!
+> > >>
+> > >> Smita's testing found that the GHES code ended up printing the events
+> > >> twice.  This version avoids the duplicate print by calling the callback
+> > >> from the GHES code instead of the EFI code as suggested by Dan.
+> > > 
+> > > I'm not sure this is working as intended.
+> > > 
+> > > There is nothing gating the call in ghes_proc() of ghes_print_estatus()
+> > > and now the EFI code handling that pretty printed things is missing we get
+> > > the horrible kernel logging for an unknown block instead.
+> > > 
+> > > So I think we need some minimal code in cper.c to match the guids then not
+> > > log them (on basis we are arguing there is no need for new cper records).
+> > > Otherwise we are in for some messy kernel logs
+> > > 
+> > > Something like:
+> > > 
+> > > {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
+> > > {1}[Hardware Error]: event severity: recoverable
+> > > {1}[Hardware Error]:  Error 0, type: recoverable
+> > > {1}[Hardware Error]:   section type: unknown, fbcd0a77-c260-417f-85a9-088b1621eba6
+> > > {1}[Hardware Error]:   section length: 0x90
+> > > {1}[Hardware Error]:   00000000: 00000090 00000007 00000000 0d938086  ................
+> > > {1}[Hardware Error]:   00000010: 00100000 00000000 00040000 00000000  ................
+> > > {1}[Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000040: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000050: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000060: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000070: 00000000 00000000 00000000 00000000  ................
+> > > {1}[Hardware Error]:   00000080: 00000000 00000000 00000000 00000000  ................
+> > > cxl_general_media: memdev=mem1 host=0000:10:00.0 serial=4 log=Informational : time=0 uuid=fbcd0a77-c260-417f-85a9-088b1621eba6 len=0 flags='' handle=0 related_handle=0 maint_op_class=0 : dpa=0 dpa_flags='' descriptor='' type='ECC Error' transaction_type='Unknown' channel=0 rank=0 device=0 comp_id=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 validity_flags=''
+> > > 
+> > > (I'm filling the record with 0s currently)
+> > 
+> > Yeah, when I tested this, I thought its okay for the hexdump to be there 
+> > in dmesg from EFI as the handling is done in trace events from GHES.
+> > 
+> > If, we need to handle from EFI, then it would be a good reason to move 
+> > the GUIDs out from GHES and place it in a common location for EFI/cper 
+> > to share similar to protocol errors.
+> 
+> Ah, yes, my expectation was more aligned with Jonathan's observation to
+> do the processing in GHES code *and* skip the processing in the CPER
+> code, something like:
+> 
 
-> On 1/8/24 05:15, Jonathan Cameron wrote:
->> On Mon, 08 Jan 2024 14:49:03 +0800
->> "Huang, Ying" <ying.huang@intel.com> wrote:
->> 
->>> Dave Jiang <dave.jiang@intel.com> writes:
->>>
->>>> When the CXL region is formed, the driver would computed the performance
->>>> data for the region. However this data is not available at the node data
->>>> collection that has been populated by the HMAT during kernel
->>>> initialization. Add a memory hotplug notifier to update the performance
->>>> data to the node hmem_attrs to expose the newly calculated region
->>>> performance data. The CXL region is created under specific CFMWS. The
->>>> node for the CFMWS is created during SRAT parsing by acpi_parse_cfmws().
->>>> Additional regions may overwrite the initial data, but since this is
->>>> for the same proximity domain it's a don't care for now.
->>>>
->>>> node_set_perf_attrs() symbol is exported to allow update of perf attribs
->>>> for a node. The sysfs path of
->>>> /sys/devices/system/node/nodeX/access0/initiators/* is created by
->>>> ndoe_set_perf_attrs() for the various attributes where nodeX is matched
->>>> to the proximity domain of the CXL region.
->> 
->> As per discussion below.  Why is access1 not also relevant for CXL memory?
->> (it's probably more relevant than access0 in many cases!)
->> 
->> For historical references, I wanted access0 to be the CPU only one, but
->> review feedback was that access0 was already defined as 'initiator based'
->> so we couldn't just make the 0 indexed one the case most people care about.
->> Hence we grew access1 to cover the CPU only case which most software cares
->> about.
->> 
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Rafael J. Wysocki <rafael@kernel.org>
->>>> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
->>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> ---
->>>> v3:
->>>> - Change EXPORT_SYMBOL_NS_GPL(,CXL) to EXPORT_SYMBOL_GPL() (Jonathan)
->>>> - use read_bandwidth as check for valid coords (Jonathan)
->>>> - Remove setting of coord access level 1. (Jonathan)
->>>> ---
->>>>  drivers/base/node.c       |    1 +
->>>>  drivers/cxl/core/region.c |   42 ++++++++++++++++++++++++++++++++++++++++++
->>>>  drivers/cxl/cxl.h         |    3 +++
->>>>  3 files changed, 46 insertions(+)
->>>>
->>>> diff --git a/drivers/base/node.c b/drivers/base/node.c
->>>> index cb2b6cc7f6e6..48e5cb292765 100644
->>>> --- a/drivers/base/node.c
->>>> +++ b/drivers/base/node.c
->>>> @@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->>>>  		}
->>>>  	}
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(node_set_perf_attrs);
->>>>  
->>>>  /**
->>>>   * struct node_cache_info - Internal tracking for memory node caches
->>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>> index d28d24524d41..bee65f535d6c 100644
->>>> --- a/drivers/cxl/core/region.c
->>>> +++ b/drivers/cxl/core/region.c
->>>> @@ -4,6 +4,7 @@
->>>>  #include <linux/genalloc.h>
->>>>  #include <linux/device.h>
->>>>  #include <linux/module.h>
->>>> +#include <linux/memory.h>
->>>>  #include <linux/slab.h>
->>>>  #include <linux/uuid.h>
->>>>  #include <linux/sort.h>
->>>> @@ -2972,6 +2973,42 @@ static int is_system_ram(struct resource *res, void *arg)
->>>>  	return 1;
->>>>  }
->>>>  
->>>> +static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
->>>> +					  unsigned long action, void *arg)
->>>> +{
->>>> +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
->>>> +					       memory_notifier);
->>>> +	struct cxl_region_params *p = &cxlr->params;
->>>> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
->>>> +	struct cxl_decoder *cxld = &cxled->cxld;
->>>> +	struct memory_notify *mnb = arg;
->>>> +	int nid = mnb->status_change_nid;
->>>> +	int region_nid;
->>>> +
->>>> +	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
->>>> +		return NOTIFY_DONE;
->>>> +
->>>> +	region_nid = phys_to_target_node(cxld->hpa_range.start);
->>>> +	if (nid != region_nid)
->>>> +		return NOTIFY_DONE;
->>>> +
->>>> +	/* Don't set if there's no coordinate information */
->>>> +	if (!cxlr->coord.write_bandwidth)
->>>> +		return NOTIFY_DONE;  
->>>
->>> Although you said you will use "read_bandwidth" in changelog, you
->>> actually didn't do that.
->>>
->>>> +
->>>> +	node_set_perf_attrs(nid, &cxlr->coord, 0);
->>>> +	node_set_perf_attrs(nid, &cxlr->coord, 1);  
->>>
->>> And this.
->>>
->>> But I don't think it's good to remove access level 1.  According to
->>> commit b9fffe47212c ("node: Add access1 class to represent CPU to memory
->>> characteristics").  Access level 1 is for performance from CPU to
->>> memory.  So, we should keep access level 1.  For CXL memory device,
->>> access level 0 and access level 1 should be equivalent.  Will the code
->>> be used for something like GPU connected via CXL?  Where the access
->>> level 0 may be for the performance from GPU to the memory.
->>>
->> I disagree. They are no more equivalent than they are on any other complex system.
->> 
->> e.g. A CXL root port being described using generic Port infrastructure may be
->> on a different die (IO dies are a common architecture) in the package
->> than the CPU cores and that IO die may well have generic initiators that
->> are much nearer than the CPU cores.
->> 
->> In those cases access0 will cover initators on the IO die but access1 will
->> cover the nearest CPU cores (initiators).
->> 
->> Both should arguably be there for CXL memory as both are as relevant as
->> they are for any other memory.
->> 
->> If / when we get some GPUs etc on CXL that are initiators this will all
->> get a lot more fun but for now we can kick that into the long grass.
->
->
-> With the current way of storing HMAT targets information, only the
-> best performance data is stored (access0). The existing HMAT handling
-> code also sets the access1 if the associated initiator node contains a
-> CPU for conventional memory. The current calculated full CXL path is
-> the access0 data. I think what's missing is the check to see if the
-> associated initiator node is also a CPU node and sets access1
-> conditionally based on that. Maybe if that conditional gets added then
-> that is ok for what we have now?
+Agreed this was intended I did not realize the above.
 
-We do need access1 to put NUMA nodes into appropriate memory tiers, just
-like we have done in hmat.c.  Because default memory tiers are defined
-with performance from CPU to the device.  Is it possible to get access1
-always?
+> 
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 35c37f667781..0a4eed470750 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/bcd.h>
+>  #include <acpi/ghes.h>
+>  #include <ras/ras_event.h>
+> +#include <linux/cxl-event.h>
+>  #include "cper_cxl.h"
+>  
+>  /*
+> @@ -607,6 +608,15 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
+>  			cper_print_prot_err(newpfx, prot_err);
+>  		else
+>  			goto err_section_too_small;
+> +	} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
+> +		printk("%ssection_type: CXL General Media Error\n", newpfx);
 
---
-Best Regards,
-Huang, Ying
+Do we want the printk's here?  I did not realize that a generic event
+would be printed.  So intention was nothing would be done on this path.
 
-> If/When the non-CPU initiators shows up for CXL, we'll need to change
-> the way to store the initiator to generic target table data and how we
-> calculate and setup access0 vs access1. Maybe that can be done as a
-> later iteration?
->
-> DJ
->
->> 
->> Jonathan
->> 
->> 
->>> --
->>> Best Regards,
->>> Huang, Ying
->>>
->>>> +
->>>> +	return NOTIFY_OK;
->>>> +}
->>>> +
->>>> +static void remove_coord_notifier(void *data)
->>>> +{
->>>> +	struct cxl_region *cxlr = data;
->>>> +
->>>> +	unregister_memory_notifier(&cxlr->memory_notifier);
->>>> +}
->>>> +
->>>>  static int cxl_region_probe(struct device *dev)
->>>>  {
->>>>  	struct cxl_region *cxlr = to_cxl_region(dev);
->>>> @@ -2997,6 +3034,11 @@ static int cxl_region_probe(struct device *dev)
->>>>  		goto out;
->>>>  	}
->>>>  
->>>> +	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
->>>> +	cxlr->memory_notifier.priority = HMAT_CALLBACK_PRI;
->>>> +	register_memory_notifier(&cxlr->memory_notifier);
->>>> +	rc = devm_add_action_or_reset(&cxlr->dev, remove_coord_notifier, cxlr);
->>>> +
->>>>  	/*
->>>>  	 * From this point on any path that changes the region's state away from
->>>>  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
->>>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->>>> index 4639d0d6ef54..2498086c8edc 100644
->>>> --- a/drivers/cxl/cxl.h
->>>> +++ b/drivers/cxl/cxl.h
->>>> @@ -6,6 +6,7 @@
->>>>  
->>>>  #include <linux/libnvdimm.h>
->>>>  #include <linux/bitfield.h>
->>>> +#include <linux/notifier.h>
->>>>  #include <linux/bitops.h>
->>>>  #include <linux/log2.h>
->>>>  #include <linux/node.h>
->>>> @@ -520,6 +521,7 @@ struct cxl_region_params {
->>>>   * @flags: Region state flags
->>>>   * @params: active + config params for the region
->>>>   * @coord: QoS access coordinates for the region
->>>> + * @memory_notifier: notifier for setting the access coordinates to node
->>>>   */
->>>>  struct cxl_region {
->>>>  	struct device dev;
->>>> @@ -531,6 +533,7 @@ struct cxl_region {
->>>>  	unsigned long flags;
->>>>  	struct cxl_region_params params;
->>>>  	struct access_coordinate coord;
->>>> +	struct notifier_block memory_notifier;
->>>>  };
->>>>  
->>>>  struct cxl_nvdimm_bridge {  
->>>
->> 
->> 
+Ira
