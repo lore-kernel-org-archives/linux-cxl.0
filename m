@@ -1,188 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101EA364C1;
-	Tue,  9 Jan 2024 23:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B1F3E480
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 23:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LsQSeA7/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704843520; x=1736379520;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=xy0vNyWK4NMphtKtF5Twl8XhFt2Jybju4y2NE85IJ2E=;
-  b=LsQSeA7/FyhbypPUCEUEPTwLbJzyWwwKoHY0iVlwrqOXEJDl2m10/vyR
-   hAfjAXTMDNhdSRIQ2x/f0tryx109FDv0eKf/4EiKiJQNX8I40eifw7pW0
-   1sNWvv95OCuCTwuT5EbOlu5dF2uoKKnxad8YaKv7CyTTtPg2BMv29KAua
-   1ZCIUTssTFcM4ksF0V3X/LdCPHswkn2STshYbFFBZ/7PUmRxVYiv09c8r
-   8DGUMdGH+jMTldDqaaqUVVxUqdtYhlJNxbGbndwM3mDX7WKVqQ7LiThnC
-   i7+YcpYC5ekbHWxV4VdIliviLde28NZzT8qiqOdMhLUD7wlGAiKjft/rE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429540143"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="429540143"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 15:38:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="16440408"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jan 2024 15:38:39 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Jan 2024 15:38:38 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Jan 2024 15:38:33 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 9 Jan 2024 15:38:33 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Jan 2024 15:38:33 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lBwSRoli9t51/FyLltbYTZmDsiSSwBXsao9lebyv72AyFMGffT2FhfM3v/2teZC+XxwECtfdN/AIROteOQ4m170zxEFnSSszdvgkOb8B3vPDZxMCLY57aTqH1wErVmbDIQWCKNUoqyp4d2PA5J59t90txtSAA7kUODtgKjt9v4cxdl+zVJ7dU0sraWFUdQk3/KQb81z5jmTaI/k8vWDuHGiB7+TpGsBWhvRveNwdHMJAIkZz9ZPyNqkJ+u+Pax5TMg8yYtO6YiMGRCORavfH/Bt1SHGBlif2x5GhWbsePtzmqNy+UZG2Ic12gjvfOBnKGXaaEJ9/ePlJG/1/0Q0PMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aCUsgw683MEk1qoTGdyKY23MukXkcH4UVwcKzxuLlTE=;
- b=S6xvyYLL+gYk9H/OnKr2mkjx53lC3uaqHJIOnwzBahUBG+DCnHcpAfad61RrdiPtsuvA1TbeEtBmQ428Hp5rMdzkLy2AzTQvnTiiqNyFDxI7OiIfFIMjpkKzPCGNm/HIu9ioJIAoWXyWW6lf/KTA9h6l74OWqKF67F1yhdbJePCwETpsyC8SDwwnSUF0gyC3s5AA9t8H76SesaX9OHkFJ/XHfx2Ydnnuvb6J8whKbDPpxhabwmbr772k9XCEEXOPsbnjLfQySyuHfDGtMrzkMyVHGN55yCbMkfNptczmVzx3jjTsyDwoLE0JW0BRjcwVWj+j6wm8JXciZ6K90i+8LQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM6PR11MB4692.namprd11.prod.outlook.com (2603:10b6:5:2aa::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.17; Tue, 9 Jan
- 2024 23:38:31 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Tue, 9 Jan 2024
- 23:38:31 +0000
-Date: Tue, 9 Jan 2024 15:38:28 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Ira Weiny
-	<ira.weiny@intel.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v5 4/9] cxl/events: Remove passing a UUID to known event
- traces
-Message-ID: <659dd8f467dbe_5cee29456@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com>
- <20231220-cxl-cper-v5-4-1bb8a4ca2c7a@intel.com>
- <20240108132325.00000e9c@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240108132325.00000e9c@Huawei.com>
-X-ClientProxiedBy: MW4PR04CA0098.namprd04.prod.outlook.com
- (2603:10b6:303:83::13) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="e5LXuhcI"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cd46e7ae8fso37419931fa.1
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jan 2024 15:56:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1704844559; x=1705449359; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=deI9GyKmvHyCD066H+Wu2YAjGfRVp8M+T1N2HV8O5I4=;
+        b=e5LXuhcIeAM/zP8PKyHWfOSL5CzmG2hlGtTfQ36WK4SCnm4nK9uvuCn67Aa8cHBwUH
+         BYzqkySXiiIiZ3tFRLYXuZFcg0g1+Kx+Bc1xa4UrQ/92HaG82xYx8vKZKRaHHzPHBDLD
+         GBpKQDyroAfppvtY+1c8ZgP561yvWAW38RCseCwl45BNPxT+2uOpOvdtQ/ySkypbodzX
+         Rx4wVwg093Hted5BQI2YVRHJ+Xty9Q4kwxMd9VdJhw0avQV5v0bEmKedj8X5fB6O7lYD
+         /XCyv/iEbyPS2MmCr9HJgnVRfuBlO4a5/iuwRyjkB8l8Ws39W3gj3+qYlReqHtniEgj/
+         TQDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704844559; x=1705449359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=deI9GyKmvHyCD066H+Wu2YAjGfRVp8M+T1N2HV8O5I4=;
+        b=OfGhDpYFFjM7Z0fvY8Az7QfbCcG3fYA9mhkBuyGuCWk5GnVEAb0uJ2JAl3QX4wRV6a
+         +nSu09fjAF0JMlz7EpKglWW6PjKGKT9Li3gwn3T5SAny9exJlZUcqGPOoXUHfc9BuFP2
+         U1cfDMRrIZ2VwtYJ/4olg2/4rHvcpNvTBzylvrempstaiOzA8A8KSuYtc3K30cog8W6Q
+         7PqSZBUQr7/Tqj4AyRlHkb6tzONArym2iD01MzruCK+EUSK/nFntj8m4f+8/3ftXQCK2
+         4SqYksbxym9Ny579TR9umji3JrsEQTTdDFaOxRkDd+sEp+by5D6V2UvJ9fzBPlaqQ4q3
+         vyQQ==
+X-Gm-Message-State: AOJu0Yyqfr+Z27dPBezQt5WrEcggidMvm4w7YLEd24AmuFAPwPtctEXH
+	gNQQFWKv1mMbm3igN3TPFhcRud3J5PvxO3gST7D5iC4DpCFraA==
+X-Google-Smtp-Source: AGHT+IH8niV1qNroh8QduYcojlVVDQFS9X2GkpYdi7ulR8Zvv4CkOMPH0UDDuHXqgIb4u1lPoAwHj9mmHs1ntGL5UpY=
+X-Received: by 2002:a05:6512:1587:b0:50e:7be8:4705 with SMTP id
+ bp7-20020a056512158700b0050e7be84705mr24917lfb.260.1704844558979; Tue, 09 Jan
+ 2024 15:55:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM6PR11MB4692:EE_
-X-MS-Office365-Filtering-Correlation-Id: e008c351-e8f5-40b6-5421-08dc116c169c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: swhF1E+ZXEjMmLaQGJNV+MkcrLxndGZzeBcQHQ3Lc+XVvqFeb13mbKHqdEcbVN29axjL5m08V44guXZjWqmTM1SM+hmPWpg794WAXMxQQfaIZq37hV80EhzJoKTLZTHTNDq3jPmD2rHRTClJnX4tgLVYzdkO9Yh9evBfjHjLjC+yrzoCAEVBZNoGP5cHfOwPRAGSJak8hmkYZNrKh2rU1uFehltqdp3dLNbvOJPrCL+5bs8uylre+eWlelqU1dCyxT2TVojpgBgUzKwhTDJtanD6rvJMJ2J0QFwUs2x8JQozdFGeXv1gluFkoXuY5M+4jrhDQyn4ON/Cw6769VoT4SbrxOdVYskwIeugHDKRIqtvz3hU//4v0yy4E1ANS4Kk34DE/xSNmvrJGHj4EYFO/oaOo03RCyl/j4ikUnHC+YzvfcuFdmY4hIh4prOKMtyysVNu7eUSsyQwAf7f2LbzIPcM+0XPZ1qrxIUnBhuqmxhpb5Yxv+eEXnFE1RdQvFeVVMEDJQnhdpxZm+tDtcw4pouC4EVufFvnKiFg8Uju7TpYjrAZlfRcEVYz5Np45Cdf
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(376002)(366004)(39860400002)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(6512007)(9686003)(26005)(86362001)(38100700002)(82960400001)(5660300002)(4326008)(6506007)(6666004)(8936002)(6636002)(316002)(8676002)(66476007)(66946007)(110136005)(54906003)(66556008)(2906002)(41300700001)(478600001)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zjL5qcbEYB11XxGe2Lrvk1EjizsoANnFXq4lpM0gf7YFVeCLTDyOgReGmcAO?=
- =?us-ascii?Q?Lz53jmyHqMtHEExJ4KmwZKhFW5eSJAbp03VEgrmFgJkOhS6VUdOXKx0x/89M?=
- =?us-ascii?Q?x3EEovggsnJfQTFdYupSVft/IhOLe0tQBMcuKT5ttmRuNA4bB+VkZq0mBej3?=
- =?us-ascii?Q?afDNkbsdpLTfENjAMsms7fUh+vZYsoifdcS7LLd/SObJmiCXD/T4guVACZOS?=
- =?us-ascii?Q?HyOozFh9fXDjj3EtkfqA1Sx87BiHjRBJpuQDf4AajFooEku92iENp4GIzpOn?=
- =?us-ascii?Q?QniCDzJ3CCdA6ceIcxTb/tVv1Mk0iufcX8NJMPuavYTEkfBNfCYQORb06sF3?=
- =?us-ascii?Q?JA142m51UZSbItSB3OY+BiKZal1tfwUnNwIlqIWUyrUB9j0GVJb57EnjcZjr?=
- =?us-ascii?Q?/ADxsIvIzWLB909kluxbRpCSrdim7Wx6pqsDPczTfb61hALhDYmitV9+LAO5?=
- =?us-ascii?Q?h04QZJiPu3TSP1DKcnIOuC8r2DT06KUXdQKs457mhkgSI3G04/Snqless6HY?=
- =?us-ascii?Q?ZjUkcVPauYR26RPKzgDXduDEAIwzTn0ZvVk4TjVVxQcG00NCundzqK2zRCq0?=
- =?us-ascii?Q?50bjUKVxSJJaorl05BdVqrCIokDFOK/IjKrMt3dIg8y7DCRdrkWmoDMSSYnw?=
- =?us-ascii?Q?G6s1jOFkJxCGzyf7LJqavJXXPrKkwl+asHY05wrSY17h1f9k5iG0FN8cSUYa?=
- =?us-ascii?Q?MGAf46767049jky+Xis5ioy0FCg1Kwh8SxjSIqwlUDF6/8jv0sVmyLDeTCjO?=
- =?us-ascii?Q?JhVTDlb7vFIH4976/OsUQqsA703qTleP2HY6gPxWyEg2miiIZY4MO04Hhu4r?=
- =?us-ascii?Q?VEydK2zYtuW3IwO26K8Rr0QNh05OCQDAlQASlCGDPOyzqSEd406Zg1eZafU8?=
- =?us-ascii?Q?7wmOY5TE5ajPuR5OgBVZzcB5jlsYoYiZ06vkI0S55MDSWuGFsFi/bHpbOINu?=
- =?us-ascii?Q?WKI71ArbPnUItb7P03yMvx3gzRPyd5LEXtldsXtQsMxbOTbMP7u2s028F73G?=
- =?us-ascii?Q?CoM/VM7STEun1ZmSE1sGVU3oD93Ob3rvLts2+gu3QhAw9coOrYi0UUxAFiuj?=
- =?us-ascii?Q?X0gdbAeDSKiX5lnxpM3dZpoMWfjdyiEc6b3QgK8j2OdJEB+z7Ysl21l+bWDB?=
- =?us-ascii?Q?OoxQ4OBjt47PU7ueSg7khcqAhu+E44G3AUPMPbwBPywtCoeak5rE7VkU9JYo?=
- =?us-ascii?Q?ZjQHtSSui+Frdp2sVn2jWkfAaeWbyCviC6WP+viqR29krRoXWZkxVSqcUJz+?=
- =?us-ascii?Q?9+j7GCBDGtwSBUkTKN3JJbkqqxN0pBAc9kmxn6FwgtPIPQ9JavJZkwdcCnD3?=
- =?us-ascii?Q?OKmIwsSTusLHyIvZzzsQzc7H2xpoyFKoi67aHCZOpfOmInTwZCTATJTBcGQd?=
- =?us-ascii?Q?X1qDeE56DhGE1cHs5y4JCmXQfe6G3dl24kgsUxgRe8Ll3/z0gT/QLSp3oUU6?=
- =?us-ascii?Q?Ta2tEhzi7On2M+A6Cv30tFCTbRsWp0OscHhRfoQXV8KubsyIdAcpsGJnI2sK?=
- =?us-ascii?Q?emldZa8LssuqhmBcwVqJuxCGQTwVJPDgu8Ljf3nqakDPh4Y20Jb4ELJWW10F?=
- =?us-ascii?Q?6nl5vP6wIVondAOt2mak2fMWGBVZEeynO94z/73g+KWaSEvE0dDfI7EOAeu6?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e008c351-e8f5-40b6-5421-08dc116c169c
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 23:38:31.5054
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7LjgvFO66wWqzduMiGxpJuhO6mHJRk83MQOmAsdrn32z5jS+6qBK5lIIhPnx/dnaUGpQRa1dfGSMV4c5f/pBf7pI8gYokh78UNHUtTD1+6o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4692
-X-OriginatorOrg: intel.com
+References: <20240101075315.43167-2-horenchuang@bytedance.com>
+ <ZZXX95yvk/WTIBT/@memverge.com> <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
+ <ZZwtmiucNXxmrZ7S@memverge.com> <CAAYibXhfUu8dMwvBmWz4P6N9-yLao0QwAFozk4rS_0GPsEZd7Q@mail.gmail.com>
+ <CAAYibXgf6i5+aqopCrVu5ZveDJ9WP2M2AJaUUaj5qFXFHQQxmQ@mail.gmail.com>
+ <ZZydwBTS4NeSizzb@memverge.com> <CAAYibXhY5p6VN7yAMpmfAgHO+gsf51dvNw68y__RYV+43CVVLQ@mail.gmail.com>
+ <ZZ2lNoTQ8hDHADTT@memverge.com> <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
+ <ZZ3FAegN/ezu9Ghy@memverge.com>
+In-Reply-To: <ZZ3FAegN/ezu9Ghy@memverge.com>
+From: Hao Xiang <hao.xiang@bytedance.com>
+Date: Tue, 9 Jan 2024 15:55:46 -0800
+Message-ID: <CAAYibXhTUgd+z3Xqk7yeWqQmHxtDmf3Ud_01iEHS0KRj9GhjUw@mail.gmail.com>
+Subject: Re: [External] Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem:
+ qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and its
+ arg 'cxlram'
+To: Gregory Price <gregory.price@memverge.com>
+Cc: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	Fan Ni <fan.ni@samsung.com>, Ira Weiny <ira.weiny@intel.com>, 
+	=?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
+	David Hildenbrand <david@redhat.com>, Igor Mammedov <imammedo@redhat.com>, Eric Blake <eblake@redhat.com>, 
+	Markus Armbruster <armbru@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	=?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
+	Eduardo Habkost <eduardo@habkost.net>, qemu-devel@nongnu.org, 
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jonathan Cameron wrote:
-> On Wed, 20 Dec 2023 16:17:31 -0800
-> Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-> > The UUID data is redundant in the known event trace types.  The addition
-> > of static defines allows the trace macros to create the UUID data inside
-> > the trace thus removing unnecessary code.
-> > 
-> > Have well known trace events use static data to set the uuid field based
-> > on the event type.
-> > 
-> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> 
-> >  	TP_STRUCT__entry(
-> >  		CXL_EVT_TP_entry
-> > @@ -422,7 +424,8 @@ TRACE_EVENT(cxl_dram,
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		CXL_EVT_TP_fast_assign(cxlmd, log, uuid, rec->hdr);
-> > +		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> > +		memcpy(&__entry->hdr_uuid, &CXL_EVENT_DRAM_UUID, sizeof(uuid_t));
-> 
-> Hmm. Why not
-> 
-> 		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
-> ?
-> 
-> Compiler should be able to squish the stuff in the define down to data as as the
-> UUID generation logic is pretty simple.
-> 
-> I've not emulated the cper records for these yet, so not tested that works beyond
-> compiling.
+On Tue, Jan 9, 2024 at 2:13=E2=80=AFPM Gregory Price <gregory.price@memverg=
+e.com> wrote:
+>
+> On Tue, Jan 09, 2024 at 01:27:28PM -0800, Hao Xiang wrote:
+> > On Tue, Jan 9, 2024 at 11:58=E2=80=AFAM Gregory Price
+> > <gregory.price@memverge.com> wrote:
+> > >
+> > > If you drop this line:
+> > >
+> > > -numa node,memdev=3Dvmem0,nodeid=3D1
+> >
+> > We tried this as well and it works after going through the cxlcli
+> > process and created the devdax device. The problem is that without the
+> > "nodeid=3D1" configuration, we cannot connect with the explicit per num=
+a
+> > node latency/bandwidth configuration "-numa hmat-lb". I glanced at the
+> > code in hw/numa.c, parse_numa_hmat_lb() looks like the one passing the
+> > lb information to VM's hmat.
+> >
+>
+> Yeah, this is what Jonathan was saying - right now there isn't a good
+> way (in QEMU) to pass the hmat/cdat stuff down through the device.
+> Needs to be plumbed out.
+>
+> In the meantime: You should just straight up drop the cxl device from
+> your QEMU config.  It doesn't actually get you anything.
+>
+> > From what I understand so far, the guest kernel will dynamically
+> > create a numa node after a cxl devdax device is created. That means we
+> > don't know the numa node until after VM boot. 2. QEMU can only
+> > statically parse the lb information to the VM at boot time. How do we
+> > connect these two things?
+>
+> during boot, the kernel discovers all the memory regions exposed to
+> bios. In this qemu configuration you have defined:
+>
+> region 0: CPU + DRAM node
+> region 1: DRAM only node
+> region 2: CXL Fixed Memory Window (the last line of the cxl stuff)
+>
+> The kernel reads this information on boot and reserves 1 numa node for
+> each of these regions.
+>
+> The kernel then automatically brings up regions 0 and 1 in nodes 0 and 1
+> respectively.
+>
+> Node2 sits dormant until you go through the cxl-cli startup sequence.
+>
+>
+> What you're asking for is for the QEMU team to plumb hmat/cdat
+> information down through the type3 device.  I *think* that is presently
+> possible with a custom CDAT file - but Jonathan probably has more
+> details on that.  You'll have to go digging for answers on that one.
 
-We can follow on with this conversion later as I see other usage of uuid
-copying in trace events (bcache for instance). Although I probably would
-not replace it with straight assignment and instead use the uuid_copy()
-helper. Otherwise, why do {uuid,guid}_copy() helpers exist?
+I think this is exactly what I was looking for. When we started with
+the idea of having an explicit CXL memory backend, we wanted to
+1) Bind a virtual CXL device to an actual CXL memory node on host.
+2) Pass the latency/bandwidth information from the CXL backend into
+the virtual CXL device.
+I didn't have a concrete idea of how to do 2)
+With the discussion here, I learned that the information is passed
+from CDAT. Just looked into the virtual CXL code and found that
+ct3_build_cdat_entries_for_mr() is the function that builds this
+information. But the latency and bandwidth there are currently
+hard-coded. I think it makes sense to have an explicit CXL memory
+backend where QEMU can query the CXL memory attributes from the host
+and pass that information from the CXL backend into the virtual CXL
+type-3 device.
+
+>
+>
+> Now - even if you did that - the current state of the cxl-type3 device
+> is *not what you want* because your memory accesses will be routed
+> through the read/write functions in the emulated device.
+>
+> What Jonathan and I discussed on the other thread is how you might go
+> about slimming this down to allow pass-through of the memory without the
+> need for all the fluff.  This is a non-trivial refactor of the existing
+> device, so i would not expect that any time soon.
+>
+> At the end of the day, quickest way to get-there-from-here is to just
+> drop the cxl related lines from your QEMU config, and keep everything
+> else.
+
+Agreed. We need the kernel to be capable of reading the memory
+attributes from HMAT and establish the correct memory tier for
+system-DRAM (on a CPUless numa node). Currently system-DRAM is assumed
+to always be fast tier.
+
+>
+> >
+> > Assuming that the same issue applies to a physical server with CXL.
+> > Were you able to see a host kernel getting the correct lb information
+> > for a CXL devdax device?
+> >
+>
+> Yes, if you bring up a CXL device via cxl-cli on real hardware, the
+> subsequent numa node ends up in the "lower tier" of the memory-tiering
+> infrastructure.
+>
+> ~Gregory
