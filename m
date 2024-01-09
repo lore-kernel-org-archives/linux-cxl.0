@@ -1,214 +1,287 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7A3E460
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 22:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B93E462
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jan 2024 22:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="GJpN5UeK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QQVDOOMfaELg2GryXZTEop8+P+vApWjK8yLpG3OxTqag/793fioALzVXS6enkPRywRwX+H4IJcmoWb64RkI2BLEUcXi+jelv9pQgSvOsQBy8tNfmx1PU3Jbxz6kwCoeLbst5kWbY+nISStW8xFPywluot7K8dEtgFabaD6qzK1NfIsx0Fz5g0BzC02ERN0/cYOp+Waq7QEisWPorNHApPEfuaqLdDT9uTbUxH07VXSOVCSlsgWjAkw2g4Hp6Y0p37+ojK2daxq4pNUYTFsEydRhpNyQZtOkChMgQbTbYX4+R8HXyc3chz1AjTiDLCWewfu8FNdJYLmc5Yqpxbvu/Ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=65qihb84fqHHhm46bwIFk0YD1fMk2hM4l52W6FRIEAg=;
- b=falVZGBbD8KKZC3wtov0O2STroVwOWwaOS/XHvsFBaq8LaPN7xHx7TVCZFQx/Lggef/YT9MP5XHsvxk53kg3/J+I4lV7C7z5DzihphJ3miWgTDr9SsJfgfLykmBSdcLpnvCqLnnuciRnZAUnl00qEGYVLNh0LqUiRu6/Q0RF2Mt7FOEq2tlCN5Q5G6MAJ9140T7wEXkI84EHtFAzmovttl1IHy1We8J7wsC/YEHzH+xEWL1pBaKNNNQKRPiSkjZbGoouExAquh9IXRjBiBCNh27TEiKzlilODVCUZJWq1zhNDDekzjPxUMdUuRLRadsCZByPOW/x6w9az53ZXT1SKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=65qihb84fqHHhm46bwIFk0YD1fMk2hM4l52W6FRIEAg=;
- b=GJpN5UeKZ1CqksWnecuOJUgzgwjs0hqsK/dqFBE2hycOnZ1cXikz0oZNF5OVLBt0iGJn050tRGJ9PsKSqyhHU/Hbi7zsFniJtxx351UsIqlGQD2w1ZxVDsFYAMrWcL1RanNrtxs9i1rPmVGVh8rDxsLcKUKjmdqU7JNKhxcubv0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by MW4PR17MB4668.namprd17.prod.outlook.com (2603:10b6:303:105::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
- 2024 22:13:26 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7a04:dc86:2799:2f15]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7a04:dc86:2799:2f15%5]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
- 22:13:26 +0000
-Date: Tue, 9 Jan 2024 17:13:21 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: Hao Xiang <hao.xiang@bytedance.com>
-Cc: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	Fan Ni <fan.ni@samsung.com>, Ira Weiny <ira.weiny@intel.com>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	David Hildenbrand <david@redhat.com>,
-	Igor Mammedov <imammedo@redhat.com>, Eric Blake <eblake@redhat.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
-	Eduardo Habkost <eduardo@habkost.net>, qemu-devel@nongnu.org,
-	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, linux-cxl@vger.kernel.org
-Subject: Re: [External] Re: [QEMU-devel][RFC PATCH 1/1] backends/hostmem:
- qapi/qom: Add an ObjectOption for memory-backend-* called HostMemType and
- its arg 'cxlram'
-Message-ID: <ZZ3FAegN/ezu9Ghy@memverge.com>
-References: <20240101075315.43167-2-horenchuang@bytedance.com>
- <ZZXX95yvk/WTIBT/@memverge.com>
- <CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com>
- <ZZwtmiucNXxmrZ7S@memverge.com>
- <CAAYibXhfUu8dMwvBmWz4P6N9-yLao0QwAFozk4rS_0GPsEZd7Q@mail.gmail.com>
- <CAAYibXgf6i5+aqopCrVu5ZveDJ9WP2M2AJaUUaj5qFXFHQQxmQ@mail.gmail.com>
- <ZZydwBTS4NeSizzb@memverge.com>
- <CAAYibXhY5p6VN7yAMpmfAgHO+gsf51dvNw68y__RYV+43CVVLQ@mail.gmail.com>
- <ZZ2lNoTQ8hDHADTT@memverge.com>
- <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAYibXjcVu-13h9jHpt2fZ3wmjz-_Dyj+WfUh0AEpid87GLriQ@mail.gmail.com>
-X-ClientProxiedBy: BY5PR13CA0001.namprd13.prod.outlook.com
- (2603:10b6:a03:180::14) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7ckwTcS"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbed788aad4so2586758276.3
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jan 2024 14:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704839833; x=1705444633; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilGp1Nj7YreKplY3xvWz50y04Y0ON1mWt/F1RjJED10=;
+        b=B7ckwTcScrrRKG5kqv478JA0PeQW9HKSzdLRBkWr0KSgJeUDlhwHP3CI9ywtd/ZKRX
+         yBop/774DvQaBkxuCl1on+515rFhH4/0cTNFeac4BNHr+x3awD/PeUf5Cxi72GUmu9A/
+         3UmmeBT0c9Ux9CE0nEXfFT5rPDrd3LgXPVmrHcP93b928Xt7oaDOSVV8NZS0SVeQOjv0
+         pva4dm4IN7gv9hGpzbvveXeidP8U9yeTD8gacmckur6oEY+umGLmms2+Ct4H97B9c7OY
+         tRz9BJbzr3GNFwFOHA36kJw2RJ5Sf+e5/W9+G5HntlB1F4BZczdips6zliRuHpo+cF5y
+         T9dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704839833; x=1705444633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ilGp1Nj7YreKplY3xvWz50y04Y0ON1mWt/F1RjJED10=;
+        b=J2zYrR1A2Mgya6b3hPZOSaYRycE7+4cyMdOJ1josG04KsiHB5BCOT4Y5s87O900kc7
+         EGzkeptHnOZLpw++vrsTzmdaHQwvxkoYtCA/AQX1vgCh7YEUa4QlyLsQfnc0/wFHysF9
+         ueDidWOBilFe689JfKq58OYk6k9F9F4NlSvH0fj4yRbjOzJUmanG5dOcUQa0cxUtxtcL
+         Cjhrs53dVY75JnCosG3tga9Q5N7mZEe5jjylDiF/Gs/Gizn/d5rn/ECBguggwSWP5zRW
+         Du3Br+5sAIEzabDV4FtyDlyYndAG0ANYCu8DX94f1MPNhEfToOWU3FI5hsHB/4WBAVUF
+         05FA==
+X-Gm-Message-State: AOJu0YwxwOj09n8PYF96LGaEKprjLdRlluYcV8xac41xUOQw69vhp6fX
+	On4tC7o6Y0N4mXF+tTTUle0=
+X-Google-Smtp-Source: AGHT+IG4ud6HlNOPxfPKiVZZJNl8OdMbB5oU1pF+UGp/OV5kzdga2j8YoKEH27Bb5pLJ9Nh0DnUqHw==
+X-Received: by 2002:a5b:84d:0:b0:dbd:73ec:4c19 with SMTP id v13-20020a5b084d000000b00dbd73ec4c19mr82338ybq.83.1704839833194;
+        Tue, 09 Jan 2024 14:37:13 -0800 (PST)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id l4-20020a25bf84000000b00db41482d349sm984318ybk.57.2024.01.09.14.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 14:37:12 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Tue, 9 Jan 2024 14:36:57 -0800
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan.Cameron@huawei.com, vishal.l.verma@intel.com,
+	fan.ni@samsung.com, a.manzanares@samsung.com, mounika.k@samsung.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/2] hw/cxl: Add Transfer FW support
+Message-ID: <ZZ3KiceGpf5RUC5a@debian>
+References: <20240109070436.21253-1-dave@stgolabs.net>
+ <20240109070436.21253-2-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB4668:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49649ec2-d783-4f23-49ca-08dc11603365
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	5hedSENaD7QctPwrw84AcZnlSYUL1PoSNX7y9fPN2RpUYVkfBcbaLu78iEHaoQx4a/Lw5blMQ7nvKUky2nD2BFmt/iCihWSdckH2vCU6NHxCi8gMHYgP0YxEYtbGpRBpVpJDJm4qbfUA0QXAUKrF1AhVA1F7cTbNGBOhaAIVlrr8qK9sMrRtJbKoC3k9BMBNPNw8CJGSo6+Gh/qDobllDat1JK6OkJ6jI88bxpG/arZinFfnGlWNefs53s6CExiGhPTcMI6MDBmQrqVyuDaNeBblKsBvHWalr2MirpuOk0/tOTZ0GCTco9r7WFrCjkUhaoXrAy+B1fHcDi85fyL1KJA6zbY73etCazlkYqa6bzcwRPuvg576OR0PENEDlby1XXzvXe4qTa+p4IEK+5NdgtDRX2NVWd5iteDeg+cqeb2SG5nNoBN1C8ZqnQwHpWGoj3a+n2oCBKV1IgG/XeiOzdqOmyFmqkyqwf4+IfR1DbmdZ3RDOzu0zFmnmK3VlNB4MyLPQdE/xff6xaFAdJ/5BvGyCYls6IFyb9emYpMCcwqv37cq/7OlAHT9Cif4jK15
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39850400004)(376002)(396003)(346002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(478600001)(5660300002)(4326008)(7416002)(83380400001)(6506007)(2616005)(53546011)(66946007)(6512007)(6666004)(6486002)(6916009)(66556008)(8676002)(66476007)(26005)(8936002)(44832011)(2906002)(36756003)(54906003)(316002)(38100700002)(41300700001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MXZBT2EwWFZnbGY3V09WZURjdDNueGJMRi9uYWxMb0tNdXQrZEdib1JnR0hz?=
- =?utf-8?B?YitqRWdlbGpFNThjZmFDRVZCRDVLTGsxb0NtUWFJckhJbTRScWx1Kzc1ODli?=
- =?utf-8?B?SmhTWXZpbEJNMC8zeGJuUFJKL0FGMko2Z2RnYWx1bXdJcHJTaWhIWllRWW52?=
- =?utf-8?B?dmp0M29YSkxnVVBWeHRHSmcramxFTDVBMU9xTE5LNTU4OUI0aGhFbDhPVDN0?=
- =?utf-8?B?QUdPcHllbmJqVjhNMnl2NGhhcmlmVnMzTHplQmxmTWtjVk0rR1o0cVBXZDhM?=
- =?utf-8?B?Y0ZwL1hJcjdMTTZFeGxBMmlydDdLTFY2bkw4ZmdsVnVvaVFqUVdPOEQ2YnE1?=
- =?utf-8?B?aGhZQUVsNjJFaWpmVVJERTMvWDNqTURIZjkrMXZOTFlNZEhJeHZmWGVRUDdn?=
- =?utf-8?B?K2JTNVcxMEZXQ0JFNnpMNWN6emNNYi9UNzhTN0lPNXJXKzlBbjI0MUZPc1dz?=
- =?utf-8?B?MDVTTlV6MWtSRmRMaVFxM1B5TDBURUZiR3lpRmV1ckQ1WFFvN1RRSGFLb1pu?=
- =?utf-8?B?YnVvcTFXVXNHdnRvZU9jT1B3TEE1ajIyNWRFSW1ZK1dMbnIxRHRzeGpXbS83?=
- =?utf-8?B?dnRtT3Z0dTFWVGdFVFJUdGV6TGVyQTQwajl0QTNPZzBnSEROUHRFTmdzd3I1?=
- =?utf-8?B?OWgwcHZKMlF0dEJnQWducXRSUTM4ZG5ES1pGR3ZLQVBHdXJxNUNvdk5vNE42?=
- =?utf-8?B?Q3VxWDRWaEhiQkpoTU9PTHpKS1ExVnduUVloYWxPMzVCUmxsNE5PTGlqQndF?=
- =?utf-8?B?LzdVQ2E2VWhTUEwxYTRyYjh5bmtkSE4xb3pzUE9yZUZOM2JaenVhcldhKzdh?=
- =?utf-8?B?ekp5OHlJcUdYN3FDUFU2aVI4RDkyazQwOGoxb3B3RWxVcHdlT2pEQ0ZrQjU0?=
- =?utf-8?B?ZndaZ1E3bW9mOTFDT1A0RUN1eHYzZ0xWZHhyVzh6bUMvZ3dPT3dlUHYwWUZC?=
- =?utf-8?B?bUpTQWFyd3BsZ1EwYyt1OVB6SENXRFhKZndOM0lhalUvZTJpRnEwdzdXVFRk?=
- =?utf-8?B?eWJyTlVYRkxmeDJDQnhqVTg1MFNrcmpHeStYWjkyNzcvOEhpM1ozUmVuNUZP?=
- =?utf-8?B?UHpHUDFqZFJpQS9RY2xjeEQxTlA4ZHI4R2pGWCtzQUNadGdpSU5qakpTbWFP?=
- =?utf-8?B?WmJFM1FkRGh0TTlyWEZyZ3dSMU03YnEwYTlvRWtkakZqR1E3NUozdHR4YzJD?=
- =?utf-8?B?UUc0bmthcDdoM01na09KbFExWkRQcHl2clF1RjRxTjlrWGdkWG0xRnlLR3hX?=
- =?utf-8?B?MUZJbGVMMlo5cGdlYXVpdmQ4YVJGZzNNcDhmWWtucTJKZ1U4aXZOMTlscUVs?=
- =?utf-8?B?c1VDOXFsY293NGpJdklpU2wrRTZ5YWVBNkJMSEdJbWhLZy9lUVhmWVJJU1E4?=
- =?utf-8?B?cnYzb0JES0FpS3dFcTE2djd6c282QWRJcThjWlduOHR4RUNUV2ZoUzVvdWVN?=
- =?utf-8?B?UHVyUjFsNzRvbUxYVDZqMENtRHRzaGQvUEpaS1k2Rk9HelVrcGM4NHpTMVJw?=
- =?utf-8?B?eXpGRGt1N0NwcDVwUEZjWjdmVGdkOWM5eFhOcCtKTGxwNWc2N0tOOEc1SjRl?=
- =?utf-8?B?LzZ3L2ltRXhwZDJsVUQ3d2dBSGp1Nm1ub2VMb1ExZlVRaDRodWFubUF6RmJp?=
- =?utf-8?B?bWxqa1A1TXJvVTR6dHVEZkZJbWYvTlBqZEllbXhnM3RueUthRGlJcFJET3BW?=
- =?utf-8?B?TUtBR1Y4Y2JIWVlMek5SMmVXQkZ0eUxkWjJYZTlNcTRsVVFzOWlQcWc3dVAz?=
- =?utf-8?B?YkpWMU52VXhxaWVqSE1tZWdDckFxVDJyd0xzQzhERGJMRWJyS1AzOGpwdjhX?=
- =?utf-8?B?YURWbm5aMzRmckwzU3NLdWtYZEg3NkxkYUNlUTZOTXA0dUUvazV0R0VmLzFx?=
- =?utf-8?B?TUNjb3FlaXBkQlFhRjJlWVd1MEs4akJkUEl6YVJMZXFvOHdMdURWdFRGUFFV?=
- =?utf-8?B?Q3hNVW9lZTdmZEpHOHJvVjl2NXVrdFZlR1Y3dHF6OG9sTWVHcnVkNmh0ZFFX?=
- =?utf-8?B?WER5NnNNUm9wM3BqMXNvejF1UHhHZGJpMHEzdVJXY0VNNXU0UXQvVHpXeXpi?=
- =?utf-8?B?Y1o2cGR5ZzBIbjBWaU5VdElsOEp3b2kxM3k1YmMvc2dzMy9LbitpSktpMmJE?=
- =?utf-8?B?QzZyeVZwdUFUc0h2TElCc0xJdFlIQ1hiSHZ6enFTZlhsdWJ1UVIxUVFqdjZY?=
- =?utf-8?B?c2c9PQ==?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49649ec2-d783-4f23-49ca-08dc11603365
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 22:13:25.8828
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rsJ/ov4EaG9txgAIAHRzPuz+rWkxJXtBx2GnMfwMwuH6VvK5C5PsuN0QJL56G9BzBTXKX3TlOxh33ZOa7TxN3RmBEMzadCNKrj+ts27Myuw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB4668
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109070436.21253-2-dave@stgolabs.net>
 
-On Tue, Jan 09, 2024 at 01:27:28PM -0800, Hao Xiang wrote:
-> On Tue, Jan 9, 2024 at 11:58 AM Gregory Price
-> <gregory.price@memverge.com> wrote:
-> >
-> > If you drop this line:
-> >
-> > -numa node,memdev=vmem0,nodeid=1
+On Mon, Jan 08, 2024 at 11:04:35PM -0800, Davidlohr Bueso wrote:
+> Per the latest 3.1 spec for supporting firmware update metadata
+> (no actual buffers). Aborting a xfer is currently unsupported
+> through a nop.
 > 
-> We tried this as well and it works after going through the cxlcli
-> process and created the devdax device. The problem is that without the
-> "nodeid=1" configuration, we cannot connect with the explicit per numa
-> node latency/bandwidth configuration "-numa hmat-lb". I glanced at the
-> code in hw/numa.c, parse_numa_hmat_lb() looks like the one passing the
-> lb information to VM's hmat.
->
-
-Yeah, this is what Jonathan was saying - right now there isn't a good
-way (in QEMU) to pass the hmat/cdat stuff down through the device.
-Needs to be plumbed out.
-
-In the meantime: You should just straight up drop the cxl device from
-your QEMU config.  It doesn't actually get you anything.
-
-> From what I understand so far, the guest kernel will dynamically
-> create a numa node after a cxl devdax device is created. That means we
-> don't know the numa node until after VM boot. 2. QEMU can only
-> statically parse the lb information to the VM at boot time. How do we
-> connect these two things?
-
-during boot, the kernel discovers all the memory regions exposed to
-bios. In this qemu configuration you have defined:
-
-region 0: CPU + DRAM node
-region 1: DRAM only node
-region 2: CXL Fixed Memory Window (the last line of the cxl stuff)
-
-The kernel reads this information on boot and reserves 1 numa node for
-each of these regions.
-
-The kernel then automatically brings up regions 0 and 1 in nodes 0 and 1
-respectively.
-
-Node2 sits dormant until you go through the cxl-cli startup sequence.
-
-
-What you're asking for is for the QEMU team to plumb hmat/cdat
-information down through the type3 device.  I *think* that is presently
-possible with a custom CDAT file - but Jonathan probably has more
-details on that.  You'll have to go digging for answers on that one.
-
-
-Now - even if you did that - the current state of the cxl-type3 device
-is *not what you want* because your memory accesses will be routed
-through the read/write functions in the emulated device.
-
-What Jonathan and I discussed on the other thread is how you might go
-about slimming this down to allow pass-through of the memory without the
-need for all the fluff.  This is a non-trivial refactor of the existing
-device, so i would not expect that any time soon.
-
-At the end of the day, quickest way to get-there-from-here is to just
-drop the cxl related lines from your QEMU config, and keep everything
-else.
-
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 124 ++++++++++++++++++++++++++++++++++--
+>  include/hw/cxl/cxl_device.h |   9 +++
+>  2 files changed, 129 insertions(+), 4 deletions(-)
 > 
-> Assuming that the same issue applies to a physical server with CXL.
-> Were you able to see a host kernel getting the correct lb information
-> for a CXL devdax device?
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 11ec8b648baf..0295ea8b29aa 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -60,6 +60,7 @@ enum {
+>          #define SET_INTERRUPT_POLICY   0x3
+>      FIRMWARE_UPDATE = 0x02,
+>          #define GET_INFO      0x0
+> +        #define TRANSFER      0x1
+>      TIMESTAMP   = 0x03,
+>          #define GET           0x0
+>          #define SET           0x1
+> @@ -815,6 +816,8 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +#define CXL_FW_SLOTS 2
+> +
+>  /* CXL r3.0 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
+>  static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+>                                                 uint8_t *payload_in,
+> @@ -846,15 +849,118 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+>      fw_info = (void *)payload_out;
+>      memset(fw_info, 0, sizeof(*fw_info));
+>  
+> -    fw_info->slots_supported = 2;
+> -    fw_info->slot_info = BIT(0) | BIT(3);
+> +    fw_info->slots_supported = CXL_FW_SLOTS;
+> +    fw_info->slot_info = (cci->fw.active_slot & 0x7) |
+> +            ((cci->fw.staged_slot & 0x7) << 3);
+>      fw_info->caps = 0;
+> -    pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
+> +
+> +    if (cci->fw.slot[0]) {
+> +        pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
+> +    }
+> +    if (cci->fw.slot[1]) {
+> +        pstrcpy(fw_info->fw_rev2, sizeof(fw_info->fw_rev2), "BWFW VERSION 1");
+> +    }
+> +    if (cci->fw.slot[2]) {
+> +        pstrcpy(fw_info->fw_rev3, sizeof(fw_info->fw_rev3), "BWFW VERSION 2");
+> +    }
+> +    if (cci->fw.slot[3]) {
+> +        pstrcpy(fw_info->fw_rev4, sizeof(fw_info->fw_rev4), "BWFW VERSION 3");
+> +    }
+>  
+>      *len_out = sizeof(*fw_info);
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
+> +#define CXL_FW_XFER_ALIGNMENT   128
+> +
+> +#define CXL_FW_XFER_ACTION_FULL	    0x0
+> +#define CXL_FW_XFER_ACTION_INIT	    0x1
+> +#define CXL_FW_XFER_ACTION_CONTINUE 0x2
+> +#define CXL_FW_XFER_ACTION_END	    0x3
+> +#define CXL_FW_XFER_ACTION_ABORT    0x4
+> +
+> +#define CXL_FW_SIZE  0x02000000 /* 32 mb */
+> +
+> +static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    CXLDeviceState *cxl_dstate = &CXL_TYPE3(cci->d)->cxl_dstate;
+> +    struct {
+> +        uint8_t action;
+> +        uint8_t slot;
+> +        uint8_t caps;
+> +        uint8_t rsvd1[2];
+> +        uint32_t offset;
+> +        uint8_t rsvd2[0x78];
+> +        uint8_t data[];
+> +    } QEMU_PACKED *fw_transfer;
+> +    size_t offset, length;
+> +
+> +    if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
+> +        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER)) {
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+> +    fw_transfer = (void *)payload_in;
+> +
+> +    if (cci->fw.transfering &&
+> +        (fw_transfer->action == CXL_FW_XFER_ACTION_FULL ||
+> +         fw_transfer->action == CXL_FW_XFER_ACTION_INIT)) {
+> +        return CXL_MBOX_FW_XFER_IN_PROGRESS;
+> +    }
+> +
+> +    offset = fw_transfer->offset * CXL_FW_XFER_ALIGNMENT;
+> +    length = len - sizeof(*fw_transfer);
+> +    if (offset + length > CXL_FW_SIZE) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    switch (fw_transfer->action) {
+> +    case CXL_FW_XFER_ACTION_FULL: /* ignores offset */
+> +    case CXL_FW_XFER_ACTION_END:
+> +        if (fw_transfer->slot == 0 ||
+> +            fw_transfer->slot == cci->fw.active_slot ||
+> +            fw_transfer->slot > CXL_FW_SLOTS) {
+Should here be >= instead of > ?
+> +            return CXL_MBOX_FW_INVALID_SLOT;
+> +        }
+> +        /*
+> +         * Optimistically mark the slot used now (as opposed
+> +         * to at the end of the successful transfer). That
+> +         * way we don't need to keep command context.
+> +         */
+> +        cci->fw.slot[fw_transfer->slot - 1] = true;
+> +        break;
+> +    case CXL_FW_XFER_ACTION_INIT:
+> +        if (offset != 0) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        /* fallthrough */
+> +    case CXL_FW_XFER_ACTION_CONTINUE:
+> +        break;
+> +    case CXL_FW_XFER_ACTION_ABORT: /* nop */
+> +        return CXL_MBOX_SUCCESS;
+> +    default:
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    cci->fw.transfering = true;
+> +
+> +    cci->bg.runtime = 2 * 1000UL;
+
+How we get this? I see the spec mentioned the timeout between FW package ports
+is 30 seconds.
+
+Fan
+> +    *len_out = 0;
+> +
+> +    return CXL_MBOX_BG_STARTED;
+> +}
+> +
+> +static void __do_firmware_xfer(CXLCCI *cci)
+> +{
+> +    cci->fw.transfering = false;
+> +}
+> +
+>  /* CXL r3.0 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
+>  static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
+>                                      uint8_t *payload_in,
+> @@ -2165,6 +2271,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>                                        ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE },
+>      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
+>          cmd_firmware_update_get_info, 0, 0 },
+> +    [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
+> +        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
+>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+>      [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
+>                           8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+> @@ -2278,7 +2386,8 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+>              h == cmd_media_get_poison_list ||
+>              h == cmd_media_inject_poison ||
+>              h == cmd_media_clear_poison ||
+> -            h == cmd_sanitize_overwrite) {
+> +            h == cmd_sanitize_overwrite ||
+> +            h == cmd_firmware_update_transfer) {
+>              return CXL_MBOX_MEDIA_DISABLED;
+>          }
+>      }
+> @@ -2325,6 +2434,9 @@ static void bg_timercb(void *opaque)
+>              CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>  
+>              switch (cci->bg.opcode) {
+> +            case 0x0201: /* fw transfer */
+> +                __do_firmware_xfer(cci);
+> +                break;
+>              case 0x4400: /* sanitize */
+>                  __do_sanitization(ct3d);
+>                  cxl_dev_enable_media(&ct3d->cxl_dstate);
+> @@ -2388,6 +2500,10 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+>      cci->payload_max = payload_max;
+>      cxl_rebuild_cel(cci);
+>  
+> +    cci->fw.active_slot = cci->fw.staged_slot = 1;
+> +    memset(cci->fw.slot, 0, sizeof(cci->fw.slot));
+> +    cci->fw.slot[cci->fw.active_slot - 1] = true;
+> +
+>      cci->bg.complete_pct = 0;
+>      cci->bg.starttime = 0;
+>      cci->bg.runtime = 0;
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index b2cb280e1631..b4373bfe4d2a 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -201,6 +201,15 @@ typedef struct CXLCCI {
+>          uint64_t runtime;
+>          QEMUTimer *timer;
+>      } bg;
+> +
+> +    /* firmware update */
+> +    struct {
+> +        bool transfering;
+> +        int active_slot;
+> +        int staged_slot;
+> +        bool slot[4];
+> +    } fw;
+> +
+>      size_t payload_max;
+>      /* Pointer to device hosting the CCI */
+>      DeviceState *d;
+> -- 
+> 2.43.0
 > 
-
-Yes, if you bring up a CXL device via cxl-cli on real hardware, the
-subsequent numa node ends up in the "lower tier" of the memory-tiering
-infrastructure.
-
-~Gregory
