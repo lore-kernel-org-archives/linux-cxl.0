@@ -1,229 +1,349 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m127220.xmail.ntesmail.com (mail-m127220.xmail.ntesmail.com [115.236.127.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F635391
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jan 2024 00:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ih6ynWsw"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5534dcfdd61so6357456a12.0
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jan 2024 16:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704846506; x=1705451306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H4pmETOHyhvCYkpQt+yPZYyBaRugInkKS3WBUZ/57JU=;
-        b=Ih6ynWswwXifDAJ/KsQxFVz0MsHg6hbzWPq4fttFD+o1yDbcEm5IwzHHH3UlXVMK8O
-         2CodG+8CpGSvF7YrTzb9HB3EyuvAiTcP8zugWzCRCzeyPygDLzMyaXvRD6zJT94xYqEO
-         R/UGyAyz5lyFMUFUmi9TDMYBed/pxfS01hs5oA+ELooW8LXFaL6tGLdvuj41azmPucFy
-         2yt95EaV3rrLCXQGbpgS468nuVSNixvi6Kq9ajh7PmuRITgiQe8k5BEZBKiEEjmEe0d8
-         e671uQ66+PNk9jLSjwNGkxDHVRaAkQfnPBR8F77Z040fPCIY91cGM7GvM5vWaGS4Qw8c
-         H/jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704846506; x=1705451306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H4pmETOHyhvCYkpQt+yPZYyBaRugInkKS3WBUZ/57JU=;
-        b=FbS3MA2s0yGIoRinV1lvprcyqHgD1zR73k8DmB1WjDUZgvsCKUGtvX8Xy4KdkvUQZf
-         Wu+1Dd4YysbS9kDRZbczDVtPWNoW38Px6vx2yB6rcOnHMQG2zLgH3oh9KTFSUw8ndoPZ
-         J79FnhKl1P9HWO0yqmbZiOCN7mjJPZUclivc8Pf8bL9fsVlnHDI3rBsJKlqkiJKZ9gGF
-         +dfUIpJ+7y4kjp9d8CebcFh3aKNHTDuUn7bWDKXDXOGWRpAH5srXJAUPVXXdr1NkcoGw
-         McgD29TWOroYaRa4bECGAY9w5pm4hPb+xdQbb5MNAYMEJp2T3Jl3+B3UHF627L9tuD1I
-         fQoQ==
-X-Gm-Message-State: AOJu0YzNA7cghYwyKCeWtLfgT/szTkEzHR7OS92+JAfGReL00HJhOI8q
-	ycaWmnN0GAYGo4M2dTR5guisl9mpKsqJ5rVBXmY7UZL6YmY+/g==
-X-Google-Smtp-Source: AGHT+IEn5QFPnpdbTlRy8zQfT/RyATV6pAFg6InDKMm2y7syoVXBkmePPkCqoJPOzTHgZl3vPqXyduVqupZ7sYtIL7U=
-X-Received: by 2002:a50:f615:0:b0:554:8c9d:c3ff with SMTP id
- c21-20020a50f615000000b005548c9dc3ffmr299258edn.29.1704846506388; Tue, 09 Jan
- 2024 16:28:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B69663A0
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jan 2024 03:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 3519386017A;
+	Wed, 10 Jan 2024 10:07:40 +0800 (CST)
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
+To: Ira Weiny <ira.weiny@intel.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, ave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org
+References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
+ <659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
+Message-ID: <2d66586f-b254-bc85-2358-9f752268cf11@easystack.cn>
+Date: Wed, 10 Jan 2024 10:07:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com> <PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com> <PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com> <ZZwrIoP9+ey7rp3C@memverge.com>
- <87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com> <20240109155049.00003f13@Huawei.com>
- <ZZ2Jd7/7rFD0o5S3@memverge.com>
-In-Reply-To: <ZZ2Jd7/7rFD0o5S3@memverge.com>
-From: Hao Xiang <hao.xiang@bytedance.com>
-Date: Tue, 9 Jan 2024 16:28:15 -0800
-Message-ID: <CAAYibXhe81ez06tP5K7zGkX9P=Ot+DcSysVyDvh13aSEDD63aA@mail.gmail.com>
-Subject: Re: [External] Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration
- between memory tiers
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Huang, Ying" <ying.huang@intel.com>, 
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>, 
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mhocko@suse.com" <mhocko@suse.com>, 
-	"tj@kernel.org" <tj@kernel.org>, "john@jagalactic.com" <john@jagalactic.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>, 
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Wei Xu <weixugc@google.com>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGU8eVhhKTEgfSR9OHU5DGlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8cf1201499023ckunm3519386017a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K0k6Mww6Ejc6ExZCMhQ6PBFM
+	HSMwCk5VSlVKTEtPQ05JT01KSUpOVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBSklIQk83Bg++
 
-On Tue, Jan 9, 2024 at 9:59=E2=80=AFAM Gregory Price <gregory.price@memverg=
-e.com> wrote:
->
-> On Tue, Jan 09, 2024 at 03:50:49PM +0000, Jonathan Cameron wrote:
-> > On Tue, 09 Jan 2024 11:41:11 +0800
-> > "Huang, Ying" <ying.huang@intel.com> wrote:
-> > > Gregory Price <gregory.price@memverge.com> writes:
-> > > > On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:
-> > > It's possible to change the performance of a NUMA node changed, if we
-> > > hot-remove a memory device, then hot-add another different memory
-> > > device.  It's hoped that the CDAT changes too.
-> >
-> > Not supported, but ACPI has _HMA methods to in theory allow changing
-> > HMAT values based on firmware notifications...  So we 'could' make
-> > it work for HMAT based description.
-> >
-> > Ultimately my current thinking is we'll end up emulating CXL type3
-> > devices (hiding topology complexity) and you can update CDAT but
-> > IIRC that is only meant to be for degraded situations - so if you
-> > want multiple performance regions, CDAT should describe them form the s=
-tart.
-> >
->
-> That was my thought.  I don't think it's particularly *realistic* for
-> HMAT/CDAT values to change at runtime, but I can imagine a case where
-> it could be valuable.
->
-> > > > https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3=
-e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
-> > > >
-> > > > This group wants to enable passing CXL memory through to KVM/QEMU
-> > > > (i.e. host CXL expander memory passed through to the guest), and
-> > > > allow the guest to apply memory tiering.
-> > > >
-> > > > There are multiple issues with this, presently:
-> > > >
-> > > > 1. The QEMU CXL virtual device is not and probably never will be
-> > > >    performant enough to be a commodity class virtualization.
-> >
-> > I'd flex that a bit - we will end up with a solution for virtualization=
- but
-> > it isn't the emulation that is there today because it's not possible to
-> > emulate some of the topology in a peformant manner (interleaving with s=
-ub
-> > page granularity / interleaving at all (to a lesser degree)). There are
-> > ways to do better than we are today, but they start to look like
-> > software dissagregated memory setups (think lots of page faults in the =
-host).
-> >
->
-> Agreed, the emulated device as-is can't be the virtualization device,
-> but it doesn't mean it can't be the basis for it.
->
-> My thought is, if you want to pass host CXL *memory* through to the
-> guest, you don't actually care to pass CXL *control* through to the
-> guest.  That control lies pretty squarely with the host/hypervisor.
->
-> So, at least in theory, you can just cut the type3 device out of the
-> QEMU configuration entirely and just pass it through as a distinct numa
-> node with specific hmat qualities.
->
-> Barring that, if we must go through the type3 device, the question is
-> how difficult would it be to just make a stripped down type3 device
-> to provide the informational components, but hack off anything
-> topology/interleave related? Then you just do direct passthrough as you
-> described below.
->
-> qemu/kvm would report errors if you tried to touch the naughty bits.
->
-> The second question is... is that device "compliant" or does it need
-> super special handling from the kernel driver :D?  If what i described
-> is not "compliant", then it's probably a bad idea, and KVM/QEMU should
-> just hide the CXL device entirely from the guest (for this use case)
-> and just pass the memory through as a numa node.
->
-> Which gets us back to: The memory-tiering component needs a way to
-> place nodes in different tiers based on HMAT/CDAT/User Whim. All three
-> of those seem like totally valid ways to go about it.
->
-> > > >
-> > > > 2. When passing memory through as an explicit NUMA node, but not as
-> > > >    part of a CXL memory device, the nodes are lumped together in th=
-e
-> > > >    DRAM tier.
-> > > >
-> > > > None of this has to do with firmware.
-> > > >
-> > > > Memory-type is an awful way of denoting membership of a tier, but w=
-e
-> > > > have HMAT information that can be passed through via QEMU:
-> > > >
-> > > > -object memory-backend-ram,size=3D4G,id=3Dram-node0 \
-> > > > -object memory-backend-ram,size=3D4G,id=3Dram-node1 \
-> > > > -numa node,nodeid=3D0,cpus=3D0-4,memdev=3Dram-node0 \
-> > > > -numa node,initiator=3D0,nodeid=3D1,memdev=3Dram-node1 \
-> > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,data-type=
-=3Daccess-latency,latency=3D10 \
-> > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,data-type=
-=3Daccess-bandwidth,bandwidth=3D10485760 \
-> > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,data-type=
-=3Daccess-latency,latency=3D20 \
-> > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,data-type=
-=3Daccess-bandwidth,bandwidth=3D5242880
-> > > >
-> > > > Not only would it be nice if we could change tier membership based =
-on
-> > > > this data, it's realistically the only way to allow guests to accom=
-plish
-> > > > memory tiering w/ KVM/QEMU and CXL memory passed through to the gue=
-st.
-> >
-> > This I fully agree with.  There will be systems with a bunch of normal =
-DDR with different
-> > access characteristics irrespective of CXL. + likely HMAT solutions wil=
-l be used
-> > before we get anything more complex in place for CXL.
-> >
->
-> Had not even considered this, but that's completely accurate as well.
->
-> And more discretely: What of devices that don't provide HMAT/CDAT? That
-> isn't necessarily a violation of any standard.  There probably could be
-> a release valve for us to still make those devices useful.
->
-> The concern I have with not implementing a movement mechanism *at all*
-> is that a one-size-fits-all initial-placement heuristic feels gross
-> when we're, at least ideologically, moving toward "software defined memor=
-y".
->
-> Personally I think the movement mechanism is a good idea that gets folks
-> where they're going sooner, and it doesn't hurt anything by existing. We
-> can change the initial placement mechanism too.
 
-I think providing users a way to "FIX" the memory tiering is a backup
-option. Given that DDRs with different access characteristics provide
-the relevant CDAT/HMAT information, the kernel should be able to
-correctly establish memory tiering on boot.
-Current memory tiering code has
-1) memory_tier_init() to iterate through all boot onlined memory
-nodes. All nodes are assumed to be fast tier (adistance
-MEMTIER_ADISTANCE_DRAM is used).
-2) dev_dax_kmem_probe to iterate through all devdax controlled memory
-nodes. This is the place the kernel reads the memory attributes from
-HMAT and recognizes the memory nodes into the correct tier (devdax
-controlled CXL, pmem, etc).
-If we want DDRs with different memory characteristics to be put into
-the correct tier (as in the guest VM memory tiering case), we probably
-need a third path to iterate the boot onlined memory nodes and also be
-able to read their memory attributes. I don't think we can do that in
-1) because the ACPI subsystem is not yet initialized.
 
->
-> </2cents>
->
-> ~Gregory
+在 2024/1/4 星期四 上午 1:22, Ira Weiny 写道:
+> Dongsheng Yang wrote:
+>> Hi all:
+>> 	This patchset introduce cxlv module to allow user to
+>> create virtual cxl device. it's based linux6.7-rc5, you can
+>> get the code from https://github.com/DataTravelGuide/linux
+>>
+>> 	As the real CXL device is not widely available now, we need
+>> some virtual cxl device to do uplayer software developing or
+>> testing. Qemu is good for functional testing, but not good
+>> for some performance testing.
+> 
+> Do you have more details on what performance is missing from Qemu and why
+> this solution is better than a solution to fix Qemu?
+> 
+> Long term it seems better to fix Qemu for this type of work.
+> 
+> Are their other advantages to having this additional test infrastructure
+> in the kernel?  We already have cxl_test.
+
+Hi Ira,
+	Let me explain more about what I mean by "qemu is not good for some 
+performance testing". cxlv is not designed to test cxl driver itself, it 
+is used to do performance testing for upper level layer software. I can 
+give an example about the performance data:
+
+(1) fio to test /dev/dax0.0 in qemu
+qemu with memory-backend-ram, and create region and namespace with mod 
+of devdax. and then run fio with ioengine dev-dax, fio file as below[1].
+
+fio in qemu result detail in [2], the average iops is: avg=1919.26.
+
+(2) fio to test /dev/dax0.0 in native host with cxlv
+use cxlv to create cxl device and create region and namespace with mod 
+of devdax. then run fio with the same fio file in [1].
+
+fio in host result detail in [3], the average iops is: avg=1510391.68.
+
+
+Now you can see the resule iops is about 1500K vs 1.9K.
+
+I can explain more about why this matters, I am doing another project in 
+block device layer, named cbd(cxl block device). It uses cxl memdev as a 
+cache and a backing with other block device. it works similar with 
+bcache, but is newly designed for cxl memory device which is byte 
+addressable and latency very small. So I need a fast cxl device to 
+verify my design in uppper layer is working well, E,g, indexing. qemu is 
+too slow to this kind of performance testing. I dont think we can "fix" 
+it, that's not what qemu need to do.
+
+So when I say qemu is not good for performance testing, it's not saying 
+I want some performance improvement of cxl implement in qemu, but I want 
+to say the whole qemu-way is not suitable for latency sensitive testing.
+
+Thanx
+
+
+
+
+[1]:
+[global]
+bs=1K
+ioengine=dev-dax
+norandommap
+time_based
+runtime=10
+group_reporting
+disable_lat=1
+disable_slat=1
+disable_clat=1
+clat_percentiles=0
+cpus_allowed_policy=split
+
+# For the dev-dax engine:
+#
+#   IOs always complete immediately
+#   IOs are always direct
+#
+iodepth=1
+direct=0
+thread
+numjobs=1
+#
+# The dev-dax engine does IO to DAX device that are special character
+# devices exported by the kernel (e.g. /dev/dax0.0). The device is
+# opened normally and then the region is accessible via mmap. We do
+# not use the O_DIRECT flag because the device is naturally direct
+# access. The O_DIRECT flags will result in failure. The engine
+# access the underlying NVDIMM directly once the mmapping is setup.
+#
+# Check the alignment requirement of your DAX device. Currently the default
+# should be 2M. Blocksize (bs) should meet alignment requirement.
+#
+# An example of creating a dev dax device node from pmem:
+# ndctl create-namespace --reconfig=namespace0.0 --mode=dax --force
+#
+filename=/dev/dax0.0
+
+[dev-dax-write]
+rw=randwrite
+stonewall
+
+[2]:
+# fio ./dax.fio
+dev-dax-write: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, 
+(T) 1024B-1024B, ioengine=dev-dax, iodepth=1
+fio-3.36
+Starting 1 thread
+Jobs: 1 (f=1): [w(1)][100.0%][w=1929KiB/s][w=1929 IOPS][eta 00m:00s] 
+
+dev-dax-write: (groupid=0, jobs=1): err= 0: pid=1198: Tue Jan  9 
+10:17:21 2024
+   write: IOPS=1917, BW=1918KiB/s (1964kB/s)(18.7MiB/10001msec); 0 zone 
+resets
+    bw (  KiB/s): min= 1700, max= 1944, per=100.00%, avg=1919.26, 
+stdev=54.14, samples=19
+    iops        : min= 1700, max= 1944, avg=1919.26, stdev=54.14, 
+samples=19
+   cpu          : usr=99.97%, sys=0.00%, ctx=12, majf=0, minf=126 
+
+   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, 
+ >=64=0.0%
+      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
+ >=64=0.0%
+      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
+ >=64=0.0%
+      issued rwts: total=0,19181,0,0 short=0,0,0,0 dropped=0,0,0,0 
+
+      latency   : target=0, window=0, percentile=100.00%, depth=1 
+
+
+Run status group 0 (all jobs):
+   WRITE: bw=1918KiB/s (1964kB/s), 1918KiB/s-1918KiB/s 
+(1964kB/s-1964kB/s), io=18.7MiB (19.6MB), run=10001-10001msec
+
+[3]:
+# fio ./dax.fio 
+
+dev-dax-write: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, 
+(T) 1024B-1024B, ioengine=dev-dax, iodepth=1
+fio-3.36 
+
+Starting 1 thread
+Jobs: 1 (f=1): [w(1)][100.0%][w=1480MiB/s][w=1515k IOPS][eta 00m:00s] 
+
+dev-dax-write: (groupid=0, jobs=1): err= 0: pid=41999: Tue Jan  9 
+18:11:18 2024
+   write: IOPS=1510k, BW=1474MiB/s (1546MB/s)(14.4GiB/10000msec); 0 zone 
+resets
+    bw (  MiB/s): min= 1418, max= 1480, per=100.00%, avg=1474.99, 
+stdev=13.83, samples=19
+    iops        : min=1452406, max=1515908, avg=1510391.68, 
+stdev=14156.58, samples=19 
+ 
+                                                     cpu          : 
+usr=99.82%, sys=0.00%, ctx=22, majf=0, minf=899 
+ 
+ 
+                        IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 
+16=0.0%, 32=0.0%, >=64=0.0% 
+ 
+                                                                submit 
+   : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0% 
+
+      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
+ >=64=0.0%
+      issued rwts: total=0,15096228,0,0 short=0,0,0,0 dropped=0,0,0,0 
+ 
+ 
+
+      latency   : target=0, window=0, percentile=100.00%, depth=1 
+
+ 
+
+Run status group 0 (all jobs): 
+
+   WRITE: bw=1474MiB/s (1546MB/s), 1474MiB/s-1474MiB/s 
+(1546MB/s-1546MB/s), io=14.4GiB (15.5GB), run=10000-10000msec
+> 
+> Ira
+> 
+>>
+>> 	The new CXLV module allow user to use the reserved RAM[1], to
+>> create virtual cxl device. When the cxlv module load, it will
+>> create a directory named as "cxl_virt" under /sys/devices/virtual:
+>>
+>> 	"/sys/devices/virtual/cxl_virt/"
+>>
+>> that's the top level device for all cxlv devices.
+>> At the same time, cxlv module will create a debugfs directory:
+>>
+>> /sys/kernel/debug/cxl/cxlv
+>> ├── create
+>> └── remove
+>>
+>> the create and remove debugfs file is the cxlv entry to create or remove
+>> a cxlv device.
+>>
+>> 	Each cxlv device have its owned virtual pci related bridge and bus, cxlv
+>> will create a new root_port for the new cxlv device, setup cxl ports for
+>> dport and nvdimm-bridge. After that, we will add the virtual pci device,
+>> that will go into the cxl_pci_probe to setup new memdev.
+>>
+>> 	Then we can see the cxl device with cxl list and use it as a real cxl
+>> device.
+>>
+>>   $ echo "memstart=$((8*1024*1024*1024)),cxltype=3,pmem=1,memsize=$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
+>>   $ cxl list
+>> [
+>>    {
+>>      "memdev":"mem0",
+>>      "pmem_size":1879048192,
+>>      "serial":0,
+>>      "numa_node":0,
+>>      "host":"0010:01:00.0"
+>>    }
+>> ]
+>>   $ cxl create-region -m mem0 -d decoder0.0 -t pmem
+>> {
+>>    "region":"region0",
+>>    "resource":"0x210000000",
+>>    "size":"1792.00 MiB (1879.05 MB)",
+>>    "type":"pmem",
+>>    "interleave_ways":1,
+>>    "interleave_granularity":256,
+>>    "decode_state":"commit",
+>>    "mappings":[
+>>      {
+>>        "position":0,
+>>        "memdev":"mem0",
+>>        "decoder":"decoder2.0"
+>>      }
+>>    ]
+>> }
+>> cxl region: cmd_create_region: created 1 region
+>>
+>>   $ ndctl create-namespace -r region0 -m fsdax --map dev -t pmem -b 0
+>> {
+>>    "dev":"namespace0.0",
+>>    "mode":"fsdax",
+>>    "map":"dev",
+>>    "size":"1762.00 MiB (1847.59 MB)",
+>>    "uuid":"686fd289-a252-42cf-a3a5-95a39ed5c9d5",
+>>    "sector_size":512,
+>>    "align":2097152,
+>>    "blockdev":"pmem0"
+>> }
+>>
+>>   $ mkfs.xfs -f /dev/pmem0
+>> meta-data=/dev/pmem0             isize=512    agcount=4, agsize=112768
+>> blks
+>>           =                       sectsz=4096  attr=2, projid32bit=1
+>>           =                       crc=1        finobt=1, sparse=1,
+>> rmapbt=0
+>>           =                       reflink=1    bigtime=0 inobtcount=0
+>> data     =                       bsize=4096   blocks=451072, imaxpct=25
+>>           =                       sunit=0      swidth=0 blks
+>> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+>> log      =internal log           bsize=4096   blocks=2560, version=2
+>>           =                       sectsz=4096  sunit=1 blks, lazy-count=1
+>> realtime =none                   extsz=4096   blocks=0, rtextents=0
+>>
+>> Any comment is welcome!
+>>
+>> TODO: implement cxlv command in ndctl to do cxlv device management.
+>>
+>> [1]: Add argument in kernel command line: "memmap=nn[KMG]$ss[KMG]",
+>> detail in Documentation/driver-api/cxl/memory-devices.rst
+>>
+>> Thanx
+>>
+>> Dongsheng Yang (4):
+>>    cxl: move some function from acpi module to core module
+>>    cxl/port: allow dport host to be driver-less device
+>>    cxl/port: introduce cxl_disable_port() function
+>>    cxl: introduce CXL Virtualization module
+>>
+>>   MAINTAINERS                         |   6 +
+>>   drivers/cxl/Kconfig                 |  11 +
+>>   drivers/cxl/Makefile                |   1 +
+>>   drivers/cxl/acpi.c                  | 143 +-----
+>>   drivers/cxl/core/port.c             | 231 ++++++++-
+>>   drivers/cxl/cxl.h                   |   6 +
+>>   drivers/cxl/cxl_virt/Makefile       |   5 +
+>>   drivers/cxl/cxl_virt/cxlv.h         |  87 ++++
+>>   drivers/cxl/cxl_virt/cxlv_debugfs.c | 260 ++++++++++
+>>   drivers/cxl/cxl_virt/cxlv_device.c  | 311 ++++++++++++
+>>   drivers/cxl/cxl_virt/cxlv_main.c    |  67 +++
+>>   drivers/cxl/cxl_virt/cxlv_pci.c     | 710 ++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl_virt/cxlv_pci.h     | 549 +++++++++++++++++++++
+>>   drivers/cxl/cxl_virt/cxlv_port.c    | 149 ++++++
+>>   14 files changed, 2388 insertions(+), 148 deletions(-)
+>>   create mode 100644 drivers/cxl/cxl_virt/Makefile
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv.h
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_debugfs.c
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_device.c
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_main.c
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.c
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.h
+>>   create mode 100644 drivers/cxl/cxl_virt/cxlv_port.c
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
+> 
