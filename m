@@ -1,174 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E127EF;
-	Wed, 10 Jan 2024 04:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD1DDF55;
+	Wed, 10 Jan 2024 05:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bWO0HJce"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lgtNCpkG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704861036; x=1736397036;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=3A6a5TwiFOECcztSm7mgNNg8SPuxFMiYpw/GhRBwV2Q=;
-  b=bWO0HJceHUkh9Bp8u3s8my1tMKIl4GgutCOmC7TE/T84rFHr4uWlGuaE
-   WAoIp+4sTDCUIdrh+GItCczBGlgdncVAQivLw7fpyok9TfRs1KyYFh8On
-   uiHdKqMnbDiB8rukKKbaBa3fie829n3pvNTyEMeUR+6drtkGoMLptOzdv
-   p3YkHcYkk4oKxu71Mt2UPxle664l/7k1OUyt5l6LKdWx7OVRhVCY1eRts
-   yRyy0jhfvekuSsxBTjiuANVoURZ7LBmU9isGg6VlrGdeirjF6A7u6Pi+l
-   etuBq5uPEHIWbCwaNmrguQXUyEDH34KQTksTZm1SlvAIOOYaCgbz0/uT1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5177177"
+  t=1704865782; x=1736401782;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=dhn8lW2PQSKTBB+E/1ToBYW7OfpllNpuAWbFrFkAQOg=;
+  b=lgtNCpkG4mjofaJjaPwyikr0NtD2dAAu4KSLxj6OeuqRbnjbLG8feWvK
+   AcOu3ftLJ5sHyEzVyXWe3GaaHra6hRErL74sd0e0LXIRf0633IWqHTT/X
+   CcmBZR3CN1LWuEXRLz+yTyJF3xTlB6qOmnWgpsRTmYDxf6EtCo+irULHl
+   VSDNGr/f1zzuQI7VorG0cK5aHdW9Pn6/AlTBOShBGnNGmv0n3GXMY/y2I
+   LHMIo6cnzMrk+Zf2IGwexXkkOhITvbtGQkrkmOsZvvRO3p09SFnjEYV68
+   6NHwDEAsNXk7WZIRZrzj2kWmDIhiEYpNbp1u7W/k80CnRLrlxnHu2MmAQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="19914845"
 X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="5177177"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 20:30:35 -0800
+   d="scan'208";a="19914845"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 21:49:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="905389911"
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="901022216"
 X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="905389911"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jan 2024 20:30:34 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Jan 2024 20:30:33 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 9 Jan 2024 20:30:33 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Jan 2024 20:30:33 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SCFC5R6f325Ifr2eUJWnwPyuaLXMcrOmixvOAZ4GGqoiK9qQA4NergR357FNQyYzYynz9wUmBqv2KR8dvrHzZCXedRSFqkmCTitifwdo6YHJqVLS5cg+3fIXNcQiJ9IQaS0hmRieVGgAoC9rImBNz7mXGWaYIKg9T3MBNe1p3Twk4CYR5AaGV++nbWeb/6MJ8sHD/W3F3qrAFZkq1Xy8jdESaDAUNMYy2Xf/xFfx31v9YzHrI8RbelHzLDrcB3UW4rOHsG2MeDvKr0B+6BoEbqEyFYGzyizF4h0hkytZ7AGJOXBRLaqrR3b7BX8NF+rsbwwcK4YJv12wzo6rgjQgtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=piXOARPCuzPeY8R4tCrZmx4dkqvT/os2RCvsfjNlNrU=;
- b=d821m6g4H9eJXr99E7pq4s6Xhty//zgMcGV0Xt3KlHQ2wPEG2KxwPjCZ7uvwaexHNVL8CFYHxTKVJqZA7HWHnV0/D8fd2RLk1t5/S5YJGe8PbBYXRWwQn6nCUik1bhjIoMU7YIX+vrQjkT/OFv0Sp3SDSE5isjFPJe5UMptGFHluDOfkFqEsnpL1SDmuW6xFDTC4FAosScrJYkuPgLqEuJq1sVn9wYmOzpFY1z10hYNyMvpyH1njprYE2K7C/c/U5Kss21FB+ftA0GMCuRA5p6dfUGHXHGT0PKPW7EYwOqZfu33I8iCBeszyYQlX0TSQNqs005qYcSO3nxS8hWc5NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BL1PR11MB5463.namprd11.prod.outlook.com (2603:10b6:208:315::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
- 2024 04:30:31 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
- 04:30:31 +0000
-Date: Tue, 9 Jan 2024 20:30:28 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-CC: <xueshuai@linux.alibaba.com>, <linux-next@vger.kernel.org>, "Rafael J.
- Wysocki" <rafael.j.wysocki@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<ira.weiny@intel.com>
-Subject: FYI, cxl.git vs acpi.git conflict entering linux-next
- (for-6.8/cxl-cper)
-Message-ID: <659e1d64dcec7_5cee294b3@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: MW4P221CA0029.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::34) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="901022216"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 21:49:35 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Srinivasulu Thanneeru
+ <sthanneeru@micron.com>,  Srinivasulu Opensrc
+ <sthanneeru.opensrc@micron.com>,  "linux-cxl@vger.kernel.org"
+ <linux-cxl@vger.kernel.org>,  "linux-mm@kvack.org" <linux-mm@kvack.org>,
+  "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+  "dan.j.williams@intel.com" <dan.j.williams@intel.com>,  "mhocko@suse.com"
+ <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
+  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
+ <emirakhur@micron.com>,  Vinicius Tavares Petrucci
+ <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  "Johannes
+ Weiner" <hannes@cmpxchg.org>,  Wei Xu <weixugc@google.com>,  Hao Xiang
+ <hao.xiang@bytedance.com>,  "Ho-Ren (Jack) Chuang"
+ <horenchuang@bytedance.com>
+Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
+In-Reply-To: <ZZ2Jd7/7rFD0o5S3@memverge.com> (Gregory Price's message of "Tue,
+	9 Jan 2024 12:59:19 -0500")
+References: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZwrIoP9+ey7rp3C@memverge.com>
+	<87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<20240109155049.00003f13@Huawei.com> <ZZ2Jd7/7rFD0o5S3@memverge.com>
+Date: Wed, 10 Jan 2024 13:47:38 +0800
+Message-ID: <87bk9t91tx.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL1PR11MB5463:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c3bf35d-8b46-4bb4-56df-08dc1194e161
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PW/RlUED2N6w/0vja3oDsheO5Ey+6AE2KWQGa/Js82/IEX+HpikgSXD2gpHneSHik2Agolzl/pLFOkR0WhVM2MUE7yIBcau+fxnncbLzmmNlEl0fTuW+G9EInf2S0+NJQakpH6w3lAB50KfeJLTCcnKdqLDxurKL/KdXheCZtN/nBLWnqLrABV/FM8iHyNYArsS+2T5OnyfAtLmhf0CyyUs+1NnN2RjcWEuKJ/4QxNTo+iqQRF7jL4hgI0RnDlA4ea+rf3np6FJ1ykJ/a0ydjFsy0p74yyDeHCWatYRZxatDsNK1KgkDOY6UWBjDT16lnXq59nje6ZYXdi3f8t6zXM157Ve6wOM2l1rKF+yFEEQkD9ApQ6z99CRQZTgTt6AXXoVB8kfgp0x3FOE2Slaz9HPdneNUGFaMjKjJkGqtJb+lpXr95Kx8kGfwGggblHrsj8y8rL1aQpHFhLeQAhFQG49oKxX67b7/yLtPCMR5UdXdSo37TPl9Ru0iIczbd1FhUMMQQtTfokgQObyteXefSW44lSnRro+t0Yd8G9ew74ZlLfpZykP5I3VsUVCvf64O
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(39860400002)(136003)(366004)(346002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(83380400001)(26005)(6512007)(9686003)(6506007)(107886003)(38100700002)(4326008)(8676002)(8936002)(5660300002)(54906003)(2906002)(478600001)(6486002)(6666004)(6916009)(66476007)(66556008)(316002)(66946007)(41300700001)(86362001)(82960400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?scFwZH22i3TLd/xsiJyWHWCnvR8T/TkZ03Dyal+Uau0QsQgrUtTdKJ8in+VG?=
- =?us-ascii?Q?z7XRY1jhnbfAciD6ZseDRRmlbETuWZVoqpPt2PAqXyY8Gz6liDaqNobeRklT?=
- =?us-ascii?Q?rTlon0qs+xzilSb1RQv5gFGf2blQ3DpBKVydpgCc2hukBM5NTXQ+sD7QO2zy?=
- =?us-ascii?Q?MpKKLco8HJKSZvJd0GY8wTE2jzQvIRwKwPD4PStUsn+aQKM6U2Cbgnej/8tN?=
- =?us-ascii?Q?Dqs08ZDLEOLJwN90DTN8l09MFcuW2pt5ubc0+tH1wlHCWf8FRamUrKEb5dJP?=
- =?us-ascii?Q?dFI0icfLtpsM9y0MR/mJA2I00Tt4cbYq8Y7rdmFcOhPys1ode4DiZBGVddls?=
- =?us-ascii?Q?gteWYuMpJuYlCyQ6ynhNMNcb3qEeN09u0ALCINZscehUJmm0m6aoIhCBoT2x?=
- =?us-ascii?Q?5pP+JYXws4/zcku2ioaFOPOXrtjPeO9drPjASIlFwpOBc1hMXp+END0tp5Kc?=
- =?us-ascii?Q?cb41kAuT5zKXMWiPGk98NsxtTyTnMPexxg1Bw4vhvliv/DzEHXjpd1qAM77z?=
- =?us-ascii?Q?QRL0aHU6mjsLggL1hFywKqlH3gIBx+7+WjVi+fvD99x1pzLFbjr8KMtUDDf5?=
- =?us-ascii?Q?t+H0YeomuB5A843wZJ2Pfco8wt/bpAgdmMdxIfUn9FFpusHhO0E6iA694ziB?=
- =?us-ascii?Q?IYwg9wpfEn23/gveqhC2ANYl/MOUF+pvPPYw2caJDsbcFTGe0av13dPBszd4?=
- =?us-ascii?Q?cReruyGQprpIpnh2QXx3jFIstA+VsVXKsK6rjkOMw1QApL30jKQDzIRFdHAO?=
- =?us-ascii?Q?jxPx5GqU1z7UgrC3p3NO6KVyNbv723jgadphYLUvqWcgh3uY0Px+5lJyQ9b4?=
- =?us-ascii?Q?+p/1xaAM7SzZ2cb/KA8Y4aDZs7LgqMjI661LNq0cBFjjaS8jrB7vIupXEDVi?=
- =?us-ascii?Q?+OiFv46P7I2GYW7p4di1sPdZQZPGwoAyur6YyZWgefRzm+MuSQrLMVOVtAQh?=
- =?us-ascii?Q?DwV5cR56zw3Pa7VrvRTLxNyVztQG/5nOlLb+BGt6q0eRi9qqrfQA2IiAY+CI?=
- =?us-ascii?Q?d20VsWU06hAw5mUFZ1XDr5myL7sUD667gA6JEe6Fm5o5ePCYFAwK0liZQ5Jm?=
- =?us-ascii?Q?5LpFPrSdZCSKuGH+UdADuEY9eZq64D4nYIbDIZjJ6KBNumVPsZs8H781wxp1?=
- =?us-ascii?Q?0V8h4DHKl5aDE3D8L268GzoYdgstYzCjP23fQ0Q9Pr6k4AJyOSfy9LLbJv1e?=
- =?us-ascii?Q?h4ifllusch52xOGpafbwk5ePck3MYUjB5QakZukrTpoqh3qzjGYMAafHJr5c?=
- =?us-ascii?Q?6cRIFiQfNfWmCJKgTwT7bkfWDglX0zRbtxLlE7NDGGbdUTEcS4G86Nf4rCWB?=
- =?us-ascii?Q?/McIz1srOy868N3WCCcxvANMAOFqJ2TOtqwAbg2w75CSF8FAIIu8kjQ/P6e0?=
- =?us-ascii?Q?qXl3Jxxun1XP3YGOKnTZcW+Rqx5S2eaUaM5Qdu/dqYXRZm5wQQ3ZEPbp1w22?=
- =?us-ascii?Q?JkICRbJXMFpkHhAybvNBOcEaQcuqjiRf1LA7p7IA2eIARr+iZid00M1+nKM6?=
- =?us-ascii?Q?RED+m3B0uRs+klEOvBgsPY4ljKrvqrWfr5wE2/R7kDErPkNCO/htq9m0mDPd?=
- =?us-ascii?Q?E4Y9ejOwACBVjXQGJGicM5skgP6owFlfWeTzOkkEQ9m+XsfqvTDlzspcr0bQ?=
- =?us-ascii?Q?dw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c3bf35d-8b46-4bb4-56df-08dc1194e161
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 04:30:31.5569
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZcOeRVOFci5nswfGZypp0geU+pSnwyi0ZKtkStzLzTulXu7BXKdHi5ypTGbyHDSW7PKXz9HR5Iz0U2TU7lGZhtCAB2kYv2G7NRCXdYNF6ik=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5463
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=ascii
 
-The final topic branch I want to merge for v6.8 contains a conflict with
-acpi.git commit:
+Gregory Price <gregory.price@memverge.com> writes:
 
-a70297d22132 ACPI: APEI: set memory failure flags as MF_ACTION_REQUIRED on synchronous events
+> On Tue, Jan 09, 2024 at 03:50:49PM +0000, Jonathan Cameron wrote:
+>> On Tue, 09 Jan 2024 11:41:11 +0800
+>> "Huang, Ying" <ying.huang@intel.com> wrote:
+>> > Gregory Price <gregory.price@memverge.com> writes:
+>> > > On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:  
+>> > It's possible to change the performance of a NUMA node changed, if we
+>> > hot-remove a memory device, then hot-add another different memory
+>> > device.  It's hoped that the CDAT changes too.
+>> 
+>> Not supported, but ACPI has _HMA methods to in theory allow changing
+>> HMAT values based on firmware notifications...  So we 'could' make
+>> it work for HMAT based description.
+>> 
+>> Ultimately my current thinking is we'll end up emulating CXL type3
+>> devices (hiding topology complexity) and you can update CDAT but
+>> IIRC that is only meant to be for degraded situations - so if you
+>> want multiple performance regions, CDAT should describe them form the start.
+>> 
+>
+> That was my thought.  I don't think it's particularly *realistic* for
+> HMAT/CDAT values to change at runtime, but I can imagine a case where
+> it could be valuable.
+>
+>> > > https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
+>> > >
+>> > > This group wants to enable passing CXL memory through to KVM/QEMU
+>> > > (i.e. host CXL expander memory passed through to the guest), and
+>> > > allow the guest to apply memory tiering.
+>> > >
+>> > > There are multiple issues with this, presently:
+>> > >
+>> > > 1. The QEMU CXL virtual device is not and probably never will be
+>> > >    performant enough to be a commodity class virtualization.
+>> 
+>> I'd flex that a bit - we will end up with a solution for virtualization but
+>> it isn't the emulation that is there today because it's not possible to
+>> emulate some of the topology in a peformant manner (interleaving with sub
+>> page granularity / interleaving at all (to a lesser degree)). There are
+>> ways to do better than we are today, but they start to look like
+>> software dissagregated memory setups (think lots of page faults in the host).
+>>
+>
+> Agreed, the emulated device as-is can't be the virtualization device,
+> but it doesn't mean it can't be the basis for it.
+>
+> My thought is, if you want to pass host CXL *memory* through to the
+> guest, you don't actually care to pass CXL *control* through to the
+> guest.  That control lies pretty squarely with the host/hypervisor.
+>
+> So, at least in theory, you can just cut the type3 device out of the
+> QEMU configuration entirely and just pass it through as a distinct numa
+> node with specific hmat qualities.
+>
+> Barring that, if we must go through the type3 device, the question is
+> how difficult would it be to just make a stripped down type3 device
+> to provide the informational components, but hack off anything
+> topology/interleave related? Then you just do direct passthrough as you
+> described below.
+>
+> qemu/kvm would report errors if you tried to touch the naughty bits.
+>
+> The second question is... is that device "compliant" or does it need
+> super special handling from the kernel driver :D?  If what i described
+> is not "compliant", then it's probably a bad idea, and KVM/QEMU should
+> just hide the CXL device entirely from the guest (for this use case)
+> and just pass the memory through as a numa node.
+>
+> Which gets us back to: The memory-tiering component needs a way to
+> place nodes in different tiers based on HMAT/CDAT/User Whim. All three
+> of those seem like totally valid ways to go about it.
+>
+>> > >
+>> > > 2. When passing memory through as an explicit NUMA node, but not as
+>> > >    part of a CXL memory device, the nodes are lumped together in the
+>> > >    DRAM tier.
+>> > >
+>> > > None of this has to do with firmware.
+>> > >
+>> > > Memory-type is an awful way of denoting membership of a tier, but we
+>> > > have HMAT information that can be passed through via QEMU:
+>> > >
+>> > > -object memory-backend-ram,size=4G,id=ram-node0 \
+>> > > -object memory-backend-ram,size=4G,id=ram-node1 \
+>> > > -numa node,nodeid=0,cpus=0-4,memdev=ram-node0 \
+>> > > -numa node,initiator=0,nodeid=1,memdev=ram-node1 \
+>> > > -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,latency=10 \
+>> > > -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=10485760 \
+>> > > -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,latency=20 \
+>> > > -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,bandwidth=5242880
+>> > >
+>> > > Not only would it be nice if we could change tier membership based on
+>> > > this data, it's realistically the only way to allow guests to accomplish
+>> > > memory tiering w/ KVM/QEMU and CXL memory passed through to the guest.
+>> 
+>> This I fully agree with.  There will be systems with a bunch of normal DDR with different
+>> access characteristics irrespective of CXL. + likely HMAT solutions will be used
+>> before we get anything more complex in place for CXL.
+>> 
+>
+> Had not even considered this, but that's completely accurate as well.
+>
+> And more discretely: What of devices that don't provide HMAT/CDAT? That
+> isn't necessarily a violation of any standard.  There probably could be
+> a release valve for us to still make those devices useful.
+>
+> The concern I have with not implementing a movement mechanism *at all*
+> is that a one-size-fits-all initial-placement heuristic feels gross
+> when we're, at least ideologically, moving toward "software defined memory".
+>
+> Personally I think the movement mechanism is a good idea that gets folks
+> where they're going sooner, and it doesn't hurt anything by existing. We
+> can change the initial placement mechanism too.
+>
+> </2cents>
 
-...here is my resolution:
+It's the last resort to provide hardware information from user space.
+We should try to avoid that if possible.
 
-diff --cc drivers/acpi/apei/ghes.c
-index ab2a82cb1b0b,56a5d2ef9e0a..7b7c605166e0
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@@ -706,7 -762,23 +779,23 @@@ static bool ghes_do_proc(struct ghes *g
-                        ghes_handle_aer(gdata);
-                }
-                else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
- -                      queued = ghes_handle_arm_hw_error(gdata, sev);
- +                      queued = ghes_handle_arm_hw_error(gdata, sev, sync);
-+               } else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
-+                       struct cxl_cper_event_rec *rec =
-+                               acpi_hest_get_payload(gdata);
-+ 
-+                       cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
-+               } else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
-+                       struct cxl_cper_event_rec *rec =
-+                               acpi_hest_get_payload(gdata);
-+ 
-+                       cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
-+               } else if (guid_equal(sec_type,
-+                                     &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-+                       struct cxl_cper_event_rec *rec =
-+                               acpi_hest_get_payload(gdata);
-+ 
-+                       cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
-                } else {
-                        void *err = acpi_hest_get_payload(gdata);
-  
-No other feature additions are pending for this cycle. Given this topic's
-readiness and testing I saw no immediate reason to hold this off until v6.9,
-but yes I wish it would have settled a bit earlier.
+Per my understanding, per-memory-type abstract distance overriding is to
+apply specific policy.  While, per-memory-node abstract distance
+overriding is to provide missing hardware information.
+
+--
+Best Regards,
+Huang, Ying
