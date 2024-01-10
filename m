@@ -1,37 +1,50 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC31D3FB04
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jan 2024 10:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E064A9A1;
+	Wed, 10 Jan 2024 14:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T93DL6N7mz6D8x1;
-	Wed, 10 Jan 2024 17:59:14 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T98mS4mQzz6K97H;
+	Wed, 10 Jan 2024 22:08:56 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4EE15140DFA;
-	Wed, 10 Jan 2024 18:01:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 90357140B2F;
+	Wed, 10 Jan 2024 22:11:32 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Jan
- 2024 10:00:49 +0000
-Date: Wed, 10 Jan 2024 10:00:48 +0000
+ 2024 14:11:31 +0000
+Date: Wed, 10 Jan 2024 14:11:30 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-	<linux-cxl@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v3 3/3] cxl: Add memory hotplug notifier for cxl region
-Message-ID: <20240110100048.000062c0@Huawei.com>
-In-Reply-To: <659d9e563e1fd_24a8294b7@dwillia2-xfh.jf.intel.com.notmuch>
-References: <170441200977.3574076.13110207881243626581.stgit@djiang5-mobl3>
-	<170441211484.3574076.5894396662836000435.stgit@djiang5-mobl3>
-	<87r0is9v6o.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240108121538.00001369@Huawei.com>
-	<38be52cf-a4ea-402c-9b14-47a80427f0c8@intel.com>
-	<20240109162753.00005b2b@Huawei.com>
-	<659d9e563e1fd_24a8294b7@dwillia2-xfh.jf.intel.com.notmuch>
+To: Gregory Price <gregory.price@memverge.com>
+CC: "Huang, Ying" <ying.huang@intel.com>, Srinivasulu Thanneeru
+	<sthanneeru@micron.com>, Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "aneesh.kumar@linux.ibm.com"
+	<aneesh.kumar@linux.ibm.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "mhocko@suse.com" <mhocko@suse.com>,
+	"tj@kernel.org" <tj@kernel.org>, "john@jagalactic.com" <john@jagalactic.com>,
+	Eishan Mirakhur <emirakhur@micron.com>, "Vinicius Tavares Petrucci"
+	<vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johannes
+ Weiner <hannes@cmpxchg.org>, "Wei Xu" <weixugc@google.com>, Hao Xiang
+	<hao.xiang@bytedance.com>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory
+ tiers
+Message-ID: <20240110141130.0000035c@Huawei.com>
+In-Reply-To: <ZZ2Jd7/7rFD0o5S3@memverge.com>
+References: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
+	<87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZwrIoP9+ey7rp3C@memverge.com>
+	<87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<20240109155049.00003f13@Huawei.com>
+	<ZZ2Jd7/7rFD0o5S3@memverge.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -42,280 +55,173 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 9 Jan 2024 11:28:22 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Tue, 9 Jan 2024 12:59:19 -0500
+Gregory Price <gregory.price@memverge.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Mon, 8 Jan 2024 11:18:33 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
+> On Tue, Jan 09, 2024 at 03:50:49PM +0000, Jonathan Cameron wrote:
+> > On Tue, 09 Jan 2024 11:41:11 +0800
+> > "Huang, Ying" <ying.huang@intel.com> wrote:  
+> > > Gregory Price <gregory.price@memverge.com> writes:  
+> > > > On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:    
+> > > It's possible to change the performance of a NUMA node changed, if we
+> > > hot-remove a memory device, then hot-add another different memory
+> > > device.  It's hoped that the CDAT changes too.  
+> > 
+> > Not supported, but ACPI has _HMA methods to in theory allow changing
+> > HMAT values based on firmware notifications...  So we 'could' make
+> > it work for HMAT based description.
+> > 
+> > Ultimately my current thinking is we'll end up emulating CXL type3
+> > devices (hiding topology complexity) and you can update CDAT but
+> > IIRC that is only meant to be for degraded situations - so if you
+> > want multiple performance regions, CDAT should describe them form the start.
 > >   
-> > > On 1/8/24 05:15, Jonathan Cameron wrote:  
-> > > > On Mon, 08 Jan 2024 14:49:03 +0800
-> > > > "Huang, Ying" <ying.huang@intel.com> wrote:
-> > > >     
-> > > >> Dave Jiang <dave.jiang@intel.com> writes:
-> > > >>    
-> > > >>> When the CXL region is formed, the driver would computed the performance
-> > > >>> data for the region. However this data is not available at the node data
-> > > >>> collection that has been populated by the HMAT during kernel
-> > > >>> initialization. Add a memory hotplug notifier to update the performance
-> > > >>> data to the node hmem_attrs to expose the newly calculated region
-> > > >>> performance data. The CXL region is created under specific CFMWS. The
-> > > >>> node for the CFMWS is created during SRAT parsing by acpi_parse_cfmws().
-> > > >>> Additional regions may overwrite the initial data, but since this is
-> > > >>> for the same proximity domain it's a don't care for now.
-> > > >>>
-> > > >>> node_set_perf_attrs() symbol is exported to allow update of perf attribs
-> > > >>> for a node. The sysfs path of
-> > > >>> /sys/devices/system/node/nodeX/access0/initiators/* is created by
-> > > >>> ndoe_set_perf_attrs() for the various attributes where nodeX is matched
-> > > >>> to the proximity domain of the CXL region.    
-> > > > 
-> > > > As per discussion below.  Why is access1 not also relevant for CXL memory?
-> > > > (it's probably more relevant than access0 in many cases!)
-> > > > 
-> > > > For historical references, I wanted access0 to be the CPU only one, but
-> > > > review feedback was that access0 was already defined as 'initiator based'
-> > > > so we couldn't just make the 0 indexed one the case most people care about.
-> > > > Hence we grew access1 to cover the CPU only case which most software cares
-> > > > about.
-> > > >     
-> > > >>>
-> > > >>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > >>> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> > > >>> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-> > > >>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > >>> ---
-> > > >>> v3:
-> > > >>> - Change EXPORT_SYMBOL_NS_GPL(,CXL) to EXPORT_SYMBOL_GPL() (Jonathan)
-> > > >>> - use read_bandwidth as check for valid coords (Jonathan)
-> > > >>> - Remove setting of coord access level 1. (Jonathan)
-> > > >>> ---
-> > > >>>  drivers/base/node.c       |    1 +
-> > > >>>  drivers/cxl/core/region.c |   42 ++++++++++++++++++++++++++++++++++++++++++
-> > > >>>  drivers/cxl/cxl.h         |    3 +++
-> > > >>>  3 files changed, 46 insertions(+)
-> > > >>>
-> > > >>> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> > > >>> index cb2b6cc7f6e6..48e5cb292765 100644
-> > > >>> --- a/drivers/base/node.c
-> > > >>> +++ b/drivers/base/node.c
-> > > >>> @@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
-> > > >>>  		}
-> > > >>>  	}
-> > > >>>  }
-> > > >>> +EXPORT_SYMBOL_GPL(node_set_perf_attrs);
-> > > >>>  
-> > > >>>  /**
-> > > >>>   * struct node_cache_info - Internal tracking for memory node caches
-> > > >>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > >>> index d28d24524d41..bee65f535d6c 100644
-> > > >>> --- a/drivers/cxl/core/region.c
-> > > >>> +++ b/drivers/cxl/core/region.c
-> > > >>> @@ -4,6 +4,7 @@
-> > > >>>  #include <linux/genalloc.h>
-> > > >>>  #include <linux/device.h>
-> > > >>>  #include <linux/module.h>
-> > > >>> +#include <linux/memory.h>
-> > > >>>  #include <linux/slab.h>
-> > > >>>  #include <linux/uuid.h>
-> > > >>>  #include <linux/sort.h>
-> > > >>> @@ -2972,6 +2973,42 @@ static int is_system_ram(struct resource *res, void *arg)
-> > > >>>  	return 1;
-> > > >>>  }
-> > > >>>  
-> > > >>> +static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
-> > > >>> +					  unsigned long action, void *arg)
-> > > >>> +{
-> > > >>> +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-> > > >>> +					       memory_notifier);
-> > > >>> +	struct cxl_region_params *p = &cxlr->params;
-> > > >>> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
-> > > >>> +	struct cxl_decoder *cxld = &cxled->cxld;
-> > > >>> +	struct memory_notify *mnb = arg;
-> > > >>> +	int nid = mnb->status_change_nid;
-> > > >>> +	int region_nid;
-> > > >>> +
-> > > >>> +	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
-> > > >>> +		return NOTIFY_DONE;
-> > > >>> +
-> > > >>> +	region_nid = phys_to_target_node(cxld->hpa_range.start);
-> > > >>> +	if (nid != region_nid)
-> > > >>> +		return NOTIFY_DONE;
-> > > >>> +
-> > > >>> +	/* Don't set if there's no coordinate information */
-> > > >>> +	if (!cxlr->coord.write_bandwidth)
-> > > >>> +		return NOTIFY_DONE;      
-> > > >>
-> > > >> Although you said you will use "read_bandwidth" in changelog, you
-> > > >> actually didn't do that.
-> > > >>    
-> > > >>> +
-> > > >>> +	node_set_perf_attrs(nid, &cxlr->coord, 0);
-> > > >>> +	node_set_perf_attrs(nid, &cxlr->coord, 1);      
-> > > >>
-> > > >> And this.
-> > > >>
-> > > >> But I don't think it's good to remove access level 1.  According to
-> > > >> commit b9fffe47212c ("node: Add access1 class to represent CPU to memory
-> > > >> characteristics").  Access level 1 is for performance from CPU to
-> > > >> memory.  So, we should keep access level 1.  For CXL memory device,
-> > > >> access level 0 and access level 1 should be equivalent.  Will the code
-> > > >> be used for something like GPU connected via CXL?  Where the access
-> > > >> level 0 may be for the performance from GPU to the memory.
-> > > >>    
-> > > > I disagree. They are no more equivalent than they are on any other complex system.
-> > > > 
-> > > > e.g. A CXL root port being described using generic Port infrastructure may be
-> > > > on a different die (IO dies are a common architecture) in the package
-> > > > than the CPU cores and that IO die may well have generic initiators that
-> > > > are much nearer than the CPU cores.
-> > > > 
-> > > > In those cases access0 will cover initators on the IO die but access1 will
-> > > > cover the nearest CPU cores (initiators).
-> > > > 
-> > > > Both should arguably be there for CXL memory as both are as relevant as
-> > > > they are for any other memory.
-> > > > 
-> > > > If / when we get some GPUs etc on CXL that are initiators this will all
-> > > > get a lot more fun but for now we can kick that into the long grass.    
-> > > 
-> > > 
-> > > With the current way of storing HMAT targets information, only the
-> > > best performance data is stored (access0). The existing HMAT handling
-> > > code also sets the access1 if the associated initiator node contains
-> > > a CPU for conventional memory. The current calculated full CXL path
-> > > is the access0 data. I think what's missing is the check to see if
-> > > the associated initiator node is also a CPU node and sets access1
-> > > conditionally based on that. Maybe if that conditional gets added
-> > > then that is ok for what we have now?  
+> 
+> That was my thought.  I don't think it's particularly *realistic* for
+> HMAT/CDAT values to change at runtime, but I can imagine a case where
+> it could be valuable.
+
+For now I'm thinking we might spit that CDAT info via a tracepoint if
+it happens, but given it's degraded perf only maybe we don't care.
+
+HMAT is more interesting because it may be used by a firmware first
+model to paper over some weird hardware being hotplugged, or for giggles
+a hypervisor moving memory around under the hood (think powering down
+whole DRAM controllers etc).
+
+Anyhow, that's highly speculative and whoever cares about it can
+make it work! :)
+
+> 
+> > > > https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
+> > > >
+> > > > This group wants to enable passing CXL memory through to KVM/QEMU
+> > > > (i.e. host CXL expander memory passed through to the guest), and
+> > > > allow the guest to apply memory tiering.
+> > > >
+> > > > There are multiple issues with this, presently:
+> > > >
+> > > > 1. The QEMU CXL virtual device is not and probably never will be
+> > > >    performant enough to be a commodity class virtualization.  
 > > 
-> > You also need the access1 initiators to be figured out (nearest
-> > one that has a CPU) - so two separate sets of calculations.
-> > Could short cut the maths if they happen to be the same node of
-> > course.  
+> > I'd flex that a bit - we will end up with a solution for virtualization but
+> > it isn't the emulation that is there today because it's not possible to
+> > emulate some of the topology in a peformant manner (interleaving with sub
+> > page granularity / interleaving at all (to a lesser degree)). There are
+> > ways to do better than we are today, but they start to look like
+> > software dissagregated memory setups (think lots of page faults in the host).
+> >  
 > 
-> Where is "access1" coming from? The generic port is the only performance
-> profile that is being calculated by the CDAT code and there is no other
-> initiator.
-
-This isn't about initiators on the CXL side of the port (for now anyway).
-It's about intiators in the host system.
-
+> Agreed, the emulated device as-is can't be the virtualization device,
+> but it doesn't mean it can't be the basis for it.
 > 
-> Now if "access1" is a convention of "that's the CPU" then we should skip
-> emitting access0 altogether and reserve that for some future accelerator
-> case that can define a better access profile talking to its own local
-> memory.  Otherwise having access0 and access1 when the only initiator is
-> the generic port (which includes all CPUs attached to that generic port)
-> does not resolve for me.
+> My thought is, if you want to pass host CXL *memory* through to the
+> guest, you don't actually care to pass CXL *control* through to the
+> guest.  That control lies pretty squarely with the host/hypervisor.
+> 
+> So, at least in theory, you can just cut the type3 device out of the
+> QEMU configuration entirely and just pass it through as a distinct numa
+> node with specific hmat qualities.
+> 
+> Barring that, if we must go through the type3 device, the question is
+> how difficult would it be to just make a stripped down type3 device
+> to provide the informational components, but hack off anything
+> topology/interleave related? Then you just do direct passthrough as you
+> described below.
 
-The initiators here are:
-
-* CPUs in the host - due to limitations of the HMAT presentation that actually
-  means those CPUs in the host that are nearest to the generic port. Only
-  these are considered for access1. So for simple placement decisions on
-  CPU only workloads this is what matters.
-* Other initiators in the host such NICs on PCI (typically ones that
-  are presented at RCiEPs or behind 'fake' switches but actually in the same
-  die as the root complex)  These and CPUs are included for access0
-* (not supported yet). Other initiators in the CXL fabric.
-
-My ancient white paper needs an update to include generic ports as they do
-make things more complex.
-https://github.com/hisilicon/acpi-numa-whitepaper/releases/download/v0.93/NUMA_Description_Under_ACPI_6.3_v0.93.pdf
-
-Anyhow:  ASCI art time. (simplified diagram of an old production CPU with CXL added
-where the PCI RC is - so no future product info but expect to see systems that
-looks similar to this :))
-
-Note the IO die might also be in the middle, or my "favorite" design - in a separate
-package entirely - IO expanders on the inter socket interconnect - (UPI or similar) ;)
-Note these might not be physical systems - an example is a VM workload
-which occasionally needs to use an 'extra' GPU. That GPU comes from a host socket
-on which the VM has no CPU resources or memory.  Anyhow given the diagrams
-I've seen of production systems pretty much anything you can conceive is is being
-built by someone.
-
-        ________________      __________________
-       |                |    |                  |            
-       |  Host DDR(PXM0)|    |  Host DDR (PXM1) |
-       |________________|    |__________________|
-              |                       |
-       _______|_______         _______|____        _________________
-       |              |       |            |       |                | 
-       |   CPU Die    |-------|  CPU Die   |-------|  IO DIE        |
-       |   PXM 0      |       |  PXM 1     |       |  PXM 2         |
-       |              |       |            |       |  NIC (GP + GI) |
-       |______________|       |____________|       |________________|
-                                                           |
-                                                    _______|________
-                                                   |               |
-                                                   |   CXL Mem     |
-                                                   |               |
-                                                   |_______________|
-
-So in this case access0 should have PXM2 as the initiator and include
-the bandwidth and latency numbers from PXM2 to itself (where the GP is)
-and those to the CXL memory that Dave's code adds in.
-
-Access1 is from PXM1 to PXM2 (to get to the GP) and on to the CXL mem.
-
-Note that one reason to do this is that the latency from the NIC in PXM2
-to CXL mem might well be not much worse than from it to the memory on PXM 1
-(cpu Die) so placement decisions might favor putting NIC buffers in CXL mem
-particularly if the bandwidth is good.
-
-
+Not stripped down as such, just lock the decoders as if a firmware had
+configured it (in reality the config will be really really simple).
+The kernel stack handles that fine today.  The only dynamic bit
+would be the DC related part.  Not sure our lockdown support in the
+emulated device is complete (some of it is there but might have missed
+some registers).
 
 > 
-> > > If/When the non-CPU initiators shows up for CXL, we'll need to change
-> > > the way to store the initiator to generic target table data and how
-> > > we calculate and setup access0 vs access1. Maybe that can be done as
-> > > a later iteration?  
+> qemu/kvm would report errors if you tried to touch the naughty bits.
+
+Might do that a temporary step along way to enabling thing but given
+CXL assumes that the host firmware 'might' have configured everything and
+locked it (kernel may be booting out of CXL memory for instance) it should
+'just work' without needing this.
+ 
+> The second question is... is that device "compliant" or does it need
+> super special handling from the kernel driver :D?  If what i described
+> is not "compliant", then it's probably a bad idea, and KVM/QEMU should
+> just hide the CXL device entirely from the guest (for this use case)
+> and just pass the memory through as a numa node.
+Would need to be compliant or very nearly so - I can see we might advertise
+no interleave support even though not setting any of the interleave address
+bits is technically a spec violation.  However, don't think we need to
+do that because of decoder locking.  We advertise interleave options but
+don't allow current setting to be changed.
+
+If someone manually resets the bus they are on their own though :(
+(that will clear the lock registers as it's the same as removing power).
+
+> 
+> Which gets us back to: The memory-tiering component needs a way to
+> place nodes in different tiers based on HMAT/CDAT/User Whim. All three
+> of those seem like totally valid ways to go about it.
+> 
+> > > >
+> > > > 2. When passing memory through as an explicit NUMA node, but not as
+> > > >    part of a CXL memory device, the nodes are lumped together in the
+> > > >    DRAM tier.
+> > > >
+> > > > None of this has to do with firmware.
+> > > >
+> > > > Memory-type is an awful way of denoting membership of a tier, but we
+> > > > have HMAT information that can be passed through via QEMU:
+> > > >
+> > > > -object memory-backend-ram,size=4G,id=ram-node0 \
+> > > > -object memory-backend-ram,size=4G,id=ram-node1 \
+> > > > -numa node,nodeid=0,cpus=0-4,memdev=ram-node0 \
+> > > > -numa node,initiator=0,nodeid=1,memdev=ram-node1 \
+> > > > -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,latency=10 \
+> > > > -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=10485760 \
+> > > > -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,latency=20 \
+> > > > -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,bandwidth=5242880
+> > > >
+> > > > Not only would it be nice if we could change tier membership based on
+> > > > this data, it's realistically the only way to allow guests to accomplish
+> > > > memory tiering w/ KVM/QEMU and CXL memory passed through to the guest.  
 > > 
-> > I'm not that bothered yet about CXL initiators - the issue today
-> > is ones on a different node the host side of the root ports.
-> > 
-> > For giggles the NVIDIA Grace proposals for how they manage their
-> > GPU partitioning will create a bunch of GI nodes that may well
-> > be nearer to the CXL ports - I've no idea!
-> > https://lore.kernel.org/qemu-devel/20231225045603.7654-1-ankita@nvidia.com/  
+> > This I fully agree with.  There will be systems with a bunch of normal DDR with different
+> > access characteristics irrespective of CXL. + likely HMAT solutions will be used
+> > before we get anything more complex in place for CXL.
+> >   
 > 
-> It seems sad that we, as an industry, went through all this trouble to
-> define an enumerable CXL bus only to fall back to ACPI for enumeration.
-
-History - a lot of this stuff was in design before CXL surfaced.
-I think we are all pushing for people to reuse the CXL defined infrastructure
-(or similar) in the long term to make everything enumerable.
-
-Arguably for a host system ACPI is the enumeration method...
-
-
+> Had not even considered this, but that's completely accurate as well.
 > 
-> The Linux reaction to CFMWS takes a "Linux likely needs *at least* this many
-> memory target nodes considered at the beginning of time", with a "circle
-> back to the dynamic node creation problem later if it proves to be
-> insufficient". The NVIDIA proposal appears to be crossing that
-> threshold, and I will go invite them to do the work to dynamically
-> enumerate initiators into the Linux tracking structures.
+> And more discretely: What of devices that don't provide HMAT/CDAT? That
+> isn't necessarily a violation of any standard.  There probably could be
+> a release valve for us to still make those devices useful.
 
-Absolutely - various replies in earlier threads made that point
-(and that everyone has been kicking that tire down the road for years).
+I'd argue any such device needs some driver support. Release valve is they
+provide the info from that driver, just like the CDAT solution is doing.
+
+If they don't then meh, their system is borked so they'll will add it
+fairly quickly!
 
 > 
-> As for where this leaves this patchset, it is clear from this
-> conversation that v6.9 is a better target for clarifying this NUMA
-> information, but I think it is ok to move ahead with the base CDAT
-> parsing for v6.8 (the bits that are already exposed to linux-next). Any
-> objections?
+> The concern I have with not implementing a movement mechanism *at all*
+> is that a one-size-fits-all initial-placement heuristic feels gross
+> when we're, at least ideologically, moving toward "software defined memory".
 > 
-Should be fine if we keep away from the userspace exposed new bits
-(though I think we can clarify them fairly fast - it's a bit late ;(
+> Personally I think the movement mechanism is a good idea that gets folks
+> where they're going sooner, and it doesn't hurt anything by existing. We
+> can change the initial placement mechanism too.
+
+I've no problem with a movement mechanism. Hopefully in the long run it
+never gets used though! Maybe in short term it's out of tree code.
 
 Jonathan
 
+> 
+> </2cents>
+> 
+> ~Gregory
 
