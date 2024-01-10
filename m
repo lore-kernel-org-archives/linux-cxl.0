@@ -1,349 +1,174 @@
-Received: from mail-m127220.xmail.ntesmail.com (mail-m127220.xmail.ntesmail.com [115.236.127.220])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B69663A0
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jan 2024 03:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 3519386017A;
-	Wed, 10 Jan 2024 10:07:40 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
-To: Ira Weiny <ira.weiny@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, ave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org
-References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
- <659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
-Message-ID: <2d66586f-b254-bc85-2358-9f752268cf11@easystack.cn>
-Date: Wed, 10 Jan 2024 10:07:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E127EF;
+	Wed, 10 Jan 2024 04:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bWO0HJce"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704861036; x=1736397036;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=3A6a5TwiFOECcztSm7mgNNg8SPuxFMiYpw/GhRBwV2Q=;
+  b=bWO0HJceHUkh9Bp8u3s8my1tMKIl4GgutCOmC7TE/T84rFHr4uWlGuaE
+   WAoIp+4sTDCUIdrh+GItCczBGlgdncVAQivLw7fpyok9TfRs1KyYFh8On
+   uiHdKqMnbDiB8rukKKbaBa3fie829n3pvNTyEMeUR+6drtkGoMLptOzdv
+   p3YkHcYkk4oKxu71Mt2UPxle664l/7k1OUyt5l6LKdWx7OVRhVCY1eRts
+   yRyy0jhfvekuSsxBTjiuANVoURZ7LBmU9isGg6VlrGdeirjF6A7u6Pi+l
+   etuBq5uPEHIWbCwaNmrguQXUyEDH34KQTksTZm1SlvAIOOYaCgbz0/uT1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5177177"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="5177177"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 20:30:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="905389911"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="905389911"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jan 2024 20:30:34 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Jan 2024 20:30:33 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 9 Jan 2024 20:30:33 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 9 Jan 2024 20:30:33 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SCFC5R6f325Ifr2eUJWnwPyuaLXMcrOmixvOAZ4GGqoiK9qQA4NergR357FNQyYzYynz9wUmBqv2KR8dvrHzZCXedRSFqkmCTitifwdo6YHJqVLS5cg+3fIXNcQiJ9IQaS0hmRieVGgAoC9rImBNz7mXGWaYIKg9T3MBNe1p3Twk4CYR5AaGV++nbWeb/6MJ8sHD/W3F3qrAFZkq1Xy8jdESaDAUNMYy2Xf/xFfx31v9YzHrI8RbelHzLDrcB3UW4rOHsG2MeDvKr0B+6BoEbqEyFYGzyizF4h0hkytZ7AGJOXBRLaqrR3b7BX8NF+rsbwwcK4YJv12wzo6rgjQgtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=piXOARPCuzPeY8R4tCrZmx4dkqvT/os2RCvsfjNlNrU=;
+ b=d821m6g4H9eJXr99E7pq4s6Xhty//zgMcGV0Xt3KlHQ2wPEG2KxwPjCZ7uvwaexHNVL8CFYHxTKVJqZA7HWHnV0/D8fd2RLk1t5/S5YJGe8PbBYXRWwQn6nCUik1bhjIoMU7YIX+vrQjkT/OFv0Sp3SDSE5isjFPJe5UMptGFHluDOfkFqEsnpL1SDmuW6xFDTC4FAosScrJYkuPgLqEuJq1sVn9wYmOzpFY1z10hYNyMvpyH1njprYE2K7C/c/U5Kss21FB+ftA0GMCuRA5p6dfUGHXHGT0PKPW7EYwOqZfu33I8iCBeszyYQlX0TSQNqs005qYcSO3nxS8hWc5NQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by BL1PR11MB5463.namprd11.prod.outlook.com (2603:10b6:208:315::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
+ 2024 04:30:31 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
+ 04:30:31 +0000
+Date: Tue, 9 Jan 2024 20:30:28 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+CC: <xueshuai@linux.alibaba.com>, <linux-next@vger.kernel.org>, "Rafael J.
+ Wysocki" <rafael.j.wysocki@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<ira.weiny@intel.com>
+Subject: FYI, cxl.git vs acpi.git conflict entering linux-next
+ (for-6.8/cxl-cper)
+Message-ID: <659e1d64dcec7_5cee294b3@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: MW4P221CA0029.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::34) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <659597dc1fb49_16f746294a1@iweiny-mobl.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGU8eVhhKTEgfSR9OHU5DGlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8cf1201499023ckunm3519386017a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K0k6Mww6Ejc6ExZCMhQ6PBFM
-	HSMwCk5VSlVKTEtPQ05JT01KSUpOVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBSklIQk83Bg++
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL1PR11MB5463:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c3bf35d-8b46-4bb4-56df-08dc1194e161
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PW/RlUED2N6w/0vja3oDsheO5Ey+6AE2KWQGa/Js82/IEX+HpikgSXD2gpHneSHik2Agolzl/pLFOkR0WhVM2MUE7yIBcau+fxnncbLzmmNlEl0fTuW+G9EInf2S0+NJQakpH6w3lAB50KfeJLTCcnKdqLDxurKL/KdXheCZtN/nBLWnqLrABV/FM8iHyNYArsS+2T5OnyfAtLmhf0CyyUs+1NnN2RjcWEuKJ/4QxNTo+iqQRF7jL4hgI0RnDlA4ea+rf3np6FJ1ykJ/a0ydjFsy0p74yyDeHCWatYRZxatDsNK1KgkDOY6UWBjDT16lnXq59nje6ZYXdi3f8t6zXM157Ve6wOM2l1rKF+yFEEQkD9ApQ6z99CRQZTgTt6AXXoVB8kfgp0x3FOE2Slaz9HPdneNUGFaMjKjJkGqtJb+lpXr95Kx8kGfwGggblHrsj8y8rL1aQpHFhLeQAhFQG49oKxX67b7/yLtPCMR5UdXdSo37TPl9Ru0iIczbd1FhUMMQQtTfokgQObyteXefSW44lSnRro+t0Yd8G9ew74ZlLfpZykP5I3VsUVCvf64O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(39860400002)(136003)(366004)(346002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(83380400001)(26005)(6512007)(9686003)(6506007)(107886003)(38100700002)(4326008)(8676002)(8936002)(5660300002)(54906003)(2906002)(478600001)(6486002)(6666004)(6916009)(66476007)(66556008)(316002)(66946007)(41300700001)(86362001)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?scFwZH22i3TLd/xsiJyWHWCnvR8T/TkZ03Dyal+Uau0QsQgrUtTdKJ8in+VG?=
+ =?us-ascii?Q?z7XRY1jhnbfAciD6ZseDRRmlbETuWZVoqpPt2PAqXyY8Gz6liDaqNobeRklT?=
+ =?us-ascii?Q?rTlon0qs+xzilSb1RQv5gFGf2blQ3DpBKVydpgCc2hukBM5NTXQ+sD7QO2zy?=
+ =?us-ascii?Q?MpKKLco8HJKSZvJd0GY8wTE2jzQvIRwKwPD4PStUsn+aQKM6U2Cbgnej/8tN?=
+ =?us-ascii?Q?Dqs08ZDLEOLJwN90DTN8l09MFcuW2pt5ubc0+tH1wlHCWf8FRamUrKEb5dJP?=
+ =?us-ascii?Q?dFI0icfLtpsM9y0MR/mJA2I00Tt4cbYq8Y7rdmFcOhPys1ode4DiZBGVddls?=
+ =?us-ascii?Q?gteWYuMpJuYlCyQ6ynhNMNcb3qEeN09u0ALCINZscehUJmm0m6aoIhCBoT2x?=
+ =?us-ascii?Q?5pP+JYXws4/zcku2ioaFOPOXrtjPeO9drPjASIlFwpOBc1hMXp+END0tp5Kc?=
+ =?us-ascii?Q?cb41kAuT5zKXMWiPGk98NsxtTyTnMPexxg1Bw4vhvliv/DzEHXjpd1qAM77z?=
+ =?us-ascii?Q?QRL0aHU6mjsLggL1hFywKqlH3gIBx+7+WjVi+fvD99x1pzLFbjr8KMtUDDf5?=
+ =?us-ascii?Q?t+H0YeomuB5A843wZJ2Pfco8wt/bpAgdmMdxIfUn9FFpusHhO0E6iA694ziB?=
+ =?us-ascii?Q?IYwg9wpfEn23/gveqhC2ANYl/MOUF+pvPPYw2caJDsbcFTGe0av13dPBszd4?=
+ =?us-ascii?Q?cReruyGQprpIpnh2QXx3jFIstA+VsVXKsK6rjkOMw1QApL30jKQDzIRFdHAO?=
+ =?us-ascii?Q?jxPx5GqU1z7UgrC3p3NO6KVyNbv723jgadphYLUvqWcgh3uY0Px+5lJyQ9b4?=
+ =?us-ascii?Q?+p/1xaAM7SzZ2cb/KA8Y4aDZs7LgqMjI661LNq0cBFjjaS8jrB7vIupXEDVi?=
+ =?us-ascii?Q?+OiFv46P7I2GYW7p4di1sPdZQZPGwoAyur6YyZWgefRzm+MuSQrLMVOVtAQh?=
+ =?us-ascii?Q?DwV5cR56zw3Pa7VrvRTLxNyVztQG/5nOlLb+BGt6q0eRi9qqrfQA2IiAY+CI?=
+ =?us-ascii?Q?d20VsWU06hAw5mUFZ1XDr5myL7sUD667gA6JEe6Fm5o5ePCYFAwK0liZQ5Jm?=
+ =?us-ascii?Q?5LpFPrSdZCSKuGH+UdADuEY9eZq64D4nYIbDIZjJ6KBNumVPsZs8H781wxp1?=
+ =?us-ascii?Q?0V8h4DHKl5aDE3D8L268GzoYdgstYzCjP23fQ0Q9Pr6k4AJyOSfy9LLbJv1e?=
+ =?us-ascii?Q?h4ifllusch52xOGpafbwk5ePck3MYUjB5QakZukrTpoqh3qzjGYMAafHJr5c?=
+ =?us-ascii?Q?6cRIFiQfNfWmCJKgTwT7bkfWDglX0zRbtxLlE7NDGGbdUTEcS4G86Nf4rCWB?=
+ =?us-ascii?Q?/McIz1srOy868N3WCCcxvANMAOFqJ2TOtqwAbg2w75CSF8FAIIu8kjQ/P6e0?=
+ =?us-ascii?Q?qXl3Jxxun1XP3YGOKnTZcW+Rqx5S2eaUaM5Qdu/dqYXRZm5wQQ3ZEPbp1w22?=
+ =?us-ascii?Q?JkICRbJXMFpkHhAybvNBOcEaQcuqjiRf1LA7p7IA2eIARr+iZid00M1+nKM6?=
+ =?us-ascii?Q?RED+m3B0uRs+klEOvBgsPY4ljKrvqrWfr5wE2/R7kDErPkNCO/htq9m0mDPd?=
+ =?us-ascii?Q?E4Y9ejOwACBVjXQGJGicM5skgP6owFlfWeTzOkkEQ9m+XsfqvTDlzspcr0bQ?=
+ =?us-ascii?Q?dw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c3bf35d-8b46-4bb4-56df-08dc1194e161
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 04:30:31.5569
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZcOeRVOFci5nswfGZypp0geU+pSnwyi0ZKtkStzLzTulXu7BXKdHi5ypTGbyHDSW7PKXz9HR5Iz0U2TU7lGZhtCAB2kYv2G7NRCXdYNF6ik=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5463
+X-OriginatorOrg: intel.com
 
+The final topic branch I want to merge for v6.8 contains a conflict with
+acpi.git commit:
 
+a70297d22132 ACPI: APEI: set memory failure flags as MF_ACTION_REQUIRED on synchronous events
 
-在 2024/1/4 星期四 上午 1:22, Ira Weiny 写道:
-> Dongsheng Yang wrote:
->> Hi all:
->> 	This patchset introduce cxlv module to allow user to
->> create virtual cxl device. it's based linux6.7-rc5, you can
->> get the code from https://github.com/DataTravelGuide/linux
->>
->> 	As the real CXL device is not widely available now, we need
->> some virtual cxl device to do uplayer software developing or
->> testing. Qemu is good for functional testing, but not good
->> for some performance testing.
-> 
-> Do you have more details on what performance is missing from Qemu and why
-> this solution is better than a solution to fix Qemu?
-> 
-> Long term it seems better to fix Qemu for this type of work.
-> 
-> Are their other advantages to having this additional test infrastructure
-> in the kernel?  We already have cxl_test.
+...here is my resolution:
 
-Hi Ira,
-	Let me explain more about what I mean by "qemu is not good for some 
-performance testing". cxlv is not designed to test cxl driver itself, it 
-is used to do performance testing for upper level layer software. I can 
-give an example about the performance data:
-
-(1) fio to test /dev/dax0.0 in qemu
-qemu with memory-backend-ram, and create region and namespace with mod 
-of devdax. and then run fio with ioengine dev-dax, fio file as below[1].
-
-fio in qemu result detail in [2], the average iops is: avg=1919.26.
-
-(2) fio to test /dev/dax0.0 in native host with cxlv
-use cxlv to create cxl device and create region and namespace with mod 
-of devdax. then run fio with the same fio file in [1].
-
-fio in host result detail in [3], the average iops is: avg=1510391.68.
-
-
-Now you can see the resule iops is about 1500K vs 1.9K.
-
-I can explain more about why this matters, I am doing another project in 
-block device layer, named cbd(cxl block device). It uses cxl memdev as a 
-cache and a backing with other block device. it works similar with 
-bcache, but is newly designed for cxl memory device which is byte 
-addressable and latency very small. So I need a fast cxl device to 
-verify my design in uppper layer is working well, E,g, indexing. qemu is 
-too slow to this kind of performance testing. I dont think we can "fix" 
-it, that's not what qemu need to do.
-
-So when I say qemu is not good for performance testing, it's not saying 
-I want some performance improvement of cxl implement in qemu, but I want 
-to say the whole qemu-way is not suitable for latency sensitive testing.
-
-Thanx
-
-
-
-
-[1]:
-[global]
-bs=1K
-ioengine=dev-dax
-norandommap
-time_based
-runtime=10
-group_reporting
-disable_lat=1
-disable_slat=1
-disable_clat=1
-clat_percentiles=0
-cpus_allowed_policy=split
-
-# For the dev-dax engine:
-#
-#   IOs always complete immediately
-#   IOs are always direct
-#
-iodepth=1
-direct=0
-thread
-numjobs=1
-#
-# The dev-dax engine does IO to DAX device that are special character
-# devices exported by the kernel (e.g. /dev/dax0.0). The device is
-# opened normally and then the region is accessible via mmap. We do
-# not use the O_DIRECT flag because the device is naturally direct
-# access. The O_DIRECT flags will result in failure. The engine
-# access the underlying NVDIMM directly once the mmapping is setup.
-#
-# Check the alignment requirement of your DAX device. Currently the default
-# should be 2M. Blocksize (bs) should meet alignment requirement.
-#
-# An example of creating a dev dax device node from pmem:
-# ndctl create-namespace --reconfig=namespace0.0 --mode=dax --force
-#
-filename=/dev/dax0.0
-
-[dev-dax-write]
-rw=randwrite
-stonewall
-
-[2]:
-# fio ./dax.fio
-dev-dax-write: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, 
-(T) 1024B-1024B, ioengine=dev-dax, iodepth=1
-fio-3.36
-Starting 1 thread
-Jobs: 1 (f=1): [w(1)][100.0%][w=1929KiB/s][w=1929 IOPS][eta 00m:00s] 
-
-dev-dax-write: (groupid=0, jobs=1): err= 0: pid=1198: Tue Jan  9 
-10:17:21 2024
-   write: IOPS=1917, BW=1918KiB/s (1964kB/s)(18.7MiB/10001msec); 0 zone 
-resets
-    bw (  KiB/s): min= 1700, max= 1944, per=100.00%, avg=1919.26, 
-stdev=54.14, samples=19
-    iops        : min= 1700, max= 1944, avg=1919.26, stdev=54.14, 
-samples=19
-   cpu          : usr=99.97%, sys=0.00%, ctx=12, majf=0, minf=126 
-
-   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, 
- >=64=0.0%
-      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
- >=64=0.0%
-      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
- >=64=0.0%
-      issued rwts: total=0,19181,0,0 short=0,0,0,0 dropped=0,0,0,0 
-
-      latency   : target=0, window=0, percentile=100.00%, depth=1 
-
-
-Run status group 0 (all jobs):
-   WRITE: bw=1918KiB/s (1964kB/s), 1918KiB/s-1918KiB/s 
-(1964kB/s-1964kB/s), io=18.7MiB (19.6MB), run=10001-10001msec
-
-[3]:
-# fio ./dax.fio 
-
-dev-dax-write: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, 
-(T) 1024B-1024B, ioengine=dev-dax, iodepth=1
-fio-3.36 
-
-Starting 1 thread
-Jobs: 1 (f=1): [w(1)][100.0%][w=1480MiB/s][w=1515k IOPS][eta 00m:00s] 
-
-dev-dax-write: (groupid=0, jobs=1): err= 0: pid=41999: Tue Jan  9 
-18:11:18 2024
-   write: IOPS=1510k, BW=1474MiB/s (1546MB/s)(14.4GiB/10000msec); 0 zone 
-resets
-    bw (  MiB/s): min= 1418, max= 1480, per=100.00%, avg=1474.99, 
-stdev=13.83, samples=19
-    iops        : min=1452406, max=1515908, avg=1510391.68, 
-stdev=14156.58, samples=19 
- 
-                                                     cpu          : 
-usr=99.82%, sys=0.00%, ctx=22, majf=0, minf=899 
- 
- 
-                        IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 
-16=0.0%, 32=0.0%, >=64=0.0% 
- 
-                                                                submit 
-   : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0% 
-
-      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, 
- >=64=0.0%
-      issued rwts: total=0,15096228,0,0 short=0,0,0,0 dropped=0,0,0,0 
- 
- 
-
-      latency   : target=0, window=0, percentile=100.00%, depth=1 
-
- 
-
-Run status group 0 (all jobs): 
-
-   WRITE: bw=1474MiB/s (1546MB/s), 1474MiB/s-1474MiB/s 
-(1546MB/s-1546MB/s), io=14.4GiB (15.5GB), run=10000-10000msec
-> 
-> Ira
-> 
->>
->> 	The new CXLV module allow user to use the reserved RAM[1], to
->> create virtual cxl device. When the cxlv module load, it will
->> create a directory named as "cxl_virt" under /sys/devices/virtual:
->>
->> 	"/sys/devices/virtual/cxl_virt/"
->>
->> that's the top level device for all cxlv devices.
->> At the same time, cxlv module will create a debugfs directory:
->>
->> /sys/kernel/debug/cxl/cxlv
->> ├── create
->> └── remove
->>
->> the create and remove debugfs file is the cxlv entry to create or remove
->> a cxlv device.
->>
->> 	Each cxlv device have its owned virtual pci related bridge and bus, cxlv
->> will create a new root_port for the new cxlv device, setup cxl ports for
->> dport and nvdimm-bridge. After that, we will add the virtual pci device,
->> that will go into the cxl_pci_probe to setup new memdev.
->>
->> 	Then we can see the cxl device with cxl list and use it as a real cxl
->> device.
->>
->>   $ echo "memstart=$((8*1024*1024*1024)),cxltype=3,pmem=1,memsize=$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
->>   $ cxl list
->> [
->>    {
->>      "memdev":"mem0",
->>      "pmem_size":1879048192,
->>      "serial":0,
->>      "numa_node":0,
->>      "host":"0010:01:00.0"
->>    }
->> ]
->>   $ cxl create-region -m mem0 -d decoder0.0 -t pmem
->> {
->>    "region":"region0",
->>    "resource":"0x210000000",
->>    "size":"1792.00 MiB (1879.05 MB)",
->>    "type":"pmem",
->>    "interleave_ways":1,
->>    "interleave_granularity":256,
->>    "decode_state":"commit",
->>    "mappings":[
->>      {
->>        "position":0,
->>        "memdev":"mem0",
->>        "decoder":"decoder2.0"
->>      }
->>    ]
->> }
->> cxl region: cmd_create_region: created 1 region
->>
->>   $ ndctl create-namespace -r region0 -m fsdax --map dev -t pmem -b 0
->> {
->>    "dev":"namespace0.0",
->>    "mode":"fsdax",
->>    "map":"dev",
->>    "size":"1762.00 MiB (1847.59 MB)",
->>    "uuid":"686fd289-a252-42cf-a3a5-95a39ed5c9d5",
->>    "sector_size":512,
->>    "align":2097152,
->>    "blockdev":"pmem0"
->> }
->>
->>   $ mkfs.xfs -f /dev/pmem0
->> meta-data=/dev/pmem0             isize=512    agcount=4, agsize=112768
->> blks
->>           =                       sectsz=4096  attr=2, projid32bit=1
->>           =                       crc=1        finobt=1, sparse=1,
->> rmapbt=0
->>           =                       reflink=1    bigtime=0 inobtcount=0
->> data     =                       bsize=4096   blocks=451072, imaxpct=25
->>           =                       sunit=0      swidth=0 blks
->> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
->> log      =internal log           bsize=4096   blocks=2560, version=2
->>           =                       sectsz=4096  sunit=1 blks, lazy-count=1
->> realtime =none                   extsz=4096   blocks=0, rtextents=0
->>
->> Any comment is welcome!
->>
->> TODO: implement cxlv command in ndctl to do cxlv device management.
->>
->> [1]: Add argument in kernel command line: "memmap=nn[KMG]$ss[KMG]",
->> detail in Documentation/driver-api/cxl/memory-devices.rst
->>
->> Thanx
->>
->> Dongsheng Yang (4):
->>    cxl: move some function from acpi module to core module
->>    cxl/port: allow dport host to be driver-less device
->>    cxl/port: introduce cxl_disable_port() function
->>    cxl: introduce CXL Virtualization module
->>
->>   MAINTAINERS                         |   6 +
->>   drivers/cxl/Kconfig                 |  11 +
->>   drivers/cxl/Makefile                |   1 +
->>   drivers/cxl/acpi.c                  | 143 +-----
->>   drivers/cxl/core/port.c             | 231 ++++++++-
->>   drivers/cxl/cxl.h                   |   6 +
->>   drivers/cxl/cxl_virt/Makefile       |   5 +
->>   drivers/cxl/cxl_virt/cxlv.h         |  87 ++++
->>   drivers/cxl/cxl_virt/cxlv_debugfs.c | 260 ++++++++++
->>   drivers/cxl/cxl_virt/cxlv_device.c  | 311 ++++++++++++
->>   drivers/cxl/cxl_virt/cxlv_main.c    |  67 +++
->>   drivers/cxl/cxl_virt/cxlv_pci.c     | 710 ++++++++++++++++++++++++++++
->>   drivers/cxl/cxl_virt/cxlv_pci.h     | 549 +++++++++++++++++++++
->>   drivers/cxl/cxl_virt/cxlv_port.c    | 149 ++++++
->>   14 files changed, 2388 insertions(+), 148 deletions(-)
->>   create mode 100644 drivers/cxl/cxl_virt/Makefile
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv.h
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_debugfs.c
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_device.c
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_main.c
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.c
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_pci.h
->>   create mode 100644 drivers/cxl/cxl_virt/cxlv_port.c
->>
->> -- 
->> 2.34.1
->>
-> 
-> 
+diff --cc drivers/acpi/apei/ghes.c
+index ab2a82cb1b0b,56a5d2ef9e0a..7b7c605166e0
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@@ -706,7 -762,23 +779,23 @@@ static bool ghes_do_proc(struct ghes *g
+                        ghes_handle_aer(gdata);
+                }
+                else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+ -                      queued = ghes_handle_arm_hw_error(gdata, sev);
+ +                      queued = ghes_handle_arm_hw_error(gdata, sev, sync);
++               } else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
++                       struct cxl_cper_event_rec *rec =
++                               acpi_hest_get_payload(gdata);
++ 
++                       cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
++               } else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
++                       struct cxl_cper_event_rec *rec =
++                               acpi_hest_get_payload(gdata);
++ 
++                       cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
++               } else if (guid_equal(sec_type,
++                                     &CPER_SEC_CXL_MEM_MODULE_GUID)) {
++                       struct cxl_cper_event_rec *rec =
++                               acpi_hest_get_payload(gdata);
++ 
++                       cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
+                } else {
+                        void *err = acpi_hest_get_payload(gdata);
+  
+No other feature additions are pending for this cycle. Given this topic's
+readiness and testing I saw no immediate reason to hold this off until v6.9,
+but yes I wish it would have settled a bit earlier.
