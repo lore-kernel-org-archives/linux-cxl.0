@@ -1,144 +1,174 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50CC15AC2
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 12:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D24F32C94;
+	Thu, 11 Jan 2024 13:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T9kXP2q6fz6D8g6;
-	Thu, 11 Jan 2024 20:30:29 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E9C05140B33;
-	Thu, 11 Jan 2024 20:32:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 11 Jan
- 2024 12:32:51 +0000
-Date: Thu, 11 Jan 2024 12:32:50 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>, "Michael
- S . Tsirkin" <mst@redhat.com>, <linux-cxl@vger.kernel.org>,
-	<qemu-devel@nongnu.org>
-Subject: Re: [PATCH v2 2/4] hw/cxl/device: read from register values in
- mdev_reg_read()
-Message-ID: <20240111123250.00007748@Huawei.com>
-In-Reply-To: <20240109174550.00000f6c@Huawei.com>
-References: <20231222090051.3265307-1-42.hyeyoo@gmail.com>
-	<20231222090051.3265307-3-42.hyeyoo@gmail.com>
-	<20240109174550.00000f6c@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T9lXD0cr1z6K8wp;
+	Thu, 11 Jan 2024 21:15:24 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 53AB4140CB9;
+	Thu, 11 Jan 2024 21:18:01 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 13:18:00 +0000
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH v5 00/12] cxl: Add support for CXL feature commands, CXL device patrol scrub control and DDR5 ECS control features
+Date: Thu, 11 Jan 2024 21:17:29 +0800
+Message-ID: <20240111131741.1356-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-On Tue, 9 Jan 2024 17:45:50 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+From: Shiju Jose <shiju.jose@huawei.com>
 
-> On Fri, 22 Dec 2023 18:00:49 +0900
-> Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-> 
-> > In the current mdev_reg_read() implementation, it consistently returns
-> > that the Media Status is Ready (01b). This was fine until commit
-> > 25a52959f99d ("hw/cxl: Add support for device sanitation") because the
-> > media was presumed to be ready.
-> > 
-> > However, as per the CXL 3.0 spec "8.2.9.8.5.1 Sanitize (Opcode 4400h)",
-> > during sanitation, the Media State should be set to Disabled (11b). The
-> > mentioned commit correctly sets it to Disabled, but mdev_reg_read()
-> > still returns Media Status as Ready.
-> > 
-> > To address this, update mdev_reg_read() to read register values instead
-> > of returning dummy values.
-> > 
-> > Fixes: commit 25a52959f99d ("hw/cxl: Add support for device sanitation")
-> > Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> > Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>  
-> 
-> I've applied this one to my tree.  (I'll push that out in a day or two after
-> tidying up some other outstanding stuff). 
-> 
-> Sometime in next week or so I'll send out a set bundling together various
-> fixes and cleanup with the intent for getting it applied.
+1. Add support for CXL feature mailbox commands.
+2. Add CXL device scrub driver supporting patrol scrub control and ECS
+control features.
+3. Add scrub subsystem driver supports configuring memory scrubs in the system.
+4. Register CXL device patrol scrub and ECS with scrub subsystem.
+5. Add common library for RASF and RAS2 PCC interfaces.
+6. Add driver for ACPI RAS2 feature table (RAS2).
+7. Add memory RAS2 driver and register with scrub subsystem.
 
-I've changed how this works because what this is doing as presented is
-overwriting the mailbox capability register.  mbox_reg_state64 is as the
-name should have made obvious to reviewers such as me, the mailbox registers!
+The QEMU series to support the CXL specific features is available here,
+https://lore.kernel.org/qemu-devel/20231124135338.1191-1-shiju.jose@huawei.com/
 
-Anyhow, I'll put an alternative fix in place.
+Changes
+v4 -> v5:
+1. Following are the main changes made based on the feedback from Dan Williams on v4.
+1.1. In the scrub subsystem the common scrub control attributes are statically defined
+     instead of dynamically created.
+1.2. Add scrub subsystem support externally defined attribute group.
+     Add CXL ECS driver define ECS specific attribute group and pass to
+	 the scrub subsystem.
+1.3. Move cxl_mem_ecs_init() to cxl/core/region.c so that the CXL region_id
+     is used in the registration with the scrub subsystem. 	 
+1.4. Add previously posted RASF common and RAS2 patches to this scrub series.
+	 
+2. Add support for the 'enable_background_scrub' attribute
+   for RAS2, on request from Bill Schwartz(wschwartz@amperecomputing.com).
 
-Jonathan
+v3 -> v4:
+1. Fixes for the warnings/errors reported by kernel test robot.
+2. Add support for reading the 'enable' attribute of CXL patrol scrub.
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  hw/cxl/cxl-device-utils.c   | 17 +++++++++++------
-> >  include/hw/cxl/cxl_device.h |  4 +++-
-> >  2 files changed, 14 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> > index 29de298117..ba3f80e6e7 100644
-> > --- a/hw/cxl/cxl-device-utils.c
-> > +++ b/hw/cxl/cxl-device-utils.c
-> > @@ -229,12 +229,9 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> >  
-> >  static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size)
-> >  {
-> > -    uint64_t retval = 0;
-> > -
-> > -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
-> > -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
-> > +    CXLDeviceState *cxl_dstate = opaque;
-> >  
-> > -    return retval;
-> > +    return cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS];
-> >  }
-> >  
-> >  static void ro_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> > @@ -371,7 +368,15 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
-> >      cxl_dstate->mbox_msi_n = msi_n;
-> >  }
-> >  
-> > -static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
-> > +static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
-> > +{
-> > +    uint64_t memdev_status_reg;
-> > +
-> > +    memdev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
-> > +    memdev_status_reg = FIELD_DP64(memdev_status_reg, CXL_MEM_DEV_STS,
-> > +                                   MBOX_READY, 1);
-> > +    cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] = memdev_status_reg;
-> > +}
-> >  
-> >  void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-> >  {
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index b2cb280e16..b318d94b36 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -408,7 +408,9 @@ static inline void __toggle_media(CXLDeviceState *cxl_dstate, int val)
-> >  {
-> >      uint64_t dev_status_reg;
-> >  
-> > -    dev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
-> > +    dev_status_reg = cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS];
-> > +    dev_status_reg = FIELD_DP64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS,
-> > +                                val);
-> >      cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] = dev_status_reg;
-> >  }
-> >  #define cxl_dev_disable_media(cxlds)                    \  
-> 
-> 
+Changes
+v2 -> v3:
+1. Changes for comments from Davidlohr, Thanks.
+ - Updated cxl scrub kconfig
+ - removed usage of the flag is_support_feature from
+   the function cxl_mem_get_supported_feature_entry().
+ - corrected spelling error.
+ - removed unnecessary debug message.
+ - removed export feature commands to the userspace.
+2. Possible fix for the warnings/errors reported by kernel
+   test robot.
+3. Add documentation for the common scrub configure atrributes.
+
+v1 -> v2:
+1. Changes for comments from Dave Jiang, Thanks.
+ - Split patches.
+ - reversed xmas tree declarations.
+ - declared flags as enums.
+ - removed few unnecessary variable initializations.
+ - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
+ - add auto clean declarations.
+ - replaced while loop with for loop.
+ - Removed allocation from cxl_get_supported_features() and
+   cxl_get_feature() and make change to take allocated memory
+   pointer from the caller.
+ - replaced if/else with switch case.
+ - replaced sprintf() with sysfs_emit() in 2 places.
+ - replaced goto label with return in few functions.
+2. removed unused code for supported attributes from ecs.
+3. Included following common patch for scrub configure driver
+   to this series.
+   "memory: scrub: Add scrub driver supports configuring memory scrubbers
+    in the system"
+
+A Somasundaram (1):
+  ACPI:RASF: Add common library for RASF and RAS2 PCC interfaces
+
+Shiju Jose (11):
+  cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+  cxl/mbox: Add GET_FEATURE mailbox command
+  cxl/mbox: Add SET_FEATURE mailbox command
+  cxl/memscrub: Add CXL device patrol scrub control feature
+  cxl/memscrub: Add CXL device ECS control feature
+  memory: scrub: Add scrub subsystem driver supports configuring memory
+    scrubs in the system
+  cxl/memscrub: Register CXL device patrol scrub with scrub configure
+    driver
+  cxl/memscrub: Register CXL device ECS with scrub configure driver
+  ACPICA: ACPI 6.5: Add support for RAS2 table
+  ACPI:RAS2: Add driver for ACPI RAS2 feature table (RAS2)
+  memory: RAS2: Add memory RAS2 driver
+
+ .../ABI/testing/sysfs-class-scrub-configure   |   91 ++
+ drivers/acpi/Kconfig                          |   15 +
+ drivers/acpi/Makefile                         |    1 +
+ drivers/acpi/ras2_acpi.c                      |   97 ++
+ drivers/acpi/rasf_acpi_common.c               |  272 +++++
+ drivers/cxl/Kconfig                           |   23 +
+ drivers/cxl/core/Makefile                     |    1 +
+ drivers/cxl/core/mbox.c                       |   59 +
+ drivers/cxl/core/memscrub.c                   | 1009 +++++++++++++++++
+ drivers/cxl/core/region.c                     |    1 +
+ drivers/cxl/cxlmem.h                          |  120 ++
+ drivers/cxl/pci.c                             |    5 +
+ drivers/memory/Kconfig                        |   15 +
+ drivers/memory/Makefile                       |    3 +
+ drivers/memory/ras2.c                         |  354 ++++++
+ drivers/memory/rasf_common.c                  |  269 +++++
+ drivers/memory/scrub/Kconfig                  |   11 +
+ drivers/memory/scrub/Makefile                 |    6 +
+ drivers/memory/scrub/memory-scrub.c           |  367 ++++++
+ include/acpi/actbl2.h                         |  137 +++
+ include/acpi/rasf_acpi.h                      |   58 +
+ include/memory/memory-scrub.h                 |   78 ++
+ include/memory/rasf.h                         |   88 ++
+ 23 files changed, 3080 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configure
+ create mode 100755 drivers/acpi/ras2_acpi.c
+ create mode 100755 drivers/acpi/rasf_acpi_common.c
+ create mode 100644 drivers/cxl/core/memscrub.c
+ create mode 100644 drivers/memory/ras2.c
+ create mode 100644 drivers/memory/rasf_common.c
+ create mode 100644 drivers/memory/scrub/Kconfig
+ create mode 100644 drivers/memory/scrub/Makefile
+ create mode 100755 drivers/memory/scrub/memory-scrub.c
+ create mode 100644 include/acpi/rasf_acpi.h
+ create mode 100755 include/memory/memory-scrub.h
+ create mode 100755 include/memory/rasf.h
+
+-- 
+2.34.1
 
