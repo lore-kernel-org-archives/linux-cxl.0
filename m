@@ -1,173 +1,174 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428383A1B7
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 23:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5765A0E1;
+	Thu, 11 Jan 2024 23:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF4bTtd/"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d9bba6d773so5157464b3a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 15:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705015019; x=1705619819; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RNPCSOWv/u1Jtplu9z7EWUMPQ6AEzJHAYRX1DmebeZA=;
-        b=VF4bTtd/eW30E+j14wKVSNDiGKl+x+AUrF/JmIRgaxv4fzPpofBFvqeJ7Q5YpWLVzG
-         un+rggKJWboVDhiY8Mdz0ssr2yWvN6gQXuKK7zKNEoQailfP6ponXYkAA1satKKspldd
-         939jKUIBZcTcsYefOrmxbufLn6nDdZNbX8X2zncDs3A34EnorvavvyjOEM72lYRW4E1V
-         HuVhIBwcugt7Hof1jLhj8FB50X7CY1ZEOP76GpMxuYS/qU3lHq6DpoMahEX2ECwo8Rd4
-         QO4Q4ECJn3KrmEvDF4ynKTJrHVhDXA43//ExsikMkFunl940QxR8pEu/fcpPObAoxgaW
-         xXDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705015019; x=1705619819;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RNPCSOWv/u1Jtplu9z7EWUMPQ6AEzJHAYRX1DmebeZA=;
-        b=MBcE6UMpOro0ZrCeqzGb+vnonUorWMtWCwBhvWyOIShJb1F5Fa6/B/dyT2J82eyI+b
-         8raFDdplphmtJeilEIITBnCV3SG5GlgjO4pod0JNuxNgmCDS2ZeSt5pnDWK/dDwL4Oqe
-         dvz0y3DXHA+fa1AJCV6PusuV02gDxf15aW9wk3USthdTqAjlUA8NeXdGDbT5UzeDlLL1
-         UAib4X1VEYEavlZcmU9x9EwgHaYmMXVmBr+SLdhGW4L0GCH2fx6jJ1XxjTMI1Of78gXt
-         4XBtneuMm0fhAH4VNs+miu3oG9S/Pe8+fSA4I5TjGVc5lceEx2B/lJ+cRbIGqBrxLrlU
-         I8bw==
-X-Gm-Message-State: AOJu0YzzyFmQ+IC/wJElhPqmTduAv7L6IoQLKssIXXJhBNllnAodtXcN
-	++p4fTpAiiVVT692R9/B/7Y=
-X-Google-Smtp-Source: AGHT+IHv5O/5kI6GqoB6sQ2gkZAPNz0D6rhBhuYsr+xFddwJuBDeJ0R5aKFjCR//yTg9ONQp0ylmjg==
-X-Received: by 2002:a62:ce83:0:b0:6d9:8453:e040 with SMTP id y125-20020a62ce83000000b006d98453e040mr73888pfg.1.1705015019397;
-        Thu, 11 Jan 2024 15:16:59 -0800 (PST)
-Received: from debian (c-71-202-83-215.hsd1.ca.comcast.net. [71.202.83.215])
-        by smtp.gmail.com with ESMTPSA id y187-20020a62cec4000000b006dab86e675esm1798768pfg.185.2024.01.11.15.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 15:16:58 -0800 (PST)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Thu, 11 Jan 2024 15:16:42 -0800
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Fan Ni <fan.ni@samsung.com>,
-	linuxarm@huawei.com
-Subject: Re: [PATCH v2 qemu] hw/cxl/device: read from register values in
- mdev_reg_read()
-Message-ID: <ZaB22v-pqAYFfJMS@debian>
-References: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RwbnNftG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705017311; x=1736553311;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FJ0h8qSjJ0rmJwf8YXi/y9KVfGd3NhHnJ+YpFv5ny+Q=;
+  b=RwbnNftG0uMZkSbnSMdp/Rux334HhKaWVpGyiAdinfz/G9bl1jhvJdR6
+   WQd4Nrvlk7liKLqW2WuNAuCrQXMgdtrLWwkB1JcaceTOVLxRnOMKN1l4j
+   1Vj8RLKhbFGzgT17cSLvQ0HKoUrxsNZfqV5FuDhF5CDfT9KsuAAzK0ifh
+   9eyqUOByg9M6sMCVCIWlfGCQ3e2sImd9BWBxJq97BDiHEVEEvGRBdWYGh
+   PxMINCvFrsNf4BirPdwdkZDG1XoG97Bv8AG5PGMpr5DQayvoPQYyVcmJ9
+   9oTA3HGHL5zK+zfhdEx3oP87snqDvXXvNZ4RiR///RHI+yXMsOruo8e/S
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="12518308"
+X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
+   d="scan'208";a="12518308"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 15:54:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="853117576"
+X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
+   d="scan'208";a="853117576"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jan 2024 15:54:57 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 15:54:57 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 15:54:56 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 11 Jan 2024 15:54:56 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Jan 2024 15:54:56 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2959k700yvuiYr+41Gm2iuMRiQ4X8m9wp0YZnvGBkofUnlMavx0Wjn2fLY6vuUFDMYIo84BPBeiVorSkWNlzbFHArQuaePxC/sv5POf/Swra+BfyOv0wU7fGd8Omi2bpSVNVeXjx9xMWd4eItIUdc4NCKWeEJBXv0foz6LN2c5fxcHLZC7HZdNmc5h981fZfsqMAyHVcGh55MXXeaQcd0q0bF9uFPHdgOgSeF/+GBdDm292VsYRLqXL5SMrFxWW4Np/T1MAcOYol4/HIn+gImPWLEL9PZoH45bWljMrlwQlemBBm0q78e9VI0+kXmL5PviCfri7zxNLRXU+ybA9Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fikKo3TBA8qMda5zTzbLlVtKK5GARKjWT1N8QFWNMJk=;
+ b=YHs6pjlDC7aKWgIOhcATfHXRC3mDs1c5ylQjT7dWR0TAtAxUsLFlu87N1PpQX+bzGjA45ZSM9Thi7fx16OKFg3NrTtwSkc781uPpoALKQydinoVyfcDR2ytAbZI3oK+Gzpd9ZYs+8EbxTONcx121NRMJMj1R/jhrPs8XcsuyHLAj0nOcxl3RO3EOMKFJbJc20U51aBja02YK+iWsBhSaxx3hUwhs+shNoqVJyTogS1NIHkGhjbKYhR5FmSP/2odskFcPErMu/1gxXwFKunrsJnQBPC24fjXZ+ZS/axl4WYnBPLLz884BgXmcm8NpyzUWTWPY42hpBSHn2OanGU7GYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by PH8PR11MB8285.namprd11.prod.outlook.com (2603:10b6:510:1c5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Thu, 11 Jan
+ 2024 23:54:49 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7181.019; Thu, 11 Jan 2024
+ 23:54:49 +0000
+Message-ID: <3d74f069-b760-45ab-8d62-5d7d143e27e5@intel.com>
+Date: Thu, 11 Jan 2024 16:54:45 -0700
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH -next] cxl: Remove duplicated include in cdat.c
+To: Yang Li <yang.lee@linux.alibaba.com>, <jonathan.cameron@huawei.com>,
+	<dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240109004728.54703-1-yang.lee@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240109004728.54703-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0P220CA0002.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::10) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH8PR11MB8285:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63272b0f-2a65-4fcf-8a69-08dc1300b233
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: U/Z40kDyPsVlh8C5dkkl/7x+aHcbV7Wov4q6TDCMckwqDQcFoUshVBKxS5tod3wX6G5W2EVU3ku46NKfXAPj2WOiDxIXqgnJoeUUm04l2ko2D2DowsUSZy1uTez0lADyFHwT3FfldSkxG01QTHF5omgsDmuxp6IOhhQhDJOglLRV8taZqQvS4cNcLTiBC43VbgvJY8xalhCwIan5c8C+nKHn2ngEVGnMD9WpV1mIut61AeXCRV14j4rC87nfMelNappUbMDAnOOym6uI7WoBRDIILeJkw1mjZcpwFrUBbAiYg87wAF+atXyN+RISozwXfCaHWyfgRPiEbIASuHUKTjyf9PVoYzZQZtC8UDlKKZUhJ5fchVZ9n5tuD2aL/FLiZV6VHUfmIUAbLHi7gQQMVKKFlC6AT95szUk+9VMgDhRg0WDMWP7f4FSaTXSox+O1TY3EaVlFEATUB7SN0iT5BBaA1AMjbFVouq+HNuDeVNHvpU4l3SrbpbEkARWdk8AYltAHWnjrm0PT+rg9qK8Q57WGh+0MW0tKwTprP27SJ6oynZcFXgYRPneSmkX6CVCPzwel66SBpQvk+HWLKp67yuRA8s1scsyH1AhKfjlNMI74MDZdScc1TQaSrbuV90iR
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(136003)(396003)(376002)(39860400002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(31686004)(83380400001)(66946007)(66556008)(82960400001)(316002)(31696002)(86362001)(36756003)(41300700001)(38100700002)(6512007)(2616005)(6506007)(26005)(8676002)(66476007)(6486002)(478600001)(6666004)(5660300002)(53546011)(2906002)(4326008)(8936002)(44832011)(4744005)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q3E5MzUyQjJRQi9aZnpmeDZHclBVcFdnRy9yREVMUXlOYkhrWExYdk96cXZR?=
+ =?utf-8?B?TjhyMkc1L1EzUmN5TVFOcVV4KzZmcjJKMytGWVcwMTRBMkVLM0w1bW5qTWd5?=
+ =?utf-8?B?NkQvMXdFYXIzd2lXbDlzN3JaaXFETVlXUVc0ZFFUL25abnlsTWNqTkVicFBJ?=
+ =?utf-8?B?L3h6UUFJNExVOW90UkpNSmRwOUVldm1MN0Qwemsvd0ZVTUthOE9sa1EvSUd0?=
+ =?utf-8?B?SENzaktucWpKbzZxWFcxT25URkJ0QVN5Nm9VSTJFVXVBTXNTRTd4NThKMWtE?=
+ =?utf-8?B?MVMzN1djY1IzMS9xTm82cWptSHU1YlIySzZxK0ZTa3BHWVkrTWxwSHlWRUFP?=
+ =?utf-8?B?UGFjM1FXK2l1Y0N6TlVFZzlyaWxpWWFpU3N1UXArWFJOVWNjTk9VUmJJQTZv?=
+ =?utf-8?B?dGZBdkFCZFphSUU2b2xmVS9XQW9qTE5DMitoWHVZcDhEc1hHWmVVcFROWGE0?=
+ =?utf-8?B?ZkIyY1RKYjNPc2FEUCtuMlkzczY5UkhsbGpVenNqblZDOGhCL3h1enBMNFpB?=
+ =?utf-8?B?eXlCeXFnZUdLT3NOK2t2RldtMjBwVW0rUzJKQWpQbGg4RFBZQ2ZiZGNtVFNh?=
+ =?utf-8?B?YjFZMUdQcTE0dnNuK2NLV0pSUTFNdVplMXMzVWFMOGxSSjdvOUI2THM4Vmdn?=
+ =?utf-8?B?ZWx1cHl0NUhYeGU4elRYcStheHhkaVRGWmtialdJMzJxSVhTT1FsZEpiemdF?=
+ =?utf-8?B?dldWdm5jY2REQkdFS2hWSEcvSUI0elJ6V3Rvd3hkYWErekptUHU1OTJUeFYr?=
+ =?utf-8?B?LzJVemdsWHVQd0tzWmJBb2txSTJvR2lMUk5EMXE5aUlLUEwvOHhIcnMrajVi?=
+ =?utf-8?B?UXZiK2piaW5LVGovRzN4bTRiQmR3WEhlVlQ0UE5qcHdZZHFqYjNLc3lnTWRG?=
+ =?utf-8?B?U1VlbDRlck1DRmZNblRJckRlUUh4Ykl5bjZvZTB2bTluZUk5dnh1emhyNUZH?=
+ =?utf-8?B?c1MwOFMzRFVJUDJ2czJ6eE5Sc3REUjVlWWpwTkQxRDQ2elRkWW9rQ1NteTBo?=
+ =?utf-8?B?T3RObnluVU42OGJvVWlGWjk2c3hqemhONWFXMnYrWlcwdHkzRW9pZzVnMnlk?=
+ =?utf-8?B?eTMralVJYTBEd0pNMC9BaDh3akdhTEZjL1BxdWNqRWxOU0M4bGRGajNnYnR6?=
+ =?utf-8?B?WkZLbWk2TWZVVGg5bkgzMWhTUUdXa3BHVFpJQ2xjN3I0Rzc2cEZNaFZSdGFk?=
+ =?utf-8?B?ZitoU3NvejdPbENaei9wcEl6aW4xeW95TlVDUWtwYnhhK0txa21IRWxLS2JU?=
+ =?utf-8?B?SkVpZFNGZ0M3blJOcE9DL3JpRWVTbitIdFphYWNybUEvbWtYdm15ZVpmTFR2?=
+ =?utf-8?B?RG1QQzdjT2Y4azU1SEdVdHlWa1NRQUhvV0JYZTBYL2pxNWlXd2tmVnJpdWE5?=
+ =?utf-8?B?czVKcFFYdXlnUWIxcU1rc0ZpZTNDZUxvUWV1bkhnVFc2eVllV0VGMUIxVVkz?=
+ =?utf-8?B?UklJR0gwSFh5T0QyVVNCcVpQc0NLb3lETWQzKzNwUExuT2J4b0h2a0FwTHE1?=
+ =?utf-8?B?bGNJeko4OURJMUMrYUJETEpCZnRpRmdtMlRsbXIyMW1UdUZpOXEvYWFaNXN6?=
+ =?utf-8?B?NGNQTDVnUWpjSnBBVzdMdGRvZ0VrR3BLTjc5ckRwUjVZTTNWUTVYcE5NZjhK?=
+ =?utf-8?B?cGFCbG9mbmV3RDN3VnpCNitIcHJjbXh6V2V1WVplSEd4WDNFL0kxYWNUY0M5?=
+ =?utf-8?B?U1daV1FsWVBVOHlTemlYVVIwY1J3ay83VDJwdDBoaGQyaHlIWFdrZU1XTzEr?=
+ =?utf-8?B?NzQzT2dkTnRlSmYyOFdlMGsvQW1OM0Q3ME83aktVME9UdGdEbjd5T3FxY1Iz?=
+ =?utf-8?B?OVJxTEQ1NTNIMTBvcGxxNlNwdDYyWndRT3lYdzFMd09ITWZtZmloTkxmblNV?=
+ =?utf-8?B?T041VE5kY2c1SXlMQzh5VzFCRkRQVUNobkpxamRBd201UjI5amlVT3plMHdx?=
+ =?utf-8?B?QUZLZmNwNUdPcEhzNkhJVVpVcGkyWW1TKzBtVHo1enRoMzVVLzhQS0wxZDVK?=
+ =?utf-8?B?Q3hKbTNsNFpqQ2JINUZWazh1MENVN0lJZXBjUFZDUE5vc3BKQ3NQcmllb0t2?=
+ =?utf-8?B?cmxxd29qalg2cmJTQ1ZaQ1Vqc0dMQmVRNlgwUGdGUHIvbzdCSWRJdjFvS1Zm?=
+ =?utf-8?Q?AK/4MjtLxDMWqSXJK5VNIOUIV?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63272b0f-2a65-4fcf-8a69-08dc1300b233
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 23:54:49.2603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wF6otex6N0WLcwceZHbhFjZ/Z2SEob07MVAJQdT/R6MfkBA0olm0p4stUuSaW+l+4YaX/zg7nqzqmAzAghPklQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8285
+X-OriginatorOrg: intel.com
 
-On Thu, Jan 11, 2024 at 02:59:05PM +0000, Jonathan Cameron wrote:
-> From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> 
-> In the current mdev_reg_read() implementation, it consistently returns
-> that the Media Status is Ready (01b). This was fine until commit
-> 25a52959f99d ("hw/cxl: Add support for device sanitation") because the
-> media was presumed to be ready.
-> 
-> However, as per the CXL 3.0 spec "8.2.9.8.5.1 Sanitize (Opcode 4400h)",
-> during sanitation, the Media State should be set to Disabled (11b). The
-> mentioned commit correctly sets it to Disabled, but mdev_reg_read()
-> still returns Media Status as Ready.
-> 
-> To address this, update mdev_reg_read() to read register values instead
-> of returning dummy values.
-> 
-> Note __toggle_media() was overwriting the mailbox capability
-> register, but nothing was reading that after this so that bug had no
-> obvious effect unless the driver was reloaded.
-> 
-> Fixes: commit 25a52959f99d ("hw/cxl: Add support for device sanitation")
-> Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Link: https://lore.kernel.org/r/20231222090051.3265307-3-42.hyeyoo@gmail.com
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> --
+On 1/8/24 17:47, Yang Li wrote:
+> The header files core.h is included twice in cdat.c,
+> so one inclusion can be removed.
 > 
-> Hyeonggon - I've kept your sign-off. Let me know if this is ok.
-> Dropped RBs etc as this has changed quite a bit.
-> 
-> I plan to send out a group of fixes including this soon, but given
-> I've been pointing out the original fix didn't work thought I'd send
-> this one out for early review!
-> 
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  include/hw/cxl/cxl_device.h |  9 +++++++--
->  hw/cxl/cxl-device-utils.c   | 17 +++++++++++------
->  2 files changed, 18 insertions(+), 8 deletions(-)
+>  drivers/cxl/core/cdat.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index befb5f884b..31d2afcd3d 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -202,6 +202,9 @@ typedef struct cxl_device_state {
->          };
->      };
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index f5e649407b8b..6fe11546889f 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -9,7 +9,6 @@
+>  #include "cxlmem.h"
+>  #include "core.h"
+>  #include "cxl.h"
+> -#include "core.h"
 >  
-> +    /* Stash the memory device status value */
-> +    uint64_t memdev_status;
-> +
->      struct {
->          bool set;
->          uint64_t last_set;
-> @@ -353,8 +356,10 @@ static inline void __toggle_media(CXLDeviceState *cxl_dstate, int val)
->  {
->      uint64_t dev_status_reg;
->  
-> -    dev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
-> -    cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] = dev_status_reg;
-> +    dev_status_reg = cxl_dstate->memdev_status;
-> +    dev_status_reg = FIELD_DP64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS,
-> +                                val);
-> +    cxl_dstate->memdev_status = dev_status_reg;
->  }
->  #define cxl_dev_disable_media(cxlds)                    \
->          do { __toggle_media((cxlds), 0x3); } while (0)
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 61a3c4dc2e..40b619ffd9 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -229,12 +229,9 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
->  
->  static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size)
->  {
-> -    uint64_t retval = 0;
-> -
-> -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
-> -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
-> +    CXLDeviceState *cxl_dstate = opaque;
->  
-> -    return retval;
-> +    return cxl_dstate->memdev_status;
->  }
->  
->  static void ro_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> @@ -371,7 +368,15 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
->      cxl_dstate->mbox_msi_n = msi_n;
->  }
->  
-> -static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
-> +static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
-> +{
-> +    uint64_t memdev_status_reg;
-> +
-> +    memdev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
-> +    memdev_status_reg = FIELD_DP64(memdev_status_reg, CXL_MEM_DEV_STS,
-> +                                   MBOX_READY, 1);
-> +    cxl_dstate->memdev_status = memdev_status_reg;
-> +}
->  
->  void cxl_device_register_init_t3(CXLType3Dev *ct3d)
->  {
-> -- 
-> 2.39.2
-> 
+>  struct dsmas_entry {
+>  	struct range dpa_range;
