@@ -1,208 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from esa.hc4959-67.iphmx.com (esa.hc4959-67.iphmx.com [216.71.153.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E53555C03
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 19:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5345786A
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 21:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seagate.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seagate.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GYH9XhQI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705001030; x=1736537030;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=hMIBPGgEW357NJe1nalk7NW/MYv0gqrs7WUaKzMf7Ik=;
-  b=GYH9XhQIy/9JcmhEI4GPQ1GI5iHCA4x6C4KmsXwa1JtAsP08lxKc3lyr
-   niNkGVwByyvFiwyQkBkIluSDFKNzLNlMN/QCCr19M3adsNDsVD3VjRla8
-   1Xs3ooQK0/Ar3luaIPV4/vh5zHehPrb9NeXOspnG2L6lbuHP/pXbouKFz
-   XpnSHuYWwhIzHKOcP7JxaEGw17YA0EmTJrhboAaGL28jhVFuMPrpRihg7
-   P/iP1gcnryzGRJHi7uf/W8mH1YLv5MW0B5GwpNeiiZ48532AherOO9lsd
-   4VJn7cq+853f71Jd6X6fE/NOtgjsixX34Ta6KOXynbtL3WU7Ok7BarAjA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="5690123"
-X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="5690123"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 11:23:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="816828693"
-X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="816828693"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jan 2024 11:23:49 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jan 2024 11:23:49 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jan 2024 11:23:48 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 11 Jan 2024 11:23:48 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 11 Jan 2024 11:23:48 -0800
+	dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b="sBUxkdhd";
+	dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b="AB1bOWd0"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=seagate.com; i=@seagate.com; q=dns/txt; s=stxiport;
+  t=1705007102; x=1736543102;
+  h=from:to:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=X4vGbiaqQJd/82GwKkzalsLN0YJR9dTvXxx0beBbHLQ=;
+  b=sBUxkdhdnsHrl5XyEbFAgsEAhNYFEW2RtXBf+xt1++wMNO8CAeKadGZR
+   ivuxdDLPFFDqDH7nIfVpEvAguuQLiaDlgulDlIoiZckrgWI3CKTLwP+3R
+   UJRf/bU06nITlKOsXT64pp72Z8YjpRMGw+clUJ26tRwFhijQqX43OUfo0
+   Y=;
+Received: from mail-dm6nam11lp2169.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.169])
+  by ob1.hc4959-67.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 13:03:51 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GZSgZ855vuT9YGC7O+KXcnZ4UFc1B9rRZQtGWhJGlgfWpW2S62TPRAA/mg2EHPa3iWRoXRTVJJD8MDPuPGmeOSf9zTfF+cBt5jN7yJrd7G7DtaC8lyuq21NoySw6/eWhH4tq34ZSoS0hkEFz1VA0M4LbNG5j7d08QzLOd35D5nuqZnI0G6BUz082ERmVvZy3dmoASvL2MG1MCW+q2aW6fklRHcq6yb6tC/16GC6F9Pcj3QzEININfsEuaLOYDdj6rSyR4NuueRHkDg4p10l53ey5ty+sWB711sp7XYl//KOGmjtbwQ2sqsidU9YeERPd6JqOV0Dvrqgmt9tRa3Wv/w==
+ b=IEszr91v7Uuh4Xb+jtmdCjnunWjnmFAzNOryTjGZ0wECSAaIOSU7p7AmJx5SMpHiU1mFb4wRLEi0pK0cNHihbwVeQW0iyWAm49ldr8xMIWfvgr73euOwnB5SI6rPCrfDU85hHZ6PiGviqa7V5UlwOmRK72bPabeTjd9QpMoPrR86y08GYmA6Yv4XfMS5H9qpAb/YdoSnoToLsO1NMKE4AMkx427GbPrGqaEkLkCUnKRHwDZofOJrmtPIxwVWaZrgLBVDcGSDh+1kOWh+E548HBUf3LJktX/jG0UOUZyfrfB8acnEcRifY0ABzrUVApRGH6Gt+YRJ29QzyOLQuP+rFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LYwOzhDad4dzDaOXhizkv2JvYxo0XibDE8mP/1C8jAE=;
- b=AXLqkjjCcXGDW+h0QomxZvu3j8/gqRaMFJen9TCT7LKfES4XnZmstarfxlw4ShgmSydByOE+u/jft7htjCbnUKZ2C2MigHxxHnCGqyX6Rv62ok4oCt/dTNzYZm54EsBtgYjpMOK0wpixR0Kj1t5lFI1ZdXAAyS45KAowk3aDNB5BXdjXmroP6ALl9hU7BfGwNZrNx72z4pUscqpEGjOq2EIr5WxHCkkWwu5oI+XpH6dxkPVAk1SFwh50WO7bPTAg/5ezLgHmjMQRy7r5r3Kn5AsdsqgXLazCb3cfsD91XQoNwRi+GpU+0a3UudwPYdcRfkqYLJgAjiToY1FwhcOpUg==
+ bh=ZhENqYJdjVIupGcP/7plMhiXLkgpb3Ug/85Y3g1aP+A=;
+ b=aMxjOgafaD1QhS++kTzK70l0GWIZKLw8YWaztv9/sU2K6Y5fzTjbLrmVdh2RboXwzQ7+5kjWYF/OmEF5/nv/TFRRfroMaNTGhfsdCcIb7uOiMlQfqChCaq+8N5zAJB9Ui6KuDnHjZ9oVQkl/UG1oTahWD/8SKjkmtvQizWWQwiTAOJKI37/RM7HiRic6XpjBkRW9O++61F6E7g4rCTMkwaUe+yezAO9L9BA9/DS4/X7oRVErGrLCb9OEb9aWWpDZtU1LxY2a6j40bMxErAWSdMxEWIwKsHhESmH2VjyuYk62gZHt7DX+z/YpDRhhuafCWi9YrnOxo7PgksYPXqdguA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SN7PR11MB6827.namprd11.prod.outlook.com (2603:10b6:806:2a2::20) with
+ smtp.mailfrom=seagate.com; dmarc=pass action=none header.from=seagate.com;
+ dkim=pass header.d=seagate.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seagate.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZhENqYJdjVIupGcP/7plMhiXLkgpb3Ug/85Y3g1aP+A=;
+ b=AB1bOWd0+u81AP+s+qwtLl5X3+xuKMOapq1CjXhR2X+ULLbmIiOJDXvBtPyP0edT+quKn7yDxs18NEKSU8Ssio4LT/lR+ju+oAgUI/lBuVfIzhF66ATxq86KmiZAjarJqfjWYmcV2FHfeR2+rpT6AyLGSShQ0FY7VQxjSb3Lx2E=
+Received: from CH0PR20MB4250.namprd20.prod.outlook.com (2603:10b6:610:c4::15)
+ by DS0PR20MB6534.namprd20.prod.outlook.com (2603:10b6:8:158::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Thu, 11 Jan
- 2024 19:23:43 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Thu, 11 Jan 2024
- 19:23:43 +0000
-Date: Thu, 11 Jan 2024 11:23:41 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>
-CC: Dan Williams <dan.j.williams@intel.com>, Joao Martins
-	<joao.m.martins@oracle.com>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: RE: [PATCH ndctl] test/daxctl-create.sh: remove region and dax
- device assumptions
-Message-ID: <65a0403d151f9_5cee2944d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240110-vv-daxctl-create-v1-1-01f5d58afcd8@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240110-vv-daxctl-create-v1-1-01f5d58afcd8@intel.com>
-X-ClientProxiedBy: MW4PR04CA0048.namprd04.prod.outlook.com
- (2603:10b6:303:6a::23) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2024 21:03:49 +0000
+Received: from CH0PR20MB4250.namprd20.prod.outlook.com
+ ([fe80::8c89:934:cf4a:95b3]) by CH0PR20MB4250.namprd20.prod.outlook.com
+ ([fe80::8c89:934:cf4a:95b3%7]) with mapi id 15.20.7181.019; Thu, 11 Jan 2024
+ 21:03:49 +0000
+From: Hongjian Fan <hongjian.fan@seagate.com>
+To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Question on deferring dax registration to cxl module for CXL_REGION
+Thread-Topic: Question on deferring dax registration to cxl module for
+ CXL_REGION
+Thread-Index: AQHaRK3Mnl1f/YIUl0aRJ08pSclcxA==
+Date: Thu, 11 Jan 2024 21:03:48 +0000
+Message-ID:
+ <CH0PR20MB4250F264AA40C6E9CF1F599C90682@CH0PR20MB4250.namprd20.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_Enabled=True;MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_SiteId=d466216a-c643-434a-9c2e-057448c17cbe;MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_SetDate=2024-01-11T21:03:48.820Z;MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_Name=Seagate
+ Internal;MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_ContentBits=0;MSIP_Label_56e366eb-86f1-4645-85a7-f29555b26fee_Method=Standard;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seagate.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR20MB4250:EE_|DS0PR20MB6534:EE_
+x-ms-office365-filtering-correlation-id: 6572165a-e1b8-44ba-7c40-08dc12e8cebb
+stx-hosted-ironport-oubound: True
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 1zMuPwY5f4Z9hfPcFtg4/Q+xovk/CBlE9Zx9ZaJ61iq/C2VZD18UzhA1GLwuHrC5rG+rH2mQ2Ae02wh5wOkC6uzhh+6KukpJxArlkagmMfNjYO/CXMGdcJbDaUeVFZM5Y2pyCpd7gRkYf28wZjPf/1pvjjdfkYWDWMxpOeY7ZWpVXR0mVY3rLKxr3Il0k30OMhITDwdNNJegzK0yfHfF2BqvvT9cXG+G2lSKsntoMIJMI5K0otHUCc4gvLWE3q9x0TOgLXV2/DOnizCo0JP3/pDCLRHgHEyFWhIDHHB9gdusAZYsR10lUwLxpQmLsAgWJRocQAzrwpiiPFoOc1wreKx2R0D/461Qa0ec11UEPWdZ654YECbuBiSvpdfnQNYkmZ2UT4wkxhM6avIGUF1/XuEYFK3Xx29FSBQkAJVjFELJMjMeve7x+ZDe0N35x9xD1h794+NjVZApaNXyX+CBcAEUnxOhyhD3KFt9MdRGNQYACuMD36SraVAHt4D4S/ZyWPLPhst6zDs5iy+eYu0vEk2FI888CcDbP4EVsT48o98DXcgZOyh7rOlRE/64+QGWDRurZ2gk7trDhR3qSFom63f4aNcg7Goi6CHSme/zfuNu+abaGlIAkcSMzW8IZXpN
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR20MB4250.namprd20.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(136003)(366004)(39860400002)(376002)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(5660300002)(6506007)(478600001)(71200400001)(8676002)(7696005)(86362001)(26005)(66476007)(66556008)(122000001)(44832011)(76116006)(316002)(8936002)(64756008)(66946007)(66446008)(6916009)(52536014)(33656002)(83380400001)(38100700002)(9686003)(2906002)(41300700001)(38070700009)(55016003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?V+UUxWmlc5qSWNtArbyecMGBXzMoNXiWGQYJqUfLhtOdgKqxxwap1qDz2H?=
+ =?iso-8859-1?Q?uqeemQPzioLKpimsldDYmsLQ8kH52VRXbOFN0LjlcqtXJRSZUyXKIYfGVK?=
+ =?iso-8859-1?Q?/aR1ohNxoCBkCACRPrbkkzyGfMM9oAf+CilNXPLqJHmwGPsV+JjDpT2JKX?=
+ =?iso-8859-1?Q?poeN1ty8BvGd34ieCzqfZ5x5I09A8XjUmFe9A2B20dUWX3O6xdCdURpfWH?=
+ =?iso-8859-1?Q?G8Is45gQVp4SGc2yZJd4SHrNaa/qLHdYhu5GeNdwc2/0/K3KGw1iVu1Ift?=
+ =?iso-8859-1?Q?+B8xktGVdXK0J54cLgqiiqaj220sc+dE8WZY8xsYjmXOgVmLXymgNHt3eC?=
+ =?iso-8859-1?Q?zKFyu+ZYBgcs8r7wpfo2c32/O4IixAwOYJ7QA9Y8GU720yFDrIwi2ugcsK?=
+ =?iso-8859-1?Q?KqTjffjIagTVVxVEX6+ywCESeyLlB2bdcXaXsS/O5DD/K5kvCBt2EorAbV?=
+ =?iso-8859-1?Q?AtEtQt75iQbcu3zO5DAr864s8ix40/NRDVAZ6ulVP7x8ahE0+4h1TPed+w?=
+ =?iso-8859-1?Q?goW+nlRzgD59xToaQedmu8SLUroPUnJKZyVk/gq8Zhgy0VSDJ0FQnEs766?=
+ =?iso-8859-1?Q?USKM2AxdHRoumlARYmjCAbcYZ1Nn3Cq7n6jXzKPcuyGIdspb/bmaOgLX9g?=
+ =?iso-8859-1?Q?5HRF0IR+qs3fnm02YN7pV9VS6+PvuKc9oyrbPrA+ovo2FA/QVMvdW04BQY?=
+ =?iso-8859-1?Q?BA/rjx7QXIACdvmgrLjv+YqoNQJgekcUHOELk3dux6EoEz6QF+Z2j650W8?=
+ =?iso-8859-1?Q?F6quuIfeM3x7Fn2sZjtXpaaCOm986N0h6iex2UdeI/w38NjitXrTjjZT0+?=
+ =?iso-8859-1?Q?0AKRYZjsrZvR/7jWjObwws0JUmQKclBfWgbG0nWPuTMCgG0eoj4LDGVsQo?=
+ =?iso-8859-1?Q?H+Vb/jm/7VU4mY7xZo+VJd7uyVfAFHc3DmQls4RZbRZSGhMJ/0G5nDXdHi?=
+ =?iso-8859-1?Q?l/XkWf3GNUuMiAYRVBEN5iSB0f2MJ3j85eoq9lDtSC3ODypG8cq22fZmwt?=
+ =?iso-8859-1?Q?MxIh46zuUg/4tgWSMpDCUZL5HayuO1SHL9C53ujjkg3vx5H4OSFVbST2qQ?=
+ =?iso-8859-1?Q?VYafMoKspohRPnkvuirw6eNikKihn7x8qdmmJP8ZiSinbYokrGd5orFPOC?=
+ =?iso-8859-1?Q?14ZI/Pxoeq9QRVhlhuDDuePFnZ3Z/Gie2n9PIE26R0q03JX7/5qWhmdxXr?=
+ =?iso-8859-1?Q?5ewy3oSUw3mrG9DOR70IX21vNYS7pwBDfCSopGYEO34wbkkGlSckXC5ZiM?=
+ =?iso-8859-1?Q?YYeY5fUhaKwYq4LxqZn32GC2GcPIJbIwB63oXV3sDEnTKWzVF74LQuGIq7?=
+ =?iso-8859-1?Q?Gi4JY3XgUrz3pwp75L1Y7zOEBj1qmzJLjF7+i/YWfNN0zlgLORhXHSpIXH?=
+ =?iso-8859-1?Q?3p5AVgJBgGjQljPmAdBJMzUa3eoMS4Mykb0sq3+sIsm6Tpj9HIUCFEuDBy?=
+ =?iso-8859-1?Q?FEcDM9LEq09l2i0d+eydvtj3U4DXU24t3Fp98g7FdwvkAXxCo1Q2kk9vCe?=
+ =?iso-8859-1?Q?wACCPn+CwctsbSu+TudWFKGxciMqx8UItVUYs+FmgbgymsveuBWC0L0QL0?=
+ =?iso-8859-1?Q?qI44Zkkja6a2Llg6w6LuKqgheAK6Aow64wYVD9e1PqUBak1xKeYffag8Kz?=
+ =?iso-8859-1?Q?Z/FzN1pmsf1QCVH8mEtWMJdpO8rZoDfmZm?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB6827:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfb8eab0-af62-4194-83ed-08dc12dad339
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: up0bfdwuLN2CrIi6qB0Po6f/XCUENDdE7eYJEuBhpnzBs6jX+XzadoOANkOVVYXp3hjYgZ0SXfwFG3XsW5I0OHVyQCl0Zkkm+h0/dga1Smqkq2qgCXU3JtX74BLLOuiOqJ2WXeuqCUL2hgrmoo0C1+pfOzw/I3hBVJMtEQjAAMMF97x67cBv5N/zjlX2tAgu82ui+6PPTlLumE38qnTL/mCThUmJrCCqOItdP8bYGv2YJFx4KVmbMLyBpStC/jS4NKTAdveeXQbETud3URkMuACNVNGFXt/OmdSfK4hUSQFML8K7eOikmoB+sSVP/LMioq4GDITzzoHS5ZvWDvZTbqolXWDlOtUopQctwN1xqeD5CQg7mHLy7NWBK/3ZyIsMAdTQwmM2ii5pFAOKJBG1Mb90GhgZKXDKjqtcG4Jk1hb9+o1io6u6+XoqiDvNiNtHXGMIkEQIBA8cxoiawGoyLsB7HoHTn0tTazbtaOjgUjLhTqSRSs/V79koYmgmauvuD1aqbFf79nPmw6JSeNFLiIzTLr0EQfk/KHb5xJ7Bl+/GCH4ZjTPlMedHQP1vlmSJ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(396003)(376002)(136003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(6506007)(478600001)(6512007)(9686003)(6486002)(26005)(38100700002)(82960400001)(316002)(5660300002)(107886003)(66946007)(83380400001)(41300700001)(2906002)(54906003)(86362001)(66556008)(4326008)(8936002)(8676002)(66476007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GBlror/IT3qdO+xri8HAxgmFx2nJ+GcqEWf9utatrF/nH6lsDAgmINA/5qLX?=
- =?us-ascii?Q?XnH+hBbXKEY8I4UzFvgM7KbodZCqfbsXM+h3BP9z8hg6n5yopO5/GWJNBbqv?=
- =?us-ascii?Q?byMeF1IEq2c+bY+PxVtZqYFmB5uib2LzvP9gr9q8DHLKrilx06rS/kP93x2h?=
- =?us-ascii?Q?6AgHYl37/UQxepWb1SRefuKuc4SyzoaLpAk/hTsRjcDonk8/MgBhg1eYS5EY?=
- =?us-ascii?Q?2fuKiDyu6HikA2azVQy35b+4vgh1kvLqNF54jVnOzZWM/4w5BNtOMngkFHjh?=
- =?us-ascii?Q?KzvEK9hF7N5K/ckldQNWzF620f+iATZHrlFA+zaVVhMuYSZbCB0E74Nmttth?=
- =?us-ascii?Q?TljJ/wml4QaN4FlVJ2+9kPrqRXaYawVGlBUTLT6T5hy9b9EcI20vROzNP4FZ?=
- =?us-ascii?Q?CYNBLzVFh+v1Dz9zanfOZ5tc0QsESP/54DsGfM0Q9AjsnIp71gDwC+Oi9ixt?=
- =?us-ascii?Q?KImVAp6tkddlcdCwiCQ2yb4qikfT4ELAjCae25ZEdsLirZLkoyvQccoYwl+T?=
- =?us-ascii?Q?xLtpH0gKIFdSn+363+FeTMbuOiQSekObH7Gs3d0LgNhQ5keaiBgJvL6CZ8SF?=
- =?us-ascii?Q?QqAgC29f6v7gU8RrshG46dHMwhdt+IhhcJo7KtQzZRD8gHxO6X+Z6XOzgrEJ?=
- =?us-ascii?Q?ZeDhFCTCZbkckzf5fXLVLD4LTZstVOHueYnH23WneY7a16JzWzYs5rPuJkeC?=
- =?us-ascii?Q?VF+7wIGWsClUl+UEDk/mMirki9tIZNwQ5dFYtkFZrSZcuEbioo5WgcftX2sS?=
- =?us-ascii?Q?OrLEJqA7tImiRpASOOBVZGELBbQh9org6DImr6cekiQ4gTKfYmhr91UeXN5O?=
- =?us-ascii?Q?6vCV4Tc692XGwW/gciokiX061emqvELY5OfVb2pn/czOdjflA7db5hXc1tjt?=
- =?us-ascii?Q?z2uSptRQoNzONpSMV115f8U8AjB5pYCWKENftTXiU5++oQda9UncsvuSPZm6?=
- =?us-ascii?Q?BeGoFuwpiZwTzxOjRf459J9/6BXbQI8TcbxLbuMXRHMa4tPvD0gNtXZq0bk3?=
- =?us-ascii?Q?nk5ixuQ0Ogdjjl9uKQSfr93ctgouafOW6jHgSsij6OLIoEFLcA2Naz/Em1LC?=
- =?us-ascii?Q?GLMISIbn/PwF4vbiXGUMLsauuq5+75srDUI8IlM2jCTkcFKJHLmuVXt/0t8X?=
- =?us-ascii?Q?3kqBP5MXRmxoeXVucSxxkiA9sYd2AUkPEz8/VRzAtrNcGyFmCbmfsv08Prme?=
- =?us-ascii?Q?4ECDNao5xxYZ+xeAnvDJiEtwxGRCFecq38CU9brChXymlFKWVZHbXf4A4CkC?=
- =?us-ascii?Q?qwTLOo3wSFiD05KdiEVs8FRWIuf4LPqa15U0qHc/lR42MHhhQHeXeEfgMKce?=
- =?us-ascii?Q?KIRfOQA0Prmal5bIjVT0FAcI2IAbS15mvPwkAp3ghg+nCpNo5L9SCwBX2Qog?=
- =?us-ascii?Q?n3prfhUbrqHSr4F+ezus0gItjpgaYVjBXqn7Hpy9/GlTUFIfyPs/3Nft3Ei+?=
- =?us-ascii?Q?gVbm9+m6faMAC2XWwmX0Wc8FWV20xmrhhITkCiIEjVRtwMxgzy7Kh1cNENbc?=
- =?us-ascii?Q?eUb5xH+iE9TVRkamJfaqWLci1UL0JlR/ZMaQf+EvcF0GYvKLaCwH4Tm+aGfK?=
- =?us-ascii?Q?0+b7RvYoqzATM3YDIK8mRRgu9xS4G4NP5j0keCBnIyoZbPj3/nWiQWaHItv2?=
- =?us-ascii?Q?pw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfb8eab0-af62-4194-83ed-08dc12dad339
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	VP3LgpH6zrNjRPR8pgAI0bUGVhrnupN330AsyG/MyUHiBX5kARIIApBLgr/k/01WIqyKkgaMGvRWkikab7q1rRJtUuHa63pwlqWmJ7Ekt+mPYl12cRc85mbeYG97R99ZmHBNY6bzDNafUcGh5YYiWTKx6zlgbPcjDQbWmEQpu2RF1x32TwIgVl5hrwL9KlfKEqwhZLd9QfeKVuX1jVbnKvGcCfhWzOw8jcSaqOdHsqXDabgX+761CNDz799LSiTdmkdaBqc/eN8SNCuK8hRQh3HjXjDlZvT01KO+YAPuqAD0GUeTrr/AxiR9Dg8cmqOBy4v8GrmcWtfFEs/e07XtmodHoCCEXGYrEjA5yAlUQUVIKtqoPCXmMy0uEw9R3fDwtmW6YgW11fiaNRA6z+PJYkiNSWcsuBzGpju6TvH0cyhKAhhodFMhIiMCX6qro7vdGyMyfMwE1NHPkCyNH/notrQkocaNu0QZrkzEKs1Xwb+A70a3JBE9FdKCYvC6vh6zrFs+h6ECRMQVYi3tZqI+gwpQKbt7+SoB2I1v6Vp2g9NKn8U+1tK6hWTdXOhgjko7L+1uUSyDTs9wIllFiC6AYMvdv3HZHsJNEWUMo84gkMbtK/PnflC+kjx1ZtPaml7z
+X-OriginatorOrg: seagate.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 19:23:43.7548
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR20MB4250.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6572165a-e1b8-44ba-7c40-08dc12e8cebb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jan 2024 21:03:48.9839
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w2SgiZRRb7oGboRLwJE7sk2cwrdOOLSjfonxH7SjCHKLcD3omEboM9c16Syq0iu4jnZPM4/12f8dclPak0I9FDBP+yXryigG12wxZ+dPN1s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6827
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d466216a-c643-434a-9c2e-057448c17cbe
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 45d8Uc2YoFC8TKG1fYQh+6bPg6flZr5MnR8NItmNXSAAxxZyXwhRk1vn+LVdhLRrAPjay3DKHD+HgvE7biRQPDdi6eQ1diQ0xAQbrWZZDGw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR20MB6534
 
-Vishal Verma wrote:
-> The daxctl-create.sh test had some hard-coded assumptions about what dax
-> device it expects to find, and what region number it will be under. This
-> usually worked when the unit test environment only had efi_fake_mem
-> devices as the sources of hmem memory. With CXL however, the region
-> numbering namespace is shared with CXL regions, often pushing the
-> efi_fake_mem region to something other than 'region0'.
-> 
-> Remove any region and device number assumptions from this test so it
-> works regardless of how regions get enumerated.
-> 
-> Cc: Joao Martins <joao.m.martins@oracle.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  test/daxctl-create.sh | 62 +++++++++++++++++++++++++++++----------------------
->  1 file changed, 35 insertions(+), 27 deletions(-)
-> 
-> diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
-> index d319a39..a5df6f2 100755
-> --- a/test/daxctl-create.sh
-> +++ b/test/daxctl-create.sh
-> @@ -29,14 +29,20 @@ find_testdev()
->  	fi
->  
->  	# find a victim region provided by dax_hmem
-> -	testpath=$("$DAXCTL" list -r 0 | jq -er '.[0].path | .//""')
-> +	region_json="$("$DAXCTL" list -R)"
-> +	testpath=$(jq -er '.[0].path | .//""' <<< "$region_json")
+Hi CXL experts,
 
-This fixes the case where the first dax-region may not be region-id 0,
-but would it also fail if the first region is not the "hmem" region?
 
-I wonder if the above and the next line can be fixed with a jq select()
-like?
+I have observed the following behavior on iomem_resourece when CONFIG_CXL_R=
+EGION is enabled in the kernel.
 
-    select(.path | contains("hmem"))
+CXL windows are inserted into iomem_resourece based on CEDT CFMWS. If there=
+ is only one CXL device attached to the host, the CXL window matches the so=
+ft reserved memory range, and the CXL window is inserted as the child of th=
+e PCI mem and the parent of the soft reserve. But if there are multiple CXL=
+ windows, each of the CXL window is part of the soft reserved memory range,=
+ the CXL window is inserted as the child of the soft reserved memory.
 
->  	if [[ ! "$testpath" == *"hmem"* ]]; then
->  		printf "Unable to find a victim region\n"
->  		exit "$rc"
->  	fi
-> +	region_id=$(jq -er '.[0].id | .//""' <<< "$region_json")
-> +	if [[ ! "$region_id" ]]; then
-> +		printf "Unable to determine victim region id\n"
-> +		exit "$rc"
-> +	fi
->  
->  	# find a victim device
-> -	testdev=$("$DAXCTL" list -D -r 0 | jq -er '.[0].chardev | .//""')
-> +	testdev=$("$DAXCTL" list -D -r "$region_id" | jq -er '.[0].chardev | .//""')
->  	if [[ ! $testdev  ]]; then
->  		printf "Unable to find a victim device\n"
->  		exit "$rc"
-> @@ -56,9 +62,10 @@ setup_dev()
->  		exit "$rc"
->  	fi
->  
-> +	"$DAXCTL" reconfigure-device -m devdax -f "$testdev"
->  	"$DAXCTL" disable-device "$testdev"
->  	"$DAXCTL" reconfigure-device -s 0 "$testdev"
-> -	available=$("$DAXCTL" list -r 0 | jq -er '.[0].available_size | .//""')
-> +	available=$("$DAXCTL" list -r "$region_id" | jq -er '.[0].available_size | .//""')
+Function dax_hmem_platform_probe defers the dax region registration for the=
+ CXL window to cxl module.
+However, two issues seem to occur:
+        1) If the CXL window is not the direct child of the iomem_resourece=
+, dax_hmem_platform_probe will not be able to detect and defer it. This mea=
+ns that if CFMWS contains multiple CXL windows, no deferral would happen.
+        2) If a CXL1.1 device is behind the CXL window, and the dax region =
+registration is deferred. The dax region will not be created because CXL1.1=
+ device doesn't have the HDM decoder and other features needed by the CXL m=
+odule to create the dax region.
 
-These and the rest of the changes look good.
+DAX ( and hmem ) module is not visible to the CXL device's features behind =
+a CXL window, so it is impossible to defer only the CXL window for CXL2.0 d=
+evices.
 
-[..]
+If I want to make dax region show up when a single CXL1.1 device is attache=
+d, I can see two potential approaches:
+        1) Do not defer the CXL window in dax_hmem_platform_probe.
+                Can we simply not defer? Current code will not defer if mul=
+tiple CXL windows presents. Is any issue observed when multiple CXL devices=
+ are attached?
+        2) Defer all CXL windows, and let cxl module create the dax region =
+for CXL1.1 device.
+                But where should this creation be? It would be a long path =
+to handle all the unvailable features from function cxl_pci_probe to reach =
+function devm_cxl_add_dax_region.
+
+Please provide your comments.
+
+
+
+Below is the /proc/iomem output from my hardware:
+
+1) When there is a single CXL2.0 device on the host, the CXL window is inse=
+rted in PCI mem and the soft reserved region is a child of the CXL window:
+
+        6080000000-707fffffff : CXL Window 0
+          6080000000-707fffffff : region0
+                6080000000-707fffffff : Soft Reserved
+                  6080000000-707fffffff : dax0.0
+                        6080000000-707fffffff : System RAM (kmem)
+
+        A cxl region is inserted under the CXL window by function discover_=
+region and the dax region is registered by cxl_dax_region_probe
+
+2) When there is a single CXL1.1 device on the host, it is similar but neit=
+her cxl region nor dax is created:
+
+        6080000000-707fffffff : CXL Window 0
+          6080000000-707fffffff : Soft Reserved
+
+        HDM decoder and other CXL2.0 features are missing from the CXL1.1 d=
+evice so the CXL driver will not create related CXL structures. Because of =
+the absence of the dax region, there is no numa node created for the cxl me=
+mory and the cxl memory is not usable in user space.
+
+3) When there are multiple CXL devices, regardless CXL1.1 or 2.0, the CXL w=
+indow is created under the soft reserved region:
+
+        6080000000-807fffffff : Soft Reserved
+          6080000000-707fffffff : CXL Window 0
+                6080000000-707fffffff : region0
+                  6080000000-707fffffff : dax2.0
+                        6080000000-707fffffff : System RAM (kmem)
+          7080000000-807fffffff : CXL Window 1
+                7080000000-807fffffff : dax3.0
+                  7080000000-807fffffff : System RAM (kmem)
+
+        Both dax regions are registered by dax_hmem_platform_probe. The cxl=
+ region is created under CXL Window for the CXL2.0 devices.
+
+
+
+Thanks,
+Hongjian Fan
+
+Seagate Internal
