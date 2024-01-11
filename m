@@ -1,287 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FB2537FC
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 23:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428383A1B7
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 23:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDeMFOdy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705014068; x=1736550068;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=Rlrnly6chOmqdGtuPDW/JrMHkVi3SX2jvpaqcTRxNaQ=;
-  b=fDeMFOdyiEI9X9148Je2WewRHok29nJ7EtcWB0yf4T231cZNTfaZm6hw
-   pmQNBP/KUt+dXnJaUB718LpwMDz8aYQW3KYSTb+qoQg2rVjKn/GZXZ5kb
-   0iw25ZM8NXANjKKWReWK61KlyDJs7bJhfyUm51WXyV9roOJppDfe2zXqa
-   381X67Vims87kY2InFLvqTGpk6D/7kgO4LSIE/r4plwMtmWeWdm03cTIE
-   X1EENBU5E/GxKmlXcbDG1tbPpGDHXirpdWXl8tPCcKILRi7GCsgSO8YeV
-   blzRVMTB1Y3Bj2jg9JFVk/Snjx+FpBPi0jhaddArIEFVZICHYxdj9AQ/K
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="398705226"
-X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="398705226"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 15:00:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="775792615"
-X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="775792615"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.89.200])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 15:00:56 -0800
-From: Vishal Verma <vishal.l.verma@intel.com>
-Date: Thu, 11 Jan 2024 16:00:53 -0700
-Subject: [PATCH ndctl v2] test/daxctl-create.sh: remove region and dax
- device assumptions
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF4bTtd/"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d9bba6d773so5157464b3a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 11 Jan 2024 15:17:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705015019; x=1705619819; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNPCSOWv/u1Jtplu9z7EWUMPQ6AEzJHAYRX1DmebeZA=;
+        b=VF4bTtd/eW30E+j14wKVSNDiGKl+x+AUrF/JmIRgaxv4fzPpofBFvqeJ7Q5YpWLVzG
+         un+rggKJWboVDhiY8Mdz0ssr2yWvN6gQXuKK7zKNEoQailfP6ponXYkAA1satKKspldd
+         939jKUIBZcTcsYefOrmxbufLn6nDdZNbX8X2zncDs3A34EnorvavvyjOEM72lYRW4E1V
+         HuVhIBwcugt7Hof1jLhj8FB50X7CY1ZEOP76GpMxuYS/qU3lHq6DpoMahEX2ECwo8Rd4
+         QO4Q4ECJn3KrmEvDF4ynKTJrHVhDXA43//ExsikMkFunl940QxR8pEu/fcpPObAoxgaW
+         xXDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705015019; x=1705619819;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RNPCSOWv/u1Jtplu9z7EWUMPQ6AEzJHAYRX1DmebeZA=;
+        b=MBcE6UMpOro0ZrCeqzGb+vnonUorWMtWCwBhvWyOIShJb1F5Fa6/B/dyT2J82eyI+b
+         8raFDdplphmtJeilEIITBnCV3SG5GlgjO4pod0JNuxNgmCDS2ZeSt5pnDWK/dDwL4Oqe
+         dvz0y3DXHA+fa1AJCV6PusuV02gDxf15aW9wk3USthdTqAjlUA8NeXdGDbT5UzeDlLL1
+         UAib4X1VEYEavlZcmU9x9EwgHaYmMXVmBr+SLdhGW4L0GCH2fx6jJ1XxjTMI1Of78gXt
+         4XBtneuMm0fhAH4VNs+miu3oG9S/Pe8+fSA4I5TjGVc5lceEx2B/lJ+cRbIGqBrxLrlU
+         I8bw==
+X-Gm-Message-State: AOJu0YzzyFmQ+IC/wJElhPqmTduAv7L6IoQLKssIXXJhBNllnAodtXcN
+	++p4fTpAiiVVT692R9/B/7Y=
+X-Google-Smtp-Source: AGHT+IHv5O/5kI6GqoB6sQ2gkZAPNz0D6rhBhuYsr+xFddwJuBDeJ0R5aKFjCR//yTg9ONQp0ylmjg==
+X-Received: by 2002:a62:ce83:0:b0:6d9:8453:e040 with SMTP id y125-20020a62ce83000000b006d98453e040mr73888pfg.1.1705015019397;
+        Thu, 11 Jan 2024 15:16:59 -0800 (PST)
+Received: from debian (c-71-202-83-215.hsd1.ca.comcast.net. [71.202.83.215])
+        by smtp.gmail.com with ESMTPSA id y187-20020a62cec4000000b006dab86e675esm1798768pfg.185.2024.01.11.15.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 15:16:58 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Thu, 11 Jan 2024 15:16:42 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Fan Ni <fan.ni@samsung.com>,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v2 qemu] hw/cxl/device: read from register values in
+ mdev_reg_read()
+Message-ID: <ZaB22v-pqAYFfJMS@debian>
+References: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240111-vv-daxctl-create-v2-1-1052c8390c5d@intel.com>
-X-B4-Tracking: v=1; b=H4sIACRzoGUC/32NQQrCMBBFr1Jm7Ugm2Jq68h7SRUimdqCmkoRQK
- b27sQdw+R789zdIHIUT3JoNIhdJsoQK+tSAm2x4MoqvDFrpiyJSWAp6u7o8o4tsM6Pr7JWpV0b
- 3HdTZO/Io65F8DJUnSXmJn+Oh0M/+iRVCQkVj61tjR+fNXULm+eyWFwz7vn8BXQ6p8LAAAAA=
-To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc: Dan Williams <dan.j.williams@intel.com>, 
- Joao Martins <joao.m.martins@oracle.com>, 
- Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.13-dev-433a8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8014;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=Rlrnly6chOmqdGtuPDW/JrMHkVi3SX2jvpaqcTRxNaQ=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDKkLilVdnxqefeAo+mCL9QTtlWscLd79/lurukiKzyJyc
- ejV/A+dHaUsDGJcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZgI1z1Ghq50tX4ex69fwgzW
- XDi0jkE6MSd20rm12pp/m0Wur0yZfJaRYWsUv3jlsmNP9MS/q8kcamhzKGJOnfhu7jWrMBnOmXv
- b+AE=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
 
-The daxctl-create.sh test had some hard-coded assumptions about what dax
-device it expects to find, and what region number it will be under. This
-usually worked when the unit test environment only had efi_fake_mem
-devices as the sources of hmem memory. With CXL however, the region
-numbering namespace is shared with CXL regions, often pushing the
-efi_fake_mem region to something other than 'region0'.
+On Thu, Jan 11, 2024 at 02:59:05PM +0000, Jonathan Cameron wrote:
+> From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> 
+> In the current mdev_reg_read() implementation, it consistently returns
+> that the Media Status is Ready (01b). This was fine until commit
+> 25a52959f99d ("hw/cxl: Add support for device sanitation") because the
+> media was presumed to be ready.
+> 
+> However, as per the CXL 3.0 spec "8.2.9.8.5.1 Sanitize (Opcode 4400h)",
+> during sanitation, the Media State should be set to Disabled (11b). The
+> mentioned commit correctly sets it to Disabled, but mdev_reg_read()
+> still returns Media Status as Ready.
+> 
+> To address this, update mdev_reg_read() to read register values instead
+> of returning dummy values.
+> 
+> Note __toggle_media() was overwriting the mailbox capability
+> register, but nothing was reading that after this so that bug had no
+> obvious effect unless the driver was reloaded.
+> 
+> Fixes: commit 25a52959f99d ("hw/cxl: Add support for device sanitation")
+> Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Link: https://lore.kernel.org/r/20231222090051.3265307-3-42.hyeyoo@gmail.com
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
-Remove any region and device number assumptions from this test so it
-works regardless of how regions get enumerated.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-Cc: Joao Martins <joao.m.martins@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
-Changes in v2:
-- Fix hmem region selection in case the first dax region is not an hmem
-  one (Dan)
-- Link to v1: https://lore.kernel.org/r/20240110-vv-daxctl-create-v1-1-01f5d58afcd8@intel.com
----
- test/daxctl-create.sh | 58 ++++++++++++++++++++++++++-------------------------
- 1 file changed, 30 insertions(+), 28 deletions(-)
-
-diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
-index d319a39..c093cb9 100755
---- a/test/daxctl-create.sh
-+++ b/test/daxctl-create.sh
-@@ -29,14 +29,14 @@ find_testdev()
- 	fi
- 
- 	# find a victim region provided by dax_hmem
--	testpath=$("$DAXCTL" list -r 0 | jq -er '.[0].path | .//""')
--	if [[ ! "$testpath" == *"hmem"* ]]; then
-+	region_id="$("$DAXCTL" list -R | jq -r '.[] | select(.path | contains("hmem")) | .id')"
-+	if [[ ! "$region_id" ]]; then
- 		printf "Unable to find a victim region\n"
- 		exit "$rc"
- 	fi
- 
- 	# find a victim device
--	testdev=$("$DAXCTL" list -D -r 0 | jq -er '.[0].chardev | .//""')
-+	testdev=$("$DAXCTL" list -D -r "$region_id" | jq -er '.[0].chardev | .//""')
- 	if [[ ! $testdev  ]]; then
- 		printf "Unable to find a victim device\n"
- 		exit "$rc"
-@@ -56,9 +56,10 @@ setup_dev()
- 		exit "$rc"
- 	fi
- 
-+	"$DAXCTL" reconfigure-device -m devdax -f "$testdev"
- 	"$DAXCTL" disable-device "$testdev"
- 	"$DAXCTL" reconfigure-device -s 0 "$testdev"
--	available=$("$DAXCTL" list -r 0 | jq -er '.[0].available_size | .//""')
-+	available=$("$DAXCTL" list -r "$region_id" | jq -er '.[0].available_size | .//""')
- }
- 
- reset_dev()
-@@ -74,8 +75,8 @@ reset_dax()
- {
- 	test -n "$testdev"
- 
--	"$DAXCTL" disable-device -r 0 all
--	"$DAXCTL" destroy-device -r 0 all
-+	"$DAXCTL" disable-device -r "$region_id" all
-+	"$DAXCTL" destroy-device -r "$region_id" all
- 	"$DAXCTL" reconfigure-device -s "$available" "$testdev"
- }
- 
-@@ -90,7 +91,7 @@ test_pass()
- 	local rc=1
- 
- 	# Available size
--	_available_size=$("$DAXCTL" list -r 0 | jq -er '.[0].available_size | .//""')
-+	_available_size=$("$DAXCTL" list -r "$region_id" | jq -er '.[0].available_size | .//""')
- 	if [[ ! $_available_size == "$available" ]]; then
- 		echo "Unexpected available size $_available_size != $available"
- 		exit "$rc"
-@@ -101,7 +102,7 @@ fail_if_available()
- {
- 	local rc=1
- 
--	_size=$("$DAXCTL" list -r 0 | jq -er '.[0].available_size | .//""')
-+	_size=$("$DAXCTL" list -r "$region_id" | jq -er '.[0].available_size | .//""')
- 	if [[ $_size ]]; then
- 		echo "Unexpected available size $_size"
- 		exit "$rc"
-@@ -170,30 +171,31 @@ daxctl_test_multi()
- 		"$DAXCTL" reconfigure-device -s $size "$testdev"
- 	fi
- 
--	daxdev_1=$("$DAXCTL" create-device -r 0 -s $size | jq -er '.[].chardev')
-+	daxdev_1=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
- 	test -n "$daxdev_1"
- 
--	daxdev_2=$("$DAXCTL" create-device -r 0 -s $size | jq -er '.[].chardev')
-+	daxdev_2=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
- 	test -n "$daxdev_2"
- 
- 	if [[ ! $2 ]]; then
--		daxdev_3=$("$DAXCTL" create-device -r 0 -s $size | jq -er '.[].chardev')
-+		daxdev_3=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
- 		test -n "$daxdev_3"
- 	fi
- 
- 	# Hole
--	"$DAXCTL" disable-device  "$1" && "$DAXCTL" destroy-device "$1"
-+	"$DAXCTL" disable-device  "$1"
-+	"$DAXCTL" destroy-device "$1"
- 
- 	# Pick space in the created hole and at the end
- 	new_size=$((size * 2))
--	daxdev_4=$("$DAXCTL" create-device -r 0 -s "$new_size" | jq -er '.[].chardev')
-+	daxdev_4=$("$DAXCTL" create-device -r "$region_id" -s "$new_size" | jq -er '.[].chardev')
- 	test -n "$daxdev_4"
- 	test "$(daxctl_get_nr_mappings "$daxdev_4")" -eq 2
- 
- 	fail_if_available
- 
--	"$DAXCTL" disable-device -r 0 all
--	"$DAXCTL" destroy-device -r 0 all
-+	"$DAXCTL" disable-device -r "$region_id" all
-+	"$DAXCTL" destroy-device -r "$region_id" all
- }
- 
- daxctl_test_multi_reconfig()
-@@ -210,7 +212,7 @@ daxctl_test_multi_reconfig()
- 	"$DAXCTL" reconfigure-device -s $size "$testdev"
- 	"$DAXCTL" disable-device "$testdev"
- 
--	daxdev_1=$("$DAXCTL" create-device -r 0 -s $size | jq -er '.[].chardev')
-+	daxdev_1=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
- 	"$DAXCTL" disable-device "$daxdev_1"
- 
- 	start=$((size + size))
-@@ -249,16 +251,16 @@ daxctl_test_adjust()
- 	start=$((size + size))
- 	for i in $(seq 1 1 $ncfgs)
- 	do
--		daxdev=$("$DAXCTL" create-device -r 0 -s "$size" | jq -er '.[].chardev')
-+		daxdev=$("$DAXCTL" create-device -r "$region_id" -s "$size" | jq -er '.[].chardev')
- 		test "$(daxctl_get_nr_mappings "$daxdev")" -eq 1
- 	done
- 
--	daxdev=$(daxctl_get_dev "dax0.1")
-+	daxdev=$(daxctl_get_dev "dax$region_id.1")
- 	"$DAXCTL" disable-device "$daxdev" && "$DAXCTL" destroy-device "$daxdev"
--	daxdev=$(daxctl_get_dev "dax0.4")
-+	daxdev=$(daxctl_get_dev "dax$region_id.4")
- 	"$DAXCTL" disable-device "$daxdev" && "$DAXCTL" destroy-device "$daxdev"
- 
--	daxdev=$(daxctl_get_dev "dax0.2")
-+	daxdev=$(daxctl_get_dev "dax$region_id.2")
- 	"$DAXCTL" disable-device "$daxdev"
- 	"$DAXCTL" reconfigure-device -s $((size * 2)) "$daxdev"
- 	# Allocates space at the beginning: expect two mappings as
-@@ -266,7 +268,7 @@ daxctl_test_adjust()
- 	# preserve the relative page_offset of existing allocations
- 	test "$(daxctl_get_nr_mappings "$daxdev")" -eq 2
- 
--	daxdev=$(daxctl_get_dev "dax0.3")
-+	daxdev=$(daxctl_get_dev "dax$region_id.3")
- 	"$DAXCTL" disable-device "$daxdev"
- 	"$DAXCTL" reconfigure-device -s $((size * 2)) "$daxdev"
- 	# Adjusts space at the end, expect one mapping because we are
-@@ -275,9 +277,9 @@ daxctl_test_adjust()
- 
- 	fail_if_available
- 
--	daxdev=$(daxctl_get_dev "dax0.3")
-+	daxdev=$(daxctl_get_dev "dax$region_id.3")
- 	"$DAXCTL" disable-device "$daxdev" && "$DAXCTL" destroy-device "$daxdev"
--	daxdev=$(daxctl_get_dev "dax0.2")
-+	daxdev=$(daxctl_get_dev "dax$region_id.2")
- 	"$DAXCTL" disable-device "$daxdev" && "$DAXCTL" destroy-device "$daxdev"
- }
- 
-@@ -295,7 +297,7 @@ daxctl_test1()
- {
- 	local daxdev
- 
--	daxdev=$("$DAXCTL" create-device -r 0 | jq -er '.[].chardev')
-+	daxdev=$("$DAXCTL" create-device -r "$region_id" | jq -er '.[].chardev')
- 
- 	test -n "$daxdev"
- 	test "$(daxctl_get_nr_mappings "$daxdev")" -eq 1
-@@ -312,17 +314,17 @@ daxctl_test1()
- # having the region device reconfigured with some of the memory.
- daxctl_test2()
- {
--	daxctl_test_multi "dax0.1" 1
-+	daxctl_test_multi "$region_id.1" 1
- 	clear_dev
- 	test_pass
- }
- 
- # Test 3: space at the beginning and at the end
- # Successfully pick space in the beginning and space at the end, by
--# having the region device emptied (so region beginning starts with dax0.1).
-+# having the region device emptied (so region beginning starts with daxX.1).
- daxctl_test3()
- {
--	daxctl_test_multi "dax0.1"
-+	daxctl_test_multi "$region_id.1"
- 	clear_dev
- 	test_pass
- }
-@@ -366,7 +368,7 @@ daxctl_test6()
- 		size=$align
- 	fi
- 
--	daxdev=$("$DAXCTL" create-device -r 0 -s $size -a $align | jq -er '.[].chardev')
-+	daxdev=$("$DAXCTL" create-device -r "$region_id" -s $size -a $align | jq -er '.[].chardev')
- 
- 	test -n "$daxdev"
- 
-
----
-base-commit: 14b4c6f9116b1c7a32e0e83d7b201b78de3fa02f
-change-id: 20240110-vv-daxctl-create-c6a7e1908296
-
-Best regards,
--- 
-Vishal Verma <vishal.l.verma@intel.com>
-
+> --
+> 
+> Hyeonggon - I've kept your sign-off. Let me know if this is ok.
+> Dropped RBs etc as this has changed quite a bit.
+> 
+> I plan to send out a group of fixes including this soon, but given
+> I've been pointing out the original fix didn't work thought I'd send
+> this one out for early review!
+> 
+> ---
+>  include/hw/cxl/cxl_device.h |  9 +++++++--
+>  hw/cxl/cxl-device-utils.c   | 17 +++++++++++------
+>  2 files changed, 18 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index befb5f884b..31d2afcd3d 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -202,6 +202,9 @@ typedef struct cxl_device_state {
+>          };
+>      };
+>  
+> +    /* Stash the memory device status value */
+> +    uint64_t memdev_status;
+> +
+>      struct {
+>          bool set;
+>          uint64_t last_set;
+> @@ -353,8 +356,10 @@ static inline void __toggle_media(CXLDeviceState *cxl_dstate, int val)
+>  {
+>      uint64_t dev_status_reg;
+>  
+> -    dev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
+> -    cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] = dev_status_reg;
+> +    dev_status_reg = cxl_dstate->memdev_status;
+> +    dev_status_reg = FIELD_DP64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS,
+> +                                val);
+> +    cxl_dstate->memdev_status = dev_status_reg;
+>  }
+>  #define cxl_dev_disable_media(cxlds)                    \
+>          do { __toggle_media((cxlds), 0x3); } while (0)
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index 61a3c4dc2e..40b619ffd9 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -229,12 +229,9 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
+>  
+>  static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size)
+>  {
+> -    uint64_t retval = 0;
+> -
+> -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
+> -    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
+> +    CXLDeviceState *cxl_dstate = opaque;
+>  
+> -    return retval;
+> +    return cxl_dstate->memdev_status;
+>  }
+>  
+>  static void ro_reg_write(void *opaque, hwaddr offset, uint64_t value,
+> @@ -371,7 +368,15 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+>      cxl_dstate->mbox_msi_n = msi_n;
+>  }
+>  
+> -static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
+> +static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
+> +{
+> +    uint64_t memdev_status_reg;
+> +
+> +    memdev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
+> +    memdev_status_reg = FIELD_DP64(memdev_status_reg, CXL_MEM_DEV_STS,
+> +                                   MBOX_READY, 1);
+> +    cxl_dstate->memdev_status = memdev_status_reg;
+> +}
+>  
+>  void cxl_device_register_init_t3(CXLType3Dev *ct3d)
+>  {
+> -- 
+> 2.39.2
+> 
