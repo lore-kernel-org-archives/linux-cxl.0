@@ -1,168 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6456E17569;
-	Fri, 12 Jan 2024 17:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C3616426;
+	Fri, 12 Jan 2024 19:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBfRq/53"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705081382; x=1736617382;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ULXzmlL/2uf0uPDuJBBMkCrMFnBfNtHg0w8+WaNL1Yg=;
-  b=fBfRq/53Rqxx/af7UVzvxAF9cMeqTCR2Ndd2tIltJ7ChR1Adq+V/mcha
-   DOxJGRbKybr47Bylx82OSFa99wPbI2IcM7/zxTCwNGLHgZyrsN8UEGzTn
-   b0iTcMFruN83jye7xI5lW5io33prOay05Vi+OeWBl3ao6GCStcXc0EFfP
-   X4xTAxum+l7n339kFemD8GamGoS5kSNPsa63dVKcH38+SUY5y9xCHFbnK
-   FmfJrpOp9krpOx2Q00cpFbaYjlURvaoqDWomiqpGzMSz0WL2iHqNBjVd/
-   Ta9fdgs1ZUdXRR7ijYeXMzoKRuG/0EC6fxRIxXeGo5JeXbUYReAkg9b7i
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="20713517"
-X-IronPort-AV: E=Sophos;i="6.04,190,1695711600"; 
-   d="scan'208";a="20713517"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 09:42:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="906383557"
-X-IronPort-AV: E=Sophos;i="6.04,190,1695711600"; 
-   d="scan'208";a="906383557"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Jan 2024 09:42:56 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Jan 2024 09:42:55 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Jan 2024 09:42:55 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 12 Jan 2024 09:42:55 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Jan 2024 09:42:55 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BlHZeUxPMM5vcOshy6ExyOTmzAzb4MKpRD1cLPnjDM4CeY9q/MJI10WPolaTz2JmUqNY3DOvq/hJZH2O0C5oxWRAfAtiWM39QifIra9UkXImu7bk7UZ6SW4h6xc05XYWly7i31OLnUHXdmgfsREDAKeRVJ7DGwY2Bchq1KImxT+lybY4WJ0zQvciL2H3ePSpyqZKTTV1hcYtiaDeHlv9LTIq8IGjey+/qYoFRBglFKO5pEraf0kCZNhNaZG2AaqVMq+dbXyiF5a6BE2qyjmedjF95EVdxaJ1cMitggTdb+cz6oyyQGeBdz6H4ydLetQH1d0r8iw4SfQsOMbp+vEddg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P0sOb3yXZEt3wu+3FCX/DYTGCH9wrZVuIy5M/nHOiwg=;
- b=W93JqRCKp8yokZThKyymFrjnf2hqjh0qQ+glXU1N9HMDc0A5KMryR3naiLEdxrxQ9KHPnLVoJyhwyit3OARM03U8lgydHJiZsz/qzs43R4kaViPtizcr3ryYPeR45GwXNGOwwRMUo2ubCRDKkW9L+gPd92aZTzzTVQ0Nnx/eG2JX82Z+Wu5MatQe6kYme3EJO0EFWvSYBRx+x4uKoWeXP50TcT9c9bMPafA7XaCNyDB+1FtYoOAPNINHqIqHLN7lYht0Jbi7vFGAvH0yLZNSn+WB8kyTWwd8SmhghWiPdo+cq2xmgvZNONYCjH20y2zBHyj0YTepWQJEyM4nc/cBSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MW4PR11MB6764.namprd11.prod.outlook.com (2603:10b6:303:209::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19; Fri, 12 Jan
- 2024 17:42:53 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::da91:dbe5:857c:fa9c%4]) with mapi id 15.20.7181.020; Fri, 12 Jan 2024
- 17:42:52 +0000
-Date: Fri, 12 Jan 2024 09:42:49 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYxyGbrF"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d41bb4da91so40996645ad.0;
+        Fri, 12 Jan 2024 11:40:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705088433; x=1705693233; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJCyV0ZVfkYa6azqkKQYvg8QMt8CHM5kXhp66DP2KrQ=;
+        b=TYxyGbrFOpbGGGuKIOIgXqSHGMec5NwdPF5zsYVjNWz8PyNI6gg2GgoDqso1r8Hd7n
+         lJs2yHyoKBipF+hFabdpg4TzHLN/V5hSOmwU/tFvm2aFrDVgjXQegBXjXXuTAb+LxgFu
+         LuWB3d1b5XeHLemNQkEBs4UDcmOZIqoy2CE8MH3gESmtQ0J3rS5BD03IZ8mMwL91wrRQ
+         v7ge3J1hH5HN/a8XN4yVGxFL+UjA12IuM+yJbcEZvF8w1xAsaV9OPlhNX68LgIygv5v8
+         AEcYPEgSD9ENGFBPH64F/7tbHavzq3ljkGWx7BaoNZBRXsMUUck87ET8Bi5Xzpk+xmby
+         KX3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705088433; x=1705693233;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BJCyV0ZVfkYa6azqkKQYvg8QMt8CHM5kXhp66DP2KrQ=;
+        b=TFnVYsPIwOe9Fegsr+hTe9zAdPxiC5jXnNqBIpOUXovGTzxKfIFyGkjI3IIObdvsqx
+         qQIikvyb7d4pyAjIRUytmaiIPRCj6I8e2fM6IRluurycjAD4xg4dTpHBaaD1DXLZhlFl
+         8TvP7Kpj72IBY2ktxhycTk8fx0VKTm9tZz9xIgCY77/jerbkP4giXBAy7xOU6cfM3pco
+         7W37WKPEwwAmEIujm1gQ9ixgOs84X7uHjNbnACTpHn6FLajrtvRTabiQDBjnMS/XKiK6
+         cOkN19QuTgpyWp7fDK/852EgwJrtCb3b6k96unHzvdBGQwpYzREylG/T5p5IsG5wWHZl
+         BK8A==
+X-Gm-Message-State: AOJu0YxZ3cRbYqkU/KXWT4DoI53pc+IWfdZCCRKBkXYBfe+OEe2GNt6N
+	cDbAd3cI6W4SiGb1d7Ti3CA=
+X-Google-Smtp-Source: AGHT+IG7YLEeac9EBpoy18WaYQqF/O1qNa7V2zPtZedjFVNl1gVhgmNYsYIbhbPbvVDJn03LT78jWA==
+X-Received: by 2002:a17:902:aa08:b0:1d4:4f4d:38cd with SMTP id be8-20020a170902aa0800b001d44f4d38cdmr1026830plb.38.1705088432580;
+        Fri, 12 Jan 2024 11:40:32 -0800 (PST)
+Received: from debian (c-71-202-83-215.hsd1.ca.comcast.net. [71.202.83.215])
+        by smtp.gmail.com with ESMTPSA id q18-20020a170902dad200b001d508715f5csm3490463plx.197.2024.01.12.11.40.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jan 2024 11:40:32 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Fri, 12 Jan 2024 11:40:11 -0800
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] cxl/pci: Skip irq features if MSI/MSI-X are not supported
-Message-ID: <65a17a19c5528_10b19f294a7@iweiny-mobl.notmuch>
+Message-ID: <ZaGVm5tHXoTZd4Ad@debian>
 References: <20240111-dont-fail-irq-v1-1-802c22a79ecb@intel.com>
- <f4cabd98-2759-4cd3-81ac-4afdf9aadf56@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f4cabd98-2759-4cd3-81ac-4afdf9aadf56@intel.com>
-X-ClientProxiedBy: SJ0PR13CA0106.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::21) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW4PR11MB6764:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77dcd93c-dedf-4297-d57a-08dc1395e710
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pvpFZwleLhoqM8A1Memr8E9YhCl9aMqq5f5YCE32zf2779RYMB9w1U0XfcqlWrROnvpvRNT+FcaYg2DaCFU2iHsz0+R3WYD5T1e75mX8AL7ThlIdfuo6tvZ+OevTfkh3n/TuyRgOXLq+mmq01kqqtCa7HSOMxFq7duJhkSoKjcFdy8pRLN1yma3g2SEHDs/i4xeerskxkYGD2qgTSwpc+FEydUdrtRFeR1GAyS+7m8hj4LtgmGC6kmVUmGQS3OQo1Epp+PmzwVoUFrNhLpVKPX0cUgCKyAdYlY0USqP0qQtCYFfateiWIyZ207D8k+Acyh3HaT9OL/hPoCta+FV9yiOKwRqIV4GU20hXwob8TUz2TrmF9eJFRGNzgLtE99txXqPNsSYsgmKChOaLYSzrhFLvsECqtdaTrYuBitAcDw5zW+mcPgO2ApiBly6KKaWjh3Ozv8IwbBJ9A1WlZE2YmhxrN5KAvVPJgX8B8jTmCpX5moc+x4yeAzRfGLXJVl+uu/ujEsn6Ka3ITIeUKehp8ag7z5evaGB6Tq6xm2ShuGWj+bNIu4sj3Pi9FKtFIGN3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(346002)(39860400002)(366004)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(41300700001)(38100700002)(82960400001)(8676002)(8936002)(316002)(6486002)(110136005)(4326008)(66476007)(6506007)(66946007)(478600001)(6636002)(66556008)(44832011)(6666004)(86362001)(4744005)(9686003)(53546011)(6512007)(5660300002)(2906002)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0GFCwLDiVpgJ/gma3rnhGq7cPcakun8eItwnH1kUu/d29/MZ8R/Uw6qezKVq?=
- =?us-ascii?Q?orjcsy7tOxHFkbhIlNkMkY6Y5iZFXipG869nSVd5OdJpVO+p8w7faYgKlTQh?=
- =?us-ascii?Q?JTnjmElYUYyXHEeOoenRJHQbfo4COkx086lB0mcS2V9T+DYZoBCMjUGsmDpJ?=
- =?us-ascii?Q?afKRBP5tTygsXwyEXpc2yK2wGUYnUvmZdNUtUVZB7KUwusFwy93nUMjolYcg?=
- =?us-ascii?Q?J8+0g2hnvzHlBBfCVUJhosLPEK50g6tkkf1miz8T47eObvynpPhGU6vQLTtD?=
- =?us-ascii?Q?0jrXMPy1RD4G/BuWldAfqDSw4BXteRPSr7DtbYk4RgRuBdT8c13G7X42AT+Q?=
- =?us-ascii?Q?6gifVEO9HK88j3Hj/mlz/osfif2N7Z48qKRV5JDP48EEUR2rupCgCH9RJ8Oq?=
- =?us-ascii?Q?TZ8KxrjR2G5t1NBvh9+RAbhuKkc/lNrCj3mqI+CC7o+lKYUvkl05eZh6cwp8?=
- =?us-ascii?Q?Zt+1CRUDjrE2DmyVzixyAC9XpM1LTvRtz0iB84n0ZadfJW8lBnMJZJBXXFMn?=
- =?us-ascii?Q?co4EcyJnV4Uo2Q93qQRyxhC6YagAprLrDWJlZr+p3kp5D9xfD7BtTBslNr99?=
- =?us-ascii?Q?/xfkHE79L7Kcw8l9GaxshWZDkduwpN5Yzzcyf/WE5uba8L36WwvRU7kBSb29?=
- =?us-ascii?Q?DQCvxirkdzViWERN2DWBe/vDpG8yT0j2sgWGid4Wr9wTUJ1zNH9NMOxqy5ls?=
- =?us-ascii?Q?pTFa3rP2GE4iIujg1wnmCykN2wKkbfuxfhPHfcuB/mHGNbAxKsWNN72e6o6R?=
- =?us-ascii?Q?lt+/YqQv3aMQFCfdl5jajFcLi6NvQHgBLPG2ceQ6Ee2iRAGI1jUh8vP00KMy?=
- =?us-ascii?Q?2b9cZziy4l1b/pSgBjN7A6rIQ728eWTRVUcH4tvLhTQgTdyZO3nJQf9RxRuj?=
- =?us-ascii?Q?stEltR/NYeMyBUVdHt0hPIGAd3cU5C+lRaVTZT/hF+R7AjjF/AugPdDnbAXT?=
- =?us-ascii?Q?b5ic5U4hApwVVMwqSxu8Y9hpO/mhSFNacMxKUE68PjDfv27XhGFt2coDZjo8?=
- =?us-ascii?Q?VRNuyzTRY6LST0sUPLIN3qZMhXwqIAOhMzV/wzg8m9VqN0wDh2DiUQwDdbqa?=
- =?us-ascii?Q?eJ/FjA/eOm1DDFAYHEJ9gvejJkP3vEUzfDR1SCxFtBfgPAgRSXpdU6o+h5Hu?=
- =?us-ascii?Q?ZM7OssL6a1cWiaWaFLAs+mN/kbc7co7mcdLa+EUv6/hOXYG5S3JPCu2BEcwl?=
- =?us-ascii?Q?++lusydK770GmqHxtsUZnDY/1hdqW7YxhJa7oMlwfXmMsE2o6Dx4NNEq2dp/?=
- =?us-ascii?Q?tueelUyTBZlNYDjTo8DRySpbYSfCkPPdGCBekCN+Q1nndxsl9v7V1H/wrKft?=
- =?us-ascii?Q?gHcdNkfUtEDdTxP/Yfg8/JlOERaUo64JwFuhlo0CQQV5dBQlBsSzB1se9noh?=
- =?us-ascii?Q?DcQTBco3CGrGcL5I5UPt2rqPbF6uBfWh0Z3tt2e01/3cw0JNRwMVDPhHO9fX?=
- =?us-ascii?Q?Uo7Vp2sNZyDhKZ+OQ9XCubJsDmUWhLfeC9Dzg0o45V55pH9q3NBqZ1uloZIH?=
- =?us-ascii?Q?vtFWp/2J0ZclkVxAdzP0gwFGdkbfOah1v1kmX7X/5/J04WSYjPhw8XRLjKBe?=
- =?us-ascii?Q?rh5D29V4Hqjx1bz+CDJdukXhM5YYGZTVjOeY5Dnh?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77dcd93c-dedf-4297-d57a-08dc1395e710
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 17:42:52.9131
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PX24P9jf51MQr7IvlQQb14Gwtrz1zslqLFnQl4mQ3vGHm0NkJkqXtyxP0VCLU80GaKeOloYljyevb4K+IE/OcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6764
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111-dont-fail-irq-v1-1-802c22a79ecb@intel.com>
 
-Dave Jiang wrote:
+On Thu, Jan 11, 2024 at 05:54:45PM -0800, Ira Weiny wrote:
+> CXL 3.1 Section 3.1.1 states:
 > 
-> On 1/11/24 18:54, Ira Weiny wrote:
-
-[snip]
-
-> > 
-> > Note that it is possible for a device to have host based event
-> > processing through polling.  However, the driver does not support
-> > polling and it is not anticipated to be required.  Leave that case to
-> > the future if such a device comes along.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 	"A Function on a CXL device must not generate INTx messages if
+> 	that Function participates in CXL.cache protocol or CXL.mem
+> 	protocols."
 > 
-> v2?
-
-Previous was RFC and not tested.  This one is tested and ready.  Hence V1.
-
+> The generic CXL memory driver only supports devices which use the
+> CXL.mem protocol.  The current driver attempts to allocate MSI/MSI-X
+> vectors in anticipation of their need for mailbox interrupts or event
+> processing.  However, the above requirement does not require a device to
+> support interrupts, only that they use MSI/MSI-X.  For example, a device
+> may disable mailbox interrupts and be configured for firmware first
+> event processing and function well with the driver.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Rather than fail device probe if interrupts are not supported; flag that
+> irqs are not enabled and avoid features which require interrupts.
+> Emit messages appropriate for the situation to aid in debugging should
+> device behavior be unexpected due to a failure to allocate vectors.
+> 
+> Note that it is possible for a device to have host based event
+> processing through polling.  However, the driver does not support
+> polling and it is not anticipated to be required.  Leave that case to
+> the future if such a device comes along.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
 
-Thanks,
-Ira
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-[snip]
+> Changes in v1:
+> - [djbw: remove persistent irq boolean]
+> - [djbw: Simplify error messages]
+> - [Alison: spell check]
+> - [iweiny: test]
+> - Link to RFC: https://lore.kernel.org/r/20240108-dont-fail-irq-v1-1-4407228debd2@intel.com
+> ---
+>  drivers/cxl/pci.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 0155fb66b580..bd12b97bb38e 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -381,7 +381,7 @@ static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
+>  	return rc;
+>  }
+>  
+> -static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
+> +static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
+>  {
+>  	struct cxl_dev_state *cxlds = &mds->cxlds;
+>  	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+> @@ -443,6 +443,11 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
+>  	if (!(cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ))
+>  		return 0;
+>  
+> +	if (!irq_avail) {
+> +		dev_err(cxlds->dev, "Mailbox irq enabled but no interrupt vectors.\n");
+> +		return 0;
+> +	}
+> +
+>  	msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
+>  	irq = pci_irq_vector(to_pci_dev(cxlds->dev), msgnum);
+>  	if (irq < 0)
+> @@ -587,7 +592,7 @@ static int cxl_mem_alloc_event_buf(struct cxl_memdev_state *mds)
+>  	return devm_add_action_or_reset(mds->cxlds.dev, free_event_buf, buf);
+>  }
+>  
+> -static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
+> +static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
+>  {
+>  	int nvecs;
+>  
+> @@ -604,9 +609,9 @@ static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
+>  				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
+>  	if (nvecs < 1) {
+>  		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
+> -		return -ENXIO;
+> +		return false;
+>  	}
+> -	return 0;
+> +	return true;
+>  }
+>  
+>  static irqreturn_t cxl_event_thread(int irq, void *id)
+> @@ -742,7 +747,7 @@ static bool cxl_event_int_is_fw(u8 setting)
+>  }
+>  
+>  static int cxl_event_config(struct pci_host_bridge *host_bridge,
+> -			    struct cxl_memdev_state *mds)
+> +			    struct cxl_memdev_state *mds, bool irq_avail)
+>  {
+>  	struct cxl_event_interrupt_policy policy;
+>  	int rc;
+> @@ -754,6 +759,11 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	if (!host_bridge->native_cxl_error)
+>  		return 0;
+>  
+> +	if (!irq_avail) {
+> +		dev_info(mds->cxlds.dev, "No interrupt vectors, no polling, skip event processing.\n");
+> +		return 0;
+> +	}
+> +
+>  	rc = cxl_mem_alloc_event_buf(mds);
+>  	if (rc)
+>  		return rc;
+> @@ -788,6 +798,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct cxl_register_map map;
+>  	struct cxl_memdev *cxlmd;
+>  	int i, rc, pmu_count;
+> +	bool irq_avail;
+>  
+>  	/*
+>  	 * Double check the anonymous union trickery in struct cxl_regs
+> @@ -845,11 +856,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	else
+>  		dev_warn(&pdev->dev, "Media not active (%d)\n", rc);
+>  
+> -	rc = cxl_alloc_irq_vectors(pdev);
+> -	if (rc)
+> -		return rc;
+> +	irq_avail = cxl_alloc_irq_vectors(pdev);
+>  
+> -	rc = cxl_pci_setup_mailbox(mds);
+> +	rc = cxl_pci_setup_mailbox(mds, irq_avail);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -908,7 +917,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		}
+>  	}
+>  
+> -	rc = cxl_event_config(host_bridge, mds);
+> +	rc = cxl_event_config(host_bridge, mds, irq_avail);
+>  	if (rc)
+>  		return rc;
+>  
+> 
+> ---
+> base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+> change-id: 20240108-dont-fail-irq-a96310368f0f
+> 
+> Best regards,
+> -- 
+> Ira Weiny <ira.weiny@intel.com>
+> 
