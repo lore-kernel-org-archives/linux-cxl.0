@@ -1,168 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B6E651
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 00:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E4423C3;
+	Fri, 12 Jan 2024 00:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKGj1X0F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBlzWxp+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705019210; x=1736555210;
+  t=1705020312; x=1736556312;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3E+Vi8Ao0s6+OnPrJwv+CL0o6Z63xYopDERSSAMIybM=;
-  b=NKGj1X0FJv6fzfnvQqrDh3wOUrCyNKyTHoCgWP92bvt1pYUbii3itPNe
-   Vx/dIWpU9sTVzqRuHYLSaYlTx564vW01HxgVBhYRDmdc6kKRD4GNggnKr
-   LivXLOX3g/GP/S3BwWWG6yTrpphp2rUSTQjC4TyUgfOnE6HcoSk22aWYJ
-   XNyRwLLd40RgmEi+05qDTCnkkW/PCU7rgntCggSxoEAUXUjJ6Hc26tlFD
-   Nwzl9OiBVs/MLnTOR+n4vkt1JXbd5yC2xsIxMiT4KoIVqG+aPC6bH+20H
-   A/6imD/awGEDt/I/dUEyIrkIEHxwBPXbEVzB5Sonx0SiOm4nPp4dXllpO
+   in-reply-to:mime-version;
+  bh=lfD3wYyufOmi7Ttwd9/Jrh8zR6HmakwyY7erC2+gkxw=;
+  b=gBlzWxp+YqQ137ZOLMmMB2dmxRz0iBpr2cFxhoolxF3TBRZs3io3/5Ot
+   /lKvfLtYqwg+5gIoqkhN8dnIgo9QMROY5nzQ+q5nkVWJeqZX8LD2yOBvm
+   V0FCxLXLMICpzRn0q0on/s8zRUN4+J09zrSsTJoRUye1vO1I0RCjE8hlB
+   Oq13J5TSJaKAJyQlQLGLL0oDML8srSQEoyi5oxa3WUaGhiz0lWZvEjeo2
+   mi6JP2ahIIjqkP1DClG8GCn4Xspy1misOwpj1siLyATATY7PdKj3FvPY/
+   bpf2h9faTf7umq3ZK0CUc1aj6gqAGJR9qTnxyul+45T3+8zVISTYjO33Y
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="5766639"
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="463327958"
 X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="5766639"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:26:50 -0800
+   d="scan'208";a="463327958"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:45:11 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="955939638"
 X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="955939638"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.69.72])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:26:50 -0800
-Date: Thu, 11 Jan 2024 16:26:48 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Hongjian Fan <hongjian.fan@seagate.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: Question on deferring dax registration to cxl module for
- CXL_REGION
-Message-ID: <ZaCHSE13Q/KJAZQU@aschofie-mobl2>
-References: <CH0PR20MB4250F264AA40C6E9CF1F599C90682@CH0PR20MB4250.namprd20.prod.outlook.com>
+   d="scan'208";a="31204885"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jan 2024 16:45:11 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 16:45:11 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 11 Jan 2024 16:45:11 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Jan 2024 16:45:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PqIR6kI2Fr4/mJXZHdayuTF+q0gyMIqir41Kzlwjkfm0ZHRPcxh4xUvgDobDY1/hmjAOqskFvcMX0FK5enbpkRgkAqmeHYeXY5sOfMJpzabVPzvRsz3BKHK/CgUiyve/iqZdPH6Pm9osF5PcMVw1QySk6VbiDT/5+GydjDX6pJfbMHEamLP8ONnTD2c76rcyyqkLleYnm0DNWMv4E//T96dCUE/zpMs2HSkxptS+4CtZPEuGVrcB2u7b3W/1TfgisPPt0ZW/PS+7ymc3J1CDcWbAT6HxH/i6iPtcbnwP31GZEsSRlD6qCSZZyWQ3MTr78O8Cf6Eo/bk2DxRnWlibpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aS+G3KqLKHekoP5omGEZN1AewDvtgA8eMnrBmmFR/Zo=;
+ b=M5Wk9+DbMuzEekBKaYi4V4X7fN68Tnino+FkJErkhATDJkhgvtdANSgz40T5hIamk8iS3sMhRrwoi5M0l0dbw8td90pj24hRo8D2OYSmKBPFj17xmmdws/boxFWk4Hsnj1jRy/t6p7kIYb3BF1lMFlcurFY9zseMzkBxnpwN+6b070CrnTkHt+IckR3QesXR4fhddNp0OpXhhBGdvY/Kaf7evOHkHoomX7AQWkvmMdCgfdhpxZmr42qcVLZ63CYUIJhNS9JBUsbIJ52QFor92qPlWRBt2FLCw4JIHHp1lIarNzyVbwuYuRBYkdtobOsGmyI6h7g6ize1ckneXcpEZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CO6PR11MB5603.namprd11.prod.outlook.com (2603:10b6:5:35c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Fri, 12 Jan
+ 2024 00:45:07 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Fri, 12 Jan 2024
+ 00:45:07 +0000
+Date: Thu, 11 Jan 2024 16:45:04 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Yang Li <yang.lee@linux.alibaba.com>, <jonathan.cameron@huawei.com>,
+	<dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yang Li
+	<yang.lee@linux.alibaba.com>
+Subject: RE: [PATCH -next] cxl: Remove duplicated include in cdat.c
+Message-ID: <65a08b90ce17d_1eb429469@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240109004728.54703-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240109004728.54703-1-yang.lee@linux.alibaba.com>
+X-ClientProxiedBy: MW4PR04CA0151.namprd04.prod.outlook.com
+ (2603:10b6:303:85::6) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH0PR20MB4250F264AA40C6E9CF1F599C90682@CH0PR20MB4250.namprd20.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO6PR11MB5603:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4209277d-6f9e-42ac-39b7-08dc1307b8fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uLP6N65bNn6wXel+DUTh1h96jWGpSRkPaYE0rXD9CrD9C+tfktPwGHkMK3Isr/oyRLGQkX1BsgPGyVOCvqm+d70ZUnW4azzrP819dykcii+edNi1M87JDNBIfG1YVFEvlftBjT2yhWNxmNYkGhHDywtpJ4PVn0ZB3ImL5Ubg3t12emiqEzysumBE/9oD+OIXB0bbrIssBPMsBA4XDKuKuI5c5FzKX7TQlEYoszX1gOaAXHUiGuApGeo76RNZFXYybwlCOzDFmXkyomStuUV54M6GRKGe9vYpoQoR63PIf3qm1fwGpomGODxrPvmqRIjLKGR0W3x158h/NCFNJUilSx4f4epVnC4Gky3oTHOp0ZYKcbVQ2ta1IMiT8vAh4AYZtQZW9ITn+aAq6V5hmK/y1OGx7nc57ckYt29jCuxktBKOAITlgmg1jc+xY3ap1hlegk2FUgNghikHzrpI0o0prlr2R+tDEQyyo620XxIWfThpQFDuH3nxZlBnppo0nPjluIhQwfGYPElfIcgrnwwcnnMTXeXqzVmAaIgM055M6NnI4+5CkQ/944bsdsr3dYUi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(39860400002)(346002)(366004)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(26005)(5660300002)(9686003)(66476007)(38100700002)(4326008)(8676002)(41300700001)(8936002)(2906002)(66946007)(6512007)(6666004)(6506007)(478600001)(6486002)(66556008)(4744005)(316002)(83380400001)(82960400001)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dI70M/AFdhb5RZm6pvoScwxcSJxZ++O36Jx5y0y96Yjp/k4cLVzNwjkn1gf+?=
+ =?us-ascii?Q?sI408AUdG3quaDrzCoZ34dTQJnq6qYbd516emh0RZS0dgGkMuzTGfotYKSiq?=
+ =?us-ascii?Q?KyOzhSrR6mF6o6HVK7M4+jxLI/V4jxCriV7W7MzGGgWhjrbVXDHn8R/7KRiY?=
+ =?us-ascii?Q?W9IT4JLPITYAqXvipqOfitg0HdtbQcXXervxAJZNRbxNgD+UeDMdeyZD7/mM?=
+ =?us-ascii?Q?douBeb6BagOaceICmO11fDs5dKUGrBdFPAIZRK06ThdnAf3FGrQFIjHPJ0XP?=
+ =?us-ascii?Q?H5mqAnNfkEctXe8GnYSy+eAa0tilUTvTbGvlhrPf4pDr/qEgwUU97+/ShVLP?=
+ =?us-ascii?Q?V0DzYqpYT4g9X+VdmgqTQbBpou0mELHu8lWGvB5LMdFl0358d2rVM7/tEoXW?=
+ =?us-ascii?Q?spxyADlnXa8+bxKhr0qHkm3A9aiJSKlRoNK3jm/ZvEBtFhUFUmFu70AN12BX?=
+ =?us-ascii?Q?wou0saZs2PAWFmUPbgN/LR23MYwr2R0aTpi7CH+I9CmFS6Eg+jRp1UjhssN9?=
+ =?us-ascii?Q?jan3bnya047NZrOkT1uzjp/9qsN+zViyHMCOXgp4S5L70H8Q3ep4r17lT+sT?=
+ =?us-ascii?Q?wTCupUhfNV4sce8DGUX879eqw8W9V8eSTNUKCjcqj4oRrAzU+XyKWNEmF6Re?=
+ =?us-ascii?Q?kyl+evNFlU55JoO6L3vNKYkqqHbRDg1tlM3YIk/s9e0QMmC4aJnyzKb539KW?=
+ =?us-ascii?Q?saKBTrX+DIL4524T2Y9+TDaXRrFiV1Ma5/1zvObRyvWI1xdSi/vr1Fm/7v3+?=
+ =?us-ascii?Q?lpoLq5tonjxXP0Tr5GdfZi+RlEZx60r4v+ym0KgQtJQVpipnf0dk9ZcsJsUt?=
+ =?us-ascii?Q?MowrTel3W8vMVjR8k4iUH+ZY0jV/y4Y3g7o5UpTRFUB85sszBrvM9hCkKOZq?=
+ =?us-ascii?Q?j47dl3urWw8pd3xOw+BXnuDbZNazexS/1yRbgFKsbF83E3V+VEs/FBM2hat0?=
+ =?us-ascii?Q?x5sz+Db7XvHw7+hT3phJeKQJ2g53CFcJKbwXI2mohZ9OBfCv/haFeOIhdZDh?=
+ =?us-ascii?Q?yyV6vWqSTQksFn/bxKhlNNuwW3pwjZQwTKR7ru/OX9++HRVehv4rRHnYQBdl?=
+ =?us-ascii?Q?Y7AFEWa274NSYD9PSIXxr3H/E4m68S1pHGrM7COETi8nlcNnMiPHXzTEyAQu?=
+ =?us-ascii?Q?nProo6vSL14rskPluldUp3PrNAOiApvTwYGLGlVvW9nRQRFCMCv0UKK/j09M?=
+ =?us-ascii?Q?rnqao6wvkdJqLlDHXvlYpkm6ClwWKbOMCAsnozB7Wh26SJFCq1NbGLW5vMzR?=
+ =?us-ascii?Q?NAdh4qb1IMXJhZ8aA7otmKBnfgM/WA1KKd9lrAzewWWI+nw1tdPFOku4GFHV?=
+ =?us-ascii?Q?OZuwCC6Tilgg6n5BSlAjsnHLRIphvSTG5yMlXLdiA7VINF6nXB7sw76zJSXE?=
+ =?us-ascii?Q?Tr4wJjzrYVNSNvllYNmbSSPcH6jiuhqj32shst/iyDHxzeKElYCug327mmoT?=
+ =?us-ascii?Q?S9g54gCQQxX7zn3wQ4DivPm54Mh2CCHpzzwxF4v76sh6/iPXpKIgIn00/rCJ?=
+ =?us-ascii?Q?v6gjoy0T/P6uf+RZ2uk+BVmUXvSUOb2RjgWZ5qQPEHxvfQ7evPD9/QNtd7AM?=
+ =?us-ascii?Q?SU4sBFOI0/Z1vctIedFOq2t01ODI1yyEr9o6DsMeiqy8hh/6rdCIKCfc0QTd?=
+ =?us-ascii?Q?Lg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4209277d-6f9e-42ac-39b7-08dc1307b8fe
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 00:45:07.1283
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1MkIFAwouJifkJ0kW2J1irTJb95D+iah4L+TIU+Vu0g8vHnu5YtB18Wl+Z4Bce/TAvDuHCZ4xwaOA6OPJt01fZs2PCTFXsgmWzhooKivIYk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR11MB5603
+X-OriginatorOrg: intel.com
 
-On Thu, Jan 11, 2024 at 09:03:48PM +0000, Hongjian Fan wrote:
-> Hi CXL experts,
+Yang Li wrote:
+> The header files core.h is included twice in cdat.c,
+> so one inclusion can be removed.
 > 
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  drivers/cxl/core/cdat.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> I have observed the following behavior on iomem_resourece when CONFIG_CXL_REGION is enabled in the kernel.
-> 
-> CXL windows are inserted into iomem_resourece based on CEDT CFMWS. If there is only one CXL device attached to the host, the CXL window matches the soft reserved memory range, and the CXL window is inserted as the child of the PCI mem and the parent of the soft reserve. But if there are multiple CXL windows, each of the CXL window is part of the soft reserved memory range, the CXL window is inserted as the child of the soft reserved memory.
-> 
-> Function dax_hmem_platform_probe defers the dax region registration for the CXL window to cxl module.
-> However, two issues seem to occur:
->         1) If the CXL window is not the direct child of the iomem_resourece, dax_hmem_platform_probe will not be able to detect and defer it. This means that if CFMWS contains multiple CXL windows, no deferral would happen.
->         2) If a CXL1.1 device is behind the CXL window, and the dax region registration is deferred. The dax region will not be created because CXL1.1 device doesn't have the HDM decoder and other features needed by the CXL module to create the dax region.
-> 
-> DAX ( and hmem ) module is not visible to the CXL device's features behind a CXL window, so it is impossible to defer only the CXL window for CXL2.0 devices.
-> 
-> If I want to make dax region show up when a single CXL1.1 device is attached, I can see two potential approaches:
->         1) Do not defer the CXL window in dax_hmem_platform_probe.
->                 Can we simply not defer? Current code will not defer if multiple CXL windows presents. Is any issue observed when multiple CXL devices are attached?
->         2) Defer all CXL windows, and let cxl module create the dax region for CXL1.1 device.
->                 But where should this creation be? It would be a long path to handle all the unvailable features from function cxl_pci_probe to reach function devm_cxl_add_dax_region.
-> 
-> Please provide your comments.
-> 
-> 
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index f5e649407b8b..6fe11546889f 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -9,7 +9,6 @@
+>  #include "cxlmem.h"
+>  #include "core.h"
+>  #include "cxl.h"
+> -#include "core.h"
 
-Hi Hondjian Fan,
+I believe that was due to a bad merge by me. That's fixed up now with a
+better merge commit.
 
-This is familiar. In Aug '23 I stopped work on a patchset [1] aimed at
-improving the soft reserved resource handling. From that cover letter:
-
-1) Soft reserved resources were observed as sometimes being the parent
-and sometimes being the child of a region resource. Patch 1 clears up
-that inconsistency.
-
-2) Soft reserved resources were also observed as stranded after region 
-teardown, making the address space the region released unavailable for
-reallocation. Patch 2 implements soft reserved resource removal.
-
-By v3 of the set, we were rethinking the approach as Patch 2's juggling
-of soft reserved spaces seemed silly and error prone. Also, the folks who
-were hitting the soft reserved issue during hotplug were able to use CFMWS
-address space not in the Soft Reserved range as a work-around.
-
-Dan offered a couple of new approaches since then:
-(I hope I'm not misquoting)
-
-1) Insert cxl intersecting soft reserved resources into a separate
-(non iomem_resource) resource tree, when / if any CXL region assembly
-fails walk that side tree and move them all over to iomem_resource.
-
-2) Given that it is already the case that the device-dax core waits for
-cxl_acpi to mark ranges as IORES_DESC_CXL, and that we do not expect that
-to fail. It means that cxl_acpi can then turn around and ask the device-dax
-core to cache and delete the soft reserve address ranges. Then if CXL notices
-a region assembly failure it can signal device-dax to release that cached
-range as a new CXL disconnected DAX region.
-
-3) CXL acpi walks the resource range knowing that at the beginning of time
-Soft Reserved ranges are unparented making them easier to delete and
-register them as "just in case" recovery ranges to device-dax.
-
-Can you comment on whether any/all of these suggestions seems to address
-what you are seeing?
-
-Others thoughts on the approach this might take next.
-
-Thanks,
-Alison
-
-
-[1] https://lore.kernel.org/linux-cxl/cover.1692638817.git.alison.schofield@intel.com/
-
-
-
-
-
-
-> 
-> Below is the /proc/iomem output from my hardware:
-> 
-> 1) When there is a single CXL2.0 device on the host, the CXL window is inserted in PCI mem and the soft reserved region is a child of the CXL window:
-> 
->         6080000000-707fffffff : CXL Window 0
->           6080000000-707fffffff : region0
->                 6080000000-707fffffff : Soft Reserved
->                   6080000000-707fffffff : dax0.0
->                         6080000000-707fffffff : System RAM (kmem)
-> 
->         A cxl region is inserted under the CXL window by function discover_region and the dax region is registered by cxl_dax_region_probe
-> 
-> 2) When there is a single CXL1.1 device on the host, it is similar but neither cxl region nor dax is created:
-> 
->         6080000000-707fffffff : CXL Window 0
->           6080000000-707fffffff : Soft Reserved
-> 
->         HDM decoder and other CXL2.0 features are missing from the CXL1.1 device so the CXL driver will not create related CXL structures. Because of the absence of the dax region, there is no numa node created for the cxl memory and the cxl memory is not usable in user space.
-> 
-> 3) When there are multiple CXL devices, regardless CXL1.1 or 2.0, the CXL window is created under the soft reserved region:
-> 
->         6080000000-807fffffff : Soft Reserved
->           6080000000-707fffffff : CXL Window 0
->                 6080000000-707fffffff : region0
->                   6080000000-707fffffff : dax2.0
->                         6080000000-707fffffff : System RAM (kmem)
->           7080000000-807fffffff : CXL Window 1
->                 7080000000-807fffffff : dax3.0
->                   7080000000-807fffffff : System RAM (kmem)
-> 
->         Both dax regions are registered by dax_hmem_platform_probe. The cxl region is created under CXL Window for the CXL2.0 devices.
-> 
-> 
-> 
-> Thanks,
-> Hongjian Fan
-> 
-> Seagate Internal
-> 
+Thanks for spotting this though!
