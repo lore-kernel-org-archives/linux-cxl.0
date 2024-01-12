@@ -1,316 +1,156 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6355D8E0
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 08:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796425DF2D
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 09:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kmAvem62"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5578485fc0eso5142649a12.1
-        for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 00:14:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1705047256; x=1705652056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VKb3pXA3O7QJEj9qo6R8Br8Dqg0hH16HzN0jOTIU5CY=;
-        b=kmAvem62xRtqzawnQQOaqI15wcoVqj92DAXCh0Rv6MfOzPs8rndR5I4Yutt6uGi9jk
-         eIb5edVc8e92YMcnnQsdFiOPYXhc6/LNxt8ZVf5UCNHD2WiDYAXzGz/OZUqqQMsERtz3
-         9a6YwW3rC0VOoSXut8mVzUwQKiYP7tiyVTcyjYaX5n2aBBIS0/ItHBoa1Q8EJR5CEcFl
-         eoYxYsfyAaRHm/Czf/rf0TtMn65gNCMHFLkWASVWi6xLknItAZhb13PS6n28JeuRe3SO
-         GRvMG7ujotqmMJiL0bhl0TxeNk7Rs7rN2hrvasN0MvoMxDS+7TycmKFVJxWUvJKAi7GG
-         THSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705047256; x=1705652056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VKb3pXA3O7QJEj9qo6R8Br8Dqg0hH16HzN0jOTIU5CY=;
-        b=pSQVM4QO7PfJsBLMz2pfd9Mfx6LlMVvuukkZ8yILIdRbeIIg2FAQMv62JPbiMw6yT+
-         tJhtFXtD12SrH5bpn446IcpoqO4XCDURwo+5gjlbMNbkim0RbMnalis5eueovfxPb/FF
-         fRa06YrJGqVT8Kl9FD+JanM3ERfldbGIIbqhFLGYrV2bgB/+dCuTqmjZHL1+f4g6ausL
-         Dz2T3LbU1nKHfMgnHtYF1YlVZc3VMzitXxXKUrWsGplJpDjmKzszCv7c/4JNIHL8d/iN
-         ZSyKiyNckVVslNnq7URC3eAPWsncwuUSzs2mRjm9IN8W8uqKmfJVn4/kPowNatR0+3di
-         y17A==
-X-Gm-Message-State: AOJu0YwJ9Kyw6OxL5pTaNT8LPYPtfv4+i2Vj0BWCDjLRgZtGNv1ZfcBW
-	YBKngz+k2A8ufFsfuPvwkeDDYivQuKFnN6z5w1Ky2Xu1cOh+hQ==
-X-Google-Smtp-Source: AGHT+IFiFE1mg3Ou42N8EKtfdnhiQN1fItrBbzyubruEBUXHkcUgv7iMSLfYfu4GiAjCUieiEfS7XXBwbT3DdXNntPk=
-X-Received: by 2002:aa7:d859:0:b0:554:4dde:4ca6 with SMTP id
- f25-20020aa7d859000000b005544dde4ca6mr511278eds.4.1705047255771; Fri, 12 Jan
- 2024 00:14:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="W6tdYUhk"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240112092203epoutp04520adfab26b9cb54a98681222000ad91~pjyUL0tS92287322873epoutp04h
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 09:22:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240112092203epoutp04520adfab26b9cb54a98681222000ad91~pjyUL0tS92287322873epoutp04h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1705051323;
+	bh=4jtHcT9tSJUCEFikmXmbUNVIvOiUbXSr+jYDOu5VeTs=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=W6tdYUhkQHoNts6CfhSjsasweCsL1BaR8Goi/NRKL1JiYg9WdBh4sjoM1oCVmVYRg
+	 n5+J7PraQcaXdTD4FBuZXCYPSN939xq00D+g4nZ3Z1WIkf2e+VbBP/xMct8QYk2AMU
+	 cWRV9aJcaxRy65LA/sXRsE1F0GnQz6TMQRSpzhXc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240112092202epcas2p3dd24a90ee283999b34be5430a47a8bb1~pjyTznyrX1981619816epcas2p3Y;
+	Fri, 12 Jan 2024 09:22:02 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.89]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TBGJV21xFz4x9Q1; Fri, 12 Jan
+	2024 09:22:02 +0000 (GMT)
+X-AuditID: b6c32a43-721fd700000021c8-46-65a104ba8784
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	76.7B.08648.AB401A56; Fri, 12 Jan 2024 18:22:02 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com> <PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com> <PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
- <87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com> <ZZwrIoP9+ey7rp3C@memverge.com>
- <87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com> <20240109155049.00003f13@Huawei.com>
- <ZZ2Jd7/7rFD0o5S3@memverge.com> <CAAYibXhe81ez06tP5K7zGkX9P=Ot+DcSysVyDvh13aSEDD63aA@mail.gmail.com>
- <20240110141821.0000370d@Huawei.com> <CAAYibXgwqY6Og_4NqGGEni=2Xgx=DPxaMc3GdBUE6FREKVCq8w@mail.gmail.com>
- <87il3z2g03.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87il3z2g03.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Hao Xiang <hao.xiang@bytedance.com>
-Date: Fri, 12 Jan 2024 00:14:04 -0800
-Message-ID: <CAAYibXh5DWcAJrqXi-V1v61DY_Xeb8BiMGoOxn1fJ_YBc2L8KQ@mail.gmail.com>
-Subject: Re: [External] Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration
- between memory tiers
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Gregory Price <gregory.price@memverge.com>, 
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mhocko@suse.com" <mhocko@suse.com>, 
-	"tj@kernel.org" <tj@kernel.org>, "john@jagalactic.com" <john@jagalactic.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>, 
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Wei Xu <weixugc@google.com>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Subject: Question about CXL region initialization
+Reply-To: wj28.lee@samsung.com
+Sender: Wonjae Lee <wj28.lee@samsung.com>
+From: Wonjae Lee <wj28.lee@samsung.com>
+To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC: "alison.schofield@intel.com" <alison.schofield@intel.com>, KyungSan Kim
+	<ks0204.kim@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, Hojin Nam
+	<hj96.nam@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20240112092201epcms2p577b3c979bdc694a370e5952edc091f68@epcms2p5>
+Date: Fri, 12 Jan 2024 18:22:01 +0900
+X-CMS-MailID: 20240112092201epcms2p577b3c979bdc694a370e5952edc091f68
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMKsWRmVeSWpSXmKPExsWy7bCmhe4uloWpBgfe8FrcfXyBzeLDm38s
+	FkfWXmWyOLqHw+L8rFMsDqwei/e8ZPLo27KK0ePzJrkA5qhsm4zUxJTUIoXUvOT8lMy8dFsl
+	7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygjUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM
+	/OISW6XUgpScAvMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IzuA83MBS0yFftnrWVpYDwv1sXI
+	ySEhYCIx7d8H9i5GLg4hgR2MEkvOz2XqYuTg4BUQlPi7QxikRljAUKL/6B9WEFtIQE7i7u1T
+	TBBxTYk301axgNhsAuoSPzpPgsVFBKwlJjQsYQOZySywgVFi6uGnrBDLeCVmtD9lgbClJbYv
+	38oIYWtI/FjWywxhi0rcXP2WHcZ+f2w+VI2IROu9s1A1ghIPfu6GiktJfD3xF+wBCYFmRonV
+	x/pZIZwGRomOmYehtulLNF5/zwZi8wr4Smz7cwasm0VAVeJj116oGheJrTuugNnMAvIS29/O
+	YQaFBDPQm+t36YOYEgLKEkduQVXwSXQc/ssO89eOeU+YIGwliSltR6Buk5BoaNzKBmF7SExc
+	cZ8REoiBEjP3nWWZwKgwCxHUs5DsnYWwdwEj8ypGsdSC4tz01GSjAkN47Cbn525iBKc+Lecd
+	jFfm/9M7xMjEwXiIUYKDWUmE9+DzBalCvCmJlVWpRfnxRaU5qcWHGE2BPp7ILCWanA9Mvnkl
+	8YYmlgYmZmaG5kamBuZK4rz3WuemCAmkJ5akZqemFqQWwfQxcXBKNTBdrwtNF1p5XuR/4M3L
+	u7+rXUpJ13JdMeFjbuhzLotN2/YclArMsPT8Uqi7ZFOU5rkEmY8zn3eeOH7/vfXs4/tYL51O
+	rfgz+bHdbvOwytNvys98b4ucmxn4z6zuc4x5qM58u+VexyramR69k/7X6fw5jKvX/lOMoUL9
+	3EDPGOOFboEnuPf4+a+4biDJJm2zXGfXVJkP4jPuZIcc8Lveca1UyeMlQ1/IHUV9lV+qt5L7
+	P+37Y/B2V9DXd8+Pv3dYI3203X3hjZfed758NlzTeDI90OF0YO+EnCoft4pthmunvk5mebI8
+	7UJrnayXj/x54R/RPOduyX135L+sNzvHeA+nt8ImhfIKoyznVfdmT+5TYinOSDTUYi4qTgQA
+	bPXY3gYEAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240112092201epcms2p577b3c979bdc694a370e5952edc091f68
+References: <CGME20240112092201epcms2p577b3c979bdc694a370e5952edc091f68@epcms2p5>
 
-On Thu, Jan 11, 2024 at 11:02=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
- wrote:
->
-> Hao Xiang <hao.xiang@bytedance.com> writes:
->
-> > On Wed, Jan 10, 2024 at 6:18=E2=80=AFAM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> >>
-> >> On Tue, 9 Jan 2024 16:28:15 -0800
-> >> Hao Xiang <hao.xiang@bytedance.com> wrote:
-> >>
-> >> > On Tue, Jan 9, 2024 at 9:59=E2=80=AFAM Gregory Price <gregory.price@=
-memverge.com> wrote:
-> >> > >
-> >> > > On Tue, Jan 09, 2024 at 03:50:49PM +0000, Jonathan Cameron wrote:
-> >> > > > On Tue, 09 Jan 2024 11:41:11 +0800
-> >> > > > "Huang, Ying" <ying.huang@intel.com> wrote:
-> >> > > > > Gregory Price <gregory.price@memverge.com> writes:
-> >> > > > > > On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:
-> >> > > > > It's possible to change the performance of a NUMA node changed=
-, if we
-> >> > > > > hot-remove a memory device, then hot-add another different mem=
-ory
-> >> > > > > device.  It's hoped that the CDAT changes too.
-> >> > > >
-> >> > > > Not supported, but ACPI has _HMA methods to in theory allow chan=
-ging
-> >> > > > HMAT values based on firmware notifications...  So we 'could' ma=
-ke
-> >> > > > it work for HMAT based description.
-> >> > > >
-> >> > > > Ultimately my current thinking is we'll end up emulating CXL typ=
-e3
-> >> > > > devices (hiding topology complexity) and you can update CDAT but
-> >> > > > IIRC that is only meant to be for degraded situations - so if yo=
-u
-> >> > > > want multiple performance regions, CDAT should describe them for=
-m the start.
-> >> > > >
-> >> > >
-> >> > > That was my thought.  I don't think it's particularly *realistic* =
-for
-> >> > > HMAT/CDAT values to change at runtime, but I can imagine a case wh=
-ere
-> >> > > it could be valuable.
-> >> > >
-> >> > > > > > https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cMLn=
-cS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
-> >> > > > > >
-> >> > > > > > This group wants to enable passing CXL memory through to KVM=
-/QEMU
-> >> > > > > > (i.e. host CXL expander memory passed through to the guest),=
- and
-> >> > > > > > allow the guest to apply memory tiering.
-> >> > > > > >
-> >> > > > > > There are multiple issues with this, presently:
-> >> > > > > >
-> >> > > > > > 1. The QEMU CXL virtual device is not and probably never wil=
-l be
-> >> > > > > >    performant enough to be a commodity class virtualization.
-> >> > > >
-> >> > > > I'd flex that a bit - we will end up with a solution for virtual=
-ization but
-> >> > > > it isn't the emulation that is there today because it's not poss=
-ible to
-> >> > > > emulate some of the topology in a peformant manner (interleaving=
- with sub
-> >> > > > page granularity / interleaving at all (to a lesser degree)). Th=
-ere are
-> >> > > > ways to do better than we are today, but they start to look like
-> >> > > > software dissagregated memory setups (think lots of page faults =
-in the host).
-> >> > > >
-> >> > >
-> >> > > Agreed, the emulated device as-is can't be the virtualization devi=
-ce,
-> >> > > but it doesn't mean it can't be the basis for it.
-> >> > >
-> >> > > My thought is, if you want to pass host CXL *memory* through to th=
-e
-> >> > > guest, you don't actually care to pass CXL *control* through to th=
-e
-> >> > > guest.  That control lies pretty squarely with the host/hypervisor=
-.
-> >> > >
-> >> > > So, at least in theory, you can just cut the type3 device out of t=
-he
-> >> > > QEMU configuration entirely and just pass it through as a distinct=
- numa
-> >> > > node with specific hmat qualities.
-> >> > >
-> >> > > Barring that, if we must go through the type3 device, the question=
- is
-> >> > > how difficult would it be to just make a stripped down type3 devic=
-e
-> >> > > to provide the informational components, but hack off anything
-> >> > > topology/interleave related? Then you just do direct passthrough a=
-s you
-> >> > > described below.
-> >> > >
-> >> > > qemu/kvm would report errors if you tried to touch the naughty bit=
-s.
-> >> > >
-> >> > > The second question is... is that device "compliant" or does it ne=
-ed
-> >> > > super special handling from the kernel driver :D?  If what i descr=
-ibed
-> >> > > is not "compliant", then it's probably a bad idea, and KVM/QEMU sh=
-ould
-> >> > > just hide the CXL device entirely from the guest (for this use cas=
-e)
-> >> > > and just pass the memory through as a numa node.
-> >> > >
-> >> > > Which gets us back to: The memory-tiering component needs a way to
-> >> > > place nodes in different tiers based on HMAT/CDAT/User Whim. All t=
-hree
-> >> > > of those seem like totally valid ways to go about it.
-> >> > >
-> >> > > > > >
-> >> > > > > > 2. When passing memory through as an explicit NUMA node, but=
- not as
-> >> > > > > >    part of a CXL memory device, the nodes are lumped togethe=
-r in the
-> >> > > > > >    DRAM tier.
-> >> > > > > >
-> >> > > > > > None of this has to do with firmware.
-> >> > > > > >
-> >> > > > > > Memory-type is an awful way of denoting membership of a tier=
-, but we
-> >> > > > > > have HMAT information that can be passed through via QEMU:
-> >> > > > > >
-> >> > > > > > -object memory-backend-ram,size=3D4G,id=3Dram-node0 \
-> >> > > > > > -object memory-backend-ram,size=3D4G,id=3Dram-node1 \
-> >> > > > > > -numa node,nodeid=3D0,cpus=3D0-4,memdev=3Dram-node0 \
-> >> > > > > > -numa node,initiator=3D0,nodeid=3D1,memdev=3Dram-node1 \
-> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,da=
-ta-type=3Daccess-latency,latency=3D10 \
-> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,da=
-ta-type=3Daccess-bandwidth,bandwidth=3D10485760 \
-> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,da=
-ta-type=3Daccess-latency,latency=3D20 \
-> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,da=
-ta-type=3Daccess-bandwidth,bandwidth=3D5242880
-> >> > > > > >
-> >> > > > > > Not only would it be nice if we could change tier membership=
- based on
-> >> > > > > > this data, it's realistically the only way to allow guests t=
-o accomplish
-> >> > > > > > memory tiering w/ KVM/QEMU and CXL memory passed through to =
-the guest.
-> >> > > >
-> >> > > > This I fully agree with.  There will be systems with a bunch of =
-normal DDR with different
-> >> > > > access characteristics irrespective of CXL. + likely HMAT soluti=
-ons will be used
-> >> > > > before we get anything more complex in place for CXL.
-> >> > > >
-> >> > >
-> >> > > Had not even considered this, but that's completely accurate as we=
-ll.
-> >> > >
-> >> > > And more discretely: What of devices that don't provide HMAT/CDAT?=
- That
-> >> > > isn't necessarily a violation of any standard.  There probably cou=
-ld be
-> >> > > a release valve for us to still make those devices useful.
-> >> > >
-> >> > > The concern I have with not implementing a movement mechanism *at =
-all*
-> >> > > is that a one-size-fits-all initial-placement heuristic feels gros=
-s
-> >> > > when we're, at least ideologically, moving toward "software define=
-d memory".
-> >> > >
-> >> > > Personally I think the movement mechanism is a good idea that gets=
- folks
-> >> > > where they're going sooner, and it doesn't hurt anything by existi=
-ng. We
-> >> > > can change the initial placement mechanism too.
-> >> >
-> >> > I think providing users a way to "FIX" the memory tiering is a backu=
-p
-> >> > option. Given that DDRs with different access characteristics provid=
-e
-> >> > the relevant CDAT/HMAT information, the kernel should be able to
-> >> > correctly establish memory tiering on boot.
-> >>
-> >> Include hotplug and I'll be happier!  I know that's messy though.
-> >>
-> >> > Current memory tiering code has
-> >> > 1) memory_tier_init() to iterate through all boot onlined memory
-> >> > nodes. All nodes are assumed to be fast tier (adistance
-> >> > MEMTIER_ADISTANCE_DRAM is used).
-> >> > 2) dev_dax_kmem_probe to iterate through all devdax controlled memor=
-y
-> >> > nodes. This is the place the kernel reads the memory attributes from
-> >> > HMAT and recognizes the memory nodes into the correct tier (devdax
-> >> > controlled CXL, pmem, etc).
-> >> > If we want DDRs with different memory characteristics to be put into
-> >> > the correct tier (as in the guest VM memory tiering case), we probab=
-ly
-> >> > need a third path to iterate the boot onlined memory nodes and also =
-be
-> >> > able to read their memory attributes. I don't think we can do that i=
-n
-> >> > 1) because the ACPI subsystem is not yet initialized.
-> >>
-> >> Can we move it later in general?  Or drag HMAT parsing earlier?
-> >> ACPI table availability is pretty early, it's just that we don't bothe=
-r
-> >> with HMAT because nothing early uses it.
-> >> IIRC SRAT parsing occurs way before memory_tier_init() will be called.
-> >
-> > I tested the call sequence under a debugger earlier. hmat_init() is
-> > called after memory_tier_init(). Let me poke around and see what our
-> > options are.
->
-> This sounds reasonable.
->
-> Please keep in mind that we need a way to identify the base line memory
-> type(default_dram_type).  A simple method is to use NUMA nodes with CPU
-> attached.  But I remember that Aneesh said that some NUMA nodes without
-> CPU will need to be put in default_dram_type too on their systems.  We
-> need a way to identify that.
+Hello,
 
-Yes, I am doing some prototyping the way you described. In
-memory_tier_init(), we will just set the memory tier for the NUMA
-nodes with CPU. In hmat_init(), I am trying to call back to mm to
-finish the memory tier initialization for the CPUless NUMA nodes. If a
-CPUless numa node can't get the effective adistance from
-mt_calc_adistance(), we will fallback to add that node to
-default_dram_type.
-The other thing I want to experiment is to call mt_calc_adistance() on
-a memory node with CPU and see what kind of adistance will be
-returned.
+To test that regions are initialized correctly for different combinations of
+capacities, I connected two CXL devices with different capacities to a CXL v2.0
+compliant system and enabled CXL Interleaving in the BIOS settings. When the
+system boot with Linux 6.7, I noticed something strange. it succeeds in
+initializing region1 but fails to initialize region0 and displays an "HPA order
+violation" message.
 
->
-> --
-> Best Regards,
-> Huang, Ying
+Does anyone have any advice on this? Below is the log for your reference: 
+
+1) iomem
+480000000-AAAffffffff : CXL Window 0
+  480000000-XXXfffffff : region0
+    480000000-XXXfffffff : Soft Reserved
+28400000000-BBBBfffffff : CXL Window 1
+  28400000000-YYYffffffff : region1
+    28400000000-YYYffffffff : Soft Reserved
+      28400000000-YYYffffffff : dax1.0
+        28400000000-YYYffffffff : System RAM (kmem)
+
+2) dmesg - some relevant logs with CXL DEBUG enabled
+...
+[] cxl_port port1: decoder1.0: range: 0x480000000-0xXXXfffffff iw: 1 ig: 512
+[] cxl decoder1.0: Added to port port1
+[] cxl_port port2: decoder2.0: range: 0x480000000-0xXXXfffffff iw: 1 ig: 512
+[] cxl decoder2.0: Added to port port2
+[] cxl_port port2: decoder2.1: range: 0x28400000000-0xYYYffffffff iw: 1 ig: 256
+[] cxl decoder2.1: Added to port port2
+...
+[] cxl_port endpoint5: decoder5.0: range: 0x480000000-0xXXXfffffff iw: 2 ig: 256
+[] cxl_port endpoint5: decoder5.1: range: 0x28400000000-0xYYYffffffff iw: 1 ig: 256
+[] cxl_pci 0000:64:00.0: mem1:decoder5.0: construct_region region0 res: [mem 0x480000000-0xXXXfffffff flags 0x200] iw: 2 ig: 256
+[] cxl_pci 0000:64:00.0: mem1:decoder5.1: construct_region region1 res: [mem 0x28400000000-0xYYYffffffff flags 0x200] iw: 1 ig: 256
+...
+[] cxl region1: mem1:endpoint5 decoder5.1 add: mem1:decoder5.1 @ 0 next: none nr_eps: 1 nr_targets: 1
+[] cxl region1: pci0000:63:port2 decoder2.1 add: mem1:decoder5.1 @ 0 next: mem1 nr_eps: 1 nr_targets: 1
+[] cxl region1: pci0000:63:port2 iw: 1 ig: 256
+[] cxl region1: pci0000:63:port2 target[0] = 0000:63:02.0 for mem1:decoder5.1 @ 0
+[] cxl_region region1: region1: register dax_region1
+...
+[] cxl_port endpoint6: decoder6.0: range: 0x480000000-0xXXXfffffff iw: 2 ig: 256
+...
+[] cxl region0: mem0:endpoint6 decoder6.0 add: mem0:decoder6.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+[] cxl region0: pci0000:3d:port1 decoder1.0 add: mem0:decoder6.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
+[] cxl region0: endpoint5: HPA order violation region1:[mem 0x28400000000-0xYYYffffffff flags 0x200] vs [mem 0x480000000-0xXXXfffffff flags 0x200]
+[] cxl region0: endpoint5: failed to allocate region reference
+
+
+Looking at the old history, there was an issue with "HPA order violation" and a
+patch was applied, could this be related?
+: https://lore.kernel.org/linux-cxl/20230905211007.256385-1-alison.schofield@intel.com/
+
+
+FYI, As an experiment, I tried deleting the below error handling code in
+cxl/core/region.c and both region0 and 1 are initialized successfully.
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3e817a6f94c6..ed08ce7840df 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -771,7 +771,6 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+                                "%s: HPA order violation %s:%pr vs %pr\n",
+                                dev_name(&port->dev),
+                                dev_name(&iter->region->dev), ip->res, p->res);
+-                       return ERR_PTR(-EBUSY);
+                }
+        }
+
+
+Any help would be appreciated.
+
+Thank you,
+Wonjae
