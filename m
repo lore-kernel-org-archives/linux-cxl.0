@@ -1,208 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AED4A10;
-	Fri, 12 Jan 2024 01:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTKpz+tz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705024491; x=1736560491;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=FwKaBh70qWbjuPirs19qbToC0mDvJw0dkUB7bx+F+is=;
-  b=GTKpz+tz1ubGudneBaKAuqeRWSnAO2qWD8izohrAjSCMl25pMgoOMnXN
-   F6/MqPobXX6fA/fwvwdlJUPsnvugCblndd71YBjSiSDCVGItF1XXwCj8P
-   AE5whB81xvjWSAAkjp9uGXTyUZRDa9VuW8Qmaj68FjFiv5wzmHhzDRi17
-   ould+IEfvDAlLhviSg5mG4c9yS9biAWkn1VaN4k0LLtI9dW6VmW+IA9bQ
-   15GpkFublok3YXVRekde76wf3SHw2ZTQEI+RIOVr2QlIAE9bkV877Z30f
-   WFSA/v253VVPYHlLSZlOLDvDXlVDc4sAULkGm/gcu5qQQfAu7qr/XYzj0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="6140958"
-X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
-   d="scan'208";a="6140958"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 17:54:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="853145257"
-X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
-   d="scan'208";a="853145257"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.125.11])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 17:54:49 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Thu, 11 Jan 2024 17:54:45 -0800
-Subject: [PATCH] cxl/pci: Skip irq features if MSI/MSI-X are not supported
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5085B5D8
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 06:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="124708289"
+X-IronPort-AV: E=Sophos;i="6.04,188,1695654000"; 
+   d="scan'208";a="124708289"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 15:27:14 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 0AF46CD6C7
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 15:27:12 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 4BF11D67AD
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 15:27:11 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id D855F200989FB
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 15:27:10 +0900 (JST)
+Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 349761A0070;
+	Fri, 12 Jan 2024 14:27:10 +0800 (CST)
+From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/core: use sysfs_emit() for attr's _show()
+Date: Fri, 12 Jan 2024 14:27:09 +0800
+Message-Id: <20240112062709.2490947-1-ruansy.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240111-dont-fail-irq-v1-1-802c22a79ecb@intel.com>
-X-B4-Tracking: v=1; b=H4sIAOSboGUC/3XMQQ6CMBCF4auQWTumUwiiK+9hWFQ6lUmwxbYhG
- sLdrexd/i953wqJo3CCS7VC5EWSBF+CDhUMo/EPRrGlQSvdKFId2uAzOiMTSnyhObc1qbrtnHJ
- QPnNkJ+/du/WlR0k5xM/OL/Rb/0kLIWHTqJPWneW71VfxmafjEJ7Qb9v2BSWdLmKqAAAA
-To: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ira Weiny <ira.weiny@intel.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705024489; l=4847;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=FwKaBh70qWbjuPirs19qbToC0mDvJw0dkUB7bx+F+is=;
- b=TPrHYderiYPCBjIAPWa3WlyGfnuWk6Uf2Ua072gqo5g3dwGpo1CtXvum/CVBM7Jy1LYWi9NXZ
- S+xzLPpQo2/Bq5xyr6Mhk831Rk42Nt8QLHcqKNspofmTDBQ0d0rny/P
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28114.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28114.005
+X-TMASE-Result: 10--2.834700-10.000000
+X-TMASE-MatchedRID: 5rkJ48FE5MzZ+HKC8eTMak7nLUqYrlslFIuBIWrdOeOjEIt+uIPPOOWs
+	WsO3yC+RZtDa42fsjEN0CabJqrYNnB8TzIzimOwPlpYqKNmWxsHZs3HUcS/scCq2rl3dzGQ1XUB
+	SXduZ9O7h/Cxbl++FlToCb6I4Tl5YoOoc79uuBhs75tuZwLS74H5KIQES6nKmDfTS0q6f4dKtxF
+	yiY+8Om2GrQMK2XG5zGIoA/ljtOSEVxRB/din+uJ07T8ZSLiAVvR84/OmB1wQp4n8eQBnwiw==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-CXL 3.1 Section 3.1.1 states:
+sprintf() is deprecated for sysfs, use preferred sysfs_emit() instead.
 
-	"A Function on a CXL device must not generate INTx messages if
-	that Function participates in CXL.cache protocol or CXL.mem
-	protocols."
-
-The generic CXL memory driver only supports devices which use the
-CXL.mem protocol.  The current driver attempts to allocate MSI/MSI-X
-vectors in anticipation of their need for mailbox interrupts or event
-processing.  However, the above requirement does not require a device to
-support interrupts, only that they use MSI/MSI-X.  For example, a device
-may disable mailbox interrupts and be configured for firmware first
-event processing and function well with the driver.
-
-Rather than fail device probe if interrupts are not supported; flag that
-irqs are not enabled and avoid features which require interrupts.
-Emit messages appropriate for the situation to aid in debugging should
-device behavior be unexpected due to a failure to allocate vectors.
-
-Note that it is possible for a device to have host based event
-processing through polling.  However, the driver does not support
-polling and it is not anticipated to be required.  Leave that case to
-the future if such a device comes along.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 ---
-Changes in v1:
-- [djbw: remove persistent irq boolean]
-- [djbw: Simplify error messages]
-- [Alison: spell check]
-- [iweiny: test]
-- Link to RFC: https://lore.kernel.org/r/20240108-dont-fail-irq-v1-1-4407228debd2@intel.com
----
- drivers/cxl/pci.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/cxl/core/memdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 0155fb66b580..bd12b97bb38e 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -381,7 +381,7 @@ static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
- 	return rc;
- }
- 
--static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
-+static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 2f43d368ba07..dae8802ecdb0 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -114,7 +114,7 @@ static DEVICE_ATTR_RO(serial);
+ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+ 			      char *buf)
  {
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
- 	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
-@@ -443,6 +443,11 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
- 	if (!(cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ))
- 		return 0;
- 
-+	if (!irq_avail) {
-+		dev_err(cxlds->dev, "Mailbox irq enabled but no interrupt vectors.\n");
-+		return 0;
-+	}
-+
- 	msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
- 	irq = pci_irq_vector(to_pci_dev(cxlds->dev), msgnum);
- 	if (irq < 0)
-@@ -587,7 +592,7 @@ static int cxl_mem_alloc_event_buf(struct cxl_memdev_state *mds)
- 	return devm_add_action_or_reset(mds->cxlds.dev, free_event_buf, buf);
+-	return sprintf(buf, "%d\n", dev_to_node(dev));
++	return sysfs_emit(buf, "%d\n", dev_to_node(dev));
  }
+ static DEVICE_ATTR_RO(numa_node);
  
--static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
-+static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
- {
- 	int nvecs;
- 
-@@ -604,9 +609,9 @@ static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
- 				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
- 	if (nvecs < 1) {
- 		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
--		return -ENXIO;
-+		return false;
- 	}
--	return 0;
-+	return true;
- }
- 
- static irqreturn_t cxl_event_thread(int irq, void *id)
-@@ -742,7 +747,7 @@ static bool cxl_event_int_is_fw(u8 setting)
- }
- 
- static int cxl_event_config(struct pci_host_bridge *host_bridge,
--			    struct cxl_memdev_state *mds)
-+			    struct cxl_memdev_state *mds, bool irq_avail)
- {
- 	struct cxl_event_interrupt_policy policy;
- 	int rc;
-@@ -754,6 +759,11 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	if (!host_bridge->native_cxl_error)
- 		return 0;
- 
-+	if (!irq_avail) {
-+		dev_info(mds->cxlds.dev, "No interrupt vectors, no polling, skip event processing.\n");
-+		return 0;
-+	}
-+
- 	rc = cxl_mem_alloc_event_buf(mds);
- 	if (rc)
- 		return rc;
-@@ -788,6 +798,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	struct cxl_register_map map;
- 	struct cxl_memdev *cxlmd;
- 	int i, rc, pmu_count;
-+	bool irq_avail;
- 
- 	/*
- 	 * Double check the anonymous union trickery in struct cxl_regs
-@@ -845,11 +856,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	else
- 		dev_warn(&pdev->dev, "Media not active (%d)\n", rc);
- 
--	rc = cxl_alloc_irq_vectors(pdev);
--	if (rc)
--		return rc;
-+	irq_avail = cxl_alloc_irq_vectors(pdev);
- 
--	rc = cxl_pci_setup_mailbox(mds);
-+	rc = cxl_pci_setup_mailbox(mds, irq_avail);
- 	if (rc)
- 		return rc;
- 
-@@ -908,7 +917,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		}
- 	}
- 
--	rc = cxl_event_config(host_bridge, mds);
-+	rc = cxl_event_config(host_bridge, mds, irq_avail);
- 	if (rc)
- 		return rc;
- 
-
----
-base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-change-id: 20240108-dont-fail-irq-a96310368f0f
-
-Best regards,
 -- 
-Ira Weiny <ira.weiny@intel.com>
+2.34.1
 
