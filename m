@@ -1,177 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB3462D
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 00:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B6E651
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jan 2024 00:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZTllXUn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKGj1X0F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705018562; x=1736554562;
+  t=1705019210; x=1736555210;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=GyYNfeysuM5tyYQTLrnvP0V0ckzLHYU/ZjclVvguVso=;
-  b=IZTllXUnl6mCyWkSAtbHT+TLhyeQQvUfGl/Sdx8SYyeM32VJl/iAwZvU
-   e07eLf1ivm1f2HGj3d41iNGYHTc/SjLMEtnOXEVgu701QOYm96iLDJltK
-   c6t58DLBaF8V6bT3TrgstZXm1dOdv4Bwht5IyzlrrzJV2y8AJnYgW+OdD
-   4jvyZUBf8jot+HF5HBxUpOArjqxLHnG7Bjfj0/dtDFoZB2kyvy6DjDhGI
-   ok0frTIKA1gAHHOqMcWjg6w8gPQr8oTMt0zX+DvtTvusv/j/4WfQs5Cn6
-   lTGwRudiQ/RYtUJDLOmNF59sFMLhyq0qCNRv28SnuRIFdZIVaqGhDST4E
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="6403807"
+   mime-version:in-reply-to;
+  bh=3E+Vi8Ao0s6+OnPrJwv+CL0o6Z63xYopDERSSAMIybM=;
+  b=NKGj1X0FJv6fzfnvQqrDh3wOUrCyNKyTHoCgWP92bvt1pYUbii3itPNe
+   Vx/dIWpU9sTVzqRuHYLSaYlTx564vW01HxgVBhYRDmdc6kKRD4GNggnKr
+   LivXLOX3g/GP/S3BwWWG6yTrpphp2rUSTQjC4TyUgfOnE6HcoSk22aWYJ
+   XNyRwLLd40RgmEi+05qDTCnkkW/PCU7rgntCggSxoEAUXUjJ6Hc26tlFD
+   Nwzl9OiBVs/MLnTOR+n4vkt1JXbd5yC2xsIxMiT4KoIVqG+aPC6bH+20H
+   A/6imD/awGEDt/I/dUEyIrkIEHxwBPXbEVzB5Sonx0SiOm4nPp4dXllpO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="5766639"
 X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="6403807"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:16:01 -0800
+   d="scan'208";a="5766639"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:26:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="1114030994"
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="955939638"
 X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
-   d="scan'208";a="1114030994"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jan 2024 16:15:47 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jan 2024 16:15:46 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 11 Jan 2024 16:15:46 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 11 Jan 2024 16:15:46 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XqJ7A0YCd1lPTMb5YhKoRo4ETlttmTlUBTDY0+VK0kLS1Q/e7o7txwxXX3s9foJsCfIjJeD4FjCbmnmAYqWWwRu1Fmw4bGjXrmVd8wgJE3GBuHT20zNQAjVHWjvtqTzTcSe+Iid6iWDNVTsUgQ0b52Ic24+JR/gG7a+4sYzrwrDNn8MMdMYps3VGoPX3PXEyKMGxjHiG09+L/p8r2YxjRwkmfKTXi/QMCDGQF1uKCa0NnYoXytTmzqlJBcs8fE41pMj+hvzR06bZB04k4Prh4q74eWFFpvYiy98FPggkEts0JoBnO1sRjz2jUE0KrVz3iBbOzSYnbwKOTLjNPkKJTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2XuncVVNoKbpkck0t599tnkzj5kHw30pRlqdyVXonJs=;
- b=Zog2ZbEsiaG8Boz05M9QoVDX7Cq56WFJkOCcVsOf2rB2n4IOpTSJuGjdQ2psmJejhTpuqnABm8WhVIP42ynj9PiPk2CS6JidDa7I0H4gm2+8c06nyJpxKLqjURqBhuzl1z5oO1+bBkUWXldsEommd271D/lUO7rQpc84v3lWCeUk6qFAI4SqAa2swoKU9Av8T5DDG+REPQzgk5v3Sy/kGhwpRabOndokqXGPeqT8el/xl06XWTRw+K1M3CT+EuQ54mudyBu4J1BWBW7kdULQLwnyvSoZyxPjym4NA1wupMxkBCliwIzK6RFWXt/zJJ/wWkQ0VIeTh7oxIwGCo+IrAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB8175.namprd11.prod.outlook.com (2603:10b6:208:44f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.17; Fri, 12 Jan
- 2024 00:15:44 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Fri, 12 Jan 2024
- 00:15:44 +0000
-Date: Thu, 11 Jan 2024 16:15:41 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>
-CC: Dan Williams <dan.j.williams@intel.com>, Joao Martins
-	<joao.m.martins@oracle.com>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: RE: [PATCH ndctl v2] test/daxctl-create.sh: remove region and dax
- device assumptions
-Message-ID: <65a084ade3b42_1eb42946b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240111-vv-daxctl-create-v2-1-1052c8390c5d@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240111-vv-daxctl-create-v2-1-1052c8390c5d@intel.com>
-X-ClientProxiedBy: MW4P222CA0002.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="955939638"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.69.72])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 16:26:50 -0800
+Date: Thu, 11 Jan 2024 16:26:48 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Hongjian Fan <hongjian.fan@seagate.com>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: Question on deferring dax registration to cxl module for
+ CXL_REGION
+Message-ID: <ZaCHSE13Q/KJAZQU@aschofie-mobl2>
+References: <CH0PR20MB4250F264AA40C6E9CF1F599C90682@CH0PR20MB4250.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB8175:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73a46b8d-bf6d-498e-fc03-08dc13039e4c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x4rpSnrzZ6NdH72fPEu89vRZRovQqegDOzUyzdiFVCP/49BQccnY8v8n7O4H2IvjLYxStqHwCcsZBKHCProN0U6PnSi8jJtngWnaZOfmUuBwNtXhCPmI3bORqj+EWCm+drltn/Ng2igLa78dnc7yN2P0aDEXisHzZ64f2cb8TgmSWJM02HGPR764axO77sInhbu258eSrhIZzuIPsob7Sbp6xUZivLhEb5yU0hPneakdKdlWsWBdQWkw2j00nBUEeW9+EEscQQuBtmElEq17e/9kmDH/afq/jN/4K8zWkS9RQWXOA6YDPaY/FUioHDGiruAovwP41460sS+UHiEA1ESLNdUdWrBMowo48EZVtuByEDNKXz8akRcMPiFG0h4NqSYC752jrWwXDW9tDP4D/8bkbx6cg1yQJ6pAhLdIwWw0o2tG28vB/tJbFwAWLwPcOKKVtiuONnAVNksH2K4xnGe0lU1+7sFyZRcEdLApvmxfgmBaK+GNtSAcxUWvRCwdtG/KYwf4rOEvmBEnPgt0LmuUUr1tI4ItosCGUVNpkfc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(346002)(376002)(136003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(82960400001)(38100700002)(86362001)(107886003)(6506007)(26005)(6512007)(9686003)(83380400001)(6666004)(316002)(8936002)(8676002)(66476007)(966005)(478600001)(54906003)(66946007)(66556008)(6486002)(2906002)(41300700001)(5660300002)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xCigdt/OH2pkkePcW20ILydewBFJEm2TRg1DYSoKagRxufzZgM2P2Kh2xBNC?=
- =?us-ascii?Q?5BuAyj0MUdyKJ9edYpbwVk/eFF4eVxAN14R4o9zzJHaqWDHFAIjbNu1iPGGs?=
- =?us-ascii?Q?CgsXd1KtYzJuZHaCpXIfYY2FGeWZyGTdpfueeDBfTQGek8IInib+k0XfqpSl?=
- =?us-ascii?Q?YThe8oRWVpp2+E7U8ZejLkpSym4g5HHRaxZE6C/a9MhMqj2IiSq3d9GYH8wy?=
- =?us-ascii?Q?7fKtPvCcCn6C1BsDK3JeanH89FiKrKL+bpzyKzELcdj/vGMbQ3sUabKuWLlH?=
- =?us-ascii?Q?FxuX3iOvbzFWNwMNI+94qFXVSjr9gSF52RMzbtn5cKCJWGiz2P3nYspOS52k?=
- =?us-ascii?Q?EmtMv5xmxeYYtTLMHQusL1bmiI+yfHeiRbnNbekDSTCPUM4opvi5+F6enbMp?=
- =?us-ascii?Q?icJ2MTb1A4TKUms6cEG1lOMXJ55Bj9844N9vGTgDmF8pmkztvrunHyop3lVn?=
- =?us-ascii?Q?13vMehHz6h2w0oAuOEoFC0aDXjLJERnawWnLwrer7+c+2jVfOgu+MsScEhlj?=
- =?us-ascii?Q?zrKhoXE33cPFla79U+qalYcIcgrOzwctUJGV+2Nqja46g8bD/D8e0sa4/fR7?=
- =?us-ascii?Q?5wJYc34eV/pwS/Le/ZyUtjedLw4lvL7P6MiVY4cKfSPWpbYflThU2QFVhAyR?=
- =?us-ascii?Q?AeHIGIdffHzBr3EdsuF3LY0FpngN0Dn4hQCdcsFQydg6JWlCMCj/nyQCCD3T?=
- =?us-ascii?Q?m3TwfAOcqb35wWoXji7GLbZ2ZpS2yTo/kjRBSoWhPUV/+Fu4bIjWRd89og36?=
- =?us-ascii?Q?yp5jduc9iWe9g7Bipo/QpfyXPsD5KtBPyRmtHibSZPv0VLPCP0ZZhKKMFs9u?=
- =?us-ascii?Q?iLi+q9zFypF+WoH2TZe2jLa5xcbVjHomjVAdo8+CFHcvtOm3WYDtnYLoE7c1?=
- =?us-ascii?Q?pT9N3DPBLShmbVPgHdcJKjsgplBxXvxqouCqnfpL6bAP7al+AV/7thUrOn2A?=
- =?us-ascii?Q?Ue5boTxvUX9kMKRoin+FRKYZE19u1VKCuVTnPFs0q1T2HjgqLfTXL1HEsBZR?=
- =?us-ascii?Q?cZ/mH5cgkn9XGy86/P5adZqttG6fU9NZzX6biBtaJFhrfPR1UrtkL4MmMxzR?=
- =?us-ascii?Q?96Qos+fVYr7S8HWIkOOSZ9hpdqmzElfWlt9tMW1xG43neKrFnc3XPDLcqlVF?=
- =?us-ascii?Q?OXZRoB3bdn61g1i2dsiZ4mzeLOz8CWwPJJhE07nhX4nGWnBcY1SWU/qylwcw?=
- =?us-ascii?Q?5YZt7VP45fEg4paGFU7F8slBzKoD389HTn3r73PQh1ihEmJ29iE69dZ6glyH?=
- =?us-ascii?Q?LS5KHlDX/V9Gq4HgxTjgLy7FRQtpRgSWPy4+Mr3bnWUX2BWAQ6VxDvFIhmem?=
- =?us-ascii?Q?jhhNvgj5GhtVjkfZM6tboj0AYWshkw7WUEGSou/P3IPH97MODq2balCGUQIy?=
- =?us-ascii?Q?hPxkUa7l9mNqTt4uv1KmMNIj57IjGpb04LrI2ZQVZgsaLqcsyWdRdaukds8m?=
- =?us-ascii?Q?SFRSdgmbyPJ+aRuMbjcqJHJNwAGA8CnUko2lAblODyXVWsvlrFJAZVbgvOdw?=
- =?us-ascii?Q?DUIZebwyMrWGDjMsBtmP7eGq/23bPm6mZTLlE/pHslhxGvvSjLEJiBTT61Wk?=
- =?us-ascii?Q?91oFQsuU2Ak9er+imoshEK5c/AkEIsaf3zqJVO2ySFFt/csOoXcf3s0Rehtt?=
- =?us-ascii?Q?VA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73a46b8d-bf6d-498e-fc03-08dc13039e4c
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 00:15:44.3609
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XepEeK3ro7FOeDSGoPzILEsFnjwnKm9zZSViZ8fM7I12vGyV+8G7jwNWiDa3j/dGICa9YA6TPvipv3NrgRdVsVM6NBhREQVR+hKCF6HtTKw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8175
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH0PR20MB4250F264AA40C6E9CF1F599C90682@CH0PR20MB4250.namprd20.prod.outlook.com>
 
-Vishal Verma wrote:
-> The daxctl-create.sh test had some hard-coded assumptions about what dax
-> device it expects to find, and what region number it will be under. This
-> usually worked when the unit test environment only had efi_fake_mem
-> devices as the sources of hmem memory. With CXL however, the region
-> numbering namespace is shared with CXL regions, often pushing the
-> efi_fake_mem region to something other than 'region0'.
+On Thu, Jan 11, 2024 at 09:03:48PM +0000, Hongjian Fan wrote:
+> Hi CXL experts,
 > 
-> Remove any region and device number assumptions from this test so it
-> works regardless of how regions get enumerated.
 > 
-> Cc: Joao Martins <joao.m.martins@oracle.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
-> Changes in v2:
-> - Fix hmem region selection in case the first dax region is not an hmem
->   one (Dan)
-> - Link to v1: https://lore.kernel.org/r/20240110-vv-daxctl-create-v1-1-01f5d58afcd8@intel.com
-> ---
->  test/daxctl-create.sh | 58 ++++++++++++++++++++++++++-------------------------
->  1 file changed, 30 insertions(+), 28 deletions(-)
+> I have observed the following behavior on iomem_resourece when CONFIG_CXL_REGION is enabled in the kernel.
 > 
-> diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
-> index d319a39..c093cb9 100755
-> --- a/test/daxctl-create.sh
-> +++ b/test/daxctl-create.sh
-> @@ -29,14 +29,14 @@ find_testdev()
->  	fi
->  
->  	# find a victim region provided by dax_hmem
-> -	testpath=$("$DAXCTL" list -r 0 | jq -er '.[0].path | .//""')
-> -	if [[ ! "$testpath" == *"hmem"* ]]; then
-> +	region_id="$("$DAXCTL" list -R | jq -r '.[] | select(.path | contains("hmem")) | .id')"
-> +	if [[ ! "$region_id" ]]; then
+> CXL windows are inserted into iomem_resourece based on CEDT CFMWS. If there is only one CXL device attached to the host, the CXL window matches the soft reserved memory range, and the CXL window is inserted as the child of the PCI mem and the parent of the soft reserve. But if there are multiple CXL windows, each of the CXL window is part of the soft reserved memory range, the CXL window is inserted as the child of the soft reserved memory.
+> 
+> Function dax_hmem_platform_probe defers the dax region registration for the CXL window to cxl module.
+> However, two issues seem to occur:
+>         1) If the CXL window is not the direct child of the iomem_resourece, dax_hmem_platform_probe will not be able to detect and defer it. This means that if CFMWS contains multiple CXL windows, no deferral would happen.
+>         2) If a CXL1.1 device is behind the CXL window, and the dax region registration is deferred. The dax region will not be created because CXL1.1 device doesn't have the HDM decoder and other features needed by the CXL module to create the dax region.
+> 
+> DAX ( and hmem ) module is not visible to the CXL device's features behind a CXL window, so it is impossible to defer only the CXL window for CXL2.0 devices.
+> 
+> If I want to make dax region show up when a single CXL1.1 device is attached, I can see two potential approaches:
+>         1) Do not defer the CXL window in dax_hmem_platform_probe.
+>                 Can we simply not defer? Current code will not defer if multiple CXL windows presents. Is any issue observed when multiple CXL devices are attached?
+>         2) Defer all CXL windows, and let cxl module create the dax region for CXL1.1 device.
+>                 But where should this creation be? It would be a long path to handle all the unvailable features from function cxl_pci_probe to reach function devm_cxl_add_dax_region.
+> 
+> Please provide your comments.
+> 
+> 
 
-/me learned a new bash'ism for testing empty variables, I like that
-better than [ -z $region_id ]
+Hi Hondjian Fan,
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+This is familiar. In Aug '23 I stopped work on a patchset [1] aimed at
+improving the soft reserved resource handling. From that cover letter:
+
+1) Soft reserved resources were observed as sometimes being the parent
+and sometimes being the child of a region resource. Patch 1 clears up
+that inconsistency.
+
+2) Soft reserved resources were also observed as stranded after region 
+teardown, making the address space the region released unavailable for
+reallocation. Patch 2 implements soft reserved resource removal.
+
+By v3 of the set, we were rethinking the approach as Patch 2's juggling
+of soft reserved spaces seemed silly and error prone. Also, the folks who
+were hitting the soft reserved issue during hotplug were able to use CFMWS
+address space not in the Soft Reserved range as a work-around.
+
+Dan offered a couple of new approaches since then:
+(I hope I'm not misquoting)
+
+1) Insert cxl intersecting soft reserved resources into a separate
+(non iomem_resource) resource tree, when / if any CXL region assembly
+fails walk that side tree and move them all over to iomem_resource.
+
+2) Given that it is already the case that the device-dax core waits for
+cxl_acpi to mark ranges as IORES_DESC_CXL, and that we do not expect that
+to fail. It means that cxl_acpi can then turn around and ask the device-dax
+core to cache and delete the soft reserve address ranges. Then if CXL notices
+a region assembly failure it can signal device-dax to release that cached
+range as a new CXL disconnected DAX region.
+
+3) CXL acpi walks the resource range knowing that at the beginning of time
+Soft Reserved ranges are unparented making them easier to delete and
+register them as "just in case" recovery ranges to device-dax.
+
+Can you comment on whether any/all of these suggestions seems to address
+what you are seeing?
+
+Others thoughts on the approach this might take next.
+
+Thanks,
+Alison
+
+
+[1] https://lore.kernel.org/linux-cxl/cover.1692638817.git.alison.schofield@intel.com/
+
+
+
+
+
+
+> 
+> Below is the /proc/iomem output from my hardware:
+> 
+> 1) When there is a single CXL2.0 device on the host, the CXL window is inserted in PCI mem and the soft reserved region is a child of the CXL window:
+> 
+>         6080000000-707fffffff : CXL Window 0
+>           6080000000-707fffffff : region0
+>                 6080000000-707fffffff : Soft Reserved
+>                   6080000000-707fffffff : dax0.0
+>                         6080000000-707fffffff : System RAM (kmem)
+> 
+>         A cxl region is inserted under the CXL window by function discover_region and the dax region is registered by cxl_dax_region_probe
+> 
+> 2) When there is a single CXL1.1 device on the host, it is similar but neither cxl region nor dax is created:
+> 
+>         6080000000-707fffffff : CXL Window 0
+>           6080000000-707fffffff : Soft Reserved
+> 
+>         HDM decoder and other CXL2.0 features are missing from the CXL1.1 device so the CXL driver will not create related CXL structures. Because of the absence of the dax region, there is no numa node created for the cxl memory and the cxl memory is not usable in user space.
+> 
+> 3) When there are multiple CXL devices, regardless CXL1.1 or 2.0, the CXL window is created under the soft reserved region:
+> 
+>         6080000000-807fffffff : Soft Reserved
+>           6080000000-707fffffff : CXL Window 0
+>                 6080000000-707fffffff : region0
+>                   6080000000-707fffffff : dax2.0
+>                         6080000000-707fffffff : System RAM (kmem)
+>           7080000000-807fffffff : CXL Window 1
+>                 7080000000-807fffffff : dax3.0
+>                   7080000000-807fffffff : System RAM (kmem)
+> 
+>         Both dax regions are registered by dax_hmem_platform_probe. The cxl region is created under CXL Window for the CXL2.0 devices.
+> 
+> 
+> 
+> Thanks,
+> Hongjian Fan
+> 
+> Seagate Internal
+> 
