@@ -1,180 +1,246 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E593017BD0
-	for <linux-cxl@vger.kernel.org>; Sat, 13 Jan 2024 22:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACF015C6
+	for <linux-cxl@vger.kernel.org>; Sun, 14 Jan 2024 00:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjxIkuCg"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78350871784so57397485a.1
-        for <linux-cxl@vger.kernel.org>; Sat, 13 Jan 2024 14:17:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705184233; x=1705789033; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PoQlO4MKUIvweMwdVro8g0ITgnHI1IyT1pBZzi+Gnv4=;
-        b=GjxIkuCgmjRu00nG9Sa3xX7mmaBqq+njNtqPu1W7Agr0kGZTpEfNb9dc3qu1GTZTBy
-         RM886mx2cHN+jYWEzZtvoXtox1u9plbIRMlxGkAJdqV7cS354tk2MFOjov612xFK/L3x
-         ou2Lx17CHOEHyHAxoGH2bvEs1dI05LeuCYfTyhIDB06A+q/cVr1v7A6SZVBL31IYS3pl
-         MZz3V7lHixjZiVRcgmqysCaigqxaBm4PvKfCGOPZlZFf6ipJMWRm2/Jw+UaqHedQdhvN
-         eLY5HHFBohvKWuCgNNX1cP0W5DEwpPqI/4oa9oQRKX8bsZXh5Uo7E53GHg5eblqTsLMj
-         UWkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705184233; x=1705789033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PoQlO4MKUIvweMwdVro8g0ITgnHI1IyT1pBZzi+Gnv4=;
-        b=xL3vGvuQz7t5L4rs2hLfcv5UEOYaFPtcITvENwL6ozedc576sitMeIoZ1tvmRYdjF/
-         2KXlLgFHttVRkIadvKTEKQn6a2ZgW3AmwQfiNiSrIJVKRt5EeClXrXsxg5Rzli/+KUS6
-         sg1wS+uLhcwG75Vw9ii4uvILmB1JggfoD28cRLPsSGuJ2x2CeHsC7mWC5oIpA7TJAWD3
-         fG6H+0GCNtn+/6Z9IsrxUAiY9UhdGwTehRUw70z+tTfyLz74ibFEwWcA5czMdyo0ahUa
-         Pr7XE6UYCV2gP4/9XUgYAY6yNwi5HEMutaL9TeIohZxmmOGUlpeCpLIHHZZLSKD//aBd
-         s2LQ==
-X-Gm-Message-State: AOJu0YxeZ4KcGjTyUfLKNvcOMq6SIlNTi/+AwMJlNA96wh3haUrKsKMS
-	sXtw9W+M8f5SPYRPk91Tsj9W7WT5HPCi7vqiglTTkIv7h11wQw==
-X-Google-Smtp-Source: AGHT+IHsK+p/V02eOSPdiecI6IrJhpKWVGzdV/UL9ZxwDqGmqwc2mYi/Sm/DUXLr0kD5qxnanSxnaoLLUWV4GrYzHxY=
-X-Received: by 2002:a05:620a:1245:b0:783:2c23:271e with SMTP id
- a5-20020a05620a124500b007832c23271emr3929034qkl.138.1705184232667; Sat, 13
- Jan 2024 14:17:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DyKfK1oV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705192498; x=1736728498;
+  h=date:from:to:cc:subject:message-id;
+  bh=qWhhp2kRRChezHXqEomVtQlfp3/d5+UuEkMSJ+VEm1E=;
+  b=DyKfK1oV4/oUhhzoxN++DD+Zo4M9Ew+lp0BJohQiBQ8muTiq6HquE9G5
+   xZ+UPJHRkBL1Ezx2p8BUg9PnMtD239yWkE+mgKk7NmEjluDCRBUhejpPw
+   27mNnbhyTMoGZ0jZBZMTFHDQBSa+AnZltDsC6JSKZOrvMfHzQZXfMqNrT
+   r4Dl9qgk9WZyeoAvkMgAis03gaGpMKJwqR6KH8UUV0nXusEzfZAqz935K
+   vl8RcW/brTShMjmEUNIlN1qygX3Ieqs/b8+qG+wp+ZKA/z4zANmuQVT2v
+   Xumalx5ynXgV043uEUjpLthRxmcQpjELhwg6nEJbjjgmNhENdYUp6cK80
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10952"; a="18021898"
+X-IronPort-AV: E=Sophos;i="6.04,193,1695711600"; 
+   d="scan'208";a="18021898"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2024 16:34:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10952"; a="776372729"
+X-IronPort-AV: E=Sophos;i="6.04,193,1695711600"; 
+   d="scan'208";a="776372729"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 13 Jan 2024 16:34:55 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOoSj-000B3W-0E;
+	Sun, 14 Jan 2024 00:34:53 +0000
+Date: Sun, 14 Jan 2024 08:34:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 73bf93edeeea866b0b6efbc8d2595bdaaba7f1a5
+Message-ID: <202401140814.piFmKuxR-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20240111145905.19797-1-Jonathan.Cameron@huawei.com>
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date: Sat, 13 Jan 2024 17:16:59 -0500
-Message-ID: <CAB=+i9SMSYHX_YTOOreJNikHiNmDxdPAuyBYPh_=1c97gjN55g@mail.gmail.com>
-Subject: Re: [PATCH v2 qemu] hw/cxl/device: read from register values in mdev_reg_read()
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org, 
-	Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 11, 2024 at 9:59=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
->
-> In the current mdev_reg_read() implementation, it consistently returns
-> that the Media Status is Ready (01b). This was fine until commit
-> 25a52959f99d ("hw/cxl: Add support for device sanitation") because the
-> media was presumed to be ready.
->
-> However, as per the CXL 3.0 spec "8.2.9.8.5.1 Sanitize (Opcode 4400h)",
-> during sanitation, the Media State should be set to Disabled (11b). The
-> mentioned commit correctly sets it to Disabled, but mdev_reg_read()
-> still returns Media Status as Ready.
->
-> To address this, update mdev_reg_read() to read register values instead
-> of returning dummy values.
->
-> Note __toggle_media() was overwriting the mailbox capability
-> register, but nothing was reading that after this so that bug had no
-> obvious effect unless the driver was reloaded.
->
-> Fixes: commit 25a52959f99d ("hw/cxl: Add support for device sanitation")
-> Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Link: https://lore.kernel.org/r/20231222090051.3265307-3-42.hyeyoo@gmail.=
-com
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> --
->
-> Hyeonggon - I've kept your sign-off. Let me know if this is ok.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 73bf93edeeea866b0b6efbc8d2595bdaaba7f1a5  cxl/core: use sysfs_emit() for attr's _show()
 
-Yeah, it's fine!
+elapsed time: 1482m
 
-I either missed that it overwrites the mailbox capability register,
-thank you so much for noticing. the new version looks fine to me.
+configs tested: 178
+configs skipped: 3
 
-> Dropped RBs etc as this has changed quite a bit.
->
-> I plan to send out a group of fixes including this soon, but given
-> I've been pointing out the original fix didn't work thought I'd send
-> this one out for early review!
->
-> ---
->  include/hw/cxl/cxl_device.h |  9 +++++++--
->  hw/cxl/cxl-device-utils.c   | 17 +++++++++++------
->  2 files changed, 18 insertions(+), 8 deletions(-)
->
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index befb5f884b..31d2afcd3d 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -202,6 +202,9 @@ typedef struct cxl_device_state {
->          };
->      };
->
-> +    /* Stash the memory device status value */
-> +    uint64_t memdev_status;
-> +
->      struct {
->          bool set;
->          uint64_t last_set;
-> @@ -353,8 +356,10 @@ static inline void __toggle_media(CXLDeviceState *cx=
-l_dstate, int val)
->  {
->      uint64_t dev_status_reg;
->
-> -    dev_status_reg =3D FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val)=
-;
-> -    cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] =3D dev_status_reg;
-> +    dev_status_reg =3D cxl_dstate->memdev_status;
-> +    dev_status_reg =3D FIELD_DP64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA=
-_STATUS,
-> +                                val);
-> +    cxl_dstate->memdev_status =3D dev_status_reg;
->  }
->  #define cxl_dev_disable_media(cxlds)                    \
->          do { __toggle_media((cxlds), 0x3); } while (0)
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 61a3c4dc2e..40b619ffd9 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -229,12 +229,9 @@ static void mailbox_reg_write(void *opaque, hwaddr o=
-ffset, uint64_t value,
->
->  static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size=
-)
->  {
-> -    uint64_t retval =3D 0;
-> -
-> -    retval =3D FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
-> -    retval =3D FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
-> +    CXLDeviceState *cxl_dstate =3D opaque;
->
-> -    return retval;
-> +    return cxl_dstate->memdev_status;
->  }
->
->  static void ro_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> @@ -371,7 +368,15 @@ static void mailbox_reg_init_common(CXLDeviceState *=
-cxl_dstate)
->      cxl_dstate->mbox_msi_n =3D msi_n;
->  }
->
-> -static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
-> +static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
-> +{
-> +    uint64_t memdev_status_reg;
-> +
-> +    memdev_status_reg =3D FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, 1=
-);
-> +    memdev_status_reg =3D FIELD_DP64(memdev_status_reg, CXL_MEM_DEV_STS,
-> +                                   MBOX_READY, 1);
-> +    cxl_dstate->memdev_status =3D memdev_status_reg;
-> +}
->
->  void cxl_device_register_init_t3(CXLType3Dev *ct3d)
->  {
-> --
-> 2.39.2
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240113   gcc  
+arc                   randconfig-002-20240113   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                            mps2_defconfig   gcc  
+arm                   randconfig-001-20240113   gcc  
+arm                   randconfig-002-20240113   gcc  
+arm                   randconfig-003-20240113   gcc  
+arm                   randconfig-004-20240113   gcc  
+arm                           sunxi_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240113   gcc  
+arm64                 randconfig-002-20240113   gcc  
+arm64                 randconfig-003-20240113   gcc  
+arm64                 randconfig-004-20240113   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240113   gcc  
+csky                  randconfig-002-20240113   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240113   clang
+hexagon               randconfig-002-20240113   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240113   gcc  
+i386         buildonly-randconfig-002-20240113   gcc  
+i386         buildonly-randconfig-003-20240113   gcc  
+i386         buildonly-randconfig-004-20240113   gcc  
+i386         buildonly-randconfig-005-20240113   gcc  
+i386         buildonly-randconfig-006-20240113   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240113   gcc  
+i386                  randconfig-002-20240113   gcc  
+i386                  randconfig-003-20240113   gcc  
+i386                  randconfig-004-20240113   gcc  
+i386                  randconfig-005-20240113   gcc  
+i386                  randconfig-006-20240113   gcc  
+i386                  randconfig-011-20240113   clang
+i386                  randconfig-012-20240113   clang
+i386                  randconfig-013-20240113   clang
+i386                  randconfig-014-20240113   clang
+i386                  randconfig-015-20240113   clang
+i386                  randconfig-016-20240113   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240113   gcc  
+loongarch             randconfig-002-20240113   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                           virt_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                           gcw0_defconfig   gcc  
+mips                      pic32mzda_defconfig   clang
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240113   gcc  
+nios2                 randconfig-002-20240113   gcc  
+openrisc                         alldefconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc                randconfig-001-20240113   gcc  
+parisc                randconfig-002-20240113   gcc  
+parisc64                            defconfig   gcc  
+powerpc                      acadia_defconfig   clang
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    ge_imp3a_defconfig   gcc  
+powerpc                  mpc885_ads_defconfig   clang
+powerpc               randconfig-001-20240113   gcc  
+powerpc               randconfig-002-20240113   gcc  
+powerpc               randconfig-003-20240113   gcc  
+powerpc                    sam440ep_defconfig   gcc  
+powerpc                     tqm8555_defconfig   gcc  
+powerpc                      walnut_defconfig   clang
+powerpc64             randconfig-001-20240113   gcc  
+powerpc64             randconfig-002-20240113   gcc  
+powerpc64             randconfig-003-20240113   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_virt_defconfig   clang
+riscv                 randconfig-001-20240113   gcc  
+riscv                 randconfig-002-20240113   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20240113   clang
+s390                  randconfig-002-20240113   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        edosk7705_defconfig   gcc  
+sh                    randconfig-001-20240113   gcc  
+sh                    randconfig-002-20240113   gcc  
+sh                           se7343_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240113   gcc  
+sparc64               randconfig-002-20240113   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240113   gcc  
+um                    randconfig-002-20240113   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240113   gcc  
+x86_64       buildonly-randconfig-002-20240113   gcc  
+x86_64       buildonly-randconfig-003-20240113   gcc  
+x86_64       buildonly-randconfig-004-20240113   gcc  
+x86_64       buildonly-randconfig-005-20240113   gcc  
+x86_64       buildonly-randconfig-006-20240113   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240113   clang
+x86_64                randconfig-002-20240113   clang
+x86_64                randconfig-003-20240113   clang
+x86_64                randconfig-004-20240113   clang
+x86_64                randconfig-005-20240113   clang
+x86_64                randconfig-006-20240113   clang
+x86_64                randconfig-011-20240113   gcc  
+x86_64                randconfig-012-20240113   gcc  
+x86_64                randconfig-013-20240113   gcc  
+x86_64                randconfig-014-20240113   gcc  
+x86_64                randconfig-015-20240113   gcc  
+x86_64                randconfig-016-20240113   gcc  
+x86_64                randconfig-071-20240113   gcc  
+x86_64                randconfig-072-20240113   gcc  
+x86_64                randconfig-073-20240113   gcc  
+x86_64                randconfig-074-20240113   gcc  
+x86_64                randconfig-075-20240113   gcc  
+x86_64                randconfig-076-20240113   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240113   gcc  
+xtensa                randconfig-002-20240113   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
