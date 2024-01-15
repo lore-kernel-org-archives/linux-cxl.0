@@ -1,328 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA17315A8;
-	Mon, 15 Jan 2024 01:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B7ABE61
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jan 2024 08:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="akUr5ml6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705281978; x=1736817978;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=RAN96hU9YlRYVx95l6KQuFTyks7KtMSlSqiqq5bKzoM=;
-  b=akUr5ml6h/mmpYIXdPz/3014bTZyZyXayEjUSoDmphoGFLUINd+qyXN1
-   3D4IHU3RrrDxmJGPN/gln1y8t8nowqvou2aYN/iewwmq7vcBuezq8Amzl
-   o/oa36hHb7jxkssptNxdnCidV3YG6Qbe5YzksOrlEjJuFalqB5Jsld5Zr
-   5Ac8eDOY2aezz7bcgUWHlceUUWMXMFsGgMeahylk2KJnVwVSp1DT1fC/B
-   v3JMjaYhKkRHX1o4nxurqhADSzJEv7HLX8poJZvJOAGybWUlFfT+bZB5k
-   fs9yUgD1n5fqathgDcs2lRVuS0EhAz8o61XRuZpdBSYac8ATX8TeS0CvE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="396653515"
-X-IronPort-AV: E=Sophos;i="6.04,195,1695711600"; 
-   d="scan'208";a="396653515"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 17:26:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="783653565"
-X-IronPort-AV: E=Sophos;i="6.04,195,1695711600"; 
-   d="scan'208";a="783653565"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 17:26:11 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Hao Xiang <hao.xiang@bytedance.com>
-Cc: "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,  Jonathan
- Cameron <Jonathan.Cameron@huawei.com>,  Gregory Price
- <gregory.price@memverge.com>,  Srinivasulu Thanneeru
- <sthanneeru@micron.com>,  Srinivasulu Opensrc
- <sthanneeru.opensrc@micron.com>,  "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>,  "linux-mm@kvack.org" <linux-mm@kvack.org>,
-  "dan.j.williams@intel.com" <dan.j.williams@intel.com>,  "mhocko@suse.com"
- <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
-  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
- <emirakhur@micron.com>,  Vinicius Tavares Petrucci
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  Johannes
- Weiner <hannes@cmpxchg.org>,  Wei Xu <weixugc@google.com>,  "Ho-Ren (Jack)
- Chuang" <horenchuang@bytedance.com>
-Subject: Re: [External] Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration
- between memory tiers
-In-Reply-To: <CAAYibXh5DWcAJrqXi-V1v61DY_Xeb8BiMGoOxn1fJ_YBc2L8KQ@mail.gmail.com>
-	(Hao Xiang's message of "Fri, 12 Jan 2024 00:14:04 -0800")
-References: <87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZZwrIoP9+ey7rp3C@memverge.com>
-	<87o7dv897s.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240109155049.00003f13@Huawei.com> <ZZ2Jd7/7rFD0o5S3@memverge.com>
-	<CAAYibXhe81ez06tP5K7zGkX9P=Ot+DcSysVyDvh13aSEDD63aA@mail.gmail.com>
-	<20240110141821.0000370d@Huawei.com>
-	<CAAYibXgwqY6Og_4NqGGEni=2Xgx=DPxaMc3GdBUE6FREKVCq8w@mail.gmail.com>
-	<87il3z2g03.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAAYibXh5DWcAJrqXi-V1v61DY_Xeb8BiMGoOxn1fJ_YBc2L8KQ@mail.gmail.com>
-Date: Mon, 15 Jan 2024 09:24:13 +0800
-Message-ID: <871qaj2xtu.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="eUDfZT+E"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50ea9daac4cso8476467e87.3
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Jan 2024 00:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1705309086; x=1705913886; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LU+B/jNsHlEjZ2wxoEQjvy+rYT/Hb6w67qSs5hOnuUs=;
+        b=eUDfZT+EdDDHNV0r+krb3vhN8LmYmEfX24Mt1AtDXhGhZZr1UvVzvodLyRcB81AWXR
+         7j96/TqvcHo0h7SOFINXo7pXU5lAHSSy8ANoCdlvVE7yE/OloXXQ/vHPDvODUcsc10Tq
+         ZPK7QlfytZsLvGlxKlEkeGfzAhYv3g74kYtvD93Uwdp+5Y8j9OCCPpoHf4ngAyXP6nV6
+         VmZrbbLzVm/XyyZJIG+iCnEJV7BC6MGRmAmcsyob3oIBSHkAjvKbh+8uZpCPVxvzr3lX
+         0yj20jEG3GiZgGXzyM2nJ0FgFUVuzfNfea/PBvVGhs08d9TfId6NfqiSB7uClQKiIWlR
+         krHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705309086; x=1705913886;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LU+B/jNsHlEjZ2wxoEQjvy+rYT/Hb6w67qSs5hOnuUs=;
+        b=Hi7iewDb74flK0s4UFEDNn3c+AIIhLGucWktDchKOdRZrbAPdD3r08D4NKTmNM/owa
+         Rya7LHpY/nmXg/5adPIn1H00iLLc5UBOk/XZqgW2v02MAL7skRXfo16FmqlXYZAM1PBt
+         J4LfIUplkEYgwLsCE/qSFnz2736VJOnrAYfRyVbnQaryc0ggfuz/P+fjBeMFKp8VwPPj
+         ayuTJlLm9sRG32AbwqCnIZdmOeetL006kBIQbyoAQzeUUSOJZ7etvQyDb0YG5W8CoAZN
+         f2kLCwNTDc43F2nPBpTQOeVYwSJU7JuK19aWa7mQaez917s+JW2Uk+turFa2FiJcA2M5
+         kS/Q==
+X-Gm-Message-State: AOJu0YwGKv2bPjWAWFtMD8X3qCbXro01rZ2lsUPudrTTcxoD2bTlmDix
+	TPPlBBXj/9ysg0MFzaTeAj6gGxQwqXBiwQ==
+X-Google-Smtp-Source: AGHT+IESuALzmLsUGdarm4Ng9xOq0U5iFLAlxI4UzttZtg7Vr6aLtR8mjHVKPDDg4SrQ3Dzx+GHubw==
+X-Received: by 2002:a05:6512:34d3:b0:50e:ea33:7f10 with SMTP id w19-20020a05651234d300b0050eea337f10mr1630837lfr.137.1705309085832;
+        Mon, 15 Jan 2024 00:58:05 -0800 (PST)
+Received: from smtpclient.apple ([2a00:1370:81a4:169c:9dc4:3ef6:b46e:2d4f])
+        by smtp.gmail.com with ESMTPSA id h5-20020a056512350500b0050e80d1d45fsm1113178lfs.143.2024.01.15.00.58.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jan 2024 00:58:05 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.4\))
+Subject: Re: [RFC] Do we need dedicated LSF/MM/BPF 2024 session for CXL
+ memory?
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+In-Reply-To: <59dfe08b-cd17-410e-b549-7fb277340a21@nmtadam.samsung>
+Date: Mon, 15 Jan 2024 11:58:03 +0300
+Cc: Dan J Williams <dan.j.williams@intel.com>,
+ Vincent Hache <vhache@rambus.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "dave@stgolabs.net" <dave@stgolabs.net>,
+ Fan Ni <fan.ni@samsung.com>,
+ Jim Harris <jim.harris@samsung.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <2A177BF8-36F9-4E7D-B353-404F1113ED0E@dubeyko.com>
+References: <CGME20231222151028uscas1p1fa4d0282844f4aaa36b1133c5df17c9c@uscas1p1.samsung.com>
+ <42978BEA-D194-41F4-A619-BAF02CE8F4FF@dubeyko.com>
+ <59dfe08b-cd17-410e-b549-7fb277340a21@nmtadam.samsung>
+To: Adam Manzanares <a.manzanares@samsung.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.4)
 
-Hao Xiang <hao.xiang@bytedance.com> writes:
 
-> On Thu, Jan 11, 2024 at 11:02=E2=80=AFPM Huang, Ying <ying.huang@intel.co=
-m> wrote:
->>
->> Hao Xiang <hao.xiang@bytedance.com> writes:
->>
->> > On Wed, Jan 10, 2024 at 6:18=E2=80=AFAM Jonathan Cameron
->> > <Jonathan.Cameron@huawei.com> wrote:
->> >>
->> >> On Tue, 9 Jan 2024 16:28:15 -0800
->> >> Hao Xiang <hao.xiang@bytedance.com> wrote:
->> >>
->> >> > On Tue, Jan 9, 2024 at 9:59=E2=80=AFAM Gregory Price <gregory.price=
-@memverge.com> wrote:
->> >> > >
->> >> > > On Tue, Jan 09, 2024 at 03:50:49PM +0000, Jonathan Cameron wrote:
->> >> > > > On Tue, 09 Jan 2024 11:41:11 +0800
->> >> > > > "Huang, Ying" <ying.huang@intel.com> wrote:
->> >> > > > > Gregory Price <gregory.price@memverge.com> writes:
->> >> > > > > > On Thu, Jan 04, 2024 at 02:05:01PM +0800, Huang, Ying wrote:
->> >> > > > > It's possible to change the performance of a NUMA node change=
-d, if we
->> >> > > > > hot-remove a memory device, then hot-add another different me=
-mory
->> >> > > > > device.  It's hoped that the CDAT changes too.
->> >> > > >
->> >> > > > Not supported, but ACPI has _HMA methods to in theory allow cha=
-nging
->> >> > > > HMAT values based on firmware notifications...  So we 'could' m=
-ake
->> >> > > > it work for HMAT based description.
->> >> > > >
->> >> > > > Ultimately my current thinking is we'll end up emulating CXL ty=
-pe3
->> >> > > > devices (hiding topology complexity) and you can update CDAT but
->> >> > > > IIRC that is only meant to be for degraded situations - so if y=
-ou
->> >> > > > want multiple performance regions, CDAT should describe them fo=
-rm the start.
->> >> > > >
->> >> > >
->> >> > > That was my thought.  I don't think it's particularly *realistic*=
- for
->> >> > > HMAT/CDAT values to change at runtime, but I can imagine a case w=
-here
->> >> > > it could be valuable.
->> >> > >
->> >> > > > > > https://lore.kernel.org/linux-cxl/CAAYibXjZ0HSCqMrzXGv62cML=
-ncS_81R3e1uNV5Fu4CPm0zAtYw@mail.gmail.com/
->> >> > > > > >
->> >> > > > > > This group wants to enable passing CXL memory through to KV=
-M/QEMU
->> >> > > > > > (i.e. host CXL expander memory passed through to the guest)=
-, and
->> >> > > > > > allow the guest to apply memory tiering.
->> >> > > > > >
->> >> > > > > > There are multiple issues with this, presently:
->> >> > > > > >
->> >> > > > > > 1. The QEMU CXL virtual device is not and probably never wi=
-ll be
->> >> > > > > >    performant enough to be a commodity class virtualization.
->> >> > > >
->> >> > > > I'd flex that a bit - we will end up with a solution for virtua=
-lization but
->> >> > > > it isn't the emulation that is there today because it's not pos=
-sible to
->> >> > > > emulate some of the topology in a peformant manner (interleavin=
-g with sub
->> >> > > > page granularity / interleaving at all (to a lesser degree)). T=
-here are
->> >> > > > ways to do better than we are today, but they start to look like
->> >> > > > software dissagregated memory setups (think lots of page faults=
- in the host).
->> >> > > >
->> >> > >
->> >> > > Agreed, the emulated device as-is can't be the virtualization dev=
-ice,
->> >> > > but it doesn't mean it can't be the basis for it.
->> >> > >
->> >> > > My thought is, if you want to pass host CXL *memory* through to t=
-he
->> >> > > guest, you don't actually care to pass CXL *control* through to t=
-he
->> >> > > guest.  That control lies pretty squarely with the host/hyperviso=
-r.
->> >> > >
->> >> > > So, at least in theory, you can just cut the type3 device out of =
-the
->> >> > > QEMU configuration entirely and just pass it through as a distinc=
-t numa
->> >> > > node with specific hmat qualities.
->> >> > >
->> >> > > Barring that, if we must go through the type3 device, the questio=
-n is
->> >> > > how difficult would it be to just make a stripped down type3 devi=
-ce
->> >> > > to provide the informational components, but hack off anything
->> >> > > topology/interleave related? Then you just do direct passthrough =
-as you
->> >> > > described below.
->> >> > >
->> >> > > qemu/kvm would report errors if you tried to touch the naughty bi=
-ts.
->> >> > >
->> >> > > The second question is... is that device "compliant" or does it n=
-eed
->> >> > > super special handling from the kernel driver :D?  If what i desc=
-ribed
->> >> > > is not "compliant", then it's probably a bad idea, and KVM/QEMU s=
-hould
->> >> > > just hide the CXL device entirely from the guest (for this use ca=
-se)
->> >> > > and just pass the memory through as a numa node.
->> >> > >
->> >> > > Which gets us back to: The memory-tiering component needs a way to
->> >> > > place nodes in different tiers based on HMAT/CDAT/User Whim. All =
-three
->> >> > > of those seem like totally valid ways to go about it.
->> >> > >
->> >> > > > > >
->> >> > > > > > 2. When passing memory through as an explicit NUMA node, bu=
-t not as
->> >> > > > > >    part of a CXL memory device, the nodes are lumped togeth=
-er in the
->> >> > > > > >    DRAM tier.
->> >> > > > > >
->> >> > > > > > None of this has to do with firmware.
->> >> > > > > >
->> >> > > > > > Memory-type is an awful way of denoting membership of a tie=
-r, but we
->> >> > > > > > have HMAT information that can be passed through via QEMU:
->> >> > > > > >
->> >> > > > > > -object memory-backend-ram,size=3D4G,id=3Dram-node0 \
->> >> > > > > > -object memory-backend-ram,size=3D4G,id=3Dram-node1 \
->> >> > > > > > -numa node,nodeid=3D0,cpus=3D0-4,memdev=3Dram-node0 \
->> >> > > > > > -numa node,initiator=3D0,nodeid=3D1,memdev=3Dram-node1 \
->> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,d=
-ata-type=3Daccess-latency,latency=3D10 \
->> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,d=
-ata-type=3Daccess-bandwidth,bandwidth=3D10485760 \
->> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,d=
-ata-type=3Daccess-latency,latency=3D20 \
->> >> > > > > > -numa hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,d=
-ata-type=3Daccess-bandwidth,bandwidth=3D5242880
->> >> > > > > >
->> >> > > > > > Not only would it be nice if we could change tier membershi=
-p based on
->> >> > > > > > this data, it's realistically the only way to allow guests =
-to accomplish
->> >> > > > > > memory tiering w/ KVM/QEMU and CXL memory passed through to=
- the guest.
->> >> > > >
->> >> > > > This I fully agree with.  There will be systems with a bunch of=
- normal DDR with different
->> >> > > > access characteristics irrespective of CXL. + likely HMAT solut=
-ions will be used
->> >> > > > before we get anything more complex in place for CXL.
->> >> > > >
->> >> > >
->> >> > > Had not even considered this, but that's completely accurate as w=
-ell.
->> >> > >
->> >> > > And more discretely: What of devices that don't provide HMAT/CDAT=
-? That
->> >> > > isn't necessarily a violation of any standard.  There probably co=
-uld be
->> >> > > a release valve for us to still make those devices useful.
->> >> > >
->> >> > > The concern I have with not implementing a movement mechanism *at=
- all*
->> >> > > is that a one-size-fits-all initial-placement heuristic feels gro=
-ss
->> >> > > when we're, at least ideologically, moving toward "software defin=
-ed memory".
->> >> > >
->> >> > > Personally I think the movement mechanism is a good idea that get=
-s folks
->> >> > > where they're going sooner, and it doesn't hurt anything by exist=
-ing. We
->> >> > > can change the initial placement mechanism too.
->> >> >
->> >> > I think providing users a way to "FIX" the memory tiering is a back=
-up
->> >> > option. Given that DDRs with different access characteristics provi=
-de
->> >> > the relevant CDAT/HMAT information, the kernel should be able to
->> >> > correctly establish memory tiering on boot.
->> >>
->> >> Include hotplug and I'll be happier!  I know that's messy though.
->> >>
->> >> > Current memory tiering code has
->> >> > 1) memory_tier_init() to iterate through all boot onlined memory
->> >> > nodes. All nodes are assumed to be fast tier (adistance
->> >> > MEMTIER_ADISTANCE_DRAM is used).
->> >> > 2) dev_dax_kmem_probe to iterate through all devdax controlled memo=
-ry
->> >> > nodes. This is the place the kernel reads the memory attributes from
->> >> > HMAT and recognizes the memory nodes into the correct tier (devdax
->> >> > controlled CXL, pmem, etc).
->> >> > If we want DDRs with different memory characteristics to be put into
->> >> > the correct tier (as in the guest VM memory tiering case), we proba=
-bly
->> >> > need a third path to iterate the boot onlined memory nodes and also=
- be
->> >> > able to read their memory attributes. I don't think we can do that =
-in
->> >> > 1) because the ACPI subsystem is not yet initialized.
->> >>
->> >> Can we move it later in general?  Or drag HMAT parsing earlier?
->> >> ACPI table availability is pretty early, it's just that we don't both=
-er
->> >> with HMAT because nothing early uses it.
->> >> IIRC SRAT parsing occurs way before memory_tier_init() will be called.
->> >
->> > I tested the call sequence under a debugger earlier. hmat_init() is
->> > called after memory_tier_init(). Let me poke around and see what our
->> > options are.
->>
->> This sounds reasonable.
->>
->> Please keep in mind that we need a way to identify the base line memory
->> type(default_dram_type).  A simple method is to use NUMA nodes with CPU
->> attached.  But I remember that Aneesh said that some NUMA nodes without
->> CPU will need to be put in default_dram_type too on their systems.  We
->> need a way to identify that.
->
-> Yes, I am doing some prototyping the way you described. In
-> memory_tier_init(), we will just set the memory tier for the NUMA
-> nodes with CPU. In hmat_init(), I am trying to call back to mm to
-> finish the memory tier initialization for the CPUless NUMA nodes. If a
-> CPUless numa node can't get the effective adistance from
-> mt_calc_adistance(), we will fallback to add that node to
-> default_dram_type.
 
-Sound reasonable for me.
+> On Jan 3, 2024, at 7:53 PM, Adam Manzanares <a.manzanares@samsung.com> =
+wrote:
+>=20
+> On Fri, Dec 22, 2023 at 06:10:21PM +0300, Viacheslav Dubeyko wrote:
+>> Hello,
+>>=20
+>> Do we need dedicated LSF/MM/BPF 2024 session for CXL memory?
+>> Any comments?
+>=20
+> We are starting to spend a bit more time looking beyond the
+> CXL driver code, specifically interleaving and tiering in
+> the context of CXL attached memory. It would be great to=20
+> carve out time to get interested parties in the same room.
+>=20
+>>=20
+>> Hi Dan,
+>>=20
+>> I believe we need some talk to summarize:
+>> (1) what we achieved during 2023 year,
+>> (2) what TODOs we have
+>> (3) etc.
+>>=20
+>> What do you think?
+>>=20
+>> Hi Adam,
+>>=20
+>> I assume it will be good to hear what is cooking on hardware =
+vendor=E2=80=99s side
+>> in the CXL memory area. Could we have some summary related to this
+>> (of course, what can be shared with open-source community)? How do =
+you
+>> feel about it?
+>=20
+> I would be more than happy to give an update from a device vendor =
+perspective.=20
+> There were several public demonstrations of CXL devices in the past =
+year and
+> it would be great if we could get representation from other CXL device =
+vendors
+> to share updates with the community.
 
-> The other thing I want to experiment is to call mt_calc_adistance() on
-> a memory node with CPU and see what kind of adistance will be
-> returned.
+Maybe, do we need to share this as a special topic? What do you think? =
+Let=E2=80=99s elaborate
+some better explanation of suggested discussion.
 
-Anyway, we need a base line to start.  The abstract distance is
-calculated based on the ratio of the performance of a node to that of
-default DRAM node.
+Thanks,
+Slava.
 
---
-Best Regards,
-Huang, Ying
