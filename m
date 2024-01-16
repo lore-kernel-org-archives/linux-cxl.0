@@ -1,21 +1,21 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866A1328C1;
-	Tue, 16 Jan 2024 21:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D9767C5E;
+	Tue, 16 Jan 2024 23:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705440566; cv=fail; b=P1loS+93QJsHd1RGFBKuM7e9So3WFyoJv1g+xwsUL7WX2MOriwOhi4sSO3+TJJFtQ5AM7TV6fjnR4PL0twV5ASt9DksBsA2fAFWZsfnJGt2cKZW1IYfKqTC5H0eR2DCNiZ5mgoYoP2XQ2PC7vic1X/KyOvdIGAivBroXbn6NBJs=
+	t=1705448871; cv=fail; b=IT9JtbcyMs47LoblRUZ+aVBraPXfAftl2DVNi50HcLXaiIOH+FXE2Z7tDqD/ajA5g1szRpNHyOFVJL0wp85gjMsd61+sGx8ztAun5EAOvJKKysdJ9JrYmu91weQ5pNT1A/7Zf+jSovx7Y6s4E/VZpxvr8IQ/KYXp26xutHSEdgs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705440566; c=relaxed/simple;
-	bh=s6+i/9DAO1Tmq8AI67YfFZqpizr7+3eL26IAiAXtjkE=;
+	s=arc-20240116; t=1705448871; c=relaxed/simple;
+	bh=aNgQpT2Uw2HwusbeBR3FCoJY3/PW9WUbkbrOWS9tb4w=;
 	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
 	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:
 	 ARC-Message-Signature:ARC-Authentication-Results:Received:Received:
 	 Date:From:To:CC:Subject:Message-ID:References:Content-Type:
 	 Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
 	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Office365-Filtering-Correlation-Id:X-LD-Processed:
 	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
 	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
 	 X-Forefront-Antispam-Report:
@@ -29,89 +29,86 @@ ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	b=SYqRa5goI0Rs7AWJQFBTQQg4reTWiA8FvZ4DrGnK2kAN/co4+16i3KwFSfNvqOya68SzABNnfcaDeNdcYCw0frwmMfb0AbMnVjDOo/WTaBJpERkFQ7Unv/Q0McxWKkHB+GNJbhTXrFwilCau0MuRu+lABUa/D4Gq6axpTGB6S/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YyNyO04Q; arc=fail smtp.client-ip=192.55.52.43
+	b=Aiun+sjlzwik9QGlK6G5I8gOciLWXhlRcjCIqEuiXPhO1d5YdAejT6x2JaKLdxR+DM3Knzp5bToz4vxNUDmD5CmhgZnR1R6PnJ5h5Z6fnsOKxZhGYZ2lpf/9XgSOP/+mDRnx8rYehIdN0J4hSeOxH1tB57XXOZ3pc5XQqxdrMrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZsTCj8/; arc=fail smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YyNyO04Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZsTCj8/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705440564; x=1736976564;
+  t=1705448870; x=1736984870;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=s6+i/9DAO1Tmq8AI67YfFZqpizr7+3eL26IAiAXtjkE=;
-  b=YyNyO04QGdvTcz8gzD6bkKesIqt6gcVEuEoq8dN+/oWODwcP59TXGf99
-   c3Ldp/FIA9k9DIuh4htvh3W+ThH66Z2tCE/X6cfs6yhTn1AUluXGXWHp5
-   AnM63fDQWA2J72CB845cggtLm2UX6/BncBlc1UJrky8a778jyA5z30k3y
-   no6++/+W13FRRfjyx9utqmq9HVeVYvTLMPpMkZD8cn4w/kVI/LBRkO3fa
-   BJdHQusmWZ+PI2BbkSw29FuaCckIqtIV6SWnAsWZ/EQyXBZ0daENHhOB+
-   ndsFElKvnDomlAW0lxiv+pjiW9JbnFUjtNwYGEuk+9ZprbXQGGrmQF0V3
+  bh=aNgQpT2Uw2HwusbeBR3FCoJY3/PW9WUbkbrOWS9tb4w=;
+  b=GZsTCj8/tkH9BYqKB7MQkU664CT/eqEChSRKiw+uB2RDdJbQwrjO/mAc
+   Hb0KPF1qqlnfP7D6phXWAubUrTVU1NnUCXSeLk3K55IN2MdIX2OHz4pck
+   u0TQ5QpWrsN0t60BRwi4U7byJHSpmwjNt75qp8WYQEP/zDUrRW66FuZtO
+   9fuAm/6dvwe6sTFG026iM020eQKIBhNB3A6MKx3cbQQCqSfibRKwAsleg
+   gYf7fic4j82nEzWg7QubSyvGdgF27pVg8GxaiBHiLA/BKd14uHV5U89FA
+   7dwZzlBcG33Izy/ybvqty/9m9p+662PurwUR3N/s4Xy89lbis2Uck9zsm
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="486149968"
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="21501145"
 X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="486149968"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 13:29:23 -0800
+   d="scan'208";a="21501145"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 15:47:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="787586898"
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="907545185"
 X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="787586898"
+   d="scan'208";a="907545185"
 Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Jan 2024 13:29:23 -0800
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Jan 2024 15:47:48 -0800
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
  ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jan 2024 13:29:22 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ 15.1.2507.35; Tue, 16 Jan 2024 15:47:48 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Jan 2024 13:29:22 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Jan 2024 15:47:48 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Jan 2024 13:29:22 -0800
+ 15.1.2507.35; Tue, 16 Jan 2024 15:47:48 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c2jTzcv/n7cp67POXf8hrenR94qzZo5TYMACwEIJfaK6q/aoGKs++as1mHj9aqUygG5bWqRVZmTJ/huqKHWhr7Ri0mVUSbj6YkDpfUuYT+5VLI5NzvdR6q79hxMjJ7UAc7hvN0SrsYU2Xr0HD1PDxH7kMdJ0dC+J4Hdr9SiTWy75bxv2E5Er3l0fExrvAKt8BVx9+lKBIaczUuuD5OCGaiFmWkxOUH77vvIF978+NuWZMaUDcruGa9oG+tfGY9oYKxZz3ouXNeZ2745BIIALn+uk2bjiAk1eRRJlm1vlxlDxtklFuF5WUOknkh6bwZGRCsJ4CzTxyIKn8tSs0lv/Pg==
+ b=OAc6u+eV81kL2fgxhsalNKDlnYSp0kmvCsXjbl8ZLkID9GkWcJuwa0tnyKv/lxZOFivOs8TSnzXrIJuOZEh7KM0ZFptvuFfycOYKogEzwb4mKb02J+l1OBcYNSj/np3lWH7+IqHIT1qYpWC5n3i3mgRlnK8dDygtF8NeyadGEZuPy5GtqoG0frWRbBCdI4UYpfZBP62c/IW/zILAUsBXCR62X2tMuz+ppng2TqPwrL0lbz1hZTewzLGC/Wah6AvqFwMfsMeRQwEiVark4vInxlgRWvfH3lMQAtzEPFhQQ9mmNG/XhZE0cvXFhGGtKnAEZ6VBQPiBDtz9UtHheiQGKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sgsWB103nGTqBz8BuezxKKw+7BBPbMfUkumWRu3dd4Q=;
- b=C2N5SZgDYU2KqVqdECen0AS6qOp33se+71q6foUUpltK/lTLV7sxFJNtxKZrw9tbypVUQo+ZpBZ9mfwFfFSsYvVnB/C1aVvp+IvsXXfSVhyrsmsQ+iNT4zQGh7EeE1ZRp+3wJY7JBSgXDz+qZNsXHj5H5n7P71MEuza+N+VNbkN9jE5EJ7IwWefJLj8DoDP07kgqLEO94e8p+p6iomP315ZesBYA1XUf0mJIOpUWmyt4P8ClFgcVIrB+xYn00tWIEMCLpbMgDw0ditJFCvkeQFzxr2HykAkCSxnQ32CNwJXEw5G9EVQmrjEZ/+GdEcWrdDa47hH0B1kkXr1Y7jjLeg==
+ bh=43kp4n9Yvm2hEY9AV4cCjw+mcSK+u6U66fVln3eX8/E=;
+ b=mi9cIdNMyX1Q/5sXj3IC3iyKwP0MlinKg13IMXKF0twMOrT0I6c3fTrQJEBVrom+HvIP4NAibMu9/KB4vSvEciBjWqfjHtxMkkzdDdO42H12rBSkSrbiGQKhsUc5xkMBmggTl/Pukge/9krhDaWESpQS9+zaby9B4mVFBXAvz07sQ9m/Xz3LQtnvqdzFfAmHFEATnn4UOMIeqD4yMtB1eUQTWRl8gL1JexhwgjVdzjNIQzDZy2LxZuJ5RN/uhVLhiVSIDo05B2z9LTjiS0sgd6dQOeL0CH0HS6IyqmcWtT9wkGaXrVzO5tICys9AuFLlhLP1BH2mrz1207C56SAFFQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY5PR11MB6113.namprd11.prod.outlook.com (2603:10b6:930:2e::22) with
+ by SA1PR11MB6823.namprd11.prod.outlook.com (2603:10b6:806:2b0::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Tue, 16 Jan
- 2024 21:29:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 16 Jan
+ 2024 23:47:42 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7181.015; Tue, 16 Jan 2024
- 21:29:20 +0000
-Date: Tue, 16 Jan 2024 13:29:18 -0800
+ 23:47:42 +0000
+Date: Tue, 16 Jan 2024 15:47:39 -0800
 From: Dan Williams <dan.j.williams@intel.com>
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>, "'Jonathan
- Cameron'" <Jonathan.Cameron@huawei.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Yasunori Gotou
- (Fujitsu)" <y-goto@fujitsu.com>
-Subject: RE: [RFC PATCH 0/3] lspci: Display cxl1.1 device link status
-Message-ID: <65a6f52e5724d_3b8e29410@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231220050738.178481-1-kobayashi.da-06@fujitsu.com>
- <20240109155755.0000087b@Huawei.com>
- <659f404a99aad_3d2f92946e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240112112414.00006443@Huawei.com>
- <TYCPR01MB11764763DFE894B96EF0C6C38BA6C2@TYCPR01MB11764.jpnprd01.prod.outlook.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, <dan.j.williams@intel.com>,
+	<dave@stogolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <rafael@kernel.org>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<benjamin.cheatham@amd.com>
+Subject: RE: [PATCH v9 3/5] EINJ: Migrate to a platform driver
+Message-ID: <65a7159bbad4d_3b8e294f5@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240115172007.309547-1-Benjamin.Cheatham@amd.com>
+ <20240115172007.309547-4-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <TYCPR01MB11764763DFE894B96EF0C6C38BA6C2@TYCPR01MB11764.jpnprd01.prod.outlook.com>
-X-ClientProxiedBy: MW4PR04CA0152.namprd04.prod.outlook.com
- (2603:10b6:303:85::7) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20240115172007.309547-4-Benjamin.Cheatham@amd.com>
+X-ClientProxiedBy: MW4PR02CA0010.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::8) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -120,144 +117,186 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6113:EE_
-X-MS-Office365-Filtering-Correlation-Id: ddc0b92a-0709-4a23-17b7-08dc16da336a
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB6823:EE_
+X-MS-Office365-Filtering-Correlation-Id: 504afeea-cb17-45b4-98eb-08dc16ed87e1
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IoG0Jdaqk8SKgJQmpYVBljlPMOjO+qd6zdI9aPCFIEXi5ISAfJwznOWKOEvlH+2zOApLuF8jKRCFJd2ES9QLO3wJ4OFsxlyvtImWYoxCHObzc6yVngBPawCcGfIH2PiJHfy5JDwgdp1S6yZQtnZ78Tuubc6H0IRSv2tS+/JCkKPtebFfGWkpIsXlqAxEtAayGEDjuTAnVjEXKt1CpTeRi4E2O2Vs8LM/f2g1AObBbkMAeErFhYKo4kBt8NY776V7Jp1l2fEheIUkgeT1L04n2oTbPtpPzFiYLN9Hf7/D45tTBic+a1escl+2dIxXETMvZ6z6Xsv7gUoQnTGNUOQikl6HnHqfWP8LYp1+JWirLEbklIjBF0RyN1+Lf7E6r2/5WdtRkelRweMx62ESf0NfryR2mkiDMSAIrfI4jjXxP4mcz6hvBHCeAUZbxkd2X5e/bQ+cS6qG6CYSxdBAGiTvvK9c1F4/sBiHmrV6FqGw84l74ap2XHqAmpWTZ/HdGhe6NvT6RaHvdV58p0R2qL9K4lKIjYZjsJ+5FqwM6wFAOsxrfCpkSLCtatlPrRh/v0Ew
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(136003)(346002)(376002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(4326008)(26005)(5660300002)(2906002)(6512007)(9686003)(6506007)(110136005)(66476007)(66556008)(316002)(66946007)(8936002)(8676002)(6486002)(41300700001)(86362001)(478600001)(82960400001)(38100700002)(83380400001)(54906003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: SeERvUJiHkt/mSQ7t5FYjsP3mlnvF2HgiSY9sO+Oqws88N4dtRGdUaIHdI9tqXGkgSvzqOYaDlYrvkZscZ6OvTrlbDoRLP+V3HunZoUEw0I8tA8i+fiXoB+QUl6i9ituSMyRs1BtXsBEYkI5Uza7vS31B3QxEOuE3yiWga3Rj2mNMibo1XPrUnIyxfXIRU1F2PqKfvA7z7TUMwwXoa8ksmrjOMkoEL+cLsGoU/qoKhExra3KegukwYbQpPBYj7AF6XJncYbQh/XdsDpQeb9leXTDliC19UYEb1X7VR1HXhPxIJrQ/2MnxMsgkmdLJAMJRpYsFtzSgoJ53HlZghFobwzwaX0yZcUHfX2LJs66Uz/J/ACi3LFo062X+ADkI/Jyw+ZiLLlLAK9pUDk9nsLmJ6dzfBoeIuPprK4zAcEcosyunL5gi9++vyj9xb/237inofTdIAAj8cXE4yL1rAuyxNHXE3aC6Zrg+B0LWRk9pXYcR1Fxu5cpSpw1ByrZuRw1quj/BkMRTBdJDI/etauFg3x2Q1u5pDyzOxu10mK/SvyBAz7w3aywRwrktEE7W82V49K/hWiPmlIhh1K6YQ5IaQXhVhAZdd3QXNvV8ltFrFznawdWD+e1hw+pX+OiyKGE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(396003)(366004)(376002)(346002)(230273577357003)(230173577357003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(9686003)(5660300002)(8936002)(86362001)(478600001)(26005)(82960400001)(6486002)(6666004)(83380400001)(6506007)(41300700001)(316002)(4326008)(8676002)(6512007)(38100700002)(66946007)(66556008)(2906002)(66476007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1e85dz3buuw4RLaL6BDsnWp1vAkrSpuQMiRuF9UU+vxJjNMZCEW/Rq/4X9wO?=
- =?us-ascii?Q?q+TuO6yiGVv3W5g4ow116QBtHMb7yitIeBaQj5vzvsfEr3zm4ehDkHYS6eF/?=
- =?us-ascii?Q?BSkRrcnZqgTWRPACdpOB1iCB/qmh1QHAjE2ttx0pEaI1kKHb+COHUKkVCha2?=
- =?us-ascii?Q?7mobLplcv0tBpM0WcvR3SBiD9zfR9NK+DsYSkvU21jY445zmjhVI0c9qvIMU?=
- =?us-ascii?Q?VDiUQB47/e18h+MUWQ+D9gkWhTJOtXzmuCW8yf1IwvoEjszoLw/bs45QF3k8?=
- =?us-ascii?Q?ERpauRdjZmlGhXB2MyIJV3zZILnSbDpNH9kuWvGvnvwvkFrm3xJnNTwufqvX?=
- =?us-ascii?Q?2MtTu/mApDjRj6rsUmptytdawS5diQ+HNX4bwUjmUZofkhFWW9Ztmm1NE3++?=
- =?us-ascii?Q?7UGfDY+/8ErOzVCJi10zMiY2+hz2eTyN6NTvfdyd9d/RT8/qk3kuBwb3fbGP?=
- =?us-ascii?Q?E6P/EjZL0i/XOfvyuTIpRfQn7vtBAKq+vCp7vwZ+QMj7CHtwAcPAD/c+Zgu2?=
- =?us-ascii?Q?Dq3QiPFIcRE9khEJ75bxSjdNScVUrEovAUD++NaYfydoCLwMirdaMnHzpn1x?=
- =?us-ascii?Q?Br3k6fJ+tLMrgqyEX0Zbsxzkw8DXFBjyuEAxZpMX+35tVNqEPNj3f0ztBr2m?=
- =?us-ascii?Q?vi9mn5AvasJKx0s6tpq1oZ2wgUolcmXgv45QK4jbvFU+XGDy2EA8JmoLzRwe?=
- =?us-ascii?Q?zReEnEXzD+xFCczdmRvMRr/eftxWa5RKr3KUr22GJErcGJIoujCFXA9elTIh?=
- =?us-ascii?Q?+3CjjSv0/2uc6CeABXbfU/1YvUqbzykPRmBdt3Yu8A1rutAmeGSR8IyHNkMy?=
- =?us-ascii?Q?ZD6Sgt4CpDjLvsaQJDgrR/swyqlk3trkvZ7Nh6HdXcuKFKMlGW2ghQYQv5am?=
- =?us-ascii?Q?8fKfgBbdzy/ozRb6GfzkD6+Qkxa2FiPryPvyN3uMjMj25yN51iTH3MXHQ3KP?=
- =?us-ascii?Q?UV8oPLN4H08y7wSlpTFHGDYGAohyeV2OQPdRB8rYx/YlX4nbTxjmuA2Ee1CL?=
- =?us-ascii?Q?ECkSaUirbalayiJUC7EPSCPiCxXXtw//QoapPYvPXhCDtf74YZPp09i4GqyN?=
- =?us-ascii?Q?r5/eZzYHoRzeJUa0jE1AoOjjP9sf61skVxCf1/lRXBkAIQC+Ej1luDvF4Lkh?=
- =?us-ascii?Q?ynU0UqklhwUab5QEPuiK31Q2x3qOAhZU5RmLvDvPP9//eDD8hnJrHaL1XVcb?=
- =?us-ascii?Q?2luximggikqdOC6oWlPYVol3Sc7AvzDHWZVf4YbIZ7sMoNWU1tyrVyMyX/pW?=
- =?us-ascii?Q?uzsuhsJntMsZU3uruwugz9LNt6BoGt1a0Isnw38jZjeIBDXkUEEml/j0klxe?=
- =?us-ascii?Q?mkvsanxg45zOOo6U9+BxrRE73GoQQsNOTz/lhyDFC6ZK6V4LmZwMzkdaJNag?=
- =?us-ascii?Q?6lIJsJ+7mAT9h5tv4ZdWnegBxGdVhHhCnjjEYyAtBvquNX/8bFxOJimmyTmU?=
- =?us-ascii?Q?yo9dN9LTAJLlTKkxmf4uAOwUBzu8rORXKeW/JCKN0ezPoHNqbqM3ZdsxVoYf?=
- =?us-ascii?Q?xGjN0uxpGEG6ctLVMbLPg6pV24bnsHOKhqmyXcA6+jY002xdA6DWw1/4JJrT?=
- =?us-ascii?Q?xortgJxe4mrxTDOOeFIw8EHjiONs5+jhs8UwzgNRwn/0q5xDmCwdeMiedr7K?=
- =?us-ascii?Q?Kg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddc0b92a-0709-4a23-17b7-08dc16da336a
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?I0mcbM/KgXnIjT185eVeOBbB/gsmJQAfnbEtvT4jA6ZzX34CE3iKsAK4elRF?=
+ =?us-ascii?Q?fuq66bYxgi42AZXt9xo6iEEcU9/FgnZPWGpv680879d51XF9ELXC4mJv4v9s?=
+ =?us-ascii?Q?7W5kg+fxiDb0ZuHa/PwZ6Ox23EdNmQqksW3nN8eSDC/E+NAHRsBTaIMXfzL8?=
+ =?us-ascii?Q?buv+FSxcSfCcROWRKEQjdhyZf9GElGZ4u+uTEcQUAYid8pbMA+Z3JnyVt7gW?=
+ =?us-ascii?Q?LmwQDiMmmMA6ZXC+K5ZpPyXtHjZur4zAzlUQjZ+m8kL7ZLTdZSVdVu/EZsCg?=
+ =?us-ascii?Q?m3OovLXVwVgAPOynUWC89jd3PVBpW90B7f+zmZ1MWYT+RnpkXx/17CdhTGig?=
+ =?us-ascii?Q?UH2dErCnXsGQHznzgzv3ThUuKPrLcB87DAUTjZaSojsELHhKy89zX31RnQQl?=
+ =?us-ascii?Q?e4hc6y4EyKu3Gb9+k/U39vkmi6gBQ9klafc3i5QVr7HRo+aUSBPKej3PwKXA?=
+ =?us-ascii?Q?aUKg8qMm6IKXdS2hVYVl5PZSVguWfKNBQGGHRViwX8AQrF53Ys9C9+PAR97a?=
+ =?us-ascii?Q?fh2c19MTpaqBqHOz+Ils1M0oSXSdPpjqmXT1u5Uotd8pon83ya1/orZOW4ir?=
+ =?us-ascii?Q?BL853tc3csywEbwuwV3/tvF8GvJ9M+qQsZ1jgSbrlAsvnA610Ajb51jwo8lc?=
+ =?us-ascii?Q?teiAAUf4GBD/FPEINn8SFOQ+mWozNNe5AbzbUIemqHRH+a5cEff8yI61t+Dr?=
+ =?us-ascii?Q?hMThvjt56tgNAglMqg3Y31Xpnp1xPcDiFonilu+Pmigq51Je1j4UCSF9o6+U?=
+ =?us-ascii?Q?T/CTOVrGEv3x6iQQVkotP3v/yy7c/GjRMFlYmCvtXRbM1cpG4E/4N6W/K3od?=
+ =?us-ascii?Q?DBxTbrsswYmMQMTN8HFJ8JC86FZdjioRdGm4u/ysQ4AnB68TJ3CR1z+paWSq?=
+ =?us-ascii?Q?1D5QR3OzKZISVfYe+C4TbkMMb50GfoRZikrHdNM362krMj7fP6UTEWXFYugV?=
+ =?us-ascii?Q?RO68B6wSgLhnkuctTCCqlwXDxrO+YeFt6T4xErfXEdWWCkp4/4xNOZLIGkLm?=
+ =?us-ascii?Q?+h++3IgS1gT7/iEldVJHwUtbVe83gQZ34Y5vkkMnP1c0HWVdO3m+Lw5XRYI2?=
+ =?us-ascii?Q?ijWcLfDZGMeMkvyIPO/khNNbemOj/5UCHwPMJdjGoWqeOSyjelx02kBFEMXS?=
+ =?us-ascii?Q?y/A0vz34F6ZyJKrOSC5ZaZ7DlxniMi3p8/VydfiOlD8LpndoQlOSNG42i7u5?=
+ =?us-ascii?Q?MjQvrqYvY2+np560dlRKrIpKwDPpT9Mhnw59FYAu5nIcUWCbBuuXK21pNlQS?=
+ =?us-ascii?Q?LxXsteBYQA1bBpllYaDqb8vubqzfRtfTmpmKdn8cMPB/SG01v+dCpSzzgg2P?=
+ =?us-ascii?Q?8Zln5h+ZmNneL4zE6c4ZX6OQfKpYTOlinD0Fkkl+3FftbckMExsiSGLzGNFg?=
+ =?us-ascii?Q?02NMLfyd81+YKKj0/VCFdfV81lGK6G29E8hVzCNkp66FirB26VHVC5rfPP0C?=
+ =?us-ascii?Q?We4y06YGse+M4Wl4qya8JA8AgDmY8sG14ToyQ5Q+cdI5XVVS1F1y4/pyiK6P?=
+ =?us-ascii?Q?6aXW0I9L/HMZUJMyiGRE8e57gvKDTu7oYefGgIBt8oAQKjRLwJ8+put7N8ed?=
+ =?us-ascii?Q?hU2qtEdQyriTBlFQTRdL2VCMq19CmNhV4vtUIMqXu258SBm3iYCgSU9Gdz6G?=
+ =?us-ascii?Q?zw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 504afeea-cb17-45b4-98eb-08dc16ed87e1
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 21:29:20.3803
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 23:47:42.3940
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tbxUVIYcOV3qA6k7ndZzNZLJ0QvgK4WsQjIl+Ont+kJr8bgl8kDn2eAzeebFStmf3KKdLcXK3oNsZn2jiQod21kUsppQ6HqlrxKepCs5v+8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6113
+X-MS-Exchange-CrossTenant-UserPrincipalName: yNC0A4G+Jm1VpEoziGUaSw1lNqroJVMrRC0MDhynBUgmJw9nEWlhk0dWNXrI+FdiuH1n9yCMoHaVBE37ibhvFeMPoQAwSJgikPB3qUhxlhA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6823
 X-OriginatorOrg: intel.com
 
-Daisuke Kobayashi (Fujitsu) wrote:
-> > > I am wondering about an approach like below is sufficient for lspci.
-> > >
-> > > The idea here is that cxl_pci (or other PCI driver for Type-2 RCDs) can
-> > > opt-in to publishing these hidden registers.
-> > >
-> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > index 4fd1f207c84e..ee63dff63b68 100644
-> > > --- a/drivers/cxl/pci.c
-> > > +++ b/drivers/cxl/pci.c
-> > > @@ -960,6 +960,19 @@ static const struct pci_error_handlers
-> > cxl_error_handlers = {
-> > >         .cor_error_detected     = cxl_cor_error_detected,
-> > >  };
-> > >
-> > > +static struct attribute *cxl_rcd_attrs[] = {
-> > > +       &dev_attr_rcd_lnkcp.attr,
-> > > +       &dev_attr_rcd_lnkctl.attr,
-> > > +       NULL
-> > > +};
-> > > +
-> > > +static struct attribute_group cxl_rcd_group = {
-> > > +       .attrs = cxl_rcd_attrs,
-> > > +       .is_visible = cxl_rcd_visible,
-> > > +};
-> > > +
-> > > +__ATTRIBUTE_GROUPS(cxl_pci);
-> > > +
-> > >  static struct pci_driver cxl_pci_driver = {
-> > >         .name                   = KBUILD_MODNAME,
-> > >         .id_table               = cxl_mem_pci_tbl,
-> > > @@ -967,6 +980,7 @@ static struct pci_driver cxl_pci_driver = {
-> > >         .err_handler            = &cxl_error_handlers,
-> > >         .driver = {
-> > >                 .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
-> > > +               .dev_groups     = cxl_rcd_groups,
-> > >         },
-> > >  };
-> > >
-> > >
-> > > However, the problem I believe is this will end up with:
-> > >
-> > > /sys/bus/pci/devices/$pdev/rcd_lnkcap
-> > > /sys/bus/pci/devices/$pdev/rcd_lnkctl
-> > >
-> > > ...with valid values, but attributes like:
-> > >
-> > > /sys/bus/pci/devices/$pdev/current_link_speed
-> > >
-> > > ...returning -EINVAL.
-> > >
-> > > So I think the options are:
-> > >
-> > > 1/ Keep the status quo of RCRB knowledge only lives in drivers/cxl/ and
-> > >    piecemeal enable specific lspci needs with RCD-specific attributes
-> > 
-> > This one gets my vote.
+Ben Cheatham wrote:
+> Change the EINJ module to install a platform device/driver on module
+> init and move the module init() and exit() functions to driver probe and
+> remove. This change allows the EINJ module to load regardless of whether
+> setting up EINJ succeeds, which allows dependent modules to still load
+> (i.e. the CXL core).
 > 
-> Thank you for your feedback.
-> Like Dan, I also believe that implementing this feature in the kernel may 
-> not be appropriate, as it is specifically needed for CXL1.1 devices.
-> Therefore, I understand that it would be better to implement 
-> the link status of CXL1.1 devices directly in lspci.
-> Please tell me if my understanding is wrong.
+> Since EINJ may no longer be initialized when the module loads, any
+> functions that are called from dependent/external modules should check
+> the einj_initialized variable before calling any EINJ functions.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  drivers/acpi/apei/einj.c | 43 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 41 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+> index 013eb621dc92..10d51cd73fa4 100644
+> --- a/drivers/acpi/apei/einj.c
+> +++ b/drivers/acpi/apei/einj.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/nmi.h>
+>  #include <linux/delay.h>
+>  #include <linux/mm.h>
+> +#include <linux/platform_device.h>
+>  #include <asm/unaligned.h>
+>  
+>  #include "apei-internal.h"
+> @@ -136,6 +137,12 @@ static struct apei_exec_ins_type einj_ins_type[] = {
+>   */
+>  static DEFINE_MUTEX(einj_mutex);
+>  
+> +/*
+> + * Functions called from dependent modules should check this variable
+> + * before using any EINJ functionality.
+> + */
 
-The proposal is to do a hybrid approach. The drivers/cxl/ subsystem
-already handles RCRB register access internally, so it can go further
-and expose a couple attributes ("rcd_lnkcap" and "rcd_lnkctl") that
-lspci can go read. In other words, "/dev/mem" is not a reliable way to
-access the RCRB, and it is too much work to make the existing sysfs
-config-space access ABI understand the RCRB layout since that
-complication would only be useful for one hardware generation.
+This reads slightly odd to me, is this clearer?
 
-An additional idea here is to allow for the CXL subsystem to takeover
-publishing PCIe attributes like "current_link_speed", that are currently
-broken by the RCRB configuration, with a change like this:
+"Exported APIs use this flag to exit early if einj_probe() failed."
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 2321fdfefd7d..982bbec721fd 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1613,7 +1613,7 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
-        struct device *dev = kobj_to_dev(kobj);
-        struct pci_dev *pdev = to_pci_dev(dev);
+> +static bool einj_initialized;
+
+This can be marked __ro_after_init to make it clear that it is static
+for the lifetime of the module.
+
+> +
+>  static void *einj_param;
+>  
+>  static void einj_exec_ctx_init(struct apei_exec_context *ctx)
+> @@ -684,7 +691,7 @@ static int einj_check_table(struct acpi_table_einj *einj_tab)
+>  	return 0;
+>  }
+>  
+> -static int __init einj_init(void)
+> +static int einj_probe(struct platform_device *pdev)
+
+This can remain __init since nothing will call this function port
+init().
+
+>  {
+>  	int rc;
+>  	acpi_status status;
+> @@ -782,7 +789,7 @@ static int __init einj_init(void)
+>  	return rc;
+>  }
+>  
+> -static void __exit einj_exit(void)
+> +static void einj_remove(struct platform_device *pdev)
+
+Similarly this can remain __exit.
  
--       if (pci_is_pcie(pdev))
-+       if (pci_is_pcie(pdev) && !is_cxl_rcd(pdev))
-                return a->mode;
- 
-        return 0;
+>  {
+>  	struct apei_exec_context ctx;
+>  
+> @@ -801,6 +808,38 @@ static void __exit einj_exit(void)
+>  	acpi_put_table((struct acpi_table_header *)einj_tab);
+>  }
+>  
+> +static struct platform_device *einj_dev;
+> +struct platform_driver einj_driver = {
+> +	.remove_new = einj_remove,
+> +	.driver = {
+> +		.name = "einj",
 
-...then the CXL subsystem can produce its own attributes with the same
-name, but backed by the RCRB lookup mechanism.
+Perhaps call this acpi-einj just to preserve the namespace in case a
+cross-platform generic "einj" comes along.
+
+> +	},
+> +};
+> +
+> +static int __init einj_init(void)
+> +{
+> +	struct platform_device_info einj_dev_info = {
+> +		.name = "einj",
+
+Ditt "acpi-einj"
+
+> +		.id = -1,
+> +	};
+> +
+> +	einj_dev = platform_device_register_full(&einj_dev_info);
+
+Just return early here if this failed.
+
+> +	einj_initialized = !platform_driver_probe(&einj_driver, einj_probe);
+
+Nit, but since platform_driver_probe() does not return bool, I would
+prefer this to be more explicit:
+
+	err = platform_driver_probe();
+	einj_initialized = err == 0;
+
+I think it is ok for the platform-device to stick around if einj_probe()
+failures as userspace can see that the module is loaded but driver-init
+failed.
+
+Similarly it's probably also ok to fail the module load if
+platform_device_register_full() fails since something deeper is wrong
+with the system if it is starting to fail something so basic.
+
+> +	if (!(einj_initialized || IS_ERR_OR_NULL(einj_dev)))
+> +		platform_device_del(einj_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit einj_exit(void)
+> +{
+> +	if (einj_initialized) {
+> +		platform_driver_unregister(&einj_driver);
+> +		platform_device_del(einj_dev);
+
+Per above, this device_del can move outside the conditional.
