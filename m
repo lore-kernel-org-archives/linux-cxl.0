@@ -1,700 +1,310 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F4220320
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Jan 2024 15:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD6822301;
+	Wed, 17 Jan 2024 16:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503943; cv=pass; b=HgR8Gg+qOHgoycVpHKEbzO2Jr7fELsHxSLaJTlEuOMuiihRRxhkgIJI3rYIttTqMSTZjMHOaQrjLntJBrU7Mxq+dbgL9Hw0JmHx8QuUoBAB6ZD0TbvF5zvRspB+0meR7bfyBk2sdveQQwcYJP3GFlqw/ju9pOvh6abs0z+q3NJE=
+	t=1705508101; cv=fail; b=PtAAGIPf2VwHkWEW/Ca6kWv6z9PZsIWJbu78RLWeMLYPAv7w0xXTM1qD6kPCg8ddi3J+mtAZJGmzCaSiqVGhQIjGo8irHxjkamzbynCyP2PhSM3D1/5jG92io1zjE1VR9EmYJHfz9mmIju19UXk5R1zu+WcYi5wBX29Q7VAxCB8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503943; c=relaxed/simple;
-	bh=E3S/T4W8+nNvoRm5UcOSgBVSxWkxgGA1HTTYSnHBfm0=;
-	h=X-Sender-Id:Received:Received:ARC-Message-Signature:
-	 ARC-Authentication-Results:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Interest-Print:
-	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
-	 DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding; b=gYRQvDlNSN81CWpUo6z49wi4L5xRQuyeRjmejl+DnubxHUjPITcbhlWOyRudYbNe6pM0uJlpmswsm4r+5YItbQYPHcnwONIZj3GBSHiQO10TposQtqUtYeecD0/t0kpjpkO+tYQAX6HGDGt5Ux9lvHHx1Y3vv+ETR0HLZ6u6vTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=K71p64ql; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1705508101; c=relaxed/simple;
+	bh=H05ExKCJJnIvj/g1Pf6ygestVAIxyGj4a6cWdoYDi04=;
+	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
+	 Received:Received:Message-ID:Date:User-Agent:Subject:To:Cc:
+	 References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=FUSx3Q1JCwopcr9W87DgXMnj7ImhWyntSYCILx7/uNS+bgruzQnbCWCBgrsJ8vtRr/SdsdQcTF46Bi1Q+vZm1SlaPTkaYmLZhjRgmtJGPJ+Z8fZpyJAgXJ8TYURupIupKF5Ymbv4JopH3gAj99RWljEwRwzAjgl9DuQEe/oamIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=haJ+EOCu; arc=fail smtp.client-ip=40.107.95.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="K71p64ql"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id C3C3C942E1E;
-	Wed, 17 Jan 2024 08:25:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a309.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 55B4A943560;
-	Wed, 17 Jan 2024 08:25:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1705479901; a=rsa-sha256;
-	cv=none;
-	b=UdnKC/x9K8mU8cMQkTerx2V3OeJqerKfkP2+eSVXfFb6PVaHdlxAXOPsylNLZ4ZeCGsztJ
-	TIzHL64OWu7LulGnMHydA+faThk5zlb5ZsDsk1X0SbTkZkTPy5G6XMorCHLL6XR5YDd5WH
-	kOtvC2Oa9fJyZdgghMoYkLox6pDjg+QwcDY8bzD9MsCleX1Wmq94yRuKlBOXzx7SgxrGYF
-	uRDFvDGfFlj1zf57J534fQijcRsowVZ5l3z3LWWKOf7pqMKC9ecclUwe5yZLsS7bVCAJwa
-	SJV5wyPz1fUcfwqOpSv8Jka/OR8Ig0QCrrXEYgf5fhQ07BTUi+u97sUV9jLoCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1705479901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=UNjH/SI+91e/1/x5n/nVjIrrp2z/EZZd79WiHojFOMw=;
-	b=GvjZ3LH3j1Xi+5Ophu/5Yf0TkbPUaWTj1RVVWBvMwG6Z5YkQe6lB5+a00z2cRMNY1TR3lT
-	TRnHXrCtfuYR1z3/K3vCOwTEq1TfKaTFDV5HeIGXanbJXIj6meYqcKzGPEJb/NGrMaW8lv
-	jTmeegBww1k32GyRHQpQlJQz5mAhQjtagvKHfJ+iwtZjO1wucarS1Cu0Zp5hLtOU+RlIPd
-	pa1gGgwTxCgdjIEE6PAsWuCnxRUnnFOUtADnwm1GP90HzSjdIRnSo+lroqJjotT9APQKri
-	KN9v3p1MkRndAIAOAVkrWXWAPBvSSw8etGEDSdj98+J3Lmf0IG1zQgpUWQAOIg==
-ARC-Authentication-Results: i=1;
-	rspamd-568947cb6c-t8d4c;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Interest-Print: 7595534d78a3bf6e_1705479901670_3904412535
-X-MC-Loop-Signature: 1705479901670:2845310478
-X-MC-Ingress-Time: 1705479901670
-Received: from pdx1-sub0-mail-a309.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.107.169.71 (trex/6.9.2);
-	Wed, 17 Jan 2024 08:25:01 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a309.dreamhost.com (Postfix) with ESMTPSA id 4TFJpN41jnzM3;
-	Wed, 17 Jan 2024 00:25:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1705479901;
-	bh=UNjH/SI+91e/1/x5n/nVjIrrp2z/EZZd79WiHojFOMw=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=K71p64qlnyup9SFQpuTRTt4Q5CY+43STiwvQvYV2bLcRkTGQrNWdrE4IizBWw7AhS
-	 8AGCkLAP00tvDAh7tzkCt3pR9tiKYVBEPCjvo88U9ULZHIL6izQpB7RiscFja3hiwt
-	 OkUxtNbIUrNUwuTMsIBppYeXegeJmIzlGdIoUFI1FCSPK6KnbCjvUSHwYQMygYYWW+
-	 hiu6lIy/f8IDl0koka96BQxzLK8Cz/SfTkwUEKQzaSupb3aFdWv3xJB9CY+6qIyI8o
-	 fUY0hI3WuhpnFKum6r1DIJEGnhefGNEH91dAsyNUdxGJ9izyFlHa1ifvZhO+GewcwO
-	 UocKuJ9X+Awsg==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: fan.ni@samsung.com,
-	a.manzanares@samsung.com,
-	mounika.k@samsung.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH -qemu] hw/cxl: Add Maintenance support
-Date: Wed, 17 Jan 2024 00:24:35 -0800
-Message-ID: <20240117082435.11348-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="haJ+EOCu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GG+jxAVPiG9cbhz/09JZ71kKDmTzXroKYUYybQunPOH3ud97t6EWaV5K4e1gId9dTudHhFGqLMiziClH/t3mMtS+RCsAeVkvUGJZYkd7mqA/sqfuu6ixl9ihvbJy1iighQadJgQ6iIIC8QJMdzH2BX5ODby0iFvQsit6bkiOG7vajkgsPFNY5wyrQ9oTftbVHTWLv7dFhkvueqhs9KZC8NwRwKA5TpEMsOb6XfWqIjouHsp2h5pWUtyEMLBrEZv613QvNzIvIwhUFPqZbQ2bojDGibauZgQZiTMwlvV0lzKXM/1A+dxzE9/HmlbW/o6Hwqn341CwB6ckaAb3T0dg3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ieDrAjMPWaSNYXYDLGga7IR/8H1GvbdMPnZGOP6eRes=;
+ b=gOmJw1TxQpxWDPolA69EBg131sN0hG6dx0SeQ1+sreEm8ELYLu+LBbu9f9MqznyeGsbbt8q5TSWoZU+TedyCzXhkZOZsQ48F4GkQddcZur1flt4AqTvlqtwcpTw9nBJYlztp4r5ATjfxvkoZW6hVEBMT487YViPspCzDZDhLL9VbfSBOb+V9cThOdiuGvMXh70cgPhfQarSiMIvVoyITSIwK9fJTvls4N5fORe+uHq/GPEWElGsouX1IjjFg2ZyTm1lCF1hPF/0BDNgzLKOynqUITZYRbY6YX53ZcY+mBU0LQLrIAKqsuOz/H102x3rBlVBDv99E644t5HJjBt6cNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ieDrAjMPWaSNYXYDLGga7IR/8H1GvbdMPnZGOP6eRes=;
+ b=haJ+EOCuWpwMu5n5LfpCH+DlV6yXIZbNG8sGIU//8eA1jCSgJv6JKvq/Alxy3kzONFsHSZSLGpqu8xKhwRjfqYQwIc2CMGIKuvKgeawlmvBzuTjhzyzjzB/4QJQCCwMqfqx2c5VT+HgKSyfv9a4Nv7/YTAHUjqw05Jzxrxw9p/4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8535.namprd12.prod.outlook.com (2603:10b6:610:160::19)
+ by CH3PR12MB8512.namprd12.prod.outlook.com (2603:10b6:610:158::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 17 Jan
+ 2024 16:14:57 +0000
+Received: from CH3PR12MB8535.namprd12.prod.outlook.com
+ ([fe80::b21f:aced:8bae:a73d]) by CH3PR12MB8535.namprd12.prod.outlook.com
+ ([fe80::b21f:aced:8bae:a73d%7]) with mapi id 15.20.7181.019; Wed, 17 Jan 2024
+ 16:14:57 +0000
+Message-ID: <4eea7fe5-9be7-4853-9c3a-bbe835f7397b@amd.com>
+Date: Wed, 17 Jan 2024 10:14:52 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 3/5] EINJ: Migrate to a platform driver
+To: Dan Williams <dan.j.williams@intel.com>, dave@stogolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ rafael@kernel.org
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20240115172007.309547-1-Benjamin.Cheatham@amd.com>
+ <20240115172007.309547-4-Benjamin.Cheatham@amd.com>
+ <65a7159bbad4d_3b8e294f5@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Ben Cheatham <benjamin.cheatham@amd.com>
+In-Reply-To: <65a7159bbad4d_3b8e294f5@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0229.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:66::35) To CH3PR12MB8535.namprd12.prod.outlook.com
+ (2603:10b6:610:160::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8535:EE_|CH3PR12MB8512:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70dadf85-3fc5-4811-b2d1-08dc177772a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7u5Dd8WUV2JpsVH/3j3pO30YCrsXmfX3Uw8onqW3LnavNTYw0GpcVJ7ITsWYK2yMLdI4c+RPhg7gqWfMylshaDJFOJM7/EW4+LnEQ4sFZSyJu7odDJQXTHKXc3sFKfp1eyK27DX4ydkURITAd2DxB+p6W4g0Kw2IXs16ERrwvXBbffK1d+HYi8gTAevNdPSlQwzM3ySUdmfVbOA24zDvDsm1NJfqLnW3q0wnxsfOUN+2aMw/noJ6vY5X5eFlCU0GcQBg0sI0z/h8Iu68UVZAEFs0H8BrU9ZM6rwDM9anI/yH0xMzb9mUix2O4a9akKwQ3lTOKDc9+jt7HN8/B8EhYjYC7VDkzGnhpTTj7gLysOF+Eh6LHIb/UJAfjXBA56v2ep0O67HcTwTDqrTaFLljMwRQKnrGgPNO7sloLZfIu3HE/xt22Kl0ZPYFcaM59vVH3F0hjR5uOE5jgD2d+serxV4vyHSZhsv5djWG2eOOiB/PgWN2zm11pJe9gvDwDykTFi8yoeYwnh6RWIASvncmH4fSbvbhUe1VRo4C+ElZi/MzHJDGP2jVJ2mS40B73NHH3u5r3N8e2edl0VHLoqQn0rSdUlDCENG6kp1by6YUc9H+deGAt5h6C+Va4e5RtmG0DRtLA/naY0Q79fpz9iMMCs9DqdofwHFcp1P4KxMjCXYpxWX13+6uxeXtI2zErzha
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8535.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(366004)(346002)(376002)(396003)(230922051799003)(230273577357003)(230173577357003)(1800799012)(64100799003)(186009)(451199024)(31686004)(83380400001)(478600001)(5660300002)(7416002)(4326008)(8936002)(66946007)(316002)(6506007)(6666004)(6486002)(66556008)(66476007)(8676002)(6512007)(26005)(2616005)(38100700002)(2906002)(53546011)(41300700001)(31696002)(86362001)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bnhVWkVXdkFpaWR2N1VBNSswNGg5UUlGMlNocUNqbTU0NnFpbDNOY2JTUXgw?=
+ =?utf-8?B?ZjQ4UDZXejcrb2JLNi9YU1JaTlFDRlRwaGpFY0hhOEFwRGpQNHV6bG9qTVJl?=
+ =?utf-8?B?eExxRGFJeDhUZ1hOMnRBQ2JrZUZCUSt5amx0RjNVdHlLdDVFMVgva3NNc1lr?=
+ =?utf-8?B?VjcvTXIvb21PZDBQRERGY1NpRVd3MkxFZW1CRVhzVHFUTlp0Q3dlM0xJRkI3?=
+ =?utf-8?B?UzAvb1JNWm1nL3pvd25uTjBWeDgxc054R2xIZ3RrRzg2bU5OSFU2TXNRSnVy?=
+ =?utf-8?B?Qy96b2piVG9KNHJrLzRtVFdvUG5Ebk9qK0FkQk15dURRSGM1ekF0QU1sM1pC?=
+ =?utf-8?B?R0dncFl2clpRZUZyMjZ6cHlqVUhsVXVZYUdiMHNHMDVNL3RTZENWVkc1eTBs?=
+ =?utf-8?B?Y09IMGl3cVZEeXl3U1NmV1Y1bWNXWW5HajZUb3RMejJGcWtHS3pLdjhoTnhn?=
+ =?utf-8?B?a2xGcTBEU0tTM1RGZTFKRkgxTW5kS1RiRlBnMEpmMGFKejlLTklCczVMdTRL?=
+ =?utf-8?B?QTlDeTlPVmN3V24zd2dJVmZXVmdwUXdFR2tCTlNaRGE1T084eTF4U214enRQ?=
+ =?utf-8?B?ZU43SlBibitsdkM5WTJ4UHdHTSsvZ1lxcFg3VkFlRDU1YTlIQmpRczZ1ODBC?=
+ =?utf-8?B?ck40OWZyS2JYaFFVWmQvVDZNRDRIVDFiekJuT3Z1bERCS0VUNVlXQ3pVMGlJ?=
+ =?utf-8?B?UWttUjR2dXlTTERYR3I4UDZYRmdDdzJNM0pPUWFkRGVpUGV1WHJQdEEyVVFi?=
+ =?utf-8?B?MnNZWFZlbnk5ZEdUQVFLOUNiVmtUMFp3enhvVzdIWEl5RkZjSWFFNkxtZzJh?=
+ =?utf-8?B?dTV4dVJXUzBXOVRXdkx5cUJMR1Z6SkxqTEtIcmozKzlPS0JsanE4c2Y5T01T?=
+ =?utf-8?B?WkFETjhWTW50dDBkSnJ3WVhxNmdaSC9EZzhGd3V4L2xWVkx6RHUxb0hXRTll?=
+ =?utf-8?B?QlZzcmI0UUZ4aWRvTGluNDRwWi9rb2pyeGRvZ0FuNkFDK3poa1RndkxJOWhK?=
+ =?utf-8?B?RjlYRjhCWEpUUXVPU0JPZFdxOVdGWHhzRzNKcmlsMHFzYU41YTlzVjRnUXpG?=
+ =?utf-8?B?WkZCODEyZCtoZGdkR3dhRTFvOVBtdUZtZ1JuQTJhcXBtVjFHWEs3YjdSaENt?=
+ =?utf-8?B?b0VicUgzVTRZQmM2WVZrd0thSWlqQ3h3a1hId0tpNjdvVGk3eDk2bFg3VndO?=
+ =?utf-8?B?M05WemhmK01rOG1VMHVreUhxSTVzZEV1Sy9PbWo5RXpscEs4OGZ1UHJ3NDVN?=
+ =?utf-8?B?YjVsUGh2MXZXRndna09VWW0rZ0lMR2c4b0FxeXhERFczTjFzcW05dzZlSzds?=
+ =?utf-8?B?YzhIWUhnTkZPaU85dllvaFFNMElMQ1puQmxMN3U5dnU1R0p6U1h5VnFrVWJ4?=
+ =?utf-8?B?RjRKcUNjY3V5aC9pTEtLZm1Nd29vVmg4RVpDc3JIcDdGbW1ndklkYjBmcFFI?=
+ =?utf-8?B?clpNeml0YlFDZWFxdlVtQVVhbnRYMExrMjVwZ09kdVdEWkJhQXlSWjNEaktE?=
+ =?utf-8?B?OHJBMFFjQUp5Y3pFM1hvZ28wRnI0YmtBRzl2ZUNsMTlCaGhIWll3UWFxb3Np?=
+ =?utf-8?B?cWQvSG1pZlhKQ1o1REpES2Q3TUlYbUxjeUJSTkV6TjE3SjczY0IzZUU2Sk9R?=
+ =?utf-8?B?YnFTU2NnVVJPSjlDV3FDVFVURm9HbmIzeVdkWE1WWlZMQmVMNXF0VTZQOHpY?=
+ =?utf-8?B?QUR3b3ZabEtFUHgyZVQ2YVpOUlJkNmEwODhQR0YzU290QkFOZ1U3M3F6RWxp?=
+ =?utf-8?B?TlNWb0owRUpjTWo2K2NST1liVDJEUkIvMHhBeGRrVVhzTDhmNXRCbXR0SWpG?=
+ =?utf-8?B?dlpndlJjR1hDSUtWV25zVnBJYW9YVUlYNkdZcVZHY3JOS0hZSEh2OWlUSmp5?=
+ =?utf-8?B?NHdwdFN4WEhQOEtQYVBJaFhIbGxJcUN3T3c4d01PdlJHRG5oNzFUbzQ5NlJR?=
+ =?utf-8?B?STdjR3NKVWtkejd1LzlNMzBNa3V2YTlHZ1lEVHBRckpIV1c1QXllL0p6WDJK?=
+ =?utf-8?B?dmsycUZSZmdyNzNyWnZsL1l3dFU1NGpRdUJNV1hSQzdEYm93VGM4blZDeHlZ?=
+ =?utf-8?B?dENVYmIxcnZSWWJ4cHI2OUZtUE14WmQwK3lOS09CTE8zTGVTckdvRjdobXJp?=
+ =?utf-8?Q?kSR16SGKPqDms+EQNXdfkV9dO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70dadf85-3fc5-4811-b2d1-08dc177772a7
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8535.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 16:14:57.3448
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E2U1K5P21S4pybTfW0qflVL4JMhBzQ5V5rgARaQpvabj8QoDZQMrsnSYlU3AA/wGOG210dROlUmGcDYsc3bXxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8512
 
-This adds initial support for the Maintenance command, specifically
-the soft and hard PPR operations on a dpa. The implementation allows
-to be executed at runtime, therefore semantically, data is retained
-and CXL.mem requests are correctly processed.
+Hi Dan, thanks for the quick response! Comments inline.
 
-Keep track of the requests upon a general media or DRAM event.
+On 1/16/24 5:47 PM, Dan Williams wrote:
+> Ben Cheatham wrote:
+>> Change the EINJ module to install a platform device/driver on module
+>> init and move the module init() and exit() functions to driver probe and
+>> remove. This change allows the EINJ module to load regardless of whether
+>> setting up EINJ succeeds, which allows dependent modules to still load
+>> (i.e. the CXL core).
+>>
+>> Since EINJ may no longer be initialized when the module loads, any
+>> functions that are called from dependent/external modules should check
+>> the einj_initialized variable before calling any EINJ functions.
+>>
+>> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+>> ---
+>>  drivers/acpi/apei/einj.c | 43 ++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 41 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+>> index 013eb621dc92..10d51cd73fa4 100644
+>> --- a/drivers/acpi/apei/einj.c
+>> +++ b/drivers/acpi/apei/einj.c
+>> @@ -21,6 +21,7 @@
+>>  #include <linux/nmi.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/mm.h>
+>> +#include <linux/platform_device.h>
+>>  #include <asm/unaligned.h>
+>>  
+>>  #include "apei-internal.h"
+>> @@ -136,6 +137,12 @@ static struct apei_exec_ins_type einj_ins_type[] = {
+>>   */
+>>  static DEFINE_MUTEX(einj_mutex);
+>>  
+>> +/*
+>> + * Functions called from dependent modules should check this variable
+>> + * before using any EINJ functionality.
+>> + */
+> 
+> This reads slightly odd to me, is this clearer?
+> 
+> "Exported APIs use this flag to exit early if einj_probe() failed."
+> 
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Only mildly tested through qmp event injection.
-Applies on top of the Features machinery:
-	https://lore.kernel.org/linux-cxl/20231124135338.1191-2-shiju.jose@huawei.com/
+That is clearer, I'll change it.
 
- hw/cxl/cxl-mailbox-utils.c  | 233 +++++++++++++++++++++++++++++++++++-
- hw/mem/cxl_type3.c          |  52 ++++++--
- hw/mem/cxl_type3_stubs.c    |   4 +-
- include/hw/cxl/cxl_device.h |  15 +++
- include/hw/cxl/cxl_events.h |   5 +-
- qapi/cxl.json               |  18 +++
- 6 files changed, 314 insertions(+), 13 deletions(-)
+>> +static bool einj_initialized;
+> 
+> This can be marked __ro_after_init to make it clear that it is static
+> for the lifetime of the module.
+> 
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 67bfcadf8b49..9df3d2894a9f 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -100,13 +100,15 @@ enum {
-         #define MANAGEMENT_COMMAND     0x0
-     MHD = 0x55,
-         #define GET_MHD_INFO 0x0
--    DCD_MANAGEMENT = 0x56
-+    DCD_MANAGEMENT = 0x56,
-         #define GET_DCD_INFO 0x0
-         #define GET_HOST_DC_REGION_CONFIG 0x1
-         #define SET_DC_REGION_CONFIG 0x2 /* Why not host? huh...*/
-         #define GET_DC_REGION_EXTENT_LIST 0x3
-         #define INITIATE_DC_ADD 0x4
-         #define INITIATE_DC_RELEASE 0x5
-+    MAINTENANCE = 0x60,
-+        #define PERFORM 0x0
- };
- 
- /* CCI Message Format CXL r3.0 Figure 7-19 */
-@@ -989,6 +991,8 @@ typedef struct CXLSupportedFeatureEntry {
- } QEMU_PACKED CXLSupportedFeatureEntry;
- 
- enum CXL_SUPPORTED_FEATURES_LIST {
-+    CXL_FEATURE_SPPR,
-+    CXL_FEATURE_HPPR,
-     CXL_FEATURE_MAX
- };
- 
-@@ -1029,6 +1033,46 @@ enum CXL_SET_FEATURE_FLAG_DATA_TRANSFER {
-     CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MAX
- };
- 
-+/*
-+ * CXL r3.1 section 8.2.9.7.2.1: sPPR Feature Discovery and Configuration
-+ * CXL r3.1 section 8.2.9.7.2.2: hPPR Feature Discovery and Configuration
-+ */
-+static const QemuUUID soft_ppr_uuid = {
-+    .data = UUID(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e,
-+                 0x69, 0x2c, 0x91, 0x75, 0x68, 0xbb)
-+};
-+
-+static const QemuUUID hard_ppr_uuid = {
-+    .data = UUID(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1,
-+                 0xec, 0x74, 0x59, 0xfb, 0x0e, 0x24)
-+};
-+
-+typedef struct CXLPPReadAttr {
-+    uint8_t max_maint_latency;
-+    uint16_t op_caps;
-+    uint16_t op_mode;
-+    uint8_t maint_op_class;
-+    uint8_t maint_op_subclass;
-+    uint8_t rsvd[9];
-+    uint8_t ppr_flags;
-+    uint16_t restriction_flags;
-+    uint8_t ppr_op_mode;
-+} QEMU_PACKED CXLPPReadAttr;
-+static CXLPPReadAttr cxl_memdev_hppr_feat_read_attr;
-+static CXLPPReadAttr cxl_memdev_sppr_feat_read_attr;
-+
-+typedef struct CXLPPRWriteAttr {
-+    uint16_t op_mode;
-+    uint8_t ppr_op_mode;
-+} QEMU_PACKED CXLPPRWriteAttr;
-+static CXLPPRWriteAttr cxl_memdev_hppr_feat_write_attr;
-+static CXLPPRWriteAttr cxl_memdev_sppr_feat_write_attr;
-+
-+typedef struct CXLPPRSetFeature {
-+        CXLSetFeatureInHeader hdr;
-+        CXLPPRWriteAttr feat_data;
-+} QEMU_PACKED QEMU_ALIGNED(16) CXLPPRSetFeature;
-+
- /* CXL r3.0 section 8.2.9.6.1: Get Supported Features (Opcode 0500h) */
- static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-                                              uint8_t *payload_in,
-@@ -1052,7 +1096,7 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-     uint16_t feat_entries = 0;
- 
-     if (get_feats_in->count < sizeof(CXLSupportedFeatureHeader) ||
--        get_feats_in->start_index > CXL_FEATURE_MAX) {
-+        get_feats_in->start_index >= CXL_FEATURE_MAX) {
-         return CXL_MBOX_INVALID_INPUT;
-     }
-     req_entries = (get_feats_in->count -
-@@ -1064,6 +1108,62 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-     entry = 0;
-     while (entry < req_entries) {
-         switch (index) {
-+        case CXL_FEATURE_SPPR:
-+            /* Fill supported feature entry for sPPR */
-+            get_feats_out->feat_entries[entry] =
-+                           (struct CXLSupportedFeatureEntry) {
-+                .uuid = soft_ppr_uuid,
-+                .feat_index = index,
-+                .get_feat_size = sizeof(cxl_memdev_sppr_feat_read_attr),
-+                .set_feat_size = sizeof(cxl_memdev_sppr_feat_write_attr),
-+                .attrb_flags = BIT(0) | BIT(5),
-+                .get_feat_version = 0x2,
-+                .set_feat_version = 0x2,
-+                .set_feat_effects = 0,
-+            };
-+            feat_entries++;
-+
-+            /* 100 ms */
-+            cxl_memdev_sppr_feat_read_attr.max_maint_latency = 0x5;
-+            /* only start maintanance when explicitly requested */
-+            cxl_memdev_sppr_feat_read_attr.op_caps = 0;
-+            cxl_memdev_sppr_feat_read_attr.op_mode = 0;
-+            cxl_memdev_sppr_feat_read_attr.maint_op_class = 0x1;
-+            cxl_memdev_sppr_feat_read_attr.maint_op_subclass = 0;
-+            /* dpa support */
-+            cxl_memdev_sppr_feat_read_attr.ppr_flags = BIT(0);
-+            /* data is retained across maintenance */
-+            cxl_memdev_sppr_feat_read_attr.restriction_flags = 0;
-+            cxl_memdev_sppr_feat_read_attr.ppr_op_mode = 0;
-+            break;
-+        case CXL_FEATURE_HPPR:
-+            /* Fill supported feature entry for hPPR */
-+            get_feats_out->feat_entries[entry] =
-+                           (struct CXLSupportedFeatureEntry) {
-+                .uuid = hard_ppr_uuid,
-+                .feat_index = index,
-+                .get_feat_size = sizeof(cxl_memdev_hppr_feat_read_attr),
-+                .set_feat_size = sizeof(cxl_memdev_hppr_feat_write_attr),
-+                .attrb_flags = BIT(0) | BIT(5),
-+                .get_feat_version = 0x2,
-+                .set_feat_version = 0x2,
-+                .set_feat_effects = 0,
-+            };
-+            feat_entries++;
-+
-+            /* 100 ms */
-+            cxl_memdev_hppr_feat_read_attr.max_maint_latency = 0x5;
-+            /* only start maintanance when explicitly requested */
-+            cxl_memdev_hppr_feat_read_attr.op_caps = 0;
-+            cxl_memdev_hppr_feat_read_attr.op_mode = 0;
-+            cxl_memdev_hppr_feat_read_attr.maint_op_class = 0x1;
-+            cxl_memdev_hppr_feat_read_attr.maint_op_subclass = 0x1;
-+            /* dpa support */
-+            cxl_memdev_hppr_feat_read_attr.ppr_flags = BIT(0);
-+            /* data is retained across maintenance */
-+            cxl_memdev_hppr_feat_read_attr.restriction_flags = 0;
-+            cxl_memdev_hppr_feat_read_attr.ppr_op_mode = 0;
-+            break;
-         default:
-             break;
-         }
-@@ -1104,6 +1204,32 @@ static CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
-         return CXL_MBOX_INVALID_INPUT;
-     }
- 
-+    if (qemu_uuid_is_equal(&get_feature->uuid, &soft_ppr_uuid)) {
-+        if (get_feature->offset >= sizeof(cxl_memdev_sppr_feat_read_attr)) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        bytes_to_copy = sizeof(cxl_memdev_sppr_feat_read_attr) -
-+                                             get_feature->offset;
-+        bytes_to_copy = (bytes_to_copy > get_feature->count) ?
-+                               get_feature->count : bytes_to_copy;
-+        memcpy(payload_out,
-+               &cxl_memdev_sppr_feat_read_attr + get_feature->offset,
-+               bytes_to_copy);
-+    } else if (qemu_uuid_is_equal(&get_feature->uuid, &hard_ppr_uuid)) {
-+        if (get_feature->offset >= sizeof(cxl_memdev_hppr_feat_read_attr)) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        bytes_to_copy = sizeof(cxl_memdev_hppr_feat_read_attr) -
-+                                             get_feature->offset;
-+        bytes_to_copy = (bytes_to_copy > get_feature->count) ?
-+                               get_feature->count : bytes_to_copy;
-+        memcpy(payload_out,
-+               &cxl_memdev_hppr_feat_read_attr + get_feature->offset,
-+               bytes_to_copy);
-+    } else {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+
-     *len_out = bytes_to_copy;
- 
-     return CXL_MBOX_SUCCESS;
-@@ -1117,6 +1243,106 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
-                                            size_t *len_out,
-                                            CXLCCI *cci)
- {
-+    CXLSetFeatureInHeader *hdr = (void *)payload_in;
-+
-+    if (qemu_uuid_is_equal(&hdr->uuid, &soft_ppr_uuid)) {
-+        CXLPPRWriteAttr *sppr_write_attr;
-+        CXLPPRSetFeature *sppr_set_feature;
-+
-+        if (hdr->version != 0x2 ||
-+            (hdr->flags & CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MASK) !=
-+                               CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER) {
-+            return CXL_MBOX_UNSUPPORTED;
-+        }
-+
-+        sppr_set_feature = (void *)payload_in;
-+        sppr_write_attr = &sppr_set_feature->feat_data;
-+        cxl_memdev_sppr_feat_read_attr.op_mode = sppr_write_attr->op_mode;
-+        cxl_memdev_sppr_feat_read_attr.ppr_op_mode = sppr_write_attr->ppr_op_mode;
-+    } else if (qemu_uuid_is_equal(&hdr->uuid, &hard_ppr_uuid)) {
-+        CXLPPRWriteAttr *hppr_write_attr;
-+        CXLPPRSetFeature *hppr_set_feature;
-+
-+        if (hdr->version != 0x2 ||
-+            (hdr->flags & CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MASK) !=
-+                               CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER) {
-+            return CXL_MBOX_UNSUPPORTED;
-+        }
-+
-+        hppr_set_feature = (void *)payload_in;
-+        hppr_write_attr = &hppr_set_feature->feat_data;
-+        cxl_memdev_hppr_feat_read_attr.op_mode = hppr_write_attr->op_mode;
-+        cxl_memdev_hppr_feat_read_attr.ppr_op_mode = hppr_write_attr->ppr_op_mode;
-+    } else {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+static void cxl_perform_ppr(CXLType3Dev *ct3d, uint64_t dpa)
-+{
-+    CXLMaintenance *ent, *next;
-+
-+    QLIST_FOREACH_SAFE(ent, &ct3d->maint_list, node, next) {
-+        if (dpa == ent->dpa) {
-+            QLIST_REMOVE(ent, node);
-+            g_free(ent);
-+            break;
-+        }
-+    }
-+    /* TODO: produce a Memory Sparing Event Record */
-+}
-+
-+/* CXL r3.1 section 8.2.9.7.1 - Perform Maintenance (Opcode 600h) */
-+static CXLRetCode cmd_media_perform_maintenance(const struct cxl_cmd *cmd,
-+                                   uint8_t *payload_in, size_t len_in,
-+                                   uint8_t *payload_out, size_t *len_out,
-+                                   CXLCCI *cci)
-+{
-+    struct {
-+        uint8_t class;
-+        uint8_t subclass;
-+        union {
-+            struct {
-+                uint8_t flags;
-+                uint64_t dpa;
-+                uint8_t nibble_mask[3];
-+            } ppr;
-+        };
-+    } QEMU_PACKED *maint_in;
-+    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-+
-+    if (maintenance_running(cci)) {
-+        return CXL_MBOX_BUSY;
-+    }
-+
-+    maint_in = (void *)payload_in;
-+
-+    switch (maint_in->class) {
-+    case 0:
-+        return CXL_MBOX_SUCCESS; /* nop */
-+    case 1:
-+        if (maint_in->ppr.flags & BIT(0)) {
-+            /* resources are always available */
-+            break;
-+        }
-+
-+        switch (maint_in->subclass) {
-+        case 0: /* soft ppr */
-+        case 1: /* hard ppr */
-+            cxl_perform_ppr(ct3d, ldq_le_p(&maint_in->ppr.dpa));
-+            break;
-+        default:
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        break;
-+    case 2:
-+    case 3:
-+        return CXL_MBOX_UNSUPPORTED;
-+    default:
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-     return CXL_MBOX_SUCCESS;
- }
- 
-@@ -2366,6 +2592,9 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
-         "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
-         cmd_media_get_scan_media_results, 0, 0 },
-     [MHD][GET_MHD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
-+    [MAINTENANCE][PERFORM] = { "MAINTENANCE_PERFORM",
-+        cmd_media_perform_maintenance, ~0,  CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-+        CXL_MBOX_IMMEDIATE_DATA_CHANGE | CXL_MBOX_BACKGROUND_OPERATION },
- };
- 
- static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 85fc08f118d0..ad1441e89407 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1679,12 +1679,15 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
- 
- static void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-                                     const QemuUUID *uuid, uint32_t flags,
--                                    uint8_t length, uint64_t timestamp)
-+                                    uint8_t length, uint64_t timestamp,
-+                                    uint8_t maint_class, uint8_t maint_subclass)
- {
-     st24_le_p(&hdr->flags, flags);
-     hdr->length = length;
-     memcpy(&hdr->id, uuid, sizeof(hdr->id));
-     stq_le_p(&hdr->timestamp, timestamp);
-+    hdr->maint_op_class = maint_class;
-+    hdr->maint_op_subclass = maint_subclass;
- }
- 
- static const QemuUUID gen_media_uuid = {
-@@ -1724,9 +1727,25 @@ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
-         return -EINVAL;
-     }
- }
-+
-+static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa)
-+{
-+    CXLMaintenance *ent, *m;
-+
-+    QLIST_FOREACH(ent, &ct3d->maint_list, node) {
-+        if (dpa == ent->dpa) {
-+            return;
-+        }
-+    }
-+    m = g_new0(CXLMaintenance, 1);
-+    m->dpa = dpa;
-+    QLIST_INSERT_HEAD(&ct3d->maint_list, m, node);
-+}
-+
- /* Component ID is device specific.  Define this as a string. */
- void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
--                                        uint8_t flags, uint64_t dpa,
-+                                        uint8_t flags, uint8_t class,
-+                                        uint8_t subclass, uint64_t dpa,
-                                         uint8_t descriptor, uint8_t type,
-                                         uint8_t transaction_type,
-                                         bool has_channel, uint8_t channel,
-@@ -1760,11 +1779,16 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
-         error_setg(errp, "Unhandled error log type");
-         return;
-     }
-+    if (rc == CXL_EVENT_TYPE_INFO && (flags & BIT(3))) {
-+        error_setg(errp, "Informational event cannot require maintanence");
-+        return;
-+    }
-     enc_log = rc;
- 
-     memset(&gem, 0, sizeof(gem));
-     cxl_assign_event_header(hdr, &gen_media_uuid, flags, sizeof(gem),
--                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-+                            cxl_device_get_timestamp(&ct3d->cxl_dstate),
-+                            class, subclass);
- 
-     stq_le_p(&gem.phys_addr, dpa);
-     gem.descriptor = descriptor;
-@@ -1797,6 +1821,10 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
-     if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&gem)) {
-         cxl_event_irq_assert(ct3d);
-     }
-+
-+    if (flags & BIT(3)) {
-+        cxl_maintenance_insert(ct3d, dpa);
-+    }
- }
- 
- #define CXL_DRAM_VALID_CHANNEL                          BIT(0)
-@@ -1809,6 +1837,7 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
- #define CXL_DRAM_VALID_CORRECTION_MASK                  BIT(7)
- 
- void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-+                               uint8_t class, uint8_t subclass,
-                                uint64_t dpa, uint8_t descriptor,
-                                uint8_t type, uint8_t transaction_type,
-                                bool has_channel, uint8_t channel,
-@@ -1847,11 +1876,15 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-         error_setg(errp, "Unhandled error log type");
-         return;
-     }
-+    if (rc == CXL_EVENT_TYPE_INFO && (flags & BIT(3))) {
-+        error_setg(errp, "Informational event cannot require maintanence");
-+        return;
-+    }
-     enc_log = rc;
- 
-     memset(&dram, 0, sizeof(dram));
-     cxl_assign_event_header(hdr, &dram_uuid, flags, sizeof(dram),
--                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-+                            cxl_device_get_timestamp(&ct3d->cxl_dstate), 0, 0);
-     stq_le_p(&dram.phys_addr, dpa);
-     dram.descriptor = descriptor;
-     dram.type = type;
-@@ -1908,7 +1941,10 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-     if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&dram)) {
-         cxl_event_irq_assert(ct3d);
-     }
--    return;
-+
-+    if (flags & BIT(3)) {
-+        cxl_maintenance_insert(ct3d, dpa);
-+    }
- }
- 
- void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-@@ -1951,7 +1987,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
- 
-     memset(&module, 0, sizeof(module));
-     cxl_assign_event_header(hdr, &memory_module_uuid, flags, sizeof(module),
--                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-+                            cxl_device_get_timestamp(&ct3d->cxl_dstate), 0, 0);
- 
-     module.type = type;
-     module.health_status = health_status;
-@@ -2015,7 +2051,7 @@ static int cxl_process_dcd_req(CXLType3Dev *dcd, CXLDCEventType type,
-      * Event Log.
-      */
-     cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
--                            cxl_device_get_timestamp(&dcd->cxl_dstate));
-+                            cxl_device_get_timestamp(&dcd->cxl_dstate), 0, 0);
- 
-     dCap.type = type;
-     stw_le_p(&dCap.host_id, hid);
-@@ -2197,7 +2233,7 @@ static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,
-      * Event Log.
-      */
-     cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
--                            cxl_device_get_timestamp(&dcd->cxl_dstate));
-+                            cxl_device_get_timestamp(&dcd->cxl_dstate), 0, 0);
- 
-     dCap.type = type;
-     stw_le_p(&dCap.host_id, hid);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index d913b11b4df9..8101eaf0ae49 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -14,7 +14,8 @@
- #include "qapi/qapi-commands-cxl.h"
- 
- void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
--                                        uint8_t flags, uint64_t dpa,
-+                                        uint8_t flags, uint8_t class,
-+                                        uint8_t subclass, uint64_t dpa,
-                                         uint8_t descriptor, uint8_t type,
-                                         uint8_t transaction_type,
-                                         bool has_channel, uint8_t channel,
-@@ -24,6 +25,7 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
-                                         Error **errp) {}
- 
- void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-+                               uint8_t class, uint8_t subclass,
-                                uint64_t dpa, uint8_t descriptor,
-                                uint8_t type, uint8_t transaction_type,
-                                bool has_channel, uint8_t channel,
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index b2cb280e1631..82b93974b837 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -426,6 +426,11 @@ static inline bool sanitize_running(CXLCCI *cci)
-     return !!cci->bg.runtime && cci->bg.opcode == 0x4400;
- }
- 
-+static inline bool maintenance_running(CXLCCI *cci)
-+{
-+    return !!cci->bg.runtime && cci->bg.opcode == 0x600;
-+}
-+
- typedef struct CXLError {
-     QTAILQ_ENTRY(CXLError) node;
-     int type; /* Error code as per FE definition */
-@@ -434,6 +439,13 @@ typedef struct CXLError {
- 
- typedef QTAILQ_HEAD(, CXLError) CXLErrorList;
- 
-+typedef struct CXLMaintenance {
-+    uint64_t dpa;
-+    QLIST_ENTRY(CXLMaintenance) node;
-+} CXLMaintenance;
-+
-+typedef QLIST_HEAD(, CXLMaintenance) CXLMaintenanceList;
-+
- typedef struct CXLPoison {
-     uint64_t start, length;
-     uint8_t type;
-@@ -520,6 +532,9 @@ struct CXLType3Dev {
-     /* Error injection */
-     CXLErrorList error_list;
- 
-+    /* Keep track of maintenance requests */
-+    CXLMaintenanceList maint_list;
-+
-     /* Poison Injection - cache */
-     CXLPoisonList poison_list;
-     unsigned int poison_list_cnt;
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index 4f8cb3215d30..ec3157829f51 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -29,9 +29,9 @@ typedef enum CXLEventLogType {
- 
- /*
-  * Common Event Record Format
-- * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-+ * CXL rev 3.1 section 8.2.9.2.1; Table 8-43
-  */
--#define CXL_EVENT_REC_HDR_RES_LEN 0xf
-+#define CXL_EVENT_REC_HDR_RES_LEN 0xe
- typedef struct CXLEventRecordHdr {
-     QemuUUID id;
-     uint8_t length;
-@@ -40,6 +40,7 @@ typedef struct CXLEventRecordHdr {
-     uint16_t related_handle;
-     uint64_t timestamp;
-     uint8_t maint_op_class;
-+    uint8_t maint_op_subclass;
-     uint8_t reserved[CXL_EVENT_REC_HDR_RES_LEN];
- } QEMU_PACKED CXLEventRecordHdr;
- 
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 1b134680239b..3e168d306b42 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -43,6 +43,14 @@
- # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
- #     Record Format, Event Record Flags for subfield definitions.
- #
-+# @class: Maintenance class operation the device requests to initiate.
-+#     See CXL r3.0 Table 8-42 CXL r3.0 Table 8-42 Common Event
-+#     Record Format.
-+#
-+# @subclass: Maintenance subclass operation the device requests to
-+#     initiate. See CXL r3.0 Table 8-42 CXL r3.0 Table 8-42 Common
-+#     Event Record Format.
-+#
- # @dpa: Device Physical Address (relative to @path device).  Note
- #     lower bits include some flags.  See CXL r3.0 Table 8-43 General
- #     Media Event Record, Physical Address.
-@@ -75,6 +83,7 @@
- ##
- { 'command': 'cxl-inject-general-media-event',
-   'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
-+            'class':'uint8', 'subclass':'uint8',
-             'dpa': 'uint64', 'descriptor': 'uint8',
-             'type': 'uint8', 'transaction-type': 'uint8',
-             '*channel': 'uint8', '*rank': 'uint8',
-@@ -94,6 +103,14 @@
- # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
- #     Record Format, Event Record Flags for subfield definitions.
- #
-+# @class: Maintenance class operation the device requests to initiate.
-+#     See CXL r3.0 Table 8-42 CXL r3.0 Table 8-42 Common Event
-+#     Record Format.
-+#
-+# @subclass: Maintenance subclass operation the device requests to
-+#     initiate. See CXL r3.0 Table 8-42 CXL r3.0 Table 8-42 Common
-+#     Event Record Format.
-+#
- # @dpa: Device Physical Address (relative to @path device).  Note
- #     lower bits include some flags.  See CXL r3.0 Table 8-44 DRAM
- #     Event Record, Physical Address.
-@@ -134,6 +151,7 @@
- ##
- { 'command': 'cxl-inject-dram-event',
-   'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
-+            'class':'uint8', 'subclass':'uint8',
-             'dpa': 'uint64', 'descriptor': 'uint8',
-             'type': 'uint8', 'transaction-type': 'uint8',
-             '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
--- 
-2.43.0
+Will do.
 
+>> +
+>>  static void *einj_param;
+>>  
+>>  static void einj_exec_ctx_init(struct apei_exec_context *ctx)
+>> @@ -684,7 +691,7 @@ static int einj_check_table(struct acpi_table_einj *einj_tab)
+>>  	return 0;
+>>  }
+>>  
+>> -static int __init einj_init(void)
+>> +static int einj_probe(struct platform_device *pdev)
+> 
+> This can remain __init since nothing will call this function port
+> init().
+> 
+>>  {
+>>  	int rc;
+>>  	acpi_status status;
+>> @@ -782,7 +789,7 @@ static int __init einj_init(void)
+>>  	return rc;
+>>  }
+>>  
+>> -static void __exit einj_exit(void)
+>> +static void einj_remove(struct platform_device *pdev)
+> 
+> Similarly this can remain __exit.
+>  
+>>  {
+>>  	struct apei_exec_context ctx;
+>>  
+>> @@ -801,6 +808,38 @@ static void __exit einj_exit(void)
+>>  	acpi_put_table((struct acpi_table_header *)einj_tab);
+>>  }
+>>  
+>> +static struct platform_device *einj_dev;
+>> +struct platform_driver einj_driver = {
+>> +	.remove_new = einj_remove,
+>> +	.driver = {
+>> +		.name = "einj",
+> 
+> Perhaps call this acpi-einj just to preserve the namespace in case a
+> cross-platform generic "einj" comes along.
+> 
+
+Gotcha, I'll make that change.
+
+>> +	},
+>> +};
+>> +
+>> +static int __init einj_init(void)
+>> +{
+>> +	struct platform_device_info einj_dev_info = {
+>> +		.name = "einj",
+> 
+> Ditt "acpi-einj"
+> 
+>> +		.id = -1,
+>> +	};
+>> +
+>> +	einj_dev = platform_device_register_full(&einj_dev_info);
+> 
+> Just return early here if this failed.
+> 
+
+Will do.
+
+>> +	einj_initialized = !platform_driver_probe(&einj_driver, einj_probe);
+> 
+> Nit, but since platform_driver_probe() does not return bool, I would
+> prefer this to be more explicit:
+> 
+> 	err = platform_driver_probe();
+> 	einj_initialized = err == 0;
+> 
+
+I agree. I was trying to not have to use an extra variable for only one line
+but
+	einj_initialized = platform_driver_probe() == 0;
+
+went over the column limit :/.
+
+> I think it is ok for the platform-device to stick around if einj_probe()
+> failures as userspace can see that the module is loaded but driver-init
+> failed.
+> 
+
+My reasoning for this was since this is really a dummy device I
+didn't want to pollute the platform device in the case the driver failed, but I
+see the reasoning here and agree with you.
+
+> Similarly it's probably also ok to fail the module load if
+> platform_device_register_full() fails since something deeper is wrong
+> with the system if it is starting to fail something so basic.
+> 
+
+Alright, will do.
+
+>> +	if (!(einj_initialized || IS_ERR_OR_NULL(einj_dev)))
+>> +		platform_device_del(einj_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void __exit einj_exit(void)
+>> +{
+>> +	if (einj_initialized) {
+>> +		platform_driver_unregister(&einj_driver);
+>> +		platform_device_del(einj_dev);
+> 
+> Per above, this device_del can move outside the conditional.
