@@ -1,141 +1,243 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2081.outbound.protection.outlook.com [40.107.237.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC9B1E486
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Jan 2024 22:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705616287; cv=fail; b=oOzPb2/arYANzvkHIQQTFP6nn3x5a6KS26EeF7w0IfV6N0lJ3dz2jD42wZKxVEhMA1kLrRUumBQv3nNt1WdO7D0Pj+HuYJB7MNdjm5Jt7SKhbDI5eufhni1OtJxWo5mgwO2tpVrtKyNptlCkWV5qiOVlnMFpClFWxPE003jC/nY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705616287; c=relaxed/simple;
-	bh=b816rcJMcE3IPDqh6btfFaADad1dJnOeSXApke9ZSSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YFDiD5TtyiZjAjzwjkbX3gEGYbtC/SnEndBBGqKnfSLl5dOR/xXc2IOFFt7myGfginM1NEPUjAb9OaZOobGbCtOAhc0ET7m5G58xCX1Gx4LHTU2/+zmj+qi4ghmwbP+2D+FMvAMcSAEzci16WskTH+mrk0qkKDs+h5wJR5KvcHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sjNh/48L; arc=fail smtp.client-ip=40.107.237.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D4F1E88F
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jan 2024 23:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705620879; cv=none; b=rVMthK0N5FpqRWvEctPXcvnWOUiqDiY2g7ayVNu7+MeVsyvzIe+fJpnu0cjuxYx1pDoWsKfiDGTa4mKj+dKeuQnJ/qMpxQTh8+8owXegDv2NhKtJCOlaQIOdmfUBwYQEOAj39Np9jLEdUwPdQVBpwxhuD2XaLyPDLHV4l5VgRiU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705620879; c=relaxed/simple;
+	bh=Yri73MmAuRMqqlrqIhwKmNea/WT71pv3w1FPxK9M8x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXtFIexDx9LuyucqVamEH2Mi3xnFbkYi/btcWzNgkkAYxBc0uj3h8AqGprC9S5byOay11pAPAMwfLjgfe+vl4cbZDmg9ulIDvL7P37EALsEyojNZa0CJwGYUVGXrMny+7rtP/f900myqCyRJ4KBDToOHcYieDBr5F/OYyxClhQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWzG3/4X; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sjNh/48L"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VnkSpNCocrim6yJywYExYiWa3beTwkCtrt2bgzr+avWjGu1/XVjl0ZqSf58jxvr73NSoSFipLrpiB80UmAmp6C+/sb4PIGgLRUDs7zWwP3IwlFs7Od3bLGVK5ay9XjprBH9veYi2wkzXh4c7bcduufrxy/capk+ViKWmTp/1qIf7W8gM9zKWpn9ZWW9ecvEKVuq4uQ8nIJdZBTRepT340nbewJIrJid8Wirkzj7iVzOyeWSk9Vnyeck+Mw8tNFGRGd1Dk7eQoacC0t5Qa1f3DdRXy94FGZ9HnR+TZAuUopfaO6Nl5atpxCcy+5LI7gupVM+SY1LMRqqbYqUDKhg/dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CEIrofcYZ67xD1lewC7rDejVuCbYGlXaXuCjrPaMTTU=;
- b=n+7qUoYkHNr9ocQb/vr6vT3/MbPPquCzl/X6pqRTZK35wJham0oifEXCt4lHAq8d7KJsh+H1tpDukOBoe38WaPEAWU32HuqGimQ/cJpY04s0vIMzx5+QRyqPtMCXdDiwNwRoirS/btJJJvPC1aX5x5gLiPIWzFyvUegbY4nRRrYVkg0th39VwiCLDrL60N1h1uFRIyloKwIH8KGW6jHsw/lJ0HpGWW3sfuWcDPkD85O2fMlESXkUBkI9jxfNaHhc+njGKOFKARmQNvVbh6LPV1vhpCrnmjEDG6tqPYlRK4MrB5JxUGkrkLSVvaxAMStcoOkGNVS9ESIz3+STpFdxYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CEIrofcYZ67xD1lewC7rDejVuCbYGlXaXuCjrPaMTTU=;
- b=sjNh/48Ljh06+rD0qXh/KG7KAznBC4pcPKxUDmVhvwtfoDGdSjvgfzJ++X1nVbISXufyRbArmwAJDnDiCdkhGeNpInRnda7u040+Ffq+kflWP8tWIMNMjRh0QKBSAJpIvTIjtCw2J8a1q2PGb6cQLHI2hTnIupG06FXEO4eamsY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by SJ2PR12MB9007.namprd12.prod.outlook.com (2603:10b6:a03:541::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Thu, 18 Jan
- 2024 22:18:01 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::e46e:7c32:7556:fae1]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::e46e:7c32:7556:fae1%7]) with mapi id 15.20.7202.024; Thu, 18 Jan 2024
- 22:18:01 +0000
-Date: Thu, 18 Jan 2024 23:17:57 +0100
-From: Robert Richter <rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWzG3/4X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705620878; x=1737156878;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yri73MmAuRMqqlrqIhwKmNea/WT71pv3w1FPxK9M8x0=;
+  b=dWzG3/4Xj8Q6zwSmFuqk+jdY7mz20PfprB0hME+ZYij7vNHJp6C7or0s
+   xd2x+SggyOZo1DrEx3qHHfWmydRkJz/BOjlSnHa/mlPwERr/LZRvSZjQY
+   ONVJnEd7h8Rdiih6EwwqyX03rYWSIqbLpHufVG7L5E2Z08tzZeL7zt/fh
+   HF3vBs24xhOVUc3z5oEeae9uza422OepgEbWH/V+xgdZShUnLMi+Z2cDt
+   CzkM4fxnB9FiLy/gMdTV3Yf70+vDVtqma0KGMiN3wyoescv2Vw2QMOG1k
+   c1d9ZKmdvjPLABuG6JM0K9kWQIe5OTN//spc9/TPyBXyPfSDhH6CRrq5c
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7298915"
+X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
+   d="scan'208";a="7298915"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 15:34:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="875221941"
+X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
+   d="scan'208";a="875221941"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.34.120])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 15:34:35 -0800
+Date: Thu, 18 Jan 2024 15:34:32 -0800
+From: Alison Schofield <alison.schofield@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] cxl/pci: Kill a goto in read_cdat_data()
-Message-ID: <ZamjlZqPBeISLjAQ@rric.localdomain>
-References: <170261791914.1714654.6447680285357545638.stgit@dwillia2-xfh.jf.intel.com>
- <ZafUwceT4N-bmS6F@rric.localdomain>
- <65a81a40cea43_3b8e294ee@dwillia2-xfh.jf.intel.com.notmuch>
- <65a81babe2436_3b8e2943b@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65a81babe2436_3b8e2943b@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: FR3P281CA0068.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:4b::15) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v6 0/7] Support poison list retrieval
+Message-ID: <Zam1iPjxXA9iiUOl@aschofie-mobl2>
+References: <cover.1705534719.git.alison.schofield@intel.com>
+ <65a99ea31393a_2d43c29454@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SJ2PR12MB9007:EE_
-X-MS-Office365-Filtering-Correlation-Id: b7f2abc0-c14d-4e4f-fb7f-08dc18735588
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	NGQMVcE1T6qdRxMJO/ph9CbeaAjfSl4cB4cu5YXdVAMceqTxBu9AuzuLHWQql3GiwIzjxtne0Y4y/HNlc4RF6xu1ZnMgOrfQGWlDvB8xu2HUZEEwOcv3VAJNdW7eLcaG+fb6BhZx+3NWdLLLgu57l6HDTH7QznEMfYWuQw9/irv5dcds98/X5N2PJlXQlGHO8ZKv3KbkVuhTu1G1OaPijGgIHv+b1oGGlEzTlc0tGeF+aN2Ffzc8tvh/1gQNe4n1EZWjzor507z6ScgnhJhkYN0f3zLZHJ9oGDi8AABMavSENUk0EqVd5uvtBjlcPluju7s2g/c1bhv/V7h6+xj1f4YFcbLFVyZFrzI/Hrk6oHi4o0QkOtb2FKWX2LIiR7T0JM5WW44zjjGprUsIIM9JJyNpYvoOOQ5AVU5fR+cqQj3v3J+ONnfvd8FRPk1Zh/ymHHA3asqPL2BGXCUWG+I2Mgbgj47/QyKXk4uiTSV84CZSgdmdUhEpQLUkr6wH4Xzx7zEByVN67cKbADuYHvGqYVlUOmkBP/VAdOlmEtNVtAY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(396003)(376002)(136003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(41300700001)(5660300002)(8936002)(2906002)(4744005)(66476007)(66946007)(66556008)(6916009)(478600001)(966005)(6486002)(316002)(8676002)(53546011)(9686003)(26005)(6512007)(6506007)(6666004)(4326008)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Y4QnxVVLg3TOSmcgT7yT3W/7Avl7sQTIZCNo3YbTqhtAbiW0X/yyMmCdlXbR?=
- =?us-ascii?Q?r18ZJF/njbAf5JTg4nY7Q38TIm1kGmH7DPxei+SlC1g6/uQBdeJCnECnQPDo?=
- =?us-ascii?Q?MDWauvGY9mEiOzA/AQqAW7a9rFhKVb64ylGK/drQT52G5/uVDTbHFY+WWAx+?=
- =?us-ascii?Q?jbEiV/vBn8AzmSz0Im48RZX4+UkWYoVQilPRruTBRS73Cg5iQO+kObJ6zh6E?=
- =?us-ascii?Q?5ZgADIjuINUXdKFpL5f40sw1MaLLMicCeKLxkiEjWNahrcuZonmGYygUujLj?=
- =?us-ascii?Q?/ohpMBglbLc1fuAGIOcaecAiRzkE1mYtyjNBYGhsYWrBlQqfgnRO1DsrYK1m?=
- =?us-ascii?Q?0bPIGXzGRq8xY51rWR2vEXbAQbOzem+U+GgMnVKDWaaLRXnX6BUqY7dFukKt?=
- =?us-ascii?Q?UpuzQ76RTQZ6J3thz6HCw2ydeqq/9XliGl/NhxMhpA5MzlyuEF4Pwq+rJQyI?=
- =?us-ascii?Q?5xloVTxzkXe1pnpvsYhJbfX4t3PugJhBaAifK4RXnFsWkaR3blybx5Q1snGg?=
- =?us-ascii?Q?vjfjih0uG2X2j/+JVzC5arESuWcFbVzzc//A7FVll4sCUyPoaRRcwKzXE/6l?=
- =?us-ascii?Q?OrgyFNVhTyA0umhFVEeKJdTz82gH53/IWNzV+dvlRqIFtZklGGKsiMOMm84y?=
- =?us-ascii?Q?SYZtzMf0xhbIK40yuq2jinOdGcOjYDYAO9SYVOmLptzXyr08GUmtOWofgZHn?=
- =?us-ascii?Q?u8GHNjfRdp74314Hrn8sOMx3mImjm2k95droF4HNvGS6+dKK4d4uh2ATrIdS?=
- =?us-ascii?Q?3tPPrIabjkVt/KV9YouDvSd/17F2T/+GdhyJ8tSzzNuuxjesWEuO2vz1tjsa?=
- =?us-ascii?Q?CL+lmrhi78raQ+BvR9OoM0mfSDJxWMbr2XXNN9kEyI5hs2X4M3Gtw2NLM0SQ?=
- =?us-ascii?Q?Exjlh9VPre1CwqlaKvPGMi94OkfGOq/UFDG4PKrfEKEc4034Y2+NCo0Xdn7Y?=
- =?us-ascii?Q?nJYFDvgkaCWVu/43kOcoeckuqoeRzEqF5F+x7QIWYleB5InnZlRZgo5QuLP6?=
- =?us-ascii?Q?OdCpilXmxuLhJewcMTalARqcCjE+jHlc4wf0Irx+iJHYV7XXw1E+QPYX6l6d?=
- =?us-ascii?Q?TD0j7jXxCf1JxWEAdjpFOxziCHUp3mcP2Wubi2zIOiEYkaACwXNSFWtM7AwH?=
- =?us-ascii?Q?7NxQvT31fVjzUoeD0Mv0wu8Z5FLvQGg9QNeEvpMY5Cf5JXXkSX2wI+pk8uCr?=
- =?us-ascii?Q?uFow8l/VwWXNB04Uilxfq2S8T0ocFSTpFSHilRVxRxdn1sAbNsXiRBfEUsoQ?=
- =?us-ascii?Q?VTwziz/XKSleWTX9h9ORu7e2CZDTc8HbK07Z1UN3BNPhY27NDshtPUD6AOy8?=
- =?us-ascii?Q?OwFLw4mMo9r0zdC70MB5HTBpwDGFAK3XDMQjYkM2AIZVwPSjW7EwkzqPr492?=
- =?us-ascii?Q?W08HUp1WMtp1AkCdXj4rLIxr7xs3dp33V134KYpA8G0KgcJs56qdm0s2w6oq?=
- =?us-ascii?Q?yM5BYx4WNMrR2m3agmzWe737YfI006JBQbAtkB5EAnWIjudifzz1QFPtYQYN?=
- =?us-ascii?Q?FcO8xNgrDZKMDKBKwR8BWJdrjHu1YQapC41YcGQGgQaXEB0PfTPaFVgWumus?=
- =?us-ascii?Q?Fa/fqZwqsC3e+HxNQejkHGI1TR95IMRpJc6GF6at?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7f2abc0-c14d-4e4f-fb7f-08dc18735588
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2024 22:18:01.6458
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SmQ2cJjlJdb5jUwQ0ijsEuPDqH2Ftcrw9Ir3isk4pe2FMD2etbmsJ0trfoSoV8J9QXs52h5iTRD/7tmYLYRw/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9007
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65a99ea31393a_2d43c29454@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-On 17.01.24 10:25:47, Dan Williams wrote:
-> Dan Williams wrote:
-> > Robert Richter wrote:
-> [..]
-> > > Should I rebase my other CDAT patches on top of this one and send a v3
-> > > of it?
+On Thu, Jan 18, 2024 at 01:56:51PM -0800, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > I would say keep the goto for now because your cleanup to eliminate the
-> > awkward "cdat_buf + sizeof(__le32)" makes it easier to use cleanup.h
-> > helpers as a follow-on.
+> > Changes since v5:
+> > - Use a private parser for cxl_poison events. (Dan)
+> >   Previously used the default parser and re-parsed per the cxl-list
+> >   needs. Replace that with a private parsing method for cxl_poison.
+> > - Add a private context to support private parsers. 
+> > - Add helpers to use with the cxl_poison parser.
+> > - cxl list json: drop nr_records field (Dan)
+> > - cxl list option: replace "poison" w "media-errors" (Dan)
+> > - cxl list json: replace "poison" w "media_errors" (Dan)
+> > - Link to v5: https://lore.kernel.org/linux-cxl/cover.1700615159.git.alison.schofield@intel.com/
+> > 
+> > 
+> > Begin cover letter:
+> > 
+> > Add the option to add a memory devices poison list to the cxl-list
+> > json output. Offer the option by memdev and by region. Sample usage:
+> > 
+> > # cxl list -m mem1 --media-errors
+> > [
+> >   {
+> >     "memdev":"mem1",
+> >     "pmem_size":1073741824,
+> >     "ram_size":1073741824,
+> >     "serial":1,
+> >     "numa_node":1,
+> >     "host":"cxl_mem.1",
+> >     "media_errors":[
+> >       {
+> >         "dpa":0,
+> >         "dpa_length":64,
+> >         "source":"Injected"
+> >       },
+> >       {
+> >         "region":"region5",
 > 
-> In other words, I drop this patch and await your cleanup based on the
-> current baseline.
+> It feels odd to list the region here. I feel like what really matters is
+> to list the endpoint decoder and if someone wants to associate endpoint
+> decoder to region, or endpoint decoder to memdev there are other queries
+> for that.
+> 
+> Then this format does not change between the "region" listing and
+> "memdev" listing, they both just output the endpoint decoder and leave
+> the rest to follow-on queries.
+> 
+> For example I expect operations software has already recorded the
+> endpoint decoder to region mapping, so when this data comes in the
+> endpoint decoder is a key to make that association. Otherwise:
+> 
+>     cxl list -RT -e $endpoint_decoder
+> 
+> ...can answer follow up questions about what is impacted by a given
+> media error record.
 
-Posted it already here, but burried in the series as I split v1 and
-added another (unrelated) CDAT patch:
+I see it as a convenience offering, but I'm starting to see that your
+stance is probably that a cxl-list option should only list additional
+info provided by the option, and not include info that can be retrieved
+elsewhere w cxl-list.
 
- https://patchwork.kernel.org/project/cxl/list/?series=815050
+I plan to make this change to endpoint as you suggest.
 
-That v2 is already on top of cxl/next. The first 2 patches can be
-applied individually independent of patch #3. Please take a look.
+> 
+> >         "dpa":1073741824,
+> >         "dpa_length":64,
+> 
+> The dpa_length is also the hpa_length, right? So maybe just call the
+> field "length".
+> 
 
-Thanks,
+No, the length only refers to the device address space. I don't think
+the hpa is guaranteed to be contiguous, so only the starting hpa addr
+is offered.
 
--Robert
+hmm..should we call it 'size' because that seems to imply less
+contiguous-ness than length?
+
+Which should it be 'dpa_length' or 'size' (or 'length')
+
+> >         "hpa":1035355557888,
+> >         "source":"Injected"
+> >       },
+> >       {
+> >         "region":"region5",
+> >         "dpa":1073745920,
+> >         "dpa_length":64,
+> >         "hpa":1035355566080,
+> >         "source":"Injected"
+> 
+> This "source" field feels like debug data. In production nobody is going
+> to be doing poison injection, and if the administrator injected it then
+> its implied they know that status. Otherwise a media-error is a
+> media-error regardless of the source.
+
+From CXL Spec Tabel 8-140 Sources can be: 
+
+Unknown.
+External. Poison received from a source external to the device.
+Internal. The device generated poison from an internal source.
+Injected. The error was injected into the device for testing purposes.
+Vendor Specific.
+
+On the v5 review, Erwin commented:
+>> This is how I would use source.
+>> "external" = don't expect to see a cxl media error, look elsewhere like a UCNA or a mem_data error in the RP's CXL.CM RAS.
+>> "internal" = expect to see a media error for more information.
+>> "injected" = somebody injected the error, no service action needed except to maybe tighten up your security.
+>> "vendor" = see vendor
+
+If it's not presented here, user can look it up in the cxl_poison trace
+event directly.
+
+I think we should keep this as is.
+
+> 
+> >       }
+> >     ]
+> >   }
+> > ]
+> > 
+> > # cxl list -r region5 --media-errors
+> > [
+> >   {
+> >     "region":"region5",
+> >     "resource":1035355553792,
+> >     "size":2147483648,
+> >     "type":"pmem",
+> >     "interleave_ways":2,
+> >     "interleave_granularity":4096,
+> >     "decode_state":"commit",
+> >     "media_errors":[
+> >       {
+> >         "memdev":"mem1",
+> >         "dpa":1073741824,
+> >         "dpa_length":64,
+> >         "hpa":1035355557888,
+> >         "source":"Injected"
+> >       },
+> >       {
+> >         "memdev":"mem1",
+> >         "dpa":1073745920,
+> >         "dpa_length":64,
+> >         "hpa":1035355566080,
+> >         "source":"Injected"
+> >       }
+> >     ]
+> >   }
+> > ]
+> > 
+> > Alison Schofield (7):
+> >   libcxl: add interfaces for GET_POISON_LIST mailbox commands
+> >   cxl: add an optional pid check to event parsing
+> >   cxl/event_trace: add a private context for private parsers
+> >   cxl/event_trace: add helpers get_field_[string|data]()
+> >   cxl/list: collect and parse media_error records
+> >   cxl/list: add --media-errors option to cxl list
+> >   cxl/test: add cxl-poison.sh unit test
+> > 
+> >  Documentation/cxl/cxl-list.txt |  71 +++++++++++
+> >  cxl/event_trace.c              |  53 +++++++-
+> >  cxl/event_trace.h              |   9 +-
+> >  cxl/filter.h                   |   3 +
+> >  cxl/json.c                     | 218 +++++++++++++++++++++++++++++++++
+> >  cxl/lib/libcxl.c               |  47 +++++++
+> >  cxl/lib/libcxl.sym             |   6 +
+> >  cxl/libcxl.h                   |   2 +
+> >  cxl/list.c                     |   2 +
+> >  test/cxl-poison.sh             | 133 ++++++++++++++++++++
+> >  test/meson.build               |   2 +
+> >  11 files changed, 543 insertions(+), 3 deletions(-)
+> >  create mode 100644 test/cxl-poison.sh
+> > 
+> > 
+> > base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
+> > -- 
+> > 2.37.3
+> > 
+> > 
+> 
+> 
