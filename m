@@ -1,104 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F87655772;
-	Fri, 19 Jan 2024 18:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE52112
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Jan 2024 18:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705688321; cv=fail; b=bTvRyoMhHHU0a6Mnk9Vgqq1qEo3nO7OgkdKT8hovZ0hAQ54wKb2CA8WtBTDkThhVnGGeVt4wm1qSD3f3Oe3mAUFOVcdxmpef9Wp4Y/+js9/qNgUAIZ18KndAMWGmsZBBvspaiWNP0JoOjvPGfJ5GjZb252jlsWn4Xrl9VmMRjjY=
+	t=1705689136; cv=fail; b=eJYQo0FGBeuumXtRkx9nju2ERnix8gPwKrvMDNEDP2qCIC7qpUM2JelBmbEBqt33vXGU9PZciGuSr7k3OJESM4TkN5h7g1hnASXdeQGR9neD2mgqKTmnFgGWmjGcWJpTei8ak1sHV8h2djNPgj0kF7m8tzPHM61qPz8NxOt0HHg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705688321; c=relaxed/simple;
-	bh=cBVYbdBIsgB3JxEZSyGleUNouftZ6iFchkbsPMoSgvg=;
+	s=arc-20240116; t=1705689136; c=relaxed/simple;
+	bh=XO78TFJuTHGm7RYhz80HSOU/je7h5vscy1F5FSS9H6I=;
 	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DVgm/1lK4FpFiu2yNpzjf/KH74RS0ZbTAgoEdWrJxbzfPg+DH8/mk0NlTUCFdYgtnuQ0n7XzL+lhFRqAEPwqiGKdfSyda2gExSPdwS2aIR+3HMDSuaHcUHLJ6YlS32FoZ/LpFAMPD8hl8B6nEivhFmVgYxLYzdJP6OeQtWYVH8w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nYWoBDG9; arc=fail smtp.client-ip=198.175.65.15
+	 Content-Type:MIME-Version; b=nIzd4kE2+PehekPaVtmSZuCn3Hy1SHFim1ROUNDEryfWdn72dr9J+JjtkYfvU7ryinxbGFohOUlQG+JQuAvyNWOaMjZWD70/USMNlTyDdkSaCzn6ejRuplrSwLt06T3+BEpoRhuPdlZy5Z0kWf6HCckN5AXj3IOXTBeIyLgMNN8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHxzSCz0; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nYWoBDG9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHxzSCz0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705688320; x=1737224320;
+  t=1705689133; x=1737225133;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=cBVYbdBIsgB3JxEZSyGleUNouftZ6iFchkbsPMoSgvg=;
-  b=nYWoBDG9l64inOOhtwrZ8aYAjrgygerWEOQtwhxwduwiLXrzKoNQb1NX
-   /fWjNtQSCdQOP5r1ny57mbe4MTzvMOupeeagSn17ruizHcN3wBia4Xb6t
-   GykQn+3q500Hl20E9XWo9bvKHVGe5O18w8zsgoEBH9nSzPIY8pXuba9a5
-   f0ZwTqPp2mSJHeC3C57nT2eV36LPEy8q5tgC/Kt7uNBI/UiQg+XHtiiqg
-   a+U0EUTfnB31Cgu56PZIlW3W7TiBBaapdCovuPob7HX66CbjwQUfiXo1a
-   ngK8sQz2AjxuKcN72++65VYNkWQZjVB6XRnZTMu/UCIN6rMjH3iEc448N
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="702400"
+  bh=XO78TFJuTHGm7RYhz80HSOU/je7h5vscy1F5FSS9H6I=;
+  b=HHxzSCz05quP1YG4FQkywlyx4VSg+ylNqvecFGnLlEBckGajT0Oxrplf
+   WKhDQD7h5Z+dlclpoFuun2VwOWs9T0NiZM+FgfHxGRwX8KHxD1QgvJAiF
+   1m8Wi7Ko34BUYZ/rRZmX32Qq+vuPtQ04n3UAK4ptEKkFotaDfbMXJ3Lpr
+   pYwUtpLCc7z1tjljN2N+yg3hTRwmob6L8hWNZFauAvh+JLANsffYErO7v
+   yBPO8qpaDauMExqwqYEVjYEH4EgvawqewrMgNl5XQ5GlUoSXBGeq6lhUc
+   lKG29edBY8ca5UqBzHLIp+wbb0NEdyx+FRMoBn0EvI04TZK0D3cymXjNb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="7909479"
 X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="702400"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:18:39 -0800
+   d="scan'208";a="7909479"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:32:13 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="761188302"
 X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="641696"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Jan 2024 10:18:38 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="761188302"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Jan 2024 10:32:12 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 19 Jan 2024 10:18:37 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.35; Fri, 19 Jan 2024 10:32:12 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 19 Jan 2024 10:18:37 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 19 Jan 2024 10:18:37 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Fri, 19 Jan 2024 10:32:12 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Jan 2024 10:18:36 -0800
+ 15.1.2507.35; Fri, 19 Jan 2024 10:32:12 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G//qdkpAej4OcYbq0l6C6AdYavfl1EZaZjFWy4ZiP6eicxV+qnSJX/HYidfLQK4zuW8+NsYtOjb+kONf94tpJtZyZJPZl8PxMPkeBEcAifpnlimMpHGAoBFl87YemO4mQXQHPJSt8U5R0jV2mU6wUvm3PVJSGjX2StLzgNVThfbeUuYv7Ft2bMr/pyiGzsU6AbndzvlJLCyyFB9CUqiOqZ/XqMlXEL3xsbbuJqr+g3isAjFH8OFSqjgmJ90tsdJhVfSoMzI4J0BUDTTYRQ0pLgGDuOBt5F9ifRPePj8s12eCWsUloHW+K/iSD9cAIkW/ok0AmpVfQ7TZKtZGWoWRSw==
+ b=V2S5bagqLshzzxJognVONx3VPoRQ4IHRL4De1WKhdQ6Vo0d3je2WXoyTYrdRv0BU9v95DAdNeNBzbgwVR6rm7wT9edE1GjXnI91zBz8NUfh/lplop2fAyE9Sjmi/mRkj/GWv6zcaB5dzqf3izLl6JPQCrlhRHmrY0FaaxxLFbuVPPzCR+2fjEh/YAJdvUfdot7EJjDJisyajqGghLwz789uxThHg+B1CuXbxxTwxXCYVSiHa2gxbXr4/+SqobTNfs3Gnc0K+UVPCGxHGFcpy5vBkZc7A/rF7EgdvpClDNB+snk/QG1lFQWzLyxikIJwDOTJwnIJLLwmcffFLb1a8vA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eztorZKniYLNsgz9r9lEtrKDXam7Q2OKmAdoxRpvFtk=;
- b=JAsA+TF37G7XHq6B9lyOuT9wnrE/jlM1NItbIRY1dMiul8WMqurrCi7n1c3i0WlQBb8X9ev9jEWJoqGEEa7oVC6/YrdwfCU1eGtEMcAy53GTsy8BxzfkrQ4HXZ+UqJX5sPXPYFTFbB4o89sCV5laTENkb2HfANgO6C31uT7K/vA+J7jXkXjRHjBu2kFAvVkrBhwAixi/aWHD8Dl5LpGSjcR/i6BihBX5h9BX0LgO2VPDpXxzOUcmiCLo2C1ts7+NKuHu+40sT7CtmcdM6O2OUc4boO7vzYLhPFxzELVV54JjrCsvD5xEMDAf8LEKBSg0CycBZsW0HO6NEUirOnDy8g==
+ bh=2rPihUcrEppPzsNZKwhBB6FtJuZHdvzBN6F9C/pI1IM=;
+ b=dQk7Lm7//W+99uPXWCehiE4HBneG8KZRZXsqzY6uxokhvvZfDWrgwmAbSBFVa8Tw532zu2fOiEPP2PNAi++ZFba8y2Zf/XgWf1aWsvUgl3MPIkOFlb2LCi395E9RIOnMd580G/VdYvB9ZnTLB0fluxAhWLXHiprq4jFrtGRPUqiZaokG0IUWHUYDTeuIIIn0H0AY6m8O2rrcLzQiVbwTfNnkIOOfTdERfD+d9N1NYFlqYHl96M0uBvXRHmhT+ELmDVoTkzEUao23qrpRDHu4gv/9A0gTsq14hRvZl2Xwkn47SMxrOCZQGaeO1IpXaIRGyL58QO33AshXJGhGcql7lQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by DM4PR11MB5486.namprd11.prod.outlook.com (2603:10b6:5:39e::11) with
+ by MN6PR11MB8220.namprd11.prod.outlook.com (2603:10b6:208:478::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.27; Fri, 19 Jan
- 2024 18:18:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Fri, 19 Jan
+ 2024 18:32:10 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::780:d536:ff24:3e4c]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::780:d536:ff24:3e4c%3]) with mapi id 15.20.7202.024; Fri, 19 Jan 2024
- 18:18:34 +0000
-Message-ID: <21b9dc5a-31fa-45d0-b0c8-f61eb3adf985@intel.com>
-Date: Fri, 19 Jan 2024 11:18:31 -0700
+ 18:32:10 +0000
+Message-ID: <694ad508-cc06-4e3a-974b-3d1403adeda9@intel.com>
+Date: Fri, 19 Jan 2024 11:32:07 -0700
 User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v2 3/3] lib/firmware_table: Provide buffer length argument
- to cdat_table_parse()
-To: Robert Richter <rrichter@amd.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Len Brown
-	<lenb@kernel.org>, <linux-acpi@vger.kernel.org>
-References: <20240108114833.241710-1-rrichter@amd.com>
- <20240108114833.241710-4-rrichter@amd.com>
+Subject: Re: [PATCH v6 1/7] libcxl: add interfaces for GET_POISON_LIST mailbox
+ commands
+To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
+References: <cover.1705534719.git.alison.schofield@intel.com>
+ <22d01bd1af9af5370d1e35094176dbd66ef20dac.1705534719.git.alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240108114833.241710-4-rrichter@amd.com>
+In-Reply-To: <22d01bd1af9af5370d1e35094176dbd66ef20dac.1705534719.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR02CA0013.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::26) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+X-ClientProxiedBy: BYAPR01CA0066.prod.exchangelabs.com (2603:10b6:a03:94::43)
+ To PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -106,214 +96,178 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DM4PR11MB5486:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9e3711c-3f8e-4305-dff1-08dc191b0c62
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|MN6PR11MB8220:EE_
+X-MS-Office365-Filtering-Correlation-Id: e05c1a10-0950-4196-0231-08dc191cf2a3
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: //vCNzRFkxtunPkzPo/A1JpqBOrA/4djQSfCpRZY7hCW6Uti7MIncCYRNg7Iatldi5KlFv7d5Tjs7OFlDAH/4O4EI7hC8HwPlt07IQP7FqHeQoTBdr9HBVTU5LtFFDEEruxTgE1vGh5tUSLaeL/by7PlglkS4EyLGBrilMbIVoLBSeGXPGMlHiXcXn5A2puRuVq0rGSRrgojg1NAUsP6t5VrwP7Oz2xHy26adaoJT6qiSbUZ9ULgreEorFNopSnYum9Yc5X9ArbvGumUpB0kVHIGcMYFc2xzGo0kfD2RxJnqSVBPHirVN79nhyu7aW18CrtKLo+cS9gtYyxzZj8NEhDMHff8LzFq5uOAiQTLwvmIi+rj/utRd9gYwkzHJ/2YdwfzhoE1mwnYHKQ9Pn4Ar+Nry3Dp5eLsmzFjzRLs9e0LhgH6YxwiE8XtMLivgLZyxhED5YlgyKCl6Z9qrvQKo9au04t85PutLFCRFh5IuPnCluthHpep6q7m3wKyf7Z/QaG2INsHrXFZ4ekaUne5IX8jNdgVHBCJ+ZZTuciXeiq1Tqd3uHteEqLw+AZjn8tfZ3Jh4vZmkdFypxe1QPmMUnHJRjtL4YMEAp8ATL3MganhLvZIih0cxXx3RS2kZelU
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(136003)(396003)(39860400002)(366004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(31686004)(4326008)(53546011)(6486002)(8676002)(83380400001)(2616005)(5660300002)(316002)(478600001)(110136005)(66476007)(6666004)(6512007)(6506007)(66946007)(66556008)(8936002)(44832011)(26005)(38100700002)(82960400001)(2906002)(86362001)(31696002)(41300700001)(36756003)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: oY+TQo7dMaP0vsJq/zE1KINaqfk8ZxDd0VCyHhEyy8jQNc59PHzJtGPUxGTIOQyx3bg0fTUuZDxGmD3Clw5SCVH+2pSM4GOyY6TIWR4jGFI1UD4z+qGn+nHwpFX3PJw2Um/Mw6uCPzXj0FpWPj8ljLkyY3ZjvWyEyeelXw/AsWjXMQPdRH5ievHx2qqcuYb2CuYJL4EUdZPHPC+WzH4hVKitjZBjSFaABgxB5OkE/vtMhUvwMQKBPKjXjhzvL+9FHj2DosqI9F82UG/Yg8vqhYO9anpbN7K+55ZWRlk05nCHgEt/Bq9ePHFU20viLDdDth+FcetuGYx0Jvg8leYx/X1yFiQOXH0sanxoTTyssMSJ93olldzK2g+osFyiHPeDilt2YZb2l2D1n5JrZTFpYkHrKOrHlHh0iy4np5b1zbS8aWw3k46nOU8uoNfM/g/tip2OVKEaRaFlBRlnaQIzBD5wwS+vNlthc8+t6NPYwZKa86Uk0EtuhIdBMAyMzI4kQNnfdWxfLbOMObuw4Ai5Xbzx830iXz5Hnr6WtxaDovyrGAQx4ykBgQINEIjeOl0y2Pfr532a859C+qLzHnRV/kLr7TPY9ElwLAgxQyWymJTEVxQpzUP7zNvqwE7IoiEI
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(366004)(396003)(39860400002)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(6666004)(66899024)(6512007)(6506007)(53546011)(26005)(6862004)(2616005)(8676002)(4326008)(36756003)(8936002)(6636002)(86362001)(316002)(44832011)(2906002)(37006003)(5660300002)(66476007)(31696002)(66946007)(66556008)(83380400001)(6486002)(41300700001)(478600001)(31686004)(38100700002)(82960400001)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aDFPVkJBVmxiN2lPc2c5KzkyNDNDQWRidUFRQklhQ0lZTXRpUE85MUh6TlBT?=
- =?utf-8?B?WkRaR0FCRkY5WDlrTksvUFI2bWtpeWM1dVk3cVFOTEhnRXdrRk1BN09PQ2d3?=
- =?utf-8?B?OU00MDJiMy9WcERXY2dlYnJiTG5ua252SHFuNjNpZlpsRDRvOXd0R3VISkRW?=
- =?utf-8?B?ZEtWVC9XVGJCRU5DdktaZEtHdi9SMEtiN3dwSWVQTy91R3JCeTUwUVVsWDdH?=
- =?utf-8?B?QzRBNXN2cWZNRE5LaFZrRHFiYjFodHM0alZHeVMrc29yYm00SzF3QkdOeW9R?=
- =?utf-8?B?UUl3aFh4bDh4MzI4K05RWStnNU9vQWgxZWdwWEhjZk9KeXhvSDg2K2VxZDB3?=
- =?utf-8?B?MloxM2sxTVRuVGh1Rkp6azZyaURHUjYwUmk5N0NSandtUFVBNm5XS1VtWm1Q?=
- =?utf-8?B?bS9LOHFMU0ZuWFZsYTRqQXE3QUJxSEdWTlNEUVk4T24zNVlYL3JqSU95V1Iy?=
- =?utf-8?B?b2pmTnR6ZW9HN2J3VXdrSVN1a1NjSzdvZ3o5MDJCSUhQalRrbHppV0lrMU9Q?=
- =?utf-8?B?d1hnVnZaZkc2KzNKd0phSU9KRnpXZlA3d0ZON1dMV0ttV3Vta08wbHB2SjZu?=
- =?utf-8?B?MVREN0M5VlkxbFRWOTh5Y1JWOFRyNURWcWlEWXlROUcrMEtkUjhCcE1UcmNo?=
- =?utf-8?B?eXlKV1Nid1IyTjdwekRJck1mcjk2d29TWUZsck9XbVRNSnE0L1hZZXVDVlF5?=
- =?utf-8?B?VkFJQUlUT1JYa2YrbUc4NlRMMnkrMWtoMEhuc2l1d3E0L1IrNXk5aitqU0FX?=
- =?utf-8?B?eUlSTXk5L3FRTXJFRnlLQ2ZIQnBjQ2MzQkthRjBJRkJ0cTBISU0yZ3M1Y2ZF?=
- =?utf-8?B?d1Y2RmRkUVdZdHJxWGlCMG9HY29QTjNkYVZONW9GTmNmRjNxcW45WkpDZTJw?=
- =?utf-8?B?Ri91TE82TXg5Z3Y1ekM1V2ZCY1pQaEdvWmIvV0l5dXhMeks5L2pwVFl1N2xD?=
- =?utf-8?B?UFh5NmVvV1Z1VitCWlpTUnVzakF2NEEreUQ1aUxocitXYkJ3SW1WbDNmRXp0?=
- =?utf-8?B?citvOXBtS0hmNUw3UUNaczRieldVbDNrN2phSTdLbi9jb1VpR3NQbGRldWpo?=
- =?utf-8?B?cmthRkN4RHVpUll3a2JCN0dpTVEyVElMWUNVQWVEU2VsQTRJK2l1S2g5Q0lF?=
- =?utf-8?B?cVZ5SkNEZ2FvWTM2cmZ6OG45T3FCRzFrMVcvb2dJRGdlVVA5aS9XeGRLY0lX?=
- =?utf-8?B?ZEIraUkyQlorR1FjQzdDZThBNlJWUjBneUhOQlljU01tVlo4S3dPaGdaRzc1?=
- =?utf-8?B?ZDh5ZHVLRHJlYy9pcHQ0Sm01K3JBV001L2M5Mld2NVVOaEd2bWxQUTFMNUpP?=
- =?utf-8?B?VUgxWnF5Z0Q3MDMvbktZSDJxZkkvSUZtdmtnTGhHTU1CQ1NXM2M1R21FSUZu?=
- =?utf-8?B?MlVyYWxrOEhsUktkZm4yRDN1alR4ZnhlNFNGbXNMMGlWdHJXWjRFY0hsaGtl?=
- =?utf-8?B?SVErMDRxS2N3a1ZaNVZvRkRoQldFWWg1M1ErNENGTnZUazVPNkUwV3dray9k?=
- =?utf-8?B?YnVCUXZ3UzZNSUlTQk9JOHN3QndUNWpTYitUZTlsNUljUmpYTndreGJOTXdB?=
- =?utf-8?B?dkgzWWRINmozWnczMEQ5UkpKSWt6ZEFqNlFJcjl2aEp5NzgxSFlVU1Q4cW8x?=
- =?utf-8?B?THdVcXJVc2VpZit2MThQeWdFVjh0NGZKMndMVWpjM1RjYUwrREh2TG5EY0Er?=
- =?utf-8?B?SlI4VDRCVldhOVdkZFZJRFZYMXEvTlJwak9YeWg1Y0FhVVFONDQ3elA4bUEz?=
- =?utf-8?B?YWpMVlprUkw4cXJJK3NXdis4RlNVQWNVbGwzZWRZQ0VEdTg2NW5CcElUcnNz?=
- =?utf-8?B?NzlXNmtTVTFTb0s0MFFIbis5T0JvcG41RlB2bTQwZDdDRVFWNlVoSklCS2RB?=
- =?utf-8?B?SnlSSWFMaWp5RUwvSDFTVS9yZkxJbTRhaExhQUI0Mk8zOGFLUkcrSlpOaEUy?=
- =?utf-8?B?WDJkalhWYXFLMVlOajl0Mmc5MVlIazZDZDhKanVXK1FhaGpZR0lhL0VGeWtk?=
- =?utf-8?B?dVg4dzlRc0FBNnhPRStwbHRESDZINHNRR1dta25ULzZNUUtOSWpBckdqMFpY?=
- =?utf-8?B?VnNkVDZLQ2F3MDhHcmJsRCtwWXVVK2Z3M0JqeXVndTRtaEtTNUVkanNybHky?=
- =?utf-8?Q?+7ORKFuchuYMayRlijAWAVBuM?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9e3711c-3f8e-4305-dff1-08dc191b0c62
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WStHTXJnVnNJOXVYVU1sdjBsZnFmaUJ4Tmo4ZXJGV2xVc1hDWnZyYlRXbldy?=
+ =?utf-8?B?SGR0QjdiS2UzN1NqZUJIVUVIbnA2Q2tCcFNXMkFTaGowdEhLdGsxeEJ2TzFG?=
+ =?utf-8?B?YmRYaDB6eGhkWGEwQUpZK0t3OUF2V3JCcTRNdC8zeTh2QmlTSWJJT3pUSUY4?=
+ =?utf-8?B?WU5od29KRXhVOUhvS1F6YzJSTTZVQXJJQXhVbkRHRHgrK3g2N0JtRldXeUhj?=
+ =?utf-8?B?RlBkNEluQkZFdmVTRWV3ZFNKK3IwWlRvenFMMkpYZ05aeTd5ZXFVZ0w4WWlE?=
+ =?utf-8?B?d2R1K1RRMFY1eDlqOFo2Nm5FOEptai9vbzlLNHR0QmZOV05oMG1sMjhURkJa?=
+ =?utf-8?B?dVJzTjJKUWNkcCsxQWlyNHYyVEJ2VlptUTJVUHAvK1Y5SytFMEVkQTgyeDhN?=
+ =?utf-8?B?OHUrV0ZXazJNMW5jdDVNQnBhMU54N01rQkxwdnI5cm1ReDN4M3hGc2sxSjFs?=
+ =?utf-8?B?ZFozMVZiTElqMVM1QjNwZ0RQd2NsMXpjanVKOU1IS2xxWWJCQTVHSkEwc2J5?=
+ =?utf-8?B?YzhtMmNSUzVEVC9FSW9TU1I2UGlnWWNLckhGLzk0VUc5NnNBTjhkTHhrUG9j?=
+ =?utf-8?B?RkZEZkovaGZ4N21wNE1mWUxud25yZng0UE82V0RUYlBsdUZYUW5XWnc2bWhm?=
+ =?utf-8?B?YUFkVHVGS3RPNzd1ejF2dEdidUlvT2Uxb0w2T2Q5alZMSjg2QkF5TEU5TVY4?=
+ =?utf-8?B?OTRidzQwMmgyVmoxSGxQM3E1dnVySEl5Z3hGUkNyQnNoMnZFbU13T3JIM2JR?=
+ =?utf-8?B?SjZnM0VPNzNKQ3ArKzZpYjhjQTNMYzlMM3h4Y21vL2NCMnlQU3RvUjNEd1hY?=
+ =?utf-8?B?cU5qNndoeEJFeDd0bjVNVzNCUStNSU9YRUxOM1NZU1hoSEgra2dFNmtFK1Z4?=
+ =?utf-8?B?WFNXc21YcGwxaFh1TkNmVUVnVkgrUGhkUXoxbUZVWWZlcGZEa0pmbnAzT3V6?=
+ =?utf-8?B?cmNrNUtEL1VvemJKTGxSdW82dWlUQkFEaGJsSENwdFVJZzE4UTYwNDZxV24y?=
+ =?utf-8?B?M3dBVEJBK3RKZm1DM2U3NWt3b1ROSlRyYTlQMXV2UlBKaU44RXpma3RWSmNr?=
+ =?utf-8?B?WkhITXM1WTVHRGlzSjl5T2xnS1drYUs3WmZiU0ZnbUFmWXlvY3MxK3VrNk1W?=
+ =?utf-8?B?VHduWHlUSGFvelBraEdUYzRpb0FPcHp2RDdBdUhaRkd4ZytpT29KNVFGTU4x?=
+ =?utf-8?B?bFVMRHNnN1QvTlhOOWU4bjE1VExTRzZvdW5hazZ6czUyeFYvZ21qb3BlV2h1?=
+ =?utf-8?B?NUNndWVFMkVLYTNTTmVzQUVxMHVEckMxeWpBbHN6UjNCYmpyU2hxUXlYYUxn?=
+ =?utf-8?B?L0xTb3VjbnJ1TEZad1NYd1YrSTNHajJmZE5vMGcxb1p4TENOMHhLU3B6SWxh?=
+ =?utf-8?B?ZnowL2ZwdVh3cW5yMWc0WkFndWRIeEVhdjdKekw4SG9sQWw1b3VleFVIYWw2?=
+ =?utf-8?B?bXJId2NqZzRqa0RZWXV3L3FWc0R0Ujl6WDlSU2xZMTZ5RmJvenBRZm9KWHFr?=
+ =?utf-8?B?MEtZZElNQmI0VTRMU1k1bmV4U1c5NjNQR21tSGU2UG5PYkExdnU1Rm44MXc0?=
+ =?utf-8?B?ejVzYzJnOHBlRCtsbzJ5Ri9WK2VDV3Y1UmNCOExuTzdrdTZtTGhBeCtqUzBs?=
+ =?utf-8?B?QWpFMk93U1U3bVlCVldzSE5UTVljTm04cUxiQnJ0dk9LaFI4dTNGU2twakxu?=
+ =?utf-8?B?SW85clI4a1laWm16Vmx6eS96NUExUVp1cXhwSWlldXdjR1h1MWFjM25ZV2lU?=
+ =?utf-8?B?c0RMRHRGL1RXR3pnemxEdU1haWpFYXhjbjFqUTJvRW95M3lQYzRMd1EvWXpn?=
+ =?utf-8?B?V1g0WE1KT3JIckxOVEdHVUl4MTdFUmZHYnF2dmdoNkwyMXZ0aVlFNzNzMHBk?=
+ =?utf-8?B?NWRyVi9lMndZMWp2bjZmb1hMWnpDRmpNTmgxOHFJY2s4cXdBWll1WnQwdUo1?=
+ =?utf-8?B?eDRMbnJ3b2lydmI5Z2kvRXpCbS9sWTE0cDVSeUFYYk1vNEI3UEpmNXBhK0lM?=
+ =?utf-8?B?NUtHWW9TV29sTzRra1hJbitIREV5cVNqWFpWUDk2dnNjOTFqWW1OT1dEZjRN?=
+ =?utf-8?B?SzltdDdUOGdXSlF4RlVMV0N3dFZxbzhud0VNZTF1Wk8vcTkxc0VOUU15SHF5?=
+ =?utf-8?Q?pFKaGpg3vCHsamSLGXiEerL3C?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e05c1a10-0950-4196-0231-08dc191cf2a3
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 18:18:34.3551
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 18:32:10.1428
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uU2BDhERDMgtB5UY8H0QznR4yXRsWbFqlRvpgtIaFKF1dC7vyVHlnrVZIqJxbtyI+ZCkQQXY86vsMEju1Jb8Xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5486
+X-MS-Exchange-CrossTenant-UserPrincipalName: KHL+LTuEvH6VQ85ykdCP8C98pl3jVHz8SSBlldFuSHXm2z/aUmqWXotB2E2hEcaBqBUrivmJpfBFmcjBJHEKsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8220
 X-OriginatorOrg: intel.com
 
 
 
-On 1/8/24 04:48, Robert Richter wrote:
-> The last entry in the CDAT table may not mark the end of the CDAT
-> table buffer specified by the length field in the CDAT header. It can
-> be shorter with trailing unused (zero'ed) data. The actual table
-> length is determined when reading all CDAT entries of the table with
-> DOE.
+On 1/17/24 17:28, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> If the table is greater than expected (containing zero'ed trailing
-> data), the CDAT parser fails with:
+> CXL devices maintain a list of locations that are poisoned or result
+> in poison if the addresses are accessed by the host.
 > 
->  [   48.691717] Malformed DSMAS table length: (24:0)
->  [   48.702084] [CDAT:0x00] Invalid zero length
->  [   48.711460] cxl_port endpoint1: Failed to parse CDAT: -22
+> Per the spec (CXL 3.1 8.2.9.9.4.1), the device returns the Poison
+> List as a set of  Media Error Records that include the source of the
+> error, the starting device physical address and length.
 > 
-> In addition, the table buffer size can be different from the size
-> specified in the length field. This may cause out-of-bound access then
-> parsing the CDAT table.
+> Trigger the retrieval of the poison list by writing to the memory
+> device sysfs attribute: trigger_poison_list. The CXL driver only
+> offers triggering per memdev, so the trigger by region interface
+> offered here is a convenience API that triggers a poison list
+> retrieval for each memdev contributing to a region.
 > 
-> Fix that by providing an optonal buffer length argument to
-> acpi_parse_entries_array() that can be used by cdat_table_parse() to
-> propagate the buffer size down to its users.
+> int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
+> int cxl_region_trigger_poison_list(struct cxl_region *region);
 > 
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> The resulting poison records are logged as kernel trace events
+> named 'cxl_poison'.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/acpi/tables.c    |  2 +-
->  drivers/cxl/core/cdat.c  |  6 +++---
->  include/linux/fw_table.h |  4 +++-
->  lib/fw_table.c           | 15 ++++++++++-----
->  4 files changed, 17 insertions(+), 10 deletions(-)
+>  cxl/lib/libcxl.c   | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym |  6 ++++++
+>  cxl/libcxl.h       |  2 ++
+>  3 files changed, 55 insertions(+)
 > 
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index b07f7d091d13..b976e5fc3fbc 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -253,7 +253,7 @@ int __init_or_acpilib acpi_table_parse_entries_array(
->  
->  	count = acpi_parse_entries_array(id, table_size,
->  					 (union fw_table_header *)table_header,
-> -					 proc, proc_num, max_entries);
-> +					 0, proc, proc_num, max_entries);
->  
->  	acpi_put_table(table_header);
->  	return count;
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 6fe11546889f..012d8f2a7945 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -149,13 +149,13 @@ static int cxl_cdat_endpoint_process(struct cxl_port *port,
->  	int rc;
->  
->  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
-> -			      dsmas_xa, port->cdat.table);
-> +			      dsmas_xa, port->cdat.table, port->cdat.length);
->  	rc = cdat_table_parse_output(rc);
->  	if (rc)
->  		return rc;
->  
->  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
-> -			      dsmas_xa, port->cdat.table);
-> +			      dsmas_xa, port->cdat.table, port->cdat.length);
->  	return cdat_table_parse_output(rc);
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index af4ca44eae19..cc95c2d7c94a 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -1647,6 +1647,53 @@ CXL_EXPORT int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev)
+>  	return 0;
 >  }
 >  
-> @@ -511,7 +511,7 @@ void cxl_switch_parse_cdat(struct cxl_port *port)
->  		return;
->  
->  	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
-> -			      port, port->cdat.table);
-> +			      port, port->cdat.table, port->cdat.length);
->  	rc = cdat_table_parse_output(rc);
->  	if (rc)
->  		dev_dbg(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
-> diff --git a/include/linux/fw_table.h b/include/linux/fw_table.h
-> index 95421860397a..3ff4c277296f 100644
-> --- a/include/linux/fw_table.h
-> +++ b/include/linux/fw_table.h
-> @@ -40,12 +40,14 @@ union acpi_subtable_headers {
->  
->  int acpi_parse_entries_array(char *id, unsigned long table_size,
->  			     union fw_table_header *table_header,
-> +			     unsigned long max_length,
->  			     struct acpi_subtable_proc *proc,
->  			     int proc_num, unsigned int max_entries);
->  
->  int cdat_table_parse(enum acpi_cdat_type type,
->  		     acpi_tbl_entry_handler_arg handler_arg, void *arg,
-> -		     struct acpi_table_cdat *table_header);
-> +		     struct acpi_table_cdat *table_header,
-> +		     unsigned long length);
->  
->  /* CXL is the only non-ACPI consumer of the FIRMWARE_TABLE library */
->  #if IS_ENABLED(CONFIG_ACPI) && !IS_ENABLED(CONFIG_CXL_BUS)
-> diff --git a/lib/fw_table.c b/lib/fw_table.c
-> index 1e5e0b2f7012..ddb67853b7ac 100644
-> --- a/lib/fw_table.c
-> +++ b/lib/fw_table.c
-> @@ -132,6 +132,7 @@ static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
->   *
->   * @id: table id (for debugging purposes)
->   * @table_size: size of the root table
-> + * @max_length: maximum size of the table (ignore if 0)
->   * @table_header: where does the table start?
->   * @proc: array of acpi_subtable_proc struct containing entry id
->   *        and associated handler with it
-> @@ -153,10 +154,11 @@ static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
->  int __init_or_fwtbl_lib
->  acpi_parse_entries_array(char *id, unsigned long table_size,
->  			 union fw_table_header *table_header,
-> +			 unsigned long max_length,
->  			 struct acpi_subtable_proc *proc,
->  			 int proc_num, unsigned int max_entries)
+> +CXL_EXPORT int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev)
+> +{
+> +	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
+> +	char *path = memdev->dev_buf;
+> +	int len = memdev->buf_len, rc;
+> +
+> +	if (snprintf(path, len, "%s/trigger_poison_list",
+> +		     memdev->dev_path) >= len) {
+> +		err(ctx, "%s: buffer too small\n",
+> +		    cxl_memdev_get_devname(memdev));
+> +		return -ENXIO;
+> +	}
+> +	rc = sysfs_write_attr(ctx, path, "1\n");
+> +	if (rc < 0) {
+> +		fprintf(stderr,
+> +			"%s: Failed write sysfs attr trigger_poison_list\n",
+> +			cxl_memdev_get_devname(memdev));
+> +		return rc;
+> +	}
+> +	return 0;
+> +}
+> +
+> +CXL_EXPORT int cxl_region_trigger_poison_list(struct cxl_region *region)
+> +{
+> +	struct cxl_memdev_mapping *mapping;
+> +	int rc;
+> +
+> +	cxl_mapping_foreach(region, mapping) {
+> +		struct cxl_decoder *decoder;
+> +		struct cxl_memdev *memdev;
+> +
+> +		decoder = cxl_mapping_get_decoder(mapping);
+> +		if (!decoder)
+> +			continue;
+> +
+> +		memdev = cxl_decoder_get_memdev(decoder);
+> +		if (!memdev)
+> +			continue;
+> +
+> +		rc = cxl_memdev_trigger_poison_list(memdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  CXL_EXPORT int cxl_memdev_enable(struct cxl_memdev *memdev)
 >  {
-> -	unsigned long table_end, subtable_len, entry_len;
-> +	unsigned long table_len, table_end, subtable_len, entry_len;
->  	struct acpi_subtable_entry entry;
->  	enum acpi_subtable_type type;
->  	int count = 0;
-> @@ -164,8 +166,10 @@ acpi_parse_entries_array(char *id, unsigned long table_size,
->  	int i;
+>  	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
+> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> index 8fa1cca3d0d7..277b7e21d6a6 100644
+> --- a/cxl/lib/libcxl.sym
+> +++ b/cxl/lib/libcxl.sym
+> @@ -264,3 +264,9 @@ global:
+>  	cxl_memdev_update_fw;
+>  	cxl_memdev_cancel_fw_update;
+>  } LIBCXL_5;
+> +
+> +LIBCXL_7 {
+> +global:
+> +	cxl_memdev_trigger_poison_list;
+> +	cxl_region_trigger_poison_list;
+> +} LIBCXL_6;
+> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> index 0f4f4b2648fb..ecdffe36df2c 100644
+> --- a/cxl/libcxl.h
+> +++ b/cxl/libcxl.h
+> @@ -460,6 +460,8 @@ enum cxl_setpartition_mode {
 >  
->  	type = acpi_get_subtable_type(id);
-> -	table_end = (unsigned long)table_header +
-> -		    acpi_table_get_length(type, table_header);
-> +	table_len = acpi_table_get_length(type, table_header);
-> +	if (max_length && max_length < table_len)
-> +		table_len = max_length;
-> +	table_end = (unsigned long)table_header + table_len;
+>  int cxl_cmd_partition_set_mode(struct cxl_cmd *cmd,
+>  		enum cxl_setpartition_mode mode);
+> +int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
+> +int cxl_region_trigger_poison_list(struct cxl_region *region);
 >  
->  	/* Parse all entries looking for a match. */
->  
-> @@ -220,7 +224,8 @@ int __init_or_fwtbl_lib
->  cdat_table_parse(enum acpi_cdat_type type,
->  		 acpi_tbl_entry_handler_arg handler_arg,
->  		 void *arg,
-> -		 struct acpi_table_cdat *table_header)
-> +		 struct acpi_table_cdat *table_header,
-> +		 unsigned long length)
->  {
->  	struct acpi_subtable_proc proc = {
->  		.id		= type,
-> @@ -234,6 +239,6 @@ cdat_table_parse(enum acpi_cdat_type type,
->  	return acpi_parse_entries_array(ACPI_SIG_CDAT,
->  					sizeof(struct acpi_table_cdat),
->  					(union fw_table_header *)table_header,
-> -					&proc, 1, 0);
-> +					length, &proc, 1, 0);
->  }
->  EXPORT_SYMBOL_FWTBL_LIB(cdat_table_parse);
+>  #ifdef __cplusplus
+>  } /* extern "C" */
