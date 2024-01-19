@@ -1,63 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B63EC2;
-	Fri, 19 Jan 2024 00:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86AC54BEE;
+	Fri, 19 Jan 2024 17:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705624962; cv=none; b=f3v0C34x+I0tluE0p+oGI2wfgBZX4VbAHLIRqGU24HD0fml5pyBwPsPD85qpYDkvaTJ6JTVNy4WQIH1nT0Ek2G0qvvZWt5owYEvfkat+nbJeJnwC7f1EfcOGAOQqDwTyIUgmQUe+33RlkIWlIGd23XQKQnghrQcjD78R8SaB5YQ=
+	t=1705684986; cv=none; b=Tye/fiNjRcJDsrzXVajGLomjQSdINDm9r5y+D5y9kiDkQEjgbw+Ygz9eu4jVG/EPQAjglBkxPsL5FnMrlR4nBHzTtMMf+MTeHN4ZbJ9qyLG3eoYd+CcYjzXFUrzDzYsfu7/ijImfb3jdzELLOprjwsGF6I0t6E04mdTqRHCdQRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705624962; c=relaxed/simple;
-	bh=KFftwYqFIcoquNtZ1NqkoabheV00jhXZ9kZGcoYTiW4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FKPZiCKWUm76t85LPXT0ZeR8kNCAb9tRAA7f9TbJuPmbishjQubNlWB3/LUuMuNkSP1DCM7ih1q00xnWQGbwYGJA/VBDy/0h2RZGsUV6CV5NvmP1lAR53HlWpSv37xjwG9sM9QwoSUaSff6CieVnSJuMWi2ShRXKxAt60x4EIWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/ApML9M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705684986; c=relaxed/simple;
+	bh=ViGy1MNPoHzdAAlOoVw+jmeOLSwE3a7hj20/dLzoCzM=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=iVqN6d3JfLV1j/mVStb5kaS+gq1oahao4knM5cTwQ1urCFGhkqaYX9rlMFeZrgKMnkXy7Nl5mP8/Mio8ueBXtD6iCnfnvO1NgEyMvk0aQGYHm7nXSedJCqoEjvRRzfyWlKxZ2RJlOFEFlaMAd8chwMmtD1EvgwjrZnQsF4kfqFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8ixvOEz; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/ApML9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 41D2CC433F1;
-	Fri, 19 Jan 2024 00:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705624962;
-	bh=KFftwYqFIcoquNtZ1NqkoabheV00jhXZ9kZGcoYTiW4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=k/ApML9MPV4+/iK5OnnqWaG2hNLCHxImi+GXb/OImwyzX/IBOPriqF2J8MXm4t0+t
-	 d0FGPL+XPMaaNXmiGFle6+VSxSI3luAhdT3FcY0mt929R/4Upun2RqvMm3WxgPjmFZ
-	 SMkS7Hi43+JYKSbf3R6uWoDPdfFEQQz1D8KCkUqqXVLwAJdt/6YNkX+CN2Nl6K+k7k
-	 Ni2DomxEYfHO8SLF3Ia0+YHjohRR8MfainNBhARYQuADQ0k65AyFhPvTcme89fmO7+
-	 SsXYf58x7k2EpF/h39/00LZihmner0M1V2XF8/kGRDjU6IbeRfgoSMnEkAIntAujL8
-	 sY+1cR3xMa9Ng==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 30AF7DFC697;
-	Fri, 19 Jan 2024 00:42:42 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) for 6.8
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <65a1ecd2b9b02_293042946b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <65a1ecd2b9b02_293042946b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-List-Id: <linux-acpi.vger.kernel.org>
-X-PR-Tracked-Message-Id: <65a1ecd2b9b02_293042946b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.8
-X-PR-Tracked-Commit-Id: 73bf93edeeea866b0b6efbc8d2595bdaaba7f1a5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: db5ccb9eb23189e99e244a4915dd31eedd8d428b
-Message-Id: <170562496219.3707.9548987370412862817.pr-tracker-bot@kernel.org>
-Date: Fri, 19 Jan 2024 00:42:42 +0000
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: torvalds@linux-foundation.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8ixvOEz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705684984; x=1737220984;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ViGy1MNPoHzdAAlOoVw+jmeOLSwE3a7hj20/dLzoCzM=;
+  b=I8ixvOEzZyOdiXBbsAw4jT3Rv6iln/8QoOkX2XSlkDJq2LtZNLg09JXs
+   XCIlj2kngQzln3AOY+/CpwQRcjF3BolRO1Lmu134g4L7PUbIcUkoxULH0
+   Ltk929wHLruc6NVj0QVTjYEUQJIM1FDJ6sK0uwfaevZhquB9kPDbtezUo
+   QRCZw8kGiu0quyfEsuUAA+W5Tkj911BxHJKF50y4aHouR+NbifhBAIljC
+   KF8o/b4G1JdCC5HiaY5bpWCkzrAuIodwyAHHohRUFvdq1tcj1smAiR1Os
+   Vn1Bjg/CHufzAchBVyt+6CDbWJwxcalTB8U3sW8TFmJpxouosCzfYzh9p
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="399665959"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="399665959"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 09:23:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="634514"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.161.22])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 09:23:02 -0800
+Subject: [PATCH v4 00/11] cxl: Add support to report region access coordinates
+ to numa nodes
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: "Huang, Ying" <ying.huang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com,
+ ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
+ jonathan.cameron@huawei.com, dave@stgolabs.net, brice.goglin@gmail.com,
+ nifan.cxl@gmail.com, rafael@kernel.org, gregkh@linuxfoundation.org
+Date: Fri, 19 Jan 2024 10:23:01 -0700
+Message-ID: <170568485801.1008395.12244787918793980621.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Fri, 12 Jan 2024 17:52:18 -0800:
+Hi Rafael,
+Please review patches 1-4,10,11 and ack if they look ok to you. Thank you!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.8
+Hi Greg,
+Please review patch 2 and 11 and ack the numa node bits if they look ok to you. Thank you!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/db5ccb9eb23189e99e244a4915dd31eedd8d428b
+v4:
+- Introduce access class 0 and 1 for CXL access coordinates.
+- See individual patches for detailed change log if applicable.
 
-Thank you!
+v3:
+- Make attributes not visible if no data. (Jonathan)
+- Fix documentation verbiage. (Jonathan)
+- Check against read bandwidth instead of write bandwidth due to future RO devices. (Jonathan)
+- Export node_set_perf_attrs() to all namespaces. (Jonathan)
+- Remove setting of coordinate access level 1. (Jonathan)
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+v2:
+- Move calculation function to core/cdat.c due to QTG series changes
+- Make cxlr->coord static (Dan)
+- Move calculation to cxl_region_attach to be under cxl_dpa_rwsem (Dan)
+- Normalize perf latency numbers to nanoseconds (Brice)
+- Update documentation with units and initiator details (Brice, Dan)
+- Fix notifier return values (Dan)
+- Use devm_add_action_or_reset() to unregister memory notifier (Dan)
+
+This series adds support for computing the performance data of a CXL region
+and also updates the performance data to the NUMA node. This series depends
+on the CXL QOS class series that's pending 6.8 pull request.
+
+CXL memory devices already attached before boot are enumerated by the BIOS.
+The SRAT and HMAT tables are properly setup to including memory regions
+enumerated from those CXL memory devices. For regions not programmed or a
+hot-plugged CXL memory device, the BIOS does not have the relevant
+information and the performance data has to be caluclated by the driver
+post region assembly.
+
+According to numaperf documentation [1] there are 2 access classes defined
+for performance between an initiator node and a memory target node. Access
+class "0" describes attributes between a memory target and the highest
+performing initator local to the target. In this case the initiator can be
+a CPU or an I/O initiator such as a GPU or NIC. Access class "1" describes
+attributes between a memory target and the nearest CPU node. Both access
+classes are calculated for the CXL memory target and updated for NUMA nodes
+through HMAT_REPORTING code or directly depending on if the NUMA node is
+described by the ACPI SRAT table.
+
+Recall from [2] that the performance data for the ranges of a CXL memory device
+is computed and cached. A CXL memory region can be backed by one or more
+devices. Thus the performance data would be the aggregated bandwidth of all
+devices that back a region and the worst latency out of all devices backing
+the region.
+
+See git branch [3] for convenience.
+
+[1]: https://www.kernel.org/doc/Documentation/admin-guide/mm/numaperf.rst
+[2]: https://lore.kernel.org/linux-cxl/170319606771.2212653.5435838660860735129.stgit@djiang5-mobl3/
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-hmem-report
+
+---
+
+Dave Jiang (11):
+      ACPI: HMAT: Remove register of memory node for generic target
+      base/node / ACPI: Enumerate node access class for 'struct access_coordinate'
+      ACPI: HMAT: Introduce 2 levels of generic port access class
+      ACPI: HMAT / cxl: Add retrieval of generic port coordinates for both access classes
+      cxl: Split out combine_coordinates() for common shared usage
+      cxl: Split out host bridge access coordinates
+      cxl: Set cxlmd->endpoint before adding port device
+      cxl/region: Calculate performance data for a region
+      cxl/region: Add sysfs attribute for locality attributes of CXL regions
+      cxl/region: Add memory hotplug notifier for cxl region
+      cxl/region: Deal with numa nodes not enumarated by SRAT
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  60 +++++++
+ drivers/acpi/numa/hmat.c                |  86 +++++++---
+ drivers/acpi/numa/srat.c                |  11 ++
+ drivers/base/node.c                     |   7 +-
+ drivers/cxl/acpi.c                      |   8 +-
+ drivers/cxl/core/cdat.c                 | 142 ++++++++++++++--
+ drivers/cxl/core/core.h                 |   4 +
+ drivers/cxl/core/port.c                 |  44 +++--
+ drivers/cxl/core/region.c               | 216 ++++++++++++++++++++++++
+ drivers/cxl/cxl.h                       |  15 +-
+ include/linux/acpi.h                    |  10 ++
+ include/linux/memory.h                  |   1 +
+ include/linux/node.h                    |  18 +-
+ 13 files changed, 565 insertions(+), 57 deletions(-)
+
+--
+
