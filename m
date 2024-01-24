@@ -1,75 +1,65 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB68C136662
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 23:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D2A136662
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 23:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706140443; cv=none; b=kNLMXFg7AerxzJzBjqLib3hbhlOoxFU6KnnDBWbUhsMEgUkwtXxYUZoFS0w3Fnyw9oiA6uz+2wDSI60wBrIFGcrkeE9TOLtWNZ9xu6/NvT8swl6jHEbPYog2U6iksI8W5e2OoXJtoBo00APM263XuWVV0AqaeU6MuvtiBK1+668=
+	t=1706140785; cv=none; b=p7KF8htr1tgzbzbqzYo5WvXIh3u19moAGBjJDV1YjjK4ojHFVEhOs8LngwG+0N0ZGTOHG1tV0ps3PsgHALiQpcXWK+cNvNTfDZtQC++ycrHW3/njNnCfU69Firwu2jPzqTLoHJ7eLFB2kWLjUrewzhYWguqBELGLtMsy+B8ol30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706140443; c=relaxed/simple;
-	bh=ZPzgneeNKpX1M4YY7NcUxYJUNg71+XEnrhrzh666Wzo=;
+	s=arc-20240116; t=1706140785; c=relaxed/simple;
+	bh=KJTZmLwaZO9xpsdvzLeVxler7rLsie4jyEXqYk03/nE=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=joRo0J7HtU3MB/o0Iy6OumPHFiq1yVYjWEBXsNzb3WKru4/LVGyUg/50zM+/h9uJ9/158P9DE1zfkSAFWlc5vODzEdFtAdf2sn3RZB3dA65HlSD+Fq47Dk8dQm1CuRXH1sFzT6an4Zz9t1KOWR4ZagoDXSHHcoD2wHhxE8O74Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N1EnbWmJ; arc=none smtp.client-ip=209.85.216.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=eig8MI+kbbEbpfAgCKOPDLlhDpqm96j9dGltNLy05qEGAjLqNNjEEtebsDLJE2Iw8s5/Tyfk2nX2bzi5cUdBS+apc6sLUs9J8MD+DAQdy7nb3E5vd+iOLwN1neohVmdA8YixNK9ehImnt4s9YDsbXv6MnmamFPXVMi5by3O8t/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQkmVLfn; arc=none smtp.client-ip=209.85.167.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1EnbWmJ"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-29080973530so3522720a91.1
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 15:54:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQkmVLfn"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bda4bd14e2so4663874b6e.2
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 15:59:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706140441; x=1706745241; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706140783; x=1706745583; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7pyltUvzVFGZNAZxa7Mlyt8rLeSRqqjX7xnAHcOcr0=;
-        b=N1EnbWmJi04RYVA3ghTEB47mtLZLocjD/vP77no4pSlClsaUwFLU9fLIjxR3QWkC+z
-         IBgJL5CPm02HPpC+ly3N7Oi8Y6KXSIW/wrNjEyNAWSg/oQNkcMKOSHyjW16A/HygzxCb
-         icCpLXrcQi89yeDyBwowG/z1wVslwlPyy4I/BisrY21LMWE3YaC1cxDAPAR2v9Jo4JgK
-         sarMw0lm5lCfmAwpyDTfzNG6hVPOfiLw6Zd6Nzp0jMKAde6Y2c738AXSw0A9/vo5lumT
-         ojo2sQ597QUN7BzD0+EanHBlOtJZLVXUiTFgNB3JnRDbLw6fp1xXXfaoqSonuno/4kuP
-         Cd0Q==
+        bh=70z9zW8c+zY1lhKSF5SMlkbQQJVCvyivNJrKkuHwb3M=;
+        b=mQkmVLfn6SNMFWfI0RSgWDCwYkFtKCOSAuBfqKhzjWtByC6Ro/YaBJVTJPKtcw8njs
+         7QUy1ig+a0V0mYwF1S04dA3g8Zv2NKKhDLAGT6/wvUcA2Vtj9l+ZkZB+cfqYIYk9M5mI
+         7K6cPbxz1UG+pxgCE3txeEesPTBRubX5X/iRqjF1kjqceRhIRnWg5tpgRqFEu4hoKCD3
+         ytBrtsr5aZVNSL73TKO5T0Ust8dM21Y2jCZh1rj6ounQRi13g1hX4hfuJ8dBtm7qt/LT
+         GM4CmqMzaQbrBXR86Lrp9NsP6y7hRof6h8x4VIauW3S+eYkL4uEBzysj6uQYy7jdDUo1
+         CvcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706140441; x=1706745241;
+        d=1e100.net; s=20230601; t=1706140783; x=1706745583;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u7pyltUvzVFGZNAZxa7Mlyt8rLeSRqqjX7xnAHcOcr0=;
-        b=vwRWt0Hx5iUnoscHWlPoYmwhLkRRLxwHfu+PyFxMRfIfT1+TiXY+KHSs2ko6Eb0Ygb
-         VcPnEUtLyLB71uBDoiJDue13UxEDwTtMRssPcTyCcaX6T3fOvA8R+fZUJ4OoN4uaPVU0
-         rUVHbzSApOwjjBPozN2LOeg1cl/OhgFX5SlKsBxo2WqyJhrnXct7JHJsRcD8/EBL3Per
-         IFWIzeeSZn8JQNt6xgsJGG5L4T3SS629tW71CewztgF/2Iyalx9WstJGsK8vv6nwgf0O
-         iwX1K2jgU1r49UCf1D+xzSL4jSMxojNPQ2si8TndICODWTKkEqV+p3VL6aW1FpkcNSGh
-         5oXw==
-X-Gm-Message-State: AOJu0YxSh8J9xGq4uokqVp7nq2vXO4NEqwKxucDpudsjkcy92Vdbt4IL
-	ZRMtBw7FI2KQk6yeioR/RLSKd1uWLUv06dsPQm6NI56235nTy5JS
-X-Google-Smtp-Source: AGHT+IFfj7f5Cyb6ETziKXIhjRTeU0iGmtCXi0SIOWtQmIrz+8FhPfXpWgpY72O9mvFbjBNwkOTT4Q==
-X-Received: by 2002:a17:90a:880a:b0:290:172f:3b1b with SMTP id s10-20020a17090a880a00b00290172f3b1bmr104708pjn.98.1706140441160;
-        Wed, 24 Jan 2024 15:54:01 -0800 (PST)
+        bh=70z9zW8c+zY1lhKSF5SMlkbQQJVCvyivNJrKkuHwb3M=;
+        b=ZjIe45trGAYw9ufJLFwroLKJZjppv37KGTPz9CT1NM9oY/mxskHpeQ2xoF9kBE53Tx
+         h6ODXRIYdKpf8cgisJ458jZbuEqYCDytLmmMy0PSYcoPgEhAnu6yIW4UMnoVm/Hbbt9r
+         oDWurq8O08Jw0WUQ/n0owOTj/ixoiAZHhUFQ76zt+wgLGOtALLW7v0elfowYU56RRMOA
+         9p/Hl7hVz10ljsxM1GXkcErMa92Q6jrmQFmBQahQbkSV26SfBu/8X548fRgl0oVmcUsQ
+         tYaWOJu0fRfcY+9BJ9fzx5VqgmpQXtuk+NQUhgyOWfz4LYrkjm5eSuBOOgAupUdWT8k4
+         ZPig==
+X-Gm-Message-State: AOJu0YzHbtf6qsmenHG2mgm4MKlUu2jQ+hJOhk+/wu4/jio4KsSYcemA
+	sgeyIWJyuwIOJBwcAEFUWuJaG07g4a2OxSZCp28/Weou1WFxu0SC
+X-Google-Smtp-Source: AGHT+IFEzS1g+FvxtLtqxjHGtmlDWqaClEQ3FnfuXQazw35kawdhDmwwT4ef3lPAyHu3Z+d+7Rw62w==
+X-Received: by 2002:a05:6808:f8f:b0:3bd:998d:60c1 with SMTP id o15-20020a0568080f8f00b003bd998d60c1mr52032oiw.17.1706140783066;
+        Wed, 24 Jan 2024 15:59:43 -0800 (PST)
 Received: from debian (c-71-202-32-218.hsd1.ca.comcast.net. [71.202.32.218])
-        by smtp.gmail.com with ESMTPSA id iz1-20020a170902ef8100b001d72358de29sm8848933plb.287.2024.01.24.15.53.59
+        by smtp.gmail.com with ESMTPSA id t6-20020a625f06000000b006dd87826805sm2599008pfb.75.2024.01.24.15.59.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 15:54:00 -0800 (PST)
+        Wed, 24 Jan 2024 15:59:41 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Wed, 24 Jan 2024 15:53:58 -0800
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	Fan Ni <fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Huai-Cheng Kuo <hchkuo@avery-design.com.tw>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	Stefan Hajnoczi <stefanha@gmail.com>, linuxarm@huawei.com,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH 09/12] hw/mem/cxl_type3: Fix potential divide by zero
- reported by coverity
-Message-ID: <ZbGjFiKKPhC_uiOF@debian>
-References: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
- <20240124124100.8218-10-Jonathan.Cameron@huawei.com>
+Date: Wed, 24 Jan 2024 15:59:08 -0800
+To: Quanquan Cao <caoqq@fujitsu.com>
+Cc: dave.jiang@intel.com, vishal.l.verma@intel.com,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH] =?utf-8?B?Y3hsL3JlZ2lvbu+8mkZp?= =?utf-8?Q?x?= overflow
+ issue in alloc_hpa()
+Message-ID: <ZbGkTHdfq0YP82YB@debian>
+References: <20240124091527.8469-1-caoqq@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,45 +68,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240124124100.8218-10-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240124091527.8469-1-caoqq@fujitsu.com>
 
-On Wed, Jan 24, 2024 at 12:40:57PM +0000, Jonathan Cameron wrote:
-> Fixes Coverity ID 1522368.
+On Wed, Jan 24, 2024 at 05:15:26PM +0800, Quanquan Cao wrote:
+> Creating a region with 16 memory devices caused a problem. The div_u64_rem
+> function, used for dividing an unsigned 64-bit number by a 32-bit one,
+> faced an issue when SZ_256M * p->interleave_ways. The result surpassed
+> the maximum limit of the 32-bit divisor (4G), leading to an overflow
+> and a remainder of 0.
+> note: At this point, p->interleave_ways is 16, meaning 16 * 256M = 4G
 > 
-> Currently error_fatal is set if interleave_ways_dec() is going to return 0
-> but we should handle that zero return explicitly.
+> To fix this issue, I replaced the div_u64_rem function with div64_u64_rem
+> and adjusted the type of the remainder.
 > 
-> Reported-by: Stefan Hajnoczi <stefanha@gmail.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-
+> Signed-off-by: Quanquan Cao <caoqq@fujitsu.com>
 > ---
-> Note this is a stop gap until a more complex HDM decoder verification series.
-> ---
->  hw/mem/cxl_type3.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/cxl/core/region.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 1b92a065a3..24211703c6 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -794,8 +794,12 @@ static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
->          }
->          if (((uint64_t)host_addr < decoder_base) ||
->              (hpa_offset >= decoder_size)) {
-> -            dpa_base += decoder_size /
-> -                cxl_interleave_ways_dec(iw, &error_fatal);
-> +            int decoded_iw = cxl_interleave_ways_dec(iw, &error_fatal);
-> +
-> +            if (decoded_iw == 0)
-> +                return false;
-> +
-> +            dpa_base += decoder_size / decoded_iw;
->              continue;
->          }
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0f05692bfec3..ce0e2d82bb2b 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -525,7 +525,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct resource *res;
+> -	u32 remainder = 0;
+> +	u64 remainder = 0;
 >  
+>  	lockdep_assert_held_write(&cxl_region_rwsem);
+>  
+> @@ -545,7 +545,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>  	    (cxlr->mode == CXL_DECODER_PMEM && uuid_is_null(&p->uuid)))
+>  		return -ENXIO;
+>  
+> -	div_u64_rem(size, SZ_256M * p->interleave_ways, &remainder);
+> +	div64_u64_rem(size, (u64)SZ_256M * p->interleave_ways, &remainder);
+>  	if (remainder)
+>  		return -EINVAL;
+>  
+
+Make sense to me.
+
+Fan
 > -- 
-> 2.39.2
+> 2.43.0
 > 
