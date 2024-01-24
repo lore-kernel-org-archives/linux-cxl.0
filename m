@@ -1,321 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A4B13175B
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 18:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB8912AAC0
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 18:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706122129; cv=none; b=VPAPdd8F41GEBaiYoEMXtHGu/VsR4q6FVG4ufs76S6SG+0K+TOnJsjOQ9ikumlOfJfnaWsje51S/3tAxT/M79qMwO1qjePznxbK8WZ0rdumnEpNahEzENjOaW8DRPDNd5z+/8R+82RNSjj/wxoY83lIkDK1hC6fNHjGK2I3XVVA=
+	t=1706122625; cv=none; b=W7J0+utI3Up10YdpnhwHBANRz+2HOh7oult5iZAxh9IY2Ahh1rUZdOq0kkA/z+//s2yVAO93sQz4BgGVW7Xnn40Rh0Cd9RXkJiAyOhYyLE0qyFK7+UiEGqt+eFkTpNc5iBCXlI+pNeZ7+5FVucOlqgOfQXJRAtEQB9qa1k6plcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706122129; c=relaxed/simple;
-	bh=PDDjcKV+eIKd2of5PJ12hfeKFK1DEy20nPWpvRUzpvU=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=TrvWK/D1rviBKx13XiOnpduGjxA82/pPLwccsZcOm55gV6J0yxB/OWOewyJrM2BgJgOaV6E2ejQdRIyWEuQ2qaJ3HE3IvbzqNqfgmKpTy0QlPXMQpGNblIPZRPTUpacZxHzBTRZZY0/kGVjF5RtD33ETrgeF//eqvFECtPkMA0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOU6Uva5; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706122625; c=relaxed/simple;
+	bh=VShdrTvSXYAjB+5jvkC2icWvtvk4BQVDPgR9bndQwm8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GyapByWBv9Kt074V110EpaBaMu5X4doWX22oW5EIA977VKpqFU54evb/3DHWyym2gpzUM0y4N/5QuoxVRALmNUt+aY5/V9zM594UbYGdCeGs2md3Eu2pVhDpU3Nd/SP2wFDhvC0BnJismTsJb8jt8VzZ9TkQWncSpkDReXJw1DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQ/Z/UBG; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOU6Uva5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706122127; x=1737658127;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PDDjcKV+eIKd2of5PJ12hfeKFK1DEy20nPWpvRUzpvU=;
-  b=ZOU6Uva5RFmXjCnuX20NRKGD8M3ks/DGZVaqk0Ta2cC/1Ejc91e/JNMn
-   AXQUXPXYzOeUZiUPW2EUN7YaBL1NquvVyIqt1KLFMeTpzgHzSugvfSJ9z
-   pg7PUQ2u1I04/iAwt5wx0lmOyTaQvM9jOXNbcAqgAt7gnicirWOLiRG7p
-   xQE00u/Bn23kOkNtXBy9dxgEO7SgTPUpxSqDXiJFNPQOCyox5GQMlsHpt
-   m1E06Zc+ThwLAN8sMDXYepv6HMgIvWK07jgchwoeWnsnYuFpQ1BCHkXvp
-   8M64G8+99pAbWl0nZa5If7ZIvzw2CnCrj3yPB/GbUWiT7HvAbL+KeAozI
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="839464"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="839464"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 10:48:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1982170"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.164.29])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 10:48:38 -0800
-Subject: [PATCH] cxl: Fix sysfs export of qos_class for memdev
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, jonathan.cameron@huawei.com, dave@stgolabs.net
-Date: Wed, 24 Jan 2024 11:48:37 -0700
-Message-ID: <170612211746.2737788.8759299841309402825.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQ/Z/UBG"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d51ba18e1bso53187495ad.0
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 10:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706122623; x=1706727423; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nqMBNzZx3ZE2LKLPN5406gk/QS3v52I3gK5sU8RKhzc=;
+        b=nQ/Z/UBG95tPNb3uCf9WfdDqrZU914OdivFq7UtyPQoFnAWehgkW6skQ/0ImxaIRrU
+         KraFodBK+nKySLoeKtIDKNopE2FRGlutYuSdbmI2oGTefjRdf/yatfLELzYTINkgFc9O
+         A5W3CQmq5s4WnWPW9Fo9CFSVA6qT8c0ruYKV0QoO6iOj6mgDHtc8EduJgTtJYji3ZIJ7
+         sg/vJDBnQaN4q4BB2RYbaYcDXTZ7l81n07vGsT1TeDUSSnYsSWC9CDF7ZNvXd4zyMmz8
+         BZ0ydCvJHZIs0gmt8cThKh7SrisacPJqecFpht/4Zl3r3+l5ykli+rKFN0e0qcSH8010
+         BnZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706122623; x=1706727423;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nqMBNzZx3ZE2LKLPN5406gk/QS3v52I3gK5sU8RKhzc=;
+        b=kkM+aif+YtX9C4MooaKoBN5URqtGO0a30oelUu8hDcFTgtVUOG/MqEYdoic/DPxGrB
+         Lp97DoGisElZY+V/plWRo3UFzzOyVFUBUc5AijRIeGIby3oiu+5BvznlFlYpBZHBSier
+         EYX9l7tyaujS0cgvBmriiQpX50vO25TDlCCLdAd7BFET/Cbg0jVIWRQDUwY+gMExkjDa
+         ABq1CdETld9+wewvWrWiMoecTZZd4hQiGjR619XdlmDayn0ujj2tJAWM5/KpSi8nm9eN
+         G6yJjEjmIKgJczOpTkO6++r/aIlPmqrr08ALyb3Os7Rw0dUFtRXPdyWh8YHklvep0P2V
+         7Q1A==
+X-Gm-Message-State: AOJu0Yw09upJN1fE6fXM8/yPH/UWZNdJDE5G7QBQ8TELs5aSGxzKEfZx
+	ZldduqZ3pNvV0EAV7LAYhvM6r246Avv8UHeWRGGI8//mPs/TaNSc
+X-Google-Smtp-Source: AGHT+IEw27iDW+MU/bmpce30MixoYf5Z3Eiyqlw10Vy89mzcTVB33gVN0fPadnIxiEeMDp1QWuWKxg==
+X-Received: by 2002:a17:90b:88f:b0:290:8cb7:fa10 with SMTP id bj15-20020a17090b088f00b002908cb7fa10mr3909572pjb.15.1706122623196;
+        Wed, 24 Jan 2024 10:57:03 -0800 (PST)
+Received: from debian (c-71-202-32-218.hsd1.ca.comcast.net. [71.202.32.218])
+        by smtp.gmail.com with ESMTPSA id r5-20020a17090ad40500b0029004b9df9fsm14257004pju.36.2024.01.24.10.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 10:57:02 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Wed, 24 Jan 2024 10:57:00 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	Fan Ni <fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linuxarm@huawei.com,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Subject: Re: [PATCH 4/5] hw/cxl: Update mailbox status registers.
+Message-ID: <ZbFdfOiWTkTggRSp@debian>
+References: <20240124134814.8717-1-Jonathan.Cameron@huawei.com>
+ <20240124134814.8717-5-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124134814.8717-5-Jonathan.Cameron@huawei.com>
 
-Current implementation exports only to
-/sys/bus/cxl/devices/.../memN/qos_class. With both ram and pmem exposed,
-the second registered sysfs attribute is rejected as duplicate. It's not
-possible to create qos_class under the dev_groups via the driver due to
-the ram and pmem sysfs sub-directories already created by the device sysfs
-groups. Move the ram and pmem qos_class to the device sysfs groups and add
-a call to sysfs_update() after the perf data are validated so the
-qos_class can be visible. The end results should be
-/sys/bus/cxl/devices/.../memN/ram/qos_class and
-/sys/bus/cxl/devices/.../memN/pmem/qos_class.
+On Wed, Jan 24, 2024 at 01:48:13PM +0000, Jonathan Cameron wrote:
+> Whilst the reported version was 1 so there should be no changes,
+> a couple of fields (where the value 0 was valid) were not
+> defined. Make those explicit and update references to be based
+> on CXL r3.1.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Fixes: 42834b17cf1f ("cxl: Export sysfs attributes for memory device QoS class")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/cdat.c   |   12 ++++++
- drivers/cxl/core/core.h   |    3 ++
- drivers/cxl/core/memdev.c |   86 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/mem.c         |   56 -----------------------------
- 4 files changed, 101 insertions(+), 56 deletions(-)
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 6fe11546889f..a47dc4102140 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -395,6 +395,7 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 	struct xarray __dsmas_xa;
- 	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
- 	int rc;
-@@ -417,6 +418,17 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
- 
- 	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
- 	cxl_qos_class_verify(cxlmd);
-+	if (!list_empty(&mds->ram_perf_list)) {
-+		rc = sysfs_update_group(&cxlmd->dev.kobj, get_cxl_memdev_ram_group());
-+		if (rc)
-+			dev_dbg(&cxlmd->dev, "Failed to update RAM QoS group\n");
-+	}
-+
-+	if (!list_empty(&mds->pmem_perf_list)) {
-+		rc = sysfs_update_group(&cxlmd->dev.kobj, get_cxl_memdev_pmem_group());
-+		if (rc)
-+			dev_dbg(&cxlmd->dev, "Failed to update PMEM QoS group\n");
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
- 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..44958be2178a 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -90,4 +90,7 @@ enum cxl_poison_trace_type {
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
- 
-+const struct attribute_group *get_cxl_memdev_ram_group(void);
-+const struct attribute_group *get_cxl_memdev_pmem_group(void);
-+
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index dae8802ecdb0..5743c6b2710c 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -447,13 +447,61 @@ static struct attribute *cxl_memdev_attributes[] = {
- 	NULL,
- };
- 
-+static ssize_t pmem_qos_class_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_dpa_perf *dpa_perf;
-+
-+	if (!dev->driver)
-+		return -ENOENT;
-+
-+	if (list_empty(&mds->pmem_perf_list))
-+		return -ENOENT;
-+
-+	dpa_perf = list_first_entry(&mds->pmem_perf_list, struct cxl_dpa_perf,
-+				    list);
-+
-+	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
-+}
-+
-+static struct device_attribute dev_attr_pmem_qos_class =
-+	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
-+
- static struct attribute *cxl_memdev_pmem_attributes[] = {
- 	&dev_attr_pmem_size.attr,
-+	&dev_attr_pmem_qos_class.attr,
- 	NULL,
- };
- 
-+static ssize_t ram_qos_class_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_dpa_perf *dpa_perf;
-+
-+	if (!dev->driver)
-+		return -ENOENT;
-+
-+	if (list_empty(&mds->ram_perf_list))
-+		return -ENOENT;
-+
-+	dpa_perf = list_first_entry(&mds->ram_perf_list, struct cxl_dpa_perf,
-+				    list);
-+
-+	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
-+}
-+
-+static struct device_attribute dev_attr_ram_qos_class =
-+	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
-+
- static struct attribute *cxl_memdev_ram_attributes[] = {
- 	&dev_attr_ram_size.attr,
-+	&dev_attr_ram_qos_class.attr,
- 	NULL,
- };
- 
-@@ -477,16 +525,54 @@ static struct attribute_group cxl_memdev_attribute_group = {
- 	.is_visible = cxl_memdev_visible,
- };
- 
-+static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+
-+	if (a == &dev_attr_ram_qos_class.attr)
-+		if (list_empty(&mds->ram_perf_list))
-+			return 0;
-+
-+	return a->mode;
-+}
-+
- static struct attribute_group cxl_memdev_ram_attribute_group = {
- 	.name = "ram",
- 	.attrs = cxl_memdev_ram_attributes,
-+	.is_visible = cxl_ram_visible,
- };
- 
-+const struct attribute_group *get_cxl_memdev_ram_group(void)
-+{
-+	return &cxl_memdev_ram_attribute_group;
-+}
-+
-+static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+
-+	if (a == &dev_attr_pmem_qos_class.attr)
-+		if (list_empty(&mds->pmem_perf_list))
-+			return 0;
-+
-+	return a->mode;
-+}
-+
- static struct attribute_group cxl_memdev_pmem_attribute_group = {
- 	.name = "pmem",
- 	.attrs = cxl_memdev_pmem_attributes,
-+	.is_visible = cxl_pmem_visible,
- };
- 
-+const struct attribute_group *get_cxl_memdev_pmem_group(void)
-+{
-+	return &cxl_memdev_pmem_attribute_group;
-+}
-+
- static umode_t cxl_memdev_security_visible(struct kobject *kobj,
- 					   struct attribute *a, int n)
- {
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index c5c9d8e0d88d..0c79d9ce877c 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -215,52 +215,6 @@ static ssize_t trigger_poison_list_store(struct device *dev,
- }
- static DEVICE_ATTR_WO(trigger_poison_list);
- 
--static ssize_t ram_qos_class_show(struct device *dev,
--				  struct device_attribute *attr, char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct cxl_dpa_perf *dpa_perf;
--
--	if (!dev->driver)
--		return -ENOENT;
--
--	if (list_empty(&mds->ram_perf_list))
--		return -ENOENT;
--
--	dpa_perf = list_first_entry(&mds->ram_perf_list, struct cxl_dpa_perf,
--				    list);
--
--	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
--}
--
--static struct device_attribute dev_attr_ram_qos_class =
--	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
--
--static ssize_t pmem_qos_class_show(struct device *dev,
--				   struct device_attribute *attr, char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct cxl_dpa_perf *dpa_perf;
--
--	if (!dev->driver)
--		return -ENOENT;
--
--	if (list_empty(&mds->pmem_perf_list))
--		return -ENOENT;
--
--	dpa_perf = list_first_entry(&mds->pmem_perf_list, struct cxl_dpa_perf,
--				    list);
--
--	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
--}
--
--static struct device_attribute dev_attr_pmem_qos_class =
--	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
--
- static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
- {
- 	struct device *dev = kobj_to_dev(kobj);
-@@ -272,21 +226,11 @@ static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
- 			      mds->poison.enabled_cmds))
- 			return 0;
- 
--	if (a == &dev_attr_pmem_qos_class.attr)
--		if (list_empty(&mds->pmem_perf_list))
--			return 0;
--
--	if (a == &dev_attr_ram_qos_class.attr)
--		if (list_empty(&mds->ram_perf_list))
--			return 0;
--
- 	return a->mode;
- }
- 
- static struct attribute *cxl_mem_attrs[] = {
- 	&dev_attr_trigger_poison_list.attr,
--	&dev_attr_ram_qos_class.attr,
--	&dev_attr_pmem_qos_class.attr,
- 	NULL
- };
- 
-
-
+> ---
+>  include/hw/cxl/cxl_device.h | 17 ++++++++++-------
+>  hw/cxl/cxl-device-utils.c   |  6 +++++-
+>  2 files changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 31d2afcd3d..9f51c586d7 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -189,7 +189,7 @@ typedef struct cxl_device_state {
+>          };
+>      };
+>  
+> -    /* mmio for the mailbox registers 8.2.8.4 */
+> +    /* CXL r3.1 Section 8.2.8.4: Mailbox Registers */
+>      struct {
+>          MemoryRegion mailbox;
+>          uint16_t payload_size;
+> @@ -310,39 +310,42 @@ void cxl_initialize_t3_ld_cci(CXLCCI *cci, DeviceState *d,
+>  REG64(CXL_DEV_EVENT_STATUS, 0)
+>      FIELD(CXL_DEV_EVENT_STATUS, EVENT_STATUS, 0, 32)
+>  
+> -/* CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register */
+> +#define CXL_DEV_MAILBOX_VERSION 1
+> +/* CXL r3.1 Section 8.2.8.4.3: Mailbox Capabilities Register */
+>  REG32(CXL_DEV_MAILBOX_CAP, 0)
+>      FIELD(CXL_DEV_MAILBOX_CAP, PAYLOAD_SIZE, 0, 5)
+>      FIELD(CXL_DEV_MAILBOX_CAP, INT_CAP, 5, 1)
+>      FIELD(CXL_DEV_MAILBOX_CAP, BG_INT_CAP, 6, 1)
+>      FIELD(CXL_DEV_MAILBOX_CAP, MSI_N, 7, 4)
+> +    FIELD(CXL_DEV_MAILBOX_CAP, MBOX_READY_TIME, 11, 8)
+> +    FIELD(CXL_DEV_MAILBOX_CAP, TYPE, 19, 4)
+>  
+> -/* CXL 2.0 8.2.8.4.4 Mailbox Control Register */
+> +/* CXL r3.1 Section 8.2.8.4.4: Mailbox Control Register */
+>  REG32(CXL_DEV_MAILBOX_CTRL, 4)
+>      FIELD(CXL_DEV_MAILBOX_CTRL, DOORBELL, 0, 1)
+>      FIELD(CXL_DEV_MAILBOX_CTRL, INT_EN, 1, 1)
+>      FIELD(CXL_DEV_MAILBOX_CTRL, BG_INT_EN, 2, 1)
+>  
+> -/* CXL 2.0 8.2.8.4.5 Command Register */
+> +/* CXL r3.1 Section 8.2.8.4.5: Command Register */
+>  REG64(CXL_DEV_MAILBOX_CMD, 8)
+>      FIELD(CXL_DEV_MAILBOX_CMD, COMMAND, 0, 8)
+>      FIELD(CXL_DEV_MAILBOX_CMD, COMMAND_SET, 8, 8)
+>      FIELD(CXL_DEV_MAILBOX_CMD, LENGTH, 16, 20)
+>  
+> -/* CXL 2.0 8.2.8.4.6 Mailbox Status Register */
+> +/* CXL r3.1 Section 8.2.8.4.6: Mailbox Status Register */
+>  REG64(CXL_DEV_MAILBOX_STS, 0x10)
+>      FIELD(CXL_DEV_MAILBOX_STS, BG_OP, 0, 1)
+>      FIELD(CXL_DEV_MAILBOX_STS, ERRNO, 32, 16)
+>      FIELD(CXL_DEV_MAILBOX_STS, VENDOR_ERRNO, 48, 16)
+>  
+> -/* CXL 2.0 8.2.8.4.7 Background Command Status Register */
+> +/* CXL r3.1 Section 8.2.8.4.7: Background Command Status Register */
+>  REG64(CXL_DEV_BG_CMD_STS, 0x18)
+>      FIELD(CXL_DEV_BG_CMD_STS, OP, 0, 16)
+>      FIELD(CXL_DEV_BG_CMD_STS, PERCENTAGE_COMP, 16, 7)
+>      FIELD(CXL_DEV_BG_CMD_STS, RET_CODE, 32, 16)
+>      FIELD(CXL_DEV_BG_CMD_STS, VENDOR_RET_CODE, 48, 16)
+>  
+> -/* CXL 2.0 8.2.8.4.8 Command Payload Registers */
+> +/* CXL r3.1 Section 8.2.8.4.8: Command Payload Registers */
+>  REG32(CXL_DEV_CMD_PAYLOAD, 0x20)
+>  
+>  REG64(CXL_MEM_DEV_STS, 0)
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index 40b619ffd9..9df8738f86 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -366,6 +366,10 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+>                       MSI_N, msi_n);
+>      cxl_dstate->mbox_msi_n = msi_n;
+> +    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+> +                     MBOX_READY_TIME, 0); /* Not reported */
+> +    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+> +                     TYPE, 0); /* Inferred from class code */
+>  }
+>  
+>  static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
+> @@ -392,7 +396,7 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
+>      cxl_device_cap_init(cxl_dstate, DEVICE_STATUS, 1, 2);
+>      device_reg_init_common(cxl_dstate);
+>  
+> -    cxl_device_cap_init(cxl_dstate, MAILBOX, 2, 1);
+> +    cxl_device_cap_init(cxl_dstate, MAILBOX, 2, CXL_DEV_MAILBOX_VERSION);
+>      mailbox_reg_init_common(cxl_dstate);
+>  
+>      cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000, 1);
+> -- 
+> 2.39.2
+> 
