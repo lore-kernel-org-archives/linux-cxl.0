@@ -1,118 +1,100 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91F218032
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 09:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3BF77642
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 12:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706087808; cv=none; b=It8flHTmWo/hqQ2SkFszYlEVENG9eeSPWWtaCsHY8ro2UKsWdfG7z/vJMKnZKgG/9w3D9b3/3f7ah4s4JRtdwCbjAnCgsvk5z8A44FL+Zj4SiNuhi3iUj7D4ONldQ+3vD3PaQnO9Jdh5PNq26XZYrL4Fmsst1vmD2/yQWeHwPek=
+	t=1706100065; cv=none; b=jqK3oycn0F4Dj0aqZMvAP3klFY1GzoNYY4bN1zF6WVTcD10OzAAHsjgz3CkKpduyguiijHDoP0pcQlhWcruiO1Di6HvM3QMFWCLVo2m5XXEYSJ44OiFXiGriDiL6SsY//0rK0BwHMxRcncOtOaVeURSTu4xsWoqmI2tLQDb9MoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706087808; c=relaxed/simple;
-	bh=yXbJVVb12rsqTs5XniUFfuGO6KFzaV53IQiFefxxjOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rR/Md4qB5SGtHD1p2iFU3yNz86KmtVSHpExCZC+0A4d8gbxqR8XMTyylEfrUg/E2DWAH+siLAe80k982GimvTPq81cClXD1/ibFIoc2e1Cwzc8qqBTXJc7nFTn8jEGDhr17P9hoMvT3Mat5fehVkrA33rI6+103hMIj/IRshqJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=MN8dXksL; arc=none smtp.client-ip=68.232.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="MN8dXksL"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1706087806; x=1737623806;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yXbJVVb12rsqTs5XniUFfuGO6KFzaV53IQiFefxxjOU=;
-  b=MN8dXksLE0f3zWpuQmdgmsSJUaIsdGQux0G4Byt6qRcWNFo9MjRSd00w
-   UUpcr3OsneJZ0fQaPuaj1SQJrZs8v85wBfjWk8rWvU384mymD3GpMQnPW
-   8U/ISLFUCFXJVO7clP+bRy1iQfap5+JQXFqxvCZ1jtLtXJIbgJItjqujr
-   lHYdBjdFGC2/e3hOMRFAxZrvbkVbC199Ae4gyXeuEDGX+57qzqCmL0yWK
-   EJ4W4Rp/NFQh6eVyek7aFk4PwDVc8zR7LorrxSrcQhA9QD1CemF0/1vAr
-   hnCdLWz5WFp1netdAC1WBkV49BiRmEgLdlWXNqSfnB9ER8+rfiaW1c37S
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="147390397"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701097200"; 
-   d="scan'208";a="147390397"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 18:15:33 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 31875C13C6
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 18:15:31 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 5DB17CCC63
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 18:15:30 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id E055B200977B7
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 18:15:29 +0900 (JST)
-Received: from Fedora-38-3.g08.fujitsu.local (unknown [10.167.220.145])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 310F41A006C;
-	Wed, 24 Jan 2024 17:15:29 +0800 (CST)
-From: Quanquan Cao <caoqq@fujitsu.com>
-To: dave.jiang@intel.com,
-	vishal.l.verma@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	Quanquan Cao <caoqq@fujitsu.com>
-Subject: [PATCH] =?UTF-8?q?cxl/region=EF=BC=9AFix=20overflow=20issue=20in?= =?UTF-8?q?=20alloc=5Fhpa()?=
-Date: Wed, 24 Jan 2024 17:15:26 +0800
-Message-ID: <20240124091527.8469-1-caoqq@fujitsu.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1706100065; c=relaxed/simple;
+	bh=H5oErUHZ5SiP1l9E9+V+eP8jREYKlvUkXKfv9gojRaY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MQ4m/2SHIBNi1erlpiZ+E1srS5YgeGaD0tAKWnizaRewHu5zSGGCaJsq6RQkIrS3v5FKmDv/g0e32SZHolumvOhekQk+pc2Olr5w8icXxcxQu7VrgBPL755ns4nIiasSRRDzYrB9bPfI5Hs+Tzp7J35qYHUDPwWWnrzf7VA9JDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TKk5Y2j2cz6K6F8;
+	Wed, 24 Jan 2024 20:38:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7BCED140390;
+	Wed, 24 Jan 2024 20:40:59 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Jan 2024 12:40:59 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
+	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>
+CC: Ira Weiny <ira.weiny@intel.com>, Huai-Cheng Kuo
+	<hchkuo@avery-design.com.tw>, Dave Jiang <dave.jiang@intel.com>, Peter
+ Maydell <peter.maydell@linaro.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Li Zhijian <lizhijian@fujitsu.com>,
+	Stefan Hajnoczi <stefanha@gmail.com>, <linuxarm@huawei.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH 00/12 qemu] CXL emulation fixes and minor cleanup.
+Date: Wed, 24 Jan 2024 12:40:48 +0000
+Message-ID: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28138.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28138.006
-X-TMASE-Result: 10--1.482900-10.000000
-X-TMASE-MatchedRID: H4VA+h+lPSsjQvIpMtTP/1jhP2vy09zoBPY4SegK3jw8cwBuO6HB35tX
-	hf4dcLJZOINY3OUapTCvKROQDK31eK+CQswOit7P0+DFDiN5F0HBOVz0Jwcxl6vCrG0TnfVUg9x
-	e4gtUJtpX5O/oNPKt7OLiwkw2Vk7GWcA4Y6culFZKzjuZtPtIBH0tCKdnhB58ZYJ9vPJ1vSBp7q
-	EhmmPgy46HM5rqDwqtG8vwxGAyKz6zYyndM+vQybAREUbP6yF+gErn0NzfulTPmd47uNafDW0mM
-	BMuLI6/+NxMmlwpQ2TlVwStRSF8+DBD7g1O8OiD9UElV5SMCCrLt16YWtxzeF9NpZbddHv73iGQ
-	YUPZme7O51vq1xhTsg==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Creating a region with 16 memory devices caused a problem. The div_u64_rem
-function, used for dividing an unsigned 64-bit number by a 32-bit one,
-faced an issue when SZ_256M * p->interleave_ways. The result surpassed
-the maximum limit of the 32-bit divisor (4G), leading to an overflow
-and a remainder of 0.
-note: At this point, p->interleave_ways is 16, meaning 16 * 256M = 4G
+This set includes the majority of fixes I currently have queued
+up for the CXL emulation. Most have been posted and reviewed
+before so this is just rebases of those.
 
-To fix this issue, I replaced the div_u64_rem function with div64_u64_rem
-and adjusted the type of the remainder.
+I've included the _STA fix as that's fairly trivial
+and didn't seem worth a separate posting. Also included
+dropping some pointless g_malloc0() failure handling that
+came up in review of Ira's "cxl/cdat: Handle cdat table build errors".
 
-Signed-off-by: Quanquan Cao <caoqq@fujitsu.com>
----
- drivers/cxl/core/region.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Note the [... qemu] marking above is because we currently use the
+linux-cxl@vger.kernel.org list to ensure CXL people notice the
+patches and difficulty of distinguishing QEMU vs Kernel patches
+was causing some grief for tracking in patchwork.
+Hopefully this is unobtrusive enough to not annoy QEMU reviewers!
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 0f05692bfec3..ce0e2d82bb2b 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -525,7 +525,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct resource *res;
--	u32 remainder = 0;
-+	u64 remainder = 0;
- 
- 	lockdep_assert_held_write(&cxl_region_rwsem);
- 
-@@ -545,7 +545,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
- 	    (cxlr->mode == CXL_DECODER_PMEM && uuid_is_null(&p->uuid)))
- 		return -ENXIO;
- 
--	div_u64_rem(size, SZ_256M * p->interleave_ways, &remainder);
-+	div64_u64_rem(size, (u64)SZ_256M * p->interleave_ways, &remainder);
- 	if (remainder)
- 		return -EINVAL;
- 
+Davidlohr Bueso (1):
+  hw/cxl/mbox: Remove dead code
+
+Hyeonggon Yoo (1):
+  hw/cxl/device: read from register values in mdev_reg_read()
+
+Ira Weiny (2):
+  cxl/cdat: Handle cdat table build errors
+  cxl/cdat: Fix header sum value in CDAT checksum
+
+Jonathan Cameron (6):
+  hw/mem/cxl_type3: Drop handling of failure of g_malloc0()
+  hw/pci-bridge/cxl_upstream: Drop g_malloc0() failure handling
+  hw/mem/cxl_type3: Fix potential divide by zero reported by coverity
+  tests/acpi: Allow update of DSDT.cxl
+  hw/i386: Fix _STA return value for ACPI0017
+  tests/acpi: Update DSDT.cxl to reflect change _STA return value.
+
+Li Zhijian (2):
+  hw/cxl: Pass CXLComponentState to cache_mem_ops
+  hw/cxl: Pass NULL for a NULL MemoryRegionOps
+
+ include/hw/cxl/cxl_device.h  |   9 ++++--
+ hw/cxl/cxl-cdat.c            |  11 +++++--
+ hw/cxl/cxl-component-utils.c |   4 +--
+ hw/cxl/cxl-device-utils.c    |  17 ++++++----
+ hw/cxl/cxl-mailbox-utils.c   |  43 +++++++++----------------
+ hw/i386/acpi-build.c         |   2 +-
+ hw/mem/cxl_type3.c           |  60 ++++++++---------------------------
+ hw/pci-bridge/cxl_upstream.c |   6 ----
+ tests/data/acpi/q35/DSDT.cxl | Bin 9713 -> 9714 bytes
+ 9 files changed, 57 insertions(+), 95 deletions(-)
+
 -- 
-2.43.0
+2.39.2
 
