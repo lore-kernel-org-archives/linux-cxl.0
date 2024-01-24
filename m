@@ -1,58 +1,58 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DA21350DC
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 21:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18721350F0
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 21:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706130657; cv=none; b=FY8ifabxw3uMX7EkDFT/Djdr1nzqjzxt/DGROQFaAT4WStoTUh9rcI6Mq5YkfbRtSy5RjQanYe/6pxlkJUfCRMAiY9IyM4G3Drz7oPxtSUFf1mHgsD1L+pdaXV5z8IiW/6nf9h3Gq6QkxDiEsvdzFhRNARsrqSRyaZkAECrj7MU=
+	t=1706130722; cv=none; b=EoP11Wnzw+fJAbBq/cX6hjGisb9qx4bFX1pIF4uxx4ubDSSVFhUR8CIqIKQ0Lr52Sq7yrWkJEUf+tZO83kc5wK0g9SUkKNTNypOd6DJv2VJGQb4lmwZOHwlI51cgRu88V7AGIcS9puff4XtbeHZcuJo4z0QJCr7QEnIShMYk4gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706130657; c=relaxed/simple;
-	bh=0a6vue7FMaWu12amXKL+5fACnuFlAnkpsJ3HLDbNsdI=;
+	s=arc-20240116; t=1706130722; c=relaxed/simple;
+	bh=crYMjGjDD/ETFS+VW6BU0hOMQRMW5y0znJAM+fLErEg=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o8h9GpkfjSz+zXqReLGUEzaapFHijGxf20lMRY7ReKiudsp3sOpfSB86iSGfrtuW3fkyYFmQNvIdWi+GfCrDTkiooCF8E/FDev8BFlfQNRznHZ2iuMe7wRrziEXPfCqFwLpGlnEauw1Ch6AI/+MHtBgvEj9MWrNJS99xjbgsL4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5h7yNVD; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzwF2zNettKNDtuF1VORmGG6KTLV8+iEIyfbX4Xvi9eREEfAOtK3E2/2uW0i4ESMUNhoWCbCw2g6KPR7BEJWb6Q2kkjs6kpJX8T8WaITYX8+ECkYNxXpu8l4DMtv7l1BvKuC9tjEOs/Ey8QLOzQWxF6sXJP/eZpNNUdnJoQ+aPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N0tDlzm+; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5h7yNVD"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d70a986c4aso28226205ad.2
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 13:10:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0tDlzm+"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5c65ca2e1eeso3142853a12.2
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 13:12:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706130655; x=1706735455; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706130720; x=1706735520; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4xU1xPzLV1x6z8Ss6xDVzDXbbEyrm2kDKmsKKYD7Y8=;
-        b=X5h7yNVD/4g/lhu8UDhrdTAHuqC6Gh0pOWnm0CjaqdnlaM5SsKRRN8BjBQ/9J5zRZd
-         Y6QWcg8/ZguOWEr30Omcc9+3B5U+18mCXdXzoAysJ4TYY16nEmTQ1+x5j+hQDSzIUzSq
-         8Eda5mpT0Cs4e5I6kSH0KqBLiHt281s+Qy8SVlKtJflwjsq3CpZG+sU4bTPtwSzgndPD
-         DC9MpODyjGk1pQuV9mTtB+MsJw+fi7kAPlXlKnBmmhNnZ3kWa57X/4zGH8vdUZnTWltS
-         HzDO/U8e/sA+pn8i1r1+VvCIjtzqOfI6Rs9SovOuWBDbq9TRAzwgGOVLKpZg22CwQoEg
-         Lh/A==
+        bh=en9elrlzH5ROGIslaMPqVVimkyWbMWGsUFGcvQEX4OE=;
+        b=N0tDlzm+jMkmGKPG0LPXc3ibqPN+oTQQhncf0xSaG72n/MC4aQByb3y20jiBfKAvad
+         dlKFp+nQ3O2oCNZmuqveH/2W4giX/0llnfZcbVDrEa+toE9ZjBSD8hW5OktqUBcOC45B
+         QZgf7Rmx2/jlkVX4wWvgJGW6BE5sigQbMwlrc7b1goS5ncJxXjZbW3PN90vNsBltvBxt
+         9sIrpQ5hho6rYrK8J2xByS2emwJcq0kQNc7HHqCT7RELETVBYfR7vs8KFdBw8GWJPMvE
+         fqRqOPDh5R0LGdSN0yrZ3P5Hs8zG1YjR+5Z6NSFgQ6Vnj/mXgLiwAyNDqMmERwLOrl99
+         R9GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706130655; x=1706735455;
+        d=1e100.net; s=20230601; t=1706130720; x=1706735520;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O4xU1xPzLV1x6z8Ss6xDVzDXbbEyrm2kDKmsKKYD7Y8=;
-        b=fRMysUcUzJ0T+E4pPj7FUP6EfC2fe0ZCAV1NqS46eGgbdS6NGWE5x5vMgI9I1x6umo
-         zfJKlGqF2BExQ8yQEom8atPDwXGToEBGrmJVaaDYR87fCvKcDb+8STPxaWnHcUDG4R3V
-         vOQO9ELdMdJwmV0ReRuWTKMoOe4Pbv+a2nyeQNJUSaUDkHesxS7i9uaOtqLQnVyXl/wk
-         lW267+803wpn1ZGXLd9DxOIXVRzgDLK030DV/rQwBYMJzzzxan4NbRGb5rYGaF/YzpRf
-         UiYDMeMwm89utne645q1bRorxihFRjzQS67e0G96HLDLb91fe7w6XRcA6Zq+uXRhZzKE
-         4fYg==
-X-Gm-Message-State: AOJu0Yxmce6hXX31W8+bwA4Bpg2evAl8soZQwiiT5Wj1BLKnEbBpmFte
-	bRzw8d+sE47uoEEsvD1c5iY64EPyfLK8PIu4JgHdKR4mC0RVJDTI
-X-Google-Smtp-Source: AGHT+IE4ZyUlrAQohEqAYTUCLHIZt6cHjZeVzqNz/BBqMndcA2TgxNfldeyeXFy9woRKTkRRL7ewDg==
-X-Received: by 2002:a17:902:a50e:b0:1d7:852b:7020 with SMTP id s14-20020a170902a50e00b001d7852b7020mr1074273plq.85.1706130654808;
-        Wed, 24 Jan 2024 13:10:54 -0800 (PST)
+        bh=en9elrlzH5ROGIslaMPqVVimkyWbMWGsUFGcvQEX4OE=;
+        b=wJ7b7rtU6G+Xowg1GvDeo/w3bIbrJOaCSKIf1lWITuMUkdtrrhIGytegpiOtnNBoj9
+         t66wnDTR+QhBke2KIk7uIxuaTpdZcBQnppPFhIJMmAgw4yt00FT/YAglSpUpt3ztlwKX
+         zrhAzQU/Hg0DuDvWgoCkQtN5RUhmlISJ7LEN6KEYLspImJl9PCdkepEX/K/LkcYuoH1b
+         OpWEwnqSryPX4x2yzZ5U6YRpNnemuID7oGiooiWcRd7gEpeNYwsL8a72NE6MOaAWyrvK
+         UX1q9xZBdIvlyI5BDdB2UrKcdHfe1owIh6FaR3Wend0GIgEe/7lJbUkMQLFgJJMqyFGa
+         0/PQ==
+X-Gm-Message-State: AOJu0YyhflQoCoHHc49nrqXdRZef+M9RY0E9/Ko8L9U2qJdoFcLdWLTQ
+	BhOkUizVHKvTahXpq5q+SWz8lc4m0+x6JXco4QBtiDdP9DvI5xyWKyvR9Dy5
+X-Google-Smtp-Source: AGHT+IEk5Kj8Zs9IkifoB3g21OSw1ffdiYqnVXgWmdl/J8qaASYgziaGsv8xwvbkOOT2F+qre3g5sg==
+X-Received: by 2002:a17:90a:a410:b0:28e:8012:1329 with SMTP id y16-20020a17090aa41000b0028e80121329mr139000pjp.23.1706130720053;
+        Wed, 24 Jan 2024 13:12:00 -0800 (PST)
 Received: from debian (c-71-202-32-218.hsd1.ca.comcast.net. [71.202.32.218])
-        by smtp.gmail.com with ESMTPSA id mq14-20020a170902fd4e00b001d74dd065e5sm5700690plb.136.2024.01.24.13.10.53
+        by smtp.gmail.com with ESMTPSA id l5-20020a17090add8500b0028dfdfc9a8esm94448pjv.37.2024.01.24.13.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 13:10:54 -0800 (PST)
+        Wed, 24 Jan 2024 13:11:59 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Wed, 24 Jan 2024 13:10:51 -0800
+Date: Wed, 24 Jan 2024 13:11:56 -0800
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	Fan Ni <fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>,
@@ -65,11 +65,11 @@ Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	Li Zhijian <lizhijian@fujitsu.com>,
 	Stefan Hajnoczi <stefanha@gmail.com>, linuxarm@huawei.com,
 	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH 02/12] hw/mem/cxl_type3: Drop handling of failure of
- g_malloc0()
-Message-ID: <ZbF82w3iCa0t1awW@debian>
+Subject: Re: [PATCH 03/12] hw/pci-bridge/cxl_upstream: Drop g_malloc0()
+ failure handling
+Message-ID: <ZbF9HMx_XJCKTcIH@debian>
 References: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
- <20240124124100.8218-3-Jonathan.Cameron@huawei.com>
+ <20240124124100.8218-4-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,174 +78,48 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240124124100.8218-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240124124100.8218-4-Jonathan.Cameron@huawei.com>
 
-On Wed, Jan 24, 2024 at 12:40:50PM +0000, Jonathan Cameron wrote:
-> As g_malloc0 will just exit QEMU on failure there is no point
-> in checking for it failing.
+On Wed, Jan 24, 2024 at 12:40:51PM +0000, Jonathan Cameron wrote:
+> As a failure of g_malloc0() will result in QEMU exiting, it
 
-The change is also related to g_malloc. So we may want to also mention it in
-the comments like " As g_malloc and g_malloc0 will just ....  ". Other
-than that, LGTM.
+s/g_malloc0/g_malloc/
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
 Fan
 
+> won't return a NULL to check.  As such, drop the incorrect handling
+> of such NULL returns in the cdat table building code.
 > 
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  hw/mem/cxl_type3.c | 52 +++++++---------------------------------------
->  1 file changed, 7 insertions(+), 45 deletions(-)
+>  hw/pci-bridge/cxl_upstream.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 52647b4ac7..1b92a065a3 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -42,9 +42,9 @@ enum {
->      CT3_CDAT_NUM_ENTRIES
->  };
+> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> index 36737189c6..d5341b530f 100644
+> --- a/hw/pci-bridge/cxl_upstream.c
+> +++ b/hw/pci-bridge/cxl_upstream.c
+> @@ -228,9 +228,6 @@ static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
 >  
-> -static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-> -                                         int dsmad_handle, MemoryRegion *mr,
-> -                                         bool is_pmem, uint64_t dpa_base)
-> +static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-> +                                          int dsmad_handle, MemoryRegion *mr,
-> +                                          bool is_pmem, uint64_t dpa_base)
->  {
->      g_autofree CDATDsmas *dsmas = NULL;
->      g_autofree CDATDslbis *dslbis0 = NULL;
-> @@ -54,9 +54,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      g_autofree CDATDsemts *dsemts = NULL;
->  
->      dsmas = g_malloc(sizeof(*dsmas));
-> -    if (!dsmas) {
+>      sslbis_size = sizeof(CDATSslbis) + sizeof(*sslbis_latency->sslbe) * count;
+>      sslbis_latency = g_malloc(sslbis_size);
+> -    if (!sslbis_latency) {
 > -        return -ENOMEM;
 > -    }
->      *dsmas = (CDATDsmas) {
->          .header = {
->              .type = CDAT_TYPE_DSMAS,
-> @@ -70,9 +67,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->  
->      /* For now, no memory side cache, plausiblish numbers */
->      dslbis0 = g_malloc(sizeof(*dslbis0));
-> -    if (!dslbis0) {
-> -        return -ENOMEM;
-> -    }
->      *dslbis0 = (CDATDslbis) {
->          .header = {
->              .type = CDAT_TYPE_DSLBIS,
-> @@ -86,9 +80,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      };
->  
->      dslbis1 = g_malloc(sizeof(*dslbis1));
-> -    if (!dslbis1) {
-> -        return -ENOMEM;
-> -    }
->      *dslbis1 = (CDATDslbis) {
->          .header = {
->              .type = CDAT_TYPE_DSLBIS,
-> @@ -102,9 +93,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      };
->  
->      dslbis2 = g_malloc(sizeof(*dslbis2));
-> -    if (!dslbis2) {
-> -        return -ENOMEM;
-> -    }
->      *dslbis2 = (CDATDslbis) {
->          .header = {
->              .type = CDAT_TYPE_DSLBIS,
-> @@ -118,9 +106,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      };
->  
->      dslbis3 = g_malloc(sizeof(*dslbis3));
-> -    if (!dslbis3) {
-> -        return -ENOMEM;
-> -    }
->      *dslbis3 = (CDATDslbis) {
->          .header = {
->              .type = CDAT_TYPE_DSLBIS,
-> @@ -134,9 +119,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      };
->  
->      dsemts = g_malloc(sizeof(*dsemts));
-> -    if (!dsemts) {
-> -        return -ENOMEM;
-> -    }
->      *dsemts = (CDATDsemts) {
->          .header = {
->              .type = CDAT_TYPE_DSEMTS,
-> @@ -159,8 +141,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->      cdat_table[CT3_CDAT_DSLBIS2] = g_steal_pointer(&dslbis2);
->      cdat_table[CT3_CDAT_DSLBIS3] = g_steal_pointer(&dslbis3);
->      cdat_table[CT3_CDAT_DSEMTS] = g_steal_pointer(&dsemts);
-> -
-> -    return 0;
->  }
->  
->  static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-> @@ -171,7 +151,6 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->      int dsmad_handle = 0;
->      int cur_ent = 0;
->      int len = 0;
-> -    int rc, i;
->  
->      if (!ct3d->hostpmem && !ct3d->hostvmem) {
->          return 0;
-> @@ -194,27 +173,18 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+>      *sslbis_latency = (CDATSslbis) {
+>          .sslbis_header = {
+>              .header = {
+> @@ -251,9 +248,6 @@ static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
 >      }
 >  
->      table = g_malloc0(len * sizeof(*table));
-> -    if (!table) {
-> -        return -ENOMEM;
+>      sslbis_bandwidth = g_malloc(sslbis_size);
+> -    if (!sslbis_bandwidth) {
+> -        return 0;
 > -    }
->  
->      /* Now fill them in */
->      if (volatile_mr) {
-> -        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
-> -                                           false, 0);
-> -        if (rc < 0) {
-> -            return rc;
-> -        }
-> +        ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
-> +                                      false, 0);
->          cur_ent = CT3_CDAT_NUM_ENTRIES;
->      }
->  
->      if (nonvolatile_mr) {
->          uint64_t base = volatile_mr ? memory_region_size(volatile_mr) : 0;
-> -        rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
-> -                                           nonvolatile_mr, true, base);
-> -        if (rc < 0) {
-> -            goto error_cleanup;
-> -        }
-> +        ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
-> +                                      nonvolatile_mr, true, base);
->          cur_ent += CT3_CDAT_NUM_ENTRIES;
->      }
->      assert(len == cur_ent);
-> @@ -222,11 +192,6 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->      *cdat_table = g_steal_pointer(&table);
->  
->      return len;
-> -error_cleanup:
-> -    for (i = 0; i < cur_ent; i++) {
-> -        g_free(table[i]);
-> -    }
-> -    return rc;
->  }
->  
->  static void ct3_free_cdat_table(CDATSubHeader **cdat_table, int num, void *priv)
-> @@ -1168,9 +1133,6 @@ void qmp_cxl_inject_uncorrectable_errors(const char *path,
->          }
->  
->          cxl_err = g_malloc0(sizeof(*cxl_err));
-> -        if (!cxl_err) {
-> -            return;
-> -        }
->  
->          cxl_err->type = cxl_err_code;
->          while (header && header_count < 32) {
+>      *sslbis_bandwidth = (CDATSslbis) {
+>          .sslbis_header = {
+>              .header = {
 > -- 
 > 2.39.2
 > 
