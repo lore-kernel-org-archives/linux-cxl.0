@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5725017543
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 12:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194BB6D1D6
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jan 2024 12:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706100125; cv=none; b=jzWrQ0J7vBAUjkV2BNQ5tqsZ2XiPbDVKq325gIFXvNw0h6WKIJQHq9fYE/c9EGAGlUzG7TllK1e1bc9bPYSnP1V4I/FtJ7/68g2wdJCjN+aKgICMlB/sCzTMcDsoC25YdNFLZXCbGiB8qIMtGqARFMq1sPV9Nfp+Rw2JoBlIb1Q=
+	t=1706100155; cv=none; b=KXE2+cgc518egfrifuYwtV3Lz+jtc33jlkkXRz9FFJ0GMwE//o5Zg+LwifTUuPuxaNU+k8ZWKz3UtfFYoUdyQYZ0NCuGeRpq1mZmITap9YGeacBDP/jLFR1qdgqWreFp3YMXu/3CCAbBj/GB3haJtHELiWD9yPZe5MMO6yjq0UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706100125; c=relaxed/simple;
-	bh=DKLtj24AAafpApQp8VZieeN7qVx2l2eFbXs2QOAuvYs=;
+	s=arc-20240116; t=1706100155; c=relaxed/simple;
+	bh=5tkuezdQedWOopMgFJUgdgei06UO8fk9Ba3v9HfvUT0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WYTuAeqfNwTgHt36Tmbg7GaTRVneAKukvO7rlndpiShNRyPBWnd6acPbo2nalgn04hpeIoUpDv1bKMjT2SE/h5fz2CCQse2njciggDUQzDynFwWiceYAq9YicyyBJ8cp2emFHk4vanRfoPgpujffqWlVoCPOPUQ5h+xgfABBwuk=
+	 MIME-Version:Content-Type; b=LdgSy1cFd1ODOlETuk06YdE7uG37NGt7qc9YH3lGEUxGyUt+MsgU1DG63iRmMJglpAzQwOna0/A6ySiXuXCkPSQLhGwL4kpSWaZlu9xFk1UUR2oNBP/OFG/x8MmD5xcnmjaW5Ko0mXetWxxICR6cOTI4ClLypt98XB9p7PIs7Vw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TKk6F1bW2z6JB3Q;
-	Wed, 24 Jan 2024 20:39:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TKk6q6LKTz6JB38;
+	Wed, 24 Jan 2024 20:39:31 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 231BF140684;
-	Wed, 24 Jan 2024 20:42:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C6BC8140A70;
+	Wed, 24 Jan 2024 20:42:31 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 12:42:00 +0000
+ 15.1.2507.35; Wed, 24 Jan 2024 12:42:31 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
 	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>
@@ -33,9 +33,9 @@ CC: Ira Weiny <ira.weiny@intel.com>, Huai-Cheng Kuo
 	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Li Zhijian <lizhijian@fujitsu.com>,
 	Stefan Hajnoczi <stefanha@gmail.com>, <linuxarm@huawei.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH 02/12] hw/mem/cxl_type3: Drop handling of failure of g_malloc0()
-Date: Wed, 24 Jan 2024 12:40:50 +0000
-Message-ID: <20240124124100.8218-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 03/12] hw/pci-bridge/cxl_upstream: Drop g_malloc0() failure handling
+Date: Wed, 24 Jan 2024 12:40:51 +0000
+Message-ID: <20240124124100.8218-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
 References: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
@@ -50,162 +50,39 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-As g_malloc0 will just exit QEMU on failure there is no point
-in checking for it failing.
+As a failure of g_malloc0() will result in QEMU exiting, it
+won't return a NULL to check.  As such, drop the incorrect handling
+of such NULL returns in the cdat table building code.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/mem/cxl_type3.c | 52 +++++++---------------------------------------
- 1 file changed, 7 insertions(+), 45 deletions(-)
+ hw/pci-bridge/cxl_upstream.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 52647b4ac7..1b92a065a3 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -42,9 +42,9 @@ enum {
-     CT3_CDAT_NUM_ENTRIES
- };
+diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+index 36737189c6..d5341b530f 100644
+--- a/hw/pci-bridge/cxl_upstream.c
++++ b/hw/pci-bridge/cxl_upstream.c
+@@ -228,9 +228,6 @@ static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
  
--static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
--                                         int dsmad_handle, MemoryRegion *mr,
--                                         bool is_pmem, uint64_t dpa_base)
-+static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-+                                          int dsmad_handle, MemoryRegion *mr,
-+                                          bool is_pmem, uint64_t dpa_base)
- {
-     g_autofree CDATDsmas *dsmas = NULL;
-     g_autofree CDATDslbis *dslbis0 = NULL;
-@@ -54,9 +54,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     g_autofree CDATDsemts *dsemts = NULL;
- 
-     dsmas = g_malloc(sizeof(*dsmas));
--    if (!dsmas) {
+     sslbis_size = sizeof(CDATSslbis) + sizeof(*sslbis_latency->sslbe) * count;
+     sslbis_latency = g_malloc(sslbis_size);
+-    if (!sslbis_latency) {
 -        return -ENOMEM;
 -    }
-     *dsmas = (CDATDsmas) {
-         .header = {
-             .type = CDAT_TYPE_DSMAS,
-@@ -70,9 +67,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
- 
-     /* For now, no memory side cache, plausiblish numbers */
-     dslbis0 = g_malloc(sizeof(*dslbis0));
--    if (!dslbis0) {
--        return -ENOMEM;
--    }
-     *dslbis0 = (CDATDslbis) {
-         .header = {
-             .type = CDAT_TYPE_DSLBIS,
-@@ -86,9 +80,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     };
- 
-     dslbis1 = g_malloc(sizeof(*dslbis1));
--    if (!dslbis1) {
--        return -ENOMEM;
--    }
-     *dslbis1 = (CDATDslbis) {
-         .header = {
-             .type = CDAT_TYPE_DSLBIS,
-@@ -102,9 +93,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     };
- 
-     dslbis2 = g_malloc(sizeof(*dslbis2));
--    if (!dslbis2) {
--        return -ENOMEM;
--    }
-     *dslbis2 = (CDATDslbis) {
-         .header = {
-             .type = CDAT_TYPE_DSLBIS,
-@@ -118,9 +106,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     };
- 
-     dslbis3 = g_malloc(sizeof(*dslbis3));
--    if (!dslbis3) {
--        return -ENOMEM;
--    }
-     *dslbis3 = (CDATDslbis) {
-         .header = {
-             .type = CDAT_TYPE_DSLBIS,
-@@ -134,9 +119,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     };
- 
-     dsemts = g_malloc(sizeof(*dsemts));
--    if (!dsemts) {
--        return -ENOMEM;
--    }
-     *dsemts = (CDATDsemts) {
-         .header = {
-             .type = CDAT_TYPE_DSEMTS,
-@@ -159,8 +141,6 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-     cdat_table[CT3_CDAT_DSLBIS2] = g_steal_pointer(&dslbis2);
-     cdat_table[CT3_CDAT_DSLBIS3] = g_steal_pointer(&dslbis3);
-     cdat_table[CT3_CDAT_DSEMTS] = g_steal_pointer(&dsemts);
--
--    return 0;
- }
- 
- static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-@@ -171,7 +151,6 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-     int dsmad_handle = 0;
-     int cur_ent = 0;
-     int len = 0;
--    int rc, i;
- 
-     if (!ct3d->hostpmem && !ct3d->hostvmem) {
-         return 0;
-@@ -194,27 +173,18 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+     *sslbis_latency = (CDATSslbis) {
+         .sslbis_header = {
+             .header = {
+@@ -251,9 +248,6 @@ static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
      }
  
-     table = g_malloc0(len * sizeof(*table));
--    if (!table) {
--        return -ENOMEM;
+     sslbis_bandwidth = g_malloc(sslbis_size);
+-    if (!sslbis_bandwidth) {
+-        return 0;
 -    }
- 
-     /* Now fill them in */
-     if (volatile_mr) {
--        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
--                                           false, 0);
--        if (rc < 0) {
--            return rc;
--        }
-+        ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
-+                                      false, 0);
-         cur_ent = CT3_CDAT_NUM_ENTRIES;
-     }
- 
-     if (nonvolatile_mr) {
-         uint64_t base = volatile_mr ? memory_region_size(volatile_mr) : 0;
--        rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
--                                           nonvolatile_mr, true, base);
--        if (rc < 0) {
--            goto error_cleanup;
--        }
-+        ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
-+                                      nonvolatile_mr, true, base);
-         cur_ent += CT3_CDAT_NUM_ENTRIES;
-     }
-     assert(len == cur_ent);
-@@ -222,11 +192,6 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-     *cdat_table = g_steal_pointer(&table);
- 
-     return len;
--error_cleanup:
--    for (i = 0; i < cur_ent; i++) {
--        g_free(table[i]);
--    }
--    return rc;
- }
- 
- static void ct3_free_cdat_table(CDATSubHeader **cdat_table, int num, void *priv)
-@@ -1168,9 +1133,6 @@ void qmp_cxl_inject_uncorrectable_errors(const char *path,
-         }
- 
-         cxl_err = g_malloc0(sizeof(*cxl_err));
--        if (!cxl_err) {
--            return;
--        }
- 
-         cxl_err->type = cxl_err_code;
-         while (header && header_count < 32) {
+     *sslbis_bandwidth = (CDATSslbis) {
+         .sslbis_header = {
+             .header = {
 -- 
 2.39.2
 
