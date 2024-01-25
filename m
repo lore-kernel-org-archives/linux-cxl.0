@@ -1,145 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail-m25492.xmail.ntesmail.com (mail-m25492.xmail.ntesmail.com [103.129.254.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A331E10A26
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jan 2024 08:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCDC1BC32
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jan 2024 09:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.129.254.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706172008; cv=none; b=FXgElpn9ZRTzNPs2XfEjJc9Wjt1zaJrdifZGYxD3b4h/qhoM753+ZTqEcHMyJFWL6qaR1rSYa8w8kIkDH8Xw/T/1JGARn23f4yaPCDOHvEfLPrwPkijCv+HTGOfC9eID9KUdriXhs1aZ3/7cnEyqteCA3EPPkvoOlaI8aXeoaqY=
+	t=1706174340; cv=none; b=g7LeruQlBda8kd0prwZbmVlxJaHd1uH/KjhM0eyAK5Th8oduHQXlVuT6eIRFUAdUeT3dN6smaDNjBJIGaJQafPgUFPRSzM47PxCkSXHPS7/dq3VRM7nRy2dT7ozTRq7wrMI8s+IyaRrXdCr18d+67CJW4VBJ/7aYX8UwqXe1mnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706172008; c=relaxed/simple;
-	bh=tVb1Q3nrwxSAjZ6RH9R+6NJOjRMXN2wvEZu7ldJZooI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eR/b4x7DASOhoJEyvzTXB2a4Bd7mR0F+hKSZwgDy7RBvh7W96NqSp0H5WCkBCFKsaHobz2eNOoj90C9/e9gw0E/MSwRyEawBOcGfzO/klOEymLT64KLdpA30iixjuX3kRWPuZdbjl+TWDoJRgjxBO7wAqq7fyw7GER+1a0bIOI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=giA65JVB; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="giA65JVB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706172006; x=1737708006;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tVb1Q3nrwxSAjZ6RH9R+6NJOjRMXN2wvEZu7ldJZooI=;
-  b=giA65JVBzQbxa1/WpLW2a8cyTFreZZyd/CRh5+sd3xHO37aoedhpYUcN
-   Rs4k7NYg0ql+S7DRAlzWd4/dElKlJ9ge6CIh8BSDaSVOYH3yFHRDXh3I3
-   WJt8T9hyKGk5w4hs1k60Wbof2RKjBtN7q7L8CHGQDOQyqFA8yYKsNtR5e
-   Ka74JL86XxI6vXDpE5m/G5DP/bbQd+QGhHKMxlg8bi10qI7jbZJ2/83Uk
-   9mBmQZFd5gcgr4Sgay0ef4kEQOcuOxoc1YdoYsetStS9zPUQcQM7Bgw4V
-   Nw6NmNoBkm5mdakG9Y9GdcufRCksGAsGFCqZR7Kb7Tnq3lUXLBYjNTk10
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="20648847"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="20648847"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:40:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="929950545"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="929950545"
-Received: from s2600wttr.bj.intel.com ([10.240.192.113])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:40:02 -0800
-From: Li Ming <ming4.li@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	terry.bowman@amd.com,
-	rrichter@amd.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	Li Ming <ming4.li@intel.com>
-Subject: [PATCH 1/1] cxl/pci: Skip to handle RAS errors if CXL.mem device is detached
-Date: Thu, 25 Jan 2024 08:14:14 +0000
-Message-Id: <20240125081414.2189572-1-ming4.li@intel.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1706174340; c=relaxed/simple;
+	bh=hQ5hsgHAywbkJvumzMcev9ttCd4FKeOp165Y4v045PY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MAJWc2oeIV3PcxfkzvllMDaxGAbYdmN6H6BY/LyWZAYUwcw7kYoBN1TK80aREEThnpGjqctBQ4O02AqRyQl2JvnIXJp3qA+2+HrCEIfYHs2EBYNHKJFUK77zVfipDVJM5KVjcUkw9F0vjynhVStZjKW4yKGUY7WfOusvzBVOHAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=103.129.254.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id B6045860279;
+	Thu, 25 Jan 2024 14:49:12 +0800 (CST)
+Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
+To: Dan Williams <dan.j.williams@intel.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, ave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
+Cc: linux-cxl@vger.kernel.org
+References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
+ <6595c83083418_8dc6829468@dwillia2-xfh.jf.intel.com.notmuch>
+ <a32d859f-054f-11ca-e8a3-dff7a5234d0a@easystack.cn>
+ <65b1da5b2933b_39fcf29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <8498fb54-b003-e9b5-ba50-2e6eb8e257f5@easystack.cn>
+Date: Thu, 25 Jan 2024 14:49:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <65b1da5b2933b_39fcf29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTU9CVhlIGExIShhJSEsdQlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lOSFVKS0tVSkJLS1kG
+X-HM-Tid: 0a8d3f6143f1023ckunmb6045860279
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ni46SDo6Njc0OU8hPUJRGR0Q
+	ORoKCzVVSlVKTEtNSk1OSE5OQkNOVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JJSzcG
 
-CXL.mem protocol errors are logged in CXL RAS capability, if CXL.mem
-device is unbound from CXL.mem driver, will not expect any CXL.mem
-protocol errors happen on the endpoint or the dport connected to the
-endpoint. Giving up these unexpected errors to avoid error handler to
-access unmapped RCH dport's RAS capability. The error handler of CXL PCI
-device helps to handle RAS errors happened on RCH dport. The host of the
-RCH dport's RAS capability mapping is CXL.mem device, so the error
-handler will access unmapped RCH dport's RAS capability after CXL.mem
-device is unbound from the CXL.mem driver.
 
-Fixes: 6ac07883dbb5 ("cxl/pci: Add RCH downstream port error logging")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
- drivers/cxl/core/pci.c | 43 ++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 6c9c8d92f8f7..480489f5644e 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -932,11 +932,21 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
- void cxl_cor_error_detected(struct pci_dev *pdev)
- {
- 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct device *dev = &cxlds->cxlmd->dev;
-+
-+	scoped_guard(device, dev) {
-+		if (!dev->driver) {
-+			dev_warn(&pdev->dev,
-+				 "%s: memdev disabled, abort error handling\n",
-+				 dev_name(dev));
-+			return;
-+		}
- 
--	if (cxlds->rcd)
--		cxl_handle_rdport_errors(cxlds);
-+		if (cxlds->rcd)
-+			cxl_handle_rdport_errors(cxlds);
- 
--	cxl_handle_endpoint_cor_ras(cxlds);
-+		cxl_handle_endpoint_cor_ras(cxlds);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, CXL);
- 
-@@ -948,16 +958,25 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
- 	struct device *dev = &cxlmd->dev;
- 	bool ue;
- 
--	if (cxlds->rcd)
--		cxl_handle_rdport_errors(cxlds);
-+	scoped_guard(device, dev) {
-+		if (!dev->driver) {
-+			dev_warn(&pdev->dev,
-+				 "%s: memdev disabled, abort error handling\n",
-+				 dev_name(dev));
-+			return PCI_ERS_RESULT_DISCONNECT;
-+		}
-+
-+		if (cxlds->rcd)
-+			cxl_handle_rdport_errors(cxlds);
-+		/*
-+		 * A frozen channel indicates an impending reset which is fatal to
-+		 * CXL.mem operation, and will likely crash the system. On the off
-+		 * chance the situation is recoverable dump the status of the RAS
-+		 * capability registers and bounce the active state of the memdev.
-+		 */
-+		ue = cxl_handle_endpoint_ras(cxlds);
-+	}
- 
--	/*
--	 * A frozen channel indicates an impending reset which is fatal to
--	 * CXL.mem operation, and will likely crash the system. On the off
--	 * chance the situation is recoverable dump the status of the RAS
--	 * capability registers and bounce the active state of the memdev.
--	 */
--	ue = cxl_handle_endpoint_ras(cxlds);
- 
- 	switch (state) {
- 	case pci_channel_io_normal:
--- 
-2.40.1
+在 2024/1/25 星期四 上午 11:49, Dan Williams 写道:
+> Dongsheng Yang wrote:
+>>
+>>
+>> 在 2024/1/4 星期四 上午 4:48, Dan Williams 写道:
+>>> Dongsheng Yang wrote:
+>>>> Hi all:
+>>>> 	This patchset introduce cxlv module to allow user to
+>>>> create virtual cxl device. it's based linux6.7-rc5, you can
+>>>> get the code from https://github.com/DataTravelGuide/linux
+>>>>
+>>>> 	As the real CXL device is not widely available now, we need
+>>>> some virtual cxl device to do uplayer software developing or
+>>>> testing. Qemu is good for functional testing, but not good
+>>>> for some performance testing.
+>>>
+>>> How is it performance testing if it's just using host-DRAM? Is the use
+>>> case something like pinning the benchmark on Socket0 and target DRAM on
+>>> Socket1 as emulated CXL to approximate CXL bus latency?
+>>
+>> Hi Dan,
+>> 	I give an example as below, please check it inline.
+>>>
+>>>>
+>>>> 	The new CXLV module allow user to use the reserved RAM[1], to
+>>>> create virtual cxl device. When the cxlv module load, it will
+>>>> create a directory named as "cxl_virt" under /sys/devices/virtual:
+>>>>
+>>>> 	"/sys/devices/virtual/cxl_virt/"
+>>>>
+>>>> that's the top level device for all cxlv devices.
+>>>> At the same time, cxlv module will create a debugfs directory:
+>>>>
+>>>> /sys/kernel/debug/cxl/cxlv
+>>>> ├── create
+>>>> └── remove
+>>>>
+>>>> the create and remove debugfs file is the cxlv entry to create or remove
+>>>> a cxlv device.
+>>>>
+>>>> 	Each cxlv device have its owned virtual pci related bridge and bus, cxlv
+>>>> will create a new root_port for the new cxlv device, setup cxl ports for
+>>>> dport and nvdimm-bridge. After that, we will add the virtual pci device,
+>>>> that will go into the cxl_pci_probe to setup new memdev.
+>>>>
+>>>> 	Then we can see the cxl device with cxl list and use it as a real cxl
+>>>> device.
+>>>>
+>>>>    $ echo "memstart=$((8*1024*1024*1024)),cxltype=3,pmem=1,memsize=$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
+>>>
+>>> Are these ranges reserved out of the mmap at boot time?
+>>
+>> Yes, it is reserved by memmap option in boot cmdline. I use memmap=8G$8G.
+> 
+> A faster way to get to a device-dax interface fronting reserved memory
+> is to use the efi_fake_mem= command line option.
+> 
+> For example:
+> 
+>      efi_fake_mem=4G@13G:0x40000
+> 
+> ...assigns 4GB of System-RAM starting at the 13G physical offset with
+> the EFI_MEMORY_SP attribute. By default the kernel creates device-dax
+> devices for that dedicated memory.
+> 
+> For dax mapping performance testing you don't need any of the CXL
+> driver infrastructure since the CXL driver has nothing to do with the
+> data path.
 
+Thanx for your information, I create cxlv because I think there could be 
+some other use cases other than device-dax to use cxl memdev. In that 
+way, we need emulate cxl memdev in cxl driver level.
+
+If we always use cxl memdev by creating a region and creating a 
+device-dax, I agree we dont need to emulate it in cxl driver level.
+
+Thanx
+> 
