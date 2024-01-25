@@ -1,92 +1,98 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D712C18EB3
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jan 2024 06:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23624134D2
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jan 2024 07:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164437; cv=fail; b=YIGxHVzCaCcAr1cIym3M4Ust+Ekc7/LVqf4CjzFW5YIo1xK87i8V1QulAKiQsVnsRJNiMfhGvF37mxdrjRjqm2HUkTy9GVoo6E2XmVUP0nXMPSWmGusuxasUR/YiXDZiWJYe/JHN72g0pQDtYMOx01qFrnXIFagB1BL5EFeYd90=
+	t=1706168784; cv=fail; b=ZyBHzPb6pCIdgGrM7teN9CBRs+ksvp4lzwefX3eBJ9pPu4OEQrATHTICDBVq0HwmQZ81fOiIbv2CMT+CFGAq/w5MVTNSRxJWw3cJ6OHROg34CDBt9Ci2uOCRKR98ho8nHVlhImhoBb3XVQDwOGz0hVedvws0YLJ8ctmPflOa1Bo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164437; c=relaxed/simple;
-	bh=1AYMR2EgYVVvPvjsZPLYxRlauXdH9wn8geE7JgKkN54=;
+	s=arc-20240116; t=1706168784; c=relaxed/simple;
+	bh=rg8Yu6rnEmo39s1JxL1VS/vLesLP/opXCgibsdIyaRc=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c+fna/DUNPAAnQRfXYR/fRBekRcaUvl/3aQxUQEE+8V5SS+J1s0ekPaEmMr9Sy/xz9fmfMIxhHJMka0qtbg3QlpK1lZ1Q2UM2nw15qBV2rfgADpFuNCBmju5WA+FFCtPd4f9TasuIbo8IaCE/PjT/m8Y2ZHEIyQhThZ8en48SIY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9NW23AX; arc=fail smtp.client-ip=192.55.52.93
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Bb1jhYcdigXaFFuvKc+Kp6fizCGiU4PByHLRWVLkPgr1aDO6MZIo6Y6FfpI2WSJSnWSTOZ5QpXd4otsoduB/91zzScYxRryOoePUawlpxOa4LagmOO5rfNH4ZFB5lkZfUU47dOgu0jm8og8S7is8Bn8K1R6n9rEs0ez4LMXR3tE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WuhzLpaF; arc=fail smtp.client-ip=192.55.52.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9NW23AX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WuhzLpaF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706164434; x=1737700434;
+  t=1706168782; x=1737704782;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=1AYMR2EgYVVvPvjsZPLYxRlauXdH9wn8geE7JgKkN54=;
-  b=Y9NW23AXPmnn8C/qgMnqkGa/vKFwLXX8iNCJWf6v/gJdExT5bQr+huVq
-   HRBFWo9bZWWVIGzThbffM6iHQ6+UunCqItLitLhtcheDc0JTLcxNLXsiK
-   lD8tNW1yW4aXxq03vJWiIftye4Aue0dgSwFB2P0bjEbK6TV7BpCWicM/6
-   xIFX1jN3eXYjW2ls3y8zMUXu6KoARNjHAPBDIE4B5y8Ot/4vdGT48Rwr1
-   AOeaATeBRAegBTt67OZKk1geOM45klSxmHZbm/grhRfxCSLbNPC5l+MqX
-   Pg6GIaCz5GHrCxwAhkNIL9IuwUBBwwGuVQauR6elLsaWKHqLhmAN5h/ML
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="399234509"
+  bh=rg8Yu6rnEmo39s1JxL1VS/vLesLP/opXCgibsdIyaRc=;
+  b=WuhzLpaFsQNsgthYbZBw8sCWTo3J7LDNDW+QS5hiyrJmoytgeTwmOLH9
+   FVymOojhP7ELAFlBrosmO3pux6VBeu6Qvrsx1Ay9XNT/hfZ5dxSInFUU4
+   Fl5Xk7M+qe89x4LzhHVVQuftCe+BZXGrs0rBrIlnKyjHwYjdPPZAxBy3F
+   jRUyB7BTjN0JRUAJfXW72KgfSV38M5mykOZRLkUDc46nJKBA5iVA4HWL+
+   l6+dmtZYRoV9JRESQ8lqiNnLFAxgvRNMa93jc4z7reWkxWV7s/5j6I+Du
+   Qrh2w6oU6+YTghg1ZFTVvUOCD9r+ydPF9PLn/4KqsRZx7Ck1ebZzGtjsY
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="399249027"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="399234509"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:33:38 -0800
+   d="scan'208";a="399249027"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 23:46:20 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="856967815"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="909919126"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="856967815"
+   d="scan'208";a="909919126"
 Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jan 2024 22:33:35 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jan 2024 23:46:19 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
  fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 22:33:34 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.35; Wed, 24 Jan 2024 23:46:18 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 22:33:34 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 23:46:18 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 24 Jan 2024 22:33:34 -0800
+ 15.1.2507.35; Wed, 24 Jan 2024 23:46:17 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CnkaY3BVbJgOK1lg4s2H1WaJjjHuS/hPEQeunbd7jkQ3hxKZCpDD/47SZEUOD8KfdA5hP2NaJpRaio2szhbZERtRBMyFIe2CpwtddThEYGHRnlXb1EySg+StsXDo6knVjZgm/WJF3l/w3G+xt8ZpyNdgiK7/1O/+gCy/m6xrvPIRPZXxQeeiMSfXiHdzMsGibZ9p6Vxp03Z1gMnwENqyZG0ApuGa1bpoU+2EZUGjfvZtHFGLi6tvzLc9A458sX6Lk35+zxihJeeXwZSmO81KWcPKW1aISY/QWaANThV++C8EkGv9/n3azRXp+NRuBYVINOhRd99Q7laLsz84VO/7/g==
+ b=RrW95yT6+x7amuvxCZzHzPVyH5ll7xbckOlq3TB9nE0Fhc4re3eYwdqzaogT1HjmH1XiBMUS2U91AUJ6lHw+HxjOPNLv9nYCQqY5LzpThXKpNe0htk01M/5KNp6oBsvurCG4CDLV9UkUfg/+frBAD5eJQB8f/blKsAC/AAzoC0UXRbSmE1hJ+uyX0aRZuwS5bxAlUdLKc29yV8z94Z7/hP3Ts8bahikJH90zBUx3Ae0ivHJuuYJGVHhA1ZTRp8ntzxkM5YI6MqEQpsKF0lPRaRExqiaO6HTnxotmJ/FfSpTCykPQ/6b/urjSVVYUjRCZigNiZ4nwQMpo8zf/H8gvqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZuRbE0r0q9RuFnrfBCjEoBmfSBkRtcEuLUlhifSoUh4=;
- b=m9tTrpKP9jcGTfT05YCnoVOoitixJtijXGzvQaFS7eM0NXSkgYAVZoGbvrUexZc+DAV3HGngtwXiuOM1/DmLMqJD+YzYnrFb8fLJk2ByrDq7u4/wseoU8xnMlPaH531mKISXaLJtVplKxG9PCy/l99Ix6Jhz0QY9RFQ+MdZnUuTeWLe8TYZ4ZG8XFHmQkHiTsb0+umf0L5eG+UaJ/cwy0hrZmVFCyUhnyQmdoThpxMhjgyvqNcnNIgSXdLEvFDBNT0D/jsq+6nTaoqPk2f96soQBoI4FyBQWBFmwSkHIntk+iaWz18TSi7N1ZjXWF1wudiX5rT0mz9shnzCMFgsMpg==
+ bh=4XzEhTegMb95KnPrg5Tby6zBWGHVFpirE22LQdtgJng=;
+ b=LKrFJx5iLjefWxIM02HcRaOTZ0N9l6+S5tVJfl/E+GDmOP71kWDS6OsdNoKO+NCweF7ucVZqJJ2LhfRG7MxDhKtDdCnSUYg845RbBN88mhbYZNc34/P5gxlXsuITcsurIrsugWRgtdwqrr+9huacR/UnLBIhQBCGTKZyHcbsS3ZVldjiO/qLt5pwwlp3k5r525AuquF1J5w5QdjUZ/cQLKQNGSWRnFDhybiqffeCrGLXLFnOoRLRe7R8bT/xf1CVscEbwrn2H33UUnKit5gn7YT3k6sldcD/1VuHS5mKV5d5T2jjxAJ+orAne8xL5h3xJWlcaQRGb8dSFQekWjrckw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB6450.namprd11.prod.outlook.com (2603:10b6:510:1f5::22) with
+ by CY8PR11MB7242.namprd11.prod.outlook.com (2603:10b6:930:95::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Thu, 25 Jan
- 2024 06:33:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Thu, 25 Jan
+ 2024 07:46:15 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7202.035; Thu, 25 Jan 2024
- 06:33:32 +0000
-Date: Wed, 24 Jan 2024 22:33:30 -0800
+ 07:46:15 +0000
+Date: Wed, 24 Jan 2024 23:46:13 -0800
 From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<jonathan.cameron@huawei.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH] cxl: Fix sysfs export of qos_class for memdev
-Message-ID: <65b200ba228f_2d43c29468@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <170612211746.2737788.8759299841309402825.stgit@djiang5-mobl3>
+To: Dongsheng Yang <dongsheng.yang@easystack.cn>, Dan Williams
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <ave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
+Message-ID: <65b211c51ce57_2d43c2949e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
+ <6595c83083418_8dc6829468@dwillia2-xfh.jf.intel.com.notmuch>
+ <a32d859f-054f-11ca-e8a3-dff7a5234d0a@easystack.cn>
+ <65b1da5b2933b_39fcf29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <8498fb54-b003-e9b5-ba50-2e6eb8e257f5@easystack.cn>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <170612211746.2737788.8759299841309402825.stgit@djiang5-mobl3>
-X-ClientProxiedBy: MW4PR03CA0028.namprd03.prod.outlook.com
- (2603:10b6:303:8f::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <8498fb54-b003-e9b5-ba50-2e6eb8e257f5@easystack.cn>
+X-ClientProxiedBy: MW4PR03CA0222.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::17) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -95,301 +101,78 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6450:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebdbaec0-b4fd-42c1-8646-08dc1d6f8cee
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7242:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7990bbc4-463f-4bd0-34f4-08dc1d79b563
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vEBx5rQGq/OGr+kiKapIC9tZjTPunUvh72o6DXDry2thRF+1/wld5l9LWaCExt1mKhTAu+SHCUfXLecfd3bVX0WDkQSQeLM760NdKWCewSY5pBkuQvzw42btMBmMka7yiVLFsjRSpFugier5FhoQmqsQ3uRWqX9LVpT9UShV5qJsK7MszVPr/USE/S97hUJ5c+tFGHulHDQEJhyQNQEa7XoUd/LI3d59jBzLGGHAvEw+tCj/+0ayLXWQvea/AR7vyYFVPdGyFEF+LrCDrWnMglW4JUaqphlihj7pMwldGta1CYlSUSScL+ezPgCYydn1eNEBBp/EeaGPDube064Bpgm7fwSK6VJtNHCa2l4sLtAEnepk0+v1FASMdwWFL4hQyeKqs46mBvclrYQIKFcANYvZmTHc7tWNVS89woeZI/c/ipG1PqDrZkiiSsTkhM0vW9Dq7H5Sn5EPBqwELH+OvQDBn3VJ7dZIkpTHh9lHkd0Q9af8NfzzjIaXOyvyCL0Ivcvj7rjz6P8nDi1jP0shrf8WG0aVLFc19drODDGQD3Y+3H9EWWhmt4Ae0VnZLF0w
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(396003)(366004)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(8676002)(8936002)(4326008)(83380400001)(316002)(41300700001)(2906002)(26005)(66946007)(5660300002)(86362001)(66476007)(66556008)(82960400001)(38100700002)(6486002)(9686003)(6512007)(478600001)(6506007);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: uvPydxYeyE3tQnRtR8pl+cbFjovCV1men4mOFcB7ZOGvVCB3yKPLrauLHvfNP0pKZrPfaKDV4fogTEvMc/RFyaGNIMSk+C0id5bIfUf44q8Exlc5+HSmoo+wBGozLja2vPVuw4kmSvu8N7kxT6VZ0ApGP9yv13umDfcMYh4oFaz8O0ZIcnlf5FzVUXxrJI1/vs/uYxAj8kN3mZFEHne1PvlSWQm2wvTi3ef2+FwS7rxiBJoKtu/ITpiFkto715Sx4IxrTzTICRAkRkzj9h7tbvieAHRrKK9IrZNcU/3cD7rJin9tZVNJ83viKgcUImBH1tOKUSEViI2TCou8ke90Zbaa+/gF173DN+Y8UFMVuZQpo+IvOKTDCX5iRuWplFOWov+NPs/sFP0zGVfnf0MFy8Vav9A/Uspi9Q4W293xzSZCRP7M9sAxMoxxLPc+WPE5bsKmtu7WrDTI/GkJYVFWZSo+IYty7IgszSTwoKkeMZSiQjdDSQrdJxBT4rSx0tfOMKrEUCoJbj33tCVh5XZZpvtrzFnfHabTXiGBpynC3KPK5khf5zhvjXEONxXF/2Nw
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(366004)(39860400002)(136003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(6486002)(26005)(478600001)(9686003)(6506007)(6512007)(316002)(6636002)(66946007)(66476007)(110136005)(66556008)(4326008)(2906002)(8676002)(5660300002)(8936002)(38100700002)(82960400001)(86362001)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SIvAPydQuzvL8LCabhouleDuLaMYXycJcp9beYxKuo39N4+wwzC7pJP/JIOF?=
- =?us-ascii?Q?Frm3YXl9C8Oz3ribbzJGLiwIc4N4/rEoKhXEwFrfXjsymTrwzpw7JuLBOw6F?=
- =?us-ascii?Q?/00QTtYtbfJduN/bOTvzqkvwx8FenpaMXzc4UduH+ivCBy6E+KmV400oYWCC?=
- =?us-ascii?Q?4mMoxYY/xs2Zgh/Wcv3GFFO/MZmkBbYVentLQS0CIYtkvqN3B3uCYjpuzu0D?=
- =?us-ascii?Q?ElxhEhJJro9d3zLmwsEbLPxrmAjVx3n5HX1G4+6jOBb5m8cHFR3SFItkU1eX?=
- =?us-ascii?Q?qlx1KMl9c5gvGg+JDDlrOjqmBOMj4tZ1KL0/BoumouGHK6NTKAMap2Q9bRn5?=
- =?us-ascii?Q?JhacKL563dAexXtdLsmpOTjH3HmZJupJ9n8Y4iHh0IC6xkp8VmwTKJ2xz2Wc?=
- =?us-ascii?Q?9CRrCgIWEX6TNqPs+00PwYWTjFKyeYT9kl1prGaBkQHZJBiAxP7cCTBJDx6w?=
- =?us-ascii?Q?e86u+lGJKvTe5ts5J+K2vFrDcOCOem+H4JhwWfU07GKNLtg/UBz/4uA2mLpb?=
- =?us-ascii?Q?U+zmaB6+uVeMhfIe9rILyr9ATu6tXEqmqSkaexnghM77wKnZaLSWK8APTGMy?=
- =?us-ascii?Q?Wr+yO5xbn70AN5tCYf8+XkCkO0GiJmTMkRe8tc2UUU8obYjKAoM+ztu8Esuj?=
- =?us-ascii?Q?7RuTNztlNcdQkIG+GpBvlYGSJSulrA7KRNA5gzSYD7oAkZg7T72pFYDqx3d2?=
- =?us-ascii?Q?T1D/fcHImQDO4CNpkBEzmbw++9N2P+80JqCv5aaYbqs6bUVQcozcRK4tN+hI?=
- =?us-ascii?Q?Cq1L90TBj1EcZ/dQyY+lKx0RitYsBQ6H32f08Kho0NR+d4gn7xUm4TBxWMaB?=
- =?us-ascii?Q?yfpx43n/cCuGFUic7gEZdYySnDwtxFsJyp233H9eMMaXIxYwxBTKqJ48pF7H?=
- =?us-ascii?Q?GZ6GcFmhW69xFYSDgRMOYZzco6JkCa3gPSBgj8XvarGc6woc72Do+/H6oDDC?=
- =?us-ascii?Q?HbSpQ4X253Bl6nxtlZbzmXH+jrdPjQdP7JTuEfYbX8U/r0pvMRGvndt5cHiW?=
- =?us-ascii?Q?/3i6q+JlPWEM53yMKUUPG/w38DZBePDVf5aU5eqHtedH2UhfYOXrPZp/Qgo1?=
- =?us-ascii?Q?Ck4yp7pAcWCL4RmgG36KmeMDdRAJnwYJ2HUwonTdAAiSfWERec4bCnYGM16O?=
- =?us-ascii?Q?igebumUTXTl1XNLQEHMvQBa9itKmp7FC6EuGnPpZ80ET0l3lP2RLMx7NYN+2?=
- =?us-ascii?Q?K9yGkkLpUjwcV5r8bXIwwT0NAuP4o21uzyM9ZaQFhNTv/jgWZRQMFRYvYUag?=
- =?us-ascii?Q?eD/SfRyA8SLqcyDwxY3ENnznjVxoy4Ck70QhFQtklO6uLsBKcM+7e9OqTLRc?=
- =?us-ascii?Q?da0uOgifOiv/baGTXbuNaLPMd05BXyUPiXLzNCx8i4OaKnPzSK2papLs4YIA?=
- =?us-ascii?Q?6tiCXfDj+cpgruq3ffeMMY40+K0OV2YEaSe8ma/3WRTgvdR6ElVSSuCsyaj0?=
- =?us-ascii?Q?nyCKFyEF1XPjXRxbgAmnU1rjppPbuBtarzBj2999d5bpTsyjhWMXMP6nC378?=
- =?us-ascii?Q?CjD782RDKywbdkiGyXQJ0pMg2zzgcHQjYZYgARKJj3Y7n4SCa5ut6B/4heEP?=
- =?us-ascii?Q?Ub1FwSrkTbXNM+xLoZ+qy4V3kmwBOeM8qU1eVX+RbIsC8TsOIkArtfftxUy/?=
- =?us-ascii?Q?JA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebdbaec0-b4fd-42c1-8646-08dc1d6f8cee
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XutdNh4jF0SYm2hDnZ+YCSrDn7OOLmUyFFSbtnfaSXoBL9+JLiHB44YkS/Bb?=
+ =?us-ascii?Q?4fuCP7MvxhoS4dkiGcZJ6hRJyJJW0gBacjTPsoIqUTnNZ/PVMx4DOVmM7gnU?=
+ =?us-ascii?Q?loD2Phe729yKss+wNw1FpHdoE5H0eQFTqF/gKamu+mzAog9CgcrKQ5q/2S9h?=
+ =?us-ascii?Q?vWn+gDBIUvE1AUfj+wLGjq3mN9tBkRJMrNN4GAr+l3ouROxzP1c9LCFymXuX?=
+ =?us-ascii?Q?Y1zwJX5f1xdDpVWWLDb3FG67S4aVAO8OAWRSyBQnfk8ogJuMhQERZmFNpRP2?=
+ =?us-ascii?Q?5myWRfLdglbkM9qVwkY+5jhxTRENfRBvjPX/Evv15ymNGf+MtAZcJJV2te+h?=
+ =?us-ascii?Q?qddbPXYgVemGJjGopMu266juzVIYPX+b4xo1ILenfv7KUmGEuBUOeDEI/3xW?=
+ =?us-ascii?Q?4fEq6AzvSCFlx0iAEcpPcoib9nevNZh4H4/s3igkLmyJxsYCv7K8bFcUjw/J?=
+ =?us-ascii?Q?ry8hKKOYfQXAjoZ9kwWxnMWW3wHH8bTIIYNR/8hVxfmXXfJAtmUh9Cm1sPaU?=
+ =?us-ascii?Q?F/l/fzhBHNJtNEJjyh6jpom+Xd7nQSKOeD0qd3j6vMImSBhn7G/24fWEWuPT?=
+ =?us-ascii?Q?WQkAtA998ptn3UDWepQudlp6BROx+zNzlN2Ow82syLzXlz1RXix7mWuwAcKD?=
+ =?us-ascii?Q?MH7VpicSD5ig2JO8KPlBFTmXFWlm/d2BGPDyz/Yo07Oqv0T98wsnbpSVfiOk?=
+ =?us-ascii?Q?Xz+O0IKYg/GA3ukaIAxofs2GSYRrE6DGDzUvBbB0oPYIfmbzbEmiEc4lEwxN?=
+ =?us-ascii?Q?Ixb513MyxNjyrh8otq6LhobAyY9AWDUGYKIgZ90Te0etp8PYD0w6vTjQwl45?=
+ =?us-ascii?Q?iGvcToSWS490FTGFWSQC62WX/n2a7l2oihIJtae/gXdIgSVp7k63Al8XJ2ZM?=
+ =?us-ascii?Q?sWJQ+n30yG1r7KXrfAj/jKwu7OwMiCnmyftxCyEuzp2qVdrJayrzqbaMK3ZW?=
+ =?us-ascii?Q?xdyepozJThINRt5K+7NFOS16gk/tuLYshS+0TG/x5PGT0yNeKohRAP/C5yNN?=
+ =?us-ascii?Q?iOXvLnu12wq6Cu75EWmwIf0oRUZViqjyIEjk7JWd9KRx3Jo7/OBuKzTXsqaZ?=
+ =?us-ascii?Q?Biw1MonkgI0P4NuWs84CHmDZJBntf4BPlgNRSUxxq/D5stmMKJ/3b5olysZE?=
+ =?us-ascii?Q?HYYbMrEJAXMpKY1oB36EcGtHrxeq6gt4yWmi2TPgYQXuV13bRVM0E0PLaxQi?=
+ =?us-ascii?Q?F3roLF7oJIu7NELYG4Ct4YBZGlRAsiTHS4A8++fOU8gf0wwyYDdsFME6RTYK?=
+ =?us-ascii?Q?VtRuTg9XKJyQQqQtM82343TTyZmSjQo/EubIVnrWEdnQhuhFee24rYeSP1Be?=
+ =?us-ascii?Q?tS/AyyQUlAiSq/saS1f7QbeV6KMyNPxfJHK75JqUuZ399S+J9hgLtBy9cJ0M?=
+ =?us-ascii?Q?Y5sxBY2l9myfdgj4Z4bnKbud4pT2giS3TGuWMmbe98novHkcCAiplV6sULu/?=
+ =?us-ascii?Q?bwr39LD/DxnS4EIu/34XUsF1iDK5lrOU4TZIjb3lHLhno+li3XcGCkbemiiI?=
+ =?us-ascii?Q?RKrgQDV/ZcpNJM15tThn79PAHHF2aMjkCkRAE0J7qCih/i5ctViodYQbQyec?=
+ =?us-ascii?Q?pXSMVu6vSaMKfnLUtWKEYam29jtV33bUHPpJnEUxx4K8a3rLZNi6tTpAllEd?=
+ =?us-ascii?Q?ew=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7990bbc4-463f-4bd0-34f4-08dc1d79b563
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 06:33:32.4790
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 07:46:15.2323
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I2YrU9B02rUae4AP3dwMChvvft+0/JJHAlTKMZTtIJYhwEXVdRUtkESYJTJbViiy7ZPG6os9FZqHoRm2TVzb/aFUjhbUqZX2jwi9MfYnELA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6450
+X-MS-Exchange-CrossTenant-UserPrincipalName: rVbbylIn51WRBl9G5h1NCzKEHz70Gf64kNBf7H+X4yFO3WA6icRQTPne3DlC+/Etkskgg0DU3Qkf0dIVeqgYq7+Dzn/drnEElbW87o2UUco=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7242
 X-OriginatorOrg: intel.com
 
-Dave Jiang wrote:
-> Current implementation exports only to
-> /sys/bus/cxl/devices/.../memN/qos_class. 
-
-Documentation/ABI/testing/sysfs-bus-cxl says they should be under ram/
-and pmem/ but I should have required a cxl_test verification of that basic
-detail. This style of ABI sanity checking is cxl_test's main reason for
-existing. Especially for scenarios like this that may not exist in
-currently available hardware.
-
-> With both ram and pmem exposed,
-
-Luckily this is not a common occurrence in the wild with real devices,
-but the amount of fixes needed here to make the implementation match the
-documentation are threatening to be too big to fix in a -rc. See below:
-
-> the second registered sysfs attribute is rejected as duplicate. It's not
-> possible to create qos_class under the dev_groups via the driver due to
-> the ram and pmem sysfs sub-directories already created by the device sysfs
-> groups. Move the ram and pmem qos_class to the device sysfs groups and add
-> a call to sysfs_update() after the perf data are validated so the
-> qos_class can be visible. The end results should be
-> /sys/bus/cxl/devices/.../memN/ram/qos_class and
-> /sys/bus/cxl/devices/.../memN/pmem/qos_class.
+Dongsheng Yang wrote:
+[..]
+> > A faster way to get to a device-dax interface fronting reserved memory
+> > is to use the efi_fake_mem= command line option.
+> > 
+> > For example:
+> > 
+> >      efi_fake_mem=4G@13G:0x40000
+> > 
+> > ...assigns 4GB of System-RAM starting at the 13G physical offset with
+> > the EFI_MEMORY_SP attribute. By default the kernel creates device-dax
+> > devices for that dedicated memory.
+> > 
+> > For dax mapping performance testing you don't need any of the CXL
+> > driver infrastructure since the CXL driver has nothing to do with the
+> > data path.
 > 
-> Fixes: 42834b17cf1f ("cxl: Export sysfs attributes for memory device QoS class")
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-Recall that I was dubious about the list_head usage and the hard to
-discern locking rules. This patch pushes that over the edge. The old
-locking model was that the lists were populated under the endpoint-port
-device_lock() and the reads of them in memdev sysfs were gated by the
-fact that they were guaranteed to be settled before the cxl_mem driver
-dev_groups were populated.
-
-Now they are moved out of that context, even that undocumented locking
-rule is violated. I believe you can hit this race by a loop that does
-cxl_mem bind/unbind while reading the qos_class. Even if that does not
-trigger, the locking here is subtle and non-obvious which usually means 
-broken.
-
-In the end, only the first verified 'struct cxl_dpa_perf' instance per
-partition matters, and *that* is what should be stored in the
-cxl_memdev_state post init, not the lists.
-
-Have a look at just caching that see if we can make this fix small
-enough to be -rc material.
-
-More comments below:
-
->  drivers/cxl/core/cdat.c   |   12 ++++++
->  drivers/cxl/core/core.h   |    3 ++
->  drivers/cxl/core/memdev.c |   86 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/mem.c         |   56 -----------------------------
->  4 files changed, 101 insertions(+), 56 deletions(-)
+> Thanx for your information, I create cxlv because I think there could be 
+> some other use cases other than device-dax to use cxl memdev. In that 
+> way, we need emulate cxl memdev in cxl driver level.
 > 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 6fe11546889f..a47dc4102140 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -395,6 +395,7 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
->  {
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->  	struct xarray __dsmas_xa;
->  	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
->  	int rc;
-> @@ -417,6 +418,17 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
->  
->  	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
->  	cxl_qos_class_verify(cxlmd);
-> +	if (!list_empty(&mds->ram_perf_list)) {
-> +		rc = sysfs_update_group(&cxlmd->dev.kobj, get_cxl_memdev_ram_group());
-> +		if (rc)
-> +			dev_dbg(&cxlmd->dev, "Failed to update RAM QoS group\n");
-> +	}
-> +
-> +	if (!list_empty(&mds->pmem_perf_list)) {
-> +		rc = sysfs_update_group(&cxlmd->dev.kobj, get_cxl_memdev_pmem_group());
-> +		if (rc)
-> +			dev_dbg(&cxlmd->dev, "Failed to update PMEM QoS group\n");
-> +	}
+> If we always use cxl memdev by creating a region and creating a 
+> device-dax, I agree we dont need to emulate it in cxl driver level.
 
-Setting aside that this does not need getter functions and can just link
-the attribute_group symbols directly, just move this logic into
-memdev.c.  I.e. create a cxl_memdev_attrs_update() that just
-unconditionally updates all attribute groups that should retrigger their
-is_visible() routines.
-
-Note that this needs to be retriggered on the way down to make the now
-defunct qos_class attributes disappear.
-
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
->  
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 3b64fb1b9ed0..44958be2178a 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -90,4 +90,7 @@ enum cxl_poison_trace_type {
->  
->  long cxl_pci_get_latency(struct pci_dev *pdev);
->  
-> +const struct attribute_group *get_cxl_memdev_ram_group(void);
-> +const struct attribute_group *get_cxl_memdev_pmem_group(void);
-> +
->  #endif /* __CXL_CORE_H__ */
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index dae8802ecdb0..5743c6b2710c 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -447,13 +447,61 @@ static struct attribute *cxl_memdev_attributes[] = {
->  	NULL,
->  };
->  
-> +static ssize_t pmem_qos_class_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct cxl_dpa_perf *dpa_perf;
-> +
-> +	if (!dev->driver)
-> +		return -ENOENT;
-
-This dev->driver check was pointless when this was a driver dev_group
-because a driver dev_group is only published while dev->driver is set.
-
-Now that it is moved to a static memdev attribute that check is racy
-without the device_lock().
-
-Side comment, -ENOENT is a surprising error condition for a file that a
-was successfully found an opened. It was not a problem before because it
-was impossible to trigger.
-
-> +	if (list_empty(&mds->pmem_perf_list))
-> +		return -ENOENT;
-
-memdev attributes depend on information being stable before the memdev
-is registered. This attribute violates that perf information is only
-valid while the mem driver is attached.
-
-I am thinking that if cxl_memdev_state only caches the single qos class
-per partition like this:
-
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 5303d6942b88..9b4a26d3acf8 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -494,8 +494,8 @@ struct cxl_memdev_state {
-        u64 next_volatile_bytes;
-        u64 next_persistent_bytes;
- 
--       struct list_head ram_perf_list;
--       struct list_head pmem_perf_list;
-+       struct cxl_dpa_perf ram_perf;
-+       struct cxl_dpa_perf pmem_perf;
- 
-        struct cxl_event_state event;
-        struct cxl_poison_state poison;
-
-...then this attribute can locklessly do:
-
-	qos_class = mds->pmem_perf.qos_class;
-
-	if (qos_class < 0)
-		return -ENXIO;
-
-Yes, userspace can race and see false positive good values before
-sysfs_update_group() can hide this attribute, but I think that's
-unavoidable. I think false negatives on the way up is precluded by the
-attribute being invisible during that time.
-
-> +	dpa_perf = list_first_entry(&mds->pmem_perf_list, struct cxl_dpa_perf,
-> +				    list);
-> +
-> +	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
-> +}
-> +
-> +static struct device_attribute dev_attr_pmem_qos_class =
-> +	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
-> +
->  static struct attribute *cxl_memdev_pmem_attributes[] = {
->  	&dev_attr_pmem_size.attr,
-> +	&dev_attr_pmem_qos_class.attr,
->  	NULL,
->  };
->  
-> +static ssize_t ram_qos_class_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct cxl_dpa_perf *dpa_perf;
-> +
-> +	if (!dev->driver)
-> +		return -ENOENT;
-> +
-> +	if (list_empty(&mds->ram_perf_list))
-> +		return -ENOENT;
-> +
-> +	dpa_perf = list_first_entry(&mds->ram_perf_list, struct cxl_dpa_perf,
-> +				    list);
-> +
-> +	return sysfs_emit(buf, "%d\n", dpa_perf->qos_class);
-> +}
-> +
-> +static struct device_attribute dev_attr_ram_qos_class =
-> +	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
-> +
->  static struct attribute *cxl_memdev_ram_attributes[] = {
->  	&dev_attr_ram_size.attr,
-> +	&dev_attr_ram_qos_class.attr,
->  	NULL,
->  };
->  
-> @@ -477,16 +525,54 @@ static struct attribute_group cxl_memdev_attribute_group = {
->  	.is_visible = cxl_memdev_visible,
->  };
->  
-> +static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	if (a == &dev_attr_ram_qos_class.attr)
-> +		if (list_empty(&mds->ram_perf_list))
-> +			return 0;
-> +
-> +	return a->mode;
-> +}
-> +
->  static struct attribute_group cxl_memdev_ram_attribute_group = {
->  	.name = "ram",
->  	.attrs = cxl_memdev_ram_attributes,
-> +	.is_visible = cxl_ram_visible,
->  };
->  
-> +const struct attribute_group *get_cxl_memdev_ram_group(void)
-> +{
-> +	return &cxl_memdev_ram_attribute_group;
-
-Could have just put &cxl_memdev_ram_attribute_group directly where this
-is called, but that's moot now with the cxl_memdev_attr_update()
-proposal.
+Upstream Linux has no apparent demand for cxlv as cxl_test, QEMU CXL,
+and/or EFI_MEMORY_SP enumeration of device-dax already covers the need.
