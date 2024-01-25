@@ -1,254 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712B463AC
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jan 2024 05:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8AF125BC;
+	Thu, 25 Jan 2024 06:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706162191; cv=none; b=Se1DjLD+IJBUJuWE0T0OOHcs/wHkxdBcfxUBHSpgeQx9H0OR8DXB1YtXR0SFfwPsIwS1uuQ1pLM3lGMUFRDdGcYiXUjB+RLyB35cp3QExaj37UfXgxvrt4gRp9JjWPc5+wqwYQZHOhQ10sxHuPL0qdzExElct/f9IBMhCpC8jtU=
+	t=1706164121; cv=none; b=RRfKDwm+iDWJc872fQHHgayM6tsd8cbEuhA1Kb9J63wovxVq0ZCfpD9bK6XqPSfAXMcGb3Q42q+jp0emnOiU0siqSCEYmoolNJ55DTZx9HOCes+fczHCqoag4NQDsoonVRORw67wUR0aazwAu2Vkyp85V4Ujkpcd4lQ+yTTcHq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706162191; c=relaxed/simple;
-	bh=mfgBba+jF/+J5pxQ41hiSO3JuztQumVsnfKWy8ju6kM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PB7by3w1A27JbLPDWpVkQ3NxVrxziPdjDClC7Deva91z+nX93vUeB4ITukFGUgv/rtAZRuQD4uLD2qO9od7ps2BjDN7bcCeOWn/BfEvdiXu37+A0H9QYQpih1Y3kiL/FPQHWHaeM7BoLUjwDqKNhi2gYEH1HMugNrwT2SzfhcRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fa5NzKrR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706164121; c=relaxed/simple;
+	bh=pvMMZU0mlB2eFcvOm/oK0NtOQG6HPvn9mMao1fi7Zqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GAi90WQsC2bhrGBFGU+IG5g5Vce+OXeV0RWUdS1lV+xTyv9NzpTDdysGiaGx3SoG8WFUzGjrNhnT5YSr86BwaBySiFAg9FbheW9RaTH6MCSzSo5tjZkWaETK3yzhnUg9Kx5daPZ5b6Z8caREOd505hxOsYpcksz9IpKEExORuao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VgNY+BzZ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fa5NzKrR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VgNY+BzZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706162190; x=1737698190;
-  h=date:from:to:cc:subject:message-id;
-  bh=mfgBba+jF/+J5pxQ41hiSO3JuztQumVsnfKWy8ju6kM=;
-  b=Fa5NzKrRW1HftEtnKeyFNSbmWBBkozZcfj8ONegh9j2QGR8/+ocLgbza
-   icoSKt+kf89pnVq3g2lgkNw5KUEppHOdTg5EzsVRLdu2F1834702Qs9Df
-   q8XgKGf9NaFZ0sgLVdn7FjMKHX6ZWZfpymAtXYiBzSbKFjcALlyzZSZ0d
-   2mse5jIA7RoIWSl6xljOh8iK+B/SCfT4hmXJQTCNMbWvYNlEkYumwG14S
-   JfTdpnlEPiTFQ08ro78w0kEpLayyjT5ilj09Ob5hhHnpFjSbm9QeGjlka
-   6jYwQYFKT2cB+s//ceW5mZq/ZXqTxzAWA+bMXyBtlT3oh4JDzDeQcws/J
+  t=1706164118; x=1737700118;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pvMMZU0mlB2eFcvOm/oK0NtOQG6HPvn9mMao1fi7Zqc=;
+  b=VgNY+BzZO7tu02szbM5sY3egj0u72h+5cGdBc7pVVT5NVRIFtJueAD1x
+   bd2sMU86AYMm8EbyyAqsRL3O/l2x7DRmFigeiiFfWzh52sZJhYDRhUEUU
+   JAWs1TVccFwpydr/jmyd9qQU+wPA6UY3migkeskci8EpT2WgDoT0lLc7e
+   VWT80yR138Kk1Rj18d0Vu/AKK9dPvTgYDoJXgzZciCkwGxpEdPQOb/s+V
+   FOy/qrdAI3VdEDlR6sjyYiq0CRo2BZQ5jnO4gMhyl/CaA3n+o3eVdm2qF
+   W5gMYhL1ITWXTqTXOKMZ8hj53oaZctzAd3W2DoIY5wdBRmY/RkTZjMMRL
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15418770"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="9456724"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15418770"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 21:56:29 -0800
+   d="scan'208";a="9456724"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:28:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="905855208"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="905855208"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2024 21:56:26 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rSsiu-0008ks-1C;
-	Thu, 25 Jan 2024 05:56:24 +0000
-Date: Thu, 25 Jan 2024 13:55:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:fixes] BUILD SUCCESS
- d72a4caf685989e353dff0a97d7376ee10edbf87
-Message-ID: <202401251323.RuXxdOua-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="2122533"
+Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:28:27 -0800
+From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org
+Cc: chao.p.peng@linux.intel.com,
+	erwin.tsaur@intel.com,
+	feiting.wanyan@intel.com,
+	qingshun.wang@intel.com,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Adam Preble <adam.c.preble@intel.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Robert Richter <rrichter@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
+Subject: [PATCH v2 0/4] PCI/AER: Handle Advisory Non-Fatal properly
+Date: Thu, 25 Jan 2024 14:27:58 +0800
+Message-ID: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: d72a4caf685989e353dff0a97d7376ee10edbf87  cxl/pci: Skip irq features if MSI/MSI-X are not supported
+According to PCIe Base Specification Revision 6.1, Sections 6.2.3.4
+and 6.2.4.3, certain uncorrectable errors will signal ERR_COR instead
+of ERR_NONFATAL, logged as Advisory Non-Fatal Error, and set bits in
+both Correctable Error Status register and Uncorrectable Error Status
+register. Currently, when handling AER events the kernel will only look
+at CE status or UE status, but never both. In the Advisory
+Non-Fatal Error case, bits set in the UE status register will not be
+reported and cleared until the next Fatal/Non-Fatal error arrives.
 
-elapsed time: 1483m
+For instance, previously, when the kernel receives an ANFE with Poisoned
+TLP in OS native AER mode, only the status of CE will be reported and
+cleared:
 
-configs tested: 178
-configs skipped: 3
+  AER: Corrected error received: 0000:b7:02.0
+  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr           
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+If the kernel receives a Malformed TLP after that, two UE will be
+reported, which is unexpected. The Malformed TLP Header was lost since
+the previous ANFE gated the TLP header logs:
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240124   gcc  
-arc                   randconfig-002-20240124   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240124   clang
-arm                   randconfig-002-20240124   clang
-arm                   randconfig-003-20240124   clang
-arm                   randconfig-004-20240124   clang
-arm                           sama5_defconfig   gcc  
-arm                           spitz_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240124   clang
-arm64                 randconfig-002-20240124   clang
-arm64                 randconfig-003-20240124   clang
-arm64                 randconfig-004-20240124   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240124   gcc  
-csky                  randconfig-002-20240124   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240124   clang
-hexagon               randconfig-002-20240124   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240124   clang
-i386         buildonly-randconfig-002-20240124   clang
-i386         buildonly-randconfig-003-20240124   clang
-i386         buildonly-randconfig-004-20240124   clang
-i386         buildonly-randconfig-005-20240124   clang
-i386         buildonly-randconfig-006-20240124   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240124   clang
-i386                  randconfig-002-20240124   clang
-i386                  randconfig-003-20240124   clang
-i386                  randconfig-004-20240124   clang
-i386                  randconfig-005-20240124   clang
-i386                  randconfig-006-20240124   clang
-i386                  randconfig-011-20240124   gcc  
-i386                  randconfig-012-20240124   gcc  
-i386                  randconfig-013-20240124   gcc  
-i386                  randconfig-014-20240124   gcc  
-i386                  randconfig-015-20240124   gcc  
-i386                  randconfig-016-20240124   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240124   gcc  
-loongarch             randconfig-002-20240124   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                           mtx1_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240124   gcc  
-nios2                 randconfig-002-20240124   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240124   gcc  
-parisc                randconfig-002-20240124   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    amigaone_defconfig   gcc  
-powerpc                        fsp2_defconfig   clang
-powerpc                     mpc512x_defconfig   clang
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc               randconfig-001-20240124   clang
-powerpc               randconfig-002-20240124   clang
-powerpc               randconfig-003-20240124   clang
-powerpc                     tqm8548_defconfig   gcc  
-powerpc64             randconfig-001-20240124   clang
-powerpc64             randconfig-002-20240124   clang
-powerpc64             randconfig-003-20240124   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20240124   clang
-riscv                 randconfig-002-20240124   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240124   gcc  
-s390                  randconfig-002-20240124   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         apsh4a3a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        dreamcast_defconfig   gcc  
-sh                    randconfig-001-20240124   gcc  
-sh                    randconfig-002-20240124   gcc  
-sh                             sh03_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240124   gcc  
-sparc64               randconfig-002-20240124   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240124   clang
-um                    randconfig-002-20240124   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240124   clang
-x86_64       buildonly-randconfig-002-20240124   clang
-x86_64       buildonly-randconfig-003-20240124   clang
-x86_64       buildonly-randconfig-004-20240124   clang
-x86_64       buildonly-randconfig-005-20240124   clang
-x86_64       buildonly-randconfig-006-20240124   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240124   gcc  
-x86_64                randconfig-002-20240124   gcc  
-x86_64                randconfig-003-20240124   gcc  
-x86_64                randconfig-004-20240124   gcc  
-x86_64                randconfig-005-20240124   gcc  
-x86_64                randconfig-006-20240124   gcc  
-x86_64                randconfig-011-20240124   clang
-x86_64                randconfig-012-20240124   clang
-x86_64                randconfig-013-20240124   clang
-x86_64                randconfig-014-20240124   clang
-x86_64                randconfig-015-20240124   clang
-x86_64                randconfig-016-20240124   clang
-x86_64                randconfig-071-20240124   clang
-x86_64                randconfig-072-20240124   clang
-x86_64                randconfig-073-20240124   clang
-x86_64                randconfig-074-20240124   clang
-x86_64                randconfig-075-20240124   clang
-x86_64                randconfig-076-20240124   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240124   gcc  
-xtensa                randconfig-002-20240124   gcc  
-xtensa                         virt_defconfig   gcc  
+  PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00041000/00180020
+     [12] TLP                    (First)
+     [18] MalfTLP       
 
+To handle this case properly, add additional fields in aer_err_info to
+track both CE and UE status/mask, UE severity, and Device Status.
+Use this information to determine the status bits that need to be cleared.
+
+Now, in the previous scenario, both CE status and related UE status will
+be reported and cleared after ANFE:
+
+  AER: Corrected error received: 0000:b7:02.0
+  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr           
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [18] TLP
+
+Additionally, add more data to aer_event tracepoint, which would help
+to better understand ANFE and other errors for external observation.
+
+Note:
+checkpatch.pl will produce following errors and warnings on PATCH 4:
+
+  ERROR: space prohibited after that open parenthesis '('
+  #103: FILE: include/ras/ras_event.h:319:
+  +		__field(	u16,		link_status	)
+
+  ...similar errors omitted...
+
+  WARNING: quoted string split across lines
+  #126: FILE: include/ras/ras_event.h:342:
+  +	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s, "
+  +		 "Correctable Error Status=0x%08x, "
+
+  ...similar warnings omitted...
+
+For readability reasons, these errors and warnings are not fixed,
+following the code style of existing examples in the kernel source tree.
+
+Change log:
+v2:
+  - Reference to the latest PCIe Specification in both commit messages
+    and comments, as suggested by Bjorn Helgaas.
+  - Describe the reason for storing additional information in
+    aer_err_info in the commit message of PATCH 1, as suggested by Bjorn
+    Helgaas.
+  - Add more details of behavior changes in the commit message of PATCH
+    2, as suggested by Bjorn Helgaas.
+
+v1: https://lore.kernel.org/linux-pci/20240111073227.31488-1-qingshun.wang@linux.intel.com/
+
+Wang, Qingshun (4):
+  PCI/AER: Store more information in aer_err_info
+  PCI/AER: Handle Advisory Non-Fatal properly
+  PCI/AER: Fetch information for FTrace
+  RAS: Trace more information in aer_event
+
+ drivers/acpi/apei/ghes.c      |  16 ++-
+ drivers/cxl/core/pci.c        |  15 ++-
+ drivers/pci/pci.h             |  12 ++-
+ drivers/pci/pcie/aer.c        | 191 +++++++++++++++++++++++++++-------
+ include/linux/aer.h           |   6 +-
+ include/linux/pci.h           |  27 +++++
+ include/ras/ras_event.h       |  48 ++++++++-
+ include/uapi/linux/pci_regs.h |   1 +
+ 8 files changed, 269 insertions(+), 47 deletions(-)
+
+
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.42.0
+
