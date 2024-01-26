@@ -1,42 +1,39 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B13AD53
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 17:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCAA20322
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 17:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290509; cv=none; b=PycNFHBgvK6MUQWodaoa8P3j+S7rx/YQ+gXROSZR0mi6C7MB4JrCb/93F6nqRMbeDnRYm/xXHSAiJdMCL8GWZ16lRBX0fVeXlrYGAzD6aqmzym+SMLUQJT+WBQsPPbBzSRkeDEsZQOmhYuYi8/Hi3O3BnPFozdn7Uj9f/SPRWTM=
+	t=1706290948; cv=none; b=jjsesjhk8CVyLAty11yIUpyw2EAfkQKFmuC+ugEZsEQ67RJxx0+3v7nk/KbnZ1vLcnnnrGWZRViHFZyZQWLHTHUETPNpiX7lUIOKerhRj6FwAmi+DMz79e2GzX+I0X7mkoCSdy6EXmLQpzQEc4/PcC42ipv1XBEOergzTmVypXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706290509; c=relaxed/simple;
-	bh=5TDc2soa250ntk64x23nLAmBYj7R5y3/wK/OUGendv0=;
+	s=arc-20240116; t=1706290948; c=relaxed/simple;
+	bh=8fTm/4bikTj6WePExouWXSPkmpSnSS6RPuI1d6OHnvg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BE6OMcxzNONuePUgF4jV6/jnooDrZzBkLlZWZB3XFPO2Pvar3sf3JkumfSkTlWsHl44tJOZLy0wbD/gPdxbhPMeh9G1QCzE+YyEcrFWXJn6iEWbJUdL3If9g/qXTs7/nW9l+A+3/8e3K8Q78kWb/1kcF2Ijnq9/bbLQ7mnCJV7s=
+	 MIME-Version:Content-Type; b=lb27t+rG/O8/ty8AumwGgfQfegxXh/idivBAMsEp4KdMqbEurWULfxeGwWzK5G0Sz/wu4J0krqPH24sq7CVKrihOB0DnAKDWaMVNX/54Q9cvidtpEn/C8QhQU7q5MwBHeibQVqMEwqMoBaFtbIF89BYn9BNvInb/M+wqVculzNo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM4Wn1nlJz67jVH;
-	Sat, 27 Jan 2024 01:32:21 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM4gw2BmMz6K8wq;
+	Sat, 27 Jan 2024 01:39:24 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 592731400D3;
-	Sat, 27 Jan 2024 01:35:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 26E52140B67;
+	Sat, 27 Jan 2024 01:42:24 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
- 2024 17:35:01 +0000
-Date: Fri, 26 Jan 2024 17:35:00 +0000
+ 2024 17:42:23 +0000
+Date: Fri, 26 Jan 2024 17:42:23 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
-	<a.manzanares@samsung.com>, <mounika.k@samsung.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/2] hw/cxl: Add Activate FW support
-Message-ID: <20240126173500.00006bf5@Huawei.com>
-In-Reply-To: <b6qqnuyzxtk7lpbf2duxcmi477wdikrtbnwhzxvg2suhgsofez@gccsm2ee3neu>
-References: <20240109070436.21253-1-dave@stgolabs.net>
-	<20240109070436.21253-3-dave@stgolabs.net>
-	<20240126155407.00005335@Huawei.com>
-	<b6qqnuyzxtk7lpbf2duxcmi477wdikrtbnwhzxvg2suhgsofez@gccsm2ee3neu>
+To: Quanquan Cao <caoqq@fujitsu.com>
+CC: <dave.jiang@intel.com>, <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH] =?UTF-8?Q?cxl/region=EF=BC=9AFix?= overflow issue in
+ alloc_hpa()
+Message-ID: <20240126174223.00005736@Huawei.com>
+In-Reply-To: <20240124091527.8469-1-caoqq@fujitsu.com>
+References: <20240124091527.8469-1-caoqq@fujitsu.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,119 +47,48 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 26 Jan 2024 08:57:07 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Wed, 24 Jan 2024 17:15:26 +0800
+Quanquan Cao <caoqq@fujitsu.com> wrote:
 
-> On Fri, 26 Jan 2024, Jonathan Cameron wrote:
+> Creating a region with 16 memory devices caused a problem. The div_u64_rem
+> function, used for dividing an unsigned 64-bit number by a 32-bit one,
+> faced an issue when SZ_256M * p->interleave_ways. The result surpassed
+> the maximum limit of the 32-bit divisor (4G), leading to an overflow
+> and a remainder of 0.
+> note: At this point, p->interleave_ways is 16, meaning 16 * 256M = 4G
 > 
-> >On Mon,  8 Jan 2024 23:04:36 -0800
-> >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >  
-> >> Per the latest 3.1 spec for supporting firmware activation.
-> >> Online mode is supported by the hw but never incurs in a
-> >> background operation.
-> >>
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>  
-> >Hi Davidlohr.
-> >
-> >One question inline.  
+> To fix this issue, I replaced the div_u64_rem function with div64_u64_rem
+> and adjusted the type of the remainder.
 > 
-> Thanks for having a look.
-> 
-> >J  
-> >> ---
-> >>  hw/cxl/cxl-mailbox-utils.c | 57 ++++++++++++++++++++++++++++++++++++--
-> >>  1 file changed, 55 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> >> index 0295ea8b29aa..7878604595dd 100644
-> >> --- a/hw/cxl/cxl-mailbox-utils.c
-> >> +++ b/hw/cxl/cxl-mailbox-utils.c
-> >> @@ -61,6 +61,7 @@ enum {
-> >>      FIRMWARE_UPDATE = 0x02,
-> >>          #define GET_INFO      0x0
-> >>          #define TRANSFER      0x1
-> >> +        #define ACTIVATE      0x2
-> >>      TIMESTAMP   = 0x03,
-> >>          #define GET           0x0
-> >>          #define SET           0x1
-> >> @@ -852,7 +853,7 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
-> >>      fw_info->slots_supported = CXL_FW_SLOTS;
-> >>      fw_info->slot_info = (cci->fw.active_slot & 0x7) |
-> >>              ((cci->fw.staged_slot & 0x7) << 3);
-> >> -    fw_info->caps = 0;
-> >> +    fw_info->caps = BIT(0);
-> >>
-> >>      if (cci->fw.slot[0]) {
-> >>          pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
-> >> @@ -961,6 +962,55 @@ static void __do_firmware_xfer(CXLCCI *cci)
-> >>      cci->fw.transfering = false;
-> >>  }
-> >>
-> >> +/* CXL r3.1 section 8.2.9.3.3: Activate FW (Opcode 0202h) */
-> >> +static CXLRetCode cmd_firmware_update_activate(const struct cxl_cmd *cmd,
-> >> +                                               uint8_t *payload_in,
-> >> +                                               size_t len,
-> >> +                                               uint8_t *payload_out,
-> >> +                                               size_t *len_out,
-> >> +                                               CXLCCI *cci)
-> >> +{
-> >> +    CXLDeviceState *cxl_dstate = &CXL_TYPE3(cci->d)->cxl_dstate;
-> >> +    struct {
-> >> +        uint8_t action;
-> >> +        uint8_t slot;
-> >> +    } QEMU_PACKED *fw_activate;
-> >> +
-> >> +    if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
-> >> +        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER)) {  
-> >
-> >Why?  Mind you I'm not sure why the get firmware info command is checking
-> >the same. This will probably go upstream post DCD so if we do need
-> >this check it needs to add an option for a DCD only device.  
-> 
-> Will remove.
-> 
-> >  
-> >> +        return CXL_MBOX_INTERNAL_ERROR;
-> >> +    }
-> >> +
-> >> +    fw_activate = (void *)payload_in;
-> >> +
-> >> +    if (fw_activate->slot == 0 ||
-> >> +        fw_activate->slot == cci->fw.active_slot ||
-> >> +        fw_activate->slot > CXL_FW_SLOTS) {
-> >> +        return CXL_MBOX_FW_INVALID_SLOT;
-> >> +    }
-> >> +
-> >> +    /*
-> >> +     * Check that an actual fw package is there, otherwise
-> >> +     * just become a nop.
-> >> +    */  
-> >Odd indent.
-> >
-> >Also, Spec reference would be good for this as I can't
-> >immediately see anything beyond the statement about failing
-> >to activate.  I assume that path applies if there is a firmware there
-> >but loading it fails for some reason and we roll back and for
-> >that there is an error code.  
-> 
-> This case just occurred to me while writing the patch, I could not
-> find an answer in the spec.
+> Signed-off-by: Quanquan Cao <caoqq@fujitsu.com>
+Good find, though now I'm curious on whether you have a real system doing
+16 way interleave :)
 
-Let's ping the spec guys for a clarification...
-I'll cc you.
-
-
-Jonathan
-
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/region.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> >
-> >So I think this should return an error but not obvious if Invalid Input
-> >or Invalid Slot.  
-> 
-> Fine with me, I'll go with Invalid Slot.
-> 
-> Thanks,
-> Davidlohr
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0f05692bfec3..ce0e2d82bb2b 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -525,7 +525,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct resource *res;
+> -	u32 remainder = 0;
+> +	u64 remainder = 0;
+>  
+>  	lockdep_assert_held_write(&cxl_region_rwsem);
+>  
+> @@ -545,7 +545,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>  	    (cxlr->mode == CXL_DECODER_PMEM && uuid_is_null(&p->uuid)))
+>  		return -ENXIO;
+>  
+> -	div_u64_rem(size, SZ_256M * p->interleave_ways, &remainder);
+> +	div64_u64_rem(size, (u64)SZ_256M * p->interleave_ways, &remainder);
+>  	if (remainder)
+>  		return -EINVAL;
+>  
 
