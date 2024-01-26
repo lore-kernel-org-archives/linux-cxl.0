@@ -1,41 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CD61EA74
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 15:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537051D54D
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 15:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282484; cv=none; b=DxvKN9yQmcQH32g+eHSFByIAG7DtUPGxXPFKMTvFZKCStqLmSv9m5x+Nt5o/J9ca5AMTx1P58VgyeBqeArhtJebFOMkTCOSqwq5Y7NKK/Ja4IOL5q0Y/VfPSd4dpXyREzxqz/AZPoHA6KRY8SQoPcbM9y3xgTeJAhjSrTAjamt0=
+	t=1706283751; cv=none; b=ALsr9gevogMcdjUUcEqDBtBIgfHMTdvyEwHdqw6Jw/xdc5yrcM/ovjNTB91kdLYaUIZwRJQ9uapxcxcu9B0IiZbNEwYflFoj3pTGSYAjII+E+R/0aeqjqIKUCMM8dImmK6nw5NjVp/DYmZ3MEKq4ToZs55HE00wDyvc1/ESfMdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282484; c=relaxed/simple;
-	bh=+rXLzZdV9iVRpvoBxv7uegg29iS1vSPygQai1lL1Jto=;
+	s=arc-20240116; t=1706283751; c=relaxed/simple;
+	bh=VZtYS/vu5U/lBOH/P/hb3mhl+/bfgOTG1sRIB2iz2Es=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRVDURZyu7xBx/std7HsLSS0N3/ORD+Yv7trMF4yH0HY9wbD4ubzoy8yHuBfLe4tokLJjDOudj6go9Mnu+JgE71pjewCKS4nHFWoAEtjGaYyZgxYWLWuYjduI76cOVBeTImgHoxfRAWuxODb1Xm6c1MqcEyW5XOdHf6jNgDXoL8=
+	 MIME-Version:Content-Type; b=KcUwAg+u/kiUOYhAJa3Rqkweas8VOYnLpUJiXv/2+hIyN1NQKLTGO+mnwQBMDGXtB26LRtXb2VpU7j/pQc8ZHiK1VSr1QWwr/B8k1L9q8UAsdNEG41oZY6i24O+Y7QookSVvcCxXYtNz5dnsHA17UQ/hIYjdgsQUt5gVlcgzVV4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM1Xz4BQcz688d6;
-	Fri, 26 Jan 2024 23:18:11 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM21n26t3z6K6DL;
+	Fri, 26 Jan 2024 23:39:41 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7CA2C140516;
-	Fri, 26 Jan 2024 23:21:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 29B92140516;
+	Fri, 26 Jan 2024 23:42:22 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
- 2024 15:21:17 +0000
-Date: Fri, 26 Jan 2024 15:21:16 +0000
+ 2024 15:42:21 +0000
+Date: Fri, 26 Jan 2024 15:42:20 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	<nifan@outlook.com>, <jim.harris@samsung.com>
-Subject: Re: [PATCH v3 0/9] Enabling DCD emulation support in Qemu
-Message-ID: <20240126152116.00001dd3@Huawei.com>
-In-Reply-To: <6556af1fc8791_1a4bd32947e@iweiny-mobl.notmuch>
-References: <20231107180907.553451-1-nifan.cxl@gmail.com>
-	<6556af1fc8791_1a4bd32947e@iweiny-mobl.notmuch>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
+	<a.manzanares@samsung.com>, <mounika.k@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/2] hw/cxl: Add Transfer FW support
+Message-ID: <20240126154220.00002797@Huawei.com>
+In-Reply-To: <20240109070436.21253-2-dave@stgolabs.net>
+References: <20240109070436.21253-1-dave@stgolabs.net>
+	<20240109070436.21253-2-dave@stgolabs.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -46,152 +45,267 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 16 Nov 2023 16:09:03 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon,  8 Jan 2024 23:04:35 -0800
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> nifan.cxl@ wrote:
-> > From: Fan Ni <nifan.cxl@gmail.com>
-> > 
-> > 
-> > The patch series are based on Jonathan's branch cxl-2023-09-26.  
+> Per the latest 3.1 spec for supporting firmware update metadata
+> (no actual buffers). Aborting a xfer is currently unsupported
+> through a nop.
 > 
-> Finally getting around to trying this new series and the patch series does not
-> seem to apply on top of this branch?
-> 
-> Just to verify is this the top commit this work was based on?
-> 
->    d4edf131bbac [jonathan/cxl-2023-09-26] cxl/vendor: SK hynix Niagara Multi-Headed SLD Device
-> 
-> I seem to have found some issue with CDAT checksumming[1] which I'm not quite
-> sure about.
-> 
-> I went ahead and pulled your latest work from:
-> 
->     https://github.com/moking/qemu-jic-clone.git dcd-dev
-> 
->     abe893944bb3  hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
-> 
-> It still has this same problem.
-> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Hi Davidlohr.
 
-> Before I dig into this, is this the latest dcd branch?
-I've pushed out a new tree, but it's definitely in a may eat babies form...
+Whilst we may never notice from the OS as we expect it to send valid
+sets of transfers only, I'd like the emulation to incorporate more
+of the validity checks the spec requires such as:
+- Multiple part transfers must all be for same slot - any interleaved
+  ones for other slots result in error.
+- Retry of previous transfer or one that starts where previous transfer
+  ended - otherwise Out of Order detected.
 
-gitlab.com/jic23/qemu cxl-2024-26-01-draft
+So we have to hold state, and as such will have the information to
+set the slot as occupied with just one extra flag stored to say it is
+a FULL or END message.
 
-Only had the most basic of testing so far.  DCD rebase was messy as I've dragged
-it into the 'next to send upstream' location and various fixes including
-Ira's CDAT one have gone out already.
+Otherwise lgtm.
 
-I'm keen to try and land this in QEMU 9.0 which basically means we have until
-the end of Feb to shake out any problems.
-
-Some other work is at least somewhat built on top of this (because of the
-need to deal with DCD regions as well as pmem and volatile ones).
+Thanks,
 
 Jonathan
 
 
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 124 ++++++++++++++++++++++++++++++++++--
+>  include/hw/cxl/cxl_device.h |   9 +++
+>  2 files changed, 129 insertions(+), 4 deletions(-)
 > 
-> Has anything changed in how you specify DCD devices on the qemu command line
-> with this latest work?  Here is what I have:
-> 
-> ...
-> -device cxl-type3,bus=hb0rp0,memdev=cxl-mem0,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem0,id=cxl-dev0,lsa=cxl-lsa0,sn=0
-> -device cxl-type3,bus=hb0rp1,memdev=cxl-mem1,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem1,id=cxl-dev1,lsa=cxl-lsa1,sn=1
-> -device cxl-type3,bus=hb1rp0,memdev=cxl-mem2,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem2,id=cxl-dev2,lsa=cxl-lsa2,sn=2
-> -device cxl-type3,bus=hb1rp1,memdev=cxl-mem3,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem3,id=cxl-dev3,lsa=cxl-lsa3,sn=3
-> ...
-> 
-> 
-> Ira
-> 
-> [1] https://lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/
-> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 11ec8b648baf..0295ea8b29aa 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -60,6 +60,7 @@ enum {
+>          #define SET_INTERRUPT_POLICY   0x3
+>      FIRMWARE_UPDATE = 0x02,
+>          #define GET_INFO      0x0
+> +        #define TRANSFER      0x1
+>      TIMESTAMP   = 0x03,
+>          #define GET           0x0
+>          #define SET           0x1
+> @@ -815,6 +816,8 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
 >  
-> > The main changes include,
-> > 1. Update cxl_find_dc_region to detect the case the range of the extent cross
-> >     multiple DC regions.
-> > 2. Add comments to explain the checks performed in function
-> >     cxl_detect_malformed_extent_list. (Jonathan)
-> > 3. Minimize the checks in cmd_dcd_add_dyn_cap_rsp.(Jonathan)
-> > 4. Update total_extent_count in add/release dynamic capacity response function.
-> >     (Ira and Jorgen Hansen).
-> > 5. Fix the logic issue in test_bits and renamed it to
-> >     test_any_bits_set to clear its function.
-> > 6. Add pending extent list for dc extent add event.
-> > 7. When add extent response is received, use the pending-to-add list to
-> >     verify the extents are valid.
-> > 8. Add test_any_bits_set and cxl_insert_extent_to_extent_list declaration to
-> >     cxl_device.h so it can be used in different files.
-> > 9. Updated ct3d_qmp_cxl_event_log_enc to include dynamic capacity event
-> >     log type.
-> > 10. Extract the functionality to delete extent from extent list to a helper
-> >     function.
-> > 11. Move the update of the bitmap which reflects which blocks are backed with
-> > dc extents from the moment when a dc extent is offered to the moment when it
-> > is accepted from the host.
-> > 12. Free dc_name after calling address_space_init to avoid memory leak when
-> >     returning early. (Nathan)
-> > 13. Add code to detect and reject QMP requests without any extents. (Jonathan)
-> > 14. Add code to detect and reject QMP requests where the extent len is 0.
-> > 15. Change the QMP interface and move the region-id out of extents and now
-> >     each command only takes care of extent add/release request in a single
-> >     region. (Jonathan)
-> > 16. Change the region bitmap length from decode_len to len.
-> > 17. Rename "dpa" to "offset" in the add/release dc extent qmp interface.
-> >     (Jonathan)
-> > 18. Block any dc extent release command if the exact extent is not already in
-> >     the extent list of the device.
-> > 
-> > The code is tested together with Ira's kernel DCD support:
-> > https://github.com/weiny2/linux-kernel/tree/dcd-v3-2023-10-30
-> > 
-> > Cover letter from v2 is here:
-> > https://lore.kernel.org/linux-cxl/20230724162313.34196-1-fan.ni@samsung.com/T/#m63039621087023691c9749a0af1212deb5549ddf
-> > 
-> > Last version (v2) is here:
-> > https://lore.kernel.org/linux-cxl/20230725183939.2741025-1-fan.ni@samsung.com/
-> > 
-> > More DCD related discussions are here:
-> > https://lore.kernel.org/linux-cxl/650cc29ab3f64_50d07294e7@iweiny-mobl.notmuch/
-> > 
-> > 
-> > 
-> > Fan Ni (9):
-> >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-> >     payload of identify memory device command
-> >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-> >     and mailbox command support
-> >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
-> >     type3 memory devices
-> >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
-> >     devices
-> >   hw/mem/cxl_type3: Add host backend and address space handling for DC
-> >     regions
-> >   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
-> >     list mailbox support
-> >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
-> >     dynamic capacity response
-> >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
-> >     extents
-> >   hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
-> > 
-> >  hw/cxl/cxl-mailbox-utils.c  | 469 +++++++++++++++++++++++++++++-
-> >  hw/mem/cxl_type3.c          | 548 +++++++++++++++++++++++++++++++++---
-> >  hw/mem/cxl_type3_stubs.c    |  14 +
-> >  include/hw/cxl/cxl_device.h |  64 ++++-
-> >  include/hw/cxl/cxl_events.h |  15 +
-> >  qapi/cxl.json               |  60 +++-
-> >  6 files changed, 1123 insertions(+), 47 deletions(-)
-> > 
-> > -- 
-> > 2.42.0
-> >   
-> 
-> 
-> 
+> +#define CXL_FW_SLOTS 2
+> +
+>  /* CXL r3.0 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
+>  static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+>                                                 uint8_t *payload_in,
+> @@ -846,15 +849,118 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+>      fw_info = (void *)payload_out;
+>      memset(fw_info, 0, sizeof(*fw_info));
+>  
+> -    fw_info->slots_supported = 2;
+> -    fw_info->slot_info = BIT(0) | BIT(3);
+> +    fw_info->slots_supported = CXL_FW_SLOTS;
+> +    fw_info->slot_info = (cci->fw.active_slot & 0x7) |
+> +            ((cci->fw.staged_slot & 0x7) << 3);
+>      fw_info->caps = 0;
+> -    pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
+> +
+> +    if (cci->fw.slot[0]) {
+> +        pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
+> +    }
+> +    if (cci->fw.slot[1]) {
+> +        pstrcpy(fw_info->fw_rev2, sizeof(fw_info->fw_rev2), "BWFW VERSION 1");
+> +    }
+> +    if (cci->fw.slot[2]) {
+
+Only support 2 slots... So could skip these 2.
+
+> +        pstrcpy(fw_info->fw_rev3, sizeof(fw_info->fw_rev3), "BWFW VERSION 2");
+> +    }
+> +    if (cci->fw.slot[3]) {
+> +        pstrcpy(fw_info->fw_rev4, sizeof(fw_info->fw_rev4), "BWFW VERSION 3");
+> +    }
+>  
+>      *len_out = sizeof(*fw_info);
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
+> +#define CXL_FW_XFER_ALIGNMENT   128
+> +
+> +#define CXL_FW_XFER_ACTION_FULL	    0x0
+> +#define CXL_FW_XFER_ACTION_INIT	    0x1
+> +#define CXL_FW_XFER_ACTION_CONTINUE 0x2
+> +#define CXL_FW_XFER_ACTION_END	    0x3
+> +#define CXL_FW_XFER_ACTION_ABORT    0x4
+> +
+> +#define CXL_FW_SIZE  0x02000000 /* 32 mb */
+> +
+> +static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    CXLDeviceState *cxl_dstate = &CXL_TYPE3(cci->d)->cxl_dstate;
+> +    struct {
+> +        uint8_t action;
+> +        uint8_t slot;
+> +        uint8_t caps;
+> +        uint8_t rsvd1[2];
+> +        uint32_t offset;
+> +        uint8_t rsvd2[0x78];
+> +        uint8_t data[];
+> +    } QEMU_PACKED *fw_transfer;
+> +    size_t offset, length;
+> +
+> +    if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
+> +        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER)) {
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+> +    fw_transfer = (void *)payload_in;
+> +
+> +    if (cci->fw.transfering &&
+> +        (fw_transfer->action == CXL_FW_XFER_ACTION_FULL ||
+> +         fw_transfer->action == CXL_FW_XFER_ACTION_INIT)) {
+> +        return CXL_MBOX_FW_XFER_IN_PROGRESS;
+Need to return this also if the slot number is different from
+an earlier transfer.
+
+> +    }
+> +
+> +    offset = fw_transfer->offset * CXL_FW_XFER_ALIGNMENT;
+
+If not INIT or FULL, we need to stash the end of previous
+transfer and make sure this comes next as otherwise should
+return FW Transfer Out of Order.
+For extra fun we also need to stash the previous transfer
+parameters to allow for 'Back-to-back retransmission of any FW
+package part is permitted during a transfer.' in 8.2.9.3.2 or r3.1
+
+So minimum needed across multiple calls is length + end address of
+previous transfer (so we can find the start or the end).
+
+
+> +    length = len - sizeof(*fw_transfer);
+> +    if (offset + length > CXL_FW_SIZE) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    switch (fw_transfer->action) {
+> +    case CXL_FW_XFER_ACTION_FULL: /* ignores offset */
+> +    case CXL_FW_XFER_ACTION_END:
+> +        if (fw_transfer->slot == 0 ||
+> +            fw_transfer->slot == cci->fw.active_slot ||
+> +            fw_transfer->slot > CXL_FW_SLOTS) {
+> +            return CXL_MBOX_FW_INVALID_SLOT;
+> +        }
+> +        /*
+> +         * Optimistically mark the slot used now (as opposed
+> +         * to at the end of the successful transfer). That
+> +         * way we don't need to keep command context.
+
+Hmm. I doubt the OS will even notice this, but it's not ideal.
+Given for ordering checks we have to store a bunch of stuff
+is it really that bad to store the slot as well?
+
+> +         */
+> +        cci->fw.slot[fw_transfer->slot - 1] = true;
+> +        break;
+> +    case CXL_FW_XFER_ACTION_INIT:
+> +        if (offset != 0) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        /* fallthrough */
+> +    case CXL_FW_XFER_ACTION_CONTINUE:
+> +        break;
+> +    case CXL_FW_XFER_ACTION_ABORT: /* nop */
+> +        return CXL_MBOX_SUCCESS;
+> +    default:
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    cci->fw.transfering = true;
+> +
+> +    cci->bg.runtime = 2 * 1000UL;
+> +    *len_out = 0;
+> +
+> +    return CXL_MBOX_BG_STARTED;
+> +}
+> +
+> +static void __do_firmware_xfer(CXLCCI *cci)
+> +{
+> +    cci->fw.transfering = false;
+> +}
+> +
+>  /* CXL r3.0 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
+>  static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
+>                                      uint8_t *payload_in,
+> @@ -2165,6 +2271,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>                                        ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE },
+>      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
+>          cmd_firmware_update_get_info, 0, 0 },
+> +    [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
+> +        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
+>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+>      [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
+>                           8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+> @@ -2278,7 +2386,8 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+>              h == cmd_media_get_poison_list ||
+>              h == cmd_media_inject_poison ||
+>              h == cmd_media_clear_poison ||
+> -            h == cmd_sanitize_overwrite) {
+> +            h == cmd_sanitize_overwrite ||
+> +            h == cmd_firmware_update_transfer) {
+>              return CXL_MBOX_MEDIA_DISABLED;
+>          }
+>      }
+> @@ -2325,6 +2434,9 @@ static void bg_timercb(void *opaque)
+>              CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>  
+>              switch (cci->bg.opcode) {
+> +            case 0x0201: /* fw transfer */
+> +                __do_firmware_xfer(cci);
+> +                break;
+>              case 0x4400: /* sanitize */
+>                  __do_sanitization(ct3d);
+>                  cxl_dev_enable_media(&ct3d->cxl_dstate);
+> @@ -2388,6 +2500,10 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+>      cci->payload_max = payload_max;
+>      cxl_rebuild_cel(cci);
+>  
+> +    cci->fw.active_slot = cci->fw.staged_slot = 1;
+> +    memset(cci->fw.slot, 0, sizeof(cci->fw.slot));
+> +    cci->fw.slot[cci->fw.active_slot - 1] = true;
+> +
+>      cci->bg.complete_pct = 0;
+>      cci->bg.starttime = 0;
+>      cci->bg.runtime = 0;
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index b2cb280e1631..b4373bfe4d2a 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -201,6 +201,15 @@ typedef struct CXLCCI {
+>          uint64_t runtime;
+>          QEMUTimer *timer;
+>      } bg;
+> +
+> +    /* firmware update */
+> +    struct {
+> +        bool transfering;
+> +        int active_slot;
+> +        int staged_slot;
+> +        bool slot[4];
+> +    } fw;
+> +
+>      size_t payload_max;
+>      /* Pointer to device hosting the CCI */
+>      DeviceState *d;
 
