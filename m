@@ -1,40 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2916510A3F
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2920A18040
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706271556; cv=none; b=WVWTIYfH6vu7OCnZcoUXmMzWgJ9Nrz8Zou8v7JwArq9kyfkm1rg51yoM/Q/pi/binwrPFZOE+0kQlV7jpSo1grqttAYnBAEHEReFh8f7RWuDGU7ql5GQtJqYUJap4hS0lmzHt8on5WNt+3eZuJEWB5VlzsNno0r8BSCaxUcD+b8=
+	t=1706272774; cv=none; b=Jmc9tQRvyL3cf1Z/lfDYDNMxt7ib3VC7rzur67oDljxVS90MmCL59UvrYO/JmLWAVn9EhTcIHmAoZrXgvSCfHHOjaHv9tqce7gQmfMynQ8I6H37q4wZxmcaQ2qt3C0bBtyhuuCFzOXGIR+zVqtFzFqx9DmQqY7I/JCtEuYXFLpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706271556; c=relaxed/simple;
-	bh=2nUYpMnoeO0JR1r1/yi/E6fbTxQe9gpLvZkYCXQCMQk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZkAiXFrCKyFw9SsLmvt0wJ8JrmA0xiAZeltVAzBt6rqHB7+ftptxGsuzYfnDyVYvw4XgO4va894R1+tfShmiUg0tr8EqUzp0dRflZNI3oFe3OC/pwG+kgD4cJHUA588aDK4JYC2IAHC0CvE999a/sPZd3Xs/NYhIR4fxKIaREFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1706272774; c=relaxed/simple;
+	bh=GEr1shwMOCFDQBxr28+qJ0bcQH7UJKgpeLNwOE7ZUfc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LJW3vwq7oKEjcUeCe/3iWITlSuZX7Itn3eaJtgp4e5WFBMVvHrlHt3bHLpHT1T+GADQfkcLaGUPFyBFHtOPJDGzuC0FfGjdLOQIINCb1AnkCIftgZxQrKA8rS5JjxenC1/qjgXButeN0gkNYlYOTZM77NBMcEn9vtmNigXs8Je8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLxWL12gdz6F91P;
-	Fri, 26 Jan 2024 20:16:30 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLxyG0T8qz6J9v3;
+	Fri, 26 Jan 2024 20:36:22 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 849F5140D26;
-	Fri, 26 Jan 2024 20:19:10 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Jan 2024 12:19:06 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
-	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, <linuxarm@huawei.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v2 5/5] hw/cxl: Standardize all references on CXL r3.1 and minor updates
-Date: Fri, 26 Jan 2024 12:16:36 +0000
-Message-ID: <20240126121636.24611-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240126121636.24611-1-Jonathan.Cameron@huawei.com>
-References: <20240126121636.24611-1-Jonathan.Cameron@huawei.com>
+	by mail.maildlp.com (Postfix) with ESMTPS id 9E49E140A86;
+	Fri, 26 Jan 2024 20:39:27 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
+ 2024 12:39:27 +0000
+Date: Fri, 26 Jan 2024 12:39:26 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Sajjan Rao <sajjanr@gmail.com>
+CC: Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: qemu cxl memory expander shows numa_node -1
+Message-ID: <20240126123926.000051bd@Huawei.com>
+In-Reply-To: <CAAg4Pap9KzkgX=fgE7vNJYxEpGbHA-NVsgBY5npXizUbMhjp9A@mail.gmail.com>
+References: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
+	<CAGEDW0fWCfuG3KrNSwDjNVGAZVL9NJgF26Jqyd840HfQdNGLbA@mail.gmail.com>
+	<CAAg4Pard=zh_5p650UcNdQEoQWZLM6G7KRqdPQHLmaR4oZMJ3w@mail.gmail.com>
+	<CAGEDW0dVEk-QXuL=DPVvSP4t5cafz6N-r_SrCxgFnBfFOsixSA@mail.gmail.com>
+	<CAAg4PaqgZcTXkWuys7FZjQdRChTkKj-ZnJQCdxpTMCxy4Hghow@mail.gmail.com>
+	<20230823175056.00001a84@Huawei.com>
+	<CAAg4ParSB4_2FU2bu96A=3tSNuwHqZwK0wCS18EJoPAq9kYEkw@mail.gmail.com>
+	<CAAg4Pap9KzkgX=fgE7vNJYxEpGbHA-NVsgBY5npXizUbMhjp9A@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,929 +49,410 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Previously not all references mentioned any spec version at all.
-Given r3.1 is the current specification available for evaluation at
-www.computeexpresslink.org update references to refer to that.
-Hopefully this won't become a never ending job.
+On Thu, 25 Jan 2024 13:45:09 +0530
+Sajjan Rao <sajjanr@gmail.com> wrote:
 
-A few structure definitions have been updated to add new fields.
-Defaults of 0 and read only are valid choices for these new DVSEC
-registers so go with that for now.
+> Looks like something changed in QEMU 8.2 that broke running code out
+> of CXL memory with KVM disabled.
+> I used "numactl --membind 2 ls" as suggested by Dimitrios earlier,
+> this worked for me until I updated to the latest QEMU.
+>=20
+> Is this a known issue? Or am I missing something?
 
-There are additional error codes and some of the 'questions' in
-the comments are resolved now.
+I'm confused on how the description below ever worked.
+Assigning the underlying memdev=3Dcxl-mem1 to a numa node isn't going
+to correctly build the connections the CFMWS PA range.
 
-Update documentation reference to point to the CXL r3.1 specification
-with naming closer to what is on the cover.
+I think you are mapping the same memory backend twice - once via
+the normal NUMA node configuration as normal RAM (part of the -m 10G)
+and once via the CXL type3 device which then ends up connected up behind
+the CFWMS.  This is not a good idea as there are two paths to the same
+memory.  CXL memory should not be part of the size provided via the -m
+parameter.
 
-For cases where there are structure version numbers, add defines
-so they can be found next to the register definitions.
+The NUMA configuration for CXL memory in QEMU (which is assuming OS first
+set up today) does not use the ACPI tables (SRAT/SLIT/HMAT) that will
+result from -numa entries in the QEMU command line but instead the kernel
+creates a NUMA node per CFWMS entry and any devices connected to that end
+up in appropriate NUMA node.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Jonathan
 
----
-v2: (Thanks to Fan Ni for reviewing)
-- Fix some wrong section numbers:
-  Identify Memory Device
-  Get Partition Info
-  Get LSA
-  Set LSA
----
- docs/system/devices/cxl.rst    |  3 +-
- include/hw/cxl/cxl_cdat.h      | 10 ++---
- include/hw/cxl/cxl_component.h | 26 ++++++++-----
- include/hw/cxl/cxl_device.h    | 60 +++++++++++++++++++++---------
- include/hw/cxl/cxl_events.h    | 18 ++++-----
- include/hw/cxl/cxl_pci.h       | 67 ++++++++++++++++++++++++----------
- hw/cxl/cxl-component-utils.c   | 17 +++++----
- hw/cxl/cxl-device-utils.c      |  8 ++--
- hw/cxl/cxl-events.c            |  2 +-
- hw/cxl/cxl-mailbox-utils.c     | 49 ++++++++++++++-----------
- hw/mem/cxl_type3.c             |  6 +--
- hw/pci-bridge/cxl_downstream.c |  4 +-
- hw/pci-bridge/cxl_root_port.c  |  4 +-
- hw/pci-bridge/cxl_upstream.c   |  4 +-
- 14 files changed, 174 insertions(+), 104 deletions(-)
-
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index 6ab5f72473..10a0e9bc9f 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -411,5 +411,4 @@ References
- 
-  - Consortium website for specifications etc:
-    http://www.computeexpresslink.org
-- - Compute Express link Revision 2 specification, October 2020
-- - CEDT CFMWS & QTG _DSM ECN May 2021
-+ - Compute Express Link (CXL) Specification, Revision 3.1, August 2023
-diff --git a/include/hw/cxl/cxl_cdat.h b/include/hw/cxl/cxl_cdat.h
-index 7f67638685..8e3d094608 100644
---- a/include/hw/cxl/cxl_cdat.h
-+++ b/include/hw/cxl/cxl_cdat.h
-@@ -16,17 +16,17 @@
- /*
-  * Reference:
-  *   Coherent Device Attribute Table (CDAT) Specification, Rev. 1.03, July. 2022
-- *   Compute Express Link (CXL) Specification, Rev. 3.0, Aug. 2022
-+ *   Compute Express Link (CXL) Specification, Rev. 3.1, Aug. 2023
-  */
--/* Table Access DOE - CXL r3.0 8.1.11 */
-+/* Table Access DOE - CXL r3.1 8.1.11 */
- #define CXL_DOE_TABLE_ACCESS      2
- #define CXL_DOE_PROTOCOL_CDAT     ((CXL_DOE_TABLE_ACCESS << 16) | CXL_VENDOR_ID)
- 
--/* Read Entry - CXL r3.0 8.1.11.1 */
-+/* Read Entry - CXL r3.1 8.1.11.1 */
- #define CXL_DOE_TAB_TYPE_CDAT 0
- #define CXL_DOE_TAB_ENT_MAX 0xFFFF
- 
--/* Read Entry Request - CXL r3.0 8.1.11.1 Table 8-13 */
-+/* Read Entry Request - CXL r3.1 8.1.11.1 Table 8-13 */
- #define CXL_DOE_TAB_REQ 0
- typedef struct CDATReq {
-     DOEHeader header;
-@@ -35,7 +35,7 @@ typedef struct CDATReq {
-     uint16_t entry_handle;
- } QEMU_PACKED CDATReq;
- 
--/* Read Entry Response - CXL r3.0 8.1.11.1 Table 8-14 */
-+/* Read Entry Response - CXL r3.1 8.1.11.1 Table 8-14 */
- #define CXL_DOE_TAB_RSP 0
- typedef struct CDATRsp {
-     DOEHeader header;
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index b5da72b789..0e5d35c263 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -10,7 +10,7 @@
- #ifndef CXL_COMPONENT_H
- #define CXL_COMPONENT_H
- 
--/* CXL 2.0 - 8.2.4 */
-+/* CXL r3.1 Section 8.2.4: CXL.cache and CXL.mem Registers  */
- #define CXL2_COMPONENT_IO_REGION_SIZE 0x1000
- #define CXL2_COMPONENT_CM_REGION_SIZE 0x1000
- #define CXL2_COMPONENT_BLOCK_SIZE 0x10000
-@@ -34,10 +34,11 @@ enum reg_type {
-  * Capability registers are defined at the top of the CXL.cache/mem region and
-  * are packed. For our purposes we will always define the caps in the same
-  * order.
-- * CXL 2.0 - 8.2.5 Table 142 for details.
-+ * CXL r3.1 Table 8-22: CXL_CAPABILITY_ID Assignment for details.
-  */
- 
--/* CXL 2.0 - 8.2.5.1 */
-+/* CXL r3.1 Section 8.2.4.1: CXL Capability Header Register */
-+#define CXL_CAPABILITY_VERSION 1
- REG32(CXL_CAPABILITY_HEADER, 0)
-     FIELD(CXL_CAPABILITY_HEADER, ID, 0, 16)
-     FIELD(CXL_CAPABILITY_HEADER, VERSION, 16, 4)
-@@ -102,12 +103,13 @@ REG32(CXL_RAS_ERR_HEADER0, CXL_RAS_REGISTERS_OFFSET + 0x18)
- #define CXL_RAS_ERR_HEADER_NUM 32
- /* Offset 0x18 - 0x58 reserved for RAS logs */
- 
--/* 8.2.5.10 - CXL Security Capability Structure */
-+/* CXL r3.1 Section 8.2.4.18: CXL Security Capability Structure */
- #define CXL_SEC_REGISTERS_OFFSET \
-     (CXL_RAS_REGISTERS_OFFSET + CXL_RAS_REGISTERS_SIZE)
- #define CXL_SEC_REGISTERS_SIZE   0 /* We don't implement 1.1 downstream ports */
- 
- /* CXL r3.1 Section 8.2.4.19: CXL Link Capability Structure */
-+#define CXL_LINK_CAPABILITY_VERSION 2
- #define CXL_LINK_REGISTERS_OFFSET \
-     (CXL_SEC_REGISTERS_OFFSET + CXL_SEC_REGISTERS_SIZE)
- #define CXL_LINK_REGISTERS_SIZE   0x50
-@@ -175,18 +177,24 @@ HDM_DECODER_INIT(1);
- HDM_DECODER_INIT(2);
- HDM_DECODER_INIT(3);
- 
--/* 8.2.5.13 - CXL Extended Security Capability Structure (Root complex only) */
-+/*
-+ * CXL r3.1 Section 8.2.4.21: CXL Extended Security Capability Structure
-+ * (Root complex only)
-+ */
- #define EXTSEC_ENTRY_MAX        256
-+#define CXL_EXTSEC_CAP_VERSION 2
- #define CXL_EXTSEC_REGISTERS_OFFSET \
-     (CXL_HDM_REGISTERS_OFFSET + CXL_HDM_REGISTERS_SIZE)
- #define CXL_EXTSEC_REGISTERS_SIZE   (8 * EXTSEC_ENTRY_MAX + 4)
- 
--/* 8.2.5.14 - CXL IDE Capability Structure */
-+/* CXL r3.1 Section 8.2.4.22: CXL IDE Capability Structure */
-+#define CXL_IDE_CAP_VERSION 2
- #define CXL_IDE_REGISTERS_OFFSET \
-     (CXL_EXTSEC_REGISTERS_OFFSET + CXL_EXTSEC_REGISTERS_SIZE)
--#define CXL_IDE_REGISTERS_SIZE   0x20
-+#define CXL_IDE_REGISTERS_SIZE   0x24
- 
--/* 8.2.5.15 - CXL Snoop Filter Capability Structure */
-+/* CXL r3.1 Section 8.2.4.23 - CXL Snoop Filter Capability Structure */
-+#define CXL_SNOOP_CAP_VERSION 1
- #define CXL_SNOOP_REGISTERS_OFFSET \
-     (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
- #define CXL_SNOOP_REGISTERS_SIZE   0x8
-@@ -202,7 +210,7 @@ typedef struct component_registers {
-     MemoryRegion component_registers;
- 
-     /*
--     * 8.2.4 Table 141:
-+     * CXL r3.1 Table 8-21: CXL Subsystem Component Register Ranges
-      *   0x0000 - 0x0fff CXL.io registers
-      *   0x1000 - 0x1fff CXL.cache and CXL.mem
-      *   0x2000 - 0xdfff Implementation specific
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 9f51c586d7..d8e184c4ba 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -58,18 +58,30 @@
-  *
-  */
- 
--#define CXL_DEVICE_CAP_HDR1_OFFSET 0x10 /* Figure 138 */
--#define CXL_DEVICE_CAP_REG_SIZE 0x10 /* 8.2.8.2 */
--#define CXL_DEVICE_CAPS_MAX 4 /* 8.2.8.2.1 + 8.2.8.5 */
-+/* CXL r3.1 Figure 8-12: CXL Device Registers */
-+#define CXL_DEVICE_CAP_HDR1_OFFSET 0x10
-+/* CXL r3.1 Section 8.2.8.2: CXL Device Capability Header Register */
-+#define CXL_DEVICE_CAP_REG_SIZE 0x10
-+
-+/*
-+ * CXL r3.1 Section 8.2.8.2.1: CXL Device Capabilities +
-+ * CXL r3.1 Section 8.2.8.5: Memory Device Capabilities
-+ */
-+#define CXL_DEVICE_CAPS_MAX 4
- #define CXL_CAPS_SIZE \
-     (CXL_DEVICE_CAP_REG_SIZE * (CXL_DEVICE_CAPS_MAX + 1)) /* +1 for header */
- 
- #define CXL_DEVICE_STATUS_REGISTERS_OFFSET 0x80 /* Read comment above */
--#define CXL_DEVICE_STATUS_REGISTERS_LENGTH 0x8 /* 8.2.8.3.1 */
-+/*
-+ * CXL r3.1 Section 8.2.8.3: Device Status Registers
-+ * As it is the only Device Status Register in CXL r3.1
-+ */
-+#define CXL_DEVICE_STATUS_REGISTERS_LENGTH 0x8
- 
- #define CXL_MAILBOX_REGISTERS_OFFSET \
-     (CXL_DEVICE_STATUS_REGISTERS_OFFSET + CXL_DEVICE_STATUS_REGISTERS_LENGTH)
--#define CXL_MAILBOX_REGISTERS_SIZE 0x20 /* 8.2.8.4, Figure 139 */
-+/* CXL r3.1 Figure 8-13: Mailbox Registers */
-+#define CXL_MAILBOX_REGISTERS_SIZE 0x20
- #define CXL_MAILBOX_PAYLOAD_SHIFT 11
- #define CXL_MAILBOX_MAX_PAYLOAD_SIZE (1 << CXL_MAILBOX_PAYLOAD_SHIFT)
- #define CXL_MAILBOX_REGISTERS_LENGTH \
-@@ -83,7 +95,7 @@
-     (CXL_DEVICE_CAP_REG_SIZE + CXL_DEVICE_STATUS_REGISTERS_LENGTH +     \
-      CXL_MAILBOX_REGISTERS_LENGTH + CXL_MEMORY_DEVICE_REGISTERS_LENGTH)
- 
--/* 8.2.8.4.5.1 Command Return Codes */
-+/* CXL r3.1 Table 8-34: Command Return Codes */
- typedef enum {
-     CXL_MBOX_SUCCESS = 0x0,
-     CXL_MBOX_BG_STARTED = 0x1,
-@@ -108,7 +120,17 @@ typedef enum {
-     CXL_MBOX_INCORRECT_PASSPHRASE = 0x14,
-     CXL_MBOX_UNSUPPORTED_MAILBOX = 0x15,
-     CXL_MBOX_INVALID_PAYLOAD_LENGTH = 0x16,
--    CXL_MBOX_MAX = 0x17
-+    CXL_MBOX_INVALID_LOG = 0x17,
-+    CXL_MBOX_INTERRUPTED = 0x18,
-+    CXL_MBOX_UNSUPPORTED_FEATURE_VERSION = 0x19,
-+    CXL_MBOX_UNSUPPORTED_FEATURE_SELECTION_VALUE = 0x1a,
-+    CXL_MBOX_FEATURE_TRANSFER_IN_PROGRESS = 0x1b,
-+    CXL_MBOX_FEATURE_TRANSFER_OUT_OF_ORDER = 0x1c,
-+    CXL_MBOX_RESOURCES_EXHAUSTED = 0x1d,
-+    CXL_MBOX_INVALID_EXTENT_LIST = 0x1e,
-+    CXL_MBOX_TRANSFER_OUT_OF_ORDER = 0x1f,
-+    CXL_MBOX_REQUEST_ABORT_NOTSUP = 0x20,
-+    CXL_MBOX_MAX = 0x20
- } CXLRetCode;
- 
- typedef struct CXLCCI CXLCCI;
-@@ -169,7 +191,7 @@ typedef struct CXLCCI {
- typedef struct cxl_device_state {
-     MemoryRegion device_registers;
- 
--    /* mmio for device capabilities array - 8.2.8.2 */
-+    /* CXL r3.1 Section 8.2.8.3: Device Status Registers */
-     struct {
-         MemoryRegion device;
-         union {
-@@ -231,7 +253,7 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d);
- void cxl_device_register_init_swcci(CSWMBCCIDev *sw);
- 
- /*
-- * CXL 2.0 - 8.2.8.1 including errata F4
-+ * CXL r3.1 Section 8.2.8.1: CXL Device Capabilities Array Register
-  * Documented as a 128 bit register, but 64 bit accesses and the second
-  * 64 bits are currently reserved.
-  */
-@@ -246,17 +268,18 @@ void cxl_event_set_status(CXLDeviceState *cxl_dstate, CXLEventLogType log_type,
- /*
-  * Helper macro to initialize capability headers for CXL devices.
-  *
-- * In the 8.2.8.2, this is listed as a 128b register, but in 8.2.8, it says:
-+ * In CXL r3.1 Section 8.2.8.2: CXL Device Capablity Header Register, this is
-+ * listed as a 128b register, but in CXL r3.1 Section 8.2.8: CXL Device Register
-+ * Interface, it says:
-  * > No registers defined in Section 8.2.8 are larger than 64-bits wide so that
-  * > is the maximum access size allowed for these registers. If this rule is not
-- * > followed, the behavior is undefined
-+ * > followed, the behavior is undefined.
-  *
-- * CXL 2.0 Errata F4 states further that the layouts in the specification are
-- * shown as greater than 128 bits, but implementations are expected to
-- * use any size of access up to 64 bits.
-+ * > To illustrate how the fields fit together, the layouts ... are shown as
-+ * > wider than a 64 bit register. Implemenations are expected to use any size
-+ * > accesses for this information up to 64 bits without lost of functionality
-  *
-- * Here we've chosen to make it 4 dwords. The spec allows any pow2 multiple
-- * access to be used for a register up to 64 bits.
-+ * Here we've chosen to make it 4 dwords.
-  */
- #define CXL_DEVICE_CAPABILITY_HEADER_REGISTER(n, offset)  \
-     REG32(CXL_DEV_##n##_CAP_HDR0, offset)                 \
-@@ -306,7 +329,8 @@ void cxl_initialize_t3_ld_cci(CXLCCI *cci, DeviceState *d,
-                        CAP_LENGTH, CXL_##reg##_REGISTERS_LENGTH);          \
-     } while (0)
- 
--/* CXL 3.0 8.2.8.3.1 Event Status Register */
-+/* CXL r3.2 Section 8.2.8.3.1: Event Status Register */
-+#define CXL_DEVICE_STATUS_VERSION 2
- REG64(CXL_DEV_EVENT_STATUS, 0)
-     FIELD(CXL_DEV_EVENT_STATUS, EVENT_STATUS, 0, 32)
- 
-@@ -348,6 +372,8 @@ REG64(CXL_DEV_BG_CMD_STS, 0x18)
- /* CXL r3.1 Section 8.2.8.4.8: Command Payload Registers */
- REG32(CXL_DEV_CMD_PAYLOAD, 0x20)
- 
-+/* CXL r3.1 Section 8.2.8.4.1: Memory Device Status Registers */
-+#define CXL_MEM_DEV_STATUS_VERSION 1
- REG64(CXL_MEM_DEV_STS, 0)
-     FIELD(CXL_MEM_DEV_STS, FATAL, 0, 1)
-     FIELD(CXL_MEM_DEV_STS, FW_HALT, 1, 1)
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index d778487b7e..5170b8dbf8 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -13,7 +13,7 @@
- #include "qemu/uuid.h"
- 
- /*
-- * CXL rev 3.0 section 8.2.9.2.2; Table 8-49
-+ * CXL r3.1 section 8.2.9.2.2: Get Event Records (Opcode 0100h); Table 8-52
-  *
-  * Define these as the bit position for the event status register for ease of
-  * setting the status.
-@@ -29,7 +29,7 @@ typedef enum CXLEventLogType {
- 
- /*
-  * Common Event Record Format
-- * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-+ * CXL r3.1 section 8.2.9.2.1: Event Records; Table 8-43
-  */
- #define CXL_EVENT_REC_HDR_RES_LEN 0xf
- typedef struct CXLEventRecordHdr {
-@@ -52,7 +52,7 @@ typedef struct CXLEventRecordRaw {
- 
- /*
-  * Get Event Records output payload
-- * CXL rev 3.0 section 8.2.9.2.2; Table 8-50
-+ * CXL r3.1 section 8.2.9.2.2; Table 8-53
-  */
- #define CXL_GET_EVENT_FLAG_OVERFLOW     BIT(0)
- #define CXL_GET_EVENT_FLAG_MORE_RECORDS BIT(1)
-@@ -70,7 +70,7 @@ typedef struct CXLGetEventPayload {
- 
- /*
-  * Clear Event Records input payload
-- * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
-+ * CXL r3.1 section 8.2.9.2.3; Table 8-54
-  */
- typedef struct CXLClearEventPayload {
-     uint8_t event_log;      /* CXLEventLogType */
-@@ -80,10 +80,10 @@ typedef struct CXLClearEventPayload {
-     uint16_t handle[];
- } CXLClearEventPayload;
- 
--/**
-+/*
-  * Event Interrupt Policy
-  *
-- * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
-+ * CXL r3.1 section 8.2.9.2.4; Table 8-55
-  */
- typedef enum CXLEventIntMode {
-     CXL_INT_NONE     = 0x00,
-@@ -106,7 +106,7 @@ typedef struct CXLEventInterruptPolicy {
- 
- /*
-  * General Media Event Record
-- * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ * CXL r3.1 Section 8.2.9.2.1.1; Table 8-45
-  */
- #define CXL_EVENT_GEN_MED_COMP_ID_SIZE  0x10
- #define CXL_EVENT_GEN_MED_RES_SIZE      0x2e
-@@ -126,7 +126,7 @@ typedef struct CXLEventGenMedia {
- 
- /*
-  * DRAM Event Record
-- * CXL Rev 3.0 Section 8.2.9.2.1.2: Table 8-44
-+ * CXL r3.1 Section 8.2.9.2.1.2: Table 8-46
-  * All fields little endian.
-  */
- typedef struct CXLEventDram {
-@@ -149,7 +149,7 @@ typedef struct CXLEventDram {
- 
- /*
-  * Memory Module Event Record
-- * CXL Rev 3.0 Section 8.2.9.2.1.3: Table 8-45
-+ * CXL r3.1 Section 8.2.9.2.1.3: Table 8-47
-  * All fields little endian.
-  */
- typedef struct CXLEventMemoryModule {
-diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
-index ddf01a543b..265db6c407 100644
---- a/include/hw/cxl/cxl_pci.h
-+++ b/include/hw/cxl/cxl_pci.h
-@@ -16,9 +16,8 @@
- #define PCIE_DVSEC_HEADER1_OFFSET 0x4 /* Offset from start of extend cap */
- #define PCIE_DVSEC_ID_OFFSET 0x8
- 
--#define PCIE_CXL_DEVICE_DVSEC_LENGTH 0x38
--#define PCIE_CXL1_DEVICE_DVSEC_REVID 0
--#define PCIE_CXL2_DEVICE_DVSEC_REVID 1
-+#define PCIE_CXL_DEVICE_DVSEC_LENGTH 0x3C
-+#define PCIE_CXL31_DEVICE_DVSEC_REVID 3
- 
- #define EXTENSIONS_PORT_DVSEC_LENGTH 0x28
- #define EXTENSIONS_PORT_DVSEC_REVID 0
-@@ -29,8 +28,8 @@
- #define GPF_DEVICE_DVSEC_LENGTH 0x10
- #define GPF_DEVICE_DVSEC_REVID 0
- 
--#define PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0 0x14
--#define PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0  1
-+#define PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH 0x20
-+#define PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID  2
- 
- #define REG_LOC_DVSEC_LENGTH 0x24
- #define REG_LOC_DVSEC_REVID  0
-@@ -55,16 +54,26 @@ typedef struct DVSECHeader {
- QEMU_BUILD_BUG_ON(sizeof(DVSECHeader) != 10);
- 
- /*
-- * CXL 2.0 devices must implement certain DVSEC IDs, and can [optionally]
-+ * CXL r3.1 Table 8-2: CXL DVSEC ID Assignment
-+ * Devices must implement certain DVSEC IDs, and can [optionally]
-  * implement others.
-+ * (x) - IDs in Table 8-2.
-  *
-- * CXL 2.0 Device: 0, [2], 5, 8
-- * CXL 2.0 RP: 3, 4, 7, 8
-- * CXL 2.0 Upstream Port: [2], 7, 8
-- * CXL 2.0 Downstream Port: 3, 4, 7, 8
-+ * CXL RCD (D1):         0, [2], [5], 7, [8], A  - Not emulated yet
-+ * CXL RCD USP (UP1):    7, [8]                  - Not emulated yet
-+ * CXL RCH DSP (DP1):    7, [8]
-+ * CXL SLD (D2):         0, [2], 5, 7, 8, [A]
-+ * CXL LD (LD):          0, [2], 5, 7, 8
-+ * CXL RP (R):           3, 4, 7, 8
-+ * CXL Switch USP (USP): [2], 7, 8
-+ * CXL Switch DSP (DSP): 3, 4, 7, 8
-+ * FM-Owned LD (FMLD):   0, [2], 7, 8, 9
-  */
- 
--/* CXL 2.0 - 8.1.3 (ID 0001) */
-+/*
-+ * CXL r3.1 Section 8.1.3: PCIe DVSEC for Devices
-+ * DVSEC ID: 0, Revision: 3
-+ */
- typedef struct CXLDVSECDevice {
-     DVSECHeader hdr;
-     uint16_t cap;
-@@ -82,10 +91,14 @@ typedef struct CXLDVSECDevice {
-     uint32_t range2_size_lo;
-     uint32_t range2_base_hi;
-     uint32_t range2_base_lo;
--} CXLDVSECDevice;
--QEMU_BUILD_BUG_ON(sizeof(CXLDVSECDevice) != 0x38);
-+    uint16_t cap3;
-+} QEMU_PACKED CXLDVSECDevice;
-+QEMU_BUILD_BUG_ON(sizeof(CXLDVSECDevice) != 0x3A);
- 
--/* CXL 2.0 - 8.1.5 (ID 0003) */
-+/*
-+ * CXL r3.1 Section 8.1.5: CXL Extensions DVSEC for Ports
-+ * DVSEC ID: 3, Revision: 0
-+ */
- typedef struct CXLDVSECPortExt {
-     DVSECHeader hdr;
-     uint16_t status;
-@@ -107,7 +120,10 @@ QEMU_BUILD_BUG_ON(sizeof(CXLDVSECPortExt) != 0x28);
- #define PORT_CONTROL_UNMASK_SBR      1
- #define PORT_CONTROL_ALT_MEMID_EN    4
- 
--/* CXL 2.0 - 8.1.6 GPF DVSEC (ID 0004) */
-+/*
-+ * CXL r3.1 Section 8.1.6: GPF DVSEC for CXL Port
-+ * DVSEC ID: 4, Revision: 0
-+ */
- typedef struct CXLDVSECPortGPF {
-     DVSECHeader hdr;
-     uint16_t rsvd;
-@@ -116,7 +132,10 @@ typedef struct CXLDVSECPortGPF {
- } CXLDVSECPortGPF;
- QEMU_BUILD_BUG_ON(sizeof(CXLDVSECPortGPF) != 0x10);
- 
--/* CXL 2.0 - 8.1.7 GPF DVSEC for CXL Device */
-+/*
-+ * CXL r3.1 Section 8.1.7: GPF DVSEC for CXL Device
-+ * DVSEC ID: 5, Revision 0
-+ */
- typedef struct CXLDVSECDeviceGPF {
-     DVSECHeader hdr;
-     uint16_t phase2_duration;
-@@ -124,17 +143,27 @@ typedef struct CXLDVSECDeviceGPF {
- } CXLDVSECDeviceGPF;
- QEMU_BUILD_BUG_ON(sizeof(CXLDVSECDeviceGPF) != 0x10);
- 
--/* CXL 2.0 - 8.1.8/8.2.1.3 Flex Bus DVSEC (ID 0007) */
-+/*
-+ * CXL r3.1 Section 8.1.8: PCIe DVSEC for Flex Bus Port
-+ * CXL r3.1 Section 8.2.1.3: Flex Bus Port DVSEC
-+ * DVSEC ID: 7, Revision 2
-+ */
- typedef struct CXLDVSECPortFlexBus {
-     DVSECHeader hdr;
-     uint16_t cap;
-     uint16_t ctrl;
-     uint16_t status;
-     uint32_t rcvd_mod_ts_data_phase1;
-+    uint32_t cap2;
-+    uint32_t ctrl2;
-+    uint32_t status2;
- } CXLDVSECPortFlexBus;
--QEMU_BUILD_BUG_ON(sizeof(CXLDVSECPortFlexBus) != 0x14);
-+QEMU_BUILD_BUG_ON(sizeof(CXLDVSECPortFlexBus) != 0x20);
- 
--/* CXL 2.0 - 8.1.9 Register Locator DVSEC (ID 0008) */
-+/*
-+ * CXL r3.1 Section 8.1.9: Register Locator DVSEC
-+ * DVSEC ID: 8, Revision 0
-+ */
- typedef struct CXLDVSECRegisterLocator {
-     DVSECHeader hdr;
-     uint16_t rsvd;
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index 848bfa20f1..84ab503325 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -13,7 +13,7 @@
- #include "hw/pci/pci.h"
- #include "hw/cxl/cxl.h"
- 
--/* CXL r3.0 Section 8.2.4.19.1 CXL HDM Decoder Capability Register */
-+/* CXL r3.1 Section 8.2.4.20.1 CXL HDM Decoder Capability Register */
- int cxl_decoder_count_enc(int count)
- {
-     switch (count) {
-@@ -160,11 +160,11 @@ static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
- }
- 
- /*
-- * 8.2.3
-+ * CXL r3.1 Section 8.2.3: Component Register Layout and Definition
-  *   The access restrictions specified in Section 8.2.2 also apply to CXL 2.0
-  *   Component Registers.
-  *
-- * 8.2.2
-+ * CXL r3.1 Section 8.2.2: Accessing Component Registers
-  *   • A 32 bit register shall be accessed as a 4 Bytes quantity. Partial
-  *   reads are not permitted.
-  *   • A 64 bit register shall be accessed as a 8 Bytes quantity. Partial
-@@ -308,7 +308,8 @@ void cxl_component_register_init_common(uint32_t *reg_state,
- 
-     /* CXL Capability Header Register */
-     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ID, 1);
--    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, VERSION, 1);
-+    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, VERSION,
-+        CXL_CAPABILITY_VERSION);
-     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 1);
-     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
- 
-@@ -328,7 +329,7 @@ void cxl_component_register_init_common(uint32_t *reg_state,
-     init_cap_reg(RAS, 2, CXL_RAS_CAPABILITY_VERSION);
-     ras_init_common(reg_state, write_msk);
- 
--    init_cap_reg(LINK, 4, 2);
-+    init_cap_reg(LINK, 4, CXL_LINK_CAPABILITY_VERSION);
- 
-     if (caps < 3) {
-         return;
-@@ -341,8 +342,8 @@ void cxl_component_register_init_common(uint32_t *reg_state,
-         return;
-     }
- 
--    init_cap_reg(EXTSEC, 6, 1);
--    init_cap_reg(SNOOP, 8, 1);
-+    init_cap_reg(EXTSEC, 6, CXL_EXTSEC_CAP_VERSION);
-+    init_cap_reg(SNOOP, 8, CXL_SNOOP_CAP_VERSION);
- 
- #undef init_cap_reg
- }
-@@ -467,7 +468,7 @@ void cxl_component_create_dvsec(CXLComponentState *cxl,
-     cxl->dvsec_offset += length;
- }
- 
--/* CXL r3.0 Section 8.2.4.19.7 CXL HDM Decoder n Control Register */
-+/* CXL r3.1 Section 8.2.4.20.7 CXL HDM Decoder n Control Register */
- uint8_t cxl_interleave_ways_enc(int iw, Error **errp)
- {
-     switch (iw) {
-diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index 9df8738f86..035d034f6d 100644
---- a/hw/cxl/cxl-device-utils.c
-+++ b/hw/cxl/cxl-device-utils.c
-@@ -13,7 +13,7 @@
- 
- /*
-  * Device registers have no restrictions per the spec, and so fall back to the
-- * default memory mapped register rules in 8.2:
-+ * default memory mapped register rules in CXL r3.1 Section 8.2:
-  *   Software shall use CXL.io Memory Read and Write to access memory mapped
-  *   register defined in this section. Unless otherwise specified, software
-  *   shall restrict the accesses width based on the following:
-@@ -393,13 +393,15 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-     ARRAY_FIELD_DP64(cap_h, CXL_DEV_CAP_ARRAY, CAP_VERSION, 1);
-     ARRAY_FIELD_DP64(cap_h, CXL_DEV_CAP_ARRAY, CAP_COUNT, cap_count);
- 
--    cxl_device_cap_init(cxl_dstate, DEVICE_STATUS, 1, 2);
-+    cxl_device_cap_init(cxl_dstate, DEVICE_STATUS, 1,
-+                        CXL_DEVICE_STATUS_VERSION);
-     device_reg_init_common(cxl_dstate);
- 
-     cxl_device_cap_init(cxl_dstate, MAILBOX, 2, CXL_DEV_MAILBOX_VERSION);
-     mailbox_reg_init_common(cxl_dstate);
- 
--    cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000, 1);
-+    cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000,
-+        CXL_MEM_DEV_STATUS_VERSION);
-     memdev_reg_init_common(cxl_dstate);
- 
-     cxl_initialize_mailbox_t3(&ct3d->cci, DEVICE(ct3d),
-diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
-index bee6dfaf14..d7b5a5ec85 100644
---- a/hw/cxl/cxl-events.c
-+++ b/hw/cxl/cxl-events.c
-@@ -206,7 +206,7 @@ CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
-      * record that will not be cleared when Clear Event Records is executed,
-      * the device shall return the Invalid Handle return code and shall not
-      * clear any of the specified event records."
--     *   -- CXL 3.0 8.2.9.2.3
-+     *   -- CXL r3.1 Section 8.2.9.2.3: Clear Event Records (0101h)
-      */
-     entry = cxl_event_get_head(log);
-     for (nr = 0; entry && nr < pl->nr_recs; nr++) {
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index dc42850767..e5eb97cb91 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -86,7 +86,7 @@ enum {
-         #define MANAGEMENT_COMMAND     0x0
- };
- 
--/* CCI Message Format CXL r3.0 Figure 7-19 */
-+/* CCI Message Format CXL r3.1 Figure 7-19 */
- typedef struct CXLCCIMessage {
-     uint8_t category;
- #define CXL_CCI_CAT_REQ 0
-@@ -342,7 +342,7 @@ static CXLRetCode cmd_events_set_interrupt_policy(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* CXL r3.0 section 8.2.9.1.1: Identify (Opcode 0001h) */
-+/* CXL r3.1 section 8.2.9.1.1: Identify (Opcode 0001h) */
- static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
-                                         uint8_t *payload_in,
-                                         size_t len_in,
-@@ -403,7 +403,7 @@ static void cxl_set_dsp_active_bm(PCIBus *b, PCIDevice *d,
-     }
- }
- 
--/* CXL r3 8.2.9.1.1 */
-+/* CXL r3.1 Section 7.6.7.1.1: Identify Switch Device (Opcode 5100h) */
- static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
-                                              uint8_t *payload_in,
-                                              size_t len_in,
-@@ -455,7 +455,7 @@ static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* CXL r3.0 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
-+/* CXL r3.1 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
- static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
-                                               uint8_t *payload_in,
-                                               size_t len_in,
-@@ -463,14 +463,14 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
-                                               size_t *len_out,
-                                               CXLCCI *cci)
- {
--    /* CXL r3.0 Table 7-18: Get Physical Port State Request Payload */
-+    /* CXL r3.1 Table 7-17: Get Physical Port State Request Payload */
-     struct cxl_fmapi_get_phys_port_state_req_pl {
-         uint8_t num_ports;
-         uint8_t ports[];
-     } QEMU_PACKED *in;
- 
-     /*
--     * CXL r3.0 Table 7-20: Get Physical Port State Port Information Block
-+     * CXL r3.1 Table 7-19: Get Physical Port State Port Information Block
-      * Format
-      */
-     struct cxl_fmapi_port_state_info_block {
-@@ -491,7 +491,7 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
-         uint8_t supported_ld_count;
-     } QEMU_PACKED;
- 
--    /* CXL r3.0 Table 7-19: Get Physical Port State Response Payload */
-+    /* CXL r3.1 Table 7-18: Get Physical Port State Response Payload */
-     struct cxl_fmapi_get_phys_port_state_resp_pl {
-         uint8_t num_ports;
-         uint8_t rsv1[3];
-@@ -579,7 +579,7 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* CXL r3.0 8.2.9.1.2 */
-+/* CXL r3.1 Section 8.2.9.1.2: Background Operation Status (Opcode 0002h) */
- static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
-                                          uint8_t *payload_in,
-                                          size_t len_in,
-@@ -609,7 +609,7 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* 8.2.9.2.1 */
-+/* CXL r3.1 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
- static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
-                                                uint8_t *payload_in,
-                                                size_t len,
-@@ -647,7 +647,7 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* 8.2.9.3.1 */
-+/* CXL r3.1 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
- static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
-                                     uint8_t *payload_in,
-                                     size_t len_in,
-@@ -664,7 +664,7 @@ static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* 8.2.9.3.2 */
-+/* CXL r3.1 Section 8.2.9.4.2: Set Timestamp (Opcode 0301h) */
- static CXLRetCode cmd_timestamp_set(const struct cxl_cmd *cmd,
-                                     uint8_t *payload_in,
-                                     size_t len_in,
-@@ -683,13 +683,13 @@ static CXLRetCode cmd_timestamp_set(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* CXL 3.0 8.2.9.5.2.1 Command Effects Log (CEL) */
-+/* CXL r3.1 Section 8.2.9.5.2.1: Command Effects Log (CEL) */
- static const QemuUUID cel_uuid = {
-     .data = UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
-                  0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
- };
- 
--/* 8.2.9.4.1 */
-+/* CXL r3.1 Section 8.2.9.5.1: Get Supported Logs (Opcode 0400h) */
- static CXLRetCode cmd_logs_get_supported(const struct cxl_cmd *cmd,
-                                          uint8_t *payload_in,
-                                          size_t len_in,
-@@ -715,7 +715,7 @@ static CXLRetCode cmd_logs_get_supported(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* 8.2.9.4.2 */
-+/* CXL r3.1 Section 8.2.9.5.2: Get Log (Opcode 0401h) */
- static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-                                    uint8_t *payload_in,
-                                    size_t len_in,
-@@ -732,14 +732,11 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-     get_log = (void *)payload_in;
- 
-     /*
--     * 8.2.9.4.2
--     *   The device shall return Invalid Parameter if the Offset or Length
-+     * CXL r3.1 Section 8.2.9.5.2: Get Log (Opcode 0401h)
-+     *   The device shall return Invalid Input if the Offset or Length
-      *   fields attempt to access beyond the size of the log as reported by Get
-      *   Supported Logs.
-      *
--     * XXX: Spec is wrong, "Invalid Parameter" isn't a thing.
--     * XXX: Spec doesn't address incorrect UUID incorrectness.
--     *
-      * The CEL buffer is large enough to fit all commands in the emulation, so
-      * the only possible failure would be if the mailbox itself isn't big
-      * enough.
-@@ -749,7 +746,7 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-     }
- 
-     if (!qemu_uuid_is_equal(&get_log->uuid, &cel_uuid)) {
--        return CXL_MBOX_UNSUPPORTED;
-+        return CXL_MBOX_INVALID_LOG;
-     }
- 
-     /* Store off everything to local variables so we can wipe out the payload */
-@@ -760,7 +757,7 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--/* 8.2.9.5.1.1 */
-+/* CXL r3.1 Section 8.2.9.9.1.1: Identify Memory Device (Opcode 4000h) */
- static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
-                                              uint8_t *payload_in,
-                                              size_t len_in,
-@@ -815,6 +812,7 @@ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.9.2.1: Get Partition Info (Opcode 4100h) */
- static CXLRetCode cmd_ccls_get_partition_info(const struct cxl_cmd *cmd,
-                                               uint8_t *payload_in,
-                                               size_t len_in,
-@@ -851,6 +849,7 @@ static CXLRetCode cmd_ccls_get_partition_info(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.9.2.3: Get LSA (Opcode 4102h) */
- static CXLRetCode cmd_ccls_get_lsa(const struct cxl_cmd *cmd,
-                                    uint8_t *payload_in,
-                                    size_t len_in,
-@@ -879,6 +878,7 @@ static CXLRetCode cmd_ccls_get_lsa(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.9.2.4: Set LSA (Opcode 4103h) */
- static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
-                                    uint8_t *payload_in,
-                                    size_t len_in,
-@@ -940,7 +940,7 @@ static void __do_sanitization(CXLType3Dev *ct3d)
- }
- 
- /*
-- * CXL 3.0 spec section 8.2.9.8.5.1 - Sanitize.
-+ * CXL r3.1 Section 8.2.9.9.5.1: Sanitize (Opcode 4400h)
-  *
-  * Once the Sanitize command has started successfully, the device shall be
-  * placed in the media disabled state. If the command fails or is interrupted
-@@ -1018,7 +1018,10 @@ static CXLRetCode cmd_get_security_state(const struct cxl_cmd *cmd,
-     *len_out = 4;
-     return CXL_MBOX_SUCCESS;
- }
-+
- /*
-+ * CXL r3.1 Section 8.2.9.9.4.1: Get Poison List (Opcode 4300h)
-+ *
-  * This is very inefficient, but good enough for now!
-  * Also the payload will always fit, so no need to handle the MORE flag and
-  * make this stateful. We may want to allow longer poison lists to aid
-@@ -1103,6 +1106,7 @@ static CXLRetCode cmd_media_get_poison_list(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.9.4.2: Inject Poison (Opcode 4301h) */
- static CXLRetCode cmd_media_inject_poison(const struct cxl_cmd *cmd,
-                                           uint8_t *payload_in,
-                                           size_t len_in,
-@@ -1146,6 +1150,7 @@ static CXLRetCode cmd_media_inject_poison(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.9.4.3: Clear Poison (Opcode 4302h */
- static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
-                                          uint8_t *payload_in,
-                                          size_t len_in,
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 71fcb44613..e8801805b9 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -319,7 +319,7 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-     cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
-                                PCIE_CXL_DEVICE_DVSEC_LENGTH,
-                                PCIE_CXL_DEVICE_DVSEC,
--                               PCIE_CXL2_DEVICE_DVSEC_REVID, dvsec);
-+                               PCIE_CXL31_DEVICE_DVSEC_REVID, dvsec);
- 
-     dvsec = (uint8_t *)&(CXLDVSECRegisterLocator){
-         .rsvd         = 0,
-@@ -346,9 +346,9 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-         .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-     };
-     cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
--                               PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0,
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
-                                PCIE_FLEXBUS_PORT_DVSEC,
--                               PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0, dvsec);
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
- }
- 
- static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
-diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-index 405a133eef..742da07a01 100644
---- a/hw/pci-bridge/cxl_downstream.c
-+++ b/hw/pci-bridge/cxl_downstream.c
-@@ -109,9 +109,9 @@ static void build_dvsecs(CXLComponentState *cxl)
-         .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-     };
-     cxl_component_create_dvsec(cxl, CXL2_DOWNSTREAM_PORT,
--                               PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0,
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
-                                PCIE_FLEXBUS_PORT_DVSEC,
--                               PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0, dvsec);
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
- 
-     dvsec = (uint8_t *)&(CXLDVSECPortGPF){
-         .rsvd        = 0,
-diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-index 8f97697631..62f96994eb 100644
---- a/hw/pci-bridge/cxl_root_port.c
-+++ b/hw/pci-bridge/cxl_root_port.c
-@@ -129,9 +129,9 @@ static void build_dvsecs(CXLComponentState *cxl)
-         .rcvd_mod_ts_data_phase1 = 0xef,
-     };
-     cxl_component_create_dvsec(cxl, CXL2_ROOT_PORT,
--                               PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0,
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
-                                PCIE_FLEXBUS_PORT_DVSEC,
--                               PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0, dvsec);
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
- 
-     dvsec = (uint8_t *)&(CXLDVSECRegisterLocator){
-         .rsvd         = 0,
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index d5341b530f..e87eb40177 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -121,9 +121,9 @@ static void build_dvsecs(CXLComponentState *cxl)
-         .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-     };
-     cxl_component_create_dvsec(cxl, CXL2_UPSTREAM_PORT,
--                               PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0,
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
-                                PCIE_FLEXBUS_PORT_DVSEC,
--                               PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0, dvsec);
-+                               PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
- 
-     dvsec = (uint8_t *)&(CXLDVSECRegisterLocator){
-         .rsvd         = 0,
--- 
-2.39.2
+>=20
+> Thanks,
+> Sajjan
+>=20
+>=20
+> On Thu, Aug 24, 2023 at 11:56=E2=80=AFAM Sajjan Rao <sajjanr@gmail.com> w=
+rote:
+> >
+> > Understood. Thank you Jonathan.
+> >
+> > On Wed, Aug 23, 2023 at 10:21=E2=80=AFPM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote: =20
+> > >
+> > > On Wed, 23 Aug 2023 16:43:13 +0530
+> > > Sajjan Rao <sajjanr@gmail.com> wrote:
+> > > =20
+> > > > Thank you Dimitrios. That worked!
+> > > >
+> > > > On Mon, Aug 21, 2023 at 4:23=E2=80=AFPM Dimitrios Palyvos
+> > > > <dimitrios.palyvos@zptcorp.com> wrote: =20
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > Ah yes, I believe you need to enable the kernel config option
+> > > > > CONFIG_CXL_REGION_INVALIDATION_TEST for the region creation to wo=
+rk in
+> > > > > QEMU. The help entry of that config option gives more info on the=
+ why.
+> > > > >
+> > > > > Hope that helps!
+> > > > >
+> > > > > Kind regards,
+> > > > > Dimitris
+> > > > >
+> > > > >
+> > > > > On Mon, Aug 21, 2023 at 12:01=E2=80=AFPM Sajjan Rao <sajjanr@gmai=
+l.com> wrote: =20
+> > > > > >
+> > > > > > Hello Dimitrios,
+> > > > > >
+> > > > > > Thank you for the pointers. I have the 6.4.10 kernel and modifi=
+ed the
+> > > > > > qemu options, but now I see an error creating the region.
+> > > > > > Is there anything else I missed?
+> > > > > >
+> > > > > > [root@cxl-test /]# cxl create-region -d decoder0.0 -s 268435456=
+ -t ram
+> > > > > > [ 4144.982608] cxl region0: Failed to synchronize CPU cache sta=
+te
+> > > > > > cxl region: create_region: region0: failed to commit decode: No=
+ such
+> > > > > > device or address
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Sajjan
+> > > > > >
+> > > > > > -- qemu
+> > > > > >
+> > > > > > qemu-system-x86_64 \
+> > > > > >  -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+> > > > > >  -machine type=3Dq35,cxl=3Don \
+> > > > > >  -m 4G \
+> > > > > >  -smp cpus=3D2 \
+> > > > > >  -accel tcg,thread=3Dsingle \
+> > > > > >  -object memory-backend-ram,size=3D4G,id=3Dm0 \
+> > > > > >  -object memory-backend-ram,size=3D256M,id=3Dcxl-mem1 \
+> > > > > >  -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
+> > > > > >  -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.16=
+8.0.9  \
+> > > > > >  -device virtio-net-pci,netdev=3Dnet0 \
+> > > > > >  -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> > > > > >  -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=
+=3D0,slot=3D2 \
+> > > > > >  -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem=
+1,id=3Dcxl-mem1 \
+> > > > > >  -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+> > > > > >  -nographic
+> > > > > >
+> > > > > > -----
+> > > > > >
+> > > > > > [root@cxl-test /]# uname -r
+> > > > > > 6.4.10-200.fc38.x86_64
+> > > > > > [root@cxl-test /]# cxl list
+> > > > > > [
+> > > > > >   {
+> > > > > >     "memdev":"mem0",
+> > > > > >     "ram_size":268435456,
+> > > > > >     "serial":0,
+> > > > > >     "host":"0000:0d:00.0"
+> > > > > >   }
+> > > > > > ]
+> > > > > > [root@cxl-test /]# cxl create-region -d decoder0.0 -s 268435456=
+ -t ram
+> > > > > > [ 4144.982608] cxl region0: Failed to synchronize CPU cache sta=
+te
+> > > > > > cxl region: create_region: region0: failed to commit decode: No=
+ such
+> > > > > > device or address
+> > > > > >
+> > > > > > [root@cxl-test /]#
+> > > > > >
+> > > > > > On Fri, Aug 18, 2023 at 8:31=E2=80=AFPM Dimitrios Palyvos
+> > > > > > <dimitrios.palyvos@zptcorp.com> wrote: =20
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > I am not an expert (and not 100% sure if that's what you want=
+ to do),
+> > > > > > > but here's one way to get your configuration to work:
+> > > > > > > 1. Disable KVM. =20
+> > >
+> > > Just to second this - don't use KVM and expect it to work with CXL em=
+ulation
+> > > if you are trying to use kmem to present it as normal memory - it sho=
+uld be fine
+> > > as long as you never run instructions resident in that memory.
+> > >
+> > > It will crash in nasty ways due to various issues with instruction em=
+ulation
+> > > where it is running out of memory behind the emulated interleave deco=
+ders.
+> > >
+> > > So far we haven't cared enough to add the complexity that would be ne=
+eded
+> > > to make that work.
+> > >
+> > > TCG is the way to go for now.
+> > >
+> > > Jonathan
+> > > =20
+> > > > > > > 2. Remove the CXL NUMA node from the QEMU command.
+> > > > > > > 3. Use the ndctl utilities in the guest to initialize your CX=
+L memory
+> > > > > > > and associated NUMA node.
+> > > > > > >
+> > > > > > > More specifically, I changed your QEMU command as follows:
+> > > > > > >
+> > > > > > >     qemu-system-x86_64 \
+> > > > > > >      -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+> > > > > > >      -machine type=3Dq35,cxl=3Don \
+> > > > > > >      -m 8G \
+> > > > > > >      -smp cpus=3D8 \
+> > > > > > >      -object memory-backend-ram,size=3D4G,id=3Dm0 \
+> > > > > > >      -object memory-backend-ram,size=3D4G,id=3Dm1 \
+> > > > > > >      -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+> > > > > > >      -numa node,memdev=3Dm0,cpus=3D0-3,nodeid=3D0 \
+> > > > > > >      -numa node,memdev=3Dm1,cpus=3D4-7,nodeid=3D1 \
+> > > > > > >      -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D=
+192.168.0.9  \
+> > > > > > >      -device virtio-net-pci,netdev=3Dnet0 \
+> > > > > > >      -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> > > > > > >      -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,ch=
+assis=3D0,slot=3D2 \
+> > > > > > >      -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dc=
+xl-mem1,id=3Dcxl-mem1 \
+> > > > > > >      -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+> > > > > > >      -nographic
+> > > > > > >
+> > > > > > > In the guest, install ndctl: https://github.com/pmem/ndctl
+> > > > > > >
+> > > > > > > After that, you should be able to see the CXL memory:
+> > > > > > >     root@cxl-img:~# cxl list
+> > > > > > >     [
+> > > > > > >       {
+> > > > > > >         "memdev":"mem0",
+> > > > > > >         "ram_size":2147483648,
+> > > > > > >         "serial":0,
+> > > > > > >         "host":"0000:0d:00.0"
+> > > > > > >       }
+> > > > > > >     ]
+> > > > > > >
+> > > > > > > And initialize it as RAM:
+> > > > > > >     root@cxl-img:~# cxl create-region -d decoder0.0 -s 214748=
+3648 -t ram
+> > > > > > >     ...
+> > > > > > >
+> > > > > > > root@cxl-img:~# lsmem --output-all
+> > > > > > >     RANGE                                  SIZE  STATE REMOVA=
+BLE BLOCK
+> > > > > > > NODE  ZONES
+> > > > > > >     0x0000000000000000-0x0000000007ffffff  128M online       =
+yes     0
+> > > > > > >    0   None
+> > > > > > >     0x0000000008000000-0x000000007fffffff  1.9G online       =
+yes  1-15
+> > > > > > >    0  DMA32
+> > > > > > >     0x0000000100000000-0x000000017fffffff    2G online       =
+yes 32-47
+> > > > > > >    0 Normal
+> > > > > > >     0x0000000180000000-0x000000027fffffff    4G online       =
+yes 48-79
+> > > > > > >    1 Normal
+> > > > > > >     0x0000000290000000-0x000000030fffffff    2G online       =
+yes 82-97
+> > > > > > >    2 Normal
+> > > > > > >
+> > > > > > >     Memory block size:       128M
+> > > > > > >     Total online memory:      10G
+> > > > > > >     Total offline memory:      0B
+> > > > > > >
+> > > > > > >
+> > > > > > >     root@cxl-img:~# cat /proc/iomem
+> > > > > > >     ...
+> > > > > > >     290000000-38fffffff : CXL Window 0
+> > > > > > >       290000000-30fffffff : region0
+> > > > > > >         290000000-30fffffff : dax0.0
+> > > > > > >           290000000-30fffffff : System RAM (kmem)
+> > > > > > >
+> > > > > > >
+> > > > > > > Then you can generate traffic in the CXL NUMA node, for examp=
+le:
+> > > > > > >
+> > > > > > >     root@cxl-img:~# numactl --membind 2 ls
+> > > > > > >
+> > > > > > > Note: The above is with linux v6.4.11.
+> > > > > > >
+> > > > > > > Hope that helps!
+> > > > > > >
+> > > > > > > Kind regards,
+> > > > > > > Dimitris
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > On Fri, Aug 18, 2023 at 11:39=E2=80=AFAM Sajjan Rao <sajjanr@=
+gmail.com> wrote: =20
+> > > > > > > >
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > I have a qemu + cxl configuration coming up with one config=
+ured type 3
+> > > > > > > > device. My goal is to generate some cxl.mem traffic in this
+> > > > > > > > configuration.
+> > > > > > > > However the numa_node is always showing as -1. I have tried=
+ various
+> > > > > > > > qemu command line parameters including to explicitly set nu=
+ma_node for
+> > > > > > > > cxl devices.
+> > > > > > > >
+> > > > > > > > Here is my qemu command line
+> > > > > > > > --------
+> > > > > > > > qemu-system-x86_64 \
+> > > > > > > >  -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+> > > > > > > >  -machine type=3Dq35,accel=3Dkvm,cxl=3Don \
+> > > > > > > >  -m 10G \
+> > > > > > > >  -smp cpus=3D8 \
+> > > > > > > >  -object memory-backend-ram,size=3D4G,id=3Dm0 \
+> > > > > > > >  -object memory-backend-ram,size=3D4G,id=3Dm1 \
+> > > > > > > >  -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+> > > > > > > >  -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
+> > > > > > > >  -numa node,memdev=3Dm1,cpus=3D2-3,nodeid=3D1 \
+> > > > > > > >  -numa node,memdev=3Dcxl-mem1,cpus=3D4-7,nodeid=3D2 \
+> > > > > > > >  -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D19=
+2.168.0.9  \
+> > > > > > > >  -device virtio-net-pci,netdev=3Dnet0 \
+> > > > > > > >  -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> > > > > > > >  -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chas=
+sis=3D0,slot=3D2 \
+> > > > > > > >  -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl=
+-mem1,id=3Dcxl-mem1 \
+> > > > > > > >  -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+> > > > > > > >  -enable-kvm \
+> > > > > > > >  -nographic
+> > > > > > > > -----
+> > > > > > > >
+> > > > > > > > I see that the cxl device is listed in lspci output
+> > > > > > > > ------
+> > > > > > > > #lspci | grep -i cxl
+> > > > > > > > 0d:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+> > > > > > > >
+> > > > > > > > #lspci -s 0d:00.0 -vvv | grep -i numa
+> > > > > > > > #
+> > > > > > > >
+> > > > > > > > -------
+> > > > > > > >
+> > > > > > > > sysfs output
+> > > > > > > > ----------
+> > > > > > > > #cat /sys/bus/cxl/devices/mem0/numa_node
+> > > > > > > > -1
+> > > > > > > > --------
+> > > > > > > >
+> > > > > > > > numactl output
+> > > > > > > >
+> > > > > > > > ------------------
+> > > > > > > > #numactl -H
+> > > > > > > > available: 3 nodes (0-2)
+> > > > > > > > node 0 cpus: 0 1
+> > > > > > > > node 0 size: 3910 MB
+> > > > > > > > node 0 free: 3776 MB
+> > > > > > > > node 1 cpus: 2 3
+> > > > > > > > node 1 size: 4031 MB
+> > > > > > > > node 1 free: 3927 MB
+> > > > > > > > node 2 cpus: 4 5 6 7
+> > > > > > > > node 2 size: 2011 MB
+> > > > > > > > node 2 free: 1785 MB
+> > > > > > > > node distances:
+> > > > > > > > node   0   1   2
+> > > > > > > >   0:  10  20  20
+> > > > > > > >   1:  20  10  20
+> > > > > > > >   2:  20  20  10
+> > > > > > > > -------------------
+> > > > > > > >
+> > > > > > > > The numa_node 2 is expected to be mapped to a CXL device, I=
+ do see
+> > > > > > > > some activity in numastat output, but it's unclear if this =
+is really
+> > > > > > > > mapped to the CXL device since the device itself says numa_=
+node is -1
+> > > > > > > > (expected to show 2).
+> > > > > > > >
+> > > > > > > > Has anybody seen this behavior? Any help will be greatly ap=
+preciated.
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > > Sajjan =20
+> > > > > > >
+> > > > > > > --
+> > > > > > > **CONFIDENTIALITY NOTICE:*
+> > > > > > > *
+> > > > > > > *The contents of this email message and any
+> > > > > > > attachments are intended solely for the addressee(s) and may =
+contain
+> > > > > > > confidential and/or privileged information and may be legally=
+ protected
+> > > > > > > from disclosure. If you are not the intended recipient of thi=
+s message or
+> > > > > > > their agent, or if this message has been addressed to you in =
+error, please
+> > > > > > > immediately alert the sender by reply email and then delete t=
+his message
+> > > > > > > and any attachments. If you are not the intended recipient, y=
+ou are hereby
+> > > > > > > notified that any use, dissemination, copying, or storage of =
+this message
+> > > > > > > or its attachments is strictly prohibited. * =20
+> > > > >
+> > > > >
+> > > > >
+> > > > > --
+> > > > >
+> > > > > Dimitrios Payvos-Giannas, PhD
+> > > > >
+> > > > > Software Engineer
+> > > > >
+> > > > > ZeroPoint Technologies
+> > > > >
+> > > > > Remove the waste.
+> > > > >
+> > > > > Release the power.
+> > > > >
+> > > > > --
+> > > > > **CONFIDENTIALITY NOTICE:*
+> > > > > *
+> > > > > *The contents of this email message and any
+> > > > > attachments are intended solely for the addressee(s) and may cont=
+ain
+> > > > > confidential and/or privileged information and may be legally pro=
+tected
+> > > > > from disclosure. If you are not the intended recipient of this me=
+ssage or
+> > > > > their agent, or if this message has been addressed to you in erro=
+r, please
+> > > > > immediately alert the sender by reply email and then delete this =
+message
+> > > > > and any attachments. If you are not the intended recipient, you a=
+re hereby
+> > > > > notified that any use, dissemination, copying, or storage of this=
+ message
+> > > > > or its attachments is strictly prohibited. * =20
+> > > =20
 
