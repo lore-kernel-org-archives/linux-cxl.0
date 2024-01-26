@@ -1,153 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85B79DF
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 04:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706244927; cv=none; b=M+UHYBEFFVRe/ISd0frB2Kyv2DNH4eVYEwALNKsmxudX/VINEGXbxKKB5nmh2xbktRAtw76zgv0LmaSxPqEhlIUvdSp/BgUUeU83mvMu5jSB5UxdC4B9NbODPrkoRqqHdreSulkDD20arxZCviPy5ppsV5OLxh4U5aEc0iY4GJo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706244927; c=relaxed/simple;
-	bh=2LfPdGJq1fjJpfR3abyAWkqeDinIMTR6GKvN+/u7CQs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nf34d5AaH4dQ+rSn9kSbQe2Ncgn6DiFLnuiVQ/zinYKplLWdPwhKCX+Kl/h+0laXMAK35or/jbgUVEHr0ZFiJEbp/KUfUSWl3mgZHQY5OStmHfIAUuF+PAxmEEXylB5xzzyVkfu8WnJ8K8XYr+x3VUswO8ZxJSCpqvzPIhCbQpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uy96Mf0I; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169751EB56
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 06:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706251074; cv=fail; b=Z0+ijY8Y9pGYnwHAP/6VMSZk/k299AWoPP5y61ndSDrZzmjM/dy/VTJZDzs7vYQ02e1bvwX63BP+8IlaRq7prb2GdTHokIvQA8tYZYnHFNwIehgIxtqZTg61r4n6D9bimybMRRQF6nMP5fxmmFc8mS5iSA2njlnEQM5fcjJvYrY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706251074; c=relaxed/simple;
+	bh=HkU7YpOMF3ujEf6k+1X656+p/g4YeXE9ZfrKnAklipw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tb8Motj9K5FVS4uEg56a4FWgbvD8tSS9bw1jDqvZDSIam6ey7SvAnPHoHAnzdl+TFReqAoE6QsuLjWWfHVQu5RwQ/Efm28OpBGy5amX6EmF9UBbivLCEXon2w0JNgmL0artx0MWn8xUxrJSoSjlGVMPNBueCpzMp53aDKodMcR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qu0lDO9h; arc=fail smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uy96Mf0I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qu0lDO9h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706244926; x=1737780926;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2LfPdGJq1fjJpfR3abyAWkqeDinIMTR6GKvN+/u7CQs=;
-  b=Uy96Mf0IcnggeUMts1gizj6G7ECSF20HyFB8Lwonq5fuMmgyeAJ/kHCD
-   OZFpnqAPq0a83rA4T87U/hOzsjQ8GnjAFq+BJ754IIW4L79CTxbKKUwNU
-   IhuK+NcvzuFtF8nvCG90P1DtzuG9OhoqphGC6PO3z4HcEVxCZZ1Nl9toX
-   4u8s56chhsECFuxPaqukMi0Rn+DJ+2oaVlGYvfkj6Bw3WsME5Huk/t193
-   LfeYYead5LfllOSUEAZguWMnlnubj29voE45PQweqfFw27lGBq5jyJVTT
-   7W2NSUFWgcDoNoQTGxRw+VrKmJxMp1VuuaP3TOLS65QNXfr0NDvJTHMgi
+  t=1706251073; x=1737787073;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HkU7YpOMF3ujEf6k+1X656+p/g4YeXE9ZfrKnAklipw=;
+  b=Qu0lDO9hi+dbJ4O4dGjtQFBgDgAxisJGUrj/IWGQRadKIBlnUzfkVstC
+   g9FGqnY8fW/gSuIcUkRF6FVs0z6nmb5k9XlQKQYCjY/o2C+EGYsnSez0M
+   PORgOT4L2gGPKuKuFIAM4RXmxsBDFikZcO7O80t05meomu1aXWdbu10jW
+   X5SXuB0xizy/IR1TDnBxk+m0QF4mwJip7lpvHspru/4yikK6XHWwbLqBj
+   u7FVsf1Xk6mcrLPJF5sawZIsvoIMaCRCwvQgCM2n1PuWPEHDtjziRt45B
+   2eDm8uBfVcgL86Oibb9cLslfUxNZGcWpveBKP79dy5pvKmK7I2cszfcG+
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9071201"
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9784841"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9071201"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 20:55:25 -0800
+   d="scan'208";a="9784841"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 22:37:52 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="877283279"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="877283279"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.176.40])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 20:54:53 -0800
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	Neha Agrawal <neha.agrawal@intel.com>
-Subject: [PATCH] cxl/region: Allow out of order assembly of autodiscovered regions
-Date: Thu, 25 Jan 2024 20:54:46 -0800
-Message-Id: <20240126045446.1750854-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
+   d="scan'208";a="2671568"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jan 2024 22:37:52 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 25 Jan 2024 22:37:51 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 25 Jan 2024 22:37:50 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 22:37:50 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 25 Jan 2024 22:37:50 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B4j4XofzZknmnitAMJ3lM1FHQxz0a1jKq/WImcV7lmoBzEWGUGwmU6tDAUIGBuhA3AHCEkITe5QvE3X4Mx4pstKfoArjMsXK8RRdIYo/FWtgITNGrWDnDKvJuOnNH8qVs9LTmt0UFvVgtjBkFLq5LOmjjp6oR36nXOLZDML+NWe9uSm+fVITa1Lf0hW8XJ3fRYEMPCKijRVPXahixu/5n6Qj6laQOLYafyHaEDeukFtRjtpCKQ+ukeyYbLR6z8USL5x1xmc52LJ1mZakFkJ8EeKHbJn6PT+pkwIsW5VtdU7hRj0mFCGDt7he/j1LkbfDM1Y8jijDktLspMwRVfYn7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5XKMfMLH3RVkrg+eq2f/x+5skpEhOQpUi7Ia6cgVh2A=;
+ b=VnTiJ+glanlANqRzsVvmMK3NixY/yYrgOrRgpw1tfrGaCvqb954erKwxp9Ev4WiWEau3b27qmny1eLiqd7RO72TNATEjNe8ENEWdNP1rY6R3Y5/IZcPyBxMvIRoaDAqWwhEGFtCZsalUeUEML5dAI78K5Op0NhnVFTs1OrWBmKGabGrg47fkeZilIVL6lx6gEoE4VkGkKLzIW/2jMr6jQoYeRdAkzaiw3IKgjD7484GfEgdK+mGHW2vdxLr0FYxniPlPM5eC7QbgSSplz4g0Aj9O8bvQKnknAJ4r74cSNWarsUhtd4ru96GCGDchzgb3H02YZkpvdAq7ndQ/KB1Z0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA0PR11MB7401.namprd11.prod.outlook.com (2603:10b6:208:433::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
+ 2024 06:37:46 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7202.035; Fri, 26 Jan 2024
+ 06:37:46 +0000
+Date: Thu, 25 Jan 2024 22:37:44 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Li Ming <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>
+CC: <dan.j.williams@intel.com>, <terry.bowman@amd.com>, <rrichter@amd.com>,
+	<Jonathan.Cameron@huawei.com>, <dave.jiang@intel.com>, Li Ming
+	<ming4.li@intel.com>
+Subject: Re: [PATCH 1/1] cxl/pci: Skip to handle RAS errors if CXL.mem device
+ is detached
+Message-ID: <65b3533821510_293042944c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240125081414.2189572-1-ming4.li@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240125081414.2189572-1-ming4.li@intel.com>
+X-ClientProxiedBy: MW2PR16CA0012.namprd16.prod.outlook.com (2603:10b6:907::25)
+ To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7401:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05ddd483-5a66-4286-0171-08dc1e394ee7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YAGse03Zfe04G/nZ9AL3tvetl1A4OieoxpXGi70Z5qg/65ZNL5575o1hGgU7TWFeSQv1fef+i2DI+GEZojSqyPKDwgMEh9tmUuOyvkryuDVJEfuLjJc4W/s3Ms0BGPn9YXVI1QRr7PvObC9ZF53tof+I8BnoOGfOnBPsfOEtDTSef8HcsuEjHGYTNHij7oZLPx+z8CHAR67poQ49O9CGJ0y7t+BosWhcDsBGy/Co8vgp1k/b6NG7IKAvsX73WhFxk0f2QbBXsaT2NHog300mMFLZ4izLoryXVB4RIXYVxdCrajatTCx85G8KlSFS0YmcafFDGOM4qIRf3giTwMI4XbevuwJqJaDcfW8o4dDuJg8lCxFv8Iz1ZATNtah6TKiiWmljZzxTmbdDITQUnzGMHut6T+Dgu9jPE66HTcTiYB7Lzx9f+g/Mjp2SoPLWACLC42CTRKNDDLuE6qR5HciqbHVLFJexxDSeOWdAMP1MovCHhlr6OZ/IxPKsVLm0a3MOkq2UajR5QtIcwT19EBTnYzT6EFYHrTEWypHEzQuOrE3Y3NLYiqN9Z3TCb9h1KWDX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(39860400002)(136003)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(86362001)(82960400001)(41300700001)(66556008)(66946007)(66476007)(316002)(6506007)(4326008)(8676002)(8936002)(478600001)(26005)(83380400001)(6486002)(107886003)(5660300002)(38100700002)(6512007)(9686003)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZrrXoj094PLFFkoUaLH1vPsc3TdaPEOmmWm0MplCmEDyhLb8wf689R6tzTGJ?=
+ =?us-ascii?Q?+7ezP1AxB0ccLMXNP/y5t/8UKy54949tvJl+votJkhFxLenueuHcUhr4IZ5d?=
+ =?us-ascii?Q?fAXpZikOwn172Xv4+vFXPZmhRw4r4BomFxy1ZBJjr0RUxsi03JNgTPT58mL4?=
+ =?us-ascii?Q?IdN0E4m3BSJbvTEyy4dnHCOBqaOCR5PC4yUEkCNMY+b3mh+OgkRuWlKWmM6H?=
+ =?us-ascii?Q?BClNZL6eWRpRnywbMCLQGj/0IvOsNnOrOP0b71lD8GEB3LOaJWStjfLsdAXB?=
+ =?us-ascii?Q?NZWx5Og/K0cBBZWK6I02ZxE1/op6huZsokwCSlCyQIqbaxlpXzZ+SyE/QoFq?=
+ =?us-ascii?Q?KDpYppZ0hU2iJI1XTzIv9nIHll8Pa0Fdi24NausAX5LcZL3PBmB3dHKjjtiU?=
+ =?us-ascii?Q?t6uhziRNUEYUdJ/EtVvFE5TcG8x90RXgPRu5XypKRNX/pRU2pBaA8pU7odsQ?=
+ =?us-ascii?Q?bXUGX1XEXqX0AqfQiDhOEYPzZEan0cb/YlPPVSdOmucbxSt3K3+vt8jbfmYa?=
+ =?us-ascii?Q?4SUv3SJnX8ejOQo5SeK/EFawtkZSAnj7Mf0/AjzknLaF721UXurKvL56UkCQ?=
+ =?us-ascii?Q?9Y+EYTuUcRqKXjkQRzSuQggIZ7JiimERa2t1OBlFy8vBpvXlXNwiOOmQ05Xf?=
+ =?us-ascii?Q?MSsFTEu8Udcz+k84/ooZBaqKKc65ahIpoW2gh1rI6BnAiRJQ7RbNErZ4e3Fv?=
+ =?us-ascii?Q?phKetCJa16rZWlc21cwUI8tDPDiPZul2swLWEWHKaRH38ef1V9KVxYXYkw8Y?=
+ =?us-ascii?Q?+bXVqQoRS7DyzmUmcqff8BVmwGF+JyF9CciR9q/9tRt7QI8i5h7Oz7hvbcfH?=
+ =?us-ascii?Q?QEOm2aG6JlwTMunWGtQN5d6aQTWi3RdZMMrVCe6kN+U+NhPpwxrDhHeBVa0q?=
+ =?us-ascii?Q?TYnpgRqUQtQskUBqlGE1GH6aJbyH1fOiLKOkvHViKW+8Syn6Qhzsy2Mt7Dw0?=
+ =?us-ascii?Q?K/wcPoFql9m28WJ/ZAM+4N8H809nQtVsJX2e+1jY3oi/Qb+LgAX2DLD4VlVa?=
+ =?us-ascii?Q?Jq6Tq4zILUpYq2vra/nKc051oIWxadsyLeotV70JwBTr1P1HO8U246nrqdBJ?=
+ =?us-ascii?Q?aArThGoxKZVQ6X0Y5vYMvjcZqSKJBeWLx5emR2L/WIlDQUKeMS9Siq6q21uh?=
+ =?us-ascii?Q?JeuI/HJByvCQ29/+V219W9ZoFEO4JsNMnqElZHwPm5nVMl8A1ejTxKVuWuEK?=
+ =?us-ascii?Q?TiRMmEW5GGjdVsXcg+2T2aZCGK6DGuTj/bJALyIL06tKzPYAXiPAaqKW1hIY?=
+ =?us-ascii?Q?zCxh8zBbP7UCZBfv2ZehideMPQJyrdkeytCXVuP4fPAEL1eQYh3Dz2bIOg2R?=
+ =?us-ascii?Q?3aAAXuIM0nPjquWBMNtC1MZOyfmLB/slzTxF3x1zCKaE/PDOl68l9EZfE12M?=
+ =?us-ascii?Q?CeKmG7EF5/zqo36e+88XbCTiYPmL1U1Pvar8Bkd8eDtowqY36SkpNAePxYL9?=
+ =?us-ascii?Q?YJ3kWUHsT8IbwWH2M3RqWxmCeM5vCfZLL30KVgrhRxcmxH6oKumHVnMYUH7D?=
+ =?us-ascii?Q?XSus9d5hggIShPnngMzuAxBKELG+nuoE3JVAUxqLRSAKv7pb51DfiGNEubxB?=
+ =?us-ascii?Q?PF2YkFXskYBye/bvLfSkSJ4jjVbonaCX0H92UpNjCxmSxBwvXZ6Z+Lrq2jUx?=
+ =?us-ascii?Q?Qw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05ddd483-5a66-4286-0171-08dc1e394ee7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 06:37:46.6575
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AwOeAwXDMajB2fpxVq34U0PUotkFtP3qtxNcarwcB6dmadNkR5CGxzaKpVeT2WVJK17OeGI2+Pfw5lEcc391UDogidG2GOsJ+yUO0sg7Tps=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7401
+X-OriginatorOrg: intel.com
 
-From: Alison Schofield <alison.schofield@intel.com>
+Li Ming wrote:
+> CXL.mem protocol errors are logged in CXL RAS capability, if CXL.mem
+> device is unbound from CXL.mem driver, will not expect any CXL.mem
+> protocol errors happen on the endpoint or the dport connected to the
+> endpoint. Giving up these unexpected errors to avoid error handler to
+> access unmapped RCH dport's RAS capability. The error handler of CXL PCI
+> device helps to handle RAS errors happened on RCH dport. The host of the
+> RCH dport's RAS capability mapping is CXL.mem device, so the error
+> handler will access unmapped RCH dport's RAS capability after CXL.mem
+> device is unbound from the CXL.mem driver.
 
-Autodiscovered regions can fail to assemble if they are not discovered
-in HPA decode order. The user will see failure messages like:
+Thanks for this Li Ming!
 
-[] cxl region0: endpoint5: HPA order violation region1
-[] cxl region0: endpoint5: failed to allocate region reference
+I am going to reword this to add more context:
 
-The check that is causing the failure helps the CXL driver enforce
-a CXL spec mandate that decoders be committed in HPA order. The
-check is needless for autodiscovered regions since their decoders
-are already programmed. Trying to enforce order in the assembly of
-these regions is useless because they are assembled once all their
-member endpoints arrive, and there is no guarantee on the order in
-which endpoints are discovered during probe.
+---
+The PCI AER model is an awkward fit for CXL error handling. While the
+expectation is that a PCI device can escalate to link reset to recover
+from an AER event, the same reset on CXL amounts to a suprise memory
+hotplug of massive amounts of memory.
 
-Keep the existing check, but for autodiscovered regions, allow the
-out of order assembly after a sanity check that the lowered numbered
-decoder has the lower HPA starting address.
+At present, the CXL error handler attempts some optimisitic error
+handling to unbind the device from the cxl_mem driver after reaping some
+RAS register values. This results in a "hopeful" attempt to unplug the
+memory, but there is no guarantee that will succeed.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Neha Agrawal <neha.agrawal@intel.com>
+A subsequent AER notification after the memdev unbind event can no
+longer assume the registers are mapped. Check for memdev bind before
+reaping status register values to avoid crashes of the form:
+
+ RIP: 0010:__cxl_handle_ras+0x30/0x110 [cxl_core]
+ Call Trace:
+  <TASK>
+  cxl_handle_rp_ras+0xbc/0xd0 [cxl_core]
+  cxl_error_detected+0x6c/0xf0 [cxl_core]
+  report_error_detected+0xc7/0x1c0
+  ? __pfx_report_frozen_detected+0x10/0x10
+  pci_walk_bus+0x73/0x90
+  pcie_do_recovery+0x23f/0x330
+
+Longer term, the unbind and PCI_ERS_RESULT_DISCONNECT behavior might
+need to be replaced with a new PCI_ERS_RESULT_PANIC.
 ---
 
-Changes since RFC:
-- Declare auto_order_ok() as static (lkp)
-- Add Tested-by tag (Neha)
-Link to RFC: https://lore.kernel.org/linux-cxl/20240113050421.1622533-1-alison.schofield@intel.com/
-
-
- drivers/cxl/core/region.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 0f05692bfec3..f6a49fd01ae9 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -753,6 +753,37 @@ static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
- 	return to_cxl_decoder(dev);
- }
- 
-+static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_a,
-+			  struct cxl_region *cxlr_b)
-+{
-+	struct cxl_region_ref *cxl_rr;
-+	struct cxl_decoder *cxld_a, *cxld_b;
-+
-+	/*
-+	 * Allow the out of order assembly of auto-discovered regions as
-+	 * long as correct decoder programming order can be verified.
-+	 *
-+	 * Per CXL Spec 3.1 8.2.4.20.12 Committing Decoder Programming,
-+	 * software must commit decoders in HPA order. Therefore it is
-+	 * sufficient to sanity check that the lowered number decoder
-+	 * has the lower HPA starting address.
-+	 */
-+	if (!test_bit(CXL_REGION_F_AUTO, &cxlr_a->flags))
-+		return false;
-+
-+	cxld_a = cxl_region_find_decoder(port, cxlr_a);
-+	cxl_rr = cxl_rr_load(port, cxlr_b);
-+	cxld_b = cxl_rr->decoder;
-+
-+	if (cxld_b->id > cxld_a->id) {
-+		dev_dbg(&cxlr_a->dev,
-+			"allow out of order region ref alloc\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
- 					       struct cxl_region *cxlr)
- {
-@@ -767,7 +798,8 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
- 		if (!ip->res)
- 			continue;
- 
--		if (ip->res->start > p->res->start) {
-+		if (ip->res->start > p->res->start &&
-+		    (!auto_order_ok(port, cxlr, iter->region))) {
- 			dev_dbg(&cxlr->dev,
- 				"%s: HPA order violation %s:%pr vs %pr\n",
- 				dev_name(&port->dev),
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
--- 
-2.37.3
-
+> Fixes: 6ac07883dbb5 ("cxl/pci: Add RCH downstream port error logging")
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Li Ming <ming4.li@intel.com>
