@@ -1,124 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from relay.mailchannels.net (gt-egress-004.relay.mailchannels.net [172.255.62.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E037420B29
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 18:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706292867; cv=none; b=eR744z6SGd/8lOwvR9FCAACIHbMYQ60FMnhc3m/gn0594/4rvvCvvQEZ/HnCWIbtTIuyIgEaEtMCxbtC7awCUnSGFmFzhxB3MbcLh+6W8671WYTS5vyUdfpy6QABHEdSfXR6z0gEu38E+7bmbEMfSJTf9OPmlu0GJHedwYtUNos=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706292867; c=relaxed/simple;
-	bh=cMu2hdAvwOGamIxJRtoVK/TWT8xFZBUU+UGskH/1Dmg=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D36225AD
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 19:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=172.255.62.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706297641; cv=pass; b=tXPVZ2fHBeMyHDgWxsX3Zj3JPPoguu9EKOtp7O2+u/SEdPi07QtHV8uLpGvRmBOQHHB2XMoirvgKX48dJfMsID5saJ8382i+mfA/fsBH+i7ae3x7A9eOBbk+xgbyo98cNdWOqlKNw+FIKBL6Fj7oHR2HPtc+NwI3W5yMFafsO5Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706297641; c=relaxed/simple;
+	bh=43LxZTXWHVwNP0vENXewcAvnrBRVcG7PgLGfhqyjSjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BrKDBppAlZpeFrGHUe+Il6avRr3bh3kvLUIooB5iYk5rsyTRItnd1CwjzX1Uem2Pb8Mpp1ramhUR8fvVf1H4+qlftNn0aYmuJK7xny6tZVeXu8oDO5b6gpvTNONgQRi58HShZLejCVQbCyLpkyLaH4MFjZzVjDWMiUhsl0JL89k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bgmbz9fT; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTcZ6L2J1lvPdDKirLKrQO35cis1XT5Jo4y5ifhKLiFnwir4pNYAkgLlcSGR91oubvg1+uqSSQvC8OfTraJHRo4TWBnVSfIPb6d7JhR/aWm+lFLcV+6FIIfQse/yFr3odGE5jHuR/HJaVJ1bBLjf8pfTmVhoMP3ZA3QuaGHyYqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Q57LdvSe; arc=pass smtp.client-ip=172.255.62.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bgmbz9fT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706292865; x=1737828865;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cMu2hdAvwOGamIxJRtoVK/TWT8xFZBUU+UGskH/1Dmg=;
-  b=Bgmbz9fT3nFEd7Lp7WyObAhFq14d1O6ERHspy3AWgktOgT2PnW0Iy5hG
-   5A8GsjitpfGIpLvVNw2LUu97m5SgPRuaoQHFO+JAGOOTJZMSpXWcq8d9T
-   PJdzjtxsBGxQ3/sYCLgT9tjAjuSsbJ0LXjn8Wec3ycNutee1144Dq+RLh
-   SK7W6kM3wnG1x1PKP6xaDSfwBmkDWASFvGUm2Y/JIuXPDUQmMUvUU9Kna
-   VwapIAa73vVvRCvxBthIgAzKNFFcN8+xsZmxYxNYF0VkUo5+0N29FntG+
-   M2M9rkoK+XEidBI31TBt7LLcxwYgs24qNtqCdJfVTyHbWXudQfXKpca6z
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433691122"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="433691122"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 10:14:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="28892802"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.37.71])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 10:14:24 -0800
-Date: Fri, 26 Jan 2024 10:14:23 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	vishal.l.verma@intel.com
-Subject: Re: [NDCTL PATCH v3 3/3] ndctl: cxl: add QoS class check for CXL
- region creation
-Message-ID: <ZbP2f31s09WRzWb1@aschofie-mobl2>
-References: <170612961495.2745924.4942817284170536877.stgit@djiang5-mobl3>
- <170612969410.2745924.538640158518770317.stgit@djiang5-mobl3>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Q57LdvSe"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4F22C14345A;
+	Fri, 26 Jan 2024 17:17:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 8DE0A1434D6;
+	Fri, 26 Jan 2024 17:17:17 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1706289437; a=rsa-sha256;
+	cv=none;
+	b=SumsGBibsM1S/idNLekcId5FC2LbkCdUPGJ/hhAUFP/o5KT/L5JARpMS8LTRgyJI0mdv0b
+	SFbgwlaIG3UdnSTNkFvA/PcLAXRtqWYGyQv52x2lEffH64RmO41ImEBMXOM3y+CbM7ZPaK
+	qN0SxFbBkXM/iMTRrf9ubUOUMaXpIexFXgwfEz7EnBuCbF2qyREfy6f0+yEZ166iFIJ2HC
+	W8yChC7gUNQM+M67VTSiFlzYuyB/MsZ7sVohpKE5fHaZ0DZ3if7UuiIaxJCCwo2LwgQgq2
+	GjaZcfxfEtV3cAIOCYYqSknr7R4YO3bm8vcYOcs7OlwhTWqs06CTy7hGVYONVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1706289437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=a11EaRkfGd9LRVKXzKjRrhaD6ophVU/ePDsda3ymzOI=;
+	b=ZIhGhIRR8cuyTPzcPsL+S+BSPEGzJophz1SnSW+iDFvKb6BstK7RQ1qSpgRIjj/R/qkV/g
+	cfdrWasunt5jRmfKNwKe1TwqjIGkA71pzpbArJQ0gxI/fodfYwRKODNnTC4CtXdOacqdE6
+	tGjCf9rDO5bpKC3JwmwMl3dX8cBC/uclJSB6FHfwVVEpOUId5sisnqvc1b44xqOXCQmVua
+	Va+zC1Q99c2qGm5jBQMI/ilyCEkt6RSSKU6AqgjxnM4+/4o77tnRRBRe/cWrtNSQutguSN
+	UEbNncZpm9CPU6GHWDSfVcgi/CAORb9QotStg+Xj/7IQ5j8QarkYW9JdcIW8jw==
+ARC-Authentication-Results: i=1;
+	rspamd-9c9494d96-cwbbn;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Shrill-Cure: 78b9a11e00ac99fd_1706289438136_1599124016
+X-MC-Loop-Signature: 1706289438136:2195006422
+X-MC-Ingress-Time: 1706289438135
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.100.20.137 (trex/6.9.2);
+	Fri, 26 Jan 2024 17:17:18 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4TM4BP0Bw3z2m;
+	Fri, 26 Jan 2024 09:17:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1706289437;
+	bh=a11EaRkfGd9LRVKXzKjRrhaD6ophVU/ePDsda3ymzOI=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Q57LdvSex/HIYDsr1/7QUYog/QTP6DpXg56R7dVuKGU7TEjBFvfmF7VBoplTQPYsI
+	 3K86WRYcboEmAqc3vCFKPbdsAgUdxL4ZS90xMVC32aFO+qKcC3XWlQ6d8swDKCiXwF
+	 P1doQN5/afafisZAZNQGObK+PYZn8dZ2uZWiADhyG4OzCR7FyLqhDU2IdVwLBCb3+J
+	 aXdEY3Zqlp0kdBh/HxRRjlTJ2FxjCyRk4YaygnweachmN27LlOKMTbhhJqrOFGL0rc
+	 RJS7UiSU0xg3iHnpwidkETtJQGYnwAV/T6OXJmu1Jh/RgadcHTO5tiH+786ScsldPZ
+	 o6e+iCseN8Agg==
+Date: Fri, 26 Jan 2024 09:17:13 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: vishal.l.verma@intel.com, fan.ni@samsung.com, a.manzanares@samsung.com, 
+	mounika.k@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: Re: [PATCH 1/2] hw/cxl: Add Transfer FW support
+Message-ID: <vsm7fpp3fbywuzzepbhezzuhewrk5fc3avtvbcrb2nubs3lm2m@y257ghfqmqmr>
+References: <20240109070436.21253-1-dave@stgolabs.net>
+ <20240109070436.21253-2-dave@stgolabs.net>
+ <20240126154220.00002797@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <170612969410.2745924.538640158518770317.stgit@djiang5-mobl3>
+In-Reply-To: <20240126154220.00002797@Huawei.com>
+User-Agent: NeoMutt/20231221
 
-On Wed, Jan 24, 2024 at 01:54:54PM -0700, Dave Jiang wrote:
-> The CFMWS provides a QTG ID. The kernel driver creates a root decoder that
-> represents the CFMWS. A qos_class attribute is exported via sysfs for the root
-> decoder.
-> 
-> One or more QoS class tokens are retrieved via QTG ID _DSM from the ACPI0017
-> device for a CXL memory device. The input for the _DSM is the read and write
-> latency and bandwidth for the path between the device and the CPU. The
-> numbers are constructed by the kernel driver for the _DSM input. When a
-> device is probed, QoS class tokens  are retrieved. This is useful for a
-> hot-plugged CXL memory device that does not have regions created.
-> 
-> Add a check for config check during region creation. Emit a warning if the
+On Fri, 26 Jan 2024, Jonathan Cameron wrote:
 
-Maybe "Add a QoS check during region creation."
+>On Mon,  8 Jan 2024 23:04:35 -0800
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> Per the latest 3.1 spec for supporting firmware update metadata
+>> (no actual buffers). Aborting a xfer is currently unsupported
+>> through a nop.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>Hi Davidlohr.
+>
+>Whilst we may never notice from the OS as we expect it to send valid
+>sets of transfers only, I'd like the emulation to incorporate more
+>of the validity checks the spec requires such as:
+>- Multiple part transfers must all be for same slot - any interleaved
+>  ones for other slots result in error.
+>- Retry of previous transfer or one that starts where previous transfer
+>  ended - otherwise Out of Order detected.
+>
+>So we have to hold state, and as such will have the information to
+>set the slot as occupied with just one extra flag stored to say it is
+>a FULL or END message.
+>
+>Otherwise lgtm.
 
-> QoS class token from the root decoder is different than the mem device QoS
-> class token. User parameter options are provided to fail instead of just
-> warning.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v3:
-> - Rebase to pending branch
-> ---
->  Documentation/cxl/cxl-create-region.txt |    9 ++++
->  cxl/region.c                            |   67 +++++++++++++++++++++++++++++++
->  2 files changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
-> index f11a412bddfe..9ab2e0fee152 100644
-> --- a/Documentation/cxl/cxl-create-region.txt
-> +++ b/Documentation/cxl/cxl-create-region.txt
-> @@ -105,6 +105,15 @@ include::bus-option.txt[]
->  	supplied, the first cross-host bridge (if available), decoder that
->  	supports the largest interleave will be chosen.
->  
-> +-e::
-> +--strict::
-> +	Enforce strict execution where any potential error will force failure.
-> +	For example, if QTG ID mismatches will cause failure.
+I will send a v2 with your feedback. Do you prefer just using your
+latest '2024-26-01-draft' branch?
 
-The definition of this 'Enforce ...' sounds very broad like it's
-going to be used for more that this QTG ID check. Is it?  Maybe I
-missed some earlier reviews and that is intentional.
-
-I was expecting it to say something like: Enforce strict QTG ID matching.
-Fail to create region on any mismatch.
-
-
-> +
-> +-q::
-> +--no-enforce-qtg::
-> +	Parameter to bypass QTG ID mismatch failure. Will only emit warning.
-> +
->  include::human-option.txt[]
->  
->  include::debug-option.txt[]
-
-
-snip
-
-> 
+Thanks,
+Davidlohr
