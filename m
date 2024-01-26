@@ -1,43 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E3314298
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 11:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E1E1A723
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 11:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706269410; cv=none; b=MLMTxRHheaMaIR7G4+WyMEU0HN5Zk4Yf4Tcmv2tM8s1s8XUJiQU1lrvjmt+AZ8DH8V57uVoVrz+EyYZ3BNqLVWC+lCzqjWdYC6+IrRmiu/z2T+/9NOkCvCIUayIFFbVSAOHzxXijtVEC+wp1ups3NFfP6Lt54ObZBfnZhohyEMg=
+	t=1706270276; cv=none; b=nli5Db4Qpwt456O97TMIEjuly+5sunxNOAx51g5m2866iJSjIHRc8NFhCZcfkHr7Rs8vWIxSDNmsMSYTzoWv2AQAEjhdj/sSpRbD1c3XjAxataKVAWEvaA+daC0w+BgO9/Z1DA+aUbINoR1SUJD8EYglYc3O+5vmm18ONfktokI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706269410; c=relaxed/simple;
-	bh=tHoHtuPOi2duesss3AYwY0IIBDNXz1fbqYCH0mut7J0=;
+	s=arc-20240116; t=1706270276; c=relaxed/simple;
+	bh=N21FOKsOOdHcwSW5OTecF2mubN9EPTmx21krlKS/yd4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kpcs0X1DJUcPxO/IcDuCYqACjbo6y4jyXV4gqlfvp5vw5OsR1vPdwr5I2/ZvHps5bTmUQLMZOlLgiNjWnO95cdFtDsD1ZH2NfkUZbAKYQWzgV2eWjhlvuMcZGxSFRkKd+N1A98RjSwloKw1d/oPPKutYtMriheLtLeQSoJxkYIU=
+	 MIME-Version:Content-Type; b=bHWOl13rWEE32a1Ve6EoZ5Yfa0SiyQo5LQas5u2ZKVwZdocndQga1SLdln0lhIdCAXmRPiX94rUVVbLBmHla9o+iU9G9bscc+SBJSAYzkdea1XdFWbbyjH1wl/ivuYaz0oFlxmncziKqAto0GQyU6UY8P/ypiEj/elO8fOnegl8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLwjx0xpXz689rg;
-	Fri, 26 Jan 2024 19:40:37 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLx2F2t8Zz6JBFG;
+	Fri, 26 Jan 2024 19:54:45 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 73AA4140CF4;
-	Fri, 26 Jan 2024 19:43:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C898140B55;
+	Fri, 26 Jan 2024 19:57:51 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
- 2024 11:43:17 +0000
-Date: Fri, 26 Jan 2024 11:43:16 +0000
+ 2024 11:57:50 +0000
+Date: Fri, 26 Jan 2024 11:57:50 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: fan <nifan.cxl@gmail.com>
 CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
-	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, <linuxarm@huawei.com>, Philippe =?ISO-8859-1?Q?Mathieu?=
- =?ISO-8859-1?Q?-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH 5/5] hw/cxl: Standardize all references on CXL r3.1 and
- minor updates
-Message-ID: <20240126114316.00006b9a@Huawei.com>
-In-Reply-To: <ZbF56-RHbxY9yAUv@debian>
-References: <20240124134814.8717-1-Jonathan.Cameron@huawei.com>
-	<20240124134814.8717-6-Jonathan.Cameron@huawei.com>
-	<ZbF56-RHbxY9yAUv@debian>
+	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>, Ira Weiny
+	<ira.weiny@intel.com>, Huai-Cheng Kuo <hchkuo@avery-design.com.tw>, "Dave
+ Jiang" <dave.jiang@intel.com>, Peter Maydell <peter.maydell@linaro.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Li
+ Zhijian <lizhijian@fujitsu.com>, Stefan Hajnoczi <stefanha@gmail.com>,
+	<linuxarm@huawei.com>, Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?=
+	<philmd@linaro.org>
+Subject: Re: [PATCH 09/12] hw/mem/cxl_type3: Fix potential divide by zero
+ reported by coverity
+Message-ID: <20240126115750.000027e6@Huawei.com>
+In-Reply-To: <ZbGjFiKKPhC_uiOF@debian>
+References: <20240124124100.8218-1-Jonathan.Cameron@huawei.com>
+	<20240124124100.8218-10-Jonathan.Cameron@huawei.com>
+	<ZbGjFiKKPhC_uiOF@debian>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,51 +52,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 24 Jan 2024 12:58:19 -0800
+On Wed, 24 Jan 2024 15:53:58 -0800
 fan <nifan.cxl@gmail.com> wrote:
 
-> On Wed, Jan 24, 2024 at 01:48:14PM +0000, Jonathan Cameron wrote:
-> > Previously not all references mentioned any spec version at all.
-> > Given r3.1 is the current specification available for evaluation at
-> > www.computeexpresslink.org update references to refer to that.
-> > Hopefully this won't become a never ending job.
+> On Wed, Jan 24, 2024 at 12:40:57PM +0000, Jonathan Cameron wrote:
+> > Fixes Coverity ID 1522368.
 > > 
-> > A few structure definitions have been updated to add new fields.
-> > Defaults of 0 and read only are valid choices for these new DVSEC
-> > registers so go with that for now.
+> > Currently error_fatal is set if interleave_ways_dec() is going to return 0
+> > but we should handle that zero return explicitly.
 > > 
-> > There are additional error codes and some of the 'questions' in
-> > the comments are resolved now.
-> > 
-> > Update documentation reference to point to the CXL r3.1 specification
-> > with naming closer to what is on the cover.
-> > 
-> > For cases where there are structure version numbers, add defines
-> > so they can be found next to the register definitions.
-> > 
+> > Reported-by: Stefan Hajnoczi <stefanha@gmail.com>
 > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---  
+> >   
 > 
-> There are several references to the spec is incorrect, other than that
-> LGTM.
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
 > 
-> Search "Identify Memory Device (Opcode 4000h)" for inline comments.
-Thanks for ploughing through all this!
+> > ---
+> > Note this is a stop gap until a more complex HDM decoder verification series.
+> > ---
+> >  hw/mem/cxl_type3.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 1b92a065a3..24211703c6 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -794,8 +794,12 @@ static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
+> >          }
+> >          if (((uint64_t)host_addr < decoder_base) ||
+> >              (hpa_offset >= decoder_size)) {
+> > -            dpa_base += decoder_size /
+> > -                cxl_interleave_ways_dec(iw, &error_fatal);
+> > +            int decoded_iw = cxl_interleave_ways_dec(iw, &error_fatal);
+> > +
+> > +            if (decoded_iw == 0)
+> > +                return false;
+I've obviously been lax in running checkpatch.
+Brackets needed for qemu style here. I'll add them for v2
 
+Jonathan
 
-> >      /* Store off everything to local variables so we can wipe out the payload */
-> > @@ -760,7 +757,7 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-> >      return CXL_MBOX_SUCCESS;
-> >  }
+> > +
+> > +            dpa_base += decoder_size / decoded_iw;
+> >              continue;
+> >          }
 > >  
-> > -/* 8.2.9.5.1.1 */
-> > +/* CXL r3.1 Section 8.2.9.8.1.1: Identify Memory Device (Opcode 4000h) */  
-> 
-> Should be 8.2.9.9.1.1
-
-Oops. I think I had the 3.0 spec open by accident when doing some of these.
-Good catch - I'll fix these all up and send a v2.
+> > -- 
+> > 2.39.2
+> >   
 
