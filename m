@@ -1,183 +1,197 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4651B955
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 14:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706277867; cv=fail; b=J7N0O0omHaG2jNy4G2GecPGOlsR/wSGcumlyab9LjJw75F7XvQOunLzKRHsljj0zpXN1C8Y3qYdixK9C1MvWl/psu71zS1EFnAp+LFOnV/M2k/rMkXQHCqu/O9w5c2u6GcVLTueFTfW/1eYJq177RJs0I32QpxncP+qSFNFp9hQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706277867; c=relaxed/simple;
-	bh=3rlatBsDK1L1xiV5epOuqHqQ9yr8BvE39emXC1vxprk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JbkeEHSO9/krJRnKnSiM8AFrC/GJKVQmPDBq2Rg23FlrutTwOIw9DJ1UAQKQjxbaXBWC+Z/BsuMny3so5+v8c1Ikhm8Z/xcjOJIdQcHKZbC4gMpDzqaLRSNSFtTSpy6qjDbBT/Ml9/i81MCkpcZyNBwhntBJizbdbMvBOAjNnGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=te4o1WZe; arc=fail smtp.client-ip=40.107.220.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="te4o1WZe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YdWu5HOH+b7vAJLbSgEFvac3lT6+LGaBH+EH/9qxE2FyrKil93YJFvZZLcMWU4RzwVWHuvuFQA4iuTozCvBtK2ZZgBetPKFUVjOaaZTxayMAQFNhAiinHdCMj1jckgl5lZRUlKrImWZY+fOI3Qrgi48K8JZTCnYTWugTaR0yOmzuO3jqAtzRwhe92K5hHMwhp6YDbpdmNKRjP25LZGCdBPnb/rk17p6BNKhrrER72SMeKkfY+0fFZMC6WmFiZ1wUes5LhJM4hALXoKJzJN0s2CcrCNvjPMj0H6QAW/NxPgHQr8LFj0xZobU62RGg69wJs5OK/CqW3JNKR6ISQJ5jLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I3FckRTV4YBfWfqFVdNc2YyAcu4rLqMBb3pKqYrCSaY=;
- b=eHiwqtCG0lddCOheeE4ppiwzncj227H9Tdijz2V9sXxoD1EId6+pPi/maLD8UpQ8hfV4PAGZNDD1RM+GoglESZdL3Vt+IzPeROseVogm8AunqaDlrS5eBI/ghBK5Zas3VHiqj9im+aMxGvyEwhRBP59vem9Hv1VZuSZrRY5/DSWUx7g4iraYETNmr4nQ3czL/uN5sjpQHznG7jwf+UzxXwKGWK72tICnWpLLCJjj97MFCVCFJTfiBjVvaX6Lcf9/s4PejRQ0PRDJbHREx2FwHCBzjBWaz5lmx/np2/F2+70HQMz/4+QxQ071vytV4yFGH9GeL5los6Wp6DJc87n+nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I3FckRTV4YBfWfqFVdNc2YyAcu4rLqMBb3pKqYrCSaY=;
- b=te4o1WZeeFUC52f/y+gj5cVelfwRnHaYe+7ngK5KYShYYzec53BAt9FfSjqzVFf6pRyrIJDXV/G/d8eOz6EKyBR2MVOvnTmy8GhnEzGKKiB0Zxq3FUKhI1AttvLqKQguT08dcPPbZwW7gqRaKH/w/hLOqUvI4yExwD10eo9N8mM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- CYXPR12MB9444.namprd12.prod.outlook.com (2603:10b6:930:d6::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.27; Fri, 26 Jan 2024 14:04:23 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::662f:e554:5359:bfdb]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::662f:e554:5359:bfdb%4]) with mapi id 15.20.7228.022; Fri, 26 Jan 2024
- 14:04:23 +0000
-Message-ID: <c8f6d74c-bdbb-4c46-a535-b109c440a7fd@amd.com>
-Date: Fri, 26 Jan 2024 08:04:19 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/pci: Skip to handle RAS errors if CXL.mem device
- is detached
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, Li Ming <ming4.li@intel.com>,
- linux-cxl@vger.kernel.org
-Cc: terry.bowman@amd.com, rrichter@amd.com, Jonathan.Cameron@huawei.com,
- dave.jiang@intel.com
-References: <20240125081414.2189572-1-ming4.li@intel.com>
- <65b3533821510_293042944c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-From: "Bowman, Terry" <kibowman@amd.com>
-In-Reply-To: <65b3533821510_293042944c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P221CA0005.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:806:25::10) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CD61EA74
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 15:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706282484; cv=none; b=DxvKN9yQmcQH32g+eHSFByIAG7DtUPGxXPFKMTvFZKCStqLmSv9m5x+Nt5o/J9ca5AMTx1P58VgyeBqeArhtJebFOMkTCOSqwq5Y7NKK/Ja4IOL5q0Y/VfPSd4dpXyREzxqz/AZPoHA6KRY8SQoPcbM9y3xgTeJAhjSrTAjamt0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706282484; c=relaxed/simple;
+	bh=+rXLzZdV9iVRpvoBxv7uegg29iS1vSPygQai1lL1Jto=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LRVDURZyu7xBx/std7HsLSS0N3/ORD+Yv7trMF4yH0HY9wbD4ubzoy8yHuBfLe4tokLJjDOudj6go9Mnu+JgE71pjewCKS4nHFWoAEtjGaYyZgxYWLWuYjduI76cOVBeTImgHoxfRAWuxODb1Xm6c1MqcEyW5XOdHf6jNgDXoL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM1Xz4BQcz688d6;
+	Fri, 26 Jan 2024 23:18:11 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7CA2C140516;
+	Fri, 26 Jan 2024 23:21:17 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
+ 2024 15:21:17 +0000
+Date: Fri, 26 Jan 2024 15:21:16 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
+	<linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
+	<nifan@outlook.com>, <jim.harris@samsung.com>
+Subject: Re: [PATCH v3 0/9] Enabling DCD emulation support in Qemu
+Message-ID: <20240126152116.00001dd3@Huawei.com>
+In-Reply-To: <6556af1fc8791_1a4bd32947e@iweiny-mobl.notmuch>
+References: <20231107180907.553451-1-nifan.cxl@gmail.com>
+	<6556af1fc8791_1a4bd32947e@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CYXPR12MB9444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7dac8d08-fb09-4b02-3b2e-08dc1e77b2b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fwmY30i4bDopEQJW7kg1P6QfunPZoBGpQXdyaehKef9ts5rYjbDbtj/NymULG0yTerVyKwEanuUm+oE6uTIp3B+C4YHJ2XmG7F9KSeW9ED7QyOMLeqdybpb9FocraF5oulL+xwXGIaZITmEYm5DRL2+L+hp23B/yy8HE+hVZU0Ipzm7n4HetxbhTBf2IijLIXzqWsp7YbROtrUQmec1NomHdIIS9bXecYin7fXZ7G9piCcnRcfnHwwEDxti8MZXnz1JwbwXfFHrQDuxhhHarh/F15DRuZlVRONA7wJ22Pz5Vtj2devcLd4qgpKxqPldJJl/AXUqRY1msKPbhJ4DYZtrcT7I4dD1yOcuOnUnhXKpp1SZye9iIgQAZjzIDkIuYBpFdXSynowMEK5gY3hCW/shhOuBOiWhCaubD0KuFj0P16OWyDQroWPmD471eNee4P39uKBp90LokEVIXay75PD9omMmg/vdjGz2J2sEbzby2f/6ot/fE3A7a1JL0W+UOV6aWOhgj8QzNXAvpvDs6ZugBE2pHIm5FceSDY7tvcJ5lwX+R/WdTpBL+IWSHgmBY1lp/vEHn5zatAfR7um0aeQiN2z478dbsfOcqS29yY/CoYFwRSE9FTnrEESftgKfV2OTDdXkIIpQLe8bK7EBJKw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39860400002)(376002)(136003)(396003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(5660300002)(41300700001)(36756003)(31696002)(38100700002)(316002)(6486002)(8676002)(478600001)(6666004)(8936002)(6512007)(110136005)(6506007)(66946007)(66476007)(26005)(2906002)(83380400001)(53546011)(66556008)(2616005)(4326008)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZWIvU1RvV1EwYURIZkFsS2IxdlBxeUZQenhVczFzcXQzTm9BMGFTMDB5bVly?=
- =?utf-8?B?OVdjTW5QS2FQSmViSXVzbnlKODhYeTE3TU5yM0pDdEpIejlpOFJkUVNRRkJo?=
- =?utf-8?B?TnJTRmhVMTV1a3JzM1NOREVMUTdCQTR4aS9SenRrRUhuWTNBWFRhMksrcGRw?=
- =?utf-8?B?UGtjNzUzYzJoKzl6UUhpYUpxV2VFTUxyc09Cd2lvZGE1dkFxaE93VXVZSXF6?=
- =?utf-8?B?OTBmdlN1N3NMYzFxb0s1aElJd2p6SzQzQ1VlSExOSkFuZStQVFVHMDhrNXhL?=
- =?utf-8?B?T0dCWDBFQVZvM0dXVG9BVnVkcitWZisxdlJ2VjhUWm1GVWw3d2pIRlFLaHVk?=
- =?utf-8?B?M2lUWEpYMmc2UVRyLzdlL2wwTzNmdTRPSXVFa08vZTNBbC9WUjFVNWRLRnhF?=
- =?utf-8?B?cjc2QS9vcUZDNitSbzdENUhLeGRXOXhwRWJ5QnVoc28xVHFQNTBjL1VZdWJv?=
- =?utf-8?B?bVVkK2tNcTRWTXo5MEdCd2hiUkpuMjF2NUVSdkFzc0xKRE91R0VOTnExdXhz?=
- =?utf-8?B?L2kvUnhOQm0xblBGSEZZQ0UwUU1VYXVLWFJPdnAzOTFHbmZFVzd4dS9MdWE1?=
- =?utf-8?B?dTBjMXFmNG9PMkRhTmNHYlRYK3Rldk1WbDdpK0ZZNDk5SE15MFBHNE9vU3Bq?=
- =?utf-8?B?cEtTR0xDUjAzRzZha0RPWjJ1OVZtVng3WXNpc3JBa0NrQVZoTmJiWWFoNUtH?=
- =?utf-8?B?YjAwdFhCejM2NWpDaEx2VkRVQkZmaWp2ZmxuWTJxQzFaTUtkVW55T1dDN0NT?=
- =?utf-8?B?TTEwbnFoeERDd0huUGZRbTN2UTJ6V0ZoZVNnWkxZQUdnTkd5U0xzeWdIdGFo?=
- =?utf-8?B?K0grV2p0TVFwaHNwZXdvUC8xdGdqK0FMYUdTMERKMXZwTnVSRHVCdmNkTjcz?=
- =?utf-8?B?QXl4QlpTaVNSM2NLdGgweE5razMzUDRtYzVESGxOd0w0cVpLWS94a1c1V3N6?=
- =?utf-8?B?UnplMGFLSDZqaVkweUx3RHBDMWp1S2pQZjlRZmZ2Yy9aMFc0eHkyakdZNDZL?=
- =?utf-8?B?WEgwdktCUTZpQk84SGlyQ0QrZFQ0aVhKZGczSnozZHNaTXpMcjVCdU5yMFl4?=
- =?utf-8?B?azdmbGdZSGt4a1paNkQzM3piUnNQYTNjTDlUNjlIZXhHdWxrblFFSXEwV0VX?=
- =?utf-8?B?eFczQzdwTm9ibGNwWmdIa0V2dnJaNjREYzR4dW1IRjVrZjhVd1hPUlhZQUpw?=
- =?utf-8?B?ZzZGVU9vRWllV2h5TlZMV0k4ZDBGNmE1azJic0J4Vk1hWTM4Rm1Ea3RCVjJU?=
- =?utf-8?B?QVFQZ1gvMEZnQWdidlU3ZDkrdVB5Q3VaL2xQS2RCVGVuS3A5THFjOUs3K0JF?=
- =?utf-8?B?d3JIa21qV0xSWGxnOHlwMktidU5QU0xMQ0VQaUQrK0xMc21NdURYajlnWlFq?=
- =?utf-8?B?MC9GTlc4eGc3MnNmNlV1bW4zMitmT2NXNWhKdlFwYk94ZWkvbGtncHFORWxF?=
- =?utf-8?B?NUZVYnJBbzArcm1FM0FhRXY3ajkyVG81b0k5cmI5Tkl5QzZMajAzTGlaK2Fz?=
- =?utf-8?B?VVBhTld1YkM2T2JjcVlQTk5JR01kd3k1elA2cml3LzI3a0ZqOGwzYUpUaWFQ?=
- =?utf-8?B?QjdEMFlpZWE0T1I2emI4aXBtWExlWlozM3phWnMralFPVXpXeVlSTWxmVFU2?=
- =?utf-8?B?RkhYL3VPUXZvR0dwL2ZNaWhRd2hTanBzNzE0TldJaDVZTnJLL2ZDaVdxSjg2?=
- =?utf-8?B?MDhIOWR4NlI1anJYMDh3MUxiZjZGMVFGUmg4RzgyU2xzdC9mc3hoQnd1aUdF?=
- =?utf-8?B?RFdFZ00vajdwU21oNEM2Uk9jcGZPN0VLVEtLNk1NdHVOMzBqYVdid3Z6S3NI?=
- =?utf-8?B?UFRDdGY1WHliVUJpMkN6SjBaNlJ2Tk83eWNvRk95eUhvVmIvQlY5ZW5qTFV3?=
- =?utf-8?B?Um41dmFqRmlVN09GcXhrVTl5TGdDeVdxcWRyM3plYzYvUzkyOXZXQ3JhVDJk?=
- =?utf-8?B?VDJaaFBFMFk0cHBuYXppdElpNU1WZkVYMzRiejhzZmlCVzdzV0JTblJ1b1BY?=
- =?utf-8?B?VGIrN2xkK3VQTjZDQVRqZ1VDQyttbFZhYmZZcWthTC9VbzJwbldwTjZhNjNv?=
- =?utf-8?B?dDhJZWdJUUdMcmlodE05aHRLZWw5dUs1ZzE5SUtZUzV5TC9iaGcvOEhmN3ZI?=
- =?utf-8?Q?yLVjS9bwzvBv5Bt1AgB4SB7qh?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dac8d08-fb09-4b02-3b2e-08dc1e77b2b8
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 14:04:22.9869
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /4wX5GtL8HQp1I9n7PBl66yCxIbUnWzjpqx/FcL3zMCrhfPuMr3cEoSzIGXWtvDh0OX05qcFl9f328UkdHBj/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9444
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Li and Dan,
+On Thu, 16 Nov 2023 16:09:03 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-I added comment below.
+> nifan.cxl@ wrote:
+> > From: Fan Ni <nifan.cxl@gmail.com>
+> > 
+> > 
+> > The patch series are based on Jonathan's branch cxl-2023-09-26.  
+> 
+> Finally getting around to trying this new series and the patch series does not
+> seem to apply on top of this branch?
+> 
+> Just to verify is this the top commit this work was based on?
+> 
+>    d4edf131bbac [jonathan/cxl-2023-09-26] cxl/vendor: SK hynix Niagara Multi-Headed SLD Device
+> 
+> I seem to have found some issue with CDAT checksumming[1] which I'm not quite
+> sure about.
+> 
+> I went ahead and pulled your latest work from:
+> 
+>     https://github.com/moking/qemu-jic-clone.git dcd-dev
+> 
+>     abe893944bb3  hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
+> 
+> It still has this same problem.
+> 
 
-On 1/26/2024 12:37 AM, Dan Williams wrote:
-> Li Ming wrote:
->> CXL.mem protocol errors are logged in CXL RAS capability, if CXL.mem
->> device is unbound from CXL.mem driver, will not expect any CXL.mem
->> protocol errors happen on the endpoint or the dport connected to the
->> endpoint. Giving up these unexpected errors to avoid error handler to
->> access unmapped RCH dport's RAS capability. The error handler of CXL PCI
->> device helps to handle RAS errors happened on RCH dport. The host of the
->> RCH dport's RAS capability mapping is CXL.mem device, so the error
->> handler will access unmapped RCH dport's RAS capability after CXL.mem
->> device is unbound from the CXL.mem driver.
-> Thanks for this Li Ming!
->
-> I am going to reword this to add more context:
->
-> ---
-> The PCI AER model is an awkward fit for CXL error handling. While the
-> expectation is that a PCI device can escalate to link reset to recover
-> from an AER event, the same reset on CXL amounts to a suprise memory
-> hotplug of massive amounts of memory.
->
-> At present, the CXL error handler attempts some optimisitic error
-> handling to unbind the device from the cxl_mem driver after reaping some
-> RAS register values. This results in a "hopeful" attempt to unplug the
-> memory, but there is no guarantee that will succeed.
->
-> A subsequent AER notification after the memdev unbind event can no
-> longer assume the registers are mapped. Check for memdev bind before
-> reaping status register values to avoid crashes of the form:
->
->   RIP: 0010:__cxl_handle_ras+0x30/0x110 [cxl_core]
->   Call Trace:
->    <TASK>
->    cxl_handle_rp_ras+0xbc/0xd0 [cxl_core]
->    cxl_error_detected+0x6c/0xf0 [cxl_core]
->    report_error_detected+0xc7/0x1c0
->    ? __pfx_report_frozen_detected+0x10/0x10
->    pci_walk_bus+0x73/0x90
->    pcie_do_recovery+0x23f/0x330
+> Before I dig into this, is this the latest dcd branch?
+I've pushed out a new tree, but it's definitely in a may eat babies form...
 
-report_error_detected() includes the same "if (dev->driver)" check before calling the device's err_handler(). The same check again in the CXL device error handler increases the chances of catching the surprise unbind case but not by much.
+gitlab.com/jic23/qemu cxl-2024-26-01-draft
 
-Regards, Terry
+Only had the most basic of testing so far.  DCD rebase was messy as I've dragged
+it into the 'next to send upstream' location and various fixes including
+Ira's CDAT one have gone out already.
+
+I'm keen to try and land this in QEMU 9.0 which basically means we have until
+the end of Feb to shake out any problems.
+
+Some other work is at least somewhat built on top of this (because of the
+need to deal with DCD regions as well as pmem and volatile ones).
+
+Jonathan
 
 
-> Longer term, the unbind and PCI_ERS_RESULT_DISCONNECT behavior might
-> need to be replaced with a new PCI_ERS_RESULT_PANIC.
-> ---
->
->> Fixes: 6ac07883dbb5 ("cxl/pci: Add RCH downstream port error logging")
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Li Ming <ming4.li@intel.com>
+> 
+> Has anything changed in how you specify DCD devices on the qemu command line
+> with this latest work?  Here is what I have:
+> 
+> ...
+> -device cxl-type3,bus=hb0rp0,memdev=cxl-mem0,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem0,id=cxl-dev0,lsa=cxl-lsa0,sn=0
+> -device cxl-type3,bus=hb0rp1,memdev=cxl-mem1,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem1,id=cxl-dev1,lsa=cxl-lsa1,sn=1
+> -device cxl-type3,bus=hb1rp0,memdev=cxl-mem2,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem2,id=cxl-dev2,lsa=cxl-lsa2,sn=2
+> -device cxl-type3,bus=hb1rp1,memdev=cxl-mem3,num-dc-regions=2,nonvolatile-dc-memdev=cxl-dc-mem3,id=cxl-dev3,lsa=cxl-lsa3,sn=3
+> ...
+> 
+> 
+> Ira
+> 
+> [1] https://lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/
+> 
+>  
+> > The main changes include,
+> > 1. Update cxl_find_dc_region to detect the case the range of the extent cross
+> >     multiple DC regions.
+> > 2. Add comments to explain the checks performed in function
+> >     cxl_detect_malformed_extent_list. (Jonathan)
+> > 3. Minimize the checks in cmd_dcd_add_dyn_cap_rsp.(Jonathan)
+> > 4. Update total_extent_count in add/release dynamic capacity response function.
+> >     (Ira and Jorgen Hansen).
+> > 5. Fix the logic issue in test_bits and renamed it to
+> >     test_any_bits_set to clear its function.
+> > 6. Add pending extent list for dc extent add event.
+> > 7. When add extent response is received, use the pending-to-add list to
+> >     verify the extents are valid.
+> > 8. Add test_any_bits_set and cxl_insert_extent_to_extent_list declaration to
+> >     cxl_device.h so it can be used in different files.
+> > 9. Updated ct3d_qmp_cxl_event_log_enc to include dynamic capacity event
+> >     log type.
+> > 10. Extract the functionality to delete extent from extent list to a helper
+> >     function.
+> > 11. Move the update of the bitmap which reflects which blocks are backed with
+> > dc extents from the moment when a dc extent is offered to the moment when it
+> > is accepted from the host.
+> > 12. Free dc_name after calling address_space_init to avoid memory leak when
+> >     returning early. (Nathan)
+> > 13. Add code to detect and reject QMP requests without any extents. (Jonathan)
+> > 14. Add code to detect and reject QMP requests where the extent len is 0.
+> > 15. Change the QMP interface and move the region-id out of extents and now
+> >     each command only takes care of extent add/release request in a single
+> >     region. (Jonathan)
+> > 16. Change the region bitmap length from decode_len to len.
+> > 17. Rename "dpa" to "offset" in the add/release dc extent qmp interface.
+> >     (Jonathan)
+> > 18. Block any dc extent release command if the exact extent is not already in
+> >     the extent list of the device.
+> > 
+> > The code is tested together with Ira's kernel DCD support:
+> > https://github.com/weiny2/linux-kernel/tree/dcd-v3-2023-10-30
+> > 
+> > Cover letter from v2 is here:
+> > https://lore.kernel.org/linux-cxl/20230724162313.34196-1-fan.ni@samsung.com/T/#m63039621087023691c9749a0af1212deb5549ddf
+> > 
+> > Last version (v2) is here:
+> > https://lore.kernel.org/linux-cxl/20230725183939.2741025-1-fan.ni@samsung.com/
+> > 
+> > More DCD related discussions are here:
+> > https://lore.kernel.org/linux-cxl/650cc29ab3f64_50d07294e7@iweiny-mobl.notmuch/
+> > 
+> > 
+> > 
+> > Fan Ni (9):
+> >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
+> >     payload of identify memory device command
+> >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
+> >     and mailbox command support
+> >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
+> >     type3 memory devices
+> >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
+> >     devices
+> >   hw/mem/cxl_type3: Add host backend and address space handling for DC
+> >     regions
+> >   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
+> >     list mailbox support
+> >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
+> >     dynamic capacity response
+> >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
+> >     extents
+> >   hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
+> > 
+> >  hw/cxl/cxl-mailbox-utils.c  | 469 +++++++++++++++++++++++++++++-
+> >  hw/mem/cxl_type3.c          | 548 +++++++++++++++++++++++++++++++++---
+> >  hw/mem/cxl_type3_stubs.c    |  14 +
+> >  include/hw/cxl/cxl_device.h |  64 ++++-
+> >  include/hw/cxl/cxl_events.h |  15 +
+> >  qapi/cxl.json               |  60 +++-
+> >  6 files changed, 1123 insertions(+), 47 deletions(-)
+> > 
+> > -- 
+> > 2.42.0
+> >   
+> 
+> 
+> 
+
