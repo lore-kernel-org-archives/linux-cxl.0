@@ -1,99 +1,165 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FA92030F
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 17:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8329A208C8
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 18:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706291315; cv=none; b=XlyXOwLo0MN/xlGAXNicmShj5lBJeTWsP8p1n7/BUkvcUoQZFBPGYTvt4WFDBgy3ooD6BiEnt1yHVDvqoQeuh3hKR/AbHY7WlTnq56ogliWEeWkpG54Bcc639NfBCE0ihkX67pRkyMZb7SYO+Etict68WSzOVuWPctT+MWZPyjc=
+	t=1706292116; cv=none; b=MzBLuhRGW2eSX9I8oJY9j28DUX998R1q5BO7VmbxdzQjsApmbU0B/qE2M84CU01QQ8itvbist6CHftTFCgx6In4sz2ippwU9Fq+hOo20ocr2tW7AWk/k7RIM5ksfr6agb7RteguxmzSrQKMSPMxEhGB2XmweG9nmBBOd4hipR9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706291315; c=relaxed/simple;
-	bh=vdKkvBh/skYrxVuR261TMwo8SFS+0NESgvKSrQ1D+aA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=og2KDkAfU+OSUxliAeFgLi0wqVNPF2Zl1/WIbZzAqq7FWxhu2uMXbgMTQjZ1DtPD/M0nHQKs5mLk7o4+I2qhSh0P2Lx6o5fneN9moTKCmRRYpNTRqC7bVLY+DrYkE3GPipg8Wcn9oGOIPkT6MhbbmHbZHsfliofx6fD7zSTj+iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TM4pw2b9rz6K8wW;
-	Sat, 27 Jan 2024 01:45:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34185140A36;
-	Sat, 27 Jan 2024 01:48:28 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
- 2024 17:48:27 +0000
-Date: Fri, 26 Jan 2024 17:48:26 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
-	<a.manzanares@samsung.com>, <mounika.k@samsung.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hw/cxl: Add Transfer FW support
-Message-ID: <20240126174826.00006239@Huawei.com>
-In-Reply-To: <vsm7fpp3fbywuzzepbhezzuhewrk5fc3avtvbcrb2nubs3lm2m@y257ghfqmqmr>
-References: <20240109070436.21253-1-dave@stgolabs.net>
-	<20240109070436.21253-2-dave@stgolabs.net>
-	<20240126154220.00002797@Huawei.com>
-	<vsm7fpp3fbywuzzepbhezzuhewrk5fc3avtvbcrb2nubs3lm2m@y257ghfqmqmr>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1706292116; c=relaxed/simple;
+	bh=UVId2mJ5SkVmLG2AO+s/CfhdcBiuQemjN6Ac3yvBFT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVKxSzqROT+QdXeKV5ywuhPuUqDYjMogIVICRhSOkkdYFWMDeEfMxLgF1MI5STmozM+WRZ7jl0NWnO26xuvH6o9q9ZuBmgqEwAAfU2HyZr+NsL9/O1NheAgMI30HGYnBYxu1ZD3gIafr6KExO1600oXiTk6DbamQOsI6PpH2d5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VE0+M7at; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VE0+M7at"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706292115; x=1737828115;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UVId2mJ5SkVmLG2AO+s/CfhdcBiuQemjN6Ac3yvBFT4=;
+  b=VE0+M7at7/uMrPl4X4jnrjdc7RnCZGD4WTwEYNFFrLwpC5K8pmg1h3ab
+   ix0We85RjOKjhsVjCSTbba2JVFoOWujccPKiMSRNiWKgnHIAnUrQJFQ4S
+   s0Uf5YEuB8tjUF4dsLNCHFyD15JqtEzVb/nMex1AGL7Mm7gJHzY5NRBnG
+   qitXAKgzxCmBNrRXvvAx0w6cNh76cHXr3+Fnkoofy1zNi55zlMldZHOfx
+   KHe5wwUsbitr+Eqaon2t9Un1qMtXnmLTTnFmpV4CUmEawO8MfuLgoSpNB
+   gbhe+5RHSOulqhe3C/s2BZuMy5bj0pzf9Y4FkCUVZM+xcll8nCK9aLf56
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="16060637"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="16060637"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 10:01:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930429035"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930429035"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.37.71])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 10:01:53 -0800
+Date: Fri, 26 Jan 2024 10:01:51 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	vishal.l.verma@intel.com
+Subject: Re: [NDCTL PATCH v3 2/3] ndctl: cxl: Add QoS class support for the
+ memory device
+Message-ID: <ZbPzj90keGE0zr0K@aschofie-mobl2>
+References: <170612961495.2745924.4942817284170536877.stgit@djiang5-mobl3>
+ <170612968788.2745924.12035270102793649199.stgit@djiang5-mobl3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170612968788.2745924.12035270102793649199.stgit@djiang5-mobl3>
 
-On Fri, 26 Jan 2024 09:17:13 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
-
-> On Fri, 26 Jan 2024, Jonathan Cameron wrote:
+On Wed, Jan 24, 2024 at 01:54:47PM -0700, Dave Jiang wrote:
+> Add libcxl API to retrieve the QoS class tokens for the memory
+> devices. Two API calls are added. One for 'ram' or 'volatile'
+> mode and another for 'pmem' or 'persistent' mode. Support also added
+> for displaying the QoS class tokens through the 'cxl list' command.
+> There can be 1 or more QoS class tokens for the memory device if
+> they are valid. The qos_class tokens are displayed behind -vvv
+> verbose level.
 > 
-> >On Mon,  8 Jan 2024 23:04:35 -0800
-> >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >  
-> >> Per the latest 3.1 spec for supporting firmware update metadata
-> >> (no actual buffers). Aborting a xfer is currently unsupported
-> >> through a nop.
-> >>
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>  
-> >Hi Davidlohr.
-> >
-> >Whilst we may never notice from the OS as we expect it to send valid
-> >sets of transfers only, I'd like the emulation to incorporate more
-> >of the validity checks the spec requires such as:
-> >- Multiple part transfers must all be for same slot - any interleaved
-> >  ones for other slots result in error.
-> >- Retry of previous transfer or one that starts where previous transfer
-> >  ended - otherwise Out of Order detected.
-> >
-> >So we have to hold state, and as such will have the information to
-> >set the slot as occupied with just one extra flag stored to say it is
-> >a FULL or END message.
-> >
-> >Otherwise lgtm.  
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+One tidbit below. 
+
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+
+> ---
+> v3:
+> - Rebase to pending branch
+> - Skip from failing if no qos_class sysfs attrib found
+> ---
+>  cxl/json.c         |   36 +++++++++++++++++++++++++++++++++++-
+>  cxl/lib/libcxl.c   |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym |    2 ++
+>  cxl/lib/private.h  |    2 ++
+>  cxl/libcxl.h       |    7 +++++++
+>  5 files changed, 94 insertions(+), 1 deletion(-)
 > 
-> I will send a v2 with your feedback. Do you prefer just using your
-> latest '2024-26-01-draft' branch?
+> diff --git a/cxl/json.c b/cxl/json.c
+> index 48a43ddf14b0..dcbac8c14f03 100644
+> --- a/cxl/json.c
+> +++ b/cxl/json.c
+> @@ -770,12 +770,32 @@ err_free:
+>  	return jpoison;
+>  }
+>  
+> +static struct json_object *get_qos_json_object(struct json_object *jdev,
+> +					       struct qos_class *qos_class)
+> +{
+> +	struct json_object *jqos_array = json_object_new_array();
+> +	struct json_object *jobj;
+> +	int i;
+> +
+> +	if (!jqos_array)
+> +		return NULL;
+> +
+> +	for (i = 0; i < qos_class->nr; i++) {
+> +		jobj = json_object_new_int(qos_class->qos[i]);
+> +		if (jobj)
+> +			json_object_array_add(jqos_array, jobj);
+> +	}
+> +
+> +	return jqos_array;
+> +}
+> +
+>  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		unsigned long flags)
+>  {
+>  	const char *devname = cxl_memdev_get_devname(memdev);
+> -	struct json_object *jdev, *jobj;
+> +	struct json_object *jdev, *jobj, *jqos;
 
-Yes, that makes my life easiest (though I'm also find dealing with
-rebases if you use something reasonable that isn't that)
-Nestle it in as far down as possible but after the DCD changes.
-Either before or after your scan media set (up to you - they'll
-probably get grouped together anyway for sending to Michael).
+Can the generic *jobj be used below rather than adding the new *jqos?
 
-Thanks!
 
-Jonathan
+>  	unsigned long long serial, size;
+> +	struct qos_class *qos_class;
+>  	int numa_node;
+>  
+>  	jdev = json_object_new_object();
+> @@ -791,6 +811,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		jobj = util_json_object_size(size, flags);
+>  		if (jobj)
+>  			json_object_object_add(jdev, "pmem_size", jobj);
+> +
+> +		if (flags & UTIL_JSON_QOS_CLASS) {
+> +			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
+> +			jqos = get_qos_json_object(jdev, qos_class);
+> +			if (jqos)
+> +				json_object_object_add(jdev, "pmem_qos_class", jqos);
+> +		}
+>  	}
+>  
+>  	size = cxl_memdev_get_ram_size(memdev);
+> @@ -798,6 +825,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		jobj = util_json_object_size(size, flags);
+>  		if (jobj)
+>  			json_object_object_add(jdev, "ram_size", jobj);
+> +
+> +		if (flags & UTIL_JSON_QOS_CLASS) {
+> +			qos_class = cxl_memdev_get_ram_qos_class(memdev);
+> +			jqos = get_qos_json_object(jdev, qos_class);
+> +			if (jqos)
+> +				json_object_object_add(jdev, "ram_qos_class", jqos);
+> +		}
+>  	}
+>  
+>  	if (flags & UTIL_JSON_HEALTH) {
 
+snip
 
 > 
-> Thanks,
-> Davidlohr
-
+> 
