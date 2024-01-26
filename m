@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0890F18E06
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0A4D30B
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706270616; cv=none; b=O9y8fr525oS6s/DvDrpAb5Nl6PQp/3q6esRe7T8H82e3dRUE0USOf819AqlX9GI+AIqO8Wbd2r13SejIA1xOUVDZFUbn2ONRDW/ggio4wfzS+iZhtiOVmLSF5DGELmBTleKk0nWTz32yk5X0XmMkCQVL95P44xtDoXC3BPxclBc=
+	t=1706270647; cv=none; b=a1D834KuHdK6AbRNq1TCMrt22ttEWoOk86NI7C28ChCBFeUn2Ihl55Vriz6LdcWsHcYnkeaYxmMqw9VRflzLVBsKjKz/np8igRSHjPJXzWzp58pvM3WnL46RijaeGuv6z9rrd4z8xj7aH66zeLy3irKZFIWowUcoOuxN/HcpDs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706270616; c=relaxed/simple;
-	bh=vrAJqu3LJ51G6xauh2EXP8cni7H6CR8W3Jp6ULeLHCE=;
+	s=arc-20240116; t=1706270647; c=relaxed/simple;
+	bh=DHWUBfQgF775qtUv7MoUAgJK2ZcMd9PItWbW5PxmYHA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AjWRa9EWvUl+NXnn/mrSoozvv3Kn/jyZtvOg7VFjQJzbGqQugUzui3RNNPszMYaPw+RLXpRNLvyP1fjdalGGnhh7uY9AvR0lyhEedVc+YBljPC2JDJeSDUswN8OmY6wqcagvSU9jZK+6XFj/5za40ZSH9EUnfl31MrjVfHyyZGI=
+	 MIME-Version:Content-Type; b=VgBMVYv+pQbx7T9gkrPfweQ46u9CRjEFrdCer3EMx/6G2epWAtbDmeKPvir6zqDM3Vuvje9jcBlzVHV8Z6P+WMzMYHRA0EPSEM8ePrLE9Xr7l3I8pJXbzMvsTreH2y/epAg+yn5AMDl+7stpw1eaReW4lAz7Fy95duPqua2jB1Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLx8q0dJ7z6JBFQ;
-	Fri, 26 Jan 2024 20:00:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLx9t6xs2z6F94N;
+	Fri, 26 Jan 2024 20:01:22 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 94AEA140CF4;
-	Fri, 26 Jan 2024 20:03:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D815140B55;
+	Fri, 26 Jan 2024 20:04:03 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Jan 2024 12:03:32 +0000
+ 15.1.2507.35; Fri, 26 Jan 2024 12:04:02 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
 	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>
@@ -32,9 +32,9 @@ CC: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
  Yoo <42.hyeyoo@gmail.com>, Li Zhijian <lizhijian@fujitsu.com>, Stefan
  Hajnoczi <stefanha@gmail.com>, <linuxarm@huawei.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v2 04/12] cxl/cdat: Fix header sum value in CDAT checksum
-Date: Fri, 26 Jan 2024 12:01:24 +0000
-Message-ID: <20240126120132.24248-5-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 05/12] hw/cxl/mbox: Remove dead code
+Date: Fri, 26 Jan 2024 12:01:25 +0000
+Message-ID: <20240126120132.24248-6-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240126120132.24248-1-Jonathan.Cameron@huawei.com>
 References: <20240126120132.24248-1-Jonathan.Cameron@huawei.com>
@@ -49,61 +49,82 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Davidlohr Bueso <dave@stgolabs.net>
 
-The addition of the DCD support for CXL type-3 devices extended the CDAT
-table large enough that the checksum being returned was incorrect.[1]
+Two functions were reported to have dead code, remove the bogus
+branches altogether, as well as a misplaced qemu_log call.
 
-This was because the checksum value was using the header length field
-rather than each of the 4 bytes of the length field.  This was
-previously not seen because the length of the CDAT data was less than
-256 thus resulting in an equivalent checksum value.
-
-Properly calculate the checksum for the CDAT header.
-
-[1] https://lore.kernel.org/all/20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com/
-
-Fixes: aba578bdace5 ("hw/cxl/cdat: CXL CDAT Data Object Exchange implementation")
-Cc: Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reported-by: Peter Maydell <peter.maydell@linaro.org>
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 ---
-Ammended buf naming to hdr_buf to avoid shadow issue with an existing buf variable
-with more limited scope.
----
- hw/cxl/cxl-cdat.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ hw/cxl/cxl-mailbox-utils.c | 43 +++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 28 deletions(-)
 
-diff --git a/hw/cxl/cxl-cdat.c b/hw/cxl/cxl-cdat.c
-index 24829cf242..2fea975671 100644
---- a/hw/cxl/cxl-cdat.c
-+++ b/hw/cxl/cxl-cdat.c
-@@ -49,6 +49,7 @@ static void ct3_build_cdat(CDATObject *cdat, Error **errp)
-     g_autofree CDATTableHeader *cdat_header = NULL;
-     g_autofree CDATEntry *cdat_st = NULL;
-     uint8_t sum = 0;
-+    uint8_t *hdr_buf;
-     int ent, i;
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 6eff56fb1b..dc42850767 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -1001,15 +1001,8 @@ static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
  
-     /* Use default table if fopen == NULL */
-@@ -95,8 +96,12 @@ static void ct3_build_cdat(CDATObject *cdat, Error **errp)
-     /* For now, no runtime updates */
-     cdat_header->sequence = 0;
-     cdat_header->length += sizeof(CDATTableHeader);
--    sum += cdat_header->revision + cdat_header->sequence +
--        cdat_header->length;
-+
-+    hdr_buf = (uint8_t *)cdat_header;
-+    for (i = 0; i < sizeof(*cdat_header); i++) {
-+        sum += hdr_buf[i];
-+    }
-+
-     /* Sum of all bytes including checksum must be 0 */
-     cdat_header->checksum = ~sum + 1;
+     cxl_dev_disable_media(&ct3d->cxl_dstate);
  
+-    if (secs > 2) {
+-        /* sanitize when done */
+-        return CXL_MBOX_BG_STARTED;
+-    } else {
+-        __do_sanitization(ct3d);
+-        cxl_dev_enable_media(&ct3d->cxl_dstate);
+-
+-        return CXL_MBOX_SUCCESS;
+-    }
++    /* sanitize when done */
++    return CXL_MBOX_BG_STARTED;
+ }
+ 
+ static CXLRetCode cmd_get_security_state(const struct cxl_cmd *cmd,
+@@ -1387,27 +1380,21 @@ static void bg_timercb(void *opaque)
+ 
+         cci->bg.complete_pct = 100;
+         cci->bg.ret_code = ret;
+-        if (ret == CXL_MBOX_SUCCESS) {
+-            switch (cci->bg.opcode) {
+-            case 0x4400: /* sanitize */
+-            {
+-                CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+-
+-                __do_sanitization(ct3d);
+-                cxl_dev_enable_media(&ct3d->cxl_dstate);
+-            }
++        switch (cci->bg.opcode) {
++        case 0x4400: /* sanitize */
++        {
++            CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++
++            __do_sanitization(ct3d);
++            cxl_dev_enable_media(&ct3d->cxl_dstate);
++        }
++        break;
++        case 0x4304: /* TODO: scan media */
++            break;
++        default:
++            __builtin_unreachable();
+             break;
+-            case 0x4304: /* TODO: scan media */
+-                break;
+-            default:
+-                __builtin_unreachable();
+-                break;
+-            }
+         }
+-
+-        qemu_log("Background command %04xh finished: %s\n",
+-                 cci->bg.opcode,
+-                 ret == CXL_MBOX_SUCCESS ? "success" : "aborted");
+     } else {
+         /* estimate only */
+         cci->bg.complete_pct = 100 * now / total_time;
 -- 
 2.39.2
 
