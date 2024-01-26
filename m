@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0A4D30B
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3D3D30B
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jan 2024 12:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706270647; cv=none; b=a1D834KuHdK6AbRNq1TCMrt22ttEWoOk86NI7C28ChCBFeUn2Ihl55Vriz6LdcWsHcYnkeaYxmMqw9VRflzLVBsKjKz/np8igRSHjPJXzWzp58pvM3WnL46RijaeGuv6z9rrd4z8xj7aH66zeLy3irKZFIWowUcoOuxN/HcpDs4=
+	t=1706270677; cv=none; b=njni4BjJuN4IdcWJ/4+s7pBeCdiZlTSlXABW7nHB6k08YxKSo17bIxszy2hsfaaS803DuRaY1w247x7riQHUxO5ws+4KT2jebzhyxTd5whe7HlBKRH/vE6TlkDo8Z+XfOn7h9lx7iWi+zl/L+mcj5bGVI+j5CIZXAbvYmvwbeag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706270647; c=relaxed/simple;
-	bh=DHWUBfQgF775qtUv7MoUAgJK2ZcMd9PItWbW5PxmYHA=;
+	s=arc-20240116; t=1706270677; c=relaxed/simple;
+	bh=9ih08QiodOSh/k+OzoQVDiXrHEpRe2gF+ZoCEyhi4AI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VgBMVYv+pQbx7T9gkrPfweQ46u9CRjEFrdCer3EMx/6G2epWAtbDmeKPvir6zqDM3Vuvje9jcBlzVHV8Z6P+WMzMYHRA0EPSEM8ePrLE9Xr7l3I8pJXbzMvsTreH2y/epAg+yn5AMDl+7stpw1eaReW4lAz7Fy95duPqua2jB1Y=
+	 MIME-Version:Content-Type; b=cULBUBozQHy6k6CfvR5c02RLdhNO6QalUv5D9ydvhv3T7Imvh140+uszLeFG3GtdjnwfEdAuRjf9KPxC7o4HcCLFHeXaxO0XIR3v3G962o9sZ5gtwoQ94kAfEz6rqtPqkrQydJJMmeogD/Bfmu1N7viG+khEib/cqqXqq1fYIrM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLx9t6xs2z6F94N;
-	Fri, 26 Jan 2024 20:01:22 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TLxBT3Z2Gz6FGY2;
+	Fri, 26 Jan 2024 20:01:53 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4D815140B55;
-	Fri, 26 Jan 2024 20:04:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D959F140AB8;
+	Fri, 26 Jan 2024 20:04:33 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Jan 2024 12:04:02 +0000
+ 15.1.2507.35; Fri, 26 Jan 2024 12:04:33 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Fan Ni
 	<fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>
@@ -32,9 +32,9 @@ CC: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
  Yoo <42.hyeyoo@gmail.com>, Li Zhijian <lizhijian@fujitsu.com>, Stefan
  Hajnoczi <stefanha@gmail.com>, <linuxarm@huawei.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v2 05/12] hw/cxl/mbox: Remove dead code
-Date: Fri, 26 Jan 2024 12:01:25 +0000
-Message-ID: <20240126120132.24248-6-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 06/12] hw/cxl/device: read from register values in mdev_reg_read()
+Date: Fri, 26 Jan 2024 12:01:26 +0000
+Message-ID: <20240126120132.24248-7-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240126120132.24248-1-Jonathan.Cameron@huawei.com>
 References: <20240126120132.24248-1-Jonathan.Cameron@huawei.com>
@@ -49,82 +49,103 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Davidlohr Bueso <dave@stgolabs.net>
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-Two functions were reported to have dead code, remove the bogus
-branches altogether, as well as a misplaced qemu_log call.
+In the current mdev_reg_read() implementation, it consistently returns
+that the Media Status is Ready (01b). This was fine until commit
+25a52959f99d ("hw/cxl: Add support for device sanitation") because the
+media was presumed to be ready.
 
-Reported-by: Peter Maydell <peter.maydell@linaro.org>
+However, as per the CXL 3.0 spec "8.2.9.8.5.1 Sanitize (Opcode 4400h)",
+during sanitation, the Media State should be set to Disabled (11b). The
+mentioned commit correctly sets it to Disabled, but mdev_reg_read()
+still returns Media Status as Ready.
+
+To address this, update mdev_reg_read() to read register values instead
+of returning dummy values.
+
+Note that __toggle_media() managed to not only write something
+that no one read, it did it to the wrong register storage and
+so changed the reported mailbox size which was definitely not
+the intent. That gets fixed as a side effect of allocating
+separate state storage for this register.
+
+Fixes: commit 25a52959f99d ("hw/cxl: Add support for device sanitation")
+Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/cxl/cxl-mailbox-utils.c | 43 +++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 28 deletions(-)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 6eff56fb1b..dc42850767 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1001,15 +1001,8 @@ static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
+---
+Patch description expanded to cover the overwrite bug fixed almost
+by accident in this patch.
+---
+ include/hw/cxl/cxl_device.h |  9 +++++++--
+ hw/cxl/cxl-device-utils.c   | 17 +++++++++++------
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index befb5f884b..31d2afcd3d 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -202,6 +202,9 @@ typedef struct cxl_device_state {
+         };
+     };
  
-     cxl_dev_disable_media(&ct3d->cxl_dstate);
++    /* Stash the memory device status value */
++    uint64_t memdev_status;
++
+     struct {
+         bool set;
+         uint64_t last_set;
+@@ -353,8 +356,10 @@ static inline void __toggle_media(CXLDeviceState *cxl_dstate, int val)
+ {
+     uint64_t dev_status_reg;
  
--    if (secs > 2) {
--        /* sanitize when done */
--        return CXL_MBOX_BG_STARTED;
--    } else {
--        __do_sanitization(ct3d);
--        cxl_dev_enable_media(&ct3d->cxl_dstate);
+-    dev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
+-    cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS] = dev_status_reg;
++    dev_status_reg = cxl_dstate->memdev_status;
++    dev_status_reg = FIELD_DP64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS,
++                                val);
++    cxl_dstate->memdev_status = dev_status_reg;
+ }
+ #define cxl_dev_disable_media(cxlds)                    \
+         do { __toggle_media((cxlds), 0x3); } while (0)
+diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+index 61a3c4dc2e..40b619ffd9 100644
+--- a/hw/cxl/cxl-device-utils.c
++++ b/hw/cxl/cxl-device-utils.c
+@@ -229,12 +229,9 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
+ 
+ static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size)
+ {
+-    uint64_t retval = 0;
 -
--        return CXL_MBOX_SUCCESS;
--    }
-+    /* sanitize when done */
-+    return CXL_MBOX_BG_STARTED;
+-    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
+-    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
++    CXLDeviceState *cxl_dstate = opaque;
+ 
+-    return retval;
++    return cxl_dstate->memdev_status;
  }
  
- static CXLRetCode cmd_get_security_state(const struct cxl_cmd *cmd,
-@@ -1387,27 +1380,21 @@ static void bg_timercb(void *opaque)
+ static void ro_reg_write(void *opaque, hwaddr offset, uint64_t value,
+@@ -371,7 +368,15 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+     cxl_dstate->mbox_msi_n = msi_n;
+ }
  
-         cci->bg.complete_pct = 100;
-         cci->bg.ret_code = ret;
--        if (ret == CXL_MBOX_SUCCESS) {
--            switch (cci->bg.opcode) {
--            case 0x4400: /* sanitize */
--            {
--                CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
--
--                __do_sanitization(ct3d);
--                cxl_dev_enable_media(&ct3d->cxl_dstate);
--            }
-+        switch (cci->bg.opcode) {
-+        case 0x4400: /* sanitize */
-+        {
-+            CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+-static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
++static void memdev_reg_init_common(CXLDeviceState *cxl_dstate)
++{
++    uint64_t memdev_status_reg;
 +
-+            __do_sanitization(ct3d);
-+            cxl_dev_enable_media(&ct3d->cxl_dstate);
-+        }
-+        break;
-+        case 0x4304: /* TODO: scan media */
-+            break;
-+        default:
-+            __builtin_unreachable();
-             break;
--            case 0x4304: /* TODO: scan media */
--                break;
--            default:
--                __builtin_unreachable();
--                break;
--            }
-         }
--
--        qemu_log("Background command %04xh finished: %s\n",
--                 cci->bg.opcode,
--                 ret == CXL_MBOX_SUCCESS ? "success" : "aborted");
-     } else {
-         /* estimate only */
-         cci->bg.complete_pct = 100 * now / total_time;
++    memdev_status_reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
++    memdev_status_reg = FIELD_DP64(memdev_status_reg, CXL_MEM_DEV_STS,
++                                   MBOX_READY, 1);
++    cxl_dstate->memdev_status = memdev_status_reg;
++}
+ 
+ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
+ {
 -- 
 2.39.2
 
