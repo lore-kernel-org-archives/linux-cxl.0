@@ -1,176 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE209657A0
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 13:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAED676C65
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 17:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706535873; cv=none; b=h9qwRV4za6TtkBDLoTVTrQbtQkBx2sldJofDZpATzV/+0t1MysTBvs3+4PJeBsal+aV3W1Yl2OTygChuVuuHzvxT/v7ESu5+yJWT76Z5n/yLX/iHGCXnzrNv0Eag8XZewEyDwqah8811u43GdVmbXQ6WmL0un/h6p5AtQbMg724=
+	t=1706549583; cv=none; b=NpPahzd0lJeTqd5rLtYLF/ajjMz4G0+TY4ThS805/FHmYK2zGxq/hWCYDz83WUOg5DWP7vhahRYJueE4sx4hw0tBX9T0ShcJfUauG0DBFVCF3FBOlpKNLqEnXGGQ4Yq/DFdsx+kKWfl7ZOn1q9fLYTYu103Npdefh9LhimeLzm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706535873; c=relaxed/simple;
-	bh=de1AjcmWYMKfa+Ib3/H854WHJIeZ0QkUxZ889mVFD2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uj1ke909snbIO42cngyfbCdViA17Q+t48FQn5AcTTVKUojHJ6kK7MpgOGgunNe9rTrWtjXuee3NUQ/CqmutsE3T8UkEdyV6kJQEh7TYoqEWAswh71b3YFgSrgYi+AQWgEY0DtybISGrs+qRQ6CMFGR/Ehs4E7I3LqYQDHEt8wTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJlzIo9w; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706549583; c=relaxed/simple;
+	bh=ejze1c6bKj5SY8gD5Dxcl3k61v4lY6LGocSmnrCjDq0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JNEtY+lhgbWigwUqdqpBrBZ5Cic4SvyyDbcGd8MUSSjh7hJK9eA14pGyipkK7n3qZqKuiW5rC4hx+mPi+XVEZ9X+qNUjRv/Q/vLWcISciJmPoJmRXCwmFr6Afh+T1DIn6aGwzDT6KVkz6E7zxO4oI9h7/JXcU+Rb8PlfyGHEvvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bihXNI9z; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJlzIo9w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706535871; x=1738071871;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=de1AjcmWYMKfa+Ib3/H854WHJIeZ0QkUxZ889mVFD2s=;
-  b=cJlzIo9wXgjcBITBDoKBpVeLuescVWENE6dQOZv3tITd7ZS8R7Oe3cJ3
-   lzqPJxbU1Zj7s3l9wCt2SoYwPpgKs3+Fy31RtmdRw6XXY/d3nl//nRE9U
-   MsntU1N24DQbdHOnRoHqblkwIrpGgKf3pebGT1YFVgUTCEjz+FKc96kEk
-   rO4vXL60WJ2XcSfdEBCcJSV6A2ILK5y9c32d5d5yuUi2Zn3/9PczNJ51n
-   P9uEELEmV5NjEvHUB9cXwQKA7/cuj6x0PFI8WABDbDN4oMrn/VW46p8eq
-   QpClsWVrUF8jPYVpQ6Fez/5UJjwG3IvZyF7c2KOz7CZTx8kwZT9HXcH2u
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16479978"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="16479978"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:44:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="29524222"
-Received: from s2600wttr.bj.intel.com ([10.240.192.113])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:44:27 -0800
-From: Li Ming <ming4.li@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	terry.bowman@amd.com,
-	rrichter@amd.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	Li Ming <ming4.li@intel.com>
-Subject: [PATCH v2 1/1] cxl/pci: Skip to handle RAS errors if CXL.mem device is detached
-Date: Mon, 29 Jan 2024 13:18:56 +0000
-Message-Id: <20240129131856.2458980-1-ming4.li@intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bihXNI9z"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-600273605a9so30666987b3.1
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 09:33:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706549580; x=1707154380; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dGNCyyidgcDrIuYHop/nlKKZHYmDs65dIr3jRdyCLXU=;
+        b=bihXNI9zgfbROMy0CFCGDbnup5FaUa7VVOzuUzpJshLeeKp0kkAs9Q7jvq+BTxKJWU
+         kWLKPEpUwD7LI4SxRUoY39fTPomrmB0wc/sp3zRDoswRac0bgissYe0u0SYrzgONqfet
+         KophJVqtmZrGlKnq/UgKqroIAG4AlW6HYYJ61Ssr698jXNuu5ATujZznYOl2Sr0EiOz/
+         4nhxm8acF6lyQpzJsv6Z2xplXPSkZAojlPXW57w+k1KWC85sabFvUpP446pLg65IPzVi
+         +wTOo11rdwR+GLFZ54ZJPmDIOIaOPEqF1W+qNvAdXW1VzDtEvbUG47Zw/r6qpw7nngv3
+         HIIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706549580; x=1707154380;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dGNCyyidgcDrIuYHop/nlKKZHYmDs65dIr3jRdyCLXU=;
+        b=E7rm/UOvVJZdtgyrFhXdAeDTHOFBZ/3G2SS7yNogsOHlXx0TpQwhT4Ha42c6Ooq77H
+         fij38ayNMk6CU1uN6T5iTMXh6Rpa7yCFmFFjXPjEPgd2vigfvTVB0G1cjf+sGBn+wSUE
+         9wyHzRDSSSM2nkOJP13KfQ2PlTvJAqDQZKtsjlbpkA1SnUxiGprPx+6kJho8iii+JWdB
+         VCZ5ziA8+QLd3lgHnc93SGfLlDy1UmKPLIG+6mbNLZ6V79+m0eXQ8L52onlraeEHBRNg
+         +zCmyt2COnUHMR98Ml2R+AaeNnkcuFKqRJWI19ospAGT6CVKRyLsYIy7oiewcBspkJML
+         n2kQ==
+X-Gm-Message-State: AOJu0Yx6rx6MGjzj81yhMPoVp1IgqLcgtUsqNwmqpTf6NIxwQOT/LYl4
+	SeO2F92scbrgBW/B8d0ZEmRDOJhOBuSbIpQVHvdrlbO/XyY8gswN
+X-Google-Smtp-Source: AGHT+IGiDzIER4X4xUPDaZamPcqHc0Qf48ktmy/6mVn5WwSeFie+xe5V0VtfRTJPIPAYvl9cnxb2Aw==
+X-Received: by 2002:a0d:d686:0:b0:5ff:73d8:216f with SMTP id y128-20020a0dd686000000b005ff73d8216fmr5090130ywd.17.1706549580553;
+        Mon, 29 Jan 2024 09:33:00 -0800 (PST)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id bf15-20020a05690c028f00b00602f3e50c62sm2002479ywb.113.2024.01.29.09.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 09:33:00 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Mon, 29 Jan 2024 09:32:39 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	nmtadam.samsung@gmail.com, nifan@outlook.com,
+	jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v3 2/9] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
+ region representative and mailbox command support
+Message-ID: <ZbfhN5kVT7W3jvoU@debian>
+References: <20231107180907.553451-1-nifan.cxl@gmail.com>
+ <20231107180907.553451-3-nifan.cxl@gmail.com>
+ <20240124145118.00002f7d@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124145118.00002f7d@Huawei.com>
 
-The PCI AER model is an awkward fit for CXL error handling. While the
-expectation is that a PCI device can escalate to link reset to recover
-from an AER event, the same reset on CXL amounts to a suprise memory
-hotplug of massive amounts of memory.
+On Wed, Jan 24, 2024 at 02:51:18PM +0000, Jonathan Cameron wrote:
+> On Tue,  7 Nov 2023 10:07:06 -0800
+> nifan.cxl@gmail.com wrote:
+> 
+> > From: Fan Ni <fan.ni@samsung.com>
+> > 
+> > Per cxl spec 3.0, add dynamic capacity region representative based on
+> > Table 8-126 and extend the cxl type3 device definition to include dc region
+> > information. Also, based on info in 8.2.9.8.9.1, add 'Get Dynamic Capacity
+> > Configuration' mailbox support.
+> > 
+> > Note: decode_len of a dc region is aligned to 256*MiB, need to be divided by
+> > 256 * MiB before returned to the host for "Get Dynamic Capacity Configuration"
+> > mailbox command.
+> > 
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> 
+> Hi Fan,
+> 
+> I'm looking at how to move these much earlier in my tree on basis that
+> they should be our main focus for merging in this QEMU cycle.
+> 
+> Whilst I do that rebase, I'm taking a closer look at the code.
+> I'm targetting rebasing on upstream qemu + the two patch sets I just
+> sent out:
+> [PATCH 00/12 qemu] CXL emulation fixes and minor cleanup. 
+> [PATCH 0/5 qemu] hw/cxl: Update CXL emulation to reflect and reference r3.1
+> 
+> It would be good to document why these commands should be optional (which I think
+> comes down to the annoying fact that Get Dynamic Capacity Configuration isn't
+> allowed to return 0 regions, but instead should not be available as a command
+> if DCD isn't supported.
+> 
+> Note this requires us to carry Gregory's patches to make the CCI command list
+> constructed at runtime rather than baked in ahead of this set.
+> 
+> So another question is should we jump directly to the r3.1 version of DCD?
+> I think we probably should as it includes some additions that are necessary
+> for a bunch of the potential use cases.
+> 
 
-At present, the CXL error handler attempts some optimisitic error
-handling to unbind the device from the cxl_mem driver after reaping some
-RAS register values. This results in a "hopeful" attempt to unplug the
-memory, but there is no guarantee that will succeed.
+Hi Jonathan,
 
-A subsequent AER notification after the memdev unbind event can no
-longer assume the registers are mapped. Check for memdev bind before
-reaping status register values to avoid crashes of the form:
+Thanks for taking time to review the patches. 
+I will redo the patches and make them align with cxl spec v3.1. Before
+that, I need some clarifications.
+As you mentioned above, for the next version, I will use upstream qemu + the
+two patchsets you mentioned above as base, that is clear to me.
+However, you mentioned Gregory's patches above constructing CCI command list
+at runtime, I think you meant we should also include that patchset
+before DCD so if DCD is not supported, the Get Dynamic capacity
+configuration command will not be available at the first place, am I
+right? If so, could you point me to the latest patches of the mentioned
+CCI work I should use? I see the CCI rework patches, but not sure if we
+should have them all or they are the latest.
 
- BUG: unable to handle page fault for address: ffa00000195e9100
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- [...]
- RIP: 0010:__cxl_handle_ras+0x30/0x110 [cxl_core]
- [...]
- Call Trace:
-  <TASK>
-  ? __die+0x24/0x70
-  ? page_fault_oops+0x82/0x160
-  ? kernelmode_fixup_or_oops+0x84/0x110
-  ? exc_page_fault+0x113/0x170
-  ? asm_exc_page_fault+0x26/0x30
-  ? __pfx_dpc_reset_link+0x10/0x10
-  ? __cxl_handle_ras+0x30/0x110 [cxl_core]
-  ? find_cxl_port+0x59/0x80 [cxl_core]
-  cxl_handle_rp_ras+0xbc/0xd0 [cxl_core]
-  cxl_error_detected+0x6c/0xf0 [cxl_core]
-  report_error_detected+0xc7/0x1c0
-  pci_walk_bus+0x73/0x90
-  pcie_do_recovery+0x23f/0x330
+Thanks,
+Fan
 
-Longer term, the unbind and PCI_ERS_RESULT_DISCONNECT behavior might
-need to be replaced with a new PCI_ERS_RESULT_PANIC.
-
-Fixes: 6ac07883dbb5 ("cxl/pci: Add RCH downstream port error logging")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
-Changes in v2:
-- Reword changelog for more context.(Dan)
----
- drivers/cxl/core/pci.c | 43 ++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 6c9c8d92f8f7..480489f5644e 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -932,11 +932,21 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
- void cxl_cor_error_detected(struct pci_dev *pdev)
- {
- 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct device *dev = &cxlds->cxlmd->dev;
-+
-+	scoped_guard(device, dev) {
-+		if (!dev->driver) {
-+			dev_warn(&pdev->dev,
-+				 "%s: memdev disabled, abort error handling\n",
-+				 dev_name(dev));
-+			return;
-+		}
- 
--	if (cxlds->rcd)
--		cxl_handle_rdport_errors(cxlds);
-+		if (cxlds->rcd)
-+			cxl_handle_rdport_errors(cxlds);
- 
--	cxl_handle_endpoint_cor_ras(cxlds);
-+		cxl_handle_endpoint_cor_ras(cxlds);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, CXL);
- 
-@@ -948,16 +958,25 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
- 	struct device *dev = &cxlmd->dev;
- 	bool ue;
- 
--	if (cxlds->rcd)
--		cxl_handle_rdport_errors(cxlds);
-+	scoped_guard(device, dev) {
-+		if (!dev->driver) {
-+			dev_warn(&pdev->dev,
-+				 "%s: memdev disabled, abort error handling\n",
-+				 dev_name(dev));
-+			return PCI_ERS_RESULT_DISCONNECT;
-+		}
-+
-+		if (cxlds->rcd)
-+			cxl_handle_rdport_errors(cxlds);
-+		/*
-+		 * A frozen channel indicates an impending reset which is fatal to
-+		 * CXL.mem operation, and will likely crash the system. On the off
-+		 * chance the situation is recoverable dump the status of the RAS
-+		 * capability registers and bounce the active state of the memdev.
-+		 */
-+		ue = cxl_handle_endpoint_ras(cxlds);
-+	}
- 
--	/*
--	 * A frozen channel indicates an impending reset which is fatal to
--	 * CXL.mem operation, and will likely crash the system. On the off
--	 * chance the situation is recoverable dump the status of the RAS
--	 * capability registers and bounce the active state of the memdev.
--	 */
--	ue = cxl_handle_endpoint_ras(cxlds);
- 
- 	switch (state) {
- 	case pci_channel_io_normal:
--- 
-2.40.1
-
+> 
+> > ---
+> >  hw/cxl/cxl-mailbox-utils.c  | 80 +++++++++++++++++++++++++++++++++++++
+> >  hw/mem/cxl_type3.c          |  6 +++
+> >  include/hw/cxl/cxl_device.h | 17 ++++++++
+> >  3 files changed, 103 insertions(+)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 8eceedfa87..f80dd6474f 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -80,6 +80,8 @@ enum {
+> >          #define GET_POISON_LIST        0x0
+> >          #define INJECT_POISON          0x1
+> >          #define CLEAR_POISON           0x2
+> > +    DCD_CONFIG  = 0x48,
+> > +        #define GET_DC_CONFIG          0x0
+> >      PHYSICAL_SWITCH = 0x51,
+> >          #define IDENTIFY_SWITCH_DEVICE      0x0
+> >          #define GET_PHYSICAL_PORT_STATE     0x1
+> > @@ -1210,6 +1212,74 @@ static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
+> >      return CXL_MBOX_SUCCESS;
+> >  }
+> >  
+> > +/*
+> > + * CXL r3.0 section 8.2.9.8.9.1: Get Dynamic Capacity Configuration
+> 
+> As per the patch set I just sent out, I want to standardize on references
+> to r3.1 because it's all that is easy to get.  However if we decide to r3.0
+> DCD first the upgrade it later, then clearly these need to stick to r3.0 for
+> now.
+> 
+> > + * (Opcode: 4800h)
+> > + */
+> > +static CXLRetCode cmd_dcd_get_dyn_cap_config(const struct cxl_cmd *cmd,
+> > +                                             uint8_t *payload_in,
+> > +                                             size_t len_in,
+> > +                                             uint8_t *payload_out,
+> > +                                             size_t *len_out,
+> > +                                             CXLCCI *cci)
+> > +{
+> > +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> > +    struct get_dyn_cap_config_in_pl {
+> > +        uint8_t region_cnt;
+> > +        uint8_t start_region_id;
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_dyn_cap_config_out_pl {
+> > +        uint8_t num_regions;
+> > +        uint8_t rsvd1[7];
+> 
+> This changed in r3.1 (errata? - I haven't checked)
+> Should be 'regions returned' in first byte.
+> 
+> > +        struct {
+> > +            uint64_t base;
+> > +            uint64_t decode_len;
+> > +            uint64_t region_len;
+> > +            uint64_t block_size;
+> > +            uint32_t dsmadhandle;
+> 
+> > +            uint8_t flags;
+> > +            uint8_t rsvd2[3];
+> > +        } QEMU_PACKED records[];
+> 
+> There are two fields after this as well.
+> Total number of supported extents and number of available extents.
+> 
+> That annoyingly means we can't use the structure to tell us where
+> to find all the fields...
+> 
+> 
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_dyn_cap_config_in_pl *in = (void *)payload_in;
+> > +    struct get_dyn_cap_config_out_pl *out = (void *)payload_out;
+> > +    uint16_t record_count = 0, i;
+> 
+> Better to split that on to 2 lines. Never hide setting a value
+> in the middle of a set of declarations.
+> 
+> > +    uint16_t out_pl_len;
+> > +    uint8_t start_region_id = in->start_region_id;
+> > +
+> > +    if (start_region_id >= ct3d->dc.num_regions) {
+> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    }
+> > +
+> > +    record_count = MIN(ct3d->dc.num_regions - in->start_region_id,
+> > +            in->region_cnt);
+> > +
+> > +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+> 
+> For r3.1 + 8 for the two trailing fields.
+> 
+> > +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> > +
+> > +    memset(out, 0, out_pl_len);
+> 
+> As part of the cci rework we started zeroing the whole mailbox payload space
+> after copying out the input payload.
+> https://elixir.bootlin.com/qemu/latest/source/hw/cxl/cxl-device-utils.c#L204
+> 
+> So shouldn't need this (unless we have a bug)
+> 
+> Jonathan
