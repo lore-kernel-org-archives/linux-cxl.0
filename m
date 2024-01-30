@@ -1,122 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC48323741
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 23:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE58D36102
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 02:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706569254; cv=none; b=qkF3qYtjfCLlIHpRRG8Nk9nDz10bCmI8BOdD6qqbRuzFfHyM+mbGPy6M5sPQ32+QBYZQ/B2UTnRzCyi9OMOtsw+WOENECMfMLPMgPw+Df5TVkFo4p1M7WaRZ+iSOeVRS3DHrcd4gVGMAeRg4PAv/ntGAyIJqihgP2ENo/gwL4FM=
+	t=1706582333; cv=none; b=Xzo+RfpYcyM17eLqrpCmqoFvIzj44g9tsHL6ETwfJUPWsOdParZW3IWVXkbY8UhRb15gPez98PqfDIurqlkq74kquBJ6E73dk18d2ick/7Pn8WHfVYy472xRXSIRotxZjLrFifE65GCHyWGc9MYHV5X1o3IwMWJbNVgKPVZdiZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706569254; c=relaxed/simple;
-	bh=r94c+3oxk8IV3YKZ0NZC5MNxv9tuHoBeD5I1bbYp8ZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NeVXs0H07YHqT7SoU/W9XZ7BnDos4WrR1MLgjLsE5eRS9OUlMK+M/P1A5mpAqdpzghgm9NWoeLP7U3JetfvDHrBZjKkLbpFSyYrGNbQkLOJPXSOec+GzNdbVRoWxOWv6dO1hIfIi/hkxDts1Vq4IXet0OtJ6BMd4BmPJiwUVMAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEMN56U3; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706582333; c=relaxed/simple;
+	bh=L89IzrilsDGveQdWAYWcXjFYMXSJQAdLrLejwXbXPuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8HkqEqYVq3CSkcOzdft37jpQ3EXvLWUR6a37E+CXCbHKcHhXbYz+riwTc4tL00eIyiBEpl2uYOFYB9O4BCgez0OvksOIiHJ5bM/KwlflTISLVFIcVrcAs0NDjoQ8TOlyqjXseWBp1XdwKZogAfMRYaG18FXQYNkCXp4vZhuNpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PZyrJLlx; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEMN56U3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706569252; x=1738105252;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=r94c+3oxk8IV3YKZ0NZC5MNxv9tuHoBeD5I1bbYp8ZE=;
-  b=IEMN56U3i2bFrnYgIOkh372uPtIv65h/sfBEG3ONEaQIW/FxZhxBZuH/
-   sQHfPMiKnPAVTmAci8RYjXMD63dZ7OxLhERIZqsRFUyCjI6thvMm45wku
-   un0RmmuC5f/qM0hQT+KR2fdJpAvgfFkQEOxghft2NllZGch4WxFSa487q
-   ZI1ENbJaE59XsYHa/PO+y+eznWG7Ft9/MktuFkXRcw3+tyj/YzRUsyBe5
-   PHjGbWd/QNevpeZdFVavXeJt1SsyEMiiObvVF1DButAb/fRRMLlAFnTms
-   47GPgFJ/5WGdehesaaOGA+5BwMewmxvrHzIsRfd2tDyiFzJh3EP/iMgDr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="467366396"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="467366396"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 15:00:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="911234963"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="911234963"
-Received: from swayomab-mobl1.amr.corp.intel.com (HELO [10.212.130.221]) ([10.212.130.221])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 15:00:51 -0800
-Message-ID: <212fdbde-460c-4c68-b778-9eba913b2b65@intel.com>
-Date: Mon, 29 Jan 2024 15:00:51 -0800
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PZyrJLlx"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d50d0c98c3so36720555ad.1
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 18:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706582330; x=1707187130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
+        b=PZyrJLlxIYjvzme9mwBwHI/K/G8ewUUCPUM6YbldfgLjelfRrxmoMQ9oYBPx/ZwbgS
+         1RnXgjdfkRjncmC6mE2ekanNB4Ltj0Uwhow0otUdcdLzj4HxYZuzLQxdEdNmAdrXqZOQ
+         8xviYM8yc/kz1QaORBEr/7Snh2vjPaRghbqC1iBl8rJZubjiRMwlik0Sl4gxzJWiPKek
+         TywRxtqxpRH1ukviI9wttiZW59Rhy68ToElsbgtBIR+erMk8uiVPSbIm5/924vbbjfTa
+         NpYGQKrb0wSdlU9edC/OggmhKewh1s6MdtgCeYHJ+JXFfVk9ASZwzFD8+McYORYnR21W
+         ZN5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706582330; x=1707187130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
+        b=JqxV6ZPyOlvLE/lCqcKlHvhX53L/6DGk2yPGBLyQ9Ffek7Acm0wagkeUg/iTDjc2BH
+         ue0VypFheDXCdAkV7aQCtYQWrXGsradUKfluID0tDKs2bbsK4TuZESRSMPORZ4KQH4Cf
+         vPCU2fI47hl6ASE1rBtP7OsVII/a1UrT7Ws0O6eDqvu/wBwbZDhfWOlRPXIQUCk3lH32
+         n67VFJ5qs7VmLpH/XhovMMG8jeP05Gn0BRDchKNGJENcAMRP3S/QZcAc7srGjrbLm7wD
+         Fg8/XHswDbBumiirszEsyhCNvEEWNPAS+WtqIxnsOKuI2DKrkQYUhoVsAdacFIqmse5c
+         ejPw==
+X-Gm-Message-State: AOJu0Yw0VL9crHxntWgudHSIKEQaLUZq8t/KsAPULaAzjPWp1cuBXbub
+	7vFsCOMHndEhu1jqHLJPgPzn/PP4fkYn32YnF/AsG+5Q2e+3EUYEjpnxWKr0IAk=
+X-Google-Smtp-Source: AGHT+IG3Tf1LicjzS4Qa3v1HBWJ0okdxx8XgE9n1laWHdO3qtQvRbO5N3KnA5oTi64pctq5hmJtDrA==
+X-Received: by 2002:a17:902:d550:b0:1d7:1a90:65ba with SMTP id z16-20020a170902d55000b001d71a9065bamr500304plf.25.1706582329913;
+        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id ml8-20020a17090334c800b001d8fb16118csm1038823plb.267.2024.01.29.18.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rUe1O-00H85k-2a;
+	Tue, 30 Jan 2024 13:38:46 +1100
+Date: Tue, 30 Jan 2024 13:38:46 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [RFC PATCH 7/7] xfs: Use dax_is_supported()
+Message-ID: <ZbhhNnQ+fqd4Hda+@dread.disaster.area>
+References: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
+ <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] x86/numa: Fix NUMA node overlap & init failure
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Alison Schofield <alison.schofield@intel.com>, x86@kernel.org,
- linux-cxl@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-References: <cover.1705085543.git.alison.schofield@intel.com>
- <65a1bce74f420_3b8e2942@dwillia2-xfh.jf.intel.com.notmuch>
- <65b2d754128f0_37ad29453@dwillia2-xfh.jf.intel.com.notmuch>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <65b2d754128f0_37ad29453@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
 
-On 1/25/24 13:49, Dan Williams wrote:
-> Circling back to check on these now that Mike has acked the memblock usage.
-> Dave or Peter, please pull them into tip/x86/mm, or I can circle back and grab
-> them next week.
+On Mon, Jan 29, 2024 at 04:06:31PM -0500, Mathieu Desnoyers wrote:
+> Use dax_is_supported() to validate whether the architecture has
+> virtually aliased caches at mount time.
+> 
+> This is relevant for architectures which require a dynamic check
+> to validate whether they have virtually aliased data caches
+> (ARCH_HAS_CACHE_ALIASING_DYNAMIC=y).
 
-Hi Dan,
+Where's the rest of this patchset? I have no idea what
+dax_is_supported() actually does, how it interacts with
+CONFIG_FS_DAX, etc.
 
-Feel free to carry these:
+If you are changing anything to do with FSDAX, the cc-ing the
+-entire- patchset to linux-fsdevel is absolutely necessary so the
+entire patchset lands in our inboxes and not just a random patch
+from the middle of a bigger change.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Chandan Babu R <chandan.babu@oracle.com>
+> Cc: Darrick J. Wong <djwong@kernel.org>
+> Cc: linux-xfs@vger.kernel.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-arch@vger.kernel.org
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: nvdimm@lists.linux.dev
+> Cc: linux-cxl@vger.kernel.org
+> ---
+>  fs/xfs/xfs_super.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 764304595e8b..b27ecb11db66 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -1376,14 +1376,22 @@ xfs_fs_parse_param(
+>  	case Opt_nodiscard:
+>  		parsing_mp->m_features &= ~XFS_FEAT_DISCARD;
+>  		return 0;
+> -#ifdef CONFIG_FS_DAX
+>  	case Opt_dax:
+> -		xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
+> -		return 0;
+> +		if (dax_is_supported()) {
+> +			xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
+> +			return 0;
+> +		} else {
+> +			xfs_warn(parsing_mp, "dax option not supported.");
+> +			return -EINVAL;
+> +		}
+>  	case Opt_dax_enum:
+> -		xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
+> -		return 0;
+> -#endif
+> +		if (dax_is_supported()) {
+> +			xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
+> +			return 0;
+> +		} else {
+> +			xfs_warn(parsing_mp, "dax option not supported.");
+> +			return -EINVAL;
+> +		}
+
+Assuming that I understand what dax_is_supported() is doing, this
+change isn't right.  We're just setting the DAX configuration flags
+from the mount options here, we don't validate them until 
+we've parsed all options and eliminated conflicts and rejected
+conflicting options. We validate whether the options are
+appropriate for the underlying hardware configuration later in the
+mount process.
+
+dax=always suitability is check in xfs_setup_dax_always() called
+later in the mount process when we have enough context and support
+to open storage devices and check them for DAX support. If the
+hardware does not support DAX then we simply we turn off DAX
+support, we do not reject the mount as this change does.
+
+dax=inode and dax=never are valid options on all configurations,
+even those with without FSDAX support or have hardware that is not
+capable of using DAX. dax=inode only affects how an inode is
+instantiated in cache - if the inode has a flag that says "use DAX"
+and dax is suppoortable by the hardware, then the turn on DAX for
+that inode. Otherwise we just use the normal non-dax IO paths.
+
+Again, we don't error out the filesystem if DAX is not supported,
+we just don't turn it on. This check is done in
+xfs_inode_should_enable_dax() and I think all you need to do is
+replace the IS_ENABLED(CONFIG_FS_DAX) with a dax_is_supported()
+call...
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
