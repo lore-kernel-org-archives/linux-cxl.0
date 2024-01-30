@@ -1,168 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE4045012
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 06:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706598000; cv=fail; b=skgqGEMco+WVrKF79CbgZTeA/HShA3yTFKspjtQNJY6RhJs/dlGi/sPzFOMjmwRs6Ig+8b5mET4H8AEQUUfR+3gXzwHHyTo0SyaBCbTj3tU4UcKZnhX5GF5z1Xc8JLvoqKkT5DXpN3Ij83FZtUGxUMrgPKW+0x+i9BGeuMGk2uU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706598000; c=relaxed/simple;
-	bh=k6t7oi/Y8bE/Zasud8cIpjIwJC7vZB8/Ik04/hNUXnQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gUUCkVxyqIevIh5+SNqpwZHQ6LSR7KFosdaqHYkI3f8msldPQEFPqRM5XO5uD1ugilvlAzWttwapKO8bo84B0FmMavLZEGv9DPMDhVketLEWvACT7sEufs1bG1+4+MrL9m742mG3XnYLZB30GdAgUTcm0rYPp0ASi5DkuPX5zL4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=meHacXT7; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBD158108
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 08:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706602834; cv=none; b=ag+fpU/Dxne+mqaWP2zy1DKeSqvokpXKymJKR4EZ7cMdouGWx3FRuPiqwpAuQVyu3qLCxJNYeckIBurhiLpT/6lXzcjxOe8H0JNY29qloK6PzVYYLkrtYffoMOndaE05x5nGWthsDEdivdx7BaLxpRSH/UeG3oN+0Kqfa0hmnHQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706602834; c=relaxed/simple;
+	bh=zAipQG7a+yGLxE3ec8lF2yuLBtHtSr4K3ieOy+RHy6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PZ8PIe2O/Bbo40NJ80SmXGK3ETLaNH516djGAHDQTtq888JR/gtHBMVwZTpzyYW6pdwarlaoWJg+l1UGDlOwP/eyon3xlMmlth1NSp7msiuGwMq5pAY92B4CMAIWrxNZ6huMnHVFCVklHFc6DCASl6ppBvNCOEhFUZ0VoJILCwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RlSWsA/c; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meHacXT7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706597999; x=1738133999;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=k6t7oi/Y8bE/Zasud8cIpjIwJC7vZB8/Ik04/hNUXnQ=;
-  b=meHacXT7c9zMsGjXl1VhfP+lD4s7ctZLvSgGc2SWxB0Frjx1GEVixqhx
-   HZtl/zTt5MU1A6fuBKBySgdogUw5Z2VR2ntaTMz3QCBMYt+6+9tm/ROXv
-   BAQO4MGM02bvQSFu7+z2pPAE44m5LEkz1OxGmDEEqGUYQp3s+wSGQAAHX
-   dHGvp9hr9H3aXypWrUgwc/sJsf1+Gz48yClKx3oYmiiyC5nsejDMmwmxx
-   1cLaJNARJ3UjJDIAuUy61a1PasKt/9nLRwt1bJfwaaxyQyLzIIP/ejN7e
-   hKhsULfJG3NL29XCZwJCLjtHZkkoevzKKgIMvIIiAbl6iVWKWsJCO92uQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="9827398"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="9827398"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:59:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="29792469"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2024 22:59:57 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 29 Jan 2024 22:59:56 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 29 Jan 2024 22:59:56 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 29 Jan 2024 22:59:56 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 29 Jan 2024 22:59:56 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O/aJm5lM306hu8XUwVfYFgUw5w6LK3PYPtZhvv71buBxgD/e+PiHlIaRCnecmOejaP2ZwLmNxERWzApqFbzkB7xAqMDeygfoLJLFLcfEsZdple+8U42StbNWWU2PNFjEZEyH7lRiqIwsPtFsiVFL/n78XogbFa6IFss6Kt6O+9QSLynqp8nUGIk5oFAv8JyEQ1B87sDyCX44gQspmRXchnyVnDSvbYQTPInHIBneG/ZjtFExpv9hsozylk8/KmdfYTN+gb8pw6htQCg8rjxx31uAPU1y80qJ/YHlR/DA999ZV6xxwYbjHEmYIMDHfKcQxEP/1VVff36Zju0qxpn+/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FdpMZMefuz3cbTfgMHAAUJuBmeGpiTzp904V1+RpkLw=;
- b=NYGxQVKbLICki6Ewqc9BLUn6mc2atreCNFW8Dh5Ggg7SUOqYkAvGMi+9pBitN1HyJDUPAHIUj6FeEEvFwbGZSfBRwXJUmIdc8YG3FlFzvY3fvZAltTEI9J14TAjnOjrMtkyWPdvm3lQT0lw8615m9qpnjdUf3AcDvv52etueahZa2GJmX7JMRtLi0f1F6dyMSiLwNZiS4aXfISy5EK0R0m+2/MFwBwneDKeK5CAkPxqDPkgBSiXJq/HtbS/Z3A4+HKD9gRMqAK4GFY2iJYV0iED8xmhzT51eoHt8GEAZJR0gpGzp93USFG/Os2ugKEDpXX4ATY5T5ArStoIcKvImDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH0PR11MB5410.namprd11.prod.outlook.com (2603:10b6:610:d1::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.35; Tue, 30 Jan
- 2024 06:59:53 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 06:59:53 +0000
-Date: Mon, 29 Jan 2024 22:59:51 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Quanquan Cao <caoqq@fujitsu.com>, <dave.jiang@intel.com>,
-	<vishal.l.verma@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Quanquan Cao <caoqq@fujitsu.com>
-Subject: Re: [PATCH] cxl/mbox: Code readability improvement
-Message-ID: <65b89e67ca4e9_59028294a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240130055844.19811-1-caoqq@fujitsu.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240130055844.19811-1-caoqq@fujitsu.com>
-X-ClientProxiedBy: MW4P221CA0021.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::26) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlSWsA/c"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55f0367b15fso2286107a12.0
+        for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 00:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706602831; x=1707207631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SVFn1X9E9eKy53g6Q742Sw5d2hRopQjyTEmeVWHEE+Q=;
+        b=RlSWsA/cAu9UdOunym0Hc3FZHzIGXwORo6IodWdsOKS3YpSnkPf003rJZbpC20SUle
+         13MtyH0+36Fn/rZnSTxmAkvaQJ5BYlILzk571knJt4pXpRXrMH8WgHYED8Oo1qfsJAU9
+         2f9tyBTpZ6ga5d0KNpdurD8ZbYcsTtF6I/IODXgTBr0H33FdhZdHQAUytkMtLSyzwzKs
+         hyNNkzTyNSP0PWfgKZEJ3Cchh+R7vwgu9FXAv2pxxEoSg9iCR/BBPPZnSE2z3NmhPwUI
+         a3jfF+xKqdiI/lSNKnke7PnPwiHF7Uc4sysTI74d05qy+lYRfQcHS985L8hduw2YR9sK
+         VK+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706602831; x=1707207631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SVFn1X9E9eKy53g6Q742Sw5d2hRopQjyTEmeVWHEE+Q=;
+        b=ARExF1r4YSUfx2pyjj9AWrBzZU1YWIl6ebrHaU8rh598PRknYRjCL+flrFLZP/cxIn
+         FC9KaHXG/34Slt+evhc08CwuihMH7QgUyq83km9mbFIKchFQ/VSYSkZXSD1RXjKS5DUP
+         BQN7MUio2OUwcWTLAbil9nGf70u+SdO65VMoaOBVNl0DTFGH6V17o2iPW10CkffB97uY
+         3O7L878Dpu1qg+Ru009Fs4lUot7M7DWD5v/bfytdlklU+YhVm7meU8+4RkqTUL8VJiEw
+         XS/0qXhOCA9JQ8lIIpnGFj+nrBSLBYlcdgAx3q0k/nzh2m2MAxToIsJreXmxLnv+sd0/
+         PoMA==
+X-Gm-Message-State: AOJu0Yw79aTWKl9FTvaoXl/wjN5x45NSmdxqSUZLY1DBU+bUXdtxObQs
+	Ir8m250If0t8RZ5MYdkdzpIv+LUzF5pa0U3wEJBh7ZZy9SBoutk+6pMUGn/oiZIe1MFX0714JIB
+	Jl3DGtrVLr96ME9MDqSm7YTJ2SWg8eDVw6WdFEA==
+X-Google-Smtp-Source: AGHT+IH3xSbO0whlApATC4e7Ju5ITVNAH1QlAJWDln453AGSObX8xKMcBfIlylKIH2NZoL8rOg07lxPGLKXme2qFerU=
+X-Received: by 2002:a05:6402:3492:b0:55f:4602:bf79 with SMTP id
+ v18-20020a056402349200b0055f4602bf79mr438320edc.27.1706602830515; Tue, 30 Jan
+ 2024 00:20:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5410:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5608503-7178-4bee-251b-08dc21610f8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TGyi4p/AE4Qlo39RQwGcxaA9WfsSRq/KX6rbILlLkfmPz/WY/B2fnSAxFYvRA7zTEUnG1vIqixH8uqV82N1XArxuQ4fao//fWob7yfV3GarnDX13LnMvFCwgVn7Wiscn8XKActRe0Jbjh2+x08pP6mh59sXF90Se4/3vpWuX95VQwbbOHK7mvvMaYpwLnquDHKA/CXEaBGHS23aHfCEHzmsM+dJvgepBt2jHwQPUDs/sEIH5GaeaUArat+0vvtoi1sw2ZqhIwH4StUv524dfWcYQ4re6Z43owVhw1Of5xns8sgUh6VZH6OGKeS2j2Qr9TjLU8gB7UKvIe/yhz1i6vOpzGI9epXup1tCavPijoJS+nfNx3AnhQIcNgO7qF1gu+L0046WeqfI8pSnj8y6GvhivqoQ9Ei/4musEqZ9vMXY/TV3qT2kwo15QfT3n5eK8xs+1IUUYe0QhisQqpUL71rMPVrAoJSKqSrbT07WREEs/Gvv/V9sW+aBtra0xny3ibf0knldGNkJl8MkeNr4Nj0A4cdLMCF6jyxhOf67PXgr/BVJWoRP7x9Z6DMN7zBlR
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(39860400002)(346002)(136003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(26005)(5660300002)(86362001)(4744005)(2906002)(4326008)(8676002)(8936002)(316002)(66946007)(66476007)(6512007)(66556008)(6636002)(9686003)(478600001)(6486002)(6506007)(82960400001)(41300700001)(83380400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZHddk/iUfSuDi4lQSaeuEwsfUJVlSXq7jAOtBOrbMfIiLWJQG0KohvGC0R6x?=
- =?us-ascii?Q?/+Jhhd9k171VTR9YgKO/HdA+++ClhxkKS4JHae2fWGQAk8jfURJIvHcsBkX1?=
- =?us-ascii?Q?9LjAe9FyFlo+vfUApwxlHvYscv2HgvKqkqBW2AHzIWvZOnEGXy7ldVPod+jv?=
- =?us-ascii?Q?a+XQmHeVSZL9ZqwslASwYm8oZgCX/j1wN3QhA+eOJKyM/8YEUMRsKLaD2cTJ?=
- =?us-ascii?Q?0IzroYRxCKg8nnA9b9NpS/P4huKG0bfBBX6aIMzQIvG+WrN23yr9DRPQKwFM?=
- =?us-ascii?Q?dalsPvovNTHKhKkCCPkANxgXYvS50ePOPp9pALePWhpt2by7nZVw21sVCJKK?=
- =?us-ascii?Q?hVnf1uewdK08RPb1jrzUUCRZEi4ZM9yPYGln9ppVE7PRqRr/BQjB9jIS4UQn?=
- =?us-ascii?Q?EkQC8rz95Qmnqf2V+tV2t07w2o6FoR0Z/QVXou2ZdKt6ycctqcbCmAsP6wvh?=
- =?us-ascii?Q?OP5t8cIDmbpxtAsgdVFMQ3iUBN0+YZ/7yw0x1cD8Z+jA05ORAJBbPRkmWC0I?=
- =?us-ascii?Q?LrF8LRrh/q8ara6Qqr5NM84WhLIbmAH6J8HWug59C5JBZxzbtsl7Rg30uRXL?=
- =?us-ascii?Q?3/gp7Rnxysa6a0GZFLSkDfTKx9nxkHxjl2xVUxo7O/huJFeTC/e1e/wOQRuQ?=
- =?us-ascii?Q?OA6hVDOgqXTUwH7M/QzICqV7PAfgFxdH2z0CWBBVotbtyQ2oHndr9K3fzwnG?=
- =?us-ascii?Q?/o3MD4Z1HhdvANAfsCO+0VvvQvSJL0lI+RPyNVPT+qfac4Lo9LinLO9SfS22?=
- =?us-ascii?Q?g/WrKZgHTysIPQeJ0oHVb7UhfJyd4mF2P4LaZoZXQTb/rulOR1xXORJomoiv?=
- =?us-ascii?Q?ewI26ymG+WKKMAryEe0i5tNRecULXkQUuMh7JUjlA+7Re1mF2Z/lCiJu8iDA?=
- =?us-ascii?Q?Niop3jhSt7evmZllmPqSJ5NTN+Xa3doKrBTn78ZpdJKWlDgq/3xLJUC47h1X?=
- =?us-ascii?Q?FkQ6lqmyerBw0IU8VjbgzST1qtLIU7AEA0ukVd3426HahpBu4H9SdeJ5ib+Z?=
- =?us-ascii?Q?lH179L0g+5xBlrkaehLOBeyBtFRRVl6YivdD50HtiyJLyDBHgcFLPokxjGpf?=
- =?us-ascii?Q?cA8ZIXofRUF7T5kgt2iawKv4uk3V5azIjUbjxYdHlsgQ2+gxlNHv8O88A8Om?=
- =?us-ascii?Q?KRTa+UfhrB2qPze3vPjxPtPd2QAvNEDgjPP+e2JBSSZk0GAicVAHCMXnHJ9W?=
- =?us-ascii?Q?oVatwjDowO77LxNrcfWUWrzeKMFBxmI/J74GVnkSafjhP06fXSKfpjW3pDTI?=
- =?us-ascii?Q?qZ40sZ8PwrmQjjpaMd7KvF2+7Obp7n2g8VQfRMK13+mGYKJYi9MrPuXcSAMk?=
- =?us-ascii?Q?/ptZBbc0T7lUSyBuPDEdkurGC22FIT6aBySP51R3P4JN84QsM0x5szVNbaW3?=
- =?us-ascii?Q?rMei4mTYpvsU1Xl26CCU5jnoJbZX82d8NgNdigpvlXUrImb7mwCw3Xt3SWxl?=
- =?us-ascii?Q?sBHAfKL8+IC1EIr5jw7M+9Nomu4PeR9rO4Wr4PHuxcnaxbycAoni5S4BCHuN?=
- =?us-ascii?Q?4Y+jktFLVysXFhFGEdJ9qXNfH0rZ5VMC/qjKeXGnPudUwB97f1zu8pcMCKKj?=
- =?us-ascii?Q?OEChP3pQeyp0gzLlvz6mgxEUiCWgfjWm/Wdhcx1zuYd8jyeMCplutBEuX7P2?=
- =?us-ascii?Q?SA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5608503-7178-4bee-251b-08dc21610f8a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 06:59:53.7039
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o2x0PuLKBmBFtXBEaWw6FCVdPIMrjOpTnobbvhKDLWPZqsWmEE2Ju39q0/So/3Lb13/Pyg3t6qs9w0xYpqXfaPGKLp+21Gtaa2D6atnxqi8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5410
-X-OriginatorOrg: intel.com
+References: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
+ <CAGEDW0fWCfuG3KrNSwDjNVGAZVL9NJgF26Jqyd840HfQdNGLbA@mail.gmail.com>
+ <CAAg4Pard=zh_5p650UcNdQEoQWZLM6G7KRqdPQHLmaR4oZMJ3w@mail.gmail.com>
+ <CAGEDW0dVEk-QXuL=DPVvSP4t5cafz6N-r_SrCxgFnBfFOsixSA@mail.gmail.com>
+ <CAAg4PaqgZcTXkWuys7FZjQdRChTkKj-ZnJQCdxpTMCxy4Hghow@mail.gmail.com>
+ <20230823175056.00001a84@Huawei.com> <CAAg4ParSB4_2FU2bu96A=3tSNuwHqZwK0wCS18EJoPAq9kYEkw@mail.gmail.com>
+ <CAAg4Pap9KzkgX=fgE7vNJYxEpGbHA-NVsgBY5npXizUbMhjp9A@mail.gmail.com>
+ <20240126123926.000051bd@Huawei.com> <ZbPTL00WOo7UC0e6@memverge.com> <20240126171233.00002a2e@Huawei.com>
+In-Reply-To: <20240126171233.00002a2e@Huawei.com>
+From: Sajjan Rao <sajjanr@gmail.com>
+Date: Tue, 30 Jan 2024 13:50:18 +0530
+Message-ID: <CAAg4ParQKj9FUe0DRX0Wmk1KT0bnxx2F7W=ic38781j7eVz+OQ@mail.gmail.com>
+Subject: Re: qemu cxl memory expander shows numa_node -1
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Gregory Price <gregory.price@memverge.com>, 
+	Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Quanquan Cao wrote:
-> "send_cmd->id == 0" indicates an invalid command, so replace 0
-> to CXL_MEM_COMMAND_ID_INVALID to make it easy for reading/understanding.
-> 
-> Signed-off-by: Quanquan Cao <caoqq@fujitsu.com>
-> ---
->  drivers/cxl/core/mbox.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 27166a411705..2e5ee05011d6 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -485,7 +485,8 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
->  	struct cxl_mem_command mem_cmd;
->  	int rc;
->  
-> -	if (send_cmd->id == 0 || send_cmd->id >= CXL_MEM_COMMAND_ID_MAX)
+Hi Jonathan,
 
-"non-zero" is readable to me, and less characters to parse means current
-code is literally easier to read.
+The QEMU command line in the original email has been corrected back in
+August 2023 based on the subsequent responses.
+
+My current QEMU command line reads like below. As you can see I am not
+assigning numa to the CXL memory object.
+
+qemu-system-x86_64 \
+ -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+ -machine type=3Dq35,nvdimm=3Don,cxl=3Don \
+ -accel tcg,thread=3Dsingle \
+ -m 4G \
+ -smp cpus=3D4 \
+ -object memory-backend-ram,size=3D4G,id=3Dm0 \
+ -object memory-backend-ram,size=3D256M,id=3Dcxl-mem1 \
+ -object memory-backend-ram,size=3D256M,id=3Dcxl-mem2 \
+ -numa node,memdev=3Dm0,cpus=3D0-3,nodeid=3D0 \
+ -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9,hostfw=
+d=3Dtcp::2222-:22
+\
+ -device virtio-net-pci,netdev=3Dnet0 \
+ -device pxb-cxl,bus_nr=3D2,bus=3Dpcie.0,id=3Dcxl.1,hdm_for_passthrough=3Dt=
+rue \
+ -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=3D2=
+ \
+ -device cxl-upstream,bus=3Dcxl_rp_port0,id=3Dus0,addr=3D0.0,multifunction=
+=3Don, \
+ -device cxl-switch-mailbox-cci,bus=3Dcxl_rp_port0,addr=3D0.2,target=3Dus0 =
+\
+ -device cxl-downstream,port=3D0,bus=3Dus0,id=3Dswport0,chassis=3D0,slot=3D=
+4 \
+ -device cxl-downstream,port=3D1,bus=3Dus0,id=3Dswport1,chassis=3D0,slot=3D=
+8 \
+ -device cxl-type3,bus=3Dswport0,volatile-memdev=3Dcxl-mem1,id=3Dcxl-vmem1 =
+\
+ -device cxl-type3,bus=3Dswport1,volatile-memdev=3Dcxl-mem2,id=3Dcxl-vmem2 =
+\
+ -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D512M,cxl-fmw.0.interleave-=
+granularity=3D2k
+\
+ -D /tmp/qemu.log \
+ -nographic
+
+Until I moved to Qemu version 8.2 recently, I was able to create
+regions and run linux native commands on CXL memory using
+#numactl --membind <cxl NUMA#> top
+
+You had advised me to turn off KVM and use tcg since the membind
+command will run code out of CXL memory which is not supported. By
+disabling KVM the membind command worked fine.
+However with Qemu version 8.2 the same membind command results in a
+kernel hard crash.
+I wanted to check if this is a known issue with 8.2 and is there a way
+around it.
+
+Thanks,
+Sajjan
+
+On Fri, Jan 26, 2024 at 10:42=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Fri, 26 Jan 2024 10:43:43 -0500
+> Gregory Price <gregory.price@memverge.com> wrote:
+>
+> > On Fri, Jan 26, 2024 at 12:39:26PM +0000, Jonathan Cameron wrote:
+> > > On Thu, 25 Jan 2024 13:45:09 +0530
+> > > Sajjan Rao <sajjanr@gmail.com> wrote:
+> > >
+> > > > Looks like something changed in QEMU 8.2 that broke running code ou=
+t
+> > > > of CXL memory with KVM disabled.
+> > > > I used "numactl --membind 2 ls" as suggested by Dimitrios earlier,
+> > > > this worked for me until I updated to the latest QEMU.
+> > > >
+> > > > Is this a known issue? Or am I missing something?
+> > >
+> > > I'm confused on how the description below ever worked.
+> > > Assigning the underlying memdev=3Dcxl-mem1 to a numa node isn't going
+> > > to correctly build the connections the CFMWS PA range.
+> > >
+> >
+> > I've now seen 3-4 occasions where people have done this and run into
+> > trouble (for obvious reasons).  Is there anything we can do to disallow
+> > the double-registering of a single memdev to both a numa node and a cxl
+> > device?
+> >
+> It would be novel for us to prevent people shooting themselves
+> in the foot ;) but I guess this should be fairly easy as the
+> numa node logic prevents the same one being used multiple times so can
+> copy how that is done.
+>
+> This should do the trick (very lightly tested).
+> It's end of day Friday here so a formal patch can wait for next week.
+>
+>
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index f29346fae7..d4194bb757 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -827,6 +827,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Erro=
+r **errp)
+>              error_setg(errp, "volatile memdev must have backing device")=
+;
+>              return false;
+>          }
+> +        if (host_memory_backend_is_mapped(ct3d->hostvmem)) {
+> +            error_setg(errp, "memory backend %s can't be used multiple t=
+imes.",
+> +               object_get_canonical_path_component(OBJECT(ct3d->hostvmem=
+)));
+> +            return false;
+> +        }
+>          memory_region_set_nonvolatile(vmr, false);
+>          memory_region_set_enabled(vmr, true);
+>          host_memory_backend_set_mapped(ct3d->hostvmem, true);
+> @@ -850,6 +855,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Erro=
+r **errp)
+>              error_setg(errp, "persistent memdev must have backing device=
+");
+>              return false;
+>          }
+> +        if (host_memory_backend_is_mapped(ct3d->hostpmem)) {
+> +            error_setg(errp, "memory backend %s can't be used multiple t=
+imes.",
+> +               object_get_canonical_path_component(OBJECT(ct3d->hostpmem=
+)));
+> +            return false;
+> +        }
+>          memory_region_set_nonvolatile(pmr, true);
+>          memory_region_set_enabled(pmr, true);
+>          host_memory_backend_set_mapped(ct3d->hostpmem, true);
+> @@ -880,6 +890,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Erro=
+r **errp)
+>              error_setg(errp, "dynamic capacity must have backing device"=
+);
+>              return false;
+>          }
+> +        if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
+> +            error_setg(errp, "memory backend %s can't be used multiple t=
+imes.",
+> +               object_get_canonical_path_component(OBJECT(ct3d->dc.host_=
+dc)));
+> +            return false;
+> +        }
+>          /* FIXME: set dc as nonvolatile for now */
+>          memory_region_set_nonvolatile(dc_mr, true);
+>          memory_region_set_enabled(dc_mr, true);
+>
+>
+>
+>
+>
+> > ~Gregory
+>
