@@ -1,180 +1,240 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE58D36102
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 02:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29CD376EA
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 04:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706582333; cv=none; b=Xzo+RfpYcyM17eLqrpCmqoFvIzj44g9tsHL6ETwfJUPWsOdParZW3IWVXkbY8UhRb15gPez98PqfDIurqlkq74kquBJ6E73dk18d2ick/7Pn8WHfVYy472xRXSIRotxZjLrFifE65GCHyWGc9MYHV5X1o3IwMWJbNVgKPVZdiZY=
+	t=1706589449; cv=none; b=CbbhqMf/JQRu08YZJNJLkjTutEvj5/53r3zzYJX8NWLt40j+dHFhUk1q0cx9NKFOwRacB3QXeGLSIX/jKOyG2XEVka5MiyaTN2YqmzngmJd2O6lKvu2f8MtW2OdhO36NenXSIRyJ9/LJYlbpMkwXpy/P7Y9Ku+9uk7v48jDdZ6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706582333; c=relaxed/simple;
-	bh=L89IzrilsDGveQdWAYWcXjFYMXSJQAdLrLejwXbXPuQ=;
+	s=arc-20240116; t=1706589449; c=relaxed/simple;
+	bh=8K1O1n708QJ431fkIBq/4nZutVemSis/ylpSdIXxoAM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l8HkqEqYVq3CSkcOzdft37jpQ3EXvLWUR6a37E+CXCbHKcHhXbYz+riwTc4tL00eIyiBEpl2uYOFYB9O4BCgez0OvksOIiHJ5bM/KwlflTISLVFIcVrcAs0NDjoQ8TOlyqjXseWBp1XdwKZogAfMRYaG18FXQYNkCXp4vZhuNpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PZyrJLlx; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kbz8jDo2GSqci2TGeEdemyNWRtv8ZUbXB/2PDIIL2RSXuvlhbYM5+umhbtHwiAwqkyVKkAj3/xEMGfOAfUQMu0Ln2d6vdJAA0DFncvdPlHygQRnyHMAj4Ic3heuZwQKMJD3GjaxhAKkM2MDhlQP3Y3KLA8UFr1yb6u6UqWL5af0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdXVJtn1; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PZyrJLlx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d50d0c98c3so36720555ad.1
-        for <linux-cxl@vger.kernel.org>; Mon, 29 Jan 2024 18:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706582330; x=1707187130; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
-        b=PZyrJLlxIYjvzme9mwBwHI/K/G8ewUUCPUM6YbldfgLjelfRrxmoMQ9oYBPx/ZwbgS
-         1RnXgjdfkRjncmC6mE2ekanNB4Ltj0Uwhow0otUdcdLzj4HxYZuzLQxdEdNmAdrXqZOQ
-         8xviYM8yc/kz1QaORBEr/7Snh2vjPaRghbqC1iBl8rJZubjiRMwlik0Sl4gxzJWiPKek
-         TywRxtqxpRH1ukviI9wttiZW59Rhy68ToElsbgtBIR+erMk8uiVPSbIm5/924vbbjfTa
-         NpYGQKrb0wSdlU9edC/OggmhKewh1s6MdtgCeYHJ+JXFfVk9ASZwzFD8+McYORYnR21W
-         ZN5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706582330; x=1707187130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
-        b=JqxV6ZPyOlvLE/lCqcKlHvhX53L/6DGk2yPGBLyQ9Ffek7Acm0wagkeUg/iTDjc2BH
-         ue0VypFheDXCdAkV7aQCtYQWrXGsradUKfluID0tDKs2bbsK4TuZESRSMPORZ4KQH4Cf
-         vPCU2fI47hl6ASE1rBtP7OsVII/a1UrT7Ws0O6eDqvu/wBwbZDhfWOlRPXIQUCk3lH32
-         n67VFJ5qs7VmLpH/XhovMMG8jeP05Gn0BRDchKNGJENcAMRP3S/QZcAc7srGjrbLm7wD
-         Fg8/XHswDbBumiirszEsyhCNvEEWNPAS+WtqIxnsOKuI2DKrkQYUhoVsAdacFIqmse5c
-         ejPw==
-X-Gm-Message-State: AOJu0Yw0VL9crHxntWgudHSIKEQaLUZq8t/KsAPULaAzjPWp1cuBXbub
-	7vFsCOMHndEhu1jqHLJPgPzn/PP4fkYn32YnF/AsG+5Q2e+3EUYEjpnxWKr0IAk=
-X-Google-Smtp-Source: AGHT+IG3Tf1LicjzS4Qa3v1HBWJ0okdxx8XgE9n1laWHdO3qtQvRbO5N3KnA5oTi64pctq5hmJtDrA==
-X-Received: by 2002:a17:902:d550:b0:1d7:1a90:65ba with SMTP id z16-20020a170902d55000b001d71a9065bamr500304plf.25.1706582329913;
-        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id ml8-20020a17090334c800b001d8fb16118csm1038823plb.267.2024.01.29.18.38.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rUe1O-00H85k-2a;
-	Tue, 30 Jan 2024 13:38:46 +1100
-Date: Tue, 30 Jan 2024 13:38:46 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdXVJtn1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706589447; x=1738125447;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=8K1O1n708QJ431fkIBq/4nZutVemSis/ylpSdIXxoAM=;
+  b=OdXVJtn1OuMJY4nUm1bDoovsrNR+H/vRt9ysEOyjAR/CHxZfLIO3C80d
+   HX1Pj4SvI0nKxLdb0lAywdVx7nIzhHL7BCEiMywgWLFuda+BfqctDF4VC
+   cS8gn2Lxw6zZaZtE/LMV4TVURMETcFl68mzb/cjKGFTJmF9uA8uuwZ0bG
+   2Y0h/gWEBRGNaoU93Txz1iYdrSQrlQJWLMMyIDc4dzSG/259e4pZa3ZnT
+   Ej+J5qKj5DwBCvkSNIXTIAuLSMzSA82aQsXkplv+mtjP5mmYgFzKAuFKu
+   ThHmUFfhxIe8gszl2mUByPSphklHrQ1Ec2RjGzDoeXrzOU4dOzwrbUjQc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="9806607"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="9806607"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 20:37:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="822067068"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="822067068"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.57.56])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 20:37:25 -0800
+Date: Mon, 29 Jan 2024 20:37:24 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Wonjae Lee <wj28.lee@samsung.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH 7/7] xfs: Use dax_is_supported()
-Message-ID: <ZbhhNnQ+fqd4Hda+@dread.disaster.area>
-References: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
- <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	KyungSan Kim <ks0204.kim@samsung.com>,
+	Hojin Nam <hj96.nam@samsung.com>
+Subject: Re: [RFC PATCH] cxl/region: Allow out of order assembly of
+ autodiscovered regions
+Message-ID: <Zbh9BMbpjr/qtVjE@aschofie-mobl2>
+References: <20240113050421.1622533-1-alison.schofield@intel.com>
+ <CGME20240113050447epcas2p2097a5c49c1f0f9318ec4202843e169b8@epcms2p8>
+ <20240126085108epcms2p8bd88403c60851f769dd7b3ccb0755f05@epcms2p8>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240126085108epcms2p8bd88403c60851f769dd7b3ccb0755f05@epcms2p8>
 
-On Mon, Jan 29, 2024 at 04:06:31PM -0500, Mathieu Desnoyers wrote:
-> Use dax_is_supported() to validate whether the architecture has
-> virtually aliased caches at mount time.
+On Fri, Jan 26, 2024 at 05:51:08PM +0900, Wonjae Lee wrote:
+> Thank you for your quick response and sending the patch!
 > 
-> This is relevant for architectures which require a dynamic check
-> to validate whether they have virtually aliased data caches
-> (ARCH_HAS_CACHE_ALIASING_DYNAMIC=y).
-
-Where's the rest of this patchset? I have no idea what
-dax_is_supported() actually does, how it interacts with
-CONFIG_FS_DAX, etc.
-
-If you are changing anything to do with FSDAX, the cc-ing the
--entire- patchset to linux-fsdevel is absolutely necessary so the
-entire patchset lands in our inboxes and not just a random patch
-from the middle of a bigger change.
-
-> Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Chandan Babu R <chandan.babu@oracle.com>
-> Cc: Darrick J. Wong <djwong@kernel.org>
-> Cc: linux-xfs@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: nvdimm@lists.linux.dev
-> Cc: linux-cxl@vger.kernel.org
-> ---
->  fs/xfs/xfs_super.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+> I'm very sorry for the delay in replying to your mail. It took some time to
+> reproduce test and check the issue.
 > 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 764304595e8b..b27ecb11db66 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -1376,14 +1376,22 @@ xfs_fs_parse_param(
->  	case Opt_nodiscard:
->  		parsing_mp->m_features &= ~XFS_FEAT_DISCARD;
->  		return 0;
-> -#ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
-> -		return 0;
-> +		if (dax_is_supported()) {
-> +			xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
-> +			return 0;
-> +		} else {
-> +			xfs_warn(parsing_mp, "dax option not supported.");
-> +			return -EINVAL;
-> +		}
->  	case Opt_dax_enum:
-> -		xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
-> -		return 0;
-> -#endif
-> +		if (dax_is_supported()) {
-> +			xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
-> +			return 0;
-> +		} else {
-> +			xfs_warn(parsing_mp, "dax option not supported.");
-> +			return -EINVAL;
-> +		}
+> On Fri, Jan 12, 2024 at 09:04:21PM -0800, alison.schofield@intel.com wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> >
+> > Wonjae Lee,
+> >
+> > Here is the RFC Patch I mentioned in this thread:
+> > https://lore.kernel.org/linux-cxl/20240112092201epcms2p577b3c979bdc694a370e5952edc091f68@epcms2p5/
+> >
+> > This passes the cxl-test suite, so hoping no regression, but it needs
+> > to be tested with the required config: 2 memdevs connected to the same
+> > port, each memdev belongs to a different auto-region. Repeated attempts
+> > should hit the test case and emit this debug message upon success:
+> >  dev_dbg(&cxlr_a->dev, "allow out of order region ref alloc\n");
+> >
+> > Failure will be the HPA order violation message.
+> >
+> > All reviewers & testers welcomed.
+> 
+> After applying your patch to base-commit, I ran the same test I mentioned in
+> the previous thread, and during the boot process, a null pointer dereference
+> occurs as shown below:
+> 
+> thread: https://lore.kernel.org/linux-cxl/ZaFn0dfaJ8iOi1UW@aschofie-mobl2/T/#t
+> base-commit: 3601311593eb44d34f142b993cb6f38f9a7863b3
+> dmesg log:
+> [] cxl region0: region sort successful
+> [] cxl region0: mem1:endpoint6 decoder6.0 add: mem1:decoder6.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+> [] cxl region0: pci0000:3d:port1 decoder1.0 add: mem1:decoder6.0 @ 0 next: mem1 nr_eps: 1 nr_targets: 1
+> [] BUG: kernel NULL pointer dereference, address: 00000000000002e8
+> ...
+> [] Call Trace:
+> ...
+> []  ? auto_order_ok+0x5f/0xb0 [cxl_core]
+> []  cxl_region_attach_position+0x379/0x860 [cxl_core]
+> []  cxl_region_attach+0x466/0x8b0 [cxl_core]
+>  
+>  
+> To be specific, cxld_a in auto_order_ok() is NULL:
+>     cxld_a = cxl_region_find_decoder(port, cxlr_a); /* cxld_a == NULL */
+>  
+> I've noticed that if I pass cxled as a function argument appropriately, and get
+> cxld_a as shown below, the region initialization succeeds with the log "cxl
+> region0: allow out of order region ref alloc" as you mention.
+>  
+> @@ -756,8 +756,8 @@ static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+>         return to_cxl_decoder(dev);
+>  }
+> -bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_a,
+> -                  struct cxl_region *cxlr_b)
+> +bool auto_order_ok(struct cxl_port *port, struct cxl_endpoint_decoder *cxled,
+> +                  struct cxl_region *cxlr_a, struct cxl_region *cxlr_b)
+>  {
+>         struct cxl_region_ref *cxl_rr;
+>         struct cxl_decoder *cxld_a, *cxld_b;
+> @@ -771,7 +771,10 @@ bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_a,
+>         if (!test_bit(CXL_REGION_F_AUTO, &cxlr_a->flags))
+>                 return false;
+> 
+> -       cxld_a = cxl_region_find_decoder(port, cxlr_a);
+> +       if (port == cxled_to_port(cxled))
+> +               cxld_a = &cxled->cxld;
+> +       else
+> +               cxld_a = cxl_region_find_decoder(port, cxlr_a);
+> 
+> I hope this helps.
 
-Assuming that I understand what dax_is_supported() is doing, this
-change isn't right.  We're just setting the DAX configuration flags
-from the mount options here, we don't validate them until 
-we've parsed all options and eliminated conflicts and rejected
-conflicting options. We validate whether the options are
-appropriate for the underlying hardware configuration later in the
-mount process.
+Yes, this is very helpful! Glad to have you trying it out.
 
-dax=always suitability is check in xfs_setup_dax_always() called
-later in the mount process when we have enough context and support
-to open storage devices and check them for DAX support. If the
-hardware does not support DAX then we simply we turn off DAX
-support, we do not reject the mount as this change does.
+I think at this point we can call alloc_region_ref() with a known cxled
+of this port and simply pass it on. I'm going to skip this if...else pattern,
+and simply get cxld_a = &cxled->cxld;
 
-dax=inode and dax=never are valid options on all configurations,
-even those with without FSDAX support or have hardware that is not
-capable of using DAX. dax=inode only affects how an inode is
-instantiated in cache - if the inode has a flag that says "use DAX"
-and dax is suppoortable by the hardware, then the turn on DAX for
-that inode. Otherwise we just use the normal non-dax IO paths.
+I think there may be opportunity for refinements in cxl_region_find_decoder()
+and it's descendants, but it's not directly tied to this patch.
 
-Again, we don't error out the filesystem if DAX is not supported,
-we just don't turn it on. This check is done in
-xfs_inode_should_enable_dax() and I think all you need to do is
-replace the IS_ENABLED(CONFIG_FS_DAX) with a dax_is_supported()
-call...
+Thanks,
+Alison
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> 
+> Thanks,
+> Wonjae
+> 
+> > Begin commit log:
+> > Autodiscovered regions can fail to assemble if they are not discovered
+> > in HPA decode order. The user will see failure messages like:
+> >
+> > [] cxl region0: endpoint5: HPA order violation region1
+> > [] cxl region0: endpoint5: failed to allocate region reference
+> >
+> > The check that is causing the failure helps the CXL driver enforce
+> > a CXL spec mandate that decoders be committed in HPA order. The
+> > check is needless for autodiscovered regions since their decoders
+> > are already programmed. Trying to enforce order in the assembly of
+> > these regions is useless because they are assembled once all their
+> > member endpoints arrive, and there is no guarantee on the order in
+> > which endpoints are discovered during probe.
+> >
+> > Keep the existing check, but for autodiscovered regions, allow the
+> > out of order assembly after a sanity check that the lowered numbered
+> > decoder has the lower HPA starting address.
+> >
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  drivers/cxl/core/region.c 34 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 33 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 0f05692bfec3..8770ebcae05d 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -753,6 +753,37 @@ static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+> >  return to_cxl_decoder(dev);
+> >  }
+> >
+> > +bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_a,
+> > +        struct cxl_region *cxlr_b)
+> > +{
+> > + struct cxl_region_ref *cxl_rr;
+> > + struct cxl_decoder *cxld_a, *cxld_b;
+> > +
+> > + /*
+> > +  * Allow the out of order assembly of auto-discovered regions as
+> > +  * long as correct decoder programming order can be verified.
+> > +  *
+> > +  * Per CXL Spec 3.1 8.2.4.20.12 Committing Decoder Programming,
+> > +  * software must commit decoders in HPA order. Therefore it is
+> > +  * sufficient to sanity check that the lowered number decoder
+> > +  * has the lower HPA starting address.
+> > +  */
+> > + if (!test_bit(CXL_REGION_F_AUTO, &cxlr_a->flags))
+> > +    return false;
+> > +
+> > + cxld_a = cxl_region_find_decoder(port, cxlr_a);
+> > + cxl_rr = cxl_rr_load(port, cxlr_b);
+> > + cxld_b = cxl_rr->decoder;
+> > +
+> > + if (cxld_b->id > cxld_a->id) {
+> > +    dev_dbg(&cxlr_a->dev,
+> > +        "allow out of order region ref alloc\n");
+> > +    return true;
+> > + }
+> > +
+> > + return false;
+> > +}
+> > +
+> >  static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+> >                          struct cxl_region *cxlr)
+> >  {
+> > @@ -767,7 +798,8 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+> >      if (!ip->res)
+> >          continue;
+> >
+> > -    if (ip->res->start > p->res->start) {
+> > +    if (ip->res->start > p->res->start &&
+> > +        (!auto_order_ok(port, cxlr, iter->region))) {
+> >          dev_dbg(&cxlr->dev,
+> >              "%s: HPA order violation %s:%pr vs %pr\n",
+> >              dev_name(&port->dev),
+> >
+> > base-commit: 3601311593eb44d34f142b993cb6f38f9a7863b3
+> > --
+> > 2.37.3
+> >
