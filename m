@@ -1,58 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BAC3EA82
-	for <linux-cxl@vger.kernel.org>; Wed, 31 Jan 2024 20:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C9337708
+	for <linux-cxl@vger.kernel.org>; Wed, 31 Jan 2024 20:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706732123; cv=none; b=spu+3Ovnc0WrQlIO3FHnTpUvEgqP4VF3AeWyzTytMIp5H/jSqii39p89Z4B97IOgt9xUEkGDUstzsOA4ZXhvS9NTr629cNXwCZhuJoJ+MAtmj0WI44bznnBfXhwXImo6ch2UJEv2NRk5Daa10zz6HoIlOSiWjwsC2K3+dcL0MmA=
+	t=1706733774; cv=none; b=TRHBkStt2a0Swq62+Gq4ViWqy3I4couqBOoIr6XZdoV1gw/fk1A7apata+bnke+lwsEhWeRzYYoyVTy+n376ac1ob/LvjrOhnBjSeOfD/qk8JS/zZdADj7mOqTG4ZtzYa06aP7Fz98jmv9J8aZ2xPUfZprz9gCgcNDKRasZSmq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706732123; c=relaxed/simple;
-	bh=6E8y+m/5W7Gd//VXf4tnyUG4YWoNNhcUGAPBQkJL350=;
+	s=arc-20240116; t=1706733774; c=relaxed/simple;
+	bh=0ttANtOrcttr7NXaqt/G0w+9AjfKy+c5thEW3pDhz3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJup/Wx4hJm50hxtjV8/DQkRYeXFiQKPaGef8u+cLyS9NsJTsbicZyN4XKJbYzSaXud4+g6Xby2LGqGyHonaoZgVBTSKVBDBAf8P5BiPdjP4XrUI8IeeHI8AwZSDGWgEpjwihL9euN5zi56tI7AqL3xXSsZzQAoZompZ4LxvRBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TQSjxWiL; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sCflt2orshv4zVTuiZEmrSwe//XMDD6CTGvqW5CNIVQvRJkr55w5qAofe4NCBGJtQXBcafqs3akqrULl1x4gBfUzugrRGjThOd1nrnblWz8V4oU38sIVRIaA3wXFGyI4K+2K/sqqSGvnMpiCwFOcZZ27BPnNtPlLkTHPHVyrXhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ENa2o3JK; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TQSjxWiL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706732122; x=1738268122;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6E8y+m/5W7Gd//VXf4tnyUG4YWoNNhcUGAPBQkJL350=;
-  b=TQSjxWiL4y3BrL3K9SX2j3pkUMvBOqAJHwoB4QjHuY5X5t9NsjqUxtw0
-   IZkPs9193vGZgn8GrOX5YmxUgSxNyUU4kfOxug/rwMmFOWkZ+T4litKJu
-   QQsuLNVwCOEYUDXyvcyb59cHV3mdi08ogBTZe9ns6piZPQ+KCzfXj04bb
-   4wHBDG4gK/e+ZBg4HIBGNAOIC2xuweDwCuKaK45Q1tERNfVR30F5OS1T/
-   LoL2Bnc+mMxMxjDFN0iaZKfdLuG1EZjyTtAQR2RXDl0cT3pahivsHsQgJ
-   E+QQ2pp72SqQebsur3710LtCKD+OcpWVDU61+NokHT61FjiwVo65nVmMq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17097814"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="17097814"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 12:15:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="4196622"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.39.51])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 12:15:14 -0800
-Date: Wed, 31 Jan 2024 12:15:12 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ENa2o3JK"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2960e754c46so13243a91.2
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Jan 2024 12:42:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706733772; x=1707338572; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4HikurBEOhu9euC7gl0ui3GG6XowXvyoYxK7m1zGW+s=;
+        b=ENa2o3JK8jYa1RYoybqHhhajN7vXPeDGVwnPgMOyLNp2438iHE1aLCfbGsoBoRlcMr
+         dk6dT2YyrH45ZE7R1Uz323TWe/Tcclgb8Q9er/zT2Mlmpy8wO8+92J+8F5Im4EBUzxKe
+         14rf7XmzyXt9kUR2vEqHE8YYI5EZc24XCEi+0hSc0qQi0G/mAvR++ZyCA4cd/rN5iBIK
+         Rge4ciJ0yNpP/tgYTHXGYiIeW/QwlbhRhXBBSRfJ09rSLVDaq0TqOOUYncnxfsPaY1Xy
+         W9w50vs6qqh3wW476TzMrblmvTqMv5SAbrN9tcBohaB+Mh4cpGDLLcXwBEDzB+Fv+5lZ
+         2Kxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706733772; x=1707338572;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4HikurBEOhu9euC7gl0ui3GG6XowXvyoYxK7m1zGW+s=;
+        b=vjsT3NbwhbR7Ijq+3nCtw7TidB5vDTMJYK0KXHLdWsFK50khlJ6SNuzd6Te4uBMTBJ
+         rd9tRzzoCA/9KWeR4IbgWWWjibeTdZeJOCXkdHdxOHlRK8f2uUjS+NuTLepTMF11ZIX5
+         1d9nhVTHejh/ULR1NSkMD5uG5wQSe7HpE+Mf/YcXnreqKVLpoIgJ7YGBPT3k3MUq+gmy
+         wYorg9JjR0BpwX+Dwl+snkcQ3yOb1w0MkQlUY4gSQDkkubLljTd2B64WFxZemB3Gasqw
+         huLe31/wHqwe5d4lYiCwmERp9A2UJa/F3ql42ktjp/o12NzRHRvjEd1JXNp9+c2ovJj/
+         WqJw==
+X-Gm-Message-State: AOJu0YxjJUuuVjSONRSFnDm9jE21GLGcPaJdi2XEjeqbwJRrS1KlyuIp
+	JYouuCXZtjs1KPWeYPWs+EqmShB47olrd9/xzOmCq+bjfc2jCpfqWVukrGr54e8=
+X-Google-Smtp-Source: AGHT+IFKgnjyHOHXjb8FWpmberef1nwD4qkIyOp+/vPJjvOfE+QEc5Mj2C0M+Fe+UDPDMwl9iwoIbw==
+X-Received: by 2002:a17:90b:2406:b0:295:cf9f:a1de with SMTP id nr6-20020a17090b240600b00295cf9fa1demr2928435pjb.12.1706733771727;
+        Wed, 31 Jan 2024 12:42:51 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id db16-20020a17090ad65000b0029608793122sm225215pjb.20.2024.01.31.12.42.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 12:42:51 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rVHPz-000JNE-2o;
+	Thu, 01 Feb 2024 07:42:47 +1100
+Date: Thu, 1 Feb 2024 07:42:47 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-	Wonjae Lee <wj28.lee@samsung.com>
-Subject: Re: [PATCH v2] cxl/region: Allow out of order assembly of
- autodiscovered regions
-Message-ID: <ZbqqUEdIq+2/I8Ae@aschofie-mobl2>
-References: <20240131020726.1790160-1-alison.schofield@intel.com>
- <65ba0b2be2775_5a9dd2945b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH v2 7/8] Introduce dcache_is_aliasing() across all
+ architectures
+Message-ID: <Zbqwx12WfXvZ6kk2@dread.disaster.area>
+References: <20240130165255.212591-1-mathieu.desnoyers@efficios.com>
+ <20240130165255.212591-8-mathieu.desnoyers@efficios.com>
+ <Zbm1CLy+YZWx2IuO@dread.disaster.area>
+ <d30a890a-f64e-4082-8d8e-864bfb3c3800@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -61,132 +81,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <65ba0b2be2775_5a9dd2945b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <d30a890a-f64e-4082-8d8e-864bfb3c3800@efficios.com>
 
-On Wed, Jan 31, 2024 at 12:56:11AM -0800, Dan Williams wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
+On Wed, Jan 31, 2024 at 09:58:21AM -0500, Mathieu Desnoyers wrote:
+> On 2024-01-30 21:48, Dave Chinner wrote:
+> > On Tue, Jan 30, 2024 at 11:52:54AM -0500, Mathieu Desnoyers wrote:
+> > > Introduce a generic way to query whether the dcache is virtually aliased
+> > > on all architectures. Its purpose is to ensure that subsystems which
+> > > are incompatible with virtually aliased data caches (e.g. FS_DAX) can
+> > > reliably query this.
+> > > 
+> > > For dcache aliasing, there are three scenarios dependending on the
+> > > architecture. Here is a breakdown based on my understanding:
+> > > 
+> > > A) The dcache is always aliasing:
+> > > 
+> > > * arc
+> > > * csky
+> > > * m68k (note: shared memory mappings are incoherent ? SHMLBA is missing there.)
+> > > * sh
+> > > * parisc
 > > 
-> > Autodiscovered regions can fail to assemble if they are not discovered
-> > in HPA decode order. The user will see failure messages like:
+> > /me wonders why the dentry cache aliasing has problems on these
+> > systems.
 > > 
-> > [] cxl region0: endpoint5: HPA order violation region1
-> > [] cxl region0: endpoint5: failed to allocate region reference
+> > Oh, dcache != fs/dcache.c (the VFS dentry cache).
 > > 
-> > The check that is causing the failure helps the CXL driver enforce
-> > a CXL spec mandate that decoders be committed in HPA order. The
-> > check is needless for autodiscovered regions since their decoders
-> > are already programmed. Trying to enforce order in the assembly of
-> > these regions is useless because they are assembled once all their
-> > member endpoints arrive, and there is no guarantee on the order in
-> > which endpoints are discovered during probe.
-> > 
-> > Keep the existing check, but for autodiscovered regions, allow the
-> > out of order assembly after a sanity check that the lesser numbered
-> > decoder has the lesser HPA starting address.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > 
-> > Changes since v1: 
-> > - Get decoder via available struct cxled_endpoint_decoder. (Wonjae)
-> > - Check F_AUTO in alloc_region_ref()
-> > - Fold assignments into the declarations in auto_order_ok()
-> > - Drop Tested-by tag due to changes
-> > Link to v1: https://lore.kernel.org/linux-cxl/20240126045446.1750854-1-alison.schofield@intel.com/
-> > 
-> > 
-> >  drivers/cxl/core/region.c | 47 ++++++++++++++++++++++++++++++---------
-> >  1 file changed, 36 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 0f05692bfec3..28e8af1e54a2 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -753,8 +753,32 @@ static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
-> >  	return to_cxl_decoder(dev);
-> >  }
-> >  
-> > -static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
-> > -					       struct cxl_region *cxlr)
-> > +static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
-> > +			  struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	struct cxl_region_ref *rr = cxl_rr_load(port, cxlr_iter);
-> > +	struct cxl_decoder *cxld_iter = rr->decoder;
-> > +	struct cxl_decoder *cxld = &cxled->cxld;
-> > +
-> > +	/*
-> > +	 * Allow the out of order assembly of auto-discovered regions.
-> > +	 * Per CXL Spec 3.1 8.2.4.20.12 software must commit decoders
-> > +	 * in HPA order. Confirm that the decoder with the lesser HPA
-> > +	 * starting address has the lesser id.
-> > +	 */
-> > +	dev_dbg(&cxld->dev, "check for HPA violation %s:%d < %s:%d\n",
-> > +		dev_name(&cxld->dev), cxld->id,
-> > +		dev_name(&cxld_iter->dev), cxld_iter->id);
-> > +
-> > +	if (cxld_iter->id > cxld->id)
+> > Can you please rename this function appropriately so us dumb
+> > filesystem people don't confuse cpu data cache configurations with
+> > the VFS dentry cache aliasing when we read this code? Something like
+> > cpu_dcache_is_aliased(), perhaps?
 > 
-> This only works if @port is an endpoint port. The order violations can
-> also happen within switch ports and in that case it is invalid to
-> compare a switch port decoder-id with an endpoint decoder id. So I think
-> this needs cxl_region_find_decoder(), and cxl_region_find_decoder()
-> needs to handle endpoint ports:
-
-Thanks! With your changes - it's looking right now:
-
-bad compares:
-[] cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder8.1:1
-[0 cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder8.2:2
-[] cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder7.1:1
-[] cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder7.2:2
-[] cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder4.1:1
-[] cxl_core:auto_order_ok:769: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder4.2:2
-
-good compares:
-[] cxl_core:auto_order_ok:773: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder8.1:1
-[] cxl_core:auto_order_ok:773: cxl decoder8.0: check for HPA violation decoder8.0:0 < decoder8.2:2
-[] cxl_core:auto_order_ok:773: cxl decoder7.0: check for HPA violation decoder7.0:0 < decoder7.1:1
-[] cxl_core:auto_order_ok:773: cxl decoder7.0: check for HPA violation decoder7.0:0 < decoder7.2:2
-[] cxl_core:auto_order_ok:773: cxl decoder4.0: check for HPA violation decoder4.0:0 < decoder4.1:1
-[] cxl_core:auto_order_ok:773: cxl decoder4.0: check for HPA violation decoder4.0:0 < decoder4.2:2
-
-
+> Good point, will do. I'm planning go rename as follows for v3 to
+> eliminate confusion with dentry cache (and with "page cache" in
+> general):
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index ce0e2d82bb2b..f1a9d1798d21 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -730,12 +730,17 @@ static int match_auto_decoder(struct device *dev, void *data)
->         return 0;
->  }
->  
-> -static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
-> -                                                  struct cxl_region *cxlr)
-> +static struct cxl_decoder *
-> +cxl_region_find_decoder(struct cxl_port *port,
-> +                       struct cxl_endpoint_decoder *cxled,
-> +                       struct cxl_region *cxlr)
->  {
->         struct device *dev;
->         int id = 0;
->  
-> +       if (port == cxled_to_port(cxled))
-> +               return &cxled->cxld;
-> +
->         if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
->                 dev = device_find_child(&port->dev, &cxlr->params,
->                                         match_auto_decoder);
-> @@ -853,10 +858,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
->  {
->         struct cxl_decoder *cxld;
->  
-> -       if (port == cxled_to_port(cxled))
-> -               cxld = &cxled->cxld;
-> -       else
-> -               cxld = cxl_region_find_decoder(port, cxlr);
-> +       cxld = cxl_region_find_decoder(port, cxled, cxlr);
->         if (!cxld) {
->                 dev_dbg(&cxlr->dev, "%s: no decoder available\n",
->                         dev_name(&port->dev));
+> ARCH_HAS_CACHE_ALIASING -> ARCH_HAS_CPU_CACHE_ALIASING
+> dcache_is_aliasing() -> cpu_dcache_is_aliasing()
+> 
+> I noticed that you suggested "aliased" rather than "aliasing",
+> but I followed what arm64 did for icache_is_aliasing(). Do you
+> have a strong preference one way or another ?
+
+Not really.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
