@@ -1,163 +1,279 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FC139AD5;
-	Wed, 31 Jan 2024 21:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45739AE6
+	for <linux-cxl@vger.kernel.org>; Wed, 31 Jan 2024 21:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706737205; cv=none; b=SrNvB8ldP369edt93qyE3oAT/GUg/WDVpX3EwcPmeOxadjHTJ44dAbeCiJ6zrI9Q55WzljE6Nimr2ZDbjVtjV19avWg2ut+oxErPoNdamm8H14ZlqWGY1OX/jrbYnpAnBa8vXtSafZTrMXi5V2bLDFN52SIG7sHrjSI1jxPH8JY=
+	t=1706737289; cv=none; b=GulzKTuYW/pP5fskppz3dnkWerbQh4dbPPQMMmm4zJfqcS8p4zBoE5NxZ3GfXUcQZO2Fd2cMP92Y5lzZ7bCAuYGTKl9UZbVH+d7WMTG582zII7pJfRuda6LiLXRZgE7RIwhDpbFOb+BTZBI0gg868NSAmqoerCA37sWaml9vpUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706737205; c=relaxed/simple;
-	bh=mE6IlMP08TpBgXOVDJUm71vva4w7+fEDZV65jtPKtXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YwibD+Z+/v1bs6uMmkTlD4gvfntMN3EWbrldjhl2MraId/jE7SbsyOepiqb0C1WOSgVg3m0zjpmya7SahKwVedFlMY0N/Vv1yHKnxrx00XqHQKrTRD2IUAp/kKTgGgmRXLy1h4dhvQXz2/qKUfpGh5T+8trIkRDdwL1Fqo52bX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=fOC//W4u; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1706737289; c=relaxed/simple;
+	bh=pg1yfmOFtbulpq5ePaYdJZBipvV4Q2Xoq2qGNToajng=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=UXSA/VMeGBGY7k0tPCxpR5kXwBieMMa42x395/kFovQ4Ce4Gk+T9i4+N+hBTBv1W/vaBgUhz3wfBRN6j3H+MbD8bQIIlqf36LKjfB5ZSNfCFVzAQ60V+g6xyrASfPG70zB7L8SzBGEW3Sc8HLuPSy47YJod4EZhctykCSYhzEH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dR22Z4se; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fOC//W4u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1706737197;
-	bh=mE6IlMP08TpBgXOVDJUm71vva4w7+fEDZV65jtPKtXc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fOC//W4u0F5vbdt+tU+rP15v/l0o/+CnIg+Ydp5bcNwGYw9ud2JP/HNwuD+X2eYWY
-	 AXE0QkkFuowfQF/N5KDNWKA1OtehwKwu++g42TntpSKmR0HWSQ8OE00hj0DK1lZL18
-	 0noEqFv4pzYCqQ+J9lGKMSW8o44r71joP5nDgCjEpRokBxY0mzIcRAvO9I+M5X6Nje
-	 0/WsjNt0cTRRaf74shtLNuDJXD/6td2e/pOr42o6HxQ8MWLaI1gQRslqQNLtk7faOo
-	 2+zPZgyGqKquMsySa1E3H6j3vwxgx0Tn5FOmPizhrqqkpYnf8Hg+OKkQ2KbcVBQ7P1
-	 HUgiw7TX/NJTg==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TQFn93W8xzX1V;
-	Wed, 31 Jan 2024 16:39:57 -0500 (EST)
-Message-ID: <0a38176b-c453-4be0-be83-f3e1bb897973@efficios.com>
-Date: Wed, 31 Jan 2024 16:39:57 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dR22Z4se"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706737285; x=1738273285;
+  h=date:from:to:cc:subject:message-id;
+  bh=pg1yfmOFtbulpq5ePaYdJZBipvV4Q2Xoq2qGNToajng=;
+  b=dR22Z4seVAAowHCcu+RnjqXUbh0PYAySkpMw/bMSZh6D3A22zQjHLnw3
+   Rr7v4QuHiz9btZD1+yS4lzUWTt2/9KMcVTLmZAfoCWMHrtunq1pPEiCDW
+   0iI5TNjrDYYTdl66kqJzAKbBoSZaTs9fH9z0FfFE1ddva8gDMCrgr3zmt
+   ttwsNgEq0lL750NhxQhqNQCYXez//Us75/5FxH7M9vAF5VdpweqMu+1LC
+   MLg/7M0WYSSpTy1uuf3vAIX+Q9qQ84GMr4XP8nwpL/1h+ftAm1uEiKpYK
+   vXKzb+ecCGvTj8SGnnnMSW96lZzxYCFjusrclWNXwJU+nUDFZO+o8z/D6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="25198006"
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="25198006"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 13:41:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="30656040"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 31 Jan 2024 13:41:23 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rVIKe-00023M-0k;
+	Wed, 31 Jan 2024 21:41:20 +0000
+Date: Thu, 01 Feb 2024 05:41:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:fixes] BUILD SUCCESS
+ 6be99530c92c6b8ff7a01903edc42393575ad63b
+Message-ID: <202402010508.djrDdEwo-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 2/4] dax: Check for data cache aliasing at runtime
-To: Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>,
- Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>,
- Russell King <linux@armlinux.org.uk>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- dm-devel@lists.linux.dev
-References: <20240131162533.247710-1-mathieu.desnoyers@efficios.com>
- <20240131162533.247710-3-mathieu.desnoyers@efficios.com>
- <65bab567665f3_37ad2943c@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <65bab567665f3_37ad2943c@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 2024-01-31 16:02, Dan Williams wrote:
-> Mathieu Desnoyers wrote:
->> Replace the following fs/Kconfig:FS_DAX dependency:
->>
->>    depends on !(ARM || MIPS || SPARC)
->>
->> By a runtime check within alloc_dax().
->>
->> This is done in preparation for its use by each filesystem supporting
->> the "dax" mount option to validate whether DAX is indeed supported.
->>
->> This is done in preparation for using cpu_dcache_is_aliasing() in a
->> following change which will properly support architectures which detect
->> data cache aliasing at runtime.
->>
->> Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->> Cc: linux-mm@kvack.org
->> Cc: linux-arch@vger.kernel.org
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Vishal Verma <vishal.l.verma@intel.com>
->> Cc: Dave Jiang <dave.jiang@intel.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Cc: nvdimm@lists.linux.dev
->> Cc: linux-cxl@vger.kernel.org
->> Cc: linux-fsdevel@vger.kernel.org
->> Cc: dm-devel@lists.linux.dev
->> ---
->>   drivers/dax/super.c | 6 ++++++
->>   fs/Kconfig          | 1 -
->>   2 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
->> index 0da9232ea175..e9f397b8a5a3 100644
->> --- a/drivers/dax/super.c
->> +++ b/drivers/dax/super.c
->> @@ -445,6 +445,12 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
->>   	dev_t devt;
->>   	int minor;
->>   
->> +	/* Unavailable on architectures with virtually aliased data caches. */
->> +	if (IS_ENABLED(CONFIG_ARM) ||
->> +	    IS_ENABLED(CONFIG_MIPS) ||
->> +	    IS_ENABLED(CONFIG_SPARC))
->> +		return NULL;
-> 
-> This function returns ERR_PTR(), not NULL on failure.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: 6be99530c92c6b8ff7a01903edc42393575ad63b  x86/numa: Fix the sort compare func used in numa_fill_memblks()
 
-Except that it returns NULL in the CONFIG_DAX=n case as you
-noticed below.
+elapsed time: 729m
 
-> 
-> ...and I notice this mistake is also made in include/linux/dax.h in the
-> CONFIG_DAX=n case. That function also mentions:
-> 
->      static inline struct dax_device *alloc_dax(void *private,
->                      const struct dax_operations *ops)
->      {
->              /*
->               * Callers should check IS_ENABLED(CONFIG_DAX) to know if this
->               * NULL is an error or expected.
->               */
->              return NULL;
->      }
-> 
-> ...and none of the callers validate the result, but now runtime
-> validation is necessary. I.e. it is not enough to check
-> IS_ENABLED(CONFIG_DAX) it also needs to check cpu_dcache_is_aliasing().
+configs tested: 204
+configs skipped: 3
 
-If the callers select DAX in their Kconfig, then they don't have to
-explicitly check for IS_ENABLED(CONFIG_DAX). Things change for the
-introduced runtime check though.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> With that, there are a few more fixup places needed, pmem_attach_disk(),
-> dcssblk_add_store(), and virtio_fs_setup_dax().
-
-Which approach should we take then ? Should we:
-
-A) Keep returning NULL from alloc_dax() for both
-    cpu_dcache_is_aliasing() and CONFIG_DAX=n, and use IS_ERR_OR_NULL()
-    in the caller. If we do this, then the callers need to somehow
-    translate this NULL into a negative error value, or
-
-B) Replace this NULL return value in both cases by a ERR_PTR() (which
-    error value should we return ?).
-
-I would favor approach B) which appears more robust and introduces
-fewer changes. If we go for that approach do we still need to change
-the callers ?
-
-Thanks,
-
-Mathieu
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                 nsimosci_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240131   gcc  
+arc                   randconfig-002-20240131   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                     am200epdkit_defconfig   clang
+arm                         axm55xx_defconfig   gcc  
+arm                                 defconfig   clang
+arm                          gemini_defconfig   gcc  
+arm                      integrator_defconfig   gcc  
+arm                        neponset_defconfig   clang
+arm                   randconfig-001-20240131   clang
+arm                   randconfig-002-20240131   clang
+arm                   randconfig-003-20240131   clang
+arm                   randconfig-004-20240131   clang
+arm                        spear6xx_defconfig   gcc  
+arm                           spitz_defconfig   clang
+arm                           stm32_defconfig   gcc  
+arm                         vf610m4_defconfig   gcc  
+arm64                            alldefconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240131   clang
+arm64                 randconfig-002-20240131   clang
+arm64                 randconfig-003-20240131   clang
+arm64                 randconfig-004-20240131   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240131   gcc  
+csky                  randconfig-002-20240131   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240131   clang
+hexagon               randconfig-002-20240131   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240131   clang
+i386         buildonly-randconfig-002-20240131   clang
+i386         buildonly-randconfig-003-20240131   clang
+i386         buildonly-randconfig-004-20240131   clang
+i386         buildonly-randconfig-005-20240131   clang
+i386         buildonly-randconfig-006-20240131   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240131   clang
+i386                  randconfig-002-20240131   clang
+i386                  randconfig-003-20240131   clang
+i386                  randconfig-004-20240131   clang
+i386                  randconfig-005-20240131   clang
+i386                  randconfig-006-20240131   clang
+i386                  randconfig-011-20240131   gcc  
+i386                  randconfig-011-20240201   clang
+i386                  randconfig-012-20240131   gcc  
+i386                  randconfig-012-20240201   clang
+i386                  randconfig-013-20240131   gcc  
+i386                  randconfig-013-20240201   clang
+i386                  randconfig-014-20240131   gcc  
+i386                  randconfig-014-20240201   clang
+i386                  randconfig-015-20240131   gcc  
+i386                  randconfig-015-20240201   clang
+i386                  randconfig-016-20240131   gcc  
+i386                  randconfig-016-20240201   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240131   gcc  
+loongarch             randconfig-002-20240131   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                        bcm47xx_defconfig   gcc  
+mips                        bcm63xx_defconfig   clang
+mips                           ip27_defconfig   gcc  
+mips                     loongson1b_defconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240131   gcc  
+nios2                 randconfig-002-20240131   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240131   gcc  
+parisc                randconfig-002-20240131   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                        fsp2_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc               randconfig-001-20240131   clang
+powerpc               randconfig-002-20240131   clang
+powerpc               randconfig-003-20240131   clang
+powerpc                    socrates_defconfig   gcc  
+powerpc64             randconfig-001-20240131   clang
+powerpc64             randconfig-002-20240131   clang
+powerpc64             randconfig-003-20240131   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20240131   clang
+riscv                 randconfig-002-20240131   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20240131   gcc  
+s390                  randconfig-002-20240131   gcc  
+sh                               alldefconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                    randconfig-001-20240131   gcc  
+sh                    randconfig-002-20240131   gcc  
+sh                           se7721_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240131   gcc  
+sparc64               randconfig-002-20240131   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240131   clang
+um                    randconfig-002-20240131   clang
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240131   clang
+x86_64       buildonly-randconfig-002-20240131   clang
+x86_64       buildonly-randconfig-003-20240131   clang
+x86_64       buildonly-randconfig-004-20240131   clang
+x86_64       buildonly-randconfig-005-20240131   clang
+x86_64       buildonly-randconfig-006-20240131   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20240131   gcc  
+x86_64                randconfig-002-20240131   gcc  
+x86_64                randconfig-003-20240131   gcc  
+x86_64                randconfig-004-20240131   gcc  
+x86_64                randconfig-005-20240131   gcc  
+x86_64                randconfig-006-20240131   gcc  
+x86_64                randconfig-011-20240131   clang
+x86_64                randconfig-012-20240131   clang
+x86_64                randconfig-013-20240131   clang
+x86_64                randconfig-014-20240131   clang
+x86_64                randconfig-015-20240131   clang
+x86_64                randconfig-016-20240131   clang
+x86_64                randconfig-071-20240131   clang
+x86_64                randconfig-072-20240131   clang
+x86_64                randconfig-073-20240131   clang
+x86_64                randconfig-074-20240131   clang
+x86_64                randconfig-075-20240131   clang
+x86_64                randconfig-076-20240131   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                randconfig-001-20240131   gcc  
+xtensa                randconfig-002-20240131   gcc  
+xtensa                    xip_kc705_defconfig   gcc  
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
