@@ -1,503 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D48B1BC49;
-	Wed, 31 Jan 2024 02:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCECAE576
+	for <linux-cxl@vger.kernel.org>; Wed, 31 Jan 2024 02:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706668006; cv=none; b=Vq/KPzssfZ3ZQmfroSmF1fylHdIsJwornSmrNs7Uxje+6Uwfy2SZhCrOl+na5vT0vbavxcmZjLKJ0JBBcjJgBIIksvuWweCrofdhHvOEh7pOlu5YxBAacU7nkFEHEEBXZOOtmF91qV8o1ycvVAyveClWNAEkTaoubWq3zPe9e1M=
+	t=1706668694; cv=none; b=ffrcJZYgTt+HzWROiYYviVyCuhnb4HsQRR1hs3kP+bfsPAVBtMz6cb6Nr75ICukptTdAPQ0aAXMzVsl/l4GrYzJ3u+N5II8oyQTjfKp4iCZfLgFuUZLIRZFUQHbZpTO/vI8uFBtHgQEVweoC+Vk3cy7+hKsucUZtEpNX3PYuQA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706668006; c=relaxed/simple;
-	bh=bj8cWvQXrmKq86waIXDVsaQ2lA8WS1l0Aluov5ssNAA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Frd6Im94GOyjz9GV3x1r4kMjaXQAUYBhD2km2EOS0PylXBMpZ67v0PnZ+nj+TIeY52ppd7mZk2wQY9ak4Yg3iq0YqM2QiCQBecA9TGPbgeQXQg6/Fafb3nwQBvbmB3pvxurxQSCqpMhThshmpzcO/K6VuKUyh4ykda9ae6Yce1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YmaqH6Uj; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706668694; c=relaxed/simple;
+	bh=21EOOfDX3QJoscC3qTFj1I2tpuBsaPAwtHgQo7BYlrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLPtD9uGBvjE5kdB9tFs4PzUZWbHO3iyEhe10nQzc3qZDKCSFuOf9IJ4ROXGVHFxjDiDYmjXkQfioZ0Nr53lKd/692zG4nmqTBC84vA+IGExclizJYHLHtrPrzYFwrKivJKgfxtOKaOtw9TAFoTlB9eqNqLMoFjRXLX13ddPWJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=T+7vMyUI; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YmaqH6Uj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706668005; x=1738204005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bj8cWvQXrmKq86waIXDVsaQ2lA8WS1l0Aluov5ssNAA=;
-  b=YmaqH6UjpCrqQ61qRpOzj68JylYj1TntH6afJ2vWn6D4R4cBTrGRu49b
-   OQRe8VjASJ8DufVMasOF99E+vnKe7vDJ2HbjiNU8mZX0eGAmfwHszBaQ6
-   Gk5KvAJa7N8UNDT4CaMSKCAaBW1odUbi6Nbqj/rWkSN++90Ri3A/TYEWE
-   3JTZOH5sdE1Wq2mpWfaQD+XY9a8nirZvMg4bi+aKKTz6+GDabkB7OBm1C
-   mEpmvj2TLRvMR3X44DTN+1KdT57bLj+c0J1M0XSMOBkpQKlMBnigcfJ+A
-   eoky30elEkoLpkOLJQP0N1ZLPpsrwKMn9GLIzjal6miIFCineeUjCEeKx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3337293"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="3337293"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 18:26:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119468425"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="1119468425"
-Received: from pangchin-mobl3.amr.corp.intel.com (HELO [10.209.54.246]) ([10.209.54.246])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 18:26:41 -0800
-Message-ID: <6ecb7bbf-0eba-4cea-b9b8-05fd092b7d01@linux.intel.com>
-Date: Tue, 30 Jan 2024 18:26:39 -0800
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="T+7vMyUI"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d8da50bffaso15059695ad.2
+        for <linux-cxl@vger.kernel.org>; Tue, 30 Jan 2024 18:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706668692; x=1707273492; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N09f6sJYKv0DgOi8MMLVMh039rU6+gfv4wN0Iyy6R6U=;
+        b=T+7vMyUIekK+cUz7XMlUFvbCCVjJleYNMUkn8aBSOLTx3BQ52R+7u9PwnmerOieDGU
+         tPxAFx7w79H2e3MxtCGNNCVd2mQmuaYmyihYrWqZvri/5CtgQDUFP5lNjfE8gI/nfCrT
+         4GFdQTQLh8kKTQMJjmdXghWJYv1kbl5bdG0A81RKsiZZjwGrPyX73Ql3mguDw2b6SpNm
+         LEwvJr28f1MoMWtbRklgbsJk7jwr9m/f56xPZ8ZK/+BSrEwWLrFudVef0E2zRBc2UQUV
+         0Gmacbrb7SFAqzZ/+2yANTbFb6oYTwk8Hmf5PFkXeCo+sy5ueNNc4COTjkF8OprEwf04
+         ESWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706668692; x=1707273492;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N09f6sJYKv0DgOi8MMLVMh039rU6+gfv4wN0Iyy6R6U=;
+        b=dNgcZ3fZA6oKbXRek2RmpxrGUIzpkb2J3dLw5ackNkzHUk4gWOY2nakzU2R2rNIF32
+         89kczLJw4fbSXIWqbo8jdJkO62+9WZHRrcZPxfi7/VftSPHRWvhG9MAMjoQBokd4fzlv
+         u30+0QbPd3ThU0I1M9TnMK24measWmN1G6xG59KVm0zOyiXd3F98bybh/gt0zrnHIHp1
+         PAw4flVOQJfq5bMRA7YZcmxX23hPVvd6Gna0dMkhJPZBro22rsp+f6rUgrj1zHI0PrAc
+         g1ryJlDVzVFskdFB0fi/1UuLT6fhhKHXMiwJTBh9KJ12cNUxOe891IYWEDa7dKHgJYV+
+         g5/Q==
+X-Gm-Message-State: AOJu0Yz7fzpHpvoec1WwP9HgrqY1ROyevcEX2wkgPShwptRwiYumyV2S
+	xETFTOUlU7xYTrC84/nzD1hl+Nvy8LHWIWADhKpkJudccdzGTvpgcwtxnloMPmM=
+X-Google-Smtp-Source: AGHT+IF3nqKBEWVvci4SEZHcSu5GXkVElPYZJQUjCfKrIEylC/tWBpIZMu1aOQe1t168W5NNY8DKnw==
+X-Received: by 2002:a17:902:ea0a:b0:1d7:199:cfc5 with SMTP id s10-20020a170902ea0a00b001d70199cfc5mr484297plg.117.1706668692197;
+        Tue, 30 Jan 2024 18:38:12 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id b4-20020a170902d88400b001d706e373a9sm7935517plz.292.2024.01.30.18.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 18:38:11 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rV0UL-00HZeK-17;
+	Wed, 31 Jan 2024 13:38:09 +1100
+Date: Wed, 31 Jan 2024 13:38:09 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/8] dax: Introduce dax_is_supported()
+Message-ID: <ZbmykQpcllC/LY6J@dread.disaster.area>
+References: <20240130165255.212591-1-mathieu.desnoyers@efficios.com>
+ <20240130165255.212591-2-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] PCI/AER: Store more information in aer_err_info
-Content-Language: en-US
-To: "Wang, Qingshun" <qingshun.wang@linux.intel.com>,
- linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-acpi@vger.kernel.org
-Cc: chao.p.peng@linux.intel.com, erwin.tsaur@intel.com,
- feiting.wanyan@intel.com, qingshun.wang@intel.com,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
- Borislav Petkov <bp@alien8.de>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Bjorn Helgaas <helgaas@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
- Shiju Jose <shiju.jose@huawei.com>, Adam Preble <adam.c.preble@intel.com>,
- Li Yang <leoyang.li@nxp.com>, Lukas Wunner <lukas@wunner.de>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-edac@vger.kernel.org
-References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
- <20240125062802.50819-2-qingshun.wang@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240125062802.50819-2-qingshun.wang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130165255.212591-2-mathieu.desnoyers@efficios.com>
 
-
-On 1/24/24 10:27 PM, Wang, Qingshun wrote:
-> When Advisory Non-Fatal errors are raised, both correctable and
-
-Maybe you can start with same info about what Advisory Non-FataL
-errors are and the specification reference. I know that you included
-it in cover letter. But it is good to include it in commit log.
-
-> uncorrectable error statuses will be set. The current kernel code cannot
-> store both statuses at the same time, thus failing to handle ANFE properly.
-> In addition, to avoid clearing UEs that are not ANFE by accident, UE
-
-Please add some details about the impact of not clearing them.
-> severity and Device Status also need to be recorded: any fatal UE cannot
-> be ANFE, and if Fatal/Non-Fatal Error Detected is set in Device Status, do
-> not take any assumption and let UE handler to clear UE status.
->
-> Store status and mask of both correctable and uncorrectable errors in
-> aer_err_info. The severity of UEs and the values of the Device Status
-> register are also recorded, which will be used to determine UEs that should
-> be handled by the ANFE handler. Refactor the rest of the code to use
-> cor/uncor_status and cor/uncor_mask fields instead of status and mask
-> fields.
->
-> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+On Tue, Jan 30, 2024 at 11:52:48AM -0500, Mathieu Desnoyers wrote:
+> Introduce a new dax_is_supported() static inline to check whether the
+> architecture supports DAX.
+> 
+> This replaces the following fs/Kconfig:FS_DAX dependency:
+> 
+>   depends on !(ARM || MIPS || SPARC)
+> 
+> This is done in preparation for its use by each filesystem supporting
+> the dax mount option to validate whether dax is indeed supported.
+> 
+> This is done in preparation for using dcache_is_aliasing() in a
+> following change which will properly support architectures which detect
+> dcache aliasing at runtime.
+> 
+> Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-arch@vger.kernel.org
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: nvdimm@lists.linux.dev
+> Cc: linux-cxl@vger.kernel.org
+> Cc: linux-fsdevel@vger.kernel.org
 > ---
->  drivers/acpi/apei/ghes.c | 10 ++++-
->  drivers/cxl/core/pci.c   |  6 ++-
->  drivers/pci/pci.h        |  8 +++-
->  drivers/pci/pcie/aer.c   | 93 ++++++++++++++++++++++++++--------------
->  include/linux/aer.h      |  4 +-
->  include/linux/pci.h      | 27 ++++++++++++
->  6 files changed, 111 insertions(+), 37 deletions(-)
->
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 7b7c605166e0..6034039d5cff 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -593,6 +593,8 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
->  
->  	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
->  	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-> +		struct pcie_capability_regs *pcie_caps;
-> +		u16 device_status = 0;
->  		unsigned int devfn;
->  		int aer_severity;
->  		u8 *aer_info;
-> @@ -615,11 +617,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
->  			return;
->  		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
->  
-> +		if (pcie_err->validation_bits & CPER_PCIE_VALID_CAPABILITY) {
-> +			pcie_caps = (struct pcie_capability_regs *)pcie_err->capability;
-> +			device_status = pcie_caps->device_status;
-> +		}
-> +
->  		aer_recover_queue(pcie_err->device_id.segment,
->  				  pcie_err->device_id.bus,
->  				  devfn, aer_severity,
->  				  (struct aer_capability_regs *)
-> -				  aer_info);
-> +				  aer_info,
-> +				  device_status);
->  	}
->  #endif
+>  fs/Kconfig          |  1 -
+>  include/linux/dax.h | 10 ++++++++++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/Kconfig b/fs/Kconfig
+> index 42837617a55b..e5efdb3b276b 100644
+> --- a/fs/Kconfig
+> +++ b/fs/Kconfig
+> @@ -56,7 +56,6 @@ endif # BLOCK
+>  config FS_DAX
+>  	bool "File system based Direct Access (DAX) support"
+>  	depends on MMU
+> -	depends on !(ARM || MIPS || SPARC)
+>  	depends on ZONE_DEVICE || FS_DAX_LIMITED
+>  	select FS_IOMAP
+>  	select DAX
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index b463502b16e1..cfc8cd4a3eae 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -78,6 +78,12 @@ static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+>  		return false;
+>  	return dax_synchronous(dax_dev);
 >  }
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 6c9c8d92f8f7..9111a4415a63 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -903,6 +903,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->  	struct aer_capability_regs aer_regs;
->  	struct cxl_dport *dport;
->  	struct cxl_port *port;
-> +	u16 device_status;
->  	int severity;
->  
->  	port = cxl_pci_find_port(pdev, &dport);
-> @@ -917,7 +918,10 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->  	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
->  		return;
->  
-> -	pci_print_aer(pdev, severity, &aer_regs);
-> +	if (pcie_capability_read_word(pdev, PCI_EXP_DEVSTA, &device_status))
-> +		return;
-> +
-> +	pci_print_aer(pdev, severity, &aer_regs, device_status);
->  
->  	if (severity == AER_CORRECTABLE)
->  		cxl_handle_rdport_cor_ras(cxlds, dport);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2336a8d1edab..f881a1b42f14 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -407,8 +407,12 @@ struct aer_err_info {
->  	unsigned int __pad2:2;
->  	unsigned int tlp_header_valid:1;
->  
-> -	unsigned int status;		/* COR/UNCOR Error Status */
-> -	unsigned int mask;		/* COR/UNCOR Error Mask */
-> +	u32 cor_mask;		/* COR Error Mask */
-> +	u32 cor_status;		/* COR Error Status */
-> +	u32 uncor_mask;		/* UNCOR Error Mask */
-> +	u32 uncor_status;	/* UNCOR Error Status */
-> +	u32 uncor_severity;	/* UNCOR Error Severity */
-> +	u16 device_status;
->  	struct aer_header_log_regs tlp;	/* TLP Header */
->  };
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 05fc30bb5134..6583dcf50977 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -615,7 +615,7 @@ const struct attribute_group aer_stats_attr_group = {
->  static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->  				   struct aer_err_info *info)
->  {
-> -	unsigned long status = info->status & ~info->mask;
-> +	unsigned long status;
->  	int i, max = -1;
->  	u64 *counter = NULL;
->  	struct aer_stats *aer_stats = pdev->aer_stats;
-> @@ -625,16 +625,19 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->  
->  	switch (info->severity) {
->  	case AER_CORRECTABLE:
-> +		status = info->cor_status & ~info->cor_mask;
->  		aer_stats->dev_total_cor_errs++;
->  		counter = &aer_stats->dev_cor_errs[0];
->  		max = AER_MAX_TYPEOF_COR_ERRS;
->  		break;
->  	case AER_NONFATAL:
-> +		status = info->uncor_status & ~info->uncor_mask;
->  		aer_stats->dev_total_nonfatal_errs++;
->  		counter = &aer_stats->dev_nonfatal_errs[0];
->  		max = AER_MAX_TYPEOF_UNCOR_ERRS;
->  		break;
->  	case AER_FATAL:
-> +		status = info->uncor_status & ~info->uncor_mask;
->  		aer_stats->dev_total_fatal_errs++;
->  		counter = &aer_stats->dev_fatal_errs[0];
->  		max = AER_MAX_TYPEOF_UNCOR_ERRS;
-> @@ -674,15 +677,17 @@ static void __print_tlp_header(struct pci_dev *dev,
->  static void __aer_print_error(struct pci_dev *dev,
->  			      struct aer_err_info *info)
->  {
-> +	unsigned long status;
->  	const char **strings;
-> -	unsigned long status = info->status & ~info->mask;
->  	const char *level, *errmsg;
->  	int i;
->  
->  	if (info->severity == AER_CORRECTABLE) {
-> +		status = info->cor_status & ~info->cor_mask;
->  		strings = aer_correctable_error_string;
->  		level = KERN_WARNING;
->  	} else {
-> +		status = info->uncor_status & ~info->uncor_mask;
->  		strings = aer_uncorrectable_error_string;
->  		level = KERN_ERR;
->  	}
-> @@ -700,18 +705,27 @@ static void __aer_print_error(struct pci_dev *dev,
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> +	u32 status, mask;
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  	const char *level;
->  
-> -	if (!info->status) {
-> +	if (info->severity == AER_CORRECTABLE) {
-> +		status = info->cor_status;
-> +		mask = info->cor_mask;
-> +	} else {
-> +		status = info->uncor_status;
-> +		mask = info->uncor_mask;
-> +	}
-> +
-> +	if (!status) {
->  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
->  			aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
-> -	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
-> -	agent = AER_GET_AGENT(info->severity, info->status);
-> +	layer = AER_GET_LAYER_ERROR(info->severity, status);
-> +	agent = AER_GET_AGENT(info->severity, status);
->  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->  
-> @@ -720,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> -		   dev->vendor, dev->device, info->status, info->mask);
-> +		   dev->vendor, dev->device, status, mask);
->  
->  	__aer_print_error(dev, info);
->  
-> @@ -731,7 +745,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
-> @@ -763,7 +777,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  #endif
->  
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> -		   struct aer_capability_regs *aer)
-> +		   struct aer_capability_regs *aer, u16 device_status)
->  {
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
-> @@ -783,8 +797,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  
->  	memset(&info, 0, sizeof(info));
->  	info.severity = aer_severity;
-> -	info.status = status;
-> -	info.mask = mask;
-> +	info.cor_status = aer->cor_status;
-> +	info.cor_mask = aer->cor_mask;
-> +	info.uncor_status = aer->uncor_status;
-> +	info.uncor_severity = aer->uncor_severity;
-> +	info.uncor_mask = aer->uncor_mask;
-> +	info.device_status = device_status;
->  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
->  
->  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> @@ -996,9 +1014,9 @@ static bool cxl_error_is_native(struct pci_dev *dev)
->  static bool is_internal_error(struct aer_err_info *info)
->  {
->  	if (info->severity == AER_CORRECTABLE)
-> -		return info->status & PCI_ERR_COR_INTERNAL;
-> +		return info->cor_status & PCI_ERR_COR_INTERNAL;
->  
-> -	return info->status & PCI_ERR_UNC_INTN;
-> +	return info->uncor_status & PCI_ERR_UNC_INTN;
->  }
->  
->  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> @@ -1097,7 +1115,7 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  		 */
->  		if (aer)
->  			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
-> -					info->status);
-> +					info->cor_status);
->  		if (pcie_aer_is_native(dev)) {
->  			struct pci_driver *pdrv = dev->driver;
->  
-> @@ -1128,6 +1146,7 @@ struct aer_recover_entry {
->  	u8	devfn;
->  	u16	domain;
->  	int	severity;
-> +	u16	device_status;
->  	struct aer_capability_regs *regs;
->  };
->  
-> @@ -1148,7 +1167,7 @@ static void aer_recover_work_func(struct work_struct *work)
->  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
->  			continue;
->  		}
-> -		pci_print_aer(pdev, entry.severity, entry.regs);
-> +		pci_print_aer(pdev, entry.severity, entry.regs, entry.device_status);
->  		/*
->  		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
->  		 * ghes_estatus_pool to protect it from overwriting when multiple sections
-> @@ -1177,7 +1196,7 @@ static DEFINE_SPINLOCK(aer_recover_ring_lock);
->  static DECLARE_WORK(aer_recover_work, aer_recover_work_func);
->  
->  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
-> -		       int severity, struct aer_capability_regs *aer_regs)
-> +		       int severity, struct aer_capability_regs *aer_regs, u16 device_status)
->  {
->  	struct aer_recover_entry entry = {
->  		.bus		= bus,
-> @@ -1185,6 +1204,7 @@ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->  		.domain		= domain,
->  		.severity	= severity,
->  		.regs		= aer_regs,
-> +		.device_status	= device_status,
->  	};
->  
->  	if (kfifo_in_spinlocked(&aer_recover_ring, &entry, 1,
-> @@ -1213,38 +1233,49 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  	int temp;
->  
->  	/* Must reset in this function */
-> -	info->status = 0;
-> +	info->cor_status = 0;
-> +	info->uncor_status = 0;
-> +	info->uncor_severity = 0;
->  	info->tlp_header_valid = 0;
->  
->  	/* The device might not support AER */
->  	if (!aer)
->  		return 0;
->  
-> -	if (info->severity == AER_CORRECTABLE) {
-> +	if (info->severity == AER_CORRECTABLE ||
-> +	    info->severity == AER_NONFATAL ||
-> +	    type == PCI_EXP_TYPE_ROOT_PORT ||
-> +	    type == PCI_EXP_TYPE_RC_EC ||
-> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> +static inline bool dax_is_supported(void)
+> +{
+> +	return !IS_ENABLED(CONFIG_ARM) &&
+> +	       !IS_ENABLED(CONFIG_MIPS) &&
+> +	       !IS_ENABLED(CONFIG_SPARC);
+> +}
 
+Uh, ok. Now I see what dax_is_supported() does.
 
-It looks like you are reading both uncorrectable and correctable status
-by default for both NONFATAL and CORRECTABLE errors. Why not do
-it conditionally only for ANFE errors?
+I think this should be folded into fs_dax_get_by_bdev(), which
+currently returns NULL if CONFIG_FS_DAX=n and so should be cahnged
+to return NULL if any of these platform configs is enabled.
 
+Then I don't think you need to change a single line of filesystem
+code - they'll all just do what they do now if the block device
+doesn't support DAX....
 
-> +		/* Link is healthy for IO reads */
->  		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS,
-> -			&info->status);
-> +				      &info->cor_status);
->  		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK,
-> -			&info->mask);
-> -		if (!(info->status & ~info->mask))
-> -			return 0;
-> -	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> -		   type == PCI_EXP_TYPE_RC_EC ||
-> -		   type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -		   info->severity == AER_NONFATAL) {
-> -
-> -		/* Link is still healthy for IO reads */
-> +				      &info->cor_mask);
->  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
-> -			&info->status);
-> +				      &info->uncor_status);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER,
-> +				      &info->uncor_severity);
->  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-> -			&info->mask);
-> -		if (!(info->status & ~info->mask))
-> +				      &info->uncor_mask);
-> +		pcie_capability_read_word(dev, PCI_EXP_DEVSTA,
-> +					  &info->device_status);
-> +	} else {
-> +		return 1;
-> +	}
-> +
-> +	if (info->severity == AER_CORRECTABLE) {
-> +		if (!(info->cor_status & ~info->cor_mask))
-> +			return 0;
-> +	} else {
-> +		if (!(info->uncor_status & ~info->uncor_mask))
->  			return 0;
->  
->  		/* Get First Error Pointer */
->  		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &temp);
->  		info->first_error = PCI_ERR_CAP_FEP(temp);
->  
-> -		if (info->status & AER_LOG_TLP_MASKS) {
-> +		if (info->uncor_status & AER_LOG_TLP_MASKS) {
->  			info->tlp_header_valid = 1;
->  			pci_read_config_dword(dev,
->  				aer + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index ae0fae70d4bd..38ac802250ac 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -52,9 +52,9 @@ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  #endif
->  
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> -		    struct aer_capability_regs *aer);
-> +		    struct aer_capability_regs *aer, u16 device_status);
->  int cper_severity_to_aer(int cper_severity);
->  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
-> -		       int severity, struct aer_capability_regs *aer_regs);
-> +		       int severity, struct aer_capability_regs *aer_regs, u16 device_status);
->  #endif //_AER_H_
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index add9368e6314..259812620d4d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -318,6 +318,33 @@ struct pci_sriov;
->  struct pci_p2pdma;
->  struct rcec_ea;
->  
-> +struct pcie_capability_regs {
-> +	u8 pcie_cap_id;
-> +	u8 next_cap_ptr;
-> +	u16 pcie_caps;
-> +	u32 device_caps;
-> +	u16 device_control;
-> +	u16 device_status;
-> +	u32 link_caps;
-> +	u16 link_control;
-> +	u16 link_status;
-> +	u32 slot_caps;
-> +	u16 slot_control;
-> +	u16 slot_status;
-> +	u16 root_control;
-> +	u16 root_caps;
-> +	u32 root_status;
-> +	u32 device_caps_2;
-> +	u16 device_control_2;
-> +	u16 device_status_2;
-> +	u32 link_caps_2;
-> +	u16 link_control_2;
-> +	u16 link_status_2;
-> +	u32 slot_caps_2;
-> +	u16 slot_control_2;
-> +	u16 slot_status_2;
-> +};
-> +
-IIUC, this struct is only used drivers/acpi/apei/ghes.c . Why not define it in that file?
->  /* The pci_dev structure describes PCI devices */
->  struct pci_dev {
->  	struct list_head bus_list;	/* Node in per-bus list */
-
+-Dave.
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Dave Chinner
+david@fromorbit.com
