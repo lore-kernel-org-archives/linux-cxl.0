@@ -1,211 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F827E118;
-	Thu,  1 Feb 2024 16:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706804217; cv=fail; b=gWBsn+jFywi/p7cqPoQgx+nfmcOqFNocOXNrvkKGQ8stEUbLosvWy/HsEu3Rq0vVl06eoTsoyNtiDH4nUMtC6jav2JPJrpYh6kMxtFjnQyUR8kUZlCq+ck8JXQO+PJBF9vHvDu8agPQeoMP1O48sE32J41wM4PwBKRaMOXEY7no=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706804217; c=relaxed/simple;
-	bh=M81fzPMjLW8GJ9y16q028C2YZ43vBP3xt+foreww5K0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RBqfflcPIAC6i8AeAv6a+cc/dslIw5C+rTWOdeMOuXDK2uzEm5HyUDEX5NUjtVBihePVNwebHEwUYdBcptQiPmWRJjWGeRRkYL9h/RCH0hawMe1+uvrFR/DUJzUcvCSkV9mQbe6SUBAKPP+idHoHk/+jOqFgC0JyZj9CZONqa+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PL9muSyw; arc=fail smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PL9muSyw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706804215; x=1738340215;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=M81fzPMjLW8GJ9y16q028C2YZ43vBP3xt+foreww5K0=;
-  b=PL9muSywjsPmYSa3ngVMqORBSVzJYw7h5aupm2AnnFYZbXVoQx1Nbyl6
-   vrv1dyjevaeu9MkoZYDDX/71A59m9MqAEL8VNpA6+/MK2KNdGzE7vk54r
-   bmERY6yn1hx6HZNW3pnzNVx637iYHWBtjzK3norKKHKGr2+D9GOVZB2l6
-   hFB6jQstKdRvksMAtvl5hrSvkFN3AOWhxbGjQuwuZoF+SVGaWWOFdDsFZ
-   2estx3/IadDAHAyt9xBj5fT7LTRertBKNAN7NxboIJTWQUQtK5d9P0Uss
-   93Un9vp5bHBV6AX9DbzpMNWs+LDfz7m28Sd40unq265evQa+4W4tQAP6y
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="407646894"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="407646894"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:16:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="4445841"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Feb 2024 08:16:54 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 1 Feb 2024 08:16:53 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 1 Feb 2024 08:16:53 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 1 Feb 2024 08:16:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oN2OBCmCSObbG5egpb+vqgJ9YGw4+yFoZjdUOhMJAoXAKveTho7Kt7kl9/H+NQGYzms8sn4qOu637ZfztjUeofWSXHLdSTlRoO+hvBB+cGJ5CFsF4MtvZ/NdTZZeenqMuq9l0F8mkOtnAPXj0kxHmiQajFFGaVsS5SJqCpU5XxkwivvJS4G3D0r1uTtX/vb+x4RKxyZ7YTItoiYS+IgBcvzwwEVhHultv1bIDF2vqyZxqUy8X9PykfUXbxrCaceDEl5AWOV7RfkyJKbIKaHw3VieK+bvCwtp/ZK1ToXAiPP4zXzlauqPkc/PrOkxY2fUd856dALvnsbwGmRCMU5/fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4csDFnzMbz2mhPQjN2WvrxiuxxyHxQSxefHYCYm2W6Q=;
- b=ip8yNTqxNYF+r3kW00WNHtChuspLRx6XKkRZ2aSEilcUWpY9XZ2kGog8Ndqzuz1h36FPWvg7zl0OWaSg4zQOf+ybOYuRMxDNlZ7iULTHFtPBC9E11fo0cyP2GH35sM+02Y3KC0tkFSWLX5+s0JF5a4cQZ51HGts7HkKQShMLG08HCpchO04209zYnxeipwCL4MUS4PAbXlCoL7s5XqhntE0jvAQYIg/tgWrRR6SNYz8AoVhJBncMVbwYFsN/hbJK2eYs+a2OFAJcmCXPwAt9touVYtWzqawrWlA3+ffsdmoJBIMeHKdKf9LVxn72djmrWuNiKVDs36OE3xRSHPxYdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH7PR11MB7718.namprd11.prod.outlook.com (2603:10b6:510:2b6::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.28; Thu, 1 Feb
- 2024 16:16:51 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::c403:9b0a:1267:d225]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::c403:9b0a:1267:d225%6]) with mapi id 15.20.7228.029; Thu, 1 Feb 2024
- 16:16:51 +0000
-Message-ID: <e51824ae-ac3b-49d6-ab2d-add4c91c2c76@intel.com>
-Date: Thu, 1 Feb 2024 09:16:49 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 2/2] cxl/trace: Remove unnecessary memcpy's
-To: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-efi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-References: <20240131-cxl-cper-fixups-v1-0-335c85b1d77b@intel.com>
- <20240131-cxl-cper-fixups-v1-2-335c85b1d77b@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240131-cxl-cper-fixups-v1-2-335c85b1d77b@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0068.namprd05.prod.outlook.com
- (2603:10b6:a03:332::13) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF6D7E0E2
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Feb 2024 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706804518; cv=none; b=LlNo2Lzu3KU9sfs8fBdnaFMWJgsZ1cFmHAwhJ43qhObAQhIwBZIBaSXDgV8n6CeIVwlbhcvI5Cj3nTJfOTpQudUBtNIWnEP3sltVt2uAmTUansRS3rGQONRy4kJCPFc1Uw4V3vOW80SmEGiRtxtUzdshlr1ZzSOog3g3GfDDTiY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706804518; c=relaxed/simple;
+	bh=doOjsJdQCDgaI6XlQjtWSmdVJ99V9PkljEkGNubL71o=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=twFinnr8YjxqniaoS6yEQ47Vw07alsNJjCuJn+XYDpGkbODXwJ5wj/fmTf5T2rblLsLhFupSasiS7eNu/njp4DpvZ0q/7cJZmuVXq0+9i7h/6e/ThKWpt4CrQkWFNfW0szkC67BfCBCvJrnV7kfu0FKhxsM0thxmBeid8vrdE+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQkcD1MwJz688sb;
+	Fri,  2 Feb 2024 00:18:52 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC08F140D26;
+	Fri,  2 Feb 2024 00:21:51 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
+ 2024 16:21:51 +0000
+Date: Thu, 1 Feb 2024 16:21:50 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Peter Maydell <peter.maydell@linaro.org>
+CC: Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>, Sajjan Rao
+	<sajjanr@gmail.com>, Gregory Price <gregory.price@memverge.com>, "Dimitrios
+ Palyvos" <dimitrios.palyvos@zptcorp.com>, <linux-cxl@vger.kernel.org>,
+	<qemu-devel@nongnu.org>, <richard.henderson@linaro.org>
+Subject: Re: Crash with CXL + TCG on 8.2: Was Re: qemu cxl memory expander
+ shows numa_node -1
+Message-ID: <20240201162150.000022cf@huawei.com>
+In-Reply-To: <CAFEAcA_a_AyQ=Epz3_+CheAT8Crsk9mOu894wbNW_FywamkZiw@mail.gmail.com>
+References: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
+	<CAAg4Pard=zh_5p650UcNdQEoQWZLM6G7KRqdPQHLmaR4oZMJ3w@mail.gmail.com>
+	<CAGEDW0dVEk-QXuL=DPVvSP4t5cafz6N-r_SrCxgFnBfFOsixSA@mail.gmail.com>
+	<CAAg4PaqgZcTXkWuys7FZjQdRChTkKj-ZnJQCdxpTMCxy4Hghow@mail.gmail.com>
+	<20230823175056.00001a84@Huawei.com>
+	<CAAg4ParSB4_2FU2bu96A=3tSNuwHqZwK0wCS18EJoPAq9kYEkw@mail.gmail.com>
+	<CAAg4Pap9KzkgX=fgE7vNJYxEpGbHA-NVsgBY5npXizUbMhjp9A@mail.gmail.com>
+	<20240126123926.000051bd@Huawei.com>
+	<ZbPTL00WOo7UC0e6@memverge.com>
+	<20240126171233.00002a2e@Huawei.com>
+	<CAAg4ParQKj9FUe0DRX0Wmk1KT0bnxx2F7W=ic38781j7eVz+OQ@mail.gmail.com>
+	<20240201130438.00001384@Huawei.com>
+	<CAFEAcA-rgFmaE4Ea7hZ-On4uyaqjWoo-OwwfNrUOdp=+Q5ckXA@mail.gmail.com>
+	<20240201140100.000016ce@huawei.com>
+	<CAFEAcA9DW8AuMwDr_qyDXPWJcLsvD773XTr1stwuagHWc6p72g@mail.gmail.com>
+	<87msskkyce.fsf@draig.linaro.org>
+	<CAFEAcA_a_AyQ=Epz3_+CheAT8Crsk9mOu894wbNW_FywamkZiw@mail.gmail.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH7PR11MB7718:EE_
-X-MS-Office365-Filtering-Correlation-Id: 178403f1-1704-40e5-3589-08dc23413308
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QEQPdot8qce3FrhZ1W606kn3pfVVKH7+HO+BFjRzpWMCqbmeSHdomTxXW+aEN1D76hoCySsWakf6p+fhNVf5iss8pWPpCJXZywoNWQSyRtsHRdtuCJC2SFwvmNinekuV7Y9jh0liEMcmNmOQQmxEApORSIwaCxaTXVsM6/LbeWxHEbSo7a1j6RwCh5ekB/EyL+chstrgYv2TOjaR2y1cCso9Rdd25iJAUXOFh8DivgOuh6KHau7dX+j8W2gXym/2vs13qakjiHasHJCB/0Q3mWs+lA8eUgSP1yuucQE/wS6kkzfdCC2l3NQmrFW6FMv/qElzPYLEwOKMtC5zGB3fU8Nv3BNPoEqlh3CoIck94QHeJNlzJfTZxBXmPGcTV2WgESGVqrE3gHeC6GNBZJtGvEfWO6VcEGnG61Ra9ycS93MJs/a6OYH/54V6XC0gGAhxWbyXN2rm9ZmqfPMr03JFEBVS9ZVEjY7TCkmTPoGiQfhDwkCTdQstR+4Ar2QilXtpbv64L2LKv91qjLUjPbsU+Gu7cigCHHpSt8wi15kfJXzY0wvFbJwbHlCfOd7rBnltkZTxzA+ga0dvIDDyimlfShdb1a6yiD9KN8PDUT7c63U=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(376002)(366004)(136003)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(26005)(41300700001)(2616005)(31686004)(6486002)(966005)(36756003)(478600001)(53546011)(6512007)(6506007)(83380400001)(82960400001)(38100700002)(86362001)(2906002)(31696002)(5660300002)(66946007)(316002)(54906003)(66556008)(66476007)(110136005)(8936002)(8676002)(4326008)(44832011)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y1JYODJ2RXhBYnY1ZHZHbmUrSEdaQzJGYVFaUVNFa3Rua2V0eWo5a2dPWEts?=
- =?utf-8?B?dkRSbW4wNTdVRVdjUm53cmd0SVFua0lYOUpzVXJ6aENjTDVXamdPdm4yMm1G?=
- =?utf-8?B?cGhMMFFRdlcvNCtGNDl1ekJWZ3dibGV6RVZ2c1J4dUJEcjBnRUFSb2E0RE5O?=
- =?utf-8?B?bE4rbkgwNHlqWXVlZDFyUkh0UjQ5Q053UzZOMTZCSktSTmVRWjI0UkNid3BB?=
- =?utf-8?B?VCtHV1lBb3lBSlRuL3BEeVpEQlN5cFBtc3FGMkM5a0FaZ0ZuSWxCY05nV2Jh?=
- =?utf-8?B?VVI4MS9iWFFvUERMbGJxTG5PRW1nbFgxcjczQitkbU1yWTQ5RmNMYlkvR1FM?=
- =?utf-8?B?TnAvQ0QwYXdrMEs2NDdxN3dWclJjRVR3aVdjZGlXbFRLNVJIaGNua3I4NWVy?=
- =?utf-8?B?KzZneS96TEM3VDZxb3MzREZ0a0QraHRxdVFydjFFZmQrakttckJtMGZBQlhO?=
- =?utf-8?B?MXRwem5EdzFLbDFRNXpaWU9yTTNtNTlRRHcwa2N4OTJuNmhzeThxOStEVE5W?=
- =?utf-8?B?RlRwck1xV0ZUd05iS3RhRk1UTklxQ3JOQzNtMWl1TjBFZk91WmROS0VkcjZn?=
- =?utf-8?B?bHF3ZndMNG45RlpQZkUyQjEyQXZIUjRGa3kzOGQ0SEY2UU5naG9rTWFBN0ZR?=
- =?utf-8?B?djNBSGhVUnZmMkJCMmdjRHYrMjJhQ0VIRCt1cVZFeURvVGtNcWdzaGhJS3ZC?=
- =?utf-8?B?cWMyaWN0RGhSZ0VCWVh4US9NaUl3N2dWMjhzTk8yWFA2cytUTmk1Y1RMZnY4?=
- =?utf-8?B?RnNOTXF6YXE3UWlKWUtFVStSOUVlTnlYeUFQL2ZVQ1NBNzFpTUlEZlppdk5Y?=
- =?utf-8?B?QnllblFxSFJ3YXl4R2JDZ1FTL0R5ZWtQZVI3V0xycXdTTXFkRlFvZTRXN2lP?=
- =?utf-8?B?cHR4Z3FCQzRqNkxLNUxBd2l3d3hweEZQQXdxbGo4U0FXM2dwY1p4QzVGcWZz?=
- =?utf-8?B?Vng5NS9vNEk0QTJ4Qkh0QWVZRXlGc0xybFNESXJQbXdrUWcxVjNRaFFCbTNq?=
- =?utf-8?B?WU5OREVrTzB2MGxud3lDQzZJcUI4OUFQUE1mcFd1VXNua0JGQVFycW1ZWVNM?=
- =?utf-8?B?VW9JbTh1eU9WMnFYcTlZRjlzZTV1ejNFTDBoZjIxd29uV3NHdExnYjVFdEly?=
- =?utf-8?B?ODFRSUIwNW1GdG9UTVJTUy91cEEwMWhzbU1IQkQ4MWkrQ0NnOVFyaWRQZmpK?=
- =?utf-8?B?ZWo0RGtvUm5JVWxOOWdJbHpWODNjdnZXWW9vV0k1UXE1NEYyTEVNU2RpUEx6?=
- =?utf-8?B?TmNrMzBpWG43TDg4WjVoRkxiMCtlWWI1WkQ2Q2dmL3JDaTFDcTV0eFFHTTRF?=
- =?utf-8?B?WmFBMVBNNW85alFqZkFEZXpsc2MzOGJZbXZ6VjArWGRXaDBKaVprRGlJWjU2?=
- =?utf-8?B?RmFkRmVpTXFVT2pZdG5OWURmWG9LZlZrYUoxc0VaY0twejhMYXBUbkxGd0VI?=
- =?utf-8?B?YXFNU24vT1dlc082YW55WUc4M3c1MmVVcHA1SUJqOUJhZ2pEdWlwQVlHd1h0?=
- =?utf-8?B?QnlhWkE5Vm5oT2duMG9LaytGbDBRMVRrc1g2Ylh2QXM3MUx2WmtxME5palQ0?=
- =?utf-8?B?YzNnL2RzeFozWjEwR0VmZFpuVGhUNno3Y2FUYnFXaTdlU1RFMVhRMFFGanRK?=
- =?utf-8?B?VklZdVRkYmwzdmF6dXJkOUlmcW9mWWp4dlZ1UnByOS81NXgwQUp5YTNHcWJx?=
- =?utf-8?B?MnoxQUJ5U3FBbitmYTJoaE1jVWdDOEF0QXJMNjBRZ1h3ck1mQ1VYOEtOWTVm?=
- =?utf-8?B?YmM3QnBCZmYxRCswRDYvV2pCSEljbG5HZGZORXF1NXF1eHhNZjNVL0sxSGtW?=
- =?utf-8?B?bFc1L1BsM3o4b21pZ2JTVlpZRElObnZVMktBSkZHNkdRRkg1VUtDQXJkTU1h?=
- =?utf-8?B?TUF6bUxjdXBOYW9jNG9hOVBjZ1JTb1owWEdjaUszUjUvNURCSmdQRmlvOUdX?=
- =?utf-8?B?ZTFPVEpJUG12dzk0U2tUNndIM0VQL21tVTQ2TSs4bWpHUW1tam9DbjdKME1s?=
- =?utf-8?B?NGc4MjViZ3pjd2tzYnZBOUVab2FxSHhDKzdwRHBNY2dmWDExbUhVNmdDQXpt?=
- =?utf-8?B?Sm9Cd3J2L282S3FYY1laTS9SaHBDUDBtU2tzV2hEcXNreDhNalZQWjZJWGZs?=
- =?utf-8?Q?tyFMFDNLB/IEosy8VxIdOsLhJ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 178403f1-1704-40e5-3589-08dc23413308
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 16:16:51.8339
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SYbCTd/sK8Tlvq/NMZIX/dotAKhXrvMvmgYCwnjwzv9Cnn6clzc6stbokvZDh/6idAF5wTiEINbSBJuafM9jOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7718
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Thu, 1 Feb 2024 16:00:56 +0000
+Peter Maydell <peter.maydell@linaro.org> wrote:
 
+> On Thu, 1 Feb 2024 at 15:17, Alex Benn=E9e <alex.bennee@linaro.org> wrote:
+> >
+> > Peter Maydell <peter.maydell@linaro.org> writes: =20
+> > > So, that looks like:
+> > >  * we call cpu_tb_exec(), which executes some generated code
+> > >  * that generated code calls the lookup_tb_ptr helper to see
+> > >    if we have a generated TB already for the address we're going
+> > >    to execute next
+> > >  * lookup_tb_ptr probes the TLB to see if we know the host RAM
+> > >    address for the guest address
+> > >  * this results in a TLB walk for an instruction fetch
+> > >  * the page table descriptor load is to IO memory
+> > >  * io_prepare assumes it needs to do a TLB recompile, because
+> > >    can_do_io is clear
+> > >
+> > > I am not surprised that the corner case of "the guest put its
+> > > page tables in an MMIO device" has not yet come up :-)
+> > >
+> > > I'm really not sure how the icount handling should interact
+> > > with that... =20
+> >
+> > Its not just icount - we need to handle it for all modes now. That said
+> > seeing as we are at the end of a block shouldn't can_do_io be set? =20
+>=20
+> The lookup_tb_ptr helper gets called from tcg_gen_goto_tb(),
+> which happens earlier than the tb_stop callback (it can
+> happen in the trans function for branch etc insns, for
+> example).
+>=20
+> I think it should be OK to clear can_do_io at the start
+> of the lookup_tb_ptr helper, something like:
+> diff --git a/accel/tcg/cpu-exec.c b/accel/tcg/cpu-exec.c
+> index 977576ca143..7818537f318 100644
+> --- a/accel/tcg/cpu-exec.c
+> +++ b/accel/tcg/cpu-exec.c
+> @@ -396,6 +396,15 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
+>      uint64_t cs_base;
+>      uint32_t flags, cflags;
+>=20
+> +    /*
+> +     * By definition we've just finished a TB, so I/O is OK.
+> +     * Avoid the possibility of calling cpu_io_recompile() if
+> +     * a page table walk triggered by tb_lookup() calling
+> +     * probe_access_internal() happens to touch an MMIO device.
+> +     * The next TB, if we chain to it, will clear the flag again.
+> +     */
+> +    cpu->neg.can_do_io =3D true;
+> +
+>      cpu_get_tb_cpu_state(env, &pc, &cs_base, &flags);
+>=20
+>      cflags =3D curr_cflags(cpu);
+>=20
+> -- PMM
 
-On 1/31/24 16:55, Ira Weiny wrote:
-> CPER events don't have UUIDs.  Therefore UUIDs were removed from the
-> records passed to trace events and replaced with hard coded values.
-> 
-> As pointed out by Jonathan, the new defines for the UUIDs present a more
-> efficient way to assign UUID in trace records.[1]
-> 
-> Replace memcpy's with the use of static data.
-> 
-> [1] https://lore.kernel.org/all/20240108132325.00000e9c@Huawei.com/
-> 
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+No joy.  Seems like a very similar backtrace.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/trace.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index 89445435303a..bdf117a33744 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -338,7 +338,7 @@ TRACE_EVENT(cxl_general_media,
->  
->  	TP_fast_assign(
->  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_GEN_MEDIA_UUID, sizeof(uuid_t));
-> +		__entry->hdr_uuid = CXL_EVENT_GEN_MEDIA_UUID;
->  
->  		/* General Media */
->  		__entry->dpa = le64_to_cpu(rec->phys_addr);
-> @@ -425,7 +425,7 @@ TRACE_EVENT(cxl_dram,
->  
->  	TP_fast_assign(
->  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_DRAM_UUID, sizeof(uuid_t));
-> +		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
->  
->  		/* DRAM */
->  		__entry->dpa = le64_to_cpu(rec->phys_addr);
-> @@ -573,7 +573,7 @@ TRACE_EVENT(cxl_memory_module,
->  
->  	TP_fast_assign(
->  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_MEM_MODULE_UUID, sizeof(uuid_t));
-> +		__entry->hdr_uuid = CXL_EVENT_MEM_MODULE_UUID;
->  
->  		/* Memory Module Event */
->  		__entry->event_type = rec->event_type;
-> 
+Thread 5 "qemu-system-x86" received signal SIGABRT, Aborted.
+[Switching to Thread 0x7ffff4efe6c0 (LWP 23937)]
+__pthread_kill_implementation (no_tid=3D0, signo=3D6, threadid=3D<optimized=
+ out>) at ./nptl/pthread_kill.c:44
+44      ./nptl/pthread_kill.c: No such file or directory.
+(gdb) bt
+#0  __pthread_kill_implementation (no_tid=3D0, signo=3D6, threadid=3D<optim=
+ized out>) at ./nptl/pthread_kill.c:44
+#1  __pthread_kill_internal (signo=3D6, threadid=3D<optimized out>) at ./np=
+tl/pthread_kill.c:78
+#2  __GI___pthread_kill (threadid=3D<optimized out>, signo=3Dsigno@entry=3D=
+6) at ./nptl/pthread_kill.c:89
+#3  0x00007ffff77c43b6 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdeps/po=
+six/raise.c:26
+#4  0x00007ffff77aa87c in __GI_abort () at ./stdlib/abort.c:79
+#5  0x0000555555c4d19e in cpu_abort (cpu=3Dcpu@entry=3D0x5555578e0cb0, fmt=
+=3Dfmt@entry=3D0x555556048ee8 "cpu_io_recompile: could not find TB for pc=
+=3D%p") at ../../cpu-target.c:373
+#6  0x0000555555c9cb25 in cpu_io_recompile (cpu=3Dcpu@entry=3D0x5555578e0cb=
+0, retaddr=3Dretaddr@entry=3D0) at ../../accel/tcg/translate-all.c:611
+#7  0x0000555555c9f744 in io_prepare (retaddr=3D0, addr=3D19595790664, attr=
+s=3D..., xlat=3D<optimized out>, cpu=3D0x5555578e0cb0, out_offset=3D<synthe=
+tic pointer>) at ../../accel/tcg/cputlb.c:1339
+#8  do_ld_mmio_beN (cpu=3D0x5555578e0cb0, full=3D0x7ffe88012890, ret_be=3Dr=
+et_be@entry=3D0, addr=3D19595790664, size=3Dsize@entry=3D8, mmu_idx=3D4, ty=
+pe=3DMMU_DATA_LOAD, ra=3D0) at ../../accel/tcg/cputlb.c:2030
+#9  0x0000555555ca0ecd in do_ld_8 (cpu=3Dcpu@entry=3D0x5555578e0cb0, p=3Dp@=
+entry=3D0x7ffff4efcdd0, mmu_idx=3D<optimized out>, type=3Dtype@entry=3DMMU_=
+DATA_LOAD, memop=3D<optimized out>, ra=3Dra@entry=3D0) at ../../accel/tcg/c=
+putlb.c:2356
+#10 0x0000555555ca332f in do_ld8_mmu (cpu=3Dcpu@entry=3D0x5555578e0cb0, add=
+r=3Daddr@entry=3D19595790664, oi=3Doi@entry=3D52, ra=3Dra@entry=3D0, access=
+_type=3Daccess_type@entry=3DMMU_DATA_LOAD) at ../../accel/tcg/cputlb.c:2439
+#11 0x0000555555ca5e69 in cpu_ldq_mmu (ra=3D0, oi=3D52, addr=3D19595790664,=
+ env=3D0x5555578e3470) at ../../accel/tcg/ldst_common.c.inc:169
+#12 cpu_ldq_le_mmuidx_ra (env=3D0x5555578e3470, addr=3D19595790664, mmu_idx=
+=3D<optimized out>, ra=3Dra@entry=3D0) at ../../accel/tcg/ldst_common.c.inc=
+:301
+#13 0x0000555555b4b5de in ptw_ldq (in=3D0x7ffff4efcf10) at ../../target/i38=
+6/tcg/sysemu/excp_helper.c:98
+#14 ptw_ldq (in=3D0x7ffff4efcf10) at ../../target/i386/tcg/sysemu/excp_help=
+er.c:93
+#15 mmu_translate (env=3Denv@entry=3D0x5555578e3470, in=3D0x7ffff4efcfd0, o=
+ut=3D0x7ffff4efcfa0, err=3Derr@entry=3D0x7ffff4efcfb0) at ../../target/i386=
+/tcg/sysemu/excp_helper.c:173
+#16 0x0000555555b4c3f3 in get_physical_address (err=3D0x7ffff4efcfb0, out=
+=3D0x7ffff4efcfa0, mmu_idx=3D0, access_type=3DMMU_DATA_STORE, addr=3D183864=
+91786698339392, env=3D0x5555578e3470) at ../../target/i386/tcg/sysemu/excp_=
+helper.c:578
+#17 x86_cpu_tlb_fill (cs=3D0x5555578e0cb0, addr=3D18386491786698339392, siz=
+e=3D<optimized out>, access_type=3DMMU_DATA_STORE, mmu_idx=3D0, probe=3D<op=
+timized out>, retaddr=3D140736029817822) at ../../target/i386/tcg/sysemu/ex=
+cp_helper.c:604
+#18 0x0000555555ca0df9 in tlb_fill (retaddr=3D140736029817822, mmu_idx=3D0,=
+ access_type=3DMMU_DATA_STORE, size=3D<optimized out>, addr=3D1838649178669=
+8339392, cpu=3D0x7ffff4efd120) at ../../accel/tcg/cputlb.c:1315
+#19 mmu_lookup1 (cpu=3Dcpu@entry=3D0x5555578e0cb0, data=3Ddata@entry=3D0x7f=
+fff4efd120, mmu_idx=3D0, access_type=3Daccess_type@entry=3DMMU_DATA_STORE, =
+ra=3Dra@entry=3D140736029817822) at ../../accel/tcg/cputlb.c:1713
+#20 0x0000555555ca2b71 in mmu_lookup (cpu=3D0x5555578e0cb0, addr=3D18386491=
+786698339392, oi=3D<optimized out>, ra=3D140736029817822, type=3DMMU_DATA_S=
+TORE, l=3D0x7ffff4efd120) at ../../accel/tcg/cputlb.c:1803
+#21 0x0000555555ca3e5d in do_st8_mmu (cpu=3D0x5555578e0cb0, addr=3D23937, v=
+al=3D18386491784638059520, oi=3D6, ra=3D140736029817822) at ../../accel/tcg=
+/cputlb.c:2853
+#22 0x00007fffa9107c63 in code_gen_buffer ()
+#23 0x0000555555c9395b in cpu_tb_exec (cpu=3Dcpu@entry=3D0x5555578e0cb0, it=
+b=3Ditb@entry=3D0x7fffa9107980 <code_gen_buffer+17856851>, tb_exit=3Dtb_exi=
+t@entry=3D0x7ffff4efd718) at ../../accel/tcg/cpu-exec.c:442
+#24 0x0000555555c93ec0 in cpu_loop_exec_tb (tb_exit=3D0x7ffff4efd718, last_=
+tb=3D<synthetic pointer>, pc=3D<optimized out>, tb=3D0x7fffa9107980 <code_g=
+en_buffer+17856851>, cpu=3D0x5555578e0cb0) at ../../accel/tcg/cpu-exec.c:897
+#25 cpu_exec_loop (cpu=3Dcpu@entry=3D0x5555578e0cb0, sc=3Dsc@entry=3D0x7fff=
+f4efd7b0) at ../../accel/tcg/cpu-exec.c:1012
+#26 0x0000555555c946d1 in cpu_exec_setjmp (cpu=3Dcpu@entry=3D0x5555578e0cb0=
+, sc=3Dsc@entry=3D0x7ffff4efd7b0) at ../../accel/tcg/cpu-exec.c:1029
+#27 0x0000555555c94ebc in cpu_exec (cpu=3Dcpu@entry=3D0x5555578e0cb0) at ..=
+/../accel/tcg/cpu-exec.c:1055
+#28 0x0000555555cb8f53 in tcg_cpu_exec (cpu=3Dcpu@entry=3D0x5555578e0cb0) a=
+t ../../accel/tcg/tcg-accel-ops.c:76
+#29 0x0000555555cb90b0 in mttcg_cpu_thread_fn (arg=3Darg@entry=3D0x5555578e=
+0cb0) at ../../accel/tcg/tcg-accel-ops-mttcg.c:95
+#30 0x0000555555e57180 in qemu_thread_start (args=3D0x555557956000) at ../.=
+./util/qemu-thread-posix.c:541
+#31 0x00007ffff78176ba in start_thread (arg=3D<optimized out>) at ./nptl/pt=
+hread_create.c:444
+#32 0x00007ffff78a60d0 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/cl=
+one3.S:81
