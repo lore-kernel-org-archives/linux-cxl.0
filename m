@@ -1,33 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82B43EA71
-	for <linux-cxl@vger.kernel.org>; Thu,  1 Feb 2024 21:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFDF3CF5B;
+	Thu,  1 Feb 2024 23:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706824061; cv=none; b=RYbgqmuyM5d7sw9Ni9tRqMB16J5Y97NZkGwYXsUypIYT7nrCPwwb+NqJOlhnafJycTL5SInGoCq8jeg+m+QBKr4itNnH9w2vFTcMnSX6A2cQfmg/Yno5gCEQONiZ9cf1LbceZSUe0NwXWSGWiVy7//WsFq0LyPsx9YuCFKCPOo8=
+	t=1706828812; cv=none; b=BE/yhWBSNmNZk6C6K23He3jVWKlvHlPFJ8Nq01lMKkKbstfNcLwPKhPAtZNAcCeQ4VjCMeCdVyrcnjUpvhFdyvWxrrkRuWUtiU6pyhRFeTTSrNZFLq4CpDKO6+j6l6Usth0YK3/eCV4P+T9qoQ96LBD5qOtJr2rI1zz11B9iGs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706824061; c=relaxed/simple;
-	bh=0408RZ0bAAZLEJegGy6iGwW3ZG9w53lSxN6ckdcSqe4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C0z3RHsjnN/ykT/ensTB/ZE+vBWB6AxwraakeUvF+4MjG9znpJ1Y8rQSGCl8IGRVp8ww0bLCqWsKyA5kC0YTP5axgdEgk8qqmv77nrpv6d3Ppz3chSCwa3P3WA1y19pxWDBovm7hX3Zl3CHxbC92s0nWw88zZFtTkCvHTcNQ4jc=
+	s=arc-20240116; t=1706828812; c=relaxed/simple;
+	bh=uwpMqP9zpqBLa5X6I9RTAUdIL9SGrKim2/2EKQ2twag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p0lMqR9FypDJ9hGk3NX5dR5s9EXsjBOXKoV30nV1EQGdKR39eHcBiTFYnqUpjKMv1TjwjOgaN5LJjsGEoFqQiszTAtDeTrGenGsj1O1OC4YFrSVrPAnn3WnOvsi3bnoY6q+AHrVTYF1M765VrWYGb3AJg2TH85VOcl1zt0PV/uM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42449C433F1;
-	Thu,  1 Feb 2024 21:47:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B0CC433C7;
+	Thu,  1 Feb 2024 23:06:51 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net
-Subject: [PATCH v3 3/3] cxl/test: Add support for qos_class checking
-Date: Thu,  1 Feb 2024 14:47:31 -0700
-Message-ID: <20240201214731.1297389-3-dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: vishal.l.verma@intel.com
+Subject: ndctl: Add support of qos_class for CXL CLI
+Date: Thu,  1 Feb 2024 16:05:03 -0700
+Message-ID: <20240201230646.1328211-1-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201214731.1297389-1-dave.jiang@intel.com>
-References: <20240201214731.1297389-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -36,219 +29,26 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Set a fake qos_class to a unique value in order to do simple testing of
-qos_class for root decoders and mem devs via user cxl_test. A mock
-function is added to set the fake qos_class values for memory device
-and overrides cxl_endpoint_parse_cdat() in cxl driver code.
+v5:
+- split out test to its own bash script. (Vishal)
+v4:
+- Update against changes in kernel from multi to single qos_class entry
+- Add test in cxl-topology.sh (Dan)
+- See individual patch log for details
+v3:
+- Rebase against latest ndctl/pending branch.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- tools/testing/cxl/Kbuild      |  1 +
- tools/testing/cxl/test/cxl.c  | 63 ++++++++++++++++++++++++++++++-----
- tools/testing/cxl/test/mock.c | 14 ++++++++
- tools/testing/cxl/test/mock.h |  1 +
- 4 files changed, 70 insertions(+), 9 deletions(-)
+The series adds support for the kernel enabling of QoS class in the v6.8
+kernel. The kernel exports a qos_class token for the root decoders (CFMWS) and as
+well as for the CXL memory devices. The qos_class exported for a device is
+calculated by the driver during device probe. Currently a qos_class is exported
+for the volatile partition (ram) and another for the persistent partition (pmem).
+In the future qos_class will be exported for DCD regions. Display of qos_class is
+through the CXL CLI list command.
 
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index caff3834671f..030b388800f0 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -13,6 +13,7 @@ ldflags-y += --wrap=cxl_hdm_decode_init
- ldflags-y += --wrap=cxl_dvsec_rr_decode
- ldflags-y += --wrap=devm_cxl_add_rch_dport
- ldflags-y += --wrap=cxl_rcd_component_reg_phys
-+ldflags-y += --wrap=cxl_endpoint_parse_cdat
- 
- DRIVERS := ../../../drivers
- CXL_SRC := $(DRIVERS)/cxl
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index a3cdbb2be038..59dc28bfcb5e 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -15,6 +15,8 @@
- 
- static int interleave_arithmetic;
- 
-+#define FAKE_QTG_ID	42
-+
- #define NR_CXL_HOST_BRIDGES 2
- #define NR_CXL_SINGLE_HOST 1
- #define NR_CXL_RCH 1
-@@ -209,7 +211,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
--			.qtg_id = 0,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
- 		},
- 		.target = { 0 },
-@@ -224,7 +226,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
--			.qtg_id = 1,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
- 		},
- 		.target = { 0, 1, },
-@@ -239,7 +241,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 2,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
- 		},
- 		.target = { 0 },
-@@ -254,7 +256,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 3,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
- 		},
- 		.target = { 0, 1, },
-@@ -269,7 +271,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 4,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
- 		},
- 		.target = { 2 },
-@@ -284,7 +286,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
--			.qtg_id = 5,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M,
- 		},
- 		.target = { 3 },
-@@ -301,7 +303,7 @@ static struct {
- 			.granularity = 4,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 0,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
- 		},
- 		.target = { 0, },
-@@ -317,7 +319,7 @@ static struct {
- 			.granularity = 0,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 1,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
- 		},
- 		.target = { 0, 1, },
-@@ -333,7 +335,7 @@ static struct {
- 			.granularity = 0,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
--			.qtg_id = 0,
-+			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 16UL,
- 		},
- 		.target = { 0, 1, 0, 1, },
-@@ -976,6 +978,48 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
- 	return 0;
- }
- 
-+/*
-+ * Faking the cxl_dpa_perf for the memdev when appropriate.
-+ */
-+static void dpa_perf_setup(struct cxl_port *endpoint, struct range *range,
-+			   struct cxl_dpa_perf *dpa_perf)
-+{
-+	dpa_perf->qos_class = FAKE_QTG_ID;
-+	dpa_perf->dpa_range = *range;
-+	dpa_perf->coord.read_latency = 500;
-+	dpa_perf->coord.write_latency = 500;
-+	dpa_perf->coord.read_bandwidth = 1000;
-+	dpa_perf->coord.write_bandwidth = 1000;
-+}
-+
-+static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
-+{
-+	struct cxl_root *cxl_root __free(put_cxl_root) =
-+		find_cxl_root(port);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct range pmem_range = {
-+		.start = cxlds->pmem_res.start,
-+		.end = cxlds->pmem_res.end,
-+	};
-+	struct range ram_range = {
-+		.start = cxlds->ram_res.start,
-+		.end = cxlds->ram_res.end,
-+	};
-+
-+	if (!cxl_root)
-+		return;
-+
-+	if (range_len(&ram_range))
-+		dpa_perf_setup(port, &ram_range, &mds->ram_perf);
-+
-+	if (range_len(&pmem_range))
-+		dpa_perf_setup(port, &pmem_range, &mds->pmem_perf);
-+
-+	cxl_memdev_update_attribute_groups(cxlmd);
-+}
-+
- static struct cxl_mock_ops cxl_mock_ops = {
- 	.is_mock_adev = is_mock_adev,
- 	.is_mock_bridge = is_mock_bridge,
-@@ -989,6 +1033,7 @@ static struct cxl_mock_ops cxl_mock_ops = {
- 	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
- 	.devm_cxl_add_passthrough_decoder = mock_cxl_add_passthrough_decoder,
- 	.devm_cxl_enumerate_decoders = mock_cxl_enumerate_decoders,
-+	.cxl_endpoint_parse_cdat = mock_cxl_endpoint_parse_cdat,
- 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
- };
- 
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 1a61e68e3095..6f737941dc0e 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -285,6 +285,20 @@ resource_size_t __wrap_cxl_rcd_component_reg_phys(struct device *dev,
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_cxl_rcd_component_reg_phys, CXL);
- 
-+void __wrap_cxl_endpoint_parse_cdat(struct cxl_port *port)
-+{
-+	int index;
-+	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-+
-+	if (ops && ops->is_mock_dev(cxlmd->dev.parent))
-+		ops->cxl_endpoint_parse_cdat(port);
-+	else
-+		cxl_endpoint_parse_cdat(port);
-+	put_cxl_mock_ops(index);
-+}
-+EXPORT_SYMBOL_NS_GPL(__wrap_cxl_endpoint_parse_cdat, CXL);
-+
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(ACPI);
- MODULE_IMPORT_NS(CXL);
-diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-index a94223750346..d1b0271d2822 100644
---- a/tools/testing/cxl/test/mock.h
-+++ b/tools/testing/cxl/test/mock.h
-@@ -25,6 +25,7 @@ struct cxl_mock_ops {
- 	int (*devm_cxl_add_passthrough_decoder)(struct cxl_port *port);
- 	int (*devm_cxl_enumerate_decoders)(
- 		struct cxl_hdm *hdm, struct cxl_endpoint_dvsec_info *info);
-+	void (*cxl_endpoint_parse_cdat)(struct cxl_port *port);
- };
- 
- void register_cxl_mock_ops(struct cxl_mock_ops *ops);
--- 
-2.43.0
-
+A qos_class check as also been added for region creation. A warning is emitted
+when the qos_class of a memory range of a CXL memory device being included in
+the CXL region assembly does not match the qos_class of the root decoder. Options
+are available to suppress the warning or to fail the region creation. This
+enabling provides a guidance on flagging memory ranges being used is not
+optimal for performance for the CXL region to be formed.
