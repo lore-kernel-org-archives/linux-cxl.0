@@ -1,124 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFD83A8F6;
-	Wed, 31 Jan 2024 23:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5585234;
+	Thu,  1 Feb 2024 01:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706745345; cv=none; b=IlUq0fDFnuHLVYnOFZmRB15ZXDo1AZxLj/essAH+p5SVsxeEXvGaXF1jdxMU78G0b6KdI9yFbD7CAt3d4uw8a9v6nF08RPzSpX4xXghmLEPIpRgZMheZ0WOASgCN/sYuEtI3+O28Qt64DY+Rut4jsfOT7Z4q1cuoifW3yuv4J6A=
+	t=1706749733; cv=none; b=GTiHHDK9Z9Gxn57mnMYDgGqm0caj/0x7wziWqIzE5qij9lzgdpcc/5VXvwzj/nYuUIPLxcaM6Pw4hQJv4HjhvDmWKiClQm71V5ygbl/EvYrekCaaEiuryLDF5a2gGiOfujGnT6ZkVGe2ue3E/IeuhB2gYEjUZ0SadmmhmE0aM2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706745345; c=relaxed/simple;
-	bh=jma4+rPiaW9wR5JtA9Pe7XnHL1MEBLBpNR+7EBnaMkc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p1Uxl2GTTqOMWUGd9NZPlzacND8Km++AhbzEfeGepnRG/XurG38+IvrXoYLc/+WwmPu1I4nAk0kNqa02pzFZqUesp8kqRgXyftuXB0dsQqY6bmVzBD0qI8xbK4rvGVD1v3ufjxfE+8/s8cnb1v3ZVFLHlDyFJAjoK0jR5zp9pCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mnke1NOh; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706749733; c=relaxed/simple;
+	bh=wepony5/D8UeXMHqv4TWwd2Y5ZKTXYDkBHaFDO5jjNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R2IlPDece3NcgUvyCIEM7J7TZ+vTn/bwRQX/xYMtiFiFmhNJsBmiTl7HykeHJh0oTDlZIIAGkcd8qRz2oBApyJckpVkFYw18s1TDYxqDQiwhZeGik1K1BR8L1gP+Th3eyD34pc3T8pIo001WTIIqDdysx1LSwupqM2uqjLpyB08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZnvbKHVI; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mnke1NOh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZnvbKHVI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706745343; x=1738281343;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=jma4+rPiaW9wR5JtA9Pe7XnHL1MEBLBpNR+7EBnaMkc=;
-  b=mnke1NOhGib7ujA2s5vK+Y9AHT+gda7p55vJ3uVINXpGBBiwWQBildx+
-   O3fDZrI1qEoaK0JiJKM1iMqDvfC0ZICWEOvPS9RNIHGwvrnt3Xt5HIVYf
-   Qqp8DVyPMZQNOwTBVNs5lBX6QMOa+uto0WwT70MpwbZMukzcmZ0iCFxBk
-   SOsBxueJAqs/Wx04boSvQ5bjR+B/ciZcSBncY/VJoTcc8AFYhRLNqKyBq
-   h4FBrljyS/Az0ZiNbSwYzeL4LLGCrZC4clUeRqJDjUvzSC0srR67igXtJ
-   z2fkmNUpEzweEsdXEoN9KQWP8hWB+u3lbUuTjlw7adRXfUVawMOgb96J+
+  t=1706749732; x=1738285732;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wepony5/D8UeXMHqv4TWwd2Y5ZKTXYDkBHaFDO5jjNM=;
+  b=ZnvbKHVI+OAmhvmH8HmRQkftAa/MRUMsEmQJSFJhgMA3/kWymFnK+OKB
+   3lM3bFPBbAXCerwMs16vLv0EHCECTIgCfsZytNwbgA4/GzQJ3YWOIjspX
+   x5oo1ZqTW8kl1XubdMgqdRbI2hEpJleq133NVBmVuFOgbcOos2QG80D2d
+   F7GGACLZIhXyOpyPl4JxUlkS7Xf6uHoKS6deKtERIXtuyIYc2THBkKsgT
+   jOuugHnh0LVPdnuKOXe7M+mupVa/Tn3PKCp+F+SYjWYWLZiOtOcfIhQQK
+   OkOLl0NZu2tYdN+RV40QCFBAAkiEldTZsuEPzbkFKiSDt78j9ujqpbsH+
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3597926"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="22276487"
 X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="3597926"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 15:55:42 -0800
+   d="scan'208";a="22276487"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:08:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822752099"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="858991587"
 X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="822752099"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.213.174.197])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 15:55:41 -0800
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Wed, 31 Jan 2024 15:55:39 -0800
-Subject: [PATCH 2/2] cxl/trace: Remove unnecessary memcpy's
+   d="scan'208";a="858991587"
+Received: from tomaszbi-mobl.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.21.45])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:08:48 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>, dan.j.williams@intel.com
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [RFC PATCH v3] cleanup: Add cond_guard() to conditional guards
+Date: Thu, 01 Feb 2024 02:08:44 +0100
+Message-ID: <6168759.DvuYhMxLoT@fdefranc-mobl3>
+Organization: intel
+In-Reply-To:
+ <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
+References: <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-cxl-cper-fixups-v1-2-335c85b1d77b@intel.com>
-References: <20240131-cxl-cper-fixups-v1-0-335c85b1d77b@intel.com>
-In-Reply-To: <20240131-cxl-cper-fixups-v1-0-335c85b1d77b@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, linux-acpi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706745338; l=1726;
- i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
- bh=jma4+rPiaW9wR5JtA9Pe7XnHL1MEBLBpNR+7EBnaMkc=;
- b=W6LLI0gVTXZoBGCHgHOW/XO2pYFZyyUiJ7Jqk4FL5Lai23kFFacC+HMr2Cf6RVfHYidxhJzuU
- qIdQ06cb+J5CWj2nkNte691OWsalY4SBIzewirtxsKEQsfZRK99xRC1
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-CPER events don't have UUIDs.  Therefore UUIDs were removed from the
-records passed to trace events and replaced with hard coded values.
+I just noticed that this is not the final version. It misses a semicolon. 
+Please discard this v3. I'm sending v4.
 
-As pointed out by Jonathan, the new defines for the UUIDs present a more
-efficient way to assign UUID in trace records.[1]
+Fabio
 
-Replace memcpy's with the use of static data.
+On Wednesday, 31 January 2024 14:37:35 CET Fabio M. De Francesco wrote:
+> Add cond_guard() to conditional guards.
+> 
+> cond_guard() is used for the _interruptible(), _killable(), and _try
+> versions of locks.
+> 
+> It stores a return value to a variable whose address is given to its
+> second argument, that is either '-1' on failure or '0' on success to
+> acquire a lock. The returned value can be checked to act accordingly
+> (e.g., to call printk() and return -EINTR in case of failure of an
+> _interruptible() variant)
+> 
+> As the other guards, it avoids to open code the release of the lock
+> after a goto to an 'out' label.
+> 
+> This remains an RFC because Dan suggested a slightly different syntax.
+> 
+> The changes to the CXL code are provided only to show the use of this
+> macro. If consensus is gathered on this macro, the cleanup of
+> show_targetN() will be submitted later in a separate patch.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Fabio M. De Francesco
+> <fabio.maria.de.francesco@linux.intel.com> ---
+> 
+> Changes from v1 and v2:
+> 	I've taken into account Dan's comments (thanks).
+> 
+>  drivers/cxl/core/region.c | 15 +++++----------
+>  include/linux/cleanup.h   | 19 +++++++++++++++++++
+>  2 files changed, 24 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0f05692bfec3..560f25bdfd11 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -668,26 +668,21 @@ static size_t show_targetN(struct cxl_region *cxlr,
+> char *buf, int pos) struct cxl_endpoint_decoder *cxled;
+>  	int rc;
+> 
+> -	rc = down_read_interruptible(&cxl_region_rwsem);
+> +	cond_guard(rwsem_read_intr, &rc, &cxl_region_rwsem);
+>  	if (rc)
+> -		return rc;
+> +		return -EINTR;
+> 
+>  	if (pos >= p->interleave_ways) {
+>  		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
+>  			p->interleave_ways);
+> -		rc = -ENXIO;
+> -		goto out;
+> +		return -ENXIO;
+>  	}
+> 
+>  	cxled = p->targets[pos];
+>  	if (!cxled)
+> -		rc = sysfs_emit(buf, "\n");
+> +		return sysfs_emit(buf, "\n");
+>  	else
+> -		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
+> -out:
+> -	up_read(&cxl_region_rwsem);
+> -
+> -	return rc;
+> +		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
+>  }
+> 
+>  static int match_free_decoder(struct device *dev, void *data)
+> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> index c2d09bc4f976..a4b40d511f9e 100644
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> @@ -134,6 +134,20 @@ static inline class_##_name##_t
+> class_##_name##ext##_constructor(_init_args) \ *	an anonymous instance of
+> the (guard) class, not recommended for *	conditional locks.
+>   *
+> + * cond_guard(name, ret, args...):
+> + * 	for conditional locks like mutex_trylock() or
+> down_read_interruptible(). + * 	'ret' is a pointer to a variable 
+where this
+> macro stores 0 on success + * 	and -1 on failure to acquire a lock.
+> + *
+> + * 	Example:
+> + *
+> + * 	int ret;
+> + * 	cond_guard(rwsem_read_try, &ret, &sem);
+> + * 	if (ret) {
+> + * 		dev_dbg("down_read_trylock() failed to down 'sem')\n");
+> + * 		return 0; // down_read_trylock() returns 0 on contention
+> + * 	}
+> + *
+>   * scoped_guard (name, args...) { }:
+>   *	similar to CLASS(name, scope)(args), except the variable (with the
+>   *	explicit name 'scope') is declard in a for-loop such that its scope 
+is
+> @@ -165,6 +179,11 @@ static inline class_##_name##_t
+> class_##_name##ext##_constructor(_init_args) \
+> 
+>  #define __guard_ptr(_name) class_##_name##_lock_ptr
+> 
+> +#define cond_guard(_name, _ret, args...) \
+> +	CLASS(_name, scope)(args); \
+> +	if (!__guard_ptr(_name)(&scope)) *_ret = -1 \
+> +	else *_ret = 0
+> +
+>  #define scoped_guard(_name, args...)					\
+>  	for (CLASS(_name, scope)(args),					\
+>  	     *done = NULL; __guard_ptr(_name)(&scope) && !done; done = (void 
+*)1)
 
-[1] https://lore.kernel.org/all/20240108132325.00000e9c@Huawei.com/
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/core/trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 89445435303a..bdf117a33744 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -338,7 +338,7 @@ TRACE_EVENT(cxl_general_media,
- 
- 	TP_fast_assign(
- 		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
--		memcpy(&__entry->hdr_uuid, &CXL_EVENT_GEN_MEDIA_UUID, sizeof(uuid_t));
-+		__entry->hdr_uuid = CXL_EVENT_GEN_MEDIA_UUID;
- 
- 		/* General Media */
- 		__entry->dpa = le64_to_cpu(rec->phys_addr);
-@@ -425,7 +425,7 @@ TRACE_EVENT(cxl_dram,
- 
- 	TP_fast_assign(
- 		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
--		memcpy(&__entry->hdr_uuid, &CXL_EVENT_DRAM_UUID, sizeof(uuid_t));
-+		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
- 
- 		/* DRAM */
- 		__entry->dpa = le64_to_cpu(rec->phys_addr);
-@@ -573,7 +573,7 @@ TRACE_EVENT(cxl_memory_module,
- 
- 	TP_fast_assign(
- 		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
--		memcpy(&__entry->hdr_uuid, &CXL_EVENT_MEM_MODULE_UUID, sizeof(uuid_t));
-+		__entry->hdr_uuid = CXL_EVENT_MEM_MODULE_UUID;
- 
- 		/* Memory Module Event */
- 		__entry->event_type = rec->event_type;
-
--- 
-2.43.0
 
