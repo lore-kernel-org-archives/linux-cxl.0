@@ -1,107 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9406943AC0;
-	Thu,  1 Feb 2024 08:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93CE4D9E8;
+	Thu,  1 Feb 2024 11:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706775427; cv=none; b=X8jQ/3jFZ4JT7d2kZLRqibCz1pmZOEUKeLiZeraCql9Drqh3lfjE02kMgYTQaiI/oH9zBTjebsDHp6Ro88jHMzUHt9Ieb+bNChX9iv80gKT6ErG2sdXqc1QdwPm/KqiptwgWsP8FBrFOJzNmOM7KHwVg5BIDfTbyi4F62OzbwDw=
+	t=1706786546; cv=none; b=GXCVOG7t3CwUCLMU+7eaQx0aLzlUi321Ysu6B9XHCQ2cqQhwdIrHaS59M4O/NfFKmZIseO/cUBZT3B01j1iybIE1gCMy/4AC3oakDC2oR+iKmAxWwAoE+XjH355z/RZI1GzAZzaQLNgW8erSgaquPbbgMGGdaGN6K6sIizOulyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706775427; c=relaxed/simple;
-	bh=lgBMpNmuZS58C3wWqdInFJ2/en+rrDKUD9rdFLLWX2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lxpAzXcDk6ywtipVZFI6qBOeCbf+3tXANKmeUlJAiLTiiNPjfLpuvITv9El4TQ+rPcAinASg6eccvGV6tiYLGS4YSVfTYQ3niJc3b5oKuXBAmMgO4eqQTgi6TIZs0FRGq6BryfJl+zpopG5LhdhuJUKJzIwLX9hs6PpaQP0U9IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V9Q5Y2kL; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V9Q5Y2kL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706775425; x=1738311425;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lgBMpNmuZS58C3wWqdInFJ2/en+rrDKUD9rdFLLWX2M=;
-  b=V9Q5Y2kLRCCFpdss2/+3MRFn7W19Pw0d1QdJOHCZOYqcti6X2Q0h9NfD
-   lCQRtBnOPNw5rRmnVHQPuZN2oOAmkfPQnAjulp6gMNS2GxbZBryWBh1nQ
-   KBRYw4KtSrlrNdYu1pIJGWqcn9tjd4ZY8l0V2Jrw48q2waSI6LBu+LrP/
-   WlTND9fvCZnjW641GWi3qUBwjqQSYWG2M6sQDVeQ3RNJGlTYEZDghsi8f
-   kJJIAsq1extPF9iHVJngtPNt/KAd+jUwNCY2P9X53NqGe5yUJ5x0xHvHY
-   v3rGZT9PSITl3Ugm+0qhVqjAkA8ERmAMMeLofrab5X7BmsXeA3xmiQi7W
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11217331"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="11217331"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:17:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="908169066"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="908169066"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.21.108])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:17:02 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>, dan.j.williams@intel.com,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v3] cleanup: Add cond_guard() to conditional guards
-Date: Thu, 01 Feb 2024 09:16:59 +0100
-Message-ID: <1785013.VLH7GnMWUR@fdefranc-mobl3>
-Organization: intel
-In-Reply-To: <65baefec49c1a_4e7f52946b@dwillia2-xfh.jf.intel.com.notmuch>
-References:
- <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
- <6168759.DvuYhMxLoT@fdefranc-mobl3>
- <65baefec49c1a_4e7f52946b@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1706786546; c=relaxed/simple;
+	bh=E1JEBjzKqKX7niomlMIXco/erWHsqVwDhTObrROcdHk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MMNcg2KIrLgdhE+zETyMSG88cjW29DeTuo5Bk8u1oy30f70Zf1V5qlD2vb3WBk73+eeJyewcjEbmYSs5X93fGrcVNVR0OUev+yyKvHqeiEEw82OCjed0xvmHJ3k6eKxg7NAQeO/TpORJ0TPMUEqxOrhuJ7ZSNP8hA56IKa39gP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQby53hVBz6JBTc;
+	Thu,  1 Feb 2024 19:18:53 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id E23C7140A36;
+	Thu,  1 Feb 2024 19:22:15 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
+ 2024 11:22:15 +0000
+Date: Thu, 1 Feb 2024 11:22:14 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/2] cxl/cper: Fix errant CPER prints for CXL events
+Message-ID: <20240201112214.00005fea@Huawei.com>
+In-Reply-To: <ZbrxDMwn4h3y5waj@aschofie-mobl2>
+References: <20240131-cxl-cper-fixups-v1-0-335c85b1d77b@intel.com>
+	<20240131-cxl-cper-fixups-v1-1-335c85b1d77b@intel.com>
+	<ZbrxDMwn4h3y5waj@aschofie-mobl2>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thursday, 1 February 2024 02:12:12 CET Dan Williams wrote:
-> Fabio M. De Francesco wrote:
-> > I just noticed that this is not the final version. It misses a semicolon.
-> > Please discard this v3. I'm sending v4.
+On Wed, 31 Jan 2024 17:17:00 -0800
+Alison Schofield <alison.schofield@intel.com> wrote:
+
+> On Wed, Jan 31, 2024 at 03:55:38PM -0800, Ira Weiny wrote:
+> > Jonathan reports that CXL CPER events dump an extra generic error
+> > message.
+> > 
+> > 	{1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
+> > 	{1}[Hardware Error]: event severity: recoverable
+> > 	{1}[Hardware Error]:  Error 0, type: recoverable
+> > 	{1}[Hardware Error]:   section type: unknown, fbcd0a77-c260-417f-85a9-088b1621eba6
+> > 	{1}[Hardware Error]:   section length: 0x90
+> > 	{1}[Hardware Error]:   00000000: 00000090 00000007 00000000 0d938086 ................
+> > 	{1}[Hardware Error]:   00000010: 00100000 00000000 00040000 00000000 ................
+> > 	...
+> > 
+> > CXL events were rerouted though the CXL subsystem for additional
+> > processing.  However, when that work was done it was missed that
+> > cper_estatus_print_section() continued with a generic error message
+> > which is confusing.
+> > 
+> > Teach CPER print code to ignore printing details of some section types.
+> > Assign the CXL event GUIDs to this set to prevent confusing unknown
+> > prints.  
 > 
-> Ok, but do please copy the aspect of scoped_conf_guard() to take a
-> "_fail" statement argument. Passing a return code collector variable by
-> reference just feels a bit too magical. I like the explicitness of
-> passing the statement directly.
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I had introduced a bug in my tests that made me see failures when there were 
-not. Now I fixed it and tests don't fail.
-
-I'm sending a new version that passes the return variable directly, not as a 
-reference, similar but not equal to:
-
-	cond_guard(..., rc, -EINTR, ...);
-
-Actually, I'm doing this:
-
-	cond_guard(..., rc, 0, -EINTR, ...);
-
-I'm not passing 'rc = -EINTR' because I want to take into account the 
-possibility that rc contains values different than 0 from previous assignments. 
-I'm passing rc, so that the macro can assign either a success code or a 
-failure error to this variable. Any value from previous assignments must be 
-always overwritten: 
-
-	#define cond_guard(_name, _ret, _scs, _err, args...) \
-        	CLASS(_name, scope)(args); \
-        	if (!__guard_ptr(_name)(&scope)) _ret = _err; \
-        	else _ret = _scs;
-
-I should have seen long ago that my tests were failing because of a missing 
-'else' when passing a statement in 'cond_guard(..., rc = -EINTR, ...);'. It 
-had nothing to do with how to pass 'rc'. Sorry for that confusion.
-
-Fabio
-
-Fabio 
-
+> 
+> 
+> > 
+> > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  drivers/acpi/apei/ghes.c    | 26 --------------------------
+> >  drivers/firmware/efi/cper.c | 19 +++++++++++++++++++
+> >  include/linux/cper.h        | 23 +++++++++++++++++++++++
+> >  3 files changed, 42 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> > index 7b7c605166e0..fe825a432c5b 100644
+> > --- a/drivers/acpi/apei/ghes.c
+> > +++ b/drivers/acpi/apei/ghes.c
+> > @@ -680,32 +680,6 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
+> >  static DECLARE_RWSEM(cxl_cper_rw_sem);
+> >  static cxl_cper_callback cper_callback;
+> >  
+> > -/* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
+> > -
+> > -/*
+> > - * General Media Event Record
+> > - * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> > - */
+> > -#define CPER_SEC_CXL_GEN_MEDIA_GUID					\
+> > -	GUID_INIT(0xfbcd0a77, 0xc260, 0x417f,				\
+> > -		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6)
+> > -
+> > -/*
+> > - * DRAM Event Record
+> > - * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+> > - */
+> > -#define CPER_SEC_CXL_DRAM_GUID						\
+> > -	GUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,				\
+> > -		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24)
+> > -
+> > -/*
+> > - * Memory Module Event Record
+> > - * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
+> > - */
+> > -#define CPER_SEC_CXL_MEM_MODULE_GUID					\
+> > -	GUID_INIT(0xfe927475, 0xdd59, 0x4339,				\
+> > -		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
+> > -
+> >  static void cxl_cper_post_event(enum cxl_event_type event_type,
+> >  				struct cxl_cper_event_rec *rec)
+> >  {
+> > diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> > index 35c37f667781..9b3884ff81e6 100644
+> > --- a/drivers/firmware/efi/cper.c
+> > +++ b/drivers/firmware/efi/cper.c
+> > @@ -523,6 +523,17 @@ static void cper_print_tstamp(const char *pfx,
+> >  	}
+> >  }
+> >  
+> > +struct ignore_section {
+> > +	guid_t guid;
+> > +	const char *name;
+> > +};
+> > +
+> > +static const struct ignore_section ignore_sections[] = {
+> > +	{ .guid = CPER_SEC_CXL_GEN_MEDIA_GUID, .name = "CXL General Media Event" },
+> > +	{ .guid = CPER_SEC_CXL_DRAM_GUID, .name = "CXL DRAM Event" },
+> > +	{ .guid = CPER_SEC_CXL_MEM_MODULE_GUID, .name = "CXL Memory Module Event" },
+> > +};
+> > +
+> >  static void
+> >  cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata,
+> >  			   int sec_no)
+> > @@ -543,6 +554,14 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
+> >  		printk("%s""fru_text: %.20s\n", pfx, gdata->fru_text);
+> >  
+> >  	snprintf(newpfx, sizeof(newpfx), "%s ", pfx);
+> > +
+> > +	for (int i = 0; i < ARRAY_SIZE(ignore_sections); i++) {
+> > +		if (guid_equal(sec_type, &ignore_sections[i].guid)) {
+> > +			printk("%ssection_type: %s\n", newpfx, ignore_sections[i].name);
+> > +			return;
+> > +		}
+> > +	}
+> > +
+> >  	if (guid_equal(sec_type, &CPER_SEC_PROC_GENERIC)) {
+> >  		struct cper_sec_proc_generic *proc_err = acpi_hest_get_payload(gdata);
+> >  
+> > diff --git a/include/linux/cper.h b/include/linux/cper.h
+> > index c1a7dc325121..265b0f8fc0b3 100644
+> > --- a/include/linux/cper.h
+> > +++ b/include/linux/cper.h
+> > @@ -90,6 +90,29 @@ enum {
+> >  	GUID_INIT(0x667DD791, 0xC6B3, 0x4c27, 0x8A, 0x6B, 0x0F, 0x8E,	\
+> >  		  0x72, 0x2D, 0xEB, 0x41)
+> >  
+> > +/* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
+> > +/*
+> > + * General Media Event Record
+> > + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> > + */
+> > +#define CPER_SEC_CXL_GEN_MEDIA_GUID					\
+> > +	GUID_INIT(0xfbcd0a77, 0xc260, 0x417f,				\
+> > +		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6)
+> > +/*
+> > + * DRAM Event Record
+> > + * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+> > + */
+> > +#define CPER_SEC_CXL_DRAM_GUID						\
+> > +	GUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,				\
+> > +		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24)
+> > +/*
+> > + * Memory Module Event Record
+> > + * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
+> > + */
+> > +#define CPER_SEC_CXL_MEM_MODULE_GUID					\
+> > +	GUID_INIT(0xfe927475, 0xdd59, 0x4339,				\
+> > +		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
+> > +
+> >  /*
+> >   * Flags bits definitions for flags in struct cper_record_header
+> >   * If set, the error has been recovered
+> > 
+> > -- 
+> > 2.43.0
+> >   
+> 
 
