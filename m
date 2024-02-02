@@ -1,189 +1,219 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15986C8D2;
-	Fri,  2 Feb 2024 00:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57142F4EA
+	for <linux-cxl@vger.kernel.org>; Fri,  2 Feb 2024 04:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706832377; cv=none; b=ZVRXw1xPZZjI6/zj3zqUbXhfJokMhvbyvvTS1KvkbHsajIRjmf6CqlrPoYKqxV2JN7fHlvqhvi2+pqtukt7B7LCTvw6vKy7eZWuyAgVTF0Xxu2vref2+3wKH/2ipKp4GE8sOOsogAPBrl1+tR16wuYdb0gViZKGd0kID6781Ges=
+	t=1706847707; cv=none; b=aGkyWSxORZwJxpmU1n30yIIpJ5ZClqqx8AhMStshV4++TCM3e95duw1cNtfTqKlMjIEJV09pK+K7j8EybCr14Qc289ody4lw/mDzpCxgjMdKlthGW3GDu/MDxCYHgfbWw3h5SAFIhxZmJ9CMXg584F1EtXlPeflOTsfmrFDL1SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706832377; c=relaxed/simple;
-	bh=N5ytPMI8CcBmVCIRgJRyHCtLc2INmcdE0bUH/E1B1pA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=N5+QxxJ0CKGZxycwK9m0dvouzJXwJ1gWotMOxbRqtz90eE/7mXg7DcUf+1lq8subY/Ia8VEWQOns/cwKrV2qd7ICZKnX5lRr3e5lmvvi97leI88wQfaQjtwT7xb9kAAHMlJ8Us7gYPH2hjnvP1l3Lf4kEjPS3LJLE2jLOmSL8mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fWSSMaSK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706847707; c=relaxed/simple;
+	bh=EbwbJJOeSpzoqsak64unU+Jk5WXtqSwJBMBM184v3E8=;
+	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
+	 Content-Type:References; b=hqiyVuPoYM/SVG7X9r0hFvzoHYuQUoA+GHxSAeDa1fkjzaOB8nmeMWZGF/oI/al3J7BPYASI/maXuuc0+lFze9RxLDpevrov30UO4U/gEXbm3Nr3OPudOoJ3dGB1UcGFcBBu2T/ql2+Jcl3E8gHSUeR2KjjhtDqILdnp2X/Pkvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gBejD5pC; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fWSSMaSK"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 411Nbr7x020563;
-	Fri, 2 Feb 2024 00:05:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=344H4x8Ad8z8mLylBhJTlrMcVRy2QejlkXWVgJvg15c=;
- b=fWSSMaSKXCTh1Gs99inTLNtCPiCtwuibOItyo1C4K4zgA4enOyUXk1rVRITHSzV/kdsL
- vrwMYNUOaUIZBba4PnyY/BGQM05MutP0HoYPHHenVsTbU2VSWc9IuNY3jBvdIcmmaR+7
- EaphozfCgcDiwqdr3XT1HgyYJum8REE5KkHi37ChllKbq7w9eb739DIShztOQpDQbHmR
- qQhQMB6lzrUl+waCRB/Af7Ov+VFhjr0n2b63fqwIvXzM86npCRwa6bIwQuHBM/CiZHP7
- BJtNhd8+QhUy1ZUhur/rvCN/8Cs5hon0E4HTuK5tG2pmatkWWcFkEe7DRAFuIm/6Gth5 aQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0n518n4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 00:05:55 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 411NcwFo023109;
-	Fri, 2 Feb 2024 00:05:54 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0n518n3u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 00:05:54 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 411MgJYi007189;
-	Fri, 2 Feb 2024 00:05:53 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwev2qbxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 00:05:53 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41205qxA48562502
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 Feb 2024 00:05:52 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B54105805E;
-	Fri,  2 Feb 2024 00:05:52 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2119858059;
-	Fri,  2 Feb 2024 00:05:51 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.60.157])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  2 Feb 2024 00:05:51 +0000 (GMT)
-Message-ID: <d0ccd2f19ed1adccc8f3dfe677c30bc44feb3d36.camel@linux.ibm.com>
-Subject: Re: [PATCH] KEYS: encrypted: Add check for strsep
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>,
-        Dan Williams
- <dan.j.williams@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "dhowells@redhat.com"
- <dhowells@redhat.com>,
-        "yaelt@google.com" <yaelt@google.com>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "nichen@iscas.ac.cn"
- <nichen@iscas.ac.cn>,
-        "sumit.garg@linaro.org" <sumit.garg@linaro.org>,
-        "jmorris@namei.org" <jmorris@namei.org>
-Cc: "Jiang, Dave" <dave.jiang@intel.com>,
-        "linux-integrity@vger.kernel.org"
-	 <linux-integrity@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org"
-	 <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>,
-        "keyrings@vger.kernel.org"
-	 <keyrings@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	 <linux-security-module@vger.kernel.org>,
-        "nvdimm@lists.linux.dev"
-	 <nvdimm@lists.linux.dev>
-Date: Thu, 01 Feb 2024 19:05:50 -0500
-In-Reply-To: <CYU2JV57VXA9.3C5QTG4LX50TD@suppilovahvero>
-References: <20231108073627.1063464-1-nichen@iscas.ac.cn>
-	 <4d3465b48b9c5a87deb385b15bf5125fc1704019.camel@intel.com>
-	 <e3275c0cfe21d75e0d71ea3fc24a31252efc9ad6.camel@linux.ibm.com>
-	 <e3b1a5e532ed86e674385abc4812c5a774f851d4.camel@intel.com>
-	 <49c48e3e96bf0f5ebef14e7328cc8a6ca6380e08.camel@linux.ibm.com>
-	 <50c2fa781e3266ee8151afdef5a8659d63ca952e.camel@intel.com>
-	 <CYS7QMYS8XAJ.2QPI3MS5KXK8E@suppilovahvero>
-	 <CYS7WMFLXNE1.35OBTKTONKNX3@suppilovahvero>
-	 <65b93f2b3099b_5cc6f29453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	 <CYU2JV57VXA9.3C5QTG4LX50TD@suppilovahvero>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gBejD5pC"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240202042142epoutp01af93056e39af33f57b924e6bafbe492b~v8PEiery92485124851epoutp017
+	for <linux-cxl@vger.kernel.org>; Fri,  2 Feb 2024 04:21:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240202042142epoutp01af93056e39af33f57b924e6bafbe492b~v8PEiery92485124851epoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1706847702;
+	bh=/bFx0IMTgJKEf4fsfTzkF1nAigAyyi0Rj25HnfRCSgg=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=gBejD5pCG3UEtgkdlxFXEZgvuxJtJRu8Eah021KZNq64One+ODwm/Tt7Swmu8uXw5
+	 6aetCpS8kwoOFK7wVV5A/GuHqStpMkikPQzQxFI9VGaToxowafWSw6S+sMKMD5U/2q
+	 GmAE5YleQh2f7QFAQ3AOW6t+wMF4kY2WibqYFH8M=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240202042141epcas2p3687132a08eff50fc3f38a0f084849ed6~v8PEBpaMk1930519305epcas2p3N;
+	Fri,  2 Feb 2024 04:21:41 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.68]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4TR2fF178pz4x9Q8; Fri,  2 Feb
+	2024 04:21:41 +0000 (GMT)
+X-AuditID: b6c32a47-9a3ff70000002726-bf-65bc6dd5581f
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8E.2A.10022.5DD6CB56; Fri,  2 Feb 2024 13:21:41 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+Subject: RE: [PATCH v3 1/3] cxl: Change 'struct cxl_memdev_state'
+ *_perf_list to single 'struct cxl_dpa_perf'
+Reply-To: wj28.lee@samsung.com
+Sender: Wonjae Lee <wj28.lee@samsung.com>
+From: Wonjae Lee <wj28.lee@samsung.com>
+To: Dave Jiang <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "Jonathan.Cameron@huawei.com"
+	<Jonathan.Cameron@huawei.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	KyungSan Kim <ks0204.kim@samsung.com>, Hojin Nam <hj96.nam@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20240201214731.1297389-1-dave.jiang@intel.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20240202042140epcms2p3c6f0708e85374e958df2f58416dde705@epcms2p3>
+Date: Fri, 02 Feb 2024 13:21:40 +0900
+X-CMS-MailID: 20240202042140epcms2p3c6f0708e85374e958df2f58416dde705
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oLsn3Vd9Pcs0Fl12p7OhnGd4O-iUA5CF
-X-Proofpoint-ORIG-GUID: GJlw1TEeGH8bzKJubicc8sFAJerRWBn3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_08,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402010185
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmqe7V3D2pBq0nWS3uPr7AZjF96gVG
+	ixM3G9ksVt9cw2jx4c0/Fov9T5+zWKxaeI3N4ugeDovzs06xWNyacIzJgcuj5chbVo/Fe14y
+	efRtWcXoMXV2vcfnTXIBrFHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJ
+	uam2Si4+AbpumTlANykplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCswL9IoTc4tL
+	89L18lJLrAwNDIxMgQoTsjN2L9rHWLBEteLMqqXMDYy9cl2MnBwSAiYSn+aeYuxi5OIQEtjB
+	KDFhyU/WLkYODl4BQYm/O4RBaoQF8iUuLHzLBmILCchJ3L19igkirinxZtoqFhCbTUBd4kfn
+	SbC4iECCxPbb79hAZjILTGSWmDfvDTPEMl6JGe1PWSBsaYnty7cygticAjYST3uvQcU1JH4s
+	64WqF5W4ufotO4z9/th8RghbRKL13lmoGkGJBz93Q8WlJL6e+MsOslhCoJlRYvWxflYIp4FR
+	omPmYagN+hKN19+DvcMr4Ctx48YPsLNZBFQltu6cxQZR4yKxfcojVhCbWUBeYvvbOcygUGEG
+	enn9Ln0QU0JAWeLILRaICj6JjsN/2WF+3DHvCROErSQxpe0I1G0SEg2NW6Gme0icaLvCPoFR
+	cRYiqGch2TULYdcCRuZVjGKpBcW56anFRgXG8NhNzs/dxAhOn1ruOxhnvP2gd4iRiYPxEKME
+	B7OSCO9KuZ2pQrwpiZVVqUX58UWlOanFhxhNgb6cyCwlmpwPTOB5JfGGJpYGJmZmhuZGpgbm
+	SuK891rnpggJpCeWpGanphakFsH0MXFwSjUwRcd7Z//2KX32uWPV/X6noEdvis8H9B+Jntbd
+	9lN49iSP2WfjFlsb3GfZeWj2hxi/VUvupnEsavBh6l5/8XSD4TXvxNld02TT9Oa31l6cqflw
+	QUp+ZzjbhsjDMjen2dYeulv9dHn7i7VXK/iKFG1eyx5zfmR6RW7CoeyfjnHLdp33vrMh6MHK
+	JIaV7x6uj2Tc8K7abNomswnPohe/yft6+peNiwHDkpMq7xZLmF7Y+DJ3Z/fJ9t660iY1w8pl
+	KtM3eETHTF61fd7/HcU3XRfYu/GsX7lvO8P9Bee4LtjsWf/U+Ka5+akAU/ULvzmX9lolSGz4
+	3x/R/+DR1Alqr96u+HMq89JVmYk50i1e7VHPn05WYinOSDTUYi4qTgQAUcKKtigEAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240201214822epcas2p3062089e1281f483fb26eea3c80a71475
+References: <20240201214731.1297389-1-dave.jiang@intel.com>
+	<CGME20240201214822epcas2p3062089e1281f483fb26eea3c80a71475@epcms2p3>
 
-On Thu, 2024-02-01 at 23:43 +0200, Jarkko Sakkinen wrote:
-> On Tue Jan 30, 2024 at 8:25 PM EET, Dan Williams wrote:
-> > Jarkko Sakkinen wrote:
-> > > On Tue Jan 30, 2024 at 7:22 PM EET, Jarkko Sakkinen wrote:
-> > > > On Wed Jan 24, 2024 at 11:10 PM EET, Verma, Vishal L wrote:
-> > > > > On Wed, 2024-01-24 at 15:40 -0500, Mimi Zohar wrote:
-> > > > > > On Wed, 2024-01-24 at 20:10 +0000, Verma, Vishal L wrote:
-> > > > > > > Ah, thanks for confirming! Would you like me to send a
-> > > > > > > revert patch or
-> > > > > > > will you do it?
-> > > > > > 
-> > > > > > Revert "KEYS: encrypted: Add check for strsep"
-> > > > > >     
-> > > > > > This reverts commit
-> > > > > > b4af096b5df5dd131ab796c79cedc7069d8f4882.
-> > > > > >     
-> > > > > > New encrypted keys are created either from kernel-generated 
-> > > > > > random
-> > > > > > numbers or user-provided decrypted data.  Revert the change
-> > > > > > requiring
-> > > > > > user-provided decrypted data.
-> > > > > > 
-> > > > > > 
-> > > > > > Can I add your Reported-by?
-> > > > > 
-> > > > > Yes that works, Thank you.
-> > > > 
-> > > > This went totally wrong IMHO.
-> > > > 
-> > > > Priority should be to locate and fix the bug not revert useful
-> > > > stuff
-> > > > when a bug is found that has limited scope.
-> > > 
-> > > By guidelines here the commit is also a bug fix and reverting
-> > > such commit means seeding a bug to the mainline. Also the klog
-> > > message alone is a bug fix here. So also by book it really has
-> > > to come back as it was already commit because we cannot
-> > > knowingly mount bugs to the mainline, right?
-> > 
-> > No, the commit broke userspace. The rule is do not cause
-> > regressions
-> > even if userspace is abusing the ABI in an undesirable way. Even
-> > the
-> > new pr_info() is a log spamming behavior change, a pr_debug() might
-> > be
-> > suitable, but otherwise a logic change here needs a clear
-> > description
-> > about what is broken about the old userspace behavior and why the
-> > kernel
-> > can not possibly safely handle it.
-> 
-> The rationale literally gives empirical proof that the log message
-> is useful by measure. It would be useless if log level is decreased
-> to debug, as then sysadmin's won't take notice. I don't really know
-> what is the definition of "spam" here but at least for me actually
-> useful log message are not in that category.
-> 
-> Issue was legit but git revert is objectively an incorrect way to
-> address the bug.
+On Thu, Feb 01, 2024 at 02:47:29PM -0700, Dave Jiang wrote:
+> In order to address the issue with being able to expose qos_class sysfs
+> attributes under 'ram' and 'pmem' sub-directories, the attributes must
+> be defined as static attributes rather than under driver->dev_groups.
+> To avoid implementing locking for accessing the 'struct cxl_dpa_perf`
+> lists, convert the list to a single 'struct cxl_dpa_perf' entry in
+> preparation to move the attributes to statically defined.
+>
+> While theoretically a partition may have multiple qos_class via CDAT, this
+> has not been encountered with testing on available hardware. The code is
+> simplified for now to not support the complex case until a use case is
+> needed to support that.
+>
+> Link: https://lore.kernel.org/linux-cxl/65b200ba228f_2d43c29468@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v3:
+> - Add to commit log about simplification (Dan)
+> - Remove check for dev->driver (Dan)
+> - Remove check for invalid qos_class (Dan)
+> ---
+>  drivers/cxl/core/cdat.c | 81 ++++++++++++-----------------------------
+>  drivers/cxl/core/mbox.c |  4 +-
+>  drivers/cxl/cxlmem.h    | 10 ++---
+>  drivers/cxl/mem.c       | 28 ++------------
+>  4 files changed, 33 insertions(+), 90 deletions(-)
+>
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index 6fe11546889f..55b82dfd794b 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -210,19 +210,12 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>   return 0;
+>  }
+>
+> -static void add_perf_entry(struct device *dev, struct dsmas_entry *dent,
+> -            struct list_head *list)
+> +static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+> +               struct cxl_dpa_perf *dpa_perf)
+>  {
+> - struct cxl_dpa_perf *dpa_perf;
+> -
+> - dpa_perf = kzalloc(sizeof(*dpa_perf), GFP_KERNEL);
+> - if (!dpa_perf)
+> -     return;
+> -
+>   dpa_perf->dpa_range = dent->dpa_range;
+>   dpa_perf->coord = dent->coord;
+>   dpa_perf->qos_class = dent->qos_class;
+> - list_add_tail(&dpa_perf->list, list);
+>   dev_dbg(dev,
+>       "DSMAS: dpa: %#llx qos: %d read_bw: %d write_bw %d read_lat: %d write_lat: %d\n",
+>       dent->dpa_range.start, dpa_perf->qos_class,
+> @@ -230,20 +223,6 @@ static void add_perf_entry(struct device *dev, struct dsmas_entry *dent,
+>       dent->coord.read_latency, dent->coord.write_latency);
+>  }
+>
+> -static void free_perf_ents(void *data)
+> -{
+> - struct cxl_memdev_state *mds = data;
+> - struct cxl_dpa_perf *dpa_perf, *n;
+> - LIST_HEAD(discard);
+> -
+> - list_splice_tail_init(&mds->ram_perf_list, &discard);
+> - list_splice_tail_init(&mds->pmem_perf_list, &discard);
+> - list_for_each_entry_safe(dpa_perf, n, &discard, list) {
+> -     list_del(&dpa_perf->list);
+> -     kfree(dpa_perf);
+> - }
+> -}
+> -
+>  static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>                    struct xarray *dsmas_xa)
+>  {
+> @@ -263,16 +242,14 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>   xa_for_each(dsmas_xa, index, dent) {
+>       if (resource_size(&cxlds->ram_res) &&
+>           range_contains(&ram_range, &dent->dpa_range))
+> -         add_perf_entry(dev, dent, &mds->ram_perf_list);
+> +         update_perf_entry(dev, dent, &mds->ram_perf);
+>       else if (resource_size(&cxlds->pmem_res) &&
+>            range_contains(&pmem_range, &dent->dpa_range))
+> -         add_perf_entry(dev, dent, &mds->pmem_perf_list);
+> +         update_perf_entry(dev, dent, &mds->pmem_perf);
+>       else
+>           dev_dbg(dev, "no partition for dsmas dpa: %#llx\n",
+>               dent->dpa_range.start);
+>   }
+> -
+> - devm_add_action_or_reset(&cxlds->cxlmd->dev, free_perf_ents, mds);
+>  }
+>
+>  static int match_cxlrd_qos_class(struct device *dev, void *data)
+> @@ -293,24 +270,25 @@ static int match_cxlrd_qos_class(struct device *dev, void *data)
+>   return 0;
+>  }
+>
+> +static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
+> +{
+> + memset(&dpa_perf, 0, sizeof(*dpa_perf));
 
-No, I made a mistake in upstreaming the patch in the first place.  It
-broke the original "encrypted" keys usage.  Reverting it was the
-correct solution.
+Hello,
 
-Mimi
+I think you meant dpa_perf instead of &dpa_perf, right?
 
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index 5c93bf9d5253..7091619f12a9 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -272,7 +272,7 @@ static int match_cxlrd_qos_class(struct device *dev, void *data)
+
+ static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
+ {
+-       memset(&dpa_perf, 0, sizeof(*dpa_perf));
++       memset(dpa_perf, 0, sizeof(*dpa_perf));
+        dpa_perf->qos_class = CXL_QOS_CLASS_INVALID;
+ }
+
+Thanks,
+Wonjae
