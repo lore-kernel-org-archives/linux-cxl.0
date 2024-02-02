@@ -1,195 +1,259 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8463A12C7E9;
-	Fri,  2 Feb 2024 18:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706900296; cv=fail; b=utz2AfHLQwnefBFffklIERkFak4fC9F09A2ydI0zdf+nDjxk3RT/Gb/QIMSTdDreJvY2xFR/0wkMkJdbmCH+JpVUVdFTrahptrkJhWZflzGgsedC51zb9dRUVtFtJlCxmSdIgWc2+MsLvfvPJ2fBpjXRu5yMxZ8VRU8q6zYuP2I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706900296; c=relaxed/simple;
-	bh=f3tdividdyZ+b7/fc/vG5R8q6P4DN3WyEpID6MMIXps=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZdQqetVqzju7j+k0NuKBlc5nayjkreYKupbYbdpwXNRA893gzXuizdotfgu1noORtMgrvCLDEwJgtIXfIK04b5mPIhfuW9YLb0KqDdmceWEXNJkjD4zPnvgHCytkwLq/5HOD5m0su391ou1M+814rYJdBRSDn2McLocLurgzbsU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5TS8ngl; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC8215E5AE;
+	Fri,  2 Feb 2024 19:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706902152; cv=none; b=CW9IUT8prQznoqyWEoVXa/26XSlx9ByNQFSdwgM1QxhdbRB00Zyj3+Fjzaazky0gSnAnxv5/FaYcgzQ+ucxLtc8GKEVs4r+TEd5jSRgO8T5OBATvlAugZM20DXH/jaLiFR90JX/5t+TjBcNfuZCLcqq+thFbny2iZ6UI3jLN8fg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706902152; c=relaxed/simple;
+	bh=P5L94LQ6Hg9uW7husBFpiivZAxhm5usar4GO4ypUsik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OtQ3WydL2Wk6zuPCX4umYA+OAsphlVmRAgKQO3C6RSZV4I6fF1hUMQcDg6cZ64R0K4TgMI5GDgOOcm2kk9y1PDrYjk0DFIVEgCCJuQIZlT+vKq7/HJxyG9aCTupBfoaXzuvgxI61orzwDQ1l3X62oZqINd4jLWmyy4F0sJjJzD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=vuoQB1le; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5TS8ngl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706900295; x=1738436295;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=f3tdividdyZ+b7/fc/vG5R8q6P4DN3WyEpID6MMIXps=;
-  b=M5TS8ngl25ceyb0lJAO2qd3qwhh7SwUKH9XPT9D6+dcxtu9yoBMhAPRw
-   dOe6NnhaequgFAZgRnrQh47uUil5+NzD938e6S99BSQ+oI0doUT8V0dkK
-   5XBxQSRhVipHxczNBFroh013YoFKjmVmDihOwQ0qAVlDHjIwIzMDDa3F/
-   n1ai5DpgFV1EICEE/pmaNgoQEmulRPMMspjHp0iLccIt9j0iIvWKvVUb/
-   9GrZ6BifD42yy8cEyepB9Vsetwu2sM00vgI9G3GnI/wpBK1F2THwKa+wy
-   bIqQCOziP0aNVp9VkDLNO0fEuSjAdX663kiESVSVyHw5gjVY0dWuOD0Z/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="4053602"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="4053602"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 10:58:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="457799"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Feb 2024 10:58:14 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 2 Feb 2024 10:58:13 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 2 Feb 2024 10:58:13 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 2 Feb 2024 10:58:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cmK1pwGqS2j58AS/E8XcjRDNKzbLt3Dz1qvjQK4ZR/5QJ8UGOB8yBT1TAAzigyKwmZW2BEnTIlKagUkwFSyAhzk9f5uOFHhVQTbbA6zkaP2MeGTvxmNPleg2OZp5dOLe6wGDNysIkU/Y+vCUmWUKuZbTzOlJTMM5cTHZi/QBArMOjftNtaTdm6+uMWjkCRG6cK7x5tsUoETxXS5ZXHrQFMrdb+J/katB5Wlcva9IdLxWS4BCm6U6RHWC5LIWIvNF7qGKk3sqE1Ti5++wfxA39U1IjXvTYa8LH36ejocnNLo5RBGilfR7Edekrotv5sbNn82zBfkOeML/UtdcMLSlmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3fgMmLMvp8dtGdYgQHRNy/IEGdc7m5YW/b9958SdQa0=;
- b=ZyRC5j/j9EIZ1yYXEw0jIgEeGcJX8lHnhWXt74xaiQ1j2SrGaMxjPtkBtLHbaKkouf2zwtij2RY3XEYChcbq3AcU1wUvoD3TYR4rcfmc7Yxw/FIaP51WqBpQC0ngGqalfMy4A24WIargSFVJRu42lBf/txnXEKv59V6PFRZPFQhfTYwWm3OoxOjmKDx/wd6KuDZ1HOlmcJulvJMOZ8w0qggwdbUbCeT4b3pB54Ps7UoMzSFYUf8PICFeOOS8V+2YOsPOkkuw1Ha+rhiPeMLS8/IQygVu19reUmZf12lACQbc56ATzfgGUov2KElLJShe0xEZHneb0cacWXDYkADmcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB6378.namprd11.prod.outlook.com (2603:10b6:510:1fa::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.35; Fri, 2 Feb
- 2024 18:58:11 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
- 18:58:11 +0000
-Date: Fri, 2 Feb 2024 10:58:08 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
-	"Ira Weiny" <ira.weiny@intel.com>
-Subject: Re: [PATCH] acpi/ghes: Prevent sleeping with spinlock held
-Message-ID: <65bd3b4073afd_7193229489@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240202-cxl-cper-smatch-v1-1-7a4103c7f5a0@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240202-cxl-cper-smatch-v1-1-7a4103c7f5a0@intel.com>
-X-ClientProxiedBy: MW4P221CA0028.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="vuoQB1le"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1706902144;
+	bh=P5L94LQ6Hg9uW7husBFpiivZAxhm5usar4GO4ypUsik=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vuoQB1lekXlbjADkCcvYIvisuIDfVtul+Mv7g1QhfkY+Dn8Kqp5EqVVFl6WgUeCME
+	 W9MsuJgQBpNHIHIEZrM7HtgrA80tGoe3cEBvkf6bFPPH93r8ERPxoEGcU19Vj0+0N6
+	 vvtibcNd6X2uUGqTdNGHLALH2lWeui4gSATNqcr9uoTDeHeflu3Bh9HHFnnUzjxPdr
+	 2UeI6iLMjX38nTDhl/OfOu57xWLk8+a9WU2pcnEYgkgUyO9CpJPcbBkMD7EXg1Ghaj
+	 DFKnWfrxihPS7a21/dHY3lcOn/pX72Zc1QAG/Xba2Jl3NCt0qpKoejnR54b+IqXJUn
+	 nbll165jXqVbA==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TRQnD3vfJzXHG;
+	Fri,  2 Feb 2024 14:29:04 -0500 (EST)
+Message-ID: <6bdf6085-101d-47ef-86f4-87936622345a@efficios.com>
+Date: Fri, 2 Feb 2024 14:29:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6378:EE_
-X-MS-Office365-Filtering-Correlation-Id: 234091a1-6b77-42a1-191c-08dc2420e6ce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s5Knsxar/zzYDlN5IyNla6uTzokdNAOvAzotvKlTRw3xMvqLkoNYkFVybUwDYXuFWtM4Jcp+/7KylsC4cyLFXL2bc2IssANdFySlE4p+EvVn7PdthNOupuTSgIoZ9y20mh37JSA20BaLsJ6XaTKZcD+44P59SqxDQWgbm/777rbq6cxqepKnflWHTwetQYOxIIPYy0WB3TJj9YpGnuxNy8tyEvkTqgdbdPhGQheMcuQswy5LlMKZRLuTS5qVwWwPPWyUoBt1gLfk5Si6SDFtkgATf3esYXitaPLIpLSZyTInXTyeLwJyLNDHu6CEoqYBRrkpCuoG2iU1gm5orCuo3bNaDqkkYVVSAQtpgy0AI4NquLri9rKwgKDVweFrduADrK6E0aZssXbPTe37PxHxjDDLZqteh6IKlbP9RWkBVtn9mUqt0DcVp0HYpD8MKxlZMif/ot+/QQ1Lc3bZwU51BW9/xZAcJFfUOtL54V4/8B3EFjbOLVFELIXx5d51waU8pwS4FzNz+Mv/YnBW2dwkYKbMjswA+Sk4eYSDIEyhgeA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(376002)(346002)(396003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(8936002)(41300700001)(82960400001)(38100700002)(86362001)(4326008)(8676002)(6666004)(6506007)(478600001)(66946007)(966005)(9686003)(83380400001)(54906003)(6512007)(66556008)(110136005)(316002)(107886003)(66476007)(6486002)(2906002)(26005)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Dzlmq4qIVXGJR3YZeZP3qVnu4WZzj8WFk6kQ79n0VKTmya6GzWeAncfSavg1?=
- =?us-ascii?Q?aUHPZJeiSF3dWptaGjA0pKOA/WCHmEgbJ/yjMW1m8/8X4qptOzAXhI92QVoY?=
- =?us-ascii?Q?rQdIbhBaEhb/LnsRCurppoA1rJD9OwM8ebuLEisHC2wJWIixZbQsbqku2nDp?=
- =?us-ascii?Q?r4gVQjqX+LAUAGDlLU3sH+pfBZhcSOqsk747cAGyjcWKGPE/2a5XlnFhNy/r?=
- =?us-ascii?Q?QFEECQsUDz08/mwmkWtaoUK4FuNnGWv3JeQmIeLvpkf1sBcLRdBw0a5tlnv6?=
- =?us-ascii?Q?Q34wDZoBwZRfj+IhVj+X9TWlGF4e9b35AIq9ZF55wBqZqrRqkQbyUrM7rwez?=
- =?us-ascii?Q?WIdMNfgivduhL+tYGVb2pUkqhagjS4sFlAj5WHQ1XO520leKHyqsEPsJljD7?=
- =?us-ascii?Q?y36I94jugLYhxGbAYcaMSAXrcNy/91f0cxytl+YfI5lIwwboXXE3w1ISFiyH?=
- =?us-ascii?Q?HbxE0IbbcNQ5vsQ6VkNs4iycqTi+VhGPi1VxAC5uohq+5N3TAauixOiJdgZ7?=
- =?us-ascii?Q?zfji26ZHsaU0CbDAAEE/zXdbMyLLt4qeICRQ14rG9Dpleg2/QDvXcmQb7HhJ?=
- =?us-ascii?Q?Fk/ix3tatJPbZ1ELiExqXstzWWadb2LXk8R7YZ1Aw3hS3G8gO9E1qU6UKh/0?=
- =?us-ascii?Q?HV8Bq4cCNW8dYe3i15iSHLeW3zIkoWrlthIVmAkRhx0IkQJ5LCVfqhQFMLWV?=
- =?us-ascii?Q?rLeScLVyukk7eOJnCJS/p6V3McjqYevKtw9Wqe8rqYXMynvO5r2KRAcmhcit?=
- =?us-ascii?Q?Y9ZZaXfRvQWDv+KDOfuKXdPew6WF19Y58P3SiX+jUvvvVzOfK6Aa2lKg0Aw6?=
- =?us-ascii?Q?nCWM5KhJxmByakwNHLnY3HK2d5uIYTMiZHtI9zVIygyQ3KApIaOi+lF0oezI?=
- =?us-ascii?Q?cbKeVcGSF7+MuUhlU+b7FBmH7mFmIWooOiRujoi6zuaKqQvCop61MjpvmGt5?=
- =?us-ascii?Q?gkCj0jGy+unlSFcnCsj7W4k0KkT7GC9KHg0uH6WgT8jinLS1KwWD+xy2FckD?=
- =?us-ascii?Q?PJ+BOpUH2WbFKir4iFSHWQo74bgh/y2cu2I5ReEkzwi9IOC9gmXwRgukOs8p?=
- =?us-ascii?Q?zDMPYNsA0qaOEepmYOZBv4t04N9lPxCSIilKWfmaSmGx7MGT+EQl9V3bJnjw?=
- =?us-ascii?Q?5WNABgt5E0k0Y+vk1lX7FuXG1uoVHOnWhF+V7ZSwzguqBcFttkAp2qFnBDS8?=
- =?us-ascii?Q?KvZ9HfdZlnS0eHejiFN0gG9aOo97ORRFejrwkOp8bYAp5AT9PcbqQu5yX3f+?=
- =?us-ascii?Q?8CjxQhYHHKkSfL7rRSANEgdpXKE2BUvBoPsOa1iJDBfD5VXIoF1TlerDy+vg?=
- =?us-ascii?Q?W0/aJdcl/obIOyZZufAPHQAZlfvYuL2VEUBazEurHZy5KkgTZ1u99fnu3Em4?=
- =?us-ascii?Q?m0LA4rsnIPJevxzXFU5XHmd4vD4pdOERSFMKGlWssyAsS9pPJif6N4ipZXEw?=
- =?us-ascii?Q?44rk3WpR7tDFOqS3BruMFkvDQL49mXWugQoCVVv/etFtzfohikJ25fnjoRgJ?=
- =?us-ascii?Q?jlRDmf0VpuLKqHj+ehYf2CvwmAVKqQNm3r5eHJNCwbra9kTX4MM+miQuZbTx?=
- =?us-ascii?Q?8My8kr+fLmFNL2betZqGz0/QTO95kJOicSoM1VFU1ZCKL0a4MCXKleHlraEi?=
- =?us-ascii?Q?uw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 234091a1-6b77-42a1-191c-08dc2420e6ce
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 18:58:11.1729
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tlhOP2jK9pWfHd6sU7Crcp6+H9NvJVlSIl3afngG5mZkS+T+rm+yh2DRq6a74qJ/wl6JyG0OdtXP8dDtuSJeAiXD3gs5BVyveJlAyBBi2k4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6378
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 2/4] dax: Check for data cache aliasing at runtime
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Dave Chinner <david@fromorbit.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>,
+ Russell King <linux@armlinux.org.uk>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ dm-devel@lists.linux.dev
+References: <20240131162533.247710-1-mathieu.desnoyers@efficios.com>
+ <20240131162533.247710-3-mathieu.desnoyers@efficios.com>
+ <65bab567665f3_37ad2943c@dwillia2-xfh.jf.intel.com.notmuch>
+ <0a38176b-c453-4be0-be83-f3e1bb897973@efficios.com>
+ <65bac71a9659b_37ad29428@dwillia2-xfh.jf.intel.com.notmuch>
+ <f1d14941-2d22-452a-99e6-42db806b6d7f@efficios.com>
+ <65bd284165177_2d43c29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <65bd284165177_2d43c29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Ira Weiny wrote:
-> Smatch caught that cxl_cper_post_event() is called with a spinlock held
-> or preemption disabled.[1]  There is no need for the callback to sleep.
+On 2024-02-02 12:37, Dan Williams wrote:
+> Mathieu Desnoyers wrote:
+[...]
+>>
 > 
-> Replace the RW semaphore with a RW lock.
+>> The alternative route I intend to take is to audit all callers
+>> of alloc_dax() and make sure they all save the alloc_dax() return
+>> value in a struct dax_device * local variable first for the sake
+>> of checking for IS_ERR(). This will leave the xyz->dax_dev pointer
+>> initialized to NULL in the error case and simplify the rest of
+>> error checking.
 > 
-> A static call was considered but ARM does not select HAVE_STATIC_CALL
-> and in that case setting the function pointer uses a RW semaphore.
-> 
-> [1] https://lore.kernel.org/all/b963c490-2c13-4b79-bbe7-34c6568423c7@moroto.mountain/
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 7b7c605166e0..bdc0ec2813a3 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -39,6 +39,7 @@
->  #include <linux/aer.h>
->  #include <linux/nmi.h>
->  #include <linux/sched/clock.h>
-> +#include <linux/spinlock.h>
->  #include <linux/uuid.h>
->  #include <linux/ras.h>
->  #include <linux/task_work.h>
-> @@ -677,7 +678,7 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  /*
->   * Only a single callback can be registered for CXL CPER events.
->   */
-> -static DECLARE_RWSEM(cxl_cper_rw_sem);
-> +static DEFINE_RWLOCK(cxl_callback_lock);
->  static cxl_cper_callback cper_callback;
->  
->  /* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
-> @@ -721,14 +722,14 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
->  		return;
->  	}
->  
-> -	guard(rwsem_read)(&cxl_cper_rw_sem);
-> +	guard(read_lock_irqsave)(&cxl_callback_lock);
->  	if (cper_callback)
->  		cper_callback(event_type, rec);
+> I could maybe get on board with that, but it needs a comment somewhere
+> about the asymmetric subtlety.
 
-This does not help because cxl_cper_event_call() takes a sleeping
-device_lock().
+Is this "somewhere" at every alloc_dax() call site, or do you have
+something else in mind ?
+
+> 
+>>
+>>
+>>>    		return;
+>>>    
+>>>    	if (dax_dev->holder_data != NULL)
+>>> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+>>> index 4e8fdcb3f1c8..b69c9e442cf4 100644
+>>> --- a/drivers/nvdimm/pmem.c
+>>> +++ b/drivers/nvdimm/pmem.c
+>>> @@ -560,17 +560,19 @@ static int pmem_attach_disk(struct device *dev,
+>>>    	dax_dev = alloc_dax(pmem, &pmem_dax_ops);
+>>>    	if (IS_ERR(dax_dev)) {
+>>>    		rc = PTR_ERR(dax_dev);
+>>> -		goto out;
+>>> +		if (rc != -EOPNOTSUPP)
+>>> +			goto out;
+>>
+>> If I compare the before / after this change, if previously
+>> pmem_attach_disk() was called in a configuration with FS_DAX=n, it would
+>> result in a NULL pointer dereference.
+> 
+> No, alloc_dax() only returns NULL CONFIG_DAX=n case, not the
+> CONFIG_FS_DAX=n case.
+
+Indeed, I was wrong there.
+
+> So that means that pmem devices on ARM have been
+> possible without FS_DAX. So, in order for alloc_dax() returning
+> ERR_PTR(-EOPNOTSUPP) to not regress pmem device availability this error
+> path needs to be changed.
+Good point. We're moving the depends on !(ARM || MIPS |PARC) from FS_DAX
+Kconfig to a runtime check in alloc_dax(), which is used whenever DAX=y,
+which includes configurations that had FS_DAX=n previously.
+
+I'll change the error path in pmem_attack_disk to treat -EOPNOTSUPP
+alloc_dax() return value as non-fatal.
+
+> 
+>> This would be an error handling fix all by itself. Do we really want
+>> to return successfully if dax is unsupported, or should we return
+>> an error here ?
+> 
+> Per above, there is no error handling fix, and pmem block device
+> available should not depend on alloc_dax() succeeding.
+
+I agree on treating alloc_dax() failure as non-fatal. There is
+however one error handling fix to nvdimm/pmem which I plan to
+introduce as an initial patch before this change:
+
+     nvdimm/pmem: Fix leak on dax_add_host() failure
+     
+     Fix a leak on dax_add_host() error, where "goto out_cleanup_dax" is done
+     before setting pmem->dax_dev, which therefore issues the two following
+     calls on NULL pointers:
+     
+     out_cleanup_dax:
+             kill_dax(pmem->dax_dev);
+             put_dax(pmem->dax_dev);
+     
+     Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 4e8fdcb3f1c8..9fe358090720 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -566,12 +566,11 @@ static int pmem_attach_disk(struct device *dev,
+  	set_dax_nomc(dax_dev);
+  	if (is_nvdimm_sync(nd_region))
+  		set_dax_synchronous(dax_dev);
++	pmem->dax_dev = dax_dev;
+  	rc = dax_add_host(dax_dev, disk);
+  	if (rc)
+  		goto out_cleanup_dax;
+  	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
+-	pmem->dax_dev = dax_dev;
+-
+  	rc = device_add_disk(dev, disk, pmem_attribute_groups);
+  	if (rc)
+  		goto out_remove_host;
+
+> 
+> The real question is what to do about device-dax. I *think* it is not
+> affected by cpu_dcache aliasing because it never accesses user mappings
+> through a kernel alias. I doubt device-dax is in use on these platforms,
+> but we might need another fixup for that if someone screams about the
+> alloc_dax() behavior change making them lose device-dax access.
+
+By "device-dax", I understand you mean drivers/dax/Kconfig:DEV_DAX.
+
+Based on your analysis, is alloc_dax() still the right spot where
+to place this runtime check ? Which call sites are responsible
+for invoking alloc_dax() for device-dax ?
+
+If we know which call sites do not intend to use the kernel linear
+mapping, we could introduce a flag (or a new variant of the alloc_dax()
+API) that would either enforce or skip the check.
+
+[...]
+
+>>
+>> Here what I'm seeing so far:
+>>
+>> - devm_release_mem_region() is never called after devm_request_mem_region(). Not
+>>     on error, neither on teardown,
+> 
+> devm_release_mem_region() is called from virtio_fs_probe() context. That
+
+I guess you mean "devm_request_mem_region()" here.
+
+> means that when virtio_fs_probe() returns an error the driver core will
+> automatically call devm_request_mem_region().
+
+And "devm_release_mem_region()" here.
+
+> 
+>> - pgmap is never freed on error after devm_kzalloc.
+> 
+> That is what the "devm_" in devm_kzalloc() does, free the memory on
+> driver-probe failure, or after the driver remove callback is invoked.
+
+Got it.
+
+> 
+>>
+>>>    {
+>>> +	struct dax_device *dax_dev __free(cleanup_dax) = NULL;
+>>>    	struct virtio_shm_region cache_reg;
+>>>    	struct dev_pagemap *pgmap;
+>>>    	bool have_cache;
+>>> @@ -804,6 +808,15 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+>>>    	if (!IS_ENABLED(CONFIG_FUSE_DAX))
+>>>    		return 0;
+>>>    
+>>> +	dax_dev = alloc_dax(fs, &virtio_fs_dax_ops);
+>>> +	if (IS_ERR(dax_dev)) {
+>>> +		int rc = PTR_ERR(dax_dev);
+>>> +
+>>> +		if (rc == -EOPNOTSUPP)
+>>> +			return 0;
+>>> +		return rc;
+>>> +	}
+>>
+>> What is gained by moving this allocation here ?
+> 
+> The gain is to fail early in virtio_fs_setup_dax() since the fundamental
+> dependency of alloc_dax() success is not met. For example why let the
+> setup progress to devm_memremap_pages() when alloc_dax() is going to
+> return ERR_PTR(-EOPNOTSUPP).
+
+What I don't know is whether there is a dependency requiring to do
+devm_request_mem_region(), devm_kzalloc(), devm_memremap_pages()
+before calling alloc_dax() ?
+
+Those 3 calls are used to populate:
+
+         fs->window_phys_addr = (phys_addr_t) cache_reg.addr;
+         fs->window_len = (phys_addr_t) cache_reg.len;
+
+and then alloc_dax() takes "fs" as private data parameter. So it's
+unclear to me whether we can swap the invocation order. I suspect
+that it is not an issue because it is only used to populate
+dax_dev->private, but I prefer to confirm this with you just to be
+on the safe side.
+
+[...]
+
+Thanks,
+
+Mathieu
+
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
