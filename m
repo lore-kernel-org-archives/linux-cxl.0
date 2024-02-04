@@ -1,99 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9209F19473;
-	Sun,  4 Feb 2024 09:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D308422638;
+	Sun,  4 Feb 2024 16:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707039998; cv=none; b=G6uNmpwRxBv+8RJDP4zRPEWUni7BE+hIEn/woURsUMZY8T1ZdXNDuTPXOioQDu/ujmBCvqR8+/Kzq80O5vGT9lEAAetkEu8brOFvcBN9AFVNaEmRQ2XT3Y+5b04yvl6OHDrJvO1Y6ZDHDkQ6oPRw+s911Vp9Bc1zkX2l9VkvAtU=
+	t=1707062806; cv=none; b=dEL9IgF+JrANr/846qdUMe7o02Ak4IOOXw/uf8lSr/y+f9F1UwMEqRkvl8v6DMAJcRA1dBDkVcu7/e1bjUwmatlBApq5193HRCD1oblAR9BBaOmbXch7seAtPK26HeBNleyLRh75KZQhLL1YaRek84ZpmhOHtuikTpbM152Myo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707039998; c=relaxed/simple;
-	bh=QYK8Ji2HLdnUjamB2FwcFhgMyE7rE4gdVyWPZdDXkMo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QywGu4Fv59dc2pdpNRE7p/wk4ZWGWQUgb7Mz2Na7CWOaPeIvqhmzXauQvZarXfoGCUh2fWtF8nKDu60UHBDae3QiiSoX46YKO7qJa9RnJyIKgLu5A/UzsFOZRybRLPBzFJwlGxdYKoYI9JXp6EnRL2gq0P38LSHyd2SS9SUmbFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0fSYYtE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707062806; c=relaxed/simple;
+	bh=NGRPqGsVHE0UEYGIKYs7klDgBUg9AeOL1bqJcet72+w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b6q30oKDpihsNkQIJu+Xq9B6MWYsUuqK/HGx6pjXiRco8DFjytffgkhUOha7+N3Jyn077mEjk70t+da8hSUB2RKbsh0e08QE0leLEX1a4L5+mc75vNmGenqGSM28f31p7VqwHA/XnOJ3KnrVi/XbCPqR2q/iPuvi+ayXwcrbLLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=IrDo/QqZ reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0fSYYtE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DDEC433C7;
-	Sun,  4 Feb 2024 09:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707039998;
-	bh=QYK8Ji2HLdnUjamB2FwcFhgMyE7rE4gdVyWPZdDXkMo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X0fSYYtEkhbU0H5/sVxw3jaa5pwk5aa5tVnB7pSjzlEHx3MlZJaP0i55A0W8s2ewi
-	 I9AHs83/cBnHLnx70+s/VZAtPRjQcIIMP69/cZC34iAw8OO1YG5/Cu9TzzM8EQ4Sbp
-	 lXPaqdv4fk3YsvAmnm4oaQ6sZXzJ09lcR7dzQJpIbH5xc+qSCuSJi+M90n+adjGXG4
-	 gtt082LSceK+SuBHD+1KHGYsWTtYuIFwAWMcinGNgkhtAWvLER1AXHmJqi3E+u5dMe
-	 /WO3EWG3FD2bt3k3lmmL8G5En4nLscCALnuwloKEZp3hoDmowEBR1+j+USFalF6wk1
-	 KDy7uSz7YlFew==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-cxl@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] cxl: remove CONFIG_CXL_PMU entry in drivers/cxl/Kconfig
-Date: Sun,  4 Feb 2024 18:46:13 +0900
-Message-Id: <20240204094613.40687-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="IrDo/QqZ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d93edfa76dso31085595ad.1;
+        Sun, 04 Feb 2024 08:06:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707062804; x=1707667604;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z36dRHY7LpnrJF+rM2BIRQuCAUrP8aB0bQLP8Y+QGrE=;
+        b=HcAso5XfAK3LidzDBcCvz6Nj5AJmJjnzQPy6ZdJuzUnWBSjAJGI2KdmmRd+IL82A65
+         j0RaEEgzBwgSUPUkHSirYs8gyqKMoc43uYpZ2UWIOjtcw0dAi3TMlYgH8mfg4nVEQELK
+         sR787LRr5jCR10G3qfeA4hLsIDxfA9uJSgKBM4iFrQD8IgU4gq6nZBaBxhtUvs6u44df
+         xEyKS/Kw0l7ZY0SG7QuRMBAMleKqz9aWo30nREFEzjfpf8ECLfLiCYuAMfdbtCV02Z18
+         jlusi9+w4Lr3kf9WxGGKRKn5KJCZtyrj6efajlkhELDvr5LupYARtrWKxCNTD3IErVbC
+         jrLA==
+X-Gm-Message-State: AOJu0YyGD0HwM1xnIzXTrVO3ezhWf0AhShehJswZ8HLLR3duLV8Tq2OZ
+	ZQHCNgV8/pPnv6ICjT98mRCkHelCQ8mvHqIWI7YRH9mLL2CEtTzP
+X-Google-Smtp-Source: AGHT+IFmqwIrUp49lfbA4xA4DO0fKzsU8tPeSfNoX2ztfG9e3WEVeMErQv8EHRSXKu+hOkDwWoWwxA==
+X-Received: by 2002:a17:902:d2c1:b0:1d9:b5d8:854c with SMTP id n1-20020a170902d2c100b001d9b5d8854cmr1038273plc.58.1707062804261;
+        Sun, 04 Feb 2024 08:06:44 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW3NLjkza/clYaUge7PnmNdCg6fXgUy8hgvWGS1AQRwpels8bA1mu9lYpjDGEqgIVLDqygv2zOESqfo1oeu6CXW0hwPdLkXEDil/9ZpUTb4XpCVY+Sk+AaEytvXLnc9yfYFMB2K7Z70aOAlXEf8TmAdChtNbsud1ITVbD6roBMREuyDmcBRJKhWY8ro6nLOYfqYJocDyjQ6rLwoOSqSjLqLKRlGncak9V6eFd+InXJw7agStw==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id e13-20020a170902cf4d00b001d8fe6cd0f0sm4693879plg.150.2024.02.04.08.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 08:06:42 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707062801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Z36dRHY7LpnrJF+rM2BIRQuCAUrP8aB0bQLP8Y+QGrE=;
+	b=IrDo/QqZos7tn0XQ9QCQ1+IJWPzh6ZdjELcJrIxcS3omKVUJ5izWcJ39x2qg8114Vn5u9i
+	j46o7DaMBqgdTesH3Drrs85eRoa+hv987SIyNGDdS4wacgzt1alFi/DDd45QleXNpfSRLF
+	Yhrys1E3qrL0qGSjkODlSCCKI4nLOj7xN4Lw3W63cRX03JUG1g66RnaG6T3kvkRu6LFOo5
+	6DLc+BuCibjOEQ0y9kzQYI0SMDFRsZQAWCaCQGjdq+8OXz5sQ3yEryDpsOT12N4s2KqL/E
+	bxjF256hPH+by6aYvVcH7SkVxT7jsAo40iy7fxyCsJxG2A0l02xAtsEeLm/poA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 13:07:11 -0300
+Subject: [PATCH] device-dax: make dax_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-dax-v1-1-69a6e4a8553b@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAC62v2UC/x3MQQqAIBBA0avErBNs0oKuEhGmYw2EhWIE0d2Tl
+ m/x/wOJIlOCoXog0sWJj1DQ1BXYzYSVBLtiQIlKolRiyWm2O5mQT+HMLTTaVvkeu0Z7KNUZyfP
+ 9H8fpfT+mwZamYQAAAA==
+To: Dan Williams <dan.j.williams@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1061; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=NGRPqGsVHE0UEYGIKYs7klDgBUg9AeOL1bqJcet72+w=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv7Yw3yyE+neTtEwU9YHmvpQ+IBR1XFaEIr8w3
+ l738UxeLMaJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+2MAAKCRDJC4p8Y4ZY
+ ptXHEACpFojr7rJxMdxjIxXm7xawLNR8i4/CaO6LWnnFuAFeWaiubKR18pFlwisnwX0OSqmM1PI
+ yJqqqwyONgbljzKMoGK6pk22MEakRmmbhSGShAl6Zitp+vkF8KBPZOCQQVQfmniSjZRqTNoMby2
+ rNZw0zF7Z3cJRXSwswmtTdvuKwbaZqZGHZW7LCfFvMlMnNMgp/SmNDGw3gTF10n346IAmUtUeQq
+ 21fKfpg63tiaa1GvawCKXk0rbc/S+UHaPGReyDW7dgqUMeJrL/tV75eH5UZLmOUWBxEKQyqC9SG
+ FdCa4f1xnK8KNJjrp2Oes1ZpPbZAxh74uZ0X8QFa8Im5/qzevFgcZM1Ome/fCfHrEc81sgcq+lk
+ lQgaJlqiUI3bhN4rHG45CYZTirL3MuDervOf3ThFdzlszlRHLMCoBonOmVY/ZRQntJpvDXVNTLe
+ 0Limb7si4ZQQyadkD9eZB1rYgEKNJFqe2EJAHlSjpfQEL7+1f92i0BBooljLe/A2JweRgX0IHB3
+ N/YqRRwXzaJN6dAJLszkDzb1ayRdWhkmUe3TUMyaGtlcmIn1TU7S83QvynQxnJh0o8ssAHZl9da
+ ZIE9XwXF2HfCl1dltvAp2xFSiwQ5rEXpHHXvgG1c0siKpMUTOoSrOy70Hp6Qqt2IQzGx/APpj3R
+ hqocF023jjDTyJQ==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-Commit 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-added the config entries for CXL_PMU in drivers/cxl/Kconfig and
-drivers/perf/Kconfig, so it can be toggled from multiple locations:
+Now that the driver core can properly handle constant struct bus_type,
+move the dax_bus_type variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-[1] Device Drivers
-     -> PCI support
-       -> CXL (Compute Expres Link) Devices
-         -> CXL Performance Monitoring Unit
-
-[2] Device Drivers
-     -> Performance monitor support
-       -> CXL Performance Monitoring Unit
-
-This complicates things, and nobody else does this.
-
-I kept the one in drivers/perf/Kconfig because CONFIG_CXL_PMU controls
-the compilation of drivers/perf/cxl_pmu.c.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
+ drivers/dax/bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/cxl/Kconfig | 13 -------------
- 1 file changed, 13 deletions(-)
-
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 67998dbd1d46..5f3c9c5529b9 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -144,17 +144,4 @@ config CXL_REGION_INVALIDATION_TEST
- 	  If unsure, or if this kernel is meant for production environments,
- 	  say N.
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index 1659b787b65f..fe0a415c854d 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -222,7 +222,7 @@ static void dax_bus_remove(struct device *dev)
+ 		dax_drv->remove(dev_dax);
+ }
  
--config CXL_PMU
--	tristate "CXL Performance Monitoring Unit"
--	default CXL_BUS
--	depends on PERF_EVENTS
--	help
--	  Support performance monitoring as defined in CXL rev 3.0
--	  section 13.2: Performance Monitoring. CXL components may have
--	  one or more CXL Performance Monitoring Units (CPMUs).
--
--	  Say 'y/m' to enable a driver that will attach to performance
--	  monitoring units and provide standard perf based interfaces.
--
--	  If unsure say 'm'.
- endif
+-static struct bus_type dax_bus_type = {
++static const struct bus_type dax_bus_type = {
+ 	.name = "dax",
+ 	.uevent = dax_bus_uevent,
+ 	.match = dax_bus_match,
+
+---
+base-commit: 73bf93edeeea866b0b6efbc8d2595bdaaba7f1a5
+change-id: 20240204-bus_cleanup-dax-52c34f72615f
+
+Best regards,
 -- 
-2.40.1
+Ricardo B. Marliere <ricardo@marliere.net>
 
