@@ -1,159 +1,78 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2D824215;
-	Sun,  4 Feb 2024 17:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0C02421F;
+	Sun,  4 Feb 2024 17:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707067521; cv=none; b=GM1kqxvichtTG0GoZZ4cNM7S4FUxVaBp41QrXgstMIbRoG7MbskpnEscNjV1MIHKpGkEt9rg1JHpPj2j2uRdmOOOtrCy7kmClVs2mEs7vRim/4Ol0oT7RUtri1tEoeWhKW7tw+hFo1ztumsfvgMLfHWwf4j1C1poJWXBEQ/PzcU=
+	t=1707067877; cv=none; b=mMmjt1c39wnguvEXMBruTju+8zYZ8aWn0rhDcHX5Q1u86e/qiN1euWNaKH2owgAtm+AU4x+b4YPQm9IHitInpVyof2hgPeR+VXxpTFLPPKmKtbj4aSEprpySFJU3KLclEndZzuNUwo6DEH1YwMw8G7qbR5sx+5yZ3tWWb92+Gs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707067521; c=relaxed/simple;
-	bh=o6XgZklQg99ao472cPaHWFZkdLc8gXrmjSvTwRxHuxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TN1avc3WT/XHGYEkLHNFOWH4ajWnHA1mlu09SaaoYq3nTErMNinLTVO++B90QFMD5Hq/AoVYu1VgnV2DW1mmEXMPe97840OoD1kF3sWZ2ySKwLTJSptf57J7FWI6quGfO5rjUEOQckHsywGb/SAd0UNS3rrJquwSyaI7tcUyxOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 5E0872800B3C2;
-	Sun,  4 Feb 2024 18:25:10 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 463422F90E5; Sun,  4 Feb 2024 18:25:10 +0100 (CET)
-Date: Sun, 4 Feb 2024 18:25:10 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+	s=arc-20240116; t=1707067877; c=relaxed/simple;
+	bh=SBchobUhFlbRKL9roZ8rvHypMRkQnDLsR7JiDyykqDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DKvc2tf67oYkg1PRIMNcTsH+b9cKvsB+5a/6HJaGXmxoe6vtpsWUVOOea8/FHnmDsJQ84wKxx+w2UOyKQgEZg8BKWctZQJhkv5qFkbCFlrK2yKF0Ebd+kijxTIAimhPA3EUQ39bjj6Zl/AnynyJQ+OVwyYlJXVsbgIOFhUnsZQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpm1xIib; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpm1xIib"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707067876; x=1738603876;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SBchobUhFlbRKL9roZ8rvHypMRkQnDLsR7JiDyykqDo=;
+  b=kpm1xIibuPXgHvc8fGrjbC4Nd9ccebJKExdGP/XjMwr+Sh5KXlWjIWRa
+   pIcHtopk+h3tWUgtOio4f2oklNjaBdZza2gIqnoaVTe4olLRy5fOz4HG1
+   seRR6kJaKfFSlTE4sjatcSxICnuH0k/uT6aXxd5ux7rY0uupgsswUMLCE
+   FvlACq/AA20o+n7uUb2q1+tshknHUL3Rc5FpVohON4jn4PG1d2GKc3kn9
+   5EAs4lS6docGBj0O+N3IHgkg01YP//ReZR2QfJUdqtKZzveYZKCIk22ge
+   LE4YNTuE52j66DlmmUD+lXaC2u0JcJ2L1ZNrdT+tAGJPHIrIobnn3TWCy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="4225899"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="4225899"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 09:31:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="31626380"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.213.2.137])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 09:31:12 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <20240204172510.GA19805@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
- <20231003153937.000034ca@Huawei.com>
+	linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	linux-cxl@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 0/2] Add cond_guard() to conditional guards
+Date: Sun,  4 Feb 2024 18:31:03 +0100
+Message-ID: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231003153937.000034ca@Huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 03, 2023 at 03:39:37PM +0100, Jonathan Cameron wrote:
-> On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:
-> > +/**
-> > + * spdm_challenge_rsp_sz() - Calculate CHALLENGE_AUTH response size
-> > + *
-> > + * @spdm_state: SPDM session state
-> > + * @rsp: CHALLENGE_AUTH response (optional)
-> > + *
-> > + * A CHALLENGE_AUTH response contains multiple variable-length fields
-> > + * as well as optional fields.  This helper eases calculating its size.
-> > + *
-> > + * If @rsp is %NULL, assume the maximum OpaqueDataLength of 1024 bytes
-> > + * (SPDM 1.0.0 table 21).  Otherwise read OpaqueDataLength from @rsp.
-> > + * OpaqueDataLength can only be > 0 for SPDM 1.0 and 1.1, as they lack
-> > + * the OtherParamsSupport field in the NEGOTIATE_ALGORITHMS request.
-> > + * For SPDM 1.2+, we do not offer any Opaque Data Formats in that field,
-> > + * which forces OpaqueDataLength to 0 (SPDM 1.2.0 margin no 261).
-> > + */
-> > +static size_t spdm_challenge_rsp_sz(struct spdm_state *spdm_state,
-> > +				    struct spdm_challenge_rsp *rsp)
-> > +{
-> > +	size_t  size  = sizeof(*rsp)		/* Header */
-> 
-> Double spaces look a bit strange...
-> 
-> > +		      + spdm_state->h		/* CertChainHash */
-> > +		      + 32;			/* Nonce */
-> > +
-> > +	if (rsp)
-> > +		/* May be unaligned if hash algorithm has unusual length. */
-> > +		size += get_unaligned_le16((u8 *)rsp + size);
-> > +	else
-> > +		size += SPDM_MAX_OPAQUE_DATA;	/* OpaqueData */
-> > +
-> > +	size += 2;				/* OpaqueDataLength */
-> > +
-> > +	if (spdm_state->version >= 0x13)
-> > +		size += 8;			/* RequesterContext */
-> > +
-> > +	return  size  + spdm_state->s;		/* Signature */
-> 
-> Double space here as well looks odd to me.
+Add cond_guard() macro to conditional guards and use it to replace an
+open-coded up_read() in show_targetN().
 
-This was criticized by Ilpo as well, but the double spaces are
-intentional to vertically align "size" on each line for neatness.
+Cc: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
 
-How strongly do you guys feel about it? ;)
+Fabio M. De Francesco (2):
+  cleanup: Add cond_guard() to conditional guards
+  cxl/region: Use cond_guard() in show_targetN()
 
+ drivers/cxl/core/region.c | 16 ++++------------
+ include/linux/cleanup.h   | 14 ++++++++++++++
+ 2 files changed, 18 insertions(+), 12 deletions(-)
 
-> > +int spdm_authenticate(struct spdm_state *spdm_state)
-> > +{
-> > +	size_t transcript_sz;
-> > +	void *transcript;
-> > +	int rc = -ENOMEM;
-> > +	u8 slot;
-> > +
-> > +	mutex_lock(&spdm_state->lock);
-> > +	spdm_reset(spdm_state);
-[...]
-> > +	rc = spdm_challenge(spdm_state, slot);
-> > +
-> > +unlock:
-> > +	if (rc)
-> > +		spdm_reset(spdm_state);
-> 
-> I'd expect reset to also clear authenticated. Seems odd to do it separately
-> and relies on reset only being called here. If that were the case and you
-> were handling locking and freeing using cleanup.h magic, then
-> 
-> 	rc = spdm_challenge(spdm_state);
-> 	if (rc)
-> 		goto reset;
-> 	return 0;
-> 
-> reset:
-> 	spdm_reset(spdm_state);
+-- 
+2.43.0
 
-Unfortunately clearing "authenticated" in spdm_reset() is not an
-option:
-
-Note that spdm_reset() is also called at the top of spdm_authenticate().
-
-If the device was previously successfully authenticated and is now
-re-authenticated successfully, clearing "authenticated" in spdm_reset()
-would cause the flag to be briefly set to false, which may irritate
-user space inspecting the sysfs attribute at just the wrong moment.
-
-If the device was previously successfully authenticated and is
-re-authenticated successfully, I want the "authenticated" attribute
-to show "true" without any gaps.  Hence it's only cleared at the end
-of spdm_authenticate() if there was an error.
-
-I agree with all your other review feedback and have amended the
-patch accordingly.  Thanks a lot!
-
-Lukas
