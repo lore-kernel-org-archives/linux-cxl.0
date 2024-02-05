@@ -1,172 +1,161 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37CB168D9;
-	Mon,  5 Feb 2024 10:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386E917571
+	for <linux-cxl@vger.kernel.org>; Mon,  5 Feb 2024 10:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707127679; cv=none; b=aI/jCq6PKunj/bSeJq7XxqoDLtJPwDo8ry4i+00hayWrW+W5b1F0NhuldU7AE/dK0GRhtk0bNgeNu/9q0ZlPUZcd123cNCjLRGxaD0P8zl1XOcBPZBJ4P9c/xzGSXil8PVjxY/n2BEGGXzTnOIHWTcQPY1mNuG8UeNUttkxhlT0=
+	t=1707129368; cv=none; b=OFzbVBm2jcoMDkWeKjbzAVzwDViMXsYUqBIeyQKVioIRtvapzJmmNZuFH7FzRwQFXCZoyzlp5NWseduapcew06Zw+OdfBwCcnp7Plx3uGUcslxedCvL81k/K99uqQYj295XjZrTCH+NBD/Eqc/TnD/68Kw0wPGgG84Zq+iTsC7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707127679; c=relaxed/simple;
-	bh=iBaUmXBlN0VxxLhGqD9SvUefjOy+3CbgHgnuPzCue3A=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FxqXdmmtIAicsRKyp9mODHykKfiu6kIQfQow/pK6ddGWPfp2kPpZHzueGHtzDS0lPMILClToBaDDJOEvV0heuhZqZlP+JXY5jwfMxyYXEfxs4hK6QU/gWCWqLAW1Zdw/KsQDtYy8GXSFsZV3QCrRmPxwDkbxrtDHgySs3pwNJqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT26g0TNXz6GBd5;
-	Mon,  5 Feb 2024 18:04:43 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id BFC8314185F;
-	Mon,  5 Feb 2024 18:07:54 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 5 Feb
- 2024 10:07:54 +0000
-Date: Mon, 5 Feb 2024 10:07:53 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Bjorn
- Helgaas" <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, "David
- Woodhouse" <dwmw2@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Alex Williamson
-	<alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <linuxarm@huawei.com>, David Box
-	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Dave
- Jiang" <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
-	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred
- Mallawa <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, Tom
- Lendacky <thomas.lendacky@amd.com>, "Sean Christopherson"
-	<seanjc@google.com>, Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <20240205100753.0000798b@Huawei.com>
-In-Reply-To: <20240204172510.GA19805@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-	<89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
-	<20231003153937.000034ca@Huawei.com>
-	<20240204172510.GA19805@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707129368; c=relaxed/simple;
+	bh=OTCAhBEXyE64cRaM/urBNTy2kxRcCEzbQtSIcwK8jV0=;
+	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
+	 References; b=I9S8T20IshWQKuTR3nchfyt9xYFeTISDsAz8KTJ/hKZ261d2dv0AswQmgIy0JlmTDinEJwnSgdN1VYAjpqVAlHU7zOXIUGcHfEiHnj+9YkQ3gu5/poAPyfnA3ACzrxkAE/g4UM2DmsJjTNgN4M7LpSW/i5gkV0N+0ZhkL33tN/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dhZyKAHD; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dhZyKAHD"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240205103604epoutp011e1a835837ba2babe6b146ba4c2a3b88~w8Ryn3Pdf1536015360epoutp01b
+	for <linux-cxl@vger.kernel.org>; Mon,  5 Feb 2024 10:36:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240205103604epoutp011e1a835837ba2babe6b146ba4c2a3b88~w8Ryn3Pdf1536015360epoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707129364;
+	bh=CSa+DTzdrMmmy4GwFfOhGfViJQP7INb0OUZQp765ca0=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=dhZyKAHDG6IQYvNo9pNTSLiq64fYHIUul1Nj1L0kCURVhYjwUO9zonn/dcp/2gXrR
+	 OjHIl/tdgIaf805W8JQQ6UFCXw7DR5DicwEG0Oqf167GnLc9CfBpWM0Z5bIYh8q0l/
+	 Xu+2E93NDriwRs5cl6ZZNh9lrhVJ+uZhKWVPksOE=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240205103603epcas2p303be92973906451d07402cd99a331a12~w8RyS47xh3207732077epcas2p3i;
+	Mon,  5 Feb 2024 10:36:03 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.97]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4TT2pq1wTzz4x9Pq; Mon,  5 Feb
+	2024 10:36:03 +0000 (GMT)
+X-AuditID: b6c32a46-5d04aa8000002596-97-65c0ba13c969
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+	25.33.09622.31AB0C56; Mon,  5 Feb 2024 19:36:03 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Mime-Version: 1.0
+Subject: cxl: question about cxl qos_class verification
+Reply-To: wj28.lee@samsung.com
+Sender: Wonjae Lee <wj28.lee@samsung.com>
+From: Wonjae Lee <wj28.lee@samsung.com>
+To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, KyungSan Kim
+	<ks0204.kim@samsung.com>, Hojin Nam <hj96.nam@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef@epcms2p8>
+Date: Mon, 05 Feb 2024 19:36:02 +0900
+X-CMS-MailID: 20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7bCmua7wrgOpBr0nOS2mT73AaHHiZiOb
+	xYc3/1gsju7hsDg/6xSLA6vH4j0vmTz6tqxi9Pi8SS6AOSrbJiM1MSW1SCE1Lzk/JTMv3VbJ
+	OzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwdoo5JCWWJOKVAoILG4WEnfzqYov7QkVSEj
+	v7jEVim1ICWnwLxArzgxt7g0L10vL7XEytDAwMgUqDAhO2PizQ6mgrXCFcvfPGVsYNzB38XI
+	ySEhYCLx8Ntxxi5GLg4hgR2MEr0721i6GDk4eAUEJf7uEAapERYwl2ic9Y4NxBYSkJO4e/sU
+	E0RcU+LNtFUsIDabgLrEj86TYHERAWuJCQ1L2EBmMgtsZZSYdOECK8QyXokZ7U9ZIGxpie3L
+	tzJC2BoSP5b1MkPYohI3V79lh7HfH5sPVSMi0XrvLFSNoMSDn7uh4lISX0/8ZQdZJiHQzCix
+	+lg/K4TTwCjRMfMw1DZ9icbr78Fe4BXwlZg7rRvsIhYBVYkPOw5DXeci8ef0DLANzALyEtvf
+	zmEGhQQz0Jvrd+mDmBICyhJHbrFAVPBJdBz+yw7z1455T5ggbCWJKW1HoG6TkGho3MoGYXtI
+	fGi+xg4yRkggUKLngNQERoVZiJCehWTtLIS1CxiZVzGKpRYU56anFhsVGMEjNzk/dxMjOPFp
+	ue1gnPL2g94hRiYOxkOMEhzMSiK8ZjsOpArxpiRWVqUW5ccXleakFh9iNAV6eCKzlGhyPjD1
+	5pXEG5pYGpiYmRmaG5kamCuJ895rnZsiJJCeWJKanZpakFoE08fEwSnVwMQyn3W/rq39xdvq
+	Of8+HRFqvHRW4Zlm/ZuLf2dfq0yZ3KRsNmfJUT6vaaFSHDsuXbad8baljdfxuLfgh7o5yuyZ
+	iQwOLquEOpfNK9vSZuE0K/ejbZ9o9FuJ/q3+v16Hi6bzxk6IOeu/9HeklFTjCmPJ+MaAOp1e
+	/vu3r5muyXogu0g9vqlHzePn+vWO11pil/QmCc9yD513udgixdydqeq950E5p+3CLU62k57J
+	Oy7fFSb1IcU+JTTw4opz8V5FZWcv6PHkdTlqx57Vcr17wuwhX8I/4y6p9aqzE2uiGu+vq0zV
+	PryB32lx5qpXGft9RfJmKpT5Fsbe3HrD3+XMpvB53M9MT+4tfldlfWypEktxRqKhFnNRcSIA
+	QlcPxgUEAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef
+References: <CGME20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef@epcms2p8>
 
-On Sun, 4 Feb 2024 18:25:10 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+Hello,
 
-> On Tue, Oct 03, 2023 at 03:39:37PM +0100, Jonathan Cameron wrote:
-> > On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > +/**
-> > > + * spdm_challenge_rsp_sz() - Calculate CHALLENGE_AUTH response size
-> > > + *
-> > > + * @spdm_state: SPDM session state
-> > > + * @rsp: CHALLENGE_AUTH response (optional)
-> > > + *
-> > > + * A CHALLENGE_AUTH response contains multiple variable-length fields
-> > > + * as well as optional fields.  This helper eases calculating its size.
-> > > + *
-> > > + * If @rsp is %NULL, assume the maximum OpaqueDataLength of 1024 bytes
-> > > + * (SPDM 1.0.0 table 21).  Otherwise read OpaqueDataLength from @rsp.
-> > > + * OpaqueDataLength can only be > 0 for SPDM 1.0 and 1.1, as they lack
-> > > + * the OtherParamsSupport field in the NEGOTIATE_ALGORITHMS request.
-> > > + * For SPDM 1.2+, we do not offer any Opaque Data Formats in that field,
-> > > + * which forces OpaqueDataLength to 0 (SPDM 1.2.0 margin no 261).
-> > > + */
-> > > +static size_t spdm_challenge_rsp_sz(struct spdm_state *spdm_state,
-> > > +				    struct spdm_challenge_rsp *rsp)
-> > > +{
-> > > +	size_t  size  = sizeof(*rsp)		/* Header */  
-> > 
-> > Double spaces look a bit strange...
-> >   
-> > > +		      + spdm_state->h		/* CertChainHash */
-> > > +		      + 32;			/* Nonce */
-> > > +
-> > > +	if (rsp)
-> > > +		/* May be unaligned if hash algorithm has unusual length. */
-> > > +		size += get_unaligned_le16((u8 *)rsp + size);
-> > > +	else
-> > > +		size += SPDM_MAX_OPAQUE_DATA;	/* OpaqueData */
-> > > +
-> > > +	size += 2;				/* OpaqueDataLength */
-> > > +
-> > > +	if (spdm_state->version >= 0x13)
-> > > +		size += 8;			/* RequesterContext */
-> > > +
-> > > +	return  size  + spdm_state->s;		/* Signature */  
-> > 
-> > Double space here as well looks odd to me.  
-> 
-> This was criticized by Ilpo as well, but the double spaces are
-> intentional to vertically align "size" on each line for neatness.
-> 
-> How strongly do you guys feel about it? ;)
+To test the CXL driver with respect to QTG IDs on a real CXL device, I
+connected one CXL device to a CXL 2.0 Compliant System (v6.8-rc3).
 
-I suspect we'll see 'fixes' for this creating noise for maintainers.
-So whilst I don't feel that strongly about it I'm not sure the alignment
-really helps much with readability either.
- 
-> 
-> 
-> > > +int spdm_authenticate(struct spdm_state *spdm_state)
-> > > +{
-> > > +	size_t transcript_sz;
-> > > +	void *transcript;
-> > > +	int rc = -ENOMEM;
-> > > +	u8 slot;
-> > > +
-> > > +	mutex_lock(&spdm_state->lock);
-> > > +	spdm_reset(spdm_state);  
-> [...]
-> > > +	rc = spdm_challenge(spdm_state, slot);
-> > > +
-> > > +unlock:
-> > > +	if (rc)
-> > > +		spdm_reset(spdm_state);  
-> > 
-> > I'd expect reset to also clear authenticated. Seems odd to do it separately
-> > and relies on reset only being called here. If that were the case and you
-> > were handling locking and freeing using cleanup.h magic, then
-> > 
-> > 	rc = spdm_challenge(spdm_state);
-> > 	if (rc)
-> > 		goto reset;
-> > 	return 0;
-> > 
-> > reset:
-> > 	spdm_reset(spdm_state);  
-> 
-> Unfortunately clearing "authenticated" in spdm_reset() is not an
-> option:
-> 
-> Note that spdm_reset() is also called at the top of spdm_authenticate().
-> 
-> If the device was previously successfully authenticated and is now
-> re-authenticated successfully, clearing "authenticated" in spdm_reset()
-> would cause the flag to be briefly set to false, which may irritate
-> user space inspecting the sysfs attribute at just the wrong moment.
+However, during cxl endpoint probing, CDAT extraction and parsing works
+fine, but cxl_qos_class_verify() for cxlmd does not run properly.
 
-That makes sense. Thanks.
+To be precise, when cxl_qos_class_verify() is executed, the below error
+handling code is executed since cxlmd->endpoint is NULL:
 
-> 
-> If the device was previously successfully authenticated and is
-> re-authenticated successfully, I want the "authenticated" attribute
-> to show "true" without any gaps.  Hence it's only cleared at the end
-> of spdm_authenticate() if there was an error.
-> 
-> I agree with all your other review feedback and have amended the
-> patch accordingly.  Thanks a lot!
-> 
-> Lukas
-> 
+    if (!cxl_root)
+        return -ENODEV;
 
+
+I'm not sure if I analyzed it correctly due to the complexity of the CXL
+driver, but I think it's because the cxl_port driver execute
+cxl_qos_class_verify() before cxlmd->endpoint = endpoint was executed in
+the cxl_mem driver. See the dmesg log below, where I've added debugging
+code.
+
+# cxl_mem driver is adding the endpoint
+[] cxl_mem mem0: call devm_cxl_add_enpoint
+...
+# endpoint port is probed, and cxl_qos_class_verify() runs
+[] cxl_port endpoint5: call cxl_qos_class_verify
+[] cxl_mem mem0: cxl_qos_class_verify: cxlmd->endpoint is NULL
+[] cxl_mem mem0: cxl_qos_class_verify: cxl_root is NULL
+...
+# cxl_mem driver sets cxlmd->endpoint
+[] cxl_mem mem0: cxl_endpoint_autoremove: cxlmd->endpoint = endpoint
+...
+
+
+I did an experiment to validate the hypothesis. If I call
+cxl_endpoint_parse_cdat() after cxlmd->endpoint is set,
+cxl_qos_class_verify() runs well without problems.
+
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index c5c9d8e0d88d..33b39c6c46fd 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -74,6 +74,8 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+        if (rc)
+                return rc;
+
++       cxl_endpoint_parse_cdat(endpoint);
++
+        if (!endpoint->dev.driver) {
+                dev_err(&cxlmd->dev, "%s failed probe\n",
+                        dev_name(&endpoint->dev));
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 97c21566677a..ee77aba62780 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -111,7 +111,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+
+        /* Cache the data early to ensure is_visible() works */
+        read_cdat_data(port);
+-       cxl_endpoint_parse_cdat(port);
+
+        get_device(&cxlmd->dev);
+        rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+
+
+Maybe there's something I'm missing. It would be very helpful if anyone
+could comment on the above analysis.
+
+Thanks,
+Wonjae
