@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0B118622;
-	Mon,  5 Feb 2024 11:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD3E199BE;
+	Mon,  5 Feb 2024 11:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707131383; cv=none; b=sUyr8kCs2gY1Owj9zkc9VZ46PAQkfIdBBUUg7rH4dla7I3BHnV2zWx0/Vp6rlra35u2FT+jWFEDQ8QloeAaarJLSNzhBLEu8wpNgNw6dryN+yZFrxZbYacGygwBAd1f3BQQXZHPvCzpm0yp7dKBkqBj1W9hWol8lyw0QOEVHxUA=
+	t=1707131517; cv=none; b=AkYiJrYbBxMcuCbCLwVlS82SuMi4r/lWgXQCKEXJ8a6C/6pXp8BOxG594sTOtu1ZcD0/ovUZCQY+nythRAZ/h0s61pf1spT9fBNyJl+UQwu+8+EGPWvahGbrSHrblcUwvMoZx7t5NCeTLR2Zz0ApEpvFcqawKNX0OaL0BKRTUMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707131383; c=relaxed/simple;
-	bh=6fDq7Awy6E71ynDuxpB8rBXU5HkmEDHMF/KRwCpZ5XU=;
+	s=arc-20240116; t=1707131517; c=relaxed/simple;
+	bh=oEj10EjSR3BOukSIkBzeBzquHeEig0ocCSapGHfIwvw=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BrO2amYz7ADwbTPKonlNFoQ2UpvviDmXtlNy2f3VmRfNhSLSWxaj03rzCBhuYLjHgNTdveQRgAfBaJFigsHAiHzASq4W1//e3cZLx+WkeVDfkr7eqsJYkRJQEeyrEZy0faUrhkmV11FnEOyh+GCn408De+h4S6zRLCZ++eyqI18=
+	 MIME-Version:Content-Type; b=CN3eBr7OXAJoFzap9p0cvw/XtRlrxH2ej/NVprjEh4GA3X4yDNoXbuwRmo6PrnQUA9V3Lg+qY//p+z1EmYOPyKs//Qg8KBP0MC7j3yA8+jvtBMbWVIIhdBy7vFrIpi2a8WtuPnXA9K/SIRG6dyjNRZpKxvScwFAotxNEXuaBc1g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT3Tt6vmFz6K5ks;
-	Mon,  5 Feb 2024 19:06:26 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT3XS0n31z67bbM;
+	Mon,  5 Feb 2024 19:08:40 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CEEF6141DB5;
-	Mon,  5 Feb 2024 19:09:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A18C11404F5;
+	Mon,  5 Feb 2024 19:11:53 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 5 Feb
- 2024 11:09:38 +0000
-Date: Mon, 5 Feb 2024 11:09:37 +0000
+ 2024 11:11:53 +0000
+Date: Mon, 5 Feb 2024 11:11:52 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
 CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
 	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>, Ingo Molnar
 	<mingo@kernel.org>, <linux-cxl@vger.kernel.org>, Ira Weiny
 	<ira.weiny@intel.com>
-Subject: Re: [PATCH 1/2] cleanup: Add cond_guard() to conditional guards
-Message-ID: <20240205110937.000036cc@Huawei.com>
-In-Reply-To: <20240204173105.935612-2-fabio.maria.de.francesco@linux.intel.com>
+Subject: Re: [PATCH 2/2] cxl/region: Use cond_guard() in show_targetN()
+Message-ID: <20240205111152.000030a3@Huawei.com>
+In-Reply-To: <20240204173105.935612-3-fabio.maria.de.francesco@linux.intel.com>
 References: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
-	<20240204173105.935612-2-fabio.maria.de.francesco@linux.intel.com>
+	<20240204173105.935612-3-fabio.maria.de.francesco@linux.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,68 +49,61 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun,  4 Feb 2024 18:31:04 +0100
+On Sun,  4 Feb 2024 18:31:05 +0100
 "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
 
-> Add cond_guard() macro to conditional guards.
-> 
-> cond_guard() is a guard to be used with the conditional variants of locks,
-> like down_read_trylock() or mutex_lock_interruptible().
-> 
-> It takes a statement (or more statements in a block) that is passed to its
-> second argument. That statement (or block) is executed if waiting for a
-> lock is interrupted or if a _trylock() fails in case of contention.
-> 
-> Usage example:
-> 
-> 	cond_guard(rwsem_read_try, { printk(...); return 0; }, &semaphore);
-> 
-> Consistenly with the other guards, locks are unlocked at the exit of the
-Spell check.
-
-> scope where cond_guard() is called.
+> Use cond_guard() in show_target() to not open code an up_read() in an 'out'
+> block. If the down_read_interruptible() fails, the statement passed to the
+> second argument of cond_guard() returns -EINTR.
 > 
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Suggested-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+
+LGTM
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  include/linux/cleanup.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/cxl/core/region.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 > 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index c2d09bc4f976..3826e8ed4e09 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -134,6 +134,16 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->   *	an anonymous instance of the (guard) class, not recommended for
->   *	conditional locks.
->   *
-> + * cond_guard(name, fail, args...):
-> + *	a guard to be used with the conditional variants of locks, like
-> + *	down_read_trylock() or mutex_lock_interruptible. 'fail' are one or more
-> + *	statements that are executed if waiting for a lock is interrupted or
-> + *	if a _trylock() fails in case of contention.
-> + *
-> + *	Example:
-> + *
-> + *		cond_guard(rwsem_read_try, { printk(...); return 0; }, &semaphore);
-> + *
->   * scoped_guard (name, args...) { }:
->   *	similar to CLASS(name, scope)(args), except the variable (with the
->   *	explicit name 'scope') is declard in a for-loop such that its scope is
-> @@ -165,6 +175,10 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0f05692bfec3..bd3236786a25 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -666,28 +666,20 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+>  {
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_endpoint_decoder *cxled;
+> -	int rc;
 >  
->  #define __guard_ptr(_name) class_##_name##_lock_ptr
+> -	rc = down_read_interruptible(&cxl_region_rwsem);
+> -	if (rc)
+> -		return rc;
+> +	cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
 >  
-> +#define cond_guard(_name, _ret, args...) \
-> +	CLASS(_name, scope)(args); \
-> +	if (!__guard_ptr(_name)(&scope)) _ret
-
-Use the naming that scoped_cond_guard() uses: _fail rather than _ret
-
-> +
->  #define scoped_guard(_name, args...)					\
->  	for (CLASS(_name, scope)(args),					\
->  	     *done = NULL; __guard_ptr(_name)(&scope) && !done; done = (void *)1)
+>  	if (pos >= p->interleave_ways) {
+>  		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
+>  			p->interleave_ways);
+> -		rc = -ENXIO;
+> -		goto out;
+> +		return -ENXIO;
+>  	}
+>  
+>  	cxled = p->targets[pos];
+>  	if (!cxled)
+> -		rc = sysfs_emit(buf, "\n");
+> +		return sysfs_emit(buf, "\n");
+>  	else
+> -		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
+> -out:
+> -	up_read(&cxl_region_rwsem);
+> -
+> -	return rc;
+> +		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
+>  }
+>  
+>  static int match_free_decoder(struct device *dev, void *data)
 
