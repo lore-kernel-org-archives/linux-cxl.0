@@ -1,190 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41AF47F7B
-	for <linux-cxl@vger.kernel.org>; Mon,  5 Feb 2024 18:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DF482DC;
+	Mon,  5 Feb 2024 18:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707156317; cv=none; b=JnIxipQYh/2aLo8BCNlJvrjY1axAxcHlYrvmZWI5wcusKuMTKTtoOkHaBSeNKIY8N6GixvVd6UVsEK30FGG6RzMb8zYJDptJmMR4G27/HhFjrDkFN5BHAjgJW/H5hI7Gpo+3wUutdgKJzR3F6V+WX18T/dmBI+8mhd11BBMg9ak=
+	t=1707156456; cv=none; b=TyhpSqgzOpvbCGsn4eCqPurpc+lV4DSaZF+zIqrJDeq5pvmNMaKvzptW6Kef3wDUMzcPzSTr9WbzTvpd9kjabQd3w5wmAH9/pIsQNpuWYXw9gISTF+XIcSuAvHtIveofm/2J2mNsAdxOxBFMKnRkyRchVibHVVxZuQA187cHPik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707156317; c=relaxed/simple;
-	bh=K6oTfg5LN2eYzL7XSL315BSXdHOq6hew174KQoNKth0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rar16UV24sKqENxmOYx5n1K7Fn4HKxKOEEoP9IWuLNvEmEoxGg8mnY/9PRsLY9D/7Rv0EgCDHtRSNCQWFUya96FMfUGvR8cuMZnL/yVCbKAIPQ5btvrg0sJbjZWWrfyyRKkXdHSvL9s8NHyLtyUUNOE2BRe12wvvMD9HF9jjjJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q8d666Pr; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1707156456; c=relaxed/simple;
+	bh=k1qcLeijxsr0TUzQiCRFv8GVbl55Crn0tIFB32o1jw0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Bh5DwVz3QQekMLChGM37md0HWNxJW33sJWEtcPtrTv/whhTPyp/JmKWxM+9ChWHwsa6OLK2MAzxd3NA4oL13uRdHm1fUnMo74uI8PeWowltGp68TW8qkAsGYYpQSQC4PbmDaEOQDasJuJvGADcex1UffnncGS/49zZ9Tv3vM5L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHKhYNMD; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q8d666Pr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHKhYNMD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707156316; x=1738692316;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K6oTfg5LN2eYzL7XSL315BSXdHOq6hew174KQoNKth0=;
-  b=Q8d666Prq8NbDNbhGqVK+dvhCAJtndBcPy2UhuuoHwvZKoOWpDXGdpYX
-   oRvbehCYGR6zc/meTAjvhwNoRZjBOOacns5jmWn3HjofNOhnsC/SjzCCE
-   ulER0SBiS0wQjael8AaR+Tlo1pUwuSWMA921dZzuuNl1+9M6GhNDQIa98
-   +70lNgbD3ZSzEYr2o+6aF1CyvVpV9laGZKsJ/KeMNoX/w2hRoZ+xsQSsS
-   itP4FLDACA4u8txb/ZsKBb1vwjLwPJJb8i/xABkuJOcdmM3NtzOBpldZk
-   K++VSBQ74H5JxmMHC4qnStqrZn0gdBWq+8hsbYn5kFjmTtyt9mtd+tQHb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="476684"
+  t=1707156454; x=1738692454;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=k1qcLeijxsr0TUzQiCRFv8GVbl55Crn0tIFB32o1jw0=;
+  b=QHKhYNMDoBdm2rWg0DmcjbvMXdtR7h1IOjHmKNYFvT7TZGcQdbsWgb9K
+   4yIXSIWO+j46U6ppGjWS3R/GsoOo+P7zX4l0Q/C8Oy9p7kMVkOlklj5qu
+   e+5DLBr+yQJ9UlT6FRWOwNDTNhDn+kn/rbKMnorUB/UJRXJIRJ9Coq6/Q
+   q9H8AdrskM8KLn8AhsNY1aZKX8j37hsKODD+ZrBVJM26AkBLvskQ0xrla
+   wUes/KKJGymllmBm/BOfvkIONFx8x3eRrhGuri4nl9Nmd5dvxdioPvo/R
+   YEJ1NHbOfo4GaXn2ycp16xWqaqbPuNm4dzOowSt4yVcO675IWlijDd/5w
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="11162297"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="476684"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 10:05:15 -0800
+   d="scan'208";a="11162297"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 10:07:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="994033"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.181]) ([10.246.112.181])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 10:05:14 -0800
-Message-ID: <c395404b-dd15-4dc7-aa95-7439d03f9054@intel.com>
-Date: Mon, 5 Feb 2024 11:05:13 -0700
+   d="scan'208";a="787460"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.213.184.201])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 10:07:32 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Mon, 05 Feb 2024 10:07:23 -0800
+Subject: [PATCH RFC] cleanup/scoped_cond_guard: Fix multiple statements in
+ fail
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] cxl: Change 'struct cxl_memdev_state' *_perf_list
- to single 'struct cxl_dpa_perf'
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net
-References: <20240201214731.1297389-1-dave.jiang@intel.com>
- <20240205113206.00004f1f@Huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240205113206.00004f1f@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240205-cond_guard-v1-1-b8d597a30cdd@intel.com>
+X-B4-Tracking: v=1; b=H4sIANojwWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIwND3eT8vJT49NLEohTdxLREA1Mzs+TU5JQ0JaCGgqLUtMwKsGHRSkF
+ uzkqxtbUAnA6L72EAAAA=
+To: Peter Zijlstra <peterz@infradead.org>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707156451; l=3867;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=k1qcLeijxsr0TUzQiCRFv8GVbl55Crn0tIFB32o1jw0=;
+ b=jnu1mYq6JJk9Q/ignm8LTz9Kjse6U3lYHMBThLkw+KHN2wwANlH53taZLLlIVOybHKefFSKTR
+ HQXvaARuZGHAsjL1pwIx+kM50RY8OctjrpuAl3QL47HP3Wy6EJvFwY9
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
+In attempting to create a cond_guard() macro[1] Fabio asked me to do
+some testing of the macros he was creating.  The model for this macro
+was scoped_cond_guard() and the ability to declare a block for the error
+path.
 
+A simple test for scoped_cond_guard() was created to learn how it
+worked and to model cond_guard() after it.  Specifically compound
+statements were tested as suggested to be used in cond_guard().[2]
 
-On 2/5/24 4:32 AM, Jonathan Cameron wrote:
-> On Thu, 1 Feb 2024 14:47:29 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> In order to address the issue with being able to expose qos_class sysfs
->> attributes under 'ram' and 'pmem' sub-directories, the attributes must
->> be defined as static attributes rather than under driver->dev_groups.
->> To avoid implementing locking for accessing the 'struct cxl_dpa_perf`
->> lists, convert the list to a single 'struct cxl_dpa_perf' entry in
->> preparation to move the attributes to statically defined.
->>
->> While theoretically a partition may have multiple qos_class via CDAT, this
->> has not been encountered with testing on available hardware. The code is
->> simplified for now to not support the complex case until a use case is
->> needed to support that.
->>
->> Link: https://lore.kernel.org/linux-cxl/65b200ba228f_2d43c29468@dwillia2-mobl3.amr.corp.intel.com.notmuch/
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> A few comments inline.
-> 
-> Jonathan
-> 
->> ---
->> v3:
->> - Add to commit log about simplification (Dan)
->> - Remove check for dev->driver (Dan)
->> - Remove check for invalid qos_class (Dan)
->> ---
->>  drivers/cxl/core/cdat.c | 81 ++++++++++++-----------------------------
->>  drivers/cxl/core/mbox.c |  4 +-
->>  drivers/cxl/cxlmem.h    | 10 ++---
->>  drivers/cxl/mem.c       | 28 ++------------
->>  4 files changed, 33 insertions(+), 90 deletions(-)
->>
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> index 6fe11546889f..55b82dfd794b 100644
->> --- a/drivers/cxl/core/cdat.c
-> 
->>  static void cxl_qos_match(struct cxl_port *root_port,
->> -			  struct list_head *work_list,
->> -			  struct list_head *discard_list)
->> +			  struct cxl_dpa_perf *dpa_perf)
->>  {
->> -	struct cxl_dpa_perf *dpa_perf, *n;
->> +	int rc;
->>  
->> -	list_for_each_entry_safe(dpa_perf, n, work_list, list) {
->> -		int rc;
->> +	if (dpa_perf->qos_class == CXL_QOS_CLASS_INVALID)
->> +		return;
->>  
->> -		if (dpa_perf->qos_class == CXL_QOS_CLASS_INVALID)
->> -			return;
->> -
->> -		rc = device_for_each_child(&root_port->dev,
->> -					   (void *)&dpa_perf->qos_class,
->> -					   match_cxlrd_qos_class);
->> -		if (!rc)
->> -			list_move_tail(&dpa_perf->list, discard_list);
->> -	}
->> +	rc = device_for_each_child(&root_port->dev,
-> 
-> Over aggressive wrap.
+static int test_scoped_cond_guard(void)
+{
+        scoped_cond_guard(rwsem_write_try,
+                        { printk(KERN_DEBUG "Failed\n"); return -EINVAL; },
+                        &my_sem) {
+                printk(KERN_DEBUG "Protected\n");
+        }
+        return 0;
+}
 
-Will fix
+This test fails with the current code:
 
-> 
->> +				   &dpa_perf->qos_class,
->> +				   match_cxlrd_qos_class);
->> +	if (!rc)
->> +		reset_dpa_perf(dpa_perf);
-> 
-> I'm not particularly keen on a function that on failure to match resets
-> some internal state in one of it's inputs.
-> Would prefer to see this return a bool then the caller decide to reset it.
+lib/test-cleanup.c: In function ‘test_scoped_cond_guard’:
+./include/linux/cleanup.h:190:17: error: ‘else’ without a previous ‘if’
+  190 |                 else
+      |                 ^~~~
+lib/test-cleanup.c:79:9: note: in expansion of macro ‘scoped_cond_guard’
+   79 |         scoped_cond_guard(rwsem_write_try,
+      |         ^~~~~~~~~~~~~~~~~
 
-Ok I'll change.
-> 
->>  }
->>  
->>  static int match_cxlrd_hb(struct device *dev, void *data)
->> @@ -334,23 +312,10 @@ static int match_cxlrd_hb(struct device *dev, void *data)
->>  	return 0;
->>  }
->>  
-> 
->>  static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
->>  {
->>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> -	LIST_HEAD(__discard);
->> -	struct list_head *discard __free(dpa_perf) = &__discard;
->>  	struct cxl_port *root_port;
->>  	int rc;
->>  
->> @@ -363,16 +328,16 @@ static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
->>  	root_port = &cxl_root->port;
->>  
->>  	/* Check that the QTG IDs are all sane between end device and root decoders */
->> -	cxl_qos_match(root_port, &mds->ram_perf_list, discard);
->> -	cxl_qos_match(root_port, &mds->pmem_perf_list, discard);
->> +	cxl_qos_match(root_port, &mds->ram_perf);
->> +	cxl_qos_match(root_port, &mds->pmem_perf);
->>  
->>  	/* Check to make sure that the device's host bridge is under a root decoder */
->>  	rc = device_for_each_child(&root_port->dev,
->>  				   (void *)cxlmd->endpoint->host_bridge,
-> 
-> Why is the explicit void * cast needed?  It's not removing const or anything like
-> that so usual c rules on it being fine to implicitly cast to void * should apply.
+This is due to an extra statement between the if and else blocks created
+by the ';' in the macro.
 
-I'll fix that in a different patch.
+Ensure the if block is delineated properly for the use of compound
+statements within the macro.
 
-> 
-> 
->>  				   match_cxlrd_hb);
->>  	if (!rc) {
->> -		list_splice_tail_init(&mds->ram_perf_list, discard);
->> -		list_splice_tail_init(&mds->pmem_perf_list, discard);
->> +		reset_dpa_perf(&mds->ram_perf);
->> +		reset_dpa_perf(&mds->pmem_perf);
->>  	}
->>  
->>  	return rc;
+[1] https://lore.kernel.org/all/20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com/
+[2] https://lore.kernel.org/all/65b938c1ad435_5cc6f294eb@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+NOTE: There is no user of this syntax yet but this is the way that Dan
+and I thought the macro worked.  An alternate syntax would be to require
+termination of the statement (ie use ';') in the use of the macro; see
+below.  But this change seemed better as the compiler should drop the
+extra statements created and allows for a bit more flexibility in the
+use of the macro.
+
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index 88af56600325..6cc4bfe61bc7 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -186,7 +186,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+ #define scoped_cond_guard(_name, _fail, args...) \
+        for (CLASS(_name, scope)(args), \
+             *done = NULL; !done; done = (void *)1) \
+-               if (!__guard_ptr(_name)(&scope)) _fail; \
++               if (!__guard_ptr(_name)(&scope)) _fail \
+                else
+
+ /*
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 2fabd497d659..fae110e8b89f 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -441,7 +441,7 @@ static int ptrace_attach(struct task_struct *task, long request,
+         * SUID, SGID and LSM creds get determined differently
+         * under ptrace.
+         */
+-       scoped_cond_guard (mutex_intr, return -ERESTARTNOINTR,
++       scoped_cond_guard (mutex_intr, return -ERESTARTNOINTR;,
+                           &task->signal->cred_guard_mutex) {
+
+                scoped_guard (task_lock, task) {
+---
+ include/linux/cleanup.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index 88af56600325..d45452ce6222 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -186,7 +186,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+ #define scoped_cond_guard(_name, _fail, args...) \
+ 	for (CLASS(_name, scope)(args), \
+ 	     *done = NULL; !done; done = (void *)1) \
+-		if (!__guard_ptr(_name)(&scope)) _fail; \
++		if (!__guard_ptr(_name)(&scope)) { _fail; } \
+ 		else
+ 
+ /*
+
+---
+base-commit: 03c972291873663f15c78ff4ca07cbf5025735f8
+change-id: 20240201-cond_guard-afa0566cecdf
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
