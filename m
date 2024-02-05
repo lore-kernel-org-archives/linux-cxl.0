@@ -1,100 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6154F887;
-	Mon,  5 Feb 2024 19:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B660052F71;
+	Mon,  5 Feb 2024 19:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707160012; cv=fail; b=c/vNz445D+HasBM6+9I3x5vcJjHvR+n9g4BMDM9bEgmS4MQuq4Cge32nchR+lemqAioei2WCozDAKcJMWKrnzQDYVW+DzdJk5VECTr3m/zr0e2Kc3fvZJycPhU1B4N0dE9SmH3eCLxWMAwkCcGrNDsBGsP8SFTDKzxs9SCdga+c=
+	t=1707160445; cv=fail; b=kL0mZ0uhcPK5q419bkXoCiyCchhjl7YokLSU4ZDXhDrH6LGki/epxnJm9IZm3GX0AiAKZs8aMrk/axAObDjmLYt0/0k7ubW1/DbCQX4tnutzIF4IRqjqVS9Vrh7i3xezCgcXYV4P3kaQzUPUAbWvDXxeyoLdatkdQGt5zqWc8JQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707160012; c=relaxed/simple;
-	bh=7xONlyVI4t46SFZAwIM9vh5LZqWX38/TR3XuoNyZWSA=;
+	s=arc-20240116; t=1707160445; c=relaxed/simple;
+	bh=dbzpiRfJhkAFNKbisXLloT3Qwu3mUHn7/EN8YHk6Y4s=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ihbzDdXpqrLCy79VvAXCErEcPjM7tTS5SuajaCIFY2njLp/PUoLEHKTZ5PN3+uDRwGzUj7ZaHSkc1ud3sCHD3Zd2F5FVhhL67CrnFZdgWp9XNQCHE0E+gIHXVq9PDZ5+a57PTtgezD1KxBmotkgz1QXaMsMjATKg61jSv/uToi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ip+rrHGG; arc=fail smtp.client-ip=192.198.163.12
+	 Content-Disposition:In-Reply-To:MIME-Version; b=e4/H8/5pfh5ZfhvO6NqUrFX6C+JJFoA3bZ4JqjG7qrES1xFWUIMk4InY/fdVpZsX7dk+rfvXONkp6J46104QsJ2r3Pgiah6q8hJMuqVRetHdm1KL/yi6S6XBglNDbYDCuUOgLHhP9/E5cDQsBkHozBBUs1G8qcSlL8TPELNtAO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XhsCnt2i; arc=fail smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ip+rrHGG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XhsCnt2i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707160011; x=1738696011;
+  t=1707160444; x=1738696444;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=7xONlyVI4t46SFZAwIM9vh5LZqWX38/TR3XuoNyZWSA=;
-  b=ip+rrHGGO2unOJLZJtj476CzLZBxTI0gdR3XUCO88obe9dzv6iwC83nO
-   4nBYDBH7fwoYwAm/Z81dkGB7IzPqoJaqFMPlBHYivX7FoVBRB9feJ0aJO
-   C/rBv/XFeRoATs8G4N/F4YjYWOkPwOlfizXTpQPXC+HTOo0kHVfV9Se/I
-   8coijT5hRpE448psc4rc9DkVWJPdVrbblqx/uEQQNwTNm7dx0y0cOdGOs
-   rhazKDws9rAlv+y/TU5GjK+YSZGYo1A7gSQj+tjo67dlIik4DDiKZTR6y
-   b5YXkIlopxG4Bw8AAmCjH9feQiiNWD98KXgc5watJLpSuRPIvk3A+J2Rl
+   in-reply-to:mime-version;
+  bh=dbzpiRfJhkAFNKbisXLloT3Qwu3mUHn7/EN8YHk6Y4s=;
+  b=XhsCnt2ipmjvjKbqZMFW2XjZ3UVCnoIb5APwOSLlwLLVnh2H07k4lt2y
+   7kGh2d/inqaaRp7CsEZEHYUUGcasOmETXfY+kVQaOvBoFpm9U8+F7HnkL
+   LPbwA4ABqMNM7SwS8iBvfCx9699NasEifc/hBh53C5n+01hU/aJeimmED
+   ZbkFXqT0KyP/px2ud7Bb2Uv8bmD7It41GQ4tWyFBr+y7+PAFPlVVZXDZ0
+   Z5xzEvhJ3R8VVr+A7S2CRte4SD81ATcA0LGPO9lzoEE3vBW+sZFfJ29Hw
+   m+VCec6NP2+ln4fLIgcEwL7AgrFYFrT5Ykf2bCa6eRHWZcTscESOnom79
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="4378251"
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="739299"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="4378251"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 11:06:50 -0800
+   d="scan'208";a="739299"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 11:14:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="5398030"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2024 11:06:50 -0800
+   d="scan'208";a="1136773"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2024 11:14:02 -0800
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 11:06:49 -0800
+ 15.1.2507.35; Mon, 5 Feb 2024 11:14:01 -0800
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 11:06:48 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ 15.1.2507.35; Mon, 5 Feb 2024 11:14:01 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 11:06:48 -0800
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Mon, 5 Feb 2024 11:14:01 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 5 Feb 2024 11:06:47 -0800
+ 15.1.2507.35; Mon, 5 Feb 2024 11:14:00 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YFUoxwAIUFYiWU2EFwx9ZtJ274+XuxiUlcBFKFrppdByrY6C6z7xmJvvBCWxI69yVoO9Xos/rLgqjw7YPrVkUBqemWM8nxLqK6aPWpn7z4dfVgTvAF2D8vp51WUH6dWMQFlp3rVXV2xJ6Wto8JjiUlgVNDW1SOuulCKYmOoxBVTZYMLboNxztk+opXzYKCbj+pPlktSJqSSreHHAbtGjFwZNCmFex0VeaPtfPi8ZieuudpOuNSTVoV6jmccWsNCbBzUku9E0s8qwM48S22XnTtT2GZVl5mnpVGOK1z0HvKHB2husL0ib4vDGNOnhmzBZsAOcggL9DhnSwlucdLb5Xw==
+ b=HtxLmG0QicXV2lx3TuE+Q4tyrF7v3nfjxIrqn2o/TM3SnpHXXFANSUzGKwQWkaYf4BsAduEQuFtTeq9xKHEV8YjUYhTykVeo1Q2o6Ez9+T91IJktaagVHk7a8+hJ/LjvvTu059uOtvOEf/irWE1kkBAEtP5PDVkjKhjFw2hIlTG9KZyPqbPxjDLp1t/3PImG+ihQ8aFlUUZ3RK74GZYX+myR1Xt0kLAXiOGfB5OIEDtDIKQtP0Ed2XUSgRz2nKQplLPnohlPKb4AAtt/gv8xGwtBMV2BkMcOYi4HAEsdsoF140tD3v7B87cbF0dvp/of9leIm1ZKQQTBV14OyszWBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rGIogkxprXTdkx66X8+DymZIg78sywT1/vVhC0qZac4=;
- b=UYleCFa1gHnbZqy7pWs+dECmfdkJUR1tEYbgDiNw4wHTZ1z34R1DNlXhzjrolnO+/eKpRjm02hlLRds1FV2Rf9uoCjsudHZEdZ2j+j8AsZqbAtvoa6M6XbSCLihObZQhoJaw9QXam7jW7Gc6eE1qM54D3s71RL5QtNtkP3DNaWKu+mQTYNQBP8Fm3xXWyc8MGW7mNjQuKJBJioIde79NfbmJEm/gh3QDYET88Nl9ltKfcBG3QwgS41aIAux9cIeHu0YXRn/88WOlVcjP+VNs4SvRp0kVBOHlaQbNyxl7BSnb+i2d67w3OV9VqqbWP13zVFbQtLCMvOzQnzluuEcRuQ==
+ bh=xymbRhY7r+yEhnyIzN2CAz2eSeYWT8I2BGCuPvqNtvo=;
+ b=oQzjmW6hc4jgGP8TG2BZ0G8N6XoHtdKDAcS2lPfvpVr5h5OKc8BBz/vscOjJq3PFhXCTyMoSZ0YSd1qY1BjO18ScpqpqDn/WqmvM1b4ARcpB+q8TuLH22WcS+z3a8Pay1eT+bTzL/lwyGh1gAJ6Xp57XRmnMsnhPp3H5NclB/ExlVGDgOrdQSyI3JoTMOlCzUatj0Ccwn+Cus6pzb4ksWVoxm8G8hws0LG3yN69JcLZxIC8fTwKnxluoK+wNmXHxjzru9hpuOH0bl/cvYpPxglRIXo0opf9zqWD7jOJ3QOeJEitVp/2z1nmKwxmb9gGaSqrmL9vMiytbcVXk1mWYpg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW4PR11MB6958.namprd11.prod.outlook.com (2603:10b6:303:229::13) with
+ by PH8PR11MB7989.namprd11.prod.outlook.com (2603:10b6:510:258::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Mon, 5 Feb
- 2024 19:06:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Mon, 5 Feb
+ 2024 19:13:59 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
- 19:06:45 +0000
-Date: Mon, 5 Feb 2024 11:06:42 -0800
+ 19:13:59 +0000
+Date: Mon, 5 Feb 2024 11:13:57 -0800
 From: Dan Williams <dan.j.williams@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>, "Fabio M. De Francesco"
-	<fabio.maria.de.francesco@linux.intel.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-CC: Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Ira Weiny
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-kernel@vger.kernel.org>
+CC: Ingo Molnar <mingo@kernel.org>, <linux-cxl@vger.kernel.org>, "Fabio M. De
+ Francesco" <fabio.maria.de.francesco@linux.intel.com>, Ira Weiny
 	<ira.weiny@intel.com>
-Subject: RE: [PATCH RFC] cleanup/scoped_cond_guard: Fix multiple statements
- in fail
-Message-ID: <65c131c2e2ec6_4e7f529442@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240205-cond_guard-v1-1-b8d597a30cdd@intel.com>
-Content-Type: text/plain; charset="utf-8"
+Subject: RE: [PATCH 1/2] cleanup: Add cond_guard() to conditional guards
+Message-ID: <65c133751a7_4e7f52946@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
+ <20240204173105.935612-2-fabio.maria.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240205-cond_guard-v1-1-b8d597a30cdd@intel.com>
-X-ClientProxiedBy: MW4PR03CA0298.namprd03.prod.outlook.com
- (2603:10b6:303:b5::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20240204173105.935612-2-fabio.maria.de.francesco@linux.intel.com>
+X-ClientProxiedBy: MW4PR04CA0385.namprd04.prod.outlook.com
+ (2603:10b6:303:81::30) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -103,159 +101,83 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB6958:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd164d0a-7313-4d19-71f4-08dc267d9866
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: b67175ce-2157-40be-d526-08dc267e9b18
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0t5NBMkVr8jQUQzUKVfalL91415bFmGKsw33opcJbwQihycZq5gQS28rtRRrR3qjvxTyJpZdxC4G0wOntndR5sz9jmEG4K3Nao8quxRRWozrsvxvbW8gghXFN8q5Xim4K36mzz9BiZ1m3ezKaDqIaoNlXJcK0h7gQcbkZwkYhu8U+QZLQ/tXSzovlxTJ4W8lSJPZJwfJn3Cd7pZaVvV3lByAe43z6gM39YGinofq+E5nUzb/DgPEq3heZml5dSK8CqZtN1CKMopWMqmJizwLC37XbV7fK3s/8df/eeErchd0Ibbo+aaa1KFjo4OLOolA0ocqINFj8Gt8lTPP4lgQbDzNeEO+VhOE8ZQTnvy524cApQPaaYRKCmC8cUIpKuqPXKO0/YfqXELUhuEQmCSvKdz4DZMWh6Iek3+H0FmoggYvZLhGIaR+J/EZRKWH73wHpQPk7XtxWBP62eZcnAI1FDbHxSA88+/8Np3nbAXcBthBaBlS/q2gy33CRXNdi0vKCClkq2BVTUaydVDpizNq9PwpYemApoh0kg46pcUJ/daHSYe/IHDBbxgS2zeanxEDcN3HWOqtP4IQ1KFDV1/i1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(376002)(346002)(136003)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(38100700002)(82960400001)(83380400001)(26005)(6486002)(966005)(86362001)(6666004)(6506007)(478600001)(9686003)(6512007)(54906003)(110136005)(316002)(41300700001)(66476007)(66946007)(66556008)(4326008)(2906002)(8936002)(8676002)(5660300002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: VaW/10TeXWFIPDW3pTwop3+shOMDBPr+Pb8p8RU5mhNyfVmd9zekC9zB2Cho0OBp1gmaV/NrrnKwy7ZxmMltoDIOEmfbL9+bxFyW8S0iGRgZ2wKRopyDbPkBMInqFv3Ai4RNarKqu5+78gxkIpalEhL58LwjJCAmZiaa096fUO08jTmfpGUx5nf8SyalpEhIlUgij8C0HJG+Cun0oWCxGZ9AoAvyCbq2N27B7EgzteChOnp2qABRaUMuWOsDgbpS3TNIeOWepVVvXxyXF0m2g8vSVJk4l/IhboTBkdpd6BYLQFokN+LLXPYkqggKVN5O+WdlnW8PyYi0KKT7mP9dOzD0ofw+REEVFZ7BlAEhzTqqCK797jdMYBbRU+O1l+q0xA7ELGbK96qoex0/hmi3cS6c7v15bk6t2MjAWNoC8thZN/PHl+njEyd42QF8NKeynMsoVR1Id+tFwmU2k8yYOGF7o7Na/oxNWo/7Noc+juszfaoizL9Xbu/7QmaO8Nryi9CGR6JRTeN/PU0fXCOyINgobAd6KN3bdaBMQHQq5fWXy/VGbzDgwA5lRCYSzmgE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(346002)(39860400002)(136003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(66556008)(66946007)(66476007)(316002)(110136005)(54906003)(2906002)(8676002)(6486002)(9686003)(4326008)(6512007)(478600001)(6506007)(41300700001)(5660300002)(86362001)(26005)(82960400001)(8936002)(83380400001)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L1ozYkE5cENFRVBjV2hYUWZXaDQvRk8xSy81YU9ydWppU0duMmVZRmFMcm5m?=
- =?utf-8?B?V2E1LzR5U2tIeGswV3YwenRUZDlxM0VCVVFFemx2cjY5YVdtMHYxeVZBSzhG?=
- =?utf-8?B?VUROYTA1bEZldlJZdjZVb042bFVCcXRGeDltYWJPakJxRk5qUEJva2JIZHJT?=
- =?utf-8?B?MzNjWXFBUDBXQ0pHblNNeS9XeXFUYktlZzBSSk8rajZQQ25kNnZyM3JMQ2k2?=
- =?utf-8?B?bk9oaFd4ZEJYa2xyZFlGTndpRmJESW44Z2J0bHpyckJzQmJrcVd1MndiWjdT?=
- =?utf-8?B?SjhqWjlkM2crZS92R1l6clhHd294V2IyR0NVVjhYRXkrUFExODRRNFlkQk51?=
- =?utf-8?B?ZVlIajVvZUdQT3poRkVNbUd1WWo2ejhIQTd1b1lHQ1M2NFJWMEtLejZEdTVC?=
- =?utf-8?B?eDNpaThjeEY0b0xIMHFiUjlRYW5iaVJvdEEreVI4LzdzN0xFWlE3MVJwNENt?=
- =?utf-8?B?QmRIaG41TFV1RlVkK1hmUm1WZXVMQUoxMmhXRG93SnJ4ellRb1FtNFk1eTUw?=
- =?utf-8?B?RzFySXhGZTlpbTVoRFJzc2VhYms0TWpoNW03SHZvWnNqT1FMUzRSS1dJMUxn?=
- =?utf-8?B?clJGN05mRVFEZ0R4SjVZNWoxMC91UWRmeEpVUWJZalhuN2w3RmxOdnN6QldL?=
- =?utf-8?B?dDFUdUdqaWhWdDloQlJhQjNCeS9GSVBHa05tcFFzenRQNDVja1IrckIvblQy?=
- =?utf-8?B?SHJwTUVMOG5vWnd6REk1VEFjMjlUdzhGd2ZzV1RYS29aZGNIOWdINXlBNCtY?=
- =?utf-8?B?WmFZdnkraTdpZmR0ZEloRHN3SDJtdTNReFhydmJ2VTZxNDNZcFg0ajRTNFRD?=
- =?utf-8?B?SDRzeGpJbUxBZ3hGcWtrdTdjUDZ5ZVJrV3d3bnlEcHZ5VTI0cHRhM3RhOGd4?=
- =?utf-8?B?NUVpQVNqM1hxaUhjbmFGYzhURHFOazR1ZEd0aWhSdjFZdGczQWVIRmtxT25r?=
- =?utf-8?B?S2lIelJ4ZmozZDhLYTg0dXA0NGc0WmFhamsvcnVsblZqNFRaODhSanZIYmpD?=
- =?utf-8?B?Ujk3VnJOMWQzUDhxeGJvcmpXbkxPZ2UzRHNleWJEVHpFbm1RSFlvZGxDTEZl?=
- =?utf-8?B?YUZHd3JBbmRoZERLWFFHQ3RnT01QYi9LVng4WmZjc1A0QlpNUDN1cWlEYlkz?=
- =?utf-8?B?SmJ5VTVEUzhDV1E1RVFVZi9rQ251R1VKZktrQ2xGRTg0ZEN4ZVdxd2QycFkz?=
- =?utf-8?B?NTR0Zk91WlBScmJKQmo4YkxXcVV2SGZJY3l2QmhnYVpnN3htdDFIYlZkbkxL?=
- =?utf-8?B?Q0NYd1oycDgwQ1RVTmRtVkxKSVFxUVJkVmo3TERCL0JyMVNWckszbERWUVQv?=
- =?utf-8?B?THZHOUQzRDRKN3dSZFlhK2NnY1RTa0FIcG9IUWxKUGZ3bVJ3cUtlTzBwTnZ0?=
- =?utf-8?B?M3JFd1QydnhDRnZydTZsUXYyMkpvbml5Uy9KTzZ0UTY2NHJWYitpb1hBa01J?=
- =?utf-8?B?dUZLd2I0ZW5Ra1VEOVFiam1OSFZ2RXU5dm5QdDJGYWhoYVZZTFd2SEpKaHZF?=
- =?utf-8?B?Uy9TRVVjeXd2M25MS2xoRG5vRXBzdm8rcTJaVWpSa2RFTzRPZ3pxTSttV3p5?=
- =?utf-8?B?WU1MeWV2aVRVRUpPb2FIc0VsaG5YRklQcWlFMmJZeG0xTzdrZU9ZRmROUTJy?=
- =?utf-8?B?Y0tWRG84T2pDdVBxV1Y4MzlmYjJhekoxeEx4Q3VBYlR5U1FRa1pqT1B5VEdj?=
- =?utf-8?B?WDBhcHc1c2hleWRzbWNNcC9xNEticGZhZTlPWmVmNFZpemdRaU5pU1hNNUlU?=
- =?utf-8?B?amw3ZnN5OGhmc1RmSjM2NnI0OVZVWTA3ZElYdjhVUDBNbGpIVnpBeVAvU3Bo?=
- =?utf-8?B?ZW1jcU5oVE1mTEhLYzRLekdZTU10TzkvRVNWejEweW1sc25RZG9icGpWUHZS?=
- =?utf-8?B?OGQwcXN2cWFyZVQxSjhBTXJxaFQrRkdsZlJLbGFPMW4zMGZlT1RNVXdqYTRz?=
- =?utf-8?B?b2xJUVZQeHNvMmUrYkIwYllkcTJCYWhIKy9nV09hL2poTHdLYVpvZWZjZlQ3?=
- =?utf-8?B?aUVONllZQkYySnJVZVp0Nm5TcXhYOFpTbFQ1L2VuNDNvV3FJZE9xd1h1T0xP?=
- =?utf-8?B?VnpyeW9VaEVOZXBhOWNsOElFbm5oOEp3YnJxWEpXMjFFQ0NrQlh1cElPV0VG?=
- =?utf-8?B?a3dkd3plSXJyRDdRYmc2ZkYxN1FDM2VTL3MvWWRSVEVsY0cySWMwdmVteXBF?=
- =?utf-8?B?Y1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd164d0a-7313-4d19-71f4-08dc267d9866
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m9foP7Hv+xIJ0Ua+SSv8/a6tkbe42v2Ih65LQtxytoen3HMmjcsLU3TCtNMI?=
+ =?us-ascii?Q?p0QBtJxAmSTfKyMqN9Tx5fMd99rsiCdKgzmOHldxKiWTG59aJv4ACVwC2TK+?=
+ =?us-ascii?Q?C4ICuUdwfgtRx57Q+tY60141RubErFL+Vt2+DYk8yWqtP/QC17jRvQGMNchS?=
+ =?us-ascii?Q?l07VigNWECFjUYS6bwLtXkduMeDr+16P99y05vgFZYRObv7976bjvq3v7XQv?=
+ =?us-ascii?Q?VEO7FJQ0JELY/dkrg3PxDQ27fb7x9Yh2XPuQhyceA3Tj6QiL7mJ9GGP+AYvB?=
+ =?us-ascii?Q?mvsJjkFJLKzJDebDKTZbYngDV2DzsKyRMjYe7PuEzdaQpF10vJZY9EqrCmZL?=
+ =?us-ascii?Q?ZB9wq0DaD36mYzTjO4OQsQyWMHFb6DUY6InFcIJQKFucm7pkCiBcKqHQQT7x?=
+ =?us-ascii?Q?0WC1oOGLkPDXei1zz5Tqr5ci2VKAPYkoWmk9PuCgAqR+wIV8FazLs0u+mYw8?=
+ =?us-ascii?Q?jPcu1Bsu7DWaT+qZUKoN32b18jGEAByiQ5JHV6npaMgUQCngKBEi9ZJfdJ56?=
+ =?us-ascii?Q?lrR4A6Dc/7EYRN/X+YX5zag9gaGvSWhI0AQnujH73TczCc+NJ6NVFZ1hSqlA?=
+ =?us-ascii?Q?nZfzRKDsQkdHhxqMaZxhskJe1jspV/iQ5e275QkvOhpypXwR1AAWj68hPUn8?=
+ =?us-ascii?Q?YxfOeUYJbOZswfs7+aNnjlrmPgGaagTuHtJk57GJAQjHI5VConTq5l+47Pa/?=
+ =?us-ascii?Q?bdoS9ggJnGdfcoNj6nWac+ZkVy7UG2AyE2SaxcUNTaT/8r9zOTFuoBCtn2gi?=
+ =?us-ascii?Q?sxRKIZWFBIspkWXTLLDlf/GSuFm+k+zU3rJ7jwNKeBJT1AoKImXatXV4vo51?=
+ =?us-ascii?Q?gdFzZUW10uk/BIFwtIAeLk5BJ9Z11qR0blZCN6tDbyRS0E98Rj3ruBMnevw+?=
+ =?us-ascii?Q?SKOSTjn6iI1U4+xZan+blvYVk6W1mzMR2kynPVsVrYdwvqKqcpv/kjEyTQ6P?=
+ =?us-ascii?Q?gYiznP1luAQUrRANPFBOclms2rDBF1TNomosFFVKjAcJPLTrT1mM6r7v/7RF?=
+ =?us-ascii?Q?I2gBvi6eI+IuCYsky15BzUxRWQw6HfjC7wwxNWW94pSzZNJXe+xeLnFywUv0?=
+ =?us-ascii?Q?XcG7Vwpcqh5GdPFraKkn/xbI8NrJhMAz3SPvCeRqNAUnBHn5+qncpnCKAbVU?=
+ =?us-ascii?Q?VBkJ1PKXXgzcISemHz/2DhOMbJh0jkW8Ej+fDOL999DCpVV+SJu+aDqpOQgE?=
+ =?us-ascii?Q?fDJFtb+ZYVYxKgDRPuxO8GWHVwmadttQX18KwLIS9TcmEFFveqlyWlTzzimi?=
+ =?us-ascii?Q?PhioA2SbKVtGJ82ThWb+Fhgi/iUa3yAU9s1iaDVGyramE6bbaB64P2Vot5wm?=
+ =?us-ascii?Q?sPb2AGB5asOYmfFsdfmLCctoVqJMq8H+2/DnpsvPAGty9xR2C7SquGoR+8yC?=
+ =?us-ascii?Q?hxC+slGPdFHIDyP43fN+uvTtvOOpL4B3IgfFAF80eh7JBYdP1K/4NxeTSWl/?=
+ =?us-ascii?Q?zglIGbdP7nlGxWv2AE7s312KKKP1sI/ivcgGKKJRqD6aCCpUkCwaIbiwztpa?=
+ =?us-ascii?Q?IJbIjZlDJaq1wk70kNWbu8Pk4j1gpOMYWd8fzEnqzAAyojwpmDXJcDP2+IBX?=
+ =?us-ascii?Q?2VYIDIBYYJ5PxarxWpDWx99b+2bye+csXBIiWJguZo2LEhz+CPrGsGD0D2Ys?=
+ =?us-ascii?Q?2A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b67175ce-2157-40be-d526-08dc267e9b18
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 19:06:45.0552
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 19:13:59.1431
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: psEfhRxdMJNBKp5VCPIDHMvTxuVCiHeSig2Ng7+TzzQT9EwyfZzFuSY+8ArENjqKhG+z/4UG8ZGePlo7A1HkKNBWmKYfg3PNoCp2D4SB/3U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6958
+X-MS-Exchange-CrossTenant-UserPrincipalName: GhmlZqSbd1MnF4J0UvYmuaKKI6R/5ym1nsWGF9KT4OZf/h6+752DJgoCt8WUjAI9q0RU1ZPJfq08yZFdUYjuGFPkZJQTWF6QXC2lykITAqE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7989
 X-OriginatorOrg: intel.com
 
-Ira Weiny wrote:
-> In attempting to create a cond_guard() macro[1] Fabio asked me to do
-> some testing of the macros he was creating.  The model for this macro
-> was scoped_cond_guard() and the ability to declare a block for the error
-> path.
+Fabio M. De Francesco wrote:
+> Add cond_guard() macro to conditional guards.
 > 
-> A simple test for scoped_cond_guard() was created to learn how it
-> worked and to model cond_guard() after it.  Specifically compound
-> statements were tested as suggested to be used in cond_guard().[2]
+> cond_guard() is a guard to be used with the conditional variants of locks,
+> like down_read_trylock() or mutex_lock_interruptible().
 > 
-> static int test_scoped_cond_guard(void)
-> {
->         scoped_cond_guard(rwsem_write_try,
->                         { printk(KERN_DEBUG "Failed\n"); return -EINVAL; },
->                         &my_sem) {
->                 printk(KERN_DEBUG "Protected\n");
->         }
->         return 0;
-> }
-> 
-> This test fails with the current code:
-> 
-> lib/test-cleanup.c: In function ‘test_scoped_cond_guard’:
-> ./include/linux/cleanup.h:190:17: error: ‘else’ without a previous ‘if’
->   190 |                 else
->       |                 ^~~~
-> lib/test-cleanup.c:79:9: note: in expansion of macro ‘scoped_cond_guard’
->    79 |         scoped_cond_guard(rwsem_write_try,
->       |         ^~~~~~~~~~~~~~~~~
-> 
-> This is due to an extra statement between the if and else blocks created
-> by the ';' in the macro.
+> It takes a statement (or more statements in a block) that is passed to its
 
-A statement-expression "({ })" builds for me, did you test that?
+s/or more statements in a block/or statement-expression)/
 
-> 
-> Ensure the if block is delineated properly for the use of compound
-> statements within the macro.
-> 
-> [1] https://lore.kernel.org/all/20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com/
-> [2] https://lore.kernel.org/all/65b938c1ad435_5cc6f294eb@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
-> NOTE: There is no user of this syntax yet but this is the way that Dan
-> and I thought the macro worked.  An alternate syntax would be to require
-> termination of the statement (ie use ';') in the use of the macro; see
-> below.  But this change seemed better as the compiler should drop the
-> extra statements created and allows for a bit more flexibility in the
-> use of the macro.
-> 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index 88af56600325..6cc4bfe61bc7 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -186,7 +186,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->  #define scoped_cond_guard(_name, _fail, args...) \
->         for (CLASS(_name, scope)(args), \
->              *done = NULL; !done; done = (void *)1) \
-> -               if (!__guard_ptr(_name)(&scope)) _fail; \
-> +               if (!__guard_ptr(_name)(&scope)) _fail \
->                 else
-> 
->  /*
-> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-> index 2fabd497d659..fae110e8b89f 100644
-> --- a/kernel/ptrace.c
-> +++ b/kernel/ptrace.c
-> @@ -441,7 +441,7 @@ static int ptrace_attach(struct task_struct *task, long request,
->          * SUID, SGID and LSM creds get determined differently
->          * under ptrace.
->          */
-> -       scoped_cond_guard (mutex_intr, return -ERESTARTNOINTR,
-> +       scoped_cond_guard (mutex_intr, return -ERESTARTNOINTR;,
+s/to its/as its/
 
-...otherwise, that semicolon looks out of place and unnecessary.
-
->                            &task->signal->cred_guard_mutex) {
+> second argument. That statement (or block) is executed if waiting for a
+> lock is interrupted or if a _trylock() fails in case of contention.
 > 
->                 scoped_guard (task_lock, task) {
-> ---
->  include/linux/cleanup.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Usage example:
 > 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index 88af56600325..d45452ce6222 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -186,7 +186,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->  #define scoped_cond_guard(_name, _fail, args...) \
->  	for (CLASS(_name, scope)(args), \
->  	     *done = NULL; !done; done = (void *)1) \
-> -		if (!__guard_ptr(_name)(&scope)) _fail; \
-> +		if (!__guard_ptr(_name)(&scope)) { _fail; } \
->  		else
->  
->  /*
+> 	cond_guard(rwsem_read_try, { printk(...); return 0; }, &semaphore);
 
-Why 2 changes to include/linux/cleanup.h in the same patch?
+Missed commenting on this in the last posting, but multi-statement fail
+cases that print and return 0 are unlikely to ever be the common case. I
+think the most simple to understand example is an interruptible lock
+that returns -EINTR on failure:
+
+	cond_guard(mutex_intr, return -EINTR, &mutex);
+
+...and then maybe mention that _fail can be a statement-expression if
+needed.
+
+> Consistenly with the other guards, locks are unlocked at the exit of the
+
+s/Consistenly with the other guards/Consistent with other usage of guard()/
