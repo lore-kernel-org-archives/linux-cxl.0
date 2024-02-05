@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD3E199BE;
-	Mon,  5 Feb 2024 11:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98D018EB0;
+	Mon,  5 Feb 2024 11:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707131517; cv=none; b=AkYiJrYbBxMcuCbCLwVlS82SuMi4r/lWgXQCKEXJ8a6C/6pXp8BOxG594sTOtu1ZcD0/ovUZCQY+nythRAZ/h0s61pf1spT9fBNyJl+UQwu+8+EGPWvahGbrSHrblcUwvMoZx7t5NCeTLR2Zz0ApEpvFcqawKNX0OaL0BKRTUMU=
+	t=1707131640; cv=none; b=XEZnmd5PdV8Xv6wqgz/uqrfQVWB0NaelMPMocV1VtKQ1Ye8m30LWVPvakqQ8SAmDijC4RgGJTEurGUSwhhe9qMmoVzVj+xFp1tFcfFZt1fdYtJZx/fsx82UgcKv8/D1PIdGtR06xFs1+FNssqMzYiIV5HfxeO/RvqjZuW5F/ufo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707131517; c=relaxed/simple;
-	bh=oEj10EjSR3BOukSIkBzeBzquHeEig0ocCSapGHfIwvw=;
+	s=arc-20240116; t=1707131640; c=relaxed/simple;
+	bh=S7C/kWLN5RArPUjnyoZ+KqIZM3xJ1mKOXrMvB6ObfBM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CN3eBr7OXAJoFzap9p0cvw/XtRlrxH2ej/NVprjEh4GA3X4yDNoXbuwRmo6PrnQUA9V3Lg+qY//p+z1EmYOPyKs//Qg8KBP0MC7j3yA8+jvtBMbWVIIhdBy7vFrIpi2a8WtuPnXA9K/SIRG6dyjNRZpKxvScwFAotxNEXuaBc1g=
+	 MIME-Version:Content-Type; b=kQJsnfLvMxAtkiQX1Mnb/YduxbE2RvUlI1Prej9131/+lifc2oBZ9EqRuUhM64VJnCU7vOKUcVkvi7a0yQlswi/F0vTXdCfqJdg6PsgOWi1Iaz8wI+AgyV+ZgcKEXa802zJh6ymuFHVSnvyNY0erIkPGurstAppa1QZ5k8QmNA4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT3XS0n31z67bbM;
-	Mon,  5 Feb 2024 19:08:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT3Zl6SL9z6K6Cx;
+	Mon,  5 Feb 2024 19:10:39 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A18C11404F5;
-	Mon,  5 Feb 2024 19:11:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B7450140CF4;
+	Mon,  5 Feb 2024 19:13:51 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 5 Feb
- 2024 11:11:53 +0000
-Date: Mon, 5 Feb 2024 11:11:52 +0000
+ 2024 11:13:51 +0000
+Date: Mon, 5 Feb 2024 11:13:49 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>, Ingo Molnar
-	<mingo@kernel.org>, <linux-cxl@vger.kernel.org>, Ira Weiny
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH 2/2] cxl/region: Use cond_guard() in show_targetN()
-Message-ID: <20240205111152.000030a3@Huawei.com>
-In-Reply-To: <20240204173105.935612-3-fabio.maria.de.francesco@linux.intel.com>
-References: <20240204173105.935612-1-fabio.maria.de.francesco@linux.intel.com>
-	<20240204173105.935612-3-fabio.maria.de.francesco@linux.intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl: remove CONFIG_CXL_PMU entry in drivers/cxl/Kconfig
+Message-ID: <20240205111349.00006ea5@Huawei.com>
+In-Reply-To: <20240204094613.40687-1-masahiroy@kernel.org>
+References: <20240204094613.40687-1-masahiroy@kernel.org>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,61 +49,62 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun,  4 Feb 2024 18:31:05 +0100
-"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
+On Sun,  4 Feb 2024 18:46:13 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-> Use cond_guard() in show_target() to not open code an up_read() in an 'out'
-> block. If the down_read_interruptible() fails, the statement passed to the
-> second argument of cond_guard() returns -EINTR.
+> Commit 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+> added the config entries for CXL_PMU in drivers/cxl/Kconfig and
+> drivers/perf/Kconfig, so it can be toggled from multiple locations:
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+> [1] Device Drivers
+>      -> PCI support
+>        -> CXL (Compute Expres Link) Devices
+>          -> CXL Performance Monitoring Unit  
+> 
+> [2] Device Drivers
+>      -> Performance monitor support
+>        -> CXL Performance Monitoring Unit  
+> 
+> This complicates things, and nobody else does this.
+> 
+> I kept the one in drivers/perf/Kconfig because CONFIG_CXL_PMU controls
+> the compilation of drivers/perf/cxl_pmu.c.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-LGTM
+oops.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+Thanks
+
+Jonathan
+
 > ---
->  drivers/cxl/core/region.c | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 0f05692bfec3..bd3236786a25 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -666,28 +666,20 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_endpoint_decoder *cxled;
-> -	int rc;
+>  drivers/cxl/Kconfig | 13 -------------
+>  1 file changed, 13 deletions(-)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67998dbd1d46..5f3c9c5529b9 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -144,17 +144,4 @@ config CXL_REGION_INVALIDATION_TEST
+>  	  If unsure, or if this kernel is meant for production environments,
+>  	  say N.
 >  
-> -	rc = down_read_interruptible(&cxl_region_rwsem);
-> -	if (rc)
-> -		return rc;
-> +	cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
->  
->  	if (pos >= p->interleave_ways) {
->  		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
->  			p->interleave_ways);
-> -		rc = -ENXIO;
-> -		goto out;
-> +		return -ENXIO;
->  	}
->  
->  	cxled = p->targets[pos];
->  	if (!cxled)
-> -		rc = sysfs_emit(buf, "\n");
-> +		return sysfs_emit(buf, "\n");
->  	else
-> -		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
-> -out:
-> -	up_read(&cxl_region_rwsem);
+> -config CXL_PMU
+> -	tristate "CXL Performance Monitoring Unit"
+> -	default CXL_BUS
+> -	depends on PERF_EVENTS
+> -	help
+> -	  Support performance monitoring as defined in CXL rev 3.0
+> -	  section 13.2: Performance Monitoring. CXL components may have
+> -	  one or more CXL Performance Monitoring Units (CPMUs).
 > -
-> -	return rc;
-> +		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
->  }
->  
->  static int match_free_decoder(struct device *dev, void *data)
+> -	  Say 'y/m' to enable a driver that will attach to performance
+> -	  monitoring units and provide standard perf based interfaces.
+> -
+> -	  If unsure say 'm'.
+>  endif
 
