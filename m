@@ -1,215 +1,146 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04318E08
-	for <linux-cxl@vger.kernel.org>; Mon,  5 Feb 2024 11:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A202C183
+	for <linux-cxl@vger.kernel.org>; Mon,  5 Feb 2024 14:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707133256; cv=none; b=c2a9HSXzotXgMINpeV+2DQwer+ayADoZZv0ZyJdEVcnU8A0tEW2iNNZoPrNEgpHFEAJeVKwSCd0kzePAKGJ6/2ToLcbRVaBkOHF5Axu4/XlmQIHUjCxW/JmJqzA8w4F3T9mmK6l00K71fi1BrxjaKKPwzMW0aUPal3mwGgG7hKQ=
+	t=1707142783; cv=none; b=bRCfbfB9/lkvL5wL00bPfhzdviUnHd2+68WVFNdu3KxP5W5XwgP4O6MGLd/AH+tUC2t9J4uz6zCKjbQi0rSpV1CBNUHxuZwfUkHQhapmXYzGaUnbdS9QbSfcStUpmfhckAYHkr0eCarqpwpmVwZR9ND/C74Ml2DEnNnTyRNd5oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707133256; c=relaxed/simple;
-	bh=kqXggVW5AcYnXEdAzbhpSMfxYxf0JGshgot3G/X8JK4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rlNz1AHgVYZtJd8i0v/a9fn6AcOhFRYfiJqf5MWxjsytkKloqv36c2dGyRrIcZiNdoivQtUmquonIxzoaWJyuv9KIU9dfPKEQeGXSSQLie+UTOGEzXycIQR8WUmpMOvjG461CaprHIxmntAtBdc0kubpGV72IymxevZeyUlEP4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1707142783; c=relaxed/simple;
+	bh=pzlegcs0hOao2uQi/Y1xRldU30nf6k7nSTV4ivAYtwk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qRlnOW4YMDGz1bZrldb9ax97Q94WxPmlKYI0oquHFK7zf/5mWgTk4rElp5+871RapVkVfScQbATN/H/LT/NC/PPHdwLZ4BVEza12OVZtYroRQd35TIN43K0LloZKXZI32dAQ01EQtRLJULx23lJ3xHW0VMDcT8EJIE7uJzQzZJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT49s1Yrmz67Dk5;
-	Mon,  5 Feb 2024 19:37:37 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT7hf3s0Hz6JB8S;
+	Mon,  5 Feb 2024 22:16:02 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C229B140A36;
-	Mon,  5 Feb 2024 19:40:50 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 5 Feb
- 2024 11:40:50 +0000
-Date: Mon, 5 Feb 2024 11:40:49 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v3 2/3] cxl: Fix sysfs export of qos_class for memdev
-Message-ID: <20240205114049.000073e6@Huawei.com>
-In-Reply-To: <20240201214731.1297389-2-dave.jiang@intel.com>
-References: <20240201214731.1297389-1-dave.jiang@intel.com>
-	<20240201214731.1297389-2-dave.jiang@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by mail.maildlp.com (Postfix) with ESMTPS id B6DEB1409F9;
+	Mon,  5 Feb 2024 22:19:36 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 5 Feb 2024 14:19:36 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
+CC: Igor Mammedov <imammedo@redhat.com>, Ani Sinha <anisinha@redhat.com>,
+	Shannon Zhao <shannon.zhaosl@gmail.com>, Dongjiu Geng
+	<gengdongjiu1@gmail.com>, <linuxarm@huawei.com>, "Michael S . Tsirkin"
+	<mst@redhat.com>, Ira Weiny <ira.weiny@intel.com>, Peter Maydell
+	<peter.maydell@linaro.org>, Fan Ni <fan.ni@samsung.com>, Marcel Apfelbaum
+	<marcel.apfelbaum@gmail.com>
+Subject: [RFC PATCH 00/11 qemu] arm/acpi/pci/cxl: ACPI based FW First error injection.
+Date: Mon, 5 Feb 2024 14:19:29 +0000
+Message-ID: <20240205141940.31111-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 1 Feb 2024 14:47:30 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+I've had a version of this code for many years (and occasionally mention it
+as test platform for kernel patches) and it keeps coming in handy, so time
+to share the CXL version.
 
-> Current implementation exports only to
-> /sys/bus/cxl/devices/.../memN/qos_class. With both ram and pmem exposed,
-> the second registered sysfs attribute is rejected as duplicate. It's not
-> possible to create qos_class under the dev_groups via the driver due to
-> the ram and pmem sysfs sub-directories already created by the device sysfs
-> groups. Move the ram and pmem qos_class to the device sysfs groups and add
-> a call to sysfs_update() after the perf data are validated so the
-> qos_class can be visible. The end results should be
-> /sys/bus/cxl/devices/.../memN/ram/qos_class and
-> /sys/bus/cxl/devices/.../memN/pmem/qos_class.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Some comments inline.  Only think I really care about though is a comment
-in the code to say why sysfs_update_groups() is not appropriate.
+What is this?
+- ACPI + UEFI specs define a means of notifying the OS of errors that
+  firmware has handled (gathered up data etc, reset the relevant error tracking
+  units etc) in a set of standard formats (UEFI spec appendix N).
+- ARM virt already supports standard HEST ACPI table description of Synchronous
+  External Abort (SEA) for memory errors. This series builds on this to
+  add a GHESv2 / Generic Error Device / GPIO interrupt path for asynchronous
+  error reporting.
+- CXL and PCI AER both already have injection commands (via HMP / QMP)
+  These are repurposed to perform FW first injection if the guest OS has not
+  negotiated OS first handling (so before the CXL / PCIE _OSC is called or
+  when it doesn't negotiate control of AER / CXL Memory Errors).
+- The OS normally negotiates for control of error registers via _OSC.
+  Previously QEMU unconditionally granted control of these registers.
+  This series includes a machine parameter to allow the 'FW' to not let the
+  OS take control and tracks whether the OS has asked for control or not.
+  Note this code relies on the standard handshake - it's not remotely
+  correct if the OS does follow that flow - this can be hardened with some
+  more AML magic.
 
-> ---
-> v3:
-> - Updated based on pervious patch changes
-> ---
->  drivers/cxl/core/cdat.c   |  1 +
->  drivers/cxl/core/memdev.c | 71 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |  2 ++
->  drivers/cxl/mem.c         | 36 --------------------
->  4 files changed, 74 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 55b82dfd794b..5c93bf9d5253 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -382,6 +382,7 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
->  
->  	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
->  	cxl_qos_class_verify(cxlmd);
-> +	cxl_memdev_update_attribute_groups(cxlmd);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_parse_cdat, CXL);
->  
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index dae8802ecdb0..ed85096a33fb 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -447,13 +447,41 @@ static struct attribute *cxl_memdev_attributes[] = {
->  	NULL,
->  };
->  
-> +static ssize_t pmem_qos_class_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +
-> +	return sysfs_emit(buf, "%d\n", mds->pmem_perf.qos_class);
-> +}
-> +
-> +static struct device_attribute dev_attr_pmem_qos_class =
-> +	__ATTR(qos_class, 0444, pmem_qos_class_show, NULL);
-> +
->  static struct attribute *cxl_memdev_pmem_attributes[] = {
->  	&dev_attr_pmem_size.attr,
-> +	&dev_attr_pmem_qos_class.attr,
->  	NULL,
->  };
->  
-> +static ssize_t ram_qos_class_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +
-> +	return sysfs_emit(buf, "%d\n", mds->ram_perf.qos_class);
-> +}
-> +
-> +static struct device_attribute dev_attr_ram_qos_class =
-> +	__ATTR(qos_class, 0444, ram_qos_class_show, NULL);
-> +
->  static struct attribute *cxl_memdev_ram_attributes[] = {
->  	&dev_attr_ram_size.attr,
-> +	&dev_attr_ram_qos_class.attr,
->  	NULL,
->  };
->  
-> @@ -477,14 +505,42 @@ static struct attribute_group cxl_memdev_attribute_group = {
->  	.is_visible = cxl_memdev_visible,
->  };
->  
-> +static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	if (a == &dev_attr_ram_qos_class.attr)
-> +		if (mds->ram_perf.qos_class == CXL_QOS_CLASS_INVALID)
-> +			return 0;
-> +
-> +	return a->mode;
-> +}
-> +
->  static struct attribute_group cxl_memdev_ram_attribute_group = {
->  	.name = "ram",
->  	.attrs = cxl_memdev_ram_attributes,
-> +	.is_visible = cxl_ram_visible,
->  };
->  
-> +static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	if (a == &dev_attr_pmem_qos_class.attr)
-> +		if (mds->pmem_perf.qos_class == CXL_QOS_CLASS_INVALID)
-> +			return 0;
-> +
-> +	return a->mode;
-> +}
-> +
->  static struct attribute_group cxl_memdev_pmem_attribute_group = {
->  	.name = "pmem",
->  	.attrs = cxl_memdev_pmem_attributes,
-> +	.is_visible = cxl_pmem_visible,
->  };
->  
->  static umode_t cxl_memdev_security_visible(struct kobject *kobj,
-> @@ -519,6 +575,21 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
->  	NULL,
->  };
->  
-> +void cxl_memdev_update_attribute_groups(struct cxl_memdev *cxlmd)
-> +{
-> +	const struct attribute_group *grp = cxl_memdev_attribute_groups[0];
-> +
-> +	for (int i = 0; grp; i++) {
-> +		int rc = sysfs_update_group(&cxlmd->dev.kobj, grp);
-> +
-> +		if (rc)
-> +			dev_dbg(&cxlmd->dev,
-> +				"Unable to update memdev attribute group.\n");
-> +		grp = cxl_memdev_attribute_groups[i + 1];
-We don't need i explicitly so maybe cleaner as something like.
+Alternatives:
+- In theory we could emulate a management controller running appropriate firmware
+  and have that actually handle the errors. It's much easier to instead intercept
+  them before the error reporting messages are sent and result logged in the root
+  ports error registers. As far as the guest is concerned it doesn't matter if
+  these registers are handled via the firmware or never got written in the first
+  place (the guest isn't allowed to touch these registers anyway!)
+  This is sort of same argument for why we build ACPI tables in general in QEMU
+  rather than making that an EDK2 problem.
 
-	for (const struct attribute_group **grp = &cxl_memdev_attribute_groups[0];
-	     grp; grp++)
-		if (sysfs_update_group(&cxlmd->dev.kobj, *grp)
-			dev_dbg(....)
+Why?
+- The kernel CXL code supports both firmware first and native RAS.
+  As only some vendors have adopted a FW first model and hardware
+  availability is limited this code has proven challenging to test.
 
-Mind you I'm not that convinced, so fine if you want to stick with current code :)
+Why an RFC?
+- Small matter that the ARM CXL support isn't upstream.
+- I'm assuming adding this support to QEMU will be controversial.
+- There are some loose ends, TODOs and Fixme's in the code.
+- Only one type of CXL event currently handled - should provide them all
+  CXL Protocol and AER error reporting is more complete.
+- I should probably figure out how to do this for x86 as apparently people
+  also want to use that architecture ;)
 
-I'd also like a comment on why sysfs_update_groups() is not appropriate here.
+Thanks to Shiju Jose for help testing this.
 
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_update_attribute_groups, CXL);
-> +
->  static const struct device_type cxl_memdev_type = {
->  	.name = "cxl_memdev",
->  	.release = cxl_memdev_release,
+Based on: Random stack of patches on my gitlab.com/jic23/qemu cxl-2024-02-05-draft
+branch. Specifically:
+https://gitlab.com/jic23/qemu/-/commit/0fa064b9c8eeef468d8a19e87f39f230b4fa4da9
 
->  
+All comments welcome - particularly anyone who can advise on what the HEST
+table should look like an x86 machine - too many options!
+
+Jonathan Cameron (11):
+  hw/pci: Add pcie_find_dvsec() utility.
+  hw/acpi: Allow GPEX _OSC to keep fw first control of AER and CXL
+    errors.
+  arm/virt: Add fw-first-ras property.
+  acpi/ghes: Support GPIO error source.
+  arm/virt: Wire up GPIO error source for ACPI / GHES
+  acpi: pci/cxl: Stash the OSC control parameters.
+  pci/aer: Support firmware first error injection via GHESv2
+  hw/pci/aer: Default to error handling on.
+  cxl/ras: Set registers to sensible state for FW first ras
+  cxl/type3: FW first protocol error injection.
+  cxl/type3: Add firmware first error reporting for general media
+    events.
+
+ include/hw/acpi/cxl.h         |   2 +-
+ include/hw/acpi/ghes.h        |  14 +
+ include/hw/arm/virt.h         |   1 +
+ include/hw/boards.h           |   1 +
+ include/hw/cxl/cxl.h          |   2 +
+ include/hw/pci-host/gpex.h    |   1 +
+ include/hw/pci/pcie.h         |   1 +
+ hw/acpi/cxl-stub.c            |   2 +-
+ hw/acpi/cxl.c                 |  50 ++-
+ hw/acpi/ghes-stub.c           |  25 ++
+ hw/acpi/ghes.c                | 634 +++++++++++++++++++++++++++++++++-
+ hw/arm/virt-acpi-build.c      |  71 +++-
+ hw/arm/virt.c                 |  32 +-
+ hw/cxl/cxl-component-utils.c  |   4 +-
+ hw/i386/acpi-build.c          |   2 +-
+ hw/mem/cxl_type3.c            |  42 ++-
+ hw/pci-bridge/cxl_root_port.c |   1 -
+ hw/pci-host/gpex-acpi.c       |  17 +-
+ hw/pci-host/gpex.c            |   1 +
+ hw/pci/pcie.c                 |  30 ++
+ hw/pci/pcie_aer.c             |  35 +-
+ 21 files changed, 914 insertions(+), 54 deletions(-)
+
+-- 
+2.39.2
 
