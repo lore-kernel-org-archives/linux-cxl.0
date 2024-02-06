@@ -1,117 +1,363 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91E812D162
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 09:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDB912E1C9
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 10:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212520; cv=none; b=L+U1FC2V9msmCUXTzXMRCt115b/gHhyB+Sf5Bn5s3IHVWm8+uxOH0zvA0kRGrlxBz4z4FJfUmv9+vxG4iDg6fUNNF4CSvefJAVqkbhRFMOoUx1sCtQTyXZpPbA5fC1ocmCJddAtAAhjuJOHhj1m6H2sDTUfunDZrZbK8Rdz+E3I=
+	t=1707214646; cv=none; b=bcRg0fhndun77CjVTod4VVu9hA9UW+uYte3N57glyTSiFPDjamWCa1dVGsRxwMltoI7Rcj0nqrQwOlCgxqEu1F2CzmD+NbrIRnl7HwvY7wUIdSnkMib9/iYoHA6auf9EqZ+o+ojUKhNxR7L3UNF04EEjVmw2c3Edfy1m5pKYHCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212520; c=relaxed/simple;
-	bh=bzedo6w2sVKvO39Zdi8zshHDEowHD0bVTtf5g9U2YNw=;
-	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
-	 References; b=pJHEonwS+E3kLYrKC93n+5nazzt7JJqItV9HeU91OpDic/xIAAj4RtacEychjHRHlej1sRnQrsu1mQ6JuigZrXf5t/JQ+l33kU4DnASl+DhwSqxlRzybaW0S0exH6TuJvqhAWq0FZNPKv+h65FeGcMha5qCc3fg/ffrcB7qHiFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pOX4kbbn; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pOX4kbbn"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240206094153epoutp02069872322bc4e2e3fbd1bca056b3118c~xPLxIxv3w1180611806epoutp02a
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 09:41:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240206094153epoutp02069872322bc4e2e3fbd1bca056b3118c~xPLxIxv3w1180611806epoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707212513;
-	bh=6FS5OxjDvcI+9OytrSkqO4qI4whSWvgqrs/WRChPmI8=;
-	h=Subject:Reply-To:From:To:CC:Date:References:From;
-	b=pOX4kbbnINMQqLbPbVq/0LTNtB8CdIpT6bBXAYxd3z6ZirCy5Ofeodrqk2jzRWpWY
-	 D+7TTB+mBr+zpxADU/URzhlcoFmJiJZTOPKJJ4mxPNSLcFJV5lKoHsK3SQM+llBac1
-	 SA4IbjjS4ySmZRiRyJ0UYEbJe9pOUgi8SZN0Zy/E=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-	20240206094152epcas2p1c921e056f2588e840065ede5f46a109b~xPLwqOpLg3006430064epcas2p1N;
-	Tue,  6 Feb 2024 09:41:52 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.98]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TTdYr0Z5Hz4x9Q0; Tue,  6 Feb
-	2024 09:41:52 +0000 (GMT)
-X-AuditID: b6c32a4d-743ff70000004a32-3c-65c1fedf9e0a
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	85.0A.18994.FDEF1C56; Tue,  6 Feb 2024 18:41:51 +0900 (KST)
+	s=arc-20240116; t=1707214646; c=relaxed/simple;
+	bh=wPgXuYljXmx1H7etGUMHKptxWTYqPPBOwZ8CAYpHuEc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mB3hzF5vACLgLaY3uffHIHIVphMZHoXts+u334/FFMFf5RKL10WgGofSsMdNNRBQgOJjFeVI71MofBxmnoHj6/mFXlnmiJ4JEEZ54RwwLlaj7IaCzNbsEGgeadQogM4XsNFI19sG92/e/0SUTlLlVCT1rXRVAUKw1SQkS9mMUcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TTfGc3zXvz6D8Z0;
+	Tue,  6 Feb 2024 18:13:44 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 20577140D27;
+	Tue,  6 Feb 2024 18:17:21 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 6 Feb
+ 2024 10:17:20 +0000
+Date: Tue, 6 Feb 2024 10:17:19 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Cao, =?UTF-8?Q?Quanquan/=E6=9B=B9_=E5=85=A8=E5=85=A8?="
+	<caoqq@fujitsu.com>
+CC: <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: Question about a segmentation fault issue when accessing memory
+ in a region
+Message-ID: <20240206101719.000065bd@Huawei.com>
+In-Reply-To: <3e84b919-7631-d1db-3e1d-33000f3f3868@fujitsu.com>
+References: <3e84b919-7631-d1db-3e1d-33000f3f3868@fujitsu.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: [PATCH] perf: CXL: fix mismatched cpmu event opcode
-Reply-To: hj96.nam@samsung.com
-Sender: Hojin Nam <hj96.nam@samsung.com>
-From: Hojin Nam <hj96.nam@samsung.com>
-To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>
-CC: Wonjae Lee <wj28.lee@samsung.com>, KyungSan Kim
-	<ks0204.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2@epcms2p3>
-Date: Tue, 06 Feb 2024 18:41:51 +0900
-X-CMS-MailID: 20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmue79fwdTDZqOW1usWniNzeLoHg6L
-	TY+vsVqcn3WKxeLyrjlsFkuvX2SyaLljarHx/js2Bw6PNfPWMHq0HHnL6rFpVSebx+Yl9R59
-	W1YxenzeJBfAFpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIT
-	oOuWmQN0jZJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLxArzgxt7g0L10vL7XE
-	ytDAwMgUqDAhO2P5pENMBRc5K3btnMPewLiRvYuRk0NCwERi67bnrF2MXBxCAnsYJRb/usjY
-	xcjBwSsgKPF3hzBIjbCAjURT/y4WEFtIQE5iz4nzLBBxDYm13w+DzWETUJNYeP8SM4gtIlAl
-	cf39UyaQmcwC25gk/j5cygixjFdiRvtTFghbWmL78q1QcQ2JH8t6mSFsUYmbq9+yw9jvj82H
-	qhGRaL13FqpGUOLBz91QcSmJT3c3QcWLJWbvXwYVL5BY8WMR1C59icbr79lAbF4BX4k379Yy
-	gdgsAqoS87esg+p1kbg38Q1YDbOAvMT2t3OYQeHALKApsX6XPogpIaAsceQWC0QFn0TH4b/s
-	MF/tmPeECcJWktjf0Qo1UULizonLUNd4SEz5eJwZEoSBEt2r/7JOYFSYhQjoWUj2zkLYu4CR
-	eRWjVGpBcW56arJRgaFuXmo5PH6T83M3MYLTppbvDsbX6//qHWJk4mA8xCjBwawkwmu240Cq
-	EG9KYmVValF+fFFpTmrxIUZToK8nMkuJJucDE3deSbyhiaWBiZmZobmRqYG5kjjvvda5KUIC
-	6YklqdmpqQWpRTB9TBycUg1MWRnH91pJdKzUqT1xROz8tLd8Gxuyf/1L3/QnqfdsZfDfR6Y3
-	fbxmL7o5b3ZxetNUx6agg27xsy/9zL2bdEqk/fg/mwXs7UuYmVxnXdhUc9vtQ9fHaxqiNu6x
-	Mx4qn3957dWfH8r6pytFFqc3vt0YbrTCZcLXm7y8lgG6QbaHnhSEB94vD/EzmWIq8XKCGdPp
-	Tvmd7P/aJK2naJzbzP1qvaFolajKpFATvv4JXqdiqk80OS6QtDIy+R206q3dloS3xgLmysXC
-	YZ37+T/73P+3+M/hnInz5U0vxxl/dM4uuDvJ/8u+qZyiCxuenjd9rV2990zIU9m1d/kmdyes
-	a06e81y7574p99w1ya3fH5mbKrEUZyQaajEXFScCAG87ZjMkBAAA
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2
-References: <CGME20240206094151epcms2p373ed7f50efa332765e14bff2b5a2abe2@epcms2p3>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-S2M NDR BI-ConflictAck opcode is described as 4 in the CXL
-3.0 specification. However, it is defined as 3 in macro definition.
+On Tue, 6 Feb 2024 15:38:31 +0800
+"Cao, Quanquan/=E6=9B=B9 =E5=85=A8=E5=85=A8" <caoqq@fujitsu.com> wrote:
 
-Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
----
- drivers/perf/cxl_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi, guys:
+>=20
+> I tried to create a region on the 2hb+6mem environment.
+> Fortunately, the region was created successfully,
+> and the system memory can be seen in the system that
+> the system memory has increased.
+>=20
+> When I tried to use the memory on the region, a segfault occurred.
+> anyone has idea?
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 365d964b0f6a..bc0d414a6aff 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -419,7 +419,7 @@ static struct attribute *cxl_pmu_event_attrs[] = {
-        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,                     CXL_PMU_GID_S2M_NDR, BIT(0)),
-        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,                    CXL_PMU_GID_S2M_NDR, BIT(1)),
-        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,                    CXL_PMU_GID_S2M_NDR, BIT(2)),
--       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(3)),
-+       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(4)),
-        /* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
-        CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,                 CXL_PMU_GID_S2M_DRS, BIT(0)),
-        CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,              CXL_PMU_GID_S2M_DRS, BIT(1)),
---
-2.34.1
+There are some issues with TCG (QEMU emulator) and other parts
+of QEMU and using CXL emulated memory as 'normal memory'.
+
+The way I did the interleaving causes problems for parts of QEMU that
+assume they can access memory within a page without doing lookups.
+There are other problems with the page table walker emulation and
+some locking issues.
+
+Short term I'll try to get a solution out that works ok without
+any interleave, and then we can look at whether we can enable
+some forms of interleave (greater than page granularity).
+
+Trying to solve this in the general case would require some
+tricky caching layer to be introduced. Can probably be done but
+may not be worth the effort.
+
+Jonathan
+
+>=20
+> Environment info:
+> os version: fedora 39
+> linux version: 6.7-rc5
+> qemu version: v8.2.0-rc4
+> kvm: off
+>=20
+> The detailed operation commands are as follows.
+> =3D=3D=3D=3D=3D=3D=3D=3D> Before region creation =20
+> # numactl -H
+> available: 2 nodes (0-1)
+> node 0 cpus: 0 1
+> node 0 size: 1006 MB
+> node 0 free: 624 MB
+> node 1 cpus: 2 3
+> node 1 size: 899 MB
+> node 1 free: 694 MB
+> node distances:
+> node   0   1
+>    0:  10  20
+>    1:  20  10
+>=20
+> # free -h
+>                 total        used        free      shared  buff/cache=20
+> available
+> Mem:           1.9Gi       448Mi       1.3Gi       1.1Mi       330Mi=20
+>    1.4Gi
+> Swap:          1.9Gi          0B       1.9Gi
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D> create a new region =20
+> # echo online_movable > /sys/devices/system/memory/auto_online_blocks
+> # cxl list -M -P -D -T -E -u
+> [
+>    {
+>      "ports":[
+>        {
+>          "port":"port1",
+>          "host":"pci0000:20",
+>          "depth":1,
+>          "nr_dports":2,
+>          "dports":[
+>            {
+>              "dport":"0000:20:00.0",
+>              "id":"0"
+>            },
+>            {
+>              "dport":"0000:20:01.0",
+>              "id":"0x1"
+>            }
+>          ],
+>          "endpoints:port1":[
+>            {
+>              "endpoint":"endpoint5",
+>              "host":"mem1",
+>              "parent_dport":"0000:20:01.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem1",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:22:00.0"
+>              }
+>            },
+>            {
+>              "endpoint":"endpoint4",
+>              "host":"mem0",
+>              "parent_dport":"0000:20:00.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem0",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:21:00.0"
+>              }
+>            }
+>          ]
+>        },
+>        {
+>          "port":"port3",
+>          "host":"pci0000:0c",
+>          "depth":1,
+>          "nr_dports":2,
+>          "dports":[
+>            {
+>              "dport":"0000:0c:00.0",
+>              "id":"0"
+>            },
+>            {
+>              "dport":"0000:0c:01.0",
+>              "id":"0x1"
+>            }
+>          ],
+>          "endpoints:port3":[
+>            {
+>              "endpoint":"endpoint7",
+>              "host":"mem3",
+>              "parent_dport":"0000:0c:00.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem3",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:0d:00.0"
+>              }
+>            },
+>            {
+>              "endpoint":"endpoint9",
+>              "host":"mem5",
+>              "parent_dport":"0000:0c:01.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem5",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:0e:00.0"
+>              }
+>            }
+>          ]
+>        },
+>        {
+>          "port":"port2",
+>          "host":"pci0000:16",
+>          "depth":1,
+>          "nr_dports":2,
+>          "dports":[
+>            {
+>              "dport":"0000:16:00.0",
+>              "id":"0"
+>            },
+>            {
+>              "dport":"0000:16:01.0",
+>              "id":"0x1"
+>            }
+>          ],
+>          "endpoints:port2":[
+>            {
+>              "endpoint":"endpoint6",
+>              "host":"mem2",
+>              "parent_dport":"0000:16:01.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem2",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:18:00.0"
+>              }
+>            },
+>            {
+>              "endpoint":"endpoint8",
+>              "host":"mem4",
+>              "parent_dport":"0000:16:00.0",
+>              "depth":2,
+>              "memdev":{
+>                "memdev":"mem4",
+>                "ram_size":"256.00 MiB (268.44 MB)",
+>                "serial":"0",
+>                "host":"0000:17:00.0"
+>              }
+>            }
+>          ]
+>        }
+>      ]
+>    },
+>    {
+>      "root decoders":[
+>        {
+>          "decoder":"decoder0.0",
+>          "resource":"0x750000000",
+>          "size":"4.00 GiB (4.29 GB)",
+>          "interleave_ways":3,
+>          "interleave_granularity":4096,
+>          "max_available_extent":"4.00 GiB (4.29 GB)",
+>          "pmem_capable":true,
+>          "volatile_capable":true,
+>          "accelmem_capable":true,
+>          "nr_targets":3,
+>          "targets":[
+>            {
+>              "target":"pci0000:20",
+>              "alias":"ACPI0016:00",
+>              "position":2,
+>              "id":"0x20"
+>            },
+>            {
+>              "target":"pci0000:16",
+>              "alias":"ACPI0016:01",
+>              "position":1,
+>              "id":"0x16"
+>            },
+>            {
+>              "target":"pci0000:0c",
+>              "alias":"ACPI0016:02",
+>              "position":0,
+>              "id":"0xc"
+>            }
+>          ]
+>        }
+>      ]
+>    }
+> ]
+> # cxl create-region -t ram -d decoder0.0 -m mem3 mem2 mem1 mem5 mem4 mem0
+> {
+>    "region":"region0",
+>    "resource":"0x750000000",
+>    "size":"1536.00 MiB (1610.61 MB)",
+>    "type":"ram",
+>    "interleave_ways":6,
+>    "interleave_granularity":4096,
+>    "decode_state":"commit",
+>    "mappings":[
+>      {
+>        "position":5,
+>        "memdev":"mem0",
+>        "decoder":"decoder4.0"
+>      },
+>      {
+>        "position":4,
+>        "memdev":"mem4",
+>        "decoder":"decoder8.0"
+>      },
+>      {
+>        "position":3,
+>        "memdev":"mem5",
+>        "decoder":"decoder9.0"
+>      },
+>      {
+>        "position":2,
+>        "memdev":"mem1",
+>        "decoder":"decoder5.0"
+>      },
+>      {
+>        "position":1,
+>        "memdev":"mem2",
+>        "decoder":"decoder6.0"
+>      },
+>      {
+>        "position":0,
+>        "memdev":"mem3",
+>        "decoder":"decoder7.0"
+>      }
+>    ]
+> }
+> cxl region: cmd_create_region: created 1 region
+>=20
+> =3D=3D=3D> After region creation =20
+> # numactl -H
+> available: 3 nodes (0-2)
+> node 0 cpus: 0 1
+> node 0 size: 1006 MB
+> node 0 free: 736 MB
+> node 1 cpus: 2 3
+> node 1 size: 899 MB
+> node 1 free: 548 MB
+> node 2 cpus:
+> node 2 size: 1536 MB             <-- new numa node was create
+> node 2 free: 1536 MB
+> node distances:
+> node   0   1   2
+>    0:  10  20  20
+>    1:  20  10  20
+>    2:  20  20  10
+>=20
+> # free -h          <-- System memory increased
+>                 total        used        free      shared  buff/cache=20
+> available
+> Mem:           3.4Gi       504Mi       2.8Gi       1.1Mi       338Mi=20
+>    2.9Gi
+> Swap:          1.9Gi          0B       1.9Gi
+>=20
+> # numactl --membind=3D2 ls
+> Segmentation fault (core dumped)
+>=20
+> # dmesg
+> [  310.119439] show_signal_msg: 20 callbacks suppressed
+> [  310.119499] ls[1153]: segfault at 1c454 ip 00007fb4cf771523 sp=20
+> 00007fff57753fe0 error 4 in ld-linux-x86-64.so.2[7fb4cf753000+27000]=20
+> likely on CPU 2 (core 0, socket 2)
+> [  310.350803] Code: 01 42 08 48 8b bd 98 fd ff ff 48 8b 57 70 48 85 d2=20
+> 74 04 48 01 42 08 48 8b bd 98 fd ff ff 48 8b 97 60 01 00 00 48 85 d2 74=20
+> 04 <48> 01 42 08 48 8b bd 98 fd ff ff 48 8b 8f f8 00 00 00 48 85 c9 74
+>=20
+
