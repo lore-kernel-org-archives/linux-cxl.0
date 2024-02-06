@@ -1,264 +1,365 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4D980033
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 06:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832881292F4
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 07:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707199234; cv=none; b=GZb0ntnGCuWm9sSyHf6InajjqAyWkuWaDWFlOlMB223bSuxWzNsAc0O3+i0sPAMnDeSH8h250S+8g+K5zRMxiPsYi9L4wWxvxtjrUPrzwBgRyENEprJbzQ/yWK2fiIyOmYAN+Fkos9ucGQ6MY+Uouf/ILVK8gPYStXWLROGU6Bs=
+	t=1707205129; cv=none; b=qVf0AN/PodF/odRIYKPPh3+yaVN8iKT/oE96eqkceddShOvDCJKz9bmA1uvrDkdVJzeYdIN7HH8UjAxtj/WCVLtWo6K/rAP6511jPUo+4qgG30MYqDUX3lrunBCw4sPzQGJkZydSgil7BaPMKPkqdN86JdKZQ+FOL1T7+daIXAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707199234; c=relaxed/simple;
-	bh=W8rnBkBIGpaOnQ8Y2AHw2CUQsx0YHv6wU9Zu6cU1Sok=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=G8Q24kA/J/U+MwVJ53ucq8Ag+3tpwNdr+Nkx5N0ZVuwXMqUCjR33AXAZfS5O+hpAsmqECqYNdS5Fh5ja/nvl5Ok6aDTaLtFyTvHpfP7+N5a9Fjn8vcLB7YuCWyvc21nXiUHOIZlGEJylBPV11Sft3b94DQ7JE6ctntUyVHQyQbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KanfOoxL; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1707205129; c=relaxed/simple;
+	bh=s3mQ0vWdaBkvqua2LAbsQyck9Md7nqljVbhvzkd9eQs=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=V1fOUN4Pdm3iFyO/dJBJpU0WN1gMfo6Htx7q6g1HckFca39C5Gc40veIvgGkzL0CmCDFL4hM/4/xuzvWnWHJq5eEzZE70F7wInRM8D2nKoKHsCIaEi56n/52UYGqX3uiKopG90BBFkGxK/s+oLr2Vf32BI7cx1GMqx2CvaKujAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=aue65FSf; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KanfOoxL"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240206060029epoutp04afa122ca6cfafd0b9b95f46cbdc805a3~xMKdk4wLC2768327683epoutp042
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 06:00:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240206060029epoutp04afa122ca6cfafd0b9b95f46cbdc805a3~xMKdk4wLC2768327683epoutp042
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707199229;
-	bh=XLqrTgZ2CyGx3OpZr4zo1V2fISRTESqEN6UpgjvjUj4=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=KanfOoxLHLcJ24oy+49WbKKTiuRYupcJsJtam3hFdpQY66YZYem4czWMKNVXvNEvx
-	 PMJADaTkbTtaYHEFL1DhebHkEaKMHPdikGdihm9e6twDF8CNVs0K62HA6mNu1ST2oj
-	 FJEanp6dn+p3TrQ/wR5ynri8W8Vp9yE/dLEBv/x8=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240206060028epcas2p2df262557fd5feec14e3db0a379ef9559~xMKdF5odO0742907429epcas2p22;
-	Tue,  6 Feb 2024 06:00:28 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.97]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TTXfN0vL0z4x9QR; Tue,  6 Feb
-	2024 06:00:28 +0000 (GMT)
-X-AuditID: b6c32a4d-9f7ff70000004a32-3d-65c1cafc7e4a
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E5.99.18994.CFAC1C56; Tue,  6 Feb 2024 15:00:28 +0900 (KST)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="aue65FSf"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1707205127; x=1738741127;
+  h=message-id:date:mime-version:from:to:cc:subject:
+   content-transfer-encoding;
+  bh=s3mQ0vWdaBkvqua2LAbsQyck9Md7nqljVbhvzkd9eQs=;
+  b=aue65FSf7msfK67n+XB5dCvqUAz8kQl9SJ8xY7dNSAxqRu8PhTjwGLTN
+   hCYFxKwXBvC09Qik/3XGS0840ifYKj3F74MLJidhhdcBNNO5HRkITGBJl
+   KrDRVGo+8hgtQX5W6pt/4tXGldOfEoM9Z4c/6+4BuSmYE8riGDiQeasKJ
+   xcM3c7wzdxb7ldUNk0b2sU3zvtSdEnXs/04R6YwEx5Fwv9DXwBGjitQ0I
+   7w+WiexQBLgxvJYEa51tQKyfqbSw6Y71E87gQSKvoBPKQNptFe4jhFI+a
+   er6PqChD7wU7Kgh8oy5vv5H/GRH7QrNAHbLjPWOtqlAulwqeNyMfxHTTu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="127929940"
+X-IronPort-AV: E=Sophos;i="6.05,246,1701097200"; 
+   d="scan'208";a="127929940"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 16:38:37 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id B100D1F3C6B
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 16:38:34 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id DC58926947E
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 16:38:33 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 0A41D200936AC
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 16:38:33 +0900 (JST)
+Received: from [10.167.220.145] (unknown [10.167.220.145])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 57D2F1A006A;
+	Tue,  6 Feb 2024 15:38:32 +0800 (CST)
+Message-ID: <3e84b919-7631-d1db-3e1d-33000f3f3868@fujitsu.com>
+Date: Tue, 6 Feb 2024 15:38:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: [NDCTL PATCH v5 3/4] ndctl: cxl: add QoS class check for CXL
- region creation
-Reply-To: wj28.lee@samsung.com
-Sender: Wonjae Lee <wj28.lee@samsung.com>
-From: Wonjae Lee <wj28.lee@samsung.com>
-To: Dave Jiang <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>
-CC: "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, KyungSan Kim <ks0204.kim@samsung.com>, Hojin
-	Nam <hj96.nam@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20240201230646.1328211-4-dave.jiang@intel.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240206060027epcms2p4291072d19a247b4b2c3944b5e6e8ed24@epcms2p4>
-Date: Tue, 06 Feb 2024 15:00:27 +0900
-X-CMS-MailID: 20240206060027epcms2p4291072d19a247b4b2c3944b5e6e8ed24
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+From: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>
+To: dan.j.williams@intel.com, dave.jiang@intel.com, vishal.l.verma@intel.com
+Cc: linux-cxl@vger.kernel.org
+Subject: Question about a segmentation fault issue when accessing memory in a
+ region
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnk+LIzCtJLcpLzFFi42LZdljTTPfPqYOpBgfWsFjcfXyBzeLEzUY2
-	iw9v/rFYHN3DYXF+1ikWi5U//rBa3JpwjMmB3WPxnpdMHi82z2T06NuyitHj8ya5AJaobJuM
-	1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoAOUFMoSc0qB
-	QgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQXmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZP//1
-	MRbs161oWvWOsYHxk1IXIyeHhICJxLGLW5m6GLk4hAT2MEqsu/WWuYuRg4NXQFDi7w5hkBph
-	gWiJhr0tLCC2kICcxN3bp5gg4poSb6atAouzCahL/Og8CTZHRGAqo8S1lnlgDrPAVkaJRS++
-	skJs45WY0f6UBcKWlti+fCsjiM0pYCNxe/E5qBoNiR/LepkhbFGJm6vfssPY74/NZ4SwRSRa
-	752FqhGUePBzN1RcSuLrib/sIIslBJoZJVYf62eFcBoYJTpmHobarC/ReP09G4jNK+Ar0by0
-	F8xmEVCVaLvbDTXJReLBxzVgm5kF5CW2v50DDhZmoJ/X79IHMSUElCWO3GKBqOCT6Dj8lx3m
-	xx3znjBB2EoSU9qOQE2UkGho3MoGYXtITPl0hXECo+IsRFjPQrJrFsKuBYzMqxilUguKc9NT
-	k40KDHXzUsvhUZycn7uJEZwitXx3ML5e/1fvECMTB+MhRgkOZiURXrMdB1KFeFMSK6tSi/Lj
-	i0pzUosPMZoCfTqRWUo0OR+YpPNK4g1NLA1MzMwMzY1MDcyVxHnvtc5NERJITyxJzU5NLUgt
-	gulj4uCUamBqTC2ozogUqj5jyq7wMOrzNScTq8CLL0/d+R/6p/La/7OXXjaFLn9c/PkG77l+
-	84W6KqeypF/M2jml5nKNJH/bm+zd/3IOlj9doyNw7VxaT9VikYDUZTmcLlv2u1scdv7U+5Gh
-	KMJRYeUcPaEvakt/bLkXm9T++8bP6K1t5m8nL33gsyHto+qsd3NDvq5R0+5KCp6qNC9z9lnW
-	L84stZNklORDdgt0TCw/kfhLLO+fss6WZ49W57xYcVOW/dHcs2sCVNSSxSaeONzW43DWjCXw
-	fnGto/n7uGlf1h0xvZB2gZP75R4rs/IpQksrtjatTG9J9DeUDKrsX63R5H7uUzpDzE7Ohjsv
-	WWMOB9pNVJuhxFKckWioxVxUnAgAVSxNGxoEAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240201230708epcas2p4d6ec80b002940637fa0d97e78d43442f
-References: <20240201230646.1328211-4-dave.jiang@intel.com>
-	<20240201230646.1328211-1-dave.jiang@intel.com>
-	<CGME20240201230708epcas2p4d6ec80b002940637fa0d97e78d43442f@epcms2p4>
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28170.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28170.005
+X-TMASE-Result: 10--17.316100-10.000000
+X-TMASE-MatchedRID: T3hsd5K8wICGYAKJjm5IPXV7tdtvoiba2FA7wK9mP9ccolHT5C7WMgim
+	Mt6TSXWlKzFPIYHt94IueHfWbrIXoO8QljqNvuG6zfqlpbtmcWgyLlxWhS9T9pfHgnfL4gdUXzw
+	oVYXbtz6/hOxDurespkMEJ9maChY/wwX0o7eolMDHsEljqux9nRZSD+Gbjz3Ib3Wpj9NSXKyMnZ
+	m8tXkF+7aMC2XmTXUNgFK2nmPCAnlNfs8n85Te8oMbH85DUZXy2KDPNsqphTL6C0ePs7A07QKmA
+	RN5PTKc
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Thu, Feb 01, 2024 at 04:05:06PM -0700, Dave Jiang wrote:
-> The CFMWS provides a QTG ID. The kernel driver creates a root decoder that
-> represents the CFMWS. A qos_class attribute is exported via sysfs for the root
-> decoder.
->
-> One or more QoS class tokens are retrieved via QTG ID _DSM from the ACPI0017
-> device for a CXL memory device. The input for the _DSM is the read and write
-> latency and bandwidth for the path between the device and the CPU. The
-> numbers are constructed by the kernel driver for the _DSM input. When a
-> device is probed, QoS class tokens  are retrieved. This is useful for a
-> hot-plugged CXL memory device that does not have regions created.
->
-> Add a QoS check during region creation. Emit a warning if the qos_class
-> token from the root decoder is different than the mem device qos_class
-> token. User parameter options are provided to fail instead of just
-> warning.
->
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  Documentation/cxl/cxl-create-region.txt |  9 ++++
->  cxl/region.c                            | 56 ++++++++++++++++++++++++-
->  2 files changed, 64 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
-> index f11a412bddfe..d5e34cf38236 100644
-> --- a/Documentation/cxl/cxl-create-region.txt
-> +++ b/Documentation/cxl/cxl-create-region.txt
-> @@ -105,6 +105,15 @@ include::bus-option.txt[]
->   supplied, the first cross-host bridge (if available), decoder that
->   supports the largest interleave will be chosen.
->
-> +-e::
-> +--strict::
-> + Enforce strict execution where any potential error will force failure.
-> + For example, if qos_class mismatches region creation will fail.
-> +
-> +-q::
-> +--no-enforce-qos::
-> + Parameter to bypass qos_class mismatch failure. Will only emit warning.
-> +
->  include::human-option.txt[]
->
->  include::debug-option.txt[]
-> diff --git a/cxl/region.c b/cxl/region.c
-> index 3a762db4800e..f9033fa0afbf 100644
-> --- a/cxl/region.c
-> +++ b/cxl/region.c
-> @@ -32,6 +32,8 @@ static struct region_params {
->   bool force;
->   bool human;
->   bool debug;
-> + bool strict;
-> + bool no_qos;
->  } param = {
->   .ways = INT_MAX,
->   .granularity = INT_MAX,
-> @@ -49,6 +51,8 @@ struct parsed_params {
->   const char **argv;
->   struct cxl_decoder *root_decoder;
->   enum cxl_decoder_mode mode;
-> + bool strict;
-> + bool no_qos;
->  };
->
->  enum region_actions {
-> @@ -81,7 +85,9 @@ OPT_STRING('U', "uuid", &param.uuid, \
->      "region uuid", "uuid for the new region (default: autogenerate)"), \
->  OPT_BOOLEAN('m', "memdevs", &param.memdevs, \
->       "non-option arguments are memdevs"), \
-> -OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats")
-> +OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats"), \
-> +OPT_BOOLEAN('e', "strict", &param.strict, "strict execution enforcement"), \
-> +OPT_BOOLEAN('q', "no-enforce-qos", &param.no_qos, "no enforce of qos_class")
->
->  static const struct option create_options[] = {
->   BASE_OPTIONS(),
-> @@ -360,6 +366,9 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
->       }
->   }
->
-> + p->strict = param.strict;
-> + p->no_qos = param.no_qos;
-> +
->   return 0;
->
->  err:
-> @@ -467,6 +476,49 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
->       p->mode = CXL_DECODER_MODE_PMEM;
->  }
->
-> +static int create_region_validate_qos_class(struct cxl_ctx *ctx,
-> +                     struct parsed_params *p)
-> +{
-> + int root_qos_class;
-> + int qos_class;
-> + int i;
-> +
-> + root_qos_class = cxl_root_decoder_get_qos_class(p->root_decoder);
-> + if (root_qos_class == CXL_QOS_CLASS_NONE)
-> +     return 0;
-> +
-> + for (i = 0; i < p->ways; i++) {
-> +     struct json_object *jobj =
-> +         json_object_array_get_idx(p->memdevs, i);
-> +     struct cxl_memdev *memdev = json_object_get_userdata(jobj);
-> +
-> +     if (p->mode == CXL_DECODER_MODE_RAM)
-> +         qos_class = cxl_memdev_get_ram_qos_class(memdev);
-> +     else
-> +         qos_class = cxl_memdev_get_pmem_qos_class(memdev);
-> +
-> +     /* No qos_class entries. Possibly no kernel support */
-> +     if (qos_class == CXL_QOS_CLASS_NONE)
-> +         break;
-> +
-> +     if (qos_class != root_qos_class) {
-> +         if (p->strict && !p->no_qos) {
-> +             log_err(&rl, "%s QoS Class mismatches %s\n",
-> +                 cxl_decoder_get_devname(p->root_decoder),
-> +                 cxl_memdev_get_devname(memdev));
-> +
-> +             return -ENXIO;
-> +         }
-> +
-> +         log_notice(&rl, "%s QoS Class mismatches %s\n",
-> +                cxl_decoder_get_devname(p->root_decoder),
-> +                cxl_memdev_get_devname(memdev));
-> +     }
-> + }
-> +
-> + return 0;
-> +}
-> +
->  static int create_region_validate_config(struct cxl_ctx *ctx,
->                    struct parsed_params *p)
->  {
-> @@ -507,6 +559,8 @@ found:
->       return rc;
->
->   collect_minsize(ctx, p);
-> + create_region_validate_qos_class(ctx, p);
+Hi, guys:
 
-Hello,
+I tried to create a region on the 2hb+6mem environment.
+Fortunately, the region was created successfully,
+and the system memory can be seen in the system that
+the system memory has increased.
 
-IIUC, if the strict option is given and a qos class mismatch occurs,
-the region creation should fail. To do that, shouldn't the return
-value of create_region_validate_qos_class() be handled like below?
+When I tried to use the memory on the region, a segfault occurred.
+anyone has idea?
 
-diff --git a/cxl/region.c b/cxl/region.c
-index f9033fa..0468f5f 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -559,7 +559,9 @@ found:
-                return rc;
+Environment info:
+os version: fedora 39
+linux version: 6.7-rc5
+qemu version: v8.2.0-rc4
+kvm: off
 
-        collect_minsize(ctx, p);
--       create_region_validate_qos_class(ctx, p);
-+       rc = create_region_validate_qos_class(ctx, p);
-+       if (rc)
-+               return rc;
+The detailed operation commands are as follows.
+========> Before region creation
+# numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0 1
+node 0 size: 1006 MB
+node 0 free: 624 MB
+node 1 cpus: 2 3
+node 1 size: 899 MB
+node 1 free: 694 MB
+node distances:
+node   0   1
+   0:  10  20
+   1:  20  10
 
-        return 0;
- }
+# free -h
+                total        used        free      shared  buff/cache 
+available
+Mem:           1.9Gi       448Mi       1.3Gi       1.1Mi       330Mi 
+   1.4Gi
+Swap:          1.9Gi          0B       1.9Gi
 
-Thanks,
-Wonjae
+========> create a new region
+# echo online_movable > /sys/devices/system/memory/auto_online_blocks
+# cxl list -M -P -D -T -E -u
+[
+   {
+     "ports":[
+       {
+         "port":"port1",
+         "host":"pci0000:20",
+         "depth":1,
+         "nr_dports":2,
+         "dports":[
+           {
+             "dport":"0000:20:00.0",
+             "id":"0"
+           },
+           {
+             "dport":"0000:20:01.0",
+             "id":"0x1"
+           }
+         ],
+         "endpoints:port1":[
+           {
+             "endpoint":"endpoint5",
+             "host":"mem1",
+             "parent_dport":"0000:20:01.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem1",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:22:00.0"
+             }
+           },
+           {
+             "endpoint":"endpoint4",
+             "host":"mem0",
+             "parent_dport":"0000:20:00.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem0",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:21:00.0"
+             }
+           }
+         ]
+       },
+       {
+         "port":"port3",
+         "host":"pci0000:0c",
+         "depth":1,
+         "nr_dports":2,
+         "dports":[
+           {
+             "dport":"0000:0c:00.0",
+             "id":"0"
+           },
+           {
+             "dport":"0000:0c:01.0",
+             "id":"0x1"
+           }
+         ],
+         "endpoints:port3":[
+           {
+             "endpoint":"endpoint7",
+             "host":"mem3",
+             "parent_dport":"0000:0c:00.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem3",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:0d:00.0"
+             }
+           },
+           {
+             "endpoint":"endpoint9",
+             "host":"mem5",
+             "parent_dport":"0000:0c:01.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem5",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:0e:00.0"
+             }
+           }
+         ]
+       },
+       {
+         "port":"port2",
+         "host":"pci0000:16",
+         "depth":1,
+         "nr_dports":2,
+         "dports":[
+           {
+             "dport":"0000:16:00.0",
+             "id":"0"
+           },
+           {
+             "dport":"0000:16:01.0",
+             "id":"0x1"
+           }
+         ],
+         "endpoints:port2":[
+           {
+             "endpoint":"endpoint6",
+             "host":"mem2",
+             "parent_dport":"0000:16:01.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem2",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:18:00.0"
+             }
+           },
+           {
+             "endpoint":"endpoint8",
+             "host":"mem4",
+             "parent_dport":"0000:16:00.0",
+             "depth":2,
+             "memdev":{
+               "memdev":"mem4",
+               "ram_size":"256.00 MiB (268.44 MB)",
+               "serial":"0",
+               "host":"0000:17:00.0"
+             }
+           }
+         ]
+       }
+     ]
+   },
+   {
+     "root decoders":[
+       {
+         "decoder":"decoder0.0",
+         "resource":"0x750000000",
+         "size":"4.00 GiB (4.29 GB)",
+         "interleave_ways":3,
+         "interleave_granularity":4096,
+         "max_available_extent":"4.00 GiB (4.29 GB)",
+         "pmem_capable":true,
+         "volatile_capable":true,
+         "accelmem_capable":true,
+         "nr_targets":3,
+         "targets":[
+           {
+             "target":"pci0000:20",
+             "alias":"ACPI0016:00",
+             "position":2,
+             "id":"0x20"
+           },
+           {
+             "target":"pci0000:16",
+             "alias":"ACPI0016:01",
+             "position":1,
+             "id":"0x16"
+           },
+           {
+             "target":"pci0000:0c",
+             "alias":"ACPI0016:02",
+             "position":0,
+             "id":"0xc"
+           }
+         ]
+       }
+     ]
+   }
+]
+# cxl create-region -t ram -d decoder0.0 -m mem3 mem2 mem1 mem5 mem4 mem0
+{
+   "region":"region0",
+   "resource":"0x750000000",
+   "size":"1536.00 MiB (1610.61 MB)",
+   "type":"ram",
+   "interleave_ways":6,
+   "interleave_granularity":4096,
+   "decode_state":"commit",
+   "mappings":[
+     {
+       "position":5,
+       "memdev":"mem0",
+       "decoder":"decoder4.0"
+     },
+     {
+       "position":4,
+       "memdev":"mem4",
+       "decoder":"decoder8.0"
+     },
+     {
+       "position":3,
+       "memdev":"mem5",
+       "decoder":"decoder9.0"
+     },
+     {
+       "position":2,
+       "memdev":"mem1",
+       "decoder":"decoder5.0"
+     },
+     {
+       "position":1,
+       "memdev":"mem2",
+       "decoder":"decoder6.0"
+     },
+     {
+       "position":0,
+       "memdev":"mem3",
+       "decoder":"decoder7.0"
+     }
+   ]
+}
+cxl region: cmd_create_region: created 1 region
+
+===> After region creation
+# numactl -H
+available: 3 nodes (0-2)
+node 0 cpus: 0 1
+node 0 size: 1006 MB
+node 0 free: 736 MB
+node 1 cpus: 2 3
+node 1 size: 899 MB
+node 1 free: 548 MB
+node 2 cpus:
+node 2 size: 1536 MB             <-- new numa node was create
+node 2 free: 1536 MB
+node distances:
+node   0   1   2
+   0:  10  20  20
+   1:  20  10  20
+   2:  20  20  10
+
+# free -h          <-- System memory increased
+                total        used        free      shared  buff/cache 
+available
+Mem:           3.4Gi       504Mi       2.8Gi       1.1Mi       338Mi 
+   2.9Gi
+Swap:          1.9Gi          0B       1.9Gi
+
+# numactl --membind=2 ls
+Segmentation fault (core dumped)
+
+# dmesg
+[  310.119439] show_signal_msg: 20 callbacks suppressed
+[  310.119499] ls[1153]: segfault at 1c454 ip 00007fb4cf771523 sp 
+00007fff57753fe0 error 4 in ld-linux-x86-64.so.2[7fb4cf753000+27000] 
+likely on CPU 2 (core 0, socket 2)
+[  310.350803] Code: 01 42 08 48 8b bd 98 fd ff ff 48 8b 57 70 48 85 d2 
+74 04 48 01 42 08 48 8b bd 98 fd ff ff 48 8b 97 60 01 00 00 48 85 d2 74 
+04 <48> 01 42 08 48 8b bd 98 fd ff ff 48 8b 8f f8 00 00 00 48 85 c9 74
