@@ -1,158 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586BF1339AF
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Feb 2024 15:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BCC6FA9;
+	Tue,  6 Feb 2024 16:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707233051; cv=none; b=cyBaLiIm164NkEDu6TchxUu+CbCpseoxPTm1AEM399sAIAASNcUFWQgZw7B6+yR9LmUv8LjxoFyOM39xBwxh8mqnVDLB5oLNut7kzlQpfB23hxZ/gKmn93r0keIl9xBnN/z9uiQNH9dVp+kYOKMJI4pG5iZ4APnyzSyOIetfI+Q=
+	t=1707237719; cv=none; b=PLUn9qKw7xzewCmJWp9Jl8viebUXZqKo40i+YQocB0i2Whqxl9K2mQlGL1tkLt1YWBtYUgX5I6MGOmZOpaHqAvRmCIX+kxO5Y6lLhAQgg+8ZMhVx12IJn5ZshTnZGHDGtQ18kuW2WawO9aL0lYPL/L6d/S9iE/qh7WI6jSwOAq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707233051; c=relaxed/simple;
-	bh=zQuekD4dXObNK2YjGF1Qz32VcLPfHHTuW/Yf+9ObYT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=co7qW/vIwayTTOg0QnQWj0g/R8glKnQ5BvZPe817lnDIJj64/ffOHAizlqDMEqc3hNHWkdehhlhNo4r2HNObKTpFUEQT84HGWQvUKji2MKMpGAwvIRlg+fhbJkpekFp6Wr2BBD4nAd25GeSQm2E52CyArDPeQckPpJFHNTyo9uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNeG06nH; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707237719; c=relaxed/simple;
+	bh=rRNlDDubtypf416CZLetd6q9gBTbLbGyegrQgkQerDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqcfC/MibPEAkftQqmPEj2mEcoRbpW1UIse+8OMTOqOMrsDOMTqKl759jcgr3+XrKP1CUi+FR6/difDhhcABWcpe9j8EDc04g9xg7VIJUU598ANeaiZ1VFFbyd+WRP1oTy6SbNcqo65TQ2Bf0DyT10umLDPoIRlcppnPJVPvXWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qmzpn5pk; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNeG06nH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qmzpn5pk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707233050; x=1738769050;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zQuekD4dXObNK2YjGF1Qz32VcLPfHHTuW/Yf+9ObYT8=;
-  b=dNeG06nHjLyxl90EvtcrQHuxO2zIQHkXjoH8QQvv9yQ9zOPfblUtOh/y
-   nB5+QrbGJLg0BQi2+jfbiU8bb+xDdN3Wf+UX+jIhFCxqVhs7Wp8EjAT51
-   HWnjQ7qXxXocMojezxTaEh/EBLqme9D/+t4dCH1LhueXAif6EM5uyydp0
-   051tlSs90xVIojW78dWib7+IHwLiVaaGCVsik3yHQj+4Mg3RwL1JbZso+
-   ptpWqmDb3R6JeCax9a2fi37wrac6R7sv0KRl2g4EZOwZ1u++k6M2++n7e
-   eVQ14DScPjP5jGTPZHebZYIaRc4QSyXnV8aDzb+VyeTJi0zUDnESgFpPW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="4580424"
+  t=1707237718; x=1738773718;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rRNlDDubtypf416CZLetd6q9gBTbLbGyegrQgkQerDE=;
+  b=Qmzpn5pkmHrBxj1x8SRX+1gMJwP7cK3Erf6mFFDnKbXIKSjMluSoLojA
+   LUejvNaaFirzqB2BHHT8On/4PZLe/EonVCd1gtqm/b/n5iwT0As137igm
+   M7V/gaubYEg6AjM4mi+jOHMaWUohFuN1wbZfel+NdXCvw22P5l6q+AGAa
+   OKWS0tG80PDE+/RWdOO4/bWAHIFuplNaK/luwLZGYjfwAtLwb+yf5h4UG
+   y7Sx2B+QWVc7RbxkeH0TmYeDR8IZ35gOtfaSTsw6vBAtc+N6UT4Mi20HV
+   VLG6pH+XkTJfLQcKFf5str5sTTnzeyJdcqsy+JzYPU84SYCiQhWszW9oT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="18304899"
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="4580424"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 07:24:09 -0800
+   d="scan'208";a="18304899"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 08:41:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="31865523"
-Received: from snandago-mobl.amr.corp.intel.com (HELO [10.246.113.99]) ([10.246.113.99])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 07:24:06 -0800
-Message-ID: <c7e8fafc-b150-4232-b56a-215292f243e0@intel.com>
-Date: Tue, 6 Feb 2024 08:24:04 -0700
+   d="scan'208";a="1357592"
+Received: from jingjing-mobl1.ccr.corp.intel.com (HELO localhost) ([10.254.215.110])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 08:41:49 -0800
+Date: Wed, 7 Feb 2024 00:41:41 +0800
+From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-acpi@vger.kernel.org, chao.p.peng@linux.intel.com, erwin.tsaur@intel.com, 
+	feiting.wanyan@intel.com, qingshun.wang@intel.com, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Shiju Jose <shiju.jose@huawei.com>, 
+	Adam Preble <adam.c.preble@intel.com>, Li Yang <leoyang.li@nxp.com>, Lukas Wunner <lukas@wunner.de>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+	Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] PCI/AER: Store more information in aer_err_info
+Message-ID: <2rfnevhnhylik4r6smr56uunsxweo7s5elo65sjhiztvxnr6bq@5fcyv22zxyyp>
+References: <20240125062802.50819-2-qingshun.wang@linux.intel.com>
+ <20240205231231.GA830643@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (2) cxl: question about cxl qos_class verification
-Content-Language: en-US
-To: wj28.lee@samsung.com,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- KyungSan Kim <ks0204.kim@samsung.com>, Hojin Nam <hj96.nam@samsung.com>
-References: <ebc9c00d-06f1-4d7f-b551-267301758e16@intel.com>
- <20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef@epcms2p8>
- <CGME20240205103602epcms2p8543d4f3a4bfb684c81f07a94627c7aef@epcms2p6>
- <20240206012321epcms2p6609fae86aaeb23ff377fce94578fc15b@epcms2p6>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240206012321epcms2p6609fae86aaeb23ff377fce94578fc15b@epcms2p6>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205231231.GA830643@bhelgaas>
 
-
-
-On 2/5/24 6:23 PM, Wonjae Lee wrote:
-> On Mon, Feb 05, 2024 at 03:31:35PM -0700, Dave Jiang wrote:
->>
->>
->> On 2/5/24 3:36 AM, Wonjae Lee wrote:
->>> Hello,
->>>
->>> To test the CXL driver with respect to QTG IDs on a real CXL device, I
->>> connected one CXL device to a CXL 2.0 Compliant System (v6.8-rc3).
->>>
->>> However, during cxl endpoint probing, CDAT extraction and parsing works
->>> fine, but cxl_qos_class_verify() for cxlmd does not run properly.
->>>
->>> To be precise, when cxl_qos_class_verify() is executed, the below error
->>> handling code is executed since cxlmd->endpoint is NULL:
->>>
->>>     if (!cxl_root)
->>>         return -ENODEV;
->>>
->>>
->>> I'm not sure if I analyzed it correctly due to the complexity of the CXL
->>> driver, but I think it's because the cxl_port driver execute
->>> cxl_qos_class_verify() before cxlmd->endpoint = endpoint was executed in
->>> the cxl_mem driver. See the dmesg log below, where I've added debugging
->>> code.
->>>
->>> # cxl_mem driver is adding the endpoint
->>> [] cxl_mem mem0: call devm_cxl_add_enpoint
->>> ...
->>> # endpoint port is probed, and cxl_qos_class_verify() runs
->>> [] cxl_port endpoint5: call cxl_qos_class_verify
->>> [] cxl_mem mem0: cxl_qos_class_verify: cxlmd->endpoint is NULL
->>> [] cxl_mem mem0: cxl_qos_class_verify: cxl_root is NULL
->>> ...
->>> # cxl_mem driver sets cxlmd->endpoint
->>> [] cxl_mem mem0: cxl_endpoint_autoremove: cxlmd->endpoint = endpoint
->>> ...
->>>
->>>
->>> I did an experiment to validate the hypothesis. If I call
->>> cxl_endpoint_parse_cdat() after cxlmd->endpoint is set,
->>> cxl_qos_class_verify() runs well without problems.
->>>
->>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
->>> index c5c9d8e0d88d..33b39c6c46fd 100644
->>> --- a/drivers/cxl/mem.c
->>> +++ b/drivers/cxl/mem.c
->>> @@ -74,6 +74,8 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->>>         if (rc)
->>>                 return rc;
->>>
->>> +       cxl_endpoint_parse_cdat(endpoint);
->>> +
->>>         if (!endpoint->dev.driver) {
->>>                 dev_err(&cxlmd->dev, "%s failed probe\n",
->>>                         dev_name(&endpoint->dev));
->>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
->>> index 97c21566677a..ee77aba62780 100644
->>> --- a/drivers/cxl/port.c
->>> +++ b/drivers/cxl/port.c
->>> @@ -111,7 +111,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->>>
->>>         /* Cache the data early to ensure is_visible() works */
->>>         read_cdat_data(port);
->>> -       cxl_endpoint_parse_cdat(port);
->>>
->>>         get_device(&cxlmd->dev);
->>>         rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
->>>
->>>
->>> Maybe there's something I'm missing. It would be very helpful if anyone
->>> could comment on the above analysis.
->>
->> I think this should fix the issue you are seeing?
->>
->> https://lore.kernel.org/linux-cxl/b243e80f-1b24-4756-8bb3-8389d66ea13a@intel.com/T/#mcbce77b6584bd1031d6c1928fcb36fe67be66039
->>
+On Mon, Feb 05, 2024 at 05:12:31PM -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 25, 2024 at 02:27:59PM +0800, Wang, Qingshun wrote:
+> > When Advisory Non-Fatal errors are raised, both correctable and
+> > uncorrectable error statuses will be set. The current kernel code cannot
+> > store both statuses at the same time, thus failing to handle ANFE properly.
+> > In addition, to avoid clearing UEs that are not ANFE by accident, UE
+> > severity and Device Status also need to be recorded: any fatal UE cannot
+> > be ANFE, and if Fatal/Non-Fatal Error Detected is set in Device Status, do
+> > not take any assumption and let UE handler to clear UE status.
+> > 
+> > Store status and mask of both correctable and uncorrectable errors in
+> > aer_err_info. The severity of UEs and the values of the Device Status
+> > register are also recorded, which will be used to determine UEs that should
+> > be handled by the ANFE handler. Refactor the rest of the code to use
+> > cor/uncor_status and cor/uncor_mask fields instead of status and mask
+> > fields.
 > 
-> Oh, you've already fixed it. I found that on the same testbed the commit
-> you mentioned resolves the issue.
+> There's a lot going on in this patch.  Could it possibly be split up a
+> bit, e.g., first tease apart aer_err_info.status/.mask into
+> .cor_status/mask and .uncor_status/mask, then add .uncor_severity,
+> then add the device_status bit separately?  If it could be split up, I
+> think the ANFE case would be easier to see.
 > 
-> Thanks for your response!
+> Thanks a lot for working on this area!
+> 
+> Bjorn
 
-Ok if I add your Tested-by tag to that patch?
- 
-> 
->>
->>>
->>> Thanks,
->>> Wonjae
->>
+Thanks for the feedback! Will split it up into two pacthes in the next
+version.
+
+--
+Best regards,
+Wang, Qingshun
