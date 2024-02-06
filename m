@@ -1,87 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A204A15;
-	Tue,  6 Feb 2024 16:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29958F68;
+	Tue,  6 Feb 2024 17:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707238017; cv=none; b=QDuJVBE2OYQF3uIOM8X8Nwz3tBqIeHKDHCNbUq9L+me5Mdda+5EnttMYIAFRAsnRQCtUsRciBgAV/oKujcjBVLvKzVeXz3nyr1oTNIdAdpNuFVQMLxr9nxITsecNU4kJdDo3qLB+H0GOCoGIKjjBYl9VrnMzAX9VewmNsKG36q8=
+	t=1707240213; cv=none; b=Q3foSvEmsRcIL49pAvhi0m/NVMi7UfJ196wdpJp9Kc4tuwJJfddyldUE3cyLFVNGDY7fYG4Wmj7vr0K3sX6XOx/88fgRBErbFKiw8++a8/YyS9QrkM4AeX5fPcjzlkFWSsxlxMLXQz++SbkmY5LytXx0xXtwJR0iUWImvUHsOEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707238017; c=relaxed/simple;
-	bh=USPZtu7vxjk1ebvcOxNJKhO0fXx2MLMuxDfhFtm/z84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oci5wMc+Qgyy04Jv0l+PwmJ8ipmOL/rJzU6h1YRc/whNa2s/8kAYTDPlDbZi265j5KWohf1AwHrjRls/s0AAjZ9UZcGipqQcNZ8I8lhdRYfA9RM0qUjIbzCzbG9CusLpZXK+96nmugDdcTSlVPhE7tEaya1hOi9t9LYbGGZ8wZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYMDHaqh; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707240213; c=relaxed/simple;
+	bh=8JZuQFl5Ktp+sBXs223hELh4OCBn2C06QW6nfIbxPBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lkA7T2qeAO2Cp5qL1hH+/bL/TBJobG/I0/VUMKrMw0SgvwkyFbPAmz/awy1b4O6XnBtTtCgD55wBEqwD8AxQ3voT7+hxt2ZJz8DyYDUYYpjvX9+Qoc94FpDo8IUge0FcjEw9ZSRtligiQVgeauwCSzzE45FdWqmfbwAQffPvm74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P0UbiIuB; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYMDHaqh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P0UbiIuB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707238016; x=1738774016;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=USPZtu7vxjk1ebvcOxNJKhO0fXx2MLMuxDfhFtm/z84=;
-  b=kYMDHaqhX6IoTu0VXfJSwq45DbvH6NRX6keJD1lrTVLOtDxWbnK14cRf
-   VLt/g4glmaY3FFhOrSvUn9zeOxE8r77peqdylkeY7MokWDEFipVHmMwRX
-   QKmDll+XRIxwNgkyc4XoD8nWo2t2mmF1vT/xd7CzGVelNGeXU07C56ikz
-   1COvb2UwUFn/95nGRQB31mOevZW4gT54ZnA+bUqkaw8ELbZCH9M+SrGgU
-   6yNS1r53pCBiP7OXVBSWK/ZlYCnLydlGq2HbJ3LfFuabBZJlFzCWLltgZ
-   Q1pkCmNNRThiRSnIsavmhMSK2pg0l4j5OvAdvEhIkaYHOq4EaIi78w3SU
+  t=1707240212; x=1738776212;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8JZuQFl5Ktp+sBXs223hELh4OCBn2C06QW6nfIbxPBA=;
+  b=P0UbiIuB5BoDOP76geca/1kQpBTs0p/ndiSnuIV5TdAJJBlt1lNJtCEO
+   3PL9JXwHMYMi3m+I1CduNSFHQdO90H8e8n/Zyv1LBL+Fufz6xFbGgsj0+
+   myF8PDRWI6c2P2sOPloOOo3g+/Guyy2o4OTgDYTa9zjQQZKjDY3LEy1lv
+   XLUVDtx7IHWKbR2Rc9kUObSajidKwTaCW56w9tlZ1R5VbpH/5Nn4Vtz7M
+   fMV7Rm2DYwrjR92mB92RKEAalNwIlm31Uakx1eRbIYzeIMwLcGISumzQJ
+   FTn0linDn5anhb/Z3oFCINTDAg5hv+VTNuUrL4kbKps4sDpyw3Fxmnpey
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="12146629"
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="950189"
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="12146629"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 08:46:56 -0800
+   d="scan'208";a="950189"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 09:23:31 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="1102749"
-Received: from jingjing-mobl1.ccr.corp.intel.com (HELO localhost) ([10.254.215.110])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 08:46:48 -0800
-Date: Wed, 7 Feb 2024 00:46:39 +0800
-From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-acpi@vger.kernel.org, chao.p.peng@linux.intel.com, erwin.tsaur@intel.com, 
-	feiting.wanyan@intel.com, qingshun.wang@intel.com, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Shiju Jose <shiju.jose@huawei.com>, 
-	Adam Preble <adam.c.preble@intel.com>, Li Yang <leoyang.li@nxp.com>, Lukas Wunner <lukas@wunner.de>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-	Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] PCI/AER: Handle Advisory Non-Fatal properly
-Message-ID: <ay2cwgycgjfqz5jmteeijgjiuje2u62wozhnkr76ag4tny6vl4@upbmy22y3hcn>
-References: <20240125062802.50819-3-qingshun.wang@linux.intel.com>
- <20240205232616.GA831017@bhelgaas>
+   d="scan'208";a="5678183"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.99]) ([10.246.113.99])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 09:23:30 -0800
+Message-ID: <f1935db3-14a5-443d-8994-f24e3cd8b98f@intel.com>
+Date: Tue, 6 Feb 2024 10:23:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205232616.GA831017@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2 v3] cleanup: Add cond_guard() to conditional guards
+Content-Language: en-US
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Ingo Molnar <mingo@kernel.org>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <20240206121301.7225-1-fabio.maria.de.francesco@linux.intel.com>
+ <20240206121301.7225-2-fabio.maria.de.francesco@linux.intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240206121301.7225-2-fabio.maria.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 05, 2024 at 05:26:16PM -0600, Bjorn Helgaas wrote:
-> In the subject, "properly" really doesn't convey information.  I think
-> this patch does two things:
-> 
->   - Prints error bits that might be ANFE 
->   - Clears UNCOR_STATUS bits that were previously not cleared
-> 
-> Maybe the subject line could say something about those (clearing
-> UNCOR_STATUS might be more important, or maybe this could even be
-> split into two patches so we could see both).
-> 
 
-Good idea, thanks. I think splitting it into two patches would be the
-better approach.
+
+On 2/6/24 5:13 AM, Fabio M. De Francesco wrote:
+> Add cond_guard() macro to conditional guards.
+> 
+> cond_guard() is a guard to be used with the conditional variants of locks,
+> like down_read_trylock() or mutex_lock_interruptible().
+> 
+> It takes a statement (or statement-expression) that is passed as its
+> second argument. That statement (or statement-expression) is executed if
+> waiting for a lock is interrupted or if a _trylock() fails in case of
+> contention.
+> 
+> Usage example:
+> 
+> 	cond_guard(mutex_intr, return -EINTR, &mutex);
+> 
+> Consistent with other usage of _guard(), locks are unlocked at the exit of the
+> scope where cond_guard() is called.
+> 
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  include/linux/cleanup.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> index c2d09bc4f976..d70454e9f8dc 100644
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> @@ -134,6 +134,16 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+>   *	an anonymous instance of the (guard) class, not recommended for
+>   *	conditional locks.
+>   *
+> + * cond_guard(name, fail, args...):
+> + *	a guard to be used with the conditional variants of locks, like
+> + *	down_read_trylock() or mutex_lock_interruptible. 'fail' is a
+> + *	statement or statement-expression that is executed if waiting for a
+> + *	lock is interrupted or if a _trylock() fails in case of contention.
+> + *
+> + *	Example:
+> + *
+> + *		cond_guard(mutex_intr, return -EINTR, &mutex);
+> + *
+>   * scoped_guard (name, args...) { }:
+>   *	similar to CLASS(name, scope)(args), except the variable (with the
+>   *	explicit name 'scope') is declard in a for-loop such that its scope is
+> @@ -165,6 +175,11 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+>  
+>  #define __guard_ptr(_name) class_##_name##_lock_ptr
+>  
+> +#define cond_guard(_name, _fail, args...) \
+> +	CLASS(_name, scope)(args); \
+> +	if (!__guard_ptr(_name)(&scope)) _fail; \
+> +	else
+> +
+>  #define scoped_guard(_name, args...)					\
+>  	for (CLASS(_name, scope)(args),					\
+>  	     *done = NULL; __guard_ptr(_name)(&scope) && !done; done = (void *)1)
