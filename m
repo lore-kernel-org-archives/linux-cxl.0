@@ -1,112 +1,153 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C5A5A0FD;
-	Wed,  7 Feb 2024 12:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A9259B78;
+	Wed,  7 Feb 2024 15:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707308875; cv=none; b=N6DptMUbslajFagpNPmN7sMRle+QA7S05LSAflNri5W0nKIfvMfPBgfnOBd85C+WykA90tMUcXOo6/xaKco+oXKTC2CvM1EpxrwoUBfkre1j5BftJC63mwAUG7xxt5obH/b+rArC9LaoqUXH6UqiRvMmwb93FDs/RhHW/mJ+RQ4=
+	t=1707319342; cv=none; b=lrUCSqxna0Z4NqFNPcdKk0tgrU1NOCzEPdIawlabTnsv7SNePgVryT1nrogmRoSZQBTQwnqjVQcXLBjIvHBCPLlt9z2+6xaPwfT/SF9ulYszNC+Te2Vs8RqnkOaroidR3e+Whava+rtrhw5dXc0uKHHtNm0BBDNOvrJCLkEBILM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707308875; c=relaxed/simple;
-	bh=zNgtsqJEnEr66FZuG+V88C+VFdZoePSCJZJWhNtsyyA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GW23hhP26mDl1CaBAIUie0IPjDZ7V14IxtaqLC6aBZnEEUL4KbcEPwNhggYPmXHPe6W/AAcNdQod6s34HhTyxfc4EGZjOL+E0R9XjMyzhQ1lT3ftq4tktpSW3QXCfJgonOW5n0ehYAK3NqDDosEFB48pG/xNTB2LSHsLxeZDqD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TVK6y1jhjz6K62N;
-	Wed,  7 Feb 2024 20:24:26 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 97A32140736;
-	Wed,  7 Feb 2024 20:27:44 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 7 Feb
- 2024 12:27:44 +0000
-Date: Wed, 7 Feb 2024 12:27:43 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hojin Nam <hj96.nam@samsung.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Wonjae Lee
-	<wj28.lee@samsung.com>, KyungSan Kim <ks0204.kim@samsung.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] perf: CXL: fix mismatched cpmu event opcode
-Message-ID: <20240207122743.00004acc@Huawei.com>
-In-Reply-To: <20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764@epcms2p3>
-References: <CGME20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764@epcms2p3>
-	<20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764@epcms2p3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707319342; c=relaxed/simple;
+	bh=0ZqVkE4MQT6le5S4lU2VaSaHvTULorc8uo0swoUmiUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lKlO6E2l0hjG/0kWTceUX5e47Elxn1oGO8drrwsfDECzAvd6LBh6MaOIX6sJN0IOcXe+4h75d8CMJC4ltFiu3nnYvutNeug9+Iir6zxpaiz7i/TDDxH66pKoPHRWTVz9FkdX6hUkwhA5qY4k9uu4Q8wRx6D+lzblVKVXxbBUD5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jF3oZI/C; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jF3oZI/C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707319340; x=1738855340;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0ZqVkE4MQT6le5S4lU2VaSaHvTULorc8uo0swoUmiUI=;
+  b=jF3oZI/C6hb98mtYHLQaugOK0GTYEdMV4GOoBB9VDN5uccgjt13LzvEU
+   0S7YVOHaxqmo+FW5kBHHVg9qcZCK9iqsKXFUNzJCEKATt0f9M8YhRBMY6
+   DLqkyOH2iz0RBimCBo+QH0aexZ68u7o5b5jqovksBXX0j1R95xLQ4TACQ
+   a27uTuCKc3qRaUgyM14ZH1eM2BvBUGj8T0SP6k7pBUcjfamlijkptwk1b
+   6g5g94pDo/qyo6fRkUU9qarplLhIbsPcuJXolfXMRIzAGOxrvDmpgcrDC
+   oRpB88eJ7tYerjjRLlP95sgZhjIaaqG1Wtvw7vViYFV27mM1FRXvAA4Cz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="3998390"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="3998390"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 07:22:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="1657320"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.22.1])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 07:22:16 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+ oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ingo Molnar <mingo@kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
+Date: Wed, 07 Feb 2024 16:22:13 +0100
+Message-ID: <4546212.LvFx2qVVIh@fdefranc-mobl3>
+Organization: intel
+In-Reply-To: <202402070919.0zuYCxMS-lkp@intel.com>
+References:
+ <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+ <202402070919.0zuYCxMS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 07 Feb 2024 13:22:35 +0900
-Hojin Nam <hj96.nam@samsung.com> wrote:
-
-> S2M NDR BI-ConflictAck opcode is described as 4 in the CXL
-> r3.1 3.3.9 Table 3.50. However, it is defined as 3 in macro definition. Also
-> adds s2m_ndr_cmpm for bit 3 that was added in CXL r3.1.
+On Wednesday, 7 February 2024 02:54:34 CET kernel test robot wrote:
+> Hi Fabio,
 > 
-> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-> Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
-
-Ah. Sorry I've mislead you. I lazily assumed this was in the 3.0 spec as well
-without checking.
-
-As a fix, we should not add the cmpm or update the reference comment.
-
-So should be the v1 patch with a reference to table 3-43 in r3.0
-and the fixes tag.
-
-A follow up patch to add the 3.1 definitions would be excellent but we shouldn't
-be looking to backport that so it doesn't belong in the fix :(
-
-
-Jonathan
-
-
-> ---
+> kernel test robot noticed the following build warnings:
 > 
-> Hi Jonathan,
-> I've modified the commit messsge and code to reflect you mentioned. Thank you!
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.8-rc3 next-20240206]
+> [cannot apply to cxl/next cxl/pending]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
-> Changes since v1:
-> - Add s2m_ndr_cmpm event attribute (Jonathan)
+> url:   
+> https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cleanup
+> -Add-cond_guard-to-conditional-guards/20240206-203110 base:   linus/master
+> patch link:   
+> https://lore.kernel.org/r/20240206121301.7225-3-fabio.maria.de.francesco%40
+> linux.intel.com patch subject: [PATCH 2/2 v3] cxl/region: Use cond_guard()
+> in show_targetN() config: s390-allyesconfig
+> (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp
+> @intel.com/config) compiler: s390-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build):
+> (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp
+> @intel.com/reproduce)
 > 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version
+> of the same patch/commit), kindly add following tags
 > 
->  drivers/perf/cxl_pmu.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes:
+> | https://lore.kernel.org/oe-kbuild-all/202402070919.0zuYCxMS-lkp@intel.com
+> | /
+> All warnings (new ones prefixed by >>):
 > 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 365d964b0f6a..d85d53d907a6 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -415,11 +415,12 @@ static struct attribute *cxl_pmu_event_attrs[] = {
->         CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,                CXL_PMU_GID_S2M_BISNP, BIT(4)),
->         CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,                CXL_PMU_GID_S2M_BISNP, BIT(5)),
->         CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,                CXL_PMU_GID_S2M_BISNP, BIT(6)),
-> -       /* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
-> +       /* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
->         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,                     CXL_PMU_GID_S2M_NDR, BIT(0)),
->         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,                    CXL_PMU_GID_S2M_NDR, BIT(1)),
->         CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,                    CXL_PMU_GID_S2M_NDR, BIT(2)),
-> -       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(3)),
-> +       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,                    CXL_PMU_GID_S2M_NDR, BIT(3)),
-> +       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(4)),
->         /* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
->         CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,                 CXL_PMU_GID_S2M_DRS, BIT(0)),
->         CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,              CXL_PMU_GID_S2M_DRS, BIT(1)),
-> --
-> 2.34.1
+>    drivers/cxl/core/region.c: In function 'show_targetN':
+> >> drivers/cxl/core/region.c:670:70: warning: suggest braces around empty
+> >> body in an 'else' statement [-Wempty-body]
+>      670 |         cond_guard(rwsem_read_intr, return -EINTR,
+> &cxl_region_rwsem);
+>          |                                                                      
+^
+
+I think that this warning deserves attention and braces should be added around 
+the 'else' empty body. I'm going to send v4:
+
+#define cond_guard(_name, _ret, args...) \
+        CLASS(_name, scope)(args); \
+        if (!__guard_ptr(_name)(&scope)) _ret; \
+        else { }
+
+Any comments?
+
+Fabio
+
+> 
+> vim +/else +670 drivers/cxl/core/region.c
+> 
+>    664
+>    665	static size_t show_targetN(struct cxl_region *cxlr, char *buf, int
+> pos) 666	{
+>    667		struct cxl_region_params *p = &cxlr->params;
+>    668		struct cxl_endpoint_decoder *cxled;
+>    669
+> 
+>  > 670		cond_guard(rwsem_read_intr, return -EINTR, 
+&cxl_region_rwsem);
+> 
+>    671
+>    672		if (pos >= p->interleave_ways) {
+>    673			dev_dbg(&cxlr->dev, "position %d out of range 
+%d\n", pos,
+>    674				p->interleave_ways);
+>    675			return -ENXIO;
+>    676		}
+>    677
+>    678		cxled = p->targets[pos];
+>    679		if (!cxled)
+>    680			return sysfs_emit(buf, "\n");
+>    681
+>    682		return sysfs_emit(buf, "%s\n", dev_name(&cxled-
+>cxld.dev));
+>    683	}
+>    684
+
+
+
 
