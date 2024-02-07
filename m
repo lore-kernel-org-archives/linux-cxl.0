@@ -1,129 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244A0DF78;
-	Wed,  7 Feb 2024 01:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734641CAB3
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 04:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707270933; cv=none; b=LtyF4f+Q3XDAoCbjHI4FIHLajTgj/TUeGXqYV0VZlrE0PpZPACCWQKppSRtFlPOHhx/daGa7zT6/PcXSZntrXvF1xyHUPm1jcakE/qxpt0o7wkd7MxkToCRkGGZhX4U4Fa/b0oZlM8LwvCBQbz8DUaL6mHu0r3lg8Bg/Gi/3Cp4=
+	t=1707279769; cv=none; b=dVYM9m6kQwMBHXK1tDjjpUTPyHx7uvvDCQA1NGQzxXPMsbtQpa63CK5tthf198eR3sdM4Jstpc+fPD1lIRd/Xi/rTQupx1KAUls+3lOJzv7T/Yv7+2FN4o9fZw22nWyNXAV9o2GIaPxydfQzupNfy41DwCxxLNBriKFBh2hImi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707270933; c=relaxed/simple;
-	bh=mG7uSB7BF0mlbRNJ9ZZyvOnHgKYsgTxFbHl5KXrLGug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ukku/ahHKgN3zLVsjSLScw64MMmo+NyMhn4vAq8sFcXVn+JIUpAeK9VRrJ7mVpI/RAFd9wcb71aGybFAJwDEMby4VJOwUcPnaaTbpv651ly6k+p49g0R6MQm6fhx/nBZry8NfsRolgHGfDe+w6a4dKXzOV3PX7A/JpiSFAw4YVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3O55aQ4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707279769; c=relaxed/simple;
+	bh=rukCa+dU1eZ6GSZTI440gjVvfzDMVGjFz/6VQOVW/40=;
+	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
+	 References; b=OGyPdFROPudrrtnLuAag24KlJZEBR1pf+MpySEhjYADRLVKBO8+F2Y2NBlv0MwCSXx0kmPgZX4Jt82FaJU/79fdY8u/Zo+oxN2LOiICAcHVXbwpGdyUvB8NMA7jk3axdyXQL7d18q3Kpdv/j1aiMH5mDXILacv4xUMfg6M9nVqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FF+s0BpJ; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3O55aQ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707270930; x=1738806930;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mG7uSB7BF0mlbRNJ9ZZyvOnHgKYsgTxFbHl5KXrLGug=;
-  b=B3O55aQ4kdKFmYjUNuUgkK9+q5KwpfRZz4qPKnMnL+fPPoRHAka2nU2e
-   evi3HKpde10+QT5vxsm0ZJq3xhDYBzA3w9XxMJPCHQz4azb5a7339+cAo
-   6PfReVhKg9AH2a8JUAR2IZNDGjQbxo+aMP3ahHhK7/on5asxoYKagaCW2
-   AtwZ+U0N2S2LI+KFCR+uYAX11CrGO1Jj0lRo2MskAkCIRiu52NSVWh6Ox
-   hXtqYJx0HP2wn61wFxP5v0pe0unKdcbS2J21zFiOQSksq56O1EwboY/is
-   o7mTSM7pxmNVFvoIdxxwDu+sQcVid9iLxtsJoU2QjVJ077AkWlV0wMW4f
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="4671459"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="4671459"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 17:55:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="5807087"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 06 Feb 2024 17:55:26 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXX9o-0001yQ-1U;
-	Wed, 07 Feb 2024 01:55:24 +0000
-Date: Wed, 7 Feb 2024 09:54:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
-Message-ID: <202402070919.0zuYCxMS-lkp@intel.com>
-References: <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FF+s0BpJ"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240207042243epoutp02ad92fc5fc858a9b741d0b86cc0555d94~xeeYymyYS0431904319epoutp02C
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 04:22:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240207042243epoutp02ad92fc5fc858a9b741d0b86cc0555d94~xeeYymyYS0431904319epoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707279763;
+	bh=4iN7aGm2GIoezqePI+sDw2OitzYGXb1VOO9E8blVTaw=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=FF+s0BpJ/LSj+nf3wR66Ixm6kefAqja9n/FmuprwniZ7lFoZp6fCjtj4bFexkT7qw
+	 vVPBosOVd5lwK3Kw+aFpYJaQg7j7NFk4xcEtfVFPaNK23oA5DbBNFGGmvwP+kp/zC1
+	 qHIiD1B/BP6ehMhJUyFanZbx4101OaLIP1g0n02Q=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+	20240207042243epcas2p1ac78a64d3306eafdf5de4ab77faa5fb2~xeeYeJ0kc1480014800epcas2p1f;
+	Wed,  7 Feb 2024 04:22:43 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.90]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TV6R36WZmz4x9Q9; Wed,  7 Feb
+	2024 04:22:39 +0000 (GMT)
+X-AuditID: b6c32a45-179ff70000002716-ad-65c3058be231
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	20.AC.10006.B8503C56; Wed,  7 Feb 2024 13:22:35 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206121301.7225-3-fabio.maria.de.francesco@linux.intel.com>
+Mime-Version: 1.0
+Subject: [PATCH v2] perf: CXL: fix mismatched cpmu event opcode
+Reply-To: hj96.nam@samsung.com
+Sender: Hojin Nam <hj96.nam@samsung.com>
+From: Hojin Nam <hj96.nam@samsung.com>
+To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>
+CC: Wonjae Lee <wj28.lee@samsung.com>, KyungSan Kim
+	<ks0204.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764@epcms2p3>
+Date: Wed, 07 Feb 2024 13:22:35 +0900
+X-CMS-MailID: 20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdljTXLeb9XCqwcLD2harFl5jszi6h8Ni
+	0+NrrBbnZ51isbi8aw6bxdLrF5ksWu6YWmy8/47NgcNjzbw1jB4tR96yemxa1cnmsXlJvUff
+	llWMHp83yQWwRWXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE
+	6Lpl5gBdo6RQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMC/QK07MLS7NS9fLSy2x
+	MjQwMDIFKkzIzrjQeJG14Ad/xat3S1gaGDt5uhg5OSQETCQe3OphBrGFBHYwStzole5i5ODg
+	FRCU+LtDGCQsLGAv0X+5hwmiRE5iz4nzLBBxDYm13w+zg9hsAmoSC+9fAhsjIlAlcf39U6B6
+	Lg5mgW1MEn8fLmWE2MUrMaP9KQuELS2xfflWqLiGxI9lvcwQtqjEzdVv2WHs98fmQ9WISLTe
+	OwtVIyjx4OduqLiUxKe7m6DixRKz9y+DihdIrPixCGqXvkTj9fdsIDavgK/E4f3r2EB+ZBFQ
+	ldg+twaixEVi6843YOXMAvIS29/OYQYpYRbQlFi/Sx/ElBBQljhyC6qCT6Lj8F92mKd2zHvC
+	BGErSezvaIU6RkLizonLUMd4SDyct4INEoKBEovXbGeewKgwCxHOs5DsnYWwdwEj8ypGsdSC
+	4tz01GKjAkN4zCbn525iBKdKLdcdjJPfftA7xMjEwXiIUYKDWUmE12zHgVQh3pTEyqrUovz4
+	otKc1OJDjKZAD09klhJNzgcm67ySeEMTSwMTMzNDcyNTA3Mlcd57rXNThATSE0tSs1NTC1KL
+	YPqYODilGpj2Js7f98Ig+LfHbZmfVcWrLrcueh40Q+xkZJe9fl6JF2t0/bqDLO+Lru5+aXta
+	P/Ow0cN1pk1MJvzHH09SPCldxF21zOPhOa4Lk5sYWTgmfzm/Mis80PWsyBPvoCZ3VZ2Ti7Q8
+	DaLVp66Zsea30u67y0Syf3+6s3jB72yH7pLZOi+enbJ7xHagdNr/Rtu+jT8TChT109/eXRlt
+	aHNg/Yxl8/sk18gZpZx90++6xWh5kMTX5ENdd9/6d9esfM+QNGN2VDXjqqjuTPflgdWLkyT7
+	mO2cpA5F8Qh5unBvjrqYcnlNdmzY/F9+re8KV8xKSWs+/EGynGv/pMY43ZhVkxv35XT6JPDz
+	ba6JMvdcxqfEUpyRaKjFXFScCABTg7sOHgQAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764
+References: <CGME20240207042235epcms2p358e40f0409e25bd9e875ad1ae0dd0764@epcms2p3>
 
-Hi Fabio,
+S2M NDR BI-ConflictAck opcode is described as 4 in the CXL
+r3.1 3.3.9 Table 3.50. However, it is defined as 3 in macro definition. Also
+adds s2m_ndr_cmpm for bit 3 that was added in CXL r3.1.
 
-kernel test robot noticed the following build warnings:
+Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
+---
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.8-rc3 next-20240206]
-[cannot apply to cxl/next cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hi Jonathan,
+I've modified the commit messsge and code to reflect you mentioned. Thank you!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cleanup-Add-cond_guard-to-conditional-guards/20240206-203110
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240206121301.7225-3-fabio.maria.de.francesco%40linux.intel.com
-patch subject: [PATCH 2/2 v3] cxl/region: Use cond_guard() in show_targetN()
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240207/202402070919.0zuYCxMS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402070919.0zuYCxMS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/cxl/core/region.c: In function 'show_targetN':
->> drivers/cxl/core/region.c:670:70: warning: suggest braces around empty body in an 'else' statement [-Wempty-body]
-     670 |         cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
-         |                                                                      ^
+Changes since v1:
+- Add s2m_ndr_cmpm event attribute (Jonathan)
 
 
-vim +/else +670 drivers/cxl/core/region.c
+ drivers/perf/cxl_pmu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-   664	
-   665	static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
-   666	{
-   667		struct cxl_region_params *p = &cxlr->params;
-   668		struct cxl_endpoint_decoder *cxled;
-   669	
- > 670		cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
-   671	
-   672		if (pos >= p->interleave_ways) {
-   673			dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
-   674				p->interleave_ways);
-   675			return -ENXIO;
-   676		}
-   677	
-   678		cxled = p->targets[pos];
-   679		if (!cxled)
-   680			return sysfs_emit(buf, "\n");
-   681	
-   682		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
-   683	}
-   684	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 365d964b0f6a..d85d53d907a6 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -415,11 +415,12 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+        CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,                CXL_PMU_GID_S2M_BISNP, BIT(4)),
+        CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,                CXL_PMU_GID_S2M_BISNP, BIT(5)),
+        CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,                CXL_PMU_GID_S2M_BISNP, BIT(6)),
+-       /* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
++       /* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
+        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,                     CXL_PMU_GID_S2M_NDR, BIT(0)),
+        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,                    CXL_PMU_GID_S2M_NDR, BIT(1)),
+        CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,                    CXL_PMU_GID_S2M_NDR, BIT(2)),
+-       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(3)),
++       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,                    CXL_PMU_GID_S2M_NDR, BIT(3)),
++       CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,           CXL_PMU_GID_S2M_NDR, BIT(4)),
+        /* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
+        CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,                 CXL_PMU_GID_S2M_DRS, BIT(0)),
+        CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,              CXL_PMU_GID_S2M_DRS, BIT(1)),
+--
+2.34.1
