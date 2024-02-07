@@ -1,91 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EC1126F15
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 20:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34B48662E
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 20:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707336793; cv=none; b=hz937S2SuOXfZLLIWVUV/Sg8LLLygFBW+NY/8eU22RpDdK5pY2IquI/lXwYcxNRb2sMn2+xjbh0pHMai7tA2AJhfT/Tz051O1wYyJwBZfKsChH1ovRoiqvwoEQbSvXv9LfTHd+1No9Fj8I54HpIBvymdqXadqwhAhlMuKHeiQKQ=
+	t=1707337005; cv=none; b=kgl+AXaaCuSRYN0fJN9qF7IbLhDrqT4mE4CurG6uvXWPwV71FrNbgYFY4gfTtSPz3bx3d64B3dW2nn8FW5hl+2WPrlRZninUJegrJCa6IZaTf2Vv7bKt1R9jgk2PyrX5OHRFjn6GzAeEUX0YHUppS/72Agab1bDdOIJUD5Pk2V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707336793; c=relaxed/simple;
-	bh=5IwnW4X5eZGAq3ypHlfqbbuQcAekRcECeINNc1xyf7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TnchdxLgd8Qgd1dqowoo7zgzS23BMQk1bFttl8ixVH5GLzXXNt76MBWScXMmPmdWDVfhEkMgR7iTGrGxBzmCwpsHTsd4mAqC5eR96+WA7rTdo2qlSuc5Zn2FSqEK/X0qv1oNzA5KhXH7DxJ+u8Mz/2qEzPGaoRagrvyayMPsv+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kbb6yELm; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1707337005; c=relaxed/simple;
+	bh=4VVNg7/LB9kXbnJYFvnvtGDF4R7WlJ4TQPpUbtdlnso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U1N8AUPMC1hMoYf0iitm1NQLFSwYbkgn3raE3YhH3md+Kc7FPh9i6bGJ5O/liO4KSc0axbdM5/JcMo/++uCxqlKvlthEzLWF49WlTPrLU56+x8/LhArPlsdE2s7BMK22V8tc0VCbtoD70NpkPoGimYAozR5Of+pMrbvUMwQZFH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvMJi640; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kbb6yELm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvMJi640"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707336792; x=1738872792;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5IwnW4X5eZGAq3ypHlfqbbuQcAekRcECeINNc1xyf7I=;
-  b=Kbb6yELmH26wBJov2mJNmXw/OoG8GAlw8QycdvmqQPKipJYSGnCVO/hM
-   DrklPokfvO1lmX4ws17/Sof3M2xWqdJDZSat7z0im3wuq8lORb7GLdCrC
-   ShhFZ0O/ogv91j5CVzW+zaxgBvhTOmsyPCMSYv9Hh7hgdrfPEgGQ1GJfP
-   A0Qx+BrvQxNP/BWwxIMzI2sWQw9bY9UCAFexVnDTdWyQyGqLTLKuGklX6
-   ChqQ+rEgWSf79gwcDmi2Vfk/2hftGFy9nksR6PqDDxwlwfZxRl+kr5Uau
-   H6X3C5Sr52gIuRZCuQNPdQkYz9u55WzOA7yCs123YzoW1Ygxh8wNlTgEB
+  t=1707337003; x=1738873003;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4VVNg7/LB9kXbnJYFvnvtGDF4R7WlJ4TQPpUbtdlnso=;
+  b=IvMJi640sCdwEKNVuIgp7mNjm6OnNrsvfWbusaRRceeCiCjSd/zFoSgh
+   aQngQc0zXMS76a0p/gWn7NrlCHxHd+m7H7v1mmIHT0pJ7PRC0VZ7OTw3J
+   qPKfeYPsr9Es+Y6IXx1LSvXIKMir5uz2RK+/BQVum7hdW5j4EgV2E2T95
+   b+prtJ3Thh9KScK+ak5gMiKoQjDQxA8ufXAewUIudgWL3SakLdoMOUSdm
+   Ia+0LQbwcHwILhbqROzkjHo/Z8ClJ5GEIrhGS6F1oBK0aakES3QE72Ctg
+   MXasD4HBCoooc9pMoha6ZjSU/jdbjBed194qPfYJFDpf2HCVET2zq+DtA
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="26515041"
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12431552"
 X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="26515041"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 12:13:11 -0800
+   d="scan'208";a="12431552"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 12:16:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="1742358"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.105.224])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 12:13:11 -0800
-Date: Wed, 7 Feb 2024 12:13:09 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	vishal.l.verma@intel.com
-Subject: Re: [NDCTL PATCH v6 1/4] ndctl: cxl: Add QoS class retrieval for the
- root decoder
-Message-ID: <ZcPkVQjK2tXbrvYt@aschofie-mobl2>
-References: <20240207172055.1882900-1-dave.jiang@intel.com>
- <20240207172055.1882900-2-dave.jiang@intel.com>
- <ZcPiffSmUyGWC6kB@aschofie-mobl2>
+   d="scan'208";a="32238522"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.163]) ([10.246.112.163])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 12:16:41 -0800
+Message-ID: <c24b91df-f94b-4455-9086-2cad26fc3400@intel.com>
+Date: Wed, 7 Feb 2024 13:16:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcPiffSmUyGWC6kB@aschofie-mobl2>
-
-On Wed, Feb 07, 2024 at 12:05:17PM -0800, Alison Schofield wrote:
-> On Wed, Feb 07, 2024 at 10:19:36AM -0700, Dave Jiang wrote:
-> > Add libcxl API to retrieve the QoS class for the root decoder. Also add
-> > support to display the QoS class for the root decoder through the 'cxl
-> > list' command. The qos_class is the QTG ID of the CFMWS window that
-> > represents the root decoder.
-> > 
-> > Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > ---
-> 
-> -snip-
-> 
-> > @@ -136,6 +136,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
-> >  		param.regions = true;
-> >  		/*fallthrough*/
-> >  	case 0:
-> > +		param.qos = true;
-> >  		break;
-> >  	}
-> 
-> Add qos to the -vvv explainer in Documentation/cxl/cxl-list.txt 
-
-My comment is wrong, since it is now an 'always displayed', not a -vvv.
-Why put it here at all then? I'm confused!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH v6 1/4] ndctl: cxl: Add QoS class retrieval for the
+ root decoder
+Content-Language: en-US
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ vishal.l.verma@intel.com
+References: <20240207172055.1882900-1-dave.jiang@intel.com>
+ <20240207172055.1882900-2-dave.jiang@intel.com>
+ <ZcPiffSmUyGWC6kB@aschofie-mobl2> <ZcPkVQjK2tXbrvYt@aschofie-mobl2>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ZcPkVQjK2tXbrvYt@aschofie-mobl2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
+
+On 2/7/24 1:13 PM, Alison Schofield wrote:
+> On Wed, Feb 07, 2024 at 12:05:17PM -0800, Alison Schofield wrote:
+>> On Wed, Feb 07, 2024 at 10:19:36AM -0700, Dave Jiang wrote:
+>>> Add libcxl API to retrieve the QoS class for the root decoder. Also add
+>>> support to display the QoS class for the root decoder through the 'cxl
+>>> list' command. The qos_class is the QTG ID of the CFMWS window that
+>>> represents the root decoder.
+>>>
+>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>> ---
+>>
+>> -snip-
+>>
+>>> @@ -136,6 +136,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+>>>  		param.regions = true;
+>>>  		/*fallthrough*/
+>>>  	case 0:
+>>> +		param.qos = true;
+>>>  		break;
+>>>  	}
+>>
+>> Add qos to the -vvv explainer in Documentation/cxl/cxl-list.txt 
+> 
+> My comment is wrong, since it is now an 'always displayed', not a -vvv.
+> Why put it here at all then? I'm confused!
+
+Just remove param.qos entirely?
 > 
 > 
+>>
+>>
