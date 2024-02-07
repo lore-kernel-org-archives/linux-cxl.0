@@ -1,131 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02716149E14
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 22:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D826F134AA
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Feb 2024 23:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707346448; cv=none; b=eP/IJRzkbbCUtTL12Xl+wYm1fLfAhUiaQDQY3SqdyKvPZYPk8S1pzwdmCgbJ4+sade+y2WPzVzItJkm+ckXIeDvFvAqAKvgmgDUYmNnCd7BJq0AgMhyDxKSzqf1TP960vPLo9oOMDu65vp+Aq0l+5Hk1LJLHrsP1z2/OkZGc3YM=
+	t=1707348727; cv=none; b=qjWxIZmoLYxLSDKmkZ6y6q2na7+7npAyo71jZqOltCaOVyStVTUS1mhADAAzLOhFg3tI1Vlrqf6qvSbS3EJRdyQfOgSeVllHbH2fF5+QWZYVS28QNjeIPMlJQlnBQxOFijOOB6PAMljLy5ey/1NQn81fOhCUI2lu+ue9S7m96ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707346448; c=relaxed/simple;
-	bh=Ns5BcPSLKhIaVHunN5WY1aH4q33j9KqumY1Li/7q5iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqqchFwYWFLjp4ld4YU/+dEqoNWif6uJx/X+bJiDrQSkO0cttqftCFNzaQhxE+mIPh2i5hilHROxvjVmIMdw9KtsZnLO82iw1xYXtMnkzHfcgFRg3/3HttZEA71O9TEARMR9Jn1ISWFpL89zXPziA1wbFm/8Vp+aDv3vFewFSbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7JxipYT; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1707348727; c=relaxed/simple;
+	bh=h+8/LV6hKXfo2H7Yrw+MF1xV5NTFBtLmrzQGxdEFs4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arySE+eXIIYW1sv42BFgXaHdySXN56silUIYBuUCumXgDbmiWwXXhZJNu9hzMpLgwyJquEX9moMknhXR8Vyim5MiDlk9fHRUpLBClU5t/gqG+LUhLmnICh+g4ot081fmoZuFpPdtdyDdyVky8QWOgxUsuuKIroqpvmvnnENmObs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I+MuZJp1; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7JxipYT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I+MuZJp1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707346447; x=1738882447;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ns5BcPSLKhIaVHunN5WY1aH4q33j9KqumY1Li/7q5iE=;
-  b=h7JxipYTpruQP5kMtQnf6VTjjYFz3dHOyl9f7nRfkk0qmwzCw5PwbAKN
-   8h1tbLDlEXTeMLMH1otmmAd72//JY2uwEvs/q3yaNk+q26QHlMk0JgDJ7
-   tzl21c4CV+fBrLby2BP4ZELl291slgoyMuw67Jv8AbyIZ74z8zR1SmIck
-   Y2K2Tcwuam70nb2rASAkoSJOOaltSJdOisengySulm2hjeOADFufIfIpW
-   WbrW4nEAWrcjsiWR/i6U34gaVbchI6V7ZnPPB8w8flgFYCC4/pKCrPgh2
-   CXPedXlcOyLFSK4UKWzZ24x1byWIxABkgqso9cZCa2RtrbCue7QIEBNdQ
+  t=1707348726; x=1738884726;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=h+8/LV6hKXfo2H7Yrw+MF1xV5NTFBtLmrzQGxdEFs4E=;
+  b=I+MuZJp1WYnB/g34ykRS4jJQel3Aoz3tImjQ0fOnuWPl9iR9gH4F1Z+Z
+   h2nFZLjKNgeIPjI6YsB7w3IavMkD0qPF3h5plR+iPSF7Q//6QUFhYaVK0
+   SGOSwEx3qZl7se3VtyftCiokZ6jAWw8nSd5jefXXiLLzE5wCq6SdMe7ll
+   oILPRI6bNhk2rxat9hYYQDrO/dlb+pSXkuNXsbHa4RfXk5ChohPliScGm
+   KAiCAjxmpXb0w1d4r48VMctZD42ahQEeRdaIk7nZSTabgAzRdR9osXDCL
+   ivm6HLHQvxp0Q7mIYbqSNZYq4mbAYAZgQAINnaZBorKfP0xAlwXUNMm9j
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="26541286"
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1250723"
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="26541286"
+   d="scan'208";a="1250723"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 14:54:06 -0800
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 15:32:06 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="1781871"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.105.224])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 14:54:06 -0800
-Date: Wed, 7 Feb 2024 14:54:04 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH v6 0/7] Support poison list retrieval
-Message-ID: <ZcQKDCiNXYqdtQ/z@aschofie-mobl2>
-References: <cover.1705534719.git.alison.schofield@intel.com>
- <65a99ea31393a_2d43c29454@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Zam1iPjxXA9iiUOl@aschofie-mobl2>
- <65a9ba5469bc5_37ad29426@dwillia2-xfh.jf.intel.com.notmuch>
+   d="scan'208";a="1787462"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.163]) ([10.246.112.163])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 15:32:04 -0800
+Message-ID: <4419c4dd-91e8-4ab3-8d1c-a59f339eb13e@intel.com>
+Date: Wed, 7 Feb 2024 16:32:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65a9ba5469bc5_37ad29426@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH v6 3/4] ndctl: cxl: add QoS class check for CXL
+ region creation
+Content-Language: en-US
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Cc: "Schofield, Alison" <alison.schofield@intel.com>
+References: <20240207172055.1882900-1-dave.jiang@intel.com>
+ <20240207172055.1882900-4-dave.jiang@intel.com>
+ <51b7c1c3f354b2fe0f0ac7fca9a35de07c5b7f23.camel@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <51b7c1c3f354b2fe0f0ac7fca9a35de07c5b7f23.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 18, 2024 at 03:55:00PM -0800, Dan Williams wrote:
-> Alison Schofield wrote:
-> [..]
-> > > >         "dpa":1073741824,
-> > > >         "dpa_length":64,
-> > > 
-> > > The dpa_length is also the hpa_length, right? So maybe just call the
-> > > field "length".
-> > > 
-> > 
-> > No, the length only refers to the device address space. I don't think
-> > the hpa is guaranteed to be contiguous, so only the starting hpa addr
-> > is offered.
-> > 
-> > hmm..should we call it 'size' because that seems to imply less
-> > contiguous-ness than length?
+
+
+On 2/7/24 2:02 PM, Verma, Vishal L wrote:
+> On Wed, 2024-02-07 at 10:19 -0700, Dave Jiang wrote:
+>> The CFMWS provides a QTG ID. The kernel driver creates a root decoder that
+>> represents the CFMWS. A qos_class attribute is exported via sysfs for the root
+>> decoder.
+>>
+>> One or more QoS class tokens are retrieved via QTG ID _DSM from the ACPI0017
+>> device for a CXL memory device. The input for the _DSM is the read and write
+>> latency and bandwidth for the path between the device and the CPU. The
+>> numbers are constructed by the kernel driver for the _DSM input. When a
+>> device is probed, QoS class tokens  are retrieved. This is useful for a
+>> hot-plugged CXL memory device that does not have regions created.
+>>
+>> Add a QoS check during region creation. Emit a warning if the qos_class
+>> token from the root decoder is different than the mem device qos_class
+>> token. User parameter options are provided to fail instead of just
+>> warning.
+>>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v6:
+>> - Check return value of create_region_validate_qos_class() (Wonjae)
+>> ---
+>>  Documentation/cxl/cxl-create-region.txt |  9 ++++
+>>  cxl/region.c                            | 58 ++++++++++++++++++++++++-
+>>  2 files changed, 66 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+>> index f11a412bddfe..d5e34cf38236 100644
+>> --- a/Documentation/cxl/cxl-create-region.txt
+>> +++ b/Documentation/cxl/cxl-create-region.txt
+>> @@ -105,6 +105,15 @@ include::bus-option.txt[]
+>>  	supplied, the first cross-host bridge (if available), decoder that
+>>  	supports the largest interleave will be chosen.
+>>  
+>> +-e::
+>> +--strict::
+>> +	Enforce strict execution where any potential error will force failure.
+>> +	For example, if qos_class mismatches region creation will fail.
+>> +
+>> +-q::
+>> +--no-enforce-qos::
+>> +	Parameter to bypass qos_class mismatch failure. Will only emit warning.
 > 
-> The only way the length could be discontiguous in HPA space is if the
-> error length is greater than the interleave granularity. Given poison is
-> tracked in cachelines and the smallest granularity is 4 cachelines it is
-> unlikely to hit the mutiple HPA case.
+> Hm, -q is usually synonymous with --quiet, it might be nice to reserve
+> it for that in case we ever need to add a quiet mode. Maybe use -Q?
 
-Hi Dan,
-
-Circling back to this issue, as I'm posting an udpated rev.
-
-I'm not getting how *only* an error length greater that IG can lead to
-discontigous HPA. If the poison starts on the last 64 bytes of an IG and
-has a length greater than 64 bytes, we go beyond the endpoints mapping,
-even if that length is less than IG.
-
-In the layout below, if the device underlying endpoint2 reports
-^poison^ as shown, it is discontinguous in HPA space.
-
-HPA 0..........................................................N
-ep1 ..........          ..........          ..........    
-ep2           ..........          ..........          ..........
-bad                   ^poison^ 
-good                  ^po          ison^
-
-'bad' is what happens today if length is applied to HPA
-'good' is what is right
-
-Am I missing something wrt cachelines you mention?
-
+Sure. I'll change it. 
 > 
-> However, I think the kernel side should aim to preclude that from
-> happening. Given that this is relying on the kernel's translation I
-> would make it so that the kernel never leaves the impacted HPAs as
-> ambiguous. For example, if the interleave_granularity of the region is
-> 256 and the DPA length is 512, it would be helpful if the *kernel* split
-> that into multiple trace events to communicate the multiple impacted
-> HPAs rather than leave it as an exercise to userspace.
 > 
-
-That's a familiar plan that we rejected in the driver implementation,
-As defined, a cxl_poison event reports a starting dpa, a dpa_length,
-and the starting hpa if the address is mapped. That left userspace to do
-the HPA translation work.
-
-We can move that work to the driver independent of this ndctl work.
-
 > 
-> Might be useful to capture Erwin's analysis of how to use that field in
-> the man page, if it's not there already.
-
-The man page now has the definitions of the source field and a spec
-reference.  I don't see the cxl list man page as the place to offer
-media-error trouble-shooting tips. 
