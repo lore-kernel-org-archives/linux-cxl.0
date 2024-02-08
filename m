@@ -1,125 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A7B7D410;
-	Thu,  8 Feb 2024 16:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707409002; cv=none; b=fBzE2kkaib15dS0VB7ya6I281i0hpaeFuFr86ATvsCjfoziyfKgd9hAfQCnAcX3BDkFbNmb9077fLOzNYeMKhFcT30lAc0y4yKiroVRpfaIzKIvAt8u+YwDiBHdkgHnK1GDwwm5AWJRPh0pRQzPdDLJrOPmtYnXQQJBvNl/q/9o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707409002; c=relaxed/simple;
-	bh=vNcKCC/VYDlVMZCuvfjdsv4qWjl8OrFT+5tYxsr8d0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IWHGBh7iOxLulokpEvrx60+ZgddYSA7DZU3bGXRhJ1VZpPJGH9wiv81bJR6bqyf0uSj2JzDOh39mODTiHkJdyk7is7DFoowN7AY86t1OpdlSzGp5TZqNm5uc4vgUhS9wE04GkGP4fkjiO/oz1MWpYlU9S4/xD6/r9RSYGplcCaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UVl7+5ot; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D774A7BAF2;
+	Thu,  8 Feb 2024 16:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707409365; cv=fail; b=lAeqx5X0uOW38Wd53ixW58DHom39hOmzvMf1bchyTj0DL0obyrcEW19iwlNfGt1VndxmkQE80732E9rRQb8/YFu5mSgdaPrMDr9s2C2FcEsO2bXXuF8i1KunV/tWoRnzQDisG3JEu4kseoKGqQDtneOvOeUEJx32xlciJMNqUCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707409365; c=relaxed/simple;
+	bh=HiG3vESMCs4OWQ8x6sOxmGdsfGqWfLGYpFTT2ubWlmQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sEhdgaEBRoI0Hk06pCQLP5fI3dzaI6dNqxNRWY/eReoM15X2GN3bqS9RxCDzVebhFG6ZhPzqH+lk+CpRRdMm8m/qmwvYBCR/Si+rWBAIrohNl6aBz2Pqh55U311wAZ3oiMcQvFTHzBF00YF57L2Sc0Hw4F90I/6hn3isDJnF3Pc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJqbXUJ+; arc=fail smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UVl7+5ot"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJqbXUJ+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707409000; x=1738945000;
+  t=1707409362; x=1738945362;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vNcKCC/VYDlVMZCuvfjdsv4qWjl8OrFT+5tYxsr8d0s=;
-  b=UVl7+5otIv9dKKz90kyxyjlHIOXEub9cTjL3y84IcjLqzbV9la8QIu35
-   VrJ13MCZtwwVTVDMMp9TDynRNQ0GxMKhZ3Rq9rBuPyusKTY7Ldp1/VAk8
-   6Z+Mv8O0FTkPQ0fWvrRJofRZi21WZVRCoRJF5hxiJ74SJMfpmMGdvpokp
-   /U7r/lWuAvgm8BPcKRWVg5cwArboRWAUUvdK1z3MLU3GooK6axlS1eOaO
-   oqQFhyi3Ar2HKbeuglYTaBsPk4FPGlm0oGUhVc5j2TsvZoZqMaqukARH+
-   v2fAndB+KkkkA/FYXi9QAHs4FYDP8PvyDRBQEibiUcLpyk9sXgt9Ripdd
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1115673"
+   in-reply-to:mime-version;
+  bh=HiG3vESMCs4OWQ8x6sOxmGdsfGqWfLGYpFTT2ubWlmQ=;
+  b=TJqbXUJ+Io+I2kPtIKdPOfpblTKDPkbONphz/jBzizuNwysBwC4N25Kr
+   s8gdColfhcGP6TBMN4JPkhkWv3koc7IbLT5tNV/Ckpm8SehiFmoP/KgvL
+   c1V25atBwLMKjG2LmJIr6tw7mnUt72CFqXIVwtA8LhppBTbXTLGw4Ib2v
+   UfxlpHFZ0yeGsFB012gi2RYgTkjaNQ2qE2aVQNj6TG4UNiUYQfZMhp8sL
+   8Q+IuH0E8dsybZgGXk6vHRqpG4O2+H3Pv7G4YlGzCCKhfkbtGss77n0zn
+   AthbY5eFocBfh5GclY5Mokez0F53SMinrF18qvc92dFrQA6aojtzJnAaA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="436387936"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1115673"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:16:39 -0800
+   d="scan'208";a="436387936"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:22:18 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="824880091"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="24927005"
-Received: from zhushaoj-mobl1.ccr.corp.intel.com (HELO localhost) ([10.249.169.162])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:16:32 -0800
-Date: Fri, 9 Feb 2024 00:16:23 +0800
-From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-acpi@vger.kernel.org, chao.p.peng@linux.intel.com, erwin.tsaur@intel.com, 
-	feiting.wanyan@intel.com, qingshun.wang@intel.com, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Shiju Jose <shiju.jose@huawei.com>, 
-	Adam Preble <adam.c.preble@intel.com>, Li Yang <leoyang.li@nxp.com>, Lukas Wunner <lukas@wunner.de>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-	Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] PCI/AER: Store more information in aer_err_info
-Message-ID: <vc67zlmqs46fx2iqjqlpvju5dzpdvqkmydpebecgcaxjivlmu5@ksu4c2g7qqig>
-References: <2rfnevhnhylik4r6smr56uunsxweo7s5elo65sjhiztvxnr6bq@5fcyv22zxyyp>
- <20240206172335.GA872811@bhelgaas>
+   d="scan'208";a="824880091"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Feb 2024 08:22:18 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 08:22:17 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 08:22:09 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 8 Feb 2024 08:22:09 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 8 Feb 2024 08:21:35 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MI8HWEW6ekcY77mFsHOWZjnuB5dXCwCr74nsWGDTbghEqW5w7+hcqCXiNYxO+HyEAsOyPqaYIqOy52Nz6EjvmfJN4CEdsRd9wepcJP1FRX7QCQcfD9y2BVq1d77msLIQ5JO3BH4AVeHJYTav0+/BmWllaUlK+EPQWdJIMrTroS20rOeXUlSp2CfM6EOkGYMvC5WFZLLOLRc4jYVKhd2P3PkT8b2oDW6g8h8bK8IMtDXBPgjk53CS5DPz3PITac0FqwhZJBeT9+QvCW0szJcz0eTSsTAxHo+47JHp7cSVJK2UfJZG0gaIv6a2IYBoyNnHEIxFX9aIk1+SEatNbKmfdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BpkeJ5oEX4gQ5+scbRE+MoSoYFSFkl7LJOz0FB7J/WQ=;
+ b=jalga50OpJfSxgpK0QlBizYG2VT6lDCXOFog9a2e5pkL//aYClsy2cDe0ikR5opgEet3rIby16eVkMz6mDPKOAB1NMFS0PqI4omEEsMc+n8VzDNodLd4VVEnrsqeqOup/zDTsLVSz2x4UkJtEUHmni3epIArYtOO/7qn4FikniFnwadPh4PnNX83aEzKl7up74AoPy6/GuFKfDrF3uy1/Ntw/SxqSYRwuNaKgbAiyN6yrX6oEOT126x2xqHSGmfaoKHLAvBkcUJYYrW+hyuDhfdWkVegxcac7t4KntpYOc1hM/1Qv6NO9q5m/PNkLZktITnVZJl+zG7FCzWBEKCMNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CY8PR11MB7243.namprd11.prod.outlook.com (2603:10b6:930:96::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.38; Thu, 8 Feb
+ 2024 16:21:28 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::9f17:e1f3:d6f0:3d59]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::9f17:e1f3:d6f0:3d59%4]) with mapi id 15.20.7249.035; Thu, 8 Feb 2024
+ 16:21:28 +0000
+Date: Thu, 8 Feb 2024 08:21:24 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Fabio M. De Francesco"
+	<fabio.maria.de.francesco@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/2 v4] cleanup: Add cond_guard() to conditional guards
+Message-ID: <65c4ff84640de_3f44ac294f5@iweiny-mobl.notmuch>
+References: <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
+ <20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
+ <20240208140403.0000238f@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240208140403.0000238f@Huawei.com>
+X-ClientProxiedBy: SJ0PR13CA0160.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::15) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206172335.GA872811@bhelgaas>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CY8PR11MB7243:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0193086d-ad10-4f6c-56c0-08dc28c200e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zFpzx+kk0ARp0dIpD2c/iUGRM3aRoexMSBNRzajpfSKJxSZqWnLIwc2UJCLLCBwy3VEAkjMZ/OUpqYqgX0BqNRvNp/rgYl8OT7jtlgWhbB8ZJIZAkZKJVpgxrAOv+UjAC3T+g0p/mqwVmEvGxvN2CTMxLe2I7TeHZH36RwDXvS7o9YkjVDrMgoMlRE+7DabUIg+qKMVqwWQqt3ltVaZV9XGy6+Ky0koiJkBp2sAYJ0f3UMytGIFs4BCVbXqS0J8rg5jsw9p3xHDM/THX2V+u2Sm7O8tDPANMVRpkD1cRGyLGiLm/WBqxnYPQfVO8XGLSeUZbiqyt+L8bfFKDcMupeelxx5YJuHLkWTjtAV80iPxqH5rJtvp1CiaUc1m5QTQMt+ONXyiF0kD83ZqrskFQDdSjavetaG/nYmWXULWO3CmicQ8GbgxauxKnAWdsm61dhGiTSxw5iyINAJAT7L8ibg3P7cgIesI0rVIBGuW0EDiKVaxspIxrqro5wGwka/FxI0LsYS3RfecTMRaxJSSA2E4PePD9TY7XFd88rS8hQgW4E2sowvUCmRWzNxbPGAKz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(39860400002)(376002)(346002)(396003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(82960400001)(83380400001)(38100700002)(41300700001)(6666004)(6506007)(478600001)(8676002)(316002)(110136005)(8936002)(54906003)(66946007)(66476007)(4326008)(44832011)(66556008)(26005)(6486002)(9686003)(6512007)(86362001)(2906002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iT9AVBBng91XyY6Lp+Dm7kfN1CiK88OmGURoMBgYdNFwOziGUGp5YcPbFncR?=
+ =?us-ascii?Q?vMRVjdRCvuevceVOSRkec3N9+tJ+h47Xr1KZVC2r4ZT6TzIIun5UdKcIR+fO?=
+ =?us-ascii?Q?yfnRvHoUcqfYOWZ5zScijT7UWikfDyag2Ikh7NnJm8xSfFPOL0ULVAqWHlr5?=
+ =?us-ascii?Q?3RPkXk6JuI9eAqUESLfcaRwH77XYaXcYiXIuGY+GgYNFlwVn+6+OzjJuDw36?=
+ =?us-ascii?Q?C5O+gNaPlqC5/8mznIHHWECMxxKLZgGm+RSYB7jYhNDgPsYXsFT7iBc6lwfa?=
+ =?us-ascii?Q?2nI7FWPwfoysxbpBekRK5w7S2mVzINbIo8FJJI4UI+btezoC+6fhCtNkbil0?=
+ =?us-ascii?Q?sO+Sgc+iGUrdwRzdTQ37nQ7zc125kmiqCHaC2TwkiBQQgi7RMhI3ZfR8DV/R?=
+ =?us-ascii?Q?HjsWUZXrrHiMGYkkwvE92i0OapUH4WxgbG3QFTQKie5EEd43oWw3wxRKfif8?=
+ =?us-ascii?Q?t3XumKvVUqtWjTez+Pg82vBz0nASrYUTO7MKAaWrtIKi53IJeJC8fmAdI26b?=
+ =?us-ascii?Q?QmScIk6sGT7PIFhWszLqNdVwINXoX4by3+uG7l6QRYotSEd0rxWKxW3nFlFT?=
+ =?us-ascii?Q?7sk4ivf7TU0YowD7ZQqk64/QLFx26AkA3pAQkiMhUqT+FJHGKcTiHcOrV7mi?=
+ =?us-ascii?Q?JCLZ6u37xWhtB82fIDE8p28oxQMYZhoOxWLTrlYD7bkzupqcFhMi5l7UdY3l?=
+ =?us-ascii?Q?1jwovM0fDvwsJA0OXaB/wEh+eUHQlQvoLQ8M2E+jH+YcpOBxYC9vsek35qIb?=
+ =?us-ascii?Q?LENSZDGXUlNvWq4pJIeDLgr6Bp9AsAyYvkr6rsuxGleyP4wMZaj1kYK53yJn?=
+ =?us-ascii?Q?5D//oUZik76AzOppeG2sjrpu292Y7c4BfNw0yucZAW9d7meUpwHsnFpMP2br?=
+ =?us-ascii?Q?o3jFi1GMb95eNP0JQJaFHuESNtVgxjG+9NTe+yx3bJjd4K+UAYpKamv+IyKv?=
+ =?us-ascii?Q?fQbVlVfgJbPvFfg+9c6Sl2Y4+NsL1J4A/fR01oIntxv97TfUvWpslDBRV2iw?=
+ =?us-ascii?Q?Py6v32Vyq6DHrtZo1PdsGZ42Gs1zXT2Svl81mf/5dESpWRPSGtbcc30+O7i6?=
+ =?us-ascii?Q?PILDVx364vuUzm15FJ/KcoBqsLj4pwZGaSwNGMeAzUm5RUs0fciweCsN2OvR?=
+ =?us-ascii?Q?y6qEN94tGIeIyrgoS1N1LW0BfAlbIOcWIK+iaMROQAMo7sntb1Nb/HsZc++N?=
+ =?us-ascii?Q?LMPKRvbiGBUsGYFwUuEo90C+EkvM3CnesTcGPX4CjbddLDQ4ZzT089olVk9Q?=
+ =?us-ascii?Q?K1GyLKseX2CZJAtrxvDO4+N65AI58cbdmwqrfyJL/jKcRhjnYCTRhs3jvRZj?=
+ =?us-ascii?Q?diAac3Yo03KOPBUG4ETxHLHtkLUNCrgm3NJNueBn2g9+mLTfkc8Y5TlIybnV?=
+ =?us-ascii?Q?BCeTKng1ogACuRM2iuROBnp4hv2bDFmpQYhSl503hNb3jhNmsCI1g5DoQR0I?=
+ =?us-ascii?Q?sepIV1PMdZju88ceEl0ANsjS5E+R9swj+E+r//+Z67IoIeb9iDCLf6BfVXDQ?=
+ =?us-ascii?Q?pTtVKMIHqHbRdFxuDeSSwvf8L0XTuDtCX3elOeMANWvMMYnFTga/caeqvXjV?=
+ =?us-ascii?Q?g2zxYoWFLR7BlyJ7djylTLNACBVnjM2SNlCYV0ZQ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0193086d-ad10-4f6c-56c0-08dc28c200e3
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 16:21:28.5963
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 02BVOxRlZ8buQXVNwOj+TcqbSNlG2JIo6JSZIaiCVa57h/Hj4kpmJ3KxhNAUODk/1cz4NeMIPpYr+wLryHrPPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7243
+X-OriginatorOrg: intel.com
 
-On Tue, Feb 06, 2024 at 11:23:35AM -0600, Bjorn Helgaas wrote:
-> On Wed, Feb 07, 2024 at 12:41:41AM +0800, Wang, Qingshun wrote:
-> > On Mon, Feb 05, 2024 at 05:12:31PM -0600, Bjorn Helgaas wrote:
-> > > On Thu, Jan 25, 2024 at 02:27:59PM +0800, Wang, Qingshun wrote:
-> > > > When Advisory Non-Fatal errors are raised, both correctable and
-> > > > uncorrectable error statuses will be set. The current kernel code cannot
-> > > > store both statuses at the same time, thus failing to handle ANFE properly.
-> > > > In addition, to avoid clearing UEs that are not ANFE by accident, UE
-> > > > severity and Device Status also need to be recorded: any fatal UE cannot
-> > > > be ANFE, and if Fatal/Non-Fatal Error Detected is set in Device Status, do
-> > > > not take any assumption and let UE handler to clear UE status.
-> > > > 
-> > > > Store status and mask of both correctable and uncorrectable errors in
-> > > > aer_err_info. The severity of UEs and the values of the Device Status
-> > > > register are also recorded, which will be used to determine UEs that should
-> > > > be handled by the ANFE handler. Refactor the rest of the code to use
-> > > > cor/uncor_status and cor/uncor_mask fields instead of status and mask
-> > > > fields.
-> > > 
-> > > There's a lot going on in this patch.  Could it possibly be split up a
-> > > bit, e.g., first tease apart aer_err_info.status/.mask into
-> > > .cor_status/mask and .uncor_status/mask, then add .uncor_severity,
-> > > then add the device_status bit separately?  If it could be split up, I
-> > > think the ANFE case would be easier to see.
+Jonathan Cameron wrote:
+> On Thu,  8 Feb 2024 14:04:23 +0100
+> "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
+> 
+> > Add cond_guard() macro to conditional guards.
 > > 
-> > Thanks for the feedback! Will split it up into two pacthes in the next
-> > version.
+> > cond_guard() is a guard to be used with the conditional variants of locks,
+> > like down_read_trylock() or mutex_lock_interruptible().
+> > 
+> > It takes a statement (or statement-expression) that is passed as its
+> > second argument. That statement (or statement-expression) is executed if
+> > waiting for a lock is interrupted or if a _trylock() fails in case of
+> > contention.
+> > 
+> > Usage example:
+> > 
+> > 	cond_guard(mutex_intr, return -EINTR, &mutex);
+> > 
+> > Consistent with other usage of _guard(), locks are unlocked at the exit of the
+> > scope where cond_guard() is called.
+> > 
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> I like the defensive else {}
+
+Agreed.
+
+Re-
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
 > 
-> Or even three:
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
->   1) tease apart aer_err_info.status/.mask into .cor_status/mask and
->      .uncor_status/mask
 > 
->   2) add .uncor_severity
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+> > ---
+> >  include/linux/cleanup.h | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> > index c2d09bc4f976..7b54ee996414 100644
+> > --- a/include/linux/cleanup.h
+> > +++ b/include/linux/cleanup.h
+> > @@ -134,6 +134,16 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+> >   *	an anonymous instance of the (guard) class, not recommended for
+> >   *	conditional locks.
+> >   *
+> > + * cond_guard(name, fail, args...):
+> > + *	a guard to be used with the conditional variants of locks, like
+> > + *	down_read_trylock() or mutex_lock_interruptible. 'fail' is a
+> > + *	statement or statement-expression that is executed if waiting for a
+> > + *	lock is interrupted or if a _trylock() fails in case of contention.
+> > + *
+> > + *	Example:
+> > + *
+> > + *		cond_guard(mutex_intr, return -EINTR, &mutex);
+> > + *
+> >   * scoped_guard (name, args...) { }:
+> >   *	similar to CLASS(name, scope)(args), except the variable (with the
+> >   *	explicit name 'scope') is declard in a for-loop such that its scope is
+> > @@ -165,6 +175,11 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+> >  
+> >  #define __guard_ptr(_name) class_##_name##_lock_ptr
+> >  
+> > +#define cond_guard(_name, _fail, args...) \
+> > +	CLASS(_name, scope)(args); \
+> > +	if (!__guard_ptr(_name)(&scope)) _fail; \
+> > +	else { }
+> > +
+> >  #define scoped_guard(_name, args...)					\
+> >  	for (CLASS(_name, scope)(args),					\
+> >  	     *done = NULL; __guard_ptr(_name)(&scope) && !done; done = (void *)1)
 > 
->   3) add device_status
-> 
-> Looking at this again, I'm a little confused about 2) and 3).  I see
-> the new read of PCI_ERR_UNCOR_SEVER into .uncor_severity, but there's
-> no actual *use* of it.
-> 
-> Same for 3), I see the new read of PCI_EXP_DEVSTA, but AFAICS there's
-> no use of that value.
 > 
 
-Both 2) and 3) are used in PATCH 2 and traced in PATCH 4. I can separate
-the logic for reading these values from PATCH 1 and merge it with PATCH
-2.
 
---
-Best regards,
-Wang, Qingshun
