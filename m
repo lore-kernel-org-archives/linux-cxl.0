@@ -1,139 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDD4762F0
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Feb 2024 12:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25304763E7;
+	Thu,  8 Feb 2024 13:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707397044; cv=none; b=bQ6zj2jTmBe5yx3R+2dOMb3gBHJJnblnhf28mjbtvPsgK5kOnGzzxRee8eyHj73gfQVJgMMc7/vaIaqtpxP9B1t92oBiMKJdKeMvFnA+CD0tP1XsW3Gs0rudc1u7xtnAMJNXeOVdBYKeLE8LOc9lsg5TOu8SKVeET4wrIGM7tFM=
+	t=1707397478; cv=none; b=TR7knlI0r7dmONLNtp0dsUkMDpQk1PxAsQvMP6orctXlNB/oqPsb6r2/vZSXgGZxQBXFOkiSrIeydLzit2fGuCHWqXUInQ9sFJ7wMd6ob/Grn7nQ+xZHdjzD4BYaImGWs14Y+Z/MDB2mrSb1/yn28FqyficLtdsnml2ymy7S8wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707397044; c=relaxed/simple;
-	bh=Z1AhRTX2glwI4fl9saz3BjYoY6LyjAzuxv6ks/m1kwQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FQIQLbUImgEiptXiV/mpYrIv8vmqrkGL7rDfqerXHeRwTkU4WEOsZBy3pXvdop4+5vnSPstbPnuvel8gjyKvFhaPlG1MNtwoikfy3S1/T8GyJwyTeYTDLSGpYoenuZ6ieWo7dE5rt9Y/n+AEKx9+hQnaThGIlcijGfbv/v3oOQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TVxkY6xmJz6K99q;
-	Thu,  8 Feb 2024 20:53:57 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id F1FE5140B73;
-	Thu,  8 Feb 2024 20:57:15 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 8 Feb
- 2024 12:57:15 +0000
-Date: Thu, 8 Feb 2024 12:57:13 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <sthanneeru.opensrc@micron.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<dan.j.williams@intel.com>, <john@jagalactic.com>, <emirakhur@micron.com>,
-	<ajayjoshi@micron.com>, <Ravis.OpenSrc@micron.com>, <sthanneeru@micron.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log and Get
- Supported Logs Sub-List commands
-Message-ID: <20240208125713.00004776@Huawei.com>
-In-Reply-To: <20240207103634.199-1-sthanneeru.opensrc@micron.com>
-References: <20240207103634.199-1-sthanneeru.opensrc@micron.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707397478; c=relaxed/simple;
+	bh=h7hT0zAQh1US2oNbTzNgMEdve8p7uZ7zf8jzekAxRAs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kMyR6m+wQArPC6nnfGV9U081kuwUIsar47vABuCIAOIWZ4QY6vjSuiL6lU0mZqSu6saFfFFT1/lTxiWV+j5lROYyfrjg4/mrB19atbUfFJuetNAUSiZn85Pz+pLGT44P3XTTSpZ2NCTsr4I4rwGS5bqijzqaTALuCKEZhMf9ANs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUt2vObF; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUt2vObF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707397475; x=1738933475;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h7hT0zAQh1US2oNbTzNgMEdve8p7uZ7zf8jzekAxRAs=;
+  b=XUt2vObFtyYejNQSPSVDwZvFxKJ+Xfylt6kU8aLM+pa5yMijHGcUpE9h
+   obttGQc/0/ZDNxzYWxg8wgVSjrLU0ZhvsefDzhDVeHYOIGS52u8J2eL0l
+   c5LUe7FrDGxpneI7k2feODklkksH2Cv5ziHCA7hAYxrxmXgPcLjHCqoEk
+   0EYjPFYefv5DdN+x2nOm2MnwhgGOP/ZjqHIMn/l3NCvjNPig2wc6ymOhW
+   yLnJvo0Hh7vRcecEHJQFkYWpRDYrEqjdv3TM13CFlmOLa6Hli2l5Kz397
+   HXi5M2kW3j3y189PwcZd2U3Foe5e8Mkelo2R65NlMrnRzSe2/3OkHea7s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1354943"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1354943"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:04:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1884027"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.213.2.200])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:04:29 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+Subject: [PATCH 0/2 v4] Add cond_guard() to conditional guards
+Date: Thu,  8 Feb 2024 14:04:22 +0100
+Message-ID: <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Wed, 7 Feb 2024 16:06:34 +0530
-<sthanneeru.opensrc@micron.com> wrote:
+Add cond_guard() macro to conditional guards and use it to replace an
+open-coded up_read() in show_targetN() and remove a block marked by an
+'out' label.
 
-> From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-> 
-> Adding UAPI support for
-> 1. CXL r3.1 8.2.9.5.3 Get Log Capabilities.
-> 2. CXL r3.1 8.2.9.5.4 Clear Log commands.
-> 3. CXL r3.1 8.2.9.5.6 Get Supported Logs Sub-List.
-> 
-> Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+---
 
-Hi Srinivasulu,
+Changes from RFC v4:
+        Changed the interface of cond_guard() to take a variable to store
+        a return code, the succes code and failure code, to enable a
+        later check of the returned code in that variable.
+Changes from RFC v5:
+        Changed the interface of cond_guard() to take a statement or 
+        statement-expression as its second argument to conform to Dan's 
+        suggestion (thanks).
+Changes from v1:
+        Fixed a grammar error in the commit message of 1/2; replaced the
+        name of the second argument of cond_guard() with '_fail'
+        according to Jonathan's comments (thanks). 
+Changes from v2:
+        Changed macro's implementation to add an 'else' to protect
+        against it being used incorrectly within another if() block.
+        Suggested by Dan (thanks). The Reviewed-by tags on 1/2 are not
+        forwarded because the implementation of cond_guard() has changed.
+        Removed a redundant 'else' from show_targetN() in 2/2.
+Changes from v3:
+	Added braces around empty body in an 'else' statement in
+	cond_guard(). Added Reviewed-by tags (Dave, Ira - thanks).
 
-Whilst I can conjecture some valid reasons to expose these to
-userspace, can you add some examples to this patch description?
+Fabio M. De Francesco (2):
+  cleanup: Add cond_guard() to conditional guards
+  cxl/region: Use cond_guard() in show_targetN()
 
-We might want to filter the clear in particular to avoid a clash
-with the driver log handling. That is only allow it for vendor
-logs.
+ drivers/cxl/core/region.c | 16 ++++------------
+ include/linux/cleanup.h   | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-Perhaps split the patch into 2 parts. The less controversial
-GET_LOG_CAPS and GET_LOG_SUBLIST, followed by a patch for the
-destructive clear log.
-
-The memory scrub handling might well
-access the ECS log for example (I don't think the current proposal
-yet does this).
-
-Jonathan
-
-
-> ---
->  drivers/cxl/core/mbox.c      | 3 +++
->  drivers/cxl/cxlmem.h         | 3 +++
->  include/uapi/linux/cxl_mem.h | 3 +++
->  3 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 27166a411705..64a44e286488 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -64,6 +64,9 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
->  	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
-> +	CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
-> +	CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
-> +	CXL_CMD(GET_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
->  };
->  
->  /*
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 5303d6942b88..4128c810051c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -529,6 +529,9 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
->  	CXL_MBOX_OP_GET_LOG		= 0x0401,
-> +	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
-> +	CXL_MBOX_OP_CLEAR_LOG		= 0x0403,
-> +	CXL_MBOX_OP_GET_LOG_SUBLIST     = 0x0405,
-
-Name should include something to make it clear this is getting
-sublist of 'supported' logs.  Not the log.
- 
->  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
->  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
->  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index 42066f4eb890..d2df9782a5ef 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -47,6 +47,9 @@
->  	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
->  	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
->  	___C(GET_TIMESTAMP, "Get Timestamp"),                             \
-> +	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
-> +	___C(CLEAR_LOG, "Clear Log"),					  \
-> +	___C(GET_LOG_SUBLIST, "Get Log Sublist"),			  \
-
-Likewise, mention it's list of supported logs.
-
->  	___C(MAX, "invalid / last command")
->  
->  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+-- 
+2.43.0
 
