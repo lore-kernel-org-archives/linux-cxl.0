@@ -1,155 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49456364
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Feb 2024 00:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707438240; cv=none; b=Dc3Hyu/V3clhRI1nam4gbIo1Gcp0VNuauaMZhzosD+jcENjW5clpDPN9qA2kQ7KPVT76/aHgqT9DjCfgnEajZ8Zz6x5d3IR2Sny7MN3Vl9cHvK0sz1IETbMuMJS6At/6DdfQEOzE1x5c3MFt8bEYnnt/l70StxQvd+r0Z+JwOWE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707438240; c=relaxed/simple;
-	bh=Du7+mCAtmQjqpc8eL7gxA1aUEP+ozJIH+yqUvezF1nM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOblErW4d6AI9Ds7/OijkTu3V+1b8kzp1xbCI66azngAi7szRnNPdwjwBMRNmyKMfD3WgZYAYhfOuI5yIDbElDxOpOL7Yv+CupIfae09rX8oGhDvq6Abc/DW+WICfhfLz4ec5WUVJnwkgYhblUtYM28TlUOyK4QTi+w9WYHJocQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kMBLIBvN; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9B781F;
+	Fri,  9 Feb 2024 01:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707440517; cv=fail; b=qAaaObPvDgfEKmPJ+GgL9WZvounUO5BDJiqu7LWXzv069W2j7K5jPtz2iNG5sUejd/8e2dUvN2LKsL5+LpSInT4yvXkeFz8NwonZHskloAe1/A7H3fdKTnUpOsijsCbcNMAXm0ELyo3Uov4uf8vpZlUNw+tajQjIjAzZhZACS4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707440517; c=relaxed/simple;
+	bh=KO0NB6VA/DHde+u1QidACgniSizD023az229gkFgXlE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oPW2TvW34IeiTYuVgvMZDIw3r+CiFcXSmLt+RryQIMM3K6Jhbqc44zbJAEtPdm+TZJYCeTiTVWs39PUXyOpUfXzzM10kHo3IMQmZ+rB1e4hCIN0hVYcOQyPvOJ2civ2BJqRs2VqKXceu5nOY7f5I+zy78x7x7Ot61c86gUtX+Us=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cZS9bhiq; arc=fail smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kMBLIBvN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cZS9bhiq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707438238; x=1738974238;
+  t=1707440516; x=1738976516;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Du7+mCAtmQjqpc8eL7gxA1aUEP+ozJIH+yqUvezF1nM=;
-  b=kMBLIBvNXDndIQEpHG4BJkSgHOlitYgWtfNT8OdzowdTiKNfGdEbrQzs
-   V4FbZ/JK/mNtcn2tuNG2LAuhoB3H2c+4LSTaEhMhuUOQQWzuDomM59zyn
-   LmKm1gI+p+nX+LkdqdwBHkQ+jvua2XYENLXbIjlo7a4LS/dWWXPjfK49E
-   b4tQvMsDSO1uNljXLb2Niq0OmHIcgwRVcb5TADw+7HyEkLMt+llT+C9od
-   ZMMcRT397SHkgd7D099ELo8YYOWbGv+BnR3ae2vb5rqV9JVI9mm/S2KlS
-   WBEGlEfdccfYdEcOZ+vSb42a0BlDfeOUxE+dc1+1bNrU+wzWT/lbTTYlS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="5198849"
+   in-reply-to:mime-version;
+  bh=KO0NB6VA/DHde+u1QidACgniSizD023az229gkFgXlE=;
+  b=cZS9bhiqYFzpzmnGV0Mj7MuOEq+TX5Azs5jnzCwRyRP4W8VjRQs1GInK
+   cBWKQv0vYrDSa9mNev7ISyfdQqx//V+MYexhoET5PKA2aN2DzTah89q5r
+   NjxXR+vt4cse9IDCCHa5qTYCXRet7b+rjA0psqUFiCyLeU52f/as9os1S
+   1/vpj6s85QzjqLYRUia/1X4vgCUnvvufe/95H9OKU5k33Pg10AMDOh0HB
+   w3uFk7Cb5I91RKoNsrocfb5nCs9SBZB8jSg4Rf4D4POF6mvvNGBYx0P7I
+   jE+naARTjFd2KcOib0TA0g8Jr4JBrGRI14u2qzBmeeQOMSFcqxgKqUnfh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1232455"
 X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
-   d="scan'208";a="5198849"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 16:23:58 -0800
+   d="scan'208";a="1232455"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 17:01:55 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
-   d="scan'208";a="2028656"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.103.161])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 16:23:56 -0800
-Date: Thu, 8 Feb 2024 16:23:54 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-	Wonjae Lee <wj28.lee@samsung.com>
-Subject: Re: [RFC PATCH] cxl/region: Allow out of order assembly of
- autodiscovered regions
-Message-ID: <ZcVwmvubGa/3CweX@aschofie-mobl2>
-References: <20240113050421.1622533-1-alison.schofield@intel.com>
- <65a980249f50f_3b8e294a3@dwillia2-xfh.jf.intel.com.notmuch>
- <ZcU+9BxBD8IRsnTu@aschofie-mobl2>
- <65c55c67ec60f_afa4294cc@dwillia2-xfh.jf.intel.com.notmuch>
+   d="scan'208";a="6440034"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Feb 2024 17:01:54 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 17:01:53 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Feb 2024 17:01:53 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 8 Feb 2024 17:01:53 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 8 Feb 2024 17:01:53 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jsdlWAMjbrP3Tb0Ig9mjxjffxMJzI8L0QeyJJoMN+LPmwoNh3mbRQ8e/hQ3oJp5pN1Ez4lOtrGOPrvN0fELvHRMIyp8R/m1DPTIzz4jMSss2KFCIGRGQlanBPwmJpkC+AFdQ6sMblzNVXdJQqVwyHa1t12G+lG806/O+IkpVKT2aFXbuQXmAiIAIsyfr3Oh0Jckt8JTO4nOxxPNtz9+sJPU8/2ZyaxhTkCZtg5htJYJGQ3I+90QdiIB9vzqHcYWO1FlaEQyfnTKR+XPiLhLodu1WUGM0YDdw5V95fSeEqugsf4McdjPpXaR8kbNFCwOiOOKi/ZiXlLF0sMmQ5ay9Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HIGOUd0Jtz8jRSAzNb3Ekwk4Hbncu74Q8gho6EfnMIc=;
+ b=NHt1YnnLJYdDjbEhet0EQJeQjn5/Rv2XQbo08AwTaCJzx3Er+4RDvtqt4vlHJr4BxFamdevAFltZrnM3mnAk2VSwavFlKEoBIrWJV0GVsW5lB4wY174lXxbe8iKpKd3ejXhyNKPBLHBljzPyMOZTRiQRD+gRjW3MRZ1Bi4AcnXnLDETRp+Di+ctJCEg4ekx1whkFbR72ct9+eHmL76LbEKUwBaH972mRtOAiOCCgIuMFt4kmgraEUymc2PsVW0cl/vjrF57vNNItTZuVZQZOM3cHjtPYyrixW9wjNoI7G5ylRoTIUvnwXI3ByRhstXAcC8uQgwyq+2lxlh1cZYJUNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CH0PR11MB5266.namprd11.prod.outlook.com (2603:10b6:610:e1::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.38; Fri, 9 Feb
+ 2024 01:01:51 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7270.024; Fri, 9 Feb 2024
+ 01:01:51 +0000
+Date: Thu, 8 Feb 2024 17:01:48 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams
+	<dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>, Dave Chinner
+	<david@fromorbit.com>
+CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox
+	<willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
+	<linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-xfs@vger.kernel.org>, <dm-devel@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH v4 06/12] dax: Check for data cache aliasing at runtime
+Message-ID: <65c5797cc88be_5a7f29421@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
+ <20240208184913.484340-7-mathieu.desnoyers@efficios.com>
+ <65c54a13c52e_afa429444@dwillia2-xfh.jf.intel.com.notmuch>
+ <0e6792eb-7504-464a-aefd-d2a803adb440@efficios.com>
+ <65c557a2e77f7_afa429490@dwillia2-xfh.jf.intel.com.notmuch>
+ <5328e7f0-0864-4626-aa6c-fef5f3f62dc8@efficios.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <5328e7f0-0864-4626-aa6c-fef5f3f62dc8@efficios.com>
+X-ClientProxiedBy: MW4PR03CA0157.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::12) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65c55c67ec60f_afa4294cc@dwillia2-xfh.jf.intel.com.notmuch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5266:EE_
+X-MS-Office365-Filtering-Correlation-Id: a62a6431-639c-4cc9-0d7c-08dc290ab328
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3pWXP+h89SGQErhKSSj4nyTgUBorxnztsN3ZLgxd6PsCfOxNT0CmO+pWrMROb6Qjbb9UjmVylkFidTX4H32/7bMd1fGXHYbn8SUUID5VQrngAmblBvccjY8nmsvgqRsHoXfIvaZnkutRC9AwEc5ywp0H0YAILdvPT1yo/AcUco6ahz+5KlooOx4l1nsAuOAbffWCu5pRC446kuQ9yaHu8tZLOoHGd0AcudE3e4KqbbJInyQDnka3QrF2z835i/BRwzyKsPBf0xSbOvgDGxFNApqQFG3cWazNJqyUZy6n5Ml8jmXwVFrvqDXvkBFPzBSmn7TQMd0czyR1kF3spfGRiUsGwN6vywpIDm6aVdt4zUk6ZJV9uqG78j8T35+L5bZzEUdfB+LtzMNh+gXjgPYGMKsi0xAmICZ81cls4xDEiaa49Of4ivQ3wFIetSeCAVtV69FRPLOqKqVfYRKjkayiOnKUNbzl0nPNKpHmkjRKc5yxLeXTMQfb1ELbQ1WZn5yq506vRgu0/Jmobw4Lp/oUqvtUSjvsDeq4VdcqgqTPIclmKbhewEmEQ5v+qLELxmRr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(396003)(376002)(346002)(366004)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(2906002)(5660300002)(7416002)(4744005)(41300700001)(83380400001)(6666004)(86362001)(82960400001)(38100700002)(26005)(6512007)(54906003)(66946007)(9686003)(110136005)(6506007)(66556008)(478600001)(66476007)(6486002)(53546011)(8936002)(8676002)(4326008)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bmkmWqiPjsidYoPB/Jw5tH4bqSgzAvg3OSsDtcMdesNzodQ6cMPwlQ8pG+vy?=
+ =?us-ascii?Q?c+IDqLewDa0UZ70ubdqlmysiLXRXHQLCoqu5uH8Rlzm0cTivsCBFab69J6Q5?=
+ =?us-ascii?Q?E2UqxzelOavrYzXzW/v35Yszl7s2rHQxnBowLAh6GobjSJIvGahV7RJaKQLD?=
+ =?us-ascii?Q?fQqj33oWtAUB6pxCWISYwITBpixkKT6c5bk9ZbsGbfEG4r0CP7uYm96piZHA?=
+ =?us-ascii?Q?37VlyPBZMI9+6b/nSrBCAYY8rPsFzbDbsymk3NK/0p4vWX5DBHaZ1we9zOwH?=
+ =?us-ascii?Q?ubJbNhQKIInjgTiGcAqcZruzxbIxRJjGpRLw7Ut1qbxovwUv3yBLFhoBvy0f?=
+ =?us-ascii?Q?JS6yFEvam+utGN5CvwEfsQ+yl6ZWHleX0WT8WPT9fpNCNZ6mxnRnOtpj4uwy?=
+ =?us-ascii?Q?5Ln98e5OjTkxtbXQMiueAXWyDXkWNiNlXEc1DUvVbZLseuVPZi7vHo3u5FNz?=
+ =?us-ascii?Q?Leg4EHf+FENe7kvBJDPQO7dMu+l/VPrvHbC6aEevJ3aKVJvrDUdd4H07JOxA?=
+ =?us-ascii?Q?L7FbjuTKTS4bWRsrpyr7nbRa9kxjiAZLYsxEJN/QVp+5RK2A+BJ6cHtmB7Fa?=
+ =?us-ascii?Q?PyBZcwIETO9MLwIplxDwsZitEWc4P/Mfr3LYdJEndN8V+QaqmROY2h8sSruP?=
+ =?us-ascii?Q?Gd5TlhXumcjV6hzhtPQen9wm6qk9y1jFHVsthvwo1LT9yzaRCU3G+oscqijs?=
+ =?us-ascii?Q?VcImlkOenKJ0ggiVjyM6jE8GZOQdqKKNvdpJ4pYbjrJ2XrHCkgjjem4NV3Sg?=
+ =?us-ascii?Q?ibNf1DGASp/mzR9n3X8va3gEiduYfkAmKlzu8IrPQPSMIBPzACAFNtFpWU1C?=
+ =?us-ascii?Q?Ya9x2JnIezRLJJh4QFTJewZLc2Q7JBR8S252oZJPrVF9JeZ7hsEkQG/hVOvR?=
+ =?us-ascii?Q?09N3nX4QZ5Wxrmp0Jay71cmQH0rcQ2+UUTAu3L7qGagfgPGKDVHvXlos9TSq?=
+ =?us-ascii?Q?AGWinJawdZgJhzlUvs5EAfUBbHUUpxC0Xt4jh+G0uOiIsX710VYN3fqtuEi6?=
+ =?us-ascii?Q?MnECTzKrbL1y9DNNrK2T9r/dsS3Y2xpX+WAi5vpW5gEW/Y0uTayb5n3nsUZF?=
+ =?us-ascii?Q?Xzsb2gsrCjv+TS0lMbcCl5HbTepwTWCj6tL9D2vOzhPWgmmmIDLLU9zsOJXI?=
+ =?us-ascii?Q?j++m0YQJapU4lD5UBT7a0HdzYGmnYxxnIvKFq0tMyA6l7dYiH1AeQQzYN8cC?=
+ =?us-ascii?Q?/KCrt59z4+kkOT2fp+ZNWQ6RSyVmmJqwc4k2JiDDSMpoNaTlxEm6/YaoygdS?=
+ =?us-ascii?Q?ExAY3bKSThgjCkEmQJhta/H+2p/uqRBgKuo6VC0K7w/NB5EV/x5b78USq/+5?=
+ =?us-ascii?Q?BE+Pd0bOzLN7PsmSDgEPfbb/ftG4RcHhQKHqh9QOfjeHtMchIcGK3mn9GS8d?=
+ =?us-ascii?Q?VwyFrIAo+gR4WDRgWYJZihxpsBUX5DdJBovOwegwhpdR/lME/tz1hlwQ2kbu?=
+ =?us-ascii?Q?9QviALOAEWT7NilB27iXV6ngXDtwbRyL/Ky7PWPvVIXrqxTlZjRSEkXs9Z/d?=
+ =?us-ascii?Q?skEW5O+IHW377J1uM8HGNGKU16rQf1p7RyrClFXMUDEBrhCbOn8IJnoQdMZh?=
+ =?us-ascii?Q?6G4o0038sGqigCv3j83kFX7bhougiw+65nfXv6+SYIbAvP8buDlGa3rQO2sV?=
+ =?us-ascii?Q?iA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a62a6431-639c-4cc9-0d7c-08dc290ab328
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 01:01:51.3545
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dO85l20Go248D8jVbSeJJBhxoTzTMfTTxt9ZXYhoLHpJD4zma+XO38ke0W04OU5NArSMTPeSQ1NaCXlGxc+sXM5X4LKoLCrXojNA3cEl78o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5266
+X-OriginatorOrg: intel.com
 
-On Thu, Feb 08, 2024 at 02:57:44PM -0800, Dan Williams wrote:
-> Alison Schofield wrote:
+Mathieu Desnoyers wrote:
+> On 2024-02-08 17:37, Dan Williams wrote:
+> > Mathieu Desnoyers wrote:
+> >> On 2024-02-08 16:39, Dan Williams wrote:
+> >> [...]
+> >>>
+> >>> So per other feedback on earlier patches, I think this hunk deserves to
+> >>> be moved to its own patch earlier in the series as a standalone fixup.
+> >>
+> >> Done.
+> >>
+> >>>
+> >>> Rest of this patch looks good to me.
+> >>
+> >> Adding your Acked-by to what is left of this patch if OK with you.
 > > 
-> > On Thu, Jan 18, 2024 at 11:46:44AM -0800, Dan Williams wrote:
+> > You can add:
 > > 
-> > - snip to decoder replay patch -
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > > 
-> > > 
-> > > So one of the largest roadblocks for creating arbitrary region assembly
-> > > scenarios with cxl_test is the inability to save and restore decoder
-> > > settings.
-> > > 
-> > > The patch below adds support for recording decoder settings and skipping
-> > > the reset of those values when unloading the driver. Then, when the
-> > > driver is reloaded, it simulates the case of BIOS created CXL regions
-> > > prior to OS boot.
-> > > 
-> > > We can go after even finer grained cases once the uunit effort settles,
-> > > but in the meantime cxl_test can add auto-assembly regression tests with
-> > > the current topology.
-> > > 
-> > > With the below you can simply trigger "cxl {en,dis}able-memdev" in the
-> > > proper order to cause the violation.
-> > > 
-> > > -- >8 --
-> > > From 5839392a3dbb64dbbac0630d930b1f48a8ef7ea6 Mon Sep 17 00:00:00 2001
-> > > From: Dan Williams <dan.j.williams@intel.com>
-> > > Date: Wed, 17 Jan 2024 20:56:20 -0800
-> > > Subject: [PATCH] tools/testing/cxl: Add decoder save/restore support
-> > > 
-> > > Record decoder values at init and mock_decoder_commit() time, and
-> > > restore them at the next invocation of mock_init_hdm_decoder(). Add 2
-> > > attributes to the cxl_test "cxl_acpi" device to optionally flush the
-> > > cache of topology decoder values, or disable updating the decoder at
-> > > mock_decoder_reset() time.
-> > > 
-> > > This enables replaying a saved decoder configuration when re-triggering
-> > > a topology scan by re-binding the cxl_acpi driver to "cxl_acpi.0" (the
-> > > cxl_test emulation of an ACPI0017 instance).
-> > 
-> > Hi Dan,
-> > 
-> > Sorry it's taken a while to come back on this. I did find it useful
-> > in testing the auto-assembly order issue as you suggested. 
-> > 
-> > I didn't use this one: &dev_attr_decoder_registry_invalidate.attr,
-> > I just reloaded the cxl-test module to do same.
+> > ...after that re-org.
 > 
-> Makes sense, that can go.
-> 
-> > This I used:  &dev_attr_decoder_registry_reset_disable.attr,
-> > with your decoders state fixup to set CXL_DECODER_STATE_AUTO,
-> > and a work-around to avoid pmem_probe failures on pmem region
-> > auto create. 
-> > 
-> > More generally, I'm wondering about the implementation of the
-> > 'registry_save'. Here it continuously updates during all
-> > cxl-test usage. Did you consider only creating the registry upon
-> > user request and then at the next mock_init_hmd_decoder() look
-> > for and use that registry if it exists.
-> > 
-> > Usage would be: 
-> > # echo 1 > /sys/bus/platform/devices/cxl_acpi.0/decoder_registry_create
-> 
-> You mean wait to snapshot decoder state when triggered?
-Yes.
+> Just to make sure: are you OK with me adding your Reviewed-by
+> only for what is left of this patch, or also to the other driver
+> patches after integrating your requested changes ?
 
-> 
-> > # echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/unbind
-> > # echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/bind
-> > 
-> > And then maybe, for folks who like to acpi/unbind,bind, rather
-> > than reload module, we could offer a decoder_registry_remove attr.
-> > 
-> > Am I missing something regarding the need to keep it updated
-> > on the fly? 
-> 
-> I can see it being an alternate way, but not sure how to weigh one
-> approach vs the other. Is the dynamic update getting in the way of a
-> test case you are thinking about? Otherwise it seemed easy to reason
-> that the registry is always on, but only takes effect when
-> registry_reset_disable is set, and cxl_acpi rebinds the test device.
-
-The constant work of updating the registry caught my attention, but
-no impact that I know of. The dynamic approach is more intrusive and
-impacts the normal path needlessly. A snapshot approach limits much
-of the impact to users of the new feature.
-
+Sure, if you make all those changes go ahead and propagate my
+Reviewed-by across the set.
