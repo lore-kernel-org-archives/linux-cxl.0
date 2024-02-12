@@ -1,138 +1,118 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBDD3F9C9;
-	Mon, 12 Feb 2024 16:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A17524D1
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Feb 2024 16:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707755471; cv=none; b=g7tquhT59CUPHUh7oDcPS+ldt54r1bJoRCuB7olprBkwj1W1iQxnDkbP/IfkFh9anRJ0o6Id7acYuXuXo/9OQi+zB00aGBwyfJewznWn21nK0XdCa/gHzqDuDE+kHpOEkCrQy1pVCQPsnbZcB8UTdDscrsXwWQhHKwr/0h56ihI=
+	t=1707755512; cv=none; b=ZvysoNpU9QWAqo8MxkXNbu2DbnZ1E9fpnEzX3EI0kDY+Pkv+8+YzMz2KhlQqMyiwR2XHU3LyQIOx1e78JW8leR8ENkveQ9D3RXXoxk2L8z8lNkKdOpFBU6/2n84Dk9LJxQrB2ZhL2MAV+8iycg9Lezb/cuOUqVtqspw7+o9vrWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707755471; c=relaxed/simple;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e1New0kvgnnhm16mTdeB4adEIZMwA1Jg75AgS/N1vmDz6CX0knehUo9s369VAKGKe591itKYdI3b71sSLhAyjZ9Y+wFlkW72agwVI3AjdaA4n944gQiPep0w5gg25yeDlA5k9h9oBTIUS4qRI2utzl7abdAVkElim1otzCvxB1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=LZvaBdNs; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="LZvaBdNs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1707755466;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LZvaBdNsLGQIy+aXABay82sJ+rFu8g6aaxGiW9uZpN66wS+NuUa7/G4W8gITWGkpa
-	 c1867KsbQxo2upSD+YIPCfUlDoy+ZG15o0o8gSLcOMEAKGWPn4/raakjLJgZ3QmgQl
-	 dI/PQmPe4eKxi8t0eZ/GmWxeVm048ci7sExiS4Ecjb68SKCeD0b3y7maiMIye3wJ45
-	 DGGcrFkvDB/kNDA8WnFjK3mwIrvjK66KtDZL/O72RsTS0jcPJStuMuyH5yBjbq3tTG
-	 J7m2qben0XtmlSJAe4Yq0LSiYgiDICl058dbEz5NMMLhFPozAslNYp17M9pnVILYBE
-	 OPYVUdNaYbjGA==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TYVMG3My8zYFZ;
-	Mon, 12 Feb 2024 11:31:06 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v5 8/8] dax: Fix incorrect list of data cache aliasing architectures
-Date: Mon, 12 Feb 2024 11:31:01 -0500
-Message-Id: <20240212163101.19614-9-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240212163101.19614-1-mathieu.desnoyers@efficios.com>
-References: <20240212163101.19614-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1707755512; c=relaxed/simple;
+	bh=3cskJbe6H5SjmJD6mPEdczsL2/gauj7TchMeywDmcWk=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type; b=l/hPEG8Aoj09RfOsFxBREXsrtRNpxu7+86hRCxzdEm8qJoQ8TpDUUxhmfYMJnxdxSsqMtP8kPYqvYOueD8jytdl3ZHaokY4KD0Cq6/3jl7PxaW6UrpPGzDl5v9uqElkfC4jvuhTMeiZSQth6VjQlJL38XTV/R4N05ONP83AvlFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TYVHt0Swxz689sn;
+	Tue, 13 Feb 2024 00:28:10 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 321A5140B73;
+	Tue, 13 Feb 2024 00:31:45 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 12 Feb
+ 2024 16:31:44 +0000
+Date: Mon, 12 Feb 2024 16:31:43 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linuxarm@huawei.com>, <qemu-devel@nongnu.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>, David Hildenbrand
+	<david@redhat.com>, Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?=
+	<philmd@linaro.org>, <linux-cxl@vger.kernel.org>
+CC: Mattias Nissler <mnissler@rivosinc.com>
+Subject: Bug: physmem: address_space_read_cached_slow() accesses wrong
+ MemoryRegion on latter part of large reads.
+Message-ID: <20240212163143.0000690a@huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-commit d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-prevents DAX from building on architectures with virtually aliased
-dcache with:
+Hi All,
 
-  depends on !(ARM || MIPS || SPARC)
+The continuing saga of a getting CXL emulation to play well with using the
+memory as normal RAM ran into (hopefully) a last issue.
 
-This check is too broad (e.g. recent ARMv7 don't have virtually aliased
-dcaches), and also misses many other architectures with virtually
-aliased data cache.
+When running my boot image via virtio-blk-pci and having deliberately forced some
+buffers to end up in the CXL memory via
+$ numactl --membind=1 ls
+then on shut down I was getting a failure to allocate a large enough DMA buffer
+even with Mattias' set to increase the size and an extra patch to apply that to
+the main system memory (as virtio ignores iommu and PCI address space).
+gdb/bt pointed at virtqueue_split_pop() bt pointed later than the actual problem
+as descriptors were loaded but corrupt here:
+https://elixir.bootlin.com/qemu/latest/source/hw/virtio/virtio.c#L1573
+https://elixir.bootlin.com/qemu/latest/source/hw/virtio/virtio.c#L306
 
-This is a regression introduced in the v4.0 Linux kernel where the
-dax mount option is removed for 32-bit ARMv7 boards which have no data
-cache aliasing, and therefore should work fine with FS_DAX.
+After a chase (via a highly suspicious read size of 0xffffffff it turns
+out it was issuing a 16 byte read via address_space_read_cached_slow() and
+getting a very odd answer.
 
-This was turned into the following check in alloc_dax() by a preparatory
-change:
+The first 8 bytes was the correct virtio descriptor content the second 8
+were coming from the flash region at physical address 0 onwards on arm-virt.
 
-        if (ops && (IS_ENABLED(CONFIG_ARM) ||
-            IS_ENABLED(CONFIG_MIPS) ||
-            IS_ENABLED(CONFIG_SPARC)))
-                return NULL;
+With those breadcrumbs the problem was (I think) easy to find.
 
-Use cpu_dcache_is_aliasing() instead to figure out whether the environment
-has aliasing data caches.
+https://elixir.bootlin.com/qemu/latest/source/include/exec/memory.h#L3029
+address_space_read_cached_slow() operates on a MemoryRegionCache with the
+hwaddr being relative to the start of that cached region.
 
-Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Cc: dm-devel@lists.linux.dev
-Cc: nvdimm@lists.linux.dev
----
- drivers/dax/super.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+However it calls flatview_read_continue()  That's fine as long as we can
+do the read in one go.
 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index ce5bffa86bba..a21a7c262382 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -13,6 +13,7 @@
- #include <linux/uio.h>
- #include <linux/dax.h>
- #include <linux/fs.h>
-+#include <linux/cacheinfo.h>
- #include "dax-private.h"
- 
- /**
-@@ -455,9 +456,7 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
- 	 * except for device-dax (NULL operations pointer), which does
- 	 * not use aliased mappings from the kernel.
- 	 */
--	if (ops && (IS_ENABLED(CONFIG_ARM) ||
--	    IS_ENABLED(CONFIG_MIPS) ||
--	    IS_ENABLED(CONFIG_SPARC)))
-+	if (ops && cpu_dcache_is_aliasing())
- 		return ERR_PTR(-EOPNOTSUPP);
- 
- 	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
--- 
-2.39.2
 
+For normal memory flatview_read_continue() will deal with splitting a read up
+but on each iteration it loads the mr via
+mr = flatview_translate(fv, addr, &addr1, &l, false, attrs);
+to cope with reads that cross MemoryRegions.
+https://elixir.bootlin.com/qemu/latest/source/system/physmem.c#L2737
+
+Unfortunately the addr passed in here is the one addressing into the
+MemoryRegionCache offset by whatever we already read.
+Which for this bug example that was 0x8 (in the flash memory).
+
+Assuming I have correctly identified the problem.
+One potential fix is to define a new
+
+MemtxResult address_space_read_cached_continue(MemoryRegionCache *cache,
+                                               hwaddr addr, MemTxAttr attrs,
+                                               void *ptr, hwaddr len,
+                                               hwaddr addr1, hwaddr l,
+                                               MemoryRegion *mr)
+
+That is nearly identical to flatview_read_continue() but with the 
+mr = flatview_translate() replaced with
+mr = address_space_translate_cached(cache, addr, &addr1, &l, false, attrs)
+
+That's a bit ugly though given the duplicated code but any other change
+is going to involve some more invasive splitting out of utility functions
+to share all but the outer loop.
+
+I don't currently have a test hitting it but assume
+flatview_write_continue() in address_space_write_cached_slow() has the
+same problem.
+
+Jonathan
+
+p.s. Will tidy this and the rest of my house of cards up then post it.
+I suspect we'll carry on hitting QEMU limitations with the CXL emulation
+but for now I have x86 and ARM setups that work with TCG.
+Hmm. Need to spend some time getting regressions tests in place :(
