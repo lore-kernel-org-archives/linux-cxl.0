@@ -1,251 +1,223 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470F36FAD
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Feb 2024 05:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707717231; cv=fail; b=qKO9emKg0qCDwjKzVraak8i+0xxejp3dtDY0HLRcbKJpBjTuLWtH16ikAzkzImaTrhD21LfwnimcV2N6z3cIfIfH0CDN18lGMSAZG4Ba1tOLP4X072jOonx/vP/eSuJaOFhIAepm0qtn2Rvgd82QP/MrnoYEc3MnE0QeRERdm8g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707717231; c=relaxed/simple;
-	bh=0IplUzcAdZFD9rVzcece/y2IWcdlHQ0EBzIxHIsALJM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=APaWYA+cEIsEE6NTcAGZe/nClrqca36YJIcaUWkzAVUoE/JHTf5eoVGLHyreTVL8JP6tNrswr0ycXcDKiVl6Wte6hP6Hi7xaUfmUywhdlv3fALd6k8eZjws/wAdfw8/y05EGXqtUWqsvba9y71AS+yvXv+fypB3EVwS183hQbTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=n5kV7qm0; arc=fail smtp.client-ip=40.107.93.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471F39859;
+	Mon, 12 Feb 2024 11:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707738450; cv=none; b=nQr/y9jJBKwbVcUO3bYc/Vt+fu1j3b8+rOjgW/rafYsaPz1WpoTFUAzHLUJf0/7cgtO25cuyUsPXbAnAI6VCQY6WCpXDuZjNp7gyp+Zk4RO2huqG+C2FPghMVp1gkZCCbaFWDU+V5z/IlxCr5jNnoa/KHM2SVv8uzu7NABVJtEA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707738450; c=relaxed/simple;
+	bh=qlzqXd3E8EN9sGyZ5zlZscBBy3a7+JL3uMmODD1BNa0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KyppGbCIDoJVlP0AV0H0VchTepF92I9NI4TqQoZTfpEJ9Cdy2Tw9HQ/bOuFONM33FMd+QMlsbz9nmao6GiKfu+YBC6Km7nYCThbVG7aDwcfShGUem/hq831gIjjoWGhx48C8ttqb1cs8Y1coUQGGkbWXj6mlAMeE2lRfKI9qdE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRFO39h3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="n5kV7qm0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lkrWvFHlV9beq9hd6fmdAZiGHfjZCydW/zwMpaIj7kW9o7rD6KtJ/3NbB6ITlg70h4ToxWWUGgTJhYCMxVlBFYyS2Pc2Tig9UjXVptH8OohuN/34F87TxMr9v32KRSolxvLrdpUcDHWoN2dNAe9dWfwPc7XyLvMjNBrXGQFISan4l6v9GX2O4/9c9YREYfsDX9GhwrftneYkF2eH3/+4yCcmWj+5C8C+ZbZfuJdHpJQwT3jnI5+B7pvP1N6lGvRXGXTjweyxP+WNBctGYlwXSItfl1uEJNHM8Pmsow72KvLiRwdZm3wJuCLubnWO2AfoZIFSxcR6reCGfqk7gJLg1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XM/fft34VO0pfNVA4Rhg3uIsasC0OGoRnoSNvH0wEHU=;
- b=c4SkcJwuOyJbPRo9jxtRoJNaTdXCP6uNntc0SohoWxooH7TN8u3voJ5ColRWF+Kae9FP/5rAQKMz0a7mTNGdoB61M9qIHiROCSroK+c7qkDQ9DzgQ84X2qKwUif93Ax6WehhQCPfGFOLl+Yuo3oaJWYxee1l0XhPteted0zPyI4qhabMOevrjJ8lcQpxLWtlTyZiP7TXuH2TTIVsGWldSGqatSL/MFgy2VvQ4UFLorJoBQfQhMgltUVBrRthJexFCZdmtaM5bpL42w4y3NcKUl3KHsMQjUB89xYIMb5t3L10+/GgwBgVL3CZn/HggvadT3FIzTvx3IoRXlAes29Dqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XM/fft34VO0pfNVA4Rhg3uIsasC0OGoRnoSNvH0wEHU=;
- b=n5kV7qm0R1szqbuwHYlpVa96qBEev39nv6mrUxoqpWvKxorUDb+U7sqL3dEJSKd818YfYxK+McF5aqQvqzzteRsHZnW2C0n+NysT0lphkGIwBAxNRu/WA93kqZJ6YvJdOyw5v/9caJiv9mp6J//bOt4hJV+WLyWTAhQPwSNneuCvu/MR/YaghkhDS5ZPvcZ7yg3eYkM4B7TUpybL9JJ7QTIwzWBfZrBhjvUSFauerBVLwunDzFSrxwoPIIq2WVMa8HFNlEuyjLNTV7frHf7K1nw/5teHVJw/QJZGnqD6DBvTp+siZVwv9JG/ZtZX3k9Ied1vKe5qJpcnjAIEOC4Qyw==
-Received: from BL1PR13CA0228.namprd13.prod.outlook.com (2603:10b6:208:2bf::23)
- by DM3PR08MB8949.namprd08.prod.outlook.com (2603:10b6:0:46::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Mon, 12 Feb
- 2024 05:53:44 +0000
-Received: from BL6PEPF0001AB56.namprd02.prod.outlook.com
- (2603:10b6:208:2bf:cafe::bb) by BL1PR13CA0228.outlook.office365.com
- (2603:10b6:208:2bf::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.24 via Frontend
- Transport; Mon, 12 Feb 2024 05:53:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
- smtp.mailfrom=micron.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=micron.com;
-Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
- 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.201.242.130; helo=mail.micron.com; pr=C
-Received: from mail.micron.com (137.201.242.130) by
- BL6PEPF0001AB56.mail.protection.outlook.com (10.167.241.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Mon, 12 Feb 2024 05:53:43 +0000
-Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW17EX19A.micron.com
- (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Sun, 11 Feb
- 2024 22:53:40 -0700
-Received: from BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f]) by
- BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f%8]) with mapi id
- 15.02.1258.028; Sun, 11 Feb 2024 22:53:40 -0700
-From: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "john@jagalactic.com" <john@jagalactic.com>,
-	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Srinivasulu Thanneeru
-	<sthanneeru@micron.com>, "shiju.jose@huawei.com" <shiju.jose@huawei.com>
-Subject: RE: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
- and Get Supported Logs Sub-List commands
-Thread-Topic: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
- and Get Supported Logs Sub-List commands
-Thread-Index: AQHaWbGZfDcNDExI9UaAVBN+W7Th47EA3qCAgAVbFaA=
-Date: Mon, 12 Feb 2024 05:53:40 +0000
-Message-ID: <bc03f3ea88b844689981d89d9e2bc89e@micron.com>
-References: <20240207103634.199-1-sthanneeru.opensrc@micron.com>
- <20240208125713.00004776@Huawei.com>
-In-Reply-To: <20240208125713.00004776@Huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mt-whitelisted: matched
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRFO39h3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707738448; x=1739274448;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=qlzqXd3E8EN9sGyZ5zlZscBBy3a7+JL3uMmODD1BNa0=;
+  b=kRFO39h3EAp2KcpdJsox+3/AUQOiWtcZEuRw3eK158CIwRNfIuAM/ngV
+   0fecrquCzUP4hvZIKF/DzB5VxgHd0e9X7ylOUJadt9u2PHzApHcz7d+vf
+   cVzoGy58KpnQd2cH9pKLc3FiL7VMHvJQclXyP88dAej4SADvR02hMqy9X
+   6nJClK6Cpxj6kRworZTtRBJ5CX4ifoaoKX5IyIovw8mLk7Zrc9yQQpT/6
+   ljZLS80nSaeh7c6DSt+YAxVk6Ml0M5TvqOwmMDBD4uWa2rWAyjZUk++BX
+   ujQXCAtQWuIIpjQHBeDRxahRHKsH+ydnVtzKZ4XWplwckb5004bSVcu5Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="2054877"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="2054877"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:47:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911459436"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="911459436"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.160])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:47:20 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Feb 2024 13:47:14 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, 
+    David Woodhouse <dwmw2@infradead.org>, 
+    Herbert Xu <herbert@gondor.apana.org.au>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Alex Williamson <alex.williamson@redhat.com>, linux-pci@vger.kernel.org, 
+    linux-cxl@vger.kernel.org, linux-coco@lists.linux.dev, 
+    keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
+    kvm@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    linuxarm@huawei.com, David Box <david.e.box@intel.com>, 
+    Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+    "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>, 
+    Alistair Francis <alistair.francis@wdc.com>, 
+    Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
+    Alexey Kardashevskiy <aik@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+    Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
+In-Reply-To: <20240209203204.GA5850@wunner.de>
+Message-ID: <5de3ae38-023f-0a3f-d750-fbfa1af7a8ee@linux.intel.com>
+References: <cover.1695921656.git.lukas@wunner.de> <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de> <5d0e75-993c-3978-8ccf-60bfb7cac10@linux.intel.com> <20240209203204.GA5850@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB56:EE_|DM3PR08MB8949:EE_
-X-MS-Office365-Filtering-Correlation-Id: ccc8ae67-3d05-44ff-2c78-08dc2b8ef8e1
-X-EXT-ByPass: 1
-X-MT-RULE-Whitelisted: Triggered
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uVasC6ET3USwMIHAGA7nmVmCSN11M+Gs6Hrbza50t6dBdBThGFKq8kpeenqh96BZuxQuJjwHzQ0bRV2FkoA0NPefNvis+zcmTbA7IgwLtK6/O+RbjWm0nYGFqzu/Hx+ZDdpsMvZf4yVNKm5Hsnc84IvDaT7A7w85bMaFFCeV1koVQwUJvqh4CDkeO2fXOScjtWcMIrVX9dUkhzdxVm2LTuZymRxW7IVUb4bFUxj5MSbWjBEnJxCKc5xspqel0SbfWuuVyrvj5tLfOndcKiataiWbEqy8Mfg7sI7LVdNAhocW2naxxFwVnGZJhrA6A/I/nfrW6yvmDnEXu27+aoR+mxYPijNXpyLSVJfNCRanPN+rdMk8lSxhPMTTvY11eEJ+Z5+isXG5umXajO5BCmDTzEAyR1jP9Y8PFR9o1MRBs4V5CG9BzuHgkNzCR3OQoNY9+ceJ83tlgHISrmRA8+8h4fprLJcydGipSgv8XCUgVm/3Na77MlGipuKlW6zXEDV+wdC2yV7m8IVouYwRKfhK4daq8/v/oSqloQNzBwM/LHOiCiajIYgZjGlD8+fe0NLQ5M1oQsNFuDccLEb+GZ2isoqJycv3V3Hee6Z29z9AJks=
-X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(39850400004)(376002)(136003)(346002)(230922051799003)(230273577357003)(1800799012)(82310400011)(186009)(451199024)(64100799003)(36840700001)(46966006)(40470700004)(7636003)(356005)(82740400003)(86362001)(5660300002)(2906002)(426003)(336012)(26005)(7696005)(53546011)(24736004)(108616005)(107886003)(41300700001)(2616005)(83380400001)(478600001)(36756003)(70206006)(4326008)(6862004)(54906003)(316002)(8676002)(70586007)(8936002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2024 05:53:43.9374
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccc8ae67-3d05-44ff-2c78-08dc2b8ef8e1
-X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB56.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR08MB8949
+Content-Type: multipart/mixed; BOUNDARY="8323328-136259284-1707737012=:1013"
+Content-ID: <fd482b13-2b88-f6d9-c1f8-18cb38ef1b33@linux.intel.com>
 
-Hi Jonathan,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thank you, for the inputs, please find comments inline.
+--8323328-136259284-1707737012=:1013
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <ea362b92-2407-d2f9-8869-a76532c7362f@linux.intel.com>
 
-Regards,
-Srini
-> -----Original Message-----
-> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Sent: Thursday, February 8, 2024 6:27 PM
-> To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-> Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org;
-> dan.j.williams@intel.com; john@jagalactic.com; Eishan Mirakhur
-> <emirakhur@micron.com>; Ajay Joshi <ajayjoshi@micron.com>; Ravis
-> OpenSrc <Ravis.OpenSrc@micron.com>; Srinivasulu Thanneeru
-> <sthanneeru@micron.com>; shiju.jose@huawei.com
-> Subject: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log =
-and
-> Get Supported Logs Sub-List commands
->=20
-> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
-> you recognize the sender and were expecting this message.
->=20
->=20
-> On Wed, 7 Feb 2024 16:06:34 +0530
-> <sthanneeru.opensrc@micron.com> wrote:
->=20
-> > From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-> >
-> > Adding UAPI support for
-> > 1. CXL r3.1 8.2.9.5.3 Get Log Capabilities.
-> > 2. CXL r3.1 8.2.9.5.4 Clear Log commands.
-> > 3. CXL r3.1 8.2.9.5.6 Get Supported Logs Sub-List.
-> >
-> > Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
->=20
-> Hi Srinivasulu,
->=20
-> Whilst I can conjecture some valid reasons to expose these to
-> userspace, can you add some examples to this patch description?
->=20
+On Fri, 9 Feb 2024, Lukas Wunner wrote:
 
-Sure, I will add description and send V2.
+> On Tue, Oct 03, 2023 at 01:35:26PM +0300, Ilpo J=E4rvinen wrote:
+> > On Thu, 28 Sep 2023, Lukas Wunner wrote:
+> > > +typedef int (spdm_transport)(void *priv, struct device *dev,
+> > > +                          const void *request, size_t request_sz,
+> > > +                          void *response, size_t response_sz);
+> >=20
+> > This returns a length or an error, right? If so return ssize_t instead.
+> >=20
+> > If you make this change, alter the caller types too.
+>=20
+> Alright, I've changed the types in __spdm_exchange() and spdm_exchange().
+>=20
+> However the callers of those functions assign the result to an "rc" varia=
+ble
+> which is also used to receive an "int" return value.
+> E.g. spdm_get_digests() assigns the ssize_t result of spdm_exchange() to =
+rc
+> but also the int result of crypto_shash_update().
+>=20
+> It feels awkward to change the type of "rc" to "ssize_t" in those
+> functions, so I kept "int".
 
-> We might want to filter the clear in particular to avoid a clash
-> with the driver log handling. That is only allow it for vendor
-> logs.
->=20
-Allowing for both of the following.
-* 5e1819d9-11a9-400c-811f-d60719403d86 - Vendor Debug Log
-* b3fab4cf-01b6-4332-943e-5e9962f23567 - Component State Dump Log
+Using ssize_t type variable for return values is not that uncommon (kernel=
+=20
+wide). Obviously that results in int -> ssize_t conversion if they call=20
+any function that only needs to return an int. But it seems harmless.
 
-> Perhaps split the patch into 2 parts. The less controversial
-> GET_LOG_CAPS and GET_LOG_SUBLIST, followed by a patch for the
-> destructive clear log.
+crypto_shash_update() doesn't input size_t like (spdm_transport)() does.
 
-Sure, I will split the patches as suggested.
+> > > +struct spdm_error_rsp {
+> > > +=09u8 version;
+> > > +=09u8 code;
+> > > +=09enum spdm_error_code error_code:8;
+> > > +=09u8 error_data;
+> > > +
+> > > +=09u8 extended_error_data[];
+> > > +} __packed;
+> >=20
+> > Is this always going to produce the layout you want given the alignment=
+=20
+> > requirements for the storage unit for u8 and enum are probably differen=
+t?
+>=20
+> Yes, the __packed attribute forces the compiler to avoid padding.
 
->=20
-> The memory scrub handling might well
-> access the ECS log for example (I don't think the current proposal
-> yet does this).
->=20
-> Jonathan
->=20
->=20
-> > ---
-> >  drivers/cxl/core/mbox.c      | 3 +++
-> >  drivers/cxl/cxlmem.h         | 3 +++
-> >  include/uapi/linux/cxl_mem.h | 3 +++
-> >  3 files changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 27166a411705..64a44e286488 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -64,6 +64,9 @@ static struct cxl_mem_command
-> cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] =3D {
-> >       CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
-> >       CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> >       CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
-> > +     CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
-> > +     CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
-> > +     CXL_CMD(GET_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
-> >  };
-> >
-> >  /*
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 5303d6942b88..4128c810051c 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -529,6 +529,9 @@ enum cxl_opcode {
-> >       CXL_MBOX_OP_SET_TIMESTAMP       =3D 0x0301,
-> >       CXL_MBOX_OP_GET_SUPPORTED_LOGS  =3D 0x0400,
-> >       CXL_MBOX_OP_GET_LOG             =3D 0x0401,
-> > +     CXL_MBOX_OP_GET_LOG_CAPS        =3D 0x0402,
-> > +     CXL_MBOX_OP_CLEAR_LOG           =3D 0x0403,
-> > +     CXL_MBOX_OP_GET_LOG_SUBLIST     =3D 0x0405,
->=20
-> Name should include something to make it clear this is getting
-> sublist of 'supported' logs.  Not the log.
->=20
-> >       CXL_MBOX_OP_IDENTIFY            =3D 0x4000,
-> >       CXL_MBOX_OP_GET_PARTITION_INFO  =3D 0x4100,
-> >       CXL_MBOX_OP_SET_PARTITION_INFO  =3D 0x4101,
-> > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.=
-h
-> > index 42066f4eb890..d2df9782a5ef 100644
-> > --- a/include/uapi/linux/cxl_mem.h
-> > +++ b/include/uapi/linux/cxl_mem.h
-> > @@ -47,6 +47,9 @@
-> >       ___DEPRECATED(SCAN_MEDIA, "Scan Media"),                         =
- \
-> >       ___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),         =
- \
-> >       ___C(GET_TIMESTAMP, "Get Timestamp"),                            =
- \
-> > +     ___C(GET_LOG_CAPS, "Get Log Capabilities"),                      =
- \
-> > +     ___C(CLEAR_LOG, "Clear Log"),                                    =
- \
-> > +     ___C(GET_LOG_SUBLIST, "Get Log Sublist"),                        =
- \
->=20
-> Likewise, mention it's list of supported logs.
+Okay, so I assume compiler is actually able put enum with u8, seemingly=20
+bitfield code generation has gotten better than it used to be.
 
-Sure, will update "supported log" in all places in the next version V2.
+With how little is promised wordings in the spec (unless there is later=20
+update I've not seen), I'd suggest you still add a static_assert for the=20
+sizeof of the struct to make sure it is always of correct size.=20
+Mislayouting is much easier to catch on build time.
 
---
-Srini
-
+> > > +static int spdm_negotiate_algs(struct spdm_state *spdm_state,
+> > > +=09=09=09       void *transcript, size_t transcript_sz)
+> > > +{
+> > > +=09struct spdm_req_alg_struct *req_alg_struct;
+> > > +=09struct spdm_negotiate_algs_req *req;
+> > > +=09struct spdm_negotiate_algs_rsp *rsp;
+> > > +=09size_t req_sz =3D sizeof(*req);
+> > > +=09size_t rsp_sz =3D sizeof(*rsp);
+> > > +=09int rc, length;
+> > > +
+> > > +=09/* Request length shall be <=3D 128 bytes (SPDM 1.1.0 margin no 1=
+85) */
+> > > +=09BUILD_BUG_ON(req_sz > 128);
+> >=20
+> > I don't know why this really has to be here? This could be static_asser=
+t()
+> > below the struct declaration.
 >=20
-> >       ___C(MAX, "invalid / last command")
-> >
-> >  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> A follow-on patch to add key exchange support increases req_sz based on
+> an SPDM_MAX_REQ_ALG_STRUCT macro defined here in front of the function
+> where it's used.  That's the reason why the size is checked here as well.
 
+Okay, understood. I didn't go that in my analysis so I missed the later=20
+addition.
+
+> > > +static int spdm_get_certificate(struct spdm_state *spdm_state, u8 sl=
+ot)
+> > > +{
+> > > +=09struct spdm_get_certificate_req req =3D {
+> > > +=09=09.code =3D SPDM_GET_CERTIFICATE,
+> > > +=09=09.param1 =3D slot,
+> > > +=09};
+> > > +=09struct spdm_get_certificate_rsp *rsp;
+> > > +=09struct spdm_cert_chain *certs =3D NULL;
+> > > +=09size_t rsp_sz, total_length, header_length;
+> > > +=09u16 remainder_length =3D 0xffff;
+> >=20
+> > 0xffff in this function should use either U16_MAX or SZ_64K - 1.
+>=20
+> The SPDM spec uses 0xffff so I'm deliberately using that as well
+> to make the connection to the spec obvious.
+
+It's not obvious when somebody is reading 0xffff. If you want to make the=
+=20
+connection obvious, you create a proper #define + add a comment where its=
+=20
+defined with the spec ref.
+
+> > > +static void spdm_create_combined_prefix(struct spdm_state *spdm_stat=
+e,
+> > > +=09=09=09=09=09const char *spdm_context, void *buf)
+> > > +{
+> > > +=09u8 minor =3D spdm_state->version & 0xf;
+> > > +=09u8 major =3D spdm_state->version >> 4;
+> > > +=09size_t len =3D strlen(spdm_context);
+> > > +=09int rc, zero_pad;
+> > > +
+> > > +=09rc =3D snprintf(buf, SPDM_PREFIX_SZ + 1,
+> > > +=09=09      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*"
+> > > +=09=09      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*",
+> > > +=09=09      major, minor, major, minor, major, minor, major, minor);
+> >=20
+> > Why are these using s8 formatting specifier %hhx ??
+>=20
+> I don't quite follow, "%hhx" is an unsigned char, not a signed char.
+>=20
+> spdm_state->version may contain e.g. 0x12 which is converted to
+> "dmtf-spdm-v1.2.*" here.
+>=20
+> The question is what happens if the major or minor version goes beyond 9.
+> The total length of the prefix is hard-coded by the spec, hence my
+> expectation is that 1.10 will be represented as "dmtf-spdm-v1.a.*"
+> to not exceed the length.  The code follows that expectation.
+
+It's actually fine.
+
+I just got tunnel vision when looking what that %hhx is in the first=20
+place, in Documentation/core-api/printk-formats.rst there's this list:
+
+=09        signed char             %d or %hhx
+                unsigned char           %u or %x
+
+But of course %hhx is just as valid for unsigned.
+
+--=20
+ i.
+--8323328-136259284-1707737012=:1013--
