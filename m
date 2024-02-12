@@ -1,76 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB013E481;
-	Mon, 12 Feb 2024 16:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E4E4CE12;
+	Mon, 12 Feb 2024 22:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707756971; cv=none; b=eJDLQKOPn0yth200M9h3ZqxCgHxNAPrD+VesrMsBDVy+1bpJhbMPDHrv88f6Feux9lRktejTT0I3tQFC4RusOAqvqhGrMXRRkHNlbmvh5YakW861XARW835+k2RRUFQax0+UDzai1bICfYJfPsdiXfu1WVkSVAo5yamNbapYxUk=
+	t=1707775427; cv=none; b=asog5OkANs9T1cy54BcvsFRjZRH+7ajuKuPy7IoVmNsNFM1JotE8Dt/lsYxGWgsGR1KbL5BqF2k6Uqx3Z8J6ZqwXFKtcyWaThbH6iDw0NWhvpM2wkyv12praDLcoo4xwE0xvaNqnWVxzV2xAiPGDfmI2pcPJ2kvidqMrttWoYTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707756971; c=relaxed/simple;
-	bh=qEHre5KcrGm7NMQ/uG4bn4q+c/50g4eByXrxSboUeBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AH9dHXVsobzu1/Lv59ouATfbkIr7ck62LPyf7qp0j6gARzOoU456mp7KwBpwNL0WgUKpOgssAHObSp+okWZHO1ltS8E9ABUzWNUXDNph+kh3vgqazHS2rudZFHXY9tAjmRhzaV9AqpP23SutI0SSeMB/FmL/FVFDDKaDQLqxyqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QXu0HhZM; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707775427; c=relaxed/simple;
+	bh=W/bpF4fDyBYCxuho4baujxfsMHNkNNXJSkVJNKjpCzs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9z51ZsJwg9T2VktXqCMntst91C/Wn2Va3y2KWtXn9IU3AiARr2PEioj3H7lxgdTKwkZmH6bGk+4fP7TdVn+/OenamEhU8QFwXNfcGuEq5KP8TZ3qHATg+JsO363wOgAvBWWQa8othZtUbHRbdq9Zdd+3svx4H4W/n3jC8QHI+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ol5cDm0Z; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QXu0HhZM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707756970; x=1739292970;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qEHre5KcrGm7NMQ/uG4bn4q+c/50g4eByXrxSboUeBc=;
-  b=QXu0HhZMfNAOmBIhNoUSENurLgynInuKSgdXvAchONnXRZfRvOQkKzh2
-   bYOvrcLUAOEUmLdgItF9fLkQky0EvDJGTGYDtFgGWXIs2v82YTtHLc5Dm
-   kH9bRGX6CQyNy4YQ5rLWhB9t8WBCTs2cjLKwQgTTAXGtroIpuWcUZSjLF
-   re4vjkmzlhMTHFDzVgiatKxV0+8lZo2xYGUn7X1mINieIZ7jR885mV1ZJ
-   aPYSql5jj/lc5+O2DrwmQtMCLefrAViGtpgXD53svARAw+9ujubUl/0y9
-   m4Nq1gdBCmdINqOAKu/qxBLKSqPeh/x1B5Mk5hC4OR07g+HHpG0FK6TDy
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1611216"
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="1611216"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 08:55:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="7264524"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.42]) ([10.246.113.42])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 08:55:48 -0800
-Message-ID: <a25d9e16-4e5e-4a65-af5b-738ad1c72aa3@intel.com>
-Date: Mon, 12 Feb 2024 09:55:47 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ol5cDm0Z"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-59a94c0fb55so175770eaf.0;
+        Mon, 12 Feb 2024 14:03:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707775424; x=1708380224; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=93VuehxW8IiZjqg3cy8gX+Dj6JAjR6qHpJt8+OJ38pE=;
+        b=Ol5cDm0ZaoRcnMscYemjlZUGsRllvsyHNvki2ldzAwXTYubOc1PELbHIbhucYB/0Xn
+         bFmJppFfWViJi8aubQXsYOGYy/f+avY+uyaguok0BOJEaPOt+6VdCPJZQYSsu1BwxhE+
+         CG6sjhm7PWbM1JKaXx6WGIx1AABclOolLrsagc2vXQ0H6fVpDlQxeLtkJiqifq/JUcKS
+         LnTSBgvnmJvsdTSUCMi5R4pJVbETweRnwjwKMYsvD+KYV2N0PheIro0hXr7C98vyVnjE
+         fPkVSmsXlLu+R4DkppTJAF+jhulYwoPT56fO5/3rQf1hqIg0lFOCCoxMhrAQbjrF7G4k
+         ZIDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707775424; x=1708380224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=93VuehxW8IiZjqg3cy8gX+Dj6JAjR6qHpJt8+OJ38pE=;
+        b=o2Rc+EVNDs7hZiEK2aXma/UOfqjCSoJ19JhhQw8XILGq8K8hHxXcMIJZp23VhSJPrw
+         xu6w1r12QnaWBVo+iDM31YbBboR6j6IpmEGP/MEGlSf7NfcBzFot6a8F8cj80RYo2QEU
+         596i2k5lYnkKE9H7dDq1F5jVHIbLcgdU40pPjmaXxBc2D38/sJ2yqcWKfOMhg3BxJZXu
+         Agjjmm+4L8QfpRBQw0StzXjRwKRtNiqsGyhh3/pPlIQpZnaEdZESSFiTu0zUMi894n9I
+         W+nvZe5vFrkBDpgLMtv1jje0zOeeEJON/JlelrpPQUrFPkagAOy0c3TjTK4sDDTzYPkm
+         umjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIB/5clU5q86e7wWTez4O+IP+p9sTfNVV6PGQ1cGOHJl21u0DPItfRGJXi4J+vktWOa5RsQ1PHzspgxc4L38x1GRxFKWOGohzjZ0rKHd5rMqwahLy87gbkrYu6IhwXwmOIC+Os4f00taYJOlnOUSflS2uoUyC23gQoJ+wi0LXefmjuA61LrVL6N9908Vz6Z9PoBIDQw7gvhANs8ThI3C8=
+X-Gm-Message-State: AOJu0YzwdryA2pPL/86+tJjObqqB64JlblkLuBUNKuSJpMbMCMDBk2OP
+	phOvx7zDqiY96cKjJJgRJBsBr9OPMwvnH1iYdbTYHPJeRtEjI+8M
+X-Google-Smtp-Source: AGHT+IE5OBKx1zbmYznUgitfUIrZdUAxmS+Eas2NAO7RGcO4j6U6ISP+C6U15Hc5IQBn0IfaRdlLPw==
+X-Received: by 2002:a05:6358:d093:b0:178:67dc:aba8 with SMTP id jc19-20020a056358d09300b0017867dcaba8mr9820912rwb.17.1707775424575;
+        Mon, 12 Feb 2024 14:03:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXsq3wUY11a+L7NuGj3BsmexGP6eZMiamdWyBsuJhiWpvO+ZarhxYNh9jN84eNMeJYhoOciFuWzz1ZnHmXsGB1m36yXHC0X6Bvd9KjpNp2fx7VJj0MQPEsh3nsPhRZtad4FDyh1OEF5Sl6qvAdFW4vKJm4/bHT+gbZ3oTrxYFPUKWoaXCU5A2ztB/oOmEw9ipe0214tr1qPrrqu1jsbviotxTqCJoI+OwAKtjNxF//RL0E6DEsDwDfSwF9RXH5EZkhrN3NnBKB8JaxLEB15EJZ4s9CN4fU7ebDUQxUsrv6wIn9BfRO+1c8jZ6oAvubgeK4EOyp07xU2RteUIcVjpr9wRJuXYhpDE83B7le4oDDm3DgtWGzYJcRDGoGD0kcBYSLEQL/C5dNkiJq8bdSCq4mRA3hixJM8UqLw8YsrXx6+qTzJ5QU+i6xDEbeZdz19lsh1rjhdIC0ch55qG4OdAFBwJ3zbYmTinLp2J+1HCDD0D7jt4v3+XiYQwrtu5r7UxNtDUNdE/xZbr6vFtQozelocRvVVtl3CUicsCQ6IAHDrEAdS49M9HFhDKZm+OLaHLGH6GA5d6ktp7067c5t1JpQ8JNUR
+Received: from debian ([2601:641:300:14de:7353:5102:82c6:956f])
+        by smtp.gmail.com with ESMTPSA id x23-20020aa79197000000b006e05c801748sm5994884pfa.199.2024.02.12.14.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 14:03:44 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Mon, 12 Feb 2024 14:03:24 -0800
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+	Russell King <linux@armlinux.org.uk>, linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev, nvdimm@lists.linux.dev
+Subject: Re: [PATCH] nvdimm/pmem: Fix leak on dax_add_host() failure
+Message-ID: <ZcqVrFKxisIwHR3p@debian>
+References: <20240212162722.19080-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvdimm/pmem: Fix leak on dax_add_host() failure
-Content-Language: en-US
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Alasdair Kergon
- <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- Russell King <linux@armlinux.org.uk>, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-xfs@vger.kernel.org, dm-devel@lists.linux.dev,
- nvdimm@lists.linux.dev
-References: <20240212162722.19080-1-mathieu.desnoyers@efficios.com>
-From: Dave Jiang <dave.jiang@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240212162722.19080-1-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-
-
-On 2/12/24 9:27 AM, Mathieu Desnoyers wrote:
+On Mon, Feb 12, 2024 at 11:27:22AM -0500, Mathieu Desnoyers wrote:
 > Fix a leak on dax_add_host() error, where "goto out_cleanup_dax" is done
 > before setting pmem->dax_dev, which therefore issues the two following
 > calls on NULL pointers:
@@ -100,7 +111,8 @@ On 2/12/24 9:27 AM, Mathieu Desnoyers wrote:
 > Cc: dm-devel@lists.linux.dev
 > Cc: nvdimm@lists.linux.dev
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
 > ---
 >  drivers/nvdimm/pmem.c | 3 +--
 >  1 file changed, 1 insertion(+), 2 deletions(-)
@@ -123,3 +135,6 @@ Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 >  	rc = device_add_disk(dev, disk, pmem_attribute_groups);
 >  	if (rc)
 >  		goto out_remove_host;
+> -- 
+> 2.39.2
+> 
