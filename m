@@ -1,73 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21AE58126;
-	Tue, 13 Feb 2024 15:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2A522089;
+	Tue, 13 Feb 2024 16:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838725; cv=none; b=BeGTBBeDCcja6XD2HWByEM1ESHhHtHgQvasp8nwY9LA0THptCqGmPuzK8LwdOZgoYh/8/efRzMekSHUKq3yoxAyrkPrUYhaL1nn2vANIakj/1fjHyW1jLpZOgL9KEojawJQz4i4QzUI8CbhRrx6XtyqDeftsaewT63V9SR4WXdQ=
+	t=1707840857; cv=none; b=emW5Kmu1R76GO9cV957e2qhpjgHOUZl3AVweag96ZLwvVGyq9v4br8gsZDDSbMCM4FuASYf8zo+2cGodUpWtqdQDjz2zoEgihIuAhMY43HhSaWblaoZpRvA7NztFV1BKQ8wfcrcgzzkThuXgCUz29hJEQkV5O6EMHm31fHHRhP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838725; c=relaxed/simple;
-	bh=/FixN+a+D9YVgQbr68SUh51x3iwYkCOi2fOrW6oV/Qs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lUG/uyCfLivi2osimmW/57JdnLs4jvj+G1wNfbBTkKdaqWobsBAGfSgCa2hmOKHxjYt1KrtTSfTs2LeM20vGiRZTNzAm44ZA+FRuTJ0fxHaTcHszzCke1OSV1qeFJWXmcM91sRICHJhJh0ceSwTMMgiWw+k4JrrJtmHY9BkeXNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pi9nctyd; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pi9nctyd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707838723; x=1739374723;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/FixN+a+D9YVgQbr68SUh51x3iwYkCOi2fOrW6oV/Qs=;
-  b=Pi9nctydhHzC3Clwpg+k8T7sZdfcviDs3DWD/9ZyTJZOU2ZDQNq4CCZf
-   FWTl2CXkkVxU3FRJOgomX7YOHZHXon5L7vPLwzvvLTpASCuySmepf1aHh
-   w1j8+J9w2JG6nvuB+AHbSf8wNWBAoLUgdCMcHSdd0VkNzvRRNEDx0Rve0
-   mmEj0S2p2dgJFjtvZuAzd8DVpjn6aieUy8JpxcqqEufsq8SQDxK/qwMrH
-   tUIfVhw4DIRw7HAXJkhDd3Y0+4bY3fJsdCJiV9Z/O/6mzD2S/XTSoYhMg
-   VW/kDkK2XtJp1mOdzBMlLGhjBSYO7CUNddKEbntQfDqZmCV6o2q08IJ7z
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="436996881"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="436996881"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 07:38:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935369945"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="935369945"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.145]) ([10.246.113.145])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 07:38:40 -0800
-Message-ID: <3896f0ec-59c1-4e2a-80f3-1081a8282a34@intel.com>
-Date: Tue, 13 Feb 2024 08:38:39 -0700
+	s=arc-20240116; t=1707840857; c=relaxed/simple;
+	bh=Z3xvOvx1h67F1Heo3z3erfDNsDHd6VOCSIQ8qEpmQGA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a19D6QdAud+7yKdm8Hx8TT9LoNrW9rVJ4a5pufgh2Od+5Z8+fTulAD/vTQyNdLvpg5hUDG0ohl3PCpNTsLACyOIx/y3TdMR9cX73oB024sNr2Ggh7IFyQ8gzLgfJa6F1YbWESeyH06kyJRC/f38zoYNFblJ3e5GJHkdh49IxUds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZ5s00clpz6K5lL;
+	Wed, 14 Feb 2024 00:10:28 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 60CA2141482;
+	Wed, 14 Feb 2024 00:14:06 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 13 Feb
+ 2024 16:14:05 +0000
+Date: Tue, 13 Feb 2024 16:14:05 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] cxl/port: make cxl_bus_type const
+Message-ID: <20240213161405.00006865@Huawei.com>
+In-Reply-To: <20240213-bus_cleanup-cxl-v1-1-a601adabb391@marliere.net>
+References: <20240213-bus_cleanup-cxl-v1-1-a601adabb391@marliere.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/port: make cxl_bus_type const
-Content-Language: en-US
-To: "Ricardo B. Marliere" <ricardo@marliere.net>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20240213-bus_cleanup-cxl-v1-1-a601adabb391@marliere.net>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240213-bus_cleanup-cxl-v1-1-a601adabb391@marliere.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 13 Feb 2024 11:46:59 -0300
+"Ricardo B. Marliere" <ricardo@marliere.net> wrote:
 
-
-On 2/13/24 7:46 AM, Ricardo B. Marliere wrote:
 > Since commit d492cc2573a0 ("driver core: device.h: make struct
 > bus_type a const *"), the driver core can properly handle constant
 > struct bus_type, move the cxl_bus_type  variable to be a constant
@@ -78,41 +63,4 @@ On 2/13/24 7:46 AM, Ricardo B. Marliere wrote:
 > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/port.c | 2 +-
->  drivers/cxl/cxl.h       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index e59d9d37aa65..a73c1d1dd4c4 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -2197,7 +2197,7 @@ static const struct attribute_group *cxl_bus_attribute_groups[] = {
->  	NULL,
->  };
->  
-> -struct bus_type cxl_bus_type = {
-> +const struct bus_type cxl_bus_type = {
->  	.name = "cxl",
->  	.uevent = cxl_bus_uevent,
->  	.match = cxl_bus_match,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index b6017c0c57b4..122015f7a558 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -803,7 +803,7 @@ int cxl_dvsec_rr_decode(struct device *dev, int dvsec,
->  
->  bool is_cxl_region(struct device *dev);
->  
-> -extern struct bus_type cxl_bus_type;
-> +extern const struct bus_type cxl_bus_type;
->  
->  struct cxl_driver {
->  	const char *name;
-> 
-> ---
-> base-commit: 716f4aaa7b48a55c73d632d0657b35342b1fefd7
-> change-id: 20240213-bus_cleanup-cxl-ce6b8a16eb0b
-> 
-> Best regards,
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
