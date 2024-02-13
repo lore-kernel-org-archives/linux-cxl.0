@@ -1,103 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D68F5CDDC
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Feb 2024 00:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E94134CB;
+	Tue, 13 Feb 2024 06:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783618; cv=none; b=W799APAN3x+tInCNThYlSL/Gr49TKyHda7SBU6pcYj9BZRYWEYRJht5skhb+aRFGUNr/D1cKrrT7mZapQC+86NbFFRs2nw8tsDs0YuZke9Q795vsJkdpmgxK6BkZPJRdxxOIRWnhuw3wyVvMuCgu7lHcPYBMUoFVm6W02hlux+k=
+	t=1707805109; cv=none; b=aoiAsO+rn9owykw0jumXZOMjrCg83MlK70KF1+KuD/wMjq3MHE2DCjxyrnmxxjdoTAQBYgawUvO1xDXgLMxrJistHG1InpXmRupUEARDOSB4Oz8xDZD9UwQ9U/Y3wivdn88FvCHU9y6wOi8zFCoFBvRXjldmPfd2jeJawCIUhIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783618; c=relaxed/simple;
-	bh=rXqBG2xEQQHC3OE/2/MNY2l1cdoK9SxwhRmgdu82Jw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YDSrvkEa7wWKIcUMo3P3/SbKIlr48lleWvLOnoFqPPKhB4ItdbK+xgTzIMiJIXZqdAjF5CXiGYH4ul/c7T7ABiuCJvN6jVEyleT2dwRu+EF4QPTmb4lNXZpF9US2LfPusQkFOrtxxDK3ZqPCTA8tRxWkgnjxYLkm1dWxi0p+eLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OxIvzUVl; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OxIvzUVl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707783616; x=1739319616;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rXqBG2xEQQHC3OE/2/MNY2l1cdoK9SxwhRmgdu82Jw0=;
-  b=OxIvzUVlutAiDjUGoJrJotil6cCpFNi/NzIJRS1w19EZUofm7oM/bTB3
-   IK8gD4Fvr4XydDl37Rtll16sq2wVIxk3VEe0JcO+FIU34BtZtSyZCyWxX
-   p1RxgFUzTve0ERKR12GYa4ugJ/6WUwOp0Ajv/kFmcg8h7RbOXA3K7xtFq
-   QmwObWcfPBa8LhzPnwlqCdXjcCa49nzRgukc2DGTL8dCmJAAsbmT2rwvb
-   8UF0lWREN3q4/sMIFVOSevSmUU0JW0UqpFxna6b1Q8krb52SXkrhw4C2y
-   GfrLt3W6qgX3amjBj+QY5deajcdJZcgDCxhUlHxuzdgXK9tcm7eZiOy5/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="24251018"
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="24251018"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 16:20:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935210031"
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="935210031"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.42]) ([10.246.113.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 16:20:13 -0800
-Message-ID: <fd03964a-0b16-42f3-8572-0a7686beda93@intel.com>
-Date: Mon, 12 Feb 2024 17:20:12 -0700
+	s=arc-20240116; t=1707805109; c=relaxed/simple;
+	bh=Em04CzlZ7w0zgHD9OH1OvZMN1cDW1yGq0zZXVpfH8xE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ja0Lie6RTYCNjU7/2W6vnsUWE1NlI+SfC3JNUqvL9mM9k77Xow0oYpqzNa75UPTznhQqLiYVhQuhjZu65ct7/jAa7mqnoeN4ZULACWQrerlyh5Bpn4mbG10QSncJADs4cdHMNuWCKrlVE1jFbVq5IDPQbGAZ4r1WJAFr+5q9uo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A88B0100DECB7;
+	Tue, 13 Feb 2024 07:18:23 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 78FE7473ECA; Tue, 13 Feb 2024 07:18:23 +0100 (CET)
+Date: Tue, 13 Feb 2024 07:18:23 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Dave Chinner <david@fromorbit.com>,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>, linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev, nvdimm@lists.linux.dev,
+	linux-s390@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [PATCH v5 5/8] virtio: Treat alloc_dax() -EOPNOTSUPP failure as
+ non-fatal
+Message-ID: <20240213061823.GB27995@wunner.de>
+References: <20240212163101.19614-1-mathieu.desnoyers@efficios.com>
+ <20240212163101.19614-6-mathieu.desnoyers@efficios.com>
+ <65ca95d086dfd_d2d429470@dwillia2-xfh.jf.intel.com.notmuch>
+ <CAHk-=wiqaENZFBiAihFxdLr2E+kSM4P64M3uPzwT4-K9NiVSmw@mail.gmail.com>
+ <65caa3966caa_5a7f294cf@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH SET] cxl: add poison event handler
-Content-Language: en-US
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com
-References: <20240209115417.724638-1-ruansy.fnst@fujitsu.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240209115417.724638-1-ruansy.fnst@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65caa3966caa_5a7f294cf@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+
+On Mon, Feb 12, 2024 at 03:02:46PM -0800, Dan Williams wrote:
+> However, Lukas, I think Linus is right, your DEFINE_FREE() should use
+> IS_ERR_OR_NULL().
+
+Uh... that's a negative, sir. ;)
+
+IS_ERR_OR_NULL() results in...
+* a superfluous NULL pointer check in x509_key_preparse() and
+* a superfluous IS_ERR check in x509_cert_parse().
+
+IS_ERR() results *only* in...
+* a superfluous IS_ERR check in x509_cert_parse().
+
+I can get rid of the IS_ERR() check by using assume().
+
+I can *not* get rid of the NULL pointer check because the compiler
+is compiled with -fno-delete-null-pointer-checks.  (The compiler
+seems to ignore __attribute__((returns_nonnull)) due to that.)
 
 
+> I.e. the problem is trying to use
+> __free(x509_free_certificate) in x509_cert_parse().
+> 
+> > --- a/crypto/asymmetric_keys/x509_cert_parser.c
+> > +++ b/crypto/asymmetric_keys/x509_cert_parser.c
+> > @@ -60,24 +60,24 @@ void x509_free_certificate(struct x509_certificate *cert)
+> >   */
+> >  struct x509_certificate *x509_cert_parse(const void *data, size_t datalen)
+> >  {
+> > -       struct x509_certificate *cert;
+> > -       struct x509_parse_context *ctx;
+> > +       struct x509_certificate *cert __free(x509_free_certificate);
+> 
+> ...make this:
+> 
+>     struct x509_certificate *cert __free(kfree);
 
-On 2/9/24 4:54 AM, Shiyang Ruan wrote:
-> Currently driver only trace cxl events, poison injection on cxl memdev
-> is silent.  OS needs to be notified then it could handle poison range
-> in time.  Per CXL spec, the device error event could be signaled through
-> FW-First and OS-First methods.
-> 
-> This draft patchset adds poison event handler in OS-First method:
->   - qemu:
->     - CXL device report POISON event to OS by MSI by sending GMER after
->       injecting a poison record
->   - CXL driver
->     a. read the POISON event through GMER;
->     b. get POISON list;
->     c. translate DPA to HPA;
->     d. construct a mce instance, then call mce_log() to queue this mce
->        instance;
-> 
-> This patchset includes 2 patches for qemu, 5 patches for cxl driver.
+That doesn't work I'm afraid.  x509_cert_parse() needs
+x509_free_certificate() to be called in the error path,
+not kfree().  See the existing code in current mainline:
 
-Hi Ruan,
-Next time please split this out and post as 2 different series. You can have the CXL driver series cover letter reference the QEMU changes. And please add QEMU to subject prefix for the QEMU patches. Thank you!
+x509_cert_parse() populates three sub-allocations in
+struct x509_certificate (pub, sig, id) and two
+sub-sub-allocations (pub->key, pub->params).
 
-> 
-> Shiyang Ruan (5):
->   cxl/core: correct length of DPA field masks
->   cxl/core: introduce cxl_memdev_dpa_to_hpa()
->   cxl/core: introduce cxl_mem_report_poison()
->   cxl/core: add report option for cxl_mem_get_poison()
->   cxl/core: add poison injection event handler
-> 
->  arch/x86/kernel/cpu/mce/core.c |  1 +
->  drivers/cxl/core/mbox.c        | 82 +++++++++++++++++++++++++++-------
->  drivers/cxl/core/memdev.c      | 16 ++++++-
->  drivers/cxl/core/region.c      |  8 ++--
->  drivers/cxl/core/trace.h       |  6 +--
->  drivers/cxl/cxlmem.h           | 11 ++---
->  drivers/cxl/pci.c              |  4 +-
->  7 files changed, 97 insertions(+), 31 deletions(-)
-> 
+So I'd have to add five additional local variables which
+get freed by __cleanup().  One of them (pub->key) requires
+kfree_sensitive() instead of kfree(), so I'd need an extra
+DEFINE_FREE() for that.
+
+I haven't tried it but I suspect the result would look
+terrible and David Howells wouldn't like it.
+
+
+> ...and Mathieu, this should be IS_ERR_OR_NULL() to skip an unnecessary
+> call to virtio_fs_cleanup_dax() at function exit that the compiler
+> should elide.
+
+My recommendation is to check for !IS_ERR() in the DEFINE_FREE() clause
+and amend virtio_fs_cleanup_dax() with a "if (!dax_dev) return;" for
+defensiveness in case someone calls it with a NULL pointer.
+
+That's the best solution I could come up with for the x509_certificate
+conversion.
+
+Note that even with superfluous checks avoided, __cleanup() causes
+gcc-12 to always generate two return paths.  It's very visible in
+the generated code that all the stack unwinding code gets duplicated
+in every function using __cleanup().  The existing Assembler code
+of x509_key_preparse() and x509_cert_parse(), without __cleanup()
+invocation, has only a single return path.
+
+So __cleanup() bloats the code regardless of superfluous checks,
+but future gcc versions might avoid that.  clang-15 generates much
+more compact code (vmlinux is a couple hundred kBytes smaller),
+but does weird things such as inlining x509_free_certificate()
+in x509_cert_parse().
+
+As you may have guessed, I've spent an inordinate amount of time
+down that rabbit hole. ;(
+
+Thanks,
+
+Lukas
