@@ -1,106 +1,212 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224D4605C7
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Feb 2024 18:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707848482; cv=none; b=dVF6JNtnKHsP55N4yj4EZG1d+ji+bF3DBF3l6VJ5AU6DawkuWjd4x+qAKtrGXriDL168XfJrkHskgCaH76yztNaUfnBA5JbYe06te8hLC+IiduNITWdCAWpLC5LMo2ZpFi8Vee6ravCnJhbXB6gWN2rF31F1NHnpUR/hWV0NOMI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707848482; c=relaxed/simple;
-	bh=gVrM4Lf0jBYH+ha09mLVPY8cuFIb0jyYslplNAZnogc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEScCLuK25qideE0e+VJ88draDzZmN8m7ld7aPo2tw8krf0+/aQ/fCe7bl2Cc1qPOckI6x59SEtlt/ub4TORvv27YdysltIBzAgF3Is8gdKy0uZ9XSCPrPmoNqUpDLumfl22V38fFZvwBEQ4y8Qz9/PCYmA+uQZ7yn0WRv1Dvt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8+fP+lP; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F242610A3D;
+	Tue, 13 Feb 2024 18:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707849615; cv=fail; b=U8U8djmL0biKgPFY60Y6+4RIAjMNheIWBQJDd9hT5G+6TQ69F7ASTROSTHtnsrG93Wad0I1Yhf/wqr4eVr0Z7vGZcGdbWdc7lgdMBcSXKadFiV093y3VgTYSYXkIz2nLo1w50d+4cuxS0aJHkE5WLdPtNXEkD6ne4PMk7l7RKYI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707849615; c=relaxed/simple;
+	bh=71HeGVCFTzxc1epbyiJp+ohp4YasHwHHL4FnW1mohbM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=i55Uz6sZxuS6pXavBBwDWmGRbM1HswrMvL2/4q2cFpeg7k4BojsLETvFr4Jaubo/Y/lmEXzaWr+fA72FDYAfSBIcWP38RVJPUMTDnmoDLpYZ+WfVKIIQN4e2/YnGXWACt0o5w4oQYDUPKrEmxO3NrBCwavRtJwQULBSECf9eMao=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jDzoV/i/; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8+fP+lP"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29080973530so3378778a91.1
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Feb 2024 10:21:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707848480; x=1708453280; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iID+5qHzUzwG5TgDFukz1qiwGtm2X/wRZ/SBXmMx4Kc=;
-        b=g8+fP+lPa8XYm77yB8I3BGvy9x8dvWQLcQC7+intX/hRS+6bQXK0alIpMgoL75+6FG
-         dPO9H1qohU3wefIjYlJ+F0Ao+sXFVXlyOib4uQ/Fe2ArGm+ziEtjw750Q0Z55ftOOUX9
-         S2vkD2UJjzNPISb4HIVisqcuQR4LGbX6TVHtEbfAKzqL7O/jlELwwHEdHZeQZt2Ia4lq
-         kApWJzEa5wK2y3Oi5JbDJRud7WeVoQnOnGCfg9RbwhCexAUR7Q0acSyeBBe7vcM2X2ei
-         mvPLHpW1bcit6OSP7C0woFCixvfB/OoizLYNmcQ41Xe0jgxglbozQf7aaFwH3a0v/1Lj
-         VU5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707848480; x=1708453280;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iID+5qHzUzwG5TgDFukz1qiwGtm2X/wRZ/SBXmMx4Kc=;
-        b=hIK/Gyv4djf1v5pZlfBhUHV7IOOYTGQOZ6pbBnMX8Ucqav/XuavxP7CQO3F+tTFJBp
-         3gK1vqSqxb7DNTTK0RUGOl5wDYquV/7Fc7JD5Y93Hhk2TP6upec9l1nenjusZrl1DcQb
-         yDust0mo7+sgr2A+2Lh4TyiODgD/pjzfQk71eefaxB1nnDlha/QWnwMg9q2gxy9KyyOh
-         KPqRnSRYA+U2+C1eZjNIPRUH0N1b6VhBilC5rb6cJ97OI05cUS8EbEpAwToy6M8Mj2Ot
-         3oeWwOYvrsJH6K3kV+5m44OBEdE8ybEo+jcQ4YlneIX8r5tly6wnvt/yYBxePZOs9mQ8
-         twXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqvuSdYAUD38tcE42cgzm0zva2eqX2Qstp8OzVrwJitECQIAXx+KWFvqv8F6fPzVxpvZndutppWNPN7UJ2j2up6WWawcOeFrAl
-X-Gm-Message-State: AOJu0Yyet5epVuLok11Ju2Los7xCh/cdsj4+tJdwL46LIM6L2+NU/7mh
-	ozlMOIESpIlwN5axAyJFVHrKkaQMUrzqyvY/iPHKeQ9HnMla7BZO
-X-Google-Smtp-Source: AGHT+IFnj7pmp12EWMqSCszNnAa0wxQFW3r2mdwohHjz5I8hZ5mc/pN3FOgQz2lGSAxZBFpr9cbKfQ==
-X-Received: by 2002:a17:90a:ce16:b0:297:154e:521d with SMTP id f22-20020a17090ace1600b00297154e521dmr268081pju.42.1707848480317;
-        Tue, 13 Feb 2024 10:21:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUiVawyW5hBG0m32tHzMP7NoNuMmGVlNoeP68+0f1Wti1lS9Wpq1zchR1HfneQ3r6YkAIy7yrq+q/ppKWT/6EJshysN4OetXYgQxzli8hals9C03FQzjAS1ziaJFr3aq+4UmwBO1xkxKSr1Vxs91OuAXNHE8FuuDq/1SjRAY9bpaBZZx5owdL0lgkIFwsu5xNgrqCIGac5Myl3LL5rYpqq466JR5UzpEWCMWl+XejZC94qGwmpbQJF2rzytFahax46lyLFFy5wYXEy2ADqPSwouT+BRUC0Et7hmHuIOCU8zNK/q7TwZx3xGrtFOd+8dbKFDnPvVViXsPZexvlxBh4F0x1OtHA1mf8Z+r/8h5Ca5Z5cCTKFl+g==
-Received: from debian ([2601:641:300:14de:a8fd:e6e0:547f:c54a])
-        by smtp.gmail.com with ESMTPSA id b8-20020a17090ae38800b00298b4e896a5sm1563590pjz.46.2024.02.13.10.21.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 10:21:20 -0800 (PST)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Tue, 13 Feb 2024 10:21:17 -0800
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	nmtadam.samsung@gmail.com, nifan@outlook.com,
-	jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v3 8/9] hw/cxl/events: Add qmp interfaces to add/release
- dynamic capacity extents
-Message-ID: <ZcuzHcqn4VeZdSam@debian>
-References: <20231107180907.553451-1-nifan.cxl@gmail.com>
- <20231107180907.553451-9-nifan.cxl@gmail.com>
- <20240213174405.00002568@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jDzoV/i/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707849613; x=1739385613;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=71HeGVCFTzxc1epbyiJp+ohp4YasHwHHL4FnW1mohbM=;
+  b=jDzoV/i/5ikIF/WknQjhmwsDtvEIjC0iPaJAuTouJ4tp8C9pU+Jhbza4
+   ppIHmcKvwlcAQyehHF3brp+yYenJ978hIofrXHIQPL3D2KV4CBs9qmJ7V
+   LhPiU5k48ErVykTQU7qYBWLftYuXISA3UrHmQxMG60fvSXSf2bHYyw1nS
+   t9+N/XOccu8odu1/82LrZwvMvkkQXalJ2romEezjpUaE3rWySWUhOfP7a
+   aE4t1oBlL/DARK6KxwD9iv/0ej5zxVcCgXYTXVtiVhsabXu4rZveWkr6R
+   G0mdev5mXCaVnB0o7VAxi6OED9RFPirB1mHuvTf+18BYLXytgRaCp2HLp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1725556"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="1725556"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 10:40:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="7606827"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2024 10:40:12 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 13 Feb 2024 10:40:11 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 13 Feb 2024 10:40:11 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 13 Feb 2024 10:40:11 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gzijWMTtngH6r/7pPlCywvkdF1ImgsxgWBZj5I87WnsCS+YBWxVgCpNr8Z8fZX6vjrldmwkBIhG9d/OLaIdL/ps0fYshxAd9ZJdRsRBE8qdJr2qSVf4sP/PeaYWG60G5gJzakZr2qhr+Bbs9S6esxtyxn7Lr9d47kTWr+cn27iI/uioj5CijgWulw7D5JcehFFc9MkvviDnelxta8M2ZlI4KmfFQHELAqECraAspRFKFgx6Kq/Qh0UMAZWT2/3/fIZLQrJ3grTcDvDjro4DbZZQltPFSObQtZshuUPPfBTTKIbR4uMx5i74tMGnqhiVDp9mq/88HxD9ozOqBM3iR6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hKTZT79HlLdiU7hCmk7lelgh2UpyLpBULUx+5j6IoC0=;
+ b=O5icoTHpmncQqkuFig6Ag1Y3B8tH0X55W6577Bxel3e2JBmM1Y+h20H0WfAn2E+QCxv6XunXaSCVrU6wyG9cugGnp/MhxYAUDVAoZa3lyz0LKE9C+0KJJrox2uoqjEDhXWhTlWAkKTA6QVRsxz3g0U8sD766LAy23rqgPeYgLkyY7LE6HZyV45Js0pXcCu7X8StAHShSvCi5N0P74KnBbgLK6gbcAWXdtkr05E2n/igpBadK2/y+mGT4xiCP7rRFhB0Onfig10yRCblTVzNRUSoEiDR7sQKPCc9DllxxThCoQW/Yornc5zYa1MUBMv87W/dMs2xBcojaBLVAolmkFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB8588.namprd11.prod.outlook.com (2603:10b6:a03:56c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.35; Tue, 13 Feb
+ 2024 18:40:09 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7270.036; Tue, 13 Feb 2024
+ 18:40:09 +0000
+Date: Tue, 13 Feb 2024 10:40:07 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/pci: Fix disabling CXL memory for zero-based
+ addressing
+Message-ID: <65cbb787e73c_29b129432@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240209193451.163564-1-rrichter@amd.com>
+ <65c68969903b1_afa429460@dwillia2-xfh.jf.intel.com.notmuch>
+ <Zctg4Lx_y_hbChUW@rric.localdomain>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Zctg4Lx_y_hbChUW@rric.localdomain>
+X-ClientProxiedBy: MW4P223CA0020.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::25) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240213174405.00002568@Huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB8588:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7875f43-e77b-4ec3-a32f-08dc2cc3349e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: R+169xOJj9ngsi/ob+3dVzL09U1OuiJ/iOnlK+hE/obytHqSa7Gzbgu/dbbaFlNZfquhtLv2EFHDolCIx2XTxGTH1u9mqZZfLAZcoW4U9oWJojEoYEWvoF1bFEH66tDDNY2II8OEsO+dwA9zXoUhp+jtw+RN1E6852jp9HlfHCAsz4UegXxLMPmMSqc42a4mK/bmSk+6j5V2b8iIGgl54Z13Oi+qsIsZHnh35UflgGZO6p20It+hjtil5YtzkgQ2O8I0eenf3KocD9mmyZFmqOgpeF4RnZOFxoDczjRseJGTUv7CmcdAWvvs9PgyDwdMs0JhU+e/5GeWzwD81YCDZnmdI2YV5HP4vrZsZMUzlT0+hcYs6BUnb//3ukmoc6NaNZq+Sxpl412N4F+iAA9Uowlza15CQt/dqvPdAPlIkMZ0aH/Bu0o6RbTDwUYzWJeG9iSDRImzmk+cUqnnJUP5GXrg1WsnJBWuKLA7kNYj6AWY5puJ5vzzGeX19DTsRXfyzQCgN/JLIx9z7jLvjEWZeyFq2t3NVhTezksj8OjMNJaA4ZYGfK4hrX4ClKlLScq/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(346002)(136003)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(26005)(41300700001)(6486002)(83380400001)(8676002)(8936002)(66946007)(66476007)(4326008)(6506007)(6512007)(478600001)(53546011)(110136005)(316002)(54906003)(9686003)(66556008)(86362001)(38100700002)(82960400001)(2906002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/RXA7vIpKVKaJlHsLcKMQnwYlRf+v9UxAjoq7c5JHKgyi/oHmNtlDxnmtQNo?=
+ =?us-ascii?Q?kYK8XXzJFPrsQEztDKu/HAPDrZJIGOox8utRj9AW9EdT5WfiiOzRiciPU441?=
+ =?us-ascii?Q?C7u/pHFxLjFu0M41Suk2i9h+mBC1bBixHImp05aj9AtQXhuDmssfUQ/6dZ3/?=
+ =?us-ascii?Q?qPF3KTLuwv1WMdaxZCVIzzZ1rpm8RmbRw/xVM1folbh4eKzVXLQSfxFiZpAi?=
+ =?us-ascii?Q?+BuJTwZ/I9aRZSDFkwZZVrT92Feu5rG9hR2xz7sRUkfLWih004wdSQtpJ/Hi?=
+ =?us-ascii?Q?Sq7JesSxl1KvfB2sGkaLSOIKU+CnCNZ7VA5sJLVVu1yXmLy/W00nJyjvqWQe?=
+ =?us-ascii?Q?XBx5kxdh6WUVdUMNeCzFqKQvnOlGiGxg2o76/7Y+RVrZ0FAhZDrnMhFyC+xp?=
+ =?us-ascii?Q?BICYTxRTae0659z3/6mZ7+UrbvZgqORwrySujMLuajKqLmfKVuaRcZmFdiOZ?=
+ =?us-ascii?Q?2koDd2oJ/wy62lpE6N9guEerEvX6mhIKeN38vyNoOZzH9OxX+5R4xUZXOuhH?=
+ =?us-ascii?Q?ViFBAG8EzpqZkBUf4vJgpZ3cRWKsTNFy6MZfD8BatHDrqOp2OjYVNO7rkpMB?=
+ =?us-ascii?Q?0BHKq/Appdh2efRGtnxkwUMMBkzE8xIP+ICuqzMHdDu0dWhRQc6OpPkkjGXD?=
+ =?us-ascii?Q?/5gGQ9xohf2DXaOAO2y4UG9VwJpaMQ5RBI738g+2CaDe/91hcxniCllOAju+?=
+ =?us-ascii?Q?3LHQUvOILStLvVttKInPbfjqu6QjMwbpE/tbH2bpyvePhfLtqRJ3XgqbsALn?=
+ =?us-ascii?Q?K3JIyPpym806e9560W2C7NXSuzirF3t3zdAKPlyk/xxdtoI5ITQXCunhQAnz?=
+ =?us-ascii?Q?FVhV0kz7SGgnX/41MjHmQQ9KBDbPnAatA9gHw3KptLv21qg2dzvR9n9GWyQ3?=
+ =?us-ascii?Q?Dct/NVo+dSUmgOZWnkm+COt5C6m+bsq3IQJAWKP+5iEVS3kJM5liZXzP8x0l?=
+ =?us-ascii?Q?KDY97ANh9pt0AUYeE5HCvne9+HiUF4k1X/eT/m5SCfCAMR+KnT8ESLLvGw+F?=
+ =?us-ascii?Q?EuZx6WJ/RR0KxHMS9ANbM5qRViS4qyAIrqosLG1DJng2Sj1IIY9a1jqAVUkk?=
+ =?us-ascii?Q?lMoaLp6zvVhMITBXkNYh2cpZ291CxkBzael0kd0Suv/Qro91Utq/hh1d0f/Z?=
+ =?us-ascii?Q?l1MOoHwTfE9LYdtOGxYr2m1t04r801+NNmxndg99J6/hhehyHdeEXn9hV2cw?=
+ =?us-ascii?Q?UDlDTwHSYD5yUSbWws4dwwdzXXjdyPrZx3MWCyn41PH4qdKmwCNzS073tnnl?=
+ =?us-ascii?Q?SNVWL6Xl6SfMwln2OTXo2SJvmQl6HEj3NSezgvTAMq0d7xiEznbTWsPcSGfK?=
+ =?us-ascii?Q?oITfYY5RoVse19Szy5yoJS52kUs0hvVLi29hXdT/ywNfTaHRyWEYP0c/zfeK?=
+ =?us-ascii?Q?jnp0Aksp0FK0TJlEXv852RATlItULlWbz9WRrHDmRIIlmCgb3EsAfw/VGwVY?=
+ =?us-ascii?Q?HOc8O2703LNPxembTQNCslrRJEyVkz/9Wr8t6pX97zAPO2BDmiFJYUHUKmWP?=
+ =?us-ascii?Q?5QNR77vOISoFg8pkfKRzIwVn/xEcVe4Kf/q33jDsDKEBrHAsRtIr1AeBWbqa?=
+ =?us-ascii?Q?tUXA2EA36VCsY1T9oAmBomHRehafNdxuwTWeAKECQ2TbLG9TtUUZG7tBA/hB?=
+ =?us-ascii?Q?jQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7875f43-e77b-4ec3-a32f-08dc2cc3349e
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2024 18:40:09.4239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FBA52wf0hB5Djpch9Ms5MlPkNITPDA2NEwmcIRbJMkfyWhJq1vVRrvnZTTJoRTQbuYa4WW4C8CEHA8VVpeNRxWwa/w447u/B3azsJ14Bqlk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8588
+X-OriginatorOrg: intel.com
 
-On Tue, Feb 13, 2024 at 05:44:05PM +0000, Jonathan Cameron wrote:
-> > diff --git a/qapi/cxl.json b/qapi/cxl.json
-> > index 8cc4c72fa9..6b631f64f1 100644
-> > --- a/qapi/cxl.json
-> > +++ b/qapi/cxl.json
-> > @@ -25,7 +25,8 @@
-> >    'data': ['informational',
-> >             'warning',
-> >             'failure',
-> > -           'fatal']
-> > +           'fatal',
-> > +           'dyncap']
-> >   }
-> Needs a docs update.
+Robert Richter wrote:
+> Dan,
 > 
-> Upstream QEMU seems to have gained some stricter checks
-> so this just broke my build after a rebase.
+> On 09.02.24 12:22:01, Dan Williams wrote:
+> > Robert Richter wrote:
 > 
-> Jonathan
+> > > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > > index 569354a5536f..3a36a2f0c94f 100644
+> > > --- a/drivers/cxl/core/pci.c
+> > > +++ b/drivers/cxl/core/pci.c
+> > > @@ -466,6 +466,18 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> > >  	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
+> > >  		struct device *cxld_dev;
+> > >  
+> > > +		/*
+> > > +		 * Handle zero-based hardware addresses
+> > > +		 */
+> > > +		if (!info->dvsec_range[i].start &&
+> > > +		    info->dvsec_range[i].end != CXL_RESOURCE_NONE &&
+> > > +		    info->dvsec_range[i].end) {
+> > > +			dev_dbg(dev, "Zero-based hardware range found [%#llx - %#llx]\n",
+> > > +				info->dvsec_range[i].start, info->dvsec_range[i].end);
+> > > +			allowed++;
+> > > +			continue;
+> > > +		}
+> > > +
+> > 
+> > I am not comfortable with this. It should be checking a platform
+> > specific quirk, or similar for the possibility of HPA != SPA. The
+> > entirety of the Linux CXL subsystem is built on the assumption that HPA
+> > == SPA, and if a platform wants to inject an offset between those Linux
+> > needs some way to enumerate that it is running in that new world. Yes,
+> > nothing in the CXL specification precludes HPA != SPA, but Linux has
+> > long since shipped the opposite assumption.
+> 
+> this check prevents the memory from disabling an enabled decoder. So it
+> just keeps everything as it comes out of firmware.
+> 
+> Can you explain the motivation why active memory is disabled?
 
-Thanks. Updated.
+It is a sanity check that Linux is operating in a CXL world that it
+understands. The fundamental assumption is that the CFMWS correctly
+conveys the CXL space, and that the HW decoder resources match platform
+expectations match Linux resource management.
 
-FYI. The new version is completed.
-https://lore.kernel.org/linux-cxl/ZcuyZ0Nwq31z8YIr@debian/T/#m07b4b4586e2f421a617f08a002b196d932a88966
+> This may take system memory offline and could lead to a kernel hang.
 
-Thanks,
-Fan
+Yes, that is not an unreasonable result when Linux fundamental
+assumptions are violated.
+
+> The same could happen if the CEDT is broken or just missing (it is not
+> mandatory for 1.1). Such systems just die when booting. So the check
+> to take memory offline should be changed in a way that it will be safe
+> to disable it.
+> 
+> A platform check would fix that only for certain systems.
+
+I am not worried about platforms that accidentally break the CEDT, those
+mistakes are typically caught pre-production. Otherwise, if the platform
+is designed to break assumptions then Linux needs explicit enabling for
+the address translation sitting between the endpoint and the platform
+address map.
