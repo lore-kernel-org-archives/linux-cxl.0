@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B0711701
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 07:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7761170E
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 07:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707894823; cv=none; b=GeB/ZMFlkHmrbHM24vt0aDQOXNRgqdA/4QpMKmNTbHEg1WsNCc464pyHd5ygLKKPETjHBeKnFL4GBbtlJtr2pqq+8THdzjoWxr/83HYyGGeO0j3bx1rKF6CNy1TnURYbiz59i/LHQS0ec47vta1uvYd5zEyNzKDZauCWj0o0vc4=
+	t=1707894824; cv=none; b=i5J8WglMhPV0F1JY23lDpA/tsWk9xp17CXtyGdxwLhaCOlRaOLUFOiDhzfhjVw5XatJ183vXrRE+WpYJ4e+bmDJ6iTeIpLFsjNYSRR5MvRj10ijYcbekEgERkZ2cnzt+2L0mgHkNEJpvgjFaBXXgDBYXPNm+BL/XIsdXjYZfqm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707894823; c=relaxed/simple;
-	bh=ZAKO34AN8eReMancRB/YsupJCwFLdiUnHS90THUFqcI=;
+	s=arc-20240116; t=1707894824; c=relaxed/simple;
+	bh=UoCmVSsZO7p4zif1BP+d6fFdML4HydLbPY786jkrMCY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uzFoLvb4Z02nPMfnPpRRh5mx+wtVqB28GUxLWQ/94te6BHBrKoVBF34butIO2X5/6TKl5PV03mUGO5G7CYF7voWML55Yn051hRlog5blWKGnF75JWkf7RbivrZn6w2QYXqdzH/cy+TSMDcA351TZ88wNsZEbHb4LkbmXGr0N4Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jf82nxsL; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=bReMuTHXyFNgWSgKf8KzyzL6eaaaTNTPmu2oudvXewcwTRkPHdKCCIf7POSkbjZoNNCdx1ggS65NBk1FH6tzRu6ZQTOYecVpeaEETqE+depbZC8OF1j7fuLH0x1X5kn7GfPxaHdqmWvW5G4BeVVcF00Kfbe+HzYZLCJHcsnV88o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTB358/0; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jf82nxsL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTB358/0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707894821; x=1739430821;
+  t=1707894822; x=1739430822;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZAKO34AN8eReMancRB/YsupJCwFLdiUnHS90THUFqcI=;
-  b=Jf82nxsLWisk8d5J+WlmN94aNsrU9jzUeJ7Svl68i7xuK+uscDamWQ48
-   4y9QFMt+SSL5p38DtOe7SXF8cd0eT0H47tVFORf/xH796UwhPnh03TH3H
-   hwuLRyBD1DOmDrERhXohmv98y/JyOslBUkWlzLwVAzOu7F++zp8xO8dHn
-   o7C1lgj+gEa6s8k9WyEebId/HG57ogQQd3eeDg1qrgWUD0/P7XnWnwOkK
-   80IEf3yW+ENKqeWMaN13GqOgZ727NJLbvokgyoq7tUmRb/GDZYx3UFvGr
-   I6ZZ/xI6Fg7lUHyCdDEAN5wDDBGVwFWfZVH6eiPxQClgXeqRlLO8ap3cY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="27374445"
+  bh=UoCmVSsZO7p4zif1BP+d6fFdML4HydLbPY786jkrMCY=;
+  b=OTB358/0oOQ+fAyIrFRBDH0Y/fGpoWwUbW2RPGpkBbF93odnS8UkIYFL
+   jFT+oYbpDDQ+qfZh4ra9EDlUc5gQFFEljyDrukoNf0l4isJBQD7tThS8c
+   K2xmUdUENfqM/zYxQcPgk5z6VnmRWRhJyGcNd68JGcEBMnC68cSyKMb/X
+   yWIphKuygD5t02mWEGdFAvuEcz7HZm/BrWxDcexaBjSYVHYAJkKqdt6G/
+   SYWIIT0XJJTYf8gvz1n/Ck+YkaSxVfL8sOay7KonnSugalBvOGpgRCPWJ
+   4TCCSKKu4iPuucynNHwCUHSn3rnY2hq5fEWhRsFhLPqgIcrjpS3vpkhBU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="27374450"
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="27374445"
+   d="scan'208";a="27374450"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:40 -0800
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="7758534"
+   d="scan'208";a="7758537"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.66.223])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:40 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:41 -0800
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -48,9 +48,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 1/2] cxl/acpi: Fix XOR 3-6-12 way host bridge look-up calculation
-Date: Tue, 13 Feb 2024 23:13:35 -0800
-Message-Id: <0eebc96f0e36ebc74b0dc0f4112b70cced6907a7.1707891715.git.alison.schofield@intel.com>
+Subject: [PATCH 2/2] cxl/test: Replace an illegal CFMWS definition with a useful x3 CFMWS
+Date: Tue, 13 Feb 2024 23:13:36 -0800
+Message-Id: <d8bbae3ea5dc59bd4972236fe06adb5ec85e5c21.1707891715.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1707891715.git.alison.schofield@intel.com>
 References: <cover.1707891715.git.alison.schofield@intel.com>
@@ -64,107 +64,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The XOR host bridge look-up function is broken in its application
-of the modulo calculation for interleaves that are multiples of 3.
+cxl/test has a small set (3) of CFMWS's that become available when
+cxl_test is loaded with this module option: interleave_arithmetic=1.
+That gives users of cxl_test access to root decoders that use XOR Math
+for interleave arithmetic rather than the default Modulo.
 
-The failure appears like this:
-[] cxl_core:cxl_region_attach_position:1433: cxl region4: mem0:decoder8.1 invalid target position for decoder3.2
+The existing x4 CFMWS definition is an invalid configuration because
+it repeats Host Bridges in the interleave set. A patch to remove its
+usage in the CXL unit test cxl-xor-region.sh is in flight.
 
-Replace the broken modulo calc with the same modulo calc as used
-for Modulo Math. This is per CXL spec definition but was overlooked
-in the original over-complicated implementation.
+Coincidentally, there is another CFMWS definition queued for addition
+here and a patch to use it in the CXL unit test is also in flight.
+Rather than tear this CFMWS out and adjust the indexes only to follow
+it with another patch to introduce a new CFMWS, do a switch in place.
 
-With the simple modulo calculation, the jump to a helper function
-becomes needless and the work is now presented in a straight line.
+Transform the illegal x4 CFMWS definition into a useful x3 version.
 
-Display the interleave_arithmetic in the dev_dbg() of successfully
-setup root decoders to make debug lookup easier.
-
-Fixes: f9db85bfec0d ("cxl/acpi: Support CXL XOR Interleave Math (CXIMS)")
+Fixes: 7a7e6edfca85 ("tools/testing/cxl: Add XOR Math support to cxl_test")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/acpi.c | 51 ++++++++++++++++++++--------------------------
- 1 file changed, 22 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index dcf2b39e1048..86c735f733ea 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -22,31 +22,6 @@ static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
- 
--/*
-- * Find a targets entry (n) in the host bridge interleave list.
-- * CXL Specification 3.0 Table 9-22
-- */
--static int cxl_xor_calc_n(u64 hpa, struct cxl_cxims_data *cximsd, int iw,
--			  int ig)
--{
--	int i = 0, n = 0;
--	u8 eiw;
--
--	/* IW: 2,4,6,8,12,16 begin building 'n' using xormaps */
--	if (iw != 3) {
--		for (i = 0; i < cximsd->nr_maps; i++)
--			n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
--	}
--	/* IW: 3,6,12 add a modulo calculation to 'n' */
--	if (!is_power_of_2(iw)) {
--		if (ways_to_eiw(iw, &eiw))
--			return -1;
--		hpa &= GENMASK_ULL(51, eiw + ig);
--		n |= do_div(hpa, 3) << i;
--	}
--	return n;
--}
--
- static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
- {
- 	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
-@@ -62,11 +37,28 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
- 			  "misconfigured root decoder\n"))
- 		return NULL;
- 
-+	/*
-+	 * Find a targets entry in the host bridge interleave
-+	 * list as defined in CXL Specification 3.0 Table 9-22
-+	 *
-+	 * iw: 1 is no interleave, so entry is 0
-+	 * iw: 3 uses a modulo calc only
-+	 * iw: 2,4,6,8,12,16 use xormaps
-+	 * iw: 6,12 apply a modulo calc after xormaps
-+	 */
-+
-+	if (iw == 1)
-+		return cxlrd->cxlsd.target[0];
-+
-+	if (iw == 3)
-+		return cxlrd->cxlsd.target[pos % iw];
-+
- 	hpa = cxlrd->res->start + pos * ig;
-+	for (int i = 0; i < cximsd->nr_maps; i++)
-+		n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
- 
--	/* Entry (n) is 0 for no interleave (iw == 1) */
--	if (iw != 1)
--		n = cxl_xor_calc_n(hpa, cximsd, iw, ig);
-+	if (iw == 6 || iw == 12)
-+		n |= pos % iw;
- 
- 	if (n < 0)
- 		return NULL;
-@@ -424,8 +416,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 		dev_err(dev, "Failed to add decode range: %pr", res);
- 		return rc;
- 	}
--	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
-+	dev_dbg(dev, "add: %s math: %s node: %d range [%#llx - %#llx]\n",
- 		dev_name(&cxld->dev),
-+		cfmws->interleave_arithmetic ? "xor" : "modulo",
- 		phys_to_target_node(cxld->hpa_range.start),
- 		cxld->hpa_range.start, cxld->hpa_range.end);
- 
+I realize this switcheroo is atypical for a patch. It seemed to be a
+cleaner repair, especially when trying to push this cxl/test change
+with the acpi driver patch in this set. Say the word and I'll split.
+
+Also, I'm not looking to put back a 4-way HB interleave at the moment,
+because it's not a unique case (similar to 2-way in the calc) and also
+because I have a patchset in the works that supports all the HB interleave
+configs. This sets focus is repairing, not enhancing.
+
+
+ tools/testing/cxl/test/cxl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index a3cdbb2be038..e7e4afabc97a 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -329,14 +329,14 @@ static struct {
+ 				.length = sizeof(mock_cedt.cfmws8),
+ 			},
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+-			.interleave_ways = 2,
++			.interleave_ways = 8,
+ 			.granularity = 0,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = 0,
+-			.window_size = SZ_256M * 16UL,
++			.window_size = SZ_256M * 12UL,
+ 		},
+-		.target = { 0, 1, 0, 1, },
++		.target = { 0, 1, 2 },
+ 	},
+ 	.cxims0 = {
+ 		.cxims = {
 -- 
 2.37.3
 
