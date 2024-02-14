@@ -1,140 +1,100 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF8B10A01
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 04:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2085125A1;
+	Wed, 14 Feb 2024 06:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707886340; cv=none; b=nlWyiMt1ShBLg44kXAFanvMe/+9oP5SQn1g62BwBhs7RR0uI4Rod8g6m21kkoVir7scdYuLegpDYM/7xnM6OB/vStbt4oSOjflMmwXX5TOQQC+osW+jnX8rxqlTdCyLbQrD0Hct5j2oShIA0I0qmGFTs07sGc1vz7bFg2MJrAag=
+	t=1707893984; cv=none; b=JGSSlGFhmus0PIpEUaZRTEajGYxa/jHMx4T6yK2M2cjYkCSGd6BUPvgFFrjuGm9Yfw5WjhmgcvD7fNyJhW8ESbHcfbP8zMIHSfXFNTJ8n7ZzlQKwjmbf95KeM1H9mBnqt/GWlkSuVgK2ZFJJa2YfsKQJcx3G59SwREh+zmsr9pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707886340; c=relaxed/simple;
-	bh=PFUgXz8ct68KZJ5vFMzy6RkzeKCtmazpm9FVQ9KKOdk=;
-	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
-	 References; b=c8ItOinif+imDhTtmaYvtuZKzk5tsucCr24vi4pVNdbTZ+DJI8YMyAUnch5T5unsEwaa8RakEH9ZC/0Pe47QFDb3Gxi0wZxLtStP9hA+OdL6Gw7sCudBpTj/gwF8APXQf65ot4WQHu7yF3QlLGRp/tV2DHY4jMlm0tfHzJk6Z14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Nu/CrzEj; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1707893984; c=relaxed/simple;
+	bh=CS45QcVTT2orYhyYWwHGZgci25zetj2poa2oQoA+Qkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RGHrBSfAfFmo/Fi5VSE/J2NkvFDgBw1/wlO6DdD2K/lKay8QLwf5xcXhJ3y9NtuvmHKT7OJtM7wOD5PAiWdJifsDCTBJk9Y48HGnfb5At/rVZQrUinJyhiS8Pp1RDpCfJvARZYKrcLZeWgiuFnQ7D8888nDXBtH8FVy/xKCRLic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qh9Rk2Fv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nu/CrzEj"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240214045215epoutp0139642c6e74be725f519e2f6937534985~zoZLIGN432759527595epoutp01Q
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 04:52:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240214045215epoutp0139642c6e74be725f519e2f6937534985~zoZLIGN432759527595epoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707886335;
-	bh=nSvBImm0z35kzVe3ZgLeWjkV2Pt4Ri5HJ6q+F34gkW8=;
-	h=Subject:Reply-To:From:To:CC:Date:References:From;
-	b=Nu/CrzEjQBSsP5ngoHzw41z2OH2uuAgsty4ZnhK2YXBfVGJMC/622/gQ+O+vBEohf
-	 vP/p/sNIKgvR2IgSolzdBUZTtQS6Lo50SN3FGxCDuner6r0fcrLet2D6vVu0ux7+6G
-	 RgBCU2wtL3XZWt2xfrzbz4iZFh6vqkExCwNMAO38=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20240214045215epcas2p422724170d640ab4e1676ee1b485ae724~zoZKtilBu0418904189epcas2p4U;
-	Wed, 14 Feb 2024 04:52:15 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.92]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4TZQly3JKQz4x9Px; Wed, 14 Feb
-	2024 04:52:14 +0000 (GMT)
-X-AuditID: b6c32a48-963ff70000002587-71-65cc46feebea
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	24.FF.09607.EF64CC56; Wed, 14 Feb 2024 13:52:14 +0900 (KST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qh9Rk2Fv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0546CC433C7;
+	Wed, 14 Feb 2024 06:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707893983;
+	bh=CS45QcVTT2orYhyYWwHGZgci25zetj2poa2oQoA+Qkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qh9Rk2FvW4tWlAWdz0iYDcgsCcNhqHDodBRSm2Ahxxogpbd+1FwGwI+oPZPtk2YXt
+	 XcXI3kcrT2Gc0TKHUFNK3hQ0VqgTtmfEUjPtLuhjJbnNo+2z2YAQHtrghbVMCMzSeQ
+	 XyffkRKeIyHUohBlM/+8e3ex4T2LzDh/eVeZQjc8=
+Date: Wed, 14 Feb 2024 07:59:40 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Dan Williams <dan.j.williams@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Dave Chinner <david@fromorbit.com>,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>, linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+	dm-devel@lists.linux.dev, nvdimm@lists.linux.dev,
+	linux-s390@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [PATCH v5 5/8] virtio: Treat alloc_dax() -EOPNOTSUPP failure as
+ non-fatal
+Message-ID: <2024021418-diving-subduing-6e34@gregkh>
+References: <20240212163101.19614-1-mathieu.desnoyers@efficios.com>
+ <20240212163101.19614-6-mathieu.desnoyers@efficios.com>
+ <20240213062559.GA27364@wunner.de>
+ <c0a08e00-e7b5-48ac-a152-3068ab0c9e15@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: [PATCH] perf: CXL: fix CPMU filter value mask length
-Reply-To: hj96.nam@samsung.com
-Sender: Hojin Nam <hj96.nam@samsung.com>
-From: Hojin Nam <hj96.nam@samsung.com>
-To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>
-CC: Wonjae Lee <wj28.lee@samsung.com>, KyungSan Kim
-	<ks0204.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240214045214epcms2p81d2ea826483fb4aecf19930f2755d55b@epcms2p8>
-Date: Wed, 14 Feb 2024 13:52:14 +0900
-X-CMS-MailID: 20240214045214epcms2p81d2ea826483fb4aecf19930f2755d55b
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdljTQvef25lUg3mNwharFl5jszi6h8Ni
-	0+NrrBbnZ51isbi8aw6bxdLrF5ksWu6YWmy8/47NgcNjzbw1jB4tR96yemxa1cnmsXlJvUff
-	llWMHp83yQWwRWXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE
-	6Lpl5gBdo6RQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMC/QK07MLS7NS9fLSy2x
-	MjQwMDIFKkzIzpiwybrgEl/FtJVTWBsYv3N1MXJwSAiYSOx7otLFyMUhJLCDUeJl51wWkDiv
-	gKDE3x3CXYycHMICthI7Ds5nBrGFBOQk9pw4zwIR15BY+/0wO4jNJqAmsfD+JbAaEYEqievv
-	nzKBzGQW2MYk8ffhUkaQhIQAr8SM9qcsELa0xPblW6HiGhI/lvUyQ9iiEjdXv2WHsd8fmw9V
-	IyLReu8sVI2gxIOfu6HiUhKf7m6CihdLzN6/DCpeILHixyKoXfoSjdffs0H85Stx7bI/SJhF
-	QFViyYtOVogSF4lvM9aB2cwC8hLb385hBilnFtCUWL9LHxJSyhJHbrFAVPBJdBz+yw7z1I55
-	T5ggbCWJ/R2tUMdISNw5cRnqGA+Jm20rWCAhGCjx8Nh7xgmMCrMQ4TwLyd5ZCHsXMDKvYhRL
-	LSjOTU8tNiowgUdscn7uJkZwotTy2ME4++0HvUOMTByMhxglOJiVRHgvzTiRKsSbklhZlVqU
-	H19UmpNafIjRFOjjicxSosn5wFSdVxJvaGJpYGJmZmhuZGpgriTOe691boqQQHpiSWp2ampB
-	ahFMHxMHp1QD04QjF7lnLg8V93XNMfIW70xiytO4dCfBt6b82dd7d7MqQnuiQx5Olt41ReLY
-	Rm2dly+KBKW72nfcOnuvXW7WZ6v/heoJrPVHtX63rHKyvH1/1g/WU6Icko+TPv1zU9+rMKfj
-	g46A9iS+TSvLu365f+HYuT9rZVNgjfJKrQ2+RXNldkVpC98TqSzlZ9+VeOL1rtcVmW88WPb/
-	2vpcVrPWc6bunJzO1cdbvSKcf/Nk3c2oqssMv27pNHPu5/2LFpiunxDy6tG//PLoKhapsNi5
-	YYKlShyuTYJCRmp/bln08/z1t1fnNbtg+PF4u0bOtGk/ispiWk8Jr1tUNmuHnXrpLM/rB07H
-	iS32n3NvdWGAEktxRqKhFnNRcSIAgqannR0EAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240214045214epcms2p81d2ea826483fb4aecf19930f2755d55b
-References: <CGME20240214045214epcms2p81d2ea826483fb4aecf19930f2755d55b@epcms2p8>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0a08e00-e7b5-48ac-a152-3068ab0c9e15@efficios.com>
 
-CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-However, it is used as 2B length in code and comments.
+On Tue, Feb 13, 2024 at 02:46:05PM -0500, Mathieu Desnoyers wrote:
+> On 2024-02-13 01:25, Lukas Wunner wrote:
+> > On Mon, Feb 12, 2024 at 11:30:58AM -0500, Mathieu Desnoyers wrote:
+> > > In preparation for checking whether the architecture has data cache
+> > > aliasing within alloc_dax(), modify the error handling of virtio
+> > > virtio_fs_setup_dax() to treat alloc_dax() -EOPNOTSUPP failure as
+> > > non-fatal.
+> > > 
+> > > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+> > 
+> > That's a v4.0 commit, yet this patch uses DEFINE_FREE() which is
+> > only available in v6.6 but not any earlier stable kernels.
+> 
+> I asked this question to Greg KH before creating this patch, and his
+> answer was to implement my fix for master, and stable kernels would take
+> care of backporting all the required dependencies.
 
-Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-Signed-off-by: Hojin Nam
----
- drivers/perf/cxl_pmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+That is correct.
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 365d964b0f6a..ca5e92f28b4a 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -59,7 +59,7 @@
- #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK     GENMASK_ULL(63, 59)
+> Now if I look at latest 6.1, 5.15, 5.10, 5.4, 4.19 stable kernels,
+> none seem to have include/linux/cleanup.h today. But I suspect that
+> sooner or later relevant master branch fixes will require stable
+> kernels to backport cleanup.h, so why not do it now ?
 
- #define CXL_PMU_FILTER_CFG_REG(n, f)   (0x400 + 4 * ((f) + (n) * 8))
--#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(15, 0)
-+#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(31, 0)
+Yes, eventually we will need to backport cleanup.h to the older kernel
+trees, I know of many patches "in flight" that are using it, so it's not
+unique to this one at all, so this is fine to have.
 
- #define CXL_PMU_COUNTER_REG(n)         (0xc00 + 8 * (n))
+Remember, make changes for Linus's tree, don't go through any gyrations
+to make things special for stable releases, that's something to only
+consider later on, if you want to.  stable kernels should have no affect
+on developers OTHER than a simple cc: stable tag on stuff that they know
+should be backported, unless they really want to do more than that,
+that's up to them.
 
-@@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
- }
+thanks,
 
- /*
-- * CPMU specification allows for 8 filters, each with a 16 bit value...
-- * So we need to find 8x16bits to store it in.
-- * As the value used for disable is 0xffff, a separate enable switch
-+ * CPMU specification allows for 8 filters, each with a 32 bit value...
-+ * So we need to find 8x32bits to store it in.
-+ * As the value used for disable is 0xffff_ffff, a separate enable switch
-  * is needed.
-  */
-
-@@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
-                if (cxl_pmu_config1_hdm_filter_en(event))
-                        cfg = cxl_pmu_config2_get_hdm_decoder(event);
-                else
--                       cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-+                       cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
-                writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-        }
-
---
-2.34.1
+greg k-h
