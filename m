@@ -1,59 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7761170E
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 07:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E433125A1
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Feb 2024 07:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707894824; cv=none; b=i5J8WglMhPV0F1JY23lDpA/tsWk9xp17CXtyGdxwLhaCOlRaOLUFOiDhzfhjVw5XatJ183vXrRE+WpYJ4e+bmDJ6iTeIpLFsjNYSRR5MvRj10ijYcbekEgERkZ2cnzt+2L0mgHkNEJpvgjFaBXXgDBYXPNm+BL/XIsdXjYZfqm0=
+	t=1707894894; cv=none; b=GtQ5DdneN4lKBndMDoTHkRPyBRaRwSKy5NPNORSBCxqxHV+jLr1UPTO4+kqC3L6ub3qsrQTLtChnL+RkOh8xZMphYUBLkCnbZdWBtDn5reZn/D5LbKRHf6Rjy8HzQELx9riD4P6AKgKBzB4uIb+KUPN+iTiuR7QAvm6BO7VQDFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707894824; c=relaxed/simple;
-	bh=UoCmVSsZO7p4zif1BP+d6fFdML4HydLbPY786jkrMCY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bReMuTHXyFNgWSgKf8KzyzL6eaaaTNTPmu2oudvXewcwTRkPHdKCCIf7POSkbjZoNNCdx1ggS65NBk1FH6tzRu6ZQTOYecVpeaEETqE+depbZC8OF1j7fuLH0x1X5kn7GfPxaHdqmWvW5G4BeVVcF00Kfbe+HzYZLCJHcsnV88o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTB358/0; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1707894894; c=relaxed/simple;
+	bh=r5sySjqBYGjo/jIQ7WsEmW/3ucA39O36zQf4ZKHKVco=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NPLyt+ne2XYdjPMmQGT9bHoTvNfkcMkNIn0vXkvYAF/7Y9+3DRUJfGL/Llphw4kS3v4IKgtMdUycj9y3yiij4XdxBXOKoJNZojTL2k0goJPbMUJ0x1rT/GgZqo90sg2BrciavthOfiksn7xYn7VtsXU5zdZqyKCfegVDNT5gkCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BGAs36DJ; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTB358/0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BGAs36DJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707894822; x=1739430822;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UoCmVSsZO7p4zif1BP+d6fFdML4HydLbPY786jkrMCY=;
-  b=OTB358/0oOQ+fAyIrFRBDH0Y/fGpoWwUbW2RPGpkBbF93odnS8UkIYFL
-   jFT+oYbpDDQ+qfZh4ra9EDlUc5gQFFEljyDrukoNf0l4isJBQD7tThS8c
-   K2xmUdUENfqM/zYxQcPgk5z6VnmRWRhJyGcNd68JGcEBMnC68cSyKMb/X
-   yWIphKuygD5t02mWEGdFAvuEcz7HZm/BrWxDcexaBjSYVHYAJkKqdt6G/
-   SYWIIT0XJJTYf8gvz1n/Ck+YkaSxVfL8sOay7KonnSugalBvOGpgRCPWJ
-   4TCCSKKu4iPuucynNHwCUHSn3rnY2hq5fEWhRsFhLPqgIcrjpS3vpkhBU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="27374450"
+  t=1707894893; x=1739430893;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=r5sySjqBYGjo/jIQ7WsEmW/3ucA39O36zQf4ZKHKVco=;
+  b=BGAs36DJX/AXEMH2x3ZnqWM1TUlg4MtLZuQhZN/A35RtTIOhoBxdf0rg
+   /Ut1eaA/3hL2ndy0qeAGAWfvlgM38D+pJQyC42zDOylcaR8B+ias4v2KY
+   jcnIDi4YalgIDfpYr9M7QqOpCb4UmpEQo5VcpuzXsoOb5ZVmiyTkfbn0Y
+   orkRE463DgtA/DHYbVtBZckj88R9G8Ias191+x+LbMxfl/b+Wwop96/9P
+   pWpi89yBYPa0qAeNGjB/gew52BSCaJxCeljX/JnXKNCCDTx8e3yG7T1uw
+   +CMdIGXjKVOrqyhqsUkyGlqhXTaVpzpazhz3ZXj+0Jh7BCGTimH1ObJ7O
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1801809"
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="27374450"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:41 -0800
+   d="scan'208";a="1801809"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:14:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="7758537"
+   d="scan'208";a="3086662"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.66.223])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:13:41 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 23:14:50 -0800
 From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 2/2] cxl/test: Replace an illegal CFMWS definition with a useful x3 CFMWS
-Date: Tue, 13 Feb 2024 23:13:36 -0800
-Message-Id: <d8bbae3ea5dc59bd4972236fe06adb5ec85e5c21.1707891715.git.alison.schofield@intel.com>
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/test: Add 3-way HB interleave testcase to cxl-xor-region.sh
+Date: Tue, 13 Feb 2024 23:14:47 -0800
+Message-Id: <20240214071447.1918988-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1707891715.git.alison.schofield@intel.com>
-References: <cover.1707891715.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,61 +57,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-cxl/test has a small set (3) of CFMWS's that become available when
-cxl_test is loaded with this module option: interleave_arithmetic=1.
-That gives users of cxl_test access to root decoders that use XOR Math
-for interleave arithmetic rather than the default Modulo.
+cxl-xor-region.sh includes test cases for 1 & 2 way host bridge
+interleaves. Add a new test case to exercise the modulo math
+function the CXL driver uses to find positions in a 3-way host
+bridge interleave.
 
-The existing x4 CFMWS definition is an invalid configuration because
-it repeats Host Bridges in the interleave set. A patch to remove its
-usage in the CXL unit test cxl-xor-region.sh is in flight.
+Skip this test case, don't fail, if the new 3-way XOR decoder
+is not present in cxl/test.
 
-Coincidentally, there is another CFMWS definition queued for addition
-here and a patch to use it in the CXL unit test is also in flight.
-Rather than tear this CFMWS out and adjust the indexes only to follow
-it with another patch to introduce a new CFMWS, do a switch in place.
+Add the missing check_dmesg helper before exiting this test.
 
-Transform the illegal x4 CFMWS definition into a useful x3 version.
-
-Fixes: 7a7e6edfca85 ("tools/testing/cxl: Add XOR Math support to cxl_test")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
+ test/cxl-xor-region.sh | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-I realize this switcheroo is atypical for a patch. It seemed to be a
-cleaner repair, especially when trying to push this cxl/test change
-with the acpi driver patch in this set. Say the word and I'll split.
-
-Also, I'm not looking to put back a 4-way HB interleave at the moment,
-because it's not a unique case (similar to 2-way in the calc) and also
-because I have a patchset in the works that supports all the HB interleave
-configs. This sets focus is repairing, not enhancing.
-
-
- tools/testing/cxl/test/cxl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index a3cdbb2be038..e7e4afabc97a 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -329,14 +329,14 @@ static struct {
- 				.length = sizeof(mock_cedt.cfmws8),
- 			},
- 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
--			.interleave_ways = 2,
-+			.interleave_ways = 8,
- 			.granularity = 0,
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = 0,
--			.window_size = SZ_256M * 16UL,
-+			.window_size = SZ_256M * 12UL,
- 		},
--		.target = { 0, 1, 0, 1, },
-+		.target = { 0, 1, 2 },
- 	},
- 	.cxims0 = {
- 		.cxims = {
+diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
+index 117e7a4bba61..2f3b4aa5208a 100644
+--- a/test/cxl-xor-region.sh
++++ b/test/cxl-xor-region.sh
+@@ -86,11 +86,44 @@ setup_x4()
+         memdevs="$mem0 $mem1 $mem2 $mem3"
+ }
+ 
++setup_x3()
++{
++        # find an x3 decoder
++        decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
++          select(.pmem_capable == true) |
++          select(.nr_targets == 3) |
++          .decoder")
++
++	if [[ ! $decoder ]]; then
++		echo "no x3 decoder found, skipping xor-x3 test"
++		return
++	fi
++
++        # Find a memdev for each host-bridge interleave position
++        port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
++            .targets | .[] | select(.position == 0) | .target")
++        port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
++            .targets | .[] | select(.position == 1) | .target")
++        port_dev2=$($CXL list -T -d "$decoder" | jq -r ".[] |
++            .targets | .[] | select(.position == 2) | .target")
++	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
++	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
++	mem2=$($CXL list -M -p "$port_dev2" | jq -r ".[0].memdev")
++	memdevs="$mem0 $mem1 $mem2"
++}
++
+ setup_x1
+ create_and_destroy_region
+ setup_x2
+ create_and_destroy_region
+ setup_x4
+ create_and_destroy_region
++# x3 decoder may not be available in cxl/test topo yet
++setup_x3
++if [[ $decoder ]]; then
++	create_and_destroy_region
++fi
++
++check_dmesg "$LINENO"
+ 
+ modprobe -r cxl_test
 -- 
 2.37.3
 
