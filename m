@@ -1,45 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132C60DFD;
-	Wed, 14 Feb 2024 17:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39B5F865;
+	Wed, 14 Feb 2024 17:39:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931927; cv=none; b=RkJPvgmE58Yq3l7CWLj0MeWrDbj7zkwo8C7WZELWhkEz4TqMySjw30Avs49hyKSYmbzCKV71pHUu+ED3EecZcksL3kKgch+CyJZCjYeJBr1AkdwSgiVQm8XKDUDzJDVHzdhhVmLXDLHeOrQHQMb8MB+q1NAQyjdtsP3wVq5rwNg=
+	t=1707932374; cv=none; b=eotmnIxJQR3nhGVi+0bq81r0mb6v+0pMY1Fu4cfg9nsSYHuE/0Q/v3Vv2VYcl8C30LCqF7oz2bhksCLwuXn7mRPkQnzxbUKBKG1qiRcIB99Tpy6sOTIlDdiy0rXCF6lABtEuo41k7yJretIn+HI2krTigNMdlnHdAUL9eK2Gmmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931927; c=relaxed/simple;
-	bh=JvVUCvD9rZWJkutZ9VbgQuNUGsPYpHJDPvCtsBtapMs=;
+	s=arc-20240116; t=1707932374; c=relaxed/simple;
+	bh=UTIGxETWJu6d/cfXmgvLgow1Z8x2OMe9r3azT5e3i1w=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hZfMES0GmXBTJCuSasnB8Sf1HAstWWVh3dgFvKNxT5AP99jhO/A0aNDgHIpqPwx9KStdp/BjuXbWvbBFxS9KVcE0bVkgZcggITZBMvw0g1mcCgPRl7Tyb4uIBUN1ZjHY7yMLoEIBb5jaX6r+OYOaHuxfp019dQiqBBNWB/cU554=
+	 MIME-Version:Content-Type; b=WIfEik5QR5B3XKq/ai+0v2qROyObenBVFBzubVXJodmIfB8WcU5xEll5/mA9TQ9UQ/yQb1iWeC3efW8dbgyiZTFWXHYEm2uag+POvMkwon3C1xHml/HNJNjYV2mL/yFirqNV/YN4nKquDz/eo5/XOetDfgxYHgzEoNGDpQnaaw0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZlWz5QNhz67pJF;
-	Thu, 15 Feb 2024 01:27:59 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZlhc2g5yz67j6n;
+	Thu, 15 Feb 2024 01:35:28 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CE5D4140D26;
-	Thu, 15 Feb 2024 01:31:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 68D2A1400CA;
+	Thu, 15 Feb 2024 01:39:28 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 14 Feb
- 2024 17:31:59 +0000
-Date: Wed, 14 Feb 2024 17:31:58 +0000
+ 2024 17:39:27 +0000
+Date: Wed, 14 Feb 2024 17:39:27 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
 	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
- Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>, Fan Ni
-	<nifan.cxl@gmail.com>
-Subject: Re: [PATCH v3 2/3] cxl/pci: Get rid of pointer arithmetic reading
- CDAT table
-Message-ID: <20240214173158.000005c0@Huawei.com>
-In-Reply-To: <20240209192647.163042-3-rrichter@amd.com>
+ Bueso" <dave@stgolabs.net>, "Rafael J. Wysocki" <rafael@kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>,
+	<linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] lib/firmware_table: Provide buffer length
+ argument to cdat_table_parse()
+Message-ID: <20240214173927.00002d20@Huawei.com>
+In-Reply-To: <20240209192647.163042-4-rrichter@amd.com>
 References: <20240209192647.163042-1-rrichter@amd.com>
-	<20240209192647.163042-3-rrichter@amd.com>
+	<20240209192647.163042-4-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -53,173 +53,175 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 9 Feb 2024 20:26:46 +0100
+On Fri, 9 Feb 2024 20:26:47 +0100
 Robert Richter <rrichter@amd.com> wrote:
 
-> Reading the CDAT table using DOE requires a Table Access Response
-> Header in addition to the CDAT entry. In current implementation this
-> has caused offsets with sizeof(__le32) to the actual buffers. This led
-> to hardly readable code and even bugs. E.g., see fix of devm_kfree()
-> in read_cdat_data():
+> There exists card implementations with a CDAT table using a fix
+There exist ... fixed size buffer,
+> buffer, but with entries filled in that do not fill the whole table
+> length size. Then, the last entry in the CDAT table may not mark the
+> end of the CDAT table buffer specified by the length field in the CDAT
+> header. It can be shorter with trailing unused (zero'ed) data. The
+> actual table length is determined while reading all CDAT entries of
+> the table with DOE.
 > 
->  c65efe3685f5 cxl/cdat: Free correct buffer on checksum error
+> If the table is greater than expected (containing zero'ed trailing
+> data), the CDAT parser fails with:
 > 
-> Rework code to avoid calculations with sizeof(__le32). Introduce
-> struct cdat_doe_rsp for this which contains the Table Access Response
-> Header and a variable payload size for various data structures
-> afterwards to access the CDAT table and its CDAT Data Structures
-> without recalculating buffer offsets.
+>  [   48.691717] Malformed DSMAS table length: (24:0)
+>  [   48.702084] [CDAT:0x00] Invalid zero length
+>  [   48.711460] cxl_port endpoint1: Failed to parse CDAT: -22
 > 
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Fan Ni <nifan.cxl@gmail.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> In addition, a check of the table buffer length is missing to prevent
+> an out-of-bound access then parsing the CDAT table.
+> 
+> Hardening code against device returning borked table. Fix that by
+> providing an optional buffer length argument to
+> acpi_parse_entries_array() that can be used by cdat_table_parse() to
+> propagate the buffer size down to its users to check the buffer
+> length. This also prevents a possible out-of-bound access mentioned.
+> 
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Hi Robert,
+I think we should scream a bit about this if we see it
+as I'm unconvinced the spec allows for an implementation like this.
 
-I like this in general.  A few comments inline though.
+If the spec is unclear, lets seek a clarification.
+
+I'm fine with this as a defensive measure, I just don't want
+device vendors to keep doing it! 
+
+Jonathan
+
 
 > ---
->  drivers/cxl/core/pci.c | 75 ++++++++++++++++++++++--------------------
->  drivers/cxl/cxlpci.h   | 20 +++++++++++
->  2 files changed, 59 insertions(+), 36 deletions(-)
+>  drivers/acpi/tables.c    |  2 +-
+>  drivers/cxl/core/cdat.c  |  6 +++---
+>  include/linux/fw_table.h |  4 +++-
+>  lib/fw_table.c           | 15 ++++++++++-----
+>  4 files changed, 17 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 39366ce94985..569354a5536f 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -544,55 +544,55 @@ static int cxl_cdat_get_length(struct device *dev,
+> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+> index b07f7d091d13..b976e5fc3fbc 100644
+> --- a/drivers/acpi/tables.c
+> +++ b/drivers/acpi/tables.c
+> @@ -253,7 +253,7 @@ int __init_or_acpilib acpi_table_parse_entries_array(
 >  
->  static int cxl_cdat_read_table(struct device *dev,
->  			       struct pci_doe_mb *doe_mb,
-> -			       void *cdat_table, size_t *cdat_length)
-> +			       struct cdat_doe_rsp *rsp, size_t *length)
-
-Nitpick, but rsp isn't a response, it's the whole table.
-Maybe it's worth a 
-#define cdat_doe_table cdat_doe_rsp
-or a typedef so the two are different in name at least whilst sharing
-same structure definition?
-
->  {
-> -	size_t length = *cdat_length + sizeof(__le32);
-> -	__le32 *data = cdat_table;
-> -	int entry_handle = 0;
-> +	size_t received, remaining = *length;
-> +	unsigned int entry_handle = 0;
-> +	union cdat_data *data;
->  	__le32 saved_dw = 0;
+>  	count = acpi_parse_entries_array(id, table_size,
+>  					 (union fw_table_header *)table_header,
+> -					 proc, proc_num, max_entries);
+> +					 0, proc, proc_num, max_entries);
 >  
->  	do {
->  		__le32 request = CDAT_DOE_REQ(entry_handle);
-> -		struct cdat_entry_header *entry;
-> -		size_t entry_dw;
->  		int rc;
+>  	acpi_put_table(table_header);
+>  	return count;
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index 6fe11546889f..012d8f2a7945 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -149,13 +149,13 @@ static int cxl_cdat_endpoint_process(struct cxl_port *port,
+>  	int rc;
 >  
->  		rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
->  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
->  			     &request, sizeof(request),
-> -			     data, length);
-> +			     rsp, sizeof(*rsp) + remaining);
-
-I guess it's not really worth using struct_size here.
-It's main advantage is making it clear we are dealing with a
-trailing [] 
-
->  		if (rc < 0) {
->  			dev_err(dev, "DOE failed: %d", rc);
->  			return rc;
->  		}
+>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
+> -			      dsmas_xa, port->cdat.table);
+> +			      dsmas_xa, port->cdat.table, port->cdat.length);
+>  	rc = cdat_table_parse_output(rc);
+>  	if (rc)
+>  		return rc;
 >  
-> -		/* 1 DW Table Access Response Header + CDAT entry */
-> -		entry = (struct cdat_entry_header *)(data + 1);
-> -		if ((entry_handle == 0 &&
-> -		     rc != sizeof(__le32) + sizeof(struct cdat_header)) ||
-> -		    (entry_handle > 0 &&
-> -		     (rc < sizeof(__le32) + sizeof(*entry) ||
-> -		      rc != sizeof(__le32) + le16_to_cpu(entry->length))))
-> +		if (rc < sizeof(*rsp))
-> +			return -EIO;
-> +
-> +		data = (void *)rsp->data;
-
-Nicer to cast to (union cdat_data *) than rely on bounce via a void *
-
-> +		received = rc - sizeof(*rsp);
-> +
-> +		if ((!entry_handle &&
-
-Prefer == 0 for this because 0 is a magic value here.
-
-> +		     received != sizeof(data->header)) ||
-> +		    (entry_handle &&
-> +		     (received < sizeof(data->entry) ||
-> +		      received != le16_to_cpu(data->entry.length))))
->  			return -EIO;
-
-Given it's two rather involved conditions maybe better to do.
-
-		if (entry_handle == 0) {
-			if (received != sizeof(data->header)
-				return -EIO;
-		} else {
-			if (received < sizeof(data->entry) ||
-			    received != le16_to_cpu(data->entry.length))
-				return -EIO;
-		}
-
-More code but easier to see the header vs entry checks.
-Could even define a little utility function / macro.
-
-		cdat_is_head_handle(val) entry_handle == 0
-so you get somewhat more self documenting code.
-
-		if (cdat_is_head_handle(entry_handle)) {
-		} else {
-		}
-
->  
->  		/* Get the CXL table access header entry handle */
->  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
-> -					 le32_to_cpu(data[0]));
-> -		entry_dw = rc / sizeof(__le32);
-> -		/* Skip Header */
-> -		entry_dw -= 1;
-> +					 le32_to_cpu(rsp->doe_header));
-> +
->  		/*
->  		 * Table Access Response Header overwrote the last DW of
->  		 * previous entry, so restore that DW
->  		 */
-> -		*data = saved_dw;
-> -		length -= entry_dw * sizeof(__le32);
-> -		data += entry_dw;
-> -		saved_dw = *data;
-> +		rsp->doe_header = saved_dw;
-
-I'm not keen on this looking like we are writing the doe header
-as we are writing the tail of the last response.
-
-Maybe the comment is enough.  I don't have a better idea on how
-to make this more obvious.
-
-> +		remaining -= received;
-> +		rsp = (void *)rsp + received;
-
-Was a potential problem with previous code, but this could
-in theory become unaligned and we should be using unaligned accessors
-for it as a result, or maybe adding a check that it doesn't ever become so.
-The check is probably the easier path given CDAT entries are thankfully
-(I think) all dword multiples as are the two headers.
-
-> +		saved_dw = rsp->doe_header;
->  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
->  
->  	/* Length in CDAT header may exceed concatenation of CDAT entries */
-> -	*cdat_length -= length - sizeof(__le32);
-> +	*length -= remaining;
->  
->  	return 0;
+>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
+> -			      dsmas_xa, port->cdat.table);
+> +			      dsmas_xa, port->cdat.table, port->cdat.length);
+>  	return cdat_table_parse_output(rc);
 >  }
+>  
+> @@ -511,7 +511,7 @@ void cxl_switch_parse_cdat(struct cxl_port *port)
+>  		return;
+>  
+>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
+> -			      port, port->cdat.table);
+> +			      port, port->cdat.table, port->cdat.length);
+>  	rc = cdat_table_parse_output(rc);
+>  	if (rc)
+>  		dev_dbg(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
+> diff --git a/include/linux/fw_table.h b/include/linux/fw_table.h
+> index 95421860397a..3ff4c277296f 100644
+> --- a/include/linux/fw_table.h
+> +++ b/include/linux/fw_table.h
+> @@ -40,12 +40,14 @@ union acpi_subtable_headers {
+>  
+>  int acpi_parse_entries_array(char *id, unsigned long table_size,
+>  			     union fw_table_header *table_header,
+> +			     unsigned long max_length,
+>  			     struct acpi_subtable_proc *proc,
+>  			     int proc_num, unsigned int max_entries);
+>  
+>  int cdat_table_parse(enum acpi_cdat_type type,
+>  		     acpi_tbl_entry_handler_arg handler_arg, void *arg,
+> -		     struct acpi_table_cdat *table_header);
+> +		     struct acpi_table_cdat *table_header,
+> +		     unsigned long length);
+>  
+>  /* CXL is the only non-ACPI consumer of the FIRMWARE_TABLE library */
+>  #if IS_ENABLED(CONFIG_ACPI) && !IS_ENABLED(CONFIG_CXL_BUS)
+> diff --git a/lib/fw_table.c b/lib/fw_table.c
+> index c3569d2ba503..16291814450e 100644
+> --- a/lib/fw_table.c
+> +++ b/lib/fw_table.c
+> @@ -127,6 +127,7 @@ static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
+>   *
+>   * @id: table id (for debugging purposes)
+>   * @table_size: size of the root table
+> + * @max_length: maximum size of the table (ignore if 0)
+>   * @table_header: where does the table start?
+>   * @proc: array of acpi_subtable_proc struct containing entry id
+>   *        and associated handler with it
+> @@ -148,18 +149,21 @@ static __init_or_fwtbl_lib int call_handler(struct acpi_subtable_proc *proc,
+>  int __init_or_fwtbl_lib
+>  acpi_parse_entries_array(char *id, unsigned long table_size,
+>  			 union fw_table_header *table_header,
+> +			 unsigned long max_length,
+>  			 struct acpi_subtable_proc *proc,
+>  			 int proc_num, unsigned int max_entries)
+>  {
+> -	unsigned long table_end, subtable_len, entry_len;
+> +	unsigned long table_len, table_end, subtable_len, entry_len;
+>  	struct acpi_subtable_entry entry;
+>  	enum acpi_subtable_type type;
+>  	int count = 0;
+>  	int i;
+>  
+>  	type = acpi_get_subtable_type(id);
+> -	table_end = (unsigned long)table_header +
+> -		    acpi_table_get_length(type, table_header);
+> +	table_len = acpi_table_get_length(type, table_header);
+> +	if (max_length && max_length < table_len)
+> +		table_len = max_length;
+	if (max_length)
+		table_len = min(max_length, table_len);
 
+> +	table_end = (unsigned long)table_header + table_len;
+>  
+>  	/* Parse all entries looking for a match. */
+>  
+> @@ -208,7 +212,8 @@ int __init_or_fwtbl_lib
+>  cdat_table_parse(enum acpi_cdat_type type,
+>  		 acpi_tbl_entry_handler_arg handler_arg,
+>  		 void *arg,
+> -		 struct acpi_table_cdat *table_header)
+> +		 struct acpi_table_cdat *table_header,
+> +		 unsigned long length)
+>  {
+>  	struct acpi_subtable_proc proc = {
+>  		.id		= type,
+> @@ -222,6 +227,6 @@ cdat_table_parse(enum acpi_cdat_type type,
+>  	return acpi_parse_entries_array(ACPI_SIG_CDAT,
+>  					sizeof(struct acpi_table_cdat),
+>  					(union fw_table_header *)table_header,
+> -					&proc, 1, 0);
+> +					length, &proc, 1, 0);
+>  }
+>  EXPORT_SYMBOL_FWTBL_LIB(cdat_table_parse);
 
