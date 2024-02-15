@@ -1,89 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5442712B15C;
-	Thu, 15 Feb 2024 11:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A77269DFE;
+	Thu, 15 Feb 2024 11:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707997503; cv=none; b=lTfD/F3OzDjc5rknpFMaBI+yCrBPSk5RzX/xDy2p8HoMAS62yobEQHiDD4UiiU1FG1fN3XygL5NxcdksCyXX0gjF1h+5R44mLlu0889jy18GcmMX46p1rsS0CycIufTn2FOwR9NL8dWqG9r5BKOErkJw/OT3YKMcce9X17728qk=
+	t=1707997634; cv=none; b=qIY+uOhc9wZEA7NKjxf+0JxcLSUPFuVxL0Fi5A+avrqRLWL6AV4w10E4cGDhHcQOYeJAt0Vaxav5ZbQpcR/QwMGt+LYo36btc613uUPPi53n3TXOCmCuRtaoosjM+OLp3B9eRUk3CtHfze/5iRuopYCFdQG9FufA57dATqyLiyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707997503; c=relaxed/simple;
-	bh=E38KSe5rcCXjcKiFq0QIkELRysT7jPLEi6+QeMypuMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOiQYmeITEwa6hFh44vyLTidFIO1x+jvGhO7+pWSSqmFavW8fhY+HFtWkB/CjHpCnnKlaDcO5FpiHOzj+VGFRGTVkF8MoEunGbXvICWQkoCKYOUxpZqCc2F/WHTC4iaMCZy1hf9Q5Yxqn4mQoOBikBVDyRz1jeQlA8czEAdPKyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIxvIFkI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIxvIFkI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3C4C433F1;
-	Thu, 15 Feb 2024 11:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707997502;
-	bh=E38KSe5rcCXjcKiFq0QIkELRysT7jPLEi6+QeMypuMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lIxvIFkINUJi5cRZ4xP8NhUn1Zw8pTPkI4yqnyjOG7YfH78IzIm6L3pT7IaY4pUJL
-	 rTevdBQ/kcLowHDOPgGDqW2uHh8vlpGz5SZLxoftBGuXNgCEP/7bkPrG4W/F3SvGQV
-	 t4pcnS79vMvXsOj58bwJOfAAndEZ3AAqAf7aN7kEe3f8vBRlGXJIS2Zdi5j7tf+WbL
-	 0ijPBAmn/72+lsFmtk/bJRC4JqBSoOV2wJ5rNXojSuEJ2YpXqaVeZTrrPzRpw36sqb
-	 JhoIAWzrQDtSf9eQihJjIXQnlWZHF80OZ1n94JDCp4/qW0zRHJJpc9QSL5vquxYJ4m
-	 8G0mV6HExSDwQ==
-Date: Thu, 15 Feb 2024 11:44:57 +0000
-From: Will Deacon <will@kernel.org>
-To: Hojin Nam <hj96.nam@samsung.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	Wonjae Lee <wj28.lee@samsung.com>,
-	KyungSan Kim <ks0204.kim@samsung.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] perf: CXL: fix CPMU filter value mask length
-Message-ID: <20240215114457.GB358@willie-the-truck>
-References: <CGME20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
- <20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
+	s=arc-20240116; t=1707997634; c=relaxed/simple;
+	bh=qmEIDhh+bnqXC1NcVizQoxS1/hB36pLfas5EtEagmNs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uDQzR42smnVrwt7yfzzx0UICiH0RGYah0+Ty3zvSXj/YgU+q9d1e8P6q+MTRORgO4OKg0ykJ9/SjqTh2YvT0WY2eAxoGJlZyQIA8Eks4HsGq+dkWdrR523L2oGm0WIX3KYIUiinn9JMgTgzyi+ZdoRnr7wl1u7NZJK4hHWBi2b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbCrF6tczz6K7F5;
+	Thu, 15 Feb 2024 19:43:41 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8B17D140D26;
+	Thu, 15 Feb 2024 19:47:09 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 11:47:08 +0000
+From: <shiju.jose@huawei.com>
+To: <linux-edac@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <mchehab@kernel.org>
+CC: <qingshun.wang@linux.intel.com>, <jonathan.cameron@huawei.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
+	<shiju.jose@huawei.com>
+Subject: [RFC PATCH 2/2] rasdaemon: ras-mc-ctl: Add support for new fields in aer_event for  advisory non-fatal and other errors
+Date: Thu, 15 Feb 2024 19:46:59 +0800
+Message-ID: <20240215114659.1513-3-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
+In-Reply-To: <20240215114659.1513-1-shiju.jose@huawei.com>
+References: <20240215114659.1513-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-Hi Hojin,
+From: Shiju Jose <shiju.jose@huawei.com>
 
-On Thu, Feb 15, 2024 at 05:09:06PM +0900, Hojin Nam wrote:
-> CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-> However, it is used as 2B length in code and comments.
-> 
-> Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
-> ---
-> 
-> Hi Jonathan,
-> as you said, I didn't actually hit this. I just found it by simply
-> comparing the code to the CXL Spec. I removed Fixes tag and 
-> repaired broken sign off, Thank you!
-> 
-> Changes since v1:
-> - Remove Fixes tag (Jonathan)
-> - Repair broken sign off (Jonathan)
-> 
->  drivers/perf/cxl_pmu.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 365d964b0f6a..ca5e92f28b4a 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -59,7 +59,7 @@
->  #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK     GENMASK_ULL(63, 59)
-> 
->  #define CXL_PMU_FILTER_CFG_REG(n, f)   (0x400 + 4 * ((f) + (n) * 8))
-> -#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(15, 0)
-> +#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(31, 0)
+Add support for following new fields added in trace aer_event
+for advisory non-fatal and other errors.
 
-Unfortunately, your patch appears to be whitespace-damaged (missing space,
-tabs converted to space) so I'm not able to apply it :(
+  - cor_status		(Correctable Error Status)
+  - cor_mask		(Correctable Error Mask)
+  - uncor_status	(Uncorrectable Error Status)
+  - uncor_severity	(Uncorrectable Error Severity)
+  - uncor_mask		(Uncorrectable Error Mask)
+  - aer_cap_ctrl	(AER Capabilities and Control)
+  - link_status		(Link Status)
+  - device_status	(Device Status)
+  - device_control_2	(Device Control 2)
 
-Will
+https://lore.kernel.org/lkml/20240125062802.50819-5-qingshun.wang@linux.intel.com/
+
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ util/ras-mc-ctl.in | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/util/ras-mc-ctl.in b/util/ras-mc-ctl.in
+index a7ece13..e5ee040 100755
+--- a/util/ras-mc-ctl.in
++++ b/util/ras-mc-ctl.in
+@@ -1750,12 +1750,13 @@ sub errors
+     my ($dev, $sector, $nr_sector, $error, $rwbs, $cmd);
+     my ($error_count, $affinity, $mpidr, $r_state, $psci_state);
+     my ($pfn, $page_type, $action_result);
++    my ($cor_status, $cor_mask, $uncor_status, $uncor_mask, $uncor_severity, $cap_control, $first_err_pointer, $link_status, $device_status, $device_control_2);
+     my ($memdev, $host, $serial, $error_status, $first_error, $header_log);
+     my ($log_type, $first_ts, $last_ts);
+     my ($trace_type, $region, $region_uuid, $hpa, $dpa, $dpa_length, $source, $flags, $overflow_ts);
+     my ($hdr_uuid, $hdr_flags, $hdr_handle, $hdr_related_handle, $hdr_ts, $hdr_length, $hdr_maint_op_class, $data);
+     my ($dpa_flags, $descriptor, $mem_event_type, $transaction_type, $channel, $rank, $device, $comp_id);
+-    my ($nibble_mask, $bank_group, $row, $column, $cor_mask);
++    my ($nibble_mask, $bank_group, $row, $column);
+     my ($event_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status);
+ 
+     my $dbh = DBI->connect("dbi:SQLite:dbname=$dbname", "", "", {});
+@@ -1782,13 +1783,23 @@ sub errors
+ 
+     # PCIe AER aer_event errors
+     if ($has_aer == 1) {
+-        $query = "select id, timestamp, dev_name, err_type, err_msg from aer_event$conf{opt}{since} order by id";
++        $query = "select id, timestamp, dev_name, err_type, err_msg, cor_status, cor_mask, uncor_status, uncor_mask, uncor_severity, cap_control, first_err_pointer, link_status, device_status, device_control_2 from aer_event$conf{opt}{since} order by id";
+         $query_handle = $dbh->prepare($query);
+         $query_handle->execute();
+-        $query_handle->bind_columns(\($id, $time, $devname, $type, $msg));
++        $query_handle->bind_columns(\($id, $time, $devname, $type, $msg, $cor_status, $cor_mask, $uncor_status, $uncor_mask, $uncor_severity, $cap_control, $first_err_pointer, $link_status, $device_status, $device_control_2));
+         $out = "";
+         while($query_handle->fetch()) {
+-            $out .= "$id $time $devname $type error: $msg\n";
++            $out .= "$id $time $devname $type error: $msg ";
++            $out .= sprintf "cor_status=0x%08x ", $cor_status if (defined $cor_status && length $cor_status);
++            $out .= sprintf "cor_mask=0x%08x ", $cor_mask if (defined $cor_mask && length $cor_mask);
++            $out .= sprintf "uncor_status=0x%08x ", $uncor_status if (defined $uncor_status && length $uncor_status);
++            $out .= sprintf "uncor_mask=0x%08x ", $uncor_mask if (defined $uncor_mask && length $uncor_mask);
++            $out .= sprintf "uncor_severity=0x%08x ", $uncor_severity if (defined $uncor_severity && length $uncor_severity);
++            $out .= sprintf "cap_control=0x%08x ", $cap_control if (defined $cap_control && length $cap_control);
++            $out .= sprintf "first_error_pointer=0x%x ", $first_err_pointer if (defined $first_err_pointer && length $first_err_pointer);
++            $out .= sprintf "link_status=0x%04x ", $link_status if (defined $link_status && length $link_status);
++            $out .= sprintf "device_status=0x%04x ", $device_status if (defined $device_status && length $device_status);
++            $out .= sprintf "device_control_2=0x%04x", $device_control_2 if (defined $device_control_2 && length $device_control_2);
+         }
+         if ($out ne "") {
+             print "PCIe AER events:\n$out\n";
+-- 
+2.34.1
+
