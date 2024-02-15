@@ -1,136 +1,86 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C69D05;
-	Thu, 15 Feb 2024 10:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D94128812
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 11:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992809; cv=none; b=GhccxBjcCAHNBHiDYuHSr19hfEdVLc+fsqdDj8KfVDp5F7todqPXb3/kv/v+4mRAUnFPJY1lAGbUwLRqyRbrhuBD7U6MMkQrWzmxSmkhu0hImCHuccAo4dhZ6LojqE0DvxxAOh8rRhGUNRXQkzDR7G4JS8UUkeZf5PsAgSXLBgQ=
+	t=1707994954; cv=none; b=r4dPymfdebLfMm65mcbP5b/Ag9mCRNJR3l7R55xHpR4Hu+9LsOnkpdCyoLoroF2MukqPBUedMGuTSwSA6hN6/gBbTnBMQS64P6s2kjBHEwnKZM9di+l+RBc/Q+p3f16hpGF5XazCjkDj9XbUoHYE6k6EFF8FFvcu1c3E7lJ/fH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992809; c=relaxed/simple;
-	bh=20qbWw4eZocIiRgqnsx02KAsr2J5ezEMIV7F1eRgzYQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VAuhYccRmQzHWyZeCZ/DHqI+x4WovnP0S/QqJFGKxgvevA4a5FrWg0dxSIN1h/DCkA2pP7O4pso8jdG0GojCSyu7Gw7maUQZewOmaLTSXl7otYoflO+iDozd4oXXXmjIUINikfkFnnI5YtrMjW1/uIA+7m7FFuCVrYB6hKLlwgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1707994954; c=relaxed/simple;
+	bh=osxN4EprxtnwmGXxZyRE1fRKANyWOh/zNggUa1A+uko=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qiTkAgCbssYvFKda16FcC+KCuOP4u8S94MSrKFMnikQpUQjYxorbi1PUA+MTFitUdHiJDtYkum+9GqaPmT0AZikGVqSmyEY2sFwoOFHCxQSgl77y89LvTezaqmqZ72mz9oGXN0lbs0CQpQT7gKRorC4cnfqrE1Fuv9AEfjWxVg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbB3S0L7Qz67Ldy;
-	Thu, 15 Feb 2024 18:23:16 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A0221400D4;
-	Thu, 15 Feb 2024 18:26:43 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
- 2024 10:26:43 +0000
-Date: Thu, 15 Feb 2024 10:26:42 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/2 v4] cleanup: Add cond_guard() to conditional guards
-Message-ID: <20240215102642.000067c5@Huawei.com>
-In-Reply-To: <20240214180452.00000974@Huawei.com>
-References: <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
-	<20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
-	<3917370.kQq0lBPeGt@fdefranc-mobl3>
-	<20240214180452.00000974@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbBrj1RMtz6K8Kq;
+	Thu, 15 Feb 2024 18:59:01 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id B9F33140D26;
+	Thu, 15 Feb 2024 19:02:28 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 11:02:28 +0000
+From: <shiju.jose@huawei.com>
+To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
+CC: <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v3 0/3] hw/cxl/cxl-mailbox-utils: Add feature commands, device patrol scrub control and DDR5 ECS control features
+Date: Thu, 15 Feb 2024 19:01:43 +0800
+Message-ID: <20240215110146.1444-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-On Wed, 14 Feb 2024 18:04:52 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+From: Shiju Jose <shiju.jose@huawei.com>
 
-> On Tue, 13 Feb 2024 17:51:26 +0100
-> "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
-> 
-> > On Thursday, 8 February 2024 14:04:23 CET Fabio M. De Francesco wrote:  
-> > > Add cond_guard() macro to conditional guards.
-> > > 
-> > > cond_guard() is a guard to be used with the conditional variants of locks,
-> > > like down_read_trylock() or mutex_lock_interruptible().
-> > > 
-> > > It takes a statement (or statement-expression) that is passed as its
-> > > second argument. That statement (or statement-expression) is executed if
-> > > waiting for a lock is interrupted or if a _trylock() fails in case of
-> > > contention.
-> > > 
-> > > Usage example:
-> > > 
-> > > 	cond_guard(mutex_intr, return -EINTR, &mutex);
-> > > 
-> > > Consistent with other usage of _guard(), locks are unlocked at the exit of
-> > > the scope where cond_guard() is called.
-> > >     
-> > [snip]  
-> > > 
-> > > +#define cond_guard(_name, _fail, args...) \
-> > > +	CLASS(_name, scope)(args); \
-> > > +	if (!__guard_ptr(_name)(&scope)) _fail; \
-> > > +	else { }
-> > > +    
-> > 
-> > I have converted and tested several functions in drivers/cxl and found that 
-> > there are cases where this macro needs to be called twice in the same scope.
-> > 
-> > The current implementation fails to compile because any subsequent call to 
-> > cond_guard() redefines "scope".
-> > 
-> > I have a solution for this, which is to instantiate a differently named 
-> > variable each time cond_guard() is used:
-> > 
-> > #define __UNIQUE_LINE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __LINE__)
-> > #define cond_guard(_name, _fail, args...) \
-> >         CLASS(_name, __UNIQUE_LINE_ID(scope))(args); \
-> >         if (!__guard_ptr(_name)(&__UNIQUE_LINE_ID(scope))) _fail; \
-> >         else { }
-> > 
-> > But, before sending v5, I think it's best to wait for comments from those with 
-> > more experience than me.  
-> 
-> Ah. So you can't use __UNIQUE_ID as guard does because we need it to be stable
-> across the two uses.  What you have looks fine to me.
-> We might end up with someone putting multiple calls in a macro but in my
-> view anyone doing that level of complexity in a macro is shooting themselves
-> in the foot.
+Add support for the feature commands, device patrol scrub control and
+DDR5 ECS control features.
 
-Thought more on this whilst cycling home.  Can you use another level
-of macros in combination with __UNIQUE_ID that guard uses?
-My skills with macros are very limited so I'm sure I got something wrong,
-but along the lines of.
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
+feature.
+CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub (ECS)
+control feature.
 
-#define __cond_class(__unique, _name, _fail, args...) \
-   CLASS(_name, __unique)(args); \
-         if (!__guard_ptr(_name)(&__unique)) _fail; \
-         else { }
-#define cond_class(_name, _fail, args... ) \
-    __cond_class(__UNIQUE_ID(guard), _name, _fail, args...
+The patches are available here,
+https://gitlab.com/shiju.jose/qemu.git branch: cxl-scrub-2024-02-15
+and is based on Jonathan's branch
+https://gitlab.com/jic23/qemu/-/tree/cxl-2024-02-05-draft 
 
-?
+Changes
+v2 -> v3
+1. Rebased and updated for 3.1 specification.
 
-> 
-> Jonathan
-> 
-> 
-> > 
-> > Fabio
-> > 
-> > 
-> > 
-> >   
-> 
-> 
+v1 -> v2
+1. Changes for Davidlohr comments. Thanks.
+ - Changed CXL SET feature data transfer flags as enum.
+ - Modified pointer supported_feats to get_feats_out.
+ - Removed an unnecessary branch.
+ - Use MIN().
+ - Move setting of hdr.nsuppfeats further down.
+ - Return CXL_MBOX_UNSUPPORTED if non-zero selection flag is passed.
+ - Add more IMMEDIATE_*.* flags set_feature.  
+ - Corrected a spelling error.
+
+Shiju Jose (3):
+  hw/cxl/cxl-mailbox-utils: Add support for feature commands (8.2.9.6)
+  hw/cxl/cxl-mailbox-utils: Add device patrol scrub control feature
+  hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS control feature
+
+ hw/cxl/cxl-mailbox-utils.c | 368 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 368 insertions(+)
+
+-- 
+2.34.1
 
