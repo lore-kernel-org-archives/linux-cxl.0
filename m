@@ -1,39 +1,53 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CC012BF0A
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 11:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C09B66B2D;
+	Thu, 15 Feb 2024 11:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707994955; cv=none; b=quHtsluQJZEqw11B3J8J7kn0RnDHqli31M+K6Dx+SCNUPgu64DfD+NfLXAUg3V2K10lIgaAt5BX/fDKFNbGNL6FnF0V/hpfdDdWQ7eIBqDiPHGGCOwdy8NAK5I82IEwgAm9JHvwEZgL0shKCmHJvhk/tuIx0zOeRR8S1AIwGPXk=
+	t=1707995711; cv=none; b=rZt/eeh9kyv+4vsAX+DVKDvvlWmwEZ1Iqf+Sshrl15hcHuRoWEBdWK4fcnOqYhUwt8iuz+FmgFyqt+YTpy2R/fATr2glIS2RLuSMraj2AGGVa4/PQunWlOlFdiV04UEIrvu5W7yDOXqohafxdbcnXp3+STN928hJbuoZdsgySjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707994955; c=relaxed/simple;
-	bh=UybtQ34uAKhmEDFjB7vnkiRlQFfpodRgTzWi/DWctq8=;
+	s=arc-20240116; t=1707995711; c=relaxed/simple;
+	bh=QQvnXMSi++sGfD6je4Srj/GDNSsMMgr8SC5M7Oowa+0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K7tQtfln1WRjLt6rqslp9qnrZqxi8BXCp9EkGE7ToSL3wBelfwfPEW+tmJD18KdHC8GcA6rcx7hrHY2XJnzEitBO8Q4SchR500iMDs6WgF/B8/TWa+sNZ1wQtAqnltmoELWg3Opdpt5o/KkoGDVP0iQJeKuLleb3orlXTSZ1tCg=
+	 MIME-Version:Content-Type; b=VeN5m8O+JOYp1sUZFVqlUm549KVuYEeT4/LAeyoIq7bKvQCCWbi7ycI1DwDQQUFtnHpBL86LBnCri8E81MnqO+D/3BUT3yo+Jh2pT4lMQUbsJD1sA0slCtWPSRjMLJ2sZEYuh6apGBgLs3amkq4QXSJIOSX4gQmE9cy4W+NC6Nc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbBrP2wBhz6F90y;
-	Thu, 15 Feb 2024 18:58:45 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbC6x3XWYz67MfY;
+	Thu, 15 Feb 2024 19:11:21 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 57A29141F42;
-	Thu, 15 Feb 2024 19:02:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7334114025A;
+	Thu, 15 Feb 2024 19:15:05 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 15 Feb 2024 11:02:28 +0000
+ 15.1.2507.35; Thu, 15 Feb 2024 11:15:04 +0000
 From: <shiju.jose@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>,
-	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v3 2/3] hw/cxl/cxl-mailbox-utils: Add device patrol scrub control feature
-Date: Thu, 15 Feb 2024 19:01:45 +0800
-Message-ID: <20240215110146.1444-3-shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH v6 01/12] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+Date: Thu, 15 Feb 2024 19:14:43 +0800
+Message-ID: <20240215111455.1462-2-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20240215110146.1444-1-shiju.jose@huawei.com>
-References: <20240215110146.1444-1-shiju.jose@huawei.com>
+In-Reply-To: <20240215111455.1462-1-shiju.jose@huawei.com>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,174 +56,146 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500006.china.huawei.com (7.191.161.198)
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
-feature. The device patrol scrub proactively locates and makes corrections
-to errors in regular cycle. The patrol scrub control allows the request to
-configure patrol scrub input configurations.
+Add support for GET_SUPPORTED_FEATURES mailbox command.
 
-The patrol scrub control allows the requester to specify the number of
-hours for which the patrol scrub cycles must be completed, provided that
-the requested number is not less than the minimum number of hours for the
-patrol scrub cycle that the device is capable of. In addition, the patrol
-scrub controls allow the host to disable and enable the feature in case
-disabling of the feature is needed for other purposes such as
-performance-aware operations which require the background operations to be
-turned off.
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+CXL devices supports features with changeable attributes.
+Get Supported Features retrieves the list of supported device specific
+features. The settings of a feature can be retrieved using Get Feature
+and optionally modified using Set Feature.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- hw/cxl/cxl-mailbox-utils.c | 97 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 96 insertions(+), 1 deletion(-)
+ drivers/cxl/core/mbox.c | 23 +++++++++++++++
+ drivers/cxl/cxlmem.h    | 62 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 85 insertions(+)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index f761ac49b5..9557c38dd9 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -997,6 +997,7 @@ typedef struct CXLSupportedFeatureEntry {
- } QEMU_PACKED CXLSupportedFeatureEntry;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 27166a411705..191f51f3df0e 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1290,6 +1290,29 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
  
- enum CXL_SUPPORTED_FEATURES_LIST {
-+    CXL_FEATURE_PATROL_SCRUB = 0,
-     CXL_FEATURE_MAX
- };
++int cxl_get_supported_features(struct cxl_memdev_state *mds,
++						struct cxl_mbox_get_supp_feats_in *pi,
++						void *feats_out)
++{
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++		.size_in = sizeof(*pi),
++		.payload_in = pi,
++		.size_out = le32_to_cpu(pi->count),
++		.payload_out = feats_out,
++		.min_out = sizeof(struct cxl_mbox_get_supp_feats_out),
++	};
++	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
++
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 5303d6942b88..23e4d98b9bae 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -529,6 +529,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
++	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -698,6 +699,64 @@ struct cxl_mbox_set_timestamp_in {
  
-@@ -1037,6 +1038,37 @@ enum CXL_SET_FEATURE_FLAG_DATA_TRANSFER {
-     CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MAX
- };
+ } __packed;
  
-+/* CXL r3.1 section 8.2.9.9.11.1: Device Patrol Scrub Control Feature */
-+static const QemuUUID patrol_scrub_uuid = {
-+    .data = UUID(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33,
-+                 0x75, 0x77, 0x4e, 0x06, 0xdb, 0x8a)
++/* Get Supported Features CXL 3.1 Spec 8.2.9.6.1 */
++/*
++ * Get Supported Features input payload
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-95
++ */
++struct cxl_mbox_get_supp_feats_in {
++	__le32 count;
++	__le16 start_index;
++	u16 reserved;
++} __packed;
++
++/*
++ * Get Supported Features Supported Feature Entry
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-97
++ */
++/* Supported Feature Entry : Payload out attribute flags */
++#define CXL_FEAT_ENTRY_FLAG_CHANGABLE	BIT(0)
++#define CXL_FEAT_ENTRY_FLAG_DEEPEST_RESET_PERSISTENCE_MASK	GENMASK(3, 1)
++#define CXL_FEAT_ENTRY_FLAG_PERSIST_ACROSS_FIRMWARE_UPDATE	BIT(4)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_DEFAULT_SELECTION	BIT(5)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_SAVED_SELECTION	BIT(6)
++
++enum cxl_feat_attr_value_persistence {
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_NONE,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_CXL_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_HOT_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_WARM_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_COLD_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_MAX
 +};
 +
-+#define CXL_MEMDEV_PS_GET_FEATURE_VERSION    0x01
-+#define CXL_MEMDEV_PS_SET_FEATURE_VERSION    0x01
-+#define CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_DEFAULT    BIT(0)
-+#define CXL_MEMDEV_PS_SCRUB_REALTIME_REPORT_CAP_DEFAULT    BIT(1)
-+#define CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_DEFAULT    12
-+#define CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_DEFAULT    1
-+#define CXL_MEMDEV_PS_ENABLE_DEFAULT    0
++#define CXL_FEAT_ENTRY_FLAG_PERSISTENCE_ACROSS_FW_UPDATE_MASK	BIT(4)
++#define CXL_FEAT_ENTRY_FLAG_PERSISTENCE_DEFAULT_SEL_SUPPORT_MASK	BIT(5)
++#define CXL_FEAT_ENTRY_FLAG_PERSISTENCE_SAVED_SEL_SUPPORT_MASK	BIT(6)
 +
-+/* CXL memdev patrol scrub control attributes */
-+struct CXLMemPatrolScrubReadAttrbs {
-+        uint8_t scrub_cycle_cap;
-+        uint16_t scrub_cycle;
-+        uint8_t scrub_flags;
-+} QEMU_PACKED cxl_memdev_ps_feat_read_attrbs;
++struct cxl_mbox_supp_feat_entry {
++	uuid_t uuid;
++	__le16 feat_index;
++	__le16 get_feat_size;
++	__le16 set_feat_size;
++	__le32 attr_flags;
++	u8 get_feat_version;
++	u8 set_feat_version;
++	__le16 set_feat_effects;
++	u8 rsvd[18];
++}  __packed;
 +
-+typedef struct CXLMemPatrolScrubWriteAttrbs {
-+    uint8_t scrub_cycle_hr;
-+    uint8_t scrub_flags;
-+} QEMU_PACKED CXLMemPatrolScrubWriteAttrbs;
++/*
++ * Get Supported Features output payload
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-96
++ */
++struct cxl_mbox_get_supp_feats_out {
++	__le16 entries;
++	__le16 nsuppfeats_dev;
++	u32 reserved;
++	struct cxl_mbox_supp_feat_entry feat_entries[];
++} __packed;
 +
-+typedef struct CXLMemPatrolScrubSetFeature {
-+        CXLSetFeatureInHeader hdr;
-+        CXLMemPatrolScrubWriteAttrbs feat_data;
-+} QEMU_PACKED QEMU_ALIGNED(16) CXLMemPatrolScrubSetFeature;
-+
- /* CXL r3.1 section 8.2.9.6.1: Get Supported Features (Opcode 0500h) */
- static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-                                              uint8_t *payload_in,
-@@ -1060,7 +1092,7 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-     uint16_t feat_entries = 0;
- 
-     if (get_feats_in->count < sizeof(CXLSupportedFeatureHeader) ||
--        get_feats_in->start_index > CXL_FEATURE_MAX) {
-+        get_feats_in->start_index >= CXL_FEATURE_MAX) {
-         return CXL_MBOX_INVALID_INPUT;
-     }
-     req_entries = (get_feats_in->count -
-@@ -1072,6 +1104,31 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-     entry = 0;
-     while (entry < req_entries) {
-         switch (index) {
-+        case  CXL_FEATURE_PATROL_SCRUB:
-+            /* Fill supported feature entry for device patrol scrub control */
-+            get_feats_out->feat_entries[entry] =
-+                           (struct CXLSupportedFeatureEntry) {
-+                .uuid = patrol_scrub_uuid,
-+                .feat_index = index,
-+                .get_feat_size = sizeof(cxl_memdev_ps_feat_read_attrbs),
-+                .set_feat_size = sizeof(CXLMemPatrolScrubWriteAttrbs),
-+                /* Bit[0] : 1, feature attributes changeable */
-+                .attrb_flags = 0x1,
-+                .get_feat_version = CXL_MEMDEV_PS_GET_FEATURE_VERSION,
-+                .set_feat_version = CXL_MEMDEV_PS_SET_FEATURE_VERSION,
-+                .set_feat_effects = 0,
-+            };
-+            feat_entries++;
-+            /* Set default value for device patrol scrub read attributes */
-+            cxl_memdev_ps_feat_read_attrbs.scrub_cycle_cap =
-+                                CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_DEFAULT |
-+                                CXL_MEMDEV_PS_SCRUB_REALTIME_REPORT_CAP_DEFAULT;
-+            cxl_memdev_ps_feat_read_attrbs.scrub_cycle =
-+                                CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_DEFAULT |
-+                                (CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_DEFAULT << 8);
-+            cxl_memdev_ps_feat_read_attrbs.scrub_flags =
-+                                CXL_MEMDEV_PS_ENABLE_DEFAULT;
-+            break;
-         default:
-             break;
-         }
-@@ -1112,6 +1169,21 @@ static CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
-         return CXL_MBOX_INVALID_INPUT;
-     }
- 
-+    if (qemu_uuid_is_equal(&get_feature->uuid, &patrol_scrub_uuid)) {
-+        if (get_feature->offset >= sizeof(cxl_memdev_ps_feat_read_attrbs)) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        bytes_to_copy = sizeof(cxl_memdev_ps_feat_read_attrbs) -
-+                                             get_feature->offset;
-+        bytes_to_copy = (bytes_to_copy > get_feature->count) ?
-+                               get_feature->count : bytes_to_copy;
-+        memcpy(payload_out,
-+               &cxl_memdev_ps_feat_read_attrbs + get_feature->offset,
-+               bytes_to_copy);
-+    } else {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+
-     *len_out = bytes_to_copy;
- 
-     return CXL_MBOX_SUCCESS;
-@@ -1125,6 +1197,29 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
-                                            size_t *len_out,
-                                            CXLCCI *cci)
- {
-+    CXLMemPatrolScrubWriteAttrbs *ps_write_attrbs;
-+    CXLMemPatrolScrubSetFeature *ps_set_feature;
-+    CXLSetFeatureInHeader *hdr = (void *)payload_in;
-+
-+    if (qemu_uuid_is_equal(&hdr->uuid, &patrol_scrub_uuid)) {
-+        if (hdr->version != CXL_MEMDEV_PS_SET_FEATURE_VERSION ||
-+            (hdr->flags & CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MASK) !=
-+                               CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER) {
-+            return CXL_MBOX_UNSUPPORTED;
-+        }
-+
-+        ps_set_feature = (void *)payload_in;
-+        ps_write_attrbs = &ps_set_feature->feat_data;
-+        cxl_memdev_ps_feat_read_attrbs.scrub_cycle &= ~0xFF;
-+        cxl_memdev_ps_feat_read_attrbs.scrub_cycle |=
-+                          ps_write_attrbs->scrub_cycle_hr & 0xFF;
-+        cxl_memdev_ps_feat_read_attrbs.scrub_flags &= ~0x1;
-+        cxl_memdev_ps_feat_read_attrbs.scrub_flags |=
-+                          ps_write_attrbs->scrub_flags & 0x1;
-+    } else {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+
-     return CXL_MBOX_SUCCESS;
- }
- 
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -829,6 +888,9 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 			    enum cxl_event_type event_type,
+ 			    const uuid_t *uuid, union cxl_event *evt);
+ int cxl_set_timestamp(struct cxl_memdev_state *mds);
++int cxl_get_supported_features(struct cxl_memdev_state *mds,
++			       struct cxl_mbox_get_supp_feats_in *pi,
++			       void *feats_out);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
 -- 
 2.34.1
 
