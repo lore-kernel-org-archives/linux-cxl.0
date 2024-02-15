@@ -1,43 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD8E1C290;
-	Thu, 15 Feb 2024 09:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C69D05;
+	Thu, 15 Feb 2024 10:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989609; cv=none; b=Hh9nBZ9hsKcRjdMyXq9NxPyyHwVYGDyy9JB7XW6wWLbJkrCj7qlcVf80Lz6Ea1JNI1/6nJl+0oPlgxqKTw0OgFlmQHwAQK0QBJVTM86Xl/z70b24/lVn+uDNDv0O+K3JpGf2LgWD3AYsJRX5Zk//6DMLmdPSrJaRhtmi1da+Qe0=
+	t=1707992809; cv=none; b=GhccxBjcCAHNBHiDYuHSr19hfEdVLc+fsqdDj8KfVDp5F7todqPXb3/kv/v+4mRAUnFPJY1lAGbUwLRqyRbrhuBD7U6MMkQrWzmxSmkhu0hImCHuccAo4dhZ6LojqE0DvxxAOh8rRhGUNRXQkzDR7G4JS8UUkeZf5PsAgSXLBgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989609; c=relaxed/simple;
-	bh=XcY6l45QO6lnI+tAYMdjp2gDS/JA/wkhgyzDiGZTQoQ=;
+	s=arc-20240116; t=1707992809; c=relaxed/simple;
+	bh=20qbWw4eZocIiRgqnsx02KAsr2J5ezEMIV7F1eRgzYQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MY+FfZNhJMzrm+/mMaujIAr4n3bDQTkJ6qCNAdWDLHaZLZ5St8Sv2N2HrgZmAaPfu/LGBUnX4wm057QLlDI9+F+9zydH3XUv4KDyHQHIvzGs5uEZdZqaWXo8lceD1BPg7Jga6zHphJ//rjepuL/MXRvRNVq5Do5FOkppuwCi3nE=
+	 MIME-Version:Content-Type; b=VAuhYccRmQzHWyZeCZ/DHqI+x4WovnP0S/QqJFGKxgvevA4a5FrWg0dxSIN1h/DCkA2pP7O4pso8jdG0GojCSyu7Gw7maUQZewOmaLTSXl7otYoflO+iDozd4oXXXmjIUINikfkFnnI5YtrMjW1/uIA+7m7FFuCVrYB6hKLlwgw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tb8sG2JCXz6JB39;
-	Thu, 15 Feb 2024 17:29:22 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbB3S0L7Qz67Ldy;
+	Thu, 15 Feb 2024 18:23:16 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4AD321400D4;
-	Thu, 15 Feb 2024 17:33:24 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A0221400D4;
+	Thu, 15 Feb 2024 18:26:43 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
- 2024 09:33:23 +0000
-Date: Thu, 15 Feb 2024 09:33:22 +0000
+ 2024 10:26:43 +0000
+Date: Thu, 15 Feb 2024 10:26:42 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <dan.j.williams@intel.com>, <rafael@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <dave@stogolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v12 2/3] cxl/core, EINJ: Add EINJ CXL debugfs files and
- EINJ helper functions
-Message-ID: <20240215093322.00000a5e@Huawei.com>
-In-Reply-To: <20240214200709.777166-3-Benjamin.Cheatham@amd.com>
-References: <20240214200709.777166-1-Benjamin.Cheatham@amd.com>
-	<20240214200709.777166-3-Benjamin.Cheatham@amd.com>
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/2 v4] cleanup: Add cond_guard() to conditional guards
+Message-ID: <20240215102642.000067c5@Huawei.com>
+In-Reply-To: <20240214180452.00000974@Huawei.com>
+References: <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
+	<20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
+	<3917370.kQq0lBPeGt@fdefranc-mobl3>
+	<20240214180452.00000974@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,83 +48,89 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 14 Feb 2024 14:07:08 -0600
-Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+On Wed, 14 Feb 2024 18:04:52 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> Implement CXL helper functions in the EINJ module for getting/injecting
-> available CXL protocol error types and export them to sysfs under
-> kernel/debug/cxl.
+> On Tue, 13 Feb 2024 17:51:26 +0100
+> "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
 > 
-> The kernel/debug/cxl/einj_types file will print the available CXL
-> protocol errors in the same format as the available_error_types
-> file provided by the EINJ module. The
-> kernel/debug/cxl/$dport_dev/einj_inject is functionally the same as the
-> error_type and error_inject files provided by the EINJ module, i.e.:
-> writing an error type into $dport_dev/einj_inject will inject said error
-> type into the CXL dport represented by $dport_dev.
+> > On Thursday, 8 February 2024 14:04:23 CET Fabio M. De Francesco wrote:  
+> > > Add cond_guard() macro to conditional guards.
+> > > 
+> > > cond_guard() is a guard to be used with the conditional variants of locks,
+> > > like down_read_trylock() or mutex_lock_interruptible().
+> > > 
+> > > It takes a statement (or statement-expression) that is passed as its
+> > > second argument. That statement (or statement-expression) is executed if
+> > > waiting for a lock is interrupted or if a _trylock() fails in case of
+> > > contention.
+> > > 
+> > > Usage example:
+> > > 
+> > > 	cond_guard(mutex_intr, return -EINTR, &mutex);
+> > > 
+> > > Consistent with other usage of _guard(), locks are unlocked at the exit of
+> > > the scope where cond_guard() is called.
+> > >     
+> > [snip]  
+> > > 
+> > > +#define cond_guard(_name, _fail, args...) \
+> > > +	CLASS(_name, scope)(args); \
+> > > +	if (!__guard_ptr(_name)(&scope)) _fail; \
+> > > +	else { }
+> > > +    
+> > 
+> > I have converted and tested several functions in drivers/cxl and found that 
+> > there are cases where this macro needs to be called twice in the same scope.
+> > 
+> > The current implementation fails to compile because any subsequent call to 
+> > cond_guard() redefines "scope".
+> > 
+> > I have a solution for this, which is to instantiate a differently named 
+> > variable each time cond_guard() is used:
+> > 
+> > #define __UNIQUE_LINE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __LINE__)
+> > #define cond_guard(_name, _fail, args...) \
+> >         CLASS(_name, __UNIQUE_LINE_ID(scope))(args); \
+> >         if (!__guard_ptr(_name)(&__UNIQUE_LINE_ID(scope))) _fail; \
+> >         else { }
+> > 
+> > But, before sending v5, I think it's best to wait for comments from those with 
+> > more experience than me.  
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> Ah. So you can't use __UNIQUE_ID as guard does because we need it to be stable
+> across the two uses.  What you have looks fine to me.
+> We might end up with someone putting multiple calls in a macro but in my
+> view anyone doing that level of complexity in a macro is shooting themselves
+> in the foot.
 
-Hi Ben,
+Thought more on this whilst cycling home.  Can you use another level
+of macros in combination with __UNIQUE_ID that guard uses?
+My skills with macros are very limited so I'm sure I got something wrong,
+but along the lines of.
 
-Just one trivial thing to add to Dan's comments.
+#define __cond_class(__unique, _name, _fail, args...) \
+   CLASS(_name, __unique)(args); \
+         if (!__guard_ptr(_name)(&__unique)) _fail; \
+         else { }
+#define cond_class(_name, _fail, args... ) \
+    __cond_class(__UNIQUE_ID(guard), _name, _fail, args...
 
-> diff --git a/include/linux/einj-cxl.h b/include/linux/einj-cxl.h
-> new file mode 100644
-> index 000000000000..92c0e2e37ad9
-> --- /dev/null
-> +++ b/include/linux/einj-cxl.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * CXL protocol Error INJection support.
-> + *
-> + * Copyright (c) 2023 Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Ben Cheatham <benjamin.cheatham@amd.com>
-> + */
-> +#ifndef CXL_EINJ_H
-> +#define CXL_EINJ_H
-> +
-> +#include <linux/pci.h>
-> +
-> +#if IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
-> +int einj_cxl_available_error_type_show(struct seq_file *m, void *v);
-> +int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type);
-> +int einj_cxl_inject_rch_error(u64 rcrb, u64 type);
-> +bool einj_is_initialized(void);
-> +#else // !IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
-Whilst C++ Style comments are allowed for a few specific case, you should stick
-to local style. In the include directory a quick grep gave me loads of
-#else /*  */
-lines and only 2
-#else //
+?
 
-So C style comments preferred.
-
-
-> +static inline int einj_cxl_available_error_type_show(struct seq_file *m,
-> +						     void *v)
-> +{
-> +	return -ENXIO;
-> +}
-> +
-> +static inline int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type)
-> +{
-> +	return -ENXIO;
-> +}
-> +
-> +static inline int einj_cxl_inject_rch_error(u64 rcrb, u64 type)
-> +{
-> +	return -ENXIO;
-> +}
-> +
-> +static inline bool einj_is_initialized(void) { return false; }
-> +#endif // CONFIG_ACPI_APEI_EINJ
-> +
-> +#endif // CXL_EINJ_H
+> 
+> Jonathan
+> 
+> 
+> > 
+> > Fabio
+> > 
+> > 
+> > 
+> >   
+> 
+> 
 
