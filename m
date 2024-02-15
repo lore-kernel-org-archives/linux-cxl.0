@@ -1,200 +1,271 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FCB4C69
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 03:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC4134AF
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 06:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707967941; cv=fail; b=uDWJGTwII69pfgWMOK8QIVFelDY2spdZuriWFI/YCE1nTt3J6H8CMTO53WPGHBP/aPBNn6eD5MdmczXMx0+K3daWL5R0VCg/xIBBLteMgdtSZjQeQchQO4t3kQrrXhkJSxqCNdVsVtMiEo8Q423ffWyg4MdJCDJP7soboONr2b4=
+	t=1707979032; cv=fail; b=lMwaNoNGaTRphTOt0O9F9Sohz+FWtApRn23b508krydZm9FlZV1M8lbcNNRmc2NVs7nxBSm5dM2+VXkRfSQOei14Z1tAFV3c327Nq+Asb5oUyku+6ZOZPLaNJY6n/vO17HEqmII36Qpf9UMrfIPYh2KFtCElKOqSmF1LbSDXg0E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707967941; c=relaxed/simple;
-	bh=T8soL9LGt7FhKUaQCmeg2yPVvefdoQSI+ZWsP3jczzI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qtoePyLcFJc0zKZU6PS7VsbnIrJSyWF40cUOQ5krZCinONOHFFpxYcl0EuyO+956JPeGHz83DZHTDazykjc4zTfw7seCWrnOxt7pbEy6Pb6rpWD78IlJA3m4IQLqGL+73NVTP+ECg3+N1b9j80tZVN991ahwan4TQ0UcGXkdmlE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lbXzQIJM; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707979032; c=relaxed/simple;
+	bh=cZgT03Bi/DzSu89peqs6APQE4Ax1pblWxc+AgPUpBkU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BtqyGy5EOMoH7aHG5dnCHvu2smlwf3dKErL+MvoOwU2lUWDQg4Kd/itnqYG5zPXA8epZjVJm1mYmN68Cr5rCqFWHkoOzZOkEp/OTlKv4kIzIyTV+fouu9upRgJiDINnmdJ9XGuU6Pj6egDysg6DKjymJbI0Yg99n7FQ3Z3auQJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=RGAYco2c; arc=fail smtp.client-ip=40.107.92.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lbXzQIJM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707967938; x=1739503938;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=T8soL9LGt7FhKUaQCmeg2yPVvefdoQSI+ZWsP3jczzI=;
-  b=lbXzQIJMUKIwDxbAsUHujXLUWN3deouJyn3SfK9p3VR0467MYpRBwLo2
-   2CSJ2Q2kxDN9tdhBzlgK0e0kJx/zaVcgbNfBI7X8A68KL+SfRAfsj2/GK
-   RGJwlrlOchtqITcECDw9GDd/sj0OY5JNwjsOVsoTRus92Vhr0ej9K900o
-   fqZJtgjS0glwhWoZWNDsHN/gt6E+ns/LxNqb2dx8B1BjyOFYAB6U3dkXk
-   Tl2leMp75/zjuBkR3pDhud94VFfM1WthRCl6k9yPEDlrmdcU7cv5BT8rh
-   PLBr0Togqx9QFX/vgHwrigwdMkVDwK+tF7tjb9xzPJlyfx+lDMwx1COmr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13142533"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="13142533"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 19:32:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="8144177"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Feb 2024 19:32:18 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 14 Feb 2024 19:32:17 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 14 Feb 2024 19:32:16 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 14 Feb 2024 19:32:16 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 14 Feb 2024 19:31:34 -0800
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="RGAYco2c"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RvY4wVEBJNyR6GAaglDFx4UdM7O782zze9hvBMvO3ttSIr5L/OiAbYcEls5jmu5rtEjIedgsQZCAMcQ5G6nzHwgbn122g6/+qeVLJ5D7REIaQpVtHKM6NO1ltglUrSfVhx6ivd+87offY6c2lhEASB8oVR93LlPEZbffN/PciVjsBg3J5owvtOEIA8UfY/KNwMI/rJOidZ8NoeXwATCUKY94pTV21cMf7/r0efGcEJKCsWJH+zWF7gwgmLV/ADpY+v3h1yOOAyjRK/8/U3XtIvtW0xlqX2njVHJgUAZh8n6LmDNwsu2XdM7DZjfsMCvjYGS5tRuWupkZizkWIykyNQ==
+ b=l6R8wJod4zUgil0498Z2iVU84ZaOQiax2M0qp2C42JcGRovl8UsjGhBmmTo33Au4heJWQ0Xg44Y6yjqQ6/9cf8okHh2FyS+kz308aG+FbmcpJWi45F/x1RfTW4bNHdJactGyrp8cI9KkT97kDAQQzijeBVROt9Gz0jGLCmgYkgxOHH+lEcVFQKWr7iMqTLFICkpDQpcwNOxq+D1Wzifv7iKnLuCy6zKzsEUV96GMrPgwWg1tpW5I6ETS/8sr03ZTBouWydh2ySC7LJRhhIKgyxhXgEwSJaBYnQUFnJPurUkfpuBS+BtBVnvrrwvrk0j8jqS1OskGm/9LmGHZMitSBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DyihrbUvqeAKJGrPyXAcg5yBMkVO0TpaitPqnisvfG8=;
- b=i+fqk1WjKnOXFTQ7dtckk25fQSNz8HYZynoXAHX2QbSdf0uyNMn6zVB0eMFsjm6PnOqnYs1QVGZRk6GL9bvsiebynOYrQYuwNQDItZdRaHZ8x7RY3LyU1fkNytG04TeRbb4k/FaN+4w2KxESfSQkH+Hy/e8T4aOiS+aborq9A8qK/tM8dfmOnY8kstDhuXp4moj6FBDxAr+a4RuPBruwfn/ZbxkSY8KD+kTpmJ6P9nRYxAbg8Y9j3XO7Oi2W/hjSuCMpMN2x9JvTk+o+j/DFEIRPOvXBbmr+JcVsg8mOAaLFNvoYOiuWiblDDclghq3GDoXKARz9ltUNz6767F/GQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4681.namprd11.prod.outlook.com (2603:10b6:303:57::14) with
+ bh=eHtFPD/Vl7gE7bwuwJNUXRUc8FcaMwP7NX19LxzEEfI=;
+ b=Od4AUuxC7kkqzxYENDS1vpQYUfMz5KQxv8iOWG2atppe3Wf8o5hiHZCVbxeViQNoGnNacaWSrWjf52ZYLN0x8t2cyXf3h1BJ2VZgtj+qRUNi8/AxEKFN8TsnbXKuSGSmGVZsQkhatLkDvqxUpY1tlo/QXgYgAeBbCSMYJ9bepv4f72jvzd/Lon2tCrKDeC4lP4dadVTxjyxx5gG0r5Ufsm/Bal+NQU7advftlok/VoQslQzF2BsgLyq5Z1O9OqoRxY4Es1NmoxacDGCFNI5sZPLOmxjhSZkfrcrORLtMOWaO65AvS7nTcziTNkj/qzvIyJr6/HI/q96FQFePklqqeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eHtFPD/Vl7gE7bwuwJNUXRUc8FcaMwP7NX19LxzEEfI=;
+ b=RGAYco2cZQbzLA8G25vqRWFBGGW7zgGh6PocBuH9ixLWhD2J2aw5L0GvOG9urSn3IZsXqHTV7os0lRE5EXFf+MYhONTeUjPE9GWU48nkSc8sGAbvgriWY+qRw16K7jnCfaICbxXXmCpUrh2egB2REGZrk9deQu9a9qMfLg4b60lY12W062Pf+YMplbqg98Q36/3CaE/DTZNWvt9DDuKP5iKpa/bxxxtFrM1Y64VyiAsIN36AlgeFt+uOG5gPmKqAIYPMxslJ7nFqZb1xL4NDb7O26EnGo5TTng947JAZAWIJcW9LPYuSEdb27Tq6h38nnZJS+xbEda2+VovOpR7Oxw==
+Received: from MW4PR04CA0129.namprd04.prod.outlook.com (2603:10b6:303:84::14)
+ by CYXPR08MB9531.namprd08.prod.outlook.com (2603:10b6:930:d8::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.29; Thu, 15 Feb
- 2024 03:31:26 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7270.036; Thu, 15 Feb 2024
- 03:31:26 +0000
-Date: Wed, 14 Feb 2024 19:31:23 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: <sthanneeru.opensrc@micron.com>, <linux-cxl@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: <Jonathan.Cameron@huawei.com>, <dan.j.williams@intel.com>,
-	<john@jagalactic.com>, <emirakhur@micron.com>, <ajayjoshi@micron.com>,
-	<Ravis.OpenSrc@micron.com>, <sthanneeru@micron.com>
-Subject: Re: [RFC PATCH] cxl/pci: Set default timeout for background
- operations
-Message-ID: <65cd858b3e5bc_5c76294dc@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240207105349.301-1-sthanneeru.opensrc@micron.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240207105349.301-1-sthanneeru.opensrc@micron.com>
-X-ClientProxiedBy: MW4PR03CA0245.namprd03.prod.outlook.com
- (2603:10b6:303:b4::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2024 06:37:05 +0000
+Received: from CO1PEPF000042AC.namprd03.prod.outlook.com
+ (2603:10b6:303:84:cafe::28) by MW4PR04CA0129.outlook.office365.com
+ (2603:10b6:303:84::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26 via Frontend
+ Transport; Thu, 15 Feb 2024 06:37:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
+ smtp.mailfrom=micron.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=micron.com;
+Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
+ 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.201.242.130; helo=mail.micron.com; pr=C
+Received: from mail.micron.com (137.201.242.130) by
+ CO1PEPF000042AC.mail.protection.outlook.com (10.167.243.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7292.25 via Frontend Transport; Thu, 15 Feb 2024 06:37:05 +0000
+Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW17EX19A.micron.com
+ (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Wed, 14 Feb
+ 2024 23:37:00 -0700
+Received: from BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f]) by
+ BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f%8]) with mapi id
+ 15.02.1258.028; Wed, 14 Feb 2024 23:37:00 -0700
+From: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "john@jagalactic.com" <john@jagalactic.com>,
+	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
+	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Srinivasulu Thanneeru
+	<sthanneeru@micron.com>, "shiju.jose@huawei.com" <shiju.jose@huawei.com>
+Subject: RE: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
+ and Get Supported Logs Sub-List commands
+Thread-Topic: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
+ and Get Supported Logs Sub-List commands
+Thread-Index: AQHaWbGZfDcNDExI9UaAVBN+W7Th47EA3qCAgAkrVGCAAPRVgA==
+Date: Thu, 15 Feb 2024 06:37:00 +0000
+Message-ID: <41ea5267236c4bd391c53379e1ac08fe@micron.com>
+References: <20240207103634.199-1-sthanneeru.opensrc@micron.com>
+ <20240208125713.00004776@Huawei.com>
+ <834c6fec2ed74f9da7643ee61843373d@micron.com>
+In-Reply-To: <834c6fec2ed74f9da7643ee61843373d@micron.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mt-whitelisted: matched
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4681:EE_
-X-MS-Office365-Filtering-Correlation-Id: 389568a6-d0f6-4a59-27d9-08dc2dd696e7
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AC:EE_|CYXPR08MB9531:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6edb261d-68e2-42c3-8b71-08dc2df0868f
+X-EXT-ByPass: 1
+X-MT-RULE-Whitelisted: Triggered
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oFyBXgc794gdzj3tHDj1ASSQUsMTrCdyWgxpCtROVkid2EHfaGUtOlqkTvONOfgpEvbEGSFkVyl7+nGql6YY5aUxFohH72bkjgRods3Z96m+rV/rp+fLRtxKj2qCI452E8t3Fk5jrtoKxSiLmjcvjKM55BExhkh6nF94Ls+gEWGY3qCtOD/n6EQFVXAM/VakJkom/rme0ebW8/OesET8oHupf//8l9logoGrkciaNw5F8cwU6vqMjhC+R1SA/152dOi0X68ySAw9iECxwLuVzNy1MQKChnx3VAz8TJjlb6K2U+SS/VfKCIrW3bzIDUxIMlLEwIQgUx399cQjInpXrx6oD0fVp+mkO701voEH3LiqEry61zWIrEQID6e+nZp/OzzmuhlrxVY7SRMjiRjBPjfd6Czb86aXkaEaGWhh/XOTjpiz6WTk47VzJ952vPSQetynTtSrRMmVW2JcTBeZTHtXmdOtMR0nh/eWbYjJVU5t6dvpNPpkyKdw7hPsxKBWTyL7TjUg1/ATEPCe/RO7UHDCHZ3M40v1ZPL3uM6Mnro=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(39860400002)(366004)(136003)(346002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(26005)(316002)(41300700001)(6666004)(8676002)(8936002)(4326008)(66476007)(66556008)(478600001)(66946007)(9686003)(966005)(6486002)(6506007)(6512007)(38100700002)(82960400001)(86362001)(5660300002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VmdmK0U5eEdMdXNMMERsY25yZ2UyUVM1dlFMMmc4dDkxUXh1S0RaK2lEclhi?=
- =?utf-8?B?emNxVTRjOVZBRmpzSGl4WUFJN3BibW1UQ1J3cm92SjdjWHdKUDQxZnVaMzBr?=
- =?utf-8?B?dWR2ZThOaGlQZmIyaklXcEZVRkpWWFhMMUYxSzBSUG1PajJYTk9FU2FOekN5?=
- =?utf-8?B?VkZicHRwZlBxTG84U3ZGN0pyYzdDTjF6cXhSZ2o3U3RHMWtMSW9kb2dWQXV4?=
- =?utf-8?B?cDhPc0ZMOTBNaHRTWVF1OE9QcDFyUGZ0NUExMXBhTzg2WVVZc3ZSNFk4b2pV?=
- =?utf-8?B?bSttc3Y5dVdEaTJZRVM3ZEl2dERqV3I4dEMxL2lGVHF4UXlnSCtudDJFUXVv?=
- =?utf-8?B?cHVONXRyLzVOb3Vpd1lHaUNqZiswaEpkNm1iSjBwVk05U1J6a2VZMjFTbks3?=
- =?utf-8?B?WVF4S09ZUmJkd09kYk5Sb3dXdkRQZXVZV2Rua1MzVEdBSmlIMWZzME91ZjF2?=
- =?utf-8?B?WjFqL1hsWkRIRENXQUZaZzQ3ZEFoeHRUVlpsKzFpL2htVWdRUXlLMVBxaWMv?=
- =?utf-8?B?Q0tWRFQvOXpwWUJ6empKZkRZTmZQajlhRVV2UmwxYXZ0bHpqajJUZzJQTFZs?=
- =?utf-8?B?N0JiVnh2WHpudjA3V2JBc1RxRkwzTkc4dzhJME1OQ3YrcmlrdzVEMXZkU0d5?=
- =?utf-8?B?YUNMTjBzUHZPbUNKS1B3bVg3Nm51RGthVm5JQ0NJZmV0cXlQQWU3YkpMNHp3?=
- =?utf-8?B?T0dyTVN5ZVRnKzlOanVQdENyUC9JTDEzVjJOWXg5NS9mNEVBVExPTnVndjhk?=
- =?utf-8?B?bDIzeTdzajJlNlRPZFFVbzJNTTdCMnp0VllzN0p1SDJUY2tEQU1CcEU0N1dR?=
- =?utf-8?B?eHBJYUZmVWU4VnVrc1ZxN2NUUkoyWWluQjREYUhjQmFkMXFxTGd5bUp4RGJZ?=
- =?utf-8?B?Y0tzZEUzMkZ1UlBrKy9ybFAxWEhLWkZFQy90L21ldzBqY2VIU3g1c0xjUHF4?=
- =?utf-8?B?MEZaVlg1OFdmRG8vUUlhZTRPaG42UEtIUzJtYW1zWFFCaVcwVGx1Sy96ay9I?=
- =?utf-8?B?TlhySnNYc09sYkRvSEppMWtpOVVxd3E0ZVZsVXVSZ0l3QVR6bUdWdXVpeEpM?=
- =?utf-8?B?RHZLSkhHeFQ4MXdJM0NlRWxFT1dnbm9LYlZKcnpvT3ZTVTdNMHViR0c2bDNl?=
- =?utf-8?B?bFB3Rjc2MGFpakJlcjlrN3NYSHFGZ1NSNndHY2JXTFBZbDhJVnlYRUdZa2I3?=
- =?utf-8?B?dDUwWjc5dFd1UFZPeW9ueXR5VWV5OWN0UTJGMzRBNURmUHJYNHd6OGFGQVNx?=
- =?utf-8?B?bmFSVE90TTBseTJsVVRVWkZ6b1hTby9zZllVUFMxWWdxOFVoZ2JocXgra1RT?=
- =?utf-8?B?NkZtN202Zjhqa29OL2lwOS9vRU03NmZObnk3TUY2MTV0OHhRVWY3QmFUTlI1?=
- =?utf-8?B?NStOaFRNMUxLUEo4QTBmYVltSWh4ZngwdGFVRnIzaEsyaFRRK3FRamloOERK?=
- =?utf-8?B?ZC9KUnJjdkhSUDJ3N2ZMclk2SEF2U2NWUTZ6bUs3ZmZnbFR6YWtlbXNFQzll?=
- =?utf-8?B?L3pNRTlRZyt2K0tRNEVsajZkdEJKd0tIWHY2YWxqZmh5QWdMVXpQdzZjSnpw?=
- =?utf-8?B?OHFkRC9IV25NdDhGYmZJTWltTzlEamZJbzBTUXJ4SVNiN09DZitDZDkyM2tr?=
- =?utf-8?B?VDIwTm4wVU5wWHJFbVhKZU5ZUXpTOUdmQ01jODA0dkNqS2J1Rk9neWtOdS9t?=
- =?utf-8?B?akJER3ZUK0l3TGJNUEZNSWh5czN5TElMNk85Y2dKU3pHUWVPQWVONXZSTmpG?=
- =?utf-8?B?cHBNRHdYSDFGNGwzOWhpQWdDblR1SUxiTkJBWFNPWTU1TmE5MnY1ZDhsYksz?=
- =?utf-8?B?cHNEQ2J3R2xLdnpyVGZHYm5USGIzS1JrRE5ZNG5rMytOb3FpdmJURHg3WE9j?=
- =?utf-8?B?VUwvRU9MaEVPME1ibHZDVU1sNjB1RDcrNTBIZldyRm9URTdraHk4Y09xeWpT?=
- =?utf-8?B?QjZuNi9wd3d3V2Z2bEZFa0c3UWRjdHNBOFVOVUg5UWN3Qkc5MFhVZXdiSEFC?=
- =?utf-8?B?a1YxdktNOTdMUWpzRFlKWHNrdkF6a2JiYmhKa016a29kK3M4UXpmdUhreGxP?=
- =?utf-8?B?RmdWa2dHdjBET2ZaTUxHbFc4TFIvMGxxaFg0bitCK28xc0dFWEVPQUxrbmZT?=
- =?utf-8?B?ZHg2QUg4U1R3SzRIcC9PNWtHVVZUaVF2ZnIyOVdlL3JVYjNvRUVvTGRoM3dS?=
- =?utf-8?B?SWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 389568a6-d0f6-4a59-27d9-08dc2dd696e7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 03:31:25.9232
+X-Microsoft-Antispam-Message-Info:
+	cuL61b+6puFkyOZ4ZbTCcyb7LhGy0YWXU1WJp8aqvoI0g/dKTwK9vDmBcKsPS+u0A2YCYO1EEiHRH2rCcIFEcvJ0mrphPFcFfqGa6KnbIobF+xeglwvzU+5su9g7Nqt+YHtOKzRo326fLcLFuoJrCEWzKdYLZIHb/wdNzDz5l4PX/8f5+UKg2K+UNZxhCABWxfeFqKvutQyV5mVqikmqykfokZPshmhhtkY9TWWyDVfcxLlRdZlyMP5LxUjWFaKEqnabscweRhyBWBLBK/Telmrt5U5zO3sE1HoMYpkEFRv+nx7OCUiZGOMvJKv3rasW/Msy+ZIvoPpxltyVxwoyhUsAes1Yrb6UnTXVS2CvPY1fxhveB0g9P8G5v3mx79RVTeyJNQBAwq37sZPdhOQ50b0n2WLRYbaFmMY195AQm1BQ6y1JFmToceRwULbtBk0GK7PD3yv9b2xnbdMiAFD7752hPzH0qa+QRgv7oJ+I2jHny+wCa+iHHAkJhheypmdnr2imh3pcIaE4oZ3YghjEZ5Uxh3TnhCO9rNyl33/FT9ym12DcDClrtn4aCJ9YZvPKEnJu/9H/aTVMns8tSixZzOzbCo3F1v6FEiwdtzYf1YjBoc8ZY6yLpgauZg6M118VSO14z6bv4ktVUQTBbtshKWRaTGIDTNC57GMQo3iXzqI=
+X-Forefront-Antispam-Report:
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(376002)(346002)(230273577357003)(230922051799003)(82310400011)(64100799003)(36860700004)(451199024)(1800799012)(186009)(40470700004)(46966006)(41300700001)(2616005)(26005)(336012)(426003)(2906002)(8676002)(4326008)(6862004)(70206006)(70586007)(5660300002)(108616005)(478600001)(7696005)(316002)(54906003)(53546011)(24736004)(107886003)(8936002)(86362001)(356005)(7636003)(36756003)(83380400001)(82740400003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 06:37:05.1629
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lfwbrxftZkOe4LIFsKby/uZfPgYs0jaac3tbf/2bd6R031u1d6c6+kmcPCL/LmcD2E0OgumZ0JbramMXxVvl9BZ33jai0yhx6zoV9K1Y+v0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4681
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6edb261d-68e2-42c3-8b71-08dc2df0868f
+X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042AC.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR08MB9531
 
-sthanneeru.opensrc@ wrote:
-> From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-> 
-> The CXL 3.0 specification outlines background operations,
-> and support for handling these operations was added in following patch.
-> 
-> Link: https://lore.kernel.org/all/20230523170927.20685-5-dave@stgolabs.net/
-> 
-> Mailbox commands like ‘Log Populate’ use background operations
-> to complete the execution of the command.
-> This can lead to a timeout, since there is currently no option
-> in the ioctl cxl_send_command structure to specify
-> a timeout value. The default values being zero can lead
-> to the driver reporting false negatives to the application.
-> 
-> This patch aims to establish default values, enabling mailbox commands
-> that operate in the background to continue functioning even
-> if a timeout is not set in the userspace application.
 
-The reason there are no defaults is because userspace is not allowed to
-issue background commands. The CXL background command definition is
-awkward in that it allows a single command to monopolize the mailbox for
-an indefinite amount of time.
 
-Instead, the approach taken with Firmware Update and Sanitize is that a
-kernel sysfs ABI mediates access to the mailbox and facilitates bounded 
-timeslices between command submissions. It effectively allows the kernel
-to manage fairness and more importantly preempt userspace if it needs to
-issue its own commands.
+> -----Original Message-----
+> From: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
+> Sent: Wednesday, February 14, 2024 9:39 PM
+> To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org;
+> dan.j.williams@intel.com; john@jagalactic.com; Eishan Mirakhur
+> <emirakhur@micron.com>; Ajay Joshi <ajayjoshi@micron.com>; Ravis
+> OpenSrc <Ravis.OpenSrc@micron.com>; Srinivasulu Thanneeru
+> <sthanneeru@micron.com>; shiju.jose@huawei.com
+> Subject: RE: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear =
+Log
+> and Get Supported Logs Sub-List commands
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> > Sent: Thursday, February 8, 2024 6:27 PM
+> > To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
+> > Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org;
+> > dan.j.williams@intel.com; john@jagalactic.com; Eishan Mirakhur
+> > <emirakhur@micron.com>; Ajay Joshi <ajayjoshi@micron.com>; Ravis
+> > OpenSrc <Ravis.OpenSrc@micron.com>; Srinivasulu Thanneeru
+> > <sthanneeru@micron.com>; shiju.jose@huawei.com
+> > Subject: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Lo=
+g and
+> > Get Supported Logs Sub-List commands
+> >
+> > CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
+> > you recognize the sender and were expecting this message.
+> >
+> >
+> > On Wed, 7 Feb 2024 16:06:34 +0530
+> > <sthanneeru.opensrc@micron.com> wrote:
+> >
+> > > From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+> > >
+> > > Adding UAPI support for
+> > > 1. CXL r3.1 8.2.9.5.3 Get Log Capabilities.
+> > > 2. CXL r3.1 8.2.9.5.4 Clear Log commands.
+> > > 3. CXL r3.1 8.2.9.5.6 Get Supported Logs Sub-List.
+> > >
+> > > Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+> >
+> > Hi Srinivasulu,
+> >
+> > Whilst I can conjecture some valid reasons to expose these to
+> > userspace, can you add some examples to this patch description?
+> >
+> > We might want to filter the clear in particular to avoid a clash
+> > with the driver log handling. That is only allow it for vendor
+> > logs.
+>=20
+> Are you suggesting that I should restrict the "Vendor Debug Log" function=
+ality
+> to
+> only apply to Vendor logs.? Why not include Component State Dumps logs
+> that
+> support the clear log feature?
 
-I assume you are only seeing this lack of a default due to building with
-CONFIG_CXL_MEM_RAW_COMMANDS=y? If yes, "raw" means "raw" and the kernel
-is mostly taken out of the loop of saving userspace from itself.
+Sorry for the typo.
 
-All that said, ugh, "Log Populate" has no facility to time bound the
-population of the log. I do not think it is tenable for Linux to
-surrender mailbox access for an indefinite uninterruptible amount of
-time... unless you want to handle "Log Populate" like Sanitize where the
-unbounded background operation is tolerated because the device is taken
-offline?
+Are you suggesting that I should restrict the "Clear log command" functiona=
+lity from user space
+to only apply to "Vendor Debug Log".?=20
+Why not include Component State Dumps logs that support the clear log featu=
+re?
+
+>=20
+> I might be overlooking something; please enlighten me.
+>=20
+> For example, following both supports Clear log in our setups.
+> * 5e1819d9-11a9-400c-811f-d60719403d86 - Vendor Debug Log
+> * b3fab4cf-01b6-4332-943e-5e9962f23567 - Component State Dump Log
+>=20
+> >
+> > Perhaps split the patch into 2 parts. The less controversial
+> > GET_LOG_CAPS and GET_LOG_SUBLIST, followed by a patch for the
+> > destructive clear log.
+> >
+> > The memory scrub handling might well
+> > access the ECS log for example (I don't think the current proposal
+> > yet does this).
+> >
+> > Jonathan
+> >
+> >
+> > > ---
+> > >  drivers/cxl/core/mbox.c      | 3 +++
+> > >  drivers/cxl/cxlmem.h         | 3 +++
+> > >  include/uapi/linux/cxl_mem.h | 3 +++
+> > >  3 files changed, 9 insertions(+)
+> > >
+> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > > index 27166a411705..64a44e286488 100644
+> > > --- a/drivers/cxl/core/mbox.c
+> > > +++ b/drivers/cxl/core/mbox.c
+> > > @@ -64,6 +64,9 @@ static struct cxl_mem_command
+> > cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] =3D {
+> > >       CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
+> > >       CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+> > >       CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
+> > > +     CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
+> > > +     CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
+> > > +     CXL_CMD(GET_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
+> > >  };
+> > >
+> > >  /*
+> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > index 5303d6942b88..4128c810051c 100644
+> > > --- a/drivers/cxl/cxlmem.h
+> > > +++ b/drivers/cxl/cxlmem.h
+> > > @@ -529,6 +529,9 @@ enum cxl_opcode {
+> > >       CXL_MBOX_OP_SET_TIMESTAMP       =3D 0x0301,
+> > >       CXL_MBOX_OP_GET_SUPPORTED_LOGS  =3D 0x0400,
+> > >       CXL_MBOX_OP_GET_LOG             =3D 0x0401,
+> > > +     CXL_MBOX_OP_GET_LOG_CAPS        =3D 0x0402,
+> > > +     CXL_MBOX_OP_CLEAR_LOG           =3D 0x0403,
+> > > +     CXL_MBOX_OP_GET_LOG_SUBLIST     =3D 0x0405,
+> >
+> > Name should include something to make it clear this is getting
+> > sublist of 'supported' logs.  Not the log.
+> >
+> > >       CXL_MBOX_OP_IDENTIFY            =3D 0x4000,
+> > >       CXL_MBOX_OP_GET_PARTITION_INFO  =3D 0x4100,
+> > >       CXL_MBOX_OP_SET_PARTITION_INFO  =3D 0x4101,
+> > > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_me=
+m.h
+> > > index 42066f4eb890..d2df9782a5ef 100644
+> > > --- a/include/uapi/linux/cxl_mem.h
+> > > +++ b/include/uapi/linux/cxl_mem.h
+> > > @@ -47,6 +47,9 @@
+> > >       ___DEPRECATED(SCAN_MEDIA, "Scan Media"),                       =
+   \
+> > >       ___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),       =
+   \
+> > >       ___C(GET_TIMESTAMP, "Get Timestamp"),                          =
+   \
+> > > +     ___C(GET_LOG_CAPS, "Get Log Capabilities"),                    =
+   \
+> > > +     ___C(CLEAR_LOG, "Clear Log"),                                  =
+   \
+> > > +     ___C(GET_LOG_SUBLIST, "Get Log Sublist"),                      =
+   \
+> >
+> > Likewise, mention it's list of supported logs.
+> >
+> > >       ___C(MAX, "invalid / last command")
+> > >
+> > >  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+>=20
+
