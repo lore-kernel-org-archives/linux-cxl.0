@@ -1,43 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ACF1BC26;
-	Thu, 15 Feb 2024 09:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD8E1C290;
+	Thu, 15 Feb 2024 09:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989238; cv=none; b=iHjkZZsj1SryQP5sLm0HiWTrV12rIbquNwYs3zly83z3esQ7Z08Mkle95krydRjNdxPNayFV6xrMqk8TSxjlmTVX+KTFzjY5KXn+w7Dl2z1GX9iaJMT6NGD8Pnl9jzYCqBe7CRxTQ10k9X4eKVvEOdjsGfLZinvr44W3eF3MH0A=
+	t=1707989609; cv=none; b=Hh9nBZ9hsKcRjdMyXq9NxPyyHwVYGDyy9JB7XW6wWLbJkrCj7qlcVf80Lz6Ea1JNI1/6nJl+0oPlgxqKTw0OgFlmQHwAQK0QBJVTM86Xl/z70b24/lVn+uDNDv0O+K3JpGf2LgWD3AYsJRX5Zk//6DMLmdPSrJaRhtmi1da+Qe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989238; c=relaxed/simple;
-	bh=JdUXTgfRhqmsxEasxutphA+qDVTuj0FX7QgjojjkOfI=;
+	s=arc-20240116; t=1707989609; c=relaxed/simple;
+	bh=XcY6l45QO6lnI+tAYMdjp2gDS/JA/wkhgyzDiGZTQoQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q4nWIfeD0fAZDv+xiGt6jzC4FuvIX3ZtA+zgsu9pHsZxRQ/Pis27AInj0hvDUh/2eVFHrbPI2PnrnzWLhzJPnj+2wuqIwI9V5WfW5yTcwf8OY+ntHgejcjF7zavJz30KqtjSn2teJ44737K949PkT95OqpHGHcCmM95j05tMyh0=
+	 MIME-Version:Content-Type; b=MY+FfZNhJMzrm+/mMaujIAr4n3bDQTkJ6qCNAdWDLHaZLZ5St8Sv2N2HrgZmAaPfu/LGBUnX4wm057QLlDI9+F+9zydH3XUv4KDyHQHIvzGs5uEZdZqaWXo8lceD1BPg7Jga6zHphJ//rjepuL/MXRvRNVq5Do5FOkppuwCi3nE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tb8k74NXPz6J9hM;
-	Thu, 15 Feb 2024 17:23:11 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tb8sG2JCXz6JB39;
+	Thu, 15 Feb 2024 17:29:22 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8FAD91400D4;
-	Thu, 15 Feb 2024 17:27:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4AD321400D4;
+	Thu, 15 Feb 2024 17:33:24 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
- 2024 09:27:13 +0000
-Date: Thu, 15 Feb 2024 09:27:12 +0000
+ 2024 09:33:23 +0000
+Date: Thu, 15 Feb 2024 09:33:22 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hojin Nam <hj96.nam@samsung.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Wonjae Lee
-	<wj28.lee@samsung.com>, KyungSan Kim <ks0204.kim@samsung.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] perf: CXL: fix CPMU filter value mask length
-Message-ID: <20240215092712.000048cd@Huawei.com>
-In-Reply-To: <20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
-References: <CGME20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
-	<20240215080906epcms2p2c49c6b9bfe271e1d089ad35ab527b958@epcms2p2>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <dan.j.williams@intel.com>, <rafael@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <dave@stogolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v12 2/3] cxl/core, EINJ: Add EINJ CXL debugfs files and
+ EINJ helper functions
+Message-ID: <20240215093322.00000a5e@Huawei.com>
+In-Reply-To: <20240214200709.777166-3-Benjamin.Cheatham@amd.com>
+References: <20240214200709.777166-1-Benjamin.Cheatham@amd.com>
+	<20240214200709.777166-3-Benjamin.Cheatham@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,67 +51,80 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 15 Feb 2024 17:09:06 +0900
-Hojin Nam <hj96.nam@samsung.com> wrote:
+On Wed, 14 Feb 2024 14:07:08 -0600
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-> CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-> However, it is used as 2B length in code and comments.
+> Implement CXL helper functions in the EINJ module for getting/injecting
+> available CXL protocol error types and export them to sysfs under
+> kernel/debug/cxl.
 > 
-> Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
+> The kernel/debug/cxl/einj_types file will print the available CXL
+> protocol errors in the same format as the available_error_types
+> file provided by the EINJ module. The
+> kernel/debug/cxl/$dport_dev/einj_inject is functionally the same as the
+> error_type and error_inject files provided by the EINJ module, i.e.:
+> writing an error type into $dport_dev/einj_inject will inject said error
+> type into the CXL dport represented by $dport_dev.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Hi Ben,
 
-Thanks for tidying this up.
+Just one trivial thing to add to Dan's comments.
 
-> ---
-> 
-> Hi Jonathan,
-> as you said, I didn't actually hit this. I just found it by simply
-> comparing the code to the CXL Spec. I removed Fixes tag and 
-> repaired broken sign off, Thank you!
-> 
-> Changes since v1:
-> - Remove Fixes tag (Jonathan)
-> - Repair broken sign off (Jonathan)
-> 
->  drivers/perf/cxl_pmu.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 365d964b0f6a..ca5e92f28b4a 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -59,7 +59,7 @@
->  #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK     GENMASK_ULL(63, 59)
-> 
->  #define CXL_PMU_FILTER_CFG_REG(n, f)   (0x400 + 4 * ((f) + (n) * 8))
-> -#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(15, 0)
-> +#define   CXL_PMU_FILTER_CFG_VALUE_MSK                 GENMASK(31, 0)
-> 
->  #define CXL_PMU_COUNTER_REG(n)         (0xc00 + 8 * (n))
-> 
-> @@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
->  }
-> 
->  /*
-> - * CPMU specification allows for 8 filters, each with a 16 bit value...
-> - * So we need to find 8x16bits to store it in.
-> - * As the value used for disable is 0xffff, a separate enable switch
-> + * CPMU specification allows for 8 filters, each with a 32 bit value...
-> + * So we need to find 8x32bits to store it in.
-> + * As the value used for disable is 0xffff_ffff, a separate enable switch
->   * is needed.
->   */
-> 
-> @@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
->                 if (cxl_pmu_config1_hdm_filter_en(event))
->                         cfg = cxl_pmu_config2_get_hdm_decoder(event);
->                 else
-> -                       cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-> +                       cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
->                 writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
->         }
-> 
-> --
-> 2.34.1
+> diff --git a/include/linux/einj-cxl.h b/include/linux/einj-cxl.h
+> new file mode 100644
+> index 000000000000..92c0e2e37ad9
+> --- /dev/null
+> +++ b/include/linux/einj-cxl.h
+> @@ -0,0 +1,40 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * CXL protocol Error INJection support.
+> + *
+> + * Copyright (c) 2023 Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Ben Cheatham <benjamin.cheatham@amd.com>
+> + */
+> +#ifndef CXL_EINJ_H
+> +#define CXL_EINJ_H
+> +
+> +#include <linux/pci.h>
+> +
+> +#if IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
+> +int einj_cxl_available_error_type_show(struct seq_file *m, void *v);
+> +int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type);
+> +int einj_cxl_inject_rch_error(u64 rcrb, u64 type);
+> +bool einj_is_initialized(void);
+> +#else // !IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
+Whilst C++ Style comments are allowed for a few specific case, you should stick
+to local style. In the include directory a quick grep gave me loads of
+#else /*  */
+lines and only 2
+#else //
+
+So C style comments preferred.
+
+
+> +static inline int einj_cxl_available_error_type_show(struct seq_file *m,
+> +						     void *v)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+> +static inline int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+> +static inline int einj_cxl_inject_rch_error(u64 rcrb, u64 type)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+> +static inline bool einj_is_initialized(void) { return false; }
+> +#endif // CONFIG_ACPI_APEI_EINJ
+> +
+> +#endif // CXL_EINJ_H
 
