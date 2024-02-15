@@ -1,58 +1,58 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543A33D6D
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 19:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3489136983
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 19:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708024287; cv=none; b=BL11GTP/6kRlLcO8Ik4Ym5jKhzmirLIFFtg2oBs9AZBJu3daSjtNtEAb+CPJAlP/VW4omvbobdxQEDocw1r6RouInqrxdmOpGyfxuy+4falTZjVbMKkVFUTQ9JVYlzc8QjSUf/EOLtqdzkR69J8n8Zo9LT5bDb/lTyqJxYRoX10=
+	t=1708024917; cv=none; b=KBOLgNxn9W6Dq4tkdXhvMaysXCrIijXulTFtQ32xSz+Dp+klS9UyuJdRuiRkupLfvbKqimXgcCJ4qTCKXqCralig3ERjA3Ua0hpbQzh/lvOwImvb60ZTJNTFkd7gFLbhRWMbubSEsNrYxOQnO85TTpTiELr7lK8CnSXUujWwqMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708024287; c=relaxed/simple;
-	bh=Kd2MPzvQ6eRT1TRiBSrDPcYmCxMTPpugMdgFcD9BlwQ=;
+	s=arc-20240116; t=1708024917; c=relaxed/simple;
+	bh=o3xDCbZLloqxGK5FQFWafvQmMFLzw63Dr7vqdYq3r4Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObhDf9NNZofs5P3CtrwW5Uo66zxWq2Sx0RnloneR6HcMjlqbjZLp+v0ocYqi+NovtWc8lw+UPvXUplB4okpDIRhdoZ6o9ZfGmDdTj30q+4yk0bX9+s6z710s8f3/3yCowqdMnqpjRjaR4N3Nh6MSZthPqQZ+E5c1XdI1xErccWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DBKsIqzY; arc=none smtp.client-ip=209.85.216.48
+	 In-Reply-To:Content-Type; b=ZCwoboL6o+ItordpY/YM8GmFUvtkgJIWkAtsnGiJOtLB7lVmS/rZWlp01sFIsfEfCrPnLppTbIlWspPIMLRgCVvUw2TFUzGRzXkczyfJ35pmnnT8Ofm4FSd57FQyhAr33IQC/YUj4jxvg8bO42ydKlv2BQx7tNwTapk3XaJiiuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=leODmwcJ; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBKsIqzY"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-298fe09f851so660537a91.2
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 11:11:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="leODmwcJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1db5212e2f6so9202955ad.1
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 11:21:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708024285; x=1708629085; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708024915; x=1708629715; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bFlCBzvtwCOVRNl3twRHbZHmzPTvnU4xWu2ISNExgbI=;
-        b=DBKsIqzYxAGfrsfO0jDss7UPaS+zN/dKR7Q/UT8jgkiZvnIXnDggJIfGvBNPCGHJyZ
-         lUqr3YQhqYFpvqa8N83rNnnPbomUBEYku/y2ve/ezY2ZGm7cuYbk19lBP9Qva6IliRI0
-         429Ju4uDK0rJcanF5TNgpxeUNPholFe5JlUc15bJVV6JN9oZ/UYPYnJ3K2F2SY7paNN+
-         VRkb9frZC5anl6o2pfzZ6YM1omEbMCC9NvddekQ/YKyrmJsD5tMLqfaD7an023bSrsvW
-         2djU7qFX2EDTxlKu4AtcXGPx7NELwdN/12Ak4ukS1T/6OrsfFRKRIvxGUgR7hEbawEEk
-         FSSA==
+        bh=UY7ZIf0XDjrnf+8+6JSkNWrbZN8oo6G4+Ro1fQYUmfA=;
+        b=leODmwcJ0kYGEtgBzUzQ/uQ9W2BHJuyXXnI/JaBdMfNMVj6Ml3bGT7v67n3fXkEu6J
+         65RRqhYkJzzJ4P3a4g4gh0FofCotZSdBeptp2ITlOkynGIe9beYg6hKUgAAaxnsosyF6
+         NXGS2+NMD1zgoC5pEQmsfwe9i3EEptf4fGOVUckbcXM1qMID7l6PQGireFHcGuT3KlK9
+         e38zwHGmsTrU8FeF5LG0j+XvpXxk3EKcKTPuHjUOkpX7Qwg/WlM6Dj2l8oiq5oxuDjWK
+         YuWtf6AuqVmOXEsxqIQK4YvXGMREkpmXmNNkMEXfpd4DgB45akxkO4IDFwhXumjjJxtB
+         NF9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708024285; x=1708629085;
+        d=1e100.net; s=20230601; t=1708024915; x=1708629715;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bFlCBzvtwCOVRNl3twRHbZHmzPTvnU4xWu2ISNExgbI=;
-        b=n6XUCKjiaCdw2lcBiaDjdXcKgkS6ooPg4TPHgBQt2dyGWmYH5ISA35l4WKv629UAJ+
-         rsg4s5XfJKEjAgpsDcDKoleKD8x9yETbz6fqSeYiVTUaM5FCptuaZxyg/ClYqBdVeWQp
-         FVCCHGeVccqAn+T5LDXl08uGndxzWMTN+MTHdNhkMg600DPN/zXDYZ6jcqxr39YWjedh
-         +PFT38phf1erhNm0Js3yuDEi72f2EGfdL6fY2w9653oksjXfQ1eBqqgsWmt6uhTC1CW2
-         CvztpusROjCL6COZOYS0j66jFJG2XPFDqVGoxYl5P/H71KmqF5if1RmUtRnTN/h7PRPz
-         an1Q==
-X-Gm-Message-State: AOJu0YwzUUycHTinZEbam3TItv2RrVmOUgbbsktd9DJXLjLaYKc68oS6
-	y48OukICcK0ezlOslUm866o2f8Wi3wAP4UvzCOOOytKJ8eVRbRxhJtYPsnxq/jk=
-X-Google-Smtp-Source: AGHT+IFosHLOzk4ViGv8QCWH+Bff4Yl9/gs4yDNGIeyREt8jgtSy+1qwAXmMbaMwcgP0IxmxKFvbJA==
-X-Received: by 2002:a17:90a:e617:b0:298:a03f:ecf7 with SMTP id j23-20020a17090ae61700b00298a03fecf7mr2987448pjy.38.1708024285145;
-        Thu, 15 Feb 2024 11:11:25 -0800 (PST)
+        bh=UY7ZIf0XDjrnf+8+6JSkNWrbZN8oo6G4+Ro1fQYUmfA=;
+        b=FJIYORwd+24XjcNy0T1VNtjNcVg6F3kRcZyp1VvJAQnpa1gNlLRS0gaUJNBUloEqRN
+         vCfXPxcohIyaAkLosIo8q4sKt3IyxI58DiPZ2X007vug7cuooCKJQppLAS1ozDO34Dzf
+         YumXScYXlUvcVtUdK+S5P0FT9EMehqYRbFoPqPSpGHMm6gQjJ3co/7Z/jMoE3s0wmmDa
+         vgHM1YizKC/jmvQMz2kxdmiU6oQCCIBflztR3lJ3kSvZZ6FXtayS21GkOqMa23iLgJdI
+         t4i4LFXtKthbwkVJ6Vfh9neb1IPend3lkeRo549OJKna0nT+GHsg+HqWwcLao+8IA4zZ
+         qKrg==
+X-Gm-Message-State: AOJu0YxviC0LrCQT1hjQphVEAWG2uEskvesHy6e3xXonVUJ74v/h8Wl+
+	rBRY3dmcDkpwmetBevcXFnaFvih+seH6deQ9tAsPua9g/FHCvaGQOUP8hH7iCJk=
+X-Google-Smtp-Source: AGHT+IFw54TZjgPqy+YK1TuVeDyWvVczSr1maCRfAB1E7aSihqnEwQcuPRhVPo72Li7BLP2bY6iHuA==
+X-Received: by 2002:a17:902:780e:b0:1db:2caa:6c5e with SMTP id p14-20020a170902780e00b001db2caa6c5emr6968338pll.3.1708024914987;
+        Thu, 15 Feb 2024 11:21:54 -0800 (PST)
 Received: from [172.20.1.19] (173-197-098-125.biz.spectrum.com. [173.197.98.125])
-        by smtp.gmail.com with ESMTPSA id se14-20020a17090b518e00b002967bc2c852sm3769428pjb.43.2024.02.15.11.11.23
+        by smtp.gmail.com with ESMTPSA id l14-20020a170903244e00b001d92a2b258esm1613209pls.118.2024.02.15.11.21.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 11:11:24 -0800 (PST)
-Message-ID: <11c4cd99-67e1-4a50-94e6-aee3f0b55230@linaro.org>
-Date: Thu, 15 Feb 2024 09:11:21 -1000
+        Thu, 15 Feb 2024 11:21:54 -0800 (PST)
+Message-ID: <cde1076c-d4bc-4e2f-9319-9eb37d24eef5@linaro.org>
+Date: Thu, 15 Feb 2024 09:21:50 -1000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] accel/tcg: Set can_do_io at at start of lookup_tb_ptr
- helper
+Subject: Re: [PATCH 2/3] target/i386: Enable page walking from MMIO memory
 Content-Language: en-US
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
  Peter Maydell <peter.maydell@linaro.org>,
@@ -72,47 +71,37 @@ To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
  Paolo Bonzini <pbonzini@redhat.com>, Eduardo Habkost <eduardo@habkost.net>
 Cc: linux-cxl@vger.kernel.org
 References: <20240215150133.2088-1-Jonathan.Cameron@huawei.com>
- <20240215150133.2088-2-Jonathan.Cameron@huawei.com>
+ <20240215150133.2088-3-Jonathan.Cameron@huawei.com>
 From: Richard Henderson <richard.henderson@linaro.org>
-In-Reply-To: <20240215150133.2088-2-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240215150133.2088-3-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/15/24 05:01, Jonathan Cameron wrote:
-> From: Peter Maydell <peter.maydell@linaro.org>
-> 
-> Peter posted this in the thread trying to fix x86 TCG handling
-> of page tables in MMIO space (specifically emulated CXL interleaved memory)
-> https://lore.kernel.org/qemu-devel/CAFEAcA_a_AyQ=Epz3_+CheAT8Crsk9mOu894wbNW_FywamkZiw@mail.gmail.com/#t
-> 
-> Peter, are you happy to give your SoB on this one?
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->   accel/tcg/cpu-exec.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/accel/tcg/cpu-exec.c b/accel/tcg/cpu-exec.c
-> index 977576ca14..52239a441f 100644
-> --- a/accel/tcg/cpu-exec.c
-> +++ b/accel/tcg/cpu-exec.c
-> @@ -396,6 +396,14 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
->       uint64_t cs_base;
->       uint32_t flags, cflags;
->   
-> +    /*
-> +     * By definition we've just finished a TB, so I/O is OK.
-> +     * Avoid the possibility of calling cpu_io_recompile() if
-> +     * a page table walk triggered by tb_lookup() calling
-> +     * probe_access_internal() happens to touch an MMIO device.
-> +     * The next TB, if we chain to it, will clear the flag again.
-> +     */
-> +    cpu->neg.can_do_io = true;
+> -static bool ptw_translate(PTETranslate *inout, hwaddr addr)
+> +static bool ptw_translate(PTETranslate *inout, hwaddr addr, uint64_t ra)
 
-Yes, this mirrors what is done in cpu_loop_exit(), and I can see how get_page_addr_code() 
-and the ptw within would require can_do_io set properly.
+You do not need to pass in 'ra' here...
 
-Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+>       flags = probe_access_full(inout->env, addr, 0, MMU_DATA_STORE,
+> -                              inout->ptw_idx, true, &inout->haddr, &full, 0);
+> +                              inout->ptw_idx, true, &inout->haddr, &full, ra);
+
+... because this                                 ^^^^
+indicates a non-fault probe.
+A return address is only required for a faulting probe to raise an exception.
+
+> -static inline uint32_t ptw_ldl(const PTETranslate *in)
+> +static inline uint32_t ptw_ldl(const PTETranslate *in, uint64_t ra)
+>  {
+>      if (likely(in->haddr)) {
+>          return ldl_p(in->haddr);
+>      }
+> -    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, 0);
+> +    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
+>  }
+
+However the loads do require 'ra' for the io_recompile, as you saw from the backtrace.
 
 
 r~
