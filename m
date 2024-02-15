@@ -1,154 +1,248 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F2FEC7
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 01:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707959981; cv=none; b=qG7zMdvVgXbJ+WrIyWCZP/qjOrDdtdGH0DeeQ7nLXmAX65wfzUX/oSM7yfWGz8QZpWlhr43Wpciub4D+d/s4HFeYVdqq9kId905k+BKMSe8erEICPU0zYBjMciA+SHj84aFtGI5qSG5DJxdusU5GircxB7da986UZhFABD0LfdM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707959981; c=relaxed/simple;
-	bh=8etmOUolKQtAINrMulYOSO7ZrAS0mvvYXhM462kQD/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQQYQ7ojLHQSLDYoFhrxKv0p1X8qIPrHiNuT7b0NLmj10ezYmAsHCRD2e3vgwDgBSt70K0se/eZR272cCMpkL+qpXdQqyq9dGBHrQuKsd+mNGxmGmNOXw20KglGNq7vb/G3SNY7KXfzZqIRIIsqTIzVUgMfZhV8yCNxL94wrQ3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hf7HAWp8; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA9F1362;
+	Thu, 15 Feb 2024 02:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707963954; cv=fail; b=Qmlxil+Dv34UrNNKuuPtwwvpb+A38WT/Um/4Rry1YMUcX9Nuy1iG2fUfuT9klxMDnCxqugv/IwrMHIKDaTYr0h8OvzjNAvf/AVf655HbnNt7SYwrHG8ZyJhgtPwLvihuCX2/kIml0VJjhSn4hD3fMpjNzti3NzAWrIrmShwG6PA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707963954; c=relaxed/simple;
+	bh=nAyVceiBfSAOIlP+3EXVWGUsbE9RQQ/VsTYAwt/2y2Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LAdJGw0Y14NHyoT0JJ6VFCr/cEzZV0b/ZZMRv9cLjxc7JEYHtpidyBy2jlzYjwUqS86LI+xBeQnSrqcRguIXcdq5/3PePAzQpIj7/U4j9QgjiStEUm24NYx9cCyMvLNUhpqz5/t+cCftwb0UKQrvq2EednH252s++3wqwcj1kNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=deNgscMo; arc=fail smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hf7HAWp8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="deNgscMo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707959979; x=1739495979;
+  t=1707963952; x=1739499952;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8etmOUolKQtAINrMulYOSO7ZrAS0mvvYXhM462kQD/0=;
-  b=hf7HAWp8YN5EaIp3TFhcgTddH61seaZLR7cs4ivtQAj1H5pz+usePnA4
-   uCyETigyUhBZzl8n+vTAKjjmO+uxCeqNX0tUf15GDA/S+1DKHxAKT48Hx
-   mDNdIWKwBtAkhJ5cloKytn8cBy3GWx2n6qnuNv4/QTl9ZdqjWvaQidcEC
-   V1DclLI/BjChWDht9C3QFg+h6PWlTpyrHFBLb+DSSMOiYBGHqSwN76Pur
-   IRZNnLUlSy1A4j0QtliuLnyC70AA837qcSSHDuun1EjnjL1XruUZdZsUT
-   KFEriX8kgLV3mWzrWV0R+ZEd39FSofDdmOMIKH23hkGEE2fIuS1OV83Nh
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1914562"
+   in-reply-to:mime-version;
+  bh=nAyVceiBfSAOIlP+3EXVWGUsbE9RQQ/VsTYAwt/2y2Y=;
+  b=deNgscMouy6qhRzhuEAucvEBX8/rRs5tOsZjfWdDydGAN8k404XLMfzI
+   u5SiEKPHMaqjxci9WuHeq6bP54ll+f8j68tUjVOTLKEpFYaIgCCc1gtEP
+   x/xQ2hcVejv4DolXKdlNdgmCPz5RUA2QcdJRA64ogdpp/TSAJlS1b+/Sw
+   wM6Jn9herRzs8NFnGgbDwx1pGf2EfFHXaYGbHOEP8BrZGDiRfwcYEuZLb
+   PcfrEKo2X84jo7P5859yA7iPtfkUsodeI6UZm33aD9KL4PcbbJwOA/+D3
+   njxWnf7au6c4h1BpmGabk9C95lm0GEgTfVvPVerUs+9QyO6xQ4H472GjQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="12756185"
 X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="1914562"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 17:19:38 -0800
+   d="scan'208";a="12756185"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 18:25:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="3395181"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 17:19:38 -0800
-Date: Wed, 14 Feb 2024 17:19:36 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	Jonathan.Cameron@huawei.com, dan.j.williams@intel.com
-Subject: Re: [RFC PATCH 3/5] cxl/core: introduce cxl_mem_report_poison()
-Message-ID: <Zc1mqOp9WiV49_Yi@agluck-desk3>
-References: <20240209115417.724638-1-ruansy.fnst@fujitsu.com>
- <20240209115417.724638-6-ruansy.fnst@fujitsu.com>
+   d="scan'208";a="8045931"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Feb 2024 18:25:51 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 14 Feb 2024 18:25:49 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 14 Feb 2024 18:25:49 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 14 Feb 2024 18:25:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QizELwx67Uz4bCigxGXYIUJBeG5U7zEWg9AXcgXqp66lffm9bGXO3E9+ymMCWfi/NEe05n+KLq48Et/SSbKX35l/awSNnV96f/Lox7g+Hejq2JFW75bILVOvqSChaA1t6sr0C8F6VF8lkXt/4yz8iR/cymmbcuLSXW4oOOQ30DqF56DeMV8cU3ALe3+D3AmY6CDosQl86KdjdlM+AksIIvRDQRyL4tXR5PM1Ysr6OvNk/d0/QZ+fG3NYxpZicmw8RXkIjqQNxo4D4qkxc1R3PGjkyV6uMrHIAqIPJjtBZbzQX70hfZTerXGpDXvwYQdicy5HV8GA+qVdyq/+uM7L9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x2oIB91cB5og4Yz7WENT7x8bfWvLhcNQ9YTDm5rUeWM=;
+ b=hrlF4B8ucsWx098ncO1nshhwsnhsHbCpz8orcSSYO67GYSef/WB5Fn/rji6SLZtbq3horROxIHa+kfv3iYH30UcJhbe8mncUxgzU4v86YxBG5KSn2yR4HmSZO0ZckglK7buceltr47T54IZw5nWrynyk6kMoWYr0HQRxdb+Ah5xjVUjsnHgo7vq+13XXGgRIaYs/P8EdAXANyPp68gVbfUfyQvgn5Aul0nvEUJkdbhiTHq+y/ErxBoQYTkpGHWqiyEUN1tgjHKtveGZXMwYQXDaZaA3rsaePLKrHzs9Cr70XVsuy13Uwuqm2Vt2XY3jhUmEXYxZyvBO2208C8YOMIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB7622.namprd11.prod.outlook.com (2603:10b6:8:144::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.27; Thu, 15 Feb
+ 2024 02:25:47 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7270.036; Thu, 15 Feb 2024
+ 02:25:47 +0000
+Date: Wed, 14 Feb 2024 18:25:44 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <rafael@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>
+CC: <dave@stogolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v12 2/3] cxl/core, EINJ: Add EINJ CXL debugfs files and
+ EINJ helper functions
+Message-ID: <65cd76286de08_29b129412@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240214200709.777166-1-Benjamin.Cheatham@amd.com>
+ <20240214200709.777166-3-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240214200709.777166-3-Benjamin.Cheatham@amd.com>
+X-ClientProxiedBy: MW4PR04CA0309.namprd04.prod.outlook.com
+ (2603:10b6:303:82::14) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209115417.724638-6-ruansy.fnst@fujitsu.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7622:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0ea0c9a0-83fc-498f-ef0f-08dc2dcd6b46
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: D9JnljWrwxYFOvC91V2M1Zqh4dcl6mX57awKRw2qlhOcb0KZGxJiIG/kajkIXlYDLuk7S2zeMjpX35z/v9siFTNwZTH3LfsMjcNzXUG1U4/tiJ//auXSALuCeccQwJkVq2PVPUOy4j1I6aDXH4HgWCQX5e/SX6PlXuYGi7hNwB6K24v3QHew03UvHMJVirezdcvFTXvz7uqxxmg+rH21GK8pEcnqy7IZrkpcf36ivTFol0w2JfU96a3AUS6FsXH22237IybZY9yQmFJ2UW1b4gRyEWzY3+xfIDBp9MldHl6OlEOiUvgdK4Wx2v3nKyp52b1lVIhWCNyJwyAMuGI1p4xZWt6yuOFpdSwmcOwlCDFtTHDgNHWOIQQJoVhqgTcjohyWjvkhCVZ3REH/ErW3D7SJ+Q6pAKmcnLhpS9Vxrhn7MG0b2eYxCS5Qm3mJ+2oaL+BOyVU4i0TdWo3U/jzFG/ZB30LKmFkbfsi3Vls+EJX6uw5CKotm25TUVwrIfhHwNiaeOds73WJBZAhPohx1R63NyDParGjiJAdg93E/a4pIregFbtPrwwPuSO1fkhZj
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(366004)(396003)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(66556008)(26005)(41300700001)(82960400001)(38100700002)(8676002)(8936002)(66946007)(5660300002)(2906002)(4326008)(6486002)(6506007)(66476007)(9686003)(6512007)(478600001)(316002)(6666004)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?P472nIxkEwvqjwkj1E37b8OwfTh+/Ih1Q6rSdY6h+yoylddwtZErUVaLyF1r?=
+ =?us-ascii?Q?oT5hO0ZbRGf6ltzssYMGc2IiKotk6NMGMSBwMg+TX8uOqXGeMRvP53V8juhK?=
+ =?us-ascii?Q?7NAvj5W5M2hoekBeTwFkrFdrdVdCkEAZZN5mEgOzl5vjHHY5bUe1/vzcboix?=
+ =?us-ascii?Q?Tvt/kB2owgyW6lNsYZWyEqQW4k1+kBPbElDD714HXv4XPYvIWNX2wt5cyLxQ?=
+ =?us-ascii?Q?7Lq+JVy1RVVxqcFiOuJDCpA8un1e3JU6dmRq2C9t5WX0cPw/O7b1se5EUFPV?=
+ =?us-ascii?Q?ROW4Fs9v9aCnEDL7ypPBZgXr9ABBG/zWJYNZfztyQj3nwdoT4bcs5uCJa4pO?=
+ =?us-ascii?Q?z0UAEG1GQfeMWHtdhWl5xyfK0TEHfppZ8VWYeAywjpd9BIqqpqiBaYdFy4/i?=
+ =?us-ascii?Q?9lVc+2fcfxwbNW+XDROK84AK9mwfBI3OQuLoIukG2jcMWStHzEA6EhXE9BVp?=
+ =?us-ascii?Q?6cUN5nIK7yjPX/PeNOx/BkdFjB/7eIYoiADui906LV8pgW+Sihcfc1mfro1M?=
+ =?us-ascii?Q?syLXaMKJ52XkHY7c9waYOL+gEw9DsUd6Jbttx6uZ1WAVg2PAsxeeHAT31+ZU?=
+ =?us-ascii?Q?q8ruvwOTeOtIFwQvH96LbYhfoU41kdkCalJepg04CiDqvS4EcGiHOly2Zx1k?=
+ =?us-ascii?Q?fC7KZzlOouoCVEhsqJrPBfVLf5yFurznDGFHJmhKOv/NnFArMLNCjVvR5yFl?=
+ =?us-ascii?Q?I6xJpLHZShtXLMAVBvctRwiEiKYCLz+7UeEcyi+VsIRLDgS+PKYC4wJJeXhg?=
+ =?us-ascii?Q?2YRykvsO4CNVLzwiaFzhfc49Umpch9m2CzWc9nxNsmg0BZuedkTxoCJ3b+z6?=
+ =?us-ascii?Q?y7r3hh01GP8CFo2GOD7AmQ4Fs/nabfzsrfajfghvgcWRqZCZMSmT9IMcnAq7?=
+ =?us-ascii?Q?vTOKyKDmj2kw0/1ADJbRA0xw4Xq1+M4aGpT7fdQgZ9+bobJDgah3EdL/fnM0?=
+ =?us-ascii?Q?d7na6zfUM7wTcvV81xjIpCXPX/FE/SWW0qn7xY2nx4N8NMN3T8AJXJxougjL?=
+ =?us-ascii?Q?7bIUTmGuM59m0yV1v5RV0iL0PPE/xRkxYrYXrEQTdw/hgV399GGJGmVmP5WU?=
+ =?us-ascii?Q?+39sQUOhMcxrT4nhWdz8CeBKm64Lybqt+wnhjLXUBTW/7Ya0LXVWZpVNk7aL?=
+ =?us-ascii?Q?rI3ArJcJna+mq+xrztWCZXNEzT7R0/mdFXA3dLMNTBHgvst9EUzZMZjA6m6y?=
+ =?us-ascii?Q?NWRY/XLAfULjpd/BpqVkZUHjkq1yvJf//VVJQEfGZW9dxoIY/+GMLK117Y52?=
+ =?us-ascii?Q?UKX/V6A8mvcvXpJORLlgppM/v0TXJxtnEDTJsr3xaaEO2CpsCxV1YopF4AXZ?=
+ =?us-ascii?Q?Y8iRj+RwBREDfYkDmaqEFugMLKi+qYemQCVHhUEZa8Al71C/xsJlHSnRECU6?=
+ =?us-ascii?Q?RXhys2+ZN3OsVgFdqCJpDRNrEBPhAya2ah1rHw75mjEXe6WR6YAVWratcYb8?=
+ =?us-ascii?Q?T1UsdIyXXBpm6527lX9DMWRF4WFilJKp7NC5BSICUvbPB8ywuMGqwIU0wrZB?=
+ =?us-ascii?Q?wReJS7/rBPK8dni/WQj80uwrRwLLUNKunkouTPn1pxPZkIqBzd1k+xmowJdM?=
+ =?us-ascii?Q?2pmYmUfTvOjydRMqKY4X4GZN/+co/J8glnJjDlMFTRLV9Htl6JkEt6qFIMpU?=
+ =?us-ascii?Q?Xg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ea0c9a0-83fc-498f-ef0f-08dc2dcd6b46
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 02:25:47.3387
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lNxOBdHKpJnFWgb4mZvTOSeSWLnkDtYnobMe1MsTfiHDkaBXXwzqN4Xj+H0xzjfFphD0KmdipQKmHauJSC7vJ0mABRPgDaVn++yXRpZvbkk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7622
+X-OriginatorOrg: intel.com
 
-On Fri, Feb 09, 2024 at 07:54:15PM +0800, Shiyang Ruan wrote:
-> If poison is detected(reported from cxl memdev), OS should be notified to
-> handle it.  Introduce this function:
->   1. translate DPA to HPA;
->   2. construct a MCE instance; (TODO: more details need to be filled)
->   3. log it into MCE event queue;
+Ben Cheatham wrote:
+> Implement CXL helper functions in the EINJ module for getting/injecting
+> available CXL protocol error types and export them to sysfs under
+> kernel/debug/cxl.
 > 
-> After that, MCE mechanism can walk over its notifier chain to execute
-> specific handlers.
-
-This looks like a useful proof of concept patch to pass errors to all
-the existing logging systems (console, mcelog, rasdaemon, EDAC). But
-it's a bare minimum (just passing the address and dropping any other
-interesting information about the error). I think we need something
-more advanced that covers more CXL error types.
-
-> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-> ---
->  arch/x86/kernel/cpu/mce/core.c |  1 +
->  drivers/cxl/core/mbox.c        | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
+> The kernel/debug/cxl/einj_types file will print the available CXL
+> protocol errors in the same format as the available_error_types
+> file provided by the EINJ module. The
+> kernel/debug/cxl/$dport_dev/einj_inject is functionally the same as the
+> error_type and error_inject files provided by the EINJ module, i.e.:
+> writing an error type into $dport_dev/einj_inject will inject said error
+> type into the CXL dport represented by $dport_dev.
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index bc39252bc54f..a64c0aceb7e0 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -131,6 +131,7 @@ void mce_setup(struct mce *m)
->  	m->ppin = cpu_data(m->extcpu).ppin;
->  	m->microcode = boot_cpu_data.microcode;
->  }
-> +EXPORT_SYMBOL_GPL(mce_setup);
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+[..]
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67998dbd1d46..d1fc3ce31fbb 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -157,4 +157,16 @@ config CXL_PMU
+>  	  monitoring units and provide standard perf based interfaces.
 >  
->  DEFINE_PER_CPU(struct mce, injectm);
->  EXPORT_PER_CPU_SYMBOL_GPL(injectm);
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 27166a411705..f9b6f50fbe80 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -4,6 +4,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/ktime.h>
->  #include <linux/mutex.h>
-> +#include <asm/mce.h>
->  #include <asm/unaligned.h>
->  #include <cxlpci.h>
->  #include <cxlmem.h>
-> @@ -1290,6 +1291,38 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
->  
-> +static void cxl_mem_report_poison(struct cxl_memdev *cxlmd,
-> +				  struct cxl_poison_record *poison)
+>  	  If unsure say 'm'.
+> +
+> +config CXL_EINJ
+> +	bool "CXL Error INJection Support"
+> +	default ACPI_APEI_EINJ
+> +	depends on ACPI_APEI_EINJ = CXL_BUS
+
+So I do not see CONFIG_CXL_EINJ used anywhere, not in a Makefile, not in
+a header file. My expectation is that if this variable is not set then
+no symbols from einj.ko are consumed by cxl_core.ko.
+
+> +	help
+> +	  Support for CXL protocol Error INJection through debugfs/cxl.
+> +	  Availability and which errors are supported is dependent on
+> +	  the host platform. Look to ACPI v6.5 section 18.6.4 and kernel
+> +	  EINJ documentation for more information.
+> +
+> +	  If unsure say 'n'
+>  endif
+[..]
+> diff --git a/include/linux/einj-cxl.h b/include/linux/einj-cxl.h
+> new file mode 100644
+> index 000000000000..92c0e2e37ad9
+> --- /dev/null
+> +++ b/include/linux/einj-cxl.h
+> @@ -0,0 +1,40 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * CXL protocol Error INJection support.
+> + *
+> + * Copyright (c) 2023 Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Ben Cheatham <benjamin.cheatham@amd.com>
+> + */
+> +#ifndef CXL_EINJ_H
+> +#define CXL_EINJ_H
+> +
+> +#include <linux/pci.h>
+> +
+> +#if IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
+
+Per above this needs to be IS_ENABLED(CONFIG_CXL_EINJ), otherwise what's
+the point of the config symbol?
+
+> +int einj_cxl_available_error_type_show(struct seq_file *m, void *v);
+> +int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type);
+> +int einj_cxl_inject_rch_error(u64 rcrb, u64 type);
+> +bool einj_is_initialized(void);
+> +#else // !IS_ENABLED(CONFIG_ACPI_APEI_EINJ)
+> +static inline int einj_cxl_available_error_type_show(struct seq_file *m,
+> +						     void *v)
 > +{
-> +	struct mce m;
-> +	u64 dpa = le64_to_cpu(poison->address) & CXL_POISON_START_MASK;
-> +	u64 len = le64_to_cpu(poison->length), i;
-> +	phys_addr_t phys_addr = cxl_memdev_dpa_to_hpa(cxlmd, dpa);
-> +
-> +	if (phys_addr)
-> +		return;
-> +
-> +	/*
-> +	 * Initialize struct mce.  Call preempt_disable() to avoid
-> +	 * "BUG: using smp_processor_id() in preemptible" for now, not sure
-> +	 * if this is a correct way.
-> +	 */
-> +	preempt_disable();
-> +	mce_setup(&m);
-> +	preempt_enable();
-> +
-> +	m.bank = -1;
-> +	/* Fake a memory read error with unknown channel */
-> +	m.status = MCI_STATUS_VAL | MCI_STATUS_EN | MCI_STATUS_ADDRV |
-> +		   MCI_STATUS_MISCV | 0x9f;
-> +	m.misc = (MCI_MISC_ADDR_PHYS << 6);
-> +
-> +	for (i = 0; i < len; i++) {
-> +		m.addr = phys_addr++;
-> +		mce_log(&m);
-
-This loop looks wrong. What values do you expect for "len" (a.k.a.
-poison->length)? Creating one log for each byte in the range will
-be very noisy!
-
-> +	}
+> +	return -ENXIO;
 > +}
 > +
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr)
->  {
+> +static inline int einj_cxl_inject_error(struct pci_dev *dport_dev, u64 type)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+> +static inline int einj_cxl_inject_rch_error(u64 rcrb, u64 type)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+> +static inline bool einj_is_initialized(void) { return false; }
+> +#endif // CONFIG_ACPI_APEI_EINJ
+> +
+> +#endif // CXL_EINJ_H
 > -- 
 > 2.34.1
+> 
+> 
 
--Tony
+
