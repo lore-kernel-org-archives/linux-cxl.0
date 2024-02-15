@@ -1,118 +1,148 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F9A1386AE
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 19:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708025524; cv=none; b=F7ZBAVAZnoJ1zJk5pA/KABiyaIKsMN/TDeufDAbsonHAvBFNIQS553Bf5qar3XJCT7AwZrQrqiDx53Gnfpw5Xn8BWN3ztwR1FZy+lj12POMOImLP9AGp4WArtmXVa2a8EjPB87r5b/EL7f35QHW+gcONAZzidKYubD82t1mRc8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708025524; c=relaxed/simple;
-	bh=mXxb8DS3o6Up5LwTuj+5zzUAJwedZeEjMZRRF9GsQzY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KVKILaVBOYt7In9tiGuzLoojfME9gYLVkCo0X7j5JqGvF+nWufQTlD4iUrJAllOLC7P6br5VTiB+t2kk+G85GW5CUOcGgt913gUiu+ILYlrMIglzPVTn2NbolxmmiR0UCmHAKqJTYrbVtm3MKrXPn+brlqoKBvavrBFU8b8+iBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bBF9XmJ7; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF97613A266;
+	Thu, 15 Feb 2024 19:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708026065; cv=fail; b=gcaLAcVfU/ZKdnqhD76WJUsu5yjxf844BBIl0AAYM/aINg194OxaejYdTFmX18HFuFmZgGEhnmewzl267LUECuDB3FkJSRaUjJskfU7QLQxRPkaGoe8IXjQszMCdp8erPubX2SVh0bbbTcSncx/tXcIHiNVLO4mM9OqL4OpTfRU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708026065; c=relaxed/simple;
+	bh=ErFeK0ZQ7Xij3015VnXJdx02/oazNb+gl/rOzDHh8rg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=begYLNkZ383F/SmOkWoMnYkU2fNuHOOA9dRC0enNn+XifEaXVgPiGTDsCUSrm2gh1uGRZ21y2Z6CWN6DNTAJgZH1ldZ0egcx1MT1TTTtmu5XrbFoawc2LlelhIi6HYAya9HMSopjaVZY4L80+KYT3J9VR+nSEw3Got/JfZ1Ni6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AwVSK7Ir; arc=fail smtp.client-ip=40.107.94.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bBF9XmJ7"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e0cc8d740cso1057924b3a.3
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 11:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708025522; x=1708630322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J74btSBxazv6J2r+dLJAGzTw0cISGopBJUtERAZfl2s=;
-        b=bBF9XmJ7NZcRo3lcVOUGEvu7Sz1cQrsXx+kF0WyF9K4LDRWGU+BuORUF2VIeF4NsR7
-         qedHxKUhMV8yVfmmRCQLPprUvX3t+jTU6Mrm3R4q1YyVWpbeUgVOLNLJIXZCkzKpMTHS
-         yqHIe+rU9myBkGdpt3vwVXrCq0PpcOi/ziknC9H1gAyPTMZ+NvKrgbYGqn+a1vXJNn4n
-         BeA9Pv67L3zsqSSY+Z5PWGt80cZONL1d+NdWHGvH5jMrb0PM94HvitHiEmEdL2oUQXY7
-         GJT3C9ZLLnXGNHBCPKXS8I7GAcLeH8wAWQ2uYobXwN4L4txj+LzeTJ+MtMaeUyG91zrp
-         Sp8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708025522; x=1708630322;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J74btSBxazv6J2r+dLJAGzTw0cISGopBJUtERAZfl2s=;
-        b=qPfTYjkdTSaez7mNRFqG50ydPXlHU+Cuh6/GE+dwio1qIj38nvasLEF3PLyZF9EJX2
-         me3MBNuLIztXNqBaob0H1g2qAfF5Xbeq6qC4oTF3wn228lV3hzWyCXsEGitVh+h127mO
-         aTOzT9W1yDt8+x84RlhEDuxc23SaE0LkulN0B3Cvld0h+swyDqw0iEx5XOZ5jJabARgK
-         mgTRsizOoGuk6pKkC+JeR/7HthICgh+cUQUEemkdLXeBhaQwKcPU1wxJcWPQCJAVHAKt
-         NvFLGk9244qkN0TsKzVPRGExLT6YEZM1gmtg2xfUO4mOQ3wiHx/4n2fdZbFhBft7AkYq
-         wrnQ==
-X-Gm-Message-State: AOJu0Yykv2xT2q8IA9e5BvkBnVkxgWjYgurHn8h4H012gknMVAFQraC7
-	p15fDJ96lLqNWesJ+k5+s2x/mggq3UFUj/NkyELIdKhYuIqSCQHS+hGAkIV+BLs=
-X-Google-Smtp-Source: AGHT+IFccsrWtc7EyQAUASxzlMRnbGMmXkZtPTQwZgipLpC3c7rV0pdb+m2i/RFsiyndMlD46m08ig==
-X-Received: by 2002:a05:6a00:2344:b0:6e1:1144:b49d with SMTP id j4-20020a056a00234400b006e11144b49dmr3267868pfj.10.1708025521846;
-        Thu, 15 Feb 2024 11:32:01 -0800 (PST)
-Received: from [172.20.1.19] (173-197-098-125.biz.spectrum.com. [173.197.98.125])
-        by smtp.gmail.com with ESMTPSA id ka19-20020a056a00939300b006e050c8f22bsm1679320pfb.207.2024.02.15.11.31.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 11:32:01 -0800 (PST)
-Message-ID: <8d7469f6-9858-41ba-8056-c6a2de15c422@linaro.org>
-Date: Thu, 15 Feb 2024 09:31:58 -1000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AwVSK7Ir"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JuoQNaimh2KUMmIP1c9ubH9QTIM2mH546jRG5qVh8vmFthpJp80pFKXrx+K2pJ9DTdr5QhRDpjkep95pqI6Ye6/sR/vnbIzQOog84IYtXYqZtH+hAgsEVoqG6i5SzQcBTrzRQLWKEbT15Yrcp64g3R4nQHO8eHHlMjZ2YfV2kOyLG7xzDiziXKGDObFuyqftK0lr2qVNuZT3fBd2dKuY6/pM7WjsrrI/wIyjfI+1YYlOTGTGHDOmKDiObPESsI1qFF6Ju6b+uAFP2Vt3zcf1xGgW2Lyw4SLXxy3Cin1atgA+nlf0RlMeB9ER4hwikgG8g0LA5QERVrWeYWvEhDVSjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JuqahSwnlRv6kCMUVZESVsUa1kQ7D7dRMWauWlFkE9Q=;
+ b=kul135O/gAbsUoEkC2RR4qGj3o7ET/A3fad790wKXFqAqa7pSXPURcljA1NcjROFAIjJIYjfWK5XtPaSsvTnf0jWRqX8NsE8X26hyhBO4UAfpaEtud8dGfV24FaFfN74b0YzFi902NoPu+qj4moK5jMvpyEq2BYrZbWn1f9cq7SwG/4BY5ANXDXYVexmrW/WpqFlU66EZ8fG0fun9NrJU4WmfQJsNq1l/0KN1oCXgmsIpqeC1k4e5JGkCN1MMcLoAToNBl4L1A7S68J3w+xzaa7/8vWb2ZqVZOR3WOSvhLbq+S6Xm/6+0qWpdc5/i+kqBd66bvU7XFZ4nlQgvfNj1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JuqahSwnlRv6kCMUVZESVsUa1kQ7D7dRMWauWlFkE9Q=;
+ b=AwVSK7IrGmLkE+BYuJH0aUAzTVYzLfJubhki5O7Tatli87RY613C5VbbZP5dSEmmDlNjO5XLWQloBScR05J9v2cDBk4znwPdKYgGMv1b3fY9hyCvXcqur1AijJvXzJYX9mpUcv9DvOAKeziQomAsPKt4xgd8wbE5aj4q8Xrf8eQ=
+Received: from BN9PR03CA0192.namprd03.prod.outlook.com (2603:10b6:408:f9::17)
+ by SA3PR12MB8024.namprd12.prod.outlook.com (2603:10b6:806:312::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.25; Thu, 15 Feb
+ 2024 19:41:02 +0000
+Received: from BN1PEPF0000468D.namprd05.prod.outlook.com
+ (2603:10b6:408:f9:cafe::29) by BN9PR03CA0192.outlook.office365.com
+ (2603:10b6:408:f9::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26 via Frontend
+ Transport; Thu, 15 Feb 2024 19:41:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF0000468D.mail.protection.outlook.com (10.167.243.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Thu, 15 Feb 2024 19:41:01 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 13:41:01 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>,
+	<benjamin.cheatham@amd.com>
+Subject: [RFC PATCH 0/6] Implement initial CXL Timeout & Isolation support
+Date: Thu, 15 Feb 2024 13:40:42 -0600
+Message-ID: <20240215194048.141411-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] target/i386: Enable page walking from MMIO memory
-Content-Language: en-US
-From: Richard Henderson <richard.henderson@linaro.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
- Peter Maydell <peter.maydell@linaro.org>,
- Gregory Price <gregory.price@memverge.com>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Sajjan Rao <sajjanr@gmail.com>,
- Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Eduardo Habkost <eduardo@habkost.net>
-Cc: linux-cxl@vger.kernel.org
-References: <20240215150133.2088-1-Jonathan.Cameron@huawei.com>
- <20240215150133.2088-3-Jonathan.Cameron@huawei.com>
- <cde1076c-d4bc-4e2f-9319-9eb37d24eef5@linaro.org>
-In-Reply-To: <cde1076c-d4bc-4e2f-9319-9eb37d24eef5@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000468D:EE_|SA3PR12MB8024:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85bc5288-6558-4a85-e6f6-08dc2e5e0ab2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	DDmtU4TcxXs5vp+REklP/D1YvkBeq6nts8B0jelVe69ObU10i9duaTGa+qb4GbW92ZNFkEDpz7PnNAgHT4bmRgwgZpcfFXOSG9X3ZeT9vqChXt/DZYWIag74AxNmVJ8BAr73Mm6Ukds19w91FTjNMRw3+z3mO2TP9cm01nUB9zBmVavQcWyJmLwmztzg2u3mQtBcF/TlAaPU8e8hBVDAlM8apUQBMqC9vjk+UNTCeW8nHVRfSJVJodDMsXi5jznUi3/g0l/vFzfw6Ce05bAxxU/kwmJTjl1cq97WKJx6fSloXgPGpoM5nI/y1atPVLcvEvr5FDWRhDb2/L8FGcRqt6DlGE+HzKt04qJ3wZezDwjTydzUBSNVQc4jAOAdRQY+j9Jt1iZbpC1HlewGxOqHZN6wxeVWjQNrvAzxfeOpt654BUPcJbEgabylLCpgrq10rs86OwDCX89NwRdyvZdix5wj5K59Q1nxCLdXChzG0/xgdJl0sRkWxo4iuR+tKEVW8Cg3ee2P8VxPdHmavvnWy9H++dO+lHKxfu1xKJ0y9K1cZOOD0uM9Tk9HoRcrz0TJ44KIFyXEIz1Inve0G5qOBvmm3FlNLk7rMbnKsFklKMPBfIVW6AV6JJrvw3SdwNuHEb1koP82xB2e60GE+bZVAUXPOkWeAMggBLqs597rmgU=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(346002)(376002)(230922051799003)(186009)(82310400011)(36860700004)(1800799012)(64100799003)(451199024)(46966006)(40470700004)(26005)(336012)(41300700001)(426003)(2616005)(1076003)(2906002)(4326008)(478600001)(70206006)(8676002)(8936002)(70586007)(7416002)(5660300002)(54906003)(6666004)(83380400001)(316002)(7696005)(16526019)(356005)(86362001)(82740400003)(36756003)(81166007)(110136005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 19:41:01.9818
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85bc5288-6558-4a85-e6f6-08dc2e5e0ab2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF0000468D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8024
 
-On 2/15/24 09:21, Richard Henderson wrote:
-> On 2/15/24 05:01, Jonathan Cameron wrote:
->> -static bool ptw_translate(PTETranslate *inout, hwaddr addr)
->> +static bool ptw_translate(PTETranslate *inout, hwaddr addr, uint64_t ra)
-> 
-> You do not need to pass in 'ra' here...
-> 
->>       flags = probe_access_full(inout->env, addr, 0, MMU_DATA_STORE,
->> -                              inout->ptw_idx, true, &inout->haddr, &full, 0);
->> +                              inout->ptw_idx, true, &inout->haddr, &full, ra);
-> 
-> ... because this                                 ^^^^
-> indicates a non-fault probe.
-> A return address is only required for a faulting probe to raise an exception.
+Implement initial support for CXL.mem Timeout & Isolation (CXL 3.0
+12.3.2). This series implements support for CXL.mem enabling and
+programming CXL.mem transaction timeout, CXL.mem error isolation,
+and error isolation interrupts for CXL-enabled PCIe root ports that
+implement the CXL Timeout & Isolation capability.
 
-Bah.  We can always recurse and hit the load case too.  So:
+I am operating under the assumption that recovery from error isolation
+will be more involved than just resetting the port and turning off
+isolation, so that flow is not implemented here. There is also no
+support for CXL.cache, but I plan to eventually implement both.
 
-Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+The series also introduces a PCIe port bus driver dependency on the CXL
+core. I expect to be able to remove that when when my team submits
+patches for a future rework of the PCIe port bus driver.
 
+I have done some testing using QEMU by adding the isolation registers
+and a hacked-up QMP command to test the interrupt flow, but I *DID NOT*
+implement the actual isolation feature and the subsequent device
+behavior. I'd be willing to share these changes (and my config) if
+anyone is interested in testing this.
 
-r~
+Any thoughts/comments would be greatly appreciated!
 
-> 
->> -static inline uint32_t ptw_ldl(const PTETranslate *in)
->> +static inline uint32_t ptw_ldl(const PTETranslate *in, uint64_t ra)
->>  {
->>      if (likely(in->haddr)) {
->>          return ldl_p(in->haddr);
->>      }
->> -    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, 0);
->> +    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
->>  }
-> 
-> However the loads do require 'ra' for the io_recompile, as you saw from the backtrace.
-> 
-> 
-> r~
+Ben Cheatham (6):
+  cxl/core: Add CXL Timeout & Isolation capability parsing
+  pcie/cxl_timeout: Add CXL Timeout & Isolation service driver
+  pcie/cxl_timeout: Add CXL.mem timeout range programming
+  pcie/cxl_timeout: Add CXL.mem error isolation support
+  pcie/portdrv: Add CXL MSI/-X allocation
+  pcie/cxl_timeout: Add CXL.mem Timeout & Isolation interrupt support
+
+ drivers/cxl/core/pci.c         |   5 +
+ drivers/cxl/core/port.c        |  80 +++++
+ drivers/cxl/core/region.c      |   9 +
+ drivers/cxl/core/regs.c        |   7 +
+ drivers/cxl/cxl.h              |  37 +++
+ drivers/cxl/cxlpci.h           |   9 +
+ drivers/pci/pcie/Kconfig       |  10 +
+ drivers/pci/pcie/Makefile      |   1 +
+ drivers/pci/pcie/cxl_timeout.c | 592 +++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv.c     |  36 +-
+ drivers/pci/pcie/portdrv.h     |  17 +-
+ 11 files changed, 799 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/pci/pcie/cxl_timeout.c
+
+-- 
+2.34.1
 
