@@ -1,95 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363F8132480
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Feb 2024 16:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B0713472A;
+	Thu, 15 Feb 2024 16:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013991; cv=none; b=QvxWgUG+6UDZ4qjmn8R6278KwWdGdeb91+SPh/sUbq8BZag8Mm7D0letOcCtujBENOQqrzlh5T9Ys+v5POTqu73Msxkq5n82e/pkqHjY6g+1KRT2wKYiC5CjLwZCdSzxp5lUr9Fm9ffDWhRzEjwoCLHc7MQtrdA9dNqjkgeMKV0=
+	t=1708014064; cv=none; b=mv0fGkRtxRH0smed98+ZnsjJh+UHTDVhYoV1gNdJwDSV3ov6uGOM5mtagUHcfiXYPW7dOvDzr5svM+UTAA/MJp5oxMVSWFQOp0lTWAbN1/hO0bwa2H6xAYdPh207RqU/XNyvIpiZL1hAs5O7++IbKN+Z5up6bfgybklh5++8yFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013991; c=relaxed/simple;
-	bh=IV1EL3vQ3L9uK6D6z/j1Zyn2KP8hiTbI3mpmzwFAGeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k+SOVXoCuMGHZEhIT1oQsBilX6OOS7mu/TtJlOuCNrMuBf61Gi7cVU/5/sCJT12n3fE3HkBfZBauKRBV8SW7BrirTzbDl4aBiesw7Es3jOGjtO3W3Hm2VFtPzt1W673a0pwX75yTh9QjweMh0QD5WnUVUmBcy0oOinPEIYt5Kd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CNBk4lkl; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CNBk4lkl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708013989; x=1739549989;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IV1EL3vQ3L9uK6D6z/j1Zyn2KP8hiTbI3mpmzwFAGeg=;
-  b=CNBk4lklvXa3CZp3WSaFzHVoNwY4YXQU6ovDihTey1jTnVw1zgYPjyB3
-   X09gEFUTXQFCi6qZjy0BghCvB0TNWOGY8B5SOm0pqoJEZUHQBAoFlws8y
-   kYIEVDp2bf591DCMQE6iZOhvgNkGC66RP80hZ2WFGeocAy0YQpPEdNmwT
-   d29yb3A8bXxdZA4FzfKVbiQ/0BVu9S2/150cVp8T1/qNE4WFylZ6qKy20
-   2bP8uOLPGopXRlAs+rn7Cp87AsZMZDfBiZHtwMBUXFNDaNM+MMi+htJhH
-   PeHVxBQONOlmoWPHt8RbwU6x9vi0DLc5WkcfKRtU9qu1KBDBsUhMqf2ch
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19624986"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="19624986"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:18:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="826432095"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="826432095"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.87]) ([10.246.113.87])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:18:56 -0800
-Message-ID: <922b74ff-84db-49f8-9653-7e81a7fa0ccc@intel.com>
-Date: Thu, 15 Feb 2024 09:18:55 -0700
+	s=arc-20240116; t=1708014064; c=relaxed/simple;
+	bh=xfrVHtHYfwvVy+QioVK9q5U7iRtvHWc4YRt9liqCBDw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NlxuA8JvyZ1d5ebCykGmuZB25Lq9B6PUqtTktPWw6/5AamnbCoNnT5kkS3pan7s3ixabs5q1IASNO2vbEeOFM8Db7+r6pFwgQq5jh+VramW6kXC2HLEe6K5uavK3FiIuvRMy8qAnaFmjL4b0PmDXbKE04aMq/keoJYMXXtS8i38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbKwB3KqCz6K8pm;
+	Fri, 16 Feb 2024 00:17:30 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 54B18140682;
+	Fri, 16 Feb 2024 00:20:58 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 16:20:57 +0000
+Date: Thu, 15 Feb 2024 16:20:56 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+	<dave@stgolabs.net>, <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 01/12] ACPI: HMAT: Remove register of memory node for
+ generic target
+Message-ID: <20240215162056.0000656e@Huawei.com>
+In-Reply-To: <20240206222951.1833098-2-dave.jiang@intel.com>
+References: <20240206222951.1833098-1-dave.jiang@intel.com>
+	<20240206222951.1833098-2-dave.jiang@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/4] cxl: Fix memdev qos_class sysfs attributes
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net
-References: <20240206190431.1810289-1-dave.jiang@intel.com>
- <20240215161709.000053c0@Huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240215161709.000053c0@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 6 Feb 2024 15:28:29 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
+> For generic targets, there's no reason to call
+> register_memory_node_under_compute_node() with the access levels that are
+> only visible to HMAT handling code. Only update the attributes and rename
+> hmat_register_generic_target_initiators() to hmat_update_generic_target().
 
-On 2/15/24 9:17 AM, Jonathan Cameron wrote:
-> On Tue, 6 Feb 2024 12:03:36 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
+What goes wrong as a result of this bug?
+
+Looks like a cleanup at first glance.
+
+With some more description if it is a fix.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > 
->> v5:
->> - Only update the perf sysfs groups (Dan)
->> - Remove unnecessary type cast (Jonathan)
->>
->> v4:
->> - Fix resetting of dpa_perf (Wonjae)
->> - Change cxl_qos_match() to return bool. (Jonathan)
->> - Remove unnecessary void * casting. (Jonathan)
->> - Replace open code with sysfs_update_groups() helper. (Jonathan)
->>
->> This series provides fixes to the memdev qos_class sysfs attributes. The
->> current code emits duplicate sysfs attribute under the same directory and
->> the ram qos_class clobbers the pmem qos_class. Move the attributes under
->> static definitions and allow the attributes to show up under ram and pmem
->> directory individually.
->>
->> The series also adds cxl_test support in order to allow CXL CLI add a unit
->> test for qos_class attributes.
+> Fixes: a3a3e341f169 ("acpi: numa: Add setting of generic port system locality attributes")
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/numa/hmat.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> I see Dan has this queued up already but fwiw (excluding patch 4 because
-> I've not looked at the cxl-test stuff for a while).
-> 
-> For patches 1-3
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index d6b85f0f6082..a26e7793ec4e 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -770,12 +770,12 @@ static void __hmat_register_target_initiators(struct memory_target *target,
+>  	}
+>  }
+>  
+> -static void hmat_register_generic_target_initiators(struct memory_target *target)
+> +static void hmat_update_generic_target(struct memory_target *target)
+>  {
+>  	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
+>  
+> -	__hmat_register_target_initiators(target, p_nodes,
+> -					  NODE_ACCESS_CLASS_GENPORT_SINK);
+> +	hmat_update_target_attrs(target, p_nodes,
+> +				 NODE_ACCESS_CLASS_GENPORT_SINK);
+>  }
+>  
+>  static void hmat_register_target_initiators(struct memory_target *target)
+> @@ -835,7 +835,7 @@ static void hmat_register_target(struct memory_target *target)
+>  	 */
+>  	mutex_lock(&target_lock);
+>  	if (*(u16 *)target->gen_port_device_handle) {
+> -		hmat_register_generic_target_initiators(target);
+> +		hmat_update_generic_target(target);
+>  		target->registered = true;
+>  	}
+>  	mutex_unlock(&target_lock);
 
-Thanks Jonathan!
