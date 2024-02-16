@@ -1,221 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB58145328;
-	Fri, 16 Feb 2024 21:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708118942; cv=none; b=pAJAEs04pE9kaTO884m/oPlTr3SJC/iebekFyLe11O0ieAZjph1xCryg8a4QVmn2eSZa63Xgc/wy7Ys3w2nrGW+HFPICspGU5QZ3R6jx2HyKgqcY/8ThoO/i4yPZXIWaoS5LBXPvU0qTkdUvZaHpxuhVEy5vNAQ9fslPMmL/t5A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708118942; c=relaxed/simple;
-	bh=z5aMfbXyqV84KC8Z/t4aLEv9U3SbaKx+axyNiFZiCXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3772oFhv+WTVk7DiKhAFvSgnbCceSgkB6Gvb7zVGEe+0cR+1B0VdlgTn0I5xYTuEV3kDoI7DgrdvVKZvWMkEJucwKumGZzhBwi5RIB2TD7Fx1VgzrI6saM/8tB14JKAOOje8aIYjNv0pLuyGHaPu84KGttFFkP0ygJzxyi4GBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=brGsL+M/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E7413957E;
+	Fri, 16 Feb 2024 22:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708121093; cv=fail; b=BDqZRz6koLj+TYEn0RcxHk1ItvmMAF2uNOeyUdFwO69YFiwlV2qsjK0Zh/zjAKfxq5RLqVvhBplxJ2PaJFgGz997AKfKKI8cWnFmhI8IEqceOnsw0Aapr4pNMj6y5OeYXS+mECTm5Mpb39BMlkidskOCV/H+os96jNuVVcwcgYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708121093; c=relaxed/simple;
+	bh=SaB/QIj1TL6qNQ8QeIpBICnceq4s/Xj5rJj3JyS9nWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Oa/9UnYakIkfnxc/0r6X/Jwk5ZvZm9h39nXc5YK51NmxTLt8i5nRjVHAIEZwXpLV2W5pASGlAPi2O9m4LWskhcnPkITEn9+cmjloTmINZZP7Uvb672nAtl4Y5EiZQMjP62uU9ykK/+gXI1NmK8hWsi4fhmcJyrGu2MYz9IBqLzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5PAlfKaX; arc=fail smtp.client-ip=40.107.223.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brGsL+M/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708118940; x=1739654940;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=z5aMfbXyqV84KC8Z/t4aLEv9U3SbaKx+axyNiFZiCXk=;
-  b=brGsL+M/JSRKT+gs3hn/ZMFVTO1+Sj3vWfjZioN0F6Yvwh5bbKGLgqli
-   cd9evD7aENTtSsO2zeyy68TbRyxD37phZoX2zqcLLbRL6jhhTSjMv2E9b
-   kqEkZk/kko+N+N0uFk/Tcb40mdjnCwc0/d/ss32vU7j+Qp1CnYoAcfcjk
-   kdPuldoVuK+1pW35/c6t4aOkE7OLtJGYACelhoiRCkMnyh35i+jP8Kqgy
-   R3pK6ynrqrtP1dvbliFHCgk/UZNbeFXO+dBE5TUf8obHFjWFuweXGIrbG
-   KQXD/zpjhW96911E2BfSW8aHYv7MxbfVQm3Q80jqBUhWwXHt5GEzfxfmn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="2130562"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="2130562"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 13:28:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="34987573"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.39]) ([10.246.112.39])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 13:28:58 -0800
-Message-ID: <12006877-65d2-4599-b931-823e2458a69f@intel.com>
-Date: Fri, 16 Feb 2024 14:28:57 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5PAlfKaX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TyNCpzOfOxCiCB7MIJ18v96xAAXofOEDYzZh/r3C1WTXN/6YDAIajh8n18HVeV+Id3nmYaX90hPQLlkHPk8YhvXj8tfCh2IUrRPG91gg+Tb8sQAAAEkaSNsBbllRT3V5ytMJGf2VCsRmT0/70t4zYkZw+rxUkpcNvuAqucTahFMtdW9KxC0+fJxC+uY2LKfh2QLRK3dlL3eeqjTFK+luGv2mbe8DLITvbCiFMzPudP9n/PoQM4llIYAqGEwczhD2iDa35GjXV/91L5Zf/+KfHSZAaxsV4JFjACtGkaD0G0hLcXCtpIFRDco6NGj75yeM1YTiBJksd2bmvBjFWvAgPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AzYL2mJBFzvsdrQJYlZhujwY+VlBn+16mbc87TR2MIE=;
+ b=Ve2aaGpKvCIjD5RRXcrjGnyqhQldqJHpo0QNmm0qqndua0jR1HqfktuM22evYFE3sDKezf/NIFfaW0N2Cs/XD8xNgHupPKJ2CnWNQFvOFq/o7DJOHkTX/lRToJxpDo2oHTOquO5nMQgOIF+1cnjhlfY2tNr5jPBFcqUDV8VFF/nS+VT6BzlPQJ1uqLMN7/bIVKI1Y5qQsLPZUiXcjD+mnw7WVD1HjHflZ20g6DJiScD3rHLhHFZ7+bSAC+8dYJmGYq9aIjOvLG56ommm4Xtk6AEB2wJMSin8asyt6CUo+aWAsQ+P+LoPhRZczB1b+f63zoWU2MhujY/pJ8WuX8/N/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AzYL2mJBFzvsdrQJYlZhujwY+VlBn+16mbc87TR2MIE=;
+ b=5PAlfKaXlI9oGcIkS6YJ8oSKyRqlTm/u9yNtmAuP7b50QxxfZaZAQB0Sry4hDA1//QjKHnJ5HMqLBIGxhnw0HyLvcaAQaH6bospx9gt1Be4jlbd/+ZFkbtOE2fjmPhs2vVKCsGS+c5PSyPaejXI7c3dCFN5FFf+ZHEuVRTZLRaI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by BL1PR12MB5063.namprd12.prod.outlook.com (2603:10b6:208:31a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.18; Fri, 16 Feb
+ 2024 22:04:49 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7316.012; Fri, 16 Feb 2024
+ 22:04:49 +0000
+Date: Fri, 16 Feb 2024 23:04:44 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/pci: Fix disabling memory if DVSEC CXL Range does
+ not match a CFMWS window
+Message-ID: <Zc_b_F5TSRSBwrNZ@rric.localdomain>
+References: <20240216160113.407141-1-rrichter@amd.com>
+ <65cfa34b741ea_5c762946@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <Zc-k1TDk1hfvakQS@rric.localdomain>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc-k1TDk1hfvakQS@rric.localdomain>
+X-ClientProxiedBy: FR0P281CA0143.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:96::17) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/12] cxl: Split out combine_coordinates() for common
- shared usage
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, dave@stgolabs.net, rafael@kernel.org,
- gregkh@linuxfoundation.org
-References: <20240206222951.1833098-1-dave.jiang@intel.com>
- <20240206222951.1833098-6-dave.jiang@intel.com>
- <20240215165129.00001e01@Huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240215165129.00001e01@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|BL1PR12MB5063:EE_
+X-MS-Office365-Filtering-Correlation-Id: e85f1118-8295-4d27-248c-08dc2f3b4b17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ldxfTPBrPKdDvCF0uq3vXzlJAbcKq+PyH8iYfNuSv5vlQgJtWJIQ/tTmuM6O/EPMTJhM4i59Q6zil1V7ruSe4Z9jqb5ikwvT8NC2t4gfAaI1iwhwLY9VYQnSjj466vXKJb2bwQOmkVgGNxDDDahdCAUv70j6iVwQbj7EukdpgsN3jEk3QcBGy36u3YZatnd8UiwCJ68d0TIbXYUqstJ2ZZO7HsLc/nd9YMMqPr9/ayKIBGPUx+F+aZPTsSjQnRTlRtHd8ePjxMd6UL0heFvOYGKHFQ8hTj3AKdWt+6DX+lMqqiwHqmRtRqb+F+s9cq1chJUB3dT5sLKwhb2wy/gwbr6jJpXz0uCGF0La3ml20ynorbNsxbH016zQTEmJnIrRs6hsWJtzokV2eFFFCsdaAkc11A1oZqtZC31LQsKmYIlPMVvY7JZgWzi7R6exsavNJxr7P9wgHlYnUDhhJCEekk7DPeTOKuwBpx3ufKh+qTbUmaxnT6ylVPY9JkZYHFskHDdkzj5cysUyixCrYZu0OfryTHl9kE//2OvRzOvnLdA7YkosyjJeJ1WtgBDamrrz
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(396003)(136003)(376002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(9686003)(478600001)(6486002)(6512007)(41300700001)(8676002)(26005)(2906002)(8936002)(4326008)(5660300002)(6506007)(53546011)(83380400001)(54906003)(66556008)(6916009)(6666004)(316002)(66476007)(66946007)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Nn1zcgPQvhdjkNnG8Y3BpLcmxtpUn45DGyi+HbvPvK18bgV3Yqq8UYPNfWyP?=
+ =?us-ascii?Q?pzu3X9OT2MGG2bykx4+IYVbeX2NaYAnOOzDtsH06WfulhCvu+tKCJJjTpDU3?=
+ =?us-ascii?Q?klcLLEogMlezOHI0zqYevQVCbIcLFPKfbX4ir076w5qFpZMQC4U/NQjnUwRM?=
+ =?us-ascii?Q?9qwMgOfpZetAyjKDT0+QeRwMVugrkzMHru4l5CwfYbuXFUsW8MR7OCO9w1vF?=
+ =?us-ascii?Q?9mxrqhQ2Yio1pmPfNL/mQTHLprnqKPuGZuPzSGVgiJsQQInkQybQHp9y8BJG?=
+ =?us-ascii?Q?PmB0CQSZMwOI1NHnlXzVtQbVoAncXYEX+UOY4axhch/lVoLd3bAdqpiWsVHK?=
+ =?us-ascii?Q?HzQotkss3H7DpAOCUJ7Pet0IS/JTNzB1Fpt0IMt4psLa4jrj41wwLzs2wBdf?=
+ =?us-ascii?Q?oErZLg7DTa+JYEoXE1P70Tp46C/F4yPh9p5irx0F0cl5pAK1DNWY9xdgjn3b?=
+ =?us-ascii?Q?AXs4QFwgdFYIyzLWqvIJ50WZDA+YifsgHbCmtlTBNqSqVqXGq02Y6k/nM99K?=
+ =?us-ascii?Q?QEtCIUJPyanwRGUBu3fFxfzmwkVY9x2ErcL5JN8F1+9xXwBLpL5CDHWTXpai?=
+ =?us-ascii?Q?xcYOMK9VWHKZ3+zYD8bAr1WMqzwodz5/E4vK5cj5OTPnM8wKoKwA1LCBmSYV?=
+ =?us-ascii?Q?DNtepQxZU0ewNju/tFci198hR67VKXrQgesapl94Z9F9Cj1FqUtURdaeyEXW?=
+ =?us-ascii?Q?8OwZj1/LhDSipdLl1hw5jxqWQfMzmxJdaV2xhs6lplw/IZIvSFwZR/1iVDcY?=
+ =?us-ascii?Q?Lst3VjgCr5lC137onn5IjCxDaqVKpKSeEKxS3wIMCM73XUvXWOOte9wnlMhx?=
+ =?us-ascii?Q?Lok7d7TXTN9L3cKn74YAocGxKdcWXETNeA99h9UiKmbgG9flVu2Liwyk0GEQ?=
+ =?us-ascii?Q?POoRSYIfDKf+hPOqryODatpydxlZT2xhIlcEvcMrHVD8hPyG8uS5sBZvgEyY?=
+ =?us-ascii?Q?cCfw0YloGsBv//UaXFdp9tmjg+uPHgOEFtEtLGtmOKKZe/95nyYaKigIj+3j?=
+ =?us-ascii?Q?hTeC0CVVhnX3zz2guKjST0+mR+VrgI1dmV2fogM/1l0Szj8I0eJWkqiS40O8?=
+ =?us-ascii?Q?V8gjNuXDGE+Swr0AnN555YYBlUJ3znrYD5dc4xIdMgVhsimo6PRZJX4A83Qa?=
+ =?us-ascii?Q?iz6ecsrHQu+goDBrHjt+Wxo5j0NF4N6ybWx8l/xWq3/hyXnpQx0QJwOQTaJX?=
+ =?us-ascii?Q?ItPSuE8mLMz6rGeMke0FpQHAkQildt7jKtNUzMBF0HNPxsKYfqKbhQqNdkex?=
+ =?us-ascii?Q?zCB7fAgLpnAVPEWDStpsD78lWfl6NtHaxk3WRBikLJ7msY2fKRFCRoOy7RW2?=
+ =?us-ascii?Q?ljIhnfDoYmxvEXoktGT3HnKoM3IDE17hnEzGSwM/PolIyASMIt9FKYe+PTx9?=
+ =?us-ascii?Q?mQ7566NPcbJmHpg3CGAb37a2aEFrtvLDzA2LuvKxoTCHI4+/Vs+aRKCMgP1o?=
+ =?us-ascii?Q?X+lbrdrNIOJaSCnHS7zbn/h7Vnah7ebslm3bpXFIwo6LgU+YHOZm8kmL9GEG?=
+ =?us-ascii?Q?+jQq1RA1NhoJusc8fP7x8iUG5wNU2oDbpyj9M5RxnosM1y0RwgcmIccDChNF?=
+ =?us-ascii?Q?KBuTpUOPN+sNB1BZ6ASPXT56CVFnnvamFtHX5EEx?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e85f1118-8295-4d27-248c-08dc2f3b4b17
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 22:04:49.0868
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uvbCiQfMCf3SWqT4QBbd2eRBb3gZLeKDDE4c1Jrqthmhvd7Ytd1NBrpfsJYfLLxWwC0VuoxABVDN1zzJuxKt2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5063
 
+On 16.02.24 19:09:30, Robert Richter wrote:
+> On 16.02.24 10:02:51, Dan Williams wrote:
+> > Robert Richter wrote:
+> > > The Linux CXL subsystem is built on the assumption that HPA == SPA.
+> > > That is, the host physical address (HPA) the HDM decoder registers are
+> > > programmed with are system physical addresses (SPA).
+> > > 
+> > > During HDM decoder setup, the DVSEC CXL range registers (cxl-3.1,
+> > > 8.1.3.8) are checked if the memory is enabled and the CXL range is in
+> > > a HPA window that is described in a CFMWS structure of the CXL host
+> > > bridge (cxl-3.1, 9.18.1.3).
+> > > 
+> > > Now, if the HPA is not an SPA, the CXL range does not match a CFMWS
+> > > window and the CXL memory range will be disabled then. The HDM decoder
+> > > stops working which causes system memory being disabled and further a
+> > > system hang during HDM decoder initialization, typically when a CXL
+> > > enabled kernel boots.
+> > > 
+> > > Prevent a system hang and do not disable the HDM decoder if the
+> > > decoder's CXL range is not found in a CFMWS window.
+> > > 
+> > > Note the change only fixes a hardware hang, but does not implement
+> > > HPA/SPA translation. Support for this can be added in a follow on
+> > > patch series.
+> > > 
 
+Fixes: 9de321e93c3b ("cxl/pci: Refactor cxl_hdm_decode_init()")
+Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating DVSEC Ranges")
+Cc: stable@vger.kernel.org
 
-On 2/15/24 9:51 AM, Jonathan Cameron wrote:
-> On Tue, 6 Feb 2024 15:28:33 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Refactor the common code of combining coordinates in order to reduce code.
->> Create a new function cxl_cooordinates_combine() it combine two 'struct
->> access_coordinate'.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v5:
->> - Fix comment header (0-day)
->> - Remove EXPORT_SYMBOL (Dan)
->> ---
->>  drivers/cxl/core/cdat.c | 32 +++++++++++++++++++++++---------
->>  drivers/cxl/core/port.c | 18 ++----------------
->>  drivers/cxl/cxl.h       |  4 ++++
->>  3 files changed, 29 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> index 08fd0baea7a0..096320390ad9 100644
->> --- a/drivers/cxl/core/cdat.c
->> +++ b/drivers/cxl/core/cdat.c
->> @@ -185,15 +185,7 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
->>  	xa_for_each(dsmas_xa, index, dent) {
->>  		int qos_class;
->>  
->> -		dent->coord.read_latency = dent->coord.read_latency +
->> -					   c.read_latency;
->> -		dent->coord.write_latency = dent->coord.write_latency +
->> -					    c.write_latency;
->> -		dent->coord.read_bandwidth = min_t(int, c.read_bandwidth,
->> -						   dent->coord.read_bandwidth);
->> -		dent->coord.write_bandwidth = min_t(int, c.write_bandwidth,
->> -						    dent->coord.write_bandwidth);
->> -
->> +		cxl_coordinates_combine(&dent->coord, &dent->coord, &c);
->>  		dent->entries = 1;
->>  		rc = cxl_root->ops->qos_class(cxl_root, &dent->coord, 1,
->>  					      &qos_class);
->> @@ -484,4 +476,26 @@ void cxl_switch_parse_cdat(struct cxl_port *port)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_switch_parse_cdat, CXL);
->>  
->> +/**
->> + * cxl_coordinates_combine - Combine the two input coordinates
->> + *
->> + * @out: Output coordinate of c1 and c2 combined
->> + * @c1: first coordinate, to be written to
-> 
-> When you say to be written to, what do you mean?
-> Left over from adding out?
+Sorry, I forgot those tags, please add.
 
-Yeah I'm not sure why it says that. Seems like half a sentence I left dangling. Going to change the block to below:
+Thanks,
 
-/**
- * cxl_coordinates_combine - Combine the two input coordinates
- *
- * @out: Output coordinate of c1 and c2 combined
- * @c1: input coordinates
- * @c2: input coordinates
- */
+-Robert
 
-
-> 
-> No obvious reason for this to have any idea that c1 and c2 are
-> ordered.  
-> 
->> + * @c2: second coordinate
->> + */
->> +void cxl_coordinates_combine(struct access_coordinate *out,
->> +			     struct access_coordinate *c1,
->> +			     struct access_coordinate *c2)
->> +{
->> +		if (c2->write_bandwidth)
->> +			out->write_bandwidth = min(c1->write_bandwidth,
->> +						   c2->write_bandwidth);
-> 
-> Why check c2->write_bandwidth?
-> Code already does it, but I'm not sure why + I don't think you should
-> treat c1 and c2 differently.
-
-I think I need to check both and make sure that neither are 0 since we are taking the min of the two and both need to be valid.
-
-> 
->> +		out->write_latency = c1->write_latency + c2->write_latency;
->> +
->> +		if (c2->read_bandwidth)
->> +			out->read_bandwidth = min(c1->read_bandwidth,
->> +						  c2->read_bandwidth);
->> +		out->read_latency = c1->read_latency + c2->read_latency;
->> +}
->> +
->>  MODULE_IMPORT_NS(CXL);
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 612bf7e1e847..af9458b2678c 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -2096,20 +2096,6 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
->>  
->> -static void combine_coordinates(struct access_coordinate *c1,
->> -				struct access_coordinate *c2)
->> -{
->> -		if (c2->write_bandwidth)
->> -			c1->write_bandwidth = min(c1->write_bandwidth,
->> -						  c2->write_bandwidth);
->> -		c1->write_latency += c2->write_latency;
->> -
->> -		if (c2->read_bandwidth)
->> -			c1->read_bandwidth = min(c1->read_bandwidth,
->> -						 c2->read_bandwidth);
->> -		c1->read_latency += c2->read_latency;
->> -}
->> -
->>  /**
->>   * cxl_endpoint_get_perf_coordinates - Retrieve performance numbers stored in dports
->>   *				   of CXL path
->> @@ -2143,7 +2129,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  	 * nothing to gather.
->>  	 */
->>  	while (iter && !is_cxl_root(to_cxl_port(iter->dev.parent))) {
->> -		combine_coordinates(&c, &dport->sw_coord);
->> +		cxl_coordinates_combine(&c, &c, &dport->sw_coord);
->>  		c.write_latency += dport->link_latency;
->>  		c.read_latency += dport->link_latency;
->>  
->> @@ -2152,7 +2138,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  	}
->>  
->>  	/* Augment with the generic port (host bridge) perf data */
->> -	combine_coordinates(&c, &dport->hb_coord[ACCESS_COORDINATE_LOCAL]);
->> +	cxl_coordinates_combine(&c, &c, &dport->hb_coord[ACCESS_COORDINATE_LOCAL]);
->>  
->>  	/* Get the calculated PCI paths bandwidth */
->>  	pdev = to_pci_dev(port->uport_dev->parent);
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index fe7448f2745e..fab2da4b1f04 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -882,6 +882,10 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  
->>  void cxl_memdev_update_perf(struct cxl_memdev *cxlmd);
->>  
->> +void cxl_coordinates_combine(struct access_coordinate *out,
->> +			     struct access_coordinate *c1,
->> +			     struct access_coordinate *c2);
->> +
->>  /*
->>   * Unit test builds overrides this to __weak, find the 'strong' version
->>   * of these symbols in tools/testing/cxl/.
-> 
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > ---
+> > >  drivers/cxl/core/pci.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
