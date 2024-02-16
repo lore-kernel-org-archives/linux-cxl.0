@@ -1,127 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2073.outbound.protection.outlook.com [40.107.243.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F62C12BF03
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Feb 2024 15:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708097629; cv=none; b=sH5TscrerQq6DHKS9hty2fjANt8UVdIjzqWE6CdDMfgqiMCSvOPQFEZ61q8UZQRUCMeWQ8AVWDsR6hWuu7zLoVfEk3eLtHoA5HcY07BElt6Zg2QDHusmmH9LJOYUnez+Wyu6GapOLXf43ZZ7o8wn+FvRU/2d06VMYszOxAhEzb4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708097629; c=relaxed/simple;
-	bh=OS40/PbHR+rczIRsxqevje9QpOpm9PuYW2JbIxtKokI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UNBPzl4d3U2UoCPrLVRRr6n3MN85GSU/S5z+aoe2HMfhvKhruvl9X0qNHty5b6F0iKV37lOq+v4HhMl5AyiQly0PnwPH0GT42yrPpY54QkSFFrwV1MKlsJpaN0TJWn7m8cY2L+VxztTfPZqtoJCQDfLX3srbuA9/rchjFpw5+xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EaQjz4Q1; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C5E433D3;
+	Fri, 16 Feb 2024 15:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708099158; cv=fail; b=DguwAXNo64oed14RU0vSOsfCB3nKoSKTgukpey56hZE2kWrFiogpsvd1VKWM8pRVZ+wAF3EFUQBSgqfju2tsmzzsx9zysV8dlaXfA4qxGVCozd8KNcLPJhuC2s6SYhQYkL/CqVL4cyVWPGpPYUn8KVa2xuiRwMkUNpUFldlGSC8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708099158; c=relaxed/simple;
+	bh=BwyY5CpgsHll42uAEgD3pbh+76IMM+pnb1zKmpmJJA4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XJkfcEi34CuwNfCcIkTrnJbmZAqOHL1eA8Q1ySPEmavDQO6BFyo5DXsZAgQ2XNDoD5E5VMXn8wucIZ9xHaUkavY8DXSxB57aj3IGRlsupimYjc8o3LTCBFqOVK0AtL2A1Dhx3fTW4Wl0qRvlp23TICyRecI34sVha3+fpuaXgCY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SQRkS0/a; arc=fail smtp.client-ip=40.107.243.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EaQjz4Q1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708097627; x=1739633627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OS40/PbHR+rczIRsxqevje9QpOpm9PuYW2JbIxtKokI=;
-  b=EaQjz4Q1hLcaaOlI/3N9dWFSvqBiyh2dVTCIjthAdG50KxRpIwHHXJSD
-   esZs3g65i+L8C32CyohWPoYtohPgalYGPZF4mzGliF5sipjXZEkhpJ2Gn
-   W3mFyXUO8gs7FJxgWbm0hnYvIyTDg0HLC7xeQ6Mtpx/GJcB0HKVKHyiZ4
-   6waPGGyKIAtvBqawd0WExVAQOcdZPGLgweKUAYrFnX+8mXN9ukyTRR+DG
-   n0X/TXkqzabZHieqNJWdCzM/hzMQh4pBLJFWwjvrQHN8G9j2B9Q8jrhuQ
-   ci9QCa6up29NH2yNBIXIcmHSR2bgAc8brAG3qD8dNwPY23wuYSO+GsJq4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="2634925"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="2634925"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:33:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="8502676"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.4]) ([10.246.112.4])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:33:46 -0800
-Message-ID: <9191ea3c-3bb4-448c-a8b1-f03dff21e7de@intel.com>
-Date: Fri, 16 Feb 2024 08:33:44 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SQRkS0/a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AM+U8P3N/XjrNmUr2GwC4DgsZsenBzQsCANwSBsCtWQQnQJ3azFmWnsp/Za2JIxcRYhJnPTaX45QeJd3Xn/kaiDJb4Jhi/JGAzrkT4ixT+QRFhgGSJM59XBnsSfXFvhkQd0nj2vXSQNkzJpvSE1gKgwrd/73Xn881HlL2/7Z1GPO7Ntv3eUtkysGTKaaNDYkAnVOz78LtQby1XrRHSaWOF/e9tfhNZfUflKai7RymjLfaDdG2+m4E9sQ909T/qycqV+23KcEYJmCQOEF19TO3BpswzVcqiPJ0Eus6M7PYimigN5i9Xf4FCk3hFlQ2Luft7BVxrpHGIMJmeAQpPO19w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Isr7T+k8kM7lUwLO0OQkG4NrSLa+LGoP/hVDJWPG5Yw=;
+ b=JrAiIj4XCaLHA+9+WQtE2TY+XWexipwrvAUkNwSBCxKzZEH8x/lOd++wV61dk1sn5sSL7L5XXXqICfF6ejPU3DV8GUVxEoAlKM/+f+bq2sc9MYRGPNAnw52U+hPUgQkmnmK12126kdlorKw22k0588h6uuuXnB5mj6iAfqfUosg+UlCfJACTe6ueY50RKincxjeBCaMdXw61Rta2LeroTsWeB2dJaJqzQuUq8WteR30D6g9NMXkzkH4zB/2N4Y6wY9tnu7jfbVyiYv0pBFg37fMKQYwMjJ1QhPjO2RwCWbGD14TjmCuzjTB2dCTR0oSwldjFlfotm+9OVlRHyjx+mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Isr7T+k8kM7lUwLO0OQkG4NrSLa+LGoP/hVDJWPG5Yw=;
+ b=SQRkS0/aWxLLxW6sUq1aM7+y5MgY1qbZBDvXXWlJ7gDXR+Kg8yPOK9FPBSdNlnG2WCzNyAwDILVXWRHVnl5zIPO3FxFQRkZP3zpYTw8qn3rHCf9yp+8c4obL9QqvqvoaD/XLVRkx+Uuaoy/o/bQbcrfF1l/f4JNDXNQKsBXTy+E=
+Received: from SA1P222CA0035.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::10)
+ by CH0PR12MB5217.namprd12.prod.outlook.com (2603:10b6:610:d0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.15; Fri, 16 Feb
+ 2024 15:59:14 +0000
+Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
+ (2603:10b6:806:2d0:cafe::2d) by SA1P222CA0035.outlook.office365.com
+ (2603:10b6:806:2d0::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39 via Frontend
+ Transport; Fri, 16 Feb 2024 15:59:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Fri, 16 Feb 2024 15:59:14 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 16 Feb
+ 2024 09:59:11 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Robert Richter
+	<rrichter@amd.com>
+Subject: [PATCH v4 0/3] CDAT updates and fixes
+Date: Fri, 16 Feb 2024 16:58:41 +0100
+Message-ID: <20240216155844.406996-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH] cxl/event_trace: parse arrays separately from
- strings
-Content-Language: en-US
-To: alison.schofield@intel.com, Vishal Verma <vishal.l.verma@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>
-References: <20240216060610.1951127-1-alison.schofield@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240216060610.1951127-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|CH0PR12MB5217:EE_
+X-MS-Office365-Filtering-Correlation-Id: f85a94df-1125-4789-6af9-08dc2f0838e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+gBRJse/uPC6nvZBc23brqRpuGker4BqwH5e2clm13Wi7JA6IYZVrDpUIZWdnmLXuBLXAhCH6N3IS3ftFiVuHHPrE7Kc4zeJWGTQihwLZuDsYXsfnQ5ve9/sZzkF9x64K0y8FRSo4kDsPOExcxBmcHghPtZ3Vhw0Qi3a5uyrRoAp9ZEvkWTIdehIHURGZ6ErBGHhh8rsUzQH/n9B/vtEOuOEJOrmYHM8tiy8ILMKixzL6D8xKFnIm8v0HLp199XVZp7cNXjzVi5LycdoMGvEbgBv/xyp0Uc6L7/tBT4CO1U79m5/Q2smXAqTMwDBpRMC1pD1LAo9xRAUs6pNQTUNt8u1kktRqdvILQ+Oy/7n+YcpHQqq/n01E3obUZtM7FpT8awnqZAhw/ib9zUSR5C/q0sjVmNfxPgBifAa0lsO4wz1TjGR0MgQqSuNg37VTIjnct7zyXwoc4h3ak0Jok00nnHr5p5anpRIWdPSyE0BU2HlS6xbGVzQmVbD91d01agGxazTXwTvqdzjLqR8g2u8rIQmqjkK7drZOntTXih0xrP4jR0FUtlSDpKbJjCoHk/uF44Twe/Mlml9uQ4ZWlmeh3dJ9k/yW3zuFFTjac42QLBi3p5wGBsYTSDKU24vV8ZwJlIRIJC5c0ymj30fHq6CdZ+f0dMiZo1rJOrMFxr+QSI=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(39860400002)(136003)(396003)(230922051799003)(451199024)(1800799012)(82310400011)(36860700004)(64100799003)(186009)(40470700004)(46966006)(8936002)(7416002)(4326008)(8676002)(5660300002)(70586007)(70206006)(2906002)(15650500001)(83380400001)(26005)(336012)(16526019)(426003)(81166007)(356005)(82740400003)(36756003)(316002)(54906003)(6666004)(110136005)(1076003)(2616005)(41300700001)(478600001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 15:59:14.0076
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f85a94df-1125-4789-6af9-08dc2f0838e7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5217
+
+Some CDAT related updates and fixes. Patch #3 does not depend on the
+previous patches and could be applied separately.
+
+Changelog:
+
+v4 (Jonathan's review comments):
+ * updated the description of cdat_doe_rsp and DOE CDAT entries
+ * changed cast in cxl_cdat_read_table() to (union cdat_data *)
+ * modified checks around CDAT entry length
+ * added a check to warn about a malformed CDAT table length
+
+v3 (Jonathan's review comments):
+ * added Reviewed-by tags
+ * made entry_handle unsigned
+ * updated patch decriptions for #2 and #3
+ * removed zero-sized arrays, use variable size arrays as data buffer,
+   introduced union cdat_data for parsing CDAT structs
+
+v2:
+ * rebased onto cxl/next (e16bf7e015d7)
+ * renamed struct cdat_doe to struct cdat_doe_rsp and also local pointers
+   accordingly to buf/rsp.
+ * added comment that the CDAT table has space for a DOE header at the
+   beginning
+ * use DECLARE_FLEX_ARRAY() macro in struct cdat_doe_rsp
+ * moved the rename to doe_mb variable into separate patch
+ * added Reviewed-by tag
+ * added patch: lib/firmware_table: Provide buffer length argument to cdat_table_parse()
+
+Robert Richter (3):
+  cxl/pci: Rename DOE mailbox handle to doe_mb
+  cxl/pci: Get rid of pointer arithmetic reading CDAT table
+  lib/firmware_table: Provide buffer length argument to
+    cdat_table_parse()
+
+ drivers/acpi/tables.c    |  2 +-
+ drivers/cxl/core/cdat.c  |  6 +--
+ drivers/cxl/core/pci.c   | 99 ++++++++++++++++++++++------------------
+ drivers/cxl/cxlpci.h     | 24 ++++++++++
+ include/linux/fw_table.h |  4 +-
+ lib/fw_table.c           | 15 ++++--
+ 6 files changed, 96 insertions(+), 54 deletions(-)
 
 
+base-commit: 6be99530c92c6b8ff7a01903edc42393575ad63b
+-- 
+2.39.2
 
-On 2/15/24 11:06 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> Arrays are being parsed as strings based on a flag that seems like
-> it would be the differentiator, ARRAY and STRING, but it is not.
-> 
-> libtraceevent sets the flags for arrays and strings like this:
-> array:  TEP_FIELD_IS_[ARRAY | STRING]
-> string: TEP_FIELD_IS_[ARRAY | STRING | DYNAMIC]
-> 
-> Use TEP_FIELD_IS_DYNAMIC to discover the field type, otherwise arrays
-> get parsed as strings and 'cxl monitor' returns gobbledygook in the
-> array type fields.
-> 
-> This fixes the "data" field of cxl_generic_events and the "uuid" field
-> of cxl_poison.
-> 
-> Before:
-> {"system":"cxl","event":"cxl_generic_event","timestamp":3469041387470,"memdev":"mem0","host":"cxl_mem.0","log":0,"hdr_uuid":"ba5eba11-abcd-efeb-a55a-a55aa5a55aa5","serial":0,"hdr_flags":8,"hdr_handle":1,"hdr_related_handle":42422,"hdr_timestamp":0,"hdr_length":128,"hdr_maint_op_class":0,"data":"Þ­¾ï"}
-> 
-> After:
-> {"system":"cxl","event":"cxl_generic_event","timestamp":312851657810,"memdev":"mem0","host":"cxl_mem.0","log":0,"hdr_uuid":"ba5eba11-abcd-efeb-a55a-a55aa5a55aa5","serial":0,"hdr_flags":8,"hdr_handle":1,"hdr_related_handle":42422,"hdr_timestamp":0,"hdr_length":128,"hdr_maint_op_class":0,"data":[222,173,190,239,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
-> 
-> Before:
-> {"system":"cxl","event":"cxl_poison","timestamp":3292418311609,"memdev":"mem1","host":"cxl_mem.1","serial":1,"trace_type":2,"region":"region5","overflow_ts":0,"hpa":1035355557888,"dpa":1073741824,"dpa_length":64,"uuid":"�Fe�c�CI�����2�]","source":0,"flags":0}
-> 
-> After:
-> {"system":"cxl","event":"cxl_poison","timestamp":94600531271,"memdev":"mem1","host":"cxl_mem.1","serial":1,"trace_type":2,"region":"region5","overflow_ts":0,"hpa":1035355557888,"dpa":1073741824,"dpa_length":64,"uuid":[139,200,184,22,236,103,76,121,157,243,47,110,243,11,158,62],"source":0,"flags":0}
-> 
-> That cxl_poison uuid format can be further improved by using the trace
-> type (__field_struct uuid_t) in the CXL kernel driver. The parser will
-> automatically pick up that new type, as illustrated in the "hdr_uuid"
-> of cxl_generic_media event trace above.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  cxl/event_trace.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/cxl/event_trace.c b/cxl/event_trace.c
-> index db8cc85f0b6f..1b5aa09de8b2 100644
-> --- a/cxl/event_trace.c
-> +++ b/cxl/event_trace.c
-> @@ -109,7 +109,13 @@ static int cxl_event_to_json(struct tep_event *event, struct tep_record *record,
->  		struct tep_format_field *f = fields[i];
->  		int len;
->  
-> -		if (f->flags & TEP_FIELD_IS_STRING) {
-> +		/*
-> +		 * libtraceevent differentiates arrays and strings like this:
-> +		 * array:  TEP_FIELD_IS_[ARRAY | STRING]
-> +		 * string: TEP_FIELD_IS_[ARRAY | STRING | DYNAMIC]
-> +		 */
-> +		if ((f->flags & TEP_FIELD_IS_STRING) &&
-> +		    ((f->flags & TEP_FIELD_IS_DYNAMIC))) {
->  			char *str;
->  
->  			str = tep_get_field_raw(NULL, event, f->name, record, &len, 0);
-> 
-> base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
