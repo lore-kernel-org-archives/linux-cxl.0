@@ -1,125 +1,172 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A92E652;
-	Mon, 19 Feb 2024 12:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192892E642;
+	Mon, 19 Feb 2024 12:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346805; cv=none; b=MMkQ8vlZKJ+uK4X/7sTOtXqXabIriuBmil1Ui7WZ1zonDYm12Xz8HTL33L98t0R6BLJVkm/rALljFGzLH46ZT/QtkFFmMl00kUoEFa81n28ljFNiQXZhSyMXbKp2HJHDHUxEIEMA12RYbO3vcp5LaCxZvCkw7V/a362Xyc0HsaY=
+	t=1708347067; cv=none; b=Kd0/wYHRUabZe/vQCtkehlgNb8SlO+TnI5YaaIxDkvje/fFEMvm4NhzgNnDacl+HlElL15MhU5ZyvXxF3LYB9dF2nPuMwfy7oYfMdRzGhz+Y54BnHwqDS3Qv80bgUGe5DYWeZCsXgJ0ftQMxjQMQA2mRSrkF4IjC1RxkJTvEy+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346805; c=relaxed/simple;
-	bh=v2tFgPh2DhrAkjf4HRKnQQBDaVpePm8Gb5zL34pd/k4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C8z0kQueI743SWtoyg1kCP3rYCZo6z2xzC4HLrDRTYvxBy4cwWsyMfkM1v2DaxBqmN7GH/G4AHWvQGAWVnSDoHuh65WsYEqN7DnFlWUAMa48vPjNzewnFI3O3gKz7b4CiDe70YwfB2Ao2atY9df2ExqKEautZqnfdgVx+RfnrNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=catl75rC; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="catl75rC"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-365138d9635so9194375ab.3;
-        Mon, 19 Feb 2024 04:46:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346803; x=1708951603;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uFMPdkgeHy68/bLzT3L6tHn2KP/MczRpQvVLvaFtrj4=;
-        b=nIlKtNsLOPxKgq+9LAo6tVmR0i+LZezQ54SjiDGcDZMrZljAVnfa0sL40/Qu1hNPnc
-         rPJ30BqWkfQzgTHEVm7ZPMhWOX8hcOhlU5QX5p8SgIo87dscSscPpMdN2ULB2uUu5WIs
-         U32pAcEJHd9R9UachnTlrxru3jQBaJCDnQUIo1qVd2SxRXPpf+m65DjpfA5DXtOagC2k
-         3BXpXI50gvX1ujCdNrJmNct0Cj37mcHsyv7QrQQj+UKIsDmfOdP6yTettdU6p7iz24o8
-         AjeIy8NJ8uP4QGv+7KkIkvWnNyxuDQmVLCb+co1J1b0mFJpr4GnqhexoSUdVLknYQGPJ
-         rx8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVxi6ConpvtwYaVFfoTbuVZIKZNy0cHbwERVDiorpMvjwAn4GW/NunVUWQ4zdcBq5fqqAZWK7T4N4VtZdDc3hNQhbmwkU8pu9EflhM6BUur/D41fRB/67hu6TiMg3jUukMHRB0DxKgr
-X-Gm-Message-State: AOJu0YxjfB9Vf/0J4v7KVeYKYh1CI8IBL71DiCaitDZDJiTlXnT0d8Ng
-	XiJvHbkkHB5X0CjkTir3Uphffty2XTHgBY+1EHPvau2U792qIMoD
-X-Google-Smtp-Source: AGHT+IGCLb6KiMGde4xcC/pcOu5ZQ5eZTdo8F9PXSJUMlMi1DIS656NNPvo+M7N9oD6G3/0AN4wV/g==
-X-Received: by 2002:a92:d9d0:0:b0:365:1a08:2425 with SMTP id n16-20020a92d9d0000000b003651a082425mr6005967ilq.30.1708346803092;
-        Mon, 19 Feb 2024 04:46:43 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id p11-20020a63fe0b000000b005c6617b52e6sm4651467pgh.5.2024.02.19.04.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 04:46:42 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1708346801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uFMPdkgeHy68/bLzT3L6tHn2KP/MczRpQvVLvaFtrj4=;
-	b=catl75rCpA3toE3p0fHkprvVKneWaZCOU7brSeB3gor/XcnDh8ijmqR8qvfFqVEqhdnDad
-	/FG1GcrHSaUWt++fd2w78wmSgHqATrWE4oCpmd/ejSUIfBGXpqCCQeAF6IsWZVHDNqfRJP
-	m8Bm1z7AaEWddZ+HMBEoNXb+qXHgsunNYDIpTLcaaRi4qLLotE9n+jjHKxVX6IzgUEuNET
-	l/aDI2T0iVeRdzEAqnzV0awaFK0Qk2BvHji9IykrAF6vnPayHttZjj1xItzLDWDxCJIFv0
-	njvxqEeQ8Bd/3b0QwkcsseYd31a0xloL9ugMUt7SrWhkippENRj+JvDpDiWPaw==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Mon, 19 Feb 2024 09:47:28 -0300
-Subject: [PATCH] dax: constify the struct device_type usage
+	s=arc-20240116; t=1708347067; c=relaxed/simple;
+	bh=EtnFnWlbUp7GLgtNCRTR1C0TuQakJARn5ciOH4S/YTw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EfcAiQEaBFkikCrJ2GMUprGAmM7qfonPvXgV/rXaRoJIctqz2aP3Bxq4sTi1pEI8BdjincXlk8k0mLNe4/U7kJYvkx0S7iJyEVsIhPszDCPpNDJDzELo5ut18l7V7HiCcCEsqVIRYcuNqoCxIEAMHTUTyH+YbmN3mh3u+J6eZVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tdj4023tbz6K8fY;
+	Mon, 19 Feb 2024 20:47:28 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7623B140B38;
+	Mon, 19 Feb 2024 20:51:01 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
+ 2024 12:51:00 +0000
+Date: Mon, 19 Feb 2024 12:50:59 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
+ Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>, Fan Ni
+	<nifan.cxl@gmail.com>
+Subject: Re: [PATCH v4 2/3] cxl/pci: Get rid of pointer arithmetic reading
+ CDAT table
+Message-ID: <20240219125059.0000737c@Huawei.com>
+In-Reply-To: <20240216155844.406996-3-rrichter@amd.com>
+References: <20240216155844.406996-1-rrichter@amd.com>
+	<20240216155844.406996-3-rrichter@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-device_cleanup-dax-v1-1-6b319ee89dc2@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAN9N02UC/x2MWwqAIBAArxL7naASva4SEeKutRAWSiGId0/6H
- JiZDJECU4S5yRDo5ciXr6DaBuxh/E6CsTJoqTup1SSwSpY2e5Lxzy3QJIGjdihtPziHUMM7kOP
- 0T5e1lA8JX5ViZAAAAA==
-To: Dan Williams <dan.j.williams@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1091; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=v2tFgPh2DhrAkjf4HRKnQQBDaVpePm8Gb5zL34pd/k4=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl003g5CgCqz1cWBx3Zxb+sX1z9Z+uaNXXOTgy5
- 1W4BWp+ppOJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNN4AAKCRDJC4p8Y4ZY
- pnSLEACmZxs7VJKZM72/T20LHsunB6H4bUV+m0RZ/lbzFoFhbDObaggtHyGNu1iza6xLAChmrC+
- /QREKrtEBMJi7SJoMDD5dZhVKDgE9BGr5ZhO1DOsq8JoUR/wn20ye9Nm1T8swWDSPCINWyXPJGT
- Pe4J68RIUOjHiFFoeguH7Bo5JSa8sOnIXw1pw4wJae4JkK3ncYETMdGf2cV6k6hT4Ua//NCcIpR
- xOJwYinwmBZBkqFE1pvTmMqTA2AlCbpq+ytSJDHA/ZOGFoEMGf66SOnyCqmLPZLIv6o7nxilvm5
- ZHFj7V+fi0HPQRO2GFCQs8EazGWkAF6HHNqAi8nf31Gt2Av21JTF/0rOcT//drrEySLH4by/bd6
- KwoCC2eolwzbmTElVjucQNoDYKIp2mSt71YhbCf1e5v3rbo61AOCFstHxkVkf96S+AYQP4sHKpD
- ZYpN9WHQYO81CNDAkYxl5OIvnnnKJpGk0htxkXm95dMrhRkqdPbnsBNIDTKmPEL0EGHcZlHKPjU
- 8lAmibOXThQCo4qmm6nN7l91pGhcrQ2MU1PbJOW+KyVx0cu0mfaIQYM3ZI/DhYpPjYFxaybSY8Z
- PtW3whftEHjCgtNyIjiO0hZh0/690D00zdBUShL6BHjN2+4Yopn0cCVJaohZFne36LRvjXX0Ncc
- OQIS0zz2f2t1p+g==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-core can properly handle constant struct device_type. Move the
-dax_mapping_type variable to be a constant structure as well, placing it
-into read-only memory which can not be modified at runtime.
+On Fri, 16 Feb 2024 16:58:43 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/dax/bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Reading the CDAT table using DOE requires a Table Access Response
+> Header in addition to the CDAT entry. In current implementation this
+> has caused offsets with sizeof(__le32) to the actual buffers. This led
+> to hardly readable code and even bugs. E.g., see fix of devm_kfree()
+> in read_cdat_data():
+> 
+>  c65efe3685f5 cxl/cdat: Free correct buffer on checksum error
+> 
+> Rework code to avoid calculations with sizeof(__le32). Introduce
+> struct cdat_doe_rsp for this which contains the Table Access Response
+> Header and a variable payload size for various data structures
+> afterwards to access the CDAT table and its CDAT Data Structures
+> without recalculating buffer offsets.
+> 
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Fan Ni <nifan.cxl@gmail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+Ok. I suspect we could fine tune this for ever but changes here look good
+enough to me and definitely nicer than the original ;)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 1ff1ab5fa105..e265ba019785 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -763,7 +763,7 @@ static const struct attribute_group *dax_mapping_attribute_groups[] = {
- 	NULL,
- };
- 
--static struct device_type dax_mapping_type = {
-+static const struct device_type dax_mapping_type = {
- 	.release = dax_mapping_release,
- 	.groups = dax_mapping_attribute_groups,
- };
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
----
-base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-change-id: 20240219-device_cleanup-dax-d82fd0c67ffd
-
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
+> ---
+>  drivers/cxl/core/pci.c | 77 ++++++++++++++++++++++--------------------
+>  drivers/cxl/cxlpci.h   | 24 +++++++++++++
+>  2 files changed, 65 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 39366ce94985..763c39456228 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -544,55 +544,57 @@ static int cxl_cdat_get_length(struct device *dev,
+>  
+>  static int cxl_cdat_read_table(struct device *dev,
+>  			       struct pci_doe_mb *doe_mb,
+> -			       void *cdat_table, size_t *cdat_length)
+> +			       struct cdat_doe_rsp *rsp, size_t *length)
+>  {
+> -	size_t length = *cdat_length + sizeof(__le32);
+> -	__le32 *data = cdat_table;
+> -	int entry_handle = 0;
+> +	size_t received, remaining = *length;
+> +	unsigned int entry_handle = 0;
+> +	union cdat_data *data;
+>  	__le32 saved_dw = 0;
+>  
+>  	do {
+>  		__le32 request = CDAT_DOE_REQ(entry_handle);
+> -		struct cdat_entry_header *entry;
+> -		size_t entry_dw;
+>  		int rc;
+>  
+>  		rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
+>  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+>  			     &request, sizeof(request),
+> -			     data, length);
+> +			     rsp, sizeof(*rsp) + remaining);
+>  		if (rc < 0) {
+>  			dev_err(dev, "DOE failed: %d", rc);
+>  			return rc;
+>  		}
+>  
+> -		/* 1 DW Table Access Response Header + CDAT entry */
+> -		entry = (struct cdat_entry_header *)(data + 1);
+> -		if ((entry_handle == 0 &&
+> -		     rc != sizeof(__le32) + sizeof(struct cdat_header)) ||
+> -		    (entry_handle > 0 &&
+> -		     (rc < sizeof(__le32) + sizeof(*entry) ||
+> -		      rc != sizeof(__le32) + le16_to_cpu(entry->length))))
+> +		if (rc < sizeof(*rsp))
+>  			return -EIO;
+>  
+> +		data = (union cdat_data *)rsp->data;
+> +		received = rc - sizeof(*rsp);
+> +
+> +		if (entry_handle == 0) {
+> +			if (received != sizeof(data->header))
+> +				return -EIO;
+> +		} else {
+> +			if (received < sizeof(data->entry) ||
+> +			    received != le16_to_cpu(data->entry.length))
+> +				return -EIO;
+> +		}
+> +
+>  		/* Get the CXL table access header entry handle */
+>  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
+> -					 le32_to_cpu(data[0]));
+> -		entry_dw = rc / sizeof(__le32);
+> -		/* Skip Header */
+> -		entry_dw -= 1;
+> +					 le32_to_cpu(rsp->doe_header));
+> +
+>  		/*
+>  		 * Table Access Response Header overwrote the last DW of
+>  		 * previous entry, so restore that DW
+>  		 */
+> -		*data = saved_dw;
+> -		length -= entry_dw * sizeof(__le32);
+> -		data += entry_dw;
+> -		saved_dw = *data;
+> +		rsp->doe_header = saved_dw;
+> +		remaining -= received;
+> +		rsp = (void *)rsp + received;
+> +		saved_dw = rsp->doe_header;
+>  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
+>  
+>  	/* Length in CDAT header may exceed concatenation of CDAT entries */
+> -	*cdat_length -= length - sizeof(__le32);
+> +	*length -= remaining;
+>  
+>  	return 0;
+>  }
 
