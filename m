@@ -1,103 +1,137 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56DE224DC
-	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 09:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F7828E34
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 10:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333641; cv=none; b=o5SkKK2bgXuxaaa3U5YLF+8X8G4BeZl8R53TB0U4rgu5icNPIDMPf9g7igvei/IY46fE12o1fVY/oHTxqUlVikQkZ+WXzPmg1gP3SB2VkMx47SuOqevNsB85r06WLSdks5BU6qoG645wV8RRgfjsInIaVcvCO9UqsngHOAKMW2s=
+	t=1708339869; cv=none; b=uNRPGNWNQ492EXnJhUF31id3znQ8GesMhoOadT3BL8TLgHuWaCfCdOL+ejQvtlAKuqlzE/gi5+Xk2EKEDKKFAb15g640+AsvxcVmDXtzzaBfFeWhEFsdkWcLVVNXvZvBBM7O9QEbG7nxOxUvdvy9ToIW6kcsIHC5gehD5WDYiNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333641; c=relaxed/simple;
-	bh=d3ncpbbD/jIqmrr9YKmvODI4grcXh+LHI1qn0nheqY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhK2Wcl2+Cim38k3OW0xCUDpLcIWvmUhtBo6DhGg2LMKQ5gUKvFXoN4o8G/o4Yemq75DFJWQVGwxBOefAdRADGGLqQC/vp0qh+uUNtl3potwPt+DJRt4fML8CYrzI5OJjGdh56myt0mXvNyHNkDLsm+AvBJ+nGLBtPDHrxuhl/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yl9dFohN; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708339869; c=relaxed/simple;
+	bh=d8UmbUuuAGN5pgeVGQcwfJ3D8MXc0ov8Q4oLVueaUlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WG7xq73uriv2OtiU/SWbaR/XGqQ58jGCabrDkuCaqxyPbN3WleMKN5XwwOzGapmk0OWn5HK/TReXfcLcbrDa05oeaCb0D0cA35O9Fy2wvYxORvDvi30jXGAmiATc8l6d7hYQ3ck/ucxS1jjYgM/3WHdMVjsIYhZhALUiyfmOeSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=T/HiowTo; arc=none smtp.client-ip=139.138.37.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yl9dFohN"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a36126ee41eso528400666b.2
-        for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 01:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708333638; x=1708938438; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tC1ZEm/yWZ4l2HBOpjXuJwNzMGpHf/k/betJFo2Hfaw=;
-        b=yl9dFohND7zz+17UZ1IZ5lzZ8J7+wRiT7gYOoiFhhZpGUGULpvWmAlGn2eiN33RmBI
-         sr0WG8BfNbuuYP+v+uDwijWajWQAAMxRCA5TUiOQFeY01S8WtIZpzFcR04n1+QSNTd1i
-         arfGyS+9ruV2f+Jq34JUTcikUnwtcH1JoECfLabNDXqzU2+v4qhDlYQBWHUdtYjNsnHn
-         hLIz91ac9E3jtNkdXsDczOeu29tJKuJe8wo0VTf/Wq2tudhCQ9E+Ruh0sQsiWweMI69d
-         2wXFvmvtNJUwUHVx6VuBhAzrBbj8RHzqCkCo7ZPpv5o+J3ATDYxC7zS4LslkMvxE66rz
-         OpAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708333638; x=1708938438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tC1ZEm/yWZ4l2HBOpjXuJwNzMGpHf/k/betJFo2Hfaw=;
-        b=C+8frofZqZOS/rwB0w9vp8N6IeAiABxtC1m/kXKUw0k98R+nlf+0fnocOAwCZf6VQx
-         Etb7lE4WoxY3Rxi1llrDps+EeihD21m37l2+eHJcXISRTyAi+yyL4oVUL+JDDhBbJYwJ
-         Xz0HRb/4+qfkfobEnBCFRk6EuV9hI8xgq8AtgufmEXu4mtPJYAm8L4GzKphav80dmaYW
-         Ysn2Q4f8Reqaol7gIbEv7tjU90mLsdEyo/lV1z0amfcffa/Ompap85GdSdcGMLU2QXas
-         6aXCIgfCmGVff7qOJJ7Z0GxWu5prUjmBrewKOgHWJzma4ma+adQc0+eZuWLv7oA16ASX
-         PQ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKnaPSjKz1DQEZIQ9pTWWsWVn+5uCicnD4u8Xydht3Nw2Oig3FwP9QJJZROXUz9yxSSpC8iGLbosG/bb3MRwSPhPbzK78eZKIo
-X-Gm-Message-State: AOJu0YxCSenJcDW/uPDfJ+KTbSx+wtTTEHheCHW58y/o+Ubl3bFu78Oo
-	pHrMYgk+y85FFXFUj0QfKuQqBBhwF+JqbUvAnOjgBAK9aSDS3+9J/BTyCv5OYbo=
-X-Google-Smtp-Source: AGHT+IFXr86gnM3CYEw6CwvqwgSKBh1+1CONJiQ5jWR3N5jH3cLVIYhSjpo8tuXQ5b5eV4kUF47BrQ==
-X-Received: by 2002:a17:906:649:b0:a3e:b869:11b3 with SMTP id t9-20020a170906064900b00a3eb86911b3mr685183ejb.55.1708333638283;
-        Mon, 19 Feb 2024 01:07:18 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id s8-20020a170906168800b00a3e7a2d9ac4sm1210148ejd.6.2024.02.19.01.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 01:07:18 -0800 (PST)
-Date: Mon, 19 Feb 2024 12:07:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
-Message-ID: <8e6825b6-261b-439b-bb28-9fc585e50979@moroto.mountain>
-References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
- <20240214121153.00005c97@huawei.com>
- <20240214102310.7ba53f3a@gandalf.local.home>
- <20240214181200.0000500b@Huawei.com>
- <65cd3c671cf86_d552e294dd@iweiny-mobl.notmuch>
- <65cd4e1f69205_d5b4829463@iweiny-mobl.notmuch>
- <65d0092079c20_6c7452946@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="T/HiowTo"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1708339866; x=1739875866;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=d8UmbUuuAGN5pgeVGQcwfJ3D8MXc0ov8Q4oLVueaUlA=;
+  b=T/HiowToBZYz/RuxWw5AesnOfR0RxyYEhOvwPmSsqeiN2rRXx3l5cuyk
+   kFXQDOmvNmVmMD+TvDD2JRnJ4+Oqhd0Bl5/tHxEN/e+TH6Zie4ZGsjEsh
+   5EpMED8WhVTD1tJBYaZ1j7MhKxybhpJUe5iYdpaw3K+G4U6o8/VTGHY/8
+   UyT3ZVsM4W8pq4dOVgsnwcGnabSe6d6kAtW6dwIgbAVafSDdObwzmwMMg
+   VXZBHb2r/xvvdfTjWF4ZuiQCUuyc9T4LjPEKjiWd7fZIFlAise8THJV8A
+   CQ3vW1z77IC0+0jHmxo9aVu2IxmjGrqrwCDWVSCkn7Rw6jkiDADGzW0i3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="129075954"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705330800"; 
+   d="scan'208";a="129075954"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 19:49:54 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id CDC2D176140
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 19:49:52 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 226BAF3165
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 19:49:52 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 9E59B20097788
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 19:49:51 +0900 (JST)
+Received: from [192.168.50.5] (unknown [10.167.226.114])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id E91D71A006B;
+	Mon, 19 Feb 2024 18:49:50 +0800 (CST)
+Message-ID: <92d66f47-3b03-4128-8243-68f917c692f0@fujitsu.com>
+Date: Mon, 19 Feb 2024 18:49:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65d0092079c20_6c7452946@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/5] cxl/core: correct length of DPA field masks
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Jonathan.Cameron@huawei.com, qemu-devel@nongnu.org,
+ linux-cxl@vger.kernel.org
+References: <20240209115417.724638-1-ruansy.fnst@fujitsu.com>
+ <20240209115417.724638-4-ruansy.fnst@fujitsu.com>
+ <65c718f786340_d2d4294b9@dwillia2-xfh.jf.intel.com.notmuch>
+From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+In-Reply-To: <65c718f786340_d2d4294b9@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28200.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28200.006
+X-TMASE-Result: 10--10.905100-10.000000
+X-TMASE-MatchedRID: X+fKKgQJwrGPvrMjLFD6eCkMR2LAnMRp2q80vLACqaeqvcIF1TcLYLBk
+	jjdoOP1bZ7SNREHYHRG4TDy5Lbm+t/RseJdyxL18Be3KRVyu+k2RgLeuORRdEsC5DTEMxpeQfiq
+	1gj2xET/lxQMqjyUzSdgNg9jbo12SkfRhdidsajODGx/OQ1GV8rnUfzScNiR3DWKb6PcVvpiOhz
+	Oa6g8KrRSQKMCB3VoeerNzoMmBWtUITClHxqpMBkVnRUzyyyjj3z7RgXDPuz8=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Fri, Feb 16, 2024 at 05:17:20PM -0800, Dan Williams wrote:
-> > commit 807fbe9cac9b190dab83e3ff377a30d18859c8ab
-> > Author: Ira Weiny <ira.weiny@intel.com>
-> > Date:   Wed Feb 14 15:25:24 2024 -0800
-> > 
-> >     Revert "acpi/ghes: Process CXL Component Events"
-> >     
-> >     This reverts commit 671a794c33c6e048ca5cedd5ad6af44d52d5d7e5.
+
+
+在 2024/2/10 14:34, Dan Williams 写道:
+> Shiyang Ruan wrote:
+>> The length of Physical Address in General Media Event Record/DRAM Event
+>> Record is 64-bit, so the field mask should be defined as such length.
 > 
-> Even reverts need changelogs, I can add one. I got conflicts trying to
-> apply this to current fixes branch. I think I am going to just
-> surgically backout the drivers/acpi/apei/ghes.c changes.
+> Can you include this user visible side-effect of this change. Looks like
+> this could cause usages of CXL_DPA_FLAGS_MASK to return an incorrect
+> result?
 
-The `git revert` command comes from ancient times and it just sets
-people up for failure...  :/
+Ok.  Will change it to this:
 
-regards,
-dan carpenter
+The length of Physical Address in General Media Event Record/DRAM Event 
+Record is 64bit, per CXL Spec r3.0 - 8.2.9.2.1.1, Table 8-43.  Currently 
+CXL_DPA_FLAGS_MASK is defined as int (32bit), then CXL_DPA_MASK is a int 
+too, it will be 0x00000000FFFFFFC0 while using "->dpa & CXL_DPA_MASK" to 
+obtain real physical address (to drop flags in lower bits), in this case 
+the higher 32bit of ->dpa will be lost.
+
+To avoid this, define CXL_DPA_FLAGS_MASK as 64bit: 0x3FULL.
+
+
+--
+Thanks,
+Ruan.
+
+> 
+>>
+>> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+>> ---
+>>   drivers/cxl/core/trace.h | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+>> index 89445435303a..388a87d972c2 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -253,11 +253,11 @@ TRACE_EVENT(cxl_generic_event,
+>>    * DRAM Event Record
+>>    * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+>>    */
+>> -#define CXL_DPA_FLAGS_MASK			0x3F
+>> +#define CXL_DPA_FLAGS_MASK			0x3FULL
+>>   #define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
+>>   
+>> -#define CXL_DPA_VOLATILE			BIT(0)
+>> -#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
+>> +#define CXL_DPA_VOLATILE			BIT_ULL(0)
+>> +#define CXL_DPA_NOT_REPAIRABLE			BIT_ULL(1)
+>>   #define show_dpa_flags(flags)	__print_flags(flags, "|",		   \
+>>   	{ CXL_DPA_VOLATILE,			"VOLATILE"		}, \
+>>   	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
+>> -- 
+>> 2.34.1
+>>
+> 
+> 
