@@ -1,39 +1,37 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6797437702
-	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 15:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED2E38DF1
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 16:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354850; cv=none; b=leLj6e6YJDoQmKSRxpOkwkjJh26uzdH/zz9riKZY91hPLVzo2Uy8P4Vzov/QeKzWFn0MgN6DTVnlzqxT8QqQkN9YJpPeLdMUi3aPWsmrElnpyCtsdXwUQbIP+wZA/KE+QxQL2WfL75bBZpWQBxoO31nmEB5B53FxOiEG3iLVJx8=
+	t=1708359154; cv=none; b=IlwjF9EIVbsE0nOnrW3LQ+aee9gLTCj0tiYrKtr+A12Og2xXrbpC7PU4pFLSBJNdY84Hnjs6O3RCdhrdPVPegNNo+deh79ISuy3qPeK3TmoXH3IdXz2UWINDjnoo/kZJssgFnGpxbxgVC5aurFxaLTqqkOeDOb9yfpTchN+6FQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354850; c=relaxed/simple;
-	bh=SM+YtkB6MvxOMIB2My7l3/sTwuupdaO8gqKR8dDBDQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJCIhePYRyFEUB6mHpNZyNIDtBGb7m9x1qhHU4nm3EV5/YiXkIYtsXbVLLeHbOLq32x/Y9t4/Ungldt+gDvERhRQZpA02pDkh2i1WhfafvOTXRAscxi7vhx4SR0QUFyocxZBn4JB0FHSVpRpXKpIsXrsVXP2JGBWAq/YVmR4lek=
+	s=arc-20240116; t=1708359154; c=relaxed/simple;
+	bh=L3SXZwR1JzsVD0om0ns4QR6W0WDLFUzjjIy8z+hH6Jw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nwIp9RdgvAOaO4uzAf95DJ/cXvnFYjGrI5FJue6rV74PnnP7PrMRMqJrBCCnvbatQJffykS1eMxhQkrdLgDq+vDdZAc6meeuRTz/+M3pXVcLukxoyR/nDmVnhfOPydozLAwlMdtfzqoVIln4blowqFqHi7wJMSRIUBiayJzncJE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tdlwr44JZz6D8YY;
-	Mon, 19 Feb 2024 22:56:28 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id DFC12140B38;
-	Mon, 19 Feb 2024 23:00:42 +0800 (CST)
-Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdnWz1d5Cz6K66L;
+	Tue, 20 Feb 2024 00:08:31 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B367140B54;
+	Tue, 20 Feb 2024 00:12:28 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 19 Feb 2024 15:00:42 +0000
-From: <shiju.jose@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>,
-	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v4 1/3] hw/cxl/cxl-mailbox-utils: Add support for feature commands (8.2.9.6)
-Date: Mon, 19 Feb 2024 23:00:23 +0800
-Message-ID: <20240219150025.1531-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20240219150025.1531-1-shiju.jose@huawei.com>
-References: <20240219150025.1531-1-shiju.jose@huawei.com>
+ 15.1.2507.35; Mon, 19 Feb 2024 16:12:27 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <qemu-devel@nongnu.org>, Peter Maydell <peter.maydell@linaro.org>, Gregory
+ Price <gregory.price@memverge.com>, =?UTF-8?q?Alex=20Benn=C3=A9e?=
+	<alex.bennee@linaro.org>, <richard.henderson@linaro.org>
+CC: <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [RFC PATCH v2] arm/ptw: Handle atomic updates of page tables entries in MMIO during PTW.
+Date: Mon, 19 Feb 2024 16:12:29 +0000
+Message-ID: <20240219161229.11776-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,224 +40,107 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Shiju Jose <shiju.jose@huawei.com>
+I'm far from confident this handling here is correct. Hence
+RFC.  In particular not sure on what locks I should hold for this
+to be even moderately safe.
 
-CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
-CXL devices supports features with changeable attributes.
-Get Supported Features retrieves the list of supported device specific
-features. The settings of a feature can be retrieved using Get Feature and
-optionally modified using Set Feature.
+The function already appears to be inconsistent in what it returns
+as the CONFIG_ATOMIC64 block returns the endian converted 'eventual'
+value of the cmpxchg whereas the TCG_OVERSIZED_GUEST case returns
+the previous value.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/cxl/cxl-mailbox-utils.c | 175 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 175 insertions(+)
-
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 80a80f1ec2..779ce80e3c 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -66,6 +66,10 @@ enum {
-     LOGS        = 0x04,
-         #define GET_SUPPORTED 0x0
-         #define GET_LOG       0x1
-+    FEATURES    = 0x05,
-+        #define GET_SUPPORTED 0x0
-+        #define GET_FEATURE   0x1
-+        #define SET_FEATURE   0x2
-     IDENTIFY    = 0x40,
-         #define MEMORY_DEVICE 0x0
-     CCLS        = 0x41,
-@@ -965,6 +969,165 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
+v2: Thanks Peter for reviewing.
+ - Handle the address space as in arm_ldq_ptw() - I should have looked
+   at the code immediately above :(
+   The result ends up a little more convoluted than I'd like. Could factor
+   this block of code out perhaps. I'm also not sure on the fault type
+   that is appropriate here.
+ - Switch to 'need_lock' as per Philippe's feedback on the x86 fixes.
+   likely() doesn't seem appropriate here though.
  
-+/* CXL r3.1 section 8.2.9.6: Features */
-+/*
-+ * Get Supported Features output payload
-+ * CXL r3.1 section 8.2.9.6.1 Table 8-96
-+ */
-+typedef struct CXLSupportedFeatureHeader {
-+    uint16_t entries;
-+    uint16_t nsuppfeats_dev;
-+    uint32_t reserved;
-+} QEMU_PACKED CXLSupportedFeatureHeader;
+target/arm/ptw.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 62 insertions(+), 2 deletions(-)
+
+diff --git a/target/arm/ptw.c b/target/arm/ptw.c
+index 5eb3577bcd..ba1a27ca2b 100644
+--- a/target/arm/ptw.c
++++ b/target/arm/ptw.c
+@@ -711,8 +711,68 @@ static uint64_t arm_casq_ptw(CPUARMState *env, uint64_t old_val,
+     void *host = ptw->out_host;
+ 
+     if (unlikely(!host)) {
+-        fi->type = ARMFault_UnsuppAtomicUpdate;
+-        return 0;
++        /* Page table in MMIO Memory Region */
++        CPUState *cs = env_cpu(env);
++        MemTxAttrs attrs = {
++            .space = ptw->out_space,
++            .secure = arm_space_is_secure(ptw->out_space),
++        };
++        AddressSpace *as = arm_addressspace(cs, attrs);
++        MemTxResult result = MEMTX_OK;
++        bool need_lock = !bql_locked();
 +
-+/*
-+ * Get Supported Features Supported Feature Entry
-+ * CXL r3.1 section 8.2.9.6.1 Table 8-97
-+ */
-+typedef struct CXLSupportedFeatureEntry {
-+    QemuUUID uuid;
-+    uint16_t feat_index;
-+    uint16_t get_feat_size;
-+    uint16_t set_feat_size;
-+    uint32_t attr_flags;
-+    uint8_t get_feat_version;
-+    uint8_t set_feat_version;
-+    uint16_t set_feat_effects;
-+    uint8_t rsvd[18];
-+} QEMU_PACKED CXLSupportedFeatureEntry;
-+
-+enum CXL_SUPPORTED_FEATURES_LIST {
-+    CXL_FEATURE_MAX
-+};
-+
-+/* Get Feature CXL 3.1 Spec 8.2.9.6.2 */
-+/*
-+ * Get Feature input payload
-+ * CXL r3.1 section 8.2.9.6.2 Table 8-99
-+ */
-+/* Get Feature : Payload in selection */
-+enum CXL_GET_FEATURE_SELECTION {
-+    CXL_GET_FEATURE_SEL_CURRENT_VALUE,
-+    CXL_GET_FEATURE_SEL_DEFAULT_VALUE,
-+    CXL_GET_FEATURE_SEL_SAVED_VALUE,
-+    CXL_GET_FEATURE_SEL_MAX
-+};
-+
-+/* Set Feature CXL 3.1 Spec 8.2.9.6.3 */
-+/*
-+ * Set Feature input payload
-+ * CXL r3.1 section 8.2.9.6.3 Table 8-101
-+ */
-+typedef struct CXLSetFeatureInHeader {
-+        QemuUUID uuid;
-+        uint32_t flags;
-+        uint16_t offset;
-+        uint8_t version;
-+        uint8_t rsvd[9];
-+} QEMU_PACKED QEMU_ALIGNED(16) CXLSetFeatureInHeader;
-+
-+/* Set Feature : Payload in flags */
-+#define CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MASK   0x7
-+enum CXL_SET_FEATURE_FLAG_DATA_TRANSFER {
-+    CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER,
-+    CXL_SET_FEATURE_FLAG_INITIATE_DATA_TRANSFER,
-+    CXL_SET_FEATURE_FLAG_CONTINUE_DATA_TRANSFER,
-+    CXL_SET_FEATURE_FLAG_FINISH_DATA_TRANSFER,
-+    CXL_SET_FEATURE_FLAG_ABORT_DATA_TRANSFER,
-+    CXL_SET_FEATURE_FLAG_DATA_TRANSFER_MAX
-+};
-+
-+/* CXL r3.1 section 8.2.9.6.1: Get Supported Features (Opcode 0500h) */
-+static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
-+                                             uint8_t *payload_in,
-+                                             size_t len_in,
-+                                             uint8_t *payload_out,
-+                                             size_t *len_out,
-+                                             CXLCCI *cci)
-+{
-+    struct {
-+        uint32_t count;
-+        uint16_t start_index;
-+        uint16_t reserved;
-+    } QEMU_PACKED QEMU_ALIGNED(16) * get_feats_in = (void *)payload_in;
-+
-+    struct {
-+        CXLSupportedFeatureHeader hdr;
-+        CXLSupportedFeatureEntry feat_entries[];
-+    } QEMU_PACKED QEMU_ALIGNED(16) * get_feats_out = (void *)payload_out;
-+    uint16_t index;
-+    uint16_t entry, req_entries;
-+    uint16_t feat_entries = 0;
-+
-+    if (get_feats_in->count < sizeof(CXLSupportedFeatureHeader) ||
-+        get_feats_in->start_index > CXL_FEATURE_MAX) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+    req_entries = (get_feats_in->count -
-+                   sizeof(CXLSupportedFeatureHeader)) /
-+                   sizeof(CXLSupportedFeatureEntry);
-+    req_entries = MIN(req_entries, CXL_FEATURE_MAX);
-+    index = get_feats_in->start_index;
-+
-+    entry = 0;
-+    while (entry < req_entries) {
-+        switch (index) {
-+        default:
-+            break;
++        if (need_lock) {
++            bql_lock();
 +        }
-+        index++;
-+        entry++;
-+    }
-+
-+    get_feats_out->hdr.nsuppfeats_dev = CXL_FEATURE_MAX;
-+    get_feats_out->hdr.entries = feat_entries;
-+    *len_out = sizeof(CXLSupportedFeatureHeader) +
-+                      feat_entries * sizeof(CXLSupportedFeatureEntry);
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+/* CXL r3.1 section 8.2.9.6.2: Get Feature (Opcode 0501h) */
-+static CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
-+                                           uint8_t *payload_in,
-+                                           size_t len_in,
-+                                           uint8_t *payload_out,
-+                                           size_t *len_out,
-+                                           CXLCCI *cci)
-+{
-+    struct {
-+        QemuUUID uuid;
-+        uint16_t offset;
-+        uint16_t count;
-+        uint8_t selection;
-+    } QEMU_PACKED QEMU_ALIGNED(16) * get_feature;
-+    uint16_t bytes_to_copy = 0;
-+
-+    get_feature = (void *)payload_in;
-+
-+    if (get_feature->selection != CXL_GET_FEATURE_SEL_CURRENT_VALUE) {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+    if (get_feature->offset + get_feature->count > cci->payload_max) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    *len_out = bytes_to_copy;
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+/* CXL r3.1 section 8.2.9.6.3: Set Feature (Opcode 0502h) */
-+static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
-+                                           uint8_t *payload_in,
-+                                           size_t len_in,
-+                                           uint8_t *payload_out,
-+                                           size_t *len_out,
-+                                           CXLCCI *cci)
-+{
-+    return CXL_MBOX_SUCCESS;
-+}
-+
- /* CXL r3.1 Section 8.2.9.9.1.1: Identify Memory Device (Opcode 4000h) */
- static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
-                                              uint8_t *payload_in,
-@@ -2166,6 +2329,18 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
-     [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
-                               0, 0 },
-     [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-+    [FEATURES][GET_SUPPORTED] = { "FEATURES_GET_SUPPORTED",
-+                                  cmd_features_get_supported, 0x8, 0 },
-+    [FEATURES][GET_FEATURE] = { "FEATURES_GET_FEATURE",
-+                                cmd_features_get_feature, 0x15, 0 },
-+    [FEATURES][SET_FEATURE] = { "FEATURES_SET_FEATURE",
-+                                cmd_features_set_feature,
-+                                ~0,
-+                                (CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-+                                 CXL_MBOX_IMMEDIATE_DATA_CHANGE |
-+                                 CXL_MBOX_IMMEDIATE_POLICY_CHANGE |
-+                                 CXL_MBOX_IMMEDIATE_LOG_CHANGE |
-+                                 CXL_MBOX_SECURITY_STATE_CHANGE)},
-     [IDENTIFY][MEMORY_DEVICE] = { "IDENTIFY_MEMORY_DEVICE",
-         cmd_identify_memory_device, 0, 0 },
-     [CCLS][GET_PARTITION_INFO] = { "CCLS_GET_PARTITION_INFO",
++        if (ptw->out_be) {
++            cur_val = address_space_ldq_be(as, ptw->out_phys, attrs, &result);
++            if (unlikely(result != MEMTX_OK)) {
++                fi->type = ARMFault_SyncExternalOnWalk;
++                fi->ea = arm_extabort_type(result);
++                if (need_lock) {
++                    bql_unlock();
++                }
++                return old_val;
++            }
++            if (cur_val == old_val) {
++                address_space_stq_be(as, ptw->out_phys, new_val, attrs, &result);
++                if (unlikely(result != MEMTX_OK)) {
++                    fi->type = ARMFault_SyncExternalOnWalk;
++                    fi->ea = arm_extabort_type(result);
++                    if (need_lock) {
++                        bql_unlock();
++                    }
++                    return old_val;
++                }
++                cur_val = new_val;
++            }
++        } else {
++            cur_val = address_space_ldq_le(as, ptw->out_phys, attrs, &result);
++            if (unlikely(result != MEMTX_OK)) {
++                fi->type = ARMFault_SyncExternalOnWalk;
++                fi->ea = arm_extabort_type(result);
++                if (need_lock) {
++                    bql_unlock();
++                }
++                return old_val;
++            }
++            if (cur_val == old_val) {
++                address_space_stq_le(as, ptw->out_phys, new_val, attrs, &result);
++                if (unlikely(result != MEMTX_OK)) {
++                    fi->type = ARMFault_SyncExternalOnWalk;
++                    fi->ea = arm_extabort_type(result);
++                    if (need_lock) {
++                        bql_unlock();
++                    }
++                    return old_val;
++                }
++                cur_val = new_val;
++            }
++        }
++        if (need_lock) {
++            bql_unlock();
++        }
++        return cur_val;
+     }
+ 
+     /*
 -- 
-2.34.1
+2.39.2
 
