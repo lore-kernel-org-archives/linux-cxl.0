@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F99341C84
-	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 17:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3E447F55
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 17:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708363978; cv=none; b=VcMLno0ROEp2AG+G5QvVPBZnGAi2aIg62HbL8rJSM9/kb3p+2KKjUZYPDbGf7KYZMfGq4szYJzVFqPMupL61p5JmR3gSSPbFwweG90YFeB+BnSKAH21VDFKCS63YFOju3LXiqHxqv4Wx0h6UGsCzx0ix7RDGmTn4WcSewOjhvJ4=
+	t=1708364008; cv=none; b=ueP+ILW9y5zRHXaOyYMrEHMF8iRMrzYU8LdO3tgrkaaOfzrhrSfbW55G6XwoZ9VRq0F0HVJabT3uZSEeQZpNiMQ3DlqpnS5zeKp1vrg4jBN58cWVm9HW0zt27rveCby78LSEZDc3lEk9sE6UXufqukXo+uOEhcVcWkE488GyIBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708363978; c=relaxed/simple;
-	bh=f775fYUi0GZ/quF/JLUyuXps4hlBzppKqPUXUn9xL3w=;
+	s=arc-20240116; t=1708364008; c=relaxed/simple;
+	bh=bkmNJQ2NiRXIVXOgVourWs5r8knbBn+ikzOzNx80zlY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lgKxm/fZlMTQxsq2duWbde+sguRD2LzGbnltFl1i7ux+ftuNH9qusDU/X+drnszkxf2GrSxQJawiyXpvwerPmNPIGhEANb9GsmBNBPJ6KEy5kHhiwQNxP5U3/J2JLZLiv6MZ7gHAkc3ZJSF+VgmAUJSvp8ocAlXZDHHLIaRVLVU=
+	 MIME-Version:Content-Type; b=hqyYs2UO+7j5CdX2Xa+daEe1skG0JHeGGuaZzuc/T3MYWGokweVtdrOuLpVDZwgVY6nT33LOElMCTk4ih4s/dGtdRDZ9L7jLXQltOzs8KVTNgfRp3HgzEWDqZCGE1rWyaDZB+BaM/XUCiBrvaem0lGVdQMzghhURrQ9XJ9b48Xc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdqJQ6cJFz6JB3W;
-	Tue, 20 Feb 2024 01:28:38 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdqKM0MC8z6K5kB;
+	Tue, 20 Feb 2024 01:29:27 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8B52B140D30;
-	Tue, 20 Feb 2024 01:32:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1BF90140519;
+	Tue, 20 Feb 2024 01:33:24 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 19 Feb 2024 17:32:53 +0000
+ 15.1.2507.35; Mon, 19 Feb 2024 17:33:23 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, Peter Maydell <peter.maydell@linaro.org>, Gregory
  Price <gregory.price@memverge.com>, =?UTF-8?q?Alex=20Benn=C3=A9e?=
@@ -32,9 +32,9 @@ To: <qemu-devel@nongnu.org>, Peter Maydell <peter.maydell@linaro.org>, Gregory
  Bonzini <pbonzini@redhat.com>, Eduardo Habkost <eduardo@habkost.net>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
 CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>
-Subject: [PATCH v2 2/3] target/i386: Enable page walking from MMIO memory
-Date: Mon, 19 Feb 2024 17:31:52 +0000
-Message-ID: <20240219173153.12114-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 3/3] tcg: Avoid double lock if page tables happen to be in mmio memory.
+Date: Mon, 19 Feb 2024 17:31:53 +0000
+Message-ID: <20240219173153.12114-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240219173153.12114-1-Jonathan.Cameron@huawei.com>
 References: <20240219173153.12114-1-Jonathan.Cameron@huawei.com>
@@ -44,256 +44,170 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Gregory Price <gregory.price@memverge.com>
+On i386, after fixing the page walking code to work with pages in
+MMIO memory (specifically CXL emulated interleaved memory),
+a crash was seen in an interrupt handling path.
 
-CXL emulation of interleave requires read and write hooks due to
-requirement for subpage granularity. The Linux kernel stack now enables
-using this memory as conventional memory in a separate NUMA node. If a
-process is deliberately forced to run from that node
-$ numactl --membind=1 ls
-the page table walk on i386 fails.
+Useful part of backtrace
 
-Useful part of backtrace:
+7  0x0000555555ab1929 in bql_lock_impl (file=0x555556049122 "../../accel/tcg/cputlb.c", line=2033) at ../../system/cpus.c:524
+8  bql_lock_impl (file=file@entry=0x555556049122 "../../accel/tcg/cputlb.c", line=line@entry=2033) at ../../system/cpus.c:520
+9  0x0000555555c9f7d6 in do_ld_mmio_beN (cpu=0x5555578e0cb0, full=0x7ffe88012950, ret_be=ret_be@entry=0, addr=19595792376, size=size@entry=8, mmu_idx=4, type=MMU_DATA_LOAD, ra=0) at ../../accel/tcg/cputlb.c:2033
+10 0x0000555555ca0fbd in do_ld_8 (cpu=cpu@entry=0x5555578e0cb0, p=p@entry=0x7ffff4efd1d0, mmu_idx=<optimized out>, type=type@entry=MMU_DATA_LOAD, memop=<optimized out>, ra=ra@entry=0) at ../../accel/tcg/cputlb.c:2356
+11 0x0000555555ca341f in do_ld8_mmu (cpu=cpu@entry=0x5555578e0cb0, addr=addr@entry=19595792376, oi=oi@entry=52, ra=0, ra@entry=52, access_type=access_type@entry=MMU_DATA_LOAD) at ../../accel/tcg/cputlb.c:2439
+12 0x0000555555ca5f59 in cpu_ldq_mmu (ra=52, oi=52, addr=19595792376, env=0x5555578e3470) at ../../accel/tcg/ldst_common.c.inc:169
+13 cpu_ldq_le_mmuidx_ra (env=0x5555578e3470, addr=19595792376, mmu_idx=<optimized out>, ra=ra@entry=0) at ../../accel/tcg/ldst_common.c.inc:301
+14 0x0000555555b4b5fc in ptw_ldq (ra=0, in=0x7ffff4efd320) at ../../target/i386/tcg/sysemu/excp_helper.c:98
+15 ptw_ldq (ra=0, in=0x7ffff4efd320) at ../../target/i386/tcg/sysemu/excp_helper.c:93
+16 mmu_translate (env=env@entry=0x5555578e3470, in=0x7ffff4efd3e0, out=0x7ffff4efd3b0, err=err@entry=0x7ffff4efd3c0, ra=ra@entry=0) at ../../target/i386/tcg/sysemu/excp_helper.c:174
+17 0x0000555555b4c4b3 in get_physical_address (ra=0, err=0x7ffff4efd3c0, out=0x7ffff4efd3b0, mmu_idx=0, access_type=MMU_DATA_LOAD, addr=18446741874686299840, env=0x5555578e3470) at ../../target/i386/tcg/sysemu/excp_helper.c:580
+18 x86_cpu_tlb_fill (cs=0x5555578e0cb0, addr=18446741874686299840, size=<optimized out>, access_type=MMU_DATA_LOAD, mmu_idx=0, probe=<optimized out>, retaddr=0) at ../../target/i386/tcg/sysemu/excp_helper.c:606
+19 0x0000555555ca0ee9 in tlb_fill (retaddr=0, mmu_idx=0, access_type=MMU_DATA_LOAD, size=<optimized out>, addr=18446741874686299840, cpu=0x7ffff4efd540) at ../../accel/tcg/cputlb.c:1315
+20 mmu_lookup1 (cpu=cpu@entry=0x5555578e0cb0, data=data@entry=0x7ffff4efd540, mmu_idx=0, access_type=access_type@entry=MMU_DATA_LOAD, ra=ra@entry=0) at ../../accel/tcg/cputlb.c:1713
+21 0x0000555555ca2c61 in mmu_lookup (cpu=cpu@entry=0x5555578e0cb0, addr=addr@entry=18446741874686299840, oi=oi@entry=32, ra=ra@entry=0, type=type@entry=MMU_DATA_LOAD, l=l@entry=0x7ffff4efd540) at ../../accel/tcg/cputlb.c:1803
+22 0x0000555555ca3165 in do_ld4_mmu (cpu=cpu@entry=0x5555578e0cb0, addr=addr@entry=18446741874686299840, oi=oi@entry=32, ra=ra@entry=0, access_type=access_type@entry=MMU_DATA_LOAD) at ../../accel/tcg/cputlb.c:2416
+23 0x0000555555ca5ef9 in cpu_ldl_mmu (ra=0, oi=32, addr=18446741874686299840, env=0x5555578e3470) at ../../accel/tcg/ldst_common.c.inc:158
+24 cpu_ldl_le_mmuidx_ra (env=env@entry=0x5555578e3470, addr=addr@entry=18446741874686299840, mmu_idx=<optimized out>, ra=ra@entry=0) at ../../accel/tcg/ldst_common.c.inc:294
+25 0x0000555555bb6cdd in do_interrupt64 (is_hw=1, next_eip=18446744072399775809, error_code=0, is_int=0, intno=236, env=0x5555578e3470) at ../../target/i386/tcg/seg_helper.c:889
+26 do_interrupt_all (cpu=cpu@entry=0x5555578e0cb0, intno=236, is_int=is_int@entry=0, error_code=error_code@entry=0, next_eip=next_eip@entry=0, is_hw=is_hw@entry=1) at ../../target/i386/tcg/seg_helper.c:1130
+27 0x0000555555bb87da in do_interrupt_x86_hardirq (env=env@entry=0x5555578e3470, intno=<optimized out>, is_hw=is_hw@entry=1) at ../../target/i386/tcg/seg_helper.c:1162
+28 0x0000555555b5039c in x86_cpu_exec_interrupt (cs=0x5555578e0cb0, interrupt_request=<optimized out>) at ../../target/i386/tcg/sysemu/seg_helper.c:197
+29 0x0000555555c94480 in cpu_handle_interrupt (last_tb=<synthetic pointer>, cpu=0x5555578e0cb0) at ../../accel/tcg/cpu-exec.c:844
 
-    (cpu=cpu@entry=0x555556fd9000, fmt=fmt@entry=0x555555fe3378 "cpu_io_recompile: could not find TB for pc=%p")
-    at ../../cpu-target.c:359
-    (retaddr=0, addr=19595792376, attrs=..., xlat=<optimized out>, cpu=0x555556fd9000, out_offset=<synthetic pointer>)
-    at ../../accel/tcg/cputlb.c:1339
-    (cpu=0x555556fd9000, full=0x7fffee0d96e0, ret_be=ret_be@entry=0, addr=19595792376, size=size@entry=8, mmu_idx=4, type=MMU_DATA_LOAD, ra=0) at ../../accel/tcg/cputlb.c:2030
-    (cpu=cpu@entry=0x555556fd9000, p=p@entry=0x7ffff56fddc0, mmu_idx=<optimized out>, type=type@entry=MMU_DATA_LOAD, memop=<optimized out>, ra=ra@entry=0) at ../../accel/tcg/cputlb.c:2356
-    (cpu=cpu@entry=0x555556fd9000, addr=addr@entry=19595792376, oi=oi@entry=52, ra=ra@entry=0, access_type=access_type@entry=MMU_DATA_LOAD) at ../../accel/tcg/cputlb.c:2439
-    at ../../accel/tcg/ldst_common.c.inc:301
-    at ../../target/i386/tcg/sysemu/excp_helper.c:173
-    (err=0x7ffff56fdf80, out=0x7ffff56fdf70, mmu_idx=0, access_type=MMU_INST_FETCH, addr=18446744072116178925, env=0x555556fdb7c0)
-    at ../../target/i386/tcg/sysemu/excp_helper.c:578
-    (cs=0x555556fd9000, addr=18446744072116178925, size=<optimized out>, access_type=MMU_INST_FETCH, mmu_idx=0, probe=<optimized out>, retaddr=0) at ../../target/i386/tcg/sysemu/excp_helper.c:604
+Peter identified this as being due to the BQL already being
+held when the page table walker encounters MMIO memory and attempts
+to take the lock again.  There are other examples of similar paths
+TCG, so this follows the approach taken in those of simply checking
+if the lock is already held and if it is, don't take it again.
 
-Avoid this by plumbing the address all the way down from
-x86_cpu_tlb_fill() where is available as retaddr to the actual accessors
-which provide it to probe_access_full() which already handles MMIO accesses.
-
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
 Suggested-by: Peter Maydell <peter.maydell@linaro.org>
-Signed-off-by: Gregory Price <gregory.price@memverge.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v2: Thanks Richard and Philippe for reviews.
- - Picked up tags.
- 
- target/i386/tcg/sysemu/excp_helper.c | 57 +++++++++++++++-------------
- 1 file changed, 30 insertions(+), 27 deletions(-)
 
-diff --git a/target/i386/tcg/sysemu/excp_helper.c b/target/i386/tcg/sysemu/excp_helper.c
-index 5b86f439ad..b3bce020f4 100644
---- a/target/i386/tcg/sysemu/excp_helper.c
-+++ b/target/i386/tcg/sysemu/excp_helper.c
-@@ -59,14 +59,14 @@ typedef struct PTETranslate {
-     hwaddr gaddr;
- } PTETranslate;
- 
--static bool ptw_translate(PTETranslate *inout, hwaddr addr)
-+static bool ptw_translate(PTETranslate *inout, hwaddr addr, uint64_t ra)
+---
+v2: Thanks Peter, Philippe and Richard.
+- Put missing bt in commit message.
+- Switch from locked to need_lock and added likely() to indicate that
+  the path where we are skipping locking is an obscure one so not
+  expected to happen much. (Philippe)
+- Equivalent change made to do_ld16_mmio_beN, do_st_mmio_leN,
+  do_st16_mmio_leN as well as do_ld_mmio_beN (Peter)
+---
+ accel/tcg/cputlb.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
+
+diff --git a/accel/tcg/cputlb.c b/accel/tcg/cputlb.c
+index 047cd2cc0a..d2b9444796 100644
+--- a/accel/tcg/cputlb.c
++++ b/accel/tcg/cputlb.c
+@@ -2018,6 +2018,7 @@ static uint64_t do_ld_mmio_beN(CPUState *cpu, CPUTLBEntryFull *full,
+                                uint64_t ret_be, vaddr addr, int size,
+                                int mmu_idx, MMUAccessType type, uintptr_t ra)
  {
-     CPUTLBEntryFull *full;
-     int flags;
++    bool need_lock = !bql_locked();
+     MemoryRegionSection *section;
+     MemoryRegion *mr;
+     hwaddr mr_offset;
+@@ -2030,10 +2031,14 @@ static uint64_t do_ld_mmio_beN(CPUState *cpu, CPUTLBEntryFull *full,
+     section = io_prepare(&mr_offset, cpu, full->xlat_section, attrs, addr, ra);
+     mr = section->mr;
  
-     inout->gaddr = addr;
-     flags = probe_access_full(inout->env, addr, 0, MMU_DATA_STORE,
--                              inout->ptw_idx, true, &inout->haddr, &full, 0);
-+                              inout->ptw_idx, true, &inout->haddr, &full, ra);
+-    bql_lock();
++    if (likely(need_lock)) {
++        bql_lock();
++    }
+     ret = int_ld_mmio_beN(cpu, full, ret_be, addr, size, mmu_idx,
+                           type, ra, mr, mr_offset);
+-    bql_unlock();
++    if (likely(need_lock)) {
++        bql_unlock();
++    }
  
-     if (unlikely(flags & TLB_INVALID_MASK)) {
-         TranslateFault *err = inout->err;
-@@ -82,20 +82,20 @@ static bool ptw_translate(PTETranslate *inout, hwaddr addr)
-     return true;
+     return ret;
  }
- 
--static inline uint32_t ptw_ldl(const PTETranslate *in)
-+static inline uint32_t ptw_ldl(const PTETranslate *in, uint64_t ra)
+@@ -2042,6 +2047,7 @@ static Int128 do_ld16_mmio_beN(CPUState *cpu, CPUTLBEntryFull *full,
+                                uint64_t ret_be, vaddr addr, int size,
+                                int mmu_idx, uintptr_t ra)
  {
-     if (likely(in->haddr)) {
-         return ldl_p(in->haddr);
-     }
--    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, 0);
-+    return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
++    bool need_lock = !bql_locked();
+     MemoryRegionSection *section;
+     MemoryRegion *mr;
+     hwaddr mr_offset;
+@@ -2054,12 +2060,16 @@ static Int128 do_ld16_mmio_beN(CPUState *cpu, CPUTLBEntryFull *full,
+     section = io_prepare(&mr_offset, cpu, full->xlat_section, attrs, addr, ra);
+     mr = section->mr;
+ 
+-    bql_lock();
++    if (likely(need_lock)) {
++        bql_lock();
++    }
+     a = int_ld_mmio_beN(cpu, full, ret_be, addr, size - 8, mmu_idx,
+                         MMU_DATA_LOAD, ra, mr, mr_offset);
+     b = int_ld_mmio_beN(cpu, full, ret_be, addr + size - 8, 8, mmu_idx,
+                         MMU_DATA_LOAD, ra, mr, mr_offset + size - 8);
+-    bql_unlock();
++    if (likely(need_lock)) {
++        bql_unlock();
++    }
+ 
+     return int128_make128(b, a);
  }
- 
--static inline uint64_t ptw_ldq(const PTETranslate *in)
-+static inline uint64_t ptw_ldq(const PTETranslate *in, uint64_t ra)
+@@ -2565,6 +2575,7 @@ static uint64_t do_st_mmio_leN(CPUState *cpu, CPUTLBEntryFull *full,
+                                uint64_t val_le, vaddr addr, int size,
+                                int mmu_idx, uintptr_t ra)
  {
-     if (likely(in->haddr)) {
-         return ldq_p(in->haddr);
-     }
--    return cpu_ldq_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, 0);
-+    return cpu_ldq_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
++    bool need_lock = !bql_locked();
+     MemoryRegionSection *section;
+     hwaddr mr_offset;
+     MemoryRegion *mr;
+@@ -2577,10 +2588,14 @@ static uint64_t do_st_mmio_leN(CPUState *cpu, CPUTLBEntryFull *full,
+     section = io_prepare(&mr_offset, cpu, full->xlat_section, attrs, addr, ra);
+     mr = section->mr;
+ 
+-    bql_lock();
++    if (likely(need_lock)) {
++        bql_lock();
++    }
+     ret = int_st_mmio_leN(cpu, full, val_le, addr, size, mmu_idx,
+                           ra, mr, mr_offset);
+-    bql_unlock();
++    if (likely(need_lock)) {
++        bql_unlock();
++    }
+ 
+     return ret;
  }
+@@ -2589,6 +2604,7 @@ static uint64_t do_st16_mmio_leN(CPUState *cpu, CPUTLBEntryFull *full,
+                                  Int128 val_le, vaddr addr, int size,
+                                  int mmu_idx, uintptr_t ra)
+ {
++    bool need_lock = !bql_locked();
+     MemoryRegionSection *section;
+     MemoryRegion *mr;
+     hwaddr mr_offset;
+@@ -2601,12 +2617,16 @@ static uint64_t do_st16_mmio_leN(CPUState *cpu, CPUTLBEntryFull *full,
+     section = io_prepare(&mr_offset, cpu, full->xlat_section, attrs, addr, ra);
+     mr = section->mr;
  
- /*
-@@ -132,7 +132,8 @@ static inline bool ptw_setl(const PTETranslate *in, uint32_t old, uint32_t set)
+-    bql_lock();
++    if (likely(need_lock)) {
++        bql_lock();
++    }
+     int_st_mmio_leN(cpu, full, int128_getlo(val_le), addr, 8,
+                     mmu_idx, ra, mr, mr_offset);
+     ret = int_st_mmio_leN(cpu, full, int128_gethi(val_le), addr + 8,
+                           size - 8, mmu_idx, ra, mr, mr_offset + 8);
+-    bql_unlock();
++    if (likely(need_lock)) {
++        bql_unlock();
++    }
+ 
+     return ret;
  }
- 
- static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
--                          TranslateResult *out, TranslateFault *err)
-+                          TranslateResult *out, TranslateFault *err,
-+                          uint64_t ra)
- {
-     const int32_t a20_mask = x86_get_a20_mask(env);
-     const target_ulong addr = in->addr;
-@@ -166,11 +167,11 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-                  */
-                 pte_addr = ((in->cr3 & ~0xfff) +
-                             (((addr >> 48) & 0x1ff) << 3)) & a20_mask;
--                if (!ptw_translate(&pte_trans, pte_addr)) {
-+                if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-                     return false;
-                 }
-             restart_5:
--                pte = ptw_ldq(&pte_trans);
-+                pte = ptw_ldq(&pte_trans, ra);
-                 if (!(pte & PG_PRESENT_MASK)) {
-                     goto do_fault;
-                 }
-@@ -191,11 +192,11 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-              */
-             pte_addr = ((pte & PG_ADDRESS_MASK) +
-                         (((addr >> 39) & 0x1ff) << 3)) & a20_mask;
--            if (!ptw_translate(&pte_trans, pte_addr)) {
-+            if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-                 return false;
-             }
-         restart_4:
--            pte = ptw_ldq(&pte_trans);
-+            pte = ptw_ldq(&pte_trans, ra);
-             if (!(pte & PG_PRESENT_MASK)) {
-                 goto do_fault;
-             }
-@@ -212,11 +213,11 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-              */
-             pte_addr = ((pte & PG_ADDRESS_MASK) +
-                         (((addr >> 30) & 0x1ff) << 3)) & a20_mask;
--            if (!ptw_translate(&pte_trans, pte_addr)) {
-+            if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-                 return false;
-             }
-         restart_3_lma:
--            pte = ptw_ldq(&pte_trans);
-+            pte = ptw_ldq(&pte_trans, ra);
-             if (!(pte & PG_PRESENT_MASK)) {
-                 goto do_fault;
-             }
-@@ -239,12 +240,12 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-              * Page table level 3
-              */
-             pte_addr = ((in->cr3 & ~0x1f) + ((addr >> 27) & 0x18)) & a20_mask;
--            if (!ptw_translate(&pte_trans, pte_addr)) {
-+            if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-                 return false;
-             }
-             rsvd_mask |= PG_HI_USER_MASK;
-         restart_3_nolma:
--            pte = ptw_ldq(&pte_trans);
-+            pte = ptw_ldq(&pte_trans, ra);
-             if (!(pte & PG_PRESENT_MASK)) {
-                 goto do_fault;
-             }
-@@ -262,11 +263,11 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-          */
-         pte_addr = ((pte & PG_ADDRESS_MASK) +
-                     (((addr >> 21) & 0x1ff) << 3)) & a20_mask;
--        if (!ptw_translate(&pte_trans, pte_addr)) {
-+        if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-             return false;
-         }
-     restart_2_pae:
--        pte = ptw_ldq(&pte_trans);
-+        pte = ptw_ldq(&pte_trans, ra);
-         if (!(pte & PG_PRESENT_MASK)) {
-             goto do_fault;
-         }
-@@ -289,10 +290,10 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-          */
-         pte_addr = ((pte & PG_ADDRESS_MASK) +
-                     (((addr >> 12) & 0x1ff) << 3)) & a20_mask;
--        if (!ptw_translate(&pte_trans, pte_addr)) {
-+        if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-             return false;
-         }
--        pte = ptw_ldq(&pte_trans);
-+        pte = ptw_ldq(&pte_trans, ra);
-         if (!(pte & PG_PRESENT_MASK)) {
-             goto do_fault;
-         }
-@@ -307,11 +308,11 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-          * Page table level 2
-          */
-         pte_addr = ((in->cr3 & ~0xfff) + ((addr >> 20) & 0xffc)) & a20_mask;
--        if (!ptw_translate(&pte_trans, pte_addr)) {
-+        if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-             return false;
-         }
-     restart_2_nopae:
--        pte = ptw_ldl(&pte_trans);
-+        pte = ptw_ldl(&pte_trans, ra);
-         if (!(pte & PG_PRESENT_MASK)) {
-             goto do_fault;
-         }
-@@ -336,10 +337,10 @@ static bool mmu_translate(CPUX86State *env, const TranslateParams *in,
-          * Page table level 1
-          */
-         pte_addr = ((pte & ~0xfffu) + ((addr >> 10) & 0xffc)) & a20_mask;
--        if (!ptw_translate(&pte_trans, pte_addr)) {
-+        if (!ptw_translate(&pte_trans, pte_addr, ra)) {
-             return false;
-         }
--        pte = ptw_ldl(&pte_trans);
-+        pte = ptw_ldl(&pte_trans, ra);
-         if (!(pte & PG_PRESENT_MASK)) {
-             goto do_fault;
-         }
-@@ -529,7 +530,8 @@ static G_NORETURN void raise_stage2(CPUX86State *env, TranslateFault *err,
- 
- static bool get_physical_address(CPUX86State *env, vaddr addr,
-                                  MMUAccessType access_type, int mmu_idx,
--                                 TranslateResult *out, TranslateFault *err)
-+                                 TranslateResult *out, TranslateFault *err,
-+                                 uint64_t ra)
- {
-     TranslateParams in;
-     bool use_stage2 = env->hflags2 & HF2_NPT_MASK;
-@@ -548,7 +550,7 @@ static bool get_physical_address(CPUX86State *env, vaddr addr,
-             in.mmu_idx = MMU_USER_IDX;
-             in.ptw_idx = MMU_PHYS_IDX;
- 
--            if (!mmu_translate(env, &in, out, err)) {
-+            if (!mmu_translate(env, &in, out, err, ra)) {
-                 err->stage2 = S2_GPA;
-                 return false;
-             }
-@@ -575,7 +577,7 @@ static bool get_physical_address(CPUX86State *env, vaddr addr,
-                     return false;
-                 }
-             }
--            return mmu_translate(env, &in, out, err);
-+            return mmu_translate(env, &in, out, err, ra);
-         }
-         break;
-     }
-@@ -601,7 +603,8 @@ bool x86_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
-     TranslateResult out;
-     TranslateFault err;
- 
--    if (get_physical_address(env, addr, access_type, mmu_idx, &out, &err)) {
-+    if (get_physical_address(env, addr, access_type, mmu_idx, &out, &err,
-+                             retaddr)) {
-         /*
-          * Even if 4MB pages, we map only one 4KB page in the cache to
-          * avoid filling it too fast.
 -- 
 2.39.2
 
