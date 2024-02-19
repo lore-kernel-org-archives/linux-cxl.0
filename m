@@ -1,40 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4462CCB4;
-	Mon, 19 Feb 2024 11:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5342C856;
+	Mon, 19 Feb 2024 11:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343252; cv=none; b=NWdAAmXmq/sRRLuLsjUgJjbY5AX3RPi6/QZuZeLsOGEY4R9N+RYG+/brIQNkBdvrkEgeHcLEIioNrgOdk7oYYqJDuVbtP2oFxsE0OFXIMKWpzUmhatmEhbEQ/vBdpwAulnSOSOU/5CCJSIvHfRJpTOYNmi/F7Cd9CZyl3VbjNq4=
+	t=1708343474; cv=none; b=Ks0SuLQZhRiCDqphm/1T+4lGYzLmnXoZB7p4AzR5S2UhQIkkUSr+KSKnX9EmQDouvInPQtTHLwoHW3xJFcaFq0+LGsGD68A0AAZ3MhamwuxMGT+GVlqEsPxebAoDFJn889i8Q9ZZko4GKoxSHk+lnMlsK6AmhhDDaSx7k208UxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343252; c=relaxed/simple;
-	bh=qQWNAa3rHjdaAl5JSrWrPWVk6WSw4xgV59on5h3QRjU=;
+	s=arc-20240116; t=1708343474; c=relaxed/simple;
+	bh=u8TUJFmzFu3voi1EVgnpbMlRsT1vKI0cpUQEGm899u0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jB30V40WphevwyLB5mF8By7O84biB9C3RbiiFe1VZ9270h1iXh4NgAM/mafLhlIs2NLDxtIeBfO3vsCPCTjmSk28euDC1FwcePpVxq3s6NatZb7UwZJ9lzlcP0yG/8RZiA9vxjsBnsc0EKzeFjubrMJpJ73288eTWgkB8IXDMyU=
+	 MIME-Version:Content-Type; b=TeowzFz0hAih1qtF7fngG3hPAJ/ctaZVS8k6nHU93RtZ6k+1SUvLqQ+J1Kd7CXxCxVvYGsWfkIydzArLmCrFix1plnRNiWI+1sMpk/6zVs5Yv3a42MHutihtOtiPIXxP6Gqhgob9pvEK88gKhZJ+X3FzabFp8ezVx+j7MtZx7zg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tdgfh0KTRz6K9B6;
-	Mon, 19 Feb 2024 19:43:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tdgkw3YNlz6K8p6;
+	Mon, 19 Feb 2024 19:47:36 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 26EDA140D1D;
-	Mon, 19 Feb 2024 19:47:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 997B5140DDF;
+	Mon, 19 Feb 2024 19:51:09 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 11:47:28 +0000
-Date: Mon, 19 Feb 2024 11:47:21 +0000
+ 2024 11:51:09 +0000
+Date: Mon, 19 Feb 2024 11:51:08 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH] acpi/ghes: Remove CXL CPER notifications
-Message-ID: <20240219114721.0000420b@Huawei.com>
-In-Reply-To: <170820177849.631006.8893584762602010898.stgit@dwillia2-xfh.jf.intel.com>
-References: <170820177849.631006.8893584762602010898.stgit@dwillia2-xfh.jf.intel.com>
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/3 v5] cleanup: Add cond_guard() to conditional guards
+Message-ID: <20240219115108.00002be2@Huawei.com>
+In-Reply-To: <20240217105904.1912368-2-fabio.maria.de.francesco@linux.intel.com>
+References: <20240217105904.1912368-1-fabio.maria.de.francesco@linux.intel.com>
+	<20240217105904.1912368-2-fabio.maria.de.francesco@linux.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,27 +49,33 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sat, 17 Feb 2024 12:29:38 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Sat, 17 Feb 2024 11:59:02 +0100
+"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
 
-> Initial tests with the CXL CPER implementation identified that error
-> reports were being duplicated in the log and the trace event [1].  Then
-> it was discovered that the notification handler took sleeping locks
-> while the GHES event handling runs in spin_lock_irqsave() context [2]
+> Add cond_guard() macro to conditional guards.
 > 
-> Given multiple bugs to fix and how late it is in the development cycle,
-> remove the CXL hookup for now and try again during the next merge
-> window.
+> cond_guard() is a guard to be used with the conditional variants of locks,
+> like down_read_trylock() or mutex_lock_interruptible().
 > 
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Link: http://lore.kernel.org/r/20240108165855.00002f5a@Huawei.com [1]
-> Closes: http://lore.kernel.org/r/b963c490-2c13-4b79-bbe7-34c6568423c7@moroto.mountain [2]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-I'm fine with this.  Updated text in thread is fine as well.
+> It takes a statement (or statement-expression) that is passed as its
+> second argument. That statement (or statement-expression) is executed if
+> waiting for a lock is interrupted or if a _trylock() fails in case of
+> contention.
+> 
+> Usage example:
+> 
+> 	cond_guard(mutex_intr, return -EINTR, &mutex);
+> 
+> Consistent with other usage of _guard(), locks are unlocked at the exit of
+> the scope where cond_guard() is called. This macro can be called multiple
+> times in the same scope.
+> 
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+Looks good.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
