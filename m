@@ -1,258 +1,243 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077C244C8E
-	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 17:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F011D446BD
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 17:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708364414; cv=none; b=OcDn31SVKpQa3jzyI24AEQyi9Gc4JLRA7X28u4Y0e5Cip1NGAd5atYcIbOei+0IZnF7p6CgtS2q/Z4NwXmCSlL/I/VfQwVRwiTmF6OqMw0ClgLne3a7NEglGJfsV3cTAS2sy0qJVtpuSZQN4v+VWUCCNG1HQfDQ7zmC1c8UATaM=
+	t=1708364806; cv=none; b=n2W9sUsudpfFYPwx2o3y2idbzjJ3Dg4j92ziemTYA0u+lEsv+dcQ10Tt4Wjwkbn26q4sEIpQl4xzhEj9TtH9anUgA9GSElK1hi1VZGOcXTD0UZovyxpQbIFJGGrGk/QXw11SC7trGQ0Bh+Xxv9peLwgQm4fGe3STgRBEqQhCBkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708364414; c=relaxed/simple;
-	bh=Wg/+0YNYZebixMdoyIsMqtwzdPACSmx2hs2RYCVurHc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qHI6s9EvP/ne65jV9CyJRbWnzMrpcgEDgkCmZpNBYh6V8dWf6CCGMS9daASmiuk1AA7EzHRM7FDNFoVj117eTww5PpzYDTtHfw6pN92G+uDX1lf9chzHcjbBPz0f4NE7a0GA8Z5DV8KvtjqxAFsUg9srrFHjBZHiER/DR8jPCKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1708364806; c=relaxed/simple;
+	bh=gMMC+2re6yGStJs8/6Nl4L6u5K/oQXHjfmDR3YQOAso=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=t5rv/gEJee0Gy5PhvuxsDOQyX8TQOz9lWDyRkuZsnBvxemamFu+l2ijO5KbfiSfKc3/8I22vajSG31JXTKEbOvqiuHVC2FsILQ6sfspHmFOPXpuHRHyN/7yxZUJr/9RieWDyWzyYgCuTb4DEADrL9Fz5oRUBBXjZB2QpwkcMlC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdqTb6FGcz6K9Fx;
-	Tue, 20 Feb 2024 01:36:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 58417140D1D;
-	Tue, 20 Feb 2024 01:40:09 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 17:40:08 +0000
-Date: Mon, 19 Feb 2024 17:40:08 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "john@jagalactic.com" <john@jagalactic.com>,
-	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Srinivasulu Thanneeru
-	<sthanneeru@micron.com>, "shiju.jose@huawei.com" <shiju.jose@huawei.com>
-Subject: Re: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
- and Get Supported Logs Sub-List commands
-Message-ID: <20240219174008.000061b4@Huawei.com>
-In-Reply-To: <9a9e96a742e8417bb84945563d80163f@micron.com>
-References: <20240207103634.199-1-sthanneeru.opensrc@micron.com>
-	<20240208125713.00004776@Huawei.com>
-	<834c6fec2ed74f9da7643ee61843373d@micron.com>
-	<20240215122653.00005ce2@Huawei.com>
-	<9a9e96a742e8417bb84945563d80163f@micron.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tdqd76s9vz67G9M;
+	Tue, 20 Feb 2024 01:43:07 +0800 (CST)
+Received: from lhrpeml100004.china.huawei.com (unknown [7.191.162.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id 706DA1404FC;
+	Tue, 20 Feb 2024 01:46:41 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml100004.china.huawei.com (7.191.162.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 19 Feb 2024 17:46:41 +0000
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
+ Mon, 19 Feb 2024 17:46:41 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, Linuxarm
+	<linuxarm@huawei.com>
+Subject: RE: [PATCH v4 3/3] hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS
+ control feature
+Thread-Topic: [PATCH v4 3/3] hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS
+ control feature
+Thread-Index: AQHaY0RpBuXGGv7onE+ApsS5f2IfM7ER43WAgAAK9pA=
+Date: Mon, 19 Feb 2024 17:46:40 +0000
+Message-ID: <f52ee7526af14f3596081af40e953ec8@huawei.com>
+References: <20240219150025.1531-1-shiju.jose@huawei.com>
+	<20240219150025.1531-4-shiju.jose@huawei.com>
+ <20240219165927.00006fd8@Huawei.com>
+In-Reply-To: <20240219165927.00006fd8@Huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 19 Feb 2024 17:32:25 +0000
-Srinivasulu Opensrc <sthanneeru.opensrc@micron.com> wrote:
+Hi Jonathan,
 
-> > -----Original Message-----
-> > From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > Sent: Thursday, February 15, 2024 5:57 PM
-> > To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-> > Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org;
-> > dan.j.williams@intel.com; john@jagalactic.com; Eishan Mirakhur
-> > <emirakhur@micron.com>; Ajay Joshi <ajayjoshi@micron.com>; Ravis
-> > OpenSrc <Ravis.OpenSrc@micron.com>; Srinivasulu Thanneeru
-> > <sthanneeru@micron.com>; shiju.jose@huawei.com
-> > Subject: Re: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log
-> > and Get Supported Logs Sub-List commands
-> > 
-> > CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
-> > you recognize the sender and were expecting this message.
-> > 
-> > 
-> > On Wed, 14 Feb 2024 16:09:01 +0000
-> > Srinivasulu Opensrc <sthanneeru.opensrc@micron.com> wrote:
-> >   
-> > > > -----Original Message-----
-> > > > From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > > > Sent: Thursday, February 8, 2024 6:27 PM
-> > > > To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-> > > > Cc: linux-cxl@vger.kernel.org; linux-mm@kvack.org;
-> > > > dan.j.williams@intel.com; john@jagalactic.com; Eishan Mirakhur
-> > > > <emirakhur@micron.com>; Ajay Joshi <ajayjoshi@micron.com>; Ravis
-> > > > OpenSrc <Ravis.OpenSrc@micron.com>; Srinivasulu Thanneeru
-> > > > <sthanneeru@micron.com>; shiju.jose@huawei.com
-> > > > Subject: [EXT] Re: [PATCH] cxl/mbox: Add Get Log Capabilities, Clear Log  
-> > and  
-> > > > Get Supported Logs Sub-List commands
-> > > >
-> > > > CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
-> > > > you recognize the sender and were expecting this message.
-> > > >
-> > > >
-> > > > On Wed, 7 Feb 2024 16:06:34 +0530
-> > > > <sthanneeru.opensrc@micron.com> wrote:
-> > > >  
-> > > > > From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-> > > > >
-> > > > > Adding UAPI support for
-> > > > > 1. CXL r3.1 8.2.9.5.3 Get Log Capabilities.
-> > > > > 2. CXL r3.1 8.2.9.5.4 Clear Log commands.
-> > > > > 3. CXL r3.1 8.2.9.5.6 Get Supported Logs Sub-List.
-> > > > >
-> > > > > Signed-off-by: Srinivasulu Thanneeru  
-> > <sthanneeru.opensrc@micron.com>  
-> > > >
-> > > > Hi Srinivasulu,
-> > > >
-> > > > Whilst I can conjecture some valid reasons to expose these to
-> > > > userspace, can you add some examples to this patch description?
-> > > >
-> > > > We might want to filter the clear in particular to avoid a clash
-> > > > with the driver log handling. That is only allow it for vendor
-> > > > logs.  
-> > >
-> > > Are you suggesting that I should restrict the "Vendor Debug Log"  
-> > functionality to  
-> > > only apply to Vendor logs.? Why not include Component State Dumps logs  
-> > that  
-> > > support the clear log feature?
-> > >
-> > > I might be overlooking something; please enlighten me.  
-> > 
-> > I had an old copy of the spec open. Indeed component state dumps
-> > should be safe to expose as well.  
-> 
-> Thank you, Jonathan.
-> I'm considering adding the following snippet to the V2 patch for "clear log" filtering. 
-> Any initial feedback would be appreciated.
+Thanks for the feedbacks.
 
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 19 February 2024 16:59
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: qemu-devel@nongnu.org; linux-cxl@vger.kernel.org; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [PATCH v4 3/3] hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS
+>control feature
+>
+>On Mon, 19 Feb 2024 23:00:25 +0800
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub
+>> (ECS) control feature.
+>>
+>> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
+>> Specification (JESD79-5) and allows the DRAM to internally read,
+>> correct single-bit errors, and write back corrected data bits to the
+>> DRAM array while providing transparency to error counts. The ECS
+>> control feature allows the request to configure ECS input
+>> configurations during system boot or at run-time.
+>>
+>> The ECS control allows the requester to change the log entry type, the
+>> ECS threshold count provided that the request is within the definition
+>> specified in DDR5 mode registers, change mode between codeword mode
+>> and row count mode, and reset the ECS counter.
+>>
+>> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>
+>Same thing about it being per device, not global.
+Sure.  I will check this.
 
-That's definitely an improvement and should let the discussion move forwards.
+>
+>Otherwise, just a few minor comments inline.
+>
+>> ---
+>>  hw/cxl/cxl-mailbox-utils.c | 100
+>> ++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 99 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index 908ce16642..2277418c07 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -998,6 +998,7 @@ typedef struct CXLSupportedFeatureEntry {
+>>
+>>  enum CXL_SUPPORTED_FEATURES_LIST {
+>>      CXL_FEATURE_PATROL_SCRUB =3D 0,
+>> +    CXL_FEATURE_ECS,
+>>      CXL_FEATURE_MAX
+>>  };
+>>
+>> @@ -1070,6 +1071,43 @@ typedef struct CXLMemPatrolScrubSetFeature {  }
+>> QEMU_PACKED QEMU_ALIGNED(16) CXLMemPatrolScrubSetFeature;  static
+>> CXLMemPatrolScrubReadAttrs cxl_memdev_ps_feat_attrs;
+>>
+>> +/*
+>> + * CXL r3.1 section 8.2.9.9.11.2:
+>> + * DDR5 Error Check Scrub (ECS) Control Feature  */ static const
+>> +QemuUUID ecs_uuid =3D {
+>> +    .data =3D UUID(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba,
+>> +                 0xb9, 0x69, 0x1e, 0x89, 0x33, 0x86) };
+>> +
+>> +#define CXL_ECS_GET_FEATURE_VERSION    0x01
+>> +#define CXL_ECS_SET_FEATURE_VERSION    0x01
+>> +#define CXL_ECS_LOG_ENTRY_TYPE_DEFAULT    0x01
+>> +#define CXL_ECS_REALTIME_REPORT_CAP_DEFAULT    1
+>> +#define CXL_ECS_THRESHOLD_COUNT_DEFAULT    3 /* 3: 256, 4: 1024, 5:
+>4096 */
+>> +#define CXL_ECS_MODE_DEFAULT    0
+>> +
+>> +#define CXL_ECS_NUM_MEDIA_FRUS   3
+>> +
+>> +/* CXL memdev DDR5 ECS control attributes */ typedef struct
+>> +CXLMemECSReadAttrs {
+>> +        uint8_t ecs_log_cap;
+>> +        uint8_t ecs_cap;
+>> +        uint16_t ecs_config;
+>> +        uint8_t ecs_flags;
+>> +} QEMU_PACKED CXLMemECSReadAttrs;
+>> +
+>> +typedef struct CXLMemECSWriteAttrs {
+>> +    uint8_t ecs_log_cap;
+>> +    uint16_t ecs_config;
+>> +} QEMU_PACKED CXLMemECSWriteAttrs;
+>> +
+>> +typedef struct CXLMemECSSetFeature {
+>> +        CXLSetFeatureInHeader hdr;
+>> +        CXLMemECSWriteAttrs feat_data[]; } QEMU_PACKED
+>> +QEMU_ALIGNED(16) CXLMemECSSetFeature; static CXLMemECSReadAttrs
+>> +cxl_ecs_feat_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+>
+>This should be device instance specific.
+Ok.
 
-Jonathan
+>
+>> +
+>>  /* CXL r3.1 section 8.2.9.6.1: Get Supported Features (Opcode 0500h)
+>> */  static CXLRetCode cmd_features_get_supported(const struct cxl_cmd
+>*cmd,
+>>                                               uint8_t *payload_in, @@
+>> -1088,7 +1126,7 @@ static CXLRetCode cmd_features_get_supported(const
+>struct cxl_cmd *cmd,
+>>          CXLSupportedFeatureHeader hdr;
+>>          CXLSupportedFeatureEntry feat_entries[];
+>>      } QEMU_PACKED QEMU_ALIGNED(16) * get_feats_out =3D (void
+>*)payload_out;
+>> -    uint16_t index;
+>> +    uint16_t count, index;
+>>      uint16_t entry, req_entries;
+>>      uint16_t feat_entries =3D 0;
+>>
+>> @@ -1130,6 +1168,35 @@ static CXLRetCode
+>cmd_features_get_supported(const struct cxl_cmd *cmd,
+>>              cxl_memdev_ps_feat_attrs.scrub_flags =3D
+>>                                  CXL_MEMDEV_PS_ENABLE_DEFAULT;
+>>              break;
+>> +        case  CXL_FEATURE_ECS:
+>> +            /* Fill supported feature entry for device DDR5 ECS control=
+ */
+>> +            get_feats_out->feat_entries[entry] =3D
+>> +                         (struct CXLSupportedFeatureEntry) {
+>> +                .uuid =3D ecs_uuid,
+>> +                .feat_index =3D index,
+>> +                .get_feat_size =3D CXL_ECS_NUM_MEDIA_FRUS *
+>> +                                    sizeof(CXLMemECSReadAttrs),
+>> +                .set_feat_size =3D CXL_ECS_NUM_MEDIA_FRUS *
+>> +                                    sizeof(CXLMemECSWriteAttrs),
+>> +                .attr_flags =3D 0x1,
+>> +                .get_feat_version =3D CXL_ECS_GET_FEATURE_VERSION,
+>> +                .set_feat_version =3D CXL_ECS_SET_FEATURE_VERSION,
+>> +                .set_feat_effects =3D 0,
+>I think spec says Immediate config change for this one.Plus the CEL bit sh=
+ould be
+>set (bit 9)
+Sure. I will change.=20
+=20
+>
+>Check this for the other features as well.
+>
+>> +            };
+>> +            feat_entries++;
+>
+>Why update this mid setting up the record?  I briefly thought this wrote t=
+wo
+>different records (which was odd!)
+>
+>We don't have gaps in the features - we probably won't ever provide that d=
+egree
+>of control of the QEMU model, so feat_entries will be req_entries -
+>get_feats_in->start_index No need to keep a count.
+Yes. You are right.
 
+>
+>> +            /* Set default value for DDR5 ECS read attributes */
+>> +            for (count =3D 0; count < CXL_ECS_NUM_MEDIA_FRUS; count++) =
+{
+>> +                cxl_ecs_feat_attrs[count].ecs_log_cap =3D
+>> +                                    CXL_ECS_LOG_ENTRY_TYPE_DEFAULT;
+>> +                cxl_ecs_feat_attrs[count].ecs_cap =3D
+>> +                                    CXL_ECS_REALTIME_REPORT_CAP_DEFAULT=
+;
+>> +                cxl_ecs_feat_attrs[count].ecs_config =3D
+>> +                                    CXL_ECS_THRESHOLD_COUNT_DEFAULT |
+>> +                                    (CXL_ECS_MODE_DEFAULT << 3);
+>> +                /* Reserved */
+>> +                cxl_ecs_feat_attrs[count].ecs_flags =3D 0;
+>> +            }
+>> +            break;
+>>          default:
+>>              break;
+>>          }
 
-> 
-> --------------
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> enum {
->         CEL_UUID,
->         VENDOR_DEBUG_UUID,
-> +       COMPONENT_STATE_DUMP_UUID,
-> };
-> 
-> /* See CXL 2.0 Table 170. Get Log Input Payload */
-> static const uuid_t log_uuid[] = {
->         [CEL_UUID] = DEFINE_CXL_CEL_UUID,
->         [VENDOR_DEBUG_UUID] = DEFINE_CXL_VENDOR_DEBUG_UUID,
-> +       [COMPONENT_STATE_DUMP_UUID] = DEFINE_CXL_COMPONENT_STATE_DUMP_UUID,
->  };
-> 
->  /*
-> @@ -333,6 +346,12 @@ static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
->                         return false;
->                 break;
->         }
-> +
-> +       case CXL_MBOX_OP_CLEAR_LOG: {
-> +               const uuid_t *uuid = (uuid_t *)payload_in;
-> +               return (uuid_equal(uuid, &log_uuid[VENDOR_DEBUG_UUID])) ||
-> +                      (uuid_equal(uuid, &log_uuid[COMPONENT_STATE_DUMP_UUID]))
-> +               }
-> }
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -565,6 +565,9 @@ enum cxl_opcode {
->  #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
->         UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
->                   0x40, 0x3d, 0x86)
-> +#define DEFINE_CXL_COMPONENT_STATE_DUMP_UUID
-> +       UUID_INIT(0x3fab4cf, 0x01b6, 0x4332, 0x94, 0x3e, 0x5e, 0x99, 0x62,       \
-> +                 0xf2, 0x35, 0x67)
-> --------------
-> > >
-> > > For example, following both supports Clear log in our setups.
-> > > * 5e1819d9-11a9-400c-811f-d60719403d86 - Vendor Debug Log
-> > > * b3fab4cf-01b6-4332-943e-5e9962f23567 - Component State Dump Log
-> > >  
-> > > >
-> > > > Perhaps split the patch into 2 parts. The less controversial
-> > > > GET_LOG_CAPS and GET_LOG_SUBLIST, followed by a patch for the
-> > > > destructive clear log.
-> > > >
-> > > > The memory scrub handling might well
-> > > > access the ECS log for example (I don't think the current proposal
-> > > > yet does this).
-> > > >
-> > > > Jonathan
-> > > >
-> > > >  
-> > > > > ---
-> > > > >  drivers/cxl/core/mbox.c      | 3 +++
-> > > > >  drivers/cxl/cxlmem.h         | 3 +++
-> > > > >  include/uapi/linux/cxl_mem.h | 3 +++
-> > > > >  3 files changed, 9 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > > > index 27166a411705..64a44e286488 100644
-> > > > > --- a/drivers/cxl/core/mbox.c
-> > > > > +++ b/drivers/cxl/core/mbox.c
-> > > > > @@ -64,6 +64,9 @@ static struct cxl_mem_command  
-> > > > cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {  
-> > > > >       CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
-> > > > >       CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> > > > >       CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
-> > > > > +     CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
-> > > > > +     CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
-> > > > > +     CXL_CMD(GET_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
-> > > > >  };
-> > > > >
-> > > > >  /*
-> > > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > > index 5303d6942b88..4128c810051c 100644
-> > > > > --- a/drivers/cxl/cxlmem.h
-> > > > > +++ b/drivers/cxl/cxlmem.h
-> > > > > @@ -529,6 +529,9 @@ enum cxl_opcode {
-> > > > >       CXL_MBOX_OP_SET_TIMESTAMP       = 0x0301,
-> > > > >       CXL_MBOX_OP_GET_SUPPORTED_LOGS  = 0x0400,
-> > > > >       CXL_MBOX_OP_GET_LOG             = 0x0401,
-> > > > > +     CXL_MBOX_OP_GET_LOG_CAPS        = 0x0402,
-> > > > > +     CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
-> > > > > +     CXL_MBOX_OP_GET_LOG_SUBLIST     = 0x0405,  
-> > > >
-> > > > Name should include something to make it clear this is getting
-> > > > sublist of 'supported' logs.  Not the log.
-> > > >  
-> > > > >       CXL_MBOX_OP_IDENTIFY            = 0x4000,
-> > > > >       CXL_MBOX_OP_GET_PARTITION_INFO  = 0x4100,
-> > > > >       CXL_MBOX_OP_SET_PARTITION_INFO  = 0x4101,
-> > > > > diff --git a/include/uapi/linux/cxl_mem.h  
-> > b/include/uapi/linux/cxl_mem.h  
-> > > > > index 42066f4eb890..d2df9782a5ef 100644
-> > > > > --- a/include/uapi/linux/cxl_mem.h
-> > > > > +++ b/include/uapi/linux/cxl_mem.h
-> > > > > @@ -47,6 +47,9 @@
-> > > > >       ___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
-> > > > >       ___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),  
-> > \  
-> > > > >       ___C(GET_TIMESTAMP, "Get Timestamp"),                             \
-> > > > > +     ___C(GET_LOG_CAPS, "Get Log Capabilities"),                       \
-> > > > > +     ___C(CLEAR_LOG, "Clear Log"),                                     \
-> > > > > +     ___C(GET_LOG_SUBLIST, "Get Log Sublist"),                         \  
-> > > >
-> > > > Likewise, mention it's list of supported logs.
-> > > >  
-> > > > >       ___C(MAX, "invalid / last command")
-> > > > >
-> > > > >  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a  
-> > >  
-> 
-
+Thanks,
+Shiju
