@@ -1,201 +1,111 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F58940BEF
-	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 16:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3783445956
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Feb 2024 17:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708361975; cv=none; b=ropflGkkBcjJKSRgKJ0WTHh1NOnR2VoXF00RZh/h7zXTJGDeHgG8cTD3OsZU/d5zOHOy/JTjxd0DBpHJcYT8KTAlIHI2RKLDcHg6MG9uIaWwsV9/kmgbqztbkonw5zgNpQEV7Njr2d5eR2Lbfr1zlNq7fBfuU/1zcTsitM+SHfk=
+	t=1708363919; cv=none; b=daMjwHvhmkSfOdcgSHgOwgbo4rc4Mei2x9+oIrCUtHYn8hxnjmqveWEz6GSgHJmYi92M9+SSA11OxIUDhxswU2p5F2pVCSOYBp6Ta/WtVN9/+FqA4IfBOvwSDzVooJWHmCj+8Z95CiRYpVzkQYGHozSu66H4fPxdVUF+gHsgApY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708361975; c=relaxed/simple;
-	bh=qcsTAEU5Lq149acMN3wUKWBHNU9vQcC8irDOH8m+Ii0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z8OgKy5mQTak+L+T8WwvsQxoeocq9jwWrzFFPuhGXKBpwUs/5noRMGDae+2BRbUcR7VylBGAl/bLdjNsvnNC55I0AgdSJa3NB87+AcDIWwQ0MqAvFpgg7MJRQT/tHVdi+p7JixhMQ6MTZU9zvJHqnNM+BoBmE2TORmTT8KirE08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1708363919; c=relaxed/simple;
+	bh=g85QRfqjmi4GiCk9esQPLvz9kDvUKiwJ9KPvXZRgqg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPqgZPvppzblydJZIdM8U39YXZUlcw1bOr99z4AY7auwgY5uPz0pjDP5dbnXG5rvK8pWkBdZDtTGvrwDnFg9/ypPAQWTEy7rSMNKWwUjJ5K7eFIXvX7hAh380b2kDz2vrMx9z39yKXfUZ4fSfhrdFVLc55oM5ACSdRT+l3eiEm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdpYt1Y7Qz6J9yl;
-	Tue, 20 Feb 2024 00:55:14 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdqHF6rcXz67D3k;
+	Tue, 20 Feb 2024 01:27:37 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C5411140FB6;
-	Tue, 20 Feb 2024 00:59:28 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 16:59:28 +0000
-Date: Mon, 19 Feb 2024 16:59:27 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v4 3/3] hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS
- control feature
-Message-ID: <20240219165927.00006fd8@Huawei.com>
-In-Reply-To: <20240219150025.1531-4-shiju.jose@huawei.com>
-References: <20240219150025.1531-1-shiju.jose@huawei.com>
-	<20240219150025.1531-4-shiju.jose@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by mail.maildlp.com (Postfix) with ESMTPS id 97786140B54;
+	Tue, 20 Feb 2024 01:31:52 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 19 Feb 2024 17:31:52 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <qemu-devel@nongnu.org>, Peter Maydell <peter.maydell@linaro.org>, Gregory
+ Price <gregory.price@memverge.com>, =?UTF-8?q?Alex=20Benn=C3=A9e?=
+	<alex.bennee@linaro.org>, Sajjan Rao <sajjanr@gmail.com>, Dimitrios Palyvos
+	<dimitrios.palyvos@zptcorp.com>, <richard.henderson@linaro.org>, Paolo
+ Bonzini <pbonzini@redhat.com>, Eduardo Habkost <eduardo@habkost.net>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>
+Subject: [PATCH v2 0/3 qemu] tcg/i386: Page tables in MMIO memory fixes (CXL)
+Date: Mon, 19 Feb 2024 17:31:50 +0000
+Message-ID: <20240219173153.12114-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 19 Feb 2024 23:00:25 +0800
-<shiju.jose@huawei.com> wrote:
+v2: Changes documented in patch 3.
+   - I have not addressed Richard's comment on recursive locks as that
+     seems to be a more general issue not specific to this patch set.
 
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub (ECS)
-> control feature.
-> 
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts. The ECS control feature
-> allows the request to configure ECS input configurations during system
-> boot or at run-time.
-> 
-> The ECS control allows the requester to change the log entry type, the ECS
-> threshold count provided that the request is within the definition
-> specified in DDR5 mode registers, change mode between codeword mode and
-> row count mode, and reset the ECS counter.
-> 
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+CXL memory is interleaved at granularities as fine as 64 bytes.
+To emulate this each read and write access undergoes address translation
+similar to that used in physical hardware. This is done using
+cfmws_ops for a memory region per CXL Fixed Memory Window (the PA address
+range in the host that is interleaved across host bridges and beyond.
+The OS programs interleaved decoders in the CXL Root Bridges, switch
+upstream ports and the corresponding decoders CXL type 3 devices who
+have to know the Host PA to Device PA mappings).
 
-Same thing about it being per device, not global. 
+Unfortunately this CXL memory may be used as normal memory and anything
+that can end up in RAM can be placed within it. As Linux has become
+more capable of handling this memory we've started to get quite a few
+bug reports for the QEMU support. However terrible the performance is
+people seem to like running actual software stacks on it :(
 
-Otherwise, just a few minor comments inline.
+This doesn't work for KVM - so for now CXL emulation remains TCG only.
+(unless you are very careful on how it is used!)  I plan to add some
+safety guards at a later date to make it slightly harder for people
+to shoot themselves in the foot + a more limited set of CXL functionality
+that is safe (no interleaving!)
 
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 100 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 99 insertions(+), 1 deletion(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 908ce16642..2277418c07 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -998,6 +998,7 @@ typedef struct CXLSupportedFeatureEntry {
->  
->  enum CXL_SUPPORTED_FEATURES_LIST {
->      CXL_FEATURE_PATROL_SCRUB = 0,
-> +    CXL_FEATURE_ECS,
->      CXL_FEATURE_MAX
->  };
->  
-> @@ -1070,6 +1071,43 @@ typedef struct CXLMemPatrolScrubSetFeature {
->  } QEMU_PACKED QEMU_ALIGNED(16) CXLMemPatrolScrubSetFeature;
->  static CXLMemPatrolScrubReadAttrs cxl_memdev_ps_feat_attrs;
->  
-> +/*
-> + * CXL r3.1 section 8.2.9.9.11.2:
-> + * DDR5 Error Check Scrub (ECS) Control Feature
-> + */
-> +static const QemuUUID ecs_uuid = {
-> +    .data = UUID(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba,
-> +                 0xb9, 0x69, 0x1e, 0x89, 0x33, 0x86)
-> +};
-> +
-> +#define CXL_ECS_GET_FEATURE_VERSION    0x01
-> +#define CXL_ECS_SET_FEATURE_VERSION    0x01
-> +#define CXL_ECS_LOG_ENTRY_TYPE_DEFAULT    0x01
-> +#define CXL_ECS_REALTIME_REPORT_CAP_DEFAULT    1
-> +#define CXL_ECS_THRESHOLD_COUNT_DEFAULT    3 /* 3: 256, 4: 1024, 5: 4096 */
-> +#define CXL_ECS_MODE_DEFAULT    0
-> +
-> +#define CXL_ECS_NUM_MEDIA_FRUS   3
-> +
-> +/* CXL memdev DDR5 ECS control attributes */
-> +typedef struct CXLMemECSReadAttrs {
-> +        uint8_t ecs_log_cap;
-> +        uint8_t ecs_cap;
-> +        uint16_t ecs_config;
-> +        uint8_t ecs_flags;
-> +} QEMU_PACKED CXLMemECSReadAttrs;
-> +
-> +typedef struct CXLMemECSWriteAttrs {
-> +    uint8_t ecs_log_cap;
-> +    uint16_t ecs_config;
-> +} QEMU_PACKED CXLMemECSWriteAttrs;
-> +
-> +typedef struct CXLMemECSSetFeature {
-> +        CXLSetFeatureInHeader hdr;
-> +        CXLMemECSWriteAttrs feat_data[];
-> +} QEMU_PACKED QEMU_ALIGNED(16) CXLMemECSSetFeature;
-> +static CXLMemECSReadAttrs cxl_ecs_feat_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+Previously we had some issues with TCG reading instructions from CXL
+memory but that is now all working. This time the issues are around
+the Page Tables being in the CXL memory + DMA buffers being placed in it.
 
-This should be device instance specific.
+The test setup I've been using is simple 2 way interleave via 2 root
+ports below a single CXL root complex.  After configuration in Linux
+these are mapped to their own Numa Node and
+numactl --membind=1 ls
+followed by powering down the machine is sufficient to hit all the bugs
+addressed in this series.
 
-> +
->  /* CXL r3.1 section 8.2.9.6.1: Get Supported Features (Opcode 0500h) */
->  static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
->                                               uint8_t *payload_in,
-> @@ -1088,7 +1126,7 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
->          CXLSupportedFeatureHeader hdr;
->          CXLSupportedFeatureEntry feat_entries[];
->      } QEMU_PACKED QEMU_ALIGNED(16) * get_feats_out = (void *)payload_out;
-> -    uint16_t index;
-> +    uint16_t count, index;
->      uint16_t entry, req_entries;
->      uint16_t feat_entries = 0;
->  
-> @@ -1130,6 +1168,35 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
->              cxl_memdev_ps_feat_attrs.scrub_flags =
->                                  CXL_MEMDEV_PS_ENABLE_DEFAULT;
->              break;
-> +        case  CXL_FEATURE_ECS:
-> +            /* Fill supported feature entry for device DDR5 ECS control */
-> +            get_feats_out->feat_entries[entry] =
-> +                         (struct CXLSupportedFeatureEntry) {
-> +                .uuid = ecs_uuid,
-> +                .feat_index = index,
-> +                .get_feat_size = CXL_ECS_NUM_MEDIA_FRUS *
-> +                                    sizeof(CXLMemECSReadAttrs),
-> +                .set_feat_size = CXL_ECS_NUM_MEDIA_FRUS *
-> +                                    sizeof(CXLMemECSWriteAttrs),
-> +                .attr_flags = 0x1,
-> +                .get_feat_version = CXL_ECS_GET_FEATURE_VERSION,
-> +                .set_feat_version = CXL_ECS_SET_FEATURE_VERSION,
-> +                .set_feat_effects = 0,
-I think spec says Immediate config change for this one.Plus the CEL bit
-should be set (bit 9)
+Thanks to Gregory, Peter and Alex for their help figuring this lot
+out. Note that I've included one patch from Peter without a SoB
+because so far it has only be posted in the discussion thread.
 
-Check this for the other features as well.
- 
-> +            };
-> +            feat_entries++;
+Whilst thread started back at:
+https://lore.kernel.org/all/CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com/
+The QEMU part is from.
+https://lore.kernel.org/all/20240201130438.00001384@Huawei.com/
 
-Why update this mid setting up the record?  I briefly thought this wrote
-two different records (which was odd!)
 
-We don't have gaps in the features - we probably won't ever provide that
-degree of control of the QEMU model, so feat_entries will be
-req_entries - get_feats_in->start_index
-No need to keep a count.
+Gregory Price (1):
+  target/i386: Enable page walking from MMIO memory
 
-> +            /* Set default value for DDR5 ECS read attributes */
-> +            for (count = 0; count < CXL_ECS_NUM_MEDIA_FRUS; count++) {
-> +                cxl_ecs_feat_attrs[count].ecs_log_cap =
-> +                                    CXL_ECS_LOG_ENTRY_TYPE_DEFAULT;
-> +                cxl_ecs_feat_attrs[count].ecs_cap =
-> +                                    CXL_ECS_REALTIME_REPORT_CAP_DEFAULT;
-> +                cxl_ecs_feat_attrs[count].ecs_config =
-> +                                    CXL_ECS_THRESHOLD_COUNT_DEFAULT |
-> +                                    (CXL_ECS_MODE_DEFAULT << 3);
-> +                /* Reserved */
-> +                cxl_ecs_feat_attrs[count].ecs_flags = 0;
-> +            }
-> +            break;
->          default:
->              break;
->          }
+Jonathan Cameron (1):
+  tcg: Avoid double lock if page tables happen to be in mmio memory.
+
+Peter Maydell (1):
+  accel/tcg: Set can_do_io at at start of lookup_tb_ptr helper
+
+ accel/tcg/cpu-exec.c                 |  8 ++++
+ accel/tcg/cputlb.c                   | 36 ++++++++++++++----
+ target/i386/tcg/sysemu/excp_helper.c | 57 +++++++++++++++-------------
+ 3 files changed, 66 insertions(+), 35 deletions(-)
+
+-- 
+2.39.2
 
