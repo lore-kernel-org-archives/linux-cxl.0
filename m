@@ -1,76 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8874F6A8D5;
-	Tue, 20 Feb 2024 14:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4AB768FA;
+	Tue, 20 Feb 2024 16:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437888; cv=none; b=XwVEqGZ/h9i+mlcp3U/7Eu+D+7+z/3EVYPAW4dlc6mRygQypIXRIhL8zx2Bp5vJzmtMMgFQHZEfRDr7ZuNKfLWCX9cyC4z6eykNxUPQi1eCXOQZJ6UnOjQXs9C6qc9Uxd1l2THslDHx5GYbYym2fKBows0LwQtCe0CLgoHHuStk=
+	t=1708445560; cv=none; b=Aohs+BqGzUSwtPO0qXZkTN7uFrCZiSjKUl39rI5u1ie0cgP25l3Sv7ksdWG+orBMQF08rQDXp8PiN6CS48Xc5g9fRtsAjq+VQG86X7Dd/WwJN8yGFp5jp48d39xpx2yteburfhWICqOnHMShV2RIDLQoTeEToHKE5QfLD79vcU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437888; c=relaxed/simple;
-	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DP1QxVJkwS97w5qqTiTK5o3OzkLDkqQKsOT93bM/ASBHzN0sEsGV5Du2ifOekzDFr59vl8OGS9ZU86ScYwiUkt06AiHjSyDDaWMtiD8xge+diQu9t/hl+Cpl5Zqc1MY7mpKzOSr9tiZ4Xqt6y48/6kWe8IpEve1JlNKqx4e2YRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yn09JOMy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yn09JOMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60AAC43390;
-	Tue, 20 Feb 2024 14:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708437888;
-	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yn09JOMyRXKoxpREqz+RRmA7flJ0OlpSjXeiCVrWjuGgUnSxUvJvP5aQcBcJ8hWO5
-	 imjk8ThAzKoWZqnY5/PDQ6OwTgtxO1FWAT7aw7CQF7tcOq2jnF9Rg22iInfU3jyrRY
-	 BLnbv6Nge+Delhb5RnSeTdEhiGcweBZ+5cg6AQpkxTT8IauKhoqVg2rpbPRIrKZEAw
-	 jwSry43jl8lOzDKqUl2s11KIQuanyKovW1UFs5FsTu/mMUGGY9Wkowv2j/VxISwjje
-	 +kqrpUO4VDqcLYcF5FbahyCCJFCJg0CZgPHpAyMbqEq32tUvoiaTpwBcpw0htzNRpG
-	 QIkf3rMJrcNWw==
-From: Will Deacon <will@kernel.org>
-To: hj96.nam@samsung.com
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	wj28.lee@samsung.com,
-	jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	ks0204.kim@samsung.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] perf: CXL: fix CPMU filter value mask length
-Date: Tue, 20 Feb 2024 14:04:39 +0000
-Message-Id: <170843064764.2617406.4906791201590222748.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240216014522.32321-1-hj96.nam@samsung.com>
-References: <CGME20240216014507epcas2p41686c0ccb1fa73715499e45bbbc7d7e9@epcas2p4.samsung.com> <20240216014522.32321-1-hj96.nam@samsung.com>
+	s=arc-20240116; t=1708445560; c=relaxed/simple;
+	bh=WZwcnRFd8AxpgMn/ncUH7HuyNVf1CJoD2fIOANFeZdk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pAE2XePKwjdm8jTqf2SuZMcjLPq6SBGDyTE7JYUpA1mxtsb8m8R3Qgtf5aEqS/rhPXydnj7DYWveMs2VxtVDSpZLH9hlSLXu7NF62sCTQdphXjPicnBlxZ2SPemmLyxkV4LUQ8buSs0gSkc586KIYQm5IegNSSb3ONZ1wthic+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TfPTZ58hwz6K635;
+	Wed, 21 Feb 2024 00:08:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B9642140B54;
+	Wed, 21 Feb 2024 00:12:34 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
+ 2024 16:12:33 +0000
+Date: Tue, 20 Feb 2024 16:12:32 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <shiju.jose@huawei.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v6 12/12] memory: RAS2: Add memory RAS2 driver
+Message-ID: <20240220161232.00000496@Huawei.com>
+In-Reply-To: <20240215111455.1462-13-shiju.jose@huawei.com>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+	<20240215111455.1462-13-shiju.jose@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 16 Feb 2024 10:45:22 +0900, hj96.nam@samsung.com wrote:
-> From: Hojin Nam <hj96.nam@samsung.com>
-> 
-> CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-> However, it is used as 2B length in code and comments.
-> 
-> 
+On Thu, 15 Feb 2024 19:14:54 +0800
+<shiju.jose@huawei.com> wrote:
 
-Applied to arm64 (for-next/fixes), thanks!
+> From: Shiju Jose <shiju.jose@huawei.com>
+>=20
+> Memory RAS2 driver binds to the platform device add by the ACPI RAS2
+> driver.
+> Driver registers the PCC channel for communicating with the ACPI compliant
+> platform that contains RAS2 command support in the hardware.
+>=20
+> Add interface functions to support configuring the parameters of HW patrol
+> scrubs in the system, which exposed to the kernel via the RAS2 and PCC,
+> using the RAS2 commands.
+>=20
+> Add support for RAS2 platform devices to register with scrub subsystem
+> driver. This enables user to configure the parameters of HW patrol scrubs,
+> which exposed to the kernel via the RAS2 table, through the scrub sysfs
+> attributes.
+>=20
+> Open Question:
+> Sysfs scrub control attribute "enable_background_scrub" is added for RAS2,
+> based on the feedback from Bill Schwartz <wschwartz@amperecomputing.com
+> on v4 to enable/disable the background_scrubbing in the platform as defin=
+ed in the
+> =E2=80=9CConfigure Scrub Parameters [INPUT]=E2=80=9C field  in RAS2 Table=
+ 5.87: Parameter Block
+> Structure for PATROL_SCRUB.
+> Is it a right approach to support "enable_background_scrub" in the sysfs
+> scrub control?
 
-[1/1] perf: CXL: fix CPMU filter value mask length
-      https://git.kernel.org/arm64/c/802379b8f9e1
+Does anyone know what this means?  IIUC patrol scrub is always background...
 
-Cheers,
--- 
-Will
+>=20
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+A few minor comments inline.  Rushed review as out of time for today though
+so may have missed stuff.
+
+> diff --git a/drivers/memory/rasf_common.c b/drivers/memory/rasf_common.c
+> new file mode 100644
+> index 000000000000..85f67308698d
+> --- /dev/null
+> +++ b/drivers/memory/rasf_common.c
+> @@ -0,0 +1,269 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * rasf_common.c - Common functions for memory RASF driver
+> + *
+> + * Copyright (c) 2023 HiSilicon Limited.
+> + *
+> + * This driver implements call back functions for the scrub
+> + * configure driver to configure the parameters of the hw patrol
+> + * scrubbers in the system, which exposed via the ACPI RASF/RAS2
+> + * table and PCC.
+> + */
+> +
+> +#define pr_fmt(fmt)     "MEMORY RASF COMMON: " fmt
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+
+of.h Shouldn't be here in an ACPI driver!
+
+> +#include <linux/platform_device.h>
+> +
+> +#include <acpi/rasf_acpi.h>
+> +#include <memory/rasf.h>
+> +
+> +static int enable_write(struct rasf_context *rasf_ctx, long val)
+> +{
+> +	int ret;
+> +	bool enable =3D val;
+> +
+> +	ret =3D rasf_ctx->ops->enable_scrub(rasf_ctx, enable);
+> +	if (ret) {
+> +		pr_err("enable patrol scrub fail, enable=3D%d ret=3D%d\n",
+> +		       enable, ret);
+
+dev_err(rasf_ctx->dev,...
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +
+> +/**
+> + * rasf_hw_scrub_is_visible() - Callback to return attribute visibility
+> + * @drv_data: Pointer to driver-private data structure passed
+> + *	      as argument to devm_scrub_device_register().
+> + * @attr_id: Scrub attribute
+> + * @region_id: ID of the memory region
+> + *
+> + * Returns: 0 on success, an error otherwise
+> + */
+> +umode_t rasf_hw_scrub_is_visible(struct device *dev, u32 attr_id, int re=
+gion_id)
+> +{
+> +	switch (attr_id) {
+> +	case scrub_rate_available:
+> +		return 0444;
+> +	case scrub_enable:
+> +	case scrub_enable_background_scrub:
+> +		return 0200;
+> +	case scrub_addr_base:
+> +	case scrub_addr_size:
+> +	case scrub_rate:
+> +		return 0644;
+
+As before, I'd prefer to see this passed the current permissions then just
+return those rather than encoding them here and in the attributes where they
+may end up out of sync
+
+> +	default:
+> +		return 0;
+> +	}
+> +}
+
+> +
+> +/**
+> + * rasf_hw_scrub_read_strings() - Read callback for string attributes
+> + * @device: Pointer to scrub device
+> + * @attr_id: Scrub attribute
+> + * @region_id: ID of the memory region
+> + * @buf: Pointer to the buffer for copying returned string
+> + *
+> + * Returns: 0 on success, an error otherwise
+> + */
+> +int rasf_hw_scrub_read_strings(struct device *device, u32 attr_id, int r=
+egion_id,
+> +			       char *buf)
+
+dev maybe instead of device.  Shorter lines and it's very common shorthand.
+
+> +{
+> +	struct rasf_context *rasf_ctx;
+> +
+> +	rasf_ctx =3D dev_get_drvdata(device);
+
+	struct rasf_context *rasf_ctx =3D dev_get_drvdata(dev);
+Same throughout.
+> +
+> +	switch (attr_id) {
+> +	case scrub_rate_available:
+> +		return rate_available_read(rasf_ctx, buf);
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+
+
