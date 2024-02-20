@@ -1,250 +1,76 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F3B5F875;
-	Tue, 20 Feb 2024 13:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8874F6A8D5;
+	Tue, 20 Feb 2024 14:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437513; cv=none; b=RlRdQ7k5CiDKTMztOLnVKXasHo3XCVHvMVRBOdz5CzYrajtX6KhI0pfs18hSQsoXTGLHlXrTf+Tv30+xVyTHScZhxJEO3v15JvD+ylfeFhYk11doMBajEPG119aMz3f/HKyihQNQ6C7CplOE+ytYHwbRffjX7IEJmagrEyGY+Ag=
+	t=1708437888; cv=none; b=XwVEqGZ/h9i+mlcp3U/7Eu+D+7+z/3EVYPAW4dlc6mRygQypIXRIhL8zx2Bp5vJzmtMMgFQHZEfRDr7ZuNKfLWCX9cyC4z6eykNxUPQi1eCXOQZJ6UnOjQXs9C6qc9Uxd1l2THslDHx5GYbYym2fKBows0LwQtCe0CLgoHHuStk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437513; c=relaxed/simple;
-	bh=2jZ1Zn0GEruFDEKcPjM7bIQpXDdfiaGStAVOT5f5KoA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vlc4SqojyjfkklmAXNfa0MzMNp37prDOWpzCfEMf+4qJhhHLDEe1+lUfpxYxe51cznQ19ADAoih0JN0Ce/d624YbI+6pZaLpzkzSyubd21crwIHUrHvkgd5+aOddSS0ahjGOrTGhMZAtz6TGmK+bG7n/hMhRnnvo8FKUfYdL+to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TfLVr44Qwz6K6LW;
-	Tue, 20 Feb 2024 21:54:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 49F37140B30;
-	Tue, 20 Feb 2024 21:58:28 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
- 2024 13:58:27 +0000
-Date: Tue, 20 Feb 2024 13:58:26 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
-	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
-	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
-	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
-	<mike.malvestuto@intel.com>, <gthelen@google.com>,
-	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>
-Subject: Re: [RFC PATCH v6 10/12] ACPICA: ACPI 6.5: Add support for RAS2
- table
-Message-ID: <20240220135826.000005e9@Huawei.com>
-In-Reply-To: <20240215111455.1462-11-shiju.jose@huawei.com>
-References: <20240215111455.1462-1-shiju.jose@huawei.com>
-	<20240215111455.1462-11-shiju.jose@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708437888; c=relaxed/simple;
+	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DP1QxVJkwS97w5qqTiTK5o3OzkLDkqQKsOT93bM/ASBHzN0sEsGV5Du2ifOekzDFr59vl8OGS9ZU86ScYwiUkt06AiHjSyDDaWMtiD8xge+diQu9t/hl+Cpl5Zqc1MY7mpKzOSr9tiZ4Xqt6y48/6kWe8IpEve1JlNKqx4e2YRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yn09JOMy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yn09JOMy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60AAC43390;
+	Tue, 20 Feb 2024 14:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708437888;
+	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Yn09JOMyRXKoxpREqz+RRmA7flJ0OlpSjXeiCVrWjuGgUnSxUvJvP5aQcBcJ8hWO5
+	 imjk8ThAzKoWZqnY5/PDQ6OwTgtxO1FWAT7aw7CQF7tcOq2jnF9Rg22iInfU3jyrRY
+	 BLnbv6Nge+Delhb5RnSeTdEhiGcweBZ+5cg6AQpkxTT8IauKhoqVg2rpbPRIrKZEAw
+	 jwSry43jl8lOzDKqUl2s11KIQuanyKovW1UFs5FsTu/mMUGGY9Wkowv2j/VxISwjje
+	 +kqrpUO4VDqcLYcF5FbahyCCJFCJg0CZgPHpAyMbqEq32tUvoiaTpwBcpw0htzNRpG
+	 QIkf3rMJrcNWw==
+From: Will Deacon <will@kernel.org>
+To: hj96.nam@samsung.com
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	wj28.lee@samsung.com,
+	jonathan.cameron@huawei.com,
+	mark.rutland@arm.com,
+	ks0204.kim@samsung.com,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] perf: CXL: fix CPMU filter value mask length
+Date: Tue, 20 Feb 2024 14:04:39 +0000
+Message-Id: <170843064764.2617406.4906791201590222748.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240216014522.32321-1-hj96.nam@samsung.com>
+References: <CGME20240216014507epcas2p41686c0ccb1fa73715499e45bbbc7d7e9@epcas2p4.samsung.com> <20240216014522.32321-1-hj96.nam@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Feb 2024 19:14:52 +0800
-<shiju.jose@huawei.com> wrote:
-
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Fri, 16 Feb 2024 10:45:22 +0900, hj96.nam@samsung.com wrote:
+> From: Hojin Nam <hj96.nam@samsung.com>
 > 
-> Add support for ACPI RAS2 feature table(RAS2) defined in the ACPI 6.5
-> Specification & upwards revision, section 5.2.21.
+> CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
+> However, it is used as 2B length in code and comments.
 > 
-> The RAS2 table provides interfaces for platform RAS features. RAS2 offers
-> the same services as RASF, but is more scalable than the latter.
-> RAS2 supports independent RAS controls and capabilities for a given RAS
-> feature for multiple instances of the same component in a given system.
-> The platform can support either RAS2 or RASF but not both.
 > 
-> Link: https://github.com/acpica/acpica/pull/899
 
-It merged in October.  Rafael, can we get this into the kernel version
-so we don't have a dependency in this patch set?
+Applied to arm64 (for-next/fixes), thanks!
 
-Thanks,
+[1/1] perf: CXL: fix CPMU filter value mask length
+      https://git.kernel.org/arm64/c/802379b8f9e1
 
-Jonathan
+Cheers,
+-- 
+Will
 
-
-
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  include/acpi/actbl2.h | 137 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 137 insertions(+)
-> 
-> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-> index 9775384d61c6..15c271657f9f 100644
-> --- a/include/acpi/actbl2.h
-> +++ b/include/acpi/actbl2.h
-> @@ -47,6 +47,7 @@
->  #define ACPI_SIG_PPTT           "PPTT"	/* Processor Properties Topology Table */
->  #define ACPI_SIG_PRMT           "PRMT"	/* Platform Runtime Mechanism Table */
->  #define ACPI_SIG_RASF           "RASF"	/* RAS Feature table */
-> +#define ACPI_SIG_RAS2           "RAS2"	/* RAS2 Feature table */
->  #define ACPI_SIG_RGRT           "RGRT"	/* Regulatory Graphics Resource Table */
->  #define ACPI_SIG_RHCT           "RHCT"	/* RISC-V Hart Capabilities Table */
->  #define ACPI_SIG_SBST           "SBST"	/* Smart Battery Specification Table */
-> @@ -2751,6 +2752,142 @@ enum acpi_rasf_status {
->  #define ACPI_RASF_ERROR                 (1<<2)
->  #define ACPI_RASF_STATUS                (0x1F<<3)
->  
-> +/*******************************************************************************
-> + *
-> + * RAS2 - RAS2 Feature Table (ACPI 6.5)
-> + *        Version 2
-> + *
-> + *
-> + ******************************************************************************/
-> +
-> +struct acpi_table_ras2 {
-> +	struct acpi_table_header header;        /* Common ACPI table header */
-> +	u16 reserved;
-> +	u16 num_pcc_descs;
-> +};
-> +
-> +/*
-> + * RAS2 Platform Communication Channel Descriptor
-> + */
-> +
-> +struct acpi_ras2_pcc_desc {
-> +	u8 channel_id;
-> +	u16 reserved;
-> +	u8 feature_type;
-> +	u32 instance;
-> +};
-> +
-> +/*
-> + * RAS2 Platform Communication Channel Shared Memory Region
-> + */
-> +
-> +struct acpi_ras2_shared_memory {
-> +	u32 signature;
-> +	u16 command;
-> +	u16 status;
-> +	u16 version;
-> +	u8 features[16];
-> +	u8 set_capabilities[16];
-> +	u16 num_parameter_blocks;
-> +	u32 set_capabilities_status;
-> +};
-> +
-> +/* RAS2 Parameter Block Structure Header */
-> +
-> +struct acpi_ras2_parameter_block {
-> +	u16 type;
-> +	u16 version;
-> +	u16 length;
-> +};
-> +
-> +/*
-> + * RAS2 Parameter Block Structure for PATROL_SCRUB
-> + */
-> +
-> +struct acpi_ras2_patrol_scrub_parameter {
-> +	struct acpi_ras2_parameter_block header;
-> +	u16 patrol_scrub_command;
-> +	u64 requested_address_range[2];
-> +	u64 actual_address_range[2];
-> +	u32 flags;
-> +	u32 scrub_params_out;
-> +	u32 scrub_params_in;
-> +};
-> +
-> +/* Masks for Flags field above */
-> +
-> +#define ACPI_RAS2_SCRUBBER_RUNNING      1
-> +
-> +/*
-> + * RAS2 Parameter Block Structure for LA2PA_TRANSLATION
-> + */
-> +
-> +struct acpi_ras2_la2pa_translation_parameter {
-> +	struct acpi_ras2_parameter_block header;
-> +	u16 addr_translation_command;
-> +	u64 sub_instance_id;
-> +	u64 logical_address;
-> +	u64 physical_address;
-> +	u32 status;
-> +};
-> +
-> +/* Channel Commands */
-> +
-> +enum acpi_ras2_commands {
-> +	ACPI_RAS2_EXECUTE_RAS2_COMMAND = 1
-> +};
-> +
-> +/* Platform RAS2 Features */
-> +
-> +enum acpi_ras2_features {
-> +	ACPI_RAS2_PATROL_SCRUB_SUPPORTED = 0,
-> +	ACPI_RAS2_LA2PA_TRANSLATION = 1
-> +};
-> +
-> +/* RAS2 Patrol Scrub Commands */
-> +
-> +enum acpi_ras2_patrol_scrub_commands {
-> +	ACPI_RAS2_GET_PATROL_PARAMETERS = 1,
-> +	ACPI_RAS2_START_PATROL_SCRUBBER = 2,
-> +	ACPI_RAS2_STOP_PATROL_SCRUBBER = 3
-> +};
-> +
-> +/* RAS2 LA2PA Translation Commands */
-> +
-> +enum acpi_ras2_la2pa_translation_commands {
-> +	ACPI_RAS2_GET_LA2PA_TRANSLATION = 1
-> +};
-> +
-> +/* RAS2 LA2PA Translation Status values */
-> +
-> +enum acpi_ras2_la2pa_translation_status {
-> +	ACPI_RAS2_LA2PA_TRANSLATION_SUCCESS = 0,
-> +	ACPI_RAS2_LA2PA_TRANSLATION_FAIL = 1
-> +};
-> +
-> +/* Channel Command flags */
-> +
-> +#define ACPI_RAS2_GENERATE_SCI          (1<<15)
-> +
-> +/* Status values */
-> +
-> +enum acpi_ras2_status {
-> +	ACPI_RAS2_SUCCESS = 0,
-> +	ACPI_RAS2_NOT_VALID  = 1,
-> +	ACPI_RAS2_NOT_SUPPORTED = 2,
-> +	ACPI_RAS2_BUSY = 3,
-> +	ACPI_RAS2_FAILED = 4,
-> +	ACPI_RAS2_ABORTED = 5,
-> +	ACPI_RAS2_INVALID_DATA = 6
-> +};
-> +
-> +/* Status flags */
-> +
-> +#define ACPI_RAS2_COMMAND_COMPLETE      (1)
-> +#define ACPI_RAS2_SCI_DOORBELL          (1<<1)
-> +#define ACPI_RAS2_ERROR                 (1<<2)
-> +#define ACPI_RAS2_STATUS                (0x1F<<3)
-> +
->  /*******************************************************************************
->   *
->   * RGRT - Regulatory Graphics Resource Table
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
