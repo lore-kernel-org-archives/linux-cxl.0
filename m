@@ -1,148 +1,225 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2081.outbound.protection.outlook.com [40.107.237.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB9941AAC;
-	Tue, 20 Feb 2024 22:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8205C15442B;
+	Tue, 20 Feb 2024 23:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708467198; cv=fail; b=g8dMh1gqXMHwXjekE42CGLFimk9rfMr4CgGCfVO6yJMP0gbUDURsoroyCSU5APGZ4fj7SvH14zyTfgAfAubrKuNRlCy1/1wiYffaMGUyX1S142mSDO7kz9x5Xntc0Jr6cQO0U787UKZkShaqB7R98yvxPPQO9PVOs2usyc37Az8=
+	t=1708470267; cv=fail; b=YWr7Ekhcb20tNiRNBqNlWLkkICa42hp15D+6IwjUlkNQRiENoxjft1Z4Sh1yiEFDVkmsmEZXrin+cWwvxz/S0VK9J0hNBKPHxIBGvRsmHdZtB/6PuJR49Uxkjda3jgLPJCyXe3bOcq53RP2aQ6tkjYqXwPYI6Hn7pfBTnCvWX9Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708467198; c=relaxed/simple;
-	bh=D4x+DsExJV9XUfdph+jiE9i9mkuhFK0JT0tqJzrmsTc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=izm3Gr/6n1HaypYlt9w4Q9kjdNz2P1odVjT/NR0RtzSREn4cncu+qAV0qiKIIVbAG9HAcORE73jc51cKKJ7MZeca3SDv3fQ93nAgv8Gj9kk3j4tdnYPARXJvmPXtovZWximmjY/CK0VkAro7FpNnqGDEvGEZDbzq48aHvRG3ArM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SwkLONtW; arc=fail smtp.client-ip=40.107.237.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1708470267; c=relaxed/simple;
+	bh=v0WV2J7ZYrrNjcHZrgdSSKTagSrPhCZqCLqqzfayTt4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cJxrmMrTFUlfUZolztfLgYkXm9vHfuQSBuM/C9Ji3jm+Milmp4FY3vwlV+YZq4/vgxUpqum51eXLA5pBmvWJ+B85ZEln6rvrzsOYLel9yX/UCBUZSNumHArY2A+i65Zov0GdOY8G0/zECQHJKZVD4rTjy3ry3ibWy5mHVc1GLhk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SvI7YX94; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SwkLONtW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SvI7YX94"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708470266; x=1740006266;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=v0WV2J7ZYrrNjcHZrgdSSKTagSrPhCZqCLqqzfayTt4=;
+  b=SvI7YX94VRYEEV7N76LNNEeWnSi6KPDFsgauKLNBMe3H2zNsV4CO4uWf
+   rv5J5P3qfvc6WG2S7zVavxsFbI1mnp7IPzdPB42ViIyftZHeh4lLS8dYd
+   bcyk/enX31ppagyl9X+nHmUoURxfgx57olTeLfQA13Du7GqVc3AWS4U/h
+   zRkwo2m3ADgLG45HcXi53hZtERs5FsLdA20OsWdSmvahIrWEhB8YR6wPk
+   Fk0uuhw7Xwdji7TGEGdbViHzZkcboPp8iLU7Y/ZYLixodCtxj8Ds00a7C
+   ppxBUPVnZDEjZKgaRnVgY3Cmj7cXDTeKGFYgMGhH9KC7Bu8dL1c6WMi2u
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="6380824"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="6380824"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 15:04:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="35693560"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Feb 2024 15:04:23 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 15:04:24 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 15:04:24 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 20 Feb 2024 15:04:24 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 20 Feb 2024 15:04:23 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gmF1y+GYdXXXKQ5iP9St/SoxiQkamdUleiB3kxVpi9CdSzqNAPubNXugWD9ValXsq2ALp+6umDyQ2UJjVOtJAfyaw5GTxmX0sEYSLG+uCXWYrx2d1sQNnhXp3/cSxWQcLHI1clU+cZ50es2jaIOqEgqaXTAhLzvm+e4A3m5tjoDKP2LbObyx+EefhuhV1Zrvt1LZEEokw375ma+kPCgW/t9fk9liJKGnS6LScNUZp8QnzjCeKyGQCE3E+C0FwkYQV1bHD/ZE0l75AyzUnKfKCC5LEt/j2iA3aj5kcf9XrEqc8kUZZGvYFncxPuSDi37q7Ynoqu09qvVTJFBnAnb+gQ==
+ b=FcM2v4xL6AS3pJ769IBb9euPJraCu7YRiT8wc+yyY7MzJfkIXrfH8jftce/7OKJGL+V1K1o/+orylv8RVOGUwSXU7UPzX2FUTdBhykPB3VGGMSivjQIT20jan6CgLc/ahnOPUgmJWzNE86mdfqLhIzlWCN7K7z2mq+inHvSjTZDfSromWqo9rESG3xpTFsjpKgynZS7dwVpbzB81bZ5XnovAJt2MOdeB03cHVbNbwSatFv5UlJ/VU/ny+G1LxOw+m3iA0g0neS/OR9PTfdn/fCtH/p7CoKql/8MkKGYfBNfgKLZMvoDqFvviwfwWDdEbawdqW+ELhvEF7tgc5I7lWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qlxMyomHGM3/6tpI3AdRWHoeW+p22bBY77GnErVQa4A=;
- b=ZvtGjytk7LG6xPw/PzJ/qh1pTnD+SpNo9iyynePvBs6NdS1RyjzKb69tUcfUWKG1OQeDK7PWBWHmThjtrY8clLm8WaGasXlu6SZm3xU6bIULZwhwQx5y+Jtaf7kX+wJOr6QT2E8kvDFS30rNqMFi7FeyJN8QcJ4pSWUyx2lDpPAjj9Sq96+Gx/X/tCe6VS5sBEqCjSORUC5MptVZF6tVf7nBBnQOQl2lCR4C81qTpb+Rc6L5ADlZTERZk9D0koL74N/OvOhsmJV1uvr5IVJqxtof+JLIKLeVCY1I3IkxBKwIJyuwY6ledpuwCtfE0n0yFyhN1Jz4HfwZ+gIAC/KeNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qlxMyomHGM3/6tpI3AdRWHoeW+p22bBY77GnErVQa4A=;
- b=SwkLONtWwMoow9t61kg4G4D34xcDMjhlcD5Xmc3uOAnQwFgVo6vX/XBI87ZVAShnbZTcLtxJkI/4DlpC+aloUGtnM7EkJnP0hAydOU5mU/kygkQo4QnV6nkpA4jkWWzqJU3djxs2cPrKxE8E1Zp8qr325ge+ns8RAg/pdaUjh+I=
-Received: from SA9PR13CA0082.namprd13.prod.outlook.com (2603:10b6:806:23::27)
- by IA0PR12MB8352.namprd12.prod.outlook.com (2603:10b6:208:3dd::14) with
+ bh=Kg1zQZ5zpyNiJDoJEdglhlWV/4B10VqhnIajhTXpiNU=;
+ b=FZVp90MtsnkUoHC11ozb1FMhkQdEGtWxyqtfPu9anD6UlkWAm5EHInPyb8CYuexoIQai6dFi6TjwWWvnR73xxBCajHH+nQ8UxyGrM7lo2PgZFEwfIgTc3NZsjxdpJP4ae63JN4eNv2CgIMfJAxlzEZMR0YzTnFbLVb45TUoAQbdTvzDR+bTJLUKm7DpAmi1P/0hUmLG+GtM2MyB0LXhHHwIR0rlnK2fkDEhDWGYyQ67ISkAKBrCqPehs1SVj1P5kummJyuE5pz+PloyB+5Lu3Ihrh40dHOSscErXM4eEDR9Ls0jVmiLpG8vn1ayQbW+ifyeQx1vDiu+nhp3Z8bUh4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA0PR11MB4592.namprd11.prod.outlook.com (2603:10b6:806:98::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Tue, 20 Feb
- 2024 22:13:13 +0000
-Received: from SN1PEPF000252A4.namprd05.prod.outlook.com
- (2603:10b6:806:23:cafe::e4) by SA9PR13CA0082.outlook.office365.com
- (2603:10b6:806:23::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.12 via Frontend
- Transport; Tue, 20 Feb 2024 22:13:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000252A4.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 22:13:12 +0000
-Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
- (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 20 Feb 2024 16:13:07 -0600
-From: Ben Cheatham <Benjamin.Cheatham@amd.com>
-To: <dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
-	<rafael@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
-	<bp@alien8.de>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
+ 2024 23:04:22 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::da43:97f6:814c:4dc]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::da43:97f6:814c:4dc%7]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
+ 23:04:20 +0000
+Date: Tue, 20 Feb 2024 15:04:18 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <rafael@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>
 CC: <dave@stogolabs.net>, <dave.jiang@intel.com>,
 	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
 	<ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <benjamin.cheatham@amd.com>
-Subject: [PATCH v13 4/4] EINJ, Documentation: Update EINJ kernel doc
-Date: Tue, 20 Feb 2024 16:11:46 -0600
-Message-ID: <20240220221146.399209-5-Benjamin.Cheatham@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240220221146.399209-1-Benjamin.Cheatham@amd.com>
+Subject: RE: [PATCH v13 0/4] cxl, EINJ: Update EINJ for CXL error types
+Message-ID: <65d52ff24b250_5e9bf294d9@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20240220221146.399209-1-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240220221146.399209-1-Benjamin.Cheatham@amd.com>
+X-ClientProxiedBy: MW4PR04CA0231.namprd04.prod.outlook.com
+ (2603:10b6:303:87::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A4:EE_|IA0PR12MB8352:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ed64091-f0be-4990-9c7a-08dc3261212e
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA0PR11MB4592:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cb1b4ed-2919-4a6a-48af-08dc3268459c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	EeD7kALFmnKjTAOacbahXxyY4J+BCJa/+8QTb3vanp5tFoOuu1Z3hwlkdUuH35jfsDEf24LNqrBlqzVLyhxKOxnKjHlxSwG4j3/5CXD9dXE3tN8B3p+LoIplQhqgJ7pRbCm1g1DoZ83fqBw1yn8fBf+gINBGtg+poY2Xmeb/gEWzTDak5yF0N5jRU2ApuUelIp/QY2E6GVSCGVqgG44DMUnT4zi3m4OCDRCEYE+vVpl/u14IxHw5LFcJQTkne0H/DGChFdfv+xnEQBOrBPwirmhsulJBGajmISoTYBiCb7OJBY6uQke2KVKFgDps2fWRAGQIoFfRY6QDTzd8UW0Q5QLCwDSw+yJ/uYSwX9+HlLu9ayk0Nz5a5hu8L7LXb1CGh1OS9YhbWJHvoVRoUN94t4dfMxN1yf3qBWGr2Nc+m24vmVQN/kOsJvfBqfc4AEsBbC5u3RllJum4izRvkHRpznnn4KYbCfhx0bOqkQ4NFqWwe5w1gueO/CLfn2gW5M+gL8EGeUXeRLibtzQAGCC1WX9dkL1gKzec+Q6lmEQXWQMwVE487AHWKAtLEOUZFVyy+bp3daRkmqQM2GsoYEKa6hArhI0Nv6e9fP6HEt1F/VmXA0CAKlUVOdT2nA/ww5IK3K+C93JX3luknfbalgHUKQ4LmPloNKaQ0t/VwuwLMf8=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 22:13:12.9218
+X-Microsoft-Antispam-Message-Info: AeEI1K3IkYkrgUtUO1xpcsnReN5tOANSgYcgmNgxG3qHO/n6VFXKBzRZhyMOtS30HJbGusN0oJ3WlGy6ZJl8xrchMWYwmOLDXU1rzIVvRzdLux5TolNt83y/ySK6cGAIGYF9igwLlZ73uYdbq+35oFw/Fsylp2ky+UbJT2rlqrJrYM+XY2lCdYCu2SHlaMgVjelt4n+o8twp2XLfvPEUpfcLDX/Llww/dSLPbcUZ0UpikLY/TFa7OXFebulilY+Vnbhx/tPFVJ3UwfZS7fwJ5tI5ByP5cm1vti2g8ftyO6YDAxTEGyrj4yDeTPNJ1FqINh1kyiakbhcX5iiKsz7wT2I64ctB8OYrZH3EXghEvLlVvzJuGoNVJ/yRcbM2a7hpTXURdsAC+og4pVPTPlVhSBCtCgFXuMNpnA+FZugxMvuempals8Z4HttjHsHgj+GIr1JHb8tlPfJwtKWtiV/LN46RHLdSgKJjpMgm4bMyi9mvkLaEH6pYGD560+5MQ8TnXnDEIEYRTNuiknSnLA/nQCWUxXIhTIXy26bTM8ZDTo8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Z9QF/7NJW7P0a6+YM3c1OsBb07h7F/fS8oHe6OVZ6ub35VcA47mfHTu8YvZd?=
+ =?us-ascii?Q?MzqsTooq4VRiyMHdm6PxX/8wWdKdlomwC/A7RtXvnrB8azZ8WVJtn50CfBmZ?=
+ =?us-ascii?Q?TPo+xS+V02DW0lcUuFjJVYsX0XQctYKH44dMja22lIfZIbm6X+1gc/CtPjjj?=
+ =?us-ascii?Q?Xlw4VP0WJopuWTP9aYQ0esinLo4h3q/gl8vQ3fD/PxBL66zYw5AKUVvrJacY?=
+ =?us-ascii?Q?QDuJzzeQqDCPWenRU/QR3TSDG8myrYlavmoPSaRo+3ZxW7E7Z3URkkFQXYEl?=
+ =?us-ascii?Q?+aUYol2h49qCfPHNRbrwYupoGYlNRjfGZOZykdvZYNPGwITTPDqmNmnQdu+m?=
+ =?us-ascii?Q?l+WtzngQM2w2U8X7kLHhekFZWu/OuSSTktBpRgu6B/r2E0mq+mN0VipSN0jd?=
+ =?us-ascii?Q?XyIyJD+tK68YqorEcSv/W7LsvQNUtKvI6muN2mX5L0fUqUvjow2MjzeRiF8V?=
+ =?us-ascii?Q?fTjH/mjSGo5opqX9y9dahHSion0+jyIKIogcHUrRmqmbXA7k9VbPPsFR5REc?=
+ =?us-ascii?Q?jnQIFAKy/xbauoQZjfWYDzYNqMCfSxanwsxOpvyx43ZZUZa1ifRxa4fIedC7?=
+ =?us-ascii?Q?pFJW8yPdw/6bqetuMv9w4/nNKC57BEfrB88DvbhDEqN+BUxTWh1laooxqAMo?=
+ =?us-ascii?Q?n+uiEBhXbxAQBTQWsAkfMjRJEcyysRARgv4pjdCP+rxm9j1/xJjiAOv0TrUR?=
+ =?us-ascii?Q?gTC8iUe2Kv2dfRdyOxflTYe5XE4xsvRr+GGFdWOvCAdc2lrAy0u5mgyz913v?=
+ =?us-ascii?Q?/aFGukhY6QOonJBcrVp7QUyiK1HEkizsbZbDVw4a42Qmp+tbtW/oQZZj0hYV?=
+ =?us-ascii?Q?Ohu4B0Ljlz13K7lME2dN9vHzGyViuJkGPSrCwlG0sxWu5lLDg0qKfFs3vxp/?=
+ =?us-ascii?Q?gO/ysuEO2JXLown3X9hHqiwOl0mY5LXHuQEi0pYf7mm6hBt6DB9PHV5ykbTW?=
+ =?us-ascii?Q?XDFWSNJBbNXzdpImlrJO8UTwC9vmUVWSJq02Uqs7TEBdCIMLZg8gWlZ6i+tW?=
+ =?us-ascii?Q?GfUUMhgc85NGHEYjOibelia2qUl/WpV38fEiek7lSuLnwRg1wQ2XxcW1QhCG?=
+ =?us-ascii?Q?QrpDCNkZHnD3P2unbR1Z2uAKx+bfjky7Vo5IqzTakbMNuVmboT1Sb+LhN3II?=
+ =?us-ascii?Q?Uk0StugAXOyZ+C7kEfLwaKVE8qvnlJCsEIDLghFj7zAbioCHvhQSm0D57GdA?=
+ =?us-ascii?Q?Rz/nhJO+jVT+3E012LEZZYMAEAF4Ma5HpJsITrsQQ89bH8F7SGYYN7uxh6yz?=
+ =?us-ascii?Q?H9E0N+2t8v7rPG3JSlNvouZk7m6sjIZ1Pl7tFZtVdBcnbK3rTxwNo9gV4YAH?=
+ =?us-ascii?Q?Wu8CQAGGnlyf8/BJpymUsuo/2/vYJuY5jfa2bDm58+I5bEJqA6EkNBiC+PB/?=
+ =?us-ascii?Q?kOTvvSqSZswQcGnbCQm4zF/pxlAlcugBSQmHHANXQT7oCd4VjPtIkwKcf+1d?=
+ =?us-ascii?Q?aaYV9DPnk3eXxsoDI9EGOkFXnyVtcE2hmBTZsL2+ItVEmUcYbcjW1BYWhyxp?=
+ =?us-ascii?Q?YvqYJEZa2AhBtpwQpBCbROmnM2rFB5brx3CNmukxt7l31FxikEQ2uwDWglUK?=
+ =?us-ascii?Q?Kuq8XmWqwQ/I5/BqOa39DSKG208BCHKfMy18Y0nqjNMVH7g1bBQ/aDXzrm7p?=
+ =?us-ascii?Q?wg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cb1b4ed-2919-4a6a-48af-08dc3268459c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 23:04:20.7080
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ed64091-f0be-4990-9c7a-08dc3261212e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8352
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lEkLVlEPtDMvntARmJo+9VlwZoRWmQ49RerBiD0W4qEGLWji7WHYYcFHpWApPjV7ARHiw7c/slza4zPKhYjq833hnmKa++HVy5d6/PgIj9Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4592
+X-OriginatorOrg: intel.com
 
-Update EINJ kernel document to include how to inject CXL protocol error
-types, build the kernel to include CXL error types, and give an example
-injection.
+Ben Cheatham wrote:
+> v13 Changes:
+> 	- Create new einj-cxl module for EINJ CXL error type functionality
+> 	- Rename CONFIG_CXL_EINJ to CONFIG_ACPI_APEI_EINJ_CXL
+> 	- Move CONFIG_ACPI_APEI_CXL to be under CONFIG_ACPI_APEI_EINJ (due to
+> 	  new CONFIG_CXL_BUS dependency)
+> 	- Add an optional dependency to CONFIG_CXL_BUS on
+> 	  CONFIG_ACPI_APEI_EINJ_CXL 
+> 	- Change pr_warn("EINJ table not found.") to a pr_info() for when/if
+> 	  EINJ probe fails (Tony)
 
-Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
----
- .../firmware-guide/acpi/apei/einj.rst         | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+pr_info() is too chatty once CXL starts triggering this module to
+autoload. I will take a look for anything else that might trigger
+another spin, but if that s/pr_info/pr_debug/ change is all that's
+needed I can handle that on applying.
 
-diff --git a/Documentation/firmware-guide/acpi/apei/einj.rst b/Documentation/firmware-guide/acpi/apei/einj.rst
-index d6b61d22f525..23741ec0de75 100644
---- a/Documentation/firmware-guide/acpi/apei/einj.rst
-+++ b/Documentation/firmware-guide/acpi/apei/einj.rst
-@@ -181,6 +181,27 @@ You should see something like this in dmesg::
-   [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
-   [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
- 
-+CXL error types are supported from ACPI 6.5 onwards (given a CXL port
-+is present). These error types are not available in the legacy interface
-+at /sys/kernel/debug/apei/einj, and are instead at /sys/kernel/debug/cxl/.
-+There is a file under debug/cxl called "einj_type" that is analogous to
-+available_error_type under debug/cxl. There is also a "einj_inject" file
-+in each $dport_dev directory under debug/cxl that will inject a given error
-+into the dport represented by $dport_dev.
-+
-+For example, to inject a CXL.mem protocol correctable error into
-+$dport_dev=pci0000:0c::
-+
-+    # cd /sys/kernel/debug/cxl/
-+    # cat einj_type                 # See which error can be injected
-+	0x00008000  CXL.mem Protocol Correctable
-+	0x00010000  CXL.mem Protocol Uncorrectable non-fatal
-+	0x00020000  CXL.mem Protocol Uncorrectable fatal
-+    # cd 0000:e0:01.1               # Navigate to dport to inject into
-+    # echo 0x8000 > einj_inject     # Inject error
-+
-+To use CXL error types, ``CONFIG_ACPI_APEI_CXL_EINJ`` will need to be enabled.
-+
- Special notes for injection into SGX enclaves:
- 
- There may be a separate BIOS setup option to enable SGX injection.
--- 
-2.34.1
+> 	- Add a clarification that a CXL port needs to be present for CXL 
+> 	  EINJ error types to einj.rst (Davidlohr)
+> 
+> v12 Changes:
+> 	- Rebase onto v6.8-rc4
+> 	- Squash Kconfig patch into patch 2/3 (Jonathan)
+> 	- Change CONFIG_CXL_EINJ from "depends on ACPI_APEI_EINJ >= CXL_BUS"
+> 	  to "depends on ACPI_APEI_EINJ = CXL_BUS"
+> 	- Drop "ACPI, APEI" part of commit message title and use just EINJ
+> 	instead (Dan)
+> 	- Add protocol error types to "einj_types" documentation (Jonathan)
+> 	- Change 0xffff... constants to use GENMASK()
+> 	- Drop param* variables and use constants instead in cxl error
+> 	  inject functions (Jonathan)
+> 	- Add is_cxl_error_type() helper function in einj.c (Jonathan)
+> 	- Remove a stray function declaration in einj-cxl.h (Jonathan)
+> 	- Comment #else/#endifs with corresponding #if/#ifdef in
+> 	einj-cxl.h (Jonathan)
+> 
+> The new CXL error types will use the Memory Address field in the
+> SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+> compliant memory-mapped downstream port. The value of the memory address
+> will be in the port's MMIO range, and it will not represent physical
+> (normal or persistent) memory.
+> 
+> Add the functionality for injecting CXL 1.1 errors to the EINJ module,
+> but not through the EINJ legacy interface under /sys/kernel/debug/apei/einj.
+> Instead, make the error types available under /sys/kernel/debug/cxl.
+> This allows for validating the MMIO address for a CXL 1.1 error type
+> while also not making the user responsible for finding it.
+> 
+> Ben Cheatham (4):
+>   EINJ: Migrate to a platform driver
+>   EINJ: Add CXL error type support
+>   cxl/core: Add CXL EINJ debugfs files
+>   EINJ, Documentation: Update EINJ kernel doc
+> 
+>  Documentation/ABI/testing/debugfs-cxl         |  30 +++++
+>  .../firmware-guide/acpi/apei/einj.rst         |  21 +++
+>  MAINTAINERS                                   |   1 +
+>  drivers/acpi/apei/Kconfig                     |  12 ++
+>  drivers/acpi/apei/Makefile                    |   1 +
+>  drivers/acpi/apei/apei-internal.h             |  17 +++
+>  drivers/acpi/apei/einj-cxl.c                  | 121 +++++++++++++++++
+>  drivers/acpi/apei/einj.c                      | 127 ++++++++++++++----
+>  drivers/cxl/Kconfig                           |   1 +
+>  drivers/cxl/core/port.c                       |  41 ++++++
+>  include/linux/einj-cxl.h                      |  40 ++++++
+>  11 files changed, 385 insertions(+), 27 deletions(-)
+>  create mode 100644 drivers/acpi/apei/einj-cxl.c
+>  create mode 100644 include/linux/einj-cxl.h
+> 
+> -- 
+> 2.34.1
+> 
+
 
