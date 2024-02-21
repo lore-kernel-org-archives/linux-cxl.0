@@ -1,55 +1,57 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EC584FD8
-	for <linux-cxl@vger.kernel.org>; Wed, 21 Feb 2024 18:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DD285268
+	for <linux-cxl@vger.kernel.org>; Wed, 21 Feb 2024 18:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539673; cv=none; b=AeU2Xi4G/S23VPVxuW4Svcbyzg8hzEM4X21W8hf/fHu5PINsOtqXBgzqHWowzgYfna4OzsL5QQVOZD86caEHs7VgfnCtKqAKGgnB6dmXb6K+WfbQ9Y/hhUZ7ziZcgT6zqml6mgfz+ApQ3D8cs5Uga33mJ6fuNqZqKUHndfMuLkk=
+	t=1708539674; cv=none; b=JshtV3wYqkW+t68Xeh+u+BBwKUMxDOwYzuXy+UL0SdzpZV97ItA0AhepI+TVtJAi0NZ5prOpYcHqXQoj6thmHk14xHnhI/fm3tysSDNaUjucna6eH4ASnIhYk8TXk/Qa2iv2rwflau7LeeeGmbS1jlbZMUKumoGB3uvOj2xDbug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539673; c=relaxed/simple;
-	bh=8/CV3w3YjwARXJ2jrEEnKHfmeI9wI2ME48Vc+8HcCPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aO5BQ1dSYIPc2XsrcNegh8V1aTr0sQW0g+2iRY6rlYWCWe6pa/TTklxXsodO58Spuj5UD9LXGRLjtVMm84GxzwORQ5k+GMbYUGfiYrnNV2l6r6+sIRFCem6sAruzftloFHJVPJ7K98i2O7Z8nH06Glzewjx7QBziFyfuW8lWWcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PMT5gmRh; arc=none smtp.client-ip=209.85.161.44
+	s=arc-20240116; t=1708539674; c=relaxed/simple;
+	bh=gkUBdmYA71Hv10Hl86RlZ3WRrrRHuAjCA/UFYnu1kv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TO1/DRNZeRIo9r3nJgaS+UKVfQHTK83mO6r2vF/x8/7IW4IV6hyIxEKSViuwlJ57eSlsKsPa3SMLGZUDtkJUIFREVT46KzlL234cF6I4g5WmnyWLF1oHVMtuw2ki7sa0dqba4ueXyMqvaysjR4QMMVMgdDosl9q2udrMZkIgbcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4ytpgIE; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMT5gmRh"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-595aa5b1fe0so4541744eaf.2
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Feb 2024 10:21:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4ytpgIE"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-29996cc6382so2688455a91.3
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Feb 2024 10:21:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708539671; x=1709144471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rF+lzU6VXn8MzeIYj12jMaidQDet+Jk/8usd9xFeU4E=;
-        b=PMT5gmRhZhRy3+ksINj9V4A4qnAKbv6zUVdFhYn0pJhsBM2YjMI6iSaSqoA/f3h4JU
-         NPrekJ0rBQATn43S+IDQ4UC9Sk6V8IrzfrjDKyasQXqHrcN+h+N0nKeNxK1dCj2fIj3T
-         KOiGc6n9eHSutPeZ88sT22RajlzhGL2raQARWrdVIF/HovzgOSzeKC8H+YRQwP8uCtET
-         eo7isBYLxwPxJgGBiOUVd9UBS05Opw1lxj44TVyeRmqCYMnYqG4H6DCTVlNzcMJZ9IHs
-         CcONxWGTlCSHw7CmY+RYZQLrPrtjqH9hKx0ycuijvX8qv9CtNjNzsype5M3H7Cf1xcty
-         po/w==
+        d=gmail.com; s=20230601; t=1708539672; x=1709144472; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AkPmI8FuszQzNKc/W7C7bH++18bz1caF1vBxyxTADMI=;
+        b=Y4ytpgIEUI+pHinWO2xyAzdKFtNkVOdq5kDp6yeAqK5FbibSY+OmM3Vkpm74PiZfqf
+         NrwCs7kZov+EI8IavimBIYmRavuH75DIEXv9U9BCBC/0FTmD6R979p/7xpn9e3ILLRFT
+         ZwFj8T8yldyGBPtsKvsjC6TAb6CbyZhDPrqUFIrxMlsAb2NsFvvASp3grwW+NTjb9TI3
+         99ikZlJpS3fV/dYyp6NJD+IuiR1lVJo2hHoyS6sWfOWYF3YHz8fzZmEWHp2Y8A7xGJ3c
+         RM3lrr+l8woC07ZZG5F9vVlEtSmueVV2ssa8277jJTP4Qmx2nay2KweTDRQbDCet2gQR
+         /AUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708539671; x=1709144471;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rF+lzU6VXn8MzeIYj12jMaidQDet+Jk/8usd9xFeU4E=;
-        b=VuF7TXHyM5d7xzOA18OAAVSBo+OLw4flLZxQ1wLUyhVGw/Ns9XjjA6JpqI6mq2DbOb
-         9F9OJVGLqi82UwD3ymrSiYIYbvDgLyb+XvpuxhISmFd+aDWXnnLUCmK5S7T4ROGiPyXI
-         eVLimZqqdVbjONHpY4bYoLyhyIpZeK6rxd27DOVCbBmhMooxVU0hNBQITF6KjRGoAw6M
-         E+viDxCEZ2ft8hlfQIFKl4ayqsnKJMYbvbaCDxPWLYeUJTdQIeSm50/JdJkZmRghWpeX
-         4d1buWKchjWCTTeN8blXw+kMt3PxzQYehd0tlli5Vseu0G7BIQw3L8mvkqQAtx2fgF3L
-         WRbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyCvA2RONeg6hHcuibglk2gtUj28WdGMFjd1zSCNvyDydQ6LVao2l1PyZOQxNuT4vks6W1bsDFWEW+l6t2KKQlIKdiu6ivSafe
-X-Gm-Message-State: AOJu0Yz5PGETzP4VwelF+SW9d/2W58SNpMSK1TkrMGG8kAVpizXce5xY
-	9InKH59WUTZoiARhYg79e61r/Ir0Edb6YX7xkZclidwilWUhnGyx
-X-Google-Smtp-Source: AGHT+IEeZFxdjaqyZAi2dnWva5Y087szRR+YGolJKt82BgzIVoI5c1BjJh3XQtisJrtTNdd4YlBcJA==
-X-Received: by 2002:a05:6358:65a7:b0:17b:57f3:3b9 with SMTP id x39-20020a05635865a700b0017b57f303b9mr3776609rwh.14.1708539670465;
-        Wed, 21 Feb 2024 10:21:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708539672; x=1709144472;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AkPmI8FuszQzNKc/W7C7bH++18bz1caF1vBxyxTADMI=;
+        b=jZwQfKEk9mx9qYeiXjWwjUDwGbiDNfUyw6Fyfc/+ZJuZlmJTAP7T7Po1Jy+VehIpEk
+         YkX2A7mUIoZSemkTe9eCATeE8ZHMqoDP2RDSsZ0IfMzbyxJtaWwUE+adVusIrZ4AilIo
+         II/mqE4zItKSvMH1HB2CkyZiyxIDS5EWlBUId4HTM6Rrv9nn94hnXqm6sdUxoCf7lqlr
+         yT6PiAoA3Hi6zr8K9fFaFwkCPp/TWol4RwpMYU3Mb6akp68eNBR2DdlIU4BEhMkqp6r1
+         FFbS/KpCe9tH7Bz9xS4FBhhs+MpKWw/BNp/ThI0tfjisZZK9S9BQYa8MXHlMRtm84Te1
+         pwbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXo3xffJnNj/fVaeSOvbtURMLNYXrNu2MjYldbKXSVRt4EIeoxXHVS1kLC7UJ4Vgk2SfgvWyD/geQb5248B5WZs/qVBfO/LcbIy
+X-Gm-Message-State: AOJu0Yw7E1lGXwuIUwUn5gR9y2V6bS0NJ4Uk08TRd83N7YO/0EG5clA5
+	pTQNbOwvMRllXxG172QC3U0WEwj36VelyGvmxy+OoRd8siPN1vqO
+X-Google-Smtp-Source: AGHT+IFMcnQh5f80Wkda3K0vH+ueICO5TJY8WkNFGkF0tVy5RzTaPhNg7QC/g2xsj8usX4PLltMs+Q==
+X-Received: by 2002:a17:90b:1e47:b0:299:2241:820b with SMTP id pi7-20020a17090b1e4700b002992241820bmr14945559pjb.37.1708539672173;
+        Wed, 21 Feb 2024 10:21:12 -0800 (PST)
 Received: from localhost.localdomain ([2601:641:300:14de:5692:7e41:13a2:69a])
-        by smtp.gmail.com with ESMTPSA id cs16-20020a17090af51000b002992f49922csm9979009pjb.25.2024.02.21.10.21.09
+        by smtp.gmail.com with ESMTPSA id cs16-20020a17090af51000b002992f49922csm9979009pjb.25.2024.02.21.10.21.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 10:21:10 -0800 (PST)
+        Wed, 21 Feb 2024 10:21:11 -0800 (PST)
 From: nifan.cxl@gmail.com
 To: qemu-devel@nongnu.org
 Cc: jonathan.cameron@huawei.com,
@@ -63,10 +65,12 @@ Cc: jonathan.cameron@huawei.com,
 	nifan.cxl@gmail.com,
 	jim.harris@samsung.com,
 	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v4 00/10] Enabling DCD emulation support in Qemu
-Date: Wed, 21 Feb 2024 10:15:53 -0800
-Message-ID: <20240221182020.1086096-1-nifan.cxl@gmail.com>
+Subject: [PATCH v4 01/10] hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output payload of identify memory device command
+Date: Wed, 21 Feb 2024 10:15:54 -0800
+Message-ID: <20240221182020.1086096-2-nifan.cxl@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240221182020.1086096-1-nifan.cxl@gmail.com>
+References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -77,81 +81,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Fan Ni <fan.ni@samsung.com>
 
-v3[1]->v4: 
+Based on CXL spec r3.1 Table 8-127 (Identify Memory Device Output
+Payload), dynamic capacity event log size should be part of
+output of the Identify command.
+Add dc_event_log_size to the output payload for the host to get the info.
 
-The code is rebased on mainstream QEMU with the following patch series:
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+---
+ hw/cxl/cxl-mailbox-utils.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-hw/cxl/mailbox: change CCI cmd set structure to be a member, not a reference
-hw/cxl/mailbox: interface to add CCI commands to an existing CCI
-
-Main changes include:
-
-1. Updated the specification references to align with cxl spec r3.1.
-2. Add extra elements to get dc region configuration output payload and
-procecced accordingly in mailbox command 4800h.
-3. Removed the unwanted space.
-4. Refactored ct3_build_cdat_entries_for_mr and extract it as a separate patch.
-5. Updated cxl_create_dc_regions function to derive region len from host
-backend size.
-6. Changed the logic for creating DC regions when host backend and address
-space processing is introduced, now cxl_create_dc_regions is called only
-when host backend exists.
-7. Updated the name of the definitions related to DC extents for consistency.
-7. Updated dynamic capacity event record definition to align with spec r3.1.
-9. Changed the dynamic capacity request process logic, for release request,
-extra checks are done against the pending list to remove the extent yet added.
-10. Changed the return value of cxl_create_dc_regions so the return can be used
-to Remove the extent for the list if needed.
-11. offset and size in the qmp interface are changed to be byte-wise while the
-original is MiB-wise.
-12. Fixed bugs in handling bitmap for dpa range existence.
-13. NOTE: in previous version DC is set to non-volatile, while in this version
-we change it to volatile per Jonathan's suggestion.
-14. Updated the doc in qapi/cxl.json.
-
-Thank Jonathan for the detailed review of the last version[1].
-
-The code is tested with Ira's last kernel DCD patch set [2] with some minor
-bug fixes[3]. Tested operations include:
-1. create DC region;
-2. Add/release DC extents;
-3. convert DC capacity into system RAM (no real read/write to DCD tested);
-
-
-v3: 
-[1] https://lore.kernel.org/linux-cxl/20231107180907.553451-1-nifan.cxl@gmail.com/T/#t
-[2] https://github.com/weiny2/linux-kernel/tree/dcd-v3-2023-10-30
-[3] https://github.com/moking/linux-dcd/commit/9d24fa6e5d39f934623220953caecc080f93e964
-
-Fan Ni (10):
-  hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-    payload of identify memory device command
-  hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-    and mailbox command support
-  include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
-    type3 memory devices
-  hw/mem/cxl_type3: Add support to create DC regions to type3 memory
-    devices
-  hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
-    size insead of mr as argument
-  hw/mem/cxl_type3: Add host backend and address space handling for DC
-    regions
-  hw/mem/cxl_type3: Add DC extent list representative and get DC extent
-    list mailbox support
-  hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
-    dynamic capacity response
-  hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
-    extents
-  hw/mem/cxl_type3: Add dpa range validation for accesses to DC regions
-
- hw/cxl/cxl-mailbox-utils.c  | 507 +++++++++++++++++++++++++++++++-
- hw/mem/cxl_type3.c          | 559 +++++++++++++++++++++++++++++++++---
- hw/mem/cxl_type3_stubs.c    |  14 +
- include/hw/cxl/cxl_device.h |  61 +++-
- include/hw/cxl/cxl_events.h |  18 ++
- qapi/cxl.json               |  61 +++-
- 6 files changed, 1174 insertions(+), 46 deletions(-)
-
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 4bcd727f4c..ba1d9901df 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -21,6 +21,7 @@
+ #include "sysemu/hostmem.h"
+ 
+ #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
++#define CXL_DC_EVENT_LOG_SIZE 8
+ 
+ /*
+  * How to add a new command, example. The command set FOO, with cmd BAR.
+@@ -780,8 +781,9 @@ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
+         uint16_t inject_poison_limit;
+         uint8_t poison_caps;
+         uint8_t qos_telemetry_caps;
++        uint16_t dc_event_log_size;
+     } QEMU_PACKED *id;
+-    QEMU_BUILD_BUG_ON(sizeof(*id) != 0x43);
++    QEMU_BUILD_BUG_ON(sizeof(*id) != 0x45);
+     CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+     CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+     CXLDeviceState *cxl_dstate = &ct3d->cxl_dstate;
+@@ -807,6 +809,7 @@ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
+     st24_le_p(id->poison_list_max_mer, 256);
+     /* No limit - so limited by main poison record limit */
+     stw_le_p(&id->inject_poison_limit, 0);
++    stw_le_p(&id->dc_event_log_size, CXL_DC_EVENT_LOG_SIZE);
+ 
+     *len_out = sizeof(*id);
+     return CXL_MBOX_SUCCESS;
 -- 
 2.43.0
 
