@@ -1,28 +1,28 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2060.outbound.protection.outlook.com [40.107.94.60])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2065.outbound.protection.outlook.com [40.107.220.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD91155303
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 17:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B981552E9
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 17:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708622661; cv=fail; b=hkHfxfjM62Nt+zOOqgI2db45jJ22wQdEX7AKwHmqB8sPWZ/71xyXR763Zcx3hk/frF5YajehhySldwvQa8mJ3b7nCjHdTS694Yf11uKyipP6uTXY26QHEa6CwMtA/htkffVhVF8sVu5aQ7avfbedf6nMtbZ8p+ByYH+4StL++gc=
+	t=1708622663; cv=fail; b=u6ODVa2a0T6ZhcYLycp2itfRpXdhPhA1Ws2EbrpbQEnCEhy0HdxinXlZXwi9YuCHn5iItnn8mDk1rLLdf6fzjVP65fdtuHVHh/kwqr5f0Wa9bMzaKGG62kNldXBRntrQbOtbEPaGNd/34KNmU949d/EWI+tA+F5L2JhMIY7c3/o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708622661; c=relaxed/simple;
-	bh=fGHNxs5saWOqHvfCufVXoN/zqoZobvWFAOPyBAACD8E=;
+	s=arc-20240116; t=1708622663; c=relaxed/simple;
+	bh=tFFMRHIL/FMmElmf5tqgjfm+/do2kohrStotqcvC7G4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OlFmBA7sZ0VowuYa9jjLViZD647/n69ght9xe1iayQkvQ2Eg889Fw2UZ5fAAjKl0mnIU2cmJOGbmf190CwRzibp5zFNeZ27R0AOmCRUVk9URB24tM2BWyFkTreNSu8xIxAhqvocMHIdTPaI/8v6ehggZvN+pniYjeiReSj899xg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=U++CcJ77; arc=fail smtp.client-ip=40.107.94.60
+	 MIME-Version:Content-Type; b=i9fjbKZx9vDVUyIcOUk2vUmdOUjUgPzcEnYkp0Udp852sDr6JQTFhrsl2xPGC9dCTMxThFtIM0GxF8rki2B1YU+rTGQ77Q9eVwpw3aVOIpBGQMmGpFjp8M76q6n/t/v4J3ijRWP6PFb8o463xpgARL0p8HYLAeZ34CsvRxGDzes=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=l3/9EBNJ; arc=fail smtp.client-ip=40.107.220.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="U++CcJ77"
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="l3/9EBNJ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ry3SJCc8Z1O38+F8bjehfRGFfukiJZurCgCVU+ZeakR363qoGyX+W3eRQmhI/BiLNCpo8r5o1bmZ1rH1XX5o7SgYsHGf0hygm+TQYcDtscjAtai1/rqf9A3/kXonrLHC3xIeBEwZqerr5L5vqSI1ZhWtGes4FMCfuZurYseB3wihUejGunMEKoCkRkjAwcZsQIWel1LLXSS57uRIQdQ3b4/B5+u9MJ9fzOXgYDr1PAIfRdgCm3zT65SzHoE+D9eboTDVxP/NmmyH2JB+1Bqd8IU5/mECDmzjI2bFrJqV9Y/Yal43PqH7Dh+YP0grxd3WCfqxmqP6Y7NEcVtTRwkYGw==
+ b=e4W8hbO6gSRnr16mOBTzVuKRUpTzBLT2DFluPPSnNzhlIb8RnhErxZgRLB15eVqTXd9+gC2g+fG3HM9z5ch25mEOzMGVbPqwnH/TzZh4xLii2XqGBzSktjE4N6iQ019b7EIZNnCjn634GLYYFTlQ528TWI+fyKbrPFauZdcPgXkWlOff3J0lkA9IZdhT7au/UeQkmBN2Csfed/3rKO6TPLGTvB1XDkTf6V11se+Wa6nFYgxALFj91VaJvt351tnUfPZ0fF8QyJMwTvJ8FeSSQL1myTT38l7iJLF9U3OTn75imZbu9WVT89TH/hHRAmTr+UOSQd8DMbGzgRL6N+ESDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DMWNL9y/3luJyqwfdPQ9EjWS3YwYvjZYot8wKMHF3VM=;
- b=dgx44TxiW2BzOicUbzeKWdvttuDsriQyFj/TTTCi8B8Z3uG/4ebV5Xc24Y2O9Z0TIs1R9amAp6wr8m5P6O6jaNKaGZYtbJx+jJgNxsSxLQ5heexsW50Tx7H8QvAZYmSxkHEfKsVzHiogm3qScrSih9h3PdFtuAweV68h1fSoEpQSt3tX1o5w1osNHOtWfnP+kwD845iHzwVAiXZw10Uy6TdMIevGVzeQs+wu8+umPDfL5IFXYuCm8XCJMKOb4Gi5CfO3s++t6DzwHHC7L94yL/02/9VgZRsFVLOVVVT3x9kY9F2jp4t5QGcfP/2R5K2RakFml5ghfBxPo6MMVIyzvQ==
+ bh=gjjFhrkJwDPt0tiihP60jyoXPkykG5vKkMSLtl3ibMI=;
+ b=BjKtnfdA//jIK4TuTwUVcJYwrGyKm0odlNwAqX4mgwUhvUuARqfl3amk+hP3+R4kAiXC5I3aSaBaymGkaQHqCa15u3ESf4SOnVu83frZRrImX9IPYYAmRLqLqrFsmvdSeVtzd4igW7OTfysqLIkuBWki6xrZqSrIxa5vLAol+ZFmAQfP0oztOJ8Q1DutHhMHDMQGnbIou+So2dMBH/Vm02OJfOzxuaqxCuFin6lYWTFzC3JyXmY2+s7Qn1mUEQIQRfyYxvREUXCe0WmdlA1RlHksCAMtIdiHDMfzqEIZmLMs9/K5Uzu7j0NDKkZbOM+3jzs/QPliBxO82FUCSUctKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DMWNL9y/3luJyqwfdPQ9EjWS3YwYvjZYot8wKMHF3VM=;
- b=U++CcJ77ykLkzi4/qZ1IGQ1M6/ZaAueECq8AD5f5sMwwj5s6wxMAABvnT4ouIWAYTYq3vHx/sytRBAnArHPft11kkzEIkG3oiMxk7S8mDShKnSCl2iuVfsG0b0K/iRrBFx8CJkZERt68jbdBFQUKKruF1RycJloyZ8/U8uqUvUeoXMXSNBIutSP/qrv8yWFp8bb+dTl2rIFZ7UD9dvvOMmkbVGY+NG+VQLZ8AS/Z+KkX+Z3BmbPfdIdGML538uphO8IAwiWzr06RvkKARfIUG10GQxMAhFUf0f9PjH9uAkw+o7WRU4jEETOKQdzoDgytcuiuY6ypCM7SOXfmsORuDQ==
-Received: from DM6PR21CA0001.namprd21.prod.outlook.com (2603:10b6:5:174::11)
- by IA1PR08MB8694.namprd08.prod.outlook.com (2603:10b6:208:447::8) with
+ bh=gjjFhrkJwDPt0tiihP60jyoXPkykG5vKkMSLtl3ibMI=;
+ b=l3/9EBNJkCShtUFDuZt9c6VDlxExmnpf5vS0dn2J2WvOKdQb5jOIcflu+6ss3jWLa6UnO1qhNnmjYRU8wdu3uyRz4CZmdBn6SbR/Q/Dg+f/QzkteFSrvwdEeXtUcINRPhNZhV2JhGKTkpcRKBzf1BE9gXdP/QIFSYlc9EQAM6OlJQ+O5t3Ps0TABUSZrNDQl9WYS+f70AIndByx4F0fSCokJeaJsNC/FTMKehJlB64AUvgjRhB1n7vHNA4Uvj9PKD1+ga84N+rZgPzWTIN1q9eDHID1/cRbQj6XJkQUhF4a+hokjHNtULutiCRtKr/+CmAkLrvhNgz4HD/6hsGjPHw==
+Received: from DS7PR03CA0209.namprd03.prod.outlook.com (2603:10b6:5:3b6::34)
+ by PH0PR08MB7713.namprd08.prod.outlook.com (2603:10b6:510:f0::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Thu, 22 Feb
- 2024 17:24:15 +0000
-Received: from CY4PEPF0000EE3D.namprd03.prod.outlook.com
- (2603:10b6:5:174:cafe::b4) by DM6PR21CA0001.outlook.office365.com
- (2603:10b6:5:174::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.11 via Frontend
- Transport; Thu, 22 Feb 2024 17:24:15 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Thu, 22 Feb
+ 2024 17:24:12 +0000
+Received: from CY4PEPF0000E9DC.namprd05.prod.outlook.com
+ (2603:10b6:5:3b6:cafe::75) by DS7PR03CA0209.outlook.office365.com
+ (2603:10b6:5:3b6::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
+ Transport; Thu, 22 Feb 2024 17:24:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
  smtp.mailfrom=micron.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=micron.com;
@@ -49,26 +49,26 @@ Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
  137.201.242.130 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.201.242.130; helo=mail.micron.com; pr=C
 Received: from mail.micron.com (137.201.242.130) by
- CY4PEPF0000EE3D.mail.protection.outlook.com (10.167.242.17) with Microsoft
+ CY4PEPF0000E9DC.mail.protection.outlook.com (10.167.241.82) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Thu, 22 Feb 2024 17:24:15 +0000
-Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19B.micron.com
- (137.201.21.219) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.7292.25 via Frontend Transport; Thu, 22 Feb 2024 17:24:12 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW36EX19A.micron.com
+ (137.201.85.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 22 Feb
- 2024 10:24:12 -0700
+ 2024 10:24:08 -0700
 Received: from micron.com (10.3.107.163) by RestrictedRelay17EX19B.micron.com
  (137.201.21.219) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28 via Frontend
- Transport; Thu, 22 Feb 2024 10:24:09 -0700
+ Transport; Thu, 22 Feb 2024 10:24:05 -0700
 From: <sthanneeru.opensrc@micron.com>
 To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
 	<sthanneeru.opensrc@micron.com>
 CC: <Jonathan.Cameron@huawei.com>, <dan.j.williams@intel.com>,
 	<john@jagalactic.com>, <emirakhur@micron.com>, <ajayjoshi@micron.com>,
 	<Ravis.OpenSrc@micron.com>, <sthanneeru@micron.com>
-Subject: [PATCH v2 2/2] cxl/mbox: Add Clear Log mailbox command
-Date: Thu, 22 Feb 2024 22:53:50 +0530
-Message-ID: <20240222172350.512-3-sthanneeru.opensrc@micron.com>
+Subject: [PATCH v2 1/2] cxl/mbox: Add Get Log Capabilities and Get Supported Logs Sub-List commands
+Date: Thu, 22 Feb 2024 22:53:49 +0530
+Message-ID: <20240222172350.512-2-sthanneeru.opensrc@micron.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240222172350.512-1-sthanneeru.opensrc@micron.com>
 References: <20240222172350.512-1-sthanneeru.opensrc@micron.com>
@@ -78,116 +78,85 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-MT-Whitelisted: matched
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3D:EE_|IA1PR08MB8694:EE_
-X-MS-Office365-Filtering-Correlation-Id: eeb8a890-b5cb-4169-22aa-08dc33cb180d
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DC:EE_|PH0PR08MB7713:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f765c68-e6f8-4b81-747b-08dc33cb163e
 X-EXT-ByPass: 1
 X-MT-RULE-Whitelisted: Triggered
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	h36hGzG3NcabWcLz4xkX1IF3+Qd8+QT/O7cRSehdwTFsFWvNek7GCrBRPN9rNKOnT7jFwXK2i8VJXSuBo0oMvYnzbDA4CNe2aMsYrg8HpxF0M7Oc8MRq5SP08qOcC9fNcyqcR3rDZG6yW4XDYGe94BXetJ+EtTnF6XEiCQcuZNL3NNQiR4Y3l/ffl+jVX/VSUPRuWyx9rGfbxlWBwOj3O76M1fDi+MQQ5IvnAfxQr1IAwilGdmXBL/oEFjCV0tehXZHPi5H95YFCnqwBJoWuN36Tk6CxHSMDzsdOP1VF0oewzP1bhIhfbyIziIopyU3tUKZsSosHF16dt4IVeYM3IA1jfwAenaEPxmfn8+hZCOS4/kssRu+1hN1R5zAZQHtGMea/oJrkmykgCefNA6EscA5ZVznJVTgZ9mYE090TSIvUMoJlhX0XbLZ/xFFx1IlDL9rJpM8lZPjNomp+lqUuFa4KT5YWZn+IqKsyS2EABOhwNZCpdPsuBNw4AM5K8umAwIfX6Xyb2NIW1c1Tab+XkVtegbCzf3vye9ws7IpcV6IWNI/7V6zFozhePZMB7xtvLRxBeXXlkX7lhJ/txHzho3di9uu/wr2snPpxO/A23esEzQztbsHFzyg8gcZIHOougkUMUGEfnHvPUwg5DZoHXCaJbgOZBOTJJIfsFc+E/QM=
+	g487PRnBkbqNS1iUlAWoee3n33QJcf+cwS2Oua6YZ7OqoaRMLEaYAdGfJCje/gJhu37hkIHfeXgf6XCtS4wmGdCgITZwyrW8/GIt1jgEQrxiRETB+O74WbKXgZ2Um9+KsIWVd2Nr8jpl+u866ElA4lKgomOZHOI9WRXz84M/AdmFT7rwHOjzHfze+aZvUj81LvfUhK19tdA/apaqtByJq3J7SoVIE3zJylOSqmOY4PJe2cOLREpMHF/2rWv4NHfmMm54EHlO9tp5n4zs8K8UM1V0PZWQpbsnAwe2nbTp1fPvc6om56cxtqm3pYx52AtzpaepOH/ilmIMhwV7BWn1pwOCF3UHbaSETX12DxEous9zeCPgIHoP0YEKaKsTzO3+MPKs/FrvpvAEvgP7o3Sy26KUg5yTXP8IecuErd3c3Ote7uigJ9bm6HQuQr/xuNyrfIxxzxRKgwtJXxUteggj1gkzqKET3U6Az5WxvTfVDnmAFppH46AqJhcy5iPVQzODBZNlQRkgG6to1EqMyresAimqMXQPG2hcnh3oY1G7qcvWoPJ9Z3UPFAgmBtc8fCGC9HICyTsXWfHIr/lnsnD2oNV7gE+mvTZ6Z9fKkZRj6p/Lv1mfSj3C7N7/bpqZw2G/J97p8AoZdaAacUTXYIQ+S6JNSZs3mgezm3swuuB5vUA=
 X-Forefront-Antispam-Report:
 	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
 X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 17:24:15.3721
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 17:24:12.3400
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eeb8a890-b5cb-4169-22aa-08dc33cb180d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f765c68-e6f8-4b81-747b-08dc33cb163e
 X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE3D.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9DC.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR08MB8694
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR08MB7713
 
 From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
 
-Adding UAPI support for CXL r3.1 8.2.9.5.4
-Clear Log command.
-
-This proposed patch will be useful for
-1. Clearing and populating the Vendor debug log and Component
-state dump log in certain scenarios, allowing for the aggregation
-of results over time.
-2. Clear the log when the device is shipped from manufacturing.
-3. In some device failure cases, customer may want to clear
-the log before shipping it back to the vendor.
+Adding UAPI support for
+1. CXL r3.1 8.2.9.5.3 Get Log Capabilities.
+2. CXL r3.1 8.2.9.5.6 Get Supported Logs Sub-List.
 
 Signed-off-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
 ---
- drivers/cxl/core/mbox.c      | 11 +++++++++++
- drivers/cxl/cxlmem.h         |  4 ++++
- include/uapi/linux/cxl_mem.h |  1 +
- 3 files changed, 16 insertions(+)
+ drivers/cxl/core/mbox.c      | 2 ++
+ drivers/cxl/cxlmem.h         | 2 ++
+ include/uapi/linux/cxl_mem.h | 2 ++
+ 3 files changed, 6 insertions(+)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 30bd8264292f..5fb01194f16f 100644
+index 27166a411705..30bd8264292f 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -57,6 +57,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+@@ -56,6 +56,8 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
  	CXL_CMD(GET_HEALTH_INFO, 0, 0x12, 0),
  	CXL_CMD(GET_LOG, 0x18, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
- 	CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
-+	CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
- 	CXL_CMD(GET_SUP_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
++	CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
++	CXL_CMD(GET_SUP_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
  	CXL_CMD(SET_PARTITION_INFO, 0x0a, 0, 0),
  	CXL_CMD(SET_LSA, CXL_VARIABLE_PAYLOAD, 0, 0),
-@@ -333,6 +334,16 @@ static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
- 			return false;
- 		break;
- 	}
-+	case CXL_MBOX_OP_CLEAR_LOG: {
-+		const uuid_t *uuid = (uuid_t *)payload_in;
-+
-+		/*
-+		 * Restrict the ‘Clear log’ action to only apply to
-+		 * Vendor debug logs and Component state dump logs.
-+		 */
-+		return (uuid_equal(uuid, &DEFINE_CXL_VENDOR_DEBUG_UUID) ||
-+			uuid_equal(uuid, &DEFINE_CXL_COMPONENT_STATE_DUMP_UUID));
-+	}
- 	default:
- 		break;
- 	}
+ 	CXL_CMD(GET_ALERT_CONFIG, 0, 0x10, 0),
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 671e46538baa..af7f8a4b84b2 100644
+index 5303d6942b88..671e46538baa 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -530,6 +530,7 @@ enum cxl_opcode {
+@@ -529,6 +529,8 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
  	CXL_MBOX_OP_GET_LOG		= 0x0401,
- 	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
-+	CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
- 	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
++	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
++	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
-@@ -565,6 +566,9 @@ enum cxl_opcode {
- #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
- 	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
- 		  0x40, 0x3d, 0x86)
-+#define DEFINE_CXL_COMPONENT_STATE_DUMP_UUID                                   \
-+	UUID_INIT(0xb3fab4cf, 0x01b6, 0x4332, 0x94, 0x3e, 0x5e, 0x99, 0x62,    \
-+		0xf2, 0x35, 0x67)
- 
- struct cxl_mbox_get_supported_logs {
- 	__le16 entries;
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
 diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 49c25056c222..c6c0fe27495d 100644
+index 42066f4eb890..49c25056c222 100644
 --- a/include/uapi/linux/cxl_mem.h
 +++ b/include/uapi/linux/cxl_mem.h
-@@ -48,6 +48,7 @@
+@@ -47,6 +47,8 @@
+ 	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
  	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
  	___C(GET_TIMESTAMP, "Get Timestamp"),                             \
- 	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
-+	___C(CLEAR_LOG, "Clear Log"),					  \
- 	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
++	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
++	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
  	___C(MAX, "invalid / last command")
  
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 -- 
 2.25.1
 
