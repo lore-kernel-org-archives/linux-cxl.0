@@ -1,72 +1,70 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DB11EB3D;
-	Thu, 22 Feb 2024 18:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B6C125CE;
+	Thu, 22 Feb 2024 18:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627924; cv=none; b=XjRGj7KIjl86gVrvN/ANwiA0LWyy/U05cebQRpbhTnKsKz7ryVtlfxjQiaRRoo02+1UD2F0O2TB1LYyB3Xf+bxftA4I8wDO0L7h22D5ClJsZXJ/MPhj5yUev/LJRQbof9qAZI+jesGLx/p0TmAlxiFCg/eVY63HDJKDVukoszgk=
+	t=1708627955; cv=none; b=lY+pWwl4VEhmkKOdDxIlTsV99DkUXrLFSe3q2BTbynjSFcxsyAu3v4gGX1V9Um9OpnwsD3LDIyUS3aFtd0WeMiq1+CRqBv/fwVVDHdgOjuNVCnKv3VSDHEQwHcZc6sYE6wWjLzCQofATUFsxwFUDXfvNUSYrdghPT7LCqa4204I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627924; c=relaxed/simple;
-	bh=Rqlhl8scJWK1KFRqpMadZ1k19G5+0GHAMj4w2ohm/zY=;
+	s=arc-20240116; t=1708627955; c=relaxed/simple;
+	bh=qFHsc/9NAkYXAV27PGFm/SEzb1sXW7fFVpJitCHk1YY=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgY2HlxO6t/YQL1NjjNysBUdk3ePrbH+JqrV9tkeJyFHhWwK0sbNMn90Tkh8iAGlmoTBoi77h3vAu6/RKeXqmAmAF4dwihN8oAa9VsOb2Fj6PV40+WLp/WTNTZQfIMg9+bTbQjZZ0Eq7S3sSVcZVILndEAnczvywePKQPFoYCjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhoyhb2W; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=VuPt9Vvzyvk1Ur64SiwUifmsNN/dTDI1z3CZ05n4GjeUrSYu2dMi8nPZ9ON+MVYIQXTVm6+Mv+8e5t/81s1r/pDxOnDHPTK9SUn9iALqV2Sln8EHrlUTw1dpMXRoHzij/hXa4nZt2+OZp4U3ZuOnmM8vLaZR5ahVIq/VLjkRlzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WC59J1CU; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhoyhb2W"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc09556599so917605ad.1;
-        Thu, 22 Feb 2024 10:52:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WC59J1CU"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso24950a12.0;
+        Thu, 22 Feb 2024 10:52:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708627922; x=1709232722; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708627953; x=1709232753; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CX+buwoA+SqSG7r/CEcjs5/GgQYEZL4oqoCzZ/o1bnQ=;
-        b=dhoyhb2WM2xHU8UYV/bu557UmKK5fTA57zIUepJs3xoaogtKo68dh185NAt0azrd9C
-         o58m3rcwZ8KKzagRZNcAByGNqHJtJk6vhfnw23CBl8o8BrCHlvnOrKL1VflUjgAIecWO
-         tt1M7tQHFt4DBCfhfarYWIETCECUeNfggXPPnK3LT+9cMZmihpQ9hevuSdvCa7qFM9Qf
-         3mhgkfobB9ZgSQl8UQ/JR6Gw6ZTuwqJFBSp892bJUelyzB9KVh6/z78I04vEZd1cL852
-         NiYux7wC+XDgj4j2bPqIDlmc8JYjSEJ3oqujkbqbdRNvu2K0tisiuteurk04p8scNusa
-         Bmnw==
+        bh=1yj780hLgcxxRzFrQjiMYOMZDjxU/tRVcygbZgcLUyg=;
+        b=WC59J1CUaCzFiQXzSb49dL6AxbFuVXQaxUR9yCFlo6T4R4y0n2crpWnAanrUgAe4oD
+         2vZZGZbg4jTuohdMHdZmskxFBt+1SHmwEBhOWr4I8u6Vw7Qktovr3Iutnv+gBDhdJbNL
+         VKt2lcKKwKnXsdC+abgVQigoZHZTZdD+/E2txo5o2tFg4XvFv0lQYGgPyq0ZTsxhu+xH
+         PqmD3MBHBy7RrNtQ7hCcZiMYDzAFblkp4+SupChRYiiy3YlV9CCeE1YLu4LyKGXHGmVr
+         REjhggSbTQPfu8DDj6r1uqxMhSG5nfWH4wvmX1y3nuAJPPi1ZaRvAu2AN6RKrWt++XC1
+         BMog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708627922; x=1709232722;
+        d=1e100.net; s=20230601; t=1708627953; x=1709232753;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CX+buwoA+SqSG7r/CEcjs5/GgQYEZL4oqoCzZ/o1bnQ=;
-        b=iEL5HFHJPTeKl3hNEB1yMZ85vbcgs4z6OQPXcYw+NNXPWX6GuoZriKbFDjGkBR8J5H
-         iLtqOKR2gvJj0ZBGYEE4lHWB0H/ZHotI0DebN56eI7HCzQux2/P9HOaLvlNSVzZoMYB4
-         9TShXrsz7floV8TefG5Hxkdq66dNIzepQZC9DpSMT2vJkA8aRxLpqRGtn3TysYwXT/Gk
-         31YwJGikXEwcjDdgY+eBGITx/DPMc/UPW0v8x93ii9b8+hl/qQ6fJwHOGhqoHPuZAS+t
-         vWxIjKfon2sn/Jpx6Yqdd15ZWS77WZ7dGDXbkCKPz/m0OeguOFkHAjxRFlLdhJPtWzSO
-         53LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpgrDVCrIIR4+nj2Rrx5a/hzYphmqCj1NOg0MAuvFWOZPzID1+gHvnO2NvORHNW188McOEDSdEAfpp7gzi4a0Ro2jCXna/elXasTuQBKbBciz4Kz0Qgw/m5tEWwvggMxR5YQ0rMIW1aubdDgqqSki7MP48OvczX/B/PBf7M4iqJd+DwM4GwKC7
-X-Gm-Message-State: AOJu0Yw0G+P4R23tgmuyLOVk98kD+aqq+LV1i8M7qLfHGMz0CCx5Ygtf
-	jo/rwDh25TINf4dnjMw/+6SzIM1HqFoXIpUZCftu7a/Me0NGXiWF
-X-Google-Smtp-Source: AGHT+IF11qcXZe+TAthoK9MJjpLgyxNCAn9qgPH8lHdKb4SzYXPbd+d0D2xNb+iqjUlMyv4QiBwmcQ==
-X-Received: by 2002:a17:903:1212:b0:1d9:14fb:d142 with SMTP id l18-20020a170903121200b001d914fbd142mr26128212plh.32.1708627921888;
-        Thu, 22 Feb 2024 10:52:01 -0800 (PST)
+        bh=1yj780hLgcxxRzFrQjiMYOMZDjxU/tRVcygbZgcLUyg=;
+        b=VoJOo5NYOoUHB+djvWUx+/xiR1X/+F0MNx87mAV/1n7tW/FgjRrihlpOnKxPOZqPH7
+         6XDTHIAZUWces6R2V+rZWbbiqXK6cf9FX+jHwTR7uQDl/ZP58jv5j5CcJAWJZNUtFigj
+         w+bQkdDgYj5vU3QRYt+RmYSP2cRNxyW+W+gcB/ZHUdIes81tpZbf2fxWnIbenY1hf1Bc
+         Y5VVQV5JdbyltmlIx45ExMqOXRcjmWnfXDt6v7qerW+AMqCMqahWFOhqeurn0DMDW+dG
+         DOQ3/DNF9i7wsnsz/iP6gVUN34/g7gcqNHmJS+VRSSn24k8Afi5iYYR5DQUZ7JYamoct
+         v33g==
+X-Forwarded-Encrypted: i=1; AJvYcCUliS2Y86fhOoP7sPgu1Hs4UmFWtNmWwiR1gz5U3ZC46brGWIGB6s35uc1c5ZfMSvJ72pXMRd5wRMBP/yEHGKrOhEE77dbNPhbgqFcVx1qDgQQxCSJ5M6sIsFk4u0a5IS7m79bUhx0+
+X-Gm-Message-State: AOJu0YwKC+0Z1eUD3vMmzE0drQWEGquVj1uz4nSYj+aRVi5CYWR5Hvv5
+	YeEOXnicfCr6kuz5E2jZUka4ktDa5Wf4/za0xzmDRY/y29FscNLC
+X-Google-Smtp-Source: AGHT+IHVxW4m7RkjhOqkIYdRdH6o807fm7UYiDq9BbKCjHZgfKL8U49QJCkZ2vuA3+7MHLUM3JsXOw==
+X-Received: by 2002:a05:6a21:3994:b0:19e:bff0:c8fc with SMTP id ad20-20020a056a21399400b0019ebff0c8fcmr26701483pzc.56.1708627952779;
+        Thu, 22 Feb 2024 10:52:32 -0800 (PST)
 Received: from debian ([2601:641:300:14de:f32d:6b5:d03a:44f])
-        by smtp.gmail.com with ESMTPSA id mp14-20020a17090b190e00b002993f72ed02sm12374377pjb.34.2024.02.22.10.52.00
+        by smtp.gmail.com with ESMTPSA id w16-20020aa78590000000b006e34e1aeee8sm10687511pfn.88.2024.02.22.10.52.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:52:01 -0800 (PST)
+        Thu, 22 Feb 2024 10:52:32 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Thu, 22 Feb 2024 10:51:41 -0800
-To: Dan Carpenter <dan.carpenter@linaro.org>
+Date: Thu, 22 Feb 2024 10:52:28 -0800
+To: Ira Weiny <ira.weiny@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Robert Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] cxl/hdm: Clean up a debug printk
-Message-ID: <ZdeXvYEs_fMks3rU@debian>
-References: <3d3d969d-651d-4e9d-a892-900876a60ab5@moroto.mountain>
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/trace: Fix uncorrectable macro spelling
+Message-ID: <ZdeX7KRZmm35qwCY@debian>
+References: <20240221-fix-correctable-macro-v1-1-6e6ab8b8aa39@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,41 +73,59 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d3d969d-651d-4e9d-a892-900876a60ab5@moroto.mountain>
+In-Reply-To: <20240221-fix-correctable-macro-v1-1-6e6ab8b8aa39@intel.com>
 
-On Thu, Feb 22, 2024 at 09:14:02AM +0300, Dan Carpenter wrote:
-> Smatch complains that %pa is for phys_addr_t types and "size" is a u64.
+On Wed, Feb 21, 2024 at 08:52:28PM -0800, Ira Weiny wrote:
+> Uncorrectable is spelled with two r's.
 > 
->     drivers/cxl/core/hdm.c:521 cxl_dpa_alloc() error: '%pa' expects
->     argument of type 'phys_addr_t*', argument 4 has type 'ullong*
+> Fix the macro spelling.
 > 
-> Looking at this, to me it seems more useful to print the sizes as
-> decimal instead of hex.  Let's do that.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
->  drivers/cxl/core/hdm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/cxl/core/trace.h     | 4 ++--
+>  tools/testing/cxl/test/mem.c | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 7d97790b893d..0b1843631b26 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -518,9 +518,9 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
->  	}
->  
->  	if (size > avail) {
-> -		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
-> +		dev_dbg(dev, "%llu exceeds available %s capacity: %llu\n", size,
->  			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> -			&avail);
-> +			(u64)avail);
->  		rc = -ENOSPC;
->  		goto out;
->  	}
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index bdf117a33744..577a01954f71 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -267,11 +267,11 @@ TRACE_EVENT(cxl_generic_event,
+>   * General Media Event Record - GMER
+>   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+>   */
+> -#define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
+> +#define CXL_GMER_EVT_DESC_UNCORRECTABLE_EVENT		BIT(0)
+>  #define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
+>  #define CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW		BIT(2)
+>  #define show_event_desc_flags(flags)	__print_flags(flags, "|",		   \
+> -	{ CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,		"UNCORRECTABLE_EVENT"	}, \
+> +	{ CXL_GMER_EVT_DESC_UNCORRECTABLE_EVENT,	"UNCORRECTABLE_EVENT"	}, \
+>  	{ CXL_GMER_EVT_DESC_THRESHOLD_EVENT,		"THRESHOLD_EVENT"	}, \
+>  	{ CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,	"POISON_LIST_OVERFLOW"	}  \
+>  )
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index 35ee41e435ab..c0c1e6b4db75 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -380,7 +380,7 @@ struct cxl_test_gen_media gen_media = {
+>  			.related_handle = cpu_to_le16(0),
+>  		},
+>  		.phys_addr = cpu_to_le64(0x2000),
+> -		.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
+> +		.descriptor = CXL_GMER_EVT_DESC_UNCORRECTABLE_EVENT,
+>  		.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
+>  		.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
+>  		/* .validity_flags = <set below> */
+> 
+> ---
+> base-commit: a2cd3520e6085b0f9145d9c5e3d1bfa9cce4c3be
+> change-id: 20240102-fix-correctable-macro-2847ce932c9c
+> 
+> Best regards,
 > -- 
-> 2.43.0
+> Ira Weiny <ira.weiny@intel.com>
 > 
