@@ -1,59 +1,60 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB4115530A
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 16:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE1B154C12
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 16:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708620904; cv=none; b=LdWiu91sRdPd7jBJDSjgry43SwY3uGP1dEMb+jwa0qn84OaMqr3gEhlYT2cztgCUFlnblOJHC9mER1Eql0BdlvQEFF0QWoRnUnvuLSvemA2zj/x3wnWYO2WuzkXU3pQSKZ5o/JC/5ZLuj28QHPpDzYK8rzfBUaWlBscMpEPBOLY=
+	t=1708620970; cv=none; b=Sk1+LcL9Ftgtit7omVITm4prxRRgEXrQakJ1P++kLJLWeggT8ipcZphTQWIefM09PMbww0KYTqOXQfY4PblvTi8bQ/rIR9a2cokyH7z0hv8NnjZK/24/sWlf3MENKgHzGCSmsmOi8DLrSJ6ekGzcTpQb/cFZl4u6/+ZRhGG4zjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708620904; c=relaxed/simple;
-	bh=E4NbgHvicTFXbgOqaQbImT9G4fAJAvJKk0PGcY8isMI=;
+	s=arc-20240116; t=1708620970; c=relaxed/simple;
+	bh=/GST2RKhooU54cpe4RLP2jvd8Ytv771GbeeZiuLCD+U=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ryx+xDEYTICaVMtoKziQ1YaVpzN9ynSfFrlUtBkA5w6xAU0EDShu2eUR/6RCivp4VJgzJAN/6GI6zfYU99OBLsL7KwIHpSQVZi+TtrfIuiWcrlB0fhFKAMsTOUSbstQR+0a39o8t4PP3jI5OzTJLA8H2EPHEVMaEEZE/rFx7o34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XPQnvPHi; arc=none smtp.client-ip=209.85.214.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSO6oAydMdefRLo+brl8xBBfti9aCO2iDJ2iwtxigcupKSDwyKlVAD9Xv/UGcoBQissN/lqMrxfaPOe3VMgqqQZlTxCiVEL8RCRfA8o2VQp/cTIjruLdIXDtvJtElt0h+xH6QBfUfNLvwUXAwrn7J5XRsLFTwQiH84acaiII31o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=As0bq3Qj; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPQnvPHi"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc1e7c0e29so20363145ad.1
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 08:54:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="As0bq3Qj"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e45bd5014dso2255342b3a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 08:56:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708620889; x=1709225689; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=csa0J0V6+LFxDu/YR9wQBUMQygQKV7FR3Ss/i1Z/wf0=;
-        b=XPQnvPHiLQmZGqoncp1rtFEjFKA/ghmqu5srsLtJaYkKeHqZjXmvL2oYkO+xAG25yc
-         IJuBf/e93tzFXRdqqkalPDHzzf4hXZTp0eUl3nFyU4wdrxhUbb0VlqSG3UqHjLANmDVZ
-         8XSdusdkG6w9KLvWiDkaF/FsnORSVlcOkNUm/STbuSOU4LaofdSutlmB0k1/tnj04wAS
-         eojYUbVyyBKjs41V1b6xOXnXwEsZdbpXmdEbBJiqI5MnF1KfEqM9xgGPnEW/opTGGKBy
-         CoFq0KBkGXGlQotM0EkKqeocV9rVI/T2GlvObDRS7qaa90RsZzXXtPlwZAPLcNBumz9s
-         /0sA==
+        d=gmail.com; s=20230601; t=1708620968; x=1709225768; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YPbA6TpI1b5Y1eRi4qIE3WJTJORdzGj63jllScn37vE=;
+        b=As0bq3Qjm1r3wrvqk22vlBF28OA/MuwmIJhz311Iuty+Xn5lMsEYKxN96sRtzMFuhU
+         +YVhx/WsZHoNa9OmWtQjDIak68apRCj4YiK2ZORxL8ptYruc5b34L8ySgf1PhdKoCc9V
+         +E5l6cocDZE7yqx7cqRtZOn901VXlDxFlvT/F6/tG5EKbfipUY+fP6AcjJqd3eMFq1Rv
+         DiiKG4MTUs8sd161yJWdMVurHt2sCnTpQY3L2+XCpW2kIlfwFW4r8k+ZZ6cG9iTTyAjz
+         UlhN374+TXCVyW++uyTV9DPnIKAD4JisGRic/VBrTUfs3gnSYiHDJmwaidkT6wNzFlb0
+         eBEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708620889; x=1709225689;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=csa0J0V6+LFxDu/YR9wQBUMQygQKV7FR3Ss/i1Z/wf0=;
-        b=urstK8VpUbGY1b3ngwWK4k8wGRXIzjMJIrWSx1GBk2Pplie6rT/CJcuA1Qt+pbb8Dk
-         H3BhrTsNzMk49u1v1uox91o/bjRvIwwimie1Fld/A0dDXfwjXt/cPddaxzfpYcjN5vBl
-         3Hu2gxP3u8D6D2tarh+f4ZQA613XLdHiWn0miuyhDYVKV2m2hti8aL6ZqPq2s/IDb1iz
-         UnK0fQKtEiuszFVd0olISrGw4+D7PwWBSySKn4sO59kuhWLxShHK+Lv3ruuTFQwrPUV5
-         PjjeW7yk9IuAPwYMXhu7pkFRF+nPjQ2fV1gNJx4HkphNThiTrlxgOvIc1XpmWpceTBxT
-         lf7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyNl4jcCKpUupSxYHAR6GjcSXrf/d18SxEOuld7yv7H34tNtosC4KJEUIpiTvtlA2iy45Jq1zzpJys61zJ9vwt8maN1Z+JrXsu
-X-Gm-Message-State: AOJu0Yzc2+7VYy09UwjTpBtZGvlZD5mKHOB/qNLmYurVkq3qs5EE4I3S
-	RdTw5rvThTEaTqkI11BajCl7sAsZmPfctcvSkLGC7W5MkdgBnj0y
-X-Google-Smtp-Source: AGHT+IHbMfXTG1dtFPimRpl1wfxBamgRiDiQPfpcwamC/Z152FCaKxp4v/HWD0LQvC1NcRJkILrTkA==
-X-Received: by 2002:a17:902:700c:b0:1dc:2f63:dfc6 with SMTP id y12-20020a170902700c00b001dc2f63dfc6mr5085045plk.53.1708620889083;
-        Thu, 22 Feb 2024 08:54:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708620968; x=1709225768;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YPbA6TpI1b5Y1eRi4qIE3WJTJORdzGj63jllScn37vE=;
+        b=TBXPeYqdSpygqzAE7KhPBHZuWwYreG/8ly/kHM6QAWn4zFiZbv6oP2L4gvQLnKQZBe
+         ApfKOvBoII5NniRrKvTBbMllQav4ILkz5EM41Mcm1A+ZUevJK6PtbCUXkRBmWdVq3ZE3
+         YmP7CY0lBAtpSQBx9U+jGC10X1XUML2leH1yxnUzL+6VgJUbrGjsUhiaq3nVlPdJNWjA
+         CX7+bDbhDBMfmnqCobyrdeRmRAz4Xyip0FP5tF6Yh+/cYf5zRi2Wu8hK2cRI1hjglRVo
+         D5v6aXaviHHAn6do7RAHiZYM/nsebIHrk20vUNA7V0eJDv/o1GquJC7vgr+JgqdAEb+u
+         2OzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhtFC9pclsTRThAqatx2dnfidaYjTtkwMPYUbsFN9VFmRLz5NlUIeEDKtYHtPm6fZJ2wcUBDxJaA13GMl5f8NQBudovXoXHDup
+X-Gm-Message-State: AOJu0YwqwNH1iYPKdkTGtG2QWqpRRp4Dk12mkmpWpNbTTerxqItIypw0
+	ShONKJoac0HjYRLwiPs75seWhNJarvBIgWJ5g64Prt/806RPmZOY
+X-Google-Smtp-Source: AGHT+IEv7YEBfHb3hssf0AOzxXGHxCT8otNmE4GpADhY5zDL7NEkPiFEJ5yzs7z4H0LKY7sMxrxNSg==
+X-Received: by 2002:a62:e10d:0:b0:6e2:9ff2:19b1 with SMTP id q13-20020a62e10d000000b006e29ff219b1mr13800579pfh.13.1708620967919;
+        Thu, 22 Feb 2024 08:56:07 -0800 (PST)
 Received: from debian ([2601:641:300:14de:f32d:6b5:d03a:44f])
-        by smtp.gmail.com with ESMTPSA id k23-20020a170902761700b001db8f7501b1sm4676735pll.2.2024.02.22.08.54.47
+        by smtp.gmail.com with ESMTPSA id a6-20020aa780c6000000b006e04ca18c2bsm11159868pfn.196.2024.02.22.08.56.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 08:54:48 -0800 (PST)
+        Thu, 22 Feb 2024 08:56:07 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Thu, 22 Feb 2024 08:54:25 -0800
+Date: Thu, 22 Feb 2024 08:56:04 -0800
 To: Wonjae Lee <wj28.lee@samsung.com>
 Cc: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
 	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -65,71 +66,42 @@ Cc: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
 	Adam Manzanares <a.manzanares@samsung.com>,
 	"dave@stgolabs.net" <dave@stgolabs.net>,
 	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-	Jim Harris <jim.harris@samsung.com>, Fan Ni <fan.ni@samsung.com>,
-	KyungSan Kim <ks0204.kim@samsung.com>,
-	Hojin Nam <hj96.nam@samsung.com>
-Subject: Re: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
- region representative and mailbox command support
-Message-ID: <Zdd8QZk_fDUs1S6E@debian>
-References: <20240221182020.1086096-3-nifan.cxl@gmail.com>
+	Jim Harris <jim.harris@samsung.com>, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v4 06/10] hw/mem/cxl_type3: Add host backend and address
+ space handling for DC regions
+Message-ID: <Zdd8pHzj38BsJwsL@debian>
+References: <20240221182020.1086096-7-nifan.cxl@gmail.com>
  <20240221182020.1086096-1-nifan.cxl@gmail.com>
- <CGME20240221182126epcas2p1b684f9239e4262f17ff484939658a382@epcms2p1>
- <20240222074525epcms2p1099bf72b0683889b36a5c5c06bdc2dff@epcms2p1>
+ <CGME20240221182137epcas2p276d22514caaa9412d0119ded6f9a63d4@epcms2p3>
+ <20240222092252epcms2p389f3b87b6ee63cf6a0e95aaf8968970d@epcms2p3>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240222074525epcms2p1099bf72b0683889b36a5c5c06bdc2dff@epcms2p1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240222092252epcms2p389f3b87b6ee63cf6a0e95aaf8968970d@epcms2p3>
 
-On Thu, Feb 22, 2024 at 04:45:25PM +0900, Wonjae Lee wrote:
-> On Wed, Feb 21, 2024 at 10:15:55AM -0800, nifan.cxl@gmail.com wrote:
+On Thu, Feb 22, 2024 at 06:22:52PM +0900, Wonjae Lee wrote:
+> On Wed, Feb 21, 2024 at 10:15:59AM -0800, nifan.cxl@gmail.com wrote:
 > > From: Fan Ni <fan.ni@samsung.com>
 > >
-> > Per cxl spec r3.1, add dynamic capacity region representative based on
-> > Table 8-165 and extend the cxl type3 device definition to include dc region
-> > information. Also, based on info in 8.2.9.9.9.1, add 'Get Dynamic Capacity
-> > Configuration' mailbox support.
+> > Add (file/memory backed) host backend, all the dynamic capacity regions
+> > will share a single, large enough host backend. Set up address space for
+> > DC regions to support read/write operations to dynamic capacity for DCD.
 > >
-> > Note: decode_len of a dc region is aligned to 256*MiB, divided by
-> > 256 * MiB before returned to the host for "Get Dynamic Capacity Configuration"
-> > mailbox command.
-> >
-> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > ---
-> >  hw/cxl/cxl-mailbox-utils.c  | 110 ++++++++++++++++++++++++++++++++++++
-> >  include/hw/cxl/cxl_device.h |  16 ++++++
-> >  2 files changed, 126 insertions(+)
-> >
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index ba1d9901df..88e3b733e3 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -22,6 +22,7 @@
-> >
+> > With the change, following supports are added:
+> > 1. Add a new property to type3 device "volatile-dc-memdev" to point to host
+> >    memory backend for dynamic capacity. Currently, all dc regions share one
+> >    one host backend.
 > 
-> [snip]
-> 
-> > +#ifdef CXL_SPEC_AFTER_R30
-> > +    /*FIXME: need to set valid values in the future*/
-> > +    stq_le_p(&extra_out->num_extents_supported, 0);
-> > +    stq_le_p(&extra_out->num_extents_available, 0);
-> > +    stq_le_p(&extra_out->num_tags_supported, 0);
-> > +    stq_le_p(&extra_out->num_tags_available, 0);
-> 
-> Hello,
-> 
-> It's a trivial comment and doesn't have any impact yet, but shouldn't it
-> be stl_le_p()?
+> Hello, I know that it's too minor comment, but 'one' was used twice.
+Good catch. Thanks.
+
+Fan
 > 
 > Thanks,
 > Wonjae
-
-Hi Wonjae,
-
-Thanks for the review. You are right, will fix in the next version.
-
-Fan
