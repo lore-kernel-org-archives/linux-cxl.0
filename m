@@ -1,53 +1,54 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE0EBE5B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAFCBE48
 	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 02:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708654551; cv=none; b=Qysxp7uLcsCL0n3YRyoUpMHCNscQ8ERVCnijnXfFAao5Wq/Xq5TwQibyM8sUlhfz6nTkV2IeyqsrtDUkSwpV7q2EzjEeoR/c6RQ1hrjWzzGxLexfyKbZBDx8RCmRGZSiPN6ai4KexxQQk/lFu300sbXq5o1kCF0iKycm/MJRAf0=
+	t=1708654552; cv=none; b=bfqXHhnrKbXxhXQXJYrqiN2joIIFKThONdw282J8DI3Do/gikOY7KL9t3wPdv/Qmi07i15thOHkgMd0oz9keDgl5dERXjKOw+fB57z6ZEDJNKLg5k2sUZNTuHRLFn1wdTdEz4YSbzCG9llcjlyzA+IaC+j6w7IsRTE6MSMbXE74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708654551; c=relaxed/simple;
-	bh=5l/LDaPWUJnWpUgs2BmMwHt9+H1G0u+Aq/EbL9KxNUQ=;
+	s=arc-20240116; t=1708654552; c=relaxed/simple;
+	bh=sg75Nzd0Nfpa+tECk4dpxR+hOqypAdcjo1sTuoZWf9Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BuuIW1bAVGHlzJ4yvvC3GGhqN573GWyf2K68xrRwubhm1Pd9sjo+Wzvm25kWTocySa10VE2btg+MpdSO5xu6KqBJlkFCAII3HxoMvTEDsAtFFCKLEfYhmIiHZ5SIVH+x/gRilcHFpDW2eWA3RBfKaARIoODhSC4/MafrkJen/E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LMjVtUZm; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=gcU9YFEJ703CQET+m4JHkPO/MF6wnRCQKljtxWa4+Zn+XovXTJljSPLckixjG7d9OK28qe1VslDi83W6Y6pNOyFt6hfPjupFtfLCcrdT+Ew4LQrYR+rFTMHNckScU1v09Jwos/DEm6ZLs+yEKeax7Z7BqGhC/V4Zn8IWPMjU13g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JYlaJLLN; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LMjVtUZm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JYlaJLLN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708654550; x=1740190550;
+  t=1708654549; x=1740190549;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5l/LDaPWUJnWpUgs2BmMwHt9+H1G0u+Aq/EbL9KxNUQ=;
-  b=LMjVtUZmwvaH1o0gRU862crpcW7jxYoa9NasXntLTFgRTdTdp7/0Zie0
-   j802nbUbWHXau6gY+ET9YSDZjfzwmI3A4B95LaYlVSBPXhvbWLJ22uZ4m
-   cCCSx1cerK2Cfo/qRXxGmM0+c1PWyyRO9VW60D0R2oJnqB6mUhG8YHMfw
-   nsLXrTrQszQbNWqkxps65rHKQbBkvvRABQXdVT+/gOZP4VuVvU2qfCpOa
-   ShIvBU97WGy19AK5EgWKDHgyi0y3eQDt6ygrwFTjIMndq+DFlD9O6/jS4
-   etQHh7304+w1UW7kYBXJfOPvLT66FTo92CC6PB6Eta/9E3TjFSE4dj87C
+  bh=sg75Nzd0Nfpa+tECk4dpxR+hOqypAdcjo1sTuoZWf9Q=;
+  b=JYlaJLLN4yAQcUuGqaffbBluqqhPlumAucQ1ggl4zrDWcWuRYjCaBBX4
+   c9VSGPcL3KFHOU7cpLdIBXs2o27Ppq4K68/mTVuCeOvi9vsbFW6L3nZeO
+   iKwoCZ9lEDKSM/ZASGa94tfb9IeFyrpSyK1psyT2oC4WVSpt+DCIbU/3X
+   IduvwxcXqj0dpRjH9B1yVhKFgLeih+87Ty5qZTWGShvEx1kjDRMZOFkAE
+   rjTZwDj/6pIj9j/eh6tFI7f6AIgNZeZgpG2hU3bBHNkB5b4q4xIh31weF
+   j61rpMDnxWJMxHoYBYQOCHlpE2/YO8Cn3rqGvr5MSMIKHrrXUxk/Wkiou
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="14364246"
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="14364242"
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="14364246"
+   d="scan'208";a="14364242"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:49 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="10410119"
+   d="scan'208";a="10410100"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.29.102])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:49 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:48 -0800
 From: alison.schofield@intel.com
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH v8 3/7] cxl/event_trace: add a private context for private parsers
-Date: Thu, 22 Feb 2024 18:15:40 -0800
-Message-Id: <e52603d144783efd5fde8deacbcc923d0e30a888.1708653303.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v8 2/7] cxl: add an optional pid check to event parsing
+Date: Thu, 22 Feb 2024 18:15:39 -0800
+Message-Id: <14a5fd819da5f4607463135f0340675b9e836e78.1708653303.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708653303.git.alison.schofield@intel.com>
 References: <cover.1708653303.git.alison.schofield@intel.com>
@@ -61,58 +62,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-CXL event tracing provides helpers to iterate through a trace
-buffer and extract events of interest. It offers two parsing
-options: a default parser that adds every field of an event to
-a json object, and a private parsing option where the caller can
-parse each event as it wishes.
+When parsing CXL events, callers may only be interested in events
+that originate from the current process. Introduce an optional
+argument to the event trace context: event_pid. When event_pid is
+present, simply skip the parsing of events without a matching pid.
+It is not a failure to see other, non matching events.
 
-Although the private parser can do some conditional parsing based
-on field values, it has no method to receive additional information
-needed to make parsing decisions in the callback.
-
-Add a private_ctx field to the existing 'struct event_context'.
-Replace the jlist_head parameter, used in the default parser,
-with the private_ctx.
-
-This is in preparation for adding a private parser requiring
-additional context for cxl_poison events.
+The initial use case for this is device poison listings where
+only the media-error records requested by this process are wanted.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/event_trace.c | 2 +-
- cxl/event_trace.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ cxl/event_trace.c | 5 +++++
+ cxl/event_trace.h | 1 +
+ 2 files changed, 6 insertions(+)
 
 diff --git a/cxl/event_trace.c b/cxl/event_trace.c
-index 269060898118..fbf7a77235ff 100644
+index db8cc85f0b6f..269060898118 100644
 --- a/cxl/event_trace.c
 +++ b/cxl/event_trace.c
-@@ -215,7 +215,7 @@ static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+@@ -208,6 +208,11 @@ static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+ 			return 0;
+ 	}
  
++	if (event_ctx->event_pid) {
++		if (event_ctx->event_pid != tep_data_pid(event->tep, record))
++			return 0;
++	}
++
  	if (event_ctx->parse_event)
  		return event_ctx->parse_event(event, record,
--					      &event_ctx->jlist_head);
-+					      event_ctx->private_ctx);
- 
- 	return cxl_event_to_json(event, record, &event_ctx->jlist_head);
- }
+ 					      &event_ctx->jlist_head);
 diff --git a/cxl/event_trace.h b/cxl/event_trace.h
-index 7f7773b2201f..ec61962abbc6 100644
+index ec6267202c8b..7f7773b2201f 100644
 --- a/cxl/event_trace.h
 +++ b/cxl/event_trace.h
-@@ -16,8 +16,9 @@ struct event_ctx {
+@@ -15,6 +15,7 @@ struct event_ctx {
+ 	const char *system;
  	struct list_head jlist_head;
  	const char *event_name; /* optional */
- 	int event_pid; /* optional */
-+	void *private_ctx; /* required with parse_event() */
++	int event_pid; /* optional */
  	int (*parse_event)(struct tep_event *event, struct tep_record *record,
--			   struct list_head *jlist_head); /* optional */
-+			   void *private_ctx);/* optional */
+ 			   struct list_head *jlist_head); /* optional */
  };
- 
- int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
 -- 
 2.37.3
 
