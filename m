@@ -1,42 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363C85CB5
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 01:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64223AD35
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 01:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708652411; cv=none; b=onkssIeGBAwrdzxqcpWsWfgPgzBm1HxczHSh66AqtHBdcw2oe/pX/gg5lO9WS/sgU26LC/ShYrrlnphgx9S1zUqvU+QRX60b8Lz2g6UbsaO7e+V/jyLhW7s261TFfHIkxYSDCoFBnWusNTDenbJ0Hy4uEdou5dtkBxMh0sRbO+k=
+	t=1708652412; cv=none; b=MD9IZUyjpWRBdS4Y4rWnbb8OPe1O3/CAHMvkcaFU+0qni1d48p6JYCNSa2BRRu5SXr2bRoiiPWLUsLrsNSdttnwrnqnV4zLb51zBWuBMQQpsa4t96OwboHMAwGnOUnf8y0DhHf3Vl/Eqc4+WQ9lWP2bLKxP7RBz1buhH+tTai5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708652411; c=relaxed/simple;
-	bh=C0acIhZXZ19r4+2Ck6zrPdB+BGsU1UZYOsQiTxFl65A=;
+	s=arc-20240116; t=1708652412; c=relaxed/simple;
+	bh=uHb/xFkDx29gBnroHLk9azdfXlhPcC5UcIj5Dj0LQCU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fEIBiZdvNy3EQKRwMb2I8+wjTwQ2ccaKcIDoJBQtFaeNjhxpYzViEMri3semvYvtp/Qf+6KvnzO2mda8E0qypNRU+AkndjrMvznMvC5cawMgr+KqlYeVv3HMQ2/DwSWh9Xt3Gzthj+RhRwVp0mzrjULZjywBFzvkx7SMb2rZeE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N+uM8kGH; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=UXJccaBZ0XpJUhxQA7q2oHiHjT9m0kdbtUci/tJczuFM/d5485fRwPDuR6WstSOjoJpJjbRPf460QgIkz9kGzTnGHu9b7mqW3zx6cLVnBkWVZG7y5ZY6QAJR+Dh7SYyEGkjuJUrePSwuxejwZvz9/Nlfvd+O9RackW4GLRwfigc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeVQ3zlF; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N+uM8kGH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeVQ3zlF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708652411; x=1740188411;
+  t=1708652412; x=1740188412;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=C0acIhZXZ19r4+2Ck6zrPdB+BGsU1UZYOsQiTxFl65A=;
-  b=N+uM8kGHaeIXOwGCGDbjcaUY+aFCza204fhR05GAWwZqG/sGPxS4+69+
-   plBtlQabXzLd9Q6rdqQXrtyOcpILtpvnAKp04qSED0WQYpKsAXc1G/IGu
-   KcjuX+zvFoIIly261H6P1ZL30YaMYVjGnvSzOOYBgxgcEzWr0RtvJyZJo
-   tbH3NtpNccruKMRC5xliiyV6hWJVuqSvpfmvBoWXZRJLjw9xxtmUyk9Z0
-   zfHCg0k0KmfDxwh+qa7dr+9FuBr1TBzUTGY+KhWmSH5dfO2tdtE1wUWNg
-   SkZapMtNjTSDq0tsEA+yjIVAf3b/xIr3Opril848PhLF4zg5Dfaq5mPH4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3097988"
+  bh=uHb/xFkDx29gBnroHLk9azdfXlhPcC5UcIj5Dj0LQCU=;
+  b=eeVQ3zlFhZzfceXS7RsTlbC8nsFkmczJGsOUnI1jr/a1P7UUrO/gcbp7
+   RCoWO9KZgj+mAyxFUwv1VHLraqgw9sUx3ExMl7FVuN4dlHSO17SOvLquv
+   emqhe0TFuBadQafkrPHO1wXh8OyXyKxcvBcO5+t6NLZrYHwBiEeAAROWv
+   bTcIOiuxexVdzOt+mRr1C62ZbcoKgoZ7SNEzI0kISTKMaYl525MEPqPoc
+   VjP2Ub2qbi1MPqMzq9KExSw/sBeaaoUbz/ZCJB+VTo9F49h/E+jaGUaoX
+   p+ZGgnnGwhZwk8gcikayr/p55Kv7uBO2MUIRIsIoNDtZLOhRG7xc3aYRL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3097990"
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="3097988"
+   d="scan'208";a="3097990"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 17:40:09 -0800
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 17:40:10 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="10482402"
+   d="scan'208";a="10482408"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.29.102])
   by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 17:40:09 -0800
 From: alison.schofield@intel.com
@@ -44,9 +44,9 @@ To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v2 2/3] cxl/test: add double quotes in cxl-xor-region.sh
-Date: Thu, 22 Feb 2024 17:40:04 -0800
-Message-Id: <0738a7a0148a24a40e1ff863a51dfc2806e2fdfd.1708650921.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v2 3/3] cxl/test: add 3-way HB interleave testcase to cxl-xor-region.sh
+Date: Thu, 22 Feb 2024 17:40:05 -0800
+Message-Id: <256021e0e136965ebe92e3900bbe93aab014e28e.1708650921.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708650921.git.alison.schofield@intel.com>
 References: <cover.1708650921.git.alison.schofield@intel.com>
@@ -60,78 +60,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Add double quotes to prevent globbing and word splitting.
-Found using shellcheck.
+cxl-xor-region.sh includes test cases for 1 & 2 way host bridge
+interleaves. Add a new test case to exercise the modulo math
+function the CXL driver uses to find positions in a 3-way host
+bridge interleave.
+
+Skip this test case, don't fail, if the new 3-way XOR decoder
+is not present in cxl/test.
+
+Add the missing check_dmesg helper before exiting this test.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- test/cxl-xor-region.sh | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ test/cxl-xor-region.sh | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-index 5ab7ede11e56..e536f0256202 100644
+index e536f0256202..b9e1d79212d3 100644
 --- a/test/cxl-xor-region.sh
 +++ b/test/cxl-xor-region.sh
-@@ -23,7 +23,8 @@ rc=1
- 
- create_and_destroy_region()
- {
--	region=$($CXL create-region -d $decoder -m $memdevs | jq -r ".region")
-+	region=$($CXL create-region -d "$decoder" -m "$memdevs" |
-+		jq -r ".region")
- 
- 	if [[ ! $region ]]; then
- 		echo "create-region failed for $decoder"
-@@ -42,9 +43,9 @@ setup_x1()
- 		.decoder")
- 
- 	# Find a memdev for this host-bridge
--	port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
-+	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
- 		.targets | .[] | select(.position == 0) | .target")
--	mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
-+	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
- 	memdevs="$mem0"
- }
- 
-@@ -57,12 +58,12 @@ setup_x2()
- 		.decoder")
- 
- 	# Find a memdev for each host-bridge interleave position
--	port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
-+	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
- 		.targets | .[] | select(.position == 0) | .target")
--	port_dev1=$($CXL list -T -d $decoder | jq -r ".[] |
-+	port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
- 		.targets | .[] | select(.position == 1) | .target")
--	mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
--	mem1=$($CXL list -M -p $port_dev1 | jq -r ".[0].memdev")
-+	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
-+	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
- 	memdevs="$mem0 $mem1"
- }
- 
-@@ -75,14 +76,14 @@ setup_x4()
- 		.decoder")
- 
- 	# Find a memdev for each host-bridge interleave position
--	port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
-+	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
- 		.targets | .[] | select(.position == 0) | .target")
--	port_dev1=$($CXL list -T -d $decoder | jq -r ".[] |
-+	port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
- 		.targets | .[] | select(.position == 1) | .target")
--	mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
--	mem1=$($CXL list -M -p $port_dev1 | jq -r ".[0].memdev")
--	mem2=$($CXL list -M -p $port_dev0 | jq -r ".[1].memdev")
--	mem3=$($CXL list -M -p $port_dev1 | jq -r ".[1].memdev")
-+	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
-+	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
-+	mem2=$($CXL list -M -p "$port_dev0" | jq -r ".[1].memdev")
-+	mem3=$($CXL list -M -p "$port_dev1" | jq -r ".[1].memdev")
+@@ -87,11 +87,44 @@ setup_x4()
  	memdevs="$mem0 $mem1 $mem2 $mem3"
  }
  
++setup_x3()
++{
++	# find an x3 decoder
++	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
++		select(.pmem_capable == true) |
++		select(.nr_targets == 3) |
++		.decoder")
++
++	if [[ ! $decoder ]]; then
++		echo "no x3 decoder found, skipping xor-x3 test"
++		return
++	fi
++
++	# Find a memdev for each host-bridge interleave position
++	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
++		.targets | .[] | select(.position == 0) | .target")
++	port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
++		.targets | .[] | select(.position == 1) | .target")
++	port_dev2=$($CXL list -T -d "$decoder" | jq -r ".[] |
++		.targets | .[] | select(.position == 2) | .target")
++	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
++	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
++	mem2=$($CXL list -M -p "$port_dev2" | jq -r ".[0].memdev")
++	memdevs="$mem0 $mem1 $mem2"
++}
++
+ setup_x1
+ create_and_destroy_region
+ setup_x2
+ create_and_destroy_region
+ setup_x4
+ create_and_destroy_region
++# x3 decoder may not be available in cxl/test topo yet
++setup_x3
++if [[ $decoder ]]; then
++	create_and_destroy_region
++fi
++
++check_dmesg "$LINENO"
+ 
+ modprobe -r cxl_test
 -- 
 2.37.3
 
