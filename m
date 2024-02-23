@@ -1,144 +1,202 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6897AE7C
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 12:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C1278667;
+	Fri, 23 Feb 2024 12:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708690574; cv=none; b=oiNa+DEz5perEFNBFs7icsqNyn2kuo4n6/lvhIjvCjALsFdatOQO7fqYiOVwRIsKqDtU/eL6w9NHUR+KAtXGlXgTmwhE6kzsaHDShxpoXw63X+g5+qiy0CrJz6sNsnAIKfXlfRfMEZyavUBMM9pRjp6P03m/dTVofVR5nyG3lQc=
+	t=1708690589; cv=none; b=Xut6gzqu4HUpx325Q3EuPxo/KJvu1JCcXJVwjeDZEA0Ssxj179E9F/vbJtQzxeNqeAdTGoEngzZ33hMR8N2DyjM4YSBjaOXlWFG+ySUnLPrz+/cqLqzivQN3CKc7XjfQ8i6u2W80p2meN1IlntqtEkYgiVCz/Ue4hKWoJfG+8pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708690574; c=relaxed/simple;
-	bh=XXfjYSKyK7PSGERT9cR7X9BLftE8LaP1K1MWP4ezhWg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pOHZVvcBqfT08xPTiivlxCcrPMn/lxRxnlm0jOtPLop1w8S1PebHTdOhQikANTux212b4f01lHlhl97WW9GCOnurx6UZb0zFAMXQaowgeEIMjcFLCqhOIlL2frVsMfZiTFrKh/9rv4dmkJn1d3zT7gxPFnqv7Tw8xEyM/JPq5Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtwQt6mP; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtwQt6mP"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d731314e67so4749245ad.1
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 04:16:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708690572; x=1709295372; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=liGPk6TzyipF2EkGC5C5VT5uk5qnMjBqkU56Aj0oaVE=;
-        b=FtwQt6mPZ12uAJCYDYqfDnh5cTu0zTq1karVcT0BMSDP1HLAhcLybx3GGFmlHeJmhW
-         mDukRRigX3yk6nWLI4G+QhkWOvVhQffiF8fPIjBhr8eCGImZChyyaZV+eieFWL5dgwm7
-         O4z2bpAkAH5Tm6mOxrMR0U32PUu2WyTt1hYqx1Eu1Zc8j1kzOxyLDnLN3wQxmbFJ69JP
-         yEDhpIDym3W5TF/MrOJj4cds6lkefByFNoCjUTztLJoFattdKx7b8SMzKmr8lLxO2c/r
-         BqzuvvpCZ9IRWdZNPc9oN9akuVTqh0ypgPrR2uxXiQjtPCT9NcIlBTgdM4g9rUS47zMv
-         0iCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708690572; x=1709295372;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=liGPk6TzyipF2EkGC5C5VT5uk5qnMjBqkU56Aj0oaVE=;
-        b=vyyl/gxpQAyzyJq1ASeMRHipp+mTJRVh3IBj0uTjcAVtHVxsCkt96MB2rUQSY+Bdl9
-         aFlbI3bNAS261+RFmP71WnHm+oMjts2h4lQaHsM+5dWdtqYIBBpjhDchg99BicfoOAaU
-         7TL0s2wnXIXjcMknY+IPSamcIOvprXcNTAAfKncILvJZhMXse1pmSxQHQGjmOGxdPJ+U
-         IwsJNMukAsqsw4zmK0Z1zwjVebU9oOA6CxulTpQDBG5yszW9KN+7aOHOnnONPLVbwhMB
-         bAnPecHEF/Sc2i8jsneOqr14ha5Zbjl+kBzNwqs/R3UTQuzzQKmla/YUnuun/hWTsZbC
-         JJaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+iTA/A3RBJyDVUJmqK9qmTPyYEtDEth0F6hFoeHpBvs+vpVLbHoBUW7caX7OsTeFuSlbVyJtOZlKgHiUfdeWi2fmwPnXWtDnI
-X-Gm-Message-State: AOJu0Yy9Y1Cxiy2i40dsvA/r0YIXOIKT79vBy6Lfi1J2P5IuQziLLi6Q
-	uuvFS6nPRT+cQav+yWo6nBripmURSSo1B+ukGPsTWMyjR1wNCskb
-X-Google-Smtp-Source: AGHT+IFU8YdKN/dHPvCC6fzGrj67uMLL5vUeoVjuOlk3cvj+Az3TprmEw2T/vXWIrEQQFf48CHLlgw==
-X-Received: by 2002:a17:903:2307:b0:1db:f1e2:84f4 with SMTP id d7-20020a170903230700b001dbf1e284f4mr2041534plh.38.1708690571879;
-        Fri, 23 Feb 2024 04:16:11 -0800 (PST)
-Received: from [192.168.0.9] ([121.137.152.114])
-        by smtp.gmail.com with ESMTPSA id g18-20020a170902c99200b001db6a228c3esm11432557plc.307.2024.02.23.04.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Feb 2024 04:16:11 -0800 (PST)
-Message-ID: <4da6524a-8a30-4872-8168-441105e8f7b5@gmail.com>
-Date: Fri, 23 Feb 2024 21:16:06 +0900
+	s=arc-20240116; t=1708690589; c=relaxed/simple;
+	bh=6gw+sPtzbNCSI61MqAWcS5jAOt318VLZXdpqL8UVbj0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=R9yLxg5EmCKiUShFIGCTE6KrtP2yHWImzL2nladYX5RvoaSxLp9hKZrsjqBkdokZVE+80/jO4pBJGwBSKwiAHL58QKegbbKMhPs3KsLdoTGhY6BsYlC7AP65zGRhdRhDf+xthNG38UqIbQsby98L3BCyUTV0WqPy088mjj+FxH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Th8655Ks2z6K8Xc;
+	Fri, 23 Feb 2024 20:12:45 +0800 (CST)
+Received: from lhrpeml100002.china.huawei.com (unknown [7.191.160.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9E516140D1A;
+	Fri, 23 Feb 2024 20:16:24 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 23 Feb 2024 12:16:24 +0000
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
+ Fri, 23 Feb 2024 12:16:24 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+Subject: RE: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Thread-Topic: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Thread-Index: AQHaYAA5w4x9+ofZHUSoNACgT3S68LEVigKAgAJRu3A=
+Date: Fri, 23 Feb 2024 12:16:23 +0000
+Message-ID: <54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+ <65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Wonjae Lee <wj28.lee@gmail.com>
-Subject: Re: [PATCH v4 09/10] hw/cxl/events: Add qmp interfaces to add/release
- dynamic capacity extents
-To: nifan.cxl@gmail.com, qemu-devel@nongnu.org
-Cc: jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
- gregory.price@memverge.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- a.manzanares@samsung.com, dave@stgolabs.net, nmtadam.samsung@gmail.com,
- jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
-References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
- <20240221182020.1086096-10-nifan.cxl@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20240221182020.1086096-10-nifan.cxl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2024-02-22 오전 3:16, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
-> 
-> Since fabric manager emulation is not supported yet, the change implements
-> the functions to add/release dynamic capacity extents as QMP interfaces.
-> 
-> Note: we skips any FM issued extent release request if the exact extent
-> does not exist in the extent list of the device. We will loose the
-> restriction later once we have partial release support in the kernel.
-> 
+Hi Dan,
 
-[snip]
+Thanks for the feedback.
 
-> +/* CXL r3.1 Table 8-50: Dynanic Capacity Event Record */
+Please find reply inline.
 
-It needs a spell check. Dynamic.
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 22 February 2024 00:21
+>To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; dan.j.williams@intel.com;
+>dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
+;
+>ira.weiny@intel.com
+>Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>tony.luck@intel.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>rafael@kernel.org; lenb@kernel.org; naoya.horiguchi@nec.com;
+>james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+>erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+>mike.malvestuto@intel.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>=
+;
+>kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+>Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+>Subject: RE: [RFC PATCH v6 00/12] cxl: Add support for CXL feature command=
+s,
+>CXL device patrol scrub control and DDR5 ECS control features
+>
+>shiju.jose@ wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> 1. Add support for CXL feature mailbox commands.
+>> 2. Add CXL device scrub driver supporting patrol scrub control and ECS
+>> control features.
+>> 3. Add scrub subsystem driver supports configuring memory scrubs in the
+>system.
+>> 4. Register CXL device patrol scrub and ECS with scrub subsystem.
+>> 5. Add common library for RASF and RAS2 PCC interfaces.
+>> 6. Add driver for ACPI RAS2 feature table (RAS2).
+>> 7. Add memory RAS2 driver and register with scrub subsystem.
+>
+>I stepped away from this patch set to focus on the changes that landed for=
+ v6.8
+>and the follow-on regression fixups. Now that v6.8 CXL work has quieted do=
+wn
+>and I circle back to this set for v6.9 I find the lack of story in this co=
+ver letter to
+>be unsettling. As a reviewer I should not have to put together the story o=
+n why
+>Linux should care about this feature and independently build up the
+>maintainence-burden vs benefit tradeoff analysis.
+I will add more details to the cover letter.
+=20
+>
+>Maybe it is self evident to others, but for me there is little in these ch=
+angelogs
+>besides "mechanism exists, enable it". There are plenty of platform or dev=
+ice
+>mechanisms that get specified that Linux does not enable for one reason or
+>another.
+>
+>The cover letter needs to answer why it matters, and what are the tradeoff=
+s.
+>Mind you, in my submissions I do not always get this right in the cover le=
+tter [1],
+>but hopefully at least one of the patches tells the story [2].
+>
+>In other words, imagine you are writing the pull request to Linus or someo=
+ne
+>else with limited time who needs to make a risk decision on a pull request=
+ with a
+>diffstat of:
+>
+>    23 files changed, 3083 insertions(+)
+>
+>...where the easiest decision is to just decline. As is, these changelogs =
+are not
+>close to tipping the scale to "accept".
+>
+>[sidebar: how did this manage to implement a new subsystem with 2 consumer=
+s
+>(CXL + ACPI), without modifying a single existing line? Zero deletions? Th=
+at is
+>either an indication that Linux perfectly anticipated this future use case
+>(unlikely), or more work needs to be done to digest an integrate these con=
+cepts
+>into existing code paths]
+>
+>One of the first questions for me is why CXL and RAS2 as the first consume=
+rs and
+>not NVDIMM-ARS and/or RASF Patrol Scrub? Part of the maintenance burden
+We don't personally care about NVDIMMS but would welcome drivers from other=
+s.
 
-...
+Regarding RASF patrol scrub no one cared about it as it's useless and
+any new implementation should be RAS2.
+Previous discussions in the community about RASF and scrub could be find he=
+re.
+https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com/#r
+and some old ones,
+https://patchwork.kernel.org/project/linux-arm-kernel/patch/CS1PR84MB003871=
+8F49DBC0FF03919E1184390@CS1PR84MB0038.NAMPRD84.PROD.OUTLOOK.COM/
 
-> +    switch (type) {
-> +    case DC_EVENT_ADD_CAPACITY:
-> +        break;
-> +    default:
-> +        break;
-> +    }
+https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.com/
 
-Perhaps this switch statement has become unnecessary in the revision to 
-patch v4?
-
-...
-
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 8cc4c72fa9..19927629c7 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-
-[snip]
-
-> +##
-> +# @cxl-add-dynamic-capacity:
-> +#
-> +# Command to start add dynamic capacity extents flow. The device will
-> +# have to ackowledged the acceptance of the extents before they are usable.
-> +#
-> +# @path: CXL DCD canonical QOM path
-> +# @region-id: id of the region where the extent to add/release
-
-How about just using "add" instead of "add/release"?
-
-...
-
-> +##
-> +# @cxl-release-dynamic-capacity:
-> +#
-> +# Command to start release dynamic capacity extents flow. The host will
-> +# need to respond to indicate that it has released the capacity before it
-> +# is made unavailable for read and write and can be re-added.
-> +#
-> +# @path: CXL DCD canonical QOM path
-> +# @region-id: id of the region where the extent to add/release
-
-And here. Only "release"?
-
+>tradeoff is providing a migration path for legacy on the way to adding the=
+ new
+>thing. If old scrub implementations could be deprecated / deleted on the w=
+ay to
+>supporting new scrub use cases that becomes interesting.
+>
+>[1]: http://lore.kernel.org/r/20240208220909.GA975234@bhelgaas
+>[2]: http://lore.kernel.org/r/20240208221305.GA975512@bhelgaas
 
 Thanks,
-Wonjae
+Shiju
