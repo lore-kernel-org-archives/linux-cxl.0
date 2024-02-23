@@ -1,144 +1,144 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99929D08
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 10:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6897AE7C
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 12:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708682583; cv=none; b=dNhuzgBhoWsiDhL+23+c1T6dAd1Uu4q93u8+fxJrMtXSFxnZi6ZpcLRLmAGNAxP0wyhWcYJJjxvmPW1mz+cwXGDzqVgKSuCVdyDMRL/c5EFWrboVtMEMu8FPbQA/weww+tMRNhvYF3Damj/PcA3L2Jw1j5hH3y5aaQtDbCjKcCs=
+	t=1708690574; cv=none; b=oiNa+DEz5perEFNBFs7icsqNyn2kuo4n6/lvhIjvCjALsFdatOQO7fqYiOVwRIsKqDtU/eL6w9NHUR+KAtXGlXgTmwhE6kzsaHDShxpoXw63X+g5+qiy0CrJz6sNsnAIKfXlfRfMEZyavUBMM9pRjp6P03m/dTVofVR5nyG3lQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708682583; c=relaxed/simple;
-	bh=gaBiF46pCWSRMtdz7FNyz7vCALtB4XDnwwkSeTDq5/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XnmAY+AF0UeBcu0g5psbOF/OrFTc1NXsGxjQHKORMj2sw/dyGmZX3S8I8wmWCpdwdaZTdnzhKX4ntCiiP3ovqyjhmlmtkHRF3oTclfS6VOlb+DIV1qAtbwWbwTMy8RgliLIxQJlkV1bZeB51hDZNAOZXrMD+XQasotkXi1up43E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mwnXCCL4; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708690574; c=relaxed/simple;
+	bh=XXfjYSKyK7PSGERT9cR7X9BLftE8LaP1K1MWP4ezhWg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pOHZVvcBqfT08xPTiivlxCcrPMn/lxRxnlm0jOtPLop1w8S1PebHTdOhQikANTux212b4f01lHlhl97WW9GCOnurx6UZb0zFAMXQaowgeEIMjcFLCqhOIlL2frVsMfZiTFrKh/9rv4dmkJn1d3zT7gxPFnqv7Tw8xEyM/JPq5Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtwQt6mP; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mwnXCCL4"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512bce554a5so156834e87.3
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 02:03:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtwQt6mP"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d731314e67so4749245ad.1
+        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 04:16:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708682580; x=1709287380; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u/ZEHHQQJ7TneXWz9Z91knv44YPnLKbvGbn+UTLm+fA=;
-        b=mwnXCCL4acdrSRedrlxX7blgrkTHpTxXJDIb0A4KCSdTGMzJ0GEIvWhL1d2rXyr4nM
-         S24FlcXUvknK7WKP53w3Y+Gn+XTkFz7usYCV839hOuVEZar+USq/IL44B94f83POfA6W
-         OoL3k2TfQJsFRFuIcKU1ldZAR2UwBJc3qCfE6wwDFQ5HLFBTvRfrbZdluSgUf2Oef2Pw
-         2+SIYiHzMXoWmipttSlZLEkCQTDhUkFG3yF3upjcl6gGlxh9OgMhFzS9P/fHxtcU97Si
-         Q6MFaXHd3mSmSD/bg+85dizILAnsMC2TF1YU4t1shC9vkClbr7VwXX5HdCy0dGpBC3VB
-         qATQ==
+        d=gmail.com; s=20230601; t=1708690572; x=1709295372; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=liGPk6TzyipF2EkGC5C5VT5uk5qnMjBqkU56Aj0oaVE=;
+        b=FtwQt6mPZ12uAJCYDYqfDnh5cTu0zTq1karVcT0BMSDP1HLAhcLybx3GGFmlHeJmhW
+         mDukRRigX3yk6nWLI4G+QhkWOvVhQffiF8fPIjBhr8eCGImZChyyaZV+eieFWL5dgwm7
+         O4z2bpAkAH5Tm6mOxrMR0U32PUu2WyTt1hYqx1Eu1Zc8j1kzOxyLDnLN3wQxmbFJ69JP
+         yEDhpIDym3W5TF/MrOJj4cds6lkefByFNoCjUTztLJoFattdKx7b8SMzKmr8lLxO2c/r
+         BqzuvvpCZ9IRWdZNPc9oN9akuVTqh0ypgPrR2uxXiQjtPCT9NcIlBTgdM4g9rUS47zMv
+         0iCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708682580; x=1709287380;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u/ZEHHQQJ7TneXWz9Z91knv44YPnLKbvGbn+UTLm+fA=;
-        b=LKcQFmoJnVIssFaH7bNYPPdBRHDJ2gvhpyEALM9tR2yfSCGpAGgnjTqMUdCwItNt6K
-         Y3xm1gYMjqLD2dt/FbDtu72w79SGU8MUCyiX69ctHLSlFYf5+m8vcEpvpLMJcAk0pW5Z
-         q6XlaEOGhDf9nn/l/1O8om+efs4PhH7w76/oGxrll6wdAZtJeDWoX2eRhYrsYB4qIrvF
-         yGeeslFCQSi1IM0Z1o7+Yv8rB3e34VPr4lbTO+/FN2rhsPQ6OJ+yLFjHvt/ahjFYEEUi
-         uyWmECmy8H7g8CpoBgaTWojsHgw6Q8WlKenjPpZdUvzzeZ484chDY3cbDTiGFrP8cmEg
-         Ll3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVVGnOd+Eoc1txaQoJY1E7V3k2P+pu8Beq4F3rvnVD2iONI7ukLxWZjlhTBGpCWo8LKWN8xipnpQO0eTX+1A7c0nDlKQKRNzL1Q
-X-Gm-Message-State: AOJu0Yz5yiAyzfvJVU3IWvDclNuQBCBVGh4+ZK6FAOB7G5+5h4MP+Fyw
-	VHWitzhtHEGLnQ4dh99g6EimGjzm5IIYRNchn8jU49B7ahvJ82vPTKhf5Er70y0ci2XTQOJEB7j
-	BEcujHByJ6FE90UlcNRTOdp0nG6eygMCg7GwOEg==
-X-Google-Smtp-Source: AGHT+IGpTQcrZ/TLTvw8DWN+u0imyHimS8sPPc+GEzTF9iID+v37fJu9yS18AJbResR+Z92UzHJomAiBb8KAqgJbf/E=
-X-Received: by 2002:ac2:5b0c:0:b0:512:cbae:4e05 with SMTP id
- v12-20020ac25b0c000000b00512cbae4e05mr1087260lfn.60.1708682579822; Fri, 23
- Feb 2024 02:02:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708690572; x=1709295372;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=liGPk6TzyipF2EkGC5C5VT5uk5qnMjBqkU56Aj0oaVE=;
+        b=vyyl/gxpQAyzyJq1ASeMRHipp+mTJRVh3IBj0uTjcAVtHVxsCkt96MB2rUQSY+Bdl9
+         aFlbI3bNAS261+RFmP71WnHm+oMjts2h4lQaHsM+5dWdtqYIBBpjhDchg99BicfoOAaU
+         7TL0s2wnXIXjcMknY+IPSamcIOvprXcNTAAfKncILvJZhMXse1pmSxQHQGjmOGxdPJ+U
+         IwsJNMukAsqsw4zmK0Z1zwjVebU9oOA6CxulTpQDBG5yszW9KN+7aOHOnnONPLVbwhMB
+         bAnPecHEF/Sc2i8jsneOqr14ha5Zbjl+kBzNwqs/R3UTQuzzQKmla/YUnuun/hWTsZbC
+         JJaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+iTA/A3RBJyDVUJmqK9qmTPyYEtDEth0F6hFoeHpBvs+vpVLbHoBUW7caX7OsTeFuSlbVyJtOZlKgHiUfdeWi2fmwPnXWtDnI
+X-Gm-Message-State: AOJu0Yy9Y1Cxiy2i40dsvA/r0YIXOIKT79vBy6Lfi1J2P5IuQziLLi6Q
+	uuvFS6nPRT+cQav+yWo6nBripmURSSo1B+ukGPsTWMyjR1wNCskb
+X-Google-Smtp-Source: AGHT+IFU8YdKN/dHPvCC6fzGrj67uMLL5vUeoVjuOlk3cvj+Az3TprmEw2T/vXWIrEQQFf48CHLlgw==
+X-Received: by 2002:a17:903:2307:b0:1db:f1e2:84f4 with SMTP id d7-20020a170903230700b001dbf1e284f4mr2041534plh.38.1708690571879;
+        Fri, 23 Feb 2024 04:16:11 -0800 (PST)
+Received: from [192.168.0.9] ([121.137.152.114])
+        by smtp.gmail.com with ESMTPSA id g18-20020a170902c99200b001db6a228c3esm11432557plc.307.2024.02.23.04.16.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 04:16:11 -0800 (PST)
+Message-ID: <4da6524a-8a30-4872-8168-441105e8f7b5@gmail.com>
+Date: Fri, 23 Feb 2024 21:16:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219161229.11776-1-Jonathan.Cameron@huawei.com> <cfa50d25-3a82-48f5-b715-1daf16932fc2@linaro.org>
-In-Reply-To: <cfa50d25-3a82-48f5-b715-1daf16932fc2@linaro.org>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Fri, 23 Feb 2024 10:02:48 +0000
-Message-ID: <CAFEAcA9g5dSDj1tQmk8og6DG+wQc14W5XvftZY0Y2XRd96PNWg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] arm/ptw: Handle atomic updates of page tables
- entries in MMIO during PTW.
-To: Richard Henderson <richard.henderson@linaro.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org, 
-	Gregory Price <gregory.price@memverge.com>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	linux-cxl@vger.kernel.org, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Wonjae Lee <wj28.lee@gmail.com>
+Subject: Re: [PATCH v4 09/10] hw/cxl/events: Add qmp interfaces to add/release
+ dynamic capacity extents
+To: nifan.cxl@gmail.com, qemu-devel@nongnu.org
+Cc: jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
+ gregory.price@memverge.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ a.manzanares@samsung.com, dave@stgolabs.net, nmtadam.samsung@gmail.com,
+ jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
+References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
+ <20240221182020.1086096-10-nifan.cxl@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20240221182020.1086096-10-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 at 21:21, Richard Henderson
-<richard.henderson@linaro.org> wrote:
->
-> On 2/19/24 06:12, Jonathan Cameron wrote:
-> > I'm far from confident this handling here is correct. Hence
-> > RFC.  In particular not sure on what locks I should hold for this
-> > to be even moderately safe.
-> >
-> > The function already appears to be inconsistent in what it returns
-> > as the CONFIG_ATOMIC64 block returns the endian converted 'eventual'
-> > value of the cmpxchg whereas the TCG_OVERSIZED_GUEST case returns
-> > the previous value.
+On 2024-02-22 오전 3:16, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
+> 
+> Since fabric manager emulation is not supported yet, the change implements
+> the functions to add/release dynamic capacity extents as QMP interfaces.
+> 
+> Note: we skips any FM issued extent release request if the exact extent
+> does not exist in the extent list of the device. We will loose the
+> restriction later once we have partial release support in the kernel.
+> 
 
-I think this is a bug in the TCG_OVERSIZED_GUEST handling,
-which we've never noticed because you only see that case
-on a 32-bit host.
+[snip]
 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > v2: Thanks Peter for reviewing.
-> >   - Handle the address space as in arm_ldq_ptw() - I should have looked
-> >     at the code immediately above :(
-> >     The result ends up a little more convoluted than I'd like. Could factor
-> >     this block of code out perhaps. I'm also not sure on the fault type
-> >     that is appropriate here.
-> >   - Switch to 'need_lock' as per Philippe's feedback on the x86 fixes.
-> >     likely() doesn't seem appropriate here though.
-> >
-> > target/arm/ptw.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++--
-> >   1 file changed, 62 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/target/arm/ptw.c b/target/arm/ptw.c
-> > index 5eb3577bcd..ba1a27ca2b 100644
-> > --- a/target/arm/ptw.c
-> > +++ b/target/arm/ptw.c
-> > @@ -711,8 +711,68 @@ static uint64_t arm_casq_ptw(CPUARMState *env, uint64_t old_val,
-> >       void *host = ptw->out_host;
-> >
-> >       if (unlikely(!host)) {
-> > -        fi->type = ARMFault_UnsuppAtomicUpdate;
-> > -        return 0;
-> > +        /* Page table in MMIO Memory Region */
-> > +        CPUState *cs = env_cpu(env);
-> > +        MemTxAttrs attrs = {
-> > +            .space = ptw->out_space,
-> > +            .secure = arm_space_is_secure(ptw->out_space),
-> > +        };
-> > +        AddressSpace *as = arm_addressspace(cs, attrs);
-> > +        MemTxResult result = MEMTX_OK;
-> > +        bool need_lock = !bql_locked();
-> > +
-> > +        if (need_lock) {
-> > +            bql_lock();
-> > +        }
-> > +        if (ptw->out_be) {
-> > +            cur_val = address_space_ldq_be(as, ptw->out_phys, attrs, &result);
-> > +            if (unlikely(result != MEMTX_OK)) {
-> > +                fi->type = ARMFault_SyncExternalOnWalk;
-> > +                fi->ea = arm_extabort_type(result);
-> > +                if (need_lock) {
-> > +                    bql_unlock();
-> > +                }
-> > +                return old_val;
-> > +            }
->
-> Use BQL_LOCK_GUARD() and avoid all of the repeated unlocks at each return point.
+> +/* CXL r3.1 Table 8-50: Dynanic Capacity Event Record */
 
-Is the BQL definitely sufficient to ensure atomicity here?
-I guess that given that we know it's not backed by host
-memory, any other vCPU trying to access the MMIO region
-at the same time will have to take the BQL first, so it
-seems like it ought to be good enough.
+It needs a spell check. Dynamic.
 
--- PMM
+...
+
+> +    switch (type) {
+> +    case DC_EVENT_ADD_CAPACITY:
+> +        break;
+> +    default:
+> +        break;
+> +    }
+
+Perhaps this switch statement has become unnecessary in the revision to 
+patch v4?
+
+...
+
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index 8cc4c72fa9..19927629c7 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+
+[snip]
+
+> +##
+> +# @cxl-add-dynamic-capacity:
+> +#
+> +# Command to start add dynamic capacity extents flow. The device will
+> +# have to ackowledged the acceptance of the extents before they are usable.
+> +#
+> +# @path: CXL DCD canonical QOM path
+> +# @region-id: id of the region where the extent to add/release
+
+How about just using "add" instead of "add/release"?
+
+...
+
+> +##
+> +# @cxl-release-dynamic-capacity:
+> +#
+> +# Command to start release dynamic capacity extents flow. The host will
+> +# need to respond to indicate that it has released the capacity before it
+> +# is made unavailable for read and write and can be re-added.
+> +#
+> +# @path: CXL DCD canonical QOM path
+> +# @region-id: id of the region where the extent to add/release
+
+And here. Only "release"?
+
+
+Thanks,
+Wonjae
