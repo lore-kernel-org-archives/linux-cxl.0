@@ -1,157 +1,128 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from snail.cherry.relay.mailchannels.net (snail.cherry.relay.mailchannels.net [23.83.223.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC36473F23
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 21:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636879; cv=none; b=NmDCBfVt8uqVTNM35e50eSl4O9FSFj9sWIxUx2MYP8cXk1QuAeGuBgd2tLkJssoFwmHrp0rB2Gz7KOEpY8O8oErD51uBh3xcuvDDpmBNfDr9jprRRSW/BxEsmuFcVm1uWPxWjypLmJIFjgo6jTaAg2CHtvWdNq9ydf8k+IXtaQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636879; c=relaxed/simple;
-	bh=kxeWsdX/bPTqQV2DoeWkgnE7s6IRxbwXFo8x66l7+kE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bGQndDTqa+DFgEpD2MOqNqrZr6IGSU680tZFOu/S/S7i5SdPa8r7v87BZRgCau8yGVq9e+TmpsTRetsAmdvGCDrzEaHQvcndh2yz91Jwjlksq7DCeLoQrn5pbgqSvantLVibDzV1D+AWHL7TeHliV5Tus8NdcOCZE6r0AlCIZ7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aV4hbrZ8; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0391B33EA;
+	Fri, 23 Feb 2024 01:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708650815; cv=pass; b=VZvKGJnBW/muHLBAm6n2bGhNWAhkcYAL3FwBvBKp0EjveQMmlmR/qfcgc8Itxa7XB04Szk6t0iI5/jXSDTKr9c0QK95yyLLusMttlf5vXTSFH7uLYk3hTqW3ObikdaBvShGU1CNibJbrZ/a48Rta74Y034WrQOHUcvYiqJsPkr8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708650815; c=relaxed/simple;
+	bh=mKFXGFHpxOFwq73nT0CzdoEb75f0DuCUlRp626b0U5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Edjsj3ey2IBAUrKGwIR6a0GqYleY6FKO5OPlAeHY5KSDzkZYbLDCrTKSNWYHG0TK2BzNkwgg4hc6QAJ9kZWF91iE53W+6AgAPKXT2q0jwulwmR21QY68E0SRuqLhk/mVx76v616nWuZtOeOP2HvRhHJNT68uFSR1QCGye0UJcmU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=A8Jb1eve; arc=pass smtp.client-ip=23.83.223.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aV4hbrZ8"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e435542d41so98818b3a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 13:21:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708636877; x=1709241677; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UCCh/F1oQ842Tcqwks1U7mp9nWMsI9vl+KYbrNtyEo0=;
-        b=aV4hbrZ8nRds0eam0dIMVV2WWzsofmtFk09n9BPzhR9chpbknje5VdYMOisbmwqcJR
-         7YeJGw9lQwzVRcDYQrVSFsDo4/WmCQSblWieJcLIgOY7/SNNa3g/i5lyOkDGuDDWWw11
-         4+KiRvjgRP6a8EMcretq1B4YQy2Tn3O+r3eQvchPs5v0+pGOzcw8dALdnarkcd7dnobd
-         BvzRWDO5DWqYiACaV6WD9HV1+j0wAt+RcMRKpSws8ElK465ZklpmSt2M7XLN7/Si88s7
-         N/fQaDklB4m0wkPfTjEC77mNENd44pORNi/vFdexbpUT66jHXJqW7Yeup+OexsIIhUFz
-         Cj+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708636877; x=1709241677;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCCh/F1oQ842Tcqwks1U7mp9nWMsI9vl+KYbrNtyEo0=;
-        b=hV5q/QtSooksAZv9rbHL0Ef8XClUsrKWltXF1aTY1J8fhFL6PaEGRhh293cywmtIpP
-         jXmL4oJQo2x2ZRaOPh8o6SOyjhsRYgjniWHFbBQeMJ9rsnYNtJnivWInlLnV0DCm91Ty
-         ft54llCOGhYRv9821dHXWMCoD8Dvy/4tpSSqumoifqcbAgbt63iU9q5X45uSlS0tmL1t
-         nof9k/dUlY15jFqHqiw7yOuuk+QVO4SwFXpm1h3P6Eg/2Llw/pw9kGAJXE1AHjFLdcxx
-         o9+E7IcW/N5bhhnAeJiCcBu1gHGz7xk7Dlgm/hgD/KAMDrMLWZoxT2vVWOLZNYxCxuaD
-         VzBA==
-X-Gm-Message-State: AOJu0YxUwo/j9iSAM2sKUBbJrcIwR/37ddo4fsTdCWakStMhcbfmQHd/
-	WgvYNl+K9nKZG4Sm3DQo8aTMuY0/I07QcfRxue6DspvOH7FGKP7/YVe4FCdOBgM=
-X-Google-Smtp-Source: AGHT+IGLGtlbicdXcwsgdLRpXtbOJ76WaGeiX1GM253/BpXCfZ9BUDz8+Z+ZarV1GpK9ZgWnuZfLAw==
-X-Received: by 2002:a05:6a00:2d96:b0:6e4:8ea7:231d with SMTP id fb22-20020a056a002d9600b006e48ea7231dmr126338pfb.5.1708636877128;
-        Thu, 22 Feb 2024 13:21:17 -0800 (PST)
-Received: from [172.20.1.19] (173-197-098-125.biz.spectrum.com. [173.197.98.125])
-        by smtp.gmail.com with ESMTPSA id kt21-20020a056a004bb500b006e465e1573esm8206831pfb.74.2024.02.22.13.21.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 13:21:16 -0800 (PST)
-Message-ID: <cfa50d25-3a82-48f5-b715-1daf16932fc2@linaro.org>
-Date: Thu, 22 Feb 2024 11:21:12 -1000
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="A8Jb1eve"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 62C043619E3;
+	Fri, 23 Feb 2024 01:13:27 +0000 (UTC)
+Received: from pdx1-sub0-mail-a236.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id BE64236167F;
+	Fri, 23 Feb 2024 01:13:24 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1708650804; a=rsa-sha256;
+	cv=none;
+	b=JpyCfBSWLPn/CQcD/bz2Z04wbO78M584h+EYOAQe2uPS+wDrlA7jUgGDc/uLxLgp6facsy
+	k/o1HCKvw0oyUxQ6tPQtKfpqigJzrbVNjAeuYZ7pKWQA3lUedQ4BNSnsdc0aG/5pbEcVB1
+	s9Rn2/H4M0SvadpxuxK12FTnKFPK+pWn5cEE2/jBQb73zB7zpgg0OKQjFROAsxX90lL0m9
+	qJZ1efiOMvgq+qHE/Q/0gYbNziff/q9ZRNhyQlQQKiOeZJdgGQiwilKbrlrmcSQRKq/Qf+
+	2q0RNA3ypv59uk53xRoP+ZcJ3IbwRLqFFpqDucAsLlQGx2Jr6iwI1RgMCFvCSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1708650804;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=E8pn+w3HibWLdOMz9pQ+J+2lKrcMhmXwK9/XHfbO8Yo=;
+	b=Qci2ShCjkn1wqSbexL+ofa9BpdOszoxdiTDsA/ZaeTkBCvpWkmXrMFR0je1pmXX7aTwomY
+	a1+O6zoqd2YTYKKkfMqXGTWqy/CwzkWx9zWpXVWuw3OLOqUy0kiNk0ZYmqCuzpG8D/03/e
+	aFiUuV2a1Z+Wj3I+6kuhQI2oSj1h+Ad51kuImcasNI4vwiiOV71lWhUNcsBGIjfbTE6/n3
+	v2cc11tfEXbCcXYlgbYTnMFY+8xkBajFWsBJ/0KmgittyHbFQuLioJSIQkI/XhcTYl+Xij
+	hhTVLTYJs/HdMtu+zHkn2M9Uzu1/m/g7snX2+uhO5+rWsqWgHbASYLkmsmKykw==
+ARC-Authentication-Results: i=1;
+	rspamd-55b4bfd7cb-w5t9p;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Arithmetic-Abortive: 22a6d8a66356533b_1708650807211_1721313757
+X-MC-Loop-Signature: 1708650807211:1808631686
+X-MC-Ingress-Time: 1708650807211
+Received: from pdx1-sub0-mail-a236.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.112.142.233 (trex/6.9.2);
+	Fri, 23 Feb 2024 01:13:27 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a236.dreamhost.com (Postfix) with ESMTPSA id 4TgsTB3R7pzQg;
+	Thu, 22 Feb 2024 17:13:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1708650804;
+	bh=E8pn+w3HibWLdOMz9pQ+J+2lKrcMhmXwK9/XHfbO8Yo=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=A8Jb1eveAREnA0NyRAiWRq0vA0ZVB7HVgEKyaCQwEVy/w3E0WadQGYMWeOdrNIL79
+	 Tbh4U3dPno+2i4EgW3P1pBwnLl3LuSJDUOUd69XUbT56N6NS5bEneXsl7yKOQ4j88N
+	 rMZWVjr0lNV0ykcg1X3blQrALIAxrTWLBufHiyAB6Of+IIYhuSmbZZjpho21SKa30q
+	 OT12bp82AWG4kw9eAZ7RuPWbEhOerhPZW6jLhpgOF9mt/HOxs7oHEGOs4jEI/4Fed7
+	 SlkleUCIoFYCn18IXlJrvkyHaUNySeRmT+Q276BbkbgeieDTwYhl5lnymDIYMXrxm8
+	 07thysYEkPMig==
+Date: Thu, 22 Feb 2024 17:13:02 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Ben Cheatham <benjamin.cheatham@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, jonathan.cameron@huawei.com, 
+	rafael@kernel.org, james.morse@arm.com, tony.luck@intel.com, bp@alien8.de, 
+	dave@stogolabs.net, dave.jiang@intel.com, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
+Subject: Re: Re: [PATCH v13 2/4] EINJ: Add CXL error type support
+Message-ID: <aitsb65thx4oyojuuf7s4tett5sw7p4qih7hlqqzmahrkdgoqi@akiloc4olwrx>
+References: <20240220221146.399209-1-Benjamin.Cheatham@amd.com>
+ <20240220221146.399209-3-Benjamin.Cheatham@amd.com>
+ <65d63647ecdb1_5e9bf294d6@dwillia2-xfh.jf.intel.com.notmuch>
+ <5a650a49-8f80-4ade-8844-61f88172cecd@amd.com>
+ <65d65ffdd40f_5c76294ce@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <f308f836-a41c-4de8-8522-7c086d89f167@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] arm/ptw: Handle atomic updates of page tables
- entries in MMIO during PTW.
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
- Peter Maydell <peter.maydell@linaro.org>,
- Gregory Price <gregory.price@memverge.com>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-Cc: linux-cxl@vger.kernel.org, linuxarm@huawei.com
-References: <20240219161229.11776-1-Jonathan.Cameron@huawei.com>
-From: Richard Henderson <richard.henderson@linaro.org>
-In-Reply-To: <20240219161229.11776-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f308f836-a41c-4de8-8522-7c086d89f167@amd.com>
+User-Agent: NeoMutt/20231221
 
-On 2/19/24 06:12, Jonathan Cameron wrote:
-> I'm far from confident this handling here is correct. Hence
-> RFC.  In particular not sure on what locks I should hold for this
-> to be even moderately safe.
-> 
-> The function already appears to be inconsistent in what it returns
-> as the CONFIG_ATOMIC64 block returns the endian converted 'eventual'
-> value of the cmpxchg whereas the TCG_OVERSIZED_GUEST case returns
-> the previous value.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> v2: Thanks Peter for reviewing.
->   - Handle the address space as in arm_ldq_ptw() - I should have looked
->     at the code immediately above :(
->     The result ends up a little more convoluted than I'd like. Could factor
->     this block of code out perhaps. I'm also not sure on the fault type
->     that is appropriate here.
->   - Switch to 'need_lock' as per Philippe's feedback on the x86 fixes.
->     likely() doesn't seem appropriate here though.
->   
-> target/arm/ptw.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 62 insertions(+), 2 deletions(-)
-> 
-> diff --git a/target/arm/ptw.c b/target/arm/ptw.c
-> index 5eb3577bcd..ba1a27ca2b 100644
-> --- a/target/arm/ptw.c
-> +++ b/target/arm/ptw.c
-> @@ -711,8 +711,68 @@ static uint64_t arm_casq_ptw(CPUARMState *env, uint64_t old_val,
->       void *host = ptw->out_host;
->   
->       if (unlikely(!host)) {
-> -        fi->type = ARMFault_UnsuppAtomicUpdate;
-> -        return 0;
-> +        /* Page table in MMIO Memory Region */
-> +        CPUState *cs = env_cpu(env);
-> +        MemTxAttrs attrs = {
-> +            .space = ptw->out_space,
-> +            .secure = arm_space_is_secure(ptw->out_space),
-> +        };
-> +        AddressSpace *as = arm_addressspace(cs, attrs);
-> +        MemTxResult result = MEMTX_OK;
-> +        bool need_lock = !bql_locked();
-> +
-> +        if (need_lock) {
-> +            bql_lock();
-> +        }
-> +        if (ptw->out_be) {
-> +            cur_val = address_space_ldq_be(as, ptw->out_phys, attrs, &result);
-> +            if (unlikely(result != MEMTX_OK)) {
-> +                fi->type = ARMFault_SyncExternalOnWalk;
-> +                fi->ea = arm_extabort_type(result);
-> +                if (need_lock) {
-> +                    bql_unlock();
-> +                }
-> +                return old_val;
-> +            }
+On Wed, 21 Feb 2024, Ben Cheatham wrote:
 
-Use BQL_LOCK_GUARD() and avoid all of the repeated unlocks at each return point.
+>So the way the EINJ module currently works (at least as I understand it)
+>is that any address supplied for memory errors is checked to make sure it's
+>a "normal" memory address. Looking at the comment above the memory checks:
+>
+>	/*
+>	 * Disallow crazy address masks that give BIOS leeway to pick
+>	 * injection address almost anywhere. Insist on page or
+>	 * better granularity and that target address is normal RAM or
+>	 * NVDIMM.
+>	 */
+>
+>it seems that's the case. What this means is that we can't supply the
+>RCRB of a CXL 1.0/1.1 port because it's an MMIO address and we have to disable
+>the checks to inject a CXL 1.0/1.1 error.
 
-You can merge all of the error paths, e.g.
+Maybe worth a comment here as to why the error checking is skipped for cxl?
 
-     cur_val = (ptw->out_be
-                ? address_space_ldq_be(as, ptw->out_phys, attrs, &result)
-                : address_space_ldq_le(as, ptw->out_phys, attrs, &result));
-     if (result == MEMTX_OK && cur_val == old_val) {
-         if (ptw->out_be) {
-             address_space_stq_be(as, ptw->out_phys, new_val, attrs, &result);
-         } else {
-             address_space_stq_le(as, ptw->out_phys, new_val, attrs, &result);
-         }
-     }
-     if (unlikely(result != MEMTX_OK)) {
-         fi->type = ...
-         return old_val;
-     }
-     return cur_val;
++	} else if ((type & CXL_ERROR_MASK) && (flags & SETWA_FLAGS_MEM)) {
++		goto inject;
 
-
-
-r~
+Thanks,
+Davidlohr
