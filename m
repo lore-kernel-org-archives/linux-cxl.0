@@ -1,147 +1,144 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7F1AAD0
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 09:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99929D08
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 10:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708679411; cv=none; b=NWXy2JRpWLcBtV7FbIZ4f6DABxHuURLqVc+QJfPlQxpZnIIidURIsmHP6CCCtwunxEVfg4pGgj9dwb6oBiICQ0MNCH7E79ynAEyP3Lu2bOdCnCYVB/E4glIFCVWT+bw8SMDpOrq7R16QdQFNFdqN3ppiy+f9bamaLMGJudGC55Q=
+	t=1708682583; cv=none; b=dNhuzgBhoWsiDhL+23+c1T6dAd1Uu4q93u8+fxJrMtXSFxnZi6ZpcLRLmAGNAxP0wyhWcYJJjxvmPW1mz+cwXGDzqVgKSuCVdyDMRL/c5EFWrboVtMEMu8FPbQA/weww+tMRNhvYF3Damj/PcA3L2Jw1j5hH3y5aaQtDbCjKcCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708679411; c=relaxed/simple;
-	bh=U3ZhYHBez9oKKXuDyPfqM+SMLNtkhZr6k4/QPCBKO9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RKocyz6KnyyhJkRRQwbhZN/z/K+c6cAVKRzblvSOJRsC/gZdYwrkn2Rzfk+hvOvitwujPEBlltfnUHB3kkul4LXGOobaxwwj8qUbg2W6E9n6qgQAWCe7+J19dp1SqZxuuC6U12MxJxT8MXH6rWtMt1k9z6qCkii6BozmH8+HYRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7lWfKr/; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708682583; c=relaxed/simple;
+	bh=gaBiF46pCWSRMtdz7FNyz7vCALtB4XDnwwkSeTDq5/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XnmAY+AF0UeBcu0g5psbOF/OrFTc1NXsGxjQHKORMj2sw/dyGmZX3S8I8wmWCpdwdaZTdnzhKX4ntCiiP3ovqyjhmlmtkHRF3oTclfS6VOlb+DIV1qAtbwWbwTMy8RgliLIxQJlkV1bZeB51hDZNAOZXrMD+XQasotkXi1up43E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mwnXCCL4; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7lWfKr/"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-295c8b795e2so511785a91.0
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 01:10:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mwnXCCL4"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512bce554a5so156834e87.3
+        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 02:03:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708679409; x=1709284209; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i7088AgHa1OAqA61tMttin5VX75haYu/ICj6HSRJocc=;
-        b=L7lWfKr/4kCZjwW7prvhs0IbfKprJaMpAU+mzwShHot/f4vCuorFXOagzuPq43T91y
-         CkoLFUmvTUOoS9zd9/Qz7ByFbTdv0I35cqWgs/udxGEZKo4qF/LEaaUYufKiC4c1BaOh
-         6merWIFD221SuyY4riIYrkZeYYVyB3n6uf/4nmUvJ67LXMoHKFZAqBwFfTFUeFKinhWy
-         e/VmwfzA/qt7TeoUpxnVfspMMIjZohALCWSliwqXLcIwUf+s/ohDzyTtohm+3UCUj0t2
-         4Bx3Xp9KQswUREkZ/eiR0oljZcv7C3/4FgoEaF1OxVdyX7we6QvNnrMOBtVCgDOoprwe
-         Ribw==
+        d=linaro.org; s=google; t=1708682580; x=1709287380; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=u/ZEHHQQJ7TneXWz9Z91knv44YPnLKbvGbn+UTLm+fA=;
+        b=mwnXCCL4acdrSRedrlxX7blgrkTHpTxXJDIb0A4KCSdTGMzJ0GEIvWhL1d2rXyr4nM
+         S24FlcXUvknK7WKP53w3Y+Gn+XTkFz7usYCV839hOuVEZar+USq/IL44B94f83POfA6W
+         OoL3k2TfQJsFRFuIcKU1ldZAR2UwBJc3qCfE6wwDFQ5HLFBTvRfrbZdluSgUf2Oef2Pw
+         2+SIYiHzMXoWmipttSlZLEkCQTDhUkFG3yF3upjcl6gGlxh9OgMhFzS9P/fHxtcU97Si
+         Q6MFaXHd3mSmSD/bg+85dizILAnsMC2TF1YU4t1shC9vkClbr7VwXX5HdCy0dGpBC3VB
+         qATQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708679409; x=1709284209;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i7088AgHa1OAqA61tMttin5VX75haYu/ICj6HSRJocc=;
-        b=STm6z6uxxGcLEIaxB2FllnlmhJjQQ3BpCOOss8ARgqcOTScd2eFyx/es7xYW9+GwVq
-         j5VgVCEFjQ6SQoiSIgyiq+8fm4V7M5XCEYRGk/s7QcXtgk0cy04ECgIbXyDG/DXKjRb/
-         lI8Fc0qeFklB2ednjaoty3cBI5yYivmNvE0kUVXcb+7Yfc/e9RzHuMNbleM2IvkbK4iK
-         wzTfzYN//1PrTEYW1NoBtCMsUlpk3nyp8DmLm72vF6a5cQaP9lZgmfBqOSQVI+e7XNKP
-         /mxqoLM5SfqLgMXRaqdESQFVh8k8biaCP9KA8MR6Gp5rYp9/b1/rsLlwAii4g/S4DGbL
-         xPpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUwKTQDqEemPuKE/DASJe7bSXSv0hcG7Esz33RojUbVLjS7voJL7Zgw0H29XsvFNijlb7dbyj6hpPx8AFtbwXu+XDH+M8amcq/
-X-Gm-Message-State: AOJu0YydIVcTNw4sOJDb1vqXNINSAT2fqrMIT/ylSLwCscU4wpOTPfyF
-	2JZ32okeZt/JPuyX0IejnIp5Fp1gyWMFbUmU6iMx353m0UX3FWYQ
-X-Google-Smtp-Source: AGHT+IHCs7N7AR1WscQ+RxKqewpNJ204dTv8cjZrnZyzFnjfD1/ZJjzCG7gLLLLxhsrAcX/bbYe2/g==
-X-Received: by 2002:a17:90a:6888:b0:29a:7380:53a with SMTP id a8-20020a17090a688800b0029a7380053amr1246186pjd.34.1708679408952;
-        Fri, 23 Feb 2024 01:10:08 -0800 (PST)
-Received: from [172.30.1.72] ([211.197.219.189])
-        by smtp.gmail.com with ESMTPSA id se13-20020a17090b518d00b00299b31de43esm921900pjb.45.2024.02.23.01.10.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Feb 2024 01:10:08 -0800 (PST)
-Message-ID: <698e6bc2-d38f-46e2-837c-3c6777d49139@gmail.com>
-Date: Fri, 23 Feb 2024 18:10:08 +0900
+        d=1e100.net; s=20230601; t=1708682580; x=1709287380;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u/ZEHHQQJ7TneXWz9Z91knv44YPnLKbvGbn+UTLm+fA=;
+        b=LKcQFmoJnVIssFaH7bNYPPdBRHDJ2gvhpyEALM9tR2yfSCGpAGgnjTqMUdCwItNt6K
+         Y3xm1gYMjqLD2dt/FbDtu72w79SGU8MUCyiX69ctHLSlFYf5+m8vcEpvpLMJcAk0pW5Z
+         q6XlaEOGhDf9nn/l/1O8om+efs4PhH7w76/oGxrll6wdAZtJeDWoX2eRhYrsYB4qIrvF
+         yGeeslFCQSi1IM0Z1o7+Yv8rB3e34VPr4lbTO+/FN2rhsPQ6OJ+yLFjHvt/ahjFYEEUi
+         uyWmECmy8H7g8CpoBgaTWojsHgw6Q8WlKenjPpZdUvzzeZ484chDY3cbDTiGFrP8cmEg
+         Ll3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVVGnOd+Eoc1txaQoJY1E7V3k2P+pu8Beq4F3rvnVD2iONI7ukLxWZjlhTBGpCWo8LKWN8xipnpQO0eTX+1A7c0nDlKQKRNzL1Q
+X-Gm-Message-State: AOJu0Yz5yiAyzfvJVU3IWvDclNuQBCBVGh4+ZK6FAOB7G5+5h4MP+Fyw
+	VHWitzhtHEGLnQ4dh99g6EimGjzm5IIYRNchn8jU49B7ahvJ82vPTKhf5Er70y0ci2XTQOJEB7j
+	BEcujHByJ6FE90UlcNRTOdp0nG6eygMCg7GwOEg==
+X-Google-Smtp-Source: AGHT+IGpTQcrZ/TLTvw8DWN+u0imyHimS8sPPc+GEzTF9iID+v37fJu9yS18AJbResR+Z92UzHJomAiBb8KAqgJbf/E=
+X-Received: by 2002:ac2:5b0c:0:b0:512:cbae:4e05 with SMTP id
+ v12-20020ac25b0c000000b00512cbae4e05mr1087260lfn.60.1708682579822; Fri, 23
+ Feb 2024 02:02:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/10] hw/cxl/cxl-mailbox-utils: Add mailbox commands
- to support add/release dynamic capacity response
-Content-Language: en-US
-To: nifan.cxl@gmail.com, qemu-devel@nongnu.org
-Cc: jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
- gregory.price@memverge.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- a.manzanares@samsung.com, dave@stgolabs.net, nmtadam.samsung@gmail.com,
- jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
-References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
- <20240221182020.1086096-9-nifan.cxl@gmail.com>
-From: Wonjae Lee <wj28.lee@gmail.com>
-In-Reply-To: <20240221182020.1086096-9-nifan.cxl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240219161229.11776-1-Jonathan.Cameron@huawei.com> <cfa50d25-3a82-48f5-b715-1daf16932fc2@linaro.org>
+In-Reply-To: <cfa50d25-3a82-48f5-b715-1daf16932fc2@linaro.org>
+From: Peter Maydell <peter.maydell@linaro.org>
+Date: Fri, 23 Feb 2024 10:02:48 +0000
+Message-ID: <CAFEAcA9g5dSDj1tQmk8og6DG+wQc14W5XvftZY0Y2XRd96PNWg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] arm/ptw: Handle atomic updates of page tables
+ entries in MMIO during PTW.
+To: Richard Henderson <richard.henderson@linaro.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org, 
+	Gregory Price <gregory.price@memverge.com>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-02-22 오전 3:16, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
-> 
-> Per CXL spec 3.1, two mailbox commands are implemented:
-> Add Dynamic Capacity Response (Opcode 4802h) 8.2.9.9.9.3, and
-> Release Dynamic Capacity (Opcode 4803h) 8.2.9.9.9.4.
-> 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> ---
->   hw/cxl/cxl-mailbox-utils.c  | 288 ++++++++++++++++++++++++++++++++++++
->   include/hw/cxl/cxl_device.h |   2 +
->   2 files changed, 290 insertions(+)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index dae7fe00ed..65ed28f700 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
+On Thu, 22 Feb 2024 at 21:21, Richard Henderson
+<richard.henderson@linaro.org> wrote:
+>
+> On 2/19/24 06:12, Jonathan Cameron wrote:
+> > I'm far from confident this handling here is correct. Hence
+> > RFC.  In particular not sure on what locks I should hold for this
+> > to be even moderately safe.
+> >
+> > The function already appears to be inconsistent in what it returns
+> > as the CONFIG_ATOMIC64 block returns the endian converted 'eventual'
+> > value of the cmpxchg whereas the TCG_OVERSIZED_GUEST case returns
+> > the previous value.
 
-[snip]
+I think this is a bug in the TCG_OVERSIZED_GUEST handling,
+which we've never noticed because you only see that case
+on a 32-bit host.
 
-> +/*
-> + * CXL r3.1 Table 8-168: Add Dynamic Capacity Response Input Payload
-> + * CXL r3.1 Table 8-170: Release Dynamic Capacity Input Payload
-> + */
-> +typedef struct CXLUpdateDCExtentListInPl {
-> +    uint32_t num_entries_updated;
-> +    uint8_t flags;
-> +    uint8_t rsvd[3];
-> +    /* CXL r3.1 Table 8-169: Updated Extent List */
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> > v2: Thanks Peter for reviewing.
+> >   - Handle the address space as in arm_ldq_ptw() - I should have looked
+> >     at the code immediately above :(
+> >     The result ends up a little more convoluted than I'd like. Could factor
+> >     this block of code out perhaps. I'm also not sure on the fault type
+> >     that is appropriate here.
+> >   - Switch to 'need_lock' as per Philippe's feedback on the x86 fixes.
+> >     likely() doesn't seem appropriate here though.
+> >
+> > target/arm/ptw.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++--
+> >   1 file changed, 62 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/target/arm/ptw.c b/target/arm/ptw.c
+> > index 5eb3577bcd..ba1a27ca2b 100644
+> > --- a/target/arm/ptw.c
+> > +++ b/target/arm/ptw.c
+> > @@ -711,8 +711,68 @@ static uint64_t arm_casq_ptw(CPUARMState *env, uint64_t old_val,
+> >       void *host = ptw->out_host;
+> >
+> >       if (unlikely(!host)) {
+> > -        fi->type = ARMFault_UnsuppAtomicUpdate;
+> > -        return 0;
+> > +        /* Page table in MMIO Memory Region */
+> > +        CPUState *cs = env_cpu(env);
+> > +        MemTxAttrs attrs = {
+> > +            .space = ptw->out_space,
+> > +            .secure = arm_space_is_secure(ptw->out_space),
+> > +        };
+> > +        AddressSpace *as = arm_addressspace(cs, attrs);
+> > +        MemTxResult result = MEMTX_OK;
+> > +        bool need_lock = !bql_locked();
+> > +
+> > +        if (need_lock) {
+> > +            bql_lock();
+> > +        }
+> > +        if (ptw->out_be) {
+> > +            cur_val = address_space_ldq_be(as, ptw->out_phys, attrs, &result);
+> > +            if (unlikely(result != MEMTX_OK)) {
+> > +                fi->type = ARMFault_SyncExternalOnWalk;
+> > +                fi->ea = arm_extabort_type(result);
+> > +                if (need_lock) {
+> > +                    bql_unlock();
+> > +                }
+> > +                return old_val;
+> > +            }
+>
+> Use BQL_LOCK_GUARD() and avoid all of the repeated unlocks at each return point.
 
-I'm not sure why this was changed, but in r3.1 the table is simply 
-renamed to "Updated Extent"
+Is the BQL definitely sufficient to ensure atomicity here?
+I guess that given that we know it's not backed by host
+memory, any other vCPU trying to access the MMIO region
+at the same time will have to take the BQL first, so it
+seems like it ought to be good enough.
 
-...
-
-> +/*
-> + * CXL r3.1 section 8.2.9.9.9.3: Add Dynamic Capacity Response (opcode 4802h)
-
-It's too trivial, but it's written as "Opcode" in other comments.
-: Opcode 4802h
-
-...
-
-> +/*
-> + * CXL r3.1 section 8.2.9.9.9.4: Release Dynamic Capacity (opcode 4803h)
-
-And here, too
-: Opcode 4803h
-
-...
-
-> @@ -1462,6 +1744,12 @@ static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
->       [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] = {
->           "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_ext_list,
->           8, 0 },
-> +    [DCD_CONFIG][ADD_DYN_CAP_RSP] = {
-> +        "ADD_DCD_DYNAMIC_CAPACITY_RESPONSE", cmd_dcd_add_dyn_cap_rsp,
-> +        ~0, IMMEDIATE_DATA_CHANGE },
-> +    [DCD_CONFIG][RELEASE_DYN_CAP] = {
-> +        "RELEASE_DCD_DYNAMIC_CAPACITY", cmd_dcd_release_dyn_cap,
-> +        ~0, IMMEDIATE_DATA_CHANGE },
-
-For consistency, how about setting the names of commands as follows?
-: DCD_ADD_DYNAMIC_CAPACITY_RESPONSE
-: DCD_RELEASE_DYNAMIC_CAPACITY
-
-Thanks,
-Wonjae
-
+-- PMM
