@@ -1,241 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1F9BE5B
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 02:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FC9125A3
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 07:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708654555; cv=none; b=UsshrZIrJmlTvVgTl86XqwRkK0ne5Eb1jCH8mOzQ6W+k/KA5/Y9wRVG+bOTcKf5NfYOfWhkVJaSYImAiPo4R2JkMaWd88KkvAT+ENPyU7Ha+nmaEB0wseajrihFbLIfF0iYst2n4DlnIiC9VeRDvKPcsmTAYUBgQK4+hfwGUX9s=
+	t=1708672224; cv=none; b=kxiw2pOMwH/4LqM+xS8pR1860ZVvQHKL9l2pQGt5uc1kC9pCIyUizv4maUANAruth+0IplHlxnZr/+ujobODpWjyuvDUze6gd9kTh68Z5AqTRqjdrmSjEkgIqS7B2CT9ZscbHcWeokQsYk7Kvwi9m0yGnSNqTcCpw8TcMO8oZOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708654555; c=relaxed/simple;
-	bh=oQvBOVgfsNLCjuievYMWAxaXWIEpXlHud/XlzXk6KRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ql0/HMfdzqp4LKwQqdi3c8T/ONDpxJq4SSFI2OmxXp531MQ0pIE9ugvlQOHtcm70cV9dE2mf8GuWns1hoD+QrO5yXEr37ExgSLHFcEE+xopLC3KcFWyVMJQYMPPPmLg/d5P6noUTKRcb0oi3RQzK/f68VolOSGng499mwNSdYC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PpKWJw5L; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708672224; c=relaxed/simple;
+	bh=qrah9Sd1KcpVWmIj0rSXuZFB+vgt/eBFjr0WBUOce+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s4i92FStz8eudi2fS4CwYaY2Lowy3g7P1HnmTdYgnMjvuZtSKEeE/lE7qTm8LypVh6UIl/J/yXq9THuXdgY2jd6xxPUuAcpBeF/tNEcapoJRrOe8LpOyZk1wxs5S9X3qMOwZ5IyVWAwEOBDO4eahvy97SafHvSxWjB+JgKrzNaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jc74xSub; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PpKWJw5L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708654554; x=1740190554;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oQvBOVgfsNLCjuievYMWAxaXWIEpXlHud/XlzXk6KRQ=;
-  b=PpKWJw5LcBe0E2qb/YaZswOEoiIddSXPT0rsbekih8lAAzI3c5JylCzt
-   HHdBiEY8fdGX0IPbFJCnsppw8mOflHhtZA7sqHtcms2S9xmP/2DWz/rBS
-   3ys7LWyjnKRMb9fXx6g4VW9dc0zwixiKb5ax6rlywumTEPewc0l9jIgv6
-   FYXiZ6NQQq2+8rJDBiFNO00XCcZ7mE5sKkUtgetNkfyrEANzT4fl5iFIH
-   TiHopyxUayMX2w107jyjHkfwX32sqrPgUpCvmfzPd5EaecFiHOhLV/5IX
-   rwidw+oX50hZRdsgm2ECAz4ZBBs7MVaCrVGlPzKlnsMX6tZzOdb3559d3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="14364257"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="14364257"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="10410161"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.29.102])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:15:53 -0800
-From: alison.schofield@intel.com
-To: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH v8 7/7] cxl/test: add cxl-poison.sh unit test
-Date: Thu, 22 Feb 2024 18:15:44 -0800
-Message-Id: <464abbfa50b0fd62ea2979e097dfc1a64314da0c.1708653303.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1708653303.git.alison.schofield@intel.com>
-References: <cover.1708653303.git.alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jc74xSub"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d95d67ff45so2956235ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Feb 2024 23:10:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708672222; x=1709277022; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UtfyMLzk9ddvun/2ANg20nTf8Zl3q/PYkofgKwLmJx0=;
+        b=jc74xSubZcYnxe4mo6tuI3OG2sNwLBjkQpjsYY+AFoWdbcIbIuaGaqZoNk46FKqQhR
+         xOPJKuk9gw914Fj89U+C2SvUb+FdKOUZjIIypCW5BQK5tOnYoJDcmuDypozhf0ke39sO
+         Rc2ubZiQG+ocZcAqEVHkuRmJ+ngvhjhl2fo8+VUHjSjMjzsinicjkzivPWNdmyx7lCw1
+         ZE3Jr48Bew3db6e1MzzQtXl/9Bi90qVvsvt6+m2wF+ZPWZUQ4Ole64MgKQrdmZ3XIFZW
+         CuMCiqUQJAMSfCgHuLeQr8MUVtq5iWMPRidnmnDb3IgkPe5Wurz3JmgCahkrxzoVhFLg
+         5aaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708672222; x=1709277022;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UtfyMLzk9ddvun/2ANg20nTf8Zl3q/PYkofgKwLmJx0=;
+        b=MoWKBC128XJ6rPCVKcrEtJxu7I3b/oM+wN6uWlErRDoWgeAKpNmZqSn2oymv+7VBwb
+         eMxgiTuUMB+mrbfhFYazK44K43GUTa8Jd/2w0DqM1IT0fr74cH4hEy6ZfmLXbuQjad9A
+         Zn6BQNUFX7aA+qkBIyIjA7MjSvJ52w10Z/65plmQK/AiAgSKhMmFc8XZC0qgVJoClHBv
+         7Pi0SBx2LG4s+CMh2GywEJo0V2w+eznRVA4cilaZSfUJ5Tjz3ZdicuSkXJ+Ht8TQOcGs
+         oaEAflvC199nPEc9pd6w30t/0S7vKv5353OGKka7cexHIW4BU8n5ZuuP13tckVpdGklr
+         ZYdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJkzIZID06kuxwf8QaeYahOU+HUwLMT1aGTWucr8Wufz5khP9DhhU2nNpMo1Vb0AKYLpgbfoso62UxJebamj5Nf3H+K8x4Rvnb
+X-Gm-Message-State: AOJu0YzqSyRPbKmnmEfpmtiPu9feBoph8WEB8+8oF6yVucRmStL5eQWH
+	nlyqn+4ZE0+WOk4FWCzPIQjtB40pUcZwzOMxg+CiI9IitkIBAaan
+X-Google-Smtp-Source: AGHT+IFsVEex3r2kBWsTHTgqIqsf1EJrYCCG9782A0ru9HeMJMvuRUAJTHGbbOPN52GjRpsWawIGmg==
+X-Received: by 2002:a17:902:f544:b0:1dc:11f:d954 with SMTP id h4-20020a170902f54400b001dc011fd954mr955919plf.54.1708672222419;
+        Thu, 22 Feb 2024 23:10:22 -0800 (PST)
+Received: from [172.30.1.72] ([211.197.219.189])
+        by smtp.gmail.com with ESMTPSA id f9-20020a170902ab8900b001dc418fdf53sm3084937plr.105.2024.02.22.23.10.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 23:10:22 -0800 (PST)
+Message-ID: <9a273d66-22e4-4a5b-80b9-a63b2421872b@gmail.com>
+Date: Fri, 23 Feb 2024 16:10:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/9] hw/mem/cxl_type3: Add DC extent list
+ representative and get DC extent list mailbox support
+Content-Language: en-US
+To: nifan.cxl@gmail.com, qemu-devel@nongnu.org
+Cc: jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
+ ira.weiny@intel.com, dan.j.williams@intel.com, a.manzanares@samsung.com,
+ dave@stgolabs.net, nmtadam.samsung@gmail.com, nifan@outlook.com,
+ jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
+References: <20231107180907.553451-1-nifan.cxl@gmail.com>
+ <20231107180907.553451-7-nifan.cxl@gmail.com>
+From: Wonjae Lee <wj28.lee@gmail.com>
+In-Reply-To: <20231107180907.553451-7-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Alison Schofield <alison.schofield@intel.com>
+On 2023-11-08 오전 3:07, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
+> 
+> Add dynamic capacity extent list representative to the definition of
+> CXLType3Dev and add get DC extent list mailbox command per
+> CXL.spec.3.0:.8.2.9.8.9.2.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> ---
+>   hw/cxl/cxl-mailbox-utils.c  | 73 +++++++++++++++++++++++++++++++++++++
+>   hw/mem/cxl_type3.c          |  1 +
+>   include/hw/cxl/cxl_device.h | 23 ++++++++++++
+>   3 files changed, 97 insertions(+)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 1f512b3e6b..56f4aa237a 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -82,6 +82,7 @@ enum {
+>           #define CLEAR_POISON           0x2
+>       DCD_CONFIG  = 0x48,
+>           #define GET_DC_CONFIG          0x0
+> +        #define GET_DYN_CAP_EXT_LIST   0x1
+>       PHYSICAL_SWITCH = 0x51,
+>           #define IDENTIFY_SWITCH_DEVICE      0x0
+>           #define GET_PHYSICAL_PORT_STATE     0x1
+> @@ -1286,6 +1287,75 @@ static CXLRetCode cmd_dcd_get_dyn_cap_config(const struct cxl_cmd *cmd,
+>       return CXL_MBOX_SUCCESS;
+>   }
+>   
+> +/*
+> + * CXL r3.0 section 8.2.9.8.9.2:
+> + * Get Dynamic Capacity Extent List (Opcode 4810h)
+> + */
+> +static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len_in,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    struct get_dyn_cap_ext_list_in_pl {
+> +        uint32_t extent_cnt;
+> +        uint32_t start_extent_id;
+> +    } QEMU_PACKED;
+> +
+> +    struct get_dyn_cap_ext_list_out_pl {
+> +        uint32_t count;
+> +        uint32_t total_extents;
+> +        uint32_t generation_num;
+> +        uint8_t rsvd[4];
+> +        CXLDCExtentRaw records[];
+> +    } QEMU_PACKED;
+> +
+> +    struct get_dyn_cap_ext_list_in_pl *in = (void *)payload_in;
+> +    struct get_dyn_cap_ext_list_out_pl *out = (void *)payload_out;
+> +    uint16_t record_count = 0, i = 0, record_done = 0;
+> +    CXLDCDExtentList *extent_list = &ct3d->dc.extents;
+> +    CXLDCDExtent *ent;
+> +    uint16_t out_pl_len;
+> +    uint32_t start_extent_id = in->start_extent_id;
+> +
+> +    if (start_extent_id > ct3d->dc.total_extent_count) {
 
-Exercise cxl list, libcxl, and driver pieces of the get poison list
-pathway. Inject and clear poison using debugfs and use cxl-cli to
-read the poison list by memdev and by region.
+Hello,
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
----
- test/cxl-poison.sh | 137 +++++++++++++++++++++++++++++++++++++++++++++
- test/meson.build   |   2 +
- 2 files changed, 139 insertions(+)
- create mode 100644 test/cxl-poison.sh
+Shouldn't it be >= rather than >?
 
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-new file mode 100644
-index 000000000000..af2e9dcd1a11
---- /dev/null
-+++ b/test/cxl-poison.sh
-@@ -0,0 +1,137 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2023 Intel Corporation. All rights reserved.
-+
-+. "$(dirname "$0")"/common
-+
-+rc=77
-+
-+set -ex
-+
-+trap 'err $LINENO' ERR
-+
-+check_prereq "jq"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test
-+
-+rc=1
-+
-+# THEORY OF OPERATION: Exercise cxl-cli and cxl driver ability to
-+# inject, clear, and get the poison list. Do it by memdev and by region.
-+
-+find_memdev()
-+{
-+	readarray -t capable_mems < <("$CXL" list -b "$CXL_TEST_BUS" -M |
-+		jq -r ".[] | select(.pmem_size != null) |
-+		select(.ram_size != null) | .memdev")
-+
-+	if [ ${#capable_mems[@]} == 0 ]; then
-+		echo "no memdevs found for test"
-+		err "$LINENO"
-+	fi
-+
-+	memdev=${capable_mems[0]}
-+}
-+
-+create_x2_region()
-+{
-+	# Find an x2 decoder
-+	decoder="$($CXL list -b "$CXL_TEST_BUS" -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 2) |
-+		.decoder")"
-+
-+	# Find a memdev for each host-bridge interleave position
-+	port_dev0="$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 0) | .target")"
-+	port_dev1="$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 1) | .target")"
-+	mem0="$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")"
-+	mem1="$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")"
-+
-+	region="$($CXL create-region -d "$decoder" -m "$mem0" "$mem1" |
-+		jq -r ".region")"
-+	if [[ ! $region ]]; then
-+		echo "create-region failed for $decoder"
-+		err "$LINENO"
-+	fi
-+	echo "$region"
-+}
-+
-+# When cxl-cli support for inject and clear arrives, replace
-+# the writes to /sys/kernel/debug with the new cxl commands.
-+
-+inject_poison_sysfs()
-+{
-+	memdev="$1"
-+	addr="$2"
-+
-+	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
-+}
-+
-+clear_poison_sysfs()
-+{
-+	memdev="$1"
-+	addr="$2"
-+
-+	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
-+}
-+
-+validate_poison_found()
-+{
-+	list_by="$1"
-+	nr_expect="$2"
-+
-+	poison_list="$($CXL list "$list_by" --media-errors |
-+		jq -r '.[].media_errors')"
-+	if [[ ! $poison_list ]]; then
-+		nr_found=0
-+	else
-+		nr_found=$(jq "length" <<< "$poison_list")
-+	fi
-+	if [ "$nr_found" -ne "$nr_expect" ]; then
-+		echo "$nr_expect poison records expected, $nr_found found"
-+		err "$LINENO"
-+	fi
-+}
-+
-+test_poison_by_memdev()
-+{
-+	find_memdev
-+	inject_poison_sysfs "$memdev" "0x40000000"
-+	inject_poison_sysfs "$memdev" "0x40001000"
-+	inject_poison_sysfs "$memdev" "0x600"
-+	inject_poison_sysfs "$memdev" "0x0"
-+	validate_poison_found "-m $memdev" 4
-+
-+	clear_poison_sysfs "$memdev" "0x40000000"
-+	clear_poison_sysfs "$memdev" "0x40001000"
-+	clear_poison_sysfs "$memdev" "0x600"
-+	clear_poison_sysfs "$memdev" "0x0"
-+	validate_poison_found "-m $memdev" 0
-+}
-+
-+test_poison_by_region()
-+{
-+	create_x2_region
-+	inject_poison_sysfs "$mem0" "0x40000000"
-+	inject_poison_sysfs "$mem1" "0x40000000"
-+	validate_poison_found "-r $region" 2
-+
-+	clear_poison_sysfs "$mem0" "0x40000000"
-+	clear_poison_sysfs "$mem1" "0x40000000"
-+	validate_poison_found "-r $region" 0
-+}
-+
-+# Turn tracing on. Note that 'cxl list --poison' does toggle the tracing.
-+# Turning it on here allows the test user to also view inject and clear
-+# trace events.
-+echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
-+
-+test_poison_by_memdev
-+test_poison_by_region
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl-test
-diff --git a/test/meson.build b/test/meson.build
-index 65db049821ee..cf99df665978 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -159,6 +159,7 @@ cxl_update_firmware = find_program('cxl-update-firmware.sh')
- cxl_events = find_program('cxl-events.sh')
- cxl_sanitize = find_program('cxl-sanitize.sh')
- cxl_destroy_region = find_program('cxl-destroy-region.sh')
-+cxl_poison = find_program('cxl-poison.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -190,6 +191,7 @@ tests = [
-   [ 'cxl-events.sh',          cxl_events,         'cxl'   ],
-   [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
-   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
-+  [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
--- 
-2.37.3
-
+Thanks,
+Wonjae
