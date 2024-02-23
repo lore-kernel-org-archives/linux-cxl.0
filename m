@@ -1,59 +1,74 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B3B1448F7;
-	Fri, 23 Feb 2024 19:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517E01448F3;
+	Fri, 23 Feb 2024 19:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708717870; cv=none; b=mthequ9vM6Wt1OeTjEwoy7IM5j5OS1edhA4plTBXtrdR6bt39+/8o5Avahjusm+90N61DgQVC2Wa5UDk8YZfrqNLhB9VWC6a3Mt2YXGQHNcPq9tqSe8NHiYrro6Yopc0zQvbKV5P9+tRRf2WOcwzlo+MYU/C2KjG8FatYbYaOmo=
+	t=1708718207; cv=none; b=R0bGiSsb/uMHzlt0IYaKEiOldtXN1T9NkpOV/TOmKXR0h+Kv/xcPCGqN/pff+S1ZvQLN54weGSpqForjL/nV17E9nuzSRSKVCrgVV6w9f0OCMzgqusOL8ZI08/TR8JdCkQZfiaBkptmYQ7sBzl0mtezIiUAHzL95/qICntmJfwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708717870; c=relaxed/simple;
-	bh=YaVgMmCZccAOj2rhCfHdyWTcmqoRE1LJqZeVBmFLeSU=;
+	s=arc-20240116; t=1708718207; c=relaxed/simple;
+	bh=V5uXT1I1WxLZr1gVzh31tRJlTZrs2HDa7enKzhMqPFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJHIbL4ThMtQt7gG/sfCa9P9rcb7lz0d83ufiFmCnbi5iARbYuvUbU2liG3c5q2qRnkoReEuGNv/YkDy4CChzdjpNQ6BgWDO/DMQrLmk0XzA9/DDLqrsClja+WqpnES1sLCqii/u+gNNdoIOmWu+Ekpz0Mfo5yhnwro3beTyIsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uWxPu15j; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2rULxQ2sPusbVDmWD1dFyU7f+T1AeNR5ZNrzUpE/Qax6Ob4QwB3zo5+UUkGqrMO2EUmUrhQlgrOOsJNfBMaF2ZNuovwyS+de+rhyL/AiJLPg9smc3GGBn4Eb2IedmDlX+cmNZUeo1hfCQsmxL7qWFwC/jxPFetqnKHUenLRNIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RbbQdQDD; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uWxPu15j"
-Date: Fri, 23 Feb 2024 14:50:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708717865;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G9nEEkfFGj8WFYt7yvHDxsoouHxXt+6aC7E5xhimc9A=;
-	b=uWxPu15jxbBy5Qv8sUU4/FKz9vhwMVdq24ex7AxwdBDTkpdTty7N4oFt5H+WpItVhn5h2q
-	QhDNbk6QMiXNrrlkBl7kMfsoV81d2NhOFvXWC0sVWqoHMtRJN5Tm42Zzvb2Qci9w4QIV6Q
-	wpkGE4FwRbb7rZDimmKQkBl02FYhYXk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org, linux-pm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-tegra@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org, brcm80211@lists.linux.dev, 
-	brcm80211-dev-list.pdl@broadcom.com, linux-usb@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-edac@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-hwmon@vger.kernel.org, io-uring@vger.kernel.org, 
-	linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-wpan@vger.kernel.org, 
-	dev@openvswitch.org, linux-s390@vger.kernel.org, 
-	tipc-discussion@lists.sourceforge.net, Julia Lawall <Julia.Lawall@inria.fr>
-Subject: Re: [FYI][PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-Message-ID: <qsksxrdinia3cxr52tfe4p3pafsy4biktnodlfn4vyzud73p2j@6ycnhrhzwsv6>
-References: <20240223125634.2888c973@gandalf.local.home>
- <0aed6cf2-17ae-45aa-b7ff-03da932ea4e0@quicinc.com>
- <20240223134653.524a5c9e@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbbQdQDD"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3bd4e6a7cb0so773509b6e.3;
+        Fri, 23 Feb 2024 11:56:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708718204; x=1709323004; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Smi/Sp7XgkONWFBICEY7Pi/t1Ktm49FpndchyfXCKuA=;
+        b=RbbQdQDDCDWuVZB19hVQYaQUxPUqH2DZOMnyjvJy/C4sA1mEg92ezQnaDsdfR4LeWT
+         2ld0HsEfKKpgzmOpwtEAvRPBrRkeukKsb4uNtkWg+2CFbTUtWpsNv5C7f0F8IwI1E2fA
+         rCoMWvsdQaY+BJpZPBj9hFHJP+KbtiNfaWkjEM2aeSHQ8SFu876RN92K3HeeW7DjX/5c
+         Ql2Kc33U8M3yZNyQk36syxgS+XExa4KzPlWEmSo/H1g8nJQqSVnG/COK96KpvIeLm+dr
+         w5cMK7ry2/8QInE+MQ4Tfc16LgVSow1mXz6ZOpAnslLlzmg1g7JeWGGMenz1G9uS2DUt
+         rJ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708718204; x=1709323004;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Smi/Sp7XgkONWFBICEY7Pi/t1Ktm49FpndchyfXCKuA=;
+        b=mqeGlQX/vvt0hJwGN8lG3uRZs5sGbKgk5f2wSBewXvcrkiFYPdABRvb2wbznr8uPt1
+         au+wqdngzgTgw1kP1n6R+HFaZzIAz+TebAq1D/vh0WEOiN8NoPPCg486BvpT/KUwc689
+         EmEAZV+Lf1EHbYEOOkLarANUWdYX8kL6GJw1FCwAYkCuW1Jb6y4rDTW8w1OHVH1KBipd
+         h8ctm71m5GMxZBn7Y8BCOOIGbqhzq4FETtANhufhSB4jqZI9pChHuVmy35oNZjAhy61t
+         hZJwKLwRlaC7v3PrgaF0/dQKTG1BPVJgQbl954y+yGKaS4LKllk7z97yDxS95jggPlLL
+         Mh8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWbDTF+2jtANMZvRglZ1o5a6sVIbYxJCRI2zoY6lrRJe6FhSfn5GJXr718ZvV0x/5IVU+NUwpTl1074hdiIHg0KPrRIostg2V6uE84jWZjRokr7FWiLlIdCaxbMQE5zNCaMZOU2r9zfs9zOnyJ8dRjOV7d36l9x6sKkuzDZvBRLUmXUMfn4tcgauPJIwcRMlzFjFnzXm0NDWp2wWZ3g5BDyrQ==
+X-Gm-Message-State: AOJu0YziA6tKLpc8PnIfe5d1JgeOIRdsV1u6xDFSiS77hqO8ORtHoNYs
+	dlzODiliaqiu5+wQwbIlTm8vLkEcHgn7HjYmmrwLOWHwNdamSeNI
+X-Google-Smtp-Source: AGHT+IHv5O7Zzjo9iR5rZ4wp2Y09L1nqF5uadiqzZbbKIzO71izmp6TPS4UCh8sTcVQ34stK3LQaXA==
+X-Received: by 2002:a05:6870:b250:b0:21e:7a1d:b4ec with SMTP id b16-20020a056870b25000b0021e7a1db4ecmr939717oam.7.1708718204401;
+        Fri, 23 Feb 2024 11:56:44 -0800 (PST)
+Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
+        by smtp.gmail.com with ESMTPSA id gq19-20020a056870d91300b0021e8424e466sm3680600oab.25.2024.02.23.11.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 11:56:44 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 23 Feb 2024 13:56:42 -0600
+From: John Groves <John@groves.net>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
+	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
+	dave.hansen@linux.intel.com, gregory.price@memverge.com
+Subject: Re: [RFC PATCH 16/20] famfs: Add fault counters
+Message-ID: <l66vdkefx4ut73jis52wvn4j6hzj5omvrtpsoda6gbl27d4uwg@yolm6jx4yitn>
+References: <cover.1708709155.git.john@groves.net>
+ <43245b463f00506016b8c39c0252faf62bd73e35.1708709155.git.john@groves.net>
+ <05a12c0b-e3e3-4549-b02e-442e4b48a86d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -62,48 +77,43 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240223134653.524a5c9e@gandalf.local.home>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <05a12c0b-e3e3-4549-b02e-442e4b48a86d@intel.com>
 
-On Fri, Feb 23, 2024 at 01:46:53PM -0500, Steven Rostedt wrote:
-> On Fri, 23 Feb 2024 10:30:45 -0800
-> Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
-> 
-> > On 2/23/2024 9:56 AM, Steven Rostedt wrote:
-> > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > 
-> > > [
-> > >    This is a treewide change. I will likely re-create this patch again in
-> > >    the second week of the merge window of v6.9 and submit it then. Hoping
-> > >    to keep the conflicts that it will cause to a minimum.
-> > > ]
-> > > 
-> > > With the rework of how the __string() handles dynamic strings where it
-> > > saves off the source string in field in the helper structure[1], the
-> > > assignment of that value to the trace event field is stored in the helper
-> > > value and does not need to be passed in again.  
+On 24/02/23 10:23AM, Dave Hansen wrote:
+> On 2/23/24 09:42, John Groves wrote:
+> > One of the key requirements for famfs is that it service vma faults
+> > efficiently. Our metadata helps - the search order is n for n extents,
+> > and n is usually 1. But we can still observe gnarly lock contention
+> > in mm if PTE faults are happening. This commit introduces fault counters
+> > that can be enabled and read via /sys/fs/famfs/...
 > > 
-> > Just curious if this could be done piecemeal by first changing the
-> > macros to be variadic macros which allows you to ignore the extra
-> > argument. The callers could then be modified in their separate trees.
-> > And then once all the callers have be merged, the macros could be
-> > changed to no longer be variadic.
+> > These counters have proved useful in troubleshooting situations where
+> > PTE faults were happening instead of PMD. No performance impact when
+> > disabled.
 > 
-> I weighed doing that, but I think ripping off the band-aid is a better
-> approach. One thing I found is that leaving unused parameters in the macros
-> can cause bugs itself. I found one case doing my clean up, where an unused
-> parameter in one of the macros was bogus, and when I made it a used
-> parameter, it broke the build.
+> This seems kinda wonky.  Why does _this_ specific filesystem need its
+> own fault counters.  Seems like something we'd want to do much more
+> generically, if it is needed at all.
 > 
-> I think for tree-wide changes, the preferred approach is to do one big
-> patch at once. And since this only affects TRACE_EVENT() macros, it
-> hopefully would not be too much of a burden (although out of tree users may
-> suffer from this, but do we care?)
+> Was the issue here just that vm_ops->fault() was getting called instead
+> of ->huge_fault()?  Or something more subtle?
 
-Agreed on doing it all at once, it'll be way less spam for people to
-deal with.
+Thanks for your reply Dave!
 
-Tangentially related though, what would make me really happy is if we
-could create the string with in the TP__fast_assign() section. I have to
-have a bunch of annoying wrappers right now because the string length
-has to be known when we invoke the tracepoint.
+First, I'm willing to pull the fault counters out if the brain trust doesn't
+like them.
+
+I put them in because we were running benchmarks of computational data
+analytics and and noted that jobs took 3x as long on famfs as raw dax -
+which indicated I was doing something wrong, because it should be equivalent
+or very close.
+
+The the solution was to call thp_get_unmapped_area() in
+famfs_file_operations, and performance doesn't vary significantly from raw
+dax now. Prior to that I wasn't making sure the mmap address was PMD aligned.
+
+After that I wanted a way to be double-secret-certain that it was servicing
+PMD faults as intended. Which it basically always is, so far. (The smoke
+tests in user space check this.)
+
+John
