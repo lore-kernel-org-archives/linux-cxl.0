@@ -1,58 +1,46 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189FD14263A
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 18:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EB21420B8;
+	Fri, 23 Feb 2024 18:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708712405; cv=none; b=gzt/C43PTQNCMy0NMpM8qpcn8MaxLDH2GeVpngktiuAS40sI68d17GnDN6F0BWyITZH2Zm0et99BsSXTGFA8JLERw7W1WhFRCYKL6ujlM8Ok+LPsq7uuw5/ROmqK0RmZoWY1PznDiPtGk77XftWzOTOghI2JWNyD9Q/lKOGkG4Q=
+	t=1708712607; cv=none; b=n2vO6Rb034yXvXNu4dn0Q3G1maqUpncdLyW50+XyzgGqlkCXwSgJBlZp6tPqiGa1Y1uCZpdrwFFIy/Oc56P2gqRwSx527Vu+7QUNpLgICrxaE7yiuTyPdcRczM+gdY+HhnOAoGiF8fyYnvsYQ9MHUTEXafDqd5guBFUmzuqZD0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708712405; c=relaxed/simple;
-	bh=jCwnUbFwT+l8ckUMK2m0mQCVbWAKZdK09GXLEpsnI8M=;
+	s=arc-20240116; t=1708712607; c=relaxed/simple;
+	bh=u/5mSMo2jLoil9eBiGjHmK9Nu9VBvSjMm+BdCSwUGC8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lT6ccVBOqVvouxyljC7jNYXJqL23rgF4e14SCDvbFSGZgJnNRq4BhRhgwi6dCG/nLB0C5fYzmXdCaHcQDjMbZQ8R0IA+3g0tW01eqjCrpOz9ym8V+EJ79Dw4WNRmdf4vaNmBr9CfVQCeCIqXjaL4ihW3xUPsry0BAmdl3CusRGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EzcyQTUa; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=VgrIGxb0J6BmH9K8nB6THvvFpjAuOUJ584vh5WYPyWWUy1Poec15kFLp5XnZSoXNSj+e+ltxPmlzQ+NVHvQksTwtToTBTzSUdB2AZ0XcTRp3I/mQRe0xZ/L5sMMnNF5ey+QwaOlBT0lRFfYVRZpy0rqToSKE/wuFnJalyCtVjCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=daV3PcJz; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EzcyQTUa"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-218642337c9so326199fac.3
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Feb 2024 10:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708712400; x=1709317200; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LklWzCbZx7Ck0JRACSyFYvfkFz2hYYkazCbjgi1SDKE=;
-        b=EzcyQTUai/SR/GzeUEj4u7i5KOET2BTP8LWmmxyq2PND+SgkaSrmzsSoQh+vrT8vYe
-         WClorYyR+jnwh5AotJaSj9/zY2m7/NenicHeAJOt0otwrN9U5ZCWeYaa2VDuy1mN+ULj
-         wuR5/rePuy+CCvQb2yx3TIwq7eGJ5dZfB6ofJDy+sZH0Z3ygJRu7+pzt9FMzfHcT+5tw
-         sWzw2Dw6zBuEbuXmGvWmwiCMw7q2ctQqU7yAjBBwO5pNUPoO6bVdLK1rlbC6IDox76ID
-         GIs0CSFkBPLqOsRYzeyyjSKq6DJQuWz5r/J6cA9po+OGNDzCcBzprwhE+WSKb9x5i429
-         /tEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708712400; x=1709317200;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LklWzCbZx7Ck0JRACSyFYvfkFz2hYYkazCbjgi1SDKE=;
-        b=uLIvAf68Xpzzz9TuIBWuNd/f6RUXDXW8i+Bj6WaTujWlTZ2NNTrUymHOXEF+WU0d1N
-         y59BWeEnAVELWu98EKi+s5/KUHqdptpuVtahUi4vZtPMraCUUtztSuKe0Jd5D2ywYfgG
-         w4d5wnj1+MuHGx3p3hPqyaVF6luIB/UlhUkwg1FBPe7ZrOyBL3uaG+/7tEiR8kGK4AKx
-         9dw+7XFaq4EREdL8HTWstq4k8UkzhUJnqX66l3uQptPsZhrjgCGPlrIpS+M+326fdPnm
-         YxskveJR0kk04GAu2/z7i3n4ghe5tE+E0/b5LGmyu/sNDVuyije1HPyRWS67jFt1tDwC
-         EmgQ==
-X-Gm-Message-State: AOJu0YxbtzSi+Z7XG6jkTtlhGEZ6mONDfDm2FqkwlLtF874j5i1wyWsH
-	6zAvYiafWbu9i1D+NLhAGnAWdp79oZAHR91WZ9/1zaMLejpJQpWxqT39TC2k/70=
-X-Google-Smtp-Source: AGHT+IHLome3EF/8wSzFbHPRxEopmaWUd7kVWnhOMJyUCshJRInWlfI5JqADDBK+g5fkQ6ZST6xm4w==
-X-Received: by 2002:a05:6870:c992:b0:21f:c7fa:753b with SMTP id hi18-20020a056870c99200b0021fc7fa753bmr312202oab.16.1708712400045;
-        Fri, 23 Feb 2024 10:20:00 -0800 (PST)
-Received: from [172.20.1.19] (173-197-098-125.biz.spectrum.com. [173.197.98.125])
-        by smtp.gmail.com with ESMTPSA id b13-20020a63eb4d000000b005dc9439c56bsm12397324pgk.13.2024.02.23.10.19.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Feb 2024 10:19:59 -0800 (PST)
-Message-ID: <47974032-2c22-481c-a9e1-1fc5990340d6@linaro.org>
-Date: Fri, 23 Feb 2024 08:19:55 -1000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="daV3PcJz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708712606; x=1740248606;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u/5mSMo2jLoil9eBiGjHmK9Nu9VBvSjMm+BdCSwUGC8=;
+  b=daV3PcJzAWnBQiz0HzMFqKiZK3sxGCKWBhLC5MnpIaWABTyrvPK+mS4s
+   3xl/srchp5AP+lK0mGAlL8/fP8YqYts1hVpf2RbGsV67YXgw4iFVA2gaW
+   /tS9Ixira8HT6X45kH+kQgchBFLjHeit2TJB6utP9j5guNSYJlhtFv8vb
+   LL6w62hlu926Lbdo1MALqZLtJBD5HnROGKY0toGeKrRP3r2uDNHpOrVe+
+   U7VF7aHPP1fHNwHELln+HcomYuChK3UI+CLOi8YawbqhpX/F6MmomoEr5
+   DSLwjsgXL5q0Pni+KhvrwktUXgAlOjBAyV3tjHx58oG1XTQSKl9L7KEnv
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6858582"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="6858582"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:23:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="10584169"
+Received: from gtkramer-mobl1.amr.corp.intel.com (HELO [10.209.82.163]) ([10.209.82.163])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:23:23 -0800
+Message-ID: <05a12c0b-e3e3-4549-b02e-442e4b48a86d@intel.com>
+Date: Fri, 23 Feb 2024 10:23:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,35 +48,83 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm/ptw: Handle atomic updates of page tables entries
- in MMIO during PTW.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
- Peter Maydell <peter.maydell@linaro.org>,
- Gregory Price <gregory.price@memverge.com>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-Cc: linux-cxl@vger.kernel.org, linuxarm@huawei.com
-References: <20240223180102.7657-1-Jonathan.Cameron@huawei.com>
+Subject: Re: [RFC PATCH 16/20] famfs: Add fault counters
 Content-Language: en-US
-From: Richard Henderson <richard.henderson@linaro.org>
-In-Reply-To: <20240223180102.7657-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: John Groves <John@Groves.net>, John Groves <jgroves@micron.com>,
+ Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
+Cc: john@jagalactic.com, Dave Chinner <david@fromorbit.com>,
+ Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com,
+ gregory.price@memverge.com
+References: <cover.1708709155.git.john@groves.net>
+ <43245b463f00506016b8c39c0252faf62bd73e35.1708709155.git.john@groves.net>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <43245b463f00506016b8c39c0252faf62bd73e35.1708709155.git.john@groves.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/23/24 08:01, Jonathan Cameron wrote:
-> Seen testing of CXL emulation on arm64 (currently out of tree).
+On 2/23/24 09:42, John Groves wrote:
+> One of the key requirements for famfs is that it service vma faults
+> efficiently. Our metadata helps - the search order is n for n extents,
+> and n is usually 1. But we can still observe gnarly lock contention
+> in mm if PTE faults are happening. This commit introduces fault counters
+> that can be enabled and read via /sys/fs/famfs/...
 > 
-> CXL interleave occurs at subpage granularity so is emulated using an IO
-> Memory Region. The memory is general purpose and as such may contain page
-> tables. FEAT_HADFS using atomic accesses from the page table walkers to
-> update accessed and dirty bits.
-> 
-> Note that disabling kernel support this ARM 8.1 feature avoids this issue
-> as the PTW no longer does an atomic update of the page table entries, but
-> that is a nasty workaround beyond its use in root causing this issue.
-> 
-> Signed-off-by: Jonathan Cameron<Jonathan.Cameron@huawei.com>
-> ---
+> These counters have proved useful in troubleshooting situations where
+> PTE faults were happening instead of PMD. No performance impact when
+> disabled.
 
-Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+This seems kinda wonky.  Why does _this_ specific filesystem need its
+own fault counters.  Seems like something we'd want to do much more
+generically, if it is needed at all.
 
-r~
+Was the issue here just that vm_ops->fault() was getting called instead
+of ->huge_fault()?  Or something more subtle?
