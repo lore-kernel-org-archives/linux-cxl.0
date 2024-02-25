@@ -1,150 +1,63 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2CD12B82;
-	Sat, 24 Feb 2024 23:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3ED2F43;
+	Sun, 25 Feb 2024 00:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708818031; cv=none; b=M+O4T4ZKfNjOE+3sXLKg+L8jvCksWillT+SUmsmQ9HMHTLrjcCoPZbvgNeePOhr9MSyWkes+mj2q6fyxFpdF+oP+WvYcz/0Rgi5arxpCk/mqGO+OSbt2Lhfk9ecNIKiaCpWJnzdOVovpGhaali94CN/+iQFCoHMaff0ppQUQSeo=
+	t=1708819691; cv=none; b=oFnu6I0x+78WrrIXlkahPFwMvWVLvogUjrXy7giRkz5wSz4BM3rMfcFxMJDe5r+L6lwEee3fKsevAKC0Hg7wbHvaRALWdZnDyfHnCuJRzwnZas8qVIHe1s2BJuQfWpFNvScIbtiuN0e3GUcXoDxynLjQtYVK/vMt26QWR6L6oxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708818031; c=relaxed/simple;
-	bh=OYw2ByYVVHvBoCVIfIWdB7pG17J1LlNmfxFwVKBACEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L+s62MbiainDs+6BxUyl1tIW0pinDMqdwLa1JrX1KpVPkN8VePoEhwmXi2//i7U+Z0Z3VGSzvivN/FX3MzUEsZYcFByqMKU90vcfWvFuQzeLZprI06T9Z2sqdaV5GK5VHRQaCyx3rWKX1h6FCKUQu5hSx08m4mnlUL9Dvj9FhwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FuL6Ae3f; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1708819691; c=relaxed/simple;
+	bh=a7/1igAT4PoxDcDNOgmtzoiaA0neM5ZGDNTfggTNBHU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FrzkBHyEj6Ud8xXjlp6Vl8PcVXwK5EtzkHgzUa7Xom9BsjG9ygFWBi3oHcjU/QOpGMsL/moxNwRjxryQk+nMcISBrIm0hwCQ70lyJVw0nQQb1MUJEOL5a3lEBNGmFC5NYkmf148VND30Op09XfslcJk3hHjOij0yX7wp0Z3VqtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME47pIY3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FuL6Ae3f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=TI5u+hB8IqJPV1NXXXiHCj1H8nEjuxpLgMV7QWNQhGk=; b=FuL6Ae3fH6sehiIobvIeA2t2bf
-	cncxTnJTyw0IHXpzN8sufwgSnKg2jUMaDxJ0hATMrjfW+0n6NwP/pO6T0gtaGujbERbYn+u+0i6X+
-	8MLtw8e5wY7Z3YYlPzos+/xQI4CECLE80kci01A0Uk1UR++i8zKHKujjDrmM5Ddt51en5El5gYEaL
-	3cr5WzXhu7hPDrGl5hLexOaE+fhvj4RGicHqYE5LyUWSncZn16pQQ8yUZy6KXiJ9yIdClDhx5VQHG
-	VQFVgO1VV4VSL+xI5ENAlFWjM5j6CqRZuTu7BpygZ4y7SqTb4TUH70Li9sgiZ0pMyaXFZSyN8LZ0/
-	t57Bv54Q==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1re1cs-0000000DrjE-1TMs;
-	Sat, 24 Feb 2024 23:40:14 +0000
-Message-ID: <121d0ce8-e542-4a1c-85e9-0d1863f36741@infradead.org>
-Date: Sat, 24 Feb 2024 15:40:11 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME47pIY3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B913C433C7;
+	Sun, 25 Feb 2024 00:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708819690;
+	bh=a7/1igAT4PoxDcDNOgmtzoiaA0neM5ZGDNTfggTNBHU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ME47pIY3cmXh+XNazxyNGhuvGuwlrIADhH+l4e94zAb9w9ITCt3PBt9iqNYxIuiDc
+	 SJBxollDEnviP7C2B6AL5VYcozKTYU4MRkUVtE72v68LdOsb4hUzCo/D748aqmSKI+
+	 L+J1JyqnhPzeX87ABZhD4P1t7SJyADhiQhYAHidZ2qHyF252SY2GF0kCTEujljZYi8
+	 4UWapzdwLJGxIpYTZoXJSjU9r/JZtlCpRxxdVTm7+kC7WBpp9LG4OS46COBodQAlKw
+	 JfDwv2XYt/3IkWXwQfeg+FAB0G2Wbi1sIUUXaNrsuVt+DdoFrn0glf5NXENAu+ciK1
+	 z88RkR1Hz9cXQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 785E4C04E32;
+	Sun, 25 Feb 2024 00:08:10 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 6.8-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <65da4a4392d41_2bce929471@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <65da4a4392d41_2bce929471@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <65da4a4392d41_2bce929471@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.8-rc6
+X-PR-Tracked-Commit-Id: 5c6224bfabbf7f3e491c51ab50fd2c6f92ba1141
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ac389bc0ca56e1a2f92b2a17e58298390a3879a8
+Message-Id: <170881969048.17738.7320871548796795724.pr-tracker-bot@kernel.org>
+Date: Sun, 25 Feb 2024 00:08:10 +0000
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: torvalds@linux-foundation.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 07/20] famfs: Add include/linux/famfs_ioctl.h
-Content-Language: en-US
-To: John Groves <John@groves.net>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
- Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com,
- Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
- dave.hansen@linux.intel.com, gregory.price@memverge.com
-References: <cover.1708709155.git.john@groves.net>
- <b40ca30e4bf689249a8c237909d9a7aaca9861e4.1708709155.git.john@groves.net>
- <8f62b688-6c14-4eab-b039-7d9a112893f8@infradead.org>
- <7onhdq4spd7mnkr5c443sbvnr7l4n34amtterg4soiey2qubyl@r2ppa6fsohnk>
- <97cde8f6-21ed-45b9-9618-568933102f05@infradead.org>
- <7rkmolss5vkdljnh6uksfkepklwofe3bkdsf36qhokyltjoxlx@xqgef734pidg>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <7rkmolss5vkdljnh6uksfkepklwofe3bkdsf36qhokyltjoxlx@xqgef734pidg>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+The pull request you sent on Sat, 24 Feb 2024 11:57:55 -0800:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.8-rc6
 
-On 2/24/24 15:32, John Groves wrote:
-> On 24/02/23 07:27PM, Randy Dunlap wrote:
->> Hi John,
->>
->> On 2/23/24 18:23, John Groves wrote:
->>>>> +
->>>>> +#define FAMFSIOC_MAGIC 'u'
->>>> This 'u' value should be documented in
->>>> Documentation/userspace-api/ioctl/ioctl-number.rst.
->>>>
->>>> and if possible, you might want to use values like 0x5x or 0x8x
->>>> that don't conflict with the ioctl numbers that are already used
->>>> in the 'u' space.
->>> Will do. I was trying to be too clever there, invoking "mu" for
->>> micron. 
->>
->> I might have been unclear about this one.
->> It's OK to use 'u' but the values 1-4 below conflict in the 'u' space:
->>
->> 'u'   00-1F  linux/smb_fs.h                                          gone
->> 'u'   20-3F  linux/uvcvideo.h                                        USB video class host driver
->> 'u'   40-4f  linux/udmabuf.h
->>
->> so if you could use
->> 'u'   50-5f
->> or
->> 'u'   80-8f
->>
->> then those conflicts wouldn't be there.
->> HTH.
->>
->>>>> +
->>>>> +/* famfs file ioctl opcodes */
->>>>> +#define FAMFSIOC_MAP_CREATE    _IOW(FAMFSIOC_MAGIC, 1, struct famfs_ioc_map)
->>>>> +#define FAMFSIOC_MAP_GET       _IOR(FAMFSIOC_MAGIC, 2, struct famfs_ioc_map)
->>>>> +#define FAMFSIOC_MAP_GETEXT    _IOR(FAMFSIOC_MAGIC, 3, struct famfs_extent)
->>>>> +#define FAMFSIOC_NOP           _IO(FAMFSIOC_MAGIC,  4)
->>
->> -- 
->> #Randy
-> 
-> Thanks Randy; I think I'm the one that didn't read carefully enough.
-> 
-> Does this look right?
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index 457e16f06e04..44a44809657b 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -288,6 +288,7 @@ Code  Seq#    Include File                                           Comments
->  'u'   00-1F  linux/smb_fs.h                                          gone
->  'u'   20-3F  linux/uvcvideo.h                                        USB video class host driver
->  'u'   40-4f  linux/udmabuf.h                                         userspace dma-buf misc device
-> +'u'   50-5F  linux/famfs_ioctl.h                                     famfs shared memory file system
->  'v'   00-1F  linux/ext2_fs.h                                         conflict!
->  'v'   00-1F  linux/fs.h                                              conflict!
->  'v'   00-0F  linux/sonypi.h                                          conflict!
-> diff --git a/include/uapi/linux/famfs_ioctl.h b/include/uapi/linux/famfs_ioctl.h
-> index 6b3e6452d02f..57521898ed57 100644
-> --- a/include/uapi/linux/famfs_ioctl.h
-> +++ b/include/uapi/linux/famfs_ioctl.h
-> @@ -48,9 +48,9 @@ struct famfs_ioc_map {
->  #define FAMFSIOC_MAGIC 'u'
-> 
->  /* famfs file ioctl opcodes */
-> -#define FAMFSIOC_MAP_CREATE    _IOW(FAMFSIOC_MAGIC, 1, struct famfs_ioc_map)
-> -#define FAMFSIOC_MAP_GET       _IOR(FAMFSIOC_MAGIC, 2, struct famfs_ioc_map)
-> -#define FAMFSIOC_MAP_GETEXT    _IOR(FAMFSIOC_MAGIC, 3, struct famfs_extent)
-> -#define FAMFSIOC_NOP           _IO(FAMFSIOC_MAGIC,  4)
-> +#define FAMFSIOC_MAP_CREATE    _IOW(FAMFSIOC_MAGIC, 0x50, struct famfs_ioc_map)
-> +#define FAMFSIOC_MAP_GET       _IOR(FAMFSIOC_MAGIC, 0x51, struct famfs_ioc_map)
-> +#define FAMFSIOC_MAP_GETEXT    _IOR(FAMFSIOC_MAGIC, 0x52, struct famfs_extent)
-> +#define FAMFSIOC_NOP           _IO(FAMFSIOC_MAGIC,  0x53)
-> 
-> Thank you!
-> John
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ac389bc0ca56e1a2f92b2a17e58298390a3879a8
 
-Yes, that looks good.
-Thanks.
+Thank you!
 
 -- 
-#Randy
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
