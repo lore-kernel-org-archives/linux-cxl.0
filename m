@@ -1,223 +1,338 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057F3405CE;
-	Mon, 26 Feb 2024 21:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A2E130E2E
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 21:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708984080; cv=none; b=glQXV47LL/kC0X0HDsc+2qUIzPWnpHhzp2UTy/TF0DN4Wq++72oWOEXb6+0sqCHmcX12WsLzNoup/u3gDbVCeOtCYqbw9MCoHqx+4iSKWSLJaYIQlcR6NucPRFGjYgQRsm3YFkhyGvG2nyjj/8PppSjbdoENzZSFuDAHjKS22J4=
+	t=1708984730; cv=none; b=us5gUKr6RftYKkdYKmLLvpuTuRot5DJlGlZ5ja3b84L2LBwRF8mbLBE21rKaGogkn5bmDHTTyowDBbJOTTJbvmTqYIBkJmCBQmA35NY6xtD/8wBHSUT0hAa6hHqkHBoW6jZ1obTL3NGK0Isncpi5D5sqN8tC/cNIB1909EBFhg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708984080; c=relaxed/simple;
-	bh=+mhRZDCckO6W8K7cXxypdompx2eyAZlDqNRYXBm0lRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GRHMcO2ldTXHr2jvC7d/XKR0IG6gUeGxZ0DHfwR1h8oG3GtwTIBuCVbLsUs5mDBPw/YuMEzapDYdhNzvHfGD32LXnu0pV44G1doIZdk+DHOCk9e0g5W0WKLQhd4lhkdjpMQGPXW0D+3/u0KTqNSnhLl/eA5VMiu6oGd6gjnBxXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxPhBclp; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708984730; c=relaxed/simple;
+	bh=Pex3Wc0DuHp4AwZi+ct2KjNQo8G+7yQCqPffoCp2HyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OQbtdNQLjZzjkwXaPHt5unOGycCJSMEDJnPxFT8M7xX/11I5yMTEI2xDXCaBc8kDORcAO0g/hdFcxTk9SVam4rei1slR4mFC5SSDI+nGwOl1fJgJluzl1kM4om+LGZSA9/qy/VfpeTliUSq6UHZpAzvFxaLNF+XadpwKANwxVsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a57QiAP8; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxPhBclp"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5a0669228b6so1321600eaf.0;
-        Mon, 26 Feb 2024 13:47:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708984076; x=1709588876; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WwkLzcOkTdepCEL/rTOLTVwMFBrXTv/HE2I151NYxEg=;
-        b=fxPhBclpFQ+5AkFBIq5hzfZ7XqCxzt4Zaj0eafEVX/3clW9wh2zFGB6lyYsKlB3UhV
-         0belvW+1FJPyFvnoDmqU1Yo6bugWLktH/8SckZJaTcoZVEay8vpIfNVZ3A97gzSqPqrK
-         dgoINt2sjdu5aUZWysjxGoTJe8kKosXu/csZaYOGrEeFENrQIknk2XZQDJGsWtZkg97/
-         fH/tROE+VJwxtRD455Ctjy5oJPco6uAS7c5cnBg02JIYiyLW96/LHVU5I1lVs5qXa2+u
-         rPL0reWB/9l0GyxlzUjPN1vfjR72LG2Ro77IXRWXwWahM8LA4Z+c1VlaY2A9nmbH8hek
-         1Izg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708984076; x=1709588876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WwkLzcOkTdepCEL/rTOLTVwMFBrXTv/HE2I151NYxEg=;
-        b=j4wMFwoT0Xa+DZxKMXZDgktBUGdvxmRR3nUkyzgK75iF6+dGV1T3VtsHNCvgJXiGeL
-         a7WuAHuQo6FELGK9EkolZb4aTNZXTEWIdyr46x6CxtyuO6ZQPBQuB03yAcKmr5eo6wlL
-         4nalqTAck1R4HrH/9Dz+DE10DOlt0vcujZOV3cbXfMAnMHyN+LgAgXFvOEdljXbJTAGR
-         50crZuyuVBqKXACCzAOuDiYChKOwmPoy/kd6QJgWP6Pbj8rTrQLGCPxpIBk4IyvJ91Ix
-         kPvYzugBr8aNgWN7CfZJ2hytHVNAOhJIOWXmJnB4Ps4qujoGh+DW6TLPaxdX3vD55bsb
-         93KA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwNszFzu0JYKIv6QxA0SKt8VkHctio9biJ2bZyA40YOMGD+pxvBstiKqdHlU9wipyXpo6pRUEsRsMpsM3g77Q9/LwX/QyMMSy7gmxwyS0Y5gKarVP4nC2XS12oAQoFHe1Dm+4G7UGFVTVjTgbPEuTo4Y88xmp2+1nnHwiSt6TqglftDyF+++bMKFm6WZKHgGcggv05JOPc+buSZQ66WuSwWA==
-X-Gm-Message-State: AOJu0Yw/eO0xf+3PXlk+bg+lMRXKTETmxaaeuCDcNcw+9mwjjUBWO9bS
-	V8MX+1/mGABoIRR73rCMASf1M9kFEyFjpLvdsvaeawKDuuZPQK82
-X-Google-Smtp-Source: AGHT+IENzrYho4sVLLETE+2kSmQeGnYGjapvMx2yk+6P/1Df/2LXKbX/7P21pTgZxerQUQHeu5dWRA==
-X-Received: by 2002:a4a:ee8e:0:b0:5a0:5ac0:e81c with SMTP id dk14-20020a4aee8e000000b005a05ac0e81cmr6718130oob.6.1708984076000;
-        Mon, 26 Feb 2024 13:47:56 -0800 (PST)
-Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id h26-20020a4ad29a000000b005a0174b67c0sm1415632oos.3.2024.02.26.13.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 13:47:55 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 26 Feb 2024 15:47:53 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 09/20] famfs: Add super_operations
-Message-ID: <z3tnfxbbvhtbyantbm3yr3yv2qsih7darbm3p5pwwdsknuxlqa@rvexwleaixiy>
-References: <cover.1708709155.git.john@groves.net>
- <537f836056c141ae093c42b9623d20de919083b1.1708709155.git.john@groves.net>
- <20240226125136.00002e64@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a57QiAP8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708984729; x=1740520729;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Pex3Wc0DuHp4AwZi+ct2KjNQo8G+7yQCqPffoCp2HyI=;
+  b=a57QiAP82qSWCCvX9UNwUTb00uvxKEsQRc/jxGrCjKzPQ7OcjRG5aGSv
+   DAMvDZgsEuwnoVdaQi596u9TqZ0s35RvyCeWSpFABjI2mvVwccgM98o1I
+   XyWpIJk/8Oy9k1hpv0lB+Le2J7rARvSupfAZKGP2ZeGzM1IdJuuK5r9jx
+   J8dXUcMgDdH6ywP8P/nbLCsMBd6CGH92wGDzw1YJ8R5dHsqy9i4WFVNU/
+   zBGKQQgwOqYYG2huJ0Rz07mc2ibS1rxIgAjZoh0OpNYMZ87vYPGdmc7Z4
+   WOw7S6I0MNRufLscwnSeERaZBUHhGa4P4BbBjY17WYfAycC1Bmp6DtCKV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3148809"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3148809"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:58:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="11484576"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.4]) ([10.246.112.4])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:58:47 -0800
+Message-ID: <adecc9e8-b0b6-475c-8194-cf9522002df1@intel.com>
+Date: Mon, 26 Feb 2024 14:58:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226125136.00002e64@Huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH v7 3/4] ndctl: cxl: add QoS class check for CXL
+ region creation
+Content-Language: en-US
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Cc: "Schofield, Alison" <alison.schofield@intel.com>
+References: <20240208201435.2081583-1-dave.jiang@intel.com>
+ <20240208201435.2081583-4-dave.jiang@intel.com>
+ <681afb7ff4a05fa07b0f449b825c8dd04915c6fa.camel@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <681afb7ff4a05fa07b0f449b825c8dd04915c6fa.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 24/02/26 12:51PM, Jonathan Cameron wrote:
-> On Fri, 23 Feb 2024 11:41:53 -0600
-> John Groves <John@Groves.net> wrote:
+
+
+On 2/23/24 3:48 PM, Verma, Vishal L wrote:
+> On Thu, 2024-02-08 at 13:11 -0700, Dave Jiang wrote:
+>> The CFMWS provides a QTG ID. The kernel driver creates a root decoder that
+>> represents the CFMWS. A qos_class attribute is exported via sysfs for the root
+>> decoder.
+>>
+>> One or more qos_class tokens are retrieved via QTG ID _DSM from the ACPI0017
+>> device for a CXL memory device. The input for the _DSM is the read and write
+>> latency and bandwidth for the path between the device and the CPU. The
+>> numbers are constructed by the kernel driver for the _DSM input. When a
+>> device is probed, QoS class tokens  are retrieved. This is useful for a
+>> hot-plugged CXL memory device that does not have regions created.
+>>
+>> Add a QoS check during region creation. If --enforce-qos/-Q is set and
+>> the qos_class mismatches, the region creation will fail.
+>>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v7:
+>> - Add qos_class_mismatched to region for cxl list (Vishal)
+>> - Add create_region -Q check (Vishal)
+>> ---
+>>  Documentation/cxl/cxl-create-region.txt |  6 +++
+>>  cxl/json.c                              |  6 +++
+>>  cxl/lib/libcxl.c                        | 11 +++++
+>>  cxl/lib/libcxl.sym                      |  2 +
+>>  cxl/lib/private.h                       |  1 +
+>>  cxl/libcxl.h                            |  2 +
+>>  cxl/region.c                            | 56 ++++++++++++++++++++++++-
+>>  7 files changed, 83 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+>> index f11a412bddfe..b244af60b8a6 100644
+>> --- a/Documentation/cxl/cxl-create-region.txt
+>> +++ b/Documentation/cxl/cxl-create-region.txt
+>> @@ -105,6 +105,12 @@ include::bus-option.txt[]
+>>  	supplied, the first cross-host bridge (if available), decoder that
+>>  	supports the largest interleave will be chosen.
+>>  
+>> +-Q::
+>> +--enforce-qos::
+>> +	Parameter to enforce qos_class mismatch failure. Region create operation
+>> +	will fail of the qos_class of the root decoder and one of the memdev that
+>> +	backs the region mismatches.
+>> +
+>>  include::human-option.txt[]
+>>  
+>>  include::debug-option.txt[]
+>> diff --git a/cxl/json.c b/cxl/json.c
+>> index c8bd8c27447a..27cbacc84f3a 100644
+>> --- a/cxl/json.c
+>> +++ b/cxl/json.c
+>> @@ -1238,6 +1238,12 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
+>>  		}
+>>  	}
+>>  
+>> +	if (cxl_region_qos_class_mismatched(region)) {
+>> +		jobj = json_object_new_boolean(true);
+>> +		if (jobj)
+>> +			json_object_object_add(jregion, "qos_class_mismatched", jobj);
+>> +	}
+>> +
+>>  	json_object_set_userdata(jregion, region, NULL);
+>>  
+>>  
+>> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+>> index 6c293f1dfc91..3461c4de2097 100644
+>> --- a/cxl/lib/libcxl.c
+>> +++ b/cxl/lib/libcxl.c
+>> @@ -414,6 +414,17 @@ CXL_EXPORT int cxl_region_is_enabled(struct cxl_region *region)
+>>  	return is_enabled(path);
+>>  }
+>>  
+>> +CXL_EXPORT void cxl_region_qos_class_mismatched_set(struct cxl_region *region,
+>> +						  bool mismatched)
+>> +{
+>> +	region->qos_mismatched = mismatched;
+>> +}
 > 
-> > Introduce the famfs superblock operations
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  fs/famfs/famfs_inode.c | 72 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >  create mode 100644 fs/famfs/famfs_inode.c
-> > 
-> > diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> > new file mode 100644
-> > index 000000000000..3329aff000d1
-> > --- /dev/null
-> > +++ b/fs/famfs/famfs_inode.c
-> > @@ -0,0 +1,72 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * famfs - dax file system for shared fabric-attached memory
-> > + *
-> > + * Copyright 2023-2024 Micron Technology, inc
-> > + *
-> > + * This file system, originally based on ramfs the dax support from xfs,
-> > + * is intended to allow multiple host systems to mount a common file system
-> > + * view of dax files that map to shared memory.
-> > + */
-> > +
-> > +#include <linux/fs.h>
-> > +#include <linux/pagemap.h>
-> > +#include <linux/highmem.h>
-> > +#include <linux/time.h>
-> > +#include <linux/init.h>
-> > +#include <linux/string.h>
-> > +#include <linux/backing-dev.h>
-> > +#include <linux/sched.h>
-> > +#include <linux/parser.h>
-> > +#include <linux/magic.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/fs_context.h>
-> > +#include <linux/fs_parser.h>
-> > +#include <linux/seq_file.h>
-> > +#include <linux/dax.h>
-> > +#include <linux/hugetlb.h>
-> > +#include <linux/uio.h>
-> > +#include <linux/iomap.h>
-> > +#include <linux/path.h>
-> > +#include <linux/namei.h>
-> > +#include <linux/pfn_t.h>
-> > +#include <linux/blkdev.h>
+> This should be called cxl_region_set_qos_class_mismatched() at a
+> minimum, but..
 > 
-> That's a lot of header for such a small patch.. I'm going to guess
-> they aren't all used - bring them in as you need them - I hope
-> you never need some of these!
-
-I didn't phase in headers in this series. Based on these recommendations,
-the next version of this series is gonna have to be 100% constructed from
-scratch, but okay. My head hurts just thinking about it. I need a nap...
-
-I've been rebasing for 3 weeks to get this series out, and it occurs to
-me that maybe there are tools I'm not aware of that make it eaiser? I'm
-just typing "rebase -i..." 200 times a day. Is there a less soul-crushing way?
-
+>> +
+>> +CXL_EXPORT bool cxl_region_qos_class_mismatched(struct cxl_region *region)
+>> +{
+>> +	return region->qos_mismatched;
+>> +}
 > 
-> 
-> > +
-> > +#include "famfs_internal.h"
-> > +
-> > +#define FAMFS_DEFAULT_MODE	0755
-> > +
-> > +static const struct super_operations famfs_ops;
-> > +static const struct inode_operations famfs_file_inode_operations;
-> > +static const struct inode_operations famfs_dir_inode_operations;
-> 
-> Why are these all up here?
+> .. I think libcxl always perform its own qos mismatch checking when
+> this is called and return appropriately, instead of relying on a user-
+> set flag.
 
-These forward declarations are needed by a later patch in the series.
-They were in famfs_internal.h, but they are only used in this file, so
-I moved them here.
-
-For all answers such as this, I will hereafter reply "rebase fu", with
-further clarification only if necessary.
-
-> 
-> > +
-> > +/**********************************************************************************
-> > + * famfs super_operations
-> > + *
-> > + * TODO: implement a famfs_statfs() that shows size, free and available space, etc.
-> > + */
-> > +
-> > +/**
-> > + * famfs_show_options() - Display the mount options in /proc/mounts.
-> Run kernel doc script + fix all warnings.
-
-Will do; I actually think I have already fixed those...
-
-> 
-> > + */
-> > +static int famfs_show_options(
-> > +	struct seq_file *m,
-> > +	struct dentry   *root)
-> Not that familiar with fs code, but this unusual kernel style. I'd go with 
-> something more common
-> 
-> static int famfs_show_options(struct seq_file *m, struct dentry *root)
-
-Done. To all functions...
+Ok. I'll add internal compare for libcxl instead and remove the flag.
 
 > 
-> > +{
-> > +	struct famfs_fs_info *fsi = root->d_sb->s_fs_info;
-> > +
-> > +	if (fsi->mount_opts.mode != FAMFS_DEFAULT_MODE)
-> > +		seq_printf(m, ",mode=%o", fsi->mount_opts.mode);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct super_operations famfs_ops = {
-> > +	.statfs		= simple_statfs,
-> > +	.drop_inode	= generic_delete_inode,
-> > +	.show_options	= famfs_show_options,
-> > +};
-> > +
-> > +
-> One blank line probably fine.
+> Actually I don't see this interface getting called anywhere. Was there
+> a patch to cxl_region_to_json() that got dropped?
 
-Done
+It's the first code chunk above.
 
 > 
+>> +
+>>  CXL_EXPORT int cxl_region_disable(struct cxl_region *region)
+>>  {
+>>  	const char *devname = cxl_region_get_devname(region);
+>> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+>> index 465c78dc6c70..47a9c3cafc71 100644
+>> --- a/cxl/lib/libcxl.sym
+>> +++ b/cxl/lib/libcxl.sym
+>> @@ -285,4 +285,6 @@ global:
+>>  	cxl_root_decoder_get_qos_class;
+>>  	cxl_memdev_get_pmem_qos_class;
+>>  	cxl_memdev_get_ram_qos_class;
+>> +	cxl_region_qos_class_mismatched_set;
+>> +	cxl_region_qos_class_mismatched;
+>>  } LIBCXL_7;
+>> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+>> index 07dc8c784f1d..88448d82d53f 100644
+>> --- a/cxl/lib/private.h
+>> +++ b/cxl/lib/private.h
+>> @@ -174,6 +174,7 @@ struct cxl_region {
+>>  	struct daxctl_region *dax_region;
+>>  	struct kmod_module *module;
+>>  	struct list_head mappings;
+>> +	bool qos_mismatched;
+>>  };
+>>  
+>>  struct cxl_memdev_mapping {
+>> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+>> index a180f01cb05e..7795496cdbbd 100644
+>> --- a/cxl/libcxl.h
+>> +++ b/cxl/libcxl.h
+>> @@ -335,6 +335,8 @@ int cxl_region_clear_target(struct cxl_region *region, int position);
+>>  int cxl_region_clear_all_targets(struct cxl_region *region);
+>>  int cxl_region_decode_commit(struct cxl_region *region);
+>>  int cxl_region_decode_reset(struct cxl_region *region);
+>> +void cxl_region_qos_class_mismatched_set(struct cxl_region *region, bool mismatched);
+>> +bool cxl_region_qos_class_mismatched(struct cxl_region *region);
+>>  
+>>  #define cxl_region_foreach(decoder, region)                                    \
+>>  	for (region = cxl_region_get_first(decoder); region != NULL;           \
+>> diff --git a/cxl/region.c b/cxl/region.c
+>> index 3a762db4800e..76df177ef246 100644
+>> --- a/cxl/region.c
+>> +++ b/cxl/region.c
+>> @@ -32,6 +32,7 @@ static struct region_params {
+>>  	bool force;
+>>  	bool human;
+>>  	bool debug;
+>> +	bool qos_enforce;
+>>  } param = {
+>>  	.ways = INT_MAX,
+>>  	.granularity = INT_MAX,
+>> @@ -49,6 +50,8 @@ struct parsed_params {
+>>  	const char **argv;
+>>  	struct cxl_decoder *root_decoder;
+>>  	enum cxl_decoder_mode mode;
+>> +	bool qos_enforce;
+>> +	bool qos_mismatched;
+>>  };
+>>  
+>>  enum region_actions {
+>> @@ -81,7 +84,8 @@ OPT_STRING('U', "uuid", &param.uuid, \
+>>  	   "region uuid", "uuid for the new region (default: autogenerate)"), \
+>>  OPT_BOOLEAN('m', "memdevs", &param.memdevs, \
+>>  	    "non-option arguments are memdevs"), \
+>> -OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats")
+>> +OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats"), \
+>> +OPT_BOOLEAN('Q', "enforce-qos", &param.qos_enforce, "enforce of qos_class matching")
+>>  
+>>  static const struct option create_options[] = {
+>>  	BASE_OPTIONS(),
+>> @@ -360,6 +364,8 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
+>>  		}
+>>  	}
+>>  
+>> +	p->qos_enforce = param.qos_enforce;
+>> +
+>>  	return 0;
+>>  
+>>  err:
+>> @@ -467,6 +473,49 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
+>>  		p->mode = CXL_DECODER_MODE_PMEM;
+>>  }
+>>  
+>> +static int create_region_validate_qos_class(struct cxl_ctx *ctx,
 > 
-> Add the rest of the stuff a module normally has, author etc in this
-> patch.
+> ctx is never used, can be removed.
 
-Because "rebase fu" I'm not sure the order will remain the same. Will
-try not to make anybody tell me this again though...
+ok
 
-John
+> 
+>> +					    struct parsed_params *p)
+>> +{
+>> +	int root_qos_class;
+>> +	int qos_class;
+>> +	int i;
+>> +
+>> +	if (!p->qos_enforce)
+>> +		return 0;
+>> +
+>> +	root_qos_class = cxl_root_decoder_get_qos_class(p->root_decoder);
+>> +	if (root_qos_class == CXL_QOS_CLASS_NONE)
+>> +		return 0;
+>> +
+>> +	for (i = 0; i < p->ways; i++) {
+>> +		struct json_object *jobj =
+>> +			json_object_array_get_idx(p->memdevs, i);
+>> +		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
+>> +
+>> +		if (p->mode == CXL_DECODER_MODE_RAM)
+>> +			qos_class = cxl_memdev_get_ram_qos_class(memdev);
+>> +		else
+>> +			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
+>> +
+>> +		/* No qos_class entries. Possibly no kernel support */
+>> +		if (qos_class == CXL_QOS_CLASS_NONE)
+>> +			break;
+>> +
+>> +		if (qos_class != root_qos_class) {
+>> +			p->qos_mismatched = true;
+>> +			if (p->qos_enforce) {
+>> +				log_err(&rl, "%s QoS Class mismatches %s\n",
+>> +					cxl_decoder_get_devname(p->root_decoder),
+>> +					cxl_memdev_get_devname(memdev));
+>> +
+>> +				return -ENXIO;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int create_region_validate_config(struct cxl_ctx *ctx,
+>>  					 struct parsed_params *p)
+>>  {
+>> @@ -507,6 +556,10 @@ found:
+>>  		return rc;
+>>  
+>>  	collect_minsize(ctx, p);
+>> +	rc = create_region_validate_qos_class(ctx, p);
+>> +	if (rc)
+>> +		return rc;
+>> +
+> 
+> Maybe this call can be moved into the existing validate_decoder() check
+> since?
 
+ok
+
+> 
+>>  	return 0;
+>>  }
+>>  
+>> @@ -654,6 +707,7 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+>>  		return -EOPNOTSUPP;
+>>  	}
+>>  
+>> +	cxl_region_qos_class_mismatched_set(region, p->qos_mismatched);
+>>  	devname = cxl_region_get_devname(region);
+>>  
+>>  	rc = cxl_region_determine_granularity(region, p);
+> 
+> I think as a future enhancement, it might be nice to add
+> cxl_filter_walk() smarts to allow it to filter memdevs based on
+> qos_class.  That way, when cxl create-region is called without any
+> memdev arguments (i.e. it is free to select memdevs), collect_memdevs()
+> can ask for memdevs that match the qos_class, and see if those can
+> satisfy the interleave requirements if --enforce-qos is used.
