@@ -1,156 +1,325 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2087.outbound.protection.outlook.com [40.107.100.87])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAB014A81;
-	Sun, 25 Feb 2024 14:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708870904; cv=fail; b=QROqTV0yYgKwMhSaDjVlQBQZSvyTRpSYceVaXj/hLoAwSHqlIZHKSbVwuDJuLnnvYeB2kKC+fV/YY6CchF1+sPm+WA6C4KWykE/eGLhR4wwmOisQaxJECgZbOIAbCnI5Fxgi7NxSl720GZK62pR29xpQ1AUyX+bK3PIXSth0SdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708870904; c=relaxed/simple;
-	bh=yp0Y5Svf6MXdHB6BEJNaAsC5OSpRWKqGkadPnCh25tw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OnOyMayYOUqYHF+iAyH2ovYnbCC6ql4k9OSJX2ZWpqxhkweT2lsYmDe5idMVe/rludD3EPAXFa0v4lZrdWhGKZcCamV6bKW6a/hon5qGqa3hsoNA004rs8N9ZkEydqqHXCYaaItUSMU9wCiPpKvuCWXGi6dW/5aCmUa+uL/eg7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aY7FM++E; arc=fail smtp.client-ip=40.107.100.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aY7FM++E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HgWAXTsguL0NTFj6f1yqqcdEndfowXOxcX7vNTgx3B5E80m0KkQjnHtO4qJ6VTGEjR4qu3iq41Ua9dzw0Zex8tjf3BX4PklggHDfu49CHh4FxgVc5k9vrPwzKgFzDd7f1WbVpWR5ZwdQtHe0u0t1stWlrR2Krz02KWk1wlzma7eFembCF9MOu4ckexByWDUp/ce3vqGgh+ckC5jbX39IaYvvUC9D3K5tQq64+agQzhtSOeA52wecMVc95C84VGdcY0HlLn9rl0d8cS0NIRwHimNcYvCG25zzYwGUbBpRPhl2KnytmTLlytY10u5EWjUs57PAFGupTfLOGVnXnZeR7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kVU9HODqslZjHxPtCElUGFAixYE1eu1W7XRSTYSHvBg=;
- b=cxPfCUEZduoT9W4IkuVHmgfLgPFxRgksUKiyCIV0sRdFaHvBuJfyWC+I0AFlKCHix3Dctbe4ayMFWIwvmdGBfIRfk76CKW2szsXRJLjWKad7TVswiqmGXV36dmYveLtIVNQqJ3bnGq7BgVkUF0R/lIIsSKEmTo2WD9yC0nmCf92kbUck1ND3UpMGl1/HAEjB0WgbWbzxttj5lN1K3BaRiXQInyFgl4FnHDm8W4VtmAljkF6SbPa33uhcLA+oleHOa1wmeXiqP4vXg6+uzo/3DizGnjli9L389789RmrkL0/GGhonNVy6ED2mYjPslvzFR18fMobV94Z+u+e2AIynnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kVU9HODqslZjHxPtCElUGFAixYE1eu1W7XRSTYSHvBg=;
- b=aY7FM++Eu1wZFDIZG8MObpavzPlrCTPALgGrL5/y+I/sU1WhhXrg9n7l12kwkbGSk5Z28+4yNQW/Br932yUSLjDo4uf3fR+BiyDKhWC2AUwwyQoLWoV+eg8+p2W+yWIq4oqlD619fA6e2ITQa8Su29oYgRaWdmBTTn3H4myZu+c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CH0PR12MB5371.namprd12.prod.outlook.com (2603:10b6:610:d6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.31; Sun, 25 Feb
- 2024 14:21:37 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7316.031; Sun, 25 Feb 2024
- 14:21:36 +0000
-Date: Sun, 25 Feb 2024 15:21:29 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Fan Ni <nifan.cxl@gmail.com>
-Subject: Re: [PATCH v4 2/3] cxl/pci: Get rid of pointer arithmetic reading
- CDAT table
-Message-ID: <ZdtM6UJM733qAukn@rric.localdomain>
-References: <20240216155844.406996-1-rrichter@amd.com>
- <20240216155844.406996-3-rrichter@amd.com>
- <20240219125059.0000737c@Huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240219125059.0000737c@Huawei.com>
-X-ClientProxiedBy: FR0P281CA0229.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b2::14) To IA0PR12MB8746.namprd12.prod.outlook.com
- (2603:10b6:208:490::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A63535BB;
+	Mon, 26 Feb 2024 10:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708943397; cv=none; b=Qp8PSyllYhVGwYAphGJG+1yTB0PMGAiCvhFhi2Rj4sbXvhYlmYq36PUZctPio7p3LHcKcDmMV4VqFEsZRbAY0WbQhe/xYn7M1HdQJo2QgxF1HRBmVYc3qkvmfD+2vZg3l5eLk2M1NZkpsSyRIbhvSv4l18Fim+d0hZco/P7KRyE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708943397; c=relaxed/simple;
+	bh=/G2UA+uUkp//XVcfRaG2YejlfgNtu6ZxQ2UfuCjPiyk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nmj8hlPln6JMedpMMDvCrGQ+VQRiBqwTYKPyeWGJH62D8h8M131R7a3eqo3xk2Znw5VOrJYa6smo1Sbbrd07pKvwy+kco0cZ70MTyxO3ortiomfNGC2TTVYImJnIMZrXxj1vy1Kz0Id1CNyB6nzqMgm+jgEK7+AK97XsbHmBOv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TjxZd1L8dz6JB1P;
+	Mon, 26 Feb 2024 18:25:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 882B51400DD;
+	Mon, 26 Feb 2024 18:29:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
+ 2024 10:29:45 +0000
+Date: Mon, 26 Feb 2024 10:29:44 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Shiju Jose <shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Message-ID: <20240226102944.000070a3@Huawei.com>
+In-Reply-To: <65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+	<65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+	<54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
+	<65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CH0PR12MB5371:EE_
-X-MS-Office365-Filtering-Correlation-Id: bed342b6-6d79-4086-a183-08dc360d128d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	SRvnxr1MtzoJeWrqXxVjJx2zyqm8h+xzO6cOMFbEPF1hcypkVV+9AXDHLg0eLQSkmxfs/9MNfFOGSOivwR3N+Tx3L57rk1TJxbTCwKpGlD7jUz7O9mSLQbykQ7IrJTn6HIM+qFYnrLvKx9LFsJGsTbHfOX3W1zu9yPgXbSC8H2Bys+mFB+6xabGYJ91CK3V5qTm5XwSieeZ0j3F/Zo3pDKN+H5MKIXtkoiE3IlfJ7im8FngmSURm4vT4bRTn7YMjDjJq/t5zjRCDEPx+WqdxqZthW8t9MnxuMbc0eR9b7b9ft+dmbMfTncG/5z+niTHfJMPRSkQi3vn00JxvLPmLbtQDhSVNBdC2SIipAaSbI6PabYVkR7tZdvtLluN2UFDhixGIA/Qyb1ekLp83rdHsBjjaCbEZjdszS6cMvecPns2SVZuWECjSSZ7vX8swAZRHpfZKjLdYpWdAgJUvQ4xjL6qpElNXT+9Tg/Rr2tHkUy72MQRmk685kL3pp+YnVXvDx+R4LyN9nE+mBRZ5CYqpDaGqK/13neOaQ8JcMGYOYC4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IaYsqFGsEO9KxwK9DEuRPWGLBC7Ns/VSVxOCF4mFqgVED6+3A/xjPhohfrSQ?=
- =?us-ascii?Q?BcxOdvTpz6ojPgnXOBIBXsuv8skSofMSPZydu/Xfxd6IdGoTDlC50YZtTyt/?=
- =?us-ascii?Q?I1WEKrOZWWn2KoecvUedUMLA2g909esZndN1vdqsZ7udGyI1gr7RQ9LSfDrm?=
- =?us-ascii?Q?GnfT0hozaIx0kXoMwaenW0RarHyLPbQp94fr/EpjgmJd0g3f3KHAdayznNOC?=
- =?us-ascii?Q?KlizaeH5y2/I5w/iEjX2nnGnxw1VEtfQ/Slg/vwpSe2Lf3cgXyPpKGO78kEB?=
- =?us-ascii?Q?Edhm330YLEgxwDoe8F7nYJygvG7d1ztotkB+X7pHl8EFRSDb6kQ4HDG9YNsc?=
- =?us-ascii?Q?xunrEixj/OlAWUGwRuoch+J7kCniHD4M6MR/3IYIpR5+n9WW8TSbRWqU8yUT?=
- =?us-ascii?Q?wSIEVZBeo/AmfLoU5OLJ/TR/jjRH2LxRPWd4F549Gt0wePM8bKbx7kfwe0DQ?=
- =?us-ascii?Q?aBkjjbjqnyVB2UxXcm5gW+20I2uDDZzLEakU4PbgxqZljAQ4be2r6m8e43HU?=
- =?us-ascii?Q?H6nzNHjijpRE263cUYbQWLfdUn49T5P0K/1lJLrgOGzUjS4KJCekXAFUdHA8?=
- =?us-ascii?Q?FoqFoRiILm2+R/nFGC0n5TNMdLJ4l2rV0vKtzszEzOS8N1wRvbrCzo9T3xFX?=
- =?us-ascii?Q?jM9foUhqy2yTMxTMbFigwpoWGOyAsmlwz93URoUnGin0xNbL4+u1XTbFT6sH?=
- =?us-ascii?Q?01+ts+OlTL9WKrvh3yE4oh/LaukxMlIjk/r5oG7AP3Qt0JjqEK51imvBULFl?=
- =?us-ascii?Q?4hY0P9BMzjSObBCflJ3M1XYgp+ZemaauSoYLEABatPGhdqddEmTP4qXy7sml?=
- =?us-ascii?Q?vr+/qFB/Y9UsVVvM/KAKgxfFlJi96QcI6RgXxB6lleJftgeqhK9rKxzjdhdX?=
- =?us-ascii?Q?ieq+PC4UcRIwG9GyLnU9BY/ilhI6OrTq26K2Jk1P1rZxmEvoVmRrfMn/6f3O?=
- =?us-ascii?Q?7WxxSABFMmuej5/zHYtXSZ7rfI+leR4WDDOTKeKlxxPTIX00POjk5L7A392p?=
- =?us-ascii?Q?WavDN+eOH6AHLwMtMbO5Nx45bXLBlcBVxWC3aCiSSJbh2hpLWmc0udstbao0?=
- =?us-ascii?Q?JAUizTCHH/4s1zrUSZNI01nR7ZVVrOi6RjZtRsyk8GxqmL0vpBSJlKExkrDe?=
- =?us-ascii?Q?F0jWcweW07qqPYwbQsEHBn3q5OLE4rWTWpXpyWJ18kpUH4VPMc93hmQydx02?=
- =?us-ascii?Q?/nrCJp73ifvn/xS3FiPBVNjATXz/O0+LmKdLnIZpoLY04W4TR6gP3bXh5YZr?=
- =?us-ascii?Q?G3zOfro1uKa9I4w2ibwbKBzPdd81e84uft9kqOwttN+FQFuxUrDj97JfpGNd?=
- =?us-ascii?Q?YOYpchnTKy8cAY3korMAw7pnEuxUyJWqIuE1BT9ZqpUX/m+S1k1n6+V8syWO?=
- =?us-ascii?Q?Z1iS5A9qcq+3xsgmvuxsZ+hml6aN7zS6dCsyiZgQzxp20IXZjAW6KJHajSXm?=
- =?us-ascii?Q?czcQLPWm/cKvSZE2w1H8ENCIkMY4L/ul80giUkTsIlV3p0aCBJ1GpRsPtGtg?=
- =?us-ascii?Q?rjVrT+omQW3Ork/m3CT+ii7HpV7oVrZls6gCT7OsZgL6Fo2gKojtWced7RVZ?=
- =?us-ascii?Q?LuwqrISEOix7AV9Ki18=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bed342b6-6d79-4086-a183-08dc360d128d
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8746.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2024 14:21:36.5788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EDubTbRmmJtDOi4ShmbVSO5cIyiJ45b0rWC26Z2YISEkNmrWYNUyrcGWGFCi2lbYkIMriVnX68unaFsDvIQ1sw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5371
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 19.02.24 12:50:59, Jonathan Cameron wrote:
-> On Fri, 16 Feb 2024 16:58:43 +0100
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > Reading the CDAT table using DOE requires a Table Access Response
-> > Header in addition to the CDAT entry. In current implementation this
-> > has caused offsets with sizeof(__le32) to the actual buffers. This led
-> > to hardly readable code and even bugs. E.g., see fix of devm_kfree()
-> > in read_cdat_data():
-> > 
-> >  c65efe3685f5 cxl/cdat: Free correct buffer on checksum error
-> > 
-> > Rework code to avoid calculations with sizeof(__le32). Introduce
-> > struct cdat_doe_rsp for this which contains the Table Access Response
-> > Header and a variable payload size for various data structures
-> > afterwards to access the CDAT table and its CDAT Data Structures
-> > without recalculating buffer offsets.
-> > 
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Cc: Fan Ni <nifan.cxl@gmail.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> Ok. I suspect we could fine tune this for ever but changes here look good
-> enough to me and definitely nicer than the original ;)
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, 23 Feb 2024 11:42:24 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Thanks for your review of this series and also the v5 update for patch
-#3.
+> Shiju Jose wrote:
+> > Hi Dan,
+> >=20
+> > Thanks for the feedback.
+> >=20
+> > Please find reply inline.
+> >  =20
+> > >-----Original Message-----
+> > >From: Dan Williams <dan.j.williams@intel.com>
+> > >Sent: 22 February 2024 00:21
+> > >To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org; lin=
+ux-
+> > >acpi@vger.kernel.org; linux-mm@kvack.org; dan.j.williams@intel.com;
+> > >dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+> > >dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel=
+.com;
+> > >ira.weiny@intel.com
+> > >Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+> > >Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+> > >tony.luck@intel.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+> > >rafael@kernel.org; lenb@kernel.org; naoya.horiguchi@nec.com;
+> > >james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+> > >erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+> > >mike.malvestuto@intel.com; gthelen@google.com;
+> > >wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+> > >tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.=
+com>;
+> > >kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+> > >Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+> > >Subject: RE: [RFC PATCH v6 00/12] cxl: Add support for CXL feature com=
+mands,
+> > >CXL device patrol scrub control and DDR5 ECS control features
+> > >
+> > >shiju.jose@ wrote: =20
+> > >> From: Shiju Jose <shiju.jose@huawei.com>
+> > >>
+> > >> 1. Add support for CXL feature mailbox commands.
+> > >> 2. Add CXL device scrub driver supporting patrol scrub control and E=
+CS
+> > >> control features.
+> > >> 3. Add scrub subsystem driver supports configuring memory scrubs in =
+the =20
+> > >system. =20
+> > >> 4. Register CXL device patrol scrub and ECS with scrub subsystem.
+> > >> 5. Add common library for RASF and RAS2 PCC interfaces.
+> > >> 6. Add driver for ACPI RAS2 feature table (RAS2).
+> > >> 7. Add memory RAS2 driver and register with scrub subsystem. =20
+> > >
+> > >I stepped away from this patch set to focus on the changes that landed=
+ for v6.8
+> > >and the follow-on regression fixups. Now that v6.8 CXL work has quiete=
+d down
+> > >and I circle back to this set for v6.9 I find the lack of story in thi=
+s cover letter to
+> > >be unsettling. As a reviewer I should not have to put together the sto=
+ry on why
+> > >Linux should care about this feature and independently build up the
+> > >maintainence-burden vs benefit tradeoff analysis. =20
+> > I will add more details to the cover letter.
+> >   =20
+> > >
+> > >Maybe it is self evident to others, but for me there is little in thes=
+e changelogs
+> > >besides "mechanism exists, enable it". There are plenty of platform or=
+ device
+> > >mechanisms that get specified that Linux does not enable for one reaso=
+n or
+> > >another.
+> > >
+> > >The cover letter needs to answer why it matters, and what are the trad=
+eoffs.
+> > >Mind you, in my submissions I do not always get this right in the cove=
+r letter [1],
+> > >but hopefully at least one of the patches tells the story [2].
+> > >
+> > >In other words, imagine you are writing the pull request to Linus or s=
+omeone
+> > >else with limited time who needs to make a risk decision on a pull req=
+uest with a
+> > >diffstat of:
+> > >
+> > >    23 files changed, 3083 insertions(+)
+> > >
+> > >...where the easiest decision is to just decline. As is, these changel=
+ogs are not
+> > >close to tipping the scale to "accept".
+> > >
+> > >[sidebar: how did this manage to implement a new subsystem with 2 cons=
+umers
+> > >(CXL + ACPI), without modifying a single existing line? Zero deletions=
+? That is
+> > >either an indication that Linux perfectly anticipated this future use =
+case
+> > >(unlikely), or more work needs to be done to digest an integrate these=
+ concepts
+> > >into existing code paths]
+> > >
+> > >One of the first questions for me is why CXL and RAS2 as the first con=
+sumers and
+> > >not NVDIMM-ARS and/or RASF Patrol Scrub? Part of the maintenance burde=
+n =20
+> > We don't personally care about NVDIMMS but would welcome drivers from o=
+thers. =20
+>=20
+> Upstream would also welcome consideration of maintenance burden
+> reduction before piling on, at least include *some* consideration of the
+> implications vs this response that comes off as "that's somebody else's
+> problem".
 
--Robert
+We can do analysis of whether the interfaces are suitable etc but
+have no access to test hardware or emulation. I guess I can hack something
+together easily enough. Today ndctl has some support. Interestingly the mod=
+el
+is different from typical volatile scrubbing as it's all on demand - that
+could be easily wrapped up in a software scrub scheduler though, but we'd n=
+eed
+input from you and other Intel people on how this is actually used.=20
+
+The use model is a lot less obvious than autonomous scrubbers - I assume be=
+cause
+the persistence means you need to do this rarely if at all (though ARS does
+support scrubbing volatile memory on nvdimms)
+
+So initial conclusion is it would need a few more controls or it needs
+some software handling of scan scheduling to map it to the interface type
+that is common to CXL and RAS2 scrub controls.
+
+Intent of the comment was to keep scope somewhat confined, and to=20
+invite others to get involved, not to rule out doing some light weight
+analysis of whether this feature would work for another potential user
+which we weren't even aware of until you mentioned it (thanks!).
+
+>=20
+> > Regarding RASF patrol scrub no one cared about it as it's useless and
+> > any new implementation should be RAS2. =20
+>=20
+> The assertion that "RASF patrol scrub no one cared about it as it's
+> useless and any new implementation should be RAS2" needs evidence.
+>=20
+> For example, what platforms are going to ship with RAS2 support, what
+> are the implications of Linux not having RAS2 scrub support in a month,
+> or in year? There are parts of the ACPI spec that have never been
+> implemented what is the evidence that RAS2 is not going to suffer the
+> same fate as RASF?=20
+
+=46rom discussions with various firmware folk we have a chicken and egg
+situation on RAS2. They will stick to their custom solutions unless there is
+plausible support in Linux for it - so right now it's a question mark
+on roadmaps. Trying to get rid of that question mark is why Shiju and I
+started looking at this in the first place. To get rid of that question
+mark we don't necessarily need to have it upstream, but we do need
+to be able to make the argument that there will be a solution ready
+soon after they release the BIOS image.  (Some distros will take years
+to catch up though).
+
+If anyone else an speak up on this point please do. Discussions and
+feedback communicated to Shiju and I off list aren't going to
+convince people :(
+Negatives perhaps easier to give than positives given this is seen as
+a potential feature for future platforms so may be confidential.
+
+> There are parts of the CXL specification that have
+> never been implemented in mass market products.
+
+Obviously can't talk about who was involved in this feature
+in it's definition, but I have strong confidence it will get implemented
+for reasons I can point at on a public list.=20
+a) There will be scrubbing on devices.
+b) It will need control (evidence for this is the BIOS controls mentioned b=
+elow
+   for equivalent main memory).
+c) Hotplug means that control must be done by OS driver (or via very fiddly
+   pre hotplug hacks that I think we can all agree should not be necessary
+   and aren't even an option on all platforms)
+d) No one likes custom solutions.
+This isn't a fancy feature with a high level of complexity which helps.
+
+Today there is the option for main memory of leaving it to BIOS parameters.
+A quick google gave me some examples (to make sure they are public):
+Dell: PowerEdge R640 BIOS and UEFI Reference Guide
+  - Memory patrol scrub - Sets the memory patrol scrub frequency.
+HP UEFI System Utilities for HPE ProLiant Gen 11 SErvers
+  - Enabling or disable patrol scrub
+Spec list of flags for lenovo systems (tells you that turning patrol scrub
+   off is a good idea ;)
+Huawei Kunpeng 920 RAS config menu.=20
+  - Active Scrub, Active Scrub interval etc.
+
+>=20
+> > Previous discussions in the community about RASF and scrub could be fin=
+d here.
+> > https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com=
+/#r
+> > and some old ones,
+> > https://patchwork.kernel.org/project/linux-arm-kernel/patch/CS1PR84MB00=
+38718F49DBC0FF03919E1184390@CS1PR84MB0038.NAMPRD84.PROD.OUTLOOK.COM/
+> >  =20
+>=20
+> Do not make people hunt for old discussions, if there are useful points
+> in that discussion that make the case for the patch set include those in
+> the next submission, don't make people hunt for the latest state of the
+> story.
+
+Sure, more of an essay needed along with links given we are talking
+about the views of others.
+
+Quick summary from a reread of the linked threads.
+AMD not implemented RASF/RAS2 yet - looking at it last year, but worried
+about inflexibility of RAS2 spec today. They were looking at some spec
+changes to improve this + other functions to be added to RAS2.
+I agree with it being limited, but think extending with backwards
+compatibility isn't a problem (and ACPI spec rules in theory guarantee
+it won't break).  I'm keen on working with current version
+so that we can ensure the ABI design for CXL encompasses it.
+
+Intel folk were cc'd but not said anything on that thread, but Tony Luck
+did comment in Jiaqi Yan's software scrubbing discussion linked below.
+He observed that a hardware implementation can be complex if doing range
+based scrubbing due to interleave etc. RAS2 and CXL both side step this
+somewhat by making it someone elses problem. In RAS2 the firmware gets
+to program multiple scrubbers to cover the range requested. In CXL
+for now this leaves the problem for userspace, but we can definitely
+consider a region interface if it makes sense.
+
+I'd also like to see inputs from a wider range of systems folk + other
+CPU companies.  How easy this is to implement is heavily dependent on
+what entity in your system is responsible for this sort of runtime
+service and that varies a lot.
+
+>=20
+> > https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.co=
+m/ =20
+>=20
+> Yes, now that is a useful changelog, thank you for highlighting it,
+> please follow its example.
+
+It's not a changelog as such but a RFC in text only form.
+However indeed lots of good info in there.
+
+Jonathan
+
+
+
