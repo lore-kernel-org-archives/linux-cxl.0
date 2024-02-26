@@ -1,157 +1,92 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE22D1292D2;
-	Mon, 26 Feb 2024 14:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E40127B4B
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 14:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956633; cv=none; b=Fu9aa9QqGiYncH20nTozE966t76ouBdbBVLLdNqT0wA6XKSSBGxRTXdakvUOtuRExu1qW9VWJGlKmipiUzQZnTZ+4Ujic9Ou3QVIVS5IxtCju1u+oQPhhNrfy7FuuDRnf858rwzqysw9BeBe9qZg32R5t8K/ZTcde0+3BcnOlDU=
+	t=1708956753; cv=none; b=ft4qMyWCqBjNGbErcrsl27OhxZv6eMOcy/PprgBiDvNUqSfZo2xEUqwTlR5jVBhdK4HEGkh/IguYW4ejSQTbaVNdTDfkJjZL76/hcg3qiL/RjSu6L86f84P86XGhTJKM/0XUJ/hZotBekxSQ4vAAAfI+Aa08R9GPSC6ImR3gqe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956633; c=relaxed/simple;
-	bh=Z19xIouIl+bCnizOctHJ7cIatm4j/vf898NH19suaAo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CxCoTwnv/utRDSYKvUP1+BvL4v/foS1Ov8MmnBN/YlIKZFHrGYnKp2BB1F8iivGbOlByu+UnvT49tffSrBUg1q+gMYFa9sWIgde4KFfeCUZuIVUbEIDoNse/XM+wgnq7GVl2cbWRXamybHhnx433y8MhaSeHqCIQgvSP58TatWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk2VC6XJkz6K9N9;
-	Mon, 26 Feb 2024 22:06:43 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34279140DDB;
-	Mon, 26 Feb 2024 22:10:27 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 14:10:26 +0000
-Date: Mon, 26 Feb 2024 14:10:25 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <stable@vger.kernel.org>, Breno Leitao
-	<leitao@debian.org>, Alison Schofield <alison.schofield@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH] cxl/acpi: Fix load failures due to single window
- creation failure
-Message-ID: <20240226141025.00001acf@Huawei.com>
-In-Reply-To: <65da43d38df20_2bca029483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <170820177238.631006.1012639681618409284.stgit@dwillia2-xfh.jf.intel.com>
-	<20240219124041.00002bda@Huawei.com>
-	<65d6335ea74ac_6c745294a8@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240223132829.00007741@Huawei.com>
-	<65d8eeaaeb302_2509b294f3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<65d987b04e98b_2509b294e4@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<65da43d38df20_2bca029483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708956753; c=relaxed/simple;
+	bh=gjCci5g3m1cdPDY+ARHKmFFSrEMmQtPvDpFEpLERfQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r9uNZFxyDPKBkqPT0+zCvYuw56fteh1pWmYrNue9tEhiAGPlZppNaHIERW/Fre+H+PdxPIwSXuiLp5a8xS5XPBsFlkZ9MnxRK4Qsu37wP6WwUCuiWYpYwzUQ9wPYvYvRPNrELZCriQdwIXvA9/dcvbu24ui2vp81yO33lFTSgwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SGrcCgZq; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGrcCgZq"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563f675be29so3224500a12.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 06:12:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708956750; x=1709561550; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjCci5g3m1cdPDY+ARHKmFFSrEMmQtPvDpFEpLERfQE=;
+        b=SGrcCgZqjqtOnKIi5mOsBIQopBnhL6t/VD2YhCt3Rql4GZdsDXFA2K05QL3yw/XaX5
+         57SGSyyFl4N85DDcpKHwyVpTOxiXSdyUQhyamfDl5TU8oCPI2kq8S1wtXbBO4oWJgL+N
+         l/wDMhA3e7qtJ3/38hCBM5xpK2ZhuvuEHXBCg30p3qVtaSQrAqsoLyHZNqPhgL5EA1Ge
+         Z4hI8E3G9eTxI31bwjdybKNnsW5gtQ0Pm3mCv/1os6Cq1ATI9YO6lYf2aI8/Hr7eAfxD
+         YVHMuehdhDx8FyhtgOyfvqwFkeQvb5f1rRJX43G/lmt9hRM1RIVVbsnRR/at/oCg4ILH
+         E3ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708956750; x=1709561550;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gjCci5g3m1cdPDY+ARHKmFFSrEMmQtPvDpFEpLERfQE=;
+        b=BSI4oCpMgfMjQ8E7VkeHHV8gYxmN+CwdDMwtUYHqNkKRg4Ibkxw7yZpVcBHgtQQTUV
+         auoNKAfv5DfB1xwVDpKq7X93pa16ayf8gfOm/X6BFQDMyO09YqD/dQgxBh4gzjNSR/iU
+         r2pelwLh22dGJvRwb3NYlGfxR27XagNpVm5rTA4poj/5yxt/DL5iG7Q9umpps+kwrykf
+         KkgsuPJV7aMYx4JJq1T+VcR7ggE8UCdSbO2/bntzgPm7QBPFB+rM19Cd8aex0RFXxEdI
+         hYKNHdzxGSqS+iFguzZaHWxtFIDgns26HTJZI8rsVcSloYvH2YwXVlrqr+5WrJm56aUW
+         Q6MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuiJcU1CkH2IEMzN4beVLamd+W6KbYY3HAz4++dOiM14dHZgLvqqoUnh1hxyAhK5r0AFaT8QtDhEXscQgJcpvY9sIawhIlvQRa
+X-Gm-Message-State: AOJu0YzCDNLeJ5tIdBQgPaqcDS/bb0vFk1N0hkVfr1lRM5dtbvYDV3ci
+	6UkbLB3KjW4OPp7gcfaoZ0jHzYeGB4Z9m4mvVErf+DYyTGPsR+zbqnIt6MOCRwxwC76OsLD1BSq
+	Pmn/6oU76OuH0KLIi5DxJ0/rgZyg3j1s8JtdPug==
+X-Google-Smtp-Source: AGHT+IGughasO44d2xK82G4ryMlpdtXPRJMNaeLmZri/kuytdaeETHB8NhO9xCLNvnfEw/fQt6EGab9gQuF+oVff6wo=
+X-Received: by 2002:aa7:c3c8:0:b0:565:f90c:1263 with SMTP id
+ l8-20020aa7c3c8000000b00565f90c1263mr1549811edr.9.1708956750102; Mon, 26 Feb
+ 2024 06:12:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240223180102.7657-1-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240223180102.7657-1-Jonathan.Cameron@huawei.com>
+From: Peter Maydell <peter.maydell@linaro.org>
+Date: Mon, 26 Feb 2024 14:12:18 +0000
+Message-ID: <CAFEAcA9X9Mvz4CL2-yFJN4a04eoODn6Yr_VcD-O6P-PJ1ioSKw@mail.gmail.com>
+Subject: Re: [PATCH v3] arm/ptw: Handle atomic updates of page tables entries
+ in MMIO during PTW.
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, Gregory Price <gregory.price@memverge.com>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	richard.henderson@linaro.org, linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 24 Feb 2024 11:30:27 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Dan Williams wrote:
-> > Dan Williams wrote:
-> > [..]  
-> > > > This is definitely not nice to read.  We are randomly setting an
-> > > > apparently unrelated pointer to NULL.  At very least the __free
-> > > > should operating on cxld then we can use  
-> > 
-> > So, how about this... I don't hate it:  
-> 
-> ...and the version that actually compiles, fixed up cxl_root_decoder
-> declaration and dropped the BUILD_BUG_ON() since it will naturally fail
-> to compile if more than the supported number of variables is passed to
-> cond_no_free_ptr():
-> 
-> -- 8< --
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 1a3e6aafbdcc..5c1dc4adf80d 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -316,6 +316,8 @@ static const struct cxl_root_ops acpi_root_ops = {
->  	.qos_class = cxl_acpi_qos_class,
->  };
->  
-> +DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
-> +	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
->  static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
->  			     struct cxl_cfmws_context *ctx)
->  {
-> @@ -323,21 +325,15 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+On Fri, 23 Feb 2024 at 18:01, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> Seen testing of CXL emulation on arm64 (currently out of tree).
+>
+> CXL interleave occurs at subpage granularity so is emulated using an IO
+> Memory Region. The memory is general purpose and as such may contain page
+> tables. FEAT_HADFS using atomic accesses from the page table walkers to
+> update accessed and dirty bits.
+>
+> Note that disabling kernel support this ARM 8.1 feature avoids this issue
+> as the PTW no longer does an atomic update of the page table entries, but
+> that is a nasty workaround beyond its use in root causing this issue.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
 
->  	/* add to the local resource tracking to establish a sort order */
->  	rc = insert_resource(cxl_res, res);
-> -	if (rc)
-> -		goto err_insert;
-> +	cond_no_free_ptr(rc == 0, return rc, res, name);
 
-I'm not convinced this is that much clearer than
-	rc = insert_resource(cxl_res, res);
-	if (rc)
-		return rc;
-	no_check_no_free_ptrs(res);
-	no_check_no_free_ptrs(name);
+Applied to target-arm.next, thanks.
 
-with better naming and with that being defined in similar way to your
-__cond_no_free_ptrs()
-
-Just keeping them in the same code block is probably enough to indicate
-that these are there because of success of insert_resource()
-+ no need to handle bigger and bigger sets of params in the future.
-
-
-Rest looks good to me
-
-Jonathan
-
- 
-	
-
-...
-
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index c2d09bc4f976..e156fed88f51 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -77,6 +77,28 @@ const volatile void * __must_check_fn(const volatile void *val)
->  
->  #define return_ptr(p)	return no_free_ptr(p)
->  
-> +#define __cond_no_free_ptrs(p) ({__auto_type __always_unused __ptr = no_free_ptr(p);})
-
-Nasty ;)
-
-> +#define __cond_no_free_ptrs1(p, ...) __cond_no_free_ptrs(p)
-> +#define __cond_no_free_ptrs2(p, ...) \
-> +	__cond_no_free_ptrs(p), __cond_no_free_ptrs1(__VA_ARGS__)
-> +#define __cond_no_free_ptrs3(p, ...) \
-> +	__cond_no_free_ptrs(p), __cond_no_free_ptrs2(__VA_ARGS__)
-> +
-> +/*
-> + * When an object is built up by an amalgamation of multiple allocations
-> + * each of those need to be cleaned up on error, but there are occasions
-> + * where once the object is registered all of those cleanups can be
-> + * cancelled.  cond_no_free_ptr() arranges to call no_free_ptr() on all
-> + * its arguments (up to 3) if @condition is true and runs @_fail
-> + * otherwise (typically to return and trigger auto-cleanup).
-> + */
-> +#define cond_no_free_ptr(condition, _fail, ...)                           \
-> +	if (condition) {                                                  \
-> +		CONCATENATE(__cond_no_free_ptrs, COUNT_ARGS(__VA_ARGS__)) \
-> +		(__VA_ARGS__);                                            \
-> +	} else {                                                          \
-> +		_fail;                                                    \
-> +	}
->  
->  /*
->   * DEFINE_CLASS(name, type, exit, init, init_args...):
-
+-- PMM
