@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68451CA9F
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 17:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2571DFEA
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 17:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708969515; cv=none; b=VRsOrykx66/ETQfd7T1mjlk60f5Ca7NoWi7mbZPDCcPXYgFWdlG3XmSwPttixifhEZE7n/8zvDl0I5ajZ+Cq63GOV5Ht8BKfSweelNEPrhMsSrukgV8BznNWv+qsQYnfMRwRrmBsz0pHM/yK0CmB42EgXufK6KDCfNH/Mo1Jang=
+	t=1708969698; cv=none; b=Xs4+aA7ARrHSkuNaE6nE2AqFAEVyzCjWr45B0tXl1FI5KoVU8A7rHz8mjnVm732ApttHyOfs4bVehodiZLmItByDlaCrN9TD9Slei005gXPZJGplZiYIuV8s1daruQePQODmg20oHxO/8lEt55X6SLvvY/6sNcNFeU4E/VsMbmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708969515; c=relaxed/simple;
-	bh=F8dE5tcQNMcrtmNA/KieAIX3AegVrejAkGVf3+8XRPo=;
+	s=arc-20240116; t=1708969698; c=relaxed/simple;
+	bh=g9eY57cf1saotO5cJrEKwXKnbd7wFsdks7j9RfMfZgU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W+CDF6Jt5XZyrSHeRiOuulBE6rmP34/+686mepk8NHmQqsNrKX9m3VsRI7C/+lSQtxLNHf2By2HljaPBM4CKX3f/nSYIN48Pib5Co/eVH1m6Lokf2GWUbzXusrdm+U5NYtUiW4FtyKq0e0NbTuD1B2ArckutDSTgeEPRkhiYOVI=
+	 MIME-Version:Content-Type; b=QIhOILe/yaxiUNWjaHBcHVarO1l7Vugs5ndnJfuUvXg5jCyhuPpUXIKdcSENTolnMZkXE+TlkyOCenxfIq0RWNH9HZitrcV3LljX9dSA1VphEt2v2twpQ4aXjrZqCF6pe2p8+WOZmVdrxa2QjeeJ1iD9+FJvyUIsd4nhEq97R/U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk7Dz5CXwz6JBTy;
-	Tue, 27 Feb 2024 01:40:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk7Jn6YmVz6K6DN;
+	Tue, 27 Feb 2024 01:43:53 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E41F9140B73;
-	Tue, 27 Feb 2024 01:45:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 27FB4140A35;
+	Tue, 27 Feb 2024 01:48:13 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 17:45:09 +0000
-Date: Mon, 26 Feb 2024 17:45:08 +0000
+ 2024 17:48:12 +0000
+Date: Mon, 26 Feb 2024 17:48:11 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: <nifan.cxl@gmail.com>
 CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
@@ -32,12 +32,12 @@ CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
 	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>, Fan Ni
 	<fan.ni@samsung.com>
-Subject: Re: [PATCH v4 06/10] hw/mem/cxl_type3: Add host backend and address
- space handling for DC regions
-Message-ID: <20240226174508.00006366@Huawei.com>
-In-Reply-To: <20240221182020.1086096-7-nifan.cxl@gmail.com>
+Subject: Re: [PATCH v4 07/10] hw/mem/cxl_type3: Add DC extent list
+ representative and get DC extent list mailbox support
+Message-ID: <20240226174811.00001549@Huawei.com>
+In-Reply-To: <20240221182020.1086096-8-nifan.cxl@gmail.com>
 References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
-	<20240221182020.1086096-7-nifan.cxl@gmail.com>
+	<20240221182020.1086096-8-nifan.cxl@gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,77 +51,89 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 21 Feb 2024 10:15:59 -0800
+On Wed, 21 Feb 2024 10:16:00 -0800
 nifan.cxl@gmail.com wrote:
 
 > From: Fan Ni <fan.ni@samsung.com>
 > 
-> Add (file/memory backed) host backend, all the dynamic capacity regions
-> will share a single, large enough host backend. Set up address space for
-> DC regions to support read/write operations to dynamic capacity for DCD.
-> 
-> With the change, following supports are added:
-> 1. Add a new property to type3 device "volatile-dc-memdev" to point to host
->    memory backend for dynamic capacity. Currently, all dc regions share one
->    one host backend.
-> 2. Add namespace for dynamic capacity for read/write support;
-> 3. Create cdat entries for each dynamic capacity region;
-> 4. Fix dvsec range registers to include DC regions.
+> Add dynamic capacity extent list representative to the definition of
+> CXLType3Dev and add get DC extent list mailbox command per
+> CXL.spec.3.1:.8.2.9.9.9.2.
 > 
 > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Follow on from earlier comment on my preference for anonymous
+structure types when we only use them in one place.
 
-Only comment on this one from me is beware of FIXME wording for
-features we haven't implemented yet.  Makes people thing code isn't
-good to go, when in reality we may or may not care about implementing
-that configurability in the future!
 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 6e5f908fb1..b966fa4f10 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-
+> +/*
+> + * CXL r3.1 section 8.2.9.9.9.2:
+> + * Get Dynamic Capacity Extent List (Opcode 4801h)
+> + */
+> +static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len_in,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    struct get_dyn_cap_ext_list_in_pl {
+> +        uint32_t extent_cnt;
+> +        uint32_t start_extent_id;
+> +    } QEMU_PACKED;
 > +
-> +    if (dc_mr) {
-> +        int i;
-> +        uint64_t region_base = vmr_size + pmr_size;
+> +    struct get_dyn_cap_ext_list_out_pl {
+> +        uint32_t count;
+> +        uint32_t total_extents;
+> +        uint32_t generation_num;
+> +        uint8_t rsvd[4];
+> +        CXLDCExtentRaw records[];
+> +    } QEMU_PACKED;
 > +
-> +        /* FIXME: Currently we assume the dynamic capacity to be volatile. */
-As below.  TODO: Allow for non volatile dynamic capacity.
+> +    struct get_dyn_cap_ext_list_in_pl *in = (void *)payload_in;
+> +    struct get_dyn_cap_ext_list_out_pl *out = (void *)payload_out;
 
-> +        for (i = 0; i < ct3d->dc.num_regions; i++) {
-> +            ct3_build_cdat_entries_for_mr(&(table[cur_ent]),
-> +                    dsmad_handle++,
-> +                    ct3d->dc.regions[i].len,
-> +                    false, true, region_base);
-> +            ct3d->dc.regions[i].dsmadhandle = dsmad_handle - 1;
+As for earlier patches, I think anonymous struct types are fine for
+these and lead to shorter code.
+
+> +    uint16_t record_count = 0, i = 0, record_done = 0;
+> +    CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> +    CXLDCExtent *ent;
+> +    uint16_t out_pl_len;
+> +    uint32_t start_extent_id = in->start_extent_id;
 > +
-> +            cur_ent += CT3_CDAT_NUM_ENTRIES;
-> +            region_base += ct3d->dc.regions[i].len;
+> +    if (start_extent_id > ct3d->dc.total_extent_count) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    record_count = MIN(in->extent_cnt,
+> +                       ct3d->dc.total_extent_count - start_extent_id);
+> +
+> +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+> +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> +
+> +    stl_le_p(&out->count, record_count);
+> +    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
+> +    stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
+> +
+> +    if (record_count > 0) {
+> +        QTAILQ_FOREACH(ent, extent_list, node) {
+> +            if (i++ < start_extent_id) {
+> +                continue;
+> +            }
+> +            stq_le_p(&out->records[record_done].start_dpa, ent->start_dpa);
+> +            stq_le_p(&out->records[record_done].len, ent->len);
+> +            memcpy(&out->records[record_done].tag, ent->tag, 0x10);
+> +            stw_le_p(&out->records[record_done].shared_seq, ent->shared_seq);
+> +            record_done++;
+> +            if (record_done == record_count) {
+> +                break;
+> +            }
 > +        }
 > +    }
 > +
-
-
-
+> +    *len_out = out_pl_len;
+> +    return CXL_MBOX_SUCCESS;
+> +}
 > +
-> +        /* FIXME: set dc as volatile for now */
 
-Not sure it's a fixme, more of a TODO to add control of this later.
-Fixme sounds broken, whereas it's a missing feature only.
-
-> +        memory_region_set_nonvolatile(dc_mr, false);
-> +        memory_region_set_enabled(dc_mr, true);
-> +        host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
-> +        if (ds->id) {
-> +            dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
-> +        } else {
-> +            dc_name = g_strdup("cxl-dcd-dpa-dc-space");
-> +        }
-> +        address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
-> +        g_free(dc_name);
-> +
-> +        if (!cxl_create_dc_regions(ct3d, errp)) {
-> +            error_setg(errp, "setup DC regions failed");
-> +            return false;
-> +        }
-> 
