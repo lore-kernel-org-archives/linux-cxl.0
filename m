@@ -1,48 +1,46 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33212126F3B;
-	Mon, 26 Feb 2024 13:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE22D1292D2;
+	Mon, 26 Feb 2024 14:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955555; cv=none; b=eV9ugEz4qZ8MQ1dO03cV+Do1O6re7O1AXfV8g93r9HqsAcUiA6YojqTUzhDhIiG+FEl2+wrHah0u+Xyq2p4ZqheGl4/x+ckVCdlio1EFZRPIBSFWHdv92QYotkI9s1ls1R55ulRkmRXEfp8YOjNSNUS0B82i1urgnempgYXBh2M=
+	t=1708956633; cv=none; b=Fu9aa9QqGiYncH20nTozE966t76ouBdbBVLLdNqT0wA6XKSSBGxRTXdakvUOtuRExu1qW9VWJGlKmipiUzQZnTZ+4Ujic9Ou3QVIVS5IxtCju1u+oQPhhNrfy7FuuDRnf858rwzqysw9BeBe9qZg32R5t8K/ZTcde0+3BcnOlDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955555; c=relaxed/simple;
-	bh=Xsm/8R6Mlt6gOOz8zdM11uszjNbgmxwBzqPat5Py7Xw=;
+	s=arc-20240116; t=1708956633; c=relaxed/simple;
+	bh=Z19xIouIl+bCnizOctHJ7cIatm4j/vf898NH19suaAo=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oa23mBpzrJrbZO3eE9zpPG9BrbOIGoVVJWb2edX6GgVGG9Qs9rcX34G4DHq4M2oyp2ZwudvIHH36UAPqCCMocx8cFiiurrA1sTExFGhXOaTcLjagzPZyiYC3sJGW+8k2jtv0oKKEVAl2Bw6XY7JF5rrzUOvJjeDea619kwdbR24=
+	 MIME-Version:Content-Type; b=CxCoTwnv/utRDSYKvUP1+BvL4v/foS1Ov8MmnBN/YlIKZFHrGYnKp2BB1F8iivGbOlByu+UnvT49tffSrBUg1q+gMYFa9sWIgde4KFfeCUZuIVUbEIDoNse/XM+wgnq7GVl2cbWRXamybHhnx433y8MhaSeHqCIQgvSP58TatWQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk24r0YY0z67PcT;
-	Mon, 26 Feb 2024 21:48:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk2VC6XJkz6K9N9;
+	Mon, 26 Feb 2024 22:06:43 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id BB3CE140A70;
-	Mon, 26 Feb 2024 21:52:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 34279140DDB;
+	Mon, 26 Feb 2024 22:10:27 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 13:52:30 +0000
-Date: Mon, 26 Feb 2024 13:52:28 +0000
+ 2024 14:10:26 +0000
+Date: Mon, 26 Feb 2024 14:10:25 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@Groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 18/20] famfs: Support character dax via the
- dev_dax_iomap patch
-Message-ID: <20240226135228.00007714@Huawei.com>
-In-Reply-To: <fa06095b6a05a26a0a016768b2e2b70663163eeb.1708709155.git.john@groves.net>
-References: <cover.1708709155.git.john@groves.net>
-	<fa06095b6a05a26a0a016768b2e2b70663163eeb.1708709155.git.john@groves.net>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <stable@vger.kernel.org>, Breno Leitao
+	<leitao@debian.org>, Alison Schofield <alison.schofield@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] cxl/acpi: Fix load failures due to single window
+ creation failure
+Message-ID: <20240226141025.00001acf@Huawei.com>
+In-Reply-To: <65da43d38df20_2bca029483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <170820177238.631006.1012639681618409284.stgit@dwillia2-xfh.jf.intel.com>
+	<20240219124041.00002bda@Huawei.com>
+	<65d6335ea74ac_6c745294a8@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240223132829.00007741@Huawei.com>
+	<65d8eeaaeb302_2509b294f3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<65d987b04e98b_2509b294e4@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<65da43d38df20_2bca029483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -53,164 +51,107 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 23 Feb 2024 11:42:02 -0600
-John Groves <John@Groves.net> wrote:
+On Sat, 24 Feb 2024 11:30:27 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> This commit introduces the ability to open a character /dev/dax device
-> instead of a block /dev/pmem device. This rests on the dev_dax_iomap
-> patches earlier in this series.
-
-Not sure the back reference is needed given it's in the series.
-
+> Dan Williams wrote:
+> > Dan Williams wrote:
+> > [..]  
+> > > > This is definitely not nice to read.  We are randomly setting an
+> > > > apparently unrelated pointer to NULL.  At very least the __free
+> > > > should operating on cxld then we can use  
+> > 
+> > So, how about this... I don't hate it:  
 > 
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  fs/famfs/famfs_inode.c | 97 +++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 87 insertions(+), 10 deletions(-)
+> ...and the version that actually compiles, fixed up cxl_root_decoder
+> declaration and dropped the BUILD_BUG_ON() since it will naturally fail
+> to compile if more than the supported number of variables is passed to
+> cond_no_free_ptr():
 > 
-> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> index 0d659820e8ff..7d65ac497147 100644
-> --- a/fs/famfs/famfs_inode.c
-> +++ b/fs/famfs/famfs_inode.c
-> @@ -215,6 +215,93 @@ static const struct super_operations famfs_ops = {
->  	.show_options	= famfs_show_options,
+> -- 8< --
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 1a3e6aafbdcc..5c1dc4adf80d 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -316,6 +316,8 @@ static const struct cxl_root_ops acpi_root_ops = {
+>  	.qos_class = cxl_acpi_qos_class,
 >  };
 >  
-> +/*****************************************************************************/
-> +
-> +#if defined(CONFIG_DEV_DAX_IOMAP)
+> +DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
+> +	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+>  static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  			     struct cxl_cfmws_context *ctx)
+>  {
+> @@ -323,21 +325,15 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+
+
+>  	/* add to the local resource tracking to establish a sort order */
+>  	rc = insert_resource(cxl_res, res);
+> -	if (rc)
+> -		goto err_insert;
+> +	cond_no_free_ptr(rc == 0, return rc, res, name);
+
+I'm not convinced this is that much clearer than
+	rc = insert_resource(cxl_res, res);
+	if (rc)
+		return rc;
+	no_check_no_free_ptrs(res);
+	no_check_no_free_ptrs(name);
+
+with better naming and with that being defined in similar way to your
+__cond_no_free_ptrs()
+
+Just keeping them in the same code block is probably enough to indicate
+that these are there because of success of insert_resource()
++ no need to handle bigger and bigger sets of params in the future.
+
+
+Rest looks good to me
+
+Jonathan
+
+ 
+	
+
+...
+
+> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> index c2d09bc4f976..e156fed88f51 100644
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> @@ -77,6 +77,28 @@ const volatile void * __must_check_fn(const volatile void *val)
+>  
+>  #define return_ptr(p)	return no_free_ptr(p)
+>  
+> +#define __cond_no_free_ptrs(p) ({__auto_type __always_unused __ptr = no_free_ptr(p);})
+
+Nasty ;)
+
+> +#define __cond_no_free_ptrs1(p, ...) __cond_no_free_ptrs(p)
+> +#define __cond_no_free_ptrs2(p, ...) \
+> +	__cond_no_free_ptrs(p), __cond_no_free_ptrs1(__VA_ARGS__)
+> +#define __cond_no_free_ptrs3(p, ...) \
+> +	__cond_no_free_ptrs(p), __cond_no_free_ptrs2(__VA_ARGS__)
 > +
 > +/*
-> + * famfs dax_operations  (for char dax)
+> + * When an object is built up by an amalgamation of multiple allocations
+> + * each of those need to be cleaned up on error, but there are occasions
+> + * where once the object is registered all of those cleanups can be
+> + * cancelled.  cond_no_free_ptr() arranges to call no_free_ptr() on all
+> + * its arguments (up to 3) if @condition is true and runs @_fail
+> + * otherwise (typically to return and trigger auto-cleanup).
 > + */
-> +static int
-> +famfs_dax_notify_failure(struct dax_device *dax_dev, u64 offset,
-> +			u64 len, int mf_flags)
-> +{
-> +	pr_err("%s: offset %lld len %llu flags %x\n", __func__,
-> +	       offset, len, mf_flags);
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static const struct dax_holder_operations famfs_dax_holder_ops = {
-> +	.notify_failure		= famfs_dax_notify_failure,
-> +};
-> +
-> +/*****************************************************************************/
-> +
-> +/**
-> + * famfs_open_char_device()
-> + *
-> + * Open a /dev/dax device. This only works in kernels with the dev_dax_iomap patch
-
-That comment you definitely don't need as this won't get merged without
-that patch being in place.
-
-
-> + */
-> +static int
-> +famfs_open_char_device(
-> +	struct super_block *sb,
-> +	struct fs_context  *fc)
-> +{
-> +	struct famfs_fs_info *fsi = sb->s_fs_info;
-> +	struct dax_device    *dax_devp;
-> +	struct inode         *daxdev_inode;
-> +
-> +	int rc = 0;
-set in all paths where it's used.
-
-> +
-> +	pr_notice("%s: Opening character dax device %s\n", __func__, fc->source);
-
-pr_debug
-
-> +
-> +	fsi->dax_filp = filp_open(fc->source, O_RDWR, 0);
-> +	if (IS_ERR(fsi->dax_filp)) {
-> +		pr_err("%s: failed to open dax device %s\n",
-> +		       __func__, fc->source);
-> +		fsi->dax_filp = NULL;
-Better to use a local variable
-
-	fp = filp_open(fc->source, O_RDWR, 0);
-	if (IS_ERR(fp)) {
-		pr_err.
-		return;
-	}
-	fsi->dax_filp = fp;
-or similar.
-
-> +		return PTR_ERR(fsi->dax_filp);
+> +#define cond_no_free_ptr(condition, _fail, ...)                           \
+> +	if (condition) {                                                  \
+> +		CONCATENATE(__cond_no_free_ptrs, COUNT_ARGS(__VA_ARGS__)) \
+> +		(__VA_ARGS__);                                            \
+> +	} else {                                                          \
+> +		_fail;                                                    \
 > +	}
-> +
-> +	daxdev_inode = file_inode(fsi->dax_filp);
-> +	dax_devp     = inode_dax(daxdev_inode);
-> +	if (IS_ERR(dax_devp)) {
-> +		pr_err("%s: unable to get daxdev from inode for %s\n",
-> +		       __func__, fc->source);
-> +		rc = -ENODEV;
-> +		goto char_err;
-> +	}
-> +
-> +	rc = fs_dax_get(dax_devp, fsi, &famfs_dax_holder_ops);
-> +	if (rc) {
-> +		pr_info("%s: err attaching famfs_dax_holder_ops\n", __func__);
-> +		goto char_err;
-> +	}
-> +
-> +	fsi->bdev_handle = NULL;
-> +	fsi->dax_devp = dax_devp;
-> +
-> +	return 0;
-> +
-> +char_err:
-> +	filp_close(fsi->dax_filp, NULL);
-
-You carefully set fsi->dax_filp to null in other other error paths.
-Why there and not here?
-
-> +	return rc;
-> +}
-> +
-> +#else /* CONFIG_DEV_DAX_IOMAP */
-> +static int
-> +famfs_open_char_device(
-> +	struct super_block *sb,
-> +	struct fs_context  *fc)
-> +{
-> +	pr_err("%s: Root device is %s, but your kernel does not support famfs on /dev/dax\n",
-> +	       __func__, fc->source);
-> +	return -ENODEV;
-> +}
-> +
-> +
-> +#endif /* CONFIG_DEV_DAX_IOMAP */
-> +
->  /***************************************************************************************
->   * dax_holder_operations for block dax
->   */
-> @@ -236,16 +323,6 @@ const struct dax_holder_operations famfs_blk_dax_holder_ops = {
->  	.notify_failure		= famfs_blk_dax_notify_failure,
->  };
 >  
-
-Put it in right place earlier! Makes this less noisy.
-
-> -static int
-> -famfs_open_char_device(
-> -	struct super_block *sb,
-> -	struct fs_context  *fc)
-> -{
-> -	pr_err("%s: Root device is %s, but your kernel does not support famfs on /dev/dax\n",
-> -	       __func__, fc->source);
-> -	return -ENODEV;
-> -}
-> -
->  /**
->   * famfs_open_device()
->   *
+>  /*
+>   * DEFINE_CLASS(name, type, exit, init, init_args...):
 
