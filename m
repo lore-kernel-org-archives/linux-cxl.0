@@ -1,175 +1,241 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2069.outbound.protection.outlook.com [40.107.237.69])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D267D131E23;
-	Mon, 26 Feb 2024 22:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708986506; cv=fail; b=QaA88hqa03jiDsb4eVbQ2ipmwjcIug174RNRMKPafueDyMlnIs8V6BA4JiUl8h9Br1v5XVpVcdbjgW4kDy6mBxMfWR/S3CJoGjV755DotCgmp65Fsl3vQx+hhtWr49e8sB7nnO/FAiTFJDKvsLVIBbZgsXfnw4b6Un5dTIldK7k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708986506; c=relaxed/simple;
-	bh=s3xALJvAIsNNWPniotW4fplEx5TTsSSVSTXwvrr/e7E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fG4SVX07SVe5etJfyV5GgT0ZoG68qgQtXWXiShrEFnEif3/7S/xRKNbiFHBe2B86T80yBQuxTZfuxj/cjXWRflCiES+MSfU49DgekI/W/w4net3fV3baOieOeC7RQA+KjEDH9LKTTg2YVMppzqqQ1Bd5DM+gKBPUL+Ct0ybOe2U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cu3lNsiI; arc=fail smtp.client-ip=40.107.237.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA211353E4
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 22:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708987155; cv=none; b=ao7OVGVFt3Uqd6fkNcgMgzMTimXofZeNG2Vu3n3Hu+Fi+3zLWhdfoHpIZvJ6JMqFyrCGxVZMMmjD785b94iEuyfg9BE6xtLUIuK/yMHRZ2x6DNBdqCFJk+TeaG6sLDIUrxds25uumMUNCZGDeQIGhKUlBpinVQQ1xoDdrn2/R3k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708987155; c=relaxed/simple;
+	bh=Qea889SXoKSSrCDwzRaGM8e19r2Hj1qy/kVfUGUiEWs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qNESQsIe97YSQoTNq0jBj+3fzAp5bWXLB0bAKGHpHvb6VbhCR/ZJCRr2LkJj8gOaer8oH4xaEfHkWtkmuHpGZQ+1e61R438v43O9hZ40MUJ2kV+GnwHpuMR3a7qhvN1u7Do/KpQT7GF3kyba3Xfa2mECmrezfZQkErAtAsSaty0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c7XU4dUc; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cu3lNsiI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ITEmBMBMaIYW59hp5itZc2Q1tRkCRHZFxv7TjYQXL8DmKyI7aIZGjFaWpnqG4nEj6QinAZ0I3s/PuwkL50Kl+1OasBjljseVLcLZF0QSYtmEGcJRZzhLMkKdnqhuw58FPl4m90+FaLluqPml0epb9OxT6VPJ8wvQ74aAuoxatFWbCxGZTsysrcMTPrUGgzjRexR0jzmdLM+6y4Ye8Wx0+wzg7N4C4MZFKjX5Gv/GBBee5vjs01lnf7q9HFJRw5WW5b/iS+J3HWQYiolwOjpLd3+eChv6Li9LwWRuIn5JdkR8s4Zoq0pislDl8W2FjzY4Eb3W/+y9gPfYRtG00DRR0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9gip4Z8xkai3SeEkYmh5ADlDrXv0++QsVpTTfmRjmI=;
- b=A27CC9mZBQ1Tewu6jzelvk7Rt+ayVhC9SkspRnzOztC7xA1J9LZqcolcN5gfWDoyTgOw8Z8aAXhMynMvDSWKguLNrW4rzsJv0ORBcxPQXWUc++s+8yNY2xEVvrxMwstwJyC4G608uuBa7xi0EKhgoxSS0dIpa32O8udlFAEcYnhiIi4xIzPfVozR03eZJw/pnySsmxGYMm3EWY+Hd3wSXgXPSNHLAhWyDksrmX5sEh7SmyZD+McBL2YoqbMeTlO6S4q8Ic0c6LSpvsYQyKbKhV9NGTrFmXK6Z9vHk/QjhVFYhIK7FcaeUzfTV7s/riMQzp68pYMjcSueMNVD70Ojqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9gip4Z8xkai3SeEkYmh5ADlDrXv0++QsVpTTfmRjmI=;
- b=cu3lNsiIraDilt4o8LtqT/rSDb4nih5TV2fLLCIxOsC6H/8bR6x6GUv7vgVAVMGB492BJpjZuo4Rjp4aMukKbBoDVhoWWmI1/xi8+bAS2wwlx9yIoE9Mv9tWxwEW76f5Qxs7fHq1krGWxgULa59+c+/S4dnx2+dhhisOjXq4864=
-Received: from CH2PR11CA0011.namprd11.prod.outlook.com (2603:10b6:610:54::21)
- by IA1PR12MB6138.namprd12.prod.outlook.com (2603:10b6:208:3ea::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.23; Mon, 26 Feb
- 2024 22:28:21 +0000
-Received: from DS3PEPF000099DA.namprd04.prod.outlook.com
- (2603:10b6:610:54:cafe::2a) by CH2PR11CA0011.outlook.office365.com
- (2603:10b6:610:54::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
- Transport; Mon, 26 Feb 2024 22:28:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099DA.mail.protection.outlook.com (10.167.17.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Mon, 26 Feb 2024 22:28:21 +0000
-Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
- (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 16:28:17 -0600
-From: Ben Cheatham <Benjamin.Cheatham@amd.com>
-To: <dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
-	<rafael@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
-	<bp@alien8.de>
-CC: <dave@stogolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <benjamin.cheatham@amd.com>
-Subject: [PATCH v14 4/4] EINJ, Documentation: Update EINJ kernel doc
-Date: Mon, 26 Feb 2024 16:27:04 -0600
-Message-ID: <20240226222704.1079449-5-Benjamin.Cheatham@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226222704.1079449-1-Benjamin.Cheatham@amd.com>
-References: <20240226222704.1079449-1-Benjamin.Cheatham@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c7XU4dUc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708987154; x=1740523154;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Qea889SXoKSSrCDwzRaGM8e19r2Hj1qy/kVfUGUiEWs=;
+  b=c7XU4dUcvly3FRYI49DAbwbotQ9n29HA+RfwJYRKGUQJPPUUHRZ5wfaF
+   NO+9/jKgQFacHDMc3qNmRnhCHkIaGp+r1lUn3qO/anxidrngrAUYIwVHo
+   EHiQnfeO/R/Y+rHIWvjePk02kopVXa/hJ32gBRq9NibXe6iAxa3Pcujay
+   SgHN1D4ri/Y2Mgc9rgkvZUCk2qu/e98/YARscGPvLS274bhGFXjES3OhY
+   zFkHOR5647Sy2r7V7jg3licPGCDsChf1ezFpa9eJipamdakH9MYZM0pqD
+   d+iX2UHbr6OnqEat5SWEWsyiX707mAJgkYxZQfA0jJf8wC6V0Q2R/MxG0
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="13944542"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="13944542"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:39:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7360773"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.112.4]) ([10.246.112.4])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:39:13 -0800
+Message-ID: <199cfa4f-cf9b-45d5-8fb3-bf8e0db2d639@intel.com>
+Date: Mon, 26 Feb 2024 15:39:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH v7 4/4] ndctl: add test for qos_class in CXL test
+ suite
+Content-Language: en-US
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+References: <20240208201435.2081583-1-dave.jiang@intel.com>
+ <20240208201435.2081583-5-dave.jiang@intel.com>
+ <677035a6578df716ff9df5cb83047498919e90ae.camel@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <677035a6578df716ff9df5cb83047498919e90ae.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DA:EE_|IA1PR12MB6138:EE_
-X-MS-Office365-Filtering-Correlation-Id: dedd1391-6ad3-49aa-224d-08dc371a3d20
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	6MguVPeWAe2ws/23M7hRmcLgAeimTjcQm9cax94lFWC1Wn4dEF2F23Gad/mClP/DE52NpRigahVHpwbTln148E9YZypN52/pJKY6X6UK196m+srSCbWlJS4YT1xyTjxrnoKvgkGAFS25PShTj4C24KNo7kIPuGD180igIlbQilXtYxFAis7HEyLOD87up2jmEO1+rdttk3QjnTVTWtZatnX8vaOpiKzzUsEDqV1ux5kIFatu5/41gsUOqOX0s6AGKZ7tsWeYRbfBf1iEGxsqIa+ZO+9KZdpo95eS9o6SdxvIxdFFF+bRy635YcmrVvKT5TwdQ74FDFMZDMdCMLtMapGK7nAdMOaPcM2s2OXNuW9ceDDsUKTrLGOrU9LdZD+rknA/k+QpSJecswTHaSHqD6kG6U3vyyNpQ+JnKN+LBcHdYxoVbmFhqz6XlGxNa6r3RL43ZyZy9zyDTanl+aj1ozB/5S9RS3/99EmNUzc0L7j2+IfiO9lwltu5U4F3WsWrsYtFSgGX7qkMWnslfMaBaM9c4QNuUprkakJakzJw7uaPP89e0+KkmsxsyVtyccIMUQs/OPL0Ex7wl/pmHNcd5XQ1XzIn6XlbLrdZMBk68qkTGFQ0zqYTcfYIx+PB1yppmG+ZWESy/UIb2xfmaQCMTY3j5j6fcKvsS1H5HKytL0Fz0qV9wVx6YSvLkeqYqzi3HESL20ZqtZ9SG6oUaFDEX1+eShpkuv9/ycpoFq6ZXPmNL9MdRCrkvPchyVWhyW3R
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 22:28:21.3180
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dedd1391-6ad3-49aa-224d-08dc371a3d20
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6138
 
-Update EINJ kernel document to include how to inject CXL protocol error
-types, build the kernel to include CXL error types, and give an example
-injection.
 
-Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
----
- .../firmware-guide/acpi/apei/einj.rst         | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
 
-diff --git a/Documentation/firmware-guide/acpi/apei/einj.rst b/Documentation/firmware-guide/acpi/apei/einj.rst
-index d6b61d22f525..c52b9da08fa9 100644
---- a/Documentation/firmware-guide/acpi/apei/einj.rst
-+++ b/Documentation/firmware-guide/acpi/apei/einj.rst
-@@ -32,6 +32,10 @@ configuration::
-   CONFIG_ACPI_APEI
-   CONFIG_ACPI_APEI_EINJ
- 
-+...and to (optionally) enable CXL protocol error injection set::
-+
-+  CONFIG_ACPI_APEI_EINJ_CXL
-+
- The EINJ user interface is in <debugfs mount point>/apei/einj.
- 
- The following files belong to it:
-@@ -118,6 +122,24 @@ The following files belong to it:
-   this actually works depends on what operations the BIOS actually
-   includes in the trigger phase.
- 
-+CXL error types are supported from ACPI 6.5 onwards (given a CXL port
-+is present). The EINJ user interface for CXL error types is at
-+<debugfs mount point>/cxl. The following files belong to it:
-+
-+- einj_types:
-+
-+  Provides the same functionality as available_error_types above, but
-+  for CXL error types
-+
-+- $dport_dev/einj_inject:
-+
-+  Injects a CXL error type into the CXL port represented by $dport_dev,
-+  where $dport_dev is the name of the CXL port (usually a PCIe device name).
-+  Error injections targeting a CXL 2.0+ port can use the legacy interface
-+  under <debugfs mount point>/apei/einj, while CXL 1.1/1.0 port injections
-+  must use this file.
-+
-+
- BIOS versions based on the ACPI 4.0 specification have limited options
- in controlling where the errors are injected. Your BIOS may support an
- extension (enabled with the param_extension=1 module parameter, or boot
-@@ -181,6 +203,18 @@ You should see something like this in dmesg::
-   [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
-   [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
- 
-+A CXL error injection example with $dport_dev=0000:e0:01.1::
-+
-+    # cd /sys/kernel/debug/cxl/
-+    # ls
-+    0000:e0:01.1 0000:0c:00.0
-+    # cat einj_types                # See which errors can be injected
-+	0x00008000  CXL.mem Protocol Correctable
-+	0x00010000  CXL.mem Protocol Uncorrectable non-fatal
-+	0x00020000  CXL.mem Protocol Uncorrectable fatal
-+    # cd 0000:e0:01.1               # Navigate to dport to inject into
-+    # echo 0x8000 > einj_inject     # Inject error
-+
- Special notes for injection into SGX enclaves:
- 
- There may be a separate BIOS setup option to enable SGX injection.
--- 
-2.34.1
+On 2/22/24 12:59 AM, Verma, Vishal L wrote:
+> On Thu, 2024-02-08 at 13:11 -0700, Dave Jiang wrote:
+>> Add tests in cxl-qos-class.sh to verify qos_class are set with the fake
+>> qos_class create by the kernel.  Root decoders should have qos_class
+>> attribute set. Memory devices should have ram_qos_class or pmem_qos_class
+>> set depending on which partitions are valid.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v7:
+>> - Add create_region -Q testing (Vishal)
+>> ---
+>>  test/common           |   4 ++
+>>  test/cxl-qos-class.sh | 102 ++++++++++++++++++++++++++++++++++++++++++
+>>  test/meson.build      |   2 +
+>>  3 files changed, 108 insertions(+)
+>>  create mode 100755 test/cxl-qos-class.sh
+>>
+>> diff --git a/test/common b/test/common
+>> index f1023ef20f7e..5694820c7adc 100644
+>> --- a/test/common
+>> +++ b/test/common
+>> @@ -150,3 +150,7 @@ check_dmesg()
+>>  	grep -q "Call Trace" <<< $log && err $1
+>>  	true
+>>  }
+>> +
+>> +
+>> +# CXL COMMON
+>> +TEST_QOS_CLASS=42
+>> diff --git a/test/cxl-qos-class.sh b/test/cxl-qos-class.sh
+>> new file mode 100755
+>> index 000000000000..145df6134685
+>> --- /dev/null
+>> +++ b/test/cxl-qos-class.sh
+>> @@ -0,0 +1,102 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Copyright (C) 2024 Intel Corporation. All rights reserved.
+>> +
+>> +. $(dirname $0)/common
+>> +
+>> +rc=77
+>> +
+>> +set -ex
+>> +
+>> +trap 'err $LINENO' ERR
+>> +
+>> +check_prereq "jq"
+>> +
+>> +modprobe -r cxl_test
+>> +modprobe cxl_test
+>> +rc=1
+>> +
+>> +check_qos_decoders () {
+>> +	# check root decoders have expected fake qos_class
+>> +	# also make sure the number of root decoders equal to the number
+>> +	# with qos_class found
+>> +	json=$($CXL list -b cxl_test -D -d root)
+>> +	decoders=$(echo "$json" | jq length)
+>> +	count=0
+>> +	while read -r qos_class
+>> +	do
+>> +		((qos_class == TEST_QOS_CLASS)) || err "$LINENO"
+>> +		count=$((count+1))
+>> +	done <<< "$(echo "$json" | jq -r '.[] | .qos_class')"
+>> +
+>> +	((count == decoders)) || err "$LINENO";
+>> +}
+>> +
+>> +check_qos_memdevs () {
+>> +	# Check that memdevs that expose ram_qos_class or pmem_qos_class have
+>> +	# expected fake value programmed.
+>> +	json=$(cxl list -b cxl_test -M)
+>> +	readarray -t lines < <(jq ".[] | .ram_size, .pmem_size, .ram_qos_class, .pmem_qos_class" <<<"$json")
+>> +	for (( i = 0; i < ${#lines[@]}; i += 4 ))
+>> +	do
+>> +		ram_size=${lines[i]}
+>> +		pmem_size=${lines[i+1]}
+>> +		ram_qos_class=${lines[i+2]}
+>> +		pmem_qos_class=${lines[i+3]}
+>> +
+>> +		if [[ "$ram_size" != null ]]
+>> +		then
+>> +			((ram_qos_class == TEST_QOS_CLASS)) || err "$LINENO"
+>> +		fi
+>> +		if [[ "$pmem_size" != null ]]
+>> +		then
+>> +			((pmem_qos_class == TEST_QOS_CLASS)) || err "$LINENO"
+>> +		fi
+>> +	done
+>> +}
+>> +
+>> +# Based on cxl-create-region.sh create_single()
+>> +destroy_regions()
+>> +{
+>> +	if [[ "$*" ]]; then
+>> +		$CXL destroy-region -f -b cxl_test "$@"
+>> +	else
+>> +		$CXL destroy-region -f -b cxl_test all
+>> +	fi
+>> +}
+>> +
+>> +create_region_check_qos()
+>> +{
+>> +	# the 5th cxl_test decoder is expected to target a single-port
+>> +	# host-bridge. Older cxl_test implementations may not define it,
+>> +	# so skip the test in that case.
+>> +	decoder=$($CXL list -b cxl_test -D -d root |
+>> +		  jq -r ".[4] |
+>> +		  select(.pmem_capable == true) |
+>> +		  select(.nr_targets == 1) |
+>> +		  .decoder")
+> 
+> Instead of assuming the 5th decoder, can we select based on some
+> property of the decoder or its parentage? This works, but it's a bit
+> sensitive to future cxl_test topology changes that will easily and
+> (more importantly) silently break this part of the test (since we skip
+> but still pass).
 
+I copied it straight from cxl-topology.sh. It can be any really. All cxl_test setup should have qos_class. I would imagine cxl-topology.sh would also break if there's some future change
+
+> 
+>> +
+>> +        if [[ ! $decoder ]]; then
+>> +                echo "no single-port host-bridge decoder found, skipping"
+>> +                return
+>> +        fi
+> 
+> I think there's some space/tab mixing going on here.
+
+I'll fix.
+
+> 
+>> +
+>> +	# Send create-region with -Q to enforce qos_class matching
+>> +	region=$($CXL create-region -Q -d "$decoder" | jq -r ".region")
+>> +	if [[ ! $region ]]; then
+>> +		echo "failed to create single-port host-bridge region"
+>> +		err "$LINENO"
+>> +	fi
+>> +
+>> +	destroy_regions "$region"
+>> +}
+>> +
+>> +check_qos_decoders
+>> +
+>> +check_qos_memdevs
+>> +
+>> +create_region_check_qos
+>> +
+>> +check_dmesg "$LINEO"
+>> +
+>> +modprobe -r cxl_test
+>> diff --git a/test/meson.build b/test/meson.build
+>> index 5eb35749a95b..4892df11119f 100644
+>> --- a/test/meson.build
+>> +++ b/test/meson.build
+>> @@ -160,6 +160,7 @@ cxl_events = find_program('cxl-events.sh')
+>>  cxl_poison = find_program('cxl-poison.sh')
+>>  cxl_sanitize = find_program('cxl-sanitize.sh')
+>>  cxl_destroy_region = find_program('cxl-destroy-region.sh')
+>> +cxl_qos_class = find_program('cxl-qos-class.sh')
+>>  
+>>  tests = [
+>>    [ 'libndctl',               libndctl,		  'ndctl' ],
+>> @@ -192,6 +193,7 @@ tests = [
+>>    [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
+>>    [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
+>>    [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+>> +  [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+>>  ]
+>>  
+>>  if get_option('destructive').enabled()
+> 
