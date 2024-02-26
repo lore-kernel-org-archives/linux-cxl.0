@@ -1,267 +1,167 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515DD132C09;
-	Mon, 26 Feb 2024 22:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708987410; cv=none; b=IC8Turo5vvUAxKH3twGNbypcgLC89YPnx2eeQo05P3ImV0G8ZQsLdx6RXBGH9QSPtPKISzv0zGD0WqVTTC//VdzTrEu0Y7uQLlyH3YhTNRoZkNkQm+QuYT3M3fLCc6ahNnCJsioWvebUm8ABfWvz7auMvelLft9k6ANHRSiJ6eo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708987410; c=relaxed/simple;
-	bh=lZO496usxRZc4uLXOrLSsGfI9A7Y3eJcpNSY/9wvdTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIKb+paP5Z/RQLdElswcW3HHmfUn8knPe+YbjsvgGEbLVTQTxnkqvBtqdJokNbqEPktgENyEbiQyX5UKb8p2V83kQUXpZJiIf4kBcMLGaBTq9Fr2C32TLRvd6LQv/74Pw5N3sgGb+Utgago52NGNotseOgN3tzlABzd9dkz1Ctc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZOco68Oc; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7EE1E897;
+	Mon, 26 Feb 2024 22:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708987645; cv=fail; b=hP8xwPGrrcxY1Sp9r03TaWTLbeFTMHPs/lDLa0/CH1QFH3jl3DkMHY0ZiG1QX+fbRDSYOPjt9D1HLF6xoHaJ9ZqavdubPnY3jo1IT1a6AxTQB1wVZbL3lrOx91FKV/Z88/J1sRbOuQaJ9YJuAozm1cOW949Z/PkIfvWdls5JQRQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708987645; c=relaxed/simple;
+	bh=JoNO2GwKuBG1py7Yfbo4Bo+ggpew49QMzSO4WAKhp4E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ThdaZpNxDKLlh0b4zmKji/g+gUe4HBN6KO3aRprCXS2+kwJ+jUfJmUP53FhI1Rq+EX/EaQM3WC+H4qqYoTkVtBaMyZd7VF1A+YHW+9vh+qTw1MXLmVrrhr7lHQZxzWyOzhaEUWYecWufJ9JwQYyvWY6B88aQzfLxrWheIr4F3+0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NupMnhNK; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOco68Oc"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-22007fe465bso926033fac.1;
-        Mon, 26 Feb 2024 14:43:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708987407; x=1709592207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DUPmDk09/sTy9Hx2AnE6xr34od72PSugc7feC6111Fo=;
-        b=ZOco68Ocod7WdLh1iUd5Q5MtS5M0djusP4y+mrSP7VEubqe9EJdeuLucBiPgRceeTj
-         WQKIwARzmaguugZDwZLtt+Vj5181JGb9XzZcpmj7wr3+1XndV6KUI/UeKEU+n91xAd+j
-         Z43W43wLE7cM62lSiBF/93syQU+zko6vitVR0F4ItoJ9+EORHKxC5JMKUaJbHFNXLv1b
-         a4MGhLT+SoUgtxLtSPlFZT/uMnUZuQx834Tkn+mxUKNks5CB0GREnqG4H7jl2adzXnXY
-         +/lZg8Mgu7niI696eGNb1+MI6McfQSLgjEmy8QwA8/0A32J48AlZyCA+qShFp9jdClxB
-         lfhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708987407; x=1709592207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DUPmDk09/sTy9Hx2AnE6xr34od72PSugc7feC6111Fo=;
-        b=LsFjt9rn7mxzsva4GZYJV9gtrQ6HQlbg9JuvcBNWDdui5BruAi3K0bbmjE+KHT55dz
-         y/ztMZff3t1t6gKifKgz6RByRW5iYvs8+rjwSBmm07mLgMtSsOxseRra1EczcMyxKiYl
-         citA/uZF6AoWhhUGUFSKRAEDQTDpO8//M2GoqFXLxo0tVrrTv335Wi6wvVDw3tRgVKRo
-         krD1DdTtSLN6GF0HyJVYlML/jAk2IA4twMatx7c++waNmCWG16519rNeZLq/6OhGJuoN
-         8BgwF7sq2E70pdNzbChxBwZA/ibV7dMVqLldv4atVL8DyigDgbYvMr6ga0RPl1d/qvR5
-         Krmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXRplfXdZPuMSyLqA6fiWAODZwreFFGEK4rABkIubKlUub4NJaEe54JbBziGSoxzuIXMzjRi0qJtW6Zpeg1qfmPj4WfDTcZB4CgxRm/h/mmA3JhUdBnoegq9mLOjKd/sP1H0SLVYPEmX2QHXtVlBqdkbDv711JvaFZvgM45GVsGeM4BPjfcyhHdPHjRRutp16XSd2bDy6K090cvBFS7MKcCA==
-X-Gm-Message-State: AOJu0YxLxI+Heme8OFFd9aikCjx5jf5hh7K1Cp6kEs8KhlK4Honf4D4B
-	kGbHOQ7PGhWbyLdr+xAiaO+uV7fQI7SS+F4eDtXn1i/qUAu7+Wnv9PbXp19ixdM=
-X-Google-Smtp-Source: AGHT+IEoZRM885tJ3SKMed/vEAVoJO38AS5Hl87/35VAcOvt6F3arFNSsmi3/j7xjKGIzHYaoLT4dg==
-X-Received: by 2002:a05:6870:b253:b0:21f:642:5240 with SMTP id b19-20020a056870b25300b0021f06425240mr9200382oam.31.1708987407360;
-        Mon, 26 Feb 2024 14:43:27 -0800 (PST)
-Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id er1-20020a0568303c0100b006e34506c5e5sm1280715otb.57.2024.02.26.14.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 14:43:27 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 26 Feb 2024 16:43:25 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 11/20] famfs: Add fs_context_operations
-Message-ID: <5aw6k6rcnpj7ukps7jcjlj2creqa4aalnesukgdi4nmjqccfg7@7l7rvtzwpjha>
-References: <cover.1708709155.git.john@groves.net>
- <a645646f071e7baa30ef37ea46ea1330ac2eb63f.1708709155.git.john@groves.net>
- <20240226132019.00007b8c@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NupMnhNK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708987643; x=1740523643;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=JoNO2GwKuBG1py7Yfbo4Bo+ggpew49QMzSO4WAKhp4E=;
+  b=NupMnhNKiKleP2qayDQSJzkuVP8Y4BKnwA8ZoHtiZhoSMzR8MNCIqJSr
+   JWTd15ylyA4UQFFbNd+IibepQmFYcN1HmwIf0JMantEi2yzMZnfbss9Of
+   ZdQRd988xViatl5fK+gynYNTfebBXBy3Kb6IYzQjxGWeIi+/dnZIWuwwu
+   hPo04W1oeQOWdbQhBa5uXv5XKQGUYDLAM954HqzcknbXqnlucltrx48SG
+   N0USqmI7JIMV6C+LniXAk6FNbrmrdBjkbdQ5FsTUyssJciGIPWdHDabkE
+   FiY/5NdPpX0YxG5GLbmuymLebotV/ZNSU+Tc7R+i8p0wM70KqbrrGV1uE
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3466132"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3466132"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:47:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="6962041"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Feb 2024 14:47:23 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 26 Feb 2024 14:47:22 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 26 Feb 2024 14:47:22 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 26 Feb 2024 14:47:22 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 26 Feb 2024 14:47:21 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kkmmCkVvCFC1oE1am+TQuZTq492wv9C5KvmvKfWFeVWRp22VD9813gZg8ONTfnpSwyYVvI18b6Xa3T10XKxn1LyTnqWEigNYAMTct/B34edbDi0S9T68H6W+tw+Tvpg/QaK2pUvNW8WkBpdyH0Pq6wUK40cs7gOtW0m3wEPZ6+IDKi98WEIp7Rwl5fnmuOL+TOmXEX9CM2MUObFOOLAk40EoGhM61/lHowr0eFQ0TOYJncDjiua8M1GzhcKNBKBEIToe5755N/HBI8uLqV+/uAXz7q2tNN6EzYYTHAooRafgxeNa2T+69ajoW2hU60/gQWzaLMTOA40d5Qkl7m+w1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FwC1Rp0J2xIcggMjc5rCnszDOG3ig9dDTTOyDs5LXOc=;
+ b=aF6gHht5IN3mmb7I2BcYSdo3JFNVMVSz/OvYkI/973Jdo9C+BBg1Gx1bflwMnmSHHPeKvZ6U7Nqt3fOeDe4gusijGXHWaK7LgS0o/iNz/WhLCOR/jv7W+zF/RqNHRMeqP2FB6XxS6bOuourukRIWC/DnMuhcx+fyhC1dXgCuycod5hcfL8FvOV04uAMX6Z4x/I2M4jM9yEDOM4G0Jl10iKNJ++hDA48aKj5iw0TRxLVFMLLQfTKjA9vs9o6NN0y0oA+WiivjYZIG3Hp/P6VzrpTHepvKOqQMMgkrKTu5kUc/jKXINGT46TpqhIkcU+PoR4yNYUnM6EaACQAgD4pvOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by PH0PR11MB5879.namprd11.prod.outlook.com (2603:10b6:510:142::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.23; Mon, 26 Feb
+ 2024 22:47:19 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::d5ce:2b6c:458:3ca9]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::d5ce:2b6c:458:3ca9%7]) with mapi id 15.20.7339.023; Mon, 26 Feb 2024
+ 22:47:19 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, "Williams, Dan J"
+	<dan.j.williams@intel.com>, "jonathan.cameron@huawei.com"
+	<jonathan.cameron@huawei.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"james.morse@arm.com" <james.morse@arm.com>, "bp@alien8.de" <bp@alien8.de>
+CC: "dave@stogolabs.net" <dave@stogolabs.net>, "Jiang, Dave"
+	<dave.jiang@intel.com>, "Schofield, Alison" <alison.schofield@intel.com>,
+	"Verma, Vishal L" <vishal.l.verma@intel.com>, "Weiny, Ira"
+	<ira.weiny@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH v14 2/4] EINJ: Add CXL error type support
+Thread-Topic: [PATCH v14 2/4] EINJ: Add CXL error type support
+Thread-Index: AQHaaQMTyYLzMSrhEkWfuaqLOd5dcLEdORWQ
+Date: Mon, 26 Feb 2024 22:47:19 +0000
+Message-ID: <SJ1PR11MB608331BA3F58C3E6559697F3FC5A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240226222704.1079449-1-Benjamin.Cheatham@amd.com>
+ <20240226222704.1079449-3-Benjamin.Cheatham@amd.com>
+In-Reply-To: <20240226222704.1079449-3-Benjamin.Cheatham@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|PH0PR11MB5879:EE_
+x-ms-office365-filtering-correlation-id: 6cbe33b0-588a-455b-dff4-08dc371ce38d
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PdoGMnMCQycYliR3jIl+2ugKM/z3XU9DFS0XYHnm78CJKhprKkRrJ8lFq3y44y7GbXBUQe8VAt8nA813BOBlkReC17S6XxZTUJLC03O2GewSFFw3B4bWbSBG0sCPp2i72n2zEF+0U0IRc9erqmg2tRfpuw6M+ESau8DLV1h9HBUfUJu5PHQJ8QFpRtNtKrQkdvePfErpZAO9acZpvRUcvXG4W8G5Hg4FcGZMuEZmNQbVesDPfv8F61UALPR7X2exzlhwtOzNJieNk/dHSndnVNbwoZtDOHzxZZPkxtH2fPi7GFW+morVzwWADp/YOGgan/jJRHfhYhE0eV7bFMAoXq2OCprwT3WyHobZgGrSYEZP5101ecIfWxIotwV3LFHQzQMJh3oxpplBS3SALemg8cqHLcj9m57sb/eu9/NAnCicQdWm+Zq6EHfMkULupyQifBw41Bw4uIdoAjcVAVLDGXn77O0VoafYX3e1gv4xqjLB+wVEH7/ljA9LFXIp1VeZGwXXmftgClT5b0OYybrqDN+TS+h6NsO1JjsWYj12m3aTCRpRqYaxGyG055yoQqwL7uQ7Pk8DeWwp3+JblNsV3eLHSqlxUHhBzOoz8drm9zBUmDuBSyDDwLHTYxBQK6AT7TPV52yuQpPUE9DPh+QFJuu5UQiwsNuht6z+ycTF8HZgLArqxx/aV9WuJhuS3n7lPRBeHYo/Hqpt1nBYz/F1UIWP2FZdQnBgvS7XKwsi9e8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?V+eEIH4NfIFxhq+dL01GnUO7MgGvYvRtbcZb+CV6T3Lflo/VonB/MD07flgl?=
+ =?us-ascii?Q?Pj3y9SWgJ65a7szEEvV5/psON0e0hrQjbRxTat7nP9w/bSlQPTBDkbQfBwnf?=
+ =?us-ascii?Q?ZH6BKW9Q4Laky968bSL3unRqjlQIr6IhJIb0qBeDA56gbRcHhZHui/xEkQrN?=
+ =?us-ascii?Q?+k1yqLZU6AUG/j5B6+U8SmRGbKay2voG1g23hl0PNl0m/Cvv7j3i1MTih0Bo?=
+ =?us-ascii?Q?L7S7K/K2U0rYaIHB2Mg7DZVSIlEMRP0uzM7/gX2NaO3P/+/WtVM6XtyeXGFz?=
+ =?us-ascii?Q?Ehg0hSZo5fOeEGnd+6+nKEqzWacQTG8jJ+punFu466tOPgF9z4vyLf5H3wE5?=
+ =?us-ascii?Q?NDC61tnEHubEky9U79to0UlLIAwEfjTeYqV+qaeSEiE8WiU7DMJAJIsQs4xQ?=
+ =?us-ascii?Q?YZL0V2oZ3rXaqW+1DF91H3B5Ac9hPjf7jELi0Jc1GJOmgJHVNg+k0krHOcC0?=
+ =?us-ascii?Q?GUZc9ULuXjw+hc0bXOrfuLMNAqLXMw73m11GrN834S93L1DLDKMbBeHcv9+w?=
+ =?us-ascii?Q?mlHDvgqpqHz0u0uOOMu+6XbOoq3olvXqRdm4zaNDoApdZOJPqLeOW4LFeprF?=
+ =?us-ascii?Q?gock69eWWoMPtcsxU2T6RrT7CbweSb9sz9VpZxWhp6UDzXTTUp+VfAml3B61?=
+ =?us-ascii?Q?Bpn2EjXNvJJbWAGlaoHLilRdIrOsLwWwqSZdL3w5WaXHSMZNvk0KmzVbIZUv?=
+ =?us-ascii?Q?gzsvCVMBEgR74RhuG+uNrno1HPnD0JJ1m+ikUzrm0jZgc+e8nZoAKdDQR5gp?=
+ =?us-ascii?Q?WuJyde3+pQZQukP77eCwWGp4v36rB1BIzFvqaD7tut2r13w9Arf3p1Y2YGti?=
+ =?us-ascii?Q?kaPeUpbF0APzVmW+Muo2q5w9LWPwZOM7wRXXWJWoZUVDdn9MnPb3eUIcxj5h?=
+ =?us-ascii?Q?T0OR5nzq9IUMxv9b/AFsdZZNx4C29cuYsCS5d2vechOk+aR9FZovOOIMy140?=
+ =?us-ascii?Q?CMNQkzCZcUvxW+gf5S8lNfrrmDjNQpMVRDYWqACXf/x5aEiDvNmg2giLlbxk?=
+ =?us-ascii?Q?UQo0/90C/RPSDHs6bisrtj/BPhsqDsjH64/Fzhd/qPZbCRtQgFKtsA2mSG1c?=
+ =?us-ascii?Q?qJqa4RxjFNYC3sZ+/tUdAECOzV8KPc9nz9maiIbNxrvvj9LleTRZU8HY6zPt?=
+ =?us-ascii?Q?4kMe7REMVmXX2upgRjHWtP5jxoeBmuB3FChRpvCeB3sNJwcH/RQwDt5jrliF?=
+ =?us-ascii?Q?2EIDk72kgP+2k69z+b8axat3qjtxeezEN1sY+h8vDmuFUo+VVWQ/VjD9pgbd?=
+ =?us-ascii?Q?JNsqh23WahXemcYdOl1Jbl0dr0E36vSGMBpWYd8+LnLW/lfcIWq0nqAsYCYL?=
+ =?us-ascii?Q?2magxsQUxV1+9G0Zyj//CnBVwGCO2+RRWF3MIwK38mjgXXYgJJYI70+V4zHb?=
+ =?us-ascii?Q?1QELk1+lYab2R1aZ6viABKgB6IdgMqysqr3fyvYDeDMEJSvU5SIx4ivEm/Yo?=
+ =?us-ascii?Q?L/kAAopddJ2WTuJx9RQJDLVuSrTNfOrBaitSO0Dpf92vCE5bU0N2a2UAC21B?=
+ =?us-ascii?Q?iK3T0PGleAQBUElXaA0ZvE7eyD95cfita9ny30qfJnQV4KVlZ6r7bbHKje6b?=
+ =?us-ascii?Q?xeo91klzvs3kOjvf8nQbFe/+ix/rbMIi9378fenQ?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226132019.00007b8c@Huawei.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cbe33b0-588a-455b-dff4-08dc371ce38d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2024 22:47:19.6023
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZNvvgqbjURU/JQeutvwiZZIxt5QWZgQ2bd+f/Ut1tywM/LL3UMICBOe5b78munVyRaMu4XlKlvXL92jFDTrW8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5879
+X-OriginatorOrg: intel.com
 
-On 24/02/26 01:20PM, Jonathan Cameron wrote:
-> On Fri, 23 Feb 2024 11:41:55 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > This commit introduces the famfs fs_context_operations and
-> > famfs_get_inode() which is used by the context operations.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> Trivial comments inline.
-> 
-> > ---
-> >  fs/famfs/famfs_inode.c | 178 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 178 insertions(+)
-> > 
-> > diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> > index 82c861998093..f98f82962d7b 100644
-> > --- a/fs/famfs/famfs_inode.c
-> > +++ b/fs/famfs/famfs_inode.c
-> > @@ -41,6 +41,50 @@ static const struct super_operations famfs_ops;
-> >  static const struct inode_operations famfs_file_inode_operations;
-> >  static const struct inode_operations famfs_dir_inode_operations;
-> >  
-> > +static struct inode *famfs_get_inode(
-> > +	struct super_block *sb,
-> > +	const struct inode *dir,
-> > +	umode_t             mode,
-> > +	dev_t               dev)
-> > +{
-> > +	struct inode *inode = new_inode(sb);
-> > +
-> > +	if (inode) {
-> reverse logic would be simpler and reduce indent.
-> 
-> 	if (!inode)
-> 		return NULL;
-> 
+> Remove CXL protocol error types from the EINJ module and move them to
+> a new einj_cxl module. The einj_cxl module implements the necessary
 
-Good one - I can be derpy this way. Although I'd bet I just copied that
-from ramfs...
+> +config ACPI_APEI_EINJ_CXL
+> +	bool "CXL Error INJection Support"
 
-> 
-> > +		struct timespec64       tv;
-> > +
-> > +		inode->i_ino = get_next_ino();
-> > +		inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
-> > +		inode->i_mapping->a_ops = &ram_aops;
-> > +		mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
-> > +		mapping_set_unevictable(inode->i_mapping);
-> > +		tv = inode_set_ctime_current(inode);
-> > +		inode_set_mtime_to_ts(inode, tv);
-> > +		inode_set_atime_to_ts(inode, tv);
-> > +
-> > +		switch (mode & S_IFMT) {
-> > +		default:
-> > +			init_special_inode(inode, mode, dev);
-> > +			break;
-> > +		case S_IFREG:
-> > +			inode->i_op = &famfs_file_inode_operations;
-> > +			inode->i_fop = &famfs_file_operations;
-> > +			break;
-> > +		case S_IFDIR:
-> > +			inode->i_op = &famfs_dir_inode_operations;
-> > +			inode->i_fop = &simple_dir_operations;
-> > +
-> > +			/* Directory inodes start off with i_nlink == 2 (for "." entry) */
-> > +			inc_nlink(inode);
-> > +			break;
-> > +		case S_IFLNK:
-> > +			inode->i_op = &page_symlink_inode_operations;
-> > +			inode_nohighmem(inode);
-> > +			break;
-> > +		}
-> > +	}
-> > +	return inode;
-> > +}
-> > +
-> >  /**********************************************************************************
-> >   * famfs super_operations
-> >   *
-> > @@ -150,6 +194,140 @@ famfs_open_device(
-> >  	return 0;
-> >  }
-> >  
-> > +/*****************************************************************************************
-> > + * fs_context_operations
-> > + */
-> > +static int
-> > +famfs_fill_super(
-> > +	struct super_block *sb,
-> > +	struct fs_context  *fc)
-> > +{
-> > +	struct famfs_fs_info *fsi = sb->s_fs_info;
-> > +	struct inode *inode;
-> > +	int rc = 0;
-> Always initialized so no need to do it here.
+It's not really a module anymore. Need to update commit messages.
 
-Fixed in more than one place.
-
-> 
-> > +
-> > +	sb->s_maxbytes		= MAX_LFS_FILESIZE;
-> > +	sb->s_blocksize		= PAGE_SIZE;
-> > +	sb->s_blocksize_bits	= PAGE_SHIFT;
-> > +	sb->s_magic		= FAMFS_MAGIC;
-> > +	sb->s_op		= &famfs_ops;
-> > +	sb->s_time_gran		= 1;
-> > +
-> > +	rc = famfs_open_device(sb, fc);
-> > +	if (rc)
-> > +		goto out;
-> 		return rc; //unless you need to do more in out in later patch..
-
-Done
-
-> 
-> > +
-> > +	inode = famfs_get_inode(sb, NULL, S_IFDIR | fsi->mount_opts.mode, 0);
-> > +	sb->s_root = d_make_root(inode);
-> > +	if (!sb->s_root)
-> > +		rc = -ENOMEM;
-> 		return -ENOMEM;
-
-Done
-
-> 
-> 	return 0;
-
-Done
-
-> 
-> > +
-> > +out:
-> > +	return rc;
-> > +}
-> > +
-> > +enum famfs_param {
-> > +	Opt_mode,
-> > +	Opt_dax,
-> Why capital O?
-
-Direct copy from ramfs
-
-> 
-> > +};
-> > +
-> 
-> ...
-> 
-> > +
-> > +static DEFINE_MUTEX(famfs_context_mutex);
-> > +static LIST_HEAD(famfs_context_list);
-> > +
-> > +static int famfs_get_tree(struct fs_context *fc)
-> > +{
-> > +	struct famfs_fs_info *fsi_entry;
-> > +	struct famfs_fs_info *fsi = fc->s_fs_info;
-> > +
-> > +	fsi->rootdev = kstrdup(fc->source, GFP_KERNEL);
-> > +	if (!fsi->rootdev)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Fail if famfs is already mounted from the same device */
-> > +	mutex_lock(&famfs_context_mutex);
-> 
-> New toys might be good to use from start to avoid need for explicit
-> unlocks in error paths.
-> 
-> 	scoped_guard(mutex, &famfs_context_mutex) {
-> 		list_for_each_entry(fsi_entry, &famfs_context_list, fsi_list) {
-> 			if (strcmp(fsi_entry->rootdev, cs_source) == 0) {
-> 			//could invert with a continue to reduce indent
-> 			// or factor this out as a little helper.
-> 			// famfs_check_not_mounted()
-> 				pr_err();
-> 				return -EALREADY;
-> 			}
-> 		}	
-> 		list_add(&fsi->fs_list, &famfs_context_list);
-> 	}
-> 
-> 	return get_tree_nodev(...
-
-Hey, I like this one. Thanks!
-
-John
-
+-Tony
