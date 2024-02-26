@@ -1,49 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F85F12C522;
-	Mon, 26 Feb 2024 16:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EA112C520
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 17:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966608; cv=none; b=lYCm534TJv2H7hBJdQZn0IPbaXmnTPf+LrnXAXkEHYl3HZhzp9rjo4Eoi699mnA2K+F+ALemlq9Cbc/v+fpkrXpQnwADu27Sp3WR7iHMoqpXpda1z61jo67E9N6/7fP1/Ro8UroRtETGNQFZh05yyj5HIaxG62tY4xgpsUfUkJo=
+	t=1708968805; cv=none; b=rAbT6sLFCYDjPsizAr5AZn6+XNwt8BOJLtm97lM/dJL3/uboRsbtgBLBbeIjSZKD8+R1oGAWNgCzVZEMxCpGfP0oVgRcSRiRzWtcsfIpoPkjZyf9WeyYXq5LOyfB5aodzFtJ6Yz4tRfDUihiSOUyf8gMcc3DoGtxASGDpYQLRj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966608; c=relaxed/simple;
-	bh=RzHsl48OLYh1aqi3F31HwLiqNz8fY9P49rMhS62lRMM=;
+	s=arc-20240116; t=1708968805; c=relaxed/simple;
+	bh=G05yC0uQzmxdAtvfuvguSQltBCY2GXprIaXLw9Edo2c=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lc0qmehqmwrqDkYvzfI+hEJ5ZcNM5+FZZG1PJssg2wunCoj18J3rhWmvstE15YNnOEgQA2oTtwsIR0unuWa+9HncfDD66LQNpIN/2+G7pLqBQpk04iyfM177NLf31/TVMrdIepDsGX8bj2n6o2mUXyW9S5Mr8Y62X+KTGH9CR28=
+	 MIME-Version:Content-Type; b=OZffI2ZaCBUYtE7ShJTBQKanCw7fdleeuMVyt4YPy6mqO8IN5JfmMoB7Jsvt01dKLdo193w/aVaf2rFUHQrJGMcOMCAr0JC1QL7RPhF4A0jroN7XuxnY35HdG5PYc9dn9n+IeTrfZa6jRWwkKviDRFN8M9kAE5ephNtORTciTjY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk6935sM2z6J9nb;
-	Tue, 27 Feb 2024 00:52:07 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk6zK098sz6JBTl;
+	Tue, 27 Feb 2024 01:28:45 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07DE3140B73;
-	Tue, 27 Feb 2024 00:56:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C990140B73;
+	Tue, 27 Feb 2024 01:33:19 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 16:56:41 +0000
-Date: Mon, 26 Feb 2024 16:56:39 +0000
+ 2024 17:33:18 +0000
+Date: Mon, 26 Feb 2024 17:33:17 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 07/20] famfs: Add include/linux/famfs_ioctl.h
-Message-ID: <20240226165639.000025c6@Huawei.com>
-In-Reply-To: <z3fx5uiv6uu4sawvxrhfvx42qetchmq4ozxhq2huwg2rrcyk5c@odbiisdhop2m>
-References: <cover.1708709155.git.john@groves.net>
-	<b40ca30e4bf689249a8c237909d9a7aaca9861e4.1708709155.git.john@groves.net>
-	<20240226123940.0000692c@Huawei.com>
-	<z3fx5uiv6uu4sawvxrhfvx42qetchmq4ozxhq2huwg2rrcyk5c@odbiisdhop2m>
+To: <nifan.cxl@gmail.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>, Fan Ni
+	<fan.ni@samsung.com>
+Subject: Re: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
+ region representative and mailbox command support
+Message-ID: <20240226173317.0000299d@Huawei.com>
+In-Reply-To: <20240221182020.1086096-3-nifan.cxl@gmail.com>
+References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
+	<20240221182020.1086096-3-nifan.cxl@gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -54,134 +48,261 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 26 Feb 2024 10:44:43 -0600
-John Groves <John@groves.net> wrote:
+On Wed, 21 Feb 2024 10:15:55 -0800
+nifan.cxl@gmail.com wrote:
 
-> On 24/02/26 12:39PM, Jonathan Cameron wrote:
-> > On Fri, 23 Feb 2024 11:41:51 -0600
-> > John Groves <John@Groves.net> wrote:
-> >   
-> > > Add uapi include file for famfs. The famfs user space uses ioctl on
-> > > individual files to pass in mapping information and file size. This
-> > > would be hard to do via sysfs or other means, since it's
-> > > file-specific.
-> > > 
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-> > >  include/uapi/linux/famfs_ioctl.h | 56 ++++++++++++++++++++++++++++++++
-> > >  1 file changed, 56 insertions(+)
-> > >  create mode 100644 include/uapi/linux/famfs_ioctl.h
-> > > 
-> > > diff --git a/include/uapi/linux/famfs_ioctl.h b/include/uapi/linux/famfs_ioctl.h
-> > > new file mode 100644
-> > > index 000000000000..6b3e6452d02f
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/famfs_ioctl.h
-> > > @@ -0,0 +1,56 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > +/*
-> > > + * famfs - dax file system for shared fabric-attached memory
-> > > + *
-> > > + * Copyright 2023-2024 Micron Technology, Inc.
-> > > + *
-> > > + * This file system, originally based on ramfs the dax support from xfs,
-> > > + * is intended to allow multiple host systems to mount a common file system
-> > > + * view of dax files that map to shared memory.
-> > > + */
-> > > +#ifndef FAMFS_IOCTL_H
-> > > +#define FAMFS_IOCTL_H
-> > > +
-> > > +#include <linux/ioctl.h>
-> > > +#include <linux/uuid.h>
-> > > +
-> > > +#define FAMFS_MAX_EXTENTS 2  
-> > Why 2?  
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> You catch everything! 
+> Per cxl spec r3.1, add dynamic capacity region representative based on
+> Table 8-165 and extend the cxl type3 device definition to include dc region
+> information. Also, based on info in 8.2.9.9.9.1, add 'Get Dynamic Capacity
+> Configuration' mailbox support.
 > 
-> This limit is in place to avoid supporting somethign we're not testing. It
-> will probably be raised later.
+> Note: decode_len of a dc region is aligned to 256*MiB, divided by
+> 256 * MiB before returned to the host for "Get Dynamic Capacity Configuration"
+> mailbox command.
 > 
-> Currently user space doesn't support deleting files, which makes it easy
-> to ignore whether any clients have a stale view of metadata. If there is
-> no delete, there's actually no reason to have more than 1 extent.
-Then have 1. + a Comment on why it is 1.
-> 
-> > > +
-> > > +enum extent_type {
-> > > +	SIMPLE_DAX_EXTENT = 13,  
-> > 
-> > Comment on this would be good to have  
-> 
-> Done. Basically we anticipate there being other types of extents in the
-> future.
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Hi Fan,
 
-I was more curious about the 13!
+A few comments inline.
 
+Jonathan
+
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 110 ++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h |  16 ++++++
+>  2 files changed, 126 insertions(+)
 > 
-> >   
-> > > +	INVALID_EXTENT_TYPE,
-> > > +};
-> > > +
-> > > +struct famfs_extent {
-> > > +	__u64              offset;
-> > > +	__u64              len;
-> > > +};
-> > > +
-> > > +enum famfs_file_type {
-> > > +	FAMFS_REG,
-> > > +	FAMFS_SUPERBLOCK,
-> > > +	FAMFS_LOG,
-> > > +};
-> > > +
-> > > +/**
-> > > + * struct famfs_ioc_map
-> > > + *
-> > > + * This is the metadata that indicates where the memory is for a famfs file
-> > > + */
-> > > +struct famfs_ioc_map {
-> > > +	enum extent_type          extent_type;
-> > > +	enum famfs_file_type      file_type;  
-> > 
-> > These are going to be potentially varying in size depending on arch, compiler
-> > settings etc.  Been a while, but I though best practice for uapi was always
-> > fixed size elements even though we lose the typing.  
-> 
-> I might not be following you fully here. User space is running the same
-> arch as kernel, so an enum can't be a different size, right? It could be
-> a different size on different arches, but this is just between user/kernel.
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index ba1d9901df..88e3b733e3 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -22,6 +22,7 @@
+>  
+>  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
+>  #define CXL_DC_EVENT_LOG_SIZE 8
+> +#define CXL_SPEC_AFTER_R30
+As below. Drop this.  Kernel code needs to be able to cope with newer specs
+than it understands anyway so should be fine with the larger records (otherwise
+it's buggy and needs fixing!) 
 
-I can't remember why, but this has bitten me in the past.
-Ah, should have known Daniel would have written something on it ;)
-https://www.kernel.org/doc/html/next/process/botching-up-ioctls.html
+>  
+>  /*
+>   * How to add a new command, example. The command set FOO, with cmd BAR.
+> @@ -80,6 +81,8 @@ enum {
+>          #define GET_POISON_LIST        0x0
+>          #define INJECT_POISON          0x1
+>          #define CLEAR_POISON           0x2
+> +    DCD_CONFIG  = 0x48,
+> +        #define GET_DC_CONFIG          0x0
+>      PHYSICAL_SWITCH = 0x51,
+>          #define IDENTIFY_SWITCH_DEVICE      0x0
+>          #define GET_PHYSICAL_PORT_STATE     0x1
+> @@ -1238,6 +1241,103 @@ static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/*
+> + * CXL r3.1 section 8.2.9.9.9.1: Get Dynamic Capacity Configuration
+> + * (Opcode: 4800h)
+> + */
+> +static CXLRetCode cmd_dcd_get_dyn_cap_config(const struct cxl_cmd *cmd,
+> +                                             uint8_t *payload_in,
+> +                                             size_t len_in,
+> +                                             uint8_t *payload_out,
+> +                                             size_t *len_out,
+> +                                             CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    struct get_dyn_cap_config_in_pl {
+Type not needed - see below. 
+> +        uint8_t region_cnt;
+> +        uint8_t start_region_id;
+> +    } QEMU_PACKED;
+   } QEMU_PACKED *in;
 
-It's the fun of need for compat ioctls with 32bit userspace on 64bit kernels.
+> +
+> +    struct get_dyn_cap_config_out_pl {
+Don't think giving this a type is necessary - see below.
+> +        uint8_t num_regions;
+> +        uint8_t regions_returned;
+> +        uint8_t rsvd1[6];
+> +        struct {
+> +            uint64_t base;
+> +            uint64_t decode_len;
+> +            uint64_t region_len;
+> +            uint64_t block_size;
+> +            uint32_t dsmadhandle;
+> +            uint8_t flags;
+> +            uint8_t rsvd2[3];
+> +        } QEMU_PACKED records[];
+> +        /*
+> +         * if cxl spec version >= 3.1, extra output payload as defined
+> +         * in struct get_dyn_cap_config_out_pl_extra comes here.
+> +         */
+> +    } QEMU_PACKED;
+    } QEMU_PACKED *out;
+> +
+> +    struct get_dyn_cap_config_in_pl *in = (void *)payload_in;
+> +    struct get_dyn_cap_config_out_pl *out = (void *)payload_out;
 
-The alignment one is key as well. That bit me more than once due to
-32bit x86 aligning 64 bit integers at 32 bits.
+We've (mostly) use the (void *) casting where we haven't given the structures
+a type.  I think I'd prefer we kept to that style for consistency.
 
-We could just not support these cases but it's easy to get right so why
-bother with complexity of ruling them out.
+There is an argument we should have given all these types
+for readability reasons and to avoid casting via void * but
+we have gone this way now - with the exception of
+the poison list - oops.   
 
-> 
-> I initially thought of XDR for on-media-format, which file systems need
-> to do with on-media structs (superblocks, logs, inodes, etc. etc.). But
-> this struct is not used in that way.
-> 
-> In fact, famfs' on-media/in-memory metadata (superblock, log, log entries)
-> is only ever read read and written by user space - so it's the user space
-> code that needs XDR on-media-format handling.
-> 
-> So to clarify - do you think those enums should be u32 or the like?
+> +    uint16_t record_count = 0;
+> +    uint16_t i;
+> +    uint16_t out_pl_len;
+> +    uint8_t start_region_id = in->start_region_id;
+> +#ifdef CXL_SPEC_AFTER_R30
 
-Yes. As it's userspace, uint32_t maybe or __u32. I 'think'
-both are acceptable in uapi headers these days.
+Handy for testing, but I'd drop the ifdef for the final
+version.  We don't need to support old specs.
 
-> 
-> Thanks!
-> John
-> 
+> +    struct get_dyn_cap_config_out_pl_extra {
+> +        uint32_t num_extents_supported;
+> +        uint32_t num_extents_available;
+> +        uint32_t num_tags_supported;
+> +        uint32_t num_tags_available;
+> +    } QEMU_PACKED;
+> +    struct get_dyn_cap_config_out_pl_extra *extra_out;
+As above, anonymous structure should work ok.
+> +#endif
+> +
+> +    if (start_region_id >= ct3d->dc.num_regions) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    record_count = MIN(ct3d->dc.num_regions - in->start_region_id,
+> +            in->region_cnt);
+> +
+> +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+> +#ifdef CXL_SPEC_AFTER_R30
+> +    extra_out = (struct get_dyn_cap_config_out_pl_extra *)(payload_out +
+> +            out_pl_len);
+> +    out_pl_len += sizeof(struct get_dyn_cap_config_out_pl_extra);
+> +#endif
+> +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> +
+> +    out->num_regions = ct3d->dc.num_regions;
+> +#ifdef CXL_SPEC_AFTER_R30
+> +    out->regions_returned = record_count;
+> +#endif
+> +    for (i = 0; i < record_count; i++) {
+> +        stq_le_p(&out->records[i].base,
+> +                ct3d->dc.regions[start_region_id + i].base);
+Qemu allows a couple of style choices, but don't think this matches any of them.
+https://elixir.bootlin.com/qemu/latest/source/docs/devel/style.rst#L79
+
+My preference is immediately after opening bracket.
+
+
+> +        stq_le_p(&out->records[i].decode_len,
+> +                ct3d->dc.regions[start_region_id + i].decode_len /
+> +                CXL_CAPACITY_MULTIPLIER);
+> +        stq_le_p(&out->records[i].region_len,
+> +                ct3d->dc.regions[start_region_id + i].len);
+> +        stq_le_p(&out->records[i].block_size,
+> +                ct3d->dc.regions[start_region_id + i].block_size);
+> +        stl_le_p(&out->records[i].dsmadhandle,
+> +                ct3d->dc.regions[start_region_id + i].dsmadhandle);
+> +        out->records[i].flags = ct3d->dc.regions[start_region_id + i].flags;
+> +    }
+> +#ifdef CXL_SPEC_AFTER_R30
+> +    /*FIXME: need to set valid values in the future*/
+
+We need to do that before upstreaming..
+For tags, 0 is fine for now.
+
+For extents allow say 512 and count how many are in lists
+I guess then subtract that.
+
+> +    stq_le_p(&extra_out->num_extents_supported, 0);
+> +    stq_le_p(&extra_out->num_extents_available, 0);
+> +    stq_le_p(&extra_out->num_tags_supported, 0);
+> +    stq_le_p(&extra_out->num_tags_available, 0);
+> +#endif
+> +
+> +    *len_out = out_pl_len;
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+>  #define IMMEDIATE_DATA_CHANGE (1 << 2)
+>  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+> @@ -1282,6 +1382,11 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>          cmd_media_clear_poison, 72, 0 },
+>  };
+>  
+> +static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
+> +    [DCD_CONFIG][GET_DC_CONFIG] = { "DCD_GET_DC_CONFIG",
+> +        cmd_dcd_get_dyn_cap_config, 2, 0 },
+> +};
+> +
+>  static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+>      [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
+>      [INFOSTAT][BACKGROUND_OPERATION_STATUS] = { "BACKGROUND_OPERATION_STATUS",
+> @@ -1487,7 +1592,12 @@ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>  
+>  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
+>  {
+> +    CXLType3Dev *ct3d = CXL_TYPE3(d);
+> +
+>      cxl_copy_cci_commands(cci, cxl_cmd_set);
+> +    if (ct3d->dc.num_regions) {
+> +        cxl_copy_cci_commands(cci, cxl_cmd_set_dcd);
+> +    }
+>      cci->d = d;
+>  
+>      /* No separation for PCI MB as protocol handled in PCI device */
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 3cf3077afa..6df7fecdf1 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -422,6 +422,17 @@ typedef struct CXLPoison {
+>  typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+>  #define CXL_POISON_LIST_LIMIT 256
+>  
+> +#define DCD_MAX_REGION_NUM 8
+Really trivial but call this 
+
+DCD_MAX_NUM_REGION because it's the maximum number of
+regions. The maximum region number is 7 (as zero indexed).
+
+> +
+> +typedef struct CXLDCDRegion {
+> +    uint64_t base;
+Probably makes sense to call out that bas also aligned to 256 MiB
+as not immediately clear the comment applies to both.
+Easiest will be to duplicate it.
+> +    uint64_t decode_len; /* aligned to 256*MiB */
+> +    uint64_t len;
+> +    uint64_t block_size;
+> +    uint32_t dsmadhandle;
+> +    uint8_t flags;
+> +} CXLDCDRegion;
+> +
+>  struct CXLType3Dev {
+>      /* Private */
+>      PCIDevice parent_obj;
+> @@ -454,6 +465,11 @@ struct CXLType3Dev {
+>      unsigned int poison_list_cnt;
+>      bool poison_list_overflowed;
+>      uint64_t poison_list_overflow_ts;
+> +
+> +    struct dynamic_capacity {
+> +        uint8_t num_regions; /* 0-8 regions */
+> +        CXLDCDRegion regions[DCD_MAX_REGION_NUM];
+> +    } dc;
+>  };
+>  
+>  #define TYPE_CXL_TYPE3 "cxl-type3"
 
