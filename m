@@ -1,119 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3FB1D698;
-	Tue, 27 Feb 2024 16:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1202C69D;
+	Tue, 27 Feb 2024 16:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709052222; cv=none; b=DtT7wb9QpRe1lDWscXrKVY4OWaQtIzixPZMsOJR6BBrt1qkDDLRfqnhkOjDA7KzHKuGSoBdNX+oqeCezGqKVxUmkCxAXoIMfAasgkXNeeshM5GsBBOVnAESda8++PQaNhYlZE6c2/RX8cNVnZ2PWdiKRi6RD6KU/3uVE3kq2el0=
+	t=1709052531; cv=none; b=NxexG2HgZKgTvYhLIy/S59IppVrzfXvRKni1mUO0ZUP/l/wzAqmrrWob4/fPuF7exE9aVnqf8YI+HeI6fUYoRhwMS+oLprdgukMYrpZRlOan7ZqGl8o/nezOJsPSj9JPtjC9P/u6JJIRQojabLII30C2zGMhivuvRCaXKAtgve8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709052222; c=relaxed/simple;
-	bh=mLvoS/AS2ZkRjKX4NepsHpSZt6hm5Psw5ZqaHoeskgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LhNCZPkr+UjxeQZZ/X0Cx0Vxm6ws9H0VcGv0lySbVwXN4++3o18+sGVcFbward/5Tm5m+noEJXp9l3p+B+AghWnlam8scK+Aysy2K3FOQRQnEx6C9E4TpQVKFn5UncLV6rbG/PaSTJDBjzXwPiX+NrNcL8E6nEIjjCencCBEV+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rh682Dw0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709052531; c=relaxed/simple;
+	bh=GtJSUs8Zd08aEwUhpwlgPs5kZeQj2tOYnSlh4NGkwac=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=ede/qpHqHpIVM6a9cJEyZKiFfep59qqU5GaXRulntV5/gtBrDJJJP7b74DeMQ+5dSPx6H5S5+8HDcaghVL5/Vo7HPkhbRzCERJtUV0NZkhK9Hr6GRt6OxKSADiw2TfZeOFbeHxawVa6VxWI1gvJ0HIjXcr6aP8+wMZkreEGVbMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VAt5aIZU; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rh682Dw0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619E4C433C7;
-	Tue, 27 Feb 2024 16:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709052221;
-	bh=mLvoS/AS2ZkRjKX4NepsHpSZt6hm5Psw5ZqaHoeskgc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rh682Dw0RdypZcLNGgBdo/QkCAZr8CNKZKAT+9739XomzD+q/p+lQyNeJzGtiRXay
-	 eVvFU3dzDKqG/uGQCDDDfQ/iE+/Q1gaC4/N0qTCe/h7Tp4VZMXLWRGtckK+n/kbHvE
-	 jIwJ1xrpnnsoakkuGFjXXc+gOkzhLDnRxCtG/K/F7+L9X3LV7wwLDnnkTwJwILxQLi
-	 A7NFLllMiqptTajUzaAEMTnw2odCxfuceubAsmFJvBBHQn5Iwh147+Jlb8+vWnugGc
-	 hHEiaS4oCiTBUGxE/EcFOKhTQV7JqslhmU8LwB6l25nIeqNTgAJI3VaJjcPOHnFUkf
-	 sOK79t4LGO3tw==
-Date: Tue, 27 Feb 2024 10:43:39 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Cc: kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org,
-	y-goto@fujitsu.com, linux-pci@vger.kernel.org, mj@ucw.cz,
-	dan.j.williams@intel.com
-Subject: Re: [RFC PATCH v2 1/3] Add sysfs attribute for CXL 1.1 device link
- status
-Message-ID: <20240227164339.GA239446@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAt5aIZU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709052529; x=1740588529;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GtJSUs8Zd08aEwUhpwlgPs5kZeQj2tOYnSlh4NGkwac=;
+  b=VAt5aIZUs9Lg5f8h3pCUYEwZVJUn9RXNEvg9Rf73c9swibJLXIa7bLkH
+   8UIBmeoYeVX6asbavo9nqhptmEqrZ8WYGFyo+VCymCsfWGI16tEpSzHpF
+   8Ibnj9noy3OQ88c8h1CoiGJDtwtg+IdoF4n3K8ljlK78qlAPm2sPVH+GI
+   MbjKipZ6flBxn/gPbCJcsBHWLuRRM7A0wKDnzhIG3D3HoBJZqJ9VwuzJq
+   mWaygvF9/XWNpigF0GPfqgDty3cgdzXGCGjGx2glQ3Zwz+GnG5G+Jx2QE
+   NlKN3fyENeiQatlTB/cM1n1V2SHs5xscGCHxCQLsp+mv5R6vjRucsriF9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14043579"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="14043579"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:48:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="44614001"
+Received: from sshaik-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.88.67])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:48:49 -0800
+Subject: [PATCH 0/2] cleanup: A couple extensions for conditional resource
+ management
+From: Dan Williams <dan.j.williams@intel.com>
+To: torvalds@linux-foundation.org, peterz@infradead.org,
+ gregkh@linuxfoundation.org
+Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Date: Tue, 27 Feb 2024 08:48:47 -0800
+Message-ID: <170905252721.2268463.6714121678946763402.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227083313.87699-2-kobayashi.da-06@fujitsu.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 27, 2024 at 05:33:11PM +0900, Kobayashi,Daisuke wrote:
-> This patch implements a process to output the link status information 
-> of the CXL1.1 device to sysfs. The values of the registers related to 
-> the link status are outputted into three separate files.
+Hi Peter, Linus, Greg,
 
-> +static u32 cxl_rcrb_to_linkcap(struct device *dev, resource_size_t rcrb)
-> +{
-> +	void __iomem *addr;
-> +	u8 offset = 0;
+The cond_guard() patch has gone through several rounds of review and is
+looking good to me, but is missing feedback from one of you that have
+been grappling with a cross-kernel view of what these new facilities
+should look like.
 
-Unnecessary initialization.  Also, readw() returns u16.
+Separately I have been running into trouble trying to fit no_free_ptr()
+into some cleanup patches and thought of another way to build on the
+conditional syntax originated in scoped_cond_guard().
 
-> +	u32 cap_hdr;
-> +	u32 linkcap = 0;
+More specifically, scoped_cond_guard() introduced the concept of passing
+a statement to the macro to handle the failure case. cond_guard()
+extends that to be used within an existing scope to automatically
+release a conditionally acquired lock rather than defining a new scope.
 
-Ditto.
+The cond_no_free_ptr() helper takes that concept for ending the cleanup
+scope for objects when responsibility for freeing them has been
+transferred to a 3rd object or subsystem.
 
-> +
-> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
-> +		return 0;
-> +
-> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
-> +		return 0;
-> +
-> +	addr = ioremap(rcrb, SZ_4K);
-> +	if (!addr)
-> +		goto out;
-> +
-> +	offset = readw(addr + PCI_CAPABILITY_LIST);
-> +	offset = offset & 0x00ff;
-> +	cap_hdr = readl(addr + offset);
-> +	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
-> +		offset = (cap_hdr >> 8) & 0x000000ff;
-> +		if (!offset)
-> +			break;
-> +		cap_hdr = readl(addr + offset);
-> +	}
+---
 
-Hmmm, it's a shame we have to reimplement pci_find_capability() here.
-I see the problem though -- pci_find_capability() does config reads
-and this is in MMIO space, not config space.
+Dan Williams (1):
+      cleanup: Introduce cond_no_free_ptr()
 
-But you need this several times, so maybe a helper function would
-still be useful so you don't have to repeat the code.
+Fabio M. De Francesco (1):
+      cleanup: Add cond_guard() to conditional guards
 
-> +	if (offset)
-> +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
 
-Testing "offset" acknowledges the possibility that it may be NULL, and
-in that case, the readl() below is a NULL pointer dereference.
+ include/linux/cleanup.h |   42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-> +	linkcap = readl(addr + offset + PCI_EXP_LNKCAP);
-> +	iounmap(addr);
-> +out:
-> +	release_mem_region(rcrb, SZ_4K);
-> +
-> +	return linkcap;
-> +}
-
-> @@ -806,6 +1003,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(mds))
->  		return PTR_ERR(mds);
->  	cxlds = &mds->cxlds;
-> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
-> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
-> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);
-
-Is there a removal issue here?  What if "pdev" is removed?  Or what if
-this module is unloaded?  Do these sysfs files get cleaned up
-automagically somehow?
-
-Bjorn
+base-commit: 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
