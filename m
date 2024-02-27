@@ -1,59 +1,59 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8044C61
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 01:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8E217F8
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 01:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708995703; cv=none; b=NHFOpMF6LbCyEiSpzUDUv5domlPA4U5vwccuzZn3OH3B0+MTXHAflF3yxz1EULQf8vWcM1b6kpejJtibQ9sbyd8ioPfldWVnbFm8kHplMjfWQ3CUVKFSdaf5+1ub7rVDkDL+9QiXlgorTYFfkaH/tkUbD5BVH4BFEi7Kf6/ughg=
+	t=1708996011; cv=none; b=owfT1ZcN0cx+OF/kgQ8GXT4dVJ33jnFjLRRQ7FvucCT8HxxdJ5YLXhVwS3zqDwEwI8Z04wAlvqtPRfgYcMAtRlTqv+E/UD301172m99t8wSsRLzcRoIgTAh1ZHlecIZEj6YoH1SKU1/ae150lBiDtS/HGBgYo31iDRKtQ5kTkp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708995703; c=relaxed/simple;
-	bh=Tn7qLnljrFHffCqaZ4hSUj4fn/J5hD7xAXBHAvtcGzg=;
+	s=arc-20240116; t=1708996011; c=relaxed/simple;
+	bh=G5XSmDj0Grny0t4D6rcJ+UO42rPWow4k7MYwmCfSkVM=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQPAL5xxcRjDOdeUDqMQisqC8YTNRc47IoTgRRaqdxUH3P5wlr4zsVz9YozeJuZ0O06b04L36W0kFBEjivG5wCu0RhtmoT63RtpKQNqgqNPNSpuWDT5gFPp2ZBjmHrl0oGV87gfL233xqAVw0IXojhQtO5zkGqqbcg0ip25BQ0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOt3KAhs; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdLTga5oAxz+UETGONoLkKgADiyi1HdgCFx9Qf4riLAssJ0X6hrgwJ0yMImQW0U4nN4YM1pjWUnwSKFABL2vwVtFaHeeMO5jX6ibaposDPq5n6MXmW3kE+jbLqveKHUq/Lidl8ycwshZpEo6EZA1vJKl4P+37iQDu6CkTxnkgFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JaOtkVxY; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOt3KAhs"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e4f49c5632so1075078b3a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 17:01:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JaOtkVxY"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-364f791a428so12201185ab.3
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Feb 2024 17:06:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708995701; x=1709600501; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708996009; x=1709600809; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZDdKR41hFYtGH6CFmjj4eUOG/E7SO7Xv5k4ut6JPaQ=;
-        b=eOt3KAhsL91rMudM4TZ3xpJze/Iz5TGTyviDqswtAEnAKEy2ImuCZLUWlniYl9LnNC
-         wR1V6OhON1KkJlk0ffjSWKX2eC4aE0+tcVnm9e237iTrO7FWW7WlXfNWCy7lFqdRN2Ya
-         AWHNC2nwj0wPpn+UPzjgeKX6g1KkSd3dyZzVRLF/MwxDcbkR/RD7MDL50F/oJYWOJo2k
-         H/QWhS1hd1eR21tuVm/FTSyoKoiMXSJt59zLc28TOBSqu5GO/WJ7ME+6gto4obU9I9hg
-         HKh6jGuq4JLUq9sTdMymDqDiyKB0j3CHEUCPvYoKqaEWuTI9IgAUeO2J4rYIQq22cnFt
-         zVKg==
+        bh=WVoAGP6yYuSlpDtZA3JBGfA3TEVDc/MSNeQz65Aoz2I=;
+        b=JaOtkVxYMLu89F4ba0qP/c7qaUk4TJoFWkkmS0iLVdRbsmD6ObXyvxL64T2hKlgijX
+         jN39Ay1NEMgRra7Z6SU90+xW6o6lH4j43uZTl4BblIQj/4zS4mB3gkocm6ABK9k3nmWW
+         lyXFp7BMXSJzHpZCkcrLGLYHr6vnGNbtqrln12ScNuyX6AWDzclmJcyImOuqRGQYphCL
+         A8JiA4RnwfELjK2UX9NjatE7os4y8znXIX4UavuOdmy3ZfIhunOk2r/x87nH5fm6eK1n
+         Hxt1Qp3Vj55vZmmr8a5afgdS78JV7ew/Y02gCryo2cG6idOdUv47JhmPyDNF8jUy41th
+         b/dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708995701; x=1709600501;
+        d=1e100.net; s=20230601; t=1708996009; x=1709600809;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eZDdKR41hFYtGH6CFmjj4eUOG/E7SO7Xv5k4ut6JPaQ=;
-        b=sRK3h3CifeAqRlTtLuGkUDGVpTZbVhfr+/2h3zDRDdiN6RoFQ/UYJ6FT3igfKVyj9K
-         EEaZy3hJRF8XXsrL/8Qbnxn9X3Sq8i3kzE6be4yNRx+Yq27yj39MzZIZADlmZOklUQos
-         JqjsQurPKKFSWDi5q4GlFATkK20Ag30YpE+6BL7ITBCYAzmH4P5f6W+uCSzGKB+y7AYz
-         H7GIpit9LlTQiXIbR9n3U83CohY/hlSrj3p2oXTQ8H5UC/dNvq0yxr/nTwWWtNcB2HGw
-         C1OpK7eMOT+AP5H9V8kWnwRqZNF0KSYVv7/J+qmJChb2XYMB+a4TgcyOkB3k//FjpvnX
-         YsEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXN+diihaFsXYf2o9Lto36ykSziSO09pq70grVwsOchu2zHHFh+miqZI5UADk5UMEj895MKEKkXUN9qFiXLrp8Xul1zm4APsEpF
-X-Gm-Message-State: AOJu0Yw9bU4aUrlw1Oie25KZT9O+z65lOcx3J5P1hlYPIoBnxdVGVBwS
-	rnmuFV1XKeh6/DN5szQRSFquOP5tBUyAbstSL1k+84L5vDuboDcq
-X-Google-Smtp-Source: AGHT+IFiuLkyfTfP1K58Ed6tmWSnREBD9iKxhj60+zuRKso+K3MibCYCAPTiPG2zPH63kjaJnRJ2rA==
-X-Received: by 2002:a05:6a20:4f03:b0:1a0:c427:9c4b with SMTP id gi3-20020a056a204f0300b001a0c4279c4bmr638311pzb.19.1708995701353;
-        Mon, 26 Feb 2024 17:01:41 -0800 (PST)
+        bh=WVoAGP6yYuSlpDtZA3JBGfA3TEVDc/MSNeQz65Aoz2I=;
+        b=cgPLXV6i52fOMkIcfYDwJeKTXjnIkMZSUNOmPl91DCk97WVykr6HkN5kZ5Cb8H5ckB
+         uiCKwsz7YN0BH+pACBAHZ9BEm731uOuXtp54aM/wrO5ZM0Gw9UeEi+5xbPPLyWpqZcoz
+         /m6Sp9wtjGjTurvYWcZlOZtYQHxjwfKkm09KzxTpn4NqCRPD2pl7WYZJpBpZTXN8f518
+         LHSOVj+DLBfH+lYhZLQ5lWedxad3XmcoLO50aDFjUyaCqi0uj3qBvepVON8GK1B/iL+2
+         AWZ1Ey+5a1XDVE3amF2F+QWK6yvaSIWn+WLeq52AFlrqAux0VGz7rSIm0cnM/Bitnh/g
+         cl4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgXL/WQJQlCAhH/SRvicr/DN9ZkkSkpK3GFIQnbkU7pQNDu/6yL9VQzVHllIhtGpBCQ08V+uJwBFOsq+7zf3lWSvFmJpKWc9zE
+X-Gm-Message-State: AOJu0Ywu4SRGnipJUt1gdLOldpYEpBZ44JNmdjfcGrsLTXoHm5r8D9nF
+	e9Kar0YZHKyVOtuzUNEuvcPSVHFJgC073XSh9l20jR24m5q41WxhXA31//VR
+X-Google-Smtp-Source: AGHT+IF/55mrQiCdVIew+CQkJsK20umuoCxmQ6xDzwu2UkEdTp+pgMbspQt5rGTI04LirRAQhBLXkQ==
+X-Received: by 2002:a92:cb90:0:b0:365:32b:602b with SMTP id z16-20020a92cb90000000b00365032b602bmr8897814ilo.11.1708996009253;
+        Mon, 26 Feb 2024 17:06:49 -0800 (PST)
 Received: from debian ([2601:641:300:14de:cd6d:a14c:bd98:9c36])
-        by smtp.gmail.com with ESMTPSA id n7-20020a056a000d4700b006e4d545519dsm4697451pfv.62.2024.02.26.17.01.39
+        by smtp.gmail.com with ESMTPSA id y5-20020a633205000000b005dc120fa3b2sm4523869pgy.18.2024.02.26.17.06.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 17:01:41 -0800 (PST)
+        Mon, 26 Feb 2024 17:06:48 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Mon, 26 Feb 2024 17:01:22 -0800
+Date: Mon, 26 Feb 2024 17:06:46 -0800
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	gregory.price@memverge.com, ira.weiny@intel.com,
@@ -62,7 +62,7 @@ Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	jim.harris@samsung.com, Fan Ni <fan.ni@samsung.com>
 Subject: Re: [PATCH v4 08/10] hw/cxl/cxl-mailbox-utils: Add mailbox commands
  to support add/release dynamic capacity response
-Message-ID: <Zd00YhCejwN6NuU6@debian>
+Message-ID: <Zd01poqsQHKMu1KQ@debian>
 References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
  <20240221182020.1086096-9-nifan.cxl@gmail.com>
  <20240226180417.00004dc4@Huawei.com>
@@ -172,11 +172,6 @@ On Mon, Feb 26, 2024 at 06:04:17PM +0000, Jonathan Cameron wrote:
 > to allow for complex extent list tracking implementations.  Succeeding
 > when a naive solution would fail due to running out of extents that it can
 > manage is not (I think) a bug.
-
-Yeah. spec r3.1 mentioned about the overflow issue that adding/releasing
-extent requests can raise. We should fail the operation if running out of
-extents and report resource exhausted.
-
 > 
 > > +                }
 > > +                break;
@@ -187,6 +182,11 @@ extents and report resource exhausted.
 > I think we need to fix this. Linux isn't going to do it any time soon, but
 > I think it's allowed to allocate two extents next to each other then free them
 > in one go.  Isn't this case easy to do or are there awkward corners?
+
+If we use the bitmap (indicating each range is filled by valid extents)
+in PATCH 10, it should not be that difficult to do.
+
+Fan
 > If it's sufficiently nasty (maybe because only part of extent provided exists?)
 > then maybe we can leave it for now.
 > 
@@ -201,50 +201,6 @@ extents and report resource exhausted.
 > Nasty to test if nothing else :(  Would look much like your check
 > on malformed extent lists.
 > 
-
-I cannot find anything specific to this in the specification either.
-Since we have already detected the case where the extent range across
-multiple regions, the only case we need to capture here is one/multiple
-portions of an extents getting released and causing extent overflow.
-I think we can handle it after we introduce the bitmaps (PATCH 10) which
-indicates DPA ranges mapped by valid extents in the device.
-
-With that, The release workflow would be
-
-1) detecting malformed extent lists; if passed
-2) do cxl_detect_extent_overflow {
-    delta = 0;
-    make a copy of the bitmap as bitmap_copy;
-    for each extent in the updated_extent_list; do
-        if (extent range not fully set in the bitmap_copy)
-            return error;
-        else {
-            if gap at the front based on the bitmap_copy:
-                delta += 1;
-            if gap at the end based on the bitmap_copy:
-                delta += 1;
-            delta -= 1;
-            // NOTE: current_extent_count will not be updated in the
-            // loop since delta will track the whole loop
-            if (delta + current_extent_count > max_extent_count)
-                return resource exhausted;
-            update bitmap_copy to clear the range covered by the extent
-            under consideration;
-        }
-    done
-
-}; if pass
-3. do real release: in the pass, we will not need to detect extent
-errors;
-
-Does the above solution sound reasonable? If so, do we want to go this
-way? do we need to introduce the bitmap earlier in the series?
-
-Thanks,
-Fan
-
-
-
 > 
 > > +            } else if ((dpa < ent->start_dpa + ent->len &&
 > > +                        dpa + len > ent->start_dpa + ent->len) ||
