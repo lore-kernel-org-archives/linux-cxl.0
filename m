@@ -1,155 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738DD51004
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 20:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FFD48CFC
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 20:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709065741; cv=none; b=m0FZA1T+E2b5OsPZipMd3YisMO/yzhCeNTChCibhsqjeEQZXp2FUaQMgwss8SxnXUIKp9tTOHAJWPKh11lddtFYQzsCR/vcU+OIluHmzRZI0c0v7DkndY+21rn9Y/ymAhRt5iIXNlqetrFlY8sBwOWThtRYFEcB0iGUCzt80qE4=
+	t=1709066471; cv=none; b=h2+JUkEjSZIbyxRcXglswThReUFI5MTwUvPSukpumBa3J8cdQ/Dp7gEB+pjEjyUHx2qnz6YOR1wVERVClyzC4ubJXJ1JhCGVTJ0dZv5PbAfRlGiS6RxUR6IBknYfaGr5RTEwhLQ5bU9o/OWVDra9sqSSjO0001CO7TDLPJ427I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709065741; c=relaxed/simple;
-	bh=nAUGOYHwbgc37EK4Po1Uxn5ZeOZ74M8gDruDHnMJzMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JS4umVCUnSAAZwfOROdn8EYJ8wSCU/r7ZxxuYgLFcqsDCJqb/wJJJE1/PD7bJ7IccA12KsZl21iSngeVfgDuMt/ZmQ2OH9nOez628BcklZP4blPuGdiKrRUGr2Fi142hrHMxgvCqPSh3+q8nxNxen9Mr/ChvYtXYvb39HZnVTSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HKT0yWsV; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709066471; c=relaxed/simple;
+	bh=Kc8/DnEIqj9ihyvhHXZRL9D2xQyaeIUiwEE9a//D3/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GHtNmjJ7p5jpnV+kOH4z/5z96tHS3EFwsoSaB9AgMjSWBEP3dYOEbDfG8R6fdfmiVYwZaxrD9/kqIwtNjK0hmTUEu9ZWvEseoHDOAcCslDRssEG4Xn9FoW+cQQKnzwxZq3CjMUx3oftEY8scHb0ySz9S/mQ5G7wujYPAzhKQOG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PlRbB+Co; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HKT0yWsV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709065739; x=1740601739;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nAUGOYHwbgc37EK4Po1Uxn5ZeOZ74M8gDruDHnMJzMo=;
-  b=HKT0yWsVQEUE3StLDOCoF+NkW8Rq6gnbvF/RGwpRgKiD89e7FfFRF45w
-   tIHeeG0MP6F+YfG03c9aC3V4/QZu6r2NLauMby/EF0jzkkqb33x9tX+1a
-   s2jQ5ZmSbUaDW+T5I6ZIiuKfeCbSW7oY2403mLx85SsgH3noAWhcrqSAs
-   GTAhwlRB4VtmdL/NjVBmIDhXmx9EFKftrKwARFNEIduQRHQa4nl6MPiN7
-   JrL5OqmVQyywb0+5W7i0dlPLmhVra3fn3oU8Qv4kWHmb9IaF8sAfI6zr6
-   u7qiZ4iuZtjq823B1IZydDAo8fYvNAvdLpAzMs2N0UnhW03SxQaRxzAD5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="25900691"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="25900691"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 12:28:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="11835463"
-Received: from pbackus-mobl1.amr.corp.intel.com (HELO [10.246.114.227]) ([10.246.114.227])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 12:28:58 -0800
-Message-ID: <86f8f0a0-3619-4905-a6e8-9fd871ec0a39@intel.com>
-Date: Tue, 27 Feb 2024 13:28:56 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PlRbB+Co"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-564fd9eea75so6057819a12.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:41:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1709066467; x=1709671267; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=juAeacRch3k681Zfd2bjBuM8kFMkd14jsXtMgJ5fuGM=;
+        b=PlRbB+CoW7stIw9cye5TOSecpRUaGisFcwm3tEa6Pik5IoTBEh+3IzDopQhTLHKkNw
+         Pexm7VxxFYMASzhPoM3KvT6yyul0FUpNlJUgNjsfal2e1AxqDfObyLiCPgcCYnHTN8Wg
+         nHgwMVEr0ZrD+yGrZ8G0c8FWFDdRbizKV5hKw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709066467; x=1709671267;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=juAeacRch3k681Zfd2bjBuM8kFMkd14jsXtMgJ5fuGM=;
+        b=cZ7xwXW2gsUV3dmiTsLGw7FNeYGQzDLuXawOH5qK6f2eKz9tvidEDNJFvXBocw0PKv
+         hDvpAHNG+58MKtGj5C7MaIWoVVXCx+TNXuGEL5nPfEejHn3Iug9m3Nxa3LKg0z2S/tHs
+         IPcqZj/h6dEL/4sgcICiSDJT0g2einU7oKloyqIGkmPQn+9zQ+rkAetu7qlBzD3oXrqa
+         iV6i5VQ5GyjSM9fPveSiXlo9Dd3P2S+dPQIT3Wr2H0Zih6u+A69npVxNZjumvzELnlEh
+         7WL4DNgerg356bIl9lnctJw+o34aB290U/NY6b7oOlLZT9magHUf/XlaT3HeKHuFSVVz
+         208w==
+X-Forwarded-Encrypted: i=1; AJvYcCWdI33ciMfNtveUNHNogatXRFAqYCMDatWGQDFLlyUJLofa6XuTxzfg+of0HgPX+NB+2njJ+69eMd9xl1b60sKn3XOqCbWNWK//
+X-Gm-Message-State: AOJu0YyEmNe7khdz6SRj6HhhJ6tYXztdW0BsrBYXCjf2YSJm08FBYjWR
+	u8FATd7nolR8OXW/LELvv9YSv95jM7QiPUFvo1qXdemnQHwkoowcgdtoqTiglIw8Ez4WbtHMyHB
+	2iFZ+7w==
+X-Google-Smtp-Source: AGHT+IEgNQW9eGt4a/cNhFFvMAbKeczujPdV0seFZyi4Qdri0VvvNTEZcvaOBD3CgmbO0SQ4MPLopw==
+X-Received: by 2002:aa7:d0c9:0:b0:565:7d4a:1d4a with SMTP id u9-20020aa7d0c9000000b005657d4a1d4amr6985226edo.8.1709066467181;
+        Tue, 27 Feb 2024 12:41:07 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id z95-20020a509e68000000b00565671fd23asm1150071ede.22.2024.02.27.12.41.06
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 12:41:06 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a437a2a46b1so259983166b.2
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:41:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUx8vqNpVwfzAmMvV2+iFPoZshT6dQa9EOii7n0xq+JaFYxlwUnSsjCXZjyryQbJFcffAOI69Cr0JWOs5MwU7xQ6oypi340DkRk
+X-Received: by 2002:a17:906:b349:b0:a3e:fce7:9393 with SMTP id
+ cd9-20020a170906b34900b00a3efce79393mr6662120ejb.10.1709066466422; Tue, 27
+ Feb 2024 12:41:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Question about forcing 'disable-memdev'
-Content-Language: en-US
-To: Jane Chu <jane.chu@oracle.com>, =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo?=
- =?UTF-8?B?5YWo?= <caoqq@fujitsu.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-Cc: vishal.l.verma@intel.com
-References: <3788c116-50aa-ae97-adca-af6559f5c59a@fujitsu.com>
- <dd61a8f2-ef80-46cc-8033-b3a4b987b3f4@intel.com>
- <ebe3f86f-d3f9-414d-9749-7d41ac7d3404@oracle.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ebe3f86f-d3f9-414d-9749-7d41ac7d3404@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <170905252721.2268463.6714121678946763402.stgit@dwillia2-xfh.jf.intel.com>
+ <170905253897.2268463.13371523233762430828.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <170905253897.2268463.13371523233762430828.stgit@dwillia2-xfh.jf.intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 27 Feb 2024 12:40:49 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiJJf+FwWNcWEv15hXjK3v3VfPLabj-SqQpMk8qLM0xAg@mail.gmail.com>
+Message-ID: <CAHk-=wiJJf+FwWNcWEv15hXjK3v3VfPLabj-SqQpMk8qLM0xAg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] cleanup: Introduce cond_no_free_ptr()
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: peterz@infradead.org, gregkh@linuxfoundation.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 27 Feb 2024 at 08:49, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+>     5/ cond_no_free_ptr(rc == 0, return rc, res, name);
 
+Ugh. Honestly, this is all too ugly for words.
 
-On 2/27/24 1:24 PM, Jane Chu wrote:
-> On 2/27/2024 8:40 AM, Dave Jiang wrote:
-> 
->>
->> On 2/26/24 10:32 PM, Cao, Quanquan/曹 全全 wrote:
->>> Hi, Dave
->>>
->>> On the basis of this patch, I conducted some tests and encountered unexpected errors. I would like to inquire whether the design here is reasonable? Below are the steps of my testing:
->>>
->>> Link: https://lore.kernel.org/linux-cxl/170138109724.2882696.123294980050048623.stgit@djiang5-mobl3/
->>>
->>>
->>> Problem description: after creating a region, directly forcing 'disable-memdev' and then consuming memory leads to a kernel panic.
->> If you are forcing memory disable when the memory cannot be offlined, then this behavior is expected. You are ripping the memory away from underneath kernel mm. The reason the check was added is to prevent the users from doing exactly that.
-> 
-> Since user is doing the illegal thing, shouldn't that lead to SIGBUS or SIGKILL ?
+The whole - and only - point for the cond_guard() is to make mistakes
+less likely.
 
-The behavior is unpredictable once the CXL memory is ripped away. If the memory only backed user memory then you may see SIGBUS. But if the memory backed kernel data then kernel OOPs is not out of question. 
+This is not it. This makes mistakes unreadable and undebuggable.
 
-> 
-> thanks,
-> 
-> -jane
-> 
->>
->>>
->>> Test environment:
->>> KERNEL    6.8.0-rc1
->>> QEMU    8.2.0-rc4
->>>
->>> Test steps：
->>>        step1: set memory auto_online to movable zones.
->>>             echo online_movable > /sys/devices/system/memory/auto_online_blocks
->>>        step2: create region
->>>             cxl create-region -t ram -d decoder0.0 -m mem0
->>>        step3: disable memdev
->>>             cxl disable-memdev mem0 -f
->>>        step4: consum CXL memory
->>>             ./consumemem   <------kernel panic
->>>
->>> numactl node status:
->>>        step1: numactl -H
->>>
->>>      available: 2 nodes (0-1)
->>>      node 0 cpus: 0 1
->>>      node 0 size: 968 MB
->>>      node 0 free: 664 MB
->>>      node 1 cpus: 2 3
->>>      node 1 size: 683 MB
->>>      node 1 free: 333 MB
->>>      node distances:
->>>      node   0   1
->>>        0:  10  20
->>>
->>>      step2: numactl -H
->>>
->>>      available: 3 nodes (0-2)
->>>      node 0 cpus: 0 1
->>>      node 0 size: 968 MB
->>>      node 0 free: 677 MB
->>>      node 1 cpus: 2 3
->>>      node 1 size: 683 MB
->>>      node 1 free: 333 MB
->>>      node 2 cpus:
->>>      node 2 size: 256 MB
->>>      node 2 free: 256 MB
->>>      node distances:
->>>      node   0   1   2
->>>        0:  10  20  20
->>>        1:  20  10  20
->>>        2:  20  20  10
->>>
->>>      step3: numactl -H
->>>
->>>      available: 3 nodes (0-2)
->>>      node 0 cpus: 0 1
->>>      node 0 size: 968 MB
->>>      node 0 free: 686 MB
->>>      node 1 cpus: 2 3
->>>      node 1 size: 683 MB
->>>      node 1 free: 336 MB
->>>      node 2 cpus:
->>>      node 2 size: 256 MB
->>>      node 2 free: 256 MB
->>>      node distances:
->>>      node   0   1   2
->>>        0:  10  20  20
->>>        1:  20  10  20
->>>        2:  20  20  10
+             Linus
