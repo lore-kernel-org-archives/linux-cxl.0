@@ -1,155 +1,257 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2098.outbound.protection.outlook.com [40.107.212.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347AD52F81
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 05:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709012019; cv=none; b=LVdX39YsxPSLY9gkfGFA6tz1bSxpgJuzxQ5oZbZZPdzHLIhnQLKvCph7++eYOD0HUE6PkIUzOd5aeymXbeOvu/qgBsQjU9uZGp0aCHsItilT4SCUsAyZU6XvZCSLZmlB7tL5IRTEBj91BT2eZvo0Iq/cwx9l80jS/c0/eGYvUkI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709012019; c=relaxed/simple;
-	bh=LmpaNhqfF0T0bD7e5/n/WMIN6zkdt6FvQ+Jo10gMSmo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=UYrNgWGdsKpCR6aNmjxvsKXz6OPNSWmDS+ZzLIeb1fDoN5HvRvBRF5asp5bxVTF9IXqtzk4lu4syB+tQsffA7hEqx+L3n4NR+TpWCzHipzEHRfk54Ox5eKTnPC0AGwh03ar1B2MmErlMjWGls72iq8C5MWvFJIhUUWdw+0xS8ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=sm6dqkQi; arc=none smtp.client-ip=207.54.90.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17FC54BC7
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 07:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709018916; cv=fail; b=gCQ+ufRjUahp5amCG5MQz5SJpkYgHn42xOUl4hZbvcc6no+53BsUeZYoEZ9wUUufIONfYr+HU29yDajy3DS/4weMHRcs7mgT/0ARq3X0E/7Rr/omYfg297/JGptcYY7nB6rADujpsxzVlsLflbwQMsylm2F8IZDHzV44bk9v8gQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709018916; c=relaxed/simple;
+	bh=cyfaitpjLrgDXbBEW0Dc441l9BqRe2ohAAOpmtU5OvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=WUTa2gFyv9k1XMRQy2C114mKmyen8Mv+bC29EhnGoo8hOPMHNsSlzACeRObwPjZ2/AIoI4Uuoz04YEl1s70AAG1DGT0+cjWJiXq8BBZfLxgdntM40LDFtPXdeqyO+isMuB1G6MHZZoHTChDUKGubT+vILm9vkUTJyJBgNcdqsQk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=p9Yopabl; arc=fail smtp.client-ip=40.107.212.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="sm6dqkQi"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709012018; x=1740548018;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   content-transfer-encoding;
-  bh=LmpaNhqfF0T0bD7e5/n/WMIN6zkdt6FvQ+Jo10gMSmo=;
-  b=sm6dqkQieFdAMj3aoUlzWxEQvOMJfLztxu8fiidlCldu3ixG0PrJPT1R
-   nSL8oe8eS8Ank5lKhLlctiMLDncsPYZOId+YH+ZSouEMHFLBqcdGwii94
-   3WARDQb6uD3bhiKz3sgVjsUWDv72INK8XGQNs6neu5Dp7FgMgp70oMTjC
-   LaW/FmsWrha19GGADCw67ZkTLTiZJoRbeCXdihEAhQbmHbxy50xarT0iZ
-   wFdmqFMpgmxHYrenAgLvk8/UbPggR7QZEf6cGgj8lbDW3q41li8MvIDPR
-   AhhwfSMfEe1oA1TWCVhck0Uf1WbMjA9SMXobyrNaj64xD1uIbu/pti58M
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="150535037"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705330800"; 
-   d="scan'208";a="150535037"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 14:32:26 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 60C66D4809
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 14:32:23 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 4EBC4D7720
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 14:32:22 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id D788140B41
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 14:32:21 +0900 (JST)
-Received: from [10.167.220.145] (unknown [10.167.220.145])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 48B761A006A;
-	Tue, 27 Feb 2024 13:32:21 +0800 (CST)
-Message-ID: <3788c116-50aa-ae97-adca-af6559f5c59a@fujitsu.com>
-Date: Tue, 27 Feb 2024 13:32:20 +0800
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="p9Yopabl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G6DmF+vyljyVyUujJTLVxYhaVAN0eMdJSeeZ8cKLcS5zHz9qSwieEyOnY6m/hLzEzWqIyQlefD4VCFxqDt/XtdA67zoTg1dMQ0pmFRWp+31Px7W6Apr5+/gJonu4noV2sCU40Lo48mc/JIS3sDrIHWrLrDoVqNgZQ8loiW0G8CLdxIvO5YwE1Zndux+h8yw7MIfMliRzoj7nNaaexHNQB1aN/4s4iX1MX06ahx0JlXozkeRJ5ogAkBOLDxhlNYqGwYi+FnLHwmBcLfVpfJrowRbC7wZ23bMWMttvwcaVHbFk9OuYPY/cuGqf5VPClVbzjBXbosDY38fdgdU9qidijQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R3EKvR3EY4ag1QXHCNQFmihqyF9hQLigpceIVgWwuXM=;
+ b=K+OWkD12WZUX75hLoNaOnpg/zBoNeuTt9iji/km4snI8RspRbXp/hYGE1NX6yxB+G5qcsMt/5AKQsXSy0/Zh6qob+2mlo+/RBkZBH5L4a6N3cNyDYX/tUd6hPyojPMAnv7rCiioztzkJqgD1IXPHjc59iRe47MBHafIKhKjgbmSRZ7gOpOYYuTO3mrTXNdJpxfZ3Mtszgmitt0G1BWkBIuLE7GkWmk3Pi64+3OSatxGM41iBCdRXxi6r7KZ1pdLza4hj4XvTyipunAlW18Q1Tv5pO58IxdwYFj1Fvp1XVGpVEJbl6dajJY7SQtI1f5VvOocuZx0/f027/xjohswLfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R3EKvR3EY4ag1QXHCNQFmihqyF9hQLigpceIVgWwuXM=;
+ b=p9Yopabl6NV+15fsC3nbavtxTfx4hskttWL6ekYZFSsQQuVNfkLb0BeJQj0UUoYUJKNxdzMM5skucWXuTagcgRN1GwDQoqVNJEg4rK0Ad1dMR48Fsm5/wu/L4JkqcBziIOVR8lPzI90kLQTExbzoXO/pMgqaTUFF4v/8lB35O60=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by CH2PR17MB4069.namprd17.prod.outlook.com (2603:10b6:610:5c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Tue, 27 Feb
+ 2024 07:28:30 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::6903:7860:581e:4468]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::6903:7860:581e:4468%6]) with mapi id 15.20.7316.023; Tue, 27 Feb 2024
+ 07:28:30 +0000
+Date: Tue, 27 Feb 2024 02:28:21 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, dan.j.williams@intel.com, ying.huang@intel.com,
+	linux-cxl@vger.kernel.org
+Subject: [LSF/MM/BPF TOPIC] mm/mempolicy extentions for heterogeneous memory
+ systems
+Message-ID: <Zd2PFXSzYuMMxiQj@memverge.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: MN2PR19CA0053.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::30) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-From: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>
-Subject: Question about forcing 'disable-memdev'
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-Cc: vishal.l.verma@intel.com
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28216.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28216.005
-X-TMASE-Result: 10--2.856700-10.000000
-X-TMASE-MatchedRID: T3hsd5K8wICGYAKJjm5IPTo39wOA02LhTSz0JdEAJbTuR6RKcHGClhDJ
-	pQ8DtMBd6XmVAUde0xrK+QFXYp+GteVaI0j/eUAPQ0Xm0pWWLkoXjfR3d0weRjYt7BCMaN4sMqe
-	v799PSV3myE8VIo655CEIEnlWgL3p7Xu8W3B9FWktXoug6eNZmQO3/A5KGHP/VgkL9epqBvExyi
-	dJf6wfobum2UTXMRXanagtny7ZPcS/WXZS/HqJ2g9ejiC/BQPdDZX99HwFDsIqtq5d3cxkNe2VN
-	uufHW17JH7NJp1cF9VlDjBseu8wPdAq6ZdUxJE1hl9IqZ3Rc3bqxvqml38y30levMI+7RuCgAeH
-	YP3tYM3Nlw8MLhLs7+96/enegQdRIE2CnS8XsZEfNZSYb0kT7CWqVVINSOGKOFbuWMgEXbM=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CH2PR17MB4069:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ccd4564-a710-491f-c4dc-08dc3765b200
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	r+78m922iBMNXoKUbH4RzsClJJlDKHelqVdPlZ+SMuSKJQ+GUPdm7OJBFiNCEOg62Zgd6Q/D5n2ogmoqJlHzl6/tFyUP97KyO2vm3zzoeiF7bdU1ilpy1hxNwKQ7VtxYm+jQzUJ/qrljZiuNn4Eso5JT+oDc9ntwu2h/dqTvM8U9O4k0u8FkuFUm17PxWjUuMfFIqOg5+TKvknx3+utda7A68W4GtT/3NqTkx5UMtB20+tBIE4/Dnxvix0rPGxgGwOTsQalK70KZAOqh3gAbjYoYPT+ri1VWOwqAEGaDm/3LQPxfCeOGtsq6sm7vGggDbr0OMuWUXAc3ihtNZ0Yhm6zJgnNJ5u3SjQhAUwXQZeSVOx7f40D0j5+/EvVxh7I69iN+cS3dBP5DzilyK/LM+W+Mu8FDqvCfw2RSOSTiBNGmcZ17zoVQrJY1sRwNuGM2yOA7PkcQtGKbniO8KwzMIG0K5iPx9+6rg1nMX/mxaBvumDJCU50PUa/Q/w8g5maywv1UL9EZF72RWESxPVyXy+eoD2Lpvt8Q5z4l3MP6ck18dfhqZtF69nPHu6QHZrHOtEE9fQM1kmLRmCpOJN7LYEOu7v+bZj29hcbPsQdICo7zaMG3QcFrp50y75dZ32+07H5fXNvILKPWd4AHLd5tZA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?i3j02vRqdiQUjMavU36tBtT/2g1KAQ3xu7KJqu95RO3Hy7IeBwoQLp3AxC2+?=
+ =?us-ascii?Q?Yg/oSVll8MbBsxfhFveYalIsdj9Fr3owshPdImmBhcolKWIOHstc/X7K+BPA?=
+ =?us-ascii?Q?9Q5cbkm3ZXgWqlZoBQOZ0N4ZepNsddOt9qPWs4fBBg/eOKdwxOwqIxvcrUPV?=
+ =?us-ascii?Q?vJbtkCPI4ZPcb3VpoFE8MzKDz61sPYNcIm9IGp5KsdSS0dyaYow3bj/1ZO7E?=
+ =?us-ascii?Q?383ApLfUCgJG7asJMyXcO9tbU7I0F3s7zFRlgIUsGfCkownOamGHQ7b4Dxzo?=
+ =?us-ascii?Q?QFvjsSL/LG+f0C3es7xxINfxwXpULXv0Q3gV5HcTuDJI2b+9G7R008Dkaafi?=
+ =?us-ascii?Q?v+l4cbGVc086swvT6hAzSjMYN/c0e9ElkXlGqa1MmkMm9J20IWcFnMommOEm?=
+ =?us-ascii?Q?Pyl8QwoVgCrjawnrHLGwvWFpnS4TTceu+zoY69A708J5t7vgtjyXzx2Q4oNm?=
+ =?us-ascii?Q?8LPgQDIvzxJgWQ8K0s8LveDHVy3CbjbDaULlc9cwuxvRign8qPIvwAYvxuQs?=
+ =?us-ascii?Q?IDOh9beNqXxRgIZiv9v+55AhaxH4cgvU9Z1FshvQk8MuEP5XTTVSaSwhFqr+?=
+ =?us-ascii?Q?dHxs9xDi4m2CNDplhYDadjIAM94T7GVNt6woOdnoLYTUUY2YUthzNJyt+UsE?=
+ =?us-ascii?Q?Bm4xD0io7ARpxr5HXqhnUp+KykHODI3+1oKVPvVtxMGPttoh/bF+0Hq1krUJ?=
+ =?us-ascii?Q?qShW2N3kbD7tr5rHhRT2+fOzwzSUhcZ3XTuW5cmnGs/mqfY3WDMjDiJvpG6F?=
+ =?us-ascii?Q?+xFGBb7uei1puNCQ97zwL7QjBlV7JmTk8MDCX8wWGHzVzi7ViIXRV8/BoaXG?=
+ =?us-ascii?Q?6b4ODLmTNdUfsfJM00BMk7OwS0P1bgPbsze8+3ul4RKYF9e3T5t/15r9uuJ3?=
+ =?us-ascii?Q?ZUds7f88ugWBPnS43G//F7UyRrhZkHbMq95kG8MkCqOzQ7uOP2e9wRgJr21z?=
+ =?us-ascii?Q?ctp4cFbYXYdUrM0Mx5UQg4SWE5v2NfoJn554ztIv3v03Uk4HRW9fp237ZzK7?=
+ =?us-ascii?Q?+rE809Ax3WmgCdIv9it5FRKSz/PzfEy4Iu+5FAiKZZNY6jEKbqSr26wxPL33?=
+ =?us-ascii?Q?o8gJQXE0A1+sj4GlvcwKNS40vx+YP2kXEcdgd57+4MmRG0epYxvUgzRo1WBQ?=
+ =?us-ascii?Q?6RNTqpPb88mYsFqpL6q79xTgMoME6T/F+cp8ZnxeKASpMF3BP05DG6TTZNeJ?=
+ =?us-ascii?Q?r/7zXdw3bTmhydJ9qIdWasizfig387ZWZZSSDG5lERDOe1TgOhM9aqqCiVgP?=
+ =?us-ascii?Q?K+XI0Ka8p2jwnEGpjSeDF640P8YrgmgsRnkmf0riLtfU603fcGiYl3mPZ7RU?=
+ =?us-ascii?Q?lPJyVBnmNQ7tx8PZkCufQ8Q3UwNNR+XsNjiMS6pVz2/Ww/QrmNcMnPFwYkBa?=
+ =?us-ascii?Q?sr2Rkn/JQncFNdIixAGZ3mDEAmy0as6bFZFDy8vXEr2VJQTas82eh+6pcKcL?=
+ =?us-ascii?Q?uEBN/l5hs5ghT4NRrV1Sd6uFyF9lW6oSpexqSbCFSDrLAQZJWgCzOdHjViNo?=
+ =?us-ascii?Q?TTOTX11wT5+cwR8V2Srx5oS8IUQ5WPa2RvvHTDC8QlarTtBMeMY6AyAlNd0M?=
+ =?us-ascii?Q?kY9BEjWaKPXgFnwF0AK9GGOoxO36McAhQRwGRRD+LnLNV6+Fjes+2m9T3fgx?=
+ =?us-ascii?Q?rQ=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ccd4564-a710-491f-c4dc-08dc3765b200
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 07:28:29.9188
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LxtjkKpzwzmCMJcHBqSuGcGyZXlOSiXE6FqgALCu6Nv+P+kpIGYHIrNOZoV3jz0pJqjnCFmN7tAK4WQ+i2MrpquiaZUdpYHikwXoyOdCrmo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR17MB4069
 
-Hi, Dave
+Commodity heterogeneous memory systems are emerging as CXL memory
+devices approach general availability.  With it, a number of
+proposals have been made to extend the mm/mempolicy component to
+better manage these disparate resources.
 
-On the basis of this patch, I conducted some tests and encountered 
-unexpected errors. I would like to inquire whether the design here is 
-reasonable? Below are the steps of my testing:
+Below are a collection of topics that have been discussed with
+some level of seriousness on-list, at-conference, or in passing.
 
-Link: 
-https://lore.kernel.org/linux-cxl/170138109724.2882696.123294980050048623.stgit@djiang5-mobl3/
+Some have reference patches, others are half-baked.  Most bring
+up interesting implications of heterogeneous memory systems and
+opportunities to improve performance (or royally mess it up!
+It's a choose your own adventure!)
 
+I'd like to propose a discussion of the environment, some of
+the issues surrounding each problems, and a general call for
+new ideas - considering that the heterogeneous memory world
+is still evolving.
 
-Problem description: after creating a region, directly forcing 
-'disable-memdev' and then consuming memory leads to a kernel panic.
+Sub-Topics:
+===
+Weighted Interleave Mempolicy
 
+This policy allows N:M interleave ratios between two or more nodes
+which allows better utilization of overall bandwidth.
 
-Test environment:
-KERNEL	6.8.0-rc1
-QEMU	8.2.0-rc4
+Right now the continued discussion is about how to generate
+default values for this system, and whether/how much topology
+information should be passed down into mempolicy.
 
-Test steps：
-       step1: set memory auto_online to movable zones.
-            echo online_movable > 
-/sys/devices/system/memory/auto_online_blocks
-       step2: create region
-            cxl create-region -t ram -d decoder0.0 -m mem0
-       step3: disable memdev
-            cxl disable-memdev mem0 -f
-       step4: consum CXL memory
-            ./consumemem   <------kernel panic
+Prior versions of this patch set also included proposals for
+task-local interleave weights, which would necessitate the
+introduction of set_mempolicy2/mbind2.  These were dropped
+until an explicit use-case emerged.
 
-numactl node status:
-       step1: numactl -H
+https://lore.kernel.org/all/20240202170238.90004-1-gregory.price@memverge.com/
+https://lore.kernel.org/all/20240220202529.2365-2-gregory.price@memverge.com/
 
-	available: 2 nodes (0-1)
-	node 0 cpus: 0 1
-	node 0 size: 968 MB
-	node 0 free: 664 MB
-	node 1 cpus: 2 3
-	node 1 size: 683 MB
-	node 1 free: 333 MB
-	node distances:
-	node   0   1
-	  0:  10  20
+====
+process_mbind system call
 
-     step2: numactl -H
+The basic ideas is to allow an external process the ability
+to modify the mempolicy of a VMA owned by another task via
+a pidfd-esque syscall.
 
-	available: 3 nodes (0-2)
-	node 0 cpus: 0 1
-	node 0 size: 968 MB
-	node 0 free: 677 MB
-	node 1 cpus: 2 3
-	node 1 size: 683 MB
-	node 1 free: 333 MB
-	node 2 cpus:
-	node 2 size: 256 MB
-	node 2 free: 256 MB
-	node distances:
-	node   0   1   2
-	  0:  10  20  20
-	  1:  20  10  20
-	  2:  20  20  10
+The current issue with this feature is the `current-centric`
+nature of the mempolicy component and difficulty refactoring
+mempolicy to make this possible.
 
-     step3: numactl -H
+Progress on this feature has stumbled, but there is still some
+quiet chittering about this idea in some corners.
 
-	available: 3 nodes (0-2)
-	node 0 cpus: 0 1
-	node 0 size: 968 MB
-	node 0 free: 686 MB
-	node 1 cpus: 2 3
-	node 1 size: 683 MB
-	node 1 free: 336 MB
-	node 2 cpus:
-	node 2 size: 256 MB
-	node 2 free: 256 MB
-	node distances:
-	node   0   1   2
-	  0:  10  20  20
-	  1:  20  10  20
-	  2:  20  20  10
+https://lore.kernel.org/linux-mm/20221010094842.4123037-1-hezhongkun.hzk@bytedance.com/
+https://lore.kernel.org/all/ZV5zGROLefrsEcHJ@r13-u19.micron.com/
+
+===
+Allowing migrate-on-mbind to apply interleave on new node set
+
+As of today, when mbind'ing a memory region using an interleave
+policy, migrations are only made on a per-node granularity.
+
+For example if you mbind() a VMA which has already allocated
+100% of its pages on node 1, an attempt to apply an interleave
+on nodes 1&2 - no migrations will occur.  Migrations only occur
+if a node which was present previously is no longer present.
+
+There has been some discussion (though no patches, yet) about
+whether it is feasible to extend migrations to support
+"re-interleaving" a VMA given the new mempolicy.
+
+Combined with something like process_mbind, this would be used
+to rebalance memory - although it could be incredibly disruptive
+to the performance of the software being rebound.
+
+===
+Cgroups (or cgroups-like?) extension for mempolicy
+
+This comes up in just about every conversation I have been
+privy to with mempolicy.  "Why doesn't cgroups allow you to
+apply a mempolicy which applies to all tasks in the cgroup?"
+
+Typical answers:
+- What does that look like hierarchically?
+- Does inheritance even make sense here?
+- Is that a memcg thing or its own new cgroups component?
+- Cgroups is not for that.
+
+The use case is somewhat straight forward. Users wish to be
+able to apply a mempolicy to a set of tasks in a cgroup, and
+have migrated tasks inherit the new cgroup's policy.
+
+Is there any way forward on a feature like this, cgroups or
+otherwise? It does seem legimiately useful.
+
+===
+Flexibility on how policies apply to VMAs within a task
+
+One of the frustrations with mempolicy is that you operate
+either on a task-wide level, or on a per-vma level.  This
+means that you either apply a given policy to all VMAs, or
+software must become "numa-aware" enough to apply individual
+policies to individual VMAs.
+
+Is something more flexible possible?
+
+For example:
+
+Is it possible to have a policy that applies only to all anonymous
+memory regions?
+
+Is it possible to explicitly avoid stack and executable regions
+when deciding whether to invoke task-mempolicy logic?
+
+These are big, non-trivial questions.  Here is a single datum to help
+explain the significance:
+
+Stream Benchmark w/ weighted interleave
+(vs DRAM, 1 Socket + 1 CXL Device)
+Default interleave : -78% (slower than DRAM)
+Global weighting   : -6% to +4% (workload dependant)
+Targeted weights   : +2.5% to +4% (consistently better than DRAM)
+
+In the 'targeted weights' scenario, the benchmark was made
+numa-aware enough to mbind its bandwidth-driving memory regions
+with a weighted-interleave policy.  However, we can see when
+using task-mempolicy, the outcomes were more varied.
+
+The question is whether it might be possible to make the targeted
+scenario more accessible from the global interface by avoiding
+obvious pitfalls (like placing code pages on far memory).
+
+Of course this can only go so far. If a mutex in anonymous memory
+ends up on a node 3 hops away... well, you're going to be a sad
+puppy.  However, it's clear there are at least some scenarios
+where this slightly more granual control could be useful.
+
+===
+
+Are you interested in these topics? Have a topic to add?
+Think numa should die in a fire? Fair game, fire away.
+
+Kind Regards,
+~Gregory Price
