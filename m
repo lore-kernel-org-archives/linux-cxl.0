@@ -1,253 +1,177 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E2E4CE17;
-	Tue, 27 Feb 2024 22:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761CE1367
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 22:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709072832; cv=none; b=D1mWKjaWCf8BxdvCkvJ/e1Mgydet6GDZl7Dx44HTym5Gjcw74CAdQb/0dMF8xYROu76u6jngAd+8dNskosTUDGHaUjOxoc0Git0Wv+MZXc3vQJC7qi9lT6DzpqIOimnq563Ns5PoVBIPkBE4CxMAqYaW7ZjdoBBE74AAjbsO2xQ=
+	t=1709073315; cv=none; b=OoL5/J0huRQ48NxHO8ominWGkeE7txhvtCj6pTqQONjJDS3KZmgjwj5PsEv2oLOHAIPq4d15rRAZ9Ba8W78Xyf7IgJSlZohG37msLjonLW9W+yEVZ7WyrtvnFwp4wlnuwpaz9qthuwOe3MQaj5PkNkqcw0M44b2YTCS40xx4oRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709072832; c=relaxed/simple;
-	bh=DUwlnHLU8UMerEe2jsOFQdmLjtd1zzuOtaTj9wFrXi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O2qGJkcbjC6GHjZPtx924f7Qbw5DExhbnqgbq20jGMDSOR5Q4aCg3eh9JMIibMcXWi/rdBB2MF/RMGTknyK00MVPBf1Rtmsdtfdi7AY4gmxNzFdJeluI9AK+CzgvcZR+X4nSzUIUs9hys6jCJtV6IWhL+cbUwqBU6A1rRggqngE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdNOOgcm; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709073315; c=relaxed/simple;
+	bh=bU1XyaKXGe+O/mEyWnCgT6O04rrbmrD9+GXNZIedtCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f5ks2lwNMS/omboHoJfF0cxnGhcsmTTBJQeL9wKXJ18Ts2AmREBNs6t2a25QFFLEVPW0uXU+c/vnxD706x5SfiZvct/aXFqGvYvVvdoGfcDkWR+tyFkTEXwEaUw0y/opZjIJvFaDB6hC7Gj3Jle49J60wAaiB0evQEE63OCFjTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CpXjLBgf; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdNOOgcm"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-22034c323a3so920677fac.0;
-        Tue, 27 Feb 2024 14:27:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CpXjLBgf"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5101cd91017so7047584e87.2
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 14:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709072829; x=1709677629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=czSfIwYqcAAlEOGZom62daR/kwIkMGAHkEzj8k6AIb8=;
-        b=MdNOOgcmecxagt6VFv+Isx/ZglugCRCnxQCS5dA51Sc+loJmdWn5c58Hw3Fy46PGC3
-         n02pnH8ZtXhyXwwP6bdI7mseAnnFCTEx1KYOgWIwwoW4hWIaw3uZp+Lt+0LK043GEwFi
-         Vv1grI0+i0dlbHo0d/J0ioybVgjLkmWSTMdoMW/4RhBmjO1e4AIdawTr8MtTdppqkyiy
-         6uZA3LwMujXC82XDpcAirTMci8rfOsCZCJ8C5vmdncEYkpOeQGfP0KBT0mteWa1dqXJ2
-         AM3cNLhEF1Tpuyr3WstOhXWa9AUWWeTU1Fh1/w/QNOoIaX8fd674h2+5upml7R33HmiY
-         6YcQ==
+        d=linux-foundation.org; s=google; t=1709073311; x=1709678111; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=80tkN5Eohd449xb1/o8bHCFsCfXV3ux6KwUX2Tit340=;
+        b=CpXjLBgfg3Q+5vek8hLkIQcosuVvPflUendIgyuIGBfMzgGrlU0L7NUsPHWrE6wHbp
+         lI3k64YoKwmJf0c/M/sfEx7IzEB9kxxSwiH+Atlmnlm6oYBM3CnCB5AXUJouY1vT/f59
+         6+gZB1sRw09AJpSbQSf2U5pkkqBJ8EfJzyKC0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709072829; x=1709677629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=czSfIwYqcAAlEOGZom62daR/kwIkMGAHkEzj8k6AIb8=;
-        b=C/VGsrkEs6hIfHDWiJ3RvcHPdACQXi3AjlSgcP/XKBvet1EOix4zaFCvJE6TrsuVmy
-         B7qiu8H+cEmNVS+z7wxYzQezm2bWT7n0He7fFMOf3KD10syRB3wSDXUHfnW3R6jTBqHM
-         QwqPinQKlvjIn6JshM46Yb0QAuke55mefijXUyr6gIfxDOhtxrTI/fMslKssI/LZwmlJ
-         utWUuQujAC2T9MINvCSgG0Y8N8nCW9wBJQZuJY42iHVsPQC5/B0nUbFXdjaXn7LeeOQL
-         MsKhNh+dqKdlDB985iPNuHSIq5ijuywXO/ZeM5CsnjBZoMNKaSIXJ0tlL5fuTTA0HF5A
-         /KlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUoIqqPdTnBu5atQqVX+ek/fFTsDROkVICAmysEwcCCw/r5J7rai++nkVFqCaB4Hsv1OzDF+9IPVH4y+6wOsWWGhtj/uJf4xdPwG3V6iWgtQGGfPBFltMkkrjBXpZBcZB8htXDlEBRNvA7RDMMjmg1zN7Bx4OwRILvJAU3dUNw/ddUAkqcAL/IqYns0ZHg5jzMemKKquQR6n438jawrAw+Qrw==
-X-Gm-Message-State: AOJu0YwSjM+/fOmH9rlm8hbXX7WzrOtrdNKjGvimnG5DQES05zpkNOdE
-	HOdRl1CErzL7RXlSKKhX6i9n91S0Tp2h/Mltm94/hL6zQpfwDcvt
-X-Google-Smtp-Source: AGHT+IEKbYA01YSpW2OAyT0uYT5pzb31FUNW6KvOwjzPB90Y5misMgivhaltW4TUa9HNsFIdgb0pig==
-X-Received: by 2002:a05:6870:e9a8:b0:220:971:ab2e with SMTP id r40-20020a056870e9a800b002200971ab2emr8197913oao.41.1709072828832;
-        Tue, 27 Feb 2024 14:27:08 -0800 (PST)
-Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id c2-20020a05687091c200b0021e88b471f2sm2236413oaf.26.2024.02.27.14.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 14:27:08 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Tue, 27 Feb 2024 16:27:06 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 18/20] famfs: Support character dax via the
- dev_dax_iomap patch
-Message-ID: <iwcbiag4hrcbbpujd6xqatfq77oxdab7a7eeqbstg64u62edad@5bfru25qxz37>
-References: <cover.1708709155.git.john@groves.net>
- <fa06095b6a05a26a0a016768b2e2b70663163eeb.1708709155.git.john@groves.net>
- <20240226135228.00007714@Huawei.com>
+        d=1e100.net; s=20230601; t=1709073311; x=1709678111;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=80tkN5Eohd449xb1/o8bHCFsCfXV3ux6KwUX2Tit340=;
+        b=R2MFq+oYmKJkpCBznjcROdvbTZbS30INpapFnhyQBsQMi45wjNWi9IK3zLqVVq8fZM
+         cUA8svybFUZ0kWdRvP0a8Nn2qHoozSCFzXqBhh0SI8FZQdJYTh7YvlnISW3N5dk+EPGX
+         3HdjtmAGVm18vBSc4WlIKjTzpbGEdSlHyvI5N+aavHaaVpP4wR1m6LyfIrkrHeShkLjn
+         CCpRw1ZE4BjI2SeZo9YiJakbvPGrexnGK3rAHaRY2gXXnZE7lfsIw4e+AzHz8q5yzyoU
+         PAxpsBiy5QXwFxNR/+haakTlwd/rJ1O2MAhA3naM9/EKNYK0t9hdM/wQBU+R/ko/BMqw
+         OJXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrQ+IjotzXF7M6VillZgTiJnkBel2bmznivfRt7/+BURVNXWRD1ifuPDIL4kuDYGY0tGX8oELeFV/mtfZaug9p60Jod39CA7+K
+X-Gm-Message-State: AOJu0Yyrnf8z91jUasnn+9SfwbvHBH974M5LWxs0VsRRArfd2OiLtTyC
+	ANin/0OQ/dywXWt0o5lHGhpCemBCLPDg94ITQPtvmbctlqRDXwdbBTlroOklmBauIwaqwx2MKix
+	Li3GfEg==
+X-Google-Smtp-Source: AGHT+IHPaF3Glw530o+uOPo+0ENmYXWIlWcejeP3Il8oszcolpqw2z8Y8XhgeTFLwiVjSBmFFr6Azg==
+X-Received: by 2002:ac2:54a9:0:b0:513:1817:189e with SMTP id w9-20020ac254a9000000b005131817189emr378873lfk.9.1709073311475;
+        Tue, 27 Feb 2024 14:35:11 -0800 (PST)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id rf23-20020a1709076a1700b00a43e47c8c97sm289239ejc.173.2024.02.27.14.35.09
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 14:35:10 -0800 (PST)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56648955ac5so1170306a12.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 14:35:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBXs6tJNe4lKFNSSzuZfJH8XEyvx5bavBls9DnLbVaFglvTbQ8bImZSQsmsabXLGFRqLyWKAYeSstlaxtzvkdIju8Ae5OGHn4m
+X-Received: by 2002:a17:906:b118:b0:a3e:c3b0:e346 with SMTP id
+ u24-20020a170906b11800b00a3ec3b0e346mr7243442ejy.16.1709073309594; Tue, 27
+ Feb 2024 14:35:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226135228.00007714@Huawei.com>
+References: <170905252721.2268463.6714121678946763402.stgit@dwillia2-xfh.jf.intel.com>
+ <170905254443.2268463.935306988251313983.stgit@dwillia2-xfh.jf.intel.com>
+ <CAHk-=whBVhnh=KSeBBRet=E7qJAwnPR_aj5em187Q3FiD+LXnA@mail.gmail.com> <65de5725824ba_1138c72948c@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <65de5725824ba_1138c72948c@dwillia2-xfh.jf.intel.com.notmuch>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 27 Feb 2024 14:34:52 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whYxkfLVtBW_B-PgNqhKOAThTbfoH5CxtOTkwOB6VOt6w@mail.gmail.com>
+Message-ID: <CAHk-=whYxkfLVtBW_B-PgNqhKOAThTbfoH5CxtOTkwOB6VOt6w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] cxl/region: Use cond_guard() in show_targetN()
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: peterz@infradead.org, gregkh@linuxfoundation.org, 
+	Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000083e343061264a3e1"
 
-On 24/02/26 01:52PM, Jonathan Cameron wrote:
-> On Fri, 23 Feb 2024 11:42:02 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > This commit introduces the ability to open a character /dev/dax device
-> > instead of a block /dev/pmem device. This rests on the dev_dax_iomap
-> > patches earlier in this series.
-> 
-> Not sure the back reference is needed given it's in the series.
+--00000000000083e343061264a3e1
+Content-Type: text/plain; charset="UTF-8"
 
-Roger that
+On Tue, 27 Feb 2024 at 13:42, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> I will also note that these last 3 statements, nuking the proposal from
+> space, I find excessive. Yes, on the internet no one can hear you being
+> subtle, but the "MORE READABLE" and "NOTHING" were pretty darn
+> unequivocal, especially coming from the person who has absolute final
+> say on what enters his project.
 
-> 
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  fs/famfs/famfs_inode.c | 97 +++++++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 87 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> > index 0d659820e8ff..7d65ac497147 100644
-> > --- a/fs/famfs/famfs_inode.c
-> > +++ b/fs/famfs/famfs_inode.c
-> > @@ -215,6 +215,93 @@ static const struct super_operations famfs_ops = {
-> >  	.show_options	= famfs_show_options,
-> >  };
-> >  
-> > +/*****************************************************************************/
-> > +
-> > +#if defined(CONFIG_DEV_DAX_IOMAP)
-> > +
-> > +/*
-> > + * famfs dax_operations  (for char dax)
-> > + */
-> > +static int
-> > +famfs_dax_notify_failure(struct dax_device *dax_dev, u64 offset,
-> > +			u64 len, int mf_flags)
-> > +{
-> > +	pr_err("%s: offset %lld len %llu flags %x\n", __func__,
-> > +	       offset, len, mf_flags);
-> > +	return -EOPNOTSUPP;
-> > +}
-> > +
-> > +static const struct dax_holder_operations famfs_dax_holder_ops = {
-> > +	.notify_failure		= famfs_dax_notify_failure,
-> > +};
-> > +
-> > +/*****************************************************************************/
-> > +
-> > +/**
-> > + * famfs_open_char_device()
-> > + *
-> > + * Open a /dev/dax device. This only works in kernels with the dev_dax_iomap patch
-> 
-> That comment you definitely don't need as this won't get merged without
-> that patch being in place.
+Heh. It's not just " one can hear you being subtle", sometimes it's
+also "people don't take hints". It can be hard to tell..
 
-This will be gone from v2. I'm 90% sure there is no reason to keep the block
-device backing support (pmem), since devdax is the point AND pmem can be
-converted to devdax mode. So famfs will become devdax only...etc.
+Anyway, it's not that I hate the guard things in general. But I do
+think they need to be used carefully, and I do think it's very
+important that they have clean interfaces.
 
-This was under development for quite a few months, and actually working,
-I got the dev_dax_iomap right (er, "right enough" for it to work :D). But now
-that dev_dax_iomap looks basically stable, pmem/block support can come out.
+The current setup came about after quite long discussions about
+getting reasonable syntax, and I'm still a bit worried even about the
+current simpler ones.
 
-> 
-> 
-> > + */
-> > +static int
-> > +famfs_open_char_device(
-> > +	struct super_block *sb,
-> > +	struct fs_context  *fc)
-> > +{
-> > +	struct famfs_fs_info *fsi = sb->s_fs_info;
-> > +	struct dax_device    *dax_devp;
-> > +	struct inode         *daxdev_inode;
-> > +
-> > +	int rc = 0;
-> set in all paths where it's used.
-> 
-> > +
-> > +	pr_notice("%s: Opening character dax device %s\n", __func__, fc->source);
-> 
-> pr_debug
+And by "simpler ones" I don't mean our current scoped_cond_guard()
+thing. We have exactly one user of it, and I have considered getting
+rid of that one user because I think it's absolutely horrid. I haven't
+figured out a better syntax for it.
 
-Done
+For the non-scoped version, I actually think there *would* be a better
+syntax - putting the error case after the macro (the way we put the
+success case after the macro for the scoped one).
 
-> 
-> > +
-> > +	fsi->dax_filp = filp_open(fc->source, O_RDWR, 0);
-> > +	if (IS_ERR(fsi->dax_filp)) {
-> > +		pr_err("%s: failed to open dax device %s\n",
-> > +		       __func__, fc->source);
-> > +		fsi->dax_filp = NULL;
-> Better to use a local variable
-> 
-> 	fp = filp_open(fc->source, O_RDWR, 0);
-> 	if (IS_ERR(fp)) {
-> 		pr_err.
-> 		return;
-> 	}
-> 	fsi->dax_filp = fp;
-> or similar.
+In fact, maybe the solution is to make the scoped and non-scoped
+versions act very similar: we could do something like this:
 
-Done, thanks.
+        [scoped_]cond_guard(name, args) { success } else { fail };
 
-> 
-> > +		return PTR_ERR(fsi->dax_filp);
-> > +	}
-> > +
-> > +	daxdev_inode = file_inode(fsi->dax_filp);
-> > +	dax_devp     = inode_dax(daxdev_inode);
-> > +	if (IS_ERR(dax_devp)) {
-> > +		pr_err("%s: unable to get daxdev from inode for %s\n",
-> > +		       __func__, fc->source);
-> > +		rc = -ENODEV;
-> > +		goto char_err;
-> > +	}
-> > +
-> > +	rc = fs_dax_get(dax_devp, fsi, &famfs_dax_holder_ops);
-> > +	if (rc) {
-> > +		pr_info("%s: err attaching famfs_dax_holder_ops\n", __func__);
-> > +		goto char_err;
-> > +	}
-> > +
-> > +	fsi->bdev_handle = NULL;
-> > +	fsi->dax_devp = dax_devp;
-> > +
-> > +	return 0;
-> > +
-> > +char_err:
-> > +	filp_close(fsi->dax_filp, NULL);
-> 
-> You carefully set fsi->dax_filp to null in other other error paths.
-> Why there and not here?
+and that syntax feels much more C-line to me.
 
-Why indeed - done now.
+So maybe something like the attached (TOTALLY UNTESTED!!) patch for
+the scoped version, and then the non-scoped version would have the
+same syntax (except it would have to generate that __UNIQUE_ID()
+thing, of course).
 
-> 
-> > +	return rc;
-> > +}
-> > +
-> > +#else /* CONFIG_DEV_DAX_IOMAP */
-> > +static int
-> > +famfs_open_char_device(
-> > +	struct super_block *sb,
-> > +	struct fs_context  *fc)
-> > +{
-> > +	pr_err("%s: Root device is %s, but your kernel does not support famfs on /dev/dax\n",
-> > +	       __func__, fc->source);
-> > +	return -ENODEV;
-> > +}
-> > +
-> > +
-> > +#endif /* CONFIG_DEV_DAX_IOMAP */
-> > +
-> >  /***************************************************************************************
-> >   * dax_holder_operations for block dax
-> >   */
-> > @@ -236,16 +323,6 @@ const struct dax_holder_operations famfs_blk_dax_holder_ops = {
-> >  	.notify_failure		= famfs_blk_dax_notify_failure,
-> >  };
-> >  
-> 
-> Put it in right place earlier! Makes this less noisy.
+I haven't thought much about this. But I think this would be more
+acceptable to me, and also solve some of the ugliness with the current
+pre-existing scoped_cond_guard().
 
-This will be eliminated by the move to /dev/dax-only
+I dunno. PeterZ did the existing stuff, but he's offlined due to
+shoulder problems so not likely to chip in.
 
-Thanks,
-John
+              Linus
 
+--00000000000083e343061264a3e1
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lt4y3wa90>
+X-Attachment-Id: f_lt4y3wa90
+
+IGluY2x1ZGUvbGludXgvY2xlYW51cC5oIHwgNyArKystLS0tCiBrZXJuZWwvcHRyYWNlLmMgICAg
+ICAgICB8IDUgKysrLS0KIDIgZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvY2xlYW51cC5oIGIvaW5jbHVkZS9s
+aW51eC9jbGVhbnVwLmgKaW5kZXggYzJkMDliYzRmOTc2Li5hMDE1YWM5NTE3YTYgMTAwNjQ0Ci0t
+LSBhL2luY2x1ZGUvbGludXgvY2xlYW51cC5oCisrKyBiL2luY2x1ZGUvbGludXgvY2xlYW51cC5o
+CkBAIC0xNDIsNyArMTQyLDcgQEAgc3RhdGljIGlubGluZSBjbGFzc18jI19uYW1lIyNfdCBjbGFz
+c18jI19uYW1lIyNleHQjI19jb25zdHJ1Y3RvcihfaW5pdF9hcmdzKSBcCiAgKglmb3IgY29uZGl0
+aW9uYWwgbG9ja3MgdGhlIGxvb3AgYm9keSBpcyBza2lwcGVkIHdoZW4gdGhlIGxvY2sgaXMgbm90
+CiAgKglhY3F1aXJlZC4KICAqCi0gKiBzY29wZWRfY29uZF9ndWFyZCAobmFtZSwgZmFpbCwgYXJn
+cy4uLikgeyB9OgorICogc2NvcGVkX2NvbmRfZ3VhcmQgKG5hbWUsIGFyZ3MuLi4pIHsgfSBbIGVs
+c2UgeyBmYWlsIH0gOgogICogICAgICBzaW1pbGFyIHRvIHNjb3BlZF9ndWFyZCgpLCBleGNlcHQg
+aXQgZG9lcyBmYWlsIHdoZW4gdGhlIGxvY2sKICAqICAgICAgYWNxdWlyZSBmYWlscy4KICAqCkBA
+IC0xNjksMTEgKzE2OSwxMCBAQCBzdGF0aWMgaW5saW5lIGNsYXNzXyMjX25hbWUjI190IGNsYXNz
+XyMjX25hbWUjI2V4dCMjX2NvbnN0cnVjdG9yKF9pbml0X2FyZ3MpIFwKIAlmb3IgKENMQVNTKF9u
+YW1lLCBzY29wZSkoYXJncyksCQkJCQlcCiAJICAgICAqZG9uZSA9IE5VTEw7IF9fZ3VhcmRfcHRy
+KF9uYW1lKSgmc2NvcGUpICYmICFkb25lOyBkb25lID0gKHZvaWQgKikxKQogCi0jZGVmaW5lIHNj
+b3BlZF9jb25kX2d1YXJkKF9uYW1lLCBfZmFpbCwgYXJncy4uLikgXAorI2RlZmluZSBzY29wZWRf
+Y29uZF9ndWFyZChfbmFtZSwgYXJncy4uLikgXAogCWZvciAoQ0xBU1MoX25hbWUsIHNjb3BlKShh
+cmdzKSwgXAogCSAgICAgKmRvbmUgPSBOVUxMOyAhZG9uZTsgZG9uZSA9ICh2b2lkICopMSkgXAot
+CQlpZiAoIV9fZ3VhcmRfcHRyKF9uYW1lKSgmc2NvcGUpKSBfZmFpbDsgXAotCQllbHNlCisJCWlm
+IChfX2d1YXJkX3B0cihfbmFtZSkoJnNjb3BlKSkKIAogLyoKICAqIEFkZGl0aW9uYWwgaGVscGVy
+IG1hY3JvcyBmb3IgZ2VuZXJhdGluZyBsb2NrIGd1YXJkcyB3aXRoIHR5cGVzLCBlaXRoZXIgZm9y
+CmRpZmYgLS1naXQgYS9rZXJuZWwvcHRyYWNlLmMgYi9rZXJuZWwvcHRyYWNlLmMKaW5kZXggMmZh
+YmQ0OTdkNjU5Li5mNTA5YjIxYTU3MTEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9wdHJhY2UuYworKysg
+Yi9rZXJuZWwvcHRyYWNlLmMKQEAgLTQ0MSw4ICs0NDEsNyBAQCBzdGF0aWMgaW50IHB0cmFjZV9h
+dHRhY2goc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrLCBsb25nIHJlcXVlc3QsCiAJICogU1VJRCwg
+U0dJRCBhbmQgTFNNIGNyZWRzIGdldCBkZXRlcm1pbmVkIGRpZmZlcmVudGx5CiAJICogdW5kZXIg
+cHRyYWNlLgogCSAqLwotCXNjb3BlZF9jb25kX2d1YXJkIChtdXRleF9pbnRyLCByZXR1cm4gLUVS
+RVNUQVJUTk9JTlRSLAotCQkJICAgJnRhc2stPnNpZ25hbC0+Y3JlZF9ndWFyZF9tdXRleCkgewor
+CXNjb3BlZF9jb25kX2d1YXJkIChtdXRleF9pbnRyLCAmdGFzay0+c2lnbmFsLT5jcmVkX2d1YXJk
+X211dGV4KSB7CiAKIAkJc2NvcGVkX2d1YXJkICh0YXNrX2xvY2ssIHRhc2spIHsKIAkJCXJldHZh
+bCA9IF9fcHRyYWNlX21heV9hY2Nlc3ModGFzaywgUFRSQUNFX01PREVfQVRUQUNIX1JFQUxDUkVE
+Uyk7CkBAIC00NjYsNiArNDY1LDggQEAgc3RhdGljIGludCBwdHJhY2VfYXR0YWNoKHN0cnVjdCB0
+YXNrX3N0cnVjdCAqdGFzaywgbG9uZyByZXF1ZXN0LAogCiAJCQlwdHJhY2Vfc2V0X3N0b3BwZWQo
+dGFzayk7CiAJCX0KKwl9IGVsc2UgeworCQlyZXR1cm4gLUVSRVNUQVJUTk9JTlRSOwogCX0KIAog
+CS8qCg==
+--00000000000083e343061264a3e1--
