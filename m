@@ -1,61 +1,61 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C88613AA36
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 20:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6107C14DFFD
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 20:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709066995; cv=none; b=UDR2YDihxcuCHDiwnofk8LcG8ZomDEtX+I43wj3y7qRVGuFhrmLa955fzBwObrQzY97JbbHZPlbtR2ZmoGtZrQTGkZMUqdwA0D3sb8v9U5/TUd7lu3Z9cAciG1dTCjOpbqy1hZSDJGQ3CakNud/1/LrsESHulo89ef2UxVQ7uLc=
+	t=1709067327; cv=none; b=Pm6QIHdO9znY9JZOXbAqDfGTEMIoJTlxnPBtFX5aLbd2gGkFQQo3vDcowcc8qX/xAI6+gkBl3IqbHbs/6zWEhlFkkhyLV6DN4+6buejYFGKHujN4T7tnrIi4XrOAA3bA8ZE3VNkzZma7pEvDkSJliRge0GQKyV8CeHv0sEjXP/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709066995; c=relaxed/simple;
-	bh=p9k/50J2fJtv36WtCUbSmzFiwVLwISsJpimpNmnaOJo=;
+	s=arc-20240116; t=1709067327; c=relaxed/simple;
+	bh=cn6YOKUX5dA3ag8i1Tc2HjJMtQinFT7ylVNBEPwuuIo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yt7iAAqEyjsfI43RXyi5EVoFSXGFBSi3ZNybA4SZ1KOpRtZ3lacWT+xGLZO0qsV0KQ4CSP6KbY+rsV+Bh8fhBPjsFr/9xV1crOzFpvf2EGjLUzroE6cuWP/ez4itGD8VCEsXBqYLDvGkwwgG1rIqq1dq81CJ0wcnv211GDgEVLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=N7mHnDdl; arc=none smtp.client-ip=209.85.208.49
+	 To:Cc:Content-Type; b=G6eM2iNmVt6ultAKecYuCeLMDILtsPlzNAhkhDJ151tx2OUTYUDVOmw3AKEjCzD0ptabBwp4jG4LdhnZ3xydgbMewpPLW1E858hY7n8IT0Eqz6FW5OhoR/n1zn4HgUIIPfVqqZmfAQC+L2xs08qFnqY1Kw2ZmIAfd6ZuXeeioz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QtVGwrYH; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="N7mHnDdl"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so274812a12.1
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:49:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QtVGwrYH"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a26fa294e56so803738266b.0
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:55:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1709066992; x=1709671792; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1709067323; x=1709672123; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yi/RZQ8KqnZwl+S2VL1o58Mg6IThl5Qs0hc2x6y80JI=;
-        b=N7mHnDdlSqH85ZaFemTfQk9eMgpfdEUeRWT7CHXa8EPKcauFoDCcpaMVyu/YxebETE
-         w1F9NBzgpidkkMvZtV0K9R22ci7jz1k7hBHYYhNZWdvRizycBwdPnE1h0s1h5cIBWVhe
-         dQwhJd/0LKY7j/VkVx0yJN8rVG1xlBWDfhal0=
+        bh=UKCWCT93031ctnu4e0l2nLLoQn5zgMFTn2j+yBK/CsE=;
+        b=QtVGwrYHR6ZoSVBDdHphTeDow/uQR0Sh+WtDzvuOtOmiGwye3DA9FZ0VmHakoDckVL
+         prV4JElEDEL2yYI1HjhVw9IdnXVfVJT/b2wX4AIY0OhjSob2XhHr5Ot0p8ff9gd2fePz
+         4Fa5DEflbJRrIcH6w1xEtTjkUNL62g8uA03PI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709066992; x=1709671792;
+        d=1e100.net; s=20230601; t=1709067323; x=1709672123;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yi/RZQ8KqnZwl+S2VL1o58Mg6IThl5Qs0hc2x6y80JI=;
-        b=veRLEffdwviidtesJwO7ZhT3DsnV6FSvNxZQu6EB/GHvNWfcIYiB6AVaeJxGvAylqb
-         ro8VzxcUPUpDVH5Eyole6K/vCF2KMAeMkBaGfYA5Nosbg8tyliBmW9ez4h7hm5FBUtHu
-         gd7D/lIS0MJZ46eu7XsF8mEAQGU2q8BqPxRyiNUuFBFfWH/+oVhwPXY45fFxIzfEeG74
-         LKVCXyw+s8HNy95fk4RICptA+azzRMvtZoilbTSVKbMuvCQ9ykLq4P967W5tZgETtAEa
-         EcB5QYSLf6J0d7QzsohzG+bf0zwe9hIDJMS+HkxsmLjsM1ee90JXyul7UXuYEreVvHhZ
-         c1jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjmgu7tHmhpClZW1XOALdpPMdDVTcegiqOg0HKE8lMFbsCW9ZazEarU/cwDAHP+xe++Hj3tdF3t0jXP0dH/YyoAgZBKrr3ZY2w
-X-Gm-Message-State: AOJu0Yy8qV0+mzEqHlZwdQyKLm+HLp5X5FN9AN9MRBr+hadWpCuGacQq
-	EcoK9DOVMlqOv54eDnhXc0Y8wXb+LfSaS+NnYOl69U6IAq6EykbYNDFq44yNTFlyXmS/wXG1nTH
-	LtkLfQQ==
-X-Google-Smtp-Source: AGHT+IH1YagAKuKFsY3lFCnzTt4a0gqxFF9zb74WfxNxLBou6gaz1w6pLDgiEZFMV4W1nOFclXRFiA==
-X-Received: by 2002:a17:906:2414:b0:a3e:c1ef:e1bd with SMTP id z20-20020a170906241400b00a3ec1efe1bdmr416500eja.16.1709066991799;
-        Tue, 27 Feb 2024 12:49:51 -0800 (PST)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id ti9-20020a170907c20900b00a3e94142018sm1111470ejc.132.2024.02.27.12.49.51
+        bh=UKCWCT93031ctnu4e0l2nLLoQn5zgMFTn2j+yBK/CsE=;
+        b=nLxtqEy32noIiLreU4iZ4qg2FWo4iaEgUmxH51ZbuxT0+dprYZ4xzxq8sM4hQia0mw
+         g+BG+Kk4Ybh7GimRsOmLLBtnLu34wMY77u7HWZB1mJe5sbO57YWC3vR8vAzikjHG9Bek
+         adLDTlBplhJqjdsgsHnJBQT9DDeu48bY/llwYPwMXYd6HfOp9WyhfNmFXYw7nPc2XxtU
+         PsyUKjXF3He8Hp9bb/Zo7v61NhXtkRFNdpVA+57kDiUFMnn5CcG79/yh8uDoIAUSIoxM
+         Mm8PZ3bFTBjOfIuonH1dPzuffEB/tybOGbUwzWHbBg0fNDBOOm0oszGshBMddoVtJJAF
+         iLIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPFauW7OaXM5HWlmZj+6lu74VZo8VTNBbT6Hj7+CdCdG8BhxfUMpZzT3CFgzWW+dktchka6yolvj3fV9aGKzs0nkEKQAxKso6/
+X-Gm-Message-State: AOJu0YyrH/cS+q6Pwlqfj21YAYhy0cwxjuuSp083LpXyWy0LOZ3oFYyV
+	2+dX9jORDbX63D6shFesXcP9xeV0+3M6lnAY8g/ca26n4juj/2HDO5gkyTxAPXklCZMBkToc7Hk
+	D+2uOug==
+X-Google-Smtp-Source: AGHT+IGywbPR71gFN4UNR031SZcjpoWYFMnlWZeMl2JRp1RhXMvVrlgYnXJ2tW0MtbvPpH0ExKuJSQ==
+X-Received: by 2002:a17:906:b858:b0:a41:3a38:64ac with SMTP id ga24-20020a170906b85800b00a413a3864acmr8270966ejb.52.1709067323613;
+        Tue, 27 Feb 2024 12:55:23 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id lu17-20020a170906fad100b00a3e45a18a5asm1122412ejb.61.2024.02.27.12.55.22
         for <linux-cxl@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 12:49:51 -0800 (PST)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso33995166b.1
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:49:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVzyJhFWUGzbOdAZCc55i2gg8Ha4e4y52Z2/M14sGHRfQyqPaWH3kDi2n/vP/6s1GdTXpdnN5tDudr4z8zbpjhSaoyRcU7VCk6J
-X-Received: by 2002:a17:906:4557:b0:a43:1099:7e72 with SMTP id
- s23-20020a170906455700b00a4310997e72mr375001ejq.35.1709066990810; Tue, 27 Feb
- 2024 12:49:50 -0800 (PST)
+        Tue, 27 Feb 2024 12:55:22 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a26fa294e56so803733466b.0
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 12:55:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgKlSbZbJq5Rq9OdhVhrIFASrY5hDQVHANltW8wQa5U8sM75slV17e5EhcJQ+CrQaSK7yd/Rsv7i2034AQdXXttEpuxyG70nxE
+X-Received: by 2002:a17:906:aed1:b0:a43:dbd6:6862 with SMTP id
+ me17-20020a170906aed100b00a43dbd66862mr957734ejb.73.1709067322332; Tue, 27
+ Feb 2024 12:55:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,42 +63,55 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <170905252721.2268463.6714121678946763402.stgit@dwillia2-xfh.jf.intel.com>
- <170905253339.2268463.9376907713092612237.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <170905253339.2268463.9376907713092612237.stgit@dwillia2-xfh.jf.intel.com>
+ <170905254443.2268463.935306988251313983.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <170905254443.2268463.935306988251313983.stgit@dwillia2-xfh.jf.intel.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 27 Feb 2024 12:49:34 -0800
-X-Gmail-Original-Message-ID: <CAHk-=win7bwWhPJ=iuW4h-sDTqbX6v9_LJnMaO3KxVfPSs81bQ@mail.gmail.com>
-Message-ID: <CAHk-=win7bwWhPJ=iuW4h-sDTqbX6v9_LJnMaO3KxVfPSs81bQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] cleanup: Add cond_guard() to conditional guards
+Date: Tue, 27 Feb 2024 12:55:06 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whBVhnh=KSeBBRet=E7qJAwnPR_aj5em187Q3FiD+LXnA@mail.gmail.com>
+Message-ID: <CAHk-=whBVhnh=KSeBBRet=E7qJAwnPR_aj5em187Q3FiD+LXnA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] cxl/region: Use cond_guard() in show_targetN()
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: peterz@infradead.org, gregkh@linuxfoundation.org, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
 	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, linux-kernel@vger.kernel.org, 
 	linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 27 Feb 2024 at 08:48, Dan Williams <dan.j.williams@intel.com> wrote:
+On Tue, 27 Feb 2024 at 08:49, Dan Williams <dan.j.williams@intel.com> wrote:
 >
->         cond_guard(mutex_intr, return -EINTR, &mutex);
+> -       rc = down_read_interruptible(&cxl_region_rwsem);
+> -       if (rc)
+> -               return rc;
+> +       cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
 
-Again, this is *not* helping make code readable and less likely to have bugs.
+Yeah, this is an example of how NOT to do things.
 
-The macro has obvious deficiencies, like the "_fail" argument not
-being surrounded by  "{ }" (the equivalent of parenthesizing an
-expression argument), but even with that trivial fix the syntax is
-just too ugly to live, and doesn't match normal C syntax.
+If you can't make the syntax be something clean and sane like
 
-And yes, we have other macros that don't have normal C syntax, and
-they are ugly too (example: #define CHKINFO(ret) in
-drivers/video/fbdev/hgafb.c), but we should have higher standards for
-globally visible helpers, and we should have *MUCH* higher standards
-for helpers that are supposed to be all about reducing mistakes.
+        if (!cond_guard(rwsem_read_intr, &cxl_region_rwsem))
+                return -EINTR;
 
-Bad / odd syntax does not reduce mistakes.
+then this code should simply not be converted to guards AT ALL.
 
-If a sane 'guard' model doesn't work for some code, the answer is not
-to make an insane guard model. The answer is to not use 'guard' in
-code like that.
+Note that we have a perfectly fine way to do conditional lock guarding
+by simply using helper functions, which actually makes code MORE
+READABLE:
 
-               Linus
+        if (!down_read_interruptible(&cxl_region_rwsem))
+                return -EINTR;
+        rc = do_locked_function();
+        up_read(&cxl_region_rwsem);
+        return rc;
+
+and notice how there are no special cases, no multiple unlocks, no
+NOTHING. And the syntax is clean.
+
+Honestly, if people are going to use 'guard' to write crap code, we
+need to really stop that in its tracks.
+
+There is no upside to making up new interfaces that only generate garbage.
+
+This is final. I'm not willing to even entertain this kind of crap.
+
+                     Linus
