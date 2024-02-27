@@ -1,141 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC414EB43
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Feb 2024 16:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3FB1D698;
+	Tue, 27 Feb 2024 16:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709052033; cv=none; b=S0J2WZYp26BHw7q7twnJZ6DspG2nkJlDn9RxPNxJgb31aZB6rEZ9lKRAmfm15w4o8V04XAniHb4bL6Ngln9bC1faNfaMJMhrC83tEV9pY2YHVybyewAsJpvyIzk8SZfISIMaJZnIII7l7MWh91dAnhZCLrXn+FhWCmvmewrcyeY=
+	t=1709052222; cv=none; b=DtT7wb9QpRe1lDWscXrKVY4OWaQtIzixPZMsOJR6BBrt1qkDDLRfqnhkOjDA7KzHKuGSoBdNX+oqeCezGqKVxUmkCxAXoIMfAasgkXNeeshM5GsBBOVnAESda8++PQaNhYlZE6c2/RX8cNVnZ2PWdiKRi6RD6KU/3uVE3kq2el0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709052033; c=relaxed/simple;
-	bh=oGY/1c58aPR/33s1f/2U3hoauwGPpqCDwBiJZqfZASY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZDbvuFLqe2KJZYMuHjbpKNh4yYrFAcnMYd97ZaacrpnvrSJ95BPr8YNqguP6KvLY0U6zoZNGrhdZicG9DME9mHuHPxNCGXxHDCGkWo8z8ZbUTPV1uK1PXbxPAHDPhKDBs3BEzBqWBL48uEpY96Udz3Nxyl0mjgPyl33AyG+bBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ikq+3K6v; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709052222; c=relaxed/simple;
+	bh=mLvoS/AS2ZkRjKX4NepsHpSZt6hm5Psw5ZqaHoeskgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LhNCZPkr+UjxeQZZ/X0Cx0Vxm6ws9H0VcGv0lySbVwXN4++3o18+sGVcFbward/5Tm5m+noEJXp9l3p+B+AghWnlam8scK+Aysy2K3FOQRQnEx6C9E4TpQVKFn5UncLV6rbG/PaSTJDBjzXwPiX+NrNcL8E6nEIjjCencCBEV+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rh682Dw0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ikq+3K6v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709052032; x=1740588032;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oGY/1c58aPR/33s1f/2U3hoauwGPpqCDwBiJZqfZASY=;
-  b=Ikq+3K6vbcfvTMCpkRViSR8iy7FBSl2sD4BnIShNN8xKVGvu6Zk2UZCq
-   5zgJovmzgAPMG/dyiHzKgzhui5EpcowzLweJqy7Zv2S2nT5zIp2TU1Z2L
-   F5LhLSS60oKDHESPPpj0hHMvSs0rPpWxpRUIIf4ox+0RPmyzdPPb6n5A9
-   0uGZo6dWFoK5tuRyevvNLxY0g9K/iaqGOG+nnsIi/zbK9hXAywq2KhTGS
-   NbC+SwQGjIPtCSeXBGpRWu0VMTwJdLofhXT/Rk9l06M6KhYE46oCoIJY1
-   CrvJa9sMb0M4yLtOqZv5F4GW7g0+AAEYgb02csq8k85jRW1tNrqOvtRGm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7186489"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="7186489"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:40:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="7058441"
-Received: from pbackus-mobl1.amr.corp.intel.com (HELO [10.246.114.227]) ([10.246.114.227])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:40:30 -0800
-Message-ID: <dd61a8f2-ef80-46cc-8033-b3a4b987b3f4@intel.com>
-Date: Tue, 27 Feb 2024 09:40:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rh682Dw0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619E4C433C7;
+	Tue, 27 Feb 2024 16:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709052221;
+	bh=mLvoS/AS2ZkRjKX4NepsHpSZt6hm5Psw5ZqaHoeskgc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rh682Dw0RdypZcLNGgBdo/QkCAZr8CNKZKAT+9739XomzD+q/p+lQyNeJzGtiRXay
+	 eVvFU3dzDKqG/uGQCDDDfQ/iE+/Q1gaC4/N0qTCe/h7Tp4VZMXLWRGtckK+n/kbHvE
+	 jIwJ1xrpnnsoakkuGFjXXc+gOkzhLDnRxCtG/K/F7+L9X3LV7wwLDnnkTwJwILxQLi
+	 A7NFLllMiqptTajUzaAEMTnw2odCxfuceubAsmFJvBBHQn5Iwh147+Jlb8+vWnugGc
+	 hHEiaS4oCiTBUGxE/EcFOKhTQV7JqslhmU8LwB6l25nIeqNTgAJI3VaJjcPOHnFUkf
+	 sOK79t4LGO3tw==
+Date: Tue, 27 Feb 2024 10:43:39 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Cc: kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org,
+	y-goto@fujitsu.com, linux-pci@vger.kernel.org, mj@ucw.cz,
+	dan.j.williams@intel.com
+Subject: Re: [RFC PATCH v2 1/3] Add sysfs attribute for CXL 1.1 device link
+ status
+Message-ID: <20240227164339.GA239446@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Question about forcing 'disable-memdev'
-Content-Language: en-US
-To: =?UTF-8?B?Q2FvLCBRdWFucXVhbi/mm7kg5YWo5YWo?= <caoqq@fujitsu.com>,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc: vishal.l.verma@intel.com
-References: <3788c116-50aa-ae97-adca-af6559f5c59a@fujitsu.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <3788c116-50aa-ae97-adca-af6559f5c59a@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227083313.87699-2-kobayashi.da-06@fujitsu.com>
 
+On Tue, Feb 27, 2024 at 05:33:11PM +0900, Kobayashi,Daisuke wrote:
+> This patch implements a process to output the link status information 
+> of the CXL1.1 device to sysfs. The values of the registers related to 
+> the link status are outputted into three separate files.
 
+> +static u32 cxl_rcrb_to_linkcap(struct device *dev, resource_size_t rcrb)
+> +{
+> +	void __iomem *addr;
+> +	u8 offset = 0;
 
-On 2/26/24 10:32 PM, Cao, Quanquan/曹 全全 wrote:
-> Hi, Dave
-> 
-> On the basis of this patch, I conducted some tests and encountered unexpected errors. I would like to inquire whether the design here is reasonable? Below are the steps of my testing:
-> 
-> Link: https://lore.kernel.org/linux-cxl/170138109724.2882696.123294980050048623.stgit@djiang5-mobl3/
-> 
-> 
-> Problem description: after creating a region, directly forcing 'disable-memdev' and then consuming memory leads to a kernel panic.
+Unnecessary initialization.  Also, readw() returns u16.
 
-If you are forcing memory disable when the memory cannot be offlined, then this behavior is expected. You are ripping the memory away from underneath kernel mm. The reason the check was added is to prevent the users from doing exactly that.
+> +	u32 cap_hdr;
+> +	u32 linkcap = 0;
 
+Ditto.
 
-> 
-> 
-> Test environment:
-> KERNEL    6.8.0-rc1
-> QEMU    8.2.0-rc4
-> 
-> Test steps：
->       step1: set memory auto_online to movable zones.
->            echo online_movable > /sys/devices/system/memory/auto_online_blocks
->       step2: create region
->            cxl create-region -t ram -d decoder0.0 -m mem0
->       step3: disable memdev
->            cxl disable-memdev mem0 -f
->       step4: consum CXL memory
->            ./consumemem   <------kernel panic
-> 
-> numactl node status:
->       step1: numactl -H
-> 
->     available: 2 nodes (0-1)
->     node 0 cpus: 0 1
->     node 0 size: 968 MB
->     node 0 free: 664 MB
->     node 1 cpus: 2 3
->     node 1 size: 683 MB
->     node 1 free: 333 MB
->     node distances:
->     node   0   1
->       0:  10  20
-> 
->     step2: numactl -H
-> 
->     available: 3 nodes (0-2)
->     node 0 cpus: 0 1
->     node 0 size: 968 MB
->     node 0 free: 677 MB
->     node 1 cpus: 2 3
->     node 1 size: 683 MB
->     node 1 free: 333 MB
->     node 2 cpus:
->     node 2 size: 256 MB
->     node 2 free: 256 MB
->     node distances:
->     node   0   1   2
->       0:  10  20  20
->       1:  20  10  20
->       2:  20  20  10
-> 
->     step3: numactl -H
-> 
->     available: 3 nodes (0-2)
->     node 0 cpus: 0 1
->     node 0 size: 968 MB
->     node 0 free: 686 MB
->     node 1 cpus: 2 3
->     node 1 size: 683 MB
->     node 1 free: 336 MB
->     node 2 cpus:
->     node 2 size: 256 MB
->     node 2 free: 256 MB
->     node distances:
->     node   0   1   2
->       0:  10  20  20
->       1:  20  10  20
->       2:  20  20  10
+> +
+> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
+> +		return 0;
+> +
+> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> +		return 0;
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr)
+> +		goto out;
+> +
+> +	offset = readw(addr + PCI_CAPABILITY_LIST);
+> +	offset = offset & 0x00ff;
+> +	cap_hdr = readl(addr + offset);
+> +	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
+> +		offset = (cap_hdr >> 8) & 0x000000ff;
+> +		if (!offset)
+> +			break;
+> +		cap_hdr = readl(addr + offset);
+> +	}
+
+Hmmm, it's a shame we have to reimplement pci_find_capability() here.
+I see the problem though -- pci_find_capability() does config reads
+and this is in MMIO space, not config space.
+
+But you need this several times, so maybe a helper function would
+still be useful so you don't have to repeat the code.
+
+> +	if (offset)
+> +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+
+Testing "offset" acknowledges the possibility that it may be NULL, and
+in that case, the readl() below is a NULL pointer dereference.
+
+> +	linkcap = readl(addr + offset + PCI_EXP_LNKCAP);
+> +	iounmap(addr);
+> +out:
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return linkcap;
+> +}
+
+> @@ -806,6 +1003,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (IS_ERR(mds))
+>  		return PTR_ERR(mds);
+>  	cxlds = &mds->cxlds;
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);
+
+Is there a removal issue here?  What if "pdev" is removed?  Or what if
+this module is unloaded?  Do these sysfs files get cleaned up
+automagically somehow?
+
+Bjorn
