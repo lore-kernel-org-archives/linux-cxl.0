@@ -1,144 +1,109 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD0FEBF;
-	Wed, 28 Feb 2024 01:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ED3210E1;
+	Wed, 28 Feb 2024 01:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709082374; cv=none; b=tuRXd5m6FGv5Vbo2KuDD4Qpy0qMTUe+aBqtfA90+4nT0XSAYuknQ5Lcs+SPAnG8LEZ0hoXD82pfUU0NLrY7AFhEz02ArJ4OvMPka9cxpsIoZjzbvpu1Tm/HC6K/kecUoK5GeKfhbtSTJhjZrqLLlOreRpU3ZkpgZ9jmDA80h6sA=
+	t=1709084959; cv=none; b=QwWA593aLPrHMuXCQ4Ez2Pn3HznQoCqMqqFYf9gOUuHv+nlvfjLhaoSpmRRXfAKThuqwhTHxhkW+X51Nl5TRIDnhfmN+PBPhOZa/XgfpBh9Ajo1kN8eB3Icdb9NhtiuZYd0d+NQoiDtQsVLfNj2W3y8u+4MeRm1tkOOiuOm2VN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709082374; c=relaxed/simple;
-	bh=Sm75gcCv9xKtIq0Ia+ywMl1YZw2dek62rJr+oQKTC1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjU7IsNrefAwEcKZu4AKTe6gYJrnZ0ACGQd62WGCGsU9yHXfmN7lzcMZ6HrcheDdZxS10bOJ9oQm52ZWwR41HyxCKHTwuhe+QIXzACDuwb5gKlJrjo4kyUGTGATmsIhpF52vIZX/Ndu2OhV/anyRBjMOKYKKAlP5f3Mllqo54oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMY6CVTD; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709084959; c=relaxed/simple;
+	bh=gjgYbrtNhxKWyS5CTNxCrQYKJsq5J+1ei+mqMlM4VEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eBhcrTMNsSfR8jQWwe4rLDseoZRCmJQyhwDI5KM83iaIlCC9ntkDGWs8D6pUEfcve7IBxEAZHpVykxJFM2V6FQsN70kyYFJ2mddbSGVHPZ78hh53GG9JMqQXtyS6PZvZfycX83JB0VGRfb07F6Ikjr27NRxej1N2thgw0SubZKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1prOQI2c; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMY6CVTD"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6e49872f576so1656005a34.1;
-        Tue, 27 Feb 2024 17:06:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709082372; x=1709687172; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DhG2DGa6pDHH1VG928nucKPhUiyDvmB5uJFD8WxCLAk=;
-        b=eMY6CVTD1mZfy03rOZkJ4ki/QIeX53Mx2oiVe2EPjFaYG+lPUv/D05iyiotwDXcLxx
-         pfSoxsDvJ6Vz6gWEfEj0nlD4hKz/78j6xWas7xXV0t5qOnb34AahB49xjZslFbS7ev3f
-         EuWPAK7Ah4wohBdaYAO1s1PmIuoyH69zYYoWcMXgcOIvRXuFsReyHSDFNpZ5Xg6W7lQG
-         WdpJiBv2G+ySuQSQUNWljKnI2M55f9HKo8e2nLiO2qxxNLrd5ujcFOrRe4Hko4B44GBI
-         gYcKlp9UO/sr7nKIY3cTjNvPw+RzCX5H5NFLdMTnUpHjdjgUH8IFFRCeYgDgDpwABFKb
-         uX0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709082372; x=1709687172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DhG2DGa6pDHH1VG928nucKPhUiyDvmB5uJFD8WxCLAk=;
-        b=hpmeQp1E3u3ObK7fli9lVTrrf++q1OocXyMRjwOB2IQ4P5mjUCccoV0+FECIKsMfXZ
-         dC3MUxPtZ9rNgk2HKlkRfwX2x2vhgkP0CfdIHQuI078TZkVafALz7TeL6fecPXydTUwu
-         qXiUAumrqoaT5Md2Ap1kW9Z0zNFQkwXYfdH9ZGjCHPr1EPypbC78+yQbxH8EklbHzmd4
-         Itpo1CBf2P0Q53fMimFgLppwUG7TMIgrJYsP/SXYKlvHwy+wYC3tmTMeKZPSmCnS5bDI
-         RzEffwSVuOQ/eFMnbYQdNucGuLxWQqmi2xe+q/kgAXhzAzI9MQ1JlfkauPV4vVcHRZsM
-         CbEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHmMS+0ZFqhOoxRUkh1NRHhQqc0xVp5vJLuBBH1w1u4dy0Thunx9cnCIWJfcoRRDhpjJFz5yIhxNeRJxLiAm46Wc+U0FCZjoSKupS+inKuREo9NSwKE0TBVQ/voqEsaKdXaA+739Wz8s1wUp57xiHbZ32ECXmflxmyaUHS2taDBcYVH8nZXyPm+E1DVg6eGOjy+S6FSGRnyqr2BpLY7OKKzg==
-X-Gm-Message-State: AOJu0Ywj/p8Yq0KjGKESJdBygDWKMxL2dw1X/DJuji3b99/UTiBNGLzn
-	hjf+N74+y17B/YRR4E9GJSMe3F7FlcHKIvcO/qKGzM+X5297HTLn
-X-Google-Smtp-Source: AGHT+IFKfO0y13JodeF6eFlc6IWCbbbk2Jvw3nQLEBpJsjWeW7+WZ/Ry4CGjgxNXq0G9thCXP1TIMA==
-X-Received: by 2002:a9d:6a9a:0:b0:6e4:8d2d:64e5 with SMTP id l26-20020a9d6a9a000000b006e48d2d64e5mr11096665otq.13.1709082372064;
-        Tue, 27 Feb 2024 17:06:12 -0800 (PST)
-Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id p4-20020a056830338400b006e2d8b5d9e5sm1713834ott.21.2024.02.27.17.06.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 17:06:11 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Tue, 27 Feb 2024 19:06:09 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 08/20] famfs: Add famfs_internal.h
-Message-ID: <agvghv2lask3iazxtycynwkdydrxqula3pwbrusvwn3e2fz6jd@nrmpnbamp6f7>
-References: <cover.1708709155.git.john@groves.net>
- <13556dbbd8d0f51bc31e3bdec796283fe85c6baf.1708709155.git.john@groves.net>
- <20240226124818.0000251d@Huawei.com>
- <u6nfwlidsmmhejsboqdo4r2juox4txkzt4ffjlnlcqzzrwthlt@wsh5eb5xeghj>
- <20240227102846.00003eef@Huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1prOQI2c"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=cms8Ef3fgwsJAymMCfxvOAd2pB9FZVDvl21gvg199Fk=; b=1prOQI2cFuXNlXlNKW6h0DpP3M
+	fdaANi4aUnHS9IxP3OGBd4OaSFmaEoJmDGt0TG4yCxM/CzShaI9mZ2FLN48JHKdvdT2ODstAMNnm3
+	U1XtaSIlZpGp4iOLnntuBqUzUt396h7bIgcxPsMjtn4WPgNfPzU6fvH8mIMYenDldNsnckCRUpMGY
+	Y0vEL5B2V9QWgvq2oW1h+SS9RB08R0MWhPthvhIstet47AxtwSEoABFDKNGSNfMAIGq9g/0/WHnJ5
+	lG6ezOo5Ggp/Yg50/fMzQf7LFwv4F0bYpqFTkT8V84q6HEibs97gC2fErgrLNZ1PXfm8d31HV8FTF
+	7tjzXGXQ==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rf94B-00000007bsH-17RP;
+	Wed, 28 Feb 2024 01:49:03 +0000
+Message-ID: <8bd01ff0-235f-4aa8-883d-4b71b505b74d@infradead.org>
+Date: Tue, 27 Feb 2024 17:49:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227102846.00003eef@Huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 11/20] famfs: Add fs_context_operations
+Content-Language: en-US
+To: John Groves <John@groves.net>, Christian Brauner <brauner@kernel.org>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com,
+ Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
+ dave.hansen@linux.intel.com, gregory.price@memverge.com
+References: <a645646f071e7baa30ef37ea46ea1330ac2eb63f.1708709155.git.john@groves.net>
+ <20240227-mammut-tastatur-d791ca2f556b@brauner>
+ <6jrtl2vc4dmi5b6db6tte2ckiyjmiwezbtlwrtmm464v65wkhj@znzv2mwjfgsk>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <6jrtl2vc4dmi5b6db6tte2ckiyjmiwezbtlwrtmm464v65wkhj@znzv2mwjfgsk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 24/02/27 10:28AM, Jonathan Cameron wrote:
-> On Mon, 26 Feb 2024 11:35:17 -0600
-> John Groves <John@groves.net> wrote:
-> 
-> > On 24/02/26 12:48PM, Jonathan Cameron wrote:
-> > > On Fri, 23 Feb 2024 11:41:52 -0600
-> > > John Groves <John@Groves.net> wrote:
-> > >   
-> > > > Add the famfs_internal.h include file. This contains internal data
-> > > > structures such as the per-file metadata structure (famfs_file_meta)
-> > > > and extent formats.
-> > > > 
-> > > > Signed-off-by: John Groves <john@groves.net>  
-> > > Hi John,
-> > > 
-> > > Build this up as you add the definitions in later patches.
-> > > 
-> > > Separate header patches just make people jump back and forth when trying
-> > > to review.  Obviously more work to build this stuff up cleanly but
-> > > it's worth doing to save review time.
-> > >   
-> > 
-> > Ohhhhkaaaaay. I think you're right, just not looking forward to
-> > all that rebasing.
-> 
-> :)  Patch mangling is half the fun of upstream development :)
-> 
-> > 
-> > > Generally I'd plumb up Kconfig and Makefile a the beginning as it means
-> > > that the set is bisectable and we can check the logic of building each stage.
-> > > That is harder to do but tends to bring benefits in forcing clear step
-> > > wise approach on a patch set. Feel free to ignore this one though as it
-> > > can slow things down.  
-> > 
-> > I'm not sure that's practical. A file system needs a bunch of different
-> > kinds of operations
-> > - super_operations
-> > - fs_context_operations
-> > - inode_operations
-> > - file_operations
-> > - dax holder_operations, iomap_ops
-> > - etc.
-> > 
-> > Will think about the dependency graph of these entities, but I'm not sure
-> > it's tractable...
-> 
-> Sure.  There's a difference though between doing something useful (or
-> even successfully loading) and being able to build it at intermediate steps.
-> I'm only looking for buildability.
-> 
-> If not possible, even with a few stubs, empty ops structures etc
-> then fair enough.
-> 
-> Jonathan
 
-I'm through at least the first stage of grief on this. By the time we're
-through this I'll be able to reconstitute the whole bloody thing from memory,
-backwards :D
 
-John
+On 2/27/24 16:59, John Groves wrote:
+> On 24/02/27 02:41PM, Christian Brauner wrote:
+>> On Fri, Feb 23, 2024 at 11:41:55AM -0600, John Groves wrote:
+>>> This commit introduces the famfs fs_context_operations and
+>>> famfs_get_inode() which is used by the context operations.
+>>>
+>>> Signed-off-by: John Groves <john@groves.net>
+>>> ---
+>>>  fs/famfs/famfs_inode.c | 178 +++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 178 insertions(+)
+>>>
+>>> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
+>>> index 82c861998093..f98f82962d7b 100644
+>>> --- a/fs/famfs/famfs_inode.c
+>>> +++ b/fs/famfs/famfs_inode.c
+> 
+> <snip>
+> 
 
+> 
+> I wasn't aware of the new fsconfig interface. Is there documentation or a
+> file sytsem that already uses it that I should refer to? I didn't find an
+> obvious candidate, but it might be me. If it should be obvious from the
+> example above, tell me and I'll try harder.
+
+> My famfs code above was copied from ramfs. If you point me to 
+> documentation I might send you a ramfs fsconfig patch too :D.
+
+All that I found was the commit to add fsconfig to the kernel tree:
+
+commit ecdab150fddb
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Nov 1 23:36:09 2018 +0000
+
+    vfs: syscall: Add fsconfig() for configuring and managing a context
+
+and the lore archive for its discussion:
+https://lore.kernel.org/all/153313723557.13253.9055982745313603422.stgit@warthog.procyon.org.uk/
+
+
+plus David's userspace man page addition for it:
+https://lore.kernel.org/linux-fsdevel/159680897140.29015.15318866561972877762.stgit@warthog.procyon.org.uk/
+
+
+-- 
+#Randy
