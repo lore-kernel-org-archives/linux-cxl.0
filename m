@@ -1,130 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25833143747;
-	Thu, 29 Feb 2024 20:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542FA16FF30
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Feb 2024 21:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239319; cv=none; b=qvTisPGJ+wwiDLpx+xJ7BRN+RsRVaLZR6ljmcRclxPZ1y9kLuEcc7iivgry8ORwXda9IC69jBD2L4Ou7JYrEBQWFgPkphr4BxynPcOk1Wad0R9tq6uMIpthgYSS4GKzHGaQhLt8L0PDeTDAdk6ddLefpo0+Tet0Z5RiTdhKCrE0=
+	t=1709242124; cv=none; b=dsN6IydEZq4DJrgEIyp43vdA2K+zFb5cg6KFj52Sx7TM7B8Q9A8ayG8pmEo8HAi17NcX/T8OrIxB0cSyzOk1JorBlIQLdFFHSErwXDag1OclabnBBDQZzRw3S8IquvvNlJcipViXS+N3aEJ2z9tzJLZCu/mf1EeoW1yqVDDyOEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239319; c=relaxed/simple;
-	bh=Afb1bS5M8L8H7i6Uyi43uTFRREwyVzlW0GwyD+OUcN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2pb9lYMgS+UH7vswFzM64SHqeAhSXDsj+L66tEpbPx5zFJPCaugDsDCZFp5F65tAv/pbJcAkPF0g2y23Bto4+OnOWC27ElfcsQzgnRk0JvW+v2FgC/uPm5qBiD898fn30pAvYpx16lm3WQaIoTt4WnIkSwWNxuWQ5pwx0zi/RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJq/kCFx; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1709242124; c=relaxed/simple;
+	bh=5FdqLWBpCA7zLkCQhq87cYmm4IIyGem84G5wya1sdac=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KSHUXgQPdYvmGy3huFy2LugBN9izCSDK0QKsSZS1bi8gMlCP9IvdQsf0h+iJHO/n58pmL64GDh3CvQUI8lprj2UoqbC8u0mtnEtsX7Pi0mKtjIVlRaMp0J9Z/CrmXPUZb0utqZ7I2O7C9Wu31sycd9uDIw//rOWmnTsTst42hko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQ5SLWYD; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJq/kCFx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQ5SLWYD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709239317; x=1740775317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Afb1bS5M8L8H7i6Uyi43uTFRREwyVzlW0GwyD+OUcN4=;
-  b=fJq/kCFxJcdVpMr5IUoe/BSEc15n2Qzkm+2qrYirOwDJPxNkqk7pEn17
-   vSwrN6kz8+PWavUlZ16U+KANR7UK3w+qdPp2rrV2zjUl6CqyohAXVZvMN
-   dVDxeBq33vvv7GQKtnXUeBqma7QasF0hVK3dAmXqELK0KsGcsRLqHtTJ2
-   L5uVDGybaPDxALPqZmDKUkbKkNC5smDQGAb4+zzX5W95AkwsU5AkEIrXy
-   1IBxAnifIxZzY9+4fKAzpftq3Sd9BM+Elfz2S6VZPnkmIgUMGrFYIbgcr
-   bVNSNUEX/f4HBp579jgWhKbq1l0/dVPCzVhvk3s3nlrzikhSIzpT4oc3X
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3908109"
+  t=1709242123; x=1740778123;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5FdqLWBpCA7zLkCQhq87cYmm4IIyGem84G5wya1sdac=;
+  b=EQ5SLWYDUDBUg2M55UHB+pwuYknmZ5L5WYSxd7aTqV6pFk1FTjgzLcZ5
+   jgYD34Sk9HK/ASql8gCC5CZqfFi6pgpWYIqYFVDqfRlKLRtklajuu7K7o
+   G3OpcmvgjlCRkpzBx2T0+k4J7SoPAqO8WsmFSs2AVToSN3tnR3wTpPixW
+   BqlO/yMQYNH0v2/UMdMCK95SaVMDAUrFqfL+UhzZiH2a6lrw5j5TT3gCs
+   vzGdm/e+PoWPo772PUvYKVdJT9+qAOFZflbl6KAd1lPLGb7IaXjBB0Nj2
+   p8p4LicrwVDp+FHKNMjOWDUIpz9uZQ2U6j4/haTrNNAtCsqePodyq/TnF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3866984"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3908109"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:41:56 -0800
+   d="scan'208";a="3866984"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:28:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="8373570"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:41:55 -0800
-Date: Thu, 29 Feb 2024 12:41:53 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
- CXL device patrol scrub control and DDR5 ECS control features
-Message-ID: <ZeDsESXK5pMeialz@agluck-desk3>
-References: <20240215111455.1462-1-shiju.jose@huawei.com>
- <65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
- <54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
- <65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240226102944.000070a3@Huawei.com>
+   d="scan'208";a="7899662"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.136.104])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:28:41 -0800
+From: alison.schofield@intel.com
+To: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/documentation: tidy up cxl-wait-sanitize man page format
+Date: Thu, 29 Feb 2024 13:28:38 -0800
+Message-Id: <20240229212838.2006205-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226102944.000070a3@Huawei.com>
+Content-Transfer-Encoding: 8bit
 
-> Obviously can't talk about who was involved in this feature
-> in it's definition, but I have strong confidence it will get implemented
-> for reasons I can point at on a public list. 
-> a) There will be scrubbing on devices.
-> b) It will need control (evidence for this is the BIOS controls mentioned below
->    for equivalent main memory).
-> c) Hotplug means that control must be done by OS driver (or via very fiddly
->    pre hotplug hacks that I think we can all agree should not be necessary
->    and aren't even an option on all platforms)
-> d) No one likes custom solutions.
-> This isn't a fancy feature with a high level of complexity which helps.
+From: Alison Schofield <alison.schofield@intel.com>
 
-But how will users know what are appropriate scrubbing
-parameters for these devices?
+Remove extra '==' to address these asciidoctor complaints:
 
-Car analogy: Fuel injection systems on internal combustion engines
-have tweakable controls. But no auto manufacturer wires them up to
-a user accessible dashboad control.
+Generating Documentation/cxl/cxl-wait-sanitize with a custom command
+ERROR: cxl-wait-sanitize.txt: line 1: non-conforming manpage title
+ERROR: cxl-wait-sanitize.txt: line 3: name section expected
+WARNING: cxl-wait-sanitize.txt: line 4: unterminated example block
+WARNING: cxl-wait-sanitize.txt: line 26: unterminated listing block
 
-Back to computers:
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ Documentation/cxl/cxl-wait-sanitize.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'd expect the OEMs that produce memory devices to set appropriate
-scrubbing rates based on their internal knowledge of the components
-used in construction.
+diff --git a/Documentation/cxl/cxl-wait-sanitize.txt b/Documentation/cxl/cxl-wait-sanitize.txt
+index 9047b74f0716..e8f2044e4882 100644
+--- a/Documentation/cxl/cxl-wait-sanitize.txt
++++ b/Documentation/cxl/cxl-wait-sanitize.txt
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ cxl-wait-sanitize(1)
+-======================
++====================
+ 
+ NAME
+ ----
 
-What is the use case where some user would need to override these
-parameters and scrub and a faster/slower rate than that set by the
-manufacturer?
+base-commit: 4d767c0c9b91d254e8ff0d7f0d3be04a498ad9f0
+-- 
+2.37.3
 
--Tony
