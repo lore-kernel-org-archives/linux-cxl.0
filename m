@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6841153BE6;
-	Thu, 29 Feb 2024 20:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF5E15E02C;
+	Thu, 29 Feb 2024 20:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239084; cv=none; b=JEyr/T8dPIuAlyuRNOl4CWN+pn1yRrDHDIaH+DoVYLt/edMKlqSRu7CqSoDaZDLpXDzSV6yuSxh+nzHVIlT4CeidUnfiWEl57V0h+jQfR46WQFSTKOJuqfLUmoQs+MOEnXIH6BniTUF5VcASHh74LuD1qNTo0vDtMIQ5gxPaKvQ=
+	t=1709239200; cv=none; b=CsLgZ0yTxbPckY0LODkwD7S3tsEIdKNrhYlJEJObNxroDljCzuRBnrtQ0FaEeJzKCJ85gq7gyPRVsSvps008HJmRV4W1TNxJQkcMWe5aZJWuGIElZCr1ny1DK1se2HKsFn0zmSwCxA9WZzuXDK/Rx9RhvQLUvwlhK39m6i4sBs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239084; c=relaxed/simple;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
+	s=arc-20240116; t=1709239200; c=relaxed/simple;
+	bh=qB4HappnWK8PlV2MzfcXsXtLknPnzx6f5UGJ670ViNM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IMLQmoSYvKuBkqI+qpmMaJlyfQAKMHXRZiK4WbM7okDL2BPm6pl0webmmKz3k6mz0lgmZ3V0AArqPBGcGx40njNwPVXVGxpQBUKEb4L3S/c3Jsar8OWcNmX6e4wdJvbeEvLQn8vXiY/Wsp8EocT2zKv3HFGruR95vRtke96QllU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pn9r1q9R; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QEV5asf5X9PBtemtYyhmErhIw2GddKWQpzP+H0iQMl6j8FVek7PLUu+uniD0vI2molSlLV5pQGsfX72U2ZfdMGGRfcGuPnAJYp7GodFLx4mIQmnLOkSB8oPnf9RmGTHBlAOLcck44R/j/LhJ2BBPqjNCLd40NqDDcHKpFZtoL5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hM0OWNOI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pn9r1q9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39702C433C7;
-	Thu, 29 Feb 2024 20:38:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hM0OWNOI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2833C433C7;
+	Thu, 29 Feb 2024 20:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239083;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
+	s=k20201202; t=1709239200;
+	bh=qB4HappnWK8PlV2MzfcXsXtLknPnzx6f5UGJ670ViNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pn9r1q9R0WLyERB/yDfHBti8aaF0pJO7UJqRLn0JqgGfbuIZ0w0whZ/5MzSYtLG3h
-	 eNrOe/5zpYwxaArEgFDuEr0CU2EpTsQ5enyKodU/RdoG8PeCjvoFdnslChJt/D7kpV
-	 v5mRcow+a2GVoUzocNqTwoDPFR/aGsYWCRIlHbWuIpPfPv8QxLEFHEpRBH0zJohOP9
-	 fxaMuXeyK/imGaknu86I001Xq11RGz+h2WVCo4XTaKoUttIZuiZ6zvJVDjOMjzAqhj
-	 V/nXAU0XqHNwuw9jJdmRz822V9Ted4y2Rl3hKGN+Z89Nrhj8rMHCWPOd0hzvA5asdc
-	 Hfr/Sf/NqBNuQ==
+	b=hM0OWNOIgcJmso6bKk+AQNSQcqhbBb2N0IGB0zvDOO9uhjTb2H3juMNc+Ilq0yVAJ
+	 wiD9BcST8SIdPQtbLDrLF+62919QlZ9OgwJXVT2gTQ2kTkWoTUxy/MFpxJba1GK4Lb
+	 FmLAez5qQUBqEAQB1tNDkFIhq3K/d8474MYvbUjJW1pa5+GuN/+ZceRu3/4o3Cf4Z9
+	 1+JjY5ML/X0B8CW1ryWhqMju3Z67CIY1WK241KJL9szN5ZjqMfRA+3NoaZ5WGxWSHz
+	 Cky66N7GkmLF/9FgArbdKm+6D/Cz8SoK97/gI2t8svlcAuysuf3CaD7wBH1qYz9DMv
+	 1y1y4kXCE/m2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hojin Nam <hj96.nam@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Dan Williams <dan.j.williams@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
+	dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	linux-cxl@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.7 16/24] perf: CXL: fix CPMU filter value mask length
-Date: Thu, 29 Feb 2024 15:36:56 -0500
-Message-ID: <20240229203729.2860356-16-sashal@kernel.org>
+	dave.jiang@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	jim.harris@samsung.com,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 12/22] cxl/region: Handle endpoint decoders in cxl_region_find_decoder()
+Date: Thu, 29 Feb 2024 15:39:05 -0500
+Message-ID: <20240229203933.2861006-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229203729.2860356-1-sashal@kernel.org>
-References: <20240229203729.2860356-1-sashal@kernel.org>
+In-Reply-To: <20240229203933.2861006-1-sashal@kernel.org>
+References: <20240229203933.2861006-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -51,60 +54,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.6
+X-stable-base: Linux 6.6.18
 Content-Transfer-Encoding: 8bit
 
-From: Hojin Nam <hj96.nam@samsung.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-[ Upstream commit 802379b8f9e169293e9ba7089e5f1a6340e2e7a3 ]
+[ Upstream commit 453a7fde8031a5192ed2f9646ad048c1a5e930dc ]
 
-CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-However, it is used as 2B length in code and comments.
+In preparation for adding a new caller of cxl_region_find_decoders()
+teach it to find a decoder from a cxl_endpoint_decoder structure.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
-Link: https://lore.kernel.org/r/20240216014522.32321-1-hj96.nam@samsung.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Combining switch and endpoint decoder lookup in one function prevents
+code duplication in call sites.
+
+Update the existing caller.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+Link: https://lore.kernel.org/r/79ae6d72978ef9f3ceec9722e1cb793820553c8e.1706736863.git.alison.schofield@intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/cxl_pmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/cxl/core/region.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index bc0d414a6aff9..308c9969642e1 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -59,7 +59,7 @@
- #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
- 
- #define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
--#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(15, 0)
-+#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
- 
- #define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
- 
-@@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6ebd12f7970bc..a3d82ef5599e8 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -729,12 +729,17 @@ static int match_auto_decoder(struct device *dev, void *data)
+ 	return 0;
  }
  
- /*
-- * CPMU specification allows for 8 filters, each with a 16 bit value...
-- * So we need to find 8x16bits to store it in.
-- * As the value used for disable is 0xffff, a separate enable switch
-+ * CPMU specification allows for 8 filters, each with a 32 bit value...
-+ * So we need to find 8x32bits to store it in.
-+ * As the value used for disable is 0xffff_ffff, a separate enable switch
-  * is needed.
-  */
+-static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+-						   struct cxl_region *cxlr)
++static struct cxl_decoder *
++cxl_region_find_decoder(struct cxl_port *port,
++			struct cxl_endpoint_decoder *cxled,
++			struct cxl_region *cxlr)
+ {
+ 	struct device *dev;
+ 	int id = 0;
  
-@@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 		if (cxl_pmu_config1_hdm_filter_en(event))
- 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
- 		else
--			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-+			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
- 		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
- 	}
++	if (port == cxled_to_port(cxled))
++		return &cxled->cxld;
++
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
+ 		dev = device_find_child(&port->dev, &cxlr->params,
+ 					match_auto_decoder);
+@@ -852,10 +857,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+ {
+ 	struct cxl_decoder *cxld;
  
+-	if (port == cxled_to_port(cxled))
+-		cxld = &cxled->cxld;
+-	else
+-		cxld = cxl_region_find_decoder(port, cxlr);
++	cxld = cxl_region_find_decoder(port, cxled, cxlr);
+ 	if (!cxld) {
+ 		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+ 			dev_name(&port->dev));
 -- 
 2.43.0
 
