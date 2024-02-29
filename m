@@ -1,173 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486ED2CCA0
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Feb 2024 00:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709167477; cv=fail; b=fGYZfiUobFDdL9cKpozMlL2LWjue8FdNoT0gPG/Coi724kRc/LmaAfyWnutg6kycQgsQRGpMYuyhd1HezxOZj8fFZz+g1Yl048O7O9XFena4J/RSv4/gk4S65TYa1l/INdB1hXXKuqwStefMkXwIxkbRqjglAEc8Cxv6X/f91/Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709167477; c=relaxed/simple;
-	bh=y5ywLtuVz+pbnKVHjKS1njtqq4mq+suscSadowNOoOI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=buq3JGcAAO8eloCL9+3cCqJQioA+ULKk4hDqmFKbzuSiSbmDSPgRQr/zLmtNcnHbVRe90am51toG8xXrRezxzAt4ZYbB3D4PkUfrp36s8A7KzHotMh+3c4Z8GMA2F+wZCp8nBU/AoRnN1xM4va8/9JxGYn1GsRXF0gtxAhwL8mg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+dE49FT; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECC36B16
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Feb 2024 02:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709172929; cv=none; b=P7I36DZOR+NU7o+UWvWEZ/rTqXh88W8FToTaKGHsWi4j24FYQPgQmih9W2sZSfnrxe2+25Ro2vFOyv7vCG4T9tT2/7Ei1Ms03HvvZAgBT4ZU4gs7buYfMMps2ORnW3UcxnxExkBHAuZzflyABmDoEwtMiq45VkSWjKBuxqIaMNc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709172929; c=relaxed/simple;
+	bh=gbK/8SPPoX50lcAPF/cWQzwwqAl+Hw5BLMUVJqzZZxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQNlADhtHaeT4Gk0d2IpcEioCq9BLwaUzVVmzxTAhABlxICb0T64cZy3c99Gib7iSJ1UxvOxLUy5xg9qW7++ZQPVP23LZAwcR9L9UHssBOV7q8ErKMPmkBn9plIKPEsV2JGEyAJ/vfG26In9ARTI5mOLuZg42hisMsjuahSFf3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=24ZP7AFU; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+dE49FT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709167476; x=1740703476;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=y5ywLtuVz+pbnKVHjKS1njtqq4mq+suscSadowNOoOI=;
-  b=i+dE49FTcKiiNm/qd/iVk7S9vlRp2QLTDdZenjBeL2uG+Gz2wnL7HfYD
-   uLZTKhAehhIEPLLpsrggnA2CuAtza8V2rA8kaix7HXAHGZbawJgyqL1iM
-   ipG5Tpo87YlzW6biuUhycJRKQkcdEiIEoPzefk+FOwGQO36jfOEk4rMgp
-   XQMNirH2dz8b2FyG1J/MvsoikQk/eZRU8XZyBRQpG4yI1arlmaPpCdHpd
-   j6UJYzlJtuhdZ45iFHF8Z6q5xnNPWWfnq2vTc7ZhmCvqEuw7Kh+ZjfuqF
-   Yi2AllzalSk67ZKDz/+in4bFEanmvtojjsrlr7uuRIhbo3o53TveQOsHP
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3472510"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="3472510"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 16:44:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="7563375"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Feb 2024 16:44:36 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 28 Feb 2024 16:44:35 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 28 Feb 2024 16:44:35 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 28 Feb 2024 16:44:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SdJ2k6smiSrKm6bsOzRtTqiJyhQCFAW8BIDa8TinCK5Y0AT0v80V/R/nJL2dKQZgwAw+miLoIN8m1/nOXwsZwL/2ZbGV/sccfvUMoK2UeWY43Ks9ohExp8OQ16V0NIxeiekF2NBSv73eOxDePVDtx+9IOg0bLYsxBkYe1PhAz6Lyr8dY2Wyt4Rk0PZGTjhHBYa9IBr4p4UmWydCqoVj1pkIh5aoxazCt6DrwdYtJxps4/AfzzwvNEA8zbggAQNTmTf4QSOND6d5PX4jUSmKSxVz4TEHBUmk87AJerANJvTvz4H4/2PqXvORGqg+7da5PwDFRIspOEAVG3I43hMb2Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5qEW4fUIrS/kACcWJogN4YjKTEDu94bgzew8MznArB8=;
- b=hzfhtgjIWVFyfMQtSiakwTR6WTv3ls5GqgOzC1kByo0aUQjgWAZAuKlfDB8SAIJyPep2OE5TaxG6jZtaCFKSXp2xXRQ1nqMvOIk+MgD8jLAlD+/noIxMtSJjGs0+5fv336MiAzAW/Uo68UA0zEASLR1LBhqC3FvSZFakzsA0rf+XsoJGfzBzXaDYh9TDa6WWeJ9pAa+15cm55G49mHar4+kmrt0RrkaxYwvKBpW5T72efBuDK8gfV3k87wH3lwcI7xrIwM7DMjHgGBHqJMyOOPDn/Y+EC3n/Lm3ZZQBFjrxBIOMVvXa90xZJ9C8ZG/UtEv1hsneZFDMNGAbM79t2kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MN0PR11MB6229.namprd11.prod.outlook.com (2603:10b6:208:3c6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.12; Thu, 29 Feb
- 2024 00:44:32 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7339.019; Thu, 29 Feb 2024
- 00:44:31 +0000
-Date: Wed, 28 Feb 2024 16:44:29 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <Jonathan.Cameron@huawei.com>,
-	<dave@stgolabs.net>
-Subject: Re: [PATCH 2/2] cxl: Add checks to access_coordinate calculation to
- fail missing data
-Message-ID: <65dfd36d990b6_1138c729463@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240229002542.634982-1-dave.jiang@intel.com>
- <20240229002542.634982-2-dave.jiang@intel.com>
- <65dfd137a1406_1138c7294dd@dwillia2-xfh.jf.intel.com.notmuch>
- <9a20ce22-5910-418e-b13a-2312880e2400@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9a20ce22-5910-418e-b13a-2312880e2400@intel.com>
-X-ClientProxiedBy: MW4PR03CA0029.namprd03.prod.outlook.com
- (2603:10b6:303:8f::34) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="24ZP7AFU"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso331380b3a.1
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Feb 2024 18:15:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1709172927; x=1709777727; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=k82qC/YmHMBHWFt7RMlbhQ42CGo9M2erm3qHEzqFqxc=;
+        b=24ZP7AFUsGm90iTvAeh7kX7tO9QmyfmmTxt3PdS+tZHHmbYyw/Y6Z7BkmbALwmCggO
+         WGjhZSqDSGUp8QMU1Utfowr5wZayAnFwJNDPV1tW/BRGLs360ohFMR17/ixmjdljd174
+         nqAdGrdT66S/tlM8Dbk5UNRr7igAzRd/tzzJ7k/CKK7SLP43Uz5fNkLM4FzU6ZiA1EMJ
+         mGdegBAlG7fnOqRFDIRItIVgI+BkH4hGUeXKHNbPS8cF9zw+X/bm3hiSYIQZVNdOSogp
+         dmNxaHrQ6iQHm9kssQF+RRuC6hg4VG4ysZdx8IuP4lOeWnCnCu8apDtEfHnHSbAVb44u
+         5rfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709172927; x=1709777727;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k82qC/YmHMBHWFt7RMlbhQ42CGo9M2erm3qHEzqFqxc=;
+        b=bVe6fQR0hSzN5u4s4QX5B8/23/zuLYNICbE57VqZ7rKqpGngjHmJuNCTadFF9/6h5k
+         OwzzamVRKayudmi3hq1xYLxNBkn3TqjuUPCtPYX2sl1zIjuIYVxxJT8chHk7tMesUbM6
+         PPXZakaioDbluIqNIMivD6VLn2jHtxDmV7FbniLm2K6VxjoxO6VVM4Vomx80rgpEKKfc
+         /55yJpWvtU4b9RCsDCA7pD9pB1wMnb0pKTTId12LysbyUsNyN2IVwnaODUzWtoIox8gS
+         0P5riyHrOOMPqX4t4QAQ636dpJENrlS1yNhkWsXNoPRBRi5UYsn722sXuGfLBrHmV/Xu
+         q4Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXyvCSuYzXj6zpWULY9KBiIB1Cll+hwSkqZDceUSTbvTe6mjWS3b6CTa2LAOo27EBEjzt++Hhzz2ZEu2REobzbsS7KE+odk3aA0
+X-Gm-Message-State: AOJu0YzYP1CjfbLFbxIiV31ykeScK8NEa6yhLn7a+n2rZheUY/0k3z6t
+	PnA64f9C2fNzbwIu8hoIxOr9qeJVxhAv9MXY4lJqAUPssORYwxd7gSg5xtxhF/s=
+X-Google-Smtp-Source: AGHT+IHlcUbGYgKkh9AJe9B6cyxTd0bn96C+Tels4WsobRn2K0DWuGc5NbJJ2I2uCc8hPOOH897Pnw==
+X-Received: by 2002:a05:6a21:1789:b0:1a1:2094:960b with SMTP id nx9-20020a056a21178900b001a12094960bmr1024668pzb.43.1709172927291;
+        Wed, 28 Feb 2024 18:15:27 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
+        by smtp.gmail.com with ESMTPSA id w16-20020a1709026f1000b001dc90b62393sm141163plk.216.2024.02.28.18.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 18:15:26 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rfVxE-00Cupu-1S;
+	Thu, 29 Feb 2024 13:15:24 +1100
+Date: Thu, 29 Feb 2024 13:15:24 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: John Groves <John@groves.net>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, John Groves <jgroves@micron.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	john@jagalactic.com, Christoph Hellwig <hch@infradead.org>,
+	dave.hansen@linux.intel.com, gregory.price@memverge.com
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+Message-ID: <Zd/ovHqO/16PsUsp@dread.disaster.area>
+References: <cover.1708709155.git.john@groves.net>
+ <ZdkzJM6sze-p3EWP@bombadil.infradead.org>
+ <cc2pabb3szzpm5jxxeku276csqu5vwqgzitkwevfluagx7akiv@h45faer5zpru>
+ <Zdy0CGL6e0ri8LiC@bombadil.infradead.org>
+ <w5cqtmdgqtjvbnrg5okdgmxe45vjg5evaxh6gg3gs6kwfqmn5p@wgakpqcumrbt>
+ <CAB=NE6UvHSvTJJCq-YuBEZNo8F5Kg25aK+2im=V7DgEsTJ8wPg@mail.gmail.com>
+ <mw4yhbmza4idassgbqeiti4ue7jq377ezxfrqrcbsbzsrmfiln@kn7qmqljvswl>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN0PR11MB6229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55be0625-cbec-407b-9857-08dc38bf97dd
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HHidp360mjsGtYTWGw/rZ8aHXpub3RfX7i4mIJJCOQCrLiV2206p6PRAl54zzJgtrhhRKAj/rs5Qh/UBA6PjjgzxQLthRlWb9m30SRp+fZjXKxmrS8z6T0SSo4kSJamR4ktFBdNew1CJAQm7addE0OWmvQeme+FFKuwEcIhDJ9DiRrNIP8DtzzH7KfJqt2ul1QrXGn2w0FMvr10Vlrm9AJ6vTMBgyB0+g6M2OVIl9BEgD/rig5UQL7coSlPQltv0x73GhJzZmGYI3q9tvgx0fCC08Be5viHDpKI21SOCW+p6516YtUJweHoV8fyNw+qnwOIfMEr7NvNmsf2Q3W/77Si/JwKuz1CGKFykbk2SRwKuZ2IPXTK7wWL87Wwk3YMnoBrkU1vm634SLDWWwxBpN4PAjnvQ0XWABD8OICz7bkCEFWCeILizdDjqLxwm7mX5CrdCCmCpVTgFgdhMYs6x9FtxxlNr0w3NFtvoqrqOQpyRWbRHni50Hlup/r4hZc/7bZxSU7H7l0vd9G46U4q4F5CTuUCFk2Ibi1HmlQS59XxeGgeVnFzwgkksbTIOqnvC9cjaJr8VLB4uIPn6ux7ZD9vJPQp0ooMpHctcSKCkCIGsYxClKfy0DiLOPtklamRXFNSFklaKEg7CpIXfgtJ4iA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nZhxJgemCYLcWnFa4ZwV3AMj1wXZLnPMTq8cRvRV+Ed9vp3TRw4VRtVdPx8q?=
- =?us-ascii?Q?orab0B5C6oxCJ4Qb0QuwcPlI6SQxLgXmBJ6C7ZF1kOw+w3Ey+stc5LAru4Dy?=
- =?us-ascii?Q?3jwmhghBQTJwSDFUdjwKgSVQLHjinGhu/PCXZ5Pe7qhnSOC1WGH+xF459S9u?=
- =?us-ascii?Q?aEPtwbcKAEi4gKfEpAKMmddRwGf7VE+t72s15qpAbHenAaiA49/SC6xjdwEM?=
- =?us-ascii?Q?aDsxstMsb0UWWdN4NhupMpX5T3Zmv1m46dMMv6lnKIYPSAyGTuEV3CTlKSjo?=
- =?us-ascii?Q?Qxp4mwWOcevclZhbA5NgiBSq11JnJ6HJDdLYATQQxLaKIH4+ApEDjot+PKFN?=
- =?us-ascii?Q?ZDW2mtLl96ZAEOeoCnfehyWMHidf+bv+2aevCk0ypC/mUi51YeY5nU4C/cci?=
- =?us-ascii?Q?3i5yrKWp2Ay82a5/px61kYMDwrN0OdB6fqXJFlvkOYrX3DlWaaVU/uyUtocu?=
- =?us-ascii?Q?ZXHsUgHKNva57CA3Jv0lStSDEqhNdPCacrqXHIF+fNmaSPUBfMDSkZdD/voP?=
- =?us-ascii?Q?JjXoznng2zQ2N0yZWJ4aEvKboAnCKDRCPnqb7ZJKMxGH+wce/yE1RJfOdXU8?=
- =?us-ascii?Q?/VU3tP11rvGRjKpOE91rqlKKWt7fW+ylvg7oiZG/rU2xufssRa4rkBuyA9kL?=
- =?us-ascii?Q?y+Nzsfmhv8XmDAphMfvvPbYFMdfj2DQW0Hp4uNpvWqaGri57xDRR6h9dq3xG?=
- =?us-ascii?Q?0mraLulDOaMNbyPCut4eNj+1toJwM9jwcaG0j0BgJyqz9lvmSQeZliInul0s?=
- =?us-ascii?Q?LLbzhBFFIMaSr9fXhwvA2cQpBFMvbu6W8CvFVE7cv+wp35yBa4fGaa+qFEc3?=
- =?us-ascii?Q?ekt5mkOn2gx0kfB6lkp+HGFOATiy6i/AFuTIRqlzOmyWWY9ouuT8jTRiS94+?=
- =?us-ascii?Q?kv86ATUJV2P9OlmLUCn/zd3hPRkmUNTj6cHWfQ1Nt3l7U0+U1t/Dkum0roMo?=
- =?us-ascii?Q?MWMpHwfgKbEuOwwjz0hvuyjQ2xyeP5yrVbV3QGK46/yOnReKwQAASrkGBgvK?=
- =?us-ascii?Q?0zvNG1InvS6U03+tOXGpz8ceShP+7tL0iygxtfo2P9qtlEiJv0Ghz4ngtaR7?=
- =?us-ascii?Q?2rnArXu9o8RFbRGO7V9RweFEtGPLBs1dbbqysmaeSuSdTObxsr5OjBLX0mgF?=
- =?us-ascii?Q?D7s0pgBn1v3QOPAilnN6X4EgUe/HC8+Qkla2wLw4w40stWOF8iM4n+epVzEH?=
- =?us-ascii?Q?dmpTyRggOOG2CYmylhBJPrTHWwCVtyhZtMCxwO7AweOSsxXnjTCkOzJvFZHy?=
- =?us-ascii?Q?3/SgAtFW5hpuT1OMYPUwZ0tyNcJZgxaiFVh/p724Hzhup9cPmbb5XMyIy8Ge?=
- =?us-ascii?Q?Z6DVskPnU5PAVtqaRfXIEVJMqRwDudPLyRylhR2beOfZXdj9bOqIo22MfTwF?=
- =?us-ascii?Q?dE6EfXmSp9nXTyS7DC/LDIdm9uV/xGjOrYl5x3Mgvyhn/HQVPUi7TS7g8m3N?=
- =?us-ascii?Q?LJLOBp8x6aDETYSsPLyY+TS/VYnTIxhNM4wd09gY54ReGYBJGHTpINleH4xV?=
- =?us-ascii?Q?lfmt2qnVxqX4iOOY9dZJNK1JGofh0Jijlq/uLF1FCJT+Rga5yuFQBE5y7JID?=
- =?us-ascii?Q?qfp8cMAPTuhdhzxf6qXA8qKX0ig2JpaQ9AWgelCh0o800iMhC0JCYchR7Of+?=
- =?us-ascii?Q?LA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55be0625-cbec-407b-9857-08dc38bf97dd
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 00:44:31.8744
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3mtzf4iv1ku8LGCqOslXXyi62tOuGr1sey7tvPzuQOmAVaLSPqGHD2+9m5/XOKnuiJER3s+vCf7ipwSxeyp3Txxk74LwJIy9A/bE/TPLS3w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6229
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <mw4yhbmza4idassgbqeiti4ue7jq377ezxfrqrcbsbzsrmfiln@kn7qmqljvswl>
 
-Dave Jiang wrote:
-> 
-> 
-> On 2/28/24 5:35 PM, Dan Williams wrote:
-> > Dave Jiang wrote:
-> >> Jonathan noted that when the coordinates for host bridge and switches
-> >> can be 0s if no actual data are retrieved and the calculation continues.
-> >> The resulting number would be inaccurate. Add checks to ensure that the
-> >> calculation would complete only if the numbers are valid.
+On Mon, Feb 26, 2024 at 08:05:58PM -0600, John Groves wrote:
+> On 24/02/26 04:58PM, Luis Chamberlain wrote:
+> > On Mon, Feb 26, 2024 at 1:16 PM John Groves <John@groves.net> wrote:
+> > >
+> > > On 24/02/26 07:53AM, Luis Chamberlain wrote:
+> > > > On Mon, Feb 26, 2024 at 07:27:18AM -0600, John Groves wrote:
+> > > > > Run status group 0 (all jobs):
+> > > > >   WRITE: bw=29.6GiB/s (31.8GB/s), 29.6GiB/s-29.6GiB/s (31.8GB/s-31.8GB/s), io=44.7GiB (48.0GB), run=1511-1511msec
+> > > >
+> > > > > This is run on an xfs file system on a SATA ssd.
+> > > >
+> > > > To compare more closer apples to apples, wouldn't it make more sense
+> > > > to try this with XFS on pmem (with fio -direct=1)?
+> > > >
+> > > >   Luis
+> > >
+> > > Makes sense. Here is the same command line I used with xfs before, but
+> > > now it's on /dev/pmem0 (the same 128G, but converted from devdax to pmem
+> > > because xfs requires that.
+> > >
+> > > fio -name=ten-256m-per-thread --nrfiles=10 -bs=2M --group_reporting=1 --alloc-size=1048576 --filesize=256MiB --readwrite=write --fallocate=none --numjobs=48 --create_on_open=0 --ioengine=io_uring --direct=1 --directory=/mnt/xfs
 > > 
-> > Similar comment as patch1. This smells like a fix, is this an urgent
-> > thing to get into v6.8, i.e. most configurations are busted without
-> > this, or is a nice to have fixup for a QEMU effect that may or may not
-> > show up in physical systems?
-> 
-> This would only be an issue if the switches do not supply a proper
-> CDAT and/or if BIOS does not provide proper ACPI tables. I think it is
-> only experienced on QEMU currently. I'll add a fix tag if you think it
-> should be a fix.
+> > Could you try with mkfs.xfs -d agcount=1024
 
-No, but please add that relevant clarification of impact to the
-changelog. It would have made it clear this is a nice to have thing for
-v6.9, nothing to worry about for v6.8.
+Won't change anything for the better, may make things worse.
+
+>    bw (  MiB/s): min= 5085, max=27367, per=100.00%, avg=14361.95, stdev=165.61, samples=719
+>    iops        : min= 2516, max=13670, avg=7160.17, stdev=82.88, samples=719
+>   lat (usec)   : 4=0.05%, 10=0.72%, 20=2.23%, 50=2.48%, 100=3.02%
+>   lat (usec)   : 250=1.54%, 500=2.37%, 750=1.34%, 1000=0.75%
+>   lat (msec)   : 2=3.20%, 4=43.10%, 10=23.05%, 20=14.81%, 50=1.25%
+
+Most of the IO latencies are up round the 4-20ms marks. That seems
+kinda high for a 2MB IO. With a memcpy speed of 10GB/s, the 2MB
+should only take a couple of hundred microseconds. For Famfs, the
+latencies appear to be around 1-4ms.
+
+So where's all that extra time coming from?
+
+
+>   lat (msec)   : 100=0.08%
+>   cpu          : usr=10.18%, sys=0.79%, ctx=67227, majf=0, minf=38511
+
+And why is system time reporting at almost zero instead of almost
+all the remaining cpu time (i.e. up at 80-90%)?
+
+Can you run call-graph kernel profiles for XFS and famfs whilst
+running this workload so we have some insight into what is behaving
+differently here?
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
