@@ -1,110 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D15E15FE17;
-	Thu, 29 Feb 2024 20:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25833143747;
+	Thu, 29 Feb 2024 20:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239207; cv=none; b=bFYunWaqQHwym84RpqLAOupmWEnmR6WLWCpz5fr8wSgt/Ou+vjiExlR8w34TdxSabefRWokKMldYAsegfcV5iQoX6llML4jsbEtwDx8r6cKK84MxB5zRPJ0KUupcNbZNWoceX6nu/ELI1GOPxH+SY1y2JZofQZke6Vgo9n8XCeQ=
+	t=1709239319; cv=none; b=qvTisPGJ+wwiDLpx+xJ7BRN+RsRVaLZR6ljmcRclxPZ1y9kLuEcc7iivgry8ORwXda9IC69jBD2L4Ou7JYrEBQWFgPkphr4BxynPcOk1Wad0R9tq6uMIpthgYSS4GKzHGaQhLt8L0PDeTDAdk6ddLefpo0+Tet0Z5RiTdhKCrE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239207; c=relaxed/simple;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=la/8w98spqavpPkM4TeXooC2liQUqizdC2xPINLjwRKnGMUVxV+XmsrTnkJFux24G27ve8VoXwzmiE4wcymYyi/wz84UlNPZ8qvP3JnvkEYDCNjKWU/vQPq1sxg8QDfbDG0fkl0y2AThN8UeaayOO1oBcEHs15xVedhwvH+GJLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gy3/fMOt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709239319; c=relaxed/simple;
+	bh=Afb1bS5M8L8H7i6Uyi43uTFRREwyVzlW0GwyD+OUcN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2pb9lYMgS+UH7vswFzM64SHqeAhSXDsj+L66tEpbPx5zFJPCaugDsDCZFp5F65tAv/pbJcAkPF0g2y23Bto4+OnOWC27ElfcsQzgnRk0JvW+v2FgC/uPm5qBiD898fn30pAvYpx16lm3WQaIoTt4WnIkSwWNxuWQ5pwx0zi/RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJq/kCFx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gy3/fMOt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F4FC43399;
-	Thu, 29 Feb 2024 20:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239206;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gy3/fMOti/adMjE74HoKA8FR6MWUiXGnnMcm5UvGvd04Cf/uKsFpfk224VBNsmN5s
-	 RYMAcePPOkuzzRopwKhjo6Y3Bb1YskqBvdpSGEv/kdd9TKDkaQ7+kSiXPhV8d1HmLz
-	 1FlA169eh+7lV4QkFi2NDXGq3WK2g24uvhT1rrsIH1jufLUMroUviY6v58IKD+6YC0
-	 xxL2ZfgvacWtLjjUiHtJKRD7APgwqImIRAs0tkKgE8iACRl4+pjlwR/rVH4jbVCbJX
-	 urExGHfWNLsyrh+WhXp77Nt11Qckcl3iBh878Ere93N/QvDenKLPemcGlv1v/P2Oh3
-	 TG1AaSQRld8Qw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hojin Nam <hj96.nam@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	linux-cxl@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 15/22] perf: CXL: fix CPMU filter value mask length
-Date: Thu, 29 Feb 2024 15:39:08 -0500
-Message-ID: <20240229203933.2861006-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229203933.2861006-1-sashal@kernel.org>
-References: <20240229203933.2861006-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJq/kCFx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709239317; x=1740775317;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Afb1bS5M8L8H7i6Uyi43uTFRREwyVzlW0GwyD+OUcN4=;
+  b=fJq/kCFxJcdVpMr5IUoe/BSEc15n2Qzkm+2qrYirOwDJPxNkqk7pEn17
+   vSwrN6kz8+PWavUlZ16U+KANR7UK3w+qdPp2rrV2zjUl6CqyohAXVZvMN
+   dVDxeBq33vvv7GQKtnXUeBqma7QasF0hVK3dAmXqELK0KsGcsRLqHtTJ2
+   L5uVDGybaPDxALPqZmDKUkbKkNC5smDQGAb4+zzX5W95AkwsU5AkEIrXy
+   1IBxAnifIxZzY9+4fKAzpftq3Sd9BM+Elfz2S6VZPnkmIgUMGrFYIbgcr
+   bVNSNUEX/f4HBp579jgWhKbq1l0/dVPCzVhvk3s3nlrzikhSIzpT4oc3X
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3908109"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="3908109"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:41:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="8373570"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:41:55 -0800
+Date: Thu, 29 Feb 2024 12:41:53 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Message-ID: <ZeDsESXK5pMeialz@agluck-desk3>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+ <65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
+ <65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240226102944.000070a3@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.18
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226102944.000070a3@Huawei.com>
 
-From: Hojin Nam <hj96.nam@samsung.com>
+> Obviously can't talk about who was involved in this feature
+> in it's definition, but I have strong confidence it will get implemented
+> for reasons I can point at on a public list. 
+> a) There will be scrubbing on devices.
+> b) It will need control (evidence for this is the BIOS controls mentioned below
+>    for equivalent main memory).
+> c) Hotplug means that control must be done by OS driver (or via very fiddly
+>    pre hotplug hacks that I think we can all agree should not be necessary
+>    and aren't even an option on all platforms)
+> d) No one likes custom solutions.
+> This isn't a fancy feature with a high level of complexity which helps.
 
-[ Upstream commit 802379b8f9e169293e9ba7089e5f1a6340e2e7a3 ]
+But how will users know what are appropriate scrubbing
+parameters for these devices?
 
-CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-However, it is used as 2B length in code and comments.
+Car analogy: Fuel injection systems on internal combustion engines
+have tweakable controls. But no auto manufacturer wires them up to
+a user accessible dashboad control.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
-Link: https://lore.kernel.org/r/20240216014522.32321-1-hj96.nam@samsung.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/perf/cxl_pmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Back to computers:
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index bc0d414a6aff9..308c9969642e1 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -59,7 +59,7 @@
- #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
- 
- #define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
--#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(15, 0)
-+#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
- 
- #define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
- 
-@@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
- }
- 
- /*
-- * CPMU specification allows for 8 filters, each with a 16 bit value...
-- * So we need to find 8x16bits to store it in.
-- * As the value used for disable is 0xffff, a separate enable switch
-+ * CPMU specification allows for 8 filters, each with a 32 bit value...
-+ * So we need to find 8x32bits to store it in.
-+ * As the value used for disable is 0xffff_ffff, a separate enable switch
-  * is needed.
-  */
- 
-@@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 		if (cxl_pmu_config1_hdm_filter_en(event))
- 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
- 		else
--			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-+			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
- 		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
- 	}
- 
--- 
-2.43.0
+I'd expect the OEMs that produce memory devices to set appropriate
+scrubbing rates based on their internal knowledge of the components
+used in construction.
 
+What is the use case where some user would need to override these
+parameters and scrub and a faster/slower rate than that set by the
+manufacturer?
+
+-Tony
