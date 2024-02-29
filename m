@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CF415E5C7;
-	Thu, 29 Feb 2024 20:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D15E15FE17;
+	Thu, 29 Feb 2024 20:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239203; cv=none; b=rwh2rqrORhgri/mU6AV57s3Jd3zMkPQfCFCNFeXK2Qq4b/eWt+4TpStV9M8WxHJiG8GJf1GwDQwtjypgR9zBi9ZHKCk2ExXwqG2j8uf1zZIWd2qjV/1bTilsXH7iH0a0Hanqs5XExgKO6EI5plh5hSmG/kFpSejt9g4fOFQkQFU=
+	t=1709239207; cv=none; b=bFYunWaqQHwym84RpqLAOupmWEnmR6WLWCpz5fr8wSgt/Ou+vjiExlR8w34TdxSabefRWokKMldYAsegfcV5iQoX6llML4jsbEtwDx8r6cKK84MxB5zRPJ0KUupcNbZNWoceX6nu/ELI1GOPxH+SY1y2JZofQZke6Vgo9n8XCeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239203; c=relaxed/simple;
-	bh=z7qh1e8vbDVQ4yzcCgshluBRHXqVwd2S32PdSJRIBvw=;
+	s=arc-20240116; t=1709239207; c=relaxed/simple;
+	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wb5ubABpR06uGdatUJgAe29HP3W5JU+mnPXp46xTVmWmb2bzyheuUZv9Vg8DIU7Sff9pdbSycTpCxkBRpvs3hCRScnwohmcRLEnzd0W447Bpug1G2YnHtReZP4yQ/6vTdRwIk3/XXrBsjZXeNGXfFmS/FkyOD6CBiSG7xhhuOS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrnzslHX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=la/8w98spqavpPkM4TeXooC2liQUqizdC2xPINLjwRKnGMUVxV+XmsrTnkJFux24G27ve8VoXwzmiE4wcymYyi/wz84UlNPZ8qvP3JnvkEYDCNjKWU/vQPq1sxg8QDfbDG0fkl0y2AThN8UeaayOO1oBcEHs15xVedhwvH+GJLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gy3/fMOt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrnzslHX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE28C433C7;
-	Thu, 29 Feb 2024 20:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gy3/fMOt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F4FC43399;
+	Thu, 29 Feb 2024 20:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239203;
-	bh=z7qh1e8vbDVQ4yzcCgshluBRHXqVwd2S32PdSJRIBvw=;
+	s=k20201202; t=1709239206;
+	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mrnzslHXY7KxmMF3JSlEXTJGr5jpPpUjDOnjOLY84G7JVybY6rjcJkSebGaxvMzsV
-	 0JpB+JZ6ya1dmuBBb9S3GVglIRQ39aq0ZKwqyd/JUJ8YghQmHhxcoeeKAJ7yqjdBl2
-	 /uGOxil6eHmbgVf2GsKdv+RJO+JEvTUAQzO4x4q1+trO9zFaW2wn2Jkf36BheqEvIc
-	 nDMU53EUZMnQKdH4sFb20FgqfhB2U0XwxntbcOjHCCrEU9oveLU7gnCBmgmSdkqrjv
-	 21ikhnJzq/XTYx69f0b2L7doMwBPZaShOJa8nWreI5+MehGJlOZ4hQhTmzUUTcXdXh
-	 dzBJDFbDgFn7A==
+	b=gy3/fMOti/adMjE74HoKA8FR6MWUiXGnnMcm5UvGvd04Cf/uKsFpfk224VBNsmN5s
+	 RYMAcePPOkuzzRopwKhjo6Y3Bb1YskqBvdpSGEv/kdd9TKDkaQ7+kSiXPhV8d1HmLz
+	 1FlA169eh+7lV4QkFi2NDXGq3WK2g24uvhT1rrsIH1jufLUMroUviY6v58IKD+6YC0
+	 xxL2ZfgvacWtLjjUiHtJKRD7APgwqImIRAs0tkKgE8iACRl4+pjlwR/rVH4jbVCbJX
+	 urExGHfWNLsyrh+WhXp77Nt11Qckcl3iBh878Ere93N/QvDenKLPemcGlv1v/P2Oh3
+	 TG1AaSQRld8Qw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Wonjae Lee <wj28.lee@samsung.com>,
-	Dan Williams <dan.j.williams@intel.com>,
+Cc: Hojin Nam <hj96.nam@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	jim.harris@samsung.com,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 13/22] cxl/region: Allow out of order assembly of autodiscovered regions
-Date: Thu, 29 Feb 2024 15:39:06 -0500
-Message-ID: <20240229203933.2861006-13-sashal@kernel.org>
+	mark.rutland@arm.com,
+	linux-cxl@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 15/22] perf: CXL: fix CPMU filter value mask length
+Date: Thu, 29 Feb 2024 15:39:08 -0500
+Message-ID: <20240229203933.2861006-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240229203933.2861006-1-sashal@kernel.org>
 References: <20240229203933.2861006-1-sashal@kernel.org>
@@ -57,113 +54,57 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.18
 Content-Transfer-Encoding: 8bit
 
-From: Alison Schofield <alison.schofield@intel.com>
+From: Hojin Nam <hj96.nam@samsung.com>
 
-[ Upstream commit cb66b1d60c283bb340a2fc19deff7de8acea74b1 ]
+[ Upstream commit 802379b8f9e169293e9ba7089e5f1a6340e2e7a3 ]
 
-Autodiscovered regions can fail to assemble if they are not discovered
-in HPA decode order. The user will see failure messages like:
+CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
+However, it is used as 2B length in code and comments.
 
-[] cxl region0: endpoint5: HPA order violation region1
-[] cxl region0: endpoint5: failed to allocate region reference
-
-The check that is causing the failure helps the CXL driver enforce
-a CXL spec mandate that decoders be committed in HPA order. The
-check is needless for autodiscovered regions since their decoders
-are already programmed. Trying to enforce order in the assembly of
-these regions is useless because they are assembled once all their
-member endpoints arrive, and there is no guarantee on the order in
-which endpoints are discovered during probe.
-
-Keep the existing check, but for autodiscovered regions, allow the
-out of order assembly after a sanity check that the lesser numbered
-decoder has the lesser HPA starting address.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-Link: https://lore.kernel.org/r/3dec69ee97524ab229a20c6739272c3000b18408.1706736863.git.alison.schofield@intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
+Link: https://lore.kernel.org/r/20240216014522.32321-1-hj96.nam@samsung.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cxl/core/region.c | 48 +++++++++++++++++++++++++++++++--------
- 1 file changed, 38 insertions(+), 10 deletions(-)
+ drivers/perf/cxl_pmu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a3d82ef5599e8..e2a82ee4ff0cf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -757,8 +757,31 @@ cxl_region_find_decoder(struct cxl_port *port,
- 	return to_cxl_decoder(dev);
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index bc0d414a6aff9..308c9969642e1 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -59,7 +59,7 @@
+ #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
+ 
+ #define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
+-#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(15, 0)
++#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
+ 
+ #define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
+ 
+@@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
  }
  
--static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
--					       struct cxl_region *cxlr)
-+static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
-+			  struct cxl_decoder *cxld)
-+{
-+	struct cxl_region_ref *rr = cxl_rr_load(port, cxlr_iter);
-+	struct cxl_decoder *cxld_iter = rr->decoder;
-+
-+	/*
-+	 * Allow the out of order assembly of auto-discovered regions.
-+	 * Per CXL Spec 3.1 8.2.4.20.12 software must commit decoders
-+	 * in HPA order. Confirm that the decoder with the lesser HPA
-+	 * starting address has the lesser id.
-+	 */
-+	dev_dbg(&cxld->dev, "check for HPA violation %s:%d < %s:%d\n",
-+		dev_name(&cxld->dev), cxld->id,
-+		dev_name(&cxld_iter->dev), cxld_iter->id);
-+
-+	if (cxld_iter->id > cxld->id)
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct cxl_region_ref *
-+alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
-+		 struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_region_ref *cxl_rr, *iter;
-@@ -768,16 +791,21 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
- 	xa_for_each(&port->regions, index, iter) {
- 		struct cxl_region_params *ip = &iter->region->params;
+ /*
+- * CPMU specification allows for 8 filters, each with a 16 bit value...
+- * So we need to find 8x16bits to store it in.
+- * As the value used for disable is 0xffff, a separate enable switch
++ * CPMU specification allows for 8 filters, each with a 32 bit value...
++ * So we need to find 8x32bits to store it in.
++ * As the value used for disable is 0xffff_ffff, a separate enable switch
+  * is needed.
+  */
  
--		if (!ip->res)
-+		if (!ip->res || ip->res->start < p->res->start)
- 			continue;
- 
--		if (ip->res->start > p->res->start) {
--			dev_dbg(&cxlr->dev,
--				"%s: HPA order violation %s:%pr vs %pr\n",
--				dev_name(&port->dev),
--				dev_name(&iter->region->dev), ip->res, p->res);
--			return ERR_PTR(-EBUSY);
-+		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+			struct cxl_decoder *cxld;
-+
-+			cxld = cxl_region_find_decoder(port, cxled, cxlr);
-+			if (auto_order_ok(port, iter->region, cxld))
-+				continue;
- 		}
-+		dev_dbg(&cxlr->dev, "%s: HPA order violation %s:%pr vs %pr\n",
-+			dev_name(&port->dev),
-+			dev_name(&iter->region->dev), ip->res, p->res);
-+
-+		return ERR_PTR(-EBUSY);
+@@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 		if (cxl_pmu_config1_hdm_filter_en(event))
+ 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
+ 		else
+-			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
++			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
+ 		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
  	}
  
- 	cxl_rr = kzalloc(sizeof(*cxl_rr), GFP_KERNEL);
-@@ -954,7 +982,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
- 			nr_targets_inc = true;
- 		}
- 	} else {
--		cxl_rr = alloc_region_ref(port, cxlr);
-+		cxl_rr = alloc_region_ref(port, cxlr, cxled);
- 		if (IS_ERR(cxl_rr)) {
- 			dev_dbg(&cxlr->dev,
- 				"%s: failed to allocate region reference\n",
 -- 
 2.43.0
 
