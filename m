@@ -1,318 +1,180 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F172F69D38
-	for <linux-cxl@vger.kernel.org>; Fri,  1 Mar 2024 08:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D2B10E9;
+	Fri,  1 Mar 2024 13:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281445; cv=none; b=ji5tqUSq2RKJ9wyoOkXZE2A2a4xzy0cYkJiZzDBHQB0qQHPXd5uXqTKrqKC845PWoCANXHYyMVE2/kor8lMmm2cbx9CdWiLL877I9vpRhFhT07D5A+q0/wJ7fapchDc99kYii2rqxYSo+eumXu54jz/LQN6IW3/q3nm7eqSJfEc=
+	t=1709299181; cv=none; b=OHECKY5GnCyV0HhrMy5LP5HBioaIVeZh5xYb7K2qWWyW7sPuPblxGzV/5mqb12b6smUScCgbAVZdnUseQ1LRTzP1NcKzMqSROW0EMxH1TawXGZ758T97sFGr5ly2F1bZahSQ/lUop0ZB5pknOSj9CdI76jGulV7XATSYJoLLlpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281445; c=relaxed/simple;
-	bh=UataCGYo3G62/ULCC+IEnJOgFpYUGdT+U0HsTd/TvSo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n/sp/zM6sR2XmjibNGbBRIScEgCijYroXFHfsw01Xw+L+bzdDuMteoA+L4AENk1CgM4XWB0EnpeWfevxF7lohUDDz7yZfJSNJa9sCd/sYa0hMfoREJeA02kGUPijvHw5j4jtoahwPFd+chZIp9yGp2nG6aI844JNRD5FgFOnycI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PdpixPhM; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PdpixPhM"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-68f901192afso7610356d6.1
-        for <linux-cxl@vger.kernel.org>; Fri, 01 Mar 2024 00:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709281443; x=1709886243; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/6TShqh1i4+cFFfpKPT0xQIuYg06VEOVkdOiTtXAx9c=;
-        b=PdpixPhMruAZAgHSjapjfKrqUVtgPikqaCmlnA2+G9Gh6OO2Od9R0lxRCKwC+C0dTZ
-         v7ENMlrcDkQAyiQMCGZ1kP8Zn2QFq+Mzj+CGscteFPYjBRfJZ60R1NOwhzPtq/cUhv8D
-         y0vwM5WFRJBx1Ghx4YnBKjLIYUbkLxp+5qz9mP1mVkU/5WtcsC691Xcbi2POhDJikAQ0
-         nPrJeQuZGbkPu5+FBy0ldxzq3s65WYgg6ZEEB35dCuS1ub7VDebOdNuYtFR6wQLgAjfL
-         18flJtnCsuLjVg94aSWEOpzkocmcilK2Dm7hTq9OoYuO0U8bV9chtFonp47XvEXronQA
-         0rNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709281443; x=1709886243;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/6TShqh1i4+cFFfpKPT0xQIuYg06VEOVkdOiTtXAx9c=;
-        b=QdF9/0PVolTbh8ButkHMN4H768gQtjlq0Az5tAdd3qWS/Sm8GbfS+3DUMwigr+s7xR
-         uQGUae8qEw6330e79sbn4l+Pynikt4g5iuCW2WUwQvNVH/dpbRrjOzcXRzvo/eRBaP+k
-         W2ovQtizVx/lCRLglZoeQpmzzyie0PdY9OanhGd+tqorrFK+lMUwA5hTQke3PkYTD8dA
-         O1qBlqjcjV4mAv/VIeyIB77qrIvNaqn086Oh6e2xHAyoq748Q3537JwgfYhC6zlkW9IV
-         eLGAngNKsDKyc53DqOb3sybB3wv6TxDw+7VhHTTwlXX7hzPotcl0BVQNH8o82yvhqeTF
-         GmdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeF8JMW6wuKuu/umbITO/FEZCF54bqxvaAsWvPdewbShijdtFu7M+GMKeFb9NktKgoK2Qf6QDUEI241Ia57Ex7vrvX9QvRLvG/
-X-Gm-Message-State: AOJu0Ywop7z1ygdWhEr0+dLo1ER2qWOcHVlCOttmqt6g8C9L4n2veUsE
-	WmEhYWIpZSAf5/2KgvOx5cPOcXZ3n8e8NicESyfpc7v4uqYfUC93W4H7wVybT1doP4qrlotn+lR
-	kkgc=
-X-Google-Smtp-Source: AGHT+IFOE//de5gW8/t5EN6iDGtxoPupJsqmHB+gIs7CE75HdwkbfH6RIWi1eK5iB+kKO7THZmG8hQ==
-X-Received: by 2002:a05:6214:42:b0:68f:280f:14cc with SMTP id c2-20020a056214004200b0068f280f14ccmr982605qvr.35.1709281443055;
-        Fri, 01 Mar 2024 00:24:03 -0800 (PST)
-Received: from n231-228-171.byted.org ([130.44.215.123])
-        by smtp.gmail.com with ESMTPSA id y19-20020a0cd993000000b0068fc392f526sm1631907qvj.127.2024.03.01.00.24.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 00:24:02 -0800 (PST)
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-To: "Hao Xiang" <hao.xiang@bytedance.com>,
-	"Gregory Price" <gourry.memverge@gmail.com>,
-	aneesh.kumar@linux.ibm.com,
-	mhocko@suse.com,
-	tj@kernel.org,
-	john@jagalactic.com,
-	"Eishan Mirakhur" <emirakhur@micron.com>,
-	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
-	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
-	"Alistair Popple" <apopple@nvidia.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Huang Ying <ying.huang@intel.com>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH v1 1/1] memory tier: acpi/hmat: create CPUless memory tiers after obtaining HMAT info
-Date: Fri,  1 Mar 2024 08:22:45 +0000
-Message-Id: <20240301082248.3456086-2-horenchuang@bytedance.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240301082248.3456086-1-horenchuang@bytedance.com>
-References: <20240301082248.3456086-1-horenchuang@bytedance.com>
+	s=arc-20240116; t=1709299181; c=relaxed/simple;
+	bh=HGAOZ9rzwRj4KaggpswQDdIDQnkCzfQ+ozJfEoUzsGo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K+CUGb3kbwNzlMx06J5JGKOfS3RKUBjVDdCVgk9j0ngx/v5Ydsoe7PrTprpznE0l3McPgwgJbEVOC7tGgyP6QmV5pLgdVmU6xa4wBi79pvQU54H1MTrCKsS0nbwp5seN4B41+wugdEk4fDrg4grgtCmhNlD30tM1Q3ewOmxZvJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TmT8S1fYbz6JB7j;
+	Fri,  1 Mar 2024 21:14:48 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 482BB140B73;
+	Fri,  1 Mar 2024 21:19:33 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 1 Mar
+ 2024 13:19:32 +0000
+Date: Fri, 1 Mar 2024 13:19:31 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Tony Luck <tony.luck@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
+	<shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>, John Groves
+	<John@Groves.net>
+Subject: Re: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Message-ID: <20240301131931.000070c7@Huawei.com>
+In-Reply-To: <ZeDsESXK5pMeialz@agluck-desk3>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+	<65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+	<54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
+	<65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240226102944.000070a3@Huawei.com>
+	<ZeDsESXK5pMeialz@agluck-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-* Introduce `mt_init_with_hmat()`
-We defer memory tier initialization for those CPUless NUMA nodes
-until acquiring HMAT info. `mt_init_with_hmat()` is introduced to
-post-create CPUless memory tiers after obtaining HMAT info.
-It iterates through each CPUless memory node, creating memory tiers if
-necessary. Finally, it calculates demotion tables again at the end.
+On Thu, 29 Feb 2024 12:41:53 -0800
+Tony Luck <tony.luck@intel.com> wrote:
 
-* Introduce `hmat_find_alloc_memory_type()`
-Find or allocate a memory type in the `hmat_memory_types` list.
+> > Obviously can't talk about who was involved in this feature
+> > in it's definition, but I have strong confidence it will get implemented
+> > for reasons I can point at on a public list. 
+> > a) There will be scrubbing on devices.
+> > b) It will need control (evidence for this is the BIOS controls mentioned below
+> >    for equivalent main memory).
+> > c) Hotplug means that control must be done by OS driver (or via very fiddly
+> >    pre hotplug hacks that I think we can all agree should not be necessary
+> >    and aren't even an option on all platforms)
+> > d) No one likes custom solutions.
+> > This isn't a fancy feature with a high level of complexity which helps.  
 
-* Make `set_node_memory_tier()` more generic
-This function can also be used for setting other memory types for a node.
-To do so, a new argument is added to specify a memory type.
+Hi Tony,
+> 
+> But how will users know what are appropriate scrubbing
+> parameters for these devices?
+> 
+> Car analogy: Fuel injection systems on internal combustion engines
+> have tweakable controls. But no auto manufacturer wires them up to
+> a user accessible dashboad control.
 
-* Handle cases where there is no HMAT when creating memory tiers
-If no HMAT is specified, it falls back to using `default_dram_type`.
+Good analogy - I believe performance tuning 3rd parties will change
+them for you. So the controls are used - be it not by every user.
 
-* Change adist calculation code to use another new lock, mt_perf_lock.
-Iterating through CPUlist nodes requires holding the `memory_tier_lock`.
-However, `mt_calc_adistance()` will end up trying to acquire the same lock,
-leading to a potential deadlock. Therefore, we propose introducing a
-standalone `mt_perf_lock` to protect `default_dram_perf`. This approach not
-only avoids deadlock but also prevents holding a large lock simultaneously.
+> 
+> Back to computers:
+> 
+> I'd expect the OEMs that produce memory devices to set appropriate
+> scrubbing rates based on their internal knowledge of the components
+> used in construction.
 
-Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
----
- drivers/acpi/numa/hmat.c     |  3 ++
- include/linux/memory-tiers.h |  6 +++
- mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
- 3 files changed, 77 insertions(+), 8 deletions(-)
+Absolutely agree that they will set a default / baseline value,
+but reality is that 'everyone' (for the first few OEMs I googled)
+exposes tuning controls in their shipping BIOS menus to configure
+this because there are users who want to change it.  I'd expect
+them to clamp the minimum scrub frequency to something that avoids
+them getting hardware returned on mass for reliability and the
+maximum at whatever ensures the perf is good enough that they sell
+hardware in the first place.  I'd also expect a bios menu to
+allow cloud hosts etc to turn off exposing RAS2 or similar.
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index d6b85f0f6082..9f57338b3cb5 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -1038,6 +1038,9 @@ static __init int hmat_init(void)
- 	if (!hmat_set_default_dram_perf())
- 		register_mt_adistance_algorithm(&hmat_adist_nb);
+> 
+> What is the use case where some user would need to override these
+> parameters and scrub and a faster/slower rate than that set by the
+> manufacturer?
+
+Its a performance vs reliability trade off.  If your larger scale
+architecture (many servers) requires a few nodes to be super stable you
+will pay pretty much any cost to keep them running. If a single node
+failure makes little or no difference, you'll happily crank this down
+(same with refresh) in order to save some power / get a small
+performance lift.  Or if you care about latency tails, more than
+reliability you'll turn this off.
+
+For comedy value, some BIOS guides point out that leaving scrub on may
+affect performance benchmarking. Obviously not a good data point, but
+a hint at the sort of market that cares.  Same market that buy cheaper
+RAM knowing they are going to have more system crashes.
+
+There is probably a description gap. That might be a paperwork
+question as part of system specification.
+What is relationship between scrub rate and error rate under particular
+styles of workload (because you get a free scrub whenever you access
+the memory)?  The RAM dimms themselves could in theory provide inputs
+but the workload dependence makes this hard. Probably fallback on a
+a test and tune loop over very long runs.  Single bit error rates
+used to detect when getting below a level people are happy with for
+instance.
+
+With the fancier units that can be supported, you can play more reliable
+memory games by scanning subsets of the memory more frequently.
+
+Though it was about a kernel daemon doing scrub, Jiaqi's RFC document here
+https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.com/
+provided justification for on demand scrub - some interesting stuff in the
+bit on hardware patrol scrubbing.  I see you commented on the thread
+and complexity of hardware solutions.
+
+- Cheap memory makes this all more important.
+- Need for configuration of how fast and when depending on system state.
+- Lack of flexibility of what is scanned (RAS2 provides some by association
+  with NUMA node + option to request particular ranges, CXL provides per
+  end point controls).
+
+There are some gaps on hardware scrubbers, but offloading this problem
+definitely attractive.
+
+So my understanding is there is demand to tune this but it won't be exposed
+on every system.
+
+Jonathan
+
  
-+	/* Post-create CPUless memory tiers after getting HMAT info */
-+	mt_init_with_hmat();
-+
- 	return 0;
- out_put:
- 	hmat_free_structures();
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 69e781900082..2f845e90c033 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -48,6 +48,7 @@ int mt_calc_adistance(int node, int *adist);
- int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- 			     const char *source);
- int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
-+void mt_init_with_hmat(void);
- #ifdef CONFIG_MIGRATION
- int next_demotion_node(int node);
- void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
-@@ -136,5 +137,10 @@ static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adis
- {
- 	return -EIO;
- }
-+
-+static inline void mt_init_with_hmat(void)
-+{
-+
-+}
- #endif	/* CONFIG_NUMA */
- #endif  /* _LINUX_MEMORY_TIERS_H */
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 0537664620e5..7a0a579b3deb 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -35,7 +35,9 @@ struct node_memory_type_map {
- };
- 
- static DEFINE_MUTEX(memory_tier_lock);
-+static DEFINE_MUTEX(mt_perf_lock);
- static LIST_HEAD(memory_tiers);
-+static LIST_HEAD(hmat_memory_types);
- static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
- struct memory_dev_type *default_dram_type;
- 
-@@ -502,7 +504,7 @@ static inline void __init_node_memory_type(int node, struct memory_dev_type *mem
- 	}
- }
- 
--static struct memory_tier *set_node_memory_tier(int node)
-+static struct memory_tier *set_node_memory_tier(int node, struct memory_dev_type *new_memtype)
- {
- 	struct memory_tier *memtier;
- 	struct memory_dev_type *memtype;
-@@ -514,7 +516,7 @@ static struct memory_tier *set_node_memory_tier(int node)
- 	if (!node_state(node, N_MEMORY))
- 		return ERR_PTR(-EINVAL);
- 
--	__init_node_memory_type(node, default_dram_type);
-+	__init_node_memory_type(node, new_memtype);
- 
- 	memtype = node_memory_types[node].memtype;
- 	node_set(node, memtype->nodes);
-@@ -623,6 +625,56 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
- }
- EXPORT_SYMBOL_GPL(clear_node_memory_type);
- 
-+static struct memory_dev_type *hmat_find_alloc_memory_type(int adist)
-+{
-+	bool found = false;
-+	struct memory_dev_type *mtype;
-+
-+	list_for_each_entry(mtype, &hmat_memory_types, list) {
-+		if (mtype->adistance == adist) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	if (!found) {
-+		mtype = alloc_memory_type(adist);
-+		if (!IS_ERR(mtype))
-+			list_add(&mtype->list, &hmat_memory_types);
-+	}
-+	return mtype;
-+}
-+
-+static void mt_create_with_hmat(int node)
-+{
-+	struct memory_dev_type *mtype = NULL;
-+	int adist = MEMTIER_ADISTANCE_DRAM;
-+
-+	mt_calc_adistance(node, &adist);
-+	if (adist != MEMTIER_ADISTANCE_DRAM) {
-+		mtype = hmat_find_alloc_memory_type(adist);
-+		if (IS_ERR(mtype))
-+			pr_err("%s() failed to allocate a tier\n", __func__);
-+	} else {
-+		mtype = default_dram_type;
-+	}
-+
-+	set_node_memory_tier(node, mtype);
-+}
-+
-+void mt_init_with_hmat(void)
-+{
-+	int nid;
-+
-+	mutex_lock(&memory_tier_lock);
-+	for_each_node_state(nid, N_MEMORY)
-+		if (!node_state(nid, N_CPU))
-+			mt_create_with_hmat(nid);
-+
-+	establish_demotion_targets();
-+	mutex_unlock(&memory_tier_lock);
-+}
-+EXPORT_SYMBOL_GPL(mt_init_with_hmat);
-+
- static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
- {
- 	pr_info(
-@@ -636,7 +688,7 @@ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- {
- 	int rc = 0;
- 
--	mutex_lock(&memory_tier_lock);
-+	mutex_lock(&mt_perf_lock);
- 	if (default_dram_perf_error) {
- 		rc = -EIO;
- 		goto out;
-@@ -684,7 +736,7 @@ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
- 	}
- 
- out:
--	mutex_unlock(&memory_tier_lock);
-+	mutex_unlock(&mt_perf_lock);
- 	return rc;
- }
- 
-@@ -700,7 +752,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
- 	    perf->read_bandwidth + perf->write_bandwidth == 0)
- 		return -EINVAL;
- 
--	mutex_lock(&memory_tier_lock);
-+	mutex_lock(&mt_perf_lock);
- 	/*
- 	 * The abstract distance of a memory node is in direct proportion to
- 	 * its memory latency (read + write) and inversely proportional to its
-@@ -713,7 +765,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
- 		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
- 		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
- 		(perf->read_bandwidth + perf->write_bandwidth);
--	mutex_unlock(&memory_tier_lock);
-+	mutex_unlock(&mt_perf_lock);
- 
- 	return 0;
- }
-@@ -797,7 +849,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
- 		break;
- 	case MEM_ONLINE:
- 		mutex_lock(&memory_tier_lock);
--		memtier = set_node_memory_tier(arg->status_change_nid);
-+		memtier = set_node_memory_tier(arg->status_change_nid, default_dram_type);
- 		if (!IS_ERR(memtier))
- 			establish_demotion_targets();
- 		mutex_unlock(&memory_tier_lock);
-@@ -836,7 +888,15 @@ static int __init memory_tier_init(void)
- 	 * types assigned.
- 	 */
- 	for_each_node_state(node, N_MEMORY) {
--		memtier = set_node_memory_tier(node);
-+		if (!node_state(node, N_CPU))
-+			/*
-+			 * Defer memory tier initialization on CPUless numa nodes.
-+			 * These will be initialized when HMAT information is
-+			 * available.
-+			 */
-+			continue;
-+
-+		memtier = set_node_memory_tier(node, default_dram_type);
- 		if (IS_ERR(memtier))
- 			/*
- 			 * Continue with memtiers we are able to setup
--- 
-Hao Xiang and Ho-Ren (Jack) Chuang
+> 
+> -Tony
 
