@@ -1,52 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D508480
-	for <linux-cxl@vger.kernel.org>; Fri,  1 Mar 2024 01:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873AC2BAE9
+	for <linux-cxl@vger.kernel.org>; Fri,  1 Mar 2024 01:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709256686; cv=none; b=kj54xF4i/BGPiFUBNl0+Z2MGtA5sIIviEbToC6vVwaI4FkN1E10hogAJCfVeoCQCy4ui4y9S+P5PeUeL2uN2kzALCRdl9dzCGQrnuvgKaWxH4hFxDUXQsjoC3qy3JWat5jbVxgakSQ8aN0CDht5WNNKWwYmHuVRJeHyro1VS0fE=
+	t=1709256688; cv=none; b=XPcojcHlJQkj+xEl800lj1zI/WGo13o6lqoBZ19HOYAekpRwU0K/wGQAsdrTD4sx5R11t247uTnhZCxV13fscAnuPFUn15owrxMQmSK+kSxkdJmEGqfbvrkqzx8ditsGuOn7VH3U172D3ssbzDv9oeJWKySqvOfxP9ZPOh0jAY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709256686; c=relaxed/simple;
-	bh=IFfgLL/7iKupxJb0Z3p3injTxjdnIk4kJXJWMRr4s2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EPEpCWrE8OSLjYlMz3UJLGTAp4F6OnAL7w26z2a4bEYO8fo/nWqJy/RGIXzZc3prgGil9qN+9ooE7KVo58GdmyFbQruWvgToV+Aroe5/OVRg9iBp3G9HYvNjGQwueKzA8EULJASmOaPZ5F3UhgI6p4oZ+Ta15VLXsb+c5j+4u8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcREh7Jd; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1709256688; c=relaxed/simple;
+	bh=hbtZxXnoVzB3QnmV5PLXG8Us1o2ekbGwln4vc2//uhw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MkKkP+WwkFNSB0JyMDmQFIXzDfbR0Is1J2WPMldHuZtZc9DDntJz2aDh4TxuOkobBLgEVEKBN1YpwAFu4xKdomPH3y8DkjdIGtEpF4B7AXK/k8tqw11IFf4nSOTuPNfSuMujnmoZJJlmDP5WrbLB3wvug97Lv15WWH2whkGAWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g579b1Ao; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcREh7Jd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g579b1Ao"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709256684; x=1740792684;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IFfgLL/7iKupxJb0Z3p3injTxjdnIk4kJXJWMRr4s2U=;
-  b=KcREh7Jdudb6feafRrGsiCqKBau9tOJWU85DEe5mFTg7/OIC1UPXzQGS
-   bqoKIdideMV8qicH6wcjJGQriZhQKa+PZf8SwSx7ouZkzjLrz+XC/Tcqo
-   akQOxWBtI/z/waMaughTKM4oNwtMa4p0SjGijJxjEtoG2otGyw7xjQSlq
-   /RzEZpj5+I/UrvhipBA3tqzlKo3muB4duszl7NBqm7SlCEvbGPGWrvasc
-   h9VNpQj606V+ugkbxjZUMJUCOBNR6l1kXK2dDnXw1hNzPcrfx3E57F/sQ
-   MgARG/6LrMiU2/JHFPQUCFBBMyxGJZjApf6DFSfhoIOpYII6cQXRWia99
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="14343102"
+  t=1709256686; x=1740792686;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hbtZxXnoVzB3QnmV5PLXG8Us1o2ekbGwln4vc2//uhw=;
+  b=g579b1Aoyh88bxocJfjhr+eNWigJt46vkN+SYXI4q/2S0odFJXENFktb
+   zXnHgjJ5eRtGlIbG0aiT1maYyY9lNySrEAPUOmUemmpdkYmr/nQbOSKKD
+   WX0s/4uC0nYOs9tfnJ/cWPg3iMrkCA3o20lSgtQIdr/jL9b8zyiPsp6dB
+   2znBIOdrVlTHBSA9ZKhy5S0KhvMyrqVJnR9btK8OMClVTBDvJuqiNO5Yx
+   Kr1QR8RhtifpnC2LFX9yWnBe+xXwLYF03VKpDOn+b4fFJh9S3jFtqQ6Wv
+   sTZRI4TKiHk1+CMkp+scSPRlJftbH10d4vaoCvqNIk5M4r5kE6/J14dCh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="14343107"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14343102"
+   d="scan'208";a="14343107"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:31:24 -0800
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:31:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7952651"
+   d="scan'208";a="7952663"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.136.104])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:31:24 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:31:25 -0800
 From: alison.schofield@intel.com
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v9 0/7] Support poison list retrieval
-Date: Thu, 29 Feb 2024 17:31:15 -0800
-Message-Id: <cover.1709253898.git.alison.schofield@intel.com>
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: [ndctl PATCH v9 2/7] cxl: add an optional pid check to event parsing
+Date: Thu, 29 Feb 2024 17:31:17 -0800
+Message-Id: <0b1b79d374bbfd90093e2ee47fb130cfbaf36e73.1709253898.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1709253898.git.alison.schofield@intel.com>
+References: <cover.1709253898.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -57,112 +62,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Changes since v8:
-Patch 4/7 cxl/event_trace: add helpers to retrieve tep fields by type
-- Add type specific helpers. Avoids the casting in next patch (DaveJ)
-- Remove DaveJ tag due to changes
+When parsing CXL events, callers may only be interested in events
+that originate from the current process. Introduce an optional
+argument to the event trace context: event_pid. When event_pid is
+present, simply skip the parsing of events without a matching pid.
+It is not a failure to see other, non matching events.
 
-Patch 5/7 cxl/list: collect and parse media_error records
-- Avoid goto block by adding helper func find_memdev() (DaveJ)
-- Out-dent the success return buried in cxl_decoder_foreach()
-- Use updated cxl_get_field_* helpers (DaveJ)
-- Add a 'goto put_obj' to unify the put on exit (DaveJ)
+The initial use case for this is device poison listings where
+only the media-error records requested by this process are wanted.
 
-- Rebased on latest pending
-Link to v8: https://lore.kernel.org/nvdimm/cover.1708653303.git.alison.schofield@intel.com/
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ cxl/event_trace.c | 5 +++++
+ cxl/event_trace.h | 1 +
+ 2 files changed, 6 insertions(+)
 
-
-Add the option to add a memory devices poison list to the cxl-list
-json output. Offer the option by memdev and by region. Sample usage:
-
-# cxl list -m mem1 --media-errors
-[
-  {
-    "memdev":"mem1",
-    "pmem_size":1073741824,
-    "ram_size":1073741824,
-    "serial":1,
-    "numa_node":1,
-    "host":"cxl_mem.1",
-    "media_errors":[
-      {
-        "dpa":0,
-        "length":64,
-        "source":"Internal"
-      },
-      {
-        "decoder":"decoder10.0",
-        "hpa":1035355557888,
-        "dpa":1073741824,
-        "length":64,
-        "source":"External"
-      },
-      {
-        "decoder":"decoder10.0",
-        "hpa":1035355566080,
-        "dpa":1073745920,
-        "length":64,
-        "source":"Injected"
-      }
-    ]
-  }
-]
-
-# cxl list -r region5 --media-errors
-[
-  {
-    "region":"region5",
-    "resource":1035355553792,
-    "size":2147483648,
-    "type":"pmem",
-    "interleave_ways":2,
-    "interleave_granularity":4096,
-    "decode_state":"commit",
-    "media_errors":[
-      {
-        "decoder":"decoder10.0",
-        "hpa":1035355557888,
-        "dpa":1073741824,
-        "length":64,
-        "source":"External"
-      },
-      {
-        "decoder":"decoder8.1",
-        "hpa":1035355566080,
-        "dpa":1073745920,
-        "length":64,
-        "source":"Internal"
-      }
-    ]
-  }
-]
-
-
-Alison Schofield (7):
-  libcxl: add interfaces for GET_POISON_LIST mailbox commands
-  cxl: add an optional pid check to event parsing
-  cxl/event_trace: add a private context for private parsers
-  cxl/event_trace: add helpers to retrieve tep fields by type
-  cxl/list: collect and parse media_error records
-  cxl/list: add --media-errors option to cxl list
-  cxl/test: add cxl-poison.sh unit test
-
- Documentation/cxl/cxl-list.txt |  79 +++++++++-
- cxl/event_trace.c              |  82 +++++++++-
- cxl/event_trace.h              |  14 +-
- cxl/filter.h                   |   3 +
- cxl/json.c                     | 271 +++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.c               |  47 ++++++
- cxl/lib/libcxl.sym             |   2 +
- cxl/libcxl.h                   |   2 +
- cxl/list.c                     |   3 +
- test/cxl-poison.sh             | 137 +++++++++++++++++
- test/meson.build               |   2 +
- 11 files changed, 638 insertions(+), 4 deletions(-)
- create mode 100644 test/cxl-poison.sh
-
-
-base-commit: ffbbb0bc246d967d53821184047f1121e02f8a81
+diff --git a/cxl/event_trace.c b/cxl/event_trace.c
+index 1b5aa09de8b2..93a95f9729fd 100644
+--- a/cxl/event_trace.c
++++ b/cxl/event_trace.c
+@@ -214,6 +214,11 @@ static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+ 			return 0;
+ 	}
+ 
++	if (event_ctx->event_pid) {
++		if (event_ctx->event_pid != tep_data_pid(event->tep, record))
++			return 0;
++	}
++
+ 	if (event_ctx->parse_event)
+ 		return event_ctx->parse_event(event, record,
+ 					      &event_ctx->jlist_head);
+diff --git a/cxl/event_trace.h b/cxl/event_trace.h
+index ec6267202c8b..7f7773b2201f 100644
+--- a/cxl/event_trace.h
++++ b/cxl/event_trace.h
+@@ -15,6 +15,7 @@ struct event_ctx {
+ 	const char *system;
+ 	struct list_head jlist_head;
+ 	const char *event_name; /* optional */
++	int event_pid; /* optional */
+ 	int (*parse_event)(struct tep_event *event, struct tep_record *record,
+ 			   struct list_head *jlist_head); /* optional */
+ };
 -- 
 2.37.3
 
