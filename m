@@ -1,82 +1,55 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ED217CE;
-	Mon,  4 Mar 2024 03:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7081811C89;
+	Mon,  4 Mar 2024 06:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709521684; cv=none; b=oH4eTpdrAmJO6nZjrCLsAmatrS1ef7aUugsSJc2xdu4UfYzGMUS7ConQEZX3d+kCWiTCKFOF0Pqpr8FjNFlybGq0d0JUUaqPpT+oKoH9KmVDTZbgjAAueluHiVt5mt149Y3e6zDKkZgjgdrauqOIGBf7nljs3oCeDH/PAGvPJX8=
+	t=1709535430; cv=none; b=J25kTagMBnmm02dRiR3aOSXnJzaspIbLZgALpYh+wmrhVphV7MUVN9tNyqBqwhUc4svG58EMFRmdoCNV3E3RLIbUqLgaEsJ86B9jsjG2zbjZz4HJEqpSih5Phx9Yc+VNJa4dcgEeGc1r2DO/hydwuP/KG4UjF1Y+1FkRSW1WF2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709521684; c=relaxed/simple;
-	bh=3BI8B2Bp4XeQbxQpsn++p8FJGrgiOurWA5aDjJl5cVM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i+t/l62vqLVD+ozBnmF7msudSU7JysRE7F+Kkz87EkS+ldxdHNfCVHZmd2ml4q1M5ISrdryzX9frRMwXymE7pCDynyoZajacjPCkDs9vcJtPktawdsGGU2BwlXQN4c5P1T5QsZc9ira0ur4jbCby9ulAr5UYvUysuLyJbG+ovqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJbLIZXS; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJbLIZXS"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e5dddd3b95so1219277b3a.1;
-        Sun, 03 Mar 2024 19:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709521682; x=1710126482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=09c5Ld8ZWpizXtKH4r3UpdHmyvyQCrCH0kV5BMr3LS0=;
-        b=QJbLIZXSrqr+kTTbEsicCODd2Q/7qSA5XMkjsNnu1lyoVMEd0PX4IuV5cbIunjyw66
-         gYjL8fEDIvNXgOA509EYO9Y5TxW2ZO0stAvFYLyFrTRQvfJXQ+Mn0YoM65SIKqIRklwy
-         nMt7/9FCrkgnw66UhgZo6GiYsS5DIDsmdkB2alTRFzphDhno18N9fBpgax9qlRh5k/jJ
-         e8xrNL9nLPqqcQAApZbEe7zCDkMvE40LVw81jfQBkHILjDCWOA22w8p5qXGfd01rXsdn
-         NsoweUOE+DVrPa2r/tKzqWp6yyEQG1sREd9bzxxnK9YfP7aSpwgUxkUlkL15yjPPktz0
-         Gavw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709521682; x=1710126482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=09c5Ld8ZWpizXtKH4r3UpdHmyvyQCrCH0kV5BMr3LS0=;
-        b=QjcuBNKyBzWP5GTuAhNfzWUqMXjVQD04hEz8BoelDf2cc3xL6yL3R4XjH19Bsjf9tD
-         ZaN5Dde3yRA0jepM5p6zh9e2l/lddwCbMqZ4L974iZObdtMqmL2zlv3ejjfvOUtxwLIG
-         JnIlJIK1vp6CCBIx9DhRIqyoONLiDrqwyTaUhVCtE0lgb9KikqJSVk2TEbRAzvdfm20S
-         5rPIT+0scoQbWUpGexxUCq0imUnwFq8SxeRDBjpsFpdhRw4h7oFzzXhbahYdRKukjZC/
-         AoxGyTiqKZRic7zhYns/rphwpIPhOWnnbC5jpMg94ogaqe9ZhMDuBMEEntNNbrj8NEjg
-         iXDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuMEWl0WrbE8EOFiIjnzIO4izAXCsEleWvYWEGDueQ1MqexzGuE4vhPsBsLCeSCM6h+EckfWzSPcjDpH5OCP/+vXW+P/1LwxLl6ffCpZvp3s4oCBCEF3SJSneiymb3nHswmRzTFhDy+MfRT3NJ7CF+nqIsWuYRCptt88H+vPeuxQvNAg==
-X-Gm-Message-State: AOJu0Yz3sAtTVoaRJ5cS/GxQIa/EyB70w/eFPc0XU36zgnSnpMQ/0na1
-	C7SifHf8g64R6qZmLA5ACNlHteRKroPgrUfByowdrCGnWbEsz5RO
-X-Google-Smtp-Source: AGHT+IG2uYM8bLWoyeF3gdZVlOJfprj9tSG/wxizpVtatiHSeXDThSwnJefuUnh4WouBjPO9U9WXKA==
-X-Received: by 2002:a05:6a20:8f29:b0:1a1:461a:3691 with SMTP id b41-20020a056a208f2900b001a1461a3691mr6916853pzk.15.1709521682220;
-        Sun, 03 Mar 2024 19:08:02 -0800 (PST)
-Received: from debian ([2601:641:300:14de:bae0:aa65:8bdd:7233])
-        by smtp.gmail.com with ESMTPSA id a3-20020aa78643000000b006e0debc1b75sm6348979pfo.90.2024.03.03.19.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 19:08:01 -0800 (PST)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Sun, 3 Mar 2024 19:07:40 -0800
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Cc: Hao Xiang <hao.xiang@bytedance.com>,
-	Gregory Price <gourry.memverge@gmail.com>,
-	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org,
-	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>,
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Huang Ying <ying.huang@intel.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
-Subject: Re: [PATCH v1 0/1] Improved Memory Tier Creation for CPUless NUMA
- Nodes
-Message-ID: <ZeU6_BnXIUs6pCym@debian>
-References: <20240301082248.3456086-1-horenchuang@bytedance.com>
+	s=arc-20240116; t=1709535430; c=relaxed/simple;
+	bh=kop2TSr8/P5YK+OY67Fn7ooNzY6XSya1pVvnxs+jX5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o9a1Ei+7QvieDzMVFXXJSze3sIOpfnpHl4JGtI/sb6DLNnfrXpjVrCnPqG8KbGHvtGrXeZ7Vn1B+WxbPxsY8hHGypQYKtVjpq5BrFt1dz0HHXBFchcy2kcYmvaxAhk/veR2wR+TAh3xp0pzVc5aLE37HlsQfzzi9PHKJKYNHiSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A0F87300002C4;
+	Mon,  4 Mar 2024 07:57:03 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 950D437E2F; Mon,  4 Mar 2024 07:57:03 +0100 (CET)
+Date: Mon, 4 Mar 2024 07:57:03 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linuxarm@huawei.com,
+	David Box <david.e.box@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+	Zhi Wang <zhi.a.wang@intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 03/12] X.509: Move certificate length retrieval into new
+ helper
+Message-ID: <20240304065703.GA24373@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
+ <65205cc1c1f40_ae7e72949d@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,41 +58,40 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240301082248.3456086-1-horenchuang@bytedance.com>
+In-Reply-To: <65205cc1c1f40_ae7e72949d@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Mar 01, 2024 at 08:22:44AM +0000, Ho-Ren (Jack) Chuang wrote:
-> The memory tiering component in the kernel is functionally useless for
-> CPUless memory/non-DRAM devices like CXL1.1 type3 memory because the nodes
-> are lumped together in the DRAM tier.
-> https://lore.kernel.org/linux-mm/PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com/T/
+On Fri, Oct 06, 2023 at 12:15:13PM -0700, Dan Williams wrote:
+> Lukas Wunner wrote:
+> > The upcoming in-kernel SPDM library (Security Protocol and Data Model,
+> > https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
+> > ASN.1 DER-encoded X.509 certificates.
+> > 
+> > Such code already exists in x509_load_certificate_list(), so move it
+> > into a new helper for reuse by SPDM.
+[...]
+> > +EXPORT_SYMBOL_GPL(x509_get_certificate_length);
+> 
+> Given CONFIG_PCI is a bool, is the export needed? Maybe save this export
+> until the modular consumer arrives, or identify the modular consumer in the
+> changelog?
 
-Is this the right patchset you want to refer to? It is about node
-migration between tiers, how is it related to the context here?
+The x509_get_certificate_length() helper introduced by this patch
+isn't needed directly by the PCI core, but by the SPDM library.
 
-Fan
+The SPDM library is tristate and is selected by CONFIG_PCI_CMA,
+which is indeed bool.
 
-> 
-> This patchset automatically resolves the issues. It delays the initialization
-> of memory tiers for CPUless NUMA nodes until they obtain HMAT information
-> at boot time, eliminating the need for user intervention.
-> If no HMAT specified, it falls back to using `default_dram_type`.
-> 
-> Example usecase:
-> We have CXL memory on the host, and we create VMs with a new system memory
-> device backed by host CXL memory. We inject CXL memory performance attributes
-> through QEMU, and the guest now sees memory nodes with performance attributes
-> in HMAT. With this change, we enable the guest kernel to construct
-> the correct memory tiering for the memory nodes.
-> 
-> Ho-Ren (Jack) Chuang (1):
->   memory tier: acpi/hmat: create CPUless memory tiers after obtaining
->     HMAT info
-> 
->  drivers/acpi/numa/hmat.c     |  3 ++
->  include/linux/memory-tiers.h |  6 +++
->  mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
->  3 files changed, 77 insertions(+), 8 deletions(-)
-> 
-> -- 
-> Hao Xiang and Ho-Ren (Jack) Chuang
-> 
+However SCSI and ATA (both tristate) have explicitly expressed an
+interest to use the SPDM library.
+
+If I drop the export, I'd have to declare the SPDM library bool.
+
+I'm leaning towards keeping the SPDM library tristate (and keep the
+export) to accommodate SCSI, ATA and possibly others.
+
+Please let me know if you disagree.
+
+Thanks,
+
+Lukas
