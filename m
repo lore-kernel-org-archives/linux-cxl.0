@@ -1,255 +1,405 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF1579DA9
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 19:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26A66166B
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 20:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709581479; cv=none; b=hNivzozoJNj62loP4H5e2iTFy7BX4TWr6yg+EdRKYFUlRQUFyL191iL2yjiqZ82hbi3Me4tp2kUgJnHmO2KngfpJqKGB36B1tgxbdsthZtVUrwoJ3zFZkDbwwgUJ6Xrl4rCzqy36rsFWpz6fIKjuh64mZau55yfIhETjZV2wzP0=
+	t=1709582647; cv=none; b=em5vjsh8hqlUaeQHVJDYu5payDZeSALnxMT2NDVCAKiQKI2d66/zFktCpuGFuyQD54CIp+QYXBipbqD/hZa6xbjAJ8FMOw1NtyEz3Qbczev9gVDn8f2HPQ93ODwcZLCJ/1mqUmE+kMQIrkmgiufLHTthkJTJBOaZmKrKdOXi2d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709581479; c=relaxed/simple;
-	bh=sxiGml8sSyPhzFwRAZ2KX5EroGcFTa5vXUesyH6hOR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GO4v2zUVpIV8U9gEp2FLwRPf+4kclNPjXVIA3ypBlFMPB3zlMGMAr7F2o6YosGoSpW5oTT1bWXcHFOaA5ShyJKLYsuveqZKp+tehiSoqen6glrjsWn/5L8zGby1CJzQD6T+SR8J6GsIBOxS10wnX3PXbh+FaEnZuo6LGPluL7NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XB5WgSXY; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709582647; c=relaxed/simple;
+	bh=yeCbFuOd3h+1orcXY+Jp7ZnVYvQ/7l6lTX4m/X6df1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mNMooN9fDIEWDlP/8XHCM+y9HWxUyrsMcdI7BEJZd33FvdK+40b9gagLNGLNUJSQnENmyqFBiOV5cDDWCy3lRgYZYtyQmpiF6MZ1woFM4jeGh1ln1Gq/1FMS+c7WHU0MsE5yvQz17QfG3h2hLE1IUiTt7IPOMM16MsQ55HE3Tew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YoFqLDYA; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB5WgSXY"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc742543119so4933308276.0
-        for <linux-cxl@vger.kernel.org>; Mon, 04 Mar 2024 11:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709581476; x=1710186276; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TKU7EMmrCEGIbEXLnUmzxmQlpe4p33ksgB+5YiuAYXs=;
-        b=XB5WgSXYxtLITOXoGonqGBTz6Q8G+owJNeK7Xss1yQfPnnK/a2LafMTq3oa9ZyU4tO
-         9yY6m/wLbvGw0oj4HlsRCkXrHXKTut3XBiIw+p5FLIJtk2Pq4QMY/ATj+aSSj1rpP3em
-         FD496hldtYH75s5x0abhA/n5zVNnVBjMuOLecKwiq3xgetaRlwChBm2+Gh3dZr2r7p+o
-         xG4VxQKPA+SNMp2jKPQeCGQVWOr7XJC/D1jMuV6FPNbgY9W56L4ATzSX+f3WjTTkBvbk
-         GOMAaC1bh5/nKFK7lt/ioxVXAKqi/utKHRYEUf32nkJvr58DMTzJyoGdkgLQy3u68qCb
-         j7WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709581476; x=1710186276;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TKU7EMmrCEGIbEXLnUmzxmQlpe4p33ksgB+5YiuAYXs=;
-        b=cIGFCE0K1udoIRs4QH+rYzVVGN0zM1n6koUqw1O7vMMYY+Am+/vGDy6+e4VLIGtkt+
-         0xLb0WFh/86eTs23CqO5gEKrYMnfDyC7iLtNXMFg5QxnNXcVscXWnUtn0QJeFPz1/OnN
-         PduFVd+J9b12SqZkzTUZUHv/OCjbpaLFO2QHhMcXb48I4NVIdSqfHtT9ZAxfEsMp083M
-         pbITKhmtJZfSgUefya3720KO1tUPD9XAtoOuwqzOsTiRl0XCRUv8kxDg9krE/ajZR26h
-         4l+gWqhr0Sm7ACaQQfXVHJI5RbnhxUBHsVLwAdqNDsfITNRvZBr1OVNJb59/DfajZLyo
-         XgjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWu3PZZCP/9Nuhct+qvkXnG2nS600pIaMsic0J12ODzfe0K1Z1uQsPAEjIKC7etEw0v1fb1Mj+BjyJvCcS3qxFbrjFCD12Gq0eY
-X-Gm-Message-State: AOJu0Yy8w4SQOSBLdZsW/P8/yHWOTPT4r8MhKVTLtOnzudD3z3Zit3NB
-	EXHwQYfU4VHPH2WX0GBq+Dl8vjfmgAWWc0QpLjf1JAMbX6YhAWD6
-X-Google-Smtp-Source: AGHT+IGJaenBrz1oSac79n8j93VzbYMt0qiN1tC/RpBnCVT3yoX1a0NYTi0pRDY7jv1mKlEMaKgrEw==
-X-Received: by 2002:a25:2690:0:b0:dc6:ff12:13d7 with SMTP id m138-20020a252690000000b00dc6ff1213d7mr5343408ybm.60.1709581476386;
-        Mon, 04 Mar 2024 11:44:36 -0800 (PST)
-Received: from localhost.localdomain ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id h1-20020a255f41000000b00dc62edd58dasm2282646ybm.40.2024.03.04.11.44.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 11:44:36 -0800 (PST)
-From: nifan.cxl@gmail.com
-To: qemu-devel@nongnu.org
-Cc: jonathan.cameron@huawei.com,
-	linux-cxl@vger.kernel.org,
-	gregory.price@memverge.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	a.manzanares@samsung.com,
-	dave@stgolabs.net,
-	nmtadam.samsung@gmail.com,
-	nifan.cxl@gmail.com,
-	jim.harris@samsung.com,
-	Jorgen.Hansen@wdc.com,
-	wj28.lee@gmail.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v5 13/13] qapi/cxl.json: Add QMP interfaces to print out accepted and pending DC extents
-Date: Mon,  4 Mar 2024 11:34:08 -0800
-Message-ID: <20240304194331.1586191-14-nifan.cxl@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240304194331.1586191-1-nifan.cxl@gmail.com>
-References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YoFqLDYA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709582644; x=1741118644;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yeCbFuOd3h+1orcXY+Jp7ZnVYvQ/7l6lTX4m/X6df1M=;
+  b=YoFqLDYAYvtHG2Jxc2cX1O5r5nQgicPtjf6t+UmmiFifc4kZ6XAlb6lX
+   aOmTFYj19skVWZqnnNYvaBkY6EKLFzAur7S43ybSdkqat2SuqwHu1ytfw
+   IIdry8iesy1cgI+Z36gfWKLQOXSBNosAko6x2UeNoqQOb3d2eO3i1v9lF
+   lINviE0S6Wvx7DjJr7QYJ17CuiDEKVlSPGY5SMDr03uDs5c+lMs/RfRx1
+   F33dsUe02uWRINddVpsYnfHgomXBMgNNpj+wKYuBqrChXb3FlHTF3sYiX
+   codJ8Du9sDuTG7emtHaM+5vIJnUe+atoQyV1IsKWZOdwu9lnLRpAdQcIx
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="15530428"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="15530428"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 12:04:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="13777522"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.247.118.63]) ([10.247.118.63])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 12:04:00 -0800
+Message-ID: <85f2763b-6665-4f76-9175-d7c5acaf2a3d@intel.com>
+Date: Mon, 4 Mar 2024 13:03:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v9 5/7] cxl/list: collect and parse media_error
+ records
+Content-Language: en-US
+To: alison.schofield@intel.com, Vishal Verma <vishal.l.verma@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+References: <cover.1709253898.git.alison.schofield@intel.com>
+ <9a6be3fd24b22661ec39ea614f75266b594026b3.1709253898.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <9a6be3fd24b22661ec39ea614f75266b594026b3.1709253898.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Fan Ni <fan.ni@samsung.com>
 
-With the change, we add the following two QMP interfaces to print out
-extents information in the device,
-1. cxl-display-accepted-dc-extents: print out the accepted DC extents in
-   the device;
-2. cxl-display-pending-to-add-dc-extents: print out the pending-to-add
-   DC extents in the device;
-The output is appended to a file passed to the command and by default
-it is /tmp/dc-extent.txt.
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
- hw/mem/cxl_type3.c       | 80 ++++++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3_stubs.c | 12 ++++++
- qapi/cxl.json            | 32 ++++++++++++++++
- 3 files changed, 124 insertions(+)
+On 2/29/24 6:31 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Media_error records are logged as events in the kernel tracing
+> subsystem. To prepare the media_error records for cxl list, enable
+> tracing, trigger the poison list read, and parse the generated
+> cxl_poison events into a json representation.
+> 
+> Use the event_trace private parsing option to customize the json
+> representation based on cxl-list calling options and event field
+> settings.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  cxl/json.c | 271 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 271 insertions(+)
+> 
+> diff --git a/cxl/json.c b/cxl/json.c
+> index 7678d02020b6..c681176aa483 100644
+> --- a/cxl/json.c
+> +++ b/cxl/json.c
+> @@ -1,16 +1,20 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
+>  #include <limits.h>
+> +#include <errno.h>
+>  #include <util/json.h>
+> +#include <util/bitmap.h>
+>  #include <uuid/uuid.h>
+>  #include <cxl/libcxl.h>
+>  #include <json-c/json.h>
+>  #include <json-c/printbuf.h>
+>  #include <ccan/short_types/short_types.h>
+> +#include <tracefs/tracefs.h>
+>  
+>  #include "filter.h"
+>  #include "json.h"
+>  #include "../daxctl/json.h"
+> +#include "event_trace.h"
+>  
+>  #define CXL_FW_VERSION_STR_LEN	16
+>  #define CXL_FW_MAX_SLOTS	4
+> @@ -571,6 +575,261 @@ err_jobj:
+>  	return NULL;
+>  }
+>  
+> +/* CXL Spec 3.1 Table 8-140 Media Error Record */
+> +#define CXL_POISON_SOURCE_UNKNOWN 0
+> +#define CXL_POISON_SOURCE_EXTERNAL 1
+> +#define CXL_POISON_SOURCE_INTERNAL 2
+> +#define CXL_POISON_SOURCE_INJECTED 3
+> +#define CXL_POISON_SOURCE_VENDOR 7
+> +
+> +/* CXL Spec 3.1 Table 8-139 Get Poison List Output Payload */
+> +#define CXL_POISON_FLAG_MORE BIT(0)
+> +#define CXL_POISON_FLAG_OVERFLOW BIT(1)
+> +#define CXL_POISON_FLAG_SCANNING BIT(2)
+> +
+> +struct poison_ctx {
+> +	struct json_object *jpoison;
+> +	struct cxl_region *region;
+> +	struct cxl_memdev *memdev;
+> +	unsigned long flags;
+> +};
+> +
+> +static struct cxl_memdev *find_memdev(struct cxl_region *region,
+> +				      const char *memdev_name)
+> +{
+> +	struct cxl_memdev_mapping *mapping;
+> +	struct cxl_decoder *decoder;
+> +	struct cxl_memdev *memdev;
+> +
+> +	cxl_mapping_foreach(region, mapping)
+> +	{
+> +		decoder = cxl_mapping_get_decoder(mapping);
+> +		if (!decoder)
+> +			continue;
+> +
+> +		memdev = cxl_decoder_get_memdev(decoder);
+> +		if (strcmp(memdev_name, cxl_memdev_get_devname(memdev)) == 0)
+> +			break;
+> +
+> +		memdev = NULL;
+> +	}
+> +	return memdev;
+> +}
+> +
+> +static const char *find_decoder_name(struct poison_ctx *ctx,
+> +				     const char *memdev_name, u64 addr)
+> +{
+> +	struct cxl_memdev *memdev = ctx->memdev;
+> +	const char *decoder_name = NULL;
+> +	struct cxl_endpoint *endpoint;
+> +	struct cxl_decoder *decoder;
+> +	struct cxl_port *port;
+> +	u64 start, end;
+> +
+> +	if (!memdev)
+> +		memdev = find_memdev(ctx->region, memdev_name);
+> +
+> +	if (!memdev)
+> +		return NULL;
+> +
+> +	endpoint = cxl_memdev_get_endpoint(memdev);
+> +	port = cxl_endpoint_get_port(endpoint);
+> +
+> +	cxl_decoder_foreach(port, decoder) {
+> +		start =  cxl_decoder_get_resource(decoder);
+> +		end = start + cxl_decoder_get_size(decoder) - 1;
+> +		if (start <= addr && addr <= end) {
+> +			decoder_name = cxl_decoder_get_devname(decoder);
+> +			break;
+> +		}
+> +	}
+> +	return decoder_name;
+> +}
+> +
+> +static int poison_event_to_json(struct tep_event *event,
+> +				struct tep_record *record, void *ctx)
+> +{
+> +	struct poison_ctx *p_ctx = (struct poison_ctx *)ctx;
+> +	struct json_object *jobj, *jp, *jpoison = p_ctx->jpoison;
+> +	unsigned long flags = p_ctx->flags;
+> +	char flag_str[32] = { '\0' };
+> +	bool overflow = false;
+> +	u8 source, pflags;
+> +	const char *name;
+> +	u64 addr, ts;
+> +	u32 length;
+> +	char *str;
+> +
+> +	jp = json_object_new_object();
+> +	if (!jp)
+> +		return -ENOMEM;
+> +
+> +	/* Skip records not in this region when listing by region */
+> +	name = p_ctx->region ? cxl_region_get_devname(p_ctx->region) : NULL;
+> +	if (name)
+> +		str = cxl_get_field_string(event, record, "region");
+> +
+> +	if ((name) && (strcmp(name, str) != 0)) {
+> +		json_object_put(jp);
+> +		return 0;
+> +	}
+> +
+> +	/* Include endpoint decoder name with hpa, when present */
+> +	name = cxl_get_field_string(event, record, "memdev");
+> +	addr = cxl_get_field_u64(event, record, "hpa");
+> +	if (addr != ULLONG_MAX)
+> +		name = find_decoder_name(p_ctx, name, addr);
+> +	else
+> +		name = NULL;
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 5bd64e604e..6a08e7ae40 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -2089,6 +2089,86 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint8_t region_id,
-                                      region_id, records, errp);
- }
- 
-+static void cxl_dcd_display_extent_list(const CXLType3Dev *dcd, const char *f,
-+                                        bool accepted_list, Error **errp)
-+{
-+    const CXLDCExtentList *list;
-+    CXLDCExtent *ent;
-+    FILE *fp = NULL;
-+    int i = 0;
-+
-+    if (!dcd->dc.num_regions) {
-+        error_setg(errp, "No dynamic capacity support from the device");
-+        return;
-+    }
-+
-+    if (!f) {
-+        fp = fopen("/tmp/dc-extent.txt", "a+");
-+    } else {
-+        fp = fopen(f, "a+");
-+    }
-+
-+    if (!fp) {
-+        error_setg(errp, "Open log file failed");
-+        return;
-+    }
-+    if (accepted_list) {
-+        list = &dcd->dc.extents;
-+        fprintf(fp, "Print accepted extent info:\n");
-+    } else {
-+        list = &dcd->dc.extents_pending_to_add;
-+        fprintf(fp, "Print pending-to-add extent info:\n");
-+    }
-+
-+    QTAILQ_FOREACH(ent, list, node) {
-+        fprintf(fp, "%d: [0x%lx - 0x%lx]\n", i++, ent->start_dpa,
-+                               ent->start_dpa + ent->len);
-+    }
-+    fprintf(fp, "In total, %d extents printed!\n", i);
-+    fclose(fp);
-+}
-+
-+void qmp_cxl_display_accepted_dc_extents(const char *path, const char *f,
-+                                         Error **errp)
-+{
-+    Object *obj;
-+    CXLType3Dev *dcd;
-+
-+    obj = object_resolve_path(path, NULL);
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve path");
-+        return;
-+    }
-+    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+        error_setg(errp, "Path not point to a valid CXL type3 device");
-+        return;
-+    }
-+
-+    dcd = CXL_TYPE3(obj);
-+    cxl_dcd_display_extent_list(dcd, f, true, errp);
-+}
-+
-+void qmp_cxl_display_pending_to_add_dc_extents(const char *path, const char *f,
-+                                               Error **errp)
-+{
-+    Object *obj;
-+    CXLType3Dev *dcd;
-+
-+    obj = object_resolve_path(path, NULL);
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve path");
-+        return;
-+    }
-+    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+        error_setg(errp, "Path not point to a valid CXL type3 device");
-+        return;
-+    }
-+
-+
-+    dcd = CXL_TYPE3(obj);
-+    cxl_dcd_display_extent_list(dcd, f, false, errp);
-+}
-+
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index d913b11b4d..d896758301 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -81,3 +81,15 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint8_t region_id,
- {
-     error_setg(errp, "CXL Type 3 support is not compiled in");
- }
-+
-+void qmp_cxl_display_accepted_dc_extents(const char *path, const char *f,
-+                                         Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-+
-+void qmp_cxl_display_pending_to_add_dc_extents(const char *path, const char *f,
-+                                               Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 2645004666..6f10300ec6 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -420,3 +420,35 @@
-             'extents': [ 'CXLDCExtentRecord' ]
-            }
- }
-+
-+##
-+# @cxl-display-accepted-dc-extents:
-+#
-+# Command to print out all the accepted DC extents in the device
-+#
-+# @path: CXL DCD canonical QOM path
-+# @output: path of output file to dump the results to
-+#
-+# Since : 9.0
-+##
-+{ 'command': 'cxl-display-accepted-dc-extents',
-+  'data': { 'path': 'str',
-+            'output': 'str'
-+           }
-+}
-+
-+##
-+# @cxl-display-pending-to-add-dc-extents:
-+#
-+# Command to print out all the pending-to-add DC extents in the device
-+#
-+# @path: CXL DCD canonical QOM path
-+# @output: path of output file to dump the results to
-+#
-+# Since : 9.0
-+##
-+{ 'command': 'cxl-display-pending-to-add-dc-extents',
-+  'data': { 'path': 'str',
-+            'output': 'str'
-+           }
-+}
--- 
-2.43.0
+Why assign name a few lines above and then reassign here without using? Also I noticed the name gets reassigned for different purposes a few times. Can we have separate variables in order to make the code cleaner to read? I think maybe a region_name and a decoder_name.
 
+> +
+> +	if (name) {
+> +		jobj = json_object_new_string(name);
+> +		if (jobj)
+> +			json_object_object_add(jp, "decoder", jobj);
+> +
+> +		jobj = util_json_object_hex(addr, flags);
+> +		if (jobj)
+> +			json_object_object_add(jp, "hpa", jobj);
+> +	}
+> +
+> +	addr = cxl_get_field_u64(event, record, "dpa");
+> +	jobj = util_json_object_hex(addr, flags);
+> +	if (jobj)
+> +		json_object_object_add(jp, "dpa", jobj);
+> +
+> +	length = cxl_get_field_u32(event, record, "dpa_length");
+> +	jobj = util_json_object_size(length, flags);
+> +	if (jobj)
+> +		json_object_object_add(jp, "length", jobj);
+> +
+> +	source = cxl_get_field_u8(event, record, "source");
+> +	switch (source) {
+> +	case CXL_POISON_SOURCE_UNKNOWN:
+> +		jobj = json_object_new_string("Unknown");
+> +		break;
+> +	case CXL_POISON_SOURCE_EXTERNAL:
+> +		jobj = json_object_new_string("External");
+> +		break;
+> +	case CXL_POISON_SOURCE_INTERNAL:
+> +		jobj = json_object_new_string("Internal");
+> +		break;
+> +	case CXL_POISON_SOURCE_INJECTED:
+> +		jobj = json_object_new_string("Injected");
+> +		break;
+> +	case CXL_POISON_SOURCE_VENDOR:
+> +		jobj = json_object_new_string("Vendor");
+> +		break;
+> +	default:
+> +		jobj = json_object_new_string("Reserved");
+> +	}
+
+Seems like you can have a static string table here? Then you can do something like:
+if (source < CXL_POISON_SOURCE_MAX)
+	jobj = json_object_new_string(cxl_poison_source[source]);
+else
+	jobj = json_object_new_string("Reserved");
+
+DJ
+> +	if (jobj)
+> +		json_object_object_add(jp, "source", jobj);
+> +
+> +	pflags = cxl_get_field_u8(event, record, "flags");
+> +	if (pflags && pflags < UCHAR_MAX) {
+> +		if (pflags & CXL_POISON_FLAG_MORE)
+> +			strcat(flag_str, "More,");
+> +		if (pflags & CXL_POISON_FLAG_SCANNING)
+> +			strcat(flag_str, "Scanning,");
+> +		if (pflags & CXL_POISON_FLAG_OVERFLOW) {
+> +			strcat(flag_str, "Overflow,");
+> +			overflow = true;
+> +		}
+> +		jobj = json_object_new_string(flag_str);
+> +		if (jobj)
+> +			json_object_object_add(jp, "flags", jobj);
+> +	}
+> +
+> +	if (overflow) {
+> +		ts = cxl_get_field_u64(event, record, "overflow_ts");
+> +		jobj = util_json_object_hex(ts, flags);
+> +		if (jobj)
+> +			json_object_object_add(jp, "overflow_t", jobj);
+> +	}
+> +	json_object_array_add(jpoison, jp);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct json_object *
+> +util_cxl_poison_events_to_json(struct tracefs_instance *inst,
+> +			       struct poison_ctx *p_ctx)
+> +{
+> +	struct event_ctx ectx = {
+> +		.event_name = "cxl_poison",
+> +		.event_pid = getpid(),
+> +		.system = "cxl",
+> +		.private_ctx = p_ctx,
+> +		.parse_event = poison_event_to_json,
+> +	};
+> +	int rc = 0;
+> +
+> +	p_ctx->jpoison = json_object_new_array();
+> +	if (!p_ctx->jpoison)
+> +		return NULL;
+> +
+> +	rc = cxl_parse_events(inst, &ectx);
+> +	if (rc < 0) {
+> +		fprintf(stderr, "Failed to parse events: %d\n", rc);
+> +		goto put_jobj;
+> +	}
+> +	if (json_object_array_length(p_ctx->jpoison) == 0)
+> +		goto put_jobj;
+> +
+> +	return p_ctx->jpoison;
+> +
+> +put_jobj:
+> +	json_object_put(p_ctx->jpoison);
+> +	return NULL;
+> +}
+> +
+> +static struct json_object *
+> +util_cxl_poison_list_to_json(struct cxl_region *region,
+> +			     struct cxl_memdev *memdev,
+> +			     unsigned long flags)
+> +{
+> +	struct json_object *jpoison = NULL;
+> +	struct poison_ctx p_ctx;
+> +	struct tracefs_instance *inst;
+> +	int rc;
+> +
+> +	inst = tracefs_instance_create("cxl list");
+> +	if (!inst) {
+> +		fprintf(stderr, "tracefs_instance_create() failed\n");
+> +		return NULL;
+> +	}
+> +
+> +	rc = cxl_event_tracing_enable(inst, "cxl", "cxl_poison");
+> +	if (rc < 0) {
+> +		fprintf(stderr, "Failed to enable trace: %d\n", rc);
+> +		goto err_free;
+> +	}
+> +
+> +	if (region)
+> +		rc = cxl_region_trigger_poison_list(region);
+> +	else
+> +		rc = cxl_memdev_trigger_poison_list(memdev);
+> +	if (rc)
+> +		goto err_free;
+> +
+> +	rc = cxl_event_tracing_disable(inst);
+> +	if (rc < 0) {
+> +		fprintf(stderr, "Failed to disable trace: %d\n", rc);
+> +		goto err_free;
+> +	}
+> +
+> +	p_ctx = (struct poison_ctx) {
+> +		.region = region,
+> +		.memdev = memdev,
+> +		.flags = flags,
+> +	};
+> +	jpoison = util_cxl_poison_events_to_json(inst, &p_ctx);
+> +
+> +err_free:
+> +	tracefs_instance_free(inst);
+> +	return jpoison;
+> +}
+> +
+>  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		unsigned long flags)
+>  {
+> @@ -649,6 +908,12 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  			json_object_object_add(jdev, "firmware", jobj);
+>  	}
+>  
+> +	if (flags & UTIL_JSON_MEDIA_ERRORS) {
+> +		jobj = util_cxl_poison_list_to_json(NULL, memdev, flags);
+> +		if (jobj)
+> +			json_object_object_add(jdev, "media_errors", jobj);
+> +	}
+> +
+>  	json_object_set_userdata(jdev, memdev, NULL);
+>  	return jdev;
+>  }
+> @@ -987,6 +1252,12 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
+>  			json_object_object_add(jregion, "state", jobj);
+>  	}
+>  
+> +	if (flags & UTIL_JSON_MEDIA_ERRORS) {
+> +		jobj = util_cxl_poison_list_to_json(region, NULL, flags);
+> +		if (jobj)
+> +			json_object_object_add(jregion, "media_errors", jobj);
+> +	}
+> +
+>  	util_cxl_mappings_append_json(jregion, region, flags);
+>  
+>  	if (flags & UTIL_JSON_DAX) {
