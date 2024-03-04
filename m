@@ -1,223 +1,204 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E0E1B59B;
-	Mon,  4 Mar 2024 08:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC351D69C
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 12:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541668; cv=fail; b=T9FIBiXU515Z1L0PAKQMrlunvAhkdnv6mXjhG49evOdcXT8XGsuyMAdPbQW+4CTdKI9Fr4cB8YsXbNtBouSoZ6LaENjRxjJZYH8toMM7aSo00LTo0T+utUYx4OrybsMNBl76AHDfLSGWSdMFv4N+YleNEq7EoU+juBddYK7pwDM=
+	t=1709556024; cv=fail; b=EeLTxhh3B1X4YHmqz0GbVjqYZBB3UTe71In2KVGJDVFF6iqeMSODi0zCtvqU/WQoh0ZMMPJ4YroeEHSGRhiOgw9klrcDu3GRs0HnL3H9kQiZCR54vqc5CYPKKUY8uzT0wfuDX5R3GEaNfNdcbJE2+1F0B0BKcQqVRgPOBzS7R5M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541668; c=relaxed/simple;
-	bh=ZlG+iU0kcLTj5LXA9qvf/9TMBfN1vqD4gMX94dODp+U=;
+	s=arc-20240116; t=1709556024; c=relaxed/simple;
+	bh=USTqQwNv7ZycD8gdFTFCYjvm11nPQGyUSREQ8wxf++w=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hUovkZyGxxQZto52Voun1Q6ukCAfyW3xgrKknx1OrZpMjf/pgXbWFPwxZu/fbMFQnFbS6tbCKrhwCzOEbDWOyu1s83vIun8JHS4E7K48HPFwJJJv3NhVp8lXa1sAUUZOrOISbKvziR6lXwB/qioTVh6QgXNfy8+ngaI08MVNbjo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=iHD02OCl; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
+	 Content-Type:MIME-Version; b=MN6hlJouhag9ncGQ5hG6LyglVFRZzvxZijq6efUE4ILa8lXMxqsQlJ4d/hoaajvx5NRkkaivu8LPULJJrYgE46DAhvYXIv1UUULC+UkQG620ycuSCFFXE6easdJk+FofgxX02fvYAK8Rt80GBp2Gz8EjShFc0kNiQclhLhg2x0s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=RY4i3Wg0; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=de98X+TZ; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="iHD02OCl"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RY4i3Wg0";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="de98X+TZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1709556022; x=1741092022;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=USTqQwNv7ZycD8gdFTFCYjvm11nPQGyUSREQ8wxf++w=;
+  b=RY4i3Wg0AH7Xz2S9k7umHxrd8Krn1E0tV8Azh1+YN1YEG6yT6rvgV+uO
+   xXD0T702E5sWsmYPGdpHHWkQD/o9lxJ7xI9DnuZ6eO4JclNp2yCUlI4Ts
+   XXTfcpqO3nfP3OTT0lR0x+F7Da5aQJjG455uKpZAvrtwjG0hayUrDnJu2
+   mYOdkLepIGR9GBVExyL+TmNLF6whMka76rGFqEcXIiPer3RtwFVaSN25B
+   pbzk/rONgfVZp3qupa+HMg3P1trQyuRRfN+NOQRc6DrErUbyNGtXdZg7q
+   EVUlz79t5zIdygDvlRifPFsfY0Q0FYCuSJxJ5WWqFMVaMVnP/LK68/cE2
+   g==;
+X-CSE-ConnectionGUID: 7+Ti7lXsSiGhisnEp8FL/g==
+X-CSE-MsgGUID: aRzoL+iiTWGje4BCu4COqg==
+X-IronPort-AV: E=Sophos;i="6.06,203,1705334400"; 
+   d="scan'208";a="10747309"
+Received: from mail-centralusazlp17013022.outbound.protection.outlook.com (HELO DM1PR04CU001.outbound.protection.outlook.com) ([40.93.13.22])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Mar 2024 20:40:20 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SUlajKkMwKvFgBjmUT9Mp94JpfcpkSBMuVTJAl9SEIDwSNVi+NviDDK4qQoxfyAoAVKxChlyVGo8aKhMKCZbdSx5QwVSJov39BV66AlVe130t/E+zBfrhmUBkSOCYhDPSiCc+XwzXUlPnmv/Ru0ut8D1yfhB0lFkTOIiatTvBj32JiDxkROPZ7QXidKo5R4OE4RMPz18xUx3yejE0MgljOW/t3SAEPeSs20sDk+1WX248RKZNUX9bmEXAhsbLMoSQ4accBmHJJAhLicAS87wpVhOG5onZDVG3E6WBLZrJ9T1Ee9yiP87bYutHsim7xf92klalj9zLqtQMulfUNpfgg==
+ b=CMFo3gRZ9prwjXTs1D2I2inbbtCSo9+hLVe/1mWAgqMOg2k8cNVDtezpt/Oy5zybXouo1OhDlTS6bpwEjUDGx8ZSdOp3XFqo1oZw1ZwNKh1OultWBN3qDbyDHs2dRn1Z5uKGHTHJhcasJr8D+el6Tdi6FAj0kFuGM5Z3vzjLH+LbPl0/zcOXjy8+lAV6FCRGLrwNZoilq7l9Ry3yszF4LwCWTwElasFeZZcoqAu8rVbeVjIkWxJ396jh/4v4BgD3qWMsQJLwqYCvQOvIUQyxrgSWTyWAFdtHViuX+eKt5z9Bx5++FCS/MJBAJiE+IPD8BH3/YPwZhFd9M/FUNFo4yQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x3wJrELjKT8hZYaRReF8XKVqzeH55cpVGeMTpLGbQAo=;
- b=afCrNG+5jWrR5x+HrqVboByFI2ZHkF4325ZY7AObkRvEs3vyLRF1ozQwVzP2lgjubVSYL8IAHatgNdH0WO/mHLVYtqUO/Ky2lt7I8SBUeq1Qs9P189hNt4jAZhVb3WzSYGt1MvqziRZ+m0CWIWCH+WpGPavBMAWMZj12m8HeWIhtROLYupPlwosEJpb48fJpDtQYzjuaPLF9kvu9IxBUm+nTCjt+//6I5aUMgnuG+XA/XrC8OOU8JHA3PSABNqk3R0Po7cReP1HKneZyAJiv0F6bTV95ak8QqIfsEnPz1G7r5dWsoeDxAAGbNMoex0P2WD5Yya/mz8EDVZ+4uJZzPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=gmail.com smtp.mailfrom=micron.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
+ bh=USTqQwNv7ZycD8gdFTFCYjvm11nPQGyUSREQ8wxf++w=;
+ b=F1C7R5LIGzqJrUaZzavz4acPow5jRylDBLPkPTJjZyIqqBpEnp4q9GWCtP7MfB7cUqvCdo61y3uGCfrCeEsbRvnrPjQyCdBF6E1yjYy2cVFD1l2750w6kzYpcCt/Wb1+NX0Q6XT4tiiQX0MzIaP+8d+TsTHVglQ/yN7WGu0MEfQw+tlgnoYqnxynf0wzo7uOCJFzOz6RxaA9oBVlWrtl9wkRuAXQixUVSHwqxHH4X4/k6TMuj5AJFDO8DhxAZVX2o22zVAm1DI+zvskJ/w4cBzZ0r6w6AK+BYXGle1kaf/Rbb/4oQ3L/jyWoFXAjGQmZtY4bbF0nfWna4K4/Xo+vtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x3wJrELjKT8hZYaRReF8XKVqzeH55cpVGeMTpLGbQAo=;
- b=iHD02OCl4N6BD3LGgxe6ufhRukUEhQEwClZXGuEz6MfDRiAENUlFkhXOIG9hu3IHcv1ojbeE9LscO89P2sJt2LqbaFoSTAOWoF+kHyqRuVnbIWKWVwdrHbs9tPfkddAiUeeQj9noXTc26ILWx6Jmytn5XhyfA5OqJo7BfTdZMm/5TtVbZDXwHIfHoWjXTSZKPOW88TmY8iIDwNFdbnYt5JLLZX//iE5FF74l/TiZEprihaIfusMhLf8OchTQzicHXuazj3G5GXYdTvYHzBgRjEFQDYcpioAuHcJL6MA/bD0Dz9YzoB3ZFDfvRjLh4rUgw5x8le4M0ciu6BRrS4bQDg==
-Received: from SN1PR12CA0114.namprd12.prod.outlook.com (2603:10b6:802:21::49)
- by CH0PR08MB7321.namprd08.prod.outlook.com (2603:10b6:610:112::19) with
+ bh=USTqQwNv7ZycD8gdFTFCYjvm11nPQGyUSREQ8wxf++w=;
+ b=de98X+TZxD6KawnqX6jskjL5TlewOSlfaiZhUkOqtJTq23eEfBi5xLmnINGH99AXVxaq+4v02hDmzl9hVfwsGPKersWj+GAyZuTfcEGMZ9ll6onj3PDHtcfHLTSq1li0SEAaqLTSWdstJZMNCYroPTJZSeAZj8E2PThbKZR2jEY=
+Received: from BYAPR04MB5431.namprd04.prod.outlook.com (2603:10b6:a03:ce::16)
+ by BN0PR04MB7965.namprd04.prod.outlook.com (2603:10b6:408:154::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Mon, 4 Mar
- 2024 08:41:01 +0000
-Received: from SA2PEPF000015CC.namprd03.prod.outlook.com
- (2603:10b6:802:21:cafe::b0) by SN1PR12CA0114.outlook.office365.com
- (2603:10b6:802:21::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38 via Frontend
- Transport; Mon, 4 Mar 2024 08:41:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
- smtp.mailfrom=micron.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=micron.com;
-Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
- 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.201.242.130; helo=mail.micron.com; pr=C
-Received: from mail.micron.com (137.201.242.130) by
- SA2PEPF000015CC.mail.protection.outlook.com (10.167.241.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.11 via Frontend Transport; Mon, 4 Mar 2024 08:41:01 +0000
-Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW17EX19A.micron.com
- (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 4 Mar
- 2024 01:40:59 -0700
-Received: from BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f]) by
- BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f%8]) with mapi id
- 15.02.1258.028; Mon, 4 Mar 2024 01:40:59 -0700
-From: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
-To: fan <nifan.cxl@gmail.com>, "Ho-Ren (Jack) Chuang"
-	<horenchuang@bytedance.com>
-CC: Hao Xiang <hao.xiang@bytedance.com>, Gregory Price
-	<gourry.memverge@gmail.com>, "aneesh.kumar@linux.ibm.com"
-	<aneesh.kumar@linux.ibm.com>, "mhocko@suse.com" <mhocko@suse.com>,
-	"tj@kernel.org" <tj@kernel.org>, "john@jagalactic.com" <john@jagalactic.com>,
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Eishan Mirakhur
-	<emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Alistair Popple
-	<apopple@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Jiang
-	<dave.jiang@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Huang Ying <ying.huang@intel.com>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang"
-	<horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+ 2024 12:40:19 +0000
+Received: from BYAPR04MB5431.namprd04.prod.outlook.com
+ ([fe80::eeac:1074:a93:a99d]) by BYAPR04MB5431.namprd04.prod.outlook.com
+ ([fe80::eeac:1074:a93:a99d%3]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
+ 12:40:18 +0000
+From: =?utf-8?B?SsO4cmdlbiBIYW5zZW4=?= <Jorgen.Hansen@wdc.com>
+To: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "qemu-devel@nongnu.org"
+	<qemu-devel@nongnu.org>
+CC: "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
 	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
-Subject: RE: [EXT] Re: [PATCH v1 0/1] Improved Memory Tier Creation for
- CPUless NUMA Nodes
-Thread-Topic: [EXT] Re: [PATCH v1 0/1] Improved Memory Tier Creation for
- CPUless NUMA Nodes
-Thread-Index: AQHabeE3Eb14wzuJtEy5fkTksq7A5rEnQq+Q
-Date: Mon, 4 Mar 2024 08:40:59 +0000
-Message-ID: <714c3599236046b182ffd0e0eb5e3ae9@micron.com>
-References: <20240301082248.3456086-1-horenchuang@bytedance.com>
- <ZeU6_BnXIUs6pCym@debian>
-In-Reply-To: <ZeU6_BnXIUs6pCym@debian>
-Accept-Language: en-US
+	"gregory.price@memverge.com" <gregory.price@memverge.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "a.manzanares@samsung.com"
+	<a.manzanares@samsung.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+	"jim.harris@samsung.com" <jim.harris@samsung.com>, Fan Ni
+	<fan.ni@samsung.com>
+Subject: Re: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
+ region representative and mailbox command support
+Thread-Topic: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
+ region representative and mailbox command support
+Thread-Index: AQHaZPLJNszLQYKukUWnC1H4DaYR/rEnmEeA
+Date: Mon, 4 Mar 2024 12:40:18 +0000
+Message-ID: <8a141940-86fd-43c8-8834-a25b0d1e79fe@wdc.com>
+References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
+ <20240221182020.1086096-3-nifan.cxl@gmail.com>
+In-Reply-To: <20240221182020.1086096-3-nifan.cxl@gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-x-mt-whitelisted: matched
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR04MB5431:EE_|BN0PR04MB7965:EE_
+x-ms-office365-filtering-correlation-id: a70f8f55-26c1-4b91-3c76-08dc3c483fbb
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ cc4dEM+mQM9OYZVKN4J89i5Iax5RIbSFhhnlTf3F3e8E6PZHHYt9xU7ux6f142X0TARr0145/GxL0raaF9ZTklHGKYfXir7EnBG6YwyyY+Jwvy4aCxMb++mrvhzx6VZdFBmdLQ1oeTVsKLGBZ135PBuuxIS0fbS5DsOraqEAM3++7qpAqugMWjF5oLyINDU/zL1Zx8xPhVqrV8aNQJRSdI7kmCNJlfxca2f4ZHMyNnVHt3YdtjgIJvRYus8+yCQpLIkqtuAz0onj11Pn8RMnFG/s+aqj3bVJshEMzcmfgqa7Fjiw9zJjp8oJs2j9jiY38PvdlEqnpu2GuzCeX/px+9bRq9oaW1bisIHT+1mz7xgG532xlIIhlNP/51AQi0x9Co3GgjpIlx0sE24TQBtAElZ8861+CttZ1dOT/q74LdM/pjgDE4IremCaPOndjMG3xP0l/v0hmjZQwXowrz+UgziD6u48cUMJ1O8CyOrdkXzmXK/YwjFzUgOM3PU7Woy9Mr8SS4GjvjJE5t+PABJrMV9xrahhSw4AmaHSgvKXDGcFED6fjNPeAIryoAnNOf2bpPlJFtioJTL25HS5lCf2RsYqmcQXT5QgPkuani5KgH+3+EXWBbUxEDBlZ368sFu7t/S3mJWxTdu+XdYrgGpDBTFGv8z4MEur56uMg7G7o83sQYogEYb0TCrN5q3gMe5SAbh1Q/jRwIZVELA9ccuzxQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB5431.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?R0RMaXYwU2podDNFdkVGMFRFUnQxcWgrb1RCbnhhc3pCUW11Z3Z3N3lOVnEv?=
+ =?utf-8?B?c0FjeXpicGI0MXBWaXhLNFlYWCt6dVgyN205cFdoL0Q4TnJ4TGdSbEY1ODI3?=
+ =?utf-8?B?bWhJTGRCNGJ0eXcwR1NORmVCZGR6d29FWDZ1eHVsUVlldjBTMm9iUmVSZEFQ?=
+ =?utf-8?B?dlBUanZ0cDE3Z0RPWGJQeW83ekRnZklkdFIxWWE3cUIvTnhDK2ZTc1RlR09z?=
+ =?utf-8?B?RXBZK1FHa3pJdHhZT05uSXY4RHhOM3dOWmI0emgrRlpFUHlLc1VpMHdWVWRa?=
+ =?utf-8?B?UkZqY2toSXJXTFJKQ096LzF2U1lXa2dsRWtVMEkyVWMzNG1admM3QTBTVlNr?=
+ =?utf-8?B?OUxlTnNhQVZiN28xc1RtWHo0d0dNM3JWZExWa2pSWXA5Y29WWnpvMGhNdEQr?=
+ =?utf-8?B?WW8rV3RaREsrUUxNQzJvc01ISlZhOSthQTZ5bG9vODM5TVhFVnV5ZjNnSElG?=
+ =?utf-8?B?TWlnd0NFMngrSGVNQWRVaGpFS3M0K2p2Tllpb0xyWTRXSnNmbkY4UFUvaHd0?=
+ =?utf-8?B?VlkrNzkwVDRXLzBPd2ZNaE1YOGY2dGs4Uk9KUkVMUkl0RjBYSHBveFE1SjBv?=
+ =?utf-8?B?SVdndVQ4dzIrV2xUUnBqRDRwWm0zM3dMRnp5Rk5EQndQazZrcEpuNDhYTmFH?=
+ =?utf-8?B?aFJBbGtibUtLZExDekZsekt3ZzZhRGErdjF4WFhldXBtQnlUK0hXRHBVR1FS?=
+ =?utf-8?B?Ry85Z0t2NGEzNFBrU1JwVk82eTRYV01CSjZocmp1N0VCbWt4Tk9aQmNxcTA4?=
+ =?utf-8?B?V1Q3cTVlSGZFd09YUlBOMHNJd0IyQ2pFNCsxUXhScHhPdWkxWmxXWjgvL3lO?=
+ =?utf-8?B?Ui9ma3dGR1NLeU9IMllxcm9QdEsvUW14YTFsWjcyNlhyT3RXM2xOcnhZb0Nz?=
+ =?utf-8?B?OEZEVEJ1NklYeVdSRnMvc3hGaEhrYVF3VXZpVkZlNHJwd2pVU3hObVpPUHhE?=
+ =?utf-8?B?SkZzN3QzNFZBVUErUFJKWllhbDNuZU9Da1A0dkVMRFF3bDVzVlJmMnZ5TmM1?=
+ =?utf-8?B?ZjIydDFKUldWZWQ5VkFoUjNEekIrMGJsOE43WTNsRFdsdTRvelhQRkVZdjM0?=
+ =?utf-8?B?MEFvRUZHT1FIVG9Bb1JKeHd0SnJnYW56aU8yV1FsQ0VmTUw4ZGdHbyt0Q1Jv?=
+ =?utf-8?B?M082eDJ0WkFCdEo0Uk9ic1lDTzVCeGJPZGd6YTd4bHRDUzVXVlpnODdmN0lV?=
+ =?utf-8?B?OTZqL2tIb0pET1E2d2dqY0R4clRyWmtBaXFyVXoyQlI1VzZnNzFzSXVZU1FG?=
+ =?utf-8?B?OEtJOVdoR1hrbHZZUkZYT1RMSUs2OHM5NnpXSXI5UklKVHZabVQxUWZGR2ha?=
+ =?utf-8?B?YzFHUlV6SXZxYnJDRUtScTcxdTR4NW84Z2EydnQzSmJqbjNBQU5MNWw1WFNm?=
+ =?utf-8?B?TEJIdllMSmhWU3pGTVNZeDVVRStzcmszZERmcDhRTHpBeWJDTTA3aDI3WUo5?=
+ =?utf-8?B?ZzV0N3R3NjFuenA0MFZLaC9WWlM0Q0ZXT0NMbXJOVWp1QjlIa3E2SUVTTi84?=
+ =?utf-8?B?SUsxOE1ubzQreUtJU1Z3UFFvQW9pbTJ3K1VZRWlQVEdOKzlCU092eHhkcEhE?=
+ =?utf-8?B?dk9DMHA0bEJGUGJWZTliWjVJYWF5cjNkOTFQUDlNcXpXM2VqNE12YmcyaHNY?=
+ =?utf-8?B?THRiWGRacThvUDZtQlFCeDQ1UGRORFdaajFRYnNuc3VXWUV6OENBN1J4TUpE?=
+ =?utf-8?B?dk1FQ1ZOaEEvSU5iT3BtU2YvWGlNQ2k2dk1RYXY0VENPR3dia1A4bzdLVFZz?=
+ =?utf-8?B?SmR1dDlXbEFDUVp1S1ZFVDdlLzEwc2ZHN1JDSTNzL0s3bXc0WXY2Q3pIYUtt?=
+ =?utf-8?B?RllSQ09VTy80Y0daTUhMN1lBbTM1bGlheG0zYmo2RTZHRElmTzgyV1ExVHZQ?=
+ =?utf-8?B?SXZ5TGxvZDRwck13MEJOZ2RtZ24xUmZIQzFpMThnWERIRWE2K1JUUy9rNlhH?=
+ =?utf-8?B?SVcvbzVLZjA2UWxlVlBCVWRwZWpTRi9uTGk3ZXBWd25zU3kyZ1ZIMHNKcjky?=
+ =?utf-8?B?MGlrbHJ0Z0ZRdkZYb3FNay9TOUdqd2NtTEROWHkyaWJUZWtHcU1NRnNFcGNn?=
+ =?utf-8?B?amljOTBBbHJpaFQ5RkJpTnlGWERtTG1FWmt3dlhUMzJyK1cyYldWQ1N1Rmdl?=
+ =?utf-8?Q?pj3ALPtdIATHUgKxW9QScxo/M?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73AB94607055484B82438CF0E42712EF@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CC:EE_|CH0PR08MB7321:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4789371f-24dd-4868-a4d4-08dc3c26d233
-X-EXT-ByPass: 1
-X-MT-RULE-Whitelisted: Triggered
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	UfG+ktEa3fBE9DpOldSTwWJVq+yPNi0IcCIgISi9eASJTEkm7yB9+n+siDClfpOqph8fzva2jeDMSf9tow0ng0fhIJfPSt1lQRrpuap7Z157hQ9/0+UGED2VNDljIwdesCVHmPFIISo65SIGW4RbMDid43jJNSBfJRu1w5qMqfz3pKc+IsTcJybmDiHNoiM/uoZqswGOJCKqofJpw+tf2LIOMyMaWidIzDWSdjcnSB+k4rNZMqg2xyM+iaJDORL1zWwvWs6OUT7pTTmKbBg6j50vhTfUeptNvqneeFGmTxmBQ3BT9cFo5rHfKEJSBN3S7LDKbUeLHvO54HYV4ex5HivkirLy4Z1M2yFF7K1ThiAwtf6sOapZSa7wmxj6vwcttq0DxH1uqDEbiC6ksPuXqec/+Fdh272z1NJv1RZd+CChCG7bUrYIjhiXWFsdblyOwxjPy1BVQszAXMtevpvYgDT6BBuxNuhFWDKqX039laj1hSqCbB3dxMbY0x20yk/hmdxCqUwCvR/Ur61tOCvrxSjnbh44uQDXyAxc4Uc3+Jiva67q6hVovep0o4oEQbIOPzmu9X1g45Gk22ph6QD9F1zdcztIhGvCVwZTcQDLU7FX4TFKCVdppg0hM8qPGVHaQ4h110k3avKJ0ggC7EhMv6L7N6PDo4xE10Jyy9+VZAAc7XrR/DAvD56i0y4Jt3k6fcX/cPaIfT4Z8MrnEkfNag==
-X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 08:41:01.1853
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	VKbMDCKlSdAfYK8ykyq0lKuzdUEsbuYqJ9uU7mM6rQuAW4RtydTjPQYvE5Kxr/ArDvt0m1F054PJy385XvJSMRrY1Wjx5ukSL6YZPyao+8nxbZv+NK9hDQsJQKdHKqnIaawyfOR/VQ5E2U1mWdmPKAe7x5t5GxeT8vwoUDgkJkSC9OMrlC6LQpAtoQzBLxHL6IpkQWiIb5k5eGpZSswYQvhMxRkDhwM/Hdt64YqTJruRJeBulsVts7jlESS0TQaTUQu4g8TlYvT8adhjB5se/NJzi1SIQA1NYJ7gKMN1XHMsyTR1qKQS6/jcsY/+nYgvMBZOKPX81VsctbsVhbXgWijHnnW9EFN/m4vKCkURlUHCMB5gOXGwZnMvJUsR48Nkioz+HMqpXtpDcPjmigFG/H/3Ha+BHRw9g6jnm7bGYwVt6nQ8EvMgynJZM+OFJt/4aLWB/BWbZ2mEA2TmCvLdx3w4VsHd8a8ZYUTJc8vZWSDF+gafoaRbrH0XLNVDsXtCmDyRLRnNNW/dGtst4BHEcxfCwVWrU3glZLUaPfBLCvb5zjkiTn1Iwyhx6YzVlhkXn0lC9mzHu9xrGUXksEL1blJi51Ax1XU6PIkJC2KQ2Axq14FCxemG8IJjyQ0MPcrm
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB5431.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a70f8f55-26c1-4b91-3c76-08dc3c483fbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 12:40:18.3734
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4789371f-24dd-4868-a4d4-08dc3c26d233
-X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF000015CC.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR08MB7321
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DUseNkYP9QYgsvTAhgWXbH4nUpt2xMxjeq4pFaR96q0l6LpK8Av3k+IIFy8UrBrI01R3rnjmpsOLLaJ0tvPx0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR04MB7965
 
-
-
-> -----Original Message-----
-> From: fan <nifan.cxl@gmail.com>
-> Sent: Monday, March 4, 2024 8:38 AM
-> To: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> Cc: Hao Xiang <hao.xiang@bytedance.com>; Gregory Price
-> <gourry.memverge@gmail.com>; aneesh.kumar@linux.ibm.com;
-> mhocko@suse.com; tj@kernel.org; john@jagalactic.com; Eishan Mirakhur
-> <emirakhur@micron.com>; Vinicius Tavares Petrucci
-> <vtavarespetr@micron.com>; Ravis OpenSrc <Ravis.OpenSrc@micron.com>;
-> Alistair Popple <apopple@nvidia.com>; Rafael J. Wysocki
-> <rafael@kernel.org>; Len Brown <lenb@kernel.org>; Andrew Morton
-> <akpm@linux-foundation.org>; Dave Jiang <dave.jiang@intel.com>; Dan
-> Williams <dan.j.williams@intel.com>; Jonathan Cameron
-> <Jonathan.Cameron@huawei.com>; Huang Ying <ying.huang@intel.com>;
-> linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> mm@kvack.org; Ho-Ren (Jack) Chuang <horenc@vt.edu>; Ho-Ren (Jack)
-> Chuang <horenchuang@gmail.com>; linux-cxl@vger.kernel.org; qemu-
-> devel@nongnu.org
-> Subject: [EXT] Re: [PATCH v1 0/1] Improved Memory Tier Creation for CPUle=
-ss
-> NUMA Nodes
->=20
-> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
-> you recognize the sender and were expecting this message.
->=20
->=20
-> On Fri, Mar 01, 2024 at 08:22:44AM +0000, Ho-Ren (Jack) Chuang wrote:
-> > The memory tiering component in the kernel is functionally useless for
-> > CPUless memory/non-DRAM devices like CXL1.1 type3 memory because the
-> nodes
-> > are lumped together in the DRAM tier.
-> >
-> https://lore.k/
-> ernel.org%2Flinux-
-> mm%2FPH0PR08MB7955E9F08CCB64F23963B5C3A860A%40PH0PR08MB7955
-> .namprd08.prod.outlook.com%2FT%2F&data=3D05%7C02%7Csthanneeru.open
-> src%40micron.com%7Cc4f03409bf454cca29d008dc3bf853d0%7Cf38a5ecd281
-> 34862b11bac1d563c806f%7C0%7C0%7C638451185012848960%7CUnknown
-> %7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
-> wiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=3Dsyvhw1w8%2BoC6ss4%2Bu2X
-> HjBuyrpwFK1hIefopgVbRy7g%3D&reserved=3D0
->=20
-Referring to the following use case from above patch?
-
---
-1. Useful to move cxl nodes to the right tiers from userspace, when
-   the hardware fails to assign the tiers correctly based on
-   memorytypes.
-
-   On some platforms we have observed cxl memory being assigned to
-   the same tier as DDR memory. This is arguably a system firmware
-   bug, but it is true that tiers represent *ranges* of performance.
-   and we believe it's important for the system operator to have
-   the ability to override bad firmware or OS decisions about tier
-   assignment as a fail-safe against potential bad outcomes.
---
-
-> Is this the right patchset you want to refer to? It is about node
-> migration between tiers, how is it related to the context here?
->=20
-> Fan
->=20
-> >
-> > This patchset automatically resolves the issues. It delays the initiali=
-zation
-> > of memory tiers for CPUless NUMA nodes until they obtain HMAT
-> information
-> > at boot time, eliminating the need for user intervention.
-> > If no HMAT specified, it falls back to using `default_dram_type`.
-> >
-> > Example usecase:
-> > We have CXL memory on the host, and we create VMs with a new system
-> memory
-> > device backed by host CXL memory. We inject CXL memory performance
-> attributes
-> > through QEMU, and the guest now sees memory nodes with performance
-> attributes
-> > in HMAT. With this change, we enable the guest kernel to construct
-> > the correct memory tiering for the memory nodes.
-> >
-> > Ho-Ren (Jack) Chuang (1):
-> >   memory tier: acpi/hmat: create CPUless memory tiers after obtaining
-> >     HMAT info
-> >
-> >  drivers/acpi/numa/hmat.c     |  3 ++
-> >  include/linux/memory-tiers.h |  6 +++
-> >  mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
-> >  3 files changed, 77 insertions(+), 8 deletions(-)
-> >
-> > --
-> > Hao Xiang and Ho-Ren (Jack) Chuang
-> >
-
+T24gMi8yMS8yNCAxOToxNSwgbmlmYW4uY3hsQGdtYWlsLmNvbSB3cm90ZToNCj4gQ0FVVElPTjog
+VGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiBXZXN0ZXJuIERpZ2l0YWwuIERv
+IG5vdCBjbGljayBvbiBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2du
+aXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhhdCB0aGUgY29udGVudCBpcyBzYWZlLg0KPiANCj4g
+DQo+IEZyb206IEZhbiBOaSA8ZmFuLm5pQHNhbXN1bmcuY29tPg0KPiANCj4gUGVyIGN4bCBzcGVj
+IHIzLjEsIGFkZCBkeW5hbWljIGNhcGFjaXR5IHJlZ2lvbiByZXByZXNlbnRhdGl2ZSBiYXNlZCBv
+bg0KPiBUYWJsZSA4LTE2NSBhbmQgZXh0ZW5kIHRoZSBjeGwgdHlwZTMgZGV2aWNlIGRlZmluaXRp
+b24gdG8gaW5jbHVkZSBkYyByZWdpb24NCj4gaW5mb3JtYXRpb24uIEFsc28sIGJhc2VkIG9uIGlu
+Zm8gaW4gOC4yLjkuOS45LjEsIGFkZCAnR2V0IER5bmFtaWMgQ2FwYWNpdHkNCj4gQ29uZmlndXJh
+dGlvbicgbWFpbGJveCBzdXBwb3J0Lg0KPiANCj4gTm90ZTogZGVjb2RlX2xlbiBvZiBhIGRjIHJl
+Z2lvbiBpcyBhbGlnbmVkIHRvIDI1NipNaUIsIGRpdmlkZWQgYnkNCj4gMjU2ICogTWlCIGJlZm9y
+ZSByZXR1cm5lZCB0byB0aGUgaG9zdCBmb3IgIkdldCBEeW5hbWljIENhcGFjaXR5IENvbmZpZ3Vy
+YXRpb24iDQo+IG1haWxib3ggY29tbWFuZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEZhbiBOaSA8
+ZmFuLm5pQHNhbXN1bmcuY29tPg0KPiAtLS0NCj4gICBody9jeGwvY3hsLW1haWxib3gtdXRpbHMu
+YyAgfCAxMTAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAgaW5jbHVk
+ZS9ody9jeGwvY3hsX2RldmljZS5oIHwgIDE2ICsrKysrKw0KPiAgIDIgZmlsZXMgY2hhbmdlZCwg
+MTI2IGluc2VydGlvbnMoKykNCj4gDQoNCltzbmlwXQ0KDQo+IA0KPiAgICAgICAvKiBObyBzZXBh
+cmF0aW9uIGZvciBQQ0kgTUIgYXMgcHJvdG9jb2wgaGFuZGxlZCBpbiBQQ0kgZGV2aWNlICovDQo+
+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2h3L2N4bC9jeGxfZGV2aWNlLmggYi9pbmNsdWRlL2h3L2N4
+bC9jeGxfZGV2aWNlLmgNCj4gaW5kZXggM2NmMzA3N2FmYS4uNmRmN2ZlY2RmMSAxMDA2NDQNCj4g
+LS0tIGEvaW5jbHVkZS9ody9jeGwvY3hsX2RldmljZS5oDQo+ICsrKyBiL2luY2x1ZGUvaHcvY3hs
+L2N4bF9kZXZpY2UuaA0KPiBAQCAtNDIyLDYgKzQyMiwxNyBAQCB0eXBlZGVmIHN0cnVjdCBDWExQ
+b2lzb24gew0KPiAgIHR5cGVkZWYgUUxJU1RfSEVBRCgsIENYTFBvaXNvbikgQ1hMUG9pc29uTGlz
+dDsNCj4gICAjZGVmaW5lIENYTF9QT0lTT05fTElTVF9MSU1JVCAyNTYNCj4gDQo+ICsjZGVmaW5l
+IERDRF9NQVhfUkVHSU9OX05VTSA4DQo+ICsNCj4gK3R5cGVkZWYgc3RydWN0IENYTERDRFJlZ2lv
+biB7DQo+ICsgICAgdWludDY0X3QgYmFzZTsNCj4gKyAgICB1aW50NjRfdCBkZWNvZGVfbGVuOyAv
+KiBhbGlnbmVkIHRvIDI1NipNaUIgKi8NCj4gKyAgICB1aW50NjRfdCBsZW47DQo+ICsgICAgdWlu
+dDY0X3QgYmxvY2tfc2l6ZTsNCj4gKyAgICB1aW50MzJfdCBkc21hZGhhbmRsZTsNCj4gKyAgICB1
+aW50OF90IGZsYWdzOw0KPiArfSBDWExEQ0RSZWdpb247DQo+ICsNCg0KVG8gYmUgY29uc2lzdGVu
+dCB3aXRoIHRoZSBuYW1pbmcgb2YgZXh0ZW50cywgYW5kIGZ1bmN0aW9ucyBkZWZpbmVkIGxhdGVy
+IA0Kb24sIHNob3VsZG4ndCB0aGlzIGJlIENYTERDUmVnaW9uIChEQyBpbnN0ZWFkIG9mIERDRCk/
+DQoNCj4gICBzdHJ1Y3QgQ1hMVHlwZTNEZXYgew0KPiAgICAgICAvKiBQcml2YXRlICovDQo+ICAg
+ICAgIFBDSURldmljZSBwYXJlbnRfb2JqOw0KPiBAQCAtNDU0LDYgKzQ2NSwxMSBAQCBzdHJ1Y3Qg
+Q1hMVHlwZTNEZXYgew0KPiAgICAgICB1bnNpZ25lZCBpbnQgcG9pc29uX2xpc3RfY250Ow0KPiAg
+ICAgICBib29sIHBvaXNvbl9saXN0X292ZXJmbG93ZWQ7DQo+ICAgICAgIHVpbnQ2NF90IHBvaXNv
+bl9saXN0X292ZXJmbG93X3RzOw0KPiArDQo+ICsgICAgc3RydWN0IGR5bmFtaWNfY2FwYWNpdHkg
+ew0KPiArICAgICAgICB1aW50OF90IG51bV9yZWdpb25zOyAvKiAwLTggcmVnaW9ucyAqLw0KPiAr
+ICAgICAgICBDWExEQ0RSZWdpb24gcmVnaW9uc1tEQ0RfTUFYX1JFR0lPTl9OVU1dOw0KPiArICAg
+IH0gZGM7DQo+ICAgfTsNCj4gDQo+ICAgI2RlZmluZSBUWVBFX0NYTF9UWVBFMyAiY3hsLXR5cGUz
+Ig0KPiAtLQ0KPiAyLjQzLjANCj4gDQo+IA0KDQpUaGFua3MsDQpKb3JnZW4=
