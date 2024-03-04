@@ -1,166 +1,77 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031AD60263
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 17:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9690612EF;
+	Mon,  4 Mar 2024 17:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573755; cv=none; b=HrViWuOJCXedsNVImolxObl6byBvkEoXZyAxBImVn+CpEY5gKgMQXeFsXDBLsPpOB5yCLCa1HEDoKSkkYZJ1MKu2m6WDVKu2xQix0Q8DGkF604w9+m9eYD0yjYFwliMWpzLa7GnUovbKj2kMLwf4UADffarZ+GfGvcSax1VthyQ=
+	t=1709573786; cv=none; b=bpkWQnxS8RXqW7lYa6aJ9T7W7c0JR3F3vZGgDExOVZ61ktlnrHTEZdsKNyUFDT0+23kaYx0UEjbz7D+dLM7UV7ZglM7TrN14X6ULqS99AMXZ0PXghuZGbmNTee13cVV9vDA225B6ZjhKMFFMJo6P/1667Vs+ZZb2NCBi2w6aVZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573755; c=relaxed/simple;
-	bh=CJmPTk46KMj+fWdS88MNpJdQqIMkENVZWY8Lu5otFJc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJlwyIu9bexKr4BGUDxzUiyhXzBuwIZsvs4BadcumEgeIvD4XoOBDvf1fvd+33dMq7nS0K3IoyjzSQs6qaZIzVFhQbL7TBmI02+CpbVczEYaOfK0qxut3GpjPqvwX9j8HZC4qKTtK8iE2jNFscwN5oS3P22FHNhCRitCjcdYZvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mFJ6Ftcu; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFJ6Ftcu"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-608cf2e08f9so51264657b3.0
-        for <linux-cxl@vger.kernel.org>; Mon, 04 Mar 2024 09:35:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709573753; x=1710178553; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=49d9IAE1DJB4fKfr/UgeNRcP4hLs0HGBVdcf75tkwvk=;
-        b=mFJ6FtcunPGXQC8K4W/32tzp829LC3OXvlgcqXOw17t+O//0cez3uImHCaJDEDri//
-         llf+Fb6xzTljf8GLUVyI6bpsMkaAnYIzo0Fy0RD1rwi803joYvjKbFsSWvFnPPzaKt8b
-         ZBsEkSa5knq7lyeMf391cwNb8Zcbr6cVlnFjjxJRkzEZwYP/0DwhO3BKXpLf3eyliOnD
-         Lo5+ExOnidGY5F9zuQ/GH1wIIoN9TXdNQS6r4+mtN4TPQF2pa+tV83hbxhjtyX8gLFWr
-         A1BvlpA3iwLa27YAvrJdnbk5+Rkw0wFKoxrU6FjO/8O/EpdSxiDqnbzAj+KWb+TxvjNR
-         u8pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709573753; x=1710178553;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=49d9IAE1DJB4fKfr/UgeNRcP4hLs0HGBVdcf75tkwvk=;
-        b=aZs2QTgMWnHj6sZeLd5l5CA9dNBlPcPLRbHHqlb1SOxhZamBrC96lUKQyzcCsxQjjM
-         F8yWkFPSPTZhiL0H0WWZ45REr4DSspZZIKJQwh6rpEphCpCQMBX8eF/2d9ria+5ImlY+
-         mhxQnrB/mS22jCrM5xi7botsWW0ectqe/cp/ebpQPjYr8mAkvOwgxCv7rRV8UHdf6Arv
-         q6c7OsQz7U20gP39VSWNGuiGjTuXU+qAeeNPvbFeUA5K4TsUfbu/OP9jYRqQENdwE7sK
-         iwKAm+s1eHDmb3obp4UaBCpNL5JYCKAElWCX8u7w07IGkFs+F2B0cZnD0KqR1aTLYXC3
-         3DOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVx0n384yj3taP044R0nu3lhs5aF9Lrg30IsN/AadfdU4GraSM983jJwfHDzueQ/l50KNkBcd+fqdJ9A7KrQgeK5tWVPNJJRiJ
-X-Gm-Message-State: AOJu0YxNvB8CkkOsPmd+nBGjVcs/4s3bnUJckm1nlrSA2atkmln4Fivx
-	8oa3OtY0jpmJr4nV6uskBapaKpkkWIsOEWSuIFBThMZzLMyQ4uBf
-X-Google-Smtp-Source: AGHT+IE3DUAH5SuCKalB5QdXYLGfxv8xiTKi9q/Z3pLebmewcUhJt8pJp4dEXgo5SHNnWmRnWYY6NQ==
-X-Received: by 2002:a81:a54a:0:b0:608:fa36:1c27 with SMTP id v10-20020a81a54a000000b00608fa361c27mr9465551ywg.23.1709573753025;
-        Mon, 04 Mar 2024 09:35:53 -0800 (PST)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id w84-20020a814957000000b006096dafea6fsm2667802ywa.62.2024.03.04.09.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 09:35:52 -0800 (PST)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Mon, 4 Mar 2024 09:35:50 -0800
-To: =?iso-8859-1?Q?J=F8rgen?= Hansen <Jorgen.Hansen@wdc.com>
-Cc: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"gregory.price@memverge.com" <gregory.price@memverge.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"a.manzanares@samsung.com" <a.manzanares@samsung.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-	"jim.harris@samsung.com" <jim.harris@samsung.com>,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
- region representative and mailbox command support
-Message-ID: <ZeYGduNSn4WGzOz5@debian>
-References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
- <20240221182020.1086096-3-nifan.cxl@gmail.com>
- <8a141940-86fd-43c8-8834-a25b0d1e79fe@wdc.com>
+	s=arc-20240116; t=1709573786; c=relaxed/simple;
+	bh=cBXEGvlaoRIaEbVUo1jmhKuFkUNx0fedDYLpxTRgGCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=emDudOTNh9MzxDSz6FzxBR8HUZWuAYT9TSEkYAWhInAHxWurdHYhSH4aMNMAP0wDgE5oGl9g+iFlzgT+qy2hFryVQR3g7BU6XaTmElcOi0nMFB7SBvBIUgs4CaGRQ0lhPJYsqGRLwTcSNS/VnfOmsI6G5l9YaZNgKeF4/Y2Typ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75847C43394;
+	Mon,  4 Mar 2024 17:36:25 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: vishal.l.verma@intel.com
+Subject: [NDCTL PATCH v9 0/4] ndctl: Add support of qos_class for CXL CLI
+Date: Mon,  4 Mar 2024 10:35:31 -0700
+Message-ID: <20240304173618.1580662-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a141940-86fd-43c8-8834-a25b0d1e79fe@wdc.com>
 
-On Mon, Mar 04, 2024 at 12:40:18PM +0000, Jørgen Hansen wrote:
-> On 2/21/24 19:15, nifan.cxl@gmail.com wrote:
-> > CAUTION: This email originated from outside of Western Digital. Do not click on links or open attachments unless you recognize the sender and know that the content is safe.
-> > 
-> > 
-> > From: Fan Ni <fan.ni@samsung.com>
-> > 
-> > Per cxl spec r3.1, add dynamic capacity region representative based on
-> > Table 8-165 and extend the cxl type3 device definition to include dc region
-> > information. Also, based on info in 8.2.9.9.9.1, add 'Get Dynamic Capacity
-> > Configuration' mailbox support.
-> > 
-> > Note: decode_len of a dc region is aligned to 256*MiB, divided by
-> > 256 * MiB before returned to the host for "Get Dynamic Capacity Configuration"
-> > mailbox command.
-> > 
-> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > ---
-> >   hw/cxl/cxl-mailbox-utils.c  | 110 ++++++++++++++++++++++++++++++++++++
-> >   include/hw/cxl/cxl_device.h |  16 ++++++
-> >   2 files changed, 126 insertions(+)
-> > 
-> 
-> [snip]
-> 
-> > 
-> >       /* No separation for PCI MB as protocol handled in PCI device */
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index 3cf3077afa..6df7fecdf1 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -422,6 +422,17 @@ typedef struct CXLPoison {
-> >   typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
-> >   #define CXL_POISON_LIST_LIMIT 256
-> > 
-> > +#define DCD_MAX_REGION_NUM 8
-> > +
-> > +typedef struct CXLDCDRegion {
-> > +    uint64_t base;
-> > +    uint64_t decode_len; /* aligned to 256*MiB */
-> > +    uint64_t len;
-> > +    uint64_t block_size;
-> > +    uint32_t dsmadhandle;
-> > +    uint8_t flags;
-> > +} CXLDCDRegion;
-> > +
-> 
-> To be consistent with the naming of extents, and functions defined later 
-> on, shouldn't this be CXLDCRegion (DC instead of DCD)?
-> 
+Hi Vishal,
+With the QoS class series merged to the v6.8 kernel, can you please review and
+apply this series to ndctl if acceptable?
 
-I was also thinking about it and a bit lazy to make the change until
-someone points out. Now I have a good reason to make the change :-).
-Thanks.
+v9:
+- Rename cxl_region_qos_class_matches() to cxl_region_qos_class_mismatch() (Vishal)
+- Rename ->qos_enforce to ->enforce_qos (Vishal)
+- Rename json output qos_class_mismatched to qos_class_mismatch (Vishal)
+v8:
+- Move qos_class comparison to libcxl. (Vishal)
+- Move check to validate_decoder(). (Vishal)
+- Update test to pick decoder that will always work. (Vishal)
+- Fix script style. (Vishal)
+v7:
+- Removed qos restriction flag entirely (Alison)
+- Added check for invalid qos_class when doing json output
+- Change -q to -Q (Vishal)
+- Add qos_class_mismatched to region output for cxl list (Vishal)
+- Add -Q test in cxl-qos-class.sh test (Vishal)
+- Change verify behavior to only do qos matching with -Q (Vishal/Dan)
+v6:
+- Check return value of create_region_validate_qos_class() (Wonjae)
+v5:
+- split out test from cxl-topology.sh (Vishal)
+v4:
+- Update against changes in kernel from multi to single qos_class entry
+- Add test in cxl-topology.sh (Dan)
+- See individual patch log for details
+v3:
+- Rebase against latest ndctl/pending branch.
 
-Fan
+The series adds support for the kernel enabling of QoS class in the v6.8
+kernel. The kernel exports a qos_class token for the root decoders (CFMWS) and as
+well as for the CXL memory devices. The qos_class exported for a device is
+calculated by the driver during device probe. Currently a qos_class is exported
+for the volatile partition (ram) and another for the persistent partition (pmem).
+In the future qos_class will be exported for DCD regions. Display of qos_class is
+through the CXL CLI list command with -vvv for extra verbose.
 
-> >   struct CXLType3Dev {
-> >       /* Private */
-> >       PCIDevice parent_obj;
-> > @@ -454,6 +465,11 @@ struct CXLType3Dev {
-> >       unsigned int poison_list_cnt;
-> >       bool poison_list_overflowed;
-> >       uint64_t poison_list_overflow_ts;
-> > +
-> > +    struct dynamic_capacity {
-> > +        uint8_t num_regions; /* 0-8 regions */
-> > +        CXLDCDRegion regions[DCD_MAX_REGION_NUM];
-> > +    } dc;
-> >   };
-> > 
-> >   #define TYPE_CXL_TYPE3 "cxl-type3"
-> > --
-> > 2.43.0
-> > 
-> > 
-> 
-> Thanks,
-> Jorgen
+A qos_class check as also been added for region creation. A warning is emitted
+when the qos_class of a memory range of a CXL memory device being included in
+the CXL region assembly does not match the qos_class of the root decoder. Options
+are available to suppress the warning or to fail the region creation. This
+enabling provides a guidance on flagging memory ranges being used is not
+optimal for performance for the CXL region to be formed.
+
