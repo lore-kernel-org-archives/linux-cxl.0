@@ -1,60 +1,60 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A175612E9
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 17:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031AD60263
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Mar 2024 17:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573504; cv=none; b=ZD0FsjwBOv1M8LmgPWbSLFtRBBlPhkM+qqZ1DHWv5tyRWQkXARNgyohSUy0OfKvJsW2BAH480P4YnfBMmDO20INygXSqvOuIKETj/t/s/Xw8e0JecE+hYHcM+LPr4pB/4Nvme9Pl/qSqToP5k9Bm++pRv5ZsyDzUhQ+HT4rVoCY=
+	t=1709573755; cv=none; b=HrViWuOJCXedsNVImolxObl6byBvkEoXZyAxBImVn+CpEY5gKgMQXeFsXDBLsPpOB5yCLCa1HEDoKSkkYZJ1MKu2m6WDVKu2xQix0Q8DGkF604w9+m9eYD0yjYFwliMWpzLa7GnUovbKj2kMLwf4UADffarZ+GfGvcSax1VthyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573504; c=relaxed/simple;
-	bh=2YnB//uS/0L+Hacq+WuTaNRZBL0/vBLmD/NWnpKuMlM=;
+	s=arc-20240116; t=1709573755; c=relaxed/simple;
+	bh=CJmPTk46KMj+fWdS88MNpJdQqIMkENVZWY8Lu5otFJc=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Amwncs0/XK+2/5q1lCbsk7GqZC5FUsOYDmwobasczVHFdbz1hNE5U5YGXJRDvis7yAysOaSpAHfD+wCS4qSejzeB/sOBGzUYWmt1eN9jXxqXFaU9+rEa6T3vJY9O9o6BMPKFruHCtvCr7MNMQ9ra5yqFpr8gVCsoBtFNTWuCpkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eUeZy2Uh; arc=none smtp.client-ip=209.85.219.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJlwyIu9bexKr4BGUDxzUiyhXzBuwIZsvs4BadcumEgeIvD4XoOBDvf1fvd+33dMq7nS0K3IoyjzSQs6qaZIzVFhQbL7TBmI02+CpbVczEYaOfK0qxut3GpjPqvwX9j8HZC4qKTtK8iE2jNFscwN5oS3P22FHNhCRitCjcdYZvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mFJ6Ftcu; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUeZy2Uh"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbed179f0faso4046322276.1
-        for <linux-cxl@vger.kernel.org>; Mon, 04 Mar 2024 09:31:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFJ6Ftcu"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-608cf2e08f9so51264657b3.0
+        for <linux-cxl@vger.kernel.org>; Mon, 04 Mar 2024 09:35:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709573501; x=1710178301; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709573753; x=1710178553; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=z3Qx+aXmPP8v8jU0J6qHwTML1uLCWv1nNAU++flyM4A=;
-        b=eUeZy2UhCDYM053uI5l6uJ4snFlXxBy5+lmkbYhJfOpGY5ZP+zJebVKDj4x+r+rmgu
-         0bLim4kL/tnEW22bAcIJZ7jGeT0EzO54/CFaxD60HMXO+HwbPB9TlRzZI0fzkjaVqbR/
-         0kSgnzUkH8nLmUtNTwNL1MuDYXj4aQtumhukH3BUmmdSQFxTVGqvnv7WHURql0vaPzDY
-         zaRu+Oa5lZSgqDzGhmoFV2EO7DUfKLv4jWtxBxuCBU1zxvJiHub70uMpgXNZl4sGkfsK
-         PlXM2VIPwa1qDkHr7B/W2OdmtdOOtQX3Sb1Vauy4QgvUKRrLYQCFpiLriKs1fIx4k0Dl
-         lVcA==
+        bh=49d9IAE1DJB4fKfr/UgeNRcP4hLs0HGBVdcf75tkwvk=;
+        b=mFJ6FtcunPGXQC8K4W/32tzp829LC3OXvlgcqXOw17t+O//0cez3uImHCaJDEDri//
+         llf+Fb6xzTljf8GLUVyI6bpsMkaAnYIzo0Fy0RD1rwi803joYvjKbFsSWvFnPPzaKt8b
+         ZBsEkSa5knq7lyeMf391cwNb8Zcbr6cVlnFjjxJRkzEZwYP/0DwhO3BKXpLf3eyliOnD
+         Lo5+ExOnidGY5F9zuQ/GH1wIIoN9TXdNQS6r4+mtN4TPQF2pa+tV83hbxhjtyX8gLFWr
+         A1BvlpA3iwLa27YAvrJdnbk5+Rkw0wFKoxrU6FjO/8O/EpdSxiDqnbzAj+KWb+TxvjNR
+         u8pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709573501; x=1710178301;
+        d=1e100.net; s=20230601; t=1709573753; x=1710178553;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3Qx+aXmPP8v8jU0J6qHwTML1uLCWv1nNAU++flyM4A=;
-        b=BEUjtyOkwKuJp3r0GUmdlz3GCXtQ3Ej9B0JNdcmS1SX56SmcT7Y9/IFqIWgEyzUuLE
-         PnVtEeoHwD2fvMeO13KR6dfj/ZCsfS7Y+4MFZfeM+u4Bm9BpBq7BCI/ECfSlRJ9tjuN6
-         7rvVKKlHbx1PdHsnu47yx6bCLXRtTOSy9Bbz/lcE7Ih6Wtmp/+a4mnybIhYQiLrXuMNY
-         V0aqJQA066hxV6C/63S9mKiUTdf+grwGqDkqF5A1B1nIEccuiU+rwadO//0xLRREYijj
-         hULNp4pkGAPtl9gdaMyqoYEgh+fNgrEAclAodSnz0RjTd0hPGaaLHc5jPYT0dR0rmBcR
-         vU0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUIqgl5t/TcY37xruIoRQEJ0ztPGT+j2G5PtjeU8UVTYIH1HvrwSB5YvG8WqRg3Vbj5BZAx1lnCXFyTrLjLizrU/rrscFxIkFvR
-X-Gm-Message-State: AOJu0Yz58GFg7PFkzL9TU4imep9OVkZZyxBnSZFoZbUVnCZpJ3bX6F7W
-	R66eW7t0cLP4ofQUTT2j/iXJmo9QGbVNqTP6o4OtyslffTx17EH4dDPg0wAp
-X-Google-Smtp-Source: AGHT+IFxHkWJmBV7rK8mGrDaT2BHHaRIeh/zkdGUMy66EQvXNr9iBaUJpu1ucf+VcMJPbfZ2Q0/8mQ==
-X-Received: by 2002:a05:6902:1815:b0:dc2:2ae4:d639 with SMTP id cf21-20020a056902181500b00dc22ae4d639mr124971ybb.20.1709573501320;
-        Mon, 04 Mar 2024 09:31:41 -0800 (PST)
+        bh=49d9IAE1DJB4fKfr/UgeNRcP4hLs0HGBVdcf75tkwvk=;
+        b=aZs2QTgMWnHj6sZeLd5l5CA9dNBlPcPLRbHHqlb1SOxhZamBrC96lUKQyzcCsxQjjM
+         F8yWkFPSPTZhiL0H0WWZ45REr4DSspZZIKJQwh6rpEphCpCQMBX8eF/2d9ria+5ImlY+
+         mhxQnrB/mS22jCrM5xi7botsWW0ectqe/cp/ebpQPjYr8mAkvOwgxCv7rRV8UHdf6Arv
+         q6c7OsQz7U20gP39VSWNGuiGjTuXU+qAeeNPvbFeUA5K4TsUfbu/OP9jYRqQENdwE7sK
+         iwKAm+s1eHDmb3obp4UaBCpNL5JYCKAElWCX8u7w07IGkFs+F2B0cZnD0KqR1aTLYXC3
+         3DOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVx0n384yj3taP044R0nu3lhs5aF9Lrg30IsN/AadfdU4GraSM983jJwfHDzueQ/l50KNkBcd+fqdJ9A7KrQgeK5tWVPNJJRiJ
+X-Gm-Message-State: AOJu0YxNvB8CkkOsPmd+nBGjVcs/4s3bnUJckm1nlrSA2atkmln4Fivx
+	8oa3OtY0jpmJr4nV6uskBapaKpkkWIsOEWSuIFBThMZzLMyQ4uBf
+X-Google-Smtp-Source: AGHT+IE3DUAH5SuCKalB5QdXYLGfxv8xiTKi9q/Z3pLebmewcUhJt8pJp4dEXgo5SHNnWmRnWYY6NQ==
+X-Received: by 2002:a81:a54a:0:b0:608:fa36:1c27 with SMTP id v10-20020a81a54a000000b00608fa361c27mr9465551ywg.23.1709573753025;
+        Mon, 04 Mar 2024 09:35:53 -0800 (PST)
 Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id y3-20020a25dc03000000b00dcda3959006sm2345648ybe.33.2024.03.04.09.31.40
+        by smtp.gmail.com with ESMTPSA id w84-20020a814957000000b006096dafea6fsm2667802ywa.62.2024.03.04.09.35.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 09:31:41 -0800 (PST)
+        Mon, 04 Mar 2024 09:35:52 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Mon, 4 Mar 2024 09:31:25 -0800
+Date: Mon, 4 Mar 2024 09:35:50 -0800
 To: =?iso-8859-1?Q?J=F8rgen?= Hansen <Jorgen.Hansen@wdc.com>
 Cc: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
 	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -68,12 +68,12 @@ Cc: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
 	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
 	"jim.harris@samsung.com" <jim.harris@samsung.com>,
 	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v4 04/10] hw/mem/cxl_type3: Add support to create DC
- regions to type3 memory devices
-Message-ID: <ZeYFbeYrJfQR7sNn@debian>
+Subject: Re: [PATCH v4 02/10] hw/cxl/cxl-mailbox-utils: Add dynamic capacity
+ region representative and mailbox command support
+Message-ID: <ZeYGduNSn4WGzOz5@debian>
 References: <20240221182020.1086096-1-nifan.cxl@gmail.com>
- <20240221182020.1086096-5-nifan.cxl@gmail.com>
- <ebab98e4-aa07-4aa6-84ec-768f6432e2f4@wdc.com>
+ <20240221182020.1086096-3-nifan.cxl@gmail.com>
+ <8a141940-86fd-43c8-8834-a25b0d1e79fe@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,127 +83,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ebab98e4-aa07-4aa6-84ec-768f6432e2f4@wdc.com>
+In-Reply-To: <8a141940-86fd-43c8-8834-a25b0d1e79fe@wdc.com>
 
-On Mon, Mar 04, 2024 at 01:10:37PM +0000, Jørgen Hansen wrote:
+On Mon, Mar 04, 2024 at 12:40:18PM +0000, Jørgen Hansen wrote:
 > On 2/21/24 19:15, nifan.cxl@gmail.com wrote:
 > > CAUTION: This email originated from outside of Western Digital. Do not click on links or open attachments unless you recognize the sender and know that the content is safe.
 > > 
 > > 
 > > From: Fan Ni <fan.ni@samsung.com>
 > > 
-> > With the change, when setting up memory for type3 memory device, we can
-> > create DC regions.
-> > A property 'num-dc-regions' is added to ct3_props to allow users to pass the
-> > number of DC regions to create. To make it easier, other region parameters
-> > like region base, length, and block size are hard coded. If needed,
-> > these parameters can be added easily.
+> > Per cxl spec r3.1, add dynamic capacity region representative based on
+> > Table 8-165 and extend the cxl type3 device definition to include dc region
+> > information. Also, based on info in 8.2.9.9.9.1, add 'Get Dynamic Capacity
+> > Configuration' mailbox support.
 > > 
-> > With the change, we can create DC regions with proper kernel side
-> > support like below:
-> > 
-> > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_dc_region)
-> > echo $region > /sys/bus/cxl/devices/decoder0.0/create_dc_region
-> > echo 256 > /sys/bus/cxl/devices/$region/interleave_granularity
-> > echo 1 > /sys/bus/cxl/devices/$region/interleave_ways
-> > 
-> > echo "dc0" >/sys/bus/cxl/devices/decoder2.0/mode
-> > echo 0x40000000 >/sys/bus/cxl/devices/decoder2.0/dpa_size
-> > 
-> > echo 0x40000000 > /sys/bus/cxl/devices/$region/size
-> > echo  "decoder2.0" > /sys/bus/cxl/devices/$region/target0
-> > echo 1 > /sys/bus/cxl/devices/$region/commit
-> > echo $region > /sys/bus/cxl/drivers/cxl_region/bind
-> > 
-> > However, we cannot really read/write to the DC regions due to lack of
-> > 1. host backend and address space setup for DC regions;
-> > 2. mailbox command support for adding/releasing DC extents.
+> > Note: decode_len of a dc region is aligned to 256*MiB, divided by
+> > 256 * MiB before returned to the host for "Get Dynamic Capacity Configuration"
+> > mailbox command.
 > > 
 > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > > ---
-> >   hw/mem/cxl_type3.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 40 insertions(+)
+> >   hw/cxl/cxl-mailbox-utils.c  | 110 ++++++++++++++++++++++++++++++++++++
+> >   include/hw/cxl/cxl_device.h |  16 ++++++
+> >   2 files changed, 126 insertions(+)
 > > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 244d2b5fd5..c61cd2b5ac 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -567,6 +567,40 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> >       }
-> >   }
+> 
+> [snip]
+> 
 > > 
-> > +/*
-> > + * TODO: dc region configuration will be updated once host backend and address
-> > + * space support is added for DCD.
-> > + */
-> > +static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> > +{
-> > +    int i;
-> > +    uint64_t region_base = 0;
-> > +    uint64_t region_len =  2 * GiB;
-> > +    uint64_t decode_len = 2 * GiB;
-> > +    uint64_t blk_size = 2 * MiB;
-> > +    CXLDCDRegion *region;
+> >       /* No separation for PCI MB as protocol handled in PCI device */
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 3cf3077afa..6df7fecdf1 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -422,6 +422,17 @@ typedef struct CXLPoison {
+> >   typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+> >   #define CXL_POISON_LIST_LIMIT 256
+> > 
+> > +#define DCD_MAX_REGION_NUM 8
 > > +
-> > +    if (ct3d->hostvmem) {
-> > +        region_base += ct3d->hostvmem->size;
-> > +    }
-> > +    if (ct3d->hostpmem) {
-> > +        region_base += ct3d->hostpmem->size;
-> > +    }
+> > +typedef struct CXLDCDRegion {
+> > +    uint64_t base;
+> > +    uint64_t decode_len; /* aligned to 256*MiB */
+> > +    uint64_t len;
+> > +    uint64_t block_size;
+> > +    uint32_t dsmadhandle;
+> > +    uint8_t flags;
+> > +} CXLDCDRegion;
+> > +
 > 
-> You could use memory_region_size() here instead of accessing field directly.
+> To be consistent with the naming of extents, and functions defined later 
+> on, shouldn't this be CXLDCRegion (DC instead of DCD)?
 > 
-> Also, it doesn't look like there is any enforcement of hostvmem and 
-> hostpmem being a multiple of 256MB, so region_base isn't necessarily 
-> aligned to 256MB either. This probably should be fixed separately for 
-> vmem and pmem, such that they check the size similar to what you do, as 
-> the existing code also assumes that they are multiples of 256MB.
 
-Yeah. I will update the code and add check here to make sure the region
-base is aligned with 256MB.
+I was also thinking about it and a bit lazy to make the change until
+someone points out. Now I have a good reason to make the change :-).
+Thanks.
 
 Fan
 
-> 
-> > +    for (i = 0; i < ct3d->dc.num_regions; i++) {
-> > +        region = &ct3d->dc.regions[i];
-> > +        region->base = region_base;
-> > +        region->decode_len = decode_len;
-> > +        region->len = region_len;
-> > +        region->block_size = blk_size;
-> > +        /* dsmad_handle is set when creating cdat table entries */
-> > +        region->flags = 0;
+> >   struct CXLType3Dev {
+> >       /* Private */
+> >       PCIDevice parent_obj;
+> > @@ -454,6 +465,11 @@ struct CXLType3Dev {
+> >       unsigned int poison_list_cnt;
+> >       bool poison_list_overflowed;
+> >       uint64_t poison_list_overflow_ts;
 > > +
-> > +        region_base += region->len;
-> > +    }
-> > +
-> > +    return true;
-> > +}
-> > +
-> >   static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-> >   {
-> >       DeviceState *ds = DEVICE(ct3d);
-> > @@ -635,6 +669,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-> >           g_free(p_name);
-> >       }
-> > 
-> > +    if (!cxl_create_dc_regions(ct3d, errp)) {
-> > +        error_setg(errp, "setup DC regions failed");
-> > +        return false;
-> > +    }
-> > +
-> >       return true;
-> >   }
-> > 
-> > @@ -930,6 +969,7 @@ static Property ct3_props[] = {
-> >                        HostMemoryBackend *),
-> >       DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
-> >       DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
-> > +    DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
-> >       DEFINE_PROP_END_OF_LIST(),
+> > +    struct dynamic_capacity {
+> > +        uint8_t num_regions; /* 0-8 regions */
+> > +        CXLDCDRegion regions[DCD_MAX_REGION_NUM];
+> > +    } dc;
 > >   };
 > > 
+> >   #define TYPE_CXL_TYPE3 "cxl-type3"
 > > --
 > > 2.43.0
 > > 
