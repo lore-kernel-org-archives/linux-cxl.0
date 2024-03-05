@@ -1,395 +1,211 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2053.outbound.protection.outlook.com [40.107.101.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6004950272
-	for <linux-cxl@vger.kernel.org>; Tue,  5 Mar 2024 09:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630950; cv=none; b=SNWPm0uzoAeLA3ypd1d1wLg5eYLkqpchKumv57moWcd4+fIqIrEdINk89RBqNILX7fo1X9Cp1JEq2BSvpqaq7BjLD7ZnECpbnRLJ6J3naoRLBjBH5b0A90yfGsQiOQ/yHm/UHAgoyOZip/W6q6inmf8/xOfq2sSUlWZtd+3026g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630950; c=relaxed/simple;
-	bh=Mrqo8t6bgnnlAwcyAfSI9kPBX6+0eznEB/cDTEm6dH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GSIQ386KaVG7Q6diqu08WoXdBV/1h408KM8eBYtIBDvCnKSZL/gxfdnpdyS0ycFgyxI/mMWG5rgWobfW++aSs7W6vbI1uY+k50hYJlo1b5oEVPur4+00QpoQZq1GfBczyOUcymAtKZntYDYTJkIxRtLuo2o/d5fg5Iz6Wtu+wGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BTS0heRB; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C30B5DF05
+	for <linux-cxl@vger.kernel.org>; Tue,  5 Mar 2024 10:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709633768; cv=fail; b=uuDr3tEQEZFgmyQaDOUnXmqkzHYFOn0DCQQQH0wVHEtIZ6/8A/ythUBJEUYr1i73oSr3Q5pl8i/15e1bmRxhsWUD6dQQXomlYeekqoMQij5WLcMFrDaBdAnBFNTK0U0fsge3+USBCAoym5IcVKsQ8oT9e8K1+5ARgg7PmFLmFIM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709633768; c=relaxed/simple;
+	bh=WZ9K8TCxneeJIpQYF5oV+smZ39lJOKVZ5XW+kJ0ahX8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sMRAaVbZa7tW0wbDym4n/Th8zq1jWSP8/5oeYIvqQPGCSfOLp3aAhR68o+w6/ekuDig4jPt0lbYaafRjzGGYQaMoLHkzbW64ruAwX5VjJY972Uk6iiKBp1+JEdxeVGfj/bzKgl/7cxqtuxV/+ogji0xU/ByqQuo0w5TVdpvfUU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=UoSbi53Q; arc=fail smtp.client-ip=40.107.101.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BTS0heRB"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7db68ed7bb1so29351241.2
-        for <linux-cxl@vger.kernel.org>; Tue, 05 Mar 2024 01:29:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709630946; x=1710235746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79M1BRzVOMDaKqMxEGUh5q94dnwcGvlodjX5ei2a/R4=;
-        b=BTS0heRBs1S9m9m0Cw2rZsvwulJs3a42Lq6jhQV5Tu/x/e66gK++HK8X95i1veG8tn
-         8JPrVf3LB9n59cbCI+hte/17BS0NEYZctWDrl487vuK519nZ3wBIWcvmT9ly9ixEo/G/
-         6MSOf1AZF79VADOZXcON3P+18Vk5SzLpQ/dOHEoIyaAjHt2OkHbiBwtRVR4zb4NKbVCw
-         ldpYs76QbesMzn6ve4dnU5E7wlCt2038iaR9NbxwkH/VjzWZjZG8P3szbgCkjxfJudGj
-         jLCrz92nWlpQpGIlqnvS6Wtj2YXDtNMcHGDmbil5pxcMgGLObB8Ht8qvENYbtUVzdOrI
-         JUcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709630946; x=1710235746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=79M1BRzVOMDaKqMxEGUh5q94dnwcGvlodjX5ei2a/R4=;
-        b=T9oFGTKydR74WsGXU0ZMbmUp1p2nPuqKAjdK3VQORZUdzAoRMg0zjqjPFCKE1psc0r
-         HdE0SXRGdueEZGS08iSp0+BI1iK6R3cceCw8WVT1IBCU2N9mRx/v/F5UL65ppy8yqpZJ
-         Wc6QBa33XvxPzL/FxwGUoJeCDoM2HzAmSqGDxh0UrImRMKndf4Is24dcsnZGZWoieSwo
-         oxmIa01icqyPRzJLNKWGUQUUfCXk1WHxx7jA90RbskF3YxTZKP7KJoM5Hc8SC00kwx81
-         Pd1+EiHjwxyr+jH+I/ZM0NETHyjn3OJPag/T+vmYFY2kVBvPMgwa37WJLfjzI/yrgYDL
-         21sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsB7y3Q6qMQJwrZj4HR6cSGEkPoPEomSE92RRVSglUNlxbna0S3I+2qa118G0hdmX00wjcZFrJD8njCQvPE9ZcNbQwPnrSconr
-X-Gm-Message-State: AOJu0Yxlhc9RkSJIRXHYWymLDteEt52rk8F+fM/rtlQDqhn1KsVufeSQ
-	L4OgLHwHmxgWe/1J2wkjNmZZr7bp/7Ed5jKJ993EavpF4qtZxpHMLeBngBioO56pk2NY+XZo0RW
-	T63EipS0hlScrnn6m8vsnoAORPiZT+tbuITs+Kw==
-X-Google-Smtp-Source: AGHT+IGeG8eiA+gbTAW4lP8+EW0Wh/ImGvq3CgHfBV04xBBfvRQuXg2vDyo36TnOBu+4pDZXWZHNMilzpagoOwujU5k=
-X-Received: by 2002:a05:6102:21ba:b0:472:c844:804d with SMTP id
- i26-20020a05610221ba00b00472c844804dmr1040181vsb.18.1709630946252; Tue, 05
- Mar 2024 01:29:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="UoSbi53Q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nYBDXPFjnQ7iRliCuLSIjZzw4fGdFm+UucNzZnKLvxefwH3wqc75H/YWtXoAfG0hatQV1MbopKEK46fjQTZWA5lsYtj3QjhRyhcFs6PJ+h+wZUSLhKjlqhsce6HEeYVWHgK0rbMcQSDWUDfZNJoQ7m8w05GnfWu0N55C2ns2a2EcE0MHM0+/HdnIJ2Vavt9Zjq4shX8XgXPWpknlJxwXMprdgcLpCuUP1eVUWyKMpRqc58pk4gd+48JJRSZKGTaDs6Cc1/ryokwKtCT03g2ZJGaM0l4QjGLnUmh06q0aYre5f72dpqvOoCFFoFXSa5/IrSeGpsTLfFTk23b1Ob/Wgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vb+rXWSU0yUufy17C5czBTA+FZPKiaI8VPFt4mjhO1U=;
+ b=Uz8ANgdJRC2vvlWe9XhON/jG4q1HIFaTfdmCMJjpSkUpEr0tWX/0V3L4V/ewIb9CqcYGu98hgwEJDddSJvd4u/raFLS8BIyJgBdT9u+wUXWPIPWfn5iXcvF9OWxejg+Z3Iuo/JpWo3X8eGWCnWVIT7ckfyA+gIp1+rRXoQjjMKB5u01cjIBAnnO7+6BoBSFQlidK6YYwEL8A4jgDHjkEgp4QSAa+5FfI9nTERrgOlQYUwgWNPTiEhO7V1Larenui5iMkXCov1sdSWLT9ZF5l4HqpeByldP9glsX0tmN8FIeeWe4IYF0gIHUnFiFyMas3nlTqxkPeInBYWbCIrESPkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vb+rXWSU0yUufy17C5czBTA+FZPKiaI8VPFt4mjhO1U=;
+ b=UoSbi53QfEbO6r+b7L6EZdMMgetz4f2+IMKHsM7cC+4Bx2fSitEwUSCnyOPfrIgJ26YqiHW8KWNkf10PgjXTr+CAe2k7XncfySaaxl6M7IQIgiKzsxNQ5JYz6xluCsCXc0P9TAHN8GdJ++UdKQgfiWIGSzL+gl3bNzpc8JahBSor8oidMvzPVUDXaBAOKXpN6warIdhpKs/bvMs8ZtwnR4uW6Ahy/N0GfrU79iCJKJ0WgLHN4pHU3nvOd0piHh+iZ7vPSzMB5TlcXqtTg9+3FYNmMXWOV2B15WngdLInSPiTGkAfzA4RPtE2A2VsZj9GgDGrzXGiMIB60Dgh0xaUDw==
+Received: from CYZPR11CA0004.namprd11.prod.outlook.com (2603:10b6:930:8d::15)
+ by CO1PR08MB6596.namprd08.prod.outlook.com (2603:10b6:303:98::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Tue, 5 Mar
+ 2024 10:16:01 +0000
+Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
+ (2603:10b6:930:8d:cafe::9f) by CYZPR11CA0004.outlook.office365.com
+ (2603:10b6:930:8d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39 via Frontend
+ Transport; Tue, 5 Mar 2024 10:16:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
+ smtp.mailfrom=micron.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=micron.com;
+Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
+ 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.201.242.130; helo=mail.micron.com; pr=C
+Received: from mail.micron.com (137.201.242.130) by
+ CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.76) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7362.11 via Frontend Transport; Tue, 5 Mar 2024 10:16:01 +0000
+Received: from BOW36EX19A.micron.com (137.201.85.33) by BOW17EX19A.micron.com
+ (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Tue, 5 Mar
+ 2024 03:16:00 -0700
+Received: from BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f]) by
+ BOW36EX19A.micron.com ([fe80::bbd8:8149:f98d:966f%8]) with mapi id
+ 15.02.1258.028; Tue, 5 Mar 2024 03:16:00 -0700
+From: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>
+To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC: "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"john@jagalactic.com" <john@jagalactic.com>, Eishan Mirakhur
+	<emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, Ravis OpenSrc
+	<Ravis.OpenSrc@micron.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>
+Subject: Re: [PATCH v2 0/2] Add log related mailbox commands
+Thread-Topic: [PATCH v2 0/2] Add log related mailbox commands
+Thread-Index: AQHabuYetwOARg/uKUeac5mGYlviyQ==
+Date: Tue, 5 Mar 2024 10:16:00 +0000
+Message-ID: <a5e634b79b284f55802c73a188540ca9@micron.com>
+References: <20240222172350.512-1-sthanneeru.opensrc@micron.com>
+ <65e631951ff61_b62b294e1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <65e631951ff61_b62b294e1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mt-whitelisted: matched
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301082248.3456086-1-horenchuang@bytedance.com>
- <20240301082248.3456086-2-horenchuang@bytedance.com> <87jzmibtyh.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87jzmibtyh.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Date: Tue, 5 Mar 2024 01:28:55 -0800
-Message-ID: <CAKPbEqrti2x05n5QhXtefhu+C=xmMUaH8mMwDy83LVN3Fj6nDw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v1 1/1] memory tier: acpi/hmat: create
- CPUless memory tiers after obtaining HMAT info
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, aneesh.kumar@linux.ibm.com, mhocko@suse.com, 
-	tj@kernel.org, john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, linux-cxl@vger.kernel.org, 
-	qemu-devel@nongnu.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|CO1PR08MB6596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 639fb919-40a3-442e-52a0-08dc3cfd4250
+X-EXT-ByPass: 1
+X-MT-RULE-Whitelisted: Triggered
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OywWRE3vW8DG/2EGotUTIkwnEf9TUPsM114TJnEWXABrwPeP5DUt9V8sJ7gNKt5RUfdJ3d8R859XHlPxuOlFPRa895BBia4bBw6/BiF1hnuxgBWWAmIJkopI60PJm9PtUJFQLADiapxjBTp+jSw5gVx9nF+0uygpAydNfJeVDO/eG478h6x4VjBxxCe2jEqf7fib4kkfXC5uA6bz9Tf6IeDp03fXh9POHhZPJpFpLg+nofZg6sBhe5Ytw8TihB3xoNRV3y2v14Q68+mlv6pKU/SX8Kh/UoqXe/iZaCgNJme32FdYYVh78EAcNk9VeB4lhjktta4i2nJDeMewFEePaEiz901+Axhju62ngJim2Vm7GRZC7/hG6d4AlJmO49fJCVjdNKoxQu9hKZgi2kaawKl3bOMcZcRk1iwF1TZo9+VI2mCBx/qmEGeC+tYO4++Mx78UXbMLzbTjo9IFtlgi/NYbuAHFA198vjAXZ2aRyJ+019935a7mlLjT8IEVfwKwtYFl/blxUt4nsNltJeIRaLh3ywSqxshomGBfl16ONV3Td4sRmUPGFh6yO/fBjArTm1F26KqcZJ1eSU/rrmbyD33VZzBety/IOIdukj+25ug4yhKhRdkxCEWZcsvYDO9u5CQWL8xhpW+i/R/n9542dK/qd24AaDF6T2OfFaljzx5rYMF/qy/SOeIV32Ey8SoM50IlXqSrjEZXYV5YHrtOCTZYm+erIpI5kfq4uyp+0/bxyB0w7miEqVchznf6lOzn
+X-Forefront-Antispam-Report:
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 10:16:01.5783
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 639fb919-40a3-442e-52a0-08dc3cfd4250
+X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR08MB6596
 
-On Sun, Mar 3, 2024 at 6:42=E2=80=AFPM Huang, Ying <ying.huang@intel.com> w=
-rote:
->
-> Hi, Jack,
->
-> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
->
-> > * Introduce `mt_init_with_hmat()`
-> > We defer memory tier initialization for those CPUless NUMA nodes
-> > until acquiring HMAT info. `mt_init_with_hmat()` is introduced to
-> > post-create CPUless memory tiers after obtaining HMAT info.
-> > It iterates through each CPUless memory node, creating memory tiers if
-> > necessary. Finally, it calculates demotion tables again at the end.
-> >
-> > * Introduce `hmat_find_alloc_memory_type()`
-> > Find or allocate a memory type in the `hmat_memory_types` list.
-> >
-> > * Make `set_node_memory_tier()` more generic
-> > This function can also be used for setting other memory types for a nod=
-e.
-> > To do so, a new argument is added to specify a memory type.
-> >
-> > * Handle cases where there is no HMAT when creating memory tiers
-> > If no HMAT is specified, it falls back to using `default_dram_type`.
-> >
-> > * Change adist calculation code to use another new lock, mt_perf_lock.
-> > Iterating through CPUlist nodes requires holding the `memory_tier_lock`=
-.
-> > However, `mt_calc_adistance()` will end up trying to acquire the same l=
-ock,
-> > leading to a potential deadlock. Therefore, we propose introducing a
-> > standalone `mt_perf_lock` to protect `default_dram_perf`. This approach=
- not
-> > only avoids deadlock but also prevents holding a large lock simultaneou=
-sly.
->
-> The patch description is used to described why we need the change, and
-> how we do that, but not what we do.  People can tell what is done from
-> the code itself.
->
 
-Got it. Thanks. Will rewrite it after the code is finalized.
+> -----Original Message-----
+> From: Dan Williams <dan.j.williams@intel.com>
+> Sent: Tuesday, March 5, 2024 2:10 AM
+> To: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>; linux-
+> cxl@vger.kernel.org; linux-mm@kvack.org
+> Cc: Jonathan.Cameron@huawei.com; dan.j.williams@intel.com;
+> john@jagalactic.com; Eishan Mirakhur <emirakhur@micron.com>; Ajay Joshi
+> <ajayjoshi@micron.com>; Ravis OpenSrc <Ravis.OpenSrc@micron.com>;
+> Srinivasulu Thanneeru <sthanneeru@micron.com>
+> Subject: [EXT] Re: [PATCH v2 0/2] Add log related mailbox commands
+>=20
+> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
+> you recognize the sender and were expecting this message.
+>=20
+>=20
+> Any specific reason to include linux-mm on this enabling? I suspect this
+> topic is only of interest to linux-cxl. Lets drop linux-mm from a v3
+> posting.
 
-> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
-> > ---
-> >  drivers/acpi/numa/hmat.c     |  3 ++
-> >  include/linux/memory-tiers.h |  6 +++
-> >  mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
-> >  3 files changed, 77 insertions(+), 8 deletions(-)
+Sorry, it's a copy paste mistake.
+Agreed, will drop linux-mm from V3.=20
+>=20
+> sthanneeru.opensrc@ wrote:
+> > From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
 > >
-> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> > index d6b85f0f6082..9f57338b3cb5 100644
-> > --- a/drivers/acpi/numa/hmat.c
-> > +++ b/drivers/acpi/numa/hmat.c
-> > @@ -1038,6 +1038,9 @@ static __init int hmat_init(void)
-> >       if (!hmat_set_default_dram_perf())
-> >               register_mt_adistance_algorithm(&hmat_adist_nb);
-> >
-> > +     /* Post-create CPUless memory tiers after getting HMAT info */
-> > +     mt_init_with_hmat();
-> > +
-> >       return 0;
-> >  out_put:
-> >       hmat_free_structures();
-> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
-h
-> > index 69e781900082..2f845e90c033 100644
-> > --- a/include/linux/memory-tiers.h
-> > +++ b/include/linux/memory-tiers.h
-> > @@ -48,6 +48,7 @@ int mt_calc_adistance(int node, int *adist);
-> >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
-> >                            const char *source);
-> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
-> > +void mt_init_with_hmat(void);
->
-> HMAT isn't universally available.  It's a driver in fact.  So, don't put
-> driver specific code in general code.
->
+> > Add support to expose following mailbox commands to userspace
+> > for clearing and populating the Vendor debug log and
+> > Component State dump log in certain scenarios,
+> > allowing for the aggregation of results over time.
+>=20
+> What is missing for me here is why the ioctl() ABI is suitable for both
+> of these. The Vendor Debug Log seems straightforward to enable via
+> ioctl() since there is no background operation entanglement, no
+> population complexity, and no reference to other payloads.
+>=20
+> The Component State Dump has several caveats in my mind for ioctl() not
+> being a suitable ABI:
+>=20
+> 1/ Populate Log has an unreasonable expectation that the submitter can
+> monopolize the mailbox indefinitely. At least that can be solved by
+> Linux only supporting automatically populated Component State Dump logs.
+>=20
+> 2/ Automatic log population requires the caller to handle races with
+> auto-population. The kernel need not export that complexity to
+> userspace. This is not fatal to the proposal, but it has interactions
+> with caveat 3.
+>=20
+> 3/ The Component State Dump format wants to reference events in the
+> Event Log, if the Event Log has been cleared then, per the spec, the
+> Component State Dump must not reference the Event Handle. To me that
+> implies that the code that clears event records must be careful to not
+> destroy linkage to component state information. That suggests that the
+> proper place to dump the component state log is an addendum to the
+> current trace events, before that code clears the event record.
+>=20
+> Something roughly like this:
 
-Please see below regarding "move code to hmat.c"
+Thank you for suggesting this approach.
+Next version V3, will add "clear log" for Component State Dump separately,
+as suggested bellow. Probably as a separate patch.
 
-> >  #ifdef CONFIG_MIGRATION
-> >  int next_demotion_node(int node);
-> >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
-> > @@ -136,5 +137,10 @@ static inline int mt_perf_to_adistance(struct acce=
-ss_coordinate *perf, int *adis
-> >  {
-> >       return -EIO;
-> >  }
-> > +
-> > +static inline void mt_init_with_hmat(void)
-> > +{
-> > +
-> > +}
-> >  #endif       /* CONFIG_NUMA */
-> >  #endif  /* _LINUX_MEMORY_TIERS_H */
-> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> > index 0537664620e5..7a0a579b3deb 100644
-> > --- a/mm/memory-tiers.c
-> > +++ b/mm/memory-tiers.c
-> > @@ -35,7 +35,9 @@ struct node_memory_type_map {
-> >  };
-> >
-> >  static DEFINE_MUTEX(memory_tier_lock);
-> > +static DEFINE_MUTEX(mt_perf_lock);
-> >  static LIST_HEAD(memory_tiers);
-> > +static LIST_HEAD(hmat_memory_types);
-> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
-> >  struct memory_dev_type *default_dram_type;
-> >
-> > @@ -502,7 +504,7 @@ static inline void __init_node_memory_type(int node=
-, struct memory_dev_type *mem
-> >       }
-> >  }
-> >
-> > -static struct memory_tier *set_node_memory_tier(int node)
-> > +static struct memory_tier *set_node_memory_tier(int node, struct memor=
-y_dev_type *new_memtype)
->
-> No. memory_dev_type are passed to the function via node_memory_types[node=
-].memtype.
->
-
-Got it. Will mimic the way kmem.c does. Thanks.
-
-> >  {
-> >       struct memory_tier *memtier;
-> >       struct memory_dev_type *memtype;
-> > @@ -514,7 +516,7 @@ static struct memory_tier *set_node_memory_tier(int=
- node)
-> >       if (!node_state(node, N_MEMORY))
-> >               return ERR_PTR(-EINVAL);
-> >
-> > -     __init_node_memory_type(node, default_dram_type);
-> > +     __init_node_memory_type(node, new_memtype);
-> >
-> >       memtype =3D node_memory_types[node].memtype;
-> >       node_set(node, memtype->nodes);
-> > @@ -623,6 +625,56 @@ void clear_node_memory_type(int node, struct memor=
-y_dev_type *memtype)
-> >  }
-> >  EXPORT_SYMBOL_GPL(clear_node_memory_type);
-> >
-> > +static struct memory_dev_type *hmat_find_alloc_memory_type(int adist)
->
-> Similar function existed in drivers/dax/kmem.c.  Please abstract them
-> and move them here.
->
-
-Got it. Will try. Thanks.
-
-> > +{
-> > +     bool found =3D false;
-> > +     struct memory_dev_type *mtype;
-> > +
-> > +     list_for_each_entry(mtype, &hmat_memory_types, list) {
-> > +             if (mtype->adistance =3D=3D adist) {
-> > +                     found =3D true;
-> > +                     break;
-> > +             }
-> > +     }
-> > +     if (!found) {
-> > +             mtype =3D alloc_memory_type(adist);
-> > +             if (!IS_ERR(mtype))
-> > +                     list_add(&mtype->list, &hmat_memory_types);
-> > +     }
-> > +     return mtype;
-> > +}
-> > +
-> > +static void mt_create_with_hmat(int node)
-> > +{
-> > +     struct memory_dev_type *mtype =3D NULL;
-> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
-> > +
-> > +     mt_calc_adistance(node, &adist);
-> > +     if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
-> > +             mtype =3D hmat_find_alloc_memory_type(adist);
-> > +             if (IS_ERR(mtype))
-> > +                     pr_err("%s() failed to allocate a tier\n", __func=
-__);
-> > +     } else {
-> > +             mtype =3D default_dram_type;
-> > +     }
-> > +
-> > +     set_node_memory_tier(node, mtype);
-> > +}
-> > +
-> > +void mt_init_with_hmat(void)
-> > +{
-> > +     int nid;
-> > +
-> > +     mutex_lock(&memory_tier_lock);
-> > +     for_each_node_state(nid, N_MEMORY)
-> > +             if (!node_state(nid, N_CPU))
-> > +                     mt_create_with_hmat(nid);
-> > +
-> > +     establish_demotion_targets();
-> > +     mutex_unlock(&memory_tier_lock);
-> > +}
-> > +EXPORT_SYMBOL_GPL(mt_init_with_hmat);
-> > +
->
-> I guess that we can put most hmat related code above in hmat.c.
->
-
-To put the heat-related code to hmat.c I will need to export some
-static functions in memory-tiers.c, like set_node_memory_tier() and
-establish_demotion_targets(). Is that ok?
-
-> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
-r *prefix)
-> >  {
-> >       pr_info(
-> > @@ -636,7 +688,7 @@ int mt_set_default_dram_perf(int nid, struct access=
-_coordinate *perf,
-> >  {
-> >       int rc =3D 0;
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> > +     mutex_lock(&mt_perf_lock);
-> >       if (default_dram_perf_error) {
-> >               rc =3D -EIO;
-> >               goto out;
-> > @@ -684,7 +736,7 @@ int mt_set_default_dram_perf(int nid, struct access=
-_coordinate *perf,
-> >       }
-> >
-> >  out:
-> > -     mutex_unlock(&memory_tier_lock);
-> > +     mutex_unlock(&mt_perf_lock);
-> >       return rc;
-> >  }
-> >
-> > @@ -700,7 +752,7 @@ int mt_perf_to_adistance(struct access_coordinate *=
-perf, int *adist)
-> >           perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
-> >               return -EINVAL;
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> > +     mutex_lock(&mt_perf_lock);
-> >       /*
-> >        * The abstract distance of a memory node is in direct proportion=
- to
-> >        * its memory latency (read + write) and inversely proportional t=
-o its
-> > @@ -713,7 +765,7 @@ int mt_perf_to_adistance(struct access_coordinate *=
-perf, int *adist)
-> >               (default_dram_perf.read_latency + default_dram_perf.write=
-_latency) *
-> >               (default_dram_perf.read_bandwidth + default_dram_perf.wri=
-te_bandwidth) /
-> >               (perf->read_bandwidth + perf->write_bandwidth);
-> > -     mutex_unlock(&memory_tier_lock);
-> > +     mutex_unlock(&mt_perf_lock);
-> >
-> >       return 0;
-> >  }
-> > @@ -797,7 +849,7 @@ static int __meminit memtier_hotplug_callback(struc=
-t notifier_block *self,
-> >               break;
-> >       case MEM_ONLINE:
-> >               mutex_lock(&memory_tier_lock);
-> > -             memtier =3D set_node_memory_tier(arg->status_change_nid);
-> > +             memtier =3D set_node_memory_tier(arg->status_change_nid, =
-default_dram_type);
-> >               if (!IS_ERR(memtier))
-> >                       establish_demotion_targets();
-> >               mutex_unlock(&memory_tier_lock);
-> > @@ -836,7 +888,15 @@ static int __init memory_tier_init(void)
-> >        * types assigned.
-> >        */
-> >       for_each_node_state(node, N_MEMORY) {
-> > -             memtier =3D set_node_memory_tier(node);
-> > +             if (!node_state(node, N_CPU))
-> > +                     /*
-> > +                      * Defer memory tier initialization on CPUless nu=
-ma nodes.
-> > +                      * These will be initialized when HMAT informatio=
-n is
-> > +                      * available.
-> > +                      */
-> > +                     continue;
-> > +
-> > +             memtier =3D set_node_memory_tier(node, default_dram_type)=
-;
->
-> On system with HMAT, how to fall back CPU-less node to
-> default_dram_type?  I found your description, but I don't find it in code=
-.
->
-
-I assume you meant without HMAT, if so,
-because if no HMAT, adist will not be updated in mt_calc_adistance():
-+ int adist =3D MEMTIER_ADISTANCE_DRAM;
-+
-+ mt_calc_adistance(node, &adist);
-+ if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
-=E2=80=A6
-+ } else {
-+ mtype =3D default_dram_type;
-+ }
-+
-+ set_node_memory_tier(node, mtype);
-
-> >               if (IS_ERR(memtier))
-> >                       /*
-> >                        * Continue with memtiers we are able to setup
->
-> --
-> Best Regards,
-> Huang, Ying
---=20
-Best regards,
-Ho-Ren (Jack) Chuang
-=E8=8E=8A=E8=B3=80=E4=BB=BB
+>=20
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 9adda4795eb7..498b2a0b3e76 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -941,7 +941,8 @@ static int cxl_clear_event_record(struct
+> cxl_memdev_state *mds,
+>  }
+>=20
+>  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> -                                   enum cxl_event_log_type type)
+> +                                   enum cxl_event_log_type type,
+> +                                   struct cxl_component_state_dump *csd)
+>  {
+>         struct cxl_memdev *cxlmd =3D mds->cxlds.cxlmd;
+>         struct device *dev =3D mds->cxlds.dev;
+> @@ -977,9 +978,12 @@ static void cxl_mem_get_records_log(struct
+> cxl_memdev_state *mds,
+>                 if (!nr_rec)
+>                         break;
+>=20
+> -               for (i =3D 0; i < nr_rec; i++)
+> +               for (i =3D 0; i < nr_rec; i++) {
+>                         __cxl_event_trace_record(cxlmd, type,
+>                                                  &payload->records[i]);
+> +                       if (is_event_referenced(csd, type, &payload->reco=
+rds[i]))
+> +                               trace_csd(csd, ...);
+> +               }
+>=20
+>                 if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+>                         trace_cxl_overflow(cxlmd, type, payload);
+>=20
+> ...but in general this cover letter needs to comment on the long term
+> suitability of the ABI.
+Will add more details to cover letter in V3.
