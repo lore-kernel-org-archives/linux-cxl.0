@@ -1,222 +1,404 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE9AEC4
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 00:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78607ECF;
+	Wed,  6 Mar 2024 02:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709684344; cv=none; b=L5NCXnmwAX+Yb6qpxCilItIWEx6lb8ossUuTKpgqd1Uc6AeYHhhJOIg+OedepIy7t8KvX61jheuVplO1Hk5elNhA/peIRwiC5BSiNWvSPvyoX9cxjuTUn5SlEkNz7nC9EZl9GumkRQ8kpbxcCjiF4fJt3II1W49Bh6yL07BHNWA=
+	t=1709692060; cv=none; b=Ps45n4eD3vgokxFGHUr8xQIs3VKuMROekPDzQ26vOij9PBmJZoxd90a14RP2fOnk7cCxhX0bIATwhDlkOHBxdkpHogRYoyK+qmkVHzq4d6GMJ+ncFmaK2GQ1gvWnIjartx2SanZQX2iMqmowCfUsBou68nHUzLWyOsuc4xGTPNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709684344; c=relaxed/simple;
-	bh=ELE4avQo+d8QsZ45q+yVs7D3nMNlIdGR5uEQwUa3lHA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rJsZnUTz1o+eObRDZl1Tj8InQ4fn+oBVk10SaPwmWNPyMad2Y798c0uuGmZA7RijUxq9sBbQlD76AA+CZSOjnGKgVDjMINXNDh9h++CYfby2k17Ptj0P6kczvYIOmhgoft4blinFt26+X3xOarNLcIOOgLvPkf5/KFjRDrfJca0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eixvOyPd; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1709692060; c=relaxed/simple;
+	bh=XDNTXC9Xxd0YQ5QcW7RTouxzsRfUoLkVDKJefb4p6HY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YQ642NBf0m7Eop1NTynYbft/YW3f74I0eDIbim7YK4FU17TqcACVNfXquLRwMa8s9yJ3yZBMJV7y2iISwxS6rEYNDERoobZZF1ltqc08gjN1Bb+DdMf5HPiIQ01ZIwcPwmhUPC6Qi89KY+YO4HkywjTo+Y7qYPzR2lxbhhfPNDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BElsvnoG; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eixvOyPd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BElsvnoG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709684342; x=1741220342;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=ELE4avQo+d8QsZ45q+yVs7D3nMNlIdGR5uEQwUa3lHA=;
-  b=eixvOyPdz+iFGgnSk34/64ZVSIrVBKQEng35thSCqqY3KOxudnnth40k
-   cO5EAdK4n4nNYvJIrSeZw8XgeXbYUAKLXaZkvkHVhbg2ySiBLKnqNueC5
-   8Kajrpwf9JFwEWPdPNV6NlSqzxNi13s9pFJMoXt69d0wt3OCTs0mwXais
-   3SKeNcCoWxBeq9Lnph8MfsjLVJZLGAR0QWe5th9cN4j+VVt9mH8Gy9ssv
-   RKoeloT45EWX1CADA4SBo46/ID2TgCpZ2xsHEPU1TOgAL2pu5CAYzcNRk
-   rCzNJ2SrOP0XthRd5o9ib0C27bcctmFM4d8Pqam7LnOLfE3D4W9ILA3Rk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="29697132"
-X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="29697132"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 16:19:01 -0800
+  t=1709692057; x=1741228057;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=XDNTXC9Xxd0YQ5QcW7RTouxzsRfUoLkVDKJefb4p6HY=;
+  b=BElsvnoGZH19kU1iMpiZFIbbXEti1NV2ETkhWJRSlLb+YoqocCmRoEpd
+   HOY8yo/tKiIvu8TIV/3YDL1XrZwiBY6C3h7QWvG7sJzVJ1cE43Mg+DX7d
+   PIr4tmKtUGKxO3uxuMMeya4NyvaO1rU6Up8k56lbaBQhL92hRjgFnh3/P
+   N4J23rEd5zWTPp0gsXo5s+rIee0uo1lHhoOZ9BW7GDfTtUjA2VINCcYkv
+   GcIB5Xe3uJG1e/YfmU+AHYbk0Z4zPgDAujhvTi8AlGY4DIRDKewx+1Nd1
+   aQAyNoC6eKHaNY0lfKZvhVBqWbsXFP2Sapo+tYlW5RJrXhlrzYGT1NJPT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4142091"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="4142091"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:27:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="9454331"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.247.118.77]) ([10.247.118.77])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 16:18:57 -0800
-Message-ID: <ec7a3108-ba31-4ef6-b873-7762258cd727@intel.com>
-Date: Tue, 5 Mar 2024 17:18:52 -0700
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="9994256"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 18:27:30 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  aneesh.kumar@linux.ibm.com,
+  mhocko@suse.com,  tj@kernel.org,  john@jagalactic.com,  Eishan Mirakhur
+ <emirakhur@micron.com>,  Vinicius Tavares Petrucci
+ <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+  Alistair Popple <apopple@nvidia.com>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  Len Brown <lenb@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Dave Jiang <dave.jiang@intel.com>,  Dan
+ Williams <dan.j.williams@intel.com>,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  linux-acpi@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  "Ho-Ren (Jack)
+ Chuang" <horenc@vt.edu>,  "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+  linux-cxl@vger.kernel.org,  qemu-devel@nongnu.org
+Subject: Re: [External] Re: [PATCH v1 1/1] memory tier: acpi/hmat: create
+ CPUless memory tiers after obtaining HMAT info
+In-Reply-To: <CAKPbEqrti2x05n5QhXtefhu+C=xmMUaH8mMwDy83LVN3Fj6nDw@mail.gmail.com>
+	(Ho-Ren Chuang's message of "Tue, 5 Mar 2024 01:28:55 -0800")
+References: <20240301082248.3456086-1-horenchuang@bytedance.com>
+	<20240301082248.3456086-2-horenchuang@bytedance.com>
+	<87jzmibtyh.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAKPbEqrti2x05n5QhXtefhu+C=xmMUaH8mMwDy83LVN3Fj6nDw@mail.gmail.com>
+Date: Wed, 06 Mar 2024 10:25:35 +0800
+Message-ID: <87edco85b4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] cxl: Add checks to access_coordinate calculation to
- fail missing data
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net
-References: <20240229002542.634982-1-dave.jiang@intel.com>
- <20240229002542.634982-2-dave.jiang@intel.com>
- <20240229174427.00000e9e@Huawei.com>
- <b6b8ba4f-0911-4c69-84ab-32027fffbdf4@intel.com>
-In-Reply-To: <b6b8ba4f-0911-4c69-84ab-32027fffbdf4@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
 
+> On Sun, Mar 3, 2024 at 6:42=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
+ wrote:
+>>
+>> Hi, Jack,
+>>
+>> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+>>
+>> > * Introduce `mt_init_with_hmat()`
+>> > We defer memory tier initialization for those CPUless NUMA nodes
+>> > until acquiring HMAT info. `mt_init_with_hmat()` is introduced to
+>> > post-create CPUless memory tiers after obtaining HMAT info.
+>> > It iterates through each CPUless memory node, creating memory tiers if
+>> > necessary. Finally, it calculates demotion tables again at the end.
+>> >
+>> > * Introduce `hmat_find_alloc_memory_type()`
+>> > Find or allocate a memory type in the `hmat_memory_types` list.
+>> >
+>> > * Make `set_node_memory_tier()` more generic
+>> > This function can also be used for setting other memory types for a no=
+de.
+>> > To do so, a new argument is added to specify a memory type.
+>> >
+>> > * Handle cases where there is no HMAT when creating memory tiers
+>> > If no HMAT is specified, it falls back to using `default_dram_type`.
+>> >
+>> > * Change adist calculation code to use another new lock, mt_perf_lock.
+>> > Iterating through CPUlist nodes requires holding the `memory_tier_lock=
+`.
+>> > However, `mt_calc_adistance()` will end up trying to acquire the same =
+lock,
+>> > leading to a potential deadlock. Therefore, we propose introducing a
+>> > standalone `mt_perf_lock` to protect `default_dram_perf`. This approac=
+h not
+>> > only avoids deadlock but also prevents holding a large lock simultaneo=
+usly.
+>>
+>> The patch description is used to described why we need the change, and
+>> how we do that, but not what we do.  People can tell what is done from
+>> the code itself.
+>>
+>
+> Got it. Thanks. Will rewrite it after the code is finalized.
+>
+>> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+>> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+>> > ---
+>> >  drivers/acpi/numa/hmat.c     |  3 ++
+>> >  include/linux/memory-tiers.h |  6 +++
+>> >  mm/memory-tiers.c            | 76 ++++++++++++++++++++++++++++++++----
+>> >  3 files changed, 77 insertions(+), 8 deletions(-)
+>> >
+>> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> > index d6b85f0f6082..9f57338b3cb5 100644
+>> > --- a/drivers/acpi/numa/hmat.c
+>> > +++ b/drivers/acpi/numa/hmat.c
+>> > @@ -1038,6 +1038,9 @@ static __init int hmat_init(void)
+>> >       if (!hmat_set_default_dram_perf())
+>> >               register_mt_adistance_algorithm(&hmat_adist_nb);
+>> >
+>> > +     /* Post-create CPUless memory tiers after getting HMAT info */
+>> > +     mt_init_with_hmat();
+>> > +
+>> >       return 0;
+>> >  out_put:
+>> >       hmat_free_structures();
+>> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers=
+.h
+>> > index 69e781900082..2f845e90c033 100644
+>> > --- a/include/linux/memory-tiers.h
+>> > +++ b/include/linux/memory-tiers.h
+>> > @@ -48,6 +48,7 @@ int mt_calc_adistance(int node, int *adist);
+>> >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>> >                            const char *source);
+>> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+>> > +void mt_init_with_hmat(void);
+>>
+>> HMAT isn't universally available.  It's a driver in fact.  So, don't put
+>> driver specific code in general code.
+>>
+>
+> Please see below regarding "move code to hmat.c"
+>
+>> >  #ifdef CONFIG_MIGRATION
+>> >  int next_demotion_node(int node);
+>> >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+>> > @@ -136,5 +137,10 @@ static inline int mt_perf_to_adistance(struct acc=
+ess_coordinate *perf, int *adis
+>> >  {
+>> >       return -EIO;
+>> >  }
+>> > +
+>> > +static inline void mt_init_with_hmat(void)
+>> > +{
+>> > +
+>> > +}
+>> >  #endif       /* CONFIG_NUMA */
+>> >  #endif  /* _LINUX_MEMORY_TIERS_H */
+>> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+>> > index 0537664620e5..7a0a579b3deb 100644
+>> > --- a/mm/memory-tiers.c
+>> > +++ b/mm/memory-tiers.c
+>> > @@ -35,7 +35,9 @@ struct node_memory_type_map {
+>> >  };
+>> >
+>> >  static DEFINE_MUTEX(memory_tier_lock);
+>> > +static DEFINE_MUTEX(mt_perf_lock);
+>> >  static LIST_HEAD(memory_tiers);
+>> > +static LIST_HEAD(hmat_memory_types);
+>> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+>> >  struct memory_dev_type *default_dram_type;
+>> >
+>> > @@ -502,7 +504,7 @@ static inline void __init_node_memory_type(int nod=
+e, struct memory_dev_type *mem
+>> >       }
+>> >  }
+>> >
+>> > -static struct memory_tier *set_node_memory_tier(int node)
+>> > +static struct memory_tier *set_node_memory_tier(int node, struct memo=
+ry_dev_type *new_memtype)
+>>
+>> No. memory_dev_type are passed to the function via node_memory_types[nod=
+e].memtype.
+>>
+>
+> Got it. Will mimic the way kmem.c does. Thanks.
+>
+>> >  {
+>> >       struct memory_tier *memtier;
+>> >       struct memory_dev_type *memtype;
+>> > @@ -514,7 +516,7 @@ static struct memory_tier *set_node_memory_tier(in=
+t node)
+>> >       if (!node_state(node, N_MEMORY))
+>> >               return ERR_PTR(-EINVAL);
+>> >
+>> > -     __init_node_memory_type(node, default_dram_type);
+>> > +     __init_node_memory_type(node, new_memtype);
+>> >
+>> >       memtype =3D node_memory_types[node].memtype;
+>> >       node_set(node, memtype->nodes);
+>> > @@ -623,6 +625,56 @@ void clear_node_memory_type(int node, struct memo=
+ry_dev_type *memtype)
+>> >  }
+>> >  EXPORT_SYMBOL_GPL(clear_node_memory_type);
+>> >
+>> > +static struct memory_dev_type *hmat_find_alloc_memory_type(int adist)
+>>
+>> Similar function existed in drivers/dax/kmem.c.  Please abstract them
+>> and move them here.
+>>
+>
+> Got it. Will try. Thanks.
+>
+>> > +{
+>> > +     bool found =3D false;
+>> > +     struct memory_dev_type *mtype;
+>> > +
+>> > +     list_for_each_entry(mtype, &hmat_memory_types, list) {
+>> > +             if (mtype->adistance =3D=3D adist) {
+>> > +                     found =3D true;
+>> > +                     break;
+>> > +             }
+>> > +     }
+>> > +     if (!found) {
+>> > +             mtype =3D alloc_memory_type(adist);
+>> > +             if (!IS_ERR(mtype))
+>> > +                     list_add(&mtype->list, &hmat_memory_types);
+>> > +     }
+>> > +     return mtype;
+>> > +}
+>> > +
+>> > +static void mt_create_with_hmat(int node)
+>> > +{
+>> > +     struct memory_dev_type *mtype =3D NULL;
+>> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
+>> > +
+>> > +     mt_calc_adistance(node, &adist);
+>> > +     if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
+>> > +             mtype =3D hmat_find_alloc_memory_type(adist);
+>> > +             if (IS_ERR(mtype))
+>> > +                     pr_err("%s() failed to allocate a tier\n", __fun=
+c__);
+>> > +     } else {
+>> > +             mtype =3D default_dram_type;
+>> > +     }
+>> > +
+>> > +     set_node_memory_tier(node, mtype);
+>> > +}
+>> > +
+>> > +void mt_init_with_hmat(void)
+>> > +{
+>> > +     int nid;
+>> > +
+>> > +     mutex_lock(&memory_tier_lock);
+>> > +     for_each_node_state(nid, N_MEMORY)
+>> > +             if (!node_state(nid, N_CPU))
+>> > +                     mt_create_with_hmat(nid);
+>> > +
+>> > +     establish_demotion_targets();
+>> > +     mutex_unlock(&memory_tier_lock);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(mt_init_with_hmat);
+>> > +
+>>
+>> I guess that we can put most hmat related code above in hmat.c.
+>>
+>
+> To put the heat-related code to hmat.c I will need to export some
+> static functions in memory-tiers.c, like set_node_memory_tier() and
+> establish_demotion_targets(). Is that ok?
 
-On 3/5/24 3:36 PM, Dave Jiang wrote:
-> 
-> 
-> On 2/29/24 10:44 AM, Jonathan Cameron wrote:
->> On Wed, 28 Feb 2024 17:25:42 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> Jonathan noted that when the coordinates for host bridge and switches
->>> can be 0s if no actual data are retrieved and the calculation continues.
->>> The resulting number would be inaccurate. Add checks to ensure that the
->>> calculation would complete only if the numbers are valid.
->>>
->>> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
->> Hi Dave,
->>
->> Whilst I think the fix is right, it is getting hard to read. Maybe
->> a rethink is needed on how that iteration works?
->>
->>> ---
->>>  drivers/cxl/core/port.c | 31 +++++++++++++++++++++++++++----
->>>  1 file changed, 27 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->>> index e1d30a885700..2c82fe24b789 100644
->>> --- a/drivers/cxl/core/port.c
->>> +++ b/drivers/cxl/core/port.c
->>> @@ -2110,6 +2110,20 @@ static void combine_coordinates(struct access_coordinate *c1,
->>>  		c1->read_latency += c2->read_latency;
->>>  }
->>>  
->>> +static bool coordinates_invalid(struct access_coordinate *c)
->>> +{
->>> +	if (!c->read_bandwidth && !c->write_bandwidth &&
->>> +	    !c->read_latency && !c->write_latency)
->>> +		return true;
->>> +
->>> +	return false;
->>> +}
->>> +
->>> +static bool parent_port_is_cxl_root(struct cxl_port *port)
->>> +{
->>> +	return is_cxl_root(to_cxl_port(port->dev.parent));
->>> +}
->>> +
->>>  /**
->>>   * cxl_endpoint_get_perf_coordinates - Retrieve performance numbers stored in dports
->>>   *				   of CXL path
->>> @@ -2142,16 +2156,25 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>>  	 * port each iteration. If the parent is cxl root then there is
->>>  	 * nothing to gather.
->>>  	 */
->>> -	while (!is_cxl_root(to_cxl_port(iter->dev.parent))) {
->>> -		combine_coordinates(&c, &dport->sw_coord);
->>> +	while (!parent_port_is_cxl_root(iter)) {
->>> +		iter = to_cxl_port(iter->dev.parent);
->>> +
->>> +		/* There's no CDAT for the host bridge, so skip if so. */
->>
->> Comment refers to skipping whereas code is 'doing more' for the other case
->> so this is confusing to me.
->>
->> The inverse of this only occurs on the last iteration I think.
->>
->> Possibly a do / while instead of a while will do it.
->> I'm far from confident though as all the levels of look up have
->> me too confused.
-> 
-> So this is somewhat tricky. For example:
-> devices/pci0000:35/0000:35:01.0/0000:37:00.0/mem5
-> 
-> In this case the endpoint is attached to the host bridge without any switches. The endpoint is 0000:37:00.0 and the host bridge down stream port is 0000:35:01.0. In this instance there is no switch and therefore switch CDAT, but there is a valid dport. So we would skip the dport->sw_coord. However, we do need to pick up the link_latency between endpoint and downstream port. So we spend 1 iteration in the loop and skips the dport->sw_coord.
-> 
-> devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/0000:c1:00.0/0000:c2:00.0/mem8
-> 
-> Now in this case there's a CXL switch in between. So in first iteration, we pick up the dport->sw_coord. And in second iteration, we skip the dport->sw_coord. However, we would be adding two link_latency. For the link between 0000:c2:00.0 (endpoint) and 0000:c1:00.0 (switch downstream port), and the link between 0000:c0:00.0 (switch upstream port) and 0000:bf:00.0 (host bridge down stream port). So therefore we can't put the sum of link_latency outside of the loop.
-> 
-> Not sure how much better this is:
-> 
-> 	do {
-> 		struct cxl_port *parent_port = to_cxl_port(iter->dev.parent);
-> 
-> 		dport = iter->parent_dport;
-> 		if (!parent_port_is_cxl_root(parent_port)) {
-> 			if (coordinates_invalid(&dport->sw_coord))
-> 				return -EINVAL;
-> 
-> 			combine_coordinates(&c, &dport->sw_coord);
-> 		}
-> 
-> 		c.write_latency += dport->link_latency;
-> 		c.read_latency += dport->link_latency;
-> 		iter = to_cxl_port(iter->dev.parent);
-> 	} while (!parent_port_is_cxl_root(iter));
-> 
-> or:
-> 
-> 	do {
-> 		struct cxl_port *parent_port = to_cxl_port(iter->dev.parent);
-> 
-> 		dport = iter->parent_dport;
-> 		c.write_latency += dport->link_latency;
-> 		c.read_latency += dport->link_latency;
-> 
-> 		if (parent_port_is_cxl_root(parent_port))
-> 			break;
-> 
-> 		if (coordinates_invalid(&dport->sw_coord))
-> 			return -EINVAL;
-> 
-> 		combine_coordinates(&c, &dport->sw_coord);
-> 		iter = to_cxl_port(iter->dev.parent);
-> 	} while (!parent_port_is_cxl_root(iter));
+Think about this again.  In fact, although there are "_hmat" in the name
+of the above functions, the code has nothing to do with hmat.  So, we
+should rename these functions, but don't need to move them to hmat.c.
+And, to set memory_tier for CPUless node on system without HMAT.  We
+should call mt_init_with_hmat() with late_initcall().  Where HMAT
+information is expected to be available on system with HMAT.  On system
+without HMAT, default_dram_type will be used.
 
-Actually, I think if we just make it dport->coord instead of dport->sw_coord and dport->hb_coord, we can remove the check and everything should work out properly. 
+>> >  static void dump_hmem_attrs(struct access_coordinate *coord, const ch=
+ar *prefix)
+>> >  {
+>> >       pr_info(
+>> > @@ -636,7 +688,7 @@ int mt_set_default_dram_perf(int nid, struct acces=
+s_coordinate *perf,
+>> >  {
+>> >       int rc =3D 0;
+>> >
+>> > -     mutex_lock(&memory_tier_lock);
+>> > +     mutex_lock(&mt_perf_lock);
+>> >       if (default_dram_perf_error) {
+>> >               rc =3D -EIO;
+>> >               goto out;
+>> > @@ -684,7 +736,7 @@ int mt_set_default_dram_perf(int nid, struct acces=
+s_coordinate *perf,
+>> >       }
+>> >
+>> >  out:
+>> > -     mutex_unlock(&memory_tier_lock);
+>> > +     mutex_unlock(&mt_perf_lock);
+>> >       return rc;
+>> >  }
+>> >
+>> > @@ -700,7 +752,7 @@ int mt_perf_to_adistance(struct access_coordinate =
+*perf, int *adist)
+>> >           perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
+>> >               return -EINVAL;
+>> >
+>> > -     mutex_lock(&memory_tier_lock);
+>> > +     mutex_lock(&mt_perf_lock);
+>> >       /*
+>> >        * The abstract distance of a memory node is in direct proportio=
+n to
+>> >        * its memory latency (read + write) and inversely proportional =
+to its
+>> > @@ -713,7 +765,7 @@ int mt_perf_to_adistance(struct access_coordinate =
+*perf, int *adist)
+>> >               (default_dram_perf.read_latency + default_dram_perf.writ=
+e_latency) *
+>> >               (default_dram_perf.read_bandwidth + default_dram_perf.wr=
+ite_bandwidth) /
+>> >               (perf->read_bandwidth + perf->write_bandwidth);
+>> > -     mutex_unlock(&memory_tier_lock);
+>> > +     mutex_unlock(&mt_perf_lock);
+>> >
+>> >       return 0;
+>> >  }
+>> > @@ -797,7 +849,7 @@ static int __meminit memtier_hotplug_callback(stru=
+ct notifier_block *self,
+>> >               break;
+>> >       case MEM_ONLINE:
+>> >               mutex_lock(&memory_tier_lock);
+>> > -             memtier =3D set_node_memory_tier(arg->status_change_nid);
+>> > +             memtier =3D set_node_memory_tier(arg->status_change_nid,=
+ default_dram_type);
+>> >               if (!IS_ERR(memtier))
+>> >                       establish_demotion_targets();
+>> >               mutex_unlock(&memory_tier_lock);
+>> > @@ -836,7 +888,15 @@ static int __init memory_tier_init(void)
+>> >        * types assigned.
+>> >        */
+>> >       for_each_node_state(node, N_MEMORY) {
+>> > -             memtier =3D set_node_memory_tier(node);
+>> > +             if (!node_state(node, N_CPU))
+>> > +                     /*
+>> > +                      * Defer memory tier initialization on CPUless n=
+uma nodes.
+>> > +                      * These will be initialized when HMAT informati=
+on is
+>> > +                      * available.
+>> > +                      */
+>> > +                     continue;
+>> > +
+>> > +             memtier =3D set_node_memory_tier(node, default_dram_type=
+);
+>>
+>> On system with HMAT, how to fall back CPU-less node to
+>> default_dram_type?  I found your description, but I don't find it in cod=
+e.
+>>
+> I assume you meant without HMAT, if so,
+> because if no HMAT, adist will not be updated in mt_calc_adistance():
 
-> 
-> 
+Sorry, typo.  On system with HMAT, mt_init_with_hmat() will not be
+called.  I have a solution in above comment.
+
+--
+Best Regards,
+Huang, Ying
+
+> + int adist =3D MEMTIER_ADISTANCE_DRAM;
+> +
+> + mt_calc_adistance(node, &adist);
+> + if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
+> =E2=80=A6
+> + } else {
+> + mtype =3D default_dram_type;
+> + }
+> +
+> + set_node_memory_tier(node, mtype);
+>
+>> >               if (IS_ERR(memtier))
+>> >                       /*
+>> >                        * Continue with memtiers we are able to setup
 >>
->>
->> 	do {
->> 		if (coordinates_invalid(&dport->sw_coord))
->> 			return -EINVAL;
->>
->> 		combine_coordinates(&c, &dport->sw_coord);
->> 		iter = to_cxl_port(iter->dev.parent);
->>   		dport = iter->parent_dport;
->> 	} while (!parent_port_is_cxl_root(iter));
->> 	/* Do final link updates */
->> 	c.write_latency += dport->link_latency;
->> 	c.read_latency += dport->link_latency;
->>
->>> +		if (!parent_port_is_cxl_root(iter)) {
->>> +			if (coordinates_invalid(&dport->sw_coord))
->>> +				return -EINVAL;
->>> +
->>> +			combine_coordinates(&c, &dport->sw_coord);
->>> +		}
->>> +
->>>  		c.write_latency += dport->link_latency;
->>>  		c.read_latency += dport->link_latency;
->>> -
->>> -		iter = to_cxl_port(iter->dev.parent);
->>>  		dport = iter->parent_dport;
->>>  	}
->>>  
->>>  	/* Augment with the generic port (host bridge) perf data */
->>> +	if (coordinates_invalid(&dport->hb_coord))
->>> +		return -EINVAL;
->>>  	combine_coordinates(&c, &dport->hb_coord);
->>>  
->>>  	/* Get the calculated PCI paths bandwidth */
->>
-> 
+>> --
+>> Best Regards,
+>> Huang, Ying
