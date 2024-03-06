@@ -1,51 +1,51 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B26086E;
-	Wed,  6 Mar 2024 10:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BE06089F;
+	Wed,  6 Mar 2024 10:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721028; cv=none; b=VfxgMsqLeYTuUT+S3YWUi3rH7zgRxVZQIdsTXvrpOF2J8H6KT+ASKBkMVzWL6WUq4jKa2aYJOIU93+XOqT6+Qx2MxRT84RekScPazdiMO6NtGu86Il1ePnDPvLlC8FootHC1pwxS58cM+9mZzOQVUtmMqFUu6CFYHHKuolTaEsI=
+	t=1709721030; cv=none; b=AY5Pzk5Vc9Yg1Qk7kGLt7h/Ii5A9ub9+XAy4K3ESNXqS/Y/bSIzQTi7Li+W7Aayj8EI2n30wWF8dsjieklQ1/eW9Zo8egbmU51GPlpHt7C7v4aLQBlAo1mjyUFR3Pp+dDhio6Dg8wJAGfGOgmmvFUXnFcx2lq/G/327YGTmuTEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721028; c=relaxed/simple;
-	bh=ZZY/OmJnWGlv4sXJ9ctR7zLIBkL6jlFxWOynKDfrnCI=;
+	s=arc-20240116; t=1709721030; c=relaxed/simple;
+	bh=Nq7SMqNBqa42A9Gw9it0V4iEBEk255GCXGK0EU8r0Nc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B8+1lryIPDqSL5mClX5lNhuprzmp0Y0nfRo3Uqrlk62U58d58/Uuge5qxVTgO4GUKAQAiU3FTzcxrKtqDqFQ/2lrjeHz4VFTXuHjwhcllRjgW/1MmBgRu5VQ13+VxWl3/RxtoLDhkAeDA79oJTqqDgNwTj8bivgb97nGAKOXILs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=T2B9GnSe; arc=none smtp.client-ip=68.232.139.117
+	 MIME-Version; b=l1vVJHVNM5LNn/5XND9Y0gZbLMBdbifNrsN7ivC8YFxgR8sljqpeZtIsluCNROY6kR2rreXpwdr4O7wFiiQZmRpdIzcaviDQVvBTx3DCIafpyjVLXNWHFwFw4/MNRyJYlFmbAUSKNJRwylUAJzxe0ydnZ+B7igXzjKeOH0F5yEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=X++/zVCQ; arc=none smtp.client-ip=139.138.37.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="T2B9GnSe"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="X++/zVCQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709721026; x=1741257026;
+  t=1709721029; x=1741257029;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZZY/OmJnWGlv4sXJ9ctR7zLIBkL6jlFxWOynKDfrnCI=;
-  b=T2B9GnSeb85UdGtzWKDyox6Dtkl+rX8uFeJKgr9LtGFandWmQzdRG2PW
-   vv/1C7vCqx5cXXfifQi4FXmnsheFdCJL4qRdgVGC883DKvJJmsaN70QlU
-   VnzCq8z3nq3oYoAWCXg6mr7M3smvrAYZ0YsanQ0L8qHDKCSgrRPq75Jj9
-   M8ObLQ8gjOPe0yDrGukkhDZ/012StW7yjU3e6oOI4rlrhyazbJTasXfXj
-   WWprqB9yA/z+en5Du5dYS9TfbrkFWk7DkBy9JiRyM/nY6eJyYrrqecbrA
-   r2irn/0XHnaIe8JxFE45UatpG0yGlgWKd3yURHyLbdVh7lLk4Mz39wvjH
+  bh=Nq7SMqNBqa42A9Gw9it0V4iEBEk255GCXGK0EU8r0Nc=;
+  b=X++/zVCQWbD3RwO4sV0R5jBoWm59aunLFlpz3wvSj7tUIUr1+QIcfxcw
+   rUs51YTB9zQ4GsEFyK7E9vjQzv0Au7y/DHG9M/IIFiCx7tL2jEhH7HUXZ
+   chdvdHYTFqV6pzIBWj11H5sAtkQ/5VztBHXXiORyfbehxUOTV2ZPhDbbo
+   0/vGrLBods4ZHkPHoHSMHz4JikXFb9z6EalEfAX2XZhSG7SsF8+yNrddq
+   j3yL4Pimm6h3PUI9+zXPNs6wxWMi1QvXj5go7YYDTGpjexIN++Vqqfss8
+   zIrxwjNOuKfwNc4iyucLrPUjbkzprpGv7peddPfybMqsSH0zoBMZYiYI5
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="151690186"
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="130699036"
 X-IronPort-AV: E=Sophos;i="6.06,208,1705330800"; 
-   d="scan'208";a="151690186"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:29:14 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 111A5EB462;
-	Wed,  6 Mar 2024 19:29:11 +0900 (JST)
+   d="scan'208";a="130699036"
+Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:29:16 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id C7383E5EA4;
+	Wed,  6 Mar 2024 19:29:12 +0900 (JST)
 Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 3D8F5BF3C9;
-	Wed,  6 Mar 2024 19:29:10 +0900 (JST)
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 06543D21CB;
+	Wed,  6 Mar 2024 19:29:12 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 9BBCD2030C7E9;
-	Wed,  6 Mar 2024 19:29:09 +0900 (JST)
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 3D7B22030C7E0;
+	Wed,  6 Mar 2024 19:29:11 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id A5E001A006A;
-	Wed,  6 Mar 2024 18:29:08 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4A1AE1A006A;
+	Wed,  6 Mar 2024 18:29:10 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: y-goto@fujitsu.com,
@@ -68,9 +68,9 @@ Cc: y-goto@fujitsu.com,
 	x86@kernel.org,
 	kexec@lists.infradead.org,
 	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH v3 4/7] dax: pmem: assign a parent resource for vmemmap region for the devdax
-Date: Wed,  6 Mar 2024 18:28:43 +0800
-Message-Id: <20240306102846.1020868-5-lizhijian@fujitsu.com>
+Subject: [PATCH v3 6/7] x86/crash: make device backed vmemmap dumpable for kexec_file_load
+Date: Wed,  6 Mar 2024 18:28:45 +0800
+Message-Id: <20240306102846.1020868-7-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240306102846.1020868-1-lizhijian@fujitsu.com>
 References: <20240306102846.1020868-1-lizhijian@fujitsu.com>
@@ -85,61 +85,55 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28234.006
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28234.006
-X-TMASE-Result: 10--5.083400-10.000000
-X-TMASE-MatchedRID: Q3OJUoK6MKVXk4HjwySOxykMR2LAnMRpFInyGi5rPwK4GyTmeN+AbD13
-	GoPFA1HFIvrftAIhWmLy9zcRSkKatS9AD6DbcToHEVuC0eNRYvKZIt4iAQN6P6oDeu6wu7bqj26
-	lKB/EzKHoHOpl9ZcDR4Ay6p60ZV62fJ5/bZ6npdg7AFczfjr/7Cf8pL7Z+mamZiZ008tHBX0M7U
-	m3uTFNcAFzvFI3lI92rZlDJo+ExYU=
+X-TMASE-Result: 10--8.255800-10.000000
+X-TMASE-MatchedRID: Eprm7pA/VZ5ZxhI5bGrNsjiEPRj9j9rvSdIdCi8Ba4AiqRodPpseIRwE
+	EIVsM/kp/lneBjailE5V00+whwxVQy/7QU2czuUNA9lly13c/gH4uJ1REX4MHbs3Yh2IOCYzJti
+	zbkLGoS92PULLZTziuytFAV6Sdl32oFf+7ciBzQpYKMMlFh4BncnlJe2gk8vIMzT8XBPSpdajxY
+	yRBa/qJXcsDK2xBHh7jaPj0W1qn0Q7AFczfjr/7LEnb/1qBW++QLtrZDNFv46p+VAyfOE7vP5i9
+	RGEpFvIT2g+olvABKw=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-When the pmem is configured as devdax, set the vmemmap region as a child
-of the namespace region so that it can be registered as a separate
-resource later.
+Add resources with specific flags to PT_LOADs of the elfcorehdr so that
+these resources can be dumpable. This change is for kexec_file_load(2)
+while kexec_load(2) setups the PT_LOADs according to its parameters
+by the callers which usually rely on resources' name from /proc/iomem
 
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Vishal Verma <vishal.l.verma@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: Dave Hansen <dave.hansen@linux.intel.com>
 CC: Baoquan He <bhe@redhat.com>
-CC: nvdimm@lists.linux.dev
-CC: linux-cxl@vger.kernel.org
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- drivers/dax/pmem.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/crash.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-index f3c6c67b8412..6ffeb81e6c7c 100644
---- a/drivers/dax/pmem.c
-+++ b/drivers/dax/pmem.c
-@@ -21,6 +21,7 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 	struct nd_dax *nd_dax = to_nd_dax(dev);
- 	struct nd_pfn *nd_pfn = &nd_dax->nd_pfn;
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
-+	struct resource *parent;
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index b6b044356f1b..b8426fedd2cd 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -146,6 +146,8 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	if (!nr_ranges)
+ 		return NULL;
  
- 	ndns = nvdimm_namespace_common_probe(dev);
- 	if (IS_ERR(ndns))
-@@ -39,8 +40,9 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 	pfn_sb = nd_pfn->pfn_sb;
- 	offset = le64_to_cpu(pfn_sb->dataoff);
- 	nsio = to_nd_namespace_io(&ndns->dev);
--	if (!devm_request_mem_region(dev, nsio->res.start, offset,
--				dev_name(&ndns->dev))) {
-+	parent = devm_request_mem_region(dev, nsio->res.start, offset,
-+				dev_name(&ndns->dev));
-+	if (!parent) {
- 		dev_warn(dev, "could not reserve metadata\n");
- 		return ERR_PTR(-EBUSY);
- 	}
-@@ -66,6 +68,8 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 		.memmap_on_memory = false,
- 	};
++	walk_device_backed_vmemmap_res(0, -1, &nr_ranges,
++				       get_nr_ram_ranges_callback);
+ 	/*
+ 	 * Exclusion of crash region and/or crashk_low_res may cause
+ 	 * another range split. So add extra two slots here.
+@@ -212,6 +214,9 @@ static int prepare_elf_headers(void **addr, unsigned long *sz,
+ 	if (ret)
+ 		goto out;
  
-+	pgmap_parent_resource(&pgmap, parent);
++	walk_device_backed_vmemmap_res(0, -1, cmem,
++				       prepare_elf64_ram_headers_callback);
 +
- 	return devm_create_dev_dax(&data);
- }
- 
+ 	/* Exclude unwanted mem ranges */
+ 	ret = elf_header_exclude_ranges(cmem);
+ 	if (ret)
 -- 
 2.29.2
 
