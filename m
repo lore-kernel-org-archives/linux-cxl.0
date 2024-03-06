@@ -1,249 +1,391 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9BF137935
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 17:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709745382; cv=fail; b=qX31uaTNKX3WQYylaT2w8/5+S073Ve9ArWzOvcpN6XA7pqXB7THl3m4JPkX4p9qNYpPUKFtA4Hsev+I/o8eL0OdlE8jonh20gOgQx7cTBqnhg4MCgxGXId7TloslURCeBQ3d5Xzfp/W7cMQ9FPtEv2W2uJ9k6bfsjnrglEXQOgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709745382; c=relaxed/simple;
-	bh=Gh3jfiSKnSN1xov5ue79ocPJrZoPgLWQsyBh5l+yjG4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QAuOKX18C9kb4Ik2LpWqDW/g0EARp81aTa2DxZTMisDUjlYeThXHXTxNDL2v/Ld1X5x1YiDAxuQWgsdR0/Rqbrivb/4uTs43a7VtuSOuf28lWp0dVm21aQgF5HAYLTVyhbLKfNqgJ8AW59njycqFbSQV5Ucowv4QKp/2OIw99Yw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dQR5iGka; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dQR5iGka"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709745381; x=1741281381;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Gh3jfiSKnSN1xov5ue79ocPJrZoPgLWQsyBh5l+yjG4=;
-  b=dQR5iGkaqh/bVxmnqQ/C9oKROPJxzfzQWAH19rCW59s0TIYs9IWIDxdQ
-   kHhBsoGVIl8fm6Hcwwo14oe2c1w6RkMlMN64InlQbF2jcqYQXUJrCupmu
-   /1o84D/DuzCl3mjjXkT8V//BFKpTaznulD4rqnBahp684YWsshD7mPOgv
-   nty3Oz1wr9I3qde/CybLw1vxKnF8tEtXKVT1Tl2SKp2OMtwy9Lr5jXyXt
-   6zTG6KVozHrNSoaz+5zi/EgOC5wocyKoiG3HEB8jYAN46N8fW2Uz1gb5M
-   nmjpO3gaEqbi4qkbMq5sl0SSf8kf69Er9Fft9lyS4cJKOKicoSTtM5jPi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15512942"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="15512942"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 09:16:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="9911708"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2024 09:16:15 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 09:16:12 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 09:16:12 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 6 Mar 2024 09:16:11 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PaFnVaUjYpuIZYsM5pmHHDdiyVVj+UM1VygpEM7Bcx6zRnzFVnJVuRN1H3+so+j+I0W4RPa3tAwNry0UKZeUguGER3OkSLb74sMNmkaNTdV8WFz7ipApokHcBdN79rpWk7m/ayAGiP8Nq1r8cR+P1pEhUacnt4sfUxeSnT1He8TXTZenKegjDhXxcL5pfj19G44EneWu/nVus9wUavfrKWcMkZP6jTIYXVpwQg8udrEEahJrPKkTv7WDdRYFcrgBAE/fWRR8riikKzyvJyOJJ6dgWUyL2J27RJcb+sFfmXVNCPBRzpHBvw8K5zdR++0Ro7hImTcAB4+p7ZsbTdHXkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UYk7jKGp/1G/K+bCBo6YncWTvUD2mFly70BudsC3Wro=;
- b=VdtLUp+tzdU6W2BeN7ROQBlD/js6214U66KAiDIJQ/o0+7ErkOddO6q3XvtpkSMiL4NpeKYL65tUBS6zDM4fd5JxEQcnMbZSLATtucVcnXTS1wO3CfhFDJI/hoHVx2T/OHA3Tz2CUPHm7LoIvfkagpbiPeqULIDXV9UoG/ONhXePM695fCMnSrFJRINn2xhp5kdMG2q4ImoBCYKoU/qulZTiYyIJLk3oX0OvpMjJcVGFDkb4X6N79h2Jz3Gjs8vS64qTFYpMlvXjYxodz3UWpLOM9qmEVFXG98g82geKO9FCLJkpV6XI3U9q5Oy8XZWmXjhm8JwoimXYly7B8ZrV4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB7254.namprd11.prod.outlook.com (2603:10b6:8:10e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
- 2024 17:16:09 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
- 17:16:09 +0000
-Date: Wed, 6 Mar 2024 09:16:07 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yuquan Wang
-	<wangyuquan1236@phytium.com.cn>
-CC: <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>, Robert Richter
-	<rrichter@amd.com>, Terry Bowman <Terry.Bowman@amd.com>,
-	<dan.williams@intel.com>, <ming4.li@intel.com>
-Subject: RE: Enabling internal errors for VH CXL devices: [was: Re: Questions
- about CXL RAS injection test in qemu]
-Message-ID: <65e8a4d74a411_1ecd294f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240306112707.3116081-1-wangyuquan1236@phytium.com.cn>
- <20240306132359.00001956@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240306132359.00001956@Huawei.com>
-X-ClientProxiedBy: MW4PR03CA0305.namprd03.prod.outlook.com
- (2603:10b6:303:dd::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E6C13BAD4
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 17:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709746116; cv=none; b=f//z872VvHZPzv/Qzs7jwNlnAtbM7BSbojXQF27f6uv38qk4p9NkisfF4Fqd2hmt2k/lvlgCLn0jX00Mtif45+yZcTl+8BWiDTUQA6MJHTNYJ+nPKzL6mpZFWQrdsqfw+fljvp+laWCDw68FGm84+PIBB2gZFreiVoLhxxewpBo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709746116; c=relaxed/simple;
+	bh=8HSfmL3dp9GL4sN8msZkHqUmIbiqwF548Xo4cVkasr8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P6dPY+l2CrTpBgtXBndz5xmnRQXmyFqVBjrEPhyL+ejLCb79JQRr70r0uHUQPCGLfMbq9MEbcI5lbNgDb3eXMZitARUslfuWWHOoIt8nTs0O+1iWbyN87kdiFpQ6n2IGDRs8P1Qav6IjIq25wgXLtAD5q/0mu/M3oJzt5XIk4LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TqfRL0w1dz6K62q;
+	Thu,  7 Mar 2024 01:23:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 51EA7140AA7;
+	Thu,  7 Mar 2024 01:28:29 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 6 Mar
+ 2024 17:28:28 +0000
+Date: Wed, 6 Mar 2024 17:28:27 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <nifan.cxl@gmail.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
+	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v5 08/13] hw/cxl/cxl-mailbox-utils: Add mailbox commands
+ to support add/release dynamic capacity response
+Message-ID: <20240306172827.000052dc@Huawei.com>
+In-Reply-To: <20240304194331.1586191-9-nifan.cxl@gmail.com>
+References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+	<20240304194331.1586191-9-nifan.cxl@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB7254:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ef8dabf-5c59-4c93-3bdc-08dc3e011d9e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bJRFXusn2ljwOt3HjTrTeMEjDnpYw4VpGP9WD7SkeI6zpg7KXn+kUU3O9oGIZSN5iMT3I2BnCqjc9iPfJLz2IJGj3gKvJs2wWLtqG+oB1mQ56HeDo+MHTIEagXR/uQvpN5zbYT2AadE/lTX+R8TQF292de/csy2Yp0z2zf9VKBrV6PVOWbtDm/1qpoFseF+w0ZdZlRwy4QvoLsbXefmbysqvCoRAbZWGzlpXCyrE2g3oa4jNz0DHNKc1JP4tddd0nx3HmhYx47nkTooC4zuLBJcWLbZwQjAdlMzAAlhPGRKNnUZLf/RyNXTtf6cfSTH7Pvsd9mAifBnzww+H+uL9wHzGeSiaqjLwZMBKBuhJJIDIzQ+2ibyjNbhrYBiqesBzVW/b5ozLUgHD0E25o/lfvhdNjyKvnJTnKDvhcbhKY7EWzjAJLGx1j5JzW5WeIHn/I3zVDtlX/0byB+pPHYwXHkyT/iAB/AaTicIGmE6RZqFnvNOausUZHteUbn1wK8fDXeTERo/cyO9uaY1IaG6ixgVP07vNL+Hrw0VNfC0KLq6PGxwOS3bFxQqhjczz/zcnwV+QJpE8IA1gj1mHTagbu8yVP5jX+xSYCbUcN5BLmF2WMRtHDmvu9hJ3LXQ19kX8oJGVRFYwo5Z3CLkaAtl6cbegjiKFt3UXiAlc9UODk7g=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DCCxt6my0SLUS2ZjI4qlmztUdC4GFthpg3PaUxrCgwzqhZPfTgxnduLFFR0d?=
- =?us-ascii?Q?jNbE3+4mgE1WeqOdbnEv6f8bLKEt30/sk0t1yEc39uToEu1SbO1IDAUReymF?=
- =?us-ascii?Q?tMGO/zafYxlSKP6jZJk2YqgTGlJPjUVTOii4WAOa/2VEbj1m8KMNN1zmMwIZ?=
- =?us-ascii?Q?yNilRla65g4HZLT8yIDWXh7+13amHKVHBUyr6ikHiFKAR8Y2e3/b7AAlfL/p?=
- =?us-ascii?Q?cljHyaDhouwN9kn4zm33rXdG3N2MCu+oBkabwQDQ6o/kI5/7eMuHxfyRm3P1?=
- =?us-ascii?Q?4pJRULwzoXF/Qyiv7M1fnU3ppgZ8PM0dSejxiyqz5LtKN76mTGdohzK9jwVf?=
- =?us-ascii?Q?Bvm4JiwPYQUSb2Ydup1qsLkL2Smd/SJ8NijZOHBFTzM7CzW/ehQj//G0f03s?=
- =?us-ascii?Q?5JTBSdiV25oxRcM6KNVdTKxV6JQH0m5AedaEHnFp9ofPr+cUjwCbR0knfYZO?=
- =?us-ascii?Q?1XCFtdaoLAMrhjRmXc5RFeDkfvf7v5bCtxilOSlWHYZ2ndOIwv8XotooYyOL?=
- =?us-ascii?Q?IoC+FsY247UwIUR8Tiz+oJ6MmkilKc3qHp1xxwaJ6mVKPXvLnvq+BkZDB9GD?=
- =?us-ascii?Q?qoSPwffaB6tUnEk2aFjWIJXFWrwGKqFIpkGfcsbUYit5QF6uxj3hqP+/7O7/?=
- =?us-ascii?Q?ec9BN7xYIIrQ5Qef822te/sENmVNqbbcHETSul2+l0StJJ1D7U/PxDnljeT0?=
- =?us-ascii?Q?364yLwXzeW9Jq5C1haErhlmQliCdQ2au2LCqTRlE0ovOP+xSQttsH2tYs1lx?=
- =?us-ascii?Q?0cXS2TO6nx4Y/rZR+BtW9Gj8mwZ8DiAf0VcFV519JfeRxJl1gJzajXulWn6N?=
- =?us-ascii?Q?jQPjUzCehCBbxRonQtUhtsUKnrrD/CAIqFml+8PxVoE2fXC/hZ/F7bOoTvpZ?=
- =?us-ascii?Q?C2deqRVIeeO0Gt4y4NnKffSCofPPwU1J/iXjIz2yMmzpYmCEdTO79ItYgbqm?=
- =?us-ascii?Q?qWOnqB4stN4XrY0wVbede4bc2iCkOnltkIUVx8R9cY75Yt3si1XcX1bdLlRG?=
- =?us-ascii?Q?627IOkOP3e/3s+s/JzwjyL78R2htpv4N8BDRtYi4hJK5vJ4wEg9G/rioswn4?=
- =?us-ascii?Q?vOXpuTlnE3gR2gxbtOhKT4GfrJMqPprx2JPe0E4ksUTxaW7YKNUm5qJIxciP?=
- =?us-ascii?Q?ASz/9CPQnuHif3fUdp24qVE1QIlVCcjAwpdjzKzASOGXGDXXVjrLv+EgE5NH?=
- =?us-ascii?Q?3AjoNhAy7uQNmtLntLW4aQCT28x2gQH1Sinqw50CW3b5MJ6w0F6RacY2GaD4?=
- =?us-ascii?Q?oMTCgNTNZLNt0HIgz12zNhL3ZOdj0SlpbEGVr8fibIFMC/5n4tD0EnFDBY1h?=
- =?us-ascii?Q?PWg+EDW7g/wS/1TIflmnhcRFbqxvcnNk4Tw30C2P2D/opQScv6nyRaKWFOxr?=
- =?us-ascii?Q?6kKBOv4VmbyJLDL/IogoyBuh5rDtAAi1vOY56pgSMd7V/1TZykhq1xuNZfOR?=
- =?us-ascii?Q?dGWVggrhjEaNP24xgyqVVbv/dLQKxkV1Z/uy97uqhgubf6As3H/WMszE11xo?=
- =?us-ascii?Q?ULqdEx+CITjLyZyXqmk3Zzr9xz7n0FswuDTQdC2B/W+LHMPH7Cfz7biSXrts?=
- =?us-ascii?Q?KOPPMK7nVfgVdmPyew0nSS/sexlFYbnHQvV722m1ZWg9IYHp1s1uC4/gPgdK?=
- =?us-ascii?Q?6Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ef8dabf-5c59-4c93-3bdc-08dc3e011d9e
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 17:16:09.3941
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VY3imdhUkcXWWu40hkIVQJnikzpE/WEik9C+4MWdjpqi6IBwni3xnBH8TVDhRbdi2XAuRs0JojdJX9+EmhNFtW5cALy8OlfPUrWnotxUJ4M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7254
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-[ add Li Ming ]
+On Mon,  4 Mar 2024 11:34:03 -0800
+nifan.cxl@gmail.com wrote:
 
-Jonathan Cameron wrote:
-[..]
-> Robert / Terry, I tracked down the patch where you enabled this for RCHs and there was
-> some discussion on walking out on VH as well to enable this, but seems it
-> never happened. Can you remember why?  Just kicked back for a future occasion?
+> From: Fan Ni <fan.ni@samsung.com>
 > 
+> Per CXL spec 3.1, two mailbox commands are implemented:
+> Add Dynamic Capacity Response (Opcode 4802h) 8.2.9.9.9.3, and
+> Release Dynamic Capacity (Opcode 4803h) 8.2.9.9.9.4.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Li Ming has this patch below waiting in wings. Li Ming, this patch is
-timely for this dicussion, care to send out the full series? I expect it
-needs to be an RFC given concerns with integrating with the pending port
-switch error handling work.
+Hmm. So I had a thought which would work for what you
+have here. See include/qemu/range.h
+I like the region merging stuff that is also in the list operators
+but we shouldn't use that because we have other reasons not to
+fuse ranges (sequence numbering etc)
 
--- 8< --
-From: Li Ming <ming4.li@intel.com>
-Subject: [PATCH RFC v3 3/6] PCI/AER: Enable RCEC to report internal error for CXL root port
-Date: Thu, 1 Feb 2024 05:58:08 +0000
+We could make an extent a wrapper around a struct Range though
+so that we can use the comparison stuff directly.
++ we can use the list manipulation in there as the basis for a future
+extent merging infrastructure that is tag and sequence number (if
+provided - so shared capacity or pmem) aware.
 
-Per CXL r3.1 section 12.2.2, RCEC is possible to log the CXL.cachemem
-protocol errors detected by CXL root port as PCI_ERR_UNC_INTN or
-PCI_ERR_COR_INTERNAL in AER Capability. So unmask PCI_ERR_UNC_INTN and
-PCI_ERR_COR_INTERNAL for that case.
+Jonathan
 
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
- drivers/pci/pcie/aer.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 42a3bd35a3e1..ef8fd77cb920 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -985,7 +985,7 @@ static bool cxl_error_is_native(struct pci_dev *dev)
- {
- 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
- 
--	return (pcie_ports_native || host->native_aer);
-+	return (pcie_ports_native || host->native_aer) && host->is_cxl;
- }
- 
- static bool is_internal_error(struct aer_err_info *info)
-@@ -1041,8 +1041,14 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
- {
- 	bool *handles_cxl = data;
- 
--	if (!*handles_cxl)
--		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-+	if (!*handles_cxl) {
-+		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END &&
-+		    is_cxl_mem_dev(dev) && cxl_error_is_native(dev))
-+			*handles_cxl = true;
-+		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-+		    cxl_error_is_native(dev))
-+			*handles_cxl = true;
-+	}
- 
- 	/* Non-zero terminates iteration */
- 	return *handles_cxl;
-@@ -1054,13 +1060,18 @@ static bool handles_cxl_errors(struct pci_dev *rcec)
- 
- 	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
- 	    pcie_aer_is_native(rcec))
--		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-+		pcie_walk_rcec_all(rcec, handles_cxl_error_iter, &handles_cxl);
- 
- 	return handles_cxl;
- }
- 
--static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-+static void cxl_enable_rcec(struct pci_dev *rcec)
- {
-+	/*
-+	 * Enable RCEC's internal error report for two cases:
-+	 * 1. RCiEP detected CXL.cachemem protocol errors
-+	 * 2. CXL root port detected CXL.cachemem protocol errors.
-+	 */
- 	if (!handles_cxl_errors(rcec))
- 		return;
- 
-@@ -1069,7 +1080,7 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
- }
- 
- #else
--static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
-+static inline void cxl_enable_rcec(struct pci_dev *dev) { }
- static inline void cxl_rch_handle_error(struct pci_dev *dev,
- 					struct aer_err_info *info) { }
- #endif
-@@ -1494,7 +1505,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return status;
- 	}
- 
--	cxl_rch_enable_rcec(port);
-+	cxl_enable_rcec(port);
- 	aer_enable_rootport(rpc);
- 	pci_info(port, "enabled with IRQ %d\n", dev->irq);
- 	return 0;
--- 
-2.40.1
+> ---
+> +
+> +/*
+> + * CXL r3.1 Table 8-168: Add Dynamic Capacity Response Input Payload
+> + * CXL r3.1 Table 8-170: Release Dynamic Capacity Input Payload
+> + */
+> +typedef struct CXLUpdateDCExtentListInPl {
+> +    uint32_t num_entries_updated;
+> +    uint8_t flags;
+> +    uint8_t rsvd[3];
+> +    /* CXL r3.1 Table 8-169: Updated Extent */
+> +    struct {
+> +        uint64_t start_dpa;
+> +        uint64_t len;
+> +        uint8_t rsvd[8];
+> +    } QEMU_PACKED updated_entries[];
+> +} QEMU_PACKED CXLUpdateDCExtentListInPl;
+> +
+> +/*
+> + * For the extents in the extent list to operate, check whether they are valid
+> + * 1. The extent should be in the range of a valid DC region;
+> + * 2. The extent should not cross multiple regions;
+> + * 3. The start DPA and the length of the extent should align with the block
+> + * size of the region;
+> + * 4. The address range of multiple extents in the list should not overlap.
+
+Hmm. Interesting.  I was thinking a given add / remove command rather than
+just the extents can't overlap a region.  However I can't find text on that
+so I believe your interpretation is correct. It is only specified for the
+event records, but that is good enough I think.  We might want to propose
+tightening the spec on this to allow devices to say no to such complex
+extent lists. Maybe a nice friendly Memory vendor should query this one if
+it's a potential problem for real devices.  Might not be!
+
+> + */
+> +static CXLRetCode cxl_detect_malformed_extent_list(CXLType3Dev *ct3d,
+> +        const CXLUpdateDCExtentListInPl *in)
+> +{
+> +    uint64_t min_block_size = UINT64_MAX;
+> +    CXLDCRegion *region = &ct3d->dc.regions[0];
+> +    CXLDCRegion *lastregion = &ct3d->dc.regions[ct3d->dc.num_regions - 1];
+> +    g_autofree unsigned long *blk_bitmap = NULL;
+> +    uint64_t dpa, len;
+> +    uint32_t i;
+> +
+> +    for (i = 0; i < ct3d->dc.num_regions; i++) {
+> +        region = &ct3d->dc.regions[i];
+> +        min_block_size = MIN(min_block_size, region->block_size);
+> +    }
+> +
+> +    blk_bitmap = bitmap_new((lastregion->base + lastregion->len -
+> +                             ct3d->dc.regions[0].base) / min_block_size);
+> +
+> +    for (i = 0; i < in->num_entries_updated; i++) {
+> +        dpa = in->updated_entries[i].start_dpa;
+> +        len = in->updated_entries[i].len;
+> +
+> +        region = cxl_find_dc_region(ct3d, dpa, len);
+> +        if (!region) {
+> +            return CXL_MBOX_INVALID_PA;
+> +        }
+> +
+> +        dpa -= ct3d->dc.regions[0].base;
+> +        if (dpa % region->block_size || len % region->block_size) {
+> +            return CXL_MBOX_INVALID_EXTENT_LIST;
+> +        }
+> +        /* the dpa range already covered by some other extents in the list */
+> +        if (test_any_bits_set(blk_bitmap, dpa / min_block_size,
+> +            len / min_block_size)) {
+> +            return CXL_MBOX_INVALID_EXTENT_LIST;
+> +        }
+> +        bitmap_set(blk_bitmap, dpa / min_block_size, len / min_block_size);
+> +   }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/*
+> + * CXL r3.1 section 8.2.9.9.9.3: Add Dynamic Capacity Response (Opcode 4802h)
+> + * An extent is added to the extent list and becomes usable only after the
+> + * response is processed successfully
+> + */
+> +static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+> +                                          uint8_t *payload_in,
+> +                                          size_t len_in,
+> +                                          uint8_t *payload_out,
+> +                                          size_t *len_out,
+> +                                          CXLCCI *cci)
+> +{
+> +    CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> +    CXLDCExtent *ent;
+> +    uint32_t i;
+> +    uint64_t dpa, len;
+> +    CXLRetCode ret;
+> +
+> +    if (in->num_entries_updated == 0) {
+> +        return CXL_MBOX_SUCCESS;
+> +    }
+> +
+> +    /* Adding extents causes exceeding device's extent tracking ability. */
+> +    if (in->num_entries_updated + ct3d->dc.total_extent_count >
+> +        CXL_NUM_EXTENTS_SUPPORTED) {
+> +        return CXL_MBOX_RESOURCES_EXHAUSTED;
+> +    }
+> +
+> +    ret = cxl_detect_malformed_extent_list(ct3d, in);
+> +    if (ret != CXL_MBOX_SUCCESS) {
+> +        return ret;
+> +    }
+> +
+> +    for (i = 0; i < in->num_entries_updated; i++) {
+> +        dpa = in->updated_entries[i].start_dpa;
+> +        len = in->updated_entries[i].len;
+> +
+> +        /*
+> +         * Check if the DPA range of the to-be-added extent overlaps with
+> +         * existing extent list maintained by the device.
+> +         */
+> +        QTAILQ_FOREACH(ent, extent_list, node) {
+
+There are too many checks in here for an overlapping test.
+
+Conditions are
+
+	|  Extent tested against |
+|  Overlap entirely                 |
+| overlap left edge |
+                    | overlap right edge |
+Think of it in the inverse condition and it is easier to reason about.
+
+              | Extent tested against |
+| to left |---                        ---| to right |
+
+which I think is something like.
+
+        if (!((dpa + len <= ent->start_dpa) || (dpa >= ent->start_dpa + ent->len)) {
+		 return CXL_MBOX_INVALID_PA;
+	}
+
+Hmm. For internal tracking (not the exposed values) we should probably use
+struct range from include/qemu/range.h.
+Felt like there had to be something better than doing this ourselves so I went
+looking.  Note it uses inclusive upper bound so be careful with that!
+
+Advantage is we get this checks for free.
+https://elixir.bootlin.com/qemu/latest/source/include/qemu/range.h#L152
+range_overlaps_range()
+
+There are functions to set them up nicely for us and by base and size
+as well which should tidy that part up.
+
+	    
+
+> +            if (ent->start_dpa <= dpa &&
+> +                    dpa + len <= ent->start_dpa + ent->len) {
+> +                return CXL_MBOX_INVALID_PA;
+> +            /* Overlapping one end of the other */
+> +            } else if ((dpa < ent->start_dpa + ent->len &&
+> +                        dpa + len > ent->start_dpa + ent->len) ||
+> +                       (dpa < ent->start_dpa && dpa + len > ent->start_dpa)) {
+> +                return CXL_MBOX_INVALID_PA;
+> +            }
+> +        }
+> +
+> +        /*
+> +         * TODO: we will add a pending extent list based on event log record
+> +         * and verify the input response; also, the "More" flag is not
+> +         * considered at the moment.
+> +         */
+> +
+> +        cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
+> +        ct3d->dc.total_extent_count += 1;
+> +    }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/*
+> + * CXL r3.1 section 8.2.9.9.9.4: Release Dynamic Capacity (Opcode 4803h)
+> + */
+> +static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+> +                                          uint8_t *payload_in,
+> +                                          size_t len_in,
+> +                                          uint8_t *payload_out,
+> +                                          size_t *len_out,
+> +                                          CXLCCI *cci)
+> +{
+> +    CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> +    CXLDCExtent *ent;
+> +    uint32_t i;
+> +    uint64_t dpa, len;
+> +    CXLRetCode ret;
+> +
+> +    if (in->num_entries_updated == 0) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    ret = cxl_detect_malformed_extent_list(ct3d, in);
+> +    if (ret != CXL_MBOX_SUCCESS) {
+> +        return ret;
+> +    }
+> +
+> +    for (i = 0; i < in->num_entries_updated; i++) {
+> +        bool found = false;
+> +
+> +        dpa = in->updated_entries[i].start_dpa;
+> +        len = in->updated_entries[i].len;
+> +
+> +        QTAILQ_FOREACH(ent, extent_list, node) {
+> +            /* Found the extent overlapping with */
+> +            if (ent->start_dpa <= dpa && dpa < ent->start_dpa + ent->len) {
+> +                if (dpa + len <= ent->start_dpa + ent->len) {
+> +                    /*
+> +                     * The incoming extent covers a portion of an extent
+> +                     * in the device extent list, remove only the overlapping
+> +                     * portion, meaning
+> +                     * 1. the portions that are not covered by the incoming
+> +                     *    extent at both end of the original extent will become
+> +                     *    new extents and inserted to the extent list; and
+> +                     * 2. the original extent is removed from the extent list;
+> +                     * 3. DC extent count is updated accordingly.
+> +                     */
+> +                    uint64_t ent_start_dpa = ent->start_dpa;
+> +                    uint64_t ent_len = ent->len;
+> +                    uint64_t len1 = dpa - ent_start_dpa;
+> +                    uint64_t len2 = ent_start_dpa + ent_len - dpa - len;
+> +
+> +                    /*
+> +                     * TODO: checking for possible extent overflow, will be
+> +                     * moved into a dedicated function of detecting extent
+> +                     * overflow.
+> +                     */
+> +                    if (len1 && len2 && ct3d->dc.total_extent_count ==
+> +                        CXL_NUM_EXTENTS_SUPPORTED) {
+> +                        return CXL_MBOX_RESOURCES_EXHAUSTED;
+> +                    }
+> +
+> +                    found = true;
+> +                    cxl_remove_extent_from_extent_list(extent_list, ent);
+> +                    ct3d->dc.total_extent_count -= 1;
+> +
+> +                    if (len1) {
+> +                        cxl_insert_extent_to_extent_list(extent_list,
+> +                                                         ent_start_dpa, len1,
+> +                                                         NULL, 0);
+> +                        ct3d->dc.total_extent_count += 1;
+> +                    }
+> +                    if (len2) {
+> +                        cxl_insert_extent_to_extent_list(extent_list, dpa + len,
+> +                                                         len2, NULL, 0);
+> +                        ct3d->dc.total_extent_count += 1;
+> +                    }
+> +                    break;
+Maybe this makes sense after the support below is added, but at this
+point in the series 
+			return CXL_MBOX_SUCCESS;
+then found isn't relevant so can drop that. Looks like you drop it later in the
+series anyway.
+
+> +                } else {
+> +                    /*
+> +                     * TODO: we reject the attempt to remove an extent that
+> +                     * overlaps with multiple extents in the device for now,
+> +                     * once the bitmap indicating whether a DPA range is
+> +                     * covered by valid extents is introduced, will allow it.
+> +                     */
+> +                    return CXL_MBOX_INVALID_PA;
+> +                }
+> +            }
+> +        }
+> +
+> +        if (!found) {
+> +            /* Try to remove a non-existing extent. */
+> +            return CXL_MBOX_INVALID_PA;
+> +        }
+> +    }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+
+>  static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 102fa8151e..dccfaaad3a 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -678,6 +678,16 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+>      return true;
+>  }
+>  
+> +static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+> +{
+> +    CXLDCExtent *ent;
+> +
+> +    while (!QTAILQ_EMPTY(&ct3d->dc.extents)) {
+> +        ent = QTAILQ_FIRST(&ct3d->dc.extents);
+> +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+
+Isn't this same a something like.
+    QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node)) {
+	cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+        //This wrapper is small enough I'd be tempted to just have the
+        //code inline at the places it's called.
+
+    }
+> +    }
+> +}
 
