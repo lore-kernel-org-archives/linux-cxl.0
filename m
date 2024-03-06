@@ -1,53 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993CF13E7C1
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 18:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038CF13E7F2
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 18:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709750555; cv=none; b=Thr2Bs0wd3mV4y7XT17cZBkeVXnJvOkLZPg6c9xN5K31C8A7Ih9TWoHvjcH8j69xKAfUFXSlJfeGQlHR71/7BIDMb8cRXFBybd+C+lmdMdODjd1ljPwADoKbCUiEnWpTGQzosd7NlCbhLbclrPrqzAxtcAyXdXyWhwp9yj0Xm9A=
+	t=1709750556; cv=none; b=rbZPzjBlJB0kcAe+qKNm6neD8OaSknwT/WLQOtKcg3RZOyltire/lLCEufQYUk/apiEYgWLFvWqQJC2MTGRtRTLRlOYM5q7ogftfuf4hIhDPnh9RIfN7cEo5Y1fM4yYo4bgGavJbCkhn5AyCUmeOYf7XBig8eWFV62xOAdI2+XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709750555; c=relaxed/simple;
-	bh=vAtrXMzOPQbVk0ENBhOuNC+XRIcLDIDYr/JHq12NW44=;
+	s=arc-20240116; t=1709750556; c=relaxed/simple;
+	bh=sFSwfMOSaRKAAtONH9OZkJqK2kxBdAF3OaadvPZiR4o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MA5afarEC+8rCgbMTxWEWLtN51hxWoSkJ66I9xTef8Jk7LmTi/OJKnQyzb7p8suFxq/68bvUVcMTs5begnbdqNzqwe2fhebqWT2zkiN7QX5G4A6VVaBsKBXqVi8GsxMzJxLIrpzmM1ZJkjK0fFOJLnIx3tLpbwzQXlTiHXyy0Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J4Jyusff; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=N8mBpjUYepuqfUMFsrYzZEN88XFh8c0/vgrLtnoqOCEdlPeqQe/21/inAnfUMcD5Ass2gGBqQXi68j7cAEazhUrWMpf/5yZk6RmAPkMeGoSmOkv9GcriDTvEknDuqaK7hV6R603pyeg9JQxMS3EIoIMGVH7OiWsqpM9ZYutrFJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FxfFEicY; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J4Jyusff"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FxfFEicY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709750552; x=1741286552;
+  t=1709750555; x=1741286555;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vAtrXMzOPQbVk0ENBhOuNC+XRIcLDIDYr/JHq12NW44=;
-  b=J4Jyusff/VW7ZKxyqo2vSHS2SiJMh/DoKAEeH3sBNLnuNvhRSwMgGctX
-   avaqLppuXFgUELsu7L1UNWiXR5W8BBxXkdWmxrQcfB1WlbnZYOR2UYPyT
-   DV+lXIT+bCcX75XYsN57gG5JQ9CdD0TLSqRs4ZGqjS4motAx8wQpALTCJ
-   7B4OxsGYoFmR5lQyHsQJz/oV2wuThmGKmXaqk8ear/+Xo4mzFy6JL/DeK
-   lDXwBFbiTzmJO47gmGV0UDOOvTRqHfCUerfZbDDegvVAMmA0VJ0a3R5rd
-   hFK9Urvv2J6JqBLd2b4rj8YNSmZyr3Kupji8DT8ykl0sYbfAfLq5v/eDM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15819825"
+  bh=sFSwfMOSaRKAAtONH9OZkJqK2kxBdAF3OaadvPZiR4o=;
+  b=FxfFEicYsTtQv1tf99O9m9tuakvMc293NyTjaPHd87B0wu3d3SFUSSPQ
+   34brBRgIQoe0pHETJ3GPhpyLg4e64WjFAT7d0yxTQq+IUgUwjwEN07ENF
+   /0bO7zAawWEaNH1Hs7YObkwL98wsSeNsqidWkYNOiYr+qozQJRNH0OxeX
+   SbKhBgnMI/VnNh8H3RFIwIIKF9+5QDUn880z0R+d5/cz3OQQ6g3Hd1g2F
+   Beb37kqLr7ZUR7tmkbNRT2pCoFNUwldn4uJ7zvxsE7PuHCbmaswEyPcSd
+   wZNotHsewrI/hAb7qz5HpdHIpT3FM1QSfl0xrCN7CuQ0jRj0RJX+soxpN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15819831"
 X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="15819825"
+   d="scan'208";a="15819831"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:42:31 -0800
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:42:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="9925969"
+   d="scan'208";a="9925983"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.251.9.155])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:42:31 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:42:33 -0800
 From: alison.schofield@intel.com
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH v10 3/7] cxl/event_trace: add a private context for private parsers
-Date: Wed,  6 Mar 2024 10:42:22 -0800
-Message-Id: <6e975df49a62cdb544791633fdd1a998a0b60164.1709748564.git.alison.schofield@intel.com>
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v10 6/7] cxl/list: add --media-errors option to cxl list
+Date: Wed,  6 Mar 2024 10:42:25 -0800
+Message-Id: <2047e536ed7a1d1a46c048053dfe22fc798ca35e.1709748564.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709748564.git.alison.schofield@intel.com>
 References: <cover.1709748564.git.alison.schofield@intel.com>
@@ -61,58 +60,161 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-CXL event tracing provides helpers to iterate through a trace
-buffer and extract events of interest. It offers two parsing
-options: a default parser that adds every field of an event to
-a json object, and a private parsing option where the caller can
-parse each event as it wishes.
+The --media-errors option to 'cxl list' retrieves poison lists from
+memory devices supporting the capability and displays the returned
+media_error records in the cxl list json. This option can apply to
+memdevs or regions.
 
-Although the private parser can do some conditional parsing based
-on field values, it has no method to receive additional information
-needed to make parsing decisions in the callback.
+Include media-errors in the -vvv verbose option.
 
-Add a private_ctx field to the existing 'struct event_context'.
-Replace the jlist_head parameter, used in the default parser,
-with the private_ctx.
-
-This is in preparation for adding a private parser requiring
-additional context for cxl_poison events.
+Example usage in the Documentation/cxl/cxl-list.txt update.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/event_trace.c | 2 +-
- cxl/event_trace.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ Documentation/cxl/cxl-list.txt | 79 +++++++++++++++++++++++++++++++++-
+ cxl/filter.h                   |  3 ++
+ cxl/list.c                     |  3 ++
+ 3 files changed, 84 insertions(+), 1 deletion(-)
 
-diff --git a/cxl/event_trace.c b/cxl/event_trace.c
-index 93a95f9729fd..bdad0c19dbd4 100644
---- a/cxl/event_trace.c
-+++ b/cxl/event_trace.c
-@@ -221,7 +221,7 @@ static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 838de4086678..5c20614ef579 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -415,6 +415,83 @@ OPTIONS
+ --region::
+ 	Specify CXL region device name(s), or device id(s), to filter the listing.
  
- 	if (event_ctx->parse_event)
- 		return event_ctx->parse_event(event, record,
--					      &event_ctx->jlist_head);
-+					      event_ctx->private_ctx);
++-L::
++--media-errors::
++	Include media-error information. The poison list is retrieved from the
++	device(s) and media_error records are added to the listing. Apply this
++	option to memdevs and regions where devices support the poison list
++	capability.
++
++	"decoder" and "hpa" are included when the media-error is in a mapped
++        address.
++
++	"source" will be one of: External, Internal, Injected, Vendor Specific,
++        or Unknown, as defined in CXL Specification v3.1 Table 8-140.
++
++----
++# cxl list -m mem1 --media-errors
++[
++  {
++    "memdev":"mem1",
++    "pmem_size":1073741824,
++    "ram_size":1073741824,
++    "serial":1,
++    "numa_node":1,
++    "host":"cxl_mem.1",
++    "media_errors":[
++      {
++        "dpa":0,
++        "length":64,
++        "source":"Internal"
++      },
++      {
++        "decoder":"decoder10.0",
++        "hpa":1035355557888,
++        "dpa":1073741824,
++        "length":64,
++        "source":"External"
++      },
++      {
++        "decoder":"decoder10.0",
++        "hpa":1035355566080,
++        "dpa":1073745920,
++        "length":64,
++        "source":"Injected"
++      }
++    ]
++  }
++]
++
++# cxl list -r region5 --media-errors
++[
++  {
++    "region":"region5",
++    "resource":1035355553792,
++    "size":2147483648,
++    "type":"pmem",
++    "interleave_ways":2,
++    "interleave_granularity":4096,
++    "decode_state":"commit",
++    "media_errors":[
++      {
++        "decoder":"decoder10.0",
++        "hpa":1035355557888,
++        "dpa":1073741824,
++        "length":64,
++        "source":"External"
++      },
++      {
++        "decoder":"decoder8.1",
++        "hpa":1035355553792,
++        "dpa":1073741824,
++        "length":64,
++        "source":"Internal"
++      }
++    ]
++  }
++]
++----
++
+ -v::
+ --verbose::
+ 	Increase verbosity of the output. This can be specified
+@@ -431,7 +508,7 @@ OPTIONS
+ 	  devices with --idle.
+ 	- *-vvv*
+ 	  Everything *-vv* provides, plus enable
+-	  --health and --partition.
++	  --health, --partition, --media-errors.
  
- 	return cxl_event_to_json(event, record, &event_ctx->jlist_head);
- }
-diff --git a/cxl/event_trace.h b/cxl/event_trace.h
-index 7f7773b2201f..ec61962abbc6 100644
---- a/cxl/event_trace.h
-+++ b/cxl/event_trace.h
-@@ -16,8 +16,9 @@ struct event_ctx {
- 	struct list_head jlist_head;
- 	const char *event_name; /* optional */
- 	int event_pid; /* optional */
-+	void *private_ctx; /* required with parse_event() */
- 	int (*parse_event)(struct tep_event *event, struct tep_record *record,
--			   struct list_head *jlist_head); /* optional */
-+			   void *private_ctx);/* optional */
+ --debug::
+ 	If the cxl tool was built with debug enabled, turn on debug
+diff --git a/cxl/filter.h b/cxl/filter.h
+index 3f65990f835a..956a46e0c7a9 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -30,6 +30,7 @@ struct cxl_filter_params {
+ 	bool fw;
+ 	bool alert_config;
+ 	bool dax;
++	bool media_errors;
+ 	int verbose;
+ 	struct log_ctx ctx;
  };
+@@ -88,6 +89,8 @@ static inline unsigned long cxl_filter_to_flags(struct cxl_filter_params *param)
+ 		flags |= UTIL_JSON_ALERT_CONFIG;
+ 	if (param->dax)
+ 		flags |= UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
++	if (param->media_errors)
++		flags |= UTIL_JSON_MEDIA_ERRORS;
+ 	return flags;
+ }
  
- int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
+diff --git a/cxl/list.c b/cxl/list.c
+index 93ba51ef895c..0b25d78248d5 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -57,6 +57,8 @@ static const struct option options[] = {
+ 		    "include memory device firmware information"),
+ 	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
+ 		    "include alert configuration information"),
++	OPT_BOOLEAN('L', "media-errors", &param.media_errors,
++		    "include media-error information "),
+ 	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+ #ifdef ENABLE_DEBUG
+ 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+@@ -121,6 +123,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		param.fw = true;
+ 		param.alert_config = true;
+ 		param.dax = true;
++		param.media_errors = true;
+ 		/* fallthrough */
+ 	case 2:
+ 		param.idle = true;
 -- 
 2.37.3
 
