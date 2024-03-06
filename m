@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B135137907
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 16:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A606A135A7F
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 16:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709741004; cv=none; b=l9MhtkRF94jTDI90xEwPvzDsozW+ozHpy8ik/8YELBeuubLl1YO5RpRVi3u+cy+0s0a9l0h8KSDIW6dteVxk+6f7VoBXfGXMPgSITIHy/Qwst97KicCknrk48W3675HIYTxB3DXAhChkMNjmIIgekpTEKHxEbXavYChGr8FEeug=
+	t=1709741016; cv=none; b=h8a8+a9Cy1g4vlk00xXSCGsLjG0QZOnRg315l/buBxf/4XXlLO3uoxTsdJk705dfUWka2UXkoGxZBQNUiOiCKFsm1tiOxepLhW6crnuiwI5Am/fHFCFZtKS1mUMomivSoPGba+CAT/3MtZJQnFyj97iIpvj6H/fBPFo2YvrI1Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709741004; c=relaxed/simple;
-	bh=qPyxrYfuEdlgR3yMMWcS5rPr/zfW9Tg64Y1XcGbp3Gs=;
+	s=arc-20240116; t=1709741016; c=relaxed/simple;
+	bh=H1E3RkLTiq5u9mFlAw6U2l2G61foVSGV2jJBxSduTyg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MJnPO6XLsLRvSbHEBVowzLjzjaoJ/kPZRUmtlwkaKBC/sx78F55TN2NLjpGkq6US0X5FnUHOLMAm5zyybArgjS09RIlQmKeHQ8JgmneFJo73dG2dmAob4KaWtO5Wktk7HL1xFFKnTAeqO0Tc/HJO1vrRvxegs8hZkWvqv5MCoBI=
+	 MIME-Version:Content-Type; b=XLVSfhoqTW8W46ktr0UOqCKnmOPulq4H0ysPqyGHinrgBtCmatxObN2jSqSTsfO5kouEIiqY3WkZAQG8T5NXH0gcEgTlh0B52hb7knixN5H5YgL0qxSl3arrmj6OnyVDyWGVjsumtZGsxrB/X/IO+8dOS6wp6l8ih1MWIqL/HqY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TqcfY1ywMz6D8rL;
-	Thu,  7 Mar 2024 00:03:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TqcZG1Xs2z6K8r7;
+	Wed,  6 Mar 2024 23:59:34 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CFB61140CF4;
-	Thu,  7 Mar 2024 00:02:57 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3BF8A140DB0;
+	Thu,  7 Mar 2024 00:03:31 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 6 Mar
- 2024 16:02:48 +0000
-Date: Wed, 6 Mar 2024 16:02:47 +0000
+ 2024 16:03:30 +0000
+Date: Wed, 6 Mar 2024 16:03:29 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: <nifan.cxl@gmail.com>
 CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
@@ -34,7 +34,7 @@ CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
 	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
 Subject: Re: [PATCH v5 05/13] hw/mem/cxl-type3: Refactor
  ct3_build_cdat_entries_for_mr to take mr size insead of mr as argument
-Message-ID: <20240306160247.00002e63@Huawei.com>
+Message-ID: <20240306160329.00006fd0@Huawei.com>
 In-Reply-To: <20240304194331.1586191-6-nifan.cxl@gmail.com>
 References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
 	<20240304194331.1586191-6-nifan.cxl@gmail.com>
@@ -59,6 +59,4 @@ nifan.cxl@gmail.com wrote:
 > The function ct3_build_cdat_entries_for_mr only uses size of the passed
 > memory region argument, refactor the function definition to make the passed
 > arguments more specific.
-> 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Typo in title, instead
