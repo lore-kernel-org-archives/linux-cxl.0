@@ -1,166 +1,424 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96FE1C6A1
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 23:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709766722; cv=fail; b=Oq+JS0BrCk89gLJuOH3EaQGA8lVDccOYkiE0AzJ05au5lRq+aRqJ1syjKx0pTIetszrf/pTvnC3e2XtyCSzR9CXyMw75XRql6hnGBPPPPmHiYCS1+f7zEKjotPcPUl93IztDv1l3HHhNm2KFn9VKj2PQG/mn3iNaOb7jFqD1Xlg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709766722; c=relaxed/simple;
-	bh=Y9exI4bTBLF24aX1ZfadZHsj6BQS5yaPYkah1JqN4j0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hjNvjdsdSF+rJCgz67quieHwF33YAO0OIhYp899KZOk8eMNdnYTtIHHl/lgRCKc7u43/gstwXEEzLpYwxOy7BwByvVeX1uPjV3JtqMypAKiT1926Cz+EeTRbrWGMswLnB60A8uIMo9v5POLY3DTo2j/jF0/LXuP8FL5pPRPssxM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CpEIblYW; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375B51CD3D
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 23:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709766936; cv=none; b=AVnyzfW390fVupb2oW1+vvAmeFMB1e5+g+AYmKmf16spYD4Ry23NDC/4lc4k/1mu2Tq7YGd7CkJ98FALKSWxxrC4CPJ299N59I1o4ZIrT1uTG0jfQAzDa5efBKbhFJ00j6/zGusW/NzZuYG6lAkmZkA3FJ11ayCsGMvkGlixrI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709766936; c=relaxed/simple;
+	bh=CPKqd4kbeR2imTuzaZtf5VpVV8A82mUXTBc1yjnKtOI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhBAHH5SMPMNZvt4nPA3IosPp69fGkkO/XJvCVauyPkrqQEYiCuyVM+I3a9WHyeJUIjTEMivVqPmlcw4YGFIyS5soE6FgMVw+GJaVQC7j26vvPClYeVFUPTkUW3NYQjJN0DThaxETR/9aC+OC6/2k0L9bYwG9WNn99YW8W81uBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gx1gTk/b; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CpEIblYW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709766721; x=1741302721;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Y9exI4bTBLF24aX1ZfadZHsj6BQS5yaPYkah1JqN4j0=;
-  b=CpEIblYWn0KndPju/khNZGHl/+PesTuZh/X+b/utH9O79qrYq+9MaD1N
-   3vzht3kX8YUb1cda2JWPFFR2ruTW5Je7RE9R3Fl2GhtBmF6BzkRSWoTWV
-   UWgojoPwucjjA0lAXFZoSeEusYqGh5tt55iK2OuC0iAL5mClafHmEVnw9
-   Lv85ZoD+bqDvJi8aynBzepXXeRyl4kkteazBx9p11Dd0+t1tWdxqvA2tf
-   B/8ADQNH3Ox3l7zpwwgVFGRs66NZzawwJJm7aFGm7cvawQUU3dU5Y/oi2
-   iJ5G78DRyrDT0fKJOgDsmDBwd5W/5J6qi6HXTGon/snQVGlBwQoNJqcLz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4278160"
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="4278160"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 15:12:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="9808945"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2024 15:12:00 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 15:11:59 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 15:11:59 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 6 Mar 2024 15:11:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OtO98IJ+T1Zb0wlCdYRJBBMCL2bJcDADiMLwHm25BgJ+/MEqq1fCv0KaUdw/t9YLWA4RyK6FF30nNOZke0PHwxwutQqqihFtzNyAoDn6lBhUMECuI49W/WUWopMSyS7omYuyjFmvuDhZRgjDSBQf3xejlUUoQsZ1OSxit5XAOuxAZI49ltlMnMcica9gHZIxwqknIhPhYSLlszBvNQne6naEsg5rrE7AFXAxAU9/DB+CYRmqv7/ndjmz4/o1JrJljPXxbTe60t3bnB1y09ruZHuza6wCYMnE8eHUDqGvuhaYS4ttIJ0XRV85bDSfUPx0aWAx/y5qTfEMO01KVk9qtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zOIjUZWl6axV1/WZxLhY9auO6Z5HSa+F1LKFUUTAzVA=;
- b=QXWraGTCZ44hlzn4SnqDzxS7x2K7uoFuRFvpg+slwH/cGGVdoPMZBRhD3i2rBieUI7VivKFoqJ3v45l9u+zZd3l4a+Ot0s5n/LEm9Wb7mp0GzVG+JnXrJ4x8HPORNeDiFvfzogkk8aPHJjwKShAaPAsFa6HsZddrY9aewHGW39GT4upZRCPsY8ls5WY6lF+XG7+iEV09lkNwoXAZxmgPMkpMJHJhyrvYVLur+uSRD2mxp/MYiZOYgdU6lD1iGDpCQrRRwHLYeWNxCbuyVFU3FllsxWvx5Pwqb0fubCgvQL7sWq5aVHMXyzMHOh6swf8paBbZgq8uDpHt7R8M7BD4JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SN7PR11MB7491.namprd11.prod.outlook.com (2603:10b6:806:349::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 6 Mar
- 2024 23:11:56 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7362.019; Wed, 6 Mar 2024
- 23:11:56 +0000
-Date: Wed, 6 Mar 2024 15:11:54 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
-CC: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [ndctl PATCH v10 2/7] cxl: add an optional pid check to event
- parsing
-Message-ID: <65e8f83a18bb4_127132949@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <cover.1709748564.git.alison.schofield@intel.com>
- <abe5627e115a94054914030f3aee2aaf5c7c47ca.1709748564.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <abe5627e115a94054914030f3aee2aaf5c7c47ca.1709748564.git.alison.schofield@intel.com>
-X-ClientProxiedBy: MW4P221CA0030.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::35) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gx1gTk/b"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc0e5b223eso2236215ad.1
+        for <linux-cxl@vger.kernel.org>; Wed, 06 Mar 2024 15:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709766933; x=1710371733; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Id/V3NEpLU2tiqiNwwAXaXlUYzvDYW4eeAi92PZrxBg=;
+        b=gx1gTk/bfcefMvwn6LcniZJ8sOMNDLnKwTI8FNKmCCyDNpUITU/9iJ1w16cv+Fr/Ab
+         JgR/DRuvJnRy8KtZyjuVvT2W5u+BThqFR9w0RM1VJeUnFLWqn2qznnLN8154H84rZBx7
+         fymdnc4dvuHkC0WGtUDi1nu51AZAKWEY4gbwZh+aTt4IZtLog5hbxlyiz9TCzt6OmdmX
+         URPTlNSjdk7FeLyuGlZNnjWdCSBwtEbF9L7cb5SSz+l+C8e1evqsMuKLsnpo7aj5wByU
+         VAPaSj/AJBIUo2pz6sbYoIZxHk/2hREl2oSQcueoafa3LqF5IP79gh4Z+VZOAm34Perd
+         OWtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709766933; x=1710371733;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Id/V3NEpLU2tiqiNwwAXaXlUYzvDYW4eeAi92PZrxBg=;
+        b=hEaOlnbWbK33lxWXGF0dSGS8X7g3Bqs1v8sK2MY9f1rwX4vi5gCrkwoRHUl8ng8qPD
+         B29WYG2beWk9MOc7zNz9dfPXssP8Srahm6tvrf8kAvyyrw0BzCZ+/c/LR5M9QcYw2RSD
+         2MO92oOhiyQ2HGCugiNJjprpNnlyTl12Krzj/8VXzdQo3FjzWx1PKM8dKcrqZ/z9arKE
+         c+grANjnTh97HK+UBvFn6Dd7+I4ZAnv5e6y1+LZwHcGQ9v29D7/NPHXKvR7Gqr/br8l3
+         jEVJA6OZ6+FjTjf7mgUoEDiov74AzpC/vyzQWFluxj4uwjG0ZRnTcewrRCrmv6wppRpr
+         ZH1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWFcFWu78vIFNmT070A4hqrNm9QniDz47OWQdS60aJT1cGKO5GOXl9ML/b6jJkDReuoa3zn/ObjBjd+4xEE2HdcOKWYeN/cNIo8
+X-Gm-Message-State: AOJu0YyGX05Q36dPWcYu6A4zqjEV95xrY5fQkorBegbKbdZD2XDQdbkQ
+	0D+ztcEO+0wvkw2T5gkuqw1r4RyJx7F9iRvnzckRMvbjkPRj7fMu
+X-Google-Smtp-Source: AGHT+IHC4n6g6JZ8b8UX0f61GtFy2ythZAVB/WHpm1wDMOTMRWsUDf9ruwcnTgdITBdJGgTgiRZ+jw==
+X-Received: by 2002:a17:902:bc86:b0:1dc:16:9000 with SMTP id bb6-20020a170902bc8600b001dc00169000mr6126594plb.16.1709766933398;
+        Wed, 06 Mar 2024 15:15:33 -0800 (PST)
+Received: from debian ([2601:641:300:14de:57cf:345:75f0:2085])
+        by smtp.gmail.com with ESMTPSA id kx3-20020a170902f94300b001dca40bb727sm13205906plb.88.2024.03.06.15.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 15:15:33 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Wed, 6 Mar 2024 15:15:30 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	gregory.price@memverge.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, a.manzanares@samsung.com,
+	dave@stgolabs.net, nmtadam.samsung@gmail.com,
+	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v5 09/13] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <Zej5EuQXytgeWGfj@debian>
+References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+ <20240304194331.1586191-10-nifan.cxl@gmail.com>
+ <20240306174811.000029fd@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7491:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56eb7532-404d-491b-47a4-08dc3e32d14c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gWbuuChSl2dA1grigiYZM+8hP3Mbtlave9C+0GV4i/tfze0B7g9mBS2igVPvcGihkCRj7WdAV1Dzn4w0VpEUfPLna2A518UA5iD+cjg3VDcginJXa0SvNorJmpEZkF1XRu3BlfCIyl2r7vRw2D+UxSYkusqlp5p1bqbxurIR8qd5bfEZRYoT1TXz+HAEVpqEalOEhOW9XGoYLb47tWq/ZB+ABD7xKE1T3hT051yDdCWItvJ7xQtStEfF83AScviOzTxA/md1mWqF8efGUkq8X0c4Wl3UDllOQ1whs3oe4Tw24GOrHm6chRiBNdbGsHGWCaf5I+iHg4Kc+0CqJDCEjXaZN8+mEmv6XVrnN/ETGsQPXZN5rYtN5E2YpTKymSrPwxrg8TNxCg78nJyovc12eqbqiVUCOxefP0CcBORKY6eHxbUkf9fTSf9YfcJ35BCEAlsTzwSnnScWmQJTw8JAtJISzlawMadHVfETAa3I309ncuwee1uwfiqUJ/6/BK2UtgaP0YpTnfFvpt6YV5tsNBrlnBP3zZBC6sxzCiVRx6xuMuQma/0Hk0wWbu3O0A+IYbMp75yqcU07m+GgAwkXWqyrSv9jJsvrMmWSa3dnUZYx4cCxZ9oj9qqGYwLvE2WiipRbb2PevnLz925/PPdd6w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?U7C8Gzvyta/mvRp8nxM6bVzVH8RAjQLKsZsFBx5PV6GM20ExAYOCy6fOPP0g?=
- =?us-ascii?Q?ixtuMPE9qL8JfOmshz3HtcGa/KemdQhifQiRxbJKIN5r4UXvONqrxitxnioY?=
- =?us-ascii?Q?WEy+e4GKCaM1L1X4clmPOMemeaIDYt+53vD+Q6JW36cfvRh9fVCDDOVXfcva?=
- =?us-ascii?Q?OnZ3HFhx5IjT3KOlwYNlF8SxCy5seqx9XYVwBFWupqTdyyf9dJx26qRuGnz0?=
- =?us-ascii?Q?xHcDpy4dPEhRAY8y5gRClPzr+xF65OxYXca9Q9tqhaVFYqFmKa13bzSNRzbT?=
- =?us-ascii?Q?VOfGWwBoQLsRTmgERaQmnlA1nlcwXRTtWInwxXdzx8ZynHM3rw20QIYbujs6?=
- =?us-ascii?Q?UWuChFv66diLV9dtsSjX1verObrkjt+kigafg1gT7/SnFczWbDbg7HDQJPj2?=
- =?us-ascii?Q?H0Os5ecyS6ZrOgK6g2KDtzEF15IXbW1u4sysZRkCLytS+Rj4JtToad+bhBlP?=
- =?us-ascii?Q?aGXD43CvrOkSHiY1WcI3RDDXpM5ZItOr/bJl9zerGsUFs/gNhwj8nh6HjIlC?=
- =?us-ascii?Q?SZ075stJUfxnptijHj7ZrMqRqM1zA7YCt3ONouiNGE0KQDVZOir0yOfM3XF3?=
- =?us-ascii?Q?7cIrkYhccWf7gRVTtNg5k6WMdbc44E22Ztr5J7A4dCRdD9c3qKsLSOKjQWQ+?=
- =?us-ascii?Q?M4pGyC4kL0M26EjhjGyT5xGgoVYtomi2e96lmwmyDkOK50qGiwyTKrolY2hT?=
- =?us-ascii?Q?4RKGieJocBW0/yLwD0ve6KpRsGfZBxrmlHLsJ1DcFxM74AJ0s9MiMqqTjY+N?=
- =?us-ascii?Q?EFPmoZEodMljWpS5lUCVHld1/jP2sfLsaAWAZC7AijiLPtlYjjRT4PY7Y3sf?=
- =?us-ascii?Q?lkb/gO4ash1BwLT5I586mZcCaQecRXZDb9Pc8S9P6jbhu2g8xNhdZRfOclEe?=
- =?us-ascii?Q?nRCI4Sw4KSwKvUEmn17FykuWUqiT65QY5waqvX9GglTp6tIA37im6KKMCu9O?=
- =?us-ascii?Q?HUFxYx4sq0j1s07532fdhY8RySe0xy4FSXA51Wbq2gNbGxNSmAtZmqR51zF0?=
- =?us-ascii?Q?D5sazpY5Wm3Je2swPqny2bYsHpRp2UcJzcyQs7RjCtzLtpolnexjNzo1BOPm?=
- =?us-ascii?Q?D+WGrF9aejfs0gsytNg1f/FLjIq//gQt35fE1DsSbcaE1vVUXBJeJaBY0ASF?=
- =?us-ascii?Q?zL/mPVdZobIHTrfRJSZ78pNKYCRYESbDIpzqQZcPqGN9UYZ+jQ2GgNW1q7Ag?=
- =?us-ascii?Q?HWSdd8U7O4OJEW2ATN/vR6D7uimz4ETnzZXFOnf4hkTFS5QA/s97r21MPkPU?=
- =?us-ascii?Q?YKTM2l5OpcuZv0j7f434dnikTe5dNLE0XnQQaix5F79XBgy+lacEC5IA2JIR?=
- =?us-ascii?Q?5y1FGmMBGj2+vLHo9qr5btnpaICXgwq1prk0sb78UrKxYmx60rOAarZtONaY?=
- =?us-ascii?Q?3GooKWt8i+uXj5EQbAbzWuPU2xeg+XXtwHjOWjONqKJ7n1+6DIOmZ/IyQm2v?=
- =?us-ascii?Q?jHU8Oe6jSKVspP5EaJrA+7l2Xcfa21smORysKwjR9uWPE/EXv28se8Etk93L?=
- =?us-ascii?Q?IBVaut4+M4BOeSlAqZRSAxM/31CNmllzwljlmd9eg2xJRB08+hLpWiV4MNDq?=
- =?us-ascii?Q?AJSKGelFb2hT6tupTYq7STJcQX4VG58EyNxTrrTw0GYhjR4kp+ldWjuD0Msk?=
- =?us-ascii?Q?Eg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56eb7532-404d-491b-47a4-08dc3e32d14c
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2024 23:11:56.1800
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3DdTSHThc/EZZbu4GSGH7fvS2V6uTwd0Y6IRfu8BuEFCxXjyIgEtBz5z4d8K93KUaaNPP0ZbuYZOmFdOwVflE8GWayoWqzcDWWgDKmSSz3o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7491
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306174811.000029fd@Huawei.com>
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On Wed, Mar 06, 2024 at 05:48:11PM +0000, Jonathan Cameron wrote:
+> On Mon,  4 Mar 2024 11:34:04 -0800
+> nifan.cxl@gmail.com wrote:
 > 
-> When parsing CXL events, callers may only be interested in events
-> that originate from the current process. Introduce an optional
-> argument to the event trace context: event_pid. When event_pid is
-> present, simply skip the parsing of events without a matching pid.
-> It is not a failure to see other, non matching events.
+> > From: Fan Ni <fan.ni@samsung.com>
+> > 
+> > Since fabric manager emulation is not supported yet, the change implements
+> > the functions to add/release dynamic capacity extents as QMP interfaces.
 > 
-> The initial use case for this is device poison listings where
-> only the media-error records requested by this process are wanted.
+> We'll need them anyway, or to implement an fm interface via QMP which is
+> going to be ugly and complex.
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > 
+> > Note: we skips any FM issued extent release request if the exact extent
+> > does not exist in the extent list of the device. We will loose the
+> > restriction later once we have partial release support in the kernel.
+> 
+> Maybe the kernel will treat it as a request to release the extent it
+> is tracking that contains it.  So we may want to add a way to poke that.
+> Not today though!
+> 
+> > 
+> > 1. Add dynamic capacity extents:
+> > 
+> > For example, the command to add two continuous extents (each 128MiB long)
+> > to region 0 (starting at DPA offset 0) looks like below:
+> > 
+> > { "execute": "qmp_capabilities" }
+> > 
+> > { "execute": "cxl-add-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "region-id": 0,
+> >       "extents": [
+> >       {
+> >           "dpa": 0,
+> >           "len": 134217728
+> >       },
+> >       {
+> >           "dpa": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > 2. Release dynamic capacity extents:
+> > 
+> > For example, the command to release an extent of size 128MiB from region 0
+> > (DPA offset 128MiB) look like below:
+> > 
+> > { "execute": "cxl-release-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "region-id": 0,
+> >       "extents": [
+> >       {
+> >           "dpa": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> 
+> ...
+>   
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index dccfaaad3a..e9c8994cdb 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -674,6 +674,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+> >          ct3d->dc.total_capacity += region->len;
+> >      }
+> >      QTAILQ_INIT(&ct3d->dc.extents);
+> > +    QTAILQ_INIT(&ct3d->dc.extents_pending_to_add);
+> >  
+> >      return true;
+> >  }
+> > @@ -686,6 +687,12 @@ static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+> >          ent = QTAILQ_FIRST(&ct3d->dc.extents);
+> >          cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+> >      }
+> > +
+> > +    while (!QTAILQ_EMPTY(&ct3d->dc.extents_pending_to_add)) {
+> 
+> QTAILQ_FOR_EACHSAFE
+> 
+> > +        ent = QTAILQ_FIRST(&ct3d->dc.extents_pending_to_add);
+> > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending_to_add,
+> > +                                           ent);
+> > +    }
+> >  }
+> 
+> > +/*
+> > + * The main function to process dynamic capacity event. Currently DC extents
+> > + * add/release requests are processed.
+> > + */
+> > +static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,
+> > +                                             CXLDCEventType type, uint16_t hid,
+> > +                                             uint8_t rid,
+> > +                                             CXLDCExtentRecordList *records,
+> > +                                             Error **errp)
+> > +{
+> > +    Object *obj;
+> > +    CXLEventDynamicCapacity dCap = {};
+> > +    CXLEventRecordHdr *hdr = &dCap.hdr;
+> > +    CXLType3Dev *dcd;
+> > +    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
+> > +    uint32_t num_extents = 0;
+> > +    CXLDCExtentRecordList *list;
+> > +    g_autofree CXLDCExtentRaw *extents = NULL;
+> > +    uint8_t enc_log;
+> > +    uint64_t offset, len, block_size;
+> > +    int i;
+> > +    int rc;
+> 
+> Combine the two lines above.
+> 
+> > +    g_autofree unsigned long *blk_bitmap = NULL;
+> > +
+> > +    obj = object_resolve_path(path, NULL);
+> > +    if (!obj) {
+> > +        error_setg(errp, "Unable to resolve path");
+> > +        return;
+> > +    }
+> 
+> object_resolve_path_type() and skip a step (should do this in various places
+> in our existing code!)
+> 
+> > +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> > +        error_setg(errp, "Path not point to a valid CXL type3 device");
+> > +        return;
+> > +    }
+> > +
+> > +    dcd = CXL_TYPE3(obj);
+> > +    if (!dcd->dc.num_regions) {
+> > +        error_setg(errp, "No dynamic capacity support from the device");
+> > +        return;
+> > +    }
+> > +
+> > +    rc = ct3d_qmp_cxl_event_log_enc(log);
+> > +    if (rc < 0) {
+> > +        error_setg(errp, "Unhandled error log type");
+> > +        return;
+> > +    }
+> > +    enc_log = rc;
+> > +
+> > +    if (rid >= dcd->dc.num_regions) {
+> > +        error_setg(errp, "region id is too large");
+> > +        return;
+> > +    }
+> > +    block_size = dcd->dc.regions[rid].block_size;
+> > +
+> > +    /* Sanity check and count the extents */
+> > +    list = records;
+> > +    while (list) {
+> > +        offset = list->value->offset;
+> > +        len = list->value->len;
+> > +
+> > +        if (len == 0) {
+> > +            error_setg(errp, "extent with 0 length is not allowed");
+> > +            return;
+> > +        }
+> > +
+> > +        if (offset % block_size || len % block_size) {
+> > +            error_setg(errp, "dpa or len is not aligned to region block size");
+> > +            return;
+> > +        }
+> > +
+> > +        if (offset + len > dcd->dc.regions[rid].len) {
+> > +            error_setg(errp, "extent range is beyond the region end");
+> > +            return;
+> > +        }
+> > +
+> > +        num_extents++;
+> > +        list = list->next;
+> > +    }
+> > +    if (num_extents == 0) {
+> > +        error_setg(errp, "No extents found in the command");
+> > +        return;
+> > +    }
+> > +
+> > +    blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
+> > +
+> > +    /* Create Extent list for event being passed to host */
+> > +    i = 0;
+> > +    list = records;
+> > +    extents = g_new0(CXLDCExtentRaw, num_extents);
+> > +    while (list) {
+> > +        CXLDCExtent *ent;
+> > +        bool skip_extent = false;
+> > +
+> > +        offset = list->value->offset;
+> > +        len = list->value->len;
+> > +
+> > +        extents[i].start_dpa = offset + dcd->dc.regions[rid].base;
+> > +        extents[i].len = len;
+> > +        memset(extents[i].tag, 0, 0x10);
+> > +        extents[i].shared_seq = 0;
+> > +
+> > +        if (type == DC_EVENT_RELEASE_CAPACITY ||
+> > +            type == DC_EVENT_FORCED_RELEASE_CAPACITY) {
+> > +            /*
+> > +             *  if the extent is still pending to be added to the host,
+> 
+> Odd spacing.
+> 
+> > +             * remove it from the pending extent list, so later when the add
+> > +             * response for the extent arrives, the device can reject the
+> > +             * extent as it is not in the pending list.
+> > +             */
+> > +            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
+> > +                        &extents[i]);
+> > +            if (ent) {
+> > +                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
+> > +                g_free(ent);
+> > +                skip_extent = true;
+> > +            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
+> > +                /* If the exact extent is not in the accepted list, skip */
+> > +                skip_extent = true;
+> > +            }
+> I think we need to reject case of some extents skipped and others not.
+> That's not supported yet so we need to complain if we get it at least. Maybe we need
+> to do two passes so we know this has happened early (or perhaps this is a later
+> patch in which case a todo here would help).
 
-Looks good,
+Skip here does not mean the extent is invalid, it just means the extent
+is still pending to add, so remove them from pending list would be
+enough to reject the extent, no need to release further. That is based
+on your feedback on v4.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+The loop here is only to collect the extents to sent to the event log. 
+But as you said, we need one pass before updating pending list.
+Actually if we do not allow the above case where extents to release is
+still in the pending to add list, we can just return here with error, no
+extra dry run needed. 
+
+What do you think?
+
+> 
+> > +        
+> > +
+> > +        /* No duplicate or overlapped extents are allowed */
+> > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > +                              len / block_size)) {
+> > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > +            return;
+> > +        }
+> > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > +
+> > +        list = list->next;
+> > +        if (!skip_extent) {
+> > +            i++;
+> Problem is if we skip one in the middle the records will be wrong below.
+
+Why? Only extents passed the check will be stored in variable extents and
+processed further and i be updated. 
+For skipped ones, since i is not updated, they will be
+overwritten by following valid ones.
+
+Fan
+
+> > +        }
+> > +    }
+> > +    num_extents = i;
+> > +
+> > +    /*
+> > +     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
+> > +     *
+> > +     * All Dynamic Capacity event records shall set the Event Record Severity
+> > +     * field in the Common Event Record Format to Informational Event. All
+> > +     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
+> > +     * Event Log.
+> > +     */
+> > +    cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
+> > +                            cxl_device_get_timestamp(&dcd->cxl_dstate));
+> > +
+> > +    dCap.type = type;
+> > +    /* FIXME: for now, validity flag is cleared */
+> > +    dCap.validity_flags = 0;
+> > +    stw_le_p(&dCap.host_id, hid);
+> > +    /* only valid for DC_REGION_CONFIG_UPDATED event */
+> > +    dCap.updated_region_id = 0;
+> > +    /*
+> > +     * FIXME: for now, the "More" flag is cleared as there is only one
+> > +     * extent associating with each record and tag-based release is
+> > +     * not supported.
+> 
+> Hmm. Seems like tag support would be easy.  Add an optional qmp parameter,
+> if a tag is set, we set the more flag for all but the last entry in this
+> loop.  I'm ok with that being a follow up patch though.
+> 
+> > +     */
+> > +    dCap.flags = 0;
+> > +    for (i = 0; i < num_extents; i++) {
+> > +        memcpy(&dCap.dynamic_capacity_extent, &extents[i],
+> > +               sizeof(CXLDCExtentRaw));
+> > +
+> > +        if (type == DC_EVENT_ADD_CAPACITY) {
+> > +            cxl_insert_extent_to_extent_list(&dcd->dc.extents_pending_to_add,
+> > +                                             extents[i].start_dpa,
+> > +                                             extents[i].len,
+> > +                                             extents[i].tag,
+> > +                                             extents[i].shared_seq);
+> > +        }
+> > +
+> > +        if (cxl_event_insert(&dcd->cxl_dstate, enc_log,
+> > +                             (CXLEventRecordRaw *)&dCap)) {
+> > +            cxl_event_irq_assert(dcd);
+> > +        }
+> > +    }
+> > +}
+> 
+> 
+> 
+> 
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 341260e6e4..b524c5e699 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -490,6 +490,7 @@ struct CXLType3Dev {
+> >          AddressSpace host_dc_as;
+> >          uint64_t total_capacity; /* 256M aligned */
+> >          CXLDCExtentList extents;
+> > +        CXLDCExtentList extents_pending_to_add;
+> 
+> Long name, extents_pending or just pending is plenty I think.
+> 
+> >          uint32_t total_extent_count;
+> >          uint32_t ext_list_gen_seq;
+> >  
+> > @@ -551,4 +552,9 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len);
+> >  
+> >  void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
+> >                                          CXLDCExtent *extent);
+> > +void cxl_insert_extent_to_extent_list(CXLDCExtentList *list, uint64_t dpa,
+> > +                                      uint64_t len, uint8_t *tag,
+> > +                                      uint16_t shared_seq);
+> > +bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
+> > +                       unsigned long size);
+> >  #endif
+> 
+> 
