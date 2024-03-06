@@ -1,79 +1,30 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BE06089F;
-	Wed,  6 Mar 2024 10:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18A87F7CC
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 11:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709721030; cv=none; b=AY5Pzk5Vc9Yg1Qk7kGLt7h/Ii5A9ub9+XAy4K3ESNXqS/Y/bSIzQTi7Li+W7Aayj8EI2n30wWF8dsjieklQ1/eW9Zo8egbmU51GPlpHt7C7v4aLQBlAo1mjyUFR3Pp+dDhio6Dg8wJAGfGOgmmvFUXnFcx2lq/G/327YGTmuTEI=
+	t=1709724456; cv=none; b=VpOa62oiJmxAjCwSNdPME6I7cGMOu5zMrflF5ilGpoUqSwa/lqW+qL43M6ABCD+dD4fK4X2zVFNKZR6mQrwQ+z1qswpEe9oht4yfs9dc6tVO8BZQiVc64AFT8zjp5thAmdGFsY3SeZPi4azuXD+lQndU+kDYmNcbRpPKB2GYaxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709721030; c=relaxed/simple;
-	bh=Nq7SMqNBqa42A9Gw9it0V4iEBEk255GCXGK0EU8r0Nc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l1vVJHVNM5LNn/5XND9Y0gZbLMBdbifNrsN7ivC8YFxgR8sljqpeZtIsluCNROY6kR2rreXpwdr4O7wFiiQZmRpdIzcaviDQVvBTx3DCIafpyjVLXNWHFwFw4/MNRyJYlFmbAUSKNJRwylUAJzxe0ydnZ+B7igXzjKeOH0F5yEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=X++/zVCQ; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="X++/zVCQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709721029; x=1741257029;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Nq7SMqNBqa42A9Gw9it0V4iEBEk255GCXGK0EU8r0Nc=;
-  b=X++/zVCQWbD3RwO4sV0R5jBoWm59aunLFlpz3wvSj7tUIUr1+QIcfxcw
-   rUs51YTB9zQ4GsEFyK7E9vjQzv0Au7y/DHG9M/IIFiCx7tL2jEhH7HUXZ
-   chdvdHYTFqV6pzIBWj11H5sAtkQ/5VztBHXXiORyfbehxUOTV2ZPhDbbo
-   0/vGrLBods4ZHkPHoHSMHz4JikXFb9z6EalEfAX2XZhSG7SsF8+yNrddq
-   j3yL4Pimm6h3PUI9+zXPNs6wxWMi1QvXj5go7YYDTGpjexIN++Vqqfss8
-   zIrxwjNOuKfwNc4iyucLrPUjbkzprpGv7peddPfybMqsSH0zoBMZYiYI5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="130699036"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705330800"; 
-   d="scan'208";a="130699036"
-Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:29:16 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id C7383E5EA4;
-	Wed,  6 Mar 2024 19:29:12 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 06543D21CB;
-	Wed,  6 Mar 2024 19:29:12 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 3D7B22030C7E0;
-	Wed,  6 Mar 2024 19:29:11 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4A1AE1A006A;
-	Wed,  6 Mar 2024 18:29:10 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	Alison Schofield <alison.schofield@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	hpa@zytor.com,
-	Ingo Molnar <mingo@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org,
-	nvdimm@lists.linux.dev,
-	x86@kernel.org,
-	kexec@lists.infradead.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH v3 6/7] x86/crash: make device backed vmemmap dumpable for kexec_file_load
-Date: Wed,  6 Mar 2024 18:28:45 +0800
-Message-Id: <20240306102846.1020868-7-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240306102846.1020868-1-lizhijian@fujitsu.com>
-References: <20240306102846.1020868-1-lizhijian@fujitsu.com>
+	s=arc-20240116; t=1709724456; c=relaxed/simple;
+	bh=PssdZqeP4i4j3E93MGK0lvPzSFVTm4F7qPMQIcyRHdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M2D5w4tpbv9MWA+zJnRReGBBVmBseY0WFsda15Tq0JGKoWpH+gndTBEoOqZMTg87hROaiJGNIuiZfri9ddYAQuqMXLiQVw2e/z2/BeDY2TyOTEoxs/qjJyPaSzejfZI5JFXy0HEaLIaAIYnUm80KizTrtocO79CbRhh4cQjlHK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBniXAYU+hlRBWQCw--.18955S2;
+	Wed, 06 Mar 2024 19:27:20 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwCXZYIQU+hlc28AAA--.730S3;
+	Wed, 06 Mar 2024 19:27:13 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan.Cameron@Huawei.com
+Cc: linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org
+Subject: Questions about CXL RAS injection test in qemu
+Date: Wed,  6 Mar 2024 19:27:07 +0800
+Message-Id: <20240306112707.3116081-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,59 +32,105 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28234.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28234.006
-X-TMASE-Result: 10--8.255800-10.000000
-X-TMASE-MatchedRID: Eprm7pA/VZ5ZxhI5bGrNsjiEPRj9j9rvSdIdCi8Ba4AiqRodPpseIRwE
-	EIVsM/kp/lneBjailE5V00+whwxVQy/7QU2czuUNA9lly13c/gH4uJ1REX4MHbs3Yh2IOCYzJti
-	zbkLGoS92PULLZTziuytFAV6Sdl32oFf+7ciBzQpYKMMlFh4BncnlJe2gk8vIMzT8XBPSpdajxY
-	yRBa/qJXcsDK2xBHh7jaPj0W1qn0Q7AFczfjr/7LEnb/1qBW++QLtrZDNFv46p+VAyfOE7vP5i9
-	RGEpFvIT2g+olvABKw=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-CM-TRANSID:AQAAfwCXZYIQU+hlc28AAA--.730S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWXnc+MHVAABsQ
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZw4xXw4rCr4ktFW8XF17trb_yoW5Ww4Upa
+	4xt3s2q34rJ3WxJa4DAFy8Z3W2qrn3XayDWF1UGrnYyFyjqr4rXr48Ka4Y9w1rKr97G343
+	Xa4ktFs8Ga1DW3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Add resources with specific flags to PT_LOADs of the elfcorehdr so that
-these resources can be dumpable. This change is for kexec_file_load(2)
-while kexec_load(2) setups the PT_LOADs according to its parameters
-by the callers which usually rely on resources' name from /proc/iomem
+Hello, Jonathan
 
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: Baoquan He <bhe@redhat.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: x86@kernel.org
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- arch/x86/kernel/crash.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Recently I met some problems on CXL RAS tests. 
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index b6b044356f1b..b8426fedd2cd 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -146,6 +146,8 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	if (!nr_ranges)
- 		return NULL;
- 
-+	walk_device_backed_vmemmap_res(0, -1, &nr_ranges,
-+				       get_nr_ram_ranges_callback);
- 	/*
- 	 * Exclusion of crash region and/or crashk_low_res may cause
- 	 * another range split. So add extra two slots here.
-@@ -212,6 +214,9 @@ static int prepare_elf_headers(void **addr, unsigned long *sz,
- 	if (ret)
- 		goto out;
- 
-+	walk_device_backed_vmemmap_res(0, -1, cmem,
-+				       prepare_elf64_ram_headers_callback);
-+
- 	/* Exclude unwanted mem ranges */
- 	ret = elf_header_exclude_ranges(cmem);
- 	if (ret)
--- 
-2.29.2
+I tried to use "cxl-inject-uncorrectable-errors" and "cxl-inject-correctable-error"
+qmp to inject CXL errors, however, there was no any kernel printing information in 
+my qemu machine. And the qmp connection was unstable that made the machine 
+always "terminating on signal 2".
+
+In addition, I successfully used the hmp "pcie_aer_inject_error" in the same conditions.
+The kernel showed relevant print information.
+
+Question:
+1) Is my CXL RAS test operations standard?
+2) The error injected by "pcie_aer_inject_error" is "protocol & link errors" of cxl.io?
+   The error injected by "cxl-inject-uncorrectable-errors" or "cxl-inject-correctable-error" is "protocol & link errors" of cxl.cachemem?
+
+Hope I can get some helps here, any help will be greatly appreciated.
+
+
+My qemu command line:
+qemu-system-x86_64 \
+-M q35,nvdimm=on,cxl=on \
+-m 4G \
+-smp 4 \
+-object memory-backend-ram,size=2G,id=mem0 \
+-numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+-object memory-backend-ram,size=2G,id=mem1 \
+-numa node,nodeid=1,cpus=2-3,memdev=mem1 \
+-object memory-backend-ram,size=256M,id=cxl-mem0 \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+-device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem0 \
+-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k \
+-hda ../disk/ubuntu_x86_test_new.qcow2 \
+-nographic \
+-qmp tcp:127.0.0.1:4444,server,nowait \
+
+Qemu version: 8.2.50, the lastest commit of branch cxl-2024-03-05 in "https://gitlab.com/jic23/qemu" 
+Kernel version: 6.8.0-rc6
+
+My steps in the Qemu qmp:
+1) telnet 127.0.0.1 4444
+
+result:
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+{"QMP": {"version": {"qemu": {"micro": 50, "minor": 2, "major": 8}, "package": "v6.2.0-19482-gccfb4fe221"}, "capabilities": ["oob"]}}
+
+2) { "execute": "qmp_capabilities" }
+
+result:
+{"return": {}}
+
+3) If inject correctable error:
+{ "execute": "cxl-inject-correctable-error",
+    "arguments": {
+        "path": "/machine/peripheral/cxl-mem0",
+        "type": "physical"
+    } }
+
+result:
+{"return": {}}
+
+3) If inject uncorrectable error:
+{ "execute": "cxl-inject-uncorrectable-errors",
+  "arguments": {
+    "path": "/machine/peripheral/cxl-mem0",
+    "errors": [
+        {
+            "type": "cache-address-parity",
+            "header": [ 3, 4]
+        },
+        {
+            "type": "cache-data-parity",
+            "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+        },
+        {
+            "type": "internal",
+            "header": [ 1, 2, 4]
+        }
+        ]
+  }}
+
+result:
+{"return": {}}
+{"timestamp": {"seconds": 1709721640, "microseconds": 275345}, "event": "SHUTDOWN", "data": {"guest": false, "reason": "host-signal"}}
+
+Many thanks
+Yuquan
 
