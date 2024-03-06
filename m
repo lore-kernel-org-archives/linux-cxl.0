@@ -1,176 +1,170 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC7E5E08B
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 18:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EE71369BA
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 18:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709748868; cv=none; b=VsCWTL4S++RhlUHi45kHuk2kLJBZpEBUXh7nY3jB4DRwzlKXsVXZhjDwbzwQXF1D6bVGgKisXjsPbIIXJjmES/ATgP/L8euW1F5550aLvKlTCa691mE1XPD1d1kqQ+aDUEqO/LPvjPZfGPLK0BoSjejCGR63Fg7IzTeLtr1EDA0=
+	t=1709750380; cv=none; b=pu4iHlJbeOptCcL+CUjcaHTDjli6rQ4U/ePxtwB3t1rUVZfuyJVeXDFnoEwUYelhgUJMFGT9jZ8wIPT65f7c2eNkJMmUz3TKJByjAR1q3clbpTcrrXamZ2z2zl8Lhe7r1JWs5woeQQeUZEQx+mHYQIlhZnFEgYiOj7+0fvvrJ3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709748868; c=relaxed/simple;
-	bh=SovEYFz2HkkUmc+KIkKoC1dzLTIDsJodtHJeaJf/KzM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sQPhL8EmWDIe/T4vkaEM0KzGoxNfPnc7jT4ld8SJF41huxacVBQ01v9uu1gPlKz5JNDXVqlHSTN6mVowQQZtNByvLUf/DzPQhaCulY67II8JBAuqkhffyIl5odP4wFeJ4d8ly1JDEjs4cAOGqd/Qrw6Tg+/7d2gK/Est0NebsiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TqgYq3yHfz6J9Tw;
-	Thu,  7 Mar 2024 02:14:23 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 56AB61400D7;
-	Thu,  7 Mar 2024 02:14:24 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 6 Mar
- 2024 18:14:23 +0000
-Date: Wed, 6 Mar 2024 18:14:22 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <nifan.cxl@gmail.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
-	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
-	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v5 12/13] hw/mem/cxl_type3: Allow to release partial
- extent and extent superset in QMP interface
-Message-ID: <20240306181422.00002b75@Huawei.com>
-In-Reply-To: <20240304194331.1586191-13-nifan.cxl@gmail.com>
-References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
-	<20240304194331.1586191-13-nifan.cxl@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1709750380; c=relaxed/simple;
+	bh=xb7JvkEju0Mcu4tPfFmUTTwajxgqXxRL8GT8RZczl1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiinNjzR3fqSsdQzXNEXokqbCAGhxX6kxNKOEtWvYrn70lMwGsMHToleiPiiUuiFSklwr9055tTGfcSQN+rWIkevFemCgU5IJ4JEonV/AGxuWAuUGSOITzi+6aySpHsOkrsf8Vk1wQeCNFElGcHwB4X+gHeZP/UQuanUcWKQ6wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FxzfvLTK; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FxzfvLTK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709750378; x=1741286378;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xb7JvkEju0Mcu4tPfFmUTTwajxgqXxRL8GT8RZczl1E=;
+  b=FxzfvLTKFzwzDznr8bEharLfm+0D9fkJK6nzTUneF2WOK3GJ3YAa68Bv
+   d2y+OkQXSYm8Xe7W+AUdfaxS7ejsws89yRH72hvgtEFSwRJ8AHMS7FD9C
+   L5JN4s/HbtuuIwINvbVWHlnYTchR2VSM/h0W0RJXKnGvbpnYCqFFOpRq5
+   wKvzdeSfeWUCxz0ou70Md73p81TG9BHUCZ+4DnlF+mQ8iHa/9P2sm/mGp
+   6juh1L3twKcJ6V3HytVIWF9vr52nk8XkT4J09Q+RSd13iWkiYdoOFsGnN
+   Q92dOP8WYeQiO2Mi+jpv0+CAOY5OhAsW8nPlm/ePBqES2E8zcQSWoRwKk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4562464"
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="4562464"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:39:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
+   d="scan'208";a="40823372"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.9.155])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 10:39:37 -0800
+Date: Wed, 6 Mar 2024 10:39:35 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v9 5/7] cxl/list: collect and parse media_error
+ records
+Message-ID: <Zei4Z9sukWIEqkAn@aschofie-mobl2>
+References: <cover.1709253898.git.alison.schofield@intel.com>
+ <9a6be3fd24b22661ec39ea614f75266b594026b3.1709253898.git.alison.schofield@intel.com>
+ <85f2763b-6665-4f76-9175-d7c5acaf2a3d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85f2763b-6665-4f76-9175-d7c5acaf2a3d@intel.com>
 
-On Mon,  4 Mar 2024 11:34:07 -0800
-nifan.cxl@gmail.com wrote:
-
-> From: Fan Ni <fan.ni@samsung.com>
+On Mon, Mar 04, 2024 at 01:03:55PM -0700, Dave Jiang wrote:
 > 
-> Before the change, the QMP interface used for add/release DC extents
-> only allows to release extents that exist in either pending-to-add list
-> or accepted list in the device, which means the DPA range of the extent must
-> match exactly that of an extent in either list. Otherwise, the release
-> request will be ignored.
 > 
-> With the change, we relax the constraints. As long as the DPA range of the
-> extent to release is covered by extents in one of the two lists
-> mentioned above, we allow the release.
+> On 2/29/24 6:31 PM, alison.schofield@intel.com wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Media_error records are logged as events in the kernel tracing
+> > subsystem. To prepare the media_error records for cxl list, enable
+> > tracing, trigger the poison list read, and parse the generated
+> > cxl_poison events into a json representation.
+> > 
+> > Use the event_trace private parsing option to customize the json
+> > representation based on cxl-list calling options and event field
+> > settings.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  cxl/json.c | 271 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 271 insertions(+)
+> > 
+
+snip
+
+> > +static int poison_event_to_json(struct tep_event *event,
+> > +				struct tep_record *record, void *ctx)
+> > +{
+> > +	struct poison_ctx *p_ctx = (struct poison_ctx *)ctx;
+> > +	struct json_object *jobj, *jp, *jpoison = p_ctx->jpoison;
+> > +	unsigned long flags = p_ctx->flags;
+> > +	char flag_str[32] = { '\0' };
+> > +	bool overflow = false;
+> > +	u8 source, pflags;
+> > +	const char *name;
+> > +	u64 addr, ts;
+> > +	u32 length;
+> > +	char *str;
+> > +
+> > +	jp = json_object_new_object();
+> > +	if (!jp)
+> > +		return -ENOMEM;
+> > +
+> > +	/* Skip records not in this region when listing by region */
+> > +	name = p_ctx->region ? cxl_region_get_devname(p_ctx->region) : NULL;
+> > +	if (name)
+> > +		str = cxl_get_field_string(event, record, "region");
+> > +
+> > +	if ((name) && (strcmp(name, str) != 0)) {
+> > +		json_object_put(jp);
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* Include endpoint decoder name with hpa, when present */
+> > +	name = cxl_get_field_string(event, record, "memdev");
+> > +	addr = cxl_get_field_u64(event, record, "hpa");
+> > +	if (addr != ULLONG_MAX)
+> > +		name = find_decoder_name(p_ctx, name, addr);
+> > +	else
+> > +		name = NULL;
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Run out of time today,  so just took a very quick look at this.
+> Why assign name a few lines above and then reassign here without using?
 
-Seemed fine but similar comments on exit conditions and retry gotos as
-earlier patches.
-
-> +/*
-> + * Remove all extents whose DPA range has overlaps with  the DPA range
-> + * [dpa, dpa + len) from the list, and delete the overlapped portion.
-> + * Note:
-> + * 1. If the removed extents is fully within the DPA range, delete the extent;
-> + * 2. Otherwise, keep the portion that does not overlap, insert new extents to
-> + * the list if needed for the un-coverlapped part.
-> + */
-> +static void cxl_delist_extent_by_dpa_range(CXLDCExtentList *list,
-> +                                           uint64_t dpa, uint64_t len)
-> +{
-> +    CXLDCExtent *ent;
->  
-> -    return NULL;
-> +process_leftover:
-
-As before can we turn this into a while loop so the exit conditions are 
-more obvious?  Based on len I think.
+name is used as a param to find_decoder_name(). I'll move that to
+only retrieve from the record if we're doing find_decod_name().
 
 
-> +    QTAILQ_FOREACH(ent, list, node) {
-> +        if (ent->start_dpa <= dpa && dpa < ent->start_dpa + ent->len) {
-> +            uint64_t ent_start_dpa = ent->start_dpa;
-> +            uint64_t ent_len = ent->len;
-> +            uint64_t len1 = dpa - ent_start_dpa;
-> +
-> +            cxl_remove_extent_from_extent_list(list, ent);
-> +            if (len1) {
-> +                cxl_insert_extent_to_extent_list(list, ent_start_dpa,
-> +                                                 len1, NULL, 0);
-> +            }
-> +
-> +            if (dpa + len <= ent_start_dpa + ent_len) {
-> +                uint64_t len2 = ent_start_dpa + ent_len - dpa - len;
-> +                if (len2) {
-> +                    cxl_insert_extent_to_extent_list(list, dpa + len,
-> +                                                     len2, NULL, 0);
-> +                }
-> +            } else {
-> +                len = dpa + len - ent_start_dpa - ent_len;
-> +                dpa = ent_start_dpa + ent_len;
-> +                goto process_leftover;
-> +            }
-> +        }
-> +    }
->  }
->  
->  /*
-> @@ -1915,8 +1966,8 @@ static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,
->      list = records;
->      extents = g_new0(CXLDCExtentRaw, num_extents);
->      while (list) {
-> -        CXLDCExtent *ent;
->          bool skip_extent = false;
-> +        CXLDCExtentList *extent_list;
->  
->          offset = list->value->offset;
->          len = list->value->len;
-> @@ -1933,15 +1984,32 @@ static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,
->               * remove it from the pending extent list, so later when the add
->               * response for the extent arrives, the device can reject the
->               * extent as it is not in the pending list.
-> +             * Now, we can handle the case where the extent covers the DPA
+> Also I noticed the name gets reassigned for different purposes a few times. Can we have separate variables in order to make the code cleaner to read? I think maybe a region_name and a decoder_name.
 
-No need for Now. Anyone reading it is look at the cod here.
+Yes, done in v10.
 
-> +             * range of multiple extents in the pending_to_add list.
-> +             * TODO: we do not allow the extent covers range of extents in
-> +             * pending_to_add list and accepted list at the same time for now.
->               */
-> -            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
-> -                        &extents[i]);
-> -            if (ent) {
-> -                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
-> -                g_free(ent);
-> +            extent_list = &dcd->dc.extents_pending_to_add;
-> +            if (cxl_test_dpa_range_covered_by_extents(extent_list,
-> +                                                      extents[i].start_dpa,
-> +                                                      extents[i].len)) {
-> +                cxl_delist_extent_by_dpa_range(extent_list,
-> +                                               extents[i].start_dpa,
-> +                                               extents[i].len);
-> +            } else if (!ct3_test_region_block_backed(dcd, extents[i].start_dpa,
-> +                                                     extents[i].len)) {
-> +                /*
-> +                 * If the DPA range of the extent is not covered by extents
-> +                 * in the accepted list, skip
-> +                 */
->                  skip_extent = true;
-> -            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
-> -                /* If the exact extent is not in the accepted list, skip */
-> +            }
-> +        } else if (type == DC_EVENT_ADD_CAPACITY) {
-> +            extent_list = &dcd->dc.extents;
-> +            /* If the extent is ready pending to add, skip */
-> +            if (cxl_test_dpa_range_covered_by_extents(extent_list,
-> +                                                      extents[i].start_dpa,
-> +                                                      extents[i].len)) {
->                  skip_extent = true;
->              }
->          }
+> > 
 
+snip
+
+> > +
+> > +	source = cxl_get_field_u8(event, record, "source");
+> > +	switch (source) {
+> > +	case CXL_POISON_SOURCE_UNKNOWN:
+> > +		jobj = json_object_new_string("Unknown");
+> > +		break;
+> > +	case CXL_POISON_SOURCE_EXTERNAL:
+> > +		jobj = json_object_new_string("External");
+> > +		break;
+> > +	case CXL_POISON_SOURCE_INTERNAL:
+> > +		jobj = json_object_new_string("Internal");
+> > +		break;
+> > +	case CXL_POISON_SOURCE_INJECTED:
+> > +		jobj = json_object_new_string("Injected");
+> > +		break;
+> > +	case CXL_POISON_SOURCE_VENDOR:
+> > +		jobj = json_object_new_string("Vendor");
+> > +		break;
+> > +	default:
+> > +		jobj = json_object_new_string("Reserved");
+> > +	}
+> 
+> Seems like you can have a static string table here? Then you can do something like:
+> if (source < CXL_POISON_SOURCE_MAX)
+> 	jobj = json_object_new_string(cxl_poison_source[source]);
+> else
+> 	jobj = json_object_new_string("Reserved");
+> 
+> DJ
+
+Nice! Please take a look at in v10.
+
+Thanks for the review!
+
+snip
