@@ -1,50 +1,51 @@
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE18604AD;
-	Wed,  6 Mar 2024 10:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBB35FDBD;
+	Wed,  6 Mar 2024 10:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720962; cv=none; b=ChvnSTd+4V5rIIL2FLpxwt7P6Itv9EyA61v+6cUPJP7L7/PbjJuvRnmlOjk7y16sb7V7sQY+NLx0pE+U1bT1VZ7kXO2SBLlxyDaMvxEqNU3F9EYMi8/QRkUNJpIRADO65Y8d3722e0sPCrtq3vfQC/zkGgt9OB0br6Wp+pICUi4=
+	t=1709720964; cv=none; b=iiksO6Vd1QM00nVNyTWEUBcIR0se5tl/Hbcq1xo4TpDGSC/+IYX/f7UqJ2XtIm//3yNOphF/QMTgNCknXOF4fMVeOpGmhUZG02D8Fj2kuAzPTBSZWBHuz4gTyjpnjMUjBNoyhspWOyphn+dAR9FPiyx054jjmnSy8fQsYvZ+vgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720962; c=relaxed/simple;
-	bh=L1uC7nmPQ3VWAXabC3fl20OZJAiFpMalcUh/l8cZZSY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ilvg+v6u8eo5O0Rz04AyS2/kxxj3qDGIse9MTlsny8u1/2X29lbce6Ngjq/JvzdjEXlwB/DneNUrjjafwxGD4/zHrUl9nJxq6QN0/Bi7P/jknFey3Api0wTgZxlj2TPc7BmePJAiDb+eb4uOZ5qnN7FDIDYe1xzkQdYcCD4UkTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=t2qbWeem; arc=none smtp.client-ip=139.138.61.253
+	s=arc-20240116; t=1709720964; c=relaxed/simple;
+	bh=XdN3aG00u/QsuyGD6b2X8W2/qtDpU1h/uB9UBsmVuQc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Xbkq6fbB8Zf5IpvlZCu+DqBQxKsIvU26AYdgwq/OeXp272AKkdph34EIr/ZKQP6jmPHXvLHwCHiW0jjRTqEKv4wwlPTFNTDkmALbv7zxaF7DpJDjkB+kmZG24YdOVblTk4TLXmhopAj0aRoknqEPWQBhokx7zO1d0vHAaGCMC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=i7oIz5Ow; arc=none smtp.client-ip=207.54.90.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="t2qbWeem"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="i7oIz5Ow"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709720960; x=1741256960;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L1uC7nmPQ3VWAXabC3fl20OZJAiFpMalcUh/l8cZZSY=;
-  b=t2qbWeemScOCHVgSVQ4UeYpIkTVjlvsMT7v7MfBrfPUCKKb/pTC3F0fO
-   1rVlZIsa+sXBb4YtsA2f33SgT0ek788CC+Pdv+g0kZEANoTsT3qk5L78t
-   VL9RaJ1tCpgl73Xe/FfuUA744iWSdV8cRcnGfwlYLrz/yRekPYxWy8fjs
-   4ijnXfdCosQDdoOAfOp4+iwLGt7aR0o2Tg+hBmyZdL9c0Y5YbrEIaJx1T
-   a2OGWLvrKCX205CG5cU3Qzj1UcYdYrvr4+hJeP/+Z5bdjpIV7/AobGVed
-   hr/3Ef8G4U85wzTmrh6CBOfLvtxOUaJZF0F5+ge3kTJL1pfZ2R4Emf1Bs
+  t=1709720963; x=1741256963;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XdN3aG00u/QsuyGD6b2X8W2/qtDpU1h/uB9UBsmVuQc=;
+  b=i7oIz5OwHcZcjmSc67Vln7VqltmBwUy9CDi9vzDDyeQKzAVZQpnHo4q5
+   Fel2EmdL2U5G4tLpuJQDXV73NqoUd+gfgXq9GwvEqTNbJYrTGBSGHh3DB
+   7JmM1Tf8cQsEnj0f1IoZyGbBDB3BkJLv+0NbGhZWO3BvvwNZ0ZRV7ifHy
+   TX43EA1E0OrZEOav8olPtPSDv5qQyWS1uGwnFOV9Al7ltVjMoFYQEpN8U
+   3iB96TmrZtp3hBausy/DonrcQPhbO1I6XyOAHY3yWvwZK+8DKyqiG/1Fh
+   5a4boo8S4tQgRYLabbiLcudJSozgNX75vZJcOnWNLdFuQ4CwLs+ZBdmlk
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="139406007"
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="151260035"
 X-IronPort-AV: E=Sophos;i="6.06,208,1705330800"; 
-   d="scan'208";a="139406007"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:29:11 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 03F83DD92F;
-	Wed,  6 Mar 2024 19:29:08 +0900 (JST)
+   d="scan'208";a="151260035"
+Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
+  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 19:29:14 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id B1867A345D;
+	Wed,  6 Mar 2024 19:29:11 +0900 (JST)
 Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 0A60CFDA06;
-	Wed,  6 Mar 2024 19:29:07 +0900 (JST)
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id E2DABD5603;
+	Wed,  6 Mar 2024 19:29:10 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 73A2321735D;
-	Wed,  6 Mar 2024 19:29:06 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 66630401D3;
+	Wed,  6 Mar 2024 19:29:10 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 8455D1A006A;
-	Wed,  6 Mar 2024 18:29:04 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 782981A006D;
+	Wed,  6 Mar 2024 18:29:09 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: y-goto@fujitsu.com,
@@ -67,10 +68,12 @@ Cc: y-goto@fujitsu.com,
 	x86@kernel.org,
 	kexec@lists.infradead.org,
 	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [RFC PATCH v3 0/7] device backed vmemmap crash dump support
-Date: Wed,  6 Mar 2024 18:28:39 +0800
-Message-Id: <20240306102846.1020868-1-lizhijian@fujitsu.com>
+Subject: [PATCH v3 5/7] resource: Introduce walk device_backed_vmemmap res() helper
+Date: Wed,  6 Mar 2024 18:28:44 +0800
+Message-Id: <20240306102846.1020868-6-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240306102846.1020868-1-lizhijian@fujitsu.com>
+References: <20240306102846.1020868-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,142 +85,69 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28234.006
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28234.006
-X-TMASE-Result: 10--12.047900-10.000000
-X-TMASE-MatchedRID: WgnE0i2Gnm0S1H+wJnLU0xxQCXaqsX3JICcCYi/y4c1YC5LPd7BvbZVh
-	8IAdHNwNV9EQFA1Eag8lMmENZ05/+9/K1ikJIsLOF+qQpCWTUjks9yCYjUR6S0u7cLcUs73+UAr
-	JnwHoG3RN6oLBwrNlQwp3Fx4qZRwntpor8DSuIkBIK2DGByysyvrFoSv9vjATUYkZd9+4t2+K/w
-	YsY7aZE7yLKxASOUwjkBUaTCifn9xExKw+e7wVxgPZZctd3P4BX098A7fr3Vfir9ZdeIDkfES3N
-	7Ud/ZNyw3/C2qEmiGxJ7i3niaFL/WIo6q3zeo5wqhcdnP91eXGdj7YWJLs3nTb+WPFOeKNMsX5M
-	tbDfIWiy+iBzQ4hgrIaPRWRVv3Ad5mMeg8RfsnWHmRpBdG9H1zX8AUEphxj0Blnw3dG9MzGjxYy
-	RBa/qJcFwgTvxipFajoczmuoPCq3JpPrv+A3tItKgYcJqG5qWnoRh9cAERsgMkJ+raRGIqWxKck
-	D0+Hnx
+X-TMASE-Result: 10--2.753200-10.000000
+X-TMASE-MatchedRID: VGeBglENKylzKOD0ULzeCRFbgtHjUWLyPeYVUCg2LRwBLwIiWDU8ay15
+	IFUNL+ETjx5X3FdI4UDmn3xyPJAJoh2P280ZiGmRcFEiuPxHjsXDCscXmnDN79P7VmP7Drr66us
+	OKvlQZawRYCju0yIRX4Ay6p60ZV62Mhe627A+8aHdB/CxWTRRu+rAZ8KTspSzZ9zg/iRwE4LkAQ
+	bstzNuLM5Iu+GqAiaI4D/GW2/5ILcxeNB9x03X8fQFNK0GDkNxsoGRy2pyHXLNTBw2qqp0+A7H6
+	7Vl1o7oIcmnZRhVxyrE4HwnSlEuHInEpJmLAFfpC1FNc6oqYVV+3BndfXUhXQ==
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Hello folks,
+It walks resources registered with flags
+(IORESOURCE_DEVICE_BACKED_VMEMMAP | IORESOURCE_BUSY), usually used by
+device backed vmemmap region. currently, it only sticks to the
+persistent memory type since it is only one user.
 
-Compared with the V2[1] I posted a long time ago, this time it is a
-completely new proposal design.
-
-### Background and motivate overview ###
----
-Crash dump is an important feature for troubleshooting the kernel. It is the
-final way to chase what happened at the kernel panic, slowdown, and so on. It
-is one of the most important tools for customer support.
-
-Currently, there are 2 syscalls(kexec_file_load(2) and kexec_load(2)) to
-configure the dumpable regions. Generally, (A)iomem resources registered with
-flags (IORESOURCE_SYSTEM_RAM | IORESOUCE_BUSY) for kexec_file_load(2) or
-(B)iomem resources registered with "System RAM" name prefix for kexec_load(2)
-are dumpable.
-
-The pmem use cases including fsdax and devdax, could map their vmemmap to
-their own devices. In this case, these part of vmemmap will not be dumped when
-crash happened since these regions are satisfied with neither the above (A)
-nor (B).
-
-In fsdax, the vmemmap(struct page array) becomes very important, it is one of
-the key data to find status of reverse map. Lacking of the information may
-cause difficulty to analyze trouble around pmem (especially Filesystem-DAX).
-That means troubleshooters are unable to check more details about pmem from
-the dumpfile.
-
-### Proposal ###
----
-In this proposal, register the device backed vmemmap as a separate resource.
-This resource has its own new flag and name, and then teaches kexec_file_load(2)
-and kexec_load(2) to mark it as dumpable.
-
-Proposed flag: IORESOURCE_DEVICE_BACKED_VMEMMAP
-Proposed name: "Device Backed Vmemmap"
-
-NOTE: crash-utils also needs to adapt to this new name for kexec_load()
-
-With current proposal, the /proc/iomem should show as following for device
-backed vmemmap
-# cat /proc/iomem
-...
-fffc0000-ffffffff : Reserved
-100000000-13fffffff : Persistent Memory
-  100000000-10fffffff : namespace0.0
-    100000000-1005fffff : Device Backed Vmemmap  # fsdax
-a80000000-b7fffffff : CXL Window 0
-  a80000000-affffffff : Persistent Memory
-    a80000000-affffffff : region1
-      a80000000-a811fffff : namespace1.0
-        a80000000-a811fffff : Device Backed Vmemmap # devdax
-      a81200000-abfffffff : dax1.0
-b80000000-c7fffffff : CXL Window 1
-c80000000-147fffffff : PCI Bus 0000:00
-  c80000000-c801fffff : PCI Bus 0000:01
-...
-
-### Kdump service reloading ###
----
-Once the kdump service is loaded, if changes to CPUs or memory occur,
-either by hot un/plug or off/onlining, the crash elfcorehdr should also
-be updated. There are 2 approaches to make the reloading more efficient.
-1) Use udev rules to watch CPU and memory events, then reload kdump
-2) Enable kernel crash hotplug to automatically reload elfcorehdr (>= 6.5)
-
-This reloading also needed when device backed vmemmap layouts change, Similar
-to what 1) does now, one could add the following as the first lines to the
-RHEL udev rule file /usr/lib/udev/rules.d/98-kexec.rules:
-
-# namespace updated: watch daxX.Y(devdax) and pfnX.Y(fsdax) of nd
-SUBSYSTEM=="nd", KERNEL=="[dp][af][xn][0-9].*", ACTION=="bind", GOTO="kdump_reload"
-SUBSYSTEM=="nd", KERNEL=="[dp][af][xn][0-9].*", ACTION=="unbind", GOTO="kdump_reload"
-# devdax <-> system-ram updated: watch daxX.Y of dax
-SUBSYSTEM=="dax", KERNEL=="dax[0-9].*", ACTION=="bind", GOTO="kdump_reload"
-SUBSYSTEM=="dax", KERNEL=="dax[0-9].*", ACTION=="unbind", GOTO="kdump_reload"
-
-Regarding 2), my idea is that it would need to call the memory_notify() in
-devm_memremap_pages_release() and devm_memremap_pages() to trigger the crash
-hotplug. This part is not yet mature, but it does not affect the whole feature
-because we can still use method 1) alternatively.
-
-[1] https://lore.kernel.org/lkml/02066f0f-dbc0-0388-4233-8e24b6f8435b@fujitsu.com/T/
---------------------------------------------
-changes from V2[1]
-- new proposal design
-
-CC: Alison Schofield <alison.schofield@intel.com>
 CC: Andrew Morton <akpm@linux-foundation.org>
 CC: Baoquan He <bhe@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>
 CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Ira Weiny <ira.weiny@intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Vishal Verma <vishal.l.verma@intel.com>
-CC: linux-cxl@vger.kernel.org
-CC: linux-mm@kvack.org
-CC: nvdimm@lists.linux.dev
-CC: x86@kernel.org
+CC: Alison Schofield <alison.schofield@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+ include/linux/ioport.h |  3 +++
+ kernel/resource.c      | 13 +++++++++++++
+ 2 files changed, 16 insertions(+)
 
-Li Zhijian (7):
-  mm: memremap: register/unregister altmap region to a separate resource
-  mm: memremap: add pgmap_parent_resource() helper
-  nvdimm: pmem: assign a parent resource for vmemmap region for the
-    fsdax
-  dax: pmem: assign a parent resource for vmemmap region for the devdax
-  resource: Introduce walk device_backed_vmemmap res() helper
-  x86/crash: make device backed vmemmap dumpable for kexec_file_load
-  nvdimm: set force_raw=1 in kdump kernel
-
- arch/x86/kernel/crash.c         |  5 +++++
- drivers/dax/pmem.c              |  8 ++++++--
- drivers/nvdimm/namespace_devs.c |  3 +++
- drivers/nvdimm/pmem.c           |  9 ++++++---
- include/linux/ioport.h          |  4 ++++
- include/linux/memremap.h        |  4 ++++
- kernel/resource.c               | 13 +++++++++++++
- mm/memremap.c                   | 30 +++++++++++++++++++++++++++++-
- 8 files changed, 70 insertions(+), 6 deletions(-)
-
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 3b59e924f531..10a60227d6c2 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -332,6 +332,9 @@ extern int
+ walk_system_ram_res(u64 start, u64 end, void *arg,
+ 		    int (*func)(struct resource *, void *));
+ extern int
++walk_device_backed_vmemmap_res(u64 start, u64 end, void *arg,
++			       int (*func)(struct resource *, void *));
++extern int
+ walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+ 			int (*func)(struct resource *, void *));
+ extern int
+diff --git a/kernel/resource.c b/kernel/resource.c
+index fcbca39dbc45..5f484266af07 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -431,6 +431,19 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+ 				     func);
+ }
+ 
++/*
++ * This function calls the @func callback against all memory ranges, which
++ * are ranges marked as (IORESOURCE_DEVICE_BACKED_VMEMMAP | IORESOURCE_BUSY)
++ * and IORES_DESC_PERSISTENT_MEMORY.
++ */
++int walk_device_backed_vmemmap_res(u64 start, u64 end, void *arg,
++			int (*func)(struct resource *, void *))
++{
++	return __walk_iomem_res_desc(start, end,
++			IORESOURCE_DEVICE_BACKED_VMEMMAP | IORESOURCE_BUSY,
++			IORES_DESC_PERSISTENT_MEMORY, arg, func);
++}
++
+ /*
+  * This function, being a variant of walk_system_ram_res(), calls the @func
+  * callback against all memory ranges of type System RAM which are marked as
 -- 
 2.29.2
 
