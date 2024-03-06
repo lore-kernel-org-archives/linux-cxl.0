@@ -1,59 +1,59 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088E918EB8
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 21:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F141B7EB
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Mar 2024 22:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709761195; cv=none; b=XJcviVCam7DNNFfQ0W5O9o0WpUPLiFNjM9zDcieFmaKRG+upy3CfmdANrL/8NRegLE34T9cPkuGrXKvD0wcu8gC+eJiVBZZ+p5ZXvGi0MyFXYL+BzYKpBC6aO2mQWCskzehx1PrYQxmgxQwUHOQ6oNVknFGHoXo4AgD5Qcgic54=
+	t=1709764513; cv=none; b=MAVIQnNKLfcI5SEUQeyItwpX9j1afd1AgWb5QCWGLumKhRTKy+TCZQmTXXfmgLQVUZ1TvKMrkHvF5Rllja0Gmh8A2AMu8Doi2e5zPAsQzh3TZlbCBtUxOPN6pgMs8U0lr/VAnOeFd+/fg3H5dRzQE8QHShYOceOiEtELxN3EYHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709761195; c=relaxed/simple;
-	bh=ihvZskgpnl4kwF7o4yPyC90JGr1l04qxE6SWnOkalEA=;
+	s=arc-20240116; t=1709764513; c=relaxed/simple;
+	bh=HsmulMEPAvdAIQuNiSfPJ24+BPWGRvIYfbiGtycc1j8=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WTT3o9gWodBLQ6p99+MbxA24TkzXVfUaMRK64p6vg9xW2gWnaIkLybNGSw+ZRlx30IWynLQeCGiPfZuTadOA3bAiO2921z/XQ+iOVUVoMc6VthtJf7/qCBoSKdUssA1Vx8x2PPvnGkSLFFfYrZ43TfD/w7Pl0kv/8rgOpxipe/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ba0UD9wR; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0JhadiFjJt8llmVS5tAodI6WZmKUQQC99k9nOGXhBKtJ1bp5zaXpLWsK7JibmgodaKC/3rGEOSAElOtK2KPrbWgKAIG7NsunykzdC74Ns//d700ZOnRL6J7PLbzND5aDBIWTy0W9gWLZxf6xQvFAROpaPFQN50y3r+Z6r7jpKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b++sfbPB; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ba0UD9wR"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e5eb3dd2f8so127857b3a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 06 Mar 2024 13:39:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b++sfbPB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc49b00bdbso2131985ad.3
+        for <linux-cxl@vger.kernel.org>; Wed, 06 Mar 2024 14:35:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709761193; x=1710365993; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709764510; x=1710369310; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Keos2S+rJXmnG4LMBOndrAMBiWeEOgfIdyIn3rwUN4=;
-        b=ba0UD9wRkJD+OMc1DL/0MjvAEtudLyw3sAR3KVSlE2//f3VGc9lpyIuMn4nplhWCgF
-         VlbIzFnTmJLIQmzr5s8m9NVSQMKpSw197tbC71ocxoz2cTjvWA/Y5wgK+jXUY4qq5seP
-         8kpZBBX55j3D74ug1WQrZ1acVKrZteN25OnHtnBdFex/ZayMxhN/lM/iorRHBOguu+rB
-         hBAEN71cMZdegSXMDMCB7O97lWPiXTICiXKcTuPIT9RVNuz5889tik3S73iH9WOcbCMB
-         0jLuyAlDilE0m6atseFOgulrLgB+ONOnfZGviQlA8+g/s5GtsoVh0yPjT2eG5Wdd7ZyV
-         hHTQ==
+        bh=Gj0jhNByro2+q/l5aUmsOObEqW6klnNrWZXeSjKkvwQ=;
+        b=b++sfbPBMENohfnkc8MsT0g8GDiTmqBMMmMZz5wGYvpllb6BxzrAtvqs4E+idgOot/
+         w+EslWWrhb4bAaFWW2JOYPvNdOCfCGfV4zb7Qkczd0pc4xNvTwMBSgepCf4pZbA1a9M+
+         p+uF7vU/5Xzgp3j7wH39+ZMvGTt0Ua3rhkEkcQezLZ7yUXeBLTjJUnsrezkbSPNWM5Xs
+         2vOeyLmSj580oBbHg6OY2VUxr/TzuoLJMFKZSO8bxdT/8KKmu0nD/KqjYaZuiq/5vSJ4
+         wUGkQvvFSPChuaY7uSm8nnhcSwC3NXTAdYjmJz0jUAQRDnYCVbwI2CpVg4CXRCMtEXT8
+         JP2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709761193; x=1710365993;
+        d=1e100.net; s=20230601; t=1709764510; x=1710369310;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Keos2S+rJXmnG4LMBOndrAMBiWeEOgfIdyIn3rwUN4=;
-        b=QEZOQ31ldaK0x/mJNeiWs8LxSu7ghhtt0mu10o+SDVT+kLLS+hBNtLjMgaJXD/Zh3T
-         XkzfJYiy5dJGiVKqyftv/A8hzojOINNT+Pwtf3lhK5f3YFklnBszK/11u/SJoh3X8LS8
-         WtEkBdLwCmQ8Ub6VlX+jRh8H+7Xl214k5eZovz0BkctL5S/8X/sJrMr6xEk0FOnemY38
-         NtvzoT2DjoDTznVPCGts6/klRaRhQLfQgnjszbHtAzYCsZ6jwH9My740642I9alFYG9X
-         BZzosJhELKXl1o0PZ1ulzkmj8lGlLCRhP8xzZM/BI2gQ7c98kOqObluDhAhzRFck5oGH
-         ekNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJB74rWtXGFFM4TLLV2t0WqgOWZev+PZwFubDQQy8yBRFyxw2mz02obRTXR+ZlQIPN3tTPUVi6WsrEqppw9oT9j5Fhxd9IN1rf
-X-Gm-Message-State: AOJu0YwOBv60RreGSEhehlmtx8r9ZjEWONBBO1RbbUiSdLckIiupAA+x
-	OMbA1c2gzppSZtsRjFM6E+pxtDCKGd3i/ZFZPARLcMUWkwqA9Dt+oplmGGaI
-X-Google-Smtp-Source: AGHT+IGBnHAp18QUa/bdAbfj8/hvqUvY85VUm7X6g38qS3jxX+VgorvLDZkeIMaU4Ra3mp24QyBBzA==
-X-Received: by 2002:a05:6a00:148a:b0:6e5:3684:807f with SMTP id v10-20020a056a00148a00b006e53684807fmr17808432pfu.6.1709761193130;
-        Wed, 06 Mar 2024 13:39:53 -0800 (PST)
+        bh=Gj0jhNByro2+q/l5aUmsOObEqW6klnNrWZXeSjKkvwQ=;
+        b=iXResvcF6W+CvSgGVA8FLyXyONvwi1GoHL1BtQX9bgZccJijVPh8mJSBzwqgPDge6O
+         cVCz73CzVC2yAYJUHfDqTFrDmtwJ+cCFH4eR8Q/qcssFSocZdlHBe3QP44abcBDPeV13
+         iUP8pT2iePB5iFcQJKP1TJVQFlJuFRYQvOK6RuXUa7GGWjNW6Ovx8diWVNFZB/5LuoLr
+         DWvYIslDdwxXX2lkjdfa3UHeJnLH6VyDTvGoGvs5KdjU5UUvh+QiEusTNfxTfj6pbolg
+         IpJCoh5JFmdWGXdLQMci7O0DFrqTtJnieOJHD6KPXWiOJhRZyaYzGBIjLNb0/MTvoV68
+         KY3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUkINN5RsQxvDUw3h15AA518lWKEoE0p/JqXz833llwev3CPgrS/hO5R6XlFFsmH9N33fhgAqdRndNExTzZNOPDh0oa3joguDDL
+X-Gm-Message-State: AOJu0Yxihv6vctktsyGiuU0m3nM72skydK7KUpDoiLZQA9GvV+J5ne7q
+	7nKtsYUjlI7eMaHW5RJfsqip/mZvd+ltL5BjJ4htBrGTUfumQBTmB2UikT+i
+X-Google-Smtp-Source: AGHT+IFNycZBifwIHxK/A4pdXVTSq6+yaJyXfbxqRUcjj8jrdbvqXHpDgLrbfRVjlcq90rKx65db0g==
+X-Received: by 2002:a17:903:41c3:b0:1dc:d515:78db with SMTP id u3-20020a17090341c300b001dcd51578dbmr7769779ple.58.1709764510118;
+        Wed, 06 Mar 2024 14:35:10 -0800 (PST)
 Received: from debian ([2601:641:300:14de:57cf:345:75f0:2085])
-        by smtp.gmail.com with ESMTPSA id g27-20020aa79ddb000000b006e651246848sm1281919pfq.137.2024.03.06.13.39.51
+        by smtp.gmail.com with ESMTPSA id q12-20020a170902dacc00b001dce6c481c1sm11520432plx.301.2024.03.06.14.35.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 13:39:52 -0800 (PST)
+        Wed, 06 Mar 2024 14:35:09 -0800 (PST)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Wed, 6 Mar 2024 13:39:50 -0800
+Date: Wed, 6 Mar 2024 14:34:50 -0800
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	gregory.price@memverge.com, ira.weiny@intel.com,
@@ -63,7 +63,7 @@ Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	Fan Ni <fan.ni@samsung.com>
 Subject: Re: [PATCH v5 08/13] hw/cxl/cxl-mailbox-utils: Add mailbox commands
  to support add/release dynamic capacity response
-Message-ID: <ZejipnoILw6_Z-Cl@debian>
+Message-ID: <ZejvipUwjO-ZRT6y@debian>
 References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
  <20240304194331.1586191-9-nifan.cxl@gmail.com>
  <20240306172827.000052dc@Huawei.com>
@@ -366,16 +366,6 @@ On Wed, Mar 06, 2024 at 05:28:27PM +0000, Jonathan Cameron wrote:
 > 			return CXL_MBOX_SUCCESS;
 > then found isn't relevant so can drop that. Looks like you drop it later in the
 > series anyway.
-
-We cannot return directly as we have more extents to release.
-One thing I think I need to add is a dry run to test if any extent in
-the income list is not contained by an extent in the extent list and
-return error before starting to do the real release. The spec just says
-we need to return invalid PA but not specify whether we should update the list
-until we found a "bad" extent or reject the request directly. Current code
-leaves a situation where we may have updated the extent list until we found a
-"bad" extent to release.
-
 > 
 > > +                } else {
 > > +                    /*
@@ -421,10 +411,12 @@ leaves a situation where we may have updated the extent list until we found a
 > 	cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
 >         //This wrapper is small enough I'd be tempted to just have the
 >         //code inline at the places it's called.
-Good point, will update.
+> 
+We will have more to release after we introduce pending list as well as
+bitmap. Keep it?
 
 Fan
-> 
+
 >     }
 > > +    }
 > > +}
