@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5D23D0C6
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Mar 2024 23:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F873D0D2
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Mar 2024 23:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709852687; cv=none; b=AmqCkbOcNfDGJ/vXhfpunc3Raao96p80/+0AtbANbQI1TkzFJcrp8H/O4NsKzbAZR0e2c90aoQ1+MaaqG1pMOu0zw4WU5qReAz0hD8sGJq+ruZTW/+Vn+4Vxy96psPWB6FqGMz3sEmJEK64jIL3exeul3n1ZA2YPK7tUG0sGLLQ=
+	t=1709852694; cv=none; b=NzhB3Wk8K8XzP/rLmGFuCPeZil3FMEtGsAttSmJWcTmCAdYAmBlH6/iUJtAg5H0EosUyvuZNbmr/7hV8lL6M/iz/1/cBRnfB8gNFkxd65Rv1d/DK+ULJC9TAIAAhUWh0qPjUtfq5TWK5s/4CxZeGl7VSLnPwh5Mgw0LfC8pjg2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709852687; c=relaxed/simple;
-	bh=dC+bSYH4vUp5DVPYWe4bTdbTeoEL/8DWSikT8r4gyfg=;
+	s=arc-20240116; t=1709852694; c=relaxed/simple;
+	bh=MVTgmyzFIA855qrUQe3+aKzN1feXA7Luq0yDtxFqTBQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ryWi5GwRnnP3PD5RI0paNNOdBsFVrsP0vd4+oUvLuQyC0WxgzhmqH+0VGfwa2ym/R86T+vuo/UrfST1wZee1NenAuvnmvHM85Qjw8awhaeXqTL9uOvYy6q4ydJ4vyofOgqC/MkPPf1TBUE0QtROmoNfp50VLp3zEx/ytCuWHX00=
+	 MIME-Version; b=c9j1FnmHOI0GvHfR2+jJrKJzatYIAmt5t8iW5iwFdhSTDJ2qhVrTwU6td8KSfxAYDWm0W0pJJkVkH2cJyKTNIrCl0NbYgnRHEC65ucMMUfSa4Op0UkKZzuc4pLkZXhTGchhEittK/fmHHY9nAyWZ+MmkGeJsJ+ttwPoVw2oLBpE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF14C433F1;
-	Thu,  7 Mar 2024 23:04:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADBCC433F1;
+	Thu,  7 Mar 2024 23:04:52 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -22,9 +22,9 @@ Cc: dan.j.williams@intel.com,
 	alison.schofield@intel.com,
 	Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net
-Subject: [PATCH v4 2/3] cxl: Consolidate dport access_coordinate ->hb_coord and ->sw_coord into ->coord
-Date: Thu,  7 Mar 2024 16:04:31 -0700
-Message-ID: <20240307230432.2006490-2-dave.jiang@intel.com>
+Subject: [PATCH v4 3/3] cxl: Add checks to access_coordinate calculation to fail missing data
+Date: Thu,  7 Mar 2024 16:04:32 -0700
+Message-ID: <20240307230432.2006490-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240307230432.2006490-1-dave.jiang@intel.com>
 References: <20240307230432.2006490-1-dave.jiang@intel.com>
@@ -36,103 +36,80 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The driver stores access_coordinate for host bridge in ->hb_coord and switch
-CDAT access_coordinate in ->sw_coord. Since neither of these
-access_coordinate clobber each other, the variable name can be consolidated
-into ->coord to simplify the code. This change also simplifies the iteration
-loop in cxl_endpoint_get_perf_coordinates() and allow all the
-access_coordinate to be picked up in the loop.
+Jonathan noted that when the coordinates for host bridge and switches
+can be 0s if no actual data are retrieved and the calculation continues.
+The resulting number would be inaccurate. Add checks to ensure that the
+calculation would complete only if the numbers are valid.
 
+While not seen in the wild, issue may show up with a BIOS that reported
+CXL root ports via Generic Ports (via a PCI handle in the SRAT entry).
+
+Fixes: 14a6960b3e92 ("cxl: Add helper function that calculate performance data for downstream ports")
+Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/acpi.c      | 6 +++---
- drivers/cxl/core/cdat.c | 2 +-
- drivers/cxl/core/port.c | 5 +----
- drivers/cxl/cxl.h       | 6 ++----
- 4 files changed, 7 insertions(+), 12 deletions(-)
+v4:
+- Flip coordinates_invalid() to coordinates_valid(). (Jonathan)
+---
+ drivers/cxl/core/port.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 1a3e6aafbdcc..dbd5a0d10f8b 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -530,13 +530,13 @@ static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
- 	if (kstrtou32(acpi_device_uid(hb), 0, &uid))
- 		return -EINVAL;
- 
--	rc = acpi_get_genport_coordinates(uid, &dport->hb_coord);
-+	rc = acpi_get_genport_coordinates(uid, &dport->coord);
- 	if (rc < 0)
- 		return rc;
- 
- 	/* Adjust back to picoseconds from nanoseconds */
--	dport->hb_coord.read_latency *= 1000;
--	dport->hb_coord.write_latency *= 1000;
-+	dport->coord.read_latency *= 1000;
-+	dport->coord.write_latency *= 1000;
- 
- 	return 0;
- }
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 0363ca434ef4..fcfb6308996b 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -460,7 +460,7 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 		xa_for_each(&port->dports, index, dport) {
- 			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
- 			    dsp_id == dport->port_id)
--				cxl_access_coordinate_set(&dport->sw_coord,
-+				cxl_access_coordinate_set(&dport->coord,
- 							  sslbis->data_type,
- 							  val);
- 		}
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index e1d30a885700..6fa273677963 100644
+index 6fa273677963..c3f3d153ee23 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -2143,7 +2143,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 	 * nothing to gather.
+@@ -2110,6 +2110,17 @@ static void combine_coordinates(struct access_coordinate *c1,
+ 		c1->read_latency += c2->read_latency;
+ }
+ 
++static bool coordinates_valid(struct access_coordinate *c)
++{
++	return c->read_bandwidth && c->write_bandwidth &&
++	       c->read_latency && c->write_latency;
++}
++
++static bool parent_port_is_cxl_root(struct cxl_port *port)
++{
++	return is_cxl_root(to_cxl_port(port->dev.parent));
++}
++
+ /**
+  * cxl_endpoint_get_perf_coordinates - Retrieve performance numbers stored in dports
+  *				   of CXL path
+@@ -2133,23 +2144,22 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
+ 	if (!is_cxl_endpoint(port))
+ 		return -EINVAL;
+ 
+-	dport = iter->parent_dport;
+-
+ 	/*
+-	 * Exit the loop when the parent port of the current port is cxl root.
+-	 * The iterative loop starts at the endpoint and gathers the
+-	 * latency of the CXL link from the current iter to the next downstream
+-	 * port each iteration. If the parent is cxl root then there is
+-	 * nothing to gather.
++	 * Exit the loop when the parent port of the current iter port is cxl
++	 * root. The iterative loop starts at the endpoint and gathers the
++	 * latency of the CXL link from the current device/port to the connected
++	 * downstream port each iteration.
  	 */
- 	while (!is_cxl_root(to_cxl_port(iter->dev.parent))) {
--		combine_coordinates(&c, &dport->sw_coord);
-+		combine_coordinates(&c, &dport->coord);
+-	while (!is_cxl_root(to_cxl_port(iter->dev.parent))) {
++	do {
++		dport = iter->parent_dport;
++		if (!coordinates_valid(&dport->coord))
++			return -EINVAL;
+ 		combine_coordinates(&c, &dport->coord);
  		c.write_latency += dport->link_latency;
  		c.read_latency += dport->link_latency;
  
-@@ -2151,9 +2151,6 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 		dport = iter->parent_dport;
- 	}
+ 		iter = to_cxl_port(iter->dev.parent);
+-		dport = iter->parent_dport;
+-	}
++	} while (!parent_port_is_cxl_root(iter));
  
--	/* Augment with the generic port (host bridge) perf data */
--	combine_coordinates(&c, &dport->hb_coord);
--
  	/* Get the calculated PCI paths bandwidth */
  	pdev = to_pci_dev(port->uport_dev->parent);
- 	bw = pcie_bandwidth_available(pdev, NULL, NULL, NULL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..0cf5f23d9de6 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -658,8 +658,7 @@ struct cxl_rcrb_info {
-  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
-  * @port: reference to cxl_port that contains this downstream port
-  * @regs: Dport parsed register blocks
-- * @sw_coord: access coordinates (performance) for switch from CDAT
-- * @hb_coord: access coordinates (performance) from ACPI generic port (host bridge)
-+ * @coord: access coordinates (bandwidth and latency performance attributes)
-  * @link_latency: calculated PCIe downstream latency
-  */
- struct cxl_dport {
-@@ -670,8 +669,7 @@ struct cxl_dport {
- 	bool rch;
- 	struct cxl_port *port;
- 	struct cxl_regs regs;
--	struct access_coordinate sw_coord;
--	struct access_coordinate hb_coord;
-+	struct access_coordinate coord;
- 	long link_latency;
- };
- 
 -- 
 2.44.0
 
