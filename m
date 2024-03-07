@@ -1,166 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DF54C7C
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Mar 2024 01:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709773763; cv=fail; b=Y6TlI+BcyoSa4NQxwRCMrfjIewyONzz8eRITTvH/iACJJbIhN5DcSfz6kZmecZIaZFR7fs/TrwkQE/JI7kQVHNuTsiDwPty6adEd5zBUSonKeqiLM3T8WLlWM3cFCOoRnmPhHIMFcRPO7TZINWkuPZR8obad6MB+vThuMFJB55M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709773763; c=relaxed/simple;
-	bh=bckjRL4WBBQImhOhsJy1cnoZ9f7/+mqGZBq13Xij4cQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=is5vABiugqGMmb9nuLN7+XbEFLVpSQuw+MWb7viKL4GeX1pnYXLBFyyyXuSlC+Xdj3KE+r0fAzX+DDgFxBaab7FGfDN+M5h70y6cLC4MQ5KagbE4+JNHVJ1ST5/bj0XbDNtc0bJ/5maBna2f7mEjY5iShCIzHFhN4AQT0oDnvTU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H0jVc7Vk; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E73E546
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Mar 2024 04:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709786460; cv=none; b=O0Wa0Uxt2kqbMdrSAhrjRAo0J8NUrA83adSMGmCIy8gNnqs9cumpO0n8d197Cj+3Q2LmPivjKE5/QxHyxLY86Rc7B88Bkw/ILHKXADIiOu9n1xNdhb7tCPxhJfg5vYJjmac4rnp2MR7eoaGoWKbJwu8Dp4ZOvX4I4a5hXeKmafw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709786460; c=relaxed/simple;
+	bh=j+oDve+5N6FwzukuKwJjRIFkdIgGtj4LQHR4HINuyhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=erVMKepjcj4aHjooOS10FGCm4oDJ8fKxpRWyaohqCOpeJM6rvEdaKLDLBjyy2UIWwUkdAu0QWD+hps2MfzsFuLm6JBXr3wzfiFQeAg81j7OmOgd0cr62wuciCZ7yAlLaq9iKviqZ+7XfmtQAmcvOrdHtHDAem4LEpQk0xB3TOZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FpoUn00B; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H0jVc7Vk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FpoUn00B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709773760; x=1741309760;
+  t=1709786459; x=1741322459;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=bckjRL4WBBQImhOhsJy1cnoZ9f7/+mqGZBq13Xij4cQ=;
-  b=H0jVc7Vk+6BVfAksEYUvvmFPpM+FWiywG4w5EbN/bi7X4RgYCCtSGTxW
-   zuGnRZSfYSS6NpeXD+pfyX7Jaa9Cv6s5rMx1SifhfbE1Q1R3nDygqlHnd
-   ld2eGFDD2UAfdQmgkBroPQsHKhZv3F2EaYMMkEQBx9Tiq2Tu6JPWTxaZN
-   7A5NK3gW1MM9oZQs70wL6iIOMlc7g3ia3MOOK1smv6TFdRxM8sJbISPv/
-   j3qs0YnlG4F1BYrOzCO7PL39Xp5eHRvj+HRQ4wdTFDodMjFu35fCaGv3W
-   e+g9E0Y3eKlnAZN+qRgAslSNHCKZd2BdIW6fjPftmJVWzGqSVpTdKj4Kf
+   mime-version:in-reply-to;
+  bh=j+oDve+5N6FwzukuKwJjRIFkdIgGtj4LQHR4HINuyhY=;
+  b=FpoUn00B1Gppd9I4aLtI6t8CmhHmInpp5OpMRWzA0WDWqiVG38hrltRT
+   sUhxCupPRFWnkm/gwFgMnpZYMfxOA7WbUUccPZ+YX74VYr61iDEnx+yOx
+   g1M6rEF5ACq2vjX6zkjB6ZceNii7txg72x0KIoGL9eG7AEXcVBLBul7la
+   fLtov9jhWiIvMc9URnF9UFkxBWeZ2B2KmYKn8d0TO7/8KuDWwwe0uU6iX
+   a+juY3nMCqxZFzLTxcen6xH5C3eC38izAfku/MCqPyDdI23YTroc4Q9Bg
+   XJFQqkskterUfvczMLWCLkQYf87cDeR7M3C/WzuNxZflCNxj3/dq8pI4V
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="29867505"
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4559081"
 X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="29867505"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 17:09:19 -0800
+   d="scan'208";a="4559081"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 20:40:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,209,1705392000"; 
-   d="scan'208";a="40919173"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2024 17:09:19 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Mar 2024 17:09:18 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Mar 2024 17:09:18 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 6 Mar 2024 17:09:18 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bR18xk288bqMvqmArgSoi0jIO1KlX3BsGKLInB39OSoGl5ydX1DDWQGZrdRo8bmi2NXqi5d1jH8CRn0pV9G3pV3uxcrtOMwh/61U/uBLK4TzSvlQpaqEn5otxZVAaZZW7zD2kLdeUlKDK/hwmXrR7w4WH2RxmEU7pMksunUiCsyYANGuNUGaVb2tkZK1dlqk4M4XwFCObNbu+CB5DuF+6qVvCIwHis3+StMqIjeetrCa86IsimaQngGo8B9xD46cOhYU4BwFrVAHOJpsJ4X/FcOOMmp4qfVRRRKloRJ3eybkRpm/gyj/waiq5RjyrCrVjoubluEqfdqMlnlaVBA4/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z/TDpKbfCgym4qdpUT0N75v4b8RaV+E+fx6knUm+JAM=;
- b=EZ+ylyeXgapPgw5+KNpnE0ct8Rt+PVjRwJIJeRbOQK7TP4ol8ryUxETwsNPDYksWKfI5I05cwm2EwSw2+VXu1k0HvE9No/mwLH8UMLD+lhB0gwyizJ18ak+rATPkPK2FxUs5+/SfsL3LJ+6tHo2wyidJLDRz7YRrBjKt5Q6L0dMZGAoiT/uqAwUGXhN2ldIo+2dFdK8G0rpbVLuW4wpmVeEIbpGxaeEArFTAnCA3Bahygh8nV+Rv4r+SSjvsQ9GDQhdcN1DASjLxAsso+38MU9YmxLISp1Df+zT+oUrPZJ8FNTaifb0wbEeUh4Uvnq1biZa6ByVEnz2NfvFMxajPQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB6042.namprd11.prod.outlook.com (2603:10b6:8:61::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
- 2024 01:09:16 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 01:09:16 +0000
-Date: Wed, 6 Mar 2024 17:09:14 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
-CC: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH v10 6/7] cxl/list: add --media-errors option to cxl
- list
-Message-ID: <65e913ba824c0_1271329410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <cover.1709748564.git.alison.schofield@intel.com>
- <2047e536ed7a1d1a46c048053dfe22fc798ca35e.1709748564.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2047e536ed7a1d1a46c048053dfe22fc798ca35e.1709748564.git.alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR04CA0196.namprd04.prod.outlook.com
- (2603:10b6:303:86::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="10413397"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.9.155])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 20:40:58 -0800
+Date: Wed, 6 Mar 2024 20:40:55 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/2] cxl/acpi: Fix XOR 3-6-12 way host bridge look-up
+ calculation
+Message-ID: <ZelFV/y3X+l4Wf0J@aschofie-mobl2>
+References: <cover.1707891715.git.alison.schofield@intel.com>
+ <0eebc96f0e36ebc74b0dc0f4112b70cced6907a7.1707891715.git.alison.schofield@intel.com>
+ <65e0d0b7bd91f_1138c72943c@dwillia2-xfh.jf.intel.com.notmuch>
+ <65e106a0e45f8_1138c729462@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6042:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb73f497-8662-4838-99cb-08dc3e4335b7
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: veGMP6WqrUWwOxnK++3u+0dIaGEfunQS329887HhfBSertvuXGYkINfcgLFxbGXO3Ub/KzVijqlyYfQMwiNYgxVHASnfipmAsZuKgx5RBho51aZIJaVbw2pTAb/RGrsyUCJNETE9/JWMjsi++md/W5oPfszn0FyHvvbRnR8zbp9vlc8MJT4T+eL+owNTFAaBgVG42M8T1rPYLZPdhTJwz+SH3ue/SczetrBV002Hfby0M0qPwKMLDlzlgYEOChbgapZMKWbWvDoBf31L9U+XuqE1gYkEg36YmKC4ZYOSNgtnU/0B99J4mB/FU01gqQNToTc3ocw3BBPcAe2qE5VkfjSZSuvdFkDzF2iZwpw8TAvWdgiyzG7a13VjeJ6rOp0fbI2MVNnFeg3AFmMFmFB7tDUFjVWHqW7IijC8nUjEGXwDQFM9qDpRG22L6dGDO5LOtS/fUOzUk61aEhGQRS2uzX5+bNthU/1cMcYX999w1kTIWPI3sPQSfTi017mynG1VEVMSL692GIW5dQa5eNveTuKO2s6po9czRnMjZE1RlG7aaWey1kdiflnOJiE82+pbSbNMf9dluptBukb6UM13AePv6I+cHhyu1Q5VHiLSkm0a6rrZQLACPHf3hMIcVGYOFuyC/325WG82WlsXqJ1nePZP2ftEgMhOOfkAyU0uqxQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BxeFLPGn5s552h/jMSKjJw9Ilz6c98zkwsra3NlKBRWKlQvaqUDmiZqzGjUg?=
- =?us-ascii?Q?nD5LgEg/3lkDxzXcKNeMh0+4G8fudHOkXqaxuZ/fRVXiFpxKjI/P56MqkkWZ?=
- =?us-ascii?Q?zhL8I0eCLaGqZGHQNg1/KSJRR0EjSiY3Iz7WMMKghYflP4YoY8jYN13hNqgj?=
- =?us-ascii?Q?ltDMRhTfdN6XH2vyZJFjOVxdP1rJ02RQJvNjtDDyxWJYxkcpCNaFb13RfvJd?=
- =?us-ascii?Q?K5uPYqWtufke2+ns/GDXM20Gn7Ao4Wc4CSBl5H4SGW25AmNgE/vpMuuRjjvk?=
- =?us-ascii?Q?YzCyq1ke7Tco/1nq4OrwTtZMGe6IjrS7le26Zq1L9PuSgLnyjSyIhQB2FWoW?=
- =?us-ascii?Q?yvu81XxTeEVwV4xHbUjQXbeB47r5jJEdVAb5pIixrVK90rcnyMRnCiQP1sy2?=
- =?us-ascii?Q?O1fMxC3q4jLHGKsGxW8LEe5ZPvE6eyYGM+GCR6Mzprx3Oqy1bQMzcZmtC991?=
- =?us-ascii?Q?zuOyXKnDs6HF+ECGZVPZ5GmvVRrqYqXHCOdshy5Sts2JpFTh028kLoQ+ZDCt?=
- =?us-ascii?Q?0uNAn8v0VEG04NtMdb2j+WUfVwPG2F+NJw9Q82Y5PaCduqMdjUlesU03+Kcu?=
- =?us-ascii?Q?D/eOcD+fxzEabl9fvFyx4gZkfWns0jIZLei5v+iu7j4V4oUBQ/MNN08+d7nQ?=
- =?us-ascii?Q?t2hfW8pY0ofqc189zMW6h0QT8i41sIYPim2Wb4fmvE9kPRHj8ChTew5ubFhg?=
- =?us-ascii?Q?wI6beaTwOe5/WxSkQl4FX4N82Y7HZQ5DDLFopghLReeS16yrnvgTY1blO8+K?=
- =?us-ascii?Q?YrsDNUbJvJpA4Vk8Mjd/H0CPFQHB8RVuXOyN4GUdlGnJc8QHWdDfO1RTaqwa?=
- =?us-ascii?Q?uCtk2qfQhNe9hSFLAVGhSGNjrOBXi8bzM+j4BzzUL9VVurNlwouIRXKeelAr?=
- =?us-ascii?Q?1EgvImG6FDLWqSym9pPFpXxmkY1/4Kd8FeH7+k32+uVivnaFA7l87uUss4BT?=
- =?us-ascii?Q?W/o0rI7gX11eZD5HmBL6+RJ8XwtYEaIqRFccpugmIzcJgzSzHWFc4Ov3maBP?=
- =?us-ascii?Q?AmMFo4jYMVqqEv4/rqzZhPcuLZ74RjEulZkgRJutLPRMHtJftmza3fQS+aK6?=
- =?us-ascii?Q?5IngAR+Hf8r35nNkaKeZH4MbH93pP6mizJZOnUNrsMs9jzRwfo+28Cfcwoo6?=
- =?us-ascii?Q?Pfe3P7ug+Ghm9LP0XN/cgUaQlREWZu4sNxw72gXz/rT1+40ttB8AXJquU9LN?=
- =?us-ascii?Q?81psePqRW00q43UHLzLi8fux0HhrqAMR6jSxdjnimXi5XTlMwE8leVoFqmpt?=
- =?us-ascii?Q?gJ2JiTuYQ3MXC+aZuIvs+iZpRK7ovtFooJRxzreeNThqmltZzAWpsPX3/nwC?=
- =?us-ascii?Q?oKhrb1BjOdAiF2maHv4u69EiZdKY2shI4Jm+d4rbOtBPnKFhp94pZ/BUfZmX?=
- =?us-ascii?Q?j0N6Lp4cEeQlnU3K1HoB3/2AuGMuEuQ0YHTTXgVmpwiBXLfUkjBeV4WT/xxZ?=
- =?us-ascii?Q?byXT3bvmz01LVijoWMrQGiyXaAA53h5wpAn6BpNv5spfoOw6v9f0FUcBPVnF?=
- =?us-ascii?Q?LEaqSG6aQu/eBoNchaF+12tHxU8KCKHgZTw/vx84s+D+BbvdK+UOoaXxd39X?=
- =?us-ascii?Q?PT3aWi6AAj4raSDab4t3gZXeu4FKcXF1z+liykeqjiOgZ62c8xdDCnwOozWC?=
- =?us-ascii?Q?jg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb73f497-8662-4838-99cb-08dc3e4335b7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 01:09:16.6505
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v5wCsLc0+3fRlsiTkrpd4AX8mN0oFWdGxpexy9z5AGXcWWcao78esiiahf/+IUi8ZGAnRoND//UxhgG06p4IHxb/Vyq70/TdWofrWYebA0E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6042
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65e106a0e45f8_1138c729462@dwillia2-xfh.jf.intel.com.notmuch>
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On Thu, Feb 29, 2024 at 02:35:12PM -0800, Dan Williams wrote:
+> Dan Williams wrote:
+> > alison.schofield@ wrote:
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > > 
+> > > The XOR host bridge look-up function is broken in its application
+> > > of the modulo calculation for interleaves that are multiples of 3.
+> > > 
+> > > The failure appears like this:
+> > > [] cxl_core:cxl_region_attach_position:1433: cxl region4: mem0:decoder8.1 invalid target position for decoder3.2
+> > > 
+> > > Replace the broken modulo calc with the same modulo calc as used
+> > > for Modulo Math. This is per CXL spec definition but was overlooked
+> > > in the original over-complicated implementation.
+> > > 
+> > > With the simple modulo calculation, the jump to a helper function
+> > > becomes needless and the work is now presented in a straight line.
+> > > 
+> > > Display the interleave_arithmetic in the dev_dbg() of successfully
+> > > setup root decoders to make debug lookup easier.
+> > > 
+> > > Fixes: f9db85bfec0d ("cxl/acpi: Support CXL XOR Interleave Math (CXIMS)")
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> [..]
+> > > -	/* Entry (n) is 0 for no interleave (iw == 1) */
+> > > -	if (iw != 1)
+> > > -		n = cxl_xor_calc_n(hpa, cximsd, iw, ig);
+> > > +	if (iw == 6 || iw == 12)
+> > > +		n |= pos % iw;
+> > 
+> > Can you help me map this back to Table-9-22?
+> > 
+> > Shouldn't this be:
+> > 
+> > 	n |= (pos % iw) << (iw / 3);
 > 
-> The --media-errors option to 'cxl list' retrieves poison lists from
-> memory devices supporting the capability and displays the returned
-> media_error records in the cxl list json. This option can apply to
-> memdevs or regions.
+> Wait, no:
 > 
-> Include media-errors in the -vvv verbose option.
+>  	n |= (pos % iw) * (iw / 3);
 > 
-> Example usage in the Documentation/cxl/cxl-list.txt update.
+> ...to match:
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>  6:   + 2* HPA[51:9+HBIG] MOD 3
+> 
+>  12:  + 4* HPA[51:10+HBIG] MOD 3
 
-Looks good, just the comment on switching from "dpa" + "hpa" to an {
-offset, length } tuple.
+Hi Dan,
 
-Other than that, for this one and patch 7/7:
+tl;mrp  <-- must read please :)
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+
+Yes - that table is the key and I have a new found understanding, or
+misunderstaning, of how to use it to share here.
+
+But first, I did follow up on your suggestions along with more
+variation to try and fix the existing code path:
+
+Evaluating other calcs with an HBIW of 6 and pos[0..5]:
+
+> Shouldn't this be:
+> 
+> 	n |= (pos % iw) << (iw / 3);
+No. For each pos in [0..5] and HBIW = 6 the right-hand side of that
+assignment results in 0, 4, 8, 12, 16, and 20, so goes beyond the
+HBIW of 6.
+
+> Wait, no:
+>
+> 	n |= (pos % iw) * (iw / 3);
+No. The right side yields 0,2,4,6,8,10, beyond HBIW of 6.
+
+I sampled many flavors of these and kept going back to Table-22
+and a 6 way HB interleave setup, trying to make something work.
+The fact that the target-list is in HB interleave order hit me
+and here's where it took me:
+
+From Table - 22 "A list of all the Interleave Targets. The number of
+entries in this list shall match the Number of Interleave Ways (NIW).
+The order of the targets reported in this List indicates the order
+in the Interleave Set"
+
+Using a 6 way Host Bridge Interleave: HB0  HB1  HB2  HB3  HB4  HB5
+
+Using this CFMWS and CXIMS. This is a sample of what a 6 way interleave
+may look like and how the xormap directs the traffic to HBs.
+
+cfmws30 = {
+                .cfmws = {
+                        .header = {
+                                .type = ACPI_CEDT_TYPE_CFMWS,
+                                .length = sizeof(mock_cedt.cfmws30),
+                        },
+                        .interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+                        .interleave_ways = 9,
+                        .granularity = 0,
+                        .restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+                                        ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+                        .qtg_id = 0,
+                        .window_size = SZ_256M * 24UL,
+                },
+                .target = { HB0, HB3, HB4, HB1, HB2, HB5 },
+        },
+cxims0 = {
+                .cxims = {
+                        .header = {
+                                .type = ACPI_CEDT_TYPE_CXIMS,
+                                .length = sizeof(mock_cedt.cxims0),
+                        },
+                        .hbig = 0,
+                        .nr_xormaps = 1,
+                },
+                /* xormap for 6 way interleave */
+                .xormap_list = { 0x2020900 },
+        },
+
+
+Given an HPA, HBIG, HBIW - the Table 9-22 calcs direct the routing of
+that HPA. In order to route an address to the correct decoder (N), do
+
+N = XORALLBITS (HPA AND XORMAP[0]) + 2* HPA[51:9+HBIG] MOD 3
+
+Example data: hpa:0xf010000100 map:0x2020900 HBIG: 6
+N = XORALLBITS (0xf01000010 AND 0x2020900) + 2* 1 MOD 3
+N = 3
+
+That says to route HPA 0xf01000100 to the 3rd Host Bridge: HB3
+(And, of course, part of the routing is that gets reduced to
+an offset, the position bit gets removed and the offset is
+applied to the DPA base.)
+
+All very interesting but is not applicable for what the driver
+is trying to do in calc_hb. The driver wants to find the index
+into the root decoder (cxlsd) target list. It is not HB3.
+
+Recall that the CFMWS presents the target list is interleave order.
+The CXL driver stores that target_list in interleave order.
+
+Applying the Table 9-22 calc doesn't apply. It shouldn't and my ahah
+moment here is that the CXL driver does not need to use that calc.
+I didn't see this until I had that 6 way HBIW where a CFMWS target
+list was 'dis-ordered'. Previously, 2 & 4 way XOR, applying the
+calc was needless, but functioned, because the lists were ordered.
+
+Given that the drivers target-list is in interleave order, use (pos % HBIW)
+to get the index into the decoder target list. We don't need the 
+complex calc to jump to the right location in the interleave since
+we stored the interleave order. And note that the (pos % HBIW) will
+fail with 'invalid target position' if the region creation is attempted
+with a badly ordered target list. The check is as valid as ever.
+
+I've verified this with these configs:
+configs="1 11 111 1111 111111 2 22 222 2222 222222 4 44"
+where an entry like 111 means 1+1+1 means 3 way HB Interleave
+
+I only reached this point while working on that 6 way XOR config.
+The upstream code works for 1 11 1111 and the like probably because
+the lists were simply ordered. 
+
+I'm ready to hear where this goes wrong. It reminds me of the address
+translation work where I was hung up on the xormaps until figuring out
+that those were routing instructions and didn't come into play at the
+driver level of translation.
+
+Direction check please. If this makes sense, the fix is simple, but the
+cleanup of useless code will cause some churn.
+
+Alison
+
