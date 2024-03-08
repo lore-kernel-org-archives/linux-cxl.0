@@ -1,163 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAB023775
-	for <linux-cxl@vger.kernel.org>; Fri,  8 Mar 2024 04:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995CA367
+	for <linux-cxl@vger.kernel.org>; Fri,  8 Mar 2024 12:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709870767; cv=none; b=nElNYR9/D99pcMCzbQQdJdTSZNRrG6FNvs61RWFnjBn1Y/Xq12KqFKfyco0L/hAk+UHwMCkJFH4SGczHYIfApRyapFYtU9cQWLa9kbulA7gDX/nB8lxfipWwcP4BGH4c/zrlzRERSjd1L49/UuBgBRiplIMSI/EE/mGioAeyu7s=
+	t=1709902794; cv=none; b=CROmW30YGyne/0MQLVjnWpWDyabRfwAWhh1EaY/2CTpqOGDp5yd1USwvHI63GLxxZ2BzIfqjeC0pX/hz93Xaxxzme0H57ERg+XNknwyWPf9zPEj/1dK5uvRCqjuswj5LyfTVHZJmKhV80zvoqPvgQ6fJgS/c4qw/ETj81HsdMWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709870767; c=relaxed/simple;
-	bh=+mS1Eb4rrt7e5o458zEFgbRZQbqLzVyDHET6ud9Olis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clMtyUtcbzkIqJ5AC437di0Z1YY7s7zkg5ntEBxIGlUx8b6cyYPA0seOnzD6fD/9t/TF4eFRthcPMdonlASN4sCmmwKKrzpxxnaAYF0IXybu1Tt3HodNMSy2Gq1xIdX6doo012DudDSO40bJmnXIZZaa/kzNdl+ZzQ9LGIHFVdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CaNJH0oP; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CaNJH0oP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709870764; x=1741406764;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+mS1Eb4rrt7e5o458zEFgbRZQbqLzVyDHET6ud9Olis=;
-  b=CaNJH0oPSdiIP7OkyjuM2Ly7s1EvyGxyQ3fjdYt6g92WFQ3VmBTqZlPa
-   cEdbKwDX5GDNL6hKYn/5L2gRkUh+8cECntoDTocOXjTi+0d4Rx4L6/Uty
-   yES6xtC3BaHlmk+2Q9p1ToWM7264VF8k9TsOzbblPE+/apLHEkag8qHjH
-   douhjXw7PTUlDSgRaYl+ZJ3GxV0Jfhq8Z6HM3ux3reXvDsLlU9u6roGLR
-   eWPkBlXSNTfKn6L5tKlglQxAd+1Qon/4Zo70XjlKy3POB2RD07cn49my7
-   gd43mFjkSbDUkBuE2o7iQIVwjQ1nBBRs32pDYQpn/CMWylJ/pdVf18Rrf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15722323"
-X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
-   d="scan'208";a="15722323"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 20:06:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
-   d="scan'208";a="10272776"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.57.195])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 20:06:03 -0800
-Date: Thu, 7 Mar 2024 20:06:01 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [ndctl PATCH v10 4/7] cxl/event_trace: add helpers to retrieve
- tep fields by type
-Message-ID: <ZeqOqcwjbdmTS1ij@aschofie-mobl2>
-References: <cover.1709748564.git.alison.schofield@intel.com>
- <3d264f1fe4c92a90eabf9cd3365a2dc69caacc4e.1709748564.git.alison.schofield@intel.com>
- <65e902155a5b4_12713294e2@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	s=arc-20240116; t=1709902794; c=relaxed/simple;
+	bh=RlenQBPkFljys8LsXWerywqY98bBzfrzhz2VR+hQ3vM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f84ZEUMf5umYcTT72eYGQj8KHQka26r4nEqrbKINDedrPHr8/X0zs8qe9Hu6E6iSamXoAgAn/MQppctlaKhTuUI2e/IOqYhL+T4DsZpfIZON8kISTbpA9dH7joX6mc5OdlE2Zxm2aXTKFN+3Lv61RNF011D9Xa6qS+g3b2hcjng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TrmTp4HS7z6JB4K;
+	Fri,  8 Mar 2024 20:59:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C900141105;
+	Fri,  8 Mar 2024 20:59:48 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 8 Mar
+ 2024 12:59:34 +0000
+Date: Fri, 8 Mar 2024 12:59:33 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <Terry.Bowman@amd.com>, <linux-cxl@vger.kernel.org>,
+	<qemu-devel@nongnu.org>
+Subject: Re: Enabling internal errors for VH CXL devices: [was: Re:
+ Questions about CXL RAS injection test in qemu]
+Message-ID: <20240308125933.000053f8@Huawei.com>
+In-Reply-To: <20240308020134.3146734-1-wangyuquan1236@phytium.com.cn>
+References: <20240308020134.3146734-1-wangyuquan1236@phytium.com.cn>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65e902155a5b4_12713294e2@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Mar 06, 2024 at 03:53:57PM -0800, Dan Williams wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > Add helpers to extract the value of an event record field given the
-> > field name. This is useful when the user knows the name and format
-> > of the field and simply needs to get it.
-> > 
-> > Since this is in preparation for adding a cxl_poison private parser
-> > for 'cxl list --media-errors' support, add those specific required
-> > types: u8, u32, u64, char*
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > ---
-> >  cxl/event_trace.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  cxl/event_trace.h | 10 ++++++-
-> >  2 files changed, 84 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/cxl/event_trace.c b/cxl/event_trace.c
-> > index bdad0c19dbd4..6cc9444f3204 100644
-> > --- a/cxl/event_trace.c
-> > +++ b/cxl/event_trace.c
-> > @@ -15,6 +15,81 @@
-> >  #define _GNU_SOURCE
-> >  #include <string.h>
-> >  
-> > +static struct tep_format_field *__find_field(struct tep_event *event,
-> > +					     const char *name)
-> > +{
-> > +	struct tep_format_field **fields;
-> > +
-> > +	fields = tep_event_fields(event);
-> > +	if (!fields)
-> > +		return NULL;
-> > +
-> > +	for (int i = 0; fields[i]; i++) {
-> > +		struct tep_format_field *f = fields[i];
-> > +
-> > +		if (strcmp(f->name, name) != 0)
-> > +			continue;
-> > +
-> > +		return f;
-> > +	}
-> > +	return NULL;
-> > +}
-> 
-> Is this open-coded tep_find_field()?
+On Fri, 8 Mar 2024 10:01:34 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-Yes it is and now it is gone.
+> On 2024-03-07 20:10,  jonathan.cameron wrote:
+> 
+> > Hack is fine the relevant device with lspci -tv and then use
+> > setpci -s 0d:00.0 0x208.l=0
+> > to clear all the mask bits for uncorrectable errors.  
+> 
+> Thanks! The suggestions from you and Terry did work!
+> 
+> BTW, is my understanding below about CXL RAS correct?
+> 
+> >> 2) The error injected by "pcie_aer_inject_error" is "protocol & link errors" of cxl.io?
+> >>    The error injected by "cxl-inject-uncorrectable-errors" or "cxl-inject-correctable-error" is "protocol & link errors" of cxl.cachemem  
+> 
+> Many thanks
+> Yuuqan
+> 
+Yes.  Note the two CXL errors are actually communicated via AER uncorrectable / correctable internal
+error combined with data that is available on the EP in the CXL specific registers.
 
-> 
-> > +
-> > +u64 cxl_get_field_u64(struct tep_event *event, struct tep_record *record,
-> > +		      const char *name)
-> > +{
-> > +	struct tep_format_field *f;
-> > +	unsigned char *val;
-> > +	int len;
-> > +
-> > +	f = __find_field(event, name);
-> > +	if (!f)
-> > +		return ULLONG_MAX;
-> > +
-> > +	val = tep_get_field_raw(NULL, event, f->name, record, &len, 0);
-> > +	if (!val)
-> > +		return ULLONG_MAX;
-> > +
-> > +	return *(u64 *)val;
-> > +}
-> 
-> Is this just open-coded tep_get_any_field_val()?
-
-It's a bit more. It returns ULLONG_MAX and casts to the u64 which
-makes the call site cleaner. 
-
-I did change it to use tep_get_field_val(). Please look at next rev.
-
-> 
-> > +
-> > +char *cxl_get_field_string(struct tep_event *event, struct tep_record *record,
-> > +			   const char *name)
-> 
-> Return a 'const char *'?
-> 
-> > +{
-> > +	struct tep_format_field *f;
-> > +	int len;
-> > +
-> > +	f = __find_field(event, name);
-> > +	if (!f)
-> > +		return NULL;
-> > +
-> > +	return tep_get_field_raw(NULL, event, f->name, record, &len, 0);
-> 
-> Is this guaranteed to be a string? ...and guaranteed to be NULL
-> terminated?
->
-It's gone. Using tep_get_field_raw() directly for str.
-
-Thanks for reviewing!
+Jonathan
