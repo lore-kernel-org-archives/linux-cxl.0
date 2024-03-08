@@ -1,59 +1,143 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCFB22638
-	for <linux-cxl@vger.kernel.org>; Fri,  8 Mar 2024 02:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35252C1BF
+	for <linux-cxl@vger.kernel.org>; Fri,  8 Mar 2024 03:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709863325; cv=none; b=h9O2plZPXTp4QRtqs/YoklInGBXEf3BOMZlTtcVaPGsH8v0N/k0k+/1SKPKEwyyJcO2YCKmPD0FHYd/zjrp+n9HqszuSBud7q9mdYdscrwUIh83XrSMx4RovuVuoQ5PMgi4iGpr9TusR5sOTB+xRMBMZTDGFQu6gMx3Tj4/9xwU=
+	t=1709870306; cv=none; b=Im07OEqqg35i4YV1rtlGF1lnYD4xJcOgKIae2/PJEVJ8bYq+bY9tGngFjwH2tMD8FswKqybjF28Etzeyid+LWJ0bwtz76yDFw+xNpTetZmw2I0fSLKIqIBQV6nM8pJh5gMejsCA8Ut9vZwP5mxPZo+Bb+pafwjYwg6VkU80dgr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709863325; c=relaxed/simple;
-	bh=850tsyXOWcmKqMm00tS48yJNpsEgc8y7e24zreAtiIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mys5OCwO1W3xRMqzjhQhkVpIhKNAr0m+MPNEQH9L+bnkGODj4jDp4jDM5QBDKxlSsgXORpjiIy8dzlI7mPtl83CrUQcY8r9Msp+qhVpDyLrBqYiVPzDHRVQ9SOOQDBHoBLnPli/rIuFaZskGZT0FEkjcEArgVGmz8IsaRIC+jsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwB3f3uLceplXljtCw--.49245S2;
-	Fri, 08 Mar 2024 10:01:47 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwDXCkSGcepl0icAAA--.93S3;
-	Fri, 08 Mar 2024 10:01:42 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@Huawei.com,
-	Terry.Bowman@amd.com
-Cc: linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: Enabling internal errors for VH CXL devices: [was: Re: Questions about CXL RAS injection test in qemu]
-Date: Fri,  8 Mar 2024 10:01:34 +0800
-Message-Id: <20240308020134.3146734-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709870306; c=relaxed/simple;
+	bh=op+zU/MmolUbrBHJoPw3I942ODKAF/0AmV9xzYojpbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TOaUN6orac+MnXmj3JyTyH3FmQYUCTq+xFohQlwPmrtor1+2FOuVrcnQYdVvX3Dwh4YlVts5Oo7yD+aVaivUmXoVslyubkO3R8LSwKXB5VxIvlgGVQhuHngzhYR/u/spYAE6jwHz6/MR7tn/J9MtCIJdJvn8s1gKFhjnhW9A1aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QODcTvCJ; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QODcTvCJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709870305; x=1741406305;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=op+zU/MmolUbrBHJoPw3I942ODKAF/0AmV9xzYojpbc=;
+  b=QODcTvCJFq24Bd5qFbz8STCJ8z6xVEbMCY5J+A/LohFDS9on10Uvp94+
+   oFiJrtX22CHAFSTNS30CQesOrcrZiG+AGKml+AKsuOV+F4upjnvLKJ9/D
+   ju4SbW+fcwsayatapEfGXEyj8s7n1S/l2H5TzacEVTWcGyMGlWyxQpjDF
+   JmwQd3lDnzFIfsB5MGsv6zl5ZTYDbq+8qB3xkcbLyMgVpG1mTI4C5lugk
+   +bgf3tC5xuO/0fISVVYLtFAwQR1iTtZtXGJUhPUClMcyIKkRYVPs5jbnl
+   fqx915zrFHmmZ+E9eU81QAUbYoQ4WCmE9vBZ7JnGoUiBK1AAs55mlSR+E
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4717054"
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="4717054"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 19:58:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="14893677"
+Received: from snlow-mobl1.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.57.195])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 19:58:23 -0800
+Date: Thu, 7 Mar 2024 19:58:22 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v10 0/7] Support poison list retrieval
+Message-ID: <ZeqM3uvPUNvOj//5@aschofie-mobl2>
+References: <cover.1709748564.git.alison.schofield@intel.com>
+ <65e8f64c6c266_1271329483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwDXCkSGcepl0icAAA--.93S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQASAWXqFuMAOAABsR
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65e8f64c6c266_1271329483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-On 2024-03-07 20:10,  jonathan.cameron wrote:
+On Wed, Mar 06, 2024 at 03:03:40PM -0800, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Changes since v9:
+> > - Replace the multi-use 'name' var, with multiple descriptive
+> >   flavors: memdev_name, region_name, decoder_name (DaveJ)
+> > - Use a static string table for poison source lookup (DaveJ)
+> > - Rebased on latest pending
+> > Link to v9: https://lore.kernel.org/r/cover.1709253898.git.alison.schofield@intel.com/
+> > 
+> > 
+> > Add the option to add a memory devices poison list to the cxl-list
+> > json output. Offer the option by memdev and by region. Sample usage:
+> > 
+> > # cxl list -m mem1 --media-errors
+> > [
+> >   {
+> >     "memdev":"mem1",
+> >     "pmem_size":1073741824,
+> >     "ram_size":1073741824,
+> >     "serial":1,
+> >     "numa_node":1,
+> >     "host":"cxl_mem.1",
+> >     "media_errors":[
+> >       {
+> >         "dpa":0,
+> >         "length":64,
+> >         "source":"Internal"
+> >       },
+> >       {
+> >         "decoder":"decoder10.0",
+> >         "hpa":1035355557888,
+> >         "dpa":1073741824,
+> >         "length":64,
+> >         "source":"External"
+> >       },
+> >       {
+> >         "decoder":"decoder10.0",
+> >         "hpa":1035355566080,
+> >         "dpa":1073745920,
+> >         "length":64,
+> >         "source":"Injected"
+> >       }
+> >     ]
+> >   }
+> > ]
+> > 
+> > # cxl list -r region5 --media-errors
+> > [
+> >   {
+> >     "region":"region5",
+> >     "resource":1035355553792,
+> >     "size":2147483648,
+> >     "type":"pmem",
+> >     "interleave_ways":2,
+> >     "interleave_granularity":4096,
+> >     "decode_state":"commit",
+> >     "media_errors":[
+> >       {
+> >         "decoder":"decoder10.0",
+> >         "hpa":1035355557888,
+> >         "dpa":1073741824,
+> >         "length":64,
+> 
+> I notice that the ndctl --media-errors records are:
+> 
+> { offset, length }
+> 
+> ...it is not clear to me that "dpa" and "hpa" have much meaning to
+> userspace by default. Physical address information is privileged, so if
+> these records were { offset, length } tuples there is the possibility
+> that they can be provided to non-root.
+> 
+> "Offset" is region relative "hpa" when listing region media errors, and
+> "offset" is memdev relative "dpa" while listing memdev relative media
+> errors.
 
-> Hack is fine the relevant device with lspci -tv and then use
-> setpci -s 0d:00.0 0x208.l=0
-> to clear all the mask bits for uncorrectable errors.
+Done. memdev relative dpa is just dpa right? Unless you are thinking
+offset into a partition? I don't think so.
 
-Thanks! The suggestions from you and Terry did work!
 
-BTW, is my understanding below about CXL RAS correct?
-
->> 2) The error injected by "pcie_aer_inject_error" is "protocol & link errors" of cxl.io?
->>    The error injected by "cxl-inject-uncorrectable-errors" or "cxl-inject-correctable-error" is "protocol & link errors" of cxl.cachemem
-
-Many thanks
-Yuuqan
 
