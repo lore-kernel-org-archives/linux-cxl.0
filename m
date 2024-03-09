@@ -1,186 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420921E515;
-	Fri,  8 Mar 2024 22:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEB310A34
+	for <linux-cxl@vger.kernel.org>; Sat,  9 Mar 2024 04:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709935343; cv=none; b=j2nvNxcEvEN5jcps+gxnOx5hXAMeWa4zQfjri0w9a6FYcCETQJoqcQtTyKdL4N6VEmtisyNlE5q6pNcj0vh8cWLA51eJqF5v8RslEteU7YnvrtjA1jQEZHartoJ6e/q3eLySBIQppHeauJse9S+fqa2/hTgV1lciAGsyfk/ZQDY=
+	t=1709958971; cv=none; b=nyQTaWq4FRjmGSLoA+J8VIka2+Y8c+zsLdcerHfI96vl5rr+J2x8BQXec1Z+wkr3Fd1rXtVZ1r4i4JNB4eoRSFWVvdXY0+1hyj/QOttYvcz92H3zGTp4WjVcC7iIRIlv/sfwGGt39/RDsQ0uj3Lf/zi+NjKDkILxmr/pt5JIg+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709935343; c=relaxed/simple;
-	bh=cRVAmkZfa9S17PCaPNZeA59zKO+slEMu6Jd1X/fnNuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Oueq3N2w0n/UefamRzAQ+yo086MsOTkkrso/AYxjBzEYIgNFZcfm3U7A/3nUsbBrzWFkdSKoe1bi0ZjRpDO2WXPA80KTANsuf1Y/XscYVZYF+squAWqrx7y26zN0ccoVnrw6XGFs/DjEbyPo2zxhuk9GwhAt3wJkesPdMpiYFms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB84C433C7;
-	Fri,  8 Mar 2024 22:02:21 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org
-Subject: [PATCH v7 12/12] cxl/region: Deal with numa nodes not enumerated by SRAT
-Date: Fri,  8 Mar 2024 14:59:31 -0700
-Message-ID: <20240308220055.2172956-13-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240308220055.2172956-1-dave.jiang@intel.com>
-References: <20240308220055.2172956-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1709958971; c=relaxed/simple;
+	bh=mPhWqVyUTxHklo6sqjEuD8L0KlKJ+qnEc3Q0WZV9+/0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsY4lBuAky7cKoGgBWDQHJhjmyKcLrwpmMTcpPZCSdEp/Vh1ERph2GRaWS+ZRMSBFNxx7jaJiEQ/+j8A+pSmZ5CqSOBMwju26TDmNGjBIiK4AeP8Dx9UrEpZSfRsJrjnvqrJgAAg+i8jxF3Qd57mj3E+zaWY8q7QcPYDwlL3kMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdErbn8N; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdErbn8N"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cedfc32250so1216642a12.0
+        for <linux-cxl@vger.kernel.org>; Fri, 08 Mar 2024 20:36:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709958968; x=1710563768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=17QTZ3ChO1eXgGrWivTxrsCH7FEhKd/2ieF4d0cg6FY=;
+        b=bdErbn8NweMB0XI+tenkSjI8aveGN6kPmMpThWQ5QprtoC9/clQQOP3PHrp4FlUs0Z
+         6jnS5tFaVpgIf+hmZt9K8SmJpjDwxa9E36eh0aO18wkRwtSEVC5/DYPP/WZssgfYBZwq
+         0qS31qMZ9o4Ri+kfzdR3qTnlRm83pbPE4WZQT6BdAlx2HGEj4/ekELYL4yd6rvf0d3PJ
+         d1iTnjCEQXB9ZLBs3wyobPNw4WFa0YNhCKcSfn0Ej6xlzix2eaTpk3OFDPE53bglnNst
+         oYwSJ4fjGiR1qly0ie+Ce9P7A02kzTNzZ42OOUw31uXG1ZGREHStwIAdSdK/73yP+Z6c
+         vMSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709958968; x=1710563768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17QTZ3ChO1eXgGrWivTxrsCH7FEhKd/2ieF4d0cg6FY=;
+        b=FNlUMUWgW6ANff0hNfUYA6gt2cQNSXq4eGO0QK5/Vp3TrXGH4pLLj73sP1x1t9Zoh/
+         Tibyt1whowoSHtABZNVbw4ex0tp2jFCb84BsjiHvcH3GJAAa7prm2h8qgEK5nmuFiQtv
+         B/TDyWkmH9LZuTLfwECFvN2sKSGsh8D+uHN44IgR+QWaSL+lesdMaX1ZEwOC41WcW+yy
+         bkD7lL8asQHwPF5HO90hswdE4iBPZU6Yan3WNxIIl1+UWT2j8FyNC9VlL1hrgPfXHpHd
+         7MaDuy32rwRZ98TiV3zcUSnSa6gU9Gk5o7vr7qdn2kPNTxpfrmBaPoPdLPJ5Js3GebAR
+         1v/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVajBrb75F2jWHObx6gWyJDJeLqpYzMjzja4OUUUd8oSODQbzgBuGcEgOA6RZL2xHbDOIIkhozMiT/ebnulJjQwNbbZ4CElysM9
+X-Gm-Message-State: AOJu0YwMG+UZD3L55u+AhWQA3jYCdot74XykB7wu9MhTzpItY23T9W9R
+	KVwCG4GpeOyZP04YmuYaMpoLX/MVcicAuY89+Yl/AiAN2gyvvvvg
+X-Google-Smtp-Source: AGHT+IHqj1J7G7icMdcHF4VYXAM3cdtUJCEEsu6y22G16ihZCps0aV4hEpKjtF3l03Gi5sqh8IdTDw==
+X-Received: by 2002:a17:902:b494:b0:1dc:ad86:8f41 with SMTP id y20-20020a170902b49400b001dcad868f41mr663573plr.28.1709958968499;
+        Fri, 08 Mar 2024 20:36:08 -0800 (PST)
+Received: from debian ([2601:641:300:14de:68d6:5df5:5646:a413])
+        by smtp.gmail.com with ESMTPSA id s5-20020a170902ea0500b001dbc3f2e7e8sm452336plg.98.2024.03.08.20.36.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 20:36:08 -0800 (PST)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Fri, 8 Mar 2024 20:35:53 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org, gregory.price@memverge.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	nmtadam.samsung@gmail.com, jim.harris@samsung.com,
+	Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v5 09/13] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <ZevnKbzBOy_9sjeg@debian>
+References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+ <20240304194331.1586191-10-nifan.cxl@gmail.com>
+ <20240306174811.000029fd@Huawei.com>
+ <Zej5EuQXytgeWGfj@debian>
+ <20240307124555.00001408@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240307124555.00001408@Huawei.com>
 
-For the numa nodes that are not created by SRAT, no memory_target is
-allocated and is not managed by the HMAT_REPORTING code. Therefore
-hmat_callback() memory hotplug notifier will exit early on those NUMA
-nodes. The CXL memory hotplug notifier will need to call
-node_set_perf_attrs() directly in order to setup the access sysfs
-attributes.
+On Thu, Mar 07, 2024 at 12:45:55PM +0000, Jonathan Cameron wrote:
+> ...
+> 
+> > > > +    list = records;
+> > > > +    extents = g_new0(CXLDCExtentRaw, num_extents);
+> > > > +    while (list) {
+> > > > +        CXLDCExtent *ent;
+> > > > +        bool skip_extent = false;
+> > > > +
+> > > > +        offset = list->value->offset;
+> > > > +        len = list->value->len;
+> > > > +
+> > > > +        extents[i].start_dpa = offset + dcd->dc.regions[rid].base;
+> > > > +        extents[i].len = len;
+> > > > +        memset(extents[i].tag, 0, 0x10);
+> > > > +        extents[i].shared_seq = 0;
+> > > > +
+> > > > +        if (type == DC_EVENT_RELEASE_CAPACITY ||
+> > > > +            type == DC_EVENT_FORCED_RELEASE_CAPACITY) {
+> > > > +            /*
+> > > > +             *  if the extent is still pending to be added to the host,  
+> > > 
+> > > Odd spacing.
+> > >   
+> > > > +             * remove it from the pending extent list, so later when the add
+> > > > +             * response for the extent arrives, the device can reject the
+> > > > +             * extent as it is not in the pending list.
+> > > > +             */
+> > > > +            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
+> > > > +                        &extents[i]);
+> > > > +            if (ent) {
+> > > > +                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
+> > > > +                g_free(ent);
+> > > > +                skip_extent = true;
+> > > > +            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
+> > > > +                /* If the exact extent is not in the accepted list, skip */
+> > > > +                skip_extent = true;
+> > > > +            }  
+> > > I think we need to reject case of some extents skipped and others not.
+> > > That's not supported yet so we need to complain if we get it at least. Maybe we need
+> > > to do two passes so we know this has happened early (or perhaps this is a later
+> > > patch in which case a todo here would help).  
+> > 
+> > Skip here does not mean the extent is invalid, it just means the extent
+> > is still pending to add, so remove them from pending list would be
+> > enough to reject the extent, no need to release further. That is based
+> > on your feedback on v4.
+> 
+> Ah. I'd missunderstood.
 
-In acpi_numa_init(), the last proximity domain (pxm) id created by SRAT is
-stored. Add a helper function acpi_node_backed_by_real_pxm() in order to
-check if a NUMA node id is defined by SRAT or created by CFMWS.
+Hi Jonathan,
 
-node_set_perf_attrs() symbol is exported to allow update of perf attribs
-for a node. The sysfs path of
-/sys/devices/system/node/nodeX/access0/initiators/* is created by
-node_set_perf_attrs() for the various attributes where nodeX is matched
-to the NUMA node of the CXL region.
+I think we should not allow to release extents that are still pending to
+add. 
+If we allow it, there is a case that will not work.
+Let's see the following case (time order):
+1. Send request to add extent A to host; (A --> pending list)
+2. Send request to release A from the host; (Delete A from pending list,
+hoping the following add response for A will fail as there is not a matched
+extent in the pending list).
+3. Host send response to the device for the add request, however, for
+some reason, it does not accept any of it, so updated list is empty,
+spec allows it. Based on the spec, we need to drop the extent at the
+head of the event log. Now we have problem. Since extent A is already
+dropped from the list, we either cannot drop as the list is empty, which
+is not the worst. If we have more extents in the list, we may drop the
+one following A, which is for another request. If this happens, all the
+following extents will be acked incorrectly as the order has been
+shifted.
+ 
+Does the above reasoning make sense to you?
 
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v7:
-- Fix typo is commit log. (Jonathan)
----
- drivers/acpi/numa/srat.c  | 11 +++++++++++
- drivers/base/node.c       |  1 +
- drivers/cxl/core/cdat.c   |  5 +++++
- drivers/cxl/core/core.h   |  1 +
- drivers/cxl/core/region.c |  7 ++++++-
- include/linux/acpi.h      |  9 +++++++++
- 6 files changed, 33 insertions(+), 1 deletion(-)
+Fan
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 0214518fc582..e45e64993c50 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -29,6 +29,8 @@ static int node_to_pxm_map[MAX_NUMNODES]
- unsigned char acpi_srat_revision __initdata;
- static int acpi_numa __initdata;
- 
-+static int last_real_pxm;
-+
- void __init disable_srat(void)
- {
- 	acpi_numa = -1;
-@@ -536,6 +538,7 @@ int __init acpi_numa_init(void)
- 		if (node_to_pxm_map[i] > fake_pxm)
- 			fake_pxm = node_to_pxm_map[i];
- 	}
-+	last_real_pxm = fake_pxm;
- 	fake_pxm++;
- 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
- 			      &fake_pxm);
-@@ -547,6 +550,14 @@ int __init acpi_numa_init(void)
- 	return 0;
- }
- 
-+bool acpi_node_backed_by_real_pxm(int nid)
-+{
-+	int pxm = node_to_pxm(nid);
-+
-+	return pxm <= last_real_pxm;
-+}
-+EXPORT_SYMBOL_GPL(acpi_node_backed_by_real_pxm);
-+
- static int acpi_get_pxm(acpi_handle h)
- {
- 	unsigned long long pxm;
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index a73b0c9a401a..eb72580288e6 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -215,6 +215,7 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
- 		}
- 	}
- }
-+EXPORT_SYMBOL_GPL(node_set_perf_attrs);
- 
- /**
-  * struct node_cache_info - Internal tracking for memory node caches
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index ee1bc8fa396b..10d4f1d7dad1 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -586,3 +586,8 @@ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
- {
- 	return hmat_update_target_coordinates(nid, &cxlr->coord[access], access);
- }
-+
-+bool cxl_need_node_perf_attrs_update(int nid)
-+{
-+	return !acpi_node_backed_by_real_pxm(nid);
-+}
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index e19800a7ce06..bc5a95665aa0 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -92,5 +92,6 @@ long cxl_pci_get_latency(struct pci_dev *pdev);
- 
- int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
- 				       enum access_coordinate_class access);
-+bool cxl_need_node_perf_attrs_update(int nid);
- 
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 535492ec8529..5c186e0a39b9 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2279,7 +2279,12 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
- 
- 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
- 		if (cxlr->coord[i].read_bandwidth) {
--			rc = cxl_update_hmat_access_coordinates(nid, cxlr, i);
-+			rc = 0;
-+			if (cxl_need_node_perf_attrs_update(nid))
-+				node_set_perf_attrs(nid, &cxlr->coord[i], i);
-+			else
-+				rc = cxl_update_hmat_access_coordinates(nid, cxlr, i);
-+
- 			if (rc == 0)
- 				cset++;
- 		}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index c84c2f34b8ee..2a7c4b90d589 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1559,4 +1559,13 @@ static inline int hmat_update_target_coordinates(int nid,
- }
- #endif
- 
-+#ifdef CONFIG_ACPI_NUMA
-+bool acpi_node_backed_by_real_pxm(int nid);
-+#else
-+static inline bool acpi_node_backed_by_real_pxm(int nid)
-+{
-+	return false;
-+}
-+#endif
-+
- #endif	/*_LINUX_ACPI_H*/
--- 
-2.44.0
-
+> 
+> > 
+> > The loop here is only to collect the extents to sent to the event log. 
+> > But as you said, we need one pass before updating pending list.
+> > Actually if we do not allow the above case where extents to release is
+> > still in the pending to add list, we can just return here with error, no
+> > extra dry run needed. 
+> > 
+> > What do you think?
+> 
+> I think we need a way to back out extents from the pending to add list
+> so we can create the race where they are offered to the OS and it takes
+> forever to accept and by the time it does we've removed them.
+> 
+> > 
+> > >   
+> > > > +        
+> > > > +
+> > > > +        /* No duplicate or overlapped extents are allowed */
+> > > > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > > > +                              len / block_size)) {
+> > > > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > > > +            return;
+> > > > +        }
+> > > > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > > > +
+> > > > +        list = list->next;
+> > > > +        if (!skip_extent) {
+> > > > +            i++;  
+> > > Problem is if we skip one in the middle the records will be wrong below.  
+> > 
+> > Why? Only extents passed the check will be stored in variable extents and
+> > processed further and i be updated. 
+> > For skipped ones, since i is not updated, they will be
+> > overwritten by following valid ones.
+> Ah. I'd missed the fact you store into the extent without a check on validity
+> but only move the index on if they were valid. Then rely on not passing a trailing
+> entry at the end.
+> If would be more readable I think if local variables were used for the parameters
+> until we've decided not to skip and the this ended with
+> 
+>         if (!skip_extent) {
+>             extents[i] = (DCXLDCExtentRaw) {
+>                 .start_dpa = ...
+> 	        ...
+>             };
+>             i++
+>         }
+> We have local len already so probably just need
+> uint64_t start_dpa = offset + dcd->dc.regions[rid].base;
+> 
+> Also maybe skip_extent_evlog or something like that to explain we are only
+> skipping that part. 
+> Helps people like me who read it completely wrong!
+> 
+> Jonathan
+> 
+>  
+> 
