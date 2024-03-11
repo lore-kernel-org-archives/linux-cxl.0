@@ -1,136 +1,206 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D035439ACB
-	for <linux-cxl@vger.kernel.org>; Sun, 10 Mar 2024 23:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710111721; cv=pass; b=JAq2XwmLTi7Y2fVt/Y9hTWmK1ewDsY/DLZfKEOy26v7bMmw8+nqz9pWjdc+gluWp3wQUtACdfpQ/tqklDuVfJons9fUFn54efW03tEZPR25F9Am1HGhlnlO1Vr5/6LvudlqJVImK6gOqM6VfPYmzM5vzJoOTyBtvl1mmh4o7vY0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710111721; c=relaxed/simple;
-	bh=3yNmOR89W6rsCYo7fCGRP96083wrqWdORtlcE0AuVAM=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84217D2
+	for <linux-cxl@vger.kernel.org>; Mon, 11 Mar 2024 01:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710120571; cv=none; b=K278/TTCtzTF9LJCjErp3dy3g0vY6mkCGgaCYwW3GspD+utRJqVSrpuJoveqf/HKRkkOvoNq2aITHnfVs10/xbktY3eFxhsgCTHFcXngkeQq5wW6IJguMDQ0sgocu1irEZso2rm2c+oG0KIwljtyUN3hQlXujouZezUpIdH/2Ek=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710120571; c=relaxed/simple;
+	bh=D+LFpG+DtzDxbDphPWqUCew6+zoXZ3tpB6Glycfh6Nk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqFcR+ALvziwoZaQysAhzJozVWkt80/YFLVZheZO6HHz+XJIUxh/IG05O5hxlgjJ9mDQ1vEWUtgXZtEnPZG018i11z+TyG7OYSbzziP4pgnN/FPSRc02aTH7kQ9MCe+M1dedi3jL6pi8bZFbG17/CtzkTXaWLbBLZjTn2nKTVwQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BKOE7IiM; arc=pass smtp.client-ip=23.83.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvxKlgAw8y8J/SZfDV4fnionUyWWt0pjv6uwG0e8FtTcYdHPO2r6jKjdHZZPCKnUyviFGN2i0ft8C33rKSwsvAa3KzoBPYOZyYeDns13PoulLHFotE5B0YVfuJdRysVi7eDMj+bYJHlAxQYaSR/oP4G2xg2UnA97NPKE8tNneYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=oJwkpIa/; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BKOE7IiM"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A343C102CEE;
-	Sun, 10 Mar 2024 23:01:53 +0000 (UTC)
-Received: from pdx1-sub0-mail-a202.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 45C1D102D31;
-	Sun, 10 Mar 2024 23:01:53 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1710111713; a=rsa-sha256;
-	cv=none;
-	b=8vl+8xC5DqzWpWLC3L/Q4d1oAOOauI+EjxUtjhmP2IsMyrY2arhJxH/t6MMvQq2npZPsOa
-	fMH+F/mYRaCfVz1cm2WTtV51yDx9QvL70GKal3rZo7VLG7GMfFvOLvBg5aUhVXmFdjIjDx
-	dtTYQE6ujBtLMmhdfiX1bbOHxjqRfsLU+dgLXmDYr+My8SaF1ysEyPBGYGhSkVuMRf+NkN
-	r8N0oHPGR9cstjt83Bn/LIqzl7PR3AClFOp/MkoR4BXQhrGb6hCWCiGEFBjLfkVWLfLMmx
-	JTOMmAeFtFVMZ4XQiHHhxdKGWkjcHk4qAfV5YHvGHmkgGdurcZYdWQKuvFiN0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1710111713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=l2HWUjqjmDG3dE4nGQIbWOiAD/6EgkwTYq4raWEcqCQ=;
-	b=TvBV1DAgugN6Nm+CRb9ua0jmNi6IlL4zEdv/zV19jLx1GCWxZ9kZ+BR4Mc9XvBluTGLq+j
-	L6ZCpmzn2M+lEKvcogE33RscopFd9Lw0pL1DB6EL73kHmOtPcqZmpO8Vnj4CrGAwpEEyPM
-	N1DZboNnR8AM6QM64IbvyjahZShQZ81MeRWQIDpiUBs0lXtBoyio2fNrH2N8u9U08Hbu0S
-	BqpPLTecqF+0zrPTdo/nxiFZdYdimpmxiUiYpZdhrWVcyUkQFp8vbmKoTJRAFzvWBhS6Mx
-	/S4cYG4v6nClxCjbeB5k3AUIFpkdKkSUpxn8o5GlofH9spNeGWL/kSAfpbOiaw==
-ARC-Authentication-Results: i=1;
-	rspamd-5db57bc4b6-7g4vs;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Madly-Turn: 2e219ad5039c1b4e_1710111713565_993148189
-X-MC-Loop-Signature: 1710111713565:4189441498
-X-MC-Ingress-Time: 1710111713565
-Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.122.162.88 (trex/6.9.2);
-	Sun, 10 Mar 2024 23:01:53 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4TtFlh57D8z2N;
-	Sun, 10 Mar 2024 16:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1710111713;
-	bh=l2HWUjqjmDG3dE4nGQIbWOiAD/6EgkwTYq4raWEcqCQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=BKOE7IiM/OQBdQqBQj9fvY7rZxqn6deX8Y7ABKzHL8DEwnsfUqFUtO8Jsf/P8Yac2
-	 pR8JRqZjKGST6aA4EoUm1jYNyUL/5e9Ly3hEqRUn1QQMK47T1jjwFVrp5rW2r+gUjI
-	 G+4D5YQIMS8Pbvb2bpNafyBui4D7OCQOUSND3tngYb+COGHt/01WjadzD8C7jHaj1H
-	 5Qzh0zxk4EH9zZ4iYf804KIxtkBr5uiCTlcNBzWcjS6eBMnD5NazXftS+v9B+eC+F+
-	 MJZKjwCUUl0AvHcsu6PiydajO1N5aLQBVCLi9de/ipzcbgg+WUle3veDQcYs0FT8oY
-	 jyOX22iNB7Q9A==
-Date: Sun, 10 Mar 2024 16:01:49 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	ira.weiny@intel.com, vishal.l.verma@intel.com,
-	alison.schofield@intel.com, Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH v4 1/3] cxl: Remove checking of iter in
- cxl_endpoint_get_perf_coordinates()
-Message-ID: <20240310230149.2ybcqrrh6rvp4ohj@offworld>
-References: <20240307230432.2006490-1-dave.jiang@intel.com>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="oJwkpIa/"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29bb5bec0e4so1600617a91.1
+        for <linux-cxl@vger.kernel.org>; Sun, 10 Mar 2024 18:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710120569; x=1710725369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hOSvhcvJGLEL7J8lpsnrtr4vlODvqiYxIBXUcrpqgiE=;
+        b=oJwkpIa/JaeLhjrIWks53Om+l6/dU6iwMs7g49EmUUJ+VSI1Xb8P4kYR5OSg8VkCxa
+         OsH1pLNi/7I1wt+ONwazpnhtxlKTcUyIX4o3TmPta5al3YiKo/CckswdEf+Y4/2SMhJT
+         PCFAm7dcKUitb3ST1uN/tfEkezN41Q4WDReGFBUSlZRuK7cPWHuXShoG28zCbzrKljRV
+         32RvoqRvrLLuH5qjjWlRpMzospsyrFUUT+lzTeqexXj3u5HHW2o2UXZlgc7si4MnaHVW
+         6c1ZufnE/qo8IAOtLyDnGpMt9osoZ/HWzsTPIf0EsLmev9v9d+JhMma1a8zrFtZZDCAW
+         EsTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710120569; x=1710725369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hOSvhcvJGLEL7J8lpsnrtr4vlODvqiYxIBXUcrpqgiE=;
+        b=UoqLLLFM0oxXliQaI1x/QCyQv9FGyLO7LLux3gMO9xQoxPN5ZKAaJY4i07LXu5LWN7
+         A6WInEH4qo8D4bzmIAnld9RDsHyK/7gGT7eDUP6D2cC4v82tCwf/xlhiAw7FVSNFvYCz
+         fT2pjmjqkd3IYWYHtLBTqdl1GK89haYWNoh5ndTU0yd/t7h/ChRLEeNaCG8Ipmv6AQlT
+         dVmKAshCQfNc0BujZ80kkW1RxaQsogqxxYH2nVa2uV8/X4FLO7YkeeGtdHqA4NeJ6+/I
+         jVU0Ewjp7h+3op+3jGAC7MyNuPrrypdgArca6V8gZk7IdJJAhJ8O7Fw4REB0/WXmLpMC
+         oRsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsBWIvcirB0EUyLA3+3T5QY/n0suLnOGfGvaMxCqX9QKSetZ6RifM28nUeFH6mts0VmlbY2Q+zSCVJrVpbRXA21ofAF1GQQsrf
+X-Gm-Message-State: AOJu0YwQJnOV3RZOjjR3SWa/pZ+MhkXrFKnlHG9o6DI01BDrcGfDD7XG
+	Xig1rbbsXSY8uGbC6AgSV4W788h3IQ1Z9DKzG8Term/ESCsM49LoP4QcWawlRsc=
+X-Google-Smtp-Source: AGHT+IFdH2KMViIbM49wC4hqTijDXwXYely9IKxeBYRM5XJT/JRC71uwCtS4jPxQ9NJv+E+Vquza9g==
+X-Received: by 2002:a17:90b:e0e:b0:29b:ab0e:4f0a with SMTP id ge14-20020a17090b0e0e00b0029bab0e4f0amr3210258pjb.23.1710120568734;
+        Sun, 10 Mar 2024 18:29:28 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-47-118.pa.nsw.optusnet.com.au. [49.179.47.118])
+        by smtp.gmail.com with ESMTPSA id c3-20020a17090a490300b0029bb4712610sm3400554pjh.6.2024.03.10.18.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Mar 2024 18:29:28 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rjUTl-000FPe-0k;
+	Mon, 11 Mar 2024 12:29:25 +1100
+Date: Mon, 11 Mar 2024 12:29:25 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: John Groves <John@groves.net>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, John Groves <jgroves@micron.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	john@jagalactic.com, Christoph Hellwig <hch@infradead.org>,
+	dave.hansen@linux.intel.com, gregory.price@memverge.com
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+Message-ID: <Ze5edU3JbLEFwJOH@dread.disaster.area>
+References: <cover.1708709155.git.john@groves.net>
+ <ZdkzJM6sze-p3EWP@bombadil.infradead.org>
+ <cc2pabb3szzpm5jxxeku276csqu5vwqgzitkwevfluagx7akiv@h45faer5zpru>
+ <Zdy0CGL6e0ri8LiC@bombadil.infradead.org>
+ <w5cqtmdgqtjvbnrg5okdgmxe45vjg5evaxh6gg3gs6kwfqmn5p@wgakpqcumrbt>
+ <CAB=NE6UvHSvTJJCq-YuBEZNo8F5Kg25aK+2im=V7DgEsTJ8wPg@mail.gmail.com>
+ <mw4yhbmza4idassgbqeiti4ue7jq377ezxfrqrcbsbzsrmfiln@kn7qmqljvswl>
+ <Zd/ovHqO/16PsUsp@dread.disaster.area>
+ <5segby7xk6wbyblovpapdymiuvg63e5qarahc4pramhsqikx2x@y3zmih6mgs33>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240307230432.2006490-1-dave.jiang@intel.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <5segby7xk6wbyblovpapdymiuvg63e5qarahc4pramhsqikx2x@y3zmih6mgs33>
 
-On Thu, 07 Mar 2024, Dave Jiang wrote:
+On Thu, Feb 29, 2024 at 08:52:48AM -0600, John Groves wrote:
+> On 24/02/29 01:15PM, Dave Chinner wrote:
+> > On Mon, Feb 26, 2024 at 08:05:58PM -0600, John Groves wrote:
+> > >    bw (  MiB/s): min= 5085, max=27367, per=100.00%, avg=14361.95, stdev=165.61, samples=719
+> > >    iops        : min= 2516, max=13670, avg=7160.17, stdev=82.88, samples=719
+> > >   lat (usec)   : 4=0.05%, 10=0.72%, 20=2.23%, 50=2.48%, 100=3.02%
+> > >   lat (usec)   : 250=1.54%, 500=2.37%, 750=1.34%, 1000=0.75%
+> > >   lat (msec)   : 2=3.20%, 4=43.10%, 10=23.05%, 20=14.81%, 50=1.25%
+> > 
+> > Most of the IO latencies are up round the 4-20ms marks. That seems
+> > kinda high for a 2MB IO. With a memcpy speed of 10GB/s, the 2MB
+> > should only take a couple of hundred microseconds. For Famfs, the
+> > latencies appear to be around 1-4ms.
+> > 
+> > So where's all that extra time coming from?
+> 
+> Below, you will see two runs with performance and latency distribution
+> about the same as famfs (the answer for that was --fallocate=native).
 
->The while() loop in cxl_endpoint_get_perf_coordinates() checks to see if
->'iter' is valid as part of the condition breaking out of the loop. However,
->iter is being used before the check at the end of the while loop before
->the next iteration starts. Given that the loop doesn't expect the iter to
->be NULL because it stops before the root port, remove the iter check.
->
->The presence of the iter or removing the iter does not impact the behavior
->of the code. This is a code clean up and not a bug fix.
->
+Ah, that is exactly what I suspected, and was wanting profiles
+because that will show up in them clearly.
 
-For the whole series:
+> > >   lat (msec)   : 100=0.08%
+> > >   cpu          : usr=10.18%, sys=0.79%, ctx=67227, majf=0, minf=38511
+> > 
+> > And why is system time reporting at almost zero instead of almost
+> > all the remaining cpu time (i.e. up at 80-90%)?
+> 
+> Something weird is going on with the cpu reporting. Sometimes sys=~0, but other times
+> it's about what you would expect. I suspect some sort of measurement error,
+> like maybe the method doesn't work with my cpu model? (I'm grasping, but with
+> a somewhat rational basis...)
+> 
+> I pasted two xfs runs below. The first has the wonky cpu sys value, and
+> the second looks about like what one would expect.
+> 
+> > 
+> > Can you run call-graph kernel profiles for XFS and famfs whilst
+> > running this workload so we have some insight into what is behaving
+> > differently here?
+> 
+> Can you point me to an example of how to do that?
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+perf record --call-graph ...
+pref report --call-graph ...
 
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->---
-> drivers/cxl/core/port.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->index e59d9d37aa65..e1d30a885700 100644
->--- a/drivers/cxl/core/port.c
->+++ b/drivers/cxl/core/port.c
->@@ -2142,7 +2142,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->	 * port each iteration. If the parent is cxl root then there is
->	 * nothing to gather.
->	 */
->-	while (iter && !is_cxl_root(to_cxl_port(iter->dev.parent))) {
->+	while (!is_cxl_root(to_cxl_port(iter->dev.parent))) {
->		combine_coordinates(&c, &dport->sw_coord);
->		c.write_latency += dport->link_latency;
->		c.read_latency += dport->link_latency;
->--
->2.44.0
->
+
+> I'd been thinking about the ~2x gap for a few days, and the most obvious
+> difference is famfs files must be preallocated (like fallocate, but works
+> a bit differently since allocation happens in user space). I just checked 
+> one of the xfs files, and it had maybe 80 extents (whereas the famfs 
+> files always have 1 extent here).
+
+Which is about 4MB per extent. Extent size is not the problem for
+zero-seek-latency storage hardware, though.
+
+Essentially what you are seeing is interleaving extent allocation
+between all the files because they are located in the same
+directory. The locality algorithm is trying to place the data
+extents close to the owner inode, but the indoes are also all close
+together because they are located in the same AG as the parent
+directory inode. Allocation concurrency is created by placing new
+directories in different allocation groups, so we end up with
+workloads in different directories being largely isolated from each
+other.
+
+However, that means when you are trying to write to many files in
+the same directory at the same time, they are largely all competing
+for the same AG lock to do block allocation during IO submission.
+That creates interleaving of write() sized extents between different
+files. We use speculative preallocation for buffered IO to avoid
+this, and for direct IO the application needs to use extent size hints
+or preallocation to avoid this contention based interleaving.
+
+IOWs, by using fallocate() to preallocate all the space there will
+be no allocation during IO submission and so the serialisation that
+occurs due to competing allocations just goes away...
+
+> FWIW I ran xfs with and without io_uring, and there was no apparent
+> difference (which makes sense to me because it's not block I/O).
+> 
+> The prior ~2x gap still seems like a lot of overhead for extent list 
+> mapping to memory, but adding --fallocate=native to the xfs test brought 
+> it into line with famfs:
+
+As I suspected. :)
+
+As for CPU usage accounting, the number of context switches says it
+all.
+
+"Bad":
+
+>   cpu          : usr=15.48%, sys=1.17%, ctx=62654, majf=0, minf=22801
+
+"good":
+
+>   cpu          : usr=14.43%, sys=78.18%, ctx=5272, majf=0, minf=15708
+
+I'd say that in the "bad" case most of the kernel work is being
+shuffled off to kernel threads to do the work and so it doesn't get
+accounted to the submission task.  In comparison, in the "good" case
+the work is being done in the submission thread and hence there's a
+lot fewer context switches and the system time is correctly
+accounted to the submission task.
+
+Perhaps an io_uring task accounting problem?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
