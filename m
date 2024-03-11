@@ -1,160 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3493E56B99;
-	Mon, 11 Mar 2024 20:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF5356772;
+	Mon, 11 Mar 2024 21:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710189721; cv=none; b=d7PW8CXWeNaG/7WNDlpUZSwEehM1OOZdZk5L/FPS8B1I0EsdmIM0fT6WlmJqvdBaaq396XaQby82i4+nLcY/O/ey6nn++ZgXQnt2uHA5x+fxlcdB4lGZJo0DO9BONo888hb+ZBR+YsPziGEh/nByBtOwuhfbo8hKkr5d6RiXkuo=
+	t=1710192045; cv=none; b=bbvb8CwJHRDe4mx9JeBUqdMNwf/0cjhCVGjbtcPp5y32hOWxYrQH+dSyl1dfAnJsehPKHfw335IqPk8+/iEMqv7fT6AWRYnbsxT8q8hoOkt+07uUxCHnRknKCLTXd7XcRi5Mqs+hmvY7Hp9sfs5Ea/cKNtycoqQ5h25QJ+ZH/UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710189721; c=relaxed/simple;
-	bh=J/wONLAEvHRU9lD1btd5BUHl4+vel/eLMs5RxCUEL6M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UNfwgdFMlNJEE/rL4tGqsaqR/+IBY+Znnr9H64ItE3m+ASf9qcVWZ4JMZHgecSdUeMI5HCW/w49C/Qz+9oDeuBRheQP7XInSGupP+2AeyFkSu13NJSSZ8Vn2hEePAO4HVcNDXPBzwzVne9UCkRRxxeCQc/Z3gNCksBDMUcJwPaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FAD9C433F1;
-	Mon, 11 Mar 2024 20:41:59 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	bhelgaas@google.com,
-	lukas@wunner.de
-Subject: [PATCH 3/3] cxl: Add post reset warning if reset is detected as Secondary Bus Reset (SBR)
-Date: Mon, 11 Mar 2024 13:39:55 -0700
-Message-ID: <20240311204132.62757-4-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240311204132.62757-1-dave.jiang@intel.com>
-References: <20240311204132.62757-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1710192045; c=relaxed/simple;
+	bh=HxYdp/+1ZrmqCfP7H1h9KnkYHbDmS8tczK9UeaKATig=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeNFU8jQrufw0UNrXtIaWPdjwrLbeUlUJLpHj3802m+e3ktSVc1D8HtX/kkwuEcJbFCTvcP/Q9u4q5Zg85/z+jImgDjQ+UcQw1cli+hY99wOUbZncx/nVeZy9cLDmpJ3Is8fOg0GTqTlycidzMrisIsRjZCZusQVO6WFFH1J72w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9gGpIua; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9gGpIua"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bed9fb159fso172492439f.1;
+        Mon, 11 Mar 2024 14:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710192043; x=1710796843; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BBhNEQBVy1fL/SUIc8TvpP+Pi6/a540l6mhfsmCEnoA=;
+        b=D9gGpIuaKliULNOid2NDaeh/rxs8s9kHu1YDiG5TYBrkC3bAoW2CUIioGe5LzmITXn
+         UEtWWw+drSglfkEAq1Z4FN3MIIlyScW5yxvYXhLZB2PMTR17Jz4Buvuce002k3I+YkIA
+         GOyoJISL2jJ4rQw7yTK/ZCbtQWKGEJLkecLqZekN/prt3Zsj74GYmS7Q9KGIvtP8ewKr
+         xFzdAlj9Gc3w3Qe8adxiUTfkkjfXBxoegs/L3NtluYoVlNfGndQwWJidy9nBNhzr3+HA
+         IUJLEgN/cWFLy33yDRaqzr2xY3N8ju3tJYwqwSmHJpw0Dg4mHmrmwaJF0sTksb8w/W18
+         k1qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710192043; x=1710796843;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BBhNEQBVy1fL/SUIc8TvpP+Pi6/a540l6mhfsmCEnoA=;
+        b=uyRtQ5rLtO3BwPYbQzfQ6hOoQQG1xi3km79ntZS5l/0sJUYw9M2lV0xAG0ROgsJFid
+         hXkEfUPOV3/DHgtZlbhB1W//EX5DMa97aK289zZYg5anBEu/7fZHGh2OUhjDkNRHxSU8
+         HTT1nIlLLRcofYWTcyryx7s4Fg7cl1675IFDgPCyeO8k8TGbGYgUFspzXVf8G2fqCz6v
+         l47td1y4prNvzt+//usvQ6O70ceqb6T8ddMOHYF1WirkFD/1Ic9uDkDr2UXzfE+hIhRP
+         IBiIImevwCollKJdut1apy0OlyGF/UTfWg2GaJJbHmtNF6LnE0ZZKqat6tI5inATvom1
+         7C/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXNZQPRKceiaLGRVDNzxqvo+VUj9wDwQC4KfRitebiCToT+MWPZG/CIxopkzQs5tJdTny0vRkrYwnFtm11icOKVzSZWf652+7Ba5Q/fMUst7KYZfPsiI55lX7Xh9WybJivDHdQbofpmKtnDc9aXYAYYHVZasb9Jl4cMs31SFw0JJlz5+Lc=
+X-Gm-Message-State: AOJu0YzR5ibGQWoONgv92ceKVG0MSXQqJYfUhQrfprmTaWN9zu4+yPoy
+	A9CRRv4cSHe8QlFd9Zs2RzlEspYjj4I7JSN5/cH7aSnJUP86pNAK
+X-Google-Smtp-Source: AGHT+IF0bJjkZx211Ow0o9UR7ZYHFVRcRVsv6ZP9/5/UfJ2pK3pt/4piWTc05I528CJAag+9Qocpiw==
+X-Received: by 2002:a05:6602:3307:b0:7c7:b761:9cea with SMTP id b7-20020a056602330700b007c7b7619ceamr8625565ioz.14.1710192042729;
+        Mon, 11 Mar 2024 14:20:42 -0700 (PDT)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id a26-20020a056638005a00b004746fab2afdsm1904555jap.40.2024.03.11.14.20.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 14:20:42 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Mon, 11 Mar 2024 14:20:23 -0700
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, david@redhat.com,
+	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
+	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
+	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
+	jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	mike.malvestuto@intel.com, gthelen@google.com,
+	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
+Message-ID: <Ze91l0jz_DZR9jjx@debian>
+References: <20240223143723.1574-1-shiju.jose@huawei.com>
+ <20240223143723.1574-4-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223143723.1574-4-shiju.jose@huawei.com>
 
-SBR is equivalent to a device been hot removed and inserted again. Doing a
-SBR on a CXL type 3 device is problematic if the exported device memory is
-part of system memory that cannot be offlined. The event is equivalent to
-violently ripping out that range of memory from the kernel. While the
-hardware requires the "Unmask SBR" bit set in the Port Control Extensions
-register and the kernel currently does not unmask it, user can unmask
-this bit via setpci or similar tool.
+On Fri, Feb 23, 2024 at 10:37:14PM +0800, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add support for SET_FEATURE mailbox command.
+> 
+> CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+> CXL devices supports features with changeable attributes.
+> The settings of a feature can be optionally modified using Set Feature
+> command.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/cxl/core/mbox.c | 67 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h    | 30 ++++++++++++++++++
+>  2 files changed, 97 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index c078e62ea194..d1660bd20bdb 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1366,6 +1366,73 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
+>  
+> +int cxl_set_feature(struct cxl_memdev_state *mds,
+> +		    const uuid_t feat_uuid, u8 feat_version,
+> +		    void *feat_data, size_t feat_data_size,
+> +		    u8 feat_flag)
+> +{
+> +	struct cxl_memdev_set_feat_pi {
+> +		struct cxl_mbox_set_feat_hdr hdr;
+> +		u8 feat_data[];
+> +	}  __packed;
+> +	size_t data_in_size, data_sent_size = 0;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	size_t hdr_size;
+> +	int rc = 0;
+> +
+> +	struct cxl_memdev_set_feat_pi *pi __free(kfree) =
+> +					kmalloc(mds->payload_size, GFP_KERNEL);
+> +	pi->hdr.uuid = feat_uuid;
+> +	pi->hdr.version = feat_version;
+> +	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
+> +	hdr_size = sizeof(pi->hdr);
+> +	/*
+> +	 * Check minimum mbox payload size is available for
+> +	 * the feature data transfer.
+> +	 */
+> +	if (hdr_size + 10 > mds->payload_size)
 
-The driver does not have a way to detect whether a reset coming from the
-PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
-detect is to note if a decoder is marked as enabled in software but the
-decoder control register indicates it's not committed.
+Where does this magic number come from? 
 
-A helper function is added to find discrepency between the decoder
-software state versus the hardware register state.
+Fan
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- Check decoder flags vs decoder registers for discrepency. (Dan)
----
- drivers/cxl/core/port.c | 30 ++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |  2 ++
- drivers/cxl/pci.c       | 19 +++++++++++++++++++
- 3 files changed, 51 insertions(+)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index e59d9d37aa65..4de0013f9cc7 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2170,6 +2170,36 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
- 
-+static int decoder_hw_mismatch(struct device *dev, void *data)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_port *port = data;
-+	struct cxl_decoder *cxld;
-+	struct cxl_hdm *cxlhdm;
-+	void __iomem *hdm;
-+	u32 ctrl;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
-+		return 0;
-+
-+	cxld = &cxled->cxld;
-+	cxlhdm = dev_get_drvdata(&port->dev);
-+	hdm = cxlhdm->regs.hdm_decoder;
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
-+}
-+
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
-+{
-+	return device_for_each_child(&port->dev, port, decoder_hw_mismatch);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-+
- /* for user tooling to ensure port disable work has completed */
- static ssize_t flush_store(const struct bus_type *bus, const char *buf, size_t count)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..e42b1f3f9288 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -882,6 +882,8 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 
- void cxl_memdev_update_perf(struct cxl_memdev *cxlmd);
- 
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 13450e75f5eb..78457542aeec 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -957,11 +957,30 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_reset_done(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &pdev->dev;
-+
-+	/*
-+	 * FLR does not expect to touch the HDM decoders and related registers.
-+	 * SBR however will wipe all device configurations.
-+	 * Issue warning if there was active decoder before reset that no
-+	 * longer exists.
-+	 */
-+	if (cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
-+		dev_warn(dev, "SBR happened without memory regions removal.\n");
-+		dev_warn(dev, "System may be unstable if regions hosted system memory.\n");
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
- 	.cor_error_detected	= cxl_cor_error_detected,
-+	.reset_done	= cxl_reset_done,
- };
- 
- static struct pci_driver cxl_pci_driver = {
--- 
-2.44.0
-
+> +		return -ENOMEM;
+> +
+> +	if ((hdr_size + feat_data_size) <= mds->payload_size) {
+> +		pi->hdr.flags = cpu_to_le32(feat_flag |
+> +				       CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
+> +		data_in_size = feat_data_size;
+> +	} else {
+> +		pi->hdr.flags = cpu_to_le32(feat_flag |
+> +				       CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
+> +		data_in_size = mds->payload_size - hdr_size;
+> +	}
+> +
+> +	do {
+> +		pi->hdr.offset = cpu_to_le16(data_sent_size);
+> +		memcpy(pi->feat_data, feat_data + data_sent_size, data_in_size);
+> +		mbox_cmd = (struct cxl_mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_SET_FEATURE,
+> +			.size_in = hdr_size + data_in_size,
+> +			.payload_in = pi,
+> +		};
+> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		data_sent_size += data_in_size;
+> +		if (data_sent_size >= feat_data_size)
+> +			return 0;
+> +
+> +		if ((feat_data_size - data_sent_size) <= (mds->payload_size - hdr_size)) {
+> +			data_in_size = feat_data_size - data_sent_size;
+> +			pi->hdr.flags = cpu_to_le32(feat_flag |
+> +					       CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
+> +		} else {
+> +			pi->hdr.flags = cpu_to_le32(feat_flag |
+> +					       CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
+> +		}
+> +	} while (true);
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
+> +
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		       struct cxl_region *cxlr)
+>  {
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index bcfefff062a6..a8d4104afa53 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -531,6 +531,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_LOG		= 0x0401,
+>  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+>  	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+> +	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
+>  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+>  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+>  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+> @@ -773,6 +774,31 @@ struct cxl_mbox_get_feat_in {
+>  	u8 selection;
+>  }  __packed;
+>  
+> +/* Set Feature CXL 3.1 Spec 8.2.9.6.3 */
+> +/*
+> + * Set Feature input payload
+> + * CXL rev 3.1 section 8.2.9.6.3 Table 8-101
+> + */
+> +/* Set Feature : Payload in flags */
+> +#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
+> +enum cxl_set_feat_flag_data_transfer {
+> +	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
+> +	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
+> +	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
+> +	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
+> +	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
+> +	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
+> +};
+> +#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
+> +
+> +struct cxl_mbox_set_feat_hdr {
+> +	uuid_t uuid;
+> +	__le32 flags;
+> +	__le16 offset;
+> +	u8 version;
+> +	u8 rsvd[9];
+> +}  __packed;
+> +
+>  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+>  struct cxl_mbox_poison_in {
+>  	__le64 offset;
+> @@ -912,6 +938,10 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
+>  		       size_t feat_out_size,
+>  		       size_t feat_out_min_size,
+>  		       enum cxl_get_feat_selection selection);
+> +int cxl_set_feature(struct cxl_memdev_state *mds,
+> +		    const uuid_t feat_uuid, u8 feat_version,
+> +		    void *feat_data, size_t feat_data_size,
+> +		    u8 feat_flag);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		       struct cxl_region *cxlr);
+> -- 
+> 2.34.1
+> 
