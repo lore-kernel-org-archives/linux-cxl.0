@@ -1,206 +1,168 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2062.outbound.protection.outlook.com [40.107.100.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84217D2
-	for <linux-cxl@vger.kernel.org>; Mon, 11 Mar 2024 01:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710120571; cv=none; b=K278/TTCtzTF9LJCjErp3dy3g0vY6mkCGgaCYwW3GspD+utRJqVSrpuJoveqf/HKRkkOvoNq2aITHnfVs10/xbktY3eFxhsgCTHFcXngkeQq5wW6IJguMDQ0sgocu1irEZso2rm2c+oG0KIwljtyUN3hQlXujouZezUpIdH/2Ek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710120571; c=relaxed/simple;
-	bh=D+LFpG+DtzDxbDphPWqUCew6+zoXZ3tpB6Glycfh6Nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvxKlgAw8y8J/SZfDV4fnionUyWWt0pjv6uwG0e8FtTcYdHPO2r6jKjdHZZPCKnUyviFGN2i0ft8C33rKSwsvAa3KzoBPYOZyYeDns13PoulLHFotE5B0YVfuJdRysVi7eDMj+bYJHlAxQYaSR/oP4G2xg2UnA97NPKE8tNneYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=oJwkpIa/; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFF84084D;
+	Mon, 11 Mar 2024 14:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710167129; cv=fail; b=a0UvNJhDRqAIJ1rMTlqC5GIoLafA08K4S7M6ZtmPRv/8yy9nDLoADFIy8jpGqVxzOiHUxM8AKeaWQSIpyGmvMDs9Wy5jse4OkjJjdwxt78gc8VCdcYOKMOyqFbFobwEVl9YK8IyJfwMPIMB+OHm6cVECe5weX4zvKCE/oCYwaO4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710167129; c=relaxed/simple;
+	bh=sAhuR08NHWs6165Y3ZJu/We+kzZmO1bDsOPtSVyuHS0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iB1AJcbuZ9jFXbog+9d0TR8RuyR77FoHZs3bGkg6BH+0ntxvtv37PKRN2YOT59OOWBc7FcKb6BVsM6MvNkF6cnOoXH52MtrRAiSiCSvNuK1mtk7J1fk2AOFV0IJudZkXhiAbx1QUDizMHwy6THGlB0Q2+elx7cYscTCG60UpuvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4KFdxBfk; arc=fail smtp.client-ip=40.107.100.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="oJwkpIa/"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29bb5bec0e4so1600617a91.1
-        for <linux-cxl@vger.kernel.org>; Sun, 10 Mar 2024 18:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710120569; x=1710725369; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hOSvhcvJGLEL7J8lpsnrtr4vlODvqiYxIBXUcrpqgiE=;
-        b=oJwkpIa/JaeLhjrIWks53Om+l6/dU6iwMs7g49EmUUJ+VSI1Xb8P4kYR5OSg8VkCxa
-         OsH1pLNi/7I1wt+ONwazpnhtxlKTcUyIX4o3TmPta5al3YiKo/CckswdEf+Y4/2SMhJT
-         PCFAm7dcKUitb3ST1uN/tfEkezN41Q4WDReGFBUSlZRuK7cPWHuXShoG28zCbzrKljRV
-         32RvoqRvrLLuH5qjjWlRpMzospsyrFUUT+lzTeqexXj3u5HHW2o2UXZlgc7si4MnaHVW
-         6c1ZufnE/qo8IAOtLyDnGpMt9osoZ/HWzsTPIf0EsLmev9v9d+JhMma1a8zrFtZZDCAW
-         EsTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710120569; x=1710725369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hOSvhcvJGLEL7J8lpsnrtr4vlODvqiYxIBXUcrpqgiE=;
-        b=UoqLLLFM0oxXliQaI1x/QCyQv9FGyLO7LLux3gMO9xQoxPN5ZKAaJY4i07LXu5LWN7
-         A6WInEH4qo8D4bzmIAnld9RDsHyK/7gGT7eDUP6D2cC4v82tCwf/xlhiAw7FVSNFvYCz
-         fT2pjmjqkd3IYWYHtLBTqdl1GK89haYWNoh5ndTU0yd/t7h/ChRLEeNaCG8Ipmv6AQlT
-         dVmKAshCQfNc0BujZ80kkW1RxaQsogqxxYH2nVa2uV8/X4FLO7YkeeGtdHqA4NeJ6+/I
-         jVU0Ewjp7h+3op+3jGAC7MyNuPrrypdgArca6V8gZk7IdJJAhJ8O7Fw4REB0/WXmLpMC
-         oRsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsBWIvcirB0EUyLA3+3T5QY/n0suLnOGfGvaMxCqX9QKSetZ6RifM28nUeFH6mts0VmlbY2Q+zSCVJrVpbRXA21ofAF1GQQsrf
-X-Gm-Message-State: AOJu0YwQJnOV3RZOjjR3SWa/pZ+MhkXrFKnlHG9o6DI01BDrcGfDD7XG
-	Xig1rbbsXSY8uGbC6AgSV4W788h3IQ1Z9DKzG8Term/ESCsM49LoP4QcWawlRsc=
-X-Google-Smtp-Source: AGHT+IFdH2KMViIbM49wC4hqTijDXwXYely9IKxeBYRM5XJT/JRC71uwCtS4jPxQ9NJv+E+Vquza9g==
-X-Received: by 2002:a17:90b:e0e:b0:29b:ab0e:4f0a with SMTP id ge14-20020a17090b0e0e00b0029bab0e4f0amr3210258pjb.23.1710120568734;
-        Sun, 10 Mar 2024 18:29:28 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-47-118.pa.nsw.optusnet.com.au. [49.179.47.118])
-        by smtp.gmail.com with ESMTPSA id c3-20020a17090a490300b0029bb4712610sm3400554pjh.6.2024.03.10.18.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 18:29:28 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rjUTl-000FPe-0k;
-	Mon, 11 Mar 2024 12:29:25 +1100
-Date: Mon, 11 Mar 2024 12:29:25 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Groves <John@groves.net>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, John Groves <jgroves@micron.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	john@jagalactic.com, Christoph Hellwig <hch@infradead.org>,
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
-Message-ID: <Ze5edU3JbLEFwJOH@dread.disaster.area>
-References: <cover.1708709155.git.john@groves.net>
- <ZdkzJM6sze-p3EWP@bombadil.infradead.org>
- <cc2pabb3szzpm5jxxeku276csqu5vwqgzitkwevfluagx7akiv@h45faer5zpru>
- <Zdy0CGL6e0ri8LiC@bombadil.infradead.org>
- <w5cqtmdgqtjvbnrg5okdgmxe45vjg5evaxh6gg3gs6kwfqmn5p@wgakpqcumrbt>
- <CAB=NE6UvHSvTJJCq-YuBEZNo8F5Kg25aK+2im=V7DgEsTJ8wPg@mail.gmail.com>
- <mw4yhbmza4idassgbqeiti4ue7jq377ezxfrqrcbsbzsrmfiln@kn7qmqljvswl>
- <Zd/ovHqO/16PsUsp@dread.disaster.area>
- <5segby7xk6wbyblovpapdymiuvg63e5qarahc4pramhsqikx2x@y3zmih6mgs33>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4KFdxBfk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qyu/fmvpK0R812X3ONzd44/FkSUvnq+p7YN/4QUB7+9Ir9hFgchdrP2EPErqmyZO09aD+ocYHOwdy71LNVJqQQzMO7YdTz3B33ogsyRfMud3aM7UHgn5g6Bmn+2Y2lSrRua+99LS8pexWzR6Go2p9hYaTovko24WtXo+w4tKEGT57MhqlYFZchnf8PMljEXHVJe8l426aVA15HXp1bkkN4xmPjWbtHl3VVha7sbvIcRYxWRrjL72C2icvqzvzuYuwGwqztGyhmdAzgJB7NFgCIKZkguPq4eqyiGH4/9EaG+3QQc454y4no3T5IyjZyIR9/fGYKPW9QAF4Rt4knF0bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Lnp6uvOWIEmePSruyrvyINxBV6hWwDzcXeL8m4CWtdw=;
+ b=eiNzA1Y63Qn7BVdY/MV1qVNEaWqpIgBfHt+RtYw0KCPFOlu+cuPSNjqJN38MRbj09kJFqDiFU8ucZvfFSYt0ixUSFvmX2UwTRdeyAjT9LIV78N62u41Q8Sn3iYwRASt66MMQCcZz84fWZZWvbz62fdN4ziPYokHxpuAcrOVE97HmAoj7yPwIDgm1Ti6pMsfy8aoGtGx01hQusl8y+AWQ4e6G/SlPmBHW75+TFSPk8YXni9IN1wv5LYlAWc1+QwcglTNgHd7vzg7497CVybUxQXnlm4s+j5AWbsHgZKNTKKh95c2G/88+M/gEy0YwMRAZTkdX+6URf0u+1KtFX8cZgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lnp6uvOWIEmePSruyrvyINxBV6hWwDzcXeL8m4CWtdw=;
+ b=4KFdxBfkD79Hl3A/SG7y4+0eyvBNDPiOej9osuFs8ntnrPSAEcapG0QdhePooCL1gVCI13u6zcTyH7KnauWqpFy3Rjbla6mumBgio1rNFcM/4ILwPU+PHmAOUo/5PgWfWqtQ0MKBBM57R5Y/0aLOPUPfpl6xHS+buFlCzjDkuqg=
+Received: from CH0PR04CA0030.namprd04.prod.outlook.com (2603:10b6:610:76::35)
+ by DM6PR12MB4433.namprd12.prod.outlook.com (2603:10b6:5:2a1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Mon, 11 Mar
+ 2024 14:25:25 +0000
+Received: from CH2PEPF0000013B.namprd02.prod.outlook.com
+ (2603:10b6:610:76:cafe::5c) by CH0PR04CA0030.outlook.office365.com
+ (2603:10b6:610:76::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36 via Frontend
+ Transport; Mon, 11 Mar 2024 14:25:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000013B.mail.protection.outlook.com (10.167.244.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7386.12 via Frontend Transport; Mon, 11 Mar 2024 14:25:23 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 11 Mar 2024 09:25:18 -0500
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
+	<rafael@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+	<bp@alien8.de>
+CC: <dave@stogolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <benjamin.cheatham@amd.com>
+Subject: [PATCH v15 0/4] cxl, EINJ: Update EINJ for CXL error types
+Date: Mon, 11 Mar 2024 09:25:04 -0500
+Message-ID: <20240311142508.31717-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5segby7xk6wbyblovpapdymiuvg63e5qarahc4pramhsqikx2x@y3zmih6mgs33>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013B:EE_|DM6PR12MB4433:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1016bc75-1ba4-4f86-ce7f-08dc41d71708
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lZ8lvxQ5jysL/djVkKqVNEoVrU5NbHq+id9fffo5kEWT2rsQP/oBsqq0Jox8VUAq0c41V5xaEgL+elvwGIxsxisEwvhPUXuuyRMp5Af1kGM1OZcmk0ZrGpOYFTv9cusy014HahkqY10uKkNahYs3N3YDcFx8FvtLUn3/0oL54kWVfOl5dXI/1xDpDeRiuADTMfloEOcQNMd3jk3YdiokbGgR1oC6mBG5V0hR78vcWXaxsLRKLkBdwuAT3FycBGnr+H9qZI11Av5hxYuVQxivRlEX//ar/4SgBnbJM/Yq0tuGR2nR4HuJChSfyhNdqajXpbfr1h4qIU5TnZEhr3HaHEgzMw4o74QYp4nv1FdRx4dWh3CvREb8yeSkRKdAkhUwwMXDFNoSogxoL7VZYdQyTJU+3J56qqf5fexf7yKbxMJoYyppwhMdKXoJYdvO/b6txQWV19g4BDaLUa8B/nEi5rdAuf2AXXBAe2i/mJjPv9WIdmudCERQBFAMWT0nHVIig3SLrUa5UaMo2RXn5+AMchZScJotCZWyGoDR0mOTWrzzI405lt84/hBs5lxp+aQnc5PyqNFq8SziDrlts93J8VQDM0hKxSAYnACsxK1mwpElpDHTjqDD75nIDL8w1LWnXpM/tccuKkKRajmALdmYQ22WFgxiHI4oIWZgI2J2CV8rmKs3xNz3wRQPQHf74NKfQZp77+83YAMFRtN+5B+4sQXb3oZCFGKvsD4x34o5oV3RGqQDElpuMc7EndqDUzIM
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 14:25:23.9370
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1016bc75-1ba4-4f86-ce7f-08dc41d71708
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000013B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4433
 
-On Thu, Feb 29, 2024 at 08:52:48AM -0600, John Groves wrote:
-> On 24/02/29 01:15PM, Dave Chinner wrote:
-> > On Mon, Feb 26, 2024 at 08:05:58PM -0600, John Groves wrote:
-> > >    bw (  MiB/s): min= 5085, max=27367, per=100.00%, avg=14361.95, stdev=165.61, samples=719
-> > >    iops        : min= 2516, max=13670, avg=7160.17, stdev=82.88, samples=719
-> > >   lat (usec)   : 4=0.05%, 10=0.72%, 20=2.23%, 50=2.48%, 100=3.02%
-> > >   lat (usec)   : 250=1.54%, 500=2.37%, 750=1.34%, 1000=0.75%
-> > >   lat (msec)   : 2=3.20%, 4=43.10%, 10=23.05%, 20=14.81%, 50=1.25%
-> > 
-> > Most of the IO latencies are up round the 4-20ms marks. That seems
-> > kinda high for a 2MB IO. With a memcpy speed of 10GB/s, the 2MB
-> > should only take a couple of hundred microseconds. For Famfs, the
-> > latencies appear to be around 1-4ms.
-> > 
-> > So where's all that extra time coming from?
-> 
-> Below, you will see two runs with performance and latency distribution
-> about the same as famfs (the answer for that was --fallocate=native).
+v15 Changes:
+	- Update commit messages for patches 2/4 & 3/4 (Tony)
+	- Add line to cover letter about CXL 2.0+ errors being available
+	  under legacy EINJ interface
+	- Add einj_cxl_rch_error_inject() for CXL 1.0/1.1 error injections
+	  in einj-core.c
+	- Remove checks for einj_initialized in einj_cxl_*_inject functions
+	  in einj-cxl.c (Dan)
+	- Update commit message for patch 1/4 from recommending checking
+	  einj_is_initialized() to a more generic "safegaurd against EINJ
+	  not being initialized"
+	- Use more specific headers in einj-cxl.c and einj-cxl.h (Jonathan)
+	- Use ACPI_APEI_EINJ_CXL_* defines in place of BIT() macros in
+	  einj_cxl_error_type_string struct (Jonathan)
+	- Move error_type_get() above einj_validate_error_type() to cleanup
+	  diff (Jonathan)
 
-Ah, that is exactly what I suspected, and was wanting profiles
-because that will show up in them clearly.
+v14 Changes:
+	- Remove einj-cxl module and instead compile as part of EINJ module
+	  (Dan)
+	- Change CONFIG_ACPI_APEI_EINJ_CXL from tristate to bool (Dan)
+	- Fix CONFIG_ACPI_APEI_EINJ_CXL/CONFIG_CXL_BUS dependencies
+	- Remove EINJ function exports (Dan)
+	- Organizational changes for CXL content in EINJ kernel
+	  documentation (Dan)
+	- Demote "EINJ table not found." print to pr_debug() from pr_info()
+	  (Dan)
 
-> > >   lat (msec)   : 100=0.08%
-> > >   cpu          : usr=10.18%, sys=0.79%, ctx=67227, majf=0, minf=38511
-> > 
-> > And why is system time reporting at almost zero instead of almost
-> > all the remaining cpu time (i.e. up at 80-90%)?
-> 
-> Something weird is going on with the cpu reporting. Sometimes sys=~0, but other times
-> it's about what you would expect. I suspect some sort of measurement error,
-> like maybe the method doesn't work with my cpu model? (I'm grasping, but with
-> a somewhat rational basis...)
-> 
-> I pasted two xfs runs below. The first has the wonky cpu sys value, and
-> the second looks about like what one would expect.
-> 
-> > 
-> > Can you run call-graph kernel profiles for XFS and famfs whilst
-> > running this workload so we have some insight into what is behaving
-> > differently here?
-> 
-> Can you point me to an example of how to do that?
+The new CXL error types will use the Memory Address field in the
+SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+compliant memory-mapped downstream port. The value of the memory address
+will be in the port's MMIO range, and it will not represent physical
+(normal or persistent) memory.
 
-perf record --call-graph ...
-pref report --call-graph ...
+Add the functionality for injecting CXL 1.1/2.0+ errors to the EINJ module,
+but not through the EINJ legacy interface under /sys/kernel/debug/apei/einj.
+Instead, make the error types available under /sys/kernel/debug/cxl.
+This allows for validating the MMIO address for a CXL 1.1 error type
+while also not making the user responsible for finding it. CXL 2.0+
+error types will be available through the legacy EINJ interface and
+under the new debug/cxl interface since they target the SBDF of the CXL
+downstream port instead of a MMIO address.
 
+Ben Cheatham (4):
+  EINJ: Migrate to a platform driver
+  EINJ: Add CXL error type support
+  cxl/core: Add CXL EINJ debugfs files
+  EINJ, Documentation: Update EINJ kernel doc
 
-> I'd been thinking about the ~2x gap for a few days, and the most obvious
-> difference is famfs files must be preallocated (like fallocate, but works
-> a bit differently since allocation happens in user space). I just checked 
-> one of the xfs files, and it had maybe 80 extents (whereas the famfs 
-> files always have 1 extent here).
+ Documentation/ABI/testing/debugfs-cxl         |  30 +++++
+ .../firmware-guide/acpi/apei/einj.rst         |  34 +++++
+ MAINTAINERS                                   |   1 +
+ drivers/acpi/apei/Kconfig                     |  12 ++
+ drivers/acpi/apei/Makefile                    |   2 +
+ drivers/acpi/apei/apei-internal.h             |  18 +++
+ drivers/acpi/apei/{einj.c => einj-core.c}     | 123 +++++++++++++++---
+ drivers/acpi/apei/einj-cxl.c                  | 116 +++++++++++++++++
+ drivers/cxl/core/port.c                       |  42 ++++++
+ include/linux/einj-cxl.h                      |  44 +++++++
+ 10 files changed, 401 insertions(+), 21 deletions(-)
+ rename drivers/acpi/apei/{einj.c => einj-core.c} (90%)
+ create mode 100644 drivers/acpi/apei/einj-cxl.c
+ create mode 100644 include/linux/einj-cxl.h
 
-Which is about 4MB per extent. Extent size is not the problem for
-zero-seek-latency storage hardware, though.
-
-Essentially what you are seeing is interleaving extent allocation
-between all the files because they are located in the same
-directory. The locality algorithm is trying to place the data
-extents close to the owner inode, but the indoes are also all close
-together because they are located in the same AG as the parent
-directory inode. Allocation concurrency is created by placing new
-directories in different allocation groups, so we end up with
-workloads in different directories being largely isolated from each
-other.
-
-However, that means when you are trying to write to many files in
-the same directory at the same time, they are largely all competing
-for the same AG lock to do block allocation during IO submission.
-That creates interleaving of write() sized extents between different
-files. We use speculative preallocation for buffered IO to avoid
-this, and for direct IO the application needs to use extent size hints
-or preallocation to avoid this contention based interleaving.
-
-IOWs, by using fallocate() to preallocate all the space there will
-be no allocation during IO submission and so the serialisation that
-occurs due to competing allocations just goes away...
-
-> FWIW I ran xfs with and without io_uring, and there was no apparent
-> difference (which makes sense to me because it's not block I/O).
-> 
-> The prior ~2x gap still seems like a lot of overhead for extent list 
-> mapping to memory, but adding --fallocate=native to the xfs test brought 
-> it into line with famfs:
-
-As I suspected. :)
-
-As for CPU usage accounting, the number of context switches says it
-all.
-
-"Bad":
-
->   cpu          : usr=15.48%, sys=1.17%, ctx=62654, majf=0, minf=22801
-
-"good":
-
->   cpu          : usr=14.43%, sys=78.18%, ctx=5272, majf=0, minf=15708
-
-I'd say that in the "bad" case most of the kernel work is being
-shuffled off to kernel threads to do the work and so it doesn't get
-accounted to the submission task.  In comparison, in the "good" case
-the work is being done in the submission thread and hence there's a
-lot fewer context switches and the system time is correctly
-accounted to the submission task.
-
-Perhaps an io_uring task accounting problem?
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+2.34.1
+
