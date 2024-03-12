@@ -1,245 +1,136 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF5356772;
-	Mon, 11 Mar 2024 21:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B52459B5F
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Mar 2024 06:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710192045; cv=none; b=bbvb8CwJHRDe4mx9JeBUqdMNwf/0cjhCVGjbtcPp5y32hOWxYrQH+dSyl1dfAnJsehPKHfw335IqPk8+/iEMqv7fT6AWRYnbsxT8q8hoOkt+07uUxCHnRknKCLTXd7XcRi5Mqs+hmvY7Hp9sfs5Ea/cKNtycoqQ5h25QJ+ZH/UQ=
+	t=1710224279; cv=none; b=RedGYXuDYoRJmU5nCJ/oHzif0Yty38FBXOe6kn/Q+GFAeycTRATATcKsxDtQsqO0rveQZ0yZIQhSVLV4KwRQyMru/EQC4gVNR3onCwiDgcEw3JkMU1EPzZPhpnNj0R7XAIR8fBDUyPOKtjNtGZRcgksjP09iq0OJZDTZ4fClRJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710192045; c=relaxed/simple;
-	bh=HxYdp/+1ZrmqCfP7H1h9KnkYHbDmS8tczK9UeaKATig=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NeNFU8jQrufw0UNrXtIaWPdjwrLbeUlUJLpHj3802m+e3ktSVc1D8HtX/kkwuEcJbFCTvcP/Q9u4q5Zg85/z+jImgDjQ+UcQw1cli+hY99wOUbZncx/nVeZy9cLDmpJ3Is8fOg0GTqTlycidzMrisIsRjZCZusQVO6WFFH1J72w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9gGpIua; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710224279; c=relaxed/simple;
+	bh=nmhtM2hCPPzOA3PI1UXfFRGQ2/QNiXyNuDJau9M3uBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qVEvquWTJPHvRSkIerCHh23e58cGnx+3eV/7iLP8V5BchM202FoJiVFu6Ixh/YAqGiuc+gZa8VoOQi2hAeOWXfFxl+4sZrsGVZBFzl+Ewm1Z4lt2wsrDvTQdVNETcDAKqkRtXhXyezLbDQCHr+bwSc88uCtSXtgyaX3s6DQpkuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=N87hEi6d; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9gGpIua"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bed9fb159fso172492439f.1;
-        Mon, 11 Mar 2024 14:20:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="N87hEi6d"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-78831914027so153681385a.1
+        for <linux-cxl@vger.kernel.org>; Mon, 11 Mar 2024 23:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710192043; x=1710796843; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBhNEQBVy1fL/SUIc8TvpP+Pi6/a540l6mhfsmCEnoA=;
-        b=D9gGpIuaKliULNOid2NDaeh/rxs8s9kHu1YDiG5TYBrkC3bAoW2CUIioGe5LzmITXn
-         UEtWWw+drSglfkEAq1Z4FN3MIIlyScW5yxvYXhLZB2PMTR17Jz4Buvuce002k3I+YkIA
-         GOyoJISL2jJ4rQw7yTK/ZCbtQWKGEJLkecLqZekN/prt3Zsj74GYmS7Q9KGIvtP8ewKr
-         xFzdAlj9Gc3w3Qe8adxiUTfkkjfXBxoegs/L3NtluYoVlNfGndQwWJidy9nBNhzr3+HA
-         IUJLEgN/cWFLy33yDRaqzr2xY3N8ju3tJYwqwSmHJpw0Dg4mHmrmwaJF0sTksb8w/W18
-         k1qw==
+        d=bytedance.com; s=google; t=1710224276; x=1710829076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fgGl/GezxVhRISLyx8tZ9PTH8m4h7yDB3m04Y7JMT5Y=;
+        b=N87hEi6diJng+w7+kr1gATEIjESXvtw+Akc9f6rIK63qn+rl+fDI9YzT3pZIvLm2AS
+         OabDFtRqCET9CeXl9TW1mvwAw+q5Iu2x8e+dI/ZOY1Cfo4Pvg4LUdE98CjZm50RoeSQJ
+         9ymy2k0sf7H86rm0Dysxp5qPoueOXY3sgFMAgpvPmX1ruTqp0SBnhC3ADYXksDFcVFCq
+         ZjtzN2DQqaPe4+byUBjTn/bvgLNg6yJ3WQPxYdioeQdXirc3fdG+iDg8VDKRhhoWNeIh
+         4zsxKVOOpG+K9JAD1D45Uhd8/QurjMHKsCswPJIeKzSDVNdZWisjkRAUW3KIRBJtxEC2
+         y21Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710192043; x=1710796843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BBhNEQBVy1fL/SUIc8TvpP+Pi6/a540l6mhfsmCEnoA=;
-        b=uyRtQ5rLtO3BwPYbQzfQ6hOoQQG1xi3km79ntZS5l/0sJUYw9M2lV0xAG0ROgsJFid
-         hXkEfUPOV3/DHgtZlbhB1W//EX5DMa97aK289zZYg5anBEu/7fZHGh2OUhjDkNRHxSU8
-         HTT1nIlLLRcofYWTcyryx7s4Fg7cl1675IFDgPCyeO8k8TGbGYgUFspzXVf8G2fqCz6v
-         l47td1y4prNvzt+//usvQ6O70ceqb6T8ddMOHYF1WirkFD/1Ic9uDkDr2UXzfE+hIhRP
-         IBiIImevwCollKJdut1apy0OlyGF/UTfWg2GaJJbHmtNF6LnE0ZZKqat6tI5inATvom1
-         7C/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXNZQPRKceiaLGRVDNzxqvo+VUj9wDwQC4KfRitebiCToT+MWPZG/CIxopkzQs5tJdTny0vRkrYwnFtm11icOKVzSZWf652+7Ba5Q/fMUst7KYZfPsiI55lX7Xh9WybJivDHdQbofpmKtnDc9aXYAYYHVZasb9Jl4cMs31SFw0JJlz5+Lc=
-X-Gm-Message-State: AOJu0YzR5ibGQWoONgv92ceKVG0MSXQqJYfUhQrfprmTaWN9zu4+yPoy
-	A9CRRv4cSHe8QlFd9Zs2RzlEspYjj4I7JSN5/cH7aSnJUP86pNAK
-X-Google-Smtp-Source: AGHT+IF0bJjkZx211Ow0o9UR7ZYHFVRcRVsv6ZP9/5/UfJ2pK3pt/4piWTc05I528CJAag+9Qocpiw==
-X-Received: by 2002:a05:6602:3307:b0:7c7:b761:9cea with SMTP id b7-20020a056602330700b007c7b7619ceamr8625565ioz.14.1710192042729;
-        Mon, 11 Mar 2024 14:20:42 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id a26-20020a056638005a00b004746fab2afdsm1904555jap.40.2024.03.11.14.20.40
+        d=1e100.net; s=20230601; t=1710224276; x=1710829076;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fgGl/GezxVhRISLyx8tZ9PTH8m4h7yDB3m04Y7JMT5Y=;
+        b=h1UmtcrH3jNhZ/mMXc5xCb/tMFo9DlupCiMxiegzsS+JmLnG2o8zVDZb01orvjySul
+         lN9yMh9wBSsDy1sAM0i8I13CNuNaVVqAsEjuQJG8IHltrjw/rFSDfkgo2UOgZuf+GLbY
+         R76HS/xboB5CZeCdQFbTBe+dsHNIUlOUGceEhnO6wvVl0z04Cjsv4NfgyIDoxtcyqCol
+         LY2MLwsoIyPZaFVC/0kW8O2yAmCtX84S9OY/8kjzPMxnARbwtoGxq+yKgdVQ3KbR3/+r
+         XQlfkr31SrT8injv8l9n5Ocj/wvA5br7newjwiuiMgOcF/1DNo8JnMAYEWtqAcFgZCLa
+         VR5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX8mZojkFNCACare4OPOObjea3qctASiXK2GG1v72cCc6niQMRSlihoYJYHIvm8/7Vg2V529k+s4r8aDwLlOHoXHsyZkR34nvGZ
+X-Gm-Message-State: AOJu0YzfihyRmZ4nSpUJRGL0SlYzLSQR8OIfTdWNziYKLEz/AUFznApc
+	xtP2CyHh1PoP632QUGz9T78t8UNhFaFx11O1vyKZFil6IzjKfo+nmLxao6H09vo=
+X-Google-Smtp-Source: AGHT+IGQVjf55XaSaA7QRv11XERHDa0ikizCRigRPLUcQWIpU3ODAYNJ7IKwN9aaMW4bZrAoONZoqw==
+X-Received: by 2002:a05:620a:4494:b0:788:7dc5:cf8f with SMTP id x20-20020a05620a449400b007887dc5cf8fmr499319qkp.35.1710224276179;
+        Mon, 11 Mar 2024 23:17:56 -0700 (PDT)
+Received: from n231-228-171.byted.org ([147.160.184.133])
+        by smtp.gmail.com with ESMTPSA id m18-20020a05620a221200b00787b93d8df1sm3394396qkh.99.2024.03.11.23.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 14:20:42 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Mon, 11 Mar 2024 14:20:23 -0700
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, david@redhat.com,
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
-	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
-	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
-	jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
-Message-ID: <Ze91l0jz_DZR9jjx@debian>
-References: <20240223143723.1574-1-shiju.jose@huawei.com>
- <20240223143723.1574-4-shiju.jose@huawei.com>
+        Mon, 11 Mar 2024 23:17:55 -0700 (PDT)
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+To: "Gregory Price" <gourry.memverge@gmail.com>,
+	aneesh.kumar@linux.ibm.com,
+	mhocko@suse.com,
+	tj@kernel.org,
+	john@jagalactic.com,
+	"Eishan Mirakhur" <emirakhur@micron.com>,
+	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
+	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
+	"Alistair Popple" <apopple@nvidia.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Huang Ying <ying.huang@intel.com>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+	qemu-devel@nongnu.org
+Subject: [PATCH v2 0/1] Improved Memory Tier Creation for CPUless NUMA Nodes
+Date: Tue, 12 Mar 2024 06:17:26 +0000
+Message-Id: <20240312061729.1997111-1-horenchuang@bytedance.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223143723.1574-4-shiju.jose@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 10:37:14PM +0800, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Add support for SET_FEATURE mailbox command.
-> 
-> CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
-> CXL devices supports features with changeable attributes.
-> The settings of a feature can be optionally modified using Set Feature
-> command.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/core/mbox.c | 67 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    | 30 ++++++++++++++++++
->  2 files changed, 97 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index c078e62ea194..d1660bd20bdb 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1366,6 +1366,73 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
->  
-> +int cxl_set_feature(struct cxl_memdev_state *mds,
-> +		    const uuid_t feat_uuid, u8 feat_version,
-> +		    void *feat_data, size_t feat_data_size,
-> +		    u8 feat_flag)
-> +{
-> +	struct cxl_memdev_set_feat_pi {
-> +		struct cxl_mbox_set_feat_hdr hdr;
-> +		u8 feat_data[];
-> +	}  __packed;
-> +	size_t data_in_size, data_sent_size = 0;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t hdr_size;
-> +	int rc = 0;
-> +
-> +	struct cxl_memdev_set_feat_pi *pi __free(kfree) =
-> +					kmalloc(mds->payload_size, GFP_KERNEL);
-> +	pi->hdr.uuid = feat_uuid;
-> +	pi->hdr.version = feat_version;
-> +	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
-> +	hdr_size = sizeof(pi->hdr);
-> +	/*
-> +	 * Check minimum mbox payload size is available for
-> +	 * the feature data transfer.
-> +	 */
-> +	if (hdr_size + 10 > mds->payload_size)
+When a memory device, such as CXL1.1 type3 memory, is emulated as
+normal memory (E820_TYPE_RAM), the memory device is indistinguishable
+from normal DRAM in terms of memory tiering with the current implementation.
+The current memory tiering assigns all detected normal memory nodes
+to the same DRAM tier. This results in normal memory devices with
+different attributions being unable to be assigned to the correct memory tier,
+leading to the inability to migrate pages between different types of memory.
+https://lore.kernel.org/linux-mm/PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com/T/
 
-Where does this magic number come from? 
+This patchset automatically resolves the issues. It delays the initialization
+of memory tiers for CPUless NUMA nodes until they obtain HMAT information
+at boot time, eliminating the need for user intervention.
+If no HMAT is specified, it falls back to using `default_dram_type`.
 
-Fan
+Example usecase:
+We have CXL memory on the host, and we create VMs with a new system memory
+device backed by host CXL memory. We inject CXL memory performance attributes
+through QEMU, and the guest now sees memory nodes with performance attributes
+in HMAT. With this change, we enable the guest kernel to construct
+the correct memory tiering for the memory nodes.
 
-> +		return -ENOMEM;
-> +
-> +	if ((hdr_size + feat_data_size) <= mds->payload_size) {
-> +		pi->hdr.flags = cpu_to_le32(feat_flag |
-> +				       CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
-> +		data_in_size = feat_data_size;
-> +	} else {
-> +		pi->hdr.flags = cpu_to_le32(feat_flag |
-> +				       CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
-> +		data_in_size = mds->payload_size - hdr_size;
-> +	}
-> +
-> +	do {
-> +		pi->hdr.offset = cpu_to_le16(data_sent_size);
-> +		memcpy(pi->feat_data, feat_data + data_sent_size, data_in_size);
-> +		mbox_cmd = (struct cxl_mbox_cmd) {
-> +			.opcode = CXL_MBOX_OP_SET_FEATURE,
-> +			.size_in = hdr_size + data_in_size,
-> +			.payload_in = pi,
-> +		};
-> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-> +		if (rc < 0)
-> +			return rc;
-> +
-> +		data_sent_size += data_in_size;
-> +		if (data_sent_size >= feat_data_size)
-> +			return 0;
-> +
-> +		if ((feat_data_size - data_sent_size) <= (mds->payload_size - hdr_size)) {
-> +			data_in_size = feat_data_size - data_sent_size;
-> +			pi->hdr.flags = cpu_to_le32(feat_flag |
-> +					       CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
-> +		} else {
-> +			pi->hdr.flags = cpu_to_le32(feat_flag |
-> +					       CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
-> +		}
-> +	} while (true);
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
-> +
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr)
->  {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index bcfefff062a6..a8d4104afa53 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -531,6 +531,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_GET_LOG		= 0x0401,
->  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
->  	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
-> +	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
->  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
->  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
->  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-> @@ -773,6 +774,31 @@ struct cxl_mbox_get_feat_in {
->  	u8 selection;
->  }  __packed;
->  
-> +/* Set Feature CXL 3.1 Spec 8.2.9.6.3 */
-> +/*
-> + * Set Feature input payload
-> + * CXL rev 3.1 section 8.2.9.6.3 Table 8-101
-> + */
-> +/* Set Feature : Payload in flags */
-> +#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
-> +enum cxl_set_feat_flag_data_transfer {
-> +	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
-> +};
-> +#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
-> +
-> +struct cxl_mbox_set_feat_hdr {
-> +	uuid_t uuid;
-> +	__le32 flags;
-> +	__le16 offset;
-> +	u8 version;
-> +	u8 rsvd[9];
-> +}  __packed;
-> +
->  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
->  struct cxl_mbox_poison_in {
->  	__le64 offset;
-> @@ -912,6 +938,10 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
->  		       size_t feat_out_size,
->  		       size_t feat_out_min_size,
->  		       enum cxl_get_feat_selection selection);
-> +int cxl_set_feature(struct cxl_memdev_state *mds,
-> +		    const uuid_t feat_uuid, u8 feat_version,
-> +		    void *feat_data, size_t feat_data_size,
-> +		    u8 feat_flag);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr);
-> -- 
-> 2.34.1
-> 
+-v2:
+ Thanks to Ying's comments,
+ * Rewrite cover letter & patch description
+ * Rename functions, don't use _hmat
+ * Abstract common functions into find_alloc_memory_type()
+ * Use the expected way to use set_node_memory_tier instead of modifying it
+-v1:
+ * https://lore.kernel.org/linux-mm/20240301082248.3456086-1-horenchuang@bytedance.com/T/
+
+
+Ho-Ren (Jack) Chuang (1):
+  memory tier: acpi/hmat: create CPUless memory tiers after obtaining
+    HMAT info
+
+ drivers/acpi/numa/hmat.c     | 11 ++++++
+ drivers/dax/kmem.c           | 13 +------
+ include/linux/acpi.h         |  6 ++++
+ include/linux/memory-tiers.h |  8 +++++
+ mm/memory-tiers.c            | 70 +++++++++++++++++++++++++++++++++---
+ 5 files changed, 92 insertions(+), 16 deletions(-)
+
+-- 
+Ho-Ren (Jack) Chuang
+
