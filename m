@@ -1,63 +1,123 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0CB6995B;
-	Tue, 12 Mar 2024 07:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A733269D00;
+	Tue, 12 Mar 2024 08:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710229898; cv=none; b=fhgchgcyflu/OQukPZFncM6QdGY/RcSlUdk/Xlkx6d5sh2Nl1Wwuoj0VaOWsr2rcAmd4ZJyF6yb/INtK6ZJQPx1p7rasx/TNVLf1o8WJ3mPbr33wiOatRM7VI3VchVzKfevcqMPGBT8EqX5JS/GbInwoqEQuUiJZdSvDFL8ulQY=
+	t=1710230612; cv=none; b=ok1Wo2HQQVbX7l0meeGgJdYuF/I3qLIfJHLVqwmWQjPFltbFIkq/437m1KTx0cekQj/aYVdY6te6zVQVpSTi36xKeiGOzDoLKsX6AazzqdBGO6XVdwkDZoVaqkQd4MXzuYKFObw+wlpPrlMNqw6FBCkRcYV7EPSg0zcAKNfVjXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710229898; c=relaxed/simple;
-	bh=PylpJHPi/9VZVZB/48DaTBqDjsV2m1sfhkn1ckM1BKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QI1zVePloZMiuB/sL6Q/ksW6YJuckQHzNn2a17VUr2blDEn/6Tq0xKiRxMAERaW69LQ6cbM7fkie8SRcxn6DomiO4XGdBfSgCk84VPFKHhrJ91bUPHunqw9q2UNVSG4kCbFQus/KPeLIk/zhKkiZS+GLskjxrR3d9v/TdK6sO/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 30376100D943E;
-	Tue, 12 Mar 2024 08:46:06 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id DCF4B48470; Tue, 12 Mar 2024 08:46:05 +0100 (CET)
-Date: Tue, 12 Mar 2024 08:46:05 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com
-Subject: Re: [PATCH 0/3] PCI: Add Secondary Bus Reset (SBR) support for CXL
-Message-ID: <ZfAIPSy8uih74ZkK@wunner.de>
-References: <20240311204132.62757-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1710230612; c=relaxed/simple;
+	bh=PV7Q++jUj48L4YB7ZkJ3Y0aTwxMtWVUehKb/76qyJaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I54FBC3pOhf9YHeC1rlQgmt8jxgbpTSBsJRQJH749LGXvx4aB0D2fXvbru08zcrjzBa72G0lgXyqq5BOKflSksBX8Agk4CIkeJ6HErTDet3KspR93hMIGoBEm8k9ZbseOXnup2YLUlAWP52CnQUdedpi0nI0rXQDywindySU9lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=hEOyIf2G; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="hEOyIf2G"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1710230610; x=1741766610;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PV7Q++jUj48L4YB7ZkJ3Y0aTwxMtWVUehKb/76qyJaA=;
+  b=hEOyIf2Gm8/W/FGG4EY92BbNrk2Wak2kTFeGE45w2U+wMO45YEpSTmaS
+   BQI4ftZ/KoMvXw8nBAlZ9pTPAjFXf8HBkpSPwoesGTs3SyVe6ofqso1jE
+   coGCahpnKI663JWvdRbNf2rpk8eWAYvVxBnyt6eqNR3VTSACs6N1Hqg6B
+   d36r+m606Z6dqtSoVwZl71k73cBMFN2bGaVBtKrY/2lC4ajeJAv1Xz8gs
+   AUBL2BjRgloBz26dcoQOgvuttKAHEmeJ1ucOpp0Gi8g+7AmyknpopgPnR
+   UePhr83h+vsZKy/DurH+ipemkdO8vbTLDdCyVlHVlCU9cv7HERICoSKzW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="131361122"
+X-IronPort-AV: E=Sophos;i="6.07,118,1708354800"; 
+   d="scan'208";a="131361122"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 17:03:21 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 8CFE5DD93B;
+	Tue, 12 Mar 2024 17:03:19 +0900 (JST)
+Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id C0A2FD9941;
+	Tue, 12 Mar 2024 17:03:18 +0900 (JST)
+Received: from cxl-test.. (unknown [10.118.236.45])
+	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 819C820059BA;
+	Tue, 12 Mar 2024 17:03:18 +0900 (JST)
+From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+To: kobayashi.da-06@jp.fujitsu.com,
+	linux-cxl@vger.kernel.org
+Cc: y-goto@fujitsu.com,
+	linux-pci@vger.kernel.org,
+	mj@ucw.cz,
+	dan.j.williams@intel.com,
+	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Subject: [PATCH v3 0/3] Display cxl1.1 device link status
+Date: Tue, 12 Mar 2024 17:05:56 +0900
+Message-ID: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311204132.62757-1-dave.jiang@intel.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 
-On Mon, Mar 11, 2024 at 01:39:52PM -0700, Dave Jiang wrote:
-> Patch 1:
-> Add check to PCI bus_reset path for CXL device and return with error if "Unmask
-> SBR" bit is set to 0. This allows user to realize that SBR is masked for this
-> CXL device. However, if the user sets the "Unmask SBR" bit via a tool such as
-> setpci, then the bus_reset will proceed.
+Hello.
 
-So is the point of patch 1 only to inform the user that the SBR has
-no effect?  Or does the SBR have any negative side effects that you
-want to avoid (e.g. due to the config space save/restore)?
+This patch series adds a feature that displays the link status
+of the CXL1.1 device.
 
-If you only want to inform the user, then this functionality could
-live in a ->reset_prepare() callback exposed by the cxl subsystem
-and the pci subsystem wouldn't have to be touched at all.
+CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+the link status can be output in the same way as traditional PCIe.
+However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+different method to obtain the link status from traditional PCIe.
+This is because the link status of the CXL1.1 device is not mapped
+in the configuration space (as per cxl3.0 specification 8.1).
+Instead, the configuration space containing the link status is mapped
+to the memory mapped register region (as per cxl3.0 specification 8.2,
+Table 8-18). Therefore, the current lspci has a problem where it does
+not display the link status of the CXL1.1 device. 
+This patch solves these issues.
 
-Thanks,
+The procedure is as follows:
+First, obtain the RCRB address within the cxl driver, then access 
+the configuration space. Next, output the link status information from
+the configuration space to sysfs. Finally, read sysfs within lspci to 
+display the link status information.
 
-Lukas
+Changes
+v1[1] -> v2:
+The following are the main changes made based on the feedback from Dan Williams.
+- Modified to perform rcrb access within the CXL driver.
+- Added new attributes to the sysfs of the PCI device.
+- Output the link status information to the sysfs of the PCI device.
+- Retrieve information from sysfs as the source when displaying information in lspci.
+
+v2[2] -> v3:
+- Fix unnecessary initialization and wrong types (Bjohn).
+- Create a helper function for getting a PCIe capability offset (Bjohn).
+- Move platform-specific implementation to the lib directory in pciutils (Martin).
+
+[1]
+https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06@fujitsu.com/
+[2]
+https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@fujitsu.com/
+
+Kobayashi,Daisuke (3):
+  Add sysfs attribute for CXL 1.1 device link status
+  Remove conditional branch that is not suitable for cxl1.1 devices
+
+ drivers/cxl/acpi.c |   4 -
+ drivers/cxl/pci.c  | 193 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 193 insertions(+), 4 deletions(-)
+
+  Add function to display cxl1.1 device link status
+
+ lib/access.c | 29 +++++++++++++++++++++
+ lib/pci.h    |  2 ++
+ ls-caps.c    | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 104 insertions(+)
+-- 
+2.43.0
+
