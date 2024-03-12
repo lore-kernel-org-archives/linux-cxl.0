@@ -1,63 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28B81386AA;
-	Tue, 12 Mar 2024 20:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386B016FF3B;
+	Tue, 12 Mar 2024 21:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710274954; cv=none; b=Wa3wAx+rb1AZwDe3ZYIkV43fJzLp+qdM+hCzf/L8WC8uyAHR03lnYcKug09wyYuguzrspj/kwkaQW6MHHADI8r97vAuC0CqCVcpmsVCpoNeJFdv2SNZd/THmfK0VTf/kkLhg70/21IUNGz7noLVFwrmuvYxJd37J18XKZ4wtmeA=
+	t=1710279098; cv=none; b=X06aTlGWZOYhENmqQ9TYrRFXGTYPqQM29WSj+cNlNc4DDB3A4NhcG23n1hEK5BBRs37z8G6FDaOCV5FytpT/DSehAcU355LGrUabe/uAhX6hdjb5XjkjcresjDEILfT770JJ7zT1Q8sorJbqlb3bxskVZqJH1nJm/fGtENfdkoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710274954; c=relaxed/simple;
-	bh=Pr5lhOrEPrMJqPAwR3vdY7dlJDIhGLkhSYZOK85QpNs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=X6NvG3cIV51+0VhsEdT3msPJwV5IYj/BBzz4g126hd3fUaBKdH00OhJPJ7HMLFaH2ti5S4O/lUH6Ekbd7Dh5aIzqwHT2EVDt/TRdbU0IvfDrMA+haiKoA2bqPxtn6nXU0c1vkeKY0PsFdNmPXgTKjReqjzvF6589tjQ6DiRBe8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JMWslwId; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710279098; c=relaxed/simple;
+	bh=TeHuMfRVF73VXvD8LVUGV65bfdXmB7UAtQdrGlMoo/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=thj7lue989KoGl64DI5VJ6poAhNMelh14daKyfb7qro4Cwdbz8GrRUE0clPhGKBkamDzQudPCSgtXN8z36im+IZX3U0Id+RbvKbjL68gEBBquLJCIi219R2jMq+BgmxQU0fnQb12Q0rmo3CEOzlpwkleHPvNqwt847OUqfIMThs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ot4A0ElF; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JMWslwId"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5D0C433C7;
-	Tue, 12 Mar 2024 20:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1710274954;
-	bh=Pr5lhOrEPrMJqPAwR3vdY7dlJDIhGLkhSYZOK85QpNs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JMWslwIdP4OWf5ct0J5wlCAlOEXwLAlFAYm+rpdZuRElOApbGIZ0KcNkJ2S3qG6b+
-	 fGQkSlgljL2lZyAwVOiEzbdcv+3noDCbQtArckxN/voeH/K5KOFFGLOeQ5eYCbj4c8
-	 aWDQufFjOWDNbpL/L7XxWZsj5Mii5d0ZR+29Dm4E=
-Date: Tue, 12 Mar 2024 13:22:33 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc: "Williams, Dan J" <dan.j.williams@intel.com>, "Jiang, Dave"
- <dave.jiang@intel.com>, "osalvador@suse.de" <osalvador@suse.de>,
- "david@redhat.com" <david@redhat.com>, "gregkh@linuxfoundation.org"
- <gregkh@linuxfoundation.org>, "Huang, Ying" <ying.huang@intel.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, "willy@infradead.org"
- <willy@infradead.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v7 1/5] dax/bus.c: replace driver-core lock usage by a
- local rwsem
-Message-Id: <20240312132233.4a04a742c7bae02a31eed78f@linux-foundation.org>
-In-Reply-To: <ebc79448a1fdb47ff16144c12cd5d8dfc733dee8.camel@intel.com>
-References: <20240124-vv-dax_abi-v7-0-20d16cb8d23d@intel.com>
-	<20240124-vv-dax_abi-v7-1-20d16cb8d23d@intel.com>
-	<65f0b5ef41817_aa222941a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<ebc79448a1fdb47ff16144c12cd5d8dfc733dee8.camel@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ot4A0ElF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710279097; x=1741815097;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TeHuMfRVF73VXvD8LVUGV65bfdXmB7UAtQdrGlMoo/8=;
+  b=Ot4A0ElFWHzP7tMPQM0A7BG7bmqZ3EETW8kztvcIdekrraXKsi9fvP0r
+   kfpSk1tS1IxRDVPyYJeX1/xL4esIM5X0Y+Egd8r+qO9WFae6lT508ocJe
+   9lKH1VQnvxrUwvw3y/o9jkzEnV9UAWG/z2C4Vj/QgyNM2XkGRh4PsIcuK
+   ZmmxFkBgD+9p2OYpEd24W4jpQPcY4jEYwo7iwQVsnn9V8zR5ZUy8VPZRl
+   URfpHbGhOD2aWWtt3wx2OF0LxUE7pfTaBmgU6PHtOR/vYzyafCtDbEead
+   qSfN9hXd2IcnAriFu1jcqF0mzI/eUEq4uiVMb9K+R5L0+LmADhsUF8cG6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8829620"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="8829620"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:31:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="16326316"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.101.145]) ([10.212.101.145])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:31:35 -0700
+Message-ID: <d43fe460-8097-4a9d-8cdc-817aabe4590c@intel.com>
+Date: Tue, 12 Mar 2024 14:31:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] PCI: Add Secondary Bus Reset (SBR) support for CXL
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ bhelgaas@google.com
+References: <20240311204132.62757-1-dave.jiang@intel.com>
+ <ZfAIPSy8uih74ZkK@wunner.de>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ZfAIPSy8uih74ZkK@wunner.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Mar 2024 20:20:17 +0000 "Verma, Vishal L" <vishal.l.verma@intel.com> wrote:
 
-> > All of these WARN_ON_ONCE() usages should be replaced with
-> > lockdep_assert_held() and lockdep_assert_held_write() where appropriate.
+
+On 3/12/24 12:46 AM, Lukas Wunner wrote:
+> On Mon, Mar 11, 2024 at 01:39:52PM -0700, Dave Jiang wrote:
+>> Patch 1:
+>> Add check to PCI bus_reset path for CXL device and return with error if "Unmask
+>> SBR" bit is set to 0. This allows user to realize that SBR is masked for this
+>> CXL device. However, if the user sets the "Unmask SBR" bit via a tool such as
+>> setpci, then the bus_reset will proceed.
 > 
-> Makes sense - I can send a patch post -rc1 to change these if that's okay Andrew?
+> So is the point of patch 1 only to inform the user that the SBR has
+> no effect?  Or does the SBR have any negative side effects that you
+> want to avoid (e.g. due to the config space save/restore)?
+> 
+> If you only want to inform the user, then this functionality could
+> live in a ->reset_prepare() callback exposed by the cxl subsystem
+> and the pci subsystem wouldn't have to be touched at all.
 
-Please do.
+Patch 1 is to inform the user that SBR has no effect. The user needs to be informed via direct errno feedback that reset is masked and isn't going to happen. In this [1] response, I believe Bjorn wanted pci_reset_function() to fail. ->reset_prepare() is only helpful if the cxl_pci driver is loaded. CXL mem devices can be programmed by the BIOS and be active without CXL driver being loaded. Also, cxl_pci only picks up PCI_CLASS_MEMORY_CXL. So other CXL devices would not be managed by this driver.
+
+[1]: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
+
+
+> 
+> Thanks,
+> 
+> Lukas
