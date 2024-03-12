@@ -1,284 +1,205 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AF278273;
-	Tue, 12 Mar 2024 09:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBFB1EB37
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Mar 2024 12:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710236495; cv=none; b=ZbTOulhdLw+++OtY683nKbzLHkEDoCNXrIW3FESjfrBDC8IJM8yQLJ3CyoctQavDA5YH8WuaL4+DT+FyU4Q9rvz+e1rqsOtepY9T3DdeRD+tJ1c/a//WkpObsnbfTKbFvpWfP/rNkH4KJd0S7y4H75RMORduz5ECfAW0nJLZax8=
+	t=1710247052; cv=none; b=maEtKF5HWQrFmctMLHu0DwCA+VN/9DIEyKHMoEbHljx6xm9EHtn+6sbaouKWCxduQfjs9TGMVK6Z58IpEJeWzI/tC5Avq8OrUsOBhjNWdxxLCcboF7BjsWmGkXRlsYa+8t19bUHNNXE18SfIDg7a7j5Z5qs3EbOA4yENrc5RUQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710236495; c=relaxed/simple;
-	bh=9BVd3T4GZqlg+poIfhaoPYk3KkThuqvVtjsxrrpVzUg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nXsjDloJSJjTY1IYr81d91FJtZJfe9iTyfdcFrYgOo2ukmQqw19ry4ICQz/avYpvbtpPGC9V+phYCf4Wq8KpEjge7+eO3334C8ShFZ3aN/NWFnDOeg2DDTLr0X4o3bWuXI1m6DXx8GYb1Dl1S8XeIavYxCYu9AarsH7yPI10UVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1710247052; c=relaxed/simple;
+	bh=JAKrne1Y3Pfed7dB8xe4vEonYOBPSi6Kf8zCTGUUQhU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lnwkXHI5jHvseA6xN49a48Az8U2ImfDSDtYnjsMddL1e0vlAvG4Rxm5QQYToQjVaZ8mcjDaQuOAJt5yzUlvnkmL55ar+e+nXBMaXBq6TsFoJTh3o8g5DOvcj8Pz0s65h9oXhASQOaMvxOC01NXms5+LJT+G1mCBUR8lESavcq5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tv7pW0sy4z688hZ;
-	Tue, 12 Mar 2024 17:37:23 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (unknown [7.191.162.67])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5738E140D1D;
-	Tue, 12 Mar 2024 17:41:28 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 12 Mar 2024 09:41:27 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
- Tue, 12 Mar 2024 09:41:27 +0000
-From: Shiju Jose <shiju.jose@huawei.com>
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TvCnw0HlWz6J9sP;
+	Tue, 12 Mar 2024 20:37:08 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC34C1400C9;
+	Tue, 12 Mar 2024 20:37:25 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 12 Mar
+ 2024 12:37:25 +0000
+Date: Tue, 12 Mar 2024 12:37:23 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: fan <nifan.cxl@gmail.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
-Thread-Topic: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
-Thread-Index: AQHaZmXa2rf54FiQvUO4a7U5LboEzbEzJw+AgADJeeA=
-Date: Tue, 12 Mar 2024 09:41:27 +0000
-Message-ID: <b6aa1dd19ab44b7db7b9aa1318c5d8b0@huawei.com>
-References: <20240223143723.1574-1-shiju.jose@huawei.com>
- <20240223143723.1574-4-shiju.jose@huawei.com> <Ze91l0jz_DZR9jjx@debian>
-In-Reply-To: <Ze91l0jz_DZR9jjx@debian>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
+	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v5 09/13] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <20240312123723.0000420d@Huawei.com>
+In-Reply-To: <ZevnKbzBOy_9sjeg@debian>
+References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+	<20240304194331.1586191-10-nifan.cxl@gmail.com>
+	<20240306174811.000029fd@Huawei.com>
+	<Zej5EuQXytgeWGfj@debian>
+	<20240307124555.00001408@Huawei.com>
+	<ZevnKbzBOy_9sjeg@debian>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Fan,
+On Fri, 8 Mar 2024 20:35:53 -0800
+fan <nifan.cxl@gmail.com> wrote:
 
->-----Original Message-----
->From: fan <nifan.cxl@gmail.com>
->Sent: 11 March 2024 21:20
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
->mm@kvack.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; david@redhat.com=
-;
->Vilas.Sridharan@amd.com; leo.duran@amd.com; Yazen.Ghannam@amd.com;
->rientjes@google.com; jiaqiyan@google.com; tony.luck@intel.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com; rafael@kernel.org;
->lenb@kernel.org; naoya.horiguchi@nec.com; james.morse@arm.com;
->jthoughton@google.com; somasundaram.a@hpe.com;
->erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->mike.malvestuto@intel.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>=
-;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox
->command
->
->On Fri, Feb 23, 2024 at 10:37:14PM +0800, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add support for SET_FEATURE mailbox command.
->>
->> CXL spec 3.1 section 8.2.9.6 describes optional device specific features=
-.
->> CXL devices supports features with changeable attributes.
->> The settings of a feature can be optionally modified using Set Feature
->> command.
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/cxl/core/mbox.c | 67
->+++++++++++++++++++++++++++++++++++++++++
->>  drivers/cxl/cxlmem.h    | 30 ++++++++++++++++++
->>  2 files changed, 97 insertions(+)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c index
->> c078e62ea194..d1660bd20bdb 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -1366,6 +1366,73 @@ size_t cxl_get_feature(struct cxl_memdev_state
->> *mds,  }  EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
->>
->> +int cxl_set_feature(struct cxl_memdev_state *mds,
->> +		    const uuid_t feat_uuid, u8 feat_version,
->> +		    void *feat_data, size_t feat_data_size,
->> +		    u8 feat_flag)
->> +{
->> +	struct cxl_memdev_set_feat_pi {
->> +		struct cxl_mbox_set_feat_hdr hdr;
->> +		u8 feat_data[];
->> +	}  __packed;
->> +	size_t data_in_size, data_sent_size =3D 0;
->> +	struct cxl_mbox_cmd mbox_cmd;
->> +	size_t hdr_size;
->> +	int rc =3D 0;
->> +
->> +	struct cxl_memdev_set_feat_pi *pi __free(kfree) =3D
->> +					kmalloc(mds->payload_size,
->GFP_KERNEL);
->> +	pi->hdr.uuid =3D feat_uuid;
->> +	pi->hdr.version =3D feat_version;
->> +	feat_flag &=3D ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
->> +	hdr_size =3D sizeof(pi->hdr);
->> +	/*
->> +	 * Check minimum mbox payload size is available for
->> +	 * the feature data transfer.
->> +	 */
->> +	if (hdr_size + 10 > mds->payload_size)
->
->Where does this magic number come from?
+> On Thu, Mar 07, 2024 at 12:45:55PM +0000, Jonathan Cameron wrote:
+> > ...
+> >   
+> > > > > +    list = records;
+> > > > > +    extents = g_new0(CXLDCExtentRaw, num_extents);
+> > > > > +    while (list) {
+> > > > > +        CXLDCExtent *ent;
+> > > > > +        bool skip_extent = false;
+> > > > > +
+> > > > > +        offset = list->value->offset;
+> > > > > +        len = list->value->len;
+> > > > > +
+> > > > > +        extents[i].start_dpa = offset + dcd->dc.regions[rid].base;
+> > > > > +        extents[i].len = len;
+> > > > > +        memset(extents[i].tag, 0, 0x10);
+> > > > > +        extents[i].shared_seq = 0;
+> > > > > +
+> > > > > +        if (type == DC_EVENT_RELEASE_CAPACITY ||
+> > > > > +            type == DC_EVENT_FORCED_RELEASE_CAPACITY) {
+> > > > > +            /*
+> > > > > +             *  if the extent is still pending to be added to the host,    
+> > > > 
+> > > > Odd spacing.
+> > > >     
+> > > > > +             * remove it from the pending extent list, so later when the add
+> > > > > +             * response for the extent arrives, the device can reject the
+> > > > > +             * extent as it is not in the pending list.
+> > > > > +             */
+> > > > > +            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
+> > > > > +                        &extents[i]);
+> > > > > +            if (ent) {
+> > > > > +                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
+> > > > > +                g_free(ent);
+> > > > > +                skip_extent = true;
+> > > > > +            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
+> > > > > +                /* If the exact extent is not in the accepted list, skip */
+> > > > > +                skip_extent = true;
+> > > > > +            }    
+> > > > I think we need to reject case of some extents skipped and others not.
+> > > > That's not supported yet so we need to complain if we get it at least. Maybe we need
+> > > > to do two passes so we know this has happened early (or perhaps this is a later
+> > > > patch in which case a todo here would help).    
+> > > 
+> > > Skip here does not mean the extent is invalid, it just means the extent
+> > > is still pending to add, so remove them from pending list would be
+> > > enough to reject the extent, no need to release further. That is based
+> > > on your feedback on v4.  
+> > 
+> > Ah. I'd missunderstood.  
+> 
+> Hi Jonathan,
+> 
+> I think we should not allow to release extents that are still pending to
+> add. 
+> If we allow it, there is a case that will not work.
+> Let's see the following case (time order):
+> 1. Send request to add extent A to host; (A --> pending list)
+> 2. Send request to release A from the host; (Delete A from pending list,
+> hoping the following add response for A will fail as there is not a matched
+> extent in the pending list).
 
-This represents minimum extra number of bytes to be available in the mail b=
-ox
-for storing the actual feature data to work with multipart feature data tra=
-nsfers.
-This will be set as a definition in the next version and however not sure t=
-he
-best value to be set.
->
->Fan
->
->> +		return -ENOMEM;
->> +
->> +	if ((hdr_size + feat_data_size) <=3D mds->payload_size) {
->> +		pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
->> +		data_in_size =3D feat_data_size;
->> +	} else {
->> +		pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
->> +		data_in_size =3D mds->payload_size - hdr_size;
->> +	}
->> +
->> +	do {
->> +		pi->hdr.offset =3D cpu_to_le16(data_sent_size);
->> +		memcpy(pi->feat_data, feat_data + data_sent_size,
->data_in_size);
->> +		mbox_cmd =3D (struct cxl_mbox_cmd) {
->> +			.opcode =3D CXL_MBOX_OP_SET_FEATURE,
->> +			.size_in =3D hdr_size + data_in_size,
->> +			.payload_in =3D pi,
->> +		};
->> +		rc =3D cxl_internal_send_cmd(mds, &mbox_cmd);
->> +		if (rc < 0)
->> +			return rc;
->> +
->> +		data_sent_size +=3D data_in_size;
->> +		if (data_sent_size >=3D feat_data_size)
->> +			return 0;
->> +
->> +		if ((feat_data_size - data_sent_size) <=3D (mds->payload_size -
->hdr_size)) {
->> +			data_in_size =3D feat_data_size - data_sent_size;
->> +			pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
->> +		} else {
->> +			pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
->> +		}
->> +	} while (true);
->> +
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
->> +
->>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->>  		       struct cxl_region *cxlr)
->>  {
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
->> bcfefff062a6..a8d4104afa53 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -531,6 +531,7 @@ enum cxl_opcode {
->>  	CXL_MBOX_OP_GET_LOG		=3D 0x0401,
->>  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	=3D 0x0500,
->>  	CXL_MBOX_OP_GET_FEATURE		=3D 0x0501,
->> +	CXL_MBOX_OP_SET_FEATURE		=3D 0x0502,
->>  	CXL_MBOX_OP_IDENTIFY		=3D 0x4000,
->>  	CXL_MBOX_OP_GET_PARTITION_INFO	=3D 0x4100,
->>  	CXL_MBOX_OP_SET_PARTITION_INFO	=3D 0x4101,
->> @@ -773,6 +774,31 @@ struct cxl_mbox_get_feat_in {
->>  	u8 selection;
->>  }  __packed;
->>
->> +/* Set Feature CXL 3.1 Spec 8.2.9.6.3 */
->> +/*
->> + * Set Feature input payload
->> + * CXL rev 3.1 section 8.2.9.6.3 Table 8-101  */
->> +/* Set Feature : Payload in flags */
->> +#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
->> +enum cxl_set_feat_flag_data_transfer {
->> +	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
->> +};
->> +#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
->> +
->> +struct cxl_mbox_set_feat_hdr {
->> +	uuid_t uuid;
->> +	__le32 flags;
->> +	__le16 offset;
->> +	u8 version;
->> +	u8 rsvd[9];
->> +}  __packed;
->> +
->>  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */  struct
->> cxl_mbox_poison_in {
->>  	__le64 offset;
->> @@ -912,6 +938,10 @@ size_t cxl_get_feature(struct cxl_memdev_state
->*mds,
->>  		       size_t feat_out_size,
->>  		       size_t feat_out_min_size,
->>  		       enum cxl_get_feat_selection selection);
->> +int cxl_set_feature(struct cxl_memdev_state *mds,
->> +		    const uuid_t feat_uuid, u8 feat_version,
->> +		    void *feat_data, size_t feat_data_size,
->> +		    u8 feat_flag);
->>  int cxl_poison_state_init(struct cxl_memdev_state *mds);  int
->> cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->>  		       struct cxl_region *cxlr);
->> --
->> 2.34.1
->>
+Definitely not allow the host to release something it hasn't accepted.
+Should allow QMP to release such entrees though (and same for fmapi when
+we get there). Any such requested from host should be treated as whatever
+it says to do if you release an extent that you don't have.
 
-Thanks,
-Shiju
+> 3. Host send response to the device for the add request, however, for
+> some reason, it does not accept any of it, so updated list is empty,
+> spec allows it. Based on the spec, we need to drop the extent at the
+> head of the event log. Now we have problem. Since extent A is already
+> dropped from the list, we either cannot drop as the list is empty, which
+> is not the worst. If we have more extents in the list, we may drop the
+> one following A, which is for another request. If this happens, all the
+> following extents will be acked incorrectly as the order has been
+> shifted.
+>  
+> Does the above reasoning make sense to you?
+Absolutely.  I got confused here on who was doing release.
+Host definitely can't release stuff it hasn't successfully accepted.
+
+Jonathan
+
+> 
+> Fan
+> 
+> >   
+> > > 
+> > > The loop here is only to collect the extents to sent to the event log. 
+> > > But as you said, we need one pass before updating pending list.
+> > > Actually if we do not allow the above case where extents to release is
+> > > still in the pending to add list, we can just return here with error, no
+> > > extra dry run needed. 
+> > > 
+> > > What do you think?  
+> > 
+> > I think we need a way to back out extents from the pending to add list
+> > so we can create the race where they are offered to the OS and it takes
+> > forever to accept and by the time it does we've removed them.
+> >   
+> > >   
+> > > >     
+> > > > > +        
+> > > > > +
+> > > > > +        /* No duplicate or overlapped extents are allowed */
+> > > > > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > > > > +                              len / block_size)) {
+> > > > > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > > > > +            return;
+> > > > > +        }
+> > > > > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > > > > +
+> > > > > +        list = list->next;
+> > > > > +        if (!skip_extent) {
+> > > > > +            i++;    
+> > > > Problem is if we skip one in the middle the records will be wrong below.    
+> > > 
+> > > Why? Only extents passed the check will be stored in variable extents and
+> > > processed further and i be updated. 
+> > > For skipped ones, since i is not updated, they will be
+> > > overwritten by following valid ones.  
+> > Ah. I'd missed the fact you store into the extent without a check on validity
+> > but only move the index on if they were valid. Then rely on not passing a trailing
+> > entry at the end.
+> > If would be more readable I think if local variables were used for the parameters
+> > until we've decided not to skip and the this ended with
+> > 
+> >         if (!skip_extent) {
+> >             extents[i] = (DCXLDCExtentRaw) {
+> >                 .start_dpa = ...
+> > 	        ...
+> >             };
+> >             i++
+> >         }
+> > We have local len already so probably just need
+> > uint64_t start_dpa = offset + dcd->dc.regions[rid].base;
+> > 
+> > Also maybe skip_extent_evlog or something like that to explain we are only
+> > skipping that part. 
+> > Helps people like me who read it completely wrong!
+> > 
+> > Jonathan
+> > 
+> >  
+> >   
+
