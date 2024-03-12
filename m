@@ -1,171 +1,251 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC451F4FA;
-	Tue, 12 Mar 2024 15:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257591; cv=fail; b=cwzc+/mNqmGoSitXP3rR0YcofzTY+en5Tdjt+r1btYOw/5VkePijlxl1yZDuoFpyQeza9OS69AQFyj5sK2BxadsP92OiQTOhOL1Nyww2ECNWe5trkSqmIYMY4ROYWWx8Per/TL/bpIg41xML6WQ0JX3GQY7ASDg4UnYGbdQgk50=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257591; c=relaxed/simple;
-	bh=mni5s5VRe4sRnpNHedFUTmq1H4VUvhvW5cPfBph0uxU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WCopBOjaOLYzAx/aXQCJFs5pXxTYqqiDQTG78pp9dONmpQHm6QPBU+x2sAK/Ja4n/yB2L0H5zunn5Y8LuiG3k82TC3KY+sAiELufBCniFu+X4hRMe/v7+V1X++bzm/S82zio9eBPVlyKvgLi/gGGJgfniqHyDktifhtcR9QbBe0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZI18UvIT; arc=fail smtp.client-ip=40.107.212.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFB07CF29
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Mar 2024 16:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710260850; cv=none; b=O7LedULGCNXpllgJ92JjZ2gunlKpTuOMDnPNqi/lprstWjpNYlDoOtb9p93gjJ9QZAdDXjtqAmdb/iNiKmNF1ArS6w5nS2Aiw3T4pOc6ARaIstfe3F0+FRUbgWeYymOsrPPuDNxCehfNlXdITyf7mv9mN3IL8A5xpEYUOadCsWQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710260850; c=relaxed/simple;
+	bh=IrrCeCvZmQxT1NJd494UuNSUDOnFL6sQeF4lrwJYytA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qKsXY3uTmj0dLBmAdxFnZ/nc+du/+pPvByeNlIhTqVN5IA9CaaBorTmlp03D4OxrWxf5OB9RNSEAxOcX6L25DW2gkgjmzToC13t1RBzkl67mL3UtKHd61QHgFd/m5aqoBKMRVoR4gDBc7tBY9anVvS6Yar2a3AAlRTpOMdtZLlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ue/BTGkV; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZI18UvIT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LPGf/KwQkShPTnnWA9bXhjcrFOAcCPtoD3RRaPhpuxSLW049lKSfISG6WpF4ctolfcjAIy+g2tVdjBGIl01tY8XBeDgif2+fcjsyfb0ORp7D2FVgAIYvuSC8Oma//KyS+jZJN3AbXoc9u53pTKuDNjAGPWdu8Us0E0HmPFlL+e5d0Zn8v8di0jjOgeVAR0jYvh0bBNfynW6fRT3S8IomGtx+eitc/4I5A/1hh4mYlFbM6TRYU3mg7VspFH0J7fGLIbOw+hg4C/lbiy5+c1PE6ee4jEpu0+Ez97zage22LwHXjQqLetAcgUTrYi+bknY+i1g0KDrESyKRzYUPw+x8xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bv7ZUd6O07qvvVVmgLG5rv07Jy/sP4rm/mdqy50GGKc=;
- b=f69OJFFgSorgolqAaojHaBtYzm+ZtfOFVU9AD8Wq1c4Rsof/4EAAFhvBRTeBvy5fPvabaYce2Nu1wt5LDjZTDarWtYgeh0n+7s9gTGcLAsdrPWTtuo8rzlEvYeq3V9PlDfPEIabIXwKTOKCjUuwLpS7CmWHjxFxaZDzCvm0JBaTHcy3L1AOO9VIL06vb6m/FaG7iX5ttTNDsGtPhmvsGdezcrgO+gXH0CaA5KrUDgZZ2iep06TWA8hiw6GVweczU0Q0+3qwNSL5sIBkLWNrybeL+Uweal538q2vz4//I6oFqlZ82EYwERxWPIVN7mTmaQsF3g+adRkLLEkE0+knaPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bv7ZUd6O07qvvVVmgLG5rv07Jy/sP4rm/mdqy50GGKc=;
- b=ZI18UvITIhNGGr7Q4w5JmQgJL3I64dC/zKiA/4NoFZdZ9TaX9usrRyGOK3EWG6n0QZH0dWFLZtDa2BD1xxIeO4H/QiwVI+VM4k5NtWsoWQDcmA6We6b2nMmANbJ7e8TTAtk6lyLUrLuHK2vvnvcisEmEDcHB8UCxJ7d1ZNFk/nc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8535.namprd12.prod.outlook.com (2603:10b6:610:160::19)
- by SJ2PR12MB8942.namprd12.prod.outlook.com (2603:10b6:a03:53b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Tue, 12 Mar
- 2024 15:33:06 +0000
-Received: from CH3PR12MB8535.namprd12.prod.outlook.com
- ([fe80::5302:26cf:a913:7e06]) by CH3PR12MB8535.namprd12.prod.outlook.com
- ([fe80::5302:26cf:a913:7e06%5]) with mapi id 15.20.7362.035; Tue, 12 Mar 2024
- 15:33:06 +0000
-Message-ID: <6f4d6962-3093-4f21-93b8-f2fa2bb2b465@amd.com>
-Date: Tue, 12 Mar 2024 10:33:03 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 2/4] EINJ: Add CXL error type support
-To: dan.j.williams@intel.com, jonathan.cameron@huawei.com, rafael@kernel.org,
- james.morse@arm.com, tony.luck@intel.com, bp@alien8.de
-Cc: dave@stogolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org
-References: <20240311142508.31717-1-Benjamin.Cheatham@amd.com>
- <20240311142508.31717-3-Benjamin.Cheatham@amd.com>
-Content-Language: en-US
-From: Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <20240311142508.31717-3-Benjamin.Cheatham@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7P220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:806:123::26) To CH3PR12MB8535.namprd12.prod.outlook.com
- (2603:10b6:610:160::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ue/BTGkV"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7c8bd9837fdso31889039f.1
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Mar 2024 09:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710260848; x=1710865648; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q55MnN0LvCb2kgiAr/MJm3d1SpDTvR8LT65JmJCoZ8s=;
+        b=Ue/BTGkVeTV3IYLyhNnW3WWdtuobVnR74Illrbc3gMIcioY2gc8eSjiMVcKNZG5P9L
+         fe6kW+hA6UlMvuKgk7HNLQCLvkI8pz0clyqukpIU2s/zWiZeRtyNOmTazC1Q3XlSp1KD
+         rsqeDs//H4FEe1aeOPcXcVZs76nSBafLATTIWzbn+TlqYKLJ4kHvJwc1GwEtFlMY1PXy
+         03NV7g0J7DrKM0QMpvmM3h42lKlk7fT+2VELVDL/Jx3UgFXf+lzqUBc9uAknNHm1OnnG
+         IxjHPUuVkaUR8ddBbMGNo4LbdXaOptzNjSIMD6J0vCj23TnDCjZn0U0SSqV8GTegOgPC
+         8hbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710260848; x=1710865648;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q55MnN0LvCb2kgiAr/MJm3d1SpDTvR8LT65JmJCoZ8s=;
+        b=SIPrMVQV9WPpU8odOvaVzUj8WqhSF0ScAMBjBTPTnMH+92CutYxL3R4818XkKADijw
+         Dov10/5yUSdBhS3o4dcye8vISS0/h/FuehjK9eB8R+8J4UTr3gTf9ZYKPzkSHp5ZPGeN
+         1vjtq1qeo+4WItpElq7qV16CyC6QEEzq+0mcHN13m3RCgDAupB2EOH8F6CNZ/XYLduX2
+         lX5143HpPGRtlpyBbm7A9kfnhW/6LH51SkSYrIdhGhfGMctAfgOKgI4L9ewaHzPVpPjO
+         d3aqa4Cyr6weB9TwKSdfihEVxkgmNRxmCrJKwX5wZU5+VpeUACZLoNzSy4jHl7BgWDEx
+         WIEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGof3GEXTAXSv/NGFQTa/BpXoM17poXeEaXaeNII7AX3070oR30MDxxYmjU+RD9S5Qr5W44nmiCL3XTBu+YyxIEv3tgmOdktH7
+X-Gm-Message-State: AOJu0YxlCQ4V971CfOLqXfD6chTPN9iA2ihKA5ybaas3zkrzPxpMn1Ze
+	Z07lxLChx9Xy46NdCecFoK/JSfaSimGn9wj145pdoqC1N15hT9GC
+X-Google-Smtp-Source: AGHT+IFg1zgxj0wdk8rTzy0XoCXK6YPLGLeQvgI8jQb6fEEi9suzWVyC+RtajJZm45LxWxsl8UQ1/Q==
+X-Received: by 2002:a5d:8b09:0:b0:7c8:c659:b951 with SMTP id k9-20020a5d8b09000000b007c8c659b951mr4596389ion.7.1710260847974;
+        Tue, 12 Mar 2024 09:27:27 -0700 (PDT)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id h14-20020a02cd2e000000b00474d68c24e6sm2343499jaq.120.2024.03.12.09.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 09:27:27 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Tue, 12 Mar 2024 09:27:05 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org, gregory.price@memverge.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	nmtadam.samsung@gmail.com, jim.harris@samsung.com,
+	Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v5 09/13] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <ZfCCWboh4w3NNVe4@debian>
+References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
+ <20240304194331.1586191-10-nifan.cxl@gmail.com>
+ <20240306174811.000029fd@Huawei.com>
+ <Zej5EuQXytgeWGfj@debian>
+ <20240307124555.00001408@Huawei.com>
+ <ZevnKbzBOy_9sjeg@debian>
+ <20240312123723.0000420d@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8535:EE_|SJ2PR12MB8942:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8887d08e-7075-4ab0-b8f3-08dc42a9b6d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	xXMMf3oPMXhbvow6IjlOLCca7+gcJtWmeG5UarSJ9lZvG7KQz7XqFTq3tay8b0d1888Vd55WFdQacx7JuOhLCVPSxUt2j9bLCA/Wnd2wGHKMsrgfJ5AxfA2leeez7oluz0RYk4fzVb4OdjOQIemTfx3DPXvLCZobEeaYJ3IdtdEwXA2jdg4c6jln4JnNL+ISvT2CM+ymRzaW2CMVOEuWhEXGoDxpN7UAaykfTduqaCr6eMxnMvnC1q7IC5XJXjMFaRVNr0tY5pqZ2aCc3IUGXx76jkEIufxQeLrXgeSbvsG7GJJKAjG5nounW3zESlQ2cX1yAL9DQ7i1P/xEX3LkL2VzM4A15atGYi0Rb8CokF0H7UTj6mkN4F5WCmvAGOaGlB3enYv7T0FrwBIFrXz73bMG/Jc4I/P8vt0KGlls3zhoaqZVMwwiYpWGzRpidDk5sC2r+Y1Mffyxgjo6zajXTeXdVDEBnzqrrGhxSNIat0TVkxSIVLQWe7Yq9SmSMoT0kC86w5lGpzIfQRQT3HP9Uw28+/7EGOMQVUowojyhQNA/YPCOXVCmcEgMtsakMJAPgc04/gchRiW80AqIwzTj//gTDdcloWIr2LFaDXuJOlKR9pRyqgj6jLf9mqkDDcvlHg4boylwAiRmaLNbGMDRc/kRom2+W3fZhYkvGBLRbWY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8535.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R2pndDltSWM0NnR5ZWdLSUNqQndBMjlydTcvcDhjZFloV3VORHphNnZ4QXJh?=
- =?utf-8?B?MWt4YWJpcHNYU0NSYlNySzM0bTFSRyt1eFBFeW5pWjhjNnZFeDM4T04zVUUr?=
- =?utf-8?B?b3F5ZHJWYWJUQ1FJZTJOQ0NvU3BTTExuVTdNMkt4NXR0UXhsTlc3MGc4WnZ4?=
- =?utf-8?B?UkZvZENQa2xYWjY3ejJnenhoM2FIU3N4SEY1RWFOVytLeFV2eDdvVldhN3dR?=
- =?utf-8?B?YjRqUTJtaytBNWRCV1ZJTTRqWERZcFdkTjd5MGU2c1ZZL3V3NUgyNWZRNUZU?=
- =?utf-8?B?WlpjRGZDTHNqU3Q1WFhuYnRqV0pnWEhCdmVZOWRRNGN5Y3dzOVVNVUFENUY4?=
- =?utf-8?B?UHlCWkRYdzNMUXdQTmk4eGQ3clRBTmdnM0F6Mlc2WE9NbWFBazBOVVJmbU85?=
- =?utf-8?B?VzZsVkU4RFAzTlVvTnZScU9xc1BoWSsyQlhTRkwrNWNpOHN6QVFpdVU0cG5k?=
- =?utf-8?B?UmFjMmFMeEhpVDFTa0hoMm5teHFwTEhtM3Y5RzdiUW00SW9mWWErM1NWdkxi?=
- =?utf-8?B?UDVMZW5DcFhWOFhqL3hvaW12SlIzM1FUMzJhRGFla2pGVUNjai85dlg3clFS?=
- =?utf-8?B?bndNcWNScXNXODA5UXZMYno4NnFwSzI4MkZwTElENlR5eUlZeFQ1NEU3dU9Y?=
- =?utf-8?B?b2ZMdm1BSXdSTHFrUkpEa3hoSXdmeSsxQlZOTlB6VzkzWDRCUEplNjhJdGV0?=
- =?utf-8?B?c0d2VTlmNFptaFV5T3B2RTNvRy9lbXU3dTUvZVBIVXRBZlB2SlUxT2ljRHhX?=
- =?utf-8?B?SzhPNGFoYi9OUEV4TDZydEl0Y2NsNTZobVh5dTRoa0ZNUVNydnFkbXFxcmUy?=
- =?utf-8?B?S204TWU3eDZHUWlScWw1LzZFU0ZQRU4wUTlGTzgvWlorWjVyekpYSHNEd2VS?=
- =?utf-8?B?TnBRcGRNNkdpcXRCNDVhcWtVMjd4ZWFqMU40ZU0yeDVjVEFiYWNKVTlJeXhq?=
- =?utf-8?B?VmphcjhYbG0xeHQ3T0RnNXZOdHFUK2daNXNaLzZZMTd5b0hEK1RsWGVUWHg5?=
- =?utf-8?B?aS9iV0VWY3hqMUdTbHhHcEdjL1VEaC9zNjVmSDB5VDJtcWl4VnRoZlJrR052?=
- =?utf-8?B?OG1ZWmljTnVTb2ZjZWxPQWFhSzE0SWcycTdLTW55SEV4WnlQbUNrNmJTc1FK?=
- =?utf-8?B?YjNBYkpyYzhvV01JR3AvcVREcEgzblRlMVZJZWZLSG9QazdsVlkxdDZzcnRs?=
- =?utf-8?B?bjlHTHV3VnpXWDBjRmxUTktKSjlOYk1meng3b1kweEpMWlQyTVV3NUZlc0xk?=
- =?utf-8?B?OUkvWnJ5UU1tcFRaM1Erb2JSSDRidGk3WmNzYlZmYnA1Y1lRdW1aeXlPOWVu?=
- =?utf-8?B?RHF0aVZWYjg5ZDRIOGdVREVUcFJISy9kQlA5ZytxMmFya1dPU3ByWlVFejR0?=
- =?utf-8?B?T0JvaHUrYlhTZnlZTjVQaW5HY01vSEVva0Z4VHU4VGFBK21KRUJra0FyOUVr?=
- =?utf-8?B?MFlmbTh3dU1SZ3UwZnRCd2xwQVBVVkdKWWg0N2pGMTArNjVBNGFxRlNSc2w1?=
- =?utf-8?B?YnZnUWdVemg3OHZBTUJTZnhDTHZNbkJReGIxNDhJdUUvQmtqZFdYZGJ0VVNs?=
- =?utf-8?B?NU9QS0RzU3d3QTBLSGhYZUtsUDRtWlEwWWFNa2lmUlQ3TGorK0gzRXgvY1pu?=
- =?utf-8?B?NHM4dnpORVdZUjJqZkJiYlBCZElnaXQ1RW0yOWtTRUJGRUN5S2d0QUZ3T3Q0?=
- =?utf-8?B?SHZTd0loYTYvQ2RDTnFMWnZTTzBTaGlmTHBqa3RDVyt3MklLQXhDbFNnWWV0?=
- =?utf-8?B?bXYrZVF4QWVQSHpFbmdNdVQrbDF4VSs2bzE4SmNOSDYzSkRVMExsYkVGd1Uz?=
- =?utf-8?B?OUxRQzlhY1VNVjlEQmZreDRpdmcxblkwTzVMNE9KVGpNUXNDVXRRc2pzcWx5?=
- =?utf-8?B?eTlqT1dGYlVTaXJwUThTNHpIU1U4Y05DZnFaVUNIT05nSEtINWxUakEwZ1Ir?=
- =?utf-8?B?cTRSRnUwenJBbXdGZ0dDdnhva2xscEJOcHJ6Vk9lcXllWHNUVVlzTlo1M2NW?=
- =?utf-8?B?TEJ1Z1pVVGFTUzl2UmI1NFUxSi96Z0xWRmxab3B6WnQ4amU0NE5sTU9QQ2xP?=
- =?utf-8?B?ZjFsUTBFWnZUUzVrNnpKblZWUlFlM0N4OGs2aE9VRW9odGh2MllsOUw1WEE1?=
- =?utf-8?Q?hWbdkGs5a45hGmuE/tNf700H3?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8887d08e-7075-4ab0-b8f3-08dc42a9b6d0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8535.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 15:33:06.5671
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 89WhkkPQRJIMSaSMWlB4O9THVbIv6pbSMW/bNfP5l/AsJtVyrvtH3ODzldw5TbTrAa8/wltMeguGcEprOiST7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8942
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240312123723.0000420d@Huawei.com>
 
-The kernel build bot found a build error with the following config:
-	CONFIG_PCI=n
-	CONFIG_CXL_BUS=n
-	CONFIG_ACPI_APEI_EINJ=y
-	CONFIG_ACPI_APEI_EINJ_CXL=y
+On Tue, Mar 12, 2024 at 12:37:23PM +0000, Jonathan Cameron wrote:
+> On Fri, 8 Mar 2024 20:35:53 -0800
+> fan <nifan.cxl@gmail.com> wrote:
+> 
+> > On Thu, Mar 07, 2024 at 12:45:55PM +0000, Jonathan Cameron wrote:
+> > > ...
+> > >   
+> > > > > > +    list = records;
+> > > > > > +    extents = g_new0(CXLDCExtentRaw, num_extents);
+> > > > > > +    while (list) {
+> > > > > > +        CXLDCExtent *ent;
+> > > > > > +        bool skip_extent = false;
+> > > > > > +
+> > > > > > +        offset = list->value->offset;
+> > > > > > +        len = list->value->len;
+> > > > > > +
+> > > > > > +        extents[i].start_dpa = offset + dcd->dc.regions[rid].base;
+> > > > > > +        extents[i].len = len;
+> > > > > > +        memset(extents[i].tag, 0, 0x10);
+> > > > > > +        extents[i].shared_seq = 0;
+> > > > > > +
+> > > > > > +        if (type == DC_EVENT_RELEASE_CAPACITY ||
+> > > > > > +            type == DC_EVENT_FORCED_RELEASE_CAPACITY) {
+> > > > > > +            /*
+> > > > > > +             *  if the extent is still pending to be added to the host,    
+> > > > > 
+> > > > > Odd spacing.
+> > > > >     
+> > > > > > +             * remove it from the pending extent list, so later when the add
+> > > > > > +             * response for the extent arrives, the device can reject the
+> > > > > > +             * extent as it is not in the pending list.
+> > > > > > +             */
+> > > > > > +            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
+> > > > > > +                        &extents[i]);
+> > > > > > +            if (ent) {
+> > > > > > +                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
+> > > > > > +                g_free(ent);
+> > > > > > +                skip_extent = true;
+> > > > > > +            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
+> > > > > > +                /* If the exact extent is not in the accepted list, skip */
+> > > > > > +                skip_extent = true;
+> > > > > > +            }    
+> > > > > I think we need to reject case of some extents skipped and others not.
+> > > > > That's not supported yet so we need to complain if we get it at least. Maybe we need
+> > > > > to do two passes so we know this has happened early (or perhaps this is a later
+> > > > > patch in which case a todo here would help).    
+> > > > 
+> > > > Skip here does not mean the extent is invalid, it just means the extent
+> > > > is still pending to add, so remove them from pending list would be
+> > > > enough to reject the extent, no need to release further. That is based
+> > > > on your feedback on v4.  
+> > > 
+> > > Ah. I'd missunderstood.  
+> > 
+> > Hi Jonathan,
+> > 
+> > I think we should not allow to release extents that are still pending to
+> > add. 
+> > If we allow it, there is a case that will not work.
+> > Let's see the following case (time order):
+> > 1. Send request to add extent A to host; (A --> pending list)
+> > 2. Send request to release A from the host; (Delete A from pending list,
+> > hoping the following add response for A will fail as there is not a matched
+> > extent in the pending list).
+> 
+> Definitely not allow the host to release something it hasn't accepted.
+> Should allow QMP to release such entrees though (and same for fmapi when
+> we get there). Any such requested from host should be treated as whatever
+> it says to do if you release an extent that you don't have.
 
-The following diff seems to fix the issue:
+Not sure how it works here. If we allow QMP to release such extents and
+clear the pending list entrees accordingly, later if the host response with
+empty extent list, how can the device figure out which request the response is
+for. The spec assumes the response comes in order, so the head of the
+pending list should be removed from the pending list, however, if QMP
+process already removed it.
 
-diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
-index f01afa2805be..7d5634357d4c 100644
---- a/drivers/acpi/apei/Kconfig
-+++ b/drivers/acpi/apei/Kconfig
-@@ -63,6 +63,7 @@ config ACPI_APEI_EINJ
- config ACPI_APEI_EINJ_CXL
-        bool "CXL Error INJection Support"
-        default ACPI_APEI_EINJ
-+       depends on PCI
-        depends on ACPI_APEI_EINJ && CXL_BUS <= ACPI_APEI_EINJ
-        help
-          Support for CXL protocol Error INJection through debugfs/cxl.
+The key problem here is for empty updated extent list, we do not have a way to
+figure out the corresponding request as there is no DPA info to look
+into.
 
-Or if depending on CONFIG_CXL_BUS is preferable (it also depends on CONFIG_PCI):
+> 
+> > 3. Host send response to the device for the add request, however, for
+> > some reason, it does not accept any of it, so updated list is empty,
+> > spec allows it. Based on the spec, we need to drop the extent at the
+> > head of the event log. Now we have problem. Since extent A is already
+> > dropped from the list, we either cannot drop as the list is empty, which
+> > is not the worst. If we have more extents in the list, we may drop the
+> > one following A, which is for another request. If this happens, all the
+> > following extents will be acked incorrectly as the order has been
+> > shifted.
+> >  
+> > Does the above reasoning make sense to you?
+> Absolutely.  I got confused here on who was doing release.
+> Host definitely can't release stuff it hasn't successfully accepted.
+> 
+> Jonathan
+> 
 
-diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
-index f01afa2805be..3cfe7e7475f2 100644
---- a/drivers/acpi/apei/Kconfig
-+++ b/drivers/acpi/apei/Kconfig
-@@ -63,7 +63,8 @@ config ACPI_APEI_EINJ
- config ACPI_APEI_EINJ_CXL
-        bool "CXL Error INJection Support"
-        default ACPI_APEI_EINJ
--       depends on ACPI_APEI_EINJ && CXL_BUS <= ACPI_APEI_EINJ
-+       depends on ACPI_APEI_EINJ
-+       depends on CXL_BUS && CXL_BUS <= ACPI_APEI_EINJ
-        help
-          Support for CXL protocol Error INJection through debugfs/cxl.
-          Availability and which errors are supported is dependent on
+The assumption here is FM first initiates the request to add some
+extents to the hosts, and later FM initiates to release the extents
+while the extents has not been accepted by the host yet. 
 
-I could send out yet another version, but since this is a one line change I would appreciate
-it if whoever picks these patches up would just include this fix.
-
-Thanks,
-Ben
+Fan
+> > 
+> > Fan
+> > 
+> > >   
+> > > > 
+> > > > The loop here is only to collect the extents to sent to the event log. 
+> > > > But as you said, we need one pass before updating pending list.
+> > > > Actually if we do not allow the above case where extents to release is
+> > > > still in the pending to add list, we can just return here with error, no
+> > > > extra dry run needed. 
+> > > > 
+> > > > What do you think?  
+> > > 
+> > > I think we need a way to back out extents from the pending to add list
+> > > so we can create the race where they are offered to the OS and it takes
+> > > forever to accept and by the time it does we've removed them.
+> > >   
+> > > >   
+> > > > >     
+> > > > > > +        
+> > > > > > +
+> > > > > > +        /* No duplicate or overlapped extents are allowed */
+> > > > > > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > > > > > +                              len / block_size)) {
+> > > > > > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > > > > > +            return;
+> > > > > > +        }
+> > > > > > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > > > > > +
+> > > > > > +        list = list->next;
+> > > > > > +        if (!skip_extent) {
+> > > > > > +            i++;    
+> > > > > Problem is if we skip one in the middle the records will be wrong below.    
+> > > > 
+> > > > Why? Only extents passed the check will be stored in variable extents and
+> > > > processed further and i be updated. 
+> > > > For skipped ones, since i is not updated, they will be
+> > > > overwritten by following valid ones.  
+> > > Ah. I'd missed the fact you store into the extent without a check on validity
+> > > but only move the index on if they were valid. Then rely on not passing a trailing
+> > > entry at the end.
+> > > If would be more readable I think if local variables were used for the parameters
+> > > until we've decided not to skip and the this ended with
+> > > 
+> > >         if (!skip_extent) {
+> > >             extents[i] = (DCXLDCExtentRaw) {
+> > >                 .start_dpa = ...
+> > > 	        ...
+> > >             };
+> > >             i++
+> > >         }
+> > > We have local len already so probably just need
+> > > uint64_t start_dpa = offset + dcd->dc.regions[rid].base;
+> > > 
+> > > Also maybe skip_extent_evlog or something like that to explain we are only
+> > > skipping that part. 
+> > > Helps people like me who read it completely wrong!
+> > > 
+> > > Jonathan
+> > > 
+> > >  
+> > >   
+> 
