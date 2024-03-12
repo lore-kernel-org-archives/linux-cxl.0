@@ -1,205 +1,101 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBFB1EB37
-	for <linux-cxl@vger.kernel.org>; Tue, 12 Mar 2024 12:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D0E57307;
+	Tue, 12 Mar 2024 14:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710247052; cv=none; b=maEtKF5HWQrFmctMLHu0DwCA+VN/9DIEyKHMoEbHljx6xm9EHtn+6sbaouKWCxduQfjs9TGMVK6Z58IpEJeWzI/tC5Avq8OrUsOBhjNWdxxLCcboF7BjsWmGkXRlsYa+8t19bUHNNXE18SfIDg7a7j5Z5qs3EbOA4yENrc5RUQ0=
+	t=1710253062; cv=none; b=A1cOGhsvbN8zXZ6Ak3YN4kj0y6HPml4/5wEVuPdAfk6j3OL/WsAhooBmK1gg14uamF31+Nnf2/5sJkP/kh4zylNeiNxzXGnMM2y0oLJOzeRnSXZlCZEZmDasjW9cKslNoyDkye2drc3AKCdX/CCHtg+Z5wU1t4vj4hXHLEuFrG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710247052; c=relaxed/simple;
-	bh=JAKrne1Y3Pfed7dB8xe4vEonYOBPSi6Kf8zCTGUUQhU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lnwkXHI5jHvseA6xN49a48Az8U2ImfDSDtYnjsMddL1e0vlAvG4Rxm5QQYToQjVaZ8mcjDaQuOAJt5yzUlvnkmL55ar+e+nXBMaXBq6TsFoJTh3o8g5DOvcj8Pz0s65h9oXhASQOaMvxOC01NXms5+LJT+G1mCBUR8lESavcq5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TvCnw0HlWz6J9sP;
-	Tue, 12 Mar 2024 20:37:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CC34C1400C9;
-	Tue, 12 Mar 2024 20:37:25 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 12 Mar
- 2024 12:37:25 +0000
-Date: Tue, 12 Mar 2024 12:37:23 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: fan <nifan.cxl@gmail.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
-	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
-	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v5 09/13] hw/cxl/events: Add qmp interfaces to
- add/release dynamic capacity extents
-Message-ID: <20240312123723.0000420d@Huawei.com>
-In-Reply-To: <ZevnKbzBOy_9sjeg@debian>
-References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
-	<20240304194331.1586191-10-nifan.cxl@gmail.com>
-	<20240306174811.000029fd@Huawei.com>
-	<Zej5EuQXytgeWGfj@debian>
-	<20240307124555.00001408@Huawei.com>
-	<ZevnKbzBOy_9sjeg@debian>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1710253062; c=relaxed/simple;
+	bh=XoAwf9+kEnAUGF56LAReX+Da1CDiFMk4mBryFYNhyhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KvfcpzcjG1sU7nANNFFwvKfzqU2FFjM97L/r4wT6hDdRVlEw98+z+fvY9ft7sQVhVs3/UrlY/W4FZ9QL4briD9uV1KkLwMyS4hEr2qA8WrQtGWyD9kv4bXWHcCMmlgZ3LgQHScGbm40r5ONl2cIzqYby9dGJ/TvXRr+P9V//8vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YHh3Xnaq; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YHh3Xnaq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710253059; x=1741789059;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XoAwf9+kEnAUGF56LAReX+Da1CDiFMk4mBryFYNhyhI=;
+  b=YHh3Xnaq8BYPzBxBybjgYp1LfLWETk6ccMXfsghQWw94IaIhnjTdT5ch
+   0XRG1li3y9wt4T48FIULWcvNmXY+CMEZXABLdBQiL1jdTNwQRwpGSM2jq
+   S04BRLLxq1idRmyaWrkUPwA6sjU7WPllozi0z9a3PZcdbLVf3AcVRn/Xn
+   OF8dXCyo5wIAnQZCHS+UByDWLZTO+LmQ+uGLVW0ozNOYZAscRmA2YpYU3
+   frHlcnwfylJvoUruGhXCppy1gGhROcqWkBz+N7MqtNb/aXXoLn+6U+rzS
+   PL1Zkg4fhx9LjBYcVuL8oKEBAxsnXKbAnxDVB3Yqg5GItPUDYzklQk/er
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="30400912"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="30400912"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 07:17:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="16123852"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 12 Mar 2024 07:17:34 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rk2wd-000ABb-0O;
+	Tue, 12 Mar 2024 14:17:31 +0000
+Date: Tue, 12 Mar 2024 22:16:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com, rafael@kernel.org, james.morse@arm.com,
+	tony.luck@intel.com, bp@alien8.de
+Cc: oe-kbuild-all@lists.linux.dev, dave@stogolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, benjamin.cheatham@amd.com
+Subject: Re: [PATCH v15 2/4] EINJ: Add CXL error type support
+Message-ID: <202403122225.k6RQAbBI-lkp@intel.com>
+References: <20240311142508.31717-3-Benjamin.Cheatham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240311142508.31717-3-Benjamin.Cheatham@amd.com>
 
-On Fri, 8 Mar 2024 20:35:53 -0800
-fan <nifan.cxl@gmail.com> wrote:
+Hi Ben,
 
-> On Thu, Mar 07, 2024 at 12:45:55PM +0000, Jonathan Cameron wrote:
-> > ...
-> >   
-> > > > > +    list = records;
-> > > > > +    extents = g_new0(CXLDCExtentRaw, num_extents);
-> > > > > +    while (list) {
-> > > > > +        CXLDCExtent *ent;
-> > > > > +        bool skip_extent = false;
-> > > > > +
-> > > > > +        offset = list->value->offset;
-> > > > > +        len = list->value->len;
-> > > > > +
-> > > > > +        extents[i].start_dpa = offset + dcd->dc.regions[rid].base;
-> > > > > +        extents[i].len = len;
-> > > > > +        memset(extents[i].tag, 0, 0x10);
-> > > > > +        extents[i].shared_seq = 0;
-> > > > > +
-> > > > > +        if (type == DC_EVENT_RELEASE_CAPACITY ||
-> > > > > +            type == DC_EVENT_FORCED_RELEASE_CAPACITY) {
-> > > > > +            /*
-> > > > > +             *  if the extent is still pending to be added to the host,    
-> > > > 
-> > > > Odd spacing.
-> > > >     
-> > > > > +             * remove it from the pending extent list, so later when the add
-> > > > > +             * response for the extent arrives, the device can reject the
-> > > > > +             * extent as it is not in the pending list.
-> > > > > +             */
-> > > > > +            ent = cxl_dc_extent_exists(&dcd->dc.extents_pending_to_add,
-> > > > > +                        &extents[i]);
-> > > > > +            if (ent) {
-> > > > > +                QTAILQ_REMOVE(&dcd->dc.extents_pending_to_add, ent, node);
-> > > > > +                g_free(ent);
-> > > > > +                skip_extent = true;
-> > > > > +            } else if (!cxl_dc_extent_exists(&dcd->dc.extents, &extents[i])) {
-> > > > > +                /* If the exact extent is not in the accepted list, skip */
-> > > > > +                skip_extent = true;
-> > > > > +            }    
-> > > > I think we need to reject case of some extents skipped and others not.
-> > > > That's not supported yet so we need to complain if we get it at least. Maybe we need
-> > > > to do two passes so we know this has happened early (or perhaps this is a later
-> > > > patch in which case a todo here would help).    
-> > > 
-> > > Skip here does not mean the extent is invalid, it just means the extent
-> > > is still pending to add, so remove them from pending list would be
-> > > enough to reject the extent, no need to release further. That is based
-> > > on your feedback on v4.  
-> > 
-> > Ah. I'd missunderstood.  
-> 
-> Hi Jonathan,
-> 
-> I think we should not allow to release extents that are still pending to
-> add. 
-> If we allow it, there is a case that will not work.
-> Let's see the following case (time order):
-> 1. Send request to add extent A to host; (A --> pending list)
-> 2. Send request to release A from the host; (Delete A from pending list,
-> hoping the following add response for A will fail as there is not a matched
-> extent in the pending list).
+kernel test robot noticed the following build errors:
 
-Definitely not allow the host to release something it hasn't accepted.
-Should allow QMP to release such entrees though (and same for fmapi when
-we get there). Any such requested from host should be treated as whatever
-it says to do if you release an extent that you don't have.
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on linus/master v6.8 next-20240312]
+[cannot apply to rafael-pm/acpi-bus rafael-pm/devprop]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 3. Host send response to the device for the add request, however, for
-> some reason, it does not accept any of it, so updated list is empty,
-> spec allows it. Based on the spec, we need to drop the extent at the
-> head of the event log. Now we have problem. Since extent A is already
-> dropped from the list, we either cannot drop as the list is empty, which
-> is not the worst. If we have more extents in the list, we may drop the
-> one following A, which is for another request. If this happens, all the
-> following extents will be acked incorrectly as the order has been
-> shifted.
->  
-> Does the above reasoning make sense to you?
-Absolutely.  I got confused here on who was doing release.
-Host definitely can't release stuff it hasn't successfully accepted.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Cheatham/EINJ-Migrate-to-a-platform-driver/20240311-222800
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20240311142508.31717-3-Benjamin.Cheatham%40amd.com
+patch subject: [PATCH v15 2/4] EINJ: Add CXL error type support
+config: arm64-randconfig-001-20240312 (https://download.01.org/0day-ci/archive/20240312/202403122225.k6RQAbBI-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240312/202403122225.k6RQAbBI-lkp@intel.com/reproduce)
 
-Jonathan
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403122225.k6RQAbBI-lkp@intel.com/
 
-> 
-> Fan
-> 
-> >   
-> > > 
-> > > The loop here is only to collect the extents to sent to the event log. 
-> > > But as you said, we need one pass before updating pending list.
-> > > Actually if we do not allow the above case where extents to release is
-> > > still in the pending to add list, we can just return here with error, no
-> > > extra dry run needed. 
-> > > 
-> > > What do you think?  
-> > 
-> > I think we need a way to back out extents from the pending to add list
-> > so we can create the race where they are offered to the OS and it takes
-> > forever to accept and by the time it does we've removed them.
-> >   
-> > >   
-> > > >     
-> > > > > +        
-> > > > > +
-> > > > > +        /* No duplicate or overlapped extents are allowed */
-> > > > > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
-> > > > > +                              len / block_size)) {
-> > > > > +            error_setg(errp, "duplicate or overlapped extents are detected");
-> > > > > +            return;
-> > > > > +        }
-> > > > > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
-> > > > > +
-> > > > > +        list = list->next;
-> > > > > +        if (!skip_extent) {
-> > > > > +            i++;    
-> > > > Problem is if we skip one in the middle the records will be wrong below.    
-> > > 
-> > > Why? Only extents passed the check will be stored in variable extents and
-> > > processed further and i be updated. 
-> > > For skipped ones, since i is not updated, they will be
-> > > overwritten by following valid ones.  
-> > Ah. I'd missed the fact you store into the extent without a check on validity
-> > but only move the index on if they were valid. Then rely on not passing a trailing
-> > entry at the end.
-> > If would be more readable I think if local variables were used for the parameters
-> > until we've decided not to skip and the this ended with
-> > 
-> >         if (!skip_extent) {
-> >             extents[i] = (DCXLDCExtentRaw) {
-> >                 .start_dpa = ...
-> > 	        ...
-> >             };
-> >             i++
-> >         }
-> > We have local len already so probably just need
-> > uint64_t start_dpa = offset + dcd->dc.regions[rid].base;
-> > 
-> > Also maybe skip_extent_evlog or something like that to explain we are only
-> > skipping that part. 
-> > Helps people like me who read it completely wrong!
-> > 
-> > Jonathan
-> > 
-> >  
-> >   
+All errors (new ones prefixed by >>):
 
+   aarch64-linux-ld: Unexpected GOT/PLT entries detected!
+   aarch64-linux-ld: Unexpected run-time procedure linkages detected!
+   aarch64-linux-ld: drivers/acpi/apei/einj-cxl.o: in function `einj_cxl_inject_error':
+>> einj-cxl.c:(.text+0x2b4): undefined reference to `pci_find_host_bridge'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
