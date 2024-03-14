@@ -1,267 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AE879DD
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Mar 2024 19:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4CF5382
+	for <linux-cxl@vger.kernel.org>; Thu, 14 Mar 2024 04:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710359647; cv=none; b=eIpfgkLMwpK7vMNOUziRdDND9eta0E/xtIMkklBrBqj0KpspWTihsyKInpQoexdneI8S4ZBWx82dPq6MPqzQE1PGvOJwIX0ameM5oAf4rv2cX6CFLxjMambL5kUictpIoqSCWWHN5eFN0B85OYc+k7UIeZgtW7Yg2cEkAg78ruo=
+	t=1710389129; cv=none; b=Ph6K4zgsAD/TALxO4OUk+kqRdAo23OFf5Nk5Ow/LKGC7n3L9wwKvOAMnTpmDhLqxa56VrwhjtNqypB+gwknrc0eMc6ORjyYuiCSVWiGTtnIk7CZgPUrwNU428Rw2S/zyRAaXKwo6tIhqW9xSTFj3YPEAJifyQgTfrIwVMRvOi/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710359647; c=relaxed/simple;
-	bh=73iGg+/d6nmylWjJytVMTIfEExiUKvUHXGiaMuNeCsM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=cti9oPEzs7X9LvVZ789KkXtoNzVgLONX/hWCHyUuGF9PnYrNJZX4loYP5qjRZbZWOmqi+y6H6vTSpaEqz/D9DAF85E7m9Rz6AMJtlb7v88uSB4Jw/vz9DU0msZauXEH5p0aNwrWRPxWR/AW0S9EtZ0j5RVV017rvGOLSByyjK2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNTSCBvd; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1710389129; c=relaxed/simple;
+	bh=EaKbqpHO5xCRlrkZCuvSvii8yZ59ISemW5bsW9qEMWE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WlFfnjl5pDD4ijB7xIIRbP+/2KaML4getBVf9W0mn99BnKm3qYqF7Z/8Uy5odeiqoqw0KzW2OWwpn5PqNRm65azlSLOPYjDUK4Ez/z3Lw9ReO8XkIJl6qy1DtVZNDxiF9vzbZaI/OqViECF2lneWc9a5oF/9D8dygYTRHRthwSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HO6JMiaq; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNTSCBvd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HO6JMiaq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710359645; x=1741895645;
-  h=date:from:to:cc:subject:message-id;
-  bh=73iGg+/d6nmylWjJytVMTIfEExiUKvUHXGiaMuNeCsM=;
-  b=fNTSCBvdUMS7fVVYh+SdH6kuNYyg38NUtuFtynUFEdQ3WFT++GEZEYkj
-   BKN1+ub5+sEmQf+3sF/G2/rpQUj+71L4RLJEjidrX/GHpAoAVmqRZHJVI
-   jDx6cWt3HiB7ulslUNTHQOIWyzIP5FPA0motUOXQ5fOrXkeClbiY8wq1i
-   q+bY0riWXcSldTdJjrsrgsUYpBgu545Bm7M0KI0NqAlTyz+EuhyJd+OKo
-   kFXifkj9DkI3gvl4V4vm3cGr3TVOE0AL9lLQKidsfos0dbcJJC3r1Oi1Y
-   NlLgejN+OwJmJol0jx/CqQULJPnIsu6tjCAhxuB8LEXLLQkjWw8xf+rtl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="8972403"
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="8972403"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 12:54:04 -0700
+  t=1710389128; x=1741925128;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EaKbqpHO5xCRlrkZCuvSvii8yZ59ISemW5bsW9qEMWE=;
+  b=HO6JMiaq40T9Lz9gtVDCZG+nZ9f9yJCJrA5LuWnSnGa00WMv6/PLKhTj
+   xJUwM5FuKomK/hO0hFfLgVJNUgv5uasmSn9dtlfr4+PPrMqTPHVCjvDgJ
+   q+wx4LDDFxI0gNhMFTCnf9kjfpQ5GpIihnnYgFwcooswytLb606qtQL5G
+   K3m8Q4caEP21towO2kc4EyMXcVHsqzljyX35X20O/YdW0wYSydyV/2w2W
+   YcJb2SMEBTNvN0aqiC3fvbGfqfrAZUJxt1nFVodBclPgw5OTZRh4W9P1a
+   dMy0SgqPBJ5jj57rxVyWWKn/DQcxzBCeX/6Y5hylyJq7bAUBXFHsh76UZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22648789"
+X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
+   d="scan'208";a="22648789"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="11929017"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 13 Mar 2024 12:54:02 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rkUfo-000Cig-01;
-	Wed, 13 Mar 2024 19:54:00 +0000
-Date: Thu, 14 Mar 2024 03:53:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
+X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
+   d="scan'208";a="12080666"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.86.131])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:26 -0700
+From: alison.schofield@intel.com
+To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 88482878c3b4abc2a6e66e016cc01eacbdc5b0ed
-Message-ID: <202403140342.Q115gQ43-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v11 0/7] Support poison list retrieval
+Date: Wed, 13 Mar 2024 21:05:16 -0700
+Message-Id: <cover.1710386468.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 88482878c3b4abc2a6e66e016cc01eacbdc5b0ed  Merge branch 'for-6.9/cxl-fixes' into for-6.9/cxl
+From: Alison Schofield <alison.schofield@intel.com>
 
-elapsed time: 737m
+Changes since v10:
+- Use offset, length notation in json output (Dan)
+- Remove endpoint decoder from json output
+- Man page updates to reflect above changes
+- Remove open coded tep_find_field() (Dan)
+- Use raw instead of custom string helper 
+- Use get_field_val() in u8,32,64 helpers instead of _raw (Dan)
+- Pass event_ctx to its own parsing method as a typical 'this' pointer (Dan)
+- Replace private_ctx w poison_ctx in event_ctx. This addresses Dan's
+  feedback to avoid a void* but stops short of his suggestion to wrap
+  event_ctx in a private_ctx for this single use case.
+- v10: https://lore.kernel.org/linux-cxl/cover.1709748564.git.alison.schofield@intel.com/
 
-configs tested: 192
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Begin cover letter:
+Add the option to add a memory devices poison list to the cxl-list
+json output. Offer the option by memdev and by region. 
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20240313   gcc  
-arc                   randconfig-002-20240313   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                       imx_v4_v5_defconfig   clang
-arm                   randconfig-001-20240313   gcc  
-arm                   randconfig-002-20240313   clang
-arm                   randconfig-003-20240313   gcc  
-arm                   randconfig-004-20240313   clang
-arm                          sp7021_defconfig   gcc  
-arm                        spear6xx_defconfig   clang
-arm                           u8500_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240313   clang
-arm64                 randconfig-002-20240313   clang
-arm64                 randconfig-003-20240313   clang
-arm64                 randconfig-004-20240313   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240313   gcc  
-csky                  randconfig-002-20240313   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240313   clang
-hexagon               randconfig-002-20240313   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240313   gcc  
-i386         buildonly-randconfig-002-20240313   gcc  
-i386         buildonly-randconfig-003-20240313   clang
-i386         buildonly-randconfig-004-20240313   clang
-i386         buildonly-randconfig-005-20240313   clang
-i386         buildonly-randconfig-006-20240313   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240313   clang
-i386                  randconfig-002-20240313   clang
-i386                  randconfig-003-20240313   clang
-i386                  randconfig-004-20240313   gcc  
-i386                  randconfig-005-20240313   gcc  
-i386                  randconfig-006-20240313   clang
-i386                  randconfig-011-20240313   gcc  
-i386                  randconfig-012-20240313   clang
-i386                  randconfig-013-20240313   gcc  
-i386                  randconfig-014-20240313   gcc  
-i386                  randconfig-015-20240313   clang
-i386                  randconfig-016-20240313   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240313   gcc  
-loongarch             randconfig-002-20240313   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      maltaaprp_defconfig   clang
-mips                         rt305x_defconfig   clang
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240313   gcc  
-nios2                 randconfig-002-20240313   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240313   gcc  
-parisc                randconfig-002-20240313   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      bamboo_defconfig   clang
-powerpc                        cell_defconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                     kilauea_defconfig   clang
-powerpc                   lite5200b_defconfig   clang
-powerpc                 mpc8313_rdb_defconfig   gcc  
-powerpc               randconfig-001-20240313   gcc  
-powerpc               randconfig-002-20240313   gcc  
-powerpc               randconfig-003-20240313   clang
-powerpc                      tqm8xx_defconfig   clang
-powerpc64                        alldefconfig   clang
-powerpc64             randconfig-001-20240313   clang
-powerpc64             randconfig-002-20240313   gcc  
-powerpc64             randconfig-003-20240313   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240313   clang
-riscv                 randconfig-002-20240313   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240313   gcc  
-s390                  randconfig-002-20240313   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                    randconfig-001-20240313   gcc  
-sh                    randconfig-002-20240313   gcc  
-sh                          sdk7780_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                   sh7770_generic_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240313   gcc  
-sparc64               randconfig-002-20240313   gcc  
-um                               alldefconfig   clang
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240313   gcc  
-um                    randconfig-002-20240313   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240313   clang
-x86_64       buildonly-randconfig-002-20240313   gcc  
-x86_64       buildonly-randconfig-003-20240313   clang
-x86_64       buildonly-randconfig-004-20240313   clang
-x86_64       buildonly-randconfig-005-20240313   gcc  
-x86_64       buildonly-randconfig-006-20240313   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240313   clang
-x86_64                randconfig-002-20240313   gcc  
-x86_64                randconfig-003-20240313   clang
-x86_64                randconfig-004-20240313   gcc  
-x86_64                randconfig-005-20240313   gcc  
-x86_64                randconfig-006-20240313   clang
-x86_64                randconfig-011-20240313   clang
-x86_64                randconfig-012-20240313   clang
-x86_64                randconfig-013-20240313   clang
-x86_64                randconfig-014-20240313   clang
-x86_64                randconfig-015-20240313   gcc  
-x86_64                randconfig-016-20240313   gcc  
-x86_64                randconfig-071-20240313   gcc  
-x86_64                randconfig-072-20240313   clang
-x86_64                randconfig-073-20240313   clang
-x86_64                randconfig-074-20240313   gcc  
-x86_64                randconfig-075-20240313   clang
-x86_64                randconfig-076-20240313   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                           alldefconfig   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240313   gcc  
+From the man page cxl-list:
 
+       -L, --media-errors
+           Include media-error information. The poison list is retrieved from
+           the device(s) and media_error records are added to the listing.
+           Apply this option to memdevs and regions where devices support the
+           poison list capability. "offset:" is relative to the region
+           resource when listing by region and is the absolute device DPA when
+           listing by memdev. "source:" is one of: External, Internal,
+           Injected, Vendor Specific, or Unknown, as defined in CXL
+           Specification v3.1 Table 8-140.
+
+           # cxl list -m mem9 --media-errors -u
+           {
+             "memdev":"mem9",
+             "pmem_size":"1024.00 MiB (1073.74 MB)",
+             "pmem_qos_class":42,
+             "ram_size":"1024.00 MiB (1073.74 MB)",
+             "ram_qos_class":42,
+             "serial":"0x5",
+             "numa_node":1,
+             "host":"cxl_mem.5",
+             "media_errors":[
+               {
+                 "offset":"0x40000000",
+                 "length":64,
+                 "source":"Injected"
+               }
+             ]
+           }
+
+       In the above example, region mappings can be found using: "cxl list -p
+       mem9 --decoders"
+
+           # cxl list -r region5 --media-errors -u
+           {
+             "region":"region5",
+             "resource":"0xf110000000",
+             "size":"2.00 GiB (2.15 GB)",
+             "type":"pmem",
+             "interleave_ways":2,
+             "interleave_granularity":4096,
+             "decode_state":"commit",
+             "media_errors":[
+               {
+                 "offset":"0x1000",
+                 "length":64,
+                 "source":"Injected"
+               },
+               {
+                 "offset":"0x2000",
+                 "length":64,
+                 "source":"Injected"
+               }
+             ]
+           }
+
+       In the above example, memdev mappings can be found using: "cxl list -r
+       region5 --targets" and "cxl list -d <decoder_name>"
+
+
+
+Alison Schofield (7):
+  libcxl: add interfaces for GET_POISON_LIST mailbox commands
+  cxl/event_trace: add an optional pid check to event parsing
+  cxl/event_trace: support poison context in event parsing
+  cxl/event_trace: add helpers to retrieve tep fields by type
+  cxl/list: collect and parse media_error records
+  cxl/list: add --media-errors option to cxl list
+  cxl/test: add cxl-poison.sh unit test
+
+ Documentation/cxl/cxl-list.txt |  62 ++++++++++-
+ cxl/event_trace.c              |  51 ++++++++-
+ cxl/event_trace.h              |  19 +++-
+ cxl/filter.h                   |   3 +
+ cxl/json.c                     | 194 +++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.c               |  47 ++++++++
+ cxl/lib/libcxl.sym             |   2 +
+ cxl/libcxl.h                   |   2 +
+ cxl/list.c                     |   3 +
+ test/cxl-poison.sh             | 137 +++++++++++++++++++++++
+ test/meson.build               |   2 +
+ 11 files changed, 514 insertions(+), 8 deletions(-)
+ create mode 100644 test/cxl-poison.sh
+
+
+base-commit: e0d0680bd3e554bd5f211e989480c5a13a023b2d
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.37.3
+
