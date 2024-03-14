@@ -1,346 +1,473 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC214D267
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Mar 2024 05:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EF65CDD0;
+	Thu, 14 Mar 2024 07:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710392424; cv=none; b=GK2E3WPFASPSYsc96JeRTgocReYrd+4nwNqVwYlh9KsEYlc2BVVcs0VGTs43Plylkf2ZzhC0fdmnRHve3OZdCqHU4JMmoVG1hrOK9TDUg6UtAazcKEuKF7iMK7Et8u5lVkZ9AzklFc4oxg4lJJixPtBcjq+IV/uCsUu/+RKja5Q=
+	t=1710402852; cv=none; b=KVsTFC5k9dKJ62yht6/IzFHeIddwVG/Bk0hwBuLqPOnFNTJ8qDG+rpm7M2uw8I7bTwKUnGnV9p27AH5yMLkMXGFImrMxY1WhRLUU5q4S64nm6RIjDh0ArGMcPeXWrP17wyDU71hj0ylA8e+eG1xaz6RAhsW2H0giXDbONpipujI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710392424; c=relaxed/simple;
-	bh=mqkM5/wu5VA3SYAqpusCC2mmXXDSkmQTflAZsfnJ+Yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GY0wX4l/JbfChJLS9toJW0y5WAnDTIZHH6KI/i+CRwMDV+JUVPIIWkm904hiwRQl/5bqHHvb/GntaPsm88sVc3lPa7PEMpGvygDyuJdf0dfrX8JT530cABVy9UYxlPvelL+NVLGNY+JEDB5mpqIjHfaGcmiX8ojO2LTGbpUxbZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqcIbb0w; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1710402852; c=relaxed/simple;
+	bh=BSNFSHcbJc+JWKcff7iLUgr8ujlh8aLQK4K89Zi3fLw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LBiFnomp0GkEFBRL48AJhyjlwo21VJdLCqRejJ76j5hIl0AOHTCRrSzHLEizksBJT29LY9NCgZBS0oGw/Uth/oICmFoldSjgMzcivaOGJ5DZAX6cJ4PJRXlvLR+qPCvvubQKH4ZfSLJFTvTKaLJ2sKCLjm4EpXICJTrGikp6HjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JtxhLuae; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqcIbb0w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtxhLuae"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710392421; x=1741928421;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mqkM5/wu5VA3SYAqpusCC2mmXXDSkmQTflAZsfnJ+Yk=;
-  b=bqcIbb0w719XKeJOGdIzOEW8woQHX7vWrskePmxLP3WL8kVyDCqNYDqe
-   j4c3eULUVjFNrERPIdMn35yiPZVeSzZRv6Kj85Vvqdgj5vAeMpqY92E+Y
-   W/6RtEHsQjNBIwXeKWOMGEeXore3YCzxpSR9agBdYX0ytH55PSa0EK3xV
-   dOBSNM+Ej9267N7Zk3geNgL/Srwi9OCsFEjtLY91kpR8Fr3pTki8XGDwz
-   4HXx8aolXmuwFzEFTgv5Iyagf+MeTgFgr+XUM5CpIIECeND045SA9H7nk
-   /0/2zhHnunogkA/rIaXHmIIIIMCGLUhTeK9HDoU7AVw83siqoujGLEGWB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5320234"
+  t=1710402849; x=1741938849;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=BSNFSHcbJc+JWKcff7iLUgr8ujlh8aLQK4K89Zi3fLw=;
+  b=JtxhLuae54DbOEIIA1Aq4Y/shaLLHNAwPtQiqBmA1Vl65lCwYAdPnRt5
+   w058d12UlBzWXDz98Eype0fAvRrUKgnqUl78/+Dq/eZiEAFVUA/+PWfKW
+   NoqXsrdcwW9wbrin3Tyz3+rH3zVhaSvSqmvT/DO3JCc7dPAmV21Fft65X
+   wm6aLIa4zjn2lMcL6rH+8Ha3+jLaSoc4/J7trzUANT4y7Os9m9fl/A2vW
+   hP5nrqgQKd6wB0W8Oe8s/aedibA6wxbgO6oMZJxJhLIJyAM7u3IHtFE5O
+   59nMdGLIxggyMZyUH3zDUUjkcEOYkWMklOM77cgV0bZcDqo9VlgEdrH0F
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5400746"
 X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="5320234"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 22:00:20 -0700
+   d="scan'208";a="5400746"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 00:54:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="35295404"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 13 Mar 2024 22:00:17 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rkdCR-000D7B-18;
-	Thu, 14 Mar 2024 05:00:15 +0000
-Date: Thu, 14 Mar 2024 12:59:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [cxl:next 14/23] drivers/acpi/apei/einj-core.c:222:11: sparse:
- sparse: incorrect type in assignment (different address spaces)
-Message-ID: <202403141236.g8QtgI6t-lkp@intel.com>
+   d="scan'208";a="16798148"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 00:54:01 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  aneesh.kumar@linux.ibm.com,
+  mhocko@suse.com,  tj@kernel.org,  john@jagalactic.com,  Eishan Mirakhur
+ <emirakhur@micron.com>,  Vinicius Tavares Petrucci
+ <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+  Alistair Popple <apopple@nvidia.com>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  Len Brown <lenb@kernel.org>,  Dan Williams
+ <dan.j.williams@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
+  Dave Jiang <dave.jiang@intel.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  linux-acpi@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  nvdimm@lists.linux.dev,
+  linux-cxl@vger.kernel.org,  linux-mm@kvack.org,  "Ho-Ren (Jack) Chuang"
+ <horenc@vt.edu>,  "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+  qemu-devel@nongnu.org,  Hao Xiang <hao.xiang@bytedance.com>
+Subject: Re: [External] Re: [PATCH v2 1/1] memory tier: acpi/hmat: create
+ CPUless memory tiers after obtaining HMAT info
+In-Reply-To: <CAKPbEqpTNN5GKKCXmyTv0szpL-N1pdKFZYPHCJjyhgpKZGMiWw@mail.gmail.com>
+	(Ho-Ren Chuang's message of "Wed, 13 Mar 2024 01:16:27 -0700")
+References: <20240312061729.1997111-1-horenchuang@bytedance.com>
+	<20240312061729.1997111-2-horenchuang@bytedance.com>
+	<874jdb4xk8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAKPbEqpTNN5GKKCXmyTv0szpL-N1pdKFZYPHCJjyhgpKZGMiWw@mail.gmail.com>
+Date: Thu, 14 Mar 2024 15:52:07 +0800
+Message-ID: <8734st2qu0.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-head:   88482878c3b4abc2a6e66e016cc01eacbdc5b0ed
-commit: 12fb28ea6b1cf24bde27c406eb38ee3c108d73f9 [14/23] EINJ: Add CXL error type support
-config: i386-randconfig-063-20240314 (https://download.01.org/0day-ci/archive/20240314/202403141236.g8QtgI6t-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240314/202403141236.g8QtgI6t-lkp@intel.com/reproduce)
+"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403141236.g8QtgI6t-lkp@intel.com/
+> On Tue, Mar 12, 2024 at 2:21=E2=80=AFAM Huang, Ying <ying.huang@intel.com=
+> wrote:
+>>
+>> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+>>
+>> > The current implementation treats emulated memory devices, such as
+>> > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal m=
+emory
+>> > (E820_TYPE_RAM). However, these emulated devices have different
+>> > characteristics than traditional DRAM, making it important to
+>> > distinguish them. Thus, we modify the tiered memory initialization pro=
+cess
+>> > to introduce a delay specifically for CPUless NUMA nodes. This delay
+>> > ensures that the memory tier initialization for these nodes is deferred
+>> > until HMAT information is obtained during the boot process. Finally,
+>> > demotion tables are recalculated at the end.
+>> >
+>> > * Abstract common functions into `find_alloc_memory_type()`
+>>
+>> We should move kmem_put_memory_types() (renamed to
+>> mt_put_memory_types()?) too.  This can be put in a separate patch.
+>>
+>
+> Will do! Thanks,
+>
+>
+>>
+>> > Since different memory devices require finding or allocating a memory =
+type,
+>> > these common steps are abstracted into a single function,
+>> > `find_alloc_memory_type()`, enhancing code scalability and conciseness.
+>> >
+>> > * Handle cases where there is no HMAT when creating memory tiers
+>> > There is a scenario where a CPUless node does not provide HMAT informa=
+tion.
+>> > If no HMAT is specified, it falls back to using the default DRAM tier.
+>> >
+>> > * Change adist calculation code to use another new lock, mt_perf_lock.
+>> > In the current implementation, iterating through CPUlist nodes requires
+>> > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will en=
+d up
+>> > trying to acquire the same lock, leading to a potential deadlock.
+>> > Therefore, we propose introducing a standalone `mt_perf_lock` to prote=
+ct
+>> > `default_dram_perf`. This approach not only avoids deadlock but also
+>> > prevents holding a large lock simultaneously.
+>> >
+>> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+>> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+>> > ---
+>> >  drivers/acpi/numa/hmat.c     | 11 ++++++
+>> >  drivers/dax/kmem.c           | 13 +------
+>> >  include/linux/acpi.h         |  6 ++++
+>> >  include/linux/memory-tiers.h |  8 +++++
+>> >  mm/memory-tiers.c            | 70 +++++++++++++++++++++++++++++++++---
+>> >  5 files changed, 92 insertions(+), 16 deletions(-)
+>> >
+>> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> > index d6b85f0f6082..28812ec2c793 100644
+>> > --- a/drivers/acpi/numa/hmat.c
+>> > +++ b/drivers/acpi/numa/hmat.c
+>> > @@ -38,6 +38,8 @@ static LIST_HEAD(targets);
+>> >  static LIST_HEAD(initiators);
+>> >  static LIST_HEAD(localities);
+>> >
+>> > +static LIST_HEAD(hmat_memory_types);
+>> > +
+>>
+>> HMAT isn't a device driver for some memory devices.  So I don't think we
+>> should manage memory types in HMAT.
+>
+> I can put it back in memory-tier.c. How about the list? Do we still
+> need to keep a separate list for storing late_inited memory nodes?
+> And how about the list name if we need to remove the prefix "hmat_"?
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/acpi/apei/einj-core.c:222:11: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct vendor_error_type_extension *v @@     got void [noderef] __iomem * @@
-   drivers/acpi/apei/einj-core.c:222:11: sparse:     expected struct vendor_error_type_extension *v
-   drivers/acpi/apei/einj-core.c:222:11: sparse:     got void [noderef] __iomem *
->> drivers/acpi/apei/einj-core.c:231:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __iomem *virt @@     got struct vendor_error_type_extension *v @@
-   drivers/acpi/apei/einj-core.c:231:29: sparse:     expected void [noderef] __iomem *virt
-   drivers/acpi/apei/einj-core.c:231:29: sparse:     got struct vendor_error_type_extension *v
->> drivers/acpi/apei/einj-core.c:257:25: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct set_error_type_with_address *v5param @@     got void [noderef] __iomem * @@
-   drivers/acpi/apei/einj-core.c:257:25: sparse:     expected struct set_error_type_with_address *v5param
-   drivers/acpi/apei/einj-core.c:257:25: sparse:     got void [noderef] __iomem *
->> drivers/acpi/apei/einj-core.c:267:25: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct einj_parameter *v4param @@     got void [noderef] __iomem * @@
-   drivers/acpi/apei/einj-core.c:267:25: sparse:     expected struct einj_parameter *v4param
-   drivers/acpi/apei/einj-core.c:267:25: sparse:     got void [noderef] __iomem *
->> drivers/acpi/apei/einj-core.c:271:45: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __iomem *virt @@     got struct einj_parameter *v4param @@
-   drivers/acpi/apei/einj-core.c:271:45: sparse:     expected void [noderef] __iomem *virt
-   drivers/acpi/apei/einj-core.c:271:45: sparse:     got struct einj_parameter *v4param
->> drivers/acpi/apei/einj-core.c:338:21: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct acpi_einj_trigger *trigger_tab @@     got void [noderef] __iomem * @@
-   drivers/acpi/apei/einj-core.c:338:21: sparse:     expected struct acpi_einj_trigger *trigger_tab
-   drivers/acpi/apei/einj-core.c:338:21: sparse:     got void [noderef] __iomem *
->> drivers/acpi/apei/einj-core.c:364:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct acpi_einj_trigger *trigger_tab @@
-   drivers/acpi/apei/einj-core.c:364:17: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/acpi/apei/einj-core.c:364:17: sparse:     got struct acpi_einj_trigger *trigger_tab
-   drivers/acpi/apei/einj-core.c:365:21: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct acpi_einj_trigger *trigger_tab @@     got void [noderef] __iomem * @@
-   drivers/acpi/apei/einj-core.c:365:21: sparse:     expected struct acpi_einj_trigger *trigger_tab
-   drivers/acpi/apei/einj-core.c:365:21: sparse:     got void [noderef] __iomem *
-   drivers/acpi/apei/einj-core.c:428:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct acpi_einj_trigger *trigger_tab @@
-   drivers/acpi/apei/einj-core.c:428:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/acpi/apei/einj-core.c:428:25: sparse:     got struct acpi_einj_trigger *trigger_tab
->> drivers/acpi/apei/einj-core.c:863:37: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __iomem *virt @@     got void *static [assigned] [toplevel] einj_param @@
-   drivers/acpi/apei/einj-core.c:863:37: sparse:     expected void [noderef] __iomem *virt
-   drivers/acpi/apei/einj-core.c:863:37: sparse:     got void *static [assigned] [toplevel] einj_param
-   drivers/acpi/apei/einj-core.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/umh.h, include/linux/kmod.h, ...):
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+I don't think we need a separate list for memory-less nodes.  Just
+iterate all memory-less nodes.
 
-vim +222 drivers/acpi/apei/einj-core.c
+>
+>> Instead, if the memory_type of a
+>> node isn't set by the driver, we should manage it in memory-tier.c as
+>> fallback.
+>>
+>
+> Do you mean some device drivers may init memory tiers between
+> memory_tier_init() and late_initcall(memory_tier_late_init);?
+> And this is the reason why you mention to exclude
+> "node_memory_types[nid].memtype !=3D NULL" in memory_tier_late_init().
+> Is my understanding correct?
 
-22fca621bd1bbc drivers/acpi/apei/einj.c Avadhut Naik     2023-11-16  212  
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  213  static void check_vendor_extension(u64 paddr,
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  214  				   struct set_error_type_with_address *v5param)
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  215  {
-459413db33d6c9 drivers/acpi/apei/einj.c Tony Luck        2012-01-23  216  	int	offset = v5param->vendor_extension;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  217  	struct	vendor_error_type_extension *v;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  218  	u32	sbdf;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  219  
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  220  	if (!offset)
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  221  		return;
-a238317ce81855 drivers/acpi/apei/einj.c Lv Zheng         2014-05-20 @222  	v = acpi_os_map_iomem(paddr + offset, sizeof(*v));
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  223  	if (!v)
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  224  		return;
-22fca621bd1bbc drivers/acpi/apei/einj.c Avadhut Naik     2023-11-16  225  	get_oem_vendor_struct(paddr, offset, v);
-459413db33d6c9 drivers/acpi/apei/einj.c Tony Luck        2012-01-23  226  	sbdf = v->pcie_sbdf;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  227  	sprintf(vendor_dev, "%x:%x:%x.%x vendor_id=%x device_id=%x rev_id=%x\n",
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  228  		sbdf >> 24, (sbdf >> 16) & 0xff,
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  229  		(sbdf >> 11) & 0x1f, (sbdf >> 8) & 0x7,
-459413db33d6c9 drivers/acpi/apei/einj.c Tony Luck        2012-01-23  230  		 v->vendor_id, v->device_id, v->rev_id);
-a238317ce81855 drivers/acpi/apei/einj.c Lv Zheng         2014-05-20 @231  	acpi_os_unmap_iomem(v, sizeof(*v));
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  232  }
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  233  
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  234  static void *einj_get_parameter_address(void)
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  235  {
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  236  	int i;
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  237  	u64 pa_v4 = 0, pa_v5 = 0;
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  238  	struct acpi_whea_header *entry;
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  239  
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  240  	entry = EINJ_TAB_ENTRY(einj_tab);
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  241  	for (i = 0; i < einj_tab->entries; i++) {
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  242  		if (entry->action == ACPI_EINJ_SET_ERROR_TYPE &&
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  243  		    entry->instruction == ACPI_EINJ_WRITE_REGISTER &&
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  244  		    entry->register_region.space_id ==
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  245  		    ACPI_ADR_SPACE_SYSTEM_MEMORY)
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  246  			pa_v4 = get_unaligned(&entry->register_region.address);
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  247  		if (entry->action == ACPI_EINJ_SET_ERROR_TYPE_WITH_ADDRESS &&
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  248  		    entry->instruction == ACPI_EINJ_WRITE_REGISTER &&
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  249  		    entry->register_region.space_id ==
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  250  		    ACPI_ADR_SPACE_SYSTEM_MEMORY)
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  251  			pa_v5 = get_unaligned(&entry->register_region.address);
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  252  		entry++;
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  253  	}
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  254  	if (pa_v5) {
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  255  		struct set_error_type_with_address *v5param;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  256  
-a238317ce81855 drivers/acpi/apei/einj.c Lv Zheng         2014-05-20 @257  		v5param = acpi_os_map_iomem(pa_v5, sizeof(*v5param));
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  258  		if (v5param) {
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  259  			acpi5 = 1;
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  260  			check_vendor_extension(pa_v5, v5param);
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  261  			return v5param;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  262  		}
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  263  	}
-d3ab3edc029bf7 drivers/acpi/apei/einj.c Chen, Gong       2013-12-18  264  	if (param_extension && pa_v4) {
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  265  		struct einj_parameter *v4param;
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  266  
-a238317ce81855 drivers/acpi/apei/einj.c Lv Zheng         2014-05-20 @267  		v4param = acpi_os_map_iomem(pa_v4, sizeof(*v4param));
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  268  		if (!v4param)
-29924b9f8f39e3 drivers/acpi/apei/einj.c Dan Carpenter    2012-01-20  269  			return NULL;
-459413db33d6c9 drivers/acpi/apei/einj.c Tony Luck        2012-01-23  270  		if (v4param->reserved1 || v4param->reserved2) {
-a238317ce81855 drivers/acpi/apei/einj.c Lv Zheng         2014-05-20 @271  			acpi_os_unmap_iomem(v4param, sizeof(*v4param));
-29924b9f8f39e3 drivers/acpi/apei/einj.c Dan Carpenter    2012-01-20  272  			return NULL;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  273  		}
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  274  		return v4param;
-c130bd6f82e5dd drivers/acpi/apei/einj.c Tony Luck        2012-01-17  275  	}
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  276  
-29924b9f8f39e3 drivers/acpi/apei/einj.c Dan Carpenter    2012-01-20  277  	return NULL;
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  278  }
-6e320ec1d98f9e drivers/acpi/apei/einj.c Huang Ying       2010-05-18  279  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  280  /* do sanity check to trigger table */
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  281  static int einj_check_trigger_header(struct acpi_einj_trigger *trigger_tab)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  282  {
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  283  	if (trigger_tab->header_size != sizeof(struct acpi_einj_trigger))
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  284  		return -EINVAL;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  285  	if (trigger_tab->table_size > PAGE_SIZE ||
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  286  	    trigger_tab->table_size < trigger_tab->header_size)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  287  		return -EINVAL;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  288  	if (trigger_tab->entry_count !=
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  289  	    (trigger_tab->table_size - trigger_tab->header_size) /
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  290  	    sizeof(struct acpi_einj_entry))
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  291  		return -EINVAL;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  292  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  293  	return 0;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  294  }
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  295  
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  296  static struct acpi_generic_address *einj_get_trigger_parameter_region(
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  297  	struct acpi_einj_trigger *trigger_tab, u64 param1, u64 param2)
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  298  {
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  299  	int i;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  300  	struct acpi_whea_header *entry;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  301  
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  302  	entry = (struct acpi_whea_header *)
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  303  		((char *)trigger_tab + sizeof(struct acpi_einj_trigger));
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  304  	for (i = 0; i < trigger_tab->entry_count; i++) {
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  305  		if (entry->action == ACPI_EINJ_TRIGGER_ERROR &&
-1d5d820b8fe83b drivers/acpi/apei/einj.c Yazen Ghannam    2017-08-28  306  		entry->instruction <= ACPI_EINJ_WRITE_REGISTER_VALUE &&
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  307  		entry->register_region.space_id ==
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  308  			ACPI_ADR_SPACE_SYSTEM_MEMORY &&
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  309  		(entry->register_region.address & param2) == (param1 & param2))
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  310  			return &entry->register_region;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  311  		entry++;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  312  	}
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  313  
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  314  	return NULL;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  315  }
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  316  /* Execute instructions in trigger error action table */
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  317  static int __einj_error_trigger(u64 trigger_paddr, u32 type,
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  318  				u64 param1, u64 param2)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  319  {
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  320  	struct acpi_einj_trigger *trigger_tab = NULL;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  321  	struct apei_exec_context trigger_ctx;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  322  	struct apei_resources trigger_resources;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  323  	struct acpi_whea_header *trigger_entry;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  324  	struct resource *r;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  325  	u32 table_size;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  326  	int rc = -EIO;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  327  	struct acpi_generic_address *trigger_param_region = NULL;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  328  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  329  	r = request_mem_region(trigger_paddr, sizeof(*trigger_tab),
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  330  			       "APEI EINJ Trigger Table");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  331  	if (!r) {
-b2f740baa42152 drivers/acpi/apei/einj.c Borislav Petkov  2016-05-23  332  		pr_err("Can not request [mem %#010llx-%#010llx] for Trigger table\n",
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  333  		       (unsigned long long)trigger_paddr,
-46b91e379f7180 drivers/acpi/apei/einj.c Bjorn Helgaas    2011-12-08  334  		       (unsigned long long)trigger_paddr +
-46b91e379f7180 drivers/acpi/apei/einj.c Bjorn Helgaas    2011-12-08  335  			    sizeof(*trigger_tab) - 1);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  336  		goto out;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  337  	}
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18 @338  	trigger_tab = ioremap_cache(trigger_paddr, sizeof(*trigger_tab));
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  339  	if (!trigger_tab) {
-b2f740baa42152 drivers/acpi/apei/einj.c Borislav Petkov  2016-05-23  340  		pr_err("Failed to map trigger table!\n");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  341  		goto out_rel_header;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  342  	}
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  343  	rc = einj_check_trigger_header(trigger_tab);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  344  	if (rc) {
-933ca4e323de77 drivers/acpi/apei/einj.c Kefeng Wang      2019-10-18  345  		pr_warn(FW_BUG "Invalid trigger error action table.\n");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  346  		goto out_rel_header;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  347  	}
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  348  
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  349  	/* No action structures in the TRIGGER_ERROR table, nothing to do */
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  350  	if (!trigger_tab->entry_count)
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  351  		goto out_rel_header;
-4c40aed869a200 drivers/acpi/apei/einj.c Niklas Söderlund 2012-01-09  352  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  353  	rc = -EIO;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  354  	table_size = trigger_tab->table_size;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  355  	r = request_mem_region(trigger_paddr + sizeof(*trigger_tab),
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  356  			       table_size - sizeof(*trigger_tab),
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  357  			       "APEI EINJ Trigger Table");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  358  	if (!r) {
-b2f740baa42152 drivers/acpi/apei/einj.c Borislav Petkov  2016-05-23  359  		pr_err("Can not request [mem %#010llx-%#010llx] for Trigger Table Entry\n",
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  360  		       (unsigned long long)trigger_paddr + sizeof(*trigger_tab),
-46b91e379f7180 drivers/acpi/apei/einj.c Bjorn Helgaas    2011-12-08  361  		       (unsigned long long)trigger_paddr + table_size - 1);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  362  		goto out_rel_header;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  363  	}
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18 @364  	iounmap(trigger_tab);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  365  	trigger_tab = ioremap_cache(trigger_paddr, table_size);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  366  	if (!trigger_tab) {
-b2f740baa42152 drivers/acpi/apei/einj.c Borislav Petkov  2016-05-23  367  		pr_err("Failed to map trigger table!\n");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  368  		goto out_rel_entry;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  369  	}
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  370  	trigger_entry = (struct acpi_whea_header *)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  371  		((char *)trigger_tab + sizeof(struct acpi_einj_trigger));
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  372  	apei_resources_init(&trigger_resources);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  373  	apei_exec_ctx_init(&trigger_ctx, einj_ins_type,
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  374  			   ARRAY_SIZE(einj_ins_type),
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  375  			   trigger_entry, trigger_tab->entry_count);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  376  	rc = apei_exec_collect_resources(&trigger_ctx, &trigger_resources);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  377  	if (rc)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  378  		goto out_fini;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  379  	rc = apei_resources_sub(&trigger_resources, &einj_resources);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  380  	if (rc)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  381  		goto out_fini;
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  382  	/*
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  383  	 * Some firmware will access target address specified in
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  384  	 * param1 to trigger the error when injecting memory error.
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  385  	 * This will cause resource conflict with regular memory.  So
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  386  	 * remove it from trigger table resources.
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  387  	 */
-c5a130325f13b2 drivers/acpi/apei/einj.c Chen Gong        2013-06-06  388  	if ((param_extension || acpi5) && (type & MEM_ERROR_MASK) && param2) {
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  389  		struct apei_resources addr_resources;
-37ea9693869627 drivers/acpi/apei/einj.c Jay Lu           2022-12-06  390  
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  391  		apei_resources_init(&addr_resources);
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  392  		trigger_param_region = einj_get_trigger_parameter_region(
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  393  			trigger_tab, param1, param2);
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  394  		if (trigger_param_region) {
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  395  			rc = apei_resources_add(&addr_resources,
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  396  				trigger_param_region->address,
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  397  				trigger_param_region->bit_width/8, true);
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  398  			if (rc)
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  399  				goto out_fini;
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  400  			rc = apei_resources_sub(&trigger_resources,
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  401  					&addr_resources);
-b4e008dc53a31c drivers/acpi/apei/einj.c Xiao, Hui        2011-12-08  402  		}
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  403  		apei_resources_fini(&addr_resources);
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  404  		if (rc)
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  405  			goto out_fini;
-fdea163d8c17ba drivers/acpi/apei/einj.c Huang Ying       2011-12-08  406  	}
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  407  	rc = apei_resources_request(&trigger_resources, "APEI EINJ Trigger");
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  408  	if (rc)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  409  		goto out_fini;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  410  	rc = apei_exec_pre_map_gars(&trigger_ctx);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  411  	if (rc)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  412  		goto out_release;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  413  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  414  	rc = apei_exec_run(&trigger_ctx, ACPI_EINJ_TRIGGER_ERROR);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  415  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  416  	apei_exec_post_unmap_gars(&trigger_ctx);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  417  out_release:
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  418  	apei_resources_release(&trigger_resources);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  419  out_fini:
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  420  	apei_resources_fini(&trigger_resources);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  421  out_rel_entry:
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  422  	release_mem_region(trigger_paddr + sizeof(*trigger_tab),
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  423  			   table_size - sizeof(*trigger_tab));
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  424  out_rel_header:
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  425  	release_mem_region(trigger_paddr, sizeof(*trigger_tab));
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  426  out:
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  427  	if (trigger_tab)
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  428  		iounmap(trigger_tab);
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  429  
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  430  	return rc;
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  431  }
-e40213450b5315 drivers/acpi/apei/einj.c Huang Ying       2010-05-18  432  
+Yes.
 
-:::::: The code at line 222 was first introduced by commit
-:::::: a238317ce8185519ed083e81e84260907fbbcf7f ACPI: Clean up acpi_os_map/unmap_memory() to eliminate __iomem.
+>> >  static DEFINE_MUTEX(target_lock);
+>> >
+>> >  /*
+>> > @@ -149,6 +151,12 @@ int acpi_get_genport_coordinates(u32 uid,
+>> >  }
+>> >  EXPORT_SYMBOL_NS_GPL(acpi_get_genport_coordinates, CXL);
+>> >
+>> > +struct memory_dev_type *hmat_find_alloc_memory_type(int adist)
+>> > +{
+>> > +     return find_alloc_memory_type(adist, &hmat_memory_types);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(hmat_find_alloc_memory_type);
+>> > +
+>> >  static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+>> >  {
+>> >       struct memory_initiator *initiator;
+>> > @@ -1038,6 +1046,9 @@ static __init int hmat_init(void)
+>> >       if (!hmat_set_default_dram_perf())
+>> >               register_mt_adistance_algorithm(&hmat_adist_nb);
+>> >
+>> > +     /* Post-create CPUless memory tiers after getting HMAT info */
+>> > +     memory_tier_late_init();
+>> > +
+>>
+>> This should be called in memory-tier.c via
+>>
+>> late_initcall(memory_tier_late_init);
+>>
+>> Then, we don't need hmat to call it.
+>>
+>
+> Thanks. Learned!
+>
+>
+>> >       return 0;
+>> >  out_put:
+>> >       hmat_free_structures();
+>> > diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+>> > index 42ee360cf4e3..aee17ab59f4f 100644
+>> > --- a/drivers/dax/kmem.c
+>> > +++ b/drivers/dax/kmem.c
+>> > @@ -55,21 +55,10 @@ static LIST_HEAD(kmem_memory_types);
+>> >
+>> >  static struct memory_dev_type *kmem_find_alloc_memory_type(int adist)
+>> >  {
+>> > -     bool found =3D false;
+>> >       struct memory_dev_type *mtype;
+>> >
+>> >       mutex_lock(&kmem_memory_type_lock);
+>> > -     list_for_each_entry(mtype, &kmem_memory_types, list) {
+>> > -             if (mtype->adistance =3D=3D adist) {
+>> > -                     found =3D true;
+>> > -                     break;
+>> > -             }
+>> > -     }
+>> > -     if (!found) {
+>> > -             mtype =3D alloc_memory_type(adist);
+>> > -             if (!IS_ERR(mtype))
+>> > -                     list_add(&mtype->list, &kmem_memory_types);
+>> > -     }
+>> > +     mtype =3D find_alloc_memory_type(adist, &kmem_memory_types);
+>> >       mutex_unlock(&kmem_memory_type_lock);
+>> >
+>> >       return mtype;
+>> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> > index b7165e52b3c6..3f927ff01f02 100644
+>> > --- a/include/linux/acpi.h
+>> > +++ b/include/linux/acpi.h
+>> > @@ -434,12 +434,18 @@ int thermal_acpi_critical_trip_temp(struct acpi_=
+device *adev, int *ret_temp);
+>> >
+>> >  #ifdef CONFIG_ACPI_HMAT
+>> >  int acpi_get_genport_coordinates(u32 uid, struct access_coordinate *c=
+oord);
+>> > +struct memory_dev_type *hmat_find_alloc_memory_type(int adist);
+>> >  #else
+>> >  static inline int acpi_get_genport_coordinates(u32 uid,
+>> >                                              struct access_coordinate =
+*coord)
+>> >  {
+>> >       return -EOPNOTSUPP;
+>> >  }
+>> > +
+>> > +static inline struct memory_dev_type *hmat_find_alloc_memory_type(int=
+ adist)
+>> > +{
+>> > +     return NULL;
+>> > +}
+>> >  #endif
+>> >
+>> >  #ifdef CONFIG_ACPI_NUMA
+>> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers=
+.h
+>> > index 69e781900082..4bc2596c5774 100644
+>> > --- a/include/linux/memory-tiers.h
+>> > +++ b/include/linux/memory-tiers.h
+>> > @@ -48,6 +48,9 @@ int mt_calc_adistance(int node, int *adist);
+>> >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>> >                            const char *source);
+>> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+>> > +struct memory_dev_type *find_alloc_memory_type(int adist,
+>> > +                                                     struct list_head=
+ *memory_types);
+>> > +void memory_tier_late_init(void);
+>> >  #ifdef CONFIG_MIGRATION
+>> >  int next_demotion_node(int node);
+>> >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+>> > @@ -136,5 +139,10 @@ static inline int mt_perf_to_adistance(struct acc=
+ess_coordinate *perf, int *adis
+>> >  {
+>> >       return -EIO;
+>> >  }
+>> > +
+>> > +static inline void memory_tier_late_init(void)
+>> > +{
+>> > +
+>> > +}
+>> >  #endif       /* CONFIG_NUMA */
+>> >  #endif  /* _LINUX_MEMORY_TIERS_H */
+>> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+>> > index 0537664620e5..79f748d60e6f 100644
+>> > --- a/mm/memory-tiers.c
+>> > +++ b/mm/memory-tiers.c
+>> > @@ -6,6 +6,7 @@
+>> >  #include <linux/memory.h>
+>> >  #include <linux/memory-tiers.h>
+>> >  #include <linux/notifier.h>
+>> > +#include <linux/acpi.h>
+>> >
+>> >  #include "internal.h"
+>> >
+>> > @@ -35,6 +36,7 @@ struct node_memory_type_map {
+>> >  };
+>> >
+>> >  static DEFINE_MUTEX(memory_tier_lock);
+>> > +static DEFINE_MUTEX(mt_perf_lock);
+>>
+>> Please add comments about what it protects.  And put it near the data
+>> structure it protects.
+>>
+>
+> Where is better for me to add comments for this? Code? Patch description?
+> Will put it closer to the protected data. Thanks.
 
-:::::: TO: Lv Zheng <lv.zheng@intel.com>
-:::::: CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Just put the comments at the above of the lock in the source code.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+>
+>> >  static LIST_HEAD(memory_tiers);
+>> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+>> >  struct memory_dev_type *default_dram_type;
+>> > @@ -623,6 +625,58 @@ void clear_node_memory_type(int node, struct memo=
+ry_dev_type *memtype)
+>> >  }
+>> >  EXPORT_SYMBOL_GPL(clear_node_memory_type);
+>> >
+>> > +struct memory_dev_type *find_alloc_memory_type(int adist, struct list=
+_head *memory_types)
+>> > +{
+>> > +     bool found =3D false;
+>> > +     struct memory_dev_type *mtype;
+>> > +
+>> > +     list_for_each_entry(mtype, memory_types, list) {
+>> > +             if (mtype->adistance =3D=3D adist) {
+>> > +                     found =3D true;
+>> > +                     break;
+>> > +             }
+>> > +     }
+>> > +     if (!found) {
+>> > +             mtype =3D alloc_memory_type(adist);
+>> > +             if (!IS_ERR(mtype))
+>> > +                     list_add(&mtype->list, memory_types);
+>> > +     }
+>> > +
+>> > +     return mtype;
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(find_alloc_memory_type);
+>> > +
+>> > +static void memory_tier_late_create(int node)
+>> > +{
+>> > +     struct memory_dev_type *mtype =3D NULL;
+>> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
+>> > +
+>> > +     mt_calc_adistance(node, &adist);
+>> > +     if (adist !=3D MEMTIER_ADISTANCE_DRAM) {
+>>
+>> We can manage default_dram_type() via find_alloc_memory_type()
+>> too.
+>>
+>> And, if "node_memory_types[node].memtype =3D=3D NULL", we can call
+>> mt_calc_adistance(node, &adist) and find_alloc_memory_type() in
+>> set_node_memory_tier().  Then, we can cover hotpluged memory node too.
+>>
+>> > +             mtype =3D hmat_find_alloc_memory_type(adist);
+>> > +             if (!IS_ERR(mtype))
+>> > +                     __init_node_memory_type(node, mtype);
+>> > +             else
+>> > +                     pr_err("Failed to allocate a memory type at %s()=
+\n", __func__);
+>> > +     }
+>> > +
+>> > +     set_node_memory_tier(node);
+>> > +}
+>> > +
+>> > +void memory_tier_late_init(void)
+>> > +{
+>> > +     int nid;
+>> > +
+>> > +     mutex_lock(&memory_tier_lock);
+>> > +     for_each_node_state(nid, N_MEMORY)
+>> > +             if (!node_state(nid, N_CPU))
+>>
+>> We should exclude "node_memory_types[nid].memtype !=3D NULL".  Some memo=
+ry
+>> nodes may be onlined by some device drivers and setup memory tiers
+>> already.
+>>
+>> > +                     memory_tier_late_create(nid);
+>> > +
+>> > +     establish_demotion_targets();
+>> > +     mutex_unlock(&memory_tier_lock);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(memory_tier_late_init);
+>> > +
+>> >  static void dump_hmem_attrs(struct access_coordinate *coord, const ch=
+ar *prefix)
+>> >  {
+>> >       pr_info(
+>> > @@ -636,7 +690,7 @@ int mt_set_default_dram_perf(int nid, struct acces=
+s_coordinate *perf,
+>> >  {
+>> >       int rc =3D 0;
+>> >
+>> > -     mutex_lock(&memory_tier_lock);
+>> > +     mutex_lock(&mt_perf_lock);
+>> >       if (default_dram_perf_error) {
+>> >               rc =3D -EIO;
+>> >               goto out;
+>> > @@ -684,7 +738,7 @@ int mt_set_default_dram_perf(int nid, struct acces=
+s_coordinate *perf,
+>> >       }
+>> >
+>> >  out:
+>> > -     mutex_unlock(&memory_tier_lock);
+>> > +     mutex_unlock(&mt_perf_lock);
+>> >       return rc;
+>> >  }
+>> >
+>> > @@ -700,7 +754,7 @@ int mt_perf_to_adistance(struct access_coordinate =
+*perf, int *adist)
+>> >           perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
+>> >               return -EINVAL;
+>> >
+>> > -     mutex_lock(&memory_tier_lock);
+>> > +     mutex_lock(&mt_perf_lock);
+>> >       /*
+>> >        * The abstract distance of a memory node is in direct proportio=
+n to
+>> >        * its memory latency (read + write) and inversely proportional =
+to its
+>> > @@ -713,7 +767,7 @@ int mt_perf_to_adistance(struct access_coordinate =
+*perf, int *adist)
+>> >               (default_dram_perf.read_latency + default_dram_perf.writ=
+e_latency) *
+>> >               (default_dram_perf.read_bandwidth + default_dram_perf.wr=
+ite_bandwidth) /
+>> >               (perf->read_bandwidth + perf->write_bandwidth);
+>> > -     mutex_unlock(&memory_tier_lock);
+>> > +     mutex_unlock(&mt_perf_lock);
+>> >
+>> >       return 0;
+>> >  }
+>> > @@ -836,6 +890,14 @@ static int __init memory_tier_init(void)
+>> >        * types assigned.
+>> >        */
+>> >       for_each_node_state(node, N_MEMORY) {
+>> > +             if (!node_state(node, N_CPU))
+>> > +                     /*
+>> > +                      * Defer memory tier initialization on CPUless n=
+uma nodes.
+>> > +                      * These will be initialized when HMAT informati=
+on is
+>>
+>> HMAT is platform specific, we should avoid to mention it in general code
+>> if possible.
+>>
+>
+> Will fix! Thanks,
+>
+>
+>> > +                      * available.
+>> > +                      */
+>> > +                     continue;
+>> > +
+>> >               memtier =3D set_node_memory_tier(node);
+>> >               if (IS_ERR(memtier))
+>> >                       /*
+>>
+
+--
+Best Regards,
+Huang, Ying
