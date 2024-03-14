@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819278F58
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Mar 2024 04:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D779B8BE5
+	for <linux-cxl@vger.kernel.org>; Thu, 14 Mar 2024 04:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710389134; cv=none; b=tWYW0LrTDPe+pbEl+Uben3Yl6ngu9QQAR+F/blKGynEkvhVybGhL9rfaA4e5lPMpjp+VIaf0roJk2kYTLmRiBkZmm74Kjk0rllTJ5airAgLxs5335ndMLnZe3XMrnXC4U5HQ31Tc3crzkXFLOKi26l0Zlq5X6a4ytV/IcJOAgoo=
+	t=1710389134; cv=none; b=Cy/ltyG2Gwq64VQcbiBHcfCeoFcUwtBJlaU6/boopOmFu9uMaOL0OPbxMPy6ki8Ju5DKVnWjGm8AoyNE7CI3qOIRvNO2BvvTVqU82R83ibBn4JjPhL3ds5g+BkAPvhC9ATx43Rwp0MC4xDDuA6W2R4+3Q5mTqjkrgF/g2veJ26U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710389134; c=relaxed/simple;
-	bh=Fh5lla700vONaOH1/VHbSAKzU7acUdog7JH10qr3u9I=;
+	bh=f2uYpAZcM9h1Gz2rTb32ZN2hNmqJWyiUEWYb6QUeISY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MS9Xp9zjgOC7Pc43ggR+AX6LHUArH5JU55UjaNDj+ih96gm3yK0dlOdbmznUnLoGbMgv55POEMfF1SuLxhi9//MDmqdZOdRaiv9OzNOKaXD1k5DYr9IBF/ZNQ9yyOfxO8Di4zN2zXY5cLaJ0DILF00OGg516VqK8MVgUCtc8Cqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HG/wX+/i; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=ZkaTHh/CXo2wrpBUEgL6FIMLSQl2MOlM3L5DWPYOvdinnq+8bcPzheJ0jqxp6e1AGJ02No7jF63T/YA1MQ/dIkFldRObuUdz6M4pJ6pkXk50BNsIwz0gNSLEfgjZUMJuLZeaPzwvRH3doNHgt2yZ95Lejv65vXn/zLxkFJSUGGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lANihWFn; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HG/wX+/i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lANihWFn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710389133; x=1741925133;
+  t=1710389131; x=1741925131;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Fh5lla700vONaOH1/VHbSAKzU7acUdog7JH10qr3u9I=;
-  b=HG/wX+/iZoO6p2eizX17uVTK4AA6WHHHHxdtKe4NFqlQ4h3g+1ysdJj/
-   S1IZMqGFGbh21j99Q/CgA6Ff8vZQvBdBsxLLeLHZUGs1PfmsNb38GmzCN
-   2NTt2RHmNI2YwrwyklsWJBnePhkiaWpjMVqsp5WC/AImVMBkaDQLFiEcn
-   A2HuLvu7ruWcnYjLLMLT1d5PIYbdVf3EVrzNP1ddJmLo8o0SWA5ndJCJe
-   b3tn2nkz5fHrl+v6vpZQ62KU/ImlAh1f7AVoijDJR8D0d4BQVH0KeKcah
-   +zpo20EEKZu1uiUv/fwj05xEd5d9Zz8Gwk8W+wvnRb6C84ImnV1mPo5qx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22648809"
+  bh=f2uYpAZcM9h1Gz2rTb32ZN2hNmqJWyiUEWYb6QUeISY=;
+  b=lANihWFn/MPnWH1VpdROMiFe313s0ZTVvP3acbQUpFdApbWJoISJ/Qhe
+   csR84hF9qzoPf5tnoPJOKTCrPLA4Gj9LkPpuh+vPi4lPLBAJLH7RCw2W2
+   ct3KmNhw94jDYdJm1PnamRrFbLYvcZj0xYAyEeyX+ZYxJLV/115r4733c
+   XYiBiYLEsrKTdwNyh7WpzC3T2ZO6IkrBLBqyhQA+tus3ZkgVtdwTA+bQo
+   K71VjJ9JzQphwe0lBWSygvAl5UuS8DUD6i+6hawHnS4b/0aVXQHRyHjq3
+   6NY+fJTsbXaYc7f/LzP0P0GbW4BP9eF8sVRG+YHchIPyUWUGMkDigUtLR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22648802"
 X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="22648809"
+   d="scan'208";a="22648802"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:33 -0700
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="12080700"
+   d="scan'208";a="12080689"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.86.131])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:32 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 21:05:30 -0700
 From: alison.schofield@intel.com
 To: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v11 6/7] cxl/list: add --media-errors option to cxl list
-Date: Wed, 13 Mar 2024 21:05:22 -0700
-Message-Id: <a6933ba82755391284368e4527154341bc4fd75f.1710386468.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v11 4/7] cxl/event_trace: add helpers to retrieve tep fields by type
+Date: Wed, 13 Mar 2024 21:05:20 -0700
+Message-Id: <0dbf9557aaf5e8047440cb74f7df84ae404c11ba.1710386468.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1710386468.git.alison.schofield@intel.com>
 References: <cover.1710386468.git.alison.schofield@intel.com>
@@ -60,144 +60,93 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The --media-errors option to 'cxl list' retrieves poison lists from
-memory devices supporting the capability and displays the returned
-media_error records in the cxl list json. This option can apply to
-memdevs or regions.
+Add helpers to extract the value of an event record field given the
+field name. This is useful when the user knows the name and format
+of the field and simply needs to get it. The helpers also return
+the 'type'_MAX of the type when the field is
 
-Include media-errors in the -vvv verbose option.
-
-Example usage in the Documentation/cxl/cxl-list.txt update.
+Since this is in preparation for adding a cxl_poison private parser
+for 'cxl list --media-errors' support those specific required
+types: u8, u32, u64.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- Documentation/cxl/cxl-list.txt | 62 +++++++++++++++++++++++++++++++++-
- cxl/filter.h                   |  3 ++
- cxl/list.c                     |  3 ++
- 3 files changed, 67 insertions(+), 1 deletion(-)
+ cxl/event_trace.c | 37 +++++++++++++++++++++++++++++++++++++
+ cxl/event_trace.h |  8 +++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 838de4086678..6d3ef92c29e8 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -415,6 +415,66 @@ OPTIONS
- --region::
- 	Specify CXL region device name(s), or device id(s), to filter the listing.
+diff --git a/cxl/event_trace.c b/cxl/event_trace.c
+index 640abdab67bf..324edb982888 100644
+--- a/cxl/event_trace.c
++++ b/cxl/event_trace.c
+@@ -15,6 +15,43 @@
+ #define _GNU_SOURCE
+ #include <string.h>
  
-+-L::
-+--media-errors::
-+	Include media-error information. The poison list is retrieved from the
-+	device(s) and media_error records are added to the listing. Apply this
-+	option to memdevs and regions where devices support the poison list
-+	capability. "offset:" is relative to the region resource when listing
-+	by region and is the absolute device DPA when listing by memdev.
-+	"source:" is one of: External, Internal, Injected, Vendor Specific,
-+	or Unknown, as defined in CXL Specification v3.1 Table 8-140.
-+
-+----
-+# cxl list -m mem9 --media-errors -u
++u64 cxl_get_field_u64(struct tep_event *event, struct tep_record *record,
++		      const char *name)
 +{
-+  "memdev":"mem9",
-+  "pmem_size":"1024.00 MiB (1073.74 MB)",
-+  "pmem_qos_class":42,
-+  "ram_size":"1024.00 MiB (1073.74 MB)",
-+  "ram_qos_class":42,
-+  "serial":"0x5",
-+  "numa_node":1,
-+  "host":"cxl_mem.5",
-+  "media_errors":[
-+    {
-+      "offset":"0x40000000",
-+      "length":64,
-+      "source":"Injected"
-+    }
-+  ]
++	unsigned long long val;
++
++	if (tep_get_field_val(NULL, event, name, record, &val, 0))
++		return ULLONG_MAX;
++
++	return val;
 +}
-+----
-+In the above example, region mappings can be found using:
-+"cxl list -p mem9 --decoders"
-+----
-+# cxl list -r region5 --media-errors -u
++
++u32 cxl_get_field_u32(struct tep_event *event, struct tep_record *record,
++		      const char *name)
 +{
-+  "region":"region5",
-+  "resource":"0xf110000000",
-+  "size":"2.00 GiB (2.15 GB)",
-+  "type":"pmem",
-+  "interleave_ways":2,
-+  "interleave_granularity":4096,
-+  "decode_state":"commit",
-+  "media_errors":[
-+    {
-+      "offset":"0x1000",
-+      "length":64,
-+      "source":"Injected"
-+    },
-+    {
-+      "offset":"0x2000",
-+      "length":64,
-+      "source":"Injected"
-+    }
-+  ]
++	char *val;
++	int len;
++
++	val = tep_get_field_raw(NULL, event, name, record, &len, 0);
++	if (!val)
++		return UINT_MAX;
++
++	return *(u32 *)val;
 +}
-+----
-+In the above example, memdev mappings can be found using:
-+"cxl list -r region5 --targets" and "cxl list -d <decoder_name>"
 +
++u8 cxl_get_field_u8(struct tep_event *event, struct tep_record *record,
++		    const char *name)
++{
++	char *val;
++	int len;
 +
- -v::
- --verbose::
- 	Increase verbosity of the output. This can be specified
-@@ -431,7 +491,7 @@ OPTIONS
- 	  devices with --idle.
- 	- *-vvv*
- 	  Everything *-vv* provides, plus enable
--	  --health and --partition.
-+	  --health, --partition, --media-errors.
++	val = tep_get_field_raw(NULL, event, name, record, &len, 0);
++	if (!val)
++		return UCHAR_MAX;
++
++	return *(u8 *)val;
++}
++
+ static struct json_object *num_to_json(void *num, int elem_size, unsigned long flags)
+ {
+ 	bool sign = flags & TEP_FIELD_IS_SIGNED;
+diff --git a/cxl/event_trace.h b/cxl/event_trace.h
+index b77cafb410c4..7b30c3922aef 100644
+--- a/cxl/event_trace.h
++++ b/cxl/event_trace.h
+@@ -5,6 +5,7 @@
  
- --debug::
- 	If the cxl tool was built with debug enabled, turn on debug
-diff --git a/cxl/filter.h b/cxl/filter.h
-index 3f65990f835a..956a46e0c7a9 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -30,6 +30,7 @@ struct cxl_filter_params {
- 	bool fw;
- 	bool alert_config;
- 	bool dax;
-+	bool media_errors;
- 	int verbose;
- 	struct log_ctx ctx;
- };
-@@ -88,6 +89,8 @@ static inline unsigned long cxl_filter_to_flags(struct cxl_filter_params *param)
- 		flags |= UTIL_JSON_ALERT_CONFIG;
- 	if (param->dax)
- 		flags |= UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
-+	if (param->media_errors)
-+		flags |= UTIL_JSON_MEDIA_ERRORS;
- 	return flags;
- }
+ #include <json-c/json.h>
+ #include <ccan/list/list.h>
++#include <ccan/short_types/short_types.h>
  
-diff --git a/cxl/list.c b/cxl/list.c
-index 93ba51ef895c..0b25d78248d5 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -57,6 +57,8 @@ static const struct option options[] = {
- 		    "include memory device firmware information"),
- 	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
- 		    "include alert configuration information"),
-+	OPT_BOOLEAN('L', "media-errors", &param.media_errors,
-+		    "include media-error information "),
- 	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
- #ifdef ENABLE_DEBUG
- 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
-@@ -121,6 +123,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		param.fw = true;
- 		param.alert_config = true;
- 		param.dax = true;
-+		param.media_errors = true;
- 		/* fallthrough */
- 	case 2:
- 		param.idle = true;
+ struct jlist_node {
+ 	struct json_object *jobj;
+@@ -32,5 +33,10 @@ int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
+ int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system,
+ 		const char *event);
+ int cxl_event_tracing_disable(struct tracefs_instance *inst);
+-
++u8 cxl_get_field_u8(struct tep_event *event, struct tep_record *record,
++		    const char *name);
++u32 cxl_get_field_u32(struct tep_event *event, struct tep_record *record,
++		      const char *name);
++u64 cxl_get_field_u64(struct tep_event *event, struct tep_record *record,
++		      const char *name);
+ #endif
 -- 
 2.37.3
 
