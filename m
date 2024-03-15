@@ -1,157 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619E318E3A
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 10:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A37218E02;
+	Fri, 15 Mar 2024 10:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710499492; cv=none; b=CzT/xyr/ekFwf9reXbJ6iSSX18ydHTYcw1tAXJ++2H2I1sxIbvMcj1MpR3OS7IKEqVk9ORRmMlKunhf9Q2BYWNhRJsL98y71ZP9IQJ9t7JmOzkNWev76l2e0YkQrYYZzkBEz0rNApnvbK95DdSus+QYDGekt7NDxrAuYaKlL1Mc=
+	t=1710500079; cv=none; b=CUir1N4l9XE4YJWp+lIMcSJykzdIMlDX0W5dsjVtqKil8I9MpAd2aCvwofdUOpUBtaBJId65at8d2Pmi9l3w4OJm5PzNmExCjS824bi54o42s8M3Ex4jZhWknRUvc+94Ce5gvhzX5qpK3eKahWhOVi9LgHz1oETZiP3kf0keG0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710499492; c=relaxed/simple;
-	bh=9WyjwAKK3Fu6MCCYLiEdWFmMr9BNARBUT08g/ibILmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NcXyg1awBSMeX0/jbYA33gfgnJCVREq+g0ZPGQtXDieJtn+a4dOiqen4i7mQeRFPa/tGsUkug+UcDxHNKmc63nx0XjPPQjojj4fbAL/BPwcdVNAl24Eh7itMhJXEOVEF9qDhy2yGUw+U92j1btafcTHKQvDINBI0xkdpNe2VqUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F657C433F1;
-	Fri, 15 Mar 2024 10:44:51 +0000 (UTC)
-Date: Fri, 15 Mar 2024 06:47:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/trace: Properly initialize cxl_poison region
- name
-Message-ID: <20240315064703.2202cc69@gandalf.local.home>
-In-Reply-To: <ZfN8AP/KdbsN32l1@aschofie-mobl2>
-References: <20240314201217.2112644-1-alison.schofield@intel.com>
-	<20240314164136.6d10aa28@gandalf.local.home>
-	<ZfNmfCmgCs4Nc+EH@aschofie-mobl2>
-	<20240314171737.2025ef60@gandalf.local.home>
-	<ZfN8AP/KdbsN32l1@aschofie-mobl2>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710500079; c=relaxed/simple;
+	bh=coEa7bpDdvUAxjenU2S6uAixXbXu/B7uaiwt/OfF2T4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UxJTT7xX1mD2bsb8cb93EcxhnU2+bj0BF+2d20udP9Lj7xh6O9OXql45eFZAjPKGF7CY/ETJyqdHdwgIHKPUKnayPDYcFFAWrAcBaiwqbiPNepXxPstpULWnq4SnhM98ymIdxBvAw7euEvVHbDBjKwaqZBYnSRzRBLdTOqfPsqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBX00DfKPRl1oq1Bg--.31652S2;
+	Fri, 15 Mar 2024 18:54:23 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBHuUHUKPRlaIwAAA--.853S4;
+	Fri, 15 Mar 2024 18:54:16 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: ira.weiny@intel.com,
+	jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	chenbaozi@phytium.com.cn,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 1/1] cxl/mem: Fix for the index of Clear Event Record Handle
+Date: Fri, 15 Mar 2024 18:53:36 +0800
+Message-Id: <20240315105336.464156-2-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240315105336.464156-1-wangyuquan1236@phytium.com.cn>
+References: <20240315105336.464156-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwBHuUHUKPRlaIwAAA--.853S4
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWXzUXsFBgAAs6
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KryrZw4xuFWfKr1DAr4rAFb_yoW8uw1UpF
+	W3uryIkr4kXa1a9wsxAas0g3y3Zay0grW3urWUt3s3G34avF98XF1fJ3yjyFsIkFyrXF1x
+	Arn8Zr45GayjgF7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Thu, 14 Mar 2024 15:36:48 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+The dev_dbg info for Clear Event Records mailbox command would report
+the handle of the next record to clear not the current one.
 
-> On Thu, Mar 14, 2024 at 05:17:37PM -0400, Steven Rostedt wrote:
-> > On Thu, 14 Mar 2024 14:05:00 -0700
-> > Alison Schofield <alison.schofield@intel.com> wrote:
-> >  =20
-> > > > I'm still curious to why NULL didn't work. I guess it may never hav=
-e as I
-> > > > noticed there's nothing else doing that. There are cases that a var=
-iable
-> > > > returns NULL and the __string() handles it. But I guess the compile=
-r gets
-> > > > confused if the NULL is a possible return to the condition in __str=
-ing().   =20
-> > >=20
-> > > Here's the full warning spew:
-> > >=20
-> > > In file included from ./include/trace/define_trace.h:102,
-> > >                  from drivers/cxl/core/trace.h:713,
-> > >                  from drivers/cxl/core/trace.c:8:
-> > > drivers/cxl/core/./trace.h: In function =E2=80=98trace_event_get_offs=
-ets_cxl_poison=E2=80=99:
-> > > ./include/trace/stages/stage5_get_offsets.h:50:21: warning: argument =
-1 null where non-null expected [-Wnonnull]
-> > >    50 |                     strlen((src) ? (const char *)(src) : "(nu=
-ll)") + 1)
-> > >       |                     ^~~~~~
-> > > ./include/trace/trace_events.h:263:9: n =20
-> >=20
-> > The full warning didn't add any new information. The above was all I
-> > needed. But I'm curious if you applied this patch if the warning will go
-> > away. (Note I didn't test nor compile this).
-> >=20
-> > -- Steve
-> >=20
-> > diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/=
-stages/stage5_get_offsets.h
-> > index e30a13be46ba..dfae18d8f4df 100644
-> > --- a/include/trace/stages/stage5_get_offsets.h
-> > +++ b/include/trace/stages/stage5_get_offsets.h
-> > @@ -9,6 +9,13 @@
-> >  #undef __entry
-> >  #define __entry entry
-> >   =20
->=20
-> +#ifndef STAGE5_H_INCLUDED
-> +#define STAGE5_H_INCLUDED
-> > +static inline const char *__string_src(const char *str)
-> > +{
-> > +	if (!str)
-> > +		return "(null)";
-> > +	return str;
-> > +} =20
-> +#endif /* STAGE5_H_INCLUDED */
->=20
-> Happy to try it out...
->=20
-> Your diff, with the ifdef above, makes the compiler happy and it functions
-> as wanted - no garbage in the fields.
+This was because the index 'i' had incremented before printing the
+current handle value.
 
-I created the patch:
+This fix also adjusts the index variable name from 'i' to 'clear_cnt'
+which can be easier for developers to distinguish and understand.
 
-  https://lore.kernel.org/linux-trace-kernel/20240314232754.345cea82@rorsch=
-ach.local.home/
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
+ drivers/cxl/core/mbox.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-That adds this. But now the kernel will not build because it requires the
-fix of this patch. Otherwise it fails with:
-
-In file included from /work/build/trace/nobackup/linux-test.git/include/tra=
-ce/define_trace.h:102,
-                 from /work/build/trace/nobackup/linux-test.git/drivers/cxl=
-/core/trace.h:713,
-                 from /work/build/trace/nobackup/linux-test.git/drivers/cxl=
-/core/trace.c:8:
-/work/build/trace/nobackup/linux-test.git/drivers/cxl/core/./trace.h: In fu=
-nction =E2=80=98trace_event_get_offsets_cxl_poison=E2=80=99:
-/work/build/trace/nobackup/linux-test.git/drivers/cxl/core/./trace.h:660:34=
-: error: passing argument 1 of =E2=80=98__string_src=E2=80=99 from incompat=
-ible pointer type [-Werror=3Dincompatible-pointer-types]
-  660 |                 __string(region, region)
-      |                                  ^~~~~~
-      |                                  |
-      |                                  struct cxl_region *
-
-I like that the patch also catches other bugs where non strings are passed
-to __string(). But I can't send this to Linus if it breaks the build.
-
-I'm breaking my pull request up as there's some other places that break the
-build with my new checks. I'll do a pull of all my updates first, and after
-Linus pulls in my change I will base the next pull off of that merge commit.
-
-But this requires that this fix is in Linus's tree before that. If not, can
-I take this fix and add it to that later pull request with all the tests. I
-want to make sure that the kernel always builds.
-
--- Steve
-
-
->=20
-> > +
-> >  /*
-> >   * Fields should never declare an array: i.e. __field(int, arr[5])
-> >   * If they do, it will cause issues in parsing and possibly corrupt the
-> > @@ -47,7 +54,7 @@
-> > =20
-> >  #undef __string
-> >  #define __string(item, src) __dynamic_array(char, item,			\
-> > -		    strlen((src) ? (const char *)(src) : "(null)") + 1)
-> > +		    strlen(__string_src(src)) + 1)
-> > =20
-> >  #undef __string_len
-> >  #define __string_len(item, src, len) __dynamic_array(char, item, (len)=
- + 1) =20
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 9adda4795eb7..3ca2845ae6aa 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -881,7 +881,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+ 	struct cxl_mbox_cmd mbox_cmd;
+ 	u16 cnt;
+ 	int rc = 0;
+-	int i;
++	int clear_cnt;
+ 
+ 	/* Payload size may limit the max handles */
+ 	if (pl_size > mds->payload_size) {
+@@ -908,28 +908,29 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+ 	 * Clear Event Records uses u8 for the handle cnt while Get Event
+ 	 * Record can return up to 0xffff records.
+ 	 */
+-	i = 0;
++	clear_cnt = 0;
+ 	for (cnt = 0; cnt < total; cnt++) {
+ 		struct cxl_event_record_raw *raw = &get_pl->records[cnt];
+ 		struct cxl_event_generic *gen = &raw->event.generic;
+ 
+-		payload->handles[i++] = gen->hdr.handle;
++		payload->handles[clear_cnt] = gen->hdr.handle;
+ 		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
+-			le16_to_cpu(payload->handles[i]));
++			le16_to_cpu(payload->handles[clear_cnt]));
+ 
+-		if (i == max_handles) {
+-			payload->nr_recs = i;
++		clear_cnt++;
++		if (clear_cnt == max_handles) {
++			payload->nr_recs = clear_cnt;
+ 			rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+ 			if (rc)
+ 				goto free_pl;
+-			i = 0;
++			clear_cnt = 0;
+ 		}
+ 	}
+ 
+ 	/* Clear what is left if any */
+-	if (i) {
+-		payload->nr_recs = i;
+-		mbox_cmd.size_in = struct_size(payload, handles, i);
++	if (clear_cnt) {
++		payload->nr_recs = clear_cnt;
++		mbox_cmd.size_in = struct_size(payload, handles, clear_cnt);
+ 		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+ 		if (rc)
+ 			goto free_pl;
+-- 
+2.34.1
 
