@@ -1,105 +1,157 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1270D1863C
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 10:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619E318E3A
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 10:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710498384; cv=none; b=Ar/M/q6ZqLMy81GBvkJU0rHRWjPLq5Nk8mvuVZC79aKPsuLLsuuVjl9IjqWXCNTRIsTBrPucvLHVTRvhNpMfrs/RTy2ZkOd5FRk21VBFoK0pCHDUUHzPT3DVaOT9mvjuHp9D/a1h9omlf3y4HFy5Ru5ZmT6byCl7nQhuWRmX0XA=
+	t=1710499492; cv=none; b=CzT/xyr/ekFwf9reXbJ6iSSX18ydHTYcw1tAXJ++2H2I1sxIbvMcj1MpR3OS7IKEqVk9ORRmMlKunhf9Q2BYWNhRJsL98y71ZP9IQJ9t7JmOzkNWev76l2e0YkQrYYZzkBEz0rNApnvbK95DdSus+QYDGekt7NDxrAuYaKlL1Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710498384; c=relaxed/simple;
-	bh=MTCMp6Vv+J9Bm2SC4D8ZwyEx/G8J49iDRE1TBEAeZh8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wn1t5rpmP25z2VSPgTVZnO54HwIFrPFAH5prTiCB4tMkEsrq+ULaX4FQjrjw6jtOxVFPQodB9fkmliug0/XDVxADv6Ffs/X6ii5l/sz0fy7XX1KJxf5dyP9mtzZF9bdk07n9NwLEUjFkZiB1s/68n4X8alntVC0mzHLsSUyE1ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tx0kz3F8vz6D8gl;
-	Fri, 15 Mar 2024 18:25:47 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E67BC141D79;
-	Fri, 15 Mar 2024 18:26:13 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 15 Mar
- 2024 10:24:15 +0000
-Date: Fri, 15 Mar 2024 10:24:15 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: <dave.jiang@intel.com>, <fan.ni@samsung.com>, <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH v9 0/7]  QEMU CXL Provide mock CXL events and irq
- support
-Message-ID: <20240315102415.00004476@Huawei.com>
-In-Reply-To: <20240315015228.307512-1-wangyuquan1236@phytium.com.cn>
-References: <20230530133603.16934-1-Jonathan.Cameron@huawei.com>
-	<20240315015228.307512-1-wangyuquan1236@phytium.com.cn>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1710499492; c=relaxed/simple;
+	bh=9WyjwAKK3Fu6MCCYLiEdWFmMr9BNARBUT08g/ibILmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NcXyg1awBSMeX0/jbYA33gfgnJCVREq+g0ZPGQtXDieJtn+a4dOiqen4i7mQeRFPa/tGsUkug+UcDxHNKmc63nx0XjPPQjojj4fbAL/BPwcdVNAl24Eh7itMhJXEOVEF9qDhy2yGUw+U92j1btafcTHKQvDINBI0xkdpNe2VqUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F657C433F1;
+	Fri, 15 Mar 2024 10:44:51 +0000 (UTC)
+Date: Fri, 15 Mar 2024 06:47:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+ <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/trace: Properly initialize cxl_poison region
+ name
+Message-ID: <20240315064703.2202cc69@gandalf.local.home>
+In-Reply-To: <ZfN8AP/KdbsN32l1@aschofie-mobl2>
+References: <20240314201217.2112644-1-alison.schofield@intel.com>
+	<20240314164136.6d10aa28@gandalf.local.home>
+	<ZfNmfCmgCs4Nc+EH@aschofie-mobl2>
+	<20240314171737.2025ef60@gandalf.local.home>
+	<ZfN8AP/KdbsN32l1@aschofie-mobl2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 15 Mar 2024 09:52:28 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+On Thu, 14 Mar 2024 15:36:48 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-> Hello, Jonathan
-> 
-> When during the test of qmps of CXL events like "cxl-inject-general-media-event", 
-> I am confuesd about the argument "flags". According to "qapi/cxl.json" in qemu, 
-> this argument represents "Event Record Flags" in Common Event Record Format.
-> However, it seems like the specific 'Event Record Severity' in this field can be
-> different from the value of 'Event Status' in "Event Status Register". 
-> 
-> For instance (take an injection example in the coverlatter):
-> 
-> { "execute": "cxl-inject-general-media-event",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-mem0",
->         "log": "informational",
->         "flags": 1,
->         "dpa": 1000,
->         "descriptor": 3,
->         "type": 3,
->         "transaction-type": 192,
->         "channel": 3,
->         "device": 5,
->         "component-id": "iras mem"
->     }}
-> 
-> In my understanding, the 'Event Status' is informational and the 
-> 'Event Record Severity' is Warning event, which means these two arguments are
-> independent of each other. Is my understanding correct?
+> On Thu, Mar 14, 2024 at 05:17:37PM -0400, Steven Rostedt wrote:
+> > On Thu, 14 Mar 2024 14:05:00 -0700
+> > Alison Schofield <alison.schofield@intel.com> wrote:
+> >  =20
+> > > > I'm still curious to why NULL didn't work. I guess it may never hav=
+e as I
+> > > > noticed there's nothing else doing that. There are cases that a var=
+iable
+> > > > returns NULL and the __string() handles it. But I guess the compile=
+r gets
+> > > > confused if the NULL is a possible return to the condition in __str=
+ing().   =20
+> > >=20
+> > > Here's the full warning spew:
+> > >=20
+> > > In file included from ./include/trace/define_trace.h:102,
+> > >                  from drivers/cxl/core/trace.h:713,
+> > >                  from drivers/cxl/core/trace.c:8:
+> > > drivers/cxl/core/./trace.h: In function =E2=80=98trace_event_get_offs=
+ets_cxl_poison=E2=80=99:
+> > > ./include/trace/stages/stage5_get_offsets.h:50:21: warning: argument =
+1 null where non-null expected [-Wnonnull]
+> > >    50 |                     strlen((src) ? (const char *)(src) : "(nu=
+ll)") + 1)
+> > >       |                     ^~~~~~
+> > > ./include/trace/trace_events.h:263:9: n =20
+> >=20
+> > The full warning didn't add any new information. The above was all I
+> > needed. But I'm curious if you applied this patch if the warning will go
+> > away. (Note I didn't test nor compile this).
+> >=20
+> > -- Steve
+> >=20
+> > diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/=
+stages/stage5_get_offsets.h
+> > index e30a13be46ba..dfae18d8f4df 100644
+> > --- a/include/trace/stages/stage5_get_offsets.h
+> > +++ b/include/trace/stages/stage5_get_offsets.h
+> > @@ -9,6 +9,13 @@
+> >  #undef __entry
+> >  #define __entry entry
+> >   =20
+>=20
+> +#ifndef STAGE5_H_INCLUDED
+> +#define STAGE5_H_INCLUDED
+> > +static inline const char *__string_src(const char *str)
+> > +{
+> > +	if (!str)
+> > +		return "(null)";
+> > +	return str;
+> > +} =20
+> +#endif /* STAGE5_H_INCLUDED */
+>=20
+> Happy to try it out...
+>=20
+> Your diff, with the ifdef above, makes the compiler happy and it functions
+> as wanted - no garbage in the fields.
 
-The event status registers dictates the notification path (which log).
-So I think that's "informational" here.
+I created the patch:
 
-Whereas flags is about the specific error. One case where they might be
-different is where the Related Event Record Handle is set.
-An error might be reported as
-1) Several things that were non fatal (each with their own record)
-2) In combination they result in a fatal situation (also has it's own record).
+  https://lore.kernel.org/linux-trace-kernel/20240314232754.345cea82@rorsch=
+ach.local.home/
 
-The QEMU injection shouldn't restrict these combinations more than the spec
-does (which is not at all!).
+That adds this. But now the kernel will not build because it requires the
+fix of this patch. Otherwise it fails with:
 
-This same disconnect in error severity is seen in UEFI CPER records for example
-where there is a containing record with one severity field, but more specific
-parts of record can have lower (or in theory higher) severity.
+In file included from /work/build/trace/nobackup/linux-test.git/include/tra=
+ce/define_trace.h:102,
+                 from /work/build/trace/nobackup/linux-test.git/drivers/cxl=
+/core/trace.h:713,
+                 from /work/build/trace/nobackup/linux-test.git/drivers/cxl=
+/core/trace.c:8:
+/work/build/trace/nobackup/linux-test.git/drivers/cxl/core/./trace.h: In fu=
+nction =E2=80=98trace_event_get_offsets_cxl_poison=E2=80=99:
+/work/build/trace/nobackup/linux-test.git/drivers/cxl/core/./trace.h:660:34=
+: error: passing argument 1 of =E2=80=98__string_src=E2=80=99 from incompat=
+ible pointer type [-Werror=3Dincompatible-pointer-types]
+  660 |                 __string(region, region)
+      |                                  ^~~~~~
+      |                                  |
+      |                                  struct cxl_region *
 
-Jonathan
+I like that the patch also catches other bugs where non strings are passed
+to __string(). But I can't send this to Linus if it breaks the build.
+
+I'm breaking my pull request up as there's some other places that break the
+build with my new checks. I'll do a pull of all my updates first, and after
+Linus pulls in my change I will base the next pull off of that merge commit.
+
+But this requires that this fix is in Linus's tree before that. If not, can
+I take this fix and add it to that later pull request with all the tests. I
+want to make sure that the kernel always builds.
+
+-- Steve
 
 
-> 
-> Many thanks
-> Yuquan
-> 
+>=20
+> > +
+> >  /*
+> >   * Fields should never declare an array: i.e. __field(int, arr[5])
+> >   * If they do, it will cause issues in parsing and possibly corrupt the
+> > @@ -47,7 +54,7 @@
+> > =20
+> >  #undef __string
+> >  #define __string(item, src) __dynamic_array(char, item,			\
+> > -		    strlen((src) ? (const char *)(src) : "(null)") + 1)
+> > +		    strlen(__string_src(src)) + 1)
+> > =20
+> >  #undef __string_len
+> >  #define __string_len(item, src, len) __dynamic_array(char, item, (len)=
+ + 1) =20
 
