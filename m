@@ -1,101 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9CB64D
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Mar 2024 22:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC0E7475
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 01:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710456480; cv=none; b=hgX0RD02zriaiTgXyz9xAmlE9fLiMeTxqYlenCiGBphUpxsjqtjUFp0yDbVrh34kA+lhlPh7WPis0NOtPcjphzPz6FRm/Mmuapun5flmmvmP8V38gPFKs9Id7uAUjQ6s2HSorLnxiMdkdnZnXa0TkZ9p1WrnuncjTcIjrcF3BWk=
+	t=1710464997; cv=none; b=dnj26Ow4CDHCfW4Pq5WvEUEHWFP4/jTixWncbM0Q362E67JXTiopDF10L5uW1P5qzd+A2N9cv3DYh1LxHdl8WRbvSfO8dzx8D9RpBm4ya0JqM0TorPwoO0A9Z0hz++13eJ38Dzg3Xcjq2vdRR5nfaxI6EpYfNgzqDr3+hBt0pW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710456480; c=relaxed/simple;
-	bh=hTzcatGjAXWTqa8zkRaGEtL/JKXM3mdrrsYjsv1nXVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dj3VqehvgejeJUGMqbM1h9PcaNokaqD/XfXK4V/HPmDl5u6DDALpEcwOUxkvkq+HaIscP/LSkMdesQhwy22V8iggPRoFfXg9pYOZA8ZrvGrm+g/j+C86nizibU0eBGz+7sqViquSp/IIOZlmb6TlzefFG4iaq8+ZCPLnrCrmkwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845A7C433C7;
-	Thu, 14 Mar 2024 22:47:59 +0000 (UTC)
-Date: Thu, 14 Mar 2024 18:50:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/trace: Properly initialize cxl_poison region
- name
-Message-ID: <20240314185010.6162cbfe@gandalf.local.home>
-In-Reply-To: <ZfN8AP/KdbsN32l1@aschofie-mobl2>
-References: <20240314201217.2112644-1-alison.schofield@intel.com>
-	<20240314164136.6d10aa28@gandalf.local.home>
-	<ZfNmfCmgCs4Nc+EH@aschofie-mobl2>
-	<20240314171737.2025ef60@gandalf.local.home>
-	<ZfN8AP/KdbsN32l1@aschofie-mobl2>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710464997; c=relaxed/simple;
+	bh=CMFRuseNI/BTwpULmbwhZpjISyqhQbCM5JXERSy3H2o=;
+	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
+	 Content-Type:References; b=FAwzFWlT9SXzmO0YjoGNEVdWzs3kCZobVHLhheHs1cHaYHK32kbtdGSOcCFpUxuXLKkmV8mb9VbW+sAXNO4O7/WEkRBw2f8gms7r0/Ua/BB8Loq54WOLAGnPWWR38XJqfNaoo7/19PHvzT+BOcb5Ey0+9YO9U9DHtdusraXUhkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oDrXAF+n; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oDrXAF+n"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240315010946epoutp04a699a0d5efe4c7dcf1348f05a171242c~8yteqQbiL1631116311epoutp04f
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 01:09:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240315010946epoutp04a699a0d5efe4c7dcf1348f05a171242c~8yteqQbiL1631116311epoutp04f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1710464986;
+	bh=CMFRuseNI/BTwpULmbwhZpjISyqhQbCM5JXERSy3H2o=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=oDrXAF+nj7ajElerpAV2FruP2j96EGDgizfswuFaeRl/ZP8Z8ANHhX3LWiXBVcHVp
+	 tT0AxFYLvIyN/3xKCs52YGGTr0+cEN1Kh9EgNq4Jb96ONrqVvesG5FF4aWMsLuQB09
+	 wQyGlSleY92XrC3ksMM/rd9VSAqhk5TPvVkYFjLM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240315010945epcas2p39a6503a37d131eb2a37c099ec9f1ca02~8yteVE8gP1180311803epcas2p3R;
+	Fri, 15 Mar 2024 01:09:45 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.68]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4TwmPP1XMMz4x9Q8; Fri, 15 Mar
+	2024 01:09:45 +0000 (GMT)
+X-AuditID: b6c32a48-bcdfd70000002587-27-65f39fd9c48c
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D2.DC.09607.9DF93F56; Fri, 15 Mar 2024 10:09:45 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Subject: RE: [ndctl PATCH v11 6/7] cxl/list: add --media-errors option to
+ cxl list
+Reply-To: wj28.lee@samsung.com
+Sender: Wonjae Lee <wj28.lee@samsung.com>
+From: Wonjae Lee <wj28.lee@samsung.com>
+To: "alison.schofield@intel.com" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>
+CC: Hojin Nam <hj96.nam@samsung.com>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <a6933ba82755391284368e4527154341bc4fd75f.1710386468.git.alison.schofield@intel.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20240315010944epcms2p4de4dee2e69a2755aeab739152417d65b@epcms2p4>
+Date: Fri, 15 Mar 2024 10:09:44 +0900
+X-CMS-MailID: 20240315010944epcms2p4de4dee2e69a2755aeab739152417d65b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsWy7bCmme7N+Z9TDf7d4bS4+/gCm8WHN/9Y
+	LM7POsVisfLHH1aLWxOOMTmweize85LJ48XmmYwefVtWMXp83iQXwBKVbZORmpiSWqSQmpec
+	n5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtFdJoSwxpxQoFJBYXKykb2dT
+	lF9akqqQkV9cYquUWpCSU2BeoFecmFtcmpeul5daYmVoYGBkClSYkJ2xqe8Re8E37oqG16cY
+	GxibubsYOTkkBEwkjs95w9zFyMUhJLCDUWL232dADgcHr4CgxN8dwiA1wgIhEufbellBbCEB
+	OYm7t08xQcQ1Jd5MW8UCYrMJqEv86DwJFhcRyJC4/ucPE8hMZoEpjBLdNw6xQizjlZjR/pQF
+	wpaW2L58KyOIzSmQKLHhz10miLiGxI9lvcwQtqjEzdVv2WHs98fmM0LYIhKt985C1QhKPPi5
+	mxFm5oQD6xlB7pcQKJd4s94c5AYJgQZGiScr/0LNMZd49mIrG4jNK+ArcXB3L1icRUBV4ufq
+	V1AzXSQefHoKFmcW0JZYtvA1OEyYgR5ev0sfYryyxJFbLBAVfBIdh2Gm80rsmPcE6hMliSlt
+	R6Auk5BoaITYKiHgIbHr5kfmCYyKsxABPQvJrlkIuxYwMq9iFEstKM5NTy02KjCBx21yfu4m
+	RnAK1PLYwTj77Qe9Q4xMHIyHGCU4mJVEeOsUP6YK8aYkVlalFuXHF5XmpBYfYjQF+nIis5Ro
+	cj4wCeeVxBuaWBqYmJkZmhuZGpgrifPea52bIiSQnliSmp2aWpBaBNPHxMEp1cAU4LfohXfJ
+	hYw5P/+X/HSM3fBbTou/7q/hoaIz+4/Fhn780dCQzdRfq8EkvenLN7W6aSoF94MrJ+7+8qUl
+	aW/cUd2NW08v3Nn8Yq9Xj67U5usHa7YwN8lwcso/3f/wlQdPrtHJn6I+0jce12/U3HFn+ckb
+	flOOL3msHPP3odylm0ZL7f9NLP+7T+h3p0vX5vxpqtanTvovv7FzF3/qhilyPvJyilblL6am
+	F+a4vAte/eXCI3PlzJOXL4R+XqBzTPfYnHf+h179y7Wb8S6Kg+2Tr8+csleTcllOP533/NVb
+	/10s/k5aEXcPsh471/YtRsHO7fYDUyn1db3G8f73fCWPC16fxPZwju2af1G1i9SymZVYijMS
+	DbWYi4oTATwM3jwKBAAA
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240314040548epcas2p3698bf9d1463a1d2255dc95ac506d3ae8
+References: <a6933ba82755391284368e4527154341bc4fd75f.1710386468.git.alison.schofield@intel.com>
+	<cover.1710386468.git.alison.schofield@intel.com>
+	<CGME20240314040548epcas2p3698bf9d1463a1d2255dc95ac506d3ae8@epcms2p4>
 
-On Thu, 14 Mar 2024 15:36:48 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
-
-> > diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
-> > index e30a13be46ba..dfae18d8f4df 100644
-> > --- a/include/trace/stages/stage5_get_offsets.h
-> > +++ b/include/trace/stages/stage5_get_offsets.h
-> > @@ -9,6 +9,13 @@
-> >  #undef __entry
-> >  #define __entry entry
-> >    
-> 
-> +#ifndef STAGE5_H_INCLUDED
-> +#define STAGE5_H_INCLUDED
-> > +static inline const char *__string_src(const char *str)
-> > +{
-> > +	if (!str)
-> > +		return "(null)";
-> > +	return str;
-> > +}  
-> +#endif /* STAGE5_H_INCLUDED */
-> 
-> Happy to try it out...
-> 
-> Your diff, with the ifdef above, makes the compiler happy and it functions
-> as wanted - no garbage in the fields.
-
-Hmm, I guess the:
-
- strlen((src ? (const char *)(src) : NULL) ? (src ? (const char *) src : NULL)) ? "(null)")) + 1
-
-was too complex for the compiler, where as:
-
- strlen(__string_str((str ? (const char *)(src) : NULL))) + 1
-
-is not.
-
-Perhaps I should add this change. I would still submit your change with the
-"" as that needs to be backported, but this probably does not.
-
-Thanks for testing it out.
-
--- Steve
-
-> 
-> > +
-> >  /*
-> >   * Fields should never declare an array: i.e. __field(int, arr[5])
-> >   * If they do, it will cause issues in parsing and possibly corrupt the
-> > @@ -47,7 +54,7 @@
-> >  
-> >  #undef __string
-> >  #define __string(item, src) __dynamic_array(char, item,			\
-> > -		    strlen((src) ? (const char *)(src) : "(null)") + 1)
-> > +		    strlen(__string_src(src)) + 1)
-> >  
-> >  #undef __string_len
-> >  #define __string_len(item, src, len) __dynamic_array(char, item, (len) + 1)  
-
+alison.schofield=40intel.com wrote:
+> From: Alison Schofield <alison.schofield=40intel.com>
+>
+> The --media-errors option to 'cxl list' retrieves poison lists from
+> memory devices supporting the capability and displays the returned
+> media_error records in the cxl list json. This option can apply to
+> memdevs or regions.
+>
+> Include media-errors in the -vvv verbose option.
+>
+> Example usage in the Documentation/cxl/cxl-list.txt update.
+>
+> Signed-off-by: Alison Schofield <alison.schofield=40intel.com>
+> ---
+> Documentation/cxl/cxl-list.txt 62 +++++++++++++++++++++++++++++++++-
+> cxl/filter.h=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
+=20=C2=A0=20=C2=A0=20=C2=A0=203=20++=0D=0A>=20cxl/list.c=C2=A0=20=C2=A0=20=
+=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
+=A0=203=20++=0D=0A>=203=20files=20changed,=2067=20insertions(+),=201=20dele=
+tion(-)=0D=0A>=0D=0A>=20diff=20--git=20a/Documentation/cxl/cxl-list.txt=20b=
+/Documentation/cxl/cxl-list.txt=0D=0A>=20index=20838de4086678..6d3ef92c29e8=
+=20100644=0D=0A>=20---=20a/Documentation/cxl/cxl-list.txt=0D=0A>=20+++=20b/=
+Documentation/cxl/cxl-list.txt=0D=0A=0D=0A=5Bsnip=5D=0D=0A=0D=0A+----=0D=0A=
++In=20the=20above=20example,=20region=20mappings=20can=20be=20found=20using=
+:=0D=0A+=22cxl=20list=20-p=20mem9=20--decoders=22=0D=0A+----=0D=0A=0D=0AHi,=
+=20isn't=20it=20'-m=20mem9'=20instead=20of=20-p?=20FYI,=20it's=20also=20on=
+=20patch's=0D=0Acover=20letter,=20too.=0D=0A=0D=0AThanks,=0D=0AWonjae
