@@ -1,57 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F1D1773D
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 16:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE7F1E4A1
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 16:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710520110; cv=none; b=sX3nc+KPVxAuu7s01NnlroF4PCrIeSBxLnKhO4VNMosiGVsTEG+uCXg1FeeN+CfkNdeF1W3SKeRW+G3wK+gXCmLRTlkEP7enSIgovX+ap6VoXDq2b8GxYBxKSv4nzbwxeNGke9UFlBlRAn3IW8gF+xgp3QaexUNLtrNYNcexO+0=
+	t=1710520887; cv=none; b=uLTCiwpeMv2PDMAVG9KuBMcmE+W8CUfP5iSWBnVQ282e46Lv3IK60y4j3McNPEIwmzCAxSURYt7vrCSKnWDzPPuG3vXB/f4hLSXihEqP2UDtebCxgwXP+Zfnu/2A5ukRPghBZ7Z0VStkCRX2YpUM2VtpAuFD//AdSRwpWT+Til4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710520110; c=relaxed/simple;
-	bh=P45XOQjxdywqtQLUhuNaWKDzl7RomQqtsdnSmsUMCT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iXhp4Stb/0lUJS3boG2J7Eyud24h/Bu44V3PqNDI9C0zeNznltvYIHaZGVehYCALWjjb4z8VtKqFhH26KhwXEFAccLNud61zrBoI0CTiIYHuBRCBgXhCmBUSfBD/tScOyVgS8BXkJTshcKjZxQVi91WiGDRSd1FFl0vB4mtpyaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06683C433F1;
-	Fri, 15 Mar 2024 16:28:28 +0000 (UTC)
-Date: Fri, 15 Mar 2024 12:30:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave
- Jiang <dave.jiang@intel.com>, "Vishal Verma" <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/trace: Properly initialize cxl_poison region
- name
-Message-ID: <20240315123042.33cb38a9@gandalf.local.home>
-In-Reply-To: <65f474bc214eb_aa22294dd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240314201217.2112644-1-alison.schofield@intel.com>
-	<20240314164136.6d10aa28@gandalf.local.home>
-	<ZfNmfCmgCs4Nc+EH@aschofie-mobl2>
-	<20240314171737.2025ef60@gandalf.local.home>
-	<ZfN8AP/KdbsN32l1@aschofie-mobl2>
-	<20240315064703.2202cc69@gandalf.local.home>
-	<65f474bc214eb_aa22294dd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710520887; c=relaxed/simple;
+	bh=JOgfJ3deDkMV1JdNjU6zW6ficQ6Eb4NB4SW3o1Ov5BQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uOYX1pmMuuiW4VZyYJtbmplNqlrePPCV/0nE+AQe1WIptE/nxWl59+mQpuENJXjoLiNyIHCBrfg1SCK1Ucg1mfthpqIFJM2/51LiIPmMI8km/4CTT+x8KBm6HixZwvZcMr6cAFdFblNze01Bl2/5JLgre1xefb0Bv6fo3c8OBV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Txn3wstr; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Txn3wstr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710520886; x=1742056886;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JOgfJ3deDkMV1JdNjU6zW6ficQ6Eb4NB4SW3o1Ov5BQ=;
+  b=Txn3wstrKpOxrB4fBloaHYE6ZxHM3EYwU3fJhd7Tg/MCX8hOmo1UFDtg
+   6ayK/S///pY7aZ6W/mVYflzMCl1vK2oaRsDDVoWAZf1Xjzp/gOe5kWVDi
+   Nv2VIdiygeoM+f9AA5TCC3MERyYU1CL2qEpAq0VN4CSkH/N1dlZaCj/H7
+   CyAOliidmG9WjjQkE0dLGvLEsqa7k4rWMjklqbceiwOAs+RrzrqqnGeLO
+   zoI9AJ0ZF71gFixy5GOhU3PNmp2cI/1K1qdKyWd2/SRm7K5YDrEwZkXPW
+   ZV9afgSC7cLjhXUaLypp8CSmCC5CNkAgQPsS9RhZ38gDmyEDPm2qB3T4Z
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="5261511"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="5261511"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 09:41:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="13132264"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.163.132]) ([10.213.163.132])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 09:41:25 -0700
+Message-ID: <f961eff1-ee32-49c0-ba5e-0e6806aae338@intel.com>
+Date: Fri, 15 Mar 2024 09:41:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v11 6/7] cxl/list: add --media-errors option to cxl
+ list
+Content-Language: en-US
+To: alison.schofield@intel.com, Vishal Verma <vishal.l.verma@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+References: <cover.1710386468.git.alison.schofield@intel.com>
+ <a6933ba82755391284368e4527154341bc4fd75f.1710386468.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <a6933ba82755391284368e4527154341bc4fd75f.1710386468.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 15 Mar 2024 09:18:04 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
+
+On 3/13/24 9:05 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> ...for you taking the fix through your tree, and yes, please Cc stable
-> on it as well.
+> The --media-errors option to 'cxl list' retrieves poison lists from
+> memory devices supporting the capability and displays the returned
+> media_error records in the cxl list json. This option can apply to
+> memdevs or regions.
+> 
+> Include media-errors in the -vvv verbose option.
+> 
+> Example usage in the Documentation/cxl/cxl-list.txt update.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Thanks, will do!
-
-I'll pull it in and start running my tests on it.
-
--- Steve
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  Documentation/cxl/cxl-list.txt | 62 +++++++++++++++++++++++++++++++++-
+>  cxl/filter.h                   |  3 ++
+>  cxl/list.c                     |  3 ++
+>  3 files changed, 67 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index 838de4086678..6d3ef92c29e8 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -415,6 +415,66 @@ OPTIONS
+>  --region::
+>  	Specify CXL region device name(s), or device id(s), to filter the listing.
+>  
+> +-L::
+> +--media-errors::
+> +	Include media-error information. The poison list is retrieved from the
+> +	device(s) and media_error records are added to the listing. Apply this
+> +	option to memdevs and regions where devices support the poison list
+> +	capability. "offset:" is relative to the region resource when listing
+> +	by region and is the absolute device DPA when listing by memdev.
+> +	"source:" is one of: External, Internal, Injected, Vendor Specific,
+> +	or Unknown, as defined in CXL Specification v3.1 Table 8-140.
+> +
+> +----
+> +# cxl list -m mem9 --media-errors -u
+> +{
+> +  "memdev":"mem9",
+> +  "pmem_size":"1024.00 MiB (1073.74 MB)",
+> +  "pmem_qos_class":42,
+> +  "ram_size":"1024.00 MiB (1073.74 MB)",
+> +  "ram_qos_class":42,
+> +  "serial":"0x5",
+> +  "numa_node":1,
+> +  "host":"cxl_mem.5",
+> +  "media_errors":[
+> +    {
+> +      "offset":"0x40000000",
+> +      "length":64,
+> +      "source":"Injected"
+> +    }
+> +  ]
+> +}
+> +----
+> +In the above example, region mappings can be found using:
+> +"cxl list -p mem9 --decoders"
+> +----
+> +# cxl list -r region5 --media-errors -u
+> +{
+> +  "region":"region5",
+> +  "resource":"0xf110000000",
+> +  "size":"2.00 GiB (2.15 GB)",
+> +  "type":"pmem",
+> +  "interleave_ways":2,
+> +  "interleave_granularity":4096,
+> +  "decode_state":"commit",
+> +  "media_errors":[
+> +    {
+> +      "offset":"0x1000",
+> +      "length":64,
+> +      "source":"Injected"
+> +    },
+> +    {
+> +      "offset":"0x2000",
+> +      "length":64,
+> +      "source":"Injected"
+> +    }
+> +  ]
+> +}
+> +----
+> +In the above example, memdev mappings can be found using:
+> +"cxl list -r region5 --targets" and "cxl list -d <decoder_name>"
+> +
+> +
+>  -v::
+>  --verbose::
+>  	Increase verbosity of the output. This can be specified
+> @@ -431,7 +491,7 @@ OPTIONS
+>  	  devices with --idle.
+>  	- *-vvv*
+>  	  Everything *-vv* provides, plus enable
+> -	  --health and --partition.
+> +	  --health, --partition, --media-errors.
+>  
+>  --debug::
+>  	If the cxl tool was built with debug enabled, turn on debug
+> diff --git a/cxl/filter.h b/cxl/filter.h
+> index 3f65990f835a..956a46e0c7a9 100644
+> --- a/cxl/filter.h
+> +++ b/cxl/filter.h
+> @@ -30,6 +30,7 @@ struct cxl_filter_params {
+>  	bool fw;
+>  	bool alert_config;
+>  	bool dax;
+> +	bool media_errors;
+>  	int verbose;
+>  	struct log_ctx ctx;
+>  };
+> @@ -88,6 +89,8 @@ static inline unsigned long cxl_filter_to_flags(struct cxl_filter_params *param)
+>  		flags |= UTIL_JSON_ALERT_CONFIG;
+>  	if (param->dax)
+>  		flags |= UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
+> +	if (param->media_errors)
+> +		flags |= UTIL_JSON_MEDIA_ERRORS;
+>  	return flags;
+>  }
+>  
+> diff --git a/cxl/list.c b/cxl/list.c
+> index 93ba51ef895c..0b25d78248d5 100644
+> --- a/cxl/list.c
+> +++ b/cxl/list.c
+> @@ -57,6 +57,8 @@ static const struct option options[] = {
+>  		    "include memory device firmware information"),
+>  	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
+>  		    "include alert configuration information"),
+> +	OPT_BOOLEAN('L', "media-errors", &param.media_errors,
+> +		    "include media-error information "),
+>  	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+>  #ifdef ENABLE_DEBUG
+>  	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+> @@ -121,6 +123,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+>  		param.fw = true;
+>  		param.alert_config = true;
+>  		param.dax = true;
+> +		param.media_errors = true;
+>  		/* fallthrough */
+>  	case 2:
+>  		param.idle = true;
