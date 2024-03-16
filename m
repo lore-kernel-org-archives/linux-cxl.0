@@ -1,117 +1,256 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334735A0E7
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 23:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EB5DDA0
+	for <linux-cxl@vger.kernel.org>; Sat, 16 Mar 2024 07:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710543825; cv=none; b=R14FOmSkgA3Dw1oknBTAXHY+nMiIddsVi2y/7/BZNItI/Olg1A5iXAnNJQSUsn0mXOYlagUnZU5w1chP8EKkKTOBlYfDMHdrQ//+9c0Fr6USpWMnsIVjDcznI0DPvXSYxYN3x319gpG7qcuXln+Iepts9PgjSdrQmlL9gJcGVAc=
+	t=1710574183; cv=none; b=M3bOKfaISsU5QDH9gQpPBXV/xsFdhI101Uh84F/0Chgl6jHX3yxrlXjn2lgF6Amwf4BhPAhiBq2n+IoEwujr6U4GsfUCUXkb9rNOREaw/Q3vgyp436ER2mY6/aQ0ufbSyhs72oVDEmksN4YmVTcYhZd0ONDi19Zme//USXFO4/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710543825; c=relaxed/simple;
-	bh=RMuhIjUGazBLLwRV5Az+LWoHwQf1/uGbV597a9mcp2c=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=QbdHziJVYtsQSumloxbUfGxvnL/GAIY1IruHThOevjSnUiJbk+sO3dnvRMSUHx9nuWYFC/xpbtOjnF/1KwVh7ujjNIkJCa2/aF685yC14QQoVgpIjBvK6l13Z1M6KGJeb2fQETrwFTgMuAbgber0iTq19kHEfGcZ0nSW7P2bcUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=G0od8TO2; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1710574183; c=relaxed/simple;
+	bh=9FCxcMIR9055xtTY0BLwSPVWRAABkeaZle+NfLdT05Y=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=h77FQDzJtD2fjxLY/WbUMLZYHqTh6rnGzQIU/J1QtgOX0b2puHcnEBDCSddXO7kTz5w13CIXSf2lY+cwrTiMg4S8axjfkCSRXyv1AiNJjLeIsMwhIxY3oZ5dHatTJTJSn5VjQ34fIcwAmCZGFG+bR7fmBQwbqnOi26BK1HjuUuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3O0+rnm; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G0od8TO2"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240315230336epoutp0197a33c6c347f7d47673d3a6b8fba2e19~9EomxkGx-2302623026epoutp01G
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Mar 2024 23:03:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240315230336epoutp0197a33c6c347f7d47673d3a6b8fba2e19~9EomxkGx-2302623026epoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1710543816;
-	bh=RMuhIjUGazBLLwRV5Az+LWoHwQf1/uGbV597a9mcp2c=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=G0od8TO2IwVTGE+yd/zxqF3ly7VesKQviD9KDnMAVYrUFv1j2KHVCPdbfBSxhvrtF
-	 5oVQAoRx3C6zPbl9n7Hd9cUVflUDOXmNj0DbSQz+kaZGddmned/ELzcezqyHKbeNd5
-	 dvXTy9O6q5ogAVkjrArg5UJrFUtu8V71vzc2qd6w=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-	20240315230335epcas2p1be595b9a66cf779ad1463b129d5fa0ac~9EomgPn5q1367013670epcas2p1o;
-	Fri, 15 Mar 2024 23:03:35 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.99]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TxKYM1GGMz4x9Pr; Fri, 15 Mar
-	2024 23:03:35 +0000 (GMT)
-X-AuditID: b6c32a4d-743ff70000004a32-e3-65f4d3c7bf6c
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FE.54.18994.7C3D4F56; Sat, 16 Mar 2024 08:03:35 +0900 (KST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3O0+rnm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710574181; x=1742110181;
+  h=date:from:to:cc:subject:message-id;
+  bh=9FCxcMIR9055xtTY0BLwSPVWRAABkeaZle+NfLdT05Y=;
+  b=i3O0+rnmxA89pYtjsv9IbzQ/dXZHlgMfcixgciyHp/TCHEQXotNXeI7d
+   aC7Bq31X0WnmJHP4YiBDhxhAknR7+P/O0pgFas7XnbhmHzpHQy05l+kE7
+   5YAqE8cxivenjyesf7//7P9i5Wlr+yrS6fS3gzqV3FLaO6tWxh+z9tBtD
+   BpJmRuEd3NVJvFi0XqRqpLaJhdBUs/pJt8HeBUfUj5jZuYpm4vnobfKQe
+   oxrroDSDjhYX/VfqMN9XBNPiGsdP/y0xy8cd/SiycY0jSc1a5McWwCVL1
+   NHjXZL+F1j3jD10FJAIzEecimRjPU5YtvAaG/w4XMphONQkbLWgfAxDMg
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="9229010"
+X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
+   d="scan'208";a="9229010"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2024 00:29:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
+   d="scan'208";a="17623817"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 16 Mar 2024 00:29:39 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rlOU4-000FAT-01;
+	Sat, 16 Mar 2024 07:29:36 +0000
+Date: Sat, 16 Mar 2024 15:28:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ ed1ff2fba7afa7baca7ceb93824a4699130b8377
+Message-ID: <202403161548.xqJm4Wlv-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: [ndctl PATCH v11 7/7] cxl/test: add cxl-poison.sh unit test
-Reply-To: wj28.lee@samsung.com
-Sender: Wonjae Lee <wj28.lee@samsung.com>
-From: Wonjae Lee <wj28.lee@samsung.com>
-To: "alison.schofield@intel.com" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>
-CC: Hojin Nam <hj96.nam@samsung.com>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <24c1f2ec413f92e8e6e8817b3d4d55f5bb142849.1710386468.git.alison.schofield@intel.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240315230334epcms2p1d92e47ec32b59ffbb186a0204f9b0866@epcms2p1>
-Date: Sat, 16 Mar 2024 08:03:34 +0900
-X-CMS-MailID: 20240315230334epcms2p1d92e47ec32b59ffbb186a0204f9b0866
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmqe7xy19SDa7PZ7W4+/gCm8WHN/9Y
-	LM7POsVisfLHH1aLWxOOMTmweize85LJ48XmmYwefVtWMXp83iQXwBKVbZORmpiSWqSQmpec
-	n5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtFdJoSwxpxQoFJBYXKykb2dT
-	lF9akqqQkV9cYquUWpCSU2BeoFecmFtcmpeul5daYmVoYGBkClSYkJ1x6v5xpoKtXBUrHu1m
-	bWC8zdnFyMkhIWAicePYF/YuRi4OIYE9jBLH/y1k7WLk4OAVEJT4u0MYpEZYwEPi35arrCC2
-	kICcxN3bp5gg4poSb6atYgGx2QTUJX50ngSLiwhkSFz/84cJZCazwBRGie4bh1ghlvFKzGh/
-	ygJhS0tsX76VEcTmFEiUOHTkISNEXEPix7JeZghbVOLm6rfsMPb7Y/OhakQkWu+dhaoRlHjw
-	czcjzMwJB9YzgtwvIVAu8Wa9OcgNEgINjBJPVv6FmmMu8ezFVjYQm1fAV+LY/WVgR7MIqEpc
-	fXAJaqaLxPovX8BsZgFtiWULXzODzGQGenj9Ln2I8coSR26xQFTwSXQchpnOK7Fj3hMmCFtJ
-	YkrbEajLJCQaGiG2SgCDc+2NV6wTGBVnIQJ6FpJdsxB2LWBkXsUolVpQnJuemmxUYKibl1oO
-	j9/k/NxNjOBUqOW7g/H1+r96hxiZOBgPMUpwMCuJ8NYpfkwV4k1JrKxKLcqPLyrNSS0+xGgK
-	9OlEZinR5HxgMs4riTc0sTQwMTMzNDcyNTBXEue91zo3RUggPbEkNTs1tSC1CKaPiYNTqoEp
-	sN3w4sG/xrb3oswnc53hjSrbs2958bon1yXTKt18XTUytJb9SbjFmX0s20Pn+No7j/j7b8q8
-	in109aSVwO9sPgHxY4YdR58H2O4QTp1hv0dP/ubSH79/BoRNjd51UnDWLpdnmQv3zFdU298m
-	ImW5wZ5thegbbhGB1yEntuTH5kd90TnkaJTHIDnZcgHb15oGDrber1WlHOarpNa0f09LnXx1
-	U8zNXw8XnlJ8YvuoSMxr41verIiFRxzzfyUv9doTEtE00+/OIp0FzzoN3/5q++E3N8XSiF3G
-	4tvaN4JS9hurlnuy5rc6aomkVk11P7K+ZP9xzVUtsfs0NXfFWJ+us2F3q5217R+/zJa1NrpK
-	LMUZiYZazEXFiQA91RriDgQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240314040551epcas2p40829b16b09f439519a692070fb460242
-References: <24c1f2ec413f92e8e6e8817b3d4d55f5bb142849.1710386468.git.alison.schofield@intel.com>
-	<cover.1710386468.git.alison.schofield@intel.com>
-	<CGME20240314040551epcas2p40829b16b09f439519a692070fb460242@epcms2p1>
 
-alison.schofield=40intel.com wrote:
-> From: Alison Schofield <alison.schofield=40intel.com>
->
-> Exercise cxl list, libcxl, and driver pieces of the get poison list
-> pathway. Inject and clear poison using debugfs and use cxl-cli to
-> read the poison list by memdev and by region.
->
-> Signed-off-by: Alison Schofield <alison.schofield=40intel.com>
-> ---
-> test/cxl-poison.sh 137 +++++++++++++++++++++++++++++++++++++++++++++
-> test/meson.build=C2=A0=20=C2=A0=202=20+=0D=0A>=202=20files=20changed,=201=
-39=20insertions(+)=0D=0A>=20create=20mode=20100644=20test/cxl-poison.sh=0D=
-=0A>=0D=0A>=20diff=20--git=20a/test/cxl-poison.sh=20b/test/cxl-poison.sh=0D=
-=0A>=20new=20file=20mode=20100644=0D=0A>=20index=20000000000000..af2e9dcd1a=
-11=0D=0A>=20---=20/dev/null=0D=0A>=20+++=20b/test/cxl-poison.sh=0D=0A=0D=0A=
-=5Bsnip=5D=0D=0A=0D=0A>=20+=23=20Turn=20tracing=20on.=20Note=20that=20'cxl=
-=20list=20--poison'=20does=20toggle=20the=20tracing.=0D=0A=0D=0AHi,=0D=0A=
-=0D=0AI=20know=20it's=20trivial=20and=20not=20sure=20if=20I'm=20understandi=
-ng=20the=20history=20of=0D=0Athe=20patch=20series=20correctly,=20but=20--po=
-ison=20seems=20to=20be=20an=20option=20that=0D=0Awas=20suggested=20before=
-=20--media-errors.=20I'm=20wondering=20if=20it's=20okay=20to=0D=0Aleave=20t=
-his=20comment.=0D=0A=0D=0AThanks,=0D=0AWonjae
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: ed1ff2fba7afa7baca7ceb93824a4699130b8377  Merge branch 'for-6.9/cxl-einj' into for-6.9/cxl
+
+elapsed time: 722m
+
+configs tested: 181
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20240316   gcc  
+arc                   randconfig-002-20240316   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                          gemini_defconfig   clang
+arm                          moxart_defconfig   gcc  
+arm                            mps2_defconfig   clang
+arm                   randconfig-001-20240316   gcc  
+arm                   randconfig-002-20240316   gcc  
+arm                   randconfig-003-20240316   gcc  
+arm                   randconfig-004-20240316   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240316   gcc  
+arm64                 randconfig-002-20240316   clang
+arm64                 randconfig-003-20240316   clang
+arm64                 randconfig-004-20240316   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240316   gcc  
+csky                  randconfig-002-20240316   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240316   clang
+hexagon               randconfig-002-20240316   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240316   clang
+i386         buildonly-randconfig-002-20240316   gcc  
+i386         buildonly-randconfig-003-20240316   gcc  
+i386         buildonly-randconfig-004-20240316   gcc  
+i386         buildonly-randconfig-005-20240316   gcc  
+i386         buildonly-randconfig-006-20240316   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240316   gcc  
+i386                  randconfig-002-20240316   gcc  
+i386                  randconfig-003-20240316   gcc  
+i386                  randconfig-004-20240316   gcc  
+i386                  randconfig-005-20240316   clang
+i386                  randconfig-006-20240316   gcc  
+i386                  randconfig-011-20240316   clang
+i386                  randconfig-012-20240316   clang
+i386                  randconfig-013-20240316   clang
+i386                  randconfig-014-20240316   clang
+i386                  randconfig-015-20240316   clang
+i386                  randconfig-016-20240316   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240316   gcc  
+loongarch             randconfig-002-20240316   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          atari_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                            gpr_defconfig   clang
+mips                     loongson1c_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240316   gcc  
+nios2                 randconfig-002-20240316   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240316   gcc  
+parisc                randconfig-002-20240316   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      arches_defconfig   gcc  
+powerpc                  mpc885_ads_defconfig   clang
+powerpc               randconfig-001-20240316   clang
+powerpc               randconfig-002-20240316   clang
+powerpc               randconfig-003-20240316   gcc  
+powerpc64             randconfig-001-20240316   gcc  
+powerpc64             randconfig-002-20240316   gcc  
+powerpc64             randconfig-003-20240316   clang
+riscv                            alldefconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                    nommu_virt_defconfig   clang
+riscv                 randconfig-001-20240316   gcc  
+riscv                 randconfig-002-20240316   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240316   clang
+s390                  randconfig-002-20240316   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240316   gcc  
+sh                    randconfig-002-20240316   gcc  
+sh                           se7721_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240316   gcc  
+sparc64               randconfig-002-20240316   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240316   clang
+um                    randconfig-002-20240316   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240316   clang
+x86_64       buildonly-randconfig-002-20240316   gcc  
+x86_64       buildonly-randconfig-003-20240316   gcc  
+x86_64       buildonly-randconfig-004-20240316   gcc  
+x86_64       buildonly-randconfig-005-20240316   gcc  
+x86_64       buildonly-randconfig-006-20240316   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240316   gcc  
+x86_64                randconfig-002-20240316   clang
+x86_64                randconfig-003-20240316   clang
+x86_64                randconfig-004-20240316   clang
+x86_64                randconfig-005-20240316   clang
+x86_64                randconfig-006-20240316   gcc  
+x86_64                randconfig-011-20240316   clang
+x86_64                randconfig-012-20240316   gcc  
+x86_64                randconfig-013-20240316   gcc  
+x86_64                randconfig-014-20240316   clang
+x86_64                randconfig-015-20240316   gcc  
+x86_64                randconfig-016-20240316   gcc  
+x86_64                randconfig-071-20240316   clang
+x86_64                randconfig-072-20240316   gcc  
+x86_64                randconfig-073-20240316   gcc  
+x86_64                randconfig-074-20240316   gcc  
+x86_64                randconfig-075-20240316   clang
+x86_64                randconfig-076-20240316   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+xtensa                randconfig-001-20240316   gcc  
+xtensa                randconfig-002-20240316   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
