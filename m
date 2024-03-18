@@ -1,57 +1,80 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3BD364A9;
-	Mon, 18 Mar 2024 10:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B9154BC4;
+	Mon, 18 Mar 2024 16:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710759551; cv=none; b=hqf7Kyp8dq/wu7Hl1UVm+zwFcVtMBhshlQ6skjpYSHIs235hObzmnQkVM0Vtg854kEIDGG3V8MvFCFnePaRsFo/HponiXR+I4uaBmw+Ts2P6eyD1xsxqdS763XJsy8o8nilUdyov4blOP+g3WIQ3FIGGHTy/879XjjdmZD2yaAg=
+	t=1710780726; cv=none; b=ejbO1no+jS9Rc6wu8wbRqwmuY2kcUXVJu/h/C/XZO55mQbY+i6cswU3ByzildBXVrgCRoRtGv2UeITN/1mcI+/yt4tkEqjdlnrQIungM4ni5IwhoFTUpcUDTaBxwpLwwlhmE8Pm4cug38rnfFkZrArImkQrI3aCEALvijoMAoFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710759551; c=relaxed/simple;
-	bh=3HWVhv5FCQZGsoqeZ8uU7NkyNl7/wt+/4DunrTQoGyg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GhGdeaUraBlv/iAUK7Aods/Iss3d26GZz9BM2VzQGJQEDZd+/bAvTRonoNH4zC5U56L6g7hyghiiLBhlB7cAKzDS8yanVjj6h5NVtKQIIdoMT9aEueAvvB9XdwUEbKT+/+hZvuMLNpikrdgwarryMPN3xAdYwh1hqh2mBY3gryE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TysKR39Y6z6K6Pg;
-	Mon, 18 Mar 2024 18:58:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E181E14322E;
-	Mon, 18 Mar 2024 18:59:00 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 18 Mar
- 2024 10:57:48 +0000
-Date: Mon, 18 Mar 2024 10:57:48 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+	s=arc-20240116; t=1710780726; c=relaxed/simple;
+	bh=06faSDOvMMSEygDMFyVQDxscKO2QCoGKfE4e/W6tpeA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+7YMvlhvsWv2f4/pCgpcJoW4M6sW/4pSeE3frHRBlFVO2qxAllACX0nttzkT5B6AHLTuJb5IJNpvmRSO39zT1l5YRU7QouUQYKKSZ0sVT58TvZKOw2o8E2CJFkUXQ4RDGUokqaEUNeNPzd9M65rf5ov3wIsVmlCV3z/y0nJCF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ES9KYqeH; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ES9KYqeH"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60cc4124a39so47620607b3.3;
+        Mon, 18 Mar 2024 09:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710780724; x=1711385524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vz0r7CrxXAbXAWl8jQv4wux9fTOJzzdZaP8w4NIvRC8=;
+        b=ES9KYqeH/pm//HQncwrdVNr4KDVPottUI/pMw+SC7cAinAN64Vek6Hj9ouJHz1rjce
+         UaVO6ii6s3sRLjND+nTum/KsLikvFiDPlFVHVEBN2j/a4HSEvzKrJU07QO+WyhV2KlAD
+         VIElR+yR+zV28wgeXmk9N9Ujxqd0qF0fPCH9VTOlCuD5nYO2cDgplMq3EvmZ+TMRVGpN
+         owzk6fPWUtnOrzjKnN4V8Y5u7Gf2Kh3PdoP9CV+xL4Ls4iubdatTG967/NHm4pJJp/GL
+         o6pjDIncroDSmbpnU4VSrXzIHICZLKPZLl7tgkX81gGXJ1F9eNayIjH8vGtjKvF53nwL
+         VeUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710780724; x=1711385524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vz0r7CrxXAbXAWl8jQv4wux9fTOJzzdZaP8w4NIvRC8=;
+        b=MOHF23FzMqqdVBgneZT3reUpMQ7c59uNOTj4bgJ7FKfH6nVFDYHdUQwqOncokbd9YU
+         TSMigGo9IAFga4L+qQ67hISti+hlRjLpYxcSormDtqyp/N9z4Udwx3MsiJjksOQGEt7l
+         WrEFDYWrDL3HkDVanV5POJVAZieRPC3cKTsSk3CiL4u/lqz95K5x6kdkCqUUJ3MyTyoK
+         d5QV4I8M8bzgujXe7iVWKLvttZjM9+a7ZlullCZekqwxaY2SoFQ7pLlxQVe+vMlMMymS
+         1x+oTkWfosFa1zomGYXvMlqaLea4IMQTESsvudW3MFaVyuxhBWCfG/3Wqxe2FhEEkb9F
+         X/8g==
+X-Forwarded-Encrypted: i=1; AJvYcCX3KALHIcTPG/11wW6xJ3okXRZcO2bbswsZHlyApzsRZzOeWfHipZmffTVDySfTRyLNXVSVD0vPRZvXtlxF7+5IZV780yepPA2oWAdGddmk/b9TjN6SNUt9ff4FYw/bLl0o53j5vi3Z
+X-Gm-Message-State: AOJu0YykfLIu4X+FT2mRKRv5M96rCkot1DdrZfpXKD5MX2e2TpnNIB1c
+	zuxjGV66YgWIx5TDu9hQOAiW8H9IWIycK2oZyq7NVpe4bsqk5Epc
+X-Google-Smtp-Source: AGHT+IE74Blc9zBVN0WzDHrovLKlrrSAraGNg67XAavl/JFPJfRSr+e3Xmo8Mk52fM6O7BPN4plgLw==
+X-Received: by 2002:a81:6e8a:0:b0:607:f09a:d298 with SMTP id j132-20020a816e8a000000b00607f09ad298mr12423396ywc.42.1710780724301;
+        Mon, 18 Mar 2024 09:52:04 -0700 (PDT)
+Received: from debian ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id r123-20020a0de881000000b00609f4a354d2sm2032136ywe.71.2024.03.18.09.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 09:52:03 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Mon, 18 Mar 2024 09:51:36 -0700
 To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: <ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<qemu-devel@nongnu.org>, <chenbaozi@phytium.com.cn>
+Cc: ira.weiny@intel.com, jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
+	chenbaozi@phytium.com.cn
 Subject: Re: [PATCH v2 1/1] cxl/mem: Fix for the index of Clear Event Record
  Handle
-Message-ID: <20240318105748.000072c5@Huawei.com>
-In-Reply-To: <20240318022928.509130-2-wangyuquan1236@phytium.com.cn>
+Message-ID: <ZfhxGHXCCgWSLqcX@debian>
 References: <20240318022928.509130-1-wangyuquan1236@phytium.com.cn>
-	<20240318022928.509130-2-wangyuquan1236@phytium.com.cn>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+ <20240318022928.509130-2-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318022928.509130-2-wangyuquan1236@phytium.com.cn>
 
-On Mon, 18 Mar 2024 10:29:28 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
-
+On Mon, Mar 18, 2024 at 10:29:28AM +0800, Yuquan Wang wrote:
 > The dev_dbg info for Clear Event Records mailbox command would report
 > the handle of the next record to clear not the current one.
 > 
@@ -73,15 +96,16 @@ Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 >  		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
 > -			le16_to_cpu(payload->handles[i]));
 > +			le16_to_cpu(payload->handles[i-1]));
-Trivial but needs spaces around the -. e.g.  [i - 1] 
 
-Maybe Dan can fix up whilst applying.
+LGTM except for the space issue mentioned by Jonathan.
 
-Otherwise
+After the fix,
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+Fan
 >  
 >  		if (i == max_handles) {
 >  			payload->nr_recs = i;
-
+> -- 
+> 2.34.1
+> 
