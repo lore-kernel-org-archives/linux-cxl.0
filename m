@@ -1,63 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB961774E;
-	Sat, 16 Mar 2024 17:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82531BF3F;
+	Mon, 18 Mar 2024 02:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710609767; cv=none; b=f8eEAJ5zGM7thO1XKmpDnSgMPcewt5pybQ3qB/qyduhVegiHuvME6u0Mo7E63le2v/Rs64+M/flGPElSQxhAu15JLQOl3fPuzt/xRMLvvWyz/iWv2hH2L47H91RM5i+oKn4qrvZ5k3DDUwN3oEa9o+eZuIl90Bp1TnSHO6pIQxQ=
+	t=1710729001; cv=none; b=Tyl3WgcV48KFGLCit6/VwXw6wRetJs2EmZkPHNBBSpfuDSUf27FhTO7prZwXdCTyjAkhoeOzRY/WiByQMBPAHScp8QHMcyxYB6uq9pZnVS6dVc5tvwJ3ocGw1x+GcIFCA0URHOB//kVF2n8JmSPffWsHNeyXs4QwH6KZu3kXyoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710609767; c=relaxed/simple;
-	bh=OwcZhnZw1/IKXQR0KBtUkffKK97jJwa0HroO/EWQklc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fGcetUaVuhF9xlKxJWzGwGkNfwHHMFMtOkWA8qqtmCRbPnlYzL5SbGYAw09d/jtsjL0F4ozDUjOvhH7xBDFgWq/+rGVJQ/MFq2o019FD/RIL+xDZktkDRZxCskX3ozievwbk1OAV3UofU8eQjgdY2R6+0SBe3KNeoRalgkAeEmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mgq7KwvV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mgq7KwvV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 201EAC433C7;
-	Sat, 16 Mar 2024 17:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710609767;
-	bh=OwcZhnZw1/IKXQR0KBtUkffKK97jJwa0HroO/EWQklc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Mgq7KwvVl6bBnQxhdqOba3fd/SFx6JB0i9br8Ni4lkDbVlf+QlykSJ5CCJfU7apig
-	 1XIr0QtCKHznTKki2gbMhN0cOzpOQZac68MWhURPLyCxVxAOTTl3ClnShjA1WTtAN2
-	 +tfQ4pD8WZ7D2BBCygP+I3g2xP5lCKMZZvOL5dv3AmpHkgSjvQhTcCNfdTL9YolPho
-	 ml9k3R8TZifvJaiVDuLHwKcqRn0Aq7ECTanapR1aA5/qSs8DyFrMlWPW7Ea03qgFCK
-	 VzYg8c/zBWG5O77TOV1mNFJ2VabVVLwWDzs0l1AAbOEnfEz7auUULm3/9henXhJzk+
-	 i/Obbc8N9MoAQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1723AD95053;
-	Sat, 16 Mar 2024 17:22:47 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) for 6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <65f4ca886d04c_aa22294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <65f4ca886d04c_aa22294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <65f4ca886d04c_aa22294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.9
-X-PR-Tracked-Commit-Id: ed1ff2fba7afa7baca7ceb93824a4699130b8377
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 02c163e959b72059ce409a8516170dc40193001f
-Message-Id: <171060976708.10702.16553926827123077337.pr-tracker-bot@kernel.org>
-Date: Sat, 16 Mar 2024 17:22:47 +0000
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: torvalds@linux-foundation.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1710729001; c=relaxed/simple;
+	bh=clJ0oy2fGlHZm/PyoJHfpz/AVMlAOf5UN7F76o3tYxQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o+UAfHTxRSkTibHwBDRH39ictnIj+OzQdHVTb4c2DS1gvJgI6mwosDNCyN0C4l7RNN8t6rt10rc7ni/GkChmG/oJbDl5BUCLx56mxfrovW0neN6YByCRHxeDzt2l7Uu+r0n88bPWA52HKxmK40PV7bJfTu7QZ5bq/fQhty6zfSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwA3PrYVp_dltrdHDg--.31911S2;
+	Mon, 18 Mar 2024 10:29:41 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwDXXNEPp_dlAEUAAA--.183S3;
+	Mon, 18 Mar 2024 10:29:36 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: ira.weiny@intel.com,
+	jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	chenbaozi@phytium.com.cn,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH v2 0/1] cxl/mem: Fix for the index of Clear Event Record Handle
+Date: Mon, 18 Mar 2024 10:29:27 +0800
+Message-Id: <20240318022928.509130-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwDXXNEPp_dlAEUAAA--.183S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAGAWX0ougA6QABs1
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr4kGF1rXrWxCF17JF4Dtwb_yoWktrb_XF
+	WkKa97u340v3Z5Z342yFW5Zry2q3yDuryF9ay0gr4jqr13Ar15Ja92kF93Cry3WrW5uw42
+	yr98Xa4qqrnF9jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
+	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
+	UUUU=
 
-The pull request you sent on Fri, 15 Mar 2024 15:24:08 -0700:
+This is a simple fix for the index of 'Clear Event Record' Handle. The
+print content of dev_dbg from Clear Event Records mailbox command would
+report the handle of the next record to clear not the current one.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.9
+The problem was found when I was doing the debug of CXL Event Error on
+Qemu. I injected an individual event through QMP 
+'cxl-inject-general-media-event':
+{ "execute": "cxl-inject-general-media-event",
+    "arguments": {
+        "path": "/machine/peripheral/cxl-mem0",
+        "log": "informational",
+        "flags": 1,
+        "dpa": 1000,
+        "descriptor": 3,
+        "type": 3,
+        "transaction-type": 192,
+        "channel": 3,
+        "device": 5,
+        "component-id": "iras mem"
+    }}
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/02c163e959b72059ce409a8516170dc40193001f
+Then the kernel printed: 
+[ 1639.106181] cxl_pci 0000:0d:00.0: Event log '0': Clearing 0
 
-Thank you!
+However, the line 36 in 'hw/cxl/cxl-events.c': log->next_handle = 1;
+It will set the actual handle value of injected event to '1'.
+
+With this fix, the kernel will print:
+[  122.456750] cxl_pci 0000:0d:00.0: Event log '0': Clearing 1
+which is in line with the simulated value in Qemu.
+
+Yuquan Wang (1):
+  cxl/mem: Fix for the index of Clear Event Record Handle
+
+ drivers/cxl/core/mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
