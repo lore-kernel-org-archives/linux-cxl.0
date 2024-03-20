@@ -1,56 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290F21E516;
-	Wed, 20 Mar 2024 17:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2F29CE8
+	for <linux-cxl@vger.kernel.org>; Wed, 20 Mar 2024 20:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710956873; cv=none; b=K8WNIE9s1tv5ZCAvnivAXR3m5zZTkqwohRZf0fYwR4xOuQttIDy1Xe8kkIF8am4j/oHYjhDFVu9FmqrrbObVg06P+BK9WoOO8HBQV/kHXENyLGMhxROe5YilXh7suOwtVHXsga5we+Z8v03wKBekESMfbSZJ6MZaMBS0DoPzRCY=
+	t=1710966254; cv=none; b=JDR+6CgyguhrQk2ZoL5qTF/LCeF5hViSSk9CaTUhDiMdhXAZgh50GntcPQCvAFab9nc/Vuvt01HCyf09pHZJYJkW63TpEIx+TdndTL0MY6Ci3MlFeUwI799vt+SMrEi9HRwgypPFm/HnSCRrLgkvt6RSA10hM2hYYm/YSrdw3Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710956873; c=relaxed/simple;
-	bh=CMBlbJgjppACUd333kEyt8jk0aVlQl5rJKnSNrUS5Hg=;
+	s=arc-20240116; t=1710966254; c=relaxed/simple;
+	bh=zPdTU4ncY8coMmcItNRH/mLOV310q68LH95EaX7JoO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmHoCuE4MwdHW628uJYoSVNULHZ5iihXuo0s/n1BWidP6loSKlivVZR51cvx3NG6Zepjvah79IJpwY2nEVhXE5himqaZYzK/SW4PkKsfY9deVpoG1uz3xGMeYhTOB/H7YN636VQl0h1k3Iu5Wlm/0yI2TryqaHGPk9GtNSsrCE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UDZdxhVJ; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=QDcQvtgf6hKy66vQADfzoW8XFaWXpiN7KT39Uu7mndog0PoymbjHdgDzt1OhbSD6U0Wbu1iregzGvmqGRs3ufeny+x+1P9zibggwYzgkaKdFZ+3WkVGvpvS37iADHgVwCGu3HtWc6pUpAEvWtuH8wwJnhu02Zap06p5qcrhw3KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BrgyctEI; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UDZdxhVJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BrgyctEI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710956872; x=1742492872;
+  t=1710966253; x=1742502253;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=CMBlbJgjppACUd333kEyt8jk0aVlQl5rJKnSNrUS5Hg=;
-  b=UDZdxhVJI6XfagxHeOQxFAzTGkEjWXDWpLgyonVYsxv0YdNSFnDpv9bp
-   LGDON681D7h/18YkkzblXV2Mj7/P4/7u0mdFJpktKmRGc6A2lj+I+dsNg
-   hDT3REKop2jOPOpz3FXknoBZS74cd+4e7SRfdz2qo1hfZYM35hPVE+Hvr
-   HraW0wAqPOohG+v0N/Pg2JxCKW/d0Z66xUbX6HzKvjEL+G8cVuQpk6+wA
-   JkGVCrf/N7sA+ahJq2/IlUxatw1uXCnvJHhSa9DtfiwGMpn9xdNX9Uh91
-   a7qBUgcyg9jEPBUBRZP2MdvQ62r0HhXruoHPAYuYit2ppsfOFJZ3j1aqE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="16540592"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="16540592"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 10:47:50 -0700
+  bh=zPdTU4ncY8coMmcItNRH/mLOV310q68LH95EaX7JoO4=;
+  b=BrgyctEIIHC+sqpKsSOYA12f7CY+CTcFQqmERgtHmFGMrh2FR1kRjy03
+   uF1sVg0vcdoqCuIvUB1XW+4qqq4jstifSaPfzX6AeoBIiHi7TfLtnmYrT
+   EWsuirP3ddDK/5jozte3ZRJ1MmvwkNPt9GkCo6wRzzRt/YP6yy+SZl/3G
+   JQNHfG7mvgwM93agwPObwkMie1gt77Eq2ActsEWi1kSEg/5tYMGsw+iBH
+   lVgQbxJRGSyxXfZ5MAZyjGWerQMx4pkipaYlCJEXuqfjzERx9IFNrjUWJ
+   2wGnEkPkVwKICE3zqwT2wnBhLNL4rGRacwT2/1iAWlBcaElkOYN+oMhwd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="16459825"
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="16459825"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 13:24:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="14207930"
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="18745799"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.188])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 10:47:50 -0700
-Date: Wed, 20 Mar 2024 10:47:48 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 13:24:12 -0700
+Date: Wed, 20 Mar 2024 13:24:10 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v2 2/3] ACPI/NUMA: Print CXL Early Discovery Table (CEDT)
-Message-ID: <ZfshRI/xAbSLJDQT@aschofie-mobl2>
-References: <20240319120026.2246389-1-rrichter@amd.com>
- <20240319120026.2246389-3-rrichter@amd.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v11 5/7] cxl/list: collect and parse media_error
+ records
+Message-ID: <ZftF6uhcBTZe/Qa5@aschofie-mobl2>
+References: <cover.1710386468.git.alison.schofield@intel.com>
+ <20c83daf14ac45542e9b6ed4cddfaf659e0ce7b0.1710386468.git.alison.schofield@intel.com>
+ <ac942888-d774-4e0a-8734-7321a558fb07@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,178 +58,272 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319120026.2246389-3-rrichter@amd.com>
+In-Reply-To: <ac942888-d774-4e0a-8734-7321a558fb07@intel.com>
 
-On Tue, Mar 19, 2024 at 01:00:24PM +0100, Robert Richter wrote:
-> The CEDT contains similar entries as the SRAT. For diagnostic reasons
-> print the CEDT same style as the SRAT.
-
-Richard,
-
-Acpitools is not properly handling the CFMWS at the moment. When
-that gets fixed up, might you be good using acpidump/extract.
-
-If you're going to dump, how about dumping it all? Add the fields
-interleave arithmetic, qtg_id, xormap_list[].
-
-While debugging issues in this space I have wished for more info
-like this:
-
-1) acpi_parse_cfmws()  pr_warn's upon failure to add a node but is 
-quiet on success. A pr_info on success, showing that a new memblk
-and node was added would be useful.
-
-2) numa_add_memblks() if memblk was extended pr_info the info.
-
-If you can incorporate here, great!
-
-Thanks,
-Alison
-
-
+On Fri, Mar 15, 2024 at 09:16:27AM -0700, Dave Jiang wrote:
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/acpi/numa/srat.c | 112 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
 > 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index e45e64993c50..50ae8557e8d1 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -300,6 +300,114 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
->  	return -EINVAL;
->  }
->  
-> +static int __init
-> +__acpi_table_print_cedt_entry(union acpi_subtable_headers *__header,
-> +			      void *arg, const unsigned long table_end)
-> +{
-> +	struct acpi_cedt_header *header = (struct acpi_cedt_header *)__header;
-> +
-> +	switch (header->type) {
-> +	case ACPI_CEDT_TYPE_CHBS:
-> +		{
-> +			struct acpi_cedt_chbs *p =
-> +				(struct acpi_cedt_chbs *)header;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_chbs)) {
-> +				pr_warn("CEDT: unsupported CHBS entry: size %d\n",
-> +					 header->length);
-> +				break;
-> +			}
-> +
-> +			pr_info("CEDT: CHBS (0x%llx length 0x%llx uid %lu) %s (%d)\n",
-> +				 (unsigned long long)p->base,
-> +				 (unsigned long long)p->length,
-> +				 (unsigned long)p->uid,
-> +				 (p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) ?
-> +				 "cxl11" :
-> +				 (p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20) ?
-> +				 "cxl20" :
-> +				 "unsupported version",
-> +				 p->cxl_version);
-> +		}
-> +		break;
-> +	case ACPI_CEDT_TYPE_CFMWS:
-> +		{
-> +			struct acpi_cedt_cfmws *p =
-> +				(struct acpi_cedt_cfmws *)header;
-> +			int eiw_to_ways[] = {1, 2, 4, 8, 16, 3, 6, 12};
-> +			int targets = -1;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_cfmws)) {
-> +				pr_warn("CEDT: unsupported CFMWS entry: size %d\n",
-> +					header->length);
-> +				break;
-> +			}
-> +
-> +			if (p->interleave_ways < ARRAY_SIZE(eiw_to_ways))
-> +				targets = eiw_to_ways[p->interleave_ways];
-> +			if (header->length < struct_size(
-> +					p, interleave_targets, targets))
-> +				targets = -1;
-> +
-> +			pr_info("CEDT: CFMWS (0x%llx length 0x%llx) with %d target%s",
-> +				(unsigned long long)p->base_hpa,
-> +				(unsigned long long)p->window_size,
-> +				targets, targets > 1 ? "s" : "");
-> +			for (int i = 0; i < targets; i++)
-> +				pr_cont("%s%lu", i ? ", " : " (",
-> +					(unsigned long)p->interleave_targets[i]);
-> +			pr_cont("%s%s%s%s%s%s\n",
-> +				targets > 0 ? ")" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ?
-> +				" type2" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ?
-> +				" type3" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ?
-> +				" volatile" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ?
-> +				" pmem" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ?
-> +				" fixed" : "");
-> +		}
-> +		break;
-> +	case ACPI_CEDT_TYPE_CXIMS:
-> +		{
-> +			struct acpi_cedt_cxims *p =
-> +				(struct acpi_cedt_cxims *)header;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_cxims)) {
-> +				pr_warn("CEDT: unsupported CXIMS entry: size %d\n",
-> +					header->length);
-> +				break;
-> +			}
-> +
-> +			pr_info("CEDT: CXIMS (hbig %u nr_xormaps %u)\n",
-> +				 (unsigned int)p->hbig,
-> +				 (unsigned int)p->nr_xormaps);
-> +		}
-> +		break;
-> +	default:
-> +		pr_warn("CEDT: Found unsupported entry (type = 0x%x)\n",
-> +			header->type);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __init acpi_table_print_cedt_entry(enum acpi_cedt_type id)
-> +{
-> +	acpi_table_parse_cedt(id, __acpi_table_print_cedt_entry, NULL);
-> +}
-> +
-> +static void __init acpi_table_print_cedt(void)
-> +{
-> +	/* Print only implemented CEDT types */
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CHBS);
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CFMWS);
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CXIMS);
-> +}
-> +
->  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  				   void *arg, const unsigned long table_end)
->  {
-> @@ -341,6 +449,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  	return 0;
->  }
->  #else
-> +static inline void acpi_table_print_cedt(void) {}
->  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  				   void *arg, const unsigned long table_end)
->  {
-> @@ -526,6 +635,9 @@ int __init acpi_numa_init(void)
->  	/* SLIT: System Locality Information Table */
->  	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
->  
-> +	/* CEDT: CXL Early Discovery Table */
-> +	acpi_table_print_cedt();
-> +
->  	/*
->  	 * CXL Fixed Memory Window Structures (CFMWS) must be parsed
->  	 * after the SRAT. Create NUMA Nodes for CXL memory ranges that
-> -- 
-> 2.39.2
+> On 3/13/24 9:05 PM, alison.schofield@intel.com wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Media_error records are logged as events in the kernel tracing
+> > subsystem. To prepare the media_error records for cxl list, enable
+> > tracing, trigger the poison list read, and parse the generated
+> > cxl_poison events into a json representation.
+> > 
+> > Use the event_trace private parsing option to customize the json
+> > representation based on cxl-list calling options and event field
+> > settings.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Minor nit below.
+
+Nit removed. Thanks!
+
+> > ---
+> >  cxl/json.c | 194 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 194 insertions(+)
+> > 
+> > diff --git a/cxl/json.c b/cxl/json.c
+> > index fbe41c78e82a..974e98f13cec 100644
+> > --- a/cxl/json.c
+> > +++ b/cxl/json.c
+> > @@ -1,16 +1,20 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  // Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
+> >  #include <limits.h>
+> > +#include <errno.h>
+> >  #include <util/json.h>
+> > +#include <util/bitmap.h>
+> >  #include <uuid/uuid.h>
+> >  #include <cxl/libcxl.h>
+> >  #include <json-c/json.h>
+> >  #include <json-c/printbuf.h>
+> >  #include <ccan/short_types/short_types.h>
+> > +#include <tracefs/tracefs.h>
+> >  
+> >  #include "filter.h"
+> >  #include "json.h"
+> >  #include "../daxctl/json.h"
+> > +#include "event_trace.h"
+> >  
+> >  #define CXL_FW_VERSION_STR_LEN	16
+> >  #define CXL_FW_MAX_SLOTS	4
+> > @@ -571,6 +575,184 @@ err_jobj:
+> >  	return NULL;
+> >  }
+> >  
+> > +/* CXL Spec 3.1 Table 8-140 Media Error Record */
+> > +#define CXL_POISON_SOURCE_MAX 7
+> > +static const char *poison_source[] = { "Unknown",  "External", "Internal",
+> > +				       "Injected", "Reserved", "Reserved",
+> > +				       "Reserved", "Vendor" };
+> > +
+> > +/* CXL Spec 3.1 Table 8-139 Get Poison List Output Payload */
+> > +#define CXL_POISON_FLAG_MORE BIT(0)
+> > +#define CXL_POISON_FLAG_OVERFLOW BIT(1)
+> > +#define CXL_POISON_FLAG_SCANNING BIT(2)
+> > +
+> > +static int poison_event_to_json(struct tep_event *event,
+> > +				struct tep_record *record,
+> > +				struct event_ctx *e_ctx)
+> > +{
+> > +	struct poison_ctx *p_ctx = e_ctx->poison_ctx;
+> > +	struct json_object *jp, *jobj, *jpoison = p_ctx->jpoison;
+> > +	struct cxl_memdev *memdev = p_ctx->memdev;
+> > +	struct cxl_region *region = p_ctx->region;
+> > +	unsigned long flags = p_ctx->flags;
+> > +	const char *region_name = NULL;
+> > +	char flag_str[32] = { '\0' };
+> > +	bool overflow = false;
+> > +	u8 source, pflags;
+> > +	u64 offset, ts;
+> > +	u32 length;
+> > +	char *str;
+> > +	int len;
+> > +
+> > +	jp = json_object_new_object();
+> > +	if (!jp)
+> > +		return -ENOMEM;
+> > +
+> > +	/* Skip records not in this region when listing by region */
+> > +	if (region)
+> > +		region_name = cxl_region_get_devname(region);
+> > +	if (region_name)
+> > +		str = tep_get_field_raw(NULL, event, "region", record, &len, 0);
+> > +	if ((region_name) && (strcmp(region_name, str) != 0)) {
+> > +		json_object_put(jp);
+> > +		return 0;
+> > +	}
+> > +	/* Include offset,length by region (hpa) or by memdev (dpa) */
+> > +	if (region) {
+> > +		offset = cxl_get_field_u64(event, record, "hpa");
+> > +		if (offset != ULLONG_MAX) {
+> > +			offset = offset - cxl_region_get_resource(region);
+> > +			jobj = util_json_object_hex(offset, flags);
+> > +			if (jobj)
+> > +				json_object_object_add(jp, "offset", jobj);
+> > +		}
+> > +	} else if (memdev) {
+> > +		offset = cxl_get_field_u64(event, record, "dpa");
+> > +		if (offset != ULLONG_MAX) {
+> > +			jobj = util_json_object_hex(offset, flags);
+> > +			if (jobj)
+> > +				json_object_object_add(jp, "offset", jobj);
+> > +		}
+> > +	}
+> > +	length = cxl_get_field_u32(event, record, "dpa_length");
+> > +	jobj = util_json_object_size(length, flags);
+> > +	if (jobj)
+> > +		json_object_object_add(jp, "length", jobj);
+> > +
+> > +	/* Always include the poison source */
+> > +	source = cxl_get_field_u8(event, record, "source");
+> > +	if (source <= CXL_POISON_SOURCE_MAX)
+> > +		jobj = json_object_new_string(poison_source[source]);
+> > +	else
+> > +		jobj = json_object_new_string("Reserved");
+> > +	if (jobj)
+> > +		json_object_object_add(jp, "source", jobj);
+> > +
+> > +	/* Include flags and overflow time if present */
+> > +	pflags = cxl_get_field_u8(event, record, "flags");
+> > +	if (pflags && pflags < UCHAR_MAX) {
+> > +		if (pflags & CXL_POISON_FLAG_MORE)
+> > +			strcat(flag_str, "More,");
+> > +		if (pflags & CXL_POISON_FLAG_SCANNING)
+> > +			strcat(flag_str, "Scanning,");
+> > +		if (pflags & CXL_POISON_FLAG_OVERFLOW) {
+> > +			strcat(flag_str, "Overflow,");
+> > +			overflow = true;
+> > +		}
+> > +		jobj = json_object_new_string(flag_str);
+> > +		if (jobj)
+> > +			json_object_object_add(jp, "flags", jobj);
+> > +	}
+> > +	if (overflow) {
+> > +		ts = cxl_get_field_u64(event, record, "overflow_ts");
+> > +		jobj = util_json_object_hex(ts, flags);
+> > +		if (jobj)
+> > +			json_object_object_add(jp, "overflow_t", jobj);
+> > +	}
+> > +	json_object_array_add(jpoison, jp);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct json_object *
+> > +util_cxl_poison_events_to_json(struct tracefs_instance *inst,
+> > +			       struct poison_ctx *p_ctx)
+> > +{
+> > +	struct event_ctx ectx = {
+> > +		.event_name = "cxl_poison",
+> > +		.event_pid = getpid(),
+> > +		.system = "cxl",
+> > +		.poison_ctx = p_ctx,
+> > +		.parse_event = poison_event_to_json,
+> > +	};
+> > +	int rc = 0;
+> 
+> No need to init rc here. 
+> 
+> DJ
+> 
+> > +
+> > +	p_ctx->jpoison = json_object_new_array();
+> > +	if (!p_ctx->jpoison)
+> > +		return NULL;
+> > +
+> > +	rc = cxl_parse_events(inst, &ectx);
+> > +	if (rc < 0) {
+> > +		fprintf(stderr, "Failed to parse events: %d\n", rc);
+> > +		goto put_jobj;
+> > +	}
+> > +	if (json_object_array_length(p_ctx->jpoison) == 0)
+> > +		goto put_jobj;
+> > +
+> > +	return p_ctx->jpoison;
+> > +
+> > +put_jobj:
+> > +	json_object_put(p_ctx->jpoison);
+> > +	return NULL;
+> > +}
+> > +
+> > +static struct json_object *
+> > +util_cxl_poison_list_to_json(struct cxl_region *region,
+> > +			     struct cxl_memdev *memdev,
+> > +			     unsigned long flags)
+> > +{
+> > +	struct json_object *jpoison = NULL;
+> > +	struct poison_ctx p_ctx;
+> > +	struct tracefs_instance *inst;
+> > +	int rc;
+> > +
+> > +	inst = tracefs_instance_create("cxl list");
+> > +	if (!inst) {
+> > +		fprintf(stderr, "tracefs_instance_create() failed\n");
+> > +		return NULL;
+> > +	}
+> > +
+> > +	rc = cxl_event_tracing_enable(inst, "cxl", "cxl_poison");
+> > +	if (rc < 0) {
+> > +		fprintf(stderr, "Failed to enable trace: %d\n", rc);
+> > +		goto err_free;
+> > +	}
+> > +
+> > +	if (region)
+> > +		rc = cxl_region_trigger_poison_list(region);
+> > +	else
+> > +		rc = cxl_memdev_trigger_poison_list(memdev);
+> > +	if (rc)
+> > +		goto err_free;
+> > +
+> > +	rc = cxl_event_tracing_disable(inst);
+> > +	if (rc < 0) {
+> > +		fprintf(stderr, "Failed to disable trace: %d\n", rc);
+> > +		goto err_free;
+> > +	}
+> > +
+> > +	p_ctx = (struct poison_ctx) {
+> > +		.region = region,
+> > +		.memdev = memdev,
+> > +		.flags = flags,
+> > +	};
+> > +	jpoison = util_cxl_poison_events_to_json(inst, &p_ctx);
+> > +
+> > +err_free:
+> > +	tracefs_instance_free(inst);
+> > +	return jpoison;
+> > +}
+> > +
+> >  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+> >  		unsigned long flags)
+> >  {
+> > @@ -664,6 +846,12 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+> >  			json_object_object_add(jdev, "firmware", jobj);
+> >  	}
+> >  
+> > +	if (flags & UTIL_JSON_MEDIA_ERRORS) {
+> > +		jobj = util_cxl_poison_list_to_json(NULL, memdev, flags);
+> > +		if (jobj)
+> > +			json_object_object_add(jdev, "media_errors", jobj);
+> > +	}
+> > +
+> >  	json_object_set_userdata(jdev, memdev, NULL);
+> >  	return jdev;
+> >  }
+> > @@ -1012,6 +1200,12 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
+> >  			json_object_object_add(jregion, "state", jobj);
+> >  	}
+> >  
+> > +	if (flags & UTIL_JSON_MEDIA_ERRORS) {
+> > +		jobj = util_cxl_poison_list_to_json(region, NULL, flags);
+> > +		if (jobj)
+> > +			json_object_object_add(jregion, "media_errors", jobj);
+> > +	}
+> > +
+> >  	util_cxl_mappings_append_json(jregion, region, flags);
+> >  
+> >  	if (flags & UTIL_JSON_DAX) {
