@@ -1,113 +1,205 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7191D1E515;
-	Wed, 20 Mar 2024 08:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710923613; cv=none; b=eRGfG3Dt5FuGTMxrPmPYpWUmyCN5LXxjxW5cXT7rJuWLDHwkfTOr3ZrVOYBYzOYX0TQXgmC+kS1ohAKXNOievFaGbH/Qec2TkjILcRSYVv5aVJPM8ltdbkXQTQ7ped1ERagf2zbH21ynM02gBXAvz2bEdEsGKzJyApXKkhBgSgc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710923613; c=relaxed/simple;
-	bh=MPqS9o9buH0oXOAQqPvPmOIaMtnY1fNPe/ZaWmypGdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aoEvIvSkSwxIq4yC4mr1dtN+pckfuZ2TIb7fSUDmUVniO6G3OedjIgAOqSdW4GDyqIzkDsLwJ9EqqFT7HJ2AIKA/XDIPX91WC55rhfDuWtB12jw+Tb7eI4B/lsGjF4mXE6GUJMFbMC3svVAbxenaNa4P/uo8WmUDJBgsBYIHeBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 234862800B3F1;
-	Wed, 20 Mar 2024 09:33:22 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 0712A5FC4CE; Wed, 20 Mar 2024 09:33:22 +0100 (CET)
-Date: Wed, 20 Mar 2024 09:33:21 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <ZfqfUaWko_Dzx020@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
- <5d0e75-993c-3978-8ccf-60bfb7cac10@linux.intel.com>
- <20240209203204.GA5850@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2E13BBEA;
+	Wed, 20 Mar 2024 12:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710938902; cv=fail; b=Z2p6yxS0iHN0g4UgscGi2GglIS+kpN0+sC95q6bLpJTGdNtDlvQb37H+ph1FdrKNo+FK7itSUOP3P6tzVRosX0T0wLRzmnn4x6q0RRxrQBnsLzDcSWW3iqVQEtYfsD+WcVQARRy6UrJb24wBYWr+oiFNAFKjmQu0mX5FRS5mWfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710938902; c=relaxed/simple;
+	bh=IzY7ogDjt3+uNQVo7vshdLVYIuMHH50lte8XEcady4k=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qdCS+BevAazXmrq3Zjl83sP+DoMlDAncaikbSyKb/FzQrSa1uFFtRg1w/t/c2kkt43r7S1nCZoP6LsaL9V6JfOe+jO7GfXsDdyqkarQjqXCE+SExeM+UL1G0weB67rMJ2/lmiWH20knXDlDOj0FD8JK2I0zXvPtOryfgeiYhBOg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rri0GN6n; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rri0GN6n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710938901; x=1742474901;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=IzY7ogDjt3+uNQVo7vshdLVYIuMHH50lte8XEcady4k=;
+  b=Rri0GN6nvH5yWWHChSBNn395N2uzyWHS3aJuffzlRThG7mDMV78DP2oC
+   1v3APqIUOVANR3IizXD3Ubtm7Z64AAOzBRGisisv2TOqApV87ht8cJ09b
+   IcihosVXCzuzDOdAoDabrtFTuyL+F5mpCatmxk16lglbN43m18trR7Fx2
+   jU+VU2EppaXd9554L81hFt0qQn4oMu0JGIPfaggoFHwXi7xbmCZj/F5WM
+   nKNVIqaEjzThhOfw+IK8N79s8sHA2reQ3FBdnI82YHcZYB6HLynb23LA7
+   rNpXao+ji/v2bhq3qSEQdOlBdeLbTdvd7bMp7COuXdj12q0fnWZnwtCND
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="23360820"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="23360820"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 05:48:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="14027092"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Mar 2024 05:48:20 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 20 Mar 2024 05:48:19 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 20 Mar 2024 05:48:19 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 20 Mar 2024 05:48:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W8Lo53wvdPLhDCVHGsqWKewNJCZCgbeaBtdbah30GxJ33x8885fKoi2j195dz/dSktJzLajMhnhNzeFNlUDZtxvpxoD5uu2iUAedVle15n7hseZ/bGJWFeBdF5deEM6BJLlhDbuRConmJvMkbdVGhJ8yyWNzah4HjzF71fyofz72aZUXTKitV4JkOblP0u8FBFgDGhAXR6HpjlMxUHGmXyEcf0gDRM1ajWYBspecWXbVGYER2ZGmwqkAQE+arFvpbJWrVSKmkz+8ZlWCQxBHMajv5oGbx/DtxVBxJxN3065F/cTamKQfBQwajOfJJmPKYKquuWAwEkBkf6ocILPS4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u4UT+PO5OCStZrxxENPtQ1lfkwlmHvJ5t/4zs3AJuuY=;
+ b=RsU3CnGgwx0sW18t4MQ7L8wbVgJa3/wMMOYegF69p+iVnYNjPzjS/7PGIrT4myfxmeIiWfBetYk/xSZyNI9+/5gUJKbIBywyJraP2lSlvSNRhO4xb8gHH9wJcWFNDKQ3FtllDbSqvXqBjRDgAmERZDzU28bOENB+ElZj8lsmpMcIveblcYacGuVCqJuLCZhsoGMpNCkbekjTDbe2S9uVgHAw1OYN3wKbvRo3YdF9LixOJvMnGqs9cLzAdwV6cpQyeRF3P2zeYFeXUfDN73CBpn8IaSAVOyy4trQmZpBUmrvtwLeMUD5CdZzphW6DF2KmUQa9lO+ls6OAmN2UqD1ZJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7200.namprd11.prod.outlook.com (2603:10b6:208:42f::11)
+ by DS0PR11MB6351.namprd11.prod.outlook.com (2603:10b6:8:cc::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11; Wed, 20 Mar
+ 2024 12:48:17 +0000
+Received: from IA1PR11MB7200.namprd11.prod.outlook.com
+ ([fe80::c990:5065:ed39:c165]) by IA1PR11MB7200.namprd11.prod.outlook.com
+ ([fe80::c990:5065:ed39:c165%6]) with mapi id 15.20.7409.010; Wed, 20 Mar 2024
+ 12:48:17 +0000
+Message-ID: <9c4b275e-45cf-42ee-b356-d858a2fd3755@intel.com>
+Date: Wed, 20 Mar 2024 20:48:09 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/6] Add support for root port RAS error handling
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, <rrichter@amd.com>,
+	<terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240313083602.239201-1-ming4.li@intel.com>
+ <65f3a842988d6_a9b4294f7@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <16ab732d-a009-45ee-a438-3faf048c7acd@intel.com>
+ <65f491b64f15a_aa2229497@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: "Li, Ming" <ming4.li@intel.com>
+Organization: Intel
+In-Reply-To: <65f491b64f15a_aa2229497@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0226.apcprd06.prod.outlook.com
+ (2603:1096:4:68::34) To IA1PR11MB7200.namprd11.prod.outlook.com
+ (2603:10b6:208:42f::11)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240209203204.GA5850@wunner.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7200:EE_|DS0PR11MB6351:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8bbaac2-5589-42e7-e53b-08dc48dc03a3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rVhvzd1OUxhvhi0QQd4ZIClCu3+2h6ePSPhB7wpYeoBp7MES/3wh0SHMYzWnNd6pBcRWE7rHh628gAt6xMPBHk35y8NHLBMjN9GaKZRm+np5Zh0XbwJ0R5Ge8cIFmWdtX218XdI+O3Y3XcFms3wySqlTQ46hJukSjRYlQWpQJwIg9nKeSMP1zlzFwoxnpMf47QlDsHJwUzUxZpfxszf/pxQjqcGR7f8d0cdoJp6ZNiiQR5bA0TA8YgRZMMKEsYTwMQoF7TkyozJkUT37dFfMgl/poMAcw4euvOv/3zYEdDvD558++k5DSlx3G8ZwPneQSdqMM24bROFlMfHgETtrNtfeMsZzqwQl2d2+2rsC9C1IdKxUB6+f+b7whjjOCNqhJNGH8WV418tkHTO0+FXP88c9yC+P5JzJmzBDtGS13mzQOlTnpNZRVIECt1K0PoJsM5aQ+xcWDGlFQumFAbauzE2ILOL4ZXw0ae+Vd0aNdbrY/idnXx/t7bzjsA3vIn0Ga0IrE0Bx+y65LVvKFqgX65wggAE/LfUIPLqRN0LIiC8cmCFW3HrQPcVOhW9eDFB4N4rEwr37uWUX8QT8xn+enliusGjwTUQ6o3GyXqlNTaobyYlfQsowvtfDYiP7g7dSrisgRaKX+gYEReS1ROOnxhpZxpZOLeBFXFbUCLOOb04=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7200.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QTFLTWx2UjYybmRBS3F5MnFKOGFKd0F4bllJWTBSd1R6Z2lQWHhsUnZES0VS?=
+ =?utf-8?B?TlhIeEZsU0pxeGxmMkwxa1QvVVY5RzdVbTdmU1lZUGlHdWxob2xEaVRETk1Q?=
+ =?utf-8?B?SUVSMmJHRHM1bCtDd3BDSnYzSmlWQUxKU0ovUjhoWWk4ajFkUHFaTVJuVWQv?=
+ =?utf-8?B?cUFWL3oxSjhSampZNmViS3M0ZElwc3Z1VUxBSWYwK2orc3lZNWZKVzZMTTFN?=
+ =?utf-8?B?KzlPREJqSnlkOFhvcHpyaEpDMDFWMC9qdDRRY0Z6bit4KzhyeFhBd1hNMkt0?=
+ =?utf-8?B?MDBrMTlLR29POVBQOUNycTFkOHY4elBnMjFEQXU1ZC8yRHNsQklteU5CeWFH?=
+ =?utf-8?B?UnMxaEw1K0NTam5jMUZ0LzN4MFZRUGF5T2ZQcGFVdjBVc1duL0o4VXU5N3Zm?=
+ =?utf-8?B?dXRpeTMrem52YzV3QlZjNEk3bjh4T3Y4Y3E5dk9QcmJRZWxZb2FPYkREWE0x?=
+ =?utf-8?B?MWI1aC9BZlhQT2NTZXgxZzI2VFJQOHRkbWVkUEkzaEZoTGN0T2ZONk1Wc0Nr?=
+ =?utf-8?B?dnhobWRWQXZCVkRLT1ZwVkxTTW5YaWtVdkZOM3hza2J3SkppOG1YQlVmNmFj?=
+ =?utf-8?B?U1EvYUxtRzRCd0ZuVTNBS2NoZ0NrcG1TK01pd0xkZks0MWZuQUcrRk83cW55?=
+ =?utf-8?B?MFhaYmZ6SmsxV3FOdytmMlBwdzVrdTlDdmlpMnIwbCtRU1g1RjByWVlqYWNP?=
+ =?utf-8?B?clVVYmlETVJncGRDc0VyUlhZVkVqUVpjUjhiY3FaWTJrT2xMTm1YOHdlVDAy?=
+ =?utf-8?B?VFhXMFVEYUhpWEp4d3RaM0hxaUV1TUZDUndaaW1ENWNNdE5Pdm5VaUxmWGFl?=
+ =?utf-8?B?cXhaNCtmaTR3L0svTjVnekJCaGsxcG5VYVRtRUpUMGdHUjB5SWtIVUp2V2ta?=
+ =?utf-8?B?bzUrVENqOGJRL004RzRyUE4vRXJxd3ozcEZUOEozWlY5RHdSZWhJVFpTaUlX?=
+ =?utf-8?B?QU9scUJyWjZ6aWEvbjhqK0UrZ1I4L1RBUUJvM1dlUndVL0trYk9KUmNuQjgy?=
+ =?utf-8?B?K1VmSWZ3RGtuZCtJM0l5UjA4U3N1cG4ydDNyL2wyTHE4TEhNV3EzNDVRdFRV?=
+ =?utf-8?B?dGhVREttMWYxSTlleGI5QTRaUWZsZUJ3NnBWelY5WEpxK3RtVjU4c1VLdFNI?=
+ =?utf-8?B?b0lzYkh0WDJyUUVnR2FYOFlPSE15R3VjcHlhbHlZNzlBQ2dNbUtneHhuVXU4?=
+ =?utf-8?B?NzNQZytVQXlTNXJIV2RzOERMWkJ4alFkcytvMm1RSU1hc3MrYTZYa2pDV3dX?=
+ =?utf-8?B?ZHZ1QzJ0VWNsZ2I1OTJBdUp4QUpwY1BsT20rMkt3c3o2S1A5ZGxmbGRLSWZH?=
+ =?utf-8?B?d3I2bFpQVDhSSTZCOEV0VWJDdEw5LzhwOHVIV0grQVpjZW9rT0VjOThIUllH?=
+ =?utf-8?B?N0lTSnRMVVhSSGRhQkk0V3B4WitSVUI5Yi8rNWNtTGQ1MzFSOUNNc05JbkVI?=
+ =?utf-8?B?QmNtRWNJMzI5M0pOa1RoTzFFZmE3clhYeUF4azZmRHNsM1g0eDhSTWZJU0p0?=
+ =?utf-8?B?UTIvT1Y3ZjhqOHNnWDdqOXp5SFJtb29RZ2Y5bVpsK2N6RDhJU1J5N3d1SEFR?=
+ =?utf-8?B?MUFET1lTdEJTYXQ3K3dySkhnRVNtTkh3eWMvL1A3eTd5ZzBCZzZ6OHRmWVhq?=
+ =?utf-8?B?M1VEZk45L1RMdE9FSjJlMkw0b2tlNjRkUHl1RUsyKy8yYkI0d0FmbnpTVCtT?=
+ =?utf-8?B?OFcyMm0wUUUrR2NNa01nMWxGZUVhRDUrcUJIM0VZQXlDZlZ3K2pCN3BQSExn?=
+ =?utf-8?B?UDJSUFlYcGpaSjFMUi9HTTJyN3VuVkVVVXBidmlWVWlTbVZVOTZTZWtUQkZ2?=
+ =?utf-8?B?VTVtL2RRczczdEdDZW51a2JKUU05amxkRy81cFhjZnkzMDlNdG8wQmZUc0M2?=
+ =?utf-8?B?L3hPdXZVTVBoN3IwZzNUVlVrRDVsNysxTnVnalpMbTdSRlViNjkwT2JZYjhr?=
+ =?utf-8?B?d1NVeFZSYXY0OVg4MVBSOXZvTEw3NlpnajllaXc0YmlkdVl1Wm9IOUFkcVBl?=
+ =?utf-8?B?eCtER1FUdE9WVnlpV0Z4ODJVUnpwc0hYRkM1SjJMd0tXWnBVNWE1a1UvcjBZ?=
+ =?utf-8?B?U0RZdE44Z01ZcWxGLzRneHBjYmZnT1NXeTVsdWZjYndlVjFaSGZDMUN3cnlq?=
+ =?utf-8?Q?v1wirq6FnqbjJ+LNx6UA4m2zv?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8bbaac2-5589-42e7-e53b-08dc48dc03a3
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7200.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 12:48:17.4172
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ak4Wksgvl27vQYFGJIT1TP7xQEX5O1By05YsBlhCd2umfcFD89NRD5uXwd+wHQhhnsVG4Txr9Yu8Nh2gBIzztw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6351
+X-OriginatorOrg: intel.com
 
-On Fri, Feb 09, 2024 at 09:32:04PM +0100, Lukas Wunner wrote:
-> On Tue, Oct 03, 2023 at 01:35:26PM +0300, Ilpo Järvinen wrote:
-> > On Thu, 28 Sep 2023, Lukas Wunner wrote:
-> > > +	spdm_state->responder_caps = le32_to_cpu(rsp->flags);
-> > 
-> > Earlier, unaligned accessors where used with the version_number_entries.
-> > Is it intentional they're not used here (I cannot see what would be 
-> > reason for this difference)?
+On 3/16/2024 2:21 AM, Dan Williams wrote:
+> Li, Ming wrote:
+> [..]
+>>> I do expect direct-attach to be a predominant use case, but I want to
+>>> make sure that the implementation at least does not make the switch port
+>>> error handling case more difficult to implement.
+>>
+>> Hi Dan,
+>>
+>> Currently, A rough idea I have is that:
+>> If a CXL switch connected to the CXL RP, there should be two cases,
+>> 1. no CXL memory device connected to the switch, in this case, I'm not
+>> sure whether CXL.cachemem protocol errors is still possibly happened
+>> between RP and switch without CXL memory device. If not, maybe we
+>> don't need to consider such case?
 > 
-> Thanks, good catch.  Indeed this is not necessarily naturally aligned
-> because the GET_CAPABILITIES request and response succeeds the
-> GET_VERSION response in the same allocation.  And the GET_VERSION
-> response size is a multiple of 2, but not always a multiple of 4.
+> Protocol errors can happen between any 2 ports, just like PCI protocol
+> errors.
 
-Actually, scratch that.
+Seems like if we want to handle CXL protocol error for such case on CXL driver side, we need some changes for CXL switch port/dport enumeration, I remembered that switch USP and DSP are enumerated only when a CXL memory device attached.
 
-I've realized that since all the SPDM request/response structs are
-declared __packed, the alignment requirement for the struct members
-becomes 1 byte and hence they're automatically accessed byte-wise on
-arches which require that:
+> 
+>> 2. a CXL memory device connected to the switch. I think cxl_pci error
+>> handler could also help to handle CXL.cachemem protocol errors
+>> happened in switch USP/DSP.
+> 
+> No, for 2 reasons:
+> 
+> * The cxl_pci driver is only for general CXL type-3 memory
+>   expanders. Even though no CXL.cache devices have upstream drivers they
+>   do exist and they would experience protocol errors that the PCI core
+>   needs to consider.
+> 
+> * When a switch is present it is possible to have a protocol error
+>   between the switch upstream port and the root port, and not between
+>   the switch downstream port and the endpoint.
+> 
+> The more I think about it I do not think it is appropriate for cxl_pci
+> to be involved in clearing root port errors in the VH case, it only
+> works the RCH case because of the way the device and the root-port get
+> combined.
 
-https://stackoverflow.com/questions/73152859/accessing-unaligned-struct-member-using-pointers#73154825
+Thank you for your explanation. 
 
-E.g. this line...
+I think I need some time to consider a appropriate proposal. maybe we can register a CXL error handler into struct pci_driver during CXL port/dport enumeration for root port and switch cases, PCIe AER driver will invoke this registered CXL error handler to handle errors on CXL subsystem side. But I think this solution also meets above issue(current CXL subsystem won't enumerate CXL switch port/dport without CXL mem device).
 
-        req->data_transfer_size = cpu_to_le32(spdm_state->transport_sz);
 
-...becomes this on arm 32-bit (multi_v4t_defconfig)...
 
-        ldr        r3, [r5, #0x1c]   ; load spdm_state->transport_sz into r3
-        lsr        r2, r3, lsr #8    ; right-shift r3 into r2 by 8 bits
-        strb       r3, [r7, #0xc]    ; copy lowest byte from r3 into request
-        strb       r2, [r7, #0xd]    ; copy next byte from r2 into request
-        lsr        r2, r3, lsr #16   ; right-shift r3 into r2 by 16 bits
-        lsr        r3, r3, lsr #24   ; right-shift r3 into r3 by 24 bits
-        strb       r2, [r7, #0xe]    ; copy next byte from r2 into request
-        strb       r3, [r7, #0xf]    ; copy next byte from r3 into request
-
-...and it becomes this on x64_64, which has no alignment requirements:
-
-        mov        eax, dword [r15+0x40] ; load spdm_state->transport_sz
-        mov        dword [r12+0xc], eax  ; copy into request
-
-So for __packed structs, get_unaligned_*() / put_unaligned_*() accessors
-are not necessary and I will drop them when respinning.
-
-Thanks,
-
-Lukas
