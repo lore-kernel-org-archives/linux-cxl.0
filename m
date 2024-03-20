@@ -1,464 +1,230 @@
-Received: from serval.cherry.relay.mailchannels.net (serval.cherry.relay.mailchannels.net [23.83.223.163])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FA64F889
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Mar 2024 23:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FCE321D;
+	Wed, 20 Mar 2024 00:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710889870; cv=pass; b=Zud4yhULtMtTuQ5aVmwekUJiKFApTtFSBEzJHycptZJ6VD9w0rLpC1VTYnDRq+ygMj5JVRjeCEPSUp8K1jL2ZtowMRJFDzh1sVzknzsSH7Zpx9gmZpqlXUySHu2ip/cpjq++mdNMm6/fi96ZICblPyF49PFpgsv8Hypnd75/sPg=
+	t=1710894121; cv=fail; b=fB0DBdn8AGVb3o3a8PK5+LqDqir+cTtYQKl5rsa3ZMyWqlRy+TxcZqItlM7Xkqf7BP51zg+v+AwHDDUG4/qEcsbkxLZ5OOBHFqdY6wBkrS94u4qnwXfYHvn2nmHhfnpWYs1GmU0pJ6x1mX9s0axlfQg38ZoUXcKyILxnGtDFiOc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710889870; c=relaxed/simple;
-	bh=bNbYdfnu4ofGEI7ataGtzy528RAtGrx0+GTi4IZGX6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEztd0jOJbSrXfH6N1sl4XLRGsrm205ZHYsr4ZgMoWstASa3sMwynn2nGQK/rHC6s0B87i6LMAJqFORZQme9yxiQXTeYEYl2DbqQFhZ8MyIuZSQ0W1StYAMom8H8zsHNlH6gbCYmo68/jiRHcgUz+37oYIGL8Pe8LO0WyHNjNA0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=a7GPv+Y3; arc=pass smtp.client-ip=23.83.223.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1710894121; c=relaxed/simple;
+	bh=fFpzXfJv1jaUrtor9ILJQCHJbwPLybCIaXrQ1PlmwH4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mjTg1R0knqUxjhPWUdL++2CGPGMMxo7PQ0lpvysC7iurviv2vWSwO1agp9sj08s1IWo7RI0sSr3vAUreusu/cjm/twc2LumU/m6HmMIKf44SGIi5NmEDKRBfE3dJHz+WwDpYUZTpBewP4reKt5HrJxihb6RHm5fZbOSeaZ2c7Dg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RaLIMdhd; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="a7GPv+Y3"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 579694C1B76;
-	Tue, 19 Mar 2024 16:28:35 +0000 (UTC)
-Received: from pdx1-sub0-mail-a254.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id EAA114C27B3;
-	Tue, 19 Mar 2024 16:28:34 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1710865715; a=rsa-sha256;
-	cv=none;
-	b=oAuWLkzaP22k1k587an4RgxRWmdZNYroBG5eNu/hy/fgIk5T832LPd6nHbACK0zf9m0ljo
-	qWgXW2Nr1SwI/s61wF0/sLm9eHifbw5VfctYt6dtLrXbxx4ghbdqlJ7fP2wdIQnuU+1+je
-	pfnMyejAb6hXQY1zLfSR2gnVU6+Yg9CmoQd3WlQwk7OrWd0m5DtIM88Ma/ETAa3CIF4Eua
-	MhhT2e5RkR6ymI77GtTLmFuK9W3RgLjhYM7PZHLZu1SS3kzXAkojNnFuppSr8qjMvcrM0s
-	F82WSl9jrmbJWVQvo47EQYYzglFPu1K6uB+e1rNqJ0ROfuOzuUGrfLE9f8qmlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1710865715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=LYz3hJdmaYpaOY0K3Qx+ah010FBvRX01FHkmdxC/K/w=;
-	b=7sA4t1+ZAFHG1RyL4huEyZ7y15yg03G+K/gKIXof6K2Om0i8i1mkdfWCXsuDIkG14A6nMS
-	9oMrLxGazGXHh+esFGlfGkisK+l9OVLsKMm41gu8eAla7KxLn2x1ac9bVE6CtFY49MLGsG
-	mcBGNW+4BAiuKo+APQgsNsWiRHPyt5hmzZhjBa647UFgzlH8BGcmpaM1XglSc5DJcc/iIN
-	huSvmTK8+MiBvwO9VfiUQaIFkMiomX74jMfEuOw0H75Rl/aao5qr1Bfrvb6uxQsrtbUrk6
-	Mln/smxu9GM6mCM13aqNagfWdsYgML+hqH+KYIkcsSdkXl7BHC+waKg51F+jew==
-ARC-Authentication-Results: i=1;
-	rspamd-76c7995f89-psfpx;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tank-Battle: 749c42a00c69019c_1710865715247_3602563192
-X-MC-Loop-Signature: 1710865715247:2903537377
-X-MC-Ingress-Time: 1710865715247
-Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.111.46.219 (trex/6.9.2);
-	Tue, 19 Mar 2024 16:28:35 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4Tzcbk3PmGzJ7;
-	Tue, 19 Mar 2024 09:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1710865714;
-	bh=LYz3hJdmaYpaOY0K3Qx+ah010FBvRX01FHkmdxC/K/w=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=a7GPv+Y3gSgcyY8lhU7SSKrO5hZpYeuJpVwNyxulGgPn/71yhxSMe7i4ueJnzetm/
-	 dgk7AU2txZ+gsJsICJrSlg+eeLW/pYkJTkrWui2HaHK1lUFcX9mWfBMC1w/DAqXd7N
-	 vFLDYNhgKX671HCI+6r06YsGZt6c3vHernDjJ4aArFsiL+VmUs4ymAo6h39spHO+JZ
-	 njq4VcoxtrKd2XIsFPJEnyw2SZNrgpvHeBrL9wW+51gVabVs016B3FmGlZ7ULTCyfU
-	 1HwvyUSMqw4kyXffxPTMPCyoZrQjuEt+EMeKbVeA9xtW4IU9WfeEEkrWZuM8dz0PjC
-	 7DsD1U+oRrJFg==
-Date: Tue, 19 Mar 2024 09:28:28 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: vishal.l.verma@intel.com, fan.ni@samsung.com, a.manzanares@samsung.com, 
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 -qemu] hw/cxl: Support firmware updates
-Message-ID: <pdvv57y2xi7jnkvtjjx6s4vbjm7vibnitfsak2jdqjlxjm6qfx@ds5xbuvrehll>
-References: <20240205172942.13343-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RaLIMdhd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710894120; x=1742430120;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=fFpzXfJv1jaUrtor9ILJQCHJbwPLybCIaXrQ1PlmwH4=;
+  b=RaLIMdhdG7BAVzGDqMVTNfFdvi7BSZPrgCN6wxVMrDheMNe2IYL02+Er
+   6bHMHgY8CItJ2lHCnBpCxUG/n90Y3APhDP0DRcxbQdJrnpQMsXDs1FaqN
+   Tot1FIjyzv6BhERJJKPOIb+sRzyJIwt6mLMUv4gI1Mo7DCT3iXxIWY6M5
+   +hOXmY3JKTvo1YIMv3wGuBPpLyHl8Z02x+CMmdK/tXM7ZSrhVrnyQOUzN
+   uBEMGLvMH6wjApWgYNPtjZDMjMVx84NL+v8GmyBmaQERlJPpxSTUdl/UJ
+   Ms1h9f/9lpLF7jmjxQWN5EOY481+5tajYkjHXeQBlOKMeoXK556dOiZnG
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="5975650"
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="5975650"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 17:22:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="18703396"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Mar 2024 17:21:59 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 19 Mar 2024 17:21:58 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 19 Mar 2024 17:21:57 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 19 Mar 2024 17:21:57 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 19 Mar 2024 17:21:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VSoIXvgdlS4tib0TJEz1pBjBtkd3/kkpeSyveIK7u/sXHQIui6o2CNx849rErQRDhKFO0ar5TVDicCLXv1pwgjAV4JhL6MYqD48NSpDBRxCvN1Qb0RXcvu0XgJSTav/pAQPD361++fd1ID9p8vNVLJiCeMQL77y37cS1OiH5YbH/iU3xRvakb2dOUzVtm+aBomAFS5KtlVfQxnnFZqsf2kAzi11U4fGoyaRBYyacqNLeqojWk/zEw2KsIyiucpPTFoXjGXQTkySs/6T23CXecia/Ex98tBCZnOiF8dz003huTEst/FeLTvjeLsgnKwVF+hPqYC7b8QuGNmO/yVQD1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5cy1lNPiBAvde08llR3bgaa8+/Blz7+PmIKMgxBxj+U=;
+ b=Ur7BAcVLh+teGlpPiGmjFuwylf72DOuFacn8ZYP5H+RpQiP+iAOHQ2d3bzCFbaIYonmXFgXBk+uZAuZkqFi7vUfO6DM5ZZ42x2ZMarIFLX8zuUCN93ASZsgQlieB7tKgZrpAphzXajbBk9hY4TMb/D9sjNKiz8m5cbpDFDg7wpwPTikUn7Avl4cgCT43xiU/OdWv8TcwoMTMu18sDNSnOqIV+exK1h3Och1qD7CtCrJ2YD0Spms2ufNatzFFE8CEwcGEgLcVF8MTNUnhT3geUyDHoqUqA5w6/YFTzcK0J6FpH79uaO9KgG7KpKauhroh65SNICSogsg5ohEuE7GbsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB7383.namprd11.prod.outlook.com (2603:10b6:8:133::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13; Wed, 20 Mar
+ 2024 00:21:56 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.010; Wed, 20 Mar 2024
+ 00:21:56 +0000
+Date: Tue, 19 Mar 2024 17:21:53 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Derick Marks <derick.w.marks@intel.com>, "Len
+ Brown" <lenb@kernel.org>
+Subject: Re: [PATCH] cxl: Fix use of phys_to_target_node() outside of init
+ section
+Message-ID: <65fa2c219548f_aa2229499@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240318210904.2188120-1-rrichter@amd.com>
+ <20240318210904.2188120-2-rrichter@amd.com>
+ <65f8b191c0422_aa222941b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <Zfl9Efxe7DwuU_i3@rric.localdomain>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Zfl9Efxe7DwuU_i3@rric.localdomain>
+X-ClientProxiedBy: MW4PR03CA0351.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240205172942.13343-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20231221
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7383:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0c7257b-642f-4b11-42e6-08dc4873c00b
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aqjIJ3wf4nqDamyIpbxWRt55FeonDL3LilnF0WA519rx6So02qQxmUePV57fniGlhePj9M7tkdYcyNptQ7kMWyRRtNCJmetDm1hHcUulmjH8eC7zyySjAu1/r0os0xP/xvO5D+KRa92fxSIwcRf2EUpjrSinvULoJdvlDzAh1AwBD0SLj4R3aWIOzLr02kiHt7/DJmSrTMNlVRUqbNY7WjcPjeA5ZWoiFp0IObN8qWqn+dKd9wgBQIN+OcrQ8zGoNDB5qY5G+ig1tQSS+EZ/RTR5xtaDJPRJM0XR+6tk36ROyI96HQlPKb2cfH8uO1+I5iOKRKa3LOL4q2uniRcP0VTNbfcI3HOGaTBn1+C0Yu+W5/gsDdLFCUcsDlrZKCR3CYYVmaZLqMFJarHSPMo5YuXroutc5H1Xl93bYqtAh4Vq1NdFaidEsL8EyfdthsTri4itWNstbF5/HdYsJObwc8z9a4JMdPMRIlqqv/49OSqIoi+Oo4OsfyHXO4TtsE+rEUqVvZsBvpFbjLn89DwLgL6nTms9/rHMBRNfEVNH58DlalH/TXO1pEyxhk5D3KKyWgbuks2/704C/sg8QOBE9/c9Irx4QvXy6w5rmcAwtWUBE04zLblmqwquzpteJLfnJv+Avh1hVNs11x0wgMu/5ipBBdg/GQ3mDFyAlHWT+nM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xdmt3OSTZHgBkDtMyxFoVPnnIeDLJaRf6r/j9J4D7kRtAV/dRw+Q3QFq60TL?=
+ =?us-ascii?Q?Ma8tdutS15vLTyLNGUJx2USv6+aElmP1NnIqWEVoG06GiKTIYIbsJ70hNfe6?=
+ =?us-ascii?Q?H8vD7B9y83WShgKEwA6SdGqgesBCjbQ4J4Xv4zKcjWs+yjNFFudphiWxroin?=
+ =?us-ascii?Q?sWkceyQ1zOFd5pqPrctCkEiPJQy0rqtUk8OeN+d05zhKkNzWLXTviBnpatwH?=
+ =?us-ascii?Q?UhwT0bmxGHRH8eipjiIf3W6V7w4APmgw1qSB9f4g8A/+eLTcyTI1LliDjNrx?=
+ =?us-ascii?Q?fZ3LVZTenH8xQ3wET5NRI86OJy2PUbF195ubGQILT7YDZ4U1xMY1xBjLwnw8?=
+ =?us-ascii?Q?j9AAFixujonXvgQFppW9yEVO84bDJWd/gI1gMzCWetHTH9MEFrKFY1+sx9oy?=
+ =?us-ascii?Q?oUU/O3Y/5qMBrPwpA2SjJ8mZwRFj2gJbg96kMaLRRchU+fRQPfxnPptEnjyG?=
+ =?us-ascii?Q?HoGwULlRN/tWV66rm20rexH6ThhvK6Y/aNJDI8KUB1JkSIvT4zvMvfj2fnop?=
+ =?us-ascii?Q?+mTbfsvL3zuZZqxf3DsvGKElLtOtRXHGSaj1s10KyJG0ZONYm//tUzHmJYrr?=
+ =?us-ascii?Q?U9AlMcoXacWdCBXv2X4LBGBYQHckKEMrCAa2FLtg5AX6QVkpVq8xpOCAFAKe?=
+ =?us-ascii?Q?7hnfEJBdyeoTsTA8SF03MPlvrbc1L1FMlw1SjATcrZb6KOmk08lZabQ/8tn0?=
+ =?us-ascii?Q?kRACipQcnXS+YeELzJWjHyJZFxNKHuvG1yOT+7Xk8erTXu505U3IM3KDMosK?=
+ =?us-ascii?Q?F47LoW4iUYmmHXvXfpE6oV8aCKuYPeJ+KDL9ZzCXJUFrxZOqgg9U8wgMqSAm?=
+ =?us-ascii?Q?4zoN3eSwEkPBq64UZh+RaU1NWqbliTtHfEeC9xrldJEp3oNMupRWEnKcfFPh?=
+ =?us-ascii?Q?JxOUl1Tp3zh7EpQeGCH1u/9QT05QkbpmHJQDXepZ0aTOMTzzQIbQvA3Yb56a?=
+ =?us-ascii?Q?hRWgPj9GTiY1LH+/9wlTfzpOWbsWZCh79FPeyS6+Iuteaw8QhG3n/JtoWiuF?=
+ =?us-ascii?Q?yJWPhj9Kwxq+VNIH2eRJxv24wOW1Y5LTARLttN3sxedrz4UXE4t1cvi7a6aJ?=
+ =?us-ascii?Q?cIDM8FJKjLzl5nmVI1pfbmoyyimOkSF1DpgS6KQOUlPIsL9WDJ8mmSU+xxpe?=
+ =?us-ascii?Q?7oq1uowg30qCW5Cb/doQT8LZwLVsy8ed0p8CNVPgULqc6nelFDT0fMwCjOsJ?=
+ =?us-ascii?Q?6JUc5HQv0GMWDHrAJfsUH4azIewuBpuS/jRpb8XHs5SOOegL/591InXVSKYf?=
+ =?us-ascii?Q?dDE1RKmuLxjAp0YUAR0+FxGb28dKBpDydCKENhLyfDVERK5wlVqkC5aCC81I?=
+ =?us-ascii?Q?JFAjrEZhuxC+2tma036Z5sNFEgYkdP2+DAxxopfGTVNrYLImINX5ejylxxaO?=
+ =?us-ascii?Q?x18xUES3fXahbCbqZRWl/CyveiLtpvRko1UqTJcjyvGc6wIT5WxqtdxL5pHn?=
+ =?us-ascii?Q?U5Pzxk7vMVMvqjMv7Io4zWpy/JAYixIPmDFKclTHCyfS7o2iUApaxpBC0CQd?=
+ =?us-ascii?Q?zHt/CBDN8J+KymyUfTfljW88WPD5b6NUbn/NoB/oxaaO/8fX0b5NyKxRCAgU?=
+ =?us-ascii?Q?wpgWtaYVeRTWbzIGTmpJ0XUNw48kElORDceCvTs79voTQb5FyJTscQwehucI?=
+ =?us-ascii?Q?Xg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0c7257b-642f-4b11-42e6-08dc4873c00b
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 00:21:56.1705
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yEsWW/IVhfQfjGkslbz+7fEpdXuhE/jcSJpbso15yvSUzu0NRh3Pil7qOsiiNnhuurBcCoAyuGi4CBEQLGW1Wtp+StjB5r9K2cD+FJPQnWU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7383
+X-OriginatorOrg: intel.com
 
-ping
+Robert Richter wrote:
+> Hi Dan,
+> 
+> patch below. I have not included it into v2 of the SRAT/CEDT changes
+> as it is cxl specific and can be applied separately.
+> 
+> Thanks,
+> 
+> -Robert
+> 
+> 
+> On 18.03.24 14:26:41, Dan Williams wrote:
+> > It should also be the case that cxl_acpi needs this:
+> > 
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index 67998dbd1d46..1bf25185c35b 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -6,6 +6,7 @@ menuconfig CXL_BUS
+> >         select FW_UPLOAD
+> >         select PCI_DOE
+> >         select FIRMWARE_TABLE
+> > +       select NUMA_KEEP_MEMINFO if NUMA
+> >         help
+> >           CXL is a bus that is electrically compatible with PCI Express, but
+> >           layers three protocols on that signalling (CXL.io, CXL.cache, and
+> 
+> From be5b495980bae41d879909212db02dac0fba978e Mon Sep 17 00:00:00 2001
 
-On Mon, 05 Feb 2024, Davidlohr Bueso wrote:
+Hi Robert,
 
->Implement transfer and activate functionality per 3.1 spec for
->supporting update metadata (no actual buffers). Transfer times
->are arbitrarily set to ten and two seconds for full and part
->transfers, respectively.
->
->Testing for both a successful part fw package transfer success
->and abort/cancel cases:
->
->// on-going partial xfer
->{
->  "firmware":{
->    "num_slots":2,
->    "active_slot":1,
->    "staged_slot":1,
->    "online_activate_capable":true,
->    "slot_1_version":"BWFW VERSION 0",
->    "fw_update_in_progress":true,
->    "remaining_size":1280
->  }
->}
->
->// xfer complete
->{
->  "firmware":{
->    "num_slots":2,
->    "active_slot":1,
->    "staged_slot":2,
->    "online_activate_capable":true,
->    "slot_1_version":"BWFW VERSION 0",
->    "slot_2_version":"BWFW VERSION 1",
->    "fw_update_in_progress":false
->  }
->}
->
->// on-going (new) partial xfer
->{
->  "firmware":{
->    "num_slots":2,
->    "active_slot":1,
->    "staged_slot":1,
->    "online_activate_capable":true,
->    "slot_1_version":"BWFW VERSION 0",
->    "fw_update_in_progress":false
->  }
->}
->
->Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->---
->Changes from v1:
-> - robustify part transfer checking (Jonathan)
-> - implement abort
-> - increase runtime for full transfer
-> - no longer prematurely mark the slot
-> - fold both cmds into a single patch
->
-> hw/cxl/cxl-mailbox-utils.c  | 217 +++++++++++++++++++++++++++++++++++-
-> include/hw/cxl/cxl_device.h |  16 +++
-> 2 files changed, 228 insertions(+), 5 deletions(-)
->
->diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->index 80a80f1ec29b..74054855b1fa 100644
->--- a/hw/cxl/cxl-mailbox-utils.c
->+++ b/hw/cxl/cxl-mailbox-utils.c
->@@ -60,6 +60,8 @@ enum {
->         #define SET_INTERRUPT_POLICY   0x3
->     FIRMWARE_UPDATE = 0x02,
->         #define GET_INFO      0x0
->+        #define TRANSFER      0x1
->+        #define ACTIVATE      0x2
->     TIMESTAMP   = 0x03,
->         #define GET           0x0
->         #define SET           0x1
->@@ -815,6 +817,9 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
->     return CXL_MBOX_SUCCESS;
-> }
->
->+#define CXL_FW_SLOTS 2
->+#define CXL_FW_SIZE  0x02000000 /* 32 mb */
->+
-> /* CXL r3.1 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
-> static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
->                                                uint8_t *payload_in,
->@@ -846,15 +851,204 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
->     fw_info = (void *)payload_out;
->     memset(fw_info, 0, sizeof(*fw_info));
->
->-    fw_info->slots_supported = 2;
->-    fw_info->slot_info = BIT(0) | BIT(3);
->-    fw_info->caps = 0;
->-    pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
->+    fw_info->slots_supported = CXL_FW_SLOTS;
->+    fw_info->slot_info = (cci->fw.active_slot & 0x7) |
->+            ((cci->fw.staged_slot & 0x7) << 3);
->+    fw_info->caps = BIT(0);
->+
->+    if (cci->fw.slot[0]) {
->+        pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
->+    }
->+    if (cci->fw.slot[1]) {
->+        pstrcpy(fw_info->fw_rev2, sizeof(fw_info->fw_rev2), "BWFW VERSION 1");
->+    }
->
->     *len_out = sizeof(*fw_info);
->     return CXL_MBOX_SUCCESS;
-> }
->
->+/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
->+#define CXL_FW_XFER_ALIGNMENT   128
->+
->+#define CXL_FW_XFER_ACTION_FULL	    0x0
->+#define CXL_FW_XFER_ACTION_INIT	    0x1
->+#define CXL_FW_XFER_ACTION_CONTINUE 0x2
->+#define CXL_FW_XFER_ACTION_END	    0x3
->+#define CXL_FW_XFER_ACTION_ABORT    0x4
->+
->+static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
->+                                               uint8_t *payload_in,
->+                                               size_t len,
->+                                               uint8_t *payload_out,
->+                                               size_t *len_out,
->+                                               CXLCCI *cci)
->+{
->+    struct {
->+        uint8_t action;
->+        uint8_t slot;
->+        uint8_t caps;
->+        uint8_t rsvd1[2];
->+        uint32_t offset;
->+        uint8_t rsvd2[0x78];
->+        uint8_t data[];
->+    } QEMU_PACKED *fw_transfer = (void *)payload_in;
->+    size_t offset, length;
->+
->+    if (fw_transfer->action == CXL_FW_XFER_ACTION_ABORT) {
->+        /*
->+         * At this point there aren't any on-going transfers
->+         * running in the bg - this is serialized before this
->+         * call altogether. Just mark the state machine and
->+         * disregard any other input.
->+         */
->+        cci->fw.transferring = false;
->+        return CXL_MBOX_SUCCESS;
->+    }
->+
->+    offset = fw_transfer->offset * CXL_FW_XFER_ALIGNMENT;
->+    length = len - sizeof(*fw_transfer);
->+    if (offset + length > CXL_FW_SIZE) {
->+        return CXL_MBOX_INVALID_INPUT;
->+    }
->+
->+    if (cci->fw.transferring) {
->+        if (fw_transfer->action == CXL_FW_XFER_ACTION_FULL ||
->+            fw_transfer->action == CXL_FW_XFER_ACTION_INIT) {
->+            return CXL_MBOX_FW_XFER_IN_PROGRESS;
->+        }
->+        /*
->+         * Abort partitioned package transfer if over 30 secs
->+         * between parts. As opposed to the explicit ABORT action,
->+         * semantically treat this condition as an error - as
->+         * if a part action were passed without a previous INIT.
->+         */
->+        if (difftime(time(NULL), cci->fw.last_partxfer) > 30.0) {
->+            cci->fw.transferring = false;
->+            return CXL_MBOX_INVALID_INPUT;
->+        }
->+    } else if (fw_transfer->action == CXL_FW_XFER_ACTION_CONTINUE ||
->+               fw_transfer->action == CXL_FW_XFER_ACTION_END) {
->+        return CXL_MBOX_INVALID_INPUT;
->+    }
->+
->+    /* allow back-to-back retransmission */
->+    if ((offset != cci->fw.prev_offset || length != cci->fw.prev_len) &&
->+        (fw_transfer->action == CXL_FW_XFER_ACTION_CONTINUE ||
->+         fw_transfer->action == CXL_FW_XFER_ACTION_END)) {
->+        /*
->+         * XXX: Linux is happy to send overlapping chunks,
->+         * so just verify no gaps.
->+         */
->+        if (offset > cci->fw.prev_offset + cci->fw.prev_len) {
->+            return CXL_MBOX_FW_XFER_OUT_OF_ORDER;
->+        }
->+    }
->+
->+    switch (fw_transfer->action) {
->+    case CXL_FW_XFER_ACTION_FULL: /* ignores offset */
->+    case CXL_FW_XFER_ACTION_END:
->+        if (fw_transfer->slot == 0 ||
->+            fw_transfer->slot == cci->fw.active_slot ||
->+            fw_transfer->slot > CXL_FW_SLOTS) {
->+            return CXL_MBOX_FW_INVALID_SLOT;
->+        }
->+
->+        /* mark the slot used upon bg completion */
->+        break;
->+    case CXL_FW_XFER_ACTION_INIT:
->+        if (offset != 0) {
->+            return CXL_MBOX_INVALID_INPUT;
->+        }
->+
->+        cci->fw.transferring = true;
->+        cci->fw.prev_slot = fw_transfer->slot;
->+        cci->fw.prev_offset = offset;
->+        cci->fw.prev_len = length;
->+        break;
->+    case CXL_FW_XFER_ACTION_CONTINUE:
->+        /* forbid slot interleaving */
->+        if (cci->fw.prev_slot != fw_transfer->slot) {
->+            return CXL_MBOX_FW_XFER_IN_PROGRESS;
->+        }
->+
->+        cci->fw.prev_offset = offset;
->+        cci->fw.prev_len = length;
->+        break;
->+    default:
->+        return CXL_MBOX_INVALID_INPUT;
->+    }
->+
->+    if (fw_transfer->action == CXL_FW_XFER_ACTION_FULL) {
->+        cci->bg.runtime = 10 * 1000UL;
->+    } else {
->+        cci->bg.runtime = 2 * 1000UL;
->+    }
->+    /* keep relevant context for bg completion */
->+    cci->fw.curr_action = fw_transfer->action;
->+    cci->fw.curr_slot = fw_transfer->slot;
->+    *len_out = 0;
->+
->+    return CXL_MBOX_BG_STARTED;
->+}
->+
->+static void __do_firmware_xfer(CXLCCI *cci)
->+{
->+    switch (cci->fw.curr_action) {
->+    case CXL_FW_XFER_ACTION_FULL:
->+    case CXL_FW_XFER_ACTION_END:
->+        cci->fw.slot[cci->fw.curr_slot - 1] = true;
->+        cci->fw.transferring = false;
->+        break;
->+    case CXL_FW_XFER_ACTION_INIT:
->+    case CXL_FW_XFER_ACTION_CONTINUE:
->+        time(&cci->fw.last_partxfer);
->+        break;
->+    default:
->+        break;
->+    }
->+}
->+
->+/* CXL r3.1 section 8.2.9.3.3: Activate FW (Opcode 0202h) */
->+static CXLRetCode cmd_firmware_update_activate(const struct cxl_cmd *cmd,
->+                                               uint8_t *payload_in,
->+                                               size_t len,
->+                                               uint8_t *payload_out,
->+                                               size_t *len_out,
->+                                               CXLCCI *cci)
->+{
->+    struct {
->+        uint8_t action;
->+        uint8_t slot;
->+    } QEMU_PACKED *fw_activate = (void *)payload_in;
->+
->+    if (fw_activate->slot == 0 ||
->+        fw_activate->slot == cci->fw.active_slot ||
->+        fw_activate->slot > CXL_FW_SLOTS) {
->+        return CXL_MBOX_FW_INVALID_SLOT;
->+    }
->+
->+    /*
->+     * XXX: Check that an actual fw package is there - spec
->+     * does not mention this case.
->+     */
->+    if (!cci->fw.slot[fw_activate->slot - 1]) {
->+        return CXL_MBOX_FW_INVALID_SLOT;
->+    }
->+
->+    switch (fw_activate->action) {
->+    case 0: /* online */
->+        cci->fw.active_slot = fw_activate->slot;
->+        break;
->+    case 1: /* reset */
->+        cci->fw.staged_slot = fw_activate->slot;
->+        break;
->+    default:
->+        return CXL_MBOX_INVALID_INPUT;
->+    }
->+
->+    return CXL_MBOX_SUCCESS;
->+}
->+
-> /* CXL r3.1 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
-> static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
->                                     uint8_t *payload_in,
->@@ -2160,6 +2354,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->                                       ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE },
->     [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
->         cmd_firmware_update_get_info, 0, 0 },
->+    [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
->+        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
->+    [FIRMWARE_UPDATE][ACTIVATE] = { "FIRMWARE_UPDATE_ACTIVATE",
->+        cmd_firmware_update_activate, 2, CXL_MBOX_BACKGROUND_OPERATION },
->     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
->     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
->                          8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
->@@ -2275,7 +2473,9 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
->             h == cmd_media_get_poison_list ||
->             h == cmd_media_inject_poison ||
->             h == cmd_media_clear_poison ||
->-            h == cmd_sanitize_overwrite) {
->+            h == cmd_sanitize_overwrite ||
->+            h == cmd_firmware_update_transfer ||
->+            h == cmd_firmware_update_activate) {
->             return CXL_MBOX_MEDIA_DISABLED;
->         }
->     }
->@@ -2319,6 +2519,9 @@ static void bg_timercb(void *opaque)
->         cci->bg.complete_pct = 100;
->         cci->bg.ret_code = ret;
->         switch (cci->bg.opcode) {
->+        case 0x0201: /* fw transfer */
->+            __do_firmware_xfer(cci);
->+            break;
->         case 0x4400: /* sanitize */
->         {
->             CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->@@ -2390,6 +2593,10 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
->     cci->bg.runtime = 0;
->     cci->bg.timer = timer_new_ms(QEMU_CLOCK_VIRTUAL,
->                                  bg_timercb, cci);
->+
->+    memset(&cci->fw, 0, sizeof(cci->fw));
->+    cci->fw.active_slot = cci->fw.staged_slot = 1;
->+    cci->fw.slot[cci->fw.active_slot - 1] = true;
-> }
->
-> static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[256])
->diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->index d38391b26f0e..8c17ba9d2131 100644
->--- a/include/hw/cxl/cxl_device.h
->+++ b/include/hw/cxl/cxl_device.h
->@@ -203,7 +203,22 @@ typedef struct CXLCCI {
->         uint64_t runtime;
->         QEMUTimer *timer;
->     } bg;
->+
->+    /* firmware update */
->+    struct {
->+        uint8_t active_slot;
->+        uint8_t staged_slot;
->+        bool slot[4];
->+        uint8_t curr_action;
->+        uint8_t curr_slot;
->+        /* handle partial transfers */
->+        bool transferring;
->+        uint8_t prev_slot;
->+        size_t prev_offset;
->+        size_t prev_len;
->+        time_t last_partxfer;
->+    } fw;
->+
->     size_t payload_max;
->     /* Pointer to device hosting the CCI */
->     DeviceState *d;
->--
->2.43.0
->
+When you send inline patches like this can you remember to include a
+scissors line? That way tools like "b4 am" automatically know where to
+trim things. So add a line like the following:
+
+-- >8 --
+
+...see "git mailinfo --help" for details.
+
+Also note that if you reply with an updated patch in a series include
+the "vX NN/MM" suffix, like "Subject: [PATCH v3 2/3] ..." so that b4 am
+knows to perform a "partial reroll".
+
+> From: Robert Richter <rrichter@amd.com>
+> Date: Tue, 19 Mar 2024 09:28:33 +0100
+> Subject: [PATCH] cxl: Fix use of phys_to_target_node() outside of init section
+> 
+> The CXL driver uses both functions phys_to_target_node() and
+> memory_add_physaddr_to_nid(). The x86 architecture relies on the
+> NUMA_KEEP_MEMINFO kernel option to be set. Enable the option for the
+> driver accordingly.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67998dbd1d46..6140b3529a29 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -6,6 +6,7 @@ menuconfig CXL_BUS
+>  	select FW_UPLOAD
+>  	select PCI_DOE
+>  	select FIRMWARE_TABLE
+> +	select NUMA_KEEP_MEMINFO if (NUMA && X86)
+>  	help
+>  	  CXL is a bus that is electrically compatible with PCI Express, but
+>  	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+> -- 
+> 2.39.2
+> 
+
+
