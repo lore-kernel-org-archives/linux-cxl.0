@@ -1,287 +1,402 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9059079F6;
-	Fri, 22 Mar 2024 08:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDCD208D1;
+	Fri, 22 Mar 2024 09:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096906; cv=none; b=RaYsDcUUAVWzNerg0fAKEjE6Whlt+CqMNxnKxqnXnguu0H5t7L5pkAVU5RMvuipO/Wo/KRZzfcblFPdJV6GXio6CrC16F6wZBXWHhLyJKz3BOvVocS6NkF9ztHQgnRLvS15DITbU5xu4ZmvQbXqiLJiQvkwH/vdFVq/N8oY/jQc=
+	t=1711099946; cv=none; b=lAghhOvAJYWk0AX3XkY8+Q3F1+MTj3vQl/jxiZ3PaFYLle/Dt+1EGSm/QNnv4MmWmpkMofa/zeC4T9iDfjjCpTvf6vUVH383ZplHXY4YovEwCrzs4cpZpQ2nkNIPLMn/GZEPJf06IrtomrlQWM9/wukBsJUi0tGefKBEGzp8JOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096906; c=relaxed/simple;
-	bh=lUc29sDLNaxzdQqbXFTr/bw/3I6o0uIxECNwJmIeNUw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ilUi3C/AobmVCzMlWWDEnhEVJmtX1OGH8cHMeAh4d/GigrguKKir9Ui+4pwz6hOxK8WR30JALTzZeKtnZpdV84oHReWFi7BSgjYGs8YdiQGotquKCuArKl2rdO37gu1WKmW1EZr2WxywCdlA5CyXAPpFuO09+c4Zb0VguOaOF5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJGV9vng; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJGV9vng"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711096905; x=1742632905;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=lUc29sDLNaxzdQqbXFTr/bw/3I6o0uIxECNwJmIeNUw=;
-  b=CJGV9vngmJWFDDe3hXcjtc0KvHe96htfDjXW1fXkv/NOeqQ1Jy9lQuuD
-   /eY+q/DeGlBCldsl2hBUcR/cWT6mzyc3fXpYauSMbhyJprvNhOoo5A7M+
-   xmBLy22tSs/Pi3pNzQ9KhZBytDg4hPJSzFYajjp1eBK7U/hHC2VdrsSuJ
-   1lxwj2sq0kdXTgDDZO/GRSzeyiIPmzyzxAr2XepP6ZvAg/XI3lh2qaNdH
-   xV0tUc+LRBOZdmrUddlGkMHK1Y9bkQaWvaw4MjfcwX/oZdm7pshuR6sjT
-   7eVH6qjiV5JOTnMzl/IAnlTDX4KhnkBVy1mlGbgn8TMfjAMw91kUJk+IV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="23620916"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="23620916"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 01:41:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="19487739"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 01:41:38 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Cc: "Gregory Price" <gourry.memverge@gmail.com>,
-  aneesh.kumar@linux.ibm.com,  mhocko@suse.com,  tj@kernel.org,
-  john@jagalactic.com,  "Eishan Mirakhur" <emirakhur@micron.com>,
-  "Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,  "Ravis OpenSrc"
- <Ravis.OpenSrc@micron.com>,  "Alistair Popple" <apopple@nvidia.com>,
-  "Srinivasulu Thanneeru" <sthanneeru@micron.com>,  Dan Williams
- <dan.j.williams@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
-  Dave Jiang <dave.jiang@intel.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  nvdimm@lists.linux.dev,
-  linux-cxl@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,  "Ho-Ren
- (Jack) Chuang" <horenchuang@gmail.com>,  qemu-devel@nongnu.org,  Hao Xiang
- <hao.xiang@bytedance.com>
-Subject: Re: [PATCH v4 2/2] memory tier: create CPUless memory tiers after
- obtaining HMAT info
-In-Reply-To: <20240322070356.315922-3-horenchuang@bytedance.com> (Ho-Ren
-	Chuang's message of "Fri, 22 Mar 2024 07:03:55 +0000")
-References: <20240322070356.315922-1-horenchuang@bytedance.com>
-	<20240322070356.315922-3-horenchuang@bytedance.com>
-Date: Fri, 22 Mar 2024 16:39:44 +0800
-Message-ID: <87cyrmr773.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1711099946; c=relaxed/simple;
+	bh=Oj5iih5wQJ0xyqRGIIw88Fc2AtQfArFbMA8zGE302ww=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l33w3zIpO/EITQ5UrU1UnRseeIO3h1gl/Kip5Ao2zsMNGBLjpjYu0LwuIBzGeIGMV2e2naYOWodjmFJn7/tXkHFA1++3bjK4rRb5KL9G4ccsT/5cb2apcSta4ejLGhrb1V0rJvKs7ruk0C0OFu4pvlabq8lQqeKbiq8STKGmaaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V1HCC6rW4z67lcT;
+	Fri, 22 Mar 2024 17:31:35 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id E10A9140519;
+	Fri, 22 Mar 2024 17:32:13 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 22 Mar
+ 2024 09:32:13 +0000
+Date: Fri, 22 Mar 2024 09:32:12 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>
+CC: <linux-cxl@vger.kernel.org>, Brett Henning <brett.henning@broadcom.com>,
+	Harold Johnson <harold.johnson@broadcom.com>, Sumanesh Samanta
+	<sumanesh.samanta@broadcom.com>, "Williams, Dan J"
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, <linuxarm@huawei.com>,
+	<linux-api@vger.kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Natu, Mahesh" <mahesh.natu@intel.com>, <Ariel.Sibley@microchip.com>
+Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
+Message-ID: <20240322093212.00003173@Huawei.com>
+In-Reply-To: <CACX_a4VPV16OFNZLCVUJrGFR5brcdiYN3aAgrxtO8ksUdNdkQQ@mail.gmail.com>
+References: <20240321174423.00007e0d@Huawei.com>
+	<CACX_a4VPV16OFNZLCVUJrGFR5brcdiYN3aAgrxtO8ksUdNdkQQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+On Thu, 21 Mar 2024 14:41:00 -0700
+Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com> wrote:
 
-> The current implementation treats emulated memory devices, such as
-> CXL1.1 type3 memory, as normal DRAM when they are emulated as normal memory
-> (E820_TYPE_RAM). However, these emulated devices have different
-> characteristics than traditional DRAM, making it important to
-> distinguish them. Thus, we modify the tiered memory initialization process
-> to introduce a delay specifically for CPUless NUMA nodes. This delay
-> ensures that the memory tier initialization for these nodes is deferred
-> until HMAT information is obtained during the boot process. Finally,
-> demotion tables are recalculated at the end.
->
-> * late_initcall(memory_tier_late_init);
-> Some device drivers may have initialized memory tiers between
-> `memory_tier_init()` and `memory_tier_late_init()`, potentially bringing
-> online memory nodes and configuring memory tiers. They should be excluded
-> in the late init.
->
-> * Handle cases where there is no HMAT when creating memory tiers
-> There is a scenario where a CPUless node does not provide HMAT information.
-> If no HMAT is specified, it falls back to using the default DRAM tier.
->
-> * Introduce another new lock `default_dram_perf_lock` for adist calculation
-> In the current implementation, iterating through CPUlist nodes requires
-> holding the `memory_tier_lock`. However, `mt_calc_adistance()` will end up
-> trying to acquire the same lock, leading to a potential deadlock.
-> Therefore, we propose introducing a standalone `default_dram_perf_lock` to
-> protect `default_dram_perf_*`. This approach not only avoids deadlock
-> but also prevents holding a large lock simultaneously.
->
-> * Upgrade `set_node_memory_tier` to support additional cases, including
->   default DRAM, late CPUless, and hot-plugged initializations.
-> To cover hot-plugged memory nodes, `mt_calc_adistance()` and
-> `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()` to
-> handle cases where memtype is not initialized and where HMAT information is
-> available.
->
-> * Introduce `default_memory_types` for those memory types that are not
->   initialized by device drivers.
-> Because late initialized memory and default DRAM memory need to be managed,
-> a default memory type is created for storing all memory types that are
-> not initialized by device drivers and as a fallback.
->
-> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
-> ---
->  mm/memory-tiers.c | 73 ++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 63 insertions(+), 10 deletions(-)
->
-> diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> index 974af10cfdd8..9396330fa162 100644
-> --- a/mm/memory-tiers.c
-> +++ b/mm/memory-tiers.c
-> @@ -36,6 +36,11 @@ struct node_memory_type_map {
->  
->  static DEFINE_MUTEX(memory_tier_lock);
->  static LIST_HEAD(memory_tiers);
-> +/*
-> + * The list is used to store all memory types that are not created
-> + * by a device driver.
-> + */
-> +static LIST_HEAD(default_memory_types);
->  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
->  struct memory_dev_type *default_dram_type;
->  
-> @@ -108,6 +113,7 @@ static struct demotion_nodes *node_demotion __read_mostly;
->  
->  static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
->
-> +static DEFINE_MUTEX(default_dram_perf_lock);
+> Thank you for kicking off this discussion, Jonathan.
 
-Better to add comments about what is protected by this lock.
+Hi Sreenivas,
 
->  static bool default_dram_perf_error;
->  static struct access_coordinate default_dram_perf;
->  static int default_dram_perf_ref_nid = NUMA_NO_NODE;
-> @@ -505,7 +511,8 @@ static inline void __init_node_memory_type(int node, struct memory_dev_type *mem
->  static struct memory_tier *set_node_memory_tier(int node)
->  {
->  	struct memory_tier *memtier;
-> -	struct memory_dev_type *memtype;
-> +	struct memory_dev_type *mtype;
+>=20
+> We need guidance from the community.
+>=20
+> 1. Datacenter customers must be able to manage PCIe switches in-band.
 
-mtype may be referenced without initialization now below.
+What is the use case? My understanding so far is that clouds and
+similar sometimes use an in band path but it would be from a management
+only host, not a general purpose host running other software. Sure
+that control host just connects to a different upstream port so, from
+a switch point of view, it's the same as any other host.  From a host
+software point of view it's not running general cloud workloads or
+(at least in most cases) a general purpose OS distribution.
 
-> +	int adist = MEMTIER_ADISTANCE_DRAM;
->  	pg_data_t *pgdat = NODE_DATA(node);
->  
->  
-> @@ -514,11 +521,20 @@ static struct memory_tier *set_node_memory_tier(int node)
->  	if (!node_state(node, N_MEMORY))
->  		return ERR_PTR(-EINVAL);
->  
-> -	__init_node_memory_type(node, default_dram_type);
-> +	mt_calc_adistance(node, &adist);
-> +	if (node_memory_types[node].memtype == NULL) {
-> +		mtype = mt_find_alloc_memory_type(adist, &default_memory_types);
-> +		if (IS_ERR(mtype)) {
-> +			mtype = default_dram_type;
-> +			pr_info("Failed to allocate a memory type. Fall back.\n");
-> +		}
-> +	}
->  
-> -	memtype = node_memory_types[node].memtype;
-> -	node_set(node, memtype->nodes);
-> -	memtier = find_create_memory_tier(memtype);
-> +	__init_node_memory_type(node, mtype);
-> +
-> +	mtype = node_memory_types[node].memtype;
-> +	node_set(node, mtype->nodes);
-> +	memtier = find_create_memory_tier(mtype);
->  	if (!IS_ERR(memtier))
->  		rcu_assign_pointer(pgdat->memtier, memtier);
->  	return memtier;
-> @@ -655,6 +671,34 @@ void mt_put_memory_types(struct list_head *memory_types)
->  }
->  EXPORT_SYMBOL_GPL(mt_put_memory_types);
->  
-> +/*
-> + * This is invoked via `late_initcall()` to initialize memory tiers for
-> + * CPU-less memory nodes after driver initialization, which is
-> + * expected to provide `adistance` algorithms.
-> + */
-> +static int __init memory_tier_late_init(void)
-> +{
-> +	int nid;
-> +
-> +	mutex_lock(&memory_tier_lock);
-> +	for_each_node_state(nid, N_MEMORY)
-> +		if (!node_state(nid, N_CPU) &&
-> +			node_memory_types[nid].memtype == NULL)
-> +			/*
-> +			 * Some device drivers may have initialized memory tiers
-> +			 * between `memory_tier_init()` and `memory_tier_late_init()`,
-> +			 * potentially bringing online memory nodes and
-> +			 * configuring memory tiers. Exclude them here.
-> +			 */
-> +			set_node_memory_tier(nid);
-> +
-> +	establish_demotion_targets();
-> +	mutex_unlock(&memory_tier_lock);
-> +
-> +	return 0;
-> +}
-> +late_initcall(memory_tier_late_init);
-> +
->  static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
->  {
->  	pr_info(
-> @@ -668,7 +712,7 @@ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
->  {
->  	int rc = 0;
->  
-> -	mutex_lock(&memory_tier_lock);
-> +	mutex_lock(&default_dram_perf_lock);
->  	if (default_dram_perf_error) {
->  		rc = -EIO;
->  		goto out;
-> @@ -716,7 +760,7 @@ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
->  	}
->  
->  out:
-> -	mutex_unlock(&memory_tier_lock);
-> +	mutex_unlock(&default_dram_perf_lock);
->  	return rc;
->  }
->  
-> @@ -732,7 +776,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
->  	    perf->read_bandwidth + perf->write_bandwidth == 0)
->  		return -EINVAL;
->  
-> -	mutex_lock(&memory_tier_lock);
-> +	mutex_lock(&default_dram_perf_lock);
->  	/*
->  	 * The abstract distance of a memory node is in direct proportion to
->  	 * its memory latency (read + write) and inversely proportional to its
-> @@ -745,7 +789,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
->  		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
->  		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
->  		(perf->read_bandwidth + perf->write_bandwidth);
-> -	mutex_unlock(&memory_tier_lock);
-> +	mutex_unlock(&default_dram_perf_lock);
->  
->  	return 0;
->  }
-> @@ -858,7 +902,8 @@ static int __init memory_tier_init(void)
->  	 * For now we can have 4 faster memory tiers with smaller adistance
->  	 * than default DRAM tier.
->  	 */
-> -	default_dram_type = alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
-> +	default_dram_type = mt_find_alloc_memory_type(MEMTIER_ADISTANCE_DRAM,
-> +									&default_memory_types);
->  	if (IS_ERR(default_dram_type))
->  		panic("%s() failed to allocate default DRAM tier\n", __func__);
->  
-> @@ -868,6 +913,14 @@ static int __init memory_tier_init(void)
->  	 * types assigned.
->  	 */
->  	for_each_node_state(node, N_MEMORY) {
-> +		if (!node_state(node, N_CPU))
-> +			/*
-> +			 * Defer memory tier initialization on CPUless numa nodes.
-> +			 * These will be initialized after firmware and devices are
-> +			 * initialized.
-> +			 */
-> +			continue;
-> +
->  		memtier = set_node_memory_tier(node);
->  		if (IS_ERR(memtier))
->  			/*
+This is the key question behind this discussion.
 
---
-Best Regards,
-Huang, Ying
+> 2. Management of switches includes getting health, performance, and error
+> telemetry.
+
+For telemetry(subject to any odd corners like commands that might lock
+the interface up for a long time, which we've seen with commands in the
+Spec!) I don't see any problem supporting those on all host software.
+They should be non destructive to other hosts etc.
+
+> 3. These telemetry functions are not yet part of the CXL standard
+
+Ok, so this we should try to pin down the boundaries around this.
+The thread linked below lays out the reasoning behind a general rule
+of not accepting vendor defined commands, but perhaps there are routes
+to answer some of those concerns.
+
+'Maybe' if you were to publish a specification for those particular
+vendor defined commands, it might be fine to add them to the allow list
+for the switch-cci. Key here is that Broadcom would be committing to not
+using those particular opcodes from the vendor space for anything else
+in the future (so we could match on VID + opcode).  This is similar to
+some DVSEC usage in PCIe (and why DVSEC is different from VSEC).
+
+Effectively you'd be publishing an additional specification building on CXL.
+Those are expected to surface anyway from various standards orgs - should
+we treat a company published one differently?  I don't see why.
+Exactly how this would work might take some figuring out (in main code,
+separate driver module etc?)
+
+That specification would be expected to provide a similar level of detail
+to CXL spec defined commands (ideally the less vague ones, but meh, up to
+you as long as any side effects are clearly documented!)
+
+Speaking for myself, I'd consider this approach.
+Particularly true if I see clear effort in the standards org to push
+these into future specifications as that shows broadcom are trying to
+enhance the ecosystems.
+
+
+> 4. We built the CCI mailboxes into our PCIe switches per CXL spec and
+> developed our management scheme around them.
+>=20
+> If the Linux community does not allow a CXL spec-compliant switch to be
+> managed via the CXL spec-defined CCI mailbox, then please guide us on
+> the right approach. Please tell us how you propose we manage our switches
+> in-band.
+
+The Linux community is fine supporting this in the kernel (the BMC or
+Fabric Management only host case - option 2 below, so the code will be ther=
+e)
+the question here is what advice we offer to the general purpose
+distributions and what protections we need to put in place to mitigate the
+'blast radius' concerns.
+
+Jonathan
+>=20
+> Thank you
+> Sreeni
+>=20
+> On Thu, Mar 21, 2024 at 10:44=E2=80=AFAM Jonathan Cameron <
+> Jonathan.Cameron@huawei.com> wrote: =20
+>=20
+> > Hi All,
+> >
+> > This is has come up in a number of discussions both on list and in priv=
+ate,
+> > so I wanted to lay out a potential set of rules when deciding whether or
+> > not
+> > to provide a user space interface for a particular feature of CXL Fabric
+> > Management.  The intent is to drive discussion, not to simply tell peop=
+le
+> > a set of rules.  I've brought this to the public lists as it's a Linux
+> > kernel
+> > policy discussion, not a standards one.
+> >
+> > Whilst I'm writing the RFC this my attempt to summarize a possible
+> > position rather than necessarily being my personal view.
+> >
+> > It's a straw man - shoot at it!
+> >
+> > Not everyone in this discussion is familiar with relevant kernel or CXL
+> > concepts
+> > so I've provided more info than I normally would.
+> >
+> > First some background:
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > CXL has two different types of Fabric. The comments here refer to both,=
+ but
+> > for now the kernel stack is focused on the simpler VCS fabric, not the =
+more
+> > recent Port Based Routing (PBR) Fabrics. A typical example for 2 hosts
+> > connected to a common switch looks something like:
+> >
+> >  ________________               _______________
+> > |                |             |               |    Hosts - each sees
+> > |    HOST A      |             |     HOST B    |    a PCIe style tree
+> > |                |             |               |    but from a fabric
+> > config
+> > |   |Root Port|  |             |   |Root Port| |    point of view it's =
+more
+> >  -------|--------               -------|-------     complex.
+> >         |                              |
+> >         |                              |
+> >  _______|______________________________|________
+> > |      USP (SW-CCI)                   USP       | Switch can have lots =
+of
+> > |       |                              |        | Upstream Ports. Each =
+one
+> > |   ____|________               _______|______  | has a virtual hierarc=
+hy.
+> > |  |             |              |             | |
+> > | vPPB          vPPB          vPPB          vPPB| There are virtual
+> > |  x             |             |              | | "downstream
+> > ports."(vPPBs)
+> > |                \            /              /  | That can be bound to =
+real
+> > |                 \          /              /   | downstream ports.
+> > |                  \        /              /    |
+> > |                   \      /              /     | Multi Logical Devices=
+ are
+> > |      DSP0           DSP1             DSP 2    | support more than one
+> > vPPB
+> > ------------------------------------------------  bound to a single
+> > physical
+> >          |             |                 |        DSP (transactions are
+> > tagged
+> >          |             |                 |        with an LD-ID)
+> >         SLD0           MLD0              SLD1
+> >
+> > Some typical fabric management activities:
+> > 1) Bind/Unbind vPPB to physical DSP (Results in hotplug / unplug events)
+> > 2) Access config space or BAR space of End Points below the switch.
+> > 3) Tunneling messages through to devices downstream (e.g Dynamic Capaci=
+ty
+> >    Forced Remove that will blow away some memory even if a host is using
+> > it).
+> > 4) Non destructive stuff like status read back.
+> >
+> > Given the hosts may be using the Type 3 hosted memory (either Single
+> > Logical
+> > Device - SLD, or an LD on a Multi logical Device - MLD) as normal memor=
+y,
+> > unbinding a device in use can result in the memory access from a
+> > different host being removed. The 'blast radius' is perhaps a rack of
+> > servers.  This discussion applies equally to FM-API commands sent to Mu=
+lti
+> > Head Devices (see CXL r3.1).
+> >
+> > The Fabric Management actions are done using the CXL spec defined Fabric
+> > Management API, (FM-API) which is transported over various means includ=
+ing
+> > OoB MCTP over your favourite transport (I2C, PCIe-VDM...) or via normal
+> > PCIe read/write to a Switch-CCI.  A Switch-CCI is mailbox in PCI BAR
+> > space on a function found alongside one of the switch upstream ports;
+> > this mailbox is very similar to the MMPT definition found in PCIe r6.2.
+> >
+> > In many cases this switch CCI / MCTP connection is used by a BMC rather
+> > than a normal host, but there have been some questions raised about whe=
+ther
+> > a general purpose server OS would have a valid reason to use this inter=
+face
+> > (beyond debug and testing) to configure the switch or an MHD.
+> >
+> > If people have a use case for this, please reply to this thread to give
+> > more details.
+> >
+> > The most recently posted CXL Switch-CCI support only provided the RAW C=
+XL
+> > command IOCTL interface that is already available for Type 3 memory
+> > devices.
+> > That allows for unfettered control of the switch but, because it is
+> > extremely easy to shoot yourself in the foot and cause unsolvable bug
+> > reports,
+> > it taints the kernel. There have been several requests to provide this
+> > interface
+> > without the taint for these switch configuration mailboxes.
+> >
+> > Last posted series:
+> >
+> > https://lore.kernel.org/all/20231016125323.18318-1-Jonathan.Cameron@hua=
+wei.com/
+> > Note there are unrelated reasons why that code hasn't been updated since
+> > v6.6 time,
+> > but I am planning to get back to it shortly.
+> >
+> > Similar issues will occur for other uses of PCIe MMPT (new mailbox in P=
+CI
+> > that
+> > sometimes is used for similarly destructive activity such as PLDM based
+> > firmware update).
+> >
+> >
+> > On to the proposed rules:
+> >
+> > 1) Kernel space use of the various mailboxes, or filtered controls from
+> > user space.
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Absolutely fine - no one worries about this, but the mediated traffic w=
+ill
+> > be filtered for potentially destructive side effects. E.g. it will reje=
+ct
+> > attempts to change anything routing related if the kernel either knows a
+> > host is
+> > using memory that will be blown away, or has no way to know (so affecti=
+ng
+> > routing to another host).  This includes blocking 'all' vendor defined
+> > messages as we have no idea what the do.  Note this means the kernel has
+> > an allow list and new commands are not initially allowed.
+> >
+> > This isn't currently enabled for Switch CCIs because they are only real=
+ly
+> > interesting if the potentially destructive stuff is available (an earli=
+er
+> > version did enable query commands, but it wasn't particularly useful to
+> > know what your switch could do but not be allowed to do any of it).
+> > If you take a MMPT usecase of PLDM firmware update, the filtering would
+> > check that the device was in a state where a firmware update won't rip
+> > memory out from under a host, which would be messy if that host is
+> > doing the update.
+> >
+> > 2) Unfiltered userspace use of mailbox for Fabric Management - BMC kern=
+els
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> >
+> > (This would just be a kernel option that we'd advise normal server
+> > distributions not to turn on. Would be enabled by openBMC etc)
+> >
+> > This is fine - there is some work to do, but the switch-cci PCI driver
+> > will hopefully be ready for upstream merge soon. There is no filtering =
+of
+> > accesses. Think of this as similar to all the damage you can do via
+> > MCTP from a BMC. Similarly it is likely that much of the complexity
+> > of the actual commands will be left to user space tooling:
+> > https://gitlab.com/jic23/cxl-fmapi-tests has some test examples.
+> >
+> > Whether Kconfig help text is strong enough to ensure this only gets
+> > enabled for BMC targeted distros is an open question we can address
+> > alongside an updated patch set.
+> >
+> > (On to the one that the "debate" is about)
+> >
+> > 3) Unfiltered user space use of mailbox for Fabric Management - Distro
+> > kernels
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > (General purpose Linux Server Distro (Redhat, Suse etc))
+> >
+> > This is equivalent of RAW command support on CXL Type 3 memory devices.
+> > You can enable those in a distro kernel build despite the scary config
+> > help text, but if you use it the kernel is tainted. The result
+> > of the taint is to add a flag to bug reports and print a big message to=
+ say
+> > that you've used a feature that might result in you shooting yourself
+> > in the foot.
+> >
+> > The taint is there because software is not at first written to deal with
+> > everything that can happen smoothly (e.g. surprise removal) It's hard
+> > to survive some of these events, so is never on the initial feature list
+> > for any bus, so this flag is just to indicate we have entered a world
+> > where almost all bets are off wrt to stability.  We might not know what
+> > a command does so we can't assess the impact (and no one trusts vendor
+> > commands to report affects right in the Command Effects Log - which
+> > in theory tells you if a command can result problems).
+> >
+> > A concern was raised about GAE/FAST/LDST tables for CXL Fabrics
+> > (a r3.1 feature) but, as I understand it, these are intended for a
+> > host to configure and should not have side effects on other hosts?
+> > My working assumption is that the kernel driver stack will handle
+> > these (once we catch up with the current feature backlog!) Currently
+> > we have no visibility of what the OS driver stack for a fabrics will
+> > actually look like - the spec is just the starting point for that.
+> > (patches welcome ;)
+> >
+> > The various CXL upstream developers and maintainers may have
+> > differing views of course, but my current understanding is we want
+> > to support 1 and 2, but are very resistant to 3!
+> >
+> > General Notes
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > One side aspect of why we really don't like unfiltered userspace access=
+ to
+> > any
+> > of these devices is that people start building non standard hacks in an=
+d we
+> > lose the ecosystem advantages. Forcing a considered discussion + patches
+> > to let a particular command be supported, drives standardization.
+> >
+> >
+> > https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei=
+8ZkcmHnPp3B0cw@mail.gmail.com/
+> > provides some history on vendor specific extensions and why in general =
+we
+> > won't support them upstream.
+> >
+> > To address another question raised in an earlier discussion:
+> > Putting these Fabric Management interfaces behind guard rails of some t=
+ype
+> > (e.g. CONFIG_IM_A_BMC_AND_CAN_MAKE_A_MESS) does not encourage the risk
+> > of non standard interfaces, because we will be even less likely to acce=
+pt
+> > those upstream!
+> >
+> > If anyone needs more details on any aspect of this please ask.
+> > There are a lot of things involved and I've only tried to give a fairly
+> > minimal illustration to drive the discussion. I may well have missed
+> > something crucial.
+> >
+> > Jonathan
+> >
+> > =20
+>=20
+
