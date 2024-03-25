@@ -1,235 +1,197 @@
-Received: from esa12.fujitsucc.c3s2.iphmx.com (esa12.fujitsucc.c3s2.iphmx.com [216.71.156.125])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB8E74C00;
-	Mon, 25 Mar 2024 04:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.156.125
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBEA86629;
+	Mon, 25 Mar 2024 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711342257; cv=fail; b=aX4bJuUoMplxFqSUR19TydLHy4jspDjn7HYkvXoWuojQFWGdXYVB0/DeF59s2YlYMNH0m8QKtffr59XDVuuQcrZulFbWHLp8kmbdtzZPOSvGMOCZcL7J6dU3LjCpfz5WEFyInpRFXBnLFbyRHCfXCA0XrTUQfMDAO0Zi0CNAKyQ=
+	t=1711379749; cv=fail; b=DHBlOA/X+YTajNnTJoGEiyORgXAHXqO7a2IsKcyX1JkTwErSd97J9mHPJl31j0DZ+6vGVvI3gzTH8V9C+0Ew6TLTmCqPZ+l6EHvsZvgwVxbzsGG0HmdhmqOnbFNRs8rZmqvFUU68yjyeUcmOCeHDzkd4EWXyej+upV7stldBwVw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711342257; c=relaxed/simple;
-	bh=dHEXHGIlfXEOsYWhnul67+pkqrT/S4FIyDfnWXMJwmI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SrADjB8+ssxxRXtbuJuLTl6ME4grONieuVz4ZEDUG46/HYTxmCOpyUB4CZJIJgZi5ogJJLvcxI/FIU7ZFiSvglf+9iuInap7Gr6MbPTMvl9KbW9GCO8dpmt+MMpXHj/tHlhdJR0a+6W2TuCOVQGOvbwhz/huqLi8V4aL8OLxZus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=WG6Slrex; arc=fail smtp.client-ip=216.71.156.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1711379749; c=relaxed/simple;
+	bh=yE0H3bDVnXXcQsnJ1gBAiEbw3+ENly868S+xuk9j/cU=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NkEuR/S1Bre45MO8gu3pqetq6uGAOMgKCnOHpBoPD/62M/jxkBldRBlGfirk3rCfTuZL5FfNOuIt3zInqraAGOHVp0HLBwmNi9r7tBurR9mgybmCF7rk5hPkjzrziJeWMPXl28sb9rgfxVP/4HO7nmIEHYa8myZHCN7ZVydApcE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TW9Wu0eL; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="WG6Slrex"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1711342254; x=1742878254;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=dHEXHGIlfXEOsYWhnul67+pkqrT/S4FIyDfnWXMJwmI=;
-  b=WG6SlrexOxclWtw/Woo8DucRsIvVkoGAHkpv+J9iw5Woj+0ZY6VxN0jI
-   qfd/tCFDG7YMWb+Oml9yi4V/H6fJ/U13HxinPjssEO580Q3+/CJB2d2bR
-   R+/vqd5MLQ/JVzPKpHqr7RMz+yYwBR2bOuHbNXEtcdhcNRn+bF77L3BjA
-   MHFOhHDMVpPJUrs/33KyRssYHC/FMfieaWWA4xUMhurKf/WPFgnsr7xKR
-   sDpDhD4i4lZjm2+g2zRxw3IA4e25FoMK9DhiZAv8c54x682EkKsmMkaqV
-   OlRMkkgvpnRihCW44rRP4w4RkB3ZJfK3WOk7fkchVv1HGCb3PS7IeBHjE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="115081201"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708354800"; 
-   d="scan'208";a="115081201"
-Received: from mail-tycjpn01lp2169.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.169])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 13:49:42 +0900
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TW9Wu0eL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bj0l3IIBfqvMC9rBH8IvTeyYCoUrRbPP6nSSv4xNr7zi31c6pwR9FnpzKJRM3BM6KSrkFuEQ9TdCycY5BBpiUnTAXU7lZjsxNWdKpZ/2IokU/nMLJrppXnB3uzCrzvoZ3BDGLhyVQ+7z90xmLpenoIxARWS1B6eJ4ej9MfhXuAh4gKRW0wukOhrJw7Ye7T9Pkyw4LErWHcUz4NsHxpt2ReonXiPJZmEaVDfnSwl7CWdH3UOgVSRSSpN0V/M3bytRSsQHpcxjsiGxIaaz0q01L1QZoAsdirnXuTZaLladKHbopTlqpzkNThyXKxSd+iJAH2Hgo2VPXxayYdZd5SB/cg==
+ b=W/FnbdDth9l4BlwCLejVy5lLJIAE9CywBap9JV7y5HmWXlbNITVWt8cJHkVlus6T2fd4wEP7gPygv6xeDZLqqFlZ3QL5iwBkPhTG2HMu/ln0pcZi7acxw40yPhQ1/qt7jIcWdfmDSyGwpqzb0k9HxKOq19BOYuMFLD1wqHcroFtQ0YC7qPA08DLBvgOYj70bPJrPk4SoUxrsFUcUGaht8Fo+MK//N/OjVzrK7shuJ7sctZ8+E4DL4UmiroC+/hEcFZEeWMHZo8aYrNdSq0YtdcAtcfiVR40OP/95MRT50cbCQUgsAfx3E4tPCEAdf3kfdtCsKA/jAhNg8iU6CPvWhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=syN4cBrzSw2eddIysmpicjGJUayBgGlafO07UHZYyoY=;
- b=lBMUKd36oG4Kspbo1S1qbasWspCXq5LuyGRUZPEFwGnU+EDcFyNEy4adesl0mDigc8LMSdahlmAG8/32LWwnsEtmIEt5EbU5mHRBl35OjJuKzEKTSfn8x6EVwTIH5NHNdo05c1VtMGeV8D7PzsfrNHvWnXgRRXu73P/W16mLHTsD45nemC3NhzsVXGzU1ZZDfJZyZzMO6QXh4dG+jP78UQ4RZl3bp2E8Wk/iYZj4CeAH8SCoHmpzSRc27aV/zeDkiuFhc5EbETffYwdN1CSMbX9T6YF0CYsDhUdLwmkfWKcIvjNLyiF4qMcIeVKuDmhGN5c8Ng0I/rfObAHZAt1PEw==
+ bh=OqtOCstPD/B6dLWFEbRbY2ey+Tto0A2Vqe7BNNGmni4=;
+ b=MDcAHnTVamiKxzClrWSmeAO8v1DyywKbFrAWq5f2guHKSSaSy134IpnO/ogrxzsVKoTvDftSHkUzMglM7sdVVeWKjXTIDWiOMW1cllcRCLoaXhBWbVcTJhyQHtOBSgXZjLBHkzWsIZF7z01POMY3JEzvRgMOJf06Eq7r/dPXCZRCupXkOKg4mp7BwoLJ+j1QSoAO2BeER9CFkc8nPRDCPlxdmGeChxUsaOcl9tx4vykLzWNNVESXO2e2ttoTVgdul4v5dTAP4LCt4HnkY6Obh82SYnq/bnvN95L148ua1FRQma8jEH9R7Ur1mGZnjdfIvdV66s8Ac76rTzPmPqp3ag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
- by OS3PR01MB6689.jpnprd01.prod.outlook.com (2603:1096:604:10d::13) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OqtOCstPD/B6dLWFEbRbY2ey+Tto0A2Vqe7BNNGmni4=;
+ b=TW9Wu0eLO7v10P93ZQyIpbyPsw+PrE+a66kJTqFv10t5AXQyyGlwKLusihncw+36NGHw98UjWJF/b3Mtu+ltoRCtr334nMmPBRzL2SW89VCTwtXdlQPplvqjlgCBdumvpawa/8W7RmZrpaloA8qmzfynf+PQrSWtytvF9X9xjpk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8535.namprd12.prod.outlook.com (2603:10b6:610:160::19)
+ by PH8PR12MB6867.namprd12.prod.outlook.com (2603:10b6:510:1ca::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 04:49:38 +0000
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::c012:6dff:e4f5:5e1c]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::c012:6dff:e4f5:5e1c%5]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 04:49:38 +0000
-From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "mj@ucw.cz"
-	<mj@ucw.cz>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Subject: RE: [PATCH v3 0/3] Display cxl1.1 device link status
-Thread-Topic: [PATCH v3 0/3] Display cxl1.1 device link status
-Thread-Index: AQHadFO/DLT7o3hEPUOdByLFlXQIcrFH9FEw
-Date: Mon, 25 Mar 2024 04:49:38 +0000
-Message-ID:
- <OSAPR01MB71827C0F65B5FE6E24B86A7DBA362@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
-In-Reply-To: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=48afc41f-0e8e-4076-a9ed-c51848c9bc32;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-03-25T04:48:07Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|OS3PR01MB6689:EE_
-x-ms-office365-filtering-correlation-id: c1dbecce-2830-4584-96c8-08dc4c86fa21
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 3RScr9FLKoEFJ2JZQ8i7uWdmeSKSGnbHmbB+4SshCEblXnS+e7hStsR1o1zOVApVjWLQ5aomxEWfV8recOB8ff/3q3I1qyQ7VKtpaB6G/p/Rt7oD8vAVNSaAQazxt4FFLEx9inD0FDHKDWiw7aQbPI9SOJYzFeasfNrdrr2YXDLglYq9aHduvQdZ+XulCfRPBy1eUgrn+KHuB1V3/k0jdPMbZTFV6tDGkIUbkD34eicHAtDldQVnOaZxdw6cFgD5nu1pJ5DnDFbdcbULrqgLntfbkg8yxJa9EtHx/qr0WSbf9iuXFfpXXbub96ldjvEkT1hNHMhzmgZ4C70s5ouKXW4SpeG0089Wm0e6o6ALvZ3eSHLkxxpefJdaLWFShizZEiDwq7Cy5WZZmx0C9/MqxjRjDvtLZwdFSBkQ+69yeKXr2+F4u8jVkxS20tv58acbdHlOwMM4biU7b5rBCFfmrHp7sacsH+sjlLBv27T+pss0tLQZ9xBHslPP+E7nXQfiLh3vCx0Qw/Selknzaolwkl5TQ2RM98joVoCxHdEbchS/jzX9tAoFLyVWyCvq3loEeSQZ1XbFxH5ucznFJVx37x9fqUnfexGmX89sv1B2+IdH4RzFttBzKdal0aFp4nfbbEEk9Fab396SpKsVtshoftj8gbqgyA4WZNp9PKkLJbSDtNeKhb/n3anyRE6NZ6wk1r0jE1D6Xrr35C69NHIp6w==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009)(1580799018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?WGhSdE9WbUJVcFZIVGlXVWJRdm5oWXJibzQrK2g5TWhJM002M2YxeGlK?=
- =?iso-2022-jp?B?eGd2RzNUYXNiVXRHN2c2ZWVMRHRTNWdTRWZFd1d0c1k5MjFLOTRkNjdX?=
- =?iso-2022-jp?B?c1ltVGJnQjRlUEREZHcyNUVjdXRxN3M0dnpUUHpIdjNIaXBQdkU4bEZD?=
- =?iso-2022-jp?B?QmcyVTg1dENuRGZHWFdKcFlQRlBCVkc1dE02bjU0ZjNHT1g2OC81VUZN?=
- =?iso-2022-jp?B?THY2cDYyMnNvWU45L3owODd3bHIxc2w3Z3k5V2IzSGJiYWZIVzQzWDdF?=
- =?iso-2022-jp?B?SmVPOUljaFZUSFp4L2crazFzamsyV2kzNisyS3BvNGlJOWZld1BTaG9i?=
- =?iso-2022-jp?B?cVJyUDFLakt3Ky9aZy9UaHQzYklReldWcXlJVHlJcGN2L2M1RDdRYndJ?=
- =?iso-2022-jp?B?SXZZMjdJT3R3ZFFQZ2N0VUFUK1BOdjFLa2JaNWhZc1gzTEpJZXcvWE5y?=
- =?iso-2022-jp?B?NEFYREkycDFraGtDQjcvcUdwQnhIaEwzUVp5OWJLa1QvMWd0MGtFdS8v?=
- =?iso-2022-jp?B?aFZmbTFTZGRlM3JyK0lnK2ZUamVOTm1LaGx6MURmYnZZVng4c1FYb2dV?=
- =?iso-2022-jp?B?TVBzUWpvcXNRQjlZWDc0NEt6M2lNbnpwTWlod1dmZVM5NzhmTDBDMDcr?=
- =?iso-2022-jp?B?MVBRZWpZTFpTVXRDdS9SRmJ0TGIrcWdMcHNGNFNzSWZTajVJa3MwMkEy?=
- =?iso-2022-jp?B?eTIzS05kV3BBWkZiL2NTUUZvWUZuVjVWMXhacW0rOUllcG16RkVuTkox?=
- =?iso-2022-jp?B?ZmNqcS9nZUpiNkM1OFFXVmZrVXBlUDcrMWtvOHFuR0x0bWRNakNHNGkv?=
- =?iso-2022-jp?B?L21UQmROdTV2YUxqNURuSEJoTnhHQVJkNmVzRDcrbTVVVE5lSkd1NVhE?=
- =?iso-2022-jp?B?bTJidFByVEw0ckFOOTg2N01adEpNQkE1amZkMWk1cEhYOVhWZjA1RUYx?=
- =?iso-2022-jp?B?cVRiZGtHSGI3eExhaXNtbE9tdm9DTzZReFBieElLQ205RXpWUGVISlhD?=
- =?iso-2022-jp?B?SWRWaWUreGluTTdGditxTlFyUVQyMTZlY002clNVR3JtN1BLbWJVOU0z?=
- =?iso-2022-jp?B?YzV5OWZpYWdLZWtab0x4WUFtbzdsUVh0REc2VkdqUDJSZHVPTSs0RzZj?=
- =?iso-2022-jp?B?SWIzNjU0VzJJeFJxanV4TGhXRmJpVkJmOGR2NjdYUXBkZ25ycU9kRU8y?=
- =?iso-2022-jp?B?OTNPU1RRR2d0Rlc1Yk93TnB4SlgweXVXVU1OMW9TWjRXZVVFRHIvbFBT?=
- =?iso-2022-jp?B?WWFiakp5TFM0K01qSW1TTW05VUtkd3hXNXlNaWxybm5tR1JjZHpVRGVt?=
- =?iso-2022-jp?B?NW1LeU44QXF4bG1UbERVVkN3OHNMUFpWb1I0eStWNXU4cENRYkd6VEY4?=
- =?iso-2022-jp?B?aEtkWEFVNlpHL2dtZzExZXBZSENucUN5TUlZRkFFQ09qa0NCRFE5Y3pU?=
- =?iso-2022-jp?B?NmNmc2tLdlBXdW9HaWF4U1VPcXkyTkgrYWxLbldndFZpWEtwRDZyQVJQ?=
- =?iso-2022-jp?B?UzFRYm9vNnU5cVB6VXJsdGZCYXpxUFk0Q1Z5RWMzVHJINE9aeTZUMjky?=
- =?iso-2022-jp?B?QXEvZXlDYmZuR3VYUEREM25lQzFJNVMvU3B0dUFlaGlOc3lRNk9NNnEw?=
- =?iso-2022-jp?B?WVR1NHNPcE8zL1NDQ3VzKzRpcTdaNlBqVlQ3K29NaXNWSCtPUzFjdkFE?=
- =?iso-2022-jp?B?YzYvUWYvR3hJV3JoVzQvc29SQXR3ZlRNZCtYVE40ZE5kMXIzbi96c0hV?=
- =?iso-2022-jp?B?WEVyemh5Q0FId0xmOE5HY1N2WjRqbzJNRlprQ0Ixc3ZhS3pPK0RFdVZy?=
- =?iso-2022-jp?B?M0x1M2QxQ2t0SGRscXNzRy9hcEh1SEh1ZTUvTlpJZzRHd01SNng2TDdS?=
- =?iso-2022-jp?B?R0J1Z1ZQSkE4OTk1MGIyRjhuUlNOTGtFa2hDMk9nM0FlYnVvMzVQSkhs?=
- =?iso-2022-jp?B?NkNHTXFQeW9KbEx4aWlFSURmK3Z0ekc3Zjg4RGJvWmpnYzBMd3Rzcmxw?=
- =?iso-2022-jp?B?NjhuVVFLMFBJM0ZvVFl2bUxrK0RtZXBYcWUydVZ2Y2hHMmxVazBWbFV1?=
- =?iso-2022-jp?B?Z3JWK0RSNEFHWXN2d3hTdXltL1g4RFljZ0lmMFlKL09KQ0VteTI4RnVM?=
- =?iso-2022-jp?B?Ti9rTklnL3JIVENIRXlObkQ3T3pmcVo1bHZ2NUVaL3A3MFY0WFgzYW5S?=
- =?iso-2022-jp?B?SytSNkRJZHVFSUZJY2d5ZDNETm5ON21BMnUvVDVCbzcvZ2RQcVhxQXVy?=
- =?iso-2022-jp?B?QmFpRGRUbWdva0lISGlIN0JOK2hib0NNTUl6SUYzRnNDSWFUeXluOWRQ?=
- =?iso-2022-jp?B?ZVZ1ekt5M09wUklZNFF2OFpUbUswTGhrdkE9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Mon, 25 Mar
+ 2024 15:15:44 +0000
+Received: from CH3PR12MB8535.namprd12.prod.outlook.com
+ ([fe80::5302:26cf:a913:7e06]) by CH3PR12MB8535.namprd12.prod.outlook.com
+ ([fe80::5302:26cf:a913:7e06%5]) with mapi id 15.20.7409.031; Mon, 25 Mar 2024
+ 15:15:37 +0000
+Message-ID: <1287adbe-364f-431c-b33f-9d73e7829b6c@amd.com>
+Date: Mon, 25 Mar 2024 10:15:30 -0500
+User-Agent: Mozilla Thunderbird
+From: Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [RFC PATCH 0/6] Implement initial CXL Timeout & Isolation support
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ bhelgaas@google.com, linux-mm@kvack.org
+References: <20240215194048.141411-1-Benjamin.Cheatham@amd.com>
+ <65cea1bc6ac0c_5e9bf294ed@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+In-Reply-To: <65cea1bc6ac0c_5e9bf294ed@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR04CA0100.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::41) To CH3PR12MB8535.namprd12.prod.outlook.com
+ (2603:10b6:610:160::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	nwoSWiLANfMEG0F7OJitWlD1I4PIpnven9Z6xCMMWNu7pFOD37TsuLl06gjnEtNH21jrbk8bGSz/lb4hpG/hLkdiMTkMKXLnViILAdAT0MjW2rZaj71QIAxUh3wQ95a6c8oddW57MynbG/OFQVEpbznEKK1zXQJ1Me0mw29qVwZ8vVVdHw1J8JoSihmf7k39oqJGLfLI54F88nbz2DlTrR/hPrtU6U2/Im3lQ5Aqgi28A0M05jxepYkAs1G4rRbtda9xMvzlPhv0eLkfi4tqm5X7xr1tJfSqOctMwa2WSMYyMf5rd9Ru2zgvJVnGoxc3ahqrNqJawAFXI4uw98Sa2KZXeHLDvWMCRf9W9SHr/9M7a0ZX8fJjYCbuTYjcGqztWjXVizm7dxAsn7vH6lZaCyAm4zuP328W0EJNIsAo33Xawq9v6dtnLdaQR4E5FmvtBJEQusvVJ4vCwWolVjH5C+CY07ZGATnEHlZgN4N3aiPnKYpPlXYNw7LsjUhFhS7azALvWOVORnMHn1/ieIGhF3+QrgqtF90J+veGoh1Tds9gjLsrZl+H7tmFds9jCo7zV/EL9t+r9FiUlzOsF/5e7JGv/8JnDaiadgoOAsbMfRhApjy2m7Z7wWrGaxe34WUO
-X-OriginatorOrg: fujitsu.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8535:EE_|PH8PR12MB6867:EE_
+X-MS-Office365-Filtering-Correlation-Id: 711288e4-b53c-4e58-933f-08dc4cde6d17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ZSoGESBbFQrrgtR/SE1bpePy87RrHJ/LfJ2RHZklTrpFCKLG9zRK1Ilih7Zrz8x71bgHTuJDpP8GUEN4yxKoOXWscC4d4cyNMq7ioKXjAz4hn8QWLG/p6v4f8rsxt2CQY6SbXGqZ1CHOVpY1fRzm9QC2E4QrSNigFxdnUhmCTyeApX0oVqIg0xi7msVE3K2HZ10B8k8Ya9c1mt860I+beUVKZlnx0Oob2TclGuRkz/RmextdPNZjarUrpGkvaMdL63TE+NvUar/oAGVU800uCloOGrBN6SUaq6QJc0s6RJHklqxaSp/HSm8RbXdoguMG3vLtNWlv7HFWA6zd62xxWWykOMkiogL5q/q7lfsF/rKK63IV9nMpf7KBYnvQj8mpDdBAWsfSjlfZET40qnstqMrhtelzq6MxIiJ4bH59XMPN6eiNqBdzl5QsQXXtDDCVNNDU+gLVelk+psUxgFa1WKuEaLEajAPseFbhYrAncOS6X9DCStKSIynqxqZOrrHbbh8UsxjiWaDMOId0WYKQNvXqBaAw4QviWuviqTSiVPwYiKEgJoSmjVaMqcyfaLC0BP35heupRynZaUbdFT1RrcOYhGc/cHsoNOyuvZutqjPQErB56ndbuiB/8foPe5/dZCmTuyf8OY/2ACGkDuWbtbOj+r9L5cq2AVcZxv9coeg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8535.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bS9SNEs1TjJjVHdJOWhLUlA0UWt2TmFQWkpWRjRVaExpT016cG1GQXI4cmFR?=
+ =?utf-8?B?Zmc2K0pFcTVBZGNvY1lMZVREYmVNOU5wTUVKTDVXVHNQRDZCdWxMWUt1eThm?=
+ =?utf-8?B?MEprNXJTQW90WjBTdDZWWi9WQ0ZONlZNNjBqZVY3Nk9wVWtibTNHRmx5R3dx?=
+ =?utf-8?B?SGpEOFZnOEgzTDFyb0Foczg0M1RCanZ6UlNXUHpTcytQOFdyckxLb2E1NVM2?=
+ =?utf-8?B?VndXeW1qYyt2aE5CbTRjWlFudXl5bm5oaDR1N3ROMGRIbVpsVE4wYTZjV2hK?=
+ =?utf-8?B?dFkrOUtlTExqSHV3SUszV2Q2aGU0TW1lK01KTXZXN3RGaFU4eGFBUjdEZkVO?=
+ =?utf-8?B?QUh6blIwTUtJT0hHMEkvamVjbGFsUlR0MDdsOFZPQnc2UlJ6KzRORjJPV0FQ?=
+ =?utf-8?B?bHpRMHZmbkVXUXpKMzg4Z2M3OGxNMFVJSUFXanVGYlRHTldVczFpL3pXWDZi?=
+ =?utf-8?B?cTRpU1pEb0sxUlRoSmF0WDZIMG5kUHVBb2s3eGdRNVh0TzRoaEszRk8rVy96?=
+ =?utf-8?B?My9STE03NFV1S2dVQnJISDFscEpiZVBVdFMyRUdJRmZZNThIbEhua3ZLT3ds?=
+ =?utf-8?B?RWV0bnhVRTN3V2NtTUNRaGJ1MWJDcitmeFVmNlBwcS8zKzZzSURBbkNpaUV2?=
+ =?utf-8?B?Qloza3dvVDhnMjR1NXdRNTNqUUthNCtWbS9aMVNlTmNtOWN0MllqWU1ISnJC?=
+ =?utf-8?B?c2dWVHBiU0VNcVY5L2toT09iSzlsa0VvNU56d0EwbzBxKzNaaWVTaDRFeHlS?=
+ =?utf-8?B?TGpJVzV6d2RvM1dYVmw4SGNzY0FSV0cxMFNkV0hVMUJNazJwTEVrNU9MWTRn?=
+ =?utf-8?B?UGZvc0pVU29IeTl3eWVvWU9NS2RIbUdySTd4cjByd0hBdXpXVWpMNFJGcEJz?=
+ =?utf-8?B?eGhvOCtQSTdqenpRWXI2UVUycXA2eFBkaDF3UTZJa0dqZWtKVlRDODVOcEVY?=
+ =?utf-8?B?a2c5YlFoMUZXREJ1by8vdzc0eFRRajBWTmJIMFplMjdraWNFcDlqMm5GTExu?=
+ =?utf-8?B?TS9jYkpRK2ttZ0hlODMzb01BRW5yaTFxWjViR1JZdEtnQjJIL1FLT2dHQWJt?=
+ =?utf-8?B?bk4rZm01K1FYNE9uakxMNmVld3dXckJhcmZVQTlBYjFoWGJxdmJWV2tYMEJH?=
+ =?utf-8?B?ZHNMWGo4b0dtZUE1ZWk1c0FIbFZuL1pRZHp0b3gxY0VVcTdPNUgwQXlsWmkr?=
+ =?utf-8?B?dzB5aThneGlKRzc3UjRKb0Y5ZExWbDBYbVk4ZVNDZnZBOEwyTkJ2L0FtamtF?=
+ =?utf-8?B?dTBQZ21XYmczRVFpSGoralA2VGhpR0ZSMmp4a21nRmFvZVVCd3NsV29xZW5M?=
+ =?utf-8?B?bE5EcklCdUl3akxob3BhOXE2OTM3ajVhSVQxRXUxYXdac29nNzl5OWJqZE5D?=
+ =?utf-8?B?cVZDZlpxNGw5RU9YUGEzM0RhcVpEYTFTZ3pheW9Ra0F0cmZER2tIZTdzak1Y?=
+ =?utf-8?B?QWgybVI5TXlTd3hEMkVJVlVXSGtLTGdJQUVVUjV5M0Jha0twbUllcUI2Yk80?=
+ =?utf-8?B?a0h1VmJzZ21Ka0s5UVZ2YWZiaUdQdjdyOXRpQXhsMncyVGdZd0Z0OFY1dFV1?=
+ =?utf-8?B?b29BYlRpUGp1NmNkUERzdlYyMnVPM0VybWp6OXAwY2dZZnh0amNHYzZvdUE3?=
+ =?utf-8?B?WS95b01XS09zZ2IzeXdERm52bndWeWhnSWI1K29IcWRXdVpvb00zZG1RS2Zl?=
+ =?utf-8?B?QkMwRnpHSW1MYkh4RzlrRkdsem1vcjFaM1JVeE9CcFY3NExwckRsbzg0dElu?=
+ =?utf-8?B?dGJ6d2RDQXByUjF2Mm5TZEc5alpFL1NjbmNSTDdQSHBrdDJuOGdIUkRSNnRS?=
+ =?utf-8?B?ZkY2Z0dUQkRSc2ZvNm9zK2xHb28yU2t4Sy8wRDZ3VXQ5VmRlWDRLTlUwd1lo?=
+ =?utf-8?B?cER4R1o3bThWZUNnWXBlWWJha3pSRWZsak45ZmxqWjh5a3REbkpPNVdMQ05q?=
+ =?utf-8?B?NjhUTWVPN1Jqb1VzOGpKUVQvUTdFT3VwNzZwbjdSWkdDNWF4K0w5V0xuVHd2?=
+ =?utf-8?B?VUFLNXEzNWI0R05yclJkbVpxTzViMzZoY1JKaG1ZczYzZzNqYkRIL2VLZ3pR?=
+ =?utf-8?B?RGNzZ0tFQXIyZWJuVHVmWHVTZjNGZTdDTVN2YzhXWklSZFpobTRheDdEYTQr?=
+ =?utf-8?Q?OucX3pr2vB38g0cX4lJ1CUM4v?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 711288e4-b53c-4e58-933f-08dc4cde6d17
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8535.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1dbecce-2830-4584-96c8-08dc4c86fa21
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 04:49:38.5573
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 15:15:37.8218
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oe+77X7V/QPP8XGSW2wo4soeHiC+w7msRxNBBZkJKGVWNVB5ZEFtE5F8wENjDeAt0ARsc3l+QiUR2Y9gGqEgFaRCUPyoAyCkPq2IrfLZVxQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB6689
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dua3mS6GHlQ8OjOi5lflf1sEHOfErxv7ztFFehskr8SnOhzscIaL7ARZQTke2i+9tPkoeCUHvZZsDJ4nbVYNSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6867
 
-Kindly ping
+Hey Dan,
 
-Any comment is welcome.
+Sorry that I went radio silent on this, I've been thinking about the approach to take
+from here on out. More below!
 
-On Tue, March 12, 2024, Kobayashi,Daisuke wrote:
-> -----Original Message-----
-> From: Kobayashi,Daisuke <kobayashi.da-06@fujitsu.com>
-> Sent: Tuesday, March 12, 2024 5:06 PM
-> To: Kobayashi, Daisuke/=1B$B>.NS=1B(B =1B$BBg2p=1B(B <kobayashi.da-06@fuj=
-itsu.com>;
-> linux-cxl@vger.kernel.org
-> Cc: Gotou, Yasunori/=1B$B8^Eg=1B(B =1B$B9/J8=1B(B <y-goto@fujitsu.com>;
-> linux-pci@vger.kernel.org; mj@ucw.cz; dan.j.williams@intel.com; Kobayashi=
-,
-> Daisuke/=1B$B>.NS=1B(B =1B$BBg2p=1B(B <kobayashi.da-06@fujitsu.com>
-> Subject: [PATCH v3 0/3] Display cxl1.1 device link status
->=20
-> Hello.
->=20
-> This patch series adds a feature that displays the link status
-> of the CXL1.1 device.
->=20
-> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
-> the link status can be output in the same way as traditional PCIe.
-> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
-> different method to obtain the link status from traditional PCIe.
-> This is because the link status of the CXL1.1 device is not mapped
-> in the configuration space (as per cxl3.0 specification 8.1).
-> Instead, the configuration space containing the link status is mapped
-> to the memory mapped register region (as per cxl3.0 specification 8.2,
-> Table 8-18). Therefore, the current lspci has a problem where it does
-> not display the link status of the CXL1.1 device.
-> This patch solves these issues.
->=20
-> The procedure is as follows:
-> First, obtain the RCRB address within the cxl driver, then access
-> the configuration space. Next, output the link status information from
-> the configuration space to sysfs. Finally, read sysfs within lspci to
-> display the link status information.
->=20
-> Changes
-> v1[1] -> v2:
-> The following are the main changes made based on the feedback from Dan
-> Williams.
-> - Modified to perform rcrb access within the CXL driver.
-> - Added new attributes to the sysfs of the PCI device.
-> - Output the link status information to the sysfs of the PCI device.
-> - Retrieve information from sysfs as the source when displaying informati=
-on in
-> lspci.
->=20
-> v2[2] -> v3:
-> - Fix unnecessary initialization and wrong types (Bjohn).
-> - Create a helper function for getting a PCIe capability offset (Bjohn).
-> - Move platform-specific implementation to the lib directory in pciutils
-> (Martin).
->=20
-> [1]
-> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06
-> @fujitsu.com/
-> [2]
-> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@
-> fujitsu.com/
->=20
-> Kobayashi,Daisuke (3):
->   Add sysfs attribute for CXL 1.1 device link status
->   Remove conditional branch that is not suitable for cxl1.1 devices
->=20
->  drivers/cxl/acpi.c |   4 -
->  drivers/cxl/pci.c  | 193
-> +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 193 insertions(+), 4 deletions(-)
->=20
->   Add function to display cxl1.1 device link status
->=20
->  lib/access.c | 29 +++++++++++++++++++++
->  lib/pci.h    |  2 ++
->  ls-caps.c    | 73
-> ++++++++++++++++++++++++++++++++++++++++++++++++
-> ++++
->  3 files changed, 104 insertions(+)
-> --
-> 2.43.0
+On 2/15/24 5:43 PM, Dan Williams wrote:
 
+[snip]
+
+>> The series also introduces a PCIe port bus driver dependency on the CXL
+>> core. I expect to be able to remove that when when my team submits
+>> patches for a future rework of the PCIe port bus driver.
+> 
+> We have time to wait for that work to settle. Do not make the job harder
+> in the near term by adding one more dependency to unwind.
+> 
+
+For sure, I'll withhold any work I do that touches the port bus driver
+until that's sent upstream. I'll send anything that doesn't touch
+the port driver, i.e. CXL region changes, as RFC as well.
+
+[snip]
+
+> So if someone says, "yes I can tolerate losing a root port at a time and
+> I can tolerate deploying my workloads with userspace memory management,
+> and this is preferable to a reboot", then maybe Linux should entertain
+> CXL Error Isolation. Until such an end use case gains clear uptake it
+> seems too early to worry about plumbing the notification mechanism.
+
+So in my mind the primary use case for this feature is in a server/data center environment.
+Losing a root port and the attached memory is definitely preferable to a reboot in this environment,
+so I think that isolation would still be useful even if it isn't plug-and-play.
+
+I agree with your assessment of what has to happen before we can make this feature work. From what I understand
+these are the main requirements for making isolation work:
+	1. The memory region can't be onlined as System RAM
+	2. The region needs to be mapped as device-dax
+	3. There need to be safeguards such that someone can't remap the region to System RAM with
+	error isolation enabled (added by me)
+
+Considering these all have to do with mm, I think that's a good place to start. What I'm thinking of starting with
+is adding a module parameter (or config option) to enable isolation for CXL dax regions by default, as well as
+a sysfs option for toggling error isolation for the CXL region. When the module parameter is specified, the CXL
+region driver would create the region as a device-dax region by default instead of onlining the region as system RAM.
+The sysfs would allow toggling error isolation for CXL regions that are already device-dax.
+
+That would cover requirements 1 & 2, but would still allow someone to reconfigure the region as a system RAM region
+with error isolation still enabled using sysfs/daxctl. To make sure the this doesn't happen, my plan is to have the
+CXL region driver automatically disable error isolation when the underlying memory region is going offline, then
+check to make sure the memory isn't onlined as System RAM before re-enabling isolation.
+
+So, with that in mind, isolation would most likely go from something that is enabled by default when compiled in to a
+feature for correctly-configured CXL regions that has to be enabled by the end user. If that is sounds good, here's
+what my roadmap would be going forward:
+
+	1. Enable creating device-dax mapped CXL regions by default
+	2. Add support for checking a CXL region meets the requirements for enabling isolation (i.e. all devices in
+	dax region(s) are device-dax)
+	3. Add back in the error isolation enablement and notification mechanisms in this patch series
+
+And then after those are in place:
+	4. Add back in timeout mechanisms
+	5. Recovery flows/support
+
+I'll also be dropping CXL.cache support until there is more support. I'd like to hear your (or anyone else's) thoughts
+on this!
+
+Thanks,
+Ben
