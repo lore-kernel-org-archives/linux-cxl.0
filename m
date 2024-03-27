@@ -1,243 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4205B152DE6
-	for <linux-cxl@vger.kernel.org>; Wed, 27 Mar 2024 19:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246BE4CB38;
+	Wed, 27 Mar 2024 21:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711569163; cv=none; b=k7lwMQATyADnzvFjgBf/7UCd08mwW3/TtOmLF+BpIitqhGG0iu+zjrTMlG+m5WOKoxpjRc/ukROlDMTwQUJ3s9flfo8QoZPvS2nHW6nX4XG7Sn/uXH9JlhilKzMeNe+aCj6vsQUihN+4U/xIX5ghJ1KN6CqzWb+fmR+abtI/lyE=
+	t=1711574792; cv=none; b=MltJqdRT03d2MftDWCc1JxuuJw7gPa3iC8IaHiD3ifEbqnofkOsLWpLJEoY81aCBdDMN7FWIHAXGPxiJxLSkz+WKtR7tCq7Hp3yMwBeupcTg+oKTHMv1G7IILA7r02JrNpEwsMc16/vRW0jg15L4/M/ux1qSONtZFjriihGQxy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711569163; c=relaxed/simple;
-	bh=RkvUXVi/Dt6O4GzRluGcJSTqPWOyEmy7NvPT0BP6324=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R9bcCsQ+rhsQGXPZHqMnBVzTER617BKUSpZ6DthwbSlA/oLLI+Uo/CCxFId33G/eWbo2LNlAQmNJJ+Mj6puGwHNaQdS3KbDLgXA3vrPpzrc94lw30IhWgkBrVnvv4GTRy4Ble6Fj4/wMy7ubdF1OIliHcW13NPovP84yBhA3b8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1GfpNQc; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711574792; c=relaxed/simple;
+	bh=Wj0CQ4VM2u/E63IBHO/QtJw33yqvmZQ+FRrokKwKLyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QQ5RDRW47DhUezWtiQ8iXd9jlwgQzHxalpkbLpjEmtOFPpTkmbpKlqg+p6u+2+3OBIELky7DL+KJMu+ljbiJfVZv8kWGXZBcSscFtZ6Ov6CyxTIwXcC01Ir27vI0+Y4cUxx0qT4XqXGTeCmuBktLmQZr0gKwpjTX3e960lBfgyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2wKEk/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1GfpNQc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711569162; x=1743105162;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=RkvUXVi/Dt6O4GzRluGcJSTqPWOyEmy7NvPT0BP6324=;
-  b=j1GfpNQcEZJYRY1LKFxRQOa6J1JXNpjKI7aaDSkJqv1z3Ah3fLFIr+/y
-   DxwLe7ITXSv6qhEOw6eo5seTF7mFBKaKoPjy71UcM2zbn5z9Kqc3m5KPw
-   cDipD6mpPiNv+2TFVhqIzzYh1yfzS9gO0vcprjc6oBtL15JBkw1+zde4N
-   m36O7HFTO7JeM1RWX3jZCyfgaWYUxNyuW8JtDQhi/p0rNZj/hbQB2JCQL
-   V3yFtyYQlBVhdjVQ6Wb0qDPgAl6A8Aa0z8Dwve1ZzNw10gmXK6s1v8iTy
-   TjtNqsgG5SI+IGDKSg1BSiYyvk9csxRx01/iWbd6QpypUuOO17Rxmto9P
-   A==;
-X-CSE-ConnectionGUID: bGOXXHDwR9iDdmXh5OSa9A==
-X-CSE-MsgGUID: 0TfGBVRmRLuqSLdBlfYo0A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6560229"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="6560229"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 12:52:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="47616378"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.82.250])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 12:52:42 -0700
-From: alison.schofield@intel.com
-To: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH v12 8/8] cxl/test: add cxl-poison.sh unit test
-Date: Wed, 27 Mar 2024 12:52:29 -0700
-Message-Id: <39dabf14f9b060d88fa926874f6c6d6c75d7803c.1711519822.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1711519822.git.alison.schofield@intel.com>
-References: <cover.1711519822.git.alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2wKEk/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BE1C433C7;
+	Wed, 27 Mar 2024 21:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711574791;
+	bh=Wj0CQ4VM2u/E63IBHO/QtJw33yqvmZQ+FRrokKwKLyM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=i2wKEk/dhLTWhIigLIE23AM7jRLjmWJ1FusMg/PGhuVZT2lB2gONKjltObA18147i
+	 RZ3ZTTR+ciw2a7q6mVm3NVHU3mGnTMqzsyLcIbKvIckxMUTU0sXiMFlyXNiyhwBV9M
+	 5icxS+zNn6VIqrGAlTGt6n44gHzgBg6szKXExbjIMBZ+A8JuaFutocnUVcjQTuSIEh
+	 fUL5iOWlzvjgtNZVwfZnWpVEt+p3UjK8OdSFBBqTyfmGOFCUKozBvRtogy/tHXgBa3
+	 /K76ZQ6pX3J4wVCk+OdNO2gDGtzRGPSYS6YClzWVmaINKgiCJtfP63SoXa2eD0XZ6P
+	 uGgeiI16UNYKg==
+Date: Wed, 27 Mar 2024 16:26:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	dan.j.williams@intel.com, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
+	lukas@wunner.de
+Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
+Message-ID: <20240327212629.GA1533990@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325235914.1897647-2-dave.jiang@intel.com>
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
+> Per CXL spec r3.1 8.1.5.2, secondary bus reset is masked unless the
+> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
+> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
+> the CXL Port Control Extensions register by returning -ENOTTY.
 
-Exercise cxl list, libcxl, and driver pieces of the get poison list
-pathway. Inject and clear poison using debugfs and use cxl-cli to
-read the poison list by memdev and by region.
+s/secondary bus reset/Secondary Bus Reset (SBR)/
+to show that this is defined by PCIe spec and introduce the
+initialism.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
----
- test/cxl-poison.sh | 137 +++++++++++++++++++++++++++++++++++++++++++++
- test/meson.build   |   2 +
- 2 files changed, 139 insertions(+)
- create mode 100644 test/cxl-poison.sh
+> With the current behavior, the bus_reset would appear to have executed
+> successfully, however the operation is actually masked if the "Unmask
+> SBR" bit is set with the default value. The intention is to inform the
+> user that SBR for the CXL device is masked and will not go through.
 
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-new file mode 100644
-index 000000000000..2caf092db460
---- /dev/null
-+++ b/test/cxl-poison.sh
-@@ -0,0 +1,137 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2023 Intel Corporation. All rights reserved.
-+
-+. "$(dirname "$0")"/common
-+
-+rc=77
-+
-+set -ex
-+
-+trap 'err $LINENO' ERR
-+
-+check_prereq "jq"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test
-+
-+rc=1
-+
-+# THEORY OF OPERATION: Exercise cxl-cli and cxl driver ability to
-+# inject, clear, and get the poison list. Do it by memdev and by region.
-+
-+find_memdev()
-+{
-+	readarray -t capable_mems < <("$CXL" list -b "$CXL_TEST_BUS" -M |
-+		jq -r ".[] | select(.pmem_size != null) |
-+		select(.ram_size != null) | .memdev")
-+
-+	if [ ${#capable_mems[@]} == 0 ]; then
-+		echo "no memdevs found for test"
-+		err "$LINENO"
-+	fi
-+
-+	memdev=${capable_mems[0]}
-+}
-+
-+create_x2_region()
-+{
-+	# Find an x2 decoder
-+	decoder="$($CXL list -b "$CXL_TEST_BUS" -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 2) |
-+		.decoder")"
-+
-+	# Find a memdev for each host-bridge interleave position
-+	port_dev0="$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 0) | .target")"
-+	port_dev1="$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 1) | .target")"
-+	mem0="$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")"
-+	mem1="$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")"
-+
-+	region="$($CXL create-region -d "$decoder" -m "$mem0" "$mem1" |
-+		jq -r ".region")"
-+	if [[ ! $region ]]; then
-+		echo "create-region failed for $decoder"
-+		err "$LINENO"
-+	fi
-+	echo "$region"
-+}
-+
-+# When cxl-cli support for inject and clear arrives, replace
-+# the writes to /sys/kernel/debug with the new cxl commands.
-+
-+inject_poison_sysfs()
-+{
-+	memdev="$1"
-+	addr="$2"
-+
-+	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
-+}
-+
-+clear_poison_sysfs()
-+{
-+	memdev="$1"
-+	addr="$2"
-+
-+	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
-+}
-+
-+validate_poison_found()
-+{
-+	list_by="$1"
-+	nr_expect="$2"
-+
-+	poison_list="$($CXL list "$list_by" --media-errors |
-+		jq -r '.[].media_errors')"
-+	if [[ ! $poison_list ]]; then
-+		nr_found=0
-+	else
-+		nr_found=$(jq "length" <<< "$poison_list")
-+	fi
-+	if [ "$nr_found" -ne "$nr_expect" ]; then
-+		echo "$nr_expect poison records expected, $nr_found found"
-+		err "$LINENO"
-+	fi
-+}
-+
-+test_poison_by_memdev()
-+{
-+	find_memdev
-+	inject_poison_sysfs "$memdev" "0x40000000"
-+	inject_poison_sysfs "$memdev" "0x40001000"
-+	inject_poison_sysfs "$memdev" "0x600"
-+	inject_poison_sysfs "$memdev" "0x0"
-+	validate_poison_found "-m $memdev" 4
-+
-+	clear_poison_sysfs "$memdev" "0x40000000"
-+	clear_poison_sysfs "$memdev" "0x40001000"
-+	clear_poison_sysfs "$memdev" "0x600"
-+	clear_poison_sysfs "$memdev" "0x0"
-+	validate_poison_found "-m $memdev" 0
-+}
-+
-+test_poison_by_region()
-+{
-+	create_x2_region
-+	inject_poison_sysfs "$mem0" "0x40000000"
-+	inject_poison_sysfs "$mem1" "0x40000000"
-+	validate_poison_found "-r $region" 2
-+
-+	clear_poison_sysfs "$mem0" "0x40000000"
-+	clear_poison_sysfs "$mem1" "0x40000000"
-+	validate_poison_found "-r $region" 0
-+}
-+
-+# Turn tracing on. Note that 'cxl list --media-errors' toggles the tracing.
-+# Turning it on here allows the test user to also view inject and clear
-+# trace events.
-+echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
-+
-+test_poison_by_memdev
-+test_poison_by_region
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl-test
-diff --git a/test/meson.build b/test/meson.build
-index a965a79fd6cb..d871e28e17ce 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -160,6 +160,7 @@ cxl_events = find_program('cxl-events.sh')
- cxl_sanitize = find_program('cxl-sanitize.sh')
- cxl_destroy_region = find_program('cxl-destroy-region.sh')
- cxl_qos_class = find_program('cxl-qos-class.sh')
-+cxl_poison = find_program('cxl-poison.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -192,6 +193,7 @@ tests = [
-   [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
-   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
-   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
-+  [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
--- 
-2.37.3
+The default value of Unmask SBR isn't really relevant here.
 
+> The expectation is that if a user overrides the "Unmask SBR" via a
+> user tool such as setpci then they can trigger a bus reset successfully.
+
+... if a user *sets* Unmask SBR ...
+to be more specific about what value is required.
+
+> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v2:
+> - Rename is_cxl_device() to pci_is_cxl(). (Lukas)
+> - Inverse xmas tree var declaration for is_cxl_port_sbr_masked(). (Lukas)
+> - Return -ENOTTY on error of reset method. (Lukas)
+> - Use pci_upstream_bridge() instead of dev->bus->self. (Lukas)
+> - Additional explanation in commit log on behavior. (Lukas)
+> ---
+>  drivers/cxl/cxlpci.h          |  2 --
+>  drivers/pci/pci.c             | 45 +++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h |  7 ++++++
+>  3 files changed, 52 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 93992a1c8eec..55be4dccbed0 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -13,10 +13,8 @@
+>   * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+>   */
+>  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+> -#define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+>  
+>  /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+> -#define CXL_DVSEC_PCIE_DEVICE					0
+>  #define   CXL_DVSEC_CAP_OFFSET		0xA
+>  #define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+>  #define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..259e5d6538bb 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
+>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+>  }
+>  
+> +static bool pci_is_cxl(struct pci_dev *dev)
+> +{
+> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					 CXL_DVSEC_PCIE_DEVICE);
+> +}
+> +
+> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
+
+s/is_cxl_port_sbr_masked/cxl_sbr_masked/ or similar
+
+> +{
+> +	int dvsec;
+
+u16
+
+> +	u16 reg;
+> +	int rc;
+> +
+> +	/*
+> +	 * No DVSEC found, must not be CXL port.
+> +	 */
+> +	dvsec = pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					  CXL_DVSEC_PCIE_PORT);
+> +	if (!dvsec)
+> +		return false;
+> +
+> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_PORT_CONTROL, &reg);
+> +	if (rc)
+> +		return true;
+> +
+> +	/*
+> +	 * CXL spec r3.1 8.1.5.2
+> +	 * When 0, SBR bit in Bridge Control register of this Port has no effect.
+> +	 * When 1, the Port shall generate hot reset when SBR bit in Bridge
+> +	 * Control gets set to 1.
+> +	 */
+> +	if (reg & CXL_DVSEC_PORT_CONTROL_UNMASK_SBR)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>  {
+> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
+>  	int rc;
+>  
+> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
+> +	if (pci_is_cxl(dev) && bridge && is_cxl_port_sbr_masked(bridge)) {
+
+This sounds like solely a property of the bridge, so why do we care
+what "dev" is?  I assume SBR is asserted in the standard PCIe way, and
+the only question is whether the bridge itself masks it.  Would this
+be enough?
+
+  if (bridge && is_cxl_port_sbr_masked(bridge))
+
+> +		if (probe)
+> +			return 0;
+> +
+> +		return -ENOTTY;
+> +	}
+> +
+>  	rc = pci_dev_reset_slot_function(dev, probe);
+>  	if (rc != -ENOTTY)
+>  		return rc;
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index a39193213ff2..5f2c66987299 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1148,4 +1148,11 @@
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+>  
+> +/* Compute Express Link (CXL) */
+> +#define PCI_DVSEC_VENDOR_ID_CXL				0x1e98
+
+I see that you're just moving this #define from drivers/cxl/cxlpci.h,
+but I'm scratching my head a bit.  As used here, this is to match the
+DVSEC Vendor ID (PCIe r6.0, sec 7.9.6.2).
+
+IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
+"PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
+name, and would normally be defined in include/linux/pci_ids.h.
+
+But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
+value "1e98" in the PCI SIG list at
+https://pcisig.com/membership/member-companies.
+
+> +#define CXL_DVSEC_PCIE_DEVICE				0
+
+I think this is the "DVSEC ID" (PCIe r6.0, sec 7.9.6.3), right?  And
+the "0" value comes from CXL r3.1, sec 8.1.3?
+
+Sec 8.1.3 says "Software may use the presence of this DVSEC to
+differentiate between a CXL device and a PCIe device. As such, a
+standard PCIe device must not expose this DVSEC."
+
+I think the "PCIE" in the name here may end up being confusing since
+the presence of this DVSEC means the device is a CXL device, *not* a
+standard PCIe device.
+
+> +#define CXL_DVSEC_PCIE_PORT				3
+
+And "3" comes from CXL r3.1, sec 8.1.5?
+
+Same here; I'm not sure "PCIE" should be in the name, or maybe it
+should be at a different place, e.g., "PCI_DVSEC_CXL_PORT" or
+something, since this DVSEC controls CXL-specific things.
+
+I kind of think a "PCI_DVSEC_" prefix might be appropriate since
+PCI is where the DVSEC concept is defined, and then the more specific
+details can follow
+
+> +#define CXL_DVSEC_PORT_CONTROL				0x0c
+> +#define  CXL_DVSEC_PORT_CONTROL_UNMASK_SBR		0x00000001
+
+s/CONTROL/CTL/ (or CTRL, though CTL is more common in this file)
+
+Bjorn
