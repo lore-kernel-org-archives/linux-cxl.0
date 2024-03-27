@@ -1,58 +1,45 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C522C190;
-	Wed, 27 Mar 2024 07:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from psrserver (unknown [123.150.8.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866122C195;
+	Wed, 27 Mar 2024 07:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.150.8.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711523931; cv=none; b=FqzJFviFJz4ci13A5GlNLXGrBB5vZp/z6LWy2pH3cfW+fW23ez/6DU/dFcPBXESRWt7Ih0hX41CNYErugSz4PAE/lCMSWAqQLaqaArkY22WubFwX2iMLTb39vIL/tHVtw8+C+zgYSKtbdSSXaObWgyf+vXpqUY39Bgx3hb2x8yw=
+	t=1711524004; cv=none; b=mSuVNqn2LiqZUDH8NhwvOZw9xwEkJm0Fhm0Wbj+apmlGUBRIUecGvkBraBwRD24wbjnLHadR+yA9vyOpTNif/thybqtpanQ/rWTpBd/bRETnzrnTW4dXEHWZBhQBURVCToQLsYq0mTSCRsYZPqZOMV+mad9lT/1f0OHVmoN7q34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711523931; c=relaxed/simple;
-	bh=Lc8RJTziSPVqWQBd4FNmq72R4WiUygStvibwOwIVHSc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=obz1FVadQn4Tb5whC/6eYAfQ35hAznsPg0jYbP35A2S3PEjKzhSfl6ByK+U22UrSG6lhEAuQbIk0kKYF5VdBneX89I+njPtBn5iXpp/0bZGhEZeLxgypTsEzezSTFX1+2NzHD+ozfeqEQrBZx1QIVOchtgfMxw6aNYigeeJKsaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+	s=arc-20240116; t=1711524004; c=relaxed/simple;
+	bh=XdXqg1NMdLPRiYnEaHoa7eE9SN69+UZWfnYpjYCbwCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=alumOLqX9Om3FE5FXkfwf0243jYC1WlA9CPJCZLRpWJU+BwFr3Nac3IxfKKpQUhk2F0w+ZO81mXcxPR8tf7Ibsn0fwA1xzEct81uev/iG3svnck8ZgERPsVrjf9x1rmhIdQ0YfXyyq5uh2+MYHxrf8yYN6Q4ssou3rYZUsY5v68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=fail smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=123.150.8.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAXHkZAyANmkHcPEA--.19818S2;
-	Wed, 27 Mar 2024 15:18:24 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwAXpvU2yANmWkYAAA--.246S3;
-	Wed, 27 Mar 2024 15:18:15 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=phytium.com.cn
+Received: by psrserver (Postfix, from userid 1000)
+	id 802AB32190E; Wed, 27 Mar 2024 15:10:15 +0800 (CST)
+Date: Wed, 27 Mar 2024 15:10:15 +0800
 From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com,
-	y-goto@fujitsu.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: RE: Questions about CXL device (type 3 memory) hotplug
-Date: Wed, 27 Mar 2024 15:18:12 +0800
-Message-Id: <20240327071812.955794-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
+To: Dan Williams <dan.j.williams@intel.com>, jonathan.cameron@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Questions about CXL device (type 3 memory) hotplug
+Message-ID: <ZgPEfJSWreRo1OdZ@psrserver>
+Reply-To: 646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch
+References: <TYWPR01MB10082116669BA002263DF132A90439@TYWPR01MB10082.jpnprd01.prod.outlook.com>
+ <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwAXpvU2yANmWkYAAA--.246S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQARAWYDI2QDSwABs6
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZr47uryDGryrAry5Gr1xZrb_yoWrGF1kpa
-	y7Ja43KrykGw1UW3W0qa4kZa4rG3Z5AayUCF9rJw1xu3ZxJF17tF4rtayYqw1agFZ7Wr12
-	v3ZYk3Z2g3WkXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
 
 On Mon, May 22, 2023 at 05:11:39PM -0700, Dan Williams wrote:
 > Yasunori Gotou (Fujitsu) wrote:
 [...]
 
-Hi, all
+Hi, 
 
 There was some confusions about CXL device hotplug when I recently
 tried to use Qemu to emulate CXL device hotplug and verify the relevant
@@ -147,6 +134,6 @@ qemu-system-x86_64 \
 Qemu version: 8.2.50, the lastest commit of branch cxl-2024-03-05 in "https://gitlab.com/jic23/qemu"
 Kernel version: 6.8.0-rc6
 
+
 Many thanks
 Yuquan
-
