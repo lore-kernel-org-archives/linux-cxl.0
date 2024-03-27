@@ -1,389 +1,152 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9521DA20
-	for <linux-cxl@vger.kernel.org>; Wed, 27 Mar 2024 06:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C522C190;
+	Wed, 27 Mar 2024 07:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711522523; cv=none; b=tQNNNCwS4Df8Oib4r0digpPwsudH7YSsDLDM4BP+7wLdPzgvMulNe+UTEX/ZIgs1bv7TQvOzQGCjiEmvGw2psw9MYHaZnyq3jKPuzF13JvMal1upTpLpeImJyT59cKUEyi/dmbyTJ4F4r1pbDRk2ZCPavlZM7TA3kEeb+Fe3x5E=
+	t=1711523931; cv=none; b=FqzJFviFJz4ci13A5GlNLXGrBB5vZp/z6LWy2pH3cfW+fW23ez/6DU/dFcPBXESRWt7Ih0hX41CNYErugSz4PAE/lCMSWAqQLaqaArkY22WubFwX2iMLTb39vIL/tHVtw8+C+zgYSKtbdSSXaObWgyf+vXpqUY39Bgx3hb2x8yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711522523; c=relaxed/simple;
-	bh=pou+ytS5UXL8DGmx9JFrYDp3iLEuHsSbSXo7hwooVB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qW4wR5d5lBB8hjFa+GSEBeb6OWz4sjLVGHCNyqSlS29AiUyGJXLUi/DW95EIeiKACX8kfR6cYoBAMtcnQtXhQjc58Wh4DkMGQOtEg2g2rPrzfGmYVf6SiLqWU4OOm6GApY5+dlef7tLV/3k4TiFGChzGSdjWTdk/geT8G7lAdHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fQsfYNcq; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fQsfYNcq"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-609ed7ca444so62892697b3.1
-        for <linux-cxl@vger.kernel.org>; Tue, 26 Mar 2024 23:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711522519; x=1712127319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2gBdAxMvMnjsczXEA3QG1dVLh7HlPI7SpPCL+teq1rw=;
-        b=fQsfYNcq2pxPFOAdU46VcMncJkKi75OueThhtAR4yD3stU6mzZVFWA/GpXo5U+clxm
-         RB/go/N/6SFS7k8GFHAGQnjqjoJUgYzQskA+85hzeLybDiL4h0NhmF1v+/kh7sJp29mt
-         yycEqBwkimNfie7RAxd4qHXvBNfBTC8ohaR2J+qv4TjoV7m41QG8acIfrRlBAz47yH79
-         4b8hszV0mk7xf6d2+/dOMd2QVDiArcGXjOIfpUurDyD6qD7M7+44R5ej8XnTrvaR4Qmy
-         MKPD61vZUb4eK2XBgKfr/ZPcpbNEPmdkYKn3J8+KCfyI9M51XBOyUvFBawi7dwY7/0QI
-         +vBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711522519; x=1712127319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2gBdAxMvMnjsczXEA3QG1dVLh7HlPI7SpPCL+teq1rw=;
-        b=rEqarqwHtDxPrUCQawHU8JBk526oIb8+ZpY00pQCcF8tgpDBA57j1Q+lW4fu36H4WW
-         Puyc9hWTqQK7onoirGD+o1ivA5aekJrmFIDJQs2fxfBWFK3EpnhFDhNIckQtiLLUJVtZ
-         zwR8fKlnONHztngh9Fx7e0ai4rqIwHs5YnUpBYBKHxl7l+AQE7j9OkIr1AmFbCny6Mho
-         dEFJCiQfP7a77+uzcFLkPwpmZ+R22fhc8FzvW94rsaaB+I3EJNvhNdRjxS6hHMEPoZCd
-         dQkK+ToCx8bBTszjVZUVBkqdwHjSm6qcqmHJIb2Kk7UXnaOXTH2AvFaD4S2COkvYOCqj
-         LR8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUqqbBm5XzXCw+mku4HOnosNP+fdqArA7ooLO3UOcp2zA7gSCHjPwTKLNU3qvsw6moHo2jsNjSFN2QQ74vj64pqQrwMW9OWH3tp
-X-Gm-Message-State: AOJu0Yxi9JkJIj+8PThbBVxgQHdV/u1WUiHQS2fm+XI27Dql5/4ZtKS+
-	cnE8cjdTxLVHb3bFVoPXeJ2IkZDFuRDicTpFoUQdMho5GOLfWOFmrChL4sxrwVjGGx1Y1hXAJuy
-	tCTcZnh/TA+dsh11eYkn9hjtZ7MZ6AQvwgyRjig==
-X-Google-Smtp-Source: AGHT+IGneaW9WE/Y0nsKRo0D7anGiHOi7fBK7mx80rP9apScsfFYIjDTSuH8hoPcCeMmppqQ4avESF7WEPInBimAGLE=
-X-Received: by 2002:a25:a009:0:b0:dcf:b5b7:c72 with SMTP id
- x9-20020a25a009000000b00dcfb5b70c72mr2835965ybh.0.1711522518886; Tue, 26 Mar
- 2024 23:55:18 -0700 (PDT)
+	s=arc-20240116; t=1711523931; c=relaxed/simple;
+	bh=Lc8RJTziSPVqWQBd4FNmq72R4WiUygStvibwOwIVHSc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=obz1FVadQn4Tb5whC/6eYAfQ35hAznsPg0jYbP35A2S3PEjKzhSfl6ByK+U22UrSG6lhEAuQbIk0kKYF5VdBneX89I+njPtBn5iXpp/0bZGhEZeLxgypTsEzezSTFX1+2NzHD+ozfeqEQrBZx1QIVOchtgfMxw6aNYigeeJKsaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAXHkZAyANmkHcPEA--.19818S2;
+	Wed, 27 Mar 2024 15:18:24 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwAXpvU2yANmWkYAAA--.246S3;
+	Wed, 27 Mar 2024 15:18:15 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com,
+	y-goto@fujitsu.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	qemu-devel@nongnu.org
+Subject: RE: Questions about CXL device (type 3 memory) hotplug
+Date: Wed, 27 Mar 2024 15:18:12 +0800
+Message-Id: <20240327071812.955794-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327041646.3258110-1-horenchuang@bytedance.com>
- <20240327041646.3258110-3-horenchuang@bytedance.com> <874jcsnryv.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <874jcsnryv.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Date: Tue, 26 Mar 2024 23:55:07 -0700
-Message-ID: <CAKPbEqpbtkbcH2XoV2g3AFm1HtzOPjkNMa3AyTqWdd5MyvY9pg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v5 2/2] memory tier: create CPUless memory
- tiers after obtaining HMAT info
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, aneesh.kumar@linux.ibm.com, mhocko@suse.com, 
-	tj@kernel.org, john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
-	Hao Xiang <hao.xiang@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwAXpvU2yANmWkYAAA--.246S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQARAWYDI2QDSwABs6
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZr47uryDGryrAry5Gr1xZrb_yoWrGF1kpa
+	y7Ja43KrykGw1UW3W0qa4kZa4rG3Z5AayUCF9rJw1xu3ZxJF17tF4rtayYqw1agFZ7Wr12
+	v3ZYk3Z2g3WkXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Tue, Mar 26, 2024 at 10:52=E2=80=AFPM Huang, Ying <ying.huang@intel.com>=
- wrote:
->
-> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
->
-> > The current implementation treats emulated memory devices, such as
-> > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal me=
-mory
-> > (E820_TYPE_RAM). However, these emulated devices have different
-> > characteristics than traditional DRAM, making it important to
-> > distinguish them. Thus, we modify the tiered memory initialization proc=
-ess
-> > to introduce a delay specifically for CPUless NUMA nodes. This delay
-> > ensures that the memory tier initialization for these nodes is deferred
-> > until HMAT information is obtained during the boot process. Finally,
-> > demotion tables are recalculated at the end.
-> >
-> > * late_initcall(memory_tier_late_init);
-> > Some device drivers may have initialized memory tiers between
-> > `memory_tier_init()` and `memory_tier_late_init()`, potentially bringin=
-g
-> > online memory nodes and configuring memory tiers. They should be exclud=
-ed
-> > in the late init.
-> >
-> > * Handle cases where there is no HMAT when creating memory tiers
-> > There is a scenario where a CPUless node does not provide HMAT informat=
-ion.
-> > If no HMAT is specified, it falls back to using the default DRAM tier.
-> >
-> > * Introduce another new lock `default_dram_perf_lock` for adist calcula=
-tion
-> > In the current implementation, iterating through CPUlist nodes requires
-> > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will end=
- up
-> > trying to acquire the same lock, leading to a potential deadlock.
-> > Therefore, we propose introducing a standalone `default_dram_perf_lock`=
- to
-> > protect `default_dram_perf_*`. This approach not only avoids deadlock
-> > but also prevents holding a large lock simultaneously. Besides, this pa=
-tch
-> > slightly shortens the time holding the lock by putting the lock closer =
-to
-> > what it protects as well.
-> >
-> > * Upgrade `set_node_memory_tier` to support additional cases, including
-> >   default DRAM, late CPUless, and hot-plugged initializations.
-> > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
-> > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()` t=
-o
-> > handle cases where memtype is not initialized and where HMAT informatio=
-n is
-> > available.
-> >
-> > * Introduce `default_memory_types` for those memory types that are not
-> >   initialized by device drivers.
-> > Because late initialized memory and default DRAM memory need to be mana=
-ged,
-> > a default memory type is created for storing all memory types that are
-> > not initialized by device drivers and as a fallback.
-> >
-> > * Fix a deadlock bug in `mt_perf_to_adistance`
-> > Because an error path was not handled properly in `mt_perf_to_adistance=
-`,
-> > unlock before returning the error.
-> >
-> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
-> > ---
-> >  mm/memory-tiers.c | 85 +++++++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 72 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> > index 974af10cfdd8..610db9581ba4 100644
-> > --- a/mm/memory-tiers.c
-> > +++ b/mm/memory-tiers.c
-> > @@ -36,6 +36,11 @@ struct node_memory_type_map {
-> >
-> >  static DEFINE_MUTEX(memory_tier_lock);
-> >  static LIST_HEAD(memory_tiers);
-> > +/*
-> > + * The list is used to store all memory types that are not created
-> > + * by a device driver.
-> > + */
-> > +static LIST_HEAD(default_memory_types);
-> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
-> >  struct memory_dev_type *default_dram_type;
-> >
-> > @@ -108,6 +113,8 @@ static struct demotion_nodes *node_demotion __read_=
-mostly;
-> >
-> >  static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
-> >
-> > +/* The lock is used to protect `default_dram_perf*` info and nid. */
-> > +static DEFINE_MUTEX(default_dram_perf_lock);
-> >  static bool default_dram_perf_error;
-> >  static struct access_coordinate default_dram_perf;
-> >  static int default_dram_perf_ref_nid =3D NUMA_NO_NODE;
-> > @@ -505,7 +512,8 @@ static inline void __init_node_memory_type(int node=
-, struct memory_dev_type *mem
-> >  static struct memory_tier *set_node_memory_tier(int node)
-> >  {
-> >       struct memory_tier *memtier;
-> > -     struct memory_dev_type *memtype;
-> > +     struct memory_dev_type *mtype =3D default_dram_type;
-> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
-> >       pg_data_t *pgdat =3D NODE_DATA(node);
-> >
-> >
-> > @@ -514,11 +522,20 @@ static struct memory_tier *set_node_memory_tier(i=
-nt node)
-> >       if (!node_state(node, N_MEMORY))
-> >               return ERR_PTR(-EINVAL);
-> >
-> > -     __init_node_memory_type(node, default_dram_type);
-> > +     mt_calc_adistance(node, &adist);
-> > +     if (node_memory_types[node].memtype =3D=3D NULL) {
-> > +             mtype =3D mt_find_alloc_memory_type(adist, &default_memor=
-y_types);
-> > +             if (IS_ERR(mtype)) {
-> > +                     mtype =3D default_dram_type;
-> > +                     pr_info("Failed to allocate a memory type. Fall b=
-ack.\n");
-> > +             }
-> > +     }
-> >
-> > -     memtype =3D node_memory_types[node].memtype;
-> > -     node_set(node, memtype->nodes);
-> > -     memtier =3D find_create_memory_tier(memtype);
-> > +     __init_node_memory_type(node, mtype);
-> > +
-> > +     mtype =3D node_memory_types[node].memtype;
-> > +     node_set(node, mtype->nodes);
-> > +     memtier =3D find_create_memory_tier(mtype);
-> >       if (!IS_ERR(memtier))
-> >               rcu_assign_pointer(pgdat->memtier, memtier);
-> >       return memtier;
-> > @@ -655,6 +672,34 @@ void mt_put_memory_types(struct list_head *memory_=
-types)
-> >  }
-> >  EXPORT_SYMBOL_GPL(mt_put_memory_types);
-> >
-> > +/*
-> > + * This is invoked via `late_initcall()` to initialize memory tiers fo=
-r
-> > + * CPU-less memory nodes after driver initialization, which is
-> > + * expected to provide `adistance` algorithms.
-> > + */
-> > +static int __init memory_tier_late_init(void)
-> > +{
-> > +     int nid;
-> > +
-> > +     mutex_lock(&memory_tier_lock);
-> > +     for_each_node_state(nid, N_MEMORY)
-> > +             if (!node_state(nid, N_CPU) &&
-> > +                     node_memory_types[nid].memtype =3D=3D NULL)
-> > +                     /*
-> > +                      * Some device drivers may have initialized memor=
-y tiers
-> > +                      * between `memory_tier_init()` and `memory_tier_=
-late_init()`,
-> > +                      * potentially bringing online memory nodes and
-> > +                      * configuring memory tiers. Exclude them here.
-> > +                      */
-> > +                     set_node_memory_tier(nid);
-> > +
-> > +     establish_demotion_targets();
-> > +     mutex_unlock(&memory_tier_lock);
-> > +
-> > +     return 0;
-> > +}
-> > +late_initcall(memory_tier_late_init);
-> > +
-> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
-r *prefix)
-> >  {
-> >       pr_info(
-> > @@ -668,7 +713,6 @@ int mt_set_default_dram_perf(int nid, struct access=
-_coordinate *perf,
-> >  {
-> >       int rc =3D 0;
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> >       if (default_dram_perf_error) {
-> >               rc =3D -EIO;
-> >               goto out;
-> > @@ -680,6 +724,7 @@ int mt_set_default_dram_perf(int nid, struct access=
-_coordinate *perf,
-> >               goto out;
-> >       }
-> >
-> > +     mutex_lock(&default_dram_perf_lock);
->
-> Why do you move the position of locking?  mutex_lock/unlock() will be
-> unbalance for error path above.
+On Mon, May 22, 2023 at 05:11:39PM -0700, Dan Williams wrote:
+> Yasunori Gotou (Fujitsu) wrote:
+[...]
+
+Hi, all
+
+There was some confusions about CXL device hotplug when I recently
+tried to use Qemu to emulate CXL device hotplug and verify the relevant
+functions of kernel.
+
+> > Q1) Can PCIe hotplug driver detect and call CXL driver?
+
+[...]
+
+> 
+> Yes.
+> 
+> The cxl_pci driver (drivers/cxl/pci.c) is just a typical PCI driver as
+> far as the PCI hotplug driver is concerned. So add/remove events of a
+> CXL card get turned into probe()/remove() events on the driver.
+> 
+
+1. Can we divide steps of CXL device hotplug into two parts(PCI hotplug & Memory Hotplug)?
+
+PCI Hotplug: the same as the native PCIe hotplug, including initializing cxl.io,
+             assigning PCIe BARs, allocating interrupts, etc. And the cxl_pci driver
+                         is responsible for this part.
+
+Memory Hotplug: focusing on enabling CXL memory including discovering and Configuring HDM,
+                extracting NUMA info from device, notifying memory management, etc.
+
+> > 
+> > Q2) Can QEMU/KVM emulate CXL device hotplug?
+> > 
+> >    I heard that QEMU/KVM has PCIe device hotplug emulation, but I'm not sure
+> >    it can hotplug CXL device.
+> 
+> It can, but as far as the driver is concerned you can achieve the same
+> by:
+> 
+> echo $devname > /sys/bus/pci/drivers/cxl_pci/unbind
+> 
+> ...that exercises the same software flows as physical unplug.
 >
 
-Because you've mentioned below that moving the lock to the
-beginning of the function will make the code easier to understand,
-I will move the lock to the beginning of the function.
+2. What is the difference between "echo $devname > /sys/bus/pci/drivers/cxl_pci/unbind" and
+"(qemu) device_del cxl-mem0" ?
 
-Perhaps the explanation may no longer be relevant; because reading
-`default_dram_perf_error` and `perf->*` do not require
-holding `default_dram_perf_lock`, but I forgot to replace
-"rc =3D -EXXX ; goto out;" with return -EXXX.
+According to the test, I found that "(qemu) device_del cxl-mem0" would directly
+unplug the device and cause the interrupts on the cxl root port. It seems like this
+operation would not only trigger cxl_pci driver but also pcieport driver.
 
-> >       if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE) {
-> >               default_dram_perf =3D *perf;
-> >               default_dram_perf_ref_nid =3D nid;
-> > @@ -716,23 +761,26 @@ int mt_set_default_dram_perf(int nid, struct acce=
-ss_coordinate *perf,
-> >       }
-> >
-> >  out:
-> > -     mutex_unlock(&memory_tier_lock);
-> > +     mutex_unlock(&default_dram_perf_lock);
-> >       return rc;
-> >  }
-> >
-> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
-> >  {
-> > +     int rc =3D 0;
-> > +
-> >       if (default_dram_perf_error)
-> >               return -EIO;
-> >
-> > -     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE)
-> > -             return -ENOENT;
-> > -
-> >       if (perf->read_latency + perf->write_latency =3D=3D 0 ||
-> >           perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
-> >               return -EINVAL;
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> > +     mutex_lock(&default_dram_perf_lock);
->
-> It may be a little better to move lock position at the begin of the
-> function.  This will not avoid race condition (not harmful in practice)
-> but it will make code easier to be understood.
->
+The kernel dmesg is like below:
 
-No problem. I will move the lock to the beginning of the function and
-take care of all error paths.
+(qemu) device_del cxl-mem0
+# dmesg
+[  699.057907] pcieport 0000:0c:00.0: pciehp: pending interrupts 0x0001 from Slot Status
+[  699.058929] pcieport 0000:0c:00.0: pciehp: Slot(0): Button press: will power off in 5 sec
+[  699.059986] pcieport 0000:0c:00.0: pciehp: pending interrupts 0x0010 from Slot Status
+[  699.060099] pcieport 0000:0c:00.0: pciehp: pciehp_set_indicators: SLOTCTRL 90 write cmd 2c0
 
-> > +     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE) {
-> > +             rc =3D -ENOENT;
-> > +             goto out;
-> > +     }
-> >       /*
-> >        * The abstract distance of a memory node is in direct proportion=
- to
-> >        * its memory latency (read + write) and inversely proportional t=
-o its
-> > @@ -745,8 +793,10 @@ int mt_perf_to_adistance(struct access_coordinate =
-*perf, int *adist)
-> >               (default_dram_perf.read_latency + default_dram_perf.write=
-_latency) *
-> >               (default_dram_perf.read_bandwidth + default_dram_perf.wri=
-te_bandwidth) /
-> >               (perf->read_bandwidth + perf->write_bandwidth);
-> > -     mutex_unlock(&memory_tier_lock);
-> > +     mutex_unlock(&default_dram_perf_lock);
-> >
-> > +out:
-> > +     mutex_unlock(&default_dram_perf_lock);
-> >       return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(mt_perf_to_adistance);
-> > @@ -858,7 +908,8 @@ static int __init memory_tier_init(void)
-> >        * For now we can have 4 faster memory tiers with smaller adistan=
-ce
-> >        * than default DRAM tier.
-> >        */
-> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
-> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANCE=
-_DRAM,
-> > +                                                                     &=
-default_memory_types);
-> >       if (IS_ERR(default_dram_type))
-> >               panic("%s() failed to allocate default DRAM tier\n", __fu=
-nc__);
-> >
-> > @@ -868,6 +919,14 @@ static int __init memory_tier_init(void)
-> >        * types assigned.
-> >        */
-> >       for_each_node_state(node, N_MEMORY) {
-> > +             if (!node_state(node, N_CPU))
-> > +                     /*
-> > +                      * Defer memory tier initialization on CPUless nu=
-ma nodes.
-> > +                      * These will be initialized after firmware and d=
-evices are
-> > +                      * initialized.
-> > +                      */
-> > +                     continue;
-> > +
-> >               memtier =3D set_node_memory_tier(node);
-> >               if (IS_ERR(memtier))
-> >                       /*
->
-> --
-> Best Regards,
-> Huang, Ying
+Then I also tried "echo $devname > /sys/bus/pci/drivers/cxl_pci/unbind"
+to check the behaviour of kernel. The kernel dmesg is like below:
 
+# echo 0000:0d:00.0 > /sys/bus/pci/drivers/cxl_pci/unbind
+# dmesg
+[70387.978931] cxl_pci 0000:0d:00.0: vgaarb: pci_notify
+[70388.021476] cxl_mem mem0: disconnect mem0 from port1
+[70388.033099] pci 0000:0d:00.0: vgaarb: pci_notify
 
+It seems like this operation would just unbind the cxl_pci driver from the cxl device.
 
---=20
-Best regards,
-Ho-Ren (Jack) Chuang
-=E8=8E=8A=E8=B3=80=E4=BB=BB
+Is my understanding about these two method correct?
+
+3) Can I just use "ndctl/test/cxl-topology.sh" to test the cxl hotplug functions of kernel?
+
+   IIUC, cxl-topology.sh would utilize cxl_test (tools/testing/cxl) which is for regression
+   testing the kernel-user ABI.
+
+PS: My qemu command line:
+qemu-system-x86_64 \
+-M q35,nvdimm=on,cxl=on \
+-m 4G \
+-smp 4 \
+-object memory-backend-ram,size=2G,id=mem0 \
+-numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+-object memory-backend-ram,size=2G,id=mem1 \
+-numa node,nodeid=1,cpus=2-3,memdev=mem1 \
+-object memory-backend-ram,size=256M,id=cxl-mem0 \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+-device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem0 \
+-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k \
+-hda ../disk/ubuntu_x86_test_new.qcow2 \
+-nographic \
+
+Qemu version: 8.2.50, the lastest commit of branch cxl-2024-03-05 in "https://gitlab.com/jic23/qemu"
+Kernel version: 6.8.0-rc6
+
+Many thanks
+Yuquan
+
