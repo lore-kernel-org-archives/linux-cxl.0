@@ -1,142 +1,133 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5487940856;
-	Thu, 28 Mar 2024 16:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711644592; cv=fail; b=bf/a6QFnDIQddWe8KW1eQWxBLCave4i/LTwTIghDCG/27ORdA2hDAtrgxn16ovxrN7O3s5LE82lgwwymNlLBg9m1KX4zmTh4Rrk8wT56JAnKcixdGGgdBbjXappx8si2gBhrI/rDsooC67WfN1ZaxfvojQvZP96RHFJiEv8vd1Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711644592; c=relaxed/simple;
-	bh=vfr8oPqicmvLFiY9/ueM5hD98OphbYDg6wgJEaK7K4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=S7Ufn40qnR1hwD25LzPAuTfQbm4hu1Ay1PvYSq0iV1xYfUmvhphNQJwKqf1ugOSuzcaVdKKrdMHq0GaAnXBClXDxSeOgRqJ0wBTG+bkCvcsJfRWAkvzdHvsfv1kSVVikHW2X9fo8tVuiK2mf6ujhIboWZXRnLfL2q9XtAzcvPGA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZKEa43GU; arc=fail smtp.client-ip=40.107.244.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0498D39FCF;
+	Thu, 28 Mar 2024 17:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711647538; cv=none; b=KbE98NMzQd63lUJL489WEjZ0d4ts+kWujfFRWdckTPnIkhcJ6a0rn+ak4GjxHt3UpbFc0FVjajiEJVoCUdS6v7HxG2F4jKM7w75oEUL7bum70mFiW4CvbeKs5RjX0z3NZ/v99tZZ6PuBooxFV7K1GPIHlmR6kCCvUgDLOX48hOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711647538; c=relaxed/simple;
+	bh=sUJiuWGvJ7K3b0lCTxqkhpEU1qk0awgSCqYlo16Lb44=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tx7kSaRRBDNbgjNw/7AY+Y8v6O+fPCKgswNJ1mUBwG923BxYZypkSNck/N5NiVuz9mx5P6IgEun7OHUbp304/TVjMcJ9/8eIzaF0UQB8gZEexl2H1eGo7MzMaHyMnnKLYtO4zTaRK38wZdTsx9Hm43elMjTndQMdTT9gtOsK2s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUp9z2zi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZKEa43GU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ILjjrSQddzZ4WTrm2w1BCs43Z1VT24rdEzhUvknd+LXn+elOj0Z1ewLVsQMRWhBcLXXRlvM5sLxpEA0ogOxMuISuPp6270nuFztiUnl037yIWyAbqvo9e/8TFTviWXr4ifgExwD3iT65kTewZh0KuGbfs4zKqZUDwcPEHa38bm6QiTjxwyLfKTPYGSQ8i0CLPV6OTnNqudFVTs6QgLPIxsUH4aygZ5mvmFrcD7nnhBFpVwIoO8l9G2Oma4v4ql1spNa7J3FnivomvLVFhrxx0CY2F8B3Y7qJFv5WwZfi4eTU0oeTCbrlNJk/HMMhfRHBQDE4HiLgeTzWnSsSLkXDpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u9S7DxOd1oZDn9BeIdLbAtE0v8HyuwcDpWjS4zgPwYU=;
- b=ZdiW3gAd+HgqVHoaIhIdg8/m0TGgvGyAdPY2JIT9d6zMMikm9YnOqsQwTZtsfpLWr/TMm82IOZYtdFyALN1VmMEuXfAUktX0s6yH7jWDqEqeUnRcp+xz+oXqib+FaFvtyb/Aaql5qKRRbUQFlEvQQPdJZrogpf1ZMzENcQeRisN6eM6sH+IOJEeinF8VwtNObxJfbFEUwGn8+LgA8p1DLY88W3Ooq3j26CYKJGfzomw7LNtyGXvBMcvuJsvJy6z48zQ14wU9KTxukVfoNpfIwZ7NPEo38SEyremZIw7+LkTZI/x5BClzuwrPTSH+iwHHyk0xIte4GBCHAKhc/c+FOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u9S7DxOd1oZDn9BeIdLbAtE0v8HyuwcDpWjS4zgPwYU=;
- b=ZKEa43GUe2cUMX05lmXQ8nSRg1+bG/XolmwJ3vvL73DFf8J04BKdNJTVw8aJ5Sr5VQiaUKF5zutSRWSOyIy4C9i8Pi/5QPYbu9EKqrLJKNPPiKOuqar+8woQxOwiAjZ5/YJsqo3IXOz5yG/ATnRfM9/MGEiWfO8JPDUZcM4Sn4g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by SA3PR12MB8811.namprd12.prod.outlook.com (2603:10b6:806:312::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Thu, 28 Mar
- 2024 16:49:47 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
- 16:49:47 +0000
-Date: Thu, 28 Mar 2024 17:49:40 +0100
-From: Robert Richter <rrichter@amd.com>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-acpi@vger.kernel.org,
-	ying.huang@intel.com, feng.tang@intel.com, fengwei.yin@intel.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v2 3/3] ACPI/NUMA: Remove architecture dependent
- remainings
-Message-ID: <ZgWfpFseS3HTO30V@rric.localdomain>
-References: <20240319120026.2246389-4-rrichter@amd.com>
- <202403220943.96dde419-oliver.sang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202403220943.96dde419-oliver.sang@intel.com>
-X-ClientProxiedBy: FR0P281CA0259.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b5::18) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUp9z2zi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B675C433F1;
+	Thu, 28 Mar 2024 17:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711647537;
+	bh=sUJiuWGvJ7K3b0lCTxqkhpEU1qk0awgSCqYlo16Lb44=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aUp9z2ziyU3WRYZJAFT9HlxN1dP6jcbL0f0Cb8BrVxUYCKmHwVgZTQnybNn6t1H6k
+	 LtKc2fKsg/EZ1xE1mDX3JLRbraSrVICKtKxCn2/ZUKUDiNXC36tUzRry+PTr8yeS4X
+	 lrmkXEuezg34KKB4/9ZlHi6v1uZ+B7P2RlnscBWguyXj+eBTODXyUpSyKuUOpQXdV2
+	 HS3g6+5wb2eAfaorrVFcdlAkLYNwDgcr3+BJkkHwYOPgnk4Nd+uJvsNs+22Y8LR0w/
+	 e2mLXt8S66ZoZ0v9LXiQYiHbruWdCv8O6W9bPDzkutk/uadkfL3X3r2DRl+Lq04qbB
+	 K5LdVQ8mAjA2A==
+Date: Thu, 28 Mar 2024 12:38:55 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	dan.j.williams@intel.com, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
+	lukas@wunner.de
+Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
+Message-ID: <20240328173855.GA1571809@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SA3PR12MB8811:EE_
-X-MS-Office365-Filtering-Correlation-Id: 877f4937-3ef4-4f10-4a2f-08dc4f4713a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Z+PS79SH32vbze6nyDVOJklFWrg4pGfxuRGh4dN1zGf2PwEjKCxoQDiFzHQwmOpXqLuga2dx8ZXLs6qcs39F/1BFF/iekw2ppZL3Mvm3dVSQ8JGQwAJP7ECGxOil34ezUJTCXb7EvK6lSZKsnogfDFap63Pv9RKc9GzrLx4jrGCXMunVZKwigSaSf1s8R2cxtXJ0gfPG3TCIqEp9NW5Vcyg5jmff1qevlQMaqnE/WJQm0oX1/A6P0+O+/mBHYQ9TpK1boZGi49WnrCgXdD6Amq7p6tSXIhu1n/ifNHyJRrAdC4f2JEAdUNDNzQtMgJkZNtDkm1+Tx2eXNv12yAgYLkrpQMSko/VljXXpZyhbOVwdBqdlY1X6lsCTCQpTH9x6Me7Ode86YJrKaYDttzTQ5IV2bjeQaM77TkxuSm3bFz4KWrt46uhwPHrlfI4V/hXm0nxGhlQ4es7eZbU41Cm5wUvPpDVtOTs26aN/wWcLs8ggycwhqbcsMF4xJ6tPGvS7CWtNsibQgdhK/8VO5CTFzXYYGD7RR0vr0pyzPsYRfJ6YF+dfti7pn/kKC103pb46AG015kWY6eBRvuBe1LbC8Z8DTAfrJ2aQYp8HxxG6zuLrixTQ4e219aWTuCAQBh5Z
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/5+in2hoEhPF0jnO75gmtdoWNaD1NgYAWmFyCCLf49wJxZCr24gdXUF+tHo3?=
- =?us-ascii?Q?0efP4BeZuaUKDs555IBeNENqZtoIB0c9ZemVwjZlXk6OM69xhei5Y4Wm7CYy?=
- =?us-ascii?Q?25yU1FKEXcjcyvPlaLW1gr6ryn+LEhDJCku7XJ6+6h4i3MOh5uRjL1nQ7u24?=
- =?us-ascii?Q?6qUNtS6K3qtE1HK44RhCwSW5mOujZFCk1f+5aeX7OFVHXXChuJm2G5kgbspK?=
- =?us-ascii?Q?+pLeOMTY6Oh0+7CEpm787O/VzyWLnombMFjgtTdOA8HOd4Qpi22/Yg/Gbq0T?=
- =?us-ascii?Q?+RGGrWXFvso/MDF3/buYTpeqhcvQgqXiN02YT7eLNKCUIpT3orlM1zUt9ggH?=
- =?us-ascii?Q?MEpPT4BZVJk31qApYcvwag/O5g4aNJC/AVlO/4zST/RI48UQLSRHtP0WbAE4?=
- =?us-ascii?Q?ivxyKmxnGptGoe0TE071zcrN45ryGp1qd5dQelTIc1d2V24DPR3t5lQ88IBH?=
- =?us-ascii?Q?Ej4sVevrMiTPSe282lkcFt50GrOpOh3oIytzIfToNG4ac1qrg7w8WyMaDi41?=
- =?us-ascii?Q?n8iaqPVMvF7Cucsel1bas72htap6DNW6QNm03WLvV8j7SRtEXqfAaYVfwxxe?=
- =?us-ascii?Q?bGKoRt2Fw39HXWnoTgkD3m9HbFzEOdwzl7VoKhO1DPMYElaBBRer/vttcyLB?=
- =?us-ascii?Q?KqJzuN2I2938IkIjdEd4Z6uiNnYe99CNsDBS0CFEtjMW3yO3v8fwAH0Gc0FY?=
- =?us-ascii?Q?ctDU4zRdmW+DIk7V6RV5NUF5u/Qc6QtFqZuNdWZKBaKUyFb7p4sfntTsWPTI?=
- =?us-ascii?Q?sVPqsm4a5qQwfgVZYRNoVxX3oHgmj/XVPhmXO5NUqpUC5WXpEMRcG9yG1G2S?=
- =?us-ascii?Q?4IN39DeAkFRLbmDq2qs7JnpB/Onv54VOBdTXZRrOgHSFmehNZqqK7eEmpGAQ?=
- =?us-ascii?Q?EALkF8iC4/F6fYi+WGM59PQFysASwiEFuSuKTjvEy7WY9odc6fsMxL0qRaqc?=
- =?us-ascii?Q?u6dckxtoP1wSt3mRpCeU8+hEWE/oelBTWGXXvVCwIK59w3Kmvj2s0+2HmDvC?=
- =?us-ascii?Q?CH5Q1gdRuaOa5G4syZ5fHhM7BJkH8nDBowqnu2THu1M5Hebger08QPRBpQ2h?=
- =?us-ascii?Q?egnjt/noGIhP/rZHFPDDQrKEN1ck6pkbsDiikE/1J4C4W3k4c09mfs/kAx+a?=
- =?us-ascii?Q?mQqBsDZEPOEMNJZaxrhPYpcddvAUz/dT3eBU1Fs+tpTij+CMty8iVraFQLqv?=
- =?us-ascii?Q?pUAT0dXcyDt/2v3G+Ok8pmA3yM3v5fZL2a32QdgMyPcTiDgtXxbsPfXQUjY2?=
- =?us-ascii?Q?zpAHLsxCd7DygeXxW1NkNyMAXfyhPT3KnBFBccecNvkcqshlRTqbvzyL56B3?=
- =?us-ascii?Q?tnIUILc2r+4cHXjU6nw8A+lT7IUKyGfQign23tXW7rpapNzhEwLviMnkFIgg?=
- =?us-ascii?Q?yy4GwKfnli4gL2oWqud9PHnpRGo89A9CNBF0TWMBDxg0DftmVxhtepDPpdoy?=
- =?us-ascii?Q?/FjWmQz6ENoOMbmQIWWCHJ2DLvjv1nKbVITuza/Ohv3JRn9GO+M/pmjBMmQF?=
- =?us-ascii?Q?nhIYAfvXVgwD9m1KJZJ1PmeRyDKyXvBahpILHnVrjYianG7zcwHXaDwhbMXU?=
- =?us-ascii?Q?3hFgQCqWpXcobt4t/dusDHdJKQBRwP6WUoyjtNLu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 877f4937-3ef4-4f10-4a2f-08dc4f4713a0
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 16:49:47.2055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v66RJiaJtx3nW1OjFKtBYTwhvlEJ7+5t484wXsqb7R+ufjQqr53AlocnYeQ++k1vFb5/S2xP4/xlFANNPL8uDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8811
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201384aa-a7a3-415a-9159-a615e8b3cc53@intel.com>
 
-On 22.03.24 10:12:04, kernel test robot wrote:
-> kernel test robot noticed a -43.6% regression of vm-scalability.throughput on:
+On Wed, Mar 27, 2024 at 04:57:40PM -0700, Dave Jiang wrote:
+> On 3/27/24 2:26 PM, Bjorn Helgaas wrote:
+> > On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
+
+> >> With the current behavior, the bus_reset would appear to have executed
+> >> successfully, however the operation is actually masked if the "Unmask
+> >> SBR" bit is set with the default value. The intention is to inform the
+> >> user that SBR for the CXL device is masked and will not go through.
+> > 
+> > The default value of Unmask SBR isn't really relevant here.
 > 
+> Changing to:
+>     When the "Unmask SBR" bit is set to 0 (default), the bus_reset would
+>     appear to have executed successfully. However the operation is actually
+>     masked. The intention is to inform the user that SBR for the CXL device
+>     is masked and will not go through.
 > 
-> commit: 09f84589a8ed1162c0274a1b5b3dadb98ee3155e ("[PATCH v2 3/3] ACPI/NUMA: Remove architecture dependent remainings")
-> url: https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/x86-numa-Fix-SRAT-lookup-of-CFMWS-ranges-with-numa_fill_memblks/20240319-200345
-> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
-> patch link: https://lore.kernel.org/all/20240319120026.2246389-4-rrichter@amd.com/
-> patch subject: [PATCH v2 3/3] ACPI/NUMA: Remove architecture dependent remainings
+> > 
+> >> The expectation is that if a user overrides the "Unmask SBR" via a
+> >> user tool such as setpci then they can trigger a bus reset successfully.
+> > 
+> > ... if a user *sets* Unmask SBR ...
+> > to be more specific about what value is required.
+> > 
+> 
+>     If a user overrides the "Unmask SBR" via a user tool such as setpci and
+>     sets the value to 1, then the bus reset will execute successfully.
 
-I have root cause the regression. After refactoring of the function an
-error in acpi_numa_memory_affinity_init() is no longer ignored
-(e.g. if a mem range is disabled) which finally causes
-acpi_numa_init() to fail too.
+I'm not super enamored with the "if a user overrides" language because
+a driver may change that bit in the future, and then the suggestion of
+a "user" will be misleading.
 
-Will be fixed in v3.
+It doesn't matter *how* it gets set to 1; it only matters that SBR
+doesn't work when "Unmask SBR" is 0 and it does work when "Unmask SBR"
+is 1.
 
-Thanks to the kernel test robot team.
+> >> +/* Compute Express Link (CXL) */
+> >> +#define PCI_DVSEC_VENDOR_ID_CXL				0x1e98
+> > 
+> > I see that you're just moving this #define from drivers/cxl/cxlpci.h,
+> > but I'm scratching my head a bit.  As used here, this is to match the
+> > DVSEC Vendor ID (PCIe r6.0, sec 7.9.6.2).
+> > 
+> > IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
+> > "PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
+> > name, and would normally be defined in include/linux/pci_ids.h.
+> > 
+> > But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
+> > value "1e98" in the PCI SIG list at
+> > https://pcisig.com/membership/member-companies.
+> > 
+> I'll create a new patch and move to include/linux/pci_ids.h first
+> for this define and change to PCI_VENDOR_ID_CXL. The value is
+> defined in CXL spec r3.1 sec 8.1.1.
 
--Robert
+I saw the CXL mentions of 0x1e98, but IMO that's not an authoritative
+source; no vendor is allowed to just squat on a Vendor ID value simply
+by mentioning it in their own internal specs.  That would obviously
+lead to madness.
+
+The footnote in CXL r3.1, sec 3.1.2, about how the 1E98h value is only
+for use in DVSEC etc., is really weird.
+
+IIUC, the PCI SIG controls the Vendor ID namespace, so I'm still
+really confused about why it is not reserved there.  I emailed the PCI
+SIG, but the footnote suggests to me that there some kind of history
+here that I don't know.
+
+Anyway, I think all we can do here is to put the definition in
+include/linux/pci_ids.h as you did and hope 0x1e98 is never allocated
+to another vendor.
+
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index a0c75e467df3..7dfbf6d96b3d 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2607,6 +2607,8 @@
+>  
+>  #define PCI_VENDOR_ID_ALIBABA          0x1ded
+>  
+> +#define PCI_VENDOR_ID_CXL              0x1e98
+> +
+>  #define PCI_VENDOR_ID_TEHUTI           0x1fc9
+>  #define PCI_DEVICE_ID_TEHUTI_3009      0x3009
+>  #define PCI_DEVICE_ID_TEHUTI_3010      0x3010
