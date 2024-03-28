@@ -1,115 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28812B9A7;
-	Thu, 28 Mar 2024 19:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890E936AF5;
+	Thu, 28 Mar 2024 20:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653299; cv=none; b=sAdRvAVDYCDJLmb5DZ+9Xz0S6CczCPHs015b51KH9Iha0tvoTKl9OqXrgeUNXwQO9ZcRkPsGFGGk6Hv+W6pGIEiiUQsGaerzrYIaiFY2d/5qIz/oTQGVylWlf3Ra9REVlSrQXcPwsIyYsr+oFQ/wJBwxfHCNuBUubCqNjmkbW/A=
+	t=1711656583; cv=none; b=Mt4o4+yOIoDknN3Y8CbNXL9yjGubvtgD9ZdMRU5QcUkBiVOC/IdldrQYzBBMNSLAKkCaQIjJ8gU1ur5fVYKoArdLvL9tcY23IkYn5AyvgKTN11X8P6ows0JMZynBPZwcdqOaItntkR5vYaHS+NyHJ3Objm6ItI+dmSfb5WMs1Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653299; c=relaxed/simple;
-	bh=+T4z2HBredaERjZopJntIuvdL+nijHJUXz6SvJzHMEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F7E0TSP7qECyglas/ryaP0Bk77fYKwwZ4UpfYUbbaOH1rFaJKwCePjaa8ndu4AfddculDDh9JptWmqM4Oz1Heo4oWecSoFwfgUHpJn5VNrnnK/xTy+DRJ+sj15G7W/eaIrRl8F7ZWmQE7xgv6j5Sb/YKVW7wIzKfabdZto27GyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPl08Goi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711656583; c=relaxed/simple;
+	bh=ik1M7ZZzzI5ShyQ5+NHuLBaVWwdADLPhh4sSQSATlG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AzLVKpqRg7PxHqVXB6j+uIqxY86k6G1yFpAKcYtLS76bq78wBLKMLbKXmVPUfg1ucbeb/XfL4Vmuhd3jQgsHMMjUkbJeaXG5oqIFDK4UiTyU2/1oAy17YXShOCyZpustPJqYUJ9DNm4mXEJC9UYRtVjQflKQMg3jMjSOxAd8acA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DK3GyJGw; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPl08Goi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0475C433C7;
-	Thu, 28 Mar 2024 19:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711653299;
-	bh=+T4z2HBredaERjZopJntIuvdL+nijHJUXz6SvJzHMEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fPl08GoiB4tGYfb66jaqHexEBUNPIoESeN4Kge7bTXdG7esAJ0k6blf3aj668URoq
-	 cu5tg7civ8LAsfyqVUfeJJgmj44tb2nFtUsfNRd3i77qRanweVPzXL3PHdxyqIf7Af
-	 Qzsl2mBpH+BcZ5CVr3fuEH3Q1CI10qE7WQwjIQjeDcZshTyIq+QipK5PfQbtNKzUof
-	 fMa8QR56WuDjv3h6VbWdErw00J9FJffWSSBlvSjP381Z7yJuYXCl+eYp7boG//8Oww
-	 pkQHV+BxC8ZR/zzBMUKXkfJSogKklbM/PrF2nhxws9nI9HrnphsdvIisORTcsToJQ5
-	 KGnpRoZVIMnJA==
-Date: Thu, 28 Mar 2024 14:14:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
-	lukas@wunner.de
-Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <20240328191457.GA1577365@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DK3GyJGw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711656581; x=1743192581;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ik1M7ZZzzI5ShyQ5+NHuLBaVWwdADLPhh4sSQSATlG0=;
+  b=DK3GyJGwqJDup74IHeBqr1nbWFA9/etvFtlMpEMoKkx/P83qfwuJWhg5
+   kfUm3Lnas0fqZGvQM6O/wAXbCcYCOLzDpd95v+BME4iNR7wU1ETNRQflD
+   Nu6jKeqHwDzXwmLmVMUG0meyfh4a8iOOfMLbHUrmW63O+u+XbyW/KRDjP
+   +1FdPuBm7oMvC/AWIYRKpujbbYnEsqyMTy+hlY1aDTiohEtgWzKZSrETB
+   5jtu8SVP2mhRoBLUjlbLas1Ra8KD3x0/ta0ly+hB034wGt199dhsYZrKN
+   gV0hGSTg4VUhHI7ay/Q3NeaZ+Hq+pWeyWh/351oF7o8udP3NrALBzfjFY
+   w==;
+X-CSE-ConnectionGUID: rODD7rb2ROq4/cdy5q6fhw==
+X-CSE-MsgGUID: 1DdWMnSDQ6un+x/Y1rqV6A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24326307"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="24326307"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 13:09:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="16633822"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.81.17]) ([10.212.81.17])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 13:09:39 -0700
+Message-ID: <b6ff085c-8cdc-4867-83fd-9566d59d5946@intel.com>
+Date: Thu, 28 Mar 2024 13:09:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6605bef53c82b_1fb31e29481@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/26] cxl/core: Separate region mode from decoder mode
+Content-Language: en-US
+To: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+Cc: Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-2-b7b00d623625@intel.com>
+ <yd6mynddwk755ypomyspzxfsqwm7j5g47yfmbw2yfwoadpnnqy@7g3ktxrwkeau>
+ <6604fe9e18eeb_20890294a1@iweiny-mobl.notmuch>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <6604fe9e18eeb_20890294a1@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 12:03:17PM -0700, Dan Williams wrote:
-> Bjorn Helgaas wrote:
-> > On Wed, Mar 27, 2024 at 04:57:40PM -0700, Dave Jiang wrote:
-> > > On 3/27/24 2:26 PM, Bjorn Helgaas wrote:
-> > > > On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
 
-> > > >> +/* Compute Express Link (CXL) */
-> > > >> +#define PCI_DVSEC_VENDOR_ID_CXL				0x1e98
-> > > > 
-> > > > I see that you're just moving this #define from drivers/cxl/cxlpci.h,
-> > > > but I'm scratching my head a bit.  As used here, this is to match the
-> > > > DVSEC Vendor ID (PCIe r6.0, sec 7.9.6.2).
-> > > > 
-> > > > IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
-> > > > "PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
-> > > > name, and would normally be defined in include/linux/pci_ids.h.
-> > > > 
-> > > > But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
-> > > > value "1e98" in the PCI SIG list at
-> > > > https://pcisig.com/membership/member-companies.
-> > > > 
-> > > I'll create a new patch and move to include/linux/pci_ids.h first
-> > > for this define and change to PCI_VENDOR_ID_CXL. The value is
-> > > defined in CXL spec r3.1 sec 8.1.1.
-> > 
-> > I saw the CXL mentions of 0x1e98, but IMO that's not an authoritative
-> > source; no vendor is allowed to just squat on a Vendor ID value simply
-> > by mentioning it in their own internal specs.  That would obviously
-> > lead to madness.
-> > 
-> > The footnote in CXL r3.1, sec 3.1.2, about how the 1E98h value is only
-> > for use in DVSEC etc., is really weird.
-> > 
-> > IIUC, the PCI SIG controls the Vendor ID namespace, so I'm still
-> > really confused about why it is not reserved there.  I emailed the PCI
-> > SIG, but the footnote suggests to me that there some kind of history
-> > here that I don't know.
-> > 
-> > Anyway, I think all we can do here is to put the definition in
-> > include/linux/pci_ids.h as you did and hope 0x1e98 is never allocated
-> > to another vendor.
+
+On 3/27/24 10:22 PM, Ira Weiny wrote:
+> Davidlohr Bueso wrote:
+>> On Sun, 24 Mar 2024, ira.weiny@intel.com wrote:
+>>
+>>> From: Navneet Singh <navneet.singh@intel.com>
+>>>
+>>> Until now region modes and decoder modes were equivalent in that they
+>>> were either PMEM or RAM.  With the upcoming addition of Dynamic Capacity
+>>> regions (which will represent an array of device regions [better named
+>>> partitions] the index of which could be different on different
+>>> interleaved devices), the mode of an endpoint decoder and a region will
+>>> no longer be equivalent.
+>>>
+>>> Define a new region mode enumeration and adjust the code for it.
+>>
+>> Could this could also be picked up regardless of dcd?
 > 
-> Oh, true, I think this should be PCI_DVSEC_VENDOR_ID_CXL, because afaics
-> it is still possible that 0x1e98 be used as a non-DVSEC vendor-id in
-> some future device.
-
-What a disaster that would be.
-
-> In other words I think the CXL specification usage of 0x1e98 is scoped
-> as "DVSEC Vendor ID", not "Vendor ID".
+> It could but there is no need for it without DCD.
 > 
-> However that would mean that a future 0x1e98 device could not publish
-> DVSECs without colliding with CXL DVSECs.
-> 
-> I note this footnote in section 3.1.2 about the 0x1e98 value (all caps
-> emphasis is from the spec, not me):
-> 
-> ---
-> NOTICE TO USERS: THE UNIQUE VALUE THAT IS PROVIDED IN THIS CXL SPECIFICATION IS
-> FOR USE IN VENDOR DEFINED MESSAGE FIELDS, DESIGNATED VENDOR SPECIFIC EXTENDED
-> CAPABILITIES, AND ALTERNATE PROTOCOL NEGOTIATION ONLY...
+> I will work on re-ordering the cleanups if Dave will agree to take them
+> early.
 
-Right, that's the one I thought was really weird.  No sane person
-would put crap like that in a spec, which is why I thought there must
-be some "interesting" history behind it.
-
-Sigh.
+There's no reason for the change unless it comes with DCD right? And probably no urgent need to taking it ahead then?
+> 
+> Ira
