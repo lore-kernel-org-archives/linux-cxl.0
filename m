@@ -1,519 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2093.outbound.protection.outlook.com [40.107.92.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1DD6519D;
-	Thu, 28 Mar 2024 21:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660278; cv=none; b=Q1jD5E1n9PULAim6D5xRUILpAMkkFaSRr0wKbdmCG6JKxPIpqNPJfSA8SLvHIN6LCdtF81SzxfHBI7YsKwKMkKzuq40pOTXxfQQqLYZN5cg14+rvleE90UfyQVgKEK8G0XW6gTlA8g+Anl55HmDWJyxjjIWzNl0rYzSOt1bis+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660278; c=relaxed/simple;
-	bh=lkZYwVy+sjuDEV04FV7Gg3b1dg27/moum9xuSHTkfOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DSMF3yJ8rhxIBFN6Lij6XsTC6/0oEhh5OdBEl4lYEGdC2xYKUWSXqtDIKrPgSgU+neivFaN26dPvkYrMMWYXgHZBrXLmOQqS/VSAbjXbGKszPvSboO9gnaEFJTZCZ1z3E9pBtCZ087KZO8kYb5u2Fr9ruHQZEy7LJJOFu4SmPI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YnoxggaM; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA5231A89;
+	Thu, 28 Mar 2024 23:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711669193; cv=fail; b=K5wG8LY6Cbvfv3LV3y/TnjM7x6e/o0lSxHNQwkzwTrG4nYTMPzVEOSRmzPFsA2WjDVKgJzOy8iY4AMkunAFbScNtFIoWchRtrZ5hkne/pgxtGQNN6t+1lLf1pSSND8g7cA86+zYaFKgBxYKfy817cH58GqiDDlem1Dr1fSAX9bU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711669193; c=relaxed/simple;
+	bh=nHf7h5Z5teGy2pUM3vNLJDX6rtRYpBzolpwMWuNakCs=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cDrbWfDmEx/R6n1nswfKeMJo07i1tjnmLva8SeQmF4lzBXXzptd34aSQwuHreyx/SyNoSZFg/OAdDJOAYIafItOyZgOE2om3skYAjSf0aWPlVD+pO32ZjowsgVQu3pNzP9dtjq+4M5JFPcYchV9f4smR2iX37TPzTJE/QZWIBME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=FJUk3OOU; arc=fail smtp.client-ip=40.107.92.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YnoxggaM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711660277; x=1743196277;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lkZYwVy+sjuDEV04FV7Gg3b1dg27/moum9xuSHTkfOA=;
-  b=YnoxggaMVY2g0iLDZPTuaTleGl2JnQMJpg9hIT0uZDRdZBchg21WS02a
-   wSx1luU0Ho8KLkjDHt5kB8nCa93DDBzkIG0EJDkJeHp+cOgV0SpfJzPvv
-   iU7cxbl1Ad4C1o4p8PPzYgFRE2YUWZy85r4S9OGAThe1dISxygQW7t542
-   TO/M0CffhfVATq9lftFeul8oADVDuITdejahxBbBHEMcjidmKif5MCseE
-   JJqX+9yBwOiyZp386AsIPbQHxmNUt8aEuXZhOmxcv0EtaZGbCyso29YLL
-   lPhZgy4rg+FQN88uhre9KVnOtJN7vNfXjsZYyvKq717uP7WCia2ytuuar
-   Q==;
-X-CSE-ConnectionGUID: Bj7YAF47TouOQrs8xfpUXg==
-X-CSE-MsgGUID: M7bmkVV/S0i6KdhzqLVDVw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6737817"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6737817"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:11:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="21446107"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.81.17]) ([10.212.81.17])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:11:14 -0700
-Message-ID: <10a45890-422d-4956-bfe0-101eee23b323@intel.com>
-Date: Thu, 28 Mar 2024 14:11:14 -0700
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="FJUk3OOU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gc6obCeHyFD/iWGwYnW6cM2pV+BnUXjoXPQ4tQNipK0WhnusbOwh66b0YdWFlG4gNvKW12Z1da7fXr0JqoIrQqMJ6zpUrYFUnvV/Vwia4W/k2QuRQ8iAe7RMzlHLVCoyclPZhbjoYI8UZTIVbIlwWLZLFShm3A7NUli2QrKmoqx9+4usy0s6m6q9ZKuMAFeq22A0TE1z99peJmI2Ft2BqBK2X5ZqIGxhqK+42Jm2v0IT9jIGaCtjwVNy+966qmLqsBPtfFlSS85wxJ03pgM9dTcSn3AEAVj9ZMzJi+8bTM0gowrT8UDQeIbSyQ8rctJbSgqt/PAUprqus3la/kaUZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jKo5hnhswaXSkcMDlFaJkiG7TFqG7scMK9fwUsx5K34=;
+ b=VrVZBnyEAHKTlgYUPft2RSz1Wlg+DLCnxs95gRmrVJPEx44byreQ3eJsDzRMSPxZJLyoyoA+qbYasjeeB1+V6kC0t9Ey2B6Uv3J5nj6nF4yLdQk1HLhRJBbuK0xKYMrmGOJ745xtS3qbSWBcQX6C566pZEM0W/CM1iM9pnN3O5HHdTehAM8ZZH5QOI+kPqAxnlKgforLARO8keC40foPJVvzDmJ6MMfo0dXnYONkJp7enmV7LPN5N9SAad26PIdESbFUiKOWCjd3A0iONrAqLPMVtGwB4E9B4FI+7aAbg6gyYsvMM+to5mUDt4kSVXx1IouonW+K1BDUrN+OFOY68w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jKo5hnhswaXSkcMDlFaJkiG7TFqG7scMK9fwUsx5K34=;
+ b=FJUk3OOUuM6jLop/Est6TDKIBMuNQXry46Q7QTCnU9s/TQgnsSXtHvO8IVJDx3Ujocsb0up9ThoRWUugs3DfCb2WqOF+C1qFoQGMUHevpofbBDmJ+4hD2MLvpOHBqGtDWzo/uR+iLY0sfd1W0OOpk+vKNTDqF47QPO9ViAG4czE=
+Received: from CO1PR01MB7370.prod.exchangelabs.com (2603:10b6:303:159::16) by
+ SJ0PR01MB6400.prod.exchangelabs.com (2603:10b6:a03:2a2::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.40; Thu, 28 Mar 2024 23:39:49 +0000
+Received: from CO1PR01MB7370.prod.exchangelabs.com
+ ([fe80::994c:4200:8a4b:6882]) by CO1PR01MB7370.prod.exchangelabs.com
+ ([fe80::994c:4200:8a4b:6882%6]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 23:39:49 +0000
+Message-ID: <0309f5f9-9a95-485c-a442-e9fba603d676@os.amperecomputing.com>
+Date: Thu, 28 Mar 2024 16:39:44 -0700
+User-Agent: Mozilla Thunderbird
+From: Daniel Ferguson <danielf@os.amperecomputing.com>
+Subject: Re: [RFC PATCH v7 00/12] memory: scrub: introduce subsystem +
+ CXL/ACPI-RAS2 drivers
+To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, dan.j.williams@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
+ Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
+ tony.luck@intel.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+ rafael@kernel.org, lenb@kernel.org, naoya.horiguchi@nec.com,
+ james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+ erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+ mike.malvestuto@intel.com, gthelen@google.com,
+ wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+ tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+ kangkang.shen@futurewei.com, wanghuiqiang@huawei.com, linuxarm@huawei.com,
+ wbs@os.amperecomputing.com
+References: <20240223143723.1574-1-shiju.jose@huawei.com>
+Content-Language: en-US
+In-Reply-To: <20240223143723.1574-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0068.namprd03.prod.outlook.com
+ (2603:10b6:610:cc::13) To CO1PR01MB7370.prod.exchangelabs.com
+ (2603:10b6:303:159::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/26] cxl/extent: Realize extent devices
-Content-Language: en-US
-To: ira.weiny@intel.com, Fan Ni <fan.ni@samsung.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Navneet Singh <navneet.singh@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR01MB7370:EE_|SJ0PR01MB6400:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oY/cTr1Y2ZBzYKzf89VaHlzZuaTuAGGhn6XFXT2P91vhzriciD7xeSqUhUj+AaFw/Bx9ALrbriw9TCccyJSaG9u15q7tst1JZimcl4QG4zfm9qlmAgYgL/gr7gMbLIAT3ZZnagoFg3Hal2Vnkm1LIFu5Fw0l6lrCGau3Q/oREqA/sZYh507qWuHCy+EJeB/IMyZ8sf+XTDD1d7N9YPq/O3ISnZUO/O4t4vvqAhZcPa26gZqEjwLJUaLm2mt2Xvt7j9K/e7YberaOJ/fchDe3n0zcsJT8iOWq258p8fiFTdC7wDspfoUxs21spJkiAeM3HgKQhEtWjl8zZsDO6Ou0riF2hfMFyWX0rmJTIVL4Bivkexhzj3dmLFubCS7xKx9qG6nVI4Si3Gq7PfPok0TjmHPXKvV7pv5lbcTokF5cceQug4yijgSMhVQhudMKi3PPwruI6eo3QImqczD1UBUV+eGCe9Wz3SmIHbxNkoCuRD9Mhy4QkqoaBikqZ+1f35iW5cUyXiGQ13oLMq+FvtByq0tD1EqG0zE7CiUXQVR1nuwfKxQiRx6mRSGydHAI3J6gMVqBzwCN5qicR3Jx5sgVG+acRyJ+Vt80kfSamoiO0kx5xm/YGITmyXYRd4tsnn4MsKX8uytQw+3BQN5hlRH2PoOnyjrcex4WlWXD5IQPxARRYv1nUhHJgB45bAohL2oaBH8UXluRslQO60Bd3rKbaQxDiDgbIRiNQQNvyQ12Aa0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR01MB7370.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(52116005)(1800799015)(376005)(366007)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RDFKK2lqbCtXYTI0N1l2Z2ZlUnhNemJOZjNxOE91LzBUcFU2VkVwNkRPN2gv?=
+ =?utf-8?B?aTQxUlZOYm00RE85OGRpV2J1blg5Uk02VnJUYm5hSkllUzBnYWZVSnBaUlV3?=
+ =?utf-8?B?aEVHTGRYd3oydER4bFpKYWtDNjdJM1pLNnFVNGpMNzdOSzBzSytHcmw4K0p6?=
+ =?utf-8?B?cTFGSmNDaVdncm1PNzFUNW9xRFg5SldUOFpEMDlVS3dCVkNKWlBoRWdVRlZ0?=
+ =?utf-8?B?azEvSnlWMHJPNkpUVGxzOCtsQ0gwZDBvWGlHdXRYemxYZ29DUWFpUHhuK1V2?=
+ =?utf-8?B?eE5pbEtzRERpc0dkOTVKeUFoU3RJK2o3Y2FidTJXOFhYbHUxUmtaQ1Rmc3Vl?=
+ =?utf-8?B?NGZoVTFkbmdqTnFwcXExVHZ1ckplOTh3bFFYYmVRakdHa09DM2k4MXdtWG8z?=
+ =?utf-8?B?aGRlaEhtRy9oTkszTWhSMzJmUkRJN0FDTWkrVnZhN3BEU013UitrWW9HUlRT?=
+ =?utf-8?B?TTczZFROUGtvNEoyY3QyVDNBMVk4OEUxWVE2Y1owZng2Q1NZcjEvQ3JLbFBt?=
+ =?utf-8?B?VVZHeTVKVGFZc1cwbmFFYk5tR1E2aGVhVW1NQTNLdWltYVV2WDRwNWlHczRH?=
+ =?utf-8?B?QmVZUVhaMXMzNm5zOCtnVkR3Q2hxV2R4NFM2enJYb09MZ2t5MStiZ0M4ZUY3?=
+ =?utf-8?B?K0JERHlSYUdrSDZyL0ZwUjVCb1g4bjIveTBLWFhRdlhwT3RoVm9iOU9rQ1NF?=
+ =?utf-8?B?NDVoUG9nWGhIYUdEUEtzd2tmNjExbXhVc05QLzN4cFl6S2QvaVdVekVUajNX?=
+ =?utf-8?B?Z2RQNHVLenlWbmJ1bGprTDliUTdaMGtUOGJFU0l3UDVQR05FSlZKY3E1bjJv?=
+ =?utf-8?B?ZzUyZFVyOWRRSXAwUTZIWjM3K2cyNlZnanlFQnFNaWtVbEdIb1BBa29NSkVJ?=
+ =?utf-8?B?cXB0NzJlZWUrVDQ0NzYwczI2TWw5RFltbmszMnE5WkVFTjZZNnRNN3ZsNWc5?=
+ =?utf-8?B?aGU0Vmg4UTBYaStYVWNXSlJFZnZaMUU3S29BTENRS3dxUnVCK1FhdVZRMWUw?=
+ =?utf-8?B?NEswOTl4K05UaDlVK0pkUDJnaEpaV1pGdlgxVHNXVHRQbko1RkpFL0NENWhR?=
+ =?utf-8?B?QnFjQWtsaDhwN243dThRKzkrYlJoMTc2QVd1dUJFZmxHd2o0cnlUV25kL2dl?=
+ =?utf-8?B?ZFBrNHhEUHNTNG02Ty9HWll6c2t0MWozejU5bFo0bGNPbEFKMWE0dFJWRlZJ?=
+ =?utf-8?B?ZVNCby82QmVBdVZVUzRxdXhsbmxSVVZreC95ZWl6SWxocWZSYjgxQjVPQnVv?=
+ =?utf-8?B?ZXhmWThrMnJic3FYaHQzY0RhVFNod3g0UUxrWmtRNVd0dlAyeTEzUnd1UEgx?=
+ =?utf-8?B?d0N6Ny9tU25TNXNnTlJqSDdZaDhGRU9sU0pXZ3NabVo1RkIwN0p5ZXRFNDZ6?=
+ =?utf-8?B?NURPU3FLWXphVmVwd0ZkeTdCK2FNajVHeERUdHNlNnp4bTdvdHpRdmZhcjVD?=
+ =?utf-8?B?d1pUQVArMjNWMjNmWW5oM28rTklrOWs1NG5POEQ1aUVhT2xwZUtnU0JNdGxQ?=
+ =?utf-8?B?dDJ2dU9HZURSSS9aUit4Uzh1UHl6b1pQa2gwUzJrRSswNHVCTVBxcnZGbjRi?=
+ =?utf-8?B?RG4ybUVZTGNCWU5mdVdCUUFCVWNoUGJKKzhFb1ZtanhwOTdJcGpxRVRUVVV2?=
+ =?utf-8?B?S0lpSTNvdFloV1ZnSW5EQ2RKczN1RzJ3ZHVxdExUdU15SkF0R1pkZ21neUIv?=
+ =?utf-8?B?YnM1alhPcXRsbmRmUFlqMXRCRUJIa1dReExHSEhySWVpR2VCRDlaYUZrcDVT?=
+ =?utf-8?B?OHFNWEZuTmlqUlI0N1BJZXFLcXZIOXRrQUl0ZXpwdzdwY3d1dVdIdGxvY0ZJ?=
+ =?utf-8?B?cmlnNkRnQVpRNmVFRjZXUGUwQ1YxQkw5bDhVR3d2SFFoUC9uY3ZzWm1oT2FY?=
+ =?utf-8?B?TFJhZzkwUStoQ2JoczVWNnpzd0JMUWMydzJ0enFES1VrVjZnUEZqK3FTK2x1?=
+ =?utf-8?B?Y3NLa2M5N3dJa0lGOEhaZDMwVXdtUnFGUjllRTZKRS9PNTZOa0kycGsrOXpO?=
+ =?utf-8?B?V2xMTm1jalYxb2N6TXJkSExmWVJuNkh0Tks5Q0liWFlSWnAxdlZ6ekJya3RP?=
+ =?utf-8?B?OGZPbFRXZU5DTDFqVXFzVHRRUGlGL2xZdmh6UGdJYkZ5blJyNkJ4S3RjR0Vm?=
+ =?utf-8?B?UjFROVM4QmpzSzJsQkdSN25tdWx2emdyU1JKY3o0Ky9TZW13Q2hRYzMxeHV5?=
+ =?utf-8?Q?jkK9cBixD2L39SRuKsnVQHg=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5788c87-846e-4c83-521c-08dc4f805b6c
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR01MB7370.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 23:39:49.1017
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3fJ2w6/Rxzljqz1bm3XokxkbhadSOdxlRVzQrfCVzxHd6R7fy9xrjiwTe+VVKC0mEO5ZCzVBdvbiTt2wnRAGXOR+fdH2GRnsYUtDlSoW29T7tUBnviWW3LaP/nQZ5A8N
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB6400
+
+> RAS2 HW based memory patrol scrub needs RAS2 PCC interfaces
+> and ACPI RAS2 driver for communication b/w kernel and firmware.
+> ACPI RAS2 Driver adds platform device, for each memory feature,
+> which binds to the RAS2 memory driver.
+> Memory RAS2 driver registers with the memory scrub subsystem to
+> expose the RAS2 scrub controls to the user.
+
+Hi Shiju,
+Thanks for this work. This has been very useful for us, as we've
+been using it to test a RAS2 implementation here at Ampere
+Computing.
+
+In general, the pieces implementing RAS2 are useful and functional. We did,
+however, encounter a few places where we had to make some bug fixes.
+I'll reply to specific patches with changes I can recommend. Also, there are
+a few implementation choices that I will have questions about.
+
+Here is an outline containing the generalized comments I plan on making
+within/near relevant patches:
+1) Found a bug in ras2.c in how the pcc_desc_list pointer is incremented.
+2) Executing a RAS2 command seems unnecessary for feature detection.
+specifically, in the functions ras2_is_patrol_scrub_support() and 
+ras2_get_patrol_scrub_params()
+3) Consider adding more error detection/reporting in ras2_check_pcc_chan()
+4) Concerns with multiple scrub devices attempting to map the same PCC 
+channel.
+
+-Daniel
 
 
 
-On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> Once all extents of an interleave set are present a region must
-> surface an extent to the region.
-> 
-> Without interleaving; endpoint decoder and region extents have a 1:1
-> relationship.  Future support for IW > 1 will maintain a N:1
-> relationship between the device extents and region extents.
-> 
-> Create a region extent device for every device extent found.  Release of
-> the extent device triggers a response to the underlying hardware extent.
-> 
-> There is no strong use case to support the addition of extents which
-> overlap previously accepted extent ranges.  Reject such new extents
-> until such time as a good use case emerges.
-> 
-> Expose the necessary details of region extents by creating the following
-> sysfs entries.
-> 
-> 	/sys/bus/cxl/devices/dax_regionX/extentY
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/offset
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/length
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/label
-> 
-> The use of the extent devices by the DAX layer is deferred to later
-> patches.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes for v1
-> [iweiny: new patch]
-> [iweiny: Rename 'dr_extent' to 'region_extent']
-> ---
->  drivers/cxl/core/Makefile |   1 +
->  drivers/cxl/core/extent.c | 133 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mbox.c   |  43 +++++++++++++++
->  drivers/cxl/core/region.c |  76 +++++++++++++++++++++++++-
->  drivers/cxl/cxl.h         |  37 +++++++++++++
->  tools/testing/cxl/Kbuild  |   1 +
->  6 files changed, 290 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 9259bcc6773c..35c5c76bfcf1 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -14,5 +14,6 @@ cxl_core-y += pci.o
->  cxl_core-y += hdm.o
->  cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
-> +cxl_core-y += extent.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-> new file mode 100644
-> index 000000000000..487c220f1c3c
-> --- /dev/null
-> +++ b/drivers/cxl/core/extent.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +#include <cxl.h>
-> +
-> +static DEFINE_IDA(cxl_extent_ida);
 
-According to Documentation/core-api/idr.rst, IDR interface is deprecated and xarray usage is preferred.
 
-> +
-> +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
 
-Parameter alignment a bit off here? and some of the other functions as well.
 
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	return sysfs_emit(buf, "%pa\n", &reg_ext->hpa_range.start);
-> +}
-> +static DEVICE_ATTR_RO(offset);
-> +
-> +static ssize_t length_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +	u64 length = range_len(&reg_ext->hpa_range);
-> +
-> +	return sysfs_emit(buf, "%pa\n", &length);
-> +}
-> +static DEVICE_ATTR_RO(length);
-> +
-> +static ssize_t label_show(struct device *dev, struct device_attribute *attr,
-> +			  char *buf)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	return sysfs_emit(buf, "%s\n", reg_ext->label);
-> +}
-> +static DEVICE_ATTR_RO(label);
-> +
-> +static struct attribute *region_extent_attrs[] = {
-> +	&dev_attr_offset.attr,
-> +	&dev_attr_length.attr,
-> +	&dev_attr_label.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group region_extent_attribute_group = {
-> +	.attrs = region_extent_attrs,
-> +};
-> +
-> +static const struct attribute_group *region_extent_attribute_groups[] = {
-> +	&region_extent_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static void region_extent_release(struct device *dev)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	cxl_release_ed_extent(&reg_ext->ed_ext);
-> +	ida_free(&cxl_extent_ida, reg_ext->dev.id);
-> +	kfree(reg_ext);
-> +}
-> +
-> +static const struct device_type region_extent_type = {
-> +	.name = "extent",
-> +	.release = region_extent_release,
-> +	.groups = region_extent_attribute_groups,
-> +};
-> +
-> +bool is_region_extent(struct device *dev)
-> +{
-> +	return dev->type == &region_extent_type;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(is_region_extent, CXL);
-> +
-> +static void region_extent_unregister(void *ext)
-> +{
-> +	struct region_extent *reg_ext = ext;
-> +
-> +	dev_dbg(&reg_ext->dev, "DAX region rm extent HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +	device_unregister(&reg_ext->dev);
-> +}
-> +
-> +int dax_region_create_ext(struct cxl_dax_region *cxlr_dax,
-> +			  struct range *hpa_range,
-> +			  const char *label,
-> +			  struct range *dpa_range,
-> +			  struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct region_extent *reg_ext;
-> +	struct device *dev;
-> +	int rc, id;
-> +
-> +	id = ida_alloc(&cxl_extent_ida, GFP_KERNEL);
-> +	if (id < 0)
-> +		return -ENOMEM;
-> +
-> +	reg_ext = kzalloc(sizeof(*reg_ext), GFP_KERNEL);
-> +	if (!reg_ext)
-> +		return -ENOMEM;
-> +
-> +	reg_ext->hpa_range = *hpa_range;
-> +	reg_ext->ed_ext.dpa_range = *dpa_range;
-> +	reg_ext->ed_ext.cxled = cxled;
-> +	snprintf(reg_ext->label, DAX_EXTENT_LABEL_LEN, "%s", label);
-> +
-> +	dev = &reg_ext->dev;
-> +	device_initialize(dev);
-> +	dev->id = id;
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = &cxlr_dax->dev;
-> +	dev->type = &region_extent_type;
-> +	rc = dev_set_name(dev, "extent%d", dev->id);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	dev_dbg(dev, "DAX region extent HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	return devm_add_action_or_reset(&cxlr_dax->dev, region_extent_unregister,
-> +	reg_ext);
-> +
-> +err:
-> +	dev_err(&cxlr_dax->dev, "Failed to initialize DAX extent dev HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	put_device(dev);
-> +	return rc;
-> +}
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9e33a0976828..6b00e717e42b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1020,6 +1020,32 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
->  	return rc;
->  }
->  
-> +static int cxl_send_dc_cap_response(struct cxl_memdev_state *mds,
-> +				    struct range *extent, int opcode)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t size;
-> +
-> +	struct cxl_mbox_dc_response *dc_res __free(kfree);
-> +	size = struct_size(dc_res, extent_list, 1);
-> +	dc_res = kzalloc(size, GFP_KERNEL);
-> +	if (!dc_res)
-> +		return -ENOMEM;
-> +
-> +	dc_res->extent_list[0].dpa_start = cpu_to_le64(extent->start);
-> +	memset(dc_res->extent_list[0].reserved, 0, 8);
 
-Not needed. kzalloc already zeroed.
 
-DJ
 
-> +	dc_res->extent_list[0].length = cpu_to_le64(range_len(extent));
-> +	dc_res->extent_list_size = cpu_to_le32(1);
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = opcode,
-> +		.size_in = size,
-> +		.payload_in = dc_res,
-> +	};
-> +
-> +	return cxl_internal_send_cmd(mds, &mbox_cmd);
-> +}
-> +
->  static struct cxl_memdev_state *
->  cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  {
-> @@ -1029,6 +1055,23 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
->  }
->  
-> +void cxl_release_ed_extent(struct cxl_ed_extent *extent)
-> +{
-> +	struct cxl_endpoint_decoder *cxled = extent->cxled;
-> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
-> +	struct device *dev = mds->cxlds.dev;
-> +	int rc;
-> +
-> +	dev_dbg(dev, "Releasing DC extent DPA %#llx - %#llx\n",
-> +		extent->dpa_range.start, extent->dpa_range.end);
-> +
-> +	rc = cxl_send_dc_cap_response(mds, &extent->dpa_range, CXL_MBOX_OP_RELEASE_DC);
-> +	if (rc)
-> +		dev_dbg(dev, "Failed to respond releasing extent DPA %#llx - %#llx; %d\n",
-> +			extent->dpa_range.start, extent->dpa_range.end, rc);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_release_ed_extent, CXL);
-> +
->  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  				    enum cxl_event_log_type type)
->  {
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3e563ab29afe..7635ff109578 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1450,11 +1450,81 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
->  	return 0;
->  }
->  
-> +static int extent_check_overlap(struct device *dev, void *arg)
-> +{
-> +	struct range *new_range = arg;
-> +	struct region_extent *ext;
-> +
-> +	if (!is_region_extent(dev))
-> +		return 0;
-> +
-> +	ext = to_region_extent(dev);
-> +	return range_overlaps(&ext->hpa_range, new_range);
-> +}
-> +
-> +static int extent_overlaps(struct cxl_dax_region *cxlr_dax,
-> +			   struct range *hpa_range)
-> +{
-> +	struct device *dev __free(put_device) =
-> +		device_find_child(&cxlr_dax->dev, hpa_range, extent_check_overlap);
-> +
-> +	if (dev)
-> +		return -EINVAL;
-> +	return 0;
-> +}
-> +
->  /* Callers are expected to ensure cxled has been attached to a region */
->  int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
->  			  struct cxl_dc_extent *dc_extent)
->  {
-> -	return 0;
-> +	struct cxl_region *cxlr = cxled->cxld.region;
-> +	struct range ext_dpa_range, ext_hpa_range;
-> +	struct device *dev = &cxlr->dev;
-> +	resource_size_t dpa_offset, hpa;
-> +
-> +	/*
-> +	 * Interleave ways == 1 means this coresponds to a 1:1 mapping between
-> +	 * device extents and DAX region extents.  Future implementations
-> +	 * should hold DC region extents here until the full dax region extent
-> +	 * can be realized.
-> +	 */
-> +	if (cxlr->params.interleave_ways != 1) {
-> +		dev_err(dev, "Interleaving DC not supported\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ext_dpa_range = (struct range) {
-> +		.start = le64_to_cpu(dc_extent->start_dpa),
-> +		.end = le64_to_cpu(dc_extent->start_dpa) +
-> +			le64_to_cpu(dc_extent->length) - 1,
-> +	};
-> +
-> +	dev_dbg(dev, "Adding DC extent DPA %#llx - %#llx\n",
-> +		ext_dpa_range.start, ext_dpa_range.end);
-> +
-> +	/*
-> +	 * Without interleave...
-> +	 * HPA offset == DPA offset
-> +	 * ... but do the math anyway
-> +	 */
-> +	dpa_offset = ext_dpa_range.start - cxled->dpa_res->start;
-> +	hpa = cxled->cxld.hpa_range.start + dpa_offset;
-> +
-> +	ext_hpa_range = (struct range) {
-> +		.start = hpa - cxlr->cxlr_dax->hpa_range.start,
-> +		.end = ext_hpa_range.start + range_len(&ext_dpa_range) - 1,
-> +	};
-> +
-> +	if (extent_overlaps(cxlr->cxlr_dax, &ext_hpa_range))
-> +		return -EINVAL;
-> +
-> +	dev_dbg(dev, "Realizing region extent at HPA %#llx - %#llx\n",
-> +		ext_hpa_range.start, ext_hpa_range.end);
-> +
-> +	return dax_region_create_ext(cxlr->cxlr_dax, &ext_hpa_range,
-> +				     (char *)dc_extent->tag,
-> +				     &ext_dpa_range,
-> +				     cxled);
->  }
->  
->  static int cxl_region_attach_position(struct cxl_region *cxlr,
-> @@ -2684,6 +2754,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
->  
->  	dev = &cxlr_dax->dev;
->  	cxlr_dax->cxlr = cxlr;
-> +	cxlr->cxlr_dax = cxlr_dax;
->  	device_initialize(dev);
->  	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
->  	device_set_pm_not_required(dev);
-> @@ -2799,7 +2870,10 @@ static int cxl_region_read_extents(struct cxl_region *cxlr)
->  static void cxlr_dax_unregister(void *_cxlr_dax)
->  {
->  	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-> +	struct cxl_region *cxlr = cxlr_dax->cxlr;
->  
-> +	cxlr->cxlr_dax = NULL;
-> +	cxlr_dax->cxlr = NULL;
->  	device_unregister(&cxlr_dax->dev);
->  }
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d585f5fdd3ae..5379ad7f5852 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -564,6 +564,7 @@ struct cxl_region_params {
->   * @type: Endpoint decoder target type
->   * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
->   * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
-> + * @cxlr_dax: (for DC regions) cached copy of CXL DAX bridge
->   * @flags: Region state flags
->   * @params: active + config params for the region
->   */
-> @@ -574,6 +575,7 @@ struct cxl_region {
->  	enum cxl_decoder_type type;
->  	struct cxl_nvdimm_bridge *cxl_nvb;
->  	struct cxl_pmem_region *cxlr_pmem;
-> +	struct cxl_dax_region *cxlr_dax;
->  	unsigned long flags;
->  	struct cxl_region_params params;
->  };
-> @@ -617,6 +619,41 @@ struct cxl_dax_region {
->  	struct range hpa_range;
->  };
->  
-> +/**
-> + * struct cxl_ed_extent - Extent within an endpoint decoder
-> + * @dpa_range: DPA range this extent covers within the decoder
-> + * @cxled: reference to the endpoint decoder
-> + */
-> +struct cxl_ed_extent {
-> +	struct range dpa_range;
-> +	struct cxl_endpoint_decoder *cxled;
-> +};
-> +void cxl_release_ed_extent(struct cxl_ed_extent *extent);
-> +
-> +/**
-> + * struct region_extent - CXL DAX region extent
-> + * @dev: device representing this extent
-> + * @hpa_range: HPA range of this extent
-> + * @label: label of the extent
-> + * @ed_ext: Endpoint decoder extent which backs this extent
-> + */
-> +#define DAX_EXTENT_LABEL_LEN 64
-> +struct region_extent {
-> +	struct device dev;
-> +	struct range hpa_range;
-> +	char label[DAX_EXTENT_LABEL_LEN];
-> +	struct cxl_ed_extent ed_ext;
-> +};
-> +
-> +int dax_region_create_ext(struct cxl_dax_region *cxlr_dax,
-> +			  struct range *hpa_range,
-> +			  const char *label,
-> +			  struct range *dpa_range,
-> +			  struct cxl_endpoint_decoder *cxled);
-> +
-> +bool is_region_extent(struct device *dev);
-> +#define to_region_extent(dev) container_of(dev, struct region_extent, dev)
-> +
->  /**
->   * struct cxl_port - logical collection of upstream port devices and
->   *		     downstream port devices to construct a CXL memory
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 030b388800f0..dc0cc1d5e6a0 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -60,6 +60,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pci.o
->  cxl_core-y += $(CXL_CORE_SRC)/hdm.o
->  cxl_core-y += $(CXL_CORE_SRC)/pmu.o
->  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
-> +cxl_core-y += $(CXL_CORE_SRC)/extent.o
->  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
->  cxl_core-y += config_check.o
-> 
+
+
+
