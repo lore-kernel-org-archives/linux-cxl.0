@@ -1,50 +1,50 @@
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609022324
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 06:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4633BB20;
+	Fri, 29 Mar 2024 06:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711694193; cv=none; b=dGU2AixxGoMl/d7nf5Z39FvNudDyqGWQjRtHWTfTU+hXdzDqTbF/1eYwqSQbD5pHaCPU76hzuyS7IBW35CQQXwvcpYsMBYjlkCFTh/z8SqUyx7J2QhCA0esY6z/DCombZ2bILJcXX/8varqT2RYjtfyyTm/00cB2ghy0Y9NpmuA=
+	t=1711694253; cv=none; b=TLDtluwW/IVZPqcdjBop8gquOuTRjArJKabCIwrkVF+6KAzvnX3sDqQF4t73lYWxXsxDoNgYXwUghopk9hjKtyhOnaCV7OoOf7hc2Wf8InS94i50+3talX/B3MxXHFRXvOosQtel9mx08qge1dLfYVBGV2RVofrNLxGEf1AiSRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711694193; c=relaxed/simple;
-	bh=wuhLrD6nDKASM1GZwEy/EhBT98EFm0ZU9lZPPyQH+DE=;
+	s=arc-20240116; t=1711694253; c=relaxed/simple;
+	bh=eaTURs2DX3hFrascB0JmgCheHmdrmF0RLNDE+Or7F2I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CAGIPcvYcNLhzIppWN0t1BttahptbrK9WvfmbWG3TUXuwzGodwKL7GwC2WmbE2ulBUk0kL6h8JvQEzR04TXplEohm+YBIVnwwkmJoNHPXm4upGm8f7cecHQCHgAaWnRk8M5F7mtgMQswiB/l8DhvhbSpfjCMzC+IbW7jjpxJtkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=iDeh5z2k; arc=none smtp.client-ip=139.138.61.253
+	 MIME-Version; b=QNTDiocbIdyTUBleiml8aJ7QFOST9myPo7u9q/dxV446HKX8Y1I+xug+oObnI3WlqbOPGHkfxBdyyN9RVdYGkSZlATHTd6LhNiAbOTLyCMTXL76U0gwwvfdERBbyE0seddRk38Yx2X3AB0GUOafdxSsoU2oV12DfFjwvpBDOM6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=WnPpWSfB; arc=none smtp.client-ip=139.138.61.252
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="iDeh5z2k"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="WnPpWSfB"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1711694190; x=1743230190;
+  t=1711694251; x=1743230251;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wuhLrD6nDKASM1GZwEy/EhBT98EFm0ZU9lZPPyQH+DE=;
-  b=iDeh5z2ku7cxzuolBUqZIHDav99tBR6tFxlkcVTew7r+4YfEbyudphp1
-   cK3K3bHzPh0RbWIMlBBAO/28heK9T3u14GaCL1Uqq9XWdgeKi2I2976oi
-   e6YHo/DrhTW57foDVVHTnpjQg/V5j/hUHxL0nyNMxItucRzQx6b2PQ+N+
-   cKJNX+1Dg408WTKAP3sU0QkZUa7KkL7qpPnFyIJXwP/8j31E+ycz8dxXw
-   1KfSF/CFd3SXj9gfCM+pTnbCwaghpNIDx2bhpWNoVuwSJzST90IqP9IHw
-   DuuNad2PppPReyiHhrT2g00iR8oN9OmLJSE/ggvy2YlPEg/ZqWQqmcXMf
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="141726400"
+  bh=eaTURs2DX3hFrascB0JmgCheHmdrmF0RLNDE+Or7F2I=;
+  b=WnPpWSfB+nDinQ74Roq2uUQGzPg68f87JSOCOUylWknn5smSnul//wcl
+   8jOTIKROUr3BmjsvOVI38dU/ewX9q9r1BSZT20uTxmSV+4Lc32XTYawEw
+   eAwCpN2UDfubE7xgOy5GZMw1kA7KPI37VEqI68yWxUnKawUH8DY2PsPmZ
+   0XDtdx8jH5HV0Xa2YYomQeL6pyan12SnExvrn8UCHnvBbLVBsOvN3WZ+7
+   wufz4Vj7QyON1cUciqWokKGF0vB2n+31cYw8v3OSr6QO+6u80KCyJEFrR
+   yYmQfo8l9wKS4bbHchokzuS1N1QtybZEzHYCjoWHTa9k7mtE+tYmVd05E
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="132533101"
 X-IronPort-AV: E=Sophos;i="6.07,164,1708354800"; 
-   d="scan'208";a="141726400"
+   d="scan'208";a="132533101"
 Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 15:36:19 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 89C9DE967F
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:17 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id B7438F923
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:16 +0900 (JST)
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 15:36:18 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 01556E9668;
+	Fri, 29 Mar 2024 15:36:17 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 34FEA12F761;
+	Fri, 29 Mar 2024 15:36:16 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 4A233200A7F0C
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:16 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id BC9362288EE;
+	Fri, 29 Mar 2024 15:36:15 +0900 (JST)
 Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id D019B1A006A;
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 378B31A006D;
 	Fri, 29 Mar 2024 14:36:15 +0800 (CST)
 From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 To: qemu-devel@nongnu.org,
@@ -52,10 +52,11 @@ To: qemu-devel@nongnu.org,
 Cc: Jonathan.Cameron@huawei.com,
 	dan.j.williams@intel.com,
 	dave@stgolabs.net,
-	ira.weiny@intel.com
-Subject: [RFC PATCH v2 3/6] cxl/core: add report option for cxl_mem_get_poison()
-Date: Fri, 29 Mar 2024 14:36:11 +0800
-Message-Id: <20240329063614.362763-4-ruansy.fnst@fujitsu.com>
+	ira.weiny@intel.com,
+	stable@vger.kernel.org
+Subject: [RFC PATCH v2 1/6] cxl/core: correct length of DPA field masks
+Date: Fri, 29 Mar 2024 14:36:09 +0800
+Message-Id: <20240329063614.362763-2-ruansy.fnst@fujitsu.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
 References: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
@@ -70,131 +71,54 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28282.003
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28282.003
-X-TMASE-Result: 10--9.462200-10.000000
-X-TMASE-MatchedRID: a3KJLn6RIiIJoDeiZ6YZhB1kSRHxj+Z5/OuUJVcMZhtdXeeZrNJbgiu5
-	iQ9EM64EjZRdXn3Xp9M6uZyF2AGJsLVQ6XPWwtdyEXjPIvKd74BUENBIMyKD0cSiwizsgluQ9my
-	Umu4fZeT7dV04rak8k5t7C5yK9FBjJBgtEIxUn4HfSQNpZkETVBgff28UuvITicvz9DxarMHQSo
-	WMT37bqFIeZmiiCQMfIdXPCd0ceGWvvxILmKK/HBRFJJyf5BJe3QfwsVk0UbtuRXh7bFKB7qYgz
-	NcfPy5s9/7GOwz/1iinIjtl5KwpMUvyE7CVOX4olExlQIQeRG0=
+X-TMASE-Result: 10-1.936900-10.000000
+X-TMASE-MatchedRID: 6KVfooacCZzo4fT4WEihVSQWufwDJ4K9T5ysQDj6eFnIPbn2oQhptW4j
+	6HJSTgstiC69Gex0rT0XkIT0cenSu+BRuAss+FbmEXjPIvKd74BUENBIMyKD0ceQfu6iwSfsePr
+	7SQbqKPDi8zVgXoAltsIJ+4gwXrEtJ0RPnyOnrZINUgM7QdTcfXGwKxjdKzHf8Yi1jddtlC4HZ7
+	7a2hmTYf2ng54tmDQpuA2+Y9lsxTCcrrRiTSKATNx+1ANNyC8exuBs026550TAYLx7rnbR8rDQ8
+	m3TqgloelpCXnG+JjvDGBZ1G8r1Sf2D6gx/0ozp
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-The GMER only has "Physical Address" field, no such one indicates length.
-So, when a poison event is received, we could use GET_POISON_LIST command
-to get the poison list.  Now driver has cxl_mem_get_poison(), so
-reuse it and add a parameter 'bool report', report poison record to MCE
-if set true.
+The length of Physical Address in General Media Event Record/DRAM Event
+Record is 64-bit, so the field mask should be defined as such length.
+Otherwise, this causes cxl_general_media and cxl_dram tracepoints to
+mask off the upper-32-bits of DPA addresses. The cxl_poison event is
+unaffected.
 
+If userspace was doing its own DPA-to-HPA translation this could lead to
+incorrect page retirement decisions, but there is no known consumer
+(like rasdaemon) of this event today.
+
+Fixes: d54a531a430b ("cxl/mem: Trace General Media Event Record")
+Cc: <stable@vger.kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 ---
- drivers/cxl/core/mbox.c   | 8 ++++++--
- drivers/cxl/core/memdev.c | 4 ++--
- drivers/cxl/core/region.c | 8 ++++----
- drivers/cxl/cxlmem.h      | 2 +-
- 4 files changed, 13 insertions(+), 9 deletions(-)
+ drivers/cxl/core/trace.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 31b1b8711256..19b46fb06ed6 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1309,7 +1309,7 @@ void cxl_mem_report_poison(struct cxl_memdev *cxlmd,
- EXPORT_SYMBOL_NS_GPL(cxl_mem_report_poison, CXL);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index e5f13260fc52..e2d1f296df97 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -253,11 +253,11 @@ TRACE_EVENT(cxl_generic_event,
+  * DRAM Event Record
+  * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+  */
+-#define CXL_DPA_FLAGS_MASK			0x3F
++#define CXL_DPA_FLAGS_MASK			0x3FULL
+ #define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
  
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
--		       struct cxl_region *cxlr)
-+		       struct cxl_region *cxlr, bool report)
- {
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
- 	struct cxl_mbox_poison_out *po;
-@@ -1340,10 +1340,14 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 		if (rc)
- 			break;
- 
--		for (int i = 0; i < le16_to_cpu(po->count); i++)
-+		for (int i = 0; i < le16_to_cpu(po->count); i++) {
- 			trace_cxl_poison(cxlmd, cxlr, &po->record[i],
- 					 po->flags, po->overflow_ts,
- 					 CXL_POISON_TRACE_LIST);
-+			if (report)
-+				cxl_mem_report_poison(cxlmd, cxlr,
-+						      &po->record[i]);
-+		}
- 
- 		/* Protect against an uncleared _FLAG_MORE */
- 		nr_records = nr_records + le16_to_cpu(po->count);
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index d4e259f3a7e9..e976141ca4a9 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -200,14 +200,14 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
- 	if (resource_size(&cxlds->pmem_res)) {
- 		offset = cxlds->pmem_res.start;
- 		length = resource_size(&cxlds->pmem_res);
--		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL, false);
- 		if (rc)
- 			return rc;
- 	}
- 	if (resource_size(&cxlds->ram_res)) {
- 		offset = cxlds->ram_res.start;
- 		length = resource_size(&cxlds->ram_res);
--		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL, false);
- 		/*
- 		 * Invalid Physical Address is not an error for
- 		 * volatile addresses. Device support is optional.
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5c186e0a39b9..e83c46cb4dea 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2585,7 +2585,7 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
- 	if (ctx->mode == CXL_DECODER_RAM) {
- 		offset = ctx->offset;
- 		length = resource_size(&cxlds->ram_res) - offset;
--		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL, false);
- 		if (rc == -EFAULT)
- 			rc = 0;
- 		if (rc)
-@@ -2603,7 +2603,7 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
- 		return 0;
- 	}
- 
--	return cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+	return cxl_mem_get_poison(cxlmd, offset, length, NULL, false);
- }
- 
- static int poison_by_decoder(struct device *dev, void *arg)
-@@ -2637,7 +2637,7 @@ static int poison_by_decoder(struct device *dev, void *arg)
- 	if (cxled->skip) {
- 		offset = cxled->dpa_res->start - cxled->skip;
- 		length = cxled->skip;
--		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL, false);
- 		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
- 			rc = 0;
- 		if (rc)
-@@ -2646,7 +2646,7 @@ static int poison_by_decoder(struct device *dev, void *arg)
- 
- 	offset = cxled->dpa_res->start;
- 	length = cxled->dpa_res->end - offset + 1;
--	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
-+	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region, false);
- 	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
- 		rc = 0;
- 	if (rc)
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 82f80eb381fb..1f03130b9d6a 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -832,7 +832,7 @@ void cxl_mem_report_poison(struct cxl_memdev *cxlmd,
- 			   struct cxl_region *cxlr,
- 			   struct cxl_poison_record *poison);
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
--		       struct cxl_region *cxlr);
-+		       struct cxl_region *cxlr, bool report);
- int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
- int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
- int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
+-#define CXL_DPA_VOLATILE			BIT(0)
+-#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
++#define CXL_DPA_VOLATILE			BIT_ULL(0)
++#define CXL_DPA_NOT_REPAIRABLE			BIT_ULL(1)
+ #define show_dpa_flags(flags)	__print_flags(flags, "|",		   \
+ 	{ CXL_DPA_VOLATILE,			"VOLATILE"		}, \
+ 	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
 -- 
 2.34.1
 
