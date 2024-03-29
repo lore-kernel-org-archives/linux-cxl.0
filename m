@@ -1,134 +1,125 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868E4376E2
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 06:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E94C17E
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711694256; cv=none; b=uP1YrxYF9uktKoqUNw3/FfrKVZWlJB43reaEpGXU9tVDID3SgJ38cibSG2YYtIXl3Uxr5w+lM/hyfxwnlD7GcDC5FIjMOlktEfdsdq2iel6GNVkdDZwpBjYJs25Ojbn6jOJQuuXF741zeuJyL2bsXtf7ypUilU2mc3yPQXBSCV8=
+	t=1711726740; cv=none; b=IAgxptNY69Cas2wTmZYcr545IT6vaCBvVI6ZLU7b893nKBFcYX88Qvcdw6qfvY00tlYK8Fjftx3MwTnm40ZU+3hk9vfKKv5EiuMbx5bPWj92b+NrWuA2ghUz4AA7M7MBkYE7UNerfcYWnVKGwPCsosltlcZX2hb8jy95CzsrKnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711694256; c=relaxed/simple;
-	bh=bCrcdq4lNI8kIJNZkx/SfFaA95id3/KBVLHFuh8UmNU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dkqFlvagr/7E23n/teccT6KCXJbR86bYH00xAS04Rv6w4cOoWi9iz81VE/Lcvpjg+b184XQMma0CdTokbdTJZXrDaOVWJfyDouHT5xwSeEaJnXQh3HmZfZJaU4B5jJCFjXeG3OAgbVeuujO63+rhQ88dS8s82bujH2efIkU54/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=auabaMAs; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1711726740; c=relaxed/simple;
+	bh=Yoeu+yPvWcr7mJFMnMj9r7kyoeVhlg19SNCTjudoBQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kb8qdywFlIRy8LsdGdTJdadD6aP8I+8WLvquSQBP8nZYkCtisR/I6NX1sPGPgB5V6amTp03uP2cMyy374qOoDSWv0ltGQ18F38SZln/KT7reQ9xe4ypZ2qRoeu6FIIKAfHl0pyZOQiJrBReITNmaGfd6oShgXlxmxeVCP/pxyas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HL8bSpm6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="auabaMAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1711694255; x=1743230255;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bCrcdq4lNI8kIJNZkx/SfFaA95id3/KBVLHFuh8UmNU=;
-  b=auabaMAsvdw3fQY+GCn0zvx59ewRMOkPVKlKOu6HBDt9JbH7w3nbsn8n
-   uFlzOxPfcd3zxmI8O/9ma1AaQFQIixtK9Czz/7GFiesFoMwxGLF+35iTB
-   lqUOSj+lFybA9N43H2qv1gkoTW7N5s37EA+foGnn/HLGLggSbc938OSZw
-   wqdSboV9Q3CSgR4Z39+XzZrk0ygjb5WTnaviu3EqxBMhWWuUKL+/xiAtH
-   YUkTy2u2hC+y/q7IpkAf1qxENWemmhI+gmp5T22te2vjBDDzxRu9xqPwd
-   3CBbfMl1RNf1xIwr4zulQwRGyAB21mwp1ciayF2CdV3oIfONIjPYYZAbY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="153723890"
-X-IronPort-AV: E=Sophos;i="6.07,164,1708354800"; 
-   d="scan'208";a="153723890"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 15:36:21 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 2BC3FD9F01
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:18 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 5DF1AD5610
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:17 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id E80DD224950
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:16 +0900 (JST)
-Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 783B21A006A;
-	Fri, 29 Mar 2024 14:36:16 +0800 (CST)
-From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-To: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	dave@stgolabs.net,
-	ira.weiny@intel.com
-Subject: [RFC PATCH v2 5/6] cxl: add definition for transaction types
-Date: Fri, 29 Mar 2024 14:36:13 +0800
-Message-Id: <20240329063614.362763-6-ruansy.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
-References: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HL8bSpm6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711726740; x=1743262740;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Yoeu+yPvWcr7mJFMnMj9r7kyoeVhlg19SNCTjudoBQQ=;
+  b=HL8bSpm62NkTk8dHNCRE78NPAcv2REOG7ngVf05wO5sVZoZuGuLWCpcn
+   gQULpRvVg276Db+MalRxCgm2GYmEJlunviZhQnhLgl8PeOkW7krYP685L
+   NpPf8G/wGnpeSfNrJpl9Ue8r56jKTJVHdHwEIwYVib84RWKaK6EQbIdsZ
+   rXHaj2TAB4sGAnPVo61lDDewyzDY8TB18Fux1KguNeo3xhycQQoZOVfsh
+   fyDoxa+CHYDxiWQZw9SuVcG4PZRY6Tene8ZJj2NW9CQoDqByrbNu6LANN
+   yXg3UnXw5lellHHfKQ0e4w0AvaW3zLXCEWago5IsywmLDcnzUBtsiRwP+
+   g==;
+X-CSE-ConnectionGUID: z0ucjuJgRuOryBhac1aR+A==
+X-CSE-MsgGUID: 22N/ijRJRLG8ytI53aUXkQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="10727582"
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="10727582"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:38:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="21714104"
+Received: from mjhill-mobl2.amr.corp.intel.com (HELO [10.212.98.214]) ([10.212.98.214])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:38:59 -0700
+Message-ID: <e3f7bb27-6bcc-41d3-bf77-8458591d1fe6@intel.com>
+Date: Fri, 29 Mar 2024 08:38:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28282.003
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28282.003
-X-TMASE-Result: 10--4.520000-10.000000
-X-TMASE-MatchedRID: NuUGwdOZh4ZkQckJEC3Q2tyBRU/cKn69F4r8H5YrEqxOeMm3G6m0Tb8F
-	Hrw7frluf146W0iUu2tR9er5wo4xLchblrt58TvtqdwbW9Wx9tAv5vY1YvMqbuUlKuNFfcJqo8W
-	MkQWv6iV3LAytsQR4e42j49Ftap9ExlblqLlYqXJt4l4q/wnikovCfpj71RK4UrGm7aSNDOJYJI
-	xPFhImJcZoZKsx29ZV9DCWgDRvWseCgKQPezcuADwdpcMIVCZT+OYGlmIZze4RZbRsQk5MBUB1Q
-	Pq9bxnWZkAxAwjIrrMHz/H0kiLyEqGAtHMDjkk9
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] cxl/test: Add test case for region info to
+ cxl-events.sh
+Content-Language: en-US
+To: alison.schofield@intel.com, Vishal Verma <vishal.l.verma@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+References: <20240328043727.2186722-1-alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240328043727.2186722-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The transaction types are defined in General Media Event Record/DRAM Event
-per CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43 and
-Section 8.2.9.2.1.2; Table 8-44.  Add them for Event Record handler use.
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
----
- include/linux/cxl-event.h | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 03fa6d50d46f..0a50754fc330 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -23,6 +23,19 @@ struct cxl_event_generic {
- 	u8 data[CXL_EVENT_RECORD_DATA_LENGTH];
- } __packed;
- 
-+/*
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+enum cxl_event_transaction_type {
-+	CXL_EVENT_TRANSACTION_UNKNOWN = 0X00,
-+	CXL_EVENT_TRANSACTION_READ,
-+	CXL_EVENT_TRANSACTION_WRITE,
-+	CXL_EVENT_TRANSACTION_SCAN_MEDIA,
-+	CXL_EVENT_TRANSACTION_INJECT_POISON,
-+	CXL_EVENT_TRANSACTION_MEDIA_SCRUB,
-+	CXL_EVENT_TRANSACTION_MEDIA_MANAGEMENT,
-+};
-+
- /*
-  * General Media Event Record
-  * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-@@ -33,7 +46,7 @@ struct cxl_event_gen_media {
- 	__le64 phys_addr;
- 	u8 descriptor;
- 	u8 type;
--	u8 transaction_type;
-+	u8 transaction_type;	/* enum cxl_event_transaction_type */
- 	u8 validity_flags[2];
- 	u8 channel;
- 	u8 rank;
-@@ -52,7 +65,7 @@ struct cxl_event_dram {
- 	__le64 phys_addr;
- 	u8 descriptor;
- 	u8 type;
--	u8 transaction_type;
-+	u8 transaction_type;	/* enum cxl_event_transaction_type */
- 	u8 validity_flags[2];
- 	u8 channel;
- 	u8 rank;
--- 
-2.34.1
+On 3/27/24 9:37 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Events cxl_general_media and cxl_dram both report DPAs that may
+> be mapped in a region. If the DPA is mapped, the trace event will
+> include the HPA translation, region name and region uuid in the
+> trace event.
+> 
+> Add a test case that triggers these events with DPAs that map
+> into a region. Verify the region is included in the trace event.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  test/cxl-events.sh | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/test/cxl-events.sh b/test/cxl-events.sh
+> index fe702bf98ad4..ff4f3fdff1d8 100644
+> --- a/test/cxl-events.sh
+> +++ b/test/cxl-events.sh
+> @@ -23,6 +23,26 @@ modprobe cxl_test
+>  rc=1
+>  
+>  dev_path="/sys/bus/platform/devices"
+> +trace_path="/sys/kernel/tracing"
+> +
+> +test_region_info()
+> +{
+> +	# Trigger a memdev in the cxl_test autodiscovered region
+> +	region=$($CXL list  -R | jq -r ".[] | .region")
+> +	memdev=$($CXL list -r "$region" --targets |
+> +		jq -r '.[].mappings' |
+> +		jq -r '.[0].memdev')
+> +	host=$($CXL list -m "$memdev" | jq -r '.[].host')
+> +
+> +	echo 1 > "$dev_path"/"$host"/event_trigger
+> +
+> +	if ! grep "cxl_general_media.*$region" "$trace_path"/trace; then
+> +		err "$LINENO"
+> +	fi
+> +	if ! grep "cxl_dram.*$region" "$trace_path"/trace; then
+> +		err "$LINENO"
+> +	fi
+> +}
+>  
+>  test_cxl_events()
+>  {
+> @@ -74,6 +94,10 @@ if [ "$num_info" -ne $num_info_expected ]; then
+>  	err "$LINENO"
+>  fi
+>  
+> +echo 1 > /sys/kernel/tracing/tracing_on
+> +test_region_info
+> +echo 0 > /sys/kernel/tracing/tracing_on
+> +
+>  check_dmesg "$LINENO"
+>  
+>  modprobe -r cxl_test
