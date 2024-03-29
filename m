@@ -1,83 +1,61 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCC13C08D
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 05:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C3B8BFC
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 06:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711690446; cv=none; b=QsCpvZ+AEoiC/MiuDuD2uNBjNUunot0mMEurFstCxAnUgR4rnuqAgKpRHI66ZXWKuB/8/Isg+hqj6pO9eeaqs5oy9A3vmvhUl1c0aKUzqLq0vy10BezFzkL05A62ky0aIHuOzoDluRhryGm267IYr2AZAZLEe71bazpslyEGE68=
+	t=1711694189; cv=none; b=hR0CZhokVOTUbEeLTEJK9MpT6FO25NiKzpoqiqdlfq5g9nz1cPx9etFf5eNwmwOclbhg4X2LDjjeAwooJWEHqYBnxRK1RG502Yln2hBW0yRKoT0qpdZQNkxvtBCwMVKd1/WsTOrIBu5+TZDk7SOoZXR/nFXLuVgOwUcGJMhcnnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711690446; c=relaxed/simple;
-	bh=ImreSG/HUgwp6aJbvn8E9oQAkoz2niDIQh3XRiMc0II=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rlfZ4o8Ip0qQie8PX6rSEWTdDIZqZz2EBbFW/eDJAm4qxl781gGFIILI+gT6dSB3Ts3L+OdDxiqkL/O6Jb/2dcbVklWXAHAi/KbY0iacK0Sh3Xd6apeWcwlKU+RzbC8fVVcjSz2HpRF1TRoEU3vi8vnzXY5x7sRtve7Oz6ct5oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EqTcYTM0; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1711694189; c=relaxed/simple;
+	bh=OV3u9PFPBxcZetPCHjdd1JxSRP+skqDSB/QGdHY7BKc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YDhqyaZR8uC83EFl1aPpeUJV+AC3dwB0p2r8l5FMSgpIGtqFrUe2FMMXFUit6launBoLzi67eW4Cr3nPu49+yzrjje7l5qCRc3hTelQN0zig5pM3Jt3FNrMWM6aCHYyXwUwsUq92YzJUVxscO82KKRV0CG70wNxU+Ovo7CHhoio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=PxLuHkyx; arc=none smtp.client-ip=139.138.61.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EqTcYTM0"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-430c63d4da9so10366961cf.0
-        for <linux-cxl@vger.kernel.org>; Thu, 28 Mar 2024 22:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711690440; x=1712295240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kzD9bp4lfPKjq881EZTr8X35H33UpZ0U2oJTGnZVwgs=;
-        b=EqTcYTM00C/gUsn3XF2WJs1zcEhTVUJTRDacCzOOvnuGy84VQTaGKAWCo6q9cRzoOP
-         fhnbjvTdPEo5XeecRjMv004VizxrCVRdVQ2KSW9P2mI70Fy9qjjDX0F9SQFeW5sPJRJ4
-         CJjonR+ngB42q/K5SRVoHuXYyt51MJOXQtTYLDSRU3hiziXHsAZssk3f3eSuLRy7MG8q
-         ZesBt57o48Z763QvQtqqDoLbh/wsBpmR47xRSbVDSCyzuXcV2IdewMwAYEjCMoMGeKtH
-         /ruNv8kW+ZtHsJjSExd2Wb6NgEmkKVa//0okKd5HSnqbe+q6F2Zcqc1QjXFwj7ZTeCn6
-         CaNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711690440; x=1712295240;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kzD9bp4lfPKjq881EZTr8X35H33UpZ0U2oJTGnZVwgs=;
-        b=Ek/THZ65dBYXkgTKwj0P2wt7SUQxMV9kAMjSrmmCY48UHFbW8hfGf3yszWmOj20baA
-         pu0QozVJQKkmJoorooUnzY48w006PB93q9k15E/ESGa6dcO9tgpPOh3utaxv0lstmBWO
-         JPTIRX8BqED15mVqeHlDmGzVoZzKbdU4auFXGpnJf+VjSPKwzrW79aAwQo3UFbYt227z
-         D6f+b+yaSHB2mVtVrtVrW/ZH4BwPFlrg/zkXABxuFDCa4PGZhAiyOJPqi8a2wwVozZc/
-         5exPNVhXiG8SXpGOE5jxgcOBixZiksg9aZJYaZccjR9Sdu6N2TdF8rfepQBZvwZyXaIf
-         0T+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhaU6UoCE64+Bh9TMzXN9KdqH1ag5Go6p+WDueBJDgJT4UAk4ZbfYy7BVvJDMabBls8Wb+7FQZJ/sWdQG27CVqDrCYr4snrs+X
-X-Gm-Message-State: AOJu0YwL0uaYHkeZBwxdH0AU2t720OduAh+a8Olm89w/V4ZV6j5R8vFd
-	cIyymyccmYKMAiuvK95R965ZQ8NIKZj4rJ/Daw+RZDxjTyK8Mpl9MxJ2AUD3sTA=
-X-Google-Smtp-Source: AGHT+IEPCB5hxd4bBd3zlijyd5nzuuMHJJeNzrT0TX98AmIg0/OG0kaxC+8voIkqbdWtPzxYHjpC/A==
-X-Received: by 2002:a05:622a:40e:b0:432:c50a:3d65 with SMTP id n14-20020a05622a040e00b00432c50a3d65mr152679qtx.36.1711690440563;
-        Thu, 28 Mar 2024 22:34:00 -0700 (PDT)
-Received: from n231-228-171.byted.org ([147.160.184.85])
-        by smtp.gmail.com with ESMTPSA id jd25-20020a05622a719900b00430bf59ebccsm1293700qtb.11.2024.03.28.22.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 22:34:00 -0700 (PDT)
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-To: "Huang, Ying" <ying.huang@intel.com>,
-	"Gregory Price" <gourry.memverge@gmail.com>,
-	aneesh.kumar@linux.ibm.com,
-	mhocko@suse.com,
-	tj@kernel.org,
-	john@jagalactic.com,
-	"Eishan Mirakhur" <emirakhur@micron.com>,
-	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
-	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
-	"Alistair Popple" <apopple@nvidia.com>,
-	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	qemu-devel@nongnu.org
-Subject: [PATCH v9 0/2] Improved Memory Tier Creation for CPUless NUMA Nodes
-Date: Fri, 29 Mar 2024 05:33:51 +0000
-Message-Id: <20240329053353.309557-1-horenchuang@bytedance.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="PxLuHkyx"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1711694186; x=1743230186;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OV3u9PFPBxcZetPCHjdd1JxSRP+skqDSB/QGdHY7BKc=;
+  b=PxLuHkyxcOvnUoG5VE8S/Sdj4fifbXWsYJurPWpvPo4YK+wVUm0asoq6
+   GDSDdZL74/sWLh743QpFTRj9aQPfxfUJ3q4C7DxqJFQN9K0ZUjKQOvJ9w
+   ah9CB0yXgZmoqfH7NMmpThbGbaaMutDavu2rqonyncosOyciuptOwKEu/
+   rDnvr4c5o1G/COtJtrcTtjmkdtStUK+a5aRnAC8KYzR6ZZjX3JC1o5+Hm
+   L0gXE7IHDcXLRYciHIZnn5TZcahfuFGTIvdYrfmHd5YVABStDFsaV2rOa
+   HBAt3UizuA+Fr5D3DY9nT2BaK9Q6qtFpEjZzxKTuHQmN2RgBsVNpr/Uzf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="141726392"
+X-IronPort-AV: E=Sophos;i="6.07,164,1708354800"; 
+   d="scan'208";a="141726392"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 15:36:18 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id B0630DCC01
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:16 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id DD30D106085
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:15 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 70451200A7F0B
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Mar 2024 15:36:15 +0900 (JST)
+Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 966DE1A006A;
+	Fri, 29 Mar 2024 14:36:14 +0800 (CST)
+From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To: qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Cc: Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	dave@stgolabs.net,
+	ira.weiny@intel.com
+Subject: [RFC PATCH v2 0/6] cxl: add poison event handler
+Date: Fri, 29 Mar 2024 14:36:08 +0800
+Message-Id: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,81 +63,60 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28282.003
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28282.003
+X-TMASE-Result: 10--8.993200-10.000000
+X-TMASE-MatchedRID: JUGAxiLh1cMkinkyECdW8xlxrtI3TxRk1QQ6Jx/fflb+Aw16GgqpO0+j
+	bx0gEqGpOQhWysfkZ0EbNNo/4MUKcPGCAvUPDMAJqhcdnP91eXGlLADMASK8x0+z00/C4DjDQiM
+	ingSlKoK4W6HEaP3gfW9yZj3aufb5HxPMjOKY7A8LbigRnpKlKSPzRlrdFGDwTpZBKtCN9kSuD0
+	NYznv/PLajWsk6DUHUm+9cshTl/b5FHiGvOIOu1w==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-When a memory device, such as CXL1.1 type3 memory, is emulated as
-normal memory (E820_TYPE_RAM), the memory device is indistinguishable
-from normal DRAM in terms of memory tiering with the current implementation.
-The current memory tiering assigns all detected normal memory nodes
-to the same DRAM tier. This results in normal memory devices with
-different attributions being unable to be assigned to the correct memory tier,
-leading to the inability to migrate pages between different types of memory.
-https://lore.kernel.org/linux-mm/PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com/T/
+Changes:
+RFCv1 -> RFCv2:
+1. update commit message of PATCH 1
+2. use memory_failure_queue() instead of MCE
+3. also report poison in debugfs when injecting poison
+4. correct DPA->HPA logic:
+     find memdev's endpoint decoder to find the region it belongs to
+5. distinguish transaction_type of GMER, only handle POISON related
+     event for now
 
-This patchset automatically resolves the issues. It delays the initialization
-of memory tiers for CPUless NUMA nodes until they obtain HMAT information
-and after all devices are initialized at boot time, eliminating the need
-for user intervention. If no HMAT is specified, it falls back to
-using `default_dram_type`.
 
-Example usecase:
-We have CXL memory on the host, and we create VMs with a new system memory
-device backed by host CXL memory. We inject CXL memory performance attributes
-through QEMU, and the guest now sees memory nodes with performance attributes
-in HMAT. With this change, we enable the guest kernel to construct
-the correct memory tiering for the memory nodes.
+Currently driver only traces cxl events, poison injection (for both vmem
+and pmem type) on cxl memdev is silent.  OS needs to be notified then it
+could handle poison range in time.  Per CXL spec, the device error event
+could be signaled through FW-First and OS-First methods.
 
--v9:
- * Address corner cases in `memory_tier_late_init`. Thank Ying's comments.
--v8:
- * Fix email format
- * https://lore.kernel.org/lkml/20240329004815.195476-1-horenchuang@bytedance.com/T/#u
--v7:
- * Add Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
--v6:
- Thanks to Ying's comments,
- * Move `default_dram_perf_lock` to the function's beginning for clarity
- * Fix double unlocking at v5
- * https://lore.kernel.org/lkml/20240327072729.3381685-1-horenchuang@bytedance.com/T/#u
--v5:
- Thanks to Ying's comments,
- * Add comments about what is protected by `default_dram_perf_lock`
- * Fix an uninitialized pointer mtype
- * Slightly shorten the time holding `default_dram_perf_lock`
- * Fix a deadlock bug in `mt_perf_to_adistance`
- * https://lore.kernel.org/lkml/20240327041646.3258110-1-horenchuang@bytedance.com/T/#u
--v4:
- Thanks to Ying's comments,
- * Remove redundant code
- * Reorganize patches accordingly
- * https://lore.kernel.org/lkml/20240322070356.315922-1-horenchuang@bytedance.com/T/#u
--v3:
- Thanks to Ying's comments,
- * Make the newly added code independent of HMAT
- * Upgrade set_node_memory_tier to support more cases
- * Put all non-driver-initialized memory types into default_memory_types
-   instead of using hmat_memory_types
- * find_alloc_memory_type -> mt_find_alloc_memory_type
- * https://lore.kernel.org/lkml/20240320061041.3246828-1-horenchuang@bytedance.com/T/#u
--v2:
- Thanks to Ying's comments,
- * Rewrite cover letter & patch description
- * Rename functions, don't use _hmat
- * Abstract common functions into find_alloc_memory_type()
- * Use the expected way to use set_node_memory_tier instead of modifying it
- * https://lore.kernel.org/lkml/20240312061729.1997111-1-horenchuang@bytedance.com/T/#u
--v1:
- * https://lore.kernel.org/lkml/20240301082248.3456086-1-horenchuang@bytedance.com/T/#u
+So, add poison event handler in OS-First method:
+  - qemu:
+    - CXL device report POISON event to OS by MSI by sending GMER after
+      injecting a poison record
+  - CXL driver                                  <-- this patchset
+    a. parse the POISON event from GMER;
+    b. retrieve POISON list from memdev;
+    c. translate poisoned DPA to HPA;
+    d. enqueue poisoned PFN to memory_failure's work queue;
 
-Ho-Ren (Jack) Chuang (2):
-  memory tier: dax/kmem: introduce an abstract layer for finding,
-    allocating, and putting memory types
-  memory tier: create CPUless memory tiers after obtaining HMAT info
 
- drivers/dax/kmem.c           |  20 +-----
- include/linux/memory-tiers.h |  13 ++++
- mm/memory-tiers.c            | 125 ++++++++++++++++++++++++++++++-----
- 3 files changed, 124 insertions(+), 34 deletions(-)
+Shiyang Ruan (6):
+  cxl/core: correct length of DPA field masks
+  cxl/core: introduce cxl_mem_report_poison()
+  cxl/core: add report option for cxl_mem_get_poison()
+  cxl/core: report poison when injecting from debugfs
+  cxl: add definition for transaction_type
+  cxl/core: add poison injection event handler
+
+ drivers/cxl/core/mbox.c   | 126 +++++++++++++++++++++++++++++++++-----
+ drivers/cxl/core/memdev.c |   5 +-
+ drivers/cxl/core/region.c |   8 +--
+ drivers/cxl/core/trace.h  |   6 +-
+ drivers/cxl/cxlmem.h      |  13 ++--
+ include/linux/cxl-event.h |  17 ++++-
+ 6 files changed, 144 insertions(+), 31 deletions(-)
 
 -- 
-Ho-Ren (Jack) Chuang
+2.34.1
 
