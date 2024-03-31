@@ -1,67 +1,159 @@
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC0384
-	for <linux-cxl@vger.kernel.org>; Sun, 31 Mar 2024 01:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570B4688;
+	Sun, 31 Mar 2024 19:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711847049; cv=none; b=dvwsp21CrDbrVssBj/GuP1TaEI+m8K0xpMeD2xqjCZrrnW2NYXrXYgZpqY6PURyERA3A0sAFYjJ9ZYI+9HZRLl4lVNzPMXS9CKW8HGjLgyW5ggpIeDR9eFvfMbvlFRBBopR/AKwJDNjwwbVPZxzf/3i1o5aRYDxXkHtl3FEbUH4=
+	t=1711912141; cv=none; b=PtP8iikdgVU9g9R6EmnJwrIMDRYcM1pZh4aCVRjBlMxqgHCWLo77rxsVKDEtPOaL4AE9WbJa81Tfn46l1x4LGrasopx1AuzIdZsXGVxpPRhBMkmmcQzyRpd67LkrAdbkcUHlcRcQfx09ay6uzrk/24uPO55aTIMjVCA5k+iQ6iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711847049; c=relaxed/simple;
-	bh=moxV8NLD4oFvjfXW/coD+y0iRjEP4+zMCKBX+Ymsun4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VRm4/MOK8RmQA++LLQoFYXbKhVnnhlgn+9BaXySEiMXoCajlWv3I3VtyTF9Cv1yjXEKlAxTX/jqfHuVni74hS7YsdZU2GDFVNDV2PRsxpB/stUXtnGac4VM0aMh3WDpw5+F158gKq1Ln+4S6SWYlfB/KlEW3f8XAQczXOh8IC30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=Uj7DTHHZ; arc=none smtp.client-ip=195.113.20.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1711912141; c=relaxed/simple;
+	bh=v/zuC8dt4PV8gMPcCnVwh1IagNNndASoACR2DPKF6zg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HGbnnlaj5+OcavjWrXqkOKc8G4KUpLtXkQLWkqnmKpuuipIoc7a38MQyWpHVRzqPfXHVIGbjeXD/vIv3NRB/xokRHclWzs9y03w+cMa1b8ptDH4qggo7jAYCE9gw1QmcX9aJZKGVn0bEtrEQ2bKtJduzAKtODZuXYp4DekCNZ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkdU9EiU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="Uj7DTHHZ"
-Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
-	id D5668285EF7; Sun, 31 Mar 2024 03:03:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1711847037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RsKNcBh3VGWNGZjbyNBK4t+Lo1NnHzTo5HDtN2e4BW4=;
-	b=Uj7DTHHZyL4nFA8406lXNb7eR/JfIcfp2BKsU/a/yZOOreTpwbeTlnN4lARG70yYpLbk3a
-	GVx9SJ1sZaehawCt4695Y+b8qRb/omIxBmK5+ODtpiBLY7uSVQS7f0R54elqGfeLIRb29Z
-	vXOgCfcHqM4Z/5xpZP5rrJUcEqp50xc=
-Date: Sun, 31 Mar 2024 03:03:57 +0200
-From: Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
-	linux-cxl@vger.kernel.org, y-goto@fujitsu.com,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] Add function to display cxl1.1 device link status
-Message-ID: <mj+md-20240331.010245.99093.nikam@ucw.cz>
-References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
- <20240312080559.14904-4-kobayashi.da-06@fujitsu.com>
- <mj+md-20240329.221545.11188.nikam@ucw.cz>
- <660767abc418d_19e0294c7@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkdU9EiU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348A7C433C7;
+	Sun, 31 Mar 2024 19:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711912140;
+	bh=v/zuC8dt4PV8gMPcCnVwh1IagNNndASoACR2DPKF6zg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EkdU9EiU/fOn+VGtH/tMC4xLPQef/k8wjFWti0XMQjY0ZC+CwZadjgwdsOnuiSFvw
+	 xPviXDAw+R09SJt/zL1282C9RYbrWZujNgIu13gna1VsZUMsilrog1MuCyndMg90jK
+	 lSN7+qQFSB18Qru/PmhPexFbSbL/AZ6BJLjFFB49RRi2WZvV/NX00if0UIeggw3ap/
+	 aCdVgYMQmXvS2iKJAx+VPbDgaQjccZ+aQPZbOtAsmH8KrnMRMqubWTturx7IEni3/d
+	 oWhO8Gsuegc5AQVQDzgSjEth8LXHD3AnBaFIz6b41Onab2Mhk+86ujvXyomS1dCkke
+	 6DLAsl7U8CMRg==
+From: SeongJae Park <sj@kernel.org>
+To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	"Gregory Price" <gourry.memverge@gmail.com>,
+	aneesh.kumar@linux.ibm.com,
+	mhocko@suse.com,
+	tj@kernel.org,
+	john@jagalactic.com,
+	"Eishan Mirakhur" <emirakhur@micron.com>,
+	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
+	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
+	"Alistair Popple" <apopple@nvidia.com>,
+	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+	qemu-devel@nongnu.org
+Subject: Re: [PATCH v9 1/2] memory tier: dax/kmem: introduce an abstract layer for finding, allocating, and putting memory types
+Date: Sun, 31 Mar 2024 12:08:57 -0700
+Message-Id: <20240331190857.132490-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240329053353.309557-2-horenchuang@bytedance.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <660767abc418d_19e0294c7@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello!
+Hi Ho-Ren,
 
-> > Does it make sense to look up CXL RCD information for all PCIe devices of type
-> > PCI_EXP_TYPE_ROOT_INT_EP? Shouldn't it be done only for devices with the CXL
-> > capability?
+On Fri, 29 Mar 2024 05:33:52 +0000 "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+
+> Since different memory devices require finding, allocating, and putting
+> memory types, these common steps are abstracted in this patch,
+> enhancing the scalability and conciseness of the code.
 > 
-> I think so, would this fit more naturally in pci_scan_caps() with a new
-> scan for DVSEC caps ("PCI_EXT_CAP_ID_DVSEC" in Linux). However, isn't
-> the trouble that this needs a DVSEC scan for CXL to know it needs to go
-> back and fill in details that normally in appear in the base PCIe
-> capability scan?
+> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+> ---
+>  drivers/dax/kmem.c           | 20 ++------------------
+>  include/linux/memory-tiers.h | 13 +++++++++++++
+>  mm/memory-tiers.c            | 32 ++++++++++++++++++++++++++++++++
+>  3 files changed, 47 insertions(+), 18 deletions(-)
+> 
+[...]
+> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+> index 69e781900082..a44c03c2ba3a 100644
+> --- a/include/linux/memory-tiers.h
+> +++ b/include/linux/memory-tiers.h
+> @@ -48,6 +48,9 @@ int mt_calc_adistance(int node, int *adist);
+>  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>  			     const char *source);
+>  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+> +struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+> +							struct list_head *memory_types);
+> +void mt_put_memory_types(struct list_head *memory_types);
+>  #ifdef CONFIG_MIGRATION
+>  int next_demotion_node(int node);
+>  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+> @@ -136,5 +139,15 @@ static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adis
+>  {
+>  	return -EIO;
+>  }
+> +
+> +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
+> +{
+> +	return NULL;
+> +}
+> +
+> +void mt_put_memory_types(struct list_head *memory_types)
+> +{
+> +
+> +}
 
-I would prefer to display all CXL stuff together (i.e., when showing the
-DVSEC caps). Is there any reason not to?
+I found latest mm-unstable tree is failing kunit as below, and 'git bisect'
+says it happens from this patch.
 
-					Martin
+    $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+    [11:56:40] Configuring KUnit Kernel ...
+    [11:56:40] Building KUnit Kernel ...
+    Populating config with:
+    $ make ARCH=um O=../kunit.out/ olddefconfig
+    Building with:
+    $ make ARCH=um O=../kunit.out/ --jobs=36
+    ERROR:root:In file included from .../mm/memory.c:71:
+    .../include/linux/memory-tiers.h:143:25: warning: no previous prototype for ‘mt_find_alloc_memory_type’ [-Wmissing-prototypes]
+      143 | struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
+          |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+    .../include/linux/memory-tiers.h:148:6: warning: no previous prototype for ‘mt_put_memory_types’ [-Wmissing-prototypes]
+      148 | void mt_put_memory_types(struct list_head *memory_types)
+          |      ^~~~~~~~~~~~~~~~~~~
+    [...]
+
+Maybe we should set these as 'static inline', like below?  I confirmed this
+fixes the kunit error.  May I ask your opinion?
+
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index a44c03c2ba3a..ee6e53144156 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -140,12 +140,12 @@ static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adis
+        return -EIO;
+ }
+
+-struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
++static inline struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
+ {
+        return NULL;
+ }
+
+-void mt_put_memory_types(struct list_head *memory_types)
++static inline void mt_put_memory_types(struct list_head *memory_types)
+ {
+
+ }
+
+
+Thanks,
+SJ
