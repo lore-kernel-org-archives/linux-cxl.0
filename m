@@ -1,207 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A8851C52;
-	Mon,  1 Apr 2024 20:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712003220; cv=fail; b=nnK7RF2w0mzI230KOeTSkAsHLjbGOOLSZJhNx9uGSSFK7Xn94dI88HsQVHR+NGTnKL0/MXY00y9uXn8/PDjeZHOcErzcmr0psS/5ru+p5A19t7u358zz0XRaW1ADD4xsbd2/QvHORm+H4voJpdhKnNvSNyZZClymynHiZV93T+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712003220; c=relaxed/simple;
-	bh=dT/AScDTEK+2rlqfqk/hZ+gmPDRHi99IoEcrZWnT/Lg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GSxQavHSAok6i4qPPsg63wQqqTT13R1bhNwsf/QqnxH0rxZHoNYEL7/SZYsFst4nFeh2Z3JH9g2VH8lkJX7wV5fKvZZLdnG1VvWTshW2KSMSdj0Tuo/SrhcsjqX8dt6Cb8DLANpO+yU4lhKV349arW37CEn2BoxuEE3hfSrrNyg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUHJbAvQ; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4B22A1BF
+	for <linux-cxl@vger.kernel.org>; Mon,  1 Apr 2024 23:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712012795; cv=none; b=fwxBEvQA93s/fhaoTi4192X9mid8jKOq7RvA5p7TeTSlkA+NV4bRucN0jhcN/WZP4mveQZK/Fkp0NpbCYJvG5yt3r/nz+yoXSmyrWUNOe6id9UfHSL6xOmrMf6khMEHsYvbYl5McJJAOYNNwllaN/6AuWHG6QKtTUDq+3Bp98Io=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712012795; c=relaxed/simple;
+	bh=TbpC8M+7RPwppbkhzTamYJOLZlUu6MTKc06W4CbpxE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bC/DwEBU4s4qM0q3eI++UkzDuzOmGxsZ+d+x86mTvLzOWqBbkpynidc53HkTJyH9KmNcl9OUfnD4s6Z1kvCQK7TW/WaD2/J4npQyBPSdveT4nrUzqSWpbDzwLl5lgOpVOp2j6v7YTUhYnTmsG08rbIjAiUsymE/j3svcFw56O3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ii3KyxUd; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUHJbAvQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712003218; x=1743539218;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dT/AScDTEK+2rlqfqk/hZ+gmPDRHi99IoEcrZWnT/Lg=;
-  b=OUHJbAvQ8EJL5bqUV8NnKjlCkLsQkb/kbNYQYwN4G8TbBfcOOtJEIIBC
-   i3G7KrPV0Zap9d0LvrshZsDrIcYPIvogussJ2Z5V3KoRb3rdh027nc8CG
-   JeE+ao8Wquw1B6B4GQRqRVQ6ushaWp+9RDuIOwODouYPKiur1GWgfabE1
-   H5oQzN+HIHsxMp4WM54ntRuUi+tNOGEctCIAo2qf+VFDfOfAVymrP+aDc
-   +pPjDZ/P870/WW38q9BUfPTxQcxwVxteBWS92KcXSXx2jgU0SkRDEILEZ
-   asaVasG/BdcdLWEB/UEnaGkdFHlkK15hzJQKm8BDa4KPJnMiNJjPe9MSC
-   w==;
-X-CSE-ConnectionGUID: 1IVSb01vRWWAcz9SihzeGg==
-X-CSE-MsgGUID: AIIA/t+yS++zbQAXpdxtRw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="10967030"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="10967030"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:26:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="17906883"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 13:26:57 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 1 Apr 2024 13:26:56 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 13:26:56 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 1 Apr 2024 13:26:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YF18wjTflCoekNqv7hB7ugM5fEtAxk5MVF4j11uDKcdrTyfq8A97nI+XtQWK46w1yhDkb71aZlyDLTgzThlwYOnDXV/DXc81PBpQPrnPBHz32kr/JD03VshPW6ycVsbbFXa2DBtSfuQHRGn7Z/1vtYOk5Cb4V+eQbOyTzliROqMzSvi69f7spd7HqfGsXHdcbAfJUzyqYf25vYuHRhzYM2e+lCmjYYzbLkWUrHSeNrG8+eq5t9AnZ7yYAd0wuB9vFNtd3DUsEFfCaw4YBJsnVg8OVzgCj2SIbi6O74uwbpAhLAIAtBmFQ4dYS642daRIw29leZMLyfW7//v/OPSuIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9Tun2qcZaiVDDsRhLwGKLkYZAZG0/AURa6ey0rKhBc=;
- b=Od8FhVyiWipYb8FCXvr4x2tIkMlEToK2DHwJW2hLAv0SNBkMabWGIcJfP18qm5myDoOsVQ9pgEhhXq8hlM5MZ726xW0Xu4y1kKXLtCUD41G7Dq646MVWHW74mgrnvTXMA2VVIh33/bKkgJb+Ms4wpWdSUbAMy+cMlEnSkGMDRY639qqSXZ52tsINchIB/fLAYubzfAgJSfK10BD3u1C+Vgv1/zEuYPM4g1w1ryyjE5mMHydyWaP/ytgIuGbfLdpC4+Vvafpq9u7sTm8L8HyZ2A/cehqfgwFQ9CfDy39nL5q9VZPUL7Su+yg52QfIXrLZLfGlTxRMzff0U+SpcmbMOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by LV3PR11MB8693.namprd11.prod.outlook.com (2603:10b6:408:215::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Mon, 1 Apr
- 2024 20:26:54 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Mon, 1 Apr 2024
- 20:26:54 +0000
-Date: Mon, 1 Apr 2024 13:26:46 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: Kwangjin Ko <kwangjin.ko@sk.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kernel_team@skhynix.com>
-Subject: Re: [PATCH 1/2] cxl/core: Fix initialization of mbox_cmd.size_out in
- get event
-Message-ID: <660b1886315db_750ac294bc@iweiny-mobl.notmuch>
-References: <20240401091057.1044-1-kwangjin.ko@sk.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240401091057.1044-1-kwangjin.ko@sk.com>
-X-ClientProxiedBy: SJ0PR03CA0045.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::20) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ii3KyxUd"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so3592707276.0
+        for <linux-cxl@vger.kernel.org>; Mon, 01 Apr 2024 16:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712012791; x=1712617591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O8nGCphDC2lDqE/CSbphHfkuC3TvEewjmAtLy2kdkps=;
+        b=ii3KyxUdV/B6xvI/sbllezlCZ0avvlb1wPoVGBy+U4kzk8FpdcBINyezzZbCy0REkw
+         +GP2vSoPu8l6fPBOs56BChMMSauO9hQ9rsV7saIFad+RXwSWLBGtU/SgEtPCUd6wpFmN
+         uszdaCnQpwmZlOUniPRnC0bni58CDY3ox1pP9ueNyxEGsNqIZKoQK/NRNIyPYvpPEest
+         3wX6uFLbVBdksLltATJJsqMniqLxaedwfMT1KbOUUeY/QlbGdCeXvzOZUw+zuHwoSh47
+         NatFArMt3WvQyhTaS44BgRZdnV+cxTUlIYaDUeRruAs4LY/t9YIF1B6I+LTrsRXTI9im
+         roww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712012791; x=1712617591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O8nGCphDC2lDqE/CSbphHfkuC3TvEewjmAtLy2kdkps=;
+        b=Jt/npO37tD3S/MVnHlMmuU/DiI4lmxKwacCP2wnrg5K8wBfxjAIwNZO42q5aWr4MJu
+         TMzdlc6r2EjTruipzCrt39qAxQ3526TloDjOjZgbThJibmJEt8iH+JEHL9/OOT2jUIng
+         xIFA4K2+ipluEvJeuAcwJiJ0DWdH6d+biGPORBRgesAyF0OkemPrQkR4k/3UScv5pqmN
+         5M5ZZfCiGHQ7Br8XwJrqiWX0IP8p5tjPVmRgqt0dhT4qHn2NvZKYjHU1OmSxqwbHKxI8
+         8J44xzOT7n+69rey4adxlazYpliC+hZqxzBUtKhoW/ngbsoFgfmg5xa7wSv4U3tW+8A0
+         e2FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0/9odZuWKeSVy6jV/lKhNRW3H4lpUFW8LNle4URDnfFQ7VnbbxtPYUVHYIt7+OIhSGQmWKUVfziF7WyOmrA5WbaNS39GZXVOr
+X-Gm-Message-State: AOJu0YzKdmaYunAFFYo7s7zdtiq2lX48ugXYMHO1dw7+K+dffNPdxxQP
+	nC3jLW7wSVECzXfWqkTh3YqvjecIzW0YKEu0VsE5HWhxR/s4R/XvRgA2euxony7+6pC9IX9ZYBI
+	p9RLzdRTx5CmOieqoigThH9JYV+7pl12xLhUNrg==
+X-Google-Smtp-Source: AGHT+IHzFkHkXRaCjC8Uy5FTEb4BrGRIOAJ4uvIAnoieQDU096hzOpi7JP+GKKrquqv5tMmb8A6yVyiIs7YwfEUYlA0=
+X-Received: by 2002:a25:bb51:0:b0:dcf:30d9:1d7b with SMTP id
+ b17-20020a25bb51000000b00dcf30d91d7bmr9194408ybk.45.1712012791583; Mon, 01
+ Apr 2024 16:06:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV3PR11MB8693:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MaoMSKPXJd46oeyjgUPejwvjj03aR13uWXtVmekux/wEXnsUbhPfYY6g+ytqAUcp01c+BmKd/uDZSy2SEi65gEH+yH6eDA8HxmoSIMa74d56asDPQCDLV0c8WJGcuZqQeuSfqic46RuiD7T5akV6i48sSWDSmAEHPOvSqKXxXO8Y55+y4CMKfgoc3BpNmPAtiKu3YC6LQeEhJPmpjKcCNMVh1/RdkHqGIPLvRMmkifuX8YkgrOxHtfxZf1gi1nSThSe23GPYYMofUS52UT1JIAmuzaQlOYqYqyOkQIQBtvOar7OJLmn5qjwnIF4//ebbNThea44cV5JggJJH1v5+kqcnWaKkWx2G9+Nt56oD1Nt/KyfvdpjXgZA+vTtAlYTGy/I3iHrs0zf0nfdI87AmMWqlXUSqf6je/rytvdQSdKaGEEsX6diDZ3IBkjBfvWwcKbZl5AmDcV3rCBUuuqjJyCwvLb3vX9tJ2TT6GbaY1+MNiMNDfpHNREdgiPaGMISZ64Z5uxTE+r/a/BIMoTR8ocWBlzrSVuA9uz4xiKZ0UFnJEz68ceKLGVNuILvfvWV4NL+re3iJuT8K0hrMQtBEOFCSdZV5Fhm+TTiLNH+nlAEai8CQXTVcpNdIfcIt913a7VU7ydW+dXPhg6K+ZmoYlnMTrNBkVjn+oOWxwQIE63Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qCTywhjYp6G9K8a246VT1cQcV7mhOXqPw6z+PUDr45Ujmc+6HlvRItJC4rJU?=
- =?us-ascii?Q?U8pXM7P/iO4nOdB2RaFck5URhU4YMBu8jSVzidvs5aoq8ojqJ2gfFLDgyGk3?=
- =?us-ascii?Q?MHz+Dp4Ss+f2Kh6t0NyqAfp1BbRPNiuzOi5o1KQVqVvL9EvJqYBbLGcDgqbj?=
- =?us-ascii?Q?nMh5TXKN9JfQMX6bPZbzPzmLAuSx5GSQu6Z4DCB/7WxZ7iRnPLroMyOFcqhe?=
- =?us-ascii?Q?fwNLRz8LVe6VRyrWwPqFPaCH8udUuTgxMMNAXaliF+XvNIHZSGeyM4fMj0Aj?=
- =?us-ascii?Q?4BW4YqoiWEdJG7KyYiK6kjye8nzguWrG+ilkP4ubkHC/HQcI1Hv8iyTQuBS7?=
- =?us-ascii?Q?wRqwp0kCX8IlFyziAu4T0RGNhjON5LaR8zC5hyYFt6mw+jcSRLV2KCdrADw1?=
- =?us-ascii?Q?ho0Pu8nPpYn5zdIX5HX5SGmF3YIeVlZxkka3GnDyR/P5IEydlaejPb6vfTTy?=
- =?us-ascii?Q?Xec6kqsHhZNMdHoKpEGqaKDR+16rEMSUjB33LIdmzQftFeGYQ8N4yPH4Lj9t?=
- =?us-ascii?Q?MiuoB/PNuHrtl00sZ++igt3tqShJphIUw4Fz+WxIrkbaacqbWXxclrBaiAEp?=
- =?us-ascii?Q?uqm1tXxVkW4ljb2WTNBoSnO8XOX0/Bjy+sw4am/jlIxwTLKta6ZU41MCK3Ix?=
- =?us-ascii?Q?vUrqlXXWDulOzdT3MqLkxSEkYfXWxyccFdNB3J3MOLa4l9Bq5XcpM66kJb9C?=
- =?us-ascii?Q?DwjiktBFEH3GqgsM9YB0x8B0pwOWFL386S2VmMucsSGE5fQ3NKDPCxOQvFmB?=
- =?us-ascii?Q?+UkG+b07ijktpsT7aO92YeyLRLeDoyZgCKWNl8Nn4q5ODyDR41H1zJVTmN9a?=
- =?us-ascii?Q?46B/kjSrgR+UEDDXBiop7YHFUTzUxTOWsbXah8IX60hMu8+m72BuDo2WvhSn?=
- =?us-ascii?Q?0P6tfdxOvjjFDJxL2TMEE1jUEhKykKMfsv+DobcTt5ScH2U24TI1qf4Ol96O?=
- =?us-ascii?Q?sAb5syLrDe8CAyFCo85ks1k80GVqQddrBcnKo1wJ+/GQjLRE6bI/Y1k1LiPn?=
- =?us-ascii?Q?0BYv1NNjCzeFLxl1IAo33cdzm6FLYKfe3R7vgr40d7z6O8uJtCgSNZk3xF5M?=
- =?us-ascii?Q?4V9dNCZtznYGHMes9mTlRZ2pvFCYYKt1DV7yb+Zxbam6qkZYShCtviJZKIgk?=
- =?us-ascii?Q?EEoE6Msf/Ws4TuIvMUtlnC0zZbrP7CabPz3esNDEDGwjnOC9JQrqcA1MUfja?=
- =?us-ascii?Q?zuopPvZN5/Qj+kOA27p7zPupbgsnFkcyeLC2y6in9pJmWAqRsXUYbwgrl4VC?=
- =?us-ascii?Q?ndHLaNeqzk3N5G3suPBTM45q48/gFjBnDXlloIdqHfwk8N0a1vl/Jk3kWk57?=
- =?us-ascii?Q?/zdQgJd1RM9bvxxkb0VDP8kvpz57mTnRW08dOd15OgxAJsa0qcrfXRVnmeTt?=
- =?us-ascii?Q?rYzlntK6iR9DKN0Cse9qcde2PYi2Qwz9HnSORqJ4o9pO1ypghBsrkfqXCPBP?=
- =?us-ascii?Q?wD3AEnFQPPk5s+OvrJfsKGRghNKhWNaussXjADhOOW483iYOuUPJMSYB73KM?=
- =?us-ascii?Q?vbhDmiicmcywGf3+fnLifQ91Jb51AJe3PlU/lA/FHhEUaSmUmer+bYmaZxT2?=
- =?us-ascii?Q?5dXrdB5y0/vKGXRmwdCyqiu8joGJTIoe7dRVsT1C?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb34a45f-483b-4874-082d-08dc528a1202
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 20:26:54.2724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wY1pJqeeiI+SYb6Xa68MXG2uCAesKz/PQ2s85MoVXm2pTJROj8Txm6KOrTXfBOS3X2Qp02tDT0vbpzrCO8kqcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8693
-X-OriginatorOrg: intel.com
+References: <20240329053353.309557-2-horenchuang@bytedance.com>
+ <20240331190857.132490-1-sj@kernel.org> <CAKPbEqo3_zHF98SRoAz4L-CCGpEm8wN1P2RgPLa_q63e1qeGxQ@mail.gmail.com>
+In-Reply-To: <CAKPbEqo3_zHF98SRoAz4L-CCGpEm8wN1P2RgPLa_q63e1qeGxQ@mail.gmail.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Mon, 1 Apr 2024 16:06:21 -0700
+Message-ID: <CAKPbEqpsE8aqH0t6iKmuLkhjFX2CfRK70K5U0eC1VvAyk8ofKg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v9 1/2] memory tier: dax/kmem: introduce an
+ abstract layer for finding, allocating, and putting memory types
+To: SeongJae Park <sj@kernel.org>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	"Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Kwangjin Ko wrote:
-> Since mbox_cmd.size_out is overwritten with the actual output size in
-> the function below, it needs to be initialized every time.
-> 
-> cxl_internal_send_cmd -> __cxl_pci_mbox_send_cmd
-> 
-> Problem scenario:
-> 
-> 1) The size_out variable is initially set to the size of the mailbox
-> 2) Read an event
->    - size_out is set to 160 bytes (header 32B + one event 128B)
->    - Two event are created while read
-> 3) Read two events
->    - size_out is still set as 160 bytes
->    - Although the value of out_len is 288 bytes, only 160 bytes are
->      copied from the mailbox register to the local variable
->    - record_count is set to 2
->    - Acessing records[1] causes a buffer overflow
+Hi SeongJae,
 
-I see how this causes a missed event due to only 1 event being copied into
-the buffer but how does this cause a buffer overflow with the payload
-buffer being set to the max mailbox size?
+On Mon, Apr 1, 2024 at 11:27=E2=80=AFAM Ho-Ren (Jack) Chuang
+<horenchuang@bytedance.com> wrote:
+>
+> Hi SeongJae,
+>
+> On Sun, Mar 31, 2024 at 12:09=E2=80=AFPM SeongJae Park <sj@kernel.org> wr=
+ote:
+> >
+> > Hi Ho-Ren,
+> >
+> > On Fri, 29 Mar 2024 05:33:52 +0000 "Ho-Ren (Jack) Chuang" <horenchuang@=
+bytedance.com> wrote:
+> >
+> > > Since different memory devices require finding, allocating, and putti=
+ng
+> > > memory types, these common steps are abstracted in this patch,
+> > > enhancing the scalability and conciseness of the code.
+> > >
+> > > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> > > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+> > > ---
+> > >  drivers/dax/kmem.c           | 20 ++------------------
+> > >  include/linux/memory-tiers.h | 13 +++++++++++++
+> > >  mm/memory-tiers.c            | 32 ++++++++++++++++++++++++++++++++
+> > >  3 files changed, 47 insertions(+), 18 deletions(-)
+> > >
+> > [...]
+> > > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tier=
+s.h
+> > > index 69e781900082..a44c03c2ba3a 100644
+> > > --- a/include/linux/memory-tiers.h
+> > > +++ b/include/linux/memory-tiers.h
+> > > @@ -48,6 +48,9 @@ int mt_calc_adistance(int node, int *adist);
+> > >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf=
+,
+> > >                            const char *source);
+> > >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)=
+;
+> > > +struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+> > > +                                                     struct list_hea=
+d *memory_types);
+> > > +void mt_put_memory_types(struct list_head *memory_types);
+> > >  #ifdef CONFIG_MIGRATION
+> > >  int next_demotion_node(int node);
+> > >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets)=
+;
+> > > @@ -136,5 +139,15 @@ static inline int mt_perf_to_adistance(struct ac=
+cess_coordinate *perf, int *adis
+> > >  {
+> > >       return -EIO;
+> > >  }
+> > > +
+> > > +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct =
+list_head *memory_types)
+> > > +{
+> > > +     return NULL;
+> > > +}
+> > > +
+> > > +void mt_put_memory_types(struct list_head *memory_types)
+> > > +{
+> > > +
+> > > +}
+> >
+> > I found latest mm-unstable tree is failing kunit as below, and 'git bis=
+ect'
+> > says it happens from this patch.
+> >
+> >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> >     [11:56:40] Configuring KUnit Kernel ...
+> >     [11:56:40] Building KUnit Kernel ...
+> >     Populating config with:
+> >     $ make ARCH=3Dum O=3D../kunit.out/ olddefconfig
+> >     Building with:
+> >     $ make ARCH=3Dum O=3D../kunit.out/ --jobs=3D36
+> >     ERROR:root:In file included from .../mm/memory.c:71:
+> >     .../include/linux/memory-tiers.h:143:25: warning: no previous proto=
+type for =E2=80=98mt_find_alloc_memory_type=E2=80=99 [-Wmissing-prototypes]
+> >       143 | struct memory_dev_type *mt_find_alloc_memory_type(int adist=
+, struct list_head *memory_types)
+> >           |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >     .../include/linux/memory-tiers.h:148:6: warning: no previous protot=
+ype for =E2=80=98mt_put_memory_types=E2=80=99 [-Wmissing-prototypes]
+> >       148 | void mt_put_memory_types(struct list_head *memory_types)
+> >           |      ^~~~~~~~~~~~~~~~~~~
+> >     [...]
+> >
+> > Maybe we should set these as 'static inline', like below?  I confirmed =
+this
+> > fixes the kunit error.  May I ask your opinion?
+> >
+>
+> Thanks for catching this. I'm trying to figure out this problem. Will get=
+ back.
+>
 
-Did you simply mean that records[1] accesses incorrect data?  I agree that
-is an issue.  I'm looking at a test for this.
+These kunit compilation errors can be solved by adding `static inline`
+to the two complaining functions, the same solution you mentioned
+earlier.
 
-Ira
+I've also tested on my end and I will send out a V10 soon. Thank you again!
 
-> 
-> Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
-> ---
->  drivers/cxl/core/mbox.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9adda4795eb7..a38531a055c8 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -958,13 +958,14 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  		.payload_in = &log_type,
->  		.size_in = sizeof(log_type),
->  		.payload_out = payload,
-> -		.size_out = mds->payload_size,
->  		.min_out = struct_size(payload, records, 0),
->  	};
->  
->  	do {
->  		int rc, i;
->  
-> +		mbox_cmd.size_out = mds->payload_size;
-> +
->  		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
->  		if (rc) {
->  			dev_err_ratelimited(dev,
-> 
-> base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
-> -- 
-> 2.34.1
-> 
+> >
+> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
+h
+> > index a44c03c2ba3a..ee6e53144156 100644
+> > --- a/include/linux/memory-tiers.h
+> > +++ b/include/linux/memory-tiers.h
+> > @@ -140,12 +140,12 @@ static inline int mt_perf_to_adistance(struct acc=
+ess_coordinate *perf, int *adis
+> >         return -EIO;
+> >  }
+> >
+> > -struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct li=
+st_head *memory_types)
+> > +static inline struct memory_dev_type *mt_find_alloc_memory_type(int ad=
+ist, struct list_head *memory_types)
+> >  {
+> >         return NULL;
+> >  }
+> >
+> > -void mt_put_memory_types(struct list_head *memory_types)
+> > +static inline void mt_put_memory_types(struct list_head *memory_types)
+> >  {
+> >
+> >  }
+> >
+> >
+> > Thanks,
+> > SJ
+>
+>
+>
+> --
+> Best regards,
+> Ho-Ren (Jack) Chuang
+> =E8=8E=8A=E8=B3=80=E4=BB=BB
 
 
+
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
