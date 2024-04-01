@@ -1,92 +1,139 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 411D81079D;
-	Mon,  1 Apr 2024 09:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37928101C5;
+	Mon,  1 Apr 2024 09:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711962680; cv=none; b=SHVKL5KDDsRjDmN7jVxlJFHRUCcldt8KbSwGGbQdICJrtbHtbKSTgIyvAz5cluCFU1x4HH7hrnp0MPBiO1lrSi5+IGfjfMax0KTW+zefv+f3TWX0KnYEi+ZAJXnEDGdWd4WFTziw7eYqyjIsk8B2tASmigxSbwu6ltkKxSz6n9s=
+	t=1711962910; cv=none; b=RQDLFTil9ij8VznedTePgzze9whjMZI4p8VJNyd6OdiCuGyQxykOQiaTiOTTxpRm5i8MI3qr/0K5j0xgrH+zV7Ea+UXxXjrS+R8/0LQt/L+DJY/tP1+aM1vixpJ+QeHY6TPppLHrjNv2wLn6w9aLEbtc31S+NYNhtz89Fu5zR/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711962680; c=relaxed/simple;
-	bh=L7sjMOJlJ+I03lGiyx1wcFdP3qgdm5PCxICxKzdjito=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bsGieWxNo0gs4ea5Vx0IvlpfGyy+othsqPeKYNvP5maLxxyq7UsO7PBq8ChNN7JLpn8Joo6eCnFiA4rPNDPwbnMfGORIB0FMkt2IhMw0XlNaRmnbm9vkzyxgBWweMLK/NTtDGATCiyFaNE4KUe7sNzCB5sAKYFt6vijAB9bH5nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-90-660a7a24c6c4
-From: Kwangjin Ko <kwangjin.ko@sk.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com
-Subject: [PATCH 2/2] cxl/core: Fix incorrect array index in cxl_clear_event_record()
-Date: Mon,  1 Apr 2024 18:10:56 +0900
-Message-ID: <20240401091057.1044-2-kwangjin.ko@sk.com>
-X-Mailer: git-send-email 2.44.0.windows.1
-In-Reply-To: <20240401091057.1044-1-kwangjin.ko@sk.com>
-References: <20240401091057.1044-1-kwangjin.ko@sk.com>
+	s=arc-20240116; t=1711962910; c=relaxed/simple;
+	bh=7BbthviDQ0Ra47LSGIAYHzV26/8roeWxwzBYVgJLFiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+yjo2KWuwWShqVTpNmbuEf+dYy4KVn1XP24SLkP6tm49bnev73Dc3Mp2bMkDLriA/gLMYGk5eIN8tbgJek6WxAyzLC780fa79Y0ZdoBMZxsOWQCVwtPFmFmoWaIhY0RsS+zrer7eL//UdO2hobQl4IOiS6M0f5z96k7fTK0Sho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=DLHWMNWN; arc=none smtp.client-ip=139.138.36.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="DLHWMNWN"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1711962906; x=1743498906;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7BbthviDQ0Ra47LSGIAYHzV26/8roeWxwzBYVgJLFiM=;
+  b=DLHWMNWNAqlN6QyrbEgjEIVdX4fgw/lyrHuVt/R7HDzGupV57bzekq9+
+   xfUmmU2BeY6bRc6sbvu0vMEwDd9ChY/TReCbwsjN59qAQsdn4aApeTAq/
+   ST4epl0j7XpQvf9AF9dqQTzbC3bhRV/bfp1L7SROd+oKxrgRXZykKtlrW
+   Gz5qTel4WAmUbt2sjnyuPuudMoKx8U+8L5Txk4blN3pFDePmWcFYmXcmF
+   XLpEw6+yrgi7XKDHxUmexUqyxFcK/WUeUOQ1oGTSiB2m9YOEUmz+HoRrJ
+   WgJuJbi+lbXNSOMtw60m0PF7cjdB/YmCGQdu+p0ZCbzMFn1IHjlPD7ZmE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="142702081"
+X-IronPort-AV: E=Sophos;i="6.07,171,1708354800"; 
+   d="scan'208";a="142702081"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 18:14:56 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id A5F06E95D6;
+	Mon,  1 Apr 2024 18:14:54 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id D9011CF7C2;
+	Mon,  1 Apr 2024 18:14:53 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 6A2D821D02B;
+	Mon,  1 Apr 2024 18:14:53 +0900 (JST)
+Received: from [192.168.50.5] (unknown [10.167.226.114])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 8C1E41A000A;
+	Mon,  1 Apr 2024 17:14:52 +0800 (CST)
+Message-ID: <545f7629-2937-42ff-809e-02fdff5f4571@fujitsu.com>
+Date: Mon, 1 Apr 2024 17:14:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/6] cxl/core: correct length of DPA field masks
+To: Dan Williams <dan.j.williams@intel.com>, qemu-devel@nongnu.org,
+ linux-cxl@vger.kernel.org
+Cc: Jonathan.Cameron@huawei.com, dave@stgolabs.net, ira.weiny@intel.com,
+ stable@vger.kernel.org
+References: <20240329063614.362763-1-ruansy.fnst@fujitsu.com>
+ <20240329063614.362763-2-ruansy.fnst@fujitsu.com>
+ <66076ce2ddec7_19e02946d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+In-Reply-To: <66076ce2ddec7_19e02946d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXC9ZZnka5KFVeawdw2K4u7jy+wWUyfeoHR
-	4sTNRjaL1TfXMFrsf/qcxWLVwmtsFudnnWKxuLxrDpvFrQnHmBw4PVqOvGX1WLznJZPH1Nn1
-	Hp83yQWwRHHZpKTmZJalFunbJXBlLG9dy1qwnKPiYc9WxgbGP2xdjJwcEgImEtumzmWCsTc+
-	eckMYrMJqElMunYYqIaLQ0RgJ6PE7WVrwBLMAhESW5r6wRqEBUIkzr7qA4uzCKhK9Bx7Ahbn
-	FTCTaDjXxg4xVFPi/azvYDWcAuYSe3cdAasRAqrZda2fBaJeUOLkzCcsEPPlJZq3zmYGWSwh
-	MINN4sjUU8wQgyQlDq64wTKBkX8Wkp5ZSHoWMDKtYhTKzCvLTczMMdHLqMzLrNBLzs/dxAgM
-	3GW1f6J3MH66EHyIUYCDUYmHNyCOM02INbGsuDL3EKMEB7OSCO9Pb6AQb0piZVVqUX58UWlO
-	avEhRmkOFiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGRo4J5rwvPCYE3A3MFt20Yon6H5Ot
-	HAcmumgEbuCOOLm9/s2VgKlvmn7e2vD5ktTjNpkjf98z6E5s+C0VPL9QxOCR4p4k/Rsrje3S
-	q8otHVsUNnv7hi7ZcXmzi1xOZiyrfrZA88Ld6btLfbSPOPHKxFbJ1Bk9ifBKMzzlYf3XaONf
-	gbqmnzpNSizFGYmGWsxFxYkAcCX+HVgCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDLMWRmVeSWpSXmKPExsXCNUPhia5KFVeawYqlRhZ3H19gs5g+9QKj
-	xYmbjWwWq2+uYbTY//Q5i8WqhdfYLA7PPclqcX7WKRaLy7vmsFncmnCMyYHLo+XIW1aPxXte
-	MnksfvGByWPq7HqPz5vkAlijuGxSUnMyy1KL9O0SuDKWt65lLVjOUfGwZytjA+Mfti5GTg4J
-	AROJjU9eMoPYbAJqEpOuHQaKc3GICOxklLi9bA1YglkgQmJLUz8TiC0sECJx9lUfWJxFQFWi
-	59gTsDivgJlEw7k2doihmhLvZ30Hq+EUMJfYu+sIWI0QUM2ua/0sEPWCEidnPmGBmC8v0bx1
-	NvMERp5ZSFKzkKQWMDKtYhTJzCvLTczMMdUrzs6ozMus0EvOz93ECAzDZbV/Ju5g/HLZ/RCj
-	AAejEg9vQBxnmhBrYllxZe4hRgkOZiUR3p/eQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8XuGp
-	CUIC6YklqdmpqQWpRTBZJg5OqQbGsNsqDH9K+WJu+6nsPvnvofL3IsOv//V42pyDrsRzfMy6
-	/zrA+SvXOlOD86bPjqlFHtHKD65WE9qbsvvhU/GlRucee/SzmFtdrI7adEPN6fYPrX97pJNL
-	j54//11I/fWj5XddcjO71yyRb972de3jZb/UWMX/lc1ZrjTd036Gy/L/Z9WFY/eFKLEUZyQa
-	ajEXFScCAO3MWe0/AgAA
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28290.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28290.006
+X-TMASE-Result: 10--5.278600-10.000000
+X-TMASE-MatchedRID: U43YD7H1LvyPvrMjLFD6eCkMR2LAnMRp2q80vLACqaeqvcIF1TcLYLBk
+	jjdoOP1baz4aoYHfj+mh3bqxZ6gk+QqU4tmmg3HIi3TrOhAURKEbbhhV65kaY2O0yVK/5Lmc5GA
+	Qy8LG5mci+t+0AiFaYvL3NxFKQpq17ZpdgJkP1WLcgUVP3Cp+vXFd5+Cf9M1DCK16zrE94nmkQu
+	0/M/TLDg9Mn3iItNtKhgDksK+IVyzHO8eAxCOj9o61Z+HJnvsOfS0Ip2eEHnzUHQeTVDUrIg6wQ
+	I72z4YedB0ntd9Tzp7GVuWouVipcobZcWeGK7nSbWo/bGcDJ4NC0x/dJHqjC/pbmb3XVEvJZDeF
+	sBl1p6QJJfBDBk+SFcEYB+iaMCoc579tse/QOaV+erPL3QFt0vMMpBf3ZLno9xc4blKmPsG++4/
+	U0fKJimxVnQcP2HDau2+pJwc75bs=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-The variable 'i' should be incremented after dev_dbg(), or print
-gen->hdr.handle instead. Otherwise, the handle value of the next loop
-will be printed. Furthermore, in the final loop, accessing 'handles[i]'
-will cause a buffer overflow.
 
-Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
----
- drivers/cxl/core/mbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index a38531a055c8..84014aa01c95 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -913,9 +913,9 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 		struct cxl_event_record_raw *raw = &get_pl->records[cnt];
- 		struct cxl_event_generic *gen = &raw->event.generic;
- 
--		payload->handles[i++] = gen->hdr.handle;
- 		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
--			le16_to_cpu(payload->handles[i]));
-+			le16_to_cpu(gen->hdr.handle));
-+		payload->handles[i++] = gen->hdr.handle;
- 
- 		if (i == max_handles) {
- 			payload->nr_recs = i;
--- 
-2.34.1
+在 2024/3/30 9:37, Dan Williams 写道:
+> Shiyang Ruan wrote:
+>> The length of Physical Address in General Media Event Record/DRAM Event
+>> Record is 64-bit, so the field mask should be defined as such length.
+>> Otherwise, this causes cxl_general_media and cxl_dram tracepoints to
+>> mask off the upper-32-bits of DPA addresses. The cxl_poison event is
+>> unaffected.
+>>
+>> If userspace was doing its own DPA-to-HPA translation this could lead to
+>> incorrect page retirement decisions, but there is no known consumer
+>> (like rasdaemon) of this event today.
+>>
+>> Fixes: d54a531a430b ("cxl/mem: Trace General Media Event Record")
+>> Cc: <stable@vger.kernel.org>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+>> ---
+>>   drivers/cxl/core/trace.h | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+>> index e5f13260fc52..e2d1f296df97 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -253,11 +253,11 @@ TRACE_EVENT(cxl_generic_event,
+>>    * DRAM Event Record
+>>    * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+>>    */
+>> -#define CXL_DPA_FLAGS_MASK			0x3F
+>> +#define CXL_DPA_FLAGS_MASK			0x3FULL
+> 
+> This change makes sense...
+> 
+>>   #define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
+>>   
+>> -#define CXL_DPA_VOLATILE			BIT(0)
+>> -#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
+>> +#define CXL_DPA_VOLATILE			BIT_ULL(0)
+>> +#define CXL_DPA_NOT_REPAIRABLE			BIT_ULL(1)
+> 
+> ...these do not. The argument to __print_flags() is an unsigned long, so
+> they will be cast down to (unsigned long), and they are never used as a
+> mask so the generated code should not change.
 
+They will only used to check if such flag is set, not used as mask.  So, 
+yes, I'll remove these changes.
+
+
+--
+Thanks,
+Ruan.
