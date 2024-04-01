@@ -1,122 +1,99 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1D61FBA
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Apr 2024 18:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2E0F9DF;
+	Mon,  1 Apr 2024 19:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711997094; cv=none; b=FdwYQnI4OWgE2u3EhnY8jI+wI42ftCi0bMchLumUdk5BWvJ5BqkOO8qTs68ehiwFerC1wKKtZ+ofCq3gcsT8f8VM0xb/gbKdsvqy2VUK1D2MyzS8Lyz18sEcgmn1NA3Z7tSZRM+Nx3yhGw+pvxX+A6FE6lSgKct/4bjeWswzun8=
+	t=1711998587; cv=none; b=Unxw5WAkBdxafwIOq87jUqLs6AakVpP25qMNgg38v/HjwPxT4F1BRq4wL0+qjP9ff4vpO3ToNKBOCc6uzrJOKNU3e+tLZJEIOleRHqKkKxAPaGOIfafS1+U7xiimxcd+vuS6Sic1pBDn4576zWUq+CaKviByhkkbZPmz+mtsoOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711997094; c=relaxed/simple;
-	bh=Ebk3J/WEr5OXhWNdWrabLnZmZ+7Ff2xoKxCy0JgwDg8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tTQ694Ev6yrjcsEOtM5WdciuPUzhotb7zWRXZXnAv1Lnbl1hknQSUAQZk5x8nEqIl5Ly37zT4PdCQjpv+vit61tMy9Q/JLjjCiwdAI8j90OnoRuATb9YLR/IAh/49ajN/2btwj3teGlVe+8G6th7qf88AjzqkyHXK79W6hnVe3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V7fzX6Rcwz6K5WY;
-	Tue,  2 Apr 2024 02:43:36 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id AEB1A1400D9;
-	Tue,  2 Apr 2024 02:44:47 +0800 (CST)
-Received: from localhost (10.48.156.172) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Apr
- 2024 19:44:47 +0100
-Date: Mon, 1 Apr 2024 19:44:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>, "Michael
- S . Tsirkin" <mst@redhat.com>, <linux-cxl@vger.kernel.org>,
-	<qemu-devel@nongnu.org>
-Subject: Re: [PATCH v2 3/4] hw/cxl/mbox: replace sanitize_running() with
- cxl_dev_media_disabled()
-Message-ID: <20240401194444.00001db0@Huawei.com>
-In-Reply-To: <CAB=+i9QrmMMazcNvEhuwTNF+UZMHPQE=yT=RE+MJCUQO+QY27A@mail.gmail.com>
-References: <20231222090051.3265307-1-42.hyeyoo@gmail.com>
-	<20231222090051.3265307-4-42.hyeyoo@gmail.com>
-	<20240109175358.00007c48@Huawei.com>
-	<CAB=+i9QrmMMazcNvEhuwTNF+UZMHPQE=yT=RE+MJCUQO+QY27A@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711998587; c=relaxed/simple;
+	bh=3GU6VuD545qjvcRHOveubHexktKTPPe9aqWlMT/cWA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcaKsd7Y06SFvHhJPlC+iV7aM5s1S148Pg3LmqDoXpIviQS9Y2qgCHwBajlXoS1UoM7H9fNM0SVPLO9I6Aql/r1k23eK19lsrG8uC+5XcFXDzOqxkDzCHRVbixAUxfZjiDqCb0mhLWZCZPgVhuyetZoG9xlzlwWPcFvgdJWGGRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z0zRcgao; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z0zRcgao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711998586; x=1743534586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3GU6VuD545qjvcRHOveubHexktKTPPe9aqWlMT/cWA0=;
+  b=Z0zRcgaoXR8BvbQ3WIGW3CFFE9w4dNhze/eM8gnr8sW0ZiM2SExbPqbX
+   ohE0syTPH7NBdCzoI/l4qslViqHrpUNuB088QsBNIbr0rNWFcY1U7PNQg
+   lWbZ5lugWmXd4SyV24+Or2xfysHgiQPhgdWN/43f5VTngknpaYM8ms6ET
+   cePVNE6gFEluA0h6z+BDGhHXKpJoK3JdhM60gXE8YCufXiRZEsodW1W3G
+   PJaJJMzlqyrdWVxrqtBO7x9ns2MXOnL8mI1f1kp7bnt0uyz/g/WxFMEIR
+   YBO+nxFy+wlJmePo8VJNgh6gYBfM0otmH/ftZdKOHM6YQtAYCp5o1jAv1
+   Q==;
+X-CSE-ConnectionGUID: jraIirAVRBy8vjKCQy0TAw==
+X-CSE-MsgGUID: KmQPrGIhRb2a6/Q6J5j+TA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="29618035"
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="29618035"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 12:09:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="17836281"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.66.56])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 12:09:43 -0700
+Date: Mon, 1 Apr 2024 12:09:42 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Kwangjin Ko <kwangjin.ko@sk.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel_team@skhynix.com
+Subject: Re: [PATCH 2/2] cxl/core: Fix incorrect array index in
+ cxl_clear_event_record()
+Message-ID: <ZgsGdvUfp8uz2xgb@aschofie-mobl2>
+References: <20240401091057.1044-1-kwangjin.ko@sk.com>
+ <20240401091057.1044-2-kwangjin.ko@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401091057.1044-2-kwangjin.ko@sk.com>
 
-On Sun, 21 Jan 2024 21:50:00 -0500
-Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
+On Mon, Apr 01, 2024 at 06:10:56PM +0900, Kwangjin Ko wrote:
+> The variable 'i' should be incremented after dev_dbg(), or print
+> gen->hdr.handle instead. Otherwise, the handle value of the next loop
+> will be printed. Furthermore, in the final loop, accessing 'handles[i]'
+> will cause a buffer overflow.
 
-> On Tue, Jan 9, 2024 at 12:54=E2=80=AFPM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Fri, 22 Dec 2023 18:00:50 +0900
-> > Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-> > =20
-> > > The spec states that reads/writes should have no effect and a part of
-> > > commands should be ignored when the media is disabled, not when the
-> > > sanitize command is running.qq
-> > >
-> > > Introduce cxl_dev_media_disabled() to check if the media is disabled =
-and
-> > > replace sanitize_running() with it.
-> > >
-> > > Make sure that the media has been correctly disabled during sanitation
-> > > by adding an assert to __toggle_media(). Now, enabling when already
-> > > enabled or vice versa results in an assert() failure.
-> > >
-> > > Suggested-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com> =20
-> >
-> > This applies to
-> >
-> > hw/cxl: Add get scan media capabilities cmd support.
-> >
-> > Should I just squash it with that patch in my tree?
-> > For now I'm holding it immediately on top of that, but I'm not keen to
-> > send messy code upstream unless there is a good reason to retain the
-> > history. =20
->=20
-> Oh, while the diff looks like the patch touches scan_media_running(), it'=
-s not.
->=20
-> The proper Fixes: tag will be:
-> Fixes: d77176724422 ("hw/cxl: Add support for device sanitation")
->=20
-> > If you are doing this sort of fix series in future, please call out
-> > what they fix explicitly.  Can't use fixes tags as the commit ids
-> > are unstable, but can mention the patch to make my life easier! =20
->=20
-> Okay, next time I will either add the Fixes tag or add a comment on
-> what it fixes.
->=20
-> By the way I guess your latest, public branch is still cxl-2023-11-02, ri=
-ght?
-> https://gitlab.com/jic23/qemu/-/tree/cxl-2023-11-02
->=20
-> I assume you adjusted my v2 series, but please let me know if you prefer
-> sending v3 against your latest tree.
->=20
-> Thanks,
-> Hyeonggon
+This fix is already queued:
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/?h=fixes
 
-Side note, in it's current form this breaks the switch-cci support in upstr=
-eam
-QEMU.  I've finally gotten back to getting ready to look at MMPT support and
-ran into a crash as a result.  Needs protection with checked object_dynamic=
-_cast()
-to make sure we have a type3 device.  I'll update the patch in my tree.
-
-Thanks,
-
-Jonathan
-
->=20
-
+> 
+> Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
+> ---
+>  drivers/cxl/core/mbox.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index a38531a055c8..84014aa01c95 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -913,9 +913,9 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+>  		struct cxl_event_record_raw *raw = &get_pl->records[cnt];
+>  		struct cxl_event_generic *gen = &raw->event.generic;
+>  
+> -		payload->handles[i++] = gen->hdr.handle;
+>  		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
+> -			le16_to_cpu(payload->handles[i]));
+> +			le16_to_cpu(gen->hdr.handle));
+> +		payload->handles[i++] = gen->hdr.handle;
+>  
+>  		if (i == max_handles) {
+>  			payload->nr_recs = i;
+> -- 
+> 2.34.1
+> 
