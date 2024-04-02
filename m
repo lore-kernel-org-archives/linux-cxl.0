@@ -1,109 +1,129 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401933D552;
-	Tue,  2 Apr 2024 08:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1B75A7AE;
+	Tue,  2 Apr 2024 10:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712045662; cv=none; b=QYHEDwfiXnWDizkqKiNA15cwckAgEI3WfINj2KyK/unw50WSRrq1xCKcmqx87QzD7lzhurafKeiJ7AkkPGd+IFDAbn/AbSbbgzVZItbnJBE+Q/PPu1JYRshKTKBNHtAA/qrX5Y4GaGuTgRhCswzaoJHSifCiJ+KAacYFeTJKv4w=
+	t=1712053036; cv=none; b=CGo8pjwD2v6GxZuf4JumjHBLKU3LChnZNgZTh8hwQW6UorqXFu9Py7pas1+oa8iaYN/vlbWUMo+vHAT5wMNLnybb5zwt5EOXYk7nbQjf+oLlIgp8Sj83iNNr+t7qNkxrdlU+ZD2LSltQdLBKxcHsgiAJFIKvUgcm+d5+WAS29Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712045662; c=relaxed/simple;
-	bh=zFoKGVF+3N6sg6qvMpvexaatvVtPYRghID21GGzQsC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u5TVEjVTW95nuobeJZrimN5SCzIbsm+R67g+Gt1QGn6IJOaOJkWql7TO+sHSKY/h3qISSfHH/cUl19O9fKcFEvq1KD+HDi/tI6WTtKKr2FjWrNVzVKVvLcqfhXIhMEYljR7A8r8iSKmP/bc5+FgOF48GhlpJUshaPQbc375K770=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-62-660bbe500238
-From: Kwangjin Ko <kwangjin.ko@sk.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com
-Subject: [PATCH v2 1/1] cxl/core: Fix initialization of mbox_cmd.size_out in get event
-Date: Tue,  2 Apr 2024 17:14:03 +0900
-Message-ID: <20240402081404.1106-2-kwangjin.ko@sk.com>
-X-Mailer: git-send-email 2.44.0.windows.1
-In-Reply-To: <20240402081404.1106-1-kwangjin.ko@sk.com>
-References: <20240402081404.1106-1-kwangjin.ko@sk.com>
+	s=arc-20240116; t=1712053036; c=relaxed/simple;
+	bh=7w+zfYL5/EU3k21GldfEZOmIoR0yGMwEVvQsUYIGfEg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WreR7uhbnnMuroSuJfM4KO1/urGSCd211C8rUz3gPSqMk+ttgk3/mzt0mNkOv1Deycpx5FRi4CIEfPcieAXhJsqH5YigbsXkb5+0FmxkJYHRJaYQVqctUNL4hI54DcXc4C4LlZ/v4rZ3Ks34hy/5056zoMfnY7uaQAID7RDFm7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V83bQ4VC0z6K98F;
+	Tue,  2 Apr 2024 18:12:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AFD60140A87;
+	Tue,  2 Apr 2024 18:17:10 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 2 Apr
+ 2024 11:17:09 +0100
+Date: Tue, 2 Apr 2024 11:17:09 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+CC: <shiju.jose@huawei.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <linux-edac@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <david@redhat.com>,
+	<Vilas.Sridharan@amd.com>, <leo.duran@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <tony.luck@intel.com>, <Jon.Grimm@amd.com>,
+	<dave.hansen@linux.intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v7 12/12] memory: RAS2: Add memory RAS2 driver
+Message-ID: <20240402111709.0000653a@Huawei.com>
+In-Reply-To: <71d41ec9-17ed-442f-8d68-a6cb9bcbb4b0@amd.com>
+References: <20240223143723.1574-1-shiju.jose@huawei.com>
+	<20240223143723.1574-13-shiju.jose@huawei.com>
+	<71d41ec9-17ed-442f-8d68-a6cb9bcbb4b0@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsXC9ZZnkW7APu40g9b1fBZ3H19gs5g+9QKj
-	xYmbjWwWq2+uYbTY//Q5i8WqhdfYLM7POsVicXnXHDaLWxOOMTlwerQcecvqsXjPSyaPqbPr
-	PT5vkgtgieKySUnNySxLLdK3S+DKOP55HlvBTu6K3Ru/MDcw9nJ2MXJySAiYSPz9dZcZxt70
-	6CaYzSagJjHp2mG2LkYuDhGBnYwSt5etAUswC0RIbGnqZwKxhQXCJO7vnMMGYrMIqEosvXQf
-	yObg4BUwkzi6zRhipqbE+1nfwVo5Bcwl2hd+ZQexhYBK+u8uYASxeQUEJU7OfMICMV5eonnr
-	bGaQvRICC9gkdi+9ywoxSFLi4IobLBMY+Wch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k
-	/NxNjMCwXVb7J3oH46cLwYcYBTgYlXh4b2zjShNiTSwrrsw9xCjBwawkwvvTmzNNiDclsbIq
-	tSg/vqg0J7X4EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA+PqTyXneJivST/pTVv9
-	Vli/1pnp9J8XLov6zDM2sHhnpywQSlr/d1FG8Vum19XHpTNfNAZZO/zSFP300TW9ST9cfWam
-	0PSwqRNu+2gKvo0p+PK+p4Kb/67TYVbe/49/PrTefj0+3tPOuzb2fYhAiADX3IAauSln5BZe
-	9rdd93HhuY618nW1p5VYijMSDbWYi4oTAVWkrKxXAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNLMWRmVeSWpSXmKPExsXCNUPhiW7APu40g95+Jou7jy+wWUyfeoHR
-	4sTNRjaL1TfXMFrsf/qcxWLVwmtsFofnnmS1OD/rFIvF5V1z2CxuTTjG5MDl0XLkLavH4j0v
-	mTwWv/jA5DF1dr3H501yAaxRXDYpqTmZZalF+nYJXBnHP89jK9jJXbF74xfmBsZezi5GTg4J
-	AROJTY9uMoPYbAJqEpOuHWbrYuTiEBHYyShxe9kasASzQITElqZ+JhBbWCBM4v7OOWwgNouA
-	qsTSS/eBbA4OXgEziaPbjCFmakq8n/UdrJVTwFyifeFXdhBbCKik/+4CRhCbV0BQ4uTMJywQ
-	4+UlmrfOZp7AyDMLSWoWktQCRqZVjCKZeWW5iZk5pnrF2RmVeZkVesn5uZsYgUG4rPbPxB2M
-	Xy67H2IU4GBU4uG9sJ4rTYg1say4MvcQowQHs5II709vzjQh3pTEyqrUovz4otKc1OJDjNIc
-	LErivF7hqQlCAumJJanZqakFqUUwWSYOTqkGxuQ7G69yunt0m1z4c2hFwdG6z162M2KU+m5K
-	a/PvddF/5b+pVfz8ZZfwwp598TXfLns1ZD+b+kj/0oaLJ6YUz/b0iT9p7tF/13erfN/HTofl
-	21zMfSxP+9du3cB/a6dZ+elUp6wO7Xcv0pS6wi1fzKvcLHJzpRiDRE2ChFvVn1fqTxnfTe1j
-	V2Ipzkg01GIuKk4EAAgrpqQ+AgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Since mbox_cmd.size_out is overwritten with the actual output size in
-the function below, it needs to be initialized every time.
+On Thu, 28 Mar 2024 11:23:38 -0400
+Yazen Ghannam <yazen.ghannam@amd.com> wrote:
 
-cxl_internal_send_cmd -> __cxl_pci_mbox_send_cmd
+> On 2/23/2024 9:37 AM, shiju.jose@huawei.com wrote:
+> > From: Shiju Jose <shiju.jose@huawei.com>
+> >=20
+> > Memory RAS2 driver binds to the platform device add by the ACPI RAS2
+> > driver.
+> > Driver registers the PCC channel for communicating with the ACPI compli=
+ant
+> > platform that contains RAS2 command support in the hardware.
+> >=20
+> > Add interface functions to support configuring the parameters of HW pat=
+rol
+> > scrubs in the system, which exposed to the kernel via the RAS2 and PCC,
+> > using the RAS2 commands.
+> >=20
+> > Add support for RAS2 platform devices to register with scrub subsystem
+> > driver. This enables user to configure the parameters of HW patrol scru=
+bs,
+> > which exposed to the kernel via the RAS2 table, through the scrub sysfs
+> > attributes.
+> >=20
+> > Open Question:
+> > Sysfs scrub control attribute "enable_background_scrub" is added for RA=
+S2,
+> > based on the feedback from Bill Schwartz <wschwartz@amperecomputing.com
+> > on v4 to enable/disable the background_scrubbing in the platform as def=
+ined in the
+> > =E2=80=9CConfigure Scrub Parameters [INPUT]=E2=80=9C field  in RAS2 Tab=
+le 5.87: Parameter Block
+> > Structure for PATROL_SCRUB.
+> > Is it a right approach to support "enable_background_scrub" in the sysfs
+> > scrub control?
+> >=20
+> > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> > ---
+> >  drivers/memory/Kconfig       |  14 ++
+> >  drivers/memory/Makefile      |   2 +
+> >  drivers/memory/ras2.c        | 364 +++++++++++++++++++++++++++++++++++
+> >  drivers/memory/ras2_common.c | 282 +++++++++++++++++++++++++++
+> >  include/memory/ras2.h        |  88 +++++++++
+> >  5 files changed, 750 insertions(+)
+> >  create mode 100644 drivers/memory/ras2.c
+> >  create mode 100644 drivers/memory/ras2_common.c
+> >  create mode 100755 include/memory/ras2.h
+> >  =20
+>=20
+> Sorry if this was already covered, but why not put the common scrub and r=
+as2
+> changes under /drivers/ras/?
 
-Problem scenario:
+Hi Yazen
 
-1) The size_out variable is initially set to the size of the mailbox.
-2) Read an event.
-   - size_out is set to 160 bytes(header 32B + one event 128B).
-   - Two event are created while reading.
-3) Read the new *two* events.
-   - size_out is still set to 160 bytes.
-   - Although the value of out_len is 288 bytes, only 160 bytes are
-     copied from the mailbox register to the local variable.
-   - record_count is set to 2.
-   - Accessing records[1] will result in reading incorrect data.
+Location / naming etc is definitely an open question.
+Given the OCP RAS API has repeatedly come up in discussions (and that
+has a much wider scope), a RAS focused location may well make sense + some
+renaming to avoid being memory scrub specific.
 
-Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
----
- drivers/cxl/core/mbox.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jonathan
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 9adda4795eb7..a38531a055c8 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -958,13 +958,14 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 		.payload_in = &log_type,
- 		.size_in = sizeof(log_type),
- 		.payload_out = payload,
--		.size_out = mds->payload_size,
- 		.min_out = struct_size(payload, records, 0),
- 	};
- 
- 	do {
- 		int rc, i;
- 
-+		mbox_cmd.size_out = mds->payload_size;
-+
- 		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
- 		if (rc) {
- 			dev_err_ratelimited(dev,
--- 
-2.34.1
+>=20
+> Thanks,
+> Yazen
 
