@@ -1,192 +1,292 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DB4692FC;
-	Wed,  3 Apr 2024 22:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712184099; cv=fail; b=RnL+bzT5fLG770NUKm+bewnQLLiUWTktfKsetu/BKRbzjER3k8Uci/oJ6RmyO6f2pgYb5zl4MekTah222x9kVUeTozC7IhiJhONbHsmkJc+7xGZYeDfIwzE1DBvEdJ4maQ+r10pwwLgCOs3nhDPTk8OEE6xDEiR8xd2r7FHT5NI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712184099; c=relaxed/simple;
-	bh=PaGqip7Mt/pxJ+JJZDfzyjKmL/0O9aPHqdKz6vU1jqE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nFaug4gOPf8CVEev4w9AOW4og8JjRcPuLEMYcJ0UCP7K4bQUBgpFJrXuWN1msK8MUGFg4uI4JN/9MP9oz+GJWUe4D6M5suMegAsUSTvj8qr0352PvQoFn/6HEFyNqEEnW+7HvpmPUt4KoFsVvsAKv6pn/C5+93QYWOYh6PDoZFc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NQ4qzDpw; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01976156662
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 23:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712186018; cv=none; b=tkyepwySFtdNSueuOT2uGIH7AeGv6vFrtj5FDnLRYgqWclR3ss7eML+94T0WWRvHho+Ysdo5EQwwtMCOvmpg0wjPMRAL3bMK+eJsj6b6oAVz9GicIKu/rk37uaggBp8XLpcLPYGftwwunqXBYV00u+6Vp/8+IiZgxnfXUek2oSw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712186018; c=relaxed/simple;
+	bh=pUU3g8YyhBE2JjQkANiR+x6xd6tdfAbxrQ8hOKQJLk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZSV/164mwVhuiyTEVTSoSqL2RE0cH4x3BOfkhp6tSBXlfMGJ0vL5rD2UiB4Pn9wtf9HtVAxdwl2JGwd6FQGKXb3BtOsPk4y+IUpvV5ECdb8RASP8PR02R2GJSRa+SWJe5/QqCx9Nqko1UdT+AaMu+WBaEZHi7a3QYXPL2chxyJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=YpHO0zEH; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NQ4qzDpw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712184098; x=1743720098;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=PaGqip7Mt/pxJ+JJZDfzyjKmL/0O9aPHqdKz6vU1jqE=;
-  b=NQ4qzDpwCCSjx4x7a4O8XTyQwLNQziPJ1DA74uI1DrbwyakfVQ2WFPPN
-   vguxjn6qJ+zx5djJHkzOwLGxZfhHSxvcYLWCK6VUiSPienfJIi2uRS+ww
-   p91zDxNKkNSWpmFpjYHr8fDZUpqM0z5anDvTxZBT2GoWoLJqfWEIr6v4f
-   XbFS88JFRA+SuUTIV+QdFUV3pU9FisPrESdNQtvC2qDk6CQj3MTsv1O7K
-   7/BPYXTASF4GQtgr2al8jiO6s8nKYLcPTQPEf9jYM4mTTrSVT+k/n+7gf
-   0mqm+ji7V7O5O3bAhf7HLv2LBSE+35AFSdSF6MNEcFjpoVsd6uXW0xbWm
-   A==;
-X-CSE-ConnectionGUID: QuqDdTNxQVSx2tQHpPvErg==
-X-CSE-MsgGUID: Cp0BwT3gSqGL+wSX0gthLg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="11273915"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="11273915"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 15:41:34 -0700
-X-CSE-ConnectionGUID: h2hQefXJTYypYTxp0FFu+g==
-X-CSE-MsgGUID: s2ju0SYnRVumN0vhbYpShA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="23286128"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Apr 2024 15:41:34 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Apr 2024 15:41:33 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Apr 2024 15:41:33 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Apr 2024 15:41:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fzzSNDl+oQZB3E+1+MJaq7Zbj6tpBxBBgTLvlsU43GII8p4xRQsNywjkUHnWmVtOMT1hRrWiUFeqhcM4pY73LjrTgmwN4SGHAP6KEG4i+r1VgjVnDppJw8jQGKpenEAWoq0UciGSgHyvnb02rtp/T7RrjQmCgznNVnGbzAmDTlEDxOsNudNchMzZ7Q5796mHtjIakLeDvc3qX7Y6Ah2FQw03LsHhtBtaj5YadqlFHzriG+40YtnPODDlHtD04HS1vOaRH8MwjOk6nZCJA88Nmdoif5JKHWqds5iEL9BYfk/Mxd35NmZsXTV2W4YyTpOKSO8J9BLZxKQ5l4ewe0HCoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z9i9dtOvlSuWFDIW5Kvi4a+yQ7l9BXrdhHPt9iBolWc=;
- b=jfCLCbdvEsSxnnRRXNJYjxG/LA39ECs3xbH5AkwWkbFI6nC84k8sPedLsM5a4SG7Ctfi9ZFXTRg5z+1Z/KPeboZ+Ar1Sl1CG1uPsuQJ9s4NpWH9Z2ubhGc3/xFYLyBMqp733KhMXLhStrAcQosaJy9OEHPAJFqSwGK2ke+WWVJeeg9qw6F4tJrgbIdk5KevAPlusE84lq575tTYAdhEA5yDu2q4cEyI60fsdj+uehUTLNA2+Qck7ilQZUrX6tgph+7dzDjBgrrzzvDERXvFY8gm1XywzmdSWdQRsoKKuOzVqKr1Q1Y6leinK3XnBDTTb/wGy7h+d3k2GNsC2vAl2wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DS0PR11MB6543.namprd11.prod.outlook.com (2603:10b6:8:d1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 3 Apr
- 2024 22:41:31 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Wed, 3 Apr 2024
- 22:41:31 +0000
-Date: Wed, 3 Apr 2024 15:41:27 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: fan <nifan.cxl@gmail.com>, <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Navneet Singh
-	<navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	"Davidlohr Bueso" <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/26] cxl/mem: Read dynamic capacity configuration from
- the device
-Message-ID: <660ddb1752d75_8a7d02948c@iweiny-mobl.notmuch>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-3-b7b00d623625@intel.com>
- <ZgIKY27PVnlGce_m@debian>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZgIKY27PVnlGce_m@debian>
-X-ClientProxiedBy: SJ0PR13CA0141.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::26) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="YpHO0zEH"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dd161eb03afso404764276.0
+        for <linux-cxl@vger.kernel.org>; Wed, 03 Apr 2024 16:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712186015; x=1712790815; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SXQkJndwO2OFb1B4uAhm6DSgUpXUEz9T4TSxXyfE+FM=;
+        b=YpHO0zEHFvldxI0Mc3QMoW5Egln0Cd9kQZU7ZnJCjJSrsvJ2pi6JlM534SCnHvyZMH
+         Gt7UcJ21OxN60o+OVGHJVrrIHYC6J7IzId4jItlZ6UeKkoyjQuWJPPO2q2smCwcO90M9
+         GYpQQhPW6SoTB4WUr1O39rT7fCd1VBBM6jDep6UEXIWPS3dqotjMkq1UWav+5szq4/0O
+         hnKz5LjTBcDZ7DdtKWSNOqHyF8rgs8Lc1lTUVIyG7h7MsK9sRqWb07GBWfwMybYrkMzj
+         nXS8Yn2sOdBp157g7DtATzBGlUwceB3Rb2UTEEXkRuWj1KuML3OD1Eu7XdegAk31c8FJ
+         C5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712186015; x=1712790815;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SXQkJndwO2OFb1B4uAhm6DSgUpXUEz9T4TSxXyfE+FM=;
+        b=Qqebc/Zprj9rUmuiUqzkbDDmCq91NJi/4Rkc7KKAIDi21hhWq/nQ8dmO6dA8hltAdT
+         4WayHdB2Hf1NbKAHVnQwhoz2aZ2EU2/FbNk16M5NhIqSwDDPrnGbXMqjkH1hw0Os+77b
+         i1r6GE6ZFcu8uKFrErhoe2nshXnYdqzaVLcJbvvoi1jGAEnCOj9DuC3CdyZ1+KsS0eHk
+         reoHqev3ot15xJfRky4YFbINwB/PRTeEl6W6pQMN9aJowKawCVC/kZya7j9LeFZb2zM6
+         BtshqNS/j2gUDMbjtXleeZ/CPdyx/A2S8qjjUxjlsqU2BkLrazUrG4T1w5+7gFNRcPbV
+         /naA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpDQQfq1Dkr37v4tRV9HItDpCQzpnpDTlFFOZvtyhdG6EVnsE71+C1MYDPHTnnzrKj9ZQqmrYH4gNFtlcxm+e/NSYqRe3VOJpy
+X-Gm-Message-State: AOJu0YxcsrGMVy3V7MtprogLgPZypVzuDHEa4vaEw/yHBQXWy1sqzNCN
+	NL5wy6to+IFda/tVKh9nK5lxoe7R2nVHDMWNwrkQVz0YTD6k8WcQZ92ENyAdm1xikSjx0i2dVoZ
+	fvMn6JqyokqxpVUPJPT+xteWizrNvsUvFIbzZtg==
+X-Google-Smtp-Source: AGHT+IFVeLOeseHn7jgUi35tqoQdrprRgFyBUayTJ7qIeLYhEuQo2z8SpiV7Er/5CVQCTXOehRej6DG8/caODWdPemM=
+X-Received: by 2002:a25:8189:0:b0:dc2:3936:5fa5 with SMTP id
+ p9-20020a258189000000b00dc239365fa5mr828148ybk.51.1712186014869; Wed, 03 Apr
+ 2024 16:13:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DS0PR11MB6543:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VuCDXDGaYLXvhTSN0lMlIkKm/Axe8aNpd29nXLehtVNXeLicCMewb7jt4I03kSg3j4b1V5WtA2T7qKTs0Qk1lrcFwJrzU3gK8Z4+VDhGzhsJuVSN+BWYoWhYE/2IuvexRD7QzO3ULxeZrib8yNGyVNSo2WH2HLFcoYHk2bSOKLFLA6T/dCwoODMkarqdWKiXWzURl/c7kktx1FrwCUFZkKdNKL+gHw5OkLqquxYSliWunC42a1Dq2Fb/6kN/zeS7OlxqfXX2hLE6+XeJ0UBwp/CGkWIMiTxjHMgqgxpvmoXofztLt8bwhNLL8uJyUHsd647r+qubxMRfki1bPTd8C9aFtdaPfe2tejKfqOj6vU0k5UUdcP6Ka9bEhhClWjDVqDQrNe3JFhHRkf425qLrCPT/tPmR0+RmncyP1FbzM/3fF+5/sNOZCFMurdQclZymmh+Cp33++dD9xPVvivnrASHgmpbQLZedacGkoTmr5DiQyi5jQh+k569Yqf7MB0i+/9FPmkzuLZmbZV4HUZfsS3Qgv5u8KGMYyteZ+iWl9c1pQYY4z+nXnf7diCN9eY/dKkr/rSdCdJxr81YLkoqplZAz/CN5oZgA24fzyZUAatuEwPeWlNsgcwOIsjjaV4JoSCq4b/Lp69vvgKU75fary4rJCSYCLoivcIw/tkw+HnE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OrRflA4M3/19D59BJRuCkp+Ssodiwc8VntN28Llq0E+HDt3fh1CB7qHWqMjT?=
- =?us-ascii?Q?nOL4I5ecw6BXiME1qMZKa6MnU0tCDGm3oZJlqaTgeNJTzGqhHMR/+La8Ykz7?=
- =?us-ascii?Q?WTRPI1MuniwQMhsXPovFFEbHhYxmJiVgIsRnhXW4v3vaFG/SUuaAF+X3ArCc?=
- =?us-ascii?Q?Q5v5mdOzlCn/BSY+JYbcIima2vO5AidrFgl65Wx6WxcGe7vfmvNWVSN7cjGR?=
- =?us-ascii?Q?4tR6ZE71NcgUrN1NlEJwYAwBrbz6BAFnaBEhyVg2qWZvJE902XE3ZT0pqXND?=
- =?us-ascii?Q?xN4rVwhlR/Oeq3yceIsl4o2w7V8MBgayKNWvCukSrSuPfeWDaxjlo2gN3xK6?=
- =?us-ascii?Q?FrwKILSMD0bxL2X1C73Vta8n+F3U4EQYb3gTgjudHUhH9RnPY7+9SZpaZU2d?=
- =?us-ascii?Q?ur9Usy2cBXBlLxAuJaERcKnT9gC2i/2vtWFMz+OdwmjT4bA8CZp5rdc1v0vr?=
- =?us-ascii?Q?MhBG5d+gK0HkPvUVg8Fel3aOXoeEI05EcLcmxalc/3a6KW94kGEYiqMD74Wd?=
- =?us-ascii?Q?3YLgdmYuL2Gcf+iQhWY2gE+Ygkgz09PbbQQ/+ZSlTgXdfxxuC4R2aFUoDCkI?=
- =?us-ascii?Q?mgELdMuY2y34AqUxoAUPZ9wRT/tXzyvMx4oNfz04wmBynBSwgwtK4+qCSj8b?=
- =?us-ascii?Q?wUPY3rdNHczrrIZRCIz/dcHD56U5jURNrlepXpg+aaFVWsRFlAjCpS3Iu08U?=
- =?us-ascii?Q?ba0Li3TJ+iwzpQwSJ8WGl7sQXu5eUGyLN+iYS9rh5/VOOdEozKJbBXumsZ83?=
- =?us-ascii?Q?Us7EDjZI1Dku9OEtt/JEii3YXmQG251c+FFVCdud/ZRmOt+9YA++5F4j1oKr?=
- =?us-ascii?Q?hvrSOKKfajuhBka/Q8JkHrMiWw6XVJR4fOPG51S9uBF6tgTwkP/LZOSsvrEH?=
- =?us-ascii?Q?Eo+sxk9zGqF1q5fLPOOKxa5U6azi15Ja+ugw9++vcunZoa5JG5D9cZN3Evjn?=
- =?us-ascii?Q?nuinNTyBDAtn6fd5SMgTMorPIYY+/t62l3Tuy+e5sKK8yNcAVKQ43E1us2h5?=
- =?us-ascii?Q?R8thve6UFOGsMcOxbS9Yh5Vl+3h21duRwxfmrnIuo+0tAbW1btPAkRUH1olU?=
- =?us-ascii?Q?Ebw1+8ydo/MuhrLme8q28FMOKVyfvWsXo3ooHcXnsiq7qa+HONrnFGCHQOKe?=
- =?us-ascii?Q?yzNfFbpmWB7/C3eBVnucPLXj0GPvCxgPpAT5qt1Efh4mlhC4Gw+SA1SWLk//?=
- =?us-ascii?Q?F209kw8tRFTWoMsRpXbwHnIJLWLdivZpOh04BTco62rJeyCTzzY71rtklBN6?=
- =?us-ascii?Q?L3O/6LnzhmzChBQeeDUXVCcE4YtvU2KDUZmDjnUQ8KmgJ2O5OqZg2NHeqmDi?=
- =?us-ascii?Q?4GK6w2HDA7D+LuNmP5CiQQZDVEmWuoS5RzI5RCjiQDUyU0+tjJcRSKf8ddPD?=
- =?us-ascii?Q?BgY8wjmtV57xH7moyaLUyV+iky8hW7WEmL75uIXf9+hI41BXj+bPa7h20z+p?=
- =?us-ascii?Q?WK4NxxwNqwHtUx8yNKdG5NnPqP/QwrQH3p5DPzRdO7kllLeUydmGfdp2iFOo?=
- =?us-ascii?Q?77bJ86HQSfx0wsm0qr8guAQnA/HoQz3WVPlXnQdqk5A7a/WuAE5R+Tk7ee6T?=
- =?us-ascii?Q?Etn6/KG/og+6NaetQqEj8krAqeLzX3y8HrRPyta2?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04f575c9-4eff-46df-1d64-08dc542f350d
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 22:41:31.0962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: baNgTM/PQfNdULX11Yjgz3sM6ZJpok9xIOJzZAg6AZfk2fDOWqFuvNuVerw19JIwsrmztPnvf33JJjX4jm/zaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6543
-X-OriginatorOrg: intel.com
+References: <20240402001739.2521623-1-horenchuang@bytedance.com>
+ <20240402001739.2521623-2-horenchuang@bytedance.com> <20240403175201.00000c2c@Huawei.com>
+In-Reply-To: <20240403175201.00000c2c@Huawei.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Wed, 3 Apr 2024 16:13:24 -0700
+Message-ID: <CAKPbEqo_zN1Y-Ut6oGpP6OaRALQRFMmA737_br-9=ROcnj25gg@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] memory tier: dax/kmem: introduce an abstract
+ layer for finding, allocating, and putting memory types
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-fan wrote:
-> On Sun, Mar 24, 2024 at 04:18:06PM -0700, ira.weiny@intel.com wrote:
-> > From: Navneet Singh <navneet.singh@intel.com>
-> > 
+Hi Jonathan,
 
-[snip]
+Thanks for your feedback. I will fix them (inlined) in the next V11.
+No worries, it's never too late!
 
-> >  
-> > +struct cxl_mbox_get_dc_config_in {
-> > +	u8 region_count;
-> > +	u8 start_region_index;
-> > +} __packed;
+On Wed, Apr 3, 2024 at 9:52=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue,  2 Apr 2024 00:17:37 +0000
+> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+>
+> > Since different memory devices require finding, allocating, and putting
+> > memory types, these common steps are abstracted in this patch,
+> > enhancing the scalability and conciseness of the code.
+> >
+> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+>
+> Hi,
+>
+> I know this is a late entry to the discussion but a few comments inline.
+> (sorry I didn't look earlier!)
+>
+> All opportunities to improve code complexity and readability as a result
+> of your factoring out.
+>
+> Jonathan
+>
+>
+> > ---
+> >  drivers/dax/kmem.c           | 20 ++------------------
+> >  include/linux/memory-tiers.h | 13 +++++++++++++
+> >  mm/memory-tiers.c            | 32 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 47 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> > index 42ee360cf4e3..01399e5b53b2 100644
+> > --- a/drivers/dax/kmem.c
+> > +++ b/drivers/dax/kmem.c
+> > @@ -55,21 +55,10 @@ static LIST_HEAD(kmem_memory_types);
+> >
+> >  static struct memory_dev_type *kmem_find_alloc_memory_type(int adist)
+> >  {
+> > -     bool found =3D false;
+> >       struct memory_dev_type *mtype;
+> >
+> >       mutex_lock(&kmem_memory_type_lock);
+> could use
+>
+>         guard(mutex)(&kmem_memory_type_lock);
+>         return mt_find_alloc_memory_type(adist, &kmem_memory_types);
+>
+
+I will change it accordingly.
+
+> I'm fine if you ignore this comment though as may be other functions in
+> here that could take advantage of the cleanup.h stuff in a future patch.
+>
+> > -     list_for_each_entry(mtype, &kmem_memory_types, list) {
+> > -             if (mtype->adistance =3D=3D adist) {
+> > -                     found =3D true;
+> > -                     break;
+> > -             }
+> > -     }
+> > -     if (!found) {
+> > -             mtype =3D alloc_memory_type(adist);
+> > -             if (!IS_ERR(mtype))
+> > -                     list_add(&mtype->list, &kmem_memory_types);
+> > -     }
+> > +     mtype =3D mt_find_alloc_memory_type(adist, &kmem_memory_types);
+> >       mutex_unlock(&kmem_memory_type_lock);
+> >
+> >       return mtype;
+>
+> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
+h
+> > index 69e781900082..a44c03c2ba3a 100644
+> > --- a/include/linux/memory-tiers.h
+> > +++ b/include/linux/memory-tiers.h
+> > @@ -48,6 +48,9 @@ int mt_calc_adistance(int node, int *adist);
+> >  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+> >                            const char *source);
+> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+> > +struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+> > +                                                     struct list_head =
+*memory_types);
+>
+> That indent looks unusual.  Align the start of struct with start of int.
+>
+
+I can make this aligned but it will show another warning:
+"WARNING: line length of 131 exceeds 100 columns"
+Is this ok?
+
+> > +void mt_put_memory_types(struct list_head *memory_types);
+> >  #ifdef CONFIG_MIGRATION
+> >  int next_demotion_node(int node);
+> >  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+> > @@ -136,5 +139,15 @@ static inline int mt_perf_to_adistance(struct acce=
+ss_coordinate *perf, int *adis
+> >  {
+> >       return -EIO;
+> >  }
 > > +
-> > +/* See CXL 3.0 Table 125 get dynamic capacity config Output Payload */
-> > +struct cxl_mbox_get_dc_config_out {
-> > +	u8 avail_region_count;
-> > +	u8 rsvd[7];
-> > +	struct cxl_dc_region_config {
-> > +		__le64 region_base;
-> > +		__le64 region_decode_length;
-> > +		__le64 region_length;
-> > +		__le64 region_block_size;
-> > +		__le32 region_dsmad_handle;
-> > +		u8 flags;
-> > +		u8 rsvd[3];
-> > +	} __packed region[];
-> > +} __packed;
-> > +#define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
-> > +#define CXL_REGIONS_RETURNED(size_out) \
-> > +	((size_out - 8) / sizeof(struct cxl_dc_region_config))
-> 
-> Although the result may be unchanged, but in cxl spec r3.1, there are four
-> fields after the region configuration structure.
+> > +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct li=
+st_head *memory_types)
+> > +{
+> > +     return NULL;
+> > +}
+> > +
+> > +void mt_put_memory_types(struct list_head *memory_types)
+> > +{
+> > +
+> No blank line needed here.
 
-Yes.  This macro is not needed.
+Will fix.
 
-The fields after the structure are of little use to the host at this time.
-So I'm going to leave them out until a use can be found for them.
+> > +}
+> >  #endif       /* CONFIG_NUMA */
+> >  #endif  /* _LINUX_MEMORY_TIERS_H */
+> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> > index 0537664620e5..974af10cfdd8 100644
+> > --- a/mm/memory-tiers.c
+> > +++ b/mm/memory-tiers.c
+> > @@ -623,6 +623,38 @@ void clear_node_memory_type(int node, struct memor=
+y_dev_type *memtype)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clear_node_memory_type);
+> >
+> > +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct li=
+st_head *memory_types)
+>
+> Breaking this out as a separate function provides opportunity to improve =
+it.
+> Maybe a follow up patch makes sense given it would no longer be a straigh=
+t
+> forward code move.  However in my view it would be simple enough to be ob=
+vious
+> even within this patch.
+>
 
-Ira
+I will just keep this as is for now to minimize the changes aka mistakes.
+
+> > +{
+> > +     bool found =3D false;
+> > +     struct memory_dev_type *mtype;
+> > +
+> > +     list_for_each_entry(mtype, memory_types, list) {
+> > +             if (mtype->adistance =3D=3D adist) {
+> > +                     found =3D true;
+>
+> Why not return here?
+>                         return mtype;
+>
+
+Yes, I can return here. I will do that and take care of the ptr
+returning at this point.
+
+> > +                     break;
+> > +             }
+> > +     }
+> > +     if (!found) {
+>
+> If returning above, no need for found variable - just do this uncondition=
+ally.
+> + I suggest you flip logic for simpler to follow code flow.
+> It's more code but I think a bit easier to read as error handling is
+> out of the main simple flow.
+>
+>         mtype =3D alloc_memory_type(adist);
+>         if (IS_ERR(mtype))
+>                 return mtype;
+>
+>         list_add(&mtype->list, memory_types);
+>
+>         return mtype;
+>
+
+Good idea! I will change it accordingly.
+
+> > +             mtype =3D alloc_memory_type(adist);
+> > +             if (!IS_ERR(mtype))
+> > +                     list_add(&mtype->list, memory_types);
+> > +     }
+> > +
+> > +     return mtype;
+> > +}
+> > +EXPORT_SYMBOL_GPL(mt_find_alloc_memory_type);
+> > +
+> > +void mt_put_memory_types(struct list_head *memory_types)
+> > +{
+> > +     struct memory_dev_type *mtype, *mtn;
+> > +
+> > +     list_for_each_entry_safe(mtype, mtn, memory_types, list) {
+> > +             list_del(&mtype->list);
+> > +             put_memory_type(mtype);
+> > +     }
+> > +}
+> > +EXPORT_SYMBOL_GPL(mt_put_memory_types);
+> > +
+> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
+r *prefix)
+> >  {
+> >       pr_info(
+>
+
+
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
