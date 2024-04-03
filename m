@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E885BE4D
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 20:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5A61552FD
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 20:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712175380; cv=none; b=EXzceXzZsaZdlRttAf5FP8nD9bf3JNoreN6WthR+NUWFADLeZcCQ3cNqpD2LMWBiNOs1ehAbRZdfR1pxe6giA7wVfcJBa/DI6C3UXNsQPyJP5t/+u8estlwIJAgr7JeQnamFYZHRVNMGi7OSwh8V3ylSo8FlkcT5Y73dPg2Saac=
+	t=1712175602; cv=none; b=gvutZxsrMh0OOw4qN2rnlGq1mSk4tFCSOICZFX+zTCjqeMjT5TpQncLLrt9uy3yzG9T0+47fDLEGnX7BrCZ8CMl66xHUAwT9mdw6/DpVQRwQXxEWaiaxlWGC2JMQP/F70h7flpoo/eVuh8LWAnR7S+tq6fdRZt2sipbmxdgXOyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712175380; c=relaxed/simple;
-	bh=6+XSWUmI1cn8jBDF3VjRTeuVNpd6f2tBpEejdEpZLJI=;
+	s=arc-20240116; t=1712175602; c=relaxed/simple;
+	bh=9v3cgsCivsSZ6WObEvfOaB7mZjay2UlGwdH7OXLDPl8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=USRqVPr10DWuWpRxB5fpmp5Ts1wnCwJIGzhtVsgi0Ta9pM057ST4P1Hxd+hTM1+QJxRhsGekKuh96mlpwQ00L51F9cNWrQQmtr1t0hkBCTIJO3rdIaox2ixEkX3hHSnu7S2MvqLBMxn/MVasndQIZZ89+4mUR0OTH3QwUXhmbWs=
+	 MIME-Version:Content-Type; b=OIivuDaNUqSwsyk0utR2IEAQlzXkrV40twISZF2MqGkosnI67qRuN1E1a4Mv2jt1A716acq4dddwgOQEwP6VCGPBNP0y3GU7joBXCuAHSIbVJ44orUYUCrf40V5g/9e5bF8OIXdWpXjOOtd8w19ywnkIXBU1P4G1F43XcVFTcqM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8wr83kmLz6DBNq;
-	Thu,  4 Apr 2024 04:11:36 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8wwR4vLvz6DBP2;
+	Thu,  4 Apr 2024 04:15:19 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A8D45140257;
-	Thu,  4 Apr 2024 04:16:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D72C0140B67;
+	Thu,  4 Apr 2024 04:19:57 +0800 (CST)
 Received: from localhost (10.126.171.13) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 3 Apr
- 2024 21:16:14 +0100
-Date: Wed, 3 Apr 2024 21:16:13 +0100
+ 2024 21:19:57 +0100
+Date: Wed, 3 Apr 2024 21:19:57 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: <alison.schofield@intel.com>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
  Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/4] cxl/core: Add region info to cxl_general_media and
- cxl_dram events
-Message-ID: <20240403211613.0000195d@Huawei.com>
-In-Reply-To: <061d1eac5d4e270337911199f0b0633c0ff230b4.1711598777.git.alison.schofield@intel.com>
+Subject: Re: [PATCH 4/4] cxl/core: Remove cxlr dependency from cxl_poison
+ trace events
+Message-ID: <20240403211957.000062d3@Huawei.com>
+In-Reply-To: <4f1c74748ee880eea9ddf6f966a4266e86f12bee.1711598777.git.alison.schofield@intel.com>
 References: <cover.1711598777.git.alison.schofield@intel.com>
-	<061d1eac5d4e270337911199f0b0633c0ff230b4.1711598777.git.alison.schofield@intel.com>
+	<4f1c74748ee880eea9ddf6f966a4266e86f12bee.1711598777.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,80 +49,76 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 27 Mar 2024 21:36:32 -0700
+On Wed, 27 Mar 2024 21:36:33 -0700
 alison.schofield@intel.com wrote:
 
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> User space may need to know which region, if any, maps the DPAs
-> (device physical addresses) reported in a cxl_general_media or
-> cxl_dram event. Since the mapping can change, the kernel provides
-> this information at the time the event occurs. This informs user
-> space that at event <timestamp> this <region> mapped this <DPA>
-> to this <HPA>.
+> cxl_poison trace events pass a pointer to a struct cxl_region
+> when poison is discovered in a mapped endpoint. This made for
+> easy look up of region name, uuid, and was useful in starting
+> the dpa->hpa translation.
 > 
-> Add the same region info that is included in the cxl_poison trace
-> event: the DPA->HPA translation, region name, and region uuid.
-> Introduce and use new helpers that lookup that region info using
-> the struct cxl_memdev and a DPA.
+> Another set of trace helpers is now available that eliminates
+> the need to pass on that cxlr. (It was passed along a lot!)
 > 
-> The new fields are inserted in the trace event and no existing
-> fields are modified. If the DPA is not mapped, user will see:
-> hpa=ULLONG_MAX, region="", and uuid=0
+> In addition to tidying up the cxl_poison calling path, shifting
+> to the new helpers also means all CXL trace events will share
+> the same code in that regard.
 > 
-> This work must be protected by dpa_rwsem & region_rwsem since
-> it is looking up region mappings.
+> Switch from a uuid array to the field_struct type uuid_t to
+> align on one uuid format in all CXL trace events. That is useful
+> when sharing region uuid lookup helpers.
+> 
+> No externally visible naming changes are made to cxl_poison trace
+> events.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-One query one the stub.. Otherwise all lgtm
+Trivial formatting comment inline.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
->  drivers/cxl/core/core.h   |  6 +++++
->  drivers/cxl/core/mbox.c   | 17 ++++++++++----
->  drivers/cxl/core/region.c |  8 +++++++
->  drivers/cxl/core/trace.h  | 47 ++++++++++++++++++++++++++++++++++-----
->  4 files changed, 69 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 24454a1cb250..848ef6904beb 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -30,8 +30,14 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port);
->  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
->  u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  		  u64 dpa);
-> +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa);
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 6ad4998aeb9a..2cd66c04602a 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -681,23 +681,23 @@ TRACE_EVENT(cxl_memory_module,
 >  
->  #else
-> +static inline
-> +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	return NULL;
 
-Is this ever going to be a problem for the reason you have commented below?
-
-Maybe 
-return ""
-?
-
-...
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 45eb9c560fd6..a5b1eaee1e58 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2723,6 +2723,14 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
->  	return ctx.cxlr;
->  }
+> @@ -712,27 +712,20 @@ TRACE_EVENT(cxl_poison,
+>  		__entry->source = cxl_poison_record_source(record);
+>  		__entry->trace_type = trace_type;
+>  		__entry->flags = flags;
+> -		if (cxlr) {
+> -			__assign_str(region, dev_name(&cxlr->dev));
+> -			memcpy(__entry->uuid, &cxlr->params.uuid, 16);
+> -			__entry->hpa = cxl_trace_hpa(cxlr, cxlmd,
+> -						     __entry->dpa);
+> -		} else {
+> -			__assign_str(region, "");
+> -			memset(__entry->uuid, 0, 16);
+> -			__entry->hpa = ULLONG_MAX;
+> -		}
+> +		__assign_str(region, to_region_name(cxlmd, cxl_poison_record_dpa(record)));
+> +		store_region_info(cxlmd, __entry->dpa, __entry->uuid,
+> +				  __entry->hpa);
+>  	    ),
 >  
-> +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	struct cxl_region *cxlr = cxl_dpa_to_region(cxlmd, dpa);
-> +
-> +	/* trace __string() assignment requires "", not NULL */
-> +	return cxlr ? dev_name(&cxlr->dev) : "";
-> +}
-> +
+> -	TP_printk("memdev=%s host=%s serial=%lld trace_type=%s region=%s "  \
+> -		"region_uuid=%pU hpa=0x%llx dpa=0x%llx dpa_length=0x%x "    \
+> +	TP_printk("memdev=%s host=%s serial=%lld trace_type=%s region=%s"  \
+> +		"region_uuid=%pUb hpa=0x%llx dpa=0x%llx dpa_length=0x%x "    \
 
+the spaces before the \ could do with tidying up.  
+
+>  		"source=%s flags=%s overflow_time=%llu",
+>  		__get_str(memdev),
+>  		__get_str(host),
+>  		__entry->serial,
+>  		show_poison_trace_type(__entry->trace_type),
+>  		__get_str(region),
+> -		__entry->uuid,
+> +		&__entry->uuid,
+>  		__entry->hpa,
+>  		__entry->dpa,
+>  		__entry->dpa_length,
 
