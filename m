@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AEB14291A
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 10:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645CD1411EE
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 10:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712140264; cv=none; b=Nh3mzBKYaq6x8RFmMkiIPS1j/B2yfdiIRLHqkfBO6f/0F5Khu0tJJuIT6FulJ8ecS0M78u42NknmlfmZHkbhOdtbzsz2Ks8wakzll6hcnaPE+g4IHIJbYbANPO4AvMKVbnyybAFfi8qUO3GHSzhY+MG2EiDzweiN9l448bFuufo=
+	t=1712140294; cv=none; b=VrQV86NQEb10pTrRanNZZvIY37MIYIDOTRsrQMaB4HgLG7k06ifiTVImwwBWS905yMS+Sl06OuaBWNvmd1ikTrunQ/YAbNEA8BYVOvdX/jzvQR9lwK3r4p4o2T9Hd0kSqYVElksYal0r0VpgWohbxa1OQFvsSPMMy8U7wPZDmjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712140264; c=relaxed/simple;
-	bh=q98z13XEl36MA0pgnJZIZiSx70A3RUp1lDY4JgqUGWQ=;
+	s=arc-20240116; t=1712140294; c=relaxed/simple;
+	bh=4hvwa4oHxailkrgF/XwV9MOP/DX+7hKrCEtdc/0Y6k4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L7A9l/PJE3l0hLiYO+v8007FKQw62oD0bKv8GwlYO51A8FifnFtKeiUWLHbts2VEOWZUzbQoXZ9Uj880HyaEmxdsurBctB0p1ez3ftqST8+wMPhLnSfbIdq+Xo01+PKSPMseuHZpZtKicbDL7O31KwLUhrgKfh76DgfzgbAP8mI=
+	 MIME-Version:Content-Type; b=svtQbDyJw9IvJJ5YpMhhMeqzCZHgi/eeulKictiaaTV+5wEjWiFoz0O+wnMjzeja8SA8diqkf6ApgdDUNNEADhtiyaFhR9DDpkc7BsTXRwrbCtKXRXiQBZfsgVJ5jO6E8u2SJ+BTKcgTcqB/wJTEJrrI5yuH7QJdax4uOzoXzQ4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8gwk6SDTz6GBrL;
-	Wed,  3 Apr 2024 18:29:42 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8gsS36Hdz6K8wp;
+	Wed,  3 Apr 2024 18:26:52 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C34C1400CA;
-	Wed,  3 Apr 2024 18:30:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 02884140D1D;
+	Wed,  3 Apr 2024 18:31:30 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Apr 2024 11:30:58 +0100
+ 15.1.2507.35; Wed, 3 Apr 2024 11:31:29 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>, <philmd@linaro.org>,
 	<mst@redhat.com>, <qemu-devel@nongnu.org>
@@ -32,9 +32,9 @@ CC: Dave Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>,
 	<imammedo@redhat.com>, <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
 	Markus Armbruster <armbru@redhat.com>, Michael Roth <michael.roth@amd.com>,
 	Ani Sinha <anisinha@redhat.com>
-Subject: [PATCH 3/6] hw/acpi: Generic Port Affinity Structure support
-Date: Wed, 3 Apr 2024 11:29:24 +0100
-Message-ID: <20240403102927.31263-4-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4/6] bios-tables-test: Allow for new acpihmat-generic-x test data.
+Date: Wed, 3 Apr 2024 11:29:25 +0100
+Message-ID: <20240403102927.31263-5-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240403102927.31263-1-Jonathan.Cameron@huawei.com>
 References: <20240403102927.31263-1-Jonathan.Cameron@huawei.com>
@@ -44,353 +44,50 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-These are very similar to the recently added Generic Initiators
-but instead of representing an initiator of memory traffic they
-represent an edge point beyond which may lie either targets or
-initiators.  Here we add these ports such that they may
-be targets of hmat_lb records to describe the latency and
-bandwidth from host side initiators to the port.  A descoverable
-mechanism such as UEFI CDAT read from CXL devices and switches
-is used to discover the remainder fo the path and the OS can build
-up full latency and bandwidth numbers as need for work and data
-placement decisions.
+The test to be added exercises many corners of the SRAT and HMAT
+table generation.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- qapi/qom.json                            |  18 +++
- include/hw/acpi/acpi_generic_initiator.h |  18 ++-
- include/hw/pci/pci_bridge.h              |   1 +
- hw/acpi/acpi_generic_initiator.c         | 141 +++++++++++++++++------
- hw/pci-bridge/pci_expander_bridge.c      |   1 -
- 5 files changed, 141 insertions(+), 38 deletions(-)
+ tests/qtest/bios-tables-test-allowed-diff.h | 5 +++++
+ tests/data/acpi/q35/APIC.acpihmat-generic-x | 0
+ tests/data/acpi/q35/CEDT.acpihmat-generic-x | 0
+ tests/data/acpi/q35/DSDT.acpihmat-generic-x | 0
+ tests/data/acpi/q35/HMAT.acpihmat-generic-x | 0
+ tests/data/acpi/q35/SRAT.acpihmat-generic-x | 0
+ 6 files changed, 5 insertions(+)
 
-diff --git a/qapi/qom.json b/qapi/qom.json
-index 85e6b4f84a..5480d9ca24 100644
---- a/qapi/qom.json
-+++ b/qapi/qom.json
-@@ -826,6 +826,22 @@
-   'data': { 'pci-dev': 'str',
-             'node': 'uint32' } }
- 
-+
-+##
-+# @AcpiGenericPortProperties:
-+#
-+# Properties for acpi-generic-port objects.
-+#
-+# @pci-bus: PCI bus of the hostbridge associated with this SRAT entry
-+#
-+# @node: numa node associated with the PCI device
-+#
-+# Since: 9.1
-+##
-+{ 'struct': 'AcpiGenericPortProperties',
-+  'data': { 'pci-bus': 'str',
-+            'node': 'uint32' } }
-+
- ##
- # @RngProperties:
- #
-@@ -944,6 +960,7 @@
- { 'enum': 'ObjectType',
-   'data': [
-     'acpi-generic-initiator',
-+    'acpi-generic-port',
-     'authz-list',
-     'authz-listfile',
-     'authz-pam',
-@@ -1016,6 +1033,7 @@
-   'discriminator': 'qom-type',
-   'data': {
-       'acpi-generic-initiator':     'AcpiGenericInitiatorProperties',
-+      'acpi-generic-port':          'AcpiGenericPortProperties',
-       'authz-list':                 'AuthZListProperties',
-       'authz-listfile':             'AuthZListFileProperties',
-       'authz-pam':                  'AuthZPAMProperties',
-diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/acpi_generic_initiator.h
-index 26e2bd92d4..49ac448034 100644
---- a/include/hw/acpi/acpi_generic_initiator.h
-+++ b/include/hw/acpi/acpi_generic_initiator.h
-@@ -30,6 +30,12 @@ typedef struct AcpiGenericInitiator {
-     AcpiGenericNode parent;
- } AcpiGenericInitiator;
- 
-+#define TYPE_ACPI_GENERIC_PORT "acpi-generic-port"
-+
-+typedef struct AcpiGenericPort {
-+    AcpiGenericInitiator parent;
-+} AcpiGenericPort;
-+
- /*
-  * ACPI 6.3:
-  * Table 5-81 Flags – Generic Initiator Affinity Structure
-@@ -49,8 +55,16 @@ typedef enum {
-  * Table 5-80 Device Handle - PCI
-  */
- typedef struct PCIDeviceHandle {
--    uint16_t segment;
--    uint16_t bdf;
-+    union {
-+        struct {
-+            uint16_t segment;
-+            uint16_t bdf;
-+        };
-+        struct {
-+            uint64_t hid;
-+            uint32_t uid;
-+        };
-+    };
- } PCIDeviceHandle;
- 
- void build_srat_generic_pci_initiator(GArray *table_data);
-diff --git a/include/hw/pci/pci_bridge.h b/include/hw/pci/pci_bridge.h
-index 5cd452115a..5456e24883 100644
---- a/include/hw/pci/pci_bridge.h
-+++ b/include/hw/pci/pci_bridge.h
-@@ -102,6 +102,7 @@ typedef struct PXBPCIEDev {
-     PXBDev parent_obj;
- } PXBPCIEDev;
- 
-+#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
- #define TYPE_PXB_DEV "pxb"
- OBJECT_DECLARE_SIMPLE_TYPE(PXBDev, PXB_DEV)
- 
-diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-index c054e0e27d..85191e90ab 100644
---- a/hw/acpi/acpi_generic_initiator.c
-+++ b/hw/acpi/acpi_generic_initiator.c
-@@ -7,6 +7,7 @@
- #include "hw/acpi/acpi_generic_initiator.h"
- #include "hw/acpi/aml-build.h"
- #include "hw/boards.h"
-+#include "hw/pci/pci_bridge.h"
- #include "hw/pci/pci_device.h"
- #include "qemu/error-report.h"
- 
-@@ -18,6 +19,10 @@ typedef struct AcpiGenericInitiatorClass {
-      AcpiGenericNodeClass parent_class;
- } AcpiGenericInitiatorClass;
- 
-+typedef struct AcpiGenericPortClass {
-+    AcpiGenericInitiatorClass parent;
-+} AcpiGenericPortClass;
-+
- OBJECT_DEFINE_ABSTRACT_TYPE(AcpiGenericNode, acpi_generic_node,
-                             ACPI_GENERIC_NODE, OBJECT)
- 
-@@ -30,6 +35,13 @@ OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
- 
- OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
- 
-+OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericPort, acpi_generic_port,
-+                   ACPI_GENERIC_PORT, ACPI_GENERIC_NODE,
-+                   { TYPE_USER_CREATABLE },
-+                   { NULL })
-+
-+OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericPort, ACPI_GENERIC_PORT)
-+
- static void acpi_generic_node_init(Object *obj)
- {
-     AcpiGenericNode *gn = ACPI_GENERIC_NODE(obj);
-@@ -53,6 +65,14 @@ static void acpi_generic_initiator_finalize(Object *obj)
- {
- }
- 
-+static void acpi_generic_port_init(Object *obj)
-+{
-+}
-+
-+static void acpi_generic_port_finalize(Object *obj)
-+{
-+}
-+
- static void acpi_generic_node_set_pci_device(Object *obj, const char *val,
-                                              Error **errp)
- {
-@@ -79,42 +99,61 @@ static void acpi_generic_node_set_node(Object *obj, Visitor *v,
-     }
- 
-     gn->node = value;
--    ms->numa_state->nodes[gn->node].has_gi = true;
-+    if (object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
-+        ms->numa_state->nodes[gn->node].has_gi = true;
-+    }
- }
- 
- static void acpi_generic_node_class_init(ObjectClass *oc, void *data)
- {
--    object_class_property_add_str(oc, "pci-dev", NULL,
--        acpi_generic_node_set_pci_device);
-     object_class_property_add(oc, "node", "int", NULL,
-         acpi_generic_node_set_node, NULL, NULL);
- }
- 
- static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
- {
-+    object_class_property_add_str(oc, "pci-dev", NULL,
-+        acpi_generic_node_set_pci_device);
-+}
-+
-+static void acpi_generic_port_class_init(ObjectClass *oc, void *data)
-+{
-+    /*
-+     * Despite the ID representing a root bridge bus, same storage
-+     * can be used.
-+     */
-+    object_class_property_add_str(oc, "pci-bus", NULL,
-+        acpi_generic_node_set_pci_device);
- }
- 
- /*
-  * ACPI 6.3:
-  * Table 5-78 Generic Initiator Affinity Structure
-+ * ACPI 6.5:
-+ * Table 5-67 Generic Port Affinity Structure
-  */
- static void
--build_srat_generic_pci_initiator_affinity(GArray *table_data, int node,
--                                          PCIDeviceHandle *handle)
-+build_srat_generic_node_affinity(GArray *table_data, int node,
-+                                 PCIDeviceHandle *handle, bool gp, bool pci)
- {
--    uint8_t index;
--
--    build_append_int_noprefix(table_data, 5, 1);  /* Type */
-+    build_append_int_noprefix(table_data, gp ? 6 : 5, 1);  /* Type */
-     build_append_int_noprefix(table_data, 32, 1); /* Length */
-     build_append_int_noprefix(table_data, 0, 1);  /* Reserved */
--    build_append_int_noprefix(table_data, 1, 1);  /* Device Handle Type: PCI */
-+    /* Device Handle Type: PCI / ACPI */
-+    build_append_int_noprefix(table_data, pci ? 1 : 0, 1);
-     build_append_int_noprefix(table_data, node, 4);  /* Proximity Domain */
- 
-     /* Device Handle - PCI */
--    build_append_int_noprefix(table_data, handle->segment, 2);
--    build_append_int_noprefix(table_data, handle->bdf, 2);
--    for (index = 0; index < 12; index++) {
--        build_append_int_noprefix(table_data, 0, 1);
-+    if (pci) {
-+        /* Device Handle - PCI */
-+        build_append_int_noprefix(table_data, handle->segment, 2);
-+        build_append_int_noprefix(table_data, handle->bdf, 2);
-+        build_append_int_noprefix(table_data, 0, 12);
-+    } else {
-+        /* Device Handle - ACPI */
-+        build_append_int_noprefix(table_data, handle->hid, 8);
-+        build_append_int_noprefix(table_data, handle->uid, 4);
-+        build_append_int_noprefix(table_data, 0, 4);
-     }
- 
-     build_append_int_noprefix(table_data, GEN_AFFINITY_ENABLED, 4); /* Flags */
-@@ -127,37 +166,69 @@ static int build_all_acpi_generic_initiators(Object *obj, void *opaque)
-     GArray *table_data = opaque;
-     PCIDeviceHandle dev_handle;
-     AcpiGenericNode *gn;
--    PCIDevice *pci_dev;
-     Object *o;
- 
--    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
-+    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_NODE)) {
-         return 0;
-     }
- 
-     gn = ACPI_GENERIC_NODE(obj);
--    if (gn->node >= ms->numa_state->num_nodes) {
--        error_printf("%s: Specified node %d is invalid.\n",
--                     TYPE_ACPI_GENERIC_INITIATOR, gn->node);
--        exit(1);
--    }
- 
--    o = object_resolve_path_type(gn->pci_dev, TYPE_PCI_DEVICE, NULL);
--    if (!o) {
--        error_printf("%s: Specified device must be a PCI device.\n",
--                     TYPE_ACPI_GENERIC_INITIATOR);
--        exit(1);
--    }
--
--    pci_dev = PCI_DEVICE(o);
--
--    dev_handle.segment = 0;
--    dev_handle.bdf = PCI_BUILD_BDF(pci_bus_num(pci_get_bus(pci_dev)),
--                                   pci_dev->devfn);
-+    if (object_dynamic_cast(OBJECT(gn), TYPE_ACPI_GENERIC_INITIATOR)) {
-+        PCIDevice *pci_dev;
-+
-+        if (gn->node >= ms->numa_state->num_nodes) {
-+            error_printf("%s: Specified node %d is invalid.\n",
-+                         TYPE_ACPI_GENERIC_INITIATOR, gn->node);
-+            exit(1);
-+        }
-+
-+        o = object_resolve_path_type(gn->pci_dev, TYPE_PCI_DEVICE, NULL);
-+        if (!o) {
-+            error_printf("%s: Specified device must be a PCI device.\n",
-+                         TYPE_ACPI_GENERIC_INITIATOR);
-+            exit(1);
-+        }
-+        pci_dev = PCI_DEVICE(o);
-+
-+        dev_handle.segment = 0;
-+        dev_handle.bdf = PCI_BUILD_BDF(pci_bus_num(pci_get_bus(pci_dev)),
-+                                       pci_dev->devfn);
-+        build_srat_generic_node_affinity(table_data,
-+                                         gn->node, &dev_handle, false, true);
- 
--    build_srat_generic_pci_initiator_affinity(table_data,
--                                              gn->node, &dev_handle);
-+        return 0;
-+    } else { /* TYPE_ACPI_GENERIC_PORT */
-+        PCIBus *bus;
-+        const char *hid = "ACPI0016";
-+
-+        if (gn->node >= ms->numa_state->num_nodes) {
-+            error_printf("%s: Specified node %d is invalid.\n",
-+                         TYPE_ACPI_GENERIC_PORT, gn->node);
-+            exit(1);
-+        }
-+
-+        o = object_resolve_path_type(gn->pci_dev, TYPE_PCI_BUS, NULL);
-+        if (!o) {
-+            error_printf("%s: Specified device must be a PCI Host Bridge.\n",
-+                         TYPE_ACPI_GENERIC_PORT);
-+            exit(1);
-+        }
-+        bus = PCI_BUS(o);
-+        /* Need to know if this is a PXB Bus so below an expander bridge */
-+        if (!object_dynamic_cast(OBJECT(bus), TYPE_PXB_CXL_BUS)) {
-+            error_printf("%s: Specified device is not a bus below a host bridge.\n",
-+                         TYPE_ACPI_GENERIC_PORT);
-+            exit(1);
-+        }
-+        /* Copy without trailing NULL */
-+        memcpy(&dev_handle.hid, hid, sizeof(dev_handle.hid));
-+        dev_handle.uid = pci_bus_num(bus);
-+        build_srat_generic_node_affinity(table_data,
-+                                         gn->node, &dev_handle, true, false);
- 
--    return 0;
-+        return 0;
-+    }
- }
- 
- void build_srat_generic_pci_initiator(GArray *table_data)
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index 0411ad31ea..f5431443b9 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -38,7 +38,6 @@ DECLARE_INSTANCE_CHECKER(PXBBus, PXB_BUS,
- DECLARE_INSTANCE_CHECKER(PXBBus, PXB_PCIE_BUS,
-                          TYPE_PXB_PCIE_BUS)
- 
--#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
- DECLARE_INSTANCE_CHECKER(PXBBus, PXB_CXL_BUS,
-                          TYPE_PXB_CXL_BUS)
- 
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8b..a5aa801c99 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,6 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/q35/APIC.acpihmat-generic-x",
++"tests/data/acpi/q35/CEDT.acpihmat-generic-x",
++"tests/data/acpi/q35/DSDT.acpihmat-generic-x",
++"tests/data/acpi/q35/HMAT.acpihmat-generic-x",
++"tests/data/acpi/q35/SRAT.acpihmat-generic-x",
+diff --git a/tests/data/acpi/q35/APIC.acpihmat-generic-x b/tests/data/acpi/q35/APIC.acpihmat-generic-x
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/tests/data/acpi/q35/CEDT.acpihmat-generic-x b/tests/data/acpi/q35/CEDT.acpihmat-generic-x
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/tests/data/acpi/q35/DSDT.acpihmat-generic-x b/tests/data/acpi/q35/DSDT.acpihmat-generic-x
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/tests/data/acpi/q35/HMAT.acpihmat-generic-x b/tests/data/acpi/q35/HMAT.acpihmat-generic-x
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/tests/data/acpi/q35/SRAT.acpihmat-generic-x b/tests/data/acpi/q35/SRAT.acpihmat-generic-x
+new file mode 100644
+index 0000000000..e69de29bb2
 -- 
 2.39.2
 
