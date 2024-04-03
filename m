@@ -1,36 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A040A58ACC;
-	Tue,  2 Apr 2024 23:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD1C1BDCE
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 02:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712101734; cv=none; b=VVXoKM+AuX5l87ySjvGF++yTc3DPxLwGtzDvT9lrUtxmmm28BBS92bquldk/mHGeXfHPfOhoJ2y6hlscuN6jrqSIJ44SZHoVKSUmERcTEwTiUg4tTqbTs7dlnV30kcfrqYrcxo54Z/tOfiKRILH7mv6ww+TpPPXw1AtvejLYEJg=
+	t=1712110741; cv=none; b=OSdYWkuVsWlUAo+WkwQjE81CK294uP5RxBGGV6X8xwxEEeBaFX3iH0hJXWRk+lGxVoOpTK5mJQ5w1EtdjzosyqI024EfTIWSr4s9tH7qYi26s21pI9g6pogYm5GT2IDABmeIKpTusoQTgkzz0d5SyXaItHGMcUDZpnJsTJblNEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712101734; c=relaxed/simple;
-	bh=tMRvNyT4x4cA66RyK/U0A8pa9XddkuGKAVgpj/Rrx70=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HkWu7LUl2Fn9095Pgvx+GltmlDB02VgpRw1FIPXw39Eh3TqII3pLhvQKK2C+kEM221PovEEedIwAksQvQJXHud0rb+qY4hnIc1GPJk9htapG0QHOKws32qlPAwvKuGgCVUus8PkxN2ArAzSiKiGwONfrBIsVixmqpybA4M34Ygg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF53C433C7;
-	Tue,  2 Apr 2024 23:48:54 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
+	s=arc-20240116; t=1712110741; c=relaxed/simple;
+	bh=4JJqb+8Ikmh1nigsAZWFnXewCUcfK0EzjY5Vs/pEJQY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VDqatIu0/eh+px0gjyb7xb6V7E5zahrUO8z+vDOCt7ushWThdJn7GnR7OLgy882S2Uh+fI0hBYm0hVrYt25tTZ/5I00kmcXBBzsHSqx1UoPd8W2Fdue7pWuJgtAsA1Y6dzTCEREgl1EAwjIKpvTSVcPow6B2EoTW4j8my1NgnLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=FM/Lm6Gv; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="FM/Lm6Gv"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1712110737; x=1743646737;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4JJqb+8Ikmh1nigsAZWFnXewCUcfK0EzjY5Vs/pEJQY=;
+  b=FM/Lm6GvHDlsh1fXJIdpiWBqz4Eh684cXtdq8rPcG4nMuJNCsAsuLdvs
+   J6dDNrXosFwBMAqD1Qp9vtoiA7k5GcUSEsyn0A1aS1fqEE0CEAuAn5foz
+   eDbRQPRGXBQdBFFULwQqgkVmnGP1V0Adkc/R267RY4GetaIiOQ8xYPd+A
+   QTatTvBf9P0fAKUKlUCnGjavruS8/4h3NQv3ULu5sQm9ZeU5oLmaX5z/y
+   818SpN1t/ZwfG7AkzaKUcp623tH5AfddgzWR5qpzfEoAPJAhchDhKsYl6
+   lN4zQyXtoUDK9/DYme7iXJSMYc4FGK7vi7TFf95VLPX7h05WWeWLI7Tet
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="133804158"
+X-IronPort-AV: E=Sophos;i="6.07,176,1708354800"; 
+   d="scan'208";a="133804158"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:18:49 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 0170BE9648
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 11:18:48 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 26C6DD5A18
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 11:18:47 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id A6A082030C7D7
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 11:18:46 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.225.88])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id AED321A0002;
+	Wed,  3 Apr 2024 10:18:45 +0800 (CST)
+From: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
 	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	bhelgaas@google.com,
-	lukas@wunner.de
-Subject: [PATCH v3 4/4] cxl: Add post reset warning if reset is detected as Secondary Bus Reset (SBR)
-Date: Tue,  2 Apr 2024 16:45:32 -0700
-Message-ID: <20240402234848.3287160-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240402234848.3287160-1-dave.jiang@intel.com>
-References: <20240402234848.3287160-1-dave.jiang@intel.com>
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	jim.harris@samsung.com
+Cc: linux-cxl@vger.kernel.org,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>
+Subject: [PATCH v2 0/2] cxl: add interleave capability check
+Date: Tue,  2 Apr 2024 22:17:45 -0400
+Message-Id: <20240403021747.17260-1-yaoxt.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -38,124 +67,43 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28294.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28294.004
+X-TMASE-Result: 10--3.304200-10.000000
+X-TMASE-MatchedRID: RtHHqK+8YWOiRKum/M+GqaoXHZz/dXlxBGvINcfHqheiC7BD4niBmFN2
+	Sv4BrfuifwWnQgO080LsIGXDDl4WhkvjnvMoJy6PmOexU8E0y9GYr/uwHXF3UiXgPASDnPcffr0
+	mqpu8k1/i8zVgXoAltsYlDcGKIsCCC24oEZ6SpSmcfuxsiY4QFH6G2XgTG5LqaBa6TjNDTIiSpp
+	j7/ABe21HD1gpfLecxpXOfrZQBGTEe1YaDpydzJYnGswXh6WSytMj5Ebu+am2WDhrT2y96q5sNE
+	GpLafrrLM/nEDLP056e+TDiyH/49wxfkLAfkNNSaAZk0sEcY14=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-SBR is equivalent to a device been hot removed and inserted again. Doing a
-SBR on a CXL type 3 device is problematic if the exported device memory is
-part of system memory that cannot be offlined. The event is equivalent to
-violently ripping out that range of memory from the kernel. While the
-hardware requires the "Unmask SBR" bit set in the Port Control Extensions
-register and the kernel currently does not unmask it, user can unmask
-this bit via setpci or similar tool.
+Changes:
+v1 -> v2:
+1. rename interleave_mask to ig_cap_mask
+2. add a check for interleave granularity
+3. update commit message of PATCH 2
 
-The driver does not have a way to detect whether a reset coming from the
-PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
-detect is to note if a decoder is marked as enabled in software but the
-decoder control register indicates it's not committed.
+Currently driver does not check the interleave capability of target, it can
+attach target to region even if target does not support the interleave
+granularity or interleave ways. Thus, applications access the memory
+will occur unexpected behavior, such as segmentation fault.
 
-A helper function is added to find discrepancy between the decoder
-software state versus the hardware register state.
+Therefore, it is necessary to check the interleave capability of target
+before attaching it to region. If the check fails, the attachment
+operation should be stopped.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- Rename decocer_hw_mismatch() to __cxl_endpoint_decoder_reset_detected(). (Dan)
-- Move register accessing function to core/pci.c. (Dan)
-- Add kernel taint to decoder reset. (Dan)
----
- drivers/cxl/core/pci.c | 31 +++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |  2 ++
- drivers/cxl/pci.c      | 20 ++++++++++++++++++++
- 3 files changed, 53 insertions(+)
+Yao Xingtao (2):
+  cxl/core/hdm: rename interleave_mask to ig_cap_mask
+  cxl/core/region: check interleave capability
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index c496a9710d62..597221f7f19b 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1045,3 +1045,34 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
- 
- 	return cxl_flit_size(pdev) * MEGA / bw;
- }
-+
-+static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_port *port = data;
-+	struct cxl_decoder *cxld;
-+	struct cxl_hdm *cxlhdm;
-+	void __iomem *hdm;
-+	u32 ctrl;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
-+		return 0;
-+
-+	cxld = &cxled->cxld;
-+	cxlhdm = dev_get_drvdata(&port->dev);
-+	hdm = cxlhdm->regs.hdm_decoder;
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
-+}
-+
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
-+{
-+	return device_for_each_child(&port->dev, port,
-+				     __cxl_endpoint_decoder_reset_detected);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 534e25e2f0a4..e3c237c50b59 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -895,6 +895,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 			     struct access_coordinate *c1,
- 			     struct access_coordinate *c2);
- 
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 110478573296..5dc1f28a031d 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -957,11 +957,31 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_reset_done(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &pdev->dev;
-+
-+	/*
-+	 * FLR does not expect to touch the HDM decoders and related registers.
-+	 * SBR however will wipe all device configurations.
-+	 * Issue warning if there was active decoder before reset that no
-+	 * longer exists.
-+	 */
-+	if (cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
-+		dev_warn(dev, "SBR happened without memory regions removal.\n");
-+		dev_warn(dev, "System may be unstable if regions hosted system memory.\n");
-+		add_taint(TAINT_USER, LOCKDEP_NOW_UNRELIABLE);
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
- 	.cor_error_detected	= cxl_cor_error_detected,
-+	.reset_done	= cxl_reset_done,
- };
- 
- static struct pci_driver cxl_pci_driver = {
+ drivers/cxl/core/hdm.c    |  8 ++++++--
+ drivers/cxl/core/region.c | 37 +++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |  2 ++
+ drivers/cxl/cxlmem.h      |  3 ++-
+ 4 files changed, 47 insertions(+), 3 deletions(-)
+
 -- 
-2.44.0
+2.37.3
 
