@@ -1,83 +1,48 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1974614A4EC;
-	Wed,  3 Apr 2024 15:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425F814A0A2
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Apr 2024 15:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712159031; cv=none; b=sBvxPZQpE0KrTWYckjicU7eSt4LySqMoPIpmjbOaDMSwHyziq+eG4wgvwTLDtQd0T3elTlVAELgUBu0NE8mBl/33gZ2WE3SQXIjX69kHXemMBu19xRiPbzAYnE0DDlPfV4rGbRYZLhiYyxuprGBAm2RQ7Ikm5/8MqjNPBWOOzWM=
+	t=1712159331; cv=none; b=V58+P90UfK27eo3Obx/9u9hEpDXz+xAV+1Cnr+50KStSD0x9AyrX+9ZwVJE44Y2qWNCCEvA1WrvtDhklWa4v7QsijLAJEnvxAzdlZdnf8c25RnShBPlzrZA9iIWerM7WDmN1bq2ao7aR0MslCytpZ3zSwCSLiv3iVzQjS4213f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712159031; c=relaxed/simple;
-	bh=EUdlrtYcP9SwWnsQ8olJN/RqljV2d9AFFIWAUVklaZA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lJE4qUBxEqmy3Sx+KyqFL98ZKBGeBA68uxCcfcVbToWImp5wUjwveqlOFHmQPxMSagqm6NJHhDF2cj6fYQM6+nF3Wc7jeBFkdq7CCy9kUY2WPB4ZQqS8DXpdYtplM3BejM+RC1Oh1QkGtq/GR9lqwaLiCG/sUFuo+Ib3CtDF2nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8psd4VBDz6G89M;
-	Wed,  3 Apr 2024 23:42:29 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6461B140516;
-	Wed,  3 Apr 2024 23:43:46 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 3 Apr
- 2024 16:43:46 +0100
-Date: Wed, 3 Apr 2024 16:43:45 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Huang Ying <ying.huang@intel.com>
-CC: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/hdm: Add debug message for invalid interleave
- granularity
-Message-ID: <20240403164345.00002e3d@Huawei.com>
-In-Reply-To: <20240402061016.388408-1-ying.huang@intel.com>
-References: <20240402061016.388408-1-ying.huang@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712159331; c=relaxed/simple;
+	bh=865GdIasFcJGLv/iz39pSxK5UVpeZQtZy5PmzJTuQ8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hcpjsV4FGMi79QG5EEdO+WkZeRQ0JWxXwWwuKrKDA3AhrEF/6+FRtK6c98TQl6AE45hKzc4GQL5ohUSl497WNnnhWfXKUrqgjTxHJZszdQPuzD8HYLnbP5yG8FbSJ/TvmlXxIwk83CbH+Zx07/Z7oZP/OB5EQ/zheY7qCSKl38o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE4E7C433F1;
+	Wed,  3 Apr 2024 15:48:50 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net
+Subject: [PATCH v7 0/5] cxl: access_coordinate validity fixes for 6.9
+Date: Wed,  3 Apr 2024 08:47:11 -0700
+Message-ID: <20240403154844.3403859-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Tue,  2 Apr 2024 14:10:16 +0800
-Huang Ying <ying.huang@intel.com> wrote:
+v7:
+- Add bug fix for not skipping RP coords that don't exist. (Jonathan)
+- Remove min_not_zero() as it doesn't apply here. DIV_ROUNDUP() is sufficient. (Jonathan)
+- Reflowed patch ordering for easier backport.
 
-> There's no debug message for invalid interleave granularity.  This
-> makes it hard to debug related bugs.  So, this is added in this patch.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-That is indeed odd given similar code around it.
+A group of fixes to make CXL access_coordinate calculation function
+properly.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/hdm.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 7d97790b893d..973a27543ed5 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -888,8 +888,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  	}
->  	rc = eig_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
->  				 &cxld->interleave_granularity);
-> -	if (rc)
-> +	if (rc) {
-> +		dev_warn(&port->dev,
-> +			 "decoder%d.%d: Invalid interleave granularity (ctrl: %#x)\n",
-> +			 port->id, cxld->id, ctrl);
->  		return rc;
-> +	}
->  
->  	dev_dbg(&port->dev, "decoder%d.%d: range: %#llx-%#llx iw: %d ig: %d\n",
->  		port->id, cxld->id, cxld->hpa_range.start, cxld->hpa_range.end,
-
+[1/5] cxl: Remove checking of iter in cxl_endpoint_get_perf_coordinates()
+[2/5] cxl: Fix retrieving of access_coordinates in PCIe path
+[3/5] cxl: Fix incorrect region perf data calculation
+[4/5] cxl: Consolidate dport access_coordinate ->hb_coord and ->sw_coord into ->coord
+[5/5] cxl: Add checks to access_coordinate calculation to fail missing data
