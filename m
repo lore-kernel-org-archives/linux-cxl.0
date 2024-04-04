@@ -1,193 +1,404 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F18367;
-	Thu,  4 Apr 2024 00:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845EF6FB8
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Apr 2024 00:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712190083; cv=none; b=rR6ifs2/fmCaeMqRluloBo4DlEQrX2c1ypI33DcLK4lRcNaoqOJvM/uBIrYGLasTTK/dVCsA4g40PkdWfxXOJ80B7MqP7taEvHTXkJnSxrS7o7E2CBJAwooo2JuRncKIWCDbW16Mz0tmbpFapR7f7A2KW8x31axAca7rycoanmU=
+	t=1712190096; cv=none; b=gNQOQo013ZqvHvydbQZeQGDSn5z0ZfhknC0p2NNVYKUmrrGfpEXNPGg6xuE7VtuYqmWsZ5SAd2+E5rBx3m+l1lu0HXUQVzpPV5c8xOaxeStVmJIECrYesW3IyWt5P2zEVrUmxs7edzQOQGHeI2sHKyTCn3kgvwAhDHc9oEtE2sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712190083; c=relaxed/simple;
-	bh=vFTQ82vo8wGIbhelQLMSbqColCwk5sKeS/9E2qjoF8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tgem2FPuxSRj5hng0ORp9weddmmZSqu26VqL3S+x6CRrcQYRkGzXvbXh0fU0Pr5N8LYBvCcYydV5YccbUmtYjynLzk0QwovKtQc50CpZoEptPUgkNDapNfDXQLfPceM47OBSDmVJLpqJMBNhyUMhdV0/IKa03ICTlIXMhZ/YWVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aE7C3M0M; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712190096; c=relaxed/simple;
+	bh=dOPbi2CUnvmLWksVT5BRSkZCsZq4DeT3G+zormngmU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pJ3Un5u9KB87zBRFwtJxP7QGcLG8zcfKLDUh+GUgFt2CONuoMMxg6ONZ6g0gRIA5u7VStgWrPJ0DwKsy4fng/2+J9ZxKOyfYdYtb3dw7psY/l5ZJJa/kpGYCL2zKMeeo5uYX3Kw3gyI27jZ5Ge5uBTQdfOdMMtt7BsaxrwT6rL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NApmcLzD; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aE7C3M0M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712190081; x=1743726081;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vFTQ82vo8wGIbhelQLMSbqColCwk5sKeS/9E2qjoF8M=;
-  b=aE7C3M0MXJte8Acv3RETZShxJFETavivQvwYkZmEdCwZbr4IhtwyQP0H
-   WG1G88ESbzKIHVxuvw6977cTdDszSex1tCm66y+FZlJdZC5WGWWrivK8S
-   sjiDpwr3mwPXIvjal2THErw6dOSIUNoc2HX9fc4UMRwsNMr7OuFpVk8RK
-   MdCcH/ruXAD+Ts0iPE3ockh844FAvHhzILB+N7GXT5DWNGjEkIXPHwdDu
-   KJqQsAKv/hHK2+ncC+R7JOtE+SzViV6Dkpt3pTKrF5Gpu4bkk567SIaNf
-   K3HfUWPsJSzr6wF5rB8bJrv1Zh/9r8gVFyCyo314uZyrSuS/38a+pPWXU
-   w==;
-X-CSE-ConnectionGUID: uga1aK/3SKy/XsuBGWycBA==
-X-CSE-MsgGUID: ow57S+uuRSCvJaVIJOZJMA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7323862"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="7323862"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 17:21:21 -0700
-X-CSE-ConnectionGUID: uf4d4fHeT2SKBUWxYb6q0Q==
-X-CSE-MsgGUID: JneW1IhoTLOEExVvXt62NQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="23072107"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.162.81]) ([10.213.162.81])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 17:21:20 -0700
-Message-ID: <3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
-Date: Wed, 3 Apr 2024 17:21:20 -0700
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NApmcLzD"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso373739276.0
+        for <linux-cxl@vger.kernel.org>; Wed, 03 Apr 2024 17:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712190092; x=1712794892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qO60jqsH0RDRW8MepZgYWUNAloZS/uU+ZxX94+OfopY=;
+        b=NApmcLzDOeR/M/hXmEUsnDvbkH/YNneRKPDzIgIZSBdOe7r4DfFbbkA/yvovm/gkTl
+         Fx3cg5hzpqDnAUhe8Zzmxhhhny/quI7JqEgkXHSMkElwr4Z/2bBnGTAbAR8aBE7dtB2Q
+         t+kuBDT4pR3RH8SmzRyAPihe+svVSC8brvCwfJlxJpbx5RjR4KCJvpuRzSkOtB3PENZZ
+         5I+zEQwj28y3jAPK+nnfblvxo3Or81xoVblnOddgB7MHzLIgZGaarV7lrczJsBgiemxN
+         fmL7RMtKazLlBa2ctmpfL991jpw00ZVLlZqJe16RDTimAyj1sIS3u4xvK1cX7WkFCtOu
+         iQ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712190092; x=1712794892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qO60jqsH0RDRW8MepZgYWUNAloZS/uU+ZxX94+OfopY=;
+        b=orP+Q1c8gx7xyBAiVpAxdIlYjd8k1GIcKwguH1NVNBME2yRoZn0IxCKFSARZQWhQt3
+         btfWDnFDWVXoPSfniSo1sjucz273x/3FsYnBwjDU3pbxe7X/1UXBMG3a3Vhp0xmZtn3J
+         yt9LV7m0f2rd2f+0rt0upeDPmu3t9hEWQRQSNKIyLnw82mZXWtW+W0mYqQJWParIijT9
+         bkcBSRiMzssazxDPA720NMVfYLjURvXvxrn4K3+2FuiGzpK9e+80Z5FC9uSAXqR7qjYP
+         vLWJ/Jtt1Z1qLhIffrBPs4I9xKph6br2JqeEjn3G6haFul+e5A1EYBExITAQCiSnmldT
+         Xmnw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8xQDS7ASeGYXR1PuT3g6LXNnun4Pz8SMfSoR3m20RHX0j0oTgJSRgGbE2NxNRxyHHYj9NCqfW8cGxyG/mafC9achGH1ycUJrS
+X-Gm-Message-State: AOJu0YyMch5ftKVHCRZ8ipYn5Irfe/tKq8ZX+vpb9er/MVT/8t5jQY9Z
+	msym1lzjkuNnbj0G2id8sLRV5vNkOMipIITq1K9TkfE9kCxFZdbunwxj5OeSzD3CkigwRDp/JdJ
+	1Fl/OoC0+LtXS5m0J4yKWXj9VZO/pgI7Pn6Y/xQ==
+X-Google-Smtp-Source: AGHT+IHSYTr5M+525vcAEY5Aj2ib0qO6jpryNktw+PRCGQjz5qKA3WKMPc+zBf2F+1T8pwG+v1Tqmm74FhKD/Wr0Snw=
+X-Received: by 2002:a05:6902:1029:b0:dc7:46fd:4998 with SMTP id
+ x9-20020a056902102900b00dc746fd4998mr1050153ybt.13.1712190092377; Wed, 03 Apr
+ 2024 17:21:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] PCI: Create new reset method to force SBR for CXL
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, dave@stgolabs.net, bhelgaas@google.com,
- lukas@wunner.de
-References: <20240402234848.3287160-1-dave.jiang@intel.com>
- <20240402234848.3287160-4-dave.jiang@intel.com>
- <20240403160911.000016c0@Huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240403160911.000016c0@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240402001739.2521623-1-horenchuang@bytedance.com>
+ <20240402001739.2521623-3-horenchuang@bytedance.com> <20240403180425.00003be0@Huawei.com>
+In-Reply-To: <20240403180425.00003be0@Huawei.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Wed, 3 Apr 2024 17:21:21 -0700
+Message-ID: <CAKPbEqoJZe+HWHhCvBTVSHXffGY2ign3Htp4pfbFb4YVJS_Q2A@mail.gmail.com>
+Subject: Re: [PATCH v10 2/2] memory tier: create CPUless memory tiers after
+ obtaining HMAT info
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
+	Hao Xiang <hao.xiang@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jonathan,
+
+Thank you for your feedback. I will fix them (inlined) in the next V11.
+
+On Wed, Apr 3, 2024 at 10:04=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> A few minor comments inline.
+>
+> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
+h
+> > index a44c03c2ba3a..16769552a338 100644
+> > --- a/include/linux/memory-tiers.h
+> > +++ b/include/linux/memory-tiers.h
+> > @@ -140,12 +140,13 @@ static inline int mt_perf_to_adistance(struct acc=
+ess_coordinate *perf, int *adis
+> >       return -EIO;
+> >  }
+> >
+> > -struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct li=
+st_head *memory_types)
+> > +static inline struct memory_dev_type *mt_find_alloc_memory_type(int ad=
+ist,
+> > +                                     struct list_head *memory_types)
+> >  {
+> >       return NULL;
+> >  }
+> >
+> > -void mt_put_memory_types(struct list_head *memory_types)
+> > +static inline void mt_put_memory_types(struct list_head *memory_types)
+> >  {
+> Why in this patch and not previous one?
+
+I've also noticed this issue. I will fix it in the next V11.
+
+> >
+> >  }
+> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> > index 974af10cfdd8..44fa10980d37 100644
+> > --- a/mm/memory-tiers.c
+> > +++ b/mm/memory-tiers.c
+> > @@ -36,6 +36,11 @@ struct node_memory_type_map {
+> >
+> >  static DEFINE_MUTEX(memory_tier_lock);
+> >  static LIST_HEAD(memory_tiers);
+> > +/*
+> > + * The list is used to store all memory types that are not created
+> > + * by a device driver.
+> > + */
+> > +static LIST_HEAD(default_memory_types);
+> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+> >  struct memory_dev_type *default_dram_type;
+> >
+> > @@ -108,6 +113,8 @@ static struct demotion_nodes *node_demotion __read_=
+mostly;
+> >
+> >  static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
+> >
+> > +/* The lock is used to protect `default_dram_perf*` info and nid. */
+> > +static DEFINE_MUTEX(default_dram_perf_lock);
+> >  static bool default_dram_perf_error;
+> >  static struct access_coordinate default_dram_perf;
+> >  static int default_dram_perf_ref_nid =3D NUMA_NO_NODE;
+> > @@ -505,7 +512,8 @@ static inline void __init_node_memory_type(int node=
+, struct memory_dev_type *mem
+> >  static struct memory_tier *set_node_memory_tier(int node)
+> >  {
+> >       struct memory_tier *memtier;
+> > -     struct memory_dev_type *memtype;
+> > +     struct memory_dev_type *mtype =3D default_dram_type;
+>
+> Does the rename add anything major to the patch?
+> If not I'd leave it alone to reduce the churn and give
+> a more readable patch.  If it is worth doing perhaps
+> a precursor patch?
+>
+
+Either name works. Keeping it the same name will make the code
+easier to follow. I agree! Thanks.
+
+> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
+> >       pg_data_t *pgdat =3D NODE_DATA(node);
+> >
+> >
+> > @@ -514,11 +522,20 @@ static struct memory_tier *set_node_memory_tier(i=
+nt node)
+> >       if (!node_state(node, N_MEMORY))
+> >               return ERR_PTR(-EINVAL);
+> >
+> > -     __init_node_memory_type(node, default_dram_type);
+> > +     mt_calc_adistance(node, &adist);
+> > +     if (node_memory_types[node].memtype =3D=3D NULL) {
+> > +             mtype =3D mt_find_alloc_memory_type(adist, &default_memor=
+y_types);
+> > +             if (IS_ERR(mtype)) {
+> > +                     mtype =3D default_dram_type;
+> > +                     pr_info("Failed to allocate a memory type. Fall b=
+ack.\n");
+> > +             }
+> > +     }
+> > +
+> > +     __init_node_memory_type(node, mtype);
+> >
+> > -     memtype =3D node_memory_types[node].memtype;
+> > -     node_set(node, memtype->nodes);
+> > -     memtier =3D find_create_memory_tier(memtype);
+> > +     mtype =3D node_memory_types[node].memtype;
+> > +     node_set(node, mtype->nodes);
+> > +     memtier =3D find_create_memory_tier(mtype);
+> >       if (!IS_ERR(memtier))
+> >               rcu_assign_pointer(pgdat->memtier, memtier);
+> >       return memtier;
+> > @@ -655,6 +672,33 @@ void mt_put_memory_types(struct list_head *memory_=
+types)
+> >  }
+> >  EXPORT_SYMBOL_GPL(mt_put_memory_types);
+> >
+> > +/*
+> > + * This is invoked via `late_initcall()` to initialize memory tiers fo=
+r
+> > + * CPU-less memory nodes after driver initialization, which is
+> > + * expected to provide `adistance` algorithms.
+> > + */
+> > +static int __init memory_tier_late_init(void)
+> > +{
+> > +     int nid;
+> > +
+> > +     mutex_lock(&memory_tier_lock);
+> > +     for_each_node_state(nid, N_MEMORY)
+> > +             if (node_memory_types[nid].memtype =3D=3D NULL)
+> > +                     /*
+> > +                      * Some device drivers may have initialized memor=
+y tiers
+> > +                      * between `memory_tier_init()` and `memory_tier_=
+late_init()`,
+> > +                      * potentially bringing online memory nodes and
+> > +                      * configuring memory tiers. Exclude them here.
+> > +                      */
+>
+> Does the comment refer to this path, or to ones where memtype is set?
+>
+
+Yes, the comment is for explaining why the if condition is used.
+
+> > +                     set_node_memory_tier(nid);
+>
+> Given the large comment I would add {} to help with readability.
+> You could flip the logic to reduce indent
+>         for_each_node_state(nid, N_MEMORY) {
+>                 if (node_memory_types[nid].memtype)
+>                         continue;
+>                 /*
+>                  * Some device drivers may have initialized memory tiers
+>                  * between `memory_tier_init()` and `memory_tier_late_ini=
+t()`,
+>                  * potentially bringing online memory nodes and
+>                  * configuring memory tiers. Exclude them here.
+>                  */
+>                 set_node_memory_tier(nid);
+>
+>
+
+I will change it accordingly.
+
+> > +
+> > +     establish_demotion_targets();
+> > +     mutex_unlock(&memory_tier_lock);
+> > +
+> > +     return 0;
+> > +}
+> > +late_initcall(memory_tier_late_init);
+> > +
+> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
+r *prefix)
+> >  {
+> >       pr_info(
+> > @@ -668,7 +712,7 @@ int mt_set_default_dram_perf(int nid, struct access=
+_coordinate *perf,
+> >  {
+> >       int rc =3D 0;
+> >
+> > -     mutex_lock(&memory_tier_lock);
+> > +     mutex_lock(&default_dram_perf_lock);
+>
+> As below, this is a classic case where guard() will help readability.
+>
+
+I will change it accordingly.
+
+> >       if (default_dram_perf_error) {
+> >               rc =3D -EIO;
+> >               goto out;
+> > @@ -716,23 +760,30 @@ int mt_set_default_dram_perf(int nid, struct acce=
+ss_coordinate *perf,
+> >       }
+> >
+> >  out:
+> > -     mutex_unlock(&memory_tier_lock);
+> > +     mutex_unlock(&default_dram_perf_lock);
+> >       return rc;
+> >  }
+> >
+> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
+> >  {
+> > -     if (default_dram_perf_error)
+> > -             return -EIO;
+> > +     int rc =3D 0;
+>
+> Looks like rc is set in all paths that reach where it issued.
+>
+
+Using guard(mutex), I will no longer need `int rc`.
+Replace `rc =3D` with `return XXX`.
+
+> >
+> > -     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE)
+> > -             return -ENOENT;
+> > +     mutex_lock(&default_dram_perf_lock);
+>
+> This would benefit quite a lot from
+> guard(mutex)(&default_dram_perf_lock);
+> and direct returns throughout.
+>
+
+Got it. I will change it accordingly.
+
+>
+> > +     if (default_dram_perf_error) {
+> > +             rc =3D -EIO;
+> > +             goto out;
+> > +     }
+> >
+> >       if (perf->read_latency + perf->write_latency =3D=3D 0 ||
+> > -         perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
+> > -             return -EINVAL;
+> > +         perf->read_bandwidth + perf->write_bandwidth =3D=3D 0) {
+> > +             rc =3D -EINVAL;
+> > +             goto out;
+> > +     }
+> >
+> > -     mutex_lock(&memory_tier_lock);
+> > +     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE) {
+> > +             rc =3D -ENOENT;
+> > +             goto out;
+> > +     }
+> >       /*
+> >        * The abstract distance of a memory node is in direct proportion=
+ to
+> >        * its memory latency (read + write) and inversely proportional t=
+o its
+> > @@ -745,9 +796,10 @@ int mt_perf_to_adistance(struct access_coordinate =
+*perf, int *adist)
+> >               (default_dram_perf.read_latency + default_dram_perf.write=
+_latency) *
+> >               (default_dram_perf.read_bandwidth + default_dram_perf.wri=
+te_bandwidth) /
+> >               (perf->read_bandwidth + perf->write_bandwidth);
+> > -     mutex_unlock(&memory_tier_lock);
+> >
+> > -     return 0;
+> > +out:
+> > +     mutex_unlock(&default_dram_perf_lock);
+> > +     return rc;
+> >  }
+> >  EXPORT_SYMBOL_GPL(mt_perf_to_adistance);
+> >
+> > @@ -858,7 +910,8 @@ static int __init memory_tier_init(void)
+> >        * For now we can have 4 faster memory tiers with smaller adistan=
+ce
+> >        * than default DRAM tier.
+> >        */
+> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
+> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANCE=
+_DRAM,
+> > +                                                                     &=
+default_memory_types);
+>
+> Unusual indenting.  Align with just after (
+>
+
+Aligning with "(" will exceed 100 columns. Would that be acceptable?
+
+> >       if (IS_ERR(default_dram_type))
+> >               panic("%s() failed to allocate default DRAM tier\n", __fu=
+nc__);
+> >
+> > @@ -868,6 +921,14 @@ static int __init memory_tier_init(void)
+> >        * types assigned.
+> >        */
+> >       for_each_node_state(node, N_MEMORY) {
+> > +             if (!node_state(node, N_CPU))
+> > +                     /*
+> > +                      * Defer memory tier initialization on CPUless nu=
+ma nodes.
+> > +                      * These will be initialized after firmware and d=
+evices are
+>
+> I think this wraps at just over 80 chars.  Seems silly to wrap so tightly=
+ and not
+> quite fit under 80. (this is about 83 chars.
+>
+
+I can fix this.
+I have a question. From my patch, this is <80 chars. However,
+in an email, this is >80 chars. Does that mean we need to
+count the number of chars in an email, not in a patch? Or if I
+missed something? like vim configuration or?
+
+> > +                      * initialized.
+> > +                      */
+> > +                     continue;
+> > +
+> >               memtier =3D set_node_memory_tier(node);
+> >               if (IS_ERR(memtier))
+> >                       /*
+>
 
 
-
-On 4/3/24 8:09 AM, Jonathan Cameron wrote:
-> On Tue, 2 Apr 2024 16:45:31 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> CXL spec r3.1 8.1.5.2
->> By default Secondary Bus Reset (SBR) is masked for CXL ports. Introduce a
->> new PCI reset method "cxl_bus" to force SBR on CXL ports by setting
->> the unmask SBR bit in the CXL DVSEC port control register before performing
->> the bus reset and restore the original value of the bit post reset. The
->> new reset method allows the user to intentionally perform SBR on a CXL
->> device without needing to set the "Unmask SBR" bit via a user tool.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> A few trivial things inline.  Otherwise looks fine.
-> 
-> FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
->> ---
->> v3:
->> - move cxl_port_dvsec() to previous patch. (Dan)
->> - add pci_cfg_access_lock() for the bridge. (Dan)
->> - Change cxl_bus_force method to cxl_bus. (Dan)
->> ---
->>  drivers/pci/pci.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/pci.h |  2 +-
->>  2 files changed, 45 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 00eddb451102..3989c8888813 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -4982,6 +4982,49 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>  	return pci_parent_bus_reset(dev, probe);
->>  }
->>  
->> +static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->> +{
->> +	struct pci_dev *bridge;
->> +	int dvsec;
-> 
-> Lukas' comment on previous applies to this as well.
-
-ok
-
-> 
->> +	int rc;
->> +	u16 reg, val;
-> 
-> Maybe combine lines as appropriate.
-
-ok
-
-> 
->> +
->> +	bridge = pci_upstream_bridge(dev);
->> +	if (!bridge)
->> +		return -ENOTTY;
->> +
->> +	dvsec = cxl_port_dvsec(bridge);
->> +	if (!dvsec)
->> +		return -ENOTTY;
->> +
->> +	if (probe)
->> +		return 0;
->> +
->> +	pci_cfg_access_lock(bridge);
->> +	rc = pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
->> +	if (rc) {
->> +		rc = -ENOTTY;
->> +		goto out;
->> +	}
->> +
->> +	if (!(reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
->> +		val = reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR;
->> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
->> +				      val);
->> +	} else {
->> +		val = reg;
->> +	}
->> +
->> +	rc = pci_reset_bus_function(dev, probe);
->> +
->> +	if (reg != val)
->> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, reg);
->> +
->> +out:
->> +	pci_cfg_access_unlock(bridge);
-> 
-> Maybe a guard() use case to allow early returns in error paths?
-
-I'm not seeing a good way to do it. pci_cfg_access_lock/unlock() isn't like your typical lock/unlock. It locks, changes some pci_dev internal stuff, and then unlocks in both functions. The pci_lock isn't being held after lock() call.
-
-> 
->> +	return rc;
->> +}
->> +
->>  void pci_dev_lock(struct pci_dev *dev)
->>  {
->>  	/* block PM suspend, driver probe, etc. */
->> @@ -5066,6 +5109,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
->>  	{ pci_af_flr, .name = "af_flr" },
->>  	{ pci_pm_reset, .name = "pm" },
->>  	{ pci_reset_bus_function, .name = "bus" },
->> +	{ cxl_reset_bus_function, .name = "cxl_bus" },
->>  };
->>  
->>  static ssize_t reset_method_show(struct device *dev,
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 16493426a04f..235f37715a43 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -51,7 +51,7 @@
->>  			       PCI_STATUS_PARITY)
->>  
->>  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
->> -#define PCI_NUM_RESET_METHODS 7
->> +#define PCI_NUM_RESET_METHODS 8
->>  
->>  #define PCI_RESET_PROBE		true
->>  #define PCI_RESET_DO_RESET	false
-> 
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
