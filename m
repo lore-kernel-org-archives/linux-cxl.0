@@ -1,44 +1,44 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D764F126F11;
-	Thu,  4 Apr 2024 13:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15E71272DF;
+	Thu,  4 Apr 2024 13:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712237366; cv=none; b=ZDjmwmSdwYHKmwTZYNIUTX05gA8Kk89Z0FG483K3AOk0QTZrLZ6QLu+TX70++DCqKhJuIEk8THdtsY4w4WPAhh8BhbyT+abf1HahFiiSuCoPBTFp3CEBUNZt7w0O2XJuSqkGo1nDppIekjamkxaekk9Hmv5Q7XFjJxk3qJ4QgtY=
+	t=1712237456; cv=none; b=HSenytMHTTcLdMISBfjqvD+6fFkQsbGIv03mP8C8pSR9kUTvYVCyAAbPCOBKUjA24c7JNLGHCIdYN+iiX2lPWwGj601GN8l3911yqfr25JhQGKEAHKrs6Vf2xET+flsoefvy1WBKjz1LfNP+cq++InQXHWfFE2YJQtdSdCohDx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712237366; c=relaxed/simple;
-	bh=JXUSbR3DZMUdA5qPCn8yNi7WcEgGX4f05m/gtXUyQxU=;
+	s=arc-20240116; t=1712237456; c=relaxed/simple;
+	bh=/4yYqOM9vkOMsFtlwSCM2wUTKRN+f5UX2VDXF/1zr8M=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EvVWPnNb+Btz7Tq8NOOTH26qlr4TtsjbugsdBcbKBJJGwkZ04AcH/wLUo4UeD+eknuL+dSsn0a7FylNzV1TFzKkVS3h24N9pE1dfVJV6j1eaqWJMgRmCqbTF2DtgWNIQaF3cz0EDM2p0zFhiOwLduHxg4t9uv2MVLMwr0RnG45g=
+	 MIME-Version:Content-Type; b=YL8Mg7QGWjTAh0qRMW49U2CxV4FqMVB7G8maq/pvYPVYQgzoNdJ6x7AEzdyxCps95KOgN1iFr4AbMuacz6C9yb3/KoS3Mnluwq4H9owLjOnjurmNK9b3q5D66AXYS1ijzmMQ5kYQl0o6uyJ2zoY1AbDg4Iz1WSjkfHnesmcqSMI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9Mm76wPJz6J7Q4;
-	Thu,  4 Apr 2024 21:24:39 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9Msk70F1z6G9PL;
+	Thu,  4 Apr 2024 21:29:30 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 33C8F140B2F;
-	Thu,  4 Apr 2024 21:29:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 95FA4140CF4;
+	Thu,  4 Apr 2024 21:30:50 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
- 2024 14:29:10 +0100
-Date: Thu, 4 Apr 2024 14:29:09 +0100
+ 2024 14:30:50 +0100
+Date: Thu, 4 Apr 2024 14:30:49 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<dave@stgolabs.net>, <bhelgaas@google.com>, <lukas@wunner.de>
-Subject: Re: [PATCH v3 3/4] PCI: Create new reset method to force SBR for
- CXL
-Message-ID: <20240404142909.00002084@Huawei.com>
-In-Reply-To: <3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
-References: <20240402234848.3287160-1-dave.jiang@intel.com>
-	<20240402234848.3287160-4-dave.jiang@intel.com>
-	<20240403160911.000016c0@Huawei.com>
-	<3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Kwangjin Ko <kwangjin.ko@sk.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel_team@skhynix.com>
+Subject: Re: [PATCH v2 1/1] cxl/core: Fix initialization of
+ mbox_cmd.size_out in get event
+Message-ID: <20240404143049.00005635@Huawei.com>
+In-Reply-To: <660d6d64a50bd_7702a29466@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240402081404.1106-1-kwangjin.ko@sk.com>
+	<20240402081404.1106-2-kwangjin.ko@sk.com>
+	<660d6d64a50bd_7702a29466@dwillia2-xfh.jf.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -52,98 +52,132 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Wed, 3 Apr 2024 07:53:24 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> >   
-> >> +
-> >> +	bridge = pci_upstream_bridge(dev);
-> >> +	if (!bridge)
-> >> +		return -ENOTTY;
-> >> +
-> >> +	dvsec = cxl_port_dvsec(bridge);
-> >> +	if (!dvsec)
-> >> +		return -ENOTTY;
-> >> +
-> >> +	if (probe)
-> >> +		return 0;
-> >> +
-> >> +	pci_cfg_access_lock(bridge);
-> >> +	rc = pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
-> >> +	if (rc) {
-> >> +		rc = -ENOTTY;
-> >> +		goto out;
-> >> +	}
-> >> +
-> >> +	if (!(reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
-> >> +		val = reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR;
-> >> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
-> >> +				      val);
-> >> +	} else {
-> >> +		val = reg;
-> >> +	}
-> >> +
-> >> +	rc = pci_reset_bus_function(dev, probe);
-> >> +
-> >> +	if (reg != val)
-> >> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, reg);
-> >> +
-> >> +out:
-> >> +	pci_cfg_access_unlock(bridge);  
+> Kwangjin Ko wrote:
+> > Since mbox_cmd.size_out is overwritten with the actual output size in
+> > the function below, it needs to be initialized every time.
 > > 
-> > Maybe a guard() use case to allow early returns in error paths?  
+> > cxl_internal_send_cmd -> __cxl_pci_mbox_send_cmd
+> > 
+> > Problem scenario:
+> > 
+> > 1) The size_out variable is initially set to the size of the mailbox.
+> > 2) Read an event.
+> >    - size_out is set to 160 bytes(header 32B + one event 128B).
+> >    - Two event are created while reading.
+> > 3) Read the new *two* events.
+> >    - size_out is still set to 160 bytes.
+> >    - Although the value of out_len is 288 bytes, only 160 bytes are
+> >      copied from the mailbox register to the local variable.
+> >    - record_count is set to 2.
+> >    - Accessing records[1] will result in reading incorrect data.
+> > 
+> > Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
+> > ---
+> >  drivers/cxl/core/mbox.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 9adda4795eb7..a38531a055c8 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -958,13 +958,14 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  		.payload_in = &log_type,
+> >  		.size_in = sizeof(log_type),
+> >  		.payload_out = payload,
+> > -		.size_out = mds->payload_size,
+> >  		.min_out = struct_size(payload, records, 0),
+> >  	};
+> >  
+> >  	do {
+> >  		int rc, i;
+> >  
+> > +		mbox_cmd.size_out = mds->payload_size;
+> > +  
 > 
-> I'm not seeing a good way to do it. pci_cfg_access_lock/unlock() isn't like your typical lock/unlock. It locks, changes some pci_dev internal stuff, and then unlocks in both functions. The pci_lock isn't being held after lock() call.
+> Fix looks correct, but I am concerned it is a band-aid for a more
+> general problem. For example, if I am not mistaken, we have a similar
+> bug in cxl_mem_get_poison().
 > 
+> So perhaps a convention to always define @mbox_cmd immediately before
+> cxl_internal_send_cmd() like this:
 
-You've lost me.
+Makes sense to me.  These aren't hot paths, so safe code is worth the
+possible extra writes.
 
-Why does guard() care about the internals?
-
-All it does is stash a copy of the '_lock' - here the bridge struct pci_dev then call the _unlock
-on it when the stashed copy of that pointer when it goes out of scope.
-
-Those functions don't need to hold a conventional lock.  Though in this case
-I believe the lock is effectively pci_dev->block_cfg_access.
-
-FWIW we do the similar in IIO (with a conditional lock for extra fun :)
-https://elixir.bootlin.com/linux/v6.9-rc2/source/include/linux/iio/iio.h#L650
-That is setting a flag much like this one.  Don't look too closely at that though
-as it evolved into a slightly odd form and needs a revisit.
-
-This was a possible nice to have, not something I care that much about
-in this patch set so feel free to not do it :)
-
-Jonathan
-
-
-
-> >   
-> >> +	return rc;
-> >> +}
-> >> +
-> >>  void pci_dev_lock(struct pci_dev *dev)
-> >>  {
-> >>  	/* block PM suspend, driver probe, etc. */
-> >> @@ -5066,6 +5109,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
-> >>  	{ pci_af_flr, .name = "af_flr" },
-> >>  	{ pci_pm_reset, .name = "pm" },
-> >>  	{ pci_reset_bus_function, .name = "bus" },
-> >> +	{ cxl_reset_bus_function, .name = "cxl_bus" },
-> >>  };
-> >>  
-> >>  static ssize_t reset_method_show(struct device *dev,
-> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >> index 16493426a04f..235f37715a43 100644
-> >> --- a/include/linux/pci.h
-> >> +++ b/include/linux/pci.h
-> >> @@ -51,7 +51,7 @@
-> >>  			       PCI_STATUS_PARITY)
-> >>  
-> >>  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
-> >> -#define PCI_NUM_RESET_METHODS 7
-> >> +#define PCI_NUM_RESET_METHODS 8
-> >>  
-> >>  #define PCI_RESET_PROBE		true
-> >>  #define PCI_RESET_DO_RESET	false  
-> >   
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 9adda4795eb7..5d44b5c095b7 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -946,24 +946,22 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>         struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+>         struct device *dev = mds->cxlds.dev;
+>         struct cxl_get_event_payload *payload;
+> -       struct cxl_mbox_cmd mbox_cmd;
+>         u8 log_type = type;
+>         u16 nr_rec;
+>  
+>         mutex_lock(&mds->event.log_lock);
+>         payload = mds->event.buf;
+>  
+> -       mbox_cmd = (struct cxl_mbox_cmd) {
+> -               .opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+> -               .payload_in = &log_type,
+> -               .size_in = sizeof(log_type),
+> -               .payload_out = payload,
+> -               .size_out = mds->payload_size,
+> -               .min_out = struct_size(payload, records, 0),
+> -       };
+> -
+>         do {
+>                 int rc, i;
+> +               struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd){
+> +                       .opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+> +                       .payload_in = &log_type,
+> +                       .size_in = sizeof(log_type),
+> +                       .payload_out = payload,
+> +                       .size_out = mds->payload_size,
+> +                       .min_out = struct_size(payload, records, 0),
+> +               };
+>  
+>                 rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+>                 if (rc) {
+> @@ -1296,7 +1294,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>         struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+>         struct cxl_mbox_poison_out *po;
+>         struct cxl_mbox_poison_in pi;
+> -       struct cxl_mbox_cmd mbox_cmd;
+>         int nr_records = 0;
+>         int rc;
+>  
+> @@ -1308,16 +1305,16 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>         pi.offset = cpu_to_le64(offset);
+>         pi.length = cpu_to_le64(len / CXL_POISON_LEN_MULT);
+>  
+> -       mbox_cmd = (struct cxl_mbox_cmd) {
+> -               .opcode = CXL_MBOX_OP_GET_POISON,
+> -               .size_in = sizeof(pi),
+> -               .payload_in = &pi,
+> -               .size_out = mds->payload_size,
+> -               .payload_out = po,
+> -               .min_out = struct_size(po, record, 0),
+> -       };
+> -
+>         do {
+> +               struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd){
+> +                       .opcode = CXL_MBOX_OP_GET_POISON,
+> +                       .size_in = sizeof(pi),
+> +                       .payload_in = &pi,
+> +                       .size_out = mds->payload_size,
+> +                       .payload_out = po,
+> +                       .min_out = struct_size(po, record, 0),
+> +               };
+> +
+>                 rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+>                 if (rc)
+>                         break;
 > 
 
