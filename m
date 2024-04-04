@@ -1,171 +1,101 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6040A4597A;
-	Thu,  4 Apr 2024 08:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE0971B40;
+	Thu,  4 Apr 2024 08:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712220707; cv=none; b=GuMCkfUuErE0TA/f8cmGRpVWXKPwlzjuwYJPcI88Sd/s9Dbt6DuL/1tcxhMkrHKfWIQe4eQ6c/L5JA34SM9u2b+EEnkYw4ommEqgKLLOl/i5dJOPq05WY/eSNMIjKtrdUFLWU8jvTV3t0YISqr/udy0Nvydrbj1+4AG5uXI3G68=
+	t=1712220707; cv=none; b=XFd/g9fCpxuGGElR/KUe+MQeoWbM1ziXrtlJqfmvJqLaSjkqAS7R+IYPL733Q3gmBaP0/UFZuxrxRCtzlKaY3O7OXGQXDMfVhoTIXqOms9gR00eMrC/+dhJgGD+FQ+LLxF8orT/m2OPT1y+Uy95vPmYWerCbWYAfmJZEizg51i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712220707; c=relaxed/simple;
-	bh=XfmsCBkDJ/6d+QejA2BzcnkkJvQKAbigpPnYoVfbLio=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X74TW1EMxgEjgzOOBab6D50YYLrE+TsjtvVNoUwFddBRLUvJ6wTm8JETU2XoGPYiP8sMq8EFi1wx2908ZQ4B/9Fg5IvYUfsLvAfRpK95LRQw4XmpkIxwe5Zfatzx2f20eh8S7fwt7VcTiht7xjvHQYGxFhsZUz4XjOHQgXPYCH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9FgY6sP7z67hPh;
-	Thu,  4 Apr 2024 16:50:17 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A4843140B35;
-	Thu,  4 Apr 2024 16:51:39 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
- 2024 09:51:39 +0100
-Date: Thu, 4 Apr 2024 09:51:38 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/26] cxl/mem: Expose device dynamic capacity
- capabilities
-Message-ID: <20240404095138.00004c7d@Huawei.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-	<20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	bh=NRX4u4aBi9RRKb5GnKffOgmpqSNRU11Djm5FO+o7j3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hgdHWghrSIVNuMC1za7r1P5ro/SYIYqOo5IWePn8fgLQZ7MIfSS6wd5yvHz/0W6Uwbz26K9M/DTOM5hae5kJkyBKbZL849rrw0xEo1AcjB6BiUEL2sp1pTpXCQN4wZiejmgM2t7aNf4ZqT2YOX/Vnd1VCkao9laKAjToVrtIVKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 681F43000222C;
+	Thu,  4 Apr 2024 10:51:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 61A7D1D17E; Thu,  4 Apr 2024 10:51:36 +0200 (CEST)
+Date: Thu, 4 Apr 2024 10:51:36 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, dave@stgolabs.net, bhelgaas@google.com
+Subject: Re: [PATCH v3 4/4] cxl: Add post reset warning if reset is detected
+ as Secondary Bus Reset (SBR)
+Message-ID: <Zg5qGJCAZJWY4xy9@wunner.de>
+References: <20240402234848.3287160-1-dave.jiang@intel.com>
+ <20240402234848.3287160-5-dave.jiang@intel.com>
+ <20240403163257.000060e1@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403163257.000060e1@Huawei.com>
 
-On Sun, 24 Mar 2024 16:18:11 -0700
-ira.weiny@intel.com wrote:
-
-> From: Navneet Singh <navneet.singh@intel.com>
+On Wed, Apr 03, 2024 at 04:32:57PM +0100, Jonathan Cameron wrote:
+> On Tue, 2 Apr 2024 16:45:32 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
+> Why not pass the info on what reset was done down from the PCI core?
+> I see Bjorn commented it would be *possible* to do it in the PCI core
+> but raised other concerns that needed addressing first (I think you've
+> dealt with those now).  Doesn't look that hard to me (I've not coded it
+> up yet though).
 > 
-> To properly configure CXL regions on Dynamic Capacity Devices (DCD),
-> user space will need to know the details of the DC Regions available on
-> a device.
+> The core code knows how far it got down the list reset_methods before
+> it succeeded in resetting.  So...
 > 
-> Expose driver dynamic capacity capabilities through sysfs
-> attributes.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Modify __pci_reset_function_locked() to return the index of the reset
+> method that succeeded. Then pass that to pci_dev_restore().
+> Finally push it into a reset_done2() that takes that as an extra
+> parameter and the driver can see if it is FLR or SBR.
 
-Trivial comments inline.
-Whilst I'd like the directory hidden as per the other suggestions,
-I don't mind that much.
+The reset types to distinguish per PCIe r6.2 sec 6.6 are
+Conventional Reset and Function Level Reset.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Secondary Bus Reset is a Conventional Reset.
 
+The spec subdivides Conventional Reset into Cold, Warm and Hot,
+but that distinction is probably irrelevant for the kernel.
 
-> 
-> ---
-> Changes for v1:
-> [iweiny: remove review tags]
-> [iweiny: mark sysfs for 6.10 kernel]
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 17 ++++++++
->  drivers/cxl/core/memdev.c               | 76 +++++++++++++++++++++++++++++++++
->  2 files changed, 93 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 8b3efaf6563c..8a4f572c8498 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -54,6 +54,23 @@ Description:
->  		identically named field in the Identify Memory Device Output
->  		Payload in the CXL-2.0 specification.
->  
-> +What:		/sys/bus/cxl/devices/memX/dc/region_count
-> +Date:		June, 2024
-> +KernelVersion:	v6.10
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Number of Dynamic Capacity (DC) regions supported on the
-> +		device.  May be 0 if the device does not support Dynamic
-> +		Capacity.
+I think a more generalized (and therefore better) approach would be
+to store the reset type the device has undergone in struct pci_dev,
+right next to error_state, so that not just the ->reset_done()
+callback benefits from the information.  The reset type applied has
+consequences beyond the individual driver:  E.g. an FLR does not
+affect CMA-SPDM session state, but a Conventional Reset does.
+So there may be consumers of that information in the PCI core as well.
 
-That will change if you go ahead and hide the directory as per suggestions.
+It's worth noting that we already have an enum pcie_reset_state in
+<linux/pci.h> which distinguishes between deassert, warm and hot reset.
+It is currently only used by PowerPC EEH to convey to the platform
+which type of reset it should apply.  It might be possible to extend
+the enum so that it can be used to store the reset type that *was*
+applied to a device in struct pci_dev.
 
-> +
-> +What:		/sys/bus/cxl/devices/memX/dc/regionY_size
-> +Date:		June, 2024
-> +KernelVersion:	v6.10
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Size of the Dynamic Capacity (DC) region Y.  Only
+That all being said, checking for the *symptoms* of a Conventional Reset,
+as Dave has done here, may actually be more robust than just relying on
+what type of reset was applied.  E.g. after an FLR was handled, the device
+may experience a DPC-induced Hot Reset.  By checking for the *symptoms*,
+the driver may be able to catch that the device has undergone a
+Conventional Reset immediately after an FLR.  Also, who knows if all
+devices are well-behaved and retain their state during an FLR, as they
+should per the spec?  Maybe there are broken devices which do not respect
+that rule.  Checking for symptoms of a Conventional Reset would catch
+those devices as well.
 
-Units always good to have in docs even if somewhat obvious.
+Thanks,
 
-> +		available on devices which support DC and only for those
-> +		region indexes supported by the device.
->  
->  What:		/sys/bus/cxl/devices/memX/pmem/qos_class
->  Date:		May, 2023
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index d4e259f3a7e9..a7b880e33a7e 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -101,6 +101,18 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
-
-...
-
-> +static struct attribute *cxl_memdev_dc_attributes[] = {
-> +	&dev_attr_region0_size.attr,
-> +	&dev_attr_region1_size.attr,
-> +	&dev_attr_region2_size.attr,
-> +	&dev_attr_region3_size.attr,
-> +	&dev_attr_region4_size.attr,
-> +	&dev_attr_region5_size.attr,
-> +	&dev_attr_region6_size.attr,
-> +	&dev_attr_region7_size.attr,
-> +	&dev_attr_region_count.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	/* Not a memory device */
-> +	if (!mds)
-> +		return 0;
-> +
-> +	if (a == &dev_attr_region_count.attr)
-> +		return a->mode;
-> +
-> +	/* Show only the regions supported */
-> +	if (n < mds->nr_dc_region)
-> +		return a->mode;
-
-This feels a bit fragile if anyone adds new attrs in future and for whatever reason
-does it before these.
-
-Maybe add a comment at top of cxl_memdev_dc_attributes()?  Say they must be first.
-
-> +
-> +	return 0;
-> +}
-> +
-
-> 
-
+Lukas
