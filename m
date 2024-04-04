@@ -1,154 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAA012BEAB
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Apr 2024 15:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B13B12AAD1;
+	Thu,  4 Apr 2024 16:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246031; cv=none; b=CtJHZqEFaSXnLYmnpBArLAaqcAy/XxkG/YHr0c+b6uEH/hY0uvvnRgJ5hPuA8gzKXelkKqqkIqqJD8EBm0mBpUi9RuOwLNaH24RYro2Hcz3rwVqlStgW+o6youfaDyO5f6kp7utlqehqWVBQDLb8YV76cnO+ujoAe0/qhl4jRac=
+	t=1712246676; cv=none; b=DfOfgJkHkSbdGbSy683EtkeLUF1mYt9AFEneRnLuh70oyiUuC1CUXJdI+MMP6BxHgDhJrAFt+QfxfKUUGX7A8f7fzZsihPnoB5RJQJzzs2P9NinPWdGO5E3GH9Oe9fsBN50uYN50rUcMxOKZuxk/Nwo6dUcqJWacWBfY2UsKhUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246031; c=relaxed/simple;
-	bh=GK3WLP3rLO3c7ioqAS+UuDcuoECmiNQsFCN6TbgEMjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZPjLJXgoNuCIjpO3jjfYx16+ibmUqmaOn+MF5cH/4W5BoPl/HlpCW2DjjsnaQvNgnGaNgQf9dgVXRZNao9s0JW7HXYhkpkshsH0Wyn7zT3quck/8K08Td73l8GksqeV65lK7JyWGNtQGYMo8V1DYK8SJgieRjwD9n6korIhBtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eD+4YigM; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eD+4YigM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712246029; x=1743782029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GK3WLP3rLO3c7ioqAS+UuDcuoECmiNQsFCN6TbgEMjc=;
-  b=eD+4YigMBzO50Tp6wgsbjHnofvz/DFMIyCJfyPPKIzR5rkDDPkbPMPhV
-   s+XHFqHgtEEX+MWyIiYHSaayqPuuYyMrTAyD4Wk6+sQkV3nYCKJMmdkm/
-   434HWekyk9vB5IjGPbKGmhRKoLwEOCUdtB7xCMpw9IOG2kn0+Y3sjoiHg
-   vkVeizOUsWHmLOTacUtgYVEVLU4WTeLoopy2FbC3H/La8Z2ChiSfNU4wI
-   IVUdLp6diRIJkSus+Aj3rVyKbNeWhxokae4YZirDIlzeDdH/y9olO/bKY
-   aw+Ax+914p2JggwxwFg2fM4UfImtNqYa6HDt0wz8kv37YieYJK6MRQpmS
-   A==;
-X-CSE-ConnectionGUID: kz/5+xJ3TtKDAX3Q2FLHiA==
-X-CSE-MsgGUID: IFGscVWcSd2RePGI0or03Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7777597"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="7777597"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 08:53:47 -0700
-X-CSE-ConnectionGUID: GLvRV+gtRjeeI+hNQS0New==
-X-CSE-MsgGUID: sE+OtRD7Q+KH+2uH6mg7Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="49780096"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.19.15])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 08:31:37 -0700
-Date: Thu, 4 Apr 2024 08:31:35 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/4] cxl/core: Add region info to cxl_general_media and
- cxl_dram events
-Message-ID: <Zg7H15AoQG5Or5SV@aschofie-mobl2>
-References: <cover.1711598777.git.alison.schofield@intel.com>
- <061d1eac5d4e270337911199f0b0633c0ff230b4.1711598777.git.alison.schofield@intel.com>
- <20240403211613.0000195d@Huawei.com>
+	s=arc-20240116; t=1712246676; c=relaxed/simple;
+	bh=0LQNpNf3RQ8YeS3e0cvnSiYysJO91XApeqbIUrs+VtQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IGitsJfh+FJlGtRTRK4e7I5UFVc6Yk4YfFEMUE1I8iqiJdzjuxhzQw6pRtwxwMKCTDbC9uprmRTjRXFuLQo4qYbEfHryPcAY7d0TPwuRt2Q7QDP9PNXwtSyedTZQAwMx61AB+zxhMnQwiYyL2OHKmuMSmdJnpy1Hx0Ublo4Q6Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9RC31XFxz6K6j4;
+	Thu,  4 Apr 2024 23:59:43 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A06D1400D4;
+	Fri,  5 Apr 2024 00:04:22 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
+ 2024 17:04:22 +0100
+Date: Thu, 4 Apr 2024 17:04:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/26] cxl/region: Read existing extents on region
+ creation
+Message-ID: <20240404170421.0000440f@Huawei.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+	<20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403211613.0000195d@Huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Apr 03, 2024 at 09:16:13PM +0100, Jonathan Cameron wrote:
-> On Wed, 27 Mar 2024 21:36:32 -0700
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > User space may need to know which region, if any, maps the DPAs
-> > (device physical addresses) reported in a cxl_general_media or
-> > cxl_dram event. Since the mapping can change, the kernel provides
-> > this information at the time the event occurs. This informs user
-> > space that at event <timestamp> this <region> mapped this <DPA>
-> > to this <HPA>.
-> > 
-> > Add the same region info that is included in the cxl_poison trace
-> > event: the DPA->HPA translation, region name, and region uuid.
-> > Introduce and use new helpers that lookup that region info using
-> > the struct cxl_memdev and a DPA.
-> > 
-> > The new fields are inserted in the trace event and no existing
-> > fields are modified. If the DPA is not mapped, user will see:
-> > hpa=ULLONG_MAX, region="", and uuid=0
-> > 
-> > This work must be protected by dpa_rwsem & region_rwsem since
-> > it is looking up region mappings.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> One query one the stub.. Otherwise all lgtm
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> > ---
-> >  drivers/cxl/core/core.h   |  6 +++++
-> >  drivers/cxl/core/mbox.c   | 17 ++++++++++----
-> >  drivers/cxl/core/region.c |  8 +++++++
-> >  drivers/cxl/core/trace.h  | 47 ++++++++++++++++++++++++++++++++++-----
-> >  4 files changed, 69 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > index 24454a1cb250..848ef6904beb 100644
-> > --- a/drivers/cxl/core/core.h
-> > +++ b/drivers/cxl/core/core.h
-> > @@ -30,8 +30,14 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port);
-> >  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
-> >  u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> >  		  u64 dpa);
-> > +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa);
-> >  
-> >  #else
-> > +static inline
-> > +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa)
-> > +{
-> > +	return NULL;
-> 
-> Is this ever going to be a problem for the reason you have commented below?
-> 
-> Maybe 
-> return ""
-> ?
-> 
-> ...
+On Sun, 24 Mar 2024 16:18:17 -0700
+ira.weiny@intel.com wrote:
 
-Yep. I'll make it "".
-Also, I'll includ Steve Rostedt on v2. He's making changes around
-assign_str() so maybe this patch can align w a simpler assign_str().
+> From: Navneet Singh <navneet.singh@intel.com>
+> 
+> Dynamic capacity device extents may be left in an accepted state on a
+> device due to an unexpected host crash.  In this case creation of a new
+> region on top of the DC partition (region) is expected to expose those
+> extents for continued use.
+> 
+> Once all endpoint decoders are part of a region and the region is being
+> realized read the device extent list.  For ease of review, this patch
+> stops after reading the extent list and leaves realization of the region
+> extents to a future patch.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Thanks Jonathan!
+A few things inline.
 
-> 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 45eb9c560fd6..a5b1eaee1e58 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -2723,6 +2723,14 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-> >  	return ctx.cxlr;
-> >  }
-> >  
-> > +const char *cxl_trace_to_region_name(const struct cxl_memdev *cxlmd, u64 dpa)
-> > +{
-> > +	struct cxl_region *cxlr = cxl_dpa_to_region(cxlmd, dpa);
-> > +
-> > +	/* trace __string() assignment requires "", not NULL */
-> > +	return cxlr ? dev_name(&cxlr->dev) : "";
-> > +}
-> > +
-> 
-> 
-> 
+J
+>  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  				    enum cxl_event_log_type type)
+>  {
+> @@ -1406,6 +1462,142 @@ int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify, CXL);
+>  
+> +static int cxl_dev_get_dc_extent_cnt(struct cxl_memdev_state *mds,
+> +				     unsigned int *extent_gen_num)
+> +{
+> +	struct cxl_mbox_get_dc_extent_in get_dc_extent;
+> +	struct cxl_mbox_get_dc_extent_out dc_extents;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	unsigned int count;
+> +	int rc;
+> +
+> +	get_dc_extent = (struct cxl_mbox_get_dc_extent_in) {
+> +		.extent_cnt = cpu_to_le32(0),
+> +		.start_extent_index = cpu_to_le32(0),
+> +	};
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
+> +		.payload_in = &get_dc_extent,
+> +		.size_in = sizeof(get_dc_extent),
+> +		.size_out = sizeof(dc_extents),
+> +		.payload_out = &dc_extents,
+> +		.min_out = 1,
+
+Why 1?
+
+> +	};
+> +
+> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	count = le32_to_cpu(dc_extents.total_extent_cnt);
+> +	*extent_gen_num = le32_to_cpu(dc_extents.extent_list_num);
+> +
+> +	return count;
+> +}
+> +
+> +static int cxl_dev_get_dc_extents(struct cxl_endpoint_decoder *cxled,
+> +				  unsigned int start_gen_num,
+> +				  unsigned int exp_cnt)
+> +{
+> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
+> +	unsigned int start_index, total_read;
+> +	struct device *dev = mds->cxlds.dev;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +
+> +	struct cxl_mbox_get_dc_extent_out *dc_extents __free(kfree) =
+> +				kvmalloc(mds->payload_size, GFP_KERNEL);
+> +	if (!dc_extents)
+> +		return -ENOMEM;
+> +
+> +	total_read = 0;
+> +	start_index = 0;
+> +	do {
+> +		unsigned int nr_ext, total_extent_cnt, gen_num;
+> +		struct cxl_mbox_get_dc_extent_in get_dc_extent;
+> +		int rc;
+> +
+> +		get_dc_extent = (struct cxl_mbox_get_dc_extent_in) {
+> +			.extent_cnt = cpu_to_le32(exp_cnt - start_index),
+> +			.start_extent_index = cpu_to_le32(start_index),
+> +		};
+> +
+> +		mbox_cmd = (struct cxl_mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
+> +			.payload_in = &get_dc_extent,
+> +			.size_in = sizeof(get_dc_extent),
+> +			.size_out = mds->payload_size,
+> +			.payload_out = dc_extents,
+> +			.min_out = 1,
+
+Why 1?
+
+> +		};
+> +
+> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		nr_ext = le32_to_cpu(dc_extents->ret_extent_cnt);
+> +		total_read += nr_ext;
+> +		total_extent_cnt = le32_to_cpu(dc_extents->total_extent_cnt);
+> +		gen_num = le32_to_cpu(dc_extents->extent_list_num);
+> +
+> +		dev_dbg(dev, "Get extent list count:%d generation Num:%d\n",
+> +			total_extent_cnt, gen_num);
+> +
+> +		if (gen_num != start_gen_num || exp_cnt != total_extent_cnt) {
+> +			dev_err(dev, "Possible incomplete extent list; gen %u != %u : cnt %u != %u\n",
+> +				gen_num, start_gen_num, exp_cnt, total_extent_cnt);
+> +			return -EIO;
+> +		}
+> +
+> +		for (int i = 0; i < nr_ext ; i++) {
+> +			dev_dbg(dev, "Processing extent %d/%d\n",
+> +				start_index + i, exp_cnt);
+> +			rc = cxl_validate_extent(mds, &dc_extents->extent[i]);
+> +			if (rc)
+> +				continue;
+
+A blank line here
+
+> +			if (!cxl_dc_extent_in_ed(cxled, &dc_extents->extent[i]))
+> +				continue;
+and here would make this more readable I think.
+
+> +			rc = cxl_ed_add_one_extent(cxled, &dc_extents->extent[i]);
+> +			if (rc)
+> +				return rc;
+> +		}
+> +
+> +		start_index += nr_ext;
+> +	} while (exp_cnt > total_read);
+> +
+> +	return 0;
+> +}
+
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0d7b09a49dcf..3e563ab29afe 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+
+>  
+> +static int cxl_region_read_extents(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int i;
+> +
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		int rc;
+Maybe worth giving up early if we see nr_targets > 1?
+
+If nothing else it saves people trying to figure out what happens if we
+reboot into an older kernel that doesn't support interleave (from one
+that does)
+
+> +
+> +		rc = cxl_read_dc_extents(p->targets[i]);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 01bee6eedff3..8f2d8944d334 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+> +/*
+> + * CXL rev 3.1 section 8.2.9.2.1.6; Table 8-51
+
+Throw a table name or section name into the reference so people
+can find it in CXL rNext.
+
+> + */
+> +#define CXL_DC_EXTENT_TAG_LEN 0x10
+> +struct cxl_dc_extent {
+> +	__le64 start_dpa;
+> +	__le64 length;
+> +	u8 tag[CXL_DC_EXTENT_TAG_LEN];
+> +	__le16 shared_extn_seq;
+> +	u8 reserved[6];
+> +} __packed;
+> +
+
+> +/*
+> + * Get Dynamic Capacity Extent List; Output Payload
+> + * CXL rev 3.1 section 8.2.9.9.9.2; Table 8-167
+> + */
+> +struct cxl_mbox_get_dc_extent_out {
+> +	__le32 ret_extent_cnt;
+> +	__le32 total_extent_cnt;
+> +	__le32 extent_list_num;
+
+Naming isn't that clear given generation bit missing.
+
+> +	u8 rsvd[4];
+> +	struct cxl_dc_extent extent[];
+> +} __packed;
+> +
+
