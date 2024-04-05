@@ -1,47 +1,46 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53F9200CB;
-	Fri,  5 Apr 2024 16:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4C5171667;
+	Fri,  5 Apr 2024 17:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712336239; cv=none; b=Lhv9UgMz3OXNnUU6DSYIScqyNm/LRs1JznILcbS2xGhSMllDEgk27or4OIcF4UgOqjggLqgBwFA1CbpfFvCRRL4qOZYwB++tp7Jon1pMK86vP/sPETH+fg0oz6zPBvwBpWbQwlcMomHtErYzuutWViOqVFMdPLtPtG9dCVNbzg4=
+	t=1712337932; cv=none; b=sPL9B0LG6TRxAnxYwnrCWpIDo/K2uubO0vqHjw/2FsFiI0+8NKgAFTHKbSOcFjJ6QjqmqhBFCt9hBtu9N7jUFb+MY5nIrenZluoVjivGqDflIzDWLdnAsCPz28/RC8r+/9IQPZsJKdE2rPXIFVR4QOkzX87yF9TbhvVIOGRkM38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712336239; c=relaxed/simple;
-	bh=OBK6g/UNcxbJXiiBy+9wcG+hPawXuj0fMmCpxvwxpYk=;
+	s=arc-20240116; t=1712337932; c=relaxed/simple;
+	bh=WI+yvEEzdbvXzYALdmX9GaU9mdSBDIKMZxEUKJeaQy8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hd8PYVMqOive8YepoSy9o1BicanVejHRg8uXEA5FqimMql+9wCdK/tgLRB1ZSIFv054qyA4Zv8rG0yk7DwJdl24E0/pj5GZ5bgJx00BSHEd4ltz1PfT8CZ9IwJX4tntC8wSSIj4k5Z9ew5BKCnYu8lPhymu7/Lloa6HNC1RVQbg=
+	 MIME-Version:Content-Type; b=M5bhrvV89K64XChtjMfJkpBz8ngrCtd2mhcqnQmodcYzafKIhXVBl5s0GZeVzUtrRXWW28ohJ80twJJ57kWvOdpEjeIgx+dt3Ej0Vqgi7tN6OBQK3EnMd+f/Xif8Bs9Rrkytsdaca2x+24TmXPEqlNGG27F0k6vYfvGEF1Y5ALw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VB4PH4fD8z6J9ds;
-	Sat,  6 Apr 2024 00:55:47 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VB4y53Rxqz6K6J4;
+	Sat,  6 Apr 2024 01:20:45 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C94A141251;
-	Sat,  6 Apr 2024 00:57:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5FE91140AB8;
+	Sat,  6 Apr 2024 01:25:26 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 5 Apr
- 2024 17:57:12 +0100
-Date: Fri, 5 Apr 2024 17:57:11 +0100
+ 2024 18:25:25 +0100
+Date: Fri, 5 Apr 2024 18:25:24 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-CC: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Xingtao Yao
- (Fujitsu)" <yaoxt.fnst@fujitsu.com>
-Subject: Re: [Problem ?] cxl list show nothing after reboot Re: [PATCH v2]
- cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS
- window
-Message-ID: <20240405175711.000032c4@Huawei.com>
-In-Reply-To: <24b8b11d-a7ec-42ce-9fa6-8a24701cfe46@fujitsu.com>
-References: <20240216160113.407141-1-rrichter@amd.com>
-	<b0f5e2ce-d39e-4a8e-8f2f-ffa67b604e02@fujitsu.com>
-	<24b8b11d-a7ec-42ce-9fa6-8a24701cfe46@fujitsu.com>
+To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
+	<gregkh@linuxfoundation.org>
+CC: 'Dan Williams' <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "mj@ucw.cz"
+	<mj@ucw.cz>
+Subject: Re: [PATCH v3 1/3] Add sysfs attribute for CXL 1.1 device link
+ status
+Message-ID: <20240405182524.00006373@Huawei.com>
+In-Reply-To: <OSAPR01MB7182D299E092B96C43B7FBAEBA3D2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+	<20240312080559.14904-2-kobayashi.da-06@fujitsu.com>
+	<6603275faabc_4a98a29470@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<OSAPR01MB7182912D196E74F55BE1A55FBA3B2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+	<OSAPR01MB7182D299E092B96C43B7FBAEBA3D2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -52,178 +51,90 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 26 Mar 2024 08:26:21 +0000
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
+On Wed, 3 Apr 2024 09:40:27 +0000
+"Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com> wrote:
 
-> All guys,
+> > Dan Williams wrote:  
+> > > Kobayashi,Daisuke wrote:  
+> > > > +static struct attribute_group cxl_rcd_group = {
+> > > > +		.attrs = cxl_rcd_attrs,
+> > > > +		.is_visible = cxl_rcd_visible,
+> > > > +};
+> > > > +
+> > > > +__ATTRIBUTE_GROUPS(cxl_rcd);
+> > > > +
+> > > >  static int cxl_pci_probe(struct pci_dev *pdev, const struct
+> > > > pci_device_id *id)  {
+> > > >  	struct pci_host_bridge *host_bridge =
+> > > > pci_find_host_bridge(pdev->bus); @@ -806,6 +995,9 @@ static int  
+> > > cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)  
+> > > >  	if (IS_ERR(mds))
+> > > >  		return PTR_ERR(mds);
+> > > >  	cxlds = &mds->cxlds;
+> > > > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
+> > > > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
+> > > > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);  
+> > >
+> > > No need to manually call device_create_file() when the attribute group is
+> > > already registered below. I am surprised you did not get duplicate sysfs file
+> > > warnings when registering these files twice.
+> > >  
+> > 
+> > Thank you for pointing it out. Remove these calls.
+> >   
+> If you are aware of the cause, I would appreciate your insight. 
+> In my environment, when I removed this device_create_file(), 
+> the file was not generated in sysfs. Therefore, I have not been 
+> able to remove this manual procedure at the moment. Is there a 
+> possibility that simply registering with 
+> struct pci_driver.driver.groups will not generate a sysfs file?
 > 
-> In order to make the CXL memdev work again, i have to modify the QEMU side
-> where it resets the "DVSEC CXL Control" during reboot. A draft changes is as below:
-> 
-> Per 8.1.3.2 DVSEC CXL Control (Offset 0Ch), Default value of BIT(2) is 0. So is it reasonable
-> to have a reset dvsecs in QEMU during reboot?
-> 
-> Any comments @Janathan
+> > > >  	pci_set_drvdata(pdev, cxlds);
+> > > >
+> > > >  	cxlds->rcd = is_cxl_restricted(pdev); @@ -967,6 +1159,7 @@ static
+> > > > struct pci_driver cxl_pci_driver = {
+> > > >  	.err_handler		= &cxl_error_handlers,
+> > > >  	.driver	= {
+> > > >  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> > > > +		.dev_groups	= cxl_rcd_groups,
+Odd though it may seem, try setting
+.dev_groups in the outer structure not the inner one.
 
-Hi,
+		.err_handler = &....
+		.dev_groups = cxl_rcd_groups,
+		.driver = {
+			...
+		},
+Similar to:
+https://elixir.bootlin.com/linux/latest/source/drivers/crypto/ccp/sp-pci.c#L592
 
-Sorry it took me so long to get to this.
+For reasons I don't follow, __pci_register_driver() overrides the internal one.
+Some ancient bit of code migration that never finished?
+https://elixir.bootlin.com/linux/latest/source/drivers/pci/pci-driver.c#L1447
 
-What are you attempting to do? Use an OS reboot on QEMU to check that the flows
-meant for BIOS configuration work - i.e. the OS rebuilds the state
-correctly by reading the current state of the devices?
+I did some digging.
+https://lore.kernel.org/all/20190731124349.4474-2-gregkh@linuxfoundation.org/
 
-Would be good to fix that case but I want to check that's the aim before looking
-too closely at this.
+So this got added to the driver core fairly recently (only 4 years ago ;)
 
-Thanks,
+The the dev_groups was added to pci in
+https://lore.kernel.org/all/20210512142648.666476-8-andrey.grodzovsky@amd.com/
 
-Jonathan
+I'm not sure why the bounce via pci_driver is needed though.
+Greg, looks like this came from usb originally, can you recall the reasoning?
 
+> > > >  	},
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.43.0
+> > > >
+> > > >  
+> > >  
+> >   
 > 
 > 
-> [root@iaas-rpma qemu]# git diff
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index b0a7e9f11b64..31755a9f9aab 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -899,6 +899,26 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
->       return address_space_write(as, dpa_offset, attrs, &data, size);
->   }
->   
-> +static void dvsecs_ctrl_reset(CXLType3Dev *ct3d)
-> +{
-> +
-> +     if (ct3d->sn != UI64_NULL) {
-> +        pcie_dev_ser_num_init(ct3d->cxl_cstate.pdev, 0x100, ct3d->sn);
-> +        ct3d->cxl_cstate.dvsec_offset = 0x100 + 0x0c;
-> +    } else {
-> +        ct3d->cxl_cstate.dvsec_offset = 0x100;
-> +    }
-> +
-> +    // FIXME?: only reset ctrl instead of rebuilding the whole dvsecs
-> +#if 0
-> +    memcpy(pdev->config + offset + sizeof(DVSECHeader),
-> +           body + sizeof(DVSECHeader),
-> +           length - sizeof(DVSECHeader));
-> +#else
-> +    build_dvsecs(ct3d);
-> +#endif
-> +}
-> +
->   static void ct3d_reset(DeviceState *dev)
->   {
->       CXLType3Dev *ct3d = CXL_TYPE3(dev);
-> @@ -907,6 +927,7 @@ static void ct3d_reset(DeviceState *dev)
->   
->       cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
->       cxl_device_register_init_t3(ct3d);
-> +    dvsecs_ctrl_reset(ct3d);
->   
->       /*
->        * Bring up an endpoint to target with MCTP over VDM.
-> 
-> 
-> 
-> 
-> 
-> On 22/03/2024 11:15, Zhijian Li (Fujitsu) wrote:
-> > Robert, Dan
-> > 
-> > It's noticed that 'cxl list' show nothing after a reboot in v6.8.(A fresh boot works)
-> > The git bisection pointed to this commit.
-> > 
-> > Haven't investigated it deeply, I'm wondering if it's a QEMU problem or
-> > something wrong with this patch.
-> > 
-> > 
-> > Reproduce step:
-> > 
-> > 1. Start a cxl QEMU VM
-> > 2. cxl list works
-> > cxl list
-> > [
-> >     {
-> >       "memdev":"mem0",
-> >       "ram_size":2147483648,
-> >       "serial":0,
-> >       "host":"0000:54:00.0"
-> >     },
-> >     {
-> >       "memdev":"mem1",
-> >       "pmem_size":2147483648,
-> >       "serial":0,
-> >       "host":"0000:36:00.0"
-> >     }
-> > ]
-> > 
-> > 3. reboot VM
-> > 4. cxl list show nothing and has following dmesg
-> > 
-> > cxl list
-> > [
-> > ]
-> >     Warning: no matching devices found
-> > 
-> > ...
-> > 
-> > [    6.249188]  pci0000:53: host supports CXL
-> > [    6.258168]  pci0000:35: host supports CXL
-> > [    6.490568] cxl_pci 0000:54:00.0: Range register decodes outside platform defined CXL ranges.
-> > [    6.494298] cxl_mem mem0: endpoint3 failed probe
-> > [    6.506072] cxl_pci 0000:36:00.0: Range register decodes outside platform defined CXL ranges.
-> > [    6.515092] cxl_mem mem1: endpoint3 failed probe
-> > [   12.181188] kauditd_printk_skb: 18 callbacks suppressed
-> > 
-> > 
-> > Thanks
-> > Zhijian
-> > 
-> > 
-> > On 17/02/2024 00:01, Robert Richter wrote:  
-> >> The Linux CXL subsystem is built on the assumption that HPA == SPA.
-> >> That is, the host physical address (HPA) the HDM decoder registers are
-> >> programmed with are system physical addresses (SPA).
-> >>
-> >> During HDM decoder setup, the DVSEC CXL range registers (cxl-3.1,
-> >> 8.1.3.8) are checked if the memory is enabled and the CXL range is in
-> >> a HPA window that is described in a CFMWS structure of the CXL host
-> >> bridge (cxl-3.1, 9.18.1.3).
-> >>
-> >> Now, if the HPA is not an SPA, the CXL range does not match a CFMWS
-> >> window and the CXL memory range will be disabled then. The HDM decoder
-> >> stops working which causes system memory being disabled and further a
-> >> system hang during HDM decoder initialization, typically when a CXL
-> >> enabled kernel boots.
-> >>
-> >> Prevent a system hang and do not disable the HDM decoder if the
-> >> decoder's CXL range is not found in a CFMWS window.
-> >>
-> >> Note the change only fixes a hardware hang, but does not implement
-> >> HPA/SPA translation. Support for this can be added in a follow on
-> >> patch series.
-> >>
-> >> Signed-off-by: Robert Richter <rrichter@amd.com>
-> >> ---
-> >>    drivers/cxl/core/pci.c | 4 ++--
-> >>    1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> >> index a0e7ed5ae25f..18616ca873e5 100644
-> >> --- a/drivers/cxl/core/pci.c
-> >> +++ b/drivers/cxl/core/pci.c
-> >> @@ -478,8 +478,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-> >>    	}
-> >>    
-> >>    	if (!allowed) {
-> >> -		cxl_set_mem_enable(cxlds, 0);
-> >> -		info->mem_enabled = 0;
-> >> +		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
-> >> +		return -ENXIO;
-> >>    	}
-> >>    
-> >>    	/  
 
