@@ -1,43 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E88616F858;
-	Fri,  5 Apr 2024 16:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53F9200CB;
+	Fri,  5 Apr 2024 16:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712335263; cv=none; b=dRJggNSgXps2f98o/PpCfzv8wvMDSGy4vNiQ/7VVxsQ6CPzwcmiNBpIW/Fim88EkpRVqeNNcc+bIf7pOHXJ0OZSpBNP+ZugaXmSXFpDG0pv8fhu0K76l58C1AbMNm/1LmSW1LUOgL43uBjwLZHH6VqZ4W8oP2qR9bgU0/c3TfUc=
+	t=1712336239; cv=none; b=Lhv9UgMz3OXNnUU6DSYIScqyNm/LRs1JznILcbS2xGhSMllDEgk27or4OIcF4UgOqjggLqgBwFA1CbpfFvCRRL4qOZYwB++tp7Jon1pMK86vP/sPETH+fg0oz6zPBvwBpWbQwlcMomHtErYzuutWViOqVFMdPLtPtG9dCVNbzg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712335263; c=relaxed/simple;
-	bh=3Atpy12ZUgPWTseaHFws+5AQqqQErgzz9HigTS5MKvA=;
+	s=arc-20240116; t=1712336239; c=relaxed/simple;
+	bh=OBK6g/UNcxbJXiiBy+9wcG+hPawXuj0fMmCpxvwxpYk=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WGkLRVJJaho9uGhXBu+k1GvzoYShzVwNzjVApyGAKVMO6JVJjcL0gJgAR+XhP8B+h2jLPpiWXc6mjdpbzyeXnsZUsM8Sxb+b13KUouv/Z49/KIakjNK8hTHlgse652FK6KcVehSwGSAz3//mzH+LIXNe0p/irZ5XfrQpZzSrYxM=
+	 MIME-Version:Content-Type; b=hd8PYVMqOive8YepoSy9o1BicanVejHRg8uXEA5FqimMql+9wCdK/tgLRB1ZSIFv054qyA4Zv8rG0yk7DwJdl24E0/pj5GZ5bgJx00BSHEd4ltz1PfT8CZ9IwJX4tntC8wSSIj4k5Z9ew5BKCnYu8lPhymu7/Lloa6HNC1RVQbg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VB42X2RK7z6J9Zb;
-	Sat,  6 Apr 2024 00:39:32 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VB4PH4fD8z6J9ds;
+	Sat,  6 Apr 2024 00:55:47 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C8200140C98;
-	Sat,  6 Apr 2024 00:40:57 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1C94A141251;
+	Sat,  6 Apr 2024 00:57:13 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 5 Apr
- 2024 17:40:57 +0100
-Date: Fri, 5 Apr 2024 17:40:56 +0100
+ 2024 17:57:12 +0100
+Date: Fri, 5 Apr 2024 17:57:11 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Kwangjin Ko <kwangjin.ko@sk.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kernel_team@skhynix.com>
-Subject: Re: [PATCH v2 1/1] cxl/core: Fix initialization of
- mbox_cmd.size_out in get event
-Message-ID: <20240405174056.00005422@Huawei.com>
-In-Reply-To: <ZhAhAL/GOaWFrauw@aschofie-mobl2>
-References: <20240402081404.1106-1-kwangjin.ko@sk.com>
-	<20240402081404.1106-2-kwangjin.ko@sk.com>
-	<ZhAhAL/GOaWFrauw@aschofie-mobl2>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+CC: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Xingtao Yao
+ (Fujitsu)" <yaoxt.fnst@fujitsu.com>
+Subject: Re: [Problem ?] cxl list show nothing after reboot Re: [PATCH v2]
+ cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS
+ window
+Message-ID: <20240405175711.000032c4@Huawei.com>
+In-Reply-To: <24b8b11d-a7ec-42ce-9fa6-8a24701cfe46@fujitsu.com>
+References: <20240216160113.407141-1-rrichter@amd.com>
+	<b0f5e2ce-d39e-4a8e-8f2f-ffa67b604e02@fujitsu.com>
+	<24b8b11d-a7ec-42ce-9fa6-8a24701cfe46@fujitsu.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,115 +52,178 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 5 Apr 2024 09:04:16 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Tue, 26 Mar 2024 08:26:21 +0000
+"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
 
-> On Tue, Apr 02, 2024 at 05:14:03PM +0900, Kwangjin Ko wrote:
-> > Since mbox_cmd.size_out is overwritten with the actual output size in
-> > the function below, it needs to be initialized every time.
+> All guys,
+> 
+> In order to make the CXL memdev work again, i have to modify the QEMU side
+> where it resets the "DVSEC CXL Control" during reboot. A draft changes is as below:
+> 
+> Per 8.1.3.2 DVSEC CXL Control (Offset 0Ch), Default value of BIT(2) is 0. So is it reasonable
+> to have a reset dvsecs in QEMU during reboot?
+> 
+> Any comments @Janathan
+
+Hi,
+
+Sorry it took me so long to get to this.
+
+What are you attempting to do? Use an OS reboot on QEMU to check that the flows
+meant for BIOS configuration work - i.e. the OS rebuilds the state
+correctly by reading the current state of the devices?
+
+Would be good to fix that case but I want to check that's the aim before looking
+too closely at this.
+
+Thanks,
+
+Jonathan
+
+> 
+> 
+> [root@iaas-rpma qemu]# git diff
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index b0a7e9f11b64..31755a9f9aab 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -899,6 +899,26 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+>       return address_space_write(as, dpa_offset, attrs, &data, size);
+>   }
+>   
+> +static void dvsecs_ctrl_reset(CXLType3Dev *ct3d)
+> +{
+> +
+> +     if (ct3d->sn != UI64_NULL) {
+> +        pcie_dev_ser_num_init(ct3d->cxl_cstate.pdev, 0x100, ct3d->sn);
+> +        ct3d->cxl_cstate.dvsec_offset = 0x100 + 0x0c;
+> +    } else {
+> +        ct3d->cxl_cstate.dvsec_offset = 0x100;
+> +    }
+> +
+> +    // FIXME?: only reset ctrl instead of rebuilding the whole dvsecs
+> +#if 0
+> +    memcpy(pdev->config + offset + sizeof(DVSECHeader),
+> +           body + sizeof(DVSECHeader),
+> +           length - sizeof(DVSECHeader));
+> +#else
+> +    build_dvsecs(ct3d);
+> +#endif
+> +}
+> +
+>   static void ct3d_reset(DeviceState *dev)
+>   {
+>       CXLType3Dev *ct3d = CXL_TYPE3(dev);
+> @@ -907,6 +927,7 @@ static void ct3d_reset(DeviceState *dev)
+>   
+>       cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
+>       cxl_device_register_init_t3(ct3d);
+> +    dvsecs_ctrl_reset(ct3d);
+>   
+>       /*
+>        * Bring up an endpoint to target with MCTP over VDM.
+> 
+> 
+> 
+> 
+> 
+> On 22/03/2024 11:15, Zhijian Li (Fujitsu) wrote:
+> > Robert, Dan
 > > 
-> > cxl_internal_send_cmd -> __cxl_pci_mbox_send_cmd
+> > It's noticed that 'cxl list' show nothing after a reboot in v6.8.(A fresh boot works)
+> > The git bisection pointed to this commit.
 > > 
-> > Problem scenario:
+> > Haven't investigated it deeply, I'm wondering if it's a QEMU problem or
+> > something wrong with this patch.
 > > 
-> > 1) The size_out variable is initially set to the size of the mailbox.
-> > 2) Read an event.
-> >    - size_out is set to 160 bytes(header 32B + one event 128B).
-> >    - Two event are created while reading.
-> > 3) Read the new *two* events.
-> >    - size_out is still set to 160 bytes.
-> >    - Although the value of out_len is 288 bytes, only 160 bytes are
-> >      copied from the mailbox register to the local variable.
-> >    - record_count is set to 2.
-> >    - Accessing records[1] will result in reading incorrect data.  
-> 
-> Agree with the other comments on need to set .out_size when doing
-> cxl_internal_send_cmd() in a loop. Poison list retrieval can hit
-> this case if the MORE flag is set and a follow on read of the list
-> delivers more records than the previous read. ie. device gives one
-> record, sets the _MORE flag, then gives 5.
-> 
-> 2 other things appeared to me while looking at this:
-> 
-> First, it seems that there is another cleanup wrt accessing records
-> with invalid data.  Still focusing on get_events and get_poison
-> since those loop through output data based on a device supplied
-> record count. The min_out check means the driver at least gets a
-> count of records to expect. That's good. The problem occurs::
-> 
-> if (mbox.size_out != struct_size(payload, records, 'record_count'))
-> 
-> The driver will log garbage trace events, and that could lead to
-> bad actions based on bad data. (like a needless scan of device based
-> on a false overflow flag). So, checking that size.out is the proper
-> multiple of record_count protects driver from bad device behavior.
-> 
-> I think that can be combined w the patch Dan is suggesting to
-> reset mbox.size_out on each loop.
-Hi Alison,
-
-I'd split it.  Dan's one is a bug fix, this is hardening against
-a device bug. Good to have but not really backport material unless
-we think there are devices like this out there.
-
-> 
-> Second thing is the pci-driver quiet handling of PAYLOAD LENGTH
-> values reported by the device. It seems like at a minimum the
-> pci-driver could emit an info or debug message when the device
-> is reporting payload lengths that exceed what the driver can
-> copy in.
-
-When does this happen?
-1. New fields on end of a fixed length message.
-   Correct to silently eat it as the spec is buggy if we don't
-    have backwards compatibility.
-    I don't think the spec has had that particular type of bug yet,
-    but maybe I'm forgetting one.
-2. Device bug.  Can't tell that is different from 1.
-
-So maybe dev_dbg(). I'm not sure why the cxl-driver would ever want to
-know.
-
-> I'm referring to the mbox.size_out adjustment in
-> __cxl_pci_mbox_send_cmd(). Or, if it's not the pci-drivers job
-> to judge, pass that actual payload length value back in the
-> mbox structure (new field) so that the cxl-driver can use it.
-> The pci driver would still do it's "#8 Sanitize the copy" work,
-> but it would allow the cxl-driver to clearly see why it got the
-> .size_out it got, and squawk about it if needed.
-> 
-> --Alison
-> 
 > > 
-> > Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
-> > ---
-> >  drivers/cxl/core/mbox.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > Reproduce step:
 > > 
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 9adda4795eb7..a38531a055c8 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -958,13 +958,14 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
-> >  		.payload_in = &log_type,
-> >  		.size_in = sizeof(log_type),
-> >  		.payload_out = payload,
-> > -		.size_out = mds->payload_size,
-> >  		.min_out = struct_size(payload, records, 0),
-> >  	};
-> >  
-> >  	do {
-> >  		int rc, i;
-> >  
-> > +		mbox_cmd.size_out = mds->payload_size;
-> > +
-> >  		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-> >  		if (rc) {
-> >  			dev_err_ratelimited(dev,
-> > -- 
-> > 2.34.1
-> >   
+> > 1. Start a cxl QEMU VM
+> > 2. cxl list works
+> > cxl list
+> > [
+> >     {
+> >       "memdev":"mem0",
+> >       "ram_size":2147483648,
+> >       "serial":0,
+> >       "host":"0000:54:00.0"
+> >     },
+> >     {
+> >       "memdev":"mem1",
+> >       "pmem_size":2147483648,
+> >       "serial":0,
+> >       "host":"0000:36:00.0"
+> >     }
+> > ]
+> > 
+> > 3. reboot VM
+> > 4. cxl list show nothing and has following dmesg
+> > 
+> > cxl list
+> > [
+> > ]
+> >     Warning: no matching devices found
+> > 
+> > ...
+> > 
+> > [    6.249188]  pci0000:53: host supports CXL
+> > [    6.258168]  pci0000:35: host supports CXL
+> > [    6.490568] cxl_pci 0000:54:00.0: Range register decodes outside platform defined CXL ranges.
+> > [    6.494298] cxl_mem mem0: endpoint3 failed probe
+> > [    6.506072] cxl_pci 0000:36:00.0: Range register decodes outside platform defined CXL ranges.
+> > [    6.515092] cxl_mem mem1: endpoint3 failed probe
+> > [   12.181188] kauditd_printk_skb: 18 callbacks suppressed
+> > 
+> > 
+> > Thanks
+> > Zhijian
+> > 
+> > 
+> > On 17/02/2024 00:01, Robert Richter wrote:  
+> >> The Linux CXL subsystem is built on the assumption that HPA == SPA.
+> >> That is, the host physical address (HPA) the HDM decoder registers are
+> >> programmed with are system physical addresses (SPA).
+> >>
+> >> During HDM decoder setup, the DVSEC CXL range registers (cxl-3.1,
+> >> 8.1.3.8) are checked if the memory is enabled and the CXL range is in
+> >> a HPA window that is described in a CFMWS structure of the CXL host
+> >> bridge (cxl-3.1, 9.18.1.3).
+> >>
+> >> Now, if the HPA is not an SPA, the CXL range does not match a CFMWS
+> >> window and the CXL memory range will be disabled then. The HDM decoder
+> >> stops working which causes system memory being disabled and further a
+> >> system hang during HDM decoder initialization, typically when a CXL
+> >> enabled kernel boots.
+> >>
+> >> Prevent a system hang and do not disable the HDM decoder if the
+> >> decoder's CXL range is not found in a CFMWS window.
+> >>
+> >> Note the change only fixes a hardware hang, but does not implement
+> >> HPA/SPA translation. Support for this can be added in a follow on
+> >> patch series.
+> >>
+> >> Signed-off-by: Robert Richter <rrichter@amd.com>
+> >> ---
+> >>    drivers/cxl/core/pci.c | 4 ++--
+> >>    1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> >> index a0e7ed5ae25f..18616ca873e5 100644
+> >> --- a/drivers/cxl/core/pci.c
+> >> +++ b/drivers/cxl/core/pci.c
+> >> @@ -478,8 +478,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> >>    	}
+> >>    
+> >>    	if (!allowed) {
+> >> -		cxl_set_mem_enable(cxlds, 0);
+> >> -		info->mem_enabled = 0;
+> >> +		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
+> >> +		return -ENXIO;
+> >>    	}
+> >>    
+> >>    	/  
 
