@@ -1,39 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF911E52C
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Apr 2024 13:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AFB16D32D
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Apr 2024 13:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712323799; cv=none; b=RuHoxqbr9hwXG/pnB3MkenPNA0YTt9UnoUtL/4YkxlBzwL4l9EexqZlRORj4jW4o+1L+21smBWR9p4Jw27z+pnvp7ViMEJJcVjojx8xN8pZmI9pNGc70/o4Xv6uvrLVlTSTKXwHBvpS1HisyQ0HYaX8fNbEgwktK8KYOigE43mo=
+	t=1712323968; cv=none; b=rG2GC5lE9aCG4/W9Ghgslg6kBoJsCnR8oKoK2Bjym63sWUWjoJOfRinz8T4YK7sRm/miWJTIJGq51ZZxoJIqEx4/CUutLa/C78ITuppvUQQyvZqWr9pOeE4yu9UM6W+QNnQ6EH5SKOguqBWD5sUvfVwASeMOeVh2jJtKb6nsTTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712323799; c=relaxed/simple;
-	bh=g/jr4ZlUC7P6kGCGyWxaH4F/lIX2SGExW5Lqb5u6aAE=;
+	s=arc-20240116; t=1712323968; c=relaxed/simple;
+	bh=z6u9/MFi/6diwsTcL68mcimKfMbpmkxIZLIesyC4UO8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XEV53lgIFD+0GD1zW4hXDSXKkI3vIHocTjE4gm3PwSd4QV+lk56YAWwr81rbQWQmOGGzTTa/nT3SKSJ3+a7KPW8gOOuHhQGEDcQyefClN7ScoZ+dPkLomh+wiSmZ2ajth+y1DSWo7tkrBLR9PonKP5A8lTKpwgCBWRWABn6X5EM=
+	 MIME-Version:Content-Type; b=u9pktgk4XyX6q1EQw/6mBEGcrVrzf1J/RkLpH2y/GakSmpWV3Vq0PN3X/QHjGPL0j8ke/UBAuG+Cms3zeCM3xRRLQ6yvA2cxrqOvKFQ7Zpfpaer9+ZwJ9OBKiNYkiRe+tQuiIRl+a+abIVnbyWPPWjcbyMeDU9sa4cdPXmuu/Ww=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9znz3DBtz688sb;
-	Fri,  5 Apr 2024 21:28:23 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9zsL0vgxz6JBDw;
+	Fri,  5 Apr 2024 21:31:18 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3D7951400CD;
-	Fri,  5 Apr 2024 21:29:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E0611400CD;
+	Fri,  5 Apr 2024 21:32:43 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 5 Apr
- 2024 14:29:45 +0100
-Date: Fri, 5 Apr 2024 14:29:45 +0100
+ 2024 14:32:42 +0100
+Date: Fri, 5 Apr 2024 14:32:42 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Parthasarathy, Mohan (In-Memory Compute Platforms)"
-	<mohan_parthasarathy@hpe.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>
-Subject: Re: How to connect a CXL memory device to a NUMA node ?
-Message-ID: <20240405142945.00002921@Huawei.com>
-In-Reply-To: <PH7PR84MB158244A35FB3A633E6E0DFE888032@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
-References: <PH7PR84MB158244A35FB3A633E6E0DFE888032@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v7 2/5] cxl: Fix retrieving of access_coordinates in
+ PCIe path
+Message-ID: <20240405143242.0000363a@Huawei.com>
+In-Reply-To: <20240403154844.3403859-3-dave.jiang@intel.com>
+References: <20240403154844.3403859-1-dave.jiang@intel.com>
+	<20240403154844.3403859-3-dave.jiang@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -47,95 +49,89 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 5 Apr 2024 10:36:37 +0000
-"Parthasarathy, Mohan (In-Memory Compute Platforms)" <mohan_parthasarathy@hpe.com> wrote:
+On Wed, 3 Apr 2024 08:47:13 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Hi all,
-
-Hi Mohan,
-
-You've found a gap on the kernel side of things rather than QEMU I think.
-Btw I assume you are testing on x86 - there are some more changes needed on
-ARM64. I have them but need to find time to clean up the code. My tests
-are on ARM64 but should align with what you are seeing.
-
-Directly no, there isn't a way to do it because such a setup would rely
-on firmware doing the distance discovery and creating SLIT and SRAT appropriate.
-It doesn't make sense to emulate a firmware setup directly in QEMU though we
-could in theory do so.
-
-Unless someone fancies taking on EDK2 support for doing that on top of QEMU, we are
-focusing on what looks more like a hotplug flow (or a BIOS leaving configuration
-to the OS.)
-
-For that we use SRAT Generic Port Affinity structures and CFMW Structures in CEDT.
-Not all the code is upstream yet though. You'll need qemu patches
-https://lore.kernel.org/qemu-devel/20240403102927.31263-1-Jonathan.Cameron@huawei.com/
-(there is a test in there to act as an example on how to configure it)
-which I posted earlier this week +
- Dave Jiang's kernel fixes on this list for the kernel
-https://lore.kernel.org/linux-cxl/20240403154844.3403859-1-dave.jiang@intel.com/T/#t
-
-However, I think we do have a gap in providing any data for SLIT equivalent for the NUMA
-nodes generated for CXL memory.
-
-You can add SLIT for all the ACPI nodes via the -numa dist,src=0,dst=0,val=10 etc
-entrees in here
-https://github.com/open-mpi/hwloc/wiki/Simulating-complex-memory-with-Qemu
-
-I've just run with that and get generic distances from numactl -H similar to below
-but the HMAT derived /sys/bus/nodes/devices/nodeX/access0/ etc correctly show different distances.
-For nodes in SLIT the values /sys/bus/node/devices/nodeX/distances (which is probably
-what numactl -H reads) show the values provided (I used 21 to make it obvious) but
-for CXL memory added to the OS the default value of 20 is used.
-
-Currently CXL related NUMA nodes are per CFMWS so if you want to separate devices into their
-own nodes you will need to create 2 of those if you want to separate your two devices into
-their own NUMA nodes.
-
-So I wonder, what should we do about distances traditionally retrieved from SLIT?
-There will be lots of legacy code out there unfortunately that will care :(
-
-We need to poke something into numa_set_distance() I think.
-
-Fun here is how do we derive something sensible given the can of worms SLIT
-is? 10 is well defined but other than 'bigger' internode distances depend
-on what mood the bios writer was in and what broke in various OS with
-the values they actually wanted to put in - these are tweaked to get around
-OS issues - we like about some of our platforms so that the scheduler doesn't
-go crazy for example. We could try to calculate relationship between SLIT
-values and HMAT values on a platform and use that to derive a value?
-
-Anyone object to just using 42 for all CXL memory nodes that weren't set
-to anything at boot time? (i.e. not already in SLIT?)
-
-Jonathan
-
-
+> Current loop in cxl_endpoint_get_perf_coordinates() incorrectly assumes
+> the Root Port (RP) dport is the one with generic port access_coordinate.
+> However those coordinates are one level up in the Host Bridge (HB).
+> Current code causes the computation code to pick up 0s as the coordinates
+> and cause minimal bandwidth to result in 0.
 > 
-> I want to create a VM with 2 CXL memory devices - one attached to NUMA node 0 and one attached to NUMA node 1. Is this possible in QEMU ? Currently when I create a CXL memory device in QEMU, it shows equal distances from each numa node in numactl output. I want it such that it should show closer distance to the NUMA node (or socket) it is attached to. Something like this :
+> Add check to skip RP when combining coordinates.
 > 
-> [fedora@localhost ~]$ numactl -H
-> available: 3 nodes (0-2)
-> node 0 cpus: 0 1
-> node 0 size: 1894 MB
-> node 0 free: 1627 MB
-> node 1 cpus: 2 3
-> node 1 size: 2012 MB
-> node 1 free: 1696 MB
-> node 2 cpus:
-> node 2 size: 4096 MB
-> node 2 free: 4096 MB
-> node distances:
-> node   0   1   2
->   0:  10  20  20
->   1:  20  10  30
->   2:  20  20  10
+> Fixes: 4d59ba915318 ("cxl: Fix retrieving of access_coordinates in PCIe path")
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+I've only tested this with direct connect, but can't see why it wouldn't work
+with switches in the path. So
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/port.c | 35 ++++++++++++++++++++++-------------
+>  1 file changed, 22 insertions(+), 13 deletions(-)
 > 
-> As you can see the distance for numa node 1 to the cxl device should be 30, not 20, assuming the CXL device is attached to node 0. Any thoughts on how to make this work ?
-.
-> 
-> Regards,
-> Mohan
-> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 6cbde50a742b..7aadcec4fc64 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -2165,6 +2165,11 @@ int cxl_hb_get_perf_coordinates(struct cxl_port *port,
+>  	return 0;
+>  }
+>  
+> +static bool parent_port_is_cxl_root(struct cxl_port *port)
+> +{
+> +	return is_cxl_root(to_cxl_port(port->dev.parent));
+> +}
+> +
+>  /**
+>   * cxl_endpoint_get_perf_coordinates - Retrieve performance numbers stored in dports
+>   *				   of CXL path
+> @@ -2184,27 +2189,31 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
+>  	struct cxl_dport *dport;
+>  	struct pci_dev *pdev;
+>  	unsigned int bw;
+> +	bool is_cxl_root;
+>  
+>  	if (!is_cxl_endpoint(port))
+>  		return -EINVAL;
+>  
+> -	dport = iter->parent_dport;
+> -
+>  	/*
+> -	 * Exit the loop when the parent port of the current port is cxl root.
+> -	 * The iterative loop starts at the endpoint and gathers the
+> -	 * latency of the CXL link from the current iter to the next downstream
+> -	 * port each iteration. If the parent is cxl root then there is
+> -	 * nothing to gather.
+> +	 * Exit the loop when the parent port of the current iter port is cxl
+> +	 * root. The iterative loop starts at the endpoint and gathers the
+> +	 * latency of the CXL link from the current device/port to the connected
+> +	 * downstream port each iteration.
+>  	 */
+> -	while (!is_cxl_root(to_cxl_port(iter->dev.parent))) {
+> -		cxl_coordinates_combine(&c, &c, &dport->sw_coord);
+> +	do {
+> +		dport = iter->parent_dport;
+> +		iter = to_cxl_port(iter->dev.parent);
+> +		is_cxl_root = parent_port_is_cxl_root(iter);
+> +
+> +		/*
+> +		 * There's no valid access_coordinate for a root port since RPs do not
+> +		 * have CDAT and therefore needs to be skipped.
+> +		 */
+> +		if (!is_cxl_root)
+> +			cxl_coordinates_combine(&c, &c, &dport->sw_coord);
+>  		c.write_latency += dport->link_latency;
+>  		c.read_latency += dport->link_latency;
+> -
+> -		iter = to_cxl_port(iter->dev.parent);
+> -		dport = iter->parent_dport;
+> -	}
+> +	} while (!is_cxl_root);
+>  
+>  	/* Get the calculated PCI paths bandwidth */
+>  	pdev = to_pci_dev(port->uport_dev->parent);
 
