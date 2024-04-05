@@ -1,165 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B799922EF8
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Apr 2024 22:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712356580; cv=fail; b=TRvU/lUDRAL8AOJX2bki7c2zT1gUJVzeATE73KoqWlYBQ+97amYs+dvC817SnTTdsWOj/SHQUz74Ah/O36q6WHPYx/WcMzqSc2G8v6mq10bF+6sfoXQlCV4KHgXza+b4YqpKBhPODa6MDLD8YYRi+N8xSDdmWzFaYWNbEe4HXME=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712356580; c=relaxed/simple;
-	bh=FoMzJ5WOsCLnDyfVdJJ+gzJrxlsJJkP8ZsHdVWz1QfY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AZP81PXsBLcsBqza7bhnDJz00l4erk+zwckbwZBztMRIkYEikHr7BNklW0XKSF+K5qDJbUs8ChaXPeGHOlF3CccEPSZ/2q/CpK6dv4IQV9/cXaN2C/im3hMJspF7dKIN9f1wTRlSQTznhc5DCxBn6J4aeVNxQGsTt/6nnP9Db0s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MGoHvfhv; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73BB2C1AD
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Apr 2024 22:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712357040; cv=none; b=Dt7JGTGIVIkucjj+1Psr7lvtMtLzJR6JffE7JbyknvFqu4X0vLYMTdDUYCaGUcpBC/yFMvxCththtgJzHSjPhXxpoeZgrzTcZnB/mrS+IdwA7BZl/QyGPYfjLPIQ5j6Z5oxg0avolZcCbFC3oOzjlrnKeVs4BbTsbZvLxPR5faI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712357040; c=relaxed/simple;
+	bh=JrWgAMwL1kvDvWJdq7P6eEwvsYKZ6eqw3MbLIeb0B38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FUcc5GypffjCW370JGE1revYBANeTp32XOvB5mBaYxpiaSohvMoNKtVf4leE+FLWGjjBIStr/bxg9zaIlUJA3uuUSOwQkRkIBNkpayPd6OWWL575LlitmUeull826mx2/mGV9DQgWy0dWLoPmP2GS32u+1ao/XCbBuKKtbUOyrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Q9YOAa8G; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MGoHvfhv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712356576; x=1743892576;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=FoMzJ5WOsCLnDyfVdJJ+gzJrxlsJJkP8ZsHdVWz1QfY=;
-  b=MGoHvfhvqLbKVXKPw7sOCckEk+QHOdxK7Weoyk4zB9rQ/OzQd5o10kam
-   MZw/Y6K46+JVN+R/8CCNshmmJicBS9pfPaPuCSk+Oq1ocwFJ9BpBXxloq
-   KQhqCOfPWMTIrzQ8mlVXUMp0q/k4a/h8bTiU/jo+BgHgmFuwWMm7b6cYJ
-   JNYZjUM1pWrF9PaaQSutOVBNr0rvL0t8EE74r69DBER3nuie6DxKAY7wt
-   IdePeqXfLc7eCGZ9GhO78wT6OfAdyW4gcf1O/+upUwviM89nmyKMpeXvv
-   dhZgmAmgm6+LZyKFyiGbHXShWT6N3PkCMJ+ZP8WZCXKSpVkVx1UYE4im3
-   w==;
-X-CSE-ConnectionGUID: 17Ci0k0yRgKoI3vGJ/2e3g==
-X-CSE-MsgGUID: 4r63sX0NS+a0T5tl8eZbvw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="11478470"
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="11478470"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:36:15 -0700
-X-CSE-ConnectionGUID: tbI8u0sIQyGhtYItGKORCg==
-X-CSE-MsgGUID: Vu4Sl56LRyex8xIBPBnOcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="42483412"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2024 15:36:15 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Apr 2024 15:36:14 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 5 Apr 2024 15:36:14 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 5 Apr 2024 15:36:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=koa2hos0bpMZBDw1pTihnV8GtobvJ41CTfv4qU0ItTst1mtJo5IbOf28naQOAl36YNT1tnafZUchHpp+Hm9vo+ojz9Vf3sQoL6nGo880vwDyIQE84vy2JRiym8OxC+0hvu7V8JOGytyq2LP5IvawG44B5vogsa0oKyr8P7QKWSwmU9ungMFwcEKWaE5LcoP+UOG7uKu/nWyPUNFIgseyHAh7HAoxSkQ29QoMb7LN2Qb9CYZXSHD45plxt/4jwIk4fiMgtAHEt+4tB1wZtdZfRap5JA3UA7gzOR5VtJPDeZ0SzBBwEOubS5PXwLahz48CTBtcrRWTL3R6gmfnc4j3uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZlIKG5YEvzUur96iuvfx+x5JWZcZjRSh5P2xV4CZf7k=;
- b=mL3wS83BVNH9EllBIBBMCWQP0xreP2irHnaOVjX5H4c+ibuHkXFd822EmA9TkPnG4a9cysnzUaghg4aV/ArQ2a1aZ/Rj7UH8PDoOX3fzn4ER/7JkQiwCB0OsW1sVak/vpMPu5yHqAhqT3tDHOKl1X4v+Dr1qmt9EsQrDSmKRU48KPwNLHGxDjGQv5DOgGMEzlpCE4o3RFNtQSy1eYMmjl6m5I2d0AUIvpZvNRhg9xUp800XHHZ52OUc/zFr1vPluJKnIREzBi9bKRczAfS5B1BhZAvPeNGdNHTRFJqvrf35lAhHk6vkuFJ0z347nLxTONS6VgP84j48U90ueQAOOTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB5969.namprd11.prod.outlook.com (2603:10b6:8:5c::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.26; Fri, 5 Apr 2024 22:36:12 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Fri, 5 Apr 2024
- 22:36:12 +0000
-Date: Fri, 5 Apr 2024 15:36:09 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>
-Subject: RE: [PATCH v7 5/5] cxl: Add checks to access_coordinate calculation
- to fail missing data
-Message-ID: <66107cd99f69e_2583ad2947d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240403154844.3403859-1-dave.jiang@intel.com>
- <20240403154844.3403859-6-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240403154844.3403859-6-dave.jiang@intel.com>
-X-ClientProxiedBy: MW3PR06CA0004.namprd06.prod.outlook.com
- (2603:10b6:303:2a::9) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Q9YOAa8G"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so2888737276.1
+        for <linux-cxl@vger.kernel.org>; Fri, 05 Apr 2024 15:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712357038; x=1712961838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hCBHfr4VKJb+nF0gfasAMfqJdSwuuy6m/sFNcO7Zez0=;
+        b=Q9YOAa8GZOwgG18/U3r8Q3MIa+ALoE79ihoU/xDJ5JmaAYP8BKpxdh13i01nFQd7sq
+         hJJoeqVsCQWCHTVZ6s0xSO6Qb1zFzD6MEwFoP1PT1usfkqZutBKKSt+qlJNkfdX/FWjf
+         VCQJsULhL4fQMx2EzYT5GHe8Jz1UZaQhBvoEhqj5JaAVJiqCtNvYw6WXaoYQdQGaISQF
+         YOg71K3AOEUi2mvCSX8zcPddQlW5W1XrXe601XZ/QldUM0c/nootaS4/nRs52dw+Znv3
+         SKwQTr8VRiDFuHOthOyuIh4Z7fe4nkd2na2nDE6wf3TbKMATCVO6oA13GWSsFMa1YUoi
+         Kulw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712357038; x=1712961838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hCBHfr4VKJb+nF0gfasAMfqJdSwuuy6m/sFNcO7Zez0=;
+        b=lD9kFRRDY/UwEBratLSyS8ze/fcyYt9S26Asz+7I7VhXN1ea5BD8m7+/jAvLBYvHfI
+         F4BxEAeBz/DvrQkCHHGNID3Ioiu/FSVlaG1pUU2sCZGqn1kBgzG7J6h8Cwi0KqFoyjUc
+         0KI9mmsgsIwvp8N11aDkyx47lLXfZ7Z6NTJSSqWrA7/vWiJxBEJ5IzwBwi2aIEgAyAcG
+         DKRCNTAVA/oaKLrG1EI0dsjeGsRgF67OnPC7of9OkBQXmI5DnJBgutd5Qvw2PUu87PdA
+         +OL5k+3QkxTb0q6w1nGNPDob6U+/8OrHkrbegGR/nlglXJI+E5cC1I0LQ1p5ln1phzBd
+         eEdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWamHeUJJLX2bQwHMvhdVEjRIzW12jUCTVYwGmrgYK8KzNEs3whsvL5R98ZJp8Wy6vrC3y/Rc4Uv0DFQUNWJrHlBrvaEnc/pQ
+X-Gm-Message-State: AOJu0Yx2J9POCp6B1qapqWEVcjNL2hzDF/GJqy8wTLLmN2NmKJGwziTz
+	R9r2sP0pRZr//QAVrJNqcDuYszoDPjzPb9yTnW5Fuvk6N8xjCCMA6LyIcPD9srTikRMpbwdKbJs
+	t92Z6WMtaNf5Zhi3JSQPfegay8ok5mFUCeCxchA==
+X-Google-Smtp-Source: AGHT+IGkc0Q0l/mos/5NT0gBK0qJn5r1i2V05XNXtK/wcS38g1Oz3fhqPqidWAK23808M9UnRFIa1KWgPI5kzEPoB9g=
+X-Received: by 2002:a25:6b51:0:b0:dc6:bbbc:80e4 with SMTP id
+ o17-20020a256b51000000b00dc6bbbc80e4mr2701001ybm.4.1712357037795; Fri, 05 Apr
+ 2024 15:43:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB5969:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b0dEnyOPdyA5M9PeXlrMrA0wxbVpofvJnCHn+Bh2zgef2y9J4rHtsFksXiLy6op7+MeNhipouxnEXBeddZjpti5yGtA8TTR2HRiffjEbUTvMLR1ldz4yr4YBy6AIE6Ysy38GEPyPk+XVzCKKsR0xy8CCu1y5mAKr2BghJ88iuH4piZAn8Vkkvsxhytsnha1v5CgLWqkeGcZOtkvmMfltWNX73Kjw3c82OyNgRpzMtbE+pG/wchu4gcTYOJZlV3YBH/ViQIWvwAXXYLVTsRMpAgIcUYBLBBvMxlg3XxcxmE0BwmR+9TgVVwUdC2NjeMVg5hA3WQbHsRnJgyHgvIqs0S6xIZdDP9EWlhZbH91efFf8IJS60vNjLdDZK3yzo0rOM5B3oq7LC+jBjmgheuoR4aG3T1mKvooNHW33vE5V+6f62yvkBan0Z538y9aGjfjPWiiW1zM2TVJyh/iep2N24+qHMgjUodeEbII2OThdhtpaMVCOIjzrK9nT4rpg4qol/N/KD/VPlAtXh9P09K7m9iYYHb7DDWnP6v3Xy4yQIC3evqOomKiJ4y3q6Rr6KkLjYHO5hih1jh5oadEzV/PlAXsy/9si6hQKudnttuOmDVS4SKu/SvduDwThTotI7gIhVAFmo/UlgbIBN8xVRwhkcT4fiBtiXV6xIV4BV38vo7Y=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Lt15g26iHnUvltk5PCtY5rV6x/ZztmDfVzHE5uuUOGwfC4OYemSk/TDnmRiq?=
- =?us-ascii?Q?CnJwXU7INzJbtK6qp5RLK1QQ8Zte9RHAZZtMevPq6y9GprbrYZKetjg65jX+?=
- =?us-ascii?Q?wjdMWqSKbQG8pE5FWq2oN0SHjP6mlqQ1gI0KJWv3u1ignSKJKjFcq8AsbcKQ?=
- =?us-ascii?Q?lKZirpK2D2naN9y8ZWicf9kGBUCrY7bV/PDba7x0uPVS1X+W4DIZlPMTcio4?=
- =?us-ascii?Q?wyKSoW6VYd6n3lyPeUJnTMuzzD4KyJqzYKVGIGMz6ecXaDcFSny6wLMtio7q?=
- =?us-ascii?Q?tuzDnVxVkv/y773oAph63xeb6ZTsusMYkKanBe5hzBgBaWYpdIE7jeygBer+?=
- =?us-ascii?Q?P/troirKYKxX/7mxXeQpYwCtR7b4M3vgEiA7ieSXZNoDOHRBMit8xzk/9hql?=
- =?us-ascii?Q?C2L4ceLyCb7YYJa2uvtA/SUyGbIYUZB4pU4SV/i+g182Ro4Mlr23p5iD2CZf?=
- =?us-ascii?Q?E0eEgvHc4HAMTjD2/vsRSv858zWYLiBlHBQDCWBn8rfVTaa/70Cn3S33cL7+?=
- =?us-ascii?Q?fxqGi/dRCEaokQIHSOurP8YI3x+cZPe7fBDj2C72DugTvWWxBF7GO6iswjRt?=
- =?us-ascii?Q?r6WqnbrQliAauQdxZ2Kite+NB6M8BaW6/Wi9BjdB1KULF3Z1L/oNP5N7YCZg?=
- =?us-ascii?Q?Gi/PpNoXoU+QDm+S9U1Xk0oSCApFWhPFHF1jOYiwTmI4HFJehr4a7M9W/8fQ?=
- =?us-ascii?Q?tuhejcBlExZOIynGUsdLmJcOd5zMkTgf4c701XMk5px4HQN4guDO2/rcPpzp?=
- =?us-ascii?Q?yYlm2Fgl/Qfr0vflAgcz8lMM+xBMQIFuyw1xU2ellO9db4N6MKV+m1VCbvxE?=
- =?us-ascii?Q?ht6I5JzLRYTiyD3E6zx/9kgombarRlb6P+6wqt7PB4Ak8TcqPWVN4MsNj8tP?=
- =?us-ascii?Q?B/dma/JkI9CZQ1Ml356lemQrpIudt8jqqCQtzaKasF3iuYJ+QyiXZFzPkJId?=
- =?us-ascii?Q?sMyO7fOiUQ4LVetx8TszTAHqLyEXHt8C0a7lD2bWpIrCd4MrDjVGXBTO1W+R?=
- =?us-ascii?Q?jpp8tgDicda0yF3y72NEMExkKW5GFoxWLaMSyerCr5buzrZpEQBi+KcGzx2+?=
- =?us-ascii?Q?Dgefo8b7xiIq2iEYhU9MQ+c1K8FY+T0dFbT1n0VGS5KoHLfUp3AJdmWJNY4x?=
- =?us-ascii?Q?HXb1zPoCX+EbDT8G5nMqd6kGHj3yFmEgEZ+E/tLzSIUJoPmZIksPrJ8OKqPU?=
- =?us-ascii?Q?2tvEz2swUb/W3tKFvJzxkIa2BXRpp5Y4uZJ34ktzuYNZIrMxLRD4jje+RwIu?=
- =?us-ascii?Q?y1VSlRanghkVRwQ8GZQGg8M5io2ZnymezNpZZkHXCd+0Z1d/AEuGApnivqKh?=
- =?us-ascii?Q?bAbJwjGwtGqOU2p2kNqjsGhyJ24661Q/3bAuN7j0SXATikeW4x3vHu+9MP2a?=
- =?us-ascii?Q?IduIhGNAkPORWoc3FSRwwEB1HEclioYgkLovY203L3XW688SuJsUxZNnYQoF?=
- =?us-ascii?Q?trC1Jeg3a2EpSyCfv74t1uSyq/8MKkrGFk6cmtyFltqKdEoktI5Oe7Un4Gqx?=
- =?us-ascii?Q?uHrLvFeAyVK2VrxDzY81DrBAYp/uigdSdR1yzfxx7Fq/w92wG6LN8F8AubmV?=
- =?us-ascii?Q?FBm3ZFfo3xA9uDYCVipF7/1ZN2AxoAGdUREDXNZZdC8D1aVPTa1lydfZ0aAU?=
- =?us-ascii?Q?ZQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fef7235-cd91-49a7-30bb-08dc55c0cba1
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2024 22:36:12.0088
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XJIroFse6XmIZJx31VaRZLegBIJOCm0KtYuR847GjzscKZ1wz+uSiOyYU1I4Gol0f+dVNA71L2MXyW7TqXPqC3P4DPcKBA1qwRO6miYl0B8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5969
-X-OriginatorOrg: intel.com
+References: <20240405000707.2670063-1-horenchuang@bytedance.com>
+ <20240405000707.2670063-3-horenchuang@bytedance.com> <20240405150244.00004b49@Huawei.com>
+In-Reply-To: <20240405150244.00004b49@Huawei.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Fri, 5 Apr 2024 15:43:47 -0700
+Message-ID: <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
+Subject: Re: [PATCH v11 2/2] memory tier: create CPUless memory tiers after
+ obtaining HMAT info
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
+	Hao Xiang <hao.xiang@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dave Jiang wrote:
-> Jonathan noted that when the coordinates for host bridge and switches
-> can be 0s if no actual data are retrieved and the calculation continues.
-> The resulting number would be inaccurate. Add checks to ensure that the
-> calculation would complete only if the numbers are valid.
-> 
-> While not seen in the wild, issue may show up with a BIOS that reported
-> CXL root ports via Generic Ports (via a PCI handle in the SRAT entry).
-> 
-> Fixes: 14a6960b3e92 ("cxl: Add helper function that calculate performance data for downstream ports")
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Fri,  5 Apr 2024 00:07:06 +0000
+> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+>
+> > The current implementation treats emulated memory devices, such as
+> > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal me=
+mory
+> > (E820_TYPE_RAM). However, these emulated devices have different
+> > characteristics than traditional DRAM, making it important to
+> > distinguish them. Thus, we modify the tiered memory initialization proc=
+ess
+> > to introduce a delay specifically for CPUless NUMA nodes. This delay
+> > ensures that the memory tier initialization for these nodes is deferred
+> > until HMAT information is obtained during the boot process. Finally,
+> > demotion tables are recalculated at the end.
+> >
+> > * late_initcall(memory_tier_late_init);
+> > Some device drivers may have initialized memory tiers between
+> > `memory_tier_init()` and `memory_tier_late_init()`, potentially bringin=
+g
+> > online memory nodes and configuring memory tiers. They should be exclud=
+ed
+> > in the late init.
+> >
+> > * Handle cases where there is no HMAT when creating memory tiers
+> > There is a scenario where a CPUless node does not provide HMAT informat=
+ion.
+> > If no HMAT is specified, it falls back to using the default DRAM tier.
+> >
+> > * Introduce another new lock `default_dram_perf_lock` for adist calcula=
+tion
+> > In the current implementation, iterating through CPUlist nodes requires
+> > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will end=
+ up
+> > trying to acquire the same lock, leading to a potential deadlock.
+> > Therefore, we propose introducing a standalone `default_dram_perf_lock`=
+ to
+> > protect `default_dram_perf_*`. This approach not only avoids deadlock
+> > but also prevents holding a large lock simultaneously.
+> >
+> > * Upgrade `set_node_memory_tier` to support additional cases, including
+> >   default DRAM, late CPUless, and hot-plugged initializations.
+> > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
+> > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()` t=
+o
+> > handle cases where memtype is not initialized and where HMAT informatio=
+n is
+> > available.
+> >
+> > * Introduce `default_memory_types` for those memory types that are not
+> >   initialized by device drivers.
+> > Because late initialized memory and default DRAM memory need to be mana=
+ged,
+> > a default memory type is created for storing all memory types that are
+> > not initialized by device drivers and as a fallback.
+> >
+> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+> > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+>
+> Hi - one remaining question. Why can't we delay init for all nodes
+> to either drivers or your fallback late_initcall code.
+> It would be nice to reduce possible code paths.
 
-Looks good,
+I try not to change too much of the existing code structure in
+this patchset.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+To me, postponing/moving all memory tier registrations to
+late_initcall() is another possible action item for the next patchset.
+
+After tier_mem(), hmat_init() is called, which requires registering
+`default_dram_type` info. This is when `default_dram_type` is needed.
+However, it is indeed possible to postpone the latter part,
+set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
+indeed be split into two parts, and the latter part can be moved to
+late_initcall() to be processed together.
+
+Doing this all memory-type drivers have to call late_initcall() to
+register a memory tier. I=E2=80=99m not sure how many they are?
+
+What do you guys think?
+
+>
+> Jonathan
+>
+>
+> > ---
+> >  mm/memory-tiers.c | 94 +++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 70 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> > index 516b144fd45a..6632102bd5c9 100644
+> > --- a/mm/memory-tiers.c
+> > +++ b/mm/memory-tiers.c
+>
+>
+>
+> > @@ -855,7 +892,8 @@ static int __init memory_tier_init(void)
+> >        * For now we can have 4 faster memory tiers with smaller adistan=
+ce
+> >        * than default DRAM tier.
+> >        */
+> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
+> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANCE=
+_DRAM,
+> > +                                                   &default_memory_typ=
+es);
+> >       if (IS_ERR(default_dram_type))
+> >               panic("%s() failed to allocate default DRAM tier\n", __fu=
+nc__);
+> >
+> > @@ -865,6 +903,14 @@ static int __init memory_tier_init(void)
+> >        * types assigned.
+> >        */
+> >       for_each_node_state(node, N_MEMORY) {
+> > +             if (!node_state(node, N_CPU))
+> > +                     /*
+> > +                      * Defer memory tier initialization on
+> > +                      * CPUless numa nodes. These will be initialized
+> > +                      * after firmware and devices are initialized.
+>
+> Could the comment also say why we can't defer them all?
+>
+> (In an odd coincidence we have a similar issue for some CPU hotplug
+>  related bring up where review feedback was move all cases later).
+>
+> > +                      */
+> > +                     continue;
+> > +
+> >               memtier =3D set_node_memory_tier(node);
+> >               if (IS_ERR(memtier))
+> >                       /*
+>
+
+
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
