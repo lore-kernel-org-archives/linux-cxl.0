@@ -1,174 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B29337700
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Apr 2024 23:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B49C32C92;
+	Sat,  6 Apr 2024 00:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712361545; cv=none; b=E/9lnHkCIbndcf+qzQLSSaf412TKfEIl4QKMjdOzRGCVMkWwljoIa7JBgmOl5uFa7kG+51TH44K5eK30a5mxPcQy5ZDXUSOn34rYpFhZrd7jb7j47r+8msWGM7ubqcSetBXGQoX7wfOKAzOhJUVcGXDORFz63DW25/WMMFRMHTs=
+	t=1712361695; cv=none; b=OMf/b7k61sm+BcoGn83uodVpMVY399pAuyawy+ek8dP3Q7sVZBcgt5veKUpYxPMEJf/aOtfA934WzQuQDHfbjcSpVwAUvmAO7uUkSlnnvU8xjVoT4HfSRZYV1PiSsfYKexmmeOYSvrMZH6LySxD+uH1A90AY/2Fl9jYdxp3l/rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712361545; c=relaxed/simple;
-	bh=jLOnTIYM/r5C9HHw0XMW5Wg8GPSMZBRnz7R2B01/6tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qTLD0ULrK7QUqwSMmpPW9BYLnzCaO6SBzOrjpjBt0NbDXsp00li2zBkBQmYw64V35bWDHSzUd/Y5+Tp27y/4cDXx+hnxTupuu6cLnHp5VVNdhqBOqYU8BKafD675/QACoYQfRG5wVkxSIDlsuvRGeJbvMG2GM72mJrGmO/BxOdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLN+9ZV/; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1712361695; c=relaxed/simple;
+	bh=dnEl1bSn8VJ78TGNl6mm0353QJWGdbMkyEQ8vUlvqOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AunQDUcLsvubkGw4emxIwY97Z7D+xs9gu7OJY8HcHU0i1jsWmQFyVcGfm8m4uebkHoSJUKUSX34BR/VlQQkkEQ598wOoI0PSOA8IJmmQ71LT6d3n4hO6jXRqxklc4Yh1QTSkoouOR28opWKpQ4G5G+7bWn6l6QKSBn5FkMCYLCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIeL2grW; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLN+9ZV/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIeL2grW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712361544; x=1743897544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jLOnTIYM/r5C9HHw0XMW5Wg8GPSMZBRnz7R2B01/6tc=;
-  b=gLN+9ZV/JKxSqdw/sgeArfggK1BnisUSY1f/MfMeZXDwZJ6mxEVD5cZy
-   LBaB/v7aNjsXV9SYO+M4OF9HTbDubPKmgySuitD5rTzuJy/KbIOezMaAR
-   TYHyh90sDX3lP8xzFatqNrQd60NBtQYONoYFQkQT2m/rIVoUXPBz2MCkf
-   bR7/vLLadH6Jqb1h691Va29Q1Ocl62YvIldBtibVMsOS2HmRnN7+G33ZG
-   /Db0HpH2PMFOj4KY3BqQC9AdcQw7ftYcZXxcm1xLPI9DE46/TzwTGguPC
-   +oy9T+1/pJWvVS0oj1TU/rJ+hn/mrmPmYhDCBFuwT0nH5gbqCfrUQU6py
+  t=1712361693; x=1743897693;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dnEl1bSn8VJ78TGNl6mm0353QJWGdbMkyEQ8vUlvqOQ=;
+  b=PIeL2grWeeeDXPV5Z8zZSWmXmF9vkKft1681h/bb/vDM5Tc767VqgDB5
+   mBSaBmZGD4xrzJoB8fEdaFTG9aKZ+sm2ea9pqxsPYvb5V6hmvBtJWtoCt
+   ZpfHFu175XrLjEhpEVuA/I/FoHKreFU1msFH1voOFgPd7lpM0+5j1r9jR
+   2pTaAXx0rX5A6h30AjzQD8XZfBkO/c/PuDMnkG5Crc0ZyfD72IGhrI3UR
+   551CcwIDq7GR1voaP7cZ2Ry55CjmmrC4RTODdTb5KstaUibrUJk68N9DA
+   JmgnAbJWINmZWTN9GiS2C3mEtGyrl5ELWIkKPMhZYXERH/TEJ3CJs69Nq
    Q==;
-X-CSE-ConnectionGUID: GFnOtF7HT0eGfPbn08ThYA==
-X-CSE-MsgGUID: aKzckMxyR4+clvqa4XcJKw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7565986"
+X-CSE-ConnectionGUID: EraClYA9Rf2pFJmlCf37kQ==
+X-CSE-MsgGUID: HqxLVUU+Q9y5scj/jWT3Vg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19071058"
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="7565986"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 16:59:03 -0700
-X-CSE-ConnectionGUID: SgwN8fRVQjyE9WCjK1KBTQ==
-X-CSE-MsgGUID: qtWNLr4WQNq7NTee5lLxKg==
+   d="scan'208";a="19071058"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:01:32 -0700
+X-CSE-ConnectionGUID: srenPdH2SkaNTFfAdLd4bA==
+X-CSE-MsgGUID: zkq/j+qcQUKmUocue1es1A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19229489"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.142.219])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 16:59:02 -0700
-Date: Fri, 5 Apr 2024 16:59:00 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: dave.jiang@intel.com, Kwangjin Ko <kwangjin.ko@sk.com>,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/core: Fix potential payload size confusion in
- cxl_mem_get_poison()
-Message-ID: <ZhCQRHjEUCWF53FF@aschofie-mobl2>
-References: <171235441633.2716581.12330082428680958635.stgit@dwillia2-xfh.jf.intel.com>
+   d="scan'208";a="19379967"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.38.118]) ([10.212.38.118])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:01:33 -0700
+Message-ID: <9593d672-8a01-437c-8a87-7217a38408c1@intel.com>
+Date: Fri, 5 Apr 2024 17:01:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171235441633.2716581.12330082428680958635.stgit@dwillia2-xfh.jf.intel.com>
-
-On Fri, Apr 05, 2024 at 03:00:16PM -0700, Dan Williams wrote:
-> A recent change to cxl_mem_get_records_log() [1] highlighted a subtle
-> nuance of looping calls to cxl_internal_send_cmd(), i.e. that
-> cxl_internal_send_cmd() modifies the 'size_out' member of the @mbox_cmd
-> argument. That mechanism is useful for communicating underflow, but it
-> is unwanted when reusing @mbox_cmd for a subsequent submission. It turns
-> out that cxl_xfer_log() avoids this scenario by always redefining
-> @mbox_cmd each iteration.
-> 
-> Update cxl_mem_get_records_log() and cxl_mem_get_poison() to follow the
-> same style as cxl_xfer_log(), i.e. re-define @mbox_cmd each iteration.
-> The cxl_mem_get_records_log() change is just a style fixup, but the
-> cxl_mem_get_poison() change is a potential fix, per Alison [2]:
-> 
->     Poison list retrieval can hit this case if the MORE flag is set and
->     a follow on read of the list delivers more records than the previous
->     read.  ie. device gives one record, sets the _MORE flag, then gives 5.
-> 
-> Not an urgent fix since this behavior has not been seen in the wild,
-> but worth tracking as a fix.
-> 
-> Cc: Kwangjin Ko <kwangjin.ko@sk.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Fixes: ed83f7ca398b ("cxl/mbox: Add GET_POISON_LIST mailbox command")
-> Link: http://lore.kernel.org/r/20240402081404.1106-2-kwangjin.ko@sk.com [1]
-> Link: http://lore.kernel.org/r/ZhAhAL/GOaWFrauw@aschofie-mobl2 [2]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Thanks Dan -
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/26] cxl/region: Add dynamic capacity decoder and region
+ modes
+Content-Language: en-US
+To: Ira Weiny <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
+ <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
+ <661040ab52a14_e9f9f2943c@iweiny-mobl.notmuch>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <661040ab52a14_e9f9f2943c@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> ---
->  drivers/cxl/core/mbox.c |   38 +++++++++++++++++---------------------
->  1 file changed, 17 insertions(+), 21 deletions(-)
+
+On 4/5/24 11:19 AM, Ira Weiny wrote:
+> Dave Jiang wrote:
+>>
+>>
+>> On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
+>>> From: Navneet Singh <navneet.singh@intel.com>
+>>>
+>>> Region mode must reflect a general dynamic capacity type which is
+>>> associated with a specific Dynamic Capacity (DC) partitions in each
+>>> device decoder within the region.  DC partitions are also know as DC
+>>> regions per CXL 3.1.
+>>
+>> This section reads somewhat awkward to me. Does this read any better?
+>>
+>> One or more Dynamic Capacity (DC) partitions (and decoders) form a CXL
+>> software region. The region mode reflects composition of that entire software
+>> region. Decoder mode reflects a specific DC partition. DC partitions are also
+>> known as DC regions per CXL specification r3.1 but is not the same entity as
+>> CXL software regions.
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index f0f54aeccc87..65185c9fa001 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -946,25 +946,22 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
->  	struct device *dev = mds->cxlds.dev;
->  	struct cxl_get_event_payload *payload;
-> -	struct cxl_mbox_cmd mbox_cmd;
->  	u8 log_type = type;
->  	u16 nr_rec;
->  
->  	mutex_lock(&mds->event.log_lock);
->  	payload = mds->event.buf;
->  
-> -	mbox_cmd = (struct cxl_mbox_cmd) {
-> -		.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
-> -		.payload_in = &log_type,
-> -		.size_in = sizeof(log_type),
-> -		.payload_out = payload,
-> -		.min_out = struct_size(payload, records, 0),
-> -	};
-> -
->  	do {
->  		int rc, i;
-> -
-> -		mbox_cmd.size_out = mds->payload_size;
-> +		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-> +			.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
-> +			.payload_in = &log_type,
-> +			.size_in = sizeof(log_type),
-> +			.payload_out = payload,
-> +			.size_out = mds->payload_size,
-> +			.min_out = struct_size(payload, records, 0),
-> +		};
->  
->  		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
->  		if (rc) {
-> @@ -1297,7 +1294,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
->  	struct cxl_mbox_poison_out *po;
->  	struct cxl_mbox_poison_in pi;
-> -	struct cxl_mbox_cmd mbox_cmd;
->  	int nr_records = 0;
->  	int rc;
->  
-> @@ -1309,16 +1305,16 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  	pi.offset = cpu_to_le64(offset);
->  	pi.length = cpu_to_le64(len / CXL_POISON_LEN_MULT);
->  
-> -	mbox_cmd = (struct cxl_mbox_cmd) {
-> -		.opcode = CXL_MBOX_OP_GET_POISON,
-> -		.size_in = sizeof(pi),
-> -		.payload_in = &pi,
-> -		.size_out = mds->payload_size,
-> -		.payload_out = po,
-> -		.min_out = struct_size(po, record, 0),
-> -	};
-> -
->  	do {
-> +		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd){
-> +			.opcode = CXL_MBOX_OP_GET_POISON,
-> +			.size_in = sizeof(pi),
-> +			.payload_in = &pi,
-> +			.size_out = mds->payload_size,
-> +			.payload_out = po,
-> +			.min_out = struct_size(po, record, 0),
-> +		};
-> +
->  		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
->  		if (rc)
->  			break;
+> Yea that does sound better but I think this builds on your text and is even
+> more clear.
 > 
+> <commit>
+> cxl/region: Add dynamic capacity decoder and region modes
+> 
+> One or more decoders each pointing to a Dynamic Capacity (DC) partition form a
+> CXL software region.  The region mode reflects composition of that entire
+> software region.  Decoder mode reflects a specific DC partition.  DC partitions
+> are also known as DC regions per CXL specification r3.1 but they are not the
+> same entity as CXL software regions.
+> 
+> Define the new modes and helper functions required to make the association
+> between these new modes.
+> 
+> </commit>
+> 
+
+LGTM
+> 
+> Ira
