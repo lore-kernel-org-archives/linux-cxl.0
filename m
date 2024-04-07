@@ -1,214 +1,264 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa14.fujitsucc.c3s2.iphmx.com (esa14.fujitsucc.c3s2.iphmx.com [68.232.156.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B9956745
-	for <linux-cxl@vger.kernel.org>; Sat,  6 Apr 2024 22:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712442789; cv=none; b=D14oABwQnhNUgypFjiezXHt3ExpGZhfbZ9Xi3FFcIzSkVQSNfbQ+eA3i/wQl+OtAEAaUv3s2NtK5XBpSybTN/0W1hbH0ZqT/ZpDc3JDq+EtDclBF5e/Yt5C9bLmswmhWg9tRX5ephiB1PJ/qDAijjXne1xnW/8HPea4ziEsLACU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712442789; c=relaxed/simple;
-	bh=W2drLSMesDs6E5OgyOQmShXqnuoln0RB1yg/xe33SB8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TSFZfJFWph4KbgZJY0xEmwhDtl5UwFK0DVgHdLOlPflGzLogbpRG6GWXScwlMpGmLU+usqBS+5bBlW3QN7nvOGEtLn+5JXwFlCjbnlBK8VlUz1n0fn7DbOniZO+o1om+FEqE8q/smWUnEcyALrNG9lVKcejUIzWUNrB6tdEnT3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KjzU4oL0; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8681C10;
+	Sun,  7 Apr 2024 03:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712461984; cv=fail; b=JxwIpefAGwolrsBw86mj59q41HOADhTJcvoc5VGp4YE3OZ5SbHmg9pVdfwGex7qo/JUn8Tf6EZpgN4WmNggz7bpiQTZ5l8AhjCXLKy1kNzV/iu9ExsX+2uyn6AxIoCJNnUJw57BMhYvMvdWWQB96r5dTxvPWG+AinvCUlVDt960=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712461984; c=relaxed/simple;
+	bh=+/rZef1YH7Pu3i3L341Y+3Mo1A+ec2pNzrAwdIvxMbE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=erb6iKSCbxfi/6sC5Tiddv0vaxBD47119H6YDQyeVC72zPjYVX2GYDE+h0dnM0tDxBXj9Oty90B+zMvADupJkFiik77MVcVtGden/iwsFIgpRhezmHuogn4vgx5DQkUyEPqcf/bD4PDPdOsVIP9kUARYKBnXN/g0xdOPZ+/Linw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=R5BGUFQ+; arc=fail smtp.client-ip=68.232.156.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KjzU4oL0"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ecee5c08e6so3065530b3a.3
-        for <linux-cxl@vger.kernel.org>; Sat, 06 Apr 2024 15:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712442787; x=1713047587; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hCcliQok5xWZ0STL9q8OCOy2kMXMLfgS8Bx/eIbiktU=;
-        b=KjzU4oL0koSjIAAPtFhC0o1fE27IC6yyGyusAt9YHooCTEL9l/CXYIxrRg326DMX4w
-         NNO/sBP2RROoEh+NfD1Dpz4qd2GLUWdDdHtWS4DNvBv+5Rpk06wlElMnjgTwCzPjFH4C
-         L31TzACeV96RH9DhkRFXk4Yh9le8daJ2JfAT12xYuY1kMNvfZARHL60Jx3ZqGr96UWaH
-         e8AlLsu1qeiBg3zzIKF0jRy/e9cbpGCG0SAGSjg1Be4ecSWsbdsQ9DldJv+d2OdgZ22d
-         EYbsnNXo5zufNIdxc+7HA58Y/CCSSYGFfs8f1k9owVlj2hQjNkwhfH2li3bDMpu/wQZk
-         9byw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712442787; x=1713047587;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hCcliQok5xWZ0STL9q8OCOy2kMXMLfgS8Bx/eIbiktU=;
-        b=oKjvFSUtfIfVX9yzMorxGg4ot9i/lBK1vulAQgAdcEu9QzaANG1YmHqSN8k87uTQGj
-         EaAGta0cePkTkh/75crH4zWcgYC8gqdh+9uHu2SIMiSgpClvkg8VV/nEkgJ5inzYq0j5
-         VGwEuyip54qEcyzJwNKgkmPAI3RDMkezrYqkLHw8oQLVeV4of/B6dOaHRbOShlQbKBWx
-         fNpvGgD6tYenCW6rsfR9F9S0R41cXTRQhialwn97txhcgC9fr+kK8Ld+3fMqGaPA9Tlu
-         DHp+Jn/6czIpEud60njGe9TU9yy5TkwouJoO1xQSfamqMfbEXm3gOBZAsX9hr+2fAYsd
-         phxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhcUa1L1bJITeCqr7yy4IcBNyPNCXAAQJJLa2R2eMIYc5kBplsNIv12jAloC3cm/209lBTp/tjtnk6pkljjqnxnhhysW5uuQ2P
-X-Gm-Message-State: AOJu0YygGkwZuZgKJfm22qK1z8r8O+V3aGRLdv3KRiFcK0RD3oowjzM2
-	g8XbmYLFpkdSpQOUCOjtNvrwaai/ktrW8cZnzyhbUwLKTwpZufokVRD7LtFGEU8=
-X-Google-Smtp-Source: AGHT+IE3AVR0/+mC7iIHHm48lOL1fFr3ZCxMScSe1UR5cKptDMhugGenVanhfxi8QfNUctRI3pzpeQ==
-X-Received: by 2002:a05:6a20:158c:b0:1a7:1c26:f9ac with SMTP id h12-20020a056a20158c00b001a71c26f9acmr6020296pzj.62.1712442786698;
-        Sat, 06 Apr 2024 15:33:06 -0700 (PDT)
-Received: from stoup.. (098-147-007-212.res.spectrum.com. [98.147.7.212])
-        by smtp.gmail.com with ESMTPSA id f23-20020a17090ace1700b002a20c0dcebbsm3643279pju.31.2024.04.06.15.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Apr 2024 15:33:06 -0700 (PDT)
-From: Richard Henderson <richard.henderson@linaro.org>
-To: qemu-devel@nongnu.org
-Cc: peter.maydell@linaro.org,
-	Jorgen.Hansen@wdc.com,
-	Jonathan.Cameron@huawei.com,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH 9/9] accel/tcg: Improve can_do_io management
-Date: Sat,  6 Apr 2024 12:32:48 -1000
-Message-Id: <20240406223248.502699-10-richard.henderson@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240406223248.502699-1-richard.henderson@linaro.org>
-References: <20240406223248.502699-1-richard.henderson@linaro.org>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="R5BGUFQ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1712461981; x=1743997981;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=+/rZef1YH7Pu3i3L341Y+3Mo1A+ec2pNzrAwdIvxMbE=;
+  b=R5BGUFQ+zXSHM2vNwho/5A+fj2Nb4543/SZQSo486YEBAbfdafpqEwlM
+   oftpJjaophfhVBOxuUDZ4LQsNpkUGLp9C7vdRcOt6MKs81fLwmwQHkwcI
+   NqK8DLcRwp3ZrigCcy9V12r1XIII1T4Ge18/s+5So46QoA5mrfWpQQ4Rq
+   L9H17rqX5AACqrLvW61mda+Ist73dYMfqHT9yS8IbbP0J0k5RiAhyXrIZ
+   rM3mkNrs73JKhwaJmYi5SLSKfqiRVyly2gItb2fZZoDPsGnmQnYlgA/fa
+   6bTr8S75RMU7aJrISGuggeVM4KwVpHLDG4u+W2RpvcO9nzPfMwPC+jYUx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="115737716"
+X-IronPort-AV: E=Sophos;i="6.07,184,1708354800"; 
+   d="scan'208";a="115737716"
+Received: from mail-os0jpn01lp2105.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.105])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 12:51:46 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8MyNj3T2aVsxE4eLId/ckCl2fS+Z9JKeHhc23BLqXontIRcfnHBQUdgidNagZuuIeVZCSnMloisCauUJ1xu3aiwygB1oTSLn1Qs/1+LQ8/UDsBBiFH4rLd9dDDfjCyzQ5NmkseHRxFdLOZZthAZI/KdkMYc639JpUUjuqzhipJRAM4zEQkLnFVHoezoc1u2emfZd5x/nQPeVRZ6MTwxRMsyzI2R/1rFS1Ki7VGFItXWcrJcwwfVKHXRUtA+er2Y7fQoKa16D/yBom2h2OQLg5N6ACDxt8M8mIgrOisXPCE4lol79Wkjrwanx+uP+BJ147DTaMuosn4hjqxh6tUjCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+/rZef1YH7Pu3i3L341Y+3Mo1A+ec2pNzrAwdIvxMbE=;
+ b=JRlnOwdbMYSGtAIyH7mQApEiP4vlWWbQxrvlSz0GaJoS71gGolxxad9xQlm6BALZME4Ue3TQWtA8z1AL+Z2ZRvpYdnzF8HML6h0otHeABFtdWd32BMBQivVGLJo19XXZrx0fR1ic7J+PHPo/gtQxDDYY8P9cNwQ4km7US3PYnGacEvUwgm4MDbrgZS6jNTtSbl65RxiTu9jcNb0B0OM6GeDVJ3JPEVbGZwLzTIB+8HefYrIFhimXLL4s196wt9u5+yuCNNLkrDc3C2M69TbymUkaj4u5xg+rjp3C+XTi9h+E52j803XyUJxysq5fc4pfzI/sd9Mj5Wk9Lmiz1vREbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
+ (2603:1096:404:8059::10) by OS7PR01MB11964.jpnprd01.prod.outlook.com
+ (2603:1096:604:23e::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sun, 7 Apr
+ 2024 03:51:42 +0000
+Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
+ ([fe80::e69:40a6:944b:f974]) by TYAPR01MB5818.jpnprd01.prod.outlook.com
+ ([fe80::e69:40a6:944b:f974%5]) with mapi id 15.20.7409.053; Sun, 7 Apr 2024
+ 03:51:42 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Xingtao Yao
+ (Fujitsu)" <yaoxt.fnst@fujitsu.com>
+Subject: Re: [Problem ?] cxl list show nothing after reboot Re: [PATCH v2]
+ cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS
+ window
+Thread-Topic: [Problem ?] cxl list show nothing after reboot Re: [PATCH v2]
+ cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS
+ window
+Thread-Index: AQHaYPF+guY7ES5MRk+p0kfVt2bmsbFDTJAAgAagGoCAEEYNgIACSTEA
+Date: Sun, 7 Apr 2024 03:51:42 +0000
+Message-ID: <df850be7-a9d1-4737-bc64-3fb682cd5691@fujitsu.com>
+References: <20240216160113.407141-1-rrichter@amd.com>
+ <b0f5e2ce-d39e-4a8e-8f2f-ffa67b604e02@fujitsu.com>
+ <24b8b11d-a7ec-42ce-9fa6-8a24701cfe46@fujitsu.com>
+ <20240405175711.000032c4@Huawei.com>
+In-Reply-To: <20240405175711.000032c4@Huawei.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYAPR01MB5818:EE_|OS7PR01MB11964:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Prg2CJ8MEaFRsbKMkrMcDs1b3OoSlrRbfcGc3pm9VDuJk2r+64Rbyyedd0emyn81eXbTSXNNNXVQ62SNvTcA3Dic/UGn6HyOeM8zUkj2o3g7rL+EpgAT2IG2jFOI4f+DBqMD3kezN0tdl4lk5IY91f5jXDEEs52XiBMX27WHHrccf/fY+9TtufT2xVKLRtcTRXJMp+y8pIr+tLchpCmKnrTH/QIJeq9PY06pxzFs0INAE++GiDAAxYds2IPvLekEh617Wzy5Oqou6IXHde/XGl9JmZ07ZeY8jvi5KAtKFSE7lr27hJY9vFbfI+rOqWJGoCl0hnzD/fUjFHPLK2INczcC8dUl619NCqfkeD67tbEyB1cSwQ+jEgs15ST2W+53mXk7dqBRB4X65doQDSG2BbhLIgBaSH3LeGN38knYE1vB+T+VWT6zCD1v59VEvUzPZH0KHVt9AuS6s0uAfpvuK80SZgm+42BEDR3DKJk4jZXni68FKc6PQVI6z81JVqxjYIUf1wW4FB+M0b51vSzWaH+EMagKlxi/NmS/t9isBUk2w8AxnDe8tYvGrieYQZdJ1wt0+WrSZThfPRRJwPmA2T/JdeYJBP2XgmR4vkpICLkKHGUex/rGiNB6ybfy0sJ6DCy7bjdIDckFozB2KLmmMFkPHHDFUpNF+jMRnZF+/EGpvU121cRkvK5d6bWqb2PhvUIFVg8Lz71P4yylu+n/ng==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB5818.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005)(1580799018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cnpMbWRmKzlDTGhad3Y3NHp3dEpEMU5USnlHdDVMQVRjcmV5Vys2Q0JjMkd5?=
+ =?utf-8?B?YXMzRzhpSXM4NnRRUGtPelRIYWEyOU9ROVFxSnpWMzZIUU4zek1TUFZUTHVG?=
+ =?utf-8?B?WkRtL3hSeXFTejFteVREankrQ0ZURllxRjM2RW0yOG5xZkJVaGs4VXFMNnAw?=
+ =?utf-8?B?SDk5bW92dmhMdVpEZ09SL2lhWmRmMEhrbHlITDdmMlE2WWRhbEFtUjR3L3Jh?=
+ =?utf-8?B?K0Y4Z3pVWmoxdXQ0K3NTS1RiQ3pmaVh0UjNnSlVuV01lcEhYekZ0czVDUS9n?=
+ =?utf-8?B?aE1FTG5ma1hkZ2hCN3Zab01oTzluRVFnQ1J0cUFIOUV3UTkvNlV2aU1LVXhx?=
+ =?utf-8?B?SW5YT1hqTi9KbUVDTkdpTGJLQWlZZ0NvOWZYbitjVDhZSmNmNWo5Mzd1Qlpp?=
+ =?utf-8?B?TUVPUkxFMzhhNTNVcDFwQzhtUGlPM2xvYURleXQ5NWVSbGpZeDJzNmhPY1Jl?=
+ =?utf-8?B?L21MMjVPdHo5NlZpUWxvK3NsMVk0bFNSZHRQMFZBR2JVT2VNQkJnOWRiK2kw?=
+ =?utf-8?B?cjh5ci94eVNnMnZ6RXhNUllyaDgwZ0I3VGhSVFJZczF6UmNxWlJwWVRwSk1F?=
+ =?utf-8?B?YVltLzRTdDRzdnpqcG9OU25QcU11U3VWamNZMG1RYmJWTGxScU9CNHJaS0F5?=
+ =?utf-8?B?N0dDWk9MYVQ1Y1A2L1p0Y0lyeklXZEc3dGtnRnJ1bXBwdXlPOStGTkJLUW84?=
+ =?utf-8?B?bVpBR0x3dDJjWTFJRHBzcitCdzUrSmhTd3A1bk85ZmQrWkNZYTdMSTAzK0tq?=
+ =?utf-8?B?V1ExWC9MSllESktybnhneWRMZWdNdHkvT2Y0SUx1K2QzaXFrdjNFTm03NkV4?=
+ =?utf-8?B?bEttRGxmU3VyTWNLcWRMbkZhK3pMMFptbWFOQWFNN1g1YzJOWVgySlBRVWda?=
+ =?utf-8?B?dDRYdGg2WWFYeVMvaHVHQ21LMkxKN3AyMDVRcTdFcXluMVRrMjg4TWFkRXlj?=
+ =?utf-8?B?VHg2UUVxTUNDYlR3U1h0bTFkQ1FMcmM5UjE3VVh5UjlPdk5xZW5xYTdFT0U0?=
+ =?utf-8?B?TWVqMWtCZ09hclltVzdNaXN3eWZOdXc1N1lRbXVjTytaR2wyTFQ4bmtTSzRi?=
+ =?utf-8?B?SWRkUnJXbzZyUEFZUE1DYkI2OEpHSGQrcUFyTFF6NVkxbVc2MmdKeWN3Slgx?=
+ =?utf-8?B?V1NQa1dBUDJTK005MUMxbmVzSm4waUlHWVZuTnZTV1VvRW1yaXVFV1Fibkc1?=
+ =?utf-8?B?YjVDQlZMWDB3L3NZMXdSVzVkaDFScytjNzRQVjcwamx0TDFiNUpvM3BlNDZG?=
+ =?utf-8?B?R3Y2azVNRWZoVGRMNERrN1N4Y0Y3dGZJdHRCSHdVYjJMK2k1NDFzdmJicitS?=
+ =?utf-8?B?c004Yk83QVAwaldZVU5DdGM0VUNsSE9SRjhQdTY4dDc0YXVENGZxcmhaODR4?=
+ =?utf-8?B?a0pNRTlOelYya1ROcWdSUU8xcVdFcGdxcmxCd2gweEFEeUlLbFBUVUdBL3JD?=
+ =?utf-8?B?cllIWEVYRHN0MmpFQnovQ3R1Q0ljK1J6Z3lzWGdvd0kvdTNwTlhWMDlvWUI4?=
+ =?utf-8?B?dmY2TmlLNm5iUnNraGlkNDlGU1pSbEphUGt3ek9WanF4TmVsZGR3QlphU3hl?=
+ =?utf-8?B?SXlvdjZPRVRKS2FtSWIvVGc1V0E3bjRvY3Q0T2c5T2VIaU10cnltOUdYVmh3?=
+ =?utf-8?B?Sk1Fa3ZqaFpsWXpaM1JqWnJFcEZzU05xWEUwSVZHK25zTGFwdWYwZFpWRDY4?=
+ =?utf-8?B?RWVLOHlkRFAzQ0IwYnc3aWlLbTlCVXlXQW1IcC9PWTJCRTJ0QUtrZ1A5am5v?=
+ =?utf-8?B?RmJaaEdIOWlEakN6RHNDa1dYRVlNbjFMZHZPOTQvSVI1VVU2SzM0ak82cnN1?=
+ =?utf-8?B?SDNLTW9QZFRCdmdEd2lsaHQzek5FWUVXcW0zbEhSQUg2NEpwWlF4ZDdMemFp?=
+ =?utf-8?B?UzhncEhEQVlnb3lZUDRXbWNPa1N3TEpvRU10eFdrYTBMdkZUc095WFlKZS9J?=
+ =?utf-8?B?K0ZtN0ZER3RsaTI4dTIxMXQxVHRwK3YwVUxVclVDQkZlcnROWGpDazAwTFdK?=
+ =?utf-8?B?dDVTTi85OWFXRmd6SURlYjUxUWlQc1VRK2J4VmtwTzVsN3ZKeWwxZWc5N0FG?=
+ =?utf-8?B?QWYxMHYxYUM3Yk5TL0hkUDNGTUIxTW5ZMysyb2FEUE91blFNQVl2cFFjZ2U1?=
+ =?utf-8?B?TGE4NGUwcTc4TE9EMVhHNFB1MGMyVllrYXlsaG10aTI5QXhEbXFoQW5ZVWxn?=
+ =?utf-8?B?bnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B0532DB171D5E2479D918F00C068D245@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	HpDjQkr3BWB1Znyv7tazTUbQQvBeFgsLVg0ixlAm6APv7LwtSHA3gxusVJGU5b8p82EuErcJSJoDFux9dlKz5N9L7Bt5vgS7QjgM57yQqPb+5NV1x3+VotsqBHIppFceE8bQRMtC0IBNOlaGPmimaq83sDDSpe4AwK1Hb2uJOouO0JqEz0V2oBuLs6JdAGwp4Ewffl9OwuLuyk+t4YDJb16UZ99w1Zpv06Y7M2pLQ1ulwVgXGAmsGC27278/jeXl/EOSnBd/6rK43iKhywS0WiwRh1OBclnSD3O19XkR1wBTrql6X/PbD+mDzJfTsVA9SstFBinc+0Dofxyhb3INDM0rKQ1XDI45cPlNPpzYNtHjZ5ev9+OIqah1bAi7PaFAfaLie13DRrBQLYW6gjvszQkWVBs+Oi43XIykoa5ZnTwDeC0KoBEZSLjanQ8EsItxBlCMQx2vkGpJB9ypOPqSHtKbB5xo38SRF9s2ySAafja/v0iG5nj2R8mxRA1sxxrZdsBV+k200TL0TroCv5RVHCCv4QPgrofIRpXUyBaI2+YdezADh3EW0ZIQuayM+nKcoJRX7YK9UjRoWIPSBmvUuQ/hOCC+KZeR+HipotXWT4eFQB8RrMTs3JEfM5azgfBT
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB5818.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a3ca6c5-edff-48a2-4978-08dc56b6097a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2024 03:51:42.2561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eATEclj69lwKJVmVf/EWUnaKmJRcxeEc2sdLDgUAjziBFbUfDrzdxK2xkXt+LMLynHd1l+7RW3OAPGMHdgOhEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11964
 
-We already attempted to set and clear can_do_io before the first
-and last insns, but only used the initial value of max_insns and
-the call to translator_io_start to find those insns.
-
-Now that we track insn_start in DisasContextBase, and now that
-we have emit_before_op, we can wait until we have finished
-translation to identify the true first and last insns and emit
-the sets of can_do_io at that time.
-
-This fixes case of a translation block which crossed a page boundary,
-and for which the second page turned out to be mmio.  In this case we
-truncate the block, and the previous logic for can_do_io could leave
-a block with a single insn with can_do_io set to false, which would
-fail an assertion in cpu_io_recompile.
-
-Reported-by: Jørgen Hansen <Jorgen.Hansen@wdc.com>
-Signed-off-by: Richard Henderson <richard.henderson@linaro.org>
----
- include/exec/translator.h |  1 -
- accel/tcg/translator.c    | 45 ++++++++++++++++++++-------------------
- 2 files changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/include/exec/translator.h b/include/exec/translator.h
-index ceaeca8c91..2c4fb818e7 100644
---- a/include/exec/translator.h
-+++ b/include/exec/translator.h
-@@ -87,7 +87,6 @@ typedef struct DisasContextBase {
-     int num_insns;
-     int max_insns;
-     bool singlestep_enabled;
--    int8_t saved_can_do_io;
-     bool plugin_enabled;
-     struct TCGOp *insn_start;
-     void *host_addr[2];
-diff --git a/accel/tcg/translator.c b/accel/tcg/translator.c
-index ae61c154c2..9de0bc34c8 100644
---- a/accel/tcg/translator.c
-+++ b/accel/tcg/translator.c
-@@ -18,20 +18,14 @@
- 
- static void set_can_do_io(DisasContextBase *db, bool val)
- {
--    if (db->saved_can_do_io != val) {
--        db->saved_can_do_io = val;
--
--        QEMU_BUILD_BUG_ON(sizeof_field(CPUState, neg.can_do_io) != 1);
--        tcg_gen_st8_i32(tcg_constant_i32(val), tcg_env,
--                        offsetof(ArchCPU, parent_obj.neg.can_do_io) -
--                        offsetof(ArchCPU, env));
--    }
-+    QEMU_BUILD_BUG_ON(sizeof_field(CPUState, neg.can_do_io) != 1);
-+    tcg_gen_st8_i32(tcg_constant_i32(val), tcg_env,
-+                    offsetof(ArchCPU, parent_obj.neg.can_do_io) -
-+                    offsetof(ArchCPU, env));
- }
- 
- bool translator_io_start(DisasContextBase *db)
- {
--    set_can_do_io(db, true);
--
-     /*
-      * Ensure that this instruction will be the last in the TB.
-      * The target may override this to something more forceful.
-@@ -84,13 +78,6 @@ static TCGOp *gen_tb_start(DisasContextBase *db, uint32_t cflags)
-                          - offsetof(ArchCPU, env));
-     }
- 
--    /*
--     * cpu->neg.can_do_io is set automatically here at the beginning of
--     * each translation block.  The cost is minimal, plus it would be
--     * very easy to forget doing it in the translator.
--     */
--    set_can_do_io(db, db->max_insns == 1);
--
-     return icount_start_insn;
- }
- 
-@@ -129,6 +116,7 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
- {
-     uint32_t cflags = tb_cflags(tb);
-     TCGOp *icount_start_insn;
-+    TCGOp *first_insn_start = NULL;
-     bool plugin_enabled;
- 
-     /* Initialize DisasContext */
-@@ -139,7 +127,6 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
-     db->num_insns = 0;
-     db->max_insns = *max_insns;
-     db->singlestep_enabled = cflags & CF_SINGLE_STEP;
--    db->saved_can_do_io = -1;
-     db->insn_start = NULL;
-     db->host_addr[0] = host_pc;
-     db->host_addr[1] = NULL;
-@@ -159,6 +146,9 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
-         *max_insns = ++db->num_insns;
-         ops->insn_start(db, cpu);
-         db->insn_start = tcg_last_op();
-+        if (first_insn_start == NULL) {
-+            first_insn_start = db->insn_start;
-+        }
-         tcg_debug_assert(db->is_jmp == DISAS_NEXT);  /* no early exit */
- 
-         if (plugin_enabled) {
-@@ -171,10 +161,6 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
-          * done next -- either exiting this loop or locate the start of
-          * the next instruction.
-          */
--        if (db->num_insns == db->max_insns) {
--            /* Accept I/O on the last instruction.  */
--            set_can_do_io(db, true);
--        }
-         ops->translate_insn(db, cpu);
- 
-         /*
-@@ -207,6 +193,21 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
-     ops->tb_stop(db, cpu);
-     gen_tb_end(tb, cflags, icount_start_insn, db->num_insns);
- 
-+    /*
-+     * Manage can_do_io for the translation block: set to false before
-+     * the first insn and set to true before the last insn.
-+     */
-+    if (db->num_insns == 1) {
-+        tcg_debug_assert(first_insn_start == db->insn_start);
-+    } else {
-+        tcg_debug_assert(first_insn_start != db->insn_start);
-+        tcg_ctx->emit_before_op = first_insn_start;
-+        set_can_do_io(db, false);
-+    }
-+    tcg_ctx->emit_before_op = db->insn_start;
-+    set_can_do_io(db, true);
-+    tcg_ctx->emit_before_op = NULL;
-+
-     if (plugin_enabled) {
-         plugin_gen_tb_end(cpu, db->num_insns);
-     }
--- 
-2.34.1
-
+DQoNCk9uIDA2LzA0LzIwMjQgMDA6NTcsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6DQo+IE9uIFR1
+ZSwgMjYgTWFyIDIwMjQgMDg6MjY6MjEgKzAwMDANCj4gIlpoaWppYW4gTGkgKEZ1aml0c3UpIiA8
+bGl6aGlqaWFuQGZ1aml0c3UuY29tPiB3cm90ZToNCj4gDQo+PiBBbGwgZ3V5cywNCj4+DQo+PiBJ
+biBvcmRlciB0byBtYWtlIHRoZSBDWEwgbWVtZGV2IHdvcmsgYWdhaW4sIGkgaGF2ZSB0byBtb2Rp
+ZnkgdGhlIFFFTVUgc2lkZQ0KPj4gd2hlcmUgaXQgcmVzZXRzIHRoZSAiRFZTRUMgQ1hMIENvbnRy
+b2wiIGR1cmluZyByZWJvb3QuIEEgZHJhZnQgY2hhbmdlcyBpcyBhcyBiZWxvdzoNCj4+DQo+PiBQ
+ZXIgOC4xLjMuMiBEVlNFQyBDWEwgQ29udHJvbCAoT2Zmc2V0IDBDaCksIERlZmF1bHQgdmFsdWUg
+b2YgQklUKDIpIGlzIDAuIFNvIGlzIGl0IHJlYXNvbmFibGUNCj4+IHRvIGhhdmUgYSByZXNldCBk
+dnNlY3MgaW4gUUVNVSBkdXJpbmcgcmVib290Pw0KPj4NCj4+IEFueSBjb21tZW50cyBASmFuYXRo
+YW4NCj4gDQo+IEhpLA0KPiANCj4gU29ycnkgaXQgdG9vayBtZSBzbyBsb25nIHRvIGdldCB0byB0
+aGlzLg0KPiANCj4gV2hhdCBhcmUgeW91IGF0dGVtcHRpbmcgdG8gZG8/IFVzZSBhbiBPUyByZWJv
+b3Qgb24gUUVNVSB0byBjaGVjayB0aGF0IHRoZSBmbG93cw0KPiBtZWFudCBmb3IgQklPUyBjb25m
+aWd1cmF0aW9uIHdvcmsgLSANCg0KDQpUaGVyZSBpcyBubyBkb3VidCB0aGF0ICp0aGUgT1MgcmVi
+dWlsZHMgdGhlIHN0YXRlIGNvcnJlY3RseSogaXMgdGhlIE9TJ3MgcmVzcG9uc2liaWxpdHkuDQpQ
+cm92aWRpbmcgdGhlIGNvbnNpc3RlbnQgZGV2aWNlIHN0YXRlIGlzIHRoZSAqRGV2aWNlKidzIHJl
+c3BvbnNpYmlsaXR5Lg0KDQpTbyBvbiByZWJvb3QsIHRoZSBkZXZpY2Ugc2hvdWxkIGhhdmUgYSBj
+b25zaXN0ZW50IGRldmljZSBzdGF0ZSB3aXRoIGEgZnJlc2ggYm9vdC4NCk15IGNoYW5nZXMgaW50
+ZW5kZWQgdG8gbGV0ICpEZXZpY2UqIGVtdWxhdGVkIGJ5IFFFTVUgcHJvdmlkZSBhIGNvbnNpc3Rl
+bnQNCmRldmljZSBzdGF0ZS4NCg0KDQpUaGFua3MNClpoaWppYW4NCg0KPiBpLmUuIHRoZSBPUyBy
+ZWJ1aWxkcyB0aGUgc3RhdGUNCj4gY29ycmVjdGx5IGJ5IHJlYWRpbmcgdGhlIGN1cnJlbnQgc3Rh
+dGUgb2YgdGhlIGRldmljZXM/Pg0KPiANCj4gV291bGQgYmUgZ29vZCB0byBmaXggdGhhdCBjYXNl
+IGJ1dCBJIHdhbnQgdG8gY2hlY2sgdGhhdCdzIHRoZSBhaW0gYmVmb3JlIGxvb2tpbmcNCj4gdG9v
+IGNsb3NlbHkgYXQgdGhpcy4NCj4gDQo+IFRoYW5rcywNCj4gDQo+IEpvbmF0aGFuDQo+IA0KPj4N
+Cj4+DQo+PiBbcm9vdEBpYWFzLXJwbWEgcWVtdV0jIGdpdCBkaWZmDQo+PiBkaWZmIC0tZ2l0IGEv
+aHcvbWVtL2N4bF90eXBlMy5jIGIvaHcvbWVtL2N4bF90eXBlMy5jDQo+PiBpbmRleCBiMGE3ZTlm
+MTFiNjQuLjMxNzU1YTlmOWFhYiAxMDA2NDQNCj4+IC0tLSBhL2h3L21lbS9jeGxfdHlwZTMuYw0K
+Pj4gKysrIGIvaHcvbWVtL2N4bF90eXBlMy5jDQo+PiBAQCAtODk5LDYgKzg5OSwyNiBAQCBNZW1U
+eFJlc3VsdCBjeGxfdHlwZTNfd3JpdGUoUENJRGV2aWNlICpkLCBod2FkZHIgaG9zdF9hZGRyLCB1
+aW50NjRfdCBkYXRhLA0KPj4gICAgICAgIHJldHVybiBhZGRyZXNzX3NwYWNlX3dyaXRlKGFzLCBk
+cGFfb2Zmc2V0LCBhdHRycywgJmRhdGEsIHNpemUpOw0KPj4gICAgfQ0KPj4gICAgDQo+PiArc3Rh
+dGljIHZvaWQgZHZzZWNzX2N0cmxfcmVzZXQoQ1hMVHlwZTNEZXYgKmN0M2QpDQo+PiArew0KPj4g
+Kw0KPj4gKyAgICAgaWYgKGN0M2QtPnNuICE9IFVJNjRfTlVMTCkgew0KPj4gKyAgICAgICAgcGNp
+ZV9kZXZfc2VyX251bV9pbml0KGN0M2QtPmN4bF9jc3RhdGUucGRldiwgMHgxMDAsIGN0M2QtPnNu
+KTsNCj4+ICsgICAgICAgIGN0M2QtPmN4bF9jc3RhdGUuZHZzZWNfb2Zmc2V0ID0gMHgxMDAgKyAw
+eDBjOw0KPj4gKyAgICB9IGVsc2Ugew0KPj4gKyAgICAgICAgY3QzZC0+Y3hsX2NzdGF0ZS5kdnNl
+Y19vZmZzZXQgPSAweDEwMDsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICAvLyBGSVhNRT86IG9u
+bHkgcmVzZXQgY3RybCBpbnN0ZWFkIG9mIHJlYnVpbGRpbmcgdGhlIHdob2xlIGR2c2Vjcw0KPj4g
+KyNpZiAwDQo+PiArICAgIG1lbWNweShwZGV2LT5jb25maWcgKyBvZmZzZXQgKyBzaXplb2YoRFZT
+RUNIZWFkZXIpLA0KPj4gKyAgICAgICAgICAgYm9keSArIHNpemVvZihEVlNFQ0hlYWRlciksDQo+
+PiArICAgICAgICAgICBsZW5ndGggLSBzaXplb2YoRFZTRUNIZWFkZXIpKTsNCj4+ICsjZWxzZQ0K
+Pj4gKyAgICBidWlsZF9kdnNlY3MoY3QzZCk7DQo+PiArI2VuZGlmDQo+PiArfQ0KPj4gKw0KPj4g
+ICAgc3RhdGljIHZvaWQgY3QzZF9yZXNldChEZXZpY2VTdGF0ZSAqZGV2KQ0KPj4gICAgew0KPj4g
+ICAgICAgIENYTFR5cGUzRGV2ICpjdDNkID0gQ1hMX1RZUEUzKGRldik7DQo+PiBAQCAtOTA3LDYg
+KzkyNyw3IEBAIHN0YXRpYyB2b2lkIGN0M2RfcmVzZXQoRGV2aWNlU3RhdGUgKmRldikNCj4+ICAg
+IA0KPj4gICAgICAgIGN4bF9jb21wb25lbnRfcmVnaXN0ZXJfaW5pdF9jb21tb24ocmVnX3N0YXRl
+LCB3cml0ZV9tc2ssIENYTDJfVFlQRTNfREVWSUNFKTsNCj4+ICAgICAgICBjeGxfZGV2aWNlX3Jl
+Z2lzdGVyX2luaXRfdDMoY3QzZCk7DQo+PiArICAgIGR2c2Vjc19jdHJsX3Jlc2V0KGN0M2QpOw0K
+Pj4gICAgDQo+PiAgICAgICAgLyoNCj4+ICAgICAgICAgKiBCcmluZyB1cCBhbiBlbmRwb2ludCB0
+byB0YXJnZXQgd2l0aCBNQ1RQIG92ZXIgVkRNLg0KPj4NCj4+DQo+Pg0KPj4NCj4+DQo+PiBPbiAy
+Mi8wMy8yMDI0IDExOjE1LCBaaGlqaWFuIExpIChGdWppdHN1KSB3cm90ZToNCj4+PiBSb2JlcnQs
+IERhbg0KPj4+DQo+Pj4gSXQncyBub3RpY2VkIHRoYXQgJ2N4bCBsaXN0JyBzaG93IG5vdGhpbmcg
+YWZ0ZXIgYSByZWJvb3QgaW4gdjYuOC4oQSBmcmVzaCBib290IHdvcmtzKQ0KPj4+IFRoZSBnaXQg
+YmlzZWN0aW9uIHBvaW50ZWQgdG8gdGhpcyBjb21taXQuDQo+Pj4NCj4+PiBIYXZlbid0IGludmVz
+dGlnYXRlZCBpdCBkZWVwbHksIEknbSB3b25kZXJpbmcgaWYgaXQncyBhIFFFTVUgcHJvYmxlbSBv
+cg0KPj4+IHNvbWV0aGluZyB3cm9uZyB3aXRoIHRoaXMgcGF0Y2guDQo+Pj4NCj4+Pg0KPj4+IFJl
+cHJvZHVjZSBzdGVwOg0KPj4+DQo+Pj4gMS4gU3RhcnQgYSBjeGwgUUVNVSBWTQ0KPj4+IDIuIGN4
+bCBsaXN0IHdvcmtzDQo+Pj4gY3hsIGxpc3QNCj4+PiBbDQo+Pj4gICAgICB7DQo+Pj4gICAgICAg
+ICJtZW1kZXYiOiJtZW0wIiwNCj4+PiAgICAgICAgInJhbV9zaXplIjoyMTQ3NDgzNjQ4LA0KPj4+
+ICAgICAgICAic2VyaWFsIjowLA0KPj4+ICAgICAgICAiaG9zdCI6IjAwMDA6NTQ6MDAuMCINCj4+
+PiAgICAgIH0sDQo+Pj4gICAgICB7DQo+Pj4gICAgICAgICJtZW1kZXYiOiJtZW0xIiwNCj4+PiAg
+ICAgICAgInBtZW1fc2l6ZSI6MjE0NzQ4MzY0OCwNCj4+PiAgICAgICAgInNlcmlhbCI6MCwNCj4+
+PiAgICAgICAgImhvc3QiOiIwMDAwOjM2OjAwLjAiDQo+Pj4gICAgICB9DQo+Pj4gXQ0KPj4+DQo+
+Pj4gMy4gcmVib290IFZNDQo+Pj4gNC4gY3hsIGxpc3Qgc2hvdyBub3RoaW5nIGFuZCBoYXMgZm9s
+bG93aW5nIGRtZXNnDQo+Pj4NCj4+PiBjeGwgbGlzdA0KPj4+IFsNCj4+PiBdDQo+Pj4gICAgICBX
+YXJuaW5nOiBubyBtYXRjaGluZyBkZXZpY2VzIGZvdW5kDQo+Pj4NCj4+PiAuLi4NCj4+Pg0KPj4+
+IFsgICAgNi4yNDkxODhdICBwY2kwMDAwOjUzOiBob3N0IHN1cHBvcnRzIENYTA0KPj4+IFsgICAg
+Ni4yNTgxNjhdICBwY2kwMDAwOjM1OiBob3N0IHN1cHBvcnRzIENYTA0KPj4+IFsgICAgNi40OTA1
+NjhdIGN4bF9wY2kgMDAwMDo1NDowMC4wOiBSYW5nZSByZWdpc3RlciBkZWNvZGVzIG91dHNpZGUg
+cGxhdGZvcm0gZGVmaW5lZCBDWEwgcmFuZ2VzLg0KPj4+IFsgICAgNi40OTQyOThdIGN4bF9tZW0g
+bWVtMDogZW5kcG9pbnQzIGZhaWxlZCBwcm9iZQ0KPj4+IFsgICAgNi41MDYwNzJdIGN4bF9wY2kg
+MDAwMDozNjowMC4wOiBSYW5nZSByZWdpc3RlciBkZWNvZGVzIG91dHNpZGUgcGxhdGZvcm0gZGVm
+aW5lZCBDWEwgcmFuZ2VzLg0KPj4+IFsgICAgNi41MTUwOTJdIGN4bF9tZW0gbWVtMTogZW5kcG9p
+bnQzIGZhaWxlZCBwcm9iZQ0KPj4+IFsgICAxMi4xODExODhdIGthdWRpdGRfcHJpbnRrX3NrYjog
+MTggY2FsbGJhY2tzIHN1cHByZXNzZWQNCj4+Pg0KPj4+DQo+Pj4gVGhhbmtzDQo+Pj4gWmhpamlh
+bg0KPj4+DQo+Pj4NCj4+PiBPbiAxNy8wMi8yMDI0IDAwOjAxLCBSb2JlcnQgUmljaHRlciB3cm90
+ZToNCj4+Pj4gVGhlIExpbnV4IENYTCBzdWJzeXN0ZW0gaXMgYnVpbHQgb24gdGhlIGFzc3VtcHRp
+b24gdGhhdCBIUEEgPT0gU1BBLg0KPj4+PiBUaGF0IGlzLCB0aGUgaG9zdCBwaHlzaWNhbCBhZGRy
+ZXNzIChIUEEpIHRoZSBIRE0gZGVjb2RlciByZWdpc3RlcnMgYXJlDQo+Pj4+IHByb2dyYW1tZWQg
+d2l0aCBhcmUgc3lzdGVtIHBoeXNpY2FsIGFkZHJlc3NlcyAoU1BBKS4NCj4+Pj4NCj4+Pj4gRHVy
+aW5nIEhETSBkZWNvZGVyIHNldHVwLCB0aGUgRFZTRUMgQ1hMIHJhbmdlIHJlZ2lzdGVycyAoY3hs
+LTMuMSwNCj4+Pj4gOC4xLjMuOCkgYXJlIGNoZWNrZWQgaWYgdGhlIG1lbW9yeSBpcyBlbmFibGVk
+IGFuZCB0aGUgQ1hMIHJhbmdlIGlzIGluDQo+Pj4+IGEgSFBBIHdpbmRvdyB0aGF0IGlzIGRlc2Ny
+aWJlZCBpbiBhIENGTVdTIHN0cnVjdHVyZSBvZiB0aGUgQ1hMIGhvc3QNCj4+Pj4gYnJpZGdlIChj
+eGwtMy4xLCA5LjE4LjEuMykuDQo+Pj4+DQo+Pj4+IE5vdywgaWYgdGhlIEhQQSBpcyBub3QgYW4g
+U1BBLCB0aGUgQ1hMIHJhbmdlIGRvZXMgbm90IG1hdGNoIGEgQ0ZNV1MNCj4+Pj4gd2luZG93IGFu
+ZCB0aGUgQ1hMIG1lbW9yeSByYW5nZSB3aWxsIGJlIGRpc2FibGVkIHRoZW4uIFRoZSBIRE0gZGVj
+b2Rlcg0KPj4+PiBzdG9wcyB3b3JraW5nIHdoaWNoIGNhdXNlcyBzeXN0ZW0gbWVtb3J5IGJlaW5n
+IGRpc2FibGVkIGFuZCBmdXJ0aGVyIGENCj4+Pj4gc3lzdGVtIGhhbmcgZHVyaW5nIEhETSBkZWNv
+ZGVyIGluaXRpYWxpemF0aW9uLCB0eXBpY2FsbHkgd2hlbiBhIENYTA0KPj4+PiBlbmFibGVkIGtl
+cm5lbCBib290cy4NCj4+Pj4NCj4+Pj4gUHJldmVudCBhIHN5c3RlbSBoYW5nIGFuZCBkbyBub3Qg
+ZGlzYWJsZSB0aGUgSERNIGRlY29kZXIgaWYgdGhlDQo+Pj4+IGRlY29kZXIncyBDWEwgcmFuZ2Ug
+aXMgbm90IGZvdW5kIGluIGEgQ0ZNV1Mgd2luZG93Lg0KPj4+Pg0KPj4+PiBOb3RlIHRoZSBjaGFu
+Z2Ugb25seSBmaXhlcyBhIGhhcmR3YXJlIGhhbmcsIGJ1dCBkb2VzIG5vdCBpbXBsZW1lbnQNCj4+
+Pj4gSFBBL1NQQSB0cmFuc2xhdGlvbi4gU3VwcG9ydCBmb3IgdGhpcyBjYW4gYmUgYWRkZWQgaW4g
+YSBmb2xsb3cgb24NCj4+Pj4gcGF0Y2ggc2VyaWVzLg0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5
+OiBSb2JlcnQgUmljaHRlciA8cnJpY2h0ZXJAYW1kLmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICAgICBk
+cml2ZXJzL2N4bC9jb3JlL3BjaS5jIHwgNCArKy0tDQo+Pj4+ICAgICAxIGZpbGUgY2hhbmdlZCwg
+MiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jeGwvY29yZS9wY2kuYyBiL2RyaXZlcnMvY3hsL2NvcmUvcGNpLmMNCj4+Pj4gaW5k
+ZXggYTBlN2VkNWFlMjVmLi4xODYxNmNhODczZTUgMTAwNjQ0DQo+Pj4+IC0tLSBhL2RyaXZlcnMv
+Y3hsL2NvcmUvcGNpLmMNCj4+Pj4gKysrIGIvZHJpdmVycy9jeGwvY29yZS9wY2kuYw0KPj4+PiBA
+QCAtNDc4LDggKzQ3OCw4IEBAIGludCBjeGxfaGRtX2RlY29kZV9pbml0KHN0cnVjdCBjeGxfZGV2
+X3N0YXRlICpjeGxkcywgc3RydWN0IGN4bF9oZG0gKmN4bGhkbSwNCj4+Pj4gICAgIAl9DQo+Pj4+
+ICAgICANCj4+Pj4gICAgIAlpZiAoIWFsbG93ZWQpIHsNCj4+Pj4gLQkJY3hsX3NldF9tZW1fZW5h
+YmxlKGN4bGRzLCAwKTsNCj4+Pj4gLQkJaW5mby0+bWVtX2VuYWJsZWQgPSAwOw0KPj4+PiArCQlk
+ZXZfZXJyKGRldiwgIlJhbmdlIHJlZ2lzdGVyIGRlY29kZXMgb3V0c2lkZSBwbGF0Zm9ybSBkZWZp
+bmVkIENYTCByYW5nZXMuXG4iKTsNCj4+Pj4gKwkJcmV0dXJuIC1FTlhJTzsNCj4+Pj4gICAgIAl9
+DQo+Pj4+ICAgICANCj4+Pj4gICAgIAkvDQo+IA==
