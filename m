@@ -1,132 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8714C29CEF
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Apr 2024 07:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74343A1A1;
+	Mon,  8 Apr 2024 08:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712561159; cv=none; b=OvpWtPfHK7S2xfOCyMIqgXnb1OXrQY6dCDRiX0vxLzNiub+IKlyiXVaDjikhnHbr52iorAjgb5G38PnV8TvNeuUQ/iZ3Cn+Na2OqPPzdV6MJCk/WuO51vONhtaBdhoRdnzSglCYSy0caDHYmj+9cPhBSWCb9cwuo14XMScJVC9s=
+	t=1712565274; cv=none; b=h6W9qCoVCyiplvh2xatwAca8I0wATWXPhPwcsrcLqW+/guwJV9VzK7Ar7Nwl7W2jrTIkGyxRHc2egToDhZetBi16hD/OVj8XKYexoVoVW1eI7gKfXgINX/I7+KCCpm8nimx1BN3kbeTo2zo5XBrWc04z5qxbwftZGy8HEWZv6bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712561159; c=relaxed/simple;
-	bh=Bo2x+u5kEZPCysluerNEAjddSbPtTdYn1ImUxTXnhu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sjv445vjOKkbFPoCDkRgSe1Qbp+pCKlgbAIlQXtC3Ubd4++e//tq75M335x+KBnODZcTPjEYm+4BITXekPWGFqfRxPJ/jjEEexgEjT76EUrLe4erqUfzS5pIrTupOnVtHPXS5qLRPQE1I7tLhpJYz1SRS82FXRVrXS+QfQCxpWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PC/AVGkg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PC/AVGkg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712561156;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nwLABuDCF8qRe6Uvxmrk10151XqSu+e28i49NmiBB+g=;
-	b=PC/AVGkgxaBdyxGK68cYBPwiV4zF04vOS6CVbIn7Dc1vGSXD+9RGpG7m86bOnnlKWzjAFs
-	9KU4SqOZQ3eO/WREtUFO+1iuoQG+e8WoRDCHyJThtS7SNzadd5FKL0O2Pe/yAN1gDCZ8so
-	YclYrcDRoLEXoYrBcUgYgM03D0OJH34=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-rUuUUg6dMDG5RWRzgmgrwA-1; Mon, 08 Apr 2024 03:25:55 -0400
-X-MC-Unique: rUuUUg6dMDG5RWRzgmgrwA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-343da0a889dso2497563f8f.0
-        for <linux-cxl@vger.kernel.org>; Mon, 08 Apr 2024 00:25:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712561154; x=1713165954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nwLABuDCF8qRe6Uvxmrk10151XqSu+e28i49NmiBB+g=;
-        b=r1BTvAMOOlT94LiTyn7MfC1y/JMsQsNQOH22N7jRDGqx8NTIcHrxHZ3JKcTjeOEkyq
-         suumi9znuzsHy+Ddt4C90fpwO9Iegkyr3mm6mAvRIyCBv5toStDCqJ8EOGG+xH5+OOQr
-         vgHbIvSdjKTT6oVhMME1F9kVF67mkT9QJi+tJd9IXxKs9vGDhmBjr18zfr/05eEv2VhV
-         T8oXcqTBiJJpLmsV8+H58CXjHYMDFYLNo7KSjTPjUqgq1vTjAWtmred5K4jLuKUov88A
-         KHKvy/payuCfMVNg/Lglgv+XIa3lod/YSPkKY2qe4awur24l6s/aI/rrLq3TbYRS76Ou
-         P4vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdL5zCZYdt3EfUtwKZ5Yc2OM/CNY16EenFc8gzyjtbkQ4UUwqfWVH8G9Xh6KQBdEITf5XsO+gG9uXyaF+uX64M6veGf5p7J0CC
-X-Gm-Message-State: AOJu0YzhYl3Fi39yIa5JBJvgLn64Q+z6VyuZM+/MhtVuwL07fdHCOhMB
-	3F9j/8QakeTOxdAh+CKc7HsTXfGEbd5vtUh1I3oRPqxRLMKn1GvQ9nIH4CbMfLC5OTp9vkYQV8A
-	fO5hGPhqpIH+5OkNIvF1Jz8tmem8BTrIRaqhY6Vjd9CFc6Y/JPglw5Al/L15Cns6yiOTykqLkl6
-	t3xUIwkiHf10s8I0kK9z7eKU3+qkd6I7U9
-X-Received: by 2002:adf:fa11:0:b0:343:6187:ff56 with SMTP id m17-20020adffa11000000b003436187ff56mr5588335wrr.56.1712561154333;
-        Mon, 08 Apr 2024 00:25:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7vp4sVIdWl1axeaYfPlSN2LmyBCOZdhHUr8UF96pdfvsxS+csccpvCf0L3/n5/uV7hEzhoAM4BevCK6Uz5Cg=
-X-Received: by 2002:adf:fa11:0:b0:343:6187:ff56 with SMTP id
- m17-20020adffa11000000b003436187ff56mr5588322wrr.56.1712561154006; Mon, 08
- Apr 2024 00:25:54 -0700 (PDT)
+	s=arc-20240116; t=1712565274; c=relaxed/simple;
+	bh=x17ORC32Viklhe62/M9AbxsYOugUrbs6BdpjADn5zX0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c371PMLQv4ZnDLOIs8Mvx/3QXKmgKWAQCM7TzbraJza0PakKCsfiWhOSvSBxy8E7jmXIy9wgpqAkGtvf8CQfQfhDtJCZCLqQj2iNUR11IdcN8SdkhBd8R5Fv9xT3AdhQafHmrruMSFgX4v5crSAUY5HCT2R7xz8m5GJYlGmrDd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VCj1v1qsJz6K6hC;
+	Mon,  8 Apr 2024 16:29:39 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5FD81140A79;
+	Mon,  8 Apr 2024 16:34:23 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 8 Apr
+ 2024 09:34:22 +0100
+Date: Mon, 8 Apr 2024 09:34:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: PJ Waskiewicz <ppwaskie@kernel.org>
+CC: Lukas Wunner <lukas@wunner.de>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+Message-ID: <20240408093422.000062d9@Huawei.com>
+In-Reply-To: <ZhNQa8wAflycciNA@snoopy>
+References: <20240407210526.8500-1-ppwaskie@kernel.org>
+	<ZhMP-NBMb387KD4Y@wunner.de>
+	<ZhNQa8wAflycciNA@snoopy>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240406223248.502699-1-richard.henderson@linaro.org> <20240406223248.502699-6-richard.henderson@linaro.org>
-In-Reply-To: <20240406223248.502699-6-richard.henderson@linaro.org>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Mon, 8 Apr 2024 09:25:42 +0200
-Message-ID: <CABgObfY3+FBG3gSmNiT2y8u8KUCUYxTUG10xbOkqrZxeQ9JvPA@mail.gmail.com>
-Subject: Re: [PATCH 5/9] target/i386: Preserve DisasContextBase.insn_start
- across rewind
-To: Richard Henderson <richard.henderson@linaro.org>
-Cc: peter.maydell@linaro.org, Jorgen.Hansen@wdc.com, 
-	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Apr 8, 2024 at 9:15=E2=80=AFAM <no-reply@patchew.org> wrote:
-> When aborting translation of the current insn, restore the
-> previous value of insn_start.
->
-> Signed-off-by: Richard Henderson <richard.henderson@linaro.org>
+On Sun, 7 Apr 2024 19:03:23 -0700
+PJ Waskiewicz <ppwaskie@kernel.org> wrote:
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> On 24/04/07 11:28PM, Lukas Wunner wrote:
+> 
+> Hi Lukas,
+> 
+> > On Sun, Apr 07, 2024 at 02:05:26PM -0700, ppwaskie@kernel.org wrote:  
+> > > --- a/drivers/cxl/acpi.c
+> > > +++ b/drivers/cxl/acpi.c
+> > > @@ -504,7 +504,7 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
+> > >  
+> > >  	rc = acpi_evaluate_integer(hb->handle, METHOD_NAME__UID, NULL, &uid);
+> > >  	if (rc != AE_OK) {
+> > > -		dev_err(dev, "unable to retrieve _UID\n");
+> > > +		dev_err(dev, "unable to retrieve _UID. Potentially buggy BIOS\n");
+> > >  		return -ENOENT;
+> > >  	}  
+> > 
+> > dev_err(dev, FW_BUG "unable to retrieve _UID\n");
+> >              ^^^^^^
+> > 
+> > There's a macro for that.  
+> 
+> Doh...it's been awhile since I've crossed buggy BIOS's.  Thanks for the
+> review and comment.
+> 
+> Updated patch:
+> 
+> cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup failure
+> 
+> From: PJ Waskiewicz <ppwaskie@kernel.org>
+> 
+> Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
+> drivers on Emerald Rapids systems.  However, on some production
+> systems from some vendors, a buggy BIOS exists that improperly
+> populates the ACPI => PCI mappings.  This leads to the cxl_acpi
+> driver to fail probe when it cannot find the root port's _UID, in
+> order to look up the device's CXL attributes in the CEDT.
+> 
+> Add a bit more of a descriptive message that the lookup failure
+> could be a bad BIOS, rather than just "failed."
+> 
+> v2: Updated message to use existing FW_BUG macro
+Move the change log "v2..." etc below the ---
+as we don't want it in the long term git log + better to send a fresh
+patch in a separate thread.
 
-The TODO comment in disas_insn() in fact can be expanded a bit.
-When/if the table-based decoder takes over completely, decoding can be
-moved completely to insn_start, and insn_start could return a bool to
-undo the beginning of the translation.
+Other than that seems reasonable to hint it is probably a bios
+bug - however I wonder how many other cases we should do this for and
+whether it is worth the effort of marking them all?
 
-Paolo
+Jonathan
 
+
+
+> 
+> Signed-off-by: PJ Waskiewicz <ppwaskie@kernel.org>
 > ---
->  target/i386/tcg/translate.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/target/i386/tcg/translate.c b/target/i386/tcg/translate.c
-> index 07f642dc9e..76a42c679c 100644
-> --- a/target/i386/tcg/translate.c
-> +++ b/target/i386/tcg/translate.c
-> @@ -139,6 +139,7 @@ typedef struct DisasContext {
->      TCGv_i64 tmp1_i64;
->
->      sigjmp_buf jmpbuf;
-> +    TCGOp *prev_insn_start;
->      TCGOp *prev_insn_end;
->  } DisasContext;
->
-> @@ -3123,6 +3124,7 @@ static bool disas_insn(DisasContext *s, CPUState *c=
-pu)
->          /* END TODO */
->          s->base.num_insns--;
->          tcg_remove_ops_after(s->prev_insn_end);
-> +        s->base.insn_start =3D s->prev_insn_start;
->          s->base.is_jmp =3D DISAS_TOO_MANY;
->          return false;
->      default:
-> @@ -6995,6 +6997,7 @@ static void i386_tr_insn_start(DisasContextBase *dc=
-base, CPUState *cpu)
->      DisasContext *dc =3D container_of(dcbase, DisasContext, base);
->      target_ulong pc_arg =3D dc->base.pc_next;
->
-> +    dc->prev_insn_start =3D dc->base.insn_start;
->      dc->prev_insn_end =3D tcg_last_op();
->      if (tb_cflags(dcbase->tb) & CF_PCREL) {
->          pc_arg &=3D ~TARGET_PAGE_MASK;
-> --
-> 2.34.1
->
+>  drivers/cxl/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index af5cb818f84d..d321cfbd4682 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -504,7 +504,7 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
+>  
+>  	rc = acpi_evaluate_integer(hb->handle, METHOD_NAME__UID, NULL, &uid);
+>  	if (rc != AE_OK) {
+> -		dev_err(dev, "unable to retrieve _UID\n");
+> +		dev_err(dev, FW_BUG "unable to retrieve _UID\n");
+>  		return -ENOENT;
+>  	}
+>  
 
