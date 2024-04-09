@@ -1,62 +1,61 @@
-Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
+Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6F97E105;
-	Tue,  9 Apr 2024 07:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E587CF2B
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 08:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712648086; cv=none; b=qWsthREPESos0/5/MAs5WIF3GDVnAVgMP4TS2RCZY7iJY/DcG85KWELi1mz/aAx1i9kzklIlxcpWvFzXj0yiSx7kO3gC/ZaMfVohD/lmTeHryP7KMuEh7UZxlFYr1EiJeMMhx0lJ0XthxNXx4UAdyPCrkzffknDoxm0sIY+9tc0=
+	t=1712649608; cv=none; b=dm5HCK54nhoohti3+rxX4zBmJrdNSBYXZy9Vut5QIUpGQm1c4ggSokZAD/XyWTpFzn3RT7UdryzNteQ7Nz8p/SlqYub0IIy30CyM48heGgOA69SKoGIFzkHx6nktps8WmA0EHndJxr9dU4aQY8+K2Z9N/NkA8u4sblaSYqmH97o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712648086; c=relaxed/simple;
-	bh=J3w0/ylkb4XiYg+NOVUCBlML1Xs+JJ1NLrEyKUxtTsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IzJUWEgZI7khyNs3uHrzlf8j5GGFDw4Tn1Uzqo19SWbdvnGCNOGRbfOrE93JHvdlrQBnyglOrGMpzO0JUbtJrN2AMn1PuFzpUgq44OtkB0klrGBCk91gxR0w4jko9TIh68qV8EFdY7lTZlDCenuyKSZu8CJZ3o/EXNUI5xiCYwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=kBIlOl2/; arc=none smtp.client-ip=139.138.61.252
+	s=arc-20240116; t=1712649608; c=relaxed/simple;
+	bh=cr75vmQQ4tjMyuDlPBiVrzxG5Gv0w637W9cL2RfcGas=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=saa63gKh32JvZIPZLwU99zdFmHpxmvDCEG+x61zwgwqqc3HLTOu0bdUrX/PQ6PkdkC3OvIzCEqFUUN6ONUPm/9LMGW57Jkkj2abIZYVyucCUCbMOiYEL1wSX7TVIMEeuzHCiv+VN5UAfuf7DzuipvdLP/HRuOBBjLtwuV4bY2Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=QUB58m8F; arc=none smtp.client-ip=139.138.61.253
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="kBIlOl2/"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="QUB58m8F"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1712648084; x=1744184084;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J3w0/ylkb4XiYg+NOVUCBlML1Xs+JJ1NLrEyKUxtTsc=;
-  b=kBIlOl2/GeAVXj0EeSQ5Izo5xQT77mG/Ejow8SdDKGH0TsyyPAI+3+tT
-   wWr5sO9WnIn7WtHk7n++7s6bnwMZIi3JRTN+WWjpxCDqXGumz/dSYdypN
-   ZplT1RdKC9DQJK0VukP2vo+UHJS/F3Ab7FrqXzFx4yIke5iIRlyUUHwHJ
-   CzxTzBCjwQBbySgyvD+k8VEjYN6Lb7aknj08CUlxlvxYUFU0DS838XWaf
-   7kywr5/p37Vc9vddRA0TD2BNUnfN+rXFxoB/+OCDh7NAI0NOrL6GhQe8j
-   A6+heO1ADEMv3C3ctfs9Fd5GIpkMY/eifxgZ4bsXZRBrx8nCChf8AYMdi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="133822738"
+  t=1712649606; x=1744185606;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cr75vmQQ4tjMyuDlPBiVrzxG5Gv0w637W9cL2RfcGas=;
+  b=QUB58m8FRCVE7SEhrs8iNg0So8VRvn+kLaB1r5XdwJDi5SSMarSdG4uP
+   sx2xAOYC0QhSliNC6e6NY2PZOPtH2EghRPi9P2zzu7zDazZT5d5EWEc7C
+   djbJkEe+UDM9/3cgwh/q/gguPRocvfKuJex5wDOdqfmYHV0KGJMQ+gPxL
+   bk+sP9TuEpNh1Ki69TiVPJvI2SAQiTcQ+2CKv56udQ2Ex1Ce7zPfyNW2m
+   sCjK7N7E7jJIUSKXqiMJi1maL/HpCAOzDEts0SvF3ASdEYmcaSOeByP5N
+   tqsMjAE4M7oJZ8O6ghkoW9nnBcuX13BAZt2Iv2oSTcd/0CjeHuODOpVae
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="143015836"
 X-IronPort-AV: E=Sophos;i="6.07,189,1708354800"; 
-   d="scan'208";a="133822738"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:33:31 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6D38AE9A34;
-	Tue,  9 Apr 2024 16:33:29 +0900 (JST)
-Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id B037D35C3E;
-	Tue,  9 Apr 2024 16:33:28 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 85718204E19B;
-	Tue,  9 Apr 2024 16:33:28 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: kobayashi.da-06@jp.fujitsu.com,
-	linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	linux-pci@vger.kernel.org,
-	mj@ucw.cz,
-	dan.j.williams@intel.com,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [PATCH v4 3/3] cxl/pci: Add sysfs attribute for CXL 1.1 device link status
-Date: Tue,  9 Apr 2024 16:35:28 +0900
-Message-ID: <20240409073528.13214-4-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
-References: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
+   d="scan'208";a="143015836"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:58:54 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 68688D9F01
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 16:58:52 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 96248D5620
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 16:58:51 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 2586A20098E12
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 16:58:51 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 6293D1A0002;
+	Tue,  9 Apr 2024 15:58:50 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	qemu-devel@nongnu.org
+Cc: linux-cxl@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [PATCH v2] hw/mem/cxl_type3: reset dvsecs in ct3d_reset()
+Date: Tue,  9 Apr 2024 15:58:46 +0800
+Message-Id: <20240409075846.85370-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,114 +64,82 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28306.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28306.006
+X-TMASE-Result: 10--9.351400-10.000000
+X-TMASE-MatchedRID: uWxJDmPsnWHOugYCEJUMNSrLqyE6Ur/j1Ee54j3itDaJXRC/bWSJueLa
+	AlZI/DlqEpqGYdoOBVcHw5SpXQUTkBT0CagFsN1kEVuC0eNRYvIXivwflisSrCWLxjlrSy8vuxW
+	P7AlD8NO3nQMqHp+dH+affHI8kAmiHY/bzRmIaZGdd2mFBNIr8gV54COoxb6XR6RHdVK85hXuQ7
+	Jl58fF92sRrupgWdD3DHgfvPgXVeSel3N+gDvB50VOF9zLtdyMeF+F9LT9kRKbKItl61J/yZ+in
+	TK0bC9eKrauXd3MZDVt7biF0Cnq/FsUqcjBanlSra5fkKjdyekD49NFNTBfWdZEUZ4TJWg7
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+After the kernel commit
+0cab68720598 ("cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS window")
+CXL type3 devices cannot be enabled again after the reboot because the
+control register(see 8.1.3.2 in CXL specifiction 2.0 for more details) was
+not reset.
 
-In CXL1.1, the link status of the device is included in the RCRB mapped to
-the memory mapped register area. Critically, that arrangement makes the link
-status and control registers invisible to existing PCI user tooling.
+These registers could be changed by the firmware or OS, let them have
+their initial value in reboot so that the OS can read their clean status.
 
-Export those registers via sysfs with the expectation that PCI user
-tooling will alternatively look for these sysfs files when attempting to
-access to these CXL 1.1 endpoints registers.
-
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Fixes: e1706ea83da0 ("hw/cxl/device: Add a memory device (8.2.8.5)")
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- drivers/cxl/pci.c | 74 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+root_port, usp and dsp have the same issue, if this patch get approved,
+I will send another patch to fix them later.
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..0ff15738b1ba 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -786,6 +786,79 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	return 0;
- }
+V2:
+   Add fixes tag.
+   Reset all dvsecs registers instead of CTRL only
+---
+ hw/mem/cxl_type3.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index b0a7e9f11b64..4f09d0b8fedc 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -30,6 +30,7 @@
+ #include "hw/pci/msix.h"
  
-+static ssize_t rcd_link_cap_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
-+}
-+static DEVICE_ATTR_RO(rcd_link_cap);
-+
-+static ssize_t rcd_link_ctrl_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
-+}
-+static DEVICE_ATTR_RO(rcd_link_ctrl);
-+
-+static ssize_t rcd_link_status_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
-+}
-+static DEVICE_ATTR_RO(rcd_link_status);
-+
-+static struct attribute *cxl_rcd_attrs[] = {
-+		&dev_attr_rcd_link_cap.attr,
-+		&dev_attr_rcd_link_ctrl.attr,
-+		&dev_attr_rcd_link_status.attr,
-+		NULL
-+};
-+
-+static umode_t cxl_rcd_visible(struct kobject *kobj,
-+					  struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (is_cxl_restricted(pdev))
-+		return a->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group cxl_rcd_group = {
-+		.attrs = cxl_rcd_attrs,
-+		.is_visible = cxl_rcd_visible,
-+};
-+__ATTRIBUTE_GROUPS(cxl_rcd);
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -969,6 +1042,7 @@ static struct pci_driver cxl_pci_driver = {
- 	.id_table		= cxl_mem_pci_tbl,
- 	.probe			= cxl_pci_probe,
- 	.err_handler		= &cxl_error_handlers,
-+	.dev_groups		= cxl_rcd_groups,
- 	.driver	= {
- 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 	},
+ #define DWORD_BYTE 4
++#define CT3D_CAP_SN_OFFSET PCI_CONFIG_SPACE_SIZE
+ 
+ /* Default CDAT entries for a memory region */
+ enum {
+@@ -284,6 +285,10 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+              range2_size_hi = 0, range2_size_lo = 0,
+              range2_base_hi = 0, range2_base_lo = 0;
+ 
++    cxl_cstate->dvsec_offset = CT3D_CAP_SN_OFFSET;
++    if (ct3d->sn != UI64_NULL) {
++        cxl_cstate->dvsec_offset += PCI_EXT_CAP_DSN_SIZEOF;
++    }
+     /*
+      * Volatile memory is mapped as (0x0)
+      * Persistent memory is mapped at (volatile->size)
+@@ -664,10 +669,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ 
+     pcie_endpoint_cap_init(pci_dev, 0x80);
+     if (ct3d->sn != UI64_NULL) {
+-        pcie_dev_ser_num_init(pci_dev, 0x100, ct3d->sn);
+-        cxl_cstate->dvsec_offset = 0x100 + 0x0c;
+-    } else {
+-        cxl_cstate->dvsec_offset = 0x100;
++        pcie_dev_ser_num_init(pci_dev, CT3D_CAP_SN_OFFSET, ct3d->sn);
+     }
+ 
+     ct3d->cxl_cstate.pdev = pci_dev;
+@@ -907,6 +909,7 @@ static void ct3d_reset(DeviceState *dev)
+ 
+     cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
+     cxl_device_register_init_t3(ct3d);
++    build_dvsecs(ct3d);
+ 
+     /*
+      * Bring up an endpoint to target with MCTP over VDM.
 -- 
-2.44.0
+2.29.2
 
