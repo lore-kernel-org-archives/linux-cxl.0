@@ -1,258 +1,94 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C699157487
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 19:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222E415623E;
+	Tue,  9 Apr 2024 19:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712689365; cv=none; b=R+IH3nkHgGvHbeGNsnS29ig8cv3wviIdMLsjsi+WfeyaewXjbRhZYjmlkVYdAxJR8gQ3qS1UPtHqeWC0l/neUAzuQn5Uvwi+AHV5ZOSHYy/TqcIR3NUuIro6RjpewxoeM0K1M2hOBqDQzCG7WZADXOzWWRFMC4cSEg8vSMn03k0=
+	t=1712689693; cv=none; b=aWIL54ooH+Rh1C4fh/HH7fFpp5wvoXTnGF1XsSSFzSw4FNjdLQR/BYECFC7n7DejBjHLDAoCP3ffT+CUwMKNoOYxmSKjV3y0Q72KbfO44wqUJY9nN9EaoYJqa4WCXEUsL89Dh8cnt1oe/SjIf/eHev0hXIhhbFZlGokYwqtYcqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712689365; c=relaxed/simple;
-	bh=pjO/EdIcJWhe4jLC9dLVMdCS9P4ixop/idJjzexUyv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OOhRFMbasJrFtRZHZPpr8XEIRN19xD7FZgFdsXY8XiP0IJtmmYk1kyqmDqGKkU+HFht+pL+4ioeKnX/BrieTB2wlp3fOIHBGRiY9Moo5BCNfWSJh4h+nlrF+fPLOfSqLNVc0/yh/8caI+nHxt3d11JVdfsJPzaxVTdwgVkGJvw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Izq4ogMf; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1712689693; c=relaxed/simple;
+	bh=yEJbl9oyBunO2YVwvMLkxlAZCzhbL8O4ABgqpXSaO9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OYRsc2W2PyKgqKbYxm7SSPma+hF0jnkgQISlxJb5ssOPClU0EGM1FiPlDQylkRiFs8GwBjX3hBDFXLz7s96oqZ3+MJYic7jYs57Yutr44JKPfEA/OknLPBvlpDIVWQ2L8oLRwKHMU6ln/JrmDaFS26DMOZuAlKVbIBq3+uYTi2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G7P4cNN8; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Izq4ogMf"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dd10ebcd702so6157120276.2
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Apr 2024 12:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1712689362; x=1713294162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u9JT5x/b9oaUqCAXwkz87p9Kfabiba0RNb5HLj9kkfw=;
-        b=Izq4ogMfAavb1rQq2gEQ9afDj2/DJ2gaL1zYfiCuitlv+jfepFFaN2lP2sEyQeLtxZ
-         gxFN4BrH15VcOT+ZPKyrkW8oS8TGeNOhZ8ynOJVjmyMjqb0hI62mx1PljsdUIQm4VTbs
-         V4y+9cfr6fekOV3le0fpbUySwfxTI4PNWLGiMa1X45POvaM4DVXGqRrMYP++o7+LKWWI
-         KYjVQi1AvmScnEFj/d8FI457nwbXfdu5XGa70LOek4ApNbmwHZMHiTe1YJkfVjpQOckE
-         MNkmXSyIcD/6OSzcFxMKu1x+PfTUnOX4RkLnvV7nLAeK1hhyLb+yhXUZ5h+KGUUq+vMX
-         p/Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712689362; x=1713294162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u9JT5x/b9oaUqCAXwkz87p9Kfabiba0RNb5HLj9kkfw=;
-        b=daH/jfWwgm8K8WEXiAWkeDwxJ/DoM2nYWiNkQyzGpXNfMYS/GW64c7KPMdfpznicRB
-         mHcRxzvFnBh3lsFa86WRgIve5T9EmR47UZq+F9hB2GEaXANXVbuAGf2kAf9A5nIt4GLt
-         0AvSFgWXb54B7cU2FqyNbFihpCodRIqpMVl12Us4SBT7+YFKqe5dKoW27YOUWtJ/tpkR
-         Pr9XiHuDhz65vCBnBGmGBKsDQP7h4C+oiTnkePCLuM1CjjodwV4t5ZnMvnTwBtrGhADv
-         pbQPOZZdC83+D055PcqMUgJPU9A8GzpLSTcc57phntox4fuvk8T0VZG7SieYD2BqB3mA
-         lzbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUx30Gteod/fBj3BZgY7KBgh5igUluY2QC0F3MznmtZX79EZV8RXc9ZA99dP7Yn1ZzaLUwrNxlhcqqC3TVc2uB0J+tH2w6I3cRM
-X-Gm-Message-State: AOJu0YyVfS8Fh+gQtaRqVsKieNfZAB3aAH85uecUhT7uzu7geLhtZnrt
-	MjCu+qpbVh2MpGJ6sHAwM/LJClCDuwUbNZgoYje5K+OvodZKe7gJNl0/nmCdwH7r7o+vsdp8CCQ
-	kgCcvSeF4V8sRpEfrRJT3eDam9ZoLv9NxG+Ly8Q==
-X-Google-Smtp-Source: AGHT+IEhGXon713SAihpC+CGTqCe5Yi+IkEzhQrqxAFLZdzLSTS9HBsKOtlx/4EZ5ThM7PRsnpjepkyCsqvR+OR0zTE=
-X-Received: by 2002:a5b:ac2:0:b0:de0:de85:e388 with SMTP id
- a2-20020a5b0ac2000000b00de0de85e388mr666317ybr.24.1712689362423; Tue, 09 Apr
- 2024 12:02:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G7P4cNN8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712689691; x=1744225691;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yEJbl9oyBunO2YVwvMLkxlAZCzhbL8O4ABgqpXSaO9Y=;
+  b=G7P4cNN88KxehsRXraZnEMlsBjMyIUJ50/701QefUzrYgPTpHdryRUMc
+   /u1zvKgqfDXyTQ0Htbx7lfkcwGuZ3D1819lClQRunHzA4XPbAvmTHOCgi
+   HyS2siXaIr/eJjMiBjv3gIuR2armaf46+XOrmnjfTXH7+JXb00wizBxM6
+   3TP4+Ukb2xTUDuA7MbkxGtTIXPeL/CZdJUtskwh6pfHgyYCKS41S45IVG
+   nl72w+ByUgwlp0nO4znOYdMhzw5YmcPTyrghHMGMpCVgpd2342CvNxVID
+   3ZITJ3j1y4PQBwsbiI3Yce3YUqpfD6O3vrrKULUw707jjJZlswV8BRwwQ
+   g==;
+X-CSE-ConnectionGUID: yJfX66uOTfiWg7hS9dI0pQ==
+X-CSE-MsgGUID: tcLeEQHjRf+7xWCTbixIcg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7880372"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7880372"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 12:08:08 -0700
+X-CSE-ConnectionGUID: 7zSpGlQDS/u4gk38YuWJrw==
+X-CSE-MsgGUID: NFeynZ0USHSBUdPvPeoROQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20791070"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.183.123]) ([10.213.183.123])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 12:08:08 -0700
+Message-ID: <84c52acf-54af-4370-983d-e03c92564774@intel.com>
+Date: Tue, 9 Apr 2024 12:08:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405000707.2670063-1-horenchuang@bytedance.com>
- <20240405000707.2670063-3-horenchuang@bytedance.com> <20240405150244.00004b49@Huawei.com>
- <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com> <20240409171204.00001710@Huawei.com>
-In-Reply-To: <20240409171204.00001710@Huawei.com>
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Date: Tue, 9 Apr 2024 12:02:31 -0700
-Message-ID: <CAKPbEqry55fc51hQ8oUC8so=PD_wWoJMEPiR-eq03BgB5q86Yw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v11 2/2] memory tier: create CPUless memory
- tiers after obtaining HMAT info
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
-	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
-	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
-	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
-	Hao Xiang <hao.xiang@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Jonathan,
-
-On Tue, Apr 9, 2024 at 9:12=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 5 Apr 2024 15:43:47 -0700
-> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
->
-> > On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Fri,  5 Apr 2024 00:07:06 +0000
-> > > "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
-> > >
-> > > > The current implementation treats emulated memory devices, such as
-> > > > CXL1.1 type3 memory, as normal DRAM when they are emulated as norma=
-l memory
-> > > > (E820_TYPE_RAM). However, these emulated devices have different
-> > > > characteristics than traditional DRAM, making it important to
-> > > > distinguish them. Thus, we modify the tiered memory initialization =
-process
-> > > > to introduce a delay specifically for CPUless NUMA nodes. This dela=
-y
-> > > > ensures that the memory tier initialization for these nodes is defe=
-rred
-> > > > until HMAT information is obtained during the boot process. Finally=
-,
-> > > > demotion tables are recalculated at the end.
-> > > >
-> > > > * late_initcall(memory_tier_late_init);
-> > > > Some device drivers may have initialized memory tiers between
-> > > > `memory_tier_init()` and `memory_tier_late_init()`, potentially bri=
-nging
-> > > > online memory nodes and configuring memory tiers. They should be ex=
-cluded
-> > > > in the late init.
-> > > >
-> > > > * Handle cases where there is no HMAT when creating memory tiers
-> > > > There is a scenario where a CPUless node does not provide HMAT info=
-rmation.
-> > > > If no HMAT is specified, it falls back to using the default DRAM ti=
-er.
-> > > >
-> > > > * Introduce another new lock `default_dram_perf_lock` for adist cal=
-culation
-> > > > In the current implementation, iterating through CPUlist nodes requ=
-ires
-> > > > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will=
- end up
-> > > > trying to acquire the same lock, leading to a potential deadlock.
-> > > > Therefore, we propose introducing a standalone `default_dram_perf_l=
-ock` to
-> > > > protect `default_dram_perf_*`. This approach not only avoids deadlo=
-ck
-> > > > but also prevents holding a large lock simultaneously.
-> > > >
-> > > > * Upgrade `set_node_memory_tier` to support additional cases, inclu=
-ding
-> > > >   default DRAM, late CPUless, and hot-plugged initializations.
-> > > > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
-> > > > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier(=
-)` to
-> > > > handle cases where memtype is not initialized and where HMAT inform=
-ation is
-> > > > available.
-> > > >
-> > > > * Introduce `default_memory_types` for those memory types that are =
-not
-> > > >   initialized by device drivers.
-> > > > Because late initialized memory and default DRAM memory need to be =
-managed,
-> > > > a default memory type is created for storing all memory types that =
-are
-> > > > not initialized by device drivers and as a fallback.
-> > > >
-> > > > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> > > > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
-> > > > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-> > >
-> > > Hi - one remaining question. Why can't we delay init for all nodes
-> > > to either drivers or your fallback late_initcall code.
-> > > It would be nice to reduce possible code paths.
-> >
-> > I try not to change too much of the existing code structure in
-> > this patchset.
-> >
-> > To me, postponing/moving all memory tier registrations to
-> > late_initcall() is another possible action item for the next patchset.
-> >
-> > After tier_mem(), hmat_init() is called, which requires registering
-> > `default_dram_type` info. This is when `default_dram_type` is needed.
-> > However, it is indeed possible to postpone the latter part,
-> > set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
-> > indeed be split into two parts, and the latter part can be moved to
-> > late_initcall() to be processed together.
-> >
-> > Doing this all memory-type drivers have to call late_initcall() to
-> > register a memory tier. I=E2=80=99m not sure how many they are?
-> >
-> > What do you guys think?
->
-> Gut feeling - if you are going to move it for some cases, move it for
-> all of them.  Then we only have to test once ;)
->
-> J
-
-Thank you for your reminder! I agree~ That's why I'm considering
-changing them in the next patchset because of the amount of changes.
-And also, this patchset already contains too many things.
-
-> >
-> > >
-> > > Jonathan
-> > >
-> > >
-> > > > ---
-> > > >  mm/memory-tiers.c | 94 +++++++++++++++++++++++++++++++++++--------=
-----
-> > > >  1 file changed, 70 insertions(+), 24 deletions(-)
-> > > >
-> > > > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> > > > index 516b144fd45a..6632102bd5c9 100644
-> > > > --- a/mm/memory-tiers.c
-> > > > +++ b/mm/memory-tiers.c
-> > >
-> > >
-> > >
-> > > > @@ -855,7 +892,8 @@ static int __init memory_tier_init(void)
-> > > >        * For now we can have 4 faster memory tiers with smaller adi=
-stance
-> > > >        * than default DRAM tier.
-> > > >        */
-> > > > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRA=
-M);
-> > > > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADIST=
-ANCE_DRAM,
-> > > > +                                                   &default_memory=
-_types);
-> > > >       if (IS_ERR(default_dram_type))
-> > > >               panic("%s() failed to allocate default DRAM tier\n", =
-__func__);
-> > > >
-> > > > @@ -865,6 +903,14 @@ static int __init memory_tier_init(void)
-> > > >        * types assigned.
-> > > >        */
-> > > >       for_each_node_state(node, N_MEMORY) {
-> > > > +             if (!node_state(node, N_CPU))
-> > > > +                     /*
-> > > > +                      * Defer memory tier initialization on
-> > > > +                      * CPUless numa nodes. These will be initiali=
-zed
-> > > > +                      * after firmware and devices are initialized=
-.
-> > >
-> > > Could the comment also say why we can't defer them all?
-> > >
-> > > (In an odd coincidence we have a similar issue for some CPU hotplug
-> > >  related bring up where review feedback was move all cases later).
-> > >
-> > > > +                      */
-> > > > +                     continue;
-> > > > +
-> > > >               memtier =3D set_node_memory_tier(node);
-> > > >               if (IS_ERR(memtier))
-> > > >                       /*
-> > >
-> >
-> >
->
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] cxl: Add rcd_regs to cxl_rcrb_info
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
+ kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org
+Cc: y-goto@fujitsu.com, linux-pci@vger.kernel.org, mj@ucw.cz,
+ dan.j.williams@intel.com
+References: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
+ <20240409073528.13214-2-kobayashi.da-06@fujitsu.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240409073528.13214-2-kobayashi.da-06@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---=20
-Best regards,
-Ho-Ren (Jack) Chuang
-=E8=8E=8A=E8=B3=80=E4=BB=BB
+
+On 4/9/24 12:35 AM, Kobayashi,Daisuke wrote:
+> Add rcd regs to cxl_rcrb_info to cache the RCD register values.
+
+I suggest you squash this patch with 2/3. There's not much meaning of adding variables without showing usage.
+
+> 
+> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> ---
+>  drivers/cxl/cxl.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 003feebab79b..2dc827c301a1 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -647,6 +647,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>  struct cxl_rcrb_info {
+>  	resource_size_t base;
+>  	u16 aer_cap;
+> +	u16 rcd_lnkctrl;
+> +	u16 rcd_lnkstatus;
+> +	u32 rcd_lnkcap;
+>  };
+>  
+>  /**
