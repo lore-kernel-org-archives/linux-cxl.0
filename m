@@ -1,160 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B113D63F;
-	Tue,  9 Apr 2024 16:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9054313666C
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Apr 2024 16:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712678584; cv=none; b=uat0LK1at/5KI/aoqSz6/Q31V7Z2ijWzL/yeSfgz5BamBXk12GFZo5/qzly32iCd46cJe+D9qzyYTsK7O2g2yHg/doIQLslUk0rLsj7QZZLNH2IFM0FlSA71HuxMrxpihfv3pqkhLvbk/kyjAXaOR+KuKuR3uYzBVeKF17YJHMo=
+	t=1712679060; cv=none; b=P3H9UDNUApEA/92ENq7R/wta4CMRomO9o5EE4e0bMj/HL2AHCcVP/NTxfrwA+cFm7lgmaML+hAB/y2UQPHTLXa4dzl35VkHFvp/pwGJG8//bmaf/adXsr8Tuo75zmr3YiOvPJRkl8ANgh15b+zc9RSNzbYmnP07r5aHgX0doMZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712678584; c=relaxed/simple;
-	bh=BXhwjnE1qVxS2euH04MQtLni9o0QfDZ0qo+X7qh1//w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q9h5QPTc573RaIz2gLIGBeLW7G+PbE3AVqupO0FvvP5NrdGrzmD5nh8JfXcAxFuMHwmaArL4dJPkrwNa+cFLuRtKC/5MO6RPA5QTnqIKQ/kt4kHF0Z+/dLIaPg0zm9kqBZvVqHqgoRZg1zusQDSso1jwE8xz6rz0292o43t/g00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A81AEC433F1;
-	Tue,  9 Apr 2024 16:03:03 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	bhelgaas@google.com,
-	lukas@wunner.de
-Subject: [PATCH v4 4/4] cxl: Add post reset warning if reset results in loss of previously committed HDM decoders
-Date: Tue,  9 Apr 2024 09:01:17 -0700
-Message-ID: <20240409160256.94184-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409160256.94184-1-dave.jiang@intel.com>
-References: <20240409160256.94184-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1712679060; c=relaxed/simple;
+	bh=ugzz/fgtHnFL3TC/aFSve0V5kZ5/EpBZqXus5kT22q0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M+8By3igDd5PYfkBjLtGlj2l6vrXALbzTLzW25EvOWVE02o0K9tPIAMiQiQJwQHQmy5XgC34Ifw2Y+Rw46IcI8vBVgay8LzCW2kFA9E3b3m+PK4yoYK/8b4jB0oH+jNxPCCtKzh5zfkKLKTZdg9K3QVQzEpVQH+KTQGoaynUbs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VDW683WQXz67DpL;
+	Wed, 10 Apr 2024 00:06:08 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 88DDD1400CA;
+	Wed, 10 Apr 2024 00:10:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 9 Apr
+ 2024 17:10:54 +0100
+Date: Tue, 9 Apr 2024 17:10:53 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Gregory Price <gregory.price@memverge.com>
+CC: <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
+	<linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
+	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v6 09/12] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <20240409171053.00003f2d@Huawei.com>
+In-Reply-To: <ZhA+U9b/IVq1V6LT@memverge.com>
+References: <20240325190339.696686-1-nifan.cxl@gmail.com>
+	<20240325190339.696686-10-nifan.cxl@gmail.com>
+	<Zg2c+YauNGqhFfTW@memverge.com>
+	<20240405132719.00005859@Huawei.com>
+	<ZhAh0Qmv2/VTe1wT@memverge.com>
+	<20240405184452.00007986@Huawei.com>
+	<ZhA+U9b/IVq1V6LT@memverge.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-SBR is equivalent to a device been hot removed and inserted again. Doing a
-SBR on a CXL type 3 device is problematic if the exported device memory is
-part of system memory that cannot be offlined. The event is equivalent to
-violently ripping out that range of memory from the kernel. While the
-hardware requires the "Unmask SBR" bit set in the Port Control Extensions
-register and the kernel currently does not unmask it, user can unmask
-this bit via setpci or similar tool.
+On Fri, 5 Apr 2024 14:09:23 -0400
+Gregory Price <gregory.price@memverge.com> wrote:
 
-The driver does not have a way to detect whether a reset coming from the
-PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
-detect is to note if a decoder is marked as enabled in software but the
-decoder control register indicates it's not committed.
+> On Fri, Apr 05, 2024 at 06:44:52PM +0100, Jonathan Cameron wrote:
+> > On Fri, 5 Apr 2024 12:07:45 -0400
+> > Gregory Price <gregory.price@memverge.com> wrote:
+> >   
+> > > 3. (C) Upon Device receiving Release Dynamic Capacity Request
+> > >    a. check for a pending release request. If exists, error.  
+> > 
+> > Not sure that's necessary - can queue as long as the head
+> > can track if the bits are in a pending release state.
+> >   
+> 
+> Yeah probably it's fine to just queue the event and everything
+> downstream just handles it.
+> 
+> > >    b. check that the bits in the MHD bitmap are actually set  
+> > Good.  
+> > > 
+> > >    function: qmp_cxl_process_dynamic_capacity
+> > > 
+> > > 4. (D) Upon Device receiving Release Dynamic Capacity Response
+> > >    a. clear the bits in the mhd bitmap
+> > >    b. remove the pending request from the pending list
+> > > 
+> > >    function: cmd_dcd_release_dyn_cap
+> > > 
+> > > Something to note: The MHD bitmap is essentially the same as the
+> > > existing DCD extent bitmap - except that it is located in a shared
+> > > region of memory (mmap file, shm, whatever - pick one).  
+> > 
+> > I think you will ideally also have a per head one to track head access
+> > to the things offered by the mhd.
+> >   
+> 
+> Generally I try not to duplicate state, reduces consistency problems.
+> 
+> You do still need a shared memory state and a per-head state to capture
+> per-head data, but the allocation bitmap is really device-global state.
 
-A helper function is added to find discrepancy between the decoder
-software state versus the hardware register state.
+There is a separation between 'offered' to a head and 'accepted on that head'.
+Sure you could track all outstanding offers (if you let more than one be
+outstanding) at the shared memory, just seemed easier to do that in the
+per head element.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v4:
-- Update commit subject to clarify. (Jonathan)
----
- drivers/cxl/core/pci.c | 31 +++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |  2 ++
- drivers/cxl/pci.c      | 20 ++++++++++++++++++++
- 3 files changed, 53 insertions(+)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index c496a9710d62..597221f7f19b 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1045,3 +1045,34 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
- 
- 	return cxl_flit_size(pdev) * MEGA / bw;
- }
-+
-+static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_port *port = data;
-+	struct cxl_decoder *cxld;
-+	struct cxl_hdm *cxlhdm;
-+	void __iomem *hdm;
-+	u32 ctrl;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
-+		return 0;
-+
-+	cxld = &cxled->cxld;
-+	cxlhdm = dev_get_drvdata(&port->dev);
-+	hdm = cxlhdm->regs.hdm_decoder;
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
-+}
-+
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
-+{
-+	return device_for_each_child(&port->dev, port,
-+				     __cxl_endpoint_decoder_reset_detected);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 534e25e2f0a4..e3c237c50b59 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -895,6 +895,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 			     struct access_coordinate *c1,
- 			     struct access_coordinate *c2);
- 
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 110478573296..5dc1f28a031d 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -957,11 +957,31 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_reset_done(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &pdev->dev;
-+
-+	/*
-+	 * FLR does not expect to touch the HDM decoders and related registers.
-+	 * SBR however will wipe all device configurations.
-+	 * Issue warning if there was active decoder before reset that no
-+	 * longer exists.
-+	 */
-+	if (cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
-+		dev_warn(dev, "SBR happened without memory regions removal.\n");
-+		dev_warn(dev, "System may be unstable if regions hosted system memory.\n");
-+		add_taint(TAINT_USER, LOCKDEP_NOW_UNRELIABLE);
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
- 	.cor_error_detected	= cxl_cor_error_detected,
-+	.reset_done	= cxl_reset_done,
- };
- 
- static struct pci_driver cxl_pci_driver = {
--- 
-2.44.0
+> 
+> Either way you have a race condition when checking the bitmap during a
+> memory access in the process of adding/releasing capacity - but that's
+> more an indication of bad host behavior than it is of a bug in the
+> implementatio of the emulated device. Probably we don't need to
+> read-lock the bitmap (for access validation), only write-lock.
+> 
+> My preference, for what it's worth, would be to have a single bitmap
+> and have it be anonymous-memory for Single-head and file-backed for
+> for Multi-head.  I'll have to work out the locking mechanism.
+I'll go with maybe until I see the code :)
+
+J
+> 
+> ~Gregory
 
