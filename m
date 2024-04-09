@@ -1,214 +1,277 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF71213D88B;
-	Tue,  9 Apr 2024 16:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4A0137C2A;
+	Tue,  9 Apr 2024 16:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712679132; cv=none; b=mISzcHNrd++d0rR0Yvy2wOKkF929nBrdLMu9lkavG5wHxLzzARENSbgXnAOBGTHRyHg3JIMVV3xaE9iiPaADa66VKh3dGZ+xZXLZ9pLr+OI7evOut0o+mXjGsjEqpAltBQITpLpIF+lga72upG1QGWl3f/V+MunDjib0+fIKrHY=
+	t=1712679743; cv=none; b=WfU6A/s9490rbaAlMLuNN9GtIIyAqJCLhG3SexJjWw1VWzT3K3cjLIIYKmFvAQo2i8JlBBG4jYohVCg/NT+68nrJq0tsoENL/IugkRGVWUxn0kYtmMI7E+KIWjvtQybgExvRKQYUCl4iXlEVYxYRVfdFA3DCkSm8Pu06EtATJdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712679132; c=relaxed/simple;
-	bh=lp0JEW66Srz5p9S+cKV1lNUbi7VeyksXm815vT1QYeQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ReV3zxk2Dlt3r6fvGYRIQ5r0/f9HXDH3lg95VJphJdxH7GE8TQd0QXwgSYfCahrihiMN+5X2CsbjBO2l3SpYxpReaj3XhKBvRl+KtXnthfdi9hWPe9vXlQgxJ3cLr7jtXO9OauEiaubssn1ryORVf6CSyUWSmNI92hWE8LCd5AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VDWC83HBWz6J9yq;
-	Wed, 10 Apr 2024 00:10:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D5F01140519;
-	Wed, 10 Apr 2024 00:12:05 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 9 Apr
- 2024 17:12:05 +0100
-Date: Tue, 9 Apr 2024 17:12:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-CC: "Huang, Ying" <ying.huang@intel.com>, Gregory Price
-	<gourry.memverge@gmail.com>, <aneesh.kumar@linux.ibm.com>, <mhocko@suse.com>,
-	<tj@kernel.org>, <john@jagalactic.com>, Eishan Mirakhur
-	<emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Alistair Popple
-	<apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, SeongJae
- Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Linux Memory
- Management List" <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang"
-	<horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	<qemu-devel@nongnu.org>, Hao Xiang <hao.xiang@bytedance.com>
-Subject: Re: [PATCH v11 2/2] memory tier: create CPUless memory tiers after
- obtaining HMAT info
-Message-ID: <20240409171204.00001710@Huawei.com>
-In-Reply-To: <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
-References: <20240405000707.2670063-1-horenchuang@bytedance.com>
-	<20240405000707.2670063-3-horenchuang@bytedance.com>
-	<20240405150244.00004b49@Huawei.com>
-	<CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712679743; c=relaxed/simple;
+	bh=JxIZLeYYKA5Iqp3UIL0+XuqsHCRG8TQtQnZnQZxVDrQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuO+hPHrv42iUYeGdSDBVYU3J1C5ATm4YmOP1OL2Be+25ZHnjeoRRuracCR2ccV1xvr0XnxPgXSdmWbn5BnjEXfduvFUFpCOPsHLa8PjEKXknUix5qUQ+tr0u8PSy0xOYZHFr0FaHzeEWfTp53PgQ97ZVdg1Jl/2Me+2MpgAyNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izuwsy8o; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izuwsy8o"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e3f6f03594so16487945ad.0;
+        Tue, 09 Apr 2024 09:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712679741; x=1713284541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tD47IJ6kQxTtIB88NMneMVe86ozyK03KRGipxA4mLDw=;
+        b=izuwsy8obxhYNMUNfa1V9hTbc6eu0GOzCMmYlHxxRgOeEJbBQECdMrPiJxXwdMh4Fg
+         xSWlaCKLjDDvobmLB3IS5RiqDQ4BM+75GpkOJpM7ljG+Itbp55Ikn+th4L+VqtTQnoJX
+         nKv7Z/Y6TY+E4ddcEXb9xIRRrDX9Mdr5e0wTgFjvdrQc1p4Xql/3/wb2HhRg2/qyT8jy
+         PzWlmz2JduZTsAiNNiVDkoQKUBql6WLKkdbO1KQJaUKBVavxC6o7Xn9+/PMUMlu5M+7h
+         qSGc+JAv/lRAWe4PIfIY2zmDHQXTGNxMILfu34E8zSiZM6SHfmq8ga2W6jLeBTFgNjx5
+         0kjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712679741; x=1713284541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tD47IJ6kQxTtIB88NMneMVe86ozyK03KRGipxA4mLDw=;
+        b=BiJ7x0xwlDdFZ0psTUqSmG98RQqNlQjoPqRQ7qmKBV1KBnBEzLJ4kKf791ZPxyulds
+         Zqx1V4WtvWuU5UGU2QKcCOnhYbbhMZU/THEqZDZc6skKtxSceq2RwWtSZvFQ9qfTBTes
+         2dw0XSUkuTltorXN9oT+OXc3NHR3CsH/492VHI4ZtPkvR3MKCutIuM7DptMjH6yCUz9c
+         vqNzLNJTVr+RUSSCqWvCu7gDUuapnDZ+3Hu3/qZ3NGaH2XSm1fc05I8C3ddC8/z9lwYL
+         xzLoEJT+EdcvsJkmvJ9qjXV9O4MF1uq3jnRr3r6mU5fsOr9E7LwtYrpgGeD7MawT359A
+         0/yw==
+X-Forwarded-Encrypted: i=1; AJvYcCVj3kXhgv4qRJJKebD+kLpBO/AiaEehMp4u0CWFp13PqXKdiV06Wi3yJO2VsTQ+UBvgBG/YBLiJ9YdOEn/Zar51sfQvl8Emafo4lm8Iaw/dJCvoKRXmAdDRI9kI7gUGPTCjni/fjL/591v79i2GEftco1qz6+TahHXIwyrLpGvewUzc1uU=
+X-Gm-Message-State: AOJu0Yxkbds+k3E4yoPLc0nKkMt0xChuwgEsJWoDP/Nca6T/B8VKNTAg
+	74dmAcVbz4l3ch4FDnzMuyl24UVz8J1vagyUMgcxh1f8eCMbAYfX
+X-Google-Smtp-Source: AGHT+IEpvJvIGTSdUOXn55foN6dxhGocH7+e1yBuo1jkO0TWg0FAeahSCO2QqKfRiDXM8w0fA38H3g==
+X-Received: by 2002:a17:902:d587:b0:1e4:9ad5:7522 with SMTP id k7-20020a170902d58700b001e49ad57522mr273599plh.21.1712679741025;
+        Tue, 09 Apr 2024 09:22:21 -0700 (PDT)
+Received: from debian ([2601:641:300:14de:df2a:d319:d307:86c9])
+        by smtp.gmail.com with ESMTPSA id l6-20020a170903120600b001e2814e08b9sm9048820plh.32.2024.04.09.09.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 09:22:20 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Tue, 9 Apr 2024 09:22:00 -0700
+To: ira.weiny@intel.com
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/26] dax/region: Create extent resources on DAX region
+ driver load
+Message-ID: <ZhVrKGHbR032FxS1@debian>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-17-b7b00d623625@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324-dcd-type2-upstream-v1-17-b7b00d623625@intel.com>
 
-On Fri, 5 Apr 2024 15:43:47 -0700
-"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+On Sun, Mar 24, 2024 at 04:18:20PM -0700, ira.weiny@intel.com wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
+> 
+> DAX regions mapping dynamic capacity partitions introduce a requirement
+> for the memory backing the region to come and go as required.  This
+> results in a DAX region with sparse areas of memory backing.  To track
+> the sparseness of the region, DAX extent objects need to track
+> sub-resource information as a new layer between the DAX region resource
+> and DAX device range resources.
+> 
+> Recall that DCD extents may be accepted when a region is first created.
+> Extend this support on region driver load.  Scan existing extents and
+> create DAX extent resources as a first step to DAX extent realization.
+> 
+> The lifetime of a DAX extent is tricky to manage because the extent life
+> may end in one of two ways.  First, the device may request the extent be
+> released.  Second, the region may release the extent when it is
+> destroyed without hardware involvement.  Support extent release without
+> hardware involvement first.  Subsequent patches will provide for
+> hardware to request extent removal.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+Trivial comments inline.
+> ---
+> Changes for v1
+> [iweiny: remove xarrays]
+> [iweiny: remove as much of extra reference stuff as possible]
+> [iweiny: Move extent resource handling to core DAX code]
+> ---
+>  drivers/dax/bus.c         | 55 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/dax/cxl.c         | 43 ++++++++++++++++++++++++++++++++++--
+>  drivers/dax/dax-private.h | 12 +++++++++++
+>  3 files changed, 108 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 903566aff5eb..4d5ed7ab6537 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -186,6 +186,61 @@ static bool is_sparse(struct dax_region *dax_region)
+>  	return (dax_region->res.flags & IORESOURCE_DAX_SPARSE_CAP) != 0;
+>  }
+>  
+> +static int dax_region_add_resource(struct dax_region *dax_region,
+> +				   struct dax_extent *dax_ext,
+> +				   resource_size_t start,
+> +				   resource_size_t length)
+> +{
+> +	struct resource *ext_res;
+> +
+> +	dev_dbg(dax_region->dev, "DAX region resource %pr\n", &dax_region->res);
+> +	ext_res = __request_region(&dax_region->res, start, length, "extent", 0);
+> +	if (!ext_res) {
+> +		dev_err(dax_region->dev, "Failed to add region s:%pa l:%pa\n",
+> +			&start, &length);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	dax_ext->region = dax_region;
+> +	dax_ext->res = ext_res;
+> +	dev_dbg(dax_region->dev, "Extent add resource %pr\n", ext_res);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dax_region_release_extent(void *ext)
+> +{
+> +	struct dax_extent *dax_ext = ext;
+> +	struct dax_region *dax_region = dax_ext->region;
+> +
+> +	dev_dbg(dax_region->dev, "Extent release resource %pr\n", dax_ext->res);
+> +	if (dax_ext->res)
+> +		__release_region(&dax_region->res, dax_ext->res->start,
+> +				 resource_size(dax_ext->res));
+> +
+> +	kfree(dax_ext);
+> +}
+> +
+> +int dax_region_add_extent(struct dax_region *dax_region, struct device *ext_dev,
+> +			  resource_size_t start, resource_size_t length)
+> +{
+> +	int rc;
+> +
+> +	struct dax_extent *dax_ext __free(kfree) = kzalloc(sizeof(*dax_ext),
+> +							   GFP_KERNEL);
+> +	if (!dax_ext)
+> +		return -ENOMEM;
+> +
+> +	guard(rwsem_write)(&dax_region_rwsem);
+> +	rc = dax_region_add_resource(dax_region, dax_ext, start, length);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return devm_add_action_or_reset(ext_dev, dax_region_release_extent,
+> +					no_free_ptr(dax_ext));
+> +}
+> +EXPORT_SYMBOL_GPL(dax_region_add_extent);
+> +
+>  bool static_dev_dax(struct dev_dax *dev_dax)
+>  {
+>  	return is_static(dev_dax->region);
+> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+> index 415d03fbf9b6..70bdc7a878ab 100644
+> --- a/drivers/dax/cxl.c
+> +++ b/drivers/dax/cxl.c
+> @@ -5,6 +5,42 @@
+>  
+>  #include "../cxl/cxl.h"
+>  #include "bus.h"
+> +#include "dax-private.h"
+> +
+> +static int __cxl_dax_region_add_extent(struct dax_region *dax_region,
+> +				       struct region_extent *reg_ext)
+> +{
+> +	struct device *ext_dev = &reg_ext->dev;
+> +	resource_size_t start, length;
+> +
+> +	dev_dbg(dax_region->dev, "Adding extent HPA %#llx - %#llx\n",
+> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
+> +
+> +	start = dax_region->res.start + reg_ext->hpa_range.start;
+> +	length = reg_ext->hpa_range.end - reg_ext->hpa_range.start + 1;
+use range_len() instead?
 
-> On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Fri,  5 Apr 2024 00:07:06 +0000
-> > "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
-> > =20
-> > > The current implementation treats emulated memory devices, such as
-> > > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal =
-memory
-> > > (E820_TYPE_RAM). However, these emulated devices have different
-> > > characteristics than traditional DRAM, making it important to
-> > > distinguish them. Thus, we modify the tiered memory initialization pr=
-ocess
-> > > to introduce a delay specifically for CPUless NUMA nodes. This delay
-> > > ensures that the memory tier initialization for these nodes is deferr=
-ed
-> > > until HMAT information is obtained during the boot process. Finally,
-> > > demotion tables are recalculated at the end.
-> > >
-> > > * late_initcall(memory_tier_late_init);
-> > > Some device drivers may have initialized memory tiers between
-> > > `memory_tier_init()` and `memory_tier_late_init()`, potentially bring=
-ing
-> > > online memory nodes and configuring memory tiers. They should be excl=
-uded
-> > > in the late init.
-> > >
-> > > * Handle cases where there is no HMAT when creating memory tiers
-> > > There is a scenario where a CPUless node does not provide HMAT inform=
-ation.
-> > > If no HMAT is specified, it falls back to using the default DRAM tier.
-> > >
-> > > * Introduce another new lock `default_dram_perf_lock` for adist calcu=
-lation
-> > > In the current implementation, iterating through CPUlist nodes requir=
-es
-> > > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will e=
-nd up
-> > > trying to acquire the same lock, leading to a potential deadlock.
-> > > Therefore, we propose introducing a standalone `default_dram_perf_loc=
-k` to
-> > > protect `default_dram_perf_*`. This approach not only avoids deadlock
-> > > but also prevents holding a large lock simultaneously.
-> > >
-> > > * Upgrade `set_node_memory_tier` to support additional cases, includi=
-ng
-> > >   default DRAM, late CPUless, and hot-plugged initializations.
-> > > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
-> > > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()`=
- to
-> > > handle cases where memtype is not initialized and where HMAT informat=
-ion is
-> > > available.
-> > >
-> > > * Introduce `default_memory_types` for those memory types that are not
-> > >   initialized by device drivers.
-> > > Because late initialized memory and default DRAM memory need to be ma=
-naged,
-> > > a default memory type is created for storing all memory types that are
-> > > not initialized by device drivers and as a fallback.
-> > >
-> > > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> > > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
-> > > Reviewed-by: "Huang, Ying" <ying.huang@intel.com> =20
-> >
-> > Hi - one remaining question. Why can't we delay init for all nodes
-> > to either drivers or your fallback late_initcall code.
-> > It would be nice to reduce possible code paths. =20
->=20
-> I try not to change too much of the existing code structure in
-> this patchset.
->=20
-> To me, postponing/moving all memory tier registrations to
-> late_initcall() is another possible action item for the next patchset.
->=20
-> After tier_mem(), hmat_init() is called, which requires registering
-> `default_dram_type` info. This is when `default_dram_type` is needed.
-> However, it is indeed possible to postpone the latter part,
-> set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
-> indeed be split into two parts, and the latter part can be moved to
-> late_initcall() to be processed together.
->=20
-> Doing this all memory-type drivers have to call late_initcall() to
-> register a memory tier. I=E2=80=99m not sure how many they are?
->=20
-> What do you guys think?
+Fan
 
-Gut feeling - if you are going to move it for some cases, move it for
-all of them.  Then we only have to test once ;)
-
-J
->=20
-> >
-> > Jonathan
-> >
-> > =20
-> > > ---
-> > >  mm/memory-tiers.c | 94 +++++++++++++++++++++++++++++++++++----------=
---
-> > >  1 file changed, 70 insertions(+), 24 deletions(-)
-> > >
-> > > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> > > index 516b144fd45a..6632102bd5c9 100644
-> > > --- a/mm/memory-tiers.c
-> > > +++ b/mm/memory-tiers.c =20
-> >
-> >
-> > =20
-> > > @@ -855,7 +892,8 @@ static int __init memory_tier_init(void)
-> > >        * For now we can have 4 faster memory tiers with smaller adist=
-ance
-> > >        * than default DRAM tier.
-> > >        */
-> > > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
-> > > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTAN=
-CE_DRAM,
-> > > +                                                   &default_memory_t=
-ypes);
-> > >       if (IS_ERR(default_dram_type))
-> > >               panic("%s() failed to allocate default DRAM tier\n", __=
-func__);
-> > >
-> > > @@ -865,6 +903,14 @@ static int __init memory_tier_init(void)
-> > >        * types assigned.
-> > >        */
-> > >       for_each_node_state(node, N_MEMORY) {
-> > > +             if (!node_state(node, N_CPU))
-> > > +                     /*
-> > > +                      * Defer memory tier initialization on
-> > > +                      * CPUless numa nodes. These will be initialized
-> > > +                      * after firmware and devices are initialized. =
-=20
-> >
-> > Could the comment also say why we can't defer them all?
-> >
-> > (In an odd coincidence we have a similar issue for some CPU hotplug
-> >  related bring up where review feedback was move all cases later).
-> > =20
-> > > +                      */
-> > > +                     continue;
-> > > +
-> > >               memtier =3D set_node_memory_tier(node);
-> > >               if (IS_ERR(memtier))
-> > >                       /* =20
-> > =20
->=20
->=20
-
+> +
+> +	return dax_region_add_extent(dax_region, ext_dev, start, length);
+> +}
+> +
+> +static int cxl_dax_region_add_extent(struct device *dev, void *data)
+> +{
+> +	struct dax_region *dax_region = data;
+> +	struct region_extent *reg_ext;
+> +
+> +	if (!is_region_extent(dev))
+> +		return 0;
+> +
+> +	reg_ext = to_region_extent(dev);
+> +
+> +	return __cxl_dax_region_add_extent(dax_region, reg_ext);
+> +}
+> +
+> +static void cxl_dax_region_add_extents(struct cxl_dax_region *cxlr_dax,
+> +				      struct dax_region *dax_region)
+> +{
+> +	dev_dbg(&cxlr_dax->dev, "Adding extents\n");
+> +	device_for_each_child(&cxlr_dax->dev, dax_region, cxl_dax_region_add_extent);
+> +}
+>  
+>  static int cxl_dax_region_probe(struct device *dev)
+>  {
+> @@ -29,9 +65,12 @@ static int cxl_dax_region_probe(struct device *dev)
+>  		return -ENOMEM;
+>  
+>  	dev_size = range_len(&cxlr_dax->hpa_range);
+> -	/* Add empty seed dax device */
+> -	if (cxlr->mode == CXL_REGION_DC)
+> +	if (cxlr->mode == CXL_REGION_DC) {
+> +		/* NOTE: Depends on dax_region being set in driver data */
+> +		cxl_dax_region_add_extents(cxlr_dax, dax_region);
+> +		/* Add empty seed dax device */
+>  		dev_size = 0;
+> +	}
+>  
+>  	data = (struct dev_dax_data) {
+>  		.dax_region = dax_region,
+> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> index 446617b73aea..c6319c6567fb 100644
+> --- a/drivers/dax/dax-private.h
+> +++ b/drivers/dax/dax-private.h
+> @@ -16,6 +16,18 @@ struct inode *dax_inode(struct dax_device *dax_dev);
+>  int dax_bus_init(void);
+>  void dax_bus_exit(void);
+>  
+> +/**
+> + * struct dax_extent - For sparse regions; an active extent
+> + * @region: dax_region this resources is in
+> + * @res: resource this extent covers
+> + */
+> +struct dax_extent {
+> +	struct dax_region *region;
+> +	struct resource *res;
+> +};
+> +int dax_region_add_extent(struct dax_region *dax_region, struct device *ext_dev,
+> +			  resource_size_t start, resource_size_t length);
+> +
+>  /**
+>   * struct dax_region - mapping infrastructure for dax devices
+>   * @id: kernel-wide unique region for a memory range
+> 
+> -- 
+> 2.44.0
+> 
