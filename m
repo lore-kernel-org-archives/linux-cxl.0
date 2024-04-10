@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C803F17F384;
-	Wed, 10 Apr 2024 17:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BA231A60;
+	Wed, 10 Apr 2024 17:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768610; cv=none; b=YCrF7tiKZWp8AAGvnkIz1CUQNHL4PBEXfjVnvudkyS3S/7p+zxzy7XRmw640ND9j6Yher2s/jAYvmywZPLl7f3T6n8HeKqAl4+M9Ljl6tX3vjRlPkvGA5kz1h3d8UkxVUzsOadTwUwwt8h+KkcSL4Sh4qValBzQfT5FbJlDOhh0=
+	t=1712771048; cv=none; b=U9WFtDT7oXiI+E1FY4BgoGrSPshprsfLipzqUYn4qvSTNk/TqrVnqDvUWVOJHbWvUeDxQFTAvqONBEXWERf18R6GO8v7SzHv1cf7lt2nU9vHdDj9c9SmRO+7vGwFFOiIsxaq5Xd54oHdfHiKcadRihUNjpOOPds2+csu+6Iy+BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768610; c=relaxed/simple;
-	bh=lq5Wl2+Nx/P1XJbW6AnAEtWNNXOhlT5G1jfm1WEuLfU=;
+	s=arc-20240116; t=1712771048; c=relaxed/simple;
+	bh=mFAnz9GU98lP3BxM5VrgUDFGq/NcdcLR4hVTVHGEi+s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icHVsB4dC+x2VHCW0O5AIHToA2BIXkmYRbB86jE3Jotm6S1IM2npSuObXmqaOvWhbdylXeFIxQLpjHCtxmLB9/h3+mvuvlnIhQyAdvmBeIBeX2YBWrthxNYVmed+zX22gc6JxfmoeINnN/ZqBcVqZvxrlPpkUr64RfBxREXMFD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cMBEOvam; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=EEk47c1c+2XXa//GTBdbQKTz1w2Ven0NBd9FPbzhwHLEIiZx8j7xv9u9x4r1vvKgvVcI2J4OqID5mGbruDvnFkGs4qlrs3ZBsMRFli4FKOt+V9o2njzgBoMUKPn8iGNqt2VVbv4cQZZQbjOF0H0FrW2WBjhHZLocebG4hDOnc24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S9KsUZZ1; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMBEOvam"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S9KsUZZ1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712768608; x=1744304608;
+  t=1712771046; x=1744307046;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=lq5Wl2+Nx/P1XJbW6AnAEtWNNXOhlT5G1jfm1WEuLfU=;
-  b=cMBEOvam8Esy8E8e1JEScBcYnr1dOfvIuqNnhQ7fXyuDiYWchoeK4ha4
-   BJWdZ/I7MRVIQlLr2f57Do7nJT07mEKpgPwW2834PH2Ld4nEAp2nt6fpq
-   zXYSQLNGaGb79b7FCBJNWNgd4GGUMKBFSo+FgxmaU9nSN+3YQpEC5PdVa
-   oMwosMjNrxIGUiTZq9EkNoCJMwJkkJkMN1P5ScP4L1nuM/1fqL+NfD/ND
-   uIyCRhHRfekPAmIvkoR7fX+F753W4eOwB2o6q1VJK0+ee36p7RXOAV4s1
-   vLM5yz72HeTDTJY3/jjnCXAUToJGSyMnsqOqBCPndG3sDt2IWqB3xRT+I
-   g==;
-X-CSE-ConnectionGUID: utnWHNjwQVOBkmhXcIKUAA==
-X-CSE-MsgGUID: iWPcOT2US1qbHxY9XSxKZA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18858507"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="18858507"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:03:27 -0700
-X-CSE-ConnectionGUID: wlfn6evvSG6s0Um4MA+UeQ==
-X-CSE-MsgGUID: tAWPm7jcSmSkDcpua7cm3Q==
+  bh=mFAnz9GU98lP3BxM5VrgUDFGq/NcdcLR4hVTVHGEi+s=;
+  b=S9KsUZZ14Yw8pPawKcrykYK12/Kkv9cd5tGc6jP/09tW5fFlXovo8snk
+   8m7d+9bj5phYhN9blit+RK3kpmCI9lCDgdylMn863PI0sKD2pXXOCLDgk
+   WfSvHx33w1IRRhdW4QRrtZPLrjTsLmbibFYh79WRA+A7KVVn65poEkL1Z
+   LuBuubLNSaUrUya+tFz9ptMK6b0xLx0nVcTV1zSp6b/oQbwg4Q6z2vt79
+   3rNkHWmkdmqEsy8Bn+Gvnx5e3O4e8dYCeF2634Ln9EJP9vMPLHRRZGu2e
+   V7ObUDgX48YHyBkSF+2EjpLfIEwkmE1Il3agJVInxKNUhatcRUKPN1RtU
+   Q==;
+X-CSE-ConnectionGUID: YlqNmV8OSsGdqvb7nhjqbw==
+X-CSE-MsgGUID: Ad64L4WoSXyWZR3SEfkC2A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="19541750"
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="19541750"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:44:05 -0700
+X-CSE-ConnectionGUID: 5lBF0UlbR/yN5YAg1QfU+w==
+X-CSE-MsgGUID: 9qcLi33VSbSb+aRG0FBuWg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25111440"
-Received: from rsterlin-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.146])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:03:26 -0700
-Date: Wed, 10 Apr 2024 10:03:24 -0700
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="20701283"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.146])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:44:05 -0700
+Date: Wed, 10 Apr 2024 10:44:03 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: ira.weiny@intel.com
 Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
@@ -54,10 +54,11 @@ Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 23/26] cxl/mem: Trace Dynamic capacity Event Record
-Message-ID: <ZhbGXMh4q3+7ymKS@aschofie-mobl2>
+Subject: Re: [PATCH 14/26] cxl/region: Read existing extents on region
+ creation
+Message-ID: <ZhbP4yMTxkLRiCSp@aschofie-mobl2>
 References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-23-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,135 +67,200 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240324-dcd-type2-upstream-v1-23-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
 
-On Sun, Mar 24, 2024 at 04:18:26PM -0700, Ira Weiny wrote:
+On Sun, Mar 24, 2024 at 04:18:17PM -0700, Ira Weiny wrote:
 > From: Navneet Singh <navneet.singh@intel.com>
 > 
-> CXL rev 3.1 section 8.2.9.2.1 adds the Dynamic Capacity Event Records.
-> Notify the host of extents being added or removed.  User space has
-> little use for these events other than for debugging.
-
-Is there really any 'Notify' going on here?
-
-Can you state the usage in the positive, rather than saying it has
-little use. Is this the only method for users to track this activity.
-
-If it were just for your kernel debugging, I'd guess you'd just throw
-in more dev_dbg() messages.
-
-I see 'dpa_start'. Will we need to do any dpa->hpa translation work
-here?
-
---Alison
-
-
+> Dynamic capacity device extents may be left in an accepted state on a
+> device due to an unexpected host crash.  In this case creation of a new
+> region on top of the DC partition (region) is expected to expose those
+> extents for continued use.
 > 
-> Add DC trace points to the trace log for debugging purposes.
+> Once all endpoint decoders are part of a region and the region is being
+> realized read the device extent list.  For ease of review, this patch
+> stops after reading the extent list and leaves realization of the region
+> extents to a future patch.
 > 
 > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
 > ---
-> Changes for v1
-> [iweiny: Adjust to new trace code]
+> Changes for v1:
+> [iweiny: remove extent list xarray]
+> [iweiny: Update spec references to 3.1]
+> [iweiny: use struct range in extents]
+> [iweiny: remove all reference tracking and let regions track extents
+> 	 through the extent devices.]
+> [djbw/Jonathan/Fan: move extent tracking to endpoint decoders]
 > ---
->  drivers/cxl/core/mbox.c  |  4 +++
->  drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 69 insertions(+)
+>  drivers/cxl/core/core.h   |   9 +++
+>  drivers/cxl/core/mbox.c   | 192 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/region.c |  29 +++++++
+>  drivers/cxl/cxlmem.h      |  49 ++++++++++++
+>  4 files changed, 279 insertions(+)
+
+snip
+
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 7babac2d1c95..cb4576890187 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -978,6 +978,10 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  		ev_type = CXL_CPER_EVENT_DRAM;
->  	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
->  		ev_type = CXL_CPER_EVENT_MEM_MODULE;
-> +	else if (uuid_equal(uuid, &CXL_EVENT_DC_EVENT_UUID)) {
-> +		trace_cxl_dynamic_capacity(cxlmd, type, &record->event.dcd);
-> +		return;
+> +static int cxl_validate_extent(struct cxl_memdev_state *mds,
+> +			       struct cxl_dc_extent *dc_extent)
+> +{
+> +	struct device *dev = mds->cxlds.dev;
+> +	uint64_t start, len;
+> +
+> +	start = le64_to_cpu(dc_extent->start_dpa);
+> +	len = le64_to_cpu(dc_extent->length);
+> +
+> +	/* Extents must not cross region boundary's */
+> +	for (int i = 0; i < mds->nr_dc_region; i++) {
+> +		struct cxl_dc_region_info *dcr = &mds->dc_region[i];
+> +
+
+I think you already got range_contains suggestion
+
+> +		if (dcr->base <= start &&
+> +		    (start + len) <= (dcr->base + dcr->decode_len)) {
+> +			dev_dbg(dev, "DC extent DPA %#llx - %#llx (DCR:%d:%#llx)\n",
+> +				start, start + len - 1, i, start - dcr->base);
+> +			return 0;
+> +		}
 > +	}
->  
->  	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
+> +
+> +	dev_err_ratelimited(dev,
+> +			    "DC extent DPA %#llx - %#llx is not in any DC region\n",
+> +			    start, start + len - 1);
+
+Need some clarification.
+Isn't this checking that the extent is fully contained within a region?
+And then, it dev_err's if not fully contained. There is not actually
+a check and an error message about crossing region boundary's as the
+comment suggests.  Maybe update the comment to reflect the work.. like:
+
+/* Extent must be fully contained in a region */
+
+
+> +	return -EINVAL;
+> +}
+> +
+> +static bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
+> +				struct cxl_dc_extent *extent)
+> +{
+> +	uint64_t start = le64_to_cpu(extent->start_dpa);
+> +	uint64_t length = le64_to_cpu(extent->length);
+
+u64 here (and in other places too)
+
+
+> +	struct range ext_range = (struct range){
+> +		.start = start,
+> +		.end = start + length - 1,
+> +	};
+> +	struct range ed_range = (struct range) {
+> +		.start = cxled->dpa_res->start,
+> +		.end = cxled->dpa_res->end,
+> +	};
+> +
+> +	dev_dbg(&cxled->cxld.dev, "Checking ED (%pr) for extent DPA:%#llx LEN:%#llx\n",
+> +		cxled->dpa_res, start, length);
+> +
+> +	return range_contains(&ed_range, &ext_range);
+> +}
+> +
+>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+> @@ -973,6 +1020,15 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+>  	return rc;
 >  }
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index bdf117a33744..7646fdd9aee3 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -707,6 +707,71 @@ TRACE_EVENT(cxl_poison,
->  	)
->  );
 >  
-> +/*
-> + * DYNAMIC CAPACITY Event Record - DER
+> +static struct cxl_memdev_state *
+> +cxled_to_mds(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +
+> +	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+> +}
+> +
+
+That's nice!
+
+
+>  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  				    enum cxl_event_log_type type)
+>  {
+> @@ -1406,6 +1462,142 @@ int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify, CXL);
+>  
+> +static int cxl_dev_get_dc_extent_cnt(struct cxl_memdev_state *mds,
+
+Perhaps drop the _dev_ from this (and other, like below) function names.
+
+> +static int cxl_dev_get_dc_extents(struct cxl_endpoint_decoder *cxled,
+
+
+snip
+
+> +/**
+> + * cxl_read_dc_extents() - Read any existing extents
+> + * @cxled: Endpoint decoder which is part of a region
 > + *
-> + * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
+> + * Issue the Get Dynamic Capacity Extent List command to the device
+> + * and add any existing extents found which belong to this decoder.
+> + *
+> + * Return: 0 if command was executed successfully, -ERRNO on error.
 > + */
+> +int cxl_read_dc_extents(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
+> +	struct device *dev = mds->cxlds.dev;
+> +	unsigned int extent_gen_num;
+> +	int rc;
 > +
-> +#define CXL_DC_ADD_CAPACITY			0x00
-> +#define CXL_DC_REL_CAPACITY			0x01
-> +#define CXL_DC_FORCED_REL_CAPACITY		0x02
-> +#define CXL_DC_REG_CONF_UPDATED			0x03
-> +#define show_dc_evt_type(type)	__print_symbolic(type,		\
-> +	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
-> +	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
-> +	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
-> +	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
-> +)
+> +	if (!cxl_dcd_supported(mds)) {
+> +		dev_dbg(dev, "DCD unsupported\n");
+> +		return 0;
+> +	}
 > +
-> +TRACE_EVENT(cxl_dynamic_capacity,
+> +	rc = cxl_dev_get_dc_extent_cnt(mds, &extent_gen_num);
+> +	dev_dbg(mds->cxlds.dev, "Extent count: %d Generation Num: %d\n",
+
+Either use the *dev defined in both dev_dbg()'s or get rid of it use mds->cxlds.dev.
+
+> +		rc, extent_gen_num);
+> +	if (rc <= 0) /* 0 == no records found */
+> +		return rc;
 > +
-> +	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-> +		 struct cxl_event_dcd *rec),
+> +	return cxl_dev_get_dc_extents(cxled, extent_gen_num, rc);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_read_dc_extents, CXL);
 > +
-> +	TP_ARGS(cxlmd, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		CXL_EVT_TP_entry
-> +
-> +		/* Dynamic capacity Event */
-> +		__field(u8, event_type)
-> +		__field(u16, hostid)
-> +		__field(u8, region_id)
-> +		__field(u64, dpa_start)
-> +		__field(u64, length)
-> +		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
-> +		__field(u16, sh_extent_seq)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> +
-> +		/* Dynamic_capacity Event */
-> +		__entry->event_type = rec->event_type;
-> +
-> +		/* DCD event record data */
-> +		__entry->hostid = le16_to_cpu(rec->host_id);
-> +		__entry->region_id = rec->region_index;
-> +		__entry->dpa_start = le64_to_cpu(rec->extent.start_dpa);
-> +		__entry->length = le64_to_cpu(rec->extent.length);
-> +		memcpy(__entry->tag, &rec->extent.tag, CXL_DC_EXTENT_TAG_LEN);
-> +		__entry->sh_extent_seq = le16_to_cpu(rec->extent.shared_extn_seq);
-> +	),
-> +
-> +	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
-> +		"starting_dpa=%llx length=%llx tag=%s " \
-> +		"shared_extent_sequence=%d",
-> +		show_dc_evt_type(__entry->event_type),
-> +		__entry->hostid,
-> +		__entry->region_id,
-> +		__entry->dpa_start,
-> +		__entry->length,
-> +		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
-> +		__entry->sh_extent_seq
-> +	)
-> +);
-> +
->  #endif /* _CXL_EVENTS_H */
+
+snip
+
 >  
->  #define TRACE_INCLUDE_FILE trace
-> 
-> -- 
-> 2.44.0
-> 
+> +static int cxl_region_read_extents(struct cxl_region *cxlr)
+> +{
+
+How about:
+static int cxl_region_read_extents(struct cxl_region_params *p)
+
+
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int i;
+> +
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		int rc;
+> +
+> +		rc = cxl_read_dc_extents(p->targets[i]);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+
+snip to end
