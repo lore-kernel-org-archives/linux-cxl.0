@@ -1,242 +1,361 @@
-Received: from esa5.fujitsucc.c3s2.iphmx.com (esa5.fujitsucc.c3s2.iphmx.com [68.232.159.76])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E213CF91;
-	Wed, 10 Apr 2024 07:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712733843; cv=fail; b=s/6odHF3MpopdyE7RKOgbFgaRccUuaUKPYMi+t20GvdFzo8kRO+WTSoalAe8o1SD1/0ySnQcP4MpU2eUVkSGLkBTgjoKT2WDh/8tEvHqxsSzU7MOVNp2Yo9y5MjB1FjQykAdhKwrf68NxRURLnpuD9OQWWY7KVneWh51XMpHXF0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712733843; c=relaxed/simple;
-	bh=waqwME4aEwXu2BoTaRYOTQ2gh0DUOtXCxk2/LKbj+oI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dz+WtKiD7M7L/H7Y4NShcHq7gUHtxjAIxXRNRsTyjz1ydCZRr+90nda8DvAnpoIDzGm8MUtCOIVSXzVinWdUrA8yxB6Yb/6NVQGFv3Za7j9CYPhBhvlA+3Jnwwy8RvqJJrcYM2HgbvebGulUw6TqVnjvk2UkQAb1W/MIBDpnqF4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=KCK8/5dG; arc=fail smtp.client-ip=68.232.159.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="KCK8/5dG"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1712733839; x=1744269839;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=waqwME4aEwXu2BoTaRYOTQ2gh0DUOtXCxk2/LKbj+oI=;
-  b=KCK8/5dGU43pA2UVFQi3jUjImlxJqf76+TyWiLuxFABSPM8ituSocuPZ
-   dDhKtR0D0212+LjlLJUmCy9UVYRsH4rM3F+CsvKxlEVQQp7OiuW2CDYf2
-   2bBCVUQWFPCpTarHfkuFBCuhmyCRq3X45RwQUxET2MudMy3HPYoMLKjc0
-   9Dav/oBaoW3zc1IjkhR3T/hzO+nad7okYXumErbllRTUO5cBj+Ui8HLlD
-   7DNqmLli0AoD2J6LPrqbqC+7ZdS7AfLuix1aabG41GEobVBnPn8v2IRao
-   SFG+Bi9MpWx0Ht2rUQtRyqy8qCXg7ZdIExu8iyYQ3HH3/Z/kW9CrhOzJ6
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="116771552"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708354800"; 
-   d="scan'208";a="116771552"
-Received: from mail-os0jpn01lp2104.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.104])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 16:22:47 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pity5e0XBWnbERWGl+RIq0RPIVuxDHD3+zVv5GaBfglZUaU+dFGAoxQ5xcmzdAHbtgsBnsA0Zo/F++IEuSA9QXRuxpumPmioGc0w7TRHwV/YmMq0PpmtQhg3L5y+4sihUMuktOG+9IE8KK/AfC5TCwa14voIBTh4bwo0FR/a9/Hm/dtYPM5hlXkLU0V0ZISQ4DN6IpMCj+vElYDEWaWrjW2efJ1LqL79jE5icc53EVIdIHp9ihxwAHvkUFb6g1JxGhiI8IsEbKUAiBX3pmfZEe3hEe0Iu0Hfwj+tGLYTh0My8IkyFPrRpIdzyJH0MyuNAvBGya+rVA/vO2u1zERgqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l+P5DPcd04woa6lu4iJhdkE0YjnwXCw5t+SA5iVb/sE=;
- b=bLjMmGpHuReyz4/I8TnB4anLT/JL0S4Y4skre917PElJXVsV85pKCk8evVCu7+dt7MoXb3GBrWVHFX12JhQ0DzuVuhSfGwx+5FIAnCBBLdk+QtYvWCZ2rdcTRnqRHf6EVJQarYbRsSz4Clo+vt94MRpz6bMDRONan2sOo/NDRuYwWJeOzyU0N7iUbeolmhmAMtcVIedPJlURCQyeVvsbKc9nf/tOwTcj+T4eUzOP/W8BT4XZMcQujIxba8lGlGtBLfZlWC+QDAm4iO8s+kIVRYTqKPB2Q+CrDE8bdm5snklN12TowBlc9h013C6LerOPNzOmomMRsK3vBMX3CAtovg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
- by TYVPR01MB10798.jpnprd01.prod.outlook.com (2603:1096:400:2af::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
- 2024 07:22:44 +0000
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::c012:6dff:e4f5:5e1c]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::c012:6dff:e4f5:5e1c%5]) with mapi id 15.20.7409.042; Wed, 10 Apr 2024
- 07:22:44 +0000
-From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-To: 'Dan Williams' <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "mj@ucw.cz"
-	<mj@ucw.cz>
-Subject: RE: [PATCH v4 3/3] cxl/pci: Add sysfs attribute for CXL 1.1 device
- link status
-Thread-Topic: [PATCH v4 3/3] cxl/pci: Add sysfs attribute for CXL 1.1 device
- link status
-Thread-Index: AQHailA4SClC4VBxrEOcikYP+rGxhbFgdnkAgAAD6ICAAJw8oA==
-Date: Wed, 10 Apr 2024 07:22:44 +0000
-Message-ID:
- <OSAPR01MB71822AAC19661B7BC652B05ABA062@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
- <20240409073528.13214-4-kobayashi.da-06@fujitsu.com>
- <6615b424e055f_2583ad2945c@dwillia2-xfh.jf.intel.com.notmuch>
- <6615b76b16371_2583ad2945a@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <6615b76b16371_2583ad2945a@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=d7a56efe-7640-45c1-a42b-a41dc4aab32c;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-04-10T07:07:19Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYVPR01MB10798:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- xSHJlTEvpbVFAxjFwN1qiuLp4Fc9QuokbJDd31Y72+Xs4dEsoM4uduO+TYuxQdK4X2ClwUj/zcpqJb8aI4q+4H7w5EzAIhMTeJv4wfoN/BsLxLCL8YsRO+QBZlMWFsYytFGKdzoJrkk06Tv47hZLEy+VJGSHuWhnjphxuPy717/w4vU01xPzZZVNa6tkkUSPQbA3xpbMHB5XUBfZYAyhEzeLqr9OZ3ncf2hE/3jS+gfRXEs1XNGr1ipU2OnQJzBY0l1mUSJ5KTYjWR7dsDdFwtD3r+uiZJELim/VdjvqeS/xE8WHor91AUmzCx+p8CtHrvysz1TsHouhzbbdi/cqkvy8BNeOJ4SZ8pb+ZoEHw4fRKPuIlUTj8ZMlqVNgJ+v81/HypdYz+GJ/fBHCHz4/NjXHdPTxxgLJPYcvaOWoDx2b795ow0bdfrtHTQt4FBe9tnRBQ6C2ubuIYpVBTxWPjdiQnPEOSMIv/PNBoTztnORQr1fEbGGVdjv1KkoMD/mw/fwgvaYKqetMxtSSIvmi01F1Qd2ZHvA0zAwXSzCquZPcxWZ5luSjZvdNbigMOBjWJOj5CRKqmLU6TrDFooyifMhqjPF0e8oR0tWrgBZNuE+9gLDm32zM59cLoXx/zQtw/vb6JsAHeRhEo9UBDhuMR6q88zOqVbis7xAQdkKtZGVKVM6PZu1FVFC04aqWzMAuJeEWvDAC4p7RjxX1sxbT8A==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(1580799018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?WldjNXFycjVRU2Mwc0hRekptb3I1V1hXWU13ZGh6S2pJVUpzRWxYd25V?=
- =?iso-2022-jp?B?aWtSRGl0cDUvQTNFSGorTzg4ZHBZOEtTRExrck5XVThNTmdOVDNmTE53?=
- =?iso-2022-jp?B?c0JlbmFoekVPaUthNVB2aWRvWng4RitsUDBVUnUrcjhQREtZUGN4SzNN?=
- =?iso-2022-jp?B?ZVFPZ09XQitPS3kveDd3TXV2cWV3amdVa01tOGFLcHhkRW5LUEpoYzh4?=
- =?iso-2022-jp?B?Q0tucHRybEpFOVJoRU50M29QdlpRN3ZRY2gyZjFlWmxxWXpFLy96OXhI?=
- =?iso-2022-jp?B?TnQzR3pTdGI3MVBRQ0E2SjZ5YlBURnRJM2JwOFZVbDRxYitITFRSdTMx?=
- =?iso-2022-jp?B?bEdUUTk3MHdFYnFMcU5JMWhybVJwMFR2Qm1ZNWtJSkJ6WlhSZkVUZzZW?=
- =?iso-2022-jp?B?V1hxdmJ5NVVQdVY0OWQzTnJ4N3luRXpHTzNnQ3BHcVFmMmhXczFLRWJW?=
- =?iso-2022-jp?B?bDNJUk1MWG5DUk1Qdk5OZU9FT2ZQKzVuQUhHV1JDbHdjV2NxdE5uZTJ0?=
- =?iso-2022-jp?B?MWFncU9YRHU1bTdUWEpZdmIrSFg2bnJjRFFhdkdUMnBVWVFBamxEV0I3?=
- =?iso-2022-jp?B?eGw2MThJM0tuaDAzaUpScitXVWlPT0xWeDVna3BNT2FJclkra1R2Zitn?=
- =?iso-2022-jp?B?dmIveWdtS0VXU2RqQURqMmJETHpEUHFld01LbVhEMUNpekVhcGpZNDZU?=
- =?iso-2022-jp?B?dE5FaXdhdzFSckx0d3BmdnM2Y2VjSFYxRkV0aEtiMVJIRzJBRktkKzJl?=
- =?iso-2022-jp?B?RmNvSHBSb0pOOG81Q0x6ZmtMQ1JJa0N4QXRLZUphR0ZjWGFQaWlTMlRU?=
- =?iso-2022-jp?B?dUlvaGN2bGFrVnc2djA4cXA2SDBXWXdUSXc3MFRzN1FGdVdXbWZBYmlu?=
- =?iso-2022-jp?B?S2J4NHhWY3RBSWNRdWIzdnVhZGlXWHNVM0pKUFFrMlNmZlBHTTl0RlA2?=
- =?iso-2022-jp?B?blQvQndtU2FmbkxzV0VsaUpacVpURktrZkFNbmg0WjhwcVZ1dHBlM3h4?=
- =?iso-2022-jp?B?L25OcXhhZE5UbG9hTkNoT0ZUcllkRzkzVnVZOHEyTC8wbkN5YXhsb3Vw?=
- =?iso-2022-jp?B?Zk1wSHRpN3MzaVh6b2JjbEdMMittZnhOSjJYV1diOTRQTEVPaFBKRXJ0?=
- =?iso-2022-jp?B?RDhqZXFPeXNnZFdKWXFYQWZPYjJqZ2tjVlllWUpPRk1hQ0EzTjlVbCtj?=
- =?iso-2022-jp?B?VEJXNnpzK3BHeWI2dVZ1NnlWMkxYdEI4azlJK1JQcCt2N3kzaVNRaC9S?=
- =?iso-2022-jp?B?aW9oZCsxZ2R4S1hmRFNWYnFjQk1xR1R0STBDVktySVZtdW9wajNkUHZK?=
- =?iso-2022-jp?B?UVpmWERhOVY3RmpZRUVPYzcvTDB1SHc1OUJCaTJHV1ZBbnlGL0pDSWtZ?=
- =?iso-2022-jp?B?L082Q1g5bHRIMkVnQUY0cDZhcEgvVU1mTHZoRGV3TXVnN0ZHVnFOSmVV?=
- =?iso-2022-jp?B?WjRpUkN4NHBwTGxWamhVbjUyaGkrS3N5bWhwVk1ZalhXZk9wNVVKOEZj?=
- =?iso-2022-jp?B?ZFpHZXArZlpSY0kvbU9tZ0IxUGhwLytoUytoT1dubkdaUG81V1BKU0py?=
- =?iso-2022-jp?B?TCs0anhGd1I3bWl1aVRJazJTa0xrcnpySktuQjl5Z1M5dzRVUVV6RFY4?=
- =?iso-2022-jp?B?cE5oRm42YkJvZmVHYXcvbU02T3I0eVJiRm8yYnQzSEMrTkp2WU4remtK?=
- =?iso-2022-jp?B?RTVmNUp4WUdjSDRKZFNjMm1jSUdGbFN3N0ZkbVRFNVMxdXdLeEZkMHc2?=
- =?iso-2022-jp?B?NU9sb0JLWHNjdEJWRFlGeGxuNjBJaTlUTTk4b2JobjRwb2s2U29nV1Na?=
- =?iso-2022-jp?B?MmtsSHdqS25jd3psZnR2VUo5UFJnTy95cEErTFA5ZG5RNUlWRHd2akRa?=
- =?iso-2022-jp?B?MHJ0V3AwOUk5bUx6ejh2SDNhUUNHWDhKdzJOZXdCTk1JZlFPcFNGajFC?=
- =?iso-2022-jp?B?eWhhOVc3R2Z3NkpxL2JiV24yQitnbElSUUIyVjZTZzViSS9VT1ErQndP?=
- =?iso-2022-jp?B?VjV4V2JnMW01ek5qZEdLKzFaZURTclRjZU9udFBWUzB3b2xiNmFwN1c0?=
- =?iso-2022-jp?B?UWNLKzVQR0laWE1TZ2JXYVBSM1FYb0lHRnV1ZGEzNjlKWGl6L3VOUTdx?=
- =?iso-2022-jp?B?cXh3TDMvTEgwQ3U1OGltYjlIZ3VkVVNhTU05WGs2TkZzeFluWkVveENV?=
- =?iso-2022-jp?B?VFBiVUR2M0d1bVNjenJwYytaNW1OUm9xUGJUMStEVmRHUHovZWtZeEVv?=
- =?iso-2022-jp?B?bUNVeVc4MW5hU3Q4b3RReGZPc0xQL3QyMG9pV2FXZUs4TzlDQTM2cTBt?=
- =?iso-2022-jp?B?cFNLQXhYZUpzdFYwZ055eFdXcVc2aldmWkE9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A563D15958A;
+	Wed, 10 Apr 2024 11:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712749526; cv=none; b=Exndx3SmMtNvDf4jwO2DUKUVznnQXwzKqwgwuEzTE6y86cQ6xph8OcrUXdrKN2+S5CgGzQHG0H+l55nTNMdmRqDTmnOXaU0De1sd2HJtI+pHWEdILda/yUuasfU0i87Eq99VOVHbRYBFGgl9w7r+VDotIJohbQZgaySXPwdKBk4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712749526; c=relaxed/simple;
+	bh=/L8YranAUwm1ifaVgmtTP4OpW+lmj/F3rMFKXqB+Sx4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c8NFoPF7nrhOqgge9Fj6Hu8bLIydGgoH4VhgX4qaeZmF85IALeQYjqTiwtgCM9ggYTbEv5Cy7IcDHlyPieqFikuyr/bF5h08EDfx1HE4KBBtYoNW+wPodzd/qc55nDyWzKqQRtIn1Rr3r3fhoXZIkLulpr0foUn8jGlUSVOL/C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VF19D33pdz6K9Hb;
+	Wed, 10 Apr 2024 19:40:32 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AC2351408F9;
+	Wed, 10 Apr 2024 19:45:19 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
+ 2024 12:45:19 +0100
+Date: Wed, 10 Apr 2024 12:45:17 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, Sreenivas Bagalkote
+	<sreenivas.bagalkote@broadcom.com>, Brett Henning
+	<brett.henning@broadcom.com>, Harold Johnson <harold.johnson@broadcom.com>,
+	Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
+	<linux-kernel@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+	<linuxarm@huawei.com>, <linux-api@vger.kernel.org>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, "Natu, Mahesh" <mahesh.natu@intel.com>
+Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
+Message-ID: <20240410124517.000075f2@Huawei.com>
+In-Reply-To: <66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240321174423.00007e0d@Huawei.com>
+	<66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	sATw3QBWArkm99zG6K/7O1itNdMM/vbTtuqV+TOTyVapo7DmULwmODGQ5rSYoYbBZbzwH0fwsRG7rWSCt7MTMs1C2b14EU9mhDJ+GYPpAOqAUba3tZAGwzQrdYiBsAiWUP+FZIfsU/+xnB7Kvd21js0WRvyhwKNqsSnr+xtHSR0FJWVS/rvNLBoShzI9/ICH0fjiPQJS8C4Qut8+zDgLJfxaWLsrs3+Zy74fHIcy2nIQX7XqUtwcsa3A4PrDMgA63VuCrrWcmzzzOnsSlttBqlWrGPsPk+/8rmJcZbrmArEYTQvJE8+/7dIyJZoBJZOYCG0YktPkumo+WlyEiTfdvHR/w7o3xuQHF2Qs9vZYlMmaBR3tKdYdzEacpiBpBWuzPjcAzsLSmm/5ZypZcvCIDxE7ShK5MaHUYUN8UXELhNUBWAUK/Iw0JWwFHVjqlGcjuDHq6DKx4AcnuXoU0Npe0+YAH2NIGHSa+q1rQOElK1EV0yVUbajLIZ3cxy+T6haYsa24mZVrivk3nvK9Bn6aXU8wAGKxZwph2VgB+7qKHZkaxLBLKGBUvSRrp1rdoUBx5tnlAli9sZN66Qbzohaef1v2OmIkLn8BkVNTrpv1e2kNcVz1Ogzg27XjTzHvtIZC
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf6aae32-8a40-4cc0-dcee-08dc592f03ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2024 07:22:44.3609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AdzXjQrf50qqIDYnx16jeudePnPtqjJwHSV+wz79TA8t/RuGcxA2i0z+HZjxYPe3ZImoJShTYDw1b8DUTua0e1j2yUqvhVcZ9Cijd9mKAfM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYVPR01MB10798
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Fri, 5 Apr 2024 17:04:34 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
+Hi Dan,
 
-> Dan Williams wrote:
-> > Kobayashi,Daisuke wrote:
-> > > Add sysfs attribute for CXL 1.1 device link status to the cxl pci dev=
-ice.
-> > >
-> > > In CXL1.1, the link status of the device is included in the RCRB mapp=
-ed to
-> > > the memory mapped register area. Critically, that arrangement makes t=
-he
-> link
-> > > status and control registers invisible to existing PCI user tooling.
-> > >
-> > > Export those registers via sysfs with the expectation that PCI user
-> > > tooling will alternatively look for these sysfs files when attempting=
- to
-> > > access to these CXL 1.1 endpoints registers.
-> > >
-> > > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-> > > ---
-> > >  drivers/cxl/pci.c | 74
-> +++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 74 insertions(+)
-> > >
-> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > index 2ff361e756d6..0ff15738b1ba 100644
-> > > --- a/drivers/cxl/pci.c
-> > > +++ b/drivers/cxl/pci.c
+> Jonathan Cameron wrote:
+> > Hi All,
+> >=20
+> > This is has come up in a number of discussions both on list and in priv=
+ate,
+> > so I wanted to lay out a potential set of rules when deciding whether o=
+r not
+> > to provide a user space interface for a particular feature of CXL Fabric
+> > Management.  The intent is to drive discussion, not to simply tell peop=
+le
+> > a set of rules.  I've brought this to the public lists as it's a Linux =
+kernel
+> > policy discussion, not a standards one.
+> >=20
+> > Whilst I'm writing the RFC this my attempt to summarize a possible
+> > position rather than necessarily being my personal view.
+> >=20
+> > It's a straw man - shoot at it!
+> >=20
+> > Not everyone in this discussion is familiar with relevant kernel or CXL=
+ concepts
+> > so I've provided more info than I normally would. =20
+>=20
+> Thanks for writing this up Jonathan!
+>=20
 > [..]
-> > 3/ The port corresponding to a memdev can disappear at any time so you
-> > need to do the same validation the cxl_mem_probe() does to keep the por=
-t
-> > active during the register access:
-> >
-> > 	guard(device)(&port->dev);
-> > 	if (!port->dev.driver)
-> > 		return -ENXIO;
+> > 2) Unfiltered userspace use of mailbox for Fabric Management - BMC kern=
+els
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> >=20
+> > (This would just be a kernel option that we'd advise normal server
+> > distributions not to turn on. Would be enabled by openBMC etc)
+> >=20
+> > This is fine - there is some work to do, but the switch-cci PCI driver
+> > will hopefully be ready for upstream merge soon. There is no filtering =
+of
+> > accesses. Think of this as similar to all the damage you can do via
+> > MCTP from a BMC. Similarly it is likely that much of the complexity
+> > of the actual commands will be left to user space tooling:=20
+> > https://gitlab.com/jic23/cxl-fmapi-tests has some test examples.
+> >=20
+> > Whether Kconfig help text is strong enough to ensure this only gets
+> > enabled for BMC targeted distros is an open question we can address
+> > alongside an updated patch set. =20
 >=20
-> Apologies, I made a mistake here. Copy how cxl_mem_probe() accesses the
-> dport.
->=20
-> 	endpoint_parent =3D port->uport_dev;
-> 	guard(device)(&endpoint_parent->dev);
-> 	if (!endpoint_parent->driver)
-> 		return -ENXIO;
+> It is not clear to me that this material makes sense to house in
+> drivers/ vs tools/ or even out-of-tree just for maintenance burden
+> relief of keeping the universes separated. What does the Linux kernel
+> project get out of carrying this in mainline alongside the inband code?
 
-Thank you for your feedback.
-I could not find the exact same code as the suggestion from cxl_mem_probe()=
-,=20
-but would your suggestion be correct with the following modification:
-
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..0ff15738b1ba 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -786,6 +786,79 @@ static int cxl_event_config(struct pci_host_bridge *ho=
-st_bridge,
- 	return 0;
- }
+I'm not sure what you mean by in band.  Aim here was to discuss
+in-band drivers for switch CCI etc. Same reason from a kernel point of
+view for why we include embedded drivers.  I'll interpret in band
+as host driven and not inband as FM-API stuff.
 =20
-+static ssize_t rcd_link_cap_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct cxl_dev_state *cxlds =3D dev_get_drvdata(dev);
-+	struct cxl_memdev *cxlmd =3D cxlds->cxlmd;
-+	struct device *endpoint_parent;
-+
-+	port =3D cxl_mem_find_port(cxlmd, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	endpoint_parent =3D port->uport_dev;
-+	guard(device)(&endpoint_parent);
-+	if (!endpoint_parent->driver)
-+		return -ENXIO;
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
-+}
-+static DEVICE_ATTR_RO(rcd_link_cap);
-[..]
---
+> I do think the mailbox refactoring to support non-CXL use cases is
+> interesting, but only so far as refactoring is consumed for inband use
+> cases like RAS API.
 
-From reading the guard macro, my understanding is that this is a macro whic=
-h
-calls the constructor here, and calls the destructor when the scope is exit=
-ed.=20
-Will this prevent the port from disappearing?
+If I read this right, I disagree with the 'only so far' bit.
+
+In all substantial ways we should support BMC use case of the Linux Kernel
+at a similar level to how we support forms of Linux Distros.  It may
+not be our target market as developers for particular parts of our companie=
+s,
+but we should not block those who want to support it.
+
+We should support them in drivers/ - maybe with example userspace code
+in tools.  Linux distros on BMCs is a big market, there are a number
+of different distros using (and in some cases contributing to) the
+upstream kernel. Not everyone is using openBMC so there is not one
+common place where downstream patches could be carried.
+=46rom a personal point of view, I like that for the same reasons that
+I like there being multiple Linux sever focused distros. It's a sign
+of a healthy ecosystem to have diverse options taking the mainline
+kernel as their starting point.
+
+BMCs are just another embedded market, and like other embedded markets
+we want to encourage upstream first etc.=20
+openBMC has a policy on this:
+https://github.com/openbmc/docs/blob/master/kernel-development.md
+"The OpenBMC project maintains a kernel tree for use by the project.
+The tree's general development policy is that code must be upstream
+first." There are paths to bypass that for openBMC so it's a little
+more relaxed than some enterprise distros (today, their policies used
+to look very similar to this) but we should not be telling
+them they need to carry support downstream.  If we are
+going to tell them that, we need to be able to point at a major
+sticking point for maintenance burden.  So far I don't see the
+additional complexity as remotely close reaching that bar.
+
+So I think we do want switch-cci support and for that matter the equivalent
+for MHDs in the upstream kernel.
+
+One place I think there is some wiggle room is the taint on use of raw
+commands.  Leaving removal of that for BMC kernels as a patch they need
+to carry downstream doesn't seem too burdensome. I'm sure they'll push
+back if it is a problem for them!  So I think we can kick that question
+into the future.
+
+Addressing maintenance burden, there is a question of where we split
+the stack.  Ignore MHDs for now (I won't go into why in this forum...)
+
+The current proposal is (simplified to ignore some sharing in lookup code e=
+tc
+that I can rip out if we think it might be a long term problem)
+
+     _____________          _____________________
+    |             |        |                     |
+    | Switch CCI  |        |  Type 3 Driver stack|=20
+    |_____________|        |_____________________|
+           |___________________________|              Whatever GPU etc
+                  _______|_______                   _______|______
+                 |               |                 |              |
+                 |  CXL MBOX     |                 | RAS API etc  |
+                 |_______________|                 |______________|
+                             |_____________________________|
+                                           |
+                                  _________|______
+                                 |                |
+                                 |   MMPT mbox    |
+                                 |________________|
+
+Switch CCI Driver: PCI driver doing everything beyond the CXL mbox specific=
+ bit.
+Type 3 Stack: All the normal stack just with the CXL Mailbox specific stuff=
+ factored
+              out. Note we can move different amounts of shared logic in he=
+re, but
+              in essence it deals with the extra layer on top of the raw MM=
+PT mbox.
+MMPT Mbox: Mailbox as per the PCI spec.
+RAS API:   Shared RAS API specific infrastructure used by other drivers.
+
+If we see a significant maintenance burden, maybe we duplicate the CXL spec=
+ific
+MBOX layer - I can see advantages in that as there is some stuff not releva=
+nt
+to the Switch CCI.  There will be some duplication of logic however such
+as background command support (which is CXL only IIUC)  We can even use
+a difference IOCTL number so the two can diverge if needed in the long run.
+
+e.g. If it makes it easier to get upstream, we can merrily duplicated code
+so that only the bit common with RAS API etc is shared (assuming the
+actually end up with MMPT, not the CXL mailbox which is what their current
+publicly available spec talks about and I assume is a pref MMPT left over?)
+
+     _____________          _____________________
+    |             |        |                     |
+    | Switch CCI  |        |  Type 3 Driver stack|=20
+    |_____________|        |_____________________|
+           |                           |              Whatever GPU etc
+    _______|_______             _______|_______        ______|_______
+   |               |           |               |      |              |
+   |  CXL MBOX     |           |  CXL MBOX     |      | RAS API etc  |
+   |_______________|           |_______________|      |______________|
+           |_____________________________|____________________|
+                                         |
+                                 ________|______
+                                |               |
+                                |   MMPT mbox   |
+                                |_______________|
+
+
+> > (On to the one that the "debate" is about)
+> >=20
+> > 3) Unfiltered user space use of mailbox for Fabric Management - Distro =
+kernels
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > (General purpose Linux Server Distro (Redhat, Suse etc))
+> >=20
+> > This is equivalent of RAW command support on CXL Type 3 memory devices.
+> > You can enable those in a distro kernel build despite the scary config
+> > help text, but if you use it the kernel is tainted. The result
+> > of the taint is to add a flag to bug reports and print a big message to=
+ say
+> > that you've used a feature that might result in you shooting yourself
+> > in the foot.
+> >=20
+> > The taint is there because software is not at first written to deal with
+> > everything that can happen smoothly (e.g. surprise removal) It's hard
+> > to survive some of these events, so is never on the initial feature list
+> > for any bus, so this flag is just to indicate we have entered a world
+> > where almost all bets are off wrt to stability.  We might not know what
+> > a command does so we can't assess the impact (and no one trusts vendor
+> > commands to report affects right in the Command Effects Log - which
+> > in theory tells you if a command can result problems). =20
+>=20
+> That is a secondary reason that the taint is there. Yes, it helps
+> upstream not waste their time on bug reports from proprietary use cases,
+> but the effect of that is to make "raw" command mode unattractive for
+> deploying solutions at scale. It clarifies that this interface is a
+> debug-tool that enterprise environment need not worry about.
+>=20
+> The more salient reason for the taint, speaking only for myself as a
+> Linux kernel community member not for $employer, is to encourage open
+> collaboration. Take firmware-update for example that is a standard
+> command with known side effects that is inaccessible via the ioctl()
+> path. It is placed behind an ABI that is easier to maintain and reason
+> about. Everyone has the firmware update tool if they have the 'cat'
+> command. Distros appreciate the fact that they do not need ship yet
+> another vendor device-update tool, vendors get free tooling and end
+> users also appreciate one flow for all devices.
+>=20
+> As I alluded here [1], I am not against innovation outside of the
+> specification, but it needs to be open, and it needs to plausibly become
+> if not a de jure standard at least a de facto standard.
+>=20
+> [1]: https://lore.kernel.org/all/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei8Zk=
+cmHnPp3B0cw@mail.gmail.com/
+
+Agree with all this.
+
+>=20
+> > A concern was raised about GAE/FAST/LDST tables for CXL Fabrics
+> > (a r3.1 feature) but, as I understand it, these are intended for a
+> > host to configure and should not have side effects on other hosts?
+> > My working assumption is that the kernel driver stack will handle
+> > these (once we catch up with the current feature backlog!) Currently
+> > we have no visibility of what the OS driver stack for a fabrics will
+> > actually look like - the spec is just the starting point for that.
+> > (patches welcome ;)
+> >=20
+> > The various CXL upstream developers and maintainers may have
+> > differing views of course, but my current understanding is we want
+> > to support 1 and 2, but are very resistant to 3! =20
+>=20
+> 1, yes, 2, need to see the patches, and agree on 3.
+
+If we end up with top architecture of the diagrams above, 2 will look pretty
+similar to last version of the switch-cci patches.  So raw commands only + =
+taint.
+Factoring out MMPT is another layer that doesn't make that much difference =
+in
+practice to this discussion. Good to have, but the reuse here would be one =
+layer
+above that.
+
+Or we just say go for second proposed architecture and 0 impact on the
+CXL specific code, just reuse of the MMPT layer.  I'd imagine people will g=
+et
+grumpy on code duplication (and we'll spend years rejecting patch sets that
+try to share the cdoe) but there should be no maintenance burden as
+a result.
+
+>=20
+> > General Notes
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >=20
+> > One side aspect of why we really don't like unfiltered userspace access=
+ to any
+> > of these devices is that people start building non standard hacks in an=
+d we
+> > lose the ecosystem advantages. Forcing a considered discussion + patches
+> > to let a particular command be supported, drives standardization. =20
+>=20
+> Like I said above, I think this is not a side aspect. It is fundamental
+> to the viability Linux as a project. This project only works because
+> organizations with competing goals realize they need some common
+> infrastructure and that there is little to be gained by competing on the
+> commons.
+>=20
+> > https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei=
+8ZkcmHnPp3B0cw@mail.gmail.com/
+> > provides some history on vendor specific extensions and why in general =
+we
+> > won't support them upstream. =20
+>=20
+> Oh, you linked my writeup... I will leave the commentary I added here in =
+case
+> restating it helps.
+>=20
+> > To address another question raised in an earlier discussion:
+> > Putting these Fabric Management interfaces behind guard rails of some t=
+ype
+> > (e.g. CONFIG_IM_A_BMC_AND_CAN_MAKE_A_MESS) does not encourage the risk
+> > of non standard interfaces, because we will be even less likely to acce=
+pt
+> > those upstream!
+> >=20
+> > If anyone needs more details on any aspect of this please ask.
+> > There are a lot of things involved and I've only tried to give a fairly
+> > minimal illustration to drive the discussion. I may well have missed
+> > something crucial. =20
+>=20
+> You captured it well, and this is open source so I may have missed
+> something crucial as well.
+>=20
+
+Thanks for detailed reply!
+
+Jonathan
+
+
