@@ -1,239 +1,620 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C6018E0E;
-	Wed, 10 Apr 2024 18:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F909184102
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Apr 2024 19:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712774957; cv=none; b=lFqTgxG/AIZtAQwNFGVi+SATbD/ghPkplm+g4mOEKIMOlWwp8Y4thGPHEjQWmD4BIPkJcNb5zjoXl10CT51cNJJgXhMhQfmZ5PF25Lh/w7apkGgG/uovTdTZXsteMoi0c44ZDH7te982ovpJBvUcD6VnMEiz5B4Zp6NNkmFkDU0=
+	t=1712778559; cv=none; b=iAkTXe0bkZJZsakdUlI46ws8B2agQsDyKWxmiACdT5l3GfwKUDu+bbLMn4eRRU59e+o/oCK0S/CMnlXMS5YasG4A3oPVp+XVfQvf4XWP+NtrW65BhACDkVn3QoZFgX5f+rez++FmETinqOL8tbmtcewo3Honif1sdbJzzXt+X9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712774957; c=relaxed/simple;
-	bh=QM8Jb3Uz2AYesC7YWy8Mrr17tAqaCNoFBt/Sd7wQDX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Za0gl5qFIihK659IBtXy891RgbnH2NTv0KvOwkZAfJW1O87BayP6H61G2LEm9R1qvG1HjcO8RAX2Bu6pAzwvTN3YRvWyefPfUuuqPVBR11wITT2EWh/HOcg8bg9sOm0IdJMrsoeSCJpY0/HHLOlbQhCjwZft0G5hKE07SFOZlv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XMMuFr7v; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XMMuFr7v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712774955; x=1744310955;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QM8Jb3Uz2AYesC7YWy8Mrr17tAqaCNoFBt/Sd7wQDX8=;
-  b=XMMuFr7vMRCds3fyxeGhrkW+EzBTyPPgzGKtcTJiRLMWtg5qYyqNolsw
-   qOYXXx3BEkXJb4M/EVXMEGk/UfcxnS2a6DbUzXYIi3hcS4st/0l2Q+Nz5
-   Q1bPL8VmnOmdZ0vCe7bGRckRtx6/3TKiGFe5KsTvjx65ocfnkVl8GaVtd
-   WagwZRaKrFcl7lULGGG5mNDWoLsYlc1YjxOdzUd7trmUmpPFxvdyiugZw
-   lgXb0rplkhWGjHOal9RdVAwZilJyh+frVFT5U4RTz+6dX5RssgZHKtkru
-   CfsNNHrs9pLOLDMiznDfqcsmWVIu5u8Vxc5OLxKHJOWuXdMs09e+xXgGq
-   Q==;
-X-CSE-ConnectionGUID: Hvp3hMutRP+0ytcBmjpS2A==
-X-CSE-MsgGUID: DF+2kDYRT6CoSLf+GTacUA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18719342"
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="18719342"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 11:49:14 -0700
-X-CSE-ConnectionGUID: T4aZJgEBQ52sbbWuz+Wzyw==
-X-CSE-MsgGUID: AA32th1QTB2ZpF7j19CTEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="25280570"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.146])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 11:49:13 -0700
-Date: Wed, 10 Apr 2024 11:49:11 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: ira.weiny@intel.com
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/26] cxl/core: Separate region mode from decoder mode
-Message-ID: <ZhbfJ5HRCFAhUy2I@aschofie-mobl2>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-2-b7b00d623625@intel.com>
+	s=arc-20240116; t=1712778559; c=relaxed/simple;
+	bh=qx6jWCszwloRG2zKLDdzFpbxXAbaVtEQlAiTr0LV/B8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d4ex/IGtMD77Lr3wSXcr9hMiQDOqDoQ/krdUH+cEwN4R0u4ehYlJ1/yX2rO1Hg8ExRyUYpZSKGm3QTvQCIF0u6Lkxw/gV0qm4wcmAXcMqS3K7Xe8Vu7BzZUbrSQdZz0W3wcQVRS4u1FVT+jRiia63qsKoCfkgyk7Pf8iN4IlFbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFCvY6F8Cz6K8pH;
+	Thu, 11 Apr 2024 03:44:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D16D1402C7;
+	Thu, 11 Apr 2024 03:49:13 +0800 (CST)
+Received: from localhost (10.48.150.216) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
+ 2024 20:49:13 +0100
+Date: Wed, 10 Apr 2024 20:49:11 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: fan <nifan.cxl@gmail.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<gregory.price@memverge.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
+	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v6 09/12] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <20240410204911.0000590b@Huawei.com>
+In-Reply-To: <ZhWym2yHoh6YIaXj@debian>
+References: <20240325190339.696686-1-nifan.cxl@gmail.com>
+	<20240325190339.696686-10-nifan.cxl@gmail.com>
+	<20240405131856.000025e7@Huawei.com>
+	<ZhWym2yHoh6YIaXj@debian>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240324-dcd-type2-upstream-v1-2-b7b00d623625@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun, Mar 24, 2024 at 04:18:05PM -0700, Ira Weiny wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
+On Tue, 9 Apr 2024 14:26:51 -0700
+fan <nifan.cxl@gmail.com> wrote:
+
+> On Fri, Apr 05, 2024 at 01:18:56PM +0100, Jonathan Cameron wrote:
+> > On Mon, 25 Mar 2024 12:02:27 -0700
+> > nifan.cxl@gmail.com wrote:
+> >   
+> > > From: Fan Ni <fan.ni@samsung.com>
+> > > 
+> > > To simulate FM functionalities for initiating Dynamic Capacity Add
+> > > (Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL spec
+> > > r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces to issue
+> > > add/release dynamic capacity extents requests.
+> > > 
+> > > With the change, we allow to release an extent only when its DPA range
+> > > is contained by a single accepted extent in the device. That is to say,
+> > > extent superset release is not supported yet.
+> > > 
+> > > 1. Add dynamic capacity extents:
+> > > 
+> > > For example, the command to add two continuous extents (each 128MiB long)
+> > > to region 0 (starting at DPA offset 0) looks like below:
+> > > 
+> > > { "execute": "qmp_capabilities" }
+> > > 
+> > > { "execute": "cxl-add-dynamic-capacity",
+> > >   "arguments": {
+> > >       "path": "/machine/peripheral/cxl-dcd0",
+> > >       "region-id": 0,
+> > >       "extents": [
+> > >       {
+> > >           "offset": 0,
+> > >           "len": 134217728
+> > >       },
+> > >       {
+> > >           "offset": 134217728,
+> > >           "len": 134217728
+> > >       }  
+> > 
+> > Hi Fan,
+> > 
+> > I talk more on this inline, but to me this interface takes multiple extents
+> > so that we can treat them as a single 'offer' of capacity. That is they
+> > should be linked in the event log with the more flag and the host should
+> > have to handle them in one go (I known Ira and Navneet's code doesn't handle
+> > this yet, but that doesn't mean QEMU shouldn't).
+> > 
+> > Alternative for now would be to only support a single entry.  Keep the
+> > interface defined to take multiple entries but reject it at runtime.
+> > 
+> > I don't want to end up with a more complex interface in the end just
+> > because we allowed this form to not set the MORE flag today.
+> > We will need this to do tagged handling and ultimately sharing, so good
+> > to get it right from the start.
+> > 
+> > For tagged handling I think the right option is to have the tag alongside
+> > region-id not in the individual extents.  That way the interface is naturally
+> > used to generate the right description to the host.
+> >   
+> > >       ]
+> > >   }
+> > > }  
+> Hi Jonathan,
+> Thanks for the detailed comments.
 > 
-> Until now region modes and decoder modes were equivalent in that they
-> were either PMEM or RAM.  With the upcoming addition of Dynamic Capacity
-> regions (which will represent an array of device regions [better named
-> partitions] the index of which could be different on different
-> interleaved devices), the mode of an endpoint decoder and a region will
-> no longer be equivalent.
-> 
-> Define a new region mode enumeration and adjust the code for it.
-> 
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes for v1
-> <none>
-> ---
->  drivers/cxl/core/region.c | 77 +++++++++++++++++++++++++++++++++++------------
->  drivers/cxl/cxl.h         | 26 ++++++++++++++--
->  2 files changed, 81 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 4c7fd2d5cccb..1723d17f121e 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -40,7 +40,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
->  	rc = down_read_interruptible(&cxl_region_rwsem);
->  	if (rc)
->  		return rc;
-> -	if (cxlr->mode != CXL_DECODER_PMEM)
-> +	if (cxlr->mode != CXL_REGION_PMEM)
->  		rc = sysfs_emit(buf, "\n");
->  	else
->  		rc = sysfs_emit(buf, "%pUb\n", &p->uuid);
-> @@ -353,7 +353,7 @@ static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
->  	 * Support tooling that expects to find a 'uuid' attribute for all
->  	 * regions regardless of mode.
->  	 */
-> -	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_DECODER_PMEM)
-> +	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_REGION_PMEM)
->  		return 0444;
->  	return a->mode;
->  }
-> @@ -516,7 +516,7 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
->  {
->  	struct cxl_region *cxlr = to_cxl_region(dev);
->  
-> -	return sysfs_emit(buf, "%s\n", cxl_decoder_mode_name(cxlr->mode));
-> +	return sysfs_emit(buf, "%s\n", cxl_region_mode_name(cxlr->mode));
->  }
->  static DEVICE_ATTR_RO(mode);
->  
-> @@ -542,7 +542,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->  
->  	/* ways, granularity and uuid (if PMEM) need to be set before HPA */
->  	if (!p->interleave_ways || !p->interleave_granularity ||
-> -	    (cxlr->mode == CXL_DECODER_PMEM && uuid_is_null(&p->uuid)))
-> +	    (cxlr->mode == CXL_REGION_PMEM && uuid_is_null(&p->uuid)))
->  		return -ENXIO;
->  
->  	div64_u64_rem(size, (u64)SZ_256M * p->interleave_ways, &remainder);
-> @@ -1683,6 +1683,17 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
->  	return rc;
->  }
->  
-> +static bool cxl_modes_compatible(enum cxl_region_mode rmode,
-> +				 enum cxl_decoder_mode dmode)
-> +{
+> For the QMP interface, I have one question. 
+> Do we want the interface to follow exactly as shown in
+> Table 7-70 and Table 7-71 in cxl r3.1?
 
-Perhaps is_region_mode_compatible() ?  
+I don't mind if it doesn't as long as it lets us pass reasonable
+things in to test the kernel code.  I'd have the interface designed
+to allow us to generate the set of records associate with a given
+'request'.  E.g. All same tag in the same QMP command.
 
-Seems we have precedence for asking these questions that have
-boolean responses. I picked 'region' because it is the region
-we are trying to construct.
+If we want multiple sets of such records (and the extents to back
+them) we can issue multiple calls.
+
+Jonathan
 
 
-> +	if (rmode == CXL_REGION_RAM && dmode == CXL_DECODER_RAM)
-> +		return true;
-> +	if (rmode == CXL_REGION_PMEM && dmode == CXL_DECODER_PMEM)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static int cxl_region_attach(struct cxl_region *cxlr,
->  			     struct cxl_endpoint_decoder *cxled, int pos)
->  {
-> @@ -1693,9 +1704,11 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	struct cxl_dport *dport;
->  	int rc = -ENXIO;
->  
-> -	if (cxled->mode != cxlr->mode) {
-> -		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
-> -			dev_name(&cxled->cxld.dev), cxlr->mode, cxled->mode);
-> +	if (!cxl_modes_compatible(cxlr->mode, cxled->mode)) {
-> +		dev_dbg(&cxlr->dev, "%s region mode: %s mismatch decoder: %s\n",
-> +			dev_name(&cxled->cxld.dev),
-> +			cxl_region_mode_name(cxlr->mode),
-> +			cxl_decoder_mode_name(cxled->mode));
->  		return -EINVAL;
->  	}
-
-Does the above return bypass this next code segment (not in your diff):
-
-       if (cxled->mode == CXL_DECODER_DEAD) {
-                dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
-                return -ENODEV;
-        }
-
-It seems we are changing the return value on DEAD.
-
-More below where a new check for DEAD is added ...
-
-snip
-
->  /* Establish an empty region covering the given HPA range */
->  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  					   struct cxl_endpoint_decoder *cxled)
-> @@ -2808,12 +2840,17 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	struct cxl_port *port = cxlrd_to_port(cxlrd);
->  	struct range *hpa = &cxled->cxld.hpa_range;
->  	struct cxl_region_params *p;
-> +	enum cxl_region_mode mode;
->  	struct cxl_region *cxlr;
->  	struct resource *res;
->  	int rc;
->  
-> +	if (cxled->mode == CXL_DECODER_DEAD)
-> +		return ERR_PTR(-EINVAL);
-
-I see this addition, but it is in a different place and with
-a different return value. Help me understand that this is no
-change in behavior.
-
-
-> +
-> +	mode = cxl_decoder_to_region_mode(cxled->mode);
->  	do {
-> -		cxlr = __create_region(cxlrd, cxled->mode,
-> +		cxlr = __create_region(cxlrd, mode,
->  				       atomic_read(&cxlrd->region_id));
->  	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
->  
-
-snip
-
->  /*
->   * Track whether this decoder is reserved for region autodiscovery, or
->   * free for userspace provisioning.
-> @@ -511,7 +532,8 @@ struct cxl_region_params {
->   * struct cxl_region - CXL region
->   * @dev: This region's device
->   * @id: This region's id. Id is globally unique across all regions
-> - * @mode: Endpoint decoder allocation / access mode
-> + * @mode: Region mode which defines which endpoint decoder mode the region is
-> + *        compatible with
-
-Maybe...
-@mode: Region mode used for decoder compatibility check
-
-snip to end
-
---Alison
 
 > 
+> Fan
+> 
+> > > 
+> > > 2. Release dynamic capacity extents:
+> > > 
+> > > For example, the command to release an extent of size 128MiB from region 0
+> > > (DPA offset 128MiB) looks like below:
+> > > 
+> > > { "execute": "cxl-release-dynamic-capacity",
+> > >   "arguments": {
+> > >       "path": "/machine/peripheral/cxl-dcd0",
+> > >       "region-id": 0,
+> > >       "extents": [
+> > >       {
+> > >           "offset": 134217728,
+> > >           "len": 134217728
+> > >       }
+> > >       ]
+> > >   }
+> > > }
+> > > 
+> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>  
+> > 
+> > 
+> >   
+> > >          /* to-be-added range should not overlap with range already accepted */
+> > >          QTAILQ_FOREACH(ent, &ct3d->dc.extents, node) {
+> > > @@ -1585,9 +1586,13 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+> > >      CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> > >      uint32_t i;
+> > >      uint64_t dpa, len;
+> > > +    CXLDCExtent *ent;
+> > >      CXLRetCode ret;
+> > >  
+> > >      if (in->num_entries_updated == 0) {
+> > > +        /* Always remove the first pending extent when response received. */
+> > > +        ent = QTAILQ_FIRST(&ct3d->dc.extents_pending);
+> > > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending, ent);
+> > >          return CXL_MBOX_SUCCESS;
+> > >      }
+> > >  
+> > > @@ -1604,6 +1609,8 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+> > >  
+> > >      ret = cxl_dcd_add_dyn_cap_rsp_dry_run(ct3d, in);
+> > >      if (ret != CXL_MBOX_SUCCESS) {
+> > > +        ent = QTAILQ_FIRST(&ct3d->dc.extents_pending);
+> > > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending, ent);  
+> > 
+> > Ah this deals with the todo I suggest you add to the earlier patch.
+> > I'd not mind so much if you hadn't been so thorough on other todo notes ;)
+> > Add one in the earlier patch and get rid of ti here like you do below.
+> > 
+> > However as I note below I think we need to handle these as groups of extents
+> > not single extents. That way we keep an 'offered' set offered at the same time by
+> > a single command (and expose to host using the more flag) together and reject
+> > them on mass.
+> > 
+> >   
+> > >          return ret;
+> > >      }
+> > >  
+> > > @@ -1613,10 +1620,9 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+> > >  
+> > >          cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
+> > >          ct3d->dc.total_extent_count += 1;
+> > > -        /*
+> > > -         * TODO: we will add a pending extent list based on event log record
+> > > -         * and process the list according here.
+> > > -         */
+> > > +
+> > > +        ent = QTAILQ_FIRST(&ct3d->dc.extents_pending);
+> > > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending, ent);
+> > >      }
+> > >  
+> > >      return CXL_MBOX_SUCCESS;
+> > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > > index 951bd79a82..74cb64e843 100644
+> > > --- a/hw/mem/cxl_type3.c
+> > > +++ b/hw/mem/cxl_type3.c  
+> >   
+> > >  
+> > >  static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+> > > @@ -1449,7 +1454,8 @@ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
+> > >          return CXL_EVENT_TYPE_FAIL;
+> > >      case CXL_EVENT_LOG_FATAL:
+> > >          return CXL_EVENT_TYPE_FATAL;
+> > > -/* DCD not yet supported */  
+> > 
+> > Drop the comment but don't add the code.  We are handling DCD differently
+> > from other events, so this code should never deal with it.
+> >   
+> > > +    case CXL_EVENT_LOG_DYNCAP:
+> > > +        return CXL_EVENT_TYPE_DYNAMIC_CAP;
+> > >      default:
+> > >          return -EINVAL;
+> > >      }
+> > > @@ -1700,6 +1706,250 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+> > >      }
+> > >  }  
+> >   
+> > > +/*
+> > > + * Check whether the range [dpa, dpa + len -1] has overlaps with extents in  
+> > 
+> > space after - (just looks odd otherwise)
+> >   
+> > > + * the list.
+> > > + * Return value: return true if has overlaps; otherwise, return false
+> > > + */
+> > > +static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> > > +                                           uint64_t dpa, uint64_t len)
+> > > +{
+> > > +    CXLDCExtent *ent;
+> > > +    Range range1, range2;
+> > > +
+> > > +    if (!list) {
+> > > +        return false;
+> > > +    }
+> > > +
+> > > +    range_init_nofail(&range1, dpa, len);
+> > > +    QTAILQ_FOREACH(ent, list, node) {
+> > > +        range_init_nofail(&range2, ent->start_dpa, ent->len);
+> > > +        if (range_overlaps_range(&range1, &range2)) {
+> > > +            return true;
+> > > +        }
+> > > +    }
+> > > +    return false;
+> > > +}
+> > > +
+> > > +/*
+> > > + * Check whether the range [dpa, dpa + len -1] is contained by extents in   
+> > 
+> > space after -
+> >   
+> > > + * the list.
+> > > + * Will check multiple extents containment once superset release is added.
+> > > + * Return value: return true if range is contained; otherwise, return false
+> > > + */
+> > > +bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
+> > > +                                    uint64_t dpa, uint64_t len)
+> > > +{
+> > > +    CXLDCExtent *ent;
+> > > +    Range range1, range2;
+> > > +
+> > > +    if (!list) {
+> > > +        return false;
+> > > +    }
+> > > +
+> > > +    range_init_nofail(&range1, dpa, len);
+> > > +    QTAILQ_FOREACH(ent, list, node) {
+> > > +        range_init_nofail(&range2, ent->start_dpa, ent->len);
+> > > +        if (range_contains_range(&range2, &range1)) {
+> > > +            return true;
+> > > +        }
+> > > +    }
+> > > +    return false;
+> > > +}
+> > > +
+> > > +/*
+> > > + * The main function to process dynamic capacity event. Currently DC extents
+> > > + * add/release requests are processed.
+> > > + */
+> > > +static void qmp_cxl_process_dynamic_capacity(const char *path, CxlEventLog log,  
+> > 
+> > As below. Don't pass in a CxlEventLog.  Whilst some infrastructure is shared
+> > with other event logs, we don't want to accidentally enable other events
+> > being added to the DC event log.
+> >   
+> > > +                                             CXLDCEventType type, uint16_t hid,
+> > > +                                             uint8_t rid,
+> > > +                                             CXLDCExtentRecordList *records,
+> > > +                                             Error **errp)
+> > > +{
+> > > +    Object *obj;
+> > > +    CXLEventDynamicCapacity dCap = {};
+> > > +    CXLEventRecordHdr *hdr = &dCap.hdr;
+> > > +    CXLType3Dev *dcd;
+> > > +    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
+> > > +    uint32_t num_extents = 0;
+> > > +    CXLDCExtentRecordList *list;
+> > > +    g_autofree CXLDCExtentRaw *extents = NULL;
+> > > +    uint8_t enc_log;
+> > > +    uint64_t dpa, offset, len, block_size;
+> > > +    int i, rc;
+> > > +    g_autofree unsigned long *blk_bitmap = NULL;
+> > > +
+> > > +    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
+> > > +    if (!obj) {
+> > > +        error_setg(errp, "Unable to resolve CXL type 3 device");
+> > > +        return;
+> > > +    }
+> > > +
+> > > +    dcd = CXL_TYPE3(obj);
+> > > +    if (!dcd->dc.num_regions) {
+> > > +        error_setg(errp, "No dynamic capacity support from the device");
+> > > +        return;
+> > > +    }
+> > > +
+> > > +    rc = ct3d_qmp_cxl_event_log_enc(log);  
+> > 
+> > enc_log = CXL_EVENT_TYPE_DYNAMIC_CAP; always so don't look it up.
+> >   
+> > > +    if (rc < 0) {
+> > > +        error_setg(errp, "Unhandled error log type");
+> > > +        return;
+> > > +    }
+> > > +    enc_log = rc;
+> > > +
+> > > +    if (rid >= dcd->dc.num_regions) {
+> > > +        error_setg(errp, "region id is too large");
+> > > +        return;
+> > > +    }
+> > > +    block_size = dcd->dc.regions[rid].block_size;
+> > > +    blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
+> > > +
+> > > +    /* Sanity check and count the extents */
+> > > +    list = records;
+> > > +    while (list) {
+> > > +        offset = list->value->offset;
+> > > +        len = list->value->len;
+> > > +        dpa = offset + dcd->dc.regions[rid].base;
+> > > +
+> > > +        if (len == 0) {
+> > > +            error_setg(errp, "extent with 0 length is not allowed");
+> > > +            return;
+> > > +        }
+> > > +
+> > > +        if (offset % block_size || len % block_size) {
+> > > +            error_setg(errp, "dpa or len is not aligned to region block size");
+> > > +            return;
+> > > +        }
+> > > +
+> > > +        if (offset + len > dcd->dc.regions[rid].len) {
+> > > +            error_setg(errp, "extent range is beyond the region end");
+> > > +            return;
+> > > +        }
+> > > +
+> > > +        /* No duplicate or overlapped extents are allowed */
+> > > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > > +                              len / block_size)) {
+> > > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > > +            return;
+> > > +        }
+> > > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > > +
+> > > +        num_extents++;
+> > > +        if (type == DC_EVENT_RELEASE_CAPACITY) {
+> > > +            if (cxl_extents_overlaps_dpa_range(&dcd->dc.extents_pending,
+> > > +                                               dpa, len)) {
+> > > +                error_setg(errp,
+> > > +                           "cannot release extent with pending DPA range");
+> > > +                return;
+> > > +            }
+> > > +            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents,
+> > > +                                                dpa, len)) {
+> > > +                error_setg(errp,
+> > > +                           "cannot release extent with non-existing DPA range");
+> > > +                return;
+> > > +            }
+> > > +        }
+> > > +        list = list->next;
+> > > +    }
+> > > +    if (num_extents == 0) {  
+> > 
+> > We can just check if there is a first one.  That check can be done before
+> > counting them and is probably a little more elegant than leaving it to down here.
+> > I'm not sure we can pass in an empty list but if we can (easy to poke interface
+> > and check) then I assume records == NULL. 
+> >   
+> > > +        error_setg(errp, "no valid extents to send to process");
+> > > +        return;
+> > > +    }
+> > > +
+> > > +    /* Create extent list for event being passed to host */
+> > > +    i = 0;
+> > > +    list = records;
+> > > +    extents = g_new0(CXLDCExtentRaw, num_extents);
+> > > +    while (list) {
+> > > +        offset = list->value->offset;
+> > > +        len = list->value->len;
+> > > +        dpa = dcd->dc.regions[rid].base + offset;
+> > > +
+> > > +        extents[i].start_dpa = dpa;
+> > > +        extents[i].len = len;
+> > > +        memset(extents[i].tag, 0, 0x10);
+> > > +        extents[i].shared_seq = 0;
+> > > +        list = list->next;
+> > > +        i++;
+> > > +    }
+> > > +
+> > > +    /*
+> > > +     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
+> > > +     *
+> > > +     * All Dynamic Capacity event records shall set the Event Record Severity
+> > > +     * field in the Common Event Record Format to Informational Event. All
+> > > +     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
+> > > +     * Event Log.
+> > > +     */
+> > > +    cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
+> > > +                            cxl_device_get_timestamp(&dcd->cxl_dstate));
+> > > +
+> > > +    dCap.type = type;
+> > > +    /* FIXME: for now, validity flag is cleared */
+> > > +    dCap.validity_flags = 0;
+> > > +    stw_le_p(&dCap.host_id, hid);
+> > > +    /* only valid for DC_REGION_CONFIG_UPDATED event */
+> > > +    dCap.updated_region_id = 0;
+> > > +    /*
+> > > +     * FIXME: for now, the "More" flag is cleared as there is only one
+> > > +     * extent associating with each record and tag-based release is
+> > > +     * not supported.  
+> > 
+> > This is misleading by my understanding of the specification.
+> > More isn't directly related to tags (though it is necessary for some
+> > flows with tags, when sharing is enabled anyway).
+> > The reference to record also isn't that relevant. The idea is you set
+> > it for all but the last record pushed to the event log (from a given
+> > action from an FM).
+> > 
+> > The whole reason to have a multi extent injection interface is to set
+> > the more flag to indicate that the OS needs to treat a bunch of extents
+> > as one 'offer' of capacity.  So a rejection from the OS needs to take
+> > out 'all those records'.  The proposed linux code will currently reject
+> > all by the first extent (I moaned about that yesterday). 
+> > 
+> > It is fine to not support this in the current code, but then I would check
+> > the number of extents and reject any multi extent commands until we
+> > do support it.
+> > 
+> > Ultimately I want a qmp command with more than one extent to mean
+> > they are one 'offer' of capacity and must be handled as such by
+> > the OS.  I.e. it can't reply with multiple unrelated acceptance
+> > or reject replies.
+> > 
+> > On the add side this is easy to support, the fiddly bit is if the
+> > OS rejects some or all of the capacity and you then need to
+> > take out all the extents offered that it hasn't accepted in it's reply.
+> > 
+> > Pending list will need to maintain that association.
+> > Maybe the easiest way is to have pending list be a list of sublists?
+> > That way each sublist is handled in one go and any non accepted extents
+> > in that sub list are dropped.
+> > 
+> >    
+> > > +     */
+> > > +    dCap.flags = 0;
+> > > +    for (i = 0; i < num_extents; i++) {
+> > > +        memcpy(&dCap.dynamic_capacity_extent, &extents[i],
+> > > +               sizeof(CXLDCExtentRaw));
+> > > +
+> > > +        if (type == DC_EVENT_ADD_CAPACITY) {
+> > > +            cxl_insert_extent_to_extent_list(&dcd->dc.extents_pending,
+> > > +                                             extents[i].start_dpa,
+> > > +                                             extents[i].len,
+> > > +                                             extents[i].tag,
+> > > +                                             extents[i].shared_seq);
+> > > +        }
+> > > +
+> > > +        if (cxl_event_insert(&dcd->cxl_dstate, enc_log,
+> > > +                             (CXLEventRecordRaw *)&dCap)) {
+> > > +            cxl_event_irq_assert(dcd);
+> > > +        }
+> > > +    }
+> > > +}
+> > > +
+> > > +void qmp_cxl_add_dynamic_capacity(const char *path, uint8_t region_id,
+> > > +                                  CXLDCExtentRecordList  *records,
+> > > +                                  Error **errp)
+> > > +{
+> > > +   qmp_cxl_process_dynamic_capacity(path, CXL_EVENT_LOG_DYNCAP,  
+> > 
+> > Drop passing in the log, it doesn't make sense given these events only occur
+> > on that log and we can hard code it in the function.
+> >   
+> > > +                                    DC_EVENT_ADD_CAPACITY, 0,
+> > > +                                    region_id, records, errp);
+> > > +}
+> > > +
+> > > +void qmp_cxl_release_dynamic_capacity(const char *path, uint8_t region_id,
+> > > +                                      CXLDCExtentRecordList  *records,
+> > > +                                      Error **errp)
+> > > +{
+> > > +    qmp_cxl_process_dynamic_capacity(path, CXL_EVENT_LOG_DYNCAP,
+> > > +                                     DC_EVENT_RELEASE_CAPACITY, 0,
+> > > +                                     region_id, records, errp);
+> > > +}
+> > > +
+> > >  static void ct3_class_init(ObjectClass *oc, void *data)
+> > >  {  
+> > 
+> >   
+> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > > index df3511e91b..b84063d9f4 100644
+> > > --- a/include/hw/cxl/cxl_device.h
+> > > +++ b/include/hw/cxl/cxl_device.h
+> > > @@ -494,6 +494,7 @@ struct CXLType3Dev {
+> > >           */
+> > >          uint64_t total_capacity; /* 256M aligned */
+> > >          CXLDCExtentList extents;
+> > > +        CXLDCExtentList extents_pending;
+> > >          uint32_t total_extent_count;
+> > >          uint32_t ext_list_gen_seq;  
+> > 
+> > 
+> >   
+> > >  #endif /* CXL_EVENTS_H */
+> > > diff --git a/qapi/cxl.json b/qapi/cxl.json
+> > > index 8cc4c72fa9..2645004666 100644
+> > > --- a/qapi/cxl.json
+> > > +++ b/qapi/cxl.json
+> > > @@ -19,13 +19,16 @@
+> > >  #
+> > >  # @fatal: Fatal Event Log
+> > >  #
+> > > +# @dyncap: Dynamic Capacity Event Log
+> > > +#
+> > >  # Since: 8.1
+> > >  ##
+> > >  { 'enum': 'CxlEventLog',
+> > >    'data': ['informational',
+> > >             'warning',
+> > >             'failure',
+> > > -           'fatal']
+> > > +           'fatal',
+> > > +           'dyncap']  
+> > 
+> > Does this have the side effect of letting us inject error events
+> > onto the dynamic capacity log? 
+> >   
+> > >   }
+> > >  
+> > >  ##
+> > > @@ -361,3 +364,59 @@
+> > >  ##
+> > >  {'command': 'cxl-inject-correctable-error',
+> > >   'data': {'path': 'str', 'type': 'CxlCorErrorType'}}  
+> > ...
+> >   
+> > > +##
+> > > +# @cxl-add-dynamic-capacity:
+> > > +#
+> > > +# Command to start add dynamic capacity extents flow. The device will
+> > > +# have to acknowledged the acceptance of the extents before they are usable.
+> > > +#
+> > > +# @path: CXL DCD canonical QOM path
+> > > +# @region-id: id of the region where the extent to add
+> > > +# @extents: Extents to add
+> > > +#
+> > > +# Since : 9.0  
+> > 
+> > 9.1
+> >   
+> > > +##
+> > > +{ 'command': 'cxl-add-dynamic-capacity',
+> > > +  'data': { 'path': 'str',
+> > > +            'region-id': 'uint8',
+> > > +            'extents': [ 'CXLDCExtentRecord' ]
+> > > +           }
+> > > +}
+> > > +
+> > > +##
+> > > +# @cxl-release-dynamic-capacity:
+> > > +#
+> > > +# Command to start release dynamic capacity extents flow. The host will
+> > > +# need to respond to indicate that it has released the capacity before it
+> > > +# is made unavailable for read and write and can be re-added.
+> > > +#
+> > > +# @path: CXL DCD canonical QOM path
+> > > +# @region-id: id of the region where the extent to release
+> > > +# @extents: Extents to release
+> > > +#
+> > > +# Since : 9.0  
+> > 
+> > 9.1
+> >   
+> > > +##
+> > > +{ 'command': 'cxl-release-dynamic-capacity',
+> > > +  'data': { 'path': 'str',
+> > > +            'region-id': 'uint8',
+> > > +            'extents': [ 'CXLDCExtentRecord' ]
+> > > +           }
+> > > +}  
+> >   
+
