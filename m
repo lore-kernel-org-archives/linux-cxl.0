@@ -1,192 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4351F5FA;
-	Thu, 11 Apr 2024 02:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8399213B5BA
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Apr 2024 06:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712802785; cv=none; b=OnBeanuLGPXWKtyjFrXDKee5J+zeiNDzwfbyfoP0ghzF9p5NaEydBU5a0HAmxTwT+CnSAzXnN1ap5CXIGcbK0FXQlDtDXf2ghlsAWXKNnBtd1YxpW0SzAXVgNy8MY/sqQfBI8tiimJ6FO2/UFTePUFDpwieXnCQIGa7TJ2nSSsE=
+	t=1712816694; cv=none; b=njFTLEIAK/x+R2jPbXaz3O8EEAkBxc5HhmClu4LpQ4W3Yqd8qljt7OczLw8mM1pKdRMW0S+WrUt80IaiC1P7+pMkZIPv1tiXGrvydhCH4oPJRy2mHldvIUGaIUxlqlWFjCHtxq3rXwsar31FOFzLTsRExX4TTsNxiLfj6HCbcDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712802785; c=relaxed/simple;
-	bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p8L0Fzw6CAFC/9arlSV9MeuIdZ3VAyIZNa+3xaO5BMsx/Nlpew5Wu64GevBDiyvrihAOd7qo4Mj/PaKiNZ34+2Od9GC180sk0WnSAfauFdndmxgZaCvAwwlCt6w9IQHC5/PASuUJam2mzo9no35HXzKU2UUHtVWgV058ljblUv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSgU+cSi; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712816694; c=relaxed/simple;
+	bh=444uiMQcMJzHmI0zrEsPgMSi/MBOOaGCll154shiDkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JoUPHiJI/jjDlN0VXeScqO731hi7ECvQWIBwa4N8XioE3jAbQ4buxAvz2zpunbAN18mRUW0T5w7kmlJgIvfCzquNKd4H4qDhgZnzKelHrWvq8rsVpQbkYVs6ZtATRF8J9RY6HZWa/3RQL7yUsDmlrLqSCjN9piI0+0YXAmNz0as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FzgyPoIv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSgU+cSi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712802784; x=1744338784;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
-  b=NSgU+cSia3EWuZS5aT32c5rcmXGq5hkwymwgmJFGl5dHg27/WGPR7XwT
-   ybEv4EXD0tx846q807K6CnVXN6EvP1vScxGy7YyawRJ1KD8vOXGZRf85q
-   nbl2XwPOrJz7x8jQFFQJEPl9iyuIkx1ut1C14j/HLdnVDKHps6j5WwoIk
-   u7i490ziVvO9fchLWI1I2TYcuyay419Rtv+QCHFXFbvqpZcKwqL6YnN20
-   OiLMWpCzM9AMQryAhsN5CSoBQNpqRJSN+R+PEZ0gIw0z6Qb50B5Tf5HIU
-   hhTukP67c6H4t4drlvF9K1Y4dNqU8A/lGfHrEvNoLI97igQ1zfT48q6qW
-   g==;
-X-CSE-ConnectionGUID: tbSE+BstTxGgN+RqcxhzMg==
-X-CSE-MsgGUID: m6fUNGKbS7u5iKpIprXzKQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8053543"
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="8053543"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:03 -0700
-X-CSE-ConnectionGUID: 1xxNz+KsR0e5RVKCjx9U+A==
-X-CSE-MsgGUID: FfgGP88QSwyjrxTM0753XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="25274483"
-Received: from tashley-mobl.amr.corp.intel.com (HELO [10.255.230.246]) ([10.255.230.246])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:02 -0700
-Message-ID: <f18734ef-9a9e-47d6-b302-81f61ad3c438@linux.intel.com>
-Date: Wed, 10 Apr 2024 19:33:02 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzgyPoIv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712816691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RCX6MGp3mzAjan9U+6PijABpgY0GU571g8JyE/O/vz8=;
+	b=FzgyPoIvlIicyHKuRlHmxjwM5a6u4SYUjRg6PDGAhqvjHUDba2GWOYNXNJdC4/+3SILLi8
+	gek3F30qCBCaLnqfjtoiBEL1w0HYchB8Z3EoL6l7ucTvi37uZ5yZNR3wv1P9ujJhVAoO8V
+	X7Tlgy0MzFdC8+RfMV3AHcTqxABm7Bo=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-185-s8PqL6tjMzOkE1bJBLtX5A-1; Thu, 11 Apr 2024 02:24:49 -0400
+X-MC-Unique: s8PqL6tjMzOkE1bJBLtX5A-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56e2b417c6aso2456378a12.2
+        for <linux-cxl@vger.kernel.org>; Wed, 10 Apr 2024 23:24:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712816688; x=1713421488;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RCX6MGp3mzAjan9U+6PijABpgY0GU571g8JyE/O/vz8=;
+        b=eL35X6iErrOtALKnwW1kcJUfA0xvyVX/8xYD7Dfs7U9cVyRURi8yhLSt8WegeBjj+B
+         vIO12AW3cuCl9/ZmPA1i/aUkkdhI/2fCQYkhgK18uujDEKU5Bs7nDRUmCs2ryZ3nYvC5
+         lqx9drELqmBDWno6B1VxBj162LfmMVHEKmECsn1P2vJZObK+LNVJeeiYrJkNODUobGz5
+         eAr7+sTlNjSmVHB09nqoKr3ZYArZF4sWLPs/bvr4yHVWAcGXcJEwQE5FUCm89BOxrdA+
+         xQMaHv9KTzidBjNupCCHu0Zu3q6NHDbyWf+HkXKMI+n1P5OoOlW28jC7FsY/wvvLKdWB
+         5PUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFL/u6NAwugnzpxGQ7t2SOsvYODRSajtzI4hCdB3iLQzx8yK2uqmrQGwILYkTJOUxqU7xrwMG2Rvva8MdtPVNhaJN1qqdXN2DI
+X-Gm-Message-State: AOJu0YyUAOYxFmKSTuKDykTB+55XOrKPKh9s/Y3skmALTvOrQ/SJt2bM
+	c1RF1aUl0i8+MyTXKZJ35uPUDEi1O4YPPEhUW1rytS6nTdg/n+0N1OV/PTEtJy595MCGy0FcZ5l
+	NDgicPVRg1YrJy6vDOlA4FQYDBL3X+fyOBpuXjsdyM7/Qwz9ke20R1ruxog==
+X-Received: by 2002:a50:a69b:0:b0:56d:eef4:28f0 with SMTP id e27-20020a50a69b000000b0056deef428f0mr3980162edc.20.1712816688787;
+        Wed, 10 Apr 2024 23:24:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnVcBcnrTAav1zdTHrQ+F/XWt8yZqNhgddppdiT7mQ7vHwUi/Ryaz0cR396KTlvaukyg8GrQ==
+X-Received: by 2002:a50:a69b:0:b0:56d:eef4:28f0 with SMTP id e27-20020a50a69b000000b0056deef428f0mr3980147edc.20.1712816688397;
+        Wed, 10 Apr 2024 23:24:48 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
+        by smtp.gmail.com with ESMTPSA id z21-20020a05640235d500b0056e718795f8sm379123edc.36.2024.04.10.23.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 23:24:47 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: repair file entry in COMPUTE EXPRESS LINK
+Date: Thu, 11 Apr 2024 08:24:43 +0200
+Message-ID: <20240411062443.47372-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] PCI: Add check for CXL Secondary Bus Reset
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- bhelgaas@google.com, lukas@wunner.de
-References: <20240409160256.94184-1-dave.jiang@intel.com>
- <20240409160256.94184-3-dave.jiang@intel.com>
- <da8ca6a2-860f-44a5-bb47-b5967f40be90@linux.intel.com>
- <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
+Commit 12fb28ea6b1c ("EINJ: Add CXL error type support") adds the header
+file include/linux/einj-cxl.h, but then adds a file entry with cxl-einj.h
+(note the swapping of words) to the COMPUTE EXPRESS LINK (CXL) section.
 
-On 4/9/24 2:56 PM, Dave Jiang wrote:
->
-> On 4/9/24 2:39 PM, Kuppuswamy Sathyanarayanan wrote:
->> On 4/9/24 9:01 AM, Dave Jiang wrote:
->>> Per CXL spec r3.1 8.1.5.2, Secondary Bus Reset (SBR) is masked unless the
->>> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
->>> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
->>> the CXL Port Control Extensions register by returning -ENOTTY.
->>>
->>> When the "Unmask SBR" bit is set to 0 (default), the bus_reset would
->>> appear to have executed successfully. However the operation is actually
->>> masked. The intention is to inform the user that SBR for the CXL device
->>> is masked and will not go through.
->>>
->>> If the "Unmask SBR" bit is set to 1, then the bus reset will execute
->>> successfully.
->>>
->>> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+broken reference.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Repair the file entry in COMPUTE EXPRESS LINK (CXL).
 
->>> v4:
->>> - cxl_port_dvsec() should return u16. (Lukas)
->>> ---
->>>  drivers/pci/pci.c             | 45 +++++++++++++++++++++++++++++++++++
->>>  include/uapi/linux/pci_regs.h |  5 ++++
->>>  2 files changed, 50 insertions(+)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index e5f243dd4288..570b00fe10f7 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
->>>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->>>  }
->>>  
->>> +static u16 cxl_port_dvsec(struct pci_dev *dev)
->>> +{
->>> +	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
->>> +					 PCI_DVSEC_CXL_PORT);
->>> +}
->> Since cxl_sbr_masked() is the only user of this function, why not directly
->> check for this capability there.
-> It's used by another function in the 3rd patch. I previously had it open coded. But Dan said to reduce churn, just create the function to begin with instead of moving that code to a function later on.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-May be that patch would be the right place to introduce a helper function. But I think it fine either way.
-
->>> +
->>> +static bool cxl_sbr_masked(struct pci_dev *dev)
->>> +{
->>> +	u16 dvsec, reg;
->>> +	int rc;
->>> +
->>> +	/*
->>> +	 * No DVSEC found, either is not a CXL port, or not connected in which
->>> +	 * case mask state is a nop (CXL r3.1 sec 9.12.3 "Enumerating CXL RPs
->>> +	 * and DSPs"
->>> +	 */
->>> +	dvsec = cxl_port_dvsec(dev);
->>> +	if (!dvsec)
->>> +		return false;
->>> +
->>> +	rc = pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
->>> +	if (rc || PCI_POSSIBLE_ERROR(reg))
->>> +		return false;
->>> +
->>> +	/*
->>> +	 * CXL spec r3.1 8.1.5.2
->>> +	 * When 0, SBR bit in Bridge Control register of this Port has no effect.
->>> +	 * When 1, the Port shall generate hot reset when SBR bit in Bridge
->>> +	 * Control gets set to 1.
->>> +	 */
->>> +	if (reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)
->>> +		return false;
->>> +
->>> +	return true;
->>> +}
->>> +
->>>  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>>  {
->>> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
->>>  	int rc;
->>>  
->>> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
->>> +	if (bridge && cxl_sbr_masked(bridge)) {
->>> +		if (probe)
->>> +			return 0;
->> Why return success during the probe?
-> Otherwise the reset_method will disappear as available after initial probe. We want to leave the reset method available. If the register bit gets unmasked we can perform a bus reset. We don't want to take it away the option entirely if it's masked.
-
-Ok.
-
->>> +
->>> +		return -ENOTTY;
->>> +	}
->>> +
->>>  	rc = pci_dev_reset_slot_function(dev, probe);
->>>  	if (rc != -ENOTTY)
->>>  		return rc;
->>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->>> index a39193213ff2..d61fa43662e3 100644
->>> --- a/include/uapi/linux/pci_regs.h
->>> +++ b/include/uapi/linux/pci_regs.h
->>> @@ -1148,4 +1148,9 @@
->>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
->>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
->>>  
->>> +/* Compute Express Link (CXL) */
->>> +#define PCI_DVSEC_CXL_PORT				3
->>> +#define PCI_DVSEC_CXL_PORT_CTL				0x0c
->>> +#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->>> +
->>>  #endif /* LINUX_PCI_REGS_H */
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index edf6176a5530..03204db05027 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5415,7 +5415,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
+ L:	linux-cxl@vger.kernel.org
+ S:	Maintained
+ F:	drivers/cxl/
+-F:	include/linux/cxl-einj.h
++F:	include/linux/einj-cxl.h
+ F:	include/linux/cxl-event.h
+ F:	include/uapi/linux/cxl_mem.h
+ F:	tools/testing/cxl/
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.44.0
 
