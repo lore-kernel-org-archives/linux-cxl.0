@@ -1,223 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10E21113
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Apr 2024 18:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3EA41207
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Apr 2024 23:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712859410; cv=none; b=p1rGtELHPFeg/EfDQaoSslXfhuFMgqNkfJR/AvmpxjO12S4EP1DcJitBsk2nHI/2UFpysEwA/muXvC2PuvkDNiKndP/AL0j9V+4GbMzLzFjyXnniv1mhK3tcIzY37uGua6c6EvmzM+cusm+7G4QaX6ReW4GPTR9PwOv0bjmA9II=
+	t=1712878635; cv=none; b=YEh7L7cZCmrTBXhpIXyafUE29eNNVo8dkRvixRXcOb9AKYzFq+007Q6IdMKNPNsgKpu2sN0QkYqdKgy5zKdnl4kZWxhlWr9l2X+7K9fyIEWSWq7bNGTiXo3l3I2BEP9O0mZF7dMlzj7Ul57sz7m6VD5B6k4SefFt9ynPEqtmjtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712859410; c=relaxed/simple;
-	bh=e4b/DAITvUFDynQLCyHr6sFgw5JUaVoC7voAnEieUyE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XvKtlLPM1nhvPUdjbVObRrc0OpFsHJJ9LPJozb0TWbT+fJLVxSFj8APXGuTlgSFhVltCmS9Y+1ZlcKdHYstnB4IS0ul+HkPBzPh4RQJzL/WCf+huYEAdtBsa6MFpT+r+o62vAGeWWqUVha+p6nQcOOT7dryAkMJ3QQuMC3lSA2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F5CC072AA;
-	Thu, 11 Apr 2024 18:16:50 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Subject: [PATCH v2] cxl: Calculate region bandwidth of targets with shared upstream link
-Date: Thu, 11 Apr 2024 11:16:41 -0700
-Message-ID: <20240411181641.514075-1-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1712878635; c=relaxed/simple;
+	bh=jWEn95MivdTzCOTeOWA0EP1pAcGrsXTtIzcBl/6j6ys=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=tzgkzbG/7QvgJH4TaX/tNk87JePRp85YtlXvXB92+aZFEC1U0nUFvYzm0ePyV09EIBIrwLN4VPI+BdbcE3d0Wdgb9nmEG6PfACONrt5xm4GP5Q0rOtQpBg4kvQf6iI8NZB2fRNs8YQR1Rzpx8eCw/2DotOYvcqezNg1YD+FJ3PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/T7da/E; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/T7da/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712878633; x=1744414633;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   content-transfer-encoding;
+  bh=jWEn95MivdTzCOTeOWA0EP1pAcGrsXTtIzcBl/6j6ys=;
+  b=F/T7da/E6UdHmIrrkg8DqQ5O6KgHur5t8zNmW5L/pKqiKGsp18VgRXgM
+   zYAG/y2rD32SxZkwXVIvJ7dk44JPHC3mSYxW24Ycl+5cMGRDGsS1IlMzC
+   GT48rIjtmtNE2o6zRhJN2DJBr3nlndGLqnkwUFeBa0dpT8Mrc3e4T4mBQ
+   lRWgEBp7ITlyTclhp5SYlHOOsol9apTrKX/Mr73A9ipBAOro7Zb2DGO1Y
+   xwzC4qywGLAgW+hTqy6fJn7cDZgec11/xRF2MPUrQb+dVBoipbQW4MoiV
+   iR8E7RwUNCcK3vGXfTQB6Xf067c6iAFFEZ6zLW5SuTlcb1KXhULWCPEDt
+   Q==;
+X-CSE-ConnectionGUID: yuxc68QcSG6D9xVqGBZaVQ==
+X-CSE-MsgGUID: DxSQOBa+SJaGDtE6JVlnSg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8240516"
+X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
+   d="scan'208";a="8240516"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 16:37:11 -0700
+X-CSE-ConnectionGUID: QhwSohbmRZe9ueLx6k2gSg==
+X-CSE-MsgGUID: TFn2V/8tTlmmGbzTLueiug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
+   d="scan'208";a="58485012"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.164.35]) ([10.213.164.35])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 16:37:11 -0700
+Message-ID: <02842127-1716-4372-a77e-d742d7dcab8a@intel.com>
+Date: Thu, 11 Apr 2024 16:37:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 6.9-rc4
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For a topology where multiple targets sharing the same switch uplink, the
-bandwidth must be divided amongst all the sharing targets.
-cxl_rr->num_targets keeps track of the numbers of targets sharing the same
-upstream port. The current implementation accumulates targets during
-cxl_region_attach() and does not have the final number of targets until
-the last target is attached. If the upstream link is shared, accumulate
-bandwidth up to the switch upstream bandwidth.
+Hi Linus, please pull from
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Link: https://lore.kernel.org/linux-cxl/20240405143242.0000363a@Huawei.com/
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.9-rc4
 
-v2:
-- cxl_region_targets() -> cxl_port_shared_region_targets(). (Dan)
-- Use different method to calculate bandwidth. (Dan)
+...to receive a collection of fixes for the CXL subsystem.
+
+A set of patches to deal with fixing the computation of access_coordinate performance data computed for the CXL device path. 
+- An error in the PCI topology walk is addressed to pick up the host bridge performance data from the correct location along the path. 
+- The incorrect calculation while doing picoseconds to nanoseconds conversion of the CDAT latency data is fixed. 
+- And a check to verify that the access_coordinate data are valid (not zeroes) is added in the computation path to prevent failed perf data from leaking to the user space via sysfs.
+
+Fix an of off by 1 indexing of Clear Event Record handles in cxl_clear_event_record().
+
+Fix of a use before init of a variable map->reg_type in cxl_decode_regblock().
+
+Fix of initialization of mbox_cmd.size_out in cxl_mem_get_records_log() before sending to hardware.
+
+This has build success notification from the kbuild-robot. They have been in the -next for a week with no reported issues.
+
 ---
- drivers/cxl/core/cdat.c   | 48 +++++++++++++++++++++++++++++++++++++--
- drivers/cxl/core/core.h   |  3 +++
- drivers/cxl/core/pci.c    | 35 ++++++++++++++++++++++++++++
- drivers/cxl/core/region.c | 10 ++++++++
- 4 files changed, 94 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 4b717d2f5a9d..09f3e62e19a5 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -541,6 +541,36 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 
- MODULE_IMPORT_NS(CXL);
- 
-+static int cxl_get_switch_uport_bandwidth(struct device *uport_dev)
-+{
-+	struct device *dev = uport_dev->parent;
-+
-+	if (!dev_is_pci(dev))
-+		return -ENODEV;
-+
-+	return cxl_pci_get_switch_usp_bandwidth(to_pci_dev(dev));
-+}
-+
-+/*
-+ * Calculate the bandwidth for the cxl region based on the number of targets
-+ * that share an upstream switch. The function is called while targets are
-+ * being attached for a region. If the number of targets is 1, then
-+ * the target either does not have a upstream switch or it's the first target
-+ * of the shared link. In this case, the bandwidth is the sum of the target
-+ * bandwidth and the collected region bandwidth. If the targets from cxl_rr is
-+ * greater than 1, then the bandwidth is the minimum of the switch upstream
-+ * port bandwidth or the region plus the target bandwidth.
-+ */
-+static unsigned int calculate_region_bw(int targets, unsigned int usp_bw,
-+					unsigned int ep_bw,
-+					unsigned int region_bw)
-+{
-+	if (targets == 1)
-+		return region_bw + ep_bw;
-+
-+	return min_t(unsigned int, usp_bw, region_bw + ep_bw);
-+}
-+
- void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 				    struct cxl_endpoint_decoder *cxled)
- {
-@@ -551,7 +581,9 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 			.start = cxled->dpa_res->start,
- 			.end = cxled->dpa_res->end,
- 	};
-+	struct cxl_port *port = cxlmd->endpoint;
- 	struct cxl_dpa_perf *perf;
-+	int usp_bw, targets;
- 
- 	switch (cxlr->mode) {
- 	case CXL_DECODER_RAM:
-@@ -569,6 +601,12 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 	if (!range_contains(&perf->dpa_range, &dpa))
- 		return;
- 
-+	usp_bw = cxl_get_switch_uport_bandwidth(port->uport_dev);
-+	if (usp_bw > 0)
-+		targets = cxl_port_shared_region_targets(port, cxlr);
-+	else
-+		targets = 1;
-+
- 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
- 		/* Get total bandwidth and the worst latency for the cxl region */
- 		cxlr->coord[i].read_latency = max_t(unsigned int,
-@@ -577,8 +615,14 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 		cxlr->coord[i].write_latency = max_t(unsigned int,
- 						     cxlr->coord[i].write_latency,
- 						     perf->coord[i].write_latency);
--		cxlr->coord[i].read_bandwidth += perf->coord[i].read_bandwidth;
--		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
-+		cxlr->coord[i].read_bandwidth =
-+			calculate_region_bw(targets, usp_bw,
-+					    perf->coord[i].read_bandwidth,
-+					    cxlr->coord[i].read_bandwidth);
-+		cxlr->coord[i].write_bandwidth =
-+			calculate_region_bw(targets, usp_bw,
-+					    perf->coord[i].write_bandwidth,
-+					    cxlr->coord[i].write_bandwidth);
- 	}
- }
- 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index bc5a95665aa0..99c1c24df671 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -89,9 +89,12 @@ enum cxl_poison_trace_type {
- };
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
-+int cxl_pci_get_switch_usp_bandwidth(struct pci_dev *pdev);
- 
- int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
- 				       enum access_coordinate_class access);
- bool cxl_need_node_perf_attrs_update(int nid);
- 
-+int cxl_port_shared_region_targets(struct cxl_port *port, struct cxl_region *cxlr);
-+
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 0df09bd79408..9281ed5a073d 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1045,3 +1045,38 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
- 
- 	return cxl_flit_size(pdev) * MEGA / bw;
- }
-+
-+static int cxl_pci_get_bandwidth(struct pci_dev *pdev)
-+{
-+	u16 lnksta;
-+	u32 width;
-+	int speed;
-+
-+	speed = pcie_link_speed_mbps(pdev);
-+	if (speed < 0)
-+		return 0;
-+	speed /= BITS_PER_BYTE;
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
-+	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
-+
-+	return speed * width;
-+}
-+
-+int cxl_pci_get_switch_usp_bandwidth(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pci_dev *iter = pdev;
-+
-+	do {
-+		if (pci_pcie_type(iter) == PCI_EXP_TYPE_UPSTREAM)
-+			break;
-+
-+		dev = iter->dev.parent;
-+		if (!dev || !dev_is_pci(dev))
-+			return -ENODEV;
-+		iter = to_pci_dev(dev);
-+	} while (1);
-+
-+	return cxl_pci_get_bandwidth(iter);
-+}
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5c186e0a39b9..5a1bca31d269 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -222,6 +222,16 @@ static struct cxl_region_ref *cxl_rr_load(struct cxl_port *port,
- 	return xa_load(&port->regions, (unsigned long)cxlr);
- }
- 
-+int cxl_port_shared_region_targets(struct cxl_port *port, struct cxl_region *cxlr)
-+{
-+	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-+
-+	if (!cxl_rr)
-+		return 0;
-+
-+	return cxl_rr->nr_targets;
-+}
-+
- static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
- {
- 	if (!cpu_cache_has_invalidate_memregion()) {
--- 
-2.44.0
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.9-rc4
+
+for you to fetch changes up to 7bcf809b1e7889ab7e75fe1fcf8f1a98332f36d2:
+
+  cxl: Add checks to access_coordinate calculation to fail missing data (2024-04-08 08:25:21 -0700)
+
+----------------------------------------------------------------
+cxl fixes for v6.9-rc4
+
+- Fix index of Clear Event Record handles in cxl_clear_event_record().
+- Fix use before init of map->reg_type in cxl_decode_regblock().
+- Fix initialization of mbox_cmd.size_out in cxl_mem_get_records_log().
+- Series fixing CXL path access_coordinate computation.
+  - Remove unneded check of iter in loop.
+  - Fix of retrieving of access_coordinate in PCI topology walk.
+  - Fix of incorrect region access_coordinate data calculation.
+  - Consolidate of access_coordinates attached to downstream port
+    context.
+  - Add check to validate access_coordinate validity to prevent
+    incorrect data being exposed via sysfs.
+
+----------------------------------------------------------------
+Dave Jiang (6):
+      cxl/core/regs: Fix usage of map->reg_type in cxl_decode_regblock() before assigned
+      cxl: Remove checking of iter in cxl_endpoint_get_perf_coordinates()
+      cxl: Fix retrieving of access_coordinates in PCIe path
+      cxl: Fix incorrect region perf data calculation
+      cxl: Consolidate dport access_coordinate ->hb_coord and ->sw_coord into ->coord
+      cxl: Add checks to access_coordinate calculation to fail missing data
+
+Kwangjin Ko (1):
+      cxl/core: Fix initialization of mbox_cmd.size_out in get event
+
+Yuquan Wang (1):
+      cxl/mem: Fix for the index of Clear Event Record Handle
+
+ drivers/cxl/acpi.c           |  13 +---
+ drivers/cxl/core/cdat.c      | 152 ++++++++++++++++++++++---------------------
+ drivers/cxl/core/mbox.c      |   5 +-
+ drivers/cxl/core/port.c      | 114 +++++++++++++++++++-------------
+ drivers/cxl/core/regs.c      |   5 +-
+ drivers/cxl/cxl.h            |   8 +--
+ drivers/cxl/cxlmem.h         |   2 +-
+ tools/testing/cxl/test/cxl.c |  10 +--
+ 8 files changed, 164 insertions(+), 145 deletions(-)   
