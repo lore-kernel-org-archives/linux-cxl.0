@@ -1,538 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8F2DF44;
-	Thu, 11 Apr 2024 00:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4351F5FA;
+	Thu, 11 Apr 2024 02:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712794216; cv=none; b=HF6zJVrpOW8Mhx1dMxGqioEwaEaaTTj3CkDXYzwu8gZeKulKY7tnIltqza14jyfVrQIJC8VqUFOp0fnVy4KXonsS8FAUmr6+F0727eO4fMJU9a4Y24TIrXl2h786lXRfCwqN3ahgj8tXWb6rd15q2hwobSX9nh/SkX5gNCuZV4w=
+	t=1712802785; cv=none; b=OnBeanuLGPXWKtyjFrXDKee5J+zeiNDzwfbyfoP0ghzF9p5NaEydBU5a0HAmxTwT+CnSAzXnN1ap5CXIGcbK0FXQlDtDXf2ghlsAWXKNnBtd1YxpW0SzAXVgNy8MY/sqQfBI8tiimJ6FO2/UFTePUFDpwieXnCQIGa7TJ2nSSsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712794216; c=relaxed/simple;
-	bh=bqHpNzC5nm/YbRZNoa0XPqoV1bng2fKlA6IxQhLVxZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Adg63JEGEHI/WkqFRUqp7NOxanxCv6/dNmzQQoCwQhgSdBqo1xDPEpxzfoJOzL92wMFe7R1g8it4dbJsuFRaqkFDNA8WP4IzkCQgziBXZIKP+Spe+p7QvE7EC7teOeyCzi+bFb4W5hAEpQB7wqfVjy7Gd9/ESZpIkQep1/pe3Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SEdc2h1G; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712802785; c=relaxed/simple;
+	bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p8L0Fzw6CAFC/9arlSV9MeuIdZ3VAyIZNa+3xaO5BMsx/Nlpew5Wu64GevBDiyvrihAOd7qo4Mj/PaKiNZ34+2Od9GC180sk0WnSAfauFdndmxgZaCvAwwlCt6w9IQHC5/PASuUJam2mzo9no35HXzKU2UUHtVWgV058ljblUv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSgU+cSi; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEdc2h1G"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSgU+cSi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712794213; x=1744330213;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bqHpNzC5nm/YbRZNoa0XPqoV1bng2fKlA6IxQhLVxZo=;
-  b=SEdc2h1G53AIBj42tOVu0uE9FwcE2glmp36K/HnhUM6BSI5N7GK5zea0
-   PIbvWWJV51ZZWRNNb8DydTAk/KmQsQr9IpTGxppHxtRZ1BWpIMNtJWDzY
-   9IeVQGtB9+z2Kt1nWaY9+nZE92FSIzLfCdmTqhOxCfxr+PFuPcuUyoUvX
-   yyXtOaFIcBHotRXOx9MmuvrRukxqe6dlLimVrVH/XDVnHeXuX94V+gt21
-   nHN5MvOU8X6NQBP5lnnk3zPvYSXktiBfHVuec3KwxlnNr0mCUXj6IEIrb
-   OoE6utouozqgLNdFmm89frEtSshk4TduJAzkXvDR6dDaV61oj7jJ/weJd
+  t=1712802784; x=1744338784;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
+  b=NSgU+cSia3EWuZS5aT32c5rcmXGq5hkwymwgmJFGl5dHg27/WGPR7XwT
+   ybEv4EXD0tx846q807K6CnVXN6EvP1vScxGy7YyawRJ1KD8vOXGZRf85q
+   nbl2XwPOrJz7x8jQFFQJEPl9iyuIkx1ut1C14j/HLdnVDKHps6j5WwoIk
+   u7i490ziVvO9fchLWI1I2TYcuyay419Rtv+QCHFXFbvqpZcKwqL6YnN20
+   OiLMWpCzM9AMQryAhsN5CSoBQNpqRJSN+R+PEZ0gIw0z6Qb50B5Tf5HIU
+   hhTukP67c6H4t4drlvF9K1Y4dNqU8A/lGfHrEvNoLI97igQ1zfT48q6qW
    g==;
-X-CSE-ConnectionGUID: CTNRp09OTOeof3UB1CcJWg==
-X-CSE-MsgGUID: RdG4Z5TRTXCJ5U6JAcYc1Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25699529"
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="25699529"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 17:09:56 -0700
-X-CSE-ConnectionGUID: EtoEtRgxR3ycl2PKEE1lpQ==
-X-CSE-MsgGUID: t5nn72H7Qwup/XkZfBEvtw==
+X-CSE-ConnectionGUID: tbSE+BstTxGgN+RqcxhzMg==
+X-CSE-MsgGUID: m6fUNGKbS7u5iKpIprXzKQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8053543"
+X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
+   d="scan'208";a="8053543"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:03 -0700
+X-CSE-ConnectionGUID: 1xxNz+KsR0e5RVKCjx9U+A==
+X-CSE-MsgGUID: FfgGP88QSwyjrxTM0753XQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="58153819"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.146])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 17:09:52 -0700
-Date: Wed, 10 Apr 2024 17:09:47 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: ira.weiny@intel.com
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/26] cxl/extent: Realize extent devices
-Message-ID: <ZhcqS4Uw+rbrwSMD@aschofie-mobl2>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
+X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
+   d="scan'208";a="25274483"
+Received: from tashley-mobl.amr.corp.intel.com (HELO [10.255.230.246]) ([10.255.230.246])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:02 -0700
+Message-ID: <f18734ef-9a9e-47d6-b302-81f61ad3c438@linux.intel.com>
+Date: Wed, 10 Apr 2024 19:33:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
-
-On Sun, Mar 24, 2024 at 04:18:19PM -0700, Ira Weiny wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> Once all extents of an interleave set are present a region must
-> surface an extent to the region.
-
-Why the vague words - realize and surface?
-
-Maybe slip the word DCD in the commit msg:
-	cxl/extent: Create DCD region extent devices
-
-And be more explicit about where we are in the setup process:
-
-Once the region driver discovers all the extents of an interleave set
-a region extent device must be created for every device extent found.
-
-Maybe rough example, but my intent is to seqway from the fact that
-the region driver has done it's part, now we are here, creating the
-region extent devices. Should that be 'DAX' region extent devices?
-
-> 
-> Without interleaving; endpoint decoder and region extents have a 1:1
-> relationship.  Future support for IW > 1 will maintain a N:1
-> relationship between the device extents and region extents.
-> 
-> Create a region extent device for every device extent found.  Release of
-> the extent device triggers a response to the underlying hardware extent.
-> 
-> There is no strong use case to support the addition of extents which
-> overlap previously accepted extent ranges.  Reject such new extents
-> until such time as a good use case emerges.
-> 
-> Expose the necessary details of region extents by creating the following
-> sysfs entries.
-> 
-> 	/sys/bus/cxl/devices/dax_regionX/extentY
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/offset
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/length
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/label
-> 
-> The use of the extent devices by the DAX layer is deferred to later
-> patches.
-
-You mean later in this set, right?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] PCI: Add check for CXL Secondary Bus Reset
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ bhelgaas@google.com, lukas@wunner.de
+References: <20240409160256.94184-1-dave.jiang@intel.com>
+ <20240409160256.94184-3-dave.jiang@intel.com>
+ <da8ca6a2-860f-44a5-bb47-b5967f40be90@linux.intel.com>
+ <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes for v1
-> [iweiny: new patch]
-> [iweiny: Rename 'dr_extent' to 'region_extent']
-> ---
->  drivers/cxl/core/Makefile |   1 +
->  drivers/cxl/core/extent.c | 133 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mbox.c   |  43 +++++++++++++++
->  drivers/cxl/core/region.c |  76 +++++++++++++++++++++++++-
->  drivers/cxl/cxl.h         |  37 +++++++++++++
->  tools/testing/cxl/Kbuild  |   1 +
->  6 files changed, 290 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 9259bcc6773c..35c5c76bfcf1 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -14,5 +14,6 @@ cxl_core-y += pci.o
->  cxl_core-y += hdm.o
->  cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
-> +cxl_core-y += extent.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-> new file mode 100644
-> index 000000000000..487c220f1c3c
-> --- /dev/null
-> +++ b/drivers/cxl/core/extent.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +#include <cxl.h>
-> +
-> +static DEFINE_IDA(cxl_extent_ida);
-> +
-> +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	return sysfs_emit(buf, "%pa\n", &reg_ext->hpa_range.start);
-> +}
-> +static DEVICE_ATTR_RO(offset);
-> +
-> +static ssize_t length_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +	u64 length = range_len(&reg_ext->hpa_range);
-> +
-> +	return sysfs_emit(buf, "%pa\n", &length);
-> +}
-> +static DEVICE_ATTR_RO(length);
-> +
-> +static ssize_t label_show(struct device *dev, struct device_attribute *attr,
-> +			  char *buf)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	return sysfs_emit(buf, "%s\n", reg_ext->label);
-> +}
-> +static DEVICE_ATTR_RO(label);
-> +
-> +static struct attribute *region_extent_attrs[] = {
-> +	&dev_attr_offset.attr,
-> +	&dev_attr_length.attr,
-> +	&dev_attr_label.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group region_extent_attribute_group = {
-> +	.attrs = region_extent_attrs,
-> +};
-> +
-> +static const struct attribute_group *region_extent_attribute_groups[] = {
-> +	&region_extent_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static void region_extent_release(struct device *dev)
-> +{
-> +	struct region_extent *reg_ext = to_region_extent(dev);
-> +
-> +	cxl_release_ed_extent(&reg_ext->ed_ext);
-> +	ida_free(&cxl_extent_ida, reg_ext->dev.id);
-> +	kfree(reg_ext);
-> +}
-> +
-> +static const struct device_type region_extent_type = {
-> +	.name = "extent",
-> +	.release = region_extent_release,
-> +	.groups = region_extent_attribute_groups,
-> +};
-> +
-> +bool is_region_extent(struct device *dev)
-> +{
-> +	return dev->type == &region_extent_type;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(is_region_extent, CXL);
-> +
-> +static void region_extent_unregister(void *ext)
-> +{
-> +	struct region_extent *reg_ext = ext;
-> +
-> +	dev_dbg(&reg_ext->dev, "DAX region rm extent HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +	device_unregister(&reg_ext->dev);
-> +}
-> +
-> +int dax_region_create_ext(struct cxl_dax_region *cxlr_dax,
-> +			  struct range *hpa_range,
-> +			  const char *label,
-> +			  struct range *dpa_range,
-> +			  struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct region_extent *reg_ext;
-> +	struct device *dev;
-> +	int rc, id;
-> +
-> +	id = ida_alloc(&cxl_extent_ida, GFP_KERNEL);
-> +	if (id < 0)
-> +		return -ENOMEM;
-> +
-> +	reg_ext = kzalloc(sizeof(*reg_ext), GFP_KERNEL);
-> +	if (!reg_ext)
-> +		return -ENOMEM;
-> +
-> +	reg_ext->hpa_range = *hpa_range;
-> +	reg_ext->ed_ext.dpa_range = *dpa_range;
-> +	reg_ext->ed_ext.cxled = cxled;
-> +	snprintf(reg_ext->label, DAX_EXTENT_LABEL_LEN, "%s", label);
-> +
-> +	dev = &reg_ext->dev;
-> +	device_initialize(dev);
-> +	dev->id = id;
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = &cxlr_dax->dev;
-> +	dev->type = &region_extent_type;
-> +	rc = dev_set_name(dev, "extent%d", dev->id);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	dev_dbg(dev, "DAX region extent HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	return devm_add_action_or_reset(&cxlr_dax->dev, region_extent_unregister,
-> +	reg_ext);
-> +
-> +err:
-> +	dev_err(&cxlr_dax->dev, "Failed to initialize DAX extent dev HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	put_device(dev);
-> +	return rc;
-> +}
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9e33a0976828..6b00e717e42b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1020,6 +1020,32 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
->  	return rc;
->  }
->  
-> +static int cxl_send_dc_cap_response(struct cxl_memdev_state *mds,
-> +				    struct range *extent, int opcode)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t size;
-> +
-> +	struct cxl_mbox_dc_response *dc_res __free(kfree);
-> +	size = struct_size(dc_res, extent_list, 1);
-> +	dc_res = kzalloc(size, GFP_KERNEL);
-> +	if (!dc_res)
-> +		return -ENOMEM;
-> +
-> +	dc_res->extent_list[0].dpa_start = cpu_to_le64(extent->start);
-> +	memset(dc_res->extent_list[0].reserved, 0, 8);
-> +	dc_res->extent_list[0].length = cpu_to_le64(range_len(extent));
-> +	dc_res->extent_list_size = cpu_to_le32(1);
+On 4/9/24 2:56 PM, Dave Jiang wrote:
+>
+> On 4/9/24 2:39 PM, Kuppuswamy Sathyanarayanan wrote:
+>> On 4/9/24 9:01 AM, Dave Jiang wrote:
+>>> Per CXL spec r3.1 8.1.5.2, Secondary Bus Reset (SBR) is masked unless the
+>>> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
+>>> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
+>>> the CXL Port Control Extensions register by returning -ENOTTY.
+>>>
+>>> When the "Unmask SBR" bit is set to 0 (default), the bus_reset would
+>>> appear to have executed successfully. However the operation is actually
+>>> masked. The intention is to inform the user that SBR for the CXL device
+>>> is masked and will not go through.
+>>>
+>>> If the "Unmask SBR" bit is set to 1, then the bus reset will execute
+>>> successfully.
+>>>
+>>> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>> ---
 
-Is the cpu_to_le32(1) necessary?  
-I notice similar for .extent_cnt, .start_extent_index in mbox.c
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
+>>> v4:
+>>> - cxl_port_dvsec() should return u16. (Lukas)
+>>> ---
+>>>  drivers/pci/pci.c             | 45 +++++++++++++++++++++++++++++++++++
+>>>  include/uapi/linux/pci_regs.h |  5 ++++
+>>>  2 files changed, 50 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index e5f243dd4288..570b00fe10f7 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
+>>>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+>>>  }
+>>>  
+>>> +static u16 cxl_port_dvsec(struct pci_dev *dev)
+>>> +{
+>>> +	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+>>> +					 PCI_DVSEC_CXL_PORT);
+>>> +}
+>> Since cxl_sbr_masked() is the only user of this function, why not directly
+>> check for this capability there.
+> It's used by another function in the 3rd patch. I previously had it open coded. But Dan said to reduce churn, just create the function to begin with instead of moving that code to a function later on.
 
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = opcode,
-> +		.size_in = size,
-> +		.payload_in = dc_res,
-> +	};
-> +
-> +	return cxl_internal_send_cmd(mds, &mbox_cmd);
-> +}
-> +
->  static struct cxl_memdev_state *
->  cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  {
-> @@ -1029,6 +1055,23 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
->  }
->  
-> +void cxl_release_ed_extent(struct cxl_ed_extent *extent)
-> +{
-> +	struct cxl_endpoint_decoder *cxled = extent->cxled;
-> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
-> +	struct device *dev = mds->cxlds.dev;
-> +	int rc;
-> +
-> +	dev_dbg(dev, "Releasing DC extent DPA %#llx - %#llx\n",
-> +		extent->dpa_range.start, extent->dpa_range.end);
-> +
-> +	rc = cxl_send_dc_cap_response(mds, &extent->dpa_range, CXL_MBOX_OP_RELEASE_DC);
-> +	if (rc)
-> +		dev_dbg(dev, "Failed to respond releasing extent DPA %#llx - %#llx; %d\n",
-> +			extent->dpa_range.start, extent->dpa_range.end, rc);
+May be that patch would be the right place to introduce a helper function. But I think it fine either way.
 
-Don't repeat the start/end details on the second dev_dbg(), add rc value
-only.
+>>> +
+>>> +static bool cxl_sbr_masked(struct pci_dev *dev)
+>>> +{
+>>> +	u16 dvsec, reg;
+>>> +	int rc;
+>>> +
+>>> +	/*
+>>> +	 * No DVSEC found, either is not a CXL port, or not connected in which
+>>> +	 * case mask state is a nop (CXL r3.1 sec 9.12.3 "Enumerating CXL RPs
+>>> +	 * and DSPs"
+>>> +	 */
+>>> +	dvsec = cxl_port_dvsec(dev);
+>>> +	if (!dvsec)
+>>> +		return false;
+>>> +
+>>> +	rc = pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
+>>> +	if (rc || PCI_POSSIBLE_ERROR(reg))
+>>> +		return false;
+>>> +
+>>> +	/*
+>>> +	 * CXL spec r3.1 8.1.5.2
+>>> +	 * When 0, SBR bit in Bridge Control register of this Port has no effect.
+>>> +	 * When 1, the Port shall generate hot reset when SBR bit in Bridge
+>>> +	 * Control gets set to 1.
+>>> +	 */
+>>> +	if (reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)
+>>> +		return false;
+>>> +
+>>> +	return true;
+>>> +}
+>>> +
+>>>  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>>>  {
+>>> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
+>>>  	int rc;
+>>>  
+>>> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
+>>> +	if (bridge && cxl_sbr_masked(bridge)) {
+>>> +		if (probe)
+>>> +			return 0;
+>> Why return success during the probe?
+> Otherwise the reset_method will disappear as available after initial probe. We want to leave the reset method available. If the register bit gets unmasked we can perform a bus reset. We don't want to take it away the option entirely if it's masked.
 
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_release_ed_extent, CXL);
-> +
->  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  				    enum cxl_event_log_type type)
->  {
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3e563ab29afe..7635ff109578 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1450,11 +1450,81 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
->  	return 0;
->  }
->  
-> +static int extent_check_overlap(struct device *dev, void *arg)
-> +{
-> +	struct range *new_range = arg;
-> +	struct region_extent *ext;
-> +
-> +	if (!is_region_extent(dev))
-> +		return 0;
-> +
-> +	ext = to_region_extent(dev);
-> +	return range_overlaps(&ext->hpa_range, new_range);
-> +}
-> +
-> +static int extent_overlaps(struct cxl_dax_region *cxlr_dax,
-> +			   struct range *hpa_range)
-> +{
-> +	struct device *dev __free(put_device) =
-> +		device_find_child(&cxlr_dax->dev, hpa_range, extent_check_overlap);
-> +
-> +	if (dev)
-> +		return -EINVAL;
-> +	return 0;
-> +}
-> +
->  /* Callers are expected to ensure cxled has been attached to a region */
->  int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
->  			  struct cxl_dc_extent *dc_extent)
->  {
-> -	return 0;
-> +	struct cxl_region *cxlr = cxled->cxld.region;
-> +	struct range ext_dpa_range, ext_hpa_range;
-> +	struct device *dev = &cxlr->dev;
-> +	resource_size_t dpa_offset, hpa;
-> +
-> +	/*
-> +	 * Interleave ways == 1 means this coresponds to a 1:1 mapping between
-> +	 * device extents and DAX region extents.  Future implementations
-> +	 * should hold DC region extents here until the full dax region extent
-> +	 * can be realized.
-> +	 */
-> +	if (cxlr->params.interleave_ways != 1) {
-> +		dev_err(dev, "Interleaving DC not supported\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ext_dpa_range = (struct range) {
-> +		.start = le64_to_cpu(dc_extent->start_dpa),
-> +		.end = le64_to_cpu(dc_extent->start_dpa) +
-> +			le64_to_cpu(dc_extent->length) - 1,
-> +	};
-> +
-> +	dev_dbg(dev, "Adding DC extent DPA %#llx - %#llx\n",
-> +		ext_dpa_range.start, ext_dpa_range.end);
-> +
-> +	/*
-> +	 * Without interleave...
-> +	 * HPA offset == DPA offset
-> +	 * ... but do the math anyway
-> +	 */
-> +	dpa_offset = ext_dpa_range.start - cxled->dpa_res->start;
-> +	hpa = cxled->cxld.hpa_range.start + dpa_offset;
-> +
-> +	ext_hpa_range = (struct range) {
-> +		.start = hpa - cxlr->cxlr_dax->hpa_range.start,
-> +		.end = ext_hpa_range.start + range_len(&ext_dpa_range) - 1,
-> +	};
-> +
-> +	if (extent_overlaps(cxlr->cxlr_dax, &ext_hpa_range))
-> +		return -EINVAL;
-> +
-> +	dev_dbg(dev, "Realizing region extent at HPA %#llx - %#llx\n",
-> +		ext_hpa_range.start, ext_hpa_range.end);
-> +
-> +	return dax_region_create_ext(cxlr->cxlr_dax, &ext_hpa_range,
-> +				     (char *)dc_extent->tag,
-> +				     &ext_dpa_range,
-> +				     cxled);
->  }
->  
->  static int cxl_region_attach_position(struct cxl_region *cxlr,
-> @@ -2684,6 +2754,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
->  
->  	dev = &cxlr_dax->dev;
->  	cxlr_dax->cxlr = cxlr;
-> +	cxlr->cxlr_dax = cxlr_dax;
->  	device_initialize(dev);
->  	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
->  	device_set_pm_not_required(dev);
-> @@ -2799,7 +2870,10 @@ static int cxl_region_read_extents(struct cxl_region *cxlr)
->  static void cxlr_dax_unregister(void *_cxlr_dax)
->  {
->  	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-> +	struct cxl_region *cxlr = cxlr_dax->cxlr;
->  
-> +	cxlr->cxlr_dax = NULL;
-> +	cxlr_dax->cxlr = NULL;
->  	device_unregister(&cxlr_dax->dev);
->  }
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d585f5fdd3ae..5379ad7f5852 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -564,6 +564,7 @@ struct cxl_region_params {
->   * @type: Endpoint decoder target type
->   * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
->   * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
-> + * @cxlr_dax: (for DC regions) cached copy of CXL DAX bridge
->   * @flags: Region state flags
->   * @params: active + config params for the region
->   */
-> @@ -574,6 +575,7 @@ struct cxl_region {
->  	enum cxl_decoder_type type;
->  	struct cxl_nvdimm_bridge *cxl_nvb;
->  	struct cxl_pmem_region *cxlr_pmem;
-> +	struct cxl_dax_region *cxlr_dax;
->  	unsigned long flags;
->  	struct cxl_region_params params;
->  };
-> @@ -617,6 +619,41 @@ struct cxl_dax_region {
->  	struct range hpa_range;
->  };
->  
-> +/**
-> + * struct cxl_ed_extent - Extent within an endpoint decoder
-> + * @dpa_range: DPA range this extent covers within the decoder
-> + * @cxled: reference to the endpoint decoder
-> + */
-> +struct cxl_ed_extent {
-> +	struct range dpa_range;
-> +	struct cxl_endpoint_decoder *cxled;
-> +};
-> +void cxl_release_ed_extent(struct cxl_ed_extent *extent);
-> +
-> +/**
-> + * struct region_extent - CXL DAX region extent
-> + * @dev: device representing this extent
-> + * @hpa_range: HPA range of this extent
-> + * @label: label of the extent
-> + * @ed_ext: Endpoint decoder extent which backs this extent
-> + */
-> +#define DAX_EXTENT_LABEL_LEN 64
-> +struct region_extent {
-> +	struct device dev;
-> +	struct range hpa_range;
-> +	char label[DAX_EXTENT_LABEL_LEN];
-> +	struct cxl_ed_extent ed_ext;
-> +};
-> +
-> +int dax_region_create_ext(struct cxl_dax_region *cxlr_dax,
-> +			  struct range *hpa_range,
-> +			  const char *label,
-> +			  struct range *dpa_range,
-> +			  struct cxl_endpoint_decoder *cxled);
-> +
-> +bool is_region_extent(struct device *dev);
-> +#define to_region_extent(dev) container_of(dev, struct region_extent, dev)
-> +
->  /**
->   * struct cxl_port - logical collection of upstream port devices and
->   *		     downstream port devices to construct a CXL memory
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 030b388800f0..dc0cc1d5e6a0 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -60,6 +60,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pci.o
->  cxl_core-y += $(CXL_CORE_SRC)/hdm.o
->  cxl_core-y += $(CXL_CORE_SRC)/pmu.o
->  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
-> +cxl_core-y += $(CXL_CORE_SRC)/extent.o
->  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
->  cxl_core-y += config_check.o
-> 
-> -- 
-> 2.44.0
-> 
+Ok.
+
+>>> +
+>>> +		return -ENOTTY;
+>>> +	}
+>>> +
+>>>  	rc = pci_dev_reset_slot_function(dev, probe);
+>>>  	if (rc != -ENOTTY)
+>>>  		return rc;
+>>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>>> index a39193213ff2..d61fa43662e3 100644
+>>> --- a/include/uapi/linux/pci_regs.h
+>>> +++ b/include/uapi/linux/pci_regs.h
+>>> @@ -1148,4 +1148,9 @@
+>>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+>>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+>>>  
+>>> +/* Compute Express Link (CXL) */
+>>> +#define PCI_DVSEC_CXL_PORT				3
+>>> +#define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>>> +#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+>>> +
+>>>  #endif /* LINUX_PCI_REGS_H */
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
