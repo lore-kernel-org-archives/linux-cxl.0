@@ -1,112 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F623BBC3;
-	Thu, 11 Apr 2024 16:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10E21113
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Apr 2024 18:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852892; cv=none; b=VFFnMLv9kXj2c+ETnPFC55D8whmUxH27GlZzcj8XPZCiZGH5hpNndaPN5Vz1HuhmHxNwJ4jUFvkAEOiALl/8A0Q/fyhNLyXED7p3GBBcRbJK0V2z5NVb9Dj6WkbDeT19ogsMK/LVKdQ+isVqfxcZnpNnvDjTb1j0MNeO03Uv9Hg=
+	t=1712859410; cv=none; b=p1rGtELHPFeg/EfDQaoSslXfhuFMgqNkfJR/AvmpxjO12S4EP1DcJitBsk2nHI/2UFpysEwA/muXvC2PuvkDNiKndP/AL0j9V+4GbMzLzFjyXnniv1mhK3tcIzY37uGua6c6EvmzM+cusm+7G4QaX6ReW4GPTR9PwOv0bjmA9II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852892; c=relaxed/simple;
-	bh=3XlIAOs87uqlOBPMpqubX7mfWhYqIMI28TNCOjbin5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KCqpeyeyzXoI4fB1ObGEyh/S50RciSnqs/5en1qo+UCTqp+SGwu/c46UXb8wR0enBI2AEkixnJ2Sk1tqkjQiPKp6mqNezQX8CZw5Cn+h6hk386BCWZkZpV3JsAbPHYFxJF1Hbd2SzmYWD0ma/zEELFCpVN1a4nIJx+JI76bV09Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DdZoJw2r; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DdZoJw2r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712852890; x=1744388890;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3XlIAOs87uqlOBPMpqubX7mfWhYqIMI28TNCOjbin5U=;
-  b=DdZoJw2r/RtjVpxa7ykTqtcgj79Aoj4DRiBjCo+3gTNxv6jr4QmtoqH5
-   G/P+eCmdgozQftm8H7rH6CEMB+ltfxVH5cXBKY9d/P0Oadhe5VZPqnaHh
-   AasKz1iXCZ4kYuf9Cyq61qgT+4UuDiJ3cg3aBOvJrkTTArOXsVHDoEgJF
-   k0HdI1X8ZHVjCWrg/Ipl7rV+SWGlS2FfjKe6IoUu6YqfGu784M6Fqhw0K
-   WCwchtAiEp+/hIeWY3wf81YFQh2fUESb08/gJtpOhW63Gpdc3QSqiScvh
-   Vxc52ZhmRr64HgBCglF9Et4d4tjM1spuACFcVpiKLdzyxV61BIvdkM7fa
-   g==;
-X-CSE-ConnectionGUID: 0jMTWNdAS2aFaNOLUT54iw==
-X-CSE-MsgGUID: C5tGTc4JTjmMoJI+VZ//xw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18837131"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="18837131"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 09:27:42 -0700
-X-CSE-ConnectionGUID: eO0p8wtaQSW5ISEQjzvlNQ==
-X-CSE-MsgGUID: 0V9qqLyfQMOCzSrfOBR6XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="25422038"
-Received: from ntasneem-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.182.183])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 09:27:41 -0700
-Date: Thu, 11 Apr 2024 09:27:39 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: repair file entry in COMPUTE EXPRESS LINK
-Message-ID: <ZhgPe5mDt2ocXovz@aschofie-mobl2>
-References: <20240411062443.47372-1-lukas.bulwahn@redhat.com>
+	s=arc-20240116; t=1712859410; c=relaxed/simple;
+	bh=e4b/DAITvUFDynQLCyHr6sFgw5JUaVoC7voAnEieUyE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XvKtlLPM1nhvPUdjbVObRrc0OpFsHJJ9LPJozb0TWbT+fJLVxSFj8APXGuTlgSFhVltCmS9Y+1ZlcKdHYstnB4IS0ul+HkPBzPh4RQJzL/WCf+huYEAdtBsa6MFpT+r+o62vAGeWWqUVha+p6nQcOOT7dryAkMJ3QQuMC3lSA2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F5CC072AA;
+	Thu, 11 Apr 2024 18:16:50 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net,
+	Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Subject: [PATCH v2] cxl: Calculate region bandwidth of targets with shared upstream link
+Date: Thu, 11 Apr 2024 11:16:41 -0700
+Message-ID: <20240411181641.514075-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411062443.47372-1-lukas.bulwahn@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 08:24:43AM +0200, Lukas Bulwahn wrote:
-> Commit 12fb28ea6b1c ("EINJ: Add CXL error type support") adds the header
-> file include/linux/einj-cxl.h, but then adds a file entry with cxl-einj.h
-> (note the swapping of words) to the COMPUTE EXPRESS LINK (CXL) section.
-> 
-> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
-> broken reference.
-> 
-> Repair the file entry in COMPUTE EXPRESS LINK (CXL).
+For a topology where multiple targets sharing the same switch uplink, the
+bandwidth must be divided amongst all the sharing targets.
+cxl_rr->num_targets keeps track of the numbers of targets sharing the same
+upstream port. The current implementation accumulates targets during
+cxl_region_attach() and does not have the final number of targets until
+the last target is attached. If the upstream link is shared, accumulate
+bandwidth up to the switch upstream bandwidth.
 
-How about stating the impact, something like:
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Link: https://lore.kernel.org/linux-cxl/20240405143242.0000363a@Huawei.com/
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-get_maintainer.pl can only return commit_signer history for file
-include/linux/einj-cxl.h because the entry in MAINTAINERS is wrong.
-Correct the entry so that the full MAINTAINER list is returned.
+v2:
+- cxl_region_targets() -> cxl_port_shared_region_targets(). (Dan)
+- Use different method to calculate bandwidth. (Dan)
+---
+ drivers/cxl/core/cdat.c   | 48 +++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/core/core.h   |  3 +++
+ drivers/cxl/core/pci.c    | 35 ++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c | 10 ++++++++
+ 4 files changed, 94 insertions(+), 2 deletions(-)
 
-It is interesting how you found it and I'm not suggesting deleting
-that.
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index 4b717d2f5a9d..09f3e62e19a5 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -541,6 +541,36 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 
+ MODULE_IMPORT_NS(CXL);
+ 
++static int cxl_get_switch_uport_bandwidth(struct device *uport_dev)
++{
++	struct device *dev = uport_dev->parent;
++
++	if (!dev_is_pci(dev))
++		return -ENODEV;
++
++	return cxl_pci_get_switch_usp_bandwidth(to_pci_dev(dev));
++}
++
++/*
++ * Calculate the bandwidth for the cxl region based on the number of targets
++ * that share an upstream switch. The function is called while targets are
++ * being attached for a region. If the number of targets is 1, then
++ * the target either does not have a upstream switch or it's the first target
++ * of the shared link. In this case, the bandwidth is the sum of the target
++ * bandwidth and the collected region bandwidth. If the targets from cxl_rr is
++ * greater than 1, then the bandwidth is the minimum of the switch upstream
++ * port bandwidth or the region plus the target bandwidth.
++ */
++static unsigned int calculate_region_bw(int targets, unsigned int usp_bw,
++					unsigned int ep_bw,
++					unsigned int region_bw)
++{
++	if (targets == 1)
++		return region_bw + ep_bw;
++
++	return min_t(unsigned int, usp_bw, region_bw + ep_bw);
++}
++
+ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 				    struct cxl_endpoint_decoder *cxled)
+ {
+@@ -551,7 +581,9 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 			.start = cxled->dpa_res->start,
+ 			.end = cxled->dpa_res->end,
+ 	};
++	struct cxl_port *port = cxlmd->endpoint;
+ 	struct cxl_dpa_perf *perf;
++	int usp_bw, targets;
+ 
+ 	switch (cxlr->mode) {
+ 	case CXL_DECODER_RAM:
+@@ -569,6 +601,12 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 	if (!range_contains(&perf->dpa_range, &dpa))
+ 		return;
+ 
++	usp_bw = cxl_get_switch_uport_bandwidth(port->uport_dev);
++	if (usp_bw > 0)
++		targets = cxl_port_shared_region_targets(port, cxlr);
++	else
++		targets = 1;
++
+ 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
+ 		/* Get total bandwidth and the worst latency for the cxl region */
+ 		cxlr->coord[i].read_latency = max_t(unsigned int,
+@@ -577,8 +615,14 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 		cxlr->coord[i].write_latency = max_t(unsigned int,
+ 						     cxlr->coord[i].write_latency,
+ 						     perf->coord[i].write_latency);
+-		cxlr->coord[i].read_bandwidth += perf->coord[i].read_bandwidth;
+-		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
++		cxlr->coord[i].read_bandwidth =
++			calculate_region_bw(targets, usp_bw,
++					    perf->coord[i].read_bandwidth,
++					    cxlr->coord[i].read_bandwidth);
++		cxlr->coord[i].write_bandwidth =
++			calculate_region_bw(targets, usp_bw,
++					    perf->coord[i].write_bandwidth,
++					    cxlr->coord[i].write_bandwidth);
+ 	}
+ }
+ 
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index bc5a95665aa0..99c1c24df671 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -89,9 +89,12 @@ enum cxl_poison_trace_type {
+ };
+ 
+ long cxl_pci_get_latency(struct pci_dev *pdev);
++int cxl_pci_get_switch_usp_bandwidth(struct pci_dev *pdev);
+ 
+ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
+ 				       enum access_coordinate_class access);
+ bool cxl_need_node_perf_attrs_update(int nid);
+ 
++int cxl_port_shared_region_targets(struct cxl_port *port, struct cxl_region *cxlr);
++
+ #endif /* __CXL_CORE_H__ */
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 0df09bd79408..9281ed5a073d 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1045,3 +1045,38 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
+ 
+ 	return cxl_flit_size(pdev) * MEGA / bw;
+ }
++
++static int cxl_pci_get_bandwidth(struct pci_dev *pdev)
++{
++	u16 lnksta;
++	u32 width;
++	int speed;
++
++	speed = pcie_link_speed_mbps(pdev);
++	if (speed < 0)
++		return 0;
++	speed /= BITS_PER_BYTE;
++
++	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
++	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
++
++	return speed * width;
++}
++
++int cxl_pci_get_switch_usp_bandwidth(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pci_dev *iter = pdev;
++
++	do {
++		if (pci_pcie_type(iter) == PCI_EXP_TYPE_UPSTREAM)
++			break;
++
++		dev = iter->dev.parent;
++		if (!dev || !dev_is_pci(dev))
++			return -ENODEV;
++		iter = to_pci_dev(dev);
++	} while (1);
++
++	return cxl_pci_get_bandwidth(iter);
++}
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 5c186e0a39b9..5a1bca31d269 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -222,6 +222,16 @@ static struct cxl_region_ref *cxl_rr_load(struct cxl_port *port,
+ 	return xa_load(&port->regions, (unsigned long)cxlr);
+ }
+ 
++int cxl_port_shared_region_targets(struct cxl_port *port, struct cxl_region *cxlr)
++{
++	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
++
++	if (!cxl_rr)
++		return 0;
++
++	return cxl_rr->nr_targets;
++}
++
+ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
+ {
+ 	if (!cpu_cache_has_invalidate_memregion()) {
+-- 
+2.44.0
 
-Thanks,
-Alison
-
-
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index edf6176a5530..03204db05027 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5415,7 +5415,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
->  L:	linux-cxl@vger.kernel.org
->  S:	Maintained
->  F:	drivers/cxl/
-> -F:	include/linux/cxl-einj.h
-> +F:	include/linux/einj-cxl.h
->  F:	include/linux/cxl-event.h
->  F:	include/uapi/linux/cxl_mem.h
->  F:	tools/testing/cxl/
-> -- 
-> 2.44.0
-> 
-> 
