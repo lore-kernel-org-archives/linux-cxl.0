@@ -1,208 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE3D14C596;
-	Fri, 12 Apr 2024 17:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5061814BF9B
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Apr 2024 21:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712944318; cv=none; b=J8B2FFPwhLM4mxQosKDVmXiO756uj6d7hvNztZbJzgtKIc3mJx5YdRGwFjWxTgiSiNPyc0yM59DhvGvIG29/wPqnoG5Ci0pkc/Lg4Ln2wOENTgwXYu6l6N2tnDsuTryib2i0126TefLMYSMxZ9Hp3+qOD6lrtWcsOiXDf70JyNs=
+	t=1712956004; cv=none; b=Ku8wbsQh6FNwFTpXQrlhTbEFsU6LKHXf1B/18jIlnVneY7keXSy/uEu2wghEqyb2uD3qmRkZCFD29Z2lHMpZJKw7S9I1cLDnDDVC2FZzMaBzvWODPFY4+Ztt7K8BJTTsr/vcbsdi/Hbm+5EF6R0UjLX5VozQvrn5tFjGohQouPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712944318; c=relaxed/simple;
-	bh=/lEuS/E7cqgtce5zjplbZPn/g1CG7srY/ywTw28hZP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iZtvFzamloDoiecefLaY7wr/fDArsG7twE5i+yZiJuunbgDOVhF2SioxqAffxfivCHXZVkPXx9a40l/Wf5nRmzuIYCrH5iNDkq/d4GrEiS2MM5mpD+AKUP6jjFugDITn1T6FNbqVdv2d1FGZRARccgYQ9vcjt9BioITfN1G7vis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBpdQpOP; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1712956004; c=relaxed/simple;
+	bh=CSEdPdPYTjr5gHfBvjI2/VJYMO4SMTS2WFurQWRnuug=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WXSp0ONGbLKO7lyfT7/Qve10Xig7tcx5RkEUM8No0FRoIedlbSOJuX8Om4AiD+PMSAG+vDkUqn9ZeVUASHvfyPAtJjHlxGOoBdmUAbQQVKPl0VLMux4P1phNtU2BEZxSuEXSEs5M4/LDKH5/S5IVUZdHSkWoWuh2KxjRGrLbr1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SDnQBlC+; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBpdQpOP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SDnQBlC+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712944317; x=1744480317;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/lEuS/E7cqgtce5zjplbZPn/g1CG7srY/ywTw28hZP4=;
-  b=hBpdQpOPyGNC/hTnGMm0rhGBkyKLfdmOfsiYU65M8l/mJuvqrr/8/b92
-   YrsqFqolGmf8Bowb0C9eDwltgTq1EBfDIgndBMUj1pDsGI3dw6Du0vqWZ
-   v4glCFcmf2j0CvJyYTo6R/8RnXjdZDnXpkEKhHjpd57SUHs+EOA5xbl7g
-   BFagQ288FNh1j2dw9klOFQ5HqwKxdrL7OHfdBHq51hkQ/HNFftgY9eIuG
-   KrTM4fzb81TamIw4sgcm9YYpOLwheOiqKbBriZsL1wBbhemitSPg0nR8j
-   SudIZNw0eWE8JcTzfYvoEi7yXFy11W/+nS8YIbTnPQ9K0JsVhDa15eF8I
-   g==;
-X-CSE-ConnectionGUID: vGlwnIciRYmw15K/svAM2Q==
-X-CSE-MsgGUID: kLyVtZgmSbaNXE0vUOi3Rw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12199729"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="12199729"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:51:56 -0700
-X-CSE-ConnectionGUID: FGd5+Cl8Q7SvwZlk+ibSEg==
-X-CSE-MsgGUID: m7b0yhK+TE+8bPkB7irrig==
+  t=1712956002; x=1744492002;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=CSEdPdPYTjr5gHfBvjI2/VJYMO4SMTS2WFurQWRnuug=;
+  b=SDnQBlC+mBE067tC925ZeDGFgjjoQze64ul979apiInH6WlTjZgVQ/Nd
+   38yjWX0JJp3uzny5tVXQiyeOTWpU5ZN4xkR4I6z+upzRLxFwHQS/mONP3
+   edGYvWk87daYjsRNqnxD45XFs2MlILOcv6Ww5FyShL2h7hSrBEE4oBcd/
+   b8Cq2Fi9LrvITxgbvPYj6KgEicVK/wK5h5v3UHE1rpFgmWE8W5yPfYeWF
+   GmDYOGYJYAtguPfNZLZk7JE+pppmRao2+lmpw7E59VbggURbQQGuBw96h
+   80PQOb9TYFWT6vtwMt+S90yGpKptHmMZB+q9cB/toxOdWVuikooTtxAuO
+   w==;
+X-CSE-ConnectionGUID: 9WG7GVSTRZqiXgAR5mZdmg==
+X-CSE-MsgGUID: ZAJtOPZvQ7+6ZyrohKTHjQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12211951"
+X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
+   d="scan'208";a="12211951"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 14:06:21 -0700
+X-CSE-ConnectionGUID: +7qdXTwXRMOYzGYPZOPyEA==
+X-CSE-MsgGUID: ZtLyK7EISFG2CfvLsqMyjA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="25846746"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.34.215]) ([10.212.34.215])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:51:55 -0700
-Message-ID: <c4e473bc-aa4e-4cb2-aca2-e96a75386a7a@intel.com>
-Date: Fri, 12 Apr 2024 10:51:54 -0700
+X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
+   d="scan'208";a="21909770"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.213.183.147])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 14:06:12 -0700
+From: Vishal Verma <vishal.l.verma@intel.com>
+Date: Fri, 12 Apr 2024 15:05:40 -0600
+Subject: [PATCH ndctl 2/2] daxctl/device.c: Fix error propagation in
+ do_xaction_device()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
- link status
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
- kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com, linux-pci@vger.kernel.org, mj@ucw.cz,
- dan.j.williams@intel.com
-References: <20240412070715.16160-1-kobayashi.da-06@fujitsu.com>
- <20240412070715.16160-3-kobayashi.da-06@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240412070715.16160-3-kobayashi.da-06@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240412-vv-daxctl-fixes-v1-2-6e808174e24f@intel.com>
+References: <20240412-vv-daxctl-fixes-v1-0-6e808174e24f@intel.com>
+In-Reply-To: <20240412-vv-daxctl-fixes-v1-0-6e808174e24f@intel.com>
+To: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>
+X-Mailer: b4 0.14-dev-5ce50
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1972;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=CSEdPdPYTjr5gHfBvjI2/VJYMO4SMTS2WFurQWRnuug=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDGmSi5zmtUwysZc/7huavtrHtX/bgdnP1jzUdY6qfTB/1
+ 0uP9B9LO0pZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRrgCGf2btKvvX+H07tEB5
+ Y97M8ASBWRcMDl8+8V9xk4NM7nQLQSaG/5FOHAc+hH5mrb1Vczr9Zuj0k+xPcmv/pH3Z6lY64Vm
+ tByMA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 
+The loop through the provided list of devices in do_xaction_device()
+returns the status based on whatever the last device did. Since the
+order of processing devices, especially in cases like the 'all' keyword,
+can be effectively random, this can lead to the same command, and same
+effects, exiting with a different error code based on device ordering.
 
+This was noticed with flakiness in the daxctl-create.sh unit test. Its
+'destroy-device all' command would either pass or fail based on the
+order it tried to destroy devices in. (Recall that until now, destroying
+a daxX.0 device would result in a failure).
 
-On 4/12/24 12:07 AM, Kobayashi,Daisuke wrote:
-> Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
-> 
-> In CXL1.1, the link status of the device is included in the RCRB mapped to
-> the memory mapped register area. Critically, that arrangement makes the
-> link status and control registers invisible to existing PCI user tooling.
-> 
-> Export those registers via sysfs with the expectation that PCI user
-> tooling will alternatively look for these sysfs files when attempting to
-> access to these CXL 1.1 endpoints registers.
-> 
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Make this slightly more consistent by saving a failed status in
+do_xaction_device if any iteration of the loop produces a failure.
+Return this saved status instead of returning the status of the last
+device processed.
 
-Minor nit. Maybe arrange the variable declaration in reverse xmas tree format. Otherwise LGTM.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ daxctl/device.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/cxl/pci.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 2ff361e756d6..b2d8198ab532 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -786,6 +786,103 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  	return 0;
->  }
->  
-> +static ssize_t rcd_link_cap_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_port *port;
-> +	struct cxl_dport *dport;
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_cap);
-> +
-> +static ssize_t rcd_link_ctrl_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_port *port;
-> +	struct cxl_dport *dport;
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_ctrl);
-> +
-> +static ssize_t rcd_link_status_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_port *port;
-> +	struct cxl_dport *dport;
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_status);
-> +
-> +static struct attribute *cxl_rcd_attrs[] = {
-> +		&dev_attr_rcd_link_cap.attr,
-> +		&dev_attr_rcd_link_ctrl.attr,
-> +		&dev_attr_rcd_link_status.attr,
-> +		NULL
-> +};
-> +
-> +static umode_t cxl_rcd_visible(struct kobject *kobj,
-> +					  struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (is_cxl_restricted(pdev))
-> +		return a->mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct attribute_group cxl_rcd_group = {
-> +		.attrs = cxl_rcd_attrs,
-> +		.is_visible = cxl_rcd_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(cxl_rcd);
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> @@ -969,6 +1066,7 @@ static struct pci_driver cxl_pci_driver = {
->  	.id_table		= cxl_mem_pci_tbl,
->  	.probe			= cxl_pci_probe,
->  	.err_handler		= &cxl_error_handlers,
-> +	.dev_groups		= cxl_rcd_groups,
->  	.driver	= {
->  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
->  	},
+diff --git a/daxctl/device.c b/daxctl/device.c
+index 83c61389..14d62148 100644
+--- a/daxctl/device.c
++++ b/daxctl/device.c
+@@ -1012,7 +1012,7 @@ static int do_xaction_device(const char *device, enum device_action action,
+ 	struct json_object *jdevs = NULL;
+ 	struct daxctl_region *region;
+ 	struct daxctl_dev *dev;
+-	int rc = -ENXIO;
++	int rc = -ENXIO, saved_rc = 0;
+ 
+ 	*processed = 0;
+ 
+@@ -1059,6 +1059,8 @@ static int do_xaction_device(const char *device, enum device_action action,
+ 				rc = -EINVAL;
+ 				break;
+ 			}
++			if (rc)
++				saved_rc = rc;
+ 		}
+ 	}
+ 
+@@ -1070,7 +1072,7 @@ static int do_xaction_device(const char *device, enum device_action action,
+ 	if (jdevs)
+ 		util_display_json_array(stdout, jdevs, flags);
+ 
+-	return rc;
++	return saved_rc;
+ }
+ 
+ int cmd_create_device(int argc, const char **argv, struct daxctl_ctx *ctx)
+
+-- 
+2.44.0
+
