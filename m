@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AEE14E2F0;
-	Fri, 12 Apr 2024 17:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE3D14C596;
+	Fri, 12 Apr 2024 17:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712944051; cv=none; b=ZvW8fwJh14Rifshp5KEuuyur8fejwSCSO2o78bliKgHP4ZFol3jcRGivNF+qkEE3DVfdeXWZUJfT3D4Bw6Na6TPiz61IJwQP3wUMynO0AqXwqtt9dbl3kQZ3J3gsRtGGhoGvYUOERcE6WuHjHIj7J8XdulEmgjMQCCTmlzBC2kU=
+	t=1712944318; cv=none; b=J8B2FFPwhLM4mxQosKDVmXiO756uj6d7hvNztZbJzgtKIc3mJx5YdRGwFjWxTgiSiNPyc0yM59DhvGvIG29/wPqnoG5Ci0pkc/Lg4Ln2wOENTgwXYu6l6N2tnDsuTryib2i0126TefLMYSMxZ9Hp3+qOD6lrtWcsOiXDf70JyNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712944051; c=relaxed/simple;
-	bh=CXe8/eHpIbYJZcLSTxZ+IHKOOfY1c5U2pDynUzQNUjk=;
+	s=arc-20240116; t=1712944318; c=relaxed/simple;
+	bh=/lEuS/E7cqgtce5zjplbZPn/g1CG7srY/ywTw28hZP4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BgH6p9q0QValkQpHKqGf0nUsdl6X+WP0WWST7Oc9ZiJ293B9UvGsIt2mG5npbD6pItMC0R5QnjJpgbDEjao76RbGZEyI8YAyhwzyYfAa7OtkobxUvv18txdANFhbu9znDGfO7ZmwKYeMlDirhKz7Uh1cUSyARrS+fFJk9GX6o3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YTQiGXDK; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=iZtvFzamloDoiecefLaY7wr/fDArsG7twE5i+yZiJuunbgDOVhF2SioxqAffxfivCHXZVkPXx9a40l/Wf5nRmzuIYCrH5iNDkq/d4GrEiS2MM5mpD+AKUP6jjFugDITn1T6FNbqVdv2d1FGZRARccgYQ9vcjt9BioITfN1G7vis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBpdQpOP; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTQiGXDK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBpdQpOP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712944049; x=1744480049;
+  t=1712944317; x=1744480317;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=CXe8/eHpIbYJZcLSTxZ+IHKOOfY1c5U2pDynUzQNUjk=;
-  b=YTQiGXDKsuAuRONVW7Zzuiz0r9KdcrLEvtRECzAbNh/xpxEoTk3q0bSj
-   vnu8Lf4d4bL4aWPpYtoCU262C9eZAbaTqSdRyWFJ8QsD4ZWARW+dpMf1B
-   JyXv8XJ49QRdKA19XJzu3ppfxKf9gdnlQoWdKp2l9AVVITi6jMzScYrwD
-   imn1flwJ/wg9ZdNzP8Ejrw5e6AWk0dpuDQOHFLPIP9MySv54B4zJfRMW8
-   PBl+TLw4JSWRgKMGtdr8mCM0liorxHMx/knpCTAyQbKSOH3WZSA1zA1i4
-   jHSYrck/oeMQJDvnMf9vB4xTQMvo9xX9OMdZuhaQa0HNahvGWc5GyuCrn
-   Q==;
-X-CSE-ConnectionGUID: ykxSoxIISPqSpdZOy1EmsA==
-X-CSE-MsgGUID: vEAhinMET9ym1VOEq6L+6Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8627223"
+  bh=/lEuS/E7cqgtce5zjplbZPn/g1CG7srY/ywTw28hZP4=;
+  b=hBpdQpOPyGNC/hTnGMm0rhGBkyKLfdmOfsiYU65M8l/mJuvqrr/8/b92
+   YrsqFqolGmf8Bowb0C9eDwltgTq1EBfDIgndBMUj1pDsGI3dw6Du0vqWZ
+   v4glCFcmf2j0CvJyYTo6R/8RnXjdZDnXpkEKhHjpd57SUHs+EOA5xbl7g
+   BFagQ288FNh1j2dw9klOFQ5HqwKxdrL7OHfdBHq51hkQ/HNFftgY9eIuG
+   KrTM4fzb81TamIw4sgcm9YYpOLwheOiqKbBriZsL1wBbhemitSPg0nR8j
+   SudIZNw0eWE8JcTzfYvoEi7yXFy11W/+nS8YIbTnPQ9K0JsVhDa15eF8I
+   g==;
+X-CSE-ConnectionGUID: vGlwnIciRYmw15K/svAM2Q==
+X-CSE-MsgGUID: kLyVtZgmSbaNXE0vUOi3Rw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12199729"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8627223"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:47:28 -0700
-X-CSE-ConnectionGUID: xtaZPBqoSAevNZXFit0PIQ==
-X-CSE-MsgGUID: MH52zZHIQCq/c67iw5UQkw==
+   d="scan'208";a="12199729"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:51:56 -0700
+X-CSE-ConnectionGUID: FGd5+Cl8Q7SvwZlk+ibSEg==
+X-CSE-MsgGUID: m7b0yhK+TE+8bPkB7irrig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21328579"
+   d="scan'208";a="25846746"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.34.215]) ([10.212.34.215])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:47:28 -0700
-Message-ID: <dcf61e50-2a56-4e1e-a21d-c887e3c07427@intel.com>
-Date: Fri, 12 Apr 2024 10:47:27 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:51:55 -0700
+Message-ID: <c4e473bc-aa4e-4cb2-aca2-e96a75386a7a@intel.com>
+Date: Fri, 12 Apr 2024 10:51:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,91 +52,157 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] cxl/core/regs: Add rcd_regs initialization at
- __rcrb_to_component()
+Subject: Re: [PATCH v5 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
+ link status
 To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
  kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org
 Cc: y-goto@fujitsu.com, linux-pci@vger.kernel.org, mj@ucw.cz,
  dan.j.williams@intel.com
 References: <20240412070715.16160-1-kobayashi.da-06@fujitsu.com>
- <20240412070715.16160-2-kobayashi.da-06@fujitsu.com>
+ <20240412070715.16160-3-kobayashi.da-06@fujitsu.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240412070715.16160-2-kobayashi.da-06@fujitsu.com>
+In-Reply-To: <20240412070715.16160-3-kobayashi.da-06@fujitsu.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 4/12/24 12:07 AM, Kobayashi,Daisuke wrote:
-> Add rcd_regs and its initialization at __rcrb_to_component() to cache
-> the cxl1.1 device link status information. Reduce access to the memory
-> map area where the RCRB is located by caching the cxl1.1 device
-> link status information.
+> Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+> 
+> In CXL1.1, the link status of the device is included in the RCRB mapped to
+> the memory mapped register area. Critically, that arrangement makes the
+> link status and control registers invisible to existing PCI user tooling.
+> 
+> Export those registers via sysfs with the expectation that PCI user
+> tooling will alternatively look for these sysfs files when attempting to
+> access to these CXL 1.1 endpoints registers.
 > 
 > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+
+Minor nit. Maybe arrange the variable declaration in reverse xmas tree format. Otherwise LGTM.
+
 > ---
->  drivers/cxl/core/regs.c | 16 ++++++++++++++++
->  drivers/cxl/cxl.h       |  3 +++
->  2 files changed, 19 insertions(+)
+>  drivers/cxl/pci.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 372786f80955..e0e96be0ca7d 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	u32 bar0, bar1;
->  	u16 cmd;
->  	u32 id;
-> +	u16 offset;
-> +	u32 cap_hdr;
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 2ff361e756d6..b2d8198ab532 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -786,6 +786,103 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	return 0;
+>  }
 >  
->  	if (which == CXL_RCRB_UPSTREAM)
->  		rcrb += SZ_4K;
-> @@ -537,6 +539,20 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	cmd = readw(addr + PCI_COMMAND);
->  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
->  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> +	offset = FIELD_GET(GENMASK(7, 0), readw(addr + PCI_CAPABILITY_LIST));
-
-Maybe
-#define PCI_RCRB_CAPABILITY_LIST_ID_MASK	GENMASK(7, 0)
-
-> +	cap_hdr = readl(addr + offset);
-> +	while ((cap_hdr & GENMASK(7, 0)) != PCI_CAP_ID_EXP) {
-
-while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr) != PCI_CAP_ID_EXP) {
-
-Also I think you need to add a check and see if the loop went beyond SZ_4K that was mapped.
-
-> +		offset = (cap_hdr >> 8) & GENMASK(7, 0);
-
-#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8);
-offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-> +		if (offset == 0)
-> +			break;
-> +		cap_hdr = readl(addr + offset);
-> +	}
-> +	if (offset) {
-> +		ri->rcd_lnkcap = readl(addr + offset + PCI_EXP_LNKCAP);
-> +		ri->rcd_lnkctrl = readl(addr + offset + PCI_EXP_LNKCTL);
-> +		ri->rcd_lnkstatus = readl(addr + offset + PCI_EXP_LNKSTA);
-> +	}
+> +static ssize_t rcd_link_cap_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
 > +
->  	iounmap(addr);
->  	release_mem_region(rcrb, SZ_4K);
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 003feebab79b..2dc827c301a1 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -647,6 +647,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
->  struct cxl_rcrb_info {
->  	resource_size_t base;
->  	u16 aer_cap;
-> +	u16 rcd_lnkctrl;
-> +	u16 rcd_lnkstatus;
-> +	u32 rcd_lnkcap;
->  };
->  
->  /**
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_cap);
+> +
+> +static ssize_t rcd_link_ctrl_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
+> +
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_ctrl);
+> +
+> +static ssize_t rcd_link_status_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
+> +
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_status);
+> +
+> +static struct attribute *cxl_rcd_attrs[] = {
+> +		&dev_attr_rcd_link_cap.attr,
+> +		&dev_attr_rcd_link_ctrl.attr,
+> +		&dev_attr_rcd_link_status.attr,
+> +		NULL
+> +};
+> +
+> +static umode_t cxl_rcd_visible(struct kobject *kobj,
+> +					  struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (is_cxl_restricted(pdev))
+> +		return a->mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group cxl_rcd_group = {
+> +		.attrs = cxl_rcd_attrs,
+> +		.is_visible = cxl_rcd_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(cxl_rcd);
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> @@ -969,6 +1066,7 @@ static struct pci_driver cxl_pci_driver = {
+>  	.id_table		= cxl_mem_pci_tbl,
+>  	.probe			= cxl_pci_probe,
+>  	.err_handler		= &cxl_error_handlers,
+> +	.dev_groups		= cxl_rcd_groups,
+>  	.driver	= {
+>  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+>  	},
