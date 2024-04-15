@@ -1,818 +1,1048 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A06F811E7
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Apr 2024 20:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BC155A59
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Apr 2024 20:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713211570; cv=none; b=tfVn+qIXiAw+1hyg0o6KXuAgfLXY502WZ0PgTxrNVAKVUwAn6tX8E399YZFpYaiUomhe/s5jX//rIYUNgC5fMQ31wPFh5y+mosdQ/aY8rOFc4hOYSzViZgU3a4coSk8qUYyfEZl8jCYeoGkx2rAF9MFBLdLfgAFr4Myficl/628=
+	t=1713211810; cv=none; b=lxneCBtKtm+SfKUavSoNa4ZnWcJFfSB6Zd5fBN9wSJr/+TAnZYKsINi3LksCLMTyMK6aDrWeaH/Xl9o39UkYlYyzf5O5iY93y0YygCLlVvKdgDFId62ioXZXHVmizN7Wy5L31d9bp0mtvlNdBnwHYpqspZQPbtPHFrt0KcMihZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713211570; c=relaxed/simple;
-	bh=jY1ZAUqk+R+8UKe8jNxz0M1NGQQv1d6iNu3Dgjsy30A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8AMp11o+2ZjXPlFrbbMgDpyRmgIXLjTeh9gxMkjst/rYsHuedNJK851SvyMTGQoy/CeJ6UV5RQS0RopPeS+gzGxdgL0EyK2gzxc+XlvmEE9x5LOQjc+cavmfrSBZuWWFabrPoZoQCKD/xha+AQZj45nzsrrO5UfMt6fhs2Xpic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYFMRtSy; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713211810; c=relaxed/simple;
+	bh=za7Dz81dttLU409DPg/wI4vGeboA5c4n/f6TPSOQoUk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Di+QXIXMOFdkGh4F7eiTQLKkMG3geY4sfTJI50WTSMUnGB7kxAsJUDAnC0G4NyUTVk6PkpVadVGxXJ6IDNGp86su/Eb+y0l6EE3EwEO8ACN4PFRP7TBpQOytiKKr+6cS8ukzr8IAY60CbNx5soVENGLLI6VfuYDcJIK6YdmLI+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TYILRhGc; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYFMRtSy"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-61587aa956eso35202057b3.1
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Apr 2024 13:06:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TYILRhGc"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso3557701276.3
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Apr 2024 13:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713211567; x=1713816367; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+V4ULxOsbfe4Bop6wwvO6323KCfy0Qka7Ncs2xzsRE=;
-        b=iYFMRtSyE9x1940CG4hU/beY1CeigVjewnCaCLS+cu+bv/SqCfuLjU56f7Xml17HCK
-         v+jEGOLmzDPDJ8VqjqjD/xT10q5McpFqQj3b0lCWmd7vsw5DpdVaIIcKNts3rqnWcYa2
-         uQ/jqsvZb8gUrV3kY945N1dcKngZcNBQ1YsZbVNPPnmsOx4XslBVF744Xq0g15cXbOZO
-         uMW3fH53PVmuuMFbvXEL8hhiFdQnAbF+xMRoq94+oVO809ymCxgyZVBCnrfrCG51CiI/
-         he6ZSBfG3MwTeqUJq56Ebxf39EfBgevDhqNkbcEPnXHbNN94S8SN2UxJW38B5XHnlO+r
-         xYAA==
+        d=broadcom.com; s=google; t=1713211807; x=1713816607; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PEDwjA566podZW58zVScNjlrRRzqIfoRHh/oCMg7Vpo=;
+        b=TYILRhGcgVLBtGU2n6/a3R3lSRtvtBwCl09BMdlJMriQaupniARx9V0UzjEd33Ewuk
+         6JsKiTBJc3JarselLJhmxWxJjsr0Q1OQuhTDbV2puff6iEmOuGh65CTl1DNuoSwHN58A
+         +CxBBpD+MoEi3Om4Wh3ZUnlnrdvF02vViWslg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713211567; x=1713816367;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W+V4ULxOsbfe4Bop6wwvO6323KCfy0Qka7Ncs2xzsRE=;
-        b=QG/PmUD4d9sofGPGvMoSUxrdLSj4qhkG34snJx6PbU43DBbeLYqaR3NcVd6PWEqDRX
-         fbgCAk8EaH2+iXX4ZxK8E9/+NGiEVBx5oIRuNLdPyWJaXBAsjps+nvV87ohYAIlViaUo
-         yamu2VpmhHiuQzv+wxiRXpsy6IMjO6QCwyxCI3NIfvBKL/MrIaThijxyYst17OUvBORV
-         16bv+p+cCQvTErEf7j9PSl/CIU/EXnSw3WREqbb5VM0iezFAfSXYakLeTm2txW7QGMyp
-         9c2wgteb9rGaBDCF+lF7oyFwlDXY8j7CBRp9701lyz3XnjhjT7sYiKTpids4fO3gDXyM
-         MQUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVXTXs3gxrNteoE2Bne+N6l8oWo/lawoJRnoNzf5DF5BK4Diij2S3S/R9Zja3OIcQD6SCYq8NyLvie56+YdFaSVxssheFunkyB
-X-Gm-Message-State: AOJu0YyMkG2F8j/RhM0G+uUKkI6j+bfYQZFAtBh/3SgFDmvBhcDcFbYp
-	HZGrKXS5mSQMel8RI3dk0s2ZMxyXN/y278Pd2HLYFCEIdSumIeDS
-X-Google-Smtp-Source: AGHT+IEg+EEWpfl099lKVZdKmQjZRenng/lAYUIZoyovn+HwcoWSF2C6ufG5MPKMq0vJoow/TVxtjg==
-X-Received: by 2002:a81:bc13:0:b0:61a:e4d2:b707 with SMTP id a19-20020a81bc13000000b0061ae4d2b707mr1736505ywi.0.1713211566896;
-        Mon, 15 Apr 2024 13:06:06 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id k11-20020a81ed0b000000b00617cd7bd3a9sm2147907ywm.109.2024.04.15.13.06.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 13:06:06 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Mon, 15 Apr 2024 13:06:04 -0700
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org, gregory.price@memverge.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	nmtadam.samsung@gmail.com, jim.harris@samsung.com,
-	Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v6 09/12] hw/cxl/events: Add qmp interfaces to
- add/release dynamic capacity extents
-Message-ID: <Zh2IrA8TQDJn1ft_@debian>
-References: <20240325190339.696686-1-nifan.cxl@gmail.com>
- <20240325190339.696686-10-nifan.cxl@gmail.com>
- <20240405131856.000025e7@Huawei.com>
- <ZhWym2yHoh6YIaXj@debian>
- <20240410204911.0000590b@Huawei.com>
+        d=1e100.net; s=20230601; t=1713211807; x=1713816607;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PEDwjA566podZW58zVScNjlrRRzqIfoRHh/oCMg7Vpo=;
+        b=VRH3qXKxWZaWE1EnYBmiEvywAzys7u29Z6YAEcraYGud7CzlJBOyBwdjadc85vS15L
+         Rq+Zg/orM/fw5v6p2cwHBsoByPnBjK2CLfarhe1bahJi4gLT4y6gnaaddv4xSIqxPFIL
+         GENhvpOJ6j1GLoJPmOR+P5BaqOor94Of0LjzJrLRU0uyvnXxj93+BQ8wFqm95lwY2RU6
+         MIu5VvOaNZWSnSiZtYtUWapouKNx8xWKD1zc9l6aZZZ8q/8b7cOnxy+VWHJpTXVtDqmR
+         4ho9w1nv8TmixwNaD9wehTx0/frGlKNNcexzrWKXCXUCSUyLqADyBell6k/ESwwHwzjz
+         ZmnA==
+X-Gm-Message-State: AOJu0Yz1P7TedBOQJbuYt6Ps56Jxgk4htPlNYaQ1/1glygPjp5EQNwe/
+	KxRDhnxufV5Y7rbPTaNVIDJ2RZ+zY7w/qWNY4KKt0u/hKggootxazUNrfFsOJ9Ii/lQQ1wwOerF
+	0Ls1mkvR8bcDGHN6IgTimzEQS39Ha34iY6wvxUHnkm3YwARChMuQtSRlc+lPhVvXmp/Az+TwEOw
+	a8X+84IwwUlsxXluNx7e5qYw==
+X-Google-Smtp-Source: AGHT+IGS4hUzD3U+v6sw/ea3rjrfR5ilgNlwwAYlNCgqVHrL9EM+j3XrFvIGGipfsMogNfMJFgQELAR4fxwn0m1ykOk=
+X-Received: by 2002:a05:6902:2408:b0:dc7:8c3a:4e42 with SMTP id
+ dr8-20020a056902240800b00dc78c3a4e42mr11888592ybb.30.1713211806317; Mon, 15
+ Apr 2024 13:10:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410204911.0000590b@Huawei.com>
+References: <20240321174423.00007e0d@Huawei.com> <66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240410124517.000075f2@Huawei.com>
+In-Reply-To: <20240410124517.000075f2@Huawei.com>
+From: Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>
+Date: Mon, 15 Apr 2024 14:09:38 -0600
+Message-ID: <CACX_a4XGLgmQC3cqCmDJnrcnfjQRW4EmV8BZTCC=MgzwYwdhXA@mail.gmail.com>
+Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, Brett Henning <brett.henning@broadcom.com>, 
+	Harold Johnson <harold.johnson@broadcom.com>, 
+	Sumanesh Samanta <sumanesh.samanta@broadcom.com>, linux-kernel@vger.kernel.org, 
+	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, linuxarm@huawei.com, linux-api@vger.kernel.org, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Natu, Mahesh" <mahesh.natu@intel.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000002f52ec061628354d"
 
+--0000000000002f52ec061628354d
+Content-Type: multipart/alternative; boundary="000000000000243380061628359f"
 
-From ce75be83e915fbc4dd6e489f976665b81174002b Mon Sep 17 00:00:00 2001
-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 20 Feb 2024 09:48:31 -0800
-Subject: [PATCH 09/13] hw/cxl/events: Add qmp interfaces to add/release
- dynamic capacity extents
+--000000000000243380061628359f
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To simulate FM functionalities for initiating Dynamic Capacity Add
-(Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL spec
-r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces to issue
-add/release dynamic capacity extents requests.
+Hello,
 
-With the change, we allow to release an extent only when its DPA range
-is contained by a single accepted extent in the device. That is to say,
-extent superset release is not supported yet.
+>> We need guidance from the community.
 
-1. Add dynamic capacity extents:
+>> 1. Datacenter customers must be able to manage PCIe switches in-band.>> =
+2. Management of switches includes getting health, performance, and error t=
+elemetry.>> 3. These telemetry functions are not yet part of the CXL standa=
+rd>> 4. We built the CCI mailboxes into our PCIe switches per CXL spec and =
+developed our management scheme around them.>> >> If the Linux community do=
+es not allow a CXL spec-compliant switch to be>> managed via the CXL spec-d=
+efined CCI mailbox, then please guide us on>> the right approach. Please te=
+ll us how you propose we manage our switches>> in-band.
 
-For example, the command to add two continuous extents (each 128MiB long)
-to region 0 (starting at DPA offset 0) looks like below:
+I am still looking for your guidance. We need to be able to manage our
+switch via the CCI mailbox. We need to use vendor-defined commands per CXL
+spec.
 
-{ "execute": "qmp_capabilities" }
+You talked about whitelisting commands (allow-list) which we agreed to.
+Would you please confirm that you will allow the vendor-defined allow-list
+of commands?
 
-{ "execute": "cxl-add-dynamic-capacity",
-  "arguments": {
-      "path": "/machine/peripheral/cxl-dcd0",
-      "hid": 0,
-      "selection-policy": 2,
-      "region-id": 0,
-      "tag": "",
-      "extents": [
-      {
-          "offset": 0,
-          "len": 134217728
-      },
-      {
-          "offset": 134217728,
-          "len": 134217728
-      }
-      ]
-  }
-}
+Thank you
+Sreeni
 
-2. Release dynamic capacity extents:
+On Wed, Apr 10, 2024 at 5:45=E2=80=AFAM Jonathan Cameron <
+Jonathan.Cameron@huawei.com> wrote:
 
-For example, the command to release an extent of size 128MiB from region 0
-(DPA offset 128MiB) looks like below:
+> On Fri, 5 Apr 2024 17:04:34 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Hi Dan,
+>
+> > Jonathan Cameron wrote:
+> > > Hi All,
+> > >
+> > > This is has come up in a number of discussions both on list and in
+> private,
+> > > so I wanted to lay out a potential set of rules when deciding whether
+> or not
+> > > to provide a user space interface for a particular feature of CXL
+> Fabric
+> > > Management.  The intent is to drive discussion, not to simply tell
+> people
+> > > a set of rules.  I've brought this to the public lists as it's a Linu=
+x
+> kernel
+> > > policy discussion, not a standards one.
+> > >
+> > > Whilst I'm writing the RFC this my attempt to summarize a possible
+> > > position rather than necessarily being my personal view.
+> > >
+> > > It's a straw man - shoot at it!
+> > >
+> > > Not everyone in this discussion is familiar with relevant kernel or
+> CXL concepts
+> > > so I've provided more info than I normally would.
+> >
+> > Thanks for writing this up Jonathan!
+> >
+> > [..]
+> > > 2) Unfiltered userspace use of mailbox for Fabric Management - BMC
+> kernels
+> > >
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >
+> > > (This would just be a kernel option that we'd advise normal server
+> > > distributions not to turn on. Would be enabled by openBMC etc)
+> > >
+> > > This is fine - there is some work to do, but the switch-cci PCI drive=
+r
+> > > will hopefully be ready for upstream merge soon. There is no filterin=
+g
+> of
+> > > accesses. Think of this as similar to all the damage you can do via
+> > > MCTP from a BMC. Similarly it is likely that much of the complexity
+> > > of the actual commands will be left to user space tooling:
+> > > https://gitlab.com/jic23/cxl-fmapi-tests has some test examples.
+> > >
+> > > Whether Kconfig help text is strong enough to ensure this only gets
+> > > enabled for BMC targeted distros is an open question we can address
+> > > alongside an updated patch set.
+> >
+> > It is not clear to me that this material makes sense to house in
+> > drivers/ vs tools/ or even out-of-tree just for maintenance burden
+> > relief of keeping the universes separated. What does the Linux kernel
+> > project get out of carrying this in mainline alongside the inband code?
+>
+> I'm not sure what you mean by in band.  Aim here was to discuss
+> in-band drivers for switch CCI etc. Same reason from a kernel point of
+> view for why we include embedded drivers.  I'll interpret in band
+> as host driven and not inband as FM-API stuff.
+>
+> > I do think the mailbox refactoring to support non-CXL use cases is
+> > interesting, but only so far as refactoring is consumed for inband use
+> > cases like RAS API.
+>
+> If I read this right, I disagree with the 'only so far' bit.
+>
+> In all substantial ways we should support BMC use case of the Linux Kerne=
+l
+> at a similar level to how we support forms of Linux Distros.  It may
+> not be our target market as developers for particular parts of our
+> companies,
+> but we should not block those who want to support it.
+>
+> We should support them in drivers/ - maybe with example userspace code
+> in tools.  Linux distros on BMCs is a big market, there are a number
+> of different distros using (and in some cases contributing to) the
+> upstream kernel. Not everyone is using openBMC so there is not one
+> common place where downstream patches could be carried.
+> From a personal point of view, I like that for the same reasons that
+> I like there being multiple Linux sever focused distros. It's a sign
+> of a healthy ecosystem to have diverse options taking the mainline
+> kernel as their starting point.
+>
+> BMCs are just another embedded market, and like other embedded markets
+> we want to encourage upstream first etc.
+> openBMC has a policy on this:
+> https://github.com/openbmc/docs/blob/master/kernel-development.md
+> "The OpenBMC project maintains a kernel tree for use by the project.
+> The tree's general development policy is that code must be upstream
+> first." There are paths to bypass that for openBMC so it's a little
+> more relaxed than some enterprise distros (today, their policies used
+> to look very similar to this) but we should not be telling
+> them they need to carry support downstream.  If we are
+> going to tell them that, we need to be able to point at a major
+> sticking point for maintenance burden.  So far I don't see the
+> additional complexity as remotely close reaching that bar.
+>
+> So I think we do want switch-cci support and for that matter the equivale=
+nt
+> for MHDs in the upstream kernel.
+>
+> One place I think there is some wiggle room is the taint on use of raw
+> commands.  Leaving removal of that for BMC kernels as a patch they need
+> to carry downstream doesn't seem too burdensome. I'm sure they'll push
+> back if it is a problem for them!  So I think we can kick that question
+> into the future.
+>
+> Addressing maintenance burden, there is a question of where we split
+> the stack.  Ignore MHDs for now (I won't go into why in this forum...)
+>
+> The current proposal is (simplified to ignore some sharing in lookup code
+> etc
+> that I can rip out if we think it might be a long term problem)
+>
+>      _____________          _____________________
+>     |             |        |                     |
+>     | Switch CCI  |        |  Type 3 Driver stack|
+>     |_____________|        |_____________________|
+>            |___________________________|              Whatever GPU etc
+>                   _______|_______                   _______|______
+>                  |               |                 |              |
+>                  |  CXL MBOX     |                 | RAS API etc  |
+>                  |_______________|                 |______________|
+>                              |_____________________________|
+>                                            |
+>                                   _________|______
+>                                  |                |
+>                                  |   MMPT mbox    |
+>                                  |________________|
+>
+> Switch CCI Driver: PCI driver doing everything beyond the CXL mbox
+> specific bit.
+> Type 3 Stack: All the normal stack just with the CXL Mailbox specific
+> stuff factored
+>               out. Note we can move different amounts of shared logic in
+> here, but
+>               in essence it deals with the extra layer on top of the raw
+> MMPT mbox.
+> MMPT Mbox: Mailbox as per the PCI spec.
+> RAS API:   Shared RAS API specific infrastructure used by other drivers.
+>
+> If we see a significant maintenance burden, maybe we duplicate the CXL
+> specific
+> MBOX layer - I can see advantages in that as there is some stuff not
+> relevant
+> to the Switch CCI.  There will be some duplication of logic however such
+> as background command support (which is CXL only IIUC)  We can even use
+> a difference IOCTL number so the two can diverge if needed in the long ru=
+n.
+>
+> e.g. If it makes it easier to get upstream, we can merrily duplicated cod=
+e
+> so that only the bit common with RAS API etc is shared (assuming the
+> actually end up with MMPT, not the CXL mailbox which is what their curren=
+t
+> publicly available spec talks about and I assume is a pref MMPT left over=
+?)
+>
+>      _____________          _____________________
+>     |             |        |                     |
+>     | Switch CCI  |        |  Type 3 Driver stack|
+>     |_____________|        |_____________________|
+>            |                           |              Whatever GPU etc
+>     _______|_______             _______|_______        ______|_______
+>    |               |           |               |      |              |
+>    |  CXL MBOX     |           |  CXL MBOX     |      | RAS API etc  |
+>    |_______________|           |_______________|      |______________|
+>            |_____________________________|____________________|
+>                                          |
+>                                  ________|______
+>                                 |               |
+>                                 |   MMPT mbox   |
+>                                 |_______________|
+>
+>
+> > > (On to the one that the "debate" is about)
+> > >
+> > > 3) Unfiltered user space use of mailbox for Fabric Management - Distr=
+o
+> kernels
+> > >
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > (General purpose Linux Server Distro (Redhat, Suse etc))
+> > >
+> > > This is equivalent of RAW command support on CXL Type 3 memory device=
+s.
+> > > You can enable those in a distro kernel build despite the scary confi=
+g
+> > > help text, but if you use it the kernel is tainted. The result
+> > > of the taint is to add a flag to bug reports and print a big message
+> to say
+> > > that you've used a feature that might result in you shooting yourself
+> > > in the foot.
+> > >
+> > > The taint is there because software is not at first written to deal
+> with
+> > > everything that can happen smoothly (e.g. surprise removal) It's hard
+> > > to survive some of these events, so is never on the initial feature
+> list
+> > > for any bus, so this flag is just to indicate we have entered a world
+> > > where almost all bets are off wrt to stability.  We might not know wh=
+at
+> > > a command does so we can't assess the impact (and no one trusts vendo=
+r
+> > > commands to report affects right in the Command Effects Log - which
+> > > in theory tells you if a command can result problems).
+> >
+> > That is a secondary reason that the taint is there. Yes, it helps
+> > upstream not waste their time on bug reports from proprietary use cases=
+,
+> > but the effect of that is to make "raw" command mode unattractive for
+> > deploying solutions at scale. It clarifies that this interface is a
+> > debug-tool that enterprise environment need not worry about.
+> >
+> > The more salient reason for the taint, speaking only for myself as a
+> > Linux kernel community member not for $employer, is to encourage open
+> > collaboration. Take firmware-update for example that is a standard
+> > command with known side effects that is inaccessible via the ioctl()
+> > path. It is placed behind an ABI that is easier to maintain and reason
+> > about. Everyone has the firmware update tool if they have the 'cat'
+> > command. Distros appreciate the fact that they do not need ship yet
+> > another vendor device-update tool, vendors get free tooling and end
+> > users also appreciate one flow for all devices.
+> >
+> > As I alluded here [1], I am not against innovation outside of the
+> > specification, but it needs to be open, and it needs to plausibly becom=
+e
+> > if not a de jure standard at least a de facto standard.
+> >
+> > [1]:
+> https://lore.kernel.org/all/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei8ZkcmHnP=
+p3B0cw@mail.gmail.com/
+>
+> Agree with all this.
+>
+> >
+> > > A concern was raised about GAE/FAST/LDST tables for CXL Fabrics
+> > > (a r3.1 feature) but, as I understand it, these are intended for a
+> > > host to configure and should not have side effects on other hosts?
+> > > My working assumption is that the kernel driver stack will handle
+> > > these (once we catch up with the current feature backlog!) Currently
+> > > we have no visibility of what the OS driver stack for a fabrics will
+> > > actually look like - the spec is just the starting point for that.
+> > > (patches welcome ;)
+> > >
+> > > The various CXL upstream developers and maintainers may have
+> > > differing views of course, but my current understanding is we want
+> > > to support 1 and 2, but are very resistant to 3!
+> >
+> > 1, yes, 2, need to see the patches, and agree on 3.
+>
+> If we end up with top architecture of the diagrams above, 2 will look
+> pretty
+> similar to last version of the switch-cci patches.  So raw commands only =
++
+> taint.
+> Factoring out MMPT is another layer that doesn't make that much differenc=
+e
+> in
+> practice to this discussion. Good to have, but the reuse here would be on=
+e
+> layer
+> above that.
+>
+> Or we just say go for second proposed architecture and 0 impact on the
+> CXL specific code, just reuse of the MMPT layer.  I'd imagine people will
+> get
+> grumpy on code duplication (and we'll spend years rejecting patch sets th=
+at
+> try to share the cdoe) but there should be no maintenance burden as
+> a result.
+>
+> >
+> > > General Notes
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >
+> > > One side aspect of why we really don't like unfiltered userspace
+> access to any
+> > > of these devices is that people start building non standard hacks in
+> and we
+> > > lose the ecosystem advantages. Forcing a considered discussion +
+> patches
+> > > to let a particular command be supported, drives standardization.
+> >
+> > Like I said above, I think this is not a side aspect. It is fundamental
+> > to the viability Linux as a project. This project only works because
+> > organizations with competing goals realize they need some common
+> > infrastructure and that there is little to be gained by competing on th=
+e
+> > commons.
+> >
+> > >
+> https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei8Z=
+kcmHnPp3B0cw@mail.gmail.com/
+> > > provides some history on vendor specific extensions and why in genera=
+l
+> we
+> > > won't support them upstream.
+> >
+> > Oh, you linked my writeup... I will leave the commentary I added here i=
+n
+> case
+> > restating it helps.
+> >
+> > > To address another question raised in an earlier discussion:
+> > > Putting these Fabric Management interfaces behind guard rails of some
+> type
+> > > (e.g. CONFIG_IM_A_BMC_AND_CAN_MAKE_A_MESS) does not encourage the ris=
+k
+> > > of non standard interfaces, because we will be even less likely to
+> accept
+> > > those upstream!
+> > >
+> > > If anyone needs more details on any aspect of this please ask.
+> > > There are a lot of things involved and I've only tried to give a fair=
+ly
+> > > minimal illustration to drive the discussion. I may well have missed
+> > > something crucial.
+> >
+> > You captured it well, and this is open source so I may have missed
+> > something crucial as well.
+> >
+>
+> Thanks for detailed reply!
+>
+> Jonathan
+>
+>
+>
 
-{ "execute": "cxl-release-dynamic-capacity",
-  "arguments": {
-      "path": "/machine/peripheral/cxl-dcd0",
-      "hid": 0,
-      "flags": 1,
-      "region-id": 0,
-      "tag": "",
-      "extents": [
-      {
-          "offset": 134217728,
-          "len": 134217728
-      }
-      ]
-  }
-}
+--=20
+This electronic communication and the information and any files transmitted=
+=20
+with it, or attached to it, are confidential and are intended solely for=20
+the use of the individual or entity to whom it is addressed and may contain=
+=20
+information that is confidential, legally privileged, protected by privacy=
+=20
+laws, or otherwise restricted from disclosure to anyone else. If you are=20
+not the intended recipient or the person responsible for delivering the=20
+e-mail to the intended recipient, you are hereby notified that any use,=20
+copying, distributing, dissemination, forwarding, printing, or copying of=
+=20
+this e-mail is strictly prohibited. If you received this e-mail in error,=
+=20
+please return the e-mail to the sender, delete it from your computer, and=
+=20
+destroy any printed copy of it.
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
- hw/cxl/cxl-mailbox-utils.c  |  65 ++++++--
- hw/mem/cxl_type3.c          | 310 +++++++++++++++++++++++++++++++++++-
- hw/mem/cxl_type3_stubs.c    |  20 +++
- include/hw/cxl/cxl_device.h |  22 +++
- include/hw/cxl/cxl_events.h |  18 +++
- qapi/cxl.json               |  69 ++++++++
- 6 files changed, 491 insertions(+), 13 deletions(-)
+--000000000000243380061628359f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index cd9092b6bf..839ae836a1 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1405,7 +1405,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
-  * Check whether any bit between addr[nr, nr+size) is set,
-  * return true if any bit is set, otherwise return false
-  */
--static bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-+bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-                               unsigned long size)
- {
-     unsigned long res = find_next_bit(addr, size + nr, nr);
-@@ -1444,7 +1444,7 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len)
-     return NULL;
- }
- 
--static void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-+void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-                                              uint64_t dpa,
-                                              uint64_t len,
-                                              uint8_t *tag,
-@@ -1470,6 +1470,44 @@ void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
-     g_free(extent);
- }
- 
-+/*
-+ * Add a new extent to the extent "group" if group exists;
-+ * otherwise, create a new group
-+ * Return value: return the group where the extent is inserted.
-+ */
-+CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-+                                                    uint64_t dpa,
-+                                                    uint64_t len,
-+                                                    uint8_t *tag,
-+                                                    uint16_t shared_seq)
-+{
-+    if (!group) {
-+        group = g_new0(CXLDCExtentGroup, 1);
-+        QTAILQ_INIT(&group->list);
-+    }
-+    cxl_insert_extent_to_extent_list(&group->list, dpa, len,
-+                                     tag, shared_seq);
-+    return group;
-+}
-+
-+void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
-+                                       CXLDCExtentGroup *group)
-+{
-+    QTAILQ_INSERT_TAIL(list, group, node);
-+}
-+
-+void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
-+{
-+    CXLDCExtent *ent, *ent_next;
-+    CXLDCExtentGroup *group = QTAILQ_FIRST(list);
-+
-+    QTAILQ_REMOVE(list, group, node);
-+    QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
-+        cxl_remove_extent_from_extent_list(&group->list, ent);
-+    }
-+    g_free(group);
-+}
-+
- /*
-  * CXL r3.1 Table 8-168: Add Dynamic Capacity Response Input Payload
-  * CXL r3.1 Table 8-170: Release Dynamic Capacity Input Payload
-@@ -1541,6 +1579,7 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
- {
-     uint32_t i;
-     CXLDCExtent *ent;
-+    CXLDCExtentGroup *ext_group;
-     uint64_t dpa, len;
-     Range range1, range2;
- 
-@@ -1551,9 +1590,13 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
-         range_init_nofail(&range1, dpa, len);
- 
-         /*
--         * TODO: once the pending extent list is added, check against
--         * the list will be added here.
-+         * The host-accepted DPA range must be contained by the first extent
-+         * group in the pending list
-          */
-+        ext_group = QTAILQ_FIRST(&ct3d->dc.extents_pending);
-+        if (!cxl_extents_contains_dpa_range(&ext_group->list, dpa, len)) {
-+            return CXL_MBOX_INVALID_PA;
-+        }
- 
-         /* to-be-added range should not overlap with range already accepted */
-         QTAILQ_FOREACH(ent, &ct3d->dc.extents, node) {
-@@ -1588,26 +1631,26 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-     CXLRetCode ret;
- 
-     if (in->num_entries_updated == 0) {
--        /*
--         * TODO: once the pending list is introduced, extents in the beginning
--         * will get wiped out.
--         */
-+        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-         return CXL_MBOX_SUCCESS;
-     }
- 
-     /* Adding extents causes exceeding device's extent tracking ability. */
-     if (in->num_entries_updated + ct3d->dc.total_extent_count >
-         CXL_NUM_EXTENTS_SUPPORTED) {
-+        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-         return CXL_MBOX_RESOURCES_EXHAUSTED;
-     }
- 
-     ret = cxl_detect_malformed_extent_list(ct3d, in);
-     if (ret != CXL_MBOX_SUCCESS) {
-+        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-         return ret;
-     }
- 
-     ret = cxl_dcd_add_dyn_cap_rsp_dry_run(ct3d, in);
-     if (ret != CXL_MBOX_SUCCESS) {
-+        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-         return ret;
-     }
- 
-@@ -1617,11 +1660,9 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
- 
-         cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
-         ct3d->dc.total_extent_count += 1;
--        /*
--         * TODO: we will add a pending extent list based on event log record
--         * and process the list accordingly here.
--         */
-     }
-+    /* Remove the first extent group in the pending list*/
-+    cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
- 
-     return CXL_MBOX_SUCCESS;
- }
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 2d4b6242f0..8d99b27b27 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -667,6 +667,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-         ct3d->dc.total_capacity += region->len;
-     }
-     QTAILQ_INIT(&ct3d->dc.extents);
-+    QTAILQ_INIT(&ct3d->dc.extents_pending);
- 
-     return true;
- }
-@@ -674,10 +675,19 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
- static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
- {
-     CXLDCExtent *ent, *ent_next;
-+    CXLDCExtentGroup *group, *group_next;
- 
-     QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node, ent_next) {
-         cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
-     }
-+
-+    QTAILQ_FOREACH_SAFE(group, &ct3d->dc.extents_pending, node, group_next) {
-+        QTAILQ_REMOVE(&ct3d->dc.extents_pending, group, node);
-+        QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
-+            cxl_remove_extent_from_extent_list(&group->list, ent);
-+        }
-+        g_free(group);
-+    }
- }
- 
- static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-@@ -1442,7 +1452,6 @@ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
-         return CXL_EVENT_TYPE_FAIL;
-     case CXL_EVENT_LOG_FATAL:
-         return CXL_EVENT_TYPE_FATAL;
--/* DCD not yet supported */
-     default:
-         return -EINVAL;
-     }
-@@ -1693,6 +1702,305 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-     }
- }
- 
-+/* CXL r3.1 Table 8-50: Dynamic Capacity Event Record */
-+static const QemuUUID dynamic_capacity_uuid = {
-+    .data = UUID(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f,
-+                 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
-+};
-+
-+typedef enum CXLDCEventType {
-+    DC_EVENT_ADD_CAPACITY = 0x0,
-+    DC_EVENT_RELEASE_CAPACITY = 0x1,
-+    DC_EVENT_FORCED_RELEASE_CAPACITY = 0x2,
-+    DC_EVENT_REGION_CONFIG_UPDATED = 0x3,
-+    DC_EVENT_ADD_CAPACITY_RSP = 0x4,
-+    DC_EVENT_CAPACITY_RELEASED = 0x5,
-+} CXLDCEventType;
-+
-+/*
-+ * Check whether the range [dpa, dpa + len - 1] has overlaps with extents in
-+ * the list.
-+ * Return value: return true if has overlaps; otherwise, return false
-+ */
-+static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-+                                           uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtent *ent;
-+    Range range1, range2;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    range_init_nofail(&range1, dpa, len);
-+    QTAILQ_FOREACH(ent, list, node) {
-+        range_init_nofail(&range2, ent->start_dpa, ent->len);
-+        if (range_overlaps_range(&range1, &range2)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+/*
-+ * Check whether the range [dpa, dpa + len - 1] is contained by extents in
-+ * the list.
-+ * Will check multiple extents containment once superset release is added.
-+ * Return value: return true if range is contained; otherwise, return false
-+ */
-+bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-+                                    uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtent *ent;
-+    Range range1, range2;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    range_init_nofail(&range1, dpa, len);
-+    QTAILQ_FOREACH(ent, list, node) {
-+        range_init_nofail(&range2, ent->start_dpa, ent->len);
-+        if (range_contains_range(&range2, &range1)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-+                                                uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtentGroup *group;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    QTAILQ_FOREACH(group, list, node) {
-+        if (cxl_extents_overlaps_dpa_range(&group->list, dpa, len)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+/*
-+ * The main function to process dynamic capacity event with extent list.
-+ * Currently DC extents add/release requests are processed.
-+ */
-+static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
-+        uint16_t hid, CXLDCEventType type, uint8_t rid,
-+        CXLDCExtentRecordList *records, Error **errp)
-+{
-+    Object *obj;
-+    CXLEventDynamicCapacity dCap = {};
-+    CXLEventRecordHdr *hdr = &dCap.hdr;
-+    CXLType3Dev *dcd;
-+    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
-+    uint32_t num_extents = 0;
-+    CXLDCExtentRecordList *list;
-+    CXLDCExtentGroup *group = NULL;
-+    g_autofree CXLDCExtentRaw *extents = NULL;
-+    uint8_t enc_log = CXL_EVENT_TYPE_DYNAMIC_CAP;
-+    uint64_t dpa, offset, len, block_size;
-+    g_autofree unsigned long *blk_bitmap = NULL;
-+    int i;
-+
-+    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve CXL type 3 device");
-+        return;
-+    }
-+
-+    dcd = CXL_TYPE3(obj);
-+    if (!dcd->dc.num_regions) {
-+        error_setg(errp, "No dynamic capacity support from the device");
-+        return;
-+    }
-+
-+
-+    if (rid >= dcd->dc.num_regions) {
-+        error_setg(errp, "region id is too large");
-+        return;
-+    }
-+    block_size = dcd->dc.regions[rid].block_size;
-+    blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
-+
-+    /* Sanity check and count the extents */
-+    list = records;
-+    while (list) {
-+        offset = list->value->offset;
-+        len = list->value->len;
-+        dpa = offset + dcd->dc.regions[rid].base;
-+
-+        if (len == 0) {
-+            error_setg(errp, "extent with 0 length is not allowed");
-+            return;
-+        }
-+
-+        if (offset % block_size || len % block_size) {
-+            error_setg(errp, "dpa or len is not aligned to region block size");
-+            return;
-+        }
-+
-+        if (offset + len > dcd->dc.regions[rid].len) {
-+            error_setg(errp, "extent range is beyond the region end");
-+            return;
-+        }
-+
-+        /* No duplicate or overlapped extents are allowed */
-+        if (test_any_bits_set(blk_bitmap, offset / block_size,
-+                              len / block_size)) {
-+            error_setg(errp, "duplicate or overlapped extents are detected");
-+            return;
-+        }
-+        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
-+
-+        if (type == DC_EVENT_RELEASE_CAPACITY) {
-+            if (cxl_extent_groups_overlaps_dpa_range(&dcd->dc.extents_pending,
-+                                                     dpa, len)) {
-+                error_setg(errp,
-+                           "cannot release extent with pending DPA range");
-+                return;
-+            }
-+            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
-+                error_setg(errp,
-+                           "cannot release extent with non-existing DPA range");
-+                return;
-+            }
-+        } else if (type == DC_EVENT_ADD_CAPACITY) {
-+            if (cxl_extents_overlaps_dpa_range(&dcd->dc.extents, dpa, len)) {
-+                error_setg(errp,
-+                           "cannot add DPA already accessible  to the same LD");
-+                return;
-+            }
-+        }
-+        list = list->next;
-+        num_extents++;
-+    }
-+
-+    if (num_extents > 1) {
-+        error_setg(errp,
-+                   "TODO: remove the check once kernel support More flag");
-+        return;
-+    }
-+
-+    /* Create extent list for event being passed to host */
-+    i = 0;
-+    list = records;
-+    extents = g_new0(CXLDCExtentRaw, num_extents);
-+    while (list) {
-+        offset = list->value->offset;
-+        len = list->value->len;
-+        dpa = dcd->dc.regions[rid].base + offset;
-+
-+        extents[i].start_dpa = dpa;
-+        extents[i].len = len;
-+        memset(extents[i].tag, 0, 0x10);
-+        extents[i].shared_seq = 0;
-+        if (type == DC_EVENT_ADD_CAPACITY) {
-+            group = cxl_insert_extent_to_extent_group(group,
-+                                                      extents[i].start_dpa,
-+                                                      extents[i].len,
-+                                                      extents[i].tag,
-+                                                      extents[i].shared_seq);
-+        }
-+
-+        list = list->next;
-+        i++;
-+    }
-+    if (group) {
-+        cxl_extent_group_list_insert_tail(&dcd->dc.extents_pending, group);
-+    }
-+
-+    /*
-+     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
-+     *
-+     * All Dynamic Capacity event records shall set the Event Record Severity
-+     * field in the Common Event Record Format to Informational Event. All
-+     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
-+     * Event Log.
-+     */
-+    cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
-+                            cxl_device_get_timestamp(&dcd->cxl_dstate));
-+
-+    dCap.type = type;
-+    /* FIXME: for now, validity flag is cleared */
-+    dCap.validity_flags = 0;
-+    stw_le_p(&dCap.host_id, hid);
-+    /* only valid for DC_REGION_CONFIG_UPDATED event */
-+    dCap.updated_region_id = 0;
-+    dCap.flags = 0;
-+    for (i = 0; i < num_extents; i++) {
-+        memcpy(&dCap.dynamic_capacity_extent, &extents[i],
-+               sizeof(CXLDCExtentRaw));
-+
-+        if (i < num_extents - 1) {
-+            /* Set "More" flag */
-+            dCap.flags |= BIT(0);
-+        }
-+
-+        if (cxl_event_insert(&dcd->cxl_dstate, enc_log,
-+                             (CXLEventRecordRaw *)&dCap)) {
-+            cxl_event_irq_assert(dcd);
-+        }
-+    }
-+}
-+
-+void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t hid,
-+                                  uint8_t sel_policy, uint8_t region_id,
-+                                  const char *tag,
-+                                  CXLDCExtentRecordList  *records,
-+                                  Error **errp)
-+{
-+    enum {
-+        CXL_SEL_POLICY_FREE,
-+        CXL_SEL_POLICY_CONTIGUOUS,
-+        CXL_SEL_POLICY_PRESCRIPTIVE,
-+        CXL_SEL_POLICY_ENABLESHAREDACCESS,
-+    };
-+    switch (sel_policy) {
-+    case CXL_SEL_POLICY_PRESCRIPTIVE:
-+        qmp_cxl_process_dynamic_capacity_prescriptive(path, hid,
-+                                                      DC_EVENT_ADD_CAPACITY,
-+                                                      region_id, records, errp);
-+        break;
-+    default:
-+        error_setg(errp, "Selection policy not supported");
-+        break;
-+    }
-+}
-+
-+#define REMOVAL_POLICY_MASK 0xf
-+#define FORCED_REMOVAL_BIT BIT(4)
-+
-+void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t hid,
-+                                      uint8_t flags, uint8_t region_id,
-+                                      const char *tag,
-+                                      CXLDCExtentRecordList  *records,
-+                                      Error **errp)
-+{
-+    CXLDCEventType type = DC_EVENT_RELEASE_CAPACITY;
-+
-+    if (flags & FORCED_REMOVAL_BIT) {
-+        /* TODO: enable forced removal in the future */
-+        type = DC_EVENT_FORCED_RELEASE_CAPACITY;
-+        error_setg(errp, "Forced removal not supported yet");
-+        return;
-+    }
-+
-+    switch (flags & REMOVAL_POLICY_MASK) {
-+    case 1:
-+        qmp_cxl_process_dynamic_capacity_prescriptive(path, hid, type,
-+                                                      region_id, records, errp);
-+        break;
-+    default:
-+        error_setg(errp, "Removal policy not supported");
-+        break;
-+    }
-+}
-+
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index 3e1851e32b..810685e0d5 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -67,3 +67,23 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
- {
-     error_setg(errp, "CXL Type 3 support is not compiled in");
- }
-+
-+void qmp_cxl_add_dynamic_capacity(const char *path,
-+                                  uint16_t hid,
-+                                  uint8_t sel_policy,
-+                                  uint8_t region_id,
-+                                  const char *tag,
-+                                  CXLDCExtentRecordList  *records,
-+                                  Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-+
-+void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t hid,
-+                                      uint8_t flags, uint8_t region_id,
-+                                      const char *tag,
-+                                      CXLDCExtentRecordList  *records,
-+                                      Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index df3511e91b..c69ff6b5de 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -443,6 +443,12 @@ typedef struct CXLDCExtent {
- } CXLDCExtent;
- typedef QTAILQ_HEAD(, CXLDCExtent) CXLDCExtentList;
- 
-+typedef struct CXLDCExtentGroup {
-+    CXLDCExtentList list;
-+    QTAILQ_ENTRY(CXLDCExtentGroup) node;
-+} CXLDCExtentGroup;
-+typedef QTAILQ_HEAD(, CXLDCExtentGroup) CXLDCExtentGroupList;
-+
- typedef struct CXLDCRegion {
-     uint64_t base;       /* aligned to 256*MiB */
-     uint64_t decode_len; /* aligned to 256*MiB */
-@@ -494,6 +500,7 @@ struct CXLType3Dev {
-          */
-         uint64_t total_capacity; /* 256M aligned */
-         CXLDCExtentList extents;
-+        CXLDCExtentGroupList extents_pending;
-         uint32_t total_extent_count;
-         uint32_t ext_list_gen_seq;
- 
-@@ -555,4 +562,19 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len);
- 
- void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
-                                         CXLDCExtent *extent);
-+void cxl_insert_extent_to_extent_list(CXLDCExtentList *list, uint64_t dpa,
-+                                      uint64_t len, uint8_t *tag,
-+                                      uint16_t shared_seq);
-+bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-+                       unsigned long size);
-+bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-+                                    uint64_t dpa, uint64_t len);
-+CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-+                                                    uint64_t dpa,
-+                                                    uint64_t len,
-+                                                    uint8_t *tag,
-+                                                    uint16_t shared_seq);
-+void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
-+                                       CXLDCExtentGroup *group);
-+void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
- #endif
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index 5170b8dbf8..38cadaa0f3 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -166,4 +166,22 @@ typedef struct CXLEventMemoryModule {
-     uint8_t reserved[0x3d];
- } QEMU_PACKED CXLEventMemoryModule;
- 
-+/*
-+ * CXL r3.1 section Table 8-50: Dynamic Capacity Event Record
-+ * All fields little endian.
-+ */
-+typedef struct CXLEventDynamicCapacity {
-+    CXLEventRecordHdr hdr;
-+    uint8_t type;
-+    uint8_t validity_flags;
-+    uint16_t host_id;
-+    uint8_t updated_region_id;
-+    uint8_t flags;
-+    uint8_t reserved2[2];
-+    uint8_t dynamic_capacity_extent[0x28]; /* defined in cxl_device.h */
-+    uint8_t reserved[0x18];
-+    uint32_t extents_avail;
-+    uint32_t tags_avail;
-+} QEMU_PACKED CXLEventDynamicCapacity;
-+
- #endif /* CXL_EVENTS_H */
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 8cc4c72fa9..8cdcfce708 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -361,3 +361,72 @@
- ##
- {'command': 'cxl-inject-correctable-error',
-  'data': {'path': 'str', 'type': 'CxlCorErrorType'}}
-+
-+##
-+# @CXLDCExtentRecord:
-+#
-+# Record of a single extent to add/release
-+#
-+# @offset: offset to the start of the region where the extent to be operated
-+# @len: length of the extent
-+#
-+# Since: 9.1
-+##
-+{ 'struct': 'CXLDCExtentRecord',
-+  'data': {
-+      'offset':'uint64',
-+      'len': 'uint64'
-+  }
-+}
-+
-+##
-+# @cxl-add-dynamic-capacity:
-+#
-+# Command to start add dynamic capacity extents flow. The device will
-+# have to acknowledged the acceptance of the extents before they are usable.
-+#
-+# @path: CXL DCD canonical QOM path
-+# @hid: host id
-+# @selection-policy: policy to use for selecting extents for adding capacity
-+# @region-id: id of the region where the extent to add
-+# @tag: Context field
-+# @extents: Extents to add
-+#
-+# Since : 9.1
-+##
-+{ 'command': 'cxl-add-dynamic-capacity',
-+  'data': { 'path': 'str',
-+            'hid': 'uint16',
-+            'selection-policy': 'uint8',
-+            'region-id': 'uint8',
-+            'tag': 'str',
-+            'extents': [ 'CXLDCExtentRecord' ]
-+           }
-+}
-+
-+##
-+# @cxl-release-dynamic-capacity:
-+#
-+# Command to start release dynamic capacity extents flow. The host will
-+# need to respond to indicate that it has released the capacity before it
-+# is made unavailable for read and write and can be re-added.
-+#
-+# @path: CXL DCD canonical QOM path
-+# @hid: host id
-+# @flags: bit[3:0] for removal policy, bit[4] for forced removal, bit[5] for
-+#     sanitize on release, bit[7:6] reserved
-+# @region-id: id of the region where the extent to release
-+# @tag: Context field
-+# @extents: Extents to release
-+#
-+# Since : 9.1
-+##
-+{ 'command': 'cxl-release-dynamic-capacity',
-+  'data': { 'path': 'str',
-+            'hid': 'uint16',
-+            'flags': 'uint8',
-+            'region-id': 'uint8',
-+            'tag': 'str',
-+            'extents': [ 'CXLDCExtentRecord' ]
-+           }
-+}
--- 
-2.43.0
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D""><div dir=3D"ltr" s=
+tyle=3D""><div class=3D"gmail_default" style=3D"font-size:small"><font face=
+=3D"monospace">Hello,</font></div><div class=3D"gmail_default" style=3D""><=
+span style=3D"color:rgb(0,0,51)"><br></span></div><div class=3D"gmail_defau=
+lt" style=3D""><span style=3D"color:rgb(0,0,51)">&gt;&gt; We need guidance =
+from the community.</span></div><div class=3D"gmail_default" style=3D""><pr=
+e style=3D"background-image:initial;background-position:initial;background-=
+size:initial;background-repeat:initial;background-origin:initial;background=
+-clip:initial;color:rgb(0,0,51)"><span style=3D"font-family:Arial,Helvetica=
+,sans-serif">&gt;&gt;</span><span style=3D"font-family:Arial,Helvetica,sans=
+-serif">=C2=A0</span>1. Datacenter customers must be able to manage PCIe sw=
+itches in-band.
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>2. Management of switches includes getting health, performance, and error =
+telemetry.
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>3. These telemetry functions are not yet part of the CXL standard
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>4. We built the CCI mailboxes into our PCIe switches per CXL spec and deve=
+loped our management scheme around them.
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>If the Linux community does not allow a CXL spec-compliant switch to be
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>managed via the CXL spec-defined CCI mailbox, then please guide us on
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>the right approach. Please tell us how you propose we manage our switches
+<span style=3D"font-family:Arial,Helvetica,sans-serif">&gt;&gt;=C2=A0</span=
+>in-band.</pre></div><div class=3D"gmail_default" style=3D"font-size:small"=
+><font face=3D"monospace">I am still looking for your guidance. We need to =
+be able to manage our switch via the CCI mailbox. We need to use vendor-def=
+ined commands per CXL spec.</font></div><div class=3D"gmail_default" style=
+=3D"font-size:small"><font face=3D"monospace"><br></font></div><div class=
+=3D"gmail_default" style=3D"font-size:small"><font face=3D"monospace">You t=
+alked about whitelisting commands (allow-list) which we agreed to. Would yo=
+u please confirm that you will allow the vendor-defined allow-list of comma=
+nds?</font></div><div class=3D"gmail_default" style=3D"font-size:small"><fo=
+nt face=3D"monospace"><br></font></div><div class=3D"gmail_default" style=
+=3D"font-size:small"><font face=3D"monospace">Thank you</font></div><div cl=
+ass=3D"gmail_default" style=3D"font-size:small"><font face=3D"monospace">Sr=
+eeni</font></div></div></div></div><br><div class=3D"gmail_quote"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Wed, Apr 10, 2024 at 5:45=E2=80=AFAM Jonat=
+han Cameron &lt;<a href=3D"mailto:Jonathan.Cameron@huawei.com">Jonathan.Cam=
+eron@huawei.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">On Fri, 5 Apr 2024 17:04:34 -0700<br>
+Dan Williams &lt;<a href=3D"mailto:dan.j.williams@intel.com" target=3D"_bla=
+nk">dan.j.williams@intel.com</a>&gt; wrote:<br>
+<br>
+Hi Dan,<br>
+<br>
+&gt; Jonathan Cameron wrote:<br>
+&gt; &gt; Hi All,<br>
+&gt; &gt; <br>
+&gt; &gt; This is has come up in a number of discussions both on list and i=
+n private,<br>
+&gt; &gt; so I wanted to lay out a potential set of rules when deciding whe=
+ther or not<br>
+&gt; &gt; to provide a user space interface for a particular feature of CXL=
+ Fabric<br>
+&gt; &gt; Management.=C2=A0 The intent is to drive discussion, not to simpl=
+y tell people<br>
+&gt; &gt; a set of rules.=C2=A0 I&#39;ve brought this to the public lists a=
+s it&#39;s a Linux kernel<br>
+&gt; &gt; policy discussion, not a standards one.<br>
+&gt; &gt; <br>
+&gt; &gt; Whilst I&#39;m writing the RFC this my attempt to summarize a pos=
+sible<br>
+&gt; &gt; position rather than necessarily being my personal view.<br>
+&gt; &gt; <br>
+&gt; &gt; It&#39;s a straw man - shoot at it!<br>
+&gt; &gt; <br>
+&gt; &gt; Not everyone in this discussion is familiar with relevant kernel =
+or CXL concepts<br>
+&gt; &gt; so I&#39;ve provided more info than I normally would.=C2=A0 <br>
+&gt; <br>
+&gt; Thanks for writing this up Jonathan!<br>
+&gt; <br>
+&gt; [..]<br>
+&gt; &gt; 2) Unfiltered userspace use of mailbox for Fabric Management - BM=
+C kernels<br>
+&gt; &gt; =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D<br>
+&gt; &gt; <br>
+&gt; &gt; (This would just be a kernel option that we&#39;d advise normal s=
+erver<br>
+&gt; &gt; distributions not to turn on. Would be enabled by openBMC etc)<br=
+>
+&gt; &gt; <br>
+&gt; &gt; This is fine - there is some work to do, but the switch-cci PCI d=
+river<br>
+&gt; &gt; will hopefully be ready for upstream merge soon. There is no filt=
+ering of<br>
+&gt; &gt; accesses. Think of this as similar to all the damage you can do v=
+ia<br>
+&gt; &gt; MCTP from a BMC. Similarly it is likely that much of the complexi=
+ty<br>
+&gt; &gt; of the actual commands will be left to user space tooling: <br>
+&gt; &gt; <a href=3D"https://gitlab.com/jic23/cxl-fmapi-tests" rel=3D"noref=
+errer" target=3D"_blank">https://gitlab.com/jic23/cxl-fmapi-tests</a> has s=
+ome test examples.<br>
+&gt; &gt; <br>
+&gt; &gt; Whether Kconfig help text is strong enough to ensure this only ge=
+ts<br>
+&gt; &gt; enabled for BMC targeted distros is an open question we can addre=
+ss<br>
+&gt; &gt; alongside an updated patch set.=C2=A0 <br>
+&gt; <br>
+&gt; It is not clear to me that this material makes sense to house in<br>
+&gt; drivers/ vs tools/ or even out-of-tree just for maintenance burden<br>
+&gt; relief of keeping the universes separated. What does the Linux kernel<=
+br>
+&gt; project get out of carrying this in mainline alongside the inband code=
+?<br>
+<br>
+I&#39;m not sure what you mean by in band.=C2=A0 Aim here was to discuss<br=
+>
+in-band drivers for switch CCI etc. Same reason from a kernel point of<br>
+view for why we include embedded drivers.=C2=A0 I&#39;ll interpret in band<=
+br>
+as host driven and not inband as FM-API stuff.<br>
+<br>
+&gt; I do think the mailbox refactoring to support non-CXL use cases is<br>
+&gt; interesting, but only so far as refactoring is consumed for inband use=
+<br>
+&gt; cases like RAS API.<br>
+<br>
+If I read this right, I disagree with the &#39;only so far&#39; bit.<br>
+<br>
+In all substantial ways we should support BMC use case of the Linux Kernel<=
+br>
+at a similar level to how we support forms of Linux Distros.=C2=A0 It may<b=
+r>
+not be our target market as developers for particular parts of our companie=
+s,<br>
+but we should not block those who want to support it.<br>
+<br>
+We should support them in drivers/ - maybe with example userspace code<br>
+in tools.=C2=A0 Linux distros on BMCs is a big market, there are a number<b=
+r>
+of different distros using (and in some cases contributing to) the<br>
+upstream kernel. Not everyone is using openBMC so there is not one<br>
+common place where downstream patches could be carried.<br>
+From a personal point of view, I like that for the same reasons that<br>
+I like there being multiple Linux sever focused distros. It&#39;s a sign<br=
+>
+of a healthy ecosystem to have diverse options taking the mainline<br>
+kernel as their starting point.<br>
+<br>
+BMCs are just another embedded market, and like other embedded markets<br>
+we want to encourage upstream first etc. <br>
+openBMC has a policy on this:<br>
+<a href=3D"https://github.com/openbmc/docs/blob/master/kernel-development.m=
+d" rel=3D"noreferrer" target=3D"_blank">https://github.com/openbmc/docs/blo=
+b/master/kernel-development.md</a><br>
+&quot;The OpenBMC project maintains a kernel tree for use by the project.<b=
+r>
+The tree&#39;s general development policy is that code must be upstream<br>
+first.&quot; There are paths to bypass that for openBMC so it&#39;s a littl=
+e<br>
+more relaxed than some enterprise distros (today, their policies used<br>
+to look very similar to this) but we should not be telling<br>
+them they need to carry support downstream.=C2=A0 If we are<br>
+going to tell them that, we need to be able to point at a major<br>
+sticking point for maintenance burden.=C2=A0 So far I don&#39;t see the<br>
+additional complexity as remotely close reaching that bar.<br>
+<br>
+So I think we do want switch-cci support and for that matter the equivalent=
+<br>
+for MHDs in the upstream kernel.<br>
+<br>
+One place I think there is some wiggle room is the taint on use of raw<br>
+commands.=C2=A0 Leaving removal of that for BMC kernels as a patch they nee=
+d<br>
+to carry downstream doesn&#39;t seem too burdensome. I&#39;m sure they&#39;=
+ll push<br>
+back if it is a problem for them!=C2=A0 So I think we can kick that questio=
+n<br>
+into the future.<br>
+<br>
+Addressing maintenance burden, there is a question of where we split<br>
+the stack.=C2=A0 Ignore MHDs for now (I won&#39;t go into why in this forum=
+...)<br>
+<br>
+The current proposal is (simplified to ignore some sharing in lookup code e=
+tc<br>
+that I can rip out if we think it might be a long term problem)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0_____________=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _______=
+______________<br>
+=C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|<br>
+=C2=A0 =C2=A0 | Switch CCI=C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 Type =
+3 Driver stack| <br>
+=C2=A0 =C2=A0 |_____________|=C2=A0 =C2=A0 =C2=A0 =C2=A0 |_________________=
+____|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|___________________________|=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Whatever GPU etc<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _______|____=
+___=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0___=
+____|______<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 |<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 CXL M=
+BOX=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0| RAS API etc=C2=A0 |<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|____________=
+___|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|________=
+______|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|_____________________________|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _________|______<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 |<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0MMPT mbox=C2=A0 =
+=C2=A0 |<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|________________|<br>
+<br>
+Switch CCI Driver: PCI driver doing everything beyond the CXL mbox specific=
+ bit.<br>
+Type 3 Stack: All the normal stack just with the CXL Mailbox specific stuff=
+ factored<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out. Note we can move diff=
+erent amounts of shared logic in here, but<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 in essence it deals with t=
+he extra layer on top of the raw MMPT mbox.<br>
+MMPT Mbox: Mailbox as per the PCI spec.<br>
+RAS API:=C2=A0 =C2=A0Shared RAS API specific infrastructure used by other d=
+rivers.<br>
+<br>
+If we see a significant maintenance burden, maybe we duplicate the CXL spec=
+ific<br>
+MBOX layer - I can see advantages in that as there is some stuff not releva=
+nt<br>
+to the Switch CCI.=C2=A0 There will be some duplication of logic however su=
+ch<br>
+as background command support (which is CXL only IIUC)=C2=A0 We can even us=
+e<br>
+a difference IOCTL number so the two can diverge if needed in the long run.=
+<br>
+<br>
+e.g. If it makes it easier to get upstream, we can merrily duplicated code<=
+br>
+so that only the bit common with RAS API etc is shared (assuming the<br>
+actually end up with MMPT, not the CXL mailbox which is what their current<=
+br>
+publicly available spec talks about and I assume is a pref MMPT left over?)=
+<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0_____________=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _______=
+______________<br>
+=C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|<br>
+=C2=A0 =C2=A0 | Switch CCI=C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 Type =
+3 Driver stack| <br>
+=C2=A0 =C2=A0 |_____________|=C2=A0 =C2=A0 =C2=A0 =C2=A0 |_________________=
+____|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Whatever GPU etc<br>
+=C2=A0 =C2=A0 _______|_______=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0_______|_______=C2=A0 =C2=A0 =C2=A0 =C2=A0 ______|_______<br>
+=C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 |<br>
+=C2=A0 =C2=A0|=C2=A0 CXL MBOX=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0|=C2=A0 CXL MBOX=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =
+| RAS API etc=C2=A0 |<br>
+=C2=A0 =C2=A0|_______________|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|___=
+____________|=C2=A0 =C2=A0 =C2=A0 |______________|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|_____________________________|___=
+_________________|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|<=
+br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0________|______<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0MMPT mbox=C2=A0 =C2=A0=
+|<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |_______________|<br>
+<br>
+<br>
+&gt; &gt; (On to the one that the &quot;debate&quot; is about)<br>
+&gt; &gt; <br>
+&gt; &gt; 3) Unfiltered user space use of mailbox for Fabric Management - D=
+istro kernels<br>
+&gt; &gt; =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D<br>
+&gt; &gt; (General purpose Linux Server Distro (Redhat, Suse etc))<br>
+&gt; &gt; <br>
+&gt; &gt; This is equivalent of RAW command support on CXL Type 3 memory de=
+vices.<br>
+&gt; &gt; You can enable those in a distro kernel build despite the scary c=
+onfig<br>
+&gt; &gt; help text, but if you use it the kernel is tainted. The result<br=
+>
+&gt; &gt; of the taint is to add a flag to bug reports and print a big mess=
+age to say<br>
+&gt; &gt; that you&#39;ve used a feature that might result in you shooting =
+yourself<br>
+&gt; &gt; in the foot.<br>
+&gt; &gt; <br>
+&gt; &gt; The taint is there because software is not at first written to de=
+al with<br>
+&gt; &gt; everything that can happen smoothly (e.g. surprise removal) It&#3=
+9;s hard<br>
+&gt; &gt; to survive some of these events, so is never on the initial featu=
+re list<br>
+&gt; &gt; for any bus, so this flag is just to indicate we have entered a w=
+orld<br>
+&gt; &gt; where almost all bets are off wrt to stability.=C2=A0 We might no=
+t know what<br>
+&gt; &gt; a command does so we can&#39;t assess the impact (and no one trus=
+ts vendor<br>
+&gt; &gt; commands to report affects right in the Command Effects Log - whi=
+ch<br>
+&gt; &gt; in theory tells you if a command can result problems).=C2=A0 <br>
+&gt; <br>
+&gt; That is a secondary reason that the taint is there. Yes, it helps<br>
+&gt; upstream not waste their time on bug reports from proprietary use case=
+s,<br>
+&gt; but the effect of that is to make &quot;raw&quot; command mode unattra=
+ctive for<br>
+&gt; deploying solutions at scale. It clarifies that this interface is a<br=
+>
+&gt; debug-tool that enterprise environment need not worry about.<br>
+&gt; <br>
+&gt; The more salient reason for the taint, speaking only for myself as a<b=
+r>
+&gt; Linux kernel community member not for $employer, is to encourage open<=
+br>
+&gt; collaboration. Take firmware-update for example that is a standard<br>
+&gt; command with known side effects that is inaccessible via the ioctl()<b=
+r>
+&gt; path. It is placed behind an ABI that is easier to maintain and reason=
+<br>
+&gt; about. Everyone has the firmware update tool if they have the &#39;cat=
+&#39;<br>
+&gt; command. Distros appreciate the fact that they do not need ship yet<br=
+>
+&gt; another vendor device-update tool, vendors get free tooling and end<br=
+>
+&gt; users also appreciate one flow for all devices.<br>
+&gt; <br>
+&gt; As I alluded here [1], I am not against innovation outside of the<br>
+&gt; specification, but it needs to be open, and it needs to plausibly beco=
+me<br>
+&gt; if not a de jure standard at least a de facto standard.<br>
+&gt; <br>
+&gt; [1]: <a href=3D"https://lore.kernel.org/all/CAPcyv4gDShAYih5iWabKg_eTH=
+huHm54vEAei8ZkcmHnPp3B0cw@mail.gmail.com/" rel=3D"noreferrer" target=3D"_bl=
+ank">https://lore.kernel.org/all/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei8Zkcm=
+HnPp3B0cw@mail.gmail.com/</a><br>
+<br>
+Agree with all this.<br>
+<br>
+&gt; <br>
+&gt; &gt; A concern was raised about GAE/FAST/LDST tables for CXL Fabrics<b=
+r>
+&gt; &gt; (a r3.1 feature) but, as I understand it, these are intended for =
+a<br>
+&gt; &gt; host to configure and should not have side effects on other hosts=
+?<br>
+&gt; &gt; My working assumption is that the kernel driver stack will handle=
+<br>
+&gt; &gt; these (once we catch up with the current feature backlog!) Curren=
+tly<br>
+&gt; &gt; we have no visibility of what the OS driver stack for a fabrics w=
+ill<br>
+&gt; &gt; actually look like - the spec is just the starting point for that=
+.<br>
+&gt; &gt; (patches welcome ;)<br>
+&gt; &gt; <br>
+&gt; &gt; The various CXL upstream developers and maintainers may have<br>
+&gt; &gt; differing views of course, but my current understanding is we wan=
+t<br>
+&gt; &gt; to support 1 and 2, but are very resistant to 3!=C2=A0 <br>
+&gt; <br>
+&gt; 1, yes, 2, need to see the patches, and agree on 3.<br>
+<br>
+If we end up with top architecture of the diagrams above, 2 will look prett=
+y<br>
+similar to last version of the switch-cci patches.=C2=A0 So raw commands on=
+ly + taint.<br>
+Factoring out MMPT is another layer that doesn&#39;t make that much differe=
+nce in<br>
+practice to this discussion. Good to have, but the reuse here would be one =
+layer<br>
+above that.<br>
+<br>
+Or we just say go for second proposed architecture and 0 impact on the<br>
+CXL specific code, just reuse of the MMPT layer.=C2=A0 I&#39;d imagine peop=
+le will get<br>
+grumpy on code duplication (and we&#39;ll spend years rejecting patch sets =
+that<br>
+try to share the cdoe) but there should be no maintenance burden as<br>
+a result.<br>
+<br>
+&gt; <br>
+&gt; &gt; General Notes<br>
+&gt; &gt; =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<br>
+&gt; &gt; <br>
+&gt; &gt; One side aspect of why we really don&#39;t like unfiltered usersp=
+ace access to any<br>
+&gt; &gt; of these devices is that people start building non standard hacks=
+ in and we<br>
+&gt; &gt; lose the ecosystem advantages. Forcing a considered discussion + =
+patches<br>
+&gt; &gt; to let a particular command be supported, drives standardization.=
+=C2=A0 <br>
+&gt; <br>
+&gt; Like I said above, I think this is not a side aspect. It is fundamenta=
+l<br>
+&gt; to the viability Linux as a project. This project only works because<b=
+r>
+&gt; organizations with competing goals realize they need some common<br>
+&gt; infrastructure and that there is little to be gained by competing on t=
+he<br>
+&gt; commons.<br>
+&gt; <br>
+&gt; &gt; <a href=3D"https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWab=
+Kg_eTHhuHm54vEAei8ZkcmHnPp3B0cw@mail.gmail.com/" rel=3D"noreferrer" target=
+=3D"_blank">https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWabKg_eTHhuH=
+m54vEAei8ZkcmHnPp3B0cw@mail.gmail.com/</a><br>
+&gt; &gt; provides some history on vendor specific extensions and why in ge=
+neral we<br>
+&gt; &gt; won&#39;t support them upstream.=C2=A0 <br>
+&gt; <br>
+&gt; Oh, you linked my writeup... I will leave the commentary I added here =
+in case<br>
+&gt; restating it helps.<br>
+&gt; <br>
+&gt; &gt; To address another question raised in an earlier discussion:<br>
+&gt; &gt; Putting these Fabric Management interfaces behind guard rails of =
+some type<br>
+&gt; &gt; (e.g. CONFIG_IM_A_BMC_AND_CAN_MAKE_A_MESS) does not encourage the=
+ risk<br>
+&gt; &gt; of non standard interfaces, because we will be even less likely t=
+o accept<br>
+&gt; &gt; those upstream!<br>
+&gt; &gt; <br>
+&gt; &gt; If anyone needs more details on any aspect of this please ask.<br=
+>
+&gt; &gt; There are a lot of things involved and I&#39;ve only tried to giv=
+e a fairly<br>
+&gt; &gt; minimal illustration to drive the discussion. I may well have mis=
+sed<br>
+&gt; &gt; something crucial.=C2=A0 <br>
+&gt; <br>
+&gt; You captured it well, and this is open source so I may have missed<br>
+&gt; something crucial as well.<br>
+&gt; <br>
+<br>
+Thanks for detailed reply!<br>
+<br>
+Jonathan<br>
+<br>
+<br>
+</blockquote></div>
 
+<br>
+<span style=3D"background-color:rgb(255,255,255)"><font size=3D"2">This ele=
+ctronic communication and the information and any files transmitted with it=
+, or attached to it, are confidential and are intended solely for the use o=
+f the individual or entity to whom it is addressed and may contain informat=
+ion that is confidential, legally privileged, protected by privacy laws, or=
+ otherwise restricted from disclosure to anyone else. If you are not the in=
+tended recipient or the person responsible for delivering the e-mail to the=
+ intended recipient, you are hereby notified that any use, copying, distrib=
+uting, dissemination, forwarding, printing, or copying of this e-mail is st=
+rictly prohibited. If you received this e-mail in error, please return the =
+e-mail to the sender, delete it from your computer, and destroy any printed=
+ copy of it.</font></span>
+--000000000000243380061628359f--
+
+--0000000000002f52ec061628354d
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIQggYJKoZIhvcNAQcCoIIQczCCEG8CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg3ZMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
+MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
+rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
+aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
+e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
+cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
+MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
+KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
+/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
+TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
+YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
+b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
+CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
+BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
+jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
+9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
+/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
+jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
+AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
+dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
+MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
+IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
+XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
+J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
+nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBWEwggRJoAMCAQICDFYaRLSTNnawblU3yzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwOTI0MjNaFw0yNTA5MTAwOTI0MjNaMIGc
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xHDAaBgNVBAMTE1NyZWVuaXZhcyBCYWdhbGtvdGUxLzAtBgkq
+hkiG9w0BCQEWIHNyZWVuaXZhcy5iYWdhbGtvdGVAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAuuAqYt2XMpXqqYrSYVv64PlRiKuXJ1Hesi3rmZm4+g8EIZRtyETO
+RWiFc6q59aDOqgjp94efpIVthPgLGM5Uv2iBj+XGsZzaiJn4ZasS5UNh0N6Rpj6dLHXBwRGaQsld
+e5WvrXWFBwSZWVNj241paUqCIV+ybg8DS6/tCwEetzOgmjs4LgYlpj957G5EryaCzH5ncDrHz2Kj
+q98WQ9dndZnpUpaPV2hP60IVspaStey0I6WjPBy7qNhbZV4J4ZN71tnZ7CrNkXy5KhwKEs+MiegU
+OQvZ9yJQdMq9Ry3cO3DNfLXNGHuM2IKh6YPPScUnfGbmK/wkpXthxhJx+kn1IQIDAQABo4IB4TCC
+Ad0wDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDov
+L3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAu
+Y3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29u
+YWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0
+cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBA
+MD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
+MDIwLmNybDArBgNVHREEJDAigSBzcmVlbml2YXMuYmFnYWxrb3RlQGJyb2FkY29tLmNvbTATBgNV
+HSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4E
+FgQU08YdPZld7W8H+uK8S2EPeYqBn20wDQYJKoZIhvcNAQELBQADggEBAGUBviL4v9e/8GOQBEZO
+mm5a/OZCkJ6COPgkQ4TEHxWWx7iYG+TVkJ2qxNS1fXQUPnAC/TBfb37wLVynlBBRTb4PYzKIfaHW
+bH9AscUsus4kEUyzYSLHYqQilComzpGFxor1x2fbLYpHMCU950wueyUHPHA3jwpWrluCE7283dWT
+rz/VNFx2cjW+y8+T+lVxO44XmrQoa8lnz3fb+QCVvRyH8sUqAYjfkscFkknlkF0NobKXFSKwK1zZ
+4ZQOk9tT7FYGWvy0nhOEUt/uKZNncumowkhquxqJve0HiOF6Z6R0eKybmGDGaWDYE11aHV62bKTn
+/SH9BOZuA2GG8ZiNR08xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i
+YWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBD
+QSAyMDIwAgxWGkS0kzZ2sG5VN8swDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIK9Q
+6ZWXQsHaM2nHvJ8LEaYFVlEzPUC6niCVh8RXvMBlMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
+HAYJKoZIhvcNAQkFMQ8XDTI0MDQxNTIwMTAwN1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQME
+ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJ
+KoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAp2+MuO1iKZG6aLtbxwC2p
+5DP1sl0qDgNdAD71LS5MxZNS4JiV0dnq9UyYzEKZAAelVrxhq0tpzw+47wHZ07wB+//jWNwFEYfr
+2equx7IEdHdoEPMVMCQQd0q0vhVNrFTgECpy2QPZgrTNGTFLOieMJUSilFBDW8XlMTpnZyZCcome
+zoGK70QwJK76h6kZkW2Brt47wGwfrYAw1cxukq6G85WQFyBWZ1NUzUgUzDXVqV1XYUiUZZuHLzdb
+FVzKThoW48AtRYidYy8VciqnJ3CXzDDp+dxUeRJxYiAim1lNBRTmsKczGw9+1YBEAwOig8lq7owo
+indv7MtM8B89TazD
+--0000000000002f52ec061628354d--
