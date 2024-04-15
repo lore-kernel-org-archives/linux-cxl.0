@@ -1,100 +1,112 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF36547F50;
-	Mon, 15 Apr 2024 10:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392CD811F1
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Apr 2024 16:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713176373; cv=none; b=nuuO3sT1iX/jTyR8QmaK/bV4fojCLkZKZc6DFj5XgYaAe3+rk8DWrNd82WCEHYlGy6clc8GO1P0IOkvMzu2c3VzwpnbqUQ37/R0vTi67+wXAUNXaHBWxuOdAjG9Ot+ZDCVyP0I0itOVimucTtQOilrd9C08+FQyQfuuIKeYvUDA=
+	t=1713197833; cv=none; b=L+GBslvxODE8h/vg9vqBHZ1pYnJOubBdpruvJPw8JEdWdxP9kDXRZwbH/wSRVgj0qP3SkNyrtUqhbIt6s3Qhtna0Cx4cULGT96g+rec2fec06XtAkQCNBeBCm7yKtU221ZyaQgXSk/5kha1+BJYLORwymGJxxInbOD/M6sF6V4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713176373; c=relaxed/simple;
-	bh=z0lUnRnJ20hdiXpMZRnobdIYEG92hyGdtmMXMY7UjPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=EDrYc+fkkwB6pGCDkFYItfrSUFdG1evTSkfVtphFFlJpZutK0S4DaPODf5MWccViBqMQSzgA5Jfw0dhzpSZY6FN4twiAYYdh64HZZdIpTIB3U0nk/IUlTZDuXvrCnHXD94LD60tG0+hbumfoWUwaaH4CGbqwwOhLqXEPBkU7FSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qs/wGaEu; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713197833; c=relaxed/simple;
+	bh=8hoFeujVd3Tdq+czm95H3yJuF1paGoOF85xTWnY9Xds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gvzXUPkaCCG/Vb9TaopTCRKrOjn4aXMov4jEDF03ogdcMRshhRffGdc7MMcVrjyNQVKCIh9r+E65aWSHqIvcLfYn18DT24Vz+3qXP2rtoaS+UmKaQSwb89ZBXzkyqwi/vN/mSbftDoIQlJP4L7WdRcxCSbVcCphZCgkS5wnELJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aIlDR55E; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qs/wGaEu"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-343bccc0b2cso1999443f8f.1;
-        Mon, 15 Apr 2024 03:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713176370; x=1713781170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KG194EJK11CX6gvo6DvtRQREQM8gMc9FVpOEjalH2pw=;
-        b=Qs/wGaEuIB1XWtOqZMZzkPrnRGJNvNmKS/80vmeKDgZR03FgB8r8myNiHO9jW/gHrR
-         2DV3ieoJoN99SWU2Ej4yPfIFxrsVrLIsSb4mJrM2TD6sd5EKUQ0PgtThTRNM5bhFeZmg
-         9pPSZxzXnDn696KFondO7kCoL1iFRQsPu6QW2/UniAFES6ptIMMe88iVCnLD/fw+GeHk
-         eswRI0ghAbD/YHnQtnZf+eJtDOQNjEiLwh3RhNRO2C5PZ7R2PWuez6rr9JzFWoZbKRPp
-         WTe2xVwwYUT/K1hM2zlv3vSd+mnSbab+uDcoxFUkEYnDutO8+zXinr3i0XXeDm5MuwR9
-         2VQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713176370; x=1713781170;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KG194EJK11CX6gvo6DvtRQREQM8gMc9FVpOEjalH2pw=;
-        b=hRWNCqbRaZ8MSDBXTl0wLsfnRh+ch+2bO0JFC5VlX8Tuyviz/D4eORQDxdNkUwEBnl
-         E4uu/Wgy5R7/Qz4ZnnDwZPIQUGWVpzc4TtaYqR0SNHx+B0xGoxyeAuE0jOFysjC719le
-         LKe7QvSnLtzMB1gBGZarKgd4iMX7yb4ME7Cu9tmL45MjFt4JLf6jOpVmgcBDD4ATjAy0
-         WM1mqYNWX8QSxqgX5n0ngeB8Hf/SFkWwuWcx53smQHSI4he5qxGgfeN9YQOZrZZujiD0
-         BJWsean75Sp0Ouvm//Eu1dXVX1pGYR8l7E91RzxsZamHGnOO/djiUIzQg4FB5S1RhHJn
-         lA9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPnURcwam3xRBA8XQBID/Cwagp9dQ6delOL7L1XpG95CMLecgADk9X9gLTxSbuLowDY8mnK28J3NwVLKnKFhAiD5X6dblNJCLIvOA5ZQu3ks6mnZ8AYXtvYFSJlO62YLiWr/Vmg/Cw
-X-Gm-Message-State: AOJu0YzaIGvcVkLVTK4FwLVGo1XXX+S/o572i4IjYw5LLoBId2xKifSB
-	PXTfjJBegkYptKCMgaXFCF1uFEdor/HrADBFeEFyFdmtSmr5FvIY
-X-Google-Smtp-Source: AGHT+IHVtzOXafYbDUSuB8izRSCQlP6f8luo9hqQkPhmgEpooak5Fh6B4tfYcWAFBqOPTX+Ekapr/w==
-X-Received: by 2002:adf:e80b:0:b0:345:f96e:39b4 with SMTP id o11-20020adfe80b000000b00345f96e39b4mr5327672wrm.8.1713176369944;
-        Mon, 15 Apr 2024 03:19:29 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id k1-20020a5d6281000000b003445bb2362esm11629201wru.65.2024.04.15.03.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 03:19:29 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] dax: remove redundant assignment to variable rc
-Date: Mon, 15 Apr 2024 11:19:28 +0100
-Message-Id: <20240415101928.484143-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aIlDR55E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713197830; x=1744733830;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8hoFeujVd3Tdq+czm95H3yJuF1paGoOF85xTWnY9Xds=;
+  b=aIlDR55EfKkTKnTRfXJQ6ONJhumCvmitDewWqENIiKBtS6o+gSiFXhEt
+   +cF/UzKAA0nH+fjc2hASOfeRFapRlmYM6y7Rvdsm+cWGxTxnEQ9A6wTFJ
+   8Xu7barVtiETVDXlcfOuuGYWMFpmFD3fUzyJxJpFkoRrePoO1Kfyul3zh
+   DwkUMWXcqCp377sKm+Ao6p/y/0coemw4DoVvdOX6vk5zOO/oYadb7Eyd4
+   joNTNMVcL1Up91HP7/ID7bR8gBCsJP9/1d+qzL3+bEdehLvLPRQeGn2R/
+   Kn6EaDmvbBo1KZElzPX9pT2GNc8Oqk5s9PqyrqQegm/qrekNOKCyGVwxt
+   A==;
+X-CSE-ConnectionGUID: TJEXpiuyTeCAFxq+Pz+MTA==
+X-CSE-MsgGUID: Sgb2agyCRGmzsjFv0ROYbA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12446899"
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="12446899"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:17:10 -0700
+X-CSE-ConnectionGUID: hNvy9VkORdylCcrpDFVraQ==
+X-CSE-MsgGUID: re2Ny30YQqCTH7LFlnetAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="59403325"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.61.52]) ([10.212.61.52])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:17:09 -0700
+Message-ID: <308450ff-00ad-4884-a62e-22d69a4727db@intel.com>
+Date: Mon, 15 Apr 2024 09:17:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ndctl 1/2] daxctl/device.c: Handle special case of
+ destroying daxX.0
+To: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <20240412-vv-daxctl-fixes-v1-0-6e808174e24f@intel.com>
+ <20240412-vv-daxctl-fixes-v1-1-6e808174e24f@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240412-vv-daxctl-fixes-v1-1-6e808174e24f@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The variable rc is being assigned an value and then is being re-assigned
-a new value in the next statement. The assignment is redundant and can
-be removed.
 
-Cleans up clang scan build warning:
-drivers/dax/bus.c:1207:2: warning: Value stored to 'rc' is never
-read [deadcode.DeadStores]
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/dax/bus.c | 1 -
- 1 file changed, 1 deletion(-)
+On 4/12/24 2:05 PM, Vishal Verma wrote:
+> The kernel has special handling for destroying the 0th dax device under
+> any given DAX region (daxX.0). It ensures the size is set to 0, but
+> doesn't actually remove the device, instead it returns an EBUSY,
+> indicating that this device cannot be removed.
+> 
+> Add an expectation in daxctl's dev_destroy() helper to handle this case
+> instead of returning the error - as far as the user is concerned, the
+> size has been set to zero, and the destroy operation has been completed,
+> even if the kernel indicated an EBUSY.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Reported-by: Ira Weiny <ira.weiny@intel.com>
+> Reported-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 797e1ebff299..f758afbf8f09 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1204,7 +1204,6 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
- 	if (rc)
- 		return rc;
- 
--	rc = -ENXIO;
- 	rc = down_write_killable(&dax_region_rwsem);
- 	if (rc)
- 		return rc;
--- 
-2.39.2
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  daxctl/device.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/daxctl/device.c b/daxctl/device.c
+> index 83913430..83c61389 100644
+> --- a/daxctl/device.c
+> +++ b/daxctl/device.c
+> @@ -675,6 +675,13 @@ static int dev_destroy(struct daxctl_dev *dev)
+>  		return rc;
+>  
+>  	rc = daxctl_region_destroy_dev(daxctl_dev_get_region(dev), dev);
+> +	/*
+> +	 * The kernel treats daxX.0 specially. It can't be deleted to ensure
+> +	 * there is always a /sys/bus/dax/ present. If this happens, an
+> +	 * EBUSY is returned. Expect it and don't treat it as an error.
+> +	 */
+> +	if (daxctl_dev_get_id(dev) == 0 && rc == -EBUSY)
+> +		return 0;
+>  	if (rc < 0)
+>  		return rc;
+>  
+> 
