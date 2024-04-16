@@ -1,75 +1,77 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D0D10A14
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 16:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC0612B156
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 16:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713285435; cv=none; b=b9VLH9UqVTmG7Qv7mDCTls3MO7nLEgnGHk+/W52XQNiYUG6Asc0F+TAnLBd2ubWfkbyvY0TQBDqPtcu07jXqEzO4snQicOPXt08BdHHG1z3qPLD1fzybhE2hZCDarm1TgkWoNsISx+zp3yQFplKmtmpDI9zzJcPVG/JBUcVricg=
+	t=1713286343; cv=none; b=u1VADTowfAVxGIbEoFeWkSXwTJkP0MwUVTHZpwAmjax2eBNkwWYHl+u9bongbIOA1TxNO5Bl7PVzkQuMmlH1+2/msu1gHMdHmwhOc5+1Fj4HeClI9Mm/3BcON3+CxuGJpMOTfBtEDZSSAeDqTyn40p66nnE6T6zjDRgAqj7e2WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713285435; c=relaxed/simple;
-	bh=WFRv13/jZwx+kjOBcw/u1tUzZJhFkeGfYTmsGU1Wazo=;
+	s=arc-20240116; t=1713286343; c=relaxed/simple;
+	bh=vStMd9S1i97vvmgQx0b8WqQl//IQzlJGYwiLtbpFnRY=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wn9ToT2rq8MDpDkgsAu3m9LFgsfvM9FJerStL2jRNQIGpmaHG5YH1I/rfvQp/Q+DbX3UCUvVlEYaiM8Vv6GmDInExfB32CTcYXGop9cHFsMDizql79tkd8yc606KEHqbdDtVN2KI83JM4pXY0zUXfewsKVB0GGrfkIb2SlJfhNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=laklfav3; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTG7WvnARATVWGXIlQ0VjVfWHPvIN9YJyeGxwrCv8zCcfadmN3Njzg9E8y3KWCM8lPP3fUjl2aUwUHjps+L5QDPAdTNCWR3BXbBxKOlAiwo4fj8FYcZLdRE0ZQ7O9ztzrQb2yGNaJ6VqXDn8eFg5c2+v1be/WlU/5YV0PtmUxew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VuEj3VkG; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="laklfav3"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e3f17c6491so39573225ad.2
-        for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 09:37:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VuEj3VkG"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ed0e9ccca1so4239250b3a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 09:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713285433; x=1713890233; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713286341; x=1713891141; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tNkzCRV02na/4jpDqu06Tw7UMHfd7rDdiAUaQoNz8M8=;
-        b=laklfav3+WOag+bLhSwF48NhevCV+0Swwr4cOBwQsSoWYL42XYbRMQ7pIoZtWK1XII
-         ye6EVGel7F17RWHylNbRgHc35MwqsWwTApBN3w0HbosNytqqvvdGvB6G8zfgEVkGBfv4
-         TM6TSJnrzozqE8iML1ojeIznPqTipSXuPfVATfK7wk5pvpbvExtPEQH+TCH6JhE/1EMt
-         CNeDbrphSTVOuyOafqB9V5Vc14ACLnye1/7XhaFa2xIwP/u3j2b6rz2M2X/ZcXvdYxaA
-         FrLBqJX1BZaJLFUSAhFFspuoYNgB5m8oYEw7mivCCVJNewIcMm1E6ATQQQ2HsDplibzg
-         UjPw==
+        bh=wl8yssDD+KGBRvPJuZCqXC/L8P+x0ZOjbrQOteVZTtY=;
+        b=VuEj3VkGvmZeAXOlKb6Pg/nufrxQ+tggOkpL67IQ58iS/XWin0YuHPfHqij/QtzqOs
+         coouSMyncq6gOAZw4PVUboMZAEewVOuXvmgBU0Mxsk4WtFGXl6LqF/iFwHAFRfuY1EHG
+         2F5snCATeLdHIWrHrXbGI0UxOd5cs916UKQrBrXm8Yb+NBD6h1JoKXhc43MTKL1dwKZb
+         GqxPbTNIQZINbyUdQDOmEW4QjVLvODGgagnJQnwg4Ls90DByd31ZvB5ZqssLh/lEik2i
+         JOmFRa1R6pJdyU1fq5eGloSx7KXD+CjvLGPqgo/wvI4eiKTYnUM4v/y5KGFpMySJTFLY
+         RrPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713285433; x=1713890233;
+        d=1e100.net; s=20230601; t=1713286341; x=1713891141;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tNkzCRV02na/4jpDqu06Tw7UMHfd7rDdiAUaQoNz8M8=;
-        b=DCgdHr9YLdQ+zpLX7R96zrXmF57OOddChzgMmEtwbiWVmBo9iZqNTlLtMLSJcGR0wW
-         1uLrmpOVmBf+ePa3qXPq868FmEIPZu7kDJg40/LuxBYZp5pjIdS7mAjqNBt+14sdtno+
-         WIexqIdeTrTSEGaoo53RWXDhyk0CWFNDRaHT0DB7tw/AX9v06vPEqSMBiabKVjoxZIKP
-         Cbj0gAoNP5q88GqgxtvcDje3bBSrEmvYlOFSfrbFiP543sd9A+c19EGLyrkfg/0tjd9R
-         M7Ebf5x3jX4G6hxLaGnCUxqw9kf80sZbLl6A78WdA9yBQe1hzyvDqh7P7qeN9ES9Kz/0
-         1Ciw==
-X-Forwarded-Encrypted: i=1; AJvYcCXg0aJK6tE9+pn7KGwJw6+fejLaeMYpIHkkXivKzc+gPczUqvlHknC+0H+KhqEZFgxkOqJj0JSbs36wCot7UlFmyjBdDgL9jCQ0
-X-Gm-Message-State: AOJu0YwH8D55RAqXoOhQSSBc1TcIMsCl7SVoLbVGfgvoAtK5pM08Ra6x
-	rnZp3CEiHI1qRDFeEK+oEZAmJWGCRyBY/qNz23HsM/jyGfdP/mM5
-X-Google-Smtp-Source: AGHT+IE6czJgFucFxlf98LtQLm/wnevBndiZG+W6ku5aN3q6n//IjyvcR38HWN26CadSJffuQxJZPw==
-X-Received: by 2002:a17:902:650a:b0:1e4:360:d926 with SMTP id b10-20020a170902650a00b001e40360d926mr10848241plk.5.1713285433106;
-        Tue, 16 Apr 2024 09:37:13 -0700 (PDT)
+        bh=wl8yssDD+KGBRvPJuZCqXC/L8P+x0ZOjbrQOteVZTtY=;
+        b=ZF1ggFCZpTJUjTWRld44E1ta7v01XMwlcN7Yz2oJroVJG7ja9ke6KLx8YuQOPjfMfT
+         X8rsqSMnIorCR/1V+sIPtMD74cZXBP43A410hQ5WErIkM/U6P/UJcY2IzxaOYDnhpTYQ
+         6X3Fhj9L5zAEV2N11zcIjiwGBOQXjCooxIIr4A9PhUQV1oE6pGFzxQVxTWYiw/h7oWX7
+         L9nP3gktK/7ZFAuYJVCGjKlDiHKKYLzQnBpsGvkF0b83OfmVljPldZusKvIl5Ys6WQUh
+         DftkfUzkXYkOtLYLt46hk3/cEkBVCqoQEFbGFJ65lY86vRB3uWUV/H8hbYJJzslyeiLp
+         IYlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNbRPXZjxkK0NHffQnAsoLFuhRgabp7Ov8AK2dZ8Me0FSi3EezgntL6UffFdSoKaGOJ0r/wOftLCNzjTE14PX6IWPcg1lEVRhY
+X-Gm-Message-State: AOJu0YwB2K+NRCGiWuOfLz8Cuwv33kYrYMYNZiwRLudxZhDPG68oCqHN
+	uhfQ8/yTuNLOmlDUGvHiJXBTz1Ro+1/HzDfD2sFAqE6rc4NcXa5z
+X-Google-Smtp-Source: AGHT+IGCADiV6FpEepx81wsOzmxZWOT0suxVPCwXFUD205hzj/zLfREUTME9FQreuUWoAc+MXxkcBQ==
+X-Received: by 2002:a05:6a00:1955:b0:6ea:ca90:3459 with SMTP id s21-20020a056a00195500b006eaca903459mr13418315pfk.32.1713286340728;
+        Tue, 16 Apr 2024 09:52:20 -0700 (PDT)
 Received: from debian ([2601:641:300:14de:b278:701:b83f:cdc])
-        by smtp.gmail.com with ESMTPSA id d7-20020a170902654700b001e20afa1038sm10207300pln.8.2024.04.16.09.37.10
+        by smtp.gmail.com with ESMTPSA id bm5-20020a056a00320500b006ecf6417a9bsm9260486pfb.29.2024.04.16.09.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 09:37:12 -0700 (PDT)
+        Tue, 16 Apr 2024 09:52:20 -0700 (PDT)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Tue, 16 Apr 2024 09:37:09 -0700
+Date: Tue, 16 Apr 2024 09:52:16 -0700
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: fan <nifan.cxl@gmail.com>, Gregory Price <gregory.price@memverge.com>,
-	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org, gregory.price@memverge.com,
 	ira.weiny@intel.com, dan.j.williams@intel.com,
 	a.manzanares@samsung.com, dave@stgolabs.net,
 	nmtadam.samsung@gmail.com, jim.harris@samsung.com,
 	Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
 	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v6 10/12] hw/mem/cxl_type3: Add dpa range validation for
- accesses to DC regions
-Message-ID: <Zh6pNVIZFMQadmOm@debian>
+Subject: Re: [PATCH v6 09/12] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <Zh6swM5SbnXkB76H@debian>
 References: <20240325190339.696686-1-nifan.cxl@gmail.com>
- <20240325190339.696686-11-nifan.cxl@gmail.com>
- <Zhm7ssKVGdGlR9Iq@memverge.com>
- <Zh1lk8FWmf0oI7RM@debian>
- <20240416160056.0000325c@Huawei.com>
+ <20240325190339.696686-10-nifan.cxl@gmail.com>
+ <20240405131856.000025e7@Huawei.com>
+ <ZhWym2yHoh6YIaXj@debian>
+ <20240410204911.0000590b@Huawei.com>
+ <Zh2IrA8TQDJn1ft_@debian>
+ <20240416155822.00004fce@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,91 +80,323 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240416160056.0000325c@Huawei.com>
+In-Reply-To: <20240416155822.00004fce@Huawei.com>
 
-On Tue, Apr 16, 2024 at 04:00:56PM +0100, Jonathan Cameron wrote:
-> On Mon, 15 Apr 2024 10:37:00 -0700
+On Tue, Apr 16, 2024 at 03:58:22PM +0100, Jonathan Cameron wrote:
+> On Mon, 15 Apr 2024 13:06:04 -0700
 > fan <nifan.cxl@gmail.com> wrote:
 > 
-> > On Fri, Apr 12, 2024 at 06:54:42PM -0400, Gregory Price wrote:
-> > > On Mon, Mar 25, 2024 at 12:02:28PM -0700, nifan.cxl@gmail.com wrote:  
-> > > > From: Fan Ni <fan.ni@samsung.com>
-> > > > 
-> > > > All dpa ranges in the DC regions are invalid to access until an extent
-> > > > covering the range has been added. Add a bitmap for each region to
-> > > > record whether a DC block in the region has been backed by DC extent.
-> > > > For the bitmap, a bit in the bitmap represents a DC block. When a DC
-> > > > extent is added, all the bits of the blocks in the extent will be set,
-> > > > which will be cleared when the extent is released.
-> > > > 
-> > > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > > > ---
-> > > >  hw/cxl/cxl-mailbox-utils.c  |  6 +++
-> > > >  hw/mem/cxl_type3.c          | 76 +++++++++++++++++++++++++++++++++++++
-> > > >  include/hw/cxl/cxl_device.h |  7 ++++
-> > > >  3 files changed, 89 insertions(+)
-> > > > 
-> > > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > > > index 7094e007b9..a0d2239176 100644
-> > > > --- a/hw/cxl/cxl-mailbox-utils.c
-> > > > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > > > @@ -1620,6 +1620,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-> > > >  
-> > > >          cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
-> > > >          ct3d->dc.total_extent_count += 1;
-> > > > +        ct3_set_region_block_backed(ct3d, dpa, len);
-> > > >  
-> > > >          ent = QTAILQ_FIRST(&ct3d->dc.extents_pending);
-> > > >          cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending, ent);  
-> > > 
-> > > while looking at the MHD code, we had decided to "reserve" the blocks in
-> > > the bitmap in the call to `qmp_cxl_process_dynamic_capacity` in order to
-> > > prevent a potential double-allocation (basically we need to sanity check
-> > > that two hosts aren't reserving the region PRIOR to the host being
-> > > notified).
-> > > 
-> > > I did not see any checks in the `qmp_cxl_process_dynamic_capacity` path
-> > > to prevent pending extents from being double-allocated.  Is this an
-> > > explicit choice?
-> > > 
-> > > I can see, for example, why you may want to allow the following in the
-> > > pending list: [Add X, Remove X, Add X].  I just want to know if this is
-> > > intentional or not. If not, you may consider adding a pending check
-> > > during the sanity check phase of `qmp_cxl_process_dynamic_capacity`
-> > > 
-> > > ~Gregory  
+> > From ce75be83e915fbc4dd6e489f976665b81174002b Mon Sep 17 00:00:00 2001
+> > From: Fan Ni <fan.ni@samsung.com>
+> > Date: Tue, 20 Feb 2024 09:48:31 -0800
+> > Subject: [PATCH 09/13] hw/cxl/events: Add qmp interfaces to add/release
+> >  dynamic capacity extents
 > > 
-> > First, for remove request, pending list is not involved. See cxl r3.1,
-> > 9.13.3.3. Pending basically means "pending to add". 
-> > So for the above example, in the pending list, you can see [Add x, add x] if the
-> > event is not processed in time.
-> > Second, from the spec, I cannot find any text saying we cannot issue
-> > another add extent X if it is still pending.
+> > To simulate FM functionalities for initiating Dynamic Capacity Add
+> > (Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL spec
+> > r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces to issue
+> > add/release dynamic capacity extents requests.
+> > 
+> > With the change, we allow to release an extent only when its DPA range
+> > is contained by a single accepted extent in the device. That is to say,
+> > extent superset release is not supported yet.
+> > 
+> > 1. Add dynamic capacity extents:
+> > 
+> > For example, the command to add two continuous extents (each 128MiB long)
+> > to region 0 (starting at DPA offset 0) looks like below:
+> > 
+> > { "execute": "qmp_capabilities" }
+> > 
+> > { "execute": "cxl-add-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "hid": 0,
+> >       "selection-policy": 2,
+> >       "region-id": 0,
+> >       "tag": "",
+> >       "extents": [
+> >       {
+> >           "offset": 0,
+> >           "len": 134217728
+> >       },
+> >       {
+> >           "offset": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > 2. Release dynamic capacity extents:
+> > 
+> > For example, the command to release an extent of size 128MiB from region 0
+> > (DPA offset 128MiB) looks like below:
+> > 
+> > { "execute": "cxl-release-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "hid": 0,
+> >       "flags": 1,
+> >       "region-id": 0,
+> >       "tag": "",
+> >       "extents": [
+> >       {
+> >           "offset": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > 
-> I think there is text saying that the capacity is not released for reuse
-> by the device until it receives a response from the host.   Whilst
-> it's not explicit on offers to the same host, I'm not sure that matters.
-> So I don't think it is suppose to queue multiple extents...
+> Nice!  A few small comments inline - particularly don't be nice to the
+> kernel by blocking things it doesn't understand yet ;)
+> 
+> Jonathan
+> 
+> > ---
+> >  hw/cxl/cxl-mailbox-utils.c  |  65 ++++++--
+> >  hw/mem/cxl_type3.c          | 310 +++++++++++++++++++++++++++++++++++-
+> >  hw/mem/cxl_type3_stubs.c    |  20 +++
+> >  include/hw/cxl/cxl_device.h |  22 +++
+> >  include/hw/cxl/cxl_events.h |  18 +++
+> >  qapi/cxl.json               |  69 ++++++++
+> >  6 files changed, 491 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index cd9092b6bf..839ae836a1 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> 
+> >  /*
+> >   * CXL r3.1 Table 8-168: Add Dynamic Capacity Response Input Payload
+> >   * CXL r3.1 Table 8-170: Release Dynamic Capacity Input Payload
+> > @@ -1541,6 +1579,7 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
+> >  {
+> >      uint32_t i;
+> >      CXLDCExtent *ent;
+> > +    CXLDCExtentGroup *ext_group;
+> >      uint64_t dpa, len;
+> >      Range range1, range2;
+> >  
+> > @@ -1551,9 +1590,13 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
+> >          range_init_nofail(&range1, dpa, len);
+> >  
+> >          /*
+> > -         * TODO: once the pending extent list is added, check against
+> > -         * the list will be added here.
+> > +         * The host-accepted DPA range must be contained by the first extent
+> > +         * group in the pending list
+> >           */
+> > +        ext_group = QTAILQ_FIRST(&ct3d->dc.extents_pending);
+> > +        if (!cxl_extents_contains_dpa_range(&ext_group->list, dpa, len)) {
+> > +            return CXL_MBOX_INVALID_PA;
+> > +        }
+> >  
+> >          /* to-be-added range should not overlap with range already accepted */
+> >          QTAILQ_FOREACH(ent, &ct3d->dc.extents, node) {
+> > @@ -1588,26 +1631,26 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+> >      CXLRetCode ret;
+> >  
+> >      if (in->num_entries_updated == 0) {
+> > -        /*
+> > -         * TODO: once the pending list is introduced, extents in the beginning
+> > -         * will get wiped out.
+> > -         */
+> > +        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
+> >          return CXL_MBOX_SUCCESS;
+> >      }
+> >  
+> >      /* Adding extents causes exceeding device's extent tracking ability. */
+> >      if (in->num_entries_updated + ct3d->dc.total_extent_count >
+> >          CXL_NUM_EXTENTS_SUPPORTED) {
+> > +        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
+> >          return CXL_MBOX_RESOURCES_EXHAUSTED;
+> >      }
+> >  
+> >      ret = cxl_detect_malformed_extent_list(ct3d, in);
+> >      if (ret != CXL_MBOX_SUCCESS) {
+> > +        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
+> 
+> If it's a bad message from the host, I don't think the device is supposed to
+> do anything with pending extents.
 
-Are you suggesting we add a check here to reject the second add when the
-first one is still pending?
+It is not clear to me here. 
 
-Currently, we do not allow releasing an extent when it is still pending,
-which aligns with the case you mentioned above "not release for reuse", I
-think.
-Can the second add mean a retry instead of reuse? 
+In the spec r3.1 8.2.9.9.9.3, Add Dynamic Capacity Response (Opcode 4802h),
+there is text like "After this command is received, the device is free to
+reclaim capacity that the host does not utilize.", that seems to imply
+as long as the response is received, we need to update the pending list
+so the capacity unused can be reclaimed. But of course, we can say if
+there is error, we cannot tell whether the host accepts the extents or
+not so not update the pending list.
+
+> 
+> >          return ret;
+> >      }
+> >  
+> >      ret = cxl_dcd_add_dyn_cap_rsp_dry_run(ct3d, in);
+> >      if (ret != CXL_MBOX_SUCCESS) {
+> > +        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
+> >          return ret;
+> >      }
+> 
+> 
+> 
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 2d4b6242f0..8d99b27b27 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> 
+> > +/*
+> > + * The main function to process dynamic capacity event with extent list.
+> > + * Currently DC extents add/release requests are processed.
+> > + */
+> > +static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+> > +        uint16_t hid, CXLDCEventType type, uint8_t rid,
+> > +        CXLDCExtentRecordList *records, Error **errp)
+> > +{
+> > +    Object *obj;
+> > +    CXLEventDynamicCapacity dCap = {};
+> > +    CXLEventRecordHdr *hdr = &dCap.hdr;
+> > +    CXLType3Dev *dcd;
+> > +    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
+> > +    uint32_t num_extents = 0;
+> > +    CXLDCExtentRecordList *list;
+> > +    CXLDCExtentGroup *group = NULL;
+> > +    g_autofree CXLDCExtentRaw *extents = NULL;
+> > +    uint8_t enc_log = CXL_EVENT_TYPE_DYNAMIC_CAP;
+> > +    uint64_t dpa, offset, len, block_size;
+> > +    g_autofree unsigned long *blk_bitmap = NULL;
+> > +    int i;
+> > +
+> > +    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
+> > +    if (!obj) {
+> > +        error_setg(errp, "Unable to resolve CXL type 3 device");
+> > +        return;
+> > +    }
+> > +
+> > +    dcd = CXL_TYPE3(obj);
+> > +    if (!dcd->dc.num_regions) {
+> > +        error_setg(errp, "No dynamic capacity support from the device");
+> > +        return;
+> > +    }
+> > +
+> > +
+> > +    if (rid >= dcd->dc.num_regions) {
+> > +        error_setg(errp, "region id is too large");
+> > +        return;
+> > +    }
+> > +    block_size = dcd->dc.regions[rid].block_size;
+> > +    blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
+> > +
+> > +    /* Sanity check and count the extents */
+> > +    list = records;
+> > +    while (list) {
+> > +        offset = list->value->offset;
+> > +        len = list->value->len;
+> > +        dpa = offset + dcd->dc.regions[rid].base;
+> > +
+> > +        if (len == 0) {
+> > +            error_setg(errp, "extent with 0 length is not allowed");
+> > +            return;
+> > +        }
+> > +
+> > +        if (offset % block_size || len % block_size) {
+> > +            error_setg(errp, "dpa or len is not aligned to region block size");
+> > +            return;
+> > +        }
+> > +
+> > +        if (offset + len > dcd->dc.regions[rid].len) {
+> > +            error_setg(errp, "extent range is beyond the region end");
+> > +            return;
+> > +        }
+> > +
+> > +        /* No duplicate or overlapped extents are allowed */
+> > +        if (test_any_bits_set(blk_bitmap, offset / block_size,
+> > +                              len / block_size)) {
+> > +            error_setg(errp, "duplicate or overlapped extents are detected");
+> > +            return;
+> > +        }
+> > +        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
+> > +
+> > +        if (type == DC_EVENT_RELEASE_CAPACITY) {
+> > +            if (cxl_extent_groups_overlaps_dpa_range(&dcd->dc.extents_pending,
+> > +                                                     dpa, len)) {
+> > +                error_setg(errp,
+> > +                           "cannot release extent with pending DPA range");
+> > +                return;
+> > +            }
+> > +            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
+> > +                error_setg(errp,
+> > +                           "cannot release extent with non-existing DPA range");
+> > +                return;
+> > +            }
+> > +        } else if (type == DC_EVENT_ADD_CAPACITY) {
+> > +            if (cxl_extents_overlaps_dpa_range(&dcd->dc.extents, dpa, len)) {
+> > +                error_setg(errp,
+> > +                           "cannot add DPA already accessible  to the same LD");
+> > +                return;
+> > +            }
+> > +        }
+> > +        list = list->next;
+> > +        num_extents++;
+> > +    }
+> > +
+> > +    if (num_extents > 1) {
+> > +        error_setg(errp,
+> > +                   "TODO: remove the check once kernel support More flag");
+> Not our problem :)  For now we can just test the kernel by passing in single
+> extents via separate commands.
+> 
+> I don't want to carry unnecessary limitations in qemu.
+> 
+
+Will remove the check here.
+
+> > +        return;
+> > +    }
+> > +
+> 
+> > +
+> > +#define REMOVAL_POLICY_MASK 0xf
+> > +#define FORCED_REMOVAL_BIT BIT(4)
+> > +
+> > +void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t hid,
+> > +                                      uint8_t flags, uint8_t region_id,
+> > +                                      const char *tag,
+> > +                                      CXLDCExtentRecordList  *records,
+> > +                                      Error **errp)
+> > +{
+> > +    CXLDCEventType type = DC_EVENT_RELEASE_CAPACITY;
+> > +
+> > +    if (flags & FORCED_REMOVAL_BIT) {
+> > +        /* TODO: enable forced removal in the future */
+> > +        type = DC_EVENT_FORCED_RELEASE_CAPACITY;
+> > +        error_setg(errp, "Forced removal not supported yet");
+> > +        return;
+> > +    }
+> > +
+> > +    switch (flags & REMOVAL_POLICY_MASK) {
+> > +    case 1:
+> Probably benefit form a suitable define.
+> 
+> > +        qmp_cxl_process_dynamic_capacity_prescriptive(path, hid, type,
+> > +                                                      region_id, records, errp);
+> > +        break;
+> 
+> I'd not noticed before but might as well return from these case blocks.
+
+Sorry. I do not follow here. What do you mean by "return from these case
+blocks", are you referring the check above about the forced removal case?
 
 Fan
 
 > 
-> 
-> > From the kernel side, if the first one is accepted, the second one will
-> > get rejected, and there is no issue there.
-> > If the first is reject for some reason, the second one can get
-> > accepted or rejected and do not need to worry about the first one.
-> > 
-> > 
-> > Fan
-> > 
-> 
+> > +    default:
+> > +        error_setg(errp, "Removal policy not supported");
+> > +        break;
+> > +    }
+> > +}
