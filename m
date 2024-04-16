@@ -1,129 +1,165 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C2A12E1D3
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 15:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713279668; cv=none; b=DM4VmJ6oEVOqwn2tvf9Ohv2Xm1nE/JvMxGTV6LOClbBH+8NiZVrAwMaZx09MCUhBTpOyoUmxkKAKVcEDk5Erx8c7PH/WXnfj9zHB5qLfAgDL3lA1rTbtUkYqQlpLyX8wkpFQj4Ik/Pm1Er6x9wm3nLli4jeRat8CLNhZqXG+Aks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713279668; c=relaxed/simple;
-	bh=m6Lvgv1hxXV0+3hd352lHTY/KJCt4gs+dsvna1eac9Q=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ENK7byRNN03ml28Ewt36RyFJHJZWV9kBc9ENqfalq8IvcC/95vRYsKTu0MvEWKoWE6iiJbkPpohnFLlO5+nRPPwQJS6GVjukUTN5fGKeUkdLFeEt0s7G2mZsF5owzD78tN3Z9OECltHkN/gnX4JifGGM5VwWn5L69/EzGLx+mxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VJnD161Cvz6K8wk;
-	Tue, 16 Apr 2024 22:56:01 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21F3D140B55;
-	Tue, 16 Apr 2024 23:00:58 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 16 Apr
- 2024 16:00:57 +0100
-Date: Tue, 16 Apr 2024 16:00:56 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: fan <nifan.cxl@gmail.com>
-CC: Gregory Price <gregory.price@memverge.com>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
-	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
-	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v6 10/12] hw/mem/cxl_type3: Add dpa range validation for
- accesses to DC regions
-Message-ID: <20240416160056.0000325c@Huawei.com>
-In-Reply-To: <Zh1lk8FWmf0oI7RM@debian>
-References: <20240325190339.696686-1-nifan.cxl@gmail.com>
-	<20240325190339.696686-11-nifan.cxl@gmail.com>
-	<Zhm7ssKVGdGlR9Iq@memverge.com>
-	<Zh1lk8FWmf0oI7RM@debian>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833DD1327FE
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 15:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713283156; cv=fail; b=F4uAIcw9WtWNAv56syUBgxjLGtCz14LlOvcxop0SICuc78baeSJVjyDpi2JyT+8CeGsITvEJEtyzbrNMiqfOw+LHFob412zg35YifQOvGFJUar7fGqKBqy82Xl7yIOdsynjTeOt/zOZy+hm8egLhpb+6DdqFwu30/37zkwB7mQo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713283156; c=relaxed/simple;
+	bh=Np6L5hilpE/9qVf1MT3sJxeYFNXqAv3mujpXVSV2zio=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=f2a72oAu5xcSXXtgofb7pmLh7ttbNemcL0FS/G2ibDLXVAMd521dDQb1MPSf0+KEG73vYfwkE6Pzin5m0YibCIxhrncDIEBOeNL+5DyJnr46xNjhECRkHrU+QPFnMJZjLFjpyXAHf6QEYlJ4fAeEsuJc6qaGvYI91VuQImCQpcQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsMgJVcP; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsMgJVcP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713283154; x=1744819154;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Np6L5hilpE/9qVf1MT3sJxeYFNXqAv3mujpXVSV2zio=;
+  b=dsMgJVcPLvpTYz8btz0Up4lvjBBygSrenQwuPK44udtT/D9Tki6R6kze
+   bIhZg8bXjBrgSQnQ5IXLrbDg/pi3ZZBmdIjgAp0yebiSbcvYiySqoc9rK
+   EGbs1kN8myw9yV/m43fDKSUvhootXkWXplKxp2P/TI0qoC2UPmuP4rN8P
+   XS/EafeKu2QaEux/tnLAqUyOHRtR/gpKUbChSi1dQVnfo3W3LFocTCU5E
+   hkEa9+Q+VlJleFLRDVW6lLj9DxM+X4qnu5d0TbkbZiVHGyOELM7eWFwBR
+   /7lYqmIKS6r3/IK+Hj782uiU4Cy/sMXnArt1DDX0VOikvgb7yJWxB3n2V
+   Q==;
+X-CSE-ConnectionGUID: cowEco6lQH2EZfrJp3GdUQ==
+X-CSE-MsgGUID: u9DRmVKuRXCuJfZ2gIFShg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8597367"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="8597367"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 08:59:11 -0700
+X-CSE-ConnectionGUID: mOHbEF2eR4+Nj03svH1D1g==
+X-CSE-MsgGUID: 62Br6BjMTo2F7ufa5Jb8pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22368394"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Apr 2024 08:59:11 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Apr 2024 08:59:11 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Apr 2024 08:59:10 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 08:59:10 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 16 Apr 2024 08:59:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XfHeVfFiqobLqchq6VptTYcbyXH5GE/u2hh0rLxTAW/LdwHa1BcO3mlzAJn4GV7UYOZWnXshcTj5T+mv+IyK+ekTFOoEuoufpdttQaHgPahfjat7uktQHEZm0+RrUHy+afvlLIk/JawnPXnpBMIqRVUWpJiirYLfytMhoZcmnM5jNPQjZdZKSXTRvGgEfk+IUFkzy2BHvOTk2ED+wvCKLjoLhRnnLxTpms4sxoY4Iru1go+bjLQqIskHncXoWGdMcRD2ZIWy8lSAMstHlfErysg5Iy+penWMAyoRo9NmMx/03X3+6HJcwohBcuAb3MpIwvdJuqJZWLJOorwV1izhsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lF7qu1bNw8I8DxqI4jlp0uOZ+jV2IVpv6vCGYQ6KpPE=;
+ b=h2qPVmDT6MZFU6KOAJI3JMpiCne8MA4bE14yfESdVjPlLmXvGSKXQrgbBto2oydOdtUMDeTyYUYPM4+Sx0DBkbB7BZJxGUern2pvEQ/nr5M4WB6J/xbshwGnL5tcrwLuo8aejLFLVsocGdc0838UM+bkCk+XXfDOyoQ731xPiH4T0+IglTu+9zAoKKhIeSRbyw06X1vq5YeBYXDaFvllsusxD5gH+315BA9XbyNChdt3eCBh7D01CncvRWrvYWHlwN4nl29rOgct32qKhFxRuxerZkvcxaHshyW7pLVvVjqTEpjSL7XLvHgxm/DiLQ4Hrl2xNUbXLl3fTYrRViY6Sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CYXPR11MB8689.namprd11.prod.outlook.com (2603:10b6:930:d8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.43; Tue, 16 Apr
+ 2024 15:59:08 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7472.027; Tue, 16 Apr 2024
+ 15:59:08 +0000
+Date: Tue, 16 Apr 2024 08:59:05 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/4] cxl/region: Move cxl_dpa_to_region() work to the
+ region driver
+Message-ID: <661ea04992d54_3f18292946a@iweiny-mobl.notmuch>
+References: <cover.1711598777.git.alison.schofield@intel.com>
+ <e62889d00f883b804e46a1840454b0c06323fedf.1711598777.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e62889d00f883b804e46a1840454b0c06323fedf.1711598777.git.alison.schofield@intel.com>
+X-ClientProxiedBy: SJ0PR05CA0081.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::26) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CYXPR11MB8689:EE_
+X-MS-Office365-Filtering-Correlation-Id: a574bf25-a764-49c3-4363-08dc5e2e266e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2rpagVbU9tJbtf5Rm0R8jcQZ5frL3ch7tzuRupz/SFGMIHb3LZU0SPP0CnOqC9EYRZ0XeRhRX7YxdyrafEleB85I/Nz1lFrGxefdP5L5h9J1RbhgyiA5L32vLDcJxCnsG/YPUHQhKvqZHpbuGquGEunx0XdGuFRLXC1nmG8J7ZXROh3b1HIGt/IkwToxwjMfrQlt0VzjFCBFSUI1P14nJFllrodJ4LyajGbprlTWxfBS6s7M4HIZsWdMNKNMcbmy0ti6C6556NT0u4w1bxRBukOyVpAbvmdUwWMUzrmiPYG3eXEvMuQ/lI+Ogsli0J0KcDE1wMiFrYKR01YKiICfoi8O+f8s73Mi+1TOEX8h/DddEQb29zsRi6uNihEbB0lgmZ6KWHamLL8ks1NNN+dIgASJjIobJ5qjob18Taf5SeALZOvBY0TcukFF+5RuOtK0swl35HfxOtAk3yO+t9Ukv+CTO3AYnFHW2rMTtYvrz44Gd0WDNcOqcjg0PjygXJbmHDZKVmnz+HhcTm9uPCVqfhrsgGPM/DHhiGn+oq7nlzUrNAzqZwlTCPevIryptd33IfmymA6h78X0Wh2r/8ucUPyKKFlIQFrVZLSFgZvntZjRbBW9fAg+NzOucOPZ/CPr8H3WsCJ/qYxyWpsyHU+DBiGytFy99zyyjD/Q8UcrDMI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RrovsNGO5+yiFkoqd+ZKqUHfvEdM9rnR76b0lJv01nBE0j2S8fjXxQ/mtV0a?=
+ =?us-ascii?Q?DtmoIn6wmMwb2wWX4qGtv1KOOVdBMQ4cQiCv0DRzUXlP/dkia96gFGoKod+1?=
+ =?us-ascii?Q?1IeIHPDed08wxgmz3MYHFJbcIeyNoz6/aZLgxFdTvBi5VB+iQ8P3tcK5uZLF?=
+ =?us-ascii?Q?XuV/xBUIjTeeXhIOba0BE5CPt55gakB/E3qBinZ5HsMTn5w2gDxDbmD083FJ?=
+ =?us-ascii?Q?n0InMQHUUOlTDCu4ctWSENSN1DHSFVL+Bvqp5JL5Hb9Px1DsJNHMwV0CnGxU?=
+ =?us-ascii?Q?DhKPqMp2LTSuKRqPV3SPgb1qONB21IxuTZ0b3r7hlElrhli+s25Afj4peoaH?=
+ =?us-ascii?Q?Rcj+edIkEJi3PQr+iiGZBzYMHn5NsIxGLRcfRd5/q//WvOGXW0VSKkiMhLvq?=
+ =?us-ascii?Q?t/oQ5Nhzeoh7TrjSIuai0MdByEeqGVxpk5ZhJmvJR8me5be49dbs++Z8AZzI?=
+ =?us-ascii?Q?6FlQAu9/vYKDaco+yusp/a6UsqeSxQiGA3RhEs+OkWyib1cNhMd9RN62clh3?=
+ =?us-ascii?Q?/b5ll4naJSxvusWujzRPtyL1TdDnrSWiCLkAEbRgxcGq1ZEjOTLg9V3xzanV?=
+ =?us-ascii?Q?jhyZ3l/8QdDGZmRGC9KSq4Vi7sj9rgb2a4PUBcqtkPVBPxNWUpI5Pef/XjcX?=
+ =?us-ascii?Q?BXXwklWEXiQN2TBd3XptW0hopHjSJNx120LgsQBMoDcYTW1GDnfDubbWtvSB?=
+ =?us-ascii?Q?62Xkt1HeU22AUAIh4JZ2+EbpkcqlQfYySDh0UI/a9eUTXp7kd91s33rqMPZW?=
+ =?us-ascii?Q?PwNj5B7tOl8WMCtDr5bqaQwoO+ygvixhmjEEr+SJvYpcjsVbvMSJETEDzNlI?=
+ =?us-ascii?Q?kCF6Z26O0kNlyN6oYo1bS+cmso6zfQ2lew0btgjiD7DoVptpaowKYSJycmAL?=
+ =?us-ascii?Q?N/eIEX2EmzYHCkOuajJ90Fi7vb9necKwH0pr9rMTGl8WnHGYPh1lr8gFHxtp?=
+ =?us-ascii?Q?AU/qsEQrr/UryZd6IPDfzM2F6vdJ/1Fji1ZgRAyrzqaU3nAMcnxBcHc6/ZWB?=
+ =?us-ascii?Q?yM8rEeRPgUzlIehwXoAg1wvCY13nOeoGFKxADxg8DCV2qk5UFwRM9sT4xtOC?=
+ =?us-ascii?Q?kzJtYzivUiORmgVO6BsttHGbbjcGKeYW6kag3ygqIGMZbi4D+zSFgjI1XjBj?=
+ =?us-ascii?Q?iQMc2ztpGY3wuZC4qcGLnTe5YqiwZilgj6E+0OhRT6CQN+NTPGvMcxvVB+y3?=
+ =?us-ascii?Q?CVIISymJQaZbXZ261XaktO0zgy60ieoDDBG1zJBJSYf1QybOYIKKPhnsrRfE?=
+ =?us-ascii?Q?6+kVVs6bQZZzouCcaSyXzOGboPxZTDRuCZUeQbcaw8Z8v2uu2V9L90MHX6R/?=
+ =?us-ascii?Q?45qEQDSMVu5aaWnThNE5jvooF24yQLpkoYi28yt22OVcVcypaznwKsM2MsoU?=
+ =?us-ascii?Q?Iv9BzDzyASCgOVDmLKGcgRe7GEw4AWsbTrveg6hf30BTbJ9cFyB9dZ5pBXW8?=
+ =?us-ascii?Q?fZ0hQk53KM5kosrxjFybOX3XM9QN0G58C4DJoxNH4zCpi+gvPjN5UxlS13H1?=
+ =?us-ascii?Q?L4Uym47rKj+L2fglA/tJmyQanKlM78rOCQCKNJY2Xudr8rCqFgzqKXG2DvRw?=
+ =?us-ascii?Q?T8cVCs+YZnjCeD/yv97IR41tyYC/fVu1ZVtmK01c?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a574bf25-a764-49c3-4363-08dc5e2e266e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 15:59:08.7613
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GSxaa1umufUGBznqFKl/n0avALFo3FEYh/ca9MnFL4gB+ZP21CoDRtKAtIgaS7oF/FFks8OpdbYHp1eiRNmGPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8689
+X-OriginatorOrg: intel.com
 
-On Mon, 15 Apr 2024 10:37:00 -0700
-fan <nifan.cxl@gmail.com> wrote:
-
-> On Fri, Apr 12, 2024 at 06:54:42PM -0400, Gregory Price wrote:
-> > On Mon, Mar 25, 2024 at 12:02:28PM -0700, nifan.cxl@gmail.com wrote:  
-> > > From: Fan Ni <fan.ni@samsung.com>
-> > > 
-> > > All dpa ranges in the DC regions are invalid to access until an extent
-> > > covering the range has been added. Add a bitmap for each region to
-> > > record whether a DC block in the region has been backed by DC extent.
-> > > For the bitmap, a bit in the bitmap represents a DC block. When a DC
-> > > extent is added, all the bits of the blocks in the extent will be set,
-> > > which will be cleared when the extent is released.
-> > > 
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > > ---
-> > >  hw/cxl/cxl-mailbox-utils.c  |  6 +++
-> > >  hw/mem/cxl_type3.c          | 76 +++++++++++++++++++++++++++++++++++++
-> > >  include/hw/cxl/cxl_device.h |  7 ++++
-> > >  3 files changed, 89 insertions(+)
-> > > 
-> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > > index 7094e007b9..a0d2239176 100644
-> > > --- a/hw/cxl/cxl-mailbox-utils.c
-> > > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > > @@ -1620,6 +1620,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-> > >  
-> > >          cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
-> > >          ct3d->dc.total_extent_count += 1;
-> > > +        ct3_set_region_block_backed(ct3d, dpa, len);
-> > >  
-> > >          ent = QTAILQ_FIRST(&ct3d->dc.extents_pending);
-> > >          cxl_remove_extent_from_extent_list(&ct3d->dc.extents_pending, ent);  
-> > 
-> > while looking at the MHD code, we had decided to "reserve" the blocks in
-> > the bitmap in the call to `qmp_cxl_process_dynamic_capacity` in order to
-> > prevent a potential double-allocation (basically we need to sanity check
-> > that two hosts aren't reserving the region PRIOR to the host being
-> > notified).
-> > 
-> > I did not see any checks in the `qmp_cxl_process_dynamic_capacity` path
-> > to prevent pending extents from being double-allocated.  Is this an
-> > explicit choice?
-> > 
-> > I can see, for example, why you may want to allow the following in the
-> > pending list: [Add X, Remove X, Add X].  I just want to know if this is
-> > intentional or not. If not, you may consider adding a pending check
-> > during the sanity check phase of `qmp_cxl_process_dynamic_capacity`
-> > 
-> > ~Gregory  
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> First, for remove request, pending list is not involved. See cxl r3.1,
-> 9.13.3.3. Pending basically means "pending to add". 
-> So for the above example, in the pending list, you can see [Add x, add x] if the
-> event is not processed in time.
-> Second, from the spec, I cannot find any text saying we cannot issue
-> another add extent X if it is still pending.
-
-I think there is text saying that the capacity is not released for reuse
-by the device until it receives a response from the host.   Whilst
-it's not explicit on offers to the same host, I'm not sure that matters.
-So I don't think it is suppose to queue multiple extents...
-
-
-> From the kernel side, if the first one is accepted, the second one will
-> get rejected, and there is no issue there.
-> If the first is reject for some reason, the second one can get
-> accepted or rejected and do not need to worry about the first one.
+> This helper belongs in the region driver as it is only useful
+> with CONFIG_CXL_REGION. Add stubs in core.h for when the region
+> driver is not built.
 > 
-> 
-> Fan
-> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
