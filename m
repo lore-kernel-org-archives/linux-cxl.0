@@ -1,186 +1,380 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA11130492
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 16:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283607; cv=fail; b=YSo9oaKcfs5YcoK8XSrf8QKWRCqEAWN9jvFgQyXTnLbEFf689C83m42IIkQF4JD4n0ffvZLeGvdWMA0DAY3UNCn568MkjlWPpwgH4kcP/vFUEEeR20s8O0TKtvTWnC60cPLnnaxG9/fOSrtGas9QqtIypiEiEZBwTM9J9+/81SM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283607; c=relaxed/simple;
-	bh=O2kUFWKbTszctBq79fFAzgxcV0cH18ErebvDyJBCglw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tRSVfJje6+XrOLwpVNaUrnXhLC7SwBaI0lAy0nOaUcQ3KC7idPgUUqaopYeUFrf6ggKro4ABoF6nTq4yh7jQRYkkzqDmBDjnDrsnUgx5eNEh9EevuGLKgHW7dh4w5orYZckY4MjInNT1JtZDbNGd41H6d4Q0Jt4otkzjwD3ta0w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GTH37k9Y; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF9513329F
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 16:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713284843; cv=none; b=clTyn/NJZZOwu1K6AbG+vszoiTkLwnMs/buQw0/NA/Fpc91YCRckIxmiAoHYMCH0c2BP4FTONzbA52CATYDcACojbqwxHDPm6m/cwAnzawalMx8PlHjeWy9XC6/UlM7znc0q9X7iQ8RePP+5aaPn8zL8uX2uD5pcuGgXnF30ktQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713284843; c=relaxed/simple;
+	bh=vJADZV05dA0ZIzyy+yg9r05kczyaLXq+URpajbQFUC8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwyeR4LO7VbHerdBliOWQ1vPqjnWLfua2+bqvkDcOUd4YBsUr6SMHVYL0FPt3FxRN78NTYFOHmBtIYg5lAEoiHO8euI418ar6sehq+Hy8hJPFd2m29+o3pPA0sR4lIsxxt2KBOz/eAnfrvCQH1fjZrxWtoRCuKtxysAWRrwg+Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VU/yRtAS; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTH37k9Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713283603; x=1744819603;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=O2kUFWKbTszctBq79fFAzgxcV0cH18ErebvDyJBCglw=;
-  b=GTH37k9Yi059RIuAnVffxv95w7CLkvzl9YPz3Syjv+4hrvX1OVW9832M
-   RiVa3xf+lnwdLRSL985bBx6JktPpJExOnS0tdweljoWsigGusFpt5qS+w
-   v89L4dBkywyDGHTd7CnY4bhz8YAcHaBmcOCCKln63GYvMNSGzsFi1cDqy
-   2cfHJWiScx78IClOviWwPHyRaXdEpyA2HNz4zvC3cI3feNrlMM47meHVD
-   nBdGQfRy12f9eciBSD+h7Pub+hQv4fX8qchaPKlSyRPnzgwmRd6P43zVx
-   7TW6XWYpFGEDEUoM9Ilb6m2+F7XnTIq3/CcFTK0x0l5XYnlOduB17VB8y
-   g==;
-X-CSE-ConnectionGUID: 2tSMe1k9SdKkABYBNiISbw==
-X-CSE-MsgGUID: zhYQGSRARAGrIXY6AN77Hw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19441575"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="19441575"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 09:05:38 -0700
-X-CSE-ConnectionGUID: 8vk4eewhTHGxZsbxkUUFRg==
-X-CSE-MsgGUID: HGquDDZ0Tk+3ltcpy0lD0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22372915"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Apr 2024 09:05:37 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 09:05:36 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 09:05:35 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 09:05:35 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Apr 2024 09:05:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HNl+brVdgNaSzd7ZSNWceHr2mpak3pLUA9PWDfg6VMe2sRexeP6tJpBFastIO6V5mzHcffay4h17DQMw92gFZdjFHSxiPOZOJ4DnLhUwqlsWiiqMtpateKZ4sondoCeE9pTVZLEqQIEQvrfr6f6qeAPeCs+Es9FOtRTmbulYuMO62QrhYLxKLTiptbvFPbqZM4pTUvBqSQAGMifoFbw/1yyjdth57JoK7mQ62tgE291llQYeoP3lQBdYKsoHkj1gHmELYARbuEUk44KVL8Sj5TLThTMa33jbb6yWj5WGHvKLMxdXKj3roWu+9uFKFkpQQeiggdxXWRR+iNFia9ilag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dx9dZJVlqZHmW3eQlLWWtyuyn7U+QKVNqaKydzfOCzo=;
- b=CT6ZDRSTJihJakvWUxnDL08Psze3AlCHqhJT1hT8W2iDR0LIpxyySYsYdsiNKIHyQLFdKgi/ROtRYM5YrklDhVFrwWy7RgcuNkRaqiYsrEV71OlD58N6dhvh0lSbQUKmENdWVYNOIsOKdryHvzUXEs8e9ImznvMQq3yB6GAW5+l2zRtbElrySi32Nncs/CxZLOpYsJ7SRlr883RWBQ1EXyV9EluiNf48C7PrKnRK4+nCaBbUwxemFYo51X05m1FWb6HRKUk0f3zpyc0n7NgclYUY8bAmmTUGsw0Sk1Je7gwmeueCJ6N4MX54myCDWtEAuV2mc+OCJLEEJ45nRigwIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by LV8PR11MB8747.namprd11.prod.outlook.com (2603:10b6:408:206::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Tue, 16 Apr
- 2024 16:05:29 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7472.027; Tue, 16 Apr 2024
- 16:05:29 +0000
-Date: Tue, 16 Apr 2024 09:05:26 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
-	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/4] cxl/region: Move cxl_trace_hpa() work to the region
- driver
-Message-ID: <661ea1c668bf1_3f18292948b@iweiny-mobl.notmuch>
-References: <cover.1711598777.git.alison.schofield@intel.com>
- <0174dc9414d4beb71828f66e173a8fcc4ebe76ab.1711598777.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0174dc9414d4beb71828f66e173a8fcc4ebe76ab.1711598777.git.alison.schofield@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0111.namprd03.prod.outlook.com
- (2603:10b6:a03:333::26) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VU/yRtAS"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ed2dc03df6so4100939b3a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 09:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713284841; x=1713889641; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SBG/mQ4GfyCu+fuVFl2L3ZeD8uCGStI54PbBXpfreoY=;
+        b=VU/yRtASJrlqe8wyXKq+hiZtZzTSQV84Fyv4sLQp5if9OS+JJGH2bsSdFj7B50e53l
+         skqJmx4naeR5PTDIOYeprD1/d0c7Pa00L1sk0xrQJoi6rGoBKRucpRKRgwdHRipNFIj8
+         Q+Q7XK/8s7iYZEWfXSzhIdsXz8uiFwhOEcSquuEWFdMpSM+05oPOmg5aWVcbR0qN5B+Z
+         NA/HFjNC2ZnvRM3PKABcb5+OVxIzE1LzQoVMucb2/ofzh7NxqVkWe4/WTeCeBWrEgv71
+         nX0YGjU7pz054ZWRQr1q9nmknGK2GUO6hz02IcLobgc8Ygxj4/EhltteBkWEkK2whe4s
+         TIbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713284841; x=1713889641;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SBG/mQ4GfyCu+fuVFl2L3ZeD8uCGStI54PbBXpfreoY=;
+        b=iscrqsSM/pHel/gtalkdm0lZDDN4WTYoiEcSRRXj17xDscMSnvRtYVmvs+iJStcX87
+         EfCt4UI2P4AxUqHwQhU4mYTnBg221GIcz/cizqFx1XouLC+sB/W+qsEgJ9rQV/z9C6Zz
+         TrGnc+FdZ05v64drqbwldlGvMv0aRLO25EO51b0TrGossPEqJd0FT5YQfTTbvLTxiRn6
+         g3r4gBb+ktLJmosfGU1MXtjrwWNdB/I0WpkXwUJxDdZdfWVXnIQvVnWGg2MkF48WKRqG
+         Ip5oPXDv0UitRN/DZmpDHw7XHgkKYnEf0w8BeDCb3InCqv66XfqyQ6EiCR2OjWsncdO1
+         fJYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXlFBK6tA+/ju0TgqXgcdNnsSlQW9hj7qFzek1wZrphsZfHgvYH1ApYrQOpXjVcN3rehcF5YJjIsL1aXDgDAMSOo4BNTvIdS10
+X-Gm-Message-State: AOJu0YyLDDHiDylqPs3eyQoKhixWesfOxKhDK6ahOK3t0pouZOWBAABA
+	hgarlmeRyJrewn3fa6+Ri8rN6PRhXj7NcJSBjqJxn1HghS2DkhDH
+X-Google-Smtp-Source: AGHT+IHGJV5CAsGQuYftg0YM8Z3RHPvXox35s2OBpa48nnHBotCg/3bZwRMsN39fmE7KL5L2sFmjog==
+X-Received: by 2002:a05:6a21:8cc7:b0:1aa:5a22:5eca with SMTP id ta7-20020a056a218cc700b001aa5a225ecamr1367732pzb.31.1713284840845;
+        Tue, 16 Apr 2024 09:27:20 -0700 (PDT)
+Received: from debian ([2601:641:300:14de:b278:701:b83f:cdc])
+        by smtp.gmail.com with ESMTPSA id b25-20020a63a119000000b005e840ad9aaesm9037741pgf.30.2024.04.16.09.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 09:27:20 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Tue, 16 Apr 2024 09:27:06 -0700
+To: =?iso-8859-1?Q?J=F8rgen?= Hansen <Jorgen.Hansen@wdc.com>
+Cc: fan <nifan.cxl@gmail.com>,
+	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"gregory.price@memverge.com" <gregory.price@memverge.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+	"jim.harris@samsung.com" <jim.harris@samsung.com>,
+	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v6 08/12] hw/cxl/cxl-mailbox-utils: Add mailbox commands
+ to support add/release dynamic capacity response
+Message-ID: <Zh6m2nRZEzxBhN2s@debian>
+References: <20240325190339.696686-1-nifan.cxl@gmail.com>
+ <20240325190339.696686-9-nifan.cxl@gmail.com>
+ <9e4207aa-be50-40ca-9fda-30e4fabf6e98@wdc.com>
+ <Zh1qRCV9EciuQsPi@debian>
+ <7a530a19-58e7-4847-ad29-699fc9e11a4f@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV8PR11MB8747:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb5825d5-e41e-458f-cec7-08dc5e2f0933
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?36a1Qk96v92O7q/JGRG+/fxD1dRuFxjuKqMxYKWxcODrGtnpGn7i5nk4IVPV?=
- =?us-ascii?Q?HoZFdBmiyv60yFQ5Us4SXEU5NiEoeojQcqZgSwOZnppXm0UK0dIi0+Uzi4Wh?=
- =?us-ascii?Q?a+prwheWP6PvbS4WjKiV7IsemYBx+q5UlQvvYayvZXNg4SIjn2RRF4aSbwpM?=
- =?us-ascii?Q?zLpcnDSuXEpLaaDU6e//cSBgxlwbWXJhho/RSbJZmQSTccKb3z5WVt2Hukav?=
- =?us-ascii?Q?iP7TJTPBdlx4Ztu2i/Etb9zofU7mRjXaTOUM1/GJoY2G61sYLBGsu6vUQdns?=
- =?us-ascii?Q?znxfPe3UGoWOyL7hKMor3LmoNbBunUJvZlzHLANsysH/xWQV71wJpM3vrySk?=
- =?us-ascii?Q?1i+RHlYH+K98tRpCYQttNBrDE5dKsAqBvPJUGmV1pGs2+f698nuBePLOHxY6?=
- =?us-ascii?Q?50xMADsDbsGeJvUg2zzbYD+qK8Sg246izYeyWpi69Iv3sH41vrfgOpvsXpfl?=
- =?us-ascii?Q?p43Ay4/a3RSOxW4cYx1XAvyLA2cs14ysyfPJ+0fz57ZTrjpQtwZWUScCuIbL?=
- =?us-ascii?Q?3T8wqdwBtfNH8EtvzN1m1J2MrWN6IfXy5muCzOjc1JgqqpHQXQfudu15eHTS?=
- =?us-ascii?Q?4w1FrqfJciIjdUrWjLeNJP0Q3uT9j82gcW6ygbV+DiROUv+QaiosUrXJThIn?=
- =?us-ascii?Q?iGGOto/6J68w32vW5rfWgtQ5TrWg1Eh6DHaTor+W8TRQJt7UgwcA0TPmgELw?=
- =?us-ascii?Q?YTuJfnlhmUn/gNS7jAHvVW3jDrv+qAbZRZDSvA45s9rwboppREeFz7mQh8Eo?=
- =?us-ascii?Q?rNX/2dHJndYDbHDGtox9qfTZfYhnAV/Y1xNQAdVocJULynN4fwmKu0998RkP?=
- =?us-ascii?Q?nBUPyvyJ+1M3LIN8FeAcnpC4ltndTN8jwwqvnTf0Es8ucoExfPYnKiEij0o0?=
- =?us-ascii?Q?fl+kTh3wNccrlyxVO0zKn04w9zo8sC4ppPFVSausPHN5hdpZNaW/eNYmD5PV?=
- =?us-ascii?Q?ZKXuEinWgC3+lx/oHVfb5ilmMKqaFUCMStrEoPBWytIPF06K2OAcGyYsMtLc?=
- =?us-ascii?Q?YtJ1n9W6UX1RXn7DlPg3ooruNz4OcPc33PtArSCwMf4pIWbc3mXA+U+pYTJl?=
- =?us-ascii?Q?FspiUk39fwJSfEWeFIcbTcBDcAKapaQxnPA2oxfOksQk4O8EexrIaOLzNgfv?=
- =?us-ascii?Q?q/KUkCHum8ORpCj54iMEq8DbqLsQoicTXPjQfhRMQui6XHVgSew8LZowfcbs?=
- =?us-ascii?Q?rpQ8GVw5FNzL01zIo9zp4XoyutyveVuKXoM6lE7zzd3YBNyalF4TAVrg7J4l?=
- =?us-ascii?Q?ucHZUax33bPEVpPgQvOJ4F6PQD9bfZqoTbHSrqHwLw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VGXq2tN7mKOZ6bPGXcjOJDUoj7MvzOmuSlsGXBhkIHCVczu0HdEIwXF2scbl?=
- =?us-ascii?Q?JjEsW9muiHuJgb8K5N5ZrrpHwD9fEMPWvb9CBIt9cdWVH47FX5YWnVf5XplF?=
- =?us-ascii?Q?nhb5yaiAxvlBdpxy2vTGifNy71rsBMayz75Z8nfrForM28ql+sVEM3zaBgos?=
- =?us-ascii?Q?tejzS52RT6kUUEp0RrzKp6pcmfYQ1lAU5fu2AZmtqh3vPiPekSkRzLWLifU0?=
- =?us-ascii?Q?wB1o084wHmNgtz4vqFBPUeTpjfc2KYQlP9pxNnkM+hdcbvxLQ4g4e4uvWz3F?=
- =?us-ascii?Q?J/7OFRQ+FjEJfLhU7m2PC37CHHq9aDKuYbz9OvbJYC/j0eEOL/qoqqSNHC5l?=
- =?us-ascii?Q?P1Jxu81KKbpB+s0v89l/GfIYq5VoIefaC9CBwqJmSvS8OuHq0h7AbjmdqrJj?=
- =?us-ascii?Q?j2DXVy7jvi555dr0SROX+YYQbmmWcPoW0AW5/nYl57Ln70cJ8ZD2I4N2BhIz?=
- =?us-ascii?Q?MUB9QqjJQ/HggtvF/0+XwlltxAc9+FuLJy/rbb9+Fm6ap3FYvCXckjCMPolB?=
- =?us-ascii?Q?FOl36FgxxGo98bvCfvxzTG+i6j/V7+9/7WPM65kk6KoKUIeWx8W0S1ELiPuY?=
- =?us-ascii?Q?dNAB4rUFF7j6Th/KsuCSbcIua3UyNHcVpBprQpUigh7YBrZUqpcYO/7ux1my?=
- =?us-ascii?Q?9rAsh6NC7hOlJuhOU9qy8N7OqbC6BGsDbEt/g/Q/Lqr2ZXPP9IfxVEYCaP+5?=
- =?us-ascii?Q?zTAG3PQE6a63lOa1aGOBccMjzZAxMRrfG788tWWVnViivEhWkWWzhjf1RkVB?=
- =?us-ascii?Q?92vFwURgLlDsjR6NbUhFzjby0vlFtLFXga1cjY2YND/6/kkPWq6D20BJiHDh?=
- =?us-ascii?Q?fx1Fu+1jqoxAz00CSYvxKPvJRRAXAT1uv+EhdF64SRt50Ek0Is3G74Ni9kVb?=
- =?us-ascii?Q?rNFsR5VieJmjuSMf4NdN+FjgxshjEHA1DxSyfarqdEOKe4EXn2co/WLzpdsi?=
- =?us-ascii?Q?yQeWrOH/hhtTxcX7yaTmyF0GHkabjFwu1RSNGeiuon8xmNCc1LCMlOCjZ24J?=
- =?us-ascii?Q?bZSeID61IT1d2ftCGtCvGrRBljt+ZcuQdJ2r+R0tdcPdNrJSW4zNakTLOsMa?=
- =?us-ascii?Q?GcJ41hT/3NlYVKjX8Gy1YUYgZTRleYYI32ExXmN3WWSYILVzVe3arxj9fOBP?=
- =?us-ascii?Q?iWikRKrRyJyW0BPYtQraz/RIy4UqGwicAv70+DFfdkvv1OxGeIxfbSTJy4eP?=
- =?us-ascii?Q?Jth2k8qtC/AUqSxyRUbbz9St5UVMZBpg+qb/8LtD6rfYpI4JOKhPc7EO+pbs?=
- =?us-ascii?Q?8o4NJ//Q0bTTOHwfYwOA7Ym4nLd1CIaLA2NWDcuhXpHlckIO84T81i3T+Ng6?=
- =?us-ascii?Q?0ADLCrY7DQjBf0+OuhtLxaxSi+lscFl4PMSSPB3wP0nBWC/QUnfjp5VeqJCr?=
- =?us-ascii?Q?iTaC3bZ46Vjzi6Gc2OBH32sR9VOmgyEV0JbuVUYuFvPSpu7thAcIoD6DXEhX?=
- =?us-ascii?Q?cAv5V4FJRRy0s0RTsT+HsjDgXmThr5kgVcZc9xXg8vocnt7JFOxVs2f8ODIt?=
- =?us-ascii?Q?o9du8kjd5UPw9sCPXggCrlLLy/E6MSHg+BBeaFMjZencFQtR48kyR6jjnV60?=
- =?us-ascii?Q?aUeStjSPu5H6mIvwQCzuAQDGlmCJ85fk3Ga3Vn9H?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb5825d5-e41e-458f-cec7-08dc5e2f0933
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 16:05:29.2622
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S6BNpypXDDzuNUkAku4AfBN1oZVUlyiKpdMMy8iIOaR1JT31vOeqEdZksNWG1WNw9c7F/W/lt4wYQmgwLr0low==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8747
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7a530a19-58e7-4847-ad29-699fc9e11a4f@wdc.com>
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On Tue, Apr 16, 2024 at 10:02:53AM +0000, Jørgen Hansen wrote:
+> On 4/15/24 19:56, fan wrote:
+> >  From 4b9695299d3d4b22f83666f8ab79099ec9f9817f Mon Sep 17 00:00:00 2001
+> > From: Fan Ni <fan.ni@samsung.com>
+> > Date: Tue, 20 Feb 2024 09:48:30 -0800
+> > Subject: [PATCH 08/13] hw/cxl/cxl-mailbox-utils: Add mailbox commands to
+> >   support add/release dynamic capacity response
+> > 
+> > Per CXL spec 3.1, two mailbox commands are implemented:
+> > Add Dynamic Capacity Response (Opcode 4802h) 8.2.9.9.9.3, and
+> > Release Dynamic Capacity (Opcode 4803h) 8.2.9.9.9.4.
+> > 
+> > For the process of the above two commands, we use two-pass approach.
+> > Pass 1: Check whether the input payload is valid or not; if not, skip
+> >          Pass 2 and return mailbox process error.
+> > Pass 2: Do the real work--add or release extents, respectively.
+> > 
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > ---
+> >   hw/cxl/cxl-mailbox-utils.c  | 396 ++++++++++++++++++++++++++++++++++++
+> >   hw/mem/cxl_type3.c          |  11 +
+> >   include/hw/cxl/cxl_device.h |   4 +
+> >   3 files changed, 411 insertions(+)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 1915959015..cd9092b6bf 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
 > 
-> This work belongs in the region driver as it is only useful with
-> CONFIG_CXL_REGION. Add stubs in core.h for when the region driver
-> is not built.
+> snip
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > +/*
+> > + * Copy extent list from src to dst
+> > + * Return value: number of extents copied
+> > + */
+> > +static uint32_t copy_extent_list(CXLDCExtentList *dst,
+> > +                                 const CXLDCExtentList *src)
+> > +{
+> > +    uint32_t cnt = 0;
+> > +    CXLDCExtent *ent;
+> > +
+> > +    if (!dst || !src) {
+> > +        return 0;
+> > +    }
+> > +
+> > +    QTAILQ_FOREACH(ent, src, node) {
+> > +        cxl_insert_extent_to_extent_list(dst, ent->start_dpa, ent->len,
+> > +                                         ent->tag, ent->shared_seq);
+> > +        cnt++;
+> > +    }
+> > +    return cnt;
+> > +}
+> > +
+> > +static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
+> > +        const CXLUpdateDCExtentListInPl *in, CXLDCExtentList *updated_list,
+> > +        uint32_t *updated_list_size)
+> > +{
+> > +    CXLDCExtent *ent, *ent_next;
+> > +    uint64_t dpa, len;
+> > +    uint32_t i;
+> > +    int cnt_delta = 0;
+> > +    CXLRetCode ret = CXL_MBOX_SUCCESS;
+> > +
+> > +    QTAILQ_INIT(updated_list);
+> > +    copy_extent_list(updated_list, &ct3d->dc.extents);
+> > +
+> > +    for (i = 0; i < in->num_entries_updated; i++) {
+> > +        Range range;
+> > +
+> > +        dpa = in->updated_entries[i].start_dpa;
+> > +        len = in->updated_entries[i].len;
+> > +
+> > +        while (len > 0) {
+> > +            QTAILQ_FOREACH(ent, updated_list, node) {
+> > +                range_init_nofail(&range, ent->start_dpa, ent->len);
+> > +
+> > +                if (range_contains(&range, dpa)) {
+> > +                    uint64_t len1, len2 = 0, len_done = 0;
+> > +                    uint64_t ent_start_dpa = ent->start_dpa;
+> > +                    uint64_t ent_len = ent->len;
+> > +
+> > +                    len1 = dpa - ent->start_dpa;
+> > +                    /* Found the extent or the subset of an existing extent */
+> > +                    if (range_contains(&range, dpa + len - 1)) {
+> > +                        len2 = ent_start_dpa + ent_len - dpa - len;
+> > +                    } else {
+> > +                        /*
+> > +                         * TODO: we reject the attempt to remove an extent
+> > +                         * that overlaps with multiple extents in the device
+> > +                         * for now. We will allow it once superset release
+> > +                         * support is added.
+> > +                         */
+> > +                        ret = CXL_MBOX_INVALID_PA;
+> > +                        goto free_and_exit;
+> > +                    }
+> > +                    len_done = ent_len - len1 - len2;
+> > +
+> > +                    cxl_remove_extent_from_extent_list(updated_list, ent);
+> > +                    cnt_delta--;
+> > +
+> > +                    if (len1) {
+> > +                        cxl_insert_extent_to_extent_list(updated_list,
+> > +                                                         ent_start_dpa,
+> > +                                                         len1, NULL, 0);
+> > +                        cnt_delta++;
+> > +                    }
+> > +                    if (len2) {
+> > +                        cxl_insert_extent_to_extent_list(updated_list,
+> > +                                                         dpa + len,
+> > +                                                         len2, NULL, 0);
+> > +                        cnt_delta++;
+> > +                    }
+> > +
+> > +                    if (cnt_delta + ct3d->dc.total_extent_count >
+> > +                            CXL_NUM_EXTENTS_SUPPORTED) {
+> > +                        ret = CXL_MBOX_RESOURCES_EXHAUSTED;
+> > +                        goto free_and_exit;
+> > +                    }
+> > +
+> > +                    len -= len_done;
+> > +                    /* len == 0 here until superset release is added */
+> > +                    break;
+> > +                }
+> > +            }
+> > +            if (len) {
+> > +                ret = CXL_MBOX_INVALID_PA;
+> > +                goto free_and_exit;
+> > +            }
+> > +        }
+> > +    }
+> > +free_and_exit:
+> > +    if (ret != CXL_MBOX_SUCCESS) {
+> > +        QTAILQ_FOREACH_SAFE(ent, updated_list, node, ent_next) {
+> > +            cxl_remove_extent_from_extent_list(updated_list, ent);
+> > +        }
+> > +        *updated_list_size = 0;
+> > +    } else {
+> > +        *updated_list_size = ct3d->dc.total_extent_count + cnt_delta;
+> > +    }
+> > +
+> > +    return ret;
+> > +}
+> > +
+> > +/*
+> > + * CXL r3.1 section 8.2.9.9.9.4: Release Dynamic Capacity (Opcode 4803h)
+> > + */
+> > +static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+> > +                                          uint8_t *payload_in,
+> > +                                          size_t len_in,
+> > +                                          uint8_t *payload_out,
+> > +                                          size_t *len_out,
+> > +                                          CXLCCI *cci)
+> > +{
+> > +    CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+> > +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> > +    CXLDCExtentList updated_list;
+> > +    CXLDCExtent *ent, *ent_next;
+> > +    uint32_t updated_list_size;
+> > +    CXLRetCode ret;
+> > +
+> > +    if (in->num_entries_updated == 0) {
+> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    }
+> > +
+> > +    ret = cxl_detect_malformed_extent_list(ct3d, in);
+> > +    if (ret != CXL_MBOX_SUCCESS) {
+> > +        return ret;
+> > +    }
+> > +
+> > +    ret = cxl_dc_extent_release_dry_run(ct3d, in, &updated_list,
+> > +                                        &updated_list_size);
+> > +    if (ret != CXL_MBOX_SUCCESS) {
+> > +        return ret;
+> > +    }
+> > +
+> > +    /*
+> > +     * If the dry run release passes, the returned updated_list will
+> > +     * be the updated extent list and we just need to clear the extents
+> > +     * in the accepted list and copy extents in the updated_list to accepted
+> > +     * list and update the extent count;
+> > +     */
+> > +    QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node, ent_next) {
+> > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+> > +    }
+> > +    copy_extent_list(&ct3d->dc.extents, &updated_list);
+> > +    QTAILQ_FOREACH_SAFE(ent, &updated_list, node, ent_next) {
+> > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+> > +    }
+> 
+> Instead of doing a copy-delete, it should be simple to just relink the 
+> list pointers of updated_list to ct3d->dc.extents - similar to the 
+> QSIMPLEQ_CONCAT operation for QSIMPLEQ (unfortunately there isn't one 
+> defined already for QTAILQ, but you could add one :)
+> 
+> Otherwise, looks great to me. Thanks for the update,
+> Jørgen
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Hi Jorgen,
+Thanks for the suggestion. The issue here is we will introduce a bitmap
+indicating which DPA range is backed with added extents in the next
+patch, for the add/release processing, we need to update the bitmap to
+reflect the update-to-date extent information. The remove and add action here
+provides a natural way to update the bitmap like below 
+
+
+   QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node, ent_next) {
+        ct3_clear_region_block_backed(ct3d, ent->start_dpa, ent->len);
+        cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+    }
+    copy_extent_list(&ct3d->dc.extents, &updated_list);
+    QTAILQ_FOREACH_SAFE(ent, &updated_list, node, ent_next) {
+        ct3_set_region_block_backed(ct3d, ent->start_dpa, ent->len);
+        cxl_remove_extent_from_extent_list(&updated_list, ent);
+    }
+
+Fan
+> 
+> > +    ct3d->dc.total_extent_count = updated_list_size;
+> > +
+> > +    return CXL_MBOX_SUCCESS;
+> > +}
+> > +
+> >   #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+> >   #define IMMEDIATE_DATA_CHANGE (1 << 2)
+> >   #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+> > @@ -1448,6 +1838,12 @@ static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
+> >       [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] = {
+> >           "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_ext_list,
+> >           8, 0 },
+> > +    [DCD_CONFIG][ADD_DYN_CAP_RSP] = {
+> > +        "DCD_ADD_DYNAMIC_CAPACITY_RESPONSE", cmd_dcd_add_dyn_cap_rsp,
+> > +        ~0, IMMEDIATE_DATA_CHANGE },
+> > +    [DCD_CONFIG][RELEASE_DYN_CAP] = {
+> > +        "DCD_RELEASE_DYNAMIC_CAPACITY", cmd_dcd_release_dyn_cap,
+> > +        ~0, IMMEDIATE_DATA_CHANGE },
+> >   };
+> > 
+> >   static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 48cce3bb13..2d4b6242f0 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -671,6 +671,15 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+> >       return true;
+> >   }
+> > 
+> > +static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+> > +{
+> > +    CXLDCExtent *ent, *ent_next;
+> > +
+> > +    QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node, ent_next) {
+> > +        cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
+> > +    }
+> > +}
+> > +
+> >   static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+> >   {
+> >       DeviceState *ds = DEVICE(ct3d);
+> > @@ -867,6 +876,7 @@ err_free_special_ops:
+> >       g_free(regs->special_ops);
+> >   err_address_space_free:
+> >       if (ct3d->dc.host_dc) {
+> > +        cxl_destroy_dc_regions(ct3d);
+> >           address_space_destroy(&ct3d->dc.host_dc_as);
+> >       }
+> >       if (ct3d->hostpmem) {
+> > @@ -888,6 +898,7 @@ static void ct3_exit(PCIDevice *pci_dev)
+> >       cxl_doe_cdat_release(cxl_cstate);
+> >       g_free(regs->special_ops);
+> >       if (ct3d->dc.host_dc) {
+> > +        cxl_destroy_dc_regions(ct3d);
+> >           address_space_destroy(&ct3d->dc.host_dc_as);
+> >       }
+> >       if (ct3d->hostpmem) {
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 6aec6ac983..df3511e91b 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -551,4 +551,8 @@ void cxl_event_irq_assert(CXLType3Dev *ct3d);
+> > 
+> >   void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d);
+> > 
+> > +CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len);
+> > +
+> > +void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
+> > +                                        CXLDCExtent *extent);
+> >   #endif
+> > --
+> > 2.43.0
+> > 
