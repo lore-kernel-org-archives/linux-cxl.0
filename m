@@ -1,320 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2863171664
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 17:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713375038; cv=none; b=Bp8qW32+jpcuOpfQrZqnAERFBvDhh15HjdMRnMz/uQr3qsUA25WmCmIHcv7X8jO3m+Q24P91qAznV/0FjL/pB24I5VjMZAfKGGbHQZk5qvonLZTIcbtwO+BZ1TVJuM4zsadx9ZB1mDohCct6wFEvmwVwPggJsfF4gFzBhGGEvTs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713375038; c=relaxed/simple;
-	bh=5mH3cTp6TZtRdu9Nx6lCJ+m7zkZHFOEqCRMyPxsY7kM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=doRSGhvhrgayqVftbGQZAif/ZmtAEvNagx4z+PRhb8ZCdmMbWECgscWMoV9k509uen70ct0dyOw7HtvFgNi51+rTiMcimIpiNHlikIGWir25sFY7YTOJWFI9t/WmWz8xEiXfIxM2kRVPzHukLlzqX8fO94ZprzE8PSy/RE5hTn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqOfyS9m; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74963AD2F
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 18:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713377693; cv=fail; b=mY9w2wptxVXMbulVZO6FIRIvA4TqYHJlB9K2hoMexvg59yDWyMfirUO6ktTSMbTsuqHeB7DrM/dT1VmhDsMO0PxpZv6mnJ3n9Y+/uAsvRHm4Y1z9YL1gdweKavKyvERe3Sr65wJaIAHIdl3+QWzzB0y4vvMrHiQnKHq5zLFVKCU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713377693; c=relaxed/simple;
+	bh=grINUycUEFct0HDT7aK73y+p435JyUqImmsood1NJnQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bwYpSckOZwNyzr9DbiQ/6OpOq3dpfxBPOLDGAa4QBc0h2cgtM4gBGjioellOYWJACsferchTwW389Xd17jlHX03uklBHsQE/tw2PslsVIpvbHFD/BMcyUHWgCjisQqXnQO08+v5gJ2jX2oiVDJEzkC0d1sWaQQaVBq3bKikkCmk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DkGlUhsW; arc=fail smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqOfyS9m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DkGlUhsW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713375036; x=1744911036;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5mH3cTp6TZtRdu9Nx6lCJ+m7zkZHFOEqCRMyPxsY7kM=;
-  b=iqOfyS9mAeMYv2052f2d+D0Hzx+4xcRqqMzAE4cDuJPnaj7fBHwMaqUg
-   s2dV0//7Bou/kKg+cBOMrNUMFF7+V5P1N2l796KRsjwoag9IXR0SOvQ0o
-   mbV8hT6Lj+e3NzsGp7STatDwq9JjIRGl4Ma76lfAxWnDkEDlLpGBURWa+
-   6HhTQGpqAeEPtjo+DbTqJTEM/oxnrsno1FUYONLXR5m+actM0MzoAdKgt
-   DzCTZzV8zCQr/lbMe4WfGHiSVDG/9A75ZZbO8mi5K2i2ETaT5ELGzgwUj
-   MkW2crYZjhjLaCQGZ1nZwZvzMnbmsE6Z06s1s5dbhAdlrhvYVCGo7G9X2
-   g==;
-X-CSE-ConnectionGUID: OxIFh/ULStK9HgWChI3aJw==
-X-CSE-MsgGUID: Xb07gE0cSxShWp6T9kPFiA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9005932"
+  t=1713377691; x=1744913691;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=grINUycUEFct0HDT7aK73y+p435JyUqImmsood1NJnQ=;
+  b=DkGlUhsWwOGC0lxd208jJ2WFTGRU84JwVn75TtZE6d/T9UyrqkONjRrb
+   SFynT2hONI6BmcH8AcJ1KhX9aAcqxKk8mejtztzYaZmIRBmRISVLitFlw
+   6ZQcPmG19rJsXYch9+V4HgJz7WyBPkl4faG9V1FNrF+WMcBFd4T58t/qj
+   mUyMemQMvomgxYeh45fjmQBPOm9moOvV50Mf9maZcBCGOz1cDC3fBAvq8
+   mxrokZhCSd4hxaikreSqJy6EgpcwzCk2i8o+mNj/OE7RuCvShcY5ILBu2
+   uQlkiBmjHnqSYzqYwsunxS3oxdDG5ZFUsVDDIxCyb2phEgsndRAE7v6zY
+   w==;
+X-CSE-ConnectionGUID: SgVzay7WQO+QgnkC1o1vKQ==
+X-CSE-MsgGUID: 7fBhKyvOQbO8dexZSydxCQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="12667010"
 X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="9005932"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 10:30:35 -0700
-X-CSE-ConnectionGUID: jX0vY89rQSaPBMPhF80OZQ==
-X-CSE-MsgGUID: 357QEn3cQjy6jJyoSzbbIg==
+   d="scan'208";a="12667010"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:14:38 -0700
+X-CSE-ConnectionGUID: oS4wU+JbTlaqjY80dSBC7g==
+X-CSE-MsgGUID: +8uCfvTBSmSbsApxF44TPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="23118306"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.69.240]) ([10.212.69.240])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 10:30:35 -0700
-Message-ID: <13652e98-3a70-4946-b8b0-be11032ca431@intel.com>
-Date: Wed, 17 Apr 2024 10:30:33 -0700
+   d="scan'208";a="23201520"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Apr 2024 11:14:37 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 17 Apr 2024 11:14:36 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 17 Apr 2024 11:14:36 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 11:14:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LoWLSrKZTVVLPKqHaWYh3WCUfGzaRQ/7x5qGQR8h1ON2L9Rr0zlLzd4twLkpiUjyMeb5bIQVzhgN2GPIB5t7lS0p6AfRI6T7RIGENKNK3S9aIWzKJF4/g1HdNEHqB3x8IxGdjY+n/wSC3sl55as3Emw12TGxug0JqanpidfKkuI9JfTxgxlJDbCNmzWRWH1Qh8bPt8VPnjvreslrYQrYX18UQr3VNrDZkyzW5sc1U2FBtI/ifjTf02+7DkUtcNh2cJTOLrlQA2QV/Cn/Pg/y7enKog6/I1GYSlhq4hYt/quNtn33lypLLYyrvKoUMKjySIyYlRyxYkS6Wl+eSxTA+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=grINUycUEFct0HDT7aK73y+p435JyUqImmsood1NJnQ=;
+ b=hCT+XaOkc5lDrfEk/ZoduQPx7VD0Gy4+xShDEz6p8ZJt5UJQPU4BXkvzGvVSYLsDEhbbYQKsPmI39S3Kz9J6iRMkoa2Q2Msvgg7Bbh8T6D/7V450qC34SMaJO75+N/dDnNUkMBlxhV9W7uNUjK0M4TI9KVmw2K2HME2q5NQgxNt+RC1H0BqEx0qKT477bHFZZupYh2W5FG+0bm/crFqAK5vgPMVDTTPAN3WJ5WIXK7fA5O0K4K8790dFfl6pSFfs2onvPZTYZrQcEjdSXXA98pSMxPtSwx4YKZlooepidmL7ID4Fu4iG7xFP0ZunQMgHqYjOqv6XtYSzTZKaUvSO2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
+ by SJ2PR11MB7518.namprd11.prod.outlook.com (2603:10b6:a03:4c5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Wed, 17 Apr
+ 2024 18:14:05 +0000
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::ed72:f69c:be80:b034]) by MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::ed72:f69c:be80:b034%4]) with mapi id 15.20.7472.037; Wed, 17 Apr 2024
+ 18:14:05 +0000
+From: "Verma, Vishal L" <vishal.l.verma@intel.com>
+To: "Jiang, Dave" <dave.jiang@intel.com>, "yaoxt.fnst@fujitsu.com"
+	<yaoxt.fnst@fujitsu.com>
+CC: "caoqq@fujitsu.com" <caoqq@fujitsu.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+Subject: Re:
+Thread-Topic: Re:
+Thread-Index: AQHakJL+anHlYPh7b0WUMbDzlAh0abFsxOkA
+Date: Wed, 17 Apr 2024 18:14:05 +0000
+Message-ID: <9b00e36292b7aa19f68bda6912b04207f43c8dc5.camel@intel.com>
+References: <170138109724.2882696.123294980050048623.stgit@djiang5-mobl3>
+	 <20240417064622.42596-1-yaoxt.fnst@fujitsu.com>
+In-Reply-To: <20240417064622.42596-1-yaoxt.fnst@fujitsu.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|SJ2PR11MB7518:EE_
+x-ms-office365-filtering-correlation-id: 8c6a0dde-971d-4c80-38ed-08dc5f0a2ab5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eE6cDQvtqM8+zMM/I4wxrYvO6V3yn4rSdxpHjLU4yLjGnyBb+C8z671Gc0+50jT5LH38lKawO8XQ46UffYkQ91kxwMbsMH6ZrCwqy3uh8i+uw05GKfDzQOas8qfVcErI+bcrJZLDloUqwbJMy4XtrKp9N0NvG0yVSB7J7d/o0qOeNxLO5lPVR1l5meoDA4vAHxMmKxVycvBMZFKh0QPqNIhO9crwIUPmBed4i1uHx5FXApxdoQ/gmopHssW6T5EvX3gWnRrNymetn+IOHUrFgtJEGKPM2yFIQoCyB7uSQFKtcn3CfYU9sbQpYFW3rkixukAH+PxrfLMWubpXh96CWbC9xAvjIzBsQNuPdYAEvqdX/ofO83YJySNH9ZyWh6CkgPeoHvpYFVKr62/N9FZNDEhZgf8BihN/0PtQiS5fHbOfNlfg0Rx6ZoJ75MacgJiocUuvYaj3EhUO3eirPrCflYwTWkqrzYqVTOf//J7yZF9/HHz8a6gqOe75twzyn6yJOF7dhMxIHZNSSizhHm8Ct0VGJPC1NkYS7nHar89zvZKPk6T0RdDxPshf2lwgRiErwyJgilvZJy0tOpCCp46PlTPQUUoclNJx/NEWMMGMA9l7zDLQQ9PO0lH0lgvGxuijYr4Wqz4BZAm6FC93zy7fAT4zIXkYTRrsuisg6Bg1NM/bCduAaW3oUNbg0ruqq+M+97K3vJUHSnMSaVFcCjzCTOvVzMHa4Gc8k+Pr9PWzHV4=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WVpQTmwrWUVPQlZMY2JDbStxak5KREk5bFIxbG9OTS82SlZNdDYxZDgwRnMr?=
+ =?utf-8?B?Y2hrZUJhZEdiZEVPbnJ3aHFPUTVuZDhMR3Z0MjdKSEdZeWpncWwwTktZM1ZT?=
+ =?utf-8?B?Rnh6QUlGVHowblUvMnF5bkZoTGRZL3JvUWlobXJlMjh3MlVGUHRkSDhrN21m?=
+ =?utf-8?B?TTFrVnYvTDg2Tk9QRVJ4RlNNZ3h6STFla3lHbnBuQUtzRllBMWd4azNzQ3dm?=
+ =?utf-8?B?a3NYejJpRzB3Q2VnTTVLUkFNRXJCeEhWSTZpK2t3WENCZTlnZGZGMmZKbmpa?=
+ =?utf-8?B?NHVsMzZXc3R2VXR4U281SjNsVWhLRTM5VnpRb0lSK0tBVllWa09peVhTS00x?=
+ =?utf-8?B?b0FPclJUa0FIeVY2alBvSGRHQWVFZzNYalRoakw1TE12VktsTDdkYjZCK013?=
+ =?utf-8?B?eEVNYndmeHZ5VnAwYkl1NERvVGRzRzd0am5EQ09MWGtYWW55OG5yZ05BNlpa?=
+ =?utf-8?B?a0hoVFRmdktOUmtnS2Ewd1RUa1lGZVZTMWI4REdvaUFXTjhvU3puVmZZTUIv?=
+ =?utf-8?B?bVNmZTAzdTRZZnZnZXU1azN2aUR2MGpNTUR3ek41STlhWGwxVm95QjgySjFu?=
+ =?utf-8?B?NGhrUzVtdm9aRVo1S25nYlp5YWZtM0wxTmIxUG9qSkNTT0pwaGxhdDVRd2tn?=
+ =?utf-8?B?d2NTVWRhM2x4dXlZOC9jMVdLTVp6WEFrbmQya1NLMHFMdVltV0ozRTc0VEE1?=
+ =?utf-8?B?TFZQbHltTENIeFFpaHpBZkdkQVRrUGFwMVM0OWlYNHV5UnlvOCticWhJaTYy?=
+ =?utf-8?B?Q294V29FNHhwMkg3SWIrLy9Ga0UwSFZkVTZtcEdnTWYySFUwUXVKdHQvQjZE?=
+ =?utf-8?B?ZnF1SURJUHIrUmNpUFo5N3prYy85U1RMVmMyeGNNekxMK0xRcE1WeUpYZkdT?=
+ =?utf-8?B?TDVEUjcvbGY4K2hVUTBPeGMyeHdHU0hnL29weDJFeU84b29mYy9QNEtJdUJP?=
+ =?utf-8?B?b2Z3bHVaNEx0b2JpcDRiV0hqQlFrWFVyVW9RTHdzb0V0eEFISkQ2ZWp6YTFl?=
+ =?utf-8?B?Z3BpalZlZk85cm9TZVVpRHJKcmVhOXRObm5CRkozdUJPTEpNRk5jQjJBemhP?=
+ =?utf-8?B?MjJmM0tQTGJWdGtxSGh5Sm9lTzZ0RlNaazIraEs0OTFocFc5T2N5cjlEelBQ?=
+ =?utf-8?B?a2JNa1pVQjAvbFgwUEdoL0ozQy9HSW9Ua0thMUN5NlI2TmtHcStubTVUOTFL?=
+ =?utf-8?B?Zkh3ZllRVk4xNVR4VmJMamhwUitzR3lpNlhHcGFTRFVxdTQ3bEU4ZDJwZnda?=
+ =?utf-8?B?SnkrTmFKZTBDOGkvVlpWWlJVbTRNdGEvRDBKT09OdWpxMGpaZ1cxTllWaEcx?=
+ =?utf-8?B?SlRiazlhR0dlcGNDL29JK1J5N3I3MG00NnA4VTRhNjFaUUtudUJrbVlyNVB0?=
+ =?utf-8?B?aVlHOTJQVWx6bEc1Q3Z2OFl5cXpnSGZWZzhIRERJcGZnbzZMdXVvVG5ONXNl?=
+ =?utf-8?B?RXlqMW9ITGN0Y0RNU0VZRkN0QXpudXp0ODV2bG5xNThtLzYranJ4Rld5UDd6?=
+ =?utf-8?B?R21PeHJVK2d4d29Va1Q3LzcvWXp4R2M5TXI1dFVUMm5Xc1QzdXVVTUkxbFpL?=
+ =?utf-8?B?ZWRjb3IxSDBNNlBmS3laVVMxeGNXSHptYVJDR2F0MUR0azhtQWpjOUdIbEVy?=
+ =?utf-8?B?ODRoZnh0eVJiNlRYS3hweXhRTE5saWM4ZGQ5aXFMS2dtd3o4YjZLVEk3UG82?=
+ =?utf-8?B?QkN2enU5ZEJJTk5yVHhMV0hmcHhPOXErU0pGUU00aTFMZ3JNYjFNRUVFSlNw?=
+ =?utf-8?B?TFdPdHBvanlKTHh0TVlIYUJ6OW5NQWNuNGs5TC81UzRSSi9LNlJ4Wkhua3dP?=
+ =?utf-8?B?YTM1NUt2bDF4ZUsyWVZnU0VnWERCUmZFdVhCalhUSWVnT0VHOWFNVDJxbDEx?=
+ =?utf-8?B?OFV4SGdjbDJSTDkyMDczSHZiNjVUTkVJWmNzMk1zTVFxeUNHUndCc1JLQ2ty?=
+ =?utf-8?B?UzRiOVF4R1dscUFkODcyTnFHdDMxZytjSk1HSjlRVzRkdE91TTRFa2hWcHFu?=
+ =?utf-8?B?Wmp2emdhOWk1L2hEQWJZa01iVTcyUS9NZXhuYWY1b0JxZ1ZRcWcwdENIemUy?=
+ =?utf-8?B?K2xRSEtwMHJLV3cvb2JjL1NXYjhZRzQ0OTQwVEFoTlJHVGV5bkxBTWd4a2xm?=
+ =?utf-8?B?emo2VUZObkE2VmJPZUM5emN5d2NvZEM3SVRZd0VqVGxQYUxyekQ0aDZkem9N?=
+ =?utf-8?B?b0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <195D760DD942774297FB8623963D6C59@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] cxl/core: add poison creation event handler
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, dave@stgolabs.net,
- ira.weiny@intel.com, alison.schofield@intel.com
-References: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
- <20240417075053.3273543-3-ruansy.fnst@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240417075053.3273543-3-ruansy.fnst@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c6a0dde-971d-4c80-38ed-08dc5f0a2ab5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2024 18:14:05.0295
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9MSzfPFvZIeNwpJuWVsRcyb6LCojYU6MvUogLh6d0oujXUyUdnNt2JBCm2EVILt87uqtbaRDAXT59C4qVJ0sK9etrae20EvyXBHG9an0C/U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7518
+X-OriginatorOrg: intel.com
 
-
-
-On 4/17/24 12:50 AM, Shiyang Ruan wrote:
-> Currently driver only traces cxl events, poison creation (for both vmem
-> and pmem type) on cxl memdev is silent.  OS needs to be notified then it
-> could handle poison pages in time.  Per CXL spec, the device error event
-> could be signaled through FW-First and OS-First methods.
-
-Please consider below for better clarity:
-Currently the driver only traces CXL events. Poison creation (for both ram
-and pmem type) on a CXL memdev is silent. The OS needs to be notified so it
-can handle poison pages. Per CXL spec, the device error event
-can be signaled through the FW-First method or the OS-First method.
-
-> 
-> So, add poison creation event handler in OS-First method:
->   - Qemu:
->     - CXL device reports POISON creation event to OS by MSI by sending
->       GMER/DER after injecting a poison record;
-
-Can probably drop the QEMU changes and this is the kernel commit log.
-
->   - CXL driver:
->     a. parse the POISON event from GMER/DER;
->     b. translate poisoned DPA to HPA (PFN);
->     c. enqueue poisoned PFN to memory_failure's work queue;
-> 
-> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-> ---
->  drivers/cxl/core/mbox.c   | 119 +++++++++++++++++++++++++++++++++-----
->  drivers/cxl/cxlmem.h      |   8 +--
->  include/linux/cxl-event.h |  18 +++++-
->  3 files changed, 125 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index f0f54aeccc87..76af0d73859d 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -837,25 +837,116 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
->  
-> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -			    enum cxl_event_log_type type,
-> -			    enum cxl_event_type event_type,
-> -			    const uuid_t *uuid, union cxl_event *evt)
-> +static void cxl_report_poison(struct cxl_memdev *cxlmd, struct cxl_region *cxlr,
-
-I think this needs to be changed to __cxl_report_poison() and the function below to cxl_report_poison(). Otherwise it goes against typical Linux methodology of having the __functionX() as the raw functionality function called by a functionX() wrapper. 
-
-DJ
-
-> +			      u64 dpa)
->  {
-> -	if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> +	u64 hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-> +	unsigned long pfn = PHYS_PFN(hpa);
-> +
-> +	if (!IS_ENABLED(CONFIG_MEMORY_FAILURE))
-> +		return;
-> +
-> +	memory_failure_queue(pfn, MF_ACTION_REQUIRED);
-> +}
-> +
-> +static int __cxl_report_poison(struct device *dev, void *arg)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_memdev *cxlmd;
-> +	u64 dpa = *(u64 *)arg;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
-> +		return 0;
-> +
-> +	if (cxled->mode == CXL_DECODER_MIXED) {
-> +		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
-> +		return 0;
-> +	}
-> +
-> +	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-> +		return 0;
-> +
-> +	cxlmd = cxled_to_memdev(cxled);
-> +	cxl_report_poison(cxlmd, cxled->cxld.region, dpa);
-> +
-> +	return 1;
-> +}
-> +
-> +static void cxl_event_handle_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	struct cxl_port *port = cxlmd->endpoint;
-> +
-> +	/*
-> +	 * No region is mapped to this endpoint, that is to say no HPA is
-> +	 * mapped.
-> +	 */
-> +	if (!port || !is_cxl_endpoint(port) ||
-> +	    cxl_num_decoders_committed(port) == 0)
-> +		return;
-> +
-> +	device_for_each_child(&port->dev, &dpa, __cxl_report_poison);
-> +}
-> +
-> +static void cxl_event_handle_general_media(struct cxl_memdev *cxlmd,
-> +					   enum cxl_event_log_type type,
-> +					   struct cxl_event_gen_media *rec)
-> +{
-> +	u64 dpa = le64_to_cpu(rec->phys_addr) & CXL_DPA_MASK;
-> +
-> +	if (type == CXL_EVENT_TYPE_FAIL) {
-> +		switch (rec->transaction_type) {
-> +		case CXL_EVENT_TRANSACTION_READ:
-> +		case CXL_EVENT_TRANSACTION_WRITE:
-> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-> +			cxl_event_handle_poison(cxlmd, dpa);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +static void cxl_event_handle_dram(struct cxl_memdev *cxlmd,
-> +				  enum cxl_event_log_type type,
-> +				  struct cxl_event_dram *rec)
-> +{
-> +	u64 dpa = le64_to_cpu(rec->phys_addr) & CXL_DPA_MASK;
-> +
-> +	if (type == CXL_EVENT_TYPE_FAIL) {
-> +		switch (rec->transaction_type) {
-> +		case CXL_EVENT_TRANSACTION_READ:
-> +		case CXL_EVENT_TRANSACTION_WRITE:
-> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-> +			cxl_event_handle_poison(cxlmd, dpa);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +			     enum cxl_event_log_type type,
-> +			     enum cxl_event_type event_type,
-> +			     const uuid_t *uuid, union cxl_event *evt)
-> +{
-> +	if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
->  		trace_cxl_general_media(cxlmd, type, &evt->gen_media);
-> -	else if (event_type == CXL_CPER_EVENT_DRAM)
-> +		cxl_event_handle_general_media(cxlmd, type, &evt->gen_media);
-> +	} else if (event_type == CXL_CPER_EVENT_DRAM) {
->  		trace_cxl_dram(cxlmd, type, &evt->dram);
-> -	else if (event_type == CXL_CPER_EVENT_MEM_MODULE)
-> +		cxl_event_handle_dram(cxlmd, type, &evt->dram);
-> +	} else if (event_type == CXL_CPER_EVENT_MEM_MODULE)
->  		trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
->  	else
->  		trace_cxl_generic_event(cxlmd, type, uuid, &evt->generic);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
-> +EXPORT_SYMBOL_NS_GPL(cxl_event_handle_record, CXL);
->  
-> -static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -				     enum cxl_event_log_type type,
-> -				     struct cxl_event_record_raw *record)
-> +static void __cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +				      enum cxl_event_log_type type,
-> +				      struct cxl_event_record_raw *record)
->  {
->  	enum cxl_event_type ev_type = CXL_CPER_EVENT_GENERIC;
->  	const uuid_t *uuid = &record->id;
-> @@ -867,7 +958,7 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
->  		ev_type = CXL_CPER_EVENT_MEM_MODULE;
->  
-> -	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
-> +	cxl_event_handle_record(cxlmd, type, ev_type, uuid, &record->event);
->  }
->  
->  static int cxl_clear_event_record(struct cxl_memdev_state *mds,
-> @@ -979,8 +1070,8 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  			break;
->  
->  		for (i = 0; i < nr_rec; i++)
-> -			__cxl_event_trace_record(cxlmd, type,
-> -						 &payload->records[i]);
-> +			__cxl_event_handle_record(cxlmd, type,
-> +						  &payload->records[i]);
->  
->  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
->  			trace_cxl_overflow(cxlmd, type, payload);
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 36cee9c30ceb..ba1347de5651 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -822,10 +822,10 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  				  unsigned long *cmds);
->  void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
-> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -			    enum cxl_event_log_type type,
-> -			    enum cxl_event_type event_type,
-> -			    const uuid_t *uuid, union cxl_event *evt);
-> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +			     enum cxl_event_log_type type,
-> +			     enum cxl_event_type event_type,
-> +			     const uuid_t *uuid, union cxl_event *evt);
->  int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-> index 03fa6d50d46f..8189bed76c12 100644
-> --- a/include/linux/cxl-event.h
-> +++ b/include/linux/cxl-event.h
-> @@ -23,6 +23,20 @@ struct cxl_event_generic {
->  	u8 data[CXL_EVENT_RECORD_DATA_LENGTH];
->  } __packed;
->  
-> +/*
-> + * Event transaction type
-> + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-> + */
-> +enum cxl_event_transaction_type {
-> +	CXL_EVENT_TRANSACTION_UNKNOWN = 0X00,
-> +	CXL_EVENT_TRANSACTION_READ,
-> +	CXL_EVENT_TRANSACTION_WRITE,
-> +	CXL_EVENT_TRANSACTION_SCAN_MEDIA,
-> +	CXL_EVENT_TRANSACTION_INJECT_POISON,
-> +	CXL_EVENT_TRANSACTION_MEDIA_SCRUB,
-> +	CXL_EVENT_TRANSACTION_MEDIA_MANAGEMENT,
-> +};
-> +
->  /*
->   * General Media Event Record
->   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-> @@ -33,7 +47,7 @@ struct cxl_event_gen_media {
->  	__le64 phys_addr;
->  	u8 descriptor;
->  	u8 type;
-> -	u8 transaction_type;
-> +	u8 transaction_type;	/* enum cxl_event_transaction_type */
->  	u8 validity_flags[2];
->  	u8 channel;
->  	u8 rank;
-> @@ -52,7 +66,7 @@ struct cxl_event_dram {
->  	__le64 phys_addr;
->  	u8 descriptor;
->  	u8 type;
-> -	u8 transaction_type;
-> +	u8 transaction_type;	/* enum cxl_event_transaction_type */
->  	u8 validity_flags[2];
->  	u8 channel;
->  	u8 rank;
+T24gV2VkLCAyMDI0LTA0LTE3IGF0IDAyOjQ2IC0wNDAwLCBZYW8gWGluZ3RhbyB3cm90ZToNCj4g
+DQo+IEhpIERhdmUsDQo+IMKgIEkgaGF2ZSBhcHBsaWVkIHRoaXMgcGF0Y2ggaW4gbXkgZW52LCBh
+bmQgZG9uZSBhIGxvdCBvZiB0ZXN0aW5nLA0KPiB0aGlzDQo+IGZlYXR1cmUgaXMgY3VycmVudGx5
+IHdvcmtpbmcgZmluZS4gDQo+IMKgIEJ1dCBpdCBpcyBub3QgbWVyZ2VkIGludG8gbWFzdGVyIGJy
+YW5jaCB5ZXQsIGFyZSB0aGVyZSBhbnkgdXBkYXRlcw0KPiBvbiB0aGlzIGZlYXR1cmU/DQoNCkhp
+IFhpbmd0YW8sDQoNClR1cm5zIG91dCB0aGF0IEkgaGFkIGFwcGxpZWQgdGhpcyB0byBhIGJyYW5j
+aCBidXQgZm9yZ290IHRvIG1lcmdlIGFuZA0KcHVzaCBpdC4gVGhhbmtzIGZvciB0aGUgcGluZyAt
+IGRvbmUgbm93LCBhbmQgcHVzaGVkIHRvIHBlbmRpbmcuDQoNCj4gDQo+IEFzc29jaWF0ZWQgcGF0
+Y2hlczoNCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtY3hsLzE3MDExMjkyMTEwNy4y
+Njg3NDU3LjI3NDEyMzE5OTUxNTQ2MzkxOTcuc3RnaXRAZGppYW5nNS1tb2JsMy8NCj4gaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtY3hsLzE3MDEyMDQyMzE1OS4yNzI1OTE1LjE0NjcwODMw
+MzE1ODI5OTE2ODUwLnN0Z2l0QGRqaWFuZzUtbW9ibDMvDQo+IA0KPiBUaGFua3MNCj4gWGluZ3Rh
+bw0KDQo=
