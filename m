@@ -1,320 +1,230 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55B86A8BA
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 07:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBE4128372
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 08:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713340332; cv=none; b=NG82hxnHwUkiz8r0QwAbKVRXoov0dNpzuslXU83vIqBW/u8iauo/Ef9/MRE1mousL7n1G0aIdMg0NDFwqpG0B5/8US7/R33k7xd8Rdms2kvX2MI6B0myTDJZZoXAptJ0Cz70szm/j1ZhjBiI+ttTEsiCCbM7z7sHm9eA0r2Q97g=
+	t=1713344040; cv=none; b=eLc2BG/n6LgRCyU7r9ufTpNxkXrdA1K/mkjKde/hmyhYNjcEvoecnLOXEYpTtg+UZa1en6QAIuHTHEmxsFLy+Yxc1ENmc575RRuPYqowiUMPbv4fpaMiUD2mQi3f3mnGICJQohfo0YxW5tLqWcSdRJiytvw8JKVfUPrAI8inmw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713340332; c=relaxed/simple;
-	bh=89O176AgrkL1yroy9Jo+jq3lmWUoJwoXlAdzQfc3vn0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZVOq6rF9ICVQs/H70dEHes13De6KADEJKKqEK7ns6bw1sopBZu25tKcP2DK74wWTgum3PeiVmk5JMufNOmBVpsijGOPsQ6H/hbCc/vM6my8Y2pRIg5s3LPpk3oMKB+6UeZXdM2YX0mPkOoHwpfrIawdVE8A9TWZ+MZ2W953DY3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=CD6c//ao; arc=none smtp.client-ip=207.54.90.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1713344040; c=relaxed/simple;
+	bh=+4T9p/7Vs7cfYNJr41v+pzH1bpwFtSs+2Zmt8xyhrZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R+des37gHunRWWUhXpr/XBd4NSQYB/pvPj2pMZTDl9y6SOBf/RANe69L5j+XpYmf0je5yXw+ZFUEuTlboJ29ZI/MjSO3JqyF/V+oShDNcxdiyHEHVINwOjLwQUN/z1jXl4cqwWrgNt8jwstc5EIRpDLxvS4cPed/Cs5Q6KDmUY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DwbG7kti; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="CD6c//ao"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1713340330; x=1744876330;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=89O176AgrkL1yroy9Jo+jq3lmWUoJwoXlAdzQfc3vn0=;
-  b=CD6c//ao3ekVSQYcigDCL9IQZSrqa/VaqBAdD78w9SnTvFsFkfjT90ez
-   01Ax00Q/OSp7eBPEIk/V6kTs6QRx37wr0LqWL6T6FYANBD9EeAVfYo8TM
-   ygrTkBP8yHl9vydlvnFyHoFMxAvtI6J/5FcS4xzihpyM/YJtNWoVb54tu
-   x++79bDp95advDq6PRPj7OtrI9JNqiG8thORQ7aH3pZU6usCfudfb25Ee
-   QXN1/bylAp+AtDGWK4wI4JcJcreN6haHpj08KxfQMrKoj2Z5UmJ238B1w
-   /XOLn0XFN5Jcqki5C81oqhRMheU5U0YubuezWfAlA5ZuJonIItQ0+3PpY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="155886662"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708354800"; 
-   d="scan'208";a="155886662"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 16:50:58 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 30AA12A0E1A
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:56 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 56D51184465
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:55 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id D43D52030D2B8
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:54 +0900 (JST)
-Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 54CCB1A000A;
-	Wed, 17 Apr 2024 15:50:54 +0800 (CST)
-From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-To: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	dave@stgolabs.net,
-	ira.weiny@intel.com,
-	alison.schofield@intel.com
-Subject: [PATCH v3 2/2] cxl/core: add poison creation event handler
-Date: Wed, 17 Apr 2024 15:50:53 +0800
-Message-Id: <20240417075053.3273543-3-ruansy.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
-References: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DwbG7kti"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dd10ebcd702so5046353276.2
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 01:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1713344036; x=1713948836; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OGwSiMzvAKR+bq3SRViWE8ZoGbeuRmJT21WPOyLk3/o=;
+        b=DwbG7ktiD7XYx0ou9PP6lamep7cLI39HQV4FzkP+acoNgEFbyKgnQCy0lWkkmAm5Lj
+         3Cc0mngeDsLhUY+ABrNeFr0vi9vV9xRJOvfhXDrDP3ezI/oZFB6wpu+mMWkx/vYJFVqj
+         Odd/Y5TGMqh9uQY/PP6YIRm67pLJT1zZ0fteZPWbCV/5g2uC38sIb7VkwJIlga+PmeXS
+         yNwNdt83NT9+BLxPhSzzR2O0oQcsCCgWup4bB43fRpP6GasCBG4VscL/l20OFJWeldgt
+         OFfw3ApwZBgHJeHXlFvQFCrsV6FIbd19yDFeDSRH5Fl/U5VdZgqeLTqNFS5n74dCAe4w
+         31Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713344036; x=1713948836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OGwSiMzvAKR+bq3SRViWE8ZoGbeuRmJT21WPOyLk3/o=;
+        b=O4C/OAr/gOezsW/HjNBjPVJlSU8lpjFjATxUv3zTloD+0zlzuwb4YGwkO8o1BPxYaa
+         9Yw/G4/pGDiMoyaUDb2LDGzjZTijDc5Z3jUq3uBE29FhEozkhwDbJNuCYL1SZ/vGE7WE
+         IX4yAkg9JNj7yhbPDBEpzsvPk6ZRg30BBbG9Jj2KmZH++NhEBSuy65Vv8T2kNNGBVKYN
+         gIZ0Y0KgLJ9MuJGYzkWM5EeEH3+NV/IA+ZiKdW/ag+gucM1zceZWFRhEK6/sXNRspN7W
+         aDGqUfBxHkuYCz6NU7NK0ifo8BeoTiMPzX4YfSaHbelDOHCI5k1tlChcRVIG74/z6Erf
+         hKCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWg3QtK55bnk29Siq8g/qTQphVGHf0o0cO0Ft521dvUYGI8oV6HtRcy8G84V4FHgneXnz55T8PSsuLBhOBA9iKes0p5tcQ+qZl5
+X-Gm-Message-State: AOJu0YwfRO6e46Xe3pz29ahRQXEDTaDWzu63zXiPQmdkE8RTpdTMuvRV
+	jjRk7Rgz3Y/e6e5ENu/pv5ae/nodBvmLvYqzB//LPnnHHDhdrobMNtHFbUHwCSnqEpTlEBfOG4c
+	OuUQQC5jboUMTF9TyVHyLCqo10h/QKxT9ToR04g==
+X-Google-Smtp-Source: AGHT+IFZRZdQbGM2QETddK5D0uyMD/72MA62SJVOkINntmHAAG+laCqSBzT6nP80eg1XWB0b95YnHzUb7Sadw2HRYNM=
+X-Received: by 2002:a25:ac42:0:b0:de4:2bc:c715 with SMTP id
+ r2-20020a25ac42000000b00de402bcc715mr4797289ybd.8.1713344036496; Wed, 17 Apr
+ 2024 01:53:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28326.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28326.005
-X-TMASE-Result: 10--16.044500-10.000000
-X-TMASE-MatchedRID: DIEPoA0d9jzvjhWxSrUkKRFbgtHjUWLy/OuUJVcMZhsshTvdDYMpJmdv
-	IBM8UuLSeJaFFPX0aSQzZRFJRee/WnuDhljfG03rTuctSpiuWyUUi4Ehat0545Tx+2LIqNmteVs
-	0skyEaS3LfxMfp01yFeQEkglipGR3fDPEC/yQgPRFThfcy7XcjI5UafLmrvaGvn+2qfQyWg0Skx
-	jSj8Gsp+GmDaCURky8QvDfXpsV7A2f80tdhYBdg9Hu43wY4QfHfrTt+hmA5bK7Iv2OMTayQWlwp
-	eAR2tzqI0ExTNeC7Ia4Yr4jUnU84qqoNk0mVBa9MrR3zbmt+0V9LQinZ4QefPcjNeVeWlqY+gtH
-	j7OwNO0CpgETeT0ynA==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+References: <20240405000707.2670063-1-horenchuang@bytedance.com>
+ <20240405000707.2670063-3-horenchuang@bytedance.com> <20240405150244.00004b49@Huawei.com>
+ <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
+ <20240409171204.00001710@Huawei.com> <CAKPbEqry55fc51hQ8oUC8so=PD_wWoJMEPiR-eq03BgB5q86Yw@mail.gmail.com>
+ <20240410175114.00001e1e@Huawei.com>
+In-Reply-To: <20240410175114.00001e1e@Huawei.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Wed, 17 Apr 2024 01:53:45 -0700
+Message-ID: <CAKPbEqqbTdyGy_q4P9QeB0x6qzx_XZvnP-oED=A1VW407JabDw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v11 2/2] memory tier: create CPUless memory
+ tiers after obtaining HMAT info
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
+	Hao Xiang <hao.xiang@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently driver only traces cxl events, poison creation (for both vmem
-and pmem type) on cxl memdev is silent.  OS needs to be notified then it
-could handle poison pages in time.  Per CXL spec, the device error event
-could be signaled through FW-First and OS-First methods.
+On Wed, Apr 10, 2024 at 9:51=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 9 Apr 2024 12:02:31 -0700
+> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+>
+> > Hi Jonathan,
+> >
+> > On Tue, Apr 9, 2024 at 9:12=E2=80=AFAM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> > >
+> > > On Fri, 5 Apr 2024 15:43:47 -0700
+> > > "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+> > >
+> > > > On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
+> > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > >
+> > > > > On Fri,  5 Apr 2024 00:07:06 +0000
+> > > > > "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+> > > > >
+> > > > > > The current implementation treats emulated memory devices, such=
+ as
+> > > > > > CXL1.1 type3 memory, as normal DRAM when they are emulated as n=
+ormal memory
+> > > > > > (E820_TYPE_RAM). However, these emulated devices have different
+> > > > > > characteristics than traditional DRAM, making it important to
+> > > > > > distinguish them. Thus, we modify the tiered memory initializat=
+ion process
+> > > > > > to introduce a delay specifically for CPUless NUMA nodes. This =
+delay
+> > > > > > ensures that the memory tier initialization for these nodes is =
+deferred
+> > > > > > until HMAT information is obtained during the boot process. Fin=
+ally,
+> > > > > > demotion tables are recalculated at the end.
+> > > > > >
+> > > > > > * late_initcall(memory_tier_late_init);
+> > > > > > Some device drivers may have initialized memory tiers between
+> > > > > > `memory_tier_init()` and `memory_tier_late_init()`, potentially=
+ bringing
+> > > > > > online memory nodes and configuring memory tiers. They should b=
+e excluded
+> > > > > > in the late init.
+> > > > > >
+> > > > > > * Handle cases where there is no HMAT when creating memory tier=
+s
+> > > > > > There is a scenario where a CPUless node does not provide HMAT =
+information.
+> > > > > > If no HMAT is specified, it falls back to using the default DRA=
+M tier.
+> > > > > >
+> > > > > > * Introduce another new lock `default_dram_perf_lock` for adist=
+ calculation
+> > > > > > In the current implementation, iterating through CPUlist nodes =
+requires
+> > > > > > holding the `memory_tier_lock`. However, `mt_calc_adistance()` =
+will end up
+> > > > > > trying to acquire the same lock, leading to a potential deadloc=
+k.
+> > > > > > Therefore, we propose introducing a standalone `default_dram_pe=
+rf_lock` to
+> > > > > > protect `default_dram_perf_*`. This approach not only avoids de=
+adlock
+> > > > > > but also prevents holding a large lock simultaneously.
+> > > > > >
+> > > > > > * Upgrade `set_node_memory_tier` to support additional cases, i=
+ncluding
+> > > > > >   default DRAM, late CPUless, and hot-plugged initializations.
+> > > > > > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
+> > > > > > `mt_find_alloc_memory_type()` are moved into `set_node_memory_t=
+ier()` to
+> > > > > > handle cases where memtype is not initialized and where HMAT in=
+formation is
+> > > > > > available.
+> > > > > >
+> > > > > > * Introduce `default_memory_types` for those memory types that =
+are not
+> > > > > >   initialized by device drivers.
+> > > > > > Because late initialized memory and default DRAM memory need to=
+ be managed,
+> > > > > > a default memory type is created for storing all memory types t=
+hat are
+> > > > > > not initialized by device drivers and as a fallback.
+> > > > > >
+> > > > > > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> > > > > > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+> > > > > > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+> > > > >
+> > > > > Hi - one remaining question. Why can't we delay init for all node=
+s
+> > > > > to either drivers or your fallback late_initcall code.
+> > > > > It would be nice to reduce possible code paths.
+> > > >
+> > > > I try not to change too much of the existing code structure in
+> > > > this patchset.
+> > > >
+> > > > To me, postponing/moving all memory tier registrations to
+> > > > late_initcall() is another possible action item for the next patchs=
+et.
+> > > >
+> > > > After tier_mem(), hmat_init() is called, which requires registering
+> > > > `default_dram_type` info. This is when `default_dram_type` is neede=
+d.
+> > > > However, it is indeed possible to postpone the latter part,
+> > > > set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
+> > > > indeed be split into two parts, and the latter part can be moved to
+> > > > late_initcall() to be processed together.
+> > > >
+> > > > Doing this all memory-type drivers have to call late_initcall() to
+> > > > register a memory tier. I=E2=80=99m not sure how many they are?
+> > > >
+> > > > What do you guys think?
+> > >
+> > > Gut feeling - if you are going to move it for some cases, move it for
+> > > all of them.  Then we only have to test once ;)
+> > >
+> > > J
+> >
+> > Thank you for your reminder! I agree~ That's why I'm considering
+> > changing them in the next patchset because of the amount of changes.
+> > And also, this patchset already contains too many things.
+>
+> Makes sense.  (Interestingly we are reaching the same conclusion
+> for the thread that motivated suggesting bringing them all together
+> in the first place!)
+>
+> Get things work in a clean fashion, then consider moving everything to
+> happen at the same time to simplify testing etc.
+Hi Jonathan,
 
-So, add poison creation event handler in OS-First method:
-  - Qemu:
-    - CXL device reports POISON creation event to OS by MSI by sending
-      GMER/DER after injecting a poison record;
-  - CXL driver:
-    a. parse the POISON event from GMER/DER;
-    b. translate poisoned DPA to HPA (PFN);
-    c. enqueue poisoned PFN to memory_failure's work queue;
+Thank you and I will do! Could you please take another look and see if
+there are any further changes needed for this patchset? If everything
+looks good to you, could you please also provide a 'Reviewed-by' for
+this patch?
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
----
- drivers/cxl/core/mbox.c   | 119 +++++++++++++++++++++++++++++++++-----
- drivers/cxl/cxlmem.h      |   8 +--
- include/linux/cxl-event.h |  18 +++++-
- 3 files changed, 125 insertions(+), 20 deletions(-)
+Per discussion, I'm going to prepare another patchset "memory tier
+initialization path optimization" and will send it out once ready.
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index f0f54aeccc87..76af0d73859d 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -837,25 +837,116 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
- 
--void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
--			    enum cxl_event_log_type type,
--			    enum cxl_event_type event_type,
--			    const uuid_t *uuid, union cxl_event *evt)
-+static void cxl_report_poison(struct cxl_memdev *cxlmd, struct cxl_region *cxlr,
-+			      u64 dpa)
- {
--	if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-+	u64 hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-+	unsigned long pfn = PHYS_PFN(hpa);
-+
-+	if (!IS_ENABLED(CONFIG_MEMORY_FAILURE))
-+		return;
-+
-+	memory_failure_queue(pfn, MF_ACTION_REQUIRED);
-+}
-+
-+static int __cxl_report_poison(struct device *dev, void *arg)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_memdev *cxlmd;
-+	u64 dpa = *(u64 *)arg;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
-+		return 0;
-+
-+	if (cxled->mode == CXL_DECODER_MIXED) {
-+		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
-+		return 0;
-+	}
-+
-+	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-+		return 0;
-+
-+	cxlmd = cxled_to_memdev(cxled);
-+	cxl_report_poison(cxlmd, cxled->cxld.region, dpa);
-+
-+	return 1;
-+}
-+
-+static void cxl_event_handle_poison(struct cxl_memdev *cxlmd, u64 dpa)
-+{
-+	struct cxl_port *port = cxlmd->endpoint;
-+
-+	/*
-+	 * No region is mapped to this endpoint, that is to say no HPA is
-+	 * mapped.
-+	 */
-+	if (!port || !is_cxl_endpoint(port) ||
-+	    cxl_num_decoders_committed(port) == 0)
-+		return;
-+
-+	device_for_each_child(&port->dev, &dpa, __cxl_report_poison);
-+}
-+
-+static void cxl_event_handle_general_media(struct cxl_memdev *cxlmd,
-+					   enum cxl_event_log_type type,
-+					   struct cxl_event_gen_media *rec)
-+{
-+	u64 dpa = le64_to_cpu(rec->phys_addr) & CXL_DPA_MASK;
-+
-+	if (type == CXL_EVENT_TYPE_FAIL) {
-+		switch (rec->transaction_type) {
-+		case CXL_EVENT_TRANSACTION_READ:
-+		case CXL_EVENT_TRANSACTION_WRITE:
-+		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-+			cxl_event_handle_poison(cxlmd, dpa);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+}
-+
-+static void cxl_event_handle_dram(struct cxl_memdev *cxlmd,
-+				  enum cxl_event_log_type type,
-+				  struct cxl_event_dram *rec)
-+{
-+	u64 dpa = le64_to_cpu(rec->phys_addr) & CXL_DPA_MASK;
-+
-+	if (type == CXL_EVENT_TYPE_FAIL) {
-+		switch (rec->transaction_type) {
-+		case CXL_EVENT_TRANSACTION_READ:
-+		case CXL_EVENT_TRANSACTION_WRITE:
-+		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-+			cxl_event_handle_poison(cxlmd, dpa);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+}
-+
-+void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-+			     enum cxl_event_log_type type,
-+			     enum cxl_event_type event_type,
-+			     const uuid_t *uuid, union cxl_event *evt)
-+{
-+	if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
- 		trace_cxl_general_media(cxlmd, type, &evt->gen_media);
--	else if (event_type == CXL_CPER_EVENT_DRAM)
-+		cxl_event_handle_general_media(cxlmd, type, &evt->gen_media);
-+	} else if (event_type == CXL_CPER_EVENT_DRAM) {
- 		trace_cxl_dram(cxlmd, type, &evt->dram);
--	else if (event_type == CXL_CPER_EVENT_MEM_MODULE)
-+		cxl_event_handle_dram(cxlmd, type, &evt->dram);
-+	} else if (event_type == CXL_CPER_EVENT_MEM_MODULE)
- 		trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
- 	else
- 		trace_cxl_generic_event(cxlmd, type, uuid, &evt->generic);
- }
--EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
-+EXPORT_SYMBOL_NS_GPL(cxl_event_handle_record, CXL);
- 
--static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
--				     enum cxl_event_log_type type,
--				     struct cxl_event_record_raw *record)
-+static void __cxl_event_handle_record(struct cxl_memdev *cxlmd,
-+				      enum cxl_event_log_type type,
-+				      struct cxl_event_record_raw *record)
- {
- 	enum cxl_event_type ev_type = CXL_CPER_EVENT_GENERIC;
- 	const uuid_t *uuid = &record->id;
-@@ -867,7 +958,7 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
- 		ev_type = CXL_CPER_EVENT_MEM_MODULE;
- 
--	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
-+	cxl_event_handle_record(cxlmd, type, ev_type, uuid, &record->event);
- }
- 
- static int cxl_clear_event_record(struct cxl_memdev_state *mds,
-@@ -979,8 +1070,8 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 			break;
- 
- 		for (i = 0; i < nr_rec; i++)
--			__cxl_event_trace_record(cxlmd, type,
--						 &payload->records[i]);
-+			__cxl_event_handle_record(cxlmd, type,
-+						  &payload->records[i]);
- 
- 		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
- 			trace_cxl_overflow(cxlmd, type, payload);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 36cee9c30ceb..ba1347de5651 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -822,10 +822,10 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- 				  unsigned long *cmds);
- void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
--void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
--			    enum cxl_event_log_type type,
--			    enum cxl_event_type event_type,
--			    const uuid_t *uuid, union cxl_event *evt);
-+void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-+			     enum cxl_event_log_type type,
-+			     enum cxl_event_type event_type,
-+			     const uuid_t *uuid, union cxl_event *evt);
- int cxl_set_timestamp(struct cxl_memdev_state *mds);
- int cxl_poison_state_init(struct cxl_memdev_state *mds);
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 03fa6d50d46f..8189bed76c12 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -23,6 +23,20 @@ struct cxl_event_generic {
- 	u8 data[CXL_EVENT_RECORD_DATA_LENGTH];
- } __packed;
- 
-+/*
-+ * Event transaction type
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+enum cxl_event_transaction_type {
-+	CXL_EVENT_TRANSACTION_UNKNOWN = 0X00,
-+	CXL_EVENT_TRANSACTION_READ,
-+	CXL_EVENT_TRANSACTION_WRITE,
-+	CXL_EVENT_TRANSACTION_SCAN_MEDIA,
-+	CXL_EVENT_TRANSACTION_INJECT_POISON,
-+	CXL_EVENT_TRANSACTION_MEDIA_SCRUB,
-+	CXL_EVENT_TRANSACTION_MEDIA_MANAGEMENT,
-+};
-+
- /*
-  * General Media Event Record
-  * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-@@ -33,7 +47,7 @@ struct cxl_event_gen_media {
- 	__le64 phys_addr;
- 	u8 descriptor;
- 	u8 type;
--	u8 transaction_type;
-+	u8 transaction_type;	/* enum cxl_event_transaction_type */
- 	u8 validity_flags[2];
- 	u8 channel;
- 	u8 rank;
-@@ -52,7 +66,7 @@ struct cxl_event_dram {
- 	__le64 phys_addr;
- 	u8 descriptor;
- 	u8 type;
--	u8 transaction_type;
-+	u8 transaction_type;	/* enum cxl_event_transaction_type */
- 	u8 validity_flags[2];
- 	u8 channel;
- 	u8 rank;
--- 
-2.34.1
+>
+> Jonathan
 
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
