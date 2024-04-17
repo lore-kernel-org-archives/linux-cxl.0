@@ -1,49 +1,50 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F4217F7
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 07:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22FD7173A;
+	Wed, 17 Apr 2024 07:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713340263; cv=none; b=qYbNlxiEHfyS8Yen6DyWktxv04k5wg9D/09hpwZbGVXIi3dM/B8z3W1EjSD51wXi9zy4RswaZjrJgLaURN+5ZrbfDOyxe+3SwO5assfpbsyzH8h7GoqLkL/ngMC0eivLl2O8e/VVRNKrSu3VIMO6Czs3gG9Q/EW7gdevt1I6Up4=
+	t=1713340269; cv=none; b=DmWWBqAGptHGUumth4eQHyja+0EDeYNWqcgK7cu1ebzHizCCtdgviAnQO70/k6aBbwDGQhKJ+1zBxlCoTQkDn8q7FJJ6RecooigSWHmwhPVkaFUy6RyX3n15IgLIhCIYDmfL+kB+FpjFrl+ZqFjlGiGeTbKkOg2RKJN5JO2koL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713340263; c=relaxed/simple;
-	bh=lb9Pxp3Eza7fspbIatLUTROAMiPIxPeq3aIDRxd+Zfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LsoZqs10gHhNvT1VE8pi9zmvggOU1L+AQtt1XlNaI6lPIo7YJZVClmm9oELXkkLg/bFu+8poPmasScOj336oWTCFzMqlIB3jV8beiiM+9Zzolr3FEp1HCX8uK+1CGDVgt6Acjsis1pVkhCTvGRoLqnev4fRGOdYnYlpmp0bG8jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=o74WZn3M; arc=none smtp.client-ip=207.54.90.49
+	s=arc-20240116; t=1713340269; c=relaxed/simple;
+	bh=nkHXoxrUC6y6rXyp3n2yBLub76g+yVRVU0sB8x34LCc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=trAWfDQQYV6CVtMRf2QR5AAnZM8KnJxN/ZDyeBsRYqc8EX6kwBdU09nnrbHUhCd71VUXUMXyQlJY5hcYGOS1J+uVh39GYFp8gu5VCzRz0ePQwli9Do+XF4MOxJiJnerS1bAtB2bJ1M5YkhGDTKqROI6Qfhi7V6LyymDB4beKjR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=eKhPh5nv; arc=none smtp.client-ip=68.232.139.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="o74WZn3M"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="eKhPh5nv"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1713340261; x=1744876261;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lb9Pxp3Eza7fspbIatLUTROAMiPIxPeq3aIDRxd+Zfc=;
-  b=o74WZn3Mro28L3fIHG1WDPKRtLf8hHoKI7UwTzVRhthrDoj47V7/e1Jt
-   ORJ3dmzKLCdgKSozj3zJPQsCowxRUqebq/TYHlCEkPwx8I5KZIyreCo0f
-   J3nWEq/leeFvy24+CR2YhWLttR3hUWyUuARaSb/w39yZXddmVz4Xe8OfP
-   z1ZbZB16L6LE13Y3Bo4Osf9jOdX9OojzBpogFN+roXzqd37Gib6xHxrOd
-   uDXAIIkzlj9rJp+NiPL9YppH3y7CZ/FypBLr++NWljspjcIe8iY7gwUWk
-   g9la9lQZJVyEuWrzNh9IMfT9lwWgIdoCSnmN7bj6QMnKCBAl8o52cQTfa
+  t=1713340267; x=1744876267;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nkHXoxrUC6y6rXyp3n2yBLub76g+yVRVU0sB8x34LCc=;
+  b=eKhPh5nvtWPGFBzrANTr93lci/cw1PLYB/gX0LN1Vgm/osV1GQjaJwIu
+   JBVvGV7NG+iglIuPVyZEgFbs48zZPUlul1ziSI0F+qrHVwJbsxqBC6XF0
+   UpGM+TGCb939VM/oYyNDjIeI02+E4QfkC37qOQKNcnmuJgevou5MuaZJB
+   1d3Tr/s6kt6a37UYKppPmLATwqG9Aye/QNU8To63YBefTMcDuEYT1gL56
+   dg1/t+iClIt9VjxVBV23rHprPndmmfrsS1mgJv4diiZOCmgC4uSWXgQhO
+   Ma1R52KRfzwuQLAXdV5qZbRuglKQiibZWE9ChK+1H+hIFkjpC2yMBp430
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="155828447"
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="157776076"
 X-IronPort-AV: E=Sophos;i="6.07,208,1708354800"; 
-   d="scan'208";a="155828447"
-Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 16:50:58 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 71F6EE4EB9
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:55 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id A1AE31B869
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:54 +0900 (JST)
+   d="scan'208";a="157776076"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 16:50:58 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id E216715FA8;
+	Wed, 17 Apr 2024 16:50:55 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 2436E4E653;
+	Wed, 17 Apr 2024 16:50:55 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 2DD1B200026DA
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 16:50:54 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 948502288CF;
+	Wed, 17 Apr 2024 16:50:54 +0900 (JST)
 Received: from irides.g08.fujitsu.local (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 577481A000A;
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id EF3991A000C;
 	Wed, 17 Apr 2024 15:50:53 +0800 (CST)
 From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 To: qemu-devel@nongnu.org,
@@ -52,11 +53,14 @@ Cc: Jonathan.Cameron@huawei.com,
 	dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	ira.weiny@intel.com,
-	alison.schofield@intel.com
-Subject: [PATCH v3 0/2] cxl: add poison creation event handler
-Date: Wed, 17 Apr 2024 15:50:51 +0800
-Message-Id: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
+	alison.schofield@intel.com,
+	stable@vger.kernel.org
+Subject: [PATCH v3 1/2] cxl/core: correct length of DPA field masks
+Date: Wed, 17 Apr 2024 15:50:52 +0800
+Message-Id: <20240417075053.3273543-2-ruansy.fnst@fujitsu.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
+References: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,52 +69,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28326.005
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28326.006
 X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28326.005
-X-TMASE-Result: 10--7.175000-10.000000
-X-TMASE-MatchedRID: 4r2MyAYFTndlJTodqNqEzpV3j1zTOBYz/OuUJVcMZhvG5dXdQTj2OHG0
-	XoqFERcpi70orB5wM5OhvbGMLMgkamULhS/RYteOEVuC0eNRYvL9XDMezlt/vCiJduasmgZhRpc
-	31ddH+ShCIvvqgRmgughBeNJICtc+j2hRzH1UwuAURSScn+QSXmVV1G+Ck2l7+gtHj7OwNO35N/
-	S1zEq4untHa4+L7o4W99dC03zAok3mnTE/jwuyozlvRXkWmame
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28326.006
+X-TMASE-Result: 10-1.936900-10.000000
+X-TMASE-MatchedRID: Z72PYcQfb3Po4fT4WEihVSQWufwDJ4K9T5ysQDj6eFnIPbn2oQhptW4j
+	6HJSTgstiC69Gex0rT0XkIT0cenSu+BRuAss+FbmEXjPIvKd74BUENBIMyKD0ceQfu6iwSfsePr
+	7SQbqKPDi8zVgXoAltuJ5hXsnxp7jC24oEZ6SpSmcfuxsiY4QFJp+Fkm0Yph4NSGlnU1tfkqmmA
+	tzdYh7Px/SCJhYcntdSNllVVIjtxumPccZWwKt1wdD9AYG5JbSTGKjvF046qOjDGFJqjnwwJsNE
+	GpLafrrLM/nEDLP056e+TDiyH/49wxfkLAfkNNSaAZk0sEcY14=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Changes: RFCv2 -> v3:
-1. patch1: removed changes for flags
-2. changed the main idea of this patchset: not for injection event
-     handling, but for creation;
-3. removed GET_POISON_LIST command while receiving POISON event;
-4. dropped poison report in debugfs;
-5. added DER event handler to handle POISON event, in case POISON event is
-     sent by DER;
-After the above changes, this patchset becomes smaller.  Main code changes
-are in patch2, which seems could't be divided smaller.
+The length of Physical Address in General Media Event Record/DRAM Event
+Record is 64-bit, so the field mask should be defined as such length.
+Otherwise, this causes cxl_general_media and cxl_dram tracepoints to
+mask off the upper-32-bits of DPA addresses. The cxl_poison event is
+unaffected.
 
+If userspace was doing its own DPA-to-HPA translation this could lead to
+incorrect page retirement decisions, but there is no known consumer
+(like rasdaemon) of this event today.
 
-Currently driver only traces cxl events, poison creation (for both vmem
-and pmem type) on cxl memdev is silent.  OS needs to be notified then it
-could handle poison pages in time.  Per CXL spec, the device error event
-could be signaled through FW-First and OS-First methods.
+Fixes: d54a531a430b ("cxl/mem: Trace General Media Event Record")
+Cc: <stable@vger.kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+---
+ drivers/cxl/core/trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, add poison creation event handler in OS-First method:
-  - Qemu:
-    - CXL device reports POISON creation event to OS by MSI by sending
-      GMER/DER after injecting a poison record;
-  - CXL driver:                                   <--- this patchset
-    a. parse the POISON event from GMER/DER;
-    b. translate poisoned DPA to HPA (PFN);
-    c. enqueue poisoned PFN to memory_failure's work queue;
-
-Shiyang Ruan (2):
-  cxl/core: correct length of DPA field masks
-  cxl/core: add poison creation event handler
-
- drivers/cxl/core/mbox.c   | 119 +++++++++++++++++++++++++++++++++-----
- drivers/cxl/core/trace.h  |   2 +-
- drivers/cxl/cxlmem.h      |   8 +--
- include/linux/cxl-event.h |  18 +++++-
- 4 files changed, 126 insertions(+), 21 deletions(-)
-
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index e5f13260fc52..cdfce932d5b1 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -253,7 +253,7 @@ TRACE_EVENT(cxl_generic_event,
+  * DRAM Event Record
+  * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+  */
+-#define CXL_DPA_FLAGS_MASK			0x3F
++#define CXL_DPA_FLAGS_MASK			0x3FULL
+ #define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
+ 
+ #define CXL_DPA_VOLATILE			BIT(0)
 -- 
 2.34.1
 
