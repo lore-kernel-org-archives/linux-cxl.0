@@ -1,66 +1,88 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49334846D
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Apr 2024 03:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13C05B1E1;
+	Wed, 17 Apr 2024 06:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713325879; cv=none; b=lYGuKJfHy6th0xBA5glnQzk+7PEig6WW6FSzQJLm9SizW0mVcy0/C5XmXG7MgoKz5dpRmgUpijdtlzTmX53mAYJkJCYoPkavio5WlYUdCyCNs/Qo/juc70ZZuPI/bjCiDeVsDuKQ8FFirJOa6txozXp4+c44nY9HpFM5NkzJ+8A=
+	t=1713334607; cv=none; b=HcQCBOcxrIchM1sjCVHrKB+A3QfAeb945vBOk41X8tPAufmHb+4QE2KvMWbTVZAOiw9zyNNFlXZfl4ACAoP62m+xRxE26HntjktY/gRA5A8GNaBMLEZeEpJuOqkMl6XbcQMiyH3dFcQfNliJBlQ2KlId/dftYtauElOMyLfzT4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713325879; c=relaxed/simple;
-	bh=NJp4+T6opihtF6JykcOdg05R2dkZFJuxMq8sGOcUdNk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qJyF77Y/58mo5/fxpKxBF3NCAsr5ZvAH5KloaDck1fECWWbMW7AFijI9sHM08XYTEc+c8Uib4zz0yPI7UXJZBmh7u7MnMNuORWjgwD5cntrfSejsklNlXSOklPwlvcznLcqgSfj5qnuhPs5XDlUbVKLAFwnVNB/f+r1bY66DX6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=n9gdUdX9; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=snu.ac.kr
+	s=arc-20240116; t=1713334607; c=relaxed/simple;
+	bh=Zup4kVprGE6/Db88WKTYbbdgKIeTY5tkXinpBoc56No=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OqZpqKOgBfMlaQNgrF6fC/z6CbTzOYUOHuAeFkgO1hJ79NhkR6pO+GznQYoXhanTgZ+DlbhU75T4CIZSvNCA5OkM8fFnsoa8rHepqOL6lkSQpM5+RH8VlzSTdumM5Az0eQG6Hp3a3BDB3OozqfwYvaFdNL0yroQvAT1CjaXvv2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkA4LyQV; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b="n9gdUdX9"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a528e7f2b6so3779223a91.0
-        for <linux-cxl@vger.kernel.org>; Tue, 16 Apr 2024 20:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snu.ac.kr; s=google; t=1713325874; x=1713930674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OhV56taU7++Z+JWH7zmlfWQwCU9i9NFlAwJ7NR5vyUw=;
-        b=n9gdUdX9czojv2r4JpQsJ3RHrM9ixRqQbYx6gQRBp8ny4AMUNSgNX5YddadWhj+CTU
-         0cuTk9NPK/oHFSEYe/2XoL0H4ybPr9eos1O4uu9wO2f/guoubXEWsPwa3Jn1SqiJ/bdz
-         KTc5uaLzBMyYAKhM6riCWvRSx5YRD9YBOrOXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713325874; x=1713930674;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OhV56taU7++Z+JWH7zmlfWQwCU9i9NFlAwJ7NR5vyUw=;
-        b=NAjHXBfAaVhpVYbOX8idR9E0dslfNQVmYL1dYo6f07ohzZXVyynTrdB4/D380B8LJG
-         CiOCQGD10dgErSHP3XUJ0Oae3pfPEB9geJg/fhR0WbFcUZFbQemJNpFhaYeoHFPKQXUT
-         xgoMzYEBxj4vSikgcuvAiiUZUmeXCJbXSt5iPo555xbaAOe4pMSnLvfTy0JFr2QRblkt
-         vF3PdyVhKsJtRI9rvkF56PbU6ZiWpg64gtt6tcGzo3PWJc2vuYQyh5kirm7y+8CQr13b
-         eyhfuySwVG67ONUx1zul9TG6vfCj1BZQrYz0DqF9u7r3vlgSGcTN608xzPQ5zihUmEwF
-         +22A==
-X-Gm-Message-State: AOJu0Yxhu+TQxyHNv/tQQHrqT2ELpQLPWlLGr1rg/PGoJLX9MW5+BWnS
-	TFD9NnP53xEvCCeG82kZX/+4x+7m6T/SaKPLuWYZ7MSEpPrduw5BsONbSYGgn7J6MeqvwOGj4Mt
-	UHS0=
-X-Google-Smtp-Source: AGHT+IGdXQiDs8kc2ufJZgofUQG4ck768IiqbKk6/mtDoXyg89PLHENbm9p6R7vjVgiy70ZIuztvvQ==
-X-Received: by 2002:a17:90a:fe98:b0:2a7:d619:8e14 with SMTP id co24-20020a17090afe9800b002a7d6198e14mr8445536pjb.5.1713325873738;
-        Tue, 16 Apr 2024 20:51:13 -0700 (PDT)
-Received: from localhost.localdomain ([147.46.121.48])
-        by smtp.gmail.com with ESMTPSA id t1-20020a17090aae0100b002a2d8d34009sm379234pjq.27.2024.04.16.20.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 20:51:13 -0700 (PDT)
-From: Sangyun Kim <sangyun.kim@snu.ac.kr>
-To: linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Sangyun Kim <sangyun.kim@snu.ac.kr>
-Subject: [PATCH] cxl/cxl-event: include missing <linux/types.h> and <linux/uuid.h>
-Date: Wed, 17 Apr 2024 12:50:43 +0900
-Message-Id: <20240417035043.2791431-1-sangyun.kim@snu.ac.kr>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkA4LyQV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713334605; x=1744870605;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Zup4kVprGE6/Db88WKTYbbdgKIeTY5tkXinpBoc56No=;
+  b=QkA4LyQV0XjQMO4ITrMrDfVVJorTFO9gaRxh04s6uL569b+CDJOZZuN9
+   cQzO9qah+IoAML51pCKjE41NwOfCDjGu84M+GlCQnMbVdf/4lfN1c3gd1
+   wWWke1b6R8OZ22qJNOVgcElV1BQK4IeEenKLXvKZ95+LU2Y+03tZXhBNO
+   hn/lhzvi5JQ4Y0tDBBRIPveeLGAdf20mmWfoacu0r0kFkThkLJ7mTquyr
+   GLuVvBj9gchfNTkmjfVkGaAKehVkRyG8GK5tq+8oCPiID/4tDXJ/gTAJf
+   x6fL9FleF+vAs1zvdTaQYe1ytmIUndm79nw8S33gk5awNT2Fz5+YrTRCq
+   Q==;
+X-CSE-ConnectionGUID: nAogyA+RQMy9b97/msdyfw==
+X-CSE-MsgGUID: E5Qh5T5USS2HYYaRjyIU3g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="11750755"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="11750755"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:16:44 -0700
+X-CSE-ConnectionGUID: NsDJERb6RGuQWGQC9axYPw==
+X-CSE-MsgGUID: EEds5zuzTOCMVFxKwv0MeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="23108988"
+Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:16:35 -0700
+From: Zhenzhong Duan <zhenzhong.duan@intel.com>
+To: linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	james.morse@arm.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	bhelgaas@google.com,
+	helgaas@kernel.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	linmiaohe@huawei.com,
+	shiju.jose@huawei.com,
+	adam.c.preble@intel.com,
+	leoyang.li@nxp.com,
+	lukas@wunner.de,
+	Smita.KoralahalliChannabasappa@amd.com,
+	rrichter@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	erwin.tsaur@intel.com,
+	sathyanarayanan.kuppuswamy@intel.com,
+	dan.j.williams@intel.com,
+	feiting.wanyan@intel.com,
+	yudong.wang@intel.com,
+	chao.p.peng@intel.com,
+	qingshun.wang@linux.intel.com,
+	Zhenzhong Duan <zhenzhong.duan@intel.com>
+Subject: [PATCH v3 0/3] PCI/AER: Handle Advisory Non-Fatal error
+Date: Wed, 17 Apr 2024 14:14:04 +0800
+Message-Id: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,37 +91,108 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The linux/cxl-event.h header file uses the u8, u16, and uuid_t types,
-but it doesn't include the necessary header files,
-<linux/types.h> and <linux/uuid.h>.
+Hi,
 
-Currently, cxl-event.h is only used by drivers/cxl/cxlmem.h,
-and it doesn't cause any errors because cxlmem.h indirectly
-includes the required types.
+This is a relay work of Qingshun's v2 [1], but changed to focus on ANFE
+processing as subject suggests and drops trace-event for now. I think it's
+a bit heavy to do extra IOes to get PCIe registers only for trace purpose
+and not see it a community request for now.
 
-However, cxl-event.h may be used by other CXL-related code in the future,
-so it's important to fix this issue by including the missing header files
-directly in cxl-event.h.
+According to PCIe Base Specification Revision 6.1, Sections 6.2.3.2.4 and
+6.2.4.3, certain uncorrectable errors will signal ERR_COR instead of
+ERR_NONFATAL, logged as Advisory Non-Fatal Error(ANFE), and set bits in
+both Correctable Error(CE) Status register and Uncorrectable Error(UE)
+Status register. Currently, when handling AER events the kernel will only
+look at CE status or UE status, but never both. In the ANFE case, bits set
+in the UE status register will not be reported and cleared until the next
+FE/NFE arrives.
 
-Signed-off-by: Sangyun Kim <sangyun.kim@snu.ac.kr>
----
- include/linux/cxl-event.h | 3 +++
- 1 file changed, 3 insertions(+)
+For instance, previously, when the kernel receives an ANFE with Poisoned
+TLP in OS native AER mode, only the status of CE will be reported and
+cleared:
 
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 03fa6d50d46f..812ed16ffc2f 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -3,6 +3,9 @@
- #ifndef _LINUX_CXL_EVENT_H
- #define _LINUX_CXL_EVENT_H
- 
-+#include <linux/types.h>
-+#include <linux/uuid.h>
-+
- /*
-  * Common Event Record Format
-  * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+
+If the kernel receives a Malformed TLP after that, two UEs will be
+reported, which is unexpected. The Malformed TLP Header is lost since
+the previous ANFE gated the TLP header logs:
+
+  PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00041000/00180020
+     [12] TLP                    (First)
+     [18] MalfTLP
+
+To handle this case properly, calculate potential ANFE related status bits
+and save in aer_err_info. Use this information to determine the status bits
+that need to be cleared.
+
+Now, for the previous scenario, both CE status and related UE status will
+be reported and cleared after ANFE:
+
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [18] TLP
+
+Note:
+checkpatch.pl will produce following warnings on PATCH2/3:
+
+WARNING: 'UE' may be misspelled - perhaps 'USE'?
+#22:
+uncorrectable error(UE) status should be cleared. However, there is no
+
+...similar warnings omitted...
+
+This is a false-positive, so not fixed.
+
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#10:
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+
+...similar warnings omitted...
+
+For readability reasons, these warnings are not fixed.
+
+
+
+[1] https://lore.kernel.org/linux-pci/20240125062802.50819-1-qingshun.wang@linux.intel.com
+
+Thanks
+Qingshun, Zhenzhong
+
+Changelog:
+v3:
+  - Split ANFE print and processing to two patches (Bjorn)
+  - Simplify ANFE handling, drop trace event
+  - Polish comments and patch description
+  - Add Tested-by
+
+v2:
+  - Reference to the latest PCIe Specification in both commit messages
+    and comments, as suggested by Bjorn Helgaas.
+  - Describe the reason for storing additional information in
+    aer_err_info in the commit message of PATCH 1, as suggested by Bjorn
+    Helgaas.
+  - Add more details of behavior changes in the commit message of PATCH
+    2, as suggested by Bjorn Helgaas.
+
+v1: https://lore.kernel.org/linux-pci/20240111073227.31488-1-qingshun.wang@linux.intel.com/
+
+
+Zhenzhong Duan (3):
+  PCI/AER: Store UNCOR_STATUS bits that might be ANFE in aer_err_info
+  PCI/AER: Print UNCOR_STATUS bits that might be ANFE
+  PCI/AER: Clear UNCOR_STATUS bits that might be ANFE
+
+ drivers/pci/pci.h      |  1 +
+ drivers/pci/pcie/aer.c | 67 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 1 deletion(-)
+
 -- 
-2.25.1
+2.34.1
 
