@@ -1,57 +1,57 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2FC2AF0F
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 23:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4B12AF0F
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 23:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713483012; cv=none; b=eEvb7n1oFOBkAIjJut+o0OEuykQZNTusBy7qS8seMxar3tT8g0B/xyzUoKbcYHp1vmyV4jTbHZBx1jsf7BeHHDhj2jqF+h4//L8WvnEUUO1CQz6/AgWe4fzaCQBgH4GhKLeImYs/qwEGupsksSY9T8MkPvcS2+mi6sY5Wf2oAUc=
+	t=1713483015; cv=none; b=HKcX7TNDWoUAsDEzq8h4nAGQHujjYe9armeUt7ukncORSZBSnmyGe8wdxWlaiLVBKRxuncrXZYVWnubx60mrd1N2S6pXr4vPmeQlFhr/aAP9O52181U166KVS8FgZtiuHYKs/g9IbTYi/JilIIpQeDqAstSKUQft82BryXBdzsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713483012; c=relaxed/simple;
-	bh=MbsEJu+P0LQqrL/fFPzA+QCKd0j/313kTt71hbsTn4o=;
+	s=arc-20240116; t=1713483015; c=relaxed/simple;
+	bh=ELAMW9qBwsov19JxnPsdJJPxtz0H+kXe0UPqPUDCjxU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9+WXuY3K5pFnt8KCYr7xsv22hLpt9eGQ2xSrJg4xdRD4CrHqE20m+EfCcBZ17F7G/JTVBZ5Il+v/2a0rDOlxtMCLQXtD7JC2pPR7BpOAj5T/d1JTqsL9JlRK1iWtfoOS8PIF58Q5WUcfkofAZ6qKqwBaD4CKfSrn4AgLr+l6I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WvcVyyaZ; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=sPDzKiWtz1g6C2tAL4PhVPSdRMA9igaTSZAWa7W3s3TZhQkiaCO25XCCQ1R2UPVGP1VwMXXnc1gCsv9kVn+7b56t1NrZgtv/6OJ4h6ZA9eDNdNIVFizSk+uyqE1KGqckJib29KboXIrM3vEG1qgCL557QqWESj01baD+/uF5Qxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYCIApV4; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvcVyyaZ"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so1345016b3a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 16:30:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYCIApV4"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ed112c64beso1325136b3a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 16:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713483010; x=1714087810; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713483013; x=1714087813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ow2honBLfLsYAJoSrWVd0jh7a+uzahn+825h2aAqTgw=;
-        b=WvcVyyaZXnM7ZmDa5GKbK44M6JBu9r3a2+i87IhRhIOP+d/19qLVxKuoNhE/0OYz93
-         rUxsL6QNeOngKck0xZhlDFX97YDBl75qKPT9dK0GYeS8YewBCkTQOsDQDk042QbCNyTE
-         JeBSU5jGnHEkZCpx6V46v4viAArMpZRkWDK5pvlaYhkcDmGdIyssfqD+zSFdOYD36JAd
-         pkfsgcY1hcrdCNR+hN8Fb/kcbJw5g0ttFnBM7B3sHfKQFlda+JVMbDuCyHc2KFVyjPCG
-         uQdwUYgHTKoVz0oULac1zo2oOoVOz1UoXGag6uhc6u0+rwIX+xMejQaiYAWqcxH4Eb7a
-         tpxg==
+        bh=Ggrpoa55J+CuYa6WaJVJnd/Z1hpjsnV4FDGSfq86nOQ=;
+        b=JYCIApV4zspdbip9o46hzxqpglLTL0AuaL7GZM4aGLHCkvfVRfobZO1QJQs71MBhL+
+         uz9Kqsh/AmKn1dNS/pLofG2Qc+2D/sCt9rtyTWDk+gpNXdiNJ+yVcptUP7b0ixEdDrzF
+         bOIdHdtBQ08Usa3BHDoaSedNoZj+VZY0mN4i82b7TQGyl8BJApQhqaPIjVd0NR7ztClg
+         ECNZxYk/J1lwuvM6pW7gv/dwQQGs6nj+iDFKdtop7TWjp5Bvfm7zArq8gAGWh8ZF5UDs
+         PYy/EoUhP7Qxw0ssAqNEWOj7NwLom5CLoEf0miI6BPDMfnZMtkh4J39w2Jily7mal4qR
+         gBYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713483010; x=1714087810;
+        d=1e100.net; s=20230601; t=1713483013; x=1714087813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ow2honBLfLsYAJoSrWVd0jh7a+uzahn+825h2aAqTgw=;
-        b=APoH6azm0WmQlQoJSO0Keyg5bwHNaBWptWT0x0a2C9J6lR2KvvnjWTbediiVB/SW3v
-         /ysjDajG8uGTbmKfvDpVU/A8MQ3P4SZvH8IRQ8f4xeLbzGRJe35PZhxja2UmKd8SwJZ+
-         9aa9ym2gbgA58xG/JASuCK8jeyLXINGZPJY9nkDVj9DyyvBPhGWby/xUYJYNCgV4fHdn
-         CVieuUB/01yx8c0dJZht7v34AlL7C3Phx1oA2vA7/i8REIoO7s/KtSn+lgVRoOsqzLfJ
-         lDjaSiRtnLNuKvVEoMI4UjAz+M3363TLusoSXGjsHDvGyP9t4v4OhQ0600yTxTaxqXaa
-         xEsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQx/J58cBJ55k+z8i2xMVs7Z3gSiMf9F2mdeSn5N8oINB2/aXSuvXpw9VJzSPVTUF9GrxqOzaGKw5go+nSlkhi1J+c+HImgFoH
-X-Gm-Message-State: AOJu0Yyb+jOUep5TnljgN/9fltFV3m48fd1acVIg3og6VFISjFehEeaL
-	jgxiQ0dDp++bPiAzFN8+0Ak/f6ancc5Xv2F+O0Rl4Vz1jJl7y7NE
-X-Google-Smtp-Source: AGHT+IE94ylxUx/UWiEiedIHul63+PwBYMukWUa1qdA/55cOY8EAPLn5Al2VYu6orH+j7LErQAQ6vg==
-X-Received: by 2002:a05:6a20:96ce:b0:1a7:61f0:9ca9 with SMTP id hq14-20020a056a2096ce00b001a761f09ca9mr647381pzc.58.1713483010243;
-        Thu, 18 Apr 2024 16:30:10 -0700 (PDT)
+        bh=Ggrpoa55J+CuYa6WaJVJnd/Z1hpjsnV4FDGSfq86nOQ=;
+        b=X5TMyDzOY5YA/MKatsHGVktKMi/XShELXrfz/953/N488IsTXid7HeuTEC+uU3Hpcy
+         GRvDtRXO426nfvXU4MrXFO+yc26r8HjT6YgsDUIKKgWlAnHCoXRxFY1qgK/0SJuEzmgJ
+         rBIzPArmN/2e2ECJE73f2pwgyRKsL59EWuNwuDvtBCC53aUY7DvY2qPYkj80ssq1iBDR
+         PjSMuNqveTmqyJEEerUZ0GIFhRriKnEBgaUWHgBI1r1xB6Jzb9GcR90RMXlAbLqchWj4
+         0s4dMHbaRRV/oyYBmTqBS0CvhLayZvfNjOL0DNYShR8GfNNSy3ugRAMwwhZLaDFYtUI8
+         2U5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUKDqfdQHAoj4XdhzzwFuDKdeOazl+KzT8LNDRnXys2TX4U2xTXLVj+Ktogert/f5Q+ELN4ljBmjkxUCGIE0wiYIBUABwn8TN/K
+X-Gm-Message-State: AOJu0Yydc2hzmWCqM5JeNo57bpmfa1ObY0O5CqJkMGiK21S05Mlnwn2X
+	IMO1aNeiu2IGVA52KBZkvuLA35X6PWGiO+cCFMDmoWGMK6VE387+
+X-Google-Smtp-Source: AGHT+IFzgF73P2kI4foReYX74Mh4RfoG1oX0kH4u/p06dPT/Tbq0J7QDVqdIYlKQaXMV/Vaon1Tgtg==
+X-Received: by 2002:a05:6a00:27a0:b0:6ea:7981:d40b with SMTP id bd32-20020a056a0027a000b006ea7981d40bmr713005pfb.16.1713483012793;
+        Thu, 18 Apr 2024 16:30:12 -0700 (PDT)
 Received: from localhost.localdomain ([2601:641:300:14de:ed8b:f40f:7543:e9ea])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056a00230300b006e6be006637sm2040783pfh.135.2024.04.18.16.30.08
+        by smtp.gmail.com with ESMTPSA id h3-20020a056a00230300b006e6be006637sm2040783pfh.135.2024.04.18.16.30.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 16:30:09 -0700 (PDT)
+        Thu, 18 Apr 2024 16:30:12 -0700 (PDT)
 From: nifan.cxl@gmail.com
 X-Google-Original-From: fan.ni@samsung.com
 To: qemu-devel@nongnu.org
@@ -69,9 +69,9 @@ Cc: jonathan.cameron@huawei.com,
 	wj28.lee@gmail.com,
 	Fan Ni <fan.ni@samsung.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v7 04/12] hw/mem/cxl_type3: Add support to create DC regions to type3 memory devices
-Date: Thu, 18 Apr 2024 16:10:55 -0700
-Message-ID: <20240418232902.583744-5-fan.ni@samsung.com>
+Subject: [PATCH v7 05/12] hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr size instead of mr as argument
+Date: Thu, 18 Apr 2024 16:10:56 -0700
+Message-ID: <20240418232902.583744-6-fan.ni@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240418232902.583744-1-fan.ni@samsung.com>
 References: <20240418232902.583744-1-fan.ni@samsung.com>
@@ -85,116 +85,89 @@ Content-Transfer-Encoding: 8bit
 
 From: Fan Ni <fan.ni@samsung.com>
 
-With the change, when setting up memory for type3 memory device, we can
-create DC regions.
-A property 'num-dc-regions' is added to ct3_props to allow users to pass the
-number of DC regions to create. To make it easier, other region parameters
-like region base, length, and block size are hard coded. If needed,
-these parameters can be added easily.
-
-With the change, we can create DC regions with proper kernel side
-support like below:
-
-region=$(cat /sys/bus/cxl/devices/decoder0.0/create_dc_region)
-echo $region > /sys/bus/cxl/devices/decoder0.0/create_dc_region
-echo 256 > /sys/bus/cxl/devices/$region/interleave_granularity
-echo 1 > /sys/bus/cxl/devices/$region/interleave_ways
-
-echo "dc0" >/sys/bus/cxl/devices/decoder2.0/mode
-echo 0x40000000 >/sys/bus/cxl/devices/decoder2.0/dpa_size
-
-echo 0x40000000 > /sys/bus/cxl/devices/$region/size
-echo  "decoder2.0" > /sys/bus/cxl/devices/$region/target0
-echo 1 > /sys/bus/cxl/devices/$region/commit
-echo $region > /sys/bus/cxl/drivers/cxl_region/bind
+The function ct3_build_cdat_entries_for_mr only uses size of the passed
+memory region argument, refactor the function definition to make the passed
+arguments more specific.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Fan Ni <fan.ni@samsung.com>
 ---
- hw/mem/cxl_type3.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ hw/mem/cxl_type3.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 5d6d3ab87d..5ceed0ab4c 100644
+index 5ceed0ab4c..a1fe268560 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -30,6 +30,7 @@
- #include "hw/pci/msix.h"
- 
- #define DWORD_BYTE 4
-+#define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
- 
- /* Default CDAT entries for a memory region */
- enum {
-@@ -567,6 +568,46 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-     }
- }
- 
-+/*
-+ * TODO: dc region configuration will be updated once host backend and address
-+ * space support is added for DCD.
-+ */
-+static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-+{
-+    int i;
-+    uint64_t region_base = 0;
-+    uint64_t region_len =  2 * GiB;
-+    uint64_t decode_len = 2 * GiB;
-+    uint64_t blk_size = 2 * MiB;
-+    CXLDCRegion *region;
-+    MemoryRegion *mr;
-+
-+    if (ct3d->hostvmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostvmem);
-+        region_base += memory_region_size(mr);
-+    }
-+    if (ct3d->hostpmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostpmem);
-+        region_base += memory_region_size(mr);
-+    }
-+    assert(region_base % CXL_CAPACITY_MULTIPLIER == 0);
-+
-+    for (i = 0, region = &ct3d->dc.regions[0];
-+         i < ct3d->dc.num_regions;
-+         i++, region++, region_base += region_len) {
-+        *region = (CXLDCRegion) {
-+            .base = region_base,
-+            .decode_len = decode_len,
-+            .len = region_len,
-+            .block_size = blk_size,
-+            /* dsmad_handle set when creating CDAT table entries */
-+            .flags = 0,
-+        };
-+    }
-+
-+    return true;
-+}
-+
- static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
- {
-     DeviceState *ds = DEVICE(ct3d);
-@@ -635,6 +676,13 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-         g_free(p_name);
-     }
- 
-+    if (ct3d->dc.num_regions > 0) {
-+        if (!cxl_create_dc_regions(ct3d, errp)) {
-+            error_setg(errp, "setup DC regions failed");
-+            return false;
-+        }
-+    }
-+
-     return true;
- }
- 
-@@ -931,6 +979,7 @@ static Property ct3_props[] = {
-                      HostMemoryBackend *),
-     DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
-     DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
-+    DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
-     DEFINE_PROP_END_OF_LIST(),
+@@ -44,7 +44,7 @@ enum {
  };
  
+ static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+-                                          int dsmad_handle, MemoryRegion *mr,
++                                          int dsmad_handle, uint64_t size,
+                                           bool is_pmem, uint64_t dpa_base)
+ {
+     CDATDsmas *dsmas;
+@@ -63,7 +63,7 @@ static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+         .DSMADhandle = dsmad_handle,
+         .flags = is_pmem ? CDAT_DSMAS_FLAG_NV : 0,
+         .DPA_base = dpa_base,
+-        .DPA_length = memory_region_size(mr),
++        .DPA_length = size,
+     };
+ 
+     /* For now, no memory side cache, plausiblish numbers */
+@@ -132,7 +132,7 @@ static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+          */
+         .EFI_memory_type_attr = is_pmem ? 2 : 1,
+         .DPA_offset = 0,
+-        .DPA_length = memory_region_size(mr),
++        .DPA_length = size,
+     };
+ 
+     /* Header always at start of structure */
+@@ -149,6 +149,7 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+     g_autofree CDATSubHeader **table = NULL;
+     CXLType3Dev *ct3d = priv;
+     MemoryRegion *volatile_mr = NULL, *nonvolatile_mr = NULL;
++    uint64_t vmr_size = 0, pmr_size = 0;
+     int dsmad_handle = 0;
+     int cur_ent = 0;
+     int len = 0;
+@@ -163,6 +164,7 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+             return -EINVAL;
+         }
+         len += CT3_CDAT_NUM_ENTRIES;
++        vmr_size = memory_region_size(volatile_mr);
+     }
+ 
+     if (ct3d->hostpmem) {
+@@ -171,21 +173,22 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+             return -EINVAL;
+         }
+         len += CT3_CDAT_NUM_ENTRIES;
++        pmr_size = memory_region_size(nonvolatile_mr);
+     }
+ 
+     table = g_malloc0(len * sizeof(*table));
+ 
+     /* Now fill them in */
+     if (volatile_mr) {
+-        ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
++        ct3_build_cdat_entries_for_mr(table, dsmad_handle++, vmr_size,
+                                       false, 0);
+         cur_ent = CT3_CDAT_NUM_ENTRIES;
+     }
+ 
+     if (nonvolatile_mr) {
+-        uint64_t base = volatile_mr ? memory_region_size(volatile_mr) : 0;
++        uint64_t base = vmr_size;
+         ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
+-                                      nonvolatile_mr, true, base);
++                                      pmr_size, true, base);
+         cur_ent += CT3_CDAT_NUM_ENTRIES;
+     }
+     assert(len == cur_ent);
 -- 
 2.43.0
 
