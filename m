@@ -1,57 +1,57 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9E371B3D
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 23:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7724458119
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 23:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713483040; cv=none; b=qFKxhQDEV/6Sw3uURgG/eflr3s9A9nbG/b1gMUOvwNqIulMx3HMKpkKryu/GDi5L8S8pnw7WJ16SbjFJmbK81onq27YA6htwG8DzP6kaXCNRZgOHgP9fRYQ/9xFIAqkjG9xV1ZN+yWe2DPN7rtL9K/H5zBLyb4aLqC7kC/B7YvI=
+	t=1713483043; cv=none; b=dw5JnZCx8ebiaVBzwUR5n/EWUjPtJiGwGrMPbBEkNsz8kWvymenttOosl4Tj+EOJUp1kRDXncSidgikD4JObKtTlZ/6omgrj24R2h34gJZJ/Y6p/rz4jXUVW+lp31UqT+FnqLaf7itLBTh5zTE5T5txPPf3s21XsleFPlCz8rhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713483040; c=relaxed/simple;
-	bh=fKQfvxmJJEaAzzudRynJlBCu52ZiuXIxL0lJkEGYdj0=;
+	s=arc-20240116; t=1713483043; c=relaxed/simple;
+	bh=4/sZTtNVoOLJvZFPx0uxL1WcMwdkqpnwinTIQ7phZZc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qu9XEWrfQ9ZNkuW0loEqUw5O3tuC1xeQTYosxM+ISHKucXk3utPB6j/bDJJbatmDHa4aXKv5+EPZVFQKGVY1LhFg7H9DI9vBvwgEdw9vqHrbr5ovCUXYeQ/sfXKkICDUjVH/9t6mK9kxzP55Qyj45dheOrcIvnNYmnEokN/sLIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWo/YWrz; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=eNxmnxqaQd9bfMHSLndAUy6k5UItWevKA+xwH7Z9zyTktvW4IiMmfVkS6but15BtOE7w/ugT2R7l31bGpxf+4K4yc8lZMwbtidoil6jPwnc0Qr9VyrWhrDkcriHFt6LU9oo0XMkI1Yt23126Nh6/W93NDYUqJi4cYOaMEuy91rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvcjjcVs; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWo/YWrz"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f074520c8cso1461324b3a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 16:30:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvcjjcVs"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso1299522b3a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Apr 2024 16:30:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713483038; x=1714087838; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713483042; x=1714087842; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w9/QnnmOfKtdXC4mQDt19ExscjIokR+8yGloQuw3o6U=;
-        b=kWo/YWrzMGZFIicv/TT5YuxHN4s15phHlW9IQuFMu23Bm+hz2ytchE7f+/cAbktncL
-         A9FsLseNwawnNZuL0o+9lpgJZHVq/RYTqgFP7pAVcLPLBxAqR/L0REKzwZMyztwTc0H3
-         zdj5YAMOCNfBpq3U82QZym8rMf46mLDHn4HebYLEsfP7m6wBJR++/S9ai99nK34W0dma
-         fv1jrlkbwEOzEyjTKj/rYpv/GLpWLquln/nt9sinCxMKCmOPQDpYC13YcpCaBIuRLHF4
-         dI9oGYVQXGnhWBgSrl0dYVPSlF5zGwfZG8yf02kyJa92UfSHcuceqoVLL2YaFQltfH3d
-         3MxA==
+        bh=KdtJQ2//BvaL+ED8X5UWARoz6dYMy43pJ3SbcFIRv9I=;
+        b=hvcjjcVs2YTt54+OCs6Uxwri44NHTleh/Q1kN5CoiB+5xfeqb1uA+XWogHK0YxUszi
+         MUp8CZAN07KE5PNgSzNcvMXsHpIt4NtFbhyRjXK5P2Xg1/En7SdX2YAdcGVPDzC1eQ2p
+         jg7vv8POG0kvyR//asQ+qdBv5PB1p8nwWOJ8BJlCZErN729lJSHdikjTCukHgvVx2dOQ
+         LHt89b9F/i5HDmZgJXGWUGdG5WPjV2ptEv4QOhwZMa6zrdZ9TjCQouI9ojnAzj07eem5
+         0KdG6SHVHaA3iJUW4jDPHpZVNoP4QYb51iJTkifNFG7G4SYh1F6OKRYs43tRHcqWlJ0v
+         u4pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713483038; x=1714087838;
+        d=1e100.net; s=20230601; t=1713483042; x=1714087842;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w9/QnnmOfKtdXC4mQDt19ExscjIokR+8yGloQuw3o6U=;
-        b=jHpB2MpsHOoB0CU/WWA7yz4seXATFOun1q5vmoF7mICLPBIkSlx6otgRNJS/7WuXR5
-         LF0Ih8b+0vcBYHVCohubQwwp6B8yX6hT2Whg/o75/Co0VEwQCNrLzW87L5FVucI+JQZp
-         D2Ko7yRZC4f8q5ABvKQLLEfuykagmnsdv4/8Q20tgrHhuAOXRiRzmLnpLAuC1xW3MkUw
-         vE+m2mgbInSb8HkKr/BPGqqDxOZ7o5hZuI0mkz/sRY4NRQu8sPYH1AZwZOrNnFCD0Tvf
-         goQjzhUvhjVdHrR2xiQZFxMGhSXUBBfZrgthU6eV53P3Dwf2b+H5flxdvW4xJnmckf3j
-         MWTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVd97VyTxipqrFcu3/ODtFLY6hasOblAkQUtG3ly2Ein5tsM8t2U4HwXYVAv/H/F35jv9UK0J8mNoeuszQ+oH+NregE0wQhD4Wa
-X-Gm-Message-State: AOJu0YxhZTgGbLxfPYzp1/Eb9Dv6dGNHPhPDsPANHYsWW4oR2S//uG/K
-	bcmu/wfIctxm+8zoIH9bst1QrXwqeqtxht2fNg/7sA1svx7621RA
-X-Google-Smtp-Source: AGHT+IFxmyePkARZkckg2WodGL2yH1e7nz5yCu71kjTaoavsu6MpQP1H/JH9iZsF6BUah9nvlvDQTQ==
-X-Received: by 2002:a05:6a00:1a8e:b0:6ee:1d68:d33 with SMTP id e14-20020a056a001a8e00b006ee1d680d33mr644097pfv.15.1713483038197;
-        Thu, 18 Apr 2024 16:30:38 -0700 (PDT)
+        bh=KdtJQ2//BvaL+ED8X5UWARoz6dYMy43pJ3SbcFIRv9I=;
+        b=O14JzshS229a33ajFMHyybCVMsNwc4TIJxigTyBNuH2i14cstWxqKfHmwNX2HA3Z3B
+         RXlWgq6rGIJLradiPTCyUUYOM6wkSrL5UpD6o0L0E1k1Nf2EHZII9+AwLuitvDHajbzX
+         pjQWIGYfknLKdQRfJkgghBldLK7mR13rqysxxs5arQ0Vw0Pp9uSh8/vl2erzikVZLjJ3
+         ekryqPyCiQxpDm+xNZo/Ly9zc7wnPlFRP0ZY/roL30jhIlraznuB4kaGIDmjtD9o5u4E
+         6+ckO8sx49bQh2DcRpWPC9URB2pWzjBK52wrwZF9QcKgdpE+0Ts8u/6+4Oa1sQIp0lah
+         iJ6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVlrmRnTXXUcuR8IQiOdLc6hfezsV/nEm6IfOvxTvU+1N1+BMbj4pLny1PpoyMno0klZjyu8D7iQU2yqvD8Ax2KiFeT5HLGHdso
+X-Gm-Message-State: AOJu0YwnIySCL7oKS9x2W731g2JvZqEOaRSKWTbxGrAKAZvuUI096v4a
+	e+f3ZMiC6/9zar3t4K4P3Cl0TKkmpuW8iVZcx9dbpwllVrtlQfVM6YkcCg==
+X-Google-Smtp-Source: AGHT+IHGuUAdd1A/hFHKB74AL5T6aGZ9tFOxeEB/HZhO5eI3UqC99l2TIAslMMUB9EHdcx6813y6bg==
+X-Received: by 2002:a62:81c6:0:b0:6f0:c78f:75e1 with SMTP id t189-20020a6281c6000000b006f0c78f75e1mr498855pfd.0.1713483041813;
+        Thu, 18 Apr 2024 16:30:41 -0700 (PDT)
 Received: from localhost.localdomain ([2601:641:300:14de:ed8b:f40f:7543:e9ea])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056a00230300b006e6be006637sm2040783pfh.135.2024.04.18.16.30.32
+        by smtp.gmail.com with ESMTPSA id h3-20020a056a00230300b006e6be006637sm2040783pfh.135.2024.04.18.16.30.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 16:30:37 -0700 (PDT)
+        Thu, 18 Apr 2024 16:30:41 -0700 (PDT)
 From: nifan.cxl@gmail.com
 X-Google-Original-From: fan.ni@samsung.com
 To: qemu-devel@nongnu.org
@@ -67,10 +67,11 @@ Cc: jonathan.cameron@huawei.com,
 	jim.harris@samsung.com,
 	Jorgen.Hansen@wdc.com,
 	wj28.lee@gmail.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v7 11/12] hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox support
-Date: Thu, 18 Apr 2024 16:11:02 -0700
-Message-ID: <20240418232902.583744-12-fan.ni@samsung.com>
+	Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 12/12] hw/mem/cxl_type3: Allow to release extent superset in QMP interface
+Date: Thu, 18 Apr 2024 16:11:03 -0700
+Message-ID: <20240418232902.583744-13-fan.ni@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240418232902.583744-1-fan.ni@samsung.com>
 References: <20240418232902.583744-1-fan.ni@samsung.com>
@@ -84,65 +85,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Fan Ni <fan.ni@samsung.com>
 
-With the change, we extend the extent release mailbox command processing
-to allow more flexible release. As long as the DPA range of the extent to
-release is covered by accepted extent(s) in the device, the release can be
-performed.
+Before the change, the QMP interface used for add/release DC extents
+only allows to release an extent whose DPA range is contained by a single
+accepted extent in the device.
 
+With the change, we relax the constraints.  As long as the DPA range of
+the extent is covered by accepted extents, we allow the release.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Fan Ni <fan.ni@samsung.com>
 ---
- hw/cxl/cxl-mailbox-utils.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ hw/mem/cxl_type3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 57f1ce9cce..89f0ab8116 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1704,6 +1704,13 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
-         dpa = in->updated_entries[i].start_dpa;
-         len = in->updated_entries[i].len;
- 
-+        /* Check if the DPA range is not fully backed with valid extents */
-+        if (!ct3_test_region_block_backed(ct3d, dpa, len)) {
-+            ret = CXL_MBOX_INVALID_PA;
-+            goto free_and_exit;
-+        }
-+
-+        /* After this point, extent overflow is the only error can happen */
-         while (len > 0) {
-             QTAILQ_FOREACH(ent, updated_list, node) {
-                 range_init_nofail(&range, ent->start_dpa, ent->len);
-@@ -1718,14 +1725,7 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
-                     if (range_contains(&range, dpa + len - 1)) {
-                         len2 = ent_start_dpa + ent_len - dpa - len;
-                     } else {
--                        /*
--                         * TODO: we reject the attempt to remove an extent
--                         * that overlaps with multiple extents in the device
--                         * for now. We will allow it once superset release
--                         * support is added.
--                         */
--                        ret = CXL_MBOX_INVALID_PA;
--                        goto free_and_exit;
-+                        dpa = ent_start_dpa + ent_len;
-                     }
-                     len_done = ent_len - len1 - len2;
- 
-@@ -1752,14 +1752,9 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
-                     }
- 
-                     len -= len_done;
--                    /* len == 0 here until superset release is added */
-                     break;
-                 }
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index a3e1a5de25..9e725647f1 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -1941,7 +1941,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+                            "cannot release extent with pending DPA range");
+                 return;
              }
--            if (len) {
--                ret = CXL_MBOX_INVALID_PA;
--                goto free_and_exit;
--            }
-         }
-     }
- free_and_exit:
+-            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
++            if (!ct3_test_region_block_backed(dcd, dpa, len)) {
+                 error_setg(errp,
+                            "cannot release extent with non-existing DPA range");
+                 return;
 -- 
 2.43.0
 
