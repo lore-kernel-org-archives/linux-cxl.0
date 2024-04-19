@@ -1,48 +1,48 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2108.outbound.protection.outlook.com [40.107.100.108])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2128.outbound.protection.outlook.com [40.107.101.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E474C8004E
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 18:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6029A13B5B5
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 18:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.128
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713550860; cv=fail; b=AmsH99lCodjf68SydY1d056GVhyhksNEhQrmuzKZ7gXHi3KgI5D2wdWz7IG+i943Pf7oTy80QJFsIaUX52GuUFXLmImtOzlTnvdl1WGk67hiHOPvmtGUjylpMyZcT9YN/AGDXJN9gJR94l4Jp2W9d8R5DA/obMrjLBdE/RtHMOo=
+	t=1713551085; cv=fail; b=DmrJ+/5URn+v8lUtjPoUjiuDZpc0VCfdSNB4xRgVDodHJItH++cNKZGKopDVS5fdpXaC+Ck8NUPcfyrKCH8YM6jcIa3ndBBvulpYzPa2QGN1c1BILVPugSXsS1EIoyq63G3yGup58+2blWU0sAaRKyvunAHDCGWHI/wJPzfbNb0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713550860; c=relaxed/simple;
-	bh=kPFPtZ2vftclQ/9cHCG3p7ZkU88tJE1LeGtSXX63/HY=;
+	s=arc-20240116; t=1713551085; c=relaxed/simple;
+	bh=typXx7L2G9xvudeOv5iPOsJrtGgLxfAZERrmIIAcFBg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VFf45DvSH8LCdb18ODna2GnzpCHZYj9UYVFi6ZiqwkWIKbmdi47mlwgJd/g9d9KKiIrBd8tnUhPQ6gaCGNYrlzMuK0H3RDqx48P4fgP+rTFcYAtVO2I3i2z4beGuLhoPa9Lk5V7621xHaokjEZK1LaXLUFhH77HQdFK4LrpSm6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=aBvr9ywO; arc=fail smtp.client-ip=40.107.100.108
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AsU+JMmb+q0XJar/OwlUTC5v9BvQVlc3OiQKD9fAZkUOZ98T2Yx5fFK3ibMJ60TeU8RU1wPXNnR2b2UIe5JYn9wLy+1Z962Pm8zjI9hpnjKXhgFA11KziPYTkVI9wLzlgU67cUJlQGYDDSz5JFEJNvr7AfWeWLV+9V5Nafuvpo8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=fail (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=iN/d6Kcf reason="signature verification failed"; arc=fail smtp.client-ip=40.107.101.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="aBvr9ywO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="iN/d6Kcf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HuduFeb8rtYBxpwZh/OXAWV2tvAf/TmntjprXObzjJ56Lh0VpNRqV9REGdADlnPixISn8xIsGI81Pl5MsC4aQ7G4VGgJmjQ0rQTxvAhnskWTxxLw627wJbVsYNnCIZijoTUSQXXTtxAT3hq30gb2SLwvMLJdMMSC/SqMHuF3+A6RYlT6XAcT2dbxWGoraiQEmZ7qILch9k4tv3K9+NuUqlWERd4RGv+ol6099cPYytvMy+SIuluX4H2VYtr4CB8LFeM7pfb9Sw38+1QKkXDVmewXHaCj13fs1n38x4y5ufIrIw8OEbJ4u8iZNokjTDIJYiAOdS/p8yyAJJ4bzp1LSw==
+ b=Iu2ZPTKvANOZcWIGVvEPEWo2/ustoBV7wQ/awKrU+p6HLd0jJneoMTWbpROwKVSClfIVN9CbxP9/SNP02UbOPZkuWmvbju02g8r0BeilPSXk7s0QI33xHFLJTxOksRzKDn95viMUvx9cr/CrQrrmvHZFFdGr1RCEheSzDIT88wgEfl3BCDihMq0Suwlj6/FlesZnjPm3uVVi0R4O+iOmJG3/lsiHWuFatfKkyZQmXssyf1RMSXgih2xgSU51GJxmB+uhNmhkRWL7L0TEW4Q0LiqglGSDuq5tPu8ZaeiCk3ZbcMP+HAfVoDC+ZxKhVGCR2vxWXrkx4NlETZ75FV7Gqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gCs0r/2/uhqxBkplN0ifnY7O4GtejURJUkLlP/Ny7gc=;
- b=ExhQcOSA+1fWICUyMf7bDneDTeOGEldizJRA3viabj35WMHf4Gw6Mw4iylM9rdNf9tD9TY0W54UqZfSRFvurrFl4+r2W/E36PvQPpBIuYklzx8mgPhNu2OK9E4gtuVW6arD6w9QuPR8Hh9EBGvuuuszNFPxNk5FDpAxvaMPgk6vdlM6cFrUOMEZAjeMZjtnT+mXpYd5TBLvBdi9xQc2POSv/2UotAFWrVaguW9m1yLSLDQ1iRFtRyJbGpBVYXo0qVGpAnWM3FhVAznpwS+79hFnNi9/Rpz52ttrp3wC5s4bz4/uZjKzcwyjr4rLXG459MoLGuXrI5I8O3KI+QB6CFg==
+ bh=J6H133nsgGGKX+c5F0sd3BLCiokggDt9PWTT+n1Y18k=;
+ b=EePj4/qYk5L/+wC31hgwxgnTyyRy8lqvJZbFhhKUpX7mvuDxlYGbp8LYwI/pWWtqVdgaLs10oo6XlWscao7kbA8hDHzZ7Swo3NoDgtR2zdZBqxqA+l7PIco7h6o94I/LPG2CIKez2F4bjC1GI7n0WlsS56kv4FpKq0Qk1Bd53nciVppKGmKW9v6XeyLoZ68nSrV/HaOx9fcWLb7IYa679klIoLIDcpf4nh8SSEOnj/r7RYF+6Kf2ptr12mlIjzFGeKB7rEmhUnnKprBBBEULL1/nQK8HU3qNz8Rgo+qezmsl/jy7ODMZpQ/O5iBRkmgklltOBFWnraklqXxL6g3+Tg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
  dkim=pass header.d=memverge.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gCs0r/2/uhqxBkplN0ifnY7O4GtejURJUkLlP/Ny7gc=;
- b=aBvr9ywOK7Ad46jD3lPWeqV7xjL2ousnWr9zkGrkmFAZIAAoYm/8RK8OAPRK72kqgV8uqwEmjOIvZgTvxLlN5wpJNziVgcrtGRiW/FAgkv90LLkdFidQx4ZSQTVsD9x990iL2qOs4znpvgoksyl1zTXh/wJpLZcfhu+tfZvFqao=
+ bh=J6H133nsgGGKX+c5F0sd3BLCiokggDt9PWTT+n1Y18k=;
+ b=iN/d6Kcf3agvL7aj6W15Y1P13u+7Otq6XNQmjNI5nziCdaTvdy+Kgxxk1GyqP6B8ErbBE8ooVPqpVWnLvBLPXL8p/jOwRDMmcWJQT8MozD5VYDFhS4bRzI/+aR2diCgLlKPiueEs46IntRH3fOxMcFb8SlDO6SJN3xRmibc/0DY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=memverge.com;
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SA1PR17MB5569.namprd17.prod.outlook.com (2603:10b6:806:1c8::19) with
+ by SJ0PR17MB6431.namprd17.prod.outlook.com (2603:10b6:a03:4d5::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 18:20:56 +0000
+ 2024 18:24:40 +0000
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::5d53:b947:4cab:2cc8]) by SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::5d53:b947:4cab:2cc8%4]) with mapi id 15.20.7472.042; Fri, 19 Apr 2024
- 18:20:56 +0000
-Date: Fri, 19 Apr 2024 14:20:53 -0400
+ 18:24:40 +0000
+Date: Fri, 19 Apr 2024 14:24:36 -0400
 From: Gregory Price <gregory.price@memverge.com>
 To: nifan.cxl@gmail.com
 Cc: qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
@@ -50,17 +50,16 @@ Cc: qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
 	dan.j.williams@intel.com, a.manzanares@samsung.com,
 	dave@stgolabs.net, nmtadam.samsung@gmail.com,
 	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v7 12/12] hw/mem/cxl_type3: Allow to release extent
- superset in QMP interface
-Message-ID: <ZiK2BVe5C99gXw46@memverge.com>
+	fan.ni@samsung.com
+Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
+Message-ID: <ZiK25Log7LmtBffa@memverge.com>
 References: <20240418232902.583744-1-fan.ni@samsung.com>
- <20240418232902.583744-13-fan.ni@samsung.com>
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240418232902.583744-13-fan.ni@samsung.com>
-X-ClientProxiedBy: BYAPR02CA0012.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::25) To SJ0PR17MB5512.namprd17.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240418232902.583744-1-fan.ni@samsung.com>
+X-ClientProxiedBy: PH8PR22CA0016.namprd22.prod.outlook.com
+ (2603:10b6:510:2d1::9) To SJ0PR17MB5512.namprd17.prod.outlook.com
  (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -69,110 +68,141 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SA1PR17MB5569:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d430d26-d891-495d-1b26-08dc609d74c4
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB6431:EE_
+X-MS-Office365-Filtering-Correlation-Id: 105e80b1-269c-48fb-d5a6-08dc609dfa4e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EFlXxr6z3OP2OSZN9nsSQVjjuKzwoxb48V4Tdzf2yC/l3WPVhmHsQ2T0rcZt?=
- =?us-ascii?Q?q2vmd/bgtZLTw0axVOFOFnUq/HjmNc9fNq+3MDNAARM8Ln+Tp0xG+LOYU+rF?=
- =?us-ascii?Q?qI0EmJi/oIjzGZCFZHDeSRm8vLM9Rjwirr+zaM4rPqfnvu5DIwFPldr8qe7n?=
- =?us-ascii?Q?ncaWttvNb6seeSqthNCwCl0MAFQlD5t7u9f/D7/On+QEecIBogLlm4XUp7tj?=
- =?us-ascii?Q?f9vroe03VK7LB3IkcaEs4lDKKGHHDqRM2vEbqGSi+NEkyvhgQDChGqlUt7V5?=
- =?us-ascii?Q?3HaWacUOhW7Ez05P8y3Kuo3Ap5omWmU4B4WYoxqUpAgO6wL81ET/d6XtjNOK?=
- =?us-ascii?Q?YAO8esWsvPcwdK4XlpQp+GPE0MWR70s7w3P7FZW6lY6sre/JGFwLBVYEEvvn?=
- =?us-ascii?Q?tl5Ac77txRNULXO7fBoyNTimCbsq9AvZZOrv/A76aqWJQeSAVAy9eGE4ffX4?=
- =?us-ascii?Q?4Sb3f+AqCpj/NMWBsauAwuHAeQ58gZCr7s7ozmaOzcH+UiysgZITn2L1rCqx?=
- =?us-ascii?Q?9mi7szIsO0FOHyoNgnjTwxauTEIjnFXz71OCZhADIez8o+dftAd3UMb2TrRW?=
- =?us-ascii?Q?v+OmadHlq5MIlwHNjWXKE5TvjC0aWJKp9yfr1Oqdz9tYXZe465ECNfbT8WJm?=
- =?us-ascii?Q?o01gW6ISxf8dKclxhL7xNealHRCgFpwt1UKIQtiWRwVfYR2mlqHzM+mRa5CP?=
- =?us-ascii?Q?mX8qrcKr1YSRB7lYqxbqjgRszpWZQTMc8VHW9quFknFVUyx2vMVMUz1cLkYB?=
- =?us-ascii?Q?cSP9PUlofuiflv2t+J0swnOnJPNQ39tKNL+PLSRX1DimbfWzhSkoKKHMYjcj?=
- =?us-ascii?Q?4Q4RtAj7VZ3m1GcZ34iagYCaaoDU0cEBvlAL9zYhwQj1Mpw+//lonX5H0d7F?=
- =?us-ascii?Q?akoCoSWwMZs1tTq/JBhRV2lc48/Vbzge4WYAo3Nn0r9uGUvQWlZ8nPx9OvP6?=
- =?us-ascii?Q?yFRqD1pYxUjC72rat8hIRqwPsYO6/vnTfvl/lgmUIXZBurkVFSAfo932cC7c?=
- =?us-ascii?Q?vWPuObWil0O3XLqgubAyq1XYdQ7XBq+jyhcwnqRirjqeOLTQdofXXS5CD1IV?=
- =?us-ascii?Q?WvRtktkwObARYZWa1sx9MlRdGA+xM3Vi3Y+L5Yznkml3iOB8o1U3BXvoILxt?=
- =?us-ascii?Q?mGPO04HBNx7IBT5aRKlJMqIGQAtuH4Z1WzZ9ovPteT2CT/ktX12zn5CM3rBV?=
- =?us-ascii?Q?ypLyWm6hEpo0jPN/l7vu0kCjgm6McGxZBfOIL2pf9kYYkpRcfF1Ds+NooEUq?=
- =?us-ascii?Q?kgC3WXdK72C3kgUr7/0jG/tgvGjkM3/sPLQ2QsuPHQ=3D=3D?=
+	ZJG4LXtlMWBH9lmJKhpQxIvySMM/aGJgAzmTR0DdD6nDskMqANXuGSdP3NNXfpbTlCsFrNqx1hI4kMn0EqlUscqJwgCN1M7VFBDXICQuMLWSpVEjQqZtx9QDi67FARBjfxEUQKEPEvefJdg+KH3HZu/cID9fUKwWZGhac6Eju6V9lLnEoaWANmvfIwWM9OKEWw9O62JN3a1I7+L2bF8Lsja+3nwEU1bT52ngs/CPikPqyTCvejXQvPfqcdgO0z3FywcEZURN0osfAbUACgwx0gx7L6vNHp9CkeXMA+oC3ViCSb0z0aELWqyBCBgO6DD9CwTBTLnhFsL5j5C5Sobx3WQRqpBiLWuSae/vmDU955KabKZD3d+7gDgfSx2E2A3PJFDyetbpyihtInlIkLgqZhYMlL5n7BEBvN2HkS9lfWl/yc58GOdcNyEanDa/bpSMmXB4Q7FAy9DDN+NUoB0DQmqutSlmsEEFnA4kv6fTfqPSK2XXD6K06h61gW1V5PBsDk2Im92jSB73RHcGlURcAGbsj/yNtbtsVXxXLQm8yx1WpAq/eFcFGlal5jJQ98H0b1gOZNvntRkxSSOVwtS+PbfBUm00XxyLbD5LGZOunoU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pwnjfFvJM1z9cDPxnAlRK+HBCEY5Mc5sGyybhKa8C47ssQ0m1Hd4z0IoO68k?=
- =?us-ascii?Q?aumLJywkc4Zd+YXKn7+3vpEMmfoufecDQxiQTgqJW9wH4LqPK9wJbFidJnV6?=
- =?us-ascii?Q?6wRblxyvVIFUqHN5Zh42xi5nza2K5kfQ5VP30Fofbkq4gccBsaHefcwkijrx?=
- =?us-ascii?Q?xx+1XqGRcTbF5dv0W6dPczzCzlwl2aiL86FDUdTDXUQVlbAd1XVywX2JSfiQ?=
- =?us-ascii?Q?5nqACZ7lsh1IhJvMT6QQhBqzwlmozekRsPB6QVOowL0nEuhscQtcbZLYAOtL?=
- =?us-ascii?Q?V6GpsXArs2jTmmv8vflhCjfJ8xgUT9UVFpbiUj/NHiiLn+pREGL9p/0eCMOO?=
- =?us-ascii?Q?6MzCM8KJaBjySI+ktL0VAryFPF0YaLkBMwsBEEV5dqb4rblCSVVuTYSm1fNe?=
- =?us-ascii?Q?xrr1xjKhQkR1lqysDcq01g8xRbbpOY42BARMja1i/xXhm0WzaXPdcSI5i++a?=
- =?us-ascii?Q?4fXF+TTQx9Yow4vM/WcVISQTWUh9d3myZuyOeMNF0CHuQoSMfJxoI/7QvRFg?=
- =?us-ascii?Q?+7NvIGXodIiA4BYb2fNN1JdK+F7qtWhQG+Ao7HDrPZEManQkbywDKXAh6J/t?=
- =?us-ascii?Q?x4aRFHdJPpZhQwBly7/s6AXo+gs8wp8dW00keHfXnxoDxbi9BG1yVd1gTzzX?=
- =?us-ascii?Q?r4+8ZgbgiYxudexIITrQvVil+vqfN/rLf2oiH2+zyXr7ZHQWRZbfh9f5OV02?=
- =?us-ascii?Q?V5/bR1qEPdvDqc0mCHxOH0z6q6jlygY0cRyPpRwxVehOaO+4r1QhC+u8C5aC?=
- =?us-ascii?Q?KOwaOQY3TKPlUCHIHSfYi9lCGUChuajSexinN2c/RjbrIko/PBdu6G5xy6Wd?=
- =?us-ascii?Q?OpDsEa3jZiet+qGayxnFoQTMyUIvvFmM9rkAjvVur5wV2g99o3D1MXdBOSOK?=
- =?us-ascii?Q?C3e9pjnRhMOt7BAJ3ec6NDODHF4yLzh0ldZ4jaCrTW6b/m0w10R4XgX5TCom?=
- =?us-ascii?Q?+Z1LXSBSVFysGzseubPl1LrDG1I6Vp4w3gXTgMH5SUwS76C5T5X53KowU4+/?=
- =?us-ascii?Q?8iw1eORa6LNpeinRlybpFo1T6Scf0RB7duSpmuFiSwsKDkl4hyY+eQWxYCDH?=
- =?us-ascii?Q?2WvCJmIo9grpvktNNkbbo9A2hguHM5XcwRKe5VvG07t3RmS6QMvBtTAU2OUf?=
- =?us-ascii?Q?sorW1pu3xeGa/f1nmnucGwNXEvx+tMBnVKmO85bA9++K5YZ4U+7YU2qbWD9A?=
- =?us-ascii?Q?0snxyca2JvQYrNfPsCj5/ASH5JDfTikPUhjpgcMWLly92nWQi1jSg0R/kd+P?=
- =?us-ascii?Q?C0RPJ62c9eiVgcj/PSbFVXTza01B7ZWpsbg+6P7Sd0i5Q8yVML3zJxaduUWV?=
- =?us-ascii?Q?6Wnc29LKs7hqbnXzezWcbuEAvgUOcOyn7UCfUUiQfQvwm4s2kNuOTeCWF/4X?=
- =?us-ascii?Q?NVrM6UZInzSV90xkhh2xkRKDvzKQsc3f0YfObIc2PsvpZJpmiwD2bnrOoqLp?=
- =?us-ascii?Q?zY9wjFLLNi5QOtVj0TzvyMCXs5yyr6MNo7eCHm27TmvwAW9URKcxlmQilTQo?=
- =?us-ascii?Q?JI7Mu6MCFfVqmM4tZGuNY2q9qO0XyXl/O1wuJZ3zPhUXpRAvYHRbuZ44iB4B?=
- =?us-ascii?Q?vNa6b1nuTPE61cuO3CLM02pT21qSOKJr61v18mEBOVNYzUrxWl9KwK6uwWHv?=
- =?us-ascii?Q?MQ=3D=3D?=
+	=?iso-8859-1?Q?VUr8XbR9U6+zvDD9lyl85Y4CbFgEKu3NjWPaHACTRHkzwyFqDLF7dgPwEZ?=
+ =?iso-8859-1?Q?uvBaTjeTbtxU7mrMpO8x2EVSnmZfF+gwn2UinmOBqnTB/wvP5bubaW9Q7k?=
+ =?iso-8859-1?Q?f6Lo+KVJ4eR3b/1xCpqO601CGMVf0n0MAXjyRL5ZOETKclGJutUGeiawTS?=
+ =?iso-8859-1?Q?faaNNlFxANjPuoncIYVk+X7MtTS6z3ysWIqDbqmqK4vDKWPKlzNU0p7sbR?=
+ =?iso-8859-1?Q?/LVQdWuH84AzXzHITcjLlx5EfWFH+BNHr/rbb4hrBh3eCoQPdECNwPFuvQ?=
+ =?iso-8859-1?Q?mUvRPVeuehpJeljiQheJGtxUwcrUSphvRTN+5jOLwBXD74IBr7A66JUVcN?=
+ =?iso-8859-1?Q?chHsV4gow/s2/LrgpxP/r0DIM8RfnDK4zkuNJz3ZJu1rvrphuSUEHgnKss?=
+ =?iso-8859-1?Q?G4fdDy/cVawdGAV4EqyPpFR2Cp8W4Zd5Cll9TznjfR8j7huqXeN29jtGaC?=
+ =?iso-8859-1?Q?MSnU/XeZvtGMEzVV4JrXltzm36pIKitUyy/sfeJIZkpQYRI/r1gp0tRz5M?=
+ =?iso-8859-1?Q?trwyjQ/0b+BaTPNs+g6F5RL49733Gmatqyq1oHA/2axgZbDt7QL/JI6lgV?=
+ =?iso-8859-1?Q?nZQRRfvvzYYJuxkMZI215dfu/2WBkydRNIhI3ff58XP3KU9E//8H3jDoUX?=
+ =?iso-8859-1?Q?WKU9r/WK3TTOFMsNPRZ6vadx1gk3VFoLM6UJeWIGh7zLKGXzP+mziDkZaS?=
+ =?iso-8859-1?Q?I6Ksh5XbtMXoReE2orkWcdl0PoRztj4cmqy6WBT9Ovg7MytcNydXkr5dYH?=
+ =?iso-8859-1?Q?dK2u79GN04tqIAeXEB5ydd9nkRo9ANiQwJpDGEeUV40Iwr5eMSrwnXqiVE?=
+ =?iso-8859-1?Q?JnPkiyhkOhmSc1lLy4dhR06s5wVU+wYK+dFB4+HL/Y3iPTeIagMPsL0am4?=
+ =?iso-8859-1?Q?xK1gOvxp6LJKvCnjiFb52kNAUuOpjIxV6FlixyeuedM47lxQRm1cThb3ii?=
+ =?iso-8859-1?Q?D84hSjSM0bYPWeIv2IcklWSS6VE0Cnxge8ZqlJefJzT8ZBqpqlp+Z6CXhs?=
+ =?iso-8859-1?Q?NCrWLs/q6l8F0tyOZCKtWdyF/jYnGiBHY8KIEvmbXeyKVGFcsFOng1GIDN?=
+ =?iso-8859-1?Q?cY05j+fCGiUoO8h1Cnsqh9KoMvCkuOPg3pSCSd2qB1hQhy+FLUdzuovQyq?=
+ =?iso-8859-1?Q?dcH/ZUtEqRPsAQmivFUiJTycTly8lq7dqcI7d8WTGLuxm5QteiA8d6ky3B?=
+ =?iso-8859-1?Q?nRlfYSA74tw4rty9Yz36ywkufwbIOuXXHbn9R/3Y2shab6vHzFBPFb3KyM?=
+ =?iso-8859-1?Q?WixOpD6kuAH7uT8+PzNFrI8vmjRh8Eb++Iga6N5jrEz2eqpfcVN1EAFObC?=
+ =?iso-8859-1?Q?LEBWVkxFHBnCahCtmXw8EG1OEKskE5XuER//wTiuW8ZPze+7cJzbiy8/2G?=
+ =?iso-8859-1?Q?pC0iV1psyjnJ9ObYebmHChfJZgf2g3s8sVHoingBC4Z9SU55c2DGXmTp3y?=
+ =?iso-8859-1?Q?rFqv64eOlzXMLs9PyvsfqPOFowHEO/3DmW4M++f1jNKMWmckNnB896qe6Y?=
+ =?iso-8859-1?Q?irqiZgbihwvYezO59bwDeXeQDKbN3+gODfS3sZIvJm5YzHybBF+uzbglvk?=
+ =?iso-8859-1?Q?jAF4PaajS1Pr4bINCE/Prr6/I+d4Hrz9Fj978FVnMh8o6EYzr8YjPr9aVs?=
+ =?iso-8859-1?Q?eYOUT5czHq7C6mQNvYXv7uLPLW5pJNHYI2d2fa49EHllWOSBJ8bOw6UA?=
+ =?iso-8859-1?Q?=3D=3D?=
 X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d430d26-d891-495d-1b26-08dc609d74c4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 105e80b1-269c-48fb-d5a6-08dc609dfa4e
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:20:56.6614
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:24:40.6905
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BQLn8zS/S4IO3R/lwsjrskVQMcy3n1P9W1XuFymeSR1nE7a0Pb7v3bnBZWILTwqjLs2kFhv6osZptIiCtXq6uqTee3HPLzqc7UE+FreTGd4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR17MB5569
+X-MS-Exchange-CrossTenant-UserPrincipalName: k0PPjffeylsqZdkbRaikVurnKUI/0UmonLUA3EmxA5swRk30UjZAAC5+ysCbRqWlxg+aKkVN0MkJSmcfXGpeiFI1KM0Jg5C1LLANQWC8MBQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB6431
 
-On Thu, Apr 18, 2024 at 04:11:03PM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On Thu, Apr 18, 2024 at 04:10:51PM -0700, nifan.cxl@gmail.com wrote:
+> A git tree of this series can be found here (with one extra commit on top
+> for printing out accepted/pending extent list): 
+> https://github.com/moking/qemu/tree/dcd-v7
 > 
-> Before the change, the QMP interface used for add/release DC extents
-> only allows to release an extent whose DPA range is contained by a single
-> accepted extent in the device.
+> v6->v7:
 > 
-> With the change, we relax the constraints.  As long as the DPA range of
-> the extent is covered by accepted extents, we allow the release.
+> 1. Fixed the dvsec range register issue mentioned in the the cover letter in v6.
+>    Only relevant bits are set to mark the device ready (Patch 6). (Jonathan)
+> 2. Moved the if statement in cxl_setup_memory from Patch 6 to Patch 4. (Jonathan)
+> 3. Used MIN instead of if statement to get record_count in Patch 7. (Jonathan)
+> 4. Added "Reviewed-by" tag to Patch 7.
+> 5. Modified cxl_dc_extent_release_dry_run so the updated extent list can be
+>    reused in cmd_dcd_release_dyn_cap to simplify the process in Patch 8. (Jørgen) 
+> 6. Added comments to indicate further "TODO" items in cmd_dcd_add_dyn_cap_rsp.
+>     (Jonathan)
+> 7. Avoided irrelevant code reformat in Patch 8. (Jonathan)
+> 8. Modified QMP interfaces for adding/releasing DC extents to allow passing
+>    tags, selection policy, flags in the interface. (Jonathan, Gregory)
+> 9. Redesigned the pending list so extents in the same requests are grouped
+>     together. A new data structure is introduced to represent "extent group"
+>     in pending list.  (Jonathan)
+> 10. Added support in QMP interface for "More" flag. 
+> 11. Check "Forced removal" flag for release request and not let it pass through.
+> 12. Removed the dynamic capacity log type from CxlEventLog definition in cxl.json
+>    to avoid the side effect it may introduce to inject error to DC event log.
+>    (Jonathan)
+> 13. Hard coded the event log type to dynamic capacity event log in QMP
+>     interfaces. (Jonathan)
+> 14. Adding space in between "-1]". (Jonathan)
+> 15. Some minor comment fixes.
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> ---
->  hw/mem/cxl_type3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The code is tested with similar setup and has passed similar tests as listed
+> in the cover letter of v5[1] and v6[2].
+> Also, the code is tested with the latest DCD kernel patchset[3].
 > 
+> [1] Qemu DCD patchset v5: https://lore.kernel.org/linux-cxl/20240304194331.1586191-1-nifan.cxl@gmail.com/T/#t
+> [2] Qemu DCD patchset v6: https://lore.kernel.org/linux-cxl/20240325190339.696686-1-nifan.cxl@gmail.com/T/#t
+> [3] DCD kernel patches: https://lore.kernel.org/linux-cxl/20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com/T/#m11c571e21c4fe17c7d04ec5c2c7bc7cbf2cd07e3
+>
 
-Reveiwed-by: Gregory Price <gregory.price@memverge.com>
+added review to all patches, will hopefully be able to add a Tested-by
+tag early next week, along with a v1 RFC for MHD bit-tracking.
 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index a3e1a5de25..9e725647f1 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1941,7 +1941,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
->                             "cannot release extent with pending DPA range");
->                  return;
->              }
-> -            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
-> +            if (!ct3_test_region_block_backed(dcd, dpa, len)) {
->                  error_setg(errp,
->                             "cannot release extent with non-existing DPA range");
->                  return;
+We've been testing v5/v6 for a bit, so I expect as soon as we get the
+MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
+
+The super-set release will complicate a few things but this doesn't
+look like a blocker on our end, just a change to how we track bits in a
+shared bit/bytemap.
+
+> 
+> Fan Ni (12):
+>   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
+>     payload of identify memory device command
+>   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
+>     and mailbox command support
+>   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
+>     type3 memory devices
+>   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
+>     devices
+>   hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
+>     size instead of mr as argument
+>   hw/mem/cxl_type3: Add host backend and address space handling for DC
+>     regions
+>   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
+>     list mailbox support
+>   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
+>     dynamic capacity response
+>   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
+>     extents
+>   hw/mem/cxl_type3: Add DPA range validation for accesses to DC regions
+>   hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox support
+>   hw/mem/cxl_type3: Allow to release extent superset in QMP interface
+> 
+>  hw/cxl/cxl-mailbox-utils.c  | 620 ++++++++++++++++++++++++++++++++++-
+>  hw/mem/cxl_type3.c          | 633 +++++++++++++++++++++++++++++++++---
+>  hw/mem/cxl_type3_stubs.c    |  20 ++
+>  include/hw/cxl/cxl_device.h |  81 ++++-
+>  include/hw/cxl/cxl_events.h |  18 +
+>  qapi/cxl.json               |  69 ++++
+>  6 files changed, 1396 insertions(+), 45 deletions(-)
+> 
 > -- 
 > 2.43.0
 > 
