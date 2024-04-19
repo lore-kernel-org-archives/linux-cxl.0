@@ -1,48 +1,48 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2134.outbound.protection.outlook.com [40.107.100.134])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2108.outbound.protection.outlook.com [40.107.100.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8011E502
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 18:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E474C8004E
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 18:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.108
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713550823; cv=fail; b=fTo9N4CiZQfjg1Ca1iGr7+bJ/PjkwEoMjn0mllpLFvgWKRTkZhJ8rDbiKP/U0U4M7hc9ftxezC76dz8J4zRq7u7DDfXUeZbPUKIgbtrCC8vJFGTihhTk5T4cywn0cb25PxDJSmGucNRn08i56Axkge8FkRSwLqPy389QoCi6H5E=
+	t=1713550860; cv=fail; b=AmsH99lCodjf68SydY1d056GVhyhksNEhQrmuzKZ7gXHi3KgI5D2wdWz7IG+i943Pf7oTy80QJFsIaUX52GuUFXLmImtOzlTnvdl1WGk67hiHOPvmtGUjylpMyZcT9YN/AGDXJN9gJR94l4Jp2W9d8R5DA/obMrjLBdE/RtHMOo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713550823; c=relaxed/simple;
-	bh=JtFQqu2mwSWm4UfyzVn7aSXGheeZL3/8iL2pF1Laz5I=;
+	s=arc-20240116; t=1713550860; c=relaxed/simple;
+	bh=kPFPtZ2vftclQ/9cHCG3p7ZkU88tJE1LeGtSXX63/HY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kaPqLjWDjQR2qwfpHNDb+NJom4ryeborLwQCz3j6xW9O4/AuQUq8KseYXvykINH6SCTVgm7uFnmO8H1+qGThu/S4lyL+/NyZCZ261cwv1Qe6teosd9LE2WwW9b+VyoZzMZZN794kMZI7JOZcX9+CPWJ/Y8XyNEFAwQhh1MmaND0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=UauoCir0; arc=fail smtp.client-ip=40.107.100.134
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VFf45DvSH8LCdb18ODna2GnzpCHZYj9UYVFi6ZiqwkWIKbmdi47mlwgJd/g9d9KKiIrBd8tnUhPQ6gaCGNYrlzMuK0H3RDqx48P4fgP+rTFcYAtVO2I3i2z4beGuLhoPa9Lk5V7621xHaokjEZK1LaXLUFhH77HQdFK4LrpSm6Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=aBvr9ywO; arc=fail smtp.client-ip=40.107.100.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="UauoCir0"
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="aBvr9ywO"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e6E2QezGOpvUjlfgOPAfMOMnc3AH9U1gfuwutVBGViMcUJVBKjzE+J54225V2gO2Ue1Q+N+vEvmHBtgTz4ROYgcVCADCxNmsL8yA7pVCMUCwGjE/GDwdhmCmUXxtTlOPYnOZK+VfvnIUY+vrNEkPy4Joq7+G3ITE2AnLly3WH9g+aFfcFp/KfgJM1Aunj/C0tWAkOrfqbYW5W6jd6zvCnEFKjoQqyvMD6jp7Rz3Rzf+ErRra92t7/B2K8xRF3y3e5p5VRhqcab0sPeeG5buvAnPPIvGXKeo0j3WqBpxWLzSBnYtXhg798haRHGpCYsa1qVMYWC9dJe+Zp68hPzQeeg==
+ b=HuduFeb8rtYBxpwZh/OXAWV2tvAf/TmntjprXObzjJ56Lh0VpNRqV9REGdADlnPixISn8xIsGI81Pl5MsC4aQ7G4VGgJmjQ0rQTxvAhnskWTxxLw627wJbVsYNnCIZijoTUSQXXTtxAT3hq30gb2SLwvMLJdMMSC/SqMHuF3+A6RYlT6XAcT2dbxWGoraiQEmZ7qILch9k4tv3K9+NuUqlWERd4RGv+ol6099cPYytvMy+SIuluX4H2VYtr4CB8LFeM7pfb9Sw38+1QKkXDVmewXHaCj13fs1n38x4y5ufIrIw8OEbJ4u8iZNokjTDIJYiAOdS/p8yyAJJ4bzp1LSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NNUbVNZ89yvRJuY4igJTchbqwHKeFWAomGkTOW/jPVE=;
- b=VU0AkqJJWAf4/cn64WJ+5m8eo1XeZmt0SZqYjx2/GvWTqyejbhZ6+Zfj5pm3zy97SHvCjlV0wGfsdZ/wyJvwS4S+pbrp4R4/S8RX7l5i1OcWKh+GpkQy8J0ET69fymDU7SmpC7gQEZZ6VUHRSXgi/gMC+qPZ4rVEVTYafWoazf+NQqF2nX0ZL9qPzQ1DDflicFUYoXlHFzOLGY1mJHFZ6w4yplapzJw3J9DTfP5sDcD780Er/FH2qEoHa83mXMJ77WlIlQAMbzH2KFhKjm6Yi5dndTpr2ahV4DIRoctg7E5UAG1Tz/Eb3EribLLI3GwHcPZI+7ZGGAjxTUkHc11Hrg==
+ bh=gCs0r/2/uhqxBkplN0ifnY7O4GtejURJUkLlP/Ny7gc=;
+ b=ExhQcOSA+1fWICUyMf7bDneDTeOGEldizJRA3viabj35WMHf4Gw6Mw4iylM9rdNf9tD9TY0W54UqZfSRFvurrFl4+r2W/E36PvQPpBIuYklzx8mgPhNu2OK9E4gtuVW6arD6w9QuPR8Hh9EBGvuuuszNFPxNk5FDpAxvaMPgk6vdlM6cFrUOMEZAjeMZjtnT+mXpYd5TBLvBdi9xQc2POSv/2UotAFWrVaguW9m1yLSLDQ1iRFtRyJbGpBVYXo0qVGpAnWM3FhVAznpwS+79hFnNi9/Rpz52ttrp3wC5s4bz4/uZjKzcwyjr4rLXG459MoLGuXrI5I8O3KI+QB6CFg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
  dkim=pass header.d=memverge.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNUbVNZ89yvRJuY4igJTchbqwHKeFWAomGkTOW/jPVE=;
- b=UauoCir0xmbJhH2CMnH2ovif+drR7dlPWv/bnIapybWK/vJ+Vdnu+Fv3BKikSX8+0zk3ExgG8SmyNfzTpQGwvlt6Cfhro9A+lhEiEIj5/3/BamEb4whJsJrvwoGnY1dkczcFLO4SUtGw1SbN7niyMnYuQBQxnnjgOX3iM9FVZsM=
+ bh=gCs0r/2/uhqxBkplN0ifnY7O4GtejURJUkLlP/Ny7gc=;
+ b=aBvr9ywOK7Ad46jD3lPWeqV7xjL2ousnWr9zkGrkmFAZIAAoYm/8RK8OAPRK72kqgV8uqwEmjOIvZgTvxLlN5wpJNziVgcrtGRiW/FAgkv90LLkdFidQx4ZSQTVsD9x990iL2qOs4znpvgoksyl1zTXh/wJpLZcfhu+tfZvFqao=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=memverge.com;
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
  by SA1PR17MB5569.namprd17.prod.outlook.com (2603:10b6:806:1c8::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 18:20:19 +0000
+ 2024 18:20:56 +0000
 Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::5d53:b947:4cab:2cc8]) by SJ0PR17MB5512.namprd17.prod.outlook.com
  ([fe80::5d53:b947:4cab:2cc8%4]) with mapi id 15.20.7472.042; Fri, 19 Apr 2024
- 18:20:19 +0000
-Date: Fri, 19 Apr 2024 14:20:15 -0400
+ 18:20:56 +0000
+Date: Fri, 19 Apr 2024 14:20:53 -0400
 From: Gregory Price <gregory.price@memverge.com>
 To: nifan.cxl@gmail.com
 Cc: qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
@@ -51,16 +51,16 @@ Cc: qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
 	dave@stgolabs.net, nmtadam.samsung@gmail.com,
 	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
 	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v7 11/12] hw/cxl/cxl-mailbox-utils: Add superset extent
- release mailbox support
-Message-ID: <ZiK136P4/tNU2AZZ@memverge.com>
+Subject: Re: [PATCH v7 12/12] hw/mem/cxl_type3: Allow to release extent
+ superset in QMP interface
+Message-ID: <ZiK2BVe5C99gXw46@memverge.com>
 References: <20240418232902.583744-1-fan.ni@samsung.com>
- <20240418232902.583744-12-fan.ni@samsung.com>
+ <20240418232902.583744-13-fan.ni@samsung.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418232902.583744-12-fan.ni@samsung.com>
-X-ClientProxiedBy: PH1PEPF00013304.namprd07.prod.outlook.com
- (2603:10b6:518:1::16) To SJ0PR17MB5512.namprd17.prod.outlook.com
+In-Reply-To: <20240418232902.583744-13-fan.ni@samsung.com>
+X-ClientProxiedBy: BYAPR02CA0012.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::25) To SJ0PR17MB5512.namprd17.prod.outlook.com
  (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -70,144 +70,109 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SA1PR17MB5569:EE_
-X-MS-Office365-Filtering-Correlation-Id: e533d1bc-bbde-4030-3786-08dc609d5e83
+X-MS-Office365-Filtering-Correlation-Id: 4d430d26-d891-495d-1b26-08dc609d74c4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kMR5pboNNzFRmrX/s7KgHpua5caBkCyH0zMmT2jZtz066NEsSfMDkZKu2UEj?=
- =?us-ascii?Q?hhzdH30GCkwx8ufrinh7XMGHIgu+MMpQi6nLrgcjYOs9jwKkMPCB+t8Orj2x?=
- =?us-ascii?Q?k/en9y4BHolpVNPA0u1IIIGBUQsTtaC8O0VDhlp1WuXtoCrmPt1iWila7nL1?=
- =?us-ascii?Q?W1tLc3saMhonfVCC3Nq30weatXGGXiBxupgehtDqDY5cXc5DBMk7hUOgyNJW?=
- =?us-ascii?Q?CNpwVP1mFVPgy7/X03juFDEjxeZY+roQldY0SpQDwKDeWbUPESeMhtqn0gT/?=
- =?us-ascii?Q?5qBXYtAnjwYPBUMDmKLwjPtI74hCqoyGG04BgCcTaO+jm0u3U0yy8T4U/U5a?=
- =?us-ascii?Q?USYczkGne0QI/DDVHdRz0Ek6RQQduGEEj16lINfNS3y4Q9auaNBKxmBj/iPu?=
- =?us-ascii?Q?kP5/w2Te/LxgJcOomWXe7pnmbLNpwOOCdg/dz5VjN6xq85AXVihjQTWfDEwZ?=
- =?us-ascii?Q?Hp8gI7i91xTEzz7kCqwawcFbH8oBCWWYR8CARWjUYjgZYRq1/Br4SXuGJ1vX?=
- =?us-ascii?Q?JP09qwbQsksogZVxnQVMpfqvoAbh7Vf/yAEXIDFXX713w8NobRIGZZ0na6Ix?=
- =?us-ascii?Q?LqEfKWdRP/gLwyC/V3hsvmAtReZdR/F9i3OGBgD7OIqyWebM6SnALuA1z+Fp?=
- =?us-ascii?Q?zW5tIQ5bOT6ZLXpvZ9Iz6bp+Ukz8YLqV5OKf3UiW5o45KSE+L5RCRv+DaPgQ?=
- =?us-ascii?Q?kjbTLurksxs8HzFnp0CpJU8jVmpWPIUx52TImzzYgF/dgabuyDhGNGVWQKnJ?=
- =?us-ascii?Q?EZE5Bv9AyzNTCrOzPMOkU/aeKrOe61EbOwrbGAvCDEkFTWEsnBWs0V/+2+I7?=
- =?us-ascii?Q?OF1HusZx5bDhxgKsHSnZXJCJ7Xd/w+DqYg2AZ8Ta3KwoG+O8KVaG6J/4qarI?=
- =?us-ascii?Q?5O4X7p+7wZMYIrWo2SKQYocpu05Es4CtxZmDLpKS5YSKB/Gldz3w6x+RaQgY?=
- =?us-ascii?Q?vafz0V/W8GkwD7ELzvfDFEN3u78sb7gyp5kyXD8RW/AR97S6mHs3ZUkhRoQF?=
- =?us-ascii?Q?lfVzt3Gkl24C0j+8T5buGE8g/O2+Och12RCQW8Y5owucS1ajT32EoU1edWqd?=
- =?us-ascii?Q?8AonWm6AsYuMgrv5IFpbvN404cS1vnvdyQ48z0QZPt4GGiuwhkzKIQv0HFw9?=
- =?us-ascii?Q?KXk5o18YY2uIc1sl6eimi06rwPNepp+ICyxoezJFLdSkZDntpWNhhxl/idvX?=
- =?us-ascii?Q?6Ws4z3ChdnLv4Sz2iQEWum1vXygvD4QGBdrdkVGgl/G5p0G0wzeYO4QQRZVH?=
- =?us-ascii?Q?rjzmsk2qozUsqCxgc2dlCmsc7EOOsVBzLLkafGmcSw=3D=3D?=
+	=?us-ascii?Q?EFlXxr6z3OP2OSZN9nsSQVjjuKzwoxb48V4Tdzf2yC/l3WPVhmHsQ2T0rcZt?=
+ =?us-ascii?Q?q2vmd/bgtZLTw0axVOFOFnUq/HjmNc9fNq+3MDNAARM8Ln+Tp0xG+LOYU+rF?=
+ =?us-ascii?Q?qI0EmJi/oIjzGZCFZHDeSRm8vLM9Rjwirr+zaM4rPqfnvu5DIwFPldr8qe7n?=
+ =?us-ascii?Q?ncaWttvNb6seeSqthNCwCl0MAFQlD5t7u9f/D7/On+QEecIBogLlm4XUp7tj?=
+ =?us-ascii?Q?f9vroe03VK7LB3IkcaEs4lDKKGHHDqRM2vEbqGSi+NEkyvhgQDChGqlUt7V5?=
+ =?us-ascii?Q?3HaWacUOhW7Ez05P8y3Kuo3Ap5omWmU4B4WYoxqUpAgO6wL81ET/d6XtjNOK?=
+ =?us-ascii?Q?YAO8esWsvPcwdK4XlpQp+GPE0MWR70s7w3P7FZW6lY6sre/JGFwLBVYEEvvn?=
+ =?us-ascii?Q?tl5Ac77txRNULXO7fBoyNTimCbsq9AvZZOrv/A76aqWJQeSAVAy9eGE4ffX4?=
+ =?us-ascii?Q?4Sb3f+AqCpj/NMWBsauAwuHAeQ58gZCr7s7ozmaOzcH+UiysgZITn2L1rCqx?=
+ =?us-ascii?Q?9mi7szIsO0FOHyoNgnjTwxauTEIjnFXz71OCZhADIez8o+dftAd3UMb2TrRW?=
+ =?us-ascii?Q?v+OmadHlq5MIlwHNjWXKE5TvjC0aWJKp9yfr1Oqdz9tYXZe465ECNfbT8WJm?=
+ =?us-ascii?Q?o01gW6ISxf8dKclxhL7xNealHRCgFpwt1UKIQtiWRwVfYR2mlqHzM+mRa5CP?=
+ =?us-ascii?Q?mX8qrcKr1YSRB7lYqxbqjgRszpWZQTMc8VHW9quFknFVUyx2vMVMUz1cLkYB?=
+ =?us-ascii?Q?cSP9PUlofuiflv2t+J0swnOnJPNQ39tKNL+PLSRX1DimbfWzhSkoKKHMYjcj?=
+ =?us-ascii?Q?4Q4RtAj7VZ3m1GcZ34iagYCaaoDU0cEBvlAL9zYhwQj1Mpw+//lonX5H0d7F?=
+ =?us-ascii?Q?akoCoSWwMZs1tTq/JBhRV2lc48/Vbzge4WYAo3Nn0r9uGUvQWlZ8nPx9OvP6?=
+ =?us-ascii?Q?yFRqD1pYxUjC72rat8hIRqwPsYO6/vnTfvl/lgmUIXZBurkVFSAfo932cC7c?=
+ =?us-ascii?Q?vWPuObWil0O3XLqgubAyq1XYdQ7XBq+jyhcwnqRirjqeOLTQdofXXS5CD1IV?=
+ =?us-ascii?Q?WvRtktkwObARYZWa1sx9MlRdGA+xM3Vi3Y+L5Yznkml3iOB8o1U3BXvoILxt?=
+ =?us-ascii?Q?mGPO04HBNx7IBT5aRKlJMqIGQAtuH4Z1WzZ9ovPteT2CT/ktX12zn5CM3rBV?=
+ =?us-ascii?Q?ypLyWm6hEpo0jPN/l7vu0kCjgm6McGxZBfOIL2pf9kYYkpRcfF1Ds+NooEUq?=
+ =?us-ascii?Q?kgC3WXdK72C3kgUr7/0jG/tgvGjkM3/sPLQ2QsuPHQ=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sKR1kTXQB0jfJDLItDwHKEiRRz4szjl6YgK74CYWbqISdV+ZOeGIaXJQQ/ZB?=
- =?us-ascii?Q?rg/pGIj2OI46x0sJPT4+Xsw9Wtn2wOIeZIfhrcSk48lmuXpNCp75POQKRE34?=
- =?us-ascii?Q?T1fduEQgrK1Ir2UcZiZvA8cpRwj+bL9oVmeynPM1HR8+WRKXeUo7Urw/ODLn?=
- =?us-ascii?Q?frgJd+6N6AbuVgPOj0UGVt55v+urj/h/Mh//MSSPzsIj/vsmOR1XXE/R+toJ?=
- =?us-ascii?Q?NH891wzrhK4dpHnCo6lG0ZQx78o8+uLbb6Qntc1/+S6UxLDFdZ74gbZBkAtX?=
- =?us-ascii?Q?2Njl2sjAmFCCRr9qMRvY3GqvgQF9ImaREycb/PR6wfoGIL9ot9rLv+C+WS5a?=
- =?us-ascii?Q?g3EuSVGtEJg4H4UvwhkSq3degj8AW+46Zj+QREKwixoHM5QkeJ5K/W/seM3/?=
- =?us-ascii?Q?C6oPHVPUmZWdXHEDH+dwLvoCVUcoS8WheHhhSwBNfZe3v4TquimtRkarpP14?=
- =?us-ascii?Q?0tBNXpsZZUe2RFUXbp/g6lMtuUYZ7aHULgtNlKwW2dz6wB7QptqmwlzmXAqq?=
- =?us-ascii?Q?RUGZ/FqFOELks9TkwUFbG81ylZJzykHvXWjxOs9ZjUWTO6oO+doxjnHf+e7g?=
- =?us-ascii?Q?I5H5qMPai+Hpl4ZmZwvPMvByrM2ImAoxCCzhiekUZX+YuY3dAdEerrBoZ7ya?=
- =?us-ascii?Q?1mgOPjP2Cpzb8D1xNwKa09yDOgJAXqlvy2+AxqBs0QsG7CiBPMl4t4YLQkE3?=
- =?us-ascii?Q?xC3QaHK1ZpwWT+7g50/p1BdHMtURy0+ZHHvbQRD1ndkkNy4YbSGJ2KbYeVqh?=
- =?us-ascii?Q?kLPdC0UNOmsON5inFgL/WR2IAuJ+sbglriDzpPeAnEDyiUzgqhWjJGmpkR1o?=
- =?us-ascii?Q?EmOMnbsGmcGkdNxtBwbQTdnnsxNj3mXT0P2jdyNAFqPgDc6lsQ28hwXGEl4b?=
- =?us-ascii?Q?LzgUxZ93lY53/mbvkdWNqUrLF2rWd7q/792xMSfdRuFeR/MwMiDG2gbw3Eny?=
- =?us-ascii?Q?wmK9cWp0Oxvz9bKPqINEvk9jcKzGWJgt1ePX1iB2aiqcGiUcPIkEMWZcpp4k?=
- =?us-ascii?Q?SVcwjrVdPvjfiTiIt5ZP3h8b5Daoj8yauhB/YH1cLL+eRBapNhw2QXWwZg0Y?=
- =?us-ascii?Q?xgOlibfCHnWuOXUhgiKT+n8qjl41AN3kpshtcclFwlI8Eo/ZGNnfzTbhwJtC?=
- =?us-ascii?Q?7mylcWNhApmLvBInidRq6a/tK9gdKrjtUprMGMUVtIRRaA52pkJeISRu1ukl?=
- =?us-ascii?Q?DZLcJ/2AvaTwzFg5WVybfxuMpAa/KyA4LUgi8NpaCiLENn2Jd1ZdjyH6nBK4?=
- =?us-ascii?Q?5QGXxNOiAG4b1Lt/0Z8+GzN5O3dePivgHyi59mOHdH3sV8XsQhw7ARr+ftW8?=
- =?us-ascii?Q?acZ9B1bJEL+3v2MHfDDFiJPl1oCr/4NvRDrURKqWxANSH6F8lvjfE2wZUCgJ?=
- =?us-ascii?Q?XWzQX11e6UNC7sCvWFRXDx6b0AdJYHOfYQ5a8cLrN5b8QGJzZ9A74PdIHXmj?=
- =?us-ascii?Q?ThejQ7MpdoB1t3HJmKqchIbpYfyKA1uMbBbDxCfNl/vsWtAHj2W4yt9m/PZg?=
- =?us-ascii?Q?4hT7yr5YCRk8dhnQBHLGAlWtQtQcr8dVjbUyKKnn876+jIyY0Vrn/Gb9rl5R?=
- =?us-ascii?Q?jAHphpkrhCjAdE78CAVboyhZ+v3F1lrcKr4aFrxWoC+gml0oXDvIKqMNQjS3?=
- =?us-ascii?Q?Kg=3D=3D?=
+	=?us-ascii?Q?pwnjfFvJM1z9cDPxnAlRK+HBCEY5Mc5sGyybhKa8C47ssQ0m1Hd4z0IoO68k?=
+ =?us-ascii?Q?aumLJywkc4Zd+YXKn7+3vpEMmfoufecDQxiQTgqJW9wH4LqPK9wJbFidJnV6?=
+ =?us-ascii?Q?6wRblxyvVIFUqHN5Zh42xi5nza2K5kfQ5VP30Fofbkq4gccBsaHefcwkijrx?=
+ =?us-ascii?Q?xx+1XqGRcTbF5dv0W6dPczzCzlwl2aiL86FDUdTDXUQVlbAd1XVywX2JSfiQ?=
+ =?us-ascii?Q?5nqACZ7lsh1IhJvMT6QQhBqzwlmozekRsPB6QVOowL0nEuhscQtcbZLYAOtL?=
+ =?us-ascii?Q?V6GpsXArs2jTmmv8vflhCjfJ8xgUT9UVFpbiUj/NHiiLn+pREGL9p/0eCMOO?=
+ =?us-ascii?Q?6MzCM8KJaBjySI+ktL0VAryFPF0YaLkBMwsBEEV5dqb4rblCSVVuTYSm1fNe?=
+ =?us-ascii?Q?xrr1xjKhQkR1lqysDcq01g8xRbbpOY42BARMja1i/xXhm0WzaXPdcSI5i++a?=
+ =?us-ascii?Q?4fXF+TTQx9Yow4vM/WcVISQTWUh9d3myZuyOeMNF0CHuQoSMfJxoI/7QvRFg?=
+ =?us-ascii?Q?+7NvIGXodIiA4BYb2fNN1JdK+F7qtWhQG+Ao7HDrPZEManQkbywDKXAh6J/t?=
+ =?us-ascii?Q?x4aRFHdJPpZhQwBly7/s6AXo+gs8wp8dW00keHfXnxoDxbi9BG1yVd1gTzzX?=
+ =?us-ascii?Q?r4+8ZgbgiYxudexIITrQvVil+vqfN/rLf2oiH2+zyXr7ZHQWRZbfh9f5OV02?=
+ =?us-ascii?Q?V5/bR1qEPdvDqc0mCHxOH0z6q6jlygY0cRyPpRwxVehOaO+4r1QhC+u8C5aC?=
+ =?us-ascii?Q?KOwaOQY3TKPlUCHIHSfYi9lCGUChuajSexinN2c/RjbrIko/PBdu6G5xy6Wd?=
+ =?us-ascii?Q?OpDsEa3jZiet+qGayxnFoQTMyUIvvFmM9rkAjvVur5wV2g99o3D1MXdBOSOK?=
+ =?us-ascii?Q?C3e9pjnRhMOt7BAJ3ec6NDODHF4yLzh0ldZ4jaCrTW6b/m0w10R4XgX5TCom?=
+ =?us-ascii?Q?+Z1LXSBSVFysGzseubPl1LrDG1I6Vp4w3gXTgMH5SUwS76C5T5X53KowU4+/?=
+ =?us-ascii?Q?8iw1eORa6LNpeinRlybpFo1T6Scf0RB7duSpmuFiSwsKDkl4hyY+eQWxYCDH?=
+ =?us-ascii?Q?2WvCJmIo9grpvktNNkbbo9A2hguHM5XcwRKe5VvG07t3RmS6QMvBtTAU2OUf?=
+ =?us-ascii?Q?sorW1pu3xeGa/f1nmnucGwNXEvx+tMBnVKmO85bA9++K5YZ4U+7YU2qbWD9A?=
+ =?us-ascii?Q?0snxyca2JvQYrNfPsCj5/ASH5JDfTikPUhjpgcMWLly92nWQi1jSg0R/kd+P?=
+ =?us-ascii?Q?C0RPJ62c9eiVgcj/PSbFVXTza01B7ZWpsbg+6P7Sd0i5Q8yVML3zJxaduUWV?=
+ =?us-ascii?Q?6Wnc29LKs7hqbnXzezWcbuEAvgUOcOyn7UCfUUiQfQvwm4s2kNuOTeCWF/4X?=
+ =?us-ascii?Q?NVrM6UZInzSV90xkhh2xkRKDvzKQsc3f0YfObIc2PsvpZJpmiwD2bnrOoqLp?=
+ =?us-ascii?Q?zY9wjFLLNi5QOtVj0TzvyMCXs5yyr6MNo7eCHm27TmvwAW9URKcxlmQilTQo?=
+ =?us-ascii?Q?JI7Mu6MCFfVqmM4tZGuNY2q9qO0XyXl/O1wuJZ3zPhUXpRAvYHRbuZ44iB4B?=
+ =?us-ascii?Q?vNa6b1nuTPE61cuO3CLM02pT21qSOKJr61v18mEBOVNYzUrxWl9KwK6uwWHv?=
+ =?us-ascii?Q?MQ=3D=3D?=
 X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e533d1bc-bbde-4030-3786-08dc609d5e83
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d430d26-d891-495d-1b26-08dc609d74c4
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:20:19.2420
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:20:56.6614
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GdxhWH1FrX4EanOA+9dOWSAqDtp0MIqwSRKxCpQFvzzDTg5CsNuJ7Pc8uzC6KDuZ3vBXNQAumGbocYVX7DHZb3Ws4jK9XHjja3BBE0phDhM=
+X-MS-Exchange-CrossTenant-UserPrincipalName: BQLn8zS/S4IO3R/lwsjrskVQMcy3n1P9W1XuFymeSR1nE7a0Pb7v3bnBZWILTwqjLs2kFhv6osZptIiCtXq6uqTee3HPLzqc7UE+FreTGd4=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR17MB5569
 
-On Thu, Apr 18, 2024 at 04:11:02PM -0700, nifan.cxl@gmail.com wrote:
+On Thu, Apr 18, 2024 at 04:11:03PM -0700, nifan.cxl@gmail.com wrote:
 > From: Fan Ni <fan.ni@samsung.com>
 > 
-> With the change, we extend the extent release mailbox command processing
-> to allow more flexible release. As long as the DPA range of the extent to
-> release is covered by accepted extent(s) in the device, the release can be
-> performed.
+> Before the change, the QMP interface used for add/release DC extents
+> only allows to release an extent whose DPA range is contained by a single
+> accepted extent in the device.
 > 
+> With the change, we relax the constraints.  As long as the DPA range of
+> the extent is covered by accepted extents, we allow the release.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > ---
->  hw/cxl/cxl-mailbox-utils.c | 21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
->
+>  hw/mem/cxl_type3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Hmmm.  This will complicate MHD accounting, but it looks ok to me as-is.
+Reveiwed-by: Gregory Price <gregory.price@memverge.com>
 
-Reviewed-by: Gregory Price <gregory.price@memverge.com>
-
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 57f1ce9cce..89f0ab8116 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -1704,6 +1704,13 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
->          dpa = in->updated_entries[i].start_dpa;
->          len = in->updated_entries[i].len;
->  
-> +        /* Check if the DPA range is not fully backed with valid extents */
-> +        if (!ct3_test_region_block_backed(ct3d, dpa, len)) {
-> +            ret = CXL_MBOX_INVALID_PA;
-> +            goto free_and_exit;
-> +        }
-> +
-> +        /* After this point, extent overflow is the only error can happen */
->          while (len > 0) {
->              QTAILQ_FOREACH(ent, updated_list, node) {
->                  range_init_nofail(&range, ent->start_dpa, ent->len);
-> @@ -1718,14 +1725,7 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
->                      if (range_contains(&range, dpa + len - 1)) {
->                          len2 = ent_start_dpa + ent_len - dpa - len;
->                      } else {
-> -                        /*
-> -                         * TODO: we reject the attempt to remove an extent
-> -                         * that overlaps with multiple extents in the device
-> -                         * for now. We will allow it once superset release
-> -                         * support is added.
-> -                         */
-> -                        ret = CXL_MBOX_INVALID_PA;
-> -                        goto free_and_exit;
-> +                        dpa = ent_start_dpa + ent_len;
->                      }
->                      len_done = ent_len - len1 - len2;
->  
-> @@ -1752,14 +1752,9 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
->                      }
->  
->                      len -= len_done;
-> -                    /* len == 0 here until superset release is added */
->                      break;
->                  }
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index a3e1a5de25..9e725647f1 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1941,7 +1941,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+>                             "cannot release extent with pending DPA range");
+>                  return;
 >              }
-> -            if (len) {
-> -                ret = CXL_MBOX_INVALID_PA;
-> -                goto free_and_exit;
-> -            }
->          }
->      }
->  free_and_exit:
+> -            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
+> +            if (!ct3_test_region_block_backed(dcd, dpa, len)) {
+>                  error_setg(errp,
+>                             "cannot release extent with non-existing DPA range");
+>                  return;
 > -- 
 > 2.43.0
 > 
