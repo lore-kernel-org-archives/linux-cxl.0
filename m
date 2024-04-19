@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362A913AD39;
-	Fri, 19 Apr 2024 16:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0043213AD1E;
+	Fri, 19 Apr 2024 16:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545271; cv=none; b=hDOIs3RH6vxxJcCl4OvJ9/F7zMvi4KkvGqpAMWhGcVjBJSQBsizfcMhSElqAH5f0/Kma31kJb9uSPl0AE4mlYhlXVy7+7q88lo1Ks954JHK0Lbxt2e/e7wQtPaAvR2FCTAXiu9DlmBsIS6Pf+aYchjCDnMvEkcR7xhhnYwKq1JE=
+	t=1713545271; cv=none; b=lSsD97NEcHTWtaS7IsNF4qgKqaf9H32Z4e7Z01yGtt7TNa7ZkB8cbEBKXrvDDBZKWJce6PcIJZQwp9H9xpRe7Q1DequWcv5eNoq2zsvADjhgxvw8ghpJvkv9NFGBq7rqcuDaAXUX/bJYFcjN+1BpnoVTRO9VoGOVUHU2AOnLd9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713545271; c=relaxed/simple;
-	bh=N/KbKABNeanEm1VOOHMlDsmLILPdeTsV4rqskWWMfv8=;
+	bh=aXgDUKRqY8QAqkzAHeRiKxyCzJOiL8X4c8Y7aaDhP/A=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GHqcOdE1zc4inKDTU5ygLpVrEtS4uGYmqTmHpMx1faYCn6RABJT5niTiOniHM8TdgAMUpncFNv03MuD0TCh2+tZ8gjJAG4iAsaTFzy9wjpatvSS9+r3XKChN2AqIkwwdhqEZETDvZCnrsrKi4q65UFkxIJPEJ1ypxD/q0v4qkGU=
+	 MIME-Version:Content-Type; b=QlP2EBY78e+KiDhjY7rEXE8hV/oAq70FfKLvCrtU26PquBAhAWPN8Sj9RoOgnpRCUQCxSSoD0QW5abFr5p8I0N1yxi+FXcpN2oDcHrmeridXq5TjxueB27Uny3huqMO63ezhdBAqk4g+eqEJasi2UIu7Q4a9/jYUoM0VLnYSmXs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VLgWB0pdKz6JBJF;
-	Sat, 20 Apr 2024 00:45:42 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VLgW90KVRz6K62N;
+	Sat, 20 Apr 2024 00:45:41 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17014140D1D;
-	Sat, 20 Apr 2024 00:47:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DAB6A140B55;
+	Sat, 20 Apr 2024 00:47:47 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Apr 2024 17:47:46 +0100
+ 15.1.2507.35; Fri, 19 Apr 2024 17:47:44 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
 	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
@@ -43,9 +43,9 @@ CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH v8 06/10] ACPICA: Add __free() based cleanup function for acpi_put_table
-Date: Sat, 20 Apr 2024 00:47:15 +0800
-Message-ID: <20240419164720.1765-7-shiju.jose@huawei.com>
+Subject: [RFC PATCH v8 04/10] cxl/mbox: Add SET_FEATURE mailbox command
+Date: Sat, 20 Apr 2024 00:47:13 +0800
+Message-ID: <20240419164720.1765-5-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
 In-Reply-To: <20240419164720.1765-1-shiju.jose@huawei.com>
 References: <20240419164720.1765-1-shiju.jose@huawei.com>
@@ -60,29 +60,163 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500006.china.huawei.com (7.191.161.198)
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Add __free() based cleanup function for acpi_put_table.
+Add support for SET_FEATURE mailbox command.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+CXL devices supports features with changeable attributes.
+The settings of a feature can be optionally modified using Set Feature
+command.
+
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- include/acpi/acpixf.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cxl/core/mbox.c | 73 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 33 +++++++++++++++++++
+ 2 files changed, 106 insertions(+)
 
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-index 3d90716f9522..fc64d903a703 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -492,6 +492,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 					    **out_table))
- ACPI_EXTERNAL_RETURN_VOID(void acpi_put_table(struct acpi_table_header *table))
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 999965871048..4ca1238e8fec 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1371,6 +1371,79 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
  
-+DEFINE_FREE(acpi_put_table, struct acpi_table_header *, if (!IS_ERR_OR_NULL(_T)) acpi_put_table(_T))
++/*
++ * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
++ * available in the mailbox for storing the actual feature data so that
++ * the feature data transfer would work as expected.
++ */
++#define FEAT_DATA_MIN_PAYLOAD_SIZE 10
++int cxl_set_feature(struct cxl_memdev_state *mds,
++		    const uuid_t feat_uuid, u8 feat_version,
++		    void *feat_data, size_t feat_data_size,
++		    u8 feat_flag)
++{
++	struct cxl_memdev_set_feat_pi {
++		struct cxl_mbox_set_feat_hdr hdr;
++		u8 feat_data[];
++	}  __packed;
++	size_t data_in_size, data_sent_size = 0;
++	struct cxl_mbox_cmd mbox_cmd;
++	size_t hdr_size;
++	int rc = 0;
 +
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 			    acpi_get_table_by_index(u32 table_index,
- 						    struct acpi_table_header
++	struct cxl_memdev_set_feat_pi *pi __free(kfree) =
++					kmalloc(mds->payload_size, GFP_KERNEL);
++	pi->hdr.uuid = feat_uuid;
++	pi->hdr.version = feat_version;
++	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
++	hdr_size = sizeof(pi->hdr);
++	/*
++	 * Check minimum mbox payload size is available for
++	 * the feature data transfer.
++	 */
++	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > mds->payload_size)
++		return -ENOMEM;
++
++	if ((hdr_size + feat_data_size) <= mds->payload_size) {
++		pi->hdr.flags = cpu_to_le32(feat_flag |
++				       CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
++		data_in_size = feat_data_size;
++	} else {
++		pi->hdr.flags = cpu_to_le32(feat_flag |
++				       CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
++		data_in_size = mds->payload_size - hdr_size;
++	}
++
++	do {
++		pi->hdr.offset = cpu_to_le16(data_sent_size);
++		memcpy(pi->feat_data, feat_data + data_sent_size, data_in_size);
++		mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_SET_FEATURE,
++			.size_in = hdr_size + data_in_size,
++			.payload_in = pi,
++		};
++		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++		if (rc < 0)
++			return rc;
++
++		data_sent_size += data_in_size;
++		if (data_sent_size >= feat_data_size)
++			return 0;
++
++		if ((feat_data_size - data_sent_size) <= (mds->payload_size - hdr_size)) {
++			data_in_size = feat_data_size - data_sent_size;
++			pi->hdr.flags = cpu_to_le32(feat_flag |
++					       CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
++		} else {
++			pi->hdr.flags = cpu_to_le32(feat_flag |
++					       CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
++		}
++	} while (true);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
++
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index c822eb30e6d1..1c50a3e2eced 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -529,6 +529,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
+ 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+ 	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
++	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -777,6 +778,34 @@ struct cxl_mbox_get_feat_in {
+ 	u8 selection;
+ }  __packed;
+ 
++/*
++ * Set Feature CXL 3.1 Spec 8.2.9.6.3
++ */
++
++/*
++ * Set Feature input payload
++ * CXL rev 3.1 section 8.2.9.6.3 Table 8-101
++ */
++/* Set Feature : Payload in flags */
++#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
++enum cxl_set_feat_flag_data_transfer {
++	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
++};
++#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
++
++struct cxl_mbox_set_feat_hdr {
++	uuid_t uuid;
++	__le32 flags;
++	__le16 offset;
++	u8 version;
++	u8 rsvd[9];
++}  __packed;
++
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -916,6 +945,10 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds,
+ 		       size_t feat_out_size,
+ 		       size_t feat_out_min_size,
+ 		       enum cxl_get_feat_selection selection);
++int cxl_set_feature(struct cxl_memdev_state *mds,
++		    const uuid_t feat_uuid, u8 feat_version,
++		    void *feat_data, size_t feat_data_size,
++		    u8 feat_flag);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
 -- 
 2.34.1
 
