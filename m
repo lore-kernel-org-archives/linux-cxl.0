@@ -1,219 +1,223 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2101.outbound.protection.outlook.com [40.107.92.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863CE12E1D2
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 17:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713546086; cv=none; b=KwnYejKjZJiu5lRpcYa+WJhL3oziw9XxhK67fryKGfncpzkjcZ+W0OD6y1Y2JNrJw9ebSlbXrTmQju4F3DQnjuyzBrKhN1dqRPVd8G2vy6fjy08/13ByD6sLvQQXd08m1GYzkXMst+S7NFyFUy1gtGRe21HpyWMqGI3FsR4051o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713546086; c=relaxed/simple;
-	bh=UvdEaJ8tz57StM6Av8Ejk/5sKaRNxJ3kQFqATS6TGOQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I12mHYm/O1EPOFq9mKC6emq71BgtEHuC7jnHpM2t7pwIEkxOFIjGuRLwK7Ob+bjZMq4DKYCgqJapbYf9txh3Y6Ir3tX/9irEiV3rNgCEqnf3RHXWGDPEq2+fh1KWWY0oxYqcRj1UXrZUldFvDMZ7zApXG89rdzRbrz7j1TuEKYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hID3FUxR; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2E177F13
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 17:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713547693; cv=fail; b=Mgf/RM1YL0gr5OnytyTnPVGURZe9vKYoKGDvb3zpLpRYGCuW9g8a3OjEhMMxajvRJot18OM/rhq6TQNgQm/eg1vxvl8KB8yGgr2PSlOlKS+i4rhvD5yrtLqvJm+ubt6ZGh9P8siC1VWaQTjG0VuiWchNK65NnEmQfrB5T0mYL/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713547693; c=relaxed/simple;
+	bh=hS23dh2/ywfRpB2ZLuQVdY1v0mDLxLJL3gpMg9EUSBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WcBNXRbPXOIzscNz8dgcBsLbr0pMkgHZRTagazY9BT7us8RdD/sY54PHGKr4tT3hhJFn/SPh06wFt2GNyas66Ts1DVvvb1wR6f7x7Ch4reJUlSybf2obo8ETmDtBLEUhDqNY5bzfbZgeRI1uPW5KReHonSGWZKDC+OVIOXTp1sU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=OBNWjent; arc=fail smtp.client-ip=40.107.92.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hID3FUxR"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so1764960a12.1
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 10:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713546085; x=1714150885; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nCqDR5ofpB9P2cVzzgQRqSAIe23nC6UzgumCvkwMrZ8=;
-        b=hID3FUxRFQ/Ufn48/skbjIyxpVb4DSxJX46KYAd18qGcQ10GXcuNvxNO/SjDhWrmoj
-         1cDBfZ3rPGYZkcG336MX+XlWMQzpay+4yotJ96pl7xETcpl/cgXAkbRVX6q0RW3F2gB8
-         1A+KgQvy3kbzn+MlCJett72YIBH1qczof4kwPG194PNeIm5svDdersp9ghNZJrVbAG9o
-         jcI+1fbYdBhexhAqsFjzRlp+9buMGZwxbUmoXzAqIiL2V9zJ8KZTlbzMocFowEbTLDbX
-         MowuomKy9q6uZMkLCeS2585YsnsEJKEptKOyLR8dfK8vlaA3Ax7wFkMafbky2aIZFKG4
-         nToA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713546085; x=1714150885;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nCqDR5ofpB9P2cVzzgQRqSAIe23nC6UzgumCvkwMrZ8=;
-        b=dIhutPGoL2LhWaLNCAwiJz9A1/jmTYtPYEmXL2EofLdiz39kpy9qxz9jmkFxh5SfJk
-         w4bvMzIP3fmYD0TGXJJ1KZ3yamwYiF5RZEsBc1/MacOUdlYrCo2YQKPWzxGyUaxaf63i
-         rrqpxnol7OnFDIcaqrIg/VRHPqEB+DuXyWfUZCqG9gMFKeGIGcil+BAfWxVhYJJ34B4K
-         M1m/u77YgEdOLSgWuLgVjPwIreEa6cRYp425saZzNWNncZPUG0T4JNVsvP51WLVcFNWy
-         OXqYVXvo7aiut+O9HZBTSY/xkIyj4p7uJ624gBR3AlLzSdRkb1YFrm+eRvEK2dZ7q4ui
-         gMlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWP01027Ut1aEHEaEhvo69QbK+mUfZu/B/yxsa+sLbOF866RRd+1vWmZqbF6/iORkq99JLdpmMMmyLLLjTGsCp9LKFElfMJC0qN
-X-Gm-Message-State: AOJu0YxJhn41Kowgh/Y7u1qLkQSdDW2GHiGsqfl0Go1toO7d5BN7mGTR
-	oJnMWndO1TvJFcV3leUINLgM2SLoJBtnv0fd/I+6hiWXGcp377h8
-X-Google-Smtp-Source: AGHT+IHhin3JHzd47H4Vr7ZTT20YXo1vo9aIuptLAocyrHYAJ3oUOblonl4ugkPGeh8hAMXu+o4YHw==
-X-Received: by 2002:a17:90a:2dce:b0:2a2:cf1d:895c with SMTP id q14-20020a17090a2dce00b002a2cf1d895cmr2888570pjm.41.1713546084627;
-        Fri, 19 Apr 2024 10:01:24 -0700 (PDT)
-Received: from debian ([2601:641:300:14de:df9a:a0db:2922:7fe6])
-        by smtp.gmail.com with ESMTPSA id x6-20020a17090a6b4600b002a0544b81d6sm3336191pjl.35.2024.04.19.10.01.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 10:01:24 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Fri, 19 Apr 2024 10:01:08 -0700
-To: Yao Xingtao <yaoxt.fnst@fujitsu.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	jim.harris@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3] cxl/core/region: check interleave capability
-Message-ID: <ZiKjVEJGFM6czFSj@debian>
-References: <20240409022621.29115-1-yaoxt.fnst@fujitsu.com>
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="OBNWjent"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dYCt5n/0Jiqnc03OL642c0KijzAcXvePYm5aVnVWiiIyUB5GmNnc5zLKDAfQePd0l5hf6olpyWrdXBhattzx6EcjChjcGKGF4U1L7rJhtfZb61Me4wrsIGqTCm71jMKTN27JI4JFmSux94bmixBmft0Qmjlt0MTopmFvpZgQvtJ+WAD4gfSRlW3hvkBCYhGbSP9Y1wdaABmFPBkmhONH2jKpFvP7S+uqi3fSIEstO+l46E8mn9uyWigtDueh6IOlpGzFqRduXQFPfElx2Wnti/4FO67FmVhVAJ5lzLZ5pvlbHP0OcJkTjWdcl5zhLGnbiS8UZpAnoZ4oUjWBlBWFxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0N1YQmNCqZRA/rk4VmBx6brleX65waCc/OFDkiDYkDU=;
+ b=mBikYOjHW5VIVpRfNEB4l3e4f4uo9YNAO69WNc29EjtGIfCD3xVydI3JJdbMhU8HIPpBft54TdTKPJxLJjipXLdDjfnW9Arfpi3vQEswPsJzFcub0gttMjBBjAyPTuHqIOalhzWac3Gj1AhUiQnlUZ+x0Ald+M59V+52rwlcoem8MFqKv33OtxnLA9/FJvKj3ulqrmQNdrr1yJAwOL8Eeo47e60w9ODlgUzm7mc/molehmNL+yoQfmlwvcSoQpTCMnkmUFIO6slECuSnIQ5Nj3muZShKYASBBJTRpC0ZSC0kF82qejQrE2UANxIU0YU6vfbAtySj1ffSKzR8YMkp6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0N1YQmNCqZRA/rk4VmBx6brleX65waCc/OFDkiDYkDU=;
+ b=OBNWjentJaznxPn7Gnk6Fiqkz6syacC6SA1cesGtQaDY8NZskN81xvLfjPFL0DkRG9wDTFX0qUpOZ3K/TRpXTW17fWlAunjmX5puP5B009d28uzvTMBqNlPCX3UEAwqoYHFoMX0gVm6cvAyYiIDYHVN+u+45Kt8T6czOfhhLjbE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by DS0PR17MB6824.namprd17.prod.outlook.com (2603:10b6:8:115::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
+ 2024 17:28:08 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::5d53:b947:4cab:2cc8]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::5d53:b947:4cab:2cc8%4]) with mapi id 15.20.7472.042; Fri, 19 Apr 2024
+ 17:28:08 +0000
+Date: Fri, 19 Apr 2024 13:27:59 -0400
+From: Gregory Price <gregory.price@memverge.com>
+To: nifan.cxl@gmail.com
+Cc: qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
+	linux-cxl@vger.kernel.org, ira.weiny@intel.com,
+	dan.j.williams@intel.com, a.manzanares@samsung.com,
+	dave@stgolabs.net, nmtadam.samsung@gmail.com,
+	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v7 06/12] hw/mem/cxl_type3: Add host backend and address
+ space handling for DC regions
+Message-ID: <ZiKpn7oSQWKkywwx@memverge.com>
+References: <20240418232902.583744-1-fan.ni@samsung.com>
+ <20240418232902.583744-7-fan.ni@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418232902.583744-7-fan.ni@samsung.com>
+X-ClientProxiedBy: SJ0PR05CA0085.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::30) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409022621.29115-1-yaoxt.fnst@fujitsu.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DS0PR17MB6824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 68ae92d2-3d2e-4b4e-bd0a-08dc60961459
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	P7BMCuK3PFJWrH/gObrDO+jzmFcW6stGFncb/RlZc15vIUUclXrcyvqq28b1bJx7yAVh6+ECC8WEHz2gXe1ySrUiaQScnWjWC3kUjcB08kX7q6ZNci91iOvg+D9Jb5XmqiOKooZw4t9HBYBPwrrGVH5tbmW+fclf/o5AibaQr3PuY8+gnKbDRcM7UedQKhm/pV5G2ScXqe70w3ah9C5tI93SHED5GH+GlRn9DKSkeMzkQctIbHBTn/jHmW7bZYas6s6MvbkAq9LlnnrGNZREn692LH9wZKa4V3Fsp+2Gpi2rEKKjWSXkAR67Ut/XJWi3/Joy03l0WN55lJvkge+kLlp3PEX9bOz+O2DMmYRSU8Q2vTvv/g3N6jfVUc84dFnD1a3UDmnZGzQthAOuKGDsL4gEnmfPIXb12XKadI69ebduw6BEAArSChLSYn/zvIMejMG3XLGMpZuimPvg0W/64NYlgsHWIjJNqqP3Sla7IUMUEIuaZz7OkSc8NpHfYdpqxwDYoqSlO1y5tXNFk40EFGdq1FR61IrbkLyFNsYGYTkIo2DVxYZAZOOHcmEUe5dQjONJKexiWmVGu+nVpzIu1fpKRa+xsfTt/gb05z2eYJmfQvfPQzmoen6nb5NMQPdALJbY4TSRFXSR2Tjax1LhyMuB60r2eyTAZXFymL622kc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T73PH2whzBIfL26nLNXNI2MLtH3M4ihycflpOD09aew20fR2d6o1d4Mknb9J?=
+ =?us-ascii?Q?CAb4OcTmQvtBb1zmiNiDjee+5AprLsaqOPTXNUBW7coeJW2fpzhbDR5Jv8t5?=
+ =?us-ascii?Q?iDsVd+EWQ1RbXhBaVRgWrYjg0iZCcASKXqCpaFh1Rgg4QYg/nwDTKGp+A+wJ?=
+ =?us-ascii?Q?wWqH+3neZRvMTLHg0vDkS7C198kaS9nlBGykOHcBhCXxI8rKY7Sgt67Ok2Qb?=
+ =?us-ascii?Q?r1BtaTWGSW5uuMaQavbCp8f8q8Sc+3MTScXmv0H7OzFa5qsVT9lRuDFoIXNM?=
+ =?us-ascii?Q?D21aMtS0TlNKyEBEeGrdKwB05tyasxBUeTGPug7ncxm/QgHI9G0A7adO/j7a?=
+ =?us-ascii?Q?/jfsYfp/4pXqQFrs94hgTvpxCN4lRH9Uj4eCgfGJ16pZW1z4ZA46YBe2wW+z?=
+ =?us-ascii?Q?LEw9bRk0PQKVlIARlCj7742WUgvUKL+Pjixn8FLFNtyTEaPmeyWuwTkccj8I?=
+ =?us-ascii?Q?D2vnRq9a3cCwGzw0ICUCBvEZXd06b4DBIou74M/OXaT9m21X9WvdQFay4hbd?=
+ =?us-ascii?Q?oGnMcf2SgDjF6XZ+O3Sf0H+Al24mojssBfiF860GClGc+wJG1uVDoS/5HT7J?=
+ =?us-ascii?Q?LbmvIb52zLbU6yBxBJ62Duqm+LfQFhgT+ISbg2a3t2ejv2iR0mgBw749lJVF?=
+ =?us-ascii?Q?mwCmB9PHAlApbc/yaQ3hxPkxToBBbUNvhszyxGW1t962ltPRAI/YhVPbKJeS?=
+ =?us-ascii?Q?gIYJ9/lCfmrnFjWhVyDi5g62Amaynw0d0VIHrCPFMkXbhc8henhJwvDfHhew?=
+ =?us-ascii?Q?UmoIzkxKjDRwphAuMfnmF4eYMiZ5IQqU8qXbmMBTN7pK7Wx16dHINR6noEur?=
+ =?us-ascii?Q?e08MejxrkpSDl1YQUw9vNLDk2pKUGt1lnOiFBL9Z1K3rhE+rgj4ok328/hEm?=
+ =?us-ascii?Q?UMadtHj8ApOr26O3SqUnWQiuu06AepNnEeQ8umscOZ6yDliLxA8w0XaQswaI?=
+ =?us-ascii?Q?fr0VPJk/xPrxDIGud1NDnUfyVC5/buqWotk/OlAclDxvscOn+ozehyLcoZW9?=
+ =?us-ascii?Q?rcMeA95f4SB5OwwhwwwepBsa747aMhW8OxKBhmhp4rJFov2BFRjvExusHJWH?=
+ =?us-ascii?Q?lpb801ImMcAcwZhQxrvjyc6AOJmB2+0dlsCvUa0pVr/Sp7WmNqnh4B+6dRl4?=
+ =?us-ascii?Q?n3zY1Y0kNi9deDkmId8kxO4jjnsbgg8NwUL/EKBoxxevcQSRlimwDhjS/Ysw?=
+ =?us-ascii?Q?dWYT4AJ0Fcq4yD4ZZYPLan3i7bQbZ29Vy6xj34qgzrIWkJwOEH/1Dflxtj3c?=
+ =?us-ascii?Q?hJ/D/pok1ZQZRCovgmud4zeNjbMgwsAX94dJY5aPZOiX4xCwWUNYCjdUlBK6?=
+ =?us-ascii?Q?KZHJMaB0x5cf4s26p5XEdhhob/UKMngsVqlp7b23OlQ38nKw2BSpFfqJVS0m?=
+ =?us-ascii?Q?poEHaxK+uNTC9Wlq0/AREnbBoomBiFoNEvmZIhaF/OB7FUBF76Z4Larkfqin?=
+ =?us-ascii?Q?c/ougmXH8+Eslaurb7eStHs3+5Nre35IDXL3ZltARH68Bogx8hh3vpepn1xP?=
+ =?us-ascii?Q?dxACXb2y9ITVtAnyTgrcUUc+vVCl7fRFwYZCe9COCpH/5AXrQMGFIh96Y7oa?=
+ =?us-ascii?Q?R51xaHTchRv6pTDMY2qr6okUXDeiBghSKy2njXCDM1BdcL1qOkkoAMv4GjNX?=
+ =?us-ascii?Q?iA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68ae92d2-3d2e-4b4e-bd0a-08dc60961459
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 17:28:08.4501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0CHxacneV4nt4x+az/nx4jugCav/gPwh4e0LClTAzwaSrdsYyvNVPzqrF4bjXoVUC3JsYBGBj6A+Fr7D9UqQRgpPsOMK9HGIhX1Y9xxPg8Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR17MB6824
 
-On Mon, Apr 08, 2024 at 10:26:21PM -0400, Yao Xingtao wrote:
-> Since interleave capability is not checked, a target can be attached to
-> region successfully even it does not support the interleave way or
-> interleave granularity.
+On Thu, Apr 18, 2024 at 04:10:57PM -0700, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> When accessing the memory, unexpected behavior occurs due to converting
-> HPA to an error DPA:
-> $ numactl -m 2 ls
-> Segmentation fault (core dumped)
-
-The commit comments only explain what the issue is before the change,
-maybe add some sentence to describe the change?
-
-Fan
-
+> Add (file/memory backed) host backend for DCD. All the dynamic capacity
+> regions will share a single, large enough host backend. Set up address
+> space for DC regions to support read/write operations to dynamic capacity
+> for DCD.
 > 
-> Link: https://lore.kernel.org/qemu-devel/20240327014653.26623-1-yaoxt.fnst@fujitsu.com
-> Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+> With the change, the following support is added:
+> 1. Add a new property to type3 device "volatile-dc-memdev" to point to host
+>    memory backend for dynamic capacity. Currently, all DC regions share one
+>    host backend;
+> 2. Add namespace for dynamic capacity for read/write support;
+> 3. Create cdat entries for each dynamic capacity region.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > ---
->  drivers/cxl/core/hdm.c    |  5 ++++
->  drivers/cxl/core/region.c | 51 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |  2 ++
->  drivers/cxl/cxlmem.h      |  1 +
->  4 files changed, 59 insertions(+)
+>  hw/cxl/cxl-mailbox-utils.c  |  16 ++--
+>  hw/mem/cxl_type3.c          | 172 +++++++++++++++++++++++++++++-------
+>  include/hw/cxl/cxl_device.h |   8 ++
+>  3 files changed, 160 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 7d97790b893d..5ac79d843a16 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -79,6 +79,11 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(11, 8);
->  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
-> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(16);
->  }
+
+A couple general comments in line for discussion, but patch looks good
+otherwise. Notes are mostly on improvements we could make that should
+not block this patch.
+
+Reviewed-by: Gregory Price <gregory.price@memverge.com>
+
 >  
->  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 5c186e0a39b9..abc14fe1717e 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1210,6 +1210,41 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  	return 0;
->  }
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index a1fe268560..ac87398089 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -45,7 +45,8 @@ enum {
 >  
-> +static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
-> +{
-> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-> +	unsigned int interleave_mask;
-> +	u8 eiw;
-> +	u16 eig;
-> +	int rc, start_pos, stop_pos;
+>  static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+>                                            int dsmad_handle, uint64_t size,
+> -                                          bool is_pmem, uint64_t dpa_base)
+> +                                          bool is_pmem, bool is_dynamic,
+> +                                          uint64_t dpa_base)
+
+We should probably change the is_* fields into a flags field and do some
+error checking on the combination of flags.
+
+>  {
+>      CDATDsmas *dsmas;
+>      CDATDslbis *dslbis0;
+> @@ -61,7 +62,8 @@ static void ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+>              .length = sizeof(*dsmas),
+>          },
+>          .DSMADhandle = dsmad_handle,
+> -        .flags = is_pmem ? CDAT_DSMAS_FLAG_NV : 0,
+> +        .flags = (is_pmem ? CDAT_DSMAS_FLAG_NV : 0) |
+> +                 (is_dynamic ? CDAT_DSMAS_FLAG_DYNAMIC_CAP : 0),
+
+For example, as noted elsewhere in the code, is_pmem+is_dynamic is not
+presently supported, so this shouldn't even be allowed in this function.
+
+> +    if (dc_mr) {
+> +        int i;
+> +        uint64_t region_base = vmr_size + pmr_size;
 > +
-> +	rc = ways_to_eiw(iw, &eiw);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!(cxlhdm->iw_cap_mask & BIT(iw)))
-> +		return -EOPNOTSUPP;
-> +
-> +	rc = granularity_to_eig(ig, &eig);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (eiw >= 8)
-> +		start_pos = eiw + eig - 1;
-> +	else
-> +		start_pos = eiw + eig + 7;
-> +	stop_pos = eig + 8;
-> +	if (stop_pos > start_pos)
-> +		return 0;
-> +
-> +	interleave_mask = GENMASK(start_pos, stop_pos);
-> +	if ((interleave_mask & cxlhdm->interleave_mask) != interleave_mask)
-> +		return -EOPNOTSUPP;
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
-> @@ -1360,6 +1395,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  			return -ENXIO;
->  		}
->  	} else {
-> +		rc = check_interleave_cap(cxld, iw, ig);
-> +		if (rc) {
-> +			dev_dbg(&cxlr->dev,
-> +				"%s:%s iw: %d ig: %d is not supported\n",
-> +				dev_name(port->uport_dev),
-> +				dev_name(&port->dev), iw, ig);
-> +			return rc;
-> +		}
->  		cxld->interleave_ways = iw;
->  		cxld->interleave_granularity = ig;
->  		cxld->hpa_range = (struct range) {
-> @@ -1796,6 +1839,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	struct cxl_dport *dport;
->  	int rc = -ENXIO;
->  
-> +	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
-> +				  p->interleave_granularity);
-> +	if (rc) {
-> +		dev_dbg(&cxlr->dev, "%s iw: %d ig: %d is not supported\n",
-> +			dev_name(&cxled->cxld.dev), p->interleave_ways,
-> +			p->interleave_granularity);
-> +		return rc;
-> +	}
->  	if (cxled->mode != cxlr->mode) {
->  		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
->  			dev_name(&cxled->cxld.dev), cxlr->mode, cxled->mode);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 534e25e2f0a4..da8a487ededa 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -45,6 +45,8 @@
->  #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
->  #define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
->  #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
->  #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
->  #define   CXL_HDM_DECODER_ENABLE BIT(1)
->  #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 20fb3b35e89e..1ec3e6285d41 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -853,6 +853,7 @@ struct cxl_hdm {
->  	unsigned int decoder_count;
->  	unsigned int target_count;
->  	unsigned int interleave_mask;
-> +	unsigned int iw_cap_mask;
->  	struct cxl_port *port;
->  };
->  
-> -- 
-> 2.37.3
-> 
+> +        /*
+> +         * TODO: we assume the dynamic capacity to be volatile for now.
+> +         * Non-volatile dynamic capacity will be added if needed in the
+> +         * future.
+> +         */
+
+Probably don't need to mark this TODO, can just leave it as a note.
+
+Non-volatile dynamic capacity will coincide with shared memory, so it'll
+end up handled.  So this isn't really a TODO for this current work, and
+should read more like:
+
+"Dynamic Capacity is always volatile, until shared memory is
+implemented"
+
+> +    } else if (ct3d->hostpmem) {
+>          range1_size_hi = ct3d->hostpmem->size >> 32;
+>          range1_size_lo = (2 << 5) | (2 << 2) | 0x3 |
+>                           (ct3d->hostpmem->size & 0xF0000000);
+> +    } else {
+> +        /*
+> +         * For DCD with no static memory, set memory active, memory class bits.
+> +         * No range is set.
+> +         */
+> +        range1_size_lo = (2 << 5) | (2 << 2) | 0x3;
+
+We should probably add defs for these fields at some point. Can be
+tabled for later work though.
+
+> +        /*
+> +         * TODO: set dc as volatile for now, non-volatile support can be added
+> +         * in the future if needed.
+> +         */
+> +        memory_region_set_nonvolatile(dc_mr, false);
+
+Again can probably drop the TODO and just leave a statement.
+
+~Gregory
