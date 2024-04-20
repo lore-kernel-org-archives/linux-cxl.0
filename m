@@ -1,174 +1,204 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3210E28F1
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 18:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713552219; cv=none; b=uuDQpwC2iOL8KWwlpg96dQBxkaL20wra8zXlyr2CRs+yKhKhyczW7Un8ra8E5rQ4afsTgCF3s7f8Dig5X8EM82zHELAsxjXftiVa/0vGrP21OauloidU99F7VZ4DcWRmfTHFairwrRDzpDFAC/2m6UnJsPKmFpRQn6x3NYZ/ZQ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713552219; c=relaxed/simple;
-	bh=7vdyUDLWy2YGytGCUK0WrzRQVn6u+3RNHL3BRxr+tcQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tC/jdy7tBEJKPHWgo1JTKhJfoK+T4YQfEKjMdrok/CYVBV7X2ALk99xd0u3uzBD7zr2IT4I8M69f5e1u4Qgn4b9t04VpXviYgGtyz46leNTI3S5L3zbK9HvJwPrB6ENye/KD3hdHNzrlZoZI0US3N7Og3A9hSjKXCej/n4LurnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUJg5ucu; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156B0623
+	for <linux-cxl@vger.kernel.org>; Sat, 20 Apr 2024 00:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713571805; cv=fail; b=HXk/UDKr9kU+/KcfyIp/WpZ7pmc/xYmpCbxajfHmoW7C25Oy+ZaOG7N2cOcCew2EI08rt7nDw5ncyGow7U1unPqJgwF1lrwTYh3Pye7kBwBD0/PjE7BU4GKtQf8/xUsrg/HJwMjHU1hxSnmCCBg9tmkKJ3RnsnsAA+RqoxVh5Y4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713571805; c=relaxed/simple;
+	bh=6cgjEs8aJAj5qTYF3vi0kI8sMUGbPDFWKB1gHjkEDwE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=J9aYuus6W+3/11Iwekvv51Slv9YXJmtO73UlNWAlzls6aWkfDQaB/blUuEG2fe71lIFhG2LUz+z8XeGUSiDtPIgmWunM156xU0rajIYGug9rt1oM9T7/Qiy66ZVDHNIeScOCVslHx48bca89RR+TAmnuyoZNbtKhcdf+OFrYVMI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iw37KdxU; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUJg5ucu"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ed627829e6so2595877b3a.1
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Apr 2024 11:43:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713552217; x=1714157017; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=y3SGJdTiCbneZQ9xF1P/4L3glY2bSj97aScmfRfKL+g=;
-        b=cUJg5ucuxPoTd3Gp99gWiakbl+x41ZxkDZE67t76D8raufoF+v99WOERLxXr0lgtE8
-         8fg3o2Vrw4RMxK2dcCTBaMHyv3YmEteAbjLiRzEm1pdouEUfIqEPlhe72WTHNKBdLHX+
-         +HYzgrpeYN97wLTK4n4ImOwWk2MFi2tueMsD8GtMqSTgZoN24GM/grJe38swMg+w25YD
-         SRpFACMtoFBOCRBIGQLG0ciYMmRZ0/P4FVRVzNYCrCtcEDhkqHACtjQEdm5dVgZuR/ol
-         fPVzZCSQP841H1mJR4I/g3BEbByrcvBDb+P5mHINr01/rbtkgoG+pRXdqrkEQPFbSKyn
-         eHRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713552217; x=1714157017;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y3SGJdTiCbneZQ9xF1P/4L3glY2bSj97aScmfRfKL+g=;
-        b=kirBW254KHqO2JxdKt9P3vGlGMv/D/ncVTFNs4gR9Dfh5uQ07snRhB+PVuayhLkgyx
-         WAfpKNhOWJ6kpBWSTQ+UeYsCArKc1Pl3a4HE8sNxFz6O1gt2A0jQMUZkYQGmNXcHfuYe
-         3drW5TEDtqy4+uogxaILWpkcPexOarAzfZLHsCIW/2iDFydExS53fvR6QqxsUt9kJ73A
-         39/hH1LqikMg443X1mFqXaXWf6p+BYVATIMHyHfnFSSuDqsr2hY9V3mUYfWiAYKZGvk5
-         VDmLkN/bGy+MkUjzbItqPXMuQSVokYzOXMt57kD6HXw5w9bdWboV4T+n0OhWBKi1OnID
-         dZ2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJaDRgIItZdXtlSMyrP3ZOfq0drIypRUuyGky8ThQ7wL6PnrDNs3nWMSEJi8hKnsetcDvt+HRSAD8bMBRcsgYH9YuvNkfqIsiY
-X-Gm-Message-State: AOJu0YwB2u7fmO/hKgXQZ1ZUkxXwWbA7LhMvtGiqpzDzTRDpkNyZ/WNM
-	VkAKmRST0dU0uW3+F3XVVRIRiVZfIV573lpwi2NguOyJVHzslj8D
-X-Google-Smtp-Source: AGHT+IEt0rYHHfLtoYwUigOXzCd9ynf0M/YgxLHlr/sd4dfyIGeWRMQ4jzueIoH7XMv3/wp0wSy0og==
-X-Received: by 2002:a05:6a20:551a:b0:1a7:7d2f:6c01 with SMTP id ko26-20020a056a20551a00b001a77d2f6c01mr2992182pzb.48.1713552217279;
-        Fri, 19 Apr 2024 11:43:37 -0700 (PDT)
-Received: from debian ([2601:641:300:14de:df9a:a0db:2922:7fe6])
-        by smtp.gmail.com with ESMTPSA id n56-20020a056a000d7800b006e6b7124b33sm3551497pfv.209.2024.04.19.11.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 11:43:36 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Fri, 19 Apr 2024 11:43:14 -0700
-To: Gregory Price <gregory.price@memverge.com>
-Cc: nifan.cxl@gmail.com, qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
-	linux-cxl@vger.kernel.org, ira.weiny@intel.com,
-	dan.j.williams@intel.com, a.manzanares@samsung.com,
-	dave@stgolabs.net, nmtadam.samsung@gmail.com,
-	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
-	fan.ni@samsung.com
-Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
-Message-ID: <ZiK7QtVxutwDys4K@debian>
-References: <20240418232902.583744-1-fan.ni@samsung.com>
- <ZiK25Log7LmtBffa@memverge.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iw37KdxU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713571803; x=1745107803;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=6cgjEs8aJAj5qTYF3vi0kI8sMUGbPDFWKB1gHjkEDwE=;
+  b=Iw37KdxUGRmjB9pxK0wgTjU0aJUjQf43ywIHHiR985j3by6FSrx5Zrx8
+   q1o6aHrwWYrYdVw3eqPf6hQLYhdzURtuETFXP2NnalrdE3xSlV4g9lgPg
+   vBmRuW5pxnGdS801/FN1uM6uLxilyBdroheRVMhypC7CJDuQjRZs07ArA
+   UrR1KfRMd52OpsH1HXVHj78vM2PtC2OtmQoxLS5BBGVJJWbq+bWiZGo/q
+   AtIB+/34QYGQLJVF4Qfiz0jZWsDg0pAagM6wkS6/Z7aOoLuKx1L2yvN8a
+   i/GSJoIW9E8IEUeQ4eGjuRIm6RzPbL6V04PGxr7W3rQ84YOKbFEJkgWpN
+   w==;
+X-CSE-ConnectionGUID: FTDMEzThSeCypZ+7Oa7hTQ==
+X-CSE-MsgGUID: kBsj66mKREKAIZpF6KKEOw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="9055782"
+X-IronPort-AV: E=Sophos;i="6.07,215,1708416000"; 
+   d="scan'208";a="9055782"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 17:10:02 -0700
+X-CSE-ConnectionGUID: oEy4e0+YQsmW4wEaSWaaHw==
+X-CSE-MsgGUID: 2ClCBBqmQl+H4iQe04BnNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,215,1708416000"; 
+   d="scan'208";a="60922203"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Apr 2024 17:10:02 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 17:10:01 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 17:10:00 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 19 Apr 2024 17:10:00 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 17:10:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MGv7LxH6mBJ9Duu8nWlUK6xmK2qA0/rfvB4qRb437oAf000iSwMbvK46yteAQbNvA2iOb1MEScM/a9fFKqCTxRzpwt/aweNWy+bgSL7h5mmat8QPc6/LrkjZ73VqN3he4fivjvjp+wwacNG+3DTe0HbBzXEegXcx4ttflIrmEESsUc9xdC7pq8AsxFLqpzxb+9Mnh0uH2hpkE/nkBN2QjAIVJf09XhiKKIn3ElmMujbFoH5SzRzZAkH+e2XGgVTOi67feg5gXXXsd9chrPb7OtLZR1NMXqsBq5SxnwZPBckJpaif6NzP/U3z8eozlBqfmrmzmJqmdFzYi7hz7MjHjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7eHzo+5h7Ke3Dmrr5KOUSsrxf78MHHF0zwhQv5yJZ24=;
+ b=V6Dl5ccpYObD3w8eR/Pa9MrWBsBQUvBSGQeLKsm+HBghbgpp9pNqV4KIc35Sf0AUAy1h/qWPXjmyNfwf/L2n9x/qm0uA96HrQgEuges3RFa8p99wjlS53eAM20EXGxo/pLxlj09o7Cbwv/1roScsMN3DVE4nwaJmbOT0Qe+HV+T7PU3mRnWxp3BwF3yK+Pj9AnlcZm1U+EJgZetccl7Uwejof0pJip12I4SzWs6cdZPk+ODcT3ket1jEVoUg6hduTvnM3Roe/ccQQpvNcUNzrTXnpIzzShxEFgTB2Cifitgo9qu66jJVsud6V3kwOtyFs4bCk69rF7HQdUti7WbTZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ2PR11MB8300.namprd11.prod.outlook.com (2603:10b6:a03:548::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.14; Sat, 20 Apr
+ 2024 00:09:58 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec%4]) with mapi id 15.20.7519.014; Sat, 20 Apr 2024
+ 00:09:58 +0000
+Date: Fri, 19 Apr 2024 17:09:55 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, <dave.jiang@intel.com>
+CC: Kwangjin Ko <kwangjin.ko@sk.com>, Alison Schofield
+	<alison.schofield@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/core: Fix potential payload size confusion in
+ cxl_mem_get_poison()
+Message-ID: <662307d32ebce_4f2872944f@iweiny-mobl.notmuch>
+References: <171235441633.2716581.12330082428680958635.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <171235441633.2716581.12330082428680958635.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: SJ0PR03CA0341.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c::16) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZiK25Log7LmtBffa@memverge.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ2PR11MB8300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41d1a1f2-d713-4c88-7fe4-08dc60ce370b
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5B2+T7cvLSO9rN+mbAgvREs/8gNt662l1E0u2DpM+sBxN5wyJM1nE2Ad04jP?=
+ =?us-ascii?Q?rvuc0ej+zZcXLMH/B3ctBochlwxv5efXCrcRmOSmR+iFx57HYavkVIEIaVdJ?=
+ =?us-ascii?Q?dUNC/UGHS/N5xN5tEVqFqGzTR8F95RSd9NB1Lmp5tWprZApJL/T3yyWbpaso?=
+ =?us-ascii?Q?AUWQrhN1jcbXoPjoYIdur48Ov9yEvhDkBRZPWyc9WVbBuG8I6E+z1wwZvmFm?=
+ =?us-ascii?Q?EmefebyZxKw1Fzk1XvB5B5fTCovpKcBm6MHLnNi8QytzdYphkXK+3iOKhwJR?=
+ =?us-ascii?Q?WIF1C+quJ5J5XF6phyHawcLF/tr+IBq78Biz+F05Yjne+bSZLfpjrgK+ulxV?=
+ =?us-ascii?Q?jVDGXUeKdy7VOgLSB0D45Kmd13rm7Mx7wx9+nU2RMKKOl0y65Lkw86LoFb7S?=
+ =?us-ascii?Q?66sVsE3oXbo3A53OxUwfoHnCSOJx8qerjwLk7fbID+oeAhxvr1Y3YsvinFf4?=
+ =?us-ascii?Q?Gi7szZcieCfSTf2BBUZXF3jhu1EvLBQy0rBsq2hHZYXad+hBLuYbW105ulOB?=
+ =?us-ascii?Q?1vAFg//jSYNUDrZe/e4y6UM9V7fSgafJVI4G6gmGOqrs+tee3k8kLTK9Rcvh?=
+ =?us-ascii?Q?6kWWfq3ZkM88TPzRRgL0WazyP/km7EVnk1CXtRieUJkjdbziM7j4fJkn4KK+?=
+ =?us-ascii?Q?QZPuC/5j09jEVg/gVBemHsy5T56jz4kRvErWM/8VhCWqXHwgDUg0cLAJGXan?=
+ =?us-ascii?Q?OW7/bk02W4uWP2o4R7U4rHgmJ9rmKgokbT0ORHNEuQxiqVdLGBbSyfxpG25V?=
+ =?us-ascii?Q?8dC94rELapuIsbnijeel/pbyYJFMaqF2SaFAaotNGwbW1hUvpgcHC+/dCU3B?=
+ =?us-ascii?Q?YcZe/0OYdHRh3iDYIvwUdEtCNiXhActq1gjs2yAEWY3i+b78UMRHEtZZeI3Q?=
+ =?us-ascii?Q?/KfUqmWHTeHOZ6sVekN03AbVBBFJHSvZO4K8fE2bGn6QTL5plhmqyfvgOVl/?=
+ =?us-ascii?Q?YDMTyV/dOHr7pbIdiV+AAgWT0Ix1Vsa5B7XUuOfN4+32OS7JyN6IaTTNxA0W?=
+ =?us-ascii?Q?nBcA+Nnm8apXJ5p9huGlJPrV+ZPKGcKEWkOAEBJG3fce51c5nAN5LPh74SrA?=
+ =?us-ascii?Q?ypJgQXVUOZFZwGKoOIlHWc7A9o6IZj8vF/0UO8dQi8Hzcu7LVY1EBqo3ALBk?=
+ =?us-ascii?Q?jSrSlTBFGeVWgLrpYkivFmq0H0C8xsetzwVbQo5v9fL2oVAsAjH4HG5VdrF+?=
+ =?us-ascii?Q?lvTNphfDtutHzACZ4T0FgRshakR2oHwlqKvL+ejXF5XMtYxRV0oLlAlDJIp8?=
+ =?us-ascii?Q?Bc0ZFa+/uL0nxJCzaf5t/Cv6sT3wB30FA3USNZHbUMQghattpV+zOevyAvla?=
+ =?us-ascii?Q?Ztc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xFut/qz7xy1qAD50YaC1mlRQbRFsCH5Qa6TEvd4MtuNimfRxHqBI/BuNLbB0?=
+ =?us-ascii?Q?rvbjn6zGDc6NRmJQbqDJoj3AF4kuJwmKuTOqB5WEwdDhIBG/b6NrXrsgVa0D?=
+ =?us-ascii?Q?UJCLYsyKP5R/WZ78KDvPlVoGRk8fnxs8Oaa7AFta5HwHJ6m89cxGQ+jUGgOp?=
+ =?us-ascii?Q?jMOImsLotpWEWTiEdw0yj/EYDpTOZRjFhkaFXFO8N7IPXOFfEgnYRizlA3G+?=
+ =?us-ascii?Q?Hz4OVmmJbibP0yZQr/QqwHHfv0uaF1KXrjBX3ScXeBkweVzNZ07pugVCsVM7?=
+ =?us-ascii?Q?Fm/QCeAl9/E+qOqrrlQZtrKFMLK9Z5g+RphfMVL2QRCy8pEMtNn3xe1MoNP4?=
+ =?us-ascii?Q?D4QAeWi9DOqkwUducdhByswrXSGzjR2jWcVWg1Rp2HaRpInfojJOhJjF1HMt?=
+ =?us-ascii?Q?rCFHuCNtS/aHBE45GsQdYQBkfqe/dl7y/MJxfhKX6vrh3wG0NV4mMiR0k7Gf?=
+ =?us-ascii?Q?WXLEyvZXGpMq8hXNbpMWOcYyypW88NNN6YEn/dLhLxbLdOZkVI5Yuib7IOoR?=
+ =?us-ascii?Q?YeeAY8N7nu26Nf8SPdw0m2HODFwXjGYajK5DQO45NCIOEFZBRYUMMVTwuDTj?=
+ =?us-ascii?Q?KIl4X+Mpiw/ojtvU8b4GADQUg+O5J6ULIaYgKVt+j7QgFwb0ZvFdt02ZASnl?=
+ =?us-ascii?Q?+qmf8nSK7ik29IjCjK4vasCgasaRKyvbMi6Qv1P3Nq279ztb/kxc0APegUHv?=
+ =?us-ascii?Q?7fzxCL2YKDkANUn3gJXNb7VCZdiXpnxeuFsYpHXK71JVjtAyBFcmQqvmpI4Z?=
+ =?us-ascii?Q?xQsH2kHUD4ughgZ4IqCrdb8v5e+DY0RvA9tZ4RuQaOqo0ef3nLcSE8mjJxMf?=
+ =?us-ascii?Q?URxJLpBZSYvuDlN4tmgzhQgCpkdPNQb7K0qAvXKzY0K/qwq9bZF6y3HM6I2d?=
+ =?us-ascii?Q?X5mHEoUce1t5XcNZ7dizIhZVDNPJ2qW1fwshk56h470ITkkAUBBWhaBz/ABw?=
+ =?us-ascii?Q?Pd0hZjZGqMaFNP7zWr7SG3fD+zuynj8A5COewTi5mLG4r5iRyWufBI+Op1Cs?=
+ =?us-ascii?Q?wrDt2GYchO5Ugg/ZZNDqxZr8l/CgK8GbD3DrYdNHRIv9YvN6cZ1i+iefu3XK?=
+ =?us-ascii?Q?Ll5+E7fHU82rKi7bLP4PgM7yw2lwH9O32bgq7vMFE5UNRk4WNNrUM8X0kBDo?=
+ =?us-ascii?Q?Sz4f1W1S89soK03T28zXm98ZnVYCZzFt1cmiHgy+iAfJGC6RDmMhjefjaUiO?=
+ =?us-ascii?Q?CmtLjsmCmFUg/Z6hoXOd3H7VUki4/w1H+DIgKqli40kSdazjZeDlaQ0FH76R?=
+ =?us-ascii?Q?r+aGr9V14pXCRPbTn+ciV138JsX6fem2ilE/jvyYWBDv/uF6E/FpLtJgyU3N?=
+ =?us-ascii?Q?prDDdybnh2tMiQkQ1GIx2ENTwYG2jyEvFOIxi5Lk7Nx6fkKnquBl+zNpPACv?=
+ =?us-ascii?Q?MEEonYdK1nead4LE1T0r27auf4GZWO/ULveUqQzBpwNDG1fqrlFqP3XRMNjD?=
+ =?us-ascii?Q?5mXz9gLx821gKC2ONDpahnfOfJYAjjL8a79WCdSLzs/nVLEbrTIzVL/4Jzw7?=
+ =?us-ascii?Q?nfkcSmNQOsPB1DSNFE9UfpufqFNj/0kbkcMMiHB8TqyX0X7qGYDlle9Yj/Iy?=
+ =?us-ascii?Q?032rtOsX4uyjBqOkZU1bSmGd9KuQaVj35tLRn81Kh37837M+xf24mR7oyzte?=
+ =?us-ascii?Q?ycDnsWT5WvrWhfjAKi5jqtwMC1EM0+698mNnjCjTrzcR?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41d1a1f2-d713-4c88-7fe4-08dc60ce370b
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2024 00:09:58.4055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LmaCu3CK/4PSDCgMhHH3BIziB7sgOFUO5xYlKeD2D7VuWBJLdzX9OhjlJ//t4dTI3NU6+rwsejGPRav8rcp9tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8300
+X-OriginatorOrg: intel.com
 
-On Fri, Apr 19, 2024 at 02:24:36PM -0400, Gregory Price wrote:
-> On Thu, Apr 18, 2024 at 04:10:51PM -0700, nifan.cxl@gmail.com wrote:
-> > A git tree of this series can be found here (with one extra commit on top
-> > for printing out accepted/pending extent list): 
-> > https://github.com/moking/qemu/tree/dcd-v7
-> > 
-> > v6->v7:
-> > 
-> > 1. Fixed the dvsec range register issue mentioned in the the cover letter in v6.
-> >    Only relevant bits are set to mark the device ready (Patch 6). (Jonathan)
-> > 2. Moved the if statement in cxl_setup_memory from Patch 6 to Patch 4. (Jonathan)
-> > 3. Used MIN instead of if statement to get record_count in Patch 7. (Jonathan)
-> > 4. Added "Reviewed-by" tag to Patch 7.
-> > 5. Modified cxl_dc_extent_release_dry_run so the updated extent list can be
-> >    reused in cmd_dcd_release_dyn_cap to simplify the process in Patch 8. (Jørgen) 
-> > 6. Added comments to indicate further "TODO" items in cmd_dcd_add_dyn_cap_rsp.
-> >     (Jonathan)
-> > 7. Avoided irrelevant code reformat in Patch 8. (Jonathan)
-> > 8. Modified QMP interfaces for adding/releasing DC extents to allow passing
-> >    tags, selection policy, flags in the interface. (Jonathan, Gregory)
-> > 9. Redesigned the pending list so extents in the same requests are grouped
-> >     together. A new data structure is introduced to represent "extent group"
-> >     in pending list.  (Jonathan)
-> > 10. Added support in QMP interface for "More" flag. 
-> > 11. Check "Forced removal" flag for release request and not let it pass through.
-> > 12. Removed the dynamic capacity log type from CxlEventLog definition in cxl.json
-> >    to avoid the side effect it may introduce to inject error to DC event log.
-> >    (Jonathan)
-> > 13. Hard coded the event log type to dynamic capacity event log in QMP
-> >     interfaces. (Jonathan)
-> > 14. Adding space in between "-1]". (Jonathan)
-> > 15. Some minor comment fixes.
-> > 
-> > The code is tested with similar setup and has passed similar tests as listed
-> > in the cover letter of v5[1] and v6[2].
-> > Also, the code is tested with the latest DCD kernel patchset[3].
-> > 
-> > [1] Qemu DCD patchset v5: https://lore.kernel.org/linux-cxl/20240304194331.1586191-1-nifan.cxl@gmail.com/T/#t
-> > [2] Qemu DCD patchset v6: https://lore.kernel.org/linux-cxl/20240325190339.696686-1-nifan.cxl@gmail.com/T/#t
-> > [3] DCD kernel patches: https://lore.kernel.org/linux-cxl/20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com/T/#m11c571e21c4fe17c7d04ec5c2c7bc7cbf2cd07e3
-> >
+Dan Williams wrote:
+> A recent change to cxl_mem_get_records_log() [1] highlighted a subtle
+> nuance of looping calls to cxl_internal_send_cmd(), i.e. that
+> cxl_internal_send_cmd() modifies the 'size_out' member of the @mbox_cmd
+> argument. That mechanism is useful for communicating underflow, but it
+> is unwanted when reusing @mbox_cmd for a subsequent submission. It turns
+> out that cxl_xfer_log() avoids this scenario by always redefining
+> @mbox_cmd each iteration.
 > 
-> added review to all patches, will hopefully be able to add a Tested-by
-> tag early next week, along with a v1 RFC for MHD bit-tracking.
+> Update cxl_mem_get_records_log() and cxl_mem_get_poison() to follow the
+> same style as cxl_xfer_log(), i.e. re-define @mbox_cmd each iteration.
+> The cxl_mem_get_records_log() change is just a style fixup, but the
+> cxl_mem_get_poison() change is a potential fix, per Alison [2]:
 > 
-> We've been testing v5/v6 for a bit, so I expect as soon as we get the
-> MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
+>     Poison list retrieval can hit this case if the MORE flag is set and
+>     a follow on read of the list delivers more records than the previous
+>     read.  ie. device gives one record, sets the _MORE flag, then gives 5.
 > 
-> The super-set release will complicate a few things but this doesn't
-> look like a blocker on our end, just a change to how we track bits in a
-> shared bit/bytemap.
+> Not an urgent fix since this behavior has not been seen in the wild,
+> but worth tracking as a fix.
 > 
+> Cc: Kwangjin Ko <kwangjin.ko@sk.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Fixes: ed83f7ca398b ("cxl/mbox: Add GET_POISON_LIST mailbox command")
+> Link: http://lore.kernel.org/r/20240402081404.1106-2-kwangjin.ko@sk.com [1]
+> Link: http://lore.kernel.org/r/ZhAhAL/GOaWFrauw@aschofie-mobl2 [2]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Hi Gregory,
-Thanks for reviewing the patches so quickly. 
-
-No pressure, but look forward to your MHD work. :)
-
-Fan
-
-> > 
-> > Fan Ni (12):
-> >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-> >     payload of identify memory device command
-> >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-> >     and mailbox command support
-> >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
-> >     type3 memory devices
-> >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
-> >     devices
-> >   hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
-> >     size instead of mr as argument
-> >   hw/mem/cxl_type3: Add host backend and address space handling for DC
-> >     regions
-> >   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
-> >     list mailbox support
-> >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
-> >     dynamic capacity response
-> >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
-> >     extents
-> >   hw/mem/cxl_type3: Add DPA range validation for accesses to DC regions
-> >   hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox support
-> >   hw/mem/cxl_type3: Allow to release extent superset in QMP interface
-> > 
-> >  hw/cxl/cxl-mailbox-utils.c  | 620 ++++++++++++++++++++++++++++++++++-
-> >  hw/mem/cxl_type3.c          | 633 +++++++++++++++++++++++++++++++++---
-> >  hw/mem/cxl_type3_stubs.c    |  20 ++
-> >  include/hw/cxl/cxl_device.h |  81 ++++-
-> >  include/hw/cxl/cxl_events.h |  18 +
-> >  qapi/cxl.json               |  69 ++++
-> >  6 files changed, 1396 insertions(+), 45 deletions(-)
-> > 
-> > -- 
-> > 2.43.0
-> > 
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
