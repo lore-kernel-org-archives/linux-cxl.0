@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD94515381C;
-	Mon, 22 Apr 2024 16:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD72B2EB11;
+	Mon, 22 Apr 2024 16:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713804212; cv=none; b=UzQvNZ4tKbOBUfOvT+51QDZXpVueDYaKVjAkk0/Y3ppZbFiNLRuVDJpVHNE3CQavc/WqRK6uUiby2BrMdqhcK9Dy7xxZPh8mKkMinbL4TPsuYAKhFIKEHR4aH3UJ0IBEHfSnI64IZa9dv9dznP+FP6RCiZpNq2lMqaziAOR1u4c=
+	t=1713804540; cv=none; b=UzZbNiujSBQH4EMp75vhcCC4oKc8H2JjzIWKay9ECCI6Wb3l4+Ldw2zCL0smV51V+waqdSJw7xo/bsEwgtsTNHDSk1vjuKSsgknaKxy3+KSzlCJ8/0xxjogEC3O7Mbj+hy3wGDgZMUWtrz+Qd/a3iFTnPMOqLzi8zhFukcKvSwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713804212; c=relaxed/simple;
-	bh=ApwW11imVDo3/pCqZSgrElUYpztN4ObYHpPgr4iAaXA=;
+	s=arc-20240116; t=1713804540; c=relaxed/simple;
+	bh=uRXRWRGIv34HbQQJzH5g6nrOYt+hPQK2/gXQaQGm4Ms=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z2ycDG4OFilPrY+RRbSsyu+UEKygisoP0O+6JvLMAnb1Cj4MWvS4SkZXs3nXcZhwdbirO2bUd7oKpNkcgw0BjMbVfboQKlsyjVcVNTcXSbH/ctjYLXkE0FafvWXQAvLo22MC0UkrwFehFpCpd83NxsPMPplvAKwUeqSCLhkJjH4=
+	 MIME-Version:Content-Type; b=KzhsYW2YkalXhKFffHiuouXWLmfb8mcfHy17RxGCcsc117yzuY2G5XBWc8RuJefX0DkGEDJcZTRkIPHq4W5vvLOmNvUTRO+6VPqoVLEHuKHeTOZJL8niajwPTkIbashM3m29+F7jBpqRtiaG4H8ihBzAsQMC4O8Vfk4bEj4zYdo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNWGc2BLXz6JBRf;
-	Tue, 23 Apr 2024 00:41:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNWNt5Pskz6K69V;
+	Tue, 23 Apr 2024 00:46:38 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8E415140AB8;
-	Tue, 23 Apr 2024 00:43:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2CD84140736;
+	Tue, 23 Apr 2024 00:48:55 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 22 Apr
- 2024 17:43:26 +0100
-Date: Mon, 22 Apr 2024 17:43:25 +0100
+ 2024 17:48:54 +0100
+Date: Mon, 22 Apr 2024 17:48:53 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Robert Richter <rrichter@amd.com>
 CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen
@@ -32,12 +32,12 @@ CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen
 	Alison Schofield <alison.schofield@intel.com>, <linux-acpi@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Len Brown
 	<lenb@kernel.org>
-Subject: Re: [PATCH v3 2/5] ACPI/NUMA: Print CXL Early Discovery Table
- (CEDT)
-Message-ID: <20240422174325.000058ba@Huawei.com>
-In-Reply-To: <20240419140203.1996635-3-rrichter@amd.com>
+Subject: Re: [PATCH v3 3/5] ACPI/NUMA: Remove architecture dependent
+ remainings
+Message-ID: <20240422174853.0000168c@Huawei.com>
+In-Reply-To: <20240419140203.1996635-4-rrichter@amd.com>
 References: <20240419140203.1996635-1-rrichter@amd.com>
-	<20240419140203.1996635-3-rrichter@amd.com>
+	<20240419140203.1996635-4-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,220 +51,102 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 19 Apr 2024 16:02:00 +0200
+On Fri, 19 Apr 2024 16:02:01 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> The CEDT contains similar entries as the SRAT. For diagnostic reasons
-> print the CEDT same style as the SRAT.
+> With the removal of the Itanium architecture [1] the last architecture
+> dependent functions:
 > 
-> Adding also a pr_info() when successfully adding a CFMWS memory range.
+>  acpi_numa_slit_init(), acpi_numa_memory_affinity_init()
 > 
-> Suggested-by: Alison Schofield <alison.schofield@intel.com> # CEDT node info
+> were removed. Remove its remainings in the header files too an make
+> them static.
+> 
+> [1] commit cf8e8658100d ("arch: Remove Itanium (IA-64) architecture")
+> 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-Hi Robert,
 
-Comments inline,
+The slit change is fine, but what about the cfmws function in here
+where a stub was removed as well. Looks sensible as it relied on the
+implementation details of acpi_numa_memory_affinity_init() but
+should probably call it out in the description and say why it no
+longer needs to be protected like this.
 
 Jonathan
 
-
 > ---
->  drivers/acpi/numa/srat.c | 122 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 121 insertions(+), 1 deletion(-)
+>  drivers/acpi/numa/srat.c | 17 ++---------------
+>  include/linux/acpi.h     |  5 -----
+>  2 files changed, 2 insertions(+), 20 deletions(-)
 > 
 > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index e45e64993c50..43417b4920da 100644
+> index 43417b4920da..bd0e2d342ba2 100644
 > --- a/drivers/acpi/numa/srat.c
 > +++ b/drivers/acpi/numa/srat.c
-> @@ -300,6 +300,114 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
->  	return -EINVAL;
+> @@ -208,13 +208,12 @@ int __init srat_disabled(void)
+>  	return acpi_numa < 0;
 >  }
 >  
-> +static int __init
-> +__acpi_table_print_cedt_entry(union acpi_subtable_headers *__header,
-> +			      void *arg, const unsigned long table_end)
-> +{
-> +	struct acpi_cedt_header *header = (struct acpi_cedt_header *)__header;
-
-As below. There is very little shred by the different types in here, so
-I'd break it up into separate functions and just call the relevant
-one.
-
-> +
-> +	switch (header->type) {
-> +	case ACPI_CEDT_TYPE_CHBS:
-> +		{
-> +			struct acpi_cedt_chbs *p =
-> +				(struct acpi_cedt_chbs *)header;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_chbs)) {
-sizeof(*p) perhaps?
-> +				pr_warn("CEDT: unsupported CHBS entry: size %d\n",
-> +					 header->length);
-> +				break;
-> +			}
-> +
-> +			pr_debug("CEDT: CHBS (0x%llx length 0x%llx uid %lu) %s (%d)\n",
-> +				(unsigned long long)p->base,
-> +				(unsigned long long)p->length,
-> +				(unsigned long)p->uid,
-> +				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) ?
-> +				"cxl11" :
-> +				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20) ?
-> +				"cxl20" :
-> +				"unsupported version",
-> +				p->cxl_version);
-> +		}
-> +		break;
-> +	case ACPI_CEDT_TYPE_CFMWS:
-> +		{
-> +			struct acpi_cedt_cfmws *p =
-> +				(struct acpi_cedt_cfmws *)header;
-> +			int eiw_to_ways[] = {1, 2, 4, 8, 16, 3, 6, 12};
-> +			int targets = -1;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_cfmws)) {
-
-sizeof(*p) perhaps?
-
-> +				pr_warn("CEDT: unsupported CFMWS entry: size %d\n",
-> +					header->length);
-> +				break;
-> +			}
-> +
-> +			if (p->interleave_ways < ARRAY_SIZE(eiw_to_ways))
-> +				targets = eiw_to_ways[p->interleave_ways];
-> +			if (header->length < struct_size(
-> +					p, interleave_targets, targets))
-> +				targets = -1;
-
-Not a warning?
-
-> +
-> +			pr_debug("CEDT: CFMWS (0x%llx length 0x%llx) with %d target%s",
-> +				(unsigned long long)p->base_hpa,
-> +				(unsigned long long)p->window_size,
-> +				targets, targets > 1 ? "s" : "");
-> +			for (int i = 0; i < targets; i++)
-> +				pr_cont("%s%lu", i ? ", " : " (",
-> +					(unsigned long)p->interleave_targets[i]);
-
-This seems odd. I don't think there is a good way to do combined pr_debug() and pr_cont()
-There was a discussion about this a few years ago...
-
-> +			pr_cont("%s%s%s%s%s%s\n",
-> +				targets > 0 ? ")" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ?
-> +				" type2" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ?
-> +				" type3" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ?
-> +				" volatile" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ?
-> +				" pmem" : "",
-> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ?
-> +				" fixed" : "");
-> +		}
-> +		break;
-> +	case ACPI_CEDT_TYPE_CXIMS:
-> +		{
-> +			struct acpi_cedt_cxims *p =
-> +				(struct acpi_cedt_cxims *)header;
-> +
-> +			if (header->length < sizeof(struct acpi_cedt_cxims)) {
-
-sizeof(*p) perhaps?
-
-> +				pr_warn("CEDT: unsupported CXIMS entry: size %d\n",
-> +					header->length);
-> +				break;
-
-I'd go with direct returns in these to make the code flow easier to read.
-
-> +			}
-> +
-> +			pr_debug("CEDT: CXIMS (hbig %u nr_xormaps %u)\n",
-> +				(unsigned int)p->hbig,
-> +				(unsigned int)p->nr_xormaps);
-> +		}
-> +		break;
-> +	default:
-> +		pr_warn("CEDT: Found unsupported entry (type = 0x%x)\n",
-> +			header->type);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __init acpi_table_print_cedt_entry(enum acpi_cedt_type id)
-> +{
-> +	acpi_table_parse_cedt(id, __acpi_table_print_cedt_entry, NULL);
-> +}
-> +
-> +static void __init acpi_table_print_cedt(void)
-> +{
-> +	/* Print only implemented CEDT types */
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CHBS);
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CFMWS);
-> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CXIMS);
-
-Would this be cleaner just breaking these up?
-
-	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, print_chbs_entry, NULL);
-	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, print_cfmws_entry, NULL);
-	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CXIMS, print_cxims_entry, NULL);
-
-
-> +}
-> +
->  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  				   void *arg, const unsigned long table_end)
+> -#if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
+>  /*
+>   * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
+>   * I/O localities since SRAT does not list them.  I/O localities are
+>   * not supported at this point.
+>   */
+> -void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+> +static void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
 >  {
-> @@ -318,8 +426,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  	 * found for any portion of the window to cover the entire
->  	 * window.
->  	 */
-> -	if (!numa_fill_memblks(start, end))
-> +	if (!numa_fill_memblks(start, end)) {
-> +		pr_info("CEDT: memblk extended [mem %#010Lx-%#010Lx]\n",
-> +			(unsigned long long) start, (unsigned long long) end - 1);
->  		return 0;
-> +	}
+>  	int i, j;
 >  
->  	/* No SRAT description. Create a new node. */
->  	node = acpi_map_pxm_to_node(*fake_pxm);
-> @@ -334,13 +445,19 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
+> @@ -236,11 +235,7 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
 >  	}
-> +
-
-Unrelated changed.  Best to clean this out to avoid the (really minor) noise.
-
->  	node_set(node, numa_nodes_parsed);
+>  }
 >  
-> +	pr_info("CEDT: Node %u PXM %u [mem %#010Lx-%#010Lx]\n",
-> +		node, *fake_pxm,
-> +		(unsigned long long) start, (unsigned long long) end - 1);
-> +
->  	/* Set the next available fake_pxm value */
+> -/*
+> - * Default callback for parsing of the Proximity Domain <-> Memory
+> - * Area mappings
+> - */
+> -int __init
+> +static int __init
+>  acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+>  {
+>  	u64 start, end;
+> @@ -456,14 +451,6 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
 >  	(*fake_pxm)++;
 >  	return 0;
 >  }
->  #else
-> +static inline void acpi_table_print_cedt(void) {}
->  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  				   void *arg, const unsigned long table_end)
->  {
-> @@ -526,6 +643,9 @@ int __init acpi_numa_init(void)
->  	/* SLIT: System Locality Information Table */
->  	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
+> -#else
+> -static inline void acpi_table_print_cedt(void) {}
+> -static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> -				   void *arg, const unsigned long table_end)
+> -{
+> -	return 0;
+> -}
+> -#endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
 >  
-> +	/* CEDT: CXL Early Discovery Table */
-> +	acpi_table_print_cedt();
-> +
->  	/*
->  	 * CXL Fixed Memory Window Structures (CFMWS) must be parsed
->  	 * after the SRAT. Create NUMA Nodes for CXL memory ranges that
+>  static int __init acpi_parse_slit(struct acpi_table_header *table)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 34829f2c517a..2c227b61a452 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -242,9 +242,6 @@ static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
+>  	return gicc->flags & ACPI_MADT_ENABLED;
+>  }
+>  
+> -/* the following numa functions are architecture-dependent */
+> -void acpi_numa_slit_init (struct acpi_table_slit *slit);
+> -
+>  #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+>  void acpi_numa_processor_affinity_init (struct acpi_srat_cpu_affinity *pa);
+>  #else
+> @@ -267,8 +264,6 @@ static inline void
+>  acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+>  #endif
+>  
+> -int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+> -
+>  #ifndef PHYS_CPUID_INVALID
+>  typedef u32 phys_cpuid_t;
+>  #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
 
