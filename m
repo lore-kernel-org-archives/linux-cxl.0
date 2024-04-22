@@ -1,52 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECDE153BD2;
-	Mon, 22 Apr 2024 16:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD94515381C;
+	Mon, 22 Apr 2024 16:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713802604; cv=none; b=gRg9k3Lv4GaCwTKEG/R0YTIA8uwOmo0hVNZJ/Dx8Y5EyWE7YWnNz4uvEzfAyU3XxhxEOFj+pnhQSNrW4RLrnv7dpE4TJpGdsb29i3sDDaXIWaI7fdDqSxlDCO7QnXHl8tNICRAlBlUle85hOj3t+aVioegMdvXQG8MaSwDWiSHg=
+	t=1713804212; cv=none; b=UzQvNZ4tKbOBUfOvT+51QDZXpVueDYaKVjAkk0/Y3ppZbFiNLRuVDJpVHNE3CQavc/WqRK6uUiby2BrMdqhcK9Dy7xxZPh8mKkMinbL4TPsuYAKhFIKEHR4aH3UJ0IBEHfSnI64IZa9dv9dznP+FP6RCiZpNq2lMqaziAOR1u4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713802604; c=relaxed/simple;
-	bh=dJAneM0dYrB9jyxfWIuDyEBUTt2XGhJq6MzCFWxFGxs=;
+	s=arc-20240116; t=1713804212; c=relaxed/simple;
+	bh=ApwW11imVDo3/pCqZSgrElUYpztN4ObYHpPgr4iAaXA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wtuqdft0+i8q6jXjxzd1G46W19G+eKd7IZhCEW0YQSPNMK5LSOUuAJF+4V9o7iR3sPdcbLHojKSWf0iG5E4R53dPCSxMEA6bt8keA/BJEvBQ7/lMZz8qReBNvlDlaztunbdYSyYwcxCAtxHqbLgWafLagCPVml/KDTC2y0XCJSo=
+	 MIME-Version:Content-Type; b=Z2ycDG4OFilPrY+RRbSsyu+UEKygisoP0O+6JvLMAnb1Cj4MWvS4SkZXs3nXcZhwdbirO2bUd7oKpNkcgw0BjMbVfboQKlsyjVcVNTcXSbH/ctjYLXkE0FafvWXQAvLo22MC0UkrwFehFpCpd83NxsPMPplvAKwUeqSCLhkJjH4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNVgX4VLDz6J9gG;
-	Tue, 23 Apr 2024 00:14:16 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNWGc2BLXz6JBRf;
+	Tue, 23 Apr 2024 00:41:12 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CD52A140736;
-	Tue, 23 Apr 2024 00:16:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E415140AB8;
+	Tue, 23 Apr 2024 00:43:26 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 22 Apr
- 2024 17:16:30 +0100
-Date: Mon, 22 Apr 2024 17:16:29 +0100
+ 2024 17:43:26 +0100
+Date: Mon, 22 Apr 2024 17:43:25 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Zhenzhong Duan <zhenzhong.duan@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-acpi@vger.kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<james.morse@arm.com>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <bhelgaas@google.com>,
-	<helgaas@kernel.org>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<linmiaohe@huawei.com>, <shiju.jose@huawei.com>, <adam.c.preble@intel.com>,
-	<leoyang.li@nxp.com>, <lukas@wunner.de>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <erwin.tsaur@intel.com>,
-	<sathyanarayanan.kuppuswamy@intel.com>, <dan.j.williams@intel.com>,
-	<feiting.wanyan@intel.com>, <yudong.wang@intel.com>, <chao.p.peng@intel.com>,
-	<qingshun.wang@linux.intel.com>
-Subject: Re: [PATCH v3 1/3] PCI/AER: Store UNCOR_STATUS bits that might be
- ANFE in aer_err_info
-Message-ID: <20240422171629.00005675@Huawei.com>
-In-Reply-To: <20240417061407.1491361-2-zhenzhong.duan@intel.com>
-References: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
-	<20240417061407.1491361-2-zhenzhong.duan@intel.com>
+To: Robert Richter <rrichter@amd.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Len Brown
+	<lenb@kernel.org>
+Subject: Re: [PATCH v3 2/5] ACPI/NUMA: Print CXL Early Discovery Table
+ (CEDT)
+Message-ID: <20240422174325.000058ba@Huawei.com>
+In-Reply-To: <20240419140203.1996635-3-rrichter@amd.com>
+References: <20240419140203.1996635-1-rrichter@amd.com>
+	<20240419140203.1996635-3-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -57,146 +48,223 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 17 Apr 2024 14:14:05 +0800
-Zhenzhong Duan <zhenzhong.duan@intel.com> wrote:
+On Fri, 19 Apr 2024 16:02:00 +0200
+Robert Richter <rrichter@amd.com> wrote:
 
-> In some cases the detector of a Non-Fatal Error(NFE) is not the most
-> appropriate agent to determine the type of the error. For example,
-> when software performs a configuration read from a non-existent
-> device or Function, completer will send an ERR_NONFATAL Message.
-> On some platforms, ERR_NONFATAL results in a System Error, which
-> breaks normal software probing.
+> The CEDT contains similar entries as the SRAT. For diagnostic reasons
+> print the CEDT same style as the SRAT.
 > 
-> Advisory Non-Fatal Error(ANFE) is a special case that can be used
-> in above scenario. It is predominantly determined by the role of the
-> detecting agent (Requester, Completer, or Receiver) and the specific
-> error. In such cases, an agent with AER signals the NFE (if enabled)
-> by sending an ERR_COR Message as an advisory to software, instead of
-> sending ERR_NONFATAL.
+> Adding also a pr_info() when successfully adding a CFMWS memory range.
 > 
-> When processing an ANFE, ideally both correctable error(CE) status and
-> uncorrectable error(UE) status should be cleared. However, there is no
-> way to fully identify the UE associated with ANFE. Even worse, a Fatal
-> Error(FE) or Non-Fatal Error(NFE) may set the same UE status bit as
-> ANFE. Treating an ANFE as NFE will reproduce above mentioned issue,
-> i.e., breaking softwore probing; treating NFE as ANFE will make us
-> ignoring some UEs which need active recover operation. To avoid clearing
-> UEs that are not ANFE by accident, the most conservative route is taken
-> here: If any of the FE/NFE Detected bits is set in Device Status, do not
-> touch UE status, they should be cleared later by the UE handler. Otherwise,
-> a specific set of UEs that may be raised as ANFE according to the PCIe
-> specification will be cleared if their corresponding severity is Non-Fatal.
-> 
-> To achieve above purpose, store UNCOR_STATUS bits that might be ANFE
-> in aer_err_info.anfe_status. So that those bits could be printed and
-> processed later.
-> 
-> Tested-by: Yudong Wang <yudong.wang@intel.com>
-> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
+> Suggested-by: Alison Schofield <alison.schofield@intel.com> # CEDT node info
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+Hi Robert,
+
+Comments inline,
+
+Jonathan
+
+
 > ---
->  drivers/pci/pci.h      |  1 +
->  drivers/pci/pcie/aer.c | 45 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
+>  drivers/acpi/numa/srat.c | 122 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 121 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 17fed1846847..3f9eb807f9fd 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -412,6 +412,7 @@ struct aer_err_info {
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index e45e64993c50..43417b4920da 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -300,6 +300,114 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+>  	return -EINVAL;
+>  }
 >  
->  	unsigned int status;		/* COR/UNCOR Error Status */
->  	unsigned int mask;		/* COR/UNCOR Error Mask */
-> +	unsigned int anfe_status;	/* UNCOR Error Status for ANFE */
->  	struct pcie_tlp_log tlp;	/* TLP Header */
->  };
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ac6293c24976..27364ab4b148 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -107,6 +107,12 @@ struct aer_stats {
->  					PCI_ERR_ROOT_MULTI_COR_RCV |	\
->  					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
->  
-> +#define AER_ERR_ANFE_UNC_MASK		(PCI_ERR_UNC_POISON_TLP |	\
-> +					PCI_ERR_UNC_COMP_TIME |		\
-> +					PCI_ERR_UNC_COMP_ABORT |	\
-> +					PCI_ERR_UNC_UNX_COMP |		\
-> +					PCI_ERR_UNC_UNSUP)
-> +
->  static int pcie_aer_disable;
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
->  
-> @@ -1196,6 +1202,41 @@ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->  EXPORT_SYMBOL_GPL(aer_recover_queue);
->  #endif
->  
-> +static void anfe_get_uc_status(struct pci_dev *dev, struct aer_err_info *info)
+> +static int __init
+> +__acpi_table_print_cedt_entry(union acpi_subtable_headers *__header,
+> +			      void *arg, const unsigned long table_end)
 > +{
-> +	u32 uncor_mask, uncor_status;
-> +	u16 device_status;
-> +	int aer = dev->aer_cap;
+> +	struct acpi_cedt_header *header = (struct acpi_cedt_header *)__header;
+
+As below. There is very little shred by the different types in here, so
+I'd break it up into separate functions and just call the relevant
+one.
+
 > +
-> +	if (pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &device_status))
-> +		return;
-> +	/*
-> +	 * Take the most conservative route here. If there are
-> +	 * Non-Fatal/Fatal errors detected, do not assume any
-> +	 * bit in uncor_status is set by ANFE.
-> +	 */
-> +	if (device_status & (PCI_EXP_DEVSTA_NFED | PCI_EXP_DEVSTA_FED))
-> +		return;
+> +	switch (header->type) {
+> +	case ACPI_CEDT_TYPE_CHBS:
+> +		{
+> +			struct acpi_cedt_chbs *p =
+> +				(struct acpi_cedt_chbs *)header;
 > +
+> +			if (header->length < sizeof(struct acpi_cedt_chbs)) {
+sizeof(*p) perhaps?
+> +				pr_warn("CEDT: unsupported CHBS entry: size %d\n",
+> +					 header->length);
+> +				break;
+> +			}
+> +
+> +			pr_debug("CEDT: CHBS (0x%llx length 0x%llx uid %lu) %s (%d)\n",
+> +				(unsigned long long)p->base,
+> +				(unsigned long long)p->length,
+> +				(unsigned long)p->uid,
+> +				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) ?
+> +				"cxl11" :
+> +				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20) ?
+> +				"cxl20" :
+> +				"unsupported version",
+> +				p->cxl_version);
+> +		}
+> +		break;
+> +	case ACPI_CEDT_TYPE_CFMWS:
+> +		{
+> +			struct acpi_cedt_cfmws *p =
+> +				(struct acpi_cedt_cfmws *)header;
+> +			int eiw_to_ways[] = {1, 2, 4, 8, 16, 3, 6, 12};
+> +			int targets = -1;
+> +
+> +			if (header->length < sizeof(struct acpi_cedt_cfmws)) {
 
-Is there not a race here?  If we happen to get either an NFED or FED 
-between the read of device_status above and here we might pick up a status
-that corresponds to that (and hence clear something we should not).
+sizeof(*p) perhaps?
 
-Or am I missing that race being close somewhere?
+> +				pr_warn("CEDT: unsupported CFMWS entry: size %d\n",
+> +					header->length);
+> +				break;
+> +			}
+> +
+> +			if (p->interleave_ways < ARRAY_SIZE(eiw_to_ways))
+> +				targets = eiw_to_ways[p->interleave_ways];
+> +			if (header->length < struct_size(
+> +					p, interleave_targets, targets))
+> +				targets = -1;
 
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor_status);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &uncor_mask);
-> +	/*
-> +	 * According to PCIe Base Specification Revision 6.1,
-> +	 * Section 6.2.3.2.4, if an UNCOR error is raised as
-> +	 * Advisory Non-Fatal error, it will match the following
-> +	 * conditions:
-> +	 *	a. The severity of the error is Non-Fatal.
-> +	 *	b. The error is one of the following:
-> +	 *		1. Poisoned TLP           (Section 6.2.3.2.4.3)
-> +	 *		2. Completion Timeout     (Section 6.2.3.2.4.4)
-> +	 *		3. Completer Abort        (Section 6.2.3.2.4.1)
-> +	 *		4. Unexpected Completion  (Section 6.2.3.2.4.5)
-> +	 *		5. Unsupported Request    (Section 6.2.3.2.4.1)
-> +	 */
-> +	info->anfe_status = uncor_status & ~uncor_mask & ~info->severity &
-> +			    AER_ERR_ANFE_UNC_MASK;
+Not a warning?
+
+> +
+> +			pr_debug("CEDT: CFMWS (0x%llx length 0x%llx) with %d target%s",
+> +				(unsigned long long)p->base_hpa,
+> +				(unsigned long long)p->window_size,
+> +				targets, targets > 1 ? "s" : "");
+> +			for (int i = 0; i < targets; i++)
+> +				pr_cont("%s%lu", i ? ", " : " (",
+> +					(unsigned long)p->interleave_targets[i]);
+
+This seems odd. I don't think there is a good way to do combined pr_debug() and pr_cont()
+There was a discussion about this a few years ago...
+
+> +			pr_cont("%s%s%s%s%s%s\n",
+> +				targets > 0 ? ")" : "",
+> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ?
+> +				" type2" : "",
+> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ?
+> +				" type3" : "",
+> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ?
+> +				" volatile" : "",
+> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ?
+> +				" pmem" : "",
+> +				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ?
+> +				" fixed" : "");
+> +		}
+> +		break;
+> +	case ACPI_CEDT_TYPE_CXIMS:
+> +		{
+> +			struct acpi_cedt_cxims *p =
+> +				(struct acpi_cedt_cxims *)header;
+> +
+> +			if (header->length < sizeof(struct acpi_cedt_cxims)) {
+
+sizeof(*p) perhaps?
+
+> +				pr_warn("CEDT: unsupported CXIMS entry: size %d\n",
+> +					header->length);
+> +				break;
+
+I'd go with direct returns in these to make the code flow easier to read.
+
+> +			}
+> +
+> +			pr_debug("CEDT: CXIMS (hbig %u nr_xormaps %u)\n",
+> +				(unsigned int)p->hbig,
+> +				(unsigned int)p->nr_xormaps);
+> +		}
+> +		break;
+> +	default:
+> +		pr_warn("CEDT: Found unsupported entry (type = 0x%x)\n",
+> +			header->type);
+> +		break;
+> +	}
+> +
+> +	return 0;
 > +}
 > +
->  /**
->   * aer_get_device_error_info - read error status from dev and store it to info
->   * @dev: pointer to the device expected to have a error record
-> @@ -1213,6 +1254,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  
->  	/* Must reset in this function */
->  	info->status = 0;
-> +	info->anfe_status = 0;
->  	info->tlp_header_valid = 0;
->  
->  	/* The device might not support AER */
-> @@ -1226,6 +1268,9 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  			&info->mask);
->  		if (!(info->status & ~info->mask))
->  			return 0;
+> +static void __init acpi_table_print_cedt_entry(enum acpi_cedt_type id)
+> +{
+> +	acpi_table_parse_cedt(id, __acpi_table_print_cedt_entry, NULL);
+> +}
 > +
-> +		if (info->status & PCI_ERR_COR_ADV_NFAT)
-> +			anfe_get_uc_status(dev, info);
->  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->  		   type == PCI_EXP_TYPE_RC_EC ||
->  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +static void __init acpi_table_print_cedt(void)
+> +{
+> +	/* Print only implemented CEDT types */
+> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CHBS);
+> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CFMWS);
+> +	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CXIMS);
+
+Would this be cleaner just breaking these up?
+
+	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, print_chbs_entry, NULL);
+	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, print_cfmws_entry, NULL);
+	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CXIMS, print_cxims_entry, NULL);
+
+
+> +}
+> +
+>  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  				   void *arg, const unsigned long table_end)
+>  {
+> @@ -318,8 +426,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  	 * found for any portion of the window to cover the entire
+>  	 * window.
+>  	 */
+> -	if (!numa_fill_memblks(start, end))
+> +	if (!numa_fill_memblks(start, end)) {
+> +		pr_info("CEDT: memblk extended [mem %#010Lx-%#010Lx]\n",
+> +			(unsigned long long) start, (unsigned long long) end - 1);
+>  		return 0;
+> +	}
+>  
+>  	/* No SRAT description. Create a new node. */
+>  	node = acpi_map_pxm_to_node(*fake_pxm);
+> @@ -334,13 +445,19 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+>  	}
+> +
+
+Unrelated changed.  Best to clean this out to avoid the (really minor) noise.
+
+>  	node_set(node, numa_nodes_parsed);
+>  
+> +	pr_info("CEDT: Node %u PXM %u [mem %#010Lx-%#010Lx]\n",
+> +		node, *fake_pxm,
+> +		(unsigned long long) start, (unsigned long long) end - 1);
+> +
+>  	/* Set the next available fake_pxm value */
+>  	(*fake_pxm)++;
+>  	return 0;
+>  }
+>  #else
+> +static inline void acpi_table_print_cedt(void) {}
+>  static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  				   void *arg, const unsigned long table_end)
+>  {
+> @@ -526,6 +643,9 @@ int __init acpi_numa_init(void)
+>  	/* SLIT: System Locality Information Table */
+>  	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
+>  
+> +	/* CEDT: CXL Early Discovery Table */
+> +	acpi_table_print_cedt();
+> +
+>  	/*
+>  	 * CXL Fixed Memory Window Structures (CFMWS) must be parsed
+>  	 * after the SRAT. Create NUMA Nodes for CXL memory ranges that
 
