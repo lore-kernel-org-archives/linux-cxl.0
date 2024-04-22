@@ -1,58 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3141B947
-	for <linux-cxl@vger.kernel.org>; Mon, 22 Apr 2024 20:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B560F1BC2A;
+	Mon, 22 Apr 2024 20:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713818638; cv=none; b=Rdody/mH7iGD6YcCRAqpiWoOxlloOFxy+9SEGCHNa8IBZw06ldmzMl4kHAzijNquVxFy2Ds7Y81iq33D+szAvg5zsF5yudV23tsWrrdBshBnEr8mnQd+/zYAKWvQTAxIdNXUlNELImcRmhkvsYEZyShg79b6vmhs2NtlybyvuFI=
+	t=1713818899; cv=none; b=DrGK15qAKXOez+QzW6qoGqqflZ00TxfK9j4492sZFi1eEpx2bgIA0KCFLXhZjyAx47yDEEoKVL+pazlTAvf88kNsOvcTFNVlz4p5SccNv7B55U/5bB9WXRIir0KhL4PdU+cNBDOVzuIZbrgvXpD/CWYdop+C1x96AvM7OE6vtKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713818638; c=relaxed/simple;
-	bh=XbgYvkJaul1roQlzwWWAbdldkDI1YA3VDiolQBABVA8=;
+	s=arc-20240116; t=1713818899; c=relaxed/simple;
+	bh=Nve2e0URcbhivgmu5Olx+jFaLYTP1uGgib0vU6aow6I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcXib49s+76gBw5o6PkSbBLAN7XWNYwXTUvvNZdFqW+xNZaKJpahBO/N3PoGq13jwNUQWrRWbU8Fr27lR4z0EzlHYMPrAyvwb6sStz4DB9vlVOtRKfitrT0o3jMOZ8oSGIya7w+flW6awQaqv1Do2l2ZeB2CkFAtN0pnZt5lDWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ctsz3000; arc=none smtp.client-ip=198.175.65.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=FuZljaFyQw1aWPEWvMQbCk2V0hOblZEeoRBaT2/2kTNggkMdLfjscaYVkZBGliZgbGiPR8M2QCuHbP/LHKG2AzW9AEMCm3pfaQcqYzO2sY+hmMrmje5EpOSUtd2CCduT8jjvWzGeG2b9zMdQ0uC0fa0ioRbdEb7BiOVFYRNekNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QqX2w+f3; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ctsz3000"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QqX2w+f3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713818637; x=1745354637;
+  t=1713818898; x=1745354898;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=XbgYvkJaul1roQlzwWWAbdldkDI1YA3VDiolQBABVA8=;
-  b=ctsz30000tmr3c+KN9+7abBg07BkgIgopUDtTgbaatyKpfD8H6SGosjk
-   n9yppNOgPVaPu8U1udTdJf8n6ZMG3oGNDVED4HBFutC020cYIJ9nwDRQE
-   dnPqPrwh/ESwf5HvAq2fAR9RRY8u+fXxkge8TsRmVLY+vqPDQ7q6eITjd
-   ag/aOo+zqbFigWJI/B8Fo4huZ4PMdGBTLrNl5Q/y1yqMjgGx7kmdr+kv9
-   sEu6nDzcK+XBcj33ukwzsV2r1I6qiGWL0JntK7XNpC+I8Yox/zVIfYmuy
-   9oosz5CEZZ8HLGy+9q5ImbFb9VcL8jAUDoicojaAZbZy/6151MvgmRbGS
-   g==;
-X-CSE-ConnectionGUID: gBCQFU9TRK+z5urJqLHYIA==
-X-CSE-MsgGUID: 7thZ0eseQSmHXg2cEyq+zg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20527777"
+  bh=Nve2e0URcbhivgmu5Olx+jFaLYTP1uGgib0vU6aow6I=;
+  b=QqX2w+f32aYXZOaxeUCVbdyN3NbDXkX2Da0YE60qmuIF8G/7Z5Y5b1kI
+   PajRHW7OTcVICe6Zp6oac5ZsFL/YXvA9BIbdZZjQi7RbzPjo1cLURQlli
+   zS3V7KNMEkzqotYmoxD+UeEhYNu4d6Iqi4l1AW4y/0+j08y1To7fjpgzM
+   BbB+RxgPJ857kjb+GUA5Sv7DYWeysl1O3wm5nbbIgY97/9LwoFFO63klb
+   BeAYq1PAUROE08T7665e7GtJ54Sxd/TpH8eHFKkqHKUtpIorVRy8WpMcK
+   Uj0qD11k2WD/Ny3/zyPS76rwlWDdzZTiT5tsFff4yM7OWdOVmV+9K/4Sm
+   A==;
+X-CSE-ConnectionGUID: yZC1yBrsSDCyZTe+BhsGgQ==
+X-CSE-MsgGUID: ZhnSPWqYTj2RoDWSf0Y+/g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="13212106"
 X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="20527777"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 13:43:56 -0700
-X-CSE-ConnectionGUID: mYwU6Z1rQ3i0GTrfHyg2tg==
-X-CSE-MsgGUID: 4qzfQft3SPeTSBpmfss8dg==
+   d="scan'208";a="13212106"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 13:47:21 -0700
+X-CSE-ConnectionGUID: wg81OQ8KT867EqJiPcOeGQ==
+X-CSE-MsgGUID: Bfxru7XJQtukdQSi9ozkDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="55345900"
+   d="scan'208";a="24007380"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.73.120])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 13:43:55 -0700
-Date: Mon, 22 Apr 2024 13:43:53 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 13:47:20 -0700
+Date: Mon, 22 Apr 2024 13:47:18 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [ndctl PATCH] cxl/test: use max_available_extent in
- cxl-destroy-region
-Message-ID: <ZibMCY8G4rDb48Bp@aschofie-mobl2>
-References: <20240327184642.2181254-1-alison.schofield@intel.com>
- <7a8214e2f84e333784cf9e7ecd851ccbbb93f3ec.camel@intel.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Derick Marks <derick.w.marks@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 1/5] x86/numa: Fix SRAT lookup of CFMWS ranges with
+ numa_fill_memblks()
+Message-ID: <ZibM1tafKjs674bR@aschofie-mobl2>
+References: <20240419140203.1996635-1-rrichter@amd.com>
+ <20240419140203.1996635-2-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -61,80 +69,80 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7a8214e2f84e333784cf9e7ecd851ccbbb93f3ec.camel@intel.com>
+In-Reply-To: <20240419140203.1996635-2-rrichter@amd.com>
 
-On Mon, Apr 22, 2024 at 10:07:58AM -0700, Vishal Verma wrote:
-> On Wed, 2024-03-27 at 11:46 -0700, alison.schofield@intel.com wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> >
-> > Using .size in decoder selection can lead to a set_size failure with
-> > these error messages:
-> >
-> > cxl region: create_region: region8: set_size failed: Numerical result out of range
-> >
-> > [] cxl_core:alloc_hpa:555: cxl region8: HPA allocation error (-34) for size:0x0000000020000000 in CXL Window 0 [mem 0xf010000000-0xf04fffffff flags 0x200]
-> >
-> > Use max_available_extent for decoder selection instead.
-> >
-> > The test overlooked the region creation failure because it used a
-> > not 'null' comparison which always succeeds. Use the ! comparator
-> > after create-region and for the ramsize check so that the test fails
-> > or continues as expected.
-> >
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  test/cxl-destroy-region.sh | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/test/cxl-destroy-region.sh b/test/cxl-destroy-region.sh
-> > index cf0a46d6ba58..167fcc4a7ff9 100644
-> > --- a/test/cxl-destroy-region.sh
-> > +++ b/test/cxl-destroy-region.sh
-> > @@ -22,7 +22,7 @@ check_destroy_ram()
-> >       decoder=$2
-> >
-> >       region="$("$CXL" create-region -d "$decoder" -m "$mem" | jq -r ".region")"
-> > -     if [ "$region" == "null" ]; then
-> > +     if [[ ! $region ]]; then
-> >               err "$LINENO"
-> >       fi
-> >       "$CXL" enable-region "$region"
-> > @@ -38,7 +38,7 @@ check_destroy_devdax()
-> >       decoder=$2
-> >
-> >       region="$("$CXL" create-region -d "$decoder" -m "$mem" | jq -r ".region")"
-> > -     if [ "$region" == "null" ]; then
-> > +     if [[ ! $region ]]; then
+On Fri, Apr 19, 2024 at 04:01:59PM +0200, Robert Richter wrote:
+> For configurations that have the kconfig option NUMA_KEEP_MEMINFO
+> disabled, the SRAT lookup done with numa_fill_memblks() fails
+> returning NUMA_NO_MEMBLK (-1). An existing SRAT memory range cannot be
+> found for a CFMWS address range. This causes the addition of a
+> duplicate numa_memblk with a different node id and a subsequent page
+> fault and kernel crash during boot.
 > 
-> While these ! $region changes are correct (because cxl create-region)
-> doesn't output any json if creation fails)..
+> numa_fill_memblks() is implemented and used in the init section only.
+> The option NUMA_KEEP_MEMINFO is only for the case when NUMA data will
+> be used outside of init. So fix the SRAT lookup by moving
+> numa_fill_memblks() out of the NUMA_KEEP_MEMINFO block to make it
+> always available in the init section.
 > 
-> >               err "$LINENO"
-> >       fi
-> >       "$CXL" enable-region "$region"
-> > @@ -55,14 +55,14 @@ check_destroy_devdax()
-> >  readarray -t mems < <("$CXL" list -b "$CXL_TEST_BUS" -M | jq -r '.[].memdev')
-> >  for mem in "${mems[@]}"; do
-> >          ramsize="$("$CXL" list -m "$mem" | jq -r '.[].ram_size')"
-> > -        if [[ $ramsize == "null" ]]; then
-> > +        if [[ ! $ramsize ]]; then
+> Note that the issue was initially introduced with [1]. But since
+> phys_to_target_node() was originally used that returned the valid node
+> 0, an additional numa_memblk was not added. Though, the node id was
+> wrong too.
 > 
-> .. I think this check needs to check for both empty and "null" - a
-> memdev that doesn't have ram_size but otherwise emits valid json will
-> result in "null" here. e.g.:
+> [1] commit fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each
+>     CFMWS not in SRAT")
 > 
->   $ echo "" | jq -r ".region"
-> 
->   $ echo "{ }" | jq -r ".region"
->   null
-> 
-> So this probably wants to be:
-> 
->   if [[ $ramsize == "null" || ! $ram_size ]]; then
->   ...
-> 
+> Fixes: 8f1004679987 ("ACPI/NUMA: Apply SRAT proximity domain to entire CFMWS window")
+> Cc: Derick Marks <derick.w.marks@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
 
-I see now!  Thanks Vishal.
+with the assumption that this is passing 0-day builds...
 
--- Alison
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
+
+>  arch/x86/include/asm/sparsemem.h | 2 +-
+>  arch/x86/mm/numa.c               | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+> index 1be13b2dfe8b..1aaa447ef24b 100644
+> --- a/arch/x86/include/asm/sparsemem.h
+> +++ b/arch/x86/include/asm/sparsemem.h
+> @@ -37,9 +37,9 @@ extern int phys_to_target_node(phys_addr_t start);
+>  #define phys_to_target_node phys_to_target_node
+>  extern int memory_add_physaddr_to_nid(u64 start);
+>  #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+> +#endif
+>  extern int numa_fill_memblks(u64 start, u64 end);
+>  #define numa_fill_memblks numa_fill_memblks
+> -#endif
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* _ASM_X86_SPARSEMEM_H */
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 65e9a6e391c0..ce84ba86e69e 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -929,6 +929,8 @@ int memory_add_physaddr_to_nid(u64 start)
+>  }
+>  EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+>  
+> +#endif
+> +
+>  static int __init cmp_memblk(const void *a, const void *b)
+>  {
+>  	const struct numa_memblk *ma = *(const struct numa_memblk **)a;
+> @@ -1001,5 +1003,3 @@ int __init numa_fill_memblks(u64 start, u64 end)
+>  	}
+>  	return 0;
+>  }
+> -
+> -#endif
+> -- 
+> 2.39.2
+> 
