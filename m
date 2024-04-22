@@ -1,201 +1,495 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2125.outbound.protection.outlook.com [40.107.101.125])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FE41534E7
-	for <linux-cxl@vger.kernel.org>; Mon, 22 Apr 2024 15:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713800553; cv=fail; b=d3kQGe1BLqATv6zFtRwxj/wSLofR8YMbHFpXk4Nh7HaF5WRMY1K0BQG5LIFrxTg0gF1MYKiCH1wkjoPyvVXKKVVsI4YZgfTC054KSlpBqXg2eBwcNp+45l/o3uhl7KRBC9lVWf/nOUfd5au/J4y11e6jBVflOzaSIu5OF4WYsM4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713800553; c=relaxed/simple;
-	bh=zqn4YVQ6q5wtoAX2BXkqpp3sjF93ve6te9FlPuIy7JI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fiGhUpBVixIXzgEspR5/vJGdbQtsnuqp+Gdp6hb+bRJdoQPg/42VYIOAOKMJueKUL1KyMFzWESXmBZMw1IY9ui8lKVbVPzEIjM4Gew66EQxnZUzpt7d08DPRrrAbc7me4cdVHRBDr/dphk3p8TBsEJzTz2y5Vjoa/OAL4LqFXjc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=gE2Uy3BZ; arc=fail smtp.client-ip=40.107.101.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="gE2Uy3BZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dO/NQCZ8pYsYCa+Q2JBOB5Raj2gVGZ8THaEnjSAocQFeNDk9amNPeogtj77sLcI091azNMYoi9TcPqdBXmFx2rNmM6dmlYkHlEgw2kwbBRD81IGIqc0wMdKCYbOvm9Bb96d6NZ8+p0ca7dL/jjwcThZbznePFCyJh14GfLNc/EHuuYEh8IYMXBcwVGNf1PmKdvRes5yMYGEQ7Ih35DIKoXBTEah3icXK/rvqwRTan6arX+/t61OBF9t7U967l6Vocnw5jHtxB7s827TH6a/Kry2MkvKzjJ7ShjfG4tkc/3Tom6gzZ4Ii0p3NrbK8syO9dY9dXE3kt3fBf8mnrSh/sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=riC2sX5TvCgAs1jkHv8tugHYcufokv7UMZM8+qMbncc=;
- b=BbEc9WHwxL7bxuEABYfvXQ+sdeGYsl6Syj+8dxi9AJyqSeyUEu3DJ43B2fwkvxJH1xXyS+BttP0M4nq4KOraFhIMM9vfiqvx4NlMQnt04+MXnF5VWpojQaWhAb25eMLHbjCIxUC1caW/WPeUF2JX7eKdIqG0ZpRjHCAe3rL3MeU0IvC9NeZCzOtena9kWYDTUfhNeN4BgpDiIh7UC0Inm6z+0ssVUziQ6fFZOFEUMUyK9XVHCcemB/x1DS/dE6RRAhYO3+KHz8UV2UUfNjwnSstv8pgGwsEeJkn4cgfuirWTcqdowh6XHTbpb2/7J8ytzqzcE9jS3uVmGyHLKljCPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=riC2sX5TvCgAs1jkHv8tugHYcufokv7UMZM8+qMbncc=;
- b=gE2Uy3BZN069u5kCxnYaxAm86iCdjTrNDOkj2Ke2qgfpMCL3Nv703A2uMWwrhskCqr1iA0xBlx96WyjXvI+eoB8izOF0Gl3FegU1mKzrS3iRZoN0Bs3Y2M/1bfNgr0j8dXfN0Jlyv5Jg3kpMnxdX/OqmL9MBPfeDTBoiYlXdmJk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by PH7PR17MB6858.namprd17.prod.outlook.com (2603:10b6:510:24d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 22 Apr
- 2024 15:42:29 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5d53:b947:4cab:2cc8]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::5d53:b947:4cab:2cc8%4]) with mapi id 15.20.7472.044; Mon, 22 Apr 2024
- 15:42:29 +0000
-Date: Mon, 22 Apr 2024 11:42:25 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org, ira.weiny@intel.com,
-	dan.j.williams@intel.com, a.manzanares@samsung.com,
-	dave@stgolabs.net, nmtadam.samsung@gmail.com,
-	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
-	fan.ni@samsung.com
-Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
-Message-ID: <ZiaFYUB6FC9NR7W4@memverge.com>
-References: <20240418232902.583744-1-fan.ni@samsung.com>
- <ZiK25Log7LmtBffa@memverge.com>
- <ZiK7QtVxutwDys4K@debian>
- <ZiQnIkYjY3ngRLAi@memverge.com>
- <20240422130448.000057ec@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422130448.000057ec@huawei.com>
-X-ClientProxiedBy: PH0PR07CA0082.namprd07.prod.outlook.com
- (2603:10b6:510:f::27) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050371514D6
+	for <linux-cxl@vger.kernel.org>; Mon, 22 Apr 2024 15:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713801094; cv=none; b=tBnQp090ohvFJSixMYNCCEvDXgYok3F9SmPvRpKN5teYa4qG/wsClj1SfOZ7npjNeffoGoSgpPmqgz/f/Pu9gRlZx1CcYEhurYEGGa8kMBWvbgU8VIhT6/ogPLAd/ZytX51Vu+ntdEljr0hJXwWpsYA3Hw0oaYCA5p0emNiIgKE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713801094; c=relaxed/simple;
+	bh=Hr+X/e7xeMGG26NNkyIs051XvFMnjOeA6RaAzH7JOT4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T8asva20AoXxp8pS9rLN893stoerqX3Jyy+T8e4I3GvlK9v8K9pMh9HOte/guSPYSzsCSPb92KtZCiAmULLiMvpS9N3STsfYlgS1dtvCsulfX80XSCwYBn8DEyV2JJ/l4im9uWaw+dxQzfXDpGT8g4W/GiSXEOjBZRbm1hcWdjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNV95685Xz6D9BC;
+	Mon, 22 Apr 2024 23:51:21 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C4D4B140AB8;
+	Mon, 22 Apr 2024 23:51:27 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 22 Apr
+ 2024 16:51:27 +0100
+Date: Mon, 22 Apr 2024 16:51:26 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
+	<a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 -qemu] hw/cxl: Support firmware updates
+Message-ID: <20240422165126.00006567@Huawei.com>
+In-Reply-To: <20240205172942.13343-1-dave@stgolabs.net>
+References: <20240205172942.13343-1-dave@stgolabs.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|PH7PR17MB6858:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1937aa50-366f-4e93-3582-08dc62e2d13f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sDojiZU/zCU4hvqr7UHecqAgcsnAtBUenvWkvfgX1skfr9Ah2VLEqU3vsJwN?=
- =?us-ascii?Q?BQg9DA/Nk1ulE1ceTIZdR0DmL29GCFWqOtV1/7sx7Pz0e3ppxIAJeJZZoQx5?=
- =?us-ascii?Q?xSjHrl6bhQ3rFztxHC7p8xfrtvDHhmqWWqRmIPe9BkjMdpenOkfh/sEVZAup?=
- =?us-ascii?Q?/JNH7ARc1pjXO3wzr6XMTHDN1gkHwRgO6PzZnkZTmawuxxmSUHTzxGvS+q5b?=
- =?us-ascii?Q?Q1wMHkE0G3YwzXNJUvQV6TnzKztY4FUNevFZuSE0xaHC0d7BNpgH+SpyEz8t?=
- =?us-ascii?Q?nvgYZobOon2S8QqRMtGkDCy+QxTaQDUqk4Z92+XHoBhbsc2coGGuJIJDbmyW?=
- =?us-ascii?Q?1Edp6bXQpACJrjtSv7dUGopr5wwnfj9D8pfYThAg11JIpjx39ntnAhXSDMvz?=
- =?us-ascii?Q?V3eGF4uREs21tVwt4JauAIMPlMOpNIrjtaI5Cja+ZnywMGCmo+eYRevGk8y6?=
- =?us-ascii?Q?/+62PFxaeu67blUlYb8fuDY6C6ZnZHxq4ziugY4N6Ad6vvy+UaT6kC9/WC+h?=
- =?us-ascii?Q?VMXXSilxPzfvvsyZymqZ0Ez7pebPR6+zj/ddwi++dMxFQp5Ob05P00bx+FxF?=
- =?us-ascii?Q?N0DH7hLaeJkuxm6zUVo6vF+/YVBFrYndKQPmlH6ZN1NDg0CBhraNMl64phPF?=
- =?us-ascii?Q?9HQTOjjo6F66U0gXLYLoyS95+SDv5XiGS0Cn2YjMhwcQ2gtiVEWShg35vZwf?=
- =?us-ascii?Q?FLjDWSws4BourNxwSJKTCAPaUEDpknlG6oLuDnQjrb6YKHM/0SVxhbjkGHwW?=
- =?us-ascii?Q?keIQo3FvCtANDItEWYIa33BTCouVIsWSvQgGpQ0a9zczeUCC9Q5GR/lt0rJ7?=
- =?us-ascii?Q?lCfcByJ/OGM3zAwoaHelld3lOyy+qpdc0aPdbZNEmwO7LgDc7YV08iQAmh65?=
- =?us-ascii?Q?NUmct33/vlCVsIWuKgHMexIQoAU8fF5BV+l1+dyMAjFqrw/X0QE5urRTk2yr?=
- =?us-ascii?Q?dtrnXOtJJEJuGsfDgd2TZADkchSQXTDfwEjVOsdeT5MZ+YZSMizq/9/SlFx8?=
- =?us-ascii?Q?RsLzr4NKsdzHAEe6ytDaJ1u+GDt0DGoaLKgNAuyxjCK08sWCVs0JSjAjaAxQ?=
- =?us-ascii?Q?bj87tCdCeX3wF14ZJVB2a1XoK9R2yonakhDS0vQoJ2hyUHThgWVc25/ZGbI1?=
- =?us-ascii?Q?vRY8MWGkEyT+fIlIWzOWNpfIp0vun4nsHqNOnW3/nMBgnzRkFFmv7gKpUZTx?=
- =?us-ascii?Q?d4AWf0wqLG3HYEkyx092atezYQa+wsnTcLVZsnuZ7GQCbJ1fdb2OvPzii4C2?=
- =?us-ascii?Q?EigRyKEnYvIAYxFObqDq+7q5Q67uiFO5hIMTkNjz/w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KsRryjeXEywDfTBozx2vM2JWX3/f2Z32jPlW/VG7nMrJyPavuqXpAhw9lG98?=
- =?us-ascii?Q?ClS3E7zwCkeDxIjE+yI/h4FL6HxR8wkDRu729wKqizQd12I75mjY9REZdh8P?=
- =?us-ascii?Q?G+ZHkxAR7qaewjWpSzSOJe+jhf+xEUVJkikcS+fPeRZ4nfxQXBGDYnXXh09c?=
- =?us-ascii?Q?i9smjSmNcaHWjv4Jn0WhWnn0/SOA8VA+N/+YSfBWmui6kwdFzVP0c65I1VqX?=
- =?us-ascii?Q?5q2AbeJ9tE0MXv57rkJge00LitlBY5h93VieuHA08n+SZ5p2YINIt2AyjQAq?=
- =?us-ascii?Q?ZMVaVkVB38RHlgzHdXZ8Z55ivL1KpSK1jeAnOSTD4gdz47YnXCeVRFkbXem5?=
- =?us-ascii?Q?XtILQ5GbswYRaS7/VKYXJSslz7oyjxmBC1DK84QH7GlJ4UWVoYWcMZEnGZGX?=
- =?us-ascii?Q?ZJ2NbK3g90KdWoA0YJASmMVFt8BM3fU35ISMSQ7LLhrsHyUIiBAcdFixc2n0?=
- =?us-ascii?Q?RD0UJnSUPiITgKIlIcbdEAC4bMZiZE2GkkYM9al6x6K5TZ1uEcZYsmu8xsnY?=
- =?us-ascii?Q?fMoSUEjM27yxYhSFeD2JBUwAuYzhPfmaxICCV9Aw7jT1e8l3QhnjdAwbrSpN?=
- =?us-ascii?Q?1s3lEP9PKgGRZ+r5bEoq4+UduL5CXGp9S6Uj+4wdzMW7yxJUiWFHqckWyY0x?=
- =?us-ascii?Q?eVBenvwOZVMSvTK3nPIz31pLSOZA3T7UtK1uN6JTCu1NFaFRLYf5sPT/nqNR?=
- =?us-ascii?Q?cdx551WWYm/BWDV/qiFqiCt5QKxUeQuOmVrxQTskWHZANf1vmk1KPqXVVtuG?=
- =?us-ascii?Q?tdg6OfUbr/p2v1Tzhk15TPKXllKTFsDy6USSeAc316GfrcOEC67ZVknydR4T?=
- =?us-ascii?Q?/MWJRzr2nZY4SjeSFK9kKgGzoMOxdoloZVL7ZtGyEmhQ2bNDR7c7Wb1rmJsm?=
- =?us-ascii?Q?4ldTt3w/QhsIS5wxQ4FAdBZFanwOy1AiokHsHwvI8C1TL9QJrYvNCeMCjQOh?=
- =?us-ascii?Q?WcrPHnd4kLrKOeT6zWZ0GeL8lwB63+X+9ucnFj5IW7iThIKCU87xo29+lAag?=
- =?us-ascii?Q?4sUIhmrybaN04Q/ccsXCE5nj/28LFSDjxhyO1/vy+/WvmdCtdWCHRDnIvqWS?=
- =?us-ascii?Q?aN11YA4tNuAXYUEWMKCIule0w0CjjeMB+i8M2AzT656XufPwhkfX1NH2Y+S8?=
- =?us-ascii?Q?6wJxio8nWtcX+LXj+rvxkK350KCBwQ502rVfOwIrfV3TAhQigZfCDdpcJDvs?=
- =?us-ascii?Q?qLvq8AnjeWpaLqxjam4LMr20iufZErToPIoXM/6t9U7ETyFjm010D+3XZs6T?=
- =?us-ascii?Q?sMQfCkE/8+YmLlGs/rE0OpBHiOdAYeeR/p0YKL0FSMCHGZv23wezj3mtE3lq?=
- =?us-ascii?Q?X59DhEHu69FrB/QSjDm1tcKGt+hUxjNJ9hwE7L+/RQsBoH3hRNw6sB5wAM9L?=
- =?us-ascii?Q?ak3XXk+S1Mt0QZeTJ3Jdj3v2lgYMFcqqmPzLluE2iOZCgZF5HlwyTFALypDk?=
- =?us-ascii?Q?5L3CxB47yE7CpRMWCyjxoYxphpnVE/VfMAVGPmAO3wW7AKwRmyCK3GMX4wi6?=
- =?us-ascii?Q?+Vb3owqJpE3AxX4aq9Rxfxp3ROf57UgYzYTDQ+Iw4Kt3HNHEnHzMtEKnerCR?=
- =?us-ascii?Q?pxf9MCITjlXgrRC2LZhftw1u/xdWXApMIcId3+fVteLGHG3N2lk6XV2JL4Fz?=
- =?us-ascii?Q?Jg=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1937aa50-366f-4e93-3582-08dc62e2d13f
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2024 15:42:29.4403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P/B5mp/xXIBQLH6hY7ONVNOif8yN0tsXER/ZT9jwbfqV5Nq5EmlU2b2etxQkZk62CpHsNcbKMVeRhmsX7joK3stIs+dF0LiyfdP6Mvml40E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR17MB6858
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Apr 22, 2024 at 01:04:48PM +0100, Jonathan Cameron wrote:
-> On Sat, 20 Apr 2024 16:35:46 -0400
-> Gregory Price <gregory.price@memverge.com> wrote:
-> 
-> > On Fri, Apr 19, 2024 at 11:43:14AM -0700, fan wrote:
-> > > On Fri, Apr 19, 2024 at 02:24:36PM -0400, Gregory Price wrote:  
-> > > > 
-> > > > added review to all patches, will hopefully be able to add a Tested-by
-> > > > tag early next week, along with a v1 RFC for MHD bit-tracking.
-> > > > 
-> > > > We've been testing v5/v6 for a bit, so I expect as soon as we get the
-> > > > MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
-> > > > 
-> > > > The super-set release will complicate a few things but this doesn't
-> > > > look like a blocker on our end, just a change to how we track bits in a
-> > > > shared bit/bytemap.
-> > > >   
-> > > 
-> > > Hi Gregory,
-> > > Thanks for reviewing the patches so quickly. 
-> > > 
-> > > No pressure, but look forward to your MHD work. :)
-> > > 
-> > > Fan  
-> > 
-> > Starting to get into versioniong hell a bit, since the Niagara work was
-> > based off of jonathan's branch and the mhd-dcd work needs some of the
-> > extentions from that branch - while this branch is based on master.
-> > 
-> > Probably we'll need to wait for a new cxl dated branch to try and sus
-> > out the pain points before we push an RFC.  I would not want to have
-> > conflicting commits for something like this for example:
-> > 
-> > https://lore.kernel.org/qemu-devel/20230901012914.226527-2-gregory.price@memverge.com/
-> > 
-> > We get merge conflicts here because this is behind that patch. So
-> > pushing up an RFC in this state would be mostly useless to everyone
-> 
-> Subtle hint noted ;) 
->
+On Mon,  5 Feb 2024 09:29:42 -0800
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-Gentle nudge/poke/prod :P
+> Implement transfer and activate functionality per 3.1 spec for
+> supporting update metadata (no actual buffers). Transfer times
+> are arbitrarily set to ten and two seconds for full and part
+> transfers, respectively.
+>=20
+> Testing for both a successful part fw package transfer success
+> and abort/cancel cases:
+>=20
+> // on-going partial xfer
+> {
+>   "firmware":{
+>     "num_slots":2,
+>     "active_slot":1,
+>     "staged_slot":1,
+>     "online_activate_capable":true,
+>     "slot_1_version":"BWFW VERSION 0",
+>     "fw_update_in_progress":true,
+>     "remaining_size":1280
+>   }
+> }
+>=20
+> // xfer complete
+> {
+>   "firmware":{
+>     "num_slots":2,
+>     "active_slot":1,
+>     "staged_slot":2,
+>     "online_activate_capable":true,
+>     "slot_1_version":"BWFW VERSION 0",
+>     "slot_2_version":"BWFW VERSION 1",
+>     "fw_update_in_progress":false
+>   }
+> }
+>=20
+> // on-going (new) partial xfer
+> {
+>   "firmware":{
+>     "num_slots":2,
+>     "active_slot":1,
+>     "staged_slot":1,
+>     "online_activate_capable":true,
+>     "slot_1_version":"BWFW VERSION 0",
+>     "fw_update_in_progress":false
+>   }
+> }
+>=20
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Hi Davidlohr,
 
-Got your updates, thank you!  We should have something cleaned up today hopefully.
+I was going to just pick this up and make the tweaks Fan suggested,
+but there are more issues vs the spec that I think should be resolved
+first.  If you are busy shout and I'll just make the changes and send
+a v3.
 
-> I'll build a fresh tree - any remaining rebases until QEMU 9.0 should be
-> straight forward anyway.   My ideal is that the NUMA GP series lands early
-> in 9.1 cycle and this can go in parallel.  I'd really like to
-> get this in early if possible so we can start clearing some of the other
-> stuff that ended up built on top of it!
-> 
-> Jonathan
-> 
-> > 
-> > ~Gregory
-> 
+Thanks,
+
+Jonathan
+
+> ---
+> Changes from v1:
+>  - robustify part transfer checking (Jonathan)
+>  - implement abort
+>  - increase runtime for full transfer
+>  - no longer prematurely mark the slot
+>  - fold both cmds into a single patch
+>=20
+>  hw/cxl/cxl-mailbox-utils.c  | 217 +++++++++++++++++++++++++++++++++++-
+>  include/hw/cxl/cxl_device.h |  16 +++
+>  2 files changed, 228 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 80a80f1ec29b..74054855b1fa 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -60,6 +60,8 @@ enum {
+>          #define SET_INTERRUPT_POLICY   0x3
+>      FIRMWARE_UPDATE =3D 0x02,
+>          #define GET_INFO      0x0
+> +        #define TRANSFER      0x1
+> +        #define ACTIVATE      0x2
+>      TIMESTAMP   =3D 0x03,
+>          #define GET           0x0
+>          #define SET           0x1
+> @@ -815,6 +817,9 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct=
+ cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+> =20
+> +#define CXL_FW_SLOTS 2
+> +#define CXL_FW_SIZE  0x02000000 /* 32 mb */
+> +
+>  /* CXL r3.1 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
+>  static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+>                                                 uint8_t *payload_in,
+> @@ -846,15 +851,204 @@ static CXLRetCode cmd_firmware_update_get_info(con=
+st struct cxl_cmd *cmd,
+>      fw_info =3D (void *)payload_out;
+>      memset(fw_info, 0, sizeof(*fw_info));
+> =20
+> -    fw_info->slots_supported =3D 2;
+> -    fw_info->slot_info =3D BIT(0) | BIT(3);
+> -    fw_info->caps =3D 0;
+> -    pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0"=
+);
+> +    fw_info->slots_supported =3D CXL_FW_SLOTS;
+> +    fw_info->slot_info =3D (cci->fw.active_slot & 0x7) |
+> +            ((cci->fw.staged_slot & 0x7) << 3);
+> +    fw_info->caps =3D BIT(0);
+
+I'd add a comment on this one for what it is. "Online update supported"
+Given this is trivial I amend the patch on my tree.
+
+> +
+> +    if (cci->fw.slot[0]) {
+> +        pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSIO=
+N 0");
+Hmm. Maybe we should fake something up in the way of an ID that changes as =
+fw's are
+uploaded.  Maybe as simple as not initiating slot[1] until a firmware has b=
+ee
+uploaded.  I just want to see this change with an upload.
+> +    }
+> +    if (cci->fw.slot[1]) {
+> +        pstrcpy(fw_info->fw_rev2, sizeof(fw_info->fw_rev2), "BWFW VERSIO=
+N 1");
+> +    }
+> =20
+>      *len_out =3D sizeof(*fw_info);
+>      return CXL_MBOX_SUCCESS;
+>  }
+> =20
+> +/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
+> +#define CXL_FW_XFER_ALIGNMENT   128
+> +
+> +#define CXL_FW_XFER_ACTION_FULL	    0x0
+> +#define CXL_FW_XFER_ACTION_INIT	    0x1
+> +#define CXL_FW_XFER_ACTION_CONTINUE 0x2
+> +#define CXL_FW_XFER_ACTION_END	    0x3
+> +#define CXL_FW_XFER_ACTION_ABORT    0x4
+> +
+> +static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint8_t action;
+> +        uint8_t slot;
+> +        uint8_t caps;
+
+Dropped caps as per Fan's comment.
+
+> +        uint8_t rsvd1[2];
+> +        uint32_t offset;
+> +        uint8_t rsvd2[0x78];
+> +        uint8_t data[];
+> +    } QEMU_PACKED *fw_transfer =3D (void *)payload_in;
+> +    size_t offset, length;
+> +
+> +    if (fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_ABORT) {
+> +        /*
+> +         * At this point there aren't any on-going transfers
+> +         * running in the bg - this is serialized before this
+> +         * call altogether. Just mark the state machine and
+> +         * disregard any other input.
+> +         */
+> +        cci->fw.transferring =3D false;
+> +        return CXL_MBOX_SUCCESS;
+> +    }
+> +
+> +    offset =3D fw_transfer->offset * CXL_FW_XFER_ALIGNMENT;
+> +    length =3D len - sizeof(*fw_transfer);
+> +    if (offset + length > CXL_FW_SIZE) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    if (cci->fw.transferring) {
+> +        if (fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_FULL ||
+> +            fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_INIT) {
+> +            return CXL_MBOX_FW_XFER_IN_PROGRESS;
+> +        }
+> +        /*
+> +         * Abort partitioned package transfer if over 30 secs
+> +         * between parts. As opposed to the explicit ABORT action,
+> +         * semantically treat this condition as an error - as
+> +         * if a part action were passed without a previous INIT.
+> +         */
+> +        if (difftime(time(NULL), cci->fw.last_partxfer) > 30.0) {
+> +            cci->fw.transferring =3D false;
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +    } else if (fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_CONTINUE ||
+> +               fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_END) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    /* allow back-to-back retransmission */
+> +    if ((offset !=3D cci->fw.prev_offset || length !=3D cci->fw.prev_len=
+) &&
+> +        (fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_CONTINUE ||
+> +         fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_END)) {
+> +        /*
+> +         * XXX: Linux is happy to send overlapping chunks,
+> +         * so just verify no gaps.
+> +         */
+
+Does the CXL spec allow overlapping?  I see text about parts being
+in order (with an exception for back to band transfer). So I think
+we need to reject any overlap and make sure Linux doesn't do it!
+
+
+The 3rd example in the imp note implies that overlap definitely isn't
+allowed.
+
+> +        if (offset > cci->fw.prev_offset + cci->fw.prev_len) {
+> +            return CXL_MBOX_FW_XFER_OUT_OF_ORDER;
+> +        }
+> +    }
+> +
+> +    switch (fw_transfer->action) {
+> +    case CXL_FW_XFER_ACTION_FULL: /* ignores offset */
+> +    case CXL_FW_XFER_ACTION_END:
+> +        if (fw_transfer->slot =3D=3D 0 ||
+> +            fw_transfer->slot =3D=3D cci->fw.active_slot ||
+> +            fw_transfer->slot > CXL_FW_SLOTS) {
+> +            return CXL_MBOX_FW_INVALID_SLOT;
+> +        }
+> +
+> +        /* mark the slot used upon bg completion */
+> +        break;
+> +    case CXL_FW_XFER_ACTION_INIT:
+> +        if (offset !=3D 0) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +
+> +        cci->fw.transferring =3D true;
+> +        cci->fw.prev_slot =3D fw_transfer->slot;
+
+Why?  This is only valid for Full and End.
+
+> +        cci->fw.prev_offset =3D offset;
+> +        cci->fw.prev_len =3D length;
+> +        break;
+> +    case CXL_FW_XFER_ACTION_CONTINUE:
+> +        /* forbid slot interleaving */
+
+=46rom 3.1 spec the slot is only specified in the final transfer.
+
+> +        if (cci->fw.prev_slot !=3D fw_transfer->slot) {
+> +            return CXL_MBOX_FW_XFER_IN_PROGRESS;
+> +        }
+> +
+> +        cci->fw.prev_offset =3D offset;
+> +        cci->fw.prev_len =3D length;
+> +        break;
+> +    default:
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    if (fw_transfer->action =3D=3D CXL_FW_XFER_ACTION_FULL) {
+> +        cci->bg.runtime =3D 10 * 1000UL;
+> +    } else {
+> +        cci->bg.runtime =3D 2 * 1000UL;
+> +    }
+> +    /* keep relevant context for bg completion */
+> +    cci->fw.curr_action =3D fw_transfer->action;
+> +    cci->fw.curr_slot =3D fw_transfer->slot;
+> +    *len_out =3D 0;
+> +
+> +    return CXL_MBOX_BG_STARTED;
+> +}
+> +
+> +static void __do_firmware_xfer(CXLCCI *cci)
+> +{
+> +    switch (cci->fw.curr_action) {
+> +    case CXL_FW_XFER_ACTION_FULL:
+> +    case CXL_FW_XFER_ACTION_END:
+> +        cci->fw.slot[cci->fw.curr_slot - 1] =3D true;
+> +        cci->fw.transferring =3D false;
+> +        break;
+
+return early would be my preference.
+
+> +    case CXL_FW_XFER_ACTION_INIT:
+> +    case CXL_FW_XFER_ACTION_CONTINUE:
+> +        time(&cci->fw.last_partxfer);
+> +        break;
+> +    default:
+> +        break;
+> +    }
+> +}
+> +
+> +/* CXL r3.1 section 8.2.9.3.3: Activate FW (Opcode 0202h) */
+> +static CXLRetCode cmd_firmware_update_activate(const struct cxl_cmd *cmd,
+> +                                               uint8_t *payload_in,
+> +                                               size_t len,
+> +                                               uint8_t *payload_out,
+> +                                               size_t *len_out,
+> +                                               CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint8_t action;
+> +        uint8_t slot;
+> +    } QEMU_PACKED *fw_activate =3D (void *)payload_in;
+> +
+> +    if (fw_activate->slot =3D=3D 0 ||
+> +        fw_activate->slot =3D=3D cci->fw.active_slot ||
+
+Whilst I don't see spec text on this case, I can't see a request
+for clarification resulting in an errata for this given it's
+nonsense to do it so software shouldn't care if this is an error
+return or a noop 'sure I'll set the firmware to the firmware I'm
+running - it'll be really quick!'.
+
+> +        fw_activate->slot > CXL_FW_SLOTS) {
+> +        return CXL_MBOX_FW_INVALID_SLOT;
+> +    }
+> +
+> +    /*
+> +     * XXX: Check that an actual fw package is there - spec
+> +     * does not mention this case.
+Obviously and error, so I guess you mean which one?
+Between this an Invalid Input.=20
+
+Given it's an error case software shouldn't hit anyway another
+one where an errata is unlikely.  Maybe worth asking the question
+however..
+
+> +     */
+> +    if (!cci->fw.slot[fw_activate->slot - 1]) {
+> +        return CXL_MBOX_FW_INVALID_SLOT;
+> +    }
+> +
+> +    switch (fw_activate->action) {
+> +    case 0: /* online */
+> +        cci->fw.active_slot =3D fw_activate->slot;
+> +        break;
+> +    case 1: /* reset */
+> +        cci->fw.staged_slot =3D fw_activate->slot;
+> +        break;
+> +    default:
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* CXL r3.1 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
+>  static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
+>                                      uint8_t *payload_in,
+> @@ -2160,6 +2354,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] =
+=3D {
+>                                        ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHAN=
+GE },
+>      [FIRMWARE_UPDATE][GET_INFO] =3D { "FIRMWARE_UPDATE_GET_INFO",
+>          cmd_firmware_update_get_info, 0, 0 },
+> +    [FIRMWARE_UPDATE][TRANSFER] =3D { "FIRMWARE_UPDATE_TRANSFER",
+> +        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION =
+},
+> +    [FIRMWARE_UPDATE][ACTIVATE] =3D { "FIRMWARE_UPDATE_ACTIVATE",
+> +        cmd_firmware_update_activate, 2, CXL_MBOX_BACKGROUND_OPERATION },
+>      [TIMESTAMP][GET] =3D { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+>      [TIMESTAMP][SET] =3D { "TIMESTAMP_SET", cmd_timestamp_set,
+>                           8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+> @@ -2275,7 +2473,9 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t se=
+t, uint8_t cmd,
+>              h =3D=3D cmd_media_get_poison_list ||
+>              h =3D=3D cmd_media_inject_poison ||
+>              h =3D=3D cmd_media_clear_poison ||
+> -            h =3D=3D cmd_sanitize_overwrite) {
+> +            h =3D=3D cmd_sanitize_overwrite ||
+> +            h =3D=3D cmd_firmware_update_transfer ||
+> +            h =3D=3D cmd_firmware_update_activate) {
+
+This clashed with an updated fix in my tree to avoid accessing
+fields that don't exist on non type 3 CCIs (Switch-cci etC).
+
+The overall check is currently using state in the type3 device
+structure.  Ultimately we should make this work for switches
+as well but that can be a job for another day.
+
+>              return CXL_MBOX_MEDIA_DISABLED;
+>          }
+>      }
+> @@ -2319,6 +2519,9 @@ static void bg_timercb(void *opaque)
+>          cci->bg.complete_pct =3D 100;
+>          cci->bg.ret_code =3D ret;
+>          switch (cci->bg.opcode) {
+> +        case 0x0201: /* fw transfer */
+> +            __do_firmware_xfer(cci);
+> +            break;
+>          case 0x4400: /* sanitize */
+>          {
+>              CXLType3Dev *ct3d =3D CXL_TYPE3(cci->d);
+> @@ -2390,6 +2593,10 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+>      cci->bg.runtime =3D 0;
+>      cci->bg.timer =3D timer_new_ms(QEMU_CLOCK_VIRTUAL,
+>                                   bg_timercb, cci);
+> +
+> +    memset(&cci->fw, 0, sizeof(cci->fw));
+> +    cci->fw.active_slot =3D cci->fw.staged_slot =3D 1;
+
+Why not set staged_slot to 0 on init?
+
+"If 0, no FW is currently staged for activation."
+
+> +    cci->fw.slot[cci->fw.active_slot - 1] =3D true;
+>  }
+> =20
+>  static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cx=
+l_cmds)[256])
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index d38391b26f0e..8c17ba9d2131 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -203,7 +203,22 @@ typedef struct CXLCCI {
+>          uint64_t runtime;
+>          QEMUTimer *timer;
+>      } bg;
+> +
+> +    /* firmware update */
+> +    struct {
+> +        uint8_t active_slot;
+> +        uint8_t staged_slot;
+> +        bool slot[4];
+> +        uint8_t curr_action;
+> +        uint8_t curr_slot;
+> +        /* handle partial transfers */
+> +        bool transferring;
+> +        uint8_t prev_slot;
+> +        size_t prev_offset;
+> +        size_t prev_len;
+> +        time_t last_partxfer;
+> +    } fw;
+> +
+>      size_t payload_max;
+>      /* Pointer to device hosting the CCI */
+>      DeviceState *d;
+> --
+> 2.43.0
+>=20
+
