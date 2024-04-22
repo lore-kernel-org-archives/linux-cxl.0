@@ -1,627 +1,212 @@
-Received: from mail-m3293.qiye.163.com (mail-m3293.qiye.163.com [220.197.32.93])
+Received: from esa15.fujitsucc.c3s2.iphmx.com (esa15.fujitsucc.c3s2.iphmx.com [68.232.156.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57954AED7;
-	Mon, 22 Apr 2024 07:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.93
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770598; cv=none; b=WehqKQnFHMJtSx+P8HtJteq8St4veJtLe80KQQ9bDKlezVlqHcDUZKQrauWoeiuYNQX4O0eFPZWtMK7Havm5jj/7qNWN6tKvwquaAdJqZEAxkkguCje6Wh3/OdSySMirO8DitFvyGQaP1eEygVJVdEqbTqLKVoLAxuRT0iLRs6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770598; c=relaxed/simple;
-	bh=djS/nygYkmJtxtQpLRF9CbU5mFHSWtrgRIwrAi/fqVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N5G+U+W47Gv2Rvw4BJnfqUd9G2CYeg0vlCeHFpQL9xcPHaNQigE0ElKwvoPa28+9Kk/HfzOubruqdT8YAu5BbzKQfT7FyYGkmYHgapOkB+r7IclBoLl837CxzRZI6h05BnPJ2xMSoRP9h43YyE93vWE+0EsBn8BMACkw2JASmXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from ubuntu-22-04.. (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id CD5BD860261;
-	Mon, 22 Apr 2024 15:16:13 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-To: dan.j.williams@intel.com,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-Subject: [PATCH 5/7] cbd: introuce cbd_backend
-Date: Mon, 22 Apr 2024 07:16:04 +0000
-Message-Id: <20240422071606.52637-6-dongsheng.yang@easystack.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA7C4DA09
+	for <linux-cxl@vger.kernel.org>; Mon, 22 Apr 2024 07:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713770873; cv=fail; b=J673CV7sn9hjbnWaT/70PfwUkdsXjOsNLWMpteKlkX7gVNO3a2nmaEbUbgnYHStVsXsdu+tXdeSk15cHX3rxPs6BFPwycHu48DE6loEmuOYwyFPKEhI6HPS7WastKP41tIoLzQxDIMG0vGGKUoVb7A67qQs0EklXExwtEIluPeo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713770873; c=relaxed/simple;
+	bh=Kk1XT8aqgU+VWpNdt+iBkvpSnBqwAsiSFH5Q5Bfik08=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=p0SKWXrEsn0RHpcJBOaAUe20jcWrW31bIqFfs4ChLdu2TmapC/RFzdh6E9DBjGXM0UA9uILBLYVyLv5WMBua2DET/JnEtrfizyeDOhpxZE0Cstm7eOT+DJ+OXpRPtFVRuQr4F2pShc8pqovmJdpeDnfK2z4rnCGBFf14Be/FCUg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=o2VfFFOR; arc=fail smtp.client-ip=68.232.156.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="o2VfFFOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1713770870; x=1745306870;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Kk1XT8aqgU+VWpNdt+iBkvpSnBqwAsiSFH5Q5Bfik08=;
+  b=o2VfFFORlUfebvI4b65GOBlVmqoSpWTUm9O6E2pRB2QOybbAGZs/p5Yt
+   yXuBjW+77xuI9qo5EC9soahlgmvjc52noWWcaauzzSOgyzeVxE0AJsVxS
+   jSLBBaHfjemXPSjjEx5LYBHUh1SoE3vh07WZya+n+pP4Twwz5ZvDsJdDd
+   ykbZoUlIC9O5hpCtjdoIlwlSqHUkvHciAiAckF8i5dMPjb7g06+mAJbgK
+   Tbe+GLdP9+Q+UZlLd8NpDAyh1qpH7Rk3a5T+DhtEfQQfhX3DoVbuP0Sqh
+   l96UKens/0f73Pvq6oZohQ/XYodwBcBr8GHhRxTZzHXHtAXxYgJ9+bX6a
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="117755050"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708354800"; 
+   d="scan'208";a="117755050"
+Received: from mail-os0jpn01lp2105.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.105])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 16:26:37 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JZ6waWpPHQO9V7rmcZYLtxLU/TPfmpCT03h249lw3PRu/IRFfJ6grTS1bESCScRvh6Q4LkN5otD0tcpmovqwwKGx9o5GFrLRd8Hmn/fWWEpzImeIvPHaryVC8kD9r3O4Dnh1IbAOqV0j1FV9lt0uNisC58tLjgVj5WHbx+3he657IE72XfxL/fxd4YtPm0N8EnsFzcL/qnu5vl8WCr6WQd8UZNwapjul81q/0SyE9uxbJ6cTvk8BzuLcYUsVkVwh8auVKQcmx+M1EB37ezzow0JSyvAHzGxiYaqa9HJgHZYVQkW4WajVKh/UVBvM77bw6AURkmOvlgJ0l18rw/sNCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kk1XT8aqgU+VWpNdt+iBkvpSnBqwAsiSFH5Q5Bfik08=;
+ b=XxzYv3N/ipe04EgOK+w0kobli/VZrdJsBzY+GWlEfOuBgHUL+0jY5LofcK2a4OgnCXJgtJYPwX9yGUEN26ikjXOjEUc+urBrB0IvUjEC2hu4KMqPnrygOdOJiEi3VzJGUmuZEDLdvEG/v94ILYjOhXkg/gcyLTjec/Q7xOt8CqdQx5nkrfeGJbZSwLB5ChqDMHr4ngXzmwRS5oaZUB/yndeu46DmDsgl3qFe4mmjwgRvYKRfyVuJ+iEQFpO/rigcN5TeSl0IMSnrVDmkBAwd/ACC7L6TbEmUE7iCmDkI/jeGHdQt+TO9g4/JjD6s+XWvWVAzUEh71a2za13v+/sGOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSZPR01MB6453.jpnprd01.prod.outlook.com (2603:1096:604:ed::14)
+ by TYWPR01MB10176.jpnprd01.prod.outlook.com (2603:1096:400:1e4::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 22 Apr
+ 2024 07:26:33 +0000
+Received: from OSZPR01MB6453.jpnprd01.prod.outlook.com
+ ([fe80::3a1c:a3fe:854f:2e1d]) by OSZPR01MB6453.jpnprd01.prod.outlook.com
+ ([fe80::3a1c:a3fe:854f:2e1d%6]) with mapi id 15.20.7472.044; Mon, 22 Apr 2024
+ 07:26:33 +0000
+From: "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>, "Jiang, Dave"
+	<dave.jiang@intel.com>
+CC: "Quanquan Cao (Fujitsu)" <caoqq@fujitsu.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+Subject: RE: Re:
+Thread-Topic: Re:
+Thread-Index: AQHakJMvZ/aqtwC1WEuOwT17T+SVjbFsxOqAgAclPEA=
+Date: Mon, 22 Apr 2024 07:26:33 +0000
+Message-ID:
+ <OSZPR01MB64532C45DD4536C337A3918F8D122@OSZPR01MB6453.jpnprd01.prod.outlook.com>
+References: <170138109724.2882696.123294980050048623.stgit@djiang5-mobl3>
+	 <20240417064622.42596-1-yaoxt.fnst@fujitsu.com>
+ <9b00e36292b7aa19f68bda6912b04207f43c8dc5.camel@intel.com>
+In-Reply-To: <9b00e36292b7aa19f68bda6912b04207f43c8dc5.camel@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ =?utf-8?B?TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5Njgw?=
+ =?utf-8?B?MmZfQWN0aW9uSWQ9MjY5NTQyNzctM2UwMC00YTYzLWIxMzEtOWE1NTYxMjY2?=
+ =?utf-8?B?MGFiO01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMz?=
+ =?utf-8?B?OTY4MDJmX0NvbnRlbnRCaXRzPTA7TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQx?=
+ =?utf-8?B?LTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfRW5hYmxlZD10cnVlO01TSVBfTGFi?=
+ =?utf-8?B?ZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMzOTY4MDJmX01ldGhv?=
+ =?utf-8?B?ZD1Qcml2aWxlZ2VkO01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFk?=
+ =?utf-8?B?NTUtNDZkZTMzOTY4MDJmX05hbWU9RlVKSVRTVS1QVUJMSUPigIs7TVNJUF9M?=
+ =?utf-8?B?YWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfU2V0?=
+ =?utf-8?B?RGF0ZT0yMDI0LTA0LTIyVDA3OjIxOjE4WjtNU0lQX0xhYmVsXzFlOTJlZjcz?=
+ =?utf-8?B?LTBhZDEtNDBjNS1hZDU1LTQ2ZGUzMzk2ODAyZl9TaXRlSWQ9YTE5ZjEyMWQt?=
+ =?utf-8?Q?81e1-4858-a9d8-736e267fd4c7;?=
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSZPR01MB6453:EE_|TYWPR01MB10176:EE_
+x-ms-office365-filtering-correlation-id: a3988482-45b6-4e79-2564-08dc629d8994
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?Wm4xWXA3SEg3RWF0SkF6cjNuSXVMUlpCL2hKeVVaOVZHN2tvcWxGbEV6MHlX?=
+ =?utf-8?B?Rys1cFZkZ01FdjlFWVdPZSsrMjFXdkhpTmlUQkVyWDdFb2dNU1p6TklXNnpD?=
+ =?utf-8?B?WmdwbWNMak5jaEJCQ1o4OEgyWGxUNUxtVU5VdWRrRURPY2htcE1qbjNlSzlN?=
+ =?utf-8?B?SjhERjU0SmpaY0F6Z3JVcnNlbVZpYU5rS05lT05ybXptaHNIbXFMVUtIWC9Y?=
+ =?utf-8?B?OGt4LzlMUFNuMnd4bzVwWlpuMTJFMnhQWVdxalFoYzMxNWorZUFaU0QzbjY3?=
+ =?utf-8?B?Q1ZTUnEwUHFib2l0Y2FEZEl6Zm45NTltM3lKK3RWSVNnZ01ZemRKNlRhclgx?=
+ =?utf-8?B?V0dtc0ZNN2YxVFdhdUpaU1ZqejhicE50MXRySUZXcjc0U1JTLy9zUFFybUJH?=
+ =?utf-8?B?aXdkVTJ4blJHTW9uRUttYnBjdGVxWk9JKzA1Z1NHd2dwZGUrVW54UFN6UVk2?=
+ =?utf-8?B?aGtmZzFzUWtxYXhZU21zWXBCTlQySHhGc0x5K1J6S1RLOXJscTJ4SU1tclNz?=
+ =?utf-8?B?dC9ZcmtJcnpKTzFXU3kvZVloSm9uQjRyeHVOS2s0Q3BjSzNtTkxpSEVkUGhh?=
+ =?utf-8?B?SVp6RkRJWUJLWU4rd3BxVGFpZzEyTHp6MWxCZWhCSVJWamJDd2MxVE9BeERy?=
+ =?utf-8?B?WVpaeVZqY3d1QWFVYzl5R3Jiemd6N1lKYWw5OUFOakluS21ZdXRpMDhCSlgr?=
+ =?utf-8?B?aVJjcVJ3RW9iYnpJVE5PZ21rOE0xc3FUTnBDSmY0NjN3bnpMa0EzZERuVUcr?=
+ =?utf-8?B?UW56dlAzRmlLdEdzcG9XSmZNNm5KL01Oc2cwaC9Tam9ZK0gyUkJpdzRrUmd3?=
+ =?utf-8?B?aktFTlJXL3dkTVF2dDRtT085Z1lWV2hKTHh2NFg2L2lJL0ltNFJXeXYyNkFu?=
+ =?utf-8?B?Y25vTVk1UGg4V3NWeUZ6VDIxRkFvcmZwKy9DWkhBZnpuVVdlQm82c1krSXJJ?=
+ =?utf-8?B?b24rL3diaHMzczdoM1NGREw3dy9WZHlIS0QyTXpuM1JhNEE4Y1JuYU9jNGpC?=
+ =?utf-8?B?aGpCTmd6bkh6cmhlMzlScElGdDJpN0tjNnJQZnVFWEo1MlAxRHdFb29xMkY5?=
+ =?utf-8?B?Z0ZyTG1qZEJ1d09BSmR2UGJtUzg2b0JxOW14c0dtYWozK3J4R1lvdEJjWmQ1?=
+ =?utf-8?B?ZkVmc0xHZVVpL0JzUTNFdGU5Vk5VNkZ2c3Bxc0FNTXh2RDdOc1B3V0UzU296?=
+ =?utf-8?B?a1ZsVGhxcjVRaUNNTlhmNC9ib3FVTmpRL2wzc0JBNm0yVXZmWmVwU1pUcnBJ?=
+ =?utf-8?B?OHF0Zy91UnFBNXNicWcwbDZiYjRYdS9kQWJrZC9oeU1XZDQ3TU83R0JYc0dW?=
+ =?utf-8?B?VDlJQ2pkYklscTc4SGltTTlCZmhEVGVJNUVGckZVdXlGNVhJM3p1ZVNGV2cw?=
+ =?utf-8?B?T3p3WnFDcHJucTZ6ZVJLUXhXRENCY1FsQTN6Vnh2UWtOR1VuQUxIb05kcEpJ?=
+ =?utf-8?B?UnVQMkYrTElNRW5vMHdzWHVDeFlHRHkvZGJHVE8wR2ROY1l2eTV1L1RkdDEz?=
+ =?utf-8?B?ZG9BWTdvSm11SFVjaHhLUU9QVjJDaEd3M2V3MG5Qb2tMYnFENlFhZUcyQXJm?=
+ =?utf-8?B?b3ZzZ1FpZ2NubVdCcjlQT3JYUUJYamQ5LzI4WVhrREp5Si9lUCsyTkJYc3J3?=
+ =?utf-8?B?dGJKeFcwTDR2cTFoYzdja1YwOFdaWVcrWDhLYWhDSDdEUGYxZXJVSzU3V041?=
+ =?utf-8?B?cHYrTjVsekdwdms4cmdXMWlnYVJBb0x1T3l0WDAvcytzYUY2bGgzQzQ5bFdC?=
+ =?utf-8?B?WDlSdFJ4Y1RlZ0g3TjRPMUdUT2ovdnRxNGIrNWRMa0JXQXE3MjlYcXk4SHFn?=
+ =?utf-8?B?VXJ1L3dFRmlTWDRGK29jMmtaVFAwT1lPd0huZmg0SUpOUnBsbTNDSkxEa3Nq?=
+ =?utf-8?Q?mJNR3nhQNfO9V?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB6453.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009)(1580799018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aWRWU0g4N0VNclVGcFI5NVJZK0tJZHUralNaNzlZb2wvSGU3ODhkWkpFLzkv?=
+ =?utf-8?B?TnJOUkt2WnFJaERSbU5XeE1URFhNYjMvTkIyMlpqSEF5bG1Vb1kwckJPS0FZ?=
+ =?utf-8?B?dWNqYWFRTm41RDhyRVFoMFB1WWlpSCtBbW92dmVqMy9VWDR2RSszMTVteXZQ?=
+ =?utf-8?B?RmwyTldZK1JXZjNXNEdhWVhnK01IWlg3YTZEY1FaYWdSc3hBT0JyeDh3L2FF?=
+ =?utf-8?B?TDh3UnF6WVdKM1RRUmFPVDNTS0ltT2pOZ1hwQTFWMUM0NjUrTXp4My9DL3FU?=
+ =?utf-8?B?SVZ5Y1NwZEZNWXdBeWFnOEhmbzRhTEVPNTcrbGxjNWQ2bzJ2QUp3MjBGR1ZI?=
+ =?utf-8?B?djJoK3hQQ3BpMWwrSHJFUGVKV0JQbTZXaDdYWUpXTzhGZmFxZGthZ2dXdVlU?=
+ =?utf-8?B?Mi9zMy85dVRNK05MVitmU3NaKzBrbkU5dDM0KzAreERXNzlVdklKS25Pa1N5?=
+ =?utf-8?B?amlvWUE3cFJNWmtaeWlSeDBsdUk0M3ZnOXFLZzVzVzNyRW1GV0dONlZ3Sm00?=
+ =?utf-8?B?cFFheDJIM2JnUndIeFRhZ1FTNzl4QTV5UFdXdC91d1BSK293ek5uZVZWbXVE?=
+ =?utf-8?B?VDgrNGN6VzNHNm5YS0cxQnZoNmtLRU9XY3Z6ZXBSZ1VmQzZvbmlXakoyVjVS?=
+ =?utf-8?B?eFprMGJZMmowOHY0Y0U2TmNCV094QWI3eDB1WG5YVnhsSE14ZzdxSTNnaTNW?=
+ =?utf-8?B?Q2szVDR4MEtyd2pOaEVxc29sbkxaZGQyaS81bnZWK0twMGtKelVtR2trWENq?=
+ =?utf-8?B?Qmpkd3hhWDdYaHV2QkJrNDI5MWloSVg2R002UDFNWjdGdEU1NlFqMWlBWjRm?=
+ =?utf-8?B?RVVJWm95eDZnSngrVXlidHYrSTRCY2ZqUmVaYlFWMVpYRnRyOGRWMjh2djc4?=
+ =?utf-8?B?WkZ5TzJQOW9VQnVzak85Wk5iQjkvN3pmM3JDTWoxcE5UZDNMN29yV1lvK1JQ?=
+ =?utf-8?B?cjZlWG5OMTRLWmxhSTBMcStCTVhNa015U2JrSmI1aDdsVWduT2dJcnJ5M2w4?=
+ =?utf-8?B?MzQ2cUs2a0w4STVKa2ZISHNNamYwWURpNmdwdmhSS3JiQlZjTUtUMjlWZmgv?=
+ =?utf-8?B?dDRJY0N6TnRseHFHSERKUjJROFlic1BSRk1RNDV6cHdEMlpWRXRJOHRLT05T?=
+ =?utf-8?B?YXNBZG51K0VTMG1lTDJmcklEclRQMGNKYUZwMjZtc2RoVTV5SHRPUmdSMVZS?=
+ =?utf-8?B?Z3lRelRSTmF1Q2s3ZXhzZTB4MFR6azZmaHBIWHZPaFM2YjlaQXArM29keVk3?=
+ =?utf-8?B?SXBtQ0RSVS90bndmcEtHSW9vWm5xaUJYVUVPYWovcHV3Y1NocEtLU205ellt?=
+ =?utf-8?B?d0lnUjBYdkRaYnVZU25iZjJOMldzaHloRW5pV2JCMCtQdk9QcUx4TzFJdXpK?=
+ =?utf-8?B?MVREQS96ODluanZlVFlka3hycHc0N1MyaGhLRVBQODNjZGdxRjZWVHptS0dW?=
+ =?utf-8?B?K21Vd00vRVR0UzNCSlJFdDYxbGk4V201eW9xc1FGdkd6ODl1NUlaMkszUnlL?=
+ =?utf-8?B?N0hVY29FL1FYRFNZWUVZT3hVeG83V1doTmx4a01rV3EwN3ZMQjJ1UzVDSkU0?=
+ =?utf-8?B?Q3I1S2ZzV2NubVNab2dHczd3bGZsTGMrT29Wd1E0dlhyMjhRdUhBTFBRcHZh?=
+ =?utf-8?B?S1YrejFMaUpacDBTOXdEQUtzakg0U0JwOW5lOUo2QWNNd3FObzF5dlNhMjNz?=
+ =?utf-8?B?VDVhOTZXMmlwMmRtWWdrOTd5dzAva09nMUV2VW1FQ3A3RHFadGxzeVp6U00y?=
+ =?utf-8?B?aXVkdVY4RkQyYmpJcmdGbUNwb1JiZUZUU3ZqV1V0bC9BTDNKbWV1UUtvSnBr?=
+ =?utf-8?B?UUJFdzYvemY0MUNDZUdlRVJLbFpyL1JzQ21tWXBicGVieDVlNzJvcmZDWTZZ?=
+ =?utf-8?B?bW9JL2R4UXZUYW5ISGZ3aG1VSm1zaCsyeFhuUGh6eU9mSlVxRmk5ZVBkZjRz?=
+ =?utf-8?B?ZGN5SUt3ZFNBZGdQMWVLOEFpZUpKV3Nza1p1djRJdURMY0NuVVc0alpibjZa?=
+ =?utf-8?B?Vkk5T3RqeXNYdGxMNjd0YlFtRkd5NXQ4cnhKRnA4OS9JY2VjUEFiY3NJampw?=
+ =?utf-8?B?MG81eCttZGhEZ3RmOFNJMWxCQThqdGRZNE9OK0lMR1c4cmdIK3FtbnMzelJ4?=
+ =?utf-8?Q?GizLSf7M2Peh69vQmoZ4bbAQT?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHh5MVktDSEIfGUJCSBoaHlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f04a99682023ckunmcd5bd860261
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pk06Cio5Cjc#LxwMMSsoCx4Z
-	EA8KCilVSlVKTEpITExLSkxPQ0pMVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBSkxNTkI3Bg++
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/umU4uVUvfssrSfiJqtRTjD1Bjtzxy0PA6CITkiNE1G1hQ3nHduCDxS4Nf5tHQXHqNcHqgpfjNBMaHCFMGsj7Pn11OEO7ndeI1pHdLbIKAhQrGp+xKNmfVlOblWwRYWix9RsEHxlu4yQ4zQuP3eHhCSy9PXM6AX2lMAwOHzY7V7ymxy7/iCMax8KFfOctXG6DbjZGIOAo2YXJGy7X4z1XcKOoxcPfPSIrteqke0Q+V+XVg+0Gn7Od6fkiG3F6ivGKJY7rqOMRHBHZPmZK1aI3S8NGOhjZ46OU/PwmSgu3BJhDeGMwji+LCoCMt25Pbih+41uay3VorAOBnEvhSS4YYqxVaGczUD8oOyztBtkyjvshJXkPABrvlqrcKRm0GqTQn0mUqi3HZfv7uRbdkAmlHSbvF+4FTuGOIBGgEehi32g2OcFDiF+DAWKNxmk4MyE5ueoa1k2PXcCuD2GEnEAQrrpBuXGd9u3HT5VuEqYJaYTPY5T+Q6pe356fh9O3Latxp5bchLy+s1U7as/7m/48ZgHi7vLImb1/NPJJKi3SLHgGV0B5bD3yU29E6vfV3ogSyZNEhIZbQ1wOKJALt6QfL2bJxWlu18c4ZDizo8G/2iiZXMA0lKhMcWBVxk0ZPD1
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB6453.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3988482-45b6-4e79-2564-08dc629d8994
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2024 07:26:33.6715
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TcRJ9Z78SbnbfHwILizGzuhL46r2b0fyYvkdvquJe4fVLduHxwNkBLMrJA2WLqWS/xCbGl8xnuMDDOM+bWUIlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10176
 
-From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-
-The "cbd_backend" is responsible for exposing a local block device (such
-as "/dev/sda") through the "cbd_transport" to other hosts.
-
-Any host that registers this transport can map this backend to a local
-"cbd device"(such as "/dev/cbd0"). All reads and writes to "cbd0" are transmitted
-through the channel inside the transport to the backend. The handler
-inside the backend is responsible for processing these read and write
-requests, converting them into read and write requests corresponding to "sda".
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
----
- drivers/block/cbd/Makefile        |   2 +-
- drivers/block/cbd/cbd_backend.c   | 254 +++++++++++++++++++++++++++++
- drivers/block/cbd/cbd_handler.c   | 261 ++++++++++++++++++++++++++++++
- drivers/block/cbd/cbd_transport.c |   6 +
- 4 files changed, 522 insertions(+), 1 deletion(-)
- create mode 100644 drivers/block/cbd/cbd_backend.c
- create mode 100644 drivers/block/cbd/cbd_handler.c
-
-diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
-index 2389a738b12b..b47f1e584946 100644
---- a/drivers/block/cbd/Makefile
-+++ b/drivers/block/cbd/Makefile
-@@ -1,3 +1,3 @@
--cbd-y := cbd_main.o cbd_transport.o cbd_channel.o cbd_host.o
-+cbd-y := cbd_main.o cbd_transport.o cbd_channel.o cbd_host.o cbd_backend.o cbd_handler.o
- 
- obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
-diff --git a/drivers/block/cbd/cbd_backend.c b/drivers/block/cbd/cbd_backend.c
-new file mode 100644
-index 000000000000..a06f319e62c4
---- /dev/null
-+++ b/drivers/block/cbd/cbd_backend.c
-@@ -0,0 +1,254 @@
-+#include "cbd_internal.h"
-+
-+static ssize_t backend_host_id_show(struct device *dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	struct cbd_backend_device *backend;
-+	struct cbd_backend_info *backend_info;
-+
-+	backend = container_of(dev, struct cbd_backend_device, dev);
-+	backend_info = backend->backend_info;
-+
-+	cbdt_flush_range(backend->cbdt, backend_info, sizeof(*backend_info));
-+
-+	if (backend_info->state == cbd_backend_state_none)
-+		return 0;
-+
-+	return sprintf(buf, "%u\n", backend_info->host_id);
-+}
-+
-+static DEVICE_ATTR(host_id, 0400, backend_host_id_show, NULL);
-+
-+static ssize_t backend_path_show(struct device *dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	struct cbd_backend_device *backend;
-+	struct cbd_backend_info *backend_info;
-+
-+	backend = container_of(dev, struct cbd_backend_device, dev);
-+	backend_info = backend->backend_info;
-+
-+	cbdt_flush_range(backend->cbdt, backend_info, sizeof(*backend_info));
-+
-+	if (backend_info->state == cbd_backend_state_none)
-+		return 0;
-+
-+	if (strlen(backend_info->path) == 0)
-+		return 0;
-+
-+	return sprintf(buf, "%s\n", backend_info->path);
-+}
-+
-+static DEVICE_ATTR(path, 0400, backend_path_show, NULL);
-+
-+CBD_OBJ_HEARTBEAT(backend);
-+
-+static struct attribute *cbd_backend_attrs[] = {
-+	&dev_attr_path.attr,
-+	&dev_attr_host_id.attr,
-+	&dev_attr_alive.attr,
-+	NULL
-+};
-+
-+static struct attribute_group cbd_backend_attr_group = {
-+	.attrs = cbd_backend_attrs,
-+};
-+
-+static const struct attribute_group *cbd_backend_attr_groups[] = {
-+	&cbd_backend_attr_group,
-+	NULL
-+};
-+
-+static void cbd_backend_release(struct device *dev)
-+{
-+}
-+
-+struct device_type cbd_backend_type = {
-+	.name		= "cbd_backend",
-+	.groups		= cbd_backend_attr_groups,
-+	.release	= cbd_backend_release,
-+};
-+
-+struct device_type cbd_backends_type = {
-+	.name		= "cbd_backends",
-+	.release	= cbd_backend_release,
-+};
-+
-+void cbdb_add_handler(struct cbd_backend *cbdb, struct cbd_handler *handler)
-+{
-+	mutex_lock(&cbdb->lock);
-+	list_add(&handler->handlers_node, &cbdb->handlers);
-+	mutex_unlock(&cbdb->lock);
-+}
-+
-+void cbdb_del_handler(struct cbd_backend *cbdb, struct cbd_handler *handler)
-+{
-+	mutex_lock(&cbdb->lock);
-+	list_del_init(&handler->handlers_node);
-+	mutex_unlock(&cbdb->lock);
-+}
-+
-+static struct cbd_handler *cbdb_get_handler(struct cbd_backend *cbdb, u32 channel_id)
-+{
-+	struct cbd_handler *handler, *handler_next;
-+	bool found = false;
-+
-+	mutex_lock(&cbdb->lock);
-+	list_for_each_entry_safe(handler, handler_next, &cbdb->handlers, handlers_node) {
-+		if (handler->channel.channel_id == channel_id) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&cbdb->lock);
-+
-+	if (!found) {
-+		return ERR_PTR(-ENOENT);
-+	}
-+
-+	return handler;
-+}
-+
-+static void state_work_fn(struct work_struct *work)
-+{
-+	struct cbd_backend *cbdb = container_of(work, struct cbd_backend, state_work.work);
-+	struct cbd_transport *cbdt = cbdb->cbdt;
-+	struct cbd_channel_info *channel_info;
-+	u32 blkdev_state, backend_state, backend_id;
-+	int i;
-+
-+	for (i = 0; i < cbdt->transport_info->channel_num; i++) {
-+		channel_info = cbdt_get_channel_info(cbdt, i);
-+
-+		cbdt_flush_range(cbdt, channel_info, sizeof(*channel_info));
-+		blkdev_state = channel_info->blkdev_state;
-+		backend_state = channel_info->backend_state;
-+		backend_id = channel_info->backend_id;
-+
-+		if (blkdev_state == cbdc_blkdev_state_running &&
-+				backend_state == cbdc_backend_state_none &&
-+				backend_id == cbdb->backend_id) {
-+
-+			cbd_handler_create(cbdb, i);
-+		}
-+		
-+		if (blkdev_state == cbdc_blkdev_state_none &&
-+				backend_state == cbdc_backend_state_running &&
-+				backend_id == cbdb->backend_id) {
-+			struct cbd_handler *handler;
-+
-+			handler = cbdb_get_handler(cbdb, i);
-+			cbd_handler_destroy(handler);
-+		}
-+	}
-+
-+	queue_delayed_work(cbd_wq, &cbdb->state_work, 1 * HZ);
-+}
-+
-+static int cbd_backend_init(struct cbd_backend *cbdb)
-+{
-+	struct cbd_backend_info *b_info;
-+	struct cbd_transport *cbdt = cbdb->cbdt;
-+
-+	b_info = cbdt_get_backend_info(cbdt, cbdb->backend_id);
-+	cbdb->backend_info = b_info;
-+
-+	b_info->host_id = cbdb->cbdt->host->host_id;
-+
-+	cbdb->bdev_handle = bdev_open_by_path(cbdb->path, BLK_OPEN_READ | BLK_OPEN_WRITE, cbdb, NULL);
-+	if (IS_ERR(cbdb->bdev_handle)) {
-+		cbdt_err(cbdt, "failed to open bdev: %d", (int)PTR_ERR(cbdb->bdev_handle));
-+		return PTR_ERR(cbdb->bdev_handle);
-+	}
-+	cbdb->bdev = cbdb->bdev_handle->bdev;
-+	b_info->dev_size = bdev_nr_sectors(cbdb->bdev);
-+
-+	INIT_DELAYED_WORK(&cbdb->state_work, state_work_fn);
-+	INIT_DELAYED_WORK(&cbdb->hb_work, backend_hb_workfn);
-+	INIT_LIST_HEAD(&cbdb->handlers);
-+	cbdb->backend_device = &cbdt->cbd_backends_dev->backend_devs[cbdb->backend_id];
-+
-+	mutex_init(&cbdb->lock);
-+
-+	queue_delayed_work(cbd_wq, &cbdb->state_work, 0);
-+	queue_delayed_work(cbd_wq, &cbdb->hb_work, 0);
-+
-+	return 0;
-+}
-+
-+int cbd_backend_start(struct cbd_transport *cbdt, char *path)
-+{
-+	struct cbd_backend *backend;
-+	struct cbd_backend_info *backend_info;
-+	u32 backend_id;
-+	int ret;
-+
-+	ret = cbdt_get_empty_backend_id(cbdt, &backend_id);
-+	if (ret) {
-+		return ret;
-+	}
-+
-+	backend_info = cbdt_get_backend_info(cbdt, backend_id);
-+
-+	backend = kzalloc(sizeof(struct cbd_backend), GFP_KERNEL);
-+	if (!backend) {
-+		return -ENOMEM;
-+	}
-+
-+	strscpy(backend->path, path, CBD_PATH_LEN);
-+	memcpy(backend_info->path, backend->path, CBD_PATH_LEN);
-+	INIT_LIST_HEAD(&backend->node);
-+	backend->backend_id = backend_id;
-+	backend->cbdt = cbdt;
-+
-+	ret = cbd_backend_init(backend);
-+	if (ret) {
-+		goto backend_free;
-+	}
-+
-+	backend_info->state = cbd_backend_state_running;
-+	cbdt_flush_range(cbdt, backend_info, sizeof(*backend_info));
-+
-+	cbdt_add_backend(cbdt, backend);
-+
-+	return 0;
-+
-+backend_free:
-+	kfree(backend);
-+
-+	return ret;
-+}
-+
-+int cbd_backend_stop(struct cbd_transport *cbdt, u32 backend_id)
-+{
-+	struct cbd_backend *cbdb;
-+	struct cbd_backend_info *backend_info;
-+
-+	cbdb = cbdt_get_backend(cbdt, backend_id);
-+	if (!cbdb) {
-+		return -ENOENT;
-+	}
-+
-+	mutex_lock(&cbdb->lock);
-+	if (!list_empty(&cbdb->handlers)) {
-+		mutex_unlock(&cbdb->lock);
-+		return -EBUSY;
-+	}
-+
-+	cbdt_del_backend(cbdt, cbdb);
-+
-+	cancel_delayed_work_sync(&cbdb->hb_work);
-+	cancel_delayed_work_sync(&cbdb->state_work);
-+
-+	backend_info = cbdt_get_backend_info(cbdt, cbdb->backend_id);
-+	backend_info->state = cbd_backend_state_none;
-+	cbdt_flush_range(cbdt, backend_info, sizeof(*backend_info));
-+	mutex_unlock(&cbdb->lock);
-+
-+	bdev_release(cbdb->bdev_handle);
-+	kfree(cbdb);
-+
-+	return 0;
-+}
-diff --git a/drivers/block/cbd/cbd_handler.c b/drivers/block/cbd/cbd_handler.c
-new file mode 100644
-index 000000000000..0fbfc225ea29
---- /dev/null
-+++ b/drivers/block/cbd/cbd_handler.c
-@@ -0,0 +1,261 @@
-+#include "cbd_internal.h"
-+
-+static inline struct cbd_se *get_se_head(struct cbd_handler *handler)
-+{
-+	return (struct cbd_se *)(handler->channel.cmdr + handler->channel_info->cmd_head);
-+}
-+
-+static inline struct cbd_se *get_se_to_handle(struct cbd_handler *handler)
-+{
-+	return (struct cbd_se *)(handler->channel.cmdr + handler->se_to_handle);
-+}
-+
-+static inline struct cbd_ce *get_compr_head(struct cbd_handler *handler)
-+{
-+	return (struct cbd_ce *)(handler->channel.compr + handler->channel_info->compr_head);
-+}
-+
-+struct cbd_backend_io {
-+	struct cbd_se		*se;
-+	u64			off;
-+	u32			len;
-+	struct bio		*bio;
-+	struct cbd_handler	*handler;
-+};
-+
-+static inline void complete_cmd(struct cbd_handler *handler, u64 priv_data, int ret)
-+{
-+	struct cbd_ce *ce = get_compr_head(handler);
-+
-+	memset(ce, 0, sizeof(*ce));
-+	ce->priv_data = priv_data;
-+	ce->result = ret;
-+	CBDC_UPDATE_COMPR_HEAD(handler->channel_info->compr_head,
-+			       sizeof(struct cbd_ce),
-+			       handler->channel_info->compr_size);
-+
-+	cbdc_flush_ctrl(&handler->channel);
-+
-+	return;
-+}
-+
-+static void backend_bio_end(struct bio *bio)
-+{
-+	struct cbd_backend_io *backend_io = bio->bi_private;
-+	struct cbd_se *se = backend_io->se;
-+	struct cbd_handler *handler = backend_io->handler;
-+
-+	if (bio->bi_status == 0 &&
-+	    cbd_se_hdr_get_op(se->header.len_op) == CBD_OP_READ) {
-+		cbdc_copy_from_bio(&handler->channel, se->data_off, se->data_len, bio);
-+	}
-+
-+	complete_cmd(handler, se->priv_data, bio->bi_status);
-+
-+	bio_free_pages(bio);
-+	bio_put(bio);
-+	kfree(backend_io);
-+}
-+
-+static int cbd_bio_alloc_pages(struct bio *bio, size_t size, gfp_t gfp_mask)
-+{
-+	int ret = 0;
-+
-+        while (size) {
-+                struct page *page = alloc_pages(gfp_mask, 0);
-+                unsigned len = min_t(size_t, PAGE_SIZE, size);
-+
-+                if (!page) {
-+			pr_err("failed to alloc page");
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		ret = bio_add_page(bio, page, len, 0);
-+                if (unlikely(ret != len)) {
-+                        __free_page(page);
-+			pr_err("failed to add page");
-+                        break;
-+                }
-+
-+                size -= len;
-+        }
-+
-+	if (size)
-+		bio_free_pages(bio);
-+	else
-+		ret = 0;
-+
-+        return ret;
-+}
-+
-+static struct cbd_backend_io *backend_prepare_io(struct cbd_handler *handler, struct cbd_se *se, blk_opf_t opf)
-+{
-+	struct cbd_backend_io *backend_io;
-+	struct cbd_backend *cbdb = handler->cbdb;
-+
-+	backend_io = kzalloc(sizeof(struct cbd_backend_io), GFP_KERNEL);
-+	backend_io->se = se;
-+
-+	backend_io->handler = handler;
-+	backend_io->bio = bio_alloc_bioset(cbdb->bdev, roundup(se->len, 4096) / 4096, opf, GFP_KERNEL, &handler->bioset);
-+
-+	backend_io->bio->bi_iter.bi_sector = se->offset >> SECTOR_SHIFT;
-+	backend_io->bio->bi_iter.bi_size = 0;
-+	backend_io->bio->bi_private = backend_io;
-+	backend_io->bio->bi_end_io = backend_bio_end;
-+
-+	return backend_io;
-+}
-+
-+static int handle_backend_cmd(struct cbd_handler *handler, struct cbd_se *se)
-+{
-+	struct cbd_backend *cbdb = handler->cbdb;
-+	u32 len = se->len;
-+	struct cbd_backend_io *backend_io = NULL;
-+	int ret;
-+
-+	if (cbd_se_hdr_flags_test(se, CBD_SE_HDR_DONE)) {
-+		return 0 ;
-+	}
-+
-+	switch (cbd_se_hdr_get_op(se->header.len_op)) {
-+	case CBD_OP_PAD:
-+		cbd_se_hdr_flags_set(se, CBD_SE_HDR_DONE);
-+		return 0;
-+	case CBD_OP_READ:
-+		backend_io = backend_prepare_io(handler, se, REQ_OP_READ);
-+		break;
-+	case CBD_OP_WRITE:
-+		backend_io = backend_prepare_io(handler, se, REQ_OP_WRITE);
-+		break;
-+	case CBD_OP_DISCARD:
-+		ret = blkdev_issue_discard(cbdb->bdev, se->offset >> SECTOR_SHIFT,
-+				se->len, GFP_NOIO);
-+		goto complete_cmd;
-+	case CBD_OP_WRITE_ZEROS:
-+		ret = blkdev_issue_zeroout(cbdb->bdev, se->offset >> SECTOR_SHIFT,
-+				se->len, GFP_NOIO, 0);
-+		goto complete_cmd;
-+	case CBD_OP_FLUSH:
-+		ret = blkdev_issue_flush(cbdb->bdev);
-+		goto complete_cmd;
-+	default:
-+		pr_err("unrecognized op: %x", cbd_se_hdr_get_op(se->header.len_op));
-+		ret = -EIO;
-+		goto complete_cmd;
-+	}
-+
-+	if (!backend_io)
-+		return -ENOMEM;
-+
-+	ret = cbd_bio_alloc_pages(backend_io->bio, len, GFP_NOIO);
-+	if (ret) {
-+		kfree(backend_io);
-+		return ret;
-+	}
-+
-+	if (cbd_se_hdr_get_op(se->header.len_op) == CBD_OP_WRITE) {
-+		cbdc_copy_to_bio(&handler->channel, se->data_off, se->data_len, backend_io->bio);
-+	}
-+
-+	submit_bio(backend_io->bio);
-+
-+	return 0;
-+
-+complete_cmd:
-+	complete_cmd(handler, se->priv_data, ret);
-+	return 0;
-+}
-+
-+static void handle_work_fn(struct work_struct *work)
-+{
-+	struct cbd_handler *handler = container_of(work, struct cbd_handler, handle_work.work);
-+	struct cbd_se *se;
-+	int ret;
-+again:
-+	/* channel ctrl would be updated by blkdev queue */
-+	cbdc_flush_ctrl(&handler->channel);
-+	se = get_se_to_handle(handler);
-+	if (se == get_se_head(handler)) {
-+		if (cbdwc_need_retry(&handler->handle_worker_cfg)) {
-+			goto again;
-+		}
-+
-+		cbdwc_miss(&handler->handle_worker_cfg);
-+
-+		queue_delayed_work(handler->handle_wq, &handler->handle_work, usecs_to_jiffies(0));
-+		return;
-+	}
-+
-+	cbdwc_hit(&handler->handle_worker_cfg);
-+	cbdt_flush_range(handler->cbdb->cbdt, se, sizeof(*se));
-+	ret = handle_backend_cmd(handler, se);
-+	if (!ret) {
-+		/* this se is handled */
-+		handler->se_to_handle = (handler->se_to_handle + cbd_se_hdr_get_len(se->header.len_op)) % handler->channel_info->cmdr_size;
-+	}
-+
-+	goto again;
-+}
-+
-+int cbd_handler_create(struct cbd_backend *cbdb, u32 channel_id)
-+{
-+	struct cbd_transport *cbdt = cbdb->cbdt;
-+	struct cbd_handler *handler;
-+	int ret;
-+
-+	handler = kzalloc(sizeof(struct cbd_handler), GFP_KERNEL);
-+	if (!handler) {
-+		return -ENOMEM;
-+	}
-+
-+	handler->cbdb = cbdb;
-+	cbd_channel_init(&handler->channel, cbdt, channel_id);
-+	handler->channel_info = handler->channel.channel_info;
-+
-+	handler->handle_wq = alloc_workqueue("cbdt%u-handler%u",
-+					     WQ_UNBOUND | WQ_MEM_RECLAIM,
-+					     0, cbdt->id, channel_id);
-+	if (!handler->handle_wq) {
-+		ret = -ENOMEM;
-+		goto free_handler;
-+	}
-+
-+	handler->se_to_handle = handler->channel_info->cmd_tail;
-+
-+	INIT_DELAYED_WORK(&handler->handle_work, handle_work_fn);
-+	INIT_LIST_HEAD(&handler->handlers_node);
-+
-+	bioset_init(&handler->bioset, 128, 0, BIOSET_NEED_BVECS);
-+	cbdwc_init(&handler->handle_worker_cfg);
-+
-+	cbdb_add_handler(cbdb, handler);
-+	handler->channel_info->backend_state = cbdc_backend_state_running;
-+
-+	cbdt_flush_range(cbdt, handler->channel_info, sizeof(*handler->channel_info));
-+
-+	queue_delayed_work(handler->handle_wq, &handler->handle_work, 0);
-+
-+	return 0;
-+
-+free_handler:
-+	kfree(handler);
-+	return ret;
-+};
-+
-+void cbd_handler_destroy(struct cbd_handler *handler)
-+{
-+	cbdb_del_handler(handler->cbdb, handler);
-+
-+	cancel_delayed_work_sync(&handler->handle_work);
-+	drain_workqueue(handler->handle_wq);
-+	destroy_workqueue(handler->handle_wq);
-+
-+	handler->channel_info->backend_state = cbdc_backend_state_none;
-+	handler->channel_info->state = cbd_channel_state_none;
-+	cbdt_flush_range(handler->cbdb->cbdt, handler->channel_info, sizeof(*handler->channel_info));
-+
-+	bioset_exit(&handler->bioset);
-+	kfree(handler);
-+}
-diff --git a/drivers/block/cbd/cbd_transport.c b/drivers/block/cbd/cbd_transport.c
-index 682d0f45ce9e..4dd9bf1b5fd5 100644
---- a/drivers/block/cbd/cbd_transport.c
-+++ b/drivers/block/cbd/cbd_transport.c
-@@ -303,8 +303,14 @@ static ssize_t cbd_adm_store(struct device *dev,
- 
- 	switch (opts.op) {
- 	case CBDT_ADM_OP_B_START:
-+		ret = cbd_backend_start(cbdt, opts.backend.path);
-+		if (ret < 0)
-+			return ret;
- 		break;
- 	case CBDT_ADM_OP_B_STOP:
-+		ret = cbd_backend_stop(cbdt, opts.backend_id);
-+		if (ret < 0)
-+			return ret;
- 		break;
- 	case CBDT_ADM_OP_B_CLEAR:
- 		break;
--- 
-2.34.1
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZlcm1hLCBWaXNoYWwgTCA8
+dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMTgsIDIw
+MjQgMjoxNCBBTQ0KPiBUbzogSmlhbmcsIERhdmUgPGRhdmUuamlhbmdAaW50ZWwuY29tPjsgWWFv
+LCBYaW5ndGFvL+WnmiDlubjmtpsNCj4gPHlhb3h0LmZuc3RAZnVqaXRzdS5jb20+DQo+IENjOiBD
+YW8sIFF1YW5xdWFuL+abuSDlhajlhaggPGNhb3FxQGZ1aml0c3UuY29tPjsgbGludXgtY3hsQHZn
+ZXIua2VybmVsLm9yZzsNCj4gbnZkaW1tQGxpc3RzLmxpbnV4LmRldg0KPiBTdWJqZWN0OiBSZToN
+Cj4gDQo+IE9uIFdlZCwgMjAyNC0wNC0xNyBhdCAwMjo0NiAtMDQwMCwgWWFvIFhpbmd0YW8gd3Jv
+dGU6DQo+ID4NCj4gPiBIaSBEYXZlLA0KPiA+IMKgIEkgaGF2ZSBhcHBsaWVkIHRoaXMgcGF0Y2gg
+aW4gbXkgZW52LCBhbmQgZG9uZSBhIGxvdCBvZiB0ZXN0aW5nLA0KPiA+IHRoaXMNCj4gPiBmZWF0
+dXJlIGlzIGN1cnJlbnRseSB3b3JraW5nIGZpbmUuDQo+ID4gwqAgQnV0IGl0IGlzIG5vdCBtZXJn
+ZWQgaW50byBtYXN0ZXIgYnJhbmNoIHlldCwgYXJlIHRoZXJlIGFueSB1cGRhdGVzDQo+ID4gb24g
+dGhpcyBmZWF0dXJlPw0KPiANCj4gSGkgWGluZ3RhbywNCj4gDQo+IFR1cm5zIG91dCB0aGF0IEkg
+aGFkIGFwcGxpZWQgdGhpcyB0byBhIGJyYW5jaCBidXQgZm9yZ290IHRvIG1lcmdlIGFuZA0KPiBw
+dXNoIGl0LiBUaGFua3MgZm9yIHRoZSBwaW5nIC0gZG9uZSBub3csIGFuZCBwdXNoZWQgdG8gcGVu
+ZGluZy4NCkF3ZXNvbWUsIG1hbnkgdGhhbmtzISEhDQoNCj4gDQo+ID4NCj4gPiBBc3NvY2lhdGVk
+IHBhdGNoZXM6DQo+ID4NCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtY3hsLzE3MDEx
+MjkyMTEwNy4yNjg3NDU3LjI3NDEyMzE5OTUxNTQ2MzkxOTcuc3QNCj4gZ2l0QGRqaWFuZzUtbW9i
+bDMvDQo+ID4NCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtY3hsLzE3MDEyMDQyMzE1
+OS4yNzI1OTE1LjE0NjcwODMwMzE1ODI5OTE2ODUwLnMNCj4gdGdpdEBkamlhbmc1LW1vYmwzLw0K
+PiA+DQo+ID4gVGhhbmtzDQo+ID4gWGluZ3Rhbw0KDQo=
