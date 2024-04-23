@@ -1,101 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632B52C9D
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Apr 2024 00:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1313E168DE;
+	Tue, 23 Apr 2024 02:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713833970; cv=fail; b=nZU76wjCSLEhJb7873u5lacAa7nUV/4s//APVTG5COZoIB9jIwdD35OfMP8vsULlhYnRR7dkA35eEl5xIVAHPSRfnrTejy+tmoVLXYjoDvFZgo1vf89kdnm4i57U81SYZniHM7lLN1Nwq+DLTTUjhER0/vDpb/pEXnbAy5wy/so=
+	t=1713838856; cv=fail; b=qHVmnvYMiLsyVOzaaVOHle1qyC5YurPcY1d+hWBmAyInDjHXJHlGavElUi0BioseKOeMiA3IdUdPWNvYd5ApvAZkTUIOrQRhL9dLNi98yqtIdWvRBT6buAGPph+DpdmagjfNrrgg6Bes7JpiByrpbFY1Yu/bHgTR1LZSwmx/nGM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713833970; c=relaxed/simple;
-	bh=gI18yVjM56/EQgnY3H6wQ48IvCy1JvNtW+kMEeK+A20=;
+	s=arc-20240116; t=1713838856; c=relaxed/simple;
+	bh=FC1oBOgiFYsEXMVLgaelftW0sZSYGGADFUFpGfxVAlk=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BOkXHzA8+CccuVNOrXS8lyHXaTkSh0450q2U/mpizixfu07nA0RWWmmzvQ+dNHqVSQ0ihs25Xe8BzT4y8EeQd7eOX1dkIOPCNYEUVg5/XFt5usV1TkVkmCMNtnwpu20N/xix9Y5Pelug4tXTZGHyib+HJLxVtJEgTXqII9+CTh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJaGiErL; arc=fail smtp.client-ip=192.198.163.14
+	 Content-Disposition:In-Reply-To:MIME-Version; b=evCTm9YxXc4osst/p2KB5jXlEytLKpx2DbCm0UT7Sm/dtC0OR24tWprX0brmw6hoo1Tr6VDgsK46iNtYM/dqgoFoCdM1ZRAqUdjSsR+SyohCyArTNgNIhYt6U6RMKuUD5ClyYGxYYYUZYmwXhDJumnf3tyHF+PDDzNy7P4QGb/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HWkCBaKy; arc=fail smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJaGiErL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HWkCBaKy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713833968; x=1745369968;
+  t=1713838856; x=1745374856;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=gI18yVjM56/EQgnY3H6wQ48IvCy1JvNtW+kMEeK+A20=;
-  b=YJaGiErL0IfZ21HDqnDTGcv8wpafooe1dFp+AXsvrTh7nGEaC9DR6HmR
-   Gm9XiaHvO7ucm9DFmLnpgSajUAZLzFrgZ/9NMCA4mQHJsoVqG5jcpk3p+
-   4FYtByq12VUTBi1+Rq8kHQ36vUU26L8u48EnNSKzqIh6yRW2rBuwAleSP
-   Glc8AFvFLwtq2/JF6ktsHtjo4uC9f4DoBOC5LZxDwtoIpDxzkgcEsX57i
-   jse8BcfW0lTl0ceo23oHvvwqqYZkSiqg+lAuRuny0ek158F4rz0l/aDxK
-   5ORwxYucuo0XFB2dtuBYNwFcf+R954gav8F4nusNFNDmE2DZ8TQF79qEx
-   Q==;
-X-CSE-ConnectionGUID: 2Ygq36R0SMiWbB9fwA9V2w==
-X-CSE-MsgGUID: tbso99V9RGqLPZupBkeR2Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9618696"
+  bh=FC1oBOgiFYsEXMVLgaelftW0sZSYGGADFUFpGfxVAlk=;
+  b=HWkCBaKy/EaTlbzpt+y69gTDdHgmmUiMqYdVEk7lDn+oU3+oYX7+dvLn
+   F4YoUZgOjbN9c/vhLU8S8OPjLXrHpqKVrfyj3q7j0RSwduq+5CE6ZPreG
+   5bfzRO227V/IcR1EVOuleA5qDYR82J2+EzI3qYedECkFOT4qJqWxqmhu6
+   /qwEaDDzD3Ajf+eunPIJKAXmAogV4bGkKPP/VEJdwVNYp22fE0zErFyGb
+   v+6LeC+pt7o1DKHnov9x+mg+7GwH0SGjzl+8YEz08X2kqwOeUL+JRi36m
+   rUMaNRXJG2gxPjiiTZcybrDBV+lfxYXwBgnHnvfQmCUgNRGb1qa7ofe85
+   A==;
+X-CSE-ConnectionGUID: NyvlZbXVQkGlTUCga+v4bw==
+X-CSE-MsgGUID: AuGHzeIHTvmKTMgYfOJg/Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="31894991"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9618696"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 17:59:27 -0700
-X-CSE-ConnectionGUID: tHfsDIS8SoCOTbcVGJowcQ==
-X-CSE-MsgGUID: jWqT1lOCSL+shiuhuepzDA==
+   d="scan'208";a="31894991"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 19:20:55 -0700
+X-CSE-ConnectionGUID: zpjDwzrmRdm2RrnbOYy0kQ==
+X-CSE-MsgGUID: G7uMkZXQQkeFzsDt/45fWQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24066266"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Apr 2024 17:59:27 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="29023139"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Apr 2024 19:20:54 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 22 Apr 2024 17:59:26 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.1.2507.35; Mon, 22 Apr 2024 19:20:53 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 22 Apr 2024 17:59:26 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.35; Mon, 22 Apr 2024 19:20:53 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 22 Apr 2024 17:59:26 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Mon, 22 Apr 2024 19:20:53 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 22 Apr 2024 17:59:26 -0700
+ 15.1.2507.35; Mon, 22 Apr 2024 19:20:52 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DkBBKNO7+l/RCe5XNdvvHYaKiwt6BvEG3gHRjJdcbmSg8mJroBVlj3fwAyNnv9+XCoVr+fkdJDTyM6onW3NKYiFNPRDEgEJsxVkkA6cGNaztkbGwV0762NuVNzIT9YYAqF7E8XxLembtjYmvgTvVYHIrbP3dI7pCEfO7ChNkHK/E6H74UelxLcm/6CtdnblN25ga3YJ462BG0ce9N/6cRo1+Iz9P9jvSLfcxmyjI7Oaku5r9IltYNscsFbZCOu9Htj2sXcRhS7BA0miFD+5I2O1ow1EYSDrm5k+A3xTQPh0bw4W5XT5zPoxxKrjGhJOsSFZKBGRwF+jaw/lICPTABQ==
+ b=IK9Jab33McDDU+AJ6hFzbxojtIozz5Vj/IgI+im81w6wfhNEmRmQ5Cj8nX8xxOSnlsWrXo53AIr2oAmpPSuvV8BgLsWmcpoDDoojc4Me51CoKYG6mgNjXh/klJ2q+VFkq1fPrIlp4k1WNagPb7V+itUx3aBpYVtCQplkYBSuo0MB3tnuBGKUUfUEN9QKchWSRMMVuHOmCIk8vqj9Z6Ho0HqzuC6zUfHEMXZ6C/69JLv5WKm855KM0+wY9Qo5r03K/Ff8E+Fkth2Ik57JMPPmO+ddUc7VgMyDqRBsWewgQUtQYv53A1fvRkDR4BiiIkxQ0suRq/9+ampaVLi2FrK2lQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0oZDM+XNA2z1nLUH2PFTuHJfhIgGVXtByWGJNWX0oK8=;
- b=Mofnj/gFxyuV7EaSqy5jzlUIEaHg762FBkWzysPL6WXvOKh09kvnRBVPBdMbDbDGMXXKQI8/qCtW5Os6xCeCo9r/MA59vpW8/2qkRO2tr4oZABAuAb16Bq89PBO3EA8nGMvYIIjVjbr3FvVsaaQmEeATgEfR1YiuktxzIeF/wvcNQCm3jNkVABRDSxGvBhKOW+8Q9XH7bCXpSvY9Q8bMQUI4GypQJv7JnLBVw/LlvDjJrjeQrkklzp4QoXpRrewfBvUi/9MGF4STJhC+sQRd6XZdSSCFbde+l2Hbvqyke7PYGMqXsFNasI2brUHPuMQEDkIy3rDeub9fr7L6QAQi5w==
+ bh=TQWCm2LPgH8Rqu+Szzd4Fcv0WIdPzOqGwOI6IlcA7wo=;
+ b=oYJtahOY9MtAWy2+BsrRfXQmMACKZg1GLQ+Le0xeNV4t8MS43sNodOiYy/hCNknxmARoRJYDNlIdmcP6HI4oywIPHcRVRjvt9p0C86mLWW7tLnrckzfAjEZYk7KEhKbuPmQCKiuMdSrJMDsKRSMlGawadH+ot/FDjZy+6KvaptP44JeBzH5/3LFnNDzrsbiueJjyl03IZRtxn/GEHn/u4e1DNZJ3UewjWEbyfQ4+dwqsQeE7nn4jRs/dMxTujKwzxNVKka+gw/VUMRy8/ta+A3kt6J1x5iJKeGO5UmevbxQkVwuhfg/U5vR16ZmC6aA7wKOtPi13D3s84htieRyGyQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CO1PR11MB4994.namprd11.prod.outlook.com (2603:10b6:303:91::7) with
+ by PH0PR11MB4807.namprd11.prod.outlook.com (2603:10b6:510:3a::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.21; Tue, 23 Apr
- 2024 00:59:24 +0000
+ 2024 02:20:51 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7452.046; Tue, 23 Apr 2024
- 00:59:24 +0000
-Date: Mon, 22 Apr 2024 17:59:22 -0700
+ 02:20:51 +0000
+Date: Mon, 22 Apr 2024 19:20:48 -0700
 From: Dan Williams <dan.j.williams@intel.com>
-To: Yao Xingtao <yaoxt.fnst@fujitsu.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <jim.harris@samsung.com>
-CC: <linux-cxl@vger.kernel.org>, Yao Xingtao <yaoxt.fnst@fujitsu.com>
-Subject: RE: [PATCH v4 2/2] cxl/region: check interleave capability
-Message-ID: <662707ea3fb4_6910294cf@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240422091350.4701-1-yaoxt.fnst@fujitsu.com>
- <20240422091350.4701-3-yaoxt.fnst@fujitsu.com>
+To: Robert Richter <rrichter@amd.com>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Andy Lutomirski
+	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>
+CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, Derick Marks
+	<derick.w.marks@intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: RE: [PATCH v3 1/5] x86/numa: Fix SRAT lookup of CFMWS ranges with
+ numa_fill_memblks()
+Message-ID: <66271b0072317_69102944c@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240419140203.1996635-1-rrichter@amd.com>
+ <20240419140203.1996635-2-rrichter@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240422091350.4701-3-yaoxt.fnst@fujitsu.com>
-X-ClientProxiedBy: SJ0PR05CA0092.namprd05.prod.outlook.com
- (2603:10b6:a03:334::7) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20240419140203.1996635-2-rrichter@amd.com>
+X-ClientProxiedBy: MW4PR03CA0256.namprd03.prod.outlook.com
+ (2603:10b6:303:b4::21) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -104,228 +109,198 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB4994:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43e3d69a-8478-42f7-4137-08dc63309e20
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4807:EE_
+X-MS-Office365-Filtering-Correlation-Id: 896390fe-0399-4146-ccb7-08dc633bfed1
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?LxKbaIIWWvWwpVZ2xZsdRLPmpXyaScLi9gfHglHDAjPaUvsrPxByfm9EmXHE?=
- =?us-ascii?Q?VyMTGImEKYk1oDpPPkqqQHsjJHzKhz0qC/9Q6BccrbyzAPg3tmCvqDmaudQj?=
- =?us-ascii?Q?c2Z5GluA6rJXfWZ5FRKN0MpZCfax9ZZgm+1Y8sP7pl1uT/Jz0QFL00DDFl1n?=
- =?us-ascii?Q?pH+iKj+PGVrg669ZgGDtUEPj72DAYmHcomiI3nt1QytmOtEsbfUpoGUrhhbB?=
- =?us-ascii?Q?+jyBHPqW/bnquHdkMTeJoDwd7K3lAN1oZ5c/TcVULIpZ/zLSjQHBblRw2Wj9?=
- =?us-ascii?Q?D6NFjeI3via7d9Iy88jt4UbxSOZnCQXJLZOHRPiIxvAd7sGHsPdFuzUtg5+w?=
- =?us-ascii?Q?mKE3zsHIquhRuSkB3b/Ptnck6r9fphYtF7GVeb4Z34QYlt5pod54FAaGwkb2?=
- =?us-ascii?Q?eYuznhahCYsmZ/XSELn4U1TyiDquP+zOH/MMBZEKPbuzdnqJl2GErZl3xo3g?=
- =?us-ascii?Q?9OL/NmSvRoi9BVJj+xCDywgyBYHE/gtQ1vA9DCzjjlMfFajSlUW36IeLCELw?=
- =?us-ascii?Q?sCyLJ12ENMHCYFUOKyCxRQelQHe9rdqlcDG42K53jC/ZK3e5IVST0XKWUZj2?=
- =?us-ascii?Q?njj1g1G8UYip9yqbOC8WLeD5KoHNBvFOzK9qUxHJdMh9XiYI1eKSXkTOaemz?=
- =?us-ascii?Q?tUsqbBa1LNAp+qRZU7c/kI/UQrmyeuF9CNKfDHNvZIqnOvm0f4QdwT5a9uVc?=
- =?us-ascii?Q?0ESdYPjiQTGDpr3gTQ/Uw//8FnFKEN5IkRl48eGyi2KP1PeaGFqNm5FcliCn?=
- =?us-ascii?Q?muzFrEMi3ijHaT0lRWlmwWLpMENjW9ErMAjOYKtASAUNe3RfZXlsCaXptBEa?=
- =?us-ascii?Q?stSMjEhxvvEheyDWmxKBNFlxnJjVzpiDt+IE8DwibyxB6QC+XunRsxxEPyGt?=
- =?us-ascii?Q?4TDnDNGXRBbLG3o4WHyqXrf7zJzdWOHLd7BYKMKydoH6HcVyDI70mdayFCyG?=
- =?us-ascii?Q?fxuTdYzkyTgaYfwnt89RQ9WGjyxzVcHNupILYJ1oZ0IoUF3WIwS5dQZlMVVd?=
- =?us-ascii?Q?bKIeKqhTsGg0+njotvKBGvLyg+xEOT8Pq66hOZ82tUx2tv3UiS61Qalj23kc?=
- =?us-ascii?Q?G+SJzR7A1JgzB3NXizRtk+msM4i7858MAv2Wl5HkDa6FLV937gWqvaU+foNy?=
- =?us-ascii?Q?WStCexwoz0CofZOTqZZLNT23MZ0wOegapChCqPvR2+eRaIG6tq83MQlBMHah?=
- =?us-ascii?Q?zi80AMXfxLIFvt3xMN4oR4X5AYMtWeagHRlvfy7anvfJ8diCi6YxEgJSMcyn?=
- =?us-ascii?Q?gvntDgu6Q7f31obz5l8KzyhCupaCq7wzm8pqvIubiw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|7416005|376005|921011;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?zm8D8elwCFU35gua95Uu97lkDUV8ZBFPjzGZIMq7Z51a4AYgFAvwifL/Zr85?=
+ =?us-ascii?Q?vM5224zZVrY1Kx3X3jDfZJvL78Yrch4MVdcoWKPGKFOGH8GC4STpzGywse3C?=
+ =?us-ascii?Q?rb0LT2HMOJU56A4lUpYRyGrIpAOogAYIwtw+MqmTI70Syd6is0UbYsN1kDKb?=
+ =?us-ascii?Q?eIjFRU0KhqPsrAolVsQtiQbE+J/UBO+xVubdqkIibsFXJrx/NfhYK6M14Ut/?=
+ =?us-ascii?Q?5f4+2+PhSLWxpv5pauU903Adu2YSLELmjoCcC0UZJ8tZGHDfx31WYrnJUY3K?=
+ =?us-ascii?Q?BZRQbS5ESmrMMzfMIurJ9mQfx324fdaSlcDxUDVQruCqJYBDaWX/mQy2wbDK?=
+ =?us-ascii?Q?8dGIJYq5CxTmDJTp17uZ9ILqVKdPHdjaJUnIO+uWML1mY/3SLEjBVpiylNFy?=
+ =?us-ascii?Q?0zF3Q79dJ96bCnjGSNy8hCKbGagUuTG1cmK2q+dxrrQPQIMflEdKdQOg+xdx?=
+ =?us-ascii?Q?T5L8MIqjsxv1JbwEyJO7ESTollvlUDrxOxmRvyiBVTVRv2tKe4hHhh4Yj5m4?=
+ =?us-ascii?Q?wyE5FyY78aQVwqyRmKVVfReRlf1rqkd2uOvHUMsrnEEuFIVSUg6KzA6/vu5t?=
+ =?us-ascii?Q?zFRakl+wtQ/SIfMCIkyXdA7KGnE+jylXHh/6nlRz4uRElr7HjMyVhbasOkkn?=
+ =?us-ascii?Q?Y55bmA+1ZJYH9AM0X1/fYal0fGnfVpao2zUD/fJZtp6vkfjceThAOQlN7QKI?=
+ =?us-ascii?Q?BGvRvZiFrt2DZg5CALGGQWtSjIvDMjco86EZwY10Fu1FRRl9ufJcph8yppO8?=
+ =?us-ascii?Q?f/81ZASAYm6UW6nzHEddQz6Pq0XkrxJKTgt/3DnMa9eIyqk11A5GFOhJWBOm?=
+ =?us-ascii?Q?rXAqYTeLWo4F16P0CUHHkhNdluJNdnEsKG6SCF3RtuxrhTGtraYuTJSsXENy?=
+ =?us-ascii?Q?fKOVziQiu+9ldaZYUGJNBI4Fb+EAjz22WgNYTaq1KoGRsaGiBwHMlontZ8ol?=
+ =?us-ascii?Q?RdxJJgeXgyeQ6hCSdS1/cNZ6lzrW+nQQPe45g3Wd1HUHiZYBgvNS1rCbz6Fc?=
+ =?us-ascii?Q?+XiT0Jl+19q+jQHPAOs9+/CU97ElwWyMYRIc2+zed+IdPgIpVA0HmL5SYga4?=
+ =?us-ascii?Q?eYBh7NRfk5LP1qLWwIVdkLO4kTQqBnt5iY/Kl2eo4Mtvm6YZbsuLzZXyBvu5?=
+ =?us-ascii?Q?bfzYdDz+K6R5cMxUTcQ9kVV7yG74n8R29myomaaFXk7qjDn87dptqO8VUDyb?=
+ =?us-ascii?Q?pcaBiEdbOtuDyRTdzrkOKGnQ02I0HS51IVQGGTLwnW7pft/wlMBkTiGcM+A4?=
+ =?us-ascii?Q?a3eyS1zdAvcXWr/leWjkiXbLPZMuNlX92t8oJeGrXCN1zfnh4Yy0U2ug4BwB?=
+ =?us-ascii?Q?EptlgTjNicrUmvSpJssjJYPJ?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(921011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GTnp40UpkJxO1Op1/MrbwNB4RfeXhgCC5k+EIuMn0LBXPgcPAgh1k/bNrrMX?=
- =?us-ascii?Q?nAxZGpoHhcj0xw4rN9HuvcTFOgRBAswT1AayMOeOeMPCxjt/vlaE4UpK/lPO?=
- =?us-ascii?Q?/ROAI4zGbfLe/BJLTm1XjVnsgQG4XCHU0GjmUa89cTeRe5jiljdWZ0LxRj8H?=
- =?us-ascii?Q?pyJBTCeUFyVNiLXws0L6359gpTuWXSpPjSM/wRnEY/40i+72c2sgV4fdIjly?=
- =?us-ascii?Q?CAbwewfbd0/STpv3yBuPCXKSjPhwSlsnm4CRJRtYJNrc5xINXmz4KSuH/ANK?=
- =?us-ascii?Q?qsfNKnurbHKarMFmAA7UBpLQVx0p9AF0LCQRjwLH0MMnQqZswHF7dDAwGZyx?=
- =?us-ascii?Q?NImOQ8KhaH2BF/GNwcHyfcQ3hBH5XTqVTR2m+06lyCOyi+1iGwmfEYHPtbi3?=
- =?us-ascii?Q?Iw0Gi86/euSQI0PFSIpAv8i1EvrY4oEFIkKRRfwwe/Ko8nCYkjF4PlfsAtUy?=
- =?us-ascii?Q?rNpr3WqxhyV7AutA3i2HGSaTp/dby2gg8RBM005t3faH9arD1DdlnlGT6NHv?=
- =?us-ascii?Q?zXXYqiOtRa/rqzeNlQ74rH23fC1HC3ZflRR2W5iYC/hnqZ1yar5fvmsang9k?=
- =?us-ascii?Q?XaKvZCjg6qXzQAKtgL/GgUeNQO+Ovh5hMW7h27CLJ29zc21ZUHVo8rvmUX1T?=
- =?us-ascii?Q?siPDBLi7K3GANdFQ29p/1yYJKrM3XMuGFD4FdP3xHrMQ6lbaochJ0bbYPiG0?=
- =?us-ascii?Q?qpx5K5A5HMmn/G0nhmePxEuJUy5U5V6xbtae+UXarSwBFjNUWrdzVYc8JfCG?=
- =?us-ascii?Q?vkzTvB4sNuO2MRDrtcXWewTjpbCu3QVakqGk+THPUVxDF3tdeWqC6U0+pwjh?=
- =?us-ascii?Q?Ls1vcAwf6vsmEP4EQHB0xykhJc2FZqNtPzJXuZsmeM7aoQIRU6hrZuUnnM6X?=
- =?us-ascii?Q?eL0HAq7k7jidvkANnzjPTiRXhtEuDckIzusAsNQtlO+7qh5c7q9Aw6Ktz3X+?=
- =?us-ascii?Q?ZdInt6MkTox5xmQsJnLABHprLxyvpPrClJpw73CpiMRoykDUsnkaMebvF7AJ?=
- =?us-ascii?Q?4rLbaPe/LSgPY/f70obaucg3z43N5ZCIQDXr2OGRxD4C9OIc/y5/Sqxl0YWa?=
- =?us-ascii?Q?eqmt37fd8CaoxrsCR3MegJxFcxgVW3ut2E+lCS0tFMXFgKZS/b+AXFLfES0H?=
- =?us-ascii?Q?dwRHjTfuzjwgo5L63Uz2IPnioTRWJR6W8EbZhL/nP4+f67awZjmg8HHgJyVR?=
- =?us-ascii?Q?SesB7RKQQBiNitHsiOx0csLI1HLM5yB2Ml4QsBASm/GMUw9pOhJRakKAB6lO?=
- =?us-ascii?Q?F34oxDV8F00wnbtiRBJS8hzLhSu8JZSaIAIvJRGOU4z1hIUZNvBHxAmGtS4Q?=
- =?us-ascii?Q?rydx6L4ldckiVooKSuoixwDpp2a4wGpeuFyN/Uyx13/mXo6zsvUeUYh26PZA?=
- =?us-ascii?Q?ofriIbMyqgR3j+ZPGR/i568YtIcBYE/H73CPvsRBW9FT+r1E6W6L0ugm65fZ?=
- =?us-ascii?Q?Bqgsco0MMFclPUiGdJo53TGxnIjoYhJarqdY1Myrx+dV9pHro3bDU3moVpJ/?=
- =?us-ascii?Q?XKy13R4DqGnOntY4H3PxBKl6fAn6lGjW8+D1KROvkoNBcZBQ2oMItURRdyu9?=
- =?us-ascii?Q?2rZ1tlBC9Q06U/E1vFlDTDsWxjo/hpCUphQ9wt1Dhj3a6c8CK1RBSp1mWYIu?=
- =?us-ascii?Q?fQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43e3d69a-8478-42f7-4137-08dc63309e20
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CLjTvtUnXiP/QFfMqeQAdu3AmRp6PoEztESfZWiD3FK64y58ZcKNHDJuJmnI?=
+ =?us-ascii?Q?og3QL12rolIZK2dualqh9nQFjD7pfYNJ1YPmDxT7A4pcNMq2wdcxVcFjeZCU?=
+ =?us-ascii?Q?FAysK1Y34bdupp27TO/sDVHsjI7sXOQTzjc5gCIrBLPYpUhbX+ImeW4VJHWQ?=
+ =?us-ascii?Q?avCb0//wQWFCtZbt9ZtQp6krT3qXnt2t49vrZyKXSztwXRB/x17evEW8Q+13?=
+ =?us-ascii?Q?LhIUVB9Ug16FmcfGnJA3Lu9I3WgSZEUdgWPcPx16VrSWMqv69BclOzSI/FgR?=
+ =?us-ascii?Q?P0zWPmCGGbhAZzPTX8YYiMvDFxYC0lwXcDM0U3D20ZDTv4n7ybdz+m0eVqys?=
+ =?us-ascii?Q?EL7uQ+gvHCmaU58o+ni6rQdkm8bIrL5qdfdsoGiShACWilQhrGF2TJzA8l1f?=
+ =?us-ascii?Q?+NJf01Z57yvrC9cLG5jmgLWE3OCndmmlzkHHrr0HsWJxs3D9XvMAbIPvB0P1?=
+ =?us-ascii?Q?pBMdkU2Htf7F0Fhyme6iM2bzdExDy7R0eFlJFF1RMRmMdSpqfppwmVee4RkS?=
+ =?us-ascii?Q?bpu6ULSMQ1qlYWGJ9lwdGxryKA8d8VXyzQZ+Pz5SuJuIdwSijoADstmU3pXE?=
+ =?us-ascii?Q?RgyDpzy4uVspeOMHfLQt0k86EGvOww07VT2HEt+K3HcIlUqUpsmmTGDhRhUx?=
+ =?us-ascii?Q?LOg5SD/68XpmrFG2RidweQEhQLw9L5Kk1Q6XVxziqV+UmMXO5hqot754GgS+?=
+ =?us-ascii?Q?8H+w7mDDhjUwMzEL4c2ShRzNBGXC83NHMUH0BI/KPMxm+/+8hMMYHH+tljBq?=
+ =?us-ascii?Q?qI3qstrKRFCy47GRWzwkcd8DjgWCkamfVpC0Z57ldKUhIq0jzvFBGl8goqI+?=
+ =?us-ascii?Q?nUB6JTeTCJripm9rJeZgPtWJ8AmYEQ5WtWGPtXNYqt3BjUfD5X8OcogMHS2F?=
+ =?us-ascii?Q?ANO3zfh6lG0eZGCHGjTqhl0e4hCAEM5ezeCqDke5GkVLKs73om45VG/VEY6Z?=
+ =?us-ascii?Q?aHFU9Kl7Hm/oJ3Y6/Z8DfXhXi53e5pVvGElcXTVPD3SzcVAGTa4Zsz/yF6hX?=
+ =?us-ascii?Q?aWHvw16+BfkFOVyB/8cuJH5EwBw3f0UegaOc9r2AnYc7augkUz1pJTn8dz7C?=
+ =?us-ascii?Q?GPm+spC5pjoTeszwh4bpnoOJEcTwmfjhdlx3vE5ElOhgMK0ut7VIKeVwFUen?=
+ =?us-ascii?Q?1MZ5A+qpK1pvpb66XwQyeYBxbPitixVooeZWU0lUyfCchR7pYB8iCm6QSIfj?=
+ =?us-ascii?Q?T1+NmzEnbcNyYuvKR8TElgGPZTcGxvkBDRnIoOMGErKkJysP/i6OA14r2/qN?=
+ =?us-ascii?Q?ilM531BzjwFIyrjWEmJaxveyfraNGV5yLxIUc8pIVsyymBsoT3R1rklllboD?=
+ =?us-ascii?Q?wMkAU1QColAENk4OZtV7Sx8lHzkrQgti4Nw/TLo56VYbkpipIOgIrmErvCtq?=
+ =?us-ascii?Q?tgfV0VsFF684jwngSEPDcn9ohBFSTuq04TAtk0K6D9epARXyKjMqV3UGIpwm?=
+ =?us-ascii?Q?VMaUU15RzKvhC5M3bnESrlmwCJQoX5hQLwucTkuXDOUNzhW9oO4geNvjZsVl?=
+ =?us-ascii?Q?uwXkV2tf7wR/i76QJMCfI98iJlfjbI+U/pL1cGs0R8FXXxaCfLZ+cf/PO3+4?=
+ =?us-ascii?Q?TVRzbcVzKHczh0ar22ziZ9bysdGp5gSeH1Z5bgsaSj8auR5NZJ5/jy5kZDhI?=
+ =?us-ascii?Q?BQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 896390fe-0399-4146-ccb7-08dc633bfed1
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 00:59:24.3291
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 02:20:51.0527
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M2vYhpoF8enR7DIaWJ7dxY3TJqiQwKGPyjMiZZUPhzFpACDRqH/aFj5IbvK6QOrVaZhnbVMSHgnnW1uwLeFaKIpnoVV+N2yX5NCG64LilCk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4994
+X-MS-Exchange-CrossTenant-UserPrincipalName: k+L4MbkuYkf1NLpMDINCVXpaglaTqBHkwchogjuHEeHpYcNCVBrpmH32LgpZBVfmh3LqwnsPnnHpGzyykHBZVfTZm7hTwiVpkTuaTFrd8RU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4807
 X-OriginatorOrg: intel.com
 
-Yao Xingtao wrote:
-> Since interleave capability is not verified, a target can successfully
-> attach to a region even if it lacks support for the specified interleave
-> ways or granularity.
+Robert Richter wrote:
+> For configurations that have the kconfig option NUMA_KEEP_MEMINFO
+> disabled, the SRAT lookup done with numa_fill_memblks() fails
+> returning NUMA_NO_MEMBLK (-1). An existing SRAT memory range cannot be
+> found for a CFMWS address range. This causes the addition of a
+> duplicate numa_memblk with a different node id and a subsequent page
+> fault and kernel crash during boot.
 > 
-> When attempting to access memory, unexpected behavior occurs due to the
-> incorrect conversion of HPA to a faulty DPA, leading to a segmentation
-> fault, as observed when executing the command:
-> $ numactl -m 2 ls
+> numa_fill_memblks() is implemented and used in the init section only.
+> The option NUMA_KEEP_MEMINFO is only for the case when NUMA data will
+> be used outside of init. So fix the SRAT lookup by moving
+> numa_fill_memblks() out of the NUMA_KEEP_MEMINFO block to make it
+> always available in the init section.
+> 
+> Note that the issue was initially introduced with [1]. But since
+> phys_to_target_node() was originally used that returned the valid node
+> 0, an additional numa_memblk was not added. Though, the node id was
+> wrong too.
 
-This is a QEMU specific statement, right?
+Wrong node seems worth notifying and we can figure out on the backend
+where the backport makes sense.
 
-That should be called out, because I suspect the behavior on hardware to
-be different.
-
-> According to the CXL specification (section 8.2.4.20 CXL HDM Decoder
-> Capability Structure), bits 11 and 12 within the 'CXL HDM Decoder
-> Capability Register' indicate the capability to establish interleaving
-> in 3, 6, 12, and 16 ways. If these bits are not set, the target cannot
-> be attached to a region utilizing such interleave ways.
 > 
-> Additionally, bits 8 and 9 in the same register represent the capability
-> of the bits used for interleaving in the address, commonly referred to as
-> the interleave mask.
-
-Perhaps replace "commonly referred to as" with "Linux tracks this in the
-cxl_port interleave_mask"
- 
-> Regarding 'Decoder Protection':
-> If IW is less than 8 (for interleave ways of 1, 2, 4, 8, 16), the
-> interleave bits start at bit position IG + 8 and end at IG + IW + 8 - 1.
+> [1] commit fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each
+>     CFMWS not in SRAT")
 > 
-> If the IW is greater than or equal to 8 (for interleave ways of 3, 6, 12),
-> the interleave bits start at bit position IG + 8 and end at IG + IW - 1.
-> 
-> If the interleave mask is insufficient to cover the required interleave
-> bits, the target cannot be attached to the region.
-> 
-> The above check does not apply to the host-bridges with single port and
-> switches with single dport, because there does not have a instance of
-> CXL HDM Decoder Capability Structure for them.
-> 
-> Fixes: 384e624bb211 ("cxl/region: Attach endpoint decoders")
-> Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+> Fixes: 8f1004679987 ("ACPI/NUMA: Apply SRAT proximity domain to entire CFMWS window")
+> Cc: Derick Marks <derick.w.marks@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/hdm.c    |  5 +++
->  drivers/cxl/core/region.c | 70 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |  2 ++
->  drivers/cxl/cxlmem.h      |  1 +
->  4 files changed, 78 insertions(+)
+>  arch/x86/include/asm/sparsemem.h | 2 +-
+>  arch/x86/mm/numa.c               | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 27fb4f9d489e..b201be4b8d76 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -80,6 +80,11 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(11, 8);
->  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
-> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(16);
->  }
->  
->  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 5c186e0a39b9..5c09652136c9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1210,6 +1210,60 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  	return 0;
->  }
->  
-> +static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
-> +{
-> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-> +	struct cxl_switch_decoder *cxlsd;
-> +	unsigned int interleave_mask;
-> +	u8 eiw;
-> +	u16 eig;
-> +	int rc, high_pos, low_pos;
-> +
-> +	if (is_switch_decoder(&cxld->dev)) {
-> +		cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> +		if (cxlsd->passthrough)
-> +			return 0;
-> +	}
-> +
-> +	rc = ways_to_eiw(iw, &eiw);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!(cxlhdm->iw_cap_mask & BIT(iw)))
+> diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+> index 1be13b2dfe8b..1aaa447ef24b 100644
+> --- a/arch/x86/include/asm/sparsemem.h
+> +++ b/arch/x86/include/asm/sparsemem.h
+> @@ -37,9 +37,9 @@ extern int phys_to_target_node(phys_addr_t start);
+>  #define phys_to_target_node phys_to_target_node
+>  extern int memory_add_physaddr_to_nid(u64 start);
+>  #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+> +#endif
+>  extern int numa_fill_memblks(u64 start, u64 end);
+>  #define numa_fill_memblks numa_fill_memblks
 
-Would be nice to just write this as:
+It just feels like numa_fill_memblks() has absolutely no business being
+defined in arch/x86/include/asm/sparsemem.h.
 
-   if (!test_bit(iw, &cxlhdm->iw_cap_mask))
+The only use for numa_fill_memblks() is to arrange for NUMA nodes to be
+applied to memory ranges hot-onlined by the CXL driver.
 
-...requires making iw_cap_mask an 'unsigned long', but that's worth it
-to me.
+It belongs right next to numa_add_memblk(), and I suspect
+arch/x86/include/asm/sparsemem.h was only chosen to avoid figuring out
+what to do about the fact that linux/numa.h does not include asm/numa.h
+and that all implementations either provide numa_add_memblk() or select
+the generic implementation.
 
-> +		return -EOPNOTSUPP;
+So I would prefer that this do the proper fix and get
+numa_fill_memblks() completely out of the sparsemem.h path.
 
-This should be -ENXIO like all the other hardware mismatch /
-misconfiguration errors in cxl_region_attach().
+Something like the following which boots for me:
 
-> +
-> +	rc = granularity_to_eig(ig, &eig);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * Per CXL specification (8.2.3.20.13 Decoder Protection in r3.1)
-> +	 * if IW < 8, the interleave bits start at bit position IG + 8, and
-> +	 * end at IG + IW + 8 - 1.
-> +	 * if IW >= 8, the interleave bits start at bit position IG + 8, and
-> +	 * end at IG + IW - 1.
-> +	 */
-> +	if (eiw >= 8)
-> +		high_pos = eiw + eig - 1;
-> +	else
-> +		high_pos = eiw + eig + 7;
-> +	low_pos = eig + 8;
-> +	/*
-> +	 * when the IW is 0 or 8 (interlave way is 1 or 3), the low_pos is
-> +	 * larger than high_pos, since the target is in the target list of a
-> +	 * passthrough decoder, the following check is ignored.
-> +	 */
-> +	if (low_pos > high_pos)
-> +		return 0;
-> +
-> +	interleave_mask = GENMASK(high_pos, low_pos);
-> +	if (interleave_mask & ~cxlhdm->interleave_mask)
-> +		return -EOPNOTSUPP;
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
-> @@ -1360,6 +1414,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  			return -ENXIO;
->  		}
->  	} else {
-> +		rc = check_interleave_cap(cxld, iw, ig);
-
-This seems too late to be doing the check. check_interleave_cap() only
-needs to operate on all the 'struct cxl_port' instances between the
-endpoint and the root. That check can be done be walking ports at
-cxl_region_attach() time, no need to wait until switch decoders are
-being allocated.
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index ef2844d69173..12a93a3466c4 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -26,6 +26,7 @@ extern s16 __apicid_to_node[MAX_LOCAL_APIC];
+ extern nodemask_t numa_nodes_parsed __initdata;
+ 
+ extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
++extern int __init numa_fill_memblks(u64 start, u64 end);
+ extern void __init numa_set_distance(int from, int to, int distance);
+ 
+ static inline void set_apicid_to_node(int apicid, s16 node)
+diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+index 1be13b2dfe8b..64df897c0ee3 100644
+--- a/arch/x86/include/asm/sparsemem.h
++++ b/arch/x86/include/asm/sparsemem.h
+@@ -37,8 +37,6 @@ extern int phys_to_target_node(phys_addr_t start);
+ #define phys_to_target_node phys_to_target_node
+ extern int memory_add_physaddr_to_nid(u64 start);
+ #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+-extern int numa_fill_memblks(u64 start, u64 end);
+-#define numa_fill_memblks numa_fill_memblks
+ #endif
+ #endif /* __ASSEMBLY__ */
+ 
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index e45e64993c50..3b09fd39eeb4 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -208,6 +208,11 @@ int __init srat_disabled(void)
+ 	return acpi_numa < 0;
+ }
+ 
++__weak int __init numa_fill_memblks(u64 start, u64 end)
++{
++	return NUMA_NO_MEMBLK;
++}
++
+ #if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
+ /*
+  * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
+diff --git a/include/linux/numa.h b/include/linux/numa.h
+index 915033a75731..8485d98e554d 100644
+--- a/include/linux/numa.h
++++ b/include/linux/numa.h
+@@ -36,13 +36,6 @@ int memory_add_physaddr_to_nid(u64 start);
+ int phys_to_target_node(u64 start);
+ #endif
+ 
+-#ifndef numa_fill_memblks
+-static inline int __init numa_fill_memblks(u64 start, u64 end)
+-{
+-	return NUMA_NO_MEMBLK;
+-}
+-#endif
+-
+ #else /* !CONFIG_NUMA */
+ static inline int numa_nearest_node(int node, unsigned int state)
+ {
