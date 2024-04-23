@@ -1,275 +1,162 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444CF1353E0;
-	Tue, 23 Apr 2024 13:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8DE5820E;
+	Tue, 23 Apr 2024 15:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713879073; cv=none; b=eBjBQ9eK7gObwE855AMJe78v7MSn+NdJx/xdd9boMeUNuqfot75FoxjCSmvCtIwQ/lci1BakAIpAP/USBMWPzlFhCsnQMBbocECwCZlf/ws7rjHUx5wIaZQf63F8SSoaOB/6UI25DRTgAbc8QV3Q65I51SCKpbwKwYGxe8HVQQg=
+	t=1713885846; cv=none; b=mS4+dr9uAQyeaWf4F91Vu7E01+U6fd/EZ6QLrBBlMW4v+KtIfA/GFTa5NzV2HEMtQmVi4XWS6t/wwbwxqo69welVd2cCmYC7vtzqfzfjo/unisXpOdRG60K9RnQPESsq9t4azVgemLiaSH1pvd/Q15YO2W1EVauFzHnhGSqa8as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713879073; c=relaxed/simple;
-	bh=IxPKUCzl68GmqyGXvxuy/DA5ZjDtg4FgIO2Z9g8hUmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tz6dM5/ztgzFUx6ocu/R4xU9Kuhf+VKdmkbXMK6lZXXOVf1E7nDVSIbnxYlr0nI03FxRuHLw/wSegNZrBw2FKiOnzXjfKi/+GwFmLPtdU6wNAyFpikBP1XPMs/SevTeO10OVnZkggD2hY803qBF5jRtbM44iO88qavEiTY3bM2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9/IEe2I; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713885846; c=relaxed/simple;
+	bh=mD0vvUwgdC13kb4/PXO2KQ82sAyp3j2+v63zyLz5Ris=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H0G8UPOhvYlCd2zmDDTohWumR+LiAS6azymN51D41u4wnKvLqFDupeUruDJO1zs2kvVoq7wt7R2lZU+bZgju5nVs/I4K+U/7PvGdbaM9osegBotaEKoAdT95Ct+GT9eXVdqtN/XcML7UCoI+VIGNHZPhvslRV4Fr5iJ8HEvE8Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCsfVJTT; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9/IEe2I"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-69b5a87505cso22019156d6.2;
-        Tue, 23 Apr 2024 06:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713879071; x=1714483871; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UlzWX69uBnN1f6I1MGifs0qgiAW4SxcxpA314BcskT4=;
-        b=f9/IEe2ITqaN0Wdvsc4o3HgW7Sj2qj69zrgJ9fjx1lPQONZTGDs6JcSqb09diwuIWM
-         Q4/yezWux6oHZQuNB9lUDdE2tgc5C3dJg/fB0/uUbvDLFUfnhzOzryOWHF7N2HHKd5F0
-         l2A5iUDsBO6z/ByQdx/on1KG/ZvxKQGR1xoYKLkXY/jlLr9sVNL64SOLHunU/9yzovla
-         PPREe/3XWAgBGQt30dkcfy85JfLG1zTi7Q5LZpb3tdTyOEX4STEwFmF+Ws9Ir62hKzNw
-         B+JacLrVoNZfnJgLKdPhOWOXNOTewh2DGOb5oJ71Nk7IXzCFKI8C9cTY4/fqn2GWUvl6
-         rPEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713879071; x=1714483871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UlzWX69uBnN1f6I1MGifs0qgiAW4SxcxpA314BcskT4=;
-        b=E9SfV+daoED7v97i0FlaSKWMDTp6cJDLV5ChFsQ7NH1/FekLOV1nNMgaVcLDo3ZPXr
-         obiFGrFs+KWfS/lYPS7zvS+EussLGvLKjjpqp+cKflZ6zrxaWyfMRnJAQO1/zphmoPmx
-         /C8svuQpcfGXOoLCZifdSMX3GKIHJnBZmj7WoxsXO/yl4nNzWRFqyuePgK6LTsQOGd1v
-         qiduI0O7/aIJ4ZvZbb8XIHiwmLanfEEChG5RgMKHYxR967hYUm6n0mGS11cogHheBoMp
-         jMMQa5pSUNXDXu+OO6LVVpj2EjLJn5gx4A5Iyt4TAVFJVNsfkjdbJVrPiRMSWTtZ45eC
-         cMug==
-X-Forwarded-Encrypted: i=1; AJvYcCVcUNOth/neMOyeIABOu/yzo+p9cA2Ioxn6LvrHodL3fqkQOwzhOv56pDh00deSBWLVsp1ofz4nY2SusjlZ90sfFBuzWjws9Fp2nCrX+xeUnP7EmAG1hAemVw7LJ9lwn/d1pzju9urh5g==
-X-Gm-Message-State: AOJu0YxwAiBdxwT/oBcll2FMacbERGN1bywEVkC8Ust1cezH5xBbr1sx
-	Y1qMwn0PIcVR0vjBYsktEU49KQzhT7DHy5KTVg1uJ2EcgRFnxJ4qT1SngoqJsjV79ivUNW/rmd7
-	Nj4uUcQkaBgy67YOzps0AxcVPjro=
-X-Google-Smtp-Source: AGHT+IGm9PNtptdr4RC0D9B0O/GNda/2xKMhHsdXlitZa7C3oPcFsgf+fpwsTHPA9gPA2XyfPZbLeP9q4GqY5s1m4TM=
-X-Received: by 2002:a0c:e909:0:b0:69b:76f7:3653 with SMTP id
- a9-20020a0ce909000000b0069b76f73653mr13626939qvo.27.1713879071065; Tue, 23
- Apr 2024 06:31:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCsfVJTT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713885844; x=1745421844;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mD0vvUwgdC13kb4/PXO2KQ82sAyp3j2+v63zyLz5Ris=;
+  b=oCsfVJTTyMdwi1Y7ZO8J66sR1FA5lmh4lzCLfTrxonVLpw9cDCx/IHme
+   iXDPN/k3jaop83LN3TPpfbssSxzAnK3kNYNU8JDGZRYM5zZFrq9UIO+Zy
+   eZLnsXQdjCEN+K7sR0wznZ/CxE9MgYwgJNt2wqRuAo/uyTukUxrFGSKFJ
+   XN2evV0ZRu20WJnpCWhQshiNqGK1Kj+cDcM/OPREDcrO4T85v2+7Q4/xO
+   Zl8OtovZYhh/kAHrPraPlFFilPLCdmQvP5z2wwW8H9kyYf30ctUP2/XTO
+   4I6M9JtaV7BUmos8fLyjOTemnYrAee3zT7jzzluiJSojvJ0stjQLfGmYl
+   w==;
+X-CSE-ConnectionGUID: dTvUyiMzSoW9QfJEEYzIlg==
+X-CSE-MsgGUID: Y97Sd2eaRG2j3SUdlhoarA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13262477"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="13262477"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:24:03 -0700
+X-CSE-ConnectionGUID: lKSM7utiRrOhAMNiblA3QA==
+X-CSE-MsgGUID: SSpv677+TW+q4Epka+axrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24440874"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.108.21]) ([10.212.108.21])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:24:03 -0700
+Message-ID: <c7a6bcb9-5727-46c0-8efb-6430604cd344@intel.com>
+Date: Tue, 23 Apr 2024 08:24:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229002020.85535-1-john@groves.net>
-In-Reply-To: <20240229002020.85535-1-john@groves.net>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 23 Apr 2024 16:30:59 +0300
-Message-ID: <CAOQ4uxi83HUUmMmNs9NeeOOfVVXhpWAdeAEDq8r31p0tK1sA2A@mail.gmail.com>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] Famfs: shared memory file system for
- disaggregated memory [LSF/MM/BPF ATTEND]
-To: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bernd.schubert@fastmail.fm>
-Cc: lsf-pc@lists.linux-foundation.org, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>, 
-	Jon Grimm <jon.grimm@amd.com>, Dave Chinner <david@fromorbit.com>, john@jagalactic.com, 
-	Bharata B Rao <bharata@amd.com>, Jerome Glisse <jglisse@google.com>, gregory.price@memverge.com, 
-	Ajay Joshi <ajayjoshi@micron.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, 
-	Alistair Popple <apopple@nvidia.com>, Christoph Hellwig <hch@infradead.org>, Zi Yan <ziy@nvidia.com>, 
-	David Rientjes <rientjes@google.com>, Ravi Shankar <venkataravis@micron.com>, 
-	dave.hansen@linux.intel.com, John Hubbard <jhubbard@nvidia.com>, mykolal@meta.com, 
-	Brian Morris <bsmorris@google.com>, Eishan Mirakhur <emirakhur@micron.com>, Wei Xu <weixugc@google.com>, 
-	"Theodore Ts'o" <tytso@mit.edu>, Srinivasulu Thanneeru <sthanneeru@micron.com>, John Groves <jgroves@micron.com>, 
-	Christoph Lameter <cl@gentwo.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Aravind Ramesh <arramesh@micron.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] cxl/core/regs: Add rcd_regs initialization at
+ __rcrb_to_component()
+To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Cc: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "mj@ucw.cz" <mj@ucw.cz>, "dan.j.williams@intel.com"
+ <dan.j.williams@intel.com>
+References: <20240412070715.16160-1-kobayashi.da-06@fujitsu.com>
+ <20240412070715.16160-2-kobayashi.da-06@fujitsu.com>
+ <dcf61e50-2a56-4e1e-a21d-c887e3c07427@intel.com>
+ <OSAPR01MB71823658767F3088CDA09489BA112@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <OSAPR01MB71823658767F3088CDA09489BA112@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 29, 2024 at 2:20=E2=80=AFAM John Groves <John@groves.net> wrote=
-:
->
-> John Groves, Micron
->
-> Micron recently released the first RFC for famfs [1]. Although famfs is n=
-ot
-> CXL-specific in any way, it aims to enable hosts to share data sets in sh=
-ared
-> memory (such as CXL) by providing a memory-mappable fs-dax file system
-> interface to the memory.
->
-> Sharable disaggregated memory already exists in the lab, and will be poss=
-ible
-> in the wild soon. Famfs aims to do the following:
->
-> * Provide an access method that provides isolation between files, and doe=
-s not
->   tempt developers to mmap all the memory writable on every host.
-> * Provide an an access method that can be used by unmodified apps.
->
-> Without something like famfs, enabling the use of sharable memory will in=
-volve
-> the temptation to do things that may destabilize systems, such as
-> mapping large shared, writable global memory ranges and hooking allocator=
-s to
-> use it (potentially sacrificing isolation), and forcing the same virtual
-> address ranges in every host/process (compromising security).
->
-> The most obvious candidate app categories are data analytics and data lak=
-es.
-> Both make heavy use of "zero-copy" data frames - column oriented data tha=
-t
-> is laid out for efficient use via (MAP_SHARED) mmap. Moreover, these use =
-case
-> categories are generally driven by python code that wrangles data into
-> appropriate data frames - making it straightforward to put the data frame=
-s
-> into famfs. Furthermore, these use cases usually involve the shared data =
-being
-> read-only during computation or query jobs - meaning they are often free =
-of
-> cache coherency concerns.
->
-> Workloads such as these often deal with data sets that are too large to f=
-it
-> in a single server's memory, so the data gets sharded - requiring movemen=
-t via
-> a network. Sharded apps also sometimes have to do expensive reshuffling -
-> moving data to nodes with available compute resources. Avoiding the shard=
-ing
-> overheads by accessing such data sets in disaggregated shared memory look=
-s
-> promising to make make better use of memory and compute resources, and by
-> effectively de-duplicating data sets in memory.
->
-> About sharable memory
->
-> * Shared memory is pmem-like, in that hosts will connect in order to acce=
-ss
->   pre-existing contents
-> * Onlining sharable memory as system-ram is nonsense; system-ram gets zer=
-oed...
-> * CXL 3 provides for optionally-supported hardware-managed cache coherenc=
-y
-> * But "multiple-readers, no writers" use cases don't need hardware suppor=
-t
->   for coherency
-> * CXL 3.1 dynamic capacity devices (DCDs) should be thought of as devices=
- with
->   an allocator built in.
-> * When sharable capacity is allocated, each host that has access will see=
- a
->   /dev/dax device that can be found by the "tag" of the allocation. The t=
-ag is
->   just a uuid.
-> * CXL 3.1 also allows the capacity associated with any allocated tag to b=
-e
->   provided to each host (or host group) as either writable or read-only.
->
-> About famfs
->
-> Famfs is an append-only log-structured file system that places many limit=
-s
-> on what can be done. This allows famfs to tolerate clients with a stale c=
-opy
-> of metadata. All memory allocation and log maintenance is performed from =
-user
-> space, but file extent lists are cached in the kernel for fast fault
-> resolution. The current limitations are fairly extreme, but many can be r=
-elaxed
-> by writing more code, managing Byzantine generals, etc. ;)
->
-> A famfs-enabled kernel can be cloned at [3], and the user space repo can =
-be
-> cloned at [4]. Even with major functional limitations in its current form
-> (e.g. famfs does not currently support deleting files), it is sufficient =
-to
-> use in data analytics workloads - in which you 1) create a famfs file sys=
-tem,
-> 2) dump data sets into it, 3) run clustered jobs that consume the shared =
-data
-> sets, and 4) dismount and deallocate the memory containing the file syste=
-m.
->
-> Famfs Open Issues
->
-> * Volatile CXL memory is exposed as character dax devices; the famfs patc=
-h
->   set adds the iomap API, which is required for fs-dax but until now miss=
-ing
->   from character dax.
-> * (/dev/pmem devices are block, and support the iomap api for fs-dax file
->   systems)
-> * /dev/pmem devices can be converted to /dev/dax mode, but native /dev/da=
-x
->   devices cannot be converted to pmem mode.
-> * /dev/dax devices lack the iomap api that fs-dax uses with pmem, so the =
-famfs
->   patch set adds that.
-> * VFS layer hooks for a file system on a character device may be needed.
-> * Famfs has uncovered some previously latent bugs in the /dev/dax mmap
->   machinery that probably require attention.
-> * Famfs currently works with either pmem or devdax devices, but our
->   inclination is to drop pmem support to, reduce the complexity of suppor=
-ting
->   two different underlying device types - particularly since famfs is not
->   intended for actual pmem.
->
->
-> Required :-
-> Dan Williams
-> Christian Brauner
-> Jonathan Cameron
-> Dave Hansen
->
-> [LSF/MM + BPF ATTEND]
->
-> I am the author of the famfs file system. Famfs was first introduced at L=
-PC
-> 2023 [2]. I'm also Micron's voting member on the Software and Systems Wor=
-king
-> Group (SSWG) of the CXL Consortium, and a co-author of the CXL 3.1
-> specification.
->
->
-> References
->
-> [1] https://lore.kernel.org/linux-fsdevel/cover.1708709155.git.john@grove=
-s.net/#t
-> [2] https://lpc.events/event/17/contributions/1455/
-> [3] https://www.computeexpresslink.org/download-the-specification
-> [4] https://github.com/cxl-micron-reskit/famfs-linux
->
 
-Hi John,
 
-Following our correspondence on your patch set [1], I am not sure that the
-details of famfs file system itself are an interesting topic for the
-LSFMM crowd??
-What I would like to do is schedule a session on:
-"Famfs: new userspace filesystem driver vs. improving FUSE/DAX"
+On 4/23/24 1:33 AM, Daisuke Kobayashi (Fujitsu) wrote:
+> Dave Jiang wrote:
+>> On 4/12/24 12:07 AM, Kobayashi,Daisuke wrote:
+>>> Add rcd_regs and its initialization at __rcrb_to_component() to cache
+>>> the cxl1.1 device link status information. Reduce access to the memory
+>>> map area where the RCRB is located by caching the cxl1.1 device
+>>> link status information.
+>>>
+>>> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+>>> ---
+>>>  drivers/cxl/core/regs.c | 16 ++++++++++++++++
+>>>  drivers/cxl/cxl.h       |  3 +++
+>>>  2 files changed, 19 insertions(+)
+>>>
+>>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+>>> index 372786f80955..e0e96be0ca7d 100644
+>>> --- a/drivers/cxl/core/regs.c
+>>> +++ b/drivers/cxl/core/regs.c
+>>> @@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device
+>> *dev, struct cxl_rcrb_info *ri
+>>>  	u32 bar0, bar1;
+>>>  	u16 cmd;
+>>>  	u32 id;
+>>> +	u16 offset;
+>>> +	u32 cap_hdr;
+>>>
+>>>  	if (which == CXL_RCRB_UPSTREAM)
+>>>  		rcrb += SZ_4K;
+>>> @@ -537,6 +539,20 @@ resource_size_t __rcrb_to_component(struct device
+>> *dev, struct cxl_rcrb_info *ri
+>>>  	cmd = readw(addr + PCI_COMMAND);
+>>>  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
+>>>  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
+>>> +	offset = FIELD_GET(GENMASK(7, 0), readw(addr +
+>> PCI_CAPABILITY_LIST));
+>>
+>> Maybe
+>> #define PCI_RCRB_CAPABILITY_LIST_ID_MASK	GENMASK(7, 0)
+>>
+>>> +	cap_hdr = readl(addr + offset);
+>>> +	while ((cap_hdr & GENMASK(7, 0)) != PCI_CAP_ID_EXP) {
+>>
+>> while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr) !=
+>> PCI_CAP_ID_EXP) {
+>>
+>> Also I think you need to add a check and see if the loop went beyond SZ_4K that
+>> was mapped.
+>>
+>>> +		offset = (cap_hdr >> 8) & GENMASK(7, 0);
+>>
+>> #define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8);
+>> offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
+> 
+> Thank you for your comment. In the next patch I will define and use additional masks.
+> 
+>>> +		if (offset == 0)
+>>> +			break;
+>>> +		cap_hdr = readl(addr + offset);
+>>> +	}
+>>> +	if (offset) {
+>>> +		ri->rcd_lnkcap = readl(addr + offset + PCI_EXP_LNKCAP);
+>>> +		ri->rcd_lnkctrl = readl(addr + offset + PCI_EXP_LNKCTL);
+>>> +		ri->rcd_lnkstatus = readl(addr + offset + PCI_EXP_LNKSTA);
+>>> +	}
+>>> +
+>>>  	iounmap(addr);
+>>>  	release_mem_region(rcrb, SZ_4K);
+>>>
+>>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>>> index 003feebab79b..2dc827c301a1 100644
+>>> --- a/drivers/cxl/cxl.h
+>>> +++ b/drivers/cxl/cxl.h
+>>> @@ -647,6 +647,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const
+>> struct device *dport_dev)
+>>>  struct cxl_rcrb_info {
+>>>  	resource_size_t base;
+>>>  	u16 aer_cap;
+>>> +	u16 rcd_lnkctrl;
+>>> +	u16 rcd_lnkstatus;
+>>> +	u32 rcd_lnkcap;
+>>>  };
+>>>
+>>>  /**
+> 
+> Please let me know if any revisions are necessary for merging this patch.
 
-I am hoping that Miklos and Bernd will be able to participate in this
-session remotely.
+Yes please send out a revision with updates. I'd also like to see a review tag from one of the other maintainers before merging. Thanks! 
 
-You see the last time that someone tried to introduce a specialized
-faster FUSE replacement [2], the comments from the community were
-that FUSE protocol can and should be improved instead of introducing
-another "filesystem in userspace" protocol.
-
-Since 2019, FUSE has gained virtiofs/dax support, it recently gained
-FUSE passthrough support and Bernd is working on FUSE uring [3].
-
-My hope is that you will be able to list the needed improvements
-to /dev/dax iomap and FUSE so that you could use the existing
-kernel infrastructure and FUSE libraries to implement famfs.
-
-How does that sound for a discussion?
-
-Thanks,
-Amir.
-
-[1] https://lore.kernel.org/linux-fsdevel/3jwluwrqj6rwsxdsksfvdeo5uccgmnkh7=
-rgefaeyxf2gu75344@ybhwncywkftx/
-[2] https://lore.kernel.org/linux-fsdevel/8d119597-4543-c6a4-917f-14f4f4a6a=
-855@netapp.com/
-[3] https://lore.kernel.org/linux-fsdevel/20230321011047.3425786-1-bschuber=
-t@ddn.com/
