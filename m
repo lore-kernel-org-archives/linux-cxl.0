@@ -1,178 +1,237 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2109.outbound.protection.outlook.com [40.107.100.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F7B134A8
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Apr 2024 20:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713990497; cv=fail; b=W6dHts+LKKHqDLq/RkVdMKjHI+TNvtHaXpWj/XAgVjr059TiCxgm1LtLGY5I73Vf7WxiUFHF+5BshESF8vkxxU1N6y5U4NpoQ7KOrXTPqFEdCabGLPS8bin+2lE90n7tMxZfjiZfQhgDjAypvQzhYdlhfDEwBZOFMe91oO0rTQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713990497; c=relaxed/simple;
-	bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EOReJ1SaHM5zgpIdqQ5Tc/qRcBomq17EB5iiFEnQwPQX4f+gD8fOJ/y0JXEUDAkYh7tG6tfukWpK/iPoErJireDO/yK+WmbUhJQvNBAt0t7KP3WQHRdZ0cokdrOrhmQ1S9GleuyZlHuLq9Ab244jD4FCKfiDiwR8kyHE2VocJxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=iXDMGTJQ; arc=fail smtp.client-ip=40.107.100.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9A1142E6F;
+	Wed, 24 Apr 2024 23:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714000759; cv=none; b=q7ropMWqYUP6pHyAUegZoAJMqeRdLZaEoyButvVILYkHsIDWdaXUzwUrhtGBmOaWB1+tKg9ejVhXrKSKshAjLMbcRQQVFEcrbzT+NPXyYaNMvsEo7govUrPq5ALnTuUqMc/RnwhkiUrz+hYrXbJnNvOT/lyqjh9FiXJDnj+wuto=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714000759; c=relaxed/simple;
+	bh=T0q3Dl6/0KH0khAoyfEPkB4v/KHhMEDnVbAu9J++Ykg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMvn3b4a2qmctrk7OPqjuWaQQmjT33ciXQJGu7UChL/Dk6J1FpSC68ylhGosnz/dp6nupbZLCcMgetWCUXCQKh9xeEUMR/VFke9eyp6sZQR37dwPXltW1E01A3f/KzuG7t/F9qljVEuMXkoUSHs7CfCkRSnf3umTFYrxdFz2TJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLKuutOA; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="iXDMGTJQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TvsVtJ0ms16s1nBgSKrWWwPzWe7P+rgA4XGydgLTBd03J2e6DWaPTRZXtu0RHmJKWfbT626upwZBBzqHG7sRWSEM5MTS8WDS/09OGts5W9MhFXpAKcuOVDe+yx31ofytPF00uep8qGgJ6ZM7SR2dtyL0g3x4V7ZS8LAmW5GCFPlooMce6nw1g23KeIi8Y3f6Uc1qZSwtKxx51RBAOxpCoDHVTwGbieIJAXpCGLpB2KQF7vqIRLSDvC+cwvpg9Tz3bLEuxJNYccDmwAVBoBEok+x36gb0BcT8eGbu2DiTaOwrn6ptKAm/8Md+V/tWvhSHTYHRneQT6/RlV9e7rzGrmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
- b=i+slNLct+GVhAS68O7/0Tnrz68wPhsHxxkIps3Q4ZX0J3RHZdtpyLywtC1y6GtqJXRB1GgqAgYA1MD3pCtpYmC9vT+lZIehpxWMfbBuzrHXewayAN2htVKrBveDwoc/2Tarbd1R0HLRq97axBPGbMObumjPykMV3tYoEUsdTR0QKItpXaJa4o56Yu8N89reGHyWhZPkbLbJJBROOOmxeW2qw4+eS5wzY9Sw7PaKLe53Nx0YaOgJknb1gQHgU81R/nk8ohLDn4NVPGbj7MtTrFN9wyhyIoOvRPxf04PtJ1CdUKBZ/BnkTdpHf0lO6oDH8cEZuDiZ0DgNECwY15GLdug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
- b=iXDMGTJQKaO9mCqcFriYZuZj9XtJ034SDe019T4+6AI3ITBz/lefr7Ym/NNchcPs4ZFFjl8hGyvyLMJL8/h4/vvuH1p7lwqcMmVotDqcMrKl7cN1zH09vg7Wu7wcVgWwI6Q6z4pLd09Vi7TG9UE0u7Jd0VXsGIwHDax6YevDMFA=
-Received: from IA0PR17MB6347.namprd17.prod.outlook.com (2603:10b6:208:435::22)
- by SJ0PR17MB5606.namprd17.prod.outlook.com (2603:10b6:a03:392::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 20:28:11 +0000
-Received: from IA0PR17MB6347.namprd17.prod.outlook.com
- ([fe80::200e:df84:29a9:8c9a]) by IA0PR17MB6347.namprd17.prod.outlook.com
- ([fe80::200e:df84:29a9:8c9a%6]) with mapi id 15.20.7519.021; Wed, 24 Apr 2024
- 20:28:11 +0000
-From: Svetly Todorov <svetly.todorov@memverge.com>
-To: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>
-CC: "Jorgen.Hansen@wdc.com" <Jorgen.Hansen@wdc.com>,
-	"a.manzanares@samsung.com" <a.manzanares@samsung.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "fan.ni@samsung.com" <fan.ni@samsung.com>, Gregory Price
-	<gregory.price@memverge.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"jim.harris@samsung.com" <jim.harris@samsung.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, "wj28.lee@gmail.com"
-	<wj28.lee@gmail.com>
-Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
-Thread-Topic: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
-Thread-Index: AQHaloQ7v+Y2b5YHh0S+QGF8zUpElLF33sQA
-Date: Wed, 24 Apr 2024 20:28:11 +0000
-Message-ID: <BD1422BC-F298-4DF2-93FE-5B123D68B7AD@memverge.com>
-References: <7489170B-E7CC-49BB-91D9-DD6497F99E23@memverge.com>
-In-Reply-To: <7489170B-E7CC-49BB-91D9-DD6497F99E23@memverge.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR17MB6347:EE_|SJ0PR17MB5606:EE_
-x-ms-office365-filtering-correlation-id: 4f839552-4dac-4fd4-8af6-08dc649d0f82
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- =?utf-8?B?QU5OZmxRdHkxdTJ6VlpVTHpab29JR3BMOVdDV3ZHaW80Mi9vUFlNbmtZbjdp?=
- =?utf-8?B?bkM3Nnd5SGxTRzVYdEY1S214YXh0U2F5VzM4akFkMU5YWVdxQ2VOTFREblRI?=
- =?utf-8?B?Z2poaTJQbHVOV2lDU2VRZHNhM1REZWtiVnExK1NDSW0xSzI4WmJMNi82WGp6?=
- =?utf-8?B?UVNxcjcrajl3dS9nOG5SdXFJQ2FpTnFER2J5dU5tbjFmV01GbkxaRkVDYlll?=
- =?utf-8?B?clFWNEhiVC9QT3ZhR3JHNXBneHFJMTI0QjRteVY0cytRM1h0MEkyS3RCWWJT?=
- =?utf-8?B?aE42VHBrL2RESU92aGN3c3VHTnJLc1lvM3k1REtJbzk1cEJqUzNBWlg5WGhM?=
- =?utf-8?B?eUlFQ3Z2TDlzVUtsZjNlNEJnMUx3NjlWWVdGeVFFcmlLbFJudThoS3h4WVl2?=
- =?utf-8?B?OGswdHRFcFRJbmdKcXF0c1N6WDNhZ0VlOHA1NGVyU3BoZDRmYkhzclhDWU5R?=
- =?utf-8?B?WSszeWQ3SXhXSGxQTVByUytJRUw5Nmc0Ylk3Znc4Zy9TU2FDQXFOZFpjOXVB?=
- =?utf-8?B?K3Q1OWU2UG9CdmRFN3NkTld2bGgzVWh2NW8rcmZtdThhQUVmZkZQaWtkTHNL?=
- =?utf-8?B?WjNTU3NBV0lZMmdhTk9UVmtRa3pFZ216Mm5iMTJDZEh2cEZWcVJiTitwNmdu?=
- =?utf-8?B?bVI4RGVJbUJkcUNwbzFkNlY4eSs5dFRkeGlIK2txcWhzeUx0SFZZY1RZaWcr?=
- =?utf-8?B?amZlRFZnc1ZQaDB5VmF2bjA3WGJMY0Y2YTJRU24wS3hpNkN2L2V5TUx3bFVl?=
- =?utf-8?B?R2FvQ3ZVNS96NGFpYy9Yb1NZSGM3TzE5dU1vWmYvM2JyeUN3OUloZzhTaWFB?=
- =?utf-8?B?UWdoVlJoNFNkNStXRzJ3UnZKd0dLVVE2aFFTMWVUcDE0SC9nOUNXZXprZTZz?=
- =?utf-8?B?dUpDMVRFbUdyaUgzWHJKdHJCOTAxQS9BZUdKcUlmeDNUNWoxMVEwQnp6WWRm?=
- =?utf-8?B?TFM1a0F2RUhseDJ4MVd2WHgvaUpwbnlQd1pEYWJqbHJFMlZjZU1DU0lBL01s?=
- =?utf-8?B?ZWsxQkVTempNT0lJS0s0OUxpSk1Ra0VyanZKMVFQcU5icUs1cTRRa3gyZ0lD?=
- =?utf-8?B?SnM0WXhxek9MNFRiVWQ1ME1zNGFBb28rWXMvM0JYeDRxaU5zNVhtNmwzWi9a?=
- =?utf-8?B?bU5nY0NJK3I5Q2I5U1pWd3FPdkN6c3ZGOXl1QzhpNk5mYm5rYmwzZUhkelND?=
- =?utf-8?B?N3dCaklRSDBRbGhKYVdGMWMrSUFFeGdqY0IwL3FMTEtRSG5TQm1BVGdLalNC?=
- =?utf-8?B?RnZrUk94QVhSYWdsWm1JL0l2ZDFpOFdCWFR1MHh4RElyTWVlQU1XRzRpb28y?=
- =?utf-8?B?Tm1CVnFINFkwVXdVOCthVWVlTDhhZkxqK3N1SGVURTR0M1lidHUyRklNOW54?=
- =?utf-8?B?YXgvV2NtczdsMWlRZVllNEFRbkhtTjNjaGZtRlM2VG9HUmdFNXV0VzlGbHVZ?=
- =?utf-8?B?U1VqcFRYTWRiQ0JHbERsZy9XaEtsWjU2bXhhR1FaVzNoVDNlN2xhZm84cHZn?=
- =?utf-8?B?QkduY3FXU0piRDNXZWR0T09lRmR1emlPTWhjUzZkaklyUzZ2Y3RySlpTcXZM?=
- =?utf-8?B?TVRUMWl3R3htMzlZY0kxSG5tQnRTODNwMG5PSlJNTHc1Q29UK0FEbG51UDhL?=
- =?utf-8?B?emF0SEowOC9nV3hNZFRSY3hpVDNmc3ovUUpEajcxNTIwTWorazZFeGswajNz?=
- =?utf-8?B?TlZ5VHhRbVpWMzBjblZjUitOZ1ZsaEJPOWlLcU1iL3RkRFBVcEJWNDJTSFVq?=
- =?utf-8?B?RzN0WkF1NHo5MjdjTnlhYllTMXdjTEluOTNQaHl6WisyWjBod0VUdUVYbGZB?=
- =?utf-8?B?dlMxM29haDdsVmJvZklLZz09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR17MB6347.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?YmxTWDBkMDFRd1E1MlJtdmJncDhHN25qdmtjT2wvL1lScFk4aTNPWkc2NFEr?=
- =?utf-8?B?S05KL1E3OG1FQWZlY1V3ZTVRNDlNclN4Y1l6c1BrTFVNMWZiaUxJS1VBMzMr?=
- =?utf-8?B?RnBaR25KOFExUUxSTVIwNC9Qa05XVkdWSmE3Z2JoNGV0MWg5UkFSeWlQWkpn?=
- =?utf-8?B?U2xNLzBDUEFsd21DZjBNaHN0YnY4Y01vT0pOSFJNalFMKy9RMXZTOUc0TDhD?=
- =?utf-8?B?Ny9YOEorY0wzWUkvNnN1TmlkMC9IVldRRDZrYzgrTGpyS1MyRU9wYStzSy93?=
- =?utf-8?B?NUdGOVpIb1RLK3RRNHYwQ1MwQk8wMUhVQ1RRTlJrMW8va216akltS1l1ZFVY?=
- =?utf-8?B?aFZNL2VDbmRqM0MwUnBHeUU4RkJLdVFRR2dzdmZyTVFGSlRTUmlEWTRUdzBR?=
- =?utf-8?B?d2FteEpnVTdZZmlzb3ViQmh2bWovcGh4eG1oVVY2OTJxeHpJOW5LUGZUaDhF?=
- =?utf-8?B?cG8yR24wU2VEVEpibEZVeGNUQ3c5TnhZcHVvZWo3Wm9KOG5oZGdFOHJRcUFN?=
- =?utf-8?B?UlErdWJPSlJDb0llSHlVQXZsNXRlOWhFQ3NNWkpRK3g5b1lNVmIwNS9CMVh0?=
- =?utf-8?B?YkRWdzNabE91cUNvMmQrdlJrdXZmYTVwQjF6dzVKTjczNmx2ZnZCVzRWd0d4?=
- =?utf-8?B?L1J2aWdIUkp5MVdoVnlaSXdrQWtFUHg2aTdQTG1NUExKMVFDM3NkVVJyRmJh?=
- =?utf-8?B?bjM1a3VVdUpHZEhIUitpQVZDUU9WNXNPNmZxVEtBSVJmcTFlVkVZUlhRL2hW?=
- =?utf-8?B?dVZLalJRYVdBMU5NdjFwV3JYQVJ5cVZDTUZTcExKMWFWK3dUTWFWSzgyMzlT?=
- =?utf-8?B?ZUtEVGZYNXJWem5HRHBVZ2cyZ0Nxd3FGUUtaRjVOQTRZNkIvNWxaSXJlMEF1?=
- =?utf-8?B?UnpIZXZqeldzdEZjcFFZVDhmNXU3dTE4VmVJd2U0TXpMLzhJTWlNZC9sZGtV?=
- =?utf-8?B?NHhzeEU2Rlg0eHBBNHlLZndtWVNlbFYzbUdsdEp0NnQvZTBud2Y1UUcxeFdz?=
- =?utf-8?B?NFJaZUxYR21ORzBnMW14cnJmdVQ5RStRd0R3K1RlNC9Qb0Y0YWhLTzd6TEFX?=
- =?utf-8?B?RW1nZllDVWhiTDBibE8rRlRrb1Job1FEbWtnM1VrRm4wYThpbTlrS0N6bG44?=
- =?utf-8?B?Rnd5MHIxanliOE81YThnOTVaaFVucklTbGQ1RjlHbDZEcnFLMEY5aER3Ymt2?=
- =?utf-8?B?VEVOMTFkOWxrMTBUeU9BTXJCTEdIQ2hRWERlYjhsZFoxbWwvdUN4b1ptY0lz?=
- =?utf-8?B?NUVjNDRYcmRCQkJhNm5SV0JLMVV1RXZUYTJ1T2g3eVBxbkk2MDdrbTRyWjFm?=
- =?utf-8?B?RnhwYUNiMlRKcDgxeUhlUkRnUnhkb3c4WlcrUWhaRGRBUTlOZS9UbCtPd3Zx?=
- =?utf-8?B?TTl5S2puR1RnTlVmM2xIUkJrVmEySk1WWjZqVTJIL0NKalFXMnZjdzZmMzlm?=
- =?utf-8?B?cXV4QTllTGdYZ05BQVQxdGdoSXN2VHRKNklIWCt0N01YNDdHQWEwTDh6QU1L?=
- =?utf-8?B?YzhyYjI2VnFrM01jN0NrK2o4d3pBV2NNK1dxUjBEblA3Njl6NnpWQ3g2WXlt?=
- =?utf-8?B?STFWOHBhMi9BOGoydS9tQ3ExNDBTdVlqMlNkUkZFT1g0bFpIOVNoVXJpN2Zi?=
- =?utf-8?B?enYyR2xnRVBZQTZiQjJZd2g1UEZzbVlnd3hrbC9iUTE1NWFxOVdIL1I5WFhN?=
- =?utf-8?B?a0V3M0lZdE5JQjEvc1RGdkJ6T1pXTnRZd1NBYTJLY3huVlVpRWdzUFNvRUdj?=
- =?utf-8?B?eEFRRWs3elZUc1lwR01ZK2xsRmRKd1F2UG92ZTZwYVdXN2NGRXdEdzJMRll6?=
- =?utf-8?B?YWRYTXhUdWxzb29ybEVwdVNPVUtBVzJ1eER3dUxwTThZZlpvS0xBN3p4UklI?=
- =?utf-8?B?bGpjVXNEcTY4RnptM0doMFhNcDVEKzZwSWFCK200emU4dVVDbTFycDlEa01R?=
- =?utf-8?B?RW0xZkFzcHJnZFlxSFdRTGhzcDBYbkRvckg3c29IN2tNdzY3YUEvZm53VWRj?=
- =?utf-8?B?em5kdzljOFI4bTBwSnlLcXdacDlpcmw2SW15VlZjZ1lPdW5WcExHcDRob01l?=
- =?utf-8?B?Z1pqMVl6YzhDaHJLcVRsMis1SkVaN3dkcmlJVWpzck03Z2RUeWdoRUhjdnNT?=
- =?utf-8?B?ZFdaYUJ1Q3c2RlE1SW1rd0tKSWU0LzZ0L0Uyek1QOHlvMVNvWTZLS0plLy9H?=
- =?utf-8?B?VDZIU25pNU04dlMvNThueFQ3ZE9GenhXRmNhemFiQjF3azNZVk1DZU4vOXU2?=
- =?utf-8?Q?8QMghDaXxzwcOxmVvS68wT4vC1bsfsE+Htn239aBRA=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A501586E17ECF34582815FCAE4262828@namprd17.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLKuutOA"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f30f69a958so388884b3a.1;
+        Wed, 24 Apr 2024 16:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714000757; x=1714605557; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sakwDrIIsmCz4hVkB1z5sN2fWtElfeE23GuvVoi+CRM=;
+        b=aLKuutOA2LNZoBs/lhGRc/8Psr3FFvZj/sgGs8feAr7FdJZ6V1PVg+4ettu4kz8KMT
+         hAqgJpHtwfB0Gj+vWWL5XFYIMUsFX43qgjwJNN41Cnjck2Thh+iO/l0BAZdTiKrzPMJ2
+         YnTy0ourOsB5cHq/EQFssakSJyi0gY0Wh8IXYlb4yN+2adrjv3RlkZ9nRFNN9AQRx1LH
+         SGl37ZKHwLNzCmL4GZ33NebaV/mW/cVgpdCPCCgUWWRQspy62B/GvWiLXmk9souP9GEc
+         VjE6eKreTPk6I7hDXLcEocZLRQ1CJi/BK2f7gDOV8rKQHO/UY2HN2EV5cgB3U0ScK3qS
+         F1kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714000757; x=1714605557;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sakwDrIIsmCz4hVkB1z5sN2fWtElfeE23GuvVoi+CRM=;
+        b=UgvxXKlyhDuwBTFYerX9IZqNq1lqqfcYdHyaMx13e0FFmXI8LlJe5YcGFTf/QatKWY
+         TbuKZnqKmj3fYS+ZemQEPmEHIwbOIpqLIxq7vMjwxAWz/6OS+SvdqhNr+J9LEvGn92+A
+         79yxgMC1frObO9WVZ25TLCs5BSM48cIAAvdvAkgm4LDX4c1olyBxv7uCVoQXlq7cRDOE
+         bvyrfnuXIg2V8Yzw3QYwY+1M5rNn/mrxuP94XOhGk8fSZJ34WmfoAz9EFv/UCVuTnqIZ
+         raJ8fXIdaZLw9yU4uDf/ajejiBB9/eVLlccAevSr5FVv4RxTLbG4UqF7OrqR4TFdiQ1/
+         gRTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNO7BCAy8hH1JWW0ymCWknTMki9xicRzP9gQGT0WBmP+AxPz2DEE1u3B87sVDIXgHLnoE1AZO1ErPPB1ZoPatp2KUW5u67iEzmovsl+vdswL5bev7lO2+3Ov+jm/zHcGgAFmTwHm2qtpIt3maRMAbbpHCn+9eEzYUwHdBP3RiAAXltPl4=
+X-Gm-Message-State: AOJu0YyTWeId+h/vZQ0LvEazxZQjzON2kx/KXHqC7eVolxLLjz2iCjuf
+	Tqhaw4a8zXxNaMjK8ggDYHlCj8cquhHdX+aUopRCzoSZuYct4jMn
+X-Google-Smtp-Source: AGHT+IEuvZAJziMcw4WYyCy553sul9ZkpvveDxJ7UhszeD5DLuljCvM3wLrc+K7mU7JskjhiQsWU8A==
+X-Received: by 2002:a05:6a21:2709:b0:1ac:48a9:8a42 with SMTP id rm9-20020a056a21270900b001ac48a98a42mr4263409pzb.14.1714000756872;
+        Wed, 24 Apr 2024 16:19:16 -0700 (PDT)
+Received: from debian ([2601:641:300:14de:56e5:6d59:647c:63a1])
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902768500b001e4478e9b21sm12438135pll.244.2024.04.24.16.19.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 16:19:16 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Wed, 24 Apr 2024 16:19:06 -0700
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, david@redhat.com,
+	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
+	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
+	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
+	jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	mike.malvestuto@intel.com, gthelen@google.com,
+	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
+	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [RFC PATCH v8 03/10] cxl/mbox: Add GET_FEATURE mailbox command
+Message-ID: <ZimTauNEryrxDQgF@debian>
+References: <20240419164720.1765-1-shiju.jose@huawei.com>
+ <20240419164720.1765-4-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR17MB6347.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f839552-4dac-4fd4-8af6-08dc649d0f82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2024 20:28:11.2077
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ARfbJYEXgZL3H5pk9pvrJQ8vt/0I4DBsG5neME0S9OBYpCHy2md1x3DA53JEoBCGD2OONEeM2M8gHw5mB6fGmiVIFV/AOUAe7VruiKKA1Bw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB5606
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240419164720.1765-4-shiju.jose@huawei.com>
 
-DQo+IE9uIEFwciAyNCwgMjAyNCwgYXQgMToxNiBQTSwgU3ZldGx5IFRvZG9yb3YgPHN2ZXRseS50
-b2Rvcm92QG1lbXZlcmdlLmNvbT4gd3JvdGU6DQo+IA0KPiBJIHRlc3RlZCB0aGUgdjcgREMgYWRk
-L3JlbGVhc2UgYXMgcGFydCBvZiB0aGUgTUhTTEQgUkZDIHdvcmsgSSBkaWQNCj4gd2l0aCBHcmVn
-b3J5LiBUaG9zZSBjb21tYW5kcyB3b3JrZWQgYXMgZXhwZWN0ZWQuIEZlZWwgZnJlZSB0byB0YWNr
-IG9uOg0KPiANCj4gVGVzdGVkLWJ5OiBTdmV0bHkgVG9kb3JvdiA8c3ZldGx5LnRvZG9yb3ZAbWVt
-dmVyZ2UuY29tIDxtYWlsdG86c3ZldGx5LnRvZG9yb3ZAbWVtdmVyZ2UuY29tPj4NCg0KRXIsDQoN
-ClRlc3RlZC1ieTogU3ZldGx5IFRvZG9yb3YgPHN2ZXRseS50b2Rvcm92QG1lbXZlcmdlLmNvbT4N
-Cg0KRGlkbuKAmXQgcmVhbGl6ZSB0aGUgQXBwbGUgTWFpbCBjbGllbnQgaGFkIHNudWNrIGEgbGlu
-ayBpbiB0aGVyZS4=
+On Sat, Apr 20, 2024 at 12:47:12AM +0800, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add support for GET_FEATURE mailbox command.
+> 
+> CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+> The settings of a feature can be retrieved using Get Feature command.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/cxl/core/mbox.c | 53 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h    | 28 ++++++++++++++++++++++
+>  2 files changed, 81 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 82e279b821e2..999965871048 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1318,6 +1318,59 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
+>  
+> +size_t cxl_get_feature(struct cxl_memdev_state *mds,
+> +		       const uuid_t feat_uuid, void *feat_out,
+> +		       size_t feat_out_size,
+> +		       size_t feat_out_min_size,
+> +		       enum cxl_get_feat_selection selection)
+> +{
+> +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> +	struct cxl_mbox_get_feat_in pi;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	size_t data_rcvd_size = 0;
+> +	size_t data_to_rd_size, size_out;
+> +	int rc;
+> +
+> +	if (feat_out_size < feat_out_min_size) {
+> +		dev_err(cxlds->dev,
+> +			"%s: feature out buffer size(%lu) is not big enough\n",
+> +			__func__, feat_out_size);
+> +		return 0;
+> +	}
+> +
+> +	if (feat_out_size <= mds->payload_size)
+> +		size_out = feat_out_size;
+> +	else
+> +		size_out = mds->payload_size;
+
+Using min() instead?
+    size_out = min(feat_out_size, mds->payload_size)
+
+> +	pi.uuid = feat_uuid;
+> +	pi.selection = selection;
+> +	do {
+> +		if ((feat_out_min_size - data_rcvd_size) <= mds->payload_size)
+> +			data_to_rd_size = feat_out_min_size - data_rcvd_size;
+> +		else
+> +			data_to_rd_size = mds->payload_size;
+
+data_to_rd_size = min(feat_out_min_size - data_rcvd_size, mds->payload_size);
+    
+It seems feat_out_min_size is always the same as feat_out_size in this series,
+what is it for? For the loop here, my understanding is we need to fill up the
+out buffer multiple times if the feature cannot be held in a call, so it
+seems feat_out_min_size should be feat_out_size here.
+
+Fan
+
+> +
+> +		pi.offset = cpu_to_le16(data_rcvd_size);
+> +		pi.count = cpu_to_le16(data_to_rd_size);
+> +
+> +		mbox_cmd = (struct cxl_mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_GET_FEATURE,
+> +			.size_in = sizeof(pi),
+> +			.payload_in = &pi,
+> +			.size_out = size_out,
+> +			.payload_out = feat_out + data_rcvd_size,
+> +			.min_out = data_to_rd_size,
+> +		};
+> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +		if (rc < 0 || mbox_cmd.size_out == 0)
+> +			return 0;
+> +		data_rcvd_size += mbox_cmd.size_out;
+> +	} while (data_rcvd_size < feat_out_min_size);
+> +
+> +	return data_rcvd_size;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
+> +
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		       struct cxl_region *cxlr)
+>  {
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 06231e63373e..c822eb30e6d1 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -528,6 +528,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+>  	CXL_MBOX_OP_GET_LOG		= 0x0401,
+>  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+> +	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+>  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+>  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+>  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+> @@ -754,6 +755,28 @@ struct cxl_mbox_get_supp_feats_out {
+>  	struct cxl_mbox_supp_feat_entry feat_entries[];
+>  } __packed;
+>  
+> +/*
+> + * Get Feature CXL 3.1 Spec 8.2.9.6.2
+> + */
+> +
+> +/*
+> + * Get Feature input payload
+> + * CXL rev 3.1 section 8.2.9.6.2 Table 8-99
+> + */
+> +enum cxl_get_feat_selection {
+> +	CXL_GET_FEAT_SEL_CURRENT_VALUE,
+> +	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
+> +	CXL_GET_FEAT_SEL_SAVED_VALUE,
+> +	CXL_GET_FEAT_SEL_MAX
+> +};
+> +
+> +struct cxl_mbox_get_feat_in {
+> +	uuid_t uuid;
+> +	__le16 offset;
+> +	__le16 count;
+> +	u8 selection;
+> +}  __packed;
+> +
+>  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+>  struct cxl_mbox_poison_in {
+>  	__le64 offset;
+> @@ -888,6 +911,11 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_get_supported_features(struct cxl_memdev_state *mds,
+>  			       u32 count, u16 start_index,
+>  			       struct cxl_mbox_get_supp_feats_out *feats_out);
+> +size_t cxl_get_feature(struct cxl_memdev_state *mds,
+> +		       const uuid_t feat_uuid, void *feat_out,
+> +		       size_t feat_out_size,
+> +		       size_t feat_out_min_size,
+> +		       enum cxl_get_feat_selection selection);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		       struct cxl_region *cxlr);
+> -- 
+> 2.34.1
+> 
