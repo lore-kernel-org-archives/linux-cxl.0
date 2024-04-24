@@ -1,128 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2103.outbound.protection.outlook.com [40.107.95.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E9F15B130
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Apr 2024 13:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713964363; cv=none; b=Oj9VzWW1TzwfWf/NIaPhKOiUKIPrW4Kr12NhqyLZaIL4T5OnqxKRkLJQygwAYV1+aTrICHcfEo0XZD9Jrbhj/ltaIXlCuA7ZiXqE7q22BkHvq2cwXnUmH9LCC/B/uOHl6+Q92RB66/uM7Rl0yf5jg524dDLsB/23IgIb2G/Z7sg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713964363; c=relaxed/simple;
-	bh=Bq7YpiW5Q91ygbccQR6dBgrOfa3wjJXstae79u/flmI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NG+9FYaiJ6iROWysUkRpdqfXkZchUUcgFgey6EE+XPpiogkfYS4Gum5xwonrYsDn5aW9FQO0wuc02WNT0wXRDXs0+XyNcoyLJuXdlEBZnoJAqjEgjmI5Y/dBnaK+FcPZMRGqQvSBPH5XuWDRhfSz5IGT6Y2axAuWMAF5E8utT3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f4I+9I2+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038E0161322;
+	Wed, 24 Apr 2024 15:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713972902; cv=fail; b=SsI4qTdKIWU5Yg9wSw2kXBCn1TWCnZyPp/TnS0OueapmMVcAzVmGkzGs2AAYNCt6FkYxCyQ6XkOK3YoPPbkmP+eg4hSmR0SglybHOcP/3mdVZT8CP4KtbPAgC1JnlvcS29+w7HloUkDCIxSjj7wSqVFY4rL3fCxs6CcAqhjPE3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713972902; c=relaxed/simple;
+	bh=kHd1Ry3YnBdkXkRcPuiomPS+1pRowH3aS3iSttM88eA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=u5iORqmTsmUrUr2xH/+y4ymeMzejLyEWbG35rLnolV3BLRQGp4kj83vRXM9PWpwm6SZIE3zppBioVgEbtnaTS9u2ewFA6WB1dAUo6FbzR2oNCnp0Xo9oGWSeUfO3as1fEu70Ug/W4zCf9QeKxjgcYBaegICaU2Ekew/ZpSC9v68=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=NRb/X98j; arc=fail smtp.client-ip=40.107.95.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f4I+9I2+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713964360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mnUi2cVgHWx3MxzJaTxsxopOnKpBzB2N1qs3enmhQg8=;
-	b=f4I+9I2+cjA+ktJ51SxWZXNz/gpLgV4lvOnbOSh/FqYSmrR7Jpj9TZ6cglDudFYvT7+2iv
-	48QoYyIwN3u49QYZQGAN1iD/vFM/jmhHfJmkUTz/Y54uBuUZr18k+6O83jBBiUg17GvwbQ
-	93BazkdPCdOYiWwFDfFSIS7EpAzmrpY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-_flngu1WPLanKjmZSWkVnA-1; Wed, 24 Apr 2024 09:12:36 -0400
-X-MC-Unique: _flngu1WPLanKjmZSWkVnA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8CDA118065AA;
-	Wed, 24 Apr 2024 13:12:35 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.39.192.247])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 69EB840C122D;
-	Wed, 24 Apr 2024 13:12:35 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 5E46921E66C8; Wed, 24 Apr 2024 15:12:34 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>
-Cc: fan <nifan.cxl@gmail.com>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  qemu-devel@nongnu.org,
-  linux-cxl@vger.kernel.org,  gregory.price@memverge.com,
-  ira.weiny@intel.com,  dan.j.williams@intel.com,
-  a.manzanares@samsung.com,  dave@stgolabs.net,  nmtadam.samsung@gmail.com,
-  jim.harris@samsung.com,  Jorgen.Hansen@wdc.com,  wj28.lee@gmail.com,  Fan
- Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v5 13/13] qapi/cxl.json: Add QMP interfaces to print out
- accepted and pending DC extents
-In-Reply-To: <ZedTEa8aktb-kKwt@redhat.com> ("Daniel P. =?utf-8?Q?Berrang?=
- =?utf-8?Q?=C3=A9=22's?= message of
-	"Tue, 5 Mar 2024 17:14:57 +0000")
-References: <20240304194331.1586191-1-nifan.cxl@gmail.com>
-	<20240304194331.1586191-14-nifan.cxl@gmail.com>
-	<20240305160908.000010c5@Huawei.com> <ZedFIp5gK4aXsqD-@redhat.com>
-	<ZedRsZee2WhTi_Nd@debian> <ZedTEa8aktb-kKwt@redhat.com>
-Date: Wed, 24 Apr 2024 15:12:34 +0200
-Message-ID: <8734ravr99.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="NRb/X98j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G8cbm8vVscye2ZzUf5B7chWIeCeBPcAfWzLnC10DrGg4q+MbsF6t9IUmUumkQ2f6rZJrOxUWDB5t53n2Mc31A6Fx7Al1NM79yA17hq3AJEwpY9CuU+4niHmAEsIJ1QkQ4HLX/BEVOA2gJonJj8czYA84oaMDyl3Qedy4V8FWmQmw4mZrUAQVsjBkdQ+38JesvEi1cajL0v9zUKHccOQERs3BF9EEKcHancAA3drHKyfr79XZOpbbnn4OrG/YgglCk/84sW8snQ7CRKnNmAN4plYVtDkf5H8xmWQoA85TSycPE1hUFtffprGR2Uqqxsl0+/SaRulkepUmW+dGIKiSCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qMs+xrt9+k20FUg4sXBvJmVVC1Dhf1Gh7jQGK6WsOsk=;
+ b=DNX8lNxCyfVdStWCXUGIfDBzyzZ1t96w3DAm58IJm7i2aR+7Q09qEUWpFY+55XdMsBYhtQBm1AFHJ7ODlkabZupMSjhBYRZ9CnmWA6SVJUMalasrJWPXt02VOxrPRBrWPqDsEFwKhPx7UGGqcLV/viJ9uO3oOEOygr6AvH4ZnZRMyhe9XFWTKAT6juQPoEHedAPbzjabWv6wiqiKBusT44cGcp8TTrrmRFDEfK185FyXtC7S1IWwsN+l9zWdlGuNSds3xc2B6nCkuOvzK/Kas/ax+tTz55ZIzlnsCA4pRIprSkpupp99vHCCSWqGxqARVo7Y7aEZISdRazYKHck8jQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qMs+xrt9+k20FUg4sXBvJmVVC1Dhf1Gh7jQGK6WsOsk=;
+ b=NRb/X98jCNAmbZmkjOOwVG2I+vw+b2aUW4KkkaJlP9G9abG8OpTTzhUTZXq26BCH+A1yjmqC7F4WXGQu5Asvx2DJTS6XQwCK+NJnqVmNzrG8qdocD+QaoAfa81lzfNl4sfhEXCYKVW8kD/MZ/qZ2FDqoZLUqJcnTeBrOTr0C3ak=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by LV8PR17MB7134.namprd17.prod.outlook.com (2603:10b6:408:180::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Wed, 24 Apr
+ 2024 15:34:57 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::5d53:b947:4cab:2cc8]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::5d53:b947:4cab:2cc8%4]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
+ 15:34:56 +0000
+Date: Wed, 24 Apr 2024 11:14:08 -0400
+From: Gregory Price <gregory.price@memverge.com>
+To: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Cc: Dan Williams <dan.j.williams@intel.com>, axboe@kernel.dk,
+	John Groves <John@groves.net>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+Message-ID: <ZikhwAAIGFG0UU23@memverge.com>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+ <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+X-ClientProxiedBy: SJ0PR03CA0291.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::26) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|LV8PR17MB7134:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f52e2f1-eebe-435d-5dfb-08dc647417ef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QUN1Z0lDZ2Rsc2lIWWNXN0RlTHNzak1yNUtLWU9VMjRaNEFldHZzSGdwZm1P?=
+ =?utf-8?B?STJSQmRIdlZOVmRGd3hWYnlPWUdDaXhmQ1pKRnd3OTVHVzJiZWxqY29DQ2dM?=
+ =?utf-8?B?M0puMmduK1Vqd0xEV0xyOEh2eGlYSmFIQVF3c1pHOUx0UzI4Tk9NQ240d3RC?=
+ =?utf-8?B?TXFoZEVKazJrN1dnNnFZdFN6T3NMTjZHdmdDSnVpalZRNDlJVTRkanhZU0kx?=
+ =?utf-8?B?c24yMDI3bHRUdlViblo5a0tLWXVTK3NxOVV6cnF0cVNHVmgzUlJoT3RVS0Yz?=
+ =?utf-8?B?WnltY1dxTHFMam9lUEc3NzRaRGp4NUhhZC9pZmtlRW1idlVpdXJFUFU2ZjEv?=
+ =?utf-8?B?S1VsTDhwOVU0bVNiUU5ZeEpFeUx0MXh0aTZjbHFvWTQ4VSt2aXlBYkYyL3Bp?=
+ =?utf-8?B?UmtwdHZWa05nVmZ0Y0RDRXJGaW5UbzNia0JXZUVFWCsyYTl0NUN3c1pKZEkx?=
+ =?utf-8?B?bEpYUEdFQ040SitSd0Y4Z2JLYlBJLy85L1NsU210Z0hYNXFoRktjUEFqeHJr?=
+ =?utf-8?B?a2Y5NExhMGhJbEZWeE5vTmpBdGRUSCtxdGd2ZGo1UHhCK1FMbWxyTVZCNXFz?=
+ =?utf-8?B?M0dtUXV5TUFsMWdGc2RXbEo1Ykh1Y0orVlJ6cXRpT3poYjNBOG85T1NJenhq?=
+ =?utf-8?B?RVMzR2JLNGkvc00vVWFzZ0daQ0Vpck4wN3NWUTJHTkQ5OUpFalhiMkoxclZF?=
+ =?utf-8?B?cFdnL3JOMTV2S3R0cWRYYk5KaS9ZTzJ1VzFCZlNBWk9wRTg3NTloSXhvWkRU?=
+ =?utf-8?B?RGNvbC9ZQndLVFptajhmbnZLZG1ER3JpVUVhZ2c4eXptL1doMVNvN3hGME1G?=
+ =?utf-8?B?VmNUSUJRWDNQY2g3VitxTDNuZVMzRyttaTBISm9pa3JWUWEvd21XN1ZFZ3dU?=
+ =?utf-8?B?eFJUUEF1YVljNUdCQlZzRzdBbHZ2NTVHTFB6VFZlTGhaTHEzTWdXS0RRa3lK?=
+ =?utf-8?B?S2NnaDl3cjUxWDZieXpCbHRybFVPUnI0YThWWGNSZ1hCUGNOekg0SVBoL21Y?=
+ =?utf-8?B?bHowVkhiSFNodStRVktxUlpETG50UlF2WGJ3ZzdERTlBNDdlY205VXVzSjNz?=
+ =?utf-8?B?cGx4N05WZDk2NlVPVVZBTEpBaGtobWV0aFNVTEFkTWVqL2RkRk5ua2tjTVhN?=
+ =?utf-8?B?Nmw1bWsyaVdHM1lPNEJKV1FWbDhCVFlZLzB1b1hPdWhRamR1RFFETnU5YVgv?=
+ =?utf-8?B?UEZWWEhMWmpKUUZPUldPZUNNQ05NSFd2SkZBMnNEeXplb28rRlQwa3VBVHdC?=
+ =?utf-8?B?a3RVTS9oY1pMbDMwRmZ0Ylh2WTFxQkJMVU9zZ1lCbGtmaUNuREJKWEllQlZJ?=
+ =?utf-8?B?eGZrdElFUU93VVZ0Q3JiMTNiVXZtcVEySjRxTnZuWXpqazR0OU5sb29yYXha?=
+ =?utf-8?B?Tkc3UEdqeUNxM3lsZFM0T0IweHE0aXhhcUlIMC9TQlpRVzZoMGdGcjlOWU1X?=
+ =?utf-8?B?SUZpcW5lN3RaenZEc2hMd2tlWFFxQU9md2h0Z0pBdUQweUwvT1c5ZEdPOEs3?=
+ =?utf-8?B?anFEMHVFZHFvZ1BpbjlFT29mM1ZpcnViajUyaXNTbTFMcU9Db3F1M01pSzlx?=
+ =?utf-8?B?N3ZKYzgrODFoZDBqcGVnaWRXNHJpdkVKZzQ4ODJOdWFZNjQ2WENYR203bC84?=
+ =?utf-8?B?Y2k0TlFnVmxGRW1XbFFMTUFMeGRBb2hnNSs1VHVHR1RJdUt1bWtvZWxjL2Nt?=
+ =?utf-8?B?UmlFRXdiMmpXTUVOMHRsaU1nZjl6VXc2MzJxVGJuWjJpWThtMlFRUWFRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WjYrVStXd0JDYzQ3d0ZZZFI4VDdzdjNackt4QnltcEt6L1p4Ny93VmRTQndz?=
+ =?utf-8?B?SGtmUjI5dlRXWFVtY0FoYUt0K2dLMlJ4S1U0WWU5SjV6YnRkYTlRb0pHd2ts?=
+ =?utf-8?B?V25DVUFGV0ZoWEJUbkdhc2Uxa29jdWM0RDgwT1RGWjcxSFpiRmhFaVUzWkYz?=
+ =?utf-8?B?SEtUWTBNUUVnd043QkJRZVY1QXlSWHdHUEJoNjdGWGx4R3RvY0paeURpOURL?=
+ =?utf-8?B?Tk4vN20vTDFVQ1F6ZXVtZGYxbmM2VHFoamNpZGorVDV6WktRQjNCcVQ2bW84?=
+ =?utf-8?B?OWhkaHZvTncyL0dvT0ZVdERxcEtiSUdHZlpES2FqbHYzR3lSQ0JlRVppaXpJ?=
+ =?utf-8?B?MEVXM0FGcU1nMnJ4VmdNSlA1YkFJNUIrYkFYQzJUcDlFRkU3OWdseWxVdzBz?=
+ =?utf-8?B?V1NOSno3eTNCRktkNkh2TGNCZWVxYlI4Zmx5c0xjaFp1QlJScjR4Y3FWNCtV?=
+ =?utf-8?B?aEVkWmRkVFBsWlZwQ1RGMXJ3OVRTUUZTKzl3VU1MaEYyd2FTdGVPSGxOQ0Nr?=
+ =?utf-8?B?Qmt5Y3BuR2pTZERESGdmR0xSc2xUNlZ4U1FERWhiNHhqaVZ4SUd0UDBhcWl0?=
+ =?utf-8?B?UHE0RE9kdjA3K25yNVJuQlVBdmFodTRleWFiQUhUOUVRVkJWVDlFdUU2VWtF?=
+ =?utf-8?B?aGdaSmxZN1NHQXB4dnVUUGxod2FYb3NEa0RVRGhuOWVBNFpzTnkzd0wrRFdY?=
+ =?utf-8?B?M3g2SUZrVUovZTlRdTBpeVU3V2FHYUhlTXcvQzZnNVNnblBuRXA5NnBMZUds?=
+ =?utf-8?B?YjZiV0JVOGlnTXlTUUdyUG10M25PWmdCbUFYVjRjcVc2WHRwcUlVTUVxTEM1?=
+ =?utf-8?B?RE5xa1JQTXJjTmdDaFc3dlMrRExoeUF3RTZhTWkwQXdxc2lzYUJyWVpEYzds?=
+ =?utf-8?B?MUp4RFZFWkQ2dFh1dkw4Q1V3OGNYdWVvbzN0a3BZWVJuUzExRXl1SjlJbjhJ?=
+ =?utf-8?B?VjdBbnFFMWd5cUNMZFNNNUVWbXpLbnY4blZMUEpTcXUwVEJMOG9JOXZWY2pD?=
+ =?utf-8?B?VCtEaW9DWkg0ZzBzTXN3MC9UUlFweVJINVhGZXUzcithc1I5UG1RdzNla3da?=
+ =?utf-8?B?cFJGWUFsVWZmUkZjaytJWTV4ZUVRNDNaV1FYYjJnZUlqUUZOWUFCekR6dDZk?=
+ =?utf-8?B?dk1RdU96R0puVW5uZUFnZmc2UlY1N0dWdm0rclB2M1cvTHR5M2FNd3NKTlQ1?=
+ =?utf-8?B?dkRFYjhHUzhiRHpybTI1blpDcmM2d2pVL2QrOHpWdGxsbjVvRkNXYVdsd2x6?=
+ =?utf-8?B?ZlVXeHU3alJSTkZ0RmNIdmxaclg3Tm1BdGZBWm1oS2xDUWJ5Vm5FUGk1OWtD?=
+ =?utf-8?B?UURwUHpISXptZkg4ekVCNHI5aUd3YnM3bnBCMmZlNjRiMWhsRVlwZVo1Mmlh?=
+ =?utf-8?B?cjlKZkUzYnhWNjRsb0JPaXA2RWdUNDVqeWxya1ZzMmFtVzQvem1yU0gybld1?=
+ =?utf-8?B?aDZ3cjN2SDdWeU1PY2xIcVdmc3F0d291ek5mL2NjdmlDTUtyWmMyMWhhdG8z?=
+ =?utf-8?B?bXdLV0NaanRnTWNqU2ZDNG5SMUVWc2NIVDJkd2FGRUxiYzZvaFhKQVM5UG4w?=
+ =?utf-8?B?Vit5UWJOa3kwcHJRbk5hNk9QSEdZN3hqUCtvazRjWTFQU2w1NkNldFUxT3p1?=
+ =?utf-8?B?TDVMOUhtd0dlaDJxbXZSbXlFdzVnbGtJZys5TWJDZU9yTzh2dFk3VjRrK3Uy?=
+ =?utf-8?B?bzVIa28rQURhVlZZZlBUYnZaUTVESTNVZzIwZUhVaW9wMzF4S2R0NnVNOUFs?=
+ =?utf-8?B?TCt6WXNZL2kvckZqVStEam9pMkZ5MVZ4V2ljd1hqemVNWDl1Z1N0SVhQUWVK?=
+ =?utf-8?B?VFovaGR5bjZhMmhrNXdzTkE5RGxzdjZNcGpySU1zNzBQMkU0b1JENXBFaDkz?=
+ =?utf-8?B?Qnc5V1A4Z29JOUkya0p2MmdySXZyblQ4OEhFL2pYK0RTZlBRaGVXTTVsSnlX?=
+ =?utf-8?B?emQwV004QWhDV3R4MlBZNHl2TWZ4bHRqWG9BMjk4L29xWkl3R1YzdFdRVGxs?=
+ =?utf-8?B?MnVqU01rVk96bFhyQ2p5VG1QdGV4V0hCWmg0cTJKUElKZ0U4dWtIYTB2eFgr?=
+ =?utf-8?B?YzVnYmptTjl2Q0pWcTdnRk1KdGJCUnEwcEJFUHRocWVHTkhNQXBLMElpRGV0?=
+ =?utf-8?B?R0RWOVlDZndvb084YWVuSk5wY3VwVTJadVAwbEtXT08rSklRcTRYQmQ5aXI1?=
+ =?utf-8?B?dVE9PQ==?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f52e2f1-eebe-435d-5dfb-08dc647417ef
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 15:34:56.2458
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tkE5orBfS7zeH+MPgYVjmkVh35jJRbiIqTw7+BB6szvUogMXNayDyMha5AIV6rSYzuUumrAE1Mhd2IgpIjkUnCZdpts3k3n7rxy6pHzjGXg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR17MB7134
 
-Daniel P. Berrang=C3=A9 <berrange@redhat.com> writes:
-
-> On Tue, Mar 05, 2024 at 09:09:05AM -0800, fan wrote:
->> On Tue, Mar 05, 2024 at 04:15:30PM +0000, Daniel P. Berrang=C3=A9 wrote:
->> > On Tue, Mar 05, 2024 at 04:09:08PM +0000, Jonathan Cameron via wrote:
->> > > On Mon,  4 Mar 2024 11:34:08 -0800
->> > > nifan.cxl@gmail.com wrote:
->> > >=20
->> > > > From: Fan Ni <fan.ni@samsung.com>
->> > > >=20
->> > > > With the change, we add the following two QMP interfaces to print =
-out
->> > > > extents information in the device,
->> > > > 1. cxl-display-accepted-dc-extents: print out the accepted DC exte=
-nts in
->> > > >    the device;
->> > > > 2. cxl-display-pending-to-add-dc-extents: print out the pending-to=
--add
->> > > >    DC extents in the device;
->> > > > The output is appended to a file passed to the command and by defa=
-ult
->> > > > it is /tmp/dc-extent.txt.
->> > > Hi Fan,
->> > >=20
->> > > Is there precedence for this sort of logging to a file from a qmp
->> > > command?  I can see something like this being useful.
->> >=20
->> > This is pretty unusual.
->>=20
->> Yeah. I cannot find anything similar in existing code, my initial plan
->> was to print out to the screen directly, however, cannot find out how to
->> do it nicely, so decided to go with a file.=20
->>=20
->> Is there a reason why we do not want to go with this approach?
->>=20
->> >=20
->> > For runtime debugging information our strong preference is to integrate
->> > 'trace' probes throughout the code:
->> >=20
->> >   https://www.qemu.org/docs/master/devel/tracing.html#tracing
->>=20
->> I am not familiar with the trace mechanism. However, I think the
->> approach in this patch may be useful not only for debugging purpose.
->> Although not tried yet, maybe we can also use the approach to set
->> some parameters at runtime like what procfs does?
+On Wed, Apr 24, 2024 at 02:33:28PM +0800, Dongsheng Yang wrote:
+> 
+> 
+> 在 2024/4/24 星期三 下午 12:29, Dan Williams 写道:
+> > Dongsheng Yang wrote:
+> > > From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+> > > 
+> > > Hi all,
+> > > 	This patchset introduce cbd (CXL block device). It's based on linux 6.8, and available at:
+> > > 	https://github.com/DataTravelGuide/linux
+> > > 
+> > [..]
+> > > (4) dax is not supported yet:
+> > > 	same with famfs, dax device is not supported here, because dax device does not support
+> > > dev_dax_iomap so far. Once dev_dax_iomap is supported, CBD can easily support DAX mode.
+> > 
+> > I am glad that famfs is mentioned here, it demonstrates you know about
+> > it. However, unfortunately this cover letter does not offer any analysis
+> > of *why* the Linux project should consider this additional approach to
+> > the inter-host shared-memory enabling problem.
+> > 
+> > To be clear I am neutral at best on some of the initiatives around CXL
+> > memory sharing vs pooling, but famfs at least jettisons block-devices
+> > and gets closer to a purpose-built memory semantic.
+> > 
+> > So my primary question is why would Linux need both famfs and cbd? I am
+> > sure famfs would love feedback and help vs developing competing efforts.
+> 
+> Hi,
+> 	Thanks for your reply, IIUC about FAMfs, the data in famfs is stored in
+> shared memory, and related nodes can share the data inside this file system;
+> whereas cbd does not store data in shared memory, it uses shared memory as a
+> channel for data transmission, and the actual data is stored in the backend
+> block device of remote nodes. In cbd, shared memory works more like network
+> to connect different hosts.
 >
-> Please don't invent something new unless you can show why QEMU's existing
-> tracing system isn't sufficiently good for the problem. QEMU's tracing
-> can dump to the terminal directly, or integrate with a variety of other
-> backends, and data can be turned off/on at runtime per-trace point.
 
-Seconded.
+Couldn't you basically just allocate a file for use as a uni-directional
+buffer on top of FAMFS and achieve the same thing without the need for
+additional kernel support? Similar in a sense to allocating a file on
+network storage and pinging the remote host when it's ready (except now
+it's fast!)
 
+(The point here is not "FAMFS is better" or "CBD is better", simply
+trying to identify the function that will ultimately dictate the form).
+
+~Gregory
