@@ -1,237 +1,116 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9A1142E6F;
-	Wed, 24 Apr 2024 23:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714000759; cv=none; b=q7ropMWqYUP6pHyAUegZoAJMqeRdLZaEoyButvVILYkHsIDWdaXUzwUrhtGBmOaWB1+tKg9ejVhXrKSKshAjLMbcRQQVFEcrbzT+NPXyYaNMvsEo7govUrPq5ALnTuUqMc/RnwhkiUrz+hYrXbJnNvOT/lyqjh9FiXJDnj+wuto=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714000759; c=relaxed/simple;
-	bh=T0q3Dl6/0KH0khAoyfEPkB4v/KHhMEDnVbAu9J++Ykg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMvn3b4a2qmctrk7OPqjuWaQQmjT33ciXQJGu7UChL/Dk6J1FpSC68ylhGosnz/dp6nupbZLCcMgetWCUXCQKh9xeEUMR/VFke9eyp6sZQR37dwPXltW1E01A3f/KzuG7t/F9qljVEuMXkoUSHs7CfCkRSnf3umTFYrxdFz2TJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLKuutOA; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13D313A3E6;
+	Wed, 24 Apr 2024 23:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714001813; cv=pass; b=oV64p7uV21259rlzV3IaLb9Thfmdj/PSA4qk5p4B7OmuTL9r/+dk0v5nPk6HMODEcWYHlBEOhoWoyBOWH2HZIj2Y1bmU2j2zDXx4WWjbL2Yu/IPHRn7XsurxCin3eIDpEJcq1rqnE4jLeNmDF3nS+dtd0E2yqpELrAwHT2+m7V0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714001813; c=relaxed/simple;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rp9wnCjkKN0tjQ6/rpG20cWvh1R8QLW/itfWRuG/ja68owoBm5jd5iLA1uvpU57zu5QGopBlxZU07osYz2dGTYkgp4e+iHmvG3ATURsrKvdDzJLWe7sfMZisQt+iYhCWGsmxjXlceHsbZvW1csmThQ66tC20PC29tW0vE7hhwJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=FuLPnotF; arc=pass smtp.client-ip=23.83.223.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLKuutOA"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f30f69a958so388884b3a.1;
-        Wed, 24 Apr 2024 16:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714000757; x=1714605557; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sakwDrIIsmCz4hVkB1z5sN2fWtElfeE23GuvVoi+CRM=;
-        b=aLKuutOA2LNZoBs/lhGRc/8Psr3FFvZj/sgGs8feAr7FdJZ6V1PVg+4ettu4kz8KMT
-         hAqgJpHtwfB0Gj+vWWL5XFYIMUsFX43qgjwJNN41Cnjck2Thh+iO/l0BAZdTiKrzPMJ2
-         YnTy0ourOsB5cHq/EQFssakSJyi0gY0Wh8IXYlb4yN+2adrjv3RlkZ9nRFNN9AQRx1LH
-         SGl37ZKHwLNzCmL4GZ33NebaV/mW/cVgpdCPCCgUWWRQspy62B/GvWiLXmk9souP9GEc
-         VjE6eKreTPk6I7hDXLcEocZLRQ1CJi/BK2f7gDOV8rKQHO/UY2HN2EV5cgB3U0ScK3qS
-         F1kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714000757; x=1714605557;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sakwDrIIsmCz4hVkB1z5sN2fWtElfeE23GuvVoi+CRM=;
-        b=UgvxXKlyhDuwBTFYerX9IZqNq1lqqfcYdHyaMx13e0FFmXI8LlJe5YcGFTf/QatKWY
-         TbuKZnqKmj3fYS+ZemQEPmEHIwbOIpqLIxq7vMjwxAWz/6OS+SvdqhNr+J9LEvGn92+A
-         79yxgMC1frObO9WVZ25TLCs5BSM48cIAAvdvAkgm4LDX4c1olyBxv7uCVoQXlq7cRDOE
-         bvyrfnuXIg2V8Yzw3QYwY+1M5rNn/mrxuP94XOhGk8fSZJ34WmfoAz9EFv/UCVuTnqIZ
-         raJ8fXIdaZLw9yU4uDf/ajejiBB9/eVLlccAevSr5FVv4RxTLbG4UqF7OrqR4TFdiQ1/
-         gRTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNO7BCAy8hH1JWW0ymCWknTMki9xicRzP9gQGT0WBmP+AxPz2DEE1u3B87sVDIXgHLnoE1AZO1ErPPB1ZoPatp2KUW5u67iEzmovsl+vdswL5bev7lO2+3Ov+jm/zHcGgAFmTwHm2qtpIt3maRMAbbpHCn+9eEzYUwHdBP3RiAAXltPl4=
-X-Gm-Message-State: AOJu0YyTWeId+h/vZQ0LvEazxZQjzON2kx/KXHqC7eVolxLLjz2iCjuf
-	Tqhaw4a8zXxNaMjK8ggDYHlCj8cquhHdX+aUopRCzoSZuYct4jMn
-X-Google-Smtp-Source: AGHT+IEuvZAJziMcw4WYyCy553sul9ZkpvveDxJ7UhszeD5DLuljCvM3wLrc+K7mU7JskjhiQsWU8A==
-X-Received: by 2002:a05:6a21:2709:b0:1ac:48a9:8a42 with SMTP id rm9-20020a056a21270900b001ac48a98a42mr4263409pzb.14.1714000756872;
-        Wed, 24 Apr 2024 16:19:16 -0700 (PDT)
-Received: from debian ([2601:641:300:14de:56e5:6d59:647c:63a1])
-        by smtp.gmail.com with ESMTPSA id m5-20020a170902768500b001e4478e9b21sm12438135pll.244.2024.04.24.16.19.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 16:19:16 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Wed, 24 Apr 2024 16:19:06 -0700
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, david@redhat.com,
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
-	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
-	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
-	jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [RFC PATCH v8 03/10] cxl/mbox: Add GET_FEATURE mailbox command
-Message-ID: <ZimTauNEryrxDQgF@debian>
-References: <20240419164720.1765-1-shiju.jose@huawei.com>
- <20240419164720.1765-4-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="FuLPnotF"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 94AD340929;
+	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 0CF724054A;
+	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1714000306; a=rsa-sha256;
+	cv=none;
+	b=SiZT6pBBOImRsA7ydImmpPrikQ9KDKMZGK7IxCYd1dEVBMlFEaB4FpGlBy0+D6QZvsWZOT
+	wVgMs2jigkMtNbAWXoZx9MoYyMmon6Hczo3t2TTl9HWPD3w7LY0kFheSI7tTdwu/AMr2r9
+	SqV+3+XF7sH7K/hu5LRcKn0M540oy+nnmQO65J2oO2cRUnJCHi5vlv1O0PwZ6HSTauFZSL
+	kVjuQZbtNwcf4M34U1C06wNOkX1Wiiz84c97XIiS1p+robK/Nn55yxdBins1PGkR57MkZX
+	s5tWHzgtlfuYE7qMuOYbq2n4OWKrKjV6V8Ghb9e9vwEYAUef6du7FpbRR3uLIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1714000306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	b=3lAkrRL3I0TuHATFXkFiJQeqiI0p3NE5y//jBkBlwU6FNdtv3Y3I5MKHXdOwKy/4PQMLhk
+	MEAj2kp+UUZ7VjJQiq8su9a0WwUz6ktIMWShSQlJ2sCTY3vYSQvNto68VjNAmjHdzCNazA
+	Bww+rY/dLisDZS0XW6Mj3GP5pPcDFnlUbFxrxbsF7fbztU+ybJqyBkJsZkmK/CSlvXwCyU
+	1YJaC9EqpCFUXB6JNcFj89zMsCvlEoIKmfiFoNSnnt/neq7Iz+Lka9gG8rgSJvn0kVadEO
+	vjpKqdPNFrrPE5TQ1fcnBwaY4LWZBKtcLjo9HTq5HEF48H/dT9XXxgBLHL3sGQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6f55c6f9dc-cds9h;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Stretch-Troubled: 4c82c1c54eb796ed_1714000306362_4070382946
+X-MC-Loop-Signature: 1714000306362:3215447623
+X-MC-Ingress-Time: 1714000306362
+Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.153.252 (trex/6.9.2);
+	Wed, 24 Apr 2024 23:11:46 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4VPvrK2ZK6z8x;
+	Wed, 24 Apr 2024 16:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1714000305;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=FuLPnotFRpjsr7YkpzdNz3BQ4FwnYher2PgVr1DLtEKGIh7tHXkEeGiUGnIYA+wy/
+	 4fc5DtHLjld6qAJgNKHQFOqO7tlEYNQRis5c1s/MxJEOQ6o1PO1H8NKglRUjoNkjGJ
+	 o5E2AfGPZlexLPcijqJauOUud1PEWKK7PTZE+6oetOY2+mMjmecwAfF8QWpb1tar45
+	 x3lKipFeeTdPGgoQKaBcOdXRKH0GdOM79UdbYcjbiJ/4q2sPDE/fkY2Rk3XncWqeba
+	 2E99aAc7u/oSeXJYOcAB6Rnm2PbXWJI0ilyf4X/AoU/IGeGsNkMDqTsINZfYelRrRY
+	 D/7MBkxE0BW+w==
+Date: Wed, 24 Apr 2024 16:11:42 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cxl: Fix use of phys_to_target_node() for x86
+Message-ID: <20240424231142.rytjmxfassu44vln@offworld>
+References: <20240424154756.2152614-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20240419164720.1765-4-shiju.jose@huawei.com>
+In-Reply-To: <20240424154756.2152614-1-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 
-On Sat, Apr 20, 2024 at 12:47:12AM +0800, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Add support for GET_FEATURE mailbox command.
-> 
-> CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
-> The settings of a feature can be retrieved using Get Feature command.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/core/mbox.c | 53 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    | 28 ++++++++++++++++++++++
->  2 files changed, 81 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 82e279b821e2..999965871048 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1318,6 +1318,59 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
->  
-> +size_t cxl_get_feature(struct cxl_memdev_state *mds,
-> +		       const uuid_t feat_uuid, void *feat_out,
-> +		       size_t feat_out_size,
-> +		       size_t feat_out_min_size,
-> +		       enum cxl_get_feat_selection selection)
-> +{
-> +	struct cxl_dev_state *cxlds = &mds->cxlds;
-> +	struct cxl_mbox_get_feat_in pi;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t data_rcvd_size = 0;
-> +	size_t data_to_rd_size, size_out;
-> +	int rc;
-> +
-> +	if (feat_out_size < feat_out_min_size) {
-> +		dev_err(cxlds->dev,
-> +			"%s: feature out buffer size(%lu) is not big enough\n",
-> +			__func__, feat_out_size);
-> +		return 0;
-> +	}
-> +
-> +	if (feat_out_size <= mds->payload_size)
-> +		size_out = feat_out_size;
-> +	else
-> +		size_out = mds->payload_size;
+On Wed, 24 Apr 2024, Robert Richter wrote:
 
-Using min() instead?
-    size_out = min(feat_out_size, mds->payload_size)
+>The CXL driver uses both functions phys_to_target_node() and
+>memory_add_physaddr_to_nid(). The x86 architecture relies on the
+>NUMA_KEEP_MEMINFO kernel option enabled for both functions to work
+>correct. Update Kconfig to make sure the option is always enabled for
+>the driver.
+>
+>Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>Link: http://lore.kernel.org/r/65f8b191c0422_aa222941b@dwillia2-mobl3.amr.corp.intel.com.notmuch
+>Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Robert Richter <rrichter@amd.com>
 
-> +	pi.uuid = feat_uuid;
-> +	pi.selection = selection;
-> +	do {
-> +		if ((feat_out_min_size - data_rcvd_size) <= mds->payload_size)
-> +			data_to_rd_size = feat_out_min_size - data_rcvd_size;
-> +		else
-> +			data_to_rd_size = mds->payload_size;
-
-data_to_rd_size = min(feat_out_min_size - data_rcvd_size, mds->payload_size);
-    
-It seems feat_out_min_size is always the same as feat_out_size in this series,
-what is it for? For the loop here, my understanding is we need to fill up the
-out buffer multiple times if the feature cannot be held in a call, so it
-seems feat_out_min_size should be feat_out_size here.
-
-Fan
-
-> +
-> +		pi.offset = cpu_to_le16(data_rcvd_size);
-> +		pi.count = cpu_to_le16(data_to_rd_size);
-> +
-> +		mbox_cmd = (struct cxl_mbox_cmd) {
-> +			.opcode = CXL_MBOX_OP_GET_FEATURE,
-> +			.size_in = sizeof(pi),
-> +			.payload_in = &pi,
-> +			.size_out = size_out,
-> +			.payload_out = feat_out + data_rcvd_size,
-> +			.min_out = data_to_rd_size,
-> +		};
-> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-> +		if (rc < 0 || mbox_cmd.size_out == 0)
-> +			return 0;
-> +		data_rcvd_size += mbox_cmd.size_out;
-> +	} while (data_rcvd_size < feat_out_min_size);
-> +
-> +	return data_rcvd_size;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
-> +
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr)
->  {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 06231e63373e..c822eb30e6d1 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -528,6 +528,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
->  	CXL_MBOX_OP_GET_LOG		= 0x0401,
->  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
-> +	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
->  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
->  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
->  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-> @@ -754,6 +755,28 @@ struct cxl_mbox_get_supp_feats_out {
->  	struct cxl_mbox_supp_feat_entry feat_entries[];
->  } __packed;
->  
-> +/*
-> + * Get Feature CXL 3.1 Spec 8.2.9.6.2
-> + */
-> +
-> +/*
-> + * Get Feature input payload
-> + * CXL rev 3.1 section 8.2.9.6.2 Table 8-99
-> + */
-> +enum cxl_get_feat_selection {
-> +	CXL_GET_FEAT_SEL_CURRENT_VALUE,
-> +	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
-> +	CXL_GET_FEAT_SEL_SAVED_VALUE,
-> +	CXL_GET_FEAT_SEL_MAX
-> +};
-> +
-> +struct cxl_mbox_get_feat_in {
-> +	uuid_t uuid;
-> +	__le16 offset;
-> +	__le16 count;
-> +	u8 selection;
-> +}  __packed;
-> +
->  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
->  struct cxl_mbox_poison_in {
->  	__le64 offset;
-> @@ -888,6 +911,11 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_get_supported_features(struct cxl_memdev_state *mds,
->  			       u32 count, u16 start_index,
->  			       struct cxl_mbox_get_supp_feats_out *feats_out);
-> +size_t cxl_get_feature(struct cxl_memdev_state *mds,
-> +		       const uuid_t feat_uuid, void *feat_out,
-> +		       size_t feat_out_size,
-> +		       size_t feat_out_min_size,
-> +		       enum cxl_get_feat_selection selection);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr);
-> -- 
-> 2.34.1
-> 
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
