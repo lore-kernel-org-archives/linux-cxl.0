@@ -1,520 +1,178 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2109.outbound.protection.outlook.com [40.107.100.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7245B134A8;
-	Wed, 24 Apr 2024 20:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713990372; cv=none; b=FON9h5hKbHe8JTrkiVvX732nmYzFDxjyevboMdzyxkBJsVoRXyTpqkxIrfvgE9vRdTeW8AsL/EK/A/zwdx9ZNUTJdayz2hKLOG2AY+Xi6TFpG6T4j9FQxWkg2Jv6hA4be7LRTtYJIfdjooYmACQU4ZNZc0k7fkUAF1QXXzF+3x0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713990372; c=relaxed/simple;
-	bh=3E6hBRp+q6RqA9OZIcTord3rpr9d9+SPNfOfM8PyddI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibXPlBMmMyBrrEKhSk1GK8lLg0HHQKgZno8awmZcWLfTbjIMQQFXVe4RK61fxirXucVgekv4uDM9SgqUi/Fupfqnbjbo+cxzH6jGFNaeZ6HMBQgKBOMFqZyI1PbLh3412HgdqP+Te35IBcIk4PlkjKV2ZeUVAzE8MJdHkYpkWDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HCDPwWus; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F7B134A8
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Apr 2024 20:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.109
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713990497; cv=fail; b=W6dHts+LKKHqDLq/RkVdMKjHI+TNvtHaXpWj/XAgVjr059TiCxgm1LtLGY5I73Vf7WxiUFHF+5BshESF8vkxxU1N6y5U4NpoQ7KOrXTPqFEdCabGLPS8bin+2lE90n7tMxZfjiZfQhgDjAypvQzhYdlhfDEwBZOFMe91oO0rTQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713990497; c=relaxed/simple;
+	bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EOReJ1SaHM5zgpIdqQ5Tc/qRcBomq17EB5iiFEnQwPQX4f+gD8fOJ/y0JXEUDAkYh7tG6tfukWpK/iPoErJireDO/yK+WmbUhJQvNBAt0t7KP3WQHRdZ0cokdrOrhmQ1S9GleuyZlHuLq9Ab244jD4FCKfiDiwR8kyHE2VocJxw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=iXDMGTJQ; arc=fail smtp.client-ip=40.107.100.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCDPwWus"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-232f2b86e4fso143320fac.3;
-        Wed, 24 Apr 2024 13:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713990369; x=1714595169; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=incol+l1cttU80jXk2nqyGIlECdYg5DlgRh3ZAraHcI=;
-        b=HCDPwWusnWZP1yzDJyyw8OOb6k4CHjIh65r3aEWNn0kEusm4bIxLLe6G3TJdJY9Hez
-         gA5JUDmaxQVAvflYUOad6YBX8xDB6N+n/fZzJBCGlUUxg4rHmWtnasJHMl7WHqXq2se4
-         s8Ww+Qg2Hnrdba5Vr81pCmmtj16+/bbdDYAtgXY39SMxvKNB0jry8yoa/TWxA8qrBGZi
-         T7rvJ8KFDn6QQy0YT5vdQExmZCYAmIvqg1O4lPccJZ2jBs0n0Wbnp61VPOrspkLHwwrA
-         l9epSzaE9Xri1Fhgsx1zjLZ3pAkV2jyBnCD0b2zGjFlQPn9dUlVJUIQ7/7UUX99jRolE
-         34pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713990369; x=1714595169;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=incol+l1cttU80jXk2nqyGIlECdYg5DlgRh3ZAraHcI=;
-        b=A8om7LNHM2wJ/coL25ska37ZyuxHvfLf6niz9g5KrIaNpQz9m3kROcvhMlriODmAZk
-         kQtY0chISyU5CgjdT081NEmwF1xyMbwt0Z9o3j56mVJwTsVJljge9Fp020wRRwnJJkYw
-         dUbh3BbH5SBnpC8g8EELldXdy7f52hqV6vTZLnRKGBbzSvRoO/Wy9J7jbougtKTAKX6x
-         5fQ/huwtpUQhs8emHGAmt5AUdwj/6Xc/KER4y50BJTIZYxbga516b9HfXHfwCeRIEYJf
-         6Mqlf9hmrqlyEYpVQnOAfMnV+ZehTirJiHNTo2huT8qJTmaopCNeTOb4Hp+qwwZ5wjbA
-         pk/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUxsu2zusA3iCcDvqYfh8r0TxNuMet4xuM8FNfDAyk7/QHvaTkaz47b7uUHLjIu30C0mH9MiRkGE2en4iwoqyO+46kl3vZQ8DfK+LNAHMohUNP+Jnb+QvxuwwNgJOOmwHiWMRr38ss2gjGnN8QvAUp3R0HDVr1EYLu8KCMCQUhp5UuZIPY=
-X-Gm-Message-State: AOJu0YzYvURxPyM9a5zKhDSEfigIxom/CbmQeXVYGOIsQWvTokhw/DA5
-	xvhuFFjSL3fTeOKIF90LoHIYPUYp39ZQyMDvOHVv7jCPTejxX38g
-X-Google-Smtp-Source: AGHT+IFhXCtEEypDPb+KRK/ZNKaDwjojMo4l1m6xexhGZqfv+stKhOGdYK5rdm1vBXBnystoX42XUQ==
-X-Received: by 2002:a05:6870:e245:b0:233:b5dd:471c with SMTP id d5-20020a056870e24500b00233b5dd471cmr3861498oac.51.1713990369274;
-        Wed, 24 Apr 2024 13:26:09 -0700 (PDT)
-Received: from debian ([2601:641:300:14de:b318:9476:706a:e82a])
-        by smtp.gmail.com with ESMTPSA id p5-20020a634f45000000b005f05c88c149sm11622926pgl.71.2024.04.24.13.25.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 13:26:08 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Wed, 24 Apr 2024 13:25:52 -0700
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, david@redhat.com,
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, tony.luck@intel.com,
-	Jon.Grimm@amd.com, dave.hansen@linux.intel.com, rafael@kernel.org,
-	lenb@kernel.org, naoya.horiguchi@nec.com, james.morse@arm.com,
-	jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <Zilq0ER7C8zeo3j8@debian>
-References: <20240419164720.1765-1-shiju.jose@huawei.com>
- <20240419164720.1765-2-shiju.jose@huawei.com>
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="iXDMGTJQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TvsVtJ0ms16s1nBgSKrWWwPzWe7P+rgA4XGydgLTBd03J2e6DWaPTRZXtu0RHmJKWfbT626upwZBBzqHG7sRWSEM5MTS8WDS/09OGts5W9MhFXpAKcuOVDe+yx31ofytPF00uep8qGgJ6ZM7SR2dtyL0g3x4V7ZS8LAmW5GCFPlooMce6nw1g23KeIi8Y3f6Uc1qZSwtKxx51RBAOxpCoDHVTwGbieIJAXpCGLpB2KQF7vqIRLSDvC+cwvpg9Tz3bLEuxJNYccDmwAVBoBEok+x36gb0BcT8eGbu2DiTaOwrn6ptKAm/8Md+V/tWvhSHTYHRneQT6/RlV9e7rzGrmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
+ b=i+slNLct+GVhAS68O7/0Tnrz68wPhsHxxkIps3Q4ZX0J3RHZdtpyLywtC1y6GtqJXRB1GgqAgYA1MD3pCtpYmC9vT+lZIehpxWMfbBuzrHXewayAN2htVKrBveDwoc/2Tarbd1R0HLRq97axBPGbMObumjPykMV3tYoEUsdTR0QKItpXaJa4o56Yu8N89reGHyWhZPkbLbJJBROOOmxeW2qw4+eS5wzY9Sw7PaKLe53Nx0YaOgJknb1gQHgU81R/nk8ohLDn4NVPGbj7MtTrFN9wyhyIoOvRPxf04PtJ1CdUKBZ/BnkTdpHf0lO6oDH8cEZuDiZ0DgNECwY15GLdug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxCkkjK1TlQBYMX53JhYRiTRr585u5xK4aS4VLeOPxk=;
+ b=iXDMGTJQKaO9mCqcFriYZuZj9XtJ034SDe019T4+6AI3ITBz/lefr7Ym/NNchcPs4ZFFjl8hGyvyLMJL8/h4/vvuH1p7lwqcMmVotDqcMrKl7cN1zH09vg7Wu7wcVgWwI6Q6z4pLd09Vi7TG9UE0u7Jd0VXsGIwHDax6YevDMFA=
+Received: from IA0PR17MB6347.namprd17.prod.outlook.com (2603:10b6:208:435::22)
+ by SJ0PR17MB5606.namprd17.prod.outlook.com (2603:10b6:a03:392::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 20:28:11 +0000
+Received: from IA0PR17MB6347.namprd17.prod.outlook.com
+ ([fe80::200e:df84:29a9:8c9a]) by IA0PR17MB6347.namprd17.prod.outlook.com
+ ([fe80::200e:df84:29a9:8c9a%6]) with mapi id 15.20.7519.021; Wed, 24 Apr 2024
+ 20:28:11 +0000
+From: Svetly Todorov <svetly.todorov@memverge.com>
+To: "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>
+CC: "Jorgen.Hansen@wdc.com" <Jorgen.Hansen@wdc.com>,
+	"a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, "fan.ni@samsung.com" <fan.ni@samsung.com>, Gregory Price
+	<gregory.price@memverge.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"jim.harris@samsung.com" <jim.harris@samsung.com>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, "wj28.lee@gmail.com"
+	<wj28.lee@gmail.com>
+Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
+Thread-Topic: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
+Thread-Index: AQHaloQ7v+Y2b5YHh0S+QGF8zUpElLF33sQA
+Date: Wed, 24 Apr 2024 20:28:11 +0000
+Message-ID: <BD1422BC-F298-4DF2-93FE-5B123D68B7AD@memverge.com>
+References: <7489170B-E7CC-49BB-91D9-DD6497F99E23@memverge.com>
+In-Reply-To: <7489170B-E7CC-49BB-91D9-DD6497F99E23@memverge.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA0PR17MB6347:EE_|SJ0PR17MB5606:EE_
+x-ms-office365-filtering-correlation-id: 4f839552-4dac-4fd4-8af6-08dc649d0f82
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?QU5OZmxRdHkxdTJ6VlpVTHpab29JR3BMOVdDV3ZHaW80Mi9vUFlNbmtZbjdp?=
+ =?utf-8?B?bkM3Nnd5SGxTRzVYdEY1S214YXh0U2F5VzM4akFkMU5YWVdxQ2VOTFREblRI?=
+ =?utf-8?B?Z2poaTJQbHVOV2lDU2VRZHNhM1REZWtiVnExK1NDSW0xSzI4WmJMNi82WGp6?=
+ =?utf-8?B?UVNxcjcrajl3dS9nOG5SdXFJQ2FpTnFER2J5dU5tbjFmV01GbkxaRkVDYlll?=
+ =?utf-8?B?clFWNEhiVC9QT3ZhR3JHNXBneHFJMTI0QjRteVY0cytRM1h0MEkyS3RCWWJT?=
+ =?utf-8?B?aE42VHBrL2RESU92aGN3c3VHTnJLc1lvM3k1REtJbzk1cEJqUzNBWlg5WGhM?=
+ =?utf-8?B?eUlFQ3Z2TDlzVUtsZjNlNEJnMUx3NjlWWVdGeVFFcmlLbFJudThoS3h4WVl2?=
+ =?utf-8?B?OGswdHRFcFRJbmdKcXF0c1N6WDNhZ0VlOHA1NGVyU3BoZDRmYkhzclhDWU5R?=
+ =?utf-8?B?WSszeWQ3SXhXSGxQTVByUytJRUw5Nmc0Ylk3Znc4Zy9TU2FDQXFOZFpjOXVB?=
+ =?utf-8?B?K3Q1OWU2UG9CdmRFN3NkTld2bGgzVWh2NW8rcmZtdThhQUVmZkZQaWtkTHNL?=
+ =?utf-8?B?WjNTU3NBV0lZMmdhTk9UVmtRa3pFZ216Mm5iMTJDZEh2cEZWcVJiTitwNmdu?=
+ =?utf-8?B?bVI4RGVJbUJkcUNwbzFkNlY4eSs5dFRkeGlIK2txcWhzeUx0SFZZY1RZaWcr?=
+ =?utf-8?B?amZlRFZnc1ZQaDB5VmF2bjA3WGJMY0Y2YTJRU24wS3hpNkN2L2V5TUx3bFVl?=
+ =?utf-8?B?R2FvQ3ZVNS96NGFpYy9Yb1NZSGM3TzE5dU1vWmYvM2JyeUN3OUloZzhTaWFB?=
+ =?utf-8?B?UWdoVlJoNFNkNStXRzJ3UnZKd0dLVVE2aFFTMWVUcDE0SC9nOUNXZXprZTZz?=
+ =?utf-8?B?dUpDMVRFbUdyaUgzWHJKdHJCOTAxQS9BZUdKcUlmeDNUNWoxMVEwQnp6WWRm?=
+ =?utf-8?B?TFM1a0F2RUhseDJ4MVd2WHgvaUpwbnlQd1pEYWJqbHJFMlZjZU1DU0lBL01s?=
+ =?utf-8?B?ZWsxQkVTempNT0lJS0s0OUxpSk1Ra0VyanZKMVFQcU5icUs1cTRRa3gyZ0lD?=
+ =?utf-8?B?SnM0WXhxek9MNFRiVWQ1ME1zNGFBb28rWXMvM0JYeDRxaU5zNVhtNmwzWi9a?=
+ =?utf-8?B?bU5nY0NJK3I5Q2I5U1pWd3FPdkN6c3ZGOXl1QzhpNk5mYm5rYmwzZUhkelND?=
+ =?utf-8?B?N3dCaklRSDBRbGhKYVdGMWMrSUFFeGdqY0IwL3FMTEtRSG5TQm1BVGdLalNC?=
+ =?utf-8?B?RnZrUk94QVhSYWdsWm1JL0l2ZDFpOFdCWFR1MHh4RElyTWVlQU1XRzRpb28y?=
+ =?utf-8?B?Tm1CVnFINFkwVXdVOCthVWVlTDhhZkxqK3N1SGVURTR0M1lidHUyRklNOW54?=
+ =?utf-8?B?YXgvV2NtczdsMWlRZVllNEFRbkhtTjNjaGZtRlM2VG9HUmdFNXV0VzlGbHVZ?=
+ =?utf-8?B?U1VqcFRYTWRiQ0JHbERsZy9XaEtsWjU2bXhhR1FaVzNoVDNlN2xhZm84cHZn?=
+ =?utf-8?B?QkduY3FXU0piRDNXZWR0T09lRmR1emlPTWhjUzZkaklyUzZ2Y3RySlpTcXZM?=
+ =?utf-8?B?TVRUMWl3R3htMzlZY0kxSG5tQnRTODNwMG5PSlJNTHc1Q29UK0FEbG51UDhL?=
+ =?utf-8?B?emF0SEowOC9nV3hNZFRSY3hpVDNmc3ovUUpEajcxNTIwTWorazZFeGswajNz?=
+ =?utf-8?B?TlZ5VHhRbVpWMzBjblZjUitOZ1ZsaEJPOWlLcU1iL3RkRFBVcEJWNDJTSFVq?=
+ =?utf-8?B?RzN0WkF1NHo5MjdjTnlhYllTMXdjTEluOTNQaHl6WisyWjBod0VUdUVYbGZB?=
+ =?utf-8?B?dlMxM29haDdsVmJvZklLZz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR17MB6347.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?YmxTWDBkMDFRd1E1MlJtdmJncDhHN25qdmtjT2wvL1lScFk4aTNPWkc2NFEr?=
+ =?utf-8?B?S05KL1E3OG1FQWZlY1V3ZTVRNDlNclN4Y1l6c1BrTFVNMWZiaUxJS1VBMzMr?=
+ =?utf-8?B?RnBaR25KOFExUUxSTVIwNC9Qa05XVkdWSmE3Z2JoNGV0MWg5UkFSeWlQWkpn?=
+ =?utf-8?B?U2xNLzBDUEFsd21DZjBNaHN0YnY4Y01vT0pOSFJNalFMKy9RMXZTOUc0TDhD?=
+ =?utf-8?B?Ny9YOEorY0wzWUkvNnN1TmlkMC9IVldRRDZrYzgrTGpyS1MyRU9wYStzSy93?=
+ =?utf-8?B?NUdGOVpIb1RLK3RRNHYwQ1MwQk8wMUhVQ1RRTlJrMW8va216akltS1l1ZFVY?=
+ =?utf-8?B?aFZNL2VDbmRqM0MwUnBHeUU4RkJLdVFRR2dzdmZyTVFGSlRTUmlEWTRUdzBR?=
+ =?utf-8?B?d2FteEpnVTdZZmlzb3ViQmh2bWovcGh4eG1oVVY2OTJxeHpJOW5LUGZUaDhF?=
+ =?utf-8?B?cG8yR24wU2VEVEpibEZVeGNUQ3c5TnhZcHVvZWo3Wm9KOG5oZGdFOHJRcUFN?=
+ =?utf-8?B?UlErdWJPSlJDb0llSHlVQXZsNXRlOWhFQ3NNWkpRK3g5b1lNVmIwNS9CMVh0?=
+ =?utf-8?B?YkRWdzNabE91cUNvMmQrdlJrdXZmYTVwQjF6dzVKTjczNmx2ZnZCVzRWd0d4?=
+ =?utf-8?B?L1J2aWdIUkp5MVdoVnlaSXdrQWtFUHg2aTdQTG1NUExKMVFDM3NkVVJyRmJh?=
+ =?utf-8?B?bjM1a3VVdUpHZEhIUitpQVZDUU9WNXNPNmZxVEtBSVJmcTFlVkVZUlhRL2hW?=
+ =?utf-8?B?dVZLalJRYVdBMU5NdjFwV3JYQVJ5cVZDTUZTcExKMWFWK3dUTWFWSzgyMzlT?=
+ =?utf-8?B?ZUtEVGZYNXJWem5HRHBVZ2cyZ0Nxd3FGUUtaRjVOQTRZNkIvNWxaSXJlMEF1?=
+ =?utf-8?B?UnpIZXZqeldzdEZjcFFZVDhmNXU3dTE4VmVJd2U0TXpMLzhJTWlNZC9sZGtV?=
+ =?utf-8?B?NHhzeEU2Rlg0eHBBNHlLZndtWVNlbFYzbUdsdEp0NnQvZTBud2Y1UUcxeFdz?=
+ =?utf-8?B?NFJaZUxYR21ORzBnMW14cnJmdVQ5RStRd0R3K1RlNC9Qb0Y0YWhLTzd6TEFX?=
+ =?utf-8?B?RW1nZllDVWhiTDBibE8rRlRrb1Job1FEbWtnM1VrRm4wYThpbTlrS0N6bG44?=
+ =?utf-8?B?Rnd5MHIxanliOE81YThnOTVaaFVucklTbGQ1RjlHbDZEcnFLMEY5aER3Ymt2?=
+ =?utf-8?B?VEVOMTFkOWxrMTBUeU9BTXJCTEdIQ2hRWERlYjhsZFoxbWwvdUN4b1ptY0lz?=
+ =?utf-8?B?NUVjNDRYcmRCQkJhNm5SV0JLMVV1RXZUYTJ1T2g3eVBxbkk2MDdrbTRyWjFm?=
+ =?utf-8?B?RnhwYUNiMlRKcDgxeUhlUkRnUnhkb3c4WlcrUWhaRGRBUTlOZS9UbCtPd3Zx?=
+ =?utf-8?B?TTl5S2puR1RnTlVmM2xIUkJrVmEySk1WWjZqVTJIL0NKalFXMnZjdzZmMzlm?=
+ =?utf-8?B?cXV4QTllTGdYZ05BQVQxdGdoSXN2VHRKNklIWCt0N01YNDdHQWEwTDh6QU1L?=
+ =?utf-8?B?YzhyYjI2VnFrM01jN0NrK2o4d3pBV2NNK1dxUjBEblA3Njl6NnpWQ3g2WXlt?=
+ =?utf-8?B?STFWOHBhMi9BOGoydS9tQ3ExNDBTdVlqMlNkUkZFT1g0bFpIOVNoVXJpN2Zi?=
+ =?utf-8?B?enYyR2xnRVBZQTZiQjJZd2g1UEZzbVlnd3hrbC9iUTE1NWFxOVdIL1I5WFhN?=
+ =?utf-8?B?a0V3M0lZdE5JQjEvc1RGdkJ6T1pXTnRZd1NBYTJLY3huVlVpRWdzUFNvRUdj?=
+ =?utf-8?B?eEFRRWs3elZUc1lwR01ZK2xsRmRKd1F2UG92ZTZwYVdXN2NGRXdEdzJMRll6?=
+ =?utf-8?B?YWRYTXhUdWxzb29ybEVwdVNPVUtBVzJ1eER3dUxwTThZZlpvS0xBN3p4UklI?=
+ =?utf-8?B?bGpjVXNEcTY4RnptM0doMFhNcDVEKzZwSWFCK200emU4dVVDbTFycDlEa01R?=
+ =?utf-8?B?RW0xZkFzcHJnZFlxSFdRTGhzcDBYbkRvckg3c29IN2tNdzY3YUEvZm53VWRj?=
+ =?utf-8?B?em5kdzljOFI4bTBwSnlLcXdacDlpcmw2SW15VlZjZ1lPdW5WcExHcDRob01l?=
+ =?utf-8?B?Z1pqMVl6YzhDaHJLcVRsMis1SkVaN3dkcmlJVWpzck03Z2RUeWdoRUhjdnNT?=
+ =?utf-8?B?ZFdaYUJ1Q3c2RlE1SW1rd0tKSWU0LzZ0L0Uyek1QOHlvMVNvWTZLS0plLy9H?=
+ =?utf-8?B?VDZIU25pNU04dlMvNThueFQ3ZE9GenhXRmNhemFiQjF3azNZVk1DZU4vOXU2?=
+ =?utf-8?Q?8QMghDaXxzwcOxmVvS68wT4vC1bsfsE+Htn239aBRA=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A501586E17ECF34582815FCAE4262828@namprd17.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419164720.1765-2-shiju.jose@huawei.com>
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR17MB6347.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f839552-4dac-4fd4-8af6-08dc649d0f82
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2024 20:28:11.2077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ARfbJYEXgZL3H5pk9pvrJQ8vt/0I4DBsG5neME0S9OBYpCHy2md1x3DA53JEoBCGD2OONEeM2M8gHw5mB6fGmiVIFV/AOUAe7VruiKKA1Bw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB5606
 
-On Sat, Apr 20, 2024 at 12:47:10AM +0800, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Add scrub subsystem supports configuring the memory scrubbers
-> in the system. The scrub subsystem provides the interface for
-> registering the scrub devices. The scrub control attributes
-> are provided to the user in /sys/class/ras/rasX/scrub
-> 
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  .../ABI/testing/sysfs-class-scrub-configure   |  47 +++
->  drivers/ras/Kconfig                           |   7 +
->  drivers/ras/Makefile                          |   1 +
->  drivers/ras/memory_scrub.c                    | 271 ++++++++++++++++++
->  include/linux/memory_scrub.h                  |  37 +++
->  5 files changed, 363 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configure
->  create mode 100755 drivers/ras/memory_scrub.c
->  create mode 100755 include/linux/memory_scrub.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-scrub-configure b/Documentation/ABI/testing/sysfs-class-scrub-configure
-> new file mode 100644
-> index 000000000000..3ed77dbb00ad
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-scrub-configure
-> @@ -0,0 +1,47 @@
-> +What:		/sys/class/ras/
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		The ras/ class subdirectory belongs to the
-> +		common ras features such as scrub subsystem.
-> +
-> +What:		/sys/class/ras/rasX/scrub/
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		The /sys/class/ras/ras{0,1,2,3,...}/scrub directories
-> +		correspond to each scrub device registered with the
-> +		scrub subsystem.
-> +
-> +What:		/sys/class/ras/rasX/scrub/name
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		(RO) name of the memory scrubber
-> +
-> +What:		/sys/class/ras/rasX/scrub/enable_background
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		(RW) Enable/Disable background(patrol) scrubbing if supported.
-> +
-> +What:		/sys/class/ras/rasX/scrub/rate_available
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		(RO) Supported range for the scrub rate by the scrubber.
-> +		The scrub rate represents in hours.
-> +
-> +What:		/sys/class/ras/rasX/scrub/rate
-> +Date:		March 2024
-> +KernelVersion:	6.9
-> +Contact:	linux-kernel@vger.kernel.org
-> +Description:
-> +		(RW) The scrub rate specified and it must be with in the
-> +		supported range by the scrubber.
-> +		The scrub rate represents in hours.
-> diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-> index fc4f4bb94a4c..181701479564 100644
-> --- a/drivers/ras/Kconfig
-> +++ b/drivers/ras/Kconfig
-> @@ -46,4 +46,11 @@ config RAS_FMPM
->  	  Memory will be retired during boot time and run time depending on
->  	  platform-specific policies.
->  
-> +config SCRUB
-> +	tristate "Memory scrub driver"
-> +	help
-> +	  This option selects the memory scrub subsystem, supports
-> +	  configuring the parameters of underlying scrubbers in the
-> +	  system for the DRAM memories.
-> +
->  endif
-> diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-> index 11f95d59d397..89bcf0d84355 100644
-> --- a/drivers/ras/Makefile
-> +++ b/drivers/ras/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_RAS)	+= ras.o
->  obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
->  obj-$(CONFIG_RAS_CEC)	+= cec.o
-> +obj-$(CONFIG_SCRUB)	+= memory_scrub.o
->  
->  obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
->  obj-y			+= amd/atl/
-> diff --git a/drivers/ras/memory_scrub.c b/drivers/ras/memory_scrub.c
-> new file mode 100755
-> index 000000000000..7e995380ec3a
-> --- /dev/null
-> +++ b/drivers/ras/memory_scrub.c
-> @@ -0,0 +1,271 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Memory scrub subsystem supports configuring the registered
-> + * memory scrubbers.
-> + *
-> + * Copyright (c) 2024 HiSilicon Limited.
-> + */
-> +
-> +#define pr_fmt(fmt)     "MEM SCRUB: " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/kfifo.h>
-> +#include <linux/memory_scrub.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +
-> +/* memory scrubber config definitions */
-> +#define SCRUB_ID_PREFIX "ras"
-> +#define SCRUB_ID_FORMAT SCRUB_ID_PREFIX "%d"
-> +
-> +static DEFINE_IDA(scrub_ida);
-> +
-> +struct scrub_device {
-> +	int id;
-> +	struct device dev;
-> +	const struct scrub_ops *ops;
-> +};
-> +
-> +#define to_scrub_device(d) container_of(d, struct scrub_device, dev)
-> +static ssize_t enable_background_store(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       const char *buf, size_t len)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	bool enable;
-> +	int ret;
-> +
-> +	ret = kstrtobool(buf, &enable);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = scrub_dev->ops->set_enabled_bg(dev, enable);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t enable_background_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	bool enable;
-> +	int ret;
-> +
-> +	ret = scrub_dev->ops->get_enabled_bg(dev, &enable);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%d\n", enable);
-> +}
-> +
-> +static ssize_t name_show(struct device *dev,
-> +			 struct device_attribute *attr, char *buf)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	int ret;
-> +
-> +	ret = scrub_dev->ops->get_name(dev, buf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return strlen(buf);
-> +}
-> +
-> +static ssize_t rate_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	u64 val;
-> +	int ret;
-> +
-> +	ret = scrub_dev->ops->rate_read(dev, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "0x%llx\n", val);
-> +}
-> +
-> +static ssize_t rate_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t len)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	long val;
-> +	int ret;
-> +
-> +	ret = kstrtol(buf, 10, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = scrub_dev->ops->rate_write(dev, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t rate_available_show(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   char *buf)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	u64 min_sr, max_sr;
-> +	int ret;
-> +
-> +	ret = scrub_dev->ops->rate_avail_range(dev, &min_sr, &max_sr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "0x%llx-0x%llx\n", min_sr, max_sr);
-> +}
-> +
-> +DEVICE_ATTR_RW(enable_background);
-> +DEVICE_ATTR_RO(name);
-> +DEVICE_ATTR_RW(rate);
-> +DEVICE_ATTR_RO(rate_available);
-> +
-> +static struct attribute *scrub_attrs[] = {
-> +	&dev_attr_enable_background.attr,
-> +	&dev_attr_name.attr,
-> +	&dev_attr_rate.attr,
-> +	&dev_attr_rate_available.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t scrub_attr_visible(struct kobject *kobj,
-> +				  struct attribute *a, int attr_id)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +	const struct scrub_ops *ops = scrub_dev->ops;
-> +
-> +	if (a == &dev_attr_enable_background.attr) {
-> +		if (ops->set_enabled_bg && ops->get_enabled_bg)
-> +			return a->mode;
-> +		if (ops->get_enabled_bg)
-> +			return 0444;
-> +		return 0;
-> +	}
-> +	if (a == &dev_attr_name.attr)
-> +		return ops->get_name ? a->mode : 0;
-> +	if (a == &dev_attr_rate_available.attr)
-> +		return ops->rate_avail_range ? a->mode : 0;
-> +	if (a == &dev_attr_rate.attr) { /* Write only makes little sense */
-> +		if (ops->rate_read && ops->rate_write)
-> +			return a->mode;
-> +		if (ops->rate_read)
-> +			return 0444;
-> +		return 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct attribute_group scrub_attr_group = {
-> +	.name		= "scrub",
-> +	.attrs		= scrub_attrs,
-> +	.is_visible	= scrub_attr_visible,
-> +};
-> +
-> +static const struct attribute_group *scrub_attr_groups[] = {
-> +	&scrub_attr_group,
-> +	NULL
-> +};
-> +
-> +static void scrub_dev_release(struct device *dev)
-> +{
-> +	struct scrub_device *scrub_dev = to_scrub_device(dev);
-> +
-> +	ida_free(&scrub_ida, scrub_dev->id);
-> +	kfree(scrub_dev);
-> +}
-> +
-> +static struct class scrub_class = {
-> +	.name = "ras",
-> +	.dev_groups = scrub_attr_groups,
-> +	.dev_release = scrub_dev_release,
-> +};
-> +
-> +static struct device *
-> +scrub_device_register(struct device *parent, void *drvdata,
-> +		      const struct scrub_ops *ops)
-> +{
-> +	struct scrub_device *scrub_dev;
-> +	struct device *hdev;
-> +	int err;
-> +
-> +	scrub_dev = kzalloc(sizeof(*scrub_dev), GFP_KERNEL);
-> +	if (!scrub_dev)
-> +		return ERR_PTR(-ENOMEM);
-> +	hdev = &scrub_dev->dev;
-> +
-> +	scrub_dev->id = ida_alloc(&scrub_ida, GFP_KERNEL);
-> +	if (scrub_dev->id < 0) {
-> +		kfree(scrub_dev);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	scrub_dev->ops = ops;
-> +	hdev->class = &scrub_class;
-> +	hdev->parent = parent;
-> +	dev_set_drvdata(hdev, drvdata);
-> +	dev_set_name(hdev, SCRUB_ID_FORMAT, scrub_dev->id);
-
-Need to check the return value of dev_set_name?
-
-fan
-
-> +	err = device_register(hdev);
-> +	if (err) {
-> +		put_device(hdev);
-> +		return ERR_PTR(err);
-> +	}
-> +
-> +	return hdev;
-> +}
-> +
-> +static void devm_scrub_release(void *dev)
-> +{
-> +	device_unregister(dev);
-> +}
-> +
-> +/**
-> + * devm_scrub_device_register - register scrubber device
-> + * @dev: the parent device
-> + * @drvdata: driver data to attach to the scrub device
-> + * @ops: pointer to scrub_ops structure (optional)
-> + *
-> + * Returns the pointer to the new device on success, ERR_PTR() otherwise.
-> + * The new device would be automatically unregistered with the parent device.
-> + */
-> +struct device *
-> +devm_scrub_device_register(struct device *dev, void *drvdata,
-> +			   const struct scrub_ops *ops)
-> +{
-> +	struct device *hdev;
-> +	int ret;
-> +
-> +	if (!dev)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	hdev = scrub_device_register(dev, drvdata, ops);
-> +	if (IS_ERR(hdev))
-> +		return hdev;
-> +
-> +	ret = devm_add_action_or_reset(dev, devm_scrub_release, hdev);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return hdev;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_scrub_device_register);
-> +
-> +static int __init memory_scrub_control_init(void)
-> +{
-> +	return class_register(&scrub_class);
-> +}
-> +subsys_initcall(memory_scrub_control_init);
-> +
-> +static void memory_scrub_control_exit(void)
-> +{
-> +	class_unregister(&scrub_class);
-> +}
-> +module_exit(memory_scrub_control_exit);
-> diff --git a/include/linux/memory_scrub.h b/include/linux/memory_scrub.h
-> new file mode 100755
-> index 000000000000..f0e1657a5072
-> --- /dev/null
-> +++ b/include/linux/memory_scrub.h
-> @@ -0,0 +1,37 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Memory scrub subsystem driver supports controlling
-> + * the memory scrubbers in the system.
-> + *
-> + * Copyright (c) 2024 HiSilicon Limited.
-> + */
-> +
-> +#ifndef __MEMORY_SCRUB_H
-> +#define __MEMORY_SCRUB_H
-> +
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +
-> +/**
-> + * struct scrub_ops - scrub device operations (all elements optional)
-> + * @get_enabled_bg: check if currently performing background scrub.
-> + * @set_enabled_bg: start or stop a bg-scrub.
-> + * @get_name: get the memory scrubber name.
-> + * @rate_avail_range: retrieve limits on supported rates.
-> + * @rate_read: read the scrub rate
-> + * @rate_write: set the scrub rate
-> + */
-> +struct scrub_ops {
-> +	int (*get_enabled_bg)(struct device *dev, bool *enable);
-> +	int (*set_enabled_bg)(struct device *dev, bool enable);
-> +	int (*get_name)(struct device *dev, char *buf);
-> +	int (*rate_avail_range)(struct device *dev, u64 *min, u64 *max);
-> +	int (*rate_read)(struct device *dev, u64 *rate);
-> +	int (*rate_write)(struct device *dev, u64 rate);
-> +};
-> +
-> +struct device *
-> +devm_scrub_device_register(struct device *dev, void *drvdata,
-> +			   const struct scrub_ops *ops);
-> +#endif /* __MEMORY_SCRUB_H */
-> -- 
-> 2.34.1
-> 
+DQo+IE9uIEFwciAyNCwgMjAyNCwgYXQgMToxNiBQTSwgU3ZldGx5IFRvZG9yb3YgPHN2ZXRseS50
+b2Rvcm92QG1lbXZlcmdlLmNvbT4gd3JvdGU6DQo+IA0KPiBJIHRlc3RlZCB0aGUgdjcgREMgYWRk
+L3JlbGVhc2UgYXMgcGFydCBvZiB0aGUgTUhTTEQgUkZDIHdvcmsgSSBkaWQNCj4gd2l0aCBHcmVn
+b3J5LiBUaG9zZSBjb21tYW5kcyB3b3JrZWQgYXMgZXhwZWN0ZWQuIEZlZWwgZnJlZSB0byB0YWNr
+IG9uOg0KPiANCj4gVGVzdGVkLWJ5OiBTdmV0bHkgVG9kb3JvdiA8c3ZldGx5LnRvZG9yb3ZAbWVt
+dmVyZ2UuY29tIDxtYWlsdG86c3ZldGx5LnRvZG9yb3ZAbWVtdmVyZ2UuY29tPj4NCg0KRXIsDQoN
+ClRlc3RlZC1ieTogU3ZldGx5IFRvZG9yb3YgPHN2ZXRseS50b2Rvcm92QG1lbXZlcmdlLmNvbT4N
+Cg0KRGlkbuKAmXQgcmVhbGl6ZSB0aGUgQXBwbGUgTWFpbCBjbGllbnQgaGFkIHNudWNrIGEgbGlu
+ayBpbiB0aGVyZS4=
