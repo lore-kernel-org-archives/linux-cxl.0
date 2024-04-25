@@ -1,110 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84BA38FB6;
-	Thu, 25 Apr 2024 19:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F28156979
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Apr 2024 21:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714073144; cv=fail; b=Fk6P0wjmDKCiSyfbxLoioOY7tzl+w50DTBpxTA3Pi3Fy34uC4aF6nCQZIeuNqO2Sd4ZTmeAem0XzaHyN0NTusdNl9jZM5zPZg3jYxaFzs1QT6YzXBPlq2ZyusNAw1g7MYGT5mr+k+nsAOmcPZkuQjiOU/9B/RZseYsec94epmL8=
+	t=1714081153; cv=fail; b=fqAmXIpUjk6c3jOlY/PqO1RYWLgTKG6SWwJ4jJiKJO5F/NTcbmXHO2rXv5usmItzk9qSA7zSTgg0UQNXP6e9M/66vAVrd4rLYRTBGPiimVbe5203E8g1gfbUja/euIDxznclsU0DMdUvTc7vKJu9BBqpy5MtS9joEfbTvfv1j/Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714073144; c=relaxed/simple;
-	bh=sSJ1K7F6FvM8ZwkMep15lLdZ5VrhkMUUi3Ft0OIysnE=;
+	s=arc-20240116; t=1714081153; c=relaxed/simple;
+	bh=k4lYQmXFEXB93/sdytsgCCU5FNoCX/TNZveAsfr2giQ=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sz1lYZTlrs6GFKJolIq3sVFkyTlB5QMR5Jap1VT1W+WcCkgzz2AU7ULi2sNz7b/Sn1+WT0zs/Stxr9OpYgkUACOwVoh040/fhXQ2j71XdWcnqq9kGg4vBKlX3kFI/8qWJ+7uoYnkUNrf+IygVsdj8tiObPcAX4K2gOeIHqR9mE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5dU3UvL; arc=fail smtp.client-ip=192.198.163.18
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GwClMgJuk0t7+vB3dXwOhb8Zl0dXztvehIJeAW/xY/EGgOjueD2qmTFCKWd0tR/lxkG9aBFzKdJGa7gGrqpCA2ql7ILtXM8eEirHRtH2SDF+rMcloTjVSKmFrVU0qlYMhV9mN7sxypvJG2Cz3KT8A8zyqeMILworIiLi1OJzRXw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2Mb8tqO; arc=fail smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5dU3UvL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2Mb8tqO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714073143; x=1745609143;
+  t=1714081151; x=1745617151;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=sSJ1K7F6FvM8ZwkMep15lLdZ5VrhkMUUi3Ft0OIysnE=;
-  b=U5dU3UvLzyOl0mwr0srS3S4PydYdH9V7+EEqwcoK9QkMNyLfv5NGaqGi
-   ikKcFRZD2lU8sWsM9s05uMZNH8e6AizTcQxr24wKHgdy0HoTXOvxSuXSh
-   NBctmSccXhKW7RRjYoXaLW+B1wRSmYEiDYB6Ba6BiF1FFvQcbqOlGzw/v
-   jm/49tLDWPg6cscBECOaRmaghOu6VamKYuh6ciBYsOpbwQtnR4YE0N+i3
-   7Avg4MzkCtaumOP2JUlN62nhDXq3maP0paPXb82s4qUp/Sa8e5jIylvTd
-   yY34MV+C0tkLAJVfpu4aZukqE6VQuhU8b5Obfa9p5wK8uL2OpXy0C8WFw
-   w==;
-X-CSE-ConnectionGUID: HIUskRCDRE68ZzjtMVtYYw==
-X-CSE-MsgGUID: 1wKhUb5cQse221CeaKY3TQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9638497"
+  bh=k4lYQmXFEXB93/sdytsgCCU5FNoCX/TNZveAsfr2giQ=;
+  b=i2Mb8tqOAVN/z46CIuI63BDS1jvc3fXW5Mh1GILliw9jEQgBPF7Jv0xW
+   zh/41DHErjx3O+DdtIsduZqF1/6V88pSuDiZ2WZ7Jep+4tWGCt9YXMKnE
+   rZDzY/8FdinccoJSulw3hlup5CkyE/rkaHITcxyhYTvnGkamqQTjoUE/W
+   3nczonoP6aFVzIOlQ6mzhWLZX4PKkta0fsaBIKUUPVlmu4JRpCsexbdl6
+   h+/NpHQleUjgn6kYHMkLtyCwuHyx09fCY05A0XcCaK33sgiyusMnnO/ue
+   5qhd14/6fKEfme2RrAA1OMc2Gcs+LB7bQ61XLmbTXvO4R6k4Ix4ECXFFj
+   A==;
+X-CSE-ConnectionGUID: 1r9EzKTESWSvvLwK7CRU7Q==
+X-CSE-MsgGUID: 0hGhVVSbTDqXlNcG9vdkdQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="12737570"
 X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="9638497"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 12:25:42 -0700
-X-CSE-ConnectionGUID: eoOf+HT9SHuhsb5b4CrCvA==
-X-CSE-MsgGUID: i1Nz90TzTxW8dH3QQjF15g==
+   d="scan'208";a="12737570"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:39:10 -0700
+X-CSE-ConnectionGUID: I17UEM4QSb+CWTL/Fv0dYg==
+X-CSE-MsgGUID: jnrCyeQTR2ySj1Y3v7e0uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="56350156"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Apr 2024 12:25:42 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+   d="scan'208";a="25261762"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Apr 2024 14:39:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Apr 2024 12:25:41 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.35; Thu, 25 Apr 2024 14:39:09 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 25 Apr 2024 12:25:41 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Thu, 25 Apr 2024 14:39:09 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 25 Apr 2024 12:25:41 -0700
+ 15.1.2507.35; Thu, 25 Apr 2024 14:39:08 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UW6VzLl82beNqNEYEY5Um6LUyUlngKsAgIfSvlhfrtzmpeGvG1o/JOdRy6T/Dfmc2uIdpHryLt1s7reYeXZ1tjnE/zNT058aJbgI4y1HvThcmkNZc5dVb0NFLJmkyny5LbdK4BOQTac8IhUt6YtjLvi6jSBweySafsD1B6A0nBSEuBrX4CJa+Uf2xl4xw6GiE4bL1Cb/lhXgXNY7Cl/ZhrW8FiR681AzAkS8HYuVuah7uQc249w79hgEZcET2nrWibg71e2cXpoEdCrw0o1Yw7r7pFVVf2mSAdabePCAItazU+MT3/6LPQ/kiAHJNY+puO8qwmlbv4DmmBSMdn/9iQ==
+ b=mYu482Rg06S6h14rcaCa6I1QT6B+wxcYaMmEeos2bFjHGn9n7hrHwHk4BWEZZ9KJBmXrxOTk47uzDrJ0PpUgdsn5BRbbXsWVQqRuRj+FPQF057own5GDPwmjmqQz4hUnPeVjGqbJoMFH6TlcZoQ8Pwh8sjrXAJpSasNPLiEiEn1UTuz2kHTrF5uhlZ4x6fg3D+zzQo+QZOuqiF5OmlIvC/I6AjG1qJflmIoNHSZBDFkRg/lg5/bEqhpdBlDpyGqmT/jgRMsoWjLVKTbSh0Lw4pov6kwnAvEP0qiwJReX/MuPSO9UddMEHuivT6vXMogVAcy7AkRdt88iheZNF7q2Ew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ubmyJxBawGLSDngfLHTD9ft7DWOS8k4Lk1y7me4HJtg=;
- b=XKBZBsSa8K2js2i2i8Eq8JWjsBHqfinKpvfsC8BsFnBdOBE3VxgnOYo+JHK/N+cFsH7Wzmf7Yc8FUvSdg5i8JsAzQdyau/oOtilHl14u9HkbPBeGyIkQ9RTtS3qZOPJQQatQ2bmN99fdPKIl3sq9wtLvoM8gz3+O56gnfsTbDseETrugpI13L+GVP3Ux7z83a9ABTKME9G9JKVNU951NZdzh4Xh11MfaJYCSk1F9V4Cda58vY61JGPt/xgjawX6f48yEH1dyX4503SNVEx0L5qUOniUXyf7zyuStk40AvfXrkW6LZOMC70Lyhi7XaiMuSjrEXBBPlq/1fzm34Nw/Lw==
+ bh=XKLYjzPKYb/HO5gTL03jLAoSP/sR/s4Dt3AaRBzx+h0=;
+ b=HAeGlWGhj/a8Dh42HJvWICGp7yl5UMeNBoeXt6WRIWdhCzmiSiQ4so9xL/fYA5tVvvQ/0Dju4crkibYYHMJFh57RedTz7v1xwDKvvm4TzQovhpqTMtcipiLqWNJiD0oXjXQm9U13nHrkM4zp9PyTn0UpTmIdhYfR/O7veplWwCoA7AUuL6UKIk6tiKgZw/f/GNQGX5ikz+8eOrfOUOJEZLtgvkpeAcEr1TN716OdGwvIpl2sCIKtNJRy6IRc7ioEwnWzuQBODZNKF58ayGkyd9iKEzS2WfKdu2d47+OLjmifxcuJ1UDsuwJlR6RMVYG5IL54lptmDUMnIgdWIrvpsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB8228.namprd11.prod.outlook.com (2603:10b6:8:180::19) with
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SN7PR11MB7490.namprd11.prod.outlook.com (2603:10b6:806:346::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Thu, 25 Apr
- 2024 19:25:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7452.046; Thu, 25 Apr 2024
- 19:25:39 +0000
-Date: Thu, 25 Apr 2024 12:25:35 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Sreenivas Bagalkote
-	<sreenivas.bagalkote@broadcom.com>, Brett Henning
-	<brett.henning@broadcom.com>, Harold Johnson <harold.johnson@broadcom.com>,
-	Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
-	<linux-kernel@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	<linuxarm@huawei.com>, <linux-api@vger.kernel.org>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, "Natu, Mahesh" <mahesh.natu@intel.com>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
-Message-ID: <662aae2fe4887_a96f294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240321174423.00007e0d@Huawei.com>
- <66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
- <20240410124517.000075f2@Huawei.com>
- <66284d5e8ac01_690a29431@dwillia2-xfh.jf.intel.com.notmuch>
- <20240425123344.000001a9@Huawei.com>
- <662a826dbeeff_b6e02943c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240425182605.00005f22@Huawei.com>
+ 2024 21:39:06 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec%4]) with mapi id 15.20.7519.020; Thu, 25 Apr 2024
+ 21:39:06 +0000
+Date: Thu, 25 Apr 2024 14:39:04 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+CC: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [ndctl PATCH v2] cxl/test: use max_available_extent in
+ cxl-destroy-region
+Message-ID: <662acd783091d_10b56a2941@iweiny-mobl.notmuch>
+References: <20240424025404.2343942-1-alison.schofield@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240425182605.00005f22@Huawei.com>
-X-ClientProxiedBy: MW4PR04CA0073.namprd04.prod.outlook.com
- (2603:10b6:303:6b::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <20240424025404.2343942-1-alison.schofield@intel.com>
+X-ClientProxiedBy: BYAPR07CA0063.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::40) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -112,180 +98,93 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB8228:EE_
-X-MS-Office365-Filtering-Correlation-Id: 223fa650-020a-4836-78ff-08dc655d7d53
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB7490:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85fbe116-61ee-4a40-62ef-08dc6570224e
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|366007|376005|1800799015;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5xXSN6rgtI1a1zBK2OBSbkrkbgNSLh6AYwGHmvTVT8YlvVpEkwm7SOF1PIqT?=
- =?us-ascii?Q?hUFao96mhTkzBwmXGlubNvfyWZM9LRzw+aqe6RuWX1tG+27PjCKPLyg6J5e5?=
- =?us-ascii?Q?2vECpePGI0gmG8VREAxNiOhbHo7vCjzcnF8GwUdgLiIrpKKno+DvoNAw5fzZ?=
- =?us-ascii?Q?haw1ts76e4ud0ipd+5/fre4dhEcAxjcTIe1VnVJsrQ9H2n3Sui6zZ+Uptvu5?=
- =?us-ascii?Q?xO8q4PHjQTOESCi8qf8FD8+sJdDrfhsPpqYDvsC1j+P4BftMKR02sw5iW8Ey?=
- =?us-ascii?Q?QIRP8z0SX4C27Gyf26m45oYpolYfsfcRnG/CVXS2nV7Vwf9uVW/tRjkMFKkt?=
- =?us-ascii?Q?TWTy7yCvUReQdC/PI2xnmN7olfBY/1c/6RcxPuYS/EF8BKRp2ziUGhM2kzUd?=
- =?us-ascii?Q?10unLcnvaOD3vYHqiqSd1WCQt097kk45PeqaDx9stFXtLpQL2sJVKkU0KZGq?=
- =?us-ascii?Q?f6Gh1AK3QjjJy4dSeoQSFtLjVMowWggoOC+JlJO33mnnfJ+OJbAcxxkbJJ41?=
- =?us-ascii?Q?43xwguctHI0OkxwU1heKqt5zuvi2LeSwifH5ATSr6wqv6xniRjXNu3tfNHgQ?=
- =?us-ascii?Q?8p5YvhoqFcf5+rgrv2o9kDVYGm40CWvm/IXqbjR2TWVXUmB5f+KzlOaJC8rB?=
- =?us-ascii?Q?ro5++ncLbYmaqrv2anL18TgK5BG7Ybf1C2xM7rgXu9gyJpelYEypOifoznF+?=
- =?us-ascii?Q?2KyXmB4KuRth47m5DtL/KIfKZStHLSSJxAfa7foGJaNiGCgXVIxPRMS5MI/T?=
- =?us-ascii?Q?o4J5fLghcZZd1Mg54T+MHEKeN0tTB3J3CJ135pkLb8kn1bNAu/odBSzkppSw?=
- =?us-ascii?Q?lUEdsEJXpsdCYCXVVYraXsByLznXTvkR64DFN4kPxi4Og2jNzW2Xyx6KXDPd?=
- =?us-ascii?Q?jwUR3XcZ6eAVEWdSCg794uG82/PFBLxtwdPJWMXq+rPvrS6VPhZoCYsoW34k?=
- =?us-ascii?Q?8JURqRMAf4J7nNhov2rLIDK3A2AV24ArR5RD1BJwV2JtZrvsrb8L32CAdlvb?=
- =?us-ascii?Q?mZddn4Oi9AE2z/aiVoG3c5TBRhvpa69a2Qx9exFseIQVVmPxi8V6+Gj1KfWb?=
- =?us-ascii?Q?xsENTgHd6sXk0MDm3CN6z97J4fJ8agA7bYvBVTuSzPTj/p5KIa5Kl0Sj5QWO?=
- =?us-ascii?Q?SvLEmXpes0fiOvu4gQHwTtMj0qsfR6991bcS9rQFTmzGlGNWVoPUzy9KjH4b?=
- =?us-ascii?Q?+Hgpj1v00WNx/HdSVfSYBxHSI+84/zl8x5D33wn1V/h20T+Y0YRCPx06HeAt?=
- =?us-ascii?Q?bilyt+lRjYUTs2Ywh3gni+8aAhNYZj7+4wgqyvd1/w=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?oX/05TP8QWafswqpM8MkcFBkCUvdwtK55j4DRij2qiSI7mLsJ5QKU23Yo878?=
+ =?us-ascii?Q?aAxZ25HmkTISLYunAfwYjkEK4LB0MiSLCVw6rgNCEBFntRdeBZiJK2R6xOvX?=
+ =?us-ascii?Q?rR0NlMfM/S+MbWa2jwNRqz7TS836qRzknBEZJEyCI+iQg/6M6vpCyc8jtjgI?=
+ =?us-ascii?Q?nAKIHtfpfw5wgI/pEjfsAe6EnUOdlKTiK3qZGV9Gb3Q2OQPxBWAQwgO3H2ff?=
+ =?us-ascii?Q?5YE+CebywfYnJak8bT1bDwvMU/gDipWZ6gB7naYRQqcQQ/6k2zLr8rgDJ4xi?=
+ =?us-ascii?Q?BioxROa3ssfj08esJjDGmfCwNwL0uSXiYGatt9wH9Bjo+DBPOruQUDDIw+gl?=
+ =?us-ascii?Q?udsJrTcVMY8p0wB5uI0O/Y9LESYyLztWbNzvgkCH0BpRNoBVT0L2hkowWQdi?=
+ =?us-ascii?Q?5CmHaMeuAGD91mOyrnn8btOqVf59/lv3yqIN7BnZh96FhTLUtxyIOKOyLfJR?=
+ =?us-ascii?Q?snHzlL5f2sDT8TLJlB07sPBxCiEvljHgUoLPbaOTAlcTA/coW/Ihrwn9FMew?=
+ =?us-ascii?Q?AlMWIL11ExEJo9hrHTQDT7M28kKi2b6KTkJ4Isp3hx7JvP4Ly/AUJtul90ue?=
+ =?us-ascii?Q?h8L9JQCa8iBCnkS1DUftYj8z7+vvuG3oxZRakeir33V5vmqsrupAYhvvw/Ud?=
+ =?us-ascii?Q?1MtmfMWgbjCgK3scu+VMEGsPftg/D75W1XheC3oTADXKzRzIpwjg11Adv+w4?=
+ =?us-ascii?Q?rJA9J0JVfYS5gTaVCR5RVD/W51jO0AGlVrG/bSGo4Wx5EGfyOUlORNRnj/jG?=
+ =?us-ascii?Q?l0I2X0Fe+EFk9GPuQvMHaNQzuLOqYQNtMlp7vJ1AxmYGINBFI8tiimM2m5uA?=
+ =?us-ascii?Q?ld05UARMr4zl6QwDdlIZlLuFCXv4LBLHteLkkl9KLbddlTlQhKnlYTg2060E?=
+ =?us-ascii?Q?Lj18kFzSScpF5aZHzR1VIIvdW7D9C/17yDJeprbvt4HbpKxubKtJB7ynKIs9?=
+ =?us-ascii?Q?dSNsV6PDAm5xHZbjIzntwaKPmPPYDYxqYiTpPVbx66VhbB+LD2nML6zI8oKh?=
+ =?us-ascii?Q?fR9zH8YvK1ijLKYHIp22boH03MICnIQQj9U/NA95S/E7Gq7/p36XQUYz9vFN?=
+ =?us-ascii?Q?wnc/98dRS3whUnq2MbWmNgZZXIDATxF4ejU6UikzFGJZPKTSCUUjNsmTuQQp?=
+ =?us-ascii?Q?8Aw190pdjZlynSwLpj75GcOmeAXvMhQ82DEZH4rRvbWbBTzD4h1YBR6XtSDH?=
+ =?us-ascii?Q?auFrvQd7vE0wnKSqe2OyuWe0gc0P3DcQfquGFDfO7/EQy/RDHL4lIomcH4yZ?=
+ =?us-ascii?Q?F1SQs92FRvn3+mbf/0pccIz4150/j86bCa+ACMbz1w=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kBuZ+2NBu+82GQZkDXbzmNXg0NuKcW3QS7ntLRuPtY1OoJgnCLbPQ0qjq+qu?=
- =?us-ascii?Q?PLkVkc2LvcxTRFQRnaWB9eM+D1sFxzpaXCcp56fAK6vUnQFDpRWFTkqhMgHY?=
- =?us-ascii?Q?yJlCk76o6VdvWGeMHDPJphj/csXjwznbsPIlR7TNIdlLgIX9ck/DJwlJ3gLI?=
- =?us-ascii?Q?+mgTIsVVcitwT4M2cO42mwAAr15VVfLJ3gdCyR8bfAEf8aZaqEFo2RXM4hpo?=
- =?us-ascii?Q?NbZkBZ59I+ly3AtSY7bXB046PDGpQGw/K8DDrdNOkzPzSzOECu7/p3Xsm6yH?=
- =?us-ascii?Q?1H0V4Gl8es5zpsspgjSlSOhRFE4XmjiiMj3kk1P6fiX1EvuiI+tILGmC+eVW?=
- =?us-ascii?Q?MPr6Jhl9NfS2H+TSqHag+vEHune6oRVEXMtozUCC9hNd1OHGhplqqJSfh1mo?=
- =?us-ascii?Q?1AjwOzvEwF/rZc+mWM5SuI6jn8CLywfMuLi2EFe+Dyko3U6ju9r0nA+WW3iL?=
- =?us-ascii?Q?ga7kQuBzzyG3PtghdHWWBxE+uksfMmJF60Vg5cqN98G0BR0Y31nto736sj2K?=
- =?us-ascii?Q?H7sWpv6EtwXoHWJ8adXlcaJ8xo3DXAX1GceevNKp7IUEd/Rizfc4LNpVFUHD?=
- =?us-ascii?Q?09GXRwDenDFaVUEhY5Oo/zOk9tIAYG17dxWOaZkvoW0cU/fw7o9dScAkrsQ+?=
- =?us-ascii?Q?GX2TctoWC2h1KedBlFv9bJQWsc4JjVv/dVKHjta3QNnZM3HUugs61U2Oxg2D?=
- =?us-ascii?Q?/4O4vDeMAZfHP4MMX2HXsx+ihdOZg6815XyRK2+YBwYnxEekDUK5+BKoaXoO?=
- =?us-ascii?Q?HOs4fzUb6cToJRZKpfyBhiSyLYL/G+EJUIfOeb2rZDPFSFuCnf4Jw2VD6FWg?=
- =?us-ascii?Q?4aXNkstgUJA2BBOJJaDQ1wfmtI4qMKFkeEljLTWOr1mkWI2wM3NfP2q8FGEU?=
- =?us-ascii?Q?W6yS2YhKvjgVR2ow61gmCe8C0W1Gv6+WRKECSD1YtoH5WJIji1Z8KnrNMmMC?=
- =?us-ascii?Q?eo9EEaxfw5fT/wrdXuC6L9kuPMKObxo8EXOcoh73hLAWWc0J7sU+UTGcnK1u?=
- =?us-ascii?Q?bp2ILVBOre8s4cuM+v2CscznhWV2Di4e1waYmjYsoaGmw9NVAtVkmNH2EgLt?=
- =?us-ascii?Q?KizJAxp6EN7WwESHc9tEJMdqnOTup2x2eQWClryrXc7NlDgrpCKC3n023Dxe?=
- =?us-ascii?Q?hfbNZojRsRc2jKStKDFkgymPJnJgechzqElHRJiXN2g2HxtNxCHe0bBKuqp4?=
- =?us-ascii?Q?yuW76uftu8x9TZmfpyV7gdVpHzLiwRKqi2Ct9x//MYZ4R+oaCJ+DxVVJXBiH?=
- =?us-ascii?Q?9k9gDDDma6jktH9oMxPIt7vd8/s3mKatJbPoo/enPSjB4T89lBoklyZ5ApTg?=
- =?us-ascii?Q?BwP062ZQwEXL+c75MvU02qRzYiSogf32Hyuav0hIhRtdWc9OH0LSLT/z+24B?=
- =?us-ascii?Q?LWFa5IVxO0AxmLZxdswkFde51X2VDYVYjD/+0jBOhcqVdp1vcKl/2fCl07rJ?=
- =?us-ascii?Q?cAGFCpdXO7OkztSzrybcMn+ondQ14CK3+4V+cKIxPvvVVM0Uj51CMPS94L07?=
- =?us-ascii?Q?0VaZ9Pz+hC8oe4sc2BJXRHvRIfmKj1wy5YKepqtVVgZe9yuu2sqi8p5Fw44L?=
- =?us-ascii?Q?kTo7B4ALZxvs3nbtgdpg8ShbPUyedBJkB5ilcbTdDPaQzO1ZZ2tO9lozheFN?=
- =?us-ascii?Q?lw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 223fa650-020a-4836-78ff-08dc655d7d53
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?n1l84IhwdPM5ASCT0zEiVpQaNaSOOmHNfphrMisV1IT+yiIhRtqT0gAbDDiN?=
+ =?us-ascii?Q?Vv4kt1d745Q5VUk4RpeeNqgIryXR8U0ZqeqyemljUlpSpDVmBxK+kUtPCaZ+?=
+ =?us-ascii?Q?FjN0Ud5+cNSzXqa93bWclIhBo0wLur4y2djLwUKHvk0sefPvDp1unGpAPYVQ?=
+ =?us-ascii?Q?wrzl4C+8NKVdJQ1IHLYdMdFV8r6w1y+udSCLHbslMotqbL+DDL0I29stM3dn?=
+ =?us-ascii?Q?LWUy6Bjbuai9Ox66nmSn7MrPCiitzIrXQFXlzfBNewBJkLv1bEqN90ODRXFr?=
+ =?us-ascii?Q?RWuW3I4x8ZRVUm5klXoVrQ4e0ABYbxBZMeSvgfEe36SI+gg5lFPT+UBq4IEH?=
+ =?us-ascii?Q?O5AgWsmODkzmBWlV/3QUbeeN9xhWWM+KK/KDAEWcNw+7NZ53hqYmxHw9MVOW?=
+ =?us-ascii?Q?gRqmUpjDnENbCkWQ157mD+3IvYB2UTrVAgZbiP6HSs5pc+3Z64qX72aQKl3w?=
+ =?us-ascii?Q?FGQq3FWkrAybX4b5J3E1aoKcrh9tJrKfxsyfBb8kQ0S8bIoFSpR4cZRBbm9S?=
+ =?us-ascii?Q?PnBHX0gxh1wNBdBHA1sQc7dVRLzITOtpcTBk+U0h4BO8dRP2XmyDMHWCgtgE?=
+ =?us-ascii?Q?QHdPCTR02O8qKBubggdbPbo29uzOlzGWjksVi3kUPabbzB2hggPpAbbm6k/K?=
+ =?us-ascii?Q?I1joyMlc1zJe1PjMX4xDjbcapLBzfhOSPeDlrlmgQ/A0QjdMIpOocB3QcMuR?=
+ =?us-ascii?Q?ebu/rsaDnviUMd6/FdH3xroy+MQ45jaa1kPsBAqtzfLhEC5GSOmbQbfIzFxt?=
+ =?us-ascii?Q?93DFZjfZ8zcuYbXWg3btVHTYUkPNgy6zbDs/p95VVkk0S2QoY1IKic7a92iW?=
+ =?us-ascii?Q?zT0tBM3aoMUa1ebIh5F8botFNhWlR76/shOMLUvZPJ/OWW6ITkEejwjYKTSE?=
+ =?us-ascii?Q?U3yd5pADkwU2jvYRxGS/g2ueqySoN4xGBTMp5xv3jko3mxp5yDPqGXX+QDLy?=
+ =?us-ascii?Q?mmDChonNsR3boOWosADAIYKnzaY2z6buCrGp1TUnZ8MQO4yaKmT9nCcvpCAf?=
+ =?us-ascii?Q?DZrkjP2C7opkdw03aCozxrzfEft9vlxnY+LpYHjxvtf+NXzIlR9FWW2tvZzc?=
+ =?us-ascii?Q?iTcqtFDD652YPkqOmzn2Dp/shhixtCscvWrLpV5myD+ycDZg/R+zJBX7OU7R?=
+ =?us-ascii?Q?wfqQwXDULlteKEiJbPBgDKKCHmoPF0nXZnzGUog31Il9ovHUyfe2x5maoADY?=
+ =?us-ascii?Q?rc5+ywxwIoPNXyB+B7WpG5Z6ZIiISpk7urlQ+Gg7e2qvqkrwTK6c18FiRAAT?=
+ =?us-ascii?Q?jflBCXV3+QBlLhHB4CZmxHDtPcIL/AM2cUlpI4qql5vswGtBbtGqKCDEsueu?=
+ =?us-ascii?Q?Xbge3z2E/EozEz+l5EJI82ykXqLBoGjT0VdFknsweuMMWGwq2fATZVSNIV8z?=
+ =?us-ascii?Q?Cp8RvGZcSrxApz1QeQjJLx1Ba6cGxmcaoMyFHwhAcE7E5mSqP7U3mySB5Vpm?=
+ =?us-ascii?Q?2803gFMhIPuTrFtMb1orvoocwOVW5nmA3WVgXHPPHS+bGbdd4Nk8EMdlp/lc?=
+ =?us-ascii?Q?G4cmoaI7OX0D0aSvG97/gDB5QIoXRm8Us2qIfiEWKSS2sftkEVpfjbPxsqa0?=
+ =?us-ascii?Q?0JGogbELdZV9SIE+VVDJW0+PVXaD8prbK2KfOkqg?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85fbe116-61ee-4a40-62ef-08dc6570224e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 19:25:39.0493
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 21:39:06.7766
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yuSPI6HdvWCOsYiyJJEaGB/7v0TZvcelqtq54rdeeV6Cy9CpoOxDFC1jLzL3lnwCGy+LsRTqJcM5QHibuq3fCqKHds2z1Jqz3DC2WP2g6lM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8228
+X-MS-Exchange-CrossTenant-UserPrincipalName: iDVoYzc515dH882I50oAKABPAtvDeD9AP28wFTwi8sUZbHYRqx5YajvFTjfMubkd/6W8ePNf9dGVlev6iB78kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7490
 X-OriginatorOrg: intel.com
 
-Jonathan Cameron wrote:
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> > The minimum requirement for justifying an in kernel driver is that
-> > something else in the kernel consumes that facility. So, again, I want
-> > to get back to specifics what else in the kernel is going to leverage
-> > the Switch CCI mailbox?
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Why?  I've never heard of such as a requirement and numerous drivers
-> provide fairly direct access to hardware. Sometimes there is a subsystem
-> aiding the data formatting etc, but fundamentally that's a convenience.
+> Using .size in decoder selection can lead to a set_size failure with
+> these error messages:
 > 
-> Taking this to a silly level, on this basis all networking drivers would
-> not be in the kernel.  They are there mainly to provide userspace access to
-> a network.
-
-Networking is an odd choice to bring into this discussion because that
-subsystem has a long history of wrestling with the "kernel bypass"
-concern. It has largely been able to weather the storm of calls to get
-out of the way and let vendor drivers have free reign.
-
-The AF_XDP socket family was the result of finding a path to let
-userspace networking stacks build functionality without forfeiting the
-relevance and ongoing collaboration on the in-kernel stack.
-
-> Any of the hardware access subsystems such hwmon, input, IIO
-> etc are primarily about providing a convenient way to get data to/from
-> a device.  They are kernel drivers because that is the cleaner path
-> for data marshaling, interrupt handling etc.
-
-Those are drivers supporting a subsystem to bring a sane kernel
-interface to front potenitally multiple vendor implementations of
-similar functionality.
-
-They are not asking for kernel bypass facilities that defeat the purpose
-of ever talking to the kernel community again for potentially
-system-integrity violating functionality behind disparate vendor
-interfaces.
-
-> In kernel users are a perfectly valid reason to have a kernel driver,
-> but it's far from the only one.  None of the AI accelerators have in kernel
-> users today (maybe they will in future). Sure there are other arguments
-> that mean only a few such devices have been upstreamed, but it's not
-> that they need in kernel users. If it's really an issue I'll just submit
-> it to driver/misc and Greg can take a view on whether it's an acceptable
-> device to have driver for... (after he's asked the obvious question of
-> why aren't the CXL folk taking it!) +cc Greg to save providing info later.
-
-AI accelerators are heavy consumers of the core-mm you can not
-reasonably coordinate with the core-mm from userspace.
-
-If the proposal is to build a new CXL Fabric Management subsystem with
-proper ABIs and openly defined command sets that will sit behind thought
-out kernel interfaces then I can get on board with that.
-
-Where I am stuck currently is the assertion that step 1 is "build ioctl
-passthrough tunnels with 'do anything you want and get away with it'
-semantics".
-
-Recall that the current restriction for raw commands was to encourage
-vendor collaboration and building sane kernel interfaces, and that
-distros would enable it in their "debug" kernels to enable hardware
-validation test benches. If the assertion is "that's too restrictive,
-enable a vendor ecosystem based on kernel bypass" that goes too far.
-
-> For background this is a PCI function with a mailbox used for switch
-> configuration. The mailbox is identical to the one found on CXL type3
-> devices. Whole thing defined in the CXL spec. It gets a little complex
-> because you can tunnel commands to devices connected to the switch,
-> potentially affecting other hosts.  Typical Linux device doing this
-> would be a BMC, but there have been repeated questions about providing
-> a subset of access to any Linux system (avoiding the foot guns)
-> Whole thing fully discoverable - proposal is a standard PCI driver.
+> cxl region: create_region: region8: set_size failed: Numerical result out of range
 > 
-> > The generic-Type-3-device mailbox has an in kernel driver because the
-> > kernel has need to send mailbox commands internally and it is
-> > fundamental to RAS and provisioning flows that the kernel have this
-> > coordination. What are the motivations for an in-band Switch CCI command
-> > submission path?
-> > 
-> > It could be the case that you have a self-evident example in mind that I
-> > have thus far failed to realize.
-> > 
+> [] cxl_core:alloc_hpa:555: cxl region8: HPA allocation error (-34) for size:0x0000000020000000 in CXL Window 0 [mem 0xf010000000-0xf04fffffff flags 0x200]
 > 
-> There are possibilities, but for now it's a transport driver just like
-> MCTP etc with a well defined chardev interface, with documented ioctl
-> interface etc (which I'd keep inline with one the CXL mailbox uses
-> just to avoid reinventing the wheel - I'd prefer to use that directly
-> to avoid divergence but I don't care that much).
+> Use max_available_extent for decoder selection instead.
 > 
-> As far as I can see, with the security / blast radius concern alleviated
-> by disabling this if lockdown is in use + taint for unaudited commands
-> (and a nasty sounding config similar to the cxl mailbox one)
-> there is little reason not to take such a driver into the kernel.
-> It has next to no maintenance impact outside of itself and a bit of
-> library code which I've proposed pushing down to the level of MMPT
-> (so PCI not CXL) if you think that is necessary. 
+> The test overlooked the region creation failure because the not 'null'
+> comparison succeeds when cxl create-region command emits nothing.
+> Use the ! comparator when checking the create-region result.
 > 
-> We want interrupt handling and basic access controls / command
-> interface to userspace.
+> When checking the ram_size output of cxl-list add a check for empty.
 > 
-> Apologies if I'm grumpy - several long days of battling cpu hotplug code.
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Again, can we please get back to the specifics of the commands to be
-enabled here? I am open to CXL Fabric Management as a first class
-citizen, I am not currently open to CXL Fabric Management gets to live
-in the corner of the kernel that is unreviewable because all it does is
-take opaque ioctl blobs and marshal them to hardware.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
