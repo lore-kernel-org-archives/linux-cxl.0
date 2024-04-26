@@ -1,323 +1,239 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F99BE4A
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Apr 2024 19:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714159534; cv=none; b=XrDwzY24F8ftXmj57QZjTOGUHAsTi1wo18X//DDxr5FT8lUu6Rvq21LmDntErG+Kl3edt6KcnEn9dg6RucNEQIg17y/8HavpZGEbN09L+HtH9BwANQ+r+mUCeUWjaaS1CyvutRV8sGdSS0sk/6tX/CuKMUb3hhJsviurz2lxqhE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714159534; c=relaxed/simple;
-	bh=osuIW81LN3kDArrXDwOJgOyc+7Hmh/3LthmWYyCjhGc=;
-	h=From:References:In-Reply-To:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VlPFzKheLAP1VSDWD0r6TIcUgJWlYfBhzpLGzshutCkyCbpHVDjzZ2gmzaUnegHsH1KSjoIisvjblV3z11NRoTZKGdnUhbsshnN776pK0Mtj5BZaj36cSEn00FBwruDOTikjkQjUaW8k+V4KrsrTxfi/gGUQ1GELLqIJy3QfMJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZpjXbqKV; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C3023773;
+	Fri, 26 Apr 2024 19:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714160814; cv=fail; b=LWzVlFEWHa2pV2dpctBYwHaVZa5fR4J0zjcx9oLh2SdmhVQ1gtCnhlQCoaLtpS9weQua0GD7lTJCVIqva1f7Co1t5V6S2aNRQmCR6A5hYXYbSrAyPLQBlf6hAHA7QV5Fupsz1SqfIYkeK0j/RTKV2v4MQLyKRPM5Sj/j70DKtbc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714160814; c=relaxed/simple;
+	bh=Pi7ukKQvRGpfOiyfjith2w72DDgU8773HPpjM8AqRZ8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uOEbecYpo1iDZEoXIjsvAQ7WIlyqvUEjltms7qodyRSDUnMBoJKlp3iFqv7CpN7KVpVkIq4xTIR9DP26YHIoTBEKZgRVZ/yy1VEnbbcUvcnsbEXHdtishatjlQWOM0mG7zvTtLdouAxhbzcGeTSz2+ncCrBZXqFpMmmd+7QM2zU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j4BISC6T; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZpjXbqKV"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2395e037342so1577909fac.0
-        for <linux-cxl@vger.kernel.org>; Fri, 26 Apr 2024 12:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1714159532; x=1714764332; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
-         :references:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=osBjS8vKypeDZuzwIxaj270n3uQ8po6Gtra6qnlobQo=;
-        b=ZpjXbqKVH+GIXFqYg+jB+MznnTnOM1n2RM0dB9bhWFPME7Zp86yhqjQA113m+xm0qH
-         DXRx5EIIeTaIf7h0E83fEHCsSnU5XTAeaNMIvibVhDBtitRCFYarpuo9YAhurfM1narQ
-         BUyU+qdVgEGhzL1L6WRN7q/jVcQaXVTmrOtcY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714159532; x=1714764332;
-        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
-         :references:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=osBjS8vKypeDZuzwIxaj270n3uQ8po6Gtra6qnlobQo=;
-        b=fd6/XDuT8q9nTs00mIIuiajbndzyeuDxN7zG4KeIOSDlsCd91Au+Er+Biao+jQVv3k
-         +qe1mxROOK5jbmnzz+FgvaIxbsS8iiOKQ+m23Qz7Z/dRa+rONKV9ToOGZpbFtT6p5WIV
-         4rHRlCuploANv1b4wtPbJPznP1Nnm75y/hD5EvCLVWuI/iEKcGhzt3r3J51jJvE0EHap
-         iF8L6MFXPeizv48rObzawAjh8wRXq2rOuS71f3hZ8c2QpR6gLBLOYbU205fJrBdECSS2
-         5cMjSAZmoUHp6TYdYQMCDT/Q8mjEWF2N/GlTr01FNTBjEiUZL+XCWkIaqSWh65lSaYg/
-         NPBw==
-X-Gm-Message-State: AOJu0YwLiylsD1oOs0sZFUCczAq25j/DezbWq0w1K6p58xFro4NQMq0i
-	Oy6R6boII6p4WRl+Ltw9O+lv2kU2KirXHwkMqgNupU5Q14JYTJKUmAbyjQOre0h3HnEiRrCG48C
-	O0qByAdaq5/dVy8josdnoz48uP0/85gpUBjAD9VlQIVV/mSKfzqHovvPLMwZ2o02gfFrQZWN9zu
-	82fTG2KzRb8iSRbgczmW1Z6Q==
-X-Google-Smtp-Source: AGHT+IGolhQr3PQiqQRxUyZHK/lDEmlBp55kfr5Ue0BBSt4bXuZMGwMI6aRz/6nhPaa1QsqxYlJltWnW3eQCB73+VBI=
-X-Received: by 2002:a05:6870:f21a:b0:222:570a:72c7 with SMTP id
- t26-20020a056870f21a00b00222570a72c7mr4020266oao.45.1714159532067; Fri, 26
- Apr 2024 12:25:32 -0700 (PDT)
-From: Harold Johnson <harold.johnson@broadcom.com>
-References: <20240321174423.00007e0d@Huawei.com>	<66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
- <20240410124517.000075f2@Huawei.com>	<66284d5e8ac01_690a29431@dwillia2-xfh.jf.intel.com.notmuch>
- <20240425123344.000001a9@Huawei.com>	<662a826dbeeff_b6e02943c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240425182605.00005f22@Huawei.com>	<662aae2fe4887_a96f294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240426094550.00002e37@Huawei.com>	<662bd36caae55_a96f2943f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240426175341.00002e67@Huawei.com>
-In-Reply-To: <20240426175341.00002e67@Huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j4BISC6T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714160812; x=1745696812;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Pi7ukKQvRGpfOiyfjith2w72DDgU8773HPpjM8AqRZ8=;
+  b=j4BISC6T0AbKeAhvqwA+5IN7je1BNoMF50xq5N7FKKck9hXjca/wAHTg
+   ehyRYErb+Y1pbjIpiRyimLlSFv6+w5aRi3k9QrPsDfCk7sgPJGufpiP0T
+   ZUWt3h4SKyD8kg/rEFuuEWzYNCujNyZXGcqj2sIbs8QlGW2K6lFhEwW8H
+   2nNoQb8Mw7o/oXv0q92sm29N3awe80fmRz4S+IoKbfyJN2j0YB6jv8ja8
+   eHxS6HHED1qK+nwML48hC4NbnubpCGzoHgsjhEskUx+RrIsyJ/9dfNegv
+   NB0wJxK/xIFdqsR7JknNnnrSTIM7nlumgybnplcfZlHWH/gWcm//fWe5I
+   g==;
+X-CSE-ConnectionGUID: XyYNxCXpQ8avh3Vk3K1Rfg==
+X-CSE-MsgGUID: 4dmhdEtkQtiXspLek/mlbw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="12845499"
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="12845499"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 12:46:51 -0700
+X-CSE-ConnectionGUID: xq/rSR4+QIWJ3+jan8rJHg==
+X-CSE-MsgGUID: UnpXQBuXQO2Bgy+4LW6Fmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="56686301"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Apr 2024 12:46:51 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 26 Apr 2024 12:46:50 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 26 Apr 2024 12:46:50 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 12:46:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jt9dYv3Ksz9wXcSEmUzPiCIkbQ6DEfR62lBWiUzZZcxmPD56OIc1iqCDr3J64/abOwTY+8rlV9On6G50AiKK3Ijxxjq8vqo4l68RZ0NT58ezCEN0SMI7K788J83iCC8lVEre4bnl3yUrAaHtSxzknXGNdhD3f2BRTmD4hPIE7Fsssx3jBxk1hCMNRLxGg1WFYplQoxV52GF+iyT/9K8WR9can0x99oxF9ndKrzZnx1XBMqWY4I8gLiW6gxWnXIqAzdCAgIRxk3yE/QV5zJmlRWKv/+KPaBYf8LNJZnSqtAWdihh19ZMVLbsdOvlZ2QQv6jXNm0l64V7bBYJjVheoTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cUnl96QjYyUAwcvs7JGJcmi44xu1OmiWoyotzIH+3rA=;
+ b=ZFajWHSHIqulcGK9lHzFHOzSfnV/j6ivO0rKzVybOgd3jzx6J/8QYZodNmrznhtFbNhGoXMdZDifBPuk7mrVSeoQ3iGVHftCvz6LCkTo3Llh0acFJGC2mj4f9dwQwgovkZOSdWt6qoeXRZwQ2ouDwTNLeuziB+FoJvzsLcYsBoqCXd58XKRfQ3mrwE5DKWI3MM1Cus9tF9rpN6uZLmdY0STu4O5CQnyR6UlH/MKue9hPv1sBg1s5WwfSQXQSp9ykSSQXJbnGWBwBlGbATu5i54grzN5YGOThYMJ2/fLHKERh3qDJGdyPLNHbMLqZlUZb/1XQvVtCZolejiEj/HQ03A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA0PR11MB7790.namprd11.prod.outlook.com (2603:10b6:208:403::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.31; Fri, 26 Apr
+ 2024 19:46:48 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7452.046; Fri, 26 Apr 2024
+ 19:46:48 +0000
+Date: Fri, 26 Apr 2024 12:46:45 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
+	<lukas@wunner.de>
+Subject: Re: [PATCH v4 3/4] PCI: Create new reset method to force SBR for CXL
+Message-ID: <662c04a5d8f5f_b6e02945f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240409160256.94184-1-dave.jiang@intel.com>
+ <20240409160256.94184-4-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240409160256.94184-4-dave.jiang@intel.com>
+X-ClientProxiedBy: MW4PR03CA0331.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::6) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQKunZEo8R7Jz4kBtk6k2PvotGU0HgHS0NaiAcYBqoMBlEd6hQI3yNWyAXtbGeoCNAHAQgKHImC+AgG1eBACLtCTCwHsMLvJrzUWuSA=
-Date: Fri, 26 Apr 2024 14:25:29 -0500
-Message-ID: <6351024b5d6206c4e9a8cd98d1a09d43@mail.gmail.com>
-Subject: RE: RFC: Restricting userspace interfaces for CXL fabric management
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, 
-	Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>, 
-	Brett Henning <brett.henning@broadcom.com>, 
-	Sumanesh Samanta <sumanesh.samanta@broadcom.com>, linux-kernel@vger.kernel.org, 
-	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, linuxarm@huawei.com, linux-api@vger.kernel.org, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Natu, Mahesh" <mahesh.natu@intel.com>, 
-	gregkh@linuxfoundation.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000004dcbd061704de9c"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7790:EE_
+X-MS-Office365-Filtering-Correlation-Id: a60d13a5-0101-4271-c8ba-08dc66299c76
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Zvhz3PaJBi8txYff182ZtO1XKR3q8DgQKZd7dE2O7AU03JM8XJeWiM5Lvdbf?=
+ =?us-ascii?Q?HkB7qTxpmIQ+8VLhvHpk+8KxvTyA/0lvUIlSdmlnLumLPDbvMsjP+9liw+dA?=
+ =?us-ascii?Q?feMwhLFxtH166/PIpWRnHE2W44RwhF6cZevzrxVxB7om8ePl/tbuGLswxuNT?=
+ =?us-ascii?Q?SZb8fh62gW+abnLiYu+O0ovOk+65s3x6wffFGwdJaYkrLY95RM8k9FHVpgBB?=
+ =?us-ascii?Q?oJ3PCgCP9RXwJBy+R2CZuJx6TVoW8MCFSYXKiH2aJY5zeoJlUbYaPcnWoqLw?=
+ =?us-ascii?Q?S3yJ2DJmKTwGDO8/DizXONb2HE92+i3b4dynBvRia/HjHPq1aO0V3VBbymdS?=
+ =?us-ascii?Q?n4tWt/7MnaR6HoayGmUiWos90NS7fw9nn+9IJkUSR6Jqt8JNWAwr4XG+/qtW?=
+ =?us-ascii?Q?5VpnGllrULGnZVPF9/fC+V+m553XnTLH/fWP8Jf9l0dw/rGaBg3IAhnJxGMs?=
+ =?us-ascii?Q?rr+7QvRXoXH8DlBm0HwQOoTfcQXeVzT1itaBJ/OGuyAAJhJaRuQLzElfEZaK?=
+ =?us-ascii?Q?z0rAQs8u5n0by/2NI7OTjOeoSwvZSqcPxDhWsF+XVtq2nvWdaljkUP4wCyB7?=
+ =?us-ascii?Q?0YRMlEN/2uwEN+ZDxcKeXZo3fOYy80Kq/q3ZUUbYrLX7bfgYqDcFKAJDnwRp?=
+ =?us-ascii?Q?jHGJ6fVv9PtZ3NnkkFzgiwgCqAmr/y9xIhJ68V7jXC2IiRcr/FL2qJ5JIktr?=
+ =?us-ascii?Q?ePPipRu8l7SnUEd29Q+Yk6WuaAENg6/YU0/PngL5ztAWAIVIB6CWqLpv/1C0?=
+ =?us-ascii?Q?r25/2DyZ2/nhbkz+k1AM9UrzOgqgBzIR0Zo4IFY8WtgZBSOAS6r2PyVLXpUc?=
+ =?us-ascii?Q?oQnaNfqxjDSrIQToO9cUA4aKmqqXTQx5bkXLF3vkV5LRf01/3pmdamfiaseJ?=
+ =?us-ascii?Q?3DhTilCx1eMV6vxGr55r9XZxes2cj0yGOkYrqw6VIHjg3eFnULpk6rngOG9i?=
+ =?us-ascii?Q?fDM71RnY5FOhlaCwFGc5UBmh/aq/5vcMfUUiaKmqWEb3JNXGMH8tuiC419ir?=
+ =?us-ascii?Q?rau35+SxDmbG9hGssc/PQ19inUXfJ+8UmGAYHAdJCwA2fv8Qpiu+E7f3BSIB?=
+ =?us-ascii?Q?B7ZlqGdj4ej4T3FxHBIbb7JYF4VHV9abUiVynDeMLvBaqkJUnJ2Vo9siZv0X?=
+ =?us-ascii?Q?YP5JUGi8ZLwXU6XksErVO9ckLyjAjc3ThWjNeguikQ65Y8noMQ0CuMPIpo9F?=
+ =?us-ascii?Q?VgYKOBxAfAru7/T+nYqRB4rj9nsx9q1LjBGL89Ordh4JQ5px0djwQRKZ9Ukb?=
+ =?us-ascii?Q?Sk+2EHHyyVwhWVTwWUUNdDW6Hxef1j9T1gEeCNjbJQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cQ3TzgJl4Hq4eTjmXF33lZ8tYSyJGROcj2LfL0GcynKYerbHTksRh425J3qN?=
+ =?us-ascii?Q?Tbu4jU2yqjPa1S+BWphACHPHOUcx9SRp8hAqFSA7t28dIGZyNoM+ABNlDBU8?=
+ =?us-ascii?Q?g7tki/TlySEzs8Am+0mKtExn2gMj1e1Ab6bEAHAFpOMZebqsJU3aPRMzl0po?=
+ =?us-ascii?Q?B/MaQ2rV3R975tYvJT/wEId5NeyjDWvd9b5FnNZjwhR2QP6YxheRs1Zf1C4G?=
+ =?us-ascii?Q?xYvgT6AhhUinSlMKUfT94VD+UeI9v3NBnlq4SbAzQziCT/KxLT0etIvFFlz6?=
+ =?us-ascii?Q?zJYiprWc/LvFp/D1rWCiacrGUPk0xR80F1gzvqUMQz7gNS2hIhGvaP7vxwn4?=
+ =?us-ascii?Q?qCilvTbmaWVkBQUKtdvBsDLsi/WElpgKlE1XXDfVNWIGU4RNm1+lwDCFsQUd?=
+ =?us-ascii?Q?26+bBSiOLyZxVFT/pwOs2X0xYxgsGDNBJln1rWF160iaqf2LegRXEGJp/jY5?=
+ =?us-ascii?Q?NO4o1v/9A3phmct0k5O3ZAVwFfBNuylfVbTQe64feq3psCJQvQYmZbJtzCLz?=
+ =?us-ascii?Q?qbtHnfnMJiuLwz1tV7L8nfsuUUjl/ZaWuTafbV65nuI7Tnd2gTrPK7kS2KZc?=
+ =?us-ascii?Q?Xx/E174IAsBN7uQkw5NHKytCHneqUPJNwsYVzwVrXzIWpsEd21e5GrqKsaf3?=
+ =?us-ascii?Q?/RUsl0p6xbF73DtDtkihcvbWJ5ZqCqGQBANjhDrhSVVzfcBJSYChW0yXThtI?=
+ =?us-ascii?Q?zPMg5p5J/cGqOk866Li4pioXyoLUOZRY/SLLjcAHjuOTibsVq51qrOBwXOyw?=
+ =?us-ascii?Q?1V6tAFDXbQH0bj1C1ri/pVXADrTdSwemmfN4vSM5Voc6tt15t25EUpf9UD+3?=
+ =?us-ascii?Q?LhBv4gvSxvKw8BSiAg852RUg05F9CxE5/+6te7YxLHzg/jgI8TRd3uh/dhOf?=
+ =?us-ascii?Q?361gSwTmQb3TFvESR9OdeaM6eAFM3gTIjQ4JVIUhSQBjgZvLUvbupggGzTI5?=
+ =?us-ascii?Q?BHB8FijBHSjVTmYl+frUl5owAu+LmA44HiOWjy1VmcFJ7cD7jeL2IsHhry7L?=
+ =?us-ascii?Q?7hFAXsdR2U8uqKdmhnCe9WU0z7mltpkzsods0gvP78PuhKDFSkV7qdtrVrdH?=
+ =?us-ascii?Q?crgw0aAcot4G87pWRAP+RYaezkAqO0Wnwnk1PqaJb1ERdNCPjPrVZEloQC1K?=
+ =?us-ascii?Q?4AUIXSlmp5RRoAJ1v2oymEhqYaZmRNv5iMkAct9Dqo+yQFYfGlFdT3D+mRex?=
+ =?us-ascii?Q?07q6EZdWXjloIAPkDrlgmARywiNE03agmMVEBZJkPU0SKms4j+zhJEMLq3Tp?=
+ =?us-ascii?Q?86anOxeUYlNQC2fcKl81MiuQ6LdMY4F4rvYI2CEcO+ku6WC2Si8xKUTCzRnE?=
+ =?us-ascii?Q?G3KR9LiqD5jwq9pNY+rg/kqtMhm+YMEeb+3ruWSqCd+O88tW98KftC94gjpd?=
+ =?us-ascii?Q?k54blxeA/Gf7dZJt+wjWT2TFhlFzRfKHJEIgFR9F+qCL+2Qwsau1YW3vwgA3?=
+ =?us-ascii?Q?kTs7fXdP39DLLusqEhHILmP7adHh9rfn7xFoCBQwKS4Oe+cLCSVQK+Y7M2mk?=
+ =?us-ascii?Q?3IMAnjfwHy2Y6+wvW7NqSjQ5pEkDtIQIHPBCBc468rm94SUXDL/V8KlMxV4A?=
+ =?us-ascii?Q?A1xThx+Ova6Tah3IxowOsg+Tm1vvba7x7yWwMePFYlaRTI6wtxHD29jNzTvG?=
+ =?us-ascii?Q?SQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a60d13a5-0101-4271-c8ba-08dc66299c76
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 19:46:48.6229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xribTiyx6k16sU872fyBrk5GF33B5unhTrfImq9zVDI4vZM7SqCVq/Ouy3N2wq8gzKPVFicfkAQokvJRC7ddlAxY2xePfSIhXxkL2A0Zrdk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7790
+X-OriginatorOrg: intel.com
 
---00000000000004dcbd061704de9c
-Content-Type: text/plain; charset="UTF-8"
+Dave Jiang wrote:
+> CXL spec r3.1 8.1.5.2
+> By default Secondary Bus Reset (SBR) is masked for CXL ports. Introduce a
+> new PCI reset method "cxl_bus" to force SBR on CXL ports by setting
+> the unmask SBR bit in the CXL DVSEC port control register before performing
+> the bus reset and restore the original value of the bit post reset. The
+> new reset method allows the user to intentionally perform SBR on a CXL
+> device without needing to set the "Unmask SBR" bit via a user tool.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v4:
+> - Use pci_dev_lock guard() on bridge. (Dan)
+> ---
+>  drivers/pci/pci.c   | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  2 +-
+>  2 files changed, 40 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 570b00fe10f7..3b4f7b369287 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4982,6 +4982,44 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>  	return pci_parent_bus_reset(dev, probe);
+>  }
+>  
+> +static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+> +{
+> +	struct pci_dev *bridge;
+> +	u16 dvsec, reg, val;
+> +	int rc;
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (!bridge)
+> +		return -ENOTTY;
+> +
+> +	dvsec = cxl_port_dvsec(bridge);
+> +	if (!dvsec)
+> +		return -ENOTTY;
+> +
+> +	if (probe)
+> +		return 0;
+> +
+> +	guard(pci_dev)(bridge);
 
-Perhaps a bit more color on a few specifics might be helpful.
+My concern here is this sets up a pci_reset_function() locking order of:
 
-I think that there will always be a class of vendor specific APIs/Opcodes
-that are related to an implementation of a standard instead of the
-standard itself.  I've been party to discussion on not creating CXL
-defined API/Opcodes that get into the realm of specifying an
-implementation.  There are also a class of data that can be collected from
-a specific implementation that is helpful for debug, for health
-monitoring, and perhaps performance monitoring where the implementation
-matters and therefore are not easily abstracted to a standard.
+    pci_dev_lock(@dev)
+        pci_dev_lock(pci_upstream_bridge(@dev))
 
-A few examples:
-a) Temperature monitoring of a component or internal chip die
-temperatures.  Could CXL define a standard OpCode to gather temperatures,
-yes it could; but is this really part of CXL?  Then how many temperature
-elements and what does each element mean?  This enters into the
-implementation and therefore is vendor specific.  Unless the CXL spec
-starts to define the implementation, something along the lines of "thou
-shall have an average die temperature, rather than specific temperatures
-across a die", etc.
+Compare that to pci_reset_bus() that does:
 
-b) Error counters, metrics, internal counters, etc.  Could CXL define a
-set of common error counters, absolutely.  PCIe has done some of this.
-However, a specific implementation may have counters and error reporting
-that are meaningful only to a specific design and a specific
-implementation rather than a "least common denominator" approach of a
-standard body.
+    pci_dev_lock(pci_upstream_bridge(@dev))
+        pci_dev_lock(@dev)
 
-c) Performance counters, metric, indicators, etc.  Performance can be very
-implementation specific and tweaking performance is likely to be
-implementation specific.  Yes, generic and a least common denominator
-elements could be created, but are likely to limiting in realizing the
-maximum performance of an implementation.
+This also highlights that the pci_dev_lock() performed by
+pci_reset_function() has long been insufficient for the
+pci_reset_bus_function() method case that could race userspace when
+pci_reset_secondary_bus() is manipulating the bridge control register.
 
-d) Logs, errors and debug information.  In addition to spec defined
-logging of CXL topology errors, specific designs will have logs, crash
-dumps, debug data that is very specific to a implementation.  There are
-likely to be cases where a product that conforms to a specification like
-CXL, may have features that don't directly have anything to do with CXL,
-but where a standards based management interface can be used to configure,
-manage, and collect data for a non-CXL feature.
-
-e) Innovation.  I believe that innovation should be encouraged.  There may
-be designs that support CXL, but that also incorporate unique and
-innovative features or functions that might service a niche market.  The
-AI space is ripe for innovation and perhaps specialized features that may
-not make sense for the overall CXL specification.
-
-I think that in most cases Vendor specific opcodes are not used to
-circumvent the standards, but are used when the standards group has no
-interested in driving into the standard certain features that are clearly
-either implementation specific or are vendor specific additions that have
-a specific appeal to a select class of customer, but yet are not relevant
-to a specific standard.
-
-At the end of the day, customer want products that solve a specific
-problem.  Sometimes vendor can address market segments or niches that a
-standard group has no interest in supporting.  It can also take months,
-and in some cases years to reach an agreement on what standardized feature
-should look like.  I also believe that there can be competitive reasons
-why there might be a group that wants to slow down a vendor's
-implementation for fear of losing market share.
-
-Thanks
-Harold Johnson
-
-
------Original Message-----
-From: Jonathan Cameron [mailto:Jonathan.Cameron@Huawei.com]
-Sent: Friday, April 26, 2024 11:54 AM
-To: Dan Williams
-Cc: linux-cxl@vger.kernel.org; Sreenivas Bagalkote; Brett Henning; Harold
-Johnson; Sumanesh Samanta; linux-kernel@vger.kernel.org; Davidlohr Bueso;
-Dave Jiang; Alison Schofield; Vishal Verma; Ira Weiny;
-linuxarm@huawei.com; linux-api@vger.kernel.org; Lorenzo Pieralisi; Natu,
-Mahesh; gregkh@linuxfoundation.org
-Subject: Re: RFC: Restricting userspace interfaces for CXL fabric
-management
-
-On Fri, 26 Apr 2024 09:16:44 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Jonathan Cameron wrote:
-> [..]
-> > To give people an incentive to play the standards game we have to
-> > provide an alternative.  Userspace libraries will provide some
-incentive
-> > to standardize if we have enough vendors (we don't today - so they
-will
-> > do their own libraries), but it is a lot easier to encourage if we
-> > exercise control over the interface.
->
-> Yes, and I expect you and I are not far off on what can be done
-> here.
->
-> However, lets cut to a sentiment hanging over this discussion. Referring
-> to vendor specific commands:
->
->     "CXL spec has them for a reason and they need to be supported."
->
-> ...that is an aggressive "vendor specific first" sentiment that
-> generates an aggressive "userspace drivers" reaction, because the best
-> way to get around community discussions about what ABI makes sense is
-> userspace drivers.
->
-> Now, if we can step back to where this discussion started, where typical
-> Linux collaboration shines, and where I think you and I are more aligned
-> than this thread would indicate, is "vendor specific last". Lets
-> carefully consider the vendor specific commands that are candidates to
-> be de facto cross vendor semantics if not de jure standards.
->
-
-Agreed. I'd go a little further and say I generally have much more warm
-and
-fuzzy feelings when what is a vendor defined command (today) maps to more
-or less the same bit of code for a proposed standards ECN.
-
-IP rules prevent us commenting on specific proposals, but there will be
-things we review quicker and with a lighter touch vs others where we
-ask lots of annoying questions about generality of the feature etc.
-Given the effort we are putting in on the kernel side we all want CXL
-to succeed and will do our best to encourage activities that make that
-more likely. There are other standards bodies available... which may
-make more sense for some features.
-
-Command interfaces are not a good place to compete and maintain secrecy.
-If vendors want to do that, then they don't get the pony of upstream
-support. They get to convince distros to do a custom kernel build for
-them:
-Good luck with that, some of those folk are 'blunt' in their responses to
-such requests.
-
-My proposal is we go forward with a bunch of the CXL spec defined commands
-to show the 'how' and consider specific proposals for upstream support
-of vendor defined commands on a case by case basis (so pretty much
-what you say above). Maybe after a few are done we can formalize some
-rules of thumb help vendors makes such proposals, though maybe some
-will figure out it is a better and longer term solution to do 'standards
-first development'.
-
-I think we do need to look at the safety filtering of tunneled
-commands but don't see that as a particularly tricky addition -
-for the simple non destructive commands at least.
-
-Jonathan
-
--- 
-This electronic communication and the information and any files transmitted 
-with it, or attached to it, are confidential and are intended solely for 
-the use of the individual or entity to whom it is addressed and may contain 
-information that is confidential, legally privileged, protected by privacy 
-laws, or otherwise restricted from disclosure to anyone else. If you are 
-not the intended recipient or the person responsible for delivering the 
-e-mail to the intended recipient, you are hereby notified that any use, 
-copying, distributing, dissemination, forwarding, printing, or copying of 
-this e-mail is strictly prohibited. If you received this e-mail in error, 
-please return the e-mail to the sender, delete it from your computer, and 
-destroy any printed copy of it.
-
---00000000000004dcbd061704de9c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-dxEvQsUZzrDYkcbaq0pFKldUHCFlJ40A6mYMamtX+K/dOy8JOPpcsGATQJVvOCowPByerwQ2YA5H
-aVoejByKvh4PX1ZKTHd4T0PI04SW0XhQeOY9Q4MrNrzi2GgJAgMBAAGjggHcMIIB2DAOBgNVHQ8B
-Af8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYIKwYB
-BQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
-MDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5n
-bG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqGOGh0
-dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3JsMCYG
-A1UdEQQfMB2BG2hhcm9sZC5qb2huc29uQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcD
-BDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUjGUx5P4A0p/XH6QC
-1/fEZlOUtrQwDQYJKoZIhvcNAQELBQADggEBAEaE/q6aHZ15f6d2Mm7iGYaGrKrIsNcfY7lr6YYY
-aEW1RGXYnu07R4eZBYISoKuJN1qKLBN+Onl1+9L8yKo2YuIH3A22iWBzV06uxFnip75Qeujg+0+r
-SH5Mdh6QCregHSSQawF0oHt50q8l5uLY0X/tOe34TxqNigwKJAJ5XE8SnZQauJrCPy5ppMgwJ9JT
-hpG/km0i0PgommCbk4Y0nd6Y84hgbte6DmlyDym+4qaHp8UD2rpXQLHDzcUzlY/JsJPAxsPl0mpT
-uKUgobEhkpp0ZYEWdB5cndcazW23IHRvnCtBG166CIEknolVYuVVbiY+IKNL8mwVqBrX9jizckox
-ggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEw
-LwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxWMcpZynHG
-JESlG+cwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEINXOgULaISToEgr9m1csddu3
-HPAVkrR3GSPYd3Pz5sY5MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTI0MDQyNjE5MjUzMlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEW
-MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCG
-SAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA/CilH+vbwSUGgfkD8NuYNxxI4IZUBrf5pl6k8SQTg
-lNGcVBMcP/gOyjbt+wRzCtaLxjobP5Y+CO2Z4t5VxAcBy3g5Qw0gBxCqcpA9MHcRMO59TZZl6M9V
-pNGa9nMNQwmsvyJhavZ1zbwhx1nSh0pBfcuZVWdAdghGR0PbUvgltiFvhrGJSxZKmVsidYSgpvo4
-OT6Dj3zKC7jnJfVMRmWSV5JpafYCPfe+Cu9j6NY/tLqkvuA+SULPyfEaG7ViYYyNj7TsuO5VSUO7
-2WPQCZohhg+Yw7tkBMVSrc64cOo0I8Rb5161GIO7NQq8EZIbukdDzMAivY4MWVwTy6etC5Jp
---00000000000004dcbd061704de9c--
+So, if the goal of the lock is to prevent userspace from clobbering the
+kernel's read-modify-write cycles of @dev's parent bridge, then the lock
+needs to be held over both the cxl_reset_bus_function() and the
+pci_reset_bus_function() cases, and it needs to be taken in
+upstream-bridge => endpoint order.
