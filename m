@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216C5762C1
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Apr 2024 03:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B1378C70
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Apr 2024 03:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714103190; cv=none; b=Ma9+Q68XUus4e5UQ17fVNQKBAWSHpBiPdu2wuZivmg13dgfZo7i/1PJnz75AmfrKgWZq+YYSxtUwEd10Gs5ULQAcbLYmSVtm4vqmCGFy5npKcTfZNigpXZgzme107dVUgGQGVRCSuIqy9GiwwR4QGamsom2MeavjyGLXv1HEa1g=
+	t=1714103191; cv=none; b=O7Yu55mUylD5QOLpG3rbTP09GMWfHiYEVmLJOSsjKfS6ewS152BSkk1SCnCVWR+hP4RHPPHQ9Mb8JR7zojftKDYquHZPBvE74eeo7KSs0KjfMKqlDhNNOWuf8C+MHbpbv53gBuTnDCgLZAoKxC+lqrHW35wp+jdxA68rAiCXANk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714103190; c=relaxed/simple;
-	bh=M+V7eaag56bkTu7oLkpJyeY1QLWG0JQz1dtu0SMLzeQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1KjvyQJMDPY1HIRD4EJU9egrQ9KU6XFkpAB76USr7oo+p/AP/upET5fNpjI5HjoFx3V+oWYA6tZEJrYVZ9VrOXOXigAo1yF602LEJAWHvHNRV+seqhIYqXoTJhRkHuxDlnW8Ai6biw25dXxknLgkBM4XKrs9APRGopJw5WEEwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lea+YPXv; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1714103191; c=relaxed/simple;
+	bh=ABXHD79SAY7dW0Fx6Y7aYlXFP4JckPvRUUEtzb8P5uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MUZKrGYCZ8zJ7IUpFIemAvIoZu1+uFECihdgPO2qt57zp6HQFXej+vUpYi9Cq+3rjxgkm0FGqr1URDrm+V4s4Ui02O2GfZzwna9iBBhvTyYW7a0wsLJuLyKSRoZQvSrxoh+TwLfX0CQ7y6AHiUoVDofJWbaWdEET6cEVgDEQ//4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lExk8EtP; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lea+YPXv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lExk8EtP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714103188; x=1745639188;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=M+V7eaag56bkTu7oLkpJyeY1QLWG0JQz1dtu0SMLzeQ=;
-  b=Lea+YPXvRXsytZww7qgO6EMWCp8sTvtcnRjSiC7XOv4adUprju2RpExZ
-   VlDJNxq35MV6k28M2bfYoWEokxXBgpsAKLPhHdED/trgWY6NwE6R5ukWJ
-   NyuVdrUb/t5MCWAhKy6btzxJsEU2fKQJ8Fedq7Do+91oDDZ6v7T0EgVZw
-   wDbSDqa5R/Qpd3Qkv8XTm+OAOhJwbzx0858qnoggWcmEIzrX0fI5P3Gid
-   CS5HlNXcWXPAJxX4E+JA0U7CzgKGB/esTg5l8gjiMGxYwxAgv61Ru8WCq
-   83xjdb4hQu0ne3Bh2GK4JvCPa0fuZnjEn/2fnc137d9EdKGYaOLnkIlnZ
-   g==;
-X-CSE-ConnectionGUID: sm3b7nG2RhmFUN9BfumNkg==
-X-CSE-MsgGUID: JhLYwj51R1OvwIr1+MqGOQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="20381456"
+  t=1714103190; x=1745639190;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ABXHD79SAY7dW0Fx6Y7aYlXFP4JckPvRUUEtzb8P5uc=;
+  b=lExk8EtPTRjlnHDpYuyfNQrJ8tlfIHm+6L519lEqFACMdmda5jTDZ78m
+   Sq+9xpANdjcpT9v8fcZalPIczvFWXDOqet5xdELWv18YttWds+TNdPVhT
+   1YUCtnI/Ik4hLdjC91/wr7EgglhMFRjj4cXh51S6D/fsgHAwv3zK0wO2L
+   ooEKwNsZ9AL8K33xnusA4cO0/Ju2XxyAJdPSImMqMq5fd1ACSzMSyJe8F
+   f5xmxx92i8qE+RShSGyMBJAJ/NX7HL+FOQjRIIWuT2CaT0NSd2ygsP/hk
+   1+/uyrCxNtT4+/RgmECWVp2zpUSe3Ehsg7xJUfHkfwM/uBr4CDblIwn2g
+   Q==;
+X-CSE-ConnectionGUID: jSmab6ZfSKudYXNWn8tdfQ==
+X-CSE-MsgGUID: p7DDyKh5QNyxX/ZNmoa8jg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="20381461"
 X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="20381456"
+   d="scan'208";a="20381461"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 20:46:27 -0700
-X-CSE-ConnectionGUID: yQ9vculjSl6VKuZvovZMzA==
-X-CSE-MsgGUID: jVM3o9O1TCezBfddsqlGuA==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 20:46:28 -0700
+X-CSE-ConnectionGUID: S7lNsRdCRZ+ZQ4KxcyB7JQ==
+X-CSE-MsgGUID: 6bJSfRU8SoSmqbpAImmf3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="29738207"
+   d="scan'208";a="29738215"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.252.128.24])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 20:46:26 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 20:46:27 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -51,11 +52,14 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v4 0/3] Add DPA->HPA translation to dram & general_media events
-Date: Thu, 25 Apr 2024 20:46:22 -0700
-Message-Id: <cover.1714102202.git.alison.schofield@intel.com>
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 1/3] cxl/region: Move cxl_dpa_to_region() work to the region driver
+Date: Thu, 25 Apr 2024 20:46:23 -0700
+Message-Id: <ea69d6e9a868815ad1626d8e2f732cc6beebbf9c.1714102202.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1714102202.git.alison.schofield@intel.com>
+References: <cover.1714102202.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,56 +70,148 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
+This helper belongs in the region driver as it is only useful
+with CONFIG_CXL_REGION. Add a stub in core.h for when the region
+driver is not built.
 
-Changes in v4:
-- Pick up Dan's style suggestions I missed in v3 (Dan)
-- Lookup hpa earlier (within trace_enabled()) and pass to the event handler (Dan)
-- Add and use a new member in cxl_event union to access the common phys_addr field.
-Link to v3: https://lore.kernel.org/cover.1714085857.git.alison.schofield@intel.com/
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+---
+ drivers/cxl/core/core.h   |  7 +++++++
+ drivers/cxl/core/memdev.c | 44 ---------------------------------------
+ drivers/cxl/core/region.c | 44 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 51 insertions(+), 44 deletions(-)
 
-Changes in v3:
-- Harvest the cxlr before calling trace handler (Dan)
-- Replace macros w inline fast assigns (made easier w available cxlr)
-- Drop prior review (Jonathan) on Patch 3 due to churn.
-- Remove Patch 4 which was making cxl_poison use the (now gone) macros.
-  (A uuid_t change was tucked in Patch 4 and can be posted as a separate
-  tidy-up patch.)
-Link to v2: https://lore.kernel.org/cover.1713842838.git.alison.schofield@intel.com/
-
-An update to the cxl_events unit test is in review here:
-https://lore.kernel.org/20240328043727.2186722-1-alison.schofield@intel.com/
-
-
-Begin Cover Letter:
-Add HPA translations to CXL events: cxl_dram and cxl_general_media
-
-Patches 1 & 2:
-Before adding the new support, do some housekeeping and move related
-helpers to the region driver because there is no looking up region
-related info without CONFIG_CXL_REGION.
-
-Patch 3:
-The new functionality is introduced - cxl_dram & cxl_general_media
-events. Lookup and log the DPA->HPA translation along with the
-region name and region uuid.
-
-
-Alison Schofield (3):
-  cxl/region: Move cxl_dpa_to_region() work to the region driver
-  cxl/region: Move cxl_trace_hpa() work to the region driver
-  cxl/core: Add region info to cxl_general_media and cxl_dram events
-
- drivers/cxl/core/core.h   |  14 ++++
- drivers/cxl/core/mbox.c   |  36 ++++++++--
- drivers/cxl/core/memdev.c |  44 -------------
- drivers/cxl/core/region.c | 135 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/trace.c  |  91 -------------------------
- drivers/cxl/core/trace.h  |  46 +++++++++----
- include/linux/cxl-event.h |  10 +++
- 7 files changed, 224 insertions(+), 152 deletions(-)
-
-
-base-commit: 4cece764965020c22cff7665b18a012006359095
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index bc5a95665aa0..87008505f8a9 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -27,7 +27,14 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
+ int cxl_region_init(void);
+ void cxl_region_exit(void);
+ int cxl_get_poison_by_endpoint(struct cxl_port *port);
++struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
++
+ #else
++static inline
++struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
++{
++	return NULL;
++}
+ static inline int cxl_get_poison_by_endpoint(struct cxl_port *port)
+ {
+ 	return 0;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index d4e259f3a7e9..0277726afd04 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -251,50 +251,6 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_trigger_poison_list, CXL);
+ 
+-struct cxl_dpa_to_region_context {
+-	struct cxl_region *cxlr;
+-	u64 dpa;
+-};
+-
+-static int __cxl_dpa_to_region(struct device *dev, void *arg)
+-{
+-	struct cxl_dpa_to_region_context *ctx = arg;
+-	struct cxl_endpoint_decoder *cxled;
+-	u64 dpa = ctx->dpa;
+-
+-	if (!is_endpoint_decoder(dev))
+-		return 0;
+-
+-	cxled = to_cxl_endpoint_decoder(dev);
+-	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+-		return 0;
+-
+-	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
+-		return 0;
+-
+-	dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
+-		dev_name(&cxled->cxld.region->dev));
+-
+-	ctx->cxlr = cxled->cxld.region;
+-
+-	return 1;
+-}
+-
+-static struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
+-{
+-	struct cxl_dpa_to_region_context ctx;
+-	struct cxl_port *port;
+-
+-	ctx = (struct cxl_dpa_to_region_context) {
+-		.dpa = dpa,
+-	};
+-	port = cxlmd->endpoint;
+-	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
+-		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+-
+-	return ctx.cxlr;
+-}
+-
+ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 5c186e0a39b9..4b227659e3f8 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2679,6 +2679,50 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
+ 	return rc;
+ }
+ 
++struct cxl_dpa_to_region_context {
++	struct cxl_region *cxlr;
++	u64 dpa;
++};
++
++static int __cxl_dpa_to_region(struct device *dev, void *arg)
++{
++	struct cxl_dpa_to_region_context *ctx = arg;
++	struct cxl_endpoint_decoder *cxled;
++	u64 dpa = ctx->dpa;
++
++	if (!is_endpoint_decoder(dev))
++		return 0;
++
++	cxled = to_cxl_endpoint_decoder(dev);
++	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
++		return 0;
++
++	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
++		return 0;
++
++	dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
++		dev_name(&cxled->cxld.region->dev));
++
++	ctx->cxlr = cxled->cxld.region;
++
++	return 1;
++}
++
++struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
++{
++	struct cxl_dpa_to_region_context ctx;
++	struct cxl_port *port;
++
++	ctx = (struct cxl_dpa_to_region_context) {
++		.dpa = dpa,
++	};
++	port = cxlmd->endpoint;
++	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
++		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
++
++	return ctx.cxlr;
++}
++
+ static struct lock_class_key cxl_pmem_region_key;
+ 
+ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 -- 
 2.37.3
 
