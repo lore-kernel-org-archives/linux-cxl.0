@@ -1,40 +1,56 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16283BBF8;
-	Sat, 27 Apr 2024 06:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBC244C8D;
+	Sat, 27 Apr 2024 11:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714198808; cv=none; b=n2DFqbDRfASd6iUCPYNOfkAdmm6s+mEw34gP38EwDZexb0Ofz2MTCt2uxWomyBU0tlLDwjiWsBNmeCp+jOUYzqgH0gLbzraspFYKWpvogBgfQO0ABaYKJPfuFt5QCRu57L/cHtI1oMfOBmI8XeXZJO5rJROEFwxmfxMWfuNHBnM=
+	t=1714216358; cv=none; b=bQ5v2VFvxy8oOaFT6YsQamlYXcrud0ECPUNDGtK/A+PtMoMrFUlviIpj1w659lXLfMaYD277767RG30160uKUWs/paWCK6opItN6r6evrS84ZT9UbsDgNd8bO8IxjJFQufCtqNGtY4Jdu4YqhlKbfsPt/hlil7mR9u1mPFS2Qbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714198808; c=relaxed/simple;
-	bh=/xJEAhZH0Zk2g9NfWsGaNADXVhIjlC0gvs1hSvu7Q70=;
+	s=arc-20240116; t=1714216358; c=relaxed/simple;
+	bh=tr79Artks8dAf9QK673sxTgZ9h7swDRJ+v3dL9mwHDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TshSk2fGe0/jzKzyVOloYcBJd3xblVSvIWAGEdeAO/f59L+/lb3IRE3/mmANC9QC0cOX2pFbEG48ECBJRETkAx77FCbO2UjcUOQGv3nR5tS3B9MQoP+9ofUXk0t+eZ6kch6jMfYlwmEEq58XM3aLZGzYhhOz+GCmG2RdpUoLOOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id B4E7D28010383;
-	Sat, 27 Apr 2024 08:19:56 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 81E317EB19; Sat, 27 Apr 2024 08:19:56 +0200 (CEST)
-Date: Sat, 27 Apr 2024 08:19:56 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com
-Subject: Re: [PATCH v4 3/4] PCI: Create new reset method to force SBR for CXL
-Message-ID: <ZiyZDKSxtfeYi0N4@wunner.de>
-References: <20240409160256.94184-1-dave.jiang@intel.com>
- <20240409160256.94184-4-dave.jiang@intel.com>
- <662c04a5d8f5f_b6e02945f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jOnJ/78hRI0vazPtiGMiuV7WEDsYSP8Jx+sD5wvWIG2yErrtLhNYEmI83tYgvTxQcXiGrMTDNpOMnjOj2tqr5TB/HK1uXYDzrUo8i8ov3zok/lECGmiobJLcR6tyPO8/DwVDk9PuxTSr+t+d/Quu8a8W4Exrh+GvE9JDtvNQeP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LqqAeS9U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LqqAeS9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630C2C113CE;
+	Sat, 27 Apr 2024 11:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714216357;
+	bh=tr79Artks8dAf9QK673sxTgZ9h7swDRJ+v3dL9mwHDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LqqAeS9UqZArFJv9wFxwNbNEYqtnYI+JWc9J4k6bQp633ND4Q80LzxyWTuvLGtXpZ
+	 h9GsDQ6bAmDlL+Edfn8198q1drntIrka1pMykjFmjBRMHzorwJ9smAZMs/FqurMhS4
+	 Qtj9YT+0GBolm8u4MlwLdCGnmL1yqjxDmFwAGTfA=
+Date: Sat, 27 Apr 2024 13:12:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Harold Johnson <harold.johnson@broadcom.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>,
+	Brett Henning <brett.henning@broadcom.com>,
+	Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
+	linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, linuxarm@huawei.com,
+	linux-api@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Natu, Mahesh" <mahesh.natu@intel.com>
+Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
+Message-ID: <2024042708-outscore-dreadful-2c21@gregkh>
+References: <20240410124517.000075f2@Huawei.com>
+ <66284d5e8ac01_690a29431@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240425123344.000001a9@Huawei.com>
+ <662a826dbeeff_b6e02943c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240425182605.00005f22@Huawei.com>
+ <662aae2fe4887_a96f294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240426094550.00002e37@Huawei.com>
+ <662bd36caae55_a96f2943f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240426175341.00002e67@Huawei.com>
+ <6351024b5d6206c4e9a8cd98d1a09d43@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -43,31 +59,73 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <662c04a5d8f5f_b6e02945f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <6351024b5d6206c4e9a8cd98d1a09d43@mail.gmail.com>
 
-On Fri, Apr 26, 2024 at 12:46:45PM -0700, Dan Williams wrote:
-> This also highlights that the pci_dev_lock() performed by
-> pci_reset_function() has long been insufficient for the
-> pci_reset_bus_function() method case that could race userspace when
-> pci_reset_secondary_bus() is manipulating the bridge control register.
+On Fri, Apr 26, 2024 at 02:25:29PM -0500, Harold Johnson wrote:
+> A few examples:
+> a) Temperature monitoring of a component or internal chip die
+> temperatures.  Could CXL define a standard OpCode to gather temperatures,
+> yes it could; but is this really part of CXL?  Then how many temperature
+> elements and what does each element mean?  This enters into the
+> implementation and therefore is vendor specific.  Unless the CXL spec
+> starts to define the implementation, something along the lines of "thou
+> shall have an average die temperature, rather than specific temperatures
+> across a die", etc.
 > 
-> So, if the goal of the lock is to prevent userspace from clobbering the
-> kernel's read-modify-write cycles of @dev's parent bridge, then the lock
-> needs to be held over both the cxl_reset_bus_function() and the
-> pci_reset_bus_function() cases, and it needs to be taken in
-> upstream-bridge => endpoint order.
+> b) Error counters, metrics, internal counters, etc.  Could CXL define a
+> set of common error counters, absolutely.  PCIe has done some of this.
+> However, a specific implementation may have counters and error reporting
+> that are meaningful only to a specific design and a specific
+> implementation rather than a "least common denominator" approach of a
+> standard body.
+> 
+> c) Performance counters, metric, indicators, etc.  Performance can be very
+> implementation specific and tweaking performance is likely to be
+> implementation specific.  Yes, generic and a least common denominator
+> elements could be created, but are likely to limiting in realizing the
+> maximum performance of an implementation.
+> 
+> d) Logs, errors and debug information.  In addition to spec defined
+> logging of CXL topology errors, specific designs will have logs, crash
+> dumps, debug data that is very specific to a implementation.  There are
+> likely to be cases where a product that conforms to a specification like
+> CXL, may have features that don't directly have anything to do with CXL,
+> but where a standards based management interface can be used to configure,
+> manage, and collect data for a non-CXL feature.
 
-No, the device lock is taken to prevent the driver from unbinding.
-It has nothing to do with protecting RMW of parent bridge registers.
+All of the above should be able to be handled by vendor-specific KERNEL
+drivers that feed the needed information to the proper user/kernel apis
+that the kernel already provides.
 
-Here's Christoph Hellwig's explanation why he introduced acquisition
-of the device lock in the PCI reset code paths:
+So while innovating at the hardware level is fine, follow the ways that
+everyone has done this for other specification types (USB, PCI, etc.)
+and just allow vendor drivers to provide the information.  Don't do this
+in crazy userspace drivers which will circumvent the whole reason we
+have standard kernel/user apis in the first place for these types of
+things.
 
-https://lore.kernel.org/all/20200325104018.GA30853@lst.de/
+> e) Innovation.  I believe that innovation should be encouraged.  There may
+> be designs that support CXL, but that also incorporate unique and
+> innovative features or functions that might service a niche market.  The
+> AI space is ripe for innovation and perhaps specialized features that may
+> not make sense for the overall CXL specification.
+> 
+> I think that in most cases Vendor specific opcodes are not used to
+> circumvent the standards, but are used when the standards group has no
+> interested in driving into the standard certain features that are clearly
+> either implementation specific or are vendor specific additions that have
+> a specific appeal to a select class of customer, but yet are not relevant
+> to a specific standard.
 
-TL;DR:  The PCI core calls the driver's ->reset_prepare and ->reset_done
-callbacks and the driver needs to be held in place for that.
+Then fight this out in the specification groups, which are highly
+political, and do not push that into the kernel space please.  Again,
+this is nothing new, we have all done this for specs for decades now,
+allow vendor additions to the spec and handle that in the kernel and all
+should be ok, right?
 
-Thanks,
+Or am I missing something obvious here where we would NOT want to do
+what all other specs have done?
 
-Lukas
+thanks,
+
+greg k-h
