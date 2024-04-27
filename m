@@ -1,98 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB192BB0A
-	for <linux-cxl@vger.kernel.org>; Sat, 27 Apr 2024 00:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABC525777
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Apr 2024 01:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714177834; cv=fail; b=MjmA4OkuDFyePG9Y0iHToewOeA6InqaFipzYsu8y5sQZWdPMo+rIv/AhegzSbKw8kvAjTsJkZL3L6MonWC0TqwQW0mDN7Z3o/StvPmjIQ+7BAe8DRnM9aHIXQyhji8efVpTfhOeV+10RfiXPKyokeObeg/hxboNvNmgkQ2Zm804=
+	t=1714180087; cv=fail; b=utgBb6uzLY7rU8EK7xXDvRyrmPO6ATSIR8OdAvanjOZaSu7OAyAZ+gZSHd1YWVFvHdASrpEJt+cbzmpHQRkRV9Swe+zOsauko/XR3OyU4gx8qjHJgeeS22tVVrogzkintEg3EOAxzcvEGJefmHNO+xu8sKkNTDoDg+FULNFkYNk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714177834; c=relaxed/simple;
-	bh=7bztZhRnXOHVHvafXHQi1i0JUfUyyXitmlWZ8hgCWf4=;
+	s=arc-20240116; t=1714180087; c=relaxed/simple;
+	bh=PiF2kE753zAf+QzYH4jqP0a6mx4w8nT4fRGc/EM8xAw=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cpUc5mOVz5hp2GDfESpj5Ha/iXaEQ7zEM2qSAQSoCGg+A7iYnCMFUv10dwbfD/3sOH4MdCFvhQMjO0DW9kkM5xeTrb/JfoILTX0duZcDqgRykiS6WHN4jmSIIOzaE5tNxkUJeKthUxX6pC1p3v89bWkJ3fx04qNwkrxt10F67+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fqJpQBEC; arc=fail smtp.client-ip=198.175.65.14
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HCtSf69Bc1iDFDskdSM4c02li9h6U4KT2m+Du/Wn9ZhNSbCY65HIHdUQFyHd8QNfQUMK9tmtXWQz/bGubW7WZUpRZTE9ohhUbcjO4V9LUqvDvH3D+wwmYJFvjaCctcPZ9O7dkEYb03wr8OudrfE8DF63cBtxwRDZXNGbJtfX9pQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzYAB6eg; arc=fail smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fqJpQBEC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzYAB6eg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714177833; x=1745713833;
+  t=1714180085; x=1745716085;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=7bztZhRnXOHVHvafXHQi1i0JUfUyyXitmlWZ8hgCWf4=;
-  b=fqJpQBEC4tj9gF7+bJQISDHkDW+bx2UihhDMIqqp4Tzro4f0iMlI0xmY
-   WOIhsgByoEBbAuQBEnNxHyAMASO0nUosMXgZMCkpaClOgXkMShmhjutDn
-   Fwq7YsE9EN1lIOa4JcrFPqAfFjOD7755YiyNitHD2BmNT6GzCefrk8K0f
-   DD+ucMeoDPZPYrs6c4BlabBWARuF7qYSTzp9rmnY7ah6jrgDrf1uSYPWp
-   oky6G50DpwH8ZSiWpZirXZyPNAf9yBBp2wIg6Le2MoF/LVsbS/a0uDviE
-   LTn7eQh5WyfbmoTNSFsxY1NQDcgoe3XBdW240jmlGQxgfB4jSsuPGS2Ht
-   w==;
-X-CSE-ConnectionGUID: hmJD0NH2QZuokANoNQhbcw==
-X-CSE-MsgGUID: sYD5WbPBRwyazOYeW+EN5A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="13759741"
+  bh=PiF2kE753zAf+QzYH4jqP0a6mx4w8nT4fRGc/EM8xAw=;
+  b=nzYAB6eglzPpdU6s/r6em1QiNe6oWwMVjL638Ew3f7UjdOhcm2QHHD4c
+   eMudm1EN/EECG21AgskJyQ2mrjVl2wNNIoLfUTHAg+7sM2TWST6pgvJxS
+   necZsUciUoZI9zO0Ikt31r88R5oxqDYhORtU2MvY8NNfcUD4DLr0V5iE4
+   ODLg66hkMY1SYJNQ3UtNKvaoOkwcqcoa7RUMrjmNU3X6tANBlvFxQSZAt
+   J5YtDr8gao89otJZh3w0nHVW7Z5uA1n/fmde1CPV2siEqneqx0dUKQEiq
+   tSROlZQaB+4tJmeuluW4rdraa4a49cr4+7ODhTgAU8+c+UQAtdQo1a825
+   A==;
+X-CSE-ConnectionGUID: IgCerSvaSza7tV1kOVJn2w==
+X-CSE-MsgGUID: MrxtYsz1SWaW1mk9AcDOXw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="10050900"
 X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="13759741"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 17:30:32 -0700
-X-CSE-ConnectionGUID: 9nq1FP41QOK1d3ppEUMOKw==
-X-CSE-MsgGUID: 1NLxYpqFST+5G6BVPjSygQ==
+   d="scan'208";a="10050900"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 18:08:04 -0700
+X-CSE-ConnectionGUID: aiZw2R/GSkKrudex1+MNdg==
+X-CSE-MsgGUID: HUB5mXmPSyuWc23g/7/d0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="30386002"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Apr 2024 17:30:32 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="26083159"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Apr 2024 18:08:05 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Apr 2024 17:30:31 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.35; Fri, 26 Apr 2024 18:08:03 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 26 Apr 2024 17:30:31 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Fri, 26 Apr 2024 18:08:03 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 17:30:31 -0700
+ 15.1.2507.35; Fri, 26 Apr 2024 18:08:03 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SX7TgXOSQscoW3CdbCw/1rVx13qzH8bgIp7//S1baUXgVYeDfvERhRX01oRYdRdlXB54BZ2jP/nfpF9wh1BSvBdq2MMUYUZ3oV3ZvEGtMDk51f5OXuHH10zl3Yu8kwDj8jIb83fjXvo6yVswIKgKmbtP5cVyvCB8wuuktq28iLGYVm+V6gz8lqlDk7kp1y6a5+pIDc3pOydDb0YLfYsk/U4HMFKckpfI296fRiHfnIE6xIPXCvzhiY4ACdzotx/djzCpVamkeds2C/UVy3m8TUNah3ATQDSuCG55bRBAqShtwfvUO4xtciZHiHWyXqsTWKmwyxoxSyW9Zuu3+KoQ1A==
+ b=GygAiwgwPDDFE5qoJN6MerDmT5nnDlX3PXMNlNrSi4xEa+g5QDj2bOPJEMtlDg9Qjho9DkCMzqz3xcfDnXR/ZSqEbT2d/nTuMK1mNGMkTIicp5ek3+zbbMabIRtXIQOfSWQxqQIXPNp18PGr5kj43u+GU8QA89MMubDUnbgfVUSSo+ipav5uLF5hmeTVbAYnOkQMIlgvJlacLDTAct4Z1kMeR2TIo+opAqeQy4zHT4yYgYcoWKangFmIY+vNHkSY6vrE87IjfAbnPBRB44cpKV1fKYUocI6VFJabAMiPFH9o9dfm3Gw+Md53EfbQId/D1YpVOfhYSEmL13aFM/eWIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=je4/i6L32wdr3ll/m+OgS+IFghnpxc/kvv0HH/hl91E=;
- b=EEqus6xYPzWzj0WwCcYVHOMT7MSyzYiJClaxW7a5LPpp8QaqJV1uhgsq3Grsk/sNSYZHTfVDqRr/s8/eXnCAJUeLsTFMHY6p3aK3iw+EdF1mRN0rMvP3oaUagGW2hVnPTlT7OuL9EUxBcRmDajZQjJNgcrFKEHTL9vhZR5tqISoDCvju9a3qCTNKU0aM7mnCkj2vhDkd+iTjTGPcR/43XI3j8LLyxawhWn35Mi0mELYUIOsH9cD16GXSxi6nUAW7tuLN+HFmvgNTM6nvZ2YZQ/LXDBWQzuUXWxWpdGOEYWizktV9f7N3ykiZmBp+0Iy6RnGebL4nLzOTjZweZadpHQ==
+ bh=nG3xnNVV+xM/IDowRjEsj1cNlf45cH/bfwxWzywObP8=;
+ b=ZIYrcCBOxJZUQmX+++Crym2mYCKPVGsuqiUAzMKbMXBCQQseAxFIZNPtQ9w0VyVpQlwjG5qJzMxgsgyFdIzgt8xr0aaS3/9z496RkD3X3cYuxHUrygyX40mWn0fv/Tluvroo3UezGEoc6pywl1vabgA0Q8FsMFD4/BBKnt/KX4Hci6hFPi8dfCVZ3OxxbLV+Wlf1QYXmFgTaXHe/yfn8nIoC5xSA+ZWcgDDqLhWrUo2yvveslIWLx2oAGwqrWAxWq0scc6Ki2mUgT0XNZ4Wng972HSSXU6TT/HUn4/SZ5UNab1p+/xFdavH6qM01bZrtN19kaZpRBnCUfFJzeKtKcQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA0PR11MB7910.namprd11.prod.outlook.com (2603:10b6:208:40d::6) with
+ by SN7PR11MB8025.namprd11.prod.outlook.com (2603:10b6:806:2dc::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23; Sat, 27 Apr
- 2024 00:30:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Sat, 27 Apr
+ 2024 01:08:02 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7452.046; Sat, 27 Apr 2024
- 00:30:22 +0000
-Date: Fri, 26 Apr 2024 17:30:19 -0700
+ 01:08:01 +0000
+Date: Fri, 26 Apr 2024 18:07:59 -0700
 From: Dan Williams <dan.j.williams@intel.com>
 To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
 	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
 	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v4 3/3] cxl/core: Add region info to cxl_general_media
- and cxl_dram events
-Message-ID: <662c471aefe43_b6e029445@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <cover.1714102202.git.alison.schofield@intel.com>
- <a45eef6938944be3a21e862d238ba65921f07a42.1714102202.git.alison.schofield@intel.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/3] cxl/acpi: Restore XOR'd position bits during address
+ translation
+Message-ID: <662c4fef695d6_b6e029460@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <cover.1714159486.git.alison.schofield@intel.com>
+ <d4e689f9a9645cbddb943188d508807da33bf91f.1714159486.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <a45eef6938944be3a21e862d238ba65921f07a42.1714102202.git.alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR04CA0153.namprd04.prod.outlook.com
- (2603:10b6:303:85::8) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <d4e689f9a9645cbddb943188d508807da33bf91f.1714159486.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW4PR03CA0357.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::32) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -101,155 +101,179 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7910:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51dc97fc-5e6b-4599-76ac-08dc66513966
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB8025:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11098bb9-2e6e-445a-f018-08dc66567c29
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?bSDo24CuSid0E3IfoPzTBNCzBrA2mvI3zNkWQ2f4AVCJrpO1x6O2w+0zbn/L?=
- =?us-ascii?Q?rav8BOT3E2mnNRI3POEzG29J7Wo3BCTHwao9RoM2mXKivLwHX0p8QgCdfaIC?=
- =?us-ascii?Q?W4w+2Lz8Rpyv0jUpERB3cuq2f9o7vTSmBkP0U8MWSSvxDyIinPA9iNzTN0vq?=
- =?us-ascii?Q?GDloK4H1wdDrGGKVIJN8la4aZ+2UjdzAMbgJXygUGXoez8JF1KErnVFBOmcR?=
- =?us-ascii?Q?8FJOPMb4Zh8Qn/qFTetNwk/2bVN7yzNsHZRozfson/eIl9JfrKHlUzQ3Fuck?=
- =?us-ascii?Q?RjFHCaxU/oSJ4NcU7+ey2pO+Yh0JPF1FVC2PJnNsJ6RXir9qq43UsBNaqac9?=
- =?us-ascii?Q?ozFLSSwcP/tvx+ZXvgYGH4izQWEThU5gbvwo8Croc6ZghuWeA/jeNbNPrTzD?=
- =?us-ascii?Q?MFJlGBAfzGsZO4vMyzPE+ZJShdhjExbdN0gyrW909PRFlEWN9P/B2C4AdMmi?=
- =?us-ascii?Q?8wQdRPhwwZD06mRDCOHss6MqaVzNmikrxWPIM1UtmvKXnd6qAO/LpyK5/TF/?=
- =?us-ascii?Q?JWxmAO48pfTLphMyofsteYtVupRi5VvHkPqBQSqFAgAqQWVECijMl18GJ/an?=
- =?us-ascii?Q?p3HlJiDuk0EaI2yAAP5kF7iDIzPdj8UPEASTOKSnwNXog16/4hegkrUcnAEV?=
- =?us-ascii?Q?43zC50FlbFRA+f0w8qF94ldcT0vldLKzQH6ZRWYnfK5kpUbkC69zuBOPVX16?=
- =?us-ascii?Q?tuHExM7IAs8gbEUu07iOKK7kS66sqbXhPAPS3axgyg4ERf/wu3Pk7a7aIr13?=
- =?us-ascii?Q?EoQmIyUJVLf3nu9i3YKDgNH9oQiqafLvNFFQBTfQzglZuX7f/ksPunUfqIR/?=
- =?us-ascii?Q?xOyzufRGVmH+g8BPc+NVmbB0ShA0jzJZ17ZdRcf5CZ8HybSxoP8ZG/uI/U/x?=
- =?us-ascii?Q?KC/9f2zmYJYgSf1qypGz2co66+F7nB1gX4MkD3/hJ42/5qRb6ZNA+zmf4AtQ?=
- =?us-ascii?Q?BHQ9lMw+jIlBlUH1XUBs4yeOpXLpyfzA44Zz8C0cOtO0NvH0hoD47HIBVL/F?=
- =?us-ascii?Q?NLYw7mNuZVOUn5xb4Wg9ajnLX7FjOffVvV8tRbiDo8Mx5MjquEfKVmWN6YYj?=
- =?us-ascii?Q?BcqaYUdBRwr2esuJbuvy0tXngZcbbkKZEpk2W51VtYcJUI3TnWuL5Z6VT0X3?=
- =?us-ascii?Q?OnSvqB1CYfWcLYa5uvVPP9hfBxo0n/at7z3etiuFNOIGr/M2TfKZpsJfzm7T?=
- =?us-ascii?Q?wI/hiUyAx8frJ43otvhAsTa41dUcupHJmOX///t86G2mAAADsvRbNQqVOR0d?=
- =?us-ascii?Q?hBlWBq7PTniUPuMC4lSumX6XYVfwKX/E9PsF1Q55BQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?XGBDrcr3431guih6Z5w3eAnItoYiWRzBkZfuHNNb4d+MkQPMfvauIT1Oepbg?=
+ =?us-ascii?Q?Al/4f4eNxmp4lh8mqfrDirOPdmyAbL6i1R8125MS/dCk1n0O+kJzcXUojwHe?=
+ =?us-ascii?Q?d0xYcJFt5Y8slvhmzYe8bLFjcz1oqMJfiyMwytCgYXAje0xydKA69Sv6TsVR?=
+ =?us-ascii?Q?Y8PDg1sppxITH3Z0IVjwNXIRebHyCvB0zKPeZ6OvjN6U7m0zQdJPzVN1UddN?=
+ =?us-ascii?Q?xfyNZzkf8cLH46S9O8znk8RTZCiOI4b1bgEzNSo9SPWxyiRFU2Wpt19kjQnQ?=
+ =?us-ascii?Q?ZT1UfZgVe6xp8Medfc5lngP3jWUhymX7bAB6jf4RPF+IK9UZR85VAgbyz6Ax?=
+ =?us-ascii?Q?TsLs3mWrmhxoW440dDDdIC9P+k7D2+1ai2zjBVgA+fNkPiQOTFLHv+1B1CUT?=
+ =?us-ascii?Q?8YRr72dr6MtpZyADohdGP72JVPwDoJyi/qXdwlb/mXTd3YkA2gVaWqnNYjZZ?=
+ =?us-ascii?Q?jGAE5XEMZ+jcXMyzuBPk2z31SNC4EjHpxd0kT7wMDEIDzV1PYWX73p/E1p9M?=
+ =?us-ascii?Q?1y+ABbKxDaPrfdVMv1CpandnWrbLBaOCPx2BoZ2MPUzvZDpBswiaX8qMIPd4?=
+ =?us-ascii?Q?Dk3XLWj7PKlQLcRTZk+5lVZqFCQBhQ1oYk++gF8s/EVhJ5B7uvtzjNyDZNqH?=
+ =?us-ascii?Q?esJXkp7XmGyBDyIHhhzPOnz7l8nsxXXXihNupwONQNqCHJ4UFScxHcnhMDRr?=
+ =?us-ascii?Q?BVGqNLcDAROiDeJiFmYk0l+JxFcpdeCt8nK3T0upKEKnDRbDayeP7/oB0D5d?=
+ =?us-ascii?Q?z0xYzcIobQPdx3KCVWWK3PtzgwasI1p8JWpPQe1TAJOX3Nfr3SW91ODDJyvB?=
+ =?us-ascii?Q?iCdcZXj68kDeMuEquUvi3LxCfxIg9E7JM9GOc63PV/QZWutp1StZKQEFnkvG?=
+ =?us-ascii?Q?c3EzQ2SEGNlQ4OKHPcN9QIfMtOuKjJ87s5bZ6kvECRwYzvoTWvNfmUYfBB7z?=
+ =?us-ascii?Q?NffvwMQnebt+i2akcKKYImkE3FyxEHD+9aCY5QysXf309PEYMcPXre5PTo+7?=
+ =?us-ascii?Q?0UYNHd67fyyDsff0wEYBPO4A9YMTVeR37v6A55V7KOe0n6PcgL/s8AkIIAzj?=
+ =?us-ascii?Q?hHMXYSA3MPZPmGzJ+llc1zRBz+tlc3mx/jrBYulAz49lBQ8ApytRcDraKXHA?=
+ =?us-ascii?Q?QqCcha7p087YG+nzuF+PX2V34o9nIA5N3qCPvpVMC0JduMWVc/ujEZfyS8Q2?=
+ =?us-ascii?Q?QewDB197BAYGDbOXUoo3FlyGZ041fs8C7ggFJH3qJHVPYsRz+LtedAF8kulO?=
+ =?us-ascii?Q?uSmYZEqfobNCw8hRkCX4lLquVXa+lgxdVrgQ5qoTXw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kq7Xmi7sjxLdfs0GbSIbpY608WS75f0WN3UncTu+UvovlH9x/HJJYyA9cYqO?=
- =?us-ascii?Q?wcxDtrsJ2Ffd04BNMWWh3D/8+9ng995LLmisFXGWmTBdTHwu0TDPd42uFPu/?=
- =?us-ascii?Q?hL8rns1f6qdKoUMNZnzKHbhIO1IxZzuTyWgXlw+fTOfYFo6oRM2K8zwE0hZu?=
- =?us-ascii?Q?F8ak0l56kt0ggNmxuCCk4oQtvwXViBv3t3N5xvZne0XoSUDtzGCF/BCL4yOV?=
- =?us-ascii?Q?+0xpSQgW+ziBqm59V79saZRUDI9L3A8O19hBXnLFPwshYi72chbqThFnom+4?=
- =?us-ascii?Q?erja+k8KLe4krs1XgL7sXl09oFA+r1cJIPXpUJcN8rtxer1ZolQrtVUrB0+J?=
- =?us-ascii?Q?C8x3+ucKPAFH8+1D8KwbaP7u6TJ868XXEbRaAJiZPQH/7O1hXOmZv9dim7IT?=
- =?us-ascii?Q?XKl+Q89Iy1/vLVsUbX72becC68cLBG97bJ6LJDxBNLPhy8Y/H+JdzvahZg6y?=
- =?us-ascii?Q?CyseXEOAEqWlPh9ZUWwlGu/k0bgUBaip46KEBZzrGxYdpU1cjrA6nVy5zWxt?=
- =?us-ascii?Q?+zD907Mls/AzitIm5wNS64d2FzavhUaxQrUN3BdUJMT5b/Jpao8eoQOsT7Q5?=
- =?us-ascii?Q?vc9mJsDA8eq1iLq2YvDh9Varz2MZYw/oXwDPA5OauNG4Ay9FiHBytG5RC3Pp?=
- =?us-ascii?Q?MNksK89Dd2NHb8I+Z6NTzljZkdZaEBDbmTRr0vKTlX/J70b1DgSnh3Jn3taL?=
- =?us-ascii?Q?L9G/aZkJiV6u9dB2V1NdcgMcXzn8EfVhHPeFy+g9r2Yfwp4vNJcP5wsU2M2t?=
- =?us-ascii?Q?1/n/fChLmqA5zh2+GaGDTPrLpKR/mpnKs9vJ4IFmZW8Uu1A7skApE2G2Awmn?=
- =?us-ascii?Q?GOVEwi33BbSwolgucyRfyL0ygKtBMJ8k0ptHDpqAT0zk6g0PQ8iFMMNnOoyJ?=
- =?us-ascii?Q?8yd3MV80ZoZ3vkA1zF6YdhgEbe64D7c2stZ9y+gbJC1fNmSp8UdT0IuU3wXV?=
- =?us-ascii?Q?yrDod4k+U+pKTRkEZcBiS8jvTaNAv1KjbWF6NrRVzYsWHqatC/javlXBntdE?=
- =?us-ascii?Q?ULiq46OB457xhyFW0TzSIaYYqcl80QfQMJHVhTDPTVlva0RBkM3SVyVgj+2U?=
- =?us-ascii?Q?4YKQImtwTudhX+9ljANWx5eBoKUToWRVVe+YYImtLijUJrsBmHO8olWemdNl?=
- =?us-ascii?Q?lppO7MCTJeg+gvW4TovyH68FdSJFrs4y9f06rNiVoq5XdAkpxCYLCtSCOLDl?=
- =?us-ascii?Q?qZcQsLfgx6YelnPT6M7x2WEnYyD8kdxgx3CayT5nygh/6xxCs/AxBLKE3y6S?=
- =?us-ascii?Q?RURA1yG/6cPrIeaSwVIwL6gqxud5EruU6MJxsKOYc0tRVRHtBBDrH0S0nlvy?=
- =?us-ascii?Q?5P+GNC5/ZMCdpN8VcnH61uOgjPRS/kLx/vgOi2RLXq37/WXlP7gJs6Vxb3wo?=
- =?us-ascii?Q?TtOeddXu4VVlyRLR90KmQj/dCq/5JPqUQUTPCKC2ghJC6p3nWUi7FgTWwmq4?=
- =?us-ascii?Q?Zwx1smsbfQjWsckiOtJ3STa1OSPRVFtCTqOkvRooZdGL3Q4jaICnLD7lhc55?=
- =?us-ascii?Q?qblHcPB4qfhxDZ1WC3Ph24Tv4Zh4Daxx1QvTzVJEloTeFrUD7KaZbj0ZxFFf?=
- =?us-ascii?Q?oayl9JuIlQwsI6ZgOhwiwN3fmsMPBBdOKstURtExN1XuJrR+u9k7M0DNQCjw?=
- =?us-ascii?Q?8g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51dc97fc-5e6b-4599-76ac-08dc66513966
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VAju5YAuhr0VzyR6APuUIsWFPGgmWnKm9V8KAbHq5KRB87zn8bjq0orGJVod?=
+ =?us-ascii?Q?QKDCANB2CHooNzt4d94P/l8mMnyPceab0vCL75ICg8e26PNVJRuSE1c0Qoj7?=
+ =?us-ascii?Q?KfHSYfb8CUrCjNFK/5eAaEgWBwKFyDjfSA9IToGJPI0ggK1RXfK+OAz07YNU?=
+ =?us-ascii?Q?LlIYKLc9Nfw0mKHVKwJ2GP3CCWG3YKVh7UQweyIb8fUL/LwgHrpo0EBbRNI5?=
+ =?us-ascii?Q?xFpD8zUQGzCKxsmAXLwcw7DfqQsSO+HM3f/KOaTKGAyZ4snuCnshyFIkjjFL?=
+ =?us-ascii?Q?r2GyyGMneySXW/tSyLN35l7EZAGALz4DQjubmiA2XbVMT5H37sQ7SRi/FhM9?=
+ =?us-ascii?Q?kc6mprWBpOIRyUhwLRm9QwJ+IfOeJ2iYDbFjII9buJKSeMUu0bAhgaBTMt6v?=
+ =?us-ascii?Q?s4soNcKQT79FkVs4A65Th/xRQnlA57N3cbBk+e8KC/iYVaop0SP/rTZA2pSe?=
+ =?us-ascii?Q?B9AG6BO1ZTdAHvzqdo712qZuZZ3l4Fz57t3qCCmnkkuruHEWruTKoo4PmJVU?=
+ =?us-ascii?Q?eZMJWvL46KFOb691G3BmxOOjSSRQqjmQeb9H3oYwLLRC4hjPsE5qw6tapbtV?=
+ =?us-ascii?Q?vU5/3e6VF/1gD8u+wi1s+CXbWtFMhshoX48cKjHswNQSPtJh0zn/wN9J0iGj?=
+ =?us-ascii?Q?rAGXWRXIJmHcDpFJpeDQLuaMa+FAbsliFezyCb3WzRZS2tdTIpzvncxmr/9J?=
+ =?us-ascii?Q?bN+IOZmcKDD83PCegkYAaGi/qZVhofFZ0gxBG6EZTKgXZUmUgjzl56sfslql?=
+ =?us-ascii?Q?L/+AO7Q8FNvGVvM84UyQ5jIUrDaoxacVK0hIU6sobOmI8ydYfOQCulr09m9/?=
+ =?us-ascii?Q?c6kh7KHjqNr2E93y/qBGFKKC0osOXGcdzprJi2cgCROh0SkaxFw5coC5Jt69?=
+ =?us-ascii?Q?wqmTh+8V9XUqL16RqFa0JaddcCL7uBzsFw8Ojc19XK8e+ONyalVF78dHobyE?=
+ =?us-ascii?Q?afOPutqf1nuuFfdGfjbWcRKhUADfTcFwESXNF4AuHyBi6VtdNubrIQ62TSi+?=
+ =?us-ascii?Q?lJgjQfS40yf+pxGGtiWb0JPjanCws08ozPbD/Zj2g2rstA8c4tTzqkdI40PT?=
+ =?us-ascii?Q?0hgm/WU7N14HxbZ8Gcc6YJOHAREAy7BHrrqdfgERFYzDooJC3YfIdE06VQmE?=
+ =?us-ascii?Q?7Urzof+Gz0E3iLWJnkUn+ZNEOtVxrCRYfo4DTc4IWNhY55gQmU6FS7pEKZam?=
+ =?us-ascii?Q?r9rVWBN93grkp8cik8lmPumK6sObwG6H5mjmLU4BvrH+OAulnAv5nbvrejcV?=
+ =?us-ascii?Q?9X7yo1RVgEbNqISLASr0jfcoEzG7BjLxld/Wfpbq7TGlN9LLsZ8JVBLMKVZs?=
+ =?us-ascii?Q?SRjjpPB9gZoVdvFwqh7QeEMwjMcTpvTk7sIx/fTyTI0oXrxT3Hh7U8iaZEy3?=
+ =?us-ascii?Q?ng0lkpETyE5LfzXvLuENosyFZ218sV+4HA/UkHYLJBpo34vBVhoD5k4lV8yb?=
+ =?us-ascii?Q?jMPr3722GmmHKhncIPf5/Iu8MhXxqyfOuQde40CMoU+r6XMuBQNiOXBlsrxz?=
+ =?us-ascii?Q?dt3v6LfNeAnMVWUcl5JKqWbUhy4e8zes/iSlDA3vL5d+uXFv3qD4hIyQRAmp?=
+ =?us-ascii?Q?cnU+lvuqvo8/gyuoy1mIzMP8TjDgcrLo+hujv1dtiuwXPhz7EGeqjgnr+6Fv?=
+ =?us-ascii?Q?iw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11098bb9-2e6e-445a-f018-08dc66567c29
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 00:30:22.3057
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 01:08:01.8003
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J4hEW43Hs798M27a4qhZseNCtsy1ZDAX8TTi9xZbbfImU6plBSArtWSSqXP2XU5p0gxg6FlS/Vbp8dvfxraatHxKfPj96LBGXQyb2pmD19c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7910
+X-MS-Exchange-CrossTenant-UserPrincipalName: PiXZAKoX9mmOSojW3rv9UxDe/ZvdYZCqoA5gbN2PyWC7WTAJeet9Hp5ub5MD3fGeuWJVKHJsNMPQI1Kv5K5zEba+JxsE9OjJEdYkkkvfqmI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8025
 X-OriginatorOrg: intel.com
 
 alison.schofield@ wrote:
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> User space may need to know which region, if any, maps the DPAs
-> (device physical addresses) reported in a cxl_general_media or
-> cxl_dram event. Since the mapping can change, the kernel provides
-> this information at the time the event occurs. This informs user
-> space that at event <timestamp> this <region> mapped this <DPA>
-> to this <HPA>.
+> When a CXL region is created in a CXL Window (CFMWS) that uses XOR
+> interleave arithmetic XOR maps are applied during the HPA->DPA
+> translation. The XOR function changes the interleave selector
+> bit (aka position bit) in the HPA thereby varying which host bridge
+> services an HPA. The purpose is to minimize hot spots thereby
+> improving performance.
 > 
-> Add the same region info that is included in the cxl_poison trace
-> event: the DPA->HPA translation, region name, and region uuid.
+> When a device reports a DPA in events such as poison, general_media,
+> and dram, the driver translates that DPA back to an HPA. Presently,
+> the CXL driver translation only considers the modulo position and
+> will report the wrong HPA for XOR configured CFMWS's.
 > 
-> The new fields are inserted in the trace event and no existing
-> fields are modified. If the DPA is not mapped, user will see:
-> hpa=ULLONG_MAX, region="", and uuid=0
+> Add a helper function that restores the XOR'd bits during DPA->HPA
+> address translation. Plumb a root decoder callback to the new helper
+> when XOR interleave arithmetic is in use. For MODULO arithmetic, just
+> let the callback be NULL - as in no extra work required.
 > 
-> This work must be protected by dpa_rwsem & region_rwsem since
-> it is looking up region mappings.
-> 
+> Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  drivers/cxl/core/mbox.c   | 36 ++++++++++++++++++++++++++------
->  drivers/cxl/core/trace.h  | 44 +++++++++++++++++++++++++++++++--------
->  include/linux/cxl-event.h | 10 +++++++++
->  3 files changed, 75 insertions(+), 15 deletions(-)
+>  drivers/cxl/acpi.c       | 49 +++++++++++++++++++++++++++++++++++++---
+>  drivers/cxl/core/port.c  |  5 +++-
+>  drivers/cxl/core/trace.c |  5 ++++
+>  drivers/cxl/cxl.h        |  6 ++++-
+>  4 files changed, 60 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9adda4795eb7..df0fc2a4570f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -842,14 +842,38 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  			    enum cxl_event_type event_type,
->  			    const uuid_t *uuid, union cxl_event *evt)
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index af5cb818f84d..519e933b5a4b 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -74,6 +74,44 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
+>  	return cxlrd->cxlsd.target[n];
+>  }
+>  
+> +static u64 restore_xor_pos(u64 hpa, u64 map)
+> +{
+> +	int restore_value, restore_pos = 0;
+> +
+> +	/*
+> +	 * Restore the position bit to its value before the
+> +	 * xormap was applied at HPA->DPA translation.
+> +	 *
+> +	 * restore_pos is the lowest set bit in the map
+> +	 * restore_value is the XORALLBITS in (hpa AND map)
+
+Might be worth finally clarifying why there is no "XOR" operation in
+this xor_pos routine, i.e. that XORALLBITS is identical to asking if the
+hweight of the (hpa & map) is odd or even.
+
+> +	 */
+> +
+> +	while ((map & (1ULL << restore_pos)) == 0)
+> +		restore_pos++;
+
+This is just open coded ffs()?
+
+> +
+> +	restore_value = (hweight64(hpa & map) & 1);
+> +	if (restore_value)
+> +		hpa |= (1ULL << restore_pos);
+> +	else
+> +		hpa &= ~(1ULL << restore_pos);
+
+It feels like this conditional mask / set can just be an xor operation?
+
+    hpa ^= ((hweight64(hpa & map) & 1) << restore_pos);
+
+Otherwise I question the & and | operations relative to the HPA bit
+position already being 0 or 1.
+
+> +
+> +	return hpa;
+> +}
+> +
+> +static u64 cxl_xor_trans(struct cxl_root_decoder *cxlrd, u64 hpa, int iw)
+
+Ok, so the driver has cxl_trace_hpa() and now cxl_xor_trans() and
+"addr_trans". Can these all just be called "translate" because "trace"
+feels like tracing, "trans" is only saving 4 characters, and "addr" is
+redundant as nothing else needs translating besides addresses in CXL
+land.
+
+[..]
+> diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+> index d0403dc3c8ab..a7ea4a256036 100644
+> --- a/drivers/cxl/core/trace.c
+> +++ b/drivers/cxl/core/trace.c
+> @@ -36,6 +36,7 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+>  static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+>  			  struct cxl_endpoint_decoder *cxled)
 >  {
-> -	if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> -		trace_cxl_general_media(cxlmd, type, &evt->gen_media);
-> -	else if (event_type == CXL_CPER_EVENT_DRAM)
-> -		trace_cxl_dram(cxlmd, type, &evt->dram);
-> -	else if (event_type == CXL_CPER_EVENT_MEM_MODULE)
-> +	if (event_type == CXL_CPER_EVENT_MEM_MODULE) {
->  		trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
-> -	else
-> +		return;
-> +	}
-> +	if (event_type == CXL_CPER_EVENT_GENERIC) {
->  		trace_cxl_generic_event(cxlmd, type, uuid, &evt->generic);
-> +		return;
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	int pos = cxled->pos;
+> @@ -75,6 +76,10 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start;
+>  
+> +	/* An addr_trans helper is defined for XOR math */
 
-Minor, but I think you could shave a couple more lines by keeping the
-else-if tree going and skip the early "return" calls with a final:
-
-	else if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled())
-
-> +	}
-> +
-> +	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
-> +		u64 dpa, hpa = ULLONG_MAX;
-> +		struct cxl_region *cxlr;
-> +
-> +		/*
-> +		 * These trace points are annotated with HPA and region
-> +		 * translations. Take topology mutation locks and lookup
-> +		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
-> +		 */
-> +		guard(rwsem_read)(&cxl_region_rwsem);
-> +		guard(rwsem_read)(&cxl_dpa_rwsem);
-> +
-> +		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
-
-A merge issue here for Dave to handle here since CXL_DPA_MASK is known
-broken. Do you want to wait until that bikeshedding on CXL_DPA_MASK
-replacement name completes, or just take the simple:
-
-  -#define CXL_DPA_FLAGS_MASK                   0x3F
-  +#define CXL_DPA_FLAGS_MASK                   0x3FULL
-
-...for now?
-
-Otherwise,
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Rather then calling out XOR math since that is an ACPI'ism I would just
+say something like: "root decoder overrides typical modulo decode"
