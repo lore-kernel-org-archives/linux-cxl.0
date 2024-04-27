@@ -1,183 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5746D3BBF8;
-	Sat, 27 Apr 2024 03:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990E3613E
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Apr 2024 05:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714188848; cv=none; b=DxFwVkEelypsuIghtoYR+wGECpaH0G2QhyEk27w6yD/GdWxOrhfqGVv7YLTMylU9GHTdEj/MRwjeIwqdIPXfc5AVV32EKp7PpBcxlVEcfCtFPTmpAjSd3uAs1qPm/bUZ4HrOdEFNA0PADF283ZLasOHN63l1IdM7lEIRPbsShM8=
+	t=1714197449; cv=none; b=N2tZbt52/YtYfnI3PBD5STqWbv/dvp/DXB/1XH3lldAJmEXT42tm72osaYFHr1C0Q0d/9fZefTlguxa0rBZH24aYf4YLxTVtovsQFn1kO2r3oNLQ/PVTzxiQNEaKkAR1il/blvy1nJyAwqraRpsoBNTBCBYIadqA5/jJnpvLtn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714188848; c=relaxed/simple;
-	bh=yakISgSJkVeGETZpCxJ2REBgvyi3LjNiXYh23/SQhB4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TK/eotwvbJtdnet6a7+NXM3DOXgIWvbqiLOLHZjaxW59bx27YU2seVewQ93rj43Nho2P7/CW6u924cVXZ03fZ6lVLyCsFfkrAQDMdqcx3E1Fm5YsYB5CheuRgwGKXTFJDBApDWGhLcAYzgR2/itLCCk/C6fhzp8lo5ssj84b2Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LG27BsGx; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1714197449; c=relaxed/simple;
+	bh=1lG2GUCCP2RE88mq8PPAHQ3Avih7Z/KS465Lev35qGk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=W8SDdgFBrd1J1Pgz06I030dcGou2cVPY1JKJLWhpoIEwm1hMUrrW0mwdWob80/FEkXHsGg9g5IqMdOhn86p2jETBhhlAjN2IroLpz5F/4usJYRy7/p4aB1B8VO/8xJbTY87GtUVzmt4xUt0REIjw+wkXyHa6AX3s8tVTFt38BSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEcjXwSB; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LG27BsGx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEcjXwSB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714188847; x=1745724847;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=yakISgSJkVeGETZpCxJ2REBgvyi3LjNiXYh23/SQhB4=;
-  b=LG27BsGxmhsSvG+Ttr3RAeO6MW1kZWCs9LIsMoaj8ftFHGeu+TkOlDQF
-   RfQFIjBol5smoAD/07uw9GGqsZhh0SpmhpIq/4qsnmQb81jaAAQKqS5wc
-   +Y/QDoKqhcdl91cz4k86972xqDMK2Q2D83eKTXr3p/Yj4k2+iq41R6I/G
-   +0xHC9W5Yfuxw+evApfgbngPtSszcJ3cQWg53eY0yrWii3TE3FqLQPhYh
-   B/IlNEYn8TXqQMNLajULTsXV1yMh5AG7LpuQP2o1viJhrlcN68DYtWTC1
-   nKELmRGXDDhVOlwXjBm4VqXOfTRjv9Ih1s4jVp2Epak8WocAFrQCvRE8O
+  t=1714197447; x=1745733447;
+  h=date:from:to:cc:subject:message-id;
+  bh=1lG2GUCCP2RE88mq8PPAHQ3Avih7Z/KS465Lev35qGk=;
+  b=JEcjXwSBUZ5J8UaKWeZGCWRqFvMGq3yDYqm2Qe0VEQYZeRk+K3sklgKh
+   KnDqoUahZknBt5Oter+IaoWYTC5RHMQEKtUyUfJ4KjOUXUMmR7euKcHA3
+   NcChavihRYrs5phX40rWsI7xYQAEx/vvWBk3vaQvqoKdWbb6x/iTnWm3d
+   s3ZNy3XcF7EXqfh76qviIzWM5MazwPImD6QozzMKLAZv318PyvrUgQHSD
+   0TsiCAqYXJb0TAFgsHT9EZ0r3SXR9E2uGeuoIb+E3Zc1CITeSgxOZpRlt
+   DBJ6DkdEMIjYwZ/aIVaL8ZQ9ghutVi4Er2YnnIaVVprKXTbEB5XkS0lnR
    g==;
-X-CSE-ConnectionGUID: kpg6tla+SVmbe8k2ypc/Sw==
-X-CSE-MsgGUID: cj3ypI2uRMa1ujb2AqHBYQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="20620073"
+X-CSE-ConnectionGUID: 9hMXttv1QoeTV56ZICq/ew==
+X-CSE-MsgGUID: jAJGGBHaS4mnuTHHHgCXsA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="20549630"
 X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="20620073"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 20:34:05 -0700
-X-CSE-ConnectionGUID: EWzyMmNzT2Kse7R8/H6fcA==
-X-CSE-MsgGUID: l7XurTIXTi6Ht2h+w67V1A==
+   d="scan'208";a="20549630"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 22:57:26 -0700
+X-CSE-ConnectionGUID: 1K4rGvRsTFeSAb2ON6WfNQ==
+X-CSE-MsgGUID: DuEb05I6TZC0wsytR/55ig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="25593991"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.65.80])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 20:34:04 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 26 Apr 2024 20:34:01 -0700
-Subject: [PATCH v4 2/2] cxl/pci: Process CPER events
+   d="scan'208";a="25700976"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Apr 2024 22:57:25 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s0b3q-0004h8-1B;
+	Sat, 27 Apr 2024 05:57:22 +0000
+Date: Sat, 27 Apr 2024 13:57:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 62dba604a4883169abf959b7d09449900e7d4537
+Message-ID: <202404271313.iLaJ2jhf-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240426-cxl-cper3-v4-2-58076cce1624@intel.com>
-References: <20240426-cxl-cper3-v4-0-58076cce1624@intel.com>
-In-Reply-To: <20240426-cxl-cper3-v4-0-58076cce1624@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
- Shiju Jose <shiju.jose@huawei.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, 
- Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714188842; l=2978;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=yakISgSJkVeGETZpCxJ2REBgvyi3LjNiXYh23/SQhB4=;
- b=W4amnZPGdmLSTt51xzju5mfp0cF6ITW+k1xlZ98cF7+XCODqQgvaphlKr3cYgwipg/WTl8tKa
- TvCcAa9FWByAFOxATABkxFUwwdmWbmgzbB7ZBw5dTDZGt1TBenfIwEZ
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-If the firmware has configured CXL event support to be firmware first
-the OS will receive those events through CPER records.  The CXL layer has
-unique DPA to HPA knowledge and existing event trace parsing in
-place.[0]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 62dba604a4883169abf959b7d09449900e7d4537  cxl/hdm: Debug, use decoder name function
 
-Add a CXL CPER work item and register it with the GHES code to process
-CPER events.
+elapsed time: 738m
 
-Link: http://lore.kernel.org/r/cover.1711598777.git.alison.schofield@intel.com [0]
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
-Changes:
-[iweiny: pick up tag]
-[djbw: use proper link format]
----
- drivers/cxl/pci.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 70 insertions(+), 1 deletion(-)
+configs tested: 193
+configs skipped: 3
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..74876c9835e8 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -974,6 +974,75 @@ static struct pci_driver cxl_pci_driver = {
- 	},
- };
- 
--module_pci_driver(cxl_pci_driver);
-+#define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
-+static void cxl_handle_cper_event(enum cxl_event_type ev_type,
-+				  struct cxl_cper_event_rec *rec)
-+{
-+	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
-+	struct pci_dev *pdev __free(pci_dev_put) = NULL;
-+	enum cxl_event_log_type log_type;
-+	struct cxl_dev_state *cxlds;
-+	unsigned int devfn;
-+	u32 hdr_flags;
-+
-+	pr_debug("CPER event %d for device %u:%u:%u.%u\n", ev_type,
-+		 device_id->segment_num, device_id->bus_num,
-+		 device_id->device_num, device_id->func_num);
-+
-+	devfn = PCI_DEVFN(device_id->device_num, device_id->func_num);
-+	pdev = pci_get_domain_bus_and_slot(device_id->segment_num,
-+					   device_id->bus_num, devfn);
-+	if (!pdev)
-+		return;
-+
-+	guard(device)(&pdev->dev);
-+	if (pdev->driver != &cxl_pci_driver)
-+		return;
-+
-+	cxlds = pci_get_drvdata(pdev);
-+	if (!cxlds)
-+		return;
-+
-+	/* Fabricate a log type */
-+	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
-+	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
-+
-+	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
-+			       &uuid_null, &rec->event);
-+}
-+
-+static void cxl_cper_work_fn(struct work_struct *work)
-+{
-+	struct cxl_cper_work_data wd;
-+
-+	while (cxl_cper_kfifo_get(&wd))
-+		cxl_handle_cper_event(wd.event_type, &wd.rec);
-+}
-+static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
-+
-+static int __init cxl_pci_driver_init(void)
-+{
-+	int rc;
-+
-+	rc = pci_register_driver(&cxl_pci_driver);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_cper_register_work(&cxl_cper_work);
-+	if (rc)
-+		pci_unregister_driver(&cxl_pci_driver);
-+
-+	return rc;
-+}
-+
-+static void __exit cxl_pci_driver_exit(void)
-+{
-+	cxl_cper_unregister_work(&cxl_cper_work);
-+	cancel_work_sync(&cxl_cper_work);
-+	pci_unregister_driver(&cxl_pci_driver);
-+}
-+
-+module_init(cxl_pci_driver_init);
-+module_exit(cxl_pci_driver_exit);
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                      axs103_smp_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240427   gcc  
+arc                   randconfig-002-20240427   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                         axm55xx_defconfig   clang
+arm                                 defconfig   clang
+arm                       imx_v4_v5_defconfig   clang
+arm                            mmp2_defconfig   gcc  
+arm                        mvebu_v7_defconfig   clang
+arm                             mxs_defconfig   clang
+arm                   randconfig-001-20240427   clang
+arm                   randconfig-002-20240427   clang
+arm                   randconfig-003-20240427   gcc  
+arm                   randconfig-004-20240427   clang
+arm                         s5pv210_defconfig   gcc  
+arm                           spitz_defconfig   gcc  
+arm                       versatile_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240427   clang
+arm64                 randconfig-002-20240427   clang
+arm64                 randconfig-003-20240427   gcc  
+arm64                 randconfig-004-20240427   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240427   gcc  
+csky                  randconfig-002-20240427   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240427   clang
+hexagon               randconfig-002-20240427   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240427   clang
+i386         buildonly-randconfig-002-20240427   gcc  
+i386         buildonly-randconfig-003-20240427   clang
+i386         buildonly-randconfig-004-20240427   clang
+i386         buildonly-randconfig-005-20240427   clang
+i386         buildonly-randconfig-006-20240427   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240427   clang
+i386                  randconfig-002-20240427   gcc  
+i386                  randconfig-003-20240427   clang
+i386                  randconfig-004-20240427   gcc  
+i386                  randconfig-005-20240427   gcc  
+i386                  randconfig-006-20240427   clang
+i386                  randconfig-011-20240427   gcc  
+i386                  randconfig-012-20240427   gcc  
+i386                  randconfig-013-20240427   clang
+i386                  randconfig-014-20240427   clang
+i386                  randconfig-015-20240427   gcc  
+i386                  randconfig-016-20240427   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240427   gcc  
+loongarch             randconfig-002-20240427   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           ip22_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+mips                malta_qemu_32r6_defconfig   gcc  
+mips                        maltaup_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240427   gcc  
+nios2                 randconfig-002-20240427   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240427   gcc  
+parisc                randconfig-002-20240427   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     mpc512x_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   gcc  
+powerpc               randconfig-001-20240427   clang
+powerpc               randconfig-002-20240427   clang
+powerpc               randconfig-003-20240427   clang
+powerpc                     tqm8540_defconfig   gcc  
+powerpc                 xes_mpc85xx_defconfig   gcc  
+powerpc64             randconfig-001-20240427   gcc  
+powerpc64             randconfig-002-20240427   gcc  
+powerpc64             randconfig-003-20240427   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240427   clang
+riscv                 randconfig-002-20240427   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240427   gcc  
+s390                  randconfig-002-20240427   gcc  
+sh                               alldefconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                    randconfig-001-20240427   gcc  
+sh                    randconfig-002-20240427   gcc  
+sh                          rsk7269_defconfig   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                           se7343_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240427   gcc  
+sparc64               randconfig-002-20240427   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240427   clang
+um                    randconfig-002-20240427   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240427   clang
+x86_64       buildonly-randconfig-002-20240427   clang
+x86_64       buildonly-randconfig-003-20240427   gcc  
+x86_64       buildonly-randconfig-004-20240427   clang
+x86_64       buildonly-randconfig-005-20240427   clang
+x86_64       buildonly-randconfig-006-20240427   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240427   clang
+x86_64                randconfig-002-20240427   clang
+x86_64                randconfig-003-20240427   gcc  
+x86_64                randconfig-004-20240427   clang
+x86_64                randconfig-005-20240427   gcc  
+x86_64                randconfig-006-20240427   gcc  
+x86_64                randconfig-011-20240427   gcc  
+x86_64                randconfig-012-20240427   clang
+x86_64                randconfig-013-20240427   clang
+x86_64                randconfig-014-20240427   clang
+x86_64                randconfig-015-20240427   gcc  
+x86_64                randconfig-016-20240427   gcc  
+x86_64                randconfig-071-20240427   gcc  
+x86_64                randconfig-072-20240427   clang
+x86_64                randconfig-073-20240427   clang
+x86_64                randconfig-074-20240427   clang
+x86_64                randconfig-075-20240427   clang
+x86_64                randconfig-076-20240427   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa                randconfig-001-20240427   gcc  
+xtensa                randconfig-002-20240427   gcc  
 
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
