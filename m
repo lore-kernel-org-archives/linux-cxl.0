@@ -1,163 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01A62F2B;
-	Mon, 29 Apr 2024 22:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C692A6BB51
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 23:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714430181; cv=none; b=RnFMJZ9ONTUGBrRAuPBAk+N0Fxe5hi8Oqtt1aqB2vyIK+izVFhgOEHKtwgxzK204rfd87kqo/Cl9qDCstxVdb2F7NWpI6ueYFR2ncpoklDnveah7n7G4+cmc/nmgNDaYA+zQxTuAnXdhmzzSfmymLcTigRJYv9dtzZlT0wJmYGo=
+	t=1714432145; cv=none; b=TlHLv5sjzoVtGoRhD1nmnhwTy5Wal8pavDqItXKKjKOOFJPCpd/upSZBnmcEGn6RDMGMcdtrJczbwEBNaFyqm5LyRdgtUn4MaYjawtyIlVWZ+XW842S5i6B69N5dTTN+JXFlFSS/zEx6b/adErpFko6FRIxtOhoZPwe0T8WiZBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714430181; c=relaxed/simple;
-	bh=YMeisKozU+8akO5Va4lqoJgVSDAzOnAq/MTp9aYAktA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lowT9TkRDixmub8ciSddktnxwk+hI8RZLE+iaAHsOb6MjkGb4b+8zw8nj0hEN20bLCRrDwrywXwQ1hOrm3NvCm+idOrWhnKuEseQcTjhGLVXqjlx9Kr2hpkQm1KUHDjse5h+5LHqKzFEZetazXAci+CEFsPOnywgZqBsMtfg7zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F144C113CD;
-	Mon, 29 Apr 2024 22:36:20 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	bhelgaas@google.com,
-	lukas@wunner.de
-Subject: [PATCH v5 4/4] cxl: Add post reset warning if reset results in loss of previously committed HDM decoders
-Date: Mon, 29 Apr 2024 15:35:32 -0700
-Message-ID: <20240429223610.1341811-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240429223610.1341811-1-dave.jiang@intel.com>
-References: <20240429223610.1341811-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1714432145; c=relaxed/simple;
+	bh=AEAH8exKNz4knmfC1O0N+nEgfn40+sZgNmZcwVLQ6QI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qX3JNCcN7Vi755YNFrkSY1+VfqHcpaJMiinTAyiCSMyHlEpWmRt8NdJgXYIvAPb1ddzZaVJrKK82QEqe12glxw5B8DBv5YzOwLrdyYLrqLDM+NF+XhWiel92XUcDqF5DHvarpcRT80IP2smPF4FJ1otstL+94TWo5zF68409zV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LSh/yfjW; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LSh/yfjW"
+Date: Mon, 29 Apr 2024 19:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714432141;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=htYHWFMQsyYauBANgReCo0euuOxBTGJaDScLWDMs8Lg=;
+	b=LSh/yfjWBKvTbYn2vCCM1tqRMDPa3kyxLO2NcmHo3Cei764O+x8CJRBPRtXY1eIwOwD2q4
+	b3RKdb6QDKzT5XZ1yMFsz4F6yc1unRErKghqhb6TIXlryGBl4pM8LI2yT0Jx66VbG6GHP0
+	pburKIChfsZZbBNHQtkK0CLaoqqhGuI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: John Groves <John@groves.net>, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	John Groves <jgroves@micron.com>, john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
+	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
+	Randy Dunlap <rdunlap@infradead.org>, Jerome Glisse <jglisse@google.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Eishan Mirakhur <emirakhur@micron.com>, Ravi Shankar <venkataravis@micron.com>, 
+	Srinivasulu Thanneeru <sthanneeru@micron.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Chandan Babu R <chandanbabu@kernel.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Steve French <stfrench@microsoft.com>, Nathan Lynch <nathanl@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Julien Panis <jpanis@baylibre.com>, Stanislav Fomichev <sdf@google.com>, 
+	Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [RFC PATCH v2 00/12] Introduce the famfs shared-memory file
+ system
+Message-ID: <bnkdeobpatyunljvujzvwydtixkkj3gfeyvk4pzgndfxo7uc32@y6lk7nplt3uk>
+References: <cover.1714409084.git.john@groves.net>
+ <Zi_n15gvA89rGZa_@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zi_n15gvA89rGZa_@casper.infradead.org>
+X-Migadu-Flow: FLOW_OUT
 
-SBR is equivalent to a device been hot removed and inserted again. Doing a
-SBR on a CXL type 3 device is problematic if the exported device memory is
-part of system memory that cannot be offlined. The event is equivalent to
-violently ripping out that range of memory from the kernel. While the
-hardware requires the "Unmask SBR" bit set in the Port Control Extensions
-register and the kernel currently does not unmask it, user can unmask
-this bit via setpci or similar tool.
+On Mon, Apr 29, 2024 at 07:32:55PM +0100, Matthew Wilcox wrote:
+> On Mon, Apr 29, 2024 at 12:04:16PM -0500, John Groves wrote:
+> > This patch set introduces famfs[1] - a special-purpose fs-dax file system
+> > for sharable disaggregated or fabric-attached memory (FAM). Famfs is not
+> > CXL-specific in anyway way.
+> > 
+> > * Famfs creates a simple access method for storing and sharing data in
+> >   sharable memory. The memory is exposed and accessed as memory-mappable
+> >   dax files.
+> > * Famfs supports multiple hosts mounting the same file system from the
+> >   same memory (something existing fs-dax file systems don't do).
+> 
+> Yes, but we do already have two filesystems that support shared storage,
+> and are rather more advanced than famfs -- GFS2 and OCFS2.  What are
+> the pros and cons of improving either of those to support DAX rather
+> than starting again with a new filesystem?
 
-The driver does not have a way to detect whether a reset coming from the
-PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
-detect is to note if a decoder is marked as enabled in software but the
-decoder control register indicates it's not committed.
+I could see a shared memory filesystem as being a completely different
+beast than a shared block storage filesystem - and I've never heard
+anyone talking about gfs2 or ocfs2 as codebases we particularly liked.
 
-A helper function is added to find discrepancy between the decoder
-software state versus the hardware register state.
+This looks like it might not even be persistent? Does it survive a
+reboot? If not, that means it'll be much smaller than a conventional
+filesystem.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v5:
-- Simplify retrieving of cxld. (Dan)
-- Add lock to device to prevent racing disabled cxlmd. (Dan)
-- Promote dev_warn() to dev_crit(). (Dan)
-- Move LOCKDEP_NOW_UNRELIABLE to LOCKDEP_IS_OK. (Dan)
----
- drivers/cxl/core/pci.c | 29 +++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |  2 ++
- drivers/cxl/pci.c      | 22 ++++++++++++++++++++++
- 3 files changed, 53 insertions(+)
+But yeah, a bit more on where this is headed would be nice.
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index c496a9710d62..8567dd11eaac 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1045,3 +1045,32 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
- 
- 	return cxl_flit_size(pdev) * MEGA / bw;
- }
-+
-+static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
-+{
-+	struct cxl_port *port = data;
-+	struct cxl_decoder *cxld;
-+	struct cxl_hdm *cxlhdm;
-+	void __iomem *hdm;
-+	u32 ctrl;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxld = to_cxl_decoder(dev);
-+	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
-+		return 0;
-+
-+	cxlhdm = dev_get_drvdata(&port->dev);
-+	hdm = cxlhdm->regs.hdm_decoder;
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
-+}
-+
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
-+{
-+	return device_for_each_child(&port->dev, port,
-+				     __cxl_endpoint_decoder_reset_detected);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 036d17db68e0..72fa47740768 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -891,6 +891,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 			     struct access_coordinate *c1,
- 			     struct access_coordinate *c2);
- 
-+bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 110478573296..dccd71840c5b 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -957,11 +957,33 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_reset_done(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &pdev->dev;
-+
-+	/*
-+	 * FLR does not expect to touch the HDM decoders and related registers.
-+	 * SBR however will wipe all device configurations.
-+	 * Issue warning if there was active decoder before reset that no
-+	 * longer exists.
-+	 */
-+	guard(device)(&cxlmd->dev);
-+	if (cxlmd->endpoint &&
-+	    cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
-+		dev_crit(dev, "SBR happened without memory regions removal.\n");
-+		dev_crit(dev, "System may be unstable if regions hosted system memory.\n");
-+		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
- 	.cor_error_detected	= cxl_cor_error_detected,
-+	.reset_done	= cxl_reset_done,
- };
- 
- static struct pci_driver cxl_pci_driver = {
--- 
-2.44.0
+Another concern is that every filesystem tends to be another huge
+monolithic codebase without a lot of code sharing between them - how
+much are we going to be adding in the end?
 
+Can we start looking for more code sharing, more library code to factor
+out?
+
+Some description of the internal data structures would really help here.
