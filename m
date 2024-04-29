@@ -1,260 +1,297 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0E253387
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 12:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714392026; cv=fail; b=pjh8ZFwlSet4X+WJqAb+hj0HXHlT8O30BYP6Ojexqu7F/gd2HV4FYA9RisHQF5beckWg2PrIYrA36psg/g0LPMMK1H0v6jQ0qIqXXSkL497MUgFDO71eLWMWyAZ0dhcgVmgcGt3Dzawbt2U/W3xqF2ElpF32JnNwcHWBlMNU+Qc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714392026; c=relaxed/simple;
-	bh=xNgt43nDhAdBhBrdgLhHyKh2GNrypKy+tDVwPoalWUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=N2DjDZ3rs0HyhUmb/A/YPu0rQeJg7+2g2sEfRwnwygCRl9NbzT5/ssGHRiGTc6bn/Tp6nf7XQCADwWJFaCDKnOAw50H41tnGtPlXjVrn7OlT9iRNALEMFsLgrHKd6L+J+RRu/o0H07rZIK/vS+ACmEPNE074jNDHQPjuU8bhzGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E3qq7Lxi; arc=fail smtp.client-ip=40.107.94.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E3qq7Lxi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C1EaH8zDr2L+zsStZeMt5b8eUBoez3XYjwLtZ3R5U3HEpfEznPrCnNL3S3AvjxMxYm/6BTWtSlmW7RQKJMys6P+E3gHJkjWdzsDpHIhDIoP2nfdu6rJNo/3tMju8/oZItIPpMmKIbUTCysgxWsSRbkPvRJwQIck11EPOYwS8FvYma0xbbJ7/jVMpy0aLCH8+y2bOyUCUwtnsaw71a8jdmpcChOQkrxtnGNYq2Fm/6vYj8O1P/BbQZNxkc0ury2SPk8KhaMzKuJfDi9xlz2StxqT/rPzmGjTgGestUaGB/D/TQJs1uCZIvByX2++PkDo8uRr6nILTdscECDSDpUJtrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QVH1Y4giFeftJNEn87lNDi+RtI2LQAzebPDtvN4rHAs=;
- b=KPINnGc48v1zGvZegdqECer8LKBUBZAkHXRZrxDCOw4awhx1OxgrTtMQq2LTdfHfnB8J6T3hy7LBKQII1kQv9wz100KYhw454CctSZDvabHio+m6Lc7NJ7JoQRN5VmdraF+jObV91dSowAXg/H80jTBc9hYhedPE/U4kGVJodUQcSEWrH6t7nePDl6Qmo7iuYfwxTXNXXlMaXcDh5hkxWXapOMEEhGHvORrj+CYn1PNn/D5b/hrRFrmNY9uNwqz7e7/u8uSYDjl1jQcpiCtmjAFXuwx4giNAW/DJoIlynQ/QEo5NhSVwfYo2IA7UhCOCSyawQu7xHGgGRlReCSDvBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QVH1Y4giFeftJNEn87lNDi+RtI2LQAzebPDtvN4rHAs=;
- b=E3qq7LxiM3XkTdMfmDAAssz1/dpodJlEOFnezvM8MgoQLhDJBuw52nNxSkT3tXU/OrFuaWay5N5Tv26jtqxGmaCGTIsyh91vzt57B1WWiDjFJJP7ytPclarqniSDm0Oof/gBxlNJBN1Jf0P1J2GJD6wg0EI8fxzUSWOjlQVSu9k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by IA1PR12MB6091.namprd12.prod.outlook.com (2603:10b6:208:3ed::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 12:00:20 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%4]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
- 12:00:20 +0000
-Date: Mon, 29 Apr 2024 14:00:14 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH] cxl: Fix cxl_endpoint_get_perf_coordinate() support for
- RCH
-Message-ID: <Zi-LzgrCVHDlIBpB@rric.localdomain>
-References: <20240426224913.1027420-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426224913.1027420-1-dave.jiang@intel.com>
-X-ClientProxiedBy: FR3P281CA0184.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::19) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3D8548EC;
+	Mon, 29 Apr 2024 12:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714393105; cv=none; b=drlm01zFyzFhLLKzsd5r9OOVnecah66vsmI7apcnd+cMgtmEr5Tncg8DTbh+DA84i/M2V03Uok6676P8jGemjQkb5TgaiVy0sFpxLedGqTZ/ECwKtNHsvEdtBIXvomYxCALRJXUPRG02sofi0id+tgKGfi2Vk025rqje9itJN9M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714393105; c=relaxed/simple;
+	bh=NPHXUVH74K4y2grEbTSYpPMd8SrTf/Vc1B0Gzk0Q5/s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uzksINruIFmKBakNs2ESt2cq4XbUP4EMskZma+Jzab01Cs+RuwsGaCp0WktAx/lB/AgzzOhrFh6u+RxnHX05a8Jbfrr3pSFMJsvtiKr2LYMC1zurorw4hf1AyB8OA+sX7W4hEi/7YAtQ3t4nhxTRVwW98fpb8sJl7MfJ2X6j76A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VSj305HQtz6K5p5;
+	Mon, 29 Apr 2024 20:15:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1BB27140B63;
+	Mon, 29 Apr 2024 20:18:18 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 29 Apr
+ 2024 13:18:17 +0100
+Date: Mon, 29 Apr 2024 13:18:16 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Harold Johnson <harold.johnson@broadcom.com>
+CC: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>, Brett Henning
+	<brett.henning@broadcom.com>, Sumanesh Samanta
+	<sumanesh.samanta@broadcom.com>, <linux-kernel@vger.kernel.org>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	<linuxarm@huawei.com>, <linux-api@vger.kernel.org>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, "Natu, Mahesh" <mahesh.natu@intel.com>,
+	<gregkh@linuxfoundation.org>
+Subject: Re: RFC: Restricting userspace interfaces for CXL fabric management
+Message-ID: <20240429131816.00005177@Huawei.com>
+In-Reply-To: <6351024b5d6206c4e9a8cd98d1a09d43@mail.gmail.com>
+References: <20240321174423.00007e0d@Huawei.com>
+	<66109191f3d6d_2583ad29468@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240410124517.000075f2@Huawei.com>
+	<66284d5e8ac01_690a29431@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240425123344.000001a9@Huawei.com>
+	<662a826dbeeff_b6e02943c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240425182605.00005f22@Huawei.com>
+	<662aae2fe4887_a96f294bf@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240426094550.00002e37@Huawei.com>
+	<662bd36caae55_a96f2943f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240426175341.00002e67@Huawei.com>
+	<6351024b5d6206c4e9a8cd98d1a09d43@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA1PR12MB6091:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11dcb829-7e12-4b1c-57c4-08dc6843f176
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nMP5Hj4RIcsSE7C1FhbQdIiFwuBgWDxAu+2+ura6nv492/XM4jall51eMWHw?=
- =?us-ascii?Q?WBpcIweo9QBT/9qI/8Kne623CIHvIPIibD4ewuAU/f/Otw+YFTul3ybIXEr4?=
- =?us-ascii?Q?omtA+22QO/8AK3A24Ip1DfwNIQNIxQv/B3cQ0KQLTFJ6MsJhRGu1tOTMWRNj?=
- =?us-ascii?Q?0SKWNO/P6XPMvZGj1cn6neIC+9uG26+mlnh6jFtkQP0m7Iod0PX5UAvtOWYb?=
- =?us-ascii?Q?/nLHxspuKeIirsI13jhBI7BfMs27I/Vd2F8AtO0AtgAcoxuOL1ILVyBcE6XJ?=
- =?us-ascii?Q?xXEpjRvJ8amNRkTCGUkjDu1nIbpgkAFwkipAw3uizT5jcKNo16MnHpxI2a4G?=
- =?us-ascii?Q?I4Wr1nRDn9z43m+MI0J8OYhw6AdpEOPpgwUgUW7+qCmWX39ob0ryz5W3lGRf?=
- =?us-ascii?Q?aYuGOA8ePb122ThwA7ibq+dH0lu8d0EjZuEOiY1Y/Xn4WjQvFN1ZVbjJ6/6y?=
- =?us-ascii?Q?pFf+5gGjpNizbSUArQ+XivamBkLy+6UBVlycKTTsk1TDCn+AoDPFIdkBOL3m?=
- =?us-ascii?Q?VKvuirGLo6Xzp1D5tiZ28XTbBXp9KZArwHe3jdI68VgNprZSXH2DLJWmfV09?=
- =?us-ascii?Q?snWKpQKAaRhjhUYvUq0IvNYyQkUJm4SgYFJ3cnmLUlX4fzsFozmtL4/MXqX+?=
- =?us-ascii?Q?1XfDmEsHjagVh3rAYv0pPzKnhPmPhtPQo/ATy0IqNkMKR5LPk4YbkR+TR//Y?=
- =?us-ascii?Q?G905BqEg/UCwp4Pf5Gv5dm4XPrnBwkZHjpGKZ+dV53JnmoNDoXHtsRrCSu69?=
- =?us-ascii?Q?RpA4Ddeh+5R91/h2+9bqjkhyy6nAjwdW+/ocbbJZCguWxrgJkYuDJW9Cxn9R?=
- =?us-ascii?Q?8WZCzgQtujZVKJj5LQWLWWRVrz34ohiCxpb/EsD5q9m/mRkgVeLu4jqkGZ0V?=
- =?us-ascii?Q?04RSlkEyCNLebWb0MjCYDlqB3uZOIlXnJrYYBcxL4J163bRBfVdfQpbyVL+8?=
- =?us-ascii?Q?7zdQU070i9TtYxwgd/t6CfTVXJ1CpHHEY6viX5c3obnS1/G7jxFkH6aZPOPL?=
- =?us-ascii?Q?nvDrayPWWVRduRFFB+wMApZxGGw8RaC2Q1jyUamVRG8rAWLBpMs9UCXzRv5J?=
- =?us-ascii?Q?GS7GmUs+zwwN938I4aOlChno1JpFku5HzMnBCmblDs7oVRYqOT1ahvtpbwEd?=
- =?us-ascii?Q?/vpgcWOfwMhRrY5I3jQnw+ADuGXk51MYLqxVsxPqFPJj0yfM7D0IGmiGGEiX?=
- =?us-ascii?Q?N8nsJVWZoKo6veab+uYwHGZo2jjB2A2YroquWcWe5pOTHsLW4RVFFRXU7AE?=
- =?us-ascii?Q?=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wGMr9oxyTnkOgNsJiYSViBxaKv5X8Sp8Hdzq9iVtwr/EFXWB18wEaBwKoCXl?=
- =?us-ascii?Q?cE52wVueYgWGstyIyKn/wacAoSaHHfWqhHhQDpUA4i5cUoI2vE1UsPgP6u2l?=
- =?us-ascii?Q?XtmKLN/DZLhFtMPra1onLA0wQx/ZCd1Peh6DcRY7/egDbbAaWbdOV76Z+LHg?=
- =?us-ascii?Q?nQePHAl90W+JMG2WN7If+qi5EMot9i08OwO0J1p3oT/fK/s22akFR4kaRhU5?=
- =?us-ascii?Q?kn488RWJUyzN9nTeXAs/D2K7hgYlJNFt/QGx9l9oloA81TAVfnBXvBXz70MX?=
- =?us-ascii?Q?8rfbstCALUuHj2omjdrDJNafGLkcf4pTwfctlKGjmvu2C8/gd54sCE3FkSy0?=
- =?us-ascii?Q?NRGKkQi2hrTxscJRs13zFqKzGI4gQQHhox6YtjMgHKfqnRxa81PBZBZATKB5?=
- =?us-ascii?Q?5N7QGoSXYfMxAr4imexgVxFjxE2RFrmA7TctLq755NYVtOKInS5+/07FeB2l?=
- =?us-ascii?Q?haxVsELR+VWWozHneoR/8a3sz/maFay0PshPXZzhfIaAmAtfJH2PS1R6pr47?=
- =?us-ascii?Q?5c3OQS6PPBEGHgq/42nuOFDS+6IHlKl875EqDyAq100az20bdJhQQGZ0fb2z?=
- =?us-ascii?Q?wphkS1DL1Apdr//wdaSWsXX8i1PIHcV1J12ps+b6htKPJRU/jYjaUUAbqiy5?=
- =?us-ascii?Q?KUauTJ4aEzNEIjEZyRanMcthf4vrCW9MxD3vo28cM1bVuVCuPTSO/LnADuz/?=
- =?us-ascii?Q?bzoqQ9BsV7SqN0pq07jZQ3p0UbvfqMY7QqbkwgQrPE1dqsIbffhxpxZMPtSt?=
- =?us-ascii?Q?LXHt/9Y/Hcgrocuca+DZEVsYuNihPx9IxyuZCcsW8XyY/+rUf434P6ZroqOB?=
- =?us-ascii?Q?Z8BHBODRsCb+VFhYeCTUbfsb+n3r8K43trwiJeIW4cYv0B4gHYGdWaFGkZJY?=
- =?us-ascii?Q?0Xr2CRMC5Ack9dqZLULkWX23yfSn9Tx9dPrJojnlwOzFVzEs4KrNE7NVk2MG?=
- =?us-ascii?Q?5mPxlub4Gnoda0YnXKH+Phd20YFLYmH6HBKP2XQ0WJB0P9ed72FCytAsI1wp?=
- =?us-ascii?Q?wECvQiyCFmkWtZLn8wha3jtvSiIv1KKPV7eVK/dbQi5ZIrOeeoEIFwv3OP3r?=
- =?us-ascii?Q?RwiHLPFDsG1MyuNNzfK57dS+IoakSVTtQblTcBPQjghbcDeR31IhdRkciRSs?=
- =?us-ascii?Q?EBF+KNVPdS2oZcSn0W0oc6lz8E8PS+6TuzjlUBWVQ7AYFJR6h+AVEvsTGl87?=
- =?us-ascii?Q?A742cZ0e/O9Vvq24FzCIJZ23lb5O0VK+SZt5BmSDKdv9+94nW6ilukEfRGib?=
- =?us-ascii?Q?sC+y7WctogLtoPFfW4qBXBzqhyJmoqomaZSARAiYSCO+MLBlWWTXgojrs5iO?=
- =?us-ascii?Q?APL3nGJYE5HUcD7b2Ar/4rQtwVp+t3tBK+DRw/iTsHgy+YsQDmKgdyqAqwuV?=
- =?us-ascii?Q?368k/IFgX3gWWkPjKShravJVArycXT5XSfmoz3FBoM+fd9toqEdykoTcktUE?=
- =?us-ascii?Q?9uzvcrjBQv9i5qEU/ioyzOO2PXTITYCNqPCZ392YUVu7Z9fIhT5rZUfWTPsT?=
- =?us-ascii?Q?z7t5arKEd7T60SM9y6StU65ghoSVtwkiXdK8jDRHOhi5pQ+xz4SGDucP5UBD?=
- =?us-ascii?Q?/yqtyRur3ImVke9qoeU=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11dcb829-7e12-4b1c-57c4-08dc6843f176
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 12:00:20.5367
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8gHqTqTejWRIOWBXblVyjy11le6pouxyehZLMT8EUHcQ3N4Yy1eLTEMls6ogFm7kYUzepLumuD3I2fLBNOIHeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6091
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 26.04.24 15:47:56, Dave Jiang wrote:
-> Robert reported the following when booting a CXL host with Restricted CXL
-> Host (RCH) topology:
->  [   39.815379] cxl_acpi ACPI0017:00: not a cxl_port device
->  [   39.827123] WARNING: CPU: 46 PID: 1754 at drivers/cxl/core/port.c:592 to_cxl_port+0x56/0x70 [cxl_core]
-> 
-> ... plus some related subsequent NULL pointer dereference:
-> 
->  [   40.718708] BUG: kernel NULL pointer dereference, address: 00000000000002d8
-> 
-> The iterator to walk the PCIe path did not account for RCH topology.
-> However RCH does not support hotplug and the memory exported by the
-> Restricted CXL Device (RCD) should be covered by HMAT and therefore no
-> access_coordinate is needed. Add check to see if the endpoint device is
-> RCD and skip calculation.
-> 
-> Also add a call to cxl_endpoint_get_perf_coordinates() in cxl_test in order
-> to exercise the topology iterator. The dev_is_pci() check added is to help
-> with this test and should be harmless for normal operation.
-> 
-> Reported-by: Robert Richter <rrichter@amd.com>
-> Closes: https://lore.kernel.org/all/Ziv8GfSMSbvlBB0h@rric.localdomain/
-> Fixes: 592780b8391f ("cxl: Fix retrieving of access_coordinates in PCIe path")
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+On Fri, 26 Apr 2024 14:25:29 -0500
+Harold Johnson <harold.johnson@broadcom.com> wrote:
 
-This patch fixes the issue.
-
-Tested-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Robert Richter <rrichter@amd.com>
-
-But see below for a question...
-
-> ---
+> Perhaps a bit more color on a few specifics might be helpful.
 > 
-> Hi Robert,
-> Can you please try this patch and see if it addresses the issue you saw
-> on your RCH platform? Thanks!
-> 
->  drivers/cxl/core/port.c      | 15 ++++++++++++++-
->  tools/testing/cxl/test/cxl.c |  3 +++
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 762783bb091a..887ed6e358fb 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -2184,6 +2184,7 @@ static bool parent_port_is_cxl_root(struct cxl_port *port)
->  int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->  				      struct access_coordinate *coord)
->  {
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->  	struct access_coordinate c[] = {
->  		{
->  			.read_bandwidth = UINT_MAX,
-> @@ -2197,12 +2198,20 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->  	struct cxl_port *iter = port;
->  	struct cxl_dport *dport;
->  	struct pci_dev *pdev;
-> +	struct device *dev;
->  	unsigned int bw;
->  	bool is_cxl_root;
->  
->  	if (!is_cxl_endpoint(port))
->  		return -EINVAL;
->  
-> +	/*
-> +	 * Skip calculation for RCD. Expectation is HMAT already covers RCD case
-> +	 * since RCH does not support hotplug.
-> +	 */
-> +	if (cxlmd->cxlds->rcd)
-> +		return 0;
-> +
->  	/*
->  	 * Exit the loop when the parent port of the current iter port is cxl
->  	 * root. The iterative loop starts at the endpoint and gathers the
-> @@ -2232,8 +2241,12 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->  		return -EINVAL;
->  	cxl_coordinates_combine(c, c, dport->coord);
->  
-> +	dev = port->uport_dev->parent;
-> +	if (!dev_is_pci(dev))
-> +		return -ENODEV;
-> +
->  	/* Get the calculated PCI paths bandwidth */
-> -	pdev = to_pci_dev(port->uport_dev->parent);
-> +	pdev = to_pci_dev(dev);
->  	bw = pcie_bandwidth_available(pdev, NULL, NULL, NULL);
->  	if (bw == 0)
->  		return -ENXIO;
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 61c69297e797..72e2ce58e1dc 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1001,6 +1001,7 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
->  	struct range pmem_range = {
->  		.start = cxlds->pmem_res.start,
->  		.end = cxlds->pmem_res.end,
-> @@ -1020,6 +1021,8 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
->  		dpa_perf_setup(port, &pmem_range, &mds->pmem_perf);
->  
->  	cxl_memdev_update_perf(cxlmd);
-> +
-> +	cxl_endpoint_get_perf_coordinates(port, ep_c);
+> I think that there will always be a class of vendor specific APIs/Opcodes
+> that are related to an implementation of a standard instead of the
+> standard itself.  I've been party to discussion on not creating CXL
+> defined API/Opcodes that get into the realm of specifying an
+> implementation.  There are also a class of data that can be collected from
+> a specific implementation that is helpful for debug, for health
+> monitoring, and perhaps performance monitoring where the implementation
+> matters and therefore are not easily abstracted to a standard.
 
-I don't see what this is for as ep_c is unused later? The only reason
-is for error checking to see if that throws some kernel message in the
-logs but return code is unused.
+Hi Harold,
+
+Let's divert into a few specifics to give some routes to implementing these.
+Some of them are extensions of things already well handled.  Tweaks
+and extensions in the 'spirit' of the existing spec are both places where
+adding some richness to the spec is probably not too difficult and where
+there may be some flexibility.
+
+In some cases the definitions in the specification almost certainly
+came after your design.
+
+> 
+> A few examples:
+> a) Temperature monitoring of a component or internal chip die
+> temperatures.  Could CXL define a standard OpCode to gather temperatures,
+> yes it could; but is this really part of CXL?  Then how many temperature
+> elements and what does each element mean?  This enters into the
+> implementation and therefore is vendor specific.  Unless the CXL spec
+> starts to define the implementation, something along the lines of "thou
+> shall have an average die temperature, rather than specific temperatures
+> across a die", etc.
+
+There is a general temperature monitoring and trip thresholds etc in the
+spec via get Health Info and event logs. That covers a single value,
+so not as extensive as what you refer to but it's a start. Whilst you
+are right that the specification should not mandate N temperatures in
+specific locations, it would be a reasonable request to allow for a
+wider set of monitors with some level of description.  The intent
+being that generic software can discover what is there and present
+that info for logging / monitoring.
+Whilst the exact meaning will vary by device, some broad scoping is
+easy enough (memory controller vs various FRUs perhaps) and that is useful
+to providing generic users space software.  hmwon has long handled this
+sort of data from whole systems where very similar aspects of 'what does
+this monitor actually mean' apply.  Sometimes that does need device
+specific mapping files - so there is precedence that may be helpful here.
+
+> 
+> b) Error counters, metrics, internal counters, etc.  Could CXL define a
+> set of common error counters, absolutely.  PCIe has done some of this.
+> However, a specific implementation may have counters and error reporting
+> that are meaningful only to a specific design and a specific
+> implementation rather than a "least common denominator" approach of a
+> standard body.
+> 
+> c) Performance counters, metric, indicators, etc.  Performance can be very
+> implementation specific and tweaking performance is likely to be
+> implementation specific.  Yes, generic and a least common denominator
+> elements could be created, but are likely to limiting in realizing the
+> maximum performance of an implementation.
+These two are somewhat related.
+
+This selection falls into two broad categories.
+- Opaque logging and reporting needed just for debug.  There are patches
+  on list for Vendor Debug Log.  They haven't merged yet though I think,
+  so good to get your input on that series.  Intent of that feature is
+  opaque logs.  There will never be a useful general tool for that stuff,
+  conversely no general userspace tools will use them as a result.
+  It's likely vendor engineer only territory.
+
+- Counters that useful at runtime.
+  The CXL PMU spec is rich and flexible. In common with CPU PMUs the perf driver
+  allows for direct specification of events to count. The same issue with
+  implementation specific counters occurs in CPUs.  Whilst you can keep
+  the meaning of events opaque, if you do you loose out on useable general
+  purpose software (e.g. perftool).  Alternatively some of this can be
+  pushed into perf tool description files. 
+  The advantage of pushing counters in to the main specification is that
+  they work out of the box as the CPMU driver will report those directly
+  (no need for perf tool to work with raw event codes).
+  At the moment that driver implements part of the CPMU spec. If there are
+  features you need (free running counters come to mind) then shout
+  / patches welcome.  We decided to play wait and see with the CPMU driver as
+  it wasn't clear if the full flexibility was needed for real devices.
+
+> 
+> d) Logs, errors and debug information.  In addition to spec defined
+> logging of CXL topology errors, specific designs will have logs, crash
+> dumps, debug data that is very specific to a implementation.  There are
+> likely to be cases where a product that conforms to a specification like
+> CXL, may have features that don't directly have anything to do with CXL,
+> but where a standards based management interface can be used to configure,
+> manage, and collect data for a non-CXL feature.
+
+There are standard interfaces defined for some of this stuff as well.
+Last I checked the discussion revolved around component state dump
+only being safe to use if the background command abort was supported,
+as that was needed to ensure the kernel was not locked out for an indefinite
+amount of time.
+
+If you are looking at other standards being run to configure CXL devices
+excellent, but those standards should be accessed using whatever the
+appropriate kernel interfaces.  Could you give some examples for this one?
+
+> 
+> e) Innovation.  I believe that innovation should be encouraged.  There may
+> be designs that support CXL, but that also incorporate unique and
+> innovative features or functions that might service a niche market.  The
+> AI space is ripe for innovation and perhaps specialized features that may
+> not make sense for the overall CXL specification.
+
+Agreed - but those may need specific drivers.
+
+> 
+> I think that in most cases Vendor specific opcodes are not used to
+> circumvent the standards, but are used when the standards group has no
+> interested in driving into the standard certain features that are clearly
+> either implementation specific or are vendor specific additions that have
+> a specific appeal to a select class of customer, but yet are not relevant
+> to a specific standard.
+> 
+> At the end of the day, customer want products that solve a specific
+> problem.  Sometimes vendor can address market segments or niches that a
+> standard group has no interest in supporting.  It can also take months,
+> and in some cases years to reach an agreement on what standardized feature
+> should look like.  I also believe that there can be competitive reasons
+> why there might be a group that wants to slow down a vendor's
+> implementation for fear of losing market share.
+
+Whilst I appreciate the way this can slow down adoption / kernel support
+it's a path that is still worth it in the end.
+
+As Dan and others have put it, there are other routes than the main
+CXL standard. Those should allow tighter collaboration on smaller topics
+to define common standards.
 
 Thanks,
 
--Robert
+Jonathan
 
->  }
->  
->  static struct cxl_mock_ops cxl_mock_ops = {
-> -- 
-> 2.44.0
+
 > 
+> Thanks
+> Harold Johnson
+> 
+> 
+> -----Original Message-----
+> From: Jonathan Cameron [mailto:Jonathan.Cameron@Huawei.com]
+> Sent: Friday, April 26, 2024 11:54 AM
+> To: Dan Williams
+> Cc: linux-cxl@vger.kernel.org; Sreenivas Bagalkote; Brett Henning; Harold
+> Johnson; Sumanesh Samanta; linux-kernel@vger.kernel.org; Davidlohr Bueso;
+> Dave Jiang; Alison Schofield; Vishal Verma; Ira Weiny;
+> linuxarm@huawei.com; linux-api@vger.kernel.org; Lorenzo Pieralisi; Natu,
+> Mahesh; gregkh@linuxfoundation.org
+> Subject: Re: RFC: Restricting userspace interfaces for CXL fabric
+> management
+> 
+> On Fri, 26 Apr 2024 09:16:44 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+> > Jonathan Cameron wrote:
+> > [..]  
+> > > To give people an incentive to play the standards game we have to
+> > > provide an alternative.  Userspace libraries will provide some  
+> incentive
+> > > to standardize if we have enough vendors (we don't today - so they  
+> will
+> > > do their own libraries), but it is a lot easier to encourage if we
+> > > exercise control over the interface.  
+> >
+> > Yes, and I expect you and I are not far off on what can be done
+> > here.
+> >
+> > However, lets cut to a sentiment hanging over this discussion. Referring
+> > to vendor specific commands:
+> >
+> >     "CXL spec has them for a reason and they need to be supported."
+> >
+> > ...that is an aggressive "vendor specific first" sentiment that
+> > generates an aggressive "userspace drivers" reaction, because the best
+> > way to get around community discussions about what ABI makes sense is
+> > userspace drivers.
+> >
+> > Now, if we can step back to where this discussion started, where typical
+> > Linux collaboration shines, and where I think you and I are more aligned
+> > than this thread would indicate, is "vendor specific last". Lets
+> > carefully consider the vendor specific commands that are candidates to
+> > be de facto cross vendor semantics if not de jure standards.
+> >  
+> 
+> Agreed. I'd go a little further and say I generally have much more warm
+> and
+> fuzzy feelings when what is a vendor defined command (today) maps to more
+> or less the same bit of code for a proposed standards ECN.
+> 
+> IP rules prevent us commenting on specific proposals, but there will be
+> things we review quicker and with a lighter touch vs others where we
+> ask lots of annoying questions about generality of the feature etc.
+> Given the effort we are putting in on the kernel side we all want CXL
+> to succeed and will do our best to encourage activities that make that
+> more likely. There are other standards bodies available... which may
+> make more sense for some features.
+> 
+> Command interfaces are not a good place to compete and maintain secrecy.
+> If vendors want to do that, then they don't get the pony of upstream
+> support. They get to convince distros to do a custom kernel build for
+> them:
+> Good luck with that, some of those folk are 'blunt' in their responses to
+> such requests.
+> 
+> My proposal is we go forward with a bunch of the CXL spec defined commands
+> to show the 'how' and consider specific proposals for upstream support
+> of vendor defined commands on a case by case basis (so pretty much
+> what you say above). Maybe after a few are done we can formalize some
+> rules of thumb help vendors makes such proposals, though maybe some
+> will figure out it is a better and longer term solution to do 'standards
+> first development'.
+> 
+> I think we do need to look at the safety filtering of tunneled
+> commands but don't see that as a particularly tricky addition -
+> for the simple non destructive commands at least.
+> 
+> Jonathan
+> 
+
