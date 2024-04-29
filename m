@@ -1,197 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1DA839EA
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 15:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714406212; cv=none; b=K0N1P7fJyUS2QPTwsQa6dAEbwQ7YzwXwPfZSwZQZIh9809YuGXND2q8fdP9+uzsmdL5PJyRIj2s6YqCMKyyAL4+3GbOCijFlGqC3GToT3Rwe4gFlxw54Vycz3r0zBQNghuNhhFmAhke7C+WldEKiMZDRv5Ts1f0F2qjHLR0lOWY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714406212; c=relaxed/simple;
-	bh=YwOg4ayY78ryEUnWV7nlBnhFtEdnL/QxILI7x3zF8es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YeUAcPpY2Q0OKwwdEO9fYPb6+bJQ0agHOiC9vANz8MjoRCJuyLCWmqssq6Z4F0KlZW10jJgxGES5Agvx7sKatuLqtT91AlI8Cz7nAfACXLaDq1/eH0H75WeVjUNBHJyUaRRsfIk7qr2ZFoeH6xbHJN1T7yvQYmnZ8fKcJyQgeAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mJZYhE9w; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B883CAE;
+	Mon, 29 Apr 2024 16:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714406772; cv=fail; b=Z4+vlo573zIP+19kz0DwaDDbBn5Y76pJQ8gNLnsMPzkiGsPCRD4Hp6LT8w7JBHaj9NVFzmdMEZ+N7UKrAfYs18DkV7GIDjpf8ENL5Fu9cyKWaCzH+2hvgGeZJvBKr2pi+JThgKZYFNTYYerlAGkcIDnZnh9sPtr/xcgOVytQyqA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714406772; c=relaxed/simple;
+	bh=2PW9UsRkyoW118RUvPJVZxQ6wOUZEUTW543BGQMuf0c=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mF2pMvNEYLKFNb8czwdZTIevQLsTWQmSCJdGBgIbCLqlUo9vQhU/AttPwUzSqu+TpR6H/38GLgxrCsxqi7ZG6NQkLP28hqFAF0Xo53urO+vz9EKGZO36DKqfZGQrNcDbXP4whYDYh0x4OBv9ZdECP9KN0x4bnl+LCsZ8bu8yQ5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=it+Gvx5L; arc=fail smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mJZYhE9w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="it+Gvx5L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714406210; x=1745942210;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YwOg4ayY78ryEUnWV7nlBnhFtEdnL/QxILI7x3zF8es=;
-  b=mJZYhE9wp1ZWYZhkZkDJC9R7+Y+qq+fxCPgtWrJKeRARc9KtrFTPJU5q
-   ZdEecceiws37PpEmXEKyMBdE9mGZT1paYWnWxMfs9fp8jYWHwOFUnveNT
-   AjWz4uAt7naASubGvQ2fYk0P90KCB1W00W36S6hpfieGkP2Hrul9MV7lv
-   KD6z0Xr/GQIjT1bnXwJl5KofwSHy4+tHJrwanTb/5iLY37QNZ/0I+vpT4
-   MaKuSWBAuTtQURhz1qf1f3QTZCenp2HvCXhrmyvedK0t6IoYCQhCKLUF9
-   Pse77vXNomY32np3AZ6kSJPs9diwD5kMlBMkAumGrrb5BHIO1vHTaFOIk
-   A==;
-X-CSE-ConnectionGUID: NNQG3dvdRrGbisQajx2h9A==
-X-CSE-MsgGUID: 60Guhh9kR4C5/3G+H73gnQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="32580367"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="32580367"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 08:56:50 -0700
-X-CSE-ConnectionGUID: XUx2eldWRX+dZG4/z3JvGQ==
-X-CSE-MsgGUID: xchPCgIGTWCwrTsc6Yng9g==
+  t=1714406771; x=1745942771;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=2PW9UsRkyoW118RUvPJVZxQ6wOUZEUTW543BGQMuf0c=;
+  b=it+Gvx5LdFhX8Zz16fo93Zv03hEewtTP1dDDFoCpOsd27E2CkRyJg466
+   HTaJhMGGHYu8/tdjiWv+YHNi39BT7RBjYqZVJANsvlS4y1aKnqLsHX4Rk
+   25DTr58dTQy72dEXVXeCv+T3r808q8O0cVtz646Ckh6GHOKjlPa4t3kEu
+   YegeFAUA2cJp7NxgNtq19mgQUl6c1KqMt9k0efDnvNPKS0FbSbysFLi0Q
+   5OU/j+rlxANFQWsHKJL4u9c1PBt7YFW+KaMNirjNo7O2pGn5gDfscdCsw
+   nmV0Qc4VnixeS4zChJXM2uhMrN93pbsM+fURIYUao2flRTf66IJspnfNT
+   Q==;
+X-CSE-ConnectionGUID: bxcfjHqkS7ihQoUQ8fa4xg==
+X-CSE-MsgGUID: RXhOTbf9T36myZUnKSoX+A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="9908022"
+X-IronPort-AV: E=Sophos;i="6.07,240,1708416000"; 
+   d="scan'208";a="9908022"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 09:06:10 -0700
+X-CSE-ConnectionGUID: TOIQ50AZSu69NSYspRbbkw==
+X-CSE-MsgGUID: hCWMcPsvRqamK/45iuMSig==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26229453"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.1.141]) ([10.212.1.141])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 08:56:49 -0700
-Message-ID: <929b7b3c-4676-468c-8ba2-8028bb05479c@intel.com>
-Date: Mon, 29 Apr 2024 08:56:48 -0700
+X-IronPort-AV: E=Sophos;i="6.07,240,1708416000"; 
+   d="scan'208";a="26026467"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Apr 2024 09:06:10 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Apr 2024 09:06:09 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Apr 2024 09:06:08 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Apr 2024 09:06:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nOiHvyGvVuojIO/xGXQus/mm/8JYKUoXvokBiyYOH6/pyB2pWKUqsRaRf/5923CAeIfXWaHXzfWAvl8U+E1bh+mfq2P/NqFRa7bW1s3+mLDtfwqcA0gielMsRZIcaVjKkdQfC+q1d/suIOsMErEVcrvnEHKpLEsmliNLqlsQuUJvztQUMGdAJadKwfeJ/dIP1pvqXpZiDsgmmIruMz73zhFWmSaSFQcl5EZkFRL9Igv/6wHaWzyWBahLvPYrUpJPA8WDspb74vnpukj8VVpYHfaW5ksAbUqYISwzt48OGmVqQ6IgN4suAe4j89Q6wz+TfVoEFmIRj3tpy8O2P0TKDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2WcQog67XKUVnkB9rGwBCstajYtnSDN8UzjMdZ+waLk=;
+ b=F7zTqt4gIKaxtCoHMUaH8RLtyd1uw3oxidFb6OMXOeHjGeDvAw1ZYsOvd9rVsgHiSWX02B8MutLRvRwfZrqZp9ygNw9DhcFo3pn4hJT6slm1WkudHNnLw2C5+48fPBhEi+OJJZ0F6vnr6mY4QFdqp8+AThqC+Pjd30hryNKALqAuFJSH7wdkAr+l9L/6g6ANWuMfAKHLJ2l68MKVfgzoEBwDLQw+ydngsvmmRhJ0BxB+A4DbFZb4u2gJnGDgdFHR1kWAJa2oYqnJEjVs72zDaUoW0Y+EDRtjjUQUP4WZGHhsEj9JeHlv4Nq3XnjtORYaLWktZ9ITMWXMf6v6ad5Mfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SA1PR11MB6712.namprd11.prod.outlook.com (2603:10b6:806:25c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
+ 2024 16:06:00 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::d543:d6c2:6eee:4ec%4]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
+ 16:06:00 +0000
+Date: Mon, 29 Apr 2024 09:05:55 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Li Zhijian <lizhijian@fujitsu.com>
+Subject: Re: [PATCH 1/2] cxl/region: Fix potential invalid pointer dereference
+Message-ID: <662fc563c6bb2_19ca3929485@iweiny-mobl.notmuch>
+References: <20240429013154.368118-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240429013154.368118-1-lizhijian@fujitsu.com>
+X-ClientProxiedBy: SJ0PR13CA0066.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::11) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Fix cxl_endpoint_get_perf_coordinate() support for
- RCH
-To: Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20240426224913.1027420-1-dave.jiang@intel.com>
- <Zi-LzgrCVHDlIBpB@rric.localdomain>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Zi-LzgrCVHDlIBpB@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA1PR11MB6712:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec9ba319-2662-4dab-d3fc-08dc6866432b
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?iqYRi+E8tSXcvt5L8C2K68MmM1I29GvyZK2Ad8Hu9ZxOZKCioi/7wUtoeQJK?=
+ =?us-ascii?Q?l+hYht8zgbF2z6KOnfDbTUaagtI5vM8qT0zxfU7HQeRtjEzOU9h17Bzd6r7b?=
+ =?us-ascii?Q?cUzrDMtSfDs51mPuQOiXutfC2XcfUtPgs6T7VaelQjcsN2ZFpE01ZmxYRTIh?=
+ =?us-ascii?Q?+It2/qq6GTPrljSNbhA+qKihHkPGvgCntzDwxxDu7D6DYVxHnrHze2bD2SMI?=
+ =?us-ascii?Q?8XdyZt3N7B5ITwC79KRxjz1nVJ06L47Q299ui+T1Hxcq8Fe3ReCU5fdF9mSI?=
+ =?us-ascii?Q?zLuaA/QjggzsJkCH4QZ0b+NjsT/DHojb2Rdo220X3VSNZxN4MOIs3jp6soA/?=
+ =?us-ascii?Q?JkTRF349LSWZN4+G05IR5FKxUHsmOddvIH6ww51gAL4dXug4XtNFh3dFYGva?=
+ =?us-ascii?Q?aYe07AltokQUUzhkEuNmse87hFg851xLZz7LmVM+Mv4WlgECEWvMAfT/vv6u?=
+ =?us-ascii?Q?/4edzo4/m6PyWKZqXoGFeT3mrG5ir/BtJFy0YjapzyuzIgCSRKdooaCz5wpr?=
+ =?us-ascii?Q?dzv2PCDGlps01AhQOL/dOve6Xx5bWEKFs6UoM6Cu71YRlxtW/2YAL2iJQ6lA?=
+ =?us-ascii?Q?zziNXKdJu/cI8nZK0Ui5ZIPi456wNzT2wxg5ZcVoxskbnNOEX51CjcQPSKq+?=
+ =?us-ascii?Q?Dv0i3vZLqiCv/8bYXWDItYy73xwDl1UDMtyPgP4b23wa14bP84xMdMd6r4ma?=
+ =?us-ascii?Q?NBXnKeZegv+eabHEjLB6E50Hh4x6RrtgSM/4oh4215SLCkhVHga8EDBJ0Uyc?=
+ =?us-ascii?Q?dxgUxO+JYvg9FRf1teABBOpr+BUsnHENJ2U6m8EjRdDyRTHQjaZnlFGAL5pm?=
+ =?us-ascii?Q?uRV/wq8ekkW1SFOqUTu/RUjhlEby2Cyt1z3OggKr5xSlqlHlOOny2H+S56Om?=
+ =?us-ascii?Q?ARRcSlr9H9A9zBZX8Vmp6yuTCpLxObi9E3zPV/+pnXDTRcA4GEh7N+bUBmYe?=
+ =?us-ascii?Q?49FFP0t2zm3mG9tBndXEV0nx3KAOsAwOj2xD/1xhjlE0OT40aYxbwas9XT7C?=
+ =?us-ascii?Q?X8QcSpYy0eWXBj3hWXoClwfsDs+XawmwEfgHR7iLWv1VfrZ8zvwYSCQZEXVM?=
+ =?us-ascii?Q?uD8lRQvX1B3zNVppSO+mz4lrGgD3WqhAoXNdrUu86JwFhKghVyXIq/4isbTQ?=
+ =?us-ascii?Q?eW9fjR6mD5Cv2+7/+gCHGxdV5CgsYnSHKbiwt9e0OSz8T9pnoIdcxWmhek/W?=
+ =?us-ascii?Q?FIp0+GhK8zc9zult/ITsOtxiaGlK9Ls9118CgGEyivu4sst0dGJaW7o40LvT?=
+ =?us-ascii?Q?QovUY+6ej0FCP35P2CkaA3cLZ8QmqH1xPH2Ovy6B0g=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Hh66XJQJwUsMwubIdKTVXKSSbhn9hBjpJjyQcosBahEdAhat8vukyZsmsrv/?=
+ =?us-ascii?Q?t6cJtuz439IyXCqQho9eP7u5UG3lH14L7nNz64wVq/CCPQCakL86n+cl+CkD?=
+ =?us-ascii?Q?dw8QDUgZCNp+FPD4Y95vh1SCyCTOnMeAS9MqhD4YiHbsWDLG3K+0v+JVynfJ?=
+ =?us-ascii?Q?yRPemgvRNarxGK6jNBYvVHvv8k8MDNuAiTr8gzkujJRrARoKZWPVIpLNZfE1?=
+ =?us-ascii?Q?07X+fjwqQBiVrnLVNtjD6sjh/QJj1r9C9bzDTkCFyIxIDG68GUYDXO/1DIyn?=
+ =?us-ascii?Q?wmrixGb1cJBOc0buaUGi5pgMg8PoZAR8xeaeGII04rgjPkc4+PaYzbYBc/nw?=
+ =?us-ascii?Q?PjhCEMrEmDHP/OpR0KPfJAGN6+7q+P0qfqgRw1aPV7oZfWznUbwZw0p1zG+K?=
+ =?us-ascii?Q?nLtdySoHw2/NR3lWDPdojuHE7psrTekVJLmBDkkpTv+45hyuIBoROZciP+0u?=
+ =?us-ascii?Q?kX8cde9Nh3AwYjLg3evwKRNcbQCXJXspYs0X+kVTzl5DMUKFr5YQZqzeDjMR?=
+ =?us-ascii?Q?IPp8LlovOu+1YoAhQ9Svy82hpNhbsY+3iOlmqNlVkNgFLBG1qMOEWSMTaGC0?=
+ =?us-ascii?Q?bxZ5eGfkAATuOqM8H4zZyJMuTa7OWFgFybWeC8vAmHviXzdNmT/8yulrI7vc?=
+ =?us-ascii?Q?rvHm1ImvNlgpx3qM/zz/YUsNXTaS6HZsM345milQEkkHfyojPVh4anmnyJLk?=
+ =?us-ascii?Q?AA6QWPpMYSVqZBZ+RiyD6o7OaGhuFOCIF/ftLhLNdK5nd7/FElsNwZV7fB3s?=
+ =?us-ascii?Q?ng4YCGJm0nIjXDw1rkfNeB/MnaHaLJ+iD1XzAti9rKMgmAqRjyz6OgAyPNSU?=
+ =?us-ascii?Q?kL2akjCYMds7GaHkuE8hKZ2+szKI1q8RVelcA6RJOGhetMCb/gZxIHSzBuES?=
+ =?us-ascii?Q?6ayroFEB8IChWeOMO6bGNQQ891I/qMxbJZ/lU3y8yeStgXZuDsd7nFzfwzaB?=
+ =?us-ascii?Q?wz1FbA9vnpQNkKZxOUxlPvwaQp3x7vR84lUHVctqN5FNW2uo+ZztSB8VQHDB?=
+ =?us-ascii?Q?HNH+FZe3voOQ8V223JXooK+NhqC1iOypf19Lp6C9L3mnWxuuOlJ1VZ1Rvhdf?=
+ =?us-ascii?Q?aWc6PU5B4vTVD/1PfTna7N0ahtLeA/uhkoqKAqbur26YFO78DRK0HSpfJsMt?=
+ =?us-ascii?Q?9e/diXrRWOzRFxaGh3Csj1qL/0iW7IKjT/1/bz1C6qrpsADL4JMDCVO90c2Z?=
+ =?us-ascii?Q?9tJDQB6D5SdMfSLQAU4A136GETRHrX4KsjvFEtQbfdelqAn488TBPWVc+IFg?=
+ =?us-ascii?Q?VT1E4fAHNmUfGKYB0z2Y08ZBHBInHKFrV0ZDlCBhwLzE41PWMFtEulvH0r2R?=
+ =?us-ascii?Q?EP0BXIUXNY/RNLd5678C2pC2mfO7nGNY+5NKqjD+OTWxPQnXnte+mwTaJN1g?=
+ =?us-ascii?Q?M2JwYr+M6rfKUTLGW1IyjAC7G0bI4r8JzfKT537UdBvMCIK2VH4/85m3MkTm?=
+ =?us-ascii?Q?h+Ij3OyWhkhqfUYqMZzO7zcUU3ycZAsYlGVU1Od4+2cWUfh1sHcQLDmM4Igb?=
+ =?us-ascii?Q?ZNn3xkD8c9Jhco6IdMDeQxCWM1tqnYizmOtu4iIOFV2X9HTexMCL9BquE9nM?=
+ =?us-ascii?Q?bh7x482kKDfgKhWmJ1YytW/NaLLSXEvlByxGGljF?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec9ba319-2662-4dab-d3fc-08dc6866432b
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 16:06:00.4705
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nbLu/BrhApfKMTgB6svLJPhH4ZZebLMgbOXwh0UN6z8Q3qYNtQW0Nc7IYGwWnOH/vw0dE8JGCevQJ/lVZR5//g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6712
+X-OriginatorOrg: intel.com
 
+Li Zhijian wrote:
+> construct_region() could return a PTR_ERR() which cannot be derefernced.
+                                                             ^^^^
+                                                             dereferenced
 
+> Moving the dereference behind the error checking to make sure the
+> pointer is valid.
+> 
 
-On 4/29/24 5:00 AM, Robert Richter wrote:
-> On 26.04.24 15:47:56, Dave Jiang wrote:
->> Robert reported the following when booting a CXL host with Restricted CXL
->> Host (RCH) topology:
->>  [   39.815379] cxl_acpi ACPI0017:00: not a cxl_port device
->>  [   39.827123] WARNING: CPU: 46 PID: 1754 at drivers/cxl/core/port.c:592 to_cxl_port+0x56/0x70 [cxl_core]
->>
->> ... plus some related subsequent NULL pointer dereference:
->>
->>  [   40.718708] BUG: kernel NULL pointer dereference, address: 00000000000002d8
->>
->> The iterator to walk the PCIe path did not account for RCH topology.
->> However RCH does not support hotplug and the memory exported by the
->> Restricted CXL Device (RCD) should be covered by HMAT and therefore no
->> access_coordinate is needed. Add check to see if the endpoint device is
->> RCD and skip calculation.
->>
->> Also add a call to cxl_endpoint_get_perf_coordinates() in cxl_test in order
->> to exercise the topology iterator. The dev_is_pci() check added is to help
->> with this test and should be harmless for normal operation.
->>
->> Reported-by: Robert Richter <rrichter@amd.com>
->> Closes: https://lore.kernel.org/all/Ziv8GfSMSbvlBB0h@rric.localdomain/
->> Fixes: 592780b8391f ("cxl: Fix retrieving of access_coordinates in PCIe path")
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> This patch fixes the issue.
-> 
-> Tested-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Robert Richter <rrichter@amd.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Thank you Robert! I'll get this queued for rc7. 
+> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+>  drivers/cxl/core/region.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> But see below for a question...
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 8535718a20f0..3c80aa263a65 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3086,10 +3086,9 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+>  	mutex_lock(&cxlrd->range_lock);
+>  	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
+>  				       match_region_by_range);
+> -	if (!region_dev) {
+> +	if (!region_dev)
+>  		cxlr = construct_region(cxlrd, cxled);
+> -		region_dev = &cxlr->dev;
+> -	} else
+> +	else
+>  		cxlr = to_cxl_region(region_dev);
+>  	mutex_unlock(&cxlrd->range_lock);
+>  
+> @@ -3097,6 +3096,9 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+>  	if (rc)
+>  		goto out;
+>  
+> +	if (!region_dev)
+> +		region_dev = &cxlr->dev;
+> +
+>  	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+>  
+>  	down_read(&cxl_region_rwsem);
+> -- 
+> 2.29.2
 > 
->> ---
->>
->> Hi Robert,
->> Can you please try this patch and see if it addresses the issue you saw
->> on your RCH platform? Thanks!
->>
->>  drivers/cxl/core/port.c      | 15 ++++++++++++++-
->>  tools/testing/cxl/test/cxl.c |  3 +++
->>  2 files changed, 17 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 762783bb091a..887ed6e358fb 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -2184,6 +2184,7 @@ static bool parent_port_is_cxl_root(struct cxl_port *port)
->>  int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  				      struct access_coordinate *coord)
->>  {
->> +	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->>  	struct access_coordinate c[] = {
->>  		{
->>  			.read_bandwidth = UINT_MAX,
->> @@ -2197,12 +2198,20 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  	struct cxl_port *iter = port;
->>  	struct cxl_dport *dport;
->>  	struct pci_dev *pdev;
->> +	struct device *dev;
->>  	unsigned int bw;
->>  	bool is_cxl_root;
->>  
->>  	if (!is_cxl_endpoint(port))
->>  		return -EINVAL;
->>  
->> +	/*
->> +	 * Skip calculation for RCD. Expectation is HMAT already covers RCD case
->> +	 * since RCH does not support hotplug.
->> +	 */
->> +	if (cxlmd->cxlds->rcd)
->> +		return 0;
->> +
->>  	/*
->>  	 * Exit the loop when the parent port of the current iter port is cxl
->>  	 * root. The iterative loop starts at the endpoint and gathers the
->> @@ -2232,8 +2241,12 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  		return -EINVAL;
->>  	cxl_coordinates_combine(c, c, dport->coord);
->>  
->> +	dev = port->uport_dev->parent;
->> +	if (!dev_is_pci(dev))
->> +		return -ENODEV;
->> +
->>  	/* Get the calculated PCI paths bandwidth */
->> -	pdev = to_pci_dev(port->uport_dev->parent);
->> +	pdev = to_pci_dev(dev);
->>  	bw = pcie_bandwidth_available(pdev, NULL, NULL, NULL);
->>  	if (bw == 0)
->>  		return -ENXIO;
->> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
->> index 61c69297e797..72e2ce58e1dc 100644
->> --- a/tools/testing/cxl/test/cxl.c
->> +++ b/tools/testing/cxl/test/cxl.c
->> @@ -1001,6 +1001,7 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
->>  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> +	struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
->>  	struct range pmem_range = {
->>  		.start = cxlds->pmem_res.start,
->>  		.end = cxlds->pmem_res.end,
->> @@ -1020,6 +1021,8 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
->>  		dpa_perf_setup(port, &pmem_range, &mds->pmem_perf);
->>  
->>  	cxl_memdev_update_perf(cxlmd);
->> +
->> +	cxl_endpoint_get_perf_coordinates(port, ep_c);
-> 
-> I don't see what this is for as ep_c is unused later? The only reason
-> is for error checking to see if that throws some kernel message in the
-> logs but return code is unused.
-
-Right. The results are thrown away. The call is there to specifically test the iterator and making sure we don't crash or fail. It has no other purpose. I looked into plumbing this function for usage in cxl-test but found it not possible to override the PCI API function that retrieves bandwidth. So for now we'll just have it just test the topology iterator. I'll add a comment. 
-> 
-> Thanks,
-> 
-> -Robert
-> 
->>  }
->>  
->>  static struct cxl_mock_ops cxl_mock_ops = {
->> -- 
->> 2.44.0
->>
