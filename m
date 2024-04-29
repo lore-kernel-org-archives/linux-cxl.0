@@ -1,57 +1,57 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C2C3D64
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 10:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF17B8F5B
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 10:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386636; cv=none; b=WJs5+hlMc3JySy9zTpKL8Br70CRJ4Nhp2AtOPMZPxhCBANQ6+n2Bzqp0ZsHHQ4ebLSaLvvecLhXs78ILYGx+ABp10SD4FDwKnryZdmIWtPY5astNNvd4UbQGkPtz/s1Um3bUoIO7X/21Y0ZrGPuaA2+uYFlwFixphUCCfmvw86g=
+	t=1714386784; cv=none; b=uS3rHFqqgFCjuuctvHdxv8donXuoZt4Kf28aAqv9/6KN3TB1ipQZjfOApeWjukvLwxAcArha8suooBj4nIGFUrfMBq6KIo86Rm0FSdR1yT4yDqlIgw51pznikv7hXbswoDyoAykcgvMhMNp5Aw9mSpr6NFd85C+gLsWMbyyXdcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386636; c=relaxed/simple;
-	bh=UbDQchwJ/5MpMWWetkzU6K8E2bg8wM9Cju7lJa1j2uM=;
+	s=arc-20240116; t=1714386784; c=relaxed/simple;
+	bh=z0Ip73Oq7JlEyErkx4LsdMIFywya1Q4jKa7bAbSZeD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oxyNHk12UYODaCpetcwg3vEkoV4CDXKycj4k4upUOpQ55ilVSL29RkaeYXxdZPjq954kU2eilCQkEN9AJKxmF2ja4mPIOy0up/k/5pIHbt9c2L6x+PzZm+WV+F2FURL4wwOuwpK4fYr48GX4uHQGh94EETR87jLFY8cGEIQyD1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oh+QzXWO; arc=none smtp.client-ip=209.85.218.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=dFkyl2d30N3kCvTv6uJeeZnvs9Ifkc1CVIZBVlV5aV1mSpawa51uEL7ZNhQSfiCS9goaK+jtequp6FMwMpVgydKAD4Xhc/2YcTx56FuBVr76MHTGWS7q996M36nQX6EvmMJqc9lXLb/lrlfSMGydOTFE0IXEbhY/vMAsjcVwlRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DtnhMIe7; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oh+QzXWO"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5200afe39eso484072066b.1
-        for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 03:30:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DtnhMIe7"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-571be483ccaso5048636a12.2
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Apr 2024 03:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714386633; x=1714991433; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714386781; x=1714991581; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2HfdH1jIH2/B+b7aR8d7pkmFhac9pK2yLLIIWF+ZffE=;
-        b=oh+QzXWO7GPG/rrPwOopWYzTXX2K94O0aR2QmPX5hnwa6PAiruuu1LwqbwxyBi2tDl
-         c24hTVkZjHtL4x2t4LtP4zHrngUc1P4ZLGduv4q+ZvShcrxwEEJfJDPElZCOXUUFZDC6
-         ysrnI/7hMwdig0LCluG1GAKmGXXzzIz8qC7mQbf7MtGtTDJ6qceFduCpbEOUrJANs1W/
-         lR4j2xKX2nQITly/Kan9Ay2Y9V8f2n36PQYqaYyzBoF/U/HaimydTYnZa6p5hKGgDGvF
-         2GtQEF7Ai9iEwjN/Aw4ER++eGSbs4f76lK2lqC/l6z57Ox2r3Vy32cGLdiazQFcINDme
-         MvKw==
+        bh=GOU5F1NGvFs0bAJKPOpovNJQxbGpDe7agzDlwsoZt9I=;
+        b=DtnhMIe7FJKb+tph/I4TU/8q+JbOiWAirJVRIgu7tUz+M57hdZXKrURpJkkDouEkH7
+         2ROGRwJ0k72KM4diSg1g16P8HFFOcrp11sGHhI2/vfzva/LGFVjv13u66sH6fJKY7KNk
+         Z5S41n8OJA40uzv19kwefRj26hNSu2XZfPwEMI/RUAqYi27SpShvgNrQYYpuzfZO5s7x
+         ExN+pbSzCimffWW+HfAZrHIgG3e4KR3ZSGhUV23Tz4RFDRUZha571dk2kfJ5cl20Bdj8
+         Snr4EF1dqNbmM3i+V0aNTWGClMtpbIkeevSgqwxPNaeciaArPLFMVHgkL2JTfhhukQx+
+         dWQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714386633; x=1714991433;
+        d=1e100.net; s=20230601; t=1714386781; x=1714991581;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2HfdH1jIH2/B+b7aR8d7pkmFhac9pK2yLLIIWF+ZffE=;
-        b=kX6wUfr14U0j1E/g50IEBMAXGQeBLuQIFM0ongvMrmXE22erc3Un+9YnKzY3qCcryv
-         rUaRhAK7NNoCmeom8FTz45BoMdnQExhDf5wcz4vz7dWSHfwsntrpFAyd6bpCVooCe7rx
-         WqEQHNmtw5HsahbFElcmIyBfkVcqdEG+WcoerMVbUoMRyfOh1QyincA7EVC8UUwsWjZF
-         wSlwmh7jaCnLQFjpSOrv0gdOYdlA9EaDWKZRlT1C8sna63hyA1Yn+pPnlAR0pB6VoZB8
-         fTyZTCqH5MHpNE2pJVH76KfMlZXoU+yYCTLg0FdpNw/vWUTa48gtPgeJcjLbuWqiSi/q
-         Jmtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRJTw49F/6mojT2nrw7kitVXWSOyZUCAYTj1oAy3kX/mareli6aZRMCINLswQl9dXG5NsGqBDdO8lYNvSruhC4PaDP7fOUnm0h
-X-Gm-Message-State: AOJu0YxFkIR7/X9YzmGg9+n/evC3J73kom2Rs2gyQH1wU6NkjXmuRXQW
-	/WBHQVe5At36PqBY+wCc6XYsJSKfMy4BClUSSgIC118QPRJYRTVMmP7NE9bVekw=
-X-Google-Smtp-Source: AGHT+IH20HweA0CE7+18VgLPAHNlNE07Gw2Y/AzjTIzrC+0NFUfK6LbhGiLvlju6wH/4YgzFQT7kww==
-X-Received: by 2002:a17:906:eca5:b0:a52:699e:f2b6 with SMTP id qh5-20020a170906eca500b00a52699ef2b6mr7846394ejb.74.1714386632555;
-        Mon, 29 Apr 2024 03:30:32 -0700 (PDT)
+        bh=GOU5F1NGvFs0bAJKPOpovNJQxbGpDe7agzDlwsoZt9I=;
+        b=pCrnY7fieXdNBFf7pWhGJaGDDdjGu3mw+un2jjC8EZTzdDplnZ18CiYmhncaUpXthQ
+         YU0wLRABggHi3hlXXyFa6jwfETnZ91rvZ1b8m7fqj1C8UfAHwa36Tb+zCjfJXHj5zTBF
+         EaIv/bATjexyv7Dvh0Nmq1CNchXzon4EXcFBfwqgqCUBP2UPwSvqaf7ZNyYq4fkCWqlI
+         FYeNbuQuS2hSq6JeEzTzSJvgySCftFJUaLH3Za+mgox79CV2S9yQu0cCan/ugtJ9nBYJ
+         NnXF880QNe4+xm+DzblxYo2fnq6PyK/5pVHfvCX009sll/zxMklsKkR8Noak/IZyVyFr
+         ZhEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVFf5G3pDtnGuN0Q7iEqYNJc2bfGhd/R+x6oxsDoMIoKV5IVBkRiO0HQ47/T8bhoMqHeMGsLzIX0N7TeKhH8AdKz6w7PzPH2Ex
+X-Gm-Message-State: AOJu0YwYU6T0KmgZOB09bEXGNLYJ52E0z1aItrFEtv3jmSpWlALCIwNj
+	6KPYE8Zpodft2J7ok998U2hkgyhZFagTwOT5XKDE6IIrAUcQyyUL45wz88ErWIo=
+X-Google-Smtp-Source: AGHT+IGL1whmMFAwvGEtnLi5B9HGyCOJ5rCv/QBcu0MkZGGUULuE//bsrooaCcaofkuAPuzYaV5fYQ==
+X-Received: by 2002:a17:906:4788:b0:a58:849f:4d18 with SMTP id cw8-20020a170906478800b00a58849f4d18mr8300393ejc.35.1714386780784;
+        Mon, 29 Apr 2024 03:33:00 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id bw13-20020a170906c1cd00b00a58de09fd92sm3080025ejb.27.2024.04.29.03.30.31
+        by smtp.gmail.com with ESMTPSA id z13-20020a170906434d00b00a51e5813f4fsm13950947ejm.19.2024.04.29.03.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 03:30:32 -0700 (PDT)
-Date: Mon, 29 Apr 2024 13:30:28 +0300
+        Mon, 29 Apr 2024 03:33:00 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:32:56 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
 Cc: "dave@stgolabs.net" <dave@stgolabs.net>,
@@ -63,11 +63,12 @@ Cc: "dave@stgolabs.net" <dave@stgolabs.net>,
 	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
 	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] cxl/region: Fix potential invalid pointer dereference
-Message-ID: <c6cab703-87df-4152-a5b0-a0ce31e7f057@moroto.mountain>
+Subject: Re: [PATCH 2/2] cxl/region: Fix missing put_device(region_dev)
+Message-ID: <856b5986-6f04-4aaa-ba35-fa5e6f3ebc2a@moroto.mountain>
 References: <20240429013154.368118-1-lizhijian@fujitsu.com>
- <18a295a2-b734-45dd-9c95-660a9e1f58e4@moroto.mountain>
- <576dccd9-1f8d-4c69-bc7f-497413b87b9d@fujitsu.com>
+ <20240429013154.368118-2-lizhijian@fujitsu.com>
+ <df5830dd-d822-4c11-9cce-3775dff0113b@moroto.mountain>
+ <cd20f733-3523-490c-8bc1-73b7300f18b8@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,29 +77,15 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <576dccd9-1f8d-4c69-bc7f-497413b87b9d@fujitsu.com>
+In-Reply-To: <cd20f733-3523-490c-8bc1-73b7300f18b8@fujitsu.com>
 
-On Mon, Apr 29, 2024 at 10:25:35AM +0000, Zhijian Li (Fujitsu) wrote:
-> >    3084          mutex_lock(&cxlrd->range_lock);
-> >    3085          region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
-> >    3086                                         match_region_by_range);
-> >    3087          if (!region_dev) {
-> >    3088                  cxlr = construct_region(cxlrd, cxled);
-> >    3089                  region_dev = &cxlr->dev;
-> >                                       ^^^^^^^^^^^
-> > This is not a dereference, it's just pointer math.  In in this case it's
-> > the same as saying:
-> > 
-> > 		region_dev = (void *)cxlr;
-> 
-> 
-> You are right, a equivalent code could be:
-> 		region_dev = ((char *)cxlr) + offsetof(struct cxl_region, dev);
-> 
-> 
+Btw, I assume you're doing some kind of static analysis?  Looking for
+missing NULL checks is very tricky and I haven't found a way to do it
+well except for looking at failed allocations.  Allocations have to be
+checked.
 
-Correct.  But offsetof() is zero.  It's the same math that to_cxl_region()
-does.
+There are so many other functions where we leave off the NULL check
+because the caller knows it can't fail.
 
 regards,
 dan carpenter
