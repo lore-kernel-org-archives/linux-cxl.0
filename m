@@ -1,353 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E11517B4F7
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 17:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A7E1369AC
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 17:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714497704; cv=none; b=d41T9noZw3x1AlmG/YafCtve2YqVcKO0Za+uGHUB/tcGi4ctPHMocBaO0Cn5cLdLL+nENEfTKwdPszX3FIeKOB7KODEdPLEV1XyM9KJiaJyL7jhJiip0b6r83p+B79NEtHz9QcbGaV97E3o6xws6mXkBEhf1YMhhmH6JcTdhTkg=
+	t=1714498092; cv=none; b=BdP43F8iQty/IeRfMgpWi/PffwKvBkVe6FJSnkwAdVHoPO8EJLW6Qc+nfTKakuh5wzgNoHsIi2DF16gDgsLU2+7KMZyqJ3sTcu9N1vKv+SS6Zhcw7j2H1ci4o7i0fKN5yL3v3waPZz30cVw/5fK2yqyhvxzVXyQNUM2eZXKp6y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714497704; c=relaxed/simple;
-	bh=eZa+Mhm5zTGoxCQc76u9nQeLkbIfYrPPS1gVvMz9PDM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e70ByGGLAEiNW2Wg60pLLsvsMT9I/1mQhvIpASAQ/vqpozUhfr2hObJJi2+YWSbM1b87SBTISfQnjicI4pdbHb9aCGq+3uATW1/nt3wwig1qlRh/Rv/KlhrStXKOe5zdFJlmdvq2knBEc9/7jFjAmfY2OiS9Lvr5mWaDPUf9eGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTRnD3pzXz6K8yJ;
-	Wed,  1 May 2024 01:21:20 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C03CC140518;
-	Wed,  1 May 2024 01:21:38 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
- 2024 18:21:38 +0100
-Date: Tue, 30 Apr 2024 18:21:37 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Markus Armbruster <armbru@redhat.com>
-CC: fan <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <gregory.price@memverge.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	<jim.harris@samsung.com>, <Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan
- Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v7 09/12] hw/cxl/events: Add qmp interfaces to
- add/release dynamic capacity extents
-Message-ID: <20240430182137.00006417@Huawei.com>
-In-Reply-To: <87h6fkob0t.fsf@pond.sub.org>
-References: <20240418232902.583744-1-fan.ni@samsung.com>
-	<20240418232902.583744-10-fan.ni@samsung.com>
-	<877cgkxzal.fsf@pond.sub.org>
-	<Zivk37xBGPsL_yo5@debian>
-	<87h6fkob0t.fsf@pond.sub.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714498092; c=relaxed/simple;
+	bh=uNphq7yEPf4QHAdcHUaIIkXX+yeG6D4+l3ZjdySbvac=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VtAZyNuPt8/iPHArjZqfc+XVw3g5tqOPbHtpoKJO6Am5wwm8daCxhBwV2N4qEIgm2I9/kwso5q8qO99yon/JX+cSECpJ2y/DmfER6WoqOABRVeOzi9+ll2jB7WH1QS4KY2TGPazlT0BrZ6hxfTfSb7uqRFQ5f3qwcrNlvmcbVYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H0x2PXn8; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H0x2PXn8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714498090; x=1746034090;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uNphq7yEPf4QHAdcHUaIIkXX+yeG6D4+l3ZjdySbvac=;
+  b=H0x2PXn85Ye6pCLVhIsv4qwZ8A6LUqKK1LJXHDZGXr5VgiMxM0uQyydU
+   971Ya5KOv3xtjXUD0pHHsOJJmtuD/MyDsw+9dthSM/eQSJywqg4lbXaHV
+   FCkltgWuhGgJn4pPqRk5SJKGhXQ6ZLtPrTBENB11KDqD2oDmND+HDyf10
+   OaOvA3wa+7aQsLNtCW1PuPqKK8YKX6vqGQPU/MUgD8mAOgRFoiqOs7Qs3
+   IXDVjZJH+b5GrkZT7p+yWcuHj4+RqROYIQY9Qeut7zlc0hMtGL21VE3Jy
+   uj92S/g8XjpgMKQddiyVUB10G04ERni0h/yCzY4aF+K3QL6ZJ5urdnHKA
+   g==;
+X-CSE-ConnectionGUID: gDW13Xl9TW62JAQLhC2rKg==
+X-CSE-MsgGUID: pTx2XYo8T0SkfPs/yuBItw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10069145"
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="10069145"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 10:28:09 -0700
+X-CSE-ConnectionGUID: OkhJa1MSTV2bty/vFX94oA==
+X-CSE-MsgGUID: 03zsJfkKSf6s03LUiPhzNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="26401129"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.251.17.48])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 10:28:08 -0700
+From: alison.schofield@intel.com
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Subject: [PATCH v6 0/4] Add DPA->HPA translation to dram & general_media events
+Date: Tue, 30 Apr 2024 10:28:02 -0700
+Message-Id: <cover.1714496730.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Apr 2024 09:58:42 +0200
-Markus Armbruster <armbru@redhat.com> wrote:
+From: Alison Schofield <alison.schofield@intel.com>
 
-> fan <nifan.cxl@gmail.com> writes:
->=20
-> > On Fri, Apr 26, 2024 at 11:12:50AM +0200, Markus Armbruster wrote: =20
-> >> nifan.cxl@gmail.com writes: =20
->=20
-> [...]
->=20
-> >> > diff --git a/qapi/cxl.json b/qapi/cxl.json
-> >> > index 4281726dec..2dcf03d973 100644
-> >> > --- a/qapi/cxl.json
-> >> > +++ b/qapi/cxl.json
-> >> > @@ -361,3 +361,72 @@
-> >> >  ##
-> >> >  {'command': 'cxl-inject-correctable-error',
-> >> >   'data': {'path': 'str', 'type': 'CxlCorErrorType'}}
-> >> > +
-> >> > +##
-> >> > +# @CXLDCExtentRecord: =20
-> >>=20
-> >> Such traffic jams of capital letters are hard to read.  What about
-> >> CxlDynamicCapacityExtent?
-> >>  =20
-> >> > +#
-> >> > +# Record of a single extent to add/release =20
-> >>=20
-> >> Suggest "A dynamic capacity extent."
-> >>  =20
-> >> > +#
-> >> > +# @offset: offset to the start of the region where the extent to be=
- operated =20
-> >>=20
-> >> Blank line here, please.
-> >>=20
-> >>=20
-> >>  =20
-> >> > +# @len: length of the extent
-> >> > +#
-> >> > +# Since: 9.1
-> >> > +##
-> >> > +{ 'struct': 'CXLDCExtentRecord',
-> >> > +  'data': {
-> >> > +      'offset':'uint64',
-> >> > +      'len': 'uint64'
-> >> > +  }
-> >> > +}
-> >> > +
-> >> > +##
-> >> > +# @cxl-add-dynamic-capacity:
-> >> > +#
-> >> > +# Command to start add dynamic capacity extents flow. The device wi=
-ll
-> >> > +# have to acknowledged the acceptance of the extents before they ar=
-e usable. =20
-> >>=20
-> >> This text needs work.  More on that at the end of my review. =20
-> >
-> > Yes. I will work on it for the next version once all the feedbacks
-> > are collected and comments are resolved.
-> >
-> > See below.
-> > =20
-> >>=20
-> >> docs/devel/qapi-code-gen.rst:
-> >>=20
-> >>     For legibility, wrap text paragraphs so every line is at most 70
-> >>     characters long.
-> >>=20
-> >>     Separate sentences with two spaces.
-> >>=20
-> >> More elsewhere.
-> >>  =20
-> >> > +#
-> >> > +# @path: CXL DCD canonical QOM path =20
-> >>=20
-> >> I'd prefer @qom-path, unless you can make a consistency argument for
-> >> @path.
-> >>=20
-> >> Sure the QOM path needs to be canonical?
-> >>=20
-> >> If not, what about "path to the CXL dynamic capacity device in the QOM
-> >> tree".  Intentionally close to existing descriptions of @qom-path
-> >> elsewhere. =20
-> >
-> > From the same file, I saw "path" was used for other commands, like
-> > "cxl-inject-memory-module-event", so I followed it.
-> > DCD is nothing different from "type 3 device" expect it can dynamically
-> > change capacity.=20
-> > Renaming it to "qom-path" is no problem for me, just want to make sure =
-it
-> > will not break the naming consistency. =20
->=20
-> Both @path and @qom-path are used (sadly).  @path is used for all kinds
-> of paths, whereas @qom-path is only used for QOM paths.  That's why I
-> prefer it.
->=20
-> However, you're making a compelling local consistency argument: cxl.json
-> uses only @path.  Sticking to that makes sense.
->=20
-> >> > +# @hid: host id =20
-> >>=20
-> >> @host-id, unless "HID" is established terminology in CXL DCD land. =20
-> >
-> > host-id works. =20
-> >>=20
-> >> What is a host ID? =20
-> >
-> > It is an id identifying the host to which the capacity is being added. =
-=20
->=20
-> How are these IDs assigned?
 
-Right now there is only 1 option.  We can drop this for now and introduce
-it when needed (Default of 0 will be fine).  Multi head device patches
-that will need this are on list though I haven't read them yet :(
+Changes in v6:
+- No code changes
+- Patch 1: Remove wrong comment about rasdaemon not being available (Jonathan)
+- Patch 1: Add Fixes tag (Jonathan)
+- Patch 3: Remove blank line in tag block (Jonathan)
+- Patch 1,4: Add Reviewed-by tags (Jonathan, Ira)
+- Link to v5: https://lore.kernel.org/cover.1714435815.git.alison.schofield@intel.com/
 
->=20
-> >> > +# @selection-policy: policy to use for selecting extents for adding=
- capacity =20
-> >>=20
-> >> Where are selection policies defined? =20
-> >
-> > It is defined in CXL specification: Specifies the policy to use for sel=
-ecting
-> > which extents comprise the added capacity =20
->=20
-> Include a reference to the spec here?
->=20
-> >> > +# @region-id: id of the region where the extent to add =20
-> >>=20
-> >> Is "region ID" the established terminology in CXL DCD land?  Or is
-> >> "region number" also used?  I'm asking because "ID" in this QEMU device
-> >> context suggests a connection to a qdev ID.
-> >>=20
-> >> If region number is fine, I'd rename to just @region, and rephrase the
-> >> description to avoid "ID".  Perhaps "number of the region the extent is
-> >> to be added to".  Not entirely happy with the phrasing, doesn't exactly
-> >> roll off the tongue, but "where the extent to add" sounds worse to my
-> >> ears.  Mind, I'm not a native speaker. =20
-> >
-> > Yes. region number is fine. Will rename it as "region"
-> > =20
-> >>  =20
-> >> > +# @tag: Context field =20
-> >>=20
-> >> What is this about? =20
-> >
-> > Based on the specification, it is "Context field utilized by implementa=
-tions
-> > that make use of the Dynamic Capacity feature.". Basically, it is a
-> > string (label) attached to an dynamic capacity extent so we can achieve
-> > specific purpose, like identifying or grouping extents. =20
->=20
-> Include a reference to the spec here?
+Begin Cover Letter:
+Add HPA translations to CXL events: cxl_dram and cxl_general_media
 
-Agreed - that is the best we can do. It'sa  magic value.
+Patch 1: 
+The DPA mask fix up patch must precede or be part of this set.
+It fixes the issue where upper 32 bits of DPA are truncated.
 
->=20
-> >> > +# @extents: Extents to add =20
-> >>=20
-> >> Blank lines between argument descriptions, please.
-> >>  =20
-> >> > +#
-> >> > +# Since : 9.1
-> >> > +##
-> >> > +{ 'command': 'cxl-add-dynamic-capacity',
-> >> > +  'data': { 'path': 'str',
-> >> > +            'hid': 'uint16',
-> >> > +            'selection-policy': 'uint8',
-> >> > +            'region-id': 'uint8',
-> >> > +            'tag': 'str',
-> >> > +            'extents': [ 'CXLDCExtentRecord' ]
-> >> > +           }
-> >> > +}
-> >> > +
-> >> > +##
-> >> > +# @cxl-release-dynamic-capacity:
-> >> > +#
-> >> > +# Command to start release dynamic capacity extents flow. The host =
-will
-> >> > +# need to respond to indicate that it has released the capacity bef=
-ore it
-> >> > +# is made unavailable for read and write and can be re-added. =20
-> >>=20
-> >> This text needs work.  More on that at the end of my review. =20
-> >
-> > Will do.
-> > =20
-> >>  =20
-> >> > +#
-> >> > +# @path: CXL DCD canonical QOM path =20
-> >>=20
-> >> My comment on cxl-add-dynamic-capacity applies.
-> >>  =20
-> >> > +# @hid: host id =20
-> >>=20
-> >> Likewise.
-> >>  =20
-> >> > +# @flags: bit[3:0] for removal policy, bit[4] for forced removal, b=
-it[5] for
-> >> > +#     sanitize on release, bit[7:6] reserved =20
-> >>=20
-> >> Where are these flags defined? =20
-> >
-> > Defined in the CXL specification, it defines the release behaviour. =20
->=20
-> Include a reference to the spec here?
->=20
-> Is the numeric encoding of flags appropriate?
+Patches 2 & 3:
+Before adding the new support, do some housekeeping and move related
+helpers to the region driver because there is no looking up region
+related info without CONFIG_CXL_REGION.
 
-Could definitely break them out as a bunch of flags / symbolic for
-the policy.
+Patch 4:
+The new functionality is introduced - cxl_dram & cxl_general_media
+events. Lookup and log the DPA->HPA translation along with the
+region name and region uuid.
 
->=20
-> In general, we prefer symbolic encodings.  Numeric encodings can make
-> sense when
->=20
-> =E2=80=A2 the encoding is stable, and
->=20
-> =E2=80=A2 QEMU doesn't need to decode it, only pass it on to something el=
-se, and
->=20
-> =E2=80=A2 both the QMP client and the "something else" prefer a numeric
->   encoding.
+Alison Schofield (4):
+  cxl/trace: Correct DPA field masks for general_media & dram events
+  cxl/region: Move cxl_dpa_to_region() work to the region driver
+  cxl/region: Move cxl_trace_hpa() work to the region driver
+  cxl/core: Add region info to cxl_general_media and cxl_dram events
 
-I don't think that really applies here - though Gregory's shim from
-MCTP to this will have to go through a simple dance to fill them in.
+ drivers/cxl/core/core.h   |  14 ++++
+ drivers/cxl/core/mbox.c   |  36 ++++++++--
+ drivers/cxl/core/memdev.c |  44 -------------
+ drivers/cxl/core/region.c | 135 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.c  |  91 -------------------------
+ drivers/cxl/core/trace.h  |  50 ++++++++++----
+ include/linux/cxl-event.h |  10 +++
+ 7 files changed, 226 insertions(+), 154 deletions(-)
 
->=20
-> >> > +# @region-id: id of the region where the extent to release =20
-> >>=20
-> >> My comment on cxl-add-dynamic-capacity applies.
-> >>  =20
-> >> > +# @tag: Context field =20
-> >>=20
-> >> Likewise.
-> >>  =20
-> >> > +# @extents: Extents to release
-> >> > +#
-> >> > +# Since : 9.1
-> >> > +##
-> >> > +{ 'command': 'cxl-release-dynamic-capacity',
-> >> > +  'data': { 'path': 'str',
-> >> > +            'hid': 'uint16',
-> >> > +            'flags': 'uint8',
-> >> > +            'region-id': 'uint8',
-> >> > +            'tag': 'str',
-> >> > +            'extents': [ 'CXLDCExtentRecord' ]
-> >> > +           }
-> >> > +} =20
-> >>=20
-> >> During review of v5, you wrote:
-> >>=20
-> >>     For add command, the host will send a mailbox command to response =
-to
-> >>     the add request to the device to indicate whether it accepts the a=
-dd
-> >>     capacity offer or not.
-> >>    =20
-> >>     For release command, the host send a mailbox command (not always a
-> >>     response since the host can proactively release capacity if it does
-> >>     not need it any more) to device to ask device release the capacity.
-> >>=20
-> >> Can you briefly sketch the protocol?  Peers and messages involved.
-> >> Possibly as a state diagram. =20
-> >
-> > Need to think about it. If we can polish the text nicely, maybe the
-> > sketch is not needed. My concern is that the sketch may
-> > introduce unwanted complexity as we expose too much details. The two
-> > commands provide ways to add/release dynamic capacity to/from a host,
-> > that is all. All the other information, like what the host will do, or
-> > how the device will react, are consequence of the command, not sure
-> > whether we want to include here. =20
->=20
-> The protocol sketch is for me, not necessarily the doc comment.  I'd
-> like to understand at high level how this stuff works, because only then
-> can I meaningfully review the docs.
->=20
-> > @Jonathan, Any thoughts on this?=20
-Makes sense to have a bit of artwork to explain what is going on.
-Suitable stuff for the cover letter or patch description for v8
-as well as in reply here.  Simple flows should be enough, we don't
-need to worry on the messy corner cases (hopefully)
 
-1) Offer extents to a host  + it accepts.
-2) Ask for it back, it gives it back.
-
-I can put my non existent artistic talents on it later in the
-week if Fan doesn't get there first.
-
->=20
-> Thanks!
->=20
+base-commit: 4cece764965020c22cff7665b18a012006359095
+-- 
+2.37.3
 
