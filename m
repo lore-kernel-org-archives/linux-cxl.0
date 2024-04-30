@@ -1,145 +1,210 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE4D199AD;
-	Tue, 30 Apr 2024 06:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF094199AD
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 06:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714459598; cv=none; b=c86ZgY58G+Dtd2QmmspOkKWY8QYkXHe5i99gFlpyNo8CzLwZitBl/muujLoh2I5uaJzY4mPAvOC8fqXCcL85+KE0aBwUe1LrLtNmFQxYbfOhkAoiKVNH3p7S8vOvfnobMpcC3W/t1hAbyBmmvlZ1d+KBPn3wBAkGscFMoSxmUX4=
+	t=1714460123; cv=none; b=Z1JW0FdaHirkna9SoN+/corYOQArsnsNklJS2rUN30mJzsszJc3jdpRjhnd7lKFM0LCA8jd1WdHN7Nt4dgzJz0L40ukdi1dxhDEai2UFoD11ZMCTdg1j9IAdTEUJbU9+Zi9XtOjG6Oz52HC5m19Iq9qDqlX/3jghs0G3S14FIw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714459598; c=relaxed/simple;
-	bh=BJHpOQBTYl2CusEmnHRWz9TzqP85OwFTue5pk4Z5ba4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IILD+880TMzR5nNFg49TS8IzkmGcBIJgOP8fz6Wks6av+MTnl0jXYIa6Dy2MNWPJBPLU7IssRKs6Gie4i/hgK7AB4YXHadyH1rU7XgAY6115x1OAoe68Lrk/XnF1krOv14x7d3L+GZuQGXCV2tSvYFnmXGxqw1twDTDtDCKYOIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbCASJSV; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714460123; c=relaxed/simple;
+	bh=ziRQrdBmN1fA8a1NWrD+P7gdayvrZUEpYEYLcVJN7RI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bfoW3PARp5EO4NY3o61ntUKVelfZCMqCnmZWDW33eYvJf+VJ5Z0yDXLAZt7eT9C33T82EXWZaqJTkUkEYd5aenOnswdF/oHzKiPmRaGjBkqD/Bjq0mEl9y4iQKtkWRUS0oCYkZAT5k9mtrKpJQ6gq5bnha326hc+t+cDVKcftB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d1gIZ+3D; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbCASJSV"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f3e3d789cdso3302938b3a.1;
-        Mon, 29 Apr 2024 23:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714459596; x=1715064396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8hCjGa0cyR+5KjlfrnK0wTPM9nmlXBCTQii4J3Gjgfc=;
-        b=VbCASJSVR7mb4y03jimQHsulDrXI5KKfUAYE9NqwPP3eN30bLLtYe5SwRPGmwgOwzx
-         sbNidX+3Qjdk2nbAPdq5aWH9tvB/syvXMuJh+inTn0SxqkrfMUcmXRfJgdYozExoB0Us
-         u2MWO22kxzVewCVqex1IXS6eiYAOqdxDG0Q3VZRLUrRhUY3+HtlNC5lV4RU3imtv0UCU
-         K35VtwMwrVPVE0MU4ah0LP9ScnhwAqrhnlsf3gX/QBbZBQ8Plw0h3bbSSLGSR5vvaInl
-         fVAHqL1/Re9q2yu641IWURD8vGuHjJt04QfS8J+ZIZrnbS+HgL99oWDoB9Iz60zdazO/
-         siSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714459596; x=1715064396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8hCjGa0cyR+5KjlfrnK0wTPM9nmlXBCTQii4J3Gjgfc=;
-        b=xMYLfx1UOKuxps1PuSM1eRtIQyGA3TkSoMUiWEGqzK4Cl4Gz9cpwT54vNl8QWg+gJp
-         WTAQbjsaUhTkhUK4vRJGK/g0bISQLh2Ma5gaz1kNf1xcmDsFnXva/LgVN9/qsTX6k0YZ
-         8OI8BTdmhend2gjOswqbXV05Z8W5ll0yejZ9eEL+um9Bn2gSNdhFO9VWcDyGeISwuQXc
-         GEqfhPNuTgFy2GCaAY23rZzgOmXqOV6/lt3yHGYlvXq70IyEUn/MWKKxxppH2oFjs/P8
-         kbi+mt5Icc46MvSjvBLU85TKiS3MDdaYf6E+1pI+dXbxH9BxYL/dUYTFpG8iKu/cFwek
-         5B+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUc7URIviLquADjEI1w3mynFsx59wXKufdixx6LHBl6o2eY7YsPYLUVhvAi9xS7ZmLsI5ib4ietB7OL9Ouujc6lwL5NWDfTM1oe183+5wtrCvXuAubzqoZJ0kNJL+Z5+8YM+MNgcuL5Zz9VZIl/gRsDQzdCkTI0T3pXERl+8w8CkHyQZoqp/hs7n3B7bFwIN6hpKEA4XVgjv9b13900MPo8yw==
-X-Gm-Message-State: AOJu0YxSLg5iausCRyfV932p6jezrW75rCuej0PU4lp4RFy/MhlBQLt7
-	f3WnQtfpNmgnZuiy5Bm4tijJfDL2Zk3NUxNusOrT7y0DbUrhMDlv
-X-Google-Smtp-Source: AGHT+IHZptiykpZhYjFmG4OGGymocqD+APs98M8NEhYGo1chm3Kg5U9XPh+dOTwbEH1pATR3JSfM+A==
-X-Received: by 2002:a05:6a20:de96:b0:1aa:7097:49e2 with SMTP id la22-20020a056a20de9600b001aa709749e2mr12942263pzb.50.1714459596260;
-        Mon, 29 Apr 2024 23:46:36 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id u2-20020a170902e5c200b001e556734814sm21511890plf.134.2024.04.29.23.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 23:46:35 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 64E1318462BA1; Tue, 30 Apr 2024 13:46:32 +0700 (WIB)
-Date: Tue, 30 Apr 2024 13:46:32 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: John Groves <John@groves.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Linux CXL <linux-cxl@vger.kernel.org>,
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>,
-	Linux NVIDMM <nvdimm@lists.linux.dev>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: John Groves <jgroves@micron.com>, john@jagalactic.com,
-	Dave Chinner <david@fromorbit.com>,
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com,
-	gregory.price@memverge.com, Randy Dunlap <rdunlap@infradead.org>,
-	Jerome Glisse <jglisse@google.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Eishan Mirakhur <emirakhur@micron.com>,
-	Ravi Shankar <venkataravis@micron.com>,
-	Srinivasulu Thanneeru <sthanneeru@micron.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Steve French <stfrench@microsoft.com>,
-	Nathan Lynch <nathanl@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Julien Panis <jpanis@baylibre.com>,
-	Stanislav Fomichev <sdf@google.com>,
-	Dongsheng Yang <dongsheng.yang@easystack.cn>,
-	Mao Zhu <zhumao001@208suo.com>, Ran Sun <sunran001@208suo.com>,
-	Xiang wangx <wangxiang@cdjrlc.com>,
-	Shaomin Deng <dengshaomin@cdjrlc.com>,
-	Charles Han <hanchunchao@inspur.com>,
-	Attreyee M <tintinm2017@gmail.com>
-Subject: Re: [RFC PATCH v2 01/12] famfs: Introduce famfs documentation
-Message-ID: <ZjCTyOvpBDBuCg5i@archie.me>
-References: <cover.1714409084.git.john@groves.net>
- <0270b3e2d4c6511990978479771598ad62cf2ddd.1714409084.git.john@groves.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d1gIZ+3D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714460120;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bubZGyS4WO89HecUmrs6HvGAjmtFDOhiVexXEzIIK8o=;
+	b=d1gIZ+3DM4lGN4P9dBpGNd26RNCfOn8addmuM//a5DSwHKEo6QvT4XzSOsKrVQvHV6C4H0
+	MKS4njBPIZWFBQ2v5ULpVPx/rHwg+p98LFUXqfmd8QDjTo1K9Y4i2H7B8fOHdcRMVvwimE
+	UdLj6JPLcplPEpU9MslXH/o6vq3XYiA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-6-UzxNebrdOAKNkPJ4RPikDg-1; Tue, 30 Apr 2024 02:55:14 -0400
+X-MC-Unique: UzxNebrdOAKNkPJ4RPikDg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F6B818065B1;
+	Tue, 30 Apr 2024 06:55:14 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.39.192.247])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D51041121306;
+	Tue, 30 Apr 2024 06:55:13 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id F3AA721E66E5; Tue, 30 Apr 2024 08:55:12 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: <ankita@nvidia.com>,  <marcel.apfelbaum@gmail.com>,
+  <philmd@linaro.org>,  <mst@redhat.com>,  <qemu-devel@nongnu.org>,  Dave
+ Jiang <dave.jiang@intel.com>,  Huang Ying <ying.huang@intel.com>,  Paolo
+ Bonzini <pbonzini@redhat.com>,  <eduardo@habkost.net>,
+  <imammedo@redhat.com>,  <linux-cxl@vger.kernel.org>,
+  <linuxarm@huawei.com>,  Michael Roth <michael.roth@amd.com>,  Ani Sinha
+ <anisinha@redhat.com>
+Subject: Re: [PATCH 3/6] hw/acpi: Generic Port Affinity Structure support
+In-Reply-To: <20240429185046.00002a7c@Huawei.com> (Jonathan Cameron's message
+	of "Mon, 29 Apr 2024 18:50:46 +0100")
+References: <20240403102927.31263-1-Jonathan.Cameron@huawei.com>
+	<20240403102927.31263-4-Jonathan.Cameron@huawei.com>
+	<87r0ewcppm.fsf@pond.sub.org> <20240429185046.00002a7c@Huawei.com>
+Date: Tue, 30 Apr 2024 08:55:12 +0200
+Message-ID: <87frv3e3vz.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="crT4BUp9nHuKakh4"
-Content-Disposition: inline
-In-Reply-To: <0270b3e2d4c6511990978479771598ad62cf2ddd.1714409084.git.john@groves.net>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
---crT4BUp9nHuKakh4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, 23 Apr 2024 12:56:21 +0200
+> Markus Armbruster <armbru@redhat.com> wrote:
+>
+>> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+>> 
+>> > These are very similar to the recently added Generic Initiators
+>> > but instead of representing an initiator of memory traffic they
+>> > represent an edge point beyond which may lie either targets or
+>> > initiators.  Here we add these ports such that they may
+>> > be targets of hmat_lb records to describe the latency and
+>> > bandwidth from host side initiators to the port.  A descoverable
+>> > mechanism such as UEFI CDAT read from CXL devices and switches
+>> > is used to discover the remainder fo the path and the OS can build
+>> > up full latency and bandwidth numbers as need for work and data
+>> > placement decisions.
+>> >
+>> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> Hi Markus,
+>
+> I've again managed a bad job of defining an interface - thanks for
+> your help!
 
-On Mon, Apr 29, 2024 at 12:04:17PM -0500, John Groves wrote:
-> * Introduce Documentation/filesystems/famfs.rst into the Documentation
->   tree and filesystems index
-> * Add famfs famfs.rst to the filesystems doc index
-> * Add famfs' ioctl opcodes to ioctl-number.rst
-> * Update MAINTAINERS FILE
->=20
+Good interfaces are hard!
 
-The doc LGTM, thanks!
+>> > ---
+>> >  qapi/qom.json                            |  18 +++
+>> >  include/hw/acpi/acpi_generic_initiator.h |  18 ++-
+>> >  include/hw/pci/pci_bridge.h              |   1 +
+>> >  hw/acpi/acpi_generic_initiator.c         | 141 +++++++++++++++++------
+>> >  hw/pci-bridge/pci_expander_bridge.c      |   1 -
+>> >  5 files changed, 141 insertions(+), 38 deletions(-)
+>> >
+>> > diff --git a/qapi/qom.json b/qapi/qom.json
+>> > index 85e6b4f84a..5480d9ca24 100644
+>> > --- a/qapi/qom.json
+>> > +++ b/qapi/qom.json
+>> > @@ -826,6 +826,22 @@
+>> >    'data': { 'pci-dev': 'str',
+>> >              'node': 'uint32' } }
+>> >  
+>> > +
+>> > +##
+>> > +# @AcpiGenericPortProperties:
+>> > +#
+>> > +# Properties for acpi-generic-port objects.
+>> > +#
+>> > +# @pci-bus: PCI bus of the hostbridge associated with this SRAT entry  
+>> 
+>> What's this exactly?  A QOM path?  A qdev ID?  Something else?
+>
+> QOM path I believe as going to call object_resolve_path_type() on it.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+QOM path then.
 
---=20
-An old man doll... just what I always wanted! - Clara
+> Oddity is it's defined for the bus, not the host bridge that
+> we care about as the host bridge doesn't have a convenient id to let
+> us identify it.
+>
+> e.g. It is specified via --device pxb-cxl,id=XXXX
+> of TYPE_PXB_CXL_HOST in the command line but ends up on the
+> TYPE_PCI_BUS with parent set to the PXB_CXL_HOST.
+> Normally we just want this bus for hanging root ports of it.
+>
+> I can clarify it's the QOM path but I'm struggling a bit to explain
+> the relationship without resorting to an example.
+> This should also not mention SRAT as at some stage I'd expect DT
+> bindings to provide similar functionality.
 
---crT4BUp9nHuKakh4
-Content-Type: application/pgp-signature; name="signature.asc"
+Let's start with an example.  Not to put it into the doc comment, only
+to help me understand what you need.  Hopefully I can then assist with
+improving the interface and/or its documentation.
 
------BEGIN PGP SIGNATURE-----
+>> > +#
+>> > +# @node: numa node associated with the PCI device  
+>> 
+>> NUMA
+>> 
+>> Is this a NUMA node ID?
+>
+> Fair question with a non obvious answer.  ACPI wise it's a proximity domain.
+> In every other SRAT entry (which define proximity domains) this does map
+> to a NUMA node in an operating system as they contain at least either some
+> form of memory access initiator (CPU, Generic Initiator etc) or a target (memory).
+>
+> A Generic Port is subtly different in that it defines a proximity domain
+> that in of itself is not what we'd think of as a NUMA node but
+> rather an entity that exists to provide the info to the OS to stitch
+> together non discoverable and discoverable buses.
+>
+> So I should have gone with something more specific. Could add this to
+> the parameter docs, or is it too much?
+>
+> @node: Similar to a NUMA node ID, but instead of providing a reference
+>        point used for defining NUMA distances and access characteristics
+>        to memory or from an initiator (e.g. CPU), this node defines the
+>        boundary point between non discoverable system buses which must be
+>        discovered from firmware, and a discoverable bus.  NUMA distances
+>        and access characteristics are defined to and from that point,
+>        but for system software to establish full initiator to target
+>        characteristics this information must be combined with information
+>        retrieved form the discoverable part of the path.  An example would
+>        use CDAT information read from devices and switches in conjunction
+>        with link characteristics read from PCIe Configuration space.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjCTwwAKCRD2uYlJVVFO
-o6cyAP9LSH332uDKE+seiJLwDjMnIq+YE0884MKXbf8SHc2gdQEArqUm84vOu682
-HXx1CyZQ45bTEfyOQgYNRg/+bNbzpw8=
-=+4jA
------END PGP SIGNATURE-----
+This is mostly greek to me :)  Bit I don't think it's too much.
 
---crT4BUp9nHuKakh4--
+>> > +#
+>> > +# Since: 9.1
+>> > +##
+>> > +{ 'struct': 'AcpiGenericPortProperties',
+>> > +  'data': { 'pci-bus': 'str',
+>> > +            'node': 'uint32' } }
+>> > +
+>> >  ##
+>> >  # @RngProperties:
+>> >  #
+>> > @@ -944,6 +960,7 @@
+>> >  { 'enum': 'ObjectType',
+>> >    'data': [
+>> >      'acpi-generic-initiator',
+>> > +    'acpi-generic-port',
+>> >      'authz-list',
+>> >      'authz-listfile',
+>> >      'authz-pam',
+>> > @@ -1016,6 +1033,7 @@
+>> >    'discriminator': 'qom-type',
+>> >    'data': {
+>> >        'acpi-generic-initiator':     'AcpiGenericInitiatorProperties',
+>> > +      'acpi-generic-port':          'AcpiGenericPortProperties',
+>> >        'authz-list':                 'AuthZListProperties',
+>> >        'authz-listfile':             'AuthZListFileProperties',
+>> >        'authz-pam':                  'AuthZPAMProperties',  
+>> 
+>> [...]
+>> 
+>> 
+
