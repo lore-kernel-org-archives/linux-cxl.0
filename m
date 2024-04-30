@@ -1,110 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D88618133A;
-	Tue, 30 Apr 2024 17:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7898423C9;
+	Tue, 30 Apr 2024 18:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714499086; cv=none; b=Z3Hfi5ImXy0F+BN3PCsUM9ZNfN5+QNSShB2Ud0NhLt0XPWAd+BvPiny+cmfZG4e7tnrqHo7jEYiUZYx5jOHIU0Z9SAxnKfWsBaT9Aac5ZEuzvqIjrcFAHLdNn7cCkJBP0jRB2btAwQcWcUIJ5E1Mn7vYIu77tOfbsLR5VGwlKTw=
+	t=1714501951; cv=none; b=NWMlBwRDRqTj7dcmKpTdbV4SOUIqLxMzqqHU9Qo+Ry1KtluD5wSi08rPFFWqGO3K1mU6m4xTaTvHTklM62hKqSr0UfzVrV0bz9Qn9F9aMekbDZ8t8x+NnQ2MUOOXNGccT90J7n/DO7UMIO1nd9w0V/86OVXYe6FdgfL1308TPlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714499086; c=relaxed/simple;
-	bh=NhTlptPmEedEHUiT46vqy1jTU5giIPfdgp2TteFj/UU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HjrAfEb5F18yGvLEKcDfp0x+qIqxvi6M5SOgZ8FOKKcH6uCW+GyFD3PgsibyQTKF6ZnS5kz/5EHhawRx9rnbj/jbLFfOlLuQGYdt40OJEWtviDOvXH5WOJJrv+2oxs5ssM3pftYTlx34q4Y7WcF5255YNKuamUcFcVvmHUkKSeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ggqfmnTI; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1714501951; c=relaxed/simple;
+	bh=sn8HIeJeJeVc1R6mxR/8VMnsMTi83wrrXNCYmLtB/kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gjBP26sMAknlHEFtIsaCqa+er8W3TPboUpctR6HOi2S4q2rjR+YnM97QkdANg2/Z+eS6jLER7DcO7/UNj9AKNfhuqDwJc4tKVIFjWV8XJ0I5DoYBcN6jS1w9pFZv6saA+su16jaMC8PkXWjA3TZ3+Emy96sJWqkegIvA7x/pVBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M2LF3w5Q; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ggqfmnTI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M2LF3w5Q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714499084; x=1746035084;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=NhTlptPmEedEHUiT46vqy1jTU5giIPfdgp2TteFj/UU=;
-  b=ggqfmnTI6RzGiyCpqI9k5msSlrX6ul5iw2pJkLPEjg8BrNapP1dT6zeC
-   HsfSJfeBvi5nzQa82qg8HJrCrk74sWG0csBwY0pkZW1x7WWIFpapm6+iV
-   dhjmV0uEj4KmN1gz+nnwzBBnf55B6KOpxdIq0dnY4Tn79/DfAuJy/gzMA
-   jBlcJkDiNCO7GKfCqwnMSgYBUxSjlvXvbN8/no9NyGeqUl6nVkpWaNPpH
-   BDTtP/onhsWT7U0V3LUBw7BHWvwkjyOYR4C4YHnLpgOhO5LY9hYl87Ru7
-   l3iC1IihlseNnSEUCAiElZ1wGkk6VP0p7w9BEZqSQDcdtBVpxzB3EMQ1H
-   Q==;
-X-CSE-ConnectionGUID: znT0yRx4RU2+t9DF9zfAfw==
-X-CSE-MsgGUID: 8ygP5gO9SzO32bhZJqX6GA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="27669841"
+  t=1714501950; x=1746037950;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sn8HIeJeJeVc1R6mxR/8VMnsMTi83wrrXNCYmLtB/kk=;
+  b=M2LF3w5Q6fX915fRlc0WbdRhSkMXUZQmT/R1yRmxBwx+ApgijBtwcOWQ
+   6jyHzkoYxGuKXOIBjhoWqKFdvQRw7Nfa65kDTpCTHlcVYnRRjPlX7zOkZ
+   YiD02XYwU9TZv6tTRjE1c3COOoj6VscMjw9Vyq2tLSIe+O9d8voD1WfSf
+   /R79LBpyNRdj8P6y/CFTCIdlWgBO7EIEVIiotS/GfXfVtXGXh5W39CNJH
+   NVd1qmzvyndThyvTiH3lUpOmUco8DUVBicfErbt6Bkl8L3HuKg/DMuPsC
+   MVh4Kmq44Vg6h1i+ODNveOHOo9Q2pQZKHIBwLmyoI27DooqcAme6CWpLG
+   w==;
+X-CSE-ConnectionGUID: KAkH2ZAFRr2xZ7TBFcXZ7g==
+X-CSE-MsgGUID: KTfzve/6Q527sQUmitdBvQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10447766"
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="27669841"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 10:44:42 -0700
-X-CSE-ConnectionGUID: MTZbRtiIT46p1EZt8gC0Xw==
-X-CSE-MsgGUID: PtnL8bTtQJuz5mXOFvW8pQ==
+   d="scan'208";a="10447766"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 11:32:29 -0700
+X-CSE-ConnectionGUID: 4LGhSSpnTYW270yu5bv0Yw==
+X-CSE-MsgGUID: 1Eb4y7CjRMGfVLpIYkAbVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26534780"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.82.45])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 10:44:42 -0700
-From: Vishal Verma <vishal.l.verma@intel.com>
-Date: Tue, 30 Apr 2024 11:44:25 -0600
-Subject: [PATCH v3 3/4] dax/bus.c: Don't use down_write_killable for
- non-user processes
+   d="scan'208";a="26555565"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 11:32:28 -0700
+Date: Tue, 30 Apr 2024 11:32:27 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 1/2] acpi/ghes: Process CXL Component Events
+Message-ID: <ZjE5O87IxxMAoaFz@agluck-desk3>
+References: <20240426-cxl-cper3-v4-0-58076cce1624@intel.com>
+ <20240426-cxl-cper3-v4-1-58076cce1624@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-vv-dax_abi_fixes-v3-3-e3dcd755774c@intel.com>
-References: <20240430-vv-dax_abi_fixes-v3-0-e3dcd755774c@intel.com>
-In-Reply-To: <20240430-vv-dax_abi_fixes-v3-0-e3dcd755774c@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.14-dev-5ce50
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1045;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=NhTlptPmEedEHUiT46vqy1jTU5giIPfdgp2TteFj/UU=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDGmGehxcG/a8TGZ7GGendtTw8nyFaR2CS4KDrHMureQTe
- 8XOJx7RUcrCIMbFICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgIl4tTEy/F+18KzNXK/pAbHM
- YZzhbhWfskIF/QLXnjxRPZ95RabIdob/yWsvbDY4MY9zwd3/egXFfE36dhuc1cQ9lx8WVVhUH3i
- FGwA=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240426-cxl-cper3-v4-1-58076cce1624@intel.com>
 
-Change an instance of down_write_killable() to a simple down_write() where
-there is no user process that might want to interrupt the operation.
+On Fri, Apr 26, 2024 at 08:34:00PM -0700, Ira Weiny wrote:
+> @@ -707,6 +805,18 @@ static bool ghes_do_proc(struct ghes *ghes,
+>  		}
+>  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+>  			queued = ghes_handle_arm_hw_error(gdata, sev, sync);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
+> +			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+> +
+> +			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
+> +			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+> +
+> +			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
+> +			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+> +
+> +			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
 
-Fixes: c05ae9d85b47 ("dax/bus.c: replace driver-core lock usage by a local rwsem")
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- drivers/dax/bus.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+You pass "rec" to cxl_cper_post_event() in all these cases for later
+processing in context where you can sleep to get locks. But that's
+just a pointer somewhere into the "gdata" error record received from
+BIOS.
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index e2c7354ce328..0011a6e6a8f2 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1540,12 +1540,8 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
- {
- 	struct dev_dax *dev_dax;
--	int rc;
--
--	rc = down_write_killable(&dax_region_rwsem);
--	if (rc)
--		return ERR_PTR(rc);
- 
-+	down_write(&dax_region_rwsem);
- 	dev_dax = __devm_create_dev_dax(data);
- 	up_write(&dax_region_rwsem);
- 
+What's the lifetime of that record? Can it be re-used/overwritten
+before that other kernel thread gets around to looking at it?
 
--- 
-2.44.0
-
+-Tony
