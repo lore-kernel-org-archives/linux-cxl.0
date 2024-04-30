@@ -1,40 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB8112C7FA;
-	Tue, 30 Apr 2024 16:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2336B181BA7
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 16:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495548; cv=none; b=KvNjd+4kuSbvpj/8WKGqH6W212v80hakT2XIQHGEtXyD2CcMArPhXEkrvkhPT1oV0PZWi9jGR4rkgPtPawGNjELCxSRXsVEe5xvRWloyEX14Ju6Ze6onh6zrL7e1JmIHd21rXzC4dG2wcDDYdLNm9NZkDAOTyMigs8RD4dtgeg4=
+	t=1714496069; cv=none; b=EocrzPfckma4OkxHqm+x0kg1NMbQ9os8c76fCFZbsKDI0p9d3JOTtK+K0AsJRNeZud7QsHq62jZ2QobI4JN8WOTYIuBUIKrJFbVUyD9dZUo9fk3I9vGwGaX++ZYEgnZWpYxuHQkTn5ItGG+P9BWKDn5vxoVVX4urJ3u8XIAlOas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495548; c=relaxed/simple;
-	bh=mfIY6Gne2tgJLNjHJkomMG8UMLhVXGCkif1Z7JBkoBs=;
+	s=arc-20240116; t=1714496069; c=relaxed/simple;
+	bh=Ku6ula7mH3d+zVzqSj+/4lVsY9mO5LYKwI9qfc7vRaQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WtHymQVfPZw5Mo4cois1PmIUfaz2srDAX8lhe/n9MclncN/NCunbOJvGpZqmjqL/NVi95inHUFjz1WqsppVWG80op+XavLKWtWIOy6TWizCs4kwuYcL211o26pha2iK012zrAUEXb2fUof8YTjddWeQf2Vx3JIfLe1Y6WkxAIqs=
+	 MIME-Version:Content-Type; b=MZ8d1z6jSnJxdUVqgA+elSU4ejzdgaTWiQEDw0keTog66WHAJmoCfviAVBrbKQLP7Xn9HXeDoPi8WTRgPgx+4jHaoxoDPzqefOLT5Ld1hgcS0cCONtMjEHyK7UHGONHcV2bHGjY1PdoX8rulruX8o+mxJH6nrTNJ5RA+MDsAKLA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTQx11kDYz6J6dN;
-	Wed,  1 May 2024 00:43:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTR772KWRz67HtH;
+	Wed,  1 May 2024 00:51:47 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5CF17140CF4;
-	Wed,  1 May 2024 00:45:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DA177140518;
+	Wed,  1 May 2024 00:54:24 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
- 2024 17:45:41 +0100
-Date: Tue, 30 Apr 2024 17:45:40 +0100
+ 2024 17:54:24 +0100
+Date: Tue, 30 Apr 2024 17:54:23 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: Fix cxlr_pmem leaks
-Message-ID: <20240430174540.000039ce@Huawei.com>
-In-Reply-To: <20240428030748.318985-1-lizhijian@fujitsu.com>
-References: <20240428030748.318985-1-lizhijian@fujitsu.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>
+Subject: Re: [PATCH] cxl: Fix cxl_endpoint_get_perf_coordinate() support for
+ RCH
+Message-ID: <20240430175423.00003589@Huawei.com>
+In-Reply-To: <Zi-RNOZ7OlK6rbuA@rric.localdomain>
+References: <20240426224913.1027420-1-dave.jiang@intel.com>
+	<662c425f15f73_b6e0294dd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<Zi-RNOZ7OlK6rbuA@rric.localdomain>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,41 +51,33 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun, 28 Apr 2024 11:07:48 +0800
-Li Zhijian <lizhijian@fujitsu.com> wrote:
+On Mon, 29 Apr 2024 14:23:16 +0200
+Robert Richter <rrichter@amd.com> wrote:
 
-> Before this error path, cxlr_pmem pointed to a kzalloc() memory, free
-> it to avoid this memory leaking.
+> On 26.04.24 17:10:07, Dan Williams wrote:
+> > Now, that said, if someone can think of why the driver needs to do
+> > dynamic performance enumeration for RCH (i.e. a platform BIOS does not
+> > populate HMAT), they should speak up now.  
+
+It would have to selectively populate HMAT as we'd need the
+Generic Port distances anyway.  That is an odd corner indeed.
+
+Agreed on disabling it until someone shouts.
+
 > 
-> Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-
-Fix is good, but this looks like nice case for conversion to cleanup.h stuff
-perhaps better to just do that?  Would need a small amount of dancing
-on the final return to return cxlr->cxlr_pmem + pointer steal
-when setting cxlr->cxlr_pmem a few lines up.
-
-Also guard for the rwsem.
-
-Dave, Dan, worth doing or take this minimal fix and spin around later?
-
-If you think this is the way to go.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/region.c | 1 +
->  1 file changed, 1 insertion(+)
+> I wouldn't stick with that forever as you never know, but for now
+> disabling it for RCDs looks good to me to fix this, esp. considering
+> we are already at -rc6.
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 5c186e0a39b9..812b2948b6c6 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2719,6 +2719,7 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
->  		if (i == 0) {
->  			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
->  			if (!cxl_nvb) {
-> +				kfree(cxlr_pmem);
->  				cxlr_pmem = ERR_PTR(-ENODEV);
->  				goto out;
->  			}
+> E.g I found in cxl-3.1, 9.11.6 RCD Discovery:
+> 
+> """
+> In the future, a
+> CXL-aware OS may extract this information directly from the device via
+> Table Access DOE.
+> """
+> 
+> Thanks,
+> 
+> -Robert
 
