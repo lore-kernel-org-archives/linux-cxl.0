@@ -1,164 +1,176 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DD88F6E;
-	Tue, 30 Apr 2024 21:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0461A0AF9
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 21:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714510897; cv=none; b=SMH2u8jopQ29F4KYJX1i5wSGqbSLTGznLDXHedsLhrVGM2QTd07ApuO9HFLG17Ge5vAAkx9kF76/Ix/LFoEAeIBkkHMH2ek91SYY+yruyuQ0DHoslnuZsx2PZc+XQdQ6yADvR2SMrbzYoFIIrBwjuUHG2Or2732Oq9401W9u/Fc=
+	t=1714514343; cv=none; b=TQsLHCL2AXCA5TSJOA3mg3ATOUCd3yBVyEsdtCY6PDRFvpfYO1DcOELp1Y46/Vs7ptyayceLQ0sq2HTe0zA3ZgK2LPdXkWPWNEVmeDj50KfgbT0gAMxrOYEHcsy1Nv4ctXeGYDKSD5TZmbEZz+945CJ4s/uTHx1wtx0CbJAMrwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714510897; c=relaxed/simple;
-	bh=ivAeT8Lh4hTJJoOvGma6HWl1YOPnEPRgEYoTLHjirCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYYWuSrZaJEaFtpSrgy2j69Zx/QX+stECqVK4wC9QZq1zQS7pJxsUpxTGWOPDd4v4g69rBnDG3HN1Uhcea8+KWtnNftux5pnFK0Pn840qNN5lchSIqoZXUsDuuWlHMUsYQS3TAn+tp2WACtLWTtis3RVF3Nl9GKSU6kyXuS2//I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=reW6wlvQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1714514343; c=relaxed/simple;
+	bh=UW15NPdktJcHHetgrISz8mlJ3BbcLOMwIT+D2804+rs=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=Lc4RUC4iCxpCW7kk5UCbOYuKepXWm/KyLIINobzXQXz26a4CmnVBCm2RgRSFQ5KjihLln8JQMJRoCG18FA7AMwhOuOjtzB2LriY2Ek2tp+jdDlqywuFi666ufbbaq88SLMgUbH80oWCjf+CDK6r3iPjm879FxcNJu7PDeYB/pBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aIXcV8yU; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="reW6wlvQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yPx7hXYNWdm8HsLrOMtYckL5fyGc+4ZNrlVxqpRmA3c=; b=reW6wlvQ6JU/8Zc/bx4AUuZHpd
-	cncMdTPtYZ+Xfbp8fRosXOGkj0Qe9qeZQGSZMwqe9m124aYjJFf2qha0bgADfZvZlMF+9h5am+R9X
-	SI2FeiyRXBUZlfCWEgmawzcsJYVKokkbTdUM7ahhc4/+LZGmjbnqT4JYEBUmefACODSkz7wuYJ/Xe
-	tlEuP7NYmxbW2dIBZyo8f2Lf32Sr2nxgMeaPADT8wdzIBKZB7ghJjdWhAIQYGhl9+lIgFM5zkVMlv
-	yphG0qermw6JDG1nP6dmYZE30taJSP1BodvfnF6p8zJAZxggdc+rPa25lJPDJj0bZAeQPBbTowxjo
-	JIZaF9kQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1ubD-0000000FZHT-1b7j;
-	Tue, 30 Apr 2024 21:01:15 +0000
-Date: Tue, 30 Apr 2024 22:01:15 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: John Groves <John@groves.net>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	nvdimm@lists.linux.dev, John Groves <jgroves@micron.com>,
-	john@jagalactic.com, Dave Chinner <david@fromorbit.com>,
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com,
-	gregory.price@memverge.com, Randy Dunlap <rdunlap@infradead.org>,
-	Jerome Glisse <jglisse@google.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Eishan Mirakhur <emirakhur@micron.com>,
-	Ravi Shankar <venkataravis@micron.com>,
-	Srinivasulu Thanneeru <sthanneeru@micron.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Steve French <stfrench@microsoft.com>,
-	Nathan Lynch <nathanl@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Julien Panis <jpanis@baylibre.com>,
-	Stanislav Fomichev <sdf@google.com>,
-	Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [RFC PATCH v2 00/12] Introduce the famfs shared-memory file
- system
-Message-ID: <ZjFcG9Q1CegMPj_7@casper.infradead.org>
-References: <cover.1714409084.git.john@groves.net>
- <Zi_n15gvA89rGZa_@casper.infradead.org>
- <c3mhc33u4yqhd75xc2ew53iuumg3c2vi3nk3msupt35fj7qkrp@pve6htn64e7c>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aIXcV8yU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714514342; x=1746050342;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UW15NPdktJcHHetgrISz8mlJ3BbcLOMwIT+D2804+rs=;
+  b=aIXcV8yUIZO3bheJCHC9XIV0p4IFmVk8MvGGjkhGmLAs2iG8tKNmgUOl
+   YckJxPt4tG95cv/hNMH07XICYKiJd/w2ZHgaSloB9QS9IjWy1d9UIcr7P
+   6BBZenDB0DpWtWT5vCMDFrzwOUDy0EJnHoYZy2UbiS4DgdXzuZzJajg7E
+   7wEy+vJogQf8o+jpLc5G8xRvGdUV+K4nzEgq02ZEbZ5dl+wonK0TzSWXc
+   Vp/+SNf/IpmtalAc1gtrXpjV1WUdxdnigZKozvTVBrbO5NACIqJUVcW3k
+   nHlWJSvhe5K2LePmf7ifEIfoqbKk+RAD/0RxF62V9AHvenGB1pWYj/hjx
+   A==;
+X-CSE-ConnectionGUID: iCRHJKguTvGrrT+7eaOfSA==
+X-CSE-MsgGUID: RaPupLKdQaKIeqZkYf7lUw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10174384"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="10174384"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:59:01 -0700
+X-CSE-ConnectionGUID: C4Nlj5NNQnCzbERp5SOBUA==
+X-CSE-MsgGUID: Fz0+mxw6QoSmdikB03ccFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="49817131"
+Received: from seastwoo-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.161.93])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:59:01 -0700
+Subject: [PATCH] cxl/region: Convert cxl_pmem_region_alloc to scope-based
+ resource management
+From: Dan Williams <dan.j.williams@intel.com>
+To: dave.jiang@intel.com
+Cc: Li Zhijian <lizhijian@fujitsu.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, linux-cxl@vger.kernel.org
+Date: Tue, 30 Apr 2024 14:59:00 -0700
+Message-ID: <171451430965.1147997.15782562063090960666.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3mhc33u4yqhd75xc2ew53iuumg3c2vi3nk3msupt35fj7qkrp@pve6htn64e7c>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 29, 2024 at 09:11:52PM -0500, John Groves wrote:
-> On 24/04/29 07:32PM, Matthew Wilcox wrote:
-> > On Mon, Apr 29, 2024 at 12:04:16PM -0500, John Groves wrote:
-> > > This patch set introduces famfs[1] - a special-purpose fs-dax file system
-> > > for sharable disaggregated or fabric-attached memory (FAM). Famfs is not
-> > > CXL-specific in anyway way.
-> > > 
-> > > * Famfs creates a simple access method for storing and sharing data in
-> > >   sharable memory. The memory is exposed and accessed as memory-mappable
-> > >   dax files.
-> > > * Famfs supports multiple hosts mounting the same file system from the
-> > >   same memory (something existing fs-dax file systems don't do).
-> > 
-> > Yes, but we do already have two filesystems that support shared storage,
-> > and are rather more advanced than famfs -- GFS2 and OCFS2.  What are
-> > the pros and cons of improving either of those to support DAX rather
-> > than starting again with a new filesystem?
-> > 
-> 
-> Thanks for paying attention to this Willy.
+A recent bugfix to cxl_pmem_region_alloc() to fix an
+error-unwind-memleak [1], highlighted a use case for scope-based resource
+management.
 
-Well, don't mistake this for an endorsement!  I remain convinced that
-this is a science project, not a product.  I am hugely sceptical of
-disaggregated systems, mostly because I've seen so many fail.  And they
-rarely attempt to answer the "janitor tripped over the cable" problem,
-the "we need to upgrade the firmware on the switch" problem, or a bunch
-of other problems I've outlined in the past on this list.
+Delete the goto for releasing @cxl_region_rwsem, and return error codes
+directly from error condition paths.
 
-So I am not supportive of any changes you want to make to the core kernel
-to support this kind of adventure.  Play in your own sandbox all you
-like, but not one line of code change in the core.  Unless it's something
-generally beneficial, of course; you mentioned refactoring DAX and that
-might be a good thing for everybody.
+The caller, devm_cxl_add_pmem_region(), is no longer given @cxlr_pmem
+directly it must retrieve it from @cxlr->cxlr_pmem. This retrieval from
+@cxlr was already in place for @cxlr->cxl_nvb, and converting
+cxl_pmem_region_alloc() to return an int makes it less awkward to handle
+no_free_ptr().
 
-> * Famfs is not, not, not a general purpose file system.
-> * One can think of famfs as a shared memory allocator where allocations can be
->   accessed as files. For certain data analytics work flows (especially 
->   involving Apache Arrow data frames) this is really powerful. Consumers of
->   data frames commonly use mmap(MAP_SHARED), and can benefit from the memory
->   de-duplication of shared memory and don't need any new abstractions.
+Cc: Li Zhijian <lizhijian@fujitsu.com>
+Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Closes: http://lore.kernel.org/r/20240430174540.000039ce@Huawei.com
+Link: http://lore.kernel.org/r/20240428030748.318985-1-lizhijian@fujitsu.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Hey Dave, this applies on top of Li's fix.
 
-... and are OK with the extra latency?
+ drivers/cxl/core/region.c |   43 +++++++++++++++++--------------------------
+ 1 file changed, 17 insertions(+), 26 deletions(-)
 
-> * Famfs is not really a data storage tool. It's more of a shared-memroy 
->   allocation tool that has the benefit of allocations being accesssible 
->   (and memory-mappable) as files. So a lot of software can automatically use 
->   it.
-> * Famfs is oriented to dumping sharable data into files and then allowing a
->   scale-out cluster to share it (often read-only) to access a single copy in
->   shared memory.
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 812b2948b6c6..e0577d99c4db 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2681,26 +2681,21 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
+ 
+ static struct lock_class_key cxl_pmem_region_key;
+ 
+-static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
++static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_nvdimm_bridge *cxl_nvb;
+-	struct cxl_pmem_region *cxlr_pmem;
+ 	struct device *dev;
+ 	int i;
+ 
+-	down_read(&cxl_region_rwsem);
+-	if (p->state != CXL_CONFIG_COMMIT) {
+-		cxlr_pmem = ERR_PTR(-ENXIO);
+-		goto out;
+-	}
++	guard(rwsem_read)(&cxl_region_rwsem);
++	if (p->state != CXL_CONFIG_COMMIT)
++		return -ENXIO;
+ 
+-	cxlr_pmem = kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets),
+-			    GFP_KERNEL);
+-	if (!cxlr_pmem) {
+-		cxlr_pmem = ERR_PTR(-ENOMEM);
+-		goto out;
+-	}
++	struct cxl_pmem_region *cxlr_pmem __free(kfree) = kzalloc(
++		struct_size(cxlr_pmem, mapping, p->nr_targets), GFP_KERNEL);
++	if (!cxlr_pmem)
++		return -ENOMEM;
+ 
+ 	cxlr_pmem->hpa_range.start = p->res->start;
+ 	cxlr_pmem->hpa_range.end = p->res->end;
+@@ -2718,11 +2713,8 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+ 		 */
+ 		if (i == 0) {
+ 			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
+-			if (!cxl_nvb) {
+-				kfree(cxlr_pmem);
+-				cxlr_pmem = ERR_PTR(-ENODEV);
+-				goto out;
+-			}
++			if (!cxl_nvb)
++				return -ENODEV;
+ 			cxlr->cxl_nvb = cxl_nvb;
+ 		}
+ 		m->cxlmd = cxlmd;
+@@ -2733,18 +2725,16 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+ 	}
+ 
+ 	dev = &cxlr_pmem->dev;
+-	cxlr_pmem->cxlr = cxlr;
+-	cxlr->cxlr_pmem = cxlr_pmem;
+ 	device_initialize(dev);
+ 	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
+ 	device_set_pm_not_required(dev);
+ 	dev->parent = &cxlr->dev;
+ 	dev->bus = &cxl_bus_type;
+ 	dev->type = &cxl_pmem_region_type;
+-out:
+-	up_read(&cxl_region_rwsem);
++	cxlr_pmem->cxlr = cxlr;
++	cxlr->cxlr_pmem = no_free_ptr(cxlr_pmem);
+ 
+-	return cxlr_pmem;
++	return 0;
+ }
+ 
+ static void cxl_dax_region_release(struct device *dev)
+@@ -2861,9 +2851,10 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+ 	struct device *dev;
+ 	int rc;
+ 
+-	cxlr_pmem = cxl_pmem_region_alloc(cxlr);
+-	if (IS_ERR(cxlr_pmem))
+-		return PTR_ERR(cxlr_pmem);
++	rc = cxl_pmem_region_alloc(cxlr);
++	if (rc)
++		return rc;
++	cxlr_pmem = cxlr->cxlr_pmem;
+ 	cxl_nvb = cxlr->cxl_nvb;
+ 
+ 	dev = &cxlr_pmem->dev;
 
-Depending on the exact workload, I can see this being more efficient
-than replicating the data to each member of the cluster.  In other
-workloads, it'll be a loss, of course.
-
-> * I'm no expert on GFS2 or OCFS2, but I've been around memory, file systems 
->   and storage since well before the turn of the century...
-> * If you had brought up the existing fs-dax file systems, I would have pointed
->   that they use write-back metadata, which does not reconcile with shared
->   access to media - but these file systems do handle that.
-> * The shared media file systems are still oriented to block devices that
->   provide durable storage and page-oriented access. CXL DRAM is a character 
-
-I'd say "block oriented" rather than page oriented, but I agree.
-
->   dax (devdax) device and does not provide durable storage.
-> * fs-dax-style memory mapping for volatile cxl memory requires the 
->   dev_dax_iomap portion of this patch set - or something similar. 
-> * A scale-out shared media file system presumably requires some commitment to
->   configure and manage some complexity in a distributed environment; whether
->   that should be mandatory for enablement of shared memory is worthy of
->   discussion.
-> * Adding memory to the storage tier for GFS2/OCFS2 would add non-persistent
->   media to the storage tier; whether this makes sense would be a topic that
->   GFS2/OCFS2 developers/architects should get involved in if they're 
->   interested.
-> 
-> Although disaggregated shared memory is not commercially available yet, famfs 
-> is being actively tested by multiple companies for several use cases and 
-> patterns with real and simulated shared memory. Demonstrations will start to
-> surface in the coming weeks & months.
-
-I guess we'll see.  SGI died for a reason.
