@@ -1,71 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6835DDA1;
-	Tue, 30 Apr 2024 02:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49057DDD4
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 03:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714445712; cv=none; b=eA0fj3nF4m1fzwvgRtpuhbP2AzeSK2x29Xf0Kp/rubRsEpEk8WArToqaE3bzwgWmv3MxcVtDZvN8rqbD3HyZc0Ro3yAOklygfZ6cK3h3ZQ2IicsAaSd4/n/jgUZdK3hjM+XEm53rF3WJnM5kAZk3cgVQZh5dYk/7BckvV6TipOM=
+	t=1714446707; cv=none; b=A4C3nLlMvj4OtvQEUX2gtfv9mG+wyrAe1mFKwIl+M3HT+RdWxRV24cxR7+33wmmdHJnRR9fhoZCF5wcObb4hn7gqxn6714XFzj9Ay12RxyVKDRlp2kxg7MN62R+uTJA8XmNw4otYJ2sNmUH5kXPkHBXWpUBetMl4HFlFe5Ly4oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714445712; c=relaxed/simple;
-	bh=iZ6nNOe9HtBpD2tVNcHlM/SflcebPn4cUJdzsYt8o5M=;
+	s=arc-20240116; t=1714446707; c=relaxed/simple;
+	bh=Z8Gr90fEJ1GKKj2x22uk9ZTJNqg1lehHEtjXiDth6tg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ai9J0+B09pGe5WCv6WBsO2dbL9xYX+xBYHPOAZXebBRgvMEHUwn61T+1ntoeX2Doyc/xpNWqmt+Y2uquv26/OnFR+dG+5GjVax1/YDoJjxqnrsFOrHDXTZh3U5eaIwVT8F/xXaHS+OniEDp9mt1vQBiMR7vZrRp4YcJbO22xwCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vt41SZpA; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMwtqcMlYC2cP88YgUBIWov3ZIpPIl1K56QxPD5rrfdWObqgqX7eMbqyJw4kqYEz2f4m1yjRCr5XFeGtwjEk7t7gypjzU2IGiK77hWliJnu+MvWQdCpW/bmMGkUDp4UposUEyFKmyHdXeZbdLjnvEezcwvcGG7/FOfAlYT/AWxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qx7i8im+; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vt41SZpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714445711; x=1745981711;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iZ6nNOe9HtBpD2tVNcHlM/SflcebPn4cUJdzsYt8o5M=;
-  b=Vt41SZpA8s2iAF7e4LNfVfw2coTewpt0IIOn4ftcZf+AYjqJWeGN6lkr
-   XNBK9m5WIqu2xZd74dTPZ0SyG6qwc2Oqdu4ElrmUTNO487HySOIZRezK+
-   SjANXNhUpJvq4HWRimpoS8pvNf4ryqn/tFS5MGfQF0dChtB/ae1qQu3QU
-   TlFOxXNWbrX/JgQtVj8mflNUIwLetIq8YlCTa/QBYgTqlhEU35+6J7Rt4
-   2T+UhYGJ/zIInjS8vOL24U17fB1kZ+c4ufnAzm2q4hEuLcmVsThLsI6pp
-   vvljfYnPGzQlw4JuRve+RSjoXgf+T+6rTDNqgW4N7gaSJYSPWZ/kPje+t
-   g==;
-X-CSE-ConnectionGUID: ZzlFhlneTwu/bwLqDeDdxQ==
-X-CSE-MsgGUID: BeW712F/T9G3w3lqW3abUg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10299262"
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="10299262"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 19:55:10 -0700
-X-CSE-ConnectionGUID: du8PLjy7Q7KwqHJe8LXpcg==
-X-CSE-MsgGUID: 6nbmXDibROWrmWQ+fDjV5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="49508152"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 29 Apr 2024 19:55:06 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s1de4-0007eC-0x;
-	Tue, 30 Apr 2024 02:55:04 +0000
-Date: Tue, 30 Apr 2024 10:54:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robert Richter <rrichter@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Andy Lutomirski <luto@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Robert Richter <rrichter@amd.com>,
-	Derick Marks <derick.w.marks@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v5 1/7] x86/numa: Fix SRAT lookup of CFMWS ranges with
- numa_fill_memblks()
-Message-ID: <202404301038.2YNsO1Qn-lkp@intel.com>
-References: <20240429124955.2294014-2-rrichter@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qx7i8im+"
+Date: Mon, 29 Apr 2024 23:11:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714446702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EI4HmUwJEPBRTrRQTROmcu/O+eYA5pmkoiZh1idyL4A=;
+	b=qx7i8im+4hQwZCeJa4irMcQULuMdYP1ZD7vSpbIPZ9bSB0UJeP5Kc0XWy9pVFR1lqvWj3u
+	7s8I6tJK5hHHFYLVelTimit+rl7VNTmh2FjKHrgsDeNu/jNQk0FBQjQJtuGsNUU2hnm1i+
+	Tc44WXIvUlNBnwLcZak84DPTGF9SP1s=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: John Groves <John@groves.net>
+Cc: Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	John Groves <jgroves@micron.com>, john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
+	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
+	Randy Dunlap <rdunlap@infradead.org>, Jerome Glisse <jglisse@google.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Eishan Mirakhur <emirakhur@micron.com>, Ravi Shankar <venkataravis@micron.com>, 
+	Srinivasulu Thanneeru <sthanneeru@micron.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Chandan Babu R <chandanbabu@kernel.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Steve French <stfrench@microsoft.com>, Nathan Lynch <nathanl@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Julien Panis <jpanis@baylibre.com>, Stanislav Fomichev <sdf@google.com>, 
+	Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [RFC PATCH v2 00/12] Introduce the famfs shared-memory file
+ system
+Message-ID: <h6tbyvdeq5hzkttsy4uyzq4v64xlkzeqfyo52ku3w4x3vvtpd7@4vxafcct62xh>
+References: <cover.1714409084.git.john@groves.net>
+ <Zi_n15gvA89rGZa_@casper.infradead.org>
+ <bnkdeobpatyunljvujzvwydtixkkj3gfeyvk4pzgndfxo7uc32@y6lk7nplt3uk>
+ <jklmoshdemmnv62nfvygkr5blz75jq6fhhaqaditws4hsj6glr@rkhdqze4d7un>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,43 +61,58 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240429124955.2294014-2-rrichter@amd.com>
+In-Reply-To: <jklmoshdemmnv62nfvygkr5blz75jq6fhhaqaditws4hsj6glr@rkhdqze4d7un>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Robert,
+On Mon, Apr 29, 2024 at 09:24:19PM -0500, John Groves wrote:
+> On 24/04/29 07:08PM, Kent Overstreet wrote:
+> > On Mon, Apr 29, 2024 at 07:32:55PM +0100, Matthew Wilcox wrote:
+> > > On Mon, Apr 29, 2024 at 12:04:16PM -0500, John Groves wrote:
+> > > > This patch set introduces famfs[1] - a special-purpose fs-dax file system
+> > > > for sharable disaggregated or fabric-attached memory (FAM). Famfs is not
+> > > > CXL-specific in anyway way.
+> > > > 
+> > > > * Famfs creates a simple access method for storing and sharing data in
+> > > >   sharable memory. The memory is exposed and accessed as memory-mappable
+> > > >   dax files.
+> > > > * Famfs supports multiple hosts mounting the same file system from the
+> > > >   same memory (something existing fs-dax file systems don't do).
+> > > 
+> > > Yes, but we do already have two filesystems that support shared storage,
+> > > and are rather more advanced than famfs -- GFS2 and OCFS2.  What are
+> > > the pros and cons of improving either of those to support DAX rather
+> > > than starting again with a new filesystem?
+> > 
+> > I could see a shared memory filesystem as being a completely different
+> > beast than a shared block storage filesystem - and I've never heard
+> > anyone talking about gfs2 or ocfs2 as codebases we particularly liked.
+> 
+> Thanks for your attention on famfs, Kent.
+> 
+> I think of it as a completely different beast. See my reply to Willy re:
+> famfs being more of a memory allocator with the benefit of allocations 
+> being accessible (and memory-mappable) as files.
 
-kernel test robot noticed the following build warnings:
+That's pretty much what I expected.
 
-[auto build test WARNING on 62dba604a4883169abf959b7d09449900e7d4537]
+I would suggest talking to RDMA people; RDMA does similar things with
+exposing address spaces across machine, and an "external" memory
+allocator is a basic building block there as well - it'd be great if we
+could get that turned into some clean library code.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/x86-numa-Fix-SRAT-lookup-of-CFMWS-ranges-with-numa_fill_memblks/20240429-205337
-base:   62dba604a4883169abf959b7d09449900e7d4537
-patch link:    https://lore.kernel.org/r/20240429124955.2294014-2-rrichter%40amd.com
-patch subject: [PATCH v5 1/7] x86/numa: Fix SRAT lookup of CFMWS ranges with numa_fill_memblks()
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240430/202404301038.2YNsO1Qn-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240430/202404301038.2YNsO1Qn-lkp@intel.com/reproduce)
+GPU people as well, possibly.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404301038.2YNsO1Qn-lkp@intel.com/
+> The famfs user space repo has some good documentation as to the on-
+> media structure of famfs. Scroll down on [1] (the documentation from
+> the famfs user space repo). There is quite a bit of info in the docs
+> from that repo.
 
-All warnings (new ones prefixed by >>):
+Ok, looking through that now.
 
->> drivers/acpi/numa/srat.c:211:19: warning: no previous prototype for 'numa_fill_memblks' [-Wmissing-prototypes]
-     211 | __weak int __init numa_fill_memblks(u64 start, u64 end)
-         |                   ^~~~~~~~~~~~~~~~~
+So youv've got a metadata log; that looks more like a conventional
+filesystem than a conventional purely in-memory thing.
 
+But you say it's a shared filesystem, and it doesn't say anything about
+that. Inter node locking?
 
-vim +/numa_fill_memblks +211 drivers/acpi/numa/srat.c
-
-   210	
- > 211	__weak int __init numa_fill_memblks(u64 start, u64 end)
-   212	{
-   213		return NUMA_NO_MEMBLK;
-   214	}
-   215	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Perhaps the ocfs2/gfs2 comparison is appropriate, after all.
