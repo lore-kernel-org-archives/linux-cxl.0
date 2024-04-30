@@ -1,267 +1,263 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CA41CB31A;
-	Tue, 30 Apr 2024 09:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468973; cv=fail; b=FQfvLYv8nFY6i35ymtbfhB69/urv9b2f0H3tK5aH/7ATqxuCJhh3zitP7Jn2LycP4qoUCTUwqOSSQdk49iYh3GiwnLoSyiJps0AiqA8u24+8oShNnK6O/gIwdBrq3UDZqIavzd7J090xV9OyEuWZ0p6IKrrca/iD35Rz2dHdPJs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468973; c=relaxed/simple;
-	bh=xu0ScFGHprQXGjeUjrlrMdsxsUwApZ59SWPq1CbOlj8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rzWLl1KgeYi/g8l5h4otbS2a5EDJX5XkgT4Oa6qkzXqHHhdwyu1lUO+dx6/Oio50C8uCS+NvA+Z1M2pGhY5PF8ipC7K8gEaQ9TMSwVxRB6ZvkUuk6e8ptb5sE42QSW2/Knkyq8sjFynxoivaRoJigZAX2canukxCqErDgUsik/o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bavQ0b/r; arc=fail smtp.client-ip=40.107.92.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bavQ0b/r"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QKZUsnuvFjyoKzYTMx7HvEEKt7Kx16TqZY6QVgHCVtpJMcKL8QwOAD92vGYFaE3gelQ6o7FIXq9ZTsB4AYBsHTMdJZCqXr4bp2ricDmefIae0hBb81w60bO4DVQLWBpdKeyWJIWOCZvBGFTbcAH5WCM5Vs1k+J0VwledowQ6RdQJ2PvEYakZ1PQAOY+KQFNY9L90yr1N40DWBzymFdoM0wYo++PaQA6F33sRaybyPwY3pb/FKkm4IGlS1M63Mq82jtfPDBLNzRnNIpN1HLxm4kln+NnPdyw9boEflDU57/7SUIKTRHLhu5tj4Wcns9cB8yAWYBTX2SWuZ9xIJ+/l/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=auFNcIrPvH7HK9lxyY6YgTh7dndOSGd2/26TlLLxI9s=;
- b=Z2XaFPssE6NJ6nAHFCl/A7O2vCrHGcfBUtaAGBFMKlM2+13TyhjUPZJlWo8pZ63IHSHzOa5hAzq3tcnKwcblZVTOmM+qc1BRmgGmxfmKDtzAiRnwEd09sGT1hcpdKYf/NXfeTcRDN+HHSnc1qtwN7MHbHuktM6xOof3MOX7846N3qG3q+CTdt8X/UgDg+1YiSVyVU0nPpGHpHhYN+n9E4Ief/zmJVkVHbckS85ukrU9lKyLzePz3sRJ7YwshgvaTe8eLFwiy/G85AZCAQvR0tCQauJ2GykVKAbXLHmzcKfsw6rzGBNgckqmKaTfuUAxFTnIOntxvM+csy2MFVkpUkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=auFNcIrPvH7HK9lxyY6YgTh7dndOSGd2/26TlLLxI9s=;
- b=bavQ0b/rBMV5p0/2f5j9eZYKpWwWV/IWIs8P4TxzIJPaJVO8VoaxjDwmVzUOulxIOB7CTaTkRPyOWHsR/n/Jqx3BGOpBFBWpnjnDr189+pEYZCjzAXH6R+PmPcRpLUVCdNnM24iWWlYaWdme4CTORH8b8hgR+cqh7r1bYRfAr+s=
-Received: from PH0PR07CA0111.namprd07.prod.outlook.com (2603:10b6:510:4::26)
- by DM4PR12MB6616.namprd12.prod.outlook.com (2603:10b6:8:8e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.35; Tue, 30 Apr
- 2024 09:22:49 +0000
-Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
- (2603:10b6:510:4:cafe::e9) by PH0PR07CA0111.outlook.office365.com
- (2603:10b6:510:4::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36 via Frontend
- Transport; Tue, 30 Apr 2024 09:22:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.204) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Tue, 30 Apr 2024 09:22:47 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 30 Apr
- 2024 04:22:43 -0500
-From: Robert Richter <rrichter@amd.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Dave Hansen <dave.hansen@linux.intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, Len Brown
-	<lenb@kernel.org>
-Subject: [PATCH v6 7/7] ACPI/NUMA: Print CXL Early Discovery Table (CEDT)
-Date: Tue, 30 Apr 2024 11:22:00 +0200
-Message-ID: <20240430092200.2335887-8-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240430092200.2335887-1-rrichter@amd.com>
-References: <20240430092200.2335887-1-rrichter@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A8E12B176
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 10:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714473842; cv=none; b=bTDRNmVOhhlzc6fjI+BEzjJGMQvdRfC0CsOBhjXOQfb5yz/rc96j2UX9yUj0Qpt0dgUPFk/e8Hko9geimA1nEaH7Ttz9f2Kv7BbVHj90uvE93uST0UHKJ/PygZK8rv3ybxWzkJSx26SU6GcyV844Ip+OSwotfG971/Qrn5ECKFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714473842; c=relaxed/simple;
+	bh=zhiWIXhrBAyOa3Iqr0VzRt4LZBkc++LQ1YlRJdJYKi8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sm1DX8WFRmk0uPlmGpHqsxc0VtEj2KJIyXD8rsH7m9iO5Q/ZTRtzL4vaerRwcUjt44yg/fqhghYmDXD5LTkzcXc2o0TN0cvbVZL3zkH+guI7VE6IY4f0ixN7IfcOBm/OTsqcDhlBR7c3G6kDt1qHxD1j4KptQgxAlVMJKaCjwUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTGyK2JhLz6K8wd;
+	Tue, 30 Apr 2024 18:43:37 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 27987140A08;
+	Tue, 30 Apr 2024 18:43:55 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
+ 2024 11:43:54 +0100
+Date: Tue, 30 Apr 2024 11:43:53 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Markus Armbruster <armbru@redhat.com>
+CC: <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>, <philmd@linaro.org>,
+	<mst@redhat.com>, <qemu-devel@nongnu.org>, Dave Jiang <dave.jiang@intel.com>,
+	Huang Ying <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, <imammedo@redhat.com>, <linux-cxl@vger.kernel.org>,
+	<linuxarm@huawei.com>, Michael Roth <michael.roth@amd.com>, Ani Sinha
+	<anisinha@redhat.com>
+Subject: Re: [PATCH 3/6] hw/acpi: Generic Port Affinity Structure support
+Message-ID: <20240430114353.00002ae5@huawei.com>
+In-Reply-To: <87frv3e3vz.fsf@pond.sub.org>
+References: <20240403102927.31263-1-Jonathan.Cameron@huawei.com>
+	<20240403102927.31263-4-Jonathan.Cameron@huawei.com>
+	<87r0ewcppm.fsf@pond.sub.org>
+	<20240429185046.00002a7c@Huawei.com>
+	<87frv3e3vz.fsf@pond.sub.org>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|DM4PR12MB6616:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bddaab9-30b2-475d-ec35-08dc68f71954
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|82310400014|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?g8sHDSGBUQMdnRpXV/xtc1i6Ljdro9c+6lpax08Pg2Cakavt3eXl0+tdxYK7?=
- =?us-ascii?Q?y3YV5S5ObJlPDO9YWV6/UOttDJ0kEtGLzPOlPMzmE+ixwgc/GgpkmohKsWMh?=
- =?us-ascii?Q?SbdIWv2i6oxfFibl2GdMMNlTvPkozsEWEXAfcqZeP1L/Yo7o+jeSrgsfINeU?=
- =?us-ascii?Q?s+xknn8iSKF+lnVViKzrCV1CtMzBBYQOIDSNlIWIZVGZ1AcyGj5rIHCL+Pql?=
- =?us-ascii?Q?GHe5ZZyPqHnpn/xYVxt/3TiNUyrAzBzO4zuvRQcX4QGxbxNtXhFTV6jc01gP?=
- =?us-ascii?Q?2g8W9l4IR0AbFStWSc1to322hCtVz0PAMWHrics6kQxzWYUmTdC92PUppUmT?=
- =?us-ascii?Q?faoM//kPoD41vL4uLaE/bknDmByZ84PqP1eCRlmdsrJ5C1AJ8KVNRDbJEskp?=
- =?us-ascii?Q?oynyklmE4iCy+E1zvIEYjwSr2VvoR3ZvHyA7BlG7kS0v7XDHe7yu1h6wtWoH?=
- =?us-ascii?Q?iSW9L3tXzGLXKCRVrC51/7bAkJPSvdClgjFL+Ff6svuTcW6A8rprhpZRHPyI?=
- =?us-ascii?Q?aNiGK88b8SAWrikxHKu8+5O4sfeJkGdRzsiGwnG3jdm8k33V86pop0wFI1vB?=
- =?us-ascii?Q?40VuoUNefvJE6vAx/yLEhT9sL6J1gmXdeXDt8WzyVd30VUVBtaoYrxZKSHtz?=
- =?us-ascii?Q?Zj1NDCpT8zUZVFH1+2ePeSipxkF3ftmBR7SxYTo2i2q24c2xkqKcfXv2L03X?=
- =?us-ascii?Q?GxfAECTBRV8KJW7Urr8Jq+eXOnVAgy4OiKlALGShAkYQJb+vrwmzRAVmzEbw?=
- =?us-ascii?Q?ut7J0BwxdCVr3KyAHP3CFT4KRARDiEclaG9ZrMEnF1mtZ06Gk2blxjliG9tq?=
- =?us-ascii?Q?Fh6NJZw9FCajYkkYuSG8Cnjf6FdXluz21kD0By0SC6YqJioznhnvFVFRW4r5?=
- =?us-ascii?Q?IdIGOtuct4b+AmPKn70IW2QzNOqb83nqhwJ4Und6Lsb3RoG6bO3kQ2G8j3F+?=
- =?us-ascii?Q?2kvLwuiC4X9ylRCkUAYiA0s69eJ3k8VuNYX9TEYwiA71Baw7RuV/JYjq4Hl4?=
- =?us-ascii?Q?98a1Z41cABD9w8uQtsJG7C8/2BODljadjvoT+ZLV4DcjDD1etzJaosITNFqm?=
- =?us-ascii?Q?N2dn0OSidvb9f7G2sW0ZnRztFgIjwvD9CiX6J5qv8d+8pZbHSGdjyabXxw3c?=
- =?us-ascii?Q?Oo7/oFGLFZqSNpBZcaODTGY1o1VR5U39E3JiDCMknscLnV61za1GUc3OkTCz?=
- =?us-ascii?Q?kRG5ikYJDpP4g/CyVCYP9LJm8U7lm002o7hZTWrpRQSmSv9mjYt4qfjfjRFI?=
- =?us-ascii?Q?TuXt3yQacz6ArTTpm8vvqQdDI+74Yn44Elx9452saTztlfYCvpt2LyyQuAK8?=
- =?us-ascii?Q?JHyePkJT4undm8TVCITKvhBJRh7nRWFmDaIiUkjk1rht7BXZJxNMhxQmbPF3?=
- =?us-ascii?Q?3V0fEUE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 09:22:47.0037
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bddaab9-30b2-475d-ec35-08dc68f71954
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD0.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6616
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-The CEDT contains similar entries as the SRAT. For diagnostic reasons
-print the CEDT same style as the SRAT.
+On Tue, 30 Apr 2024 08:55:12 +0200
+Markus Armbruster <armbru@redhat.com> wrote:
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/acpi/numa/srat.c | 111 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+> 
+> > On Tue, 23 Apr 2024 12:56:21 +0200
+> > Markus Armbruster <armbru@redhat.com> wrote:
+> >  
+> >> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+> >>   
+> >> > These are very similar to the recently added Generic Initiators
+> >> > but instead of representing an initiator of memory traffic they
+> >> > represent an edge point beyond which may lie either targets or
+> >> > initiators.  Here we add these ports such that they may
+> >> > be targets of hmat_lb records to describe the latency and
+> >> > bandwidth from host side initiators to the port.  A descoverable
+> >> > mechanism such as UEFI CDAT read from CXL devices and switches
+> >> > is used to discover the remainder fo the path and the OS can build
+> >> > up full latency and bandwidth numbers as need for work and data
+> >> > placement decisions.
+> >> >
+> >> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> >
+> > Hi Markus,
+> >
+> > I've again managed a bad job of defining an interface - thanks for
+> > your help!  
+> 
+> Good interfaces are hard!
+> 
+> >> > ---
+> >> >  qapi/qom.json                            |  18 +++
+> >> >  include/hw/acpi/acpi_generic_initiator.h |  18 ++-
+> >> >  include/hw/pci/pci_bridge.h              |   1 +
+> >> >  hw/acpi/acpi_generic_initiator.c         | 141 +++++++++++++++++------
+> >> >  hw/pci-bridge/pci_expander_bridge.c      |   1 -
+> >> >  5 files changed, 141 insertions(+), 38 deletions(-)
+> >> >
+> >> > diff --git a/qapi/qom.json b/qapi/qom.json
+> >> > index 85e6b4f84a..5480d9ca24 100644
+> >> > --- a/qapi/qom.json
+> >> > +++ b/qapi/qom.json
+> >> > @@ -826,6 +826,22 @@
+> >> >    'data': { 'pci-dev': 'str',
+> >> >              'node': 'uint32' } }
+> >> >  
+> >> > +
+> >> > +##
+> >> > +# @AcpiGenericPortProperties:
+> >> > +#
+> >> > +# Properties for acpi-generic-port objects.
+> >> > +#
+> >> > +# @pci-bus: PCI bus of the hostbridge associated with this SRAT entry    
+> >> 
+> >> What's this exactly?  A QOM path?  A qdev ID?  Something else?  
+> >
+> > QOM path I believe as going to call object_resolve_path_type() on it.  
+> 
+> QOM path then.
+> 
+> > Oddity is it's defined for the bus, not the host bridge that
+> > we care about as the host bridge doesn't have a convenient id to let
+> > us identify it.
+> >
+> > e.g. It is specified via --device pxb-cxl,id=XXXX
+> > of TYPE_PXB_CXL_HOST in the command line but ends up on the
+> > TYPE_PCI_BUS with parent set to the PXB_CXL_HOST.
+> > Normally we just want this bus for hanging root ports of it.
+> >
+> > I can clarify it's the QOM path but I'm struggling a bit to explain
+> > the relationship without resorting to an example.
+> > This should also not mention SRAT as at some stage I'd expect DT
+> > bindings to provide similar functionality.  
+> 
+> Let's start with an example.  Not to put it into the doc comment, only
+> to help me understand what you need.  Hopefully I can then assist with
+> improving the interface and/or its documentation.
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 34ecf2dc912f..fa21d4d5fccf 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -320,6 +320,114 @@ acpi_parse_memory_affinity(union acpi_subtable_headers *header,
- 	return 0;
- }
- 
-+static int __init
-+__acpi_table_print_cedt_entry(union acpi_subtable_headers *__header,
-+			      void *arg, const unsigned long table_end)
-+{
-+	struct acpi_cedt_header *header = (struct acpi_cedt_header *)__header;
-+
-+	switch (header->type) {
-+	case ACPI_CEDT_TYPE_CHBS:
-+		{
-+			struct acpi_cedt_chbs *p =
-+				(struct acpi_cedt_chbs *)header;
-+
-+			if (header->length < sizeof(struct acpi_cedt_chbs)) {
-+				pr_warn("CEDT: unsupported CHBS entry: size %d\n",
-+					 header->length);
-+				break;
-+			}
-+
-+			pr_debug("CEDT: CHBS (0x%llx length 0x%llx uid %lu) %s (%d)\n",
-+				(unsigned long long)p->base,
-+				(unsigned long long)p->length,
-+				(unsigned long)p->uid,
-+				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) ?
-+				"cxl11" :
-+				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20) ?
-+				"cxl20" :
-+				"unsupported version",
-+				p->cxl_version);
-+		}
-+		break;
-+	case ACPI_CEDT_TYPE_CFMWS:
-+		{
-+			struct acpi_cedt_cfmws *p =
-+				(struct acpi_cedt_cfmws *)header;
-+			int eiw_to_ways[] = {1, 2, 4, 8, 16, 3, 6, 12};
-+			int targets = -1;
-+
-+			if (header->length < sizeof(struct acpi_cedt_cfmws)) {
-+				pr_warn("CEDT: unsupported CFMWS entry: size %d\n",
-+					header->length);
-+				break;
-+			}
-+
-+			if (p->interleave_ways < ARRAY_SIZE(eiw_to_ways))
-+				targets = eiw_to_ways[p->interleave_ways];
-+			if (header->length < struct_size(
-+					p, interleave_targets, targets))
-+				targets = -1;
-+
-+			pr_debug("CEDT: CFMWS (0x%llx length 0x%llx) with %d target%s",
-+				(unsigned long long)p->base_hpa,
-+				(unsigned long long)p->window_size,
-+				targets, targets > 1 ? "s" : "");
-+			for (int i = 0; i < targets; i++)
-+				pr_cont("%s%lu", i ? ", " : " (",
-+					(unsigned long)p->interleave_targets[i]);
-+			pr_cont("%s%s%s%s%s%s\n",
-+				targets > 0 ? ")" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ?
-+				" type2" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ?
-+				" type3" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ?
-+				" volatile" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ?
-+				" pmem" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ?
-+				" fixed" : "");
-+		}
-+		break;
-+	case ACPI_CEDT_TYPE_CXIMS:
-+		{
-+			struct acpi_cedt_cxims *p =
-+				(struct acpi_cedt_cxims *)header;
-+
-+			if (header->length < sizeof(struct acpi_cedt_cxims)) {
-+				pr_warn("CEDT: unsupported CXIMS entry: size %d\n",
-+					header->length);
-+				break;
-+			}
-+
-+			pr_debug("CEDT: CXIMS (hbig %u nr_xormaps %u)\n",
-+				(unsigned int)p->hbig,
-+				(unsigned int)p->nr_xormaps);
-+		}
-+		break;
-+	default:
-+		pr_warn("CEDT: Found unsupported entry (type = 0x%x)\n",
-+			header->type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __init acpi_table_print_cedt_entry(enum acpi_cedt_type id)
-+{
-+	acpi_table_parse_cedt(id, __acpi_table_print_cedt_entry, NULL);
-+}
-+
-+static void __init acpi_table_print_cedt(void)
-+{
-+	/* Print only implemented CEDT types */
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CHBS);
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CFMWS);
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CXIMS);
-+}
-+
- static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 				   void *arg, const unsigned long table_end)
- {
-@@ -518,6 +626,9 @@ int __init acpi_numa_init(void)
- 	/* SLIT: System Locality Information Table */
- 	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
- 
-+	/* CEDT: CXL Early Discovery Table */
-+	acpi_table_print_cedt();
-+
- 	/*
- 	 * CXL Fixed Memory Window Structures (CFMWS) must be parsed
- 	 * after the SRAT. Create NUMA Nodes for CXL memory ranges that
--- 
-2.39.2
+Stripping out some relevant bits from a test setup and editing it down
+- most of this is about creating relevant SLIT/HMAT tables.
+
+# First a CXL root bridge, root port and direct attached device plus fixed
+# memory window.  Linux currently builds a NUMA node per fixed memory window
+# but that's a simplification that may change over time.
+ -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+ -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+ -device cxl-type3,bus=cxl_rp_port0,volatile-memdev=cxl-mem1,persistent-memdev=cxl-mem2,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+ -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+
+# Next line is the port defintion - see that the pci-bus refers to the one in the id parameter for
+# the PXB CXL, but the ACPI table that is generated refers to the DSDT entry via a ACPI0016 entry.
+# So to get to that we use the PCI bus ID of the root bus that forms part of the root bridge (but
+# is a child object in qemu.
+ -numa node,nodeid=2 \
+ -object acpi-generic-port,id=bob11,pci-bus=cxl.1,node=2 \
+
+# The rest is a the setup for the hmat and slit tables.  I hid most of the config, but
+# left this here as key is that we specify values to and from the generic port 'node'
+# but it's not really a node as such, but just a point along the path to one.
+
+ -numa dist,src=0,dst=0,val=10 -numa dist,src=0,dst=1,val=21 -numa dist,src=0,dst=2,val=21 -numa dist,src=0,dst=3,val=21 -numa dist,src=0,dst=4,val=21 -numa dist,src=0,dst=5,val=21 \
+ -numa dist,src=1,dst=0,val=21 -numa dist,src=1,dst=1,val=10 -numa dist,src=1,dst=2,val=21 -numa dist,src=1,dst=3,val=21 -numa dist,src=1,dst=4,val=21 -numa dist,src=1,dst=5,val=21 \
+ -numa dist,src=2,dst=0,val=21 -numa dist,src=2,dst=1,val=21 -numa dist,src=2,dst=2,val=10 -numa dist,src=2,dst=3,val=21 -numa dist,src=2,dst=4,val=21 -numa dist,src=2,dst=5,val=21 \
+ -numa dist,src=3,dst=0,val=21 -numa dist,src=3,dst=1,val=21 -numa dist,src=3,dst=2,val=21 -numa dist,src=3,dst=3,val=10 -numa dist,src=3,dst=4,val=21 -numa dist,src=3,dst=5,val=21 \
+ -numa dist,src=4,dst=0,val=21 -numa dist,src=4,dst=1,val=21 -numa dist,src=4,dst=2,val=21 -numa dist,src=4,dst=3,val=21 -numa dist,src=4,dst=4,val=10 -numa dist,src=4,dst=5,val=21 \
+ -numa dist,src=5,dst=0,val=21 -numa dist,src=5,dst=1,val=21 -numa dist,src=5,dst=2,val=21 -numa dist,src=5,dst=3,val=21 -numa dist,src=5,dst=4,val=21 -numa dist,src=5,dst=5,val=10 \
+ -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,latency=10 \
+ -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=800M \
+ -numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-latency,latency=100 \
+ -numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=0,target=4,hierarchy=memory,data-type=access-latency,latency=100 \
+ -numa hmat-lb,initiator=0,target=4,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=0,target=5,hierarchy=memory,data-type=access-latency,latency=200 \
+ -numa hmat-lb,initiator=0,target=5,hierarchy=memory,data-type=access-bandwidth,bandwidth=400M \
+ -numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-latency,latency=500 \
+ -numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=100M \
+ -numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-latency,latency=50 \
+ -numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-bandwidth,bandwidth=400M \
+ -numa hmat-lb,initiator=1,target=4,hierarchy=memory,data-type=access-latency,latency=50 \
+ -numa hmat-lb,initiator=1,target=4,hierarchy=memory,data-type=access-bandwidth,bandwidth=800M \
+ -numa hmat-lb,initiator=1,target=5,hierarchy=memory,data-type=access-latency,latency=500 \
+ -numa hmat-lb,initiator=1,target=5,hierarchy=memory,data-type=access-bandwidth,bandwidth=100M \
+  -numa hmat-lb,initiator=3,target=0,hierarchy=memory,data-type=access-latency,latency=20 \
+ -numa hmat-lb,initiator=3,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=400M \
+ -numa hmat-lb,initiator=3,target=2,hierarchy=memory,data-type=access-latency,latency=80 \
+ -numa hmat-lb,initiator=3,target=2,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=3,target=4,hierarchy=memory,data-type=access-latency,latency=80 \
+ -numa hmat-lb,initiator=3,target=4,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=3,target=5,hierarchy=memory,data-type=access-latency,latency=20 \
+ -numa hmat-lb,initiator=3,target=5,hierarchy=memory,data-type=access-bandwidth,bandwidth=400M \
+ -numa hmat-lb,initiator=5,target=0,hierarchy=memory,data-type=access-latency,latency=20 \
+ -numa hmat-lb,initiator=5,target=0,hierarchy=memory,data-type=access-bandwidth,bandwidth=400M \
+ -numa hmat-lb,initiator=5,target=2,hierarchy=memory,data-type=access-latency,latency=80 \
+ -numa hmat-lb,initiator=5,target=4,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=5,target=4,hierarchy=memory,data-type=access-latency,latency=80 \
+ -numa hmat-lb,initiator=5,target=2,hierarchy=memory,data-type=access-bandwidth,bandwidth=200M \
+ -numa hmat-lb,initiator=5,target=5,hierarchy=memory,data-type=access-latency,latency=10 \
+ -numa hmat-lb,initiator=5,target=5,hierarchy=memory,data-type=access-bandwidth,bandwidth=800M
+
+
+> 
+> >> > +#
+> >> > +# @node: numa node associated with the PCI device    
+> >> 
+> >> NUMA
+> >> 
+> >> Is this a NUMA node ID?  
+> >
+> > Fair question with a non obvious answer.  ACPI wise it's a proximity domain.
+> > In every other SRAT entry (which define proximity domains) this does map
+> > to a NUMA node in an operating system as they contain at least either some
+> > form of memory access initiator (CPU, Generic Initiator etc) or a target (memory).
+> >
+> > A Generic Port is subtly different in that it defines a proximity domain
+> > that in of itself is not what we'd think of as a NUMA node but
+> > rather an entity that exists to provide the info to the OS to stitch
+> > together non discoverable and discoverable buses.
+> >
+> > So I should have gone with something more specific. Could add this to
+> > the parameter docs, or is it too much?
+> >
+> > @node: Similar to a NUMA node ID, but instead of providing a reference
+> >        point used for defining NUMA distances and access characteristics
+> >        to memory or from an initiator (e.g. CPU), this node defines the
+> >        boundary point between non discoverable system buses which must be
+> >        discovered from firmware, and a discoverable bus.  NUMA distances
+> >        and access characteristics are defined to and from that point,
+> >        but for system software to establish full initiator to target
+> >        characteristics this information must be combined with information
+> >        retrieved form the discoverable part of the path.  An example would
+> >        use CDAT information read from devices and switches in conjunction
+> >        with link characteristics read from PCIe Configuration space.  
+> 
+> This is mostly greek to me :)  Bit I don't think it's too much.
+> 
+> >> > +#
+> >> > +# Since: 9.1
+> >> > +##
+> >> > +{ 'struct': 'AcpiGenericPortProperties',
+> >> > +  'data': { 'pci-bus': 'str',
+> >> > +            'node': 'uint32' } }
+> >> > +
+> >> >  ##
+> >> >  # @RngProperties:
+> >> >  #
+> >> > @@ -944,6 +960,7 @@
+> >> >  { 'enum': 'ObjectType',
+> >> >    'data': [
+> >> >      'acpi-generic-initiator',
+> >> > +    'acpi-generic-port',
+> >> >      'authz-list',
+> >> >      'authz-listfile',
+> >> >      'authz-pam',
+> >> > @@ -1016,6 +1033,7 @@
+> >> >    'discriminator': 'qom-type',
+> >> >    'data': {
+> >> >        'acpi-generic-initiator':     'AcpiGenericInitiatorProperties',
+> >> > +      'acpi-generic-port':          'AcpiGenericPortProperties',
+> >> >        'authz-list':                 'AuthZListProperties',
+> >> >        'authz-listfile':             'AuthZListFileProperties',
+> >> >        'authz-pam':                  'AuthZPAMProperties',    
+> >> 
+> >> [...]
+> >> 
+> >>   
+> 
 
