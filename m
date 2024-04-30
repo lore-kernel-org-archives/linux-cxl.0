@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7008710E4
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 00:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F7C161
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Apr 2024 00:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714437270; cv=none; b=kmCD5DpcIXH8cQIRrJwIV78UT7Wt3aZECTfJKyTXRHyxKyJYYcLrpgUa0qgihsPbCSLOu064RuhvbOxY9+Qsz+E8rEn0XnRzhHqyfkvwKV5CpqC3Nbq1WqBtMofPHNTdGk+mu4q8rkm2jR4iYnr/3YBb8c+ifumBJdFvtMi8iH4=
+	t=1714437271; cv=none; b=eggMQ4yQCnN6g+wxb4LK13+IM6ZpBzO7/APCshGOhxCWcU8OqZ34PKmCAbA+UrCyBY6Cs8fJX/jQCCyokXfYwgMIqSCaH3Ul2XyKD0LwLQzgE4pT3FBXEUZP3puLAeUFdNnu07C6EFqOy3//DsDUSfcvu4hLIwN6e69IDL+BSm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714437270; c=relaxed/simple;
-	bh=ABXHD79SAY7dW0Fx6Y7aYlXFP4JckPvRUUEtzb8P5uc=;
+	s=arc-20240116; t=1714437271; c=relaxed/simple;
+	bh=BMD+dMyJ+CTFoCBAvul3O+dwsboFUPU8h+jh6uxvwhE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O7tB7TL+W9VhEAfi2Ft5VeFay0loohzTnj40O7TLgcDi/cpUMIxXfaOF/hiWWarwsXEWuhaOdzVadJinq6calUS7tQLX1M9Tjhk6kMiHXEobciYBDHsEzUcA3nkVkkn9I2KRtc8YMBT2kV+biR7494DuejhQJtUr/Vc6PmKDczI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L5k1E7Nh; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=UIOSmMn02L2/0Ob2YgHplnvtXbWFyKHC8Wm+fe+rLYaSUlVdF8OMsL311TYMwrZoMB7OMaswzkN4pyiQ4hVeHqXcH3mcTaNO4UextHXqj5a3wThmT2CjdmjGHcHWipO+bbPLqlVcqzNUrvfP2Ij8hFUFDS7YttZnhJS6EzunhfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DABvTomg; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L5k1E7Nh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DABvTomg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714437268; x=1745973268;
+  t=1714437269; x=1745973269;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ABXHD79SAY7dW0Fx6Y7aYlXFP4JckPvRUUEtzb8P5uc=;
-  b=L5k1E7NhoH/QCnwkxtOdEzopnFnH+wU1XWQ371ziELtQbFKayXFqaTjT
-   VZ+IwEzERgQyVAVN799Pqn2nYZ1Rn0jRhfgR3xr98k+hfVV1jWD4U9AVH
-   O3GNezhIrxcB8V4cqkaWqB4ohAeiKpI5JsdV6HvdUb70OkP3JaOkhmDIA
-   1DwlqNrvCMnngUUAKxb+sNuqABupw3oipPfRDivk40wr5KuO/U0hOH5Hx
-   j4+bSUDoO3SU/a4g9pmNj9BYeJvmBQJCxdtc3VjEBoR/Ks5PhkSvS/5N6
-   AJO557pkoeDQXW32/pbiqL/xjLeQUXbbBPw05AT+/BFp+AWfpgL6F9W7a
-   Q==;
-X-CSE-ConnectionGUID: 5x6cnPKtQVyatpgzy42HEA==
-X-CSE-MsgGUID: QstjDLIsQ5aBSzQNUGbrew==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10289557"
+  bh=BMD+dMyJ+CTFoCBAvul3O+dwsboFUPU8h+jh6uxvwhE=;
+  b=DABvTomg+WZ2Z4DJmUdN/CC0v6dY5dvhFNwuqPubghF0Nnnl2kmjYFYx
+   EiA/rwbNrBjdt0tpp19vmj+8kNqtNvQ3GkGIrJBBYPO4z4oUDtO9S476u
+   yDPbJLlfvGH/HLQ35d9Cede4BzpJB1oN53+ti37BOedgqNgHNqffUdpyX
+   B2huXELcg0yf/vRvJIckqIvHnM/RV8vqvUlkmH0FxeTypikTK0xxlzLqd
+   Lns+O2/pISi/Ga25k9Sczfho66uZNaEu2amnzHyRKdFqQrGaAPbNXM3E5
+   EPA4ysqBaJsDoqaX/q5g1bOhKOwSNuSf/xF/Hd+BgRtcspcigkYWEWoXm
+   g==;
+X-CSE-ConnectionGUID: uAxC4HxLTJ2WKMRyO5fyNQ==
+X-CSE-MsgGUID: OuapjSQrTj62AbBOhzrApA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10289562"
 X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="10289557"
+   d="scan'208";a="10289562"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 17:34:27 -0700
-X-CSE-ConnectionGUID: vR9MmVHBR+WPyLYftvSTTA==
-X-CSE-MsgGUID: f0WNj2EhRWGmn5F1m804Nw==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 17:34:28 -0700
+X-CSE-ConnectionGUID: bTMYgtvYSWC8uy+ys4E2sw==
+X-CSE-MsgGUID: M1K5nSWoR26ldgp/8lBKMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="57149089"
+   d="scan'208";a="57149092"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.192.110])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 17:34:27 -0700
 From: alison.schofield@intel.com
@@ -55,9 +55,9 @@ Cc: linux-cxl@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Shiyang Ruan <ruansy.fnst@fujitsu.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v5 2/4] cxl/region: Move cxl_dpa_to_region() work to the region driver
-Date: Mon, 29 Apr 2024 17:34:22 -0700
-Message-Id: <8145d4d63f26d862949a036767955c4dbf03f5e9.1714435815.git.alison.schofield@intel.com>
+Subject: [PATCH v5 3/4] cxl/region: Move cxl_trace_hpa() work to the region driver
+Date: Mon, 29 Apr 2024 17:34:23 -0700
+Message-Id: <5d3bd29c90c8081d6f773cd5a71a744e884cea79.1714435815.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1714435815.git.alison.schofield@intel.com>
 References: <cover.1714435815.git.alison.schofield@intel.com>
@@ -71,148 +71,255 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-This helper belongs in the region driver as it is only useful
-with CONFIG_CXL_REGION. Add a stub in core.h for when the region
-driver is not built.
+This work belongs in the region driver as it is only useful with
+CONFIG_CXL_REGION. Add a stub in core.h for when the region driver
+is not built.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/core.h   |  7 +++++++
- drivers/cxl/core/memdev.c | 44 ---------------------------------------
- drivers/cxl/core/region.c | 44 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+), 44 deletions(-)
+ drivers/cxl/core/core.h   |  7 +++
+ drivers/cxl/core/region.c | 91 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.c  | 91 ---------------------------------------
+ drivers/cxl/core/trace.h  |  2 -
+ 4 files changed, 98 insertions(+), 93 deletions(-)
 
 diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index bc5a95665aa0..87008505f8a9 100644
+index 87008505f8a9..625394486459 100644
 --- a/drivers/cxl/core/core.h
 +++ b/drivers/cxl/core/core.h
-@@ -27,7 +27,14 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- int cxl_region_init(void);
+@@ -28,8 +28,15 @@ int cxl_region_init(void);
  void cxl_region_exit(void);
  int cxl_get_poison_by_endpoint(struct cxl_port *port);
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
-+
- #else
-+static inline
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-+{
-+	return NULL;
-+}
- static inline int cxl_get_poison_by_endpoint(struct cxl_port *port)
- {
- 	return 0;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index d4e259f3a7e9..0277726afd04 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -251,50 +251,6 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_trigger_poison_list, CXL);
+ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
++u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
++		  u64 dpa);
  
--struct cxl_dpa_to_region_context {
--	struct cxl_region *cxlr;
--	u64 dpa;
--};
--
--static int __cxl_dpa_to_region(struct device *dev, void *arg)
--{
--	struct cxl_dpa_to_region_context *ctx = arg;
--	struct cxl_endpoint_decoder *cxled;
--	u64 dpa = ctx->dpa;
--
--	if (!is_endpoint_decoder(dev))
--		return 0;
--
--	cxled = to_cxl_endpoint_decoder(dev);
--	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
--		return 0;
--
--	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
--		return 0;
--
--	dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
--		dev_name(&cxled->cxld.region->dev));
--
--	ctx->cxlr = cxled->cxld.region;
--
--	return 1;
--}
--
--static struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
--{
--	struct cxl_dpa_to_region_context ctx;
--	struct cxl_port *port;
--
--	ctx = (struct cxl_dpa_to_region_context) {
--		.dpa = dpa,
--	};
--	port = cxlmd->endpoint;
--	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
--		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
--
--	return ctx.cxlr;
--}
--
- static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
+ #else
++static inline u64
++cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd, u64 dpa)
++{
++	return ULLONG_MAX;
++}
+ static inline
+ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
  {
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5c186e0a39b9..4b227659e3f8 100644
+index 4b227659e3f8..45eb9c560fd6 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -2679,6 +2679,50 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
- 	return rc;
+@@ -2723,6 +2723,97 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+ 	return ctx.cxlr;
  }
  
-+struct cxl_dpa_to_region_context {
-+	struct cxl_region *cxlr;
-+	u64 dpa;
-+};
-+
-+static int __cxl_dpa_to_region(struct device *dev, void *arg)
++static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
 +{
-+	struct cxl_dpa_to_region_context *ctx = arg;
-+	struct cxl_endpoint_decoder *cxled;
-+	u64 dpa = ctx->dpa;
++	struct cxl_region_params *p = &cxlr->params;
++	int gran = p->interleave_granularity;
++	int ways = p->interleave_ways;
++	u64 offset;
 +
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
++	/* Is the hpa within this region at all */
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_dbg(&cxlr->dev,
++			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
++		return false;
++	}
 +
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-+		return 0;
++	/* Is the hpa in an expected chunk for its pos(-ition) */
++	offset = hpa - p->res->start;
++	offset = do_div(offset, gran * ways);
++	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
++		return true;
 +
-+	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-+		return 0;
++	dev_dbg(&cxlr->dev,
++		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
 +
-+	dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
-+		dev_name(&cxled->cxld.region->dev));
-+
-+	ctx->cxlr = cxled->cxld.region;
-+
-+	return 1;
++	return false;
 +}
 +
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
++static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
++			  struct cxl_endpoint_decoder *cxled)
 +{
-+	struct cxl_dpa_to_region_context ctx;
-+	struct cxl_port *port;
++	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
++	struct cxl_region_params *p = &cxlr->params;
++	int pos = cxled->pos;
++	u16 eig = 0;
++	u8 eiw = 0;
 +
-+	ctx = (struct cxl_dpa_to_region_context) {
-+		.dpa = dpa,
-+	};
-+	port = cxlmd->endpoint;
-+	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
-+		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
++	ways_to_eiw(p->interleave_ways, &eiw);
++	granularity_to_eig(p->interleave_granularity, &eig);
 +
-+	return ctx.cxlr;
++	/*
++	 * The device position in the region interleave set was removed
++	 * from the offset at HPA->DPA translation. To reconstruct the
++	 * HPA, place the 'pos' in the offset.
++	 *
++	 * The placement of 'pos' in the HPA is determined by interleave
++	 * ways and granularity and is defined in the CXL Spec 3.0 Section
++	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
++	 */
++
++	/* Remove the dpa base */
++	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
++
++	mask_upper = GENMASK_ULL(51, eig + 8);
++
++	if (eiw < 8) {
++		hpa_offset = (dpa_offset & mask_upper) << eiw;
++		hpa_offset |= pos << (eig + 8);
++	} else {
++		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
++		bits_upper = bits_upper * 3;
++		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
++	}
++
++	/* The lower bits remain unchanged */
++	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
++
++	/* Apply the hpa_offset to the region base address */
++	hpa = hpa_offset + p->res->start;
++
++	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
++		return ULLONG_MAX;
++
++	return hpa;
++}
++
++u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
++		  u64 dpa)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_endpoint_decoder *cxled = NULL;
++
++	for (int i = 0; i <  p->nr_targets; i++) {
++		cxled = p->targets[i];
++		if (cxlmd == cxled_to_memdev(cxled))
++			break;
++	}
++	if (!cxled || cxlmd != cxled_to_memdev(cxled))
++		return ULLONG_MAX;
++
++	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
 +}
 +
  static struct lock_class_key cxl_pmem_region_key;
  
  static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+index d0403dc3c8ab..7f2a9dd0d0e3 100644
+--- a/drivers/cxl/core/trace.c
++++ b/drivers/cxl/core/trace.c
+@@ -6,94 +6,3 @@
+ 
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+-
+-static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+-{
+-	struct cxl_region_params *p = &cxlr->params;
+-	int gran = p->interleave_granularity;
+-	int ways = p->interleave_ways;
+-	u64 offset;
+-
+-	/* Is the hpa within this region at all */
+-	if (hpa < p->res->start || hpa > p->res->end) {
+-		dev_dbg(&cxlr->dev,
+-			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+-		return false;
+-	}
+-
+-	/* Is the hpa in an expected chunk for its pos(-ition) */
+-	offset = hpa - p->res->start;
+-	offset = do_div(offset, gran * ways);
+-	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
+-		return true;
+-
+-	dev_dbg(&cxlr->dev,
+-		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
+-
+-	return false;
+-}
+-
+-static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+-			  struct cxl_endpoint_decoder *cxled)
+-{
+-	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+-	struct cxl_region_params *p = &cxlr->params;
+-	int pos = cxled->pos;
+-	u16 eig = 0;
+-	u8 eiw = 0;
+-
+-	ways_to_eiw(p->interleave_ways, &eiw);
+-	granularity_to_eig(p->interleave_granularity, &eig);
+-
+-	/*
+-	 * The device position in the region interleave set was removed
+-	 * from the offset at HPA->DPA translation. To reconstruct the
+-	 * HPA, place the 'pos' in the offset.
+-	 *
+-	 * The placement of 'pos' in the HPA is determined by interleave
+-	 * ways and granularity and is defined in the CXL Spec 3.0 Section
+-	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+-	 */
+-
+-	/* Remove the dpa base */
+-	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+-
+-	mask_upper = GENMASK_ULL(51, eig + 8);
+-
+-	if (eiw < 8) {
+-		hpa_offset = (dpa_offset & mask_upper) << eiw;
+-		hpa_offset |= pos << (eig + 8);
+-	} else {
+-		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
+-		bits_upper = bits_upper * 3;
+-		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
+-	}
+-
+-	/* The lower bits remain unchanged */
+-	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+-
+-	/* Apply the hpa_offset to the region base address */
+-	hpa = hpa_offset + p->res->start;
+-
+-	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
+-		return ULLONG_MAX;
+-
+-	return hpa;
+-}
+-
+-u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *cxlmd,
+-		  u64 dpa)
+-{
+-	struct cxl_region_params *p = &cxlr->params;
+-	struct cxl_endpoint_decoder *cxled = NULL;
+-
+-	for (int i = 0; i <  p->nr_targets; i++) {
+-		cxled = p->targets[i];
+-		if (cxlmd == cxled_to_memdev(cxled))
+-			break;
+-	}
+-	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+-		return ULLONG_MAX;
+-
+-	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
+-}
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 7c5cd069f10c..e303e618aa05 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -642,8 +642,6 @@ TRACE_EVENT(cxl_memory_module,
+ #define cxl_poison_overflow(flags, time)				\
+ 	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
+ 
+-u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *memdev, u64 dpa);
+-
+ TRACE_EVENT(cxl_poison,
+ 
+ 	TP_PROTO(struct cxl_memdev *cxlmd, struct cxl_region *cxlr,
 -- 
 2.37.3
 
