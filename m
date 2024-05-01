@@ -1,86 +1,62 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E531101DB;
-	Wed,  1 May 2024 02:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A17D33E1
+	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 03:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714529365; cv=none; b=Yn8AGZO0VL5X6mDoNVKwbxSBm48Dp26B2oZCjZvIGrWVDFcDnub7d2idD7iO9PAAxYpdUctCMGY92+GY+5EkDtmXajnKkY9+ZlJDP5j+PeBHPN9cydZKKg5XAVMpxSG47WedaQrq7rui3XE/PyRq44mF+uNzjdt+bN54w3ArDI0=
+	t=1714534885; cv=none; b=RJpYZofOjGxahRiOqkW2G5stnFtVYougj4HILYN/DNNJpK688ezd3IAVYFr2+9qPSPFVkR1AghoVwwOvc/tcTHCB833DLu53eSHBJnVx6Vj5dVb5sWoY16iZbpJHC8KS9wCq63ilvMx0TGGKKsSmuJ3G2bW9DkZL66cvKU3S6uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714529365; c=relaxed/simple;
-	bh=ySsZVAs1iEFo2LCjm6AMLn2MXUzr5ui6+DRDT1wzK5w=;
+	s=arc-20240116; t=1714534885; c=relaxed/simple;
+	bh=vASjZCFmZ6OCQORoIXvQyn/pets9eA2xZgphX0MeQxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j16QywS4Ylu6ALWdFOzFCLkT2/z6Bw+FDImk8J8j5eYvrtbncIgMXn3FTbQm62KiDHdosjVT1g5pc6LLIbxmgsQd5Njuh7olItYKctBmCKbBIxtqvNQHYbA5zWVzLkxFBVpr/9rqDwq/eGdD/c00q9wtl5O20WfeeS/ypwZyUn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwKAJDJs; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HWnlKVKCQIfufUtk0XirijqIQHZCoukHNk3azFkMxnw5MBPg5BwojJWjl5vCaGX8l8sSTWDbcLuNL2XwOqHQWMFgNRbIEggsqkUona7rhKXizSkEtIUmrhivqu6zHwHDekJbK8JDkyog72cLOevricgou+KRANJGob1xTRo8FLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SU7VPYhj; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwKAJDJs"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6ee135f6a21so1505940a34.2;
-        Tue, 30 Apr 2024 19:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714529362; x=1715134162; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yezFULKDfkH4O3tF/9359IJey7y6CAqBHbGwFEbOyVA=;
-        b=YwKAJDJsrHJzy9Nhbd12XqQYho1TDtij29n7QRiMJGkOF8kGSQUPZtMF8U3ewLC1zC
-         utlHXeKGXUxmGB+6ogC7/CIH3woelnDK4NjA5l0XCPvvrJ2QaD/xuEQCZ3JJnyzUNCMU
-         V7Vrf2/56Yvyv0zFQ6e6030dUyoW+IBgw+tJEK1rg1Zfk1dXzWg8lRIehqsi5KxFcf8f
-         11n63us67jlyzX+iOj9DbMtBEWTPetudWM840eZsei0u8fv/lg1GnOIovg1ueULh61Dq
-         YF/W83VxJsj/cf+z4/2ejYudXvsX81IlxtO76SAODgWihEPJoVashL8sv0ykf49JJGZX
-         9jbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714529362; x=1715134162;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yezFULKDfkH4O3tF/9359IJey7y6CAqBHbGwFEbOyVA=;
-        b=cILeYf77/KsjeBJHSmCvuA/iBoHtjuDCMdc3uhUzxaZWSQNV10TkDW1xJvpQ8Zmd3c
-         svLdUfeuCTV7Qz5hy4cXeBveRU8RvuIu5ohBg5JtMVqm3BWprce4pymj6LzlSB6vwsvV
-         CB0Q0KRC8FjLl6zfurRYgurQiGS/CXmWDHwcYcIXw6kKsjJtLNvrCTeaHO4qa2dOvHpB
-         vSjbwWDEkkIdqYN5zWJos/2YXtX6TIVPbfWH4Q1hBsPMeDunofWU6fClDPspAM9lmfrf
-         OLg08sLItiW5e0nIaI2KtIkcFv+tv7tsApzFARQoqS25RKDEAnV6S+5AfWm4y1W1RxzU
-         PYXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU65CSe5ZfTUAV6m0+enmMHD9mKUWSmL7Tfy8hgWkVvEX++0wgjGnVW1JGQ8Yokc6SvYf01fr5tQbKWUTRmOmirdgy32f5irVtGRPz5H2zutei3Yj7LIv4QDHeXhmqZftIBQA5RPyTqnA==
-X-Gm-Message-State: AOJu0Yzrc9M/OK9SK2VouCywMjUoED6osGQ1iEQO3JkJ4OTMTMrZmmDZ
-	3HGROdlTmvt2Ic0ALT/mgRPkucAEnwJTJOGgO4ZgbfAIEuK5tjkf
-X-Google-Smtp-Source: AGHT+IFCXZV9GskZrc8P0wyeR7SistjwlusLdB0r7UTGFqSaOO/E5aKxcvUFB9ZcRRmGCZ6KMJV0HQ==
-X-Received: by 2002:a05:6830:e16:b0:6ee:62e5:8fe3 with SMTP id do22-20020a0568300e1600b006ee62e58fe3mr1414305otb.25.1714529361993;
-        Tue, 30 Apr 2024 19:09:21 -0700 (PDT)
-Received: from Borg-10.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id bq10-20020a056830388a00b006ef888380a9sm338042otb.59.2024.04.30.19.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 19:09:21 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Tue, 30 Apr 2024 21:09:18 -0500
-From: John Groves <John@groves.net>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	John Groves <jgroves@micron.com>, john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
-	Randy Dunlap <rdunlap@infradead.org>, Jerome Glisse <jglisse@google.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>, Ravi Shankar <venkataravis@micron.com>, 
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Chandan Babu R <chandanbabu@kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Steve French <stfrench@microsoft.com>, Nathan Lynch <nathanl@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Julien Panis <jpanis@baylibre.com>, Stanislav Fomichev <sdf@google.com>, 
-	Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [RFC PATCH v2 00/12] Introduce the famfs shared-memory file
- system
-Message-ID: <zwtglxnnbjbgtzcv7rhrbtqz6owmviv3yg25bcluenaayzzj4p@nng3gh5twcjo>
-References: <cover.1714409084.git.john@groves.net>
- <Zi_n15gvA89rGZa_@casper.infradead.org>
- <bnkdeobpatyunljvujzvwydtixkkj3gfeyvk4pzgndfxo7uc32@y6lk7nplt3uk>
- <jklmoshdemmnv62nfvygkr5blz75jq6fhhaqaditws4hsj6glr@rkhdqze4d7un>
- <h6tbyvdeq5hzkttsy4uyzq4v64xlkzeqfyo52ku3w4x3vvtpd7@4vxafcct62xh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SU7VPYhj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714534882; x=1746070882;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vASjZCFmZ6OCQORoIXvQyn/pets9eA2xZgphX0MeQxw=;
+  b=SU7VPYhjtx2dP14mjhTjQO1GwG0zNlOVWm3FHne3BEWkIDwMTytDIUlJ
+   Fo1pOaMtiWqQq0/Lxt0b+kGexPYsEfRCU8yWcpCNa1Pss6sEOQzVnkxYK
+   vLbkvAhcdK21LGnucAUiYdUEYXnicwu16DIQw7TWFOxVtGwWFes2vgPuE
+   mmEhALltHp5XJnyhRXys3QjhLYVgQry2okLSjxNZwngA6D+ww+/+eSc0s
+   ygNSSkzMGDd/XC9e0ESu5Ce0xWV7lardi2HxlGz/SDUI1/QnHgIrnBp5J
+   YFD2HENe6+yarBwDch+Rdvw9rL6zkhxfWYZcjYGFxBZzoI1odIPMoxHzH
+   A==;
+X-CSE-ConnectionGUID: Wy63aqoMTM62gkKVxi6Rpg==
+X-CSE-MsgGUID: Q+R3WjsCRP2n/DI2oGXAEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10438117"
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="10438117"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 20:41:22 -0700
+X-CSE-ConnectionGUID: kmegHtW3Tn6tVFqdBw+viA==
+X-CSE-MsgGUID: IWIV4XVXSNSlIYoPukiomw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="27276035"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.209.59])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 20:41:22 -0700
+Date: Tue, 30 Apr 2024 20:41:19 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/3] cxl/acpi: Restore XOR'd position bits during address
+ translation
+Message-ID: <ZjG531aOXtjx209a@aschofie-mobl2>
+References: <cover.1714159486.git.alison.schofield@intel.com>
+ <d4e689f9a9645cbddb943188d508807da33bf91f.1714159486.git.alison.schofield@intel.com>
+ <662c4fef695d6_b6e029460@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,100 +65,157 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <h6tbyvdeq5hzkttsy4uyzq4v64xlkzeqfyo52ku3w4x3vvtpd7@4vxafcct62xh>
+In-Reply-To: <662c4fef695d6_b6e029460@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-On 24/04/29 11:11PM, Kent Overstreet wrote:
-> On Mon, Apr 29, 2024 at 09:24:19PM -0500, John Groves wrote:
-> > On 24/04/29 07:08PM, Kent Overstreet wrote:
-> > > On Mon, Apr 29, 2024 at 07:32:55PM +0100, Matthew Wilcox wrote:
-> > > > On Mon, Apr 29, 2024 at 12:04:16PM -0500, John Groves wrote:
-> > > > > This patch set introduces famfs[1] - a special-purpose fs-dax file system
-> > > > > for sharable disaggregated or fabric-attached memory (FAM). Famfs is not
-> > > > > CXL-specific in anyway way.
-> > > > > 
-> > > > > * Famfs creates a simple access method for storing and sharing data in
-> > > > >   sharable memory. The memory is exposed and accessed as memory-mappable
-> > > > >   dax files.
-> > > > > * Famfs supports multiple hosts mounting the same file system from the
-> > > > >   same memory (something existing fs-dax file systems don't do).
-> > > > 
-> > > > Yes, but we do already have two filesystems that support shared storage,
-> > > > and are rather more advanced than famfs -- GFS2 and OCFS2.  What are
-> > > > the pros and cons of improving either of those to support DAX rather
-> > > > than starting again with a new filesystem?
-> > > 
-> > > I could see a shared memory filesystem as being a completely different
-> > > beast than a shared block storage filesystem - and I've never heard
-> > > anyone talking about gfs2 or ocfs2 as codebases we particularly liked.
+On Fri, Apr 26, 2024 at 06:07:59PM -0700, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > Thanks for your attention on famfs, Kent.
+> > When a CXL region is created in a CXL Window (CFMWS) that uses XOR
+> > interleave arithmetic XOR maps are applied during the HPA->DPA
+> > translation. The XOR function changes the interleave selector
+> > bit (aka position bit) in the HPA thereby varying which host bridge
+> > services an HPA. The purpose is to minimize hot spots thereby
+> > improving performance.
 > > 
-> > I think of it as a completely different beast. See my reply to Willy re:
-> > famfs being more of a memory allocator with the benefit of allocations 
-> > being accessible (and memory-mappable) as files.
+> > When a device reports a DPA in events such as poison, general_media,
+> > and dram, the driver translates that DPA back to an HPA. Presently,
+> > the CXL driver translation only considers the modulo position and
+> > will report the wrong HPA for XOR configured CFMWS's.
+> > 
+> > Add a helper function that restores the XOR'd bits during DPA->HPA
+> > address translation. Plumb a root decoder callback to the new helper
+> > when XOR interleave arithmetic is in use. For MODULO arithmetic, just
+> > let the callback be NULL - as in no extra work required.
+> > 
+> > Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  drivers/cxl/acpi.c       | 49 +++++++++++++++++++++++++++++++++++++---
+> >  drivers/cxl/core/port.c  |  5 +++-
+> >  drivers/cxl/core/trace.c |  5 ++++
+> >  drivers/cxl/cxl.h        |  6 ++++-
+> >  4 files changed, 60 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index af5cb818f84d..519e933b5a4b 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -74,6 +74,44 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
+> >  	return cxlrd->cxlsd.target[n];
+> >  }
+> >  
+> > +static u64 restore_xor_pos(u64 hpa, u64 map)
+> > +{
+> > +	int restore_value, restore_pos = 0;
+> > +
+> > +	/*
+> > +	 * Restore the position bit to its value before the
+> > +	 * xormap was applied at HPA->DPA translation.
+> > +	 *
+> > +	 * restore_pos is the lowest set bit in the map
+> > +	 * restore_value is the XORALLBITS in (hpa AND map)
 > 
-> That's pretty much what I expected.
+> Might be worth finally clarifying why there is no "XOR" operation in
+> this xor_pos routine, i.e. that XORALLBITS is identical to asking if the
+> hweight of the (hpa & map) is odd or even.
 > 
-> I would suggest talking to RDMA people; RDMA does similar things with
-> exposing address spaces across machine, and an "external" memory
-> allocator is a basic building block there as well - it'd be great if we
-> could get that turned into some clean library code.
+
+Thanks for the review Dan!
+
+Well, I would except that a few lines below, you suggest I use
+an XOR operand ;) but I know what you mean. Edited in v2.
+
+Actually, I've abandoned this separate function in v2. Since
+the LOC have been whittled down, seems useless.
+
+> > +	 */
+> > +
+> > +	while ((map & (1ULL << restore_pos)) == 0)
+> > +		restore_pos++;
 > 
-> GPU people as well, possibly.
+> This is just open coded ffs()?
+> 
+So it is!  Using ffs() in v2.
 
-Thanks for your attention Kent.
+> > +
+> > +	restore_value = (hweight64(hpa & map) & 1);
+> > +	if (restore_value)
+> > +		hpa |= (1ULL << restore_pos);
+> > +	else
+> > +		hpa &= ~(1ULL << restore_pos);
+> 
+> It feels like this conditional mask / set can just be an xor operation?
+> 
+>     hpa ^= ((hweight64(hpa & map) & 1) << restore_pos);
 
-I'm on it. Part of the core idea behind famfs is that page-oriented data
-movement can be avoided with actual shared memory. Yes, the memory is likely to 
-be slower (either BW or latency or both) but it's cacheline access rather than 
-full-page (or larger) retrieval, which is a win for some access patterns (and
-not so for others).
-
-Part of the issue is communicating the fact that shared access to cachelines
-is possible.
-
-There are some interesting possibilities with GPUs retrieving famfs files
-(or portions thereof), but I have no insight as to the motivations of GPU 
-vendors.
+I've taken the XOR operand piece, but didn't collapse into the
+one-liner you suggest.  See what you think in v1 please.
 
 > 
-> > The famfs user space repo has some good documentation as to the on-
-> > media structure of famfs. Scroll down on [1] (the documentation from
-> > the famfs user space repo). There is quite a bit of info in the docs
-> > from that repo.
+> Otherwise I question the & and | operations relative to the HPA bit
+> position already being 0 or 1.
 > 
-> Ok, looking through that now.
+
+They are gone in next rev, but FWIW here's the truth about those ops:
+
+if restore_value == 1, using |= always sets the bit at restore_pos
+like this:
+	restore_value  current_value  |= value
+	1		0		1
+	1		1		1
+
+if restore_value == 0, using &= always clears the bit at restore_pos
+like this:
+	restore_value  current_value  |= value
+	0		0		0
+	0		1		0
+
+> > +
+> > +	return hpa;
+> > +}
+> > +
+> > +static u64 cxl_xor_trans(struct cxl_root_decoder *cxlrd, u64 hpa, int iw)
 > 
-> So youv've got a metadata log; that looks more like a conventional
-> filesystem than a conventional purely in-memory thing.
+> Ok, so the driver has cxl_trace_hpa() and now cxl_xor_trans() and
+> "addr_trans". Can these all just be called "translate" because "trace"
+> feels like tracing, "trans" is only saving 4 characters, and "addr" is
+> redundant as nothing else needs translating besides addresses in CXL
+> land.
+
+I think i've got it:
+
+Existing:
+cxl_trace_hpa() -> cxl_translate()
+
+Introduced in this set:
+cxl_addr_trans_fn -> cxl_translate_fn
+addr_trans -> translate
+cxl_xor_trans() -> cxl_xor_translate()
+
 > 
-> But you say it's a shared filesystem, and it doesn't say anything about
-> that. Inter node locking?
+> [..]
+> > diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+> > index d0403dc3c8ab..a7ea4a256036 100644
+> > --- a/drivers/cxl/core/trace.c
+> > +++ b/drivers/cxl/core/trace.c
+> > @@ -36,6 +36,7 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+> >  static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+> >  			  struct cxl_endpoint_decoder *cxled)
+> >  {
+> > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> >  	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+> >  	struct cxl_region_params *p = &cxlr->params;
+> >  	int pos = cxled->pos;
+> > @@ -75,6 +76,10 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+> >  	/* Apply the hpa_offset to the region base address */
+> >  	hpa = hpa_offset + p->res->start;
+> >  
+> > +	/* An addr_trans helper is defined for XOR math */
 > 
-> Perhaps the ocfs2/gfs2 comparison is appropriate, after all.
+> Rather then calling out XOR math since that is an ACPI'ism I would just
+> say something like: "root decoder overrides typical modulo decode"
 
-Famfs is intended to be mounted from more than one host from the same in-memory
-image. A metadata log is kinda the simpliest approach to make that work (let me
-know your thoughts if you disagree on that). When a client mounts, playing the 
-log from the shared memory brings that client mount into sync with the source 
-(the Master).
+Got it.
 
-No inter-node locking is currently needed because only the node that created
-the file system (the Master) can write the log. Famfs is not intended to be 
-a general-purpose FS...
-
-The famfs log is currently append-only, and I think of it as a "code-first"
-implementation of a shared memory FS that that gets the job done in something
-approaching the simplest possible approach.
-
-If the approach evolves to full allocate-on-write, then moving to a file system
-platform that handles that would make sense. If it remains (as I suspect will
-make sense) a way to share collections of data sets, or indexes, or other 
-data that is published and then consumed [all or mostly] read-only, this
-simple approach may be long-term sufficient.
-
-Regards,
-John
-
-
-
+-- Alison
