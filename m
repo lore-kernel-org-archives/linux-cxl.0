@@ -1,230 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0513BBCC
-	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 05:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05AB4AEEA
+	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 06:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714539607; cv=none; b=V3sFB0wKtWsCTrUp89lIisx0cV7eGLQvDoYCpKX+yy+441YZYecDIuH4RxQZlf9sk+Oe3cmjYaLVr3jQchz95JkF1JJVGiuNTWwnJpk2WJ4POE3+3VYSutGfjJNX3rHinoBAnpPN6betkAuXISMaiPzR9lSv/mo95vLLP4D5YII=
+	t=1714544296; cv=none; b=E26IBMKKX5fNNKHwCRayPajvlqZc8TOGidL1kQivyAlTxedoCr7ZKZeO6qeEawLlUeCMbzhr/aZqWI6Mymtxqk5xQOLbcnvwzBbwzknUm1UEio/ql4g6JmohBCaQ9qozMozK+Qhm+iFoNCXeFY4e9aPEe4v6A7e0W6vs90LJtPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714539607; c=relaxed/simple;
-	bh=5UFGOuOlFDtxfNPx5Rv0YnLHi9WncpO+3O+AfldGTzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsjhXaBkpPKOAByFHHCYpHV2UOsSqoUQyaM33BF6ckm6KcbVRO2JiTbWrlN3oSi0AaSYT8exyDMenGhk9Vt+I9EtatQ5dK+FP6vw1633Ca1bez3hy5mp3yQNWK87RNKWoqlocIw7ZdFHHnxBMFXRneeHYEx4xyBeJK/TlG419GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itKdeDTX; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1714544296; c=relaxed/simple;
+	bh=pzOT/7UKgJdIKLVX/GRx1IHex2c+QSb+SH89G61022k=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=mGsrY2pfUU+jqUTDuoi9Eu/4GWITkcJPvWOPTje5wHHEPmiSjeIYvzlFtlGLC9VWVwca/I2kROpr9Lol6MIj12SaoXgRHtHYTYWqHiixbMH+RLnpkI3o/pAo8fsRiZLkne30gIn9fMey/CX2fmjJ5Qksb8372m9mp0FK6qJOH4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UL456j2V; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itKdeDTX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UL456j2V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714539604; x=1746075604;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5UFGOuOlFDtxfNPx5Rv0YnLHi9WncpO+3O+AfldGTzI=;
-  b=itKdeDTXuRcI87jWujj3mSTpdKAA7yiAuc1CJRECjC81W3TRuExYb0CC
-   TXrDc0H6SeynWDaeqGqhH/l5OJ97gaiIfMWsJapopBIuhWSIhZ+dvvScD
-   SAc/P0APJmmRa5+nsPBb68f7X2CwIR2MhjnCHZ/GRpk2U6cAhIAvKmL54
-   VV2PciGN03NTqukXzDZap1V8ZjNf2+jhsXEeeNSriALwdPs/VChMOqUtB
-   3pCwfgDi1EZK+fVC5huew05pW824UiJ9LwQDB20UfEteR+xV3QXm2OOOA
-   dc/qnragTU2j+G9N+jeMqkn9Lsvxek76leRmth1pDVE6KOBJE2kSr70cp
-   Q==;
-X-CSE-ConnectionGUID: zqWfcQRVRg+SALEKBl6aMw==
-X-CSE-MsgGUID: R1YnrokaT9uQZRADjk+SNw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14046414"
+  t=1714544295; x=1746080295;
+  h=date:from:to:cc:subject:message-id;
+  bh=pzOT/7UKgJdIKLVX/GRx1IHex2c+QSb+SH89G61022k=;
+  b=UL456j2VgBCDB3Ns5J/iosToY4Ege6auFWm1UbhE2G2yqxAvMqmkxIkh
+   aUR0dg7avwy3BK9XgDjiuwWVGH8Z04xkoF9b8j5W8/wmxgQDS7n0XttJj
+   tjvlmeb4r8joQVCa9s9/NnB44weNmYV3wSFTatB1Ph1TyQRb04Dq0O4ah
+   o4Iyhchl2qjm+DiXYWtf502hrcfSJLGcFiMiMjY4/O+IPj28x06gkPOR9
+   gYEMT8oMxhc/i/8QfIYbR5yZWXkNhh4kXW06ESeiHOnVajFxLXtIn8IxV
+   Hc4iZMvxjyuiom6zdZ8GmIq9xiZrf3HY5r/+5eX/AvsBwznz95+4axPs2
+   g==;
+X-CSE-ConnectionGUID: UfuRmzZTSrWQYrjBCUF7EQ==
+X-CSE-MsgGUID: 2dhzhlC5S0WcTLQ/CxbhDQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10133815"
 X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
-   d="scan'208";a="14046414"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 22:00:03 -0700
-X-CSE-ConnectionGUID: VQa5RoGlTyKdH6awXY7sTw==
-X-CSE-MsgGUID: 39JG/BPwS2q2b25hzZ/86Q==
+   d="scan'208";a="10133815"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 23:18:14 -0700
+X-CSE-ConnectionGUID: YsfpTBRjRTa6CeOrZZG5DQ==
+X-CSE-MsgGUID: Jd5XjeEZSAOjjDoD17xn/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
-   d="scan'208";a="57570650"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.209.59])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 22:00:04 -0700
-Date: Tue, 30 Apr 2024 22:00:02 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] cxl/acpi: Restore XOR'd position bits during address
- translation
-Message-ID: <ZjHMUsUsAEqk/wVz@aschofie-mobl2>
-References: <cover.1714159486.git.alison.schofield@intel.com>
- <d4e689f9a9645cbddb943188d508807da33bf91f.1714159486.git.alison.schofield@intel.com>
- <662c4fef695d6_b6e029460@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ZjG531aOXtjx209a@aschofie-mobl2>
+   d="scan'208";a="27109502"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 30 Apr 2024 23:18:11 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s23I8-0008vN-1h;
+	Wed, 01 May 2024 06:18:08 +0000
+Date: Wed, 01 May 2024 14:17:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.10/add-log-mbox-cmds] BUILD SUCCESS
+ 206f9fa9d55592c8cea0ccf84a5242b7c7cf3748
+Message-ID: <202405011452.UEGzC1Uv-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjG531aOXtjx209a@aschofie-mobl2>
 
-On Tue, Apr 30, 2024 at 08:41:19PM -0700, Alison Schofield wrote:
-> On Fri, Apr 26, 2024 at 06:07:59PM -0700, Dan Williams wrote:
-> > alison.schofield@ wrote:
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > When a CXL region is created in a CXL Window (CFMWS) that uses XOR
-> > > interleave arithmetic XOR maps are applied during the HPA->DPA
-> > > translation. The XOR function changes the interleave selector
-> > > bit (aka position bit) in the HPA thereby varying which host bridge
-> > > services an HPA. The purpose is to minimize hot spots thereby
-> > > improving performance.
-> > > 
-> > > When a device reports a DPA in events such as poison, general_media,
-> > > and dram, the driver translates that DPA back to an HPA. Presently,
-> > > the CXL driver translation only considers the modulo position and
-> > > will report the wrong HPA for XOR configured CFMWS's.
-> > > 
-> > > Add a helper function that restores the XOR'd bits during DPA->HPA
-> > > address translation. Plumb a root decoder callback to the new helper
-> > > when XOR interleave arithmetic is in use. For MODULO arithmetic, just
-> > > let the callback be NULL - as in no extra work required.
-> > > 
-> > > Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > > ---
-> > >  drivers/cxl/acpi.c       | 49 +++++++++++++++++++++++++++++++++++++---
-> > >  drivers/cxl/core/port.c  |  5 +++-
-> > >  drivers/cxl/core/trace.c |  5 ++++
-> > >  drivers/cxl/cxl.h        |  6 ++++-
-> > >  4 files changed, 60 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > > index af5cb818f84d..519e933b5a4b 100644
-> > > --- a/drivers/cxl/acpi.c
-> > > +++ b/drivers/cxl/acpi.c
-> > > @@ -74,6 +74,44 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
-> > >  	return cxlrd->cxlsd.target[n];
-> > >  }
-> > >  
-> > > +static u64 restore_xor_pos(u64 hpa, u64 map)
-> > > +{
-> > > +	int restore_value, restore_pos = 0;
-> > > +
-> > > +	/*
-> > > +	 * Restore the position bit to its value before the
-> > > +	 * xormap was applied at HPA->DPA translation.
-> > > +	 *
-> > > +	 * restore_pos is the lowest set bit in the map
-> > > +	 * restore_value is the XORALLBITS in (hpa AND map)
-> > 
-> > Might be worth finally clarifying why there is no "XOR" operation in
-> > this xor_pos routine, i.e. that XORALLBITS is identical to asking if the
-> > hweight of the (hpa & map) is odd or even.
-> > 
-> 
-> Thanks for the review Dan!
-> 
-> Well, I would except that a few lines below, you suggest I use
-> an XOR operand ;) but I know what you mean. Edited in v2.
-> 
-> Actually, I've abandoned this separate function in v2. Since
-> the LOC have been whittled down, seems useless.
-> 
-> > > +	 */
-> > > +
-> > > +	while ((map & (1ULL << restore_pos)) == 0)
-> > > +		restore_pos++;
-> > 
-> > This is just open coded ffs()?
-> > 
-> So it is!  Using ffs() in v2.
-> 
-> > > +
-> > > +	restore_value = (hweight64(hpa & map) & 1);
-> > > +	if (restore_value)
-> > > +		hpa |= (1ULL << restore_pos);
-> > > +	else
-> > > +		hpa &= ~(1ULL << restore_pos);
-> > 
-> > It feels like this conditional mask / set can just be an xor operation?
-> > 
-> >     hpa ^= ((hweight64(hpa & map) & 1) << restore_pos);
-> 
-> I've taken the XOR operand piece, but didn't collapse into the
-> one-liner you suggest.  See what you think in v1 please.
-> 
-> > 
-> > Otherwise I question the & and | operations relative to the HPA bit
-> > position already being 0 or 1.
-> > 
-> 
-> They are gone in next rev, but FWIW here's the truth about those ops:
-> 
-> if restore_value == 1, using |= always sets the bit at restore_pos
-> like this:
-> 	restore_value  current_value  |= value
-> 	1		0		1
-> 	1		1		1
-> 
-> if restore_value == 0, using &= always clears the bit at restore_pos
-> like this:
-> 	restore_value  current_value  |= value
-                                      ^^ should be &= 
-> 	0		0		0
-> 	0		1		0
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.10/add-log-mbox-cmds
+branch HEAD: 206f9fa9d55592c8cea0ccf84a5242b7c7cf3748  cxl/mbox: Add Clear Log mailbox command
 
-I guess my own typo proves ^= is cleaner ;)
+elapsed time: 723m
 
+configs tested: 186
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > > +
-> > > +	return hpa;
-> > > +}
-> > > +
-> > > +static u64 cxl_xor_trans(struct cxl_root_decoder *cxlrd, u64 hpa, int iw)
-> > 
-> > Ok, so the driver has cxl_trace_hpa() and now cxl_xor_trans() and
-> > "addr_trans". Can these all just be called "translate" because "trace"
-> > feels like tracing, "trans" is only saving 4 characters, and "addr" is
-> > redundant as nothing else needs translating besides addresses in CXL
-> > land.
-> 
-> I think i've got it:
-> 
-> Existing:
-> cxl_trace_hpa() -> cxl_translate()
-> 
-> Introduced in this set:
-> cxl_addr_trans_fn -> cxl_translate_fn
-> addr_trans -> translate
-> cxl_xor_trans() -> cxl_xor_translate()
-> 
-> > 
-> > [..]
-> > > diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
-> > > index d0403dc3c8ab..a7ea4a256036 100644
-> > > --- a/drivers/cxl/core/trace.c
-> > > +++ b/drivers/cxl/core/trace.c
-> > > @@ -36,6 +36,7 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
-> > >  static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
-> > >  			  struct cxl_endpoint_decoder *cxled)
-> > >  {
-> > > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> > >  	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
-> > >  	struct cxl_region_params *p = &cxlr->params;
-> > >  	int pos = cxled->pos;
-> > > @@ -75,6 +76,10 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
-> > >  	/* Apply the hpa_offset to the region base address */
-> > >  	hpa = hpa_offset + p->res->start;
-> > >  
-> > > +	/* An addr_trans helper is defined for XOR math */
-> > 
-> > Rather then calling out XOR math since that is an ACPI'ism I would just
-> > say something like: "root decoder overrides typical modulo decode"
-> 
-> Got it.
-> 
-> -- Alison
-> 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240501   gcc  
+arc                   randconfig-002-20240501   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                         assabet_defconfig   clang
+arm                                 defconfig   clang
+arm                   randconfig-001-20240501   gcc  
+arm                   randconfig-002-20240501   gcc  
+arm                   randconfig-003-20240501   clang
+arm                   randconfig-004-20240501   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240501   gcc  
+arm64                 randconfig-002-20240501   gcc  
+arm64                 randconfig-003-20240501   clang
+arm64                 randconfig-004-20240501   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240501   gcc  
+csky                  randconfig-002-20240501   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240501   clang
+hexagon               randconfig-002-20240501   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240501   clang
+i386         buildonly-randconfig-002-20240501   gcc  
+i386         buildonly-randconfig-003-20240501   clang
+i386         buildonly-randconfig-004-20240501   gcc  
+i386         buildonly-randconfig-005-20240501   gcc  
+i386         buildonly-randconfig-006-20240501   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240501   gcc  
+i386                  randconfig-002-20240501   clang
+i386                  randconfig-003-20240501   gcc  
+i386                  randconfig-004-20240501   gcc  
+i386                  randconfig-005-20240501   clang
+i386                  randconfig-006-20240501   clang
+i386                  randconfig-011-20240501   gcc  
+i386                  randconfig-012-20240501   gcc  
+i386                  randconfig-013-20240501   gcc  
+i386                  randconfig-014-20240501   gcc  
+i386                  randconfig-015-20240501   gcc  
+i386                  randconfig-016-20240501   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240501   gcc  
+loongarch             randconfig-002-20240501   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath79_defconfig   gcc  
+mips                     cu1830-neo_defconfig   gcc  
+mips                         db1xxx_defconfig   clang
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                        maltaup_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240501   gcc  
+nios2                 randconfig-002-20240501   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240501   gcc  
+parisc                randconfig-002-20240501   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                    klondike_defconfig   gcc  
+powerpc                    mvme5100_defconfig   gcc  
+powerpc               randconfig-001-20240501   clang
+powerpc               randconfig-002-20240501   clang
+powerpc               randconfig-003-20240501   clang
+powerpc                     tqm8555_defconfig   clang
+powerpc64             randconfig-001-20240501   clang
+powerpc64             randconfig-002-20240501   clang
+powerpc64             randconfig-003-20240501   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240501   clang
+riscv                 randconfig-002-20240501   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240501   gcc  
+s390                  randconfig-002-20240501   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                ecovec24-romimage_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240501   gcc  
+sh                    randconfig-002-20240501   gcc  
+sh                   sh7724_generic_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240501   gcc  
+sparc64               randconfig-002-20240501   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240501   gcc  
+um                    randconfig-002-20240501   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240501   gcc  
+x86_64       buildonly-randconfig-002-20240501   clang
+x86_64       buildonly-randconfig-003-20240501   gcc  
+x86_64       buildonly-randconfig-004-20240501   gcc  
+x86_64       buildonly-randconfig-005-20240501   clang
+x86_64       buildonly-randconfig-006-20240501   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240501   gcc  
+x86_64                randconfig-002-20240501   gcc  
+x86_64                randconfig-003-20240501   gcc  
+x86_64                randconfig-004-20240501   clang
+x86_64                randconfig-005-20240501   clang
+x86_64                randconfig-006-20240501   gcc  
+x86_64                randconfig-011-20240501   gcc  
+x86_64                randconfig-012-20240501   clang
+x86_64                randconfig-013-20240501   gcc  
+x86_64                randconfig-014-20240501   clang
+x86_64                randconfig-015-20240501   clang
+x86_64                randconfig-016-20240501   clang
+x86_64                randconfig-071-20240501   clang
+x86_64                randconfig-072-20240501   clang
+x86_64                randconfig-073-20240501   clang
+x86_64                randconfig-074-20240501   gcc  
+x86_64                randconfig-075-20240501   gcc  
+x86_64                randconfig-076-20240501   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240501   gcc  
+xtensa                randconfig-002-20240501   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
