@@ -1,75 +1,77 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B84D52F
-	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 22:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4769F4E1DA
+	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 22:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714602592; cv=none; b=kA4fTwK1Q0GhEHuP+mSEaGKHUn7HnMivFYO/AZ6YhwSyhrMVSpEaNQqHLW3GsarjscRIbO3a37xXtAoEXbe0PjIKgC12GLEjtcMaFNIZOUqXYzCQ3nnuZ/bSH+wO39+awNp9WsjQTQ0NyTcJWCL0u9UfufD6uuGpP9Cq8Ex792Y=
+	t=1714603013; cv=none; b=Vn1jHjL4czVJ781IXOrP574GGz8Ig4/z+6UaTwxd5MCGbC4IDp2/WGlTD8JvRJJlcdigkxcRsWPhVkeypBOBLVjuqj1niNcfyc2UgzHsRPZjO6tyqd3w8+x9a8JGx5Kmg/G4c9PvpTCClTCMi3Y9rVGaC9COgF+08IvIy1Cm+jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714602592; c=relaxed/simple;
-	bh=D+iZlCUmvcIaJjhis52d+bkDEtDAr13IHTOgNA1A87Q=;
+	s=arc-20240116; t=1714603013; c=relaxed/simple;
+	bh=ch1QtgwAOqQ18DJ9cog4zl7TkY/94kEF5/1mlziALYs=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G182w4C6ZFgj4KqL9m+l+jSdtkJ/6Jd63abRmACV4f0jpWEEHDw2cpaYM1imdy9VWSHIx4u2fvNCuQP+nJdYs42fJ5LZdIoMZhiZRf8tonyyIAc7lTGkZ5qOqaA3gM60l7SO6IvbRxJ06ZJjQTsnBfLllVoHe5sCPCdA/xR5ef4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJIKwZAi; arc=none smtp.client-ip=209.85.219.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=jV5pbtBdzfHox6AtINScFu7O5J/mg/xtmlORYgh1Sf02XaiVjrGS1lxVFxAqEjwzpH1NX2DLMViHVYICmgwAaduhlVEzpwZ7aBkYyLjYOYUyiOox9Z6tgkw9qNSCO7BxJhVb7ptBEzv9UQxBOhqjWGuQ1EXG2Cf+w9Vu0nnPN/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KoXc1mDg; arc=none smtp.client-ip=209.85.128.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJIKwZAi"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de607ab52f4so3178752276.2
-        for <linux-cxl@vger.kernel.org>; Wed, 01 May 2024 15:29:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoXc1mDg"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-61804067da0so69973717b3.0
+        for <linux-cxl@vger.kernel.org>; Wed, 01 May 2024 15:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714602589; x=1715207389; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714603010; x=1715207810; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Ya9A5uI7lqh7r2djX+UOzPlU7DjwFFEgn6jcZ40x08=;
-        b=IJIKwZAi0UoDAuIg8q+mUQxhIVlelDUq+Ni4XCpOCrqTZO+iTlCMdEtm+JMtr1GfvJ
-         YbZ9gCvCxhL6HTbjz3fkI0yAwO47I52VCQRoNx8WcYDwIj/ubyFM/aOlPMxMm3Czc0Pw
-         S+hNZDQQx2QafyW8I4vpQOhX103aOaqT3wgGoqPLW+Q9DFErV2YYhb4VHD+BEJ3HqcNt
-         OgQXj8rFe1LEvX0X0H6x9PRa7nVneD3NrzjiB31mJyz6P/tCGh6L0n2+OCPV1avNhwiO
-         wwFIRaTCYC5JORezq88zDbU0s0MHTAZ9AciBCowuEPU+DlWLo9tnYd2VhANIbrhjr/an
-         BFmg==
+        bh=nBvaKgJBJ+oK+nIKOiEo7E3/IY84/nH8+IpysiosK4I=;
+        b=KoXc1mDgB4CBuLMCT5NepL/AQLPJUwTEi4Wdt+1Jp/gNU/sIfYVxZfEEip2NS/PO9L
+         fazV8EedHh9lv05bHJaz30SJvjPX5CCUI9roTzq42XZTp5gnARn3nsYFzdWOLdkEJE7y
+         cJeufC/udfD/M7yqsGZNwRNo1ica/wi51sGMMNBKM2o7AZ+8j3e3NBqWjaG07UCTX0lN
+         EOzDPftoL8WeB/cZrqra27Q8RL6bUcgeRaIFxg79qzE33ubYz/gny0SEN2xEHHcdJKCz
+         WLZeJEl4U7b8Cs+u/pl4rK3TioQtbICArYoCRiE9+K47QEwD9EwfQuTQs0tJYTEjHlbe
+         WoLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714602589; x=1715207389;
+        d=1e100.net; s=20230601; t=1714603010; x=1715207810;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Ya9A5uI7lqh7r2djX+UOzPlU7DjwFFEgn6jcZ40x08=;
-        b=c9foQyAGjbL2zSI+caOwG9lKJMTr1Uy2TORSSv6dN0xEWnTPAL4rAnkLFrcQpzIMpE
-         bzRybEf2FnkoP6Qh9xW9f/NIzIqXxeyBkOOKdG/YinAq5I9Ac5leooyVcumZFGXfXvCk
-         9uEGSkhfCEap5FuSxSnrc92lsTtu+sR8OYQU4cGxhSXWzDLF7xpPLKQrtDOXWNHkatJl
-         V66+5Wn3aYC/2g+D+KA8L4ymfFiB1TaYUdXLd4Hu7LYTKgkGeWR8bNl1tunwI3J0DF+S
-         7gIW+jHd7hNvpYOA4nE7Epq7yyS4/xIHPUxfOGjGnOTHXoe9HIKrbYhaIrPW4pxnNAuM
-         tikA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZrVQoH4DIDFbsGTTaz84WBASmks0fK/e86SDQTdb+lH/Fximf3huclckK6us7kJJvnJFu5gzg25VPBnwDIhfEyzLnzQgkdmSK
-X-Gm-Message-State: AOJu0Yz71vO9vQpaV3zHD42OF9MGbF8/e+Rj+Ea1yaguYI5FqjZRdui2
-	NhDlUMHSz3rjdTsXc+noQ+hiFopd+vpajNu/a/lAJKHLJcI0g0iU
-X-Google-Smtp-Source: AGHT+IHuW+PK4T46wVOjmF+JYxuDTyMjRaypFpjgIsmBYhCZ/1c5PRhxPcSoOMKHYET7UEF4hfyEFA==
-X-Received: by 2002:a25:6b0b:0:b0:de5:6abe:9ab4 with SMTP id g11-20020a256b0b000000b00de56abe9ab4mr3840027ybc.50.1714602588836;
-        Wed, 01 May 2024 15:29:48 -0700 (PDT)
+        bh=nBvaKgJBJ+oK+nIKOiEo7E3/IY84/nH8+IpysiosK4I=;
+        b=Oealb0iPRHLGjzD2PG4GobfQgwPfLnr6QDoaCFOM5tNBjZuNp0s3RmZOT0BLMfyzt3
+         spJvn05XxPV/KgFtTPZuSnSy9K7+juA5ikxuBc9NdkJB9r2wP5QNGffWJz660w6DVuC8
+         GUxVFdwMoWibI1O5s1aNfnLQIwKa9N0P8ldun2JVv5dUePrCr8u/r3VsLryj5wPtBu4V
+         RnNNfLyn3+Ieb1AIIOn8a7tvkybA6cG+95oTwGuHscbOreRLVN590gZzXMRfH+OCid1h
+         pAs2TKpIvWLA1Ic+0kVWMScbFHDg/CkSWNKZFlXaHYVYeSh0tAND+yhe0DtcuDf1sQFO
+         7+NA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2hMtGT+kj0wPByNDSEF94LvngGwOy7vTr9N11LNl+XIdMCv4RCRNJ3fRW3cpWTLaNw26sRHCkal0zgh88Kda9XeWSp65FQAES
+X-Gm-Message-State: AOJu0YxkNxKRiX4zna2BoxaRWtMT67jFdqDimSG2S1In4DcImGzGtOWH
+	48KwsX/MkfF8sqo/uGOqcEDEI/YcEHIYVrLEg21SVr7QpI9yh4/1
+X-Google-Smtp-Source: AGHT+IHBUM5spfwVDo/cU7Zy2S0wkyo1Id8JIRs2xQX//Hy3JhSVOYTnZDkoDeqM7FVMTHG1B7Dkpw==
+X-Received: by 2002:a05:690c:4b90:b0:617:fbaa:1d91 with SMTP id iq16-20020a05690c4b9000b00617fbaa1d91mr4347127ywb.11.1714603010166;
+        Wed, 01 May 2024 15:36:50 -0700 (PDT)
 Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id s15-20020a25830f000000b00de60bbad61csm1135297ybk.63.2024.05.01.15.29.47
+        by smtp.gmail.com with ESMTPSA id z30-20020a81ac5e000000b0061df7da7c00sm715943ywj.65.2024.05.01.15.36.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 15:29:48 -0700 (PDT)
+        Wed, 01 May 2024 15:36:49 -0700 (PDT)
 From: fan <nifan.cxl@gmail.com>
 X-Google-Original-From: fan <fan@debian>
-Date: Wed, 1 May 2024 15:29:31 -0700
-To: Markus Armbruster <armbru@redhat.com>
-Cc: fan <nifan.cxl@gmail.com>, qemu-devel@nongnu.org,
-	jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
+Date: Wed, 1 May 2024 15:36:47 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: fan <nifan.cxl@gmail.com>, Markus Armbruster <armbru@redhat.com>,
+	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
 	gregory.price@memverge.com, ira.weiny@intel.com,
 	dan.j.williams@intel.com, a.manzanares@samsung.com,
 	dave@stgolabs.net, nmtadam.samsung@gmail.com,
 	jim.harris@samsung.com, Jorgen.Hansen@wdc.com, wj28.lee@gmail.com,
-	Fan Ni <fan.ni@samsung.com>
+	Fan Ni <fan.ni@samsung.com>, mst@redhat.com
 Subject: Re: [PATCH v7 09/12] hw/cxl/events: Add qmp interfaces to
  add/release dynamic capacity extents
-Message-ID: <ZjLCS8yJC-OvPsUS@debian>
+Message-ID: <ZjLD_wSqrj_z6mM7@debian>
 References: <20240418232902.583744-1-fan.ni@samsung.com>
  <20240418232902.583744-10-fan.ni@samsung.com>
  <877cgkxzal.fsf@pond.sub.org>
  <Zivk37xBGPsL_yo5@debian>
  <87h6fkob0t.fsf@pond.sub.org>
+ <ZjEnwPeoivsW8y5Z@debian>
+ <20240501155812.00002ec3@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,747 +80,243 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h6fkob0t.fsf@pond.sub.org>
+In-Reply-To: <20240501155812.00002ec3@Huawei.com>
+
+Hi Markus, Michael and Jonathan,
+
+FYI. I have updated this patch based on the feedbacks so far, and posted here:
+https://lore.kernel.org/linux-cxl/20240418232902.583744-1-fan.ni@samsung.com/T/#ma25b6657597d39df23341dc43c22a8c49818e5f9
+
+Comments are welcomed and appreciated.
+
+Fan
 
 
-From 873f59ec06c38645768ada452d9b18920a34723e Mon Sep 17 00:00:00 2001
-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 20 Feb 2024 09:48:31 -0800
-Subject: [PATCH] hw/cxl/events: Add qmp interfaces to add/release dynamic
- capacity extents
-Status: RO
-Content-Length: 25172
-Lines: 731
-
-To simulate FM functionalities for initiating Dynamic Capacity Add
-(Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL spec
-r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces to issue
-add/release dynamic capacity extents requests.
-
-With the change, we allow to release an extent only when its DPA range
-is contained by a single accepted extent in the device. That is to say,
-extent superset release is not supported yet.
-
-1. Add dynamic capacity extents:
-
-For example, the command to add two continuous extents (each 128MiB long)
-to region 0 (starting at DPA offset 0) looks like below:
-
-{ "execute": "qmp_capabilities" }
-
-{ "execute": "cxl-add-dynamic-capacity",
-  "arguments": {
-      "path": "/machine/peripheral/cxl-dcd0",
-      "host-id": 0,
-      "selection-policy": 2,
-      "region": 0,
-      "tag": "",
-      "extents": [
-      {
-          "offset": 0,
-          "len": 134217728
-      },
-      {
-          "offset": 134217728,
-          "len": 134217728
-      }
-      ]
-  }
-}
-
-2. Release dynamic capacity extents:
-
-For example, the command to release an extent of size 128MiB from region 0
-(DPA offset 128MiB) looks like below:
-
-{ "execute": "cxl-release-dynamic-capacity",
-  "arguments": {
-      "path": "/machine/peripheral/cxl-dcd0",
-      "host-id": 0,
-      "flags": 1,
-      "region": 0,
-      "tag": "",
-      "extents": [
-      {
-          "offset": 134217728,
-          "len": 134217728
-      }
-      ]
-  }
-}
-
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
- hw/cxl/cxl-mailbox-utils.c  |  62 +++++--
- hw/mem/cxl_type3.c          | 311 +++++++++++++++++++++++++++++++++++-
- hw/mem/cxl_type3_stubs.c    |  20 +++
- include/hw/cxl/cxl_device.h |  22 +++
- include/hw/cxl/cxl_events.h |  18 +++
- qapi/cxl.json               |  90 +++++++++++
- 6 files changed, 510 insertions(+), 13 deletions(-)
-
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 9d54e10cd4..3569902e9e 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1405,7 +1405,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
-  * Check whether any bit between addr[nr, nr+size) is set,
-  * return true if any bit is set, otherwise return false
-  */
--static bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-+bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-                               unsigned long size)
- {
-     unsigned long res = find_next_bit(addr, size + nr, nr);
-@@ -1444,7 +1444,7 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len)
-     return NULL;
- }
- 
--static void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-+void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-                                              uint64_t dpa,
-                                              uint64_t len,
-                                              uint8_t *tag,
-@@ -1470,6 +1470,44 @@ void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
-     g_free(extent);
- }
- 
-+/*
-+ * Add a new extent to the extent "group" if group exists;
-+ * otherwise, create a new group
-+ * Return value: return the group where the extent is inserted.
-+ */
-+CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-+                                                    uint64_t dpa,
-+                                                    uint64_t len,
-+                                                    uint8_t *tag,
-+                                                    uint16_t shared_seq)
-+{
-+    if (!group) {
-+        group = g_new0(CXLDCExtentGroup, 1);
-+        QTAILQ_INIT(&group->list);
-+    }
-+    cxl_insert_extent_to_extent_list(&group->list, dpa, len,
-+                                     tag, shared_seq);
-+    return group;
-+}
-+
-+void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
-+                                       CXLDCExtentGroup *group)
-+{
-+    QTAILQ_INSERT_TAIL(list, group, node);
-+}
-+
-+void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
-+{
-+    CXLDCExtent *ent, *ent_next;
-+    CXLDCExtentGroup *group = QTAILQ_FIRST(list);
-+
-+    QTAILQ_REMOVE(list, group, node);
-+    QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
-+        cxl_remove_extent_from_extent_list(&group->list, ent);
-+    }
-+    g_free(group);
-+}
-+
- /*
-  * CXL r3.1 Table 8-168: Add Dynamic Capacity Response Input Payload
-  * CXL r3.1 Table 8-170: Release Dynamic Capacity Input Payload
-@@ -1541,6 +1579,7 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
- {
-     uint32_t i;
-     CXLDCExtent *ent;
-+    CXLDCExtentGroup *ext_group;
-     uint64_t dpa, len;
-     Range range1, range2;
- 
-@@ -1551,9 +1590,13 @@ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
-         range_init_nofail(&range1, dpa, len);
- 
-         /*
--         * TODO: once the pending extent list is added, check against
--         * the list will be added here.
-+         * The host-accepted DPA range must be contained by the first extent
-+         * group in the pending list
-          */
-+        ext_group = QTAILQ_FIRST(&ct3d->dc.extents_pending);
-+        if (!cxl_extents_contains_dpa_range(&ext_group->list, dpa, len)) {
-+            return CXL_MBOX_INVALID_PA;
-+        }
- 
-         /* to-be-added range should not overlap with range already accepted */
-         QTAILQ_FOREACH(ent, &ct3d->dc.extents, node) {
-@@ -1586,10 +1629,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-     CXLRetCode ret;
- 
-     if (in->num_entries_updated == 0) {
--        /*
--         * TODO: once the pending list is introduced, extents in the beginning
--         * will get wiped out.
--         */
-+        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-         return CXL_MBOX_SUCCESS;
-     }
- 
-@@ -1615,11 +1655,9 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
- 
-         cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
-         ct3d->dc.total_extent_count += 1;
--        /*
--         * TODO: we will add a pending extent list based on event log record
--         * and process the list accordingly here.
--         */
-     }
-+    /* Remove the first extent group in the pending list*/
-+    cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
- 
-     return CXL_MBOX_SUCCESS;
- }
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index c2cdd6d506..1bae3711a0 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -667,6 +667,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-         ct3d->dc.total_capacity += region->len;
-     }
-     QTAILQ_INIT(&ct3d->dc.extents);
-+    QTAILQ_INIT(&ct3d->dc.extents_pending);
- 
-     return true;
- }
-@@ -674,10 +675,19 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
- static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
- {
-     CXLDCExtent *ent, *ent_next;
-+    CXLDCExtentGroup *group, *group_next;
- 
-     QTAILQ_FOREACH_SAFE(ent, &ct3d->dc.extents, node, ent_next) {
-         cxl_remove_extent_from_extent_list(&ct3d->dc.extents, ent);
-     }
-+
-+    QTAILQ_FOREACH_SAFE(group, &ct3d->dc.extents_pending, node, group_next) {
-+        QTAILQ_REMOVE(&ct3d->dc.extents_pending, group, node);
-+        QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
-+            cxl_remove_extent_from_extent_list(&group->list, ent);
-+        }
-+        g_free(group);
-+    }
- }
- 
- static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-@@ -1443,7 +1453,6 @@ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
-         return CXL_EVENT_TYPE_FAIL;
-     case CXL_EVENT_LOG_FATAL:
-         return CXL_EVENT_TYPE_FATAL;
--/* DCD not yet supported */
-     default:
-         return -EINVAL;
-     }
-@@ -1694,6 +1703,306 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-     }
- }
- 
-+/* CXL r3.1 Table 8-50: Dynamic Capacity Event Record */
-+static const QemuUUID dynamic_capacity_uuid = {
-+    .data = UUID(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f,
-+                 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
-+};
-+
-+typedef enum CXLDCEventType {
-+    DC_EVENT_ADD_CAPACITY = 0x0,
-+    DC_EVENT_RELEASE_CAPACITY = 0x1,
-+    DC_EVENT_FORCED_RELEASE_CAPACITY = 0x2,
-+    DC_EVENT_REGION_CONFIG_UPDATED = 0x3,
-+    DC_EVENT_ADD_CAPACITY_RSP = 0x4,
-+    DC_EVENT_CAPACITY_RELEASED = 0x5,
-+} CXLDCEventType;
-+
-+/*
-+ * Check whether the range [dpa, dpa + len - 1] has overlaps with extents in
-+ * the list.
-+ * Return value: return true if has overlaps; otherwise, return false
-+ */
-+static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-+                                           uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtent *ent;
-+    Range range1, range2;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    range_init_nofail(&range1, dpa, len);
-+    QTAILQ_FOREACH(ent, list, node) {
-+        range_init_nofail(&range2, ent->start_dpa, ent->len);
-+        if (range_overlaps_range(&range1, &range2)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+/*
-+ * Check whether the range [dpa, dpa + len - 1] is contained by extents in
-+ * the list.
-+ * Will check multiple extents containment once superset release is added.
-+ * Return value: return true if range is contained; otherwise, return false
-+ */
-+bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-+                                    uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtent *ent;
-+    Range range1, range2;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    range_init_nofail(&range1, dpa, len);
-+    QTAILQ_FOREACH(ent, list, node) {
-+        range_init_nofail(&range2, ent->start_dpa, ent->len);
-+        if (range_contains_range(&range2, &range1)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-+                                                uint64_t dpa, uint64_t len)
-+{
-+    CXLDCExtentGroup *group;
-+
-+    if (!list) {
-+        return false;
-+    }
-+
-+    QTAILQ_FOREACH(group, list, node) {
-+        if (cxl_extents_overlaps_dpa_range(&group->list, dpa, len)) {
-+            return true;
-+        }
-+    }
-+    return false;
-+}
-+
-+/*
-+ * The main function to process dynamic capacity event with extent list.
-+ * Currently DC extents add/release requests are processed.
-+ */
-+static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
-+        uint16_t hid, CXLDCEventType type, uint8_t rid,
-+        CXLDynamicCapacityExtentList *records, Error **errp)
-+{
-+    Object *obj;
-+    CXLEventDynamicCapacity dCap = {};
-+    CXLEventRecordHdr *hdr = &dCap.hdr;
-+    CXLType3Dev *dcd;
-+    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
-+    uint32_t num_extents = 0;
-+    CXLDynamicCapacityExtentList *list;
-+    CXLDCExtentGroup *group = NULL;
-+    g_autofree CXLDCExtentRaw *extents = NULL;
-+    uint8_t enc_log = CXL_EVENT_TYPE_DYNAMIC_CAP;
-+    uint64_t dpa, offset, len, block_size;
-+    g_autofree unsigned long *blk_bitmap = NULL;
-+    int i;
-+
-+    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve CXL type 3 device");
-+        return;
-+    }
-+
-+    dcd = CXL_TYPE3(obj);
-+    if (!dcd->dc.num_regions) {
-+        error_setg(errp, "No dynamic capacity support from the device");
-+        return;
-+    }
-+
-+
-+    if (rid >= dcd->dc.num_regions) {
-+        error_setg(errp, "region id is too large");
-+        return;
-+    }
-+    block_size = dcd->dc.regions[rid].block_size;
-+    blk_bitmap = bitmap_new(dcd->dc.regions[rid].len / block_size);
-+
-+    /* Sanity check and count the extents */
-+    list = records;
-+    while (list) {
-+        offset = list->value->offset;
-+        len = list->value->len;
-+        dpa = offset + dcd->dc.regions[rid].base;
-+
-+        if (len == 0) {
-+            error_setg(errp, "extent with 0 length is not allowed");
-+            return;
-+        }
-+
-+        if (offset % block_size || len % block_size) {
-+            error_setg(errp, "dpa or len is not aligned to region block size");
-+            return;
-+        }
-+
-+        if (offset + len > dcd->dc.regions[rid].len) {
-+            error_setg(errp, "extent range is beyond the region end");
-+            return;
-+        }
-+
-+        /* No duplicate or overlapped extents are allowed */
-+        if (test_any_bits_set(blk_bitmap, offset / block_size,
-+                              len / block_size)) {
-+            error_setg(errp, "duplicate or overlapped extents are detected");
-+            return;
-+        }
-+        bitmap_set(blk_bitmap, offset / block_size, len / block_size);
-+
-+        if (type == DC_EVENT_RELEASE_CAPACITY) {
-+            if (cxl_extent_groups_overlaps_dpa_range(&dcd->dc.extents_pending,
-+                                                     dpa, len)) {
-+                error_setg(errp,
-+                           "cannot release extent with pending DPA range");
-+                return;
-+            }
-+            if (!cxl_extents_contains_dpa_range(&dcd->dc.extents, dpa, len)) {
-+                error_setg(errp,
-+                           "cannot release extent with non-existing DPA range");
-+                return;
-+            }
-+        } else if (type == DC_EVENT_ADD_CAPACITY) {
-+            if (cxl_extents_overlaps_dpa_range(&dcd->dc.extents, dpa, len)) {
-+                error_setg(errp,
-+                           "cannot add DPA already accessible  to the same LD");
-+                return;
-+            }
-+            if (cxl_extent_groups_overlaps_dpa_range(&dcd->dc.extents_pending,
-+                                                     dpa, len)) {
-+                error_setg(errp,
-+                           "cannot add DPA again while still pending");
-+                return;
-+            }
-+        }
-+        list = list->next;
-+        num_extents++;
-+    }
-+
-+    /* Create extent list for event being passed to host */
-+    i = 0;
-+    list = records;
-+    extents = g_new0(CXLDCExtentRaw, num_extents);
-+    while (list) {
-+        offset = list->value->offset;
-+        len = list->value->len;
-+        dpa = dcd->dc.regions[rid].base + offset;
-+
-+        extents[i].start_dpa = dpa;
-+        extents[i].len = len;
-+        memset(extents[i].tag, 0, 0x10);
-+        extents[i].shared_seq = 0;
-+        if (type == DC_EVENT_ADD_CAPACITY) {
-+            group = cxl_insert_extent_to_extent_group(group,
-+                                                      extents[i].start_dpa,
-+                                                      extents[i].len,
-+                                                      extents[i].tag,
-+                                                      extents[i].shared_seq);
-+        }
-+
-+        list = list->next;
-+        i++;
-+    }
-+    if (group) {
-+        cxl_extent_group_list_insert_tail(&dcd->dc.extents_pending, group);
-+    }
-+
-+    /*
-+     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
-+     *
-+     * All Dynamic Capacity event records shall set the Event Record Severity
-+     * field in the Common Event Record Format to Informational Event. All
-+     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
-+     * Event Log.
-+     */
-+    cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
-+                            cxl_device_get_timestamp(&dcd->cxl_dstate));
-+
-+    dCap.type = type;
-+    /* FIXME: for now, validity flag is cleared */
-+    dCap.validity_flags = 0;
-+    stw_le_p(&dCap.host_id, hid);
-+    /* only valid for DC_REGION_CONFIG_UPDATED event */
-+    dCap.updated_region_id = 0;
-+    dCap.flags = 0;
-+    for (i = 0; i < num_extents; i++) {
-+        memcpy(&dCap.dynamic_capacity_extent, &extents[i],
-+               sizeof(CXLDCExtentRaw));
-+
-+        if (i < num_extents - 1) {
-+            /* Set "More" flag */
-+            dCap.flags |= BIT(0);
-+        }
-+
-+        if (cxl_event_insert(&dcd->cxl_dstate, enc_log,
-+                             (CXLEventRecordRaw *)&dCap)) {
-+            cxl_event_irq_assert(dcd);
-+        }
-+    }
-+}
-+
-+void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t host_id,
-+                                  uint8_t sel_policy, uint8_t region,
-+                                  const char *tag,
-+                                  CXLDynamicCapacityExtentList  *extents,
-+                                  Error **errp)
-+{
-+    enum {
-+        CXL_SEL_POLICY_FREE,
-+        CXL_SEL_POLICY_CONTIGUOUS,
-+        CXL_SEL_POLICY_PRESCRIPTIVE,
-+        CXL_SEL_POLICY_ENABLESHAREDACCESS,
-+    };
-+    switch (sel_policy) {
-+    case CXL_SEL_POLICY_PRESCRIPTIVE:
-+        qmp_cxl_process_dynamic_capacity_prescriptive(path, host_id,
-+                                                      DC_EVENT_ADD_CAPACITY,
-+                                                      region, extents, errp);
-+        return;
-+    default:
-+        error_setg(errp, "Selection policy not supported");
-+        return;
-+    }
-+}
-+
-+#define REMOVAL_POLICY_MASK 0xf
-+#define REMOVAL_POLICY_PRESCRIPTIVE 1
-+#define FORCED_REMOVAL_BIT BIT(4)
-+
-+void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
-+                                      uint8_t flags, uint8_t region,
-+                                      const char *tag,
-+                                      CXLDynamicCapacityExtentList  *extents,
-+                                      Error **errp)
-+{
-+    CXLDCEventType type = DC_EVENT_RELEASE_CAPACITY;
-+
-+    if (flags & FORCED_REMOVAL_BIT) {
-+        /* TODO: enable forced removal in the future */
-+        type = DC_EVENT_FORCED_RELEASE_CAPACITY;
-+        error_setg(errp, "Forced removal not supported yet");
-+        return;
-+    }
-+
-+    switch (flags & REMOVAL_POLICY_MASK) {
-+    case REMOVAL_POLICY_PRESCRIPTIVE:
-+        qmp_cxl_process_dynamic_capacity_prescriptive(path, host_id, type,
-+                                                      region, extents, errp);
-+        return;
-+    default:
-+        error_setg(errp, "Removal policy not supported");
-+        return;
-+    }
-+}
-+
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index 3e1851e32b..9df530ceec 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -67,3 +67,23 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
- {
-     error_setg(errp, "CXL Type 3 support is not compiled in");
- }
-+
-+void qmp_cxl_add_dynamic_capacity(const char *path,
-+                                  uint16_t host_id,
-+                                  uint8_t sel_policy,
-+                                  uint8_t region,
-+                                  const char *tag,
-+                                  CXLDynamicCapacityExtentList *extents,
-+                                  Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-+
-+void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
-+                                      uint8_t flags, uint8_t region,
-+                                      const char *tag,
-+                                      CXLDynamicCapacityExtentList *extents,
-+                                      Error **errp)
-+{
-+    error_setg(errp, "CXL Type 3 support is not compiled in");
-+}
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index df3511e91b..c69ff6b5de 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -443,6 +443,12 @@ typedef struct CXLDCExtent {
- } CXLDCExtent;
- typedef QTAILQ_HEAD(, CXLDCExtent) CXLDCExtentList;
- 
-+typedef struct CXLDCExtentGroup {
-+    CXLDCExtentList list;
-+    QTAILQ_ENTRY(CXLDCExtentGroup) node;
-+} CXLDCExtentGroup;
-+typedef QTAILQ_HEAD(, CXLDCExtentGroup) CXLDCExtentGroupList;
-+
- typedef struct CXLDCRegion {
-     uint64_t base;       /* aligned to 256*MiB */
-     uint64_t decode_len; /* aligned to 256*MiB */
-@@ -494,6 +500,7 @@ struct CXLType3Dev {
-          */
-         uint64_t total_capacity; /* 256M aligned */
-         CXLDCExtentList extents;
-+        CXLDCExtentGroupList extents_pending;
-         uint32_t total_extent_count;
-         uint32_t ext_list_gen_seq;
- 
-@@ -555,4 +562,19 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len);
- 
- void cxl_remove_extent_from_extent_list(CXLDCExtentList *list,
-                                         CXLDCExtent *extent);
-+void cxl_insert_extent_to_extent_list(CXLDCExtentList *list, uint64_t dpa,
-+                                      uint64_t len, uint8_t *tag,
-+                                      uint16_t shared_seq);
-+bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
-+                       unsigned long size);
-+bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-+                                    uint64_t dpa, uint64_t len);
-+CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-+                                                    uint64_t dpa,
-+                                                    uint64_t len,
-+                                                    uint8_t *tag,
-+                                                    uint16_t shared_seq);
-+void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
-+                                       CXLDCExtentGroup *group);
-+void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
- #endif
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index 5170b8dbf8..38cadaa0f3 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -166,4 +166,22 @@ typedef struct CXLEventMemoryModule {
-     uint8_t reserved[0x3d];
- } QEMU_PACKED CXLEventMemoryModule;
- 
-+/*
-+ * CXL r3.1 section Table 8-50: Dynamic Capacity Event Record
-+ * All fields little endian.
-+ */
-+typedef struct CXLEventDynamicCapacity {
-+    CXLEventRecordHdr hdr;
-+    uint8_t type;
-+    uint8_t validity_flags;
-+    uint16_t host_id;
-+    uint8_t updated_region_id;
-+    uint8_t flags;
-+    uint8_t reserved2[2];
-+    uint8_t dynamic_capacity_extent[0x28]; /* defined in cxl_device.h */
-+    uint8_t reserved[0x18];
-+    uint32_t extents_avail;
-+    uint32_t tags_avail;
-+} QEMU_PACKED CXLEventDynamicCapacity;
-+
- #endif /* CXL_EVENTS_H */
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 4281726dec..27cf39f448 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -361,3 +361,93 @@
- ##
- {'command': 'cxl-inject-correctable-error',
-  'data': {'path': 'str', 'type': 'CxlCorErrorType'}}
-+
-+##
-+# @CXLDynamicCapacityExtent:
-+#
-+# A single dynamic capacity extent
-+#
-+# @offset: The offset (in bytes) to the start of the region
-+#     where the extent belongs to
-+#
-+# @len: The length of the extent in bytes
-+#
-+# Since: 9.1
-+##
-+{ 'struct': 'CXLDynamicCapacityExtent',
-+  'data': {
-+      'offset':'uint64',
-+      'len': 'uint64'
-+  }
-+}
-+
-+##
-+# @cxl-add-dynamic-capacity:
-+#
-+# Command to initiate to add dynamic capacity extents to a host.  It
-+# simulates operations defined in cxl spec r3.1 7.6.7.6.5.
-+#
-+# @path: CXL DCD canonical QOM path
-+#
-+# @host-id: The "Host ID" field as defined in cxl spec r3.1
-+#     Table 7-70.
-+#
-+# @selection-policy: The "Selection Policy" bits as defined in
-+#     cxl spec r3.1 Table 7-70.  It specifies the policy to use for
-+#     selecting which extents comprise the added capacity.
-+#
-+# @region: The "Region Number" field as defined in cxl spec r3.1
-+#     Table 7-70.  The dynamic capacity region where the capacity
-+#     is being added.  Valid range is from 0-7.
-+#
-+# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-70.
-+#
-+# @extents: The "Extent List" field as defined in cxl spec r3.1
-+#     Table 7-70.
-+#
-+# Since : 9.1
-+##
-+{ 'command': 'cxl-add-dynamic-capacity',
-+  'data': { 'path': 'str',
-+            'host-id': 'uint16',
-+            'selection-policy': 'uint8',
-+            'region': 'uint8',
-+            'tag': 'str',
-+            'extents': [ 'CXLDynamicCapacityExtent' ]
-+           }
-+}
-+
-+##
-+# @cxl-release-dynamic-capacity:
-+#
-+# Command to initiate to release dynamic capacity extents from a
-+# host.  It simulates operations defined in cxl spec r3.1 7.6.7.6.6.
-+#
-+# @path: CXL DCD canonical QOM path
-+#
-+# @host-id: The "Host ID" field as defined in cxl spec r3.1
-+#     Table 7-71.
-+#
-+# @flags: The "Flags" field as defined in cxl spec r3.1 Table 7-71,
-+#     with bit[3:0] for removal policy, bit[4] for forced removal,
-+#     bit[5] for sanitize on release, bit[7:6] reserved.
-+#
-+# @region: The dynamic capacity region where the extents will be
-+#     released.
-+#
-+# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-71.
-+#
-+# @extents: The "Extent List" field as defined in cxl spec r3.1
-+#     Table 7-71.
-+#
-+# Since : 9.1
-+##
-+{ 'command': 'cxl-release-dynamic-capacity',
-+  'data': { 'path': 'str',
-+            'host-id': 'uint16',
-+            'flags': 'uint8',
-+            'region': 'uint8',
-+            'tag': 'str',
-+            'extents': [ 'CXLDynamicCapacityExtent' ]
-+           }
-+}
--- 
-2.43.0
-
+On Wed, May 01, 2024 at 03:58:12PM +0100, Jonathan Cameron wrote:
+> 
+> 
+> 
+> > > >> > +# @hid: host id  
+> > > >> 
+> > > >> @host-id, unless "HID" is established terminology in CXL DCD land.  
+> > > >
+> > > > host-id works.  
+> > > >> 
+> > > >> What is a host ID?  
+> > > >
+> > > > It is an id identifying the host to which the capacity is being added.  
+> > > 
+> > > How are these IDs assigned?  
+> > 
+> > All the arguments passed to the command here are defined in CXL spec. I
+> > will add reference to the spec.
+> > 
+> > Based on the spec, for LD-FAM (Fabric attached memory represented as
+> > logical device), host id is the LD-ID of the host interface to which
+> > the capacity is being added. LD-ID is a unique number (16-bit) assigned
+> > to a host interface.
+> 
+> Key here is the host doesn't know it.  This ID exists purely for rooting
+> to the appropriate host interface either via choosing a port on a
+> multihead Single Logical Device (SLD) (so today it's always 0 as we only
+> have one head) or if we ever implement a switch capable of handling MLDs
+> then the switch will handle routing of host PCIe accesses so it lands
+> on the interface defined by this ID (and the event turns up in that event log.
+> 
+>             Host A         Host B - could in theory be a RP on host A ;)
+>               |              |  Doesn't exist (yet, but there are partial.
+>              _|______________|_ patches for this on list.
+>             | LD 0         LD 1|
+>             |                  |
+>             |   Multi Head     |
+>             |   Single Logical |
+>             |  Device (MH-SLD) |
+>             |__________________|
+> Host view similar to the switch case, but just two direct
+> connected devices.
+> 
+> Or Switch and MLD case - we aren't emulating this yet at all
+> 
+>      Wiring / real topology                 Host View 
+>          
+>       Host A     Host B              Host A       Host B
+>         |          |                   |            |
+>      ___|__________|___               _|_          _|_
+>     |   \  SWITCH /    |             |SW0|        | | |
+>     |    \       /     |             | | |        | | |
+>     |    LD0   LD1     |             | | |        | | |
+>     |      \   /       |             | | |        | | |
+>     |        |         |             | | |        | | |
+>     |________|_________|             |_|_|        |_|_|
+>              |                         |            |
+>       Traffic tagged with LD           |            |
+>              |                         |            |
+>      ________|________________     ____|___     ____|___
+>     | Multilogical Device MLD |   |        |   |        |
+>     |        |                |   | Simple |   | Another|
+>     |       / \               |   | CXL    |   | CXL    |
+>     |      /   \              |   | Memory |   | Memory |
+>     |    Interfaces           |   | Device |   | Device |
+>     |   LD0     LD1           |   |        |   |        |
+>     |_________________________|   |________|   |________|
+> 
+> Note the hosts just see separate devices and switches with the fun exception that the
+> memory may actually be available to both at the same time.
+> 
+> Control plane for the switches and MLD see what is actually going on.
+> 
+> At this stage upshot is we could just default this to zero and add an optional
+> parameter to set it later.
+> 
+> 
+> 
+> ...
+> 
+> > > >> > +# @extents: Extents to release
+> > > >> > +#
+> > > >> > +# Since : 9.1
+> > > >> > +##
+> > > >> > +{ 'command': 'cxl-release-dynamic-capacity',
+> > > >> > +  'data': { 'path': 'str',
+> > > >> > +            'hid': 'uint16',
+> > > >> > +            'flags': 'uint8',
+> > > >> > +            'region-id': 'uint8',
+> > > >> > +            'tag': 'str',
+> > > >> > +            'extents': [ 'CXLDCExtentRecord' ]
+> > > >> > +           }
+> > > >> > +}  
+> > > >> 
+> > > >> During review of v5, you wrote:
+> > > >> 
+> > > >>     For add command, the host will send a mailbox command to response to
+> > > >>     the add request to the device to indicate whether it accepts the add
+> > > >>     capacity offer or not.
+> > > >>     
+> > > >>     For release command, the host send a mailbox command (not always a
+> > > >>     response since the host can proactively release capacity if it does
+> > > >>     not need it any more) to device to ask device release the capacity.
+> > > >> 
+> > > >> Can you briefly sketch the protocol?  Peers and messages involved.
+> > > >> Possibly as a state diagram.  
+> > > >
+> > > > Need to think about it. If we can polish the text nicely, maybe the
+> > > > sketch is not needed. My concern is that the sketch may
+> > > > introduce unwanted complexity as we expose too much details. The two
+> > > > commands provide ways to add/release dynamic capacity to/from a host,
+> > > > that is all. All the other information, like what the host will do, or
+> > > > how the device will react, are consequence of the command, not sure
+> > > > whether we want to include here.  
+> > > 
+> > > The protocol sketch is for me, not necessarily the doc comment.  I'd
+> > > like to understand at high level how this stuff works, because only then
+> > > can I meaningfully review the docs.  
+> > 
+> > --------------------------------
+> > For add command, saying a user sends a request to FM to ask to add
+> > extent A of the device (managed by FM) to host 0.
+> > The function cxl-add-dynamic-capacity simulates what FM needs to do.
+> 
+> This gets a little fiddly as an explanation.  I'd argue this is more or
+> less at the level of the FM to device command flow so it's the device
+> verifying etc. (you could explain this interface as talking to an FM
+> that is talking to the device, but that just feels complicated to me).
+> 
+> > 1. Verify extent A is valid (behaviour defined by the spec), return
+> > error if not; otherwise,
+> > 2. Add a record to the device's event log (indicating the intent to
+> > add extent A to host 0), update device internal extent tracking status,
+> > signal an interrupt to host 0;
+> > (The above step 1 & 2 are performed in the QMP interface, following
+> > operations are QMP irrelevant, only host and device involved.)
+> 
+> In this patch.
+> 
+> > 3. Once the interrupt is received, host 0 fetch the event record from
+> > the device's event log through some mailbox command (out of scope
+> > of this patch series).
+> 
+> It's in patch 8.
+> 
+> > 4. Host 0 decides whether it accepts extent A or not. Whether accept or
+> > reject, host needs to send a response (add-response mailbox command) to
+> > the device so the device can update its internal extent tracking
+> > status accordingly.
+> > The device return a value to the host showing whether the response is
+> > successful or failed.
+> 
+> (assuming the host isn't buggy this always succeeds)
+> 
+> > 5. Based on the mailbox command return value, the host process
+> > accordingly.
+> 
+> Memory now useable by host if it accepted it successfully.
+> 
+> > 6. The host sends a mailbox command to the device to clear the event
+> > record in the device's event log. 
+> > 
+> > ---------------------------------
+> > For release command, saying a user sends a request to FM to ask host 0
+> > to release extent A and return it back to the device (managed by FM).
+> > 
+> > The function cxl-release-dynamic-capacity simulates what FM needs to do.
+> > 1. Verify extent A is valid (defined by the spec), return error if not;
+> > otherwise,
+> > 2. Add a record to the event log (indicating the intent to
+> > release extent A from host 0), signal an interrupt to host 0;
+> > (The above step 1 & 2 are performed in the QMP interface, following
+> > operations are QMP irrelevant, only host and device involved.
+> > 3. Once the interrupt is received, host 0 fetch the event record from
+> > the device's event log through some mailbox command (out of scope
+> > of this patch series).
+> > 4. Host 0 decides whether it can release extent A or not. Whether can or
+> > cannot release, host needs to send a release (mailbox command) to the device
+> > so the device can update its internal extent tracking status accordingly.
+> > The device returns a value to host 0 showing whether the release is
+> > successful or failed.
+> > 5. Based on the returned value, the host process accordingly.
+> > 6. The host sends mailbox command to clear the event record in the
+> > device's event log. 
+> > 
+> > For release command, it is more complicated. Based on the release flag
+> > passed to FM, FM can behaviour differently. For example, if the
+> > forced-removal flag is set, FM can directly get the extent back from a
+> > host for other uses without waiting for the host to send command to the
+> > device. For the above step 2, their may be not event record to the event
+> > log (no supported in this patch series yet).
+> I thought we weren't doing force remove yet?  So for that we could
+> set default value as normal release until we add that support perhaps.
+> 
+> > 
+> > Also, for the release interface here, it simulates FM initializes the
+> > release request.
+> > There is another case where the host can proactively release extents it
+> > do not need any more back to device. However, this case is out of the
+> > scope of this release interface.
+> > 
+> > Hope the above text helps a little for the context here.
+> > Let me know if further clarification is needed.
+> 
+> Only thing I'd add is that for now (because we don't need it for testing
+> the kernel flows) is that this does not provide any way for external
+> agents (e.g. our 'fabric manager' to find out what the state is - i.e.
+> if the extents have been accepted by the host etc). That stuff is all
+> defined by the spec, but not yet in the QMP interface.  At somepoint
+> we may want to add that as a state query type interface.
+> 
+> Jonathan
+> 
+> p.s. Our emails raced yesterday, so great you put together this explanation
+> of the flows before I got to it :)
+> 
+> > 
+> > Thanks,
+> > Fan
+> > 
+> > 
+> > 
+> > >   
+> > > > @Jonathan, Any thoughts on this?  
+> > > 
+> > > Thanks!
+> > >   
+> 
