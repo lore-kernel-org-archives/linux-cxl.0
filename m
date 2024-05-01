@@ -1,41 +1,48 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107D12F369
-	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 14:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7823D5FBB1
+	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 14:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714573510; cv=none; b=bVrM3xhXP3gM/3HOtnA2YD7YAuKCLTVN4oigVMYy80mzny6KSjdlTEmXuj3Tw93h4BxF9WXgxe6efQWNujdpi/pVHuI4H6Os7pmcaZzBQuMV5u0rutbiKXyTsnd/Cyd1kAbTSymLW4ygKJB6aDUiNIo7Qt8vGYvF5+wlzP72QuQ=
+	t=1714575500; cv=none; b=ZmaRMf1rn4jy7ixnkcjX3Ddy0bMKBW2Lpm098kQDoayIPj0875kNpinuvmZxEcuVeHd0I2OIHLz+l78r7p3RcmqJQciGAMjEhQ2Bhs88YGgiMk1ZPHOKQ7FHTSm9PEPgKTGnAwDi9+xNWyeRxVw7Hr8vKBoq0ARidHekHabfnt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714573510; c=relaxed/simple;
-	bh=+UjacypduRFIk5vKU2cjXpHPV+jopZ6/m/iBjd7c+io=;
+	s=arc-20240116; t=1714575500; c=relaxed/simple;
+	bh=XGF+Gx/6ObQES9uht5TX9XbsAD/26jfrV4n9qikj2WM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=idKfl9ARR8Jiom6U7qtj0XfZzvIdp+a1zxZIECVK9VrXZ6JEVSCC7VjAw01QNTkb9VIt53o+EixnvzH0QBNu5PYwZ9XrawZhVHOys6BIUEVy47H1/9suIJY/Xwm3ucFjl0AHSP9MBFaLhgVZxW+R5u5tVrLnBHL2SYbHtsiep0s=
+	 MIME-Version:Content-Type; b=V+gdQ3VhQHU+WHy9bFejD3byoYAtYnuN27ewXYlcFdnGsOoB8gtPpLlHUV25zrJTBo5ZrhVZa3DfhKtKkoPbnDgj2E7KvbtMyeIkbSjUGkImh3wS0BviGLjFUUuMjshE2pb5AUX4Oc/sOfg7cwXri/XG0CW4pUyaCjTjurr7RNw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTzmD3HSYz67nrk;
-	Wed,  1 May 2024 22:22:20 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VV0YG65fxz6K7HY;
+	Wed,  1 May 2024 22:57:54 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 747111408F9;
-	Wed,  1 May 2024 22:25:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 68EEE1408F9;
+	Wed,  1 May 2024 22:58:14 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 1 May
- 2024 15:25:04 +0100
-Date: Wed, 1 May 2024 15:25:03 +0100
+ 2024 15:58:13 +0100
+Date: Wed, 1 May 2024 15:58:12 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240501152503.00002e60@Huawei.com>
-In-Reply-To: <6628464ee73bb_d567d2943c@iweiny-mobl.notmuch>
-References: <20240411181641.514075-1-dave.jiang@intel.com>
-	<6628464ee73bb_d567d2943c@iweiny-mobl.notmuch>
+To: fan <nifan.cxl@gmail.com>
+CC: Markus Armbruster <armbru@redhat.com>, <qemu-devel@nongnu.org>,
+	<linux-cxl@vger.kernel.org>, <gregory.price@memverge.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
+	<jim.harris@samsung.com>, <Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, Fan
+ Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH v7 09/12] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <20240501155812.00002ec3@Huawei.com>
+In-Reply-To: <ZjEnwPeoivsW8y5Z@debian>
+References: <20240418232902.583744-1-fan.ni@samsung.com>
+	<20240418232902.583744-10-fan.ni@samsung.com>
+	<877cgkxzal.fsf@pond.sub.org>
+	<Zivk37xBGPsL_yo5@debian>
+	<87h6fkob0t.fsf@pond.sub.org>
+	<ZjEnwPeoivsW8y5Z@debian>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -46,210 +53,233 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 23 Apr 2024 16:37:50 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
 
-> Dave Jiang wrote:
+
+
+> > >> > +# @hid: host id  
+> > >> 
+> > >> @host-id, unless "HID" is established terminology in CXL DCD land.  
+> > >
+> > > host-id works.  
+> > >> 
+> > >> What is a host ID?  
+> > >
+> > > It is an id identifying the host to which the capacity is being added.  
+> > 
+> > How are these IDs assigned?  
 > 
-> [snip]
+> All the arguments passed to the command here are defined in CXL spec. I
+> will add reference to the spec.
 > 
-> > +/*
-> > + * Calculate the bandwidth for the cxl region based on the number of targets
-> > + * that share an upstream switch. The function is called while targets are
-> > + * being attached for a region. If the number of targets is 1, then
-> > + * the target either does not have a upstream switch or it's the first target
-> > + * of the shared link. In this case, the bandwidth is the sum of the target
-> > + * bandwidth and the collected region bandwidth. If the targets from cxl_rr is
-> > + * greater than 1, then the bandwidth is the minimum of the switch upstream
-> > + * port bandwidth or the region plus the target bandwidth.
-> > + */
-> > +static unsigned int calculate_region_bw(int targets, unsigned int usp_bw,
-> > +					unsigned int ep_bw,
-> > +					unsigned int region_bw)
-> > +{
-> > +	if (targets == 1)
-> > +		return region_bw + ep_bw;
-> > +
-> > +	return min_t(unsigned int, usp_bw, region_bw + ep_bw);
-> > +}
-> > +
-> >  void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> >  				    struct cxl_endpoint_decoder *cxled)
-> >  {
-> > @@ -551,7 +581,9 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> >  			.start = cxled->dpa_res->start,
-> >  			.end = cxled->dpa_res->end,
-> >  	};
-> > +	struct cxl_port *port = cxlmd->endpoint;
-> >  	struct cxl_dpa_perf *perf;
-> > +	int usp_bw, targets;
-> >  
-> >  	switch (cxlr->mode) {
-> >  	case CXL_DECODER_RAM:
-> > @@ -569,6 +601,12 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> >  	if (!range_contains(&perf->dpa_range, &dpa))
-> >  		return;
-> >  
-> > +	usp_bw = cxl_get_switch_uport_bandwidth(port->uport_dev);
-> > +	if (usp_bw > 0)
-> > +		targets = cxl_port_shared_region_targets(port, cxlr);  
+> Based on the spec, for LD-FAM (Fabric attached memory represented as
+> logical device), host id is the LD-ID of the host interface to which
+> the capacity is being added. LD-ID is a unique number (16-bit) assigned
+> to a host interface.
+
+Key here is the host doesn't know it.  This ID exists purely for rooting
+to the appropriate host interface either via choosing a port on a
+multihead Single Logical Device (SLD) (so today it's always 0 as we only
+have one head) or if we ever implement a switch capable of handling MLDs
+then the switch will handle routing of host PCIe accesses so it lands
+on the interface defined by this ID (and the event turns up in that event log.
+
+            Host A         Host B - could in theory be a RP on host A ;)
+              |              |  Doesn't exist (yet, but there are partial.
+             _|______________|_ patches for this on list.
+            | LD 0         LD 1|
+            |                  |
+            |   Multi Head     |
+            |   Single Logical |
+            |  Device (MH-SLD) |
+            |__________________|
+Host view similar to the switch case, but just two direct
+connected devices.
+
+Or Switch and MLD case - we aren't emulating this yet at all
+
+     Wiring / real topology                 Host View 
+         
+      Host A     Host B              Host A       Host B
+        |          |                   |            |
+     ___|__________|___               _|_          _|_
+    |   \  SWITCH /    |             |SW0|        | | |
+    |    \       /     |             | | |        | | |
+    |    LD0   LD1     |             | | |        | | |
+    |      \   /       |             | | |        | | |
+    |        |         |             | | |        | | |
+    |________|_________|             |_|_|        |_|_|
+             |                         |            |
+      Traffic tagged with LD           |            |
+             |                         |            |
+     ________|________________     ____|___     ____|___
+    | Multilogical Device MLD |   |        |   |        |
+    |        |                |   | Simple |   | Another|
+    |       / \               |   | CXL    |   | CXL    |
+    |      /   \              |   | Memory |   | Memory |
+    |    Interfaces           |   | Device |   | Device |
+    |   LD0     LD1           |   |        |   |        |
+    |_________________________|   |________|   |________|
+
+Note the hosts just see separate devices and switches with the fun exception that the
+memory may actually be available to both at the same time.
+
+Control plane for the switches and MLD see what is actually going on.
+
+At this stage upshot is we could just default this to zero and add an optional
+parameter to set it later.
+
+
+
+...
+
+> > >> > +# @extents: Extents to release
+> > >> > +#
+> > >> > +# Since : 9.1
+> > >> > +##
+> > >> > +{ 'command': 'cxl-release-dynamic-capacity',
+> > >> > +  'data': { 'path': 'str',
+> > >> > +            'hid': 'uint16',
+> > >> > +            'flags': 'uint8',
+> > >> > +            'region-id': 'uint8',
+> > >> > +            'tag': 'str',
+> > >> > +            'extents': [ 'CXLDCExtentRecord' ]
+> > >> > +           }
+> > >> > +}  
+> > >> 
+> > >> During review of v5, you wrote:
+> > >> 
+> > >>     For add command, the host will send a mailbox command to response to
+> > >>     the add request to the device to indicate whether it accepts the add
+> > >>     capacity offer or not.
+> > >>     
+> > >>     For release command, the host send a mailbox command (not always a
+> > >>     response since the host can proactively release capacity if it does
+> > >>     not need it any more) to device to ask device release the capacity.
+> > >> 
+> > >> Can you briefly sketch the protocol?  Peers and messages involved.
+> > >> Possibly as a state diagram.  
+> > >
+> > > Need to think about it. If we can polish the text nicely, maybe the
+> > > sketch is not needed. My concern is that the sketch may
+> > > introduce unwanted complexity as we expose too much details. The two
+> > > commands provide ways to add/release dynamic capacity to/from a host,
+> > > that is all. All the other information, like what the host will do, or
+> > > how the device will react, are consequence of the command, not sure
+> > > whether we want to include here.  
+> > 
+> > The protocol sketch is for me, not necessarily the doc comment.  I'd
+> > like to understand at high level how this stuff works, because only then
+> > can I meaningfully review the docs.  
 > 
-> I'm not quite following how this handles a x4 situation with 2 upstream
-> ports and 2 devices under each of those switches.
+> --------------------------------
+> For add command, saying a user sends a request to FM to ask to add
+> extent A of the device (managed by FM) to host 0.
+> The function cxl-add-dynamic-capacity simulates what FM needs to do.
+
+This gets a little fiddly as an explanation.  I'd argue this is more or
+less at the level of the FM to device command flow so it's the device
+verifying etc. (you could explain this interface as talking to an FM
+that is talking to the device, but that just feels complicated to me).
+
+> 1. Verify extent A is valid (behaviour defined by the spec), return
+> error if not; otherwise,
+> 2. Add a record to the device's event log (indicating the intent to
+> add extent A to host 0), update device internal extent tracking status,
+> signal an interrupt to host 0;
+> (The above step 1 & 2 are performed in the QMP interface, following
+> operations are QMP irrelevant, only host and device involved.)
+
+In this patch.
+
+> 3. Once the interrupt is received, host 0 fetch the event record from
+> the device's event log through some mailbox command (out of scope
+> of this patch series).
+
+It's in patch 8.
+
+> 4. Host 0 decides whether it accepts extent A or not. Whether accept or
+> reject, host needs to send a response (add-response mailbox command) to
+> the device so the device can update its internal extent tracking
+> status accordingly.
+> The device return a value to the host showing whether the response is
+> successful or failed.
+
+(assuming the host isn't buggy this always succeeds)
+
+> 5. Based on the mailbox command return value, the host process
+> accordingly.
+
+Memory now useable by host if it accepted it successfully.
+
+> 6. The host sends a mailbox command to the device to clear the event
+> record in the device's event log. 
 > 
->      +------+            +------+
->      | HB 0 |            | HB 1 |
->      +------+            +------+
->         | (link 0)          | (link 1)
->      +------+            +------+
->      | SW 0 |            | SW 1 |
->      +------+            +------+
->       /    \              /     \
->  +------+ +------+   +------+ +------+
->  | EP 0 | | EP 1 |   | EP 2 | | EP 3 |
->  +------+ +------+   +------+ +------+
+> ---------------------------------
+> For release command, saying a user sends a request to FM to ask host 0
+> to release extent A and return it back to the device (managed by FM).
 > 
-> In this case the region BW should be:
+> The function cxl-release-dynamic-capacity simulates what FM needs to do.
+> 1. Verify extent A is valid (defined by the spec), return error if not;
+> otherwise,
+> 2. Add a record to the event log (indicating the intent to
+> release extent A from host 0), signal an interrupt to host 0;
+> (The above step 1 & 2 are performed in the QMP interface, following
+> operations are QMP irrelevant, only host and device involved.
+> 3. Once the interrupt is received, host 0 fetch the event record from
+> the device's event log through some mailbox command (out of scope
+> of this patch series).
+> 4. Host 0 decides whether it can release extent A or not. Whether can or
+> cannot release, host needs to send a release (mailbox command) to the device
+> so the device can update its internal extent tracking status accordingly.
+> The device returns a value to host 0 showing whether the release is
+> successful or failed.
+> 5. Based on the returned value, the host process accordingly.
+> 6. The host sends mailbox command to clear the event record in the
+> device's event log. 
 > 
-> 	min ( sum(link0, link1), sum(EP 0-3) )
+> For release command, it is more complicated. Based on the release flag
+> passed to FM, FM can behaviour differently. For example, if the
+> forced-removal flag is set, FM can directly get the extent back from a
+> host for other uses without waiting for the host to send command to the
+> device. For the above step 2, their may be not event record to the event
+> log (no supported in this patch series yet).
+I thought we weren't doing force remove yet?  So for that we could
+set default value as normal release until we add that support perhaps.
+
 > 
-> How is the sum of EP 0-1 limited to the link0 BW, and EP 2-3 to link1?
+> Also, for the release interface here, it simulates FM initializes the
+> release request.
+> There is another case where the host can proactively release extents it
+> do not need any more back to device. However, this case is out of the
+> scope of this release interface.
+> 
+> Hope the above text helps a little for the context here.
+> Let me know if further clarification is needed.
 
-Agreed. Seems this fails if there are multiple RPs involved whether attached
-to a single host bridge, or multiple host bridges (and hence multiple generic
-ports).  
-
-I'm also wondering now if we are handling the difference between shared
-Generic Ports and independent ones? (and for giggles PXM nodes with multiple
-GPs)
-
-                 CFMWS 0
-                    |
-           _________|_________
-          |                   |
-    GP0/HB0/ACPI0017-0  GP1/HB1/ACPI0017-1
-      |          |        |           |
-     RP0        RP1      RP2         RP3
-      |          |        |           |
-    SW 0       SW 1     SW 2        SW 3
-    |   |      |   |    |   |       |   |
-   EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
-
-BW I think is min of (being loose with terms!):
-* GP0 BW + GP1 BW  (I think GP stuff is expressing bw to the Root Complex)
-* RP0 Link + RP1 Link + RP2 Link + RP3 Link
-* SW0 SSLBIS BW Port0 + SW0 SSLBIS BW P1 + SW1 BW P0 + SW1 P1 + SW2 P0 + SW2 P1 + SW3 P0 + SW3 P1
-* EP0 Link BW + EP1 Link BW + EP2 Link BW + EP3 Link BW + EP 4 Link BW + EP5 Link BW + EP6 Link BW + EP7 Link BW
-* EP0 DSLBIS BW + EP1.... EP7 DSLBIS BW.
-
-But it's worse than that, because in each branch the bottleneck might not
-be at the same level.  If we spit it into two GP0 tree and GP1 tree
-and in GP0 the limit is the SW0/1 BW and in GP1 it's EP4,5,6,7
-then we can't just sum things up like above.
-
-I think we'd need to build up from the leaves with them all in place, clamping
-as we go.  So something like
-Min (CPU0 to GP0 BW, 
-     Min(RP0 to SW 0 Link BW, 
-         Min(SW0SSLBIS to P0, EP0 DSLBIS, EP0 Upstream Link) +
-         Min(SW0SSLBIS to P1, EP1 DSLBIS, EP1 Upstream link)) +
-     Min(RP1 to SW 1 Link BW, 
-         Min(SW1SSLBIS to P0, EP2 DSLBIS, EP2 Upstream Link) +
-         Min(SW1SSLBIS to P1, EP3 DSLBIS, EP3 Upstream link))) +
-Min (CPU0 to GP1 BW,
-     Min(RP2 to SW 2 Link BW, 
-         Min(SW2SSLBIS to P0, EP4 DSLBIS, EP4 Upstream Link) +
-         Min(SW2SSLBIS to P1, EP5 DSLBIS, EP5 Upstream link)) +
-     Min(RP3 to SW 3 Link BW, 
-         Min(SW3SSLBIS to P0, EP6 DSLBIS, EP6 Upstream Link) +
-         Min(SW3SSLBIS to P1, EP7 DSLBIS, EP7 Upstream link))))
-
-
-The outer most sum assumes GP0 and GP1 are in different PXM.
-If they are in the same one I think it's effectively the same
-as all the RP below one HB?
-
-Maybe we should just document we only support symmetric
-setups and print warning messages if anything else is seen - the
-shared PXM for the GPs should be added though as that is certainly
-possible and made me think I need to poke some FW folk to make sure
-they aren't doing this wrong ;)
-
-So there can be sharing both upstream of switches and between the root
-ports.  We can't do anything about sharing inside the host as HMAT
-doesn't give us any hints.
-
-I'm basing that shared PXM assumption on the case of two chunks of
-memory (each with own SRAT entry but same Proximity Domain) then the HMAT numbers
-are to all the memory in the node, not to each chunk of the memory.
-
-So upshot is we need test cases where we deliberate clamp the bandwidth
-at each level in the above diagram to something small and make sure we
-correctly identify the overall bandwidth.
-
-Can do that in QEMU (with the GP set) though you'll need to hack the
-CDAT tables or export them and inject them back in again with different
-numbers.
-
-Good luck ;) *hides*
+Only thing I'd add is that for now (because we don't need it for testing
+the kernel flows) is that this does not provide any way for external
+agents (e.g. our 'fabric manager' to find out what the state is - i.e.
+if the extents have been accepted by the host etc). That stuff is all
+defined by the spec, but not yet in the QMP interface.  At somepoint
+we may want to add that as a state query type interface.
 
 Jonathan
 
+p.s. Our emails raced yesterday, so great you put together this explanation
+of the flows before I got to it :)
 
-
-
 > 
-> > +	else
-> > +		targets = 1;  
+> Thanks,
+> Fan
 > 
-> Maybe a comment to indicate that targets == 1 is a failure to read the usp
-> link speed so defaulting back to the sum of the endpoints.
 > 
-> > +
-> >  	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-> >  		/* Get total bandwidth and the worst latency for the cxl region */
-> >  		cxlr->coord[i].read_latency = max_t(unsigned int,
-> > @@ -577,8 +615,14 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> >  		cxlr->coord[i].write_latency = max_t(unsigned int,
-> >  						     cxlr->coord[i].write_latency,
-> >  						     perf->coord[i].write_latency);
-> > -		cxlr->coord[i].read_bandwidth += perf->coord[i].read_bandwidth;
-> > -		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
-> > +		cxlr->coord[i].read_bandwidth =
-> > +			calculate_region_bw(targets, usp_bw,
-> > +					    perf->coord[i].read_bandwidth,
-> > +					    cxlr->coord[i].read_bandwidth);
-> > +		cxlr->coord[i].write_bandwidth =
-> > +			calculate_region_bw(targets, usp_bw,
-> > +					    perf->coord[i].write_bandwidth,
-> > +					    cxlr->coord[i].write_bandwidth);
-> >  	}
-> >  }
-> >    
 > 
-> [snip]
-> 
-> > +
-> > +int cxl_pci_get_switch_usp_bandwidth(struct pci_dev *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct pci_dev *iter = pdev;
-> > +
-> > +	do {
-> > +		if (pci_pcie_type(iter) == PCI_EXP_TYPE_UPSTREAM)
-> > +			break;  
-> 
-> Why is it not ok to do:
-> 
-> 	while (pci_pcie_type(iter) != PCI_EXP_TYPE_UPSTREAM) {
-> 		...
-Snap ;)
-> 	}
-> 
-> Ira
-> 
-> [snip]
+> >   
+> > > @Jonathan, Any thoughts on this?  
+> > 
+> > Thanks!
+> >   
 
