@@ -1,251 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E17537E8
-	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 10:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6884A60269
+	for <linux-cxl@vger.kernel.org>; Wed,  1 May 2024 12:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714559286; cv=none; b=OkAygfpMUDpvEI9tgc+zd5vYsd9uG4ilOhdcXX1BrSSS2Nqr9ySUKxHUtHEeZ02Nlsvavk/uiLKpszDEDB003yW6brprVr8koWydAue3jb/c3+f7tSatpcOzR+r7IpZxOlA0aBJ77uCGwyc+B5mAxQeiWvLnY7gOtYOvsm94DWw=
+	t=1714564987; cv=none; b=gbasTL4aLEFTGsEoM350Ll5mpPtcQsXeWsNFMHZrOKErckC3W67xRuMRtv8tJKYWfyvxdmXqE0MW36hL3Iv2vKTOCYdzEu4WSw5JUmBIoLDqxVchxSr98LyOvsnu/jKlooz9ISHLd9cd6Pu09Bslge+G7wVooYWc775lWf8xew4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714559286; c=relaxed/simple;
-	bh=xdaVbRtolqsxksBQMd+qO8Y6eQoZ0DhOvEand6mNomI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kovzP2Jf1EwiJJpsvKsmea4h0lwdpu8TnXO/GbOXpjYb6a7TWmgcsiNhPNtk80wmIpouixjlIXehk4yIFZF8lzBaAb2yqCx2l8ihHjJPtW26+Z3PpRB0U7+ScHnCi60hYBn7/DTURMkQFYXFnSmS9U5ZR4ZdIUhvtYKn0NpAbtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2UOpVzK; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2UOpVzK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714559284; x=1746095284;
-  h=date:from:to:cc:subject:message-id;
-  bh=xdaVbRtolqsxksBQMd+qO8Y6eQoZ0DhOvEand6mNomI=;
-  b=E2UOpVzK5dPSysdbzVymgYM0FSpKlITyfaWsFwviDdBbNiuBy118oOw4
-   CQFtqX46NmiDSZGk8ttrsKc+ZVlVglZ9lhEWk+NYFT7DwTzOWei6eoCnL
-   dZVLZYVXa8nCbo1IIJhgmBdjBC9DMdhKeQYeJXQug2AMkzrBr2FzOzU3d
-   rBO4ySBM9fKJtQduK/ZF6ngeMd6TF5eBM0kkyjzyDa2ASkzcZMO8osDT4
-   1Gx43L0vxdfJsHfAf691q2fMOTrw+8upDgH980c+DLFQFGwWW0Ut6NiKi
-   bDWbVjuIi+Fc6wkuHbDA/nlBT4iAImHhfV1uoWTQ1vqDiFa91595vqWK3
-   A==;
-X-CSE-ConnectionGUID: my4KPPiiSoKZtONKevd5Uw==
-X-CSE-MsgGUID: sySrTTanQeqY67d+r4eVYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="21436935"
-X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
-   d="scan'208";a="21436935"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 03:28:04 -0700
-X-CSE-ConnectionGUID: vHKeO3r6TBSaObFZrXPCrg==
-X-CSE-MsgGUID: 0/p39sVuTSyIt360zyXf4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
-   d="scan'208";a="26602942"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 01 May 2024 03:28:01 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s27Bv-0009Qb-0o;
-	Wed, 01 May 2024 10:27:59 +0000
-Date: Wed, 01 May 2024 18:27:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 1c987cf22d6b65ade46145c03eef13f0e3e81d83
-Message-ID: <202405011812.ejznCmWM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1714564987; c=relaxed/simple;
+	bh=rQUJbT+Wdadi30I/9+k4XlMGkOxEkdIkQInQaLzStA4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k97eUsW/kJRk6RJRjoottzsXsZWHeJU36icnb4vxtqbCNGL9Tq0ht9oY3SloLjpqj/87DD9dqPiYMl8HL1P13Bd3f91VnsfULhlHm9cfgWKQ8eCEQXxr8b6u92SkeWBF/RQFZNfBujpFSsXaWVL3fTWm79QdyOuAoFcubaDxWUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTwcD5l6cz67n5j;
+	Wed,  1 May 2024 20:00:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9DB52140B55;
+	Wed,  1 May 2024 20:02:52 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 1 May
+ 2024 13:02:52 +0100
+Date: Wed, 1 May 2024 13:02:51 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <dave.jiang@intel.com>, Li Zhijian <lizhijian@fujitsu.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/region: Convert cxl_pmem_region_alloc to
+ scope-based resource management
+Message-ID: <20240501130251.0000265d@Huawei.com>
+In-Reply-To: <171451430965.1147997.15782562063090960666.stgit@dwillia2-xfh.jf.intel.com>
+References: <171451430965.1147997.15782562063090960666.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 1c987cf22d6b65ade46145c03eef13f0e3e81d83  cxl/region: Fix cxlr_pmem leaks
+On Tue, 30 Apr 2024 14:59:00 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-elapsed time: 754m
+> A recent bugfix to cxl_pmem_region_alloc() to fix an
+> error-unwind-memleak [1], highlighted a use case for scope-based resource
+> management.
+> 
+> Delete the goto for releasing @cxl_region_rwsem, and return error codes
+> directly from error condition paths.
+> 
+> The caller, devm_cxl_add_pmem_region(), is no longer given @cxlr_pmem
+> directly it must retrieve it from @cxlr->cxlr_pmem. This retrieval from
+> @cxlr was already in place for @cxlr->cxl_nvb, and converting
+> cxl_pmem_region_alloc() to return an int makes it less awkward to handle
+> no_free_ptr().
+> 
+> Cc: Li Zhijian <lizhijian@fujitsu.com>
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Closes: http://lore.kernel.org/r/20240430174540.000039ce@Huawei.com
+> Link: http://lore.kernel.org/r/20240428030748.318985-1-lizhijian@fujitsu.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-configs tested: 171
-configs skipped: 3
+Trivial comments inline  Up to Dave or you on whether you want to act on them.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240501   gcc  
-arc                   randconfig-002-20240501   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                         assabet_defconfig   clang
-arm                                 defconfig   clang
-arm                   randconfig-001-20240501   gcc  
-arm                   randconfig-002-20240501   gcc  
-arm                   randconfig-003-20240501   clang
-arm                   randconfig-004-20240501   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240501   gcc  
-arm64                 randconfig-002-20240501   gcc  
-arm64                 randconfig-003-20240501   clang
-arm64                 randconfig-004-20240501   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240501   gcc  
-csky                  randconfig-002-20240501   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240501   clang
-hexagon               randconfig-002-20240501   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240501   clang
-i386         buildonly-randconfig-002-20240501   gcc  
-i386         buildonly-randconfig-003-20240501   clang
-i386         buildonly-randconfig-004-20240501   gcc  
-i386         buildonly-randconfig-005-20240501   gcc  
-i386         buildonly-randconfig-006-20240501   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240501   gcc  
-i386                  randconfig-002-20240501   clang
-i386                  randconfig-003-20240501   gcc  
-i386                  randconfig-004-20240501   gcc  
-i386                  randconfig-005-20240501   clang
-i386                  randconfig-006-20240501   clang
-i386                  randconfig-011-20240501   gcc  
-i386                  randconfig-012-20240501   gcc  
-i386                  randconfig-013-20240501   gcc  
-i386                  randconfig-014-20240501   gcc  
-i386                  randconfig-015-20240501   gcc  
-i386                  randconfig-016-20240501   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240501   gcc  
-loongarch             randconfig-002-20240501   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          ath79_defconfig   gcc  
-mips                     cu1830-neo_defconfig   gcc  
-mips                         db1xxx_defconfig   clang
-mips                  maltasmvp_eva_defconfig   gcc  
-mips                        maltaup_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240501   gcc  
-nios2                 randconfig-002-20240501   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240501   gcc  
-parisc                randconfig-002-20240501   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                    klondike_defconfig   gcc  
-powerpc                    mvme5100_defconfig   gcc  
-powerpc               randconfig-001-20240501   clang
-powerpc               randconfig-002-20240501   clang
-powerpc               randconfig-003-20240501   clang
-powerpc                     tqm8555_defconfig   clang
-powerpc64             randconfig-001-20240501   clang
-powerpc64             randconfig-002-20240501   clang
-powerpc64             randconfig-003-20240501   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240501   clang
-riscv                 randconfig-002-20240501   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240501   gcc  
-s390                  randconfig-002-20240501   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                    randconfig-001-20240501   gcc  
-sh                    randconfig-002-20240501   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240501   gcc  
-sparc64               randconfig-002-20240501   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240501   gcc  
-um                    randconfig-002-20240501   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240501   gcc  
-x86_64       buildonly-randconfig-002-20240501   clang
-x86_64       buildonly-randconfig-003-20240501   gcc  
-x86_64       buildonly-randconfig-004-20240501   gcc  
-x86_64       buildonly-randconfig-005-20240501   clang
-x86_64       buildonly-randconfig-006-20240501   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240501   gcc  
-x86_64                randconfig-002-20240501   gcc  
-x86_64                randconfig-003-20240501   gcc  
-x86_64                randconfig-004-20240501   clang
-x86_64                randconfig-005-20240501   clang
-x86_64                randconfig-006-20240501   gcc  
-x86_64                randconfig-011-20240501   gcc  
-x86_64                randconfig-012-20240501   clang
-x86_64                randconfig-013-20240501   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240501   gcc  
-xtensa                randconfig-002-20240501   gcc  
+> ---
+> Hey Dave, this applies on top of Li's fix.
+> 
+>  drivers/cxl/core/region.c |   43 +++++++++++++++++--------------------------
+>  1 file changed, 17 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 812b2948b6c6..e0577d99c4db 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2681,26 +2681,21 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
+>  
+>  static struct lock_class_key cxl_pmem_region_key;
+>  
+> -static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+> +static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
+>  {
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_nvdimm_bridge *cxl_nvb;
+> -	struct cxl_pmem_region *cxlr_pmem;
+>  	struct device *dev;
+>  	int i;
+>  
+> -	down_read(&cxl_region_rwsem);
+> -	if (p->state != CXL_CONFIG_COMMIT) {
+> -		cxlr_pmem = ERR_PTR(-ENXIO);
+> -		goto out;
+> -	}
+> +	guard(rwsem_read)(&cxl_region_rwsem);
+> +	if (p->state != CXL_CONFIG_COMMIT)
+> +		return -ENXIO;
+>  
+> -	cxlr_pmem = kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets),
+> -			    GFP_KERNEL);
+> -	if (!cxlr_pmem) {
+> -		cxlr_pmem = ERR_PTR(-ENOMEM);
+> -		goto out;
+> -	}
+> +	struct cxl_pmem_region *cxlr_pmem __free(kfree) = kzalloc(
+> +		struct_size(cxlr_pmem, mapping, p->nr_targets), GFP_KERNEL);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+That is rather ugly.  Maybe bring the kzalloc down onto the second line and
+wrap the GFP_KERNEL (or just go over 80 chars)?
+
+> +	if (!cxlr_pmem)
+> +		return -ENOMEM;
+>  
+>  	cxlr_pmem->hpa_range.start = p->res->start;
+>  	cxlr_pmem->hpa_range.end = p->res->end;
+> @@ -2718,11 +2713,8 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+>  		 */
+>  		if (i == 0) {
+>  			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
+> -			if (!cxl_nvb) {
+> -				kfree(cxlr_pmem);
+> -				cxlr_pmem = ERR_PTR(-ENODEV);
+> -				goto out;
+> -			}
+> +			if (!cxl_nvb)
+> +				return -ENODEV;
+>  			cxlr->cxl_nvb = cxl_nvb;
+>  		}
+>  		m->cxlmd = cxlmd;
+> @@ -2733,18 +2725,16 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+>  	}
+>  
+>  	dev = &cxlr_pmem->dev;
+> -	cxlr_pmem->cxlr = cxlr;
+> -	cxlr->cxlr_pmem = cxlr_pmem;
+>  	device_initialize(dev);
+>  	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
+>  	device_set_pm_not_required(dev);
+>  	dev->parent = &cxlr->dev;
+>  	dev->bus = &cxl_bus_type;
+>  	dev->type = &cxl_pmem_region_type;
+> -out:
+> -	up_read(&cxl_region_rwsem);
+> +	cxlr_pmem->cxlr = cxlr;
+> +	cxlr->cxlr_pmem = no_free_ptr(cxlr_pmem);
+>  
+> -	return cxlr_pmem;
+> +	return 0;
+>  }
+>  
+>  static void cxl_dax_region_release(struct device *dev)
+> @@ -2861,9 +2851,10 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+>  	struct device *dev;
+>  	int rc;
+>  
+> -	cxlr_pmem = cxl_pmem_region_alloc(cxlr);
+> -	if (IS_ERR(cxlr_pmem))
+> -		return PTR_ERR(cxlr_pmem);
+> +	rc = cxl_pmem_region_alloc(cxlr);
+> +	if (rc)
+> +		return rc;
+> +	cxlr_pmem = cxlr->cxlr_pmem;
+
+Is the local variable worth retaining? It's only used twice.
+
+The fact it's a clxr->cxlr* also seems rather like it could be named
+in a more compact fashion inside the cxl_region.  Would pmemr
+work for instance?
+
+>  	cxl_nvb = cxlr->cxl_nvb;
+>  
+>  	dev = &cxlr_pmem->dev;
+> 
+> 
+
