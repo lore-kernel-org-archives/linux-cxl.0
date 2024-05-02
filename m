@@ -1,217 +1,599 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2071.outbound.protection.outlook.com [40.107.95.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193B184DE8;
-	Thu,  2 May 2024 13:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655461; cv=fail; b=itMArb7Eca2xUWBSLV3avl10EAx/aZF4iur6UrbFRfL7RG/xJ5SY4vVB+tn8Q0md4gkJoyuHVY97hl7QUTyxaYNDO8zY6oNTqYk4kZLXF/yJwFrGlet1qJrqLQ0Yl6L4g/w55Sd7/NlDYOBsczQlKq7sCrxTUsV2guRLnlPRzQs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655461; c=relaxed/simple;
-	bh=iXR8lCBOw2pJcxMMYwjFI6zH6Ru+QQkAbcZ6VaO+tl0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nLhW5ydHIU2DUzueaILAE4OuxNU/Sm2fZbw8bKLnIoh/DNOVEifVTfGFqgOgilEnnNgHGQuckx7wF8dk3BEX49Y04A1VJeDoxId+wkC0ZZdojenjVXuNQ17c1pNAYzZOxN31epDbYML7rPQhA5dAYksIGGJBaxOts7YdzHap/UA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xperB7mq; arc=fail smtp.client-ip=40.107.95.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D74159583;
+	Thu,  2 May 2024 15:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714665107; cv=none; b=G487n08p2YbuueIfJjG69V3/dPYVmDqSfFbimP6CEjnN2ULyENXv1MvapMGAK2hQ0XptsjdkyKMTeZN1L348np5xjmNaAzSOUd53UjxvRpZ17f8ett3Mq8E5zICvbxDd19+dBZ0vD9Ky1rzPZLS/81JDcyfWidqwywezY3vtqCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714665107; c=relaxed/simple;
+	bh=madXtRtye2NdTAMFoTu9MhdM+cjDEtSL9BOuWZzVI94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jAqAqlPU0btHbkUI/ihr+XTXt4J+tRdyWkEBDN3qcr3u+k2fK9DINWpBrbRib8hh4H7Fqb1v2X5ZiDsgzb5y52+mkMsYUAzMTPLQdWP0nIZJBMCEUoypMKuuZU0WaFcOGd4ozmSuKqXxOdigALBUZqQoVr1lFNaPP8czv0Mn+Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IrVKXV4p; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xperB7mq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ngx46zBKZRrubqALD1OLwOz9SQ45cvROOojLbwbVfIvMxQ519fJzAF/2rxqicycRBb84iudzBU7EWKE0cHXqQqcLh5HSGqnIKO+APVGIjnAgXZCinhgNBg3UwWSR8z3lJeb09K9rj/q8H43anSMwh5HDVi/2HXd0c300m4PrjyCR08jh1Zv7J0GYOWlNaAkNYuvk9nOqKvWrY+bvhyZ5gaBW/WTdLRkRJUPHRR1uCoFp/UXNqLB5UmiIaHm1w3qufAuOZ2+PcUrkE2aORoc4Z9I+A/1HrX9zyMuaqpiI7f2Z94GkYHUOULVio8ueYq7OwhGAe4KJmT0/92fslyroGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yzYUJuAYKm1do27SYeL+f93Xc9Dgs4ObFK3fmIQdZgA=;
- b=nZBpHZFlcew5tR+7IaQpENtJf/tu9FCHUbsPiwRNT2q46/UKDNICZJAEQTwFtnV2Mm6yL3V7Q/guitWHnbJdV7xeIgUKgKf9lnw/iW7AHbnAkM7OY0X9IDhdnHgO0DF9tf8hrhw4iABdAL8ZCtWG5CeLxaS6dILgfrhiQgqiRsugcDcS9UYPRazFP+d0X1AHzyATltRCjSUNWChUuY0ItLOgFIDfF3i0FOYhw6B082bXG1ddMxysnebifI41QE/ZLz6kQ+UtbZsAZ8bWe8bvH5nSjBXDgzRPiZeY3nAYgTd6ubUI5rqC4e0VbGEHMxsr1GM2GeKrK9eTu9R2UMVOLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yzYUJuAYKm1do27SYeL+f93Xc9Dgs4ObFK3fmIQdZgA=;
- b=xperB7mqxzQFj9cQpS7ElWfVWLgD0f7KjYnn/9/9yG0iVQ90sLGKZ6V/OVskwH2cRu0jSVNeTFFOe5/Te9P6K3/gEVPdATNdgPKxrgQn0h2uDNvUHckXwGH/99NRq9f5ejf9CuY1kgzk3axQ+N0QRM/nOTpsHH9R/qPAhJQxXHA=
-Received: from CH2PR05CA0023.namprd05.prod.outlook.com (2603:10b6:610::36) by
- SN7PR12MB7979.namprd12.prod.outlook.com (2603:10b6:806:32a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29; Thu, 2 May
- 2024 13:10:41 +0000
-Received: from CH2PEPF0000009E.namprd02.prod.outlook.com
- (2603:10b6:610:0:cafe::ed) by CH2PR05CA0023.outlook.office365.com
- (2603:10b6:610::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29 via Frontend
- Transport; Thu, 2 May 2024 13:10:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000009E.mail.protection.outlook.com (10.167.244.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 13:10:40 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 2 May
- 2024 08:10:37 -0500
-From: Robert Richter <rrichter@amd.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Dave Hansen <dave.hansen@linux.intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>
-Subject: [PATCH v7 2/4] ACPI/NUMA: Remove architecture dependent remainings
-Date: Thu, 2 May 2024 15:10:10 +0200
-Message-ID: <20240502131012.2385725-3-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240502131012.2385725-1-rrichter@amd.com>
-References: <20240502131012.2385725-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrVKXV4p"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6ef94f1ce39so1377491a34.3;
+        Thu, 02 May 2024 08:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714665103; x=1715269903; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tSw5CDNnmNfjcv9csnsLo9GWGGKwZzHe3Z8GskOuqRU=;
+        b=IrVKXV4p3BqpM762CPjwjFz+Qsl4c/6y4bjCvPXYnIQCjRxTdFtVD02Fqso5JhXuL7
+         gsLnlxBqmVyGohwejVWlktfV+dTGSz/K8869aZL7f0L6TRwy6QXTh+zBI4GX2A9fccVg
+         gjy26KsV10jwXvnOLJqmHWkUz9yS5zHowGH4a/CRm7gbu77FMy/h3oleC7+rIewvmL8S
+         DKXnsh+ZiAd98OvrW5wtO83jHy3AIDepTBf6Yo4pI8oMPMuo9VNK1RzjsTImiBkdlVdZ
+         Pv7IBa7C1sDOCmBfb9FKZuhcyoyxrQyIPXQyvm77yOpHaHWj3wU6MWnNddVdY4E83yJK
+         Tbyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714665103; x=1715269903;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tSw5CDNnmNfjcv9csnsLo9GWGGKwZzHe3Z8GskOuqRU=;
+        b=QZ1MWRizPYcgvj0NxJUq6frl59fcEwrSrTHlRJGhy+c3UIh5KlpZhfgv1v3M1Gfm2n
+         eRfADa/PbnuojTzDkhfPgH6feVlUsiOegMCNL4M5MUo5niKB9MINccZsA4FIMHBW1UhR
+         RzPPZmitcvRK2whEsHU0kKMiWEcOn+r87CeVyBV1bTJxH2eCSJtdccM1IbWgTUva+Co/
+         7JHkYLv8wUkhNt7ybmop7nCUEW9dGM9bLp1cWqSYVcW3uZA8PzMEPXaTC9nGbboVHdmq
+         AwOu+WNUgaGY+RPvCR6aftmI8g5lTXLOhxlSTquFxH0CPzYhRFvY2KqugR0fJ1uYS5fi
+         HUQg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6TU6PLhHES1lYoX5iJ5uxnlKBGENLVp2QgPE3K+2kSqVDsLFZwmtAZQ7/0J+pHHAZwSyspsw6MloHvRKVPj7SNDj2bktsvqBtGI9XbHFUdUNCS3mI871kyXCxmZ7STPEzIeLJIp9edg==
+X-Gm-Message-State: AOJu0Yw2+aKNGv6j+zsRB/N88II8HcmXamlh61Y6n7RSP7nPiDupFfUZ
+	JVwyghGBQt7LjHqeQyHA4UhYbhIneTOn7UzWus9bqD6t1oXa+2mj
+X-Google-Smtp-Source: AGHT+IE6ElHBfSwWcZ1io4BsdOj3NVDPEhkrPjboLrwtaQcD7SqjMQ8+2u2iaflIjiXGp8WWORSnaw==
+X-Received: by 2002:a05:6830:158:b0:6ee:3370:142e with SMTP id j24-20020a056830015800b006ee3370142emr270743otp.24.1714665103103;
+        Thu, 02 May 2024 08:51:43 -0700 (PDT)
+Received: from Borg-10.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
+        by smtp.gmail.com with ESMTPSA id cl8-20020a05683064c800b006ef0f290550sm234485otb.31.2024.05.02.08.51.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 08:51:42 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 2 May 2024 10:51:39 -0500
+From: John Groves <John@groves.net>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	John Groves <jgroves@micron.com>, john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
+	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
+	Randy Dunlap <rdunlap@infradead.org>, Jerome Glisse <jglisse@google.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Eishan Mirakhur <emirakhur@micron.com>, Ravi Shankar <venkataravis@micron.com>, 
+	Srinivasulu Thanneeru <sthanneeru@micron.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Chandan Babu R <chandanbabu@kernel.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Steve French <stfrench@microsoft.com>, 
+	Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Julien Panis <jpanis@baylibre.com>, 
+	Stanislav Fomichev <sdf@google.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [RFC PATCH v2 08/12] famfs: module operations & fs_context
+Message-ID: <hrboank5xdhpr6jj4x5pd4trmsnehbo2yrvi57aed736pakz2w@eldaewzyg2jv>
+References: <cover.1714409084.git.john@groves.net>
+ <86694a1a663ab0b6e8e35c7b187f5ad179103482.1714409084.git.john@groves.net>
+ <20240430-badeverbot-paletten-05442cfbbdf0@brauner>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009E:EE_|SN7PR12MB7979:EE_
-X-MS-Office365-Filtering-Correlation-Id: afc424f4-509e-4822-c9d5-08dc6aa9441f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|36860700004|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ISWHm1iZ1NT8GGsggDcSIs5DQSE+gZvijXWGXkx364wX2L9NvrPY6Xry41St?=
- =?us-ascii?Q?gmfXLiKGWdRZtbEoaE8ePBQprd8ixzI0vfJkb6/pPBb/mRDvcPxyDK8PkV/S?=
- =?us-ascii?Q?FWeQiEgu/IsY6YwNx5mKmHuwuEHLjZ2pVKe5ZuBHNhDombQA8PtY3W66IptV?=
- =?us-ascii?Q?hu5zbBvdLp3gsrUL8pqYZ+Vo6Xb8V1EaYz2XltKtz5GQ0VdtfPnAkKVYNBS2?=
- =?us-ascii?Q?4MveFUcyDbXu4LTTRjbST9kfX4/xmosaa1gq6lgGo/PNoR4MoEBUaQ3n1Z7P?=
- =?us-ascii?Q?j2byETzZcSbGyq+S1n+MEon0WpJZVjfAPclmxFOGHb3qonjvB/VyqUIEUHyC?=
- =?us-ascii?Q?KPdbp+IPY9MDU2lfLn10FqABlgXcZCnfKeXh7buNdw8uYAH3mjvSiWCkIT3z?=
- =?us-ascii?Q?yNxQj6EehTc/RgmL+PNyiBJeWjKRdacwX72b4p1Wosp3m9bxh2EAvEuqVlQi?=
- =?us-ascii?Q?+LMja29J4BywKL30ReW0FEusu/yDDausSGafIVOXKx1TFWHDbpVPhErFiCT0?=
- =?us-ascii?Q?MpSwcTCWYKpSKsr6dGmQ6R0AiW2Bp+YLsaalIUEokWdUkfOJwUfem+35UWlL?=
- =?us-ascii?Q?CkgAlJEZPtIzgaUhG0ne/QzY/vTWwNfrUMHV/CA3bBxqBtU6OXKtmifxlBLf?=
- =?us-ascii?Q?gMj3ra1lhOnTROugpzFTBGEk7yxDOgAsPookBtmhyhD5QcjeV5gAF6yRkd1a?=
- =?us-ascii?Q?wYNhcSmPEDZUouohQseRtV6KP8e9MFOb/hAjgT1qR5rQyOmC0DIxLublV6iK?=
- =?us-ascii?Q?9W0k+xjzKfAjTI0tssyyJru0nRnfZ/QXSesKxJIpp4ih4JAxA3071t9/mDuN?=
- =?us-ascii?Q?c+pSUUIjVJbroqTYhhERDUAONSNpO6bBmCZysazG6p02sKU8FM7U5ZiKhmQW?=
- =?us-ascii?Q?7SA4cSZ3D/B1taQjUJlKRU3I8PhFaHFghr0nd2pyt+oSVCYDrRYl1QP7C3s5?=
- =?us-ascii?Q?3/bo3PamEOuQTFZa/fLI5ChCbKA6s6sooq3qVXWfKGPzxFHfEYOwVU60m48q?=
- =?us-ascii?Q?Tk+XzQY4eWq+TwkMqxMvDl6QSRUFEt61xH6xvnr64hNSR2wTDwkRNogUZuEO?=
- =?us-ascii?Q?Oio6rQMy9rPyN0XJFy8b7i7ZfgJYiZj75NcDn69LmEThAru0ml7Sv6eBHkBr?=
- =?us-ascii?Q?JUnEwf2pACmk11/5201pITyUDom/kHZnhzt++cwF1FwTkXCvs+yfW1++Ob+u?=
- =?us-ascii?Q?BEij4alxT5/i88l9/SxKYqRBD+Apx/f6ghs/XpUcVlnhxiawGwaAuHSIeZPS?=
- =?us-ascii?Q?/usjPJLG3xgnXpqah8R4/TND23O48P1ExBAYEBfTmASM/YHotmKdjqQKeu4Q?=
- =?us-ascii?Q?vpN9bKwiU22K5vRjho15eHuZwz3/obyWpgRORlSOCW4Fkiq/+SYVFbL53sLe?=
- =?us-ascii?Q?1Imx3bUSjSeQ5fzO7u/IelLRVlJl?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 13:10:40.4094
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afc424f4-509e-4822-c9d5-08dc6aa9441f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7979
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430-badeverbot-paletten-05442cfbbdf0@brauner>
 
-With the removal of the Itanium architecture [1] the last architecture
-dependent functions:
+On 24/04/30 01:01PM, Christian Brauner wrote:
+> On Mon, Apr 29, 2024 at 12:04:24PM -0500, John Groves wrote:
+> > Start building up from the famfs module operations. This commit
+> > includes the following:
+> > 
+> > * Register as a file system
+> > * Parse mount parameters
+> > * Allocate or find (and initialize) a superblock via famfs_get_tree()
+> > * Lookup the host dax device, and bail if it's in use (or not dax)
+> > * Register as the holder of the dax device if it's available
+> > * Add Kconfig and Makefile misc to build famfs
+> > * Add FAMFS_SUPER_MAGIC to include/uapi/linux/magic.h
+> > * Add export of fs/namei.c:may_open_dev(), which famfs needs to call
+> > * Update MAINTAINERS file for the fs/famfs/ path
+> > 
+> > The following exports had to happen to enable famfs:
+> > 
+> > * This uses the new fs/super.c:kill_char_super() - the other kill*super
+> >   helpers were not quite right.
+> > * This uses the dev_dax_iomap export of dax_dev_get()
+> > 
+> > This commit builds but is otherwise too incomplete to run
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  MAINTAINERS                |   1 +
+> >  fs/Kconfig                 |   2 +
+> >  fs/Makefile                |   1 +
+> >  fs/famfs/Kconfig           |  10 ++
+> >  fs/famfs/Makefile          |   5 +
+> >  fs/famfs/famfs_inode.c     | 345 +++++++++++++++++++++++++++++++++++++
+> >  fs/famfs/famfs_internal.h  |  36 ++++
+> >  fs/namei.c                 |   1 +
+> >  include/uapi/linux/magic.h |   1 +
+> >  9 files changed, 402 insertions(+)
+> >  create mode 100644 fs/famfs/Kconfig
+> >  create mode 100644 fs/famfs/Makefile
+> >  create mode 100644 fs/famfs/famfs_inode.c
+> >  create mode 100644 fs/famfs/famfs_internal.h
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 3f2d847dcf01..365d678e2f40 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8188,6 +8188,7 @@ L:	linux-cxl@vger.kernel.org
+> >  L:	linux-fsdevel@vger.kernel.org
+> >  S:	Supported
+> >  F:	Documentation/filesystems/famfs.rst
+> > +F:	fs/famfs
+> >  
+> >  FANOTIFY
+> >  M:	Jan Kara <jack@suse.cz>
+> > diff --git a/fs/Kconfig b/fs/Kconfig
+> > index a46b0cbc4d8f..53b4629e92a0 100644
+> > --- a/fs/Kconfig
+> > +++ b/fs/Kconfig
+> > @@ -140,6 +140,8 @@ source "fs/autofs/Kconfig"
+> >  source "fs/fuse/Kconfig"
+> >  source "fs/overlayfs/Kconfig"
+> >  
+> > +source "fs/famfs/Kconfig"
+> > +
+> >  menu "Caches"
+> >  
+> >  source "fs/netfs/Kconfig"
+> > diff --git a/fs/Makefile b/fs/Makefile
+> > index 6ecc9b0a53f2..3393f399a9e9 100644
+> > --- a/fs/Makefile
+> > +++ b/fs/Makefile
+> > @@ -129,3 +129,4 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
+> >  obj-$(CONFIG_EROFS_FS)		+= erofs/
+> >  obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
+> >  obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
+> > +obj-$(CONFIG_FAMFS)             += famfs/
+> > diff --git a/fs/famfs/Kconfig b/fs/famfs/Kconfig
+> > new file mode 100644
+> > index 000000000000..edb8980820f7
+> > --- /dev/null
+> > +++ b/fs/famfs/Kconfig
+> > @@ -0,0 +1,10 @@
+> > +
+> > +
+> > +config FAMFS
+> > +       tristate "famfs: shared memory file system"
+> > +       depends on DEV_DAX && FS_DAX && DEV_DAX_IOMAP
+> > +       help
+> > +	  Support for the famfs file system. Famfs is a dax file system that
+> > +	  can support scale-out shared access to fabric-attached memory
+> > +	  (e.g. CXL shared memory). Famfs is not a general purpose file system;
+> > +	  it is an enabler for data sets in shared memory.
+> > diff --git a/fs/famfs/Makefile b/fs/famfs/Makefile
+> > new file mode 100644
+> > index 000000000000..62230bcd6793
+> > --- /dev/null
+> > +++ b/fs/famfs/Makefile
+> > @@ -0,0 +1,5 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +obj-$(CONFIG_FAMFS) += famfs.o
+> > +
+> > +famfs-y := famfs_inode.o
+> > diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
+> > new file mode 100644
+> > index 000000000000..61306240fc0b
+> > --- /dev/null
+> > +++ b/fs/famfs/famfs_inode.c
+> > @@ -0,0 +1,345 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * famfs - dax file system for shared fabric-attached memory
+> > + *
+> > + * Copyright 2023-2024 Micron Technology, inc
+> > + *
+> > + * This file system, originally based on ramfs the dax support from xfs,
+> > + * is intended to allow multiple host systems to mount a common file system
+> > + * view of dax files that map to shared memory.
+> > + */
+> > +
+> > +#include <linux/fs.h>
+> > +#include <linux/time.h>
+> > +#include <linux/init.h>
+> > +#include <linux/string.h>
+> > +#include <linux/parser.h>
+> > +#include <linux/magic.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/fs_context.h>
+> > +#include <linux/fs_parser.h>
+> > +#include <linux/dax.h>
+> > +#include <linux/hugetlb.h>
+> > +#include <linux/iomap.h>
+> > +#include <linux/path.h>
+> > +#include <linux/namei.h>
+> > +
+> > +#include "famfs_internal.h"
+> > +
+> > +#define FAMFS_DEFAULT_MODE	0755
+> > +
+> > +static struct inode *famfs_get_inode(struct super_block *sb,
+> > +				     const struct inode *dir,
+> > +				     umode_t mode, dev_t dev)
+> > +{
+> > +	struct inode *inode = new_inode(sb);
+> > +	struct timespec64 tv;
+> > +
+> > +	if (!inode)
+> > +		return NULL;
+> > +
+> > +	inode->i_ino = get_next_ino();
+> > +	inode_init_owner(&nop_mnt_idmap, inode, dir, mode);
+> > +	inode->i_mapping->a_ops = &ram_aops;
+> > +	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
+> > +	mapping_set_unevictable(inode->i_mapping);
+> > +	tv = inode_set_ctime_current(inode);
+> > +	inode_set_mtime_to_ts(inode, tv);
+> > +	inode_set_atime_to_ts(inode, tv);
+> > +
+> > +	switch (mode & S_IFMT) {
+> > +	default:
+> > +		init_special_inode(inode, mode, dev);
+> > +		break;
+> > +	case S_IFREG:
+> > +		inode->i_op = NULL /* famfs_file_inode_operations */;
+> > +		inode->i_fop = NULL /* &famfs_file_operations */;
+> > +		break;
+> > +	case S_IFDIR:
+> > +		inode->i_op = NULL /* famfs_dir_inode_operations */;
+> > +		inode->i_fop = &simple_dir_operations;
+> > +
+> > +		/* Directory inodes start off with i_nlink == 2 (for ".") */
+> > +		inc_nlink(inode);
+> > +		break;
+> > +	case S_IFLNK:
+> > +		inode->i_op = &page_symlink_inode_operations;
+> > +		inode_nohighmem(inode);
+> > +		break;
+> > +	}
+> > +	return inode;
+> > +}
+> > +
+> > +/*
+> > + * famfs dax_operations  (for char dax)
+> > + */
+> > +static int
+> > +famfs_dax_notify_failure(struct dax_device *dax_dev, u64 offset,
+> > +			u64 len, int mf_flags)
+> > +{
+> > +	struct super_block *sb = dax_holder(dax_dev);
+> > +	struct famfs_fs_info *fsi = sb->s_fs_info;
+> > +
+> > +	pr_err("%s: rootdev=%s offset=%lld len=%llu flags=%x\n", __func__,
+> > +	       fsi->rootdev, offset, len, mf_flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct dax_holder_operations famfs_dax_holder_ops = {
+> > +	.notify_failure		= famfs_dax_notify_failure,
+> > +};
+> > +
+> > +/*****************************************************************************
+> > + * fs_context_operations
+> > + */
+> > +
+> > +static int
+> > +famfs_fill_super(struct super_block *sb, struct fs_context *fc)
+> > +{
+> > +	int rc = 0;
+> > +
+> > +	sb->s_maxbytes		= MAX_LFS_FILESIZE;
+> > +	sb->s_blocksize		= PAGE_SIZE;
+> > +	sb->s_blocksize_bits	= PAGE_SHIFT;
+> > +	sb->s_magic		= FAMFS_SUPER_MAGIC;
+> > +	sb->s_op		= NULL /* famfs_super_ops */;
+> > +	sb->s_time_gran		= 1;
+> > +
+> > +	return rc;
+> > +}
+> > +
+> > +static int
+> > +lookup_daxdev(const char *pathname, dev_t *devno)
+> > +{
+> > +	struct inode *inode;
+> > +	struct path path;
+> > +	int err;
+> > +
+> > +	if (!pathname || !*pathname)
+> > +		return -EINVAL;
+> > +
+> > +	err = kern_path(pathname, LOOKUP_FOLLOW, &path);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	inode = d_backing_inode(path.dentry);
+> > +	if (!S_ISCHR(inode->i_mode)) {
+> > +		err = -EINVAL;
+> > +		goto out_path_put;
+> > +	}
+> > +
+> > +	if (!may_open_dev(&path)) { /* had to export this */
+> > +		err = -EACCES;
+> > +		goto out_path_put;
+> > +	}
+> > +
+> > +	 /* if it's dax, i_rdev is struct dax_device */
+> > +	*devno = inode->i_rdev;
+> > +
+> > +out_path_put:
+> > +	path_put(&path);
+> > +	return err;
+> > +}
+> > +
+> > +static int
+> > +famfs_get_tree(struct fs_context *fc)
+> > +{
+> > +	struct famfs_fs_info *fsi = fc->s_fs_info;
+> > +	struct dax_device *dax_devp;
+> > +	struct super_block *sb;
+> > +	struct inode *inode;
+> > +	dev_t daxdevno;
+> > +	int err;
+> > +
+> > +	/* TODO: clean up chatty messages */
+> > +
+> > +	err = lookup_daxdev(fc->source, &daxdevno);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	fsi->daxdevno = daxdevno;
+> > +
+> > +	/* This will set sb->s_dev=daxdevno */
+> > +	sb = sget_dev(fc, daxdevno);
+> 
+> This will open the dax device as a block device. However, nothing in
+> your ->kill_sb method or kill_char_super() closes it again. So you're
+> leaking block device references and leaving unitialized memory around as
+> you've claimed that device but never ended your claim.
 
- acpi_numa_slit_init(), acpi_numa_memory_affinity_init()
+My uptake is admittedly a bit slow with the superblock handling code; I'm
+still working to get my head around it. Thank you for your help and
+patience on this.
 
-were removed. Remove its remainings in the header files too and make
-them static.
+By "This will open the dax device as a block device", are you referring to
+the call from sget_fc() to get_filesystem() - which then does a
+__module_get(fs->owner)? That's the only thing I see that one might refer
+to as "open" - and I do see [I think] that the famfs code is not doing a
+module_put. Or maybe I'm missing something else...
 
-[1] commit cf8e8658100d ("arch: Remove Itanium (IA-64) architecture")
+Looking at xfs as an example, bdev_file_open_by_path() is called from 
+xfs_fill_super(), which is called back from get_tree_bdev() after the
+superblock is found or allocated.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/acpi/numa/srat.c | 16 ++--------------
- include/linux/acpi.h     |  5 -----
- 2 files changed, 2 insertions(+), 19 deletions(-)
+In famfs, I'm not currently using a get_tree helper because there doesn't 
+appear to be one that's quite right for a character-backed FS (?). The 
+call in famfs that I think is most analogous to bdev_file_open_by_path() 
+is dax_dev_get(), which is called after we've found or allocated a 
+superblock via sget_dev()->sget_fc().
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 3b09fd39eeb4..e4d53e3660fd 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -213,13 +213,12 @@ __weak int __init numa_fill_memblks(u64 start, u64 end)
- 	return NUMA_NO_MEMBLK;
- }
- 
--#if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
- /*
-  * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
-  * I/O localities since SRAT does not list them.  I/O localities are
-  * not supported at this point.
-  */
--void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
-+static void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
- {
- 	int i, j;
- 
-@@ -241,11 +240,7 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
- 	}
- }
- 
--/*
-- * Default callback for parsing of the Proximity Domain <-> Memory
-- * Area mappings
-- */
--int __init
-+static int __init
- acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
- {
- 	u64 start, end;
-@@ -345,13 +340,6 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 	(*fake_pxm)++;
- 	return 0;
- }
--#else
--static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
--				   void *arg, const unsigned long table_end)
--{
--	return 0;
--}
--#endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
- 
- static int __init acpi_parse_slit(struct acpi_table_header *table)
- {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 34829f2c517a..2c227b61a452 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -242,9 +242,6 @@ static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
- 	return gicc->flags & ACPI_MADT_ENABLED;
- }
- 
--/* the following numa functions are architecture-dependent */
--void acpi_numa_slit_init (struct acpi_table_slit *slit);
--
- #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
- void acpi_numa_processor_affinity_init (struct acpi_srat_cpu_affinity *pa);
- #else
-@@ -267,8 +264,6 @@ static inline void
- acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
- #endif
- 
--int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
--
- #ifndef PHYS_CPUID_INVALID
- typedef u32 phys_cpuid_t;
- #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
--- 
-2.39.2
+Using sget_dev() looked ok to me, but it does put a devdax (char device)
+dev_t in superblock->s_dev - which may be a bit squirrely because it's
+usually a block dev_t. But I don't see s_dev being used except in the
+setup_bdev_super() path, which famfs is not using.
+
+So if there is an open that I'm not closing, I'm not seeing it yet (other
+than the apparent missing module_put()). Can you elaborate a bit?
+
+> 
+> > +	if (IS_ERR(sb)) {
+> > +		pr_err("%s: sget_dev error\n", __func__);
+> > +		return PTR_ERR(sb);
+> > +	}
+> > +
+> > +	if (sb->s_root) {
+> > +		pr_info("%s: found a matching suerblock for %s\n",
+> > +			__func__, fc->source);
+> > +
+> > +		/* We don't expect to find a match by dev_t; if we do, it must
+> > +		 * already be mounted, so we bail
+> > +		 */
+> > +		err = -EBUSY;
+> > +		goto deactivate_out;
+> > +	} else {
+> > +		pr_info("%s: initializing new superblock for %s\n",
+> > +			__func__, fc->source);
+> > +		err = famfs_fill_super(sb, fc);
+> > +		if (err)
+> > +			goto deactivate_out;
+> > +	}
+> > +
+> > +	/* This will fail if it's not a dax device */
+> > +	dax_devp = dax_dev_get(daxdevno);
+> > +	if (!dax_devp) {
+> > +		pr_warn("%s: device %s not found or not dax\n",
+> > +		       __func__, fc->source);
+> > +		err = -ENODEV;
+> > +		goto deactivate_out;
+> > +	}
+> > +
+> > +	err = fs_dax_get(dax_devp, sb, &famfs_dax_holder_ops);
+> > +	if (err) {
+> > +		pr_err("%s: fs_dax_get(%lld) failed\n", __func__, (u64)daxdevno);
+> > +		err = -EBUSY;
+> > +		goto deactivate_out;
+> > +	}
+> > +	fsi->dax_devp = dax_devp;
+> > +
+> > +	inode = famfs_get_inode(sb, NULL, S_IFDIR | fsi->mount_opts.mode, 0);
+> > +	sb->s_root = d_make_root(inode);
+> > +	if (!sb->s_root) {
+> > +		pr_err("%s: d_make_root() failed\n", __func__);
+> > +		err = -ENOMEM;
+> > +		fs_put_dax(fsi->dax_devp, sb);
+> > +		goto deactivate_out;
+> > +	}
+> > +
+> > +	sb->s_flags |= SB_ACTIVE;
+> > +
+> > +	WARN_ON(fc->root);
+> > +	fc->root = dget(sb->s_root);
+> > +	return err;
+> > +
+> > +deactivate_out:
+> > +	pr_debug("%s: deactivating sb=%llx\n", __func__, (u64)sb);
+> > +	deactivate_locked_super(sb);
+> > +	return err;
+> > +}
+> > +
+> > +/*****************************************************************************/
+> > +
+> > +enum famfs_param {
+> > +	Opt_mode,
+> > +	Opt_dax,
+> > +};
+> > +
+> > +const struct fs_parameter_spec famfs_fs_parameters[] = {
+> > +	fsparam_u32oct("mode",	  Opt_mode),
+> > +	fsparam_string("dax",     Opt_dax),
+> > +	{}
+> > +};
+> > +
+> > +static int famfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+> > +{
+> > +	struct famfs_fs_info *fsi = fc->s_fs_info;
+> > +	struct fs_parse_result result;
+> > +	int opt;
+> > +
+> > +	opt = fs_parse(fc, famfs_fs_parameters, param, &result);
+> > +	if (opt == -ENOPARAM) {
+> > +		opt = vfs_parse_fs_param_source(fc, param);
+> > +		if (opt != -ENOPARAM)
+> > +			return opt;
+> 
+> This shouldn't be needed. The VFS will handle all that for you.
+> 
+> > +
+> > +		return 0;
+> > +	}
+> > +	if (opt < 0)
+> > +		return opt;
+> > +
+> > +	switch (opt) {
+> > +	case Opt_mode:
+> > +		fsi->mount_opts.mode = result.uint_32 & S_IALLUGO;
+> > +		break;
+> > +	case Opt_dax:
+> > +		if (strcmp(param->string, "always"))
+> > +			pr_notice("%s: invalid dax mode %s\n",
+> > +				  __func__, param->string);
+> > +		break;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void famfs_free_fc(struct fs_context *fc)
+> > +{
+> > +	struct famfs_fs_info *fsi = fc->s_fs_info;
+> > +
+> > +	if (fsi && fsi->rootdev)
+> > +		kfree(fsi->rootdev);
+> 
+> Dead code since rootdev is unused an unset?
+
+Good catch, thank you. rootdev was used in v1 but not in v2.
+
+> 
+> > +
+> > +	kfree(fsi);
+> > +}
+> > +
+> > +static const struct fs_context_operations famfs_context_ops = {
+> > +	.free		= famfs_free_fc,
+> > +	.parse_param	= famfs_parse_param,
+> > +	.get_tree	= famfs_get_tree,
+> > +};
+> > +
+> > +static int famfs_init_fs_context(struct fs_context *fc)
+> > +{
+> > +	struct famfs_fs_info *fsi;
+> > +
+> > +	fsi = kzalloc(sizeof(*fsi), GFP_KERNEL);
+> > +	if (!fsi)
+> > +		return -ENOMEM;
+> > +
+> > +	fsi->mount_opts.mode = FAMFS_DEFAULT_MODE;
+> > +	fc->s_fs_info        = fsi;
+> > +	fc->ops              = &famfs_context_ops;
+> > +	return 0;
+> > +}
+> > +
+> > +static void famfs_kill_sb(struct super_block *sb)
+> > +{
+> > +	struct famfs_fs_info *fsi = sb->s_fs_info;
+> > +
+> > +	if (fsi->dax_devp)
+> > +		fs_put_dax(fsi->dax_devp, sb);
+> > +	if (fsi && fsi->rootdev)
+> > +		kfree(fsi->rootdev);
+> > +	kfree(fsi);
+> > +	sb->s_fs_info = NULL;
+> > +
+> > +	kill_char_super(sb); /* new */
+> > +}
+> 
+> Can likely just be
+> 
+> static void famfs_kill_sb(struct super_block *sb)
+> {
+> 	struct famfs_fs_info *fsi = sb->s_fs_info;
+> 
+> 	generic_shutdown_super(sb);
+> 
+>         if (sb->s_bdev_file)
+> 		bdev_fput(sb->s_bdev_file);
+> 
+> 	if (fsi->dax_devp)
+> 		fs_put_dax(fsi->dax_devp, sb);
+> 
+> 	kfree(fsi);
+> }
+> 
+> and then you don't need any custom helpers at all.
+
+Thanks; will give this a try
+
+> 
+> > +
+> > +#define MODULE_NAME "famfs"
+> > +static struct file_system_type famfs_fs_type = {
+> > +	.name		  = MODULE_NAME,
+> > +	.init_fs_context  = famfs_init_fs_context,
+> > +	.parameters	  = famfs_fs_parameters,
+> > +	.kill_sb	  = famfs_kill_sb,
+> > +	.fs_flags	  = FS_USERNS_MOUNT,
+> 
+> Sorry, no. This should not be mountable by unprivileged users and
+> containers if it's using a real device and especially not since it's not
+> even a mature filesystem.
+
+I'm a derp. That should be:
+
+	.fs_flags = FS_REQUIRES_DEV;
+
+Right?
+
+<snip>
+
+Thank you for your help!
+John
 
