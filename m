@@ -1,82 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939B62EB11;
-	Thu,  2 May 2024 17:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF95172BCC;
+	Thu,  2 May 2024 18:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714671275; cv=none; b=J0/wF/FNfTGfcgGuZwR4gefTAEfmLCe3CGFBC/cmCQaCV9WuPim7IqxQ2Q+mip6erIPIKkKSFJN5LO25nUaNbihY1AOJdw9BY2mnkAys2PCAurJ3g7N//WB1OL/zacTrWYGO5XxN01LBFVKMkaJOm6eanXlIFVYy/j+un1sjnuw=
+	t=1714673879; cv=none; b=pL+DNmMAvgcC39TYtiLDIPJ2Ft6s5s9Q0XPq4cqKgfzzuJHwGGNHUGPGC6ehM0+WU8tATaIKKsn1ENq4dIEl/Ml3LslwDRf+o+tSEq39o79CgpJH13wcEkyRt3xIVKBq0GRaDSqWLTL8XyqVW83UsGUqh84aLw7N9DhGqmMzrUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714671275; c=relaxed/simple;
-	bh=+h6/LR4S3cVJNgFoVugMFRRM6TloFW7Vi20pmrGxXpA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tbgs81kQ6r02IqCd2n5IYJwM5ZWUzBQSl2DMj0yjPlBD0T7BfmTvKt8MqtYS0waX70ouUYKx1kE3SmNPYroraHTWlDOHgiEytayeSs9z12MNtNUoTnXKgu2c/IiM54zUucR3VtKUWq6WTSmRkTPUWUq6EjSyp9AzYL48E4lz/TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+riW7/f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714673879; c=relaxed/simple;
+	bh=E2/Y6J7NstGDN5G+OLb9BK9JxiFU3j74+Vpxh9Lgc58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWg1CscauaPLI+0dW6QDu8HDX77LsIfzn0l1uCcjo0YJAO5WFPDLU8rFcY/9PzU8ZIioeN8jHc0depkYaxVxhk5M+BZfvPygDwwPg+xhz6nFLWY7x2+98EKleVLTNEJKwq+CeCAD77v43Y4OPQXkq1z39IMi9mrRh35NAPdtOCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=s1dmyspa; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+riW7/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C236BC113CC;
-	Thu,  2 May 2024 17:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714671275;
-	bh=+h6/LR4S3cVJNgFoVugMFRRM6TloFW7Vi20pmrGxXpA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=R+riW7/fdD2hN81bSLI10S63tn2cpLV+vVta5eOUQ4fDfRkhVXBnHu63P6rEAUEIM
-	 04AyOXl3ocfyKC8w2Pmy9mZ+uxETyiA0gRPwU3pWRTZ1OT1HoJT4m0TKly2ztwdHXb
-	 bxGELm+ddNicgnUcbWDB8LMcf6tK3sI8hM0Do2r0zfg2FeHiiW8UjRo2K/AjqEYudY
-	 jD9UO/2W60isI8EPISQSzUv0ZzXnyBi/NWDK2RBbXARSCupZBjs8dxCBSAXRM4eoRB
-	 pezc+7FiUBOl/aWvh+1i70wNLE6Q0X54eX6ME0ZrzE0mzKk6FqnBmKvSMSUigIw1RT
-	 g+29fAd9TMsCA==
-Message-ID: <6af0488a5d845028978f57e63f3706f8899465cf.camel@kernel.org>
-Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
- failure
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
- <helgaas@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 02 May 2024 10:34:33 -0700
-In-Reply-To: <6632640bef65a_10c21294e3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <ce49c67c24f57ffab166d688a1c9e3139733f412.camel@kernel.org>
-	 <20240429153138.GA681245@bhelgaas>
-	 <662fe860eb889_1487294e8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	 <f5078550384a6b9be5a6d05415ea321332c7fb96.camel@kernel.org>
-	 <6632640bef65a_10c21294e3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="s1dmyspa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=E2/Y6J7NstGDN5G+OLb9BK9JxiFU3j74+Vpxh9Lgc58=; b=s1dmyspa6Avs2bch76r+b3luAo
+	A2PKXmXrAp+abshWjuWyXwHTkGYD279gFWFCY6mEx/d5SQ+i7b7a/SNIwYIW6r8KKvGMVQn/zUUwx
+	7nTmEY4Kx+LHI5CSxKctd3vT8PF9fR/c2PZctXLWg7nKgtq/drT5ZU/AuXXvoetfuW/8tX1xlIKkC
+	fi7LYYAFrK662zZY78ZYcQG6cSYjVihE3L9OnbAuO6uXxVpG+5yD6HtEIiGaF/LE5mB0DoNB2qrEd
+	OJyT8oEm2YWDIyM84feYXvdfh2wINmI84S4HdVCBA6DCPyQEUunLFjgGaQvxn6WZl/0ONNYjL2z/+
+	wMIMg+/g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1s2azc-009cti-1w;
+	Thu, 02 May 2024 18:17:16 +0000
+Date: Thu, 2 May 2024 19:17:16 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: John Groves <John@groves.net>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
+	John Groves <jgroves@micron.com>, john@jagalactic.com,
+	Dave Chinner <david@fromorbit.com>,
+	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com,
+	gregory.price@memverge.com, Randy Dunlap <rdunlap@infradead.org>,
+	Jerome Glisse <jglisse@google.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	Eishan Mirakhur <emirakhur@micron.com>,
+	Ravi Shankar <venkataravis@micron.com>,
+	Srinivasulu Thanneeru <sthanneeru@micron.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Chandan Babu R <chandanbabu@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Steve French <stfrench@microsoft.com>,
+	Nathan Lynch <nathanl@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Julien Panis <jpanis@baylibre.com>,
+	Stanislav Fomichev <sdf@google.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [RFC PATCH v2 07/12] famfs prep: Add fs/super.c:kill_char_super()
+Message-ID: <20240502181716.GG2118490@ZenIV>
+References: <cover.1714409084.git.john@groves.net>
+ <a702d42c922737c4f8278617db69ce2b6d813c5f.1714409084.git.john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a702d42c922737c4f8278617db69ce2b6d813c5f.1714409084.git.john@groves.net>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Wed, 2024-05-01 at 08:47 -0700, Dan Williams wrote:
-> PJ Waskiewicz wrote:
-> > Buggy BIOS, that above value resolves to CX02.=C2=A0 In fact, it
-> > *should* be
-> > 49.=C2=A0 This is very much a bug in the ACPI arena.
->=20
-> Ok, so back to this patch in question, my concern with upgrading:
->=20
-> =C2=A0=C2=A0=C2=A0 dev_err(dev, "unable to retrieve _UID\n");
->=20
-> ...to say "potentially buggy BIOS", is that same charge could be
-> levied
-> against all of the dev_warn() and dev_err() instances in
-> drivers/cxl/acpi.c. So, it's not clear to me that cxl_acpi driver
-> failures need to be more explicit.
->=20
-> Otherwise, pretty much any ACPI hiccup message in the kernel would be
-> candidate for claiming "BIOS is busted".
+On Mon, Apr 29, 2024 at 12:04:23PM -0500, John Groves wrote:
+> Famfs needs a slightly different kill_super variant than already existed.
+> Putting it local to famfs would require exporting d_genocide(); this
+> seemed a bit cleaner.
 
-I really do like your patch you proposed a few weeks back.  I'm happy
-to pull that and test it if you'd like to move forward on that instead.
-
-Personally, I think the amount of discussion generated around this
-simple "the BIOS is broken" should warrant some level of change to help
-others not in-the-know to understand why their shiny new CXL devices
-fell over on init.  Whatever that change looks like though, I'm not
-married to any particular approach.
-
--PJ
+What's wrong with kill_litter_super()?
