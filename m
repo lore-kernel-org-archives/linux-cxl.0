@@ -1,174 +1,190 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928B957CA1;
-	Thu,  2 May 2024 22:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07F513957E
+	for <linux-cxl@vger.kernel.org>; Fri,  3 May 2024 05:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714688740; cv=none; b=hoN6FMsbib7RrTEkrm4xTj929mtmSmvBFDHSF031V4bWjqczKOqOtRypkpmSo2bcKb31OxOkhvSJNAjilVQz+qIZ4BP8dK5Trm+IvdLY2VI/Uc1WGDYJwETdOTvMQFGFbars7lx2d1UpyCCALGxHfok/K1uNt6ty3S+ppiO2Wjs=
+	t=1714713185; cv=none; b=AeojUpUhuq86K/X8lLYhmx3MRL3wcHd2AKyRcZa8BFziMDJCDePRaQlAgnGzzAYgl52NtQ5X5UaJG5EvRVB7nDg/yc52lyqiOGStbSKIIIyGsYdP6LCrFsbLexXe319ffaygP/wPUYGi1j1M8qt9A/kIV9e3bx30DCpLfwG6HxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714688740; c=relaxed/simple;
-	bh=eDGVsHioAAo/vf/7wBtnBG4uUJlX8jpAESzfNt3wp0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bTzVspEBP7WB1u7CyXoe3BsO5zMewyHONcYPpgrE57l8crYz52t3RaH34d65YyuuXGcKfR83sgerzP90hl0/rqFXkCwORo/fQGE3ATeoKE9bZ8mUa5NTfN2Z6oHInSz31qvsJOmKdkphU5sJnoh3nKR49vyMRgZrtPiL86PBXB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6CY/FHc; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+	s=arc-20240116; t=1714713185; c=relaxed/simple;
+	bh=RJfCpz3IgkmkNHRNxdmGWf3bBlQxiovF4wODXhNM/BU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Oz3k8qCJM8rWV3sneej5bjVZcvUe916hWWtZjoFvET9VcGDP/yBgeLKVVHJiyYEqohoGmVK6ZAaDpEoE/vPv+vaTRL89LASiB7sUoLb087BeRRdZfKbY2VX2mozdYvMBa6hwMxf2p0WFOpzikguCSGcWpawA5DMr7ivQa5jV53s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jo7PRYPn; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6CY/FHc"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-23d4a841361so1284452fac.2;
-        Thu, 02 May 2024 15:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jo7PRYPn"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6eb8ea5ac95so5093003a34.2
+        for <linux-cxl@vger.kernel.org>; Thu, 02 May 2024 22:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714688737; x=1715293537; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cOKlIbmXyMNXTVDeqMbLyxE1OQ/hUFeaOYrKeFPij4M=;
-        b=Y6CY/FHcdz5k8qVAdcvwqpaLu7oO6TskYq2UKCOXQhlaHFivMt/UZnaqwfr6lt/GxQ
-         ahpz/SxWRUeqJabZOFmZtU2j7g6+dqs5/vP0YoXH4LdfNQ0QCZVjHaDVylfwxgUP51Ee
-         DwmdKo7G7sHQY9Gstpj06p/2ZNbwb0PZZhseGRaOvyvsU1mC2crw/IRDtW4PWVzpyve9
-         dNW0xnOfhOi6Ylk0G7BzY+ivTWqm05P2CtiVrXWUPj8RZ+qio7Zbtol8qiuhX7fvIULH
-         tflHD43hFAvTowLo8jxvDwStYj1h4FS4nUm2TpkPRA9SxfzeCdv7l+om2EuEA0eTm/4/
-         bJXQ==
+        d=gmail.com; s=20230601; t=1714713183; x=1715317983; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y1exDMYdKKOv6j+nKRmmPtBgRUJm0rdQUtcFwal8QNo=;
+        b=jo7PRYPnM+/e8w7KDG+bVFGuDDCfflgHptoHfwzse1CXMMq/dMW4YG4oViJ/FAGB0A
+         FX1i0s2AIhZwfxQhiLJdcCoeZhV1QX/mPhQ4H+mMyiKeLM1kHJvI09LtLm1+hMwB/HgC
+         3jHbAWJ1vEVaRNckZrBgapa2XtJAOpQf9Z96FucLT821wlOZWMSLVsy7+B1wKwjahFq8
+         IrLd9OfMhej5GdfBLUPwbVOK7ejzm50v60LavNDxq5e+NN6ZwStv3/DIWBNKw635MeSf
+         +8L/ys7eYwwsHKyBewaKCbH2VDO80Xwujw88U0YRt9uHF6C9Z6N8NWDozWTm3EuSA+bK
+         qSRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714688737; x=1715293537;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1714713183; x=1715317983;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cOKlIbmXyMNXTVDeqMbLyxE1OQ/hUFeaOYrKeFPij4M=;
-        b=uGW8FeCp2cBkFsZ0jjds80QWAnw64mKFP6vFgCbIjxPAtqBFgfxzkowEOuSUkKOgjo
-         IIdHeRIsstHqDf6NwkUgQ//ZSpqjqlUmmZAgNRw/VnPqIp62J1oD353v8W/3paw+3/0X
-         mxdGFW74J5/SqU0YJWVS9fiN4yHcJMJXL1KT0WVJG0cZZZ3q2lFjkxE9FPYWhRRwW4XT
-         Spn7wdfYILFTvMVMlAOP0+F1Q+KRxsIODJPmz93DVsYfnPBcxsHOXVV/GkbM8sCkeNOJ
-         oURWWrt496oJmTnDe1ADLFh/kqbtrQk9dPy0sWvikU1lwhJcAyvl//iudTn3ZSv24dIS
-         3Usw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVpie8zwO/rgEZ7hSmxDr4/yCE5snnbywG0d1e8dvjZbkzb1lfIgzti8HrgIN6eIziM1EOqkWesww14Kl3V7r+4Nc/e8dQQeDshNmTbhMcn7QTz2hM05jLECxTi3NimGJl7z3a0spEkg==
-X-Gm-Message-State: AOJu0YwdfVDcnisTJDoi9cM9JpLo8aJZNYQrhDXvDxtuCbrG5Mxsql2B
-	m2zLU2QQlU44+tyVWZPZKgQNF6yaBhuo5QRy1iKLn0lwLdkp+7EA
-X-Google-Smtp-Source: AGHT+IEwgDWoCry6Pq2qZp46Ox6bz4a0XeU+HDndM+eo6gMtEhnY+zVwPSwOIHNmTdAftkObEmqa/Q==
-X-Received: by 2002:a05:6870:9346:b0:22e:c6b2:849e with SMTP id j6-20020a056870934600b0022ec6b2849emr1448527oak.9.1714688737537;
-        Thu, 02 May 2024 15:25:37 -0700 (PDT)
-Received: from Borg-10.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id el7-20020a056830718700b006eb92d716bdsm369993otb.15.2024.05.02.15.25.34
+        bh=Y1exDMYdKKOv6j+nKRmmPtBgRUJm0rdQUtcFwal8QNo=;
+        b=tWgWPd9eMT62/PYx5AlViXrlc3wh+UY9+zf5TZBSMwjuwrAQjF5BHfX8F1CO9k3ppL
+         V6uxTqjgm4UdUqcGZRItgSyyTskTcylrYb/z1TdNMcLqhHxI0rH3HEfS4u496sRfJvSO
+         PbHJb+zr4SP7r11vjiZysWsCTLEdf1hw6e0YDDtbcnVaJnCKondUhzUyseUZVliqqUrP
+         oGBbL8dAFTafBP1GEPEiwGl3DPgCAqqD/T+FNac+JZ9l1SETrUvFwiwUvsSiNy7ggVcO
+         JP+JqIZxPXUurs0KhQXo0r+roTRJbzU8rcEPy/EH7SSPD/yf5YIH84yOIsllvMGXcQCl
+         3Log==
+X-Gm-Message-State: AOJu0YxuXBNRC13CSn3vtKmRHnrrhb94cwYvrfslk4ni4vBllL8kPzNh
+	h0/PLwAm2JvUPDpRT/nErKtuYzZT48KXsbuGWUKVdh56xxLz41rD
+X-Google-Smtp-Source: AGHT+IG40cc3968vT8apuchfQYN85QKlZDmZLem1Ga3AKGRvARsMimfgz+AMR+H4hxMgc7mgApfxYQ==
+X-Received: by 2002:a05:6358:88a:b0:186:68fb:5061 with SMTP id m10-20020a056358088a00b0018668fb5061mr1689521rwj.24.1714713182642;
+        Thu, 02 May 2024 22:13:02 -0700 (PDT)
+Received: from hyeongtakPC.. ([147.46.174.104])
+        by smtp.googlemail.com with ESMTPSA id l191-20020a6391c8000000b0061aa394533csm1823147pge.16.2024.05.02.22.12.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 15:25:36 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 2 May 2024 17:25:33 -0500
-From: John Groves <John@groves.net>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	John Groves <jgroves@micron.com>, john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
-	Randy Dunlap <rdunlap@infradead.org>, Jerome Glisse <jglisse@google.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>, Ravi Shankar <venkataravis@micron.com>, 
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Chandan Babu R <chandanbabu@kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Steve French <stfrench@microsoft.com>, 
-	Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Julien Panis <jpanis@baylibre.com>, 
-	Stanislav Fomichev <sdf@google.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [RFC PATCH v2 07/12] famfs prep: Add fs/super.c:kill_char_super()
-Message-ID: <eiobix2ovov5gywodc4bqyhhv7mshe7bvbp2ekewrvpdlnz5gh@6ryuna2lfpt7>
-References: <cover.1714409084.git.john@groves.net>
- <a702d42c922737c4f8278617db69ce2b6d813c5f.1714409084.git.john@groves.net>
- <20240502181716.GG2118490@ZenIV>
+        Thu, 02 May 2024 22:13:02 -0700 (PDT)
+From: Hyeongtak Ji <hyeongtak.ji@gmail.com>
+To: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Cc: linux-cxl@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	ave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: Re: [RFC PATCH 0/4] cxl: introduce CXL Virtualization module
+Date: Fri,  3 May 2024 14:12:49 +0900
+Message-Id: <20240503051249.1644083-1-hyeongtak.ji@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231228060510.1178981-1-dongsheng.yang@easystack.cn>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502181716.GG2118490@ZenIV>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 24/05/02 07:17PM, Al Viro wrote:
-> On Mon, Apr 29, 2024 at 12:04:23PM -0500, John Groves wrote:
-> > Famfs needs a slightly different kill_super variant than already existed.
-> > Putting it local to famfs would require exporting d_genocide(); this
-> > seemed a bit cleaner.
+Hello Dongsheng,
+
+Thank you for sharing this work!  I might be a little late but it would be
+helpful if you can answer a few questions below.
+
+On Thu, 28 Dec 2023 06:05:06 +0000 Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
+> Hi all:
+> 	This patchset introduce cxlv module to allow user to
+> create virtual cxl device. it's based linux6.7-rc5, you can
+> get the code from https://github.com/DataTravelGuide/linux
 > 
-> What's wrong with kill_litter_super()?
+> 	As the real CXL device is not widely available now, we need
+> some virtual cxl device to do uplayer software developing or
+> testing. Qemu is good for functional testing, but not good
+> for some performance testing.
+> 
+> 	The new CXLV module allow user to use the reserved RAM[1], to
+> create virtual cxl device. When the cxlv module load, it will
+> create a directory named as "cxl_virt" under /sys/devices/virtual:
+> 
+> 	"/sys/devices/virtual/cxl_virt/"
+> 
+> that's the top level device for all cxlv devices.
+> At the same time, cxlv module will create a debugfs directory:
+> 
+> /sys/kernel/debug/cxl/cxlv
+> ├── create
+> └── remove
+> 
+> the create and remove debugfs file is the cxlv entry to create or remove
+> a cxlv device.
+> 
+> 	Each cxlv device have its owned virtual pci related bridge and bus, cxlv
+> will create a new root_port for the new cxlv device, setup cxl ports for
+> dport and nvdimm-bridge. After that, we will add the virtual pci device,
+> that will go into the cxl_pci_probe to setup new memdev.
+> 
+> 	Then we can see the cxl device with cxl list and use it as a real cxl
+> device.
+> 
+>  $ echo "memstart=$((8*1024*1024*1024)),cxltype=3,pmem=1,memsize=$((2*1024*1024*1024))" > /sys/kernel/debug/cxl/cxlv/create
 
-I struggled with that, I don't have my head fully around the superblock
-handling code.
+I tried following your usage (w/ "memmap=8G$8G") but it does not seem to work
+well. After creation I got logs like below:
 
-But when I replace kill_char_super() with kill_litter_super()...
+  [   35.484764] PCI host bridge to bus 0010:00
+  [   35.485015] pci_bus 0010:00: root bus resource [io  0x0000-0xffff]
+  [   35.485446] pci_bus 0010:00: root bus resource [mem 0x00000000-0x7fffffffff]
+  [   35.485817] pci_bus 0010:00: root bus resource [bus 00-ff]
+  [   35.486126] pci 0010:00:00.0: [7c73:9a6c] type 01 class 0x060400
+  [   35.486436] pci 0010:00:00.0: reg 0x10: [mem 0x200100000-0x2001fffff 64bit pref]
+  [   35.486875] pci 0010:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+  [   35.487300] pci 0010:01:00.0: [7c73:9a6c] type 00 class 0x050210
+  [   35.487745] pci 0010:01:00.0: reg 0x10: [mem 0x200000000-0x2001fffff 64bit pref]
+  [   35.488171] pci 0010:00:00.0: PCI bridge to [bus 01-ff]
+  [   35.488438] pci 0010:00:00.0:   bridge window [io  0x0000-0x0fff]
+  [   35.488756] pci 0010:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+  [   35.489101] pci 0010:00:00.0:   bridge window [mem 0x00000000-0x000fffff pref]
+  [   35.489462] pci_bus 0010:01: busn_res: [bus 01-ff] end is updated to 01
+  [   35.511966] pcieport 0010:00:00.0: enabling device (0000 -> 0003)
+  [   35.512403] pci 0010:00:00.0: enabling device (0000 -> 0003)
+  [   35.512738] cxl_pci 0010:01:00.0: enabling device (0000 -> 0002)
+  [   35.517755] cxl_virt cxlv0: unsupported cmd: 0x301
+  [   35.542026] cxl_virt cxlv0: unsupported cmd: 0x4500
+  [   35.543738] cxl_virt cxlv0: unsupported cmd: 0x4500
 
-- first mount works
-- first umount works
-- second mount works
-- second umount does this (which I don't properly understand):
+Is it normal to get "unsupported cmd" here?
 
-May 02 17:21:58 f39-dev1 kernel: ------------[ cut here ]------------
-May 02 17:21:58 f39-dev1 kernel: ida_free called for id=1 which is not allocated.
-May 02 17:21:58 f39-dev1 kernel: WARNING: CPU: 1 PID: 1173 at lib/idr.c:525 ida_free+0xe3/0x140
-May 02 17:21:58 f39-dev1 kernel: Modules linked in: famfs rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace netfs qrtr rfkill snd_hda_codec_generic intel_rapl_msr sunrpc snd_hda_intel snd_intel_dspcfg intel_rapl_common snd_intel_sdw_acpi snd_hda_codec kmem snd_hda_core device_dax kvm_intel snd_hwdep iTCO_wdt kvm intel_pmc_bxt snd_seq iTCO_vendor_support dax_hmem snd_seq_device cxl_acpi cxl_core rapl snd_pcm snd_timer snd einj pcspkr soundcore i2c_i801 lpc_ich i2c_smbus vfat fat virtio_balloon joydev fuse loop zram xfs crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 sha1_ssse3 virtio_net virtio_console net_failover virtio_gpu failover virtio_blk virtio_dma_buf serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua dm_multipath qemu_fw_cfg
-May 02 17:21:58 f39-dev1 kernel: CPU: 1 PID: 1173 Comm: umount Tainted: G        W          6.9.0-rc5+ #266
-May 02 17:21:58 f39-dev1 kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20230301gitf80f052277c8-26.fc38 03/01/2023
-May 02 17:21:58 f39-dev1 kernel: RIP: 0010:ida_free+0xe3/0x140
-May 02 17:21:58 f39-dev1 kernel: Code: 8d 7d a0 e8 9f 2e 02 00 eb 62 41 83 fe 3e 76 3c 48 8b 7d a0 4c 89 ee e8 5b 73 04 00 89 de 48 c7 c7 60 51 be 82 e8 3d 03 0b ff <0f> 0b 48 8b 45 d8 65 48 2b 04 25 28 00 00 00 75 3f 48 83 c4 40 5b
-May 02 17:21:58 f39-dev1 kernel: RSP: 0018:ffffc90000c37c50 EFLAGS: 00010286
-May 02 17:21:58 f39-dev1 kernel: RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-May 02 17:21:58 f39-dev1 kernel: RDX: 0000000000000002 RSI: 0000000000000027 RDI: 00000000ffffffff
-May 02 17:21:58 f39-dev1 kernel: RBP: ffffc90000c37cb0 R08: 0000000000000000 R09: 0000000000000003
-May 02 17:21:58 f39-dev1 kernel: R10: ffffc90000c37aa0 R11: ffffffff82f3c3a8 R12: 00c7fffffffffffc
-May 02 17:21:58 f39-dev1 kernel: R13: 0000000000000202 R14: 0000000000000001 R15: 0000000000000000
-May 02 17:21:58 f39-dev1 kernel: FS:  00007f0ff81c0800(0000) GS:ffff88886fc80000(0000) knlGS:0000000000000000
-May 02 17:21:58 f39-dev1 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-May 02 17:21:58 f39-dev1 kernel: CR2: 00007f6b841c95a8 CR3: 00000001254c8001 CR4: 0000000000170ef0
-May 02 17:21:58 f39-dev1 kernel: Call Trace:
-May 02 17:21:58 f39-dev1 kernel:  <TASK>
-May 02 17:21:58 f39-dev1 kernel:  ? show_regs+0x64/0x70
-May 02 17:21:58 f39-dev1 kernel:  ? __warn+0x88/0x130
-May 02 17:21:58 f39-dev1 kernel:  ? ida_free+0xe3/0x140
-May 02 17:21:58 f39-dev1 kernel:  ? report_bug+0x192/0x1c0
-May 02 17:21:58 f39-dev1 kernel:  ? handle_bug+0x44/0x90
-May 02 17:21:58 f39-dev1 kernel:  ? exc_invalid_op+0x18/0x70
-May 02 17:21:58 f39-dev1 kernel:  ? asm_exc_invalid_op+0x1b/0x20
-May 02 17:21:58 f39-dev1 kernel:  ? ida_free+0xe3/0x140
-May 02 17:21:58 f39-dev1 kernel:  kill_litter_super+0x4c/0x60
-May 02 17:21:58 f39-dev1 kernel:  famfs_kill_sb+0x57/0x60 [famfs]
-May 02 17:21:58 f39-dev1 kernel:  deactivate_locked_super+0x35/0xb0
-May 02 17:21:58 f39-dev1 kernel:  deactivate_super+0x40/0x50
-May 02 17:21:58 f39-dev1 kernel:  cleanup_mnt+0xc3/0x160
-May 02 17:21:58 f39-dev1 kernel:  __cleanup_mnt+0x12/0x20
-May 02 17:21:58 f39-dev1 kernel:  task_work_run+0x60/0x90
-May 02 17:21:58 f39-dev1 kernel:  syscall_exit_to_user_mode+0x21a/0x220
-May 02 17:21:58 f39-dev1 kernel:  do_syscall_64+0x8d/0x180
-May 02 17:21:58 f39-dev1 kernel:  ? do_faccessat+0x1b8/0x2e0
-May 02 17:21:58 f39-dev1 kernel:  ? syscall_exit_to_user_mode+0x7c/0x220
-May 02 17:21:58 f39-dev1 kernel:  ? do_syscall_64+0x8d/0x180
-May 02 17:21:58 f39-dev1 kernel:  ? syscall_exit_to_user_mode+0x7c/0x220
-May 02 17:21:58 f39-dev1 kernel:  ? do_syscall_64+0x8d/0x180
-May 02 17:21:58 f39-dev1 kernel:  ? do_syscall_64+0x8d/0x180
-May 02 17:21:58 f39-dev1 kernel:  ? do_user_addr_fault+0x315/0x6e0
-May 02 17:21:58 f39-dev1 kernel:  ? irqentry_exit_to_user_mode+0x71/0x220
-May 02 17:21:58 f39-dev1 kernel:  ? irqentry_exit+0x3b/0x50
-May 02 17:21:58 f39-dev1 kernel:  ? exc_page_fault+0x90/0x190
-May 02 17:21:58 f39-dev1 kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-May 02 17:21:58 f39-dev1 kernel: RIP: 0033:0x7f0ff83df41b
-May 02 17:21:58 f39-dev1 kernel: Code: c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 e1 19 0c 00 f7 d8
-May 02 17:21:58 f39-dev1 kernel: RSP: 002b:00007fffe039cfd8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-May 02 17:21:58 f39-dev1 kernel: RAX: 0000000000000000 RBX: 0000555ad6c2fb90 RCX: 00007f0ff83df41b
-May 02 17:21:58 f39-dev1 kernel: RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000555ad6c34ba0
-May 02 17:21:58 f39-dev1 kernel: RBP: 00007fffe039d0b0 R08: 0000000000000020 R09: 0000000000000001
-May 02 17:21:58 f39-dev1 kernel: R10: 0000000000000004 R11: 0000000000000246 R12: 0000555ad6c2fc90
-May 02 17:21:58 f39-dev1 kernel: R13: 0000000000000000 R14: 0000555ad6c34ba0 R15: 0000555ad6c2ffa0
-May 02 17:21:58 f39-dev1 kernel:  </TASK>
-May 02 17:21:58 f39-dev1 kernel: ---[ end trace 0000000000000000 ]---
+>  $ cxl list
+> [
+>   {
+>     "memdev":"mem0",
+>     "pmem_size":1879048192,
+>     "serial":0,
+>     "numa_node":0,
+>     "host":"0010:01:00.0"
+>   }
+> ]
 
+I got the exact same result against `cxl list`.
 
-With kill_char_super(), it can mount and dismount for days with no
-issues that I have seen.
+>  $ cxl create-region -m mem0 -d decoder0.0 -t pmem
+> {
+>   "region":"region0",
+>   "resource":"0x210000000",
+>   "size":"1792.00 MiB (1879.05 MB)",
+>   "type":"pmem",
+>   "interleave_ways":1,
+>   "interleave_granularity":256,
+>   "decode_state":"commit",
+>   "mappings":[
+>     {
+>       "position":0,
+>       "memdev":"mem0",
+>       "decoder":"decoder2.0"
+>     }
+>   ]
+> }
+> cxl region: cmd_create_region: created 1 region
 
-Thanks,
-John
+Instead of successful region creation, what I could find was
 
+  $ cxl create-region -m mem0 -d decoder0.0 -t pmem
+  cxl region: create_region: region0: failed to commit decode: No such device or address
+  cxl region: cmd_create_region: created 0 regions
 
+How can I follow your usage in the letter?
+
+...snip...
+
+Kind regards,
+Hyeongtak
