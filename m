@@ -1,122 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51D818EB0;
-	Fri,  3 May 2024 20:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEACA2C684;
+	Fri,  3 May 2024 23:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714768393; cv=none; b=qvDWOsPj5CNZtLff7rA8C55cgStnVPGFn5CkaJLR5m51D45b/zA8yFtLRbJT5WNyc9rDG+pFXP70m3Mw8exFnq6Rirnkxaw8DagRyc/If7A07MSWqRZWdyefetzZZ4r5NvCmi2CvDz1GZU2gYAowl01Q/QXOtaA61kicDgAtsTo=
+	t=1714778777; cv=none; b=AY4cPktkKALRk8xQKVf0o11FztcxGSzjN3uYh5cja/z4uobVJur9a5de95J2W0Jc5m7r1CyCMuhM28wnHSPDkHltKS4X04KXvjQVmQE0tfWG5eDle5joZQNvf4wQiGFgdxrFTPz4BNze0IrAvgDJODUfWatmf0ftgn74TzYw604=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714768393; c=relaxed/simple;
-	bh=xNrH/b7XdzLMDSODlqM+fBKWye1+YkW33nUfkQPiS5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N44T1Dd3VFvDlekP71eiqC/WCk4dpN95Mra3QZJzoYQ8BHhChejeHHxe3GJsZmwnF1H976iL39y8tZMGiLaiNFMI3iIGJZNtzbasYJg0FnnvXb4bH7H6NKUpALguNam6KIJbblyxQYE7zSnAnqs70TTiFZq5k+FP0EsNkJf5FP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mg7cESue; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714778777; c=relaxed/simple;
+	bh=ooDSTrrnJaPNjnEpdZTK2JnudZxAgCc1CC+HWSsoSks=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=d33cj1MTLADjgPbgG/Cca1IdBCMa0rMCbrcUc3fuc5oeS1wbDLm56f4xjw1H9UTNe74TH/gSprAtizFlJV/gHuVHVSjABexSqjZcThk/1zLUCZh03yXsh4PQ6jRahzoIIbgsI1Z+oL2DTcEZXfgAV2nxzL8UypY+iB6PgGN0zSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdqqUa1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mg7cESue"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714768392; x=1746304392;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xNrH/b7XdzLMDSODlqM+fBKWye1+YkW33nUfkQPiS5g=;
-  b=mg7cESueNzIvieG8QjHJs16bVLOxg88ETAAZzelhxhVuA/JxZyUZtTDj
-   UVW9PEogDuBn1BgKUFSxXnEASJxQzKJNiEawx32woOBY5MvpggcCnxAOl
-   ABd/as0vBOI5SYT7qA+JLb5ZPgm/VYx/UIaz7rCp97QTzyKw8NUGekuZ8
-   TQf6IvddD+r9ri6VXTCn360pagsSbxW10C5BjOGjXUdL2ZvYjE+Ko7d6g
-   OEE1k89AyHboCwxbcL3r4YSUSXi4zXGS86n5AMbR7uV4JRjLdxDCncLQM
-   I3/KtY/xzqqG2aJwZhq6eLgNeAGDn94dNKdUiyNgXjolXU/sywLU6UYJd
-   A==;
-X-CSE-ConnectionGUID: I/QZLbVqS4GIXJhDMwg47w==
-X-CSE-MsgGUID: JCbKB6mcRzuBtfL5qOb++w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="10751465"
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="10751465"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 13:33:11 -0700
-X-CSE-ConnectionGUID: 4E8LX40rSHuI7uxCGNM6FA==
-X-CSE-MsgGUID: Es9jDY8sTsuflYoHPbAfpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="32355696"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.82.66])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 13:33:11 -0700
-Date: Fri, 3 May 2024 13:33:09 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/26] cxl/core: Simplify cxl_dpa_set_mode()
-Message-ID: <ZjVKBYhiCSWA89s0@aschofie-mobl2>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-5-b7b00d623625@intel.com>
- <ZhSPHvoTHl28GXt1@aschofie-mobl2>
- <6635366717079_e1f582941d@iweiny-mobl.notmuch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdqqUa1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 45F71C2BBFC;
+	Fri,  3 May 2024 23:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714778777;
+	bh=ooDSTrrnJaPNjnEpdZTK2JnudZxAgCc1CC+HWSsoSks=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=mdqqUa1I8qgp6Uw9SI1YpnBraFM7VcUpUarrwpm3agz7d2ViuHwwDg51fLc7Xbrn5
+	 LycgJVPQoFmeL9ZPku9OrjBj5MWB+ffXfOPt8q7RHr+PVccspCsPafWO4MAeKVo0U4
+	 3ij7Z5TQjN5XJHJfXhF1Lf/PgdiOfYQa4teV+sxeQR5/FlIOW5AfpN6PUKkTdhLnmR
+	 QTv8o0E/2oX224aesg1ladnRwUYv1+v1VjI/Vih9VpSQN+EuUw3PEw3KrRx2dk9nH4
+	 jqNNBzSS8GVM/8sAwwQOaXXKQOvoOTW4PDWCXWOB3RHX7E2VgqYM3+N343Oea1PEty
+	 avEIOgDpVdNgw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3AD7EC433A2;
+	Fri,  3 May 2024 23:26:17 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) Fix for 6.9-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <64b8cfc3-c2f2-487a-bced-8519690239a4@intel.com>
+References: <64b8cfc3-c2f2-487a-bced-8519690239a4@intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <64b8cfc3-c2f2-487a-bced-8519690239a4@intel.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.9-rc7
+X-PR-Tracked-Commit-Id: 5d211c7090590033581175d6405ae40917ca3a06
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7367539ad4b0f8f9b396baf02110962333719a48
+Message-Id: <171477877722.21900.18023377163439705041.pr-tracker-bot@kernel.org>
+Date: Fri, 03 May 2024 23:26:17 +0000
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6635366717079_e1f582941d@iweiny-mobl.notmuch>
 
-On Fri, May 03, 2024 at 12:09:27PM -0700, Ira Weiny wrote:
+The pull request you sent on Fri, 3 May 2024 09:21:51 -0700:
 
-snip
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.9-rc7
 
-> 
-> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > > index 7d97790b893d..66b8419fd0c3 100644
-> > > --- a/drivers/cxl/core/hdm.c
-> > > +++ b/drivers/cxl/core/hdm.c
-> > > @@ -411,44 +411,35 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-> > >  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > >  	struct device *dev = &cxled->cxld.dev;
-> > > -	int rc;
-> > >  
-> > > +	guard(rwsem_write)(&cxl_dpa_rwsem);
-> > > +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
-> > > +		return -EBUSY;
-> > > +
-> > > +	/*
-> > > +	 * Check that the mode is supported by the current partition
-> > > +	 * configuration
-> > > +	 */
-> > >  	switch (mode) {
-> > >  	case CXL_DECODER_RAM:
-> > > +		if (!resource_size(&cxlds->ram_res)) {
-> > > +			dev_dbg(dev, "no available ram capacity\n");
-> > > +			return -ENXIO;
-> > > +		}
-> > > +		break;
-> > >  	case CXL_DECODER_PMEM:
-> > > +		if (!resource_size(&cxlds->pmem_res)) {
-> > > +			dev_dbg(dev, "no available pmem capacity\n");
-> > > +			return -ENXIO;
-> > > +		}
-> > >  		break;
-> > >  	default:
-> > >  		dev_dbg(dev, "unsupported mode: %d\n", mode);
-> > >  		return -EINVAL;
-> > >  	}
-> > >  
-> > 
-> > delete extra line
-> 
-> You don't like the space following the switch?
-> 
-> Ira
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7367539ad4b0f8f9b396baf02110962333719a48
 
-Sorry - looks fine. Ignore my comment.
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
