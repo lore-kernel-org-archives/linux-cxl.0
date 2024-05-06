@@ -1,164 +1,347 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A206520E6;
-	Mon,  6 May 2024 10:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342921552F7;
+	Mon,  6 May 2024 16:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714991466; cv=none; b=I3f3HFAfrm57AjIfKNq8pIUqddQ/BQ2N6yVMcQNruByN2ma2dFzxRLwm2jZ7dLUYdbXmYXODTG3dknN1fIZ7mb/IkOrq+W/76tWEcuduuCuSdsP5Skjbu7UqS+/5zex7rleoO0uHSlG8G3DXcRRXh72ngnzgA0iM6QInrTbG2TM=
+	t=1715011681; cv=none; b=XP1meAl8ALlbKEB1+GoIxH3XXtCol/5Azz6ekV0YKzaRPkOZpooXxnuOd7/SzSvlizxBUgP2nVgnCK4ThwbnHkm1CoseZKbAiTx+fCvtI/Me6vQK9/Vddck9VvYhH9xEYdFi5dvMPY60UGnYJru0wTxdPaev4lJxYQWHB0IdeWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714991466; c=relaxed/simple;
-	bh=ReZKyuVHA0NHApnlMBhen5K4UugoVceHOVNhkkvO6yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I61x6FlickYqSRY/uetWajD3IqYoYE0aI6xxp7xnk2iCMYLuQYeKhERMqYyewenwHDqd90K4VpdQMA+yV/RVxE1e7y1/PQra7trM24dpYXaCRnaxcMQdO+P7k5aEq/JtgcEiSBP3hXSGABsqnprt4wxHKiHBRhkAweeQbfc5ntM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lKsTAn5S; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1715011681; c=relaxed/simple;
+	bh=2IOd66RSOqQqrKQkuMh3XogGiLvLLMV7lnIQ5ZnGbPE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ab+S3ejjGcxj4AmsJYFwHp1MJ4UeIqbizPvsOHQ+JUzWEi7gxTAl5fcSlM7/bj3HmrWP9mSa/5epd+xCS1HcqFVb+leMOnPQTJCc7C5xtwAEmDjx8MgJ3n+yvRNb+v4erKGANSsZuJ6HiaH/7evuEYtmnd19B0ueSzRe7Mhdv+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdcM3M4J; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lKsTAn5S"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0982D40E0249;
-	Mon,  6 May 2024 10:31:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id h5q6KkWXILDw; Mon,  6 May 2024 10:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714991458; bh=snaM6UDtGtGvqvIKA47vd3NtbUZwsnUs8N0zwMuvcFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKsTAn5SKefD7WI+yRaq08YbIV+1ksjAPMz31FhFS97vvzMBXS/MUSbHPDQGOYxLI
-	 LJ+2OMimc4sy7QTSfhIKBn0lNu9SFSNJ0f2bSIyn8ScGMYCWGKusTnKexdk2MMJTIt
-	 Td7g2RmjqRAzSg/14n7zvDh/7WPw+Pgl6mMkHrCN/7p3nPXfN362Zj+h/bVsDdAlcz
-	 ezOsWx2t9UtC9h7lgES4p4LocFcTBtdUbSxOYmI5lfA6EwRTnMGcFES98RUed0wyxu
-	 Otf0mlBhKW65Xpf/mwJIS1Xl5zvq0WRGi/RAp7K/1YNp9BgwL+L5+mMle/M9rhV+uL
-	 j7xDXYq40aZP7/6OQ5zvn/4MgUKsGANoDTbNGXykt44NIkBmHm1Ek5fYwAG/NU6gpx
-	 LMGnd4GJhR0A2GnGOpsbNv41F7rPhN0NxKPM26Gmi5SA4e8eUqG4RA7hk+l7OiL3lc
-	 Ri6RS9Qylcb+gjR2m2RCV0wQqAmzLI4x1gSQQnL8SkhEYw1/K84kQWIaOouSMlptjy
-	 D5u+2PUKgvBSw7AxIDd5/wJVPsOEO4VZfWJtr0n1qSQh+6NoGe/lOOlkmfaEfEZCIF
-	 KfH5qVWUPM9aBMqf1Iv0fsKrvWJVp6tdASX5j2j31OB0nQ+89XRIyz77YkEtqAKej+
-	 /lR1VU/27KvCKxnUssgLwkDA=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B77840E0187;
-	Mon,  6 May 2024 10:30:15 +0000 (UTC)
-Date: Mon, 6 May 2024 12:30:14 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local>
-References: <20240419164720.1765-1-shiju.jose@huawei.com>
- <20240419164720.1765-2-shiju.jose@huawei.com>
- <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local>
- <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdcM3M4J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715011679; x=1746547679;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2IOd66RSOqQqrKQkuMh3XogGiLvLLMV7lnIQ5ZnGbPE=;
+  b=mdcM3M4JAswq+Hj/4Jf8yuJJzZ01cw/1YIbVCq41wSpETdlk/y+wCCKG
+   Zm5wngIWty+CYyYkYBxJboRiH5P5Sp7aMxzCLDqTo+c4sWsxLXg0gx0iZ
+   ICjxPI7MQGO4zSU25v8UzZkJVkuasCkw+113Id0SpRZecPk/3CK4JUCL2
+   X2Gp/ANFecJKEF7RfXSUX5GxkGd3k1fJeXjnni6M/P+yMGpWIG6PZcOqK
+   AQuzxwxWUTTCuBffe/10Q4i3vtKMFf3Fwd6/YQr79alcEMS7Rrek/qjga
+   OmWUC8WaxWZlYmWg7BWc5+uBSNvvny8mI8bPfuX9l+Eq9r5VkSyxvBgJb
+   Q==;
+X-CSE-ConnectionGUID: NLhT/Lx7Qmu2o7wZa+FILQ==
+X-CSE-MsgGUID: BDduzWQaQ6Knn/Zh12Op3g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21440400"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="21440400"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 09:07:58 -0700
+X-CSE-ConnectionGUID: u2l7s34lSJ6s3YOUXNviqw==
+X-CSE-MsgGUID: +dIdv11yQnK7uo5bWilyRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="32705046"
+Received: from haabdall-mobl.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.82.8])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 09:07:57 -0700
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+To: akpm@linux-foundation.org
+Cc: rick.p.edgecombe@intel.com,
+	Liam.Howlett@oracle.com,
+	bp@alien8.de,
+	bpf@vger.kernel.org,
+	broonie@kernel.org,
+	christophe.leroy@csgroup.eu,
+	dan.j.williams@intel.com,
+	dave.hansen@linux.intel.com,
+	debug@rivosinc.com,
+	hpa@zytor.com,
+	io-uring@vger.kernel.org,
+	keescook@chromium.org,
+	kirill.shutemov@linux.intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-s390@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	luto@kernel.org,
+	mingo@redhat.com,
+	nvdimm@lists.linux.dev,
+	peterz@infradead.org,
+	sparclinux@vger.kernel.org,
+	tglx@linutronix.de,
+	x86@kernel.org
+Subject: [PATCH] mm: Remove mm argument from mm_get_unmapped_area()
+Date: Mon,  6 May 2024 09:07:47 -0700
+Message-Id: <20240506160747.1321726-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 06:11:13PM +0000, Shiju Jose wrote:
-> It is expected to have multiple RAS-specific functionalities other
-> than scrubbing  in long run.  Most of the classes in the kernel found
-> as  /sys/class/<class-name>/<class-name>X/
-> 
-> If not, however /sys/class/ras/<module -name>X/<feature> is more
-> suitable because there are multiple device instances such as cxl
-> devices with scrub control feature.  For example,
-> /sys/class/ras/cxlX/scrub
+Recently the get_unmapped_area() pointer on mm_struct was removed in
+favor of direct callable function that can determines which of two
+handlers to call based on an mm flag. This function,
+mm_get_unmapped_area(), checks the flag of the mm passed as an argument.
 
-Make it as user-friendly as possible. cxlX is not as user-friendly as
+Dan Williams pointed out (see link) that all callers pass curret->mm, so
+the mm argument is unneeded. It could be conceivable for a caller to want
+to pass a different mm in the future, but in this case a new helper could
+easily be added.
 
-/sys/class/ras/cxl/<mem_accelerator>
-		  /<fancy_bla_thing>
+So remove the mm argument, and rename the function
+current_get_unmapped_area().
 
-and so on.
+Fixes: 529ce23a764f ("mm: switch mm->get_unmapped_area() to a flag")
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Link: https://lore.kernel.org/lkml/6603bed6662a_4a98a2949e@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+---
+Based on linux-next.
+---
+ arch/sparc/kernel/sys_sparc_64.c |  9 +++++----
+ arch/x86/kernel/cpu/sgx/driver.c |  2 +-
+ drivers/char/mem.c               |  2 +-
+ drivers/dax/device.c             |  6 +++---
+ fs/proc/inode.c                  |  2 +-
+ fs/ramfs/file-mmu.c              |  2 +-
+ include/linux/sched/mm.h         |  6 +++---
+ io_uring/memmap.c                |  2 +-
+ kernel/bpf/arena.c               |  2 +-
+ kernel/bpf/syscall.c             |  2 +-
+ mm/mmap.c                        | 11 +++++------
+ mm/shmem.c                       |  9 ++++-----
+ 12 files changed, 27 insertions(+), 28 deletions(-)
 
-Yes, you can introduce a special category .../ras/cxl/ if there are
-multiple cxl devices which have RAS functionality on them.
+diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+index d9c3b34ca744..cf0b4ace5bf9 100644
+--- a/arch/sparc/kernel/sys_sparc_64.c
++++ b/arch/sparc/kernel/sys_sparc_64.c
+@@ -220,7 +220,7 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
+ 
+ 	if (flags & MAP_FIXED) {
+ 		/* Ok, don't mess with it. */
+-		return mm_get_unmapped_area(current->mm, NULL, orig_addr, len, pgoff, flags);
++		return current_get_unmapped_area(NULL, orig_addr, len, pgoff, flags);
+ 	}
+ 	flags &= ~MAP_SHARED;
+ 
+@@ -233,8 +233,9 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
+ 		align_goal = (64UL * 1024);
+ 
+ 	do {
+-		addr = mm_get_unmapped_area(current->mm, NULL, orig_addr,
+-					    len + (align_goal - PAGE_SIZE), pgoff, flags);
++		addr = current_get_unmapped_area(NULL, orig_addr,
++						 len + (align_goal - PAGE_SIZE),
++						 pgoff, flags);
+ 		if (!(addr & ~PAGE_MASK)) {
+ 			addr = (addr + (align_goal - 1UL)) & ~(align_goal - 1UL);
+ 			break;
+@@ -252,7 +253,7 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
+ 	 * be obtained.
+ 	 */
+ 	if (addr & ~PAGE_MASK)
+-		addr = mm_get_unmapped_area(current->mm, NULL, orig_addr, len, pgoff, flags);
++		addr = current_get_unmapped_area(NULL, orig_addr, len, pgoff, flags);
+ 
+ 	return addr;
+ }
+diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
+index 22b65a5f5ec6..5f7bfd9035f7 100644
+--- a/arch/x86/kernel/cpu/sgx/driver.c
++++ b/arch/x86/kernel/cpu/sgx/driver.c
+@@ -113,7 +113,7 @@ static unsigned long sgx_get_unmapped_area(struct file *file,
+ 	if (flags & MAP_FIXED)
+ 		return addr;
+ 
+-	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
++	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+ }
+ 
+ #ifdef CONFIG_COMPAT
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 7c359cc406d5..a29c4bd506d5 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -546,7 +546,7 @@ static unsigned long get_unmapped_area_zero(struct file *file,
+ 	}
+ 
+ 	/* Otherwise flags & MAP_PRIVATE: with no shmem object beneath it */
+-	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
++	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+ #else
+ 	return -ENOSYS;
+ #endif
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index eb61598247a9..c379902307b7 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -329,14 +329,14 @@ static unsigned long dax_get_unmapped_area(struct file *filp,
+ 	if ((off + len_align) < off)
+ 		goto out;
+ 
+-	addr_align = mm_get_unmapped_area(current->mm, filp, addr, len_align,
+-					  pgoff, flags);
++	addr_align = current_get_unmapped_area(filp, addr, len_align,
++					       pgoff, flags);
+ 	if (!IS_ERR_VALUE(addr_align)) {
+ 		addr_align += (off - addr_align) & (align - 1);
+ 		return addr_align;
+ 	}
+  out:
+-	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
++	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
+ }
+ 
+ static const struct address_space_operations dev_dax_aops = {
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index d19434e2a58e..24a6aeac3de5 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -455,7 +455,7 @@ pde_get_unmapped_area(struct proc_dir_entry *pde, struct file *file, unsigned lo
+ 		return pde->proc_ops->proc_get_unmapped_area(file, orig_addr, len, pgoff, flags);
+ 
+ #ifdef CONFIG_MMU
+-	return mm_get_unmapped_area(current->mm, file, orig_addr, len, pgoff, flags);
++	return current_get_unmapped_area(file, orig_addr, len, pgoff, flags);
+ #endif
+ 
+ 	return orig_addr;
+diff --git a/fs/ramfs/file-mmu.c b/fs/ramfs/file-mmu.c
+index b45c7edc3225..85f57de31102 100644
+--- a/fs/ramfs/file-mmu.c
++++ b/fs/ramfs/file-mmu.c
+@@ -35,7 +35,7 @@ static unsigned long ramfs_mmu_get_unmapped_area(struct file *file,
+ 		unsigned long addr, unsigned long len, unsigned long pgoff,
+ 		unsigned long flags)
+ {
+-	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
++	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+ }
+ 
+ const struct file_operations ramfs_file_operations = {
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 91546493c43d..c67c7de05c7a 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -187,9 +187,9 @@ arch_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
+ 			  unsigned long len, unsigned long pgoff,
+ 			  unsigned long flags);
+ 
+-unsigned long mm_get_unmapped_area(struct mm_struct *mm, struct file *filp,
+-				   unsigned long addr, unsigned long len,
+-				   unsigned long pgoff, unsigned long flags);
++unsigned long current_get_unmapped_area(struct file *filp, unsigned long addr,
++					unsigned long len, unsigned long pgoff,
++					unsigned long flags);
+ 
+ unsigned long
+ arch_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
+diff --git a/io_uring/memmap.c b/io_uring/memmap.c
+index 4785d6af5fee..1aaea32c797c 100644
+--- a/io_uring/memmap.c
++++ b/io_uring/memmap.c
+@@ -305,7 +305,7 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
+ #else
+ 	addr = 0UL;
+ #endif
+-	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
++	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
+ }
+ 
+ #else /* !CONFIG_MMU */
+diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
+index 4a1be699bb82..054486f7c453 100644
+--- a/kernel/bpf/arena.c
++++ b/kernel/bpf/arena.c
+@@ -314,7 +314,7 @@ static unsigned long arena_get_unmapped_area(struct file *filp, unsigned long ad
+ 			return -EINVAL;
+ 	}
+ 
+-	ret = mm_get_unmapped_area(current->mm, filp, addr, len * 2, 0, flags);
++	ret = current_get_unmapped_area(filp, addr, len * 2, 0, flags);
+ 	if (IS_ERR_VALUE(ret))
+ 		return ret;
+ 	if ((ret >> 32) == ((ret + len - 1) >> 32))
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 2222c3ff88e7..d9ff2843f6ef 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -992,7 +992,7 @@ static unsigned long bpf_get_unmapped_area(struct file *filp, unsigned long addr
+ 	if (map->ops->map_get_unmapped_area)
+ 		return map->ops->map_get_unmapped_area(filp, addr, len, pgoff, flags);
+ #ifdef CONFIG_MMU
+-	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
++	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
+ #else
+ 	return addr;
+ #endif
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 83b4682ec85c..4e98a907c53d 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1901,16 +1901,15 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
+ 	return error ? error : addr;
+ }
+ 
+-unsigned long
+-mm_get_unmapped_area(struct mm_struct *mm, struct file *file,
+-		     unsigned long addr, unsigned long len,
+-		     unsigned long pgoff, unsigned long flags)
++unsigned long current_get_unmapped_area(struct file *file, unsigned long addr,
++					unsigned long len, unsigned long pgoff,
++					unsigned long flags)
+ {
+-	if (test_bit(MMF_TOPDOWN, &mm->flags))
++	if (test_bit(MMF_TOPDOWN, &current->mm->flags))
+ 		return arch_get_unmapped_area_topdown(file, addr, len, pgoff, flags);
+ 	return arch_get_unmapped_area(file, addr, len, pgoff, flags);
+ }
+-EXPORT_SYMBOL(mm_get_unmapped_area);
++EXPORT_SYMBOL(current_get_unmapped_area);
+ 
+ /**
+  * find_vma_intersection() - Look up the first VMA which intersects the interval
+diff --git a/mm/shmem.c b/mm/shmem.c
+index f5d60436b604..c0acd7db93c8 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2276,8 +2276,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
+ 	if (len > TASK_SIZE)
+ 		return -ENOMEM;
+ 
+-	addr = mm_get_unmapped_area(current->mm, file, uaddr, len, pgoff,
+-				    flags);
++	addr = current_get_unmapped_area(file, uaddr, len, pgoff, flags);
+ 
+ 	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+ 		return addr;
+@@ -2334,8 +2333,8 @@ unsigned long shmem_get_unmapped_area(struct file *file,
+ 	if (inflated_len < len)
+ 		return addr;
+ 
+-	inflated_addr = mm_get_unmapped_area(current->mm, NULL, uaddr,
+-					     inflated_len, 0, flags);
++	inflated_addr = current_get_unmapped_area(NULL, uaddr,
++						  inflated_len, 0, flags);
+ 	if (IS_ERR_VALUE(inflated_addr))
+ 		return addr;
+ 	if (inflated_addr & ~PAGE_MASK)
+@@ -4799,7 +4798,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
+ 				      unsigned long addr, unsigned long len,
+ 				      unsigned long pgoff, unsigned long flags)
+ {
+-	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
++	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+ }
+ #endif
+ 
 
-> Presently underlying hw driver does the check. I think this will
-> become more complex if does in the common rate_store() if we have to
-> check against either a list of possible rates or min and max rates.
-
-Ok.
-
-> >> +DEVICE_ATTR_RW(enable_background);
-> >> +DEVICE_ATTR_RO(name);
-> >> +DEVICE_ATTR_RW(rate);
-> >> +DEVICE_ATTR_RO(rate_available);
-> >
-> >static
-
-Forgot one.
-
-> This is the ras instance id (X) used for scrub control feature, /sys/class/ras/rasX/scrub/
-
-Yeah, as discussed  above.
-
-> >> +static int __init memory_scrub_control_init(void) {
-> >> +	return class_register(&scrub_class); }
-> >> +subsys_initcall(memory_scrub_control_init);
-> >
-> >You can't just blindly register this thing without checking whether there are even
-> >any hw scrubber devices on the system.
->
-> I think it happens only when a dependent module as autoloaded based
-> on a scrub device existing with exception of memory scrub control
-> built in and who would build this in?
-
-You think or you know?
-
+base-commit: 9221b2819b8a4196eecf5476d66201be60fbcf29
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
