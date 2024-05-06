@@ -1,101 +1,105 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E92414293;
-	Mon,  6 May 2024 16:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A3A13DDD8;
+	Mon,  6 May 2024 16:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715013186; cv=fail; b=WEId0rtQ+/6sjDRxFXHhIh9mTk5Nd7b7D0T8tHJ+YDM4YuwHa5mkMBwKMVFQTI3MrcTXFWlyHMclt0fOQS13NCkc0NjCgVl37Rj0oCFDAJubknb0/uIeeQ2SvJvXybnfxqAZJw4/x2zW2od5rltl6y6JR35PctnEsILnNP40qUk=
+	t=1715014617; cv=fail; b=PhbWiNND0G+IjSaaFXnC31TbSsMDLtXc+LwGaoLWmJPuGIM372l1EvVMg2YxvU09k8u3eMUHHi6x6iwlRGUPyTPgmoBbo1kkmk9b/lJQ2WrnIZXJj9oqgl1lxdPTpnNbmIvwFKP+pp1r80QoZicZtb/G+Va9qxbto7nqbhmiz98=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715013186; c=relaxed/simple;
-	bh=qWVDWiUWZFraaj8kb7Iym6tndbe4h5T+nUOUei0/CyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RsBlLMvtBTfiD291eXYjg4s63IcputTSIjVvW6aDaGS4K62C3H0M8KbZYBqu3dx6bVsibpGH38wMmrRaiPs2Nd/+FELXrZpMAnaJMqWNafB0YNgowhm+OKOxyb1f8666g5zug/a6jz9Op69vf3IfuXwVkE+gTuF95CVPswWLBGQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dd9fbWf8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YoIfPsNx; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1715014617; c=relaxed/simple;
+	bh=LRR43HiivhXqN5zWXwbpZnXiwCsMdnJUHiAxfhVOtu8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=a338rDgX5HOwYEPmjJ4szwCg/PmjCPBH4srGodM6K7YuAR4PlisqZwC0AI0q2k7NnFWoB2SdYLzzBfq8i7LQNCzaIQjnRkryLiFwzgV0/69wu6ZD4MWKsOeQU2AE1cWshscNKbUsj3ZDOMtrGglXZdMO/T5gE4Ilg7E/hTyvyrQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=keNNG/ZD; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dd9fbWf8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YoIfPsNx"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446Amx42018880;
-	Mon, 6 May 2024 16:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=tVWU6s/ThW+WwoE2GW213T6lTHfHA2on7z95CmN9QIU=;
- b=dd9fbWf8xCWj/cudxJiJ6Rrh2reDT5erS+qYef7YuuEdNV0ietf8ageLP/E8t1rIS1cj
- 5zs3d5VCwApTYelsj8SkDJ31KUWKM5wgmxZ7jiRr2ySoAZysD7vfDVOkkzmsykc4bhww
- tmvzDkZ0Sgsihx/E75CQoqLDh8nkQTR5R0ZpfsWW6dtSQr08uvdInCQS4iur6/ebeEDg
- ZtGgJKV+xzohdIly1kT/hsvKqs7m/7iJ54fwH88mFK3QXDf9GKfQRJFM/n8QgZ771gEw
- 8Wqsn/Tkhq7n9+A+B3X5XQdDo+I1QZNwk8XP+pYMaGq6fjkbTuxB8iopYvljFE5QUrpO 4Q== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xwcmvb0p3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 06 May 2024 16:32:11 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 446EpSko027556;
-	Mon, 6 May 2024 16:32:10 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xwbfd3amr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 06 May 2024 16:32:10 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="keNNG/ZD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715014615; x=1746550615;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=LRR43HiivhXqN5zWXwbpZnXiwCsMdnJUHiAxfhVOtu8=;
+  b=keNNG/ZDc5fgRWiv8YMd0f3A/jF17qfnR9Q5Tl2OCqI+D0WfwRhiVKKI
+   v77WGZrB6Ubh1pludsJA+yqrdae6X3pWejf9p/0E0XoYXEJqO9OjbUjx0
+   0RcfRI9zUAlmgE8FghYH1XFNP/dMC90+YkvuDGttU8nLB8FfXn9FRnlbp
+   WslsSBGh/da/p+zrDpPKCEeGw/jEXaJWh0kKqJ39kZeHlbeBnFGhcMlTS
+   36sBhoz+qWkD6SOJQ1VW9S5OvWLqOtym0KFmf6gdrZENb0QO805C8HvQf
+   pWXyY0n6MwBU8E3APwfK9yKpv/VslBaaxc3M2LMl0zR5btnq4pE0hcFYs
+   A==;
+X-CSE-ConnectionGUID: K7EMWaU/SGiN5Z9aqqHetg==
+X-CSE-MsgGUID: oPYU7dbzQAaKJshBFeNb9Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="13722944"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="13722944"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 09:56:53 -0700
+X-CSE-ConnectionGUID: KyfYfr20S5qPTyIJkOxs3Q==
+X-CSE-MsgGUID: FD7VXddHT1qAca2yfBXCNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="33024772"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 May 2024 09:56:53 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 6 May 2024 09:56:52 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 6 May 2024 09:56:52 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 6 May 2024 09:56:52 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 6 May 2024 09:56:52 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KrUmfMUPiML7IIKr4SKZ6Iyb7jzy2V0cRm+Cuc/59o55MrbZClO7VztRAiIPmrkFCAyy5gdotzPDnRiCCfk1RasOasisrXUdbtrc5z7QioESkkzOuIkhlRhBvyZSzITW902FRr8qTfXWlCFCr0XUJBh/67x/K+gLeyv8qMg35j4zlK/26tEbuGwlZ2XhuwalgmoRzBjghEvKqM/jbHNQ2tqX8f0losrcxR/gEPEokhpvI3LAiMLCFEEoPnVBlnDYEfIjvOczhgvL06nr/yK0MnDMvFqwIew8i/SOKMKLQoEmou9xViRwFbB6fy9OcCAHeWXrqQOAM70pa2m9v2QUsg==
+ b=f6T7ivBFD6Q5Tg5JNDKHUYSQrHmGo+GPQSJxzLVwUVllcXJbOR7MXcX2bfKCOPDPC0jLpi+sv1gN0hcNsFfOgHLEvNBjrc7n/mPD6iPhjXt7Wq/LO9cd3sfXkjUpRaFfX0ucFGW1rnTDFXXwclvUS3NKoSNPg8687HPcFumppyZVB6Rusp6TX4vhnAUHMylV+vGBl/a81dME6TibxnROH5aMOrTKHxduaQUb4WZHj5ZIUmfj98OQzKaljHxXa2aIzpfVPbpnoMx/hct5kUf24JgdKBfOToLT3LP8W4cN37su8vaL3V0idGUJqrrQkyxQ1ojOCJvuEqNZjIQt9lIkFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tVWU6s/ThW+WwoE2GW213T6lTHfHA2on7z95CmN9QIU=;
- b=EkNP6ah6t6meRSb3059QleEnlKC40EE9RiMSZBVw9m7JFsgaR+7bcqfxaj57EdTAency/TQvXPY+7Ea/Hp2zrtUNswVvIyQHH4wkTdRjd+1tlS0tEyifnw0oCKr2Ht99pmsDwQ7nfDlVMGTtPymYSpUIjChcTHBfu93aCGI0TKLeTLchp5n0XzI/iNJ+J+Mes4o10dN2VGJa2y8SmstyL6HbBPzVAbn2gaysEI6PzdMP1/3w1LXN1mOP0ceoefWnCs2eH50/jlZLsL9/7XlSWZW9inD++B+Lsx1vTgPi2c4fEgzORQx5G/4o3s/kMnAJ+j+K6K+TvDBzIKL9JxPYqA==
+ bh=I74u/K6RY/Z00k1ovruIH6BBzkfrXt2BcISq1+EqOUk=;
+ b=jOmuwNoe/KIOx3jRdh89IO0ciLSAbgcKPKDz3RlHXrGLkOkCMoUC4xSXyMRKbdjxuN9M0LSgFDa5ByggEqftcErXaXQSqYEwqO3Ebf4SpKwCXlkqzR25kwYbQPKpmN9yZr14ZOAfl7mdcCdELPQ3SC1//rYfCiMPzXtBLTFgNg/6VbrJOaIUBWhepRjHHUI3ybNk94wDnzEnmBN/YnkgQYkahRglYfNyTQimE/XTh3TjcAD0AFDjbvpYftH8i/6JSF7THIkbODpI+mHG1O19Zzn+ffzenw+ACISyd8PQGG4z7I8ZZ0zd2d5nxXeZc9gScdu9IbOUh+ZZI4Zt6zuUGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tVWU6s/ThW+WwoE2GW213T6lTHfHA2on7z95CmN9QIU=;
- b=YoIfPsNxJ5q0WKAK8Ha2T5FLg0chiuQMpP8BmKvHPLRoH056XZ/SnB7FaU067IYgLngsLZJSGmXxskL4fIBqyezcFtqZtSUD9ukN2p02VdxQadUuqebU9e7kQAaygBf/MQkUowjFUzk9/9v3sClreoQq0hZ2DJ+bNlvWt1APZAw=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by CH2PR10MB4149.namprd10.prod.outlook.com (2603:10b6:610:a7::16) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS7PR11MB7691.namprd11.prod.outlook.com (2603:10b6:8:e4::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
- 2024 16:32:07 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.7544.041; Mon, 6 May 2024
- 16:32:07 +0000
-Date: Mon, 6 May 2024 12:32:03 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: akpm@linux-foundation.org, bp@alien8.de, bpf@vger.kernel.org,
-        broonie@kernel.org, christophe.leroy@csgroup.eu,
-        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        debug@rivosinc.com, hpa@zytor.com, io-uring@vger.kernel.org,
-        keescook@chromium.org, kirill.shutemov@linux.intel.com,
-        linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, luto@kernel.org,
-        mingo@redhat.com, nvdimm@lists.linux.dev, peterz@infradead.org,
-        sparclinux@vger.kernel.org, tglx@linutronix.de, x86@kernel.org
-Subject: Re: [PATCH] mm: Remove mm argument from mm_get_unmapped_area()
-Message-ID: <tj2cc7k2fyeh2qi6hqkftxe2vk46rtjxaue222jkw3zcnxad4d@uark4ccqtx3t>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, akpm@linux-foundation.org, bp@alien8.de, bpf@vger.kernel.org, 
-	broonie@kernel.org, christophe.leroy@csgroup.eu, dan.j.williams@intel.com, 
-	dave.hansen@linux.intel.com, debug@rivosinc.com, hpa@zytor.com, io-uring@vger.kernel.org, 
-	keescook@chromium.org, kirill.shutemov@linux.intel.com, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
-	nvdimm@lists.linux.dev, peterz@infradead.org, sparclinux@vger.kernel.org, 
-	tglx@linutronix.de, x86@kernel.org
-References: <20240506160747.1321726-1-rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset=us-ascii
+ 2024 16:56:43 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7544.041; Mon, 6 May 2024
+ 16:56:43 +0000
+Date: Mon, 6 May 2024 09:56:40 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, Fan Ni
+	<fan.ni@samsung.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Navneet
+ Singh <navneet.singh@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 13/26] cxl/mem: Configure dynamic capacity interrupts
+Message-ID: <66390bc876ad7_2e2d22947e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-13-b7b00d623625@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240506160747.1321726-1-rick.p.edgecombe@intel.com>
-User-Agent: NeoMutt/20231103
-X-ClientProxiedBy: BN9PR03CA0453.namprd03.prod.outlook.com
- (2603:10b6:408:139::8) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+In-Reply-To: <20240324-dcd-type2-upstream-v1-13-b7b00d623625@intel.com>
+X-ClientProxiedBy: MW4PR04CA0270.namprd04.prod.outlook.com
+ (2603:10b6:303:88::35) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -103,360 +107,261 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|CH2PR10MB4149:EE_
-X-MS-Office365-Filtering-Correlation-Id: a298842b-87f5-4dd7-e269-08dc6dea11e4
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS7PR11MB7691:EE_
+X-MS-Office365-Filtering-Correlation-Id: f87e2ad1-6070-4a44-c0b1-08dc6ded81ce
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?6M+3HKQ+ldqt4Rtwci88UgMtW/041j8a+bAIZ49j9AMqrKNPzoF9U69E2Bgp?=
- =?us-ascii?Q?Mk+ArKcSS/S/N4LRAxdL4ZYp4zwek0kL8l+Y4Xez75wc0VmxMO8oHAxFTRud?=
- =?us-ascii?Q?cBbMDcHL9xScJCj//BupJI3Uu5bF0AZw0ujrTrcujKno1pOTleg0wtUpmkA/?=
- =?us-ascii?Q?eutgnpJP59tWiBjUJBNiT1054k/dgnuS1gDvXu/TyM/CTPu3pQtvdAvxnQ5h?=
- =?us-ascii?Q?H2+Yrw+SvGcVrgK7oFYHycSJ0gebT8XuPc/uW5zGSaWT2v0rr7M3sgOr9SqV?=
- =?us-ascii?Q?yNouQYXOSXd0S5mYV4eV2kBfXVuparbTiOsuv2pAM1fX5qEusSy4P17T2nE8?=
- =?us-ascii?Q?pztSvv+UxTbn/paKa1iIEyC/YjOZZ5/XLtN0V3qNG51ZzZ+DVf7smDW6UHYk?=
- =?us-ascii?Q?l1vLFf9zQUavZ0pQPoJwzzUtFBT3mvT0c35RPceKDeHIqP9rR9kT7MOXPk48?=
- =?us-ascii?Q?RJ6YmGYQxH3weWet+PimuqwYowsM2eDaFbqrU3Tum0k/tgca10RHxvj1x5eC?=
- =?us-ascii?Q?bbVDi6dMafV8U/VHmF+czFL2EY7rAeiD6DTzB6J5KCk6Y6uaI5sSh8hWemtu?=
- =?us-ascii?Q?gKxnLmxvOhdDSVFs9AMP4z+Z3HSHph3zfDyy6JphgBwEb/68H5L782tBoUXF?=
- =?us-ascii?Q?EIF6ckzKP+qOz9gg3GHp+T4yQOVKbW5NPKiqsjOeqN8pvlA2GbXt2vI4fC6j?=
- =?us-ascii?Q?EgGONj+1WpFk1ySM7FuFtObMyKfr3GqTc99RDR+9gchPaZoBj30vDye/jJoq?=
- =?us-ascii?Q?m+4SmqaorKKynm2PxsOZhBv7+7FcXz5xHf9nHXOl4i1Yil2LtqZMBkkEE5CR?=
- =?us-ascii?Q?W6rxhLPwnIfeuc1hi7yb69REgwzCKDU8JorW4a1aTe0P0+G80njNw+iwkUHt?=
- =?us-ascii?Q?jEdv+AJJJNOetHyUBu3zWBOOErZrFc7Er8lHDweJ76f3FiUdMrtjEqujMIeE?=
- =?us-ascii?Q?uNZzFTaAZv//ffNF1Igi0Xfhqt+K4nfMNGvYlpoSZ5p1NC6aW+Oku2OM+1y/?=
- =?us-ascii?Q?fQw2EZ6cxv1P1+PhY40FqUlo6Hc4bGUuWZ53OrCoJA20o3w7JOBUnLm0jn3N?=
- =?us-ascii?Q?uHk+q5NJhKAsGd4G9+CdZPvJ0lpxqvQo6oFfrZ/QTzn1ZRXlytXA85ET8GCb?=
- =?us-ascii?Q?D9fknq6yzOWddVye83iYP7h5llocDL0zaj9/pDr9K6DXeJuBFu/6OYzQqy/D?=
- =?us-ascii?Q?pD7D0TMKfqu8R14FLEGxy/2m9iNc9AfSHHeMhw=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?qDmXECfMey37ZlIEqtDFGgZtjHrpapH7Z2Y8RLUOk39OGRIVbS3QPz0uB+0j?=
+ =?us-ascii?Q?M2UcJBT2WJ9NMx2mtJcm3BUzc5erb8r8BsHg0M3SImF2lNuKZV6GMRdWHfYu?=
+ =?us-ascii?Q?kX+BQ6NAx7+OkdenJTdSM6Wh3jEbk9minkkwsSE7kLAu3zcTzHFfdgFkLcFl?=
+ =?us-ascii?Q?nG0NcW39aD9BSPN7rgLXegRLM0OBcTXP05IkS7Lqx3+aUcRieVTYuoNztEJt?=
+ =?us-ascii?Q?z80u42EIOGFoz5QePDJEio9nfjUHz6IsBql2udrp8V3puq1mZCxbU1AwbTVg?=
+ =?us-ascii?Q?Fjws7aijH2aoUcHJRexQuwR6d0DIhuVhpQ3eeJAZnhMjoBSnvbJx5rxc6JH0?=
+ =?us-ascii?Q?nORkyYkoXooqsN8Q9FNQXlRf4PcgSYi5ku2/fo9B/yNOV6rU988S4OOYzmZx?=
+ =?us-ascii?Q?ApAXjnTl+SqEpSVXemgUXXOz8NJk0qsoJzwyh2Uf0TQZ+qrTpTKNbts85Bxf?=
+ =?us-ascii?Q?T1mAZuchgNpMM+sdvu2KeL6LAT9BtTYz+fVC6tT8kHlwZMLbKt8S4JbwpZhz?=
+ =?us-ascii?Q?pZy2zHMMtrtaNCh37+oDcxmCGs4hQDNbK5FGSwYalq7o3wid2vWrA87bb2Sp?=
+ =?us-ascii?Q?rcuTKpptbbXB108+8fT7zk4UR3WRi50wkmBfNts+CYRi+1e+U05BkutQ7IT7?=
+ =?us-ascii?Q?moVowaoR0GmC+ykl9EnTuaSzt8MfkMjRbjhJ614GB6CYTQEeinPzZJhL+UAP?=
+ =?us-ascii?Q?jYp8VFA9lsMRfoCeP9AqIxgCPiNp9ue6y3r1FCE8NYJ/D50mFVYS1tXzCRNQ?=
+ =?us-ascii?Q?6O5ZhvWFWtYtXXwF9NSfTwK7ujDkcoVFJkizIAQmPjTzLgWSR5n6cyUKDosh?=
+ =?us-ascii?Q?kcO+srXsJsXr5L6CyXPmmG7bkZw1hoEAvAUBxO6NRUJOMtMTaWtCO2U+JzNg?=
+ =?us-ascii?Q?645TqzuAJu/S9LXqrXkjQvmitVj0czDN7iAw+pFPEbwMUz4nIDFNO6VA50Gw?=
+ =?us-ascii?Q?jH4GLMQ6aidsg5Nz0MyB4j5r4dYq5q70XJgrWG/aL41/pVzYUSgSR8FxljbE?=
+ =?us-ascii?Q?0O18AzoaVvgVlWHFIRKH+YXUQySxyr04cTY52fKfiu/JWvvRS1Sf2Y8CeJKq?=
+ =?us-ascii?Q?LRhbolSeA5cO8xQF0kQ0MOY5V60ALNIxBKA5I8xPUfICEfIlnGY2Vzmi6qhx?=
+ =?us-ascii?Q?4XC8Hc88Kg55umv/rFCzUCriYQ/AJQOIrw93q+k7BKfVRXHjZ3jt1VXdb4Jc?=
+ =?us-ascii?Q?PjVN6cpwPy7zm/MhD1FFI3tUAxnPjMmdW/MCOpNBILLdBkHKNwBLXEx4m+6r?=
+ =?us-ascii?Q?kKeeiPrhKvSOyQ8GhX05NzoLhgphOQUQq5gCt8zG4g=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?FQJZXyHpj15Vs3eAhoBqfT+2fkWzDZpGxBzdCRspzGZmUV4JoxfgfeFfpmNp?=
- =?us-ascii?Q?T4vkA3ZrspFmRptYKg5ZgNRJLTiZt4LJreX/hLJfWKK74jhA8LlzNx0QLj+y?=
- =?us-ascii?Q?mFVhn9d5r381lpnoWSLlqLFYMG2SmHZ7rIQQrbp1Ody3yYIOD/0WfPZMUcZm?=
- =?us-ascii?Q?xB2UB5FWohYmYuAQcyHPKZKqcGwk98EoZKl3hsR3G4rpAvIjX3//mlHQCPFy?=
- =?us-ascii?Q?xb/a2E+DzW+WHCn0e7aPjDp5U1sDKDuGIAKNBpy1eQucBL92AysmXDB7MlWK?=
- =?us-ascii?Q?5TT4BHO2dCSB6L6LPIHU218/L7Dy3OC+p07i4y1FTrt5TQj4t53yncp1hXzZ?=
- =?us-ascii?Q?cPJPoX36y3LI2r6AEayqGrnSwfv7vjksWlRqordcYX7sxL8pmlnuriQuX/ej?=
- =?us-ascii?Q?6DHvfffzeK0vAOVt5ExUoyyq1ajO357P/K7IS5K3zMGE+XqibvzW4A4Tgrxc?=
- =?us-ascii?Q?cxUyk6ixeWhkSDAuRmOqfzjeWqyYnvYL/jJTvA5PbaUDnwSrWp0Ni6xDdv/k?=
- =?us-ascii?Q?NhsC8uuivrBtx1umYy5vYr4XxttM1qSzamGpEwe5s7M47/49qVka6jihjull?=
- =?us-ascii?Q?GL2r5Kxy0hkS8JRVDYVZJLiwrQ9sBgc/cxJ91ZwvU+tBkqHpgn5GTKCeua1K?=
- =?us-ascii?Q?kl4oNA29LSHkpVeeS8PS9lVcEKTahQ3GBw11XcMouLLysCcddp7OvHGHR8T6?=
- =?us-ascii?Q?9g1UOyHmBr5gx36Q4llkjkPdqCWO1wpV0kJalq5usQmnAKJrzC50wMNUexcL?=
- =?us-ascii?Q?VRzP5AqqrQwrgShEI2+gsrqiy38UaKjOUEw4l/rjL+WQY5G/Tkj3COxmaToN?=
- =?us-ascii?Q?bGestlPns68iuZXBIjCRds0iiHG3E2BkCbnP0RNlDk7/Lb3+5GfOTyD3yJM/?=
- =?us-ascii?Q?ynZ109qBN5eZC/w9hYiILfze7gZXNhvdquQY6rnIN2y0pdO7Oa2mo4Am5EWC?=
- =?us-ascii?Q?o1NdcxcBxQEOJdfJqbFTcxhR3o5wucIskQEqHRKast4KnGn4l+L18gvv3MHk?=
- =?us-ascii?Q?oGOs9T6+Par+QQFurXTvfFsypZaDALQ525LewRKX6pPbk25MCfVQqaY68QwQ?=
- =?us-ascii?Q?aXq5P/3HvQDUC9dXs4SXsecN9Vc7JxH2oNAdC5lYCSJ2/NxQxD/2ZooWzY0k?=
- =?us-ascii?Q?dk6vhrFQAekEDcz26FBazIRQuB1ysFqFZ08xjewL6HYmzoATJDkeidemDLB6?=
- =?us-ascii?Q?FvDkVGEJ7hc+upgTZyIUUPtYmjl2BgTgkr45NHDMCf72Zfn1qGjCG1t/sVgS?=
- =?us-ascii?Q?LKPq+ISNZ1flbDohwCuepLIRX66mwjqQTzgNQGq/UJgPadkd11+IFKVD+gBn?=
- =?us-ascii?Q?eGY911KyOByPLehuylpzezEPj8nOtR/1mqdsdlsw9grmjn3l6QcSIEDnSaI5?=
- =?us-ascii?Q?NBgQgxWm4BcIPlZkw+nS2quwQIVsmbQ1W+PtTMS0FpGZvUer6pSZqbgqRZgm?=
- =?us-ascii?Q?4PDvP3q/MT55WpdJF4yjcS47kZMBFOdLzHUh23/ylfMzr37mGU5MgMl1CvmA?=
- =?us-ascii?Q?VdhNaW51X8Td6mO6JLI4OWHmRIyPqlEekXqo2FubeC2PawzePj6rNQxYt/f4?=
- =?us-ascii?Q?8qr2IaJryBfzH+kmw4t/wtMHNu19JKg1D4jbgqyN?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	08W2z6M7XXaCvtoT+I1jZthd7WgOenKLBocXd5Ac8smhKVR+ormqDtcSqx4KmeTUQGKjHs20S5TixfiLjuz6ENf6swonzXDDaU5kBRGwL5ZfMYvn6by0pS2l8CLPKlC3Mir/3dJEj32sV/urHWMeLREp7VDX1hCD7+tfcCXZISkYCWI8qq8vqRVmsb5PZU3wWPkDD2QNjK25+6RfAyAhr1bL9QnDhJuMwuj4G7SKu7JhmTZQiUD02qNdAty3X9BuRgzpTHCCZ8EPAeg3q4AbwqZLSg404SGWDwU0uaGqAQEwkKBpwanZCyC56hHgGNIhjL9E8Q0YpRo5aUSdJABVqG5/zYmTa9VdE/DoN3kHT7Zf4FT6M1Zc8PTdSMhvLtwJW8OUVCFxCHvFVM/5Gl0Y6kBkaBv4uHRzPZwP3zTA5iMBfegYwFu6qgmcMSBjoLMQmA6Ymr2NRYnYDK8ceT/otSJ2TGwgskAbsA+vQNnL5hF/3PriPvQZ0bV/KuBFrCnjYZfXjpSn05/nfC3C+9xhbvbMIJk9xmJiq+zTJsqegdLajzfOrFXte1mEnBiFaULN/qfdRnEWRQlC4vT5Xr+Eh0Zi/9t+3KnReAMTxBO8m8k=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a298842b-87f5-4dd7-e269-08dc6dea11e4
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NJuU/JoCHMGlMvmbdek8Zd/5eHDaZLh1uaRa6wpxiFb8TDZ36KInEgKpbHTO?=
+ =?us-ascii?Q?JRi/K7XKqNtgGc2Vh/E9JtLex0g0lDF50Mr53mAYEAPhxGfeHqJqLMoC/Ao3?=
+ =?us-ascii?Q?nTe5yUSeATc+LiueMk0Lglgs1Rtho+imTq1M8me33KeBVqtLHmJVR86ecnKp?=
+ =?us-ascii?Q?ooiThTJlmWlejr/7TOw8r+HE1Iqn+w5WKniEr0mfWUJHJYCOYHh/DnUEoyzw?=
+ =?us-ascii?Q?j/njvQGjPP2pGewzCfH8GYrXrXT0NPQRN7SUO/gsM5HL15c5Dj2yn2/B2Be7?=
+ =?us-ascii?Q?v3SKevl+DmMR+HPuGThx6DPWXbeefSqbywCSHe4mJPsXQtgvpZXWlwvW+szB?=
+ =?us-ascii?Q?o7Zqh0NJ+qE2qn9GKCUN7P+8Y78e6NE8ZrCa2W1eNo7CQEfbOQig/pid/mQj?=
+ =?us-ascii?Q?aGqqCdyb94NCML58ZFm199X2cgHGHbwOA9D9pJppCqxZtR2l9/aPy+09Uczm?=
+ =?us-ascii?Q?ii+COGn0woTK9Ap1tm5LW0/2vBLBWEKpaUr9weF47I4GREYNdPixu37YXtzr?=
+ =?us-ascii?Q?SxweFo5nPkqce1LgoQm9VPkfprCD80+IN7A/hZAV1wu1x+dt42vydKwsHCCn?=
+ =?us-ascii?Q?upHlXCss608UZ9M7r8s/Qir53z4JuZMjhitFyWBPOaZHUJfXVs/H6cUx/cSX?=
+ =?us-ascii?Q?lqzKKhVOlOCizbNReQaaZUprGo6e8A1x+2KHcwpQghaZPP96Uf4Oepy1BWuh?=
+ =?us-ascii?Q?6ssfyuZW6MN07rG6jbNK+bD37ZzUEEu0DzimHyPhNuuzHx9ZRQAaRKTYBfbX?=
+ =?us-ascii?Q?HfzZFvq+2akg9WoYmegpjwSPg3lbRX/7fchUHzn5pRnl5gWX7rLPYkS9p+mM?=
+ =?us-ascii?Q?7dwosik3bMDzSYu4kuSx3a3TWF2FHkr3gRPPEviao5BBJRT80mgcawK6XzgK?=
+ =?us-ascii?Q?P3nnOOTfYhESF0pY0TtDj0O2zAHZkifrlcm9dk0Fhia4vDlziml1mkfnvaCK?=
+ =?us-ascii?Q?FyNTvSkH3ICJ6lsmieOQvH7sknW0+fjGyQRE0qvefPcFw7wDRycpiWWBdFmc?=
+ =?us-ascii?Q?D6aPdRDaUoEvbpMhAEF3TE6Qswk8JXrQA6cm5ETXZEEDaOanNJDTSnx8p0EJ?=
+ =?us-ascii?Q?PAKFdu9g/wq7QNCAfs2iZw8u1Dy9Uek3qlvfu6iL1hkztVTpGAShbWTmbe2k?=
+ =?us-ascii?Q?c8kRD3TH66QSqConUopNKLbLiB7Xodn8CjsRugqb9VQvh+DzcOgeleqjPXfE?=
+ =?us-ascii?Q?8NN3+YSNjkylND7XEZ0qYjcqq/Hzxa4lSBSAAOjKrEeByB7HiJbUDjReKniD?=
+ =?us-ascii?Q?AG1nKu/PxcgXLdUQGjit9sHbOcW1/3EoSRcC6ar0sAIxO7z6wmsn9c2HwGrB?=
+ =?us-ascii?Q?Oel8qGCsyRJ7Rtu72dbCQLXCzOZq74lKvJDCWbRQA9SpvVwx0frzosuf3X7V?=
+ =?us-ascii?Q?sv6T/tKB4UZQsbS+JjGEOvDWHl2Sc4EVKU/4MpW1vwF/YXfAduxx4TpJRZt6?=
+ =?us-ascii?Q?5xQgyviVpGGDlzSt0XPFb9cY/9UttORBx5nqNs/T8PlvUa0Zr7Zp8j1B5Nb7?=
+ =?us-ascii?Q?dr+mmRglWGV4E2P8H8yEYZIp4cG2oL2az8MTbehhY7f0SyRGXf9qp9XP8EAT?=
+ =?us-ascii?Q?3wff3UmAYiCDn1UgrAORHQaocJLebt5yN1JIy1iolh5XiKXSM0El7q0T6Vk+?=
+ =?us-ascii?Q?5Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f87e2ad1-6070-4a44-c0b1-08dc6ded81ce
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 16:32:07.1740
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 16:56:43.3831
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GhNQSx4QKmf4rqQgEAuNnvRPwVCMbjU4yVE59IPAQcoVrjR8cfC0p8foE/22PGUBNCzn8CSPlbJvIqeK6JKXbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4149
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_11,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2405060115
-X-Proofpoint-GUID: AAmGHJRXJl55T06wLMFRITivgmcPcwKx
-X-Proofpoint-ORIG-GUID: AAmGHJRXJl55T06wLMFRITivgmcPcwKx
+X-MS-Exchange-CrossTenant-UserPrincipalName: f4F/ML9HOwa7Zc7sxDPuI4/BKcy84CkfYcDNy9INwVdLQMBAk6RPWCHwbgdeJixiInEptt4voS2StoyaoKxOs7gxLw62zAZiKJySwsadRnI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7691
+X-OriginatorOrg: intel.com
 
-* Rick Edgecombe <rick.p.edgecombe@intel.com> [240506 12:08]:
-> Recently the get_unmapped_area() pointer on mm_struct was removed in
-> favor of direct callable function that can determines which of two
-> handlers to call based on an mm flag. This function,
-> mm_get_unmapped_area(), checks the flag of the mm passed as an argument.
+ira.weiny@ wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
 > 
-> Dan Williams pointed out (see link) that all callers pass curret->mm, so
-> the mm argument is unneeded. It could be conceivable for a caller to want
-> to pass a different mm in the future, but in this case a new helper could
-> easily be added.
+> Dynamic Capacity Devices (DCD) support extent change notifications
+> through the event log mechanism.  The interrupt mailbox commands were
+> extended in CXL 3.1 to support these notifications.
 > 
-> So remove the mm argument, and rename the function
-> current_get_unmapped_area().
-
-I like this patch.
-
-I think the context of current->mm is implied. IOW, could we call it
-get_unmapped_area() instead?  There are other functions today that use
-current->mm that don't start with current_<whatever>.  I probably should
-have responded to Dan's suggestion with my comment.
-
-Either way, this is a minor thing so feel free to add:
-Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-
+> Firmware can't configure DCD events to be FW controlled but can retain
+> control of memory events.  Split irq configuration of memory events and
+> DCD events to allow for FW control of memory events while DCD is host
+> controlled.
 > 
-> Fixes: 529ce23a764f ("mm: switch mm->get_unmapped_area() to a flag")
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Link: https://lore.kernel.org/lkml/6603bed6662a_4a98a2949e@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+> Configure DCD event log interrupts on devices supporting dynamic
+> capacity.  Disable DCD if interrupts are not supported.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
 > ---
-> Based on linux-next.
+> Changes for v1
+> [iweiny: rebase to upstream irq code]
+> [iweiny: disable DCD if irqs not supported]
 > ---
->  arch/sparc/kernel/sys_sparc_64.c |  9 +++++----
->  arch/x86/kernel/cpu/sgx/driver.c |  2 +-
->  drivers/char/mem.c               |  2 +-
->  drivers/dax/device.c             |  6 +++---
->  fs/proc/inode.c                  |  2 +-
->  fs/ramfs/file-mmu.c              |  2 +-
->  include/linux/sched/mm.h         |  6 +++---
->  io_uring/memmap.c                |  2 +-
->  kernel/bpf/arena.c               |  2 +-
->  kernel/bpf/syscall.c             |  2 +-
->  mm/mmap.c                        | 11 +++++------
->  mm/shmem.c                       |  9 ++++-----
->  12 files changed, 27 insertions(+), 28 deletions(-)
+>  drivers/cxl/core/mbox.c |  9 ++++++-
+>  drivers/cxl/cxl.h       |  4 ++-
+>  drivers/cxl/cxlmem.h    |  4 +++
+>  drivers/cxl/pci.c       | 71 ++++++++++++++++++++++++++++++++++++++++---------
+>  4 files changed, 74 insertions(+), 14 deletions(-)
 > 
-> diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-> index d9c3b34ca744..cf0b4ace5bf9 100644
-> --- a/arch/sparc/kernel/sys_sparc_64.c
-> +++ b/arch/sparc/kernel/sys_sparc_64.c
-> @@ -220,7 +220,7 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
->  
->  	if (flags & MAP_FIXED) {
->  		/* Ok, don't mess with it. */
-> -		return mm_get_unmapped_area(current->mm, NULL, orig_addr, len, pgoff, flags);
-> +		return current_get_unmapped_area(NULL, orig_addr, len, pgoff, flags);
->  	}
->  	flags &= ~MAP_SHARED;
->  
-> @@ -233,8 +233,9 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
->  		align_goal = (64UL * 1024);
->  
->  	do {
-> -		addr = mm_get_unmapped_area(current->mm, NULL, orig_addr,
-> -					    len + (align_goal - PAGE_SIZE), pgoff, flags);
-> +		addr = current_get_unmapped_area(NULL, orig_addr,
-> +						 len + (align_goal - PAGE_SIZE),
-> +						 pgoff, flags);
->  		if (!(addr & ~PAGE_MASK)) {
->  			addr = (addr + (align_goal - 1UL)) & ~(align_goal - 1UL);
->  			break;
-> @@ -252,7 +253,7 @@ unsigned long get_fb_unmapped_area(struct file *filp, unsigned long orig_addr, u
->  	 * be obtained.
->  	 */
->  	if (addr & ~PAGE_MASK)
-> -		addr = mm_get_unmapped_area(current->mm, NULL, orig_addr, len, pgoff, flags);
-> +		addr = current_get_unmapped_area(NULL, orig_addr, len, pgoff, flags);
->  
->  	return addr;
->  }
-> diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
-> index 22b65a5f5ec6..5f7bfd9035f7 100644
-> --- a/arch/x86/kernel/cpu/sgx/driver.c
-> +++ b/arch/x86/kernel/cpu/sgx/driver.c
-> @@ -113,7 +113,7 @@ static unsigned long sgx_get_unmapped_area(struct file *file,
->  	if (flags & MAP_FIXED)
->  		return addr;
->  
-> -	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 14e8a7528a8b..58b31fa47b93 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1323,10 +1323,17 @@ static int cxl_get_dc_config(struct cxl_memdev_state *mds, u8 start_region,
+>  	return rc;
 >  }
 >  
->  #ifdef CONFIG_COMPAT
-> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-> index 7c359cc406d5..a29c4bd506d5 100644
-> --- a/drivers/char/mem.c
-> +++ b/drivers/char/mem.c
-> @@ -546,7 +546,7 @@ static unsigned long get_unmapped_area_zero(struct file *file,
->  	}
->  
->  	/* Otherwise flags & MAP_PRIVATE: with no shmem object beneath it */
-> -	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(file, addr, len, pgoff, flags);
->  #else
->  	return -ENOSYS;
->  #endif
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index eb61598247a9..c379902307b7 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -329,14 +329,14 @@ static unsigned long dax_get_unmapped_area(struct file *filp,
->  	if ((off + len_align) < off)
->  		goto out;
->  
-> -	addr_align = mm_get_unmapped_area(current->mm, filp, addr, len_align,
-> -					  pgoff, flags);
-> +	addr_align = current_get_unmapped_area(filp, addr, len_align,
-> +					       pgoff, flags);
->  	if (!IS_ERR_VALUE(addr_align)) {
->  		addr_align += (off - addr_align) & (align - 1);
->  		return addr_align;
->  	}
->   out:
-> -	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
->  }
->  
->  static const struct address_space_operations dev_dax_aops = {
-> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-> index d19434e2a58e..24a6aeac3de5 100644
-> --- a/fs/proc/inode.c
-> +++ b/fs/proc/inode.c
-> @@ -455,7 +455,7 @@ pde_get_unmapped_area(struct proc_dir_entry *pde, struct file *file, unsigned lo
->  		return pde->proc_ops->proc_get_unmapped_area(file, orig_addr, len, pgoff, flags);
->  
->  #ifdef CONFIG_MMU
-> -	return mm_get_unmapped_area(current->mm, file, orig_addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(file, orig_addr, len, pgoff, flags);
->  #endif
->  
->  	return orig_addr;
-> diff --git a/fs/ramfs/file-mmu.c b/fs/ramfs/file-mmu.c
-> index b45c7edc3225..85f57de31102 100644
-> --- a/fs/ramfs/file-mmu.c
-> +++ b/fs/ramfs/file-mmu.c
-> @@ -35,7 +35,7 @@ static unsigned long ramfs_mmu_get_unmapped_area(struct file *file,
->  		unsigned long addr, unsigned long len, unsigned long pgoff,
->  		unsigned long flags)
+> -static bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+> +bool cxl_dcd_supported(struct cxl_memdev_state *mds)
 >  {
-> -	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+>  	return test_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
 >  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_dcd_supported, CXL);
+> +
+> +void cxl_disable_dcd(struct cxl_memdev_state *mds)
+> +{
+> +	clear_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_disable_dcd, CXL);
+
+Just use the open-coded bit ops, or local / static helpers because these
+helpers do not consume any other infra from core/mbox.c.
+
+>  /**
+>   * cxl_dev_dynamic_capacity_identify() - Reads the dynamic capacity
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 15d418b3bc9b..d585f5fdd3ae 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -164,11 +164,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
+>  #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
+>  #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
+> +#define CXLDEV_EVENT_STATUS_DCD			BIT(4)
 >  
->  const struct file_operations ramfs_file_operations = {
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index 91546493c43d..c67c7de05c7a 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -187,9 +187,9 @@ arch_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
->  			  unsigned long len, unsigned long pgoff,
->  			  unsigned long flags);
+>  #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
+>  				 CXLDEV_EVENT_STATUS_WARN |	\
+>  				 CXLDEV_EVENT_STATUS_FAIL |	\
+> -				 CXLDEV_EVENT_STATUS_FATAL)
+> +				 CXLDEV_EVENT_STATUS_FATAL|	\
+> +				 CXLDEV_EVENT_STATUS_DCD)
 >  
-> -unsigned long mm_get_unmapped_area(struct mm_struct *mm, struct file *filp,
-> -				   unsigned long addr, unsigned long len,
-> -				   unsigned long pgoff, unsigned long flags);
-> +unsigned long current_get_unmapped_area(struct file *filp, unsigned long addr,
-> +					unsigned long len, unsigned long pgoff,
-> +					unsigned long flags);
->  
->  unsigned long
->  arch_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
-> diff --git a/io_uring/memmap.c b/io_uring/memmap.c
-> index 4785d6af5fee..1aaea32c797c 100644
-> --- a/io_uring/memmap.c
-> +++ b/io_uring/memmap.c
-> @@ -305,7 +305,7 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
->  #else
->  	addr = 0UL;
->  #endif
-> -	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
->  }
->  
->  #else /* !CONFIG_MMU */
-> diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
-> index 4a1be699bb82..054486f7c453 100644
-> --- a/kernel/bpf/arena.c
-> +++ b/kernel/bpf/arena.c
-> @@ -314,7 +314,7 @@ static unsigned long arena_get_unmapped_area(struct file *filp, unsigned long ad
->  			return -EINVAL;
->  	}
->  
-> -	ret = mm_get_unmapped_area(current->mm, filp, addr, len * 2, 0, flags);
-> +	ret = current_get_unmapped_area(filp, addr, len * 2, 0, flags);
->  	if (IS_ERR_VALUE(ret))
->  		return ret;
->  	if ((ret >> 32) == ((ret + len - 1) >> 32))
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 2222c3ff88e7..d9ff2843f6ef 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -992,7 +992,7 @@ static unsigned long bpf_get_unmapped_area(struct file *filp, unsigned long addr
->  	if (map->ops->map_get_unmapped_area)
->  		return map->ops->map_get_unmapped_area(filp, addr, len, pgoff, flags);
->  #ifdef CONFIG_MMU
-> -	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(filp, addr, len, pgoff, flags);
->  #else
->  	return addr;
->  #endif
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 83b4682ec85c..4e98a907c53d 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1901,16 +1901,15 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
->  	return error ? error : addr;
->  }
->  
-> -unsigned long
-> -mm_get_unmapped_area(struct mm_struct *mm, struct file *file,
-> -		     unsigned long addr, unsigned long len,
-> -		     unsigned long pgoff, unsigned long flags)
-> +unsigned long current_get_unmapped_area(struct file *file, unsigned long addr,
-> +					unsigned long len, unsigned long pgoff,
-> +					unsigned long flags)
->  {
-> -	if (test_bit(MMF_TOPDOWN, &mm->flags))
-> +	if (test_bit(MMF_TOPDOWN, &current->mm->flags))
->  		return arch_get_unmapped_area_topdown(file, addr, len, pgoff, flags);
->  	return arch_get_unmapped_area(file, addr, len, pgoff, flags);
->  }
-> -EXPORT_SYMBOL(mm_get_unmapped_area);
-> +EXPORT_SYMBOL(current_get_unmapped_area);
+>  /* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
+>  #define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 4624cf612c1e..01bee6eedff3 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -225,7 +225,9 @@ struct cxl_event_interrupt_policy {
+>  	u8 warn_settings;
+>  	u8 failure_settings;
+>  	u8 fatal_settings;
+> +	u8 dcd_settings;
+>  } __packed;
+> +#define CXL_EVENT_INT_POLICY_BASE_SIZE 4 /* info, warn, failure, fatal */
 >  
 >  /**
->   * find_vma_intersection() - Look up the first VMA which intersects the interval
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index f5d60436b604..c0acd7db93c8 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2276,8 +2276,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
->  	if (len > TASK_SIZE)
->  		return -ENOMEM;
->  
-> -	addr = mm_get_unmapped_area(current->mm, file, uaddr, len, pgoff,
-> -				    flags);
-> +	addr = current_get_unmapped_area(file, uaddr, len, pgoff, flags);
->  
->  	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
->  		return addr;
-> @@ -2334,8 +2333,8 @@ unsigned long shmem_get_unmapped_area(struct file *file,
->  	if (inflated_len < len)
->  		return addr;
->  
-> -	inflated_addr = mm_get_unmapped_area(current->mm, NULL, uaddr,
-> -					     inflated_len, 0, flags);
-> +	inflated_addr = current_get_unmapped_area(NULL, uaddr,
-> +						  inflated_len, 0, flags);
->  	if (IS_ERR_VALUE(inflated_addr))
->  		return addr;
->  	if (inflated_addr & ~PAGE_MASK)
-> @@ -4799,7 +4798,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
->  				      unsigned long addr, unsigned long len,
->  				      unsigned long pgoff, unsigned long flags)
->  {
-> -	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> +	return current_get_unmapped_area(file, addr, len, pgoff, flags);
+>   * struct cxl_event_state - Event log driver state
+> @@ -890,6 +892,8 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+>  			    const uuid_t *uuid, union cxl_event *evt);
+> +bool cxl_dcd_supported(struct cxl_memdev_state *mds);
+> +void cxl_disable_dcd(struct cxl_memdev_state *mds);
+>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 12cd5d399230..ef482eae09e9 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -669,22 +669,33 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
 >  }
->  #endif
 >  
-> 
-> base-commit: 9221b2819b8a4196eecf5476d66201be60fbcf29
-> -- 
-> 2.34.1
-> 
+>  static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
+> -				    struct cxl_event_interrupt_policy *policy)
+> +				    struct cxl_event_interrupt_policy *policy,
+> +				    bool native_cxl)
+>  {
+>  	struct cxl_mbox_cmd mbox_cmd;
+> +	size_t size_in;
+>  	int rc;
+>  
+> -	*policy = (struct cxl_event_interrupt_policy) {
+> -		.info_settings = CXL_INT_MSI_MSIX,
+> -		.warn_settings = CXL_INT_MSI_MSIX,
+> -		.failure_settings = CXL_INT_MSI_MSIX,
+> -		.fatal_settings = CXL_INT_MSI_MSIX,
+> -	};
+> +	if (native_cxl) {
+> +		*policy = (struct cxl_event_interrupt_policy) {
+> +			.info_settings = CXL_INT_MSI_MSIX,
+> +			.warn_settings = CXL_INT_MSI_MSIX,
+> +			.failure_settings = CXL_INT_MSI_MSIX,
+> +			.fatal_settings = CXL_INT_MSI_MSIX,
+> +			.dcd_settings = 0,
+
+No need to initialize dcd_settings.
+
+> +		};
+> +	}
+> +	size_in = CXL_EVENT_INT_POLICY_BASE_SIZE;
+
+Let's skip adding this new #define and make it explicit, i.e. wihtout
+needing to crack open the spec, that the dcd settings are incremental to
+the original payload size:
+
+    size_in = offsetof(typeof(*policy), dcd_settings);
+
+> +
+> +	if (cxl_dcd_supported(mds)) {
+> +		policy->dcd_settings = CXL_INT_MSI_MSIX;
+> +		size_in += sizeof(policy->dcd_settings);
+
+...and then this can just be:
+
+	size_in = sizeof(*policy);
+
+> +	}
+>  
+>  	mbox_cmd = (struct cxl_mbox_cmd) {
+>  		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
+>  		.payload_in = policy,
+> -		.size_in = sizeof(*policy),
+> +		.size_in = size_in,
+>  	};
+>  
+>  	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> @@ -731,6 +742,31 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
+>  	return 0;
+>  }
+>  
+> +static int cxl_irqsetup(struct cxl_memdev_state *mds,
+> +			struct cxl_event_interrupt_policy *policy,
+> +			bool native_cxl)
+> +{
+> +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> +	int rc;
+> +
+> +	if (native_cxl) {
+> +		rc = cxl_event_irqsetup(mds, policy);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	if (cxl_dcd_supported(mds)) {
+> +		rc = cxl_event_req_irq(cxlds, policy->dcd_settings);
+> +		if (rc) {
+> +			dev_err(cxlds->dev, "Failed to get interrupt for DCD event log\n");
+> +			cxl_disable_dcd(mds);
+> +			return rc;
+> +		}
+> +	}
+
+I think this could be simplified if cxl_event_req_irq() simply skipped
+the non CXL_INT_MSI_MSIX modes. I.e. cxl_event_req_irq() is being too
+strict after the policy settings have already run the gauntlet.
