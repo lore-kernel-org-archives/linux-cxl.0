@@ -1,152 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23763150995;
-	Tue,  7 May 2024 11:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D48153812;
+	Tue,  7 May 2024 11:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082531; cv=none; b=AGi7p28P7lRmpGsRrP2RLmAlHhwfMVJAQLu1Ktn64uUchOqBc7CuQ+N60mjOeDz57m59DtTW4TvRPPOOdYcqoj37rC/drmSdCeFkmnI+VEJ0RXW/zk2hWgfGpOamcuxR7aJl3zn10rBOeMGEhSPm6kUfimkr20v0UUqds+nzmGA=
+	t=1715082541; cv=none; b=tre4YSIrzaKjSTIgU+QUJpF0n+fmovr+nPHCOatNfzLMJd6COi0JCRHCPOEnLcoOGe7fg2yRlHekZYAMR1v35DFM/o3ZMm7Xg08uqvtrs5WHB//yvRniPqGfkF1IfYYRtEvUwxW0I7FX/LMF4KYcZ+TxjPvjKVUURzEnLEaKARs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082531; c=relaxed/simple;
-	bh=up5hp9emyS2c8JEPt9FJIuloQ1kofrcTiij5qfny1nY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oG/6UwUrSSKON/OsqjKuPMET1SkwBASk9KHv+XtB7RlZYm9YlnfMNxj1D3G1ekxIWiLAPDWYoIp51Zsr9b+t4mNPVxrkMHvbhEwSCtfTkqk+CmFibsKUpzsPb8J/S8ZmnP0y/gP2dZZ3M9/+lYp72vHfHjJu2gVTYQVn6Vv3jTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HDje+WBA; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HDje+WBA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715082541; c=relaxed/simple;
+	bh=l46mjhyiRGZnsJnxurBGbw9J+XDezpuskZK4nvwuBCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NVO2lZteaqu8NIYAssOce+sv9zaY5spqAZpXdodYdWpo9qE0PSvSxvDoE5xWhkSTWr55DJbwX0JjFScgsOHtr7TifEU7QY196aIyVpZcVAOh2wFS+HWycF98bxtyfP24TEf2N8KznI7ZThQRlerAyE1lplyD81FI97UuWSZtv0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzP9AeLY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HDje+WBA";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HDje+WBA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E2D52091A;
-	Tue,  7 May 2024 11:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715082527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQuAY9ohhmInSThPMJ1QNyWppnFR1uXYDi4xt6VDBaM=;
-	b=HDje+WBAMblSXBygDUCEg3bL6VVHzXqGPyg8AG2recz+t0z6Q+2JP5/TmrDqqgEoSjavBm
-	MJ4Gvf84/NXyxFffUhls7gQQ24eiNNv40jiGHjNUstcIiDDINRyfFJq8xPpwerdKXxiyb0
-	MVzC7fc+rbwxaSsA4PIKbT6+FXlxr4w=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715082527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQuAY9ohhmInSThPMJ1QNyWppnFR1uXYDi4xt6VDBaM=;
-	b=HDje+WBAMblSXBygDUCEg3bL6VVHzXqGPyg8AG2recz+t0z6Q+2JP5/TmrDqqgEoSjavBm
-	MJ4Gvf84/NXyxFffUhls7gQQ24eiNNv40jiGHjNUstcIiDDINRyfFJq8xPpwerdKXxiyb0
-	MVzC7fc+rbwxaSsA4PIKbT6+FXlxr4w=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 29E3413A2D;
-	Tue,  7 May 2024 11:48:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xDo2Bx8VOmYdBAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Tue, 07 May 2024 11:48:47 +0000
-Date: Tue, 7 May 2024 13:48:46 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Adam Manzanares <a.manzanares@samsung.com>
-Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Fan Ni <fan.ni@samsung.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
-	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
-	"shradha.t@samsung.com" <shradha.t@samsung.com>,
-	"mcgrof@kernel.org" <mcgrof@kernel.org>,
-	Jim Harris <jim.harris@samsung.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
-Message-ID: <ZjoVHhiSLm3KRW63@tiehlicka>
-References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
- <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzP9AeLY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E568CC4AF67;
+	Tue,  7 May 2024 11:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715082540;
+	bh=l46mjhyiRGZnsJnxurBGbw9J+XDezpuskZK4nvwuBCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nzP9AeLYA6p3W9EelU4oswzDMMPF/yc4VpQxUmAsmTw1mTNUOo06+51wbxrsJWMEs
+	 deGyBOL6Reh7fIJn7Dz5FAqlHTG+I2fgM9V5TqqU1RwUrZwOClG3wwCPtEvkeNxWR8
+	 slHsrj4kq7m0RcbGwcOBGdl8+RJf+/TjnXJOC3wnxVlqF36PUNNGGXBRyVRL4d4Y6n
+	 Q9uaHWPP0loI85XURzUmgWXZt49ZGAusQGm3QW/HCVEYPBS2/2/mv6zxUpg4Q5kIzE
+	 taXSd105jId1Yn/MQvQ0U+dDNMtdkxa2HV5t7dPyRKr6+rMB56EH2OvUnTuYqtFi8r
+	 LSO3JKUsdiAXw==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5ac4470de3bso871386eaf.0;
+        Tue, 07 May 2024 04:49:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXMfirTJaqTImPNIi5MQ800RcoA4C7cnSaOinUwUZmTJjXoGQefC4BmqNaDNlSzX7QlaKdKSXxTW4eGACsxJChgpCMWeAwj00LZ4XLwA3Ux6LEC/8U3qxaN5EJ4WvPJSqfRMHLatpwiEkquTJC852U+5V8WIyugoRN+VGjuXs5dFHBfmw==
+X-Gm-Message-State: AOJu0YzIwJI8PtTPpAwipLmI65j0cnbgGGhUQUJe0kxZR6a8N0urnHRI
+	uWzQJQF1LG2Y0UgmNyailAuIpxij+JgCRXeyoh0E0Dihfl6kUregO5yx3plF7GssKNfD09CTPK3
+	h2TZq5gbNuwzLI0Ul1IYyoJ5JEAM=
+X-Google-Smtp-Source: AGHT+IHKm+n8JrihalvSOOI3GVpZIpZ0FPm7U1eIAdmMyIBoURUnJJoIV3KskUgjHuc8gidPhYjX3eejTKtaMdtuTks=
+X-Received: by 2002:a4a:2511:0:b0:5b2:f29:93f0 with SMTP id
+ g17-20020a4a2511000000b005b20f2993f0mr5312891ooa.0.1715082540247; Tue, 07 May
+ 2024 04:49:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[lists.linux-foundation.org,intel.com,huawei.com,stgolabs.net,samsung.com,gmail.com,google.com,fujitsu.com,kernel.org,kvack.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -2.30
-X-Spam-Flag: NO
+References: <20240502131012.2385725-1-rrichter@amd.com>
+In-Reply-To: <20240502131012.2385725-1-rrichter@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 7 May 2024 13:48:49 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hHqbFyCARK9+OegRjdFNpq+nX+QMb+gF1w9333DOXe0g@mail.gmail.com>
+Message-ID: <CAJZ5v0hHqbFyCARK9+OegRjdFNpq+nX+QMb+gF1w9333DOXe0g@mail.gmail.com>
+Subject: Re: [PATCH v7 0/4] SRAT/CEDT fixes and updates
+To: Robert Richter <rrichter@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon 06-05-24 19:27:10, Adam Manzanares wrote:
-> Hello all,
-> 
-> I would like to have a discussion with the CXL development community about
-> current outstanding issues and also invite developers interested in RAS and
-> memory tiering to participate.
-> 
-> The first topic I believe we should discuss is how we can ensure as a group
-> that we are prioritizing upstream work. On a recent upstream CXL development
-> discussion call there was a call to review more work. I apologize for not
-> grabbing the link, but I believe Dave Jiang is leveraging patchwork and this
-> link should be shared with others so we can help get more reviews where needed.
-> 
-> The second topic I would like to discuss is how we integrate RAS features that
-> have similar equivalents in the kernel. A CXL device can provide info about 
-> memory media errors in a similar fashion to memory controllers that have EDAC
-> support. Discussions have been put on the list and I would like to hear thoughts
-> from the community about where this should go [1]. On the same topic CXL has 
-> port level RAS features and the PCIe DW series touched on this issue  [2]
-> 
-> The third topic I would like to discuss is how we can get a set of common
-> benchmarks for memory tiering evaluations. Our team has done some initial
-> work in this space, but we want to hear more from end users about their 
-> workloads of concern. There was a proposal related to this topic, but from what 
-> I understand no meeting has been held [3]. 
-> 
-> The last topic that I believe is worth discussion is how do we come up with
-> a baseline for testing. I am aware of 3 efforts that could be used cxl_test, 
-> qemu, and uunit testing framework [4].
+On Thu, May 2, 2024 at 3:10=E2=80=AFPM Robert Richter <rrichter@amd.com> wr=
+ote:
+>
+> Some fixes and updates for SRAT/CEDT parsing code. Patches can be
+> applied individually and are independent.
+>
+> First patch fixes a page fault during boot (fix as suggested by Dan).
+>
+> Patches 2 to 4 remove architectural code no longer needed.
+>
+> Changelog:
+>
+> v7:
+>  * added Reviewed-by tags
+>  * dropped printout patches (#5 to #7)
+>
+> v6:
+>  * rebased onto cxl/fixes
+>  * fixed 0day build errors in patch #1:
+>    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/x86-numa=
+-Fix-SRAT-lookup-of-CFMWS-ranges-with-numa_fill_memblks/20240429-205337
+>
+> v5:
+>  * dropped: "x86/numa: Fix SRAT lookup of CFMWS ranges with
+>    numa_fill_memblks()"
+>  * added: "ACPI/NUMA: Return memblk modification state from
+>    numa_fill_memblks()"
+>  * conditionally print CEDT extended memblks
+>
+> v4:
+>  * updated SOB chains and desription
+>  * added patch "x86/numa: Remove numa_fill_memblks() from sparsemem.h
+>    using __weak"
+>  * Reordered patches to move CEDT table printout as an option at the
+>    end
+>  * split print table patch and added: "ACPI/NUMA: Add log messages for
+>    memory ranges found in CEDT"
+>
+> v3:
+>  * Rebased onto v6.9-rc1
+>  * Fixing x86 build error in sparsemem.h [Dan/Alison]
+>  * Added CEDT node info [Alison]
+>  * Use pr_debug() for table output [Dan]
+>  * Refactoring split in 3 patches [Dan]
+>  * Fixed performance regression introduced [kbot]
+>  * Fixed checkpatch issues [Dan]
+>
+> Robert Richter (4):
+>   x86/numa: Fix SRAT lookup of CFMWS ranges with numa_fill_memblks()
+>   ACPI/NUMA: Remove architecture dependent remainings
+>   ACPI/NUMA: Squash acpi_numa_slit_init() into acpi_parse_slit()
+>   ACPI/NUMA: Squash acpi_numa_memory_affinity_init() into
+>     acpi_parse_memory_affinity()
+>
+>  arch/x86/include/asm/sparsemem.h |  2 -
+>  arch/x86/mm/numa.c               |  4 +-
+>  drivers/acpi/numa/srat.c         | 82 +++++++++++++-------------------
+>  include/linux/acpi.h             |  5 --
+>  include/linux/numa.h             |  7 +--
+>  5 files changed, 35 insertions(+), 65 deletions(-)
+>
+>
+> base-commit: 5d211c7090590033581175d6405ae40917ca3a06
+> --
 
-This seems to be quite a lot for a single time slot. I think it would
-make sense to split that into more slots. WDYT?
--- 
-Michal Hocko
-SUSE Labs
+Whole series applied as 6.10 material, thanks!
