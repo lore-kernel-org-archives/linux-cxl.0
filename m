@@ -1,132 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0D25B1E0;
-	Tue,  7 May 2024 09:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23763150995;
+	Tue,  7 May 2024 11:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715074518; cv=none; b=VpWUrXio+5UWH6K2tDebpmneDdxkZ9O++iGDn2vWlguMJ1B5tXpA+ZLousz2gXCjccH3M9r7adHIu/H59K7FM75sDL+b0v+JPYp9IpCSWdcS4TW/8oykwwBwyiRAsrwRLGNiP3Pf0ed/PsrIkodnfvSPw9084csjMsubFcxp4vw=
+	t=1715082531; cv=none; b=AGi7p28P7lRmpGsRrP2RLmAlHhwfMVJAQLu1Ktn64uUchOqBc7CuQ+N60mjOeDz57m59DtTW4TvRPPOOdYcqoj37rC/drmSdCeFkmnI+VEJ0RXW/zk2hWgfGpOamcuxR7aJl3zn10rBOeMGEhSPm6kUfimkr20v0UUqds+nzmGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715074518; c=relaxed/simple;
-	bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dhvkUqyBAFVgq+pIfEa27ts4YkZ54eaoTW4iM8VhBFnD9fr0XnHgpgqBAyHWXTHDsqm1kPCs1iRYpqB17N7Mnbf3rCqDbtInyiFyev/A04DmiRon+EJImHb+o4jS+c9XTMnKiPsaJft62fRgHMy2a8yFgHA8D0xMRnCRQSzU/GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f0Kb1CCE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715082531; c=relaxed/simple;
+	bh=up5hp9emyS2c8JEPt9FJIuloQ1kofrcTiij5qfny1nY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oG/6UwUrSSKON/OsqjKuPMET1SkwBASk9KHv+XtB7RlZYm9YlnfMNxj1D3G1ekxIWiLAPDWYoIp51Zsr9b+t4mNPVxrkMHvbhEwSCtfTkqk+CmFibsKUpzsPb8J/S8ZmnP0y/gP2dZZ3M9/+lYp72vHfHjJu2gVTYQVn6Vv3jTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HDje+WBA; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HDje+WBA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f0Kb1CCE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715074516; x=1746610516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
-  b=f0Kb1CCElH2s0NtHZN9vrxssW0dato7Y3zPkKX0LBLcw69wtcmAf+TBq
-   l/uO12yE8pkl5wBCmQOS4ULoVcC2KnHgFn6lasRfd1VxwRTxilSfvaJgW
-   T0MZqapWfXT9A11ugQTsFKZVeS1ij4Bg661w8s0NBDiUh+TX4qqa65Iqv
-   ATE/16Td/R8lzn2NCiS4SvAz1gfQ1Iw7LKRxSue36oe3gR4PeeuWKBZUK
-   IiJDdgLHbnOaLcacUML+J50PIP8/S0+KCB6KPPNjXO/PiMD+iFu+4nIGW
-   TADhbyohG+YL4joV5gk3SD1S+rIVbQdz5UR/k0DFV5UH4yN3ophC6SDDl
-   A==;
-X-CSE-ConnectionGUID: k6iR+1LGRnuafXBASfEWDw==
-X-CSE-MsgGUID: gIzHRv1nTFW+9P/+t8QS+g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="28329410"
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="28329410"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:15 -0700
-X-CSE-ConnectionGUID: mbnN2bOrQTSC4WJUNs+SKg==
-X-CSE-MsgGUID: xehOBnBQQpmFgGKtOm2zIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="33029128"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:12 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v2 0/4] acpi/ghes, cper,
- cxl: Trace FW-First CXL Protocol Errors
-Date: Tue, 07 May 2024 11:35:09 +0200
-Message-ID: <2649256.vYhyI6sBWr@fdefranc-mobl3>
-In-Reply-To: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HDje+WBA";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HDje+WBA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E2D52091A;
+	Tue,  7 May 2024 11:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715082527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aQuAY9ohhmInSThPMJ1QNyWppnFR1uXYDi4xt6VDBaM=;
+	b=HDje+WBAMblSXBygDUCEg3bL6VVHzXqGPyg8AG2recz+t0z6Q+2JP5/TmrDqqgEoSjavBm
+	MJ4Gvf84/NXyxFffUhls7gQQ24eiNNv40jiGHjNUstcIiDDINRyfFJq8xPpwerdKXxiyb0
+	MVzC7fc+rbwxaSsA4PIKbT6+FXlxr4w=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715082527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aQuAY9ohhmInSThPMJ1QNyWppnFR1uXYDi4xt6VDBaM=;
+	b=HDje+WBAMblSXBygDUCEg3bL6VVHzXqGPyg8AG2recz+t0z6Q+2JP5/TmrDqqgEoSjavBm
+	MJ4Gvf84/NXyxFffUhls7gQQ24eiNNv40jiGHjNUstcIiDDINRyfFJq8xPpwerdKXxiyb0
+	MVzC7fc+rbwxaSsA4PIKbT6+FXlxr4w=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 29E3413A2D;
+	Tue,  7 May 2024 11:48:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xDo2Bx8VOmYdBAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Tue, 07 May 2024 11:48:47 +0000
+Date: Tue, 7 May 2024 13:48:46 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Adam Manzanares <a.manzanares@samsung.com>
+Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	Fan Ni <fan.ni@samsung.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
+	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
+	"shradha.t@samsung.com" <shradha.t@samsung.com>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>,
+	Jim Harris <jim.harris@samsung.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
+Message-ID: <ZjoVHhiSLm3KRW63@tiehlicka>
+References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
+ <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[lists.linux-foundation.org,intel.com,huawei.com,stgolabs.net,samsung.com,gmail.com,google.com,fujitsu.com,kernel.org,kvack.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-On Tuesday, January 9, 2024 4:47:51=E2=80=AFAM GMT+2 Smita Koralahalli wrot=
-e:
-> This patchset adds trace event support for FW-First Protocol Errors.
->=20
-> This series depends on:
-> https://lore.kernel.org/linux-cxl/20231220-cxl-cper-v5-0-1bb8a4ca2c7a@int=
-el.
-> com
->=20
-Hello Smita,
+On Mon 06-05-24 19:27:10, Adam Manzanares wrote:
+> Hello all,
+> 
+> I would like to have a discussion with the CXL development community about
+> current outstanding issues and also invite developers interested in RAS and
+> memory tiering to participate.
+> 
+> The first topic I believe we should discuss is how we can ensure as a group
+> that we are prioritizing upstream work. On a recent upstream CXL development
+> discussion call there was a call to review more work. I apologize for not
+> grabbing the link, but I believe Dave Jiang is leveraging patchwork and this
+> link should be shared with others so we can help get more reviews where needed.
+> 
+> The second topic I would like to discuss is how we integrate RAS features that
+> have similar equivalents in the kernel. A CXL device can provide info about 
+> memory media errors in a similar fashion to memory controllers that have EDAC
+> support. Discussions have been put on the list and I would like to hear thoughts
+> from the community about where this should go [1]. On the same topic CXL has 
+> port level RAS features and the PCIe DW series touched on this issue  [2]
+> 
+> The third topic I would like to discuss is how we can get a set of common
+> benchmarks for memory tiering evaluations. Our team has done some initial
+> work in this space, but we want to hear more from end users about their 
+> workloads of concern. There was a proposal related to this topic, but from what 
+> I understand no meeting has been held [3]. 
+> 
+> The last topic that I believe is worth discussion is how do we come up with
+> a baseline for testing. I am aware of 3 efforts that could be used cxl_test, 
+> qemu, and uunit testing framework [4].
 
-I'm working on a small series of enhancement and additions to kernel logs a=
-nd=20
-trace events in extlog_print() (ELOG). I'm interested to reuse from ELOG th=
-e=20
-infrastructure which you made to trace the CXL Protocol Errors.
-
-I'm aware that this series depends on an old one from Ira which has been=20
-superseded by a different implementation and, furthermore, that this needs =
-to=20
-be reworked   because the execution of this code may sleep while in atomic=
-=20
-context.=20
-
-I'd like to ask if you plan to fix and rebase this series to a current cxl=
-=20
-branch. If so, I'll wait for the next version to integrate in ELOG.
-
-Otherwise, if you are not anymore actively working on this series, please=20
-notice that I'd be glad to help by making the necessary changes and by port=
-ing=20
-your code to a current cxl branch (of course, retaining your authorship).
-
-Thanks,
-
-=46abio M. De Francesco
->
-> Link to v1:
-> https://lore.kernel.org/all/20240102150933.161009-1-Smita.KoralahalliChan=
-nab
-> asappa@amd.com
->=20
-> Smita Koralahalli (4):
->   acpi/ghes, cxl: Create a common CXL struct to handle different CXL
->     CPER records
->   efi/cper, cxl: Make definitions and structures global
->   acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
->   acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
->=20
->  drivers/acpi/apei/ghes.c        | 22 ++++++++-
->  drivers/cxl/core/pci.c          | 29 ++++++++++++
->  drivers/cxl/cxlpci.h            |  3 ++
->  drivers/cxl/pci.c               | 13 ++++--
->  drivers/firmware/efi/cper_cxl.c | 79 ++++++++++++++++++++++++++++-----
->  drivers/firmware/efi/cper_cxl.h |  7 +--
->  include/linux/cper.h            |  4 ++
->  include/linux/cxl-event.h       | 31 ++++++++++++-
->  8 files changed, 166 insertions(+), 22 deletions(-)
-
-
-
-
+This seems to be quite a lot for a single time slot. I think it would
+make sense to split that into more slots. WDYT?
+-- 
+Michal Hocko
+SUSE Labs
