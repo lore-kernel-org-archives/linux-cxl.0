@@ -1,130 +1,132 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74E944C9D;
-	Tue,  7 May 2024 05:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0D25B1E0;
+	Tue,  7 May 2024 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715060084; cv=none; b=QGDzAqCMU8UY06mu8T0WHe6UIv4uiCdQO38Cb+5avpHqCdG5Vpp3lWxBEJlRa+LmJ04nVdTPHMfhlTXbjtWAk3c7TQywr8fC/VwnNgdcoAf4t6HRE6HOiCQtNUgnyIcaP+5UCn/wAcPk5mnW/CUewb3vSUQi+e59/i+trwJWNuI=
+	t=1715074518; cv=none; b=VpWUrXio+5UWH6K2tDebpmneDdxkZ9O++iGDn2vWlguMJ1B5tXpA+ZLousz2gXCjccH3M9r7adHIu/H59K7FM75sDL+b0v+JPYp9IpCSWdcS4TW/8oykwwBwyiRAsrwRLGNiP3Pf0ed/PsrIkodnfvSPw9084csjMsubFcxp4vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715060084; c=relaxed/simple;
-	bh=kWsx9r+IsZebycMvtu2kA8q1XeItoXHgG6C79L0hDcA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BGo0cajDxZHCMreIkAQTbN7hyXRJhm197Mil0JHAdKaJhMDGxm3Q8Abc/Yud6AqSzfX7Tiy/BR2vWt+fMy7auCANr0pWksLeYDUV4nScq1FlMF9xGrS1nu3owCp0c9kGZhMVkmQ6HUqBhrDX2lY9KB4aqkMGV/GUjVUoF6z6MSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=dg+J8jDO; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1715074518; c=relaxed/simple;
+	bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dhvkUqyBAFVgq+pIfEa27ts4YkZ54eaoTW4iM8VhBFnD9fr0XnHgpgqBAyHWXTHDsqm1kPCs1iRYpqB17N7Mnbf3rCqDbtInyiFyev/A04DmiRon+EJImHb+o4jS+c9XTMnKiPsaJft62fRgHMy2a8yFgHA8D0xMRnCRQSzU/GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f0Kb1CCE; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="dg+J8jDO"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1715060082; x=1746596082;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kWsx9r+IsZebycMvtu2kA8q1XeItoXHgG6C79L0hDcA=;
-  b=dg+J8jDOZbrrye0q/2PbNnFuY7gnNR7gEKWrxfdoMjmf89BRB6K+hPqe
-   F3v4w5fEZ75ZoxXj9nsYljVL0uW9kqlqj459F1OVi+u9bzu1hqRAgMVmq
-   TcrkYNRws+L4ElFnJBycmkJZRXZ/GhroDycgVpEoDtLpidZbHIP3mRIWF
-   BVrEmw2xSzpj4UEQIKWhgApN4UgHWT1zazS/I7X+iHJjuI2IjJxqOCkB2
-   L/CiAKjoEa+ToQI/cOd1pCVSeA1q2tnIGETchwkVN/4F8JlYewbBiulXl
-   tZb86drjSlk79Lse/0cDlpDJL1FLUkufQPdRBrgquXKIPzuCWEUfh1vpK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f0Kb1CCE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715074516; x=1746610516;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
+  b=f0Kb1CCElH2s0NtHZN9vrxssW0dato7Y3zPkKX0LBLcw69wtcmAf+TBq
+   l/uO12yE8pkl5wBCmQOS4ULoVcC2KnHgFn6lasRfd1VxwRTxilSfvaJgW
+   T0MZqapWfXT9A11ugQTsFKZVeS1ij4Bg661w8s0NBDiUh+TX4qqa65Iqv
+   ATE/16Td/R8lzn2NCiS4SvAz1gfQ1Iw7LKRxSue36oe3gR4PeeuWKBZUK
+   IiJDdgLHbnOaLcacUML+J50PIP8/S0+KCB6KPPNjXO/PiMD+iFu+4nIGW
+   TADhbyohG+YL4joV5gk3SD1S+rIVbQdz5UR/k0DFV5UH4yN3ophC6SDDl
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="136791182"
-X-IronPort-AV: E=Sophos;i="6.07,260,1708354800"; 
-   d="scan'208";a="136791182"
-Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 14:34:32 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 7CB5BD6EFE;
-	Tue,  7 May 2024 14:34:30 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id A7313D9732;
-	Tue,  7 May 2024 14:34:29 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 4557220071A34;
-	Tue,  7 May 2024 14:34:29 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 643281A0002;
-	Tue,  7 May 2024 13:34:28 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH v2] cxl/region: Fix memregion leaks in devm_cxl_add_region()
-Date: Tue,  7 May 2024 13:34:21 +0800
-Message-Id: <20240507053421.456439-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+X-CSE-ConnectionGUID: k6iR+1LGRnuafXBASfEWDw==
+X-CSE-MsgGUID: gIzHRv1nTFW+9P/+t8QS+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="28329410"
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="28329410"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:15 -0700
+X-CSE-ConnectionGUID: mbnN2bOrQTSC4WJUNs+SKg==
+X-CSE-MsgGUID: xehOBnBQQpmFgGKtOm2zIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="33029128"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.31])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:12 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 0/4] acpi/ghes, cper,
+ cxl: Trace FW-First CXL Protocol Errors
+Date: Tue, 07 May 2024 11:35:09 +0200
+Message-ID: <2649256.vYhyI6sBWr@fdefranc-mobl3>
+In-Reply-To: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28366.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28366.005
-X-TMASE-Result: 10--5.654200-10.000000
-X-TMASE-MatchedRID: JUGAxiLh1cP/rbll2ZPJSIL5ja7E+OhynpdnAKvzbsEBLwIiWDU8a78F
-	Hrw7frluf146W0iUu2tDc4lSgrowpc2IoAvAG8CyBe3KRVyu+k3DCscXmnDN78fASe7knCttQIs
-	gZTZgm0Ggx1wnIrEXsoAy6p60ZV62yA7duzCw6dLdB/CxWTRRu25FeHtsUoHu60fgqs6GC2l5dg
-	k0gqkmKXunP19LriDGzAxqArotu/kfwV6sBPR0lg==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Move the mode verification to __create_region() before allocating the
-memregion to avoid the memregion leaks.
+On Tuesday, January 9, 2024 4:47:51=E2=80=AFAM GMT+2 Smita Koralahalli wrot=
+e:
+> This patchset adds trace event support for FW-First Protocol Errors.
+>=20
+> This series depends on:
+> https://lore.kernel.org/linux-cxl/20231220-cxl-cper-v5-0-1bb8a4ca2c7a@int=
+el.
+> com
+>=20
+Hello Smita,
 
-Fixes: 6e099264185d ("cxl/region: Add volatile region creation support")
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-V2: Move the mode verification to __create_region() # Dan
----
- drivers/cxl/core/region.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+I'm working on a small series of enhancement and additions to kernel logs a=
+nd=20
+trace events in extlog_print() (ELOG). I'm interested to reuse from ELOG th=
+e=20
+infrastructure which you made to trace the CXL Protocol Errors.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 812b2948b6c6..18b95149640b 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2352,15 +2352,6 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 	struct device *dev;
- 	int rc;
- 
--	switch (mode) {
--	case CXL_DECODER_RAM:
--	case CXL_DECODER_PMEM:
--		break;
--	default:
--		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
--		return ERR_PTR(-EINVAL);
--	}
--
- 	cxlr = cxl_region_alloc(cxlrd, id);
- 	if (IS_ERR(cxlr))
- 		return cxlr;
-@@ -2415,6 +2406,15 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- {
- 	int rc;
- 
-+	switch (mode) {
-+	case CXL_DECODER_RAM:
-+	case CXL_DECODER_PMEM:
-+		break;
-+	default:
-+		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
- 	rc = memregion_alloc(GFP_KERNEL);
- 	if (rc < 0)
- 		return ERR_PTR(rc);
--- 
-2.29.2
+I'm aware that this series depends on an old one from Ira which has been=20
+superseded by a different implementation and, furthermore, that this needs =
+to=20
+be reworked   because the execution of this code may sleep while in atomic=
+=20
+context.=20
+
+I'd like to ask if you plan to fix and rebase this series to a current cxl=
+=20
+branch. If so, I'll wait for the next version to integrate in ELOG.
+
+Otherwise, if you are not anymore actively working on this series, please=20
+notice that I'd be glad to help by making the necessary changes and by port=
+ing=20
+your code to a current cxl branch (of course, retaining your authorship).
+
+Thanks,
+
+=46abio M. De Francesco
+>
+> Link to v1:
+> https://lore.kernel.org/all/20240102150933.161009-1-Smita.KoralahalliChan=
+nab
+> asappa@amd.com
+>=20
+> Smita Koralahalli (4):
+>   acpi/ghes, cxl: Create a common CXL struct to handle different CXL
+>     CPER records
+>   efi/cper, cxl: Make definitions and structures global
+>   acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
+>   acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
+>=20
+>  drivers/acpi/apei/ghes.c        | 22 ++++++++-
+>  drivers/cxl/core/pci.c          | 29 ++++++++++++
+>  drivers/cxl/cxlpci.h            |  3 ++
+>  drivers/cxl/pci.c               | 13 ++++--
+>  drivers/firmware/efi/cper_cxl.c | 79 ++++++++++++++++++++++++++++-----
+>  drivers/firmware/efi/cper_cxl.h |  7 +--
+>  include/linux/cper.h            |  4 ++
+>  include/linux/cxl-event.h       | 31 ++++++++++++-
+>  8 files changed, 166 insertions(+), 22 deletions(-)
+
+
+
 
