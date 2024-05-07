@@ -1,78 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C03716D9C4;
-	Tue,  7 May 2024 18:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D6816D33C;
+	Tue,  7 May 2024 18:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715107481; cv=none; b=CURbYCpSWlfplWWlxCZc+kwHvYo5lvCRqExny2/ybk5Z4X04N/WxpyDpJ1LQydf6m/WtmJa+DqeO/WEkrpn3qABPS3ctAsSocWr7lFMydcFTNKOFs+iUKWeBKYl5Z2jUehFQEONI+7sJDrEvkjtH074doeh4utRO8q3NSj1RdiA=
+	t=1715107864; cv=none; b=Tpyzi+4HLU6R4AFlbAJjTZ93BiToAAVabYAMIogkVVUt+BJu97inXxk0F+9G+SiGW6jFnJAIb5apdF/EQA4EV0AIjnImhpb5m8LAUm+E8SY9QSv42EMSF2dr+7XJPoprLJMqX1LOXoEN5nNb/pHmfs4SnYQyp8aX/2IMhjNjK1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715107481; c=relaxed/simple;
-	bh=E9XMpXDc4GOLixsNa+tnFmNYImN3ywdXtqA8m4WFyPw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LkiWqLoj8ecazHOVL7wk/9er98Dd623c4o7Cj4lM07m7N7LqTeL9qMdrjhK2HaWX7KK69od4sRBbNFIVBDy64xCzAjStcTRgfWwYRY3FbIr2EtUIHIM58WX+WC2T7qHifck9mJYxHbKqqv7uJGRsS+proWundqdEQWvNpC5chZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpNd/Ja2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715107864; c=relaxed/simple;
+	bh=ZwX2Rn50wq4SlmLyEfoqfN58ifJPiOPy5eQX4TCy5Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+q7LGof6i24UqfeM5vgS9o84GRP4sNgrDES88R1VdtbUS29k5su2EzJxZrHBhh+qxcv8/63WwBdA8jJV8WCD8/Zle3weNMUruDpCNBEe5v4B6N+zNKlYurhgd9iqx6u7FvSdT6dC31sYRbX6GPkYsZp9Qodd/iAFLBmom9Vhd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B0Kxz5lu; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpNd/Ja2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48ABC4AF63;
-	Tue,  7 May 2024 18:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715107480;
-	bh=E9XMpXDc4GOLixsNa+tnFmNYImN3ywdXtqA8m4WFyPw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=MpNd/Ja2Vh2gjAHIPag6uTHw64TRJyQonnhrzPu5n5tSQjDrrWbOiI5bN0azYmhSW
-	 sKQrP+rmYF3tjbwC6rUIQGwEla3h7yzNk8oMMgDA0gyugo5gHY1NyypBZmuJLl086B
-	 qIHVAaFwwWbhTGiVCUOj1Hk/nUQFR/7hpGuGkFJdaPjUd36m3VWZlFG9B30qsfnrs1
-	 Om/n29YfBxfdiLN2LDlVLWdPzEJOzOiluGEeiWbNhCDuL2KkCYlDtS+Ug8YFLeI/HH
-	 XevNrTboghPqmWMikEFzLTegknE3kIu5EupZDipffwUrLdly+BUH0P6d9d+szc6P17
-	 pjl+tpR4PGFvA==
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34db9a38755so3245600f8f.1;
-        Tue, 07 May 2024 11:44:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWdGcvVs9vFS3uQzyJSvOuAaSkoxtSTWuA47D81248OCnRBfcHfY9F44CZQbHhgmKHn8nj3qAoX8QQcK/7WEj1pkhGx0kq7OiqVNviXgedp+m9qebLZTo2r17bq3rCHfrUQF6ar/jA30g==
-X-Gm-Message-State: AOJu0YxqPOfsxFdrYWc4pyY0AuMs7vkVQB678h5VnZLDyIrT6jNCsc9L
-	V2RGGcPYLNBovTK2jnxY9yESZavMpADfRsifoO6/kDduSoBHhaFIqsReNKXjYSQ5Y4sIFClY6+7
-	JI1CaZL0NFThI/dGgACPsLFQs33E=
-X-Google-Smtp-Source: AGHT+IGHhSVsi6e3fyUfKOWCT5TUwxTG1IqviacHiKVUDhQeNmsktRO8HZtHvMkPNpakpL2fH5o5lva4DU45TSZnZEg=
-X-Received: by 2002:a5d:5288:0:b0:34d:a159:48e6 with SMTP id
- ffacd0b85a97d-34fc9893babmr655329f8f.0.1715107479251; Tue, 07 May 2024
- 11:44:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B0Kxz5lu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=c7dDW50rDrXhq4SPVgt6MlbL8l9sqdQ0MjPeV/butIg=; b=B0Kxz5lu9jST40KSMnjcnC2idI
+	CyKD/iJCN7Oxx+Z+ibpRIevp1XLk7cCBcds2RjiZpauu9inkkhAwsxJLpFtHXmsMUV79u58vX+3Eo
+	qV9VNvLhSUH4LLy8W0fzGvgvGXW7kQ0/UEpepmReQXZ1Z1cuqO7rx8fcgm8YPUkSh5dsZiu4bq9Ru
+	nITKGqEHxQ4lk2c8aK/yaxWfE5e4vM/sJMgb6qJ3Bf2SAYOC5xoH8B7b1x8/MbbL/QAQvYpGdjRHt
+	8Ij3/OHGQr+7Y6mBSJ2gQJV+N41IpAZcIZ/SvG1mOmBf1Cb5zl21ovoNd/q9Y8MpffsDLvM07Rjom
+	Cqn04GAg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4Ptu-0000000CRRN-3fGU;
+	Tue, 07 May 2024 18:50:54 +0000
+Date: Tue, 7 May 2024 11:50:54 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Adam Manzanares <a.manzanares@samsung.com>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	Fan Ni <fan.ni@samsung.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
+	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
+	"shradha.t@samsung.com" <shradha.t@samsung.com>,
+	Jim Harris <jim.harris@samsung.com>,
+	"mhocko@suse.com" <mhocko@suse.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
+Message-ID: <Zjp4DtkCFGOiFA6X@bombadil.infradead.org>
+References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
+ <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
+ <66396c1938726_2f63a29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Luis Chamberlain <mcgrof@kernel.org>
-Date: Tue, 7 May 2024 11:44:26 -0700
-X-Gmail-Original-Message-ID: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
-Message-ID: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
-Subject: kdevops BoF at LSFMM
-To: lsf-pc@lists.linux-foundation.org
-Cc: kdevops@lists.linux.dev, Linux FS Devel <linux-fsdevel@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66396c1938726_2f63a29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Dear LPC session leads,
+On Mon, May 06, 2024 at 04:47:37PM -0700, Dan Williams wrote:
+> For testing I think it is an "all of the above plus hardware testing if
+> possible" situation. My hope is to get to a point where CXL patchwork
+> lights up "S/W/F" columns with backend tests similar to NETDEV
+> patchwork:
+> 
+> https://patchwork.kernel.org/project/netdevbpf/list/
+> 
+> There are some initial discussions about how to do this likely we can
+> grab some folks to discuss more.
+> 
+> I think Paul and Song would be useful to have for this discussion.
 
-We'd like to gather together and talk about current ongoing
-developments / changes on kdevops at LSFMM. Those interested in
-automation on complex workflows with kdevops are also welcomed. This
-is best addressed informally, but since I see an open slot for at
-10:30am for Tuesday, figured I'd check to see if we can snatch it.
-BoFs for filesystems are scheduled towards the end of the conference
-on Wednesday it seems, so ideally this would just take place then, but
-the last BoF for XFS at Linux Plumbers took... 4 hours, and if such
-filesystem BoFs take place I suspect each FS developer would also want
-to attend their own respective FS BoF... so perhaps best we get a
-kdevops BoF out of the way before the respective filesystem BoFs.
+I think everyone and their aunt wants this to happen for their subsystem,
+so a separate session to hear about how to get there would be nice.
 
-Agenda items?
-
-Guestfs migration progress - have we killed vagrant?
-Automation on testing filesystem baselines
-xarray / maple tree testing and userspace testing
-OpenTofu
-kdevops-results-archive split
-
-Any others?
-
- Luis
+  Luis
