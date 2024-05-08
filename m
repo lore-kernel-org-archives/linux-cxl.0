@@ -1,124 +1,134 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BCC38F9A;
-	Wed,  8 May 2024 17:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7426612C53D;
+	Wed,  8 May 2024 17:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715190250; cv=none; b=GpaS2xeXk5S4l7neu4IYflMxlUJZgOCaNc3K5B/qSTVWkrvCg1KmqDyzTErulNLAkVeNEdt0dwFJS7l6oLXKKgtemHH5ScsHrH4dHXbOu3Wst2u+Y8sm1VCDM9eYS0oCNsP6Ygpk6oXex0se6551S3fp53VNt6Mie5sZdEQqO8Y=
+	t=1715190340; cv=none; b=jnXBRa40tEM6grxksi+LB0O9SC+Zz4d32b5DCdvKkrnKfMKKOBFEPFNZGPx/JnnzN1PvlsM/8dkQAETAa6fHEDvm854zGAF+9+OGTDhpqLkKXS9Rlrhb6paTVoj98hc0q/OzYCu93nyAnM6qDIW5dbhV+pFbQTxeYPl8cOcvcQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715190250; c=relaxed/simple;
-	bh=Gz4wEJwjFRJax85gYAY8xR9FHpxogME+xjyKzzRa+14=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NVJ5hqUBVpBlRLU/48K1ff8y5YEnRSeEh5O1gJsfTocyCOQi4qR4ZwCmQsbuyHerKWDGIsyK6Hy9zZam6eh86wSF+2jAqPX5N5rHQV7YHD6vZySGQ+iKstCPlrlhdUEpQCLhu5OC7BcjiD5iXetx+1oCAKobg2Ji9c9sfvgpAvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZMvB0lN4z6K7GH;
-	Thu,  9 May 2024 01:43:34 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id A4F42140AB8;
-	Thu,  9 May 2024 01:44:03 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 8 May 2024 18:44:03 +0100
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
- Wed, 8 May 2024 18:44:03 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Thread-Topic: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Thread-Index: AQHaknlLsB7DmyDvA0iAgKJhxeY8vLF4vVgAgABZuhCAEPP6AIADoMIA///2ZwCAABJKUA==
-Date: Wed, 8 May 2024 17:44:03 +0000
-Message-ID: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
-References: <20240419164720.1765-1-shiju.jose@huawei.com>
- <20240419164720.1765-2-shiju.jose@huawei.com>
- <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local>
- <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
- <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local>
- <e0ce36eb80054440ab877ccee4e606de@huawei.com>
- <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local>
-In-Reply-To: <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1715190340; c=relaxed/simple;
+	bh=J9rxaShe8DnD1zG+rIM4r+Ehc8sjR/2P5I/JoOOEs8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KveAggebSAZtIF3WjLJeSIk8eVJl2rY2qA/Kk9okk5/JqC9DdqdbS2chpbFhVL+VGrndPgjVAYhCQM0c0XTuMZyz7gLu9sv11Vb+MRUpvj27ty/nbg9rNajaq66Mm3q5MB6hdfcZI/Q5XqXXRo2h+3hPImaHEy+B1UYuBYyjVUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZWwyBDR; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZWwyBDR"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-518931f8d23so4515957e87.3;
+        Wed, 08 May 2024 10:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715190337; x=1715795137; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YpOyR7sEcKqWJ7zR1tbOjAV4YCtQJ/MHAOEDc9dmlI=;
+        b=MZWwyBDRxs9KAXv6QVKMENvrQXTuyMrDkMGMZsaxoMBoL+9o4HuyJDo00/8+vEfh/I
+         5Gt8bj1O+i/BwglAVZSofMfQKYrkuOSj6D8vLt6kukpUlmqW9isezyz3V0rcDmA9cGKS
+         mrdi30HKwGX/db8wV9xpEuT4BmaoqjLbqKHFYGygLvEnyjk/d5LCzD3vp3xYmZLxoX3H
+         jxBTbOnB8fJ5jMZCdPSpXlO+yIruUf9FAKw06YS6oXkT9a/gIwRoDPLSE31xrH8yk2Kd
+         daULAggWL0K+2I90qrt5ArJplP9b0lPh+jQLSf1Ds+3Z66ehATYSKc3FPYMZeKTBsbnQ
+         GlOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715190337; x=1715795137;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7YpOyR7sEcKqWJ7zR1tbOjAV4YCtQJ/MHAOEDc9dmlI=;
+        b=GFlAg7f6P70kabvF1kY1iYgD7bsMcisfULT59dvoN7vMEeBi6CXngRD3WlQPRVUyPe
+         GjidGtHw1Ia6oiNNJTvQrrDcfZf/9TKo03C/m/HcoVdQZXGkrEvzaF4X5IvLhn4BgE81
+         Vu1QDIbnB4aeimOzsbJWO16H/lV2XfOglVXlslf7hgKFHZga+2Tc+dO+VdcTF2zk0t+6
+         NaVTu+xMLAU58/z9YeHvJLaDtKzQQ9ojDAOvt4imm2d9h3YazL/Ery/vNYEJXgaCEAQV
+         WdcPO1I0xbNAJpmXPkS/KXjexSAmgwDgCbhVOxiceukuIqaSRWVpmyUWCHVg6AaUiAMj
+         vqZg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7pcZEmf6iokDDhVNARvBs/Puo/F+aA6mduHt2DwxQ5xai6+ryn029JMM0UnpndxQTOEnmHwA/EZtb0IxwN6TtA+VST5QT1klroFslUiqEtzICCnakhydIu3HMG6uEOI97y8RYGhg+9A==
+X-Gm-Message-State: AOJu0Yzu8H5a6bF1Tq6oXBW1D6QkVIiuAWdO1/garqjazxLpRz2ApteF
+	9m9GOrrkzd7xnYy+Zml5+E2+vlV6mv4mm6IOycHve+nLiKHI1ZC0UlF2HjC4gLAxxnksaH1ZeLh
+	6NDM9bmCfGU27d3sp+Y08BIKEnAw=
+X-Google-Smtp-Source: AGHT+IENyS4BGSIrm8+zmbnKFWxmMBVao31FcGAzKiMHqSZ2culOe/5GGFaG0D3SK6ipXNKNeRvfUYsk2+5RNBsgB3E=
+X-Received: by 2002:a19:9158:0:b0:51f:5c3:2d6e with SMTP id
+ 2adb3069b0e04-5217c46c15cmr1928148e87.17.1715190336273; Wed, 08 May 2024
+ 10:45:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
+ <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
+In-Reply-To: <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
+From: Steve French <smfrench@gmail.com>
+Date: Wed, 8 May 2024 12:45:25 -0500
+Message-ID: <CAH2r5mt=CRQXdVHiXMCEwtyEXt-r-oENdESwF5k+vEww-JkWCg@mail.gmail.com>
+Subject: Re: kdevops BoF at LSFMM
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, lsf-pc@lists.linux-foundation.org, 
+	kdevops@lists.linux.dev, Linux FS Devel <linux-fsdevel@vger.kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, linux-cxl@vger.kernel.org, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
-bGllbjguZGU+DQo+U2VudDogMDggTWF5IDIwMjQgMTg6MjANCj5UbzogU2hpanUgSm9zZSA8c2hp
-anUuam9zZUBodWF3ZWkuY29tPg0KPkNjOiBsaW51eC1jeGxAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+bW1Aa3ZhY2sub3JnOyBkYW4uai53aWxs
-aWFtc0BpbnRlbC5jb207IGRhdmVAc3Rnb2xhYnMubmV0OyBKb25hdGhhbg0KPkNhbWVyb24gPGpv
-bmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGRhdmUuamlhbmdAaW50ZWwuY29tOw0KPmFsaXNv
-bi5zY2hvZmllbGRAaW50ZWwuY29tOyB2aXNoYWwubC52ZXJtYUBpbnRlbC5jb207IGlyYS53ZWlu
-eUBpbnRlbC5jb207DQo+bGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGRhdmlkQHJlZGhhdC5jb207DQo+VmlsYXMuU3JpZGhhcmFuQGFtZC5j
-b207IGxlby5kdXJhbkBhbWQuY29tOyBZYXplbi5HaGFubmFtQGFtZC5jb207DQo+cmllbnRqZXNA
-Z29vZ2xlLmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsgdG9ueS5sdWNrQGludGVsLmNvbTsNCj5K
-b24uR3JpbW1AYW1kLmNvbTsgZGF2ZS5oYW5zZW5AbGludXguaW50ZWwuY29tOyByYWZhZWxAa2Vy
-bmVsLm9yZzsNCj5sZW5iQGtlcm5lbC5vcmc7IG5hb3lhLmhvcmlndWNoaUBuZWMuY29tOyBqYW1l
-cy5tb3JzZUBhcm0uY29tOw0KPmp0aG91Z2h0b25AZ29vZ2xlLmNvbTsgc29tYXN1bmRhcmFtLmFA
-aHBlLmNvbTsNCj5lcmRlbWFrdGFzQGdvb2dsZS5jb207IHBnb25kYUBnb29nbGUuY29tOyBkdWVu
-d2VuQGdvb2dsZS5jb207DQo+bWlrZS5tYWx2ZXN0dXRvQGludGVsLmNvbTsgZ3RoZWxlbkBnb29n
-bGUuY29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25AYW1wZXJl
-Y29tcHV0aW5nLmNvbTsNCj53YnNAb3MuYW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4uY3hsQGdt
-YWlsLmNvbTsgdGFueGlhb2ZlaQ0KPjx0YW54aWFvZmVpQGh1YXdlaS5jb20+OyBaZW5ndGFvIChC
-KSA8cHJpbWUuemVuZ0BoaXNpbGljb24uY29tPjsNCj5rYW5na2FuZy5zaGVuQGZ1dHVyZXdlaS5j
-b207IHdhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdlaS5jb20+Ow0KPkxpbnV4YXJtIDxs
-aW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHY4IDAxLzEwXSBy
-YXM6IHNjcnViOiBBZGQgc2NydWIgc3Vic3lzdGVtDQo+DQo+T24gV2VkLCBNYXkgMDgsIDIwMjQg
-YXQgMDQ6NTk6MThQTSArMDAwMCwgU2hpanUgSm9zZSB3cm90ZToNCj4+ID4+IEkgdGhpbmsgaXQg
-aGFwcGVucyBvbmx5IHdoZW4gYSBkZXBlbmRlbnQgbW9kdWxlIGFzIGF1dG9sb2FkZWQgYmFzZWQN
-Cj4+ID4+IG9uIGEgc2NydWIgZGV2aWNlIGV4aXN0aW5nIHdpdGggZXhjZXB0aW9uIG9mIG1lbW9y
-eSBzY3J1YiBjb250cm9sDQo+PiA+PiBidWlsdCBpbiBhbmQgd2hvIHdvdWxkIGJ1aWxkIHRoaXMg
-aW4/DQo+PiA+DQo+PiA+WW91IHRoaW5rIG9yIHlvdSBrbm93Pw0KPj4gV2Uga25vdyBhcyBJIGhh
-ZCB0ZXN0ZWQuDQo+DQo+RG9lcyB0aGlzIHRoaW5nIHJlZ2lzdGVyIHN1Y2Nlc3NmdWxseSBvbiBh
-IG1hY2hpbmUgd2hpY2ggZG9lc24ndCBoYXZlIHRob3NlDQo+ZGV2aWNlcz8NCj4NCkkgbWVhbiBz
-Y3J1YiBzdWJzeXN0ZW0gbW9kdWxlIGlzIG5vdCBsb2FkZWQgYW5kIGluaXRpYWx6ZWQgdW50aWwg
-YSBkZXBlbmRlbnQgIGRldmljZSBtb2R1bGUgaXMgbG9hZGVkIGFuZCBhIGRldmljZSBkb2VzIG5v
-dCBnZXQgcmVnaXN0ZXJlZCB3aXRoIHRoZSBzY3J1YiBzdWJzeXN0ZW0gb24gYSBtYWNoaW5lIHdo
-aWNoIGRvZXNuJ3QgaGF2ZSB0aGUgY29ycmVzcG9uZGluZyBzY3J1YiBmZWF0dXJlcy4NCj4tLQ0K
-PlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0KPmh0dHBzOi8vcGVvcGxlLmtlcm5lbC5v
-cmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQoNClRoYW5rcywNClNoaWp1DQo=
+On Wed, May 8, 2024 at 2:48=E2=80=AFAM Amir Goldstein <amir73il@gmail.com> =
+wrote:
+>
+> On Tue, May 7, 2024 at 9:44=E2=80=AFPM Luis Chamberlain <mcgrof@kernel.or=
+g> wrote:
+> >
+> > Dear LPC session leads,
+> >
+> > We'd like to gather together and talk about current ongoing
+> > developments / changes on kdevops at LSFMM. Those interested in
+> > automation on complex workflows with kdevops are also welcomed. This
+> > is best addressed informally, but since I see an open slot for at
+> > 10:30am for Tuesday, figured I'd check to see if we can snatch it.
+>
+> The empty slot is there for flexibility of the schedule and also
+> wouldn't storage/MM people be interested in kdevops?
+>
+> I've placed you session instead of the FS lightning talks on Tuesday
+> after Leah's FS testing session.
+> There are enough slots for FS lightning talks.
+>
+> There are several empty slots throughout the agenda left for
+> flexibility, including the one you mentioned on Tue morning.
+> kdevops session is for a very specialized group of developers,
+> so if that group is assembled and decides to use an earlier slot
+> we can do that on the spot.
+
+kdevops could be *extrememly* useful to understand better (and
+to share "best practices" and ideas on testing from various filesystems)
+
+I would be very happy if there were an easy way to do three things
+faster/easier:
+1) make it easier to run a reasonably large set of fs tests automatically
+on checkin of a commit or set of commits (e.g. to an externally visible
+github branch) before it goes in linux-next, and a larger set
+of test automation that is automatically run on P/Rs (I kick these tests
+off semi-manually for cifs.ko and ksmbd.ko today)
+2) make it easier as a maintainer to get reports of automated testing of
+stable-rc (or automate running of tests against stable-rc by filesystem typ=
+e
+and send failures to the specific fs's mailing list).  Make the tests run
+for a particular fs more visible, so maintainers/contributors can note
+where important tests are left out against a particular fs
+3) make it easier to auto-bisect what commit regressed when a failing test
+is spotted
+4) make it easier to automatically enable certain fs specific debug
+tooling (e.g. eBPF scripts or trace points or log capturing) when a
+test fails, or when a test fails - enable tracing and restart tests
+5) make it easier to collect log output at the end of each test to
+catch "suspicious" things (like network reconnects/timeouts, dmesg
+events logged, fs specific stats or debug data that show excessive
+failures or slow responses)
+6) an easy way to tell if a kdevops run is "suspiciously slow" (ie if a tes=
+t
+or set of tests is more than 20% slower than the baseline test run, it
+could indicate a performance regression that needs to be bisected
+and identified)
+
+--=20
+Thanks,
+
+Steve
