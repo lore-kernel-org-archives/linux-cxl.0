@@ -1,108 +1,113 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E0032C8B;
-	Wed,  8 May 2024 07:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 247AE41A89
+	for <linux-cxl@vger.kernel.org>; Wed,  8 May 2024 08:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715154347; cv=none; b=KaFe2R2I57sWo6AXUODqtH7oRvWr2Yviy5bLYhTVAPM2h2BXuVw1EVFTNVeavAW92zdHVKMyKK6hFn5B8CXcJorUnJpvoQTHICaSt1/JBXzJ0WddFr4OEmhmgwKYD9c71nLCGABbfCfEdA7iTusU2tRmYWb65/0qZgkVENB5lxg=
+	t=1715155285; cv=none; b=WI3qkmsoKaRsODK6sdbJKluzmNMKz2evTp444AZBtuxkOYRfCO95A9jhSk2j8liPUqnsVyEiC2/8KrdMJKv/QjfOJ4s5TICNyGsRi2vIxsf04R2L/oFoiA1IL5+KGZtIlI834lPjghRE8yClApLk2dvPHrhjMoznEFMbqncpNAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715154347; c=relaxed/simple;
-	bh=Asxa12FYwp6Eh7LcfCTnjW7ES+F3pNL6geI94xycBN8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XfYW51BZyvp1AorFkp41EyT30emxo/5cfZ6U5/KG6SPfaYSSjWt+PKjKC7CugxyY4wkDa+H2cD1I8pHglVoPhQVxmyOLKZbqt7uzsnrUEeJUJs7exYOzq2ItqGjrAQOlxEQd4y0jyjy7m53rWuJw/LsNxnWeHg0CLbZ3nUl95fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLQuFcws; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLQuFcws"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7929c9e67fdso259261885a.2;
-        Wed, 08 May 2024 00:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715154345; x=1715759145; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Asxa12FYwp6Eh7LcfCTnjW7ES+F3pNL6geI94xycBN8=;
-        b=hLQuFcwsUYlmVm5bAV+IcTDVBe8Ckv6pnnIspz9APHyKCEfVmShImBKfh6GfMTQAfq
-         /N0yAnq+iiWVcKouglpHu2+dzNT1+1zlldahDkKMpov+/XZfCCIMDWCbgL7+1fRRMKST
-         FNoUnhkmoGDdG00GJh5HXlD4wxFq0ctvm5gnpzJpOupvHj9qQUXqwRsnwuI6CNmiT5sc
-         BZ7brPvl9nu0vdHRhPMfyWxLDWuu+8ocgsG+TChZ9h+NZ2hp0yZ/3lHodZT/o2qU2TrN
-         AB+zerCtSsVuo0Wf652tqOsZZxRkERz0VP3iUjciJhl2VPtoWjA7vQ4O7jwXuwiCEVIi
-         Bdgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715154345; x=1715759145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Asxa12FYwp6Eh7LcfCTnjW7ES+F3pNL6geI94xycBN8=;
-        b=MzMzToTcCCachlt+2EBp4rEkex3XMs9T4aB1tPJ99dwefp48amnVxT6Cu7q09sw5Pb
-         LDflV3bGaG1eyJMQez/IO38/HS2g0qhwl+KsAWaFvzyasL7KqwBlxWPaQXQe6VHcZ6Ja
-         WNwWS5rmUjqaVBQBufb9z3SbiPiUgDn/EW6uExld+deDjif4Fs0yq6UCAIPmCz6kBt0E
-         XAhbHb3IAJApSAtcrBOfV6S3DqPidEtQ70LKbHqj65B743BrAGd5FQz4ntDikU4amS3d
-         taLYEeJ/r2P2hbb///KLh0Y0P0OOoSn/MhGjtdvNND67FCUOZg2rBShMp0AAH+7tqszP
-         Z/aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmIfM31EIHsCkG/LD66LUgKrMpd5nZs6gElrPH+lUC1QEEYipUSmKFLLKSfWuP+BmecWEZ3uVtFXUhUrbyVPE9FfVEQavhcFId8YgwOwMYU8BXMiOWtj23FrPNj4DmQmPNnsm94ZLcBw==
-X-Gm-Message-State: AOJu0YxfGCOxmCVoL0cl4VBdusynv5AqxeH/ctPZzd4L/7IIOFJWB9/Y
-	vcTwXWgQ0SknwWbM5CoyRtYP2BWW9zqiQAk3S6pEnFCLBIwefK6nH0bBo+/x8PZEaiewastCWqt
-	wPruKi9/VsPlq0zGShvBesS61orI=
-X-Google-Smtp-Source: AGHT+IETJkV+zUHuVrv52PTMHRbun4ueox3FklyyPNHf1V0JNtHy/KFcHP4vl/EDr89gXxpF3AQrY2pcBW3rctQ02rs=
-X-Received: by 2002:a05:620a:17a8:b0:78f:182:5e20 with SMTP id
- af79cd13be357-792b27bdeb1mr232953285a.7.1715154344973; Wed, 08 May 2024
- 00:45:44 -0700 (PDT)
+	s=arc-20240116; t=1715155285; c=relaxed/simple;
+	bh=Iv2+2VbxUuO3Hvpk/53ikbEARB6VOlKEq6bifWKYEKg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=La+HHUKSbJ1enuTW2V2bJS346cTt0sqg9wh+KQYGQ3TsUKMuRFZ7ElT9eZpkt/ZFf6JJIu5iSC0s6Ci4V1x4V4pdo4d9flhP+0Er+ITIqEITZnF/hht2DtQWuISGJ34nXy3h13OREDkEE+Ls5eLN/8WaGb3LNhc4rMOiiR2RILs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3v69AMTtmnR4LAQ--.3084S2;
+	Wed, 08 May 2024 16:01:04 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwAHIjs5MTtmb2MAAA--.378S3;
+	Wed, 08 May 2024 16:00:57 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan.Cameron@Huawei.com
+Cc: qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: CXL numa error on arm64 qemu virt machine
+Date: Wed,  8 May 2024 16:00:51 +0800
+Message-Id: <20240508080051.3756934-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
-In-Reply-To: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 8 May 2024 10:45:33 +0300
-Message-ID: <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
-Subject: Re: kdevops BoF at LSFMM
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, kdevops@lists.linux.dev, 
-	Linux FS Devel <linux-fsdevel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	linux-cxl@vger.kernel.org, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwAHIjs5MTtmb2MAAA--.378S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQATAWY6gmcCxgABsv
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXw18KFW3Ar4rGF4kJFWrXwb_yoW5GF1DpF
+	42v3Wjgrs5JFnruw1kta4rJFyYqw4SvanrWry3AF1ruw1Utr18Xr1IyFy3KFykAw43GwnF
+	va1ktFn0qa48Zw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Tue, May 7, 2024 at 9:44=E2=80=AFPM Luis Chamberlain <mcgrof@kernel.org>=
- wrote:
->
-> Dear LPC session leads,
->
-> We'd like to gather together and talk about current ongoing
-> developments / changes on kdevops at LSFMM. Those interested in
-> automation on complex workflows with kdevops are also welcomed. This
-> is best addressed informally, but since I see an open slot for at
-> 10:30am for Tuesday, figured I'd check to see if we can snatch it.
+Hello, Jonathan
 
-The empty slot is there for flexibility of the schedule and also
-wouldn't storage/MM people be interested in kdevops?
+Recently I run some cxl tests on qemu virt(branch:cxl-2024-04-22-draft) but met some
+problems.
 
-I've placed you session instead of the FS lightning talks on Tuesday
-after Leah's FS testing session.
-There are enough slots for FS lightning talks.
+Problems: 
+1) the virt machine could not set the right numa topology from user input;
 
-There are several empty slots throughout the agenda left for
-flexibility, including the one you mentioned on Tue morning.
-kdevops session is for a very specialized group of developers,
-so if that group is assembled and decides to use an earlier slot
-we can do that on the spot.
+My Qemu numa set:
+-object memory-backend-ram,size=2G,id=mem0 \
+-numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+-object memory-backend-ram,size=2G,id=mem1 \
+-numa node,nodeid=1,cpus=2-3,memdev=mem1 \
 
-> BoFs for filesystems are scheduled towards the end of the conference
-> on Wednesday it seems, so ideally this would just take place then, but
-> the last BoF for XFS at Linux Plumbers took... 4 hours, and if such
-> filesystem BoFs take place I suspect each FS developer would also want
-> to attend their own respective FS BoF...
+However, the system shows:
+root@ubuntu-jammy-arm64:~# numactl -H
+	available: 1 nodes (0)
+	node 0 cpus: 0 1 2 3
+	node 0 size: 4166 MB
+	node 0 free: 3920 MB
+	node distances:
+	node   0 
+	0:  10 
 
-I certainly hope that FS maintainers will use this gathering to have
-their own respective BoFs.
-If anyone would like to lead an FS BoF in the FS track room,
-please let me know and I will place it on the agenda.
+Boot Kernel print:
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x40000000-0xbfffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0xc0000000-0x13fffffff]
+[    0.000000] ACPI: Unknown target node for memory at 0x10000000000, assuming node 0
+[    0.000000] NUMA: Warning: invalid memblk node 16 [mem 0x0000000004000000-0x0000000007ffffff]
+[    0.000000] NUMA: Faking a node at [mem 0x0000000004000000-0x000000013fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x13f7f89c0-0x13f7fafff]
 
-Thanks,
-Amir.
+2) it seems like the problem of allocating numa node in arm for cxl memory still exists;
+Previous discussion: https://lore.kernel.org/linux-cxl/20231011150620.0000212a@Huawei.com/
+
+root@debian-bullseye-arm64:~# cxl create-region -d decoder0.0 -t ram
+[   68.653873] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
+[   68.660568] Unknown target node for memory at 0x10000000000, assuming node 0
+
+If not, maybe I could try to do something to help fix this problem.
+
+
+My full qemu command line:
+qemu-system-aarch64 \
+-M virt,gic-version=3,cxl=on \
+-m 4G \
+-smp 4 \
+-object memory-backend-ram,size=2G,id=mem0 \
+-numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+-object memory-backend-ram,size=2G,id=mem1 \
+-numa node,nodeid=1,cpus=2-3,memdev=mem1 \
+-cpu cortex-a57 \
+-bios QEMU_EFI.fd.bak \
+-device virtio-blk-pci,drive=hd,bus=pcie.0 \
+-drive if=none,id=hd,file=../disk/debos_arm64.ext \
+-nographic \
+-object memory-backend-file,id=mem2,mem-path=/tmp/mem2,size=256M,share=true \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+-device cxl-type3,bus=root_port13,volatile-memdev=mem2,id=cxl-mem1 \
+-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
+-qmp tcp:127.0.0.1:4444,server,nowait \
+
+Qemu version: the lastest commit of branch cxl-2024-04-22-draft in "https://gitlab.com/jic23/qemu" 
+Kernel version: 6.6.0
+
+Many thanks
+Yuquan
+
