@@ -1,85 +1,176 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D528625B;
-	Wed,  8 May 2024 15:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB83A1A2C22
+	for <linux-cxl@vger.kernel.org>; Wed,  8 May 2024 16:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715183850; cv=none; b=VHz5c6aDMPvFKlYVcCKIGG0sHh/18SnsDDizXCWzmxAsyHtOpJyUAwUkbhcrrewfmKFtZ+g5zXxo3rbyybK0u3Ki/yWz2l05qpnuup8PMqVeQrDGAAG8lPW1teS/es/NMQBgU8fvhoXTleBWzC8UbZ01Hw/LLKFGnFVx5jQBK8c=
+	t=1715184921; cv=none; b=L3zyWqzq1YfphMB0yfBlcAquz3Mn2ZFPbqXX3bZQZkBVi3vSFUEC+MfyAOPGIVMnAwam1HtgbJ9kz6pDybT5KxrbsvjpIheIRfaGvlFxI1urPpf2vn+Tf2vfAzokmy+xa5UfIdjuVrZQC9lZnTi3G0h8cLZWHoelGMEvFOK7UPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715183850; c=relaxed/simple;
-	bh=tPtSEqghp6X+xcXBgf6p9DZmYra2EVVIPkBYbj7ZAe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpNe6kDtDMTQjblzw0mSeyLIfTYuQl7MKT4G5kfYVp2m7ccG4Rrqkb+By6w/Cg+lZfhqibR49B1hjJKYts+qxepvlG6uULfx0JIFtl5gq5tWBYx2HXHscAW8WyaKfI+fREJdeuuxF9lo7nMaqkS5WBtZVzL1E7qIvLXluu9vfO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=191FKoNE; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="191FKoNE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-	bh=VgZ2foeBWNFhshAFEh20hHZWiXfRXeW8Nj8zaU2MzqM=; b=191FKoNEnsqepe1oU/+t+ooLkM
-	/0x9s4xT63IOqeine6ftTBG1SVkanLvQXJOJI6MpIEVwMlSGB9d1uzQV/xN9Wh5BGCPqAIcWbmZjf
-	PblqJDctAintRccFGWGq0BuPUqLcjDvsyONtCWiaAdC+YjK6GxMgfuH61nv0A0D38eULdNBesszYI
-	jn0O22MmIGbuZ0mS3MELF4BbpEWyAIkrVYjtlMTiIsV89wL/d/TP99itexld514y03zsy/QUjBmwZ
-	ZpCbD3KY0Zse1talZ7Bw+6C9vKmZxskpYH3IubLD76BEUnjc81jkab2fqlk9JkTU6e7EWx/ZrmvDt
-	uz0jlMqA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4jfQ-0000000G6J3-2Nep;
-	Wed, 08 May 2024 15:57:27 +0000
-Date: Wed, 8 May 2024 08:57:16 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: lsf-pc@lists.linux-foundation.org, kdevops@lists.linux.dev,
-	Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-	linux-mm <linux-mm@kvack.org>, linux-cxl@vger.kernel.org,
-	Jan Kara <jack@suse.cz>
-Subject: Re: kdevops BoF at LSFMM
-Message-ID: <Zjug3BqYyW3hrMdy@bombadil.infradead.org>
-References: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
- <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
+	s=arc-20240116; t=1715184921; c=relaxed/simple;
+	bh=iRTDxQin8R+kPkCKALKFKED1S8aKVK7gzgNImbIOajY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=afbMt3F6ZUdbkemlJ1U+siEVbvXvC2gFYASFlKKY84VRG0j5Qnl2m0/Zvh9cY9bEcEOzvpBatU2ZBFZEDubWsXLEs9WvDi9kzu9j/gtRBvEPkIy7KIJf00fG0OwUMeSPUWQeJlRjKWjNPr5qNyTqMWC2G4PthrBdOZ2XyzLCBto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZKwk4k31z6DB9d;
+	Thu,  9 May 2024 00:14:46 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 278E9140AB8;
+	Thu,  9 May 2024 00:15:16 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 8 May
+ 2024 17:15:15 +0100
+Date: Wed, 8 May 2024 17:15:14 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+CC: Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
+	<qemu-devel@nongnu.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <shiju.jose@huawei.com>
+Subject: Re: [PATCH v3 2/2] cxl/core: add poison creation event handler
+Message-ID: <20240508171514.000031dd@Huawei.com>
+In-Reply-To: <0d0b087f-9aa4-45d3-9412-0b1a6a005c52@fujitsu.com>
+References: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
+	<20240417075053.3273543-3-ruansy.fnst@fujitsu.com>
+	<6627f68be4ff5_cd8e0294c3@iweiny-mobl.notmuch>
+	<0d0b087f-9aa4-45d3-9412-0b1a6a005c52@fujitsu.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, May 08, 2024 at 10:45:33AM +0300, Amir Goldstein wrote:
-> On Tue, May 7, 2024 at 9:44 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> >
-> > Dear LPC session leads,
-> >
-> > We'd like to gather together and talk about current ongoing
-> > developments / changes on kdevops at LSFMM. Those interested in
-> > automation on complex workflows with kdevops are also welcomed. This
-> > is best addressed informally
-> 
-> wouldn't storage/MM people be interested in kdevops?
+On Fri, 3 May 2024 18:42:31 +0800
+Shiyang Ruan <ruansy.fnst@fujitsu.com> wrote:
 
-It is up to them, I mean, I've started to work on mmtests integration
-so we can help test memory fragmentation, and plan is to integrate
-automation of maple tree and xarray shortly, mm folks are more than
-welcomed!
+> =E5=9C=A8 2024/4/24 1:57, Ira Weiny =E5=86=99=E9=81=93:
+> > Shiyang Ruan wrote: =20
+> >> Currently driver only traces cxl events, poison creation (for both vmem
+> >> and pmem type) on cxl memdev is silent.  OS needs to be notified then =
+it
+> >> could handle poison pages in time.  Per CXL spec, the device error eve=
+nt
+> >> could be signaled through FW-First and OS-First methods.
+> >>
+> >> So, add poison creation event handler in OS-First method:
+> >>    - Qemu:
+> >>      - CXL device reports POISON creation event to OS by MSI by sending
+> >>        GMER/DER after injecting a poison record;
+> >>    - CXL driver:
+> >>      a. parse the POISON event from GMER/DER;
+> >>      b. translate poisoned DPA to HPA (PFN);
+> >>      c. enqueue poisoned PFN to memory_failure's work queue; =20
+> >=20
+> > I'm a bit confused by the need for this patch.  Perhaps a bit more deta=
+il
+> > here? =20
+>=20
+> Yes, I should have wrote more details.
+>=20
+> I want to check and make sure the HWPOISON on a CXL device (type3) is=20
+> working properly.  For example, a FSDAX filesystem created on a=20
+> type3-pmem device, then it gets a POISON bit, the OS should be able to=20
+> handle this POISON event: find the relevant process
+>=20
+> Currently I'm using Qemu with several simulated CXL devices, and using=20
+> poison injection API of Qemu to create POISON records, but OS isn't=20
+> notified.  Only when we actively call list POISON records (cxl list -L)=20
+> will the driver fetch them and log into trace events, then we see the=20
+> POISON records.  Memory failure wasn't triggered too.
+>=20
 
-> I've placed you session instead of the FS lightning talks on Tuesday
-> after Leah's FS testing session.
-> There are enough slots for FS lightning talks.
+Indeed - QEMU emulation of this is not complete.  It should also be generat=
+ing
+the events. Ideally we'd even handle injecting silent poison (not yet detec=
+ted
+by the device) and have that generate the synchronous memory faults on an a=
+ccess.
 
-That works great, thanks!
+> That's why I said "poison creation on cxl memdev is silent".  Per spec,=20
+> POISON creation should be notified to OS.  Since not familiar with=20
+> firmware part, I'm try adding this notification for OS-First.
+>=20
+> >=20
+> > More comments below.
+> >  =20
+> >>
+> >> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+> >> ---
+> >>   drivers/cxl/core/mbox.c   | 119 +++++++++++++++++++++++++++++++++---=
+--
+> >>   drivers/cxl/cxlmem.h      |   8 +--
+> >>   include/linux/cxl-event.h |  18 +++++-
+> >>   3 files changed, 125 insertions(+), 20 deletions(-)
+> >>
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index f0f54aeccc87..76af0d73859d 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -837,25 +837,116 @@ int cxl_enumerate_cmds(struct cxl_memdev_state =
+*mds)
+> >>   }
+> >>   EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+> >>  =20
+> >> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> >> -			    enum cxl_event_log_type type,
+> >> -			    enum cxl_event_type event_type,
+> >> -			    const uuid_t *uuid, union cxl_event *evt)
+> >> +static void cxl_report_poison(struct cxl_memdev *cxlmd, struct cxl_re=
+gion *cxlr,
+> >> +			      u64 dpa)
+> >>   {
+> >> -	if (event_type =3D=3D CXL_CPER_EVENT_GEN_MEDIA)
+> >> +	u64 hpa =3D cxl_trace_hpa(cxlr, cxlmd, dpa);
+> >> +	unsigned long pfn =3D PHYS_PFN(hpa);
+> >> +
+> >> +	if (!IS_ENABLED(CONFIG_MEMORY_FAILURE))
+> >> +		return;
+> >> +
+> >> +	memory_failure_queue(pfn, MF_ACTION_REQUIRED); =20
+> >=20
+> > I thought that ras daemon was supposed to take care of this when the tr=
+ace
+> > event occurred.  Alison is working on the HPA data for that path. =20
+>=20
+> It seems to save CXL trace events/memory-failures to DB and report to=20
+> others, but cannot let OS call memory failure.
 
-> kdevops session is for a very specialized group of developers,
-> so if that group is assembled and decides to use an earlier slot
-> we can do that on the spot.
+Interesting question of whose problem this is.  For corrected
+errors it's policy stuff that belongs in userspace, but for known
+memory failure, it might want to be in kernel.
 
-I think the current timing is perfect, and does not even conflict with
-mm folks, if they want to join.
+Shiju (+Cc) pointed me a the existing rasdaemon handling for corrected
+errors (statistics get too bad, so memory offlined)=20
+https://github.com/mchehab/rasdaemon/commit/9ae6b70effb8adc9572debc800b8e16=
+173f74bb8
 
-  Luis
+Poison detection via scrub though is reported via CPER Memory Error Section=
+ with
+"Scrub uncorrected error" set. That triggers apei handling. On
+x86 looks to be apei_mce_report_mem_error(). Also triggers
+the ghes_do_memory_failure_path() and ultimately memory_failure().
+
+Conveniently there was a patch fixing the sync path last year
+that includes info on what happens in async case.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Da70297d2213253853e95f5b49651f924990c6d3b
+
+"In addition, for aysnchronous errors, kernel will notify the
+process who owns the poisoned page by sending SIGBUS with BUS_MCERRR_A0
+in early kill mode."
+
+So I think the kernel should probably do the same for CXL poison
+error records when it gets them.
+
+Jonathan
+
