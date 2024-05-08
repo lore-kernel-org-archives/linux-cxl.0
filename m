@@ -1,136 +1,103 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4839AD6;
-	Wed,  8 May 2024 19:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0CFD534;
+	Wed,  8 May 2024 19:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715196403; cv=none; b=Vy2oDGxnc8G9xOw0bwoNXEenDhIimRXUWqGx2zv8p47/WkXEmwgtVopCadejdkcIRmmWhsxW9UXVuUiRgmuTYSW8zhgfP0fs05imOK3kKyJcnGIE0iyPlANBLuGwCkX+mcvf5NF60B1WYM+bDNqlt/faFPyLu0vGXYwNi22yE6g=
+	t=1715196625; cv=none; b=MbSclgfZ64FUQt50UX0N61su0DBjorZb1luk+uvpmfN2wTNvZ71mq/31mzdL1lP44tzcMYP2sv09PhxX3zYfyuFAVG5G5/nvP8TxXQMHQzd1srkzebiVbLypIV7lUwMKMRIPQfnAmMrHpp246O0ukdi1g2gnhcOnpq8bSsKa38k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715196403; c=relaxed/simple;
-	bh=AQ4aj6+Lyl30KBT589y0Wg9owBgdJw7PaStUeDorEOI=;
+	s=arc-20240116; t=1715196625; c=relaxed/simple;
+	bh=w5k+yxn9zC7TL2YBMW5JBZXfSMdrbXnisSZwM2mWRnI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CIfZGCUBroqe8ggeWgXYQwzn5pVpGEdiM5cvBBi3Wa2juUQtQRBsjJ+0td8XZRg12LlpzCDowkE7Xfpuv48b1wxXeZOJRmu5x47quoh/BnwtEtLmXAKyeBbrWPcgPG1LNnd+KUFwbbNWbYiHYVGvLTefN932Pz7dZfiZf2gFCAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fx6/uGoa; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=R+SZu2KcuQTKv7dd270QMwyZrxP4gSCsDjXnS62n1AVvVSuuQaddKsUKPeUkQ9dfJnI8eqXJM/cc1Nd5UOqqWAatvHqlDM/snSkaTUd8qSozbvh5O/SS+DM+AkfYSPNJ21zXV9QAQJQB0Gpwiv+Q2JTca2ROAepfQtT5WS6nIaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F5qR6IOK; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fx6/uGoa"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D6BC40E0177;
-	Wed,  8 May 2024 19:26:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FJBrvZdqr9td; Wed,  8 May 2024 19:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715196394; bh=MmARqp4eGq04zOmDOAjY3swGyB0SboUexwrUO+pYtb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fx6/uGoa2vQ7dKihmWFq8nD+Z7Wd+e9d/4odS4YYXLjbSee3L+gS6hSdpGMC4UQMu
-	 aqCpPUpuCkFK2/uubhzOWl1CnYB4wCz2aeD8RgqUEfO16eWC0hWu9wSx7T48I7XSGt
-	 nXesYrDt48iheoRGqCESLoUTOKf6BL8qh87w1ViWwttCPP+chEYhkc5U1L25f+7je7
-	 n91teh1XUP8tuTlH+udSxGMS0QmC/nGr8vgXTAtJy0DNeG1y8kkev3ZS9s7IidWXGN
-	 TW0Fk6Mj1el9/f049O5DwZmq1zEoz6yl7t49yocPaf0ilbbxqG+DuzCcFLDAwP3e4k
-	 eLU/02AS8X76gLrPv+ZdqC6iDZsar/B9qWiiXwKO7B3wXaQVBGXa3GwZ69iAX/7wH6
-	 tr+s75mn6L050ZWYGRnUjsENqEtqWK+VXifF15RP0na4dC00Z+aoxMFUpLavKBA7M9
-	 b25V9A8dCTJhew6e60OiD2d+5QdVlZ+p/eS/2h58MArcaxAuTSd61UxkVC57O7NmtY
-	 XxkQtXWTVnk3/0MCmsXDxu1khQM99af0zaHJQzAEOTNdjaXS1jVCez2s9/UPxlPdwD
-	 DThHPSggIeJJY1FAddNQkYuDNe+Pwp2nXHB/fDs9rrESC7mNy6QZ/rE9xaTys4edad
-	 d+KdXyZpBf72VCLFq0CV0IYE=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C481F40E01A3;
-	Wed,  8 May 2024 19:25:51 +0000 (UTC)
-Date: Wed, 8 May 2024 21:25:46 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F5qR6IOK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QWFSSKGbHla6mEPQaFgDSzLdUE17xeXPLekr1H3HReM=; b=F5qR6IOKs/Ad9M4W3Ci1MobTou
+	PkZ/eWYbJnPgKeKc/8oNakuG4g8yYzyh2b69xGCes0r1i3eSNdMeKAb1jCmi/PqkE/xmIPwE8zEvy
+	o0xX/OmtNr+H41aTN4xfv6DM3k/UTmx/wU91GVIO7+4bzmxO8tc5+3NCgtmuPUFFFOKXFgYiV5nTg
+	sZPYxRF7zo3KrssOHM9ALfNmk4qFYBj5ievIcn4HsQ1/5VTxeVzgeNKawBla864XsWX/tb8UyYO0U
+	MeVZU3EOfWxXKTp9cwIxWw1k4cy64rvN41s1vSZVPo5c5s9VKuS7A/vJG0AymlW5z6Be+6RjHOtNT
+	38NdCBTA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4mzV-0000000GklA-35eN;
+	Wed, 08 May 2024 19:30:13 +0000
+Date: Wed, 8 May 2024 12:30:13 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Adam Manzanares <a.manzanares@samsung.com>, Song Liu <song@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
 	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Fan Ni <fan.ni@samsung.com>,
 	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
 	"alison.schofield@intel.com" <alison.schofield@intel.com>,
 	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
+	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
 	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
-References: <20240419164720.1765-1-shiju.jose@huawei.com>
- <20240419164720.1765-2-shiju.jose@huawei.com>
- <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local>
- <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
- <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local>
- <e0ce36eb80054440ab877ccee4e606de@huawei.com>
- <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local>
- <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
+	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
+	"shradha.t@samsung.com" <shradha.t@samsung.com>,
+	Jim Harris <jim.harris@samsung.com>,
+	"mhocko@suse.com" <mhocko@suse.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
+Message-ID: <ZjvSxTvu_SHWVCVK@bombadil.infradead.org>
+References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
+ <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
+ <66396c1938726_2f63a29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <Zjp4DtkCFGOiFA6X@bombadil.infradead.org>
+ <48a26545-5d41-47f4-95a6-e55395b63c66@nmtadam.samsung>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
+In-Reply-To: <48a26545-5d41-47f4-95a6-e55395b63c66@nmtadam.samsung>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Wed, May 08, 2024 at 05:44:03PM +0000, Shiju Jose wrote:
-> I mean scrub subsystem module is not loaded and initialzed until
-> a dependent  device module is loaded and a device does not get
-> registered with the scrub subsystem on a machine which doesn't have
-> the corresponding scrub features.
+On Wed, May 08, 2024 at 06:38:36PM +0000, Adam Manzanares wrote:
+> On Tue, May 07, 2024 at 11:50:54AM -0700, Luis Chamberlain wrote:
+> > On Mon, May 06, 2024 at 04:47:37PM -0700, Dan Williams wrote:
+> > > For testing I think it is an "all of the above plus hardware testing if
+> > > possible" situation. My hope is to get to a point where CXL patchwork
+> > > lights up "S/W/F" columns with backend tests similar to NETDEV
+> > > patchwork:
+> > > 
+> > > https://patchwork.kernel.org/project/netdevbpf/list/
+> > > 
+> > > There are some initial discussions about how to do this likely we can
+> > > grab some folks to discuss more.
+> > > 
+> > > I think Paul and Song would be useful to have for this discussion.
+> > 
+> > I think everyone and their aunt wants this to happen for their subsystem,
+> > so a separate session to hear about how to get there would be nice.
+> 
+> +1
 
-Stop this rambling blabla please. This should *not* happen:
+Song, at last year's LSFMM you had mentioned the above work by ebpf folks
+with patchwork integration. While it is great, I am not sure if folks
+realize the amount of work required to get the above up and running and
+then to maintain it. So I was wondering if perhaps at this year's LSFMM
+if we can have a lightning talk or BoF to review just that and give
+people clarity about the effort required to do get this going and
+maintaining it. Its clear not only CXL folks would be interested, but
+also filesystems and likely block layer folks. Would you be up to help
+review that with folks with a lightning talk or BoF session? Would there
+be anyone else who can talk about that?
 
-# insmod ./memory_scrub.ko
-# echo $?
-0
-# lsmod
-Module                  Size  Used by
-memory_scrub           12288  0
-
-This is on a silly guest which has none of those dependent devices crap.
-
-Your scrub module should load only on a machine which has the hardware
-- not just for fun and on anything.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+  Luis
