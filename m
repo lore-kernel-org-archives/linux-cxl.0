@@ -1,269 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEE485626
-	for <linux-cxl@vger.kernel.org>; Wed,  8 May 2024 18:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4839AD6;
+	Wed,  8 May 2024 19:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715194082; cv=none; b=BkTayYoRihX1rsWGFCVB05W4KGWxgLegL4VAiWNcyVtzgtUkcv9OIqOuH2NVWbqtezbBRvSFKkHxJU4j7ZIR6SrCYgcX3suGYqb9ox/84qq+SiS0uE0ZmsnHYTKGF+6bJ0tyUxIZAsGKYpKpuVJKfeE5nBycQimAVUFYJ1SXh74=
+	t=1715196403; cv=none; b=Vy2oDGxnc8G9xOw0bwoNXEenDhIimRXUWqGx2zv8p47/WkXEmwgtVopCadejdkcIRmmWhsxW9UXVuUiRgmuTYSW8zhgfP0fs05imOK3kKyJcnGIE0iyPlANBLuGwCkX+mcvf5NF60B1WYM+bDNqlt/faFPyLu0vGXYwNi22yE6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715194082; c=relaxed/simple;
-	bh=8ZaTMIA2VWuUyCfHILHaPfFNIOx7N6yy+lPc9hfj9Uc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UzqwUOazM9T1C6WGMBaW2Ik3Q1DPtRFwkawVORmfDKb6Gpca9iXJPyGoWRPeGkIaKaOr+N6TsGEn+2Xj5bjYbj3tMatF7SNfJcC9q1HNVbIVP7HITyU3CDJ/VUT1jCbAfW6GxPlV4j39fZH8qtOTrE1LtVxQWArWQrYbb0gcg7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L7xk30A6; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715196403; c=relaxed/simple;
+	bh=AQ4aj6+Lyl30KBT589y0Wg9owBgdJw7PaStUeDorEOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CIfZGCUBroqe8ggeWgXYQwzn5pVpGEdiM5cvBBi3Wa2juUQtQRBsjJ+0td8XZRg12LlpzCDowkE7Xfpuv48b1wxXeZOJRmu5x47quoh/BnwtEtLmXAKyeBbrWPcgPG1LNnd+KUFwbbNWbYiHYVGvLTefN932Pz7dZfiZf2gFCAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fx6/uGoa; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L7xk30A6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715194081; x=1746730081;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8ZaTMIA2VWuUyCfHILHaPfFNIOx7N6yy+lPc9hfj9Uc=;
-  b=L7xk30A6sThTvpgFNZaqbYnRqhVN36sm0zWIEJH/YDN4hLZl15IAl0pV
-   /RXsTFbulw4VrqnSgGBGFhdDZPYEAsL+M1FF5egQBgS2/+Jz/bKg7WmBA
-   T0SCk60QP1LXIZhwKCOMfJ+THs2WXsZlsc1Z5XdI9/wqGbPcumORAzKwL
-   NqN9coa5T0dXzLtE+sjxePoQvSoefbD58yGPQDV5nm3tXqKFJC9fKEEaR
-   FfwHIo4EzqVAcJxznqYwrl8AVWscjbwprXynmJrtuke84opiArZfiLcKp
-   5eQZKFEKLkz02ApyXBar/tbsWVlplDksR1R2RkjMuOK43+4815bt8MQgi
-   g==;
-X-CSE-ConnectionGUID: o7+E0SoiTbiY7nl6pNgx+g==
-X-CSE-MsgGUID: I++c54G6TnuWU6NRGXTbxQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10928021"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="10928021"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:47:59 -0700
-X-CSE-ConnectionGUID: 2p3fZP8HSBSBmvf2ddqTGA==
-X-CSE-MsgGUID: hKCh3Am3S4y+eQwv9o/Fng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33811970"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.242.107])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:47:58 -0700
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fx6/uGoa"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D6BC40E0177;
+	Wed,  8 May 2024 19:26:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FJBrvZdqr9td; Wed,  8 May 2024 19:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715196394; bh=MmARqp4eGq04zOmDOAjY3swGyB0SboUexwrUO+pYtb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fx6/uGoa2vQ7dKihmWFq8nD+Z7Wd+e9d/4odS4YYXLjbSee3L+gS6hSdpGMC4UQMu
+	 aqCpPUpuCkFK2/uubhzOWl1CnYB4wCz2aeD8RgqUEfO16eWC0hWu9wSx7T48I7XSGt
+	 nXesYrDt48iheoRGqCESLoUTOKf6BL8qh87w1ViWwttCPP+chEYhkc5U1L25f+7je7
+	 n91teh1XUP8tuTlH+udSxGMS0QmC/nGr8vgXTAtJy0DNeG1y8kkev3ZS9s7IidWXGN
+	 TW0Fk6Mj1el9/f049O5DwZmq1zEoz6yl7t49yocPaf0ilbbxqG+DuzCcFLDAwP3e4k
+	 eLU/02AS8X76gLrPv+ZdqC6iDZsar/B9qWiiXwKO7B3wXaQVBGXa3GwZ69iAX/7wH6
+	 tr+s75mn6L050ZWYGRnUjsENqEtqWK+VXifF15RP0na4dC00Z+aoxMFUpLavKBA7M9
+	 b25V9A8dCTJhew6e60OiD2d+5QdVlZ+p/eS/2h58MArcaxAuTSd61UxkVC57O7NmtY
+	 XxkQtXWTVnk3/0MCmsXDxu1khQM99af0zaHJQzAEOTNdjaXS1jVCez2s9/UPxlPdwD
+	 DThHPSggIeJJY1FAddNQkYuDNe+Pwp2nXHB/fDs9rrESC7mNy6QZ/rE9xaTys4edad
+	 d+KdXyZpBf72VCLFq0CV0IYE=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C481F40E01A3;
+	Wed,  8 May 2024 19:25:51 +0000 (UTC)
+Date: Wed, 8 May 2024 21:25:46 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Shiju Jose <shiju.jose@huawei.com>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 4/4] cxl: Remove defunct code calculating host bridge target positions
-Date: Wed,  8 May 2024 11:47:53 -0700
-Message-Id: <2f2536ae494a158292951141c17881828e85fd23.1715192606.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1715192606.git.alison.schofield@intel.com>
-References: <cover.1715192606.git.alison.schofield@intel.com>
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
+References: <20240419164720.1765-1-shiju.jose@huawei.com>
+ <20240419164720.1765-2-shiju.jose@huawei.com>
+ <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local>
+ <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
+ <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local>
+ <e0ce36eb80054440ab877ccee4e606de@huawei.com>
+ <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local>
+ <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Wed, May 08, 2024 at 05:44:03PM +0000, Shiju Jose wrote:
+> I mean scrub subsystem module is not loaded and initialzed until
+> a dependent  device module is loaded and a device does not get
+> registered with the scrub subsystem on a machine which doesn't have
+> the corresponding scrub features.
 
-The CXL Spec 3.1 Table 9-22 requires that the BIOS populate the CFMWS
-target list in interleave target order. This means that the calculations
-the CXL driver added to determine positions when XOR math is in use,
-along with the entire XOR vs Modulo call back setup is not needed.
+Stop this rambling blabla please. This should *not* happen:
 
-A prior patch added a common method to verify positions.
+# insmod ./memory_scrub.ko
+# echo $?
+0
+# lsmod
+Module                  Size  Used by
+memory_scrub           12288  0
 
-Remove the now unused code related to the cxl_calc_hb_fn.
+This is on a silly guest which has none of those dependent devices crap.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/acpi.c      | 62 ++---------------------------------------
- drivers/cxl/core/port.c | 18 ------------
- drivers/cxl/cxl.h       |  6 ----
- 3 files changed, 3 insertions(+), 83 deletions(-)
+Your scrub module should load only on a machine which has the hardware
+- not just for fun and on anything.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 20488e7b09ac..25da55337834 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -22,57 +22,6 @@ static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
- 
--/*
-- * Find a targets entry (n) in the host bridge interleave list.
-- * CXL Specification 3.0 Table 9-22
-- */
--static int cxl_xor_calc_n(u64 hpa, struct cxl_cxims_data *cximsd, int iw,
--			  int ig)
--{
--	int i = 0, n = 0;
--	u8 eiw;
--
--	/* IW: 2,4,6,8,12,16 begin building 'n' using xormaps */
--	if (iw != 3) {
--		for (i = 0; i < cximsd->nr_maps; i++)
--			n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
--	}
--	/* IW: 3,6,12 add a modulo calculation to 'n' */
--	if (!is_power_of_2(iw)) {
--		if (ways_to_eiw(iw, &eiw))
--			return -1;
--		hpa &= GENMASK_ULL(51, eiw + ig);
--		n |= do_div(hpa, 3) << i;
--	}
--	return n;
--}
--
--static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
--{
--	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
--	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
--	struct cxl_decoder *cxld = &cxlsd->cxld;
--	int ig = cxld->interleave_granularity;
--	int iw = cxld->interleave_ways;
--	int n = 0;
--	u64 hpa;
--
--	if (dev_WARN_ONCE(&cxld->dev,
--			  cxld->interleave_ways != cxlsd->nr_targets,
--			  "misconfigured root decoder\n"))
--		return NULL;
--
--	hpa = cxlrd->res->start + pos * ig;
--
--	/* Entry (n) is 0 for no interleave (iw == 1) */
--	if (iw != 1)
--		n = cxl_xor_calc_n(hpa, cximsd, iw, ig);
--
--	if (n < 0)
--		return NULL;
--
--	return cxlrd->cxlsd.target[n];
--}
- 
- static u64 cxl_xor_translate(struct cxl_root_decoder *cxlrd, u64 hpa)
- {
-@@ -398,7 +347,6 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 	struct cxl_port *root_port = ctx->root_port;
- 	struct cxl_cxims_context cxims_ctx;
- 	struct device *dev = ctx->dev;
--	cxl_calc_hb_fn cxl_calc_hb;
- 	cxl_translate_fn translate;
- 	struct cxl_decoder *cxld;
- 	unsigned int ways, i, ig;
-@@ -427,17 +375,13 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 	if (rc)
- 		return rc;
- 
--	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO) {
--		cxl_calc_hb = cxl_hb_modulo;
-+	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
- 		translate = NULL;
--
--	} else {
--		cxl_calc_hb = cxl_hb_xor;
-+	else
- 		translate = cxl_xor_translate;
--	}
- 
- 	struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
--		cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb, translate);
-+		cxl_root_decoder_alloc(root_port, ways, translate);
- 	if (IS_ERR(cxlrd))
- 		return PTR_ERR(cxlrd);
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 32346c171892..9c0e4c6387aa 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1733,21 +1733,6 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
- 	return 0;
- }
- 
--struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos)
--{
--	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
--	struct cxl_decoder *cxld = &cxlsd->cxld;
--	int iw;
--
--	iw = cxld->interleave_ways;
--	if (dev_WARN_ONCE(&cxld->dev, iw != cxlsd->nr_targets,
--			  "misconfigured root decoder\n"))
--		return NULL;
--
--	return cxlrd->cxlsd.target[pos % iw];
--}
--EXPORT_SYMBOL_NS_GPL(cxl_hb_modulo, CXL);
--
- static struct lock_class_key cxl_decoder_key;
- 
- /**
-@@ -1807,7 +1792,6 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
-  * cxl_root_decoder_alloc - Allocate a root level decoder
-  * @port: owning CXL root of this decoder
-  * @nr_targets: static number of downstream targets
-- * @calc_hb: which host bridge covers the n'th position by granularity
-  * @translate: decoder specific address translation function
-  *
-  * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
-@@ -1817,7 +1801,6 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
-  */
- struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 						unsigned int nr_targets,
--						cxl_calc_hb_fn calc_hb,
- 						cxl_translate_fn translate)
- {
- 	struct cxl_root_decoder *cxlrd;
-@@ -1840,7 +1823,6 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 		return ERR_PTR(rc);
- 	}
- 
--	cxlrd->calc_hb = calc_hb;
- 	cxlrd->translate = translate;
- 	mutex_init(&cxlrd->range_lock);
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index e11155002213..68ac68506670 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -432,15 +432,12 @@ struct cxl_switch_decoder {
- };
- 
- struct cxl_root_decoder;
--typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxlrd,
--					    int pos);
- typedef u64 (*cxl_translate_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
- 
- /**
-  * struct cxl_root_decoder - Static platform CXL address decoder
-  * @res: host / parent resource for region allocations
-  * @region_id: region id for next region provisioning event
-- * @calc_hb: which host bridge covers the n'th position by granularity
-  * @translate: decoder specific address translation function
-  * @platform_data: platform specific configuration data
-  * @range_lock: sync region autodiscovery by address range
-@@ -450,7 +447,6 @@ typedef u64 (*cxl_translate_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
- struct cxl_root_decoder {
- 	struct resource *res;
- 	atomic_t region_id;
--	cxl_calc_hb_fn calc_hb;
- 	cxl_translate_fn translate;
- 	void *platform_data;
- 	struct mutex range_lock;
-@@ -776,9 +772,7 @@ bool is_switch_decoder(struct device *dev);
- bool is_endpoint_decoder(struct device *dev);
- struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 						unsigned int nr_targets,
--						cxl_calc_hb_fn calc_hb,
- 						cxl_translate_fn translate);
--struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos);
- struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
- 						    unsigned int nr_targets);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
 -- 
-2.37.3
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
