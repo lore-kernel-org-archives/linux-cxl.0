@@ -1,48 +1,53 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BC186621;
-	Wed,  8 May 2024 14:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEDC126F39;
+	Wed,  8 May 2024 15:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715179411; cv=none; b=rTCn2sAJUEaxqB/WjQ/Bnb88W8fGPGEvEPccr7BgnzY0+Uksd5j1t4AF2+AFvCPjxJPQwbaNw582C5r+fB/ImWG9aw8ehdNq2xMF7DPXPnxsb2Odbotl4b9SC7Qr5XzCFfGOzWH63xWk8mR+gxtLysLlyLFb0+xtRA6uMUeMCqs=
+	t=1715183066; cv=none; b=FNLSV4zHBOOHRcyUkYoHKmBWfLkZm5G2lj9X7NUh6u0LwmRqBRi6ytLVYmCs/0ulnLKJaw0VU84w3Xd+ykPA4NZyLG6SYRIn7zbDpBmYBkQBRKrR+VyDeJjNiKguj9Yq059SgxlEF0bSmgLmY4jXdbPTCsyn2f5QT5uog2U72rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715179411; c=relaxed/simple;
-	bh=5cvfBGfQ1cSzb6/XP5aipsaEXZK9rqKx7tJpGXt/ljM=;
+	s=arc-20240116; t=1715183066; c=relaxed/simple;
+	bh=fbytiBxk9aCvNLuZTIUm90QUNrs4BiaGpAjgwqM2sV8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNZwcJJZlhDqCs8LiIWxVVYSsH2/mInM6cHmhHR51pTwdTsgyXTCJ8yrfvyvFvZZ7C/o0DGftUTTL8iF+Q2Iqzsy7TqnjuGzI8mw9HbeVYhzZJN86k8tWb+81MOJ2UITRqlkzEdQqUm/OLujpzxWLndsGoLPeqI2bhvD+z93ce0=
+	 MIME-Version:Content-Type; b=ilOvVA8ExqePLF3Yn9vR/F95xZ4e6JrFli8WOYwJ9v51Rk2xMYOkyVSdvubQXX5rJWAD44KcLA3u3Blr5ZNBvaA56AEpiC5YRMZOy9qKEAtTrpWYZLpu0P31Hx7RqbYcBYR6aMClgXC0TDcYFYj2Nx1LLJtwhyu8W/poquau2ss=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZHqq6GpDz6JBD7;
-	Wed,  8 May 2024 22:40:23 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZKB14wvMz6K6Lg;
+	Wed,  8 May 2024 23:41:13 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 962D3140A36;
-	Wed,  8 May 2024 22:43:23 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B60CC1400D1;
+	Wed,  8 May 2024 23:44:19 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 8 May
- 2024 15:43:23 +0100
-Date: Wed, 8 May 2024 15:43:21 +0100
+ 2024 16:44:18 +0100
+Date: Wed, 8 May 2024 16:44:17 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik
-	<josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 00/26] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <20240508154321.00002073@Huawei.com>
-In-Reply-To: <66385b6eb5f54_25842129416@iweiny-mobl.notmuch>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-	<20240404184901.00002104@Huawei.com>
-	<6632d503f3ae5_e1f58294df@iweiny-mobl.notmuch>
-	<20240503102051.00004a99@Huawei.com>
-	<66385b6eb5f54_25842129416@iweiny-mobl.notmuch>
+To: Dongsheng Yang <dongsheng.yang@easystack.cn>
+CC: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+	Gregory Price <gregory.price@memverge.com>, <axboe@kernel.dk>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+Message-ID: <20240508164417.00006c69@Huawei.com>
+In-Reply-To: <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+	<66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+	<ZikhwAAIGFG0UU23@memverge.com>
+	<bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
+	<ZiuwyIVaKJq8aC6g@memverge.com>
+	<98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
+	<ZivS86BrfPHopkru@memverge.com>
+	<8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
+	<wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
+	<20240503105245.00003676@Huawei.com>
+	<5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
+	<20240508131125.00003d2b@Huawei.com>
+	<ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,272 +56,249 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun, 5 May 2024 21:24:14 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Wed, 8 May 2024 21:03:54 +0800
+Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
 
-> Jonathan Cameron wrote:
-> > On Wed, 1 May 2024 16:49:24 -0700
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> > > Jonathan Cameron wrote:  
-> > > >     
-> > > > > 
-> > > > > Fan Ni's latest v5 of Qemu DCD was used for testing.[2]    
-> > > > Hi Ira, Navneet.    
-> > > > > 
-> > > > > Remaining work:
-> > > > > 
-> > > > > 	1) Integrate the QoS work from Dave Jiang
-> > > > > 	2) Interleave support    
-> > > > 
-> > > > 
-> > > > More flag.  This one I think is potentially important and don't
-> > > > see any handling in here.    
-> > > 
-> > > Nope I admit I missed the spec requirement.
-> > >   
-> > > > 
-> > > > Whilst an FM could in theory be careful to avoid sending a
-> > > > sparse set of extents, if the device is managing the memory range
-> > > > (which is possible all it supports) and the FM issues an Initiate Dynamic
-> > > > Capacity Add with Free (again may be all device supports) then we
-> > > > can't stop the device issuing a bunch of sparse extents.
-> > > > 
-> > > > Now it won't be broken as such without this, but every time we
-> > > > accept the first extent that will implicitly reject the rest.
-> > > > That will look very ugly to an FM which has to poke potentially many
-> > > > times to successfully allocate memory to a host.    
-> > > 
-> > > This helps me to see see why the more bit is useful.
-> > >   
-> > > > 
-> > > > I also don't think it will be that hard to support, but maybe I'm
-> > > > missing something?     
-> > > 
-> > > Just a bunch of code and refactoring busy work.  ;-)  It's not rocket
-> > > science but does fundamentally change the arch again.
-> > >   
-> > > > 
-> > > > My first thought is it's just a loop in cxl_handle_dcd_add_extent()
-> > > > over a list of extents passed in then slightly more complex response
-> > > > generation.    
-> > > 
-> > > Not exactly 'just a loop'.  No matter how I work this out there is the
-> > > possibility that some extents get surfaced and then the kernel tries to
-> > > remove them because it should not have.  
-> > 
-> > Lets consider why it might need to back out.
-> > 1) Device sends an invalid set of extents - so maybe one in a later message
-> >    overlaps with an already allocated extent.   Device bug, handling can
-> >    be extremely inelegant - up to crashing the kernel.  Worst that happens
-> >    due to race is probably a poison storm / machine check fun?  Not our
-> >    responsibility to deal with something that broken (in my view!) Best effort
-> >    only.
-> > 
-> > 2) Host can't handle the extent for some reason and didn't know that until
-> >    later - can just reject the ones it can't handle.   
-> 
-> 3) Something in the host fails like ENOMEM on a later extent surface which
->    requires the host to back out of all of them.
-> 
-> 3 should be rare and I'm working toward it.  But it is possible this will
-> happen.
-> 
-> If you have a 'prepare' notify it should avoid most of these because the
-> extents will be mostly formed.  But there are some error paths on the actual
-> surface code path.
+> =E5=9C=A8 2024/5/8 =E6=98=9F=E6=9C=9F=E4=B8=89 =E4=B8=8B=E5=8D=88 8:11, J=
+onathan Cameron =E5=86=99=E9=81=93:
+> > On Wed, 8 May 2024 19:39:23 +0800
+> > Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
+> >  =20
+> >> =E5=9C=A8 2024/5/3 =E6=98=9F=E6=9C=9F=E4=BA=94 =E4=B8=8B=E5=8D=88 5:52=
+, Jonathan Cameron =E5=86=99=E9=81=93: =20
+> >>> On Sun, 28 Apr 2024 11:55:10 -0500
+> >>> John Groves <John@groves.net> wrote:
+> >>>     =20
+> >>>> On 24/04/28 01:47PM, Dongsheng Yang wrote: =20
+> >>>>>
+> >>>>>
+> >>>>> =E5=9C=A8 2024/4/27 =E6=98=9F=E6=9C=9F=E5=85=AD =E4=B8=8A=E5=8D=88 =
+12:14, Gregory Price =E5=86=99=E9=81=93: =20
+> >>>>>> On Fri, Apr 26, 2024 at 10:53:43PM +0800, Dongsheng Yang wrote: =20
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> =E5=9C=A8 2024/4/26 =E6=98=9F=E6=9C=9F=E4=BA=94 =E4=B8=8B=E5=8D=
+=88 9:48, Gregory Price =E5=86=99=E9=81=93: =20
+> >>>>>>>>        =20
+> >>>>>>>    =20
+> >>
+> >> ... =20
+> >>>>
+> >>>> Just to make things slightly gnarlier, the MESI cache coherency prot=
+ocol
+> >>>> allows a CPU to speculatively convert a line from exclusive to modif=
+ied,
+> >>>> meaning it's not clear as of now whether "occasional" clean write-ba=
+cks
+> >>>> can be avoided. Meaning those read-only mappings may be more importa=
+nt
+> >>>> than one might think. (Clean write-backs basically make it
+> >>>> impossible for software to manage cache coherency.) =20
+> >>>
+> >>> My understanding is that clean write backs are an implementation spec=
+ific
+> >>> issue that came as a surprise to some CPU arch folk I spoke to, we wi=
+ll
+> >>> need some path for a host to say if they can ever do that.
+> >>>
+> >>> Given this definitely effects one CPU vendor, maybe solutions that
+> >>> rely on this not happening are not suitable for upstream.
+> >>>
+> >>> Maybe this market will be important enough for that CPU vendor to stop
+> >>> doing it but if they do it will take a while...
+> >>>
+> >>> Flushing in general is as CPU architecture problem where each of the
+> >>> architectures needs to be clear what they do / specify that their
+> >>> licensees do.
+> >>>
+> >>> I'm with Dan on encouraging all memory vendors to do hardware coheren=
+ce! =20
+> >>
+> >> Hi Gregory, John, Jonathan and Dan:
+> >> 	Thanx for your information, they help a lot, and sorry for the late r=
+eply.
+> >>
+> >> After some internal discussions, I think we can design it as follows:
+> >>
+> >> (1) If the hardware implements cache coherence, then the software layer
+> >> doesn't need to consider this issue, and can perform read and write
+> >> operations directly. =20
+> >=20
+> > Agreed - this is one easier case.
+> >  =20
+> >>
+> >> (2) If the hardware doesn't implement cache coherence, we can consider=
+ a
+> >> DMA-like approach, where we check architectural features to determine =
+if
+> >> cache coherence is supported. This could be similar to
+> >> `dev_is_dma_coherent`. =20
+> >=20
+> > Ok. So this would combine host support checks with checking if the shar=
+ed
+> > memory on the device is multi host cache coherent (it will be single ho=
+st
+> > cache coherent which is what makes this messy) =20
+> >>
+> >> Additionally, if the architecture supports flushing and invalidating C=
+PU
+> >> caches (`CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE`,
+> >> `CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU`,
+> >> `CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL`), =20
+> >=20
+> > Those particular calls won't tell you much at all. They indicate that a=
+ flush
+> > can happen as far as a common point for DMA engines in the system. No
+> > information on whether there are caches beyond that point.
+> >  =20
+> >>
+> >> then we can handle cache coherence at the software layer.
+> >> (For the clean writeback issue, I think it may also require
+> >> clarification from the architecture, and how DMA handles the clean
+> >> writeback problem, which I haven't further checked.) =20
+> >=20
+> > I believe the relevant architecture only does IO coherent DMA so it is
+> > never a problem (unlike with multihost cache coherence).Hi Jonathan, =20
+>=20
+> let me provide an example,
+> In nvmeof-rdma, the `nvme_rdma_queue_rq` function places a request into=20
+> `req->sqe.dma`.
+>=20
+> (1) First, it calls `ib_dma_sync_single_for_cpu()`, which invalidates=20
+> the CPU cache:
+>=20
+>=20
+> ib_dma_sync_single_for_cpu(dev, sqe->dma,
+>                              sizeof(struct nvme_command), DMA_TO_DEVICE);
+>=20
+>=20
+> For example, on ARM64, this would call `arch_sync_dma_for_cpu`, followed=
+=20
+> by `dcache_inval_poc(start, start + size)`.
 
-True. If these are really small allocations then elegant handling feels like
-a nice to have rather than a requirement.
+Key here is the POC. It's a flush to the point of coherence of the local
+system.  It has no idea about interhost coherency and is not necessarily
+the DRAM (in CXL or otherwise).
 
-> 
-> >   
-> > > 
-> > > To be most safe the cxl core is going to have to make 2 round trips to the
-> > > cxl region layer for each extent.  The first determines if the extent is
-> > > valid and creates the extent as much as possible.  The second actually
-> > > surfaces the extents.  However, if the surface fails then you might not
-> > > get the extents back.  So now we are in an invalid state.  :-/  WARN and
-> > > continue I guess?!??!  
-> > 
-> > Yes. Orchestrator can decide how to handle - probably reboot server in as
-> > gentle a fashion as possible.
-> >   
-> 
-> Ok
-> 
-> >   
-> > > 
-> > > I think the safest way to handle this is add a new kernel notify event
-> > > called 'extent create' which stops short of surfacing the extent.  [I'm
-> > > not 100% sure how this is going to affect interleave.]
-> > > 
-> > > I think the safest logic for add is something like:
-> > > 
-> > > 	cxl_handle_dcd_add_event()
-> > > 		add_extent(squirl_list, extent);
-> > > 
-> > > 		if (more bit) /* wait for more */
-> > > 			return;
-> > > 
-> > > 		/* Create extents to hedge the bets against failure */
-> > > 		for_each(squirl_list)
-> > > 			if (notify 'extent create' != ok)
-> > > 				send_response(fail);
-> > > 				return;
-> > > 		
-> > > 		for_each(squirl_list)
-> > > 			if (notify 'surface' != ok)
-> > > 				/*
-> > > 				 * If the more bit was set, some extents
-> > > 				 * have been surfaced and now need to be
-> > > 				 * removed...
-> > > 				 *
-> > > 				 * Try to remove them and hope...
-> > > 				 */  
-> > 
-> > If we failed to surface them all another option is just tell the device
-> > that.   Responds with the extents that successfully surfaced and reject
-> > all others (or all after the one that failed?)  So for the lower layers
-> > send the device a response that says "thanks but I only took these ones"
-> > and for the upper layers pretend "I was only offered these ones"
-> >   
-> 
-> But doesn't that basically break the more bit?  I'm willing to do that as it is
-> easier for the host.
+If you are doing software coherence, those devices will plug into today's
+hosts and they have no idea that such a flush means pushing out into
+the CXL fabric and to the type 3 device.
 
-Don't think so.  We can always accept part of the offered extents in same
-way we can accept part of a single offered extent if we like.
-The more flag just means we only get to do that communication of what
-we accepted once. So we have to reply with what we want and don't set
-more flag in last message - thus indicating we don't want the rest.
-(making sure we also tidy up the log for the ones we rejected)
+>=20
+> (2) Setting up data related to the NVMe request.
+>=20
+> (3) then Calls `ib_dma_sync_single_for_device` to flush the CPU cache to=
+=20
+> DMA memory:
+>=20
+> ib_dma_sync_single_for_device(dev, sqe->dma,
+>                                  sizeof(struct nvme_command),=20
+> DMA_TO_DEVICE);
+>=20
+> Of course, if the hardware ensures cache coherency, the above operations=
+=20
+> are skipped. However, if the hardware does not guarantee cache=20
+> coherency, RDMA appears to ensure cache coherency through this method.
+>=20
+> In the RDMA scenario, we also face the issue of multi-host cache=20
+> coherence. so I'm thinking, can we adopt a similar approach in CXL=20
+> shared memory to achieve data sharing?
 
-> 
-> > > 				WARN_ON('surface extents failed');
-> > > 				for_each(squirl_list)
-> > > 					notify 'remove without response'
-> > > 				send_response(fail);
-> > > 				return;
-> > > 
-> > > 		send_response(squirl_list, accept);
-> > > 
-> > > The logic for remove is not changed AFAICS because the device must allow
-> > > for memory to be released at any time so the host is free to release each
-> > > of the extents individually despite the 'more' bit???  
-> > 
-> > Yes, but only after it accepted them - which needs to be done in one go.
-> > So you can't just send releases before that (the device will return an
-> > error and keep them in the pending list I think...)  
-> 
-> :-(  OK so this more bit is really more...  no pun intended.  Because this
-> breaks the entire model I have if I have to treat these as a huge atomic unit.
-> 
-> Let me think on that a bit more.  Obviously it is just tagging an iterating the
-> extents to find those associated with a more bit on accept.  But it will take
-> some time to code up.
+You don't face the same coherence issues, or at least not in the same way.
+In that case the coherence guarantees are actually to the RDMA NIC.
+It is guaranteed to see the clean data by the host - that may involve
+flushes to PoC.  A one time snapshot is then sent to readers on other
+hosts. If writes occur they are also guarantee to replace cached copies
+on this host - because there is well define guarantee of IO coherence
+or explicit cache maintenance to the PoC.
 
-The ability to give up at any point (though you need to read and clear the extents
-that are left) should get around a lot of the complexity but sure it's
-not a trivial thing to support.
+=20
+>=20
+> >>
+> >> (3) If the hardware doesn't implement cache coherence and the cpu
+> >> doesn't support the required CPU cache operations, then we can run in
+> >> nocache mode. =20
+> >=20
+> > I suspect that gets you no where either.  Never believe an architecture
+> > that provides a flag that says not to cache something.  That just means
+> > you should not be able to tell that it is cached - many many implementa=
+tions
+> > actually cache such accesses. =20
+>=20
+> Sigh, then that really makes thing difficult.
 
-I'd flip a 'something went wrong flag' on the the first failure, carry on the
-walk not surfacing anything else, but clearing the logs etc, then finally reply
-with what succeeded before that 'went wrong' flag was set.
+Yes. I think we are going to have to wait on architecture specific clarific=
+ations
+before any software coherent use case can be guaranteed to work beyond the =
+3.1 ones
+for temporal sharing (only one accessing host at a time) and read only shar=
+ing where
+writes are dropped anyway so clean write back is irrelevant beyond some noi=
+se in
+logs possibly (if they do get logged it is considered so rare we don't care=
+!).
 
-> 
-> >   
-> > >   
-> > > > 
-> > > > I don't want this to block getting initial DCD support in but it
-> > > > will be a bit ugly if we quickly support the more flag and then end
-> > > > up with just one kernel that an FM has to be careful with...    
-> > > 
-> > > I'm not sure which is worse.  Given your use case above it seems like the
-> > > more bit may be more important for 'dumb' devices which want to add
-> > > extents in blocks before responding to the FM.  Thus complicating the FM.
-> > > 
-> > > It seems 'smarter' devices which could figure this out (not requiring the
-> > > more bit) are the ones which will be developed later.  So it seems the use
-> > > case time line is the opposite of what we need right now.  
-> > 
-> > Once we hit shareable capacity (which the smarter devices will use) then
-> > this become the dominant approach to non contiguous allocations because
-> > you can't add extents with a given tag in multiple goes.  
-> 
-> Why not?  Sharing is going to require some synchronization with the
-> orchestrator and can't the user app just report it did not get all it's memory
-> and wait for more?  With the same tag?
+> >  =20
+> >>
+> >> CBD can initially support (3), and then transition to (1) when hardware
+> >> supports cache-coherency. If there's sufficient market demand, we can
+> >> also consider supporting (2). =20
+> > I'd assume only (3) works.  The others rely on assumptions I don't thin=
+k =20
+>=20
+> I guess you mean (1), the hardware cache-coherency way, right?
 
-Hmm. I was sure the spec said sharing did not allow addition of capacity after
-first creation, but now can't find it.  If you did do it though, fun
-occurs when you then pass it on to the second device because you have
-to do that via tag alone.
-
-I believe this is about simplification on the device side because
-offers of extents to other hosts are done by tag. If you allow extra ones
-to turn up there are race conditions to potentially deal with.
-
-7.6.7.6.5 Initiate Dynamic Capacity add.
-
-"Enable shared Access" Enable access to extents previously added to another
-host in a DC region that reports the "sharable" flag, as designated by the
-specific tag value.
-
-Note it is up to the device to offer the same capacity to all hosts for
-which this is issued.  There is no extent list or length provided.
-
-
-> 
-> > 
-> > So I'd expect the more flag to be more common not less over time.  
-> > > 
-> > > For that reason I'm inclined to try and get this in.
-> > >   
-> > 
-> > Great - but I'd not worry too much about bad effects if you get invalid
-> > lists from the device.  If the only option is shout and panic, then fine
-> > though I'd imagine we can do slightly better than that, so maybe warn
-> > extensively and don't let the region be used.  
-> 
-> It is not just about invalid lists.  It is that setting up the extent devices
-> may fail and waiting for the devices to be set up means that they are user
-> visible.  So that is the chicken and the egg...
-> 
-> This is unlikely and perhaps the partials should just be surfaced and accept
-> whatever works.  Then let it all tear down later if it does not all go.
-> 
-> But I was trying to honor the accept 'all or nothing' as that is what has been
-> stated as the requirement of the more bit.
-
-That's not quite true - for shared it is all or nothing (after first host anyway) but
-for other capacity it is 'accept X and reject Y in one go'.  You don't need to
-take it all but you only get one go to say what you did accept.
-
-> 
-> But it seems that it does not __have__ to be atomic.  Or at least the partials
-> can be cleaned up and all tried again.
-
-With care you can accept up to a point, then give those back if you like - or
-carry on and use them.
+Indeed - oops!
+Hardware coherency is the way to go, or a well defined and clearly document
+description of how to play with the various host architectures.
 
 Jonathan
 
-> 
-> Ira
-> 
-> > 
+
+>=20
+> :)
+> Thanx
+>=20
+> > you can rely on.
+> >=20
+> > Fun fun fun,
+> >=20
 > > Jonathan
-> >   
-> > > Ira
-> > >   
-> >   
-> 
-> 
-> 
+> >  =20
+> >>
+> >> How does this approach sound?
+> >>
+> >> Thanx =20
+> >>>
+> >>> J
+> >>>     =20
+> >>>>
+> >>>> Keep in mind that I don't think anybody has cxl 3 devices or CPUs ye=
+t, and
+> >>>> shared memory is not explicitly legal in cxl 2, so there are things =
+a cpu
+> >>>> could do (or not do) in a cxl 2 environment that are not illegal bec=
+ause
+> >>>> they should not be observable in a no-shared-memory environment.
+> >>>>
+> >>>> CBD is interesting work, though for some of the reasons above I'm so=
+mewhat
+> >>>> skeptical of shared memory as an IPC mechanism.
+> >>>>
+> >>>> Regards,
+> >>>> John
+> >>>>
+> >>>>
+> >>>>    =20
+> >>>
+> >>> .
+> >>>     =20
+> >=20
+> > .
+> >  =20
 
