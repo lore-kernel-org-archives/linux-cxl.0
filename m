@@ -1,187 +1,136 @@
-Received: from mail-m17229.xmail.ntesmail.com (mail-m17229.xmail.ntesmail.com [45.195.17.229])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C25653;
-	Thu,  9 May 2024 19:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534A3129E86;
+	Thu,  9 May 2024 20:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715281371; cv=none; b=gS5RyhTAP0IP17+deH6yEFXsfqsGgf2RNAZJDnbwXAijRn9SHbH3AGwPd+DrJsHNRR2q7jQfZk2KWbrliNvn+HTEFqxwxBy3IywJeFvt1GCRtHzzh6Rzzv9JwKnqjJjqJoUozOVusIA5u6kIc0xufq20pEVjdN92Rbueof8ENSs=
+	t=1715285048; cv=none; b=nmxdxCeLjrGBdGrNoDMeUNUbEobbe2jyFMgIUrhRMUYjLE/m0knETxk0p5mr6DySPHzCJO4f7MYx73MYPXKERC3zHPJjELBch6CVw+VaXPjUFWeUoDyDWkOBwJSwMXOBPPDwQbjx6Bp/qibpc5o14f9FW/ShUrn+kivXRvrWDKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715281371; c=relaxed/simple;
-	bh=4XnBz2lh+7YxriUGIom+RcfBIR64ijJxolblnDjagBQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CHchWtgmZK1r13FgNAiQNW2n+e5sa19I/i7JXuPU/TJT4shnsV4SCOurfsQ1Pcj5ZOz1IRGL0/SEYOsA4tiKjfiKNl+HWBvis6IF5kWHE8f1LPEfnN5HXzOSS8tBaO2rSwrXpZgZILv9EA4/MoRd0na1kWtUvfdu07zASnvvGds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 0F263860417;
-	Thu,  9 May 2024 21:03:43 +0800 (CST)
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
- Gregory Price <gregory.price@memverge.com>, axboe@kernel.dk,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
- <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
- <ZikhwAAIGFG0UU23@memverge.com>
- <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
- <ZiuwyIVaKJq8aC6g@memverge.com>
- <98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
- <ZivS86BrfPHopkru@memverge.com>
- <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
- <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
- <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
-Date: Thu, 9 May 2024 21:03:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1715285048; c=relaxed/simple;
+	bh=pxGd4CDP41NclFRXMdY20h/Qs6nREZrAp6NTkT2Uv7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN6Uw12v3erEj9MZTu42J4aTryrWpJuamyayVdVZ94VUnxvF/mHkjrsv7k8IKT52hdtIM742rShpNNQP8By1vlFiTiNXCdLYLcQeyUwOc+SKmmMXkILPH920Gau7CDnYR3KTCQmotBlZtbeOp7ImoT0/dAITKQeflPS2y/8Q4LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EdbGzmPW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EdbGzmPW"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2383C40E024D;
+	Thu,  9 May 2024 20:04:03 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id A2zAiRG3Y64e; Thu,  9 May 2024 20:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715285039; bh=hTxyMbW2JqF7oP0XGaZ6IM3jMn36gRHXPNQMDzL/rlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EdbGzmPWCDxbDlP5o2UbdaxZLhzj6Nqr8fbkFRCtQrLqH1wLYuXYQ7H6KJvdguKbD
+	 LQOkmBBKv3kVyIYOm+lBFqFfEIR8ClWe37eivEmyWCE12wB5UulxQ0qSBcMkS5XM64
+	 a4JggIPXNmrdZMWXvBTF19mUGyf67zJRTli/VY6OCU5htm5jh8jouPYCklLGvp1LaV
+	 mHxhO5BV/bEYqZFcbsdWOuWWiP31PcNg6HCv/TKCMMvaMLm0vleYB/JOtxOG6DTJEb
+	 yri9poMX/YwXG5AH/Cnro5m3Vp2FB/a+D4hQmVhQuZ0ffiUvbahAhrUAq0DuuU6oE6
+	 pXKAIcMttmKUrDMN47lno4ZTeU+DY3kRgzD3Riwhos1o58MyNcQ3AVsguPQmD2sjMp
+	 RAG8UDIweLAzM4G0P62VSWvXaJpAImHHMi8qCEiOJQ4VIg7qgVS8uXdkn73JoYN40H
+	 X8tqQIFeYEqnCWvOPRtGh1BnHjRO0SiOvoAOg7niSj5lGZpMSDrEPcs5dutbD7f2CQ
+	 CYDArNPhZCqFjtu8GUBRIcHLBjFzeXRvAnXsAWpa9s8B/2C8PRyZCLZ0nmC+dVAeDg
+	 0LyOCWhwm89Qyg6PH923mA0yyekwqjlxOghpP8E4cQqLp06WlRJMQlkwjSKAUg7c1z
+	 UizAsoNJPKZ2Z0FI+jqWOnWw=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1242840E0249;
+	Thu,  9 May 2024 20:03:13 +0000 (UTC)
+Date: Thu, 9 May 2024 22:03:06 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Shiju Jose <shiju.jose@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
+References: <20240419164720.1765-2-shiju.jose@huawei.com>
+ <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local>
+ <63fdbe26b51f4b7c859bfb30287c8673@huawei.com>
+ <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local>
+ <e0ce36eb80054440ab877ccee4e606de@huawei.com>
+ <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local>
+ <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
+ <20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
+ <20240509101939.0000263a@Huawei.com>
+ <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240509132134.00000ae9@Huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGUNNVh1KTB0eSx8ZS0wZSFUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f5d73d560023ckunm0f263860417
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6Fjo*FDc*EUo6Aj1JLj5J
-	GggwC0JVSlVKTEpOSU5CQ0lIQ0xIVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTE5JTjcG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
 
+On Thu, May 09, 2024 at 05:52:18PM +0200, Borislav Petkov wrote:
+> Are you arguing for the nonsensical "it should load" case because it
+> is simply easier this way? How hard is that "jump through hoops" thing
+> anyway?
 
+Let's see: the following patches add something called
+GET_SUPPORTED_FEATURES which is used to detect whether the system has
+patrol scrub functionality etc.
 
-在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
-> On Thu, 9 May 2024 19:24:28 +0800
-> Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
-> 
-...
->>> Yes. I think we are going to have to wait on architecture specific clarifications
->>> before any software coherent use case can be guaranteed to work beyond the 3.1 ones
->>> for temporal sharing (only one accessing host at a time) and read only sharing where
->>> writes are dropped anyway so clean write back is irrelevant beyond some noise in
->>> logs possibly (if they do get logged it is considered so rare we don't care!).
->>
->> Hi Jonathan,
->> 	Allow me to discuss further. As described in CXL 3.1:
->> ```
->> Software-managed coherency schemes are complicated by any host or device
->> whose caching agents generate clean writebacks. A “No Clean Writebacks”
->> capability bit is available for a host in the CXL System Description
->> Structure (CSDS; see Section 9.18.1.6) or for a device in the DVSEC CXL
->> Capability2 register (see Section 8.1.3.7).
->> ```
->>
->> If we check and find that the "No clean writeback" bit in both CSDS and
->> DVSEC is set, can we then assume that software cache-coherency is
->> feasible, as outlined below:
->>
->> (1) Both the writer and reader ensure cache flushes. Since there are no
->> clean writebacks, there will be no background data writes.
->>
->> (2) The writer writes data to shared memory and then executes a cache
->> flush. If we trust the "No clean writeback" bit, we can assume that the
->> data in shared memory is coherent.
->>
->> (3) Before reading the data, the reader performs cache invalidation.
->> Since there are no clean writebacks, this invalidation operation will
->> not destroy the data written by the writer. Therefore, the data read by
->> the reader should be the data written by the writer, and since the
->> writer's cache is clean, it will not write data to shared memory during
->> the reader's reading process. Additionally, data integrity can be ensured.
->>
->> The first step for CBD should depend on hardware cache coherence, which
->> is clearer and more feasible. Here, I am just exploring the possibility
->> of software cache coherence, not insisting on implementing software
->> cache-coherency right away. :)
-> 
-> Yes, if a platform sets that bit, you 'should' be fine.  What exact flush
-> is needed is architecture specific however and the DMA related ones
-> may not be sufficient. I'd keep an eye open for arch doc update from the
-> various vendors.
-> 
-> Also, the architecture that motivated that bit existing is a 'moderately
-> large' chip vendor so I'd go so far as to say adoption will be limited
-> unless they resolve that in a future implementation :)
+Then there's ras2_acpi_init() which checks for a RAS2 ACPI table.
 
-Great, I think we've had a good discussion and reached a consensus on 
-this issue. The remaining aspect will depend on hardware updates. Thank 
-you for the information, that helps a lot.
+Are you saying that checking for those two things in the init function
+is jumping through hoops?
 
-Thanx
-> 
-> Jonathan
-> 
->>
->> Thanx
->>>    
->>>>>       
->>>>>>
->>>>>> CBD can initially support (3), and then transition to (1) when hardware
->>>>>> supports cache-coherency. If there's sufficient market demand, we can
->>>>>> also consider supporting (2).
->>>>> I'd assume only (3) works.  The others rely on assumptions I don't think
->>>>
->>>> I guess you mean (1), the hardware cache-coherency way, right?
->>>
->>> Indeed - oops!
->>> Hardware coherency is the way to go, or a well defined and clearly document
->>> description of how to play with the various host architectures.
->>>
->>> Jonathan
->>>
->>>    
->>>>
->>>> :)
->>>> Thanx
->>>>   
->>>>> you can rely on.
->>>>>
->>>>> Fun fun fun,
->>>>>
->>>>> Jonathan
->>>>>       
->>>>>>
->>>>>> How does this approach sound?
->>>>>>
->>>>>> Thanx
->>>>>>>
->>>>>>> J
->>>>>>>          
->>>>>>>>
->>>>>>>> Keep in mind that I don't think anybody has cxl 3 devices or CPUs yet, and
->>>>>>>> shared memory is not explicitly legal in cxl 2, so there are things a cpu
->>>>>>>> could do (or not do) in a cxl 2 environment that are not illegal because
->>>>>>>> they should not be observable in a no-shared-memory environment.
->>>>>>>>
->>>>>>>> CBD is interesting work, though for some of the reasons above I'm somewhat
->>>>>>>> skeptical of shared memory as an IPC mechanism.
->>>>>>>>
->>>>>>>> Regards,
->>>>>>>> John
->>>>>>>>
->>>>>>>>
->>>>>>>>         
->>>>>>>
->>>>>>> .
->>>>>>>          
->>>>>
->>>>> .
->>>>>       
->>>
->>>    
-> 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
