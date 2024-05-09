@@ -1,100 +1,203 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246FD12E1C4
-	for <linux-cxl@vger.kernel.org>; Thu,  9 May 2024 08:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FB2128396;
+	Thu,  9 May 2024 08:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715243783; cv=none; b=ER5OHRxT1gRKpxp/3jnPTMlqBLfGobeFnU2AXdp60c2xMNTVJZJCSGYwLAoMKibkAkCZJYF5O4MilHrnM9EFeXNpVhcOSa6l96S64MMXd/ZqiHfsifTn3f6rgjTitv1pAxolp2M0KD6LMTy7K8TpuQ4nKo3Pl2OLyhTfsRWElmE=
+	t=1715244684; cv=none; b=kHwplKIhuX6UJmPrGW1bj1WJqISoY2QgMQJ6U0Mr7jpgPVOCSeLcqD0SlS+7zeaSPAlWpeiQXA0Iah/cS5C7svYjXBmdPBVzGmGTFcwQlUs77HKAE8Sr8V9NWhAGCkr/6FjDL7IId3n7BwjT8bcf6AMIsITWj2axU+yvlsp46MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715243783; c=relaxed/simple;
-	bh=6BimscIfEVy+rigGE22N8TRVH9Ai1yIz3OtT7I8wsVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OcHjALcOzGYO/69JaprzAohdutvfVez8oxj/9OY/XIU3fPQP3vXsI4MqSPMWR0SypV4ezJ0JLgxkBaKNYcBR8T4YG5LCoVqODW1/5MUPzjmEpwTRhEx18K36waBIqGFJIC08FnIsROHZddkM+KCV2qZs7kTV/QfTaayk2ELYRtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAnCQbxijxmyPsYAQ--.5778S2;
-	Thu, 09 May 2024 16:36:01 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBn15fbijxmX4IAAA--.1030S2;
-	Thu, 09 May 2024 16:35:55 +0800 (CST)
-Date: Thu, 9 May 2024 16:35:34 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-Subject: Re: CXL numa error on arm64 qemu virt machine
-Message-ID: <ZjyK1tI0TtbAKhmh@phytium.com.cn>
-Reply-To: 20240508130252.00006367@huawei.com
-References: <20240508080051.3756934-1-wangyuquan1236@phytium.com.cn>
- <20240508130252.00006367@Huawei.com>
+	s=arc-20240116; t=1715244684; c=relaxed/simple;
+	bh=UuNlm3kDCVruMLI+aaRK5geLMaD9c7v7/gptoRxJydY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h8hcvvW+ThRUAnkPdSGOkV7OWLzrn1qkWppvZjwLC+Zs8xMPubIN24DrX08mhT0pLop8KrJE9aZdRWIWBmWhGllOAWxZ1n/tyn8tlcTIAEGlKDmGXP5XZJLqI1VZrBtIMfBND+sBucFF0r9TbxyhZE2x7JOd5RtscmeJdOd8f04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RMyNR/Ec; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RMyNR/Ec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715244682; x=1746780682;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UuNlm3kDCVruMLI+aaRK5geLMaD9c7v7/gptoRxJydY=;
+  b=RMyNR/EcVFQOxXyLFLRmBurfxGOC8YkGdVZ1LAonFcHqAHwJ8r2Lzq8d
+   e9n3Uu/FsBO8zxXtL5fFDBzXGQWT1om9bEeEcFyHjBxRl0nsvP9IbmwMQ
+   2hVepN1FkUb0biScrIgm8KJih6waZagSwbF+Nbci9r9+Vd9K+miFxzao1
+   NdnApebteGmI4Cr/I5njbSdJAUCp+4thgt+QZiaaVvMWFx7xZE/7hKAsa
+   T++SUQ0BGEYpjYau7xQiXV3vfEbm6J9wYAl4i0JKQug/Q3yD8spTCY5Xm
+   rMiESZ22if64vrJO8yqYTuDycZY5s3mVHh5USxLUfbfUr3Qb1K9gk1q3W
+   A==;
+X-CSE-ConnectionGUID: Q6Yonj0MQHCS+l+XbYm81Q==
+X-CSE-MsgGUID: +ANTXSGVQzO1UH5wRBMG/Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14103950"
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="14103950"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:21 -0700
+X-CSE-ConnectionGUID: 6b+qMRU8QoKFRQ8UJLIHDw==
+X-CSE-MsgGUID: yt2Ktp1zSJqdCQpMpq1diw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="29060665"
+Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:14 -0700
+From: Zhenzhong Duan <zhenzhong.duan@intel.com>
+To: linux-pci@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	james.morse@arm.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	bhelgaas@google.com,
+	helgaas@kernel.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	linmiaohe@huawei.com,
+	shiju.jose@huawei.com,
+	adam.c.preble@intel.com,
+	lukas@wunner.de,
+	Smita.KoralahalliChannabasappa@amd.com,
+	rrichter@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	erwin.tsaur@intel.com,
+	sathyanarayanan.kuppuswamy@intel.com,
+	dan.j.williams@intel.com,
+	feiting.wanyan@intel.com,
+	yudong.wang@intel.com,
+	chao.p.peng@intel.com,
+	qingshun.wang@linux.intel.com,
+	Zhenzhong Duan <zhenzhong.duan@intel.com>
+Subject: [PATCH v4 0/3] PCI/AER: Handle Advisory Non-Fatal error
+Date: Thu,  9 May 2024 16:48:30 +0800
+Message-Id: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508130252.00006367@Huawei.com>
-X-CM-TRANSID:AQAAfwBn15fbijxmX4IAAA--.1030S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWY70+QC3QABs0
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CrW8GFWkZF1ktw1xuF45Wrg_yoW8tw4fpF
-	4jgFn3CrWkJr1xKryktw43Jr15Awn5Ca1DWFyfGw18Arn8Xr1DJw17Kw1agF9xC3yfAw42
-	qFyDtr1qya1DZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 08, 2024 at 01:02:52PM +0100, Jonathan Cameron wrote:
-> 
-> > [    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x40000000-0xbfffffff]
-> > [    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0xc0000000-0x13fffffff]
-> > [    0.000000] ACPI: Unknown target node for memory at 0x10000000000, assuming node 0
-> > [    0.000000] NUMA: Warning: invalid memblk node 16 [mem 0x0000000004000000-0x0000000007ffffff]
-> > [    0.000000] NUMA: Faking a node at [mem 0x0000000004000000-0x000000013fffffff]
-> > [    0.000000] NUMA: NODE_DATA [mem 0x13f7f89c0-0x13f7fafff]
-> > 
-> > Previous discussion: https://lore.kernel.org/linux-cxl/20231011150620.0000212a@Huawei.com/
-> > 
-> > root@debian-bullseye-arm64:~# cxl create-region -d decoder0.0 -t ram
-> > [   68.653873] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
-> > [   68.660568] Unknown target node for memory at 0x10000000000, assuming node 0
-> 
-> You need a load of kernel changes for NUMA nodes to work correctly with
-> CXL memory on arm64 platforms.  I have some working code but need to tidy
-> up a few corners that came up in an internal review earlier this week.
-> 
-> I have some travel coming up so may take a week or so to get those out.
-> 
-> Curiously that invalid memblk has nothing to do with the CXL fixed memory window
-> Could you check if that is happening for you without the CXL patches?
-> 
+Hi,
 
-Thanks.
+This is a relay work of Qingshun's v2 [1], but changed to focus on ANFE
+processing as subject suggests and drops trace-event for now. I think it's
+a bit heavy to do extra IOes to get PCIe registers only for trace purpose
+and not see it a community request for now.
 
-I have checked it, the problem is caused by my bios firmware file. I
-change the bios file and the numa topology can works.
+According to PCIe Base Specification Revision 6.1, Sections 6.2.3.2.4 and
+6.2.4.3, certain uncorrectable errors will signal ERR_COR instead of
+ERR_NONFATAL, logged as Advisory Non-Fatal Error(ANFE), and set bits in
+both Correctable Error(CE) Status register and Uncorrectable Error(UE)
+Status register. Currently, when handling AER events the kernel will only
+look at CE status or UE status, but never both. In the ANFE case, bits set
+in the UE status register will not be reported and cleared until the next
+FE/NFE arrives.
 
-BTW, if it is convenient, could you help to post the link of the patches of CXL 
-memory NUMA nodes on arm64 platforms?
+For instance, previously, when the kernel receives an ANFE with Poisoned
+TLP in OS native AER mode, only the status of CE will be reported and
+cleared:
 
-> 
-> Whilst it doesn't work yet (because of missing kernel support)
-> you'll need something that looks more like the generic ports test added in 
-> https://gitlab.com/jic23/qemu/-/commit/6589c527920ba22fe0923b60b58d33a8e9fd371e
-> 
-> Most importantly
-> -numa node,nodeid=2 -object acpi-generic-port,id=gp0,pci-bus-cxl.1,node=2
-> + the bits setting distances etc.  Note CXL memory does not provide SLIT like
-> data at the moment, so the test above won't help you identify if it is correctly
-> set up.  That's a gap in general in the kernel support. Whilst we'd love
-> it if everyone moved to hmat derived information we may need to provide
-> some fallback.
-> 
-> Jonathan
-> 
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
 
-Many thanks
-Yuquan
+If the kernel receives a Malformed TLP after that, two UEs will be
+reported, which is unexpected. The Malformed TLP Header is lost since
+the previous ANFE gated the TLP header logs:
+
+  PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00041000/00180020
+     [12] TLP                    (First)
+     [18] MalfTLP
+
+To handle this case properly, calculate potential ANFE related status bits
+and save in aer_err_info. Use this information to determine the status bits
+that need to be cleared.
+
+Now, for the previous scenario, both CE status and related UE status will
+be reported and cleared after ANFE:
+
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [18] TLP
+
+Note:
+checkpatch.pl will produce following warnings on PATCH2/3:
+
+WARNING: 'UE' may be misspelled - perhaps 'USE'?
+#22:
+uncorrectable error(UE) status should be cleared. However, there is no
+
+...similar warnings omitted...
+
+This is a false-positive, so not fixed.
+
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#10:
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+
+...similar warnings omitted...
+
+For readability reasons, these warnings are not fixed.
+
+
+
+[1] https://lore.kernel.org/linux-pci/20240125062802.50819-1-qingshun.wang@linux.intel.com
+
+Thanks
+Qingshun, Zhenzhong
+
+Changelog:
+v4:
+  - Fix a race in anfe_get_uc_status() (Jonathan)
+  - Add a comment to explain side effect of processing ANFE as NFE (Jonathan)
+  - Drop the check for PCI_EXP_DEVSTA_NFED
+
+v3:
+  - Split ANFE print and processing to two patches (Bjorn)
+  - Simplify ANFE handling, drop trace event
+  - Polish comments and patch description
+  - Add Tested-by
+
+v2:
+  - Reference to the latest PCIe Specification in both commit messages
+    and comments, as suggested by Bjorn Helgaas.
+  - Describe the reason for storing additional information in
+    aer_err_info in the commit message of PATCH 1, as suggested by Bjorn
+    Helgaas.
+  - Add more details of behavior changes in the commit message of PATCH
+    2, as suggested by Bjorn Helgaas.
+
+v3: https://lore.kernel.org/lkml/20240417061407.1491361-1-zhenzhong.duan@intel.com
+v2: https://lore.kernel.org/linux-pci/20240125062802.50819-1-qingshun.wang@linux.intel.com
+v1: https://lore.kernel.org/linux-pci/20240111073227.31488-1-qingshun.wang@linux.intel.com
+
+Zhenzhong Duan (3):
+  PCI/AER: Store UNCOR_STATUS bits that might be ANFE in aer_err_info
+  PCI/AER: Print UNCOR_STATUS bits that might be ANFE
+  PCI/AER: Clear UNCOR_STATUS bits that might be ANFE
+
+ drivers/pci/pci.h      |  1 +
+ drivers/pci/pcie/aer.c | 75 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 75 insertions(+), 1 deletion(-)
+
+-- 
+2.34.1
 
