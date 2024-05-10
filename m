@@ -1,148 +1,327 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EF715ECDF;
-	Fri, 10 May 2024 07:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3461607A3;
+	Fri, 10 May 2024 09:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715326571; cv=none; b=t69C77LAtPA+1nS8E0pv3xh+nXizoFbKkugFJYXxbWCn28bg/9bV5XYfXIVFiJvbMTLKPuG1L5R7JSOWk4RNLyWp0uAL2zW2Q9rSUxk/bm4sB5SSEdKK6eBgL+0vyhhCHxZ/TfJdio+zOdP3ws17ecSramh4ItjbxxCv6AFrXmI=
+	t=1715331799; cv=none; b=uJOC1Buw+H/JVFVrFL+CkTB6Xe67HwgoYjwzsNXzPnWNglAqqeeCZ5vv09SxWgVpRTxzUmzhqfqe7+YXuCuegoNH8tvQG0dXSkhT266j/WCBXKqy4Chve6LAeHZtZMZ2N4Sbj9i2p6Ngu6pGmh7Sgi/jRDDSElIgMA9aDgvKAAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715326571; c=relaxed/simple;
-	bh=hOdurdp2lVjX4G1Rzv+cZ224UyrXPp8qXi9rHu/n88k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uP3Iy9IfpYH0aFBZ0DiPaxloCbddGpXppxkv1ACqr7pvdS/1iuHFXdCAElgnPVWSkDyLe+MRX6vf78fK0Yr3gF28NeoytYaTm4Fq3EgWXtiBIDw+T28OYFD3kNivmcok2DdzVPDShkcrEDdQo4uzvXP8g3SwmNOgwZOi4RsFguc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=dvdzCCD5; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="dvdzCCD5"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1715326569; x=1746862569;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hOdurdp2lVjX4G1Rzv+cZ224UyrXPp8qXi9rHu/n88k=;
-  b=dvdzCCD5C5EkjvaSS3ppnfYzU+02w/b+Wq0JSi0R6JlhIrHCqItLB/4p
-   Q0IKapF6tJzu8ACeWEFGeHNjV8Ksn7N0PCqDgBRdOoA5JkHsFoD4QBxBg
-   BOZk37S/+X8T/e7ObbrgrlsXd0ho27258SxKiOBDljbSOK/LsPv5MsiMV
-   mSPWTNWu3HW7O//r6/uyIofwbQNcoNAOYmCDr/riTlr9Xyc3sh/vvwqU6
-   KCaDuq+G4atbAOQmRexJAvtYXJOkSnMhlY8LNUqpU7VhLu+DQ+i3fhn7e
-   XoxIxNypN5lz6UCC5kgxftT+1oLbU9wuoypqVMFQXaNA5t3FR48zqMlbe
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="157886733"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712588400"; 
-   d="scan'208";a="157886733"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 16:34:46 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id E65A0C2AC5;
-	Fri, 10 May 2024 16:34:43 +0900 (JST)
-Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 2D6FFEA195;
-	Fri, 10 May 2024 16:34:43 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 019B7204F433;
-	Fri, 10 May 2024 16:34:42 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: kobayashi.da-06@jp.fujitsu.com,
-	linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	linux-pci@vger.kernel.org,
-	mj@ucw.cz,
-	dan.j.williams@intel.com,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v7 1/2] cxl/core/regs: Add rcd_regs initialization at __rcrb_to_component()
-Date: Fri, 10 May 2024 16:37:09 +0900
-Message-ID: <20240510073710.98953-2-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240510073710.98953-1-kobayashi.da-06@fujitsu.com>
-References: <20240510073710.98953-1-kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1715331799; c=relaxed/simple;
+	bh=glmPpNnjWxfvpn59tClr8Pv6XgRUAHoo+HWFtiSoBv8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JmHUeWSvylNOt8z17V6/g9zn/X11laM/nX72fKfK0spASS05PyQaTmPjXN25rXUTeFLIpVHaWymv21BcLHtH1tm53zWBAraN1kizMZQ0t1CoycyoUxH6VGElmNg+WVAVvw9Kg61e80FNyOi81wt6LpUbPper8YvY68lRME3+NDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VbNBB6ypqz6JBH0;
+	Fri, 10 May 2024 17:00:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B46771400D4;
+	Fri, 10 May 2024 17:03:07 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 10 May
+ 2024 10:03:06 +0100
+Date: Fri, 10 May 2024 10:03:05 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <shiju.jose@huawei.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<wbs@os.amperecomputing.com>, <nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240510100305.00000a2b@Huawei.com>
+In-Reply-To: <663d448c2ef3_1c0a1929453@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240419164720.1765-1-shiju.jose@huawei.com>
+	<20240419164720.1765-2-shiju.jose@huawei.com>
+	<663d448c2ef3_1c0a1929453@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add rcd_regs and its initialization at __rcrb_to_component() to cache
-the cxl1.1 device link status information. Reduce access to the memory
-map area where the RCRB is located by caching the cxl1.1 device
-link status information.
+On Thu, 9 May 2024 14:47:56 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/core/core.h |  4 ++++
- drivers/cxl/core/regs.c | 16 ++++++++++++++++
- drivers/cxl/cxl.h       |  3 +++
- 3 files changed, 23 insertions(+)
+> shiju.jose@ wrote:
+> > From: Shiju Jose <shiju.jose@huawei.com>
+> >=20
+> > Add scrub subsystem supports configuring the memory scrubbers
+> > in the system. The scrub subsystem provides the interface for
+> > registering the scrub devices. The scrub control attributes
+> > are provided to the user in /sys/class/ras/rasX/scrub
+> >=20
+> > Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> > ---
+> >  .../ABI/testing/sysfs-class-scrub-configure   |  47 +++
+> >  drivers/ras/Kconfig                           |   7 +
+> >  drivers/ras/Makefile                          |   1 +
+> >  drivers/ras/memory_scrub.c                    | 271 ++++++++++++++++++
+> >  include/linux/memory_scrub.h                  |  37 +++
+> >  5 files changed, 363 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configu=
+re
+> >  create mode 100755 drivers/ras/memory_scrub.c
+> >  create mode 100755 include/linux/memory_scrub.h
+> >=20
+> > diff --git a/Documentation/ABI/testing/sysfs-class-scrub-configure b/Do=
+cumentation/ABI/testing/sysfs-class-scrub-configure
+> > new file mode 100644
+> > index 000000000000..3ed77dbb00ad
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-class-scrub-configure
+> > @@ -0,0 +1,47 @@
+> > +What:		/sys/class/ras/
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		The ras/ class subdirectory belongs to the
+> > +		common ras features such as scrub subsystem.=20
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..42e3483b4a14 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -75,6 +75,10 @@ resource_size_t __rcrb_to_component(struct device *dev,
- 				    enum cxl_rcrb which);
- u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
- 
-+#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-+
- extern struct rw_semaphore cxl_dpa_rwsem;
- extern struct rw_semaphore cxl_region_rwsem;
- 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 372786f80955..1ad58c464488 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	u32 bar0, bar1;
- 	u16 cmd;
- 	u32 id;
-+	u16 offset;
-+	u32 cap_hdr;
- 
- 	if (which == CXL_RCRB_UPSTREAM)
- 		rcrb += SZ_4K;
-@@ -537,6 +539,20 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	cmd = readw(addr + PCI_COMMAND);
- 	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
- 	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-+	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-+	cap_hdr = readl(addr + offset);
-+	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-+		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-+		if (offset == 0 || offset > SZ_4K)
-+			break;
-+		cap_hdr = readl(addr + offset);
-+	}
-+	if (offset) {
-+		ri->rcd_lnkcap = readl(addr + offset + PCI_EXP_LNKCAP);
-+		ri->rcd_lnkctrl = readl(addr + offset + PCI_EXP_LNKCTL);
-+		ri->rcd_lnkstatus = readl(addr + offset + PCI_EXP_LNKSTA);
-+	}
-+
- 	iounmap(addr);
- 	release_mem_region(rcrb, SZ_4K);
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..808818ccc255 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -646,6 +646,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
- 
- struct cxl_rcrb_info {
- 	resource_size_t base;
-+	u16 rcd_lnkstatus;
-+	u16 rcd_lnkctrl;
-+	u32 rcd_lnkcap;
- 	u16 aer_cap;
- };
- 
--- 
-2.44.0
+Hi Dan,
+=20
+>=20
+> Why create "ras" class versus just a "srcub" class? I am otherwise not
+> aware of a precedent for class device hierarchy. For example, on my
+> system there is:
+
+I think that's miss described - aim is on subsystem, the first feature
+supported is scrub.  Intent here is to group RAS features of a given
+device / interface etc into one place. This was a request in an review
+of an earlier version on basis these interfaces tend to get grouped together
+in a device.
+So options are
+
+/sys/class/ras/cxl_mem0/scrub/rate etc.
+/sys/class/ras/cxl_mem0/ecs/rate etc
+(maybe separate for ECS because it annoyingly looks nothing like scrub desp=
+ite name
+ and there are multiple impelmentations)
+
+vs
+/sys/class/ras/cxl_mem0_scrub
+/sys/class/ras/cxl_mem0_ecs
+etc
+Note that generic naming not including what the source was got
+negative reviews in favor of making that the device instance name here.
+So that rulled out simply
+/sys/class/ras/scrubX/
+/sys/class/ras/ecsX/
+
+I don't mind which way we go; both are extensible.
+
+>=20
+> /sys/class/
+> =E2=94=9C=E2=94=80=E2=94=80 scsi_device
+> =E2=94=9C=E2=94=80=E2=94=80 scsi_disk
+> =E2=94=9C=E2=94=80=E2=94=80 scsi_generic
+> =E2=94=94=E2=94=80=E2=94=80 scsi_host
+>=20
+> ...not:
+>=20
+> /sys/class/scsi/
+> =E2=94=9C=E2=94=80=E2=94=80 device
+> =E2=94=9C=E2=94=80=E2=94=80 disk
+> =E2=94=9C=E2=94=80=E2=94=80 generic
+> =E2=94=94=E2=94=80=E2=94=80 host
+
+That's a docs problem - this was never the intent.
+
+>=20
+>=20
+> > +
+> > +What:		/sys/class/ras/rasX/scrub/
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		The /sys/class/ras/ras{0,1,2,3,...}/scrub directories
+> > +		correspond to each scrub device registered with the
+> > +		scrub subsystem. =20
+>=20
+> I notice there are some visibility rules in the code, but those
+> expectations are not documented here.
+>=20
+> This documentation would also help developers writing new users of
+> scrub_device_register().
+Agreed. One to improve.
+
+>=20
+> > +
+> > +What:		/sys/class/ras/rasX/scrub/name
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		(RO) name of the memory scrubber
+> > +
+> > +What:		/sys/class/ras/rasX/scrub/enable_background
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		(RW) Enable/Disable background(patrol) scrubbing if supported.
+> > +
+> > +What:		/sys/class/ras/rasX/scrub/rate_available
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		(RO) Supported range for the scrub rate by the scrubber.
+> > +		The scrub rate represents in hours.
+> > +
+> > +What:		/sys/class/ras/rasX/scrub/rate
+> > +Date:		March 2024
+> > +KernelVersion:	6.9
+> > +Contact:	linux-kernel@vger.kernel.org
+> > +Description:
+> > +		(RW) The scrub rate specified and it must be with in the
+> > +		supported range by the scrubber.
+> > +		The scrub rate represents in hours.
+> > diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
+> > index fc4f4bb94a4c..181701479564 100644
+> > --- a/drivers/ras/Kconfig
+> > +++ b/drivers/ras/Kconfig
+> > @@ -46,4 +46,11 @@ config RAS_FMPM
+> >  	  Memory will be retired during boot time and run time depending on
+> >  	  platform-specific policies.
+> > =20
+> > +config SCRUB
+> > +	tristate "Memory scrub driver"
+> > +	help
+> > +	  This option selects the memory scrub subsystem, supports
+> > +	  configuring the parameters of underlying scrubbers in the
+> > +	  system for the DRAM memories.
+> > +
+> >  endif
+> > diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
+> > index 11f95d59d397..89bcf0d84355 100644
+> > --- a/drivers/ras/Makefile
+> > +++ b/drivers/ras/Makefile
+> > @@ -2,6 +2,7 @@
+> >  obj-$(CONFIG_RAS)	+=3D ras.o
+> >  obj-$(CONFIG_DEBUG_FS)	+=3D debugfs.o
+> >  obj-$(CONFIG_RAS_CEC)	+=3D cec.o
+> > +obj-$(CONFIG_SCRUB)	+=3D memory_scrub.o
+> > =20
+> >  obj-$(CONFIG_RAS_FMPM)	+=3D amd/fmpm.o
+> >  obj-y			+=3D amd/atl/
+> > diff --git a/drivers/ras/memory_scrub.c b/drivers/ras/memory_scrub.c
+> > new file mode 100755
+> > index 000000000000..7e995380ec3a
+> > --- /dev/null
+> > +++ b/drivers/ras/memory_scrub.c
+> > @@ -0,0 +1,271 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Memory scrub subsystem supports configuring the registered
+> > + * memory scrubbers.
+> > + *
+> > + * Copyright (c) 2024 HiSilicon Limited.
+> > + */
+> > +
+> > +#define pr_fmt(fmt)     "MEM SCRUB: " fmt
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/kfifo.h>
+> > +#include <linux/memory_scrub.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +/* memory scrubber config definitions */
+> > +#define SCRUB_ID_PREFIX "ras"
+> > +#define SCRUB_ID_FORMAT SCRUB_ID_PREFIX "%d"
+> > +
+> > +static DEFINE_IDA(scrub_ida);
+> > +
+> > +struct scrub_device {
+> > +	int id;
+> > +	struct device dev;
+> > +	const struct scrub_ops *ops;
+> > +};
+> > +
+> > +#define to_scrub_device(d) container_of(d, struct scrub_device, dev)
+> > +static ssize_t enable_background_store(struct device *dev,
+> > +				       struct device_attribute *attr,
+> > +				       const char *buf, size_t len)
+> > +{
+> > +	struct scrub_device *scrub_dev =3D to_scrub_device(dev);
+> > +	bool enable;
+> > +	int ret;
+> > +
+> > +	ret =3D kstrtobool(buf, &enable);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret =3D scrub_dev->ops->set_enabled_bg(dev, enable);
+> > +	if (ret)
+> > +		return ret; =20
+>=20
+> It strikes me as somewhat pointless to have such a thin sysfs
+> implementation whose only job is to call down into a callback to do the
+> work. Unless there are other consumers of 'struct scrub_ops' outside of
+> these sysfs files why not just have the low-level drivers register their
+> corresponding attributes themselves?
+>=20
+> Unless the functionality is truly generic just let the low-level driver
+> be responsible for conforming to the sysfs ABI expectations, and, for
+> example, each register their own "enable_background" attribute if they
+> support that semantic.
+
+This was me pushing for this based on that approach having been a pain
+in subystems I've been involved with in the past. so I'll answer.
+
+Maybe if we think the number of scrub drivers remains very low we can
+rely on ABI review. However, it's painful.  Everyone wants to add
+their own custom ABI, so every review consists of 'no that is
+isn't consistent' reviews.  The callback schemes reduce that considerably.
+As someone with their name next to one of the largest sysfs ABIs in the
+kernel, maybe I'm projecting my pain points on this one.
+
+Note that this approach has failed for multiple similar simple subsystems
+in the past and they have migrated to a (mostly) tighter description for
+ABI simply because those constraints are useful.  A fairly recent one
+maybe 8 years ago? Was hwmon. There are other advantages that may not
+yet apply here (in kernel interfaces are much easier, even if they are
+only occasionally used for a given subsystem), but my motivation in=20
+pushing Shiju this way was to lock down the userspace interface.
+
+>=20
+> So scrub_device_register() would grow a 'const struct attribute_group
+> **groups' argument, or something along those lines.
+
+Sure. Shiju had that in an earlier version.  Personally I think it's
+an approach that may bite in the long run, but meh, maybe this will
+only ever have half a dozen drivers so it might remain manageable.
+If not, I love say 'I told you so' :)
+
+Jonathan
+
 
