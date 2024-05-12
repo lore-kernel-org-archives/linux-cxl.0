@@ -1,165 +1,114 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E66D12E75;
-	Sun, 12 May 2024 13:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C5510949;
+	Sun, 12 May 2024 20:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715519269; cv=none; b=hez0dI9/Tc55L24g/nbJGKTrGQ1yMR+vy1ZMwLWC0YIwUv4sNjR6pdwiJjeOhNqOMQc7R4cnRQOwg8vkje33s3SjkHwFtj9XWEdb5hwMaZR6eg9H4xqriH5C6ZGzLsu0XFPF3erI4LvaHdDerltDBO3qw3iEBhiDNsiJnByhCf4=
+	t=1715545214; cv=none; b=NDqUhssaqV0ybIP+q88JCHpt9W8zYLcjvl4gHwPd0gdITSOopBFM8xVshmOjIn1NnsCv4DK/CEXSsSu/Tyr+OFydwRkxMsE3XExSCVftHEzLMJSv+7F0Ztag/mrzcdkJszIVhrMByM6XJjhShm8BX3z+9po4CMU+tuoJO/wqvZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715519269; c=relaxed/simple;
-	bh=sTyRzxnXF/xuRmh2VOKidfRqkilMa37ngVU/scAvl3c=;
+	s=arc-20240116; t=1715545214; c=relaxed/simple;
+	bh=lPELNgbhGwSVRuDhodKqmPBqUVaZ8iha52M89DSyFM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmFXFBmRs2YJ33y1xUEipS5mxPjI+BS05v1kkVkf+npF0loM+WEC9bMm82cII2roIcFiBXX3S/+ReqNL7MLXxp97QtX/KMThPYmm74/wFkw1STbC1XNtMiIJFCDkhooRoq8w/6ppUiChq7ZJaNhALYh0rbcJJBHHuSWd0awsypw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oxhEzKm6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oxhEzKm6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=odhcasAwz1QxpbA0JQMoctL8eidRA0zEFKNbKDGpy9K8XbZ/rIslf7U0rQ8MjcshEmRF46xIYAGaqsiMnf9xft69TYSSdWICM79QMjGI3+aZLCtASEWdwbIu2sLaie8GiJo1j5/eKHZm4ollzZZIYGmsGbWWIx8sw3BSy27HjhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fChSPcYi; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oxhEzKm6";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oxhEzKm6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 67D875D72F;
-	Sun, 12 May 2024 13:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715519264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pFk2lQrJDqhAqVN6zGkwW6eqg9ViLfDkQT7/TvZ4C8Q=;
-	b=oxhEzKm6qhRTZ4J/OnYQSSj0x3597Xoh4+SyGoulvzDLeb+eVkKR0oEEVIWWhbS4iOdwq+
-	/QMPgyZCturYOSOvhyIVu07+UoVJRCQXkBC7YckdlqAQROuBWJUd2EJxsWZzm80Qputy8s
-	KYnGzuZCA+NBB4iXJii3jMQc8YsaPB8=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715519264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pFk2lQrJDqhAqVN6zGkwW6eqg9ViLfDkQT7/TvZ4C8Q=;
-	b=oxhEzKm6qhRTZ4J/OnYQSSj0x3597Xoh4+SyGoulvzDLeb+eVkKR0oEEVIWWhbS4iOdwq+
-	/QMPgyZCturYOSOvhyIVu07+UoVJRCQXkBC7YckdlqAQROuBWJUd2EJxsWZzm80Qputy8s
-	KYnGzuZCA+NBB4iXJii3jMQc8YsaPB8=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0E14132C2;
-	Sun, 12 May 2024 13:07:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KTRoMR+/QGazUAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Sun, 12 May 2024 13:07:43 +0000
-Date: Sun, 12 May 2024 15:07:42 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Adam Manzanares <a.manzanares@samsung.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Fan Ni <fan.ni@samsung.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
-	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
-	"shradha.t@samsung.com" <shradha.t@samsung.com>,
-	"mcgrof@kernel.org" <mcgrof@kernel.org>,
-	Jim Harris <jim.harris@samsung.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fChSPcYi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=+7g3F+helJJcn5pjYF5PEHb/D+StZeBk57kcYCoFLFE=; b=fChSPcYiTY/qj0ED3CUwT4LdOn
+	wFHQ6302DMMO9f0vuE3BA2Novq2UpKnsfqoy1Xgm/6AEHQ5uDrXRM70t/EJbnXIOrUPP10TAOMQcU
+	RC/y7WmzsszUGeGD71QCYk3ZjAXxC5szRxyMC/GckYkpgKMM9wHjmZwkJTyKcCvy2/vPk1elcLqlm
+	Dwd3LYb809fdXWqOVOWNw1otk3Bu6e2KoEFRL5120ORoDkEyZMAJ4jWJxtRwLx3NfdsYuo9Z5bQnR
+	kmtW80ESDvtFe6KpQyaDCiqxywYOpuao6sL6bMqZG7Zdhe0/8xSueARwKMAR3aiPzZP+0V+oN7ECv
+	aYUTw3sQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s6Ffz-0000000AkKX-116I;
+	Sun, 12 May 2024 20:20:07 +0000
+Date: Sun, 12 May 2024 13:20:07 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Chuck Lever III <chuck.lever@oracle.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Steve French <smfrench@gmail.com>, Amir Goldstein <amir73il@gmail.com>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"kdevops@lists.linux.dev" <kdevops@lists.linux.dev>,
+	Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+	linux-mm <linux-mm@kvack.org>,
 	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
-Message-ID: <ZkC_HnL4lfrNnZkm@tiehlicka>
-References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
- <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
- <ZjoVHhiSLm3KRW63@tiehlicka>
- <cd7de8e2-6520-4b06-92be-668aeb96bc40@nmtadam.samsung>
+	Jan Kara <jack@suse.cz>
+Subject: Re: kdevops BoF at LSFMM
+Message-ID: <ZkEkdz1ccfjtZ3LS@bombadil.infradead.org>
+References: <CAB=NE6XyLS1TaAcgzSWa=1pgezRjFoy8nuVtSWSfB8Qsdsx_xQ@mail.gmail.com>
+ <CAOQ4uxigKrtZwS4Y0CFow0YWEbusecv2ub=Zm2uqsvdCpDRu1w@mail.gmail.com>
+ <CAH2r5mt=CRQXdVHiXMCEwtyEXt-r-oENdESwF5k+vEww-JkWCg@mail.gmail.com>
+ <E2589F86-7582-488C-9DBB-8022D481AFB3@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cd7de8e2-6520-4b06-92be-668aeb96bc40@nmtadam.samsung>
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[lists.linux-foundation.org,intel.com,huawei.com,stgolabs.net,samsung.com,gmail.com,google.com,fujitsu.com,kernel.org,kvack.org,vger.kernel.org];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E2589F86-7582-488C-9DBB-8022D481AFB3@oracle.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-[add Davidlohr]
-
-On Wed 08-05-24 18:35:50, Adam Manzanares wrote:
-> On Tue, May 07, 2024 at 01:48:46PM +0200, Michal Hocko wrote:
-> > On Mon 06-05-24 19:27:10, Adam Manzanares wrote:
-> > > Hello all,
-> > > 
-> > > I would like to have a discussion with the CXL development community about
-> > > current outstanding issues and also invite developers interested in RAS and
-> > > memory tiering to participate.
-> > > 
-> > > The first topic I believe we should discuss is how we can ensure as a group
-> > > that we are prioritizing upstream work. On a recent upstream CXL development
-> > > discussion call there was a call to review more work. I apologize for not
-> > > grabbing the link, but I believe Dave Jiang is leveraging patchwork and this
-> > > link should be shared with others so we can help get more reviews where needed.
-> > > 
-> > > The second topic I would like to discuss is how we integrate RAS features that
-> > > have similar equivalents in the kernel. A CXL device can provide info about 
-> > > memory media errors in a similar fashion to memory controllers that have EDAC
-> > > support. Discussions have been put on the list and I would like to hear thoughts
-> > > from the community about where this should go [1]. On the same topic CXL has 
-> > > port level RAS features and the PCIe DW series touched on this issue  [2]
-> > > 
-> > > The third topic I would like to discuss is how we can get a set of common
-> > > benchmarks for memory tiering evaluations. Our team has done some initial
-> > > work in this space, but we want to hear more from end users about their 
-> > > workloads of concern. There was a proposal related to this topic, but from what 
-> > > I understand no meeting has been held [3]. 
-> > > 
-> > > The last topic that I believe is worth discussion is how do we come up with
-> > > a baseline for testing. I am aware of 3 efforts that could be used cxl_test, 
-> > > qemu, and uunit testing framework [4].
-> > 
-> > This seems to be quite a lot for a single time slot. I think it would
-> > make sense to split that into more slots. WDYT?
+On Wed, May 08, 2024 at 05:54:50PM +0000, Chuck Lever III wrote:
 > 
-> +1. I think the performance implications of CXL memory and how it relates
-> to existing memory management code tackling performance differentiated memory 
-> would be nice to separate. I think Davidlohr would be a great candidate to 
-> lead this discussion.
+> 
+> > On May 8, 2024, at 1:45 PM, Steve French <smfrench@gmail.com> wrote:
+> > 
+> > I would be very happy if there were an easy way to do three things
+> > faster/easier:
+> > 1) make it easier to run a reasonably large set of fs tests automatically
+> > on checkin of a commit or set of commits (e.g. to an externally visible
+> > github branch) before it goes in linux-next, and a larger set
+> > of test automation that is automatically run on P/Rs (I kick these tests
+> > off semi-manually for cifs.ko and ksmbd.ko today)
+> > 2) make it easier as a maintainer to get reports of automated testing of
+> > stable-rc (or automate running of tests against stable-rc by filesystem type
+> > and send failures to the specific fs's mailing list).  Make the tests run
+> > for a particular fs more visible, so maintainers/contributors can note
+> > where important tests are left out against a particular fs
+> 
+> In my experience, these require the addition of a CI
+> apparatus like BuildBot or Jenkins -- they are not
+> directly part of kdevops' mission.
 
-WDYT Davidlohr?
--- 
-Michal Hocko
-SUSE Labs
+Song Liu and Paul E Luse will have a talk on Wednesday about using a
+CI framework for md/raid. The holy grail I think here is that they
+have used their experience with eBPF patchwork CI integration, and
+I think everyone likely wants something similar:
+
+https://patchwork.kernel.org/project/netdevbpf/list/
+
+The S / W / F is Success / warning/ fail.
+
+I'd like to see how we can do that for kdevops. The work is already
+put in place to ramp up complex workflows, now we just have to launch
+them and collect information.
+
+> Scott Mayhew and
+> I have been playing with BuildBot, and there are some
+> areas where integration between kdevops and BuildBot
+> could be improved (and could be discussed next week).
+
+Neat!
+
+> > 3) make it easier to auto-bisect what commit regressed when a failing test
+> > is spotted
+> 
+> Jeff Layton has mentioned this as well. I don't think
+> it would be impossible to get kdevops to orchestrate
+> a bisect, as long as it has an automatic way to decide
+> when to use "git bisect {good|bad}"
+
+Kent alreeady seems to have this working too, we should try to see what
+we can leverage.
+
+  Luis
