@@ -1,100 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5F1384
-	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 00:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B5F7FD;
+	Fri, 17 May 2024 00:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715904507; cv=fail; b=FuuT7HaGlI+/D6ScouWvXt/o524mQOPNY2tM8mjde8IcaZMuLpzkvxunK2pddf1oogZpLZm/aKGKZFOUK7R0Vlcg+lffz39MipaJAXPkh8DyAuNz5AfcJYihzccjgfq36QwVdBz5edbSYmQvp1DGVQBFoqZTT3JVKCBCt4n0GU8=
+	t=1715906626; cv=fail; b=s+s8bFsLY/j9s/YLKPVxXW72nFXtiM1+5RFggYckGyPAyeT+0FfBFRLoFgXWmXBrsuNXxMJcEzs0TIwo8J9c+rl97UVAVlH8z8kuuCQLU5NB5vqKktC0m3setyfPg9flwffkIUX8NW05cVWakyKlfb8ZW9U0p/wl2jGxN09Zt+Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715904507; c=relaxed/simple;
-	bh=JOwDmcbKwfFWMPt/6H1OJFhCyKcseAbjPr/ZodNIbW4=;
+	s=arc-20240116; t=1715906626; c=relaxed/simple;
+	bh=6VpDeEoAiFBAnJ2sRb2hIWpj6IVrKB0hcIaR5wrIeb4=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ouXrN48qWrrimI9OtooIFJ5TinvR9YR+/uDSESqyycIiA96pPxpM+mA1tuUqTde7YWzBw4yK9PIqqUBB79r8bvjgVH3ZhFufGqMDAdqFbnkkVhYIHXCzkY1p+MJfeDSzpxGY/ii2BLXIQv/TlZFE9OPnG0oYXuCQI14WF1WG/ns=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GybaRtw5; arc=fail smtp.client-ip=198.175.65.13
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KbF71CqHAWEq+IA6ghq2c9y2VqBumB+6T+1fYBkOAojUw30kY95gI48n/qNYZlglfGmGAHBIum3kkzCd3YVNW8gVuarYKdrNpRiE4w36dF33CloF9jBr6hHDRfxMsI/H2PNi8Q8gLko0Xg+0rIDLOkxkwASR4//hA5lOWZuX+jI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0kDPl62; arc=fail smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GybaRtw5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0kDPl62"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715904504; x=1747440504;
+  t=1715906624; x=1747442624;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=JOwDmcbKwfFWMPt/6H1OJFhCyKcseAbjPr/ZodNIbW4=;
-  b=GybaRtw5PZc9UYHQh1sC5U2/gn1rGE6GA72p5J3AedWXClEKkXgqOnwf
-   AI+hiPVRO4axQgvQpcz0JH2tL0R9qXq6/gFrG1S/3NZVXPBO1r8CMLSwR
-   LGJlIgE7xOcGjbGTxVvWXvYQC7laGHyrdEiE4RHePhS8m99qhFq1JTE3Q
-   DB7GHzmEhZ/OrSKhu2m6/WyuynTBcHwa+TPBiGwMVRNdSRQY5zBcOQBA+
-   D7nAtoR7S9V/Ftu5c+fmntgzm+tHIZotR/ji3feZH+Qu+NQakF6qCepto
-   LKRZQMIpkAPrCnCFhu6W1STI8ZyFOKriM8KjdPLmHMGEvFuHD9w/2sk4T
+   in-reply-to:mime-version;
+  bh=6VpDeEoAiFBAnJ2sRb2hIWpj6IVrKB0hcIaR5wrIeb4=;
+  b=X0kDPl62P9xf8CfFl7WpdId1+pyxt/TI6SPbB1zrDwRgd7t6KoiILOr3
+   zlzAPXFx4Z8hxOFA5loX447H528oiIYrzVt8mkoh9XdZ5Z/jRqu/wpLSJ
+   NNdtNQzTT/olI7ZsM6u3vgkKrHeuSiiYGrPcT8td1em+xDNIQKh5t6/xs
+   NvlOn+EYe47JC1YOz2xWtt5M+XHM4V3dQNp3Ehhuv/UfNQvvIWJxxtyPn
+   93UF1E+ew+MS01UkNdmqcHEFdxQeoOPPRqyKOg1MT7SvYu8nEBl54HQeA
+   KhSBiCc/hrt6sWQGUP+Y8Z1j6Gvqn2LGAP+GzqkeFSyuY+mAkd80GJyfF
    A==;
-X-CSE-ConnectionGUID: Wu//SkuYSnOUBNsEv37S4w==
-X-CSE-MsgGUID: AW1360T+TwmwbvmHR3B9iw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23196379"
+X-CSE-ConnectionGUID: Ylh3V7CvTpOqUp9BWFaNtA==
+X-CSE-MsgGUID: uaZu3BmFQymlk/BnqsyZIA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23472013"
 X-IronPort-AV: E=Sophos;i="6.08,166,1712646000"; 
-   d="scan'208";a="23196379"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 17:08:24 -0700
-X-CSE-ConnectionGUID: KcuRStixTwSoDg6m8T017g==
-X-CSE-MsgGUID: gZaE/zoWTCS7FZzdcbYpzQ==
+   d="scan'208";a="23472013"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 17:43:43 -0700
+X-CSE-ConnectionGUID: tVPz2a8ySPGvaeD2NGii2Q==
+X-CSE-MsgGUID: FoFeP9FVRV+OnQ+d9/ozDQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,166,1712646000"; 
-   d="scan'208";a="31602303"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 May 2024 17:08:23 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+   d="scan'208";a="31636667"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 May 2024 17:43:43 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 16 May 2024 17:08:23 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ 15.1.2507.35; Thu, 16 May 2024 17:43:43 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 16 May 2024 17:08:22 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 16 May 2024 17:08:22 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Thu, 16 May 2024 17:43:43 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 16 May 2024 17:08:22 -0700
+ 15.1.2507.35; Thu, 16 May 2024 17:43:43 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XyVuiFm/Szj5FSBf/P+E/GmYX6Rf4k6yPPZ7LHVUxOfSCPzJKYGqz2ce7bEqEnKJIMQnPukFZlbPmdFVjM/PKjXgwcIPpxMEw3P44EM5TinaLeO9KOQu4EIr36n68SQRaXXSIrTBGWnrq/T/PZ7pmTWObBa1LB5kYiGG5PNpSIpVrU3zJPNUHId0J4uFjFentyW1VqCeeqSaz1xVXIgRHuawze5A/VRVaE6O+yf2vPSsxCvgBCx7alX/LQC/jArgcg7LE6gMY0tntIRJlz+NaOQ/EyvnhOt7sSDHhsmrT3mwbb4LVuo5zz5adOg/RNaOYDIKb7Ytkwgtl8eQ2Y417w==
+ b=Saxj2aEE4o8qslX3NWSs+JWwAxT2bZ8Po+D8qulP7kYV1YqDIp6Y7vecQLvU3XuzVdgZ1WjF7r5VFdTIv1LlUEasaFHb+xido8NShFBRrMbgBxMvHgGNhfDLYL9mPopJ1jOZql5T7SOEDXcX3y5RIiXNz/WxNeLJjQh1+bSRptlQsCpakum/n9lGUCDnhTrAxxIUCtZTJ+d1ehFngZYqdBaiOoYMn0I6Jy29dbH0vQkAtOGNX4K4wl7ItFxlO7yf1IY/uq7Z2oIdjz1nLFGPK3rRZXwzKsHnLlTRuQ3eJEtuoRGaUwUnhoJo0MOHrr9FQz7eMrG3TdXXXPdj1gSCPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=be2M8K5P4Df/GOBx8bDiggtSuR+Ne21+qpHUMEwK+5w=;
- b=ZBiZit0oI2E4SVeTwFnPIoVgfFAqGqdCfJWIncHqU7hc503CFty76nhjf/wbv8um6kPxg9Mi6GviC5gnsUtyF14LjDvxQi1V2VZg/q3JqjcU2qk6CDwPOu/F5GJOeTFWcj1Q9uos0FNFIA2WW/xdgJst1FcYo/2UMZ6NLdDC9ebsij/6v9vES+3l+IWxI6ayBpfe1IpJAVfT58Zd4QXXPHgx1azTKTg9F5k0xz02DxgqFxtJXCAUItUhXd2xcrib3362NW+qt0WYLNceN3SAjibiEbhZXV1ZDjIgS3p6dkyK2r5ES4dF/WzxqE6pKdGgHeTC3DEppRxw20ufsdfWNQ==
+ bh=tdvBcSSqtz/bYbH7U7TiVlRMLO68p5DeR5ezV/fkSIo=;
+ b=jjHJ4UOiYKjnCqN2tPzRN0BRJbVTHiPwMedEQTCsp4Ncq5Wwo2XrLoIkuhmp6j5+acds4dP0R23az24tRNoY4zYwsSl4kO5ZU6j0yXhGNW2q55/Ue0MIQFbi3ayb1sM4Xm95JvFxEf/1TQKHDzXxd1zC2UUjGTbDVfBhcV9NRPZ9dK5qX5mxK6JmIonkcx73T8l9tEg1vI9rcPBkCytB6ZSJ5t66RxpMWI7AxC9lhPFSZmajCqV/nGz5uCdFb0NNE875g7Xy958EakEUzufuuFO35sSRuZupa9T7RDCdbBcixcKR5ENusQ8iDKiK9V3oqZp99LwE4tmaj30SM8f+lg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SN7PR11MB7639.namprd11.prod.outlook.com (2603:10b6:806:32a::14) with
+ by SJ0PR11MB6694.namprd11.prod.outlook.com (2603:10b6:a03:44d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Fri, 17 May
- 2024 00:08:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.26; Fri, 17 May
+ 2024 00:43:36 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 00:08:20 +0000
-Date: Thu, 16 May 2024 17:08:17 -0700
+ 00:43:36 +0000
+Date: Thu, 16 May 2024 17:43:33 -0700
 From: Dan Williams <dan.j.williams@intel.com>
-To: <alucerop@amd.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <pieter.jansen-van-vuuren@amd.com>,
-	<richard.hughes@amd.com>, <dinan.gunawardena@amd.com>
-CC: Alejandro Lucero <alejandro.lucero-palau@amd.com>
-Subject: RE: [RFC PATCH 00/13] RFC: add Type2 device support
-Message-ID: <66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240516081202.27023-1-alucerop@amd.com>
-Content-Type: text/plain; charset="iso-8859-1"
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: RE: [PATCH v2] cxl/events: Use a common struct for DRAM and General
+ Media events
+Message-ID: <6646a835ac144_2c26294da@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240516102116.3512377-1-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240516081202.27023-1-alucerop@amd.com>
-X-ClientProxiedBy: MW4PR04CA0364.namprd04.prod.outlook.com
- (2603:10b6:303:81::9) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20240516102116.3512377-1-fabio.m.de.francesco@linux.intel.com>
+X-ClientProxiedBy: MW3PR05CA0016.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::21) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -103,267 +102,267 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7639:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09c70567-b0da-421c-c666-08dc760575aa
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB6694:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2f1142b-ecd5-4500-f93b-08dc760a62f6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?xbQkiReNjEThyq1qIl1VaX+U1udtFdGfma70WXl6+vw42X0oxXw1dLEgvP?=
- =?iso-8859-1?Q?/gg+VvfTyR5t8FOzCzGP3XWW7l8K1iCbIg/TUc9qtYP/CqQXYpzX10/FEa?=
- =?iso-8859-1?Q?hcjgANnWex/v6KSgi2va0KbxaPcm/+iUv+ctiQzpgpiX/TdnmwtE6+2NsJ?=
- =?iso-8859-1?Q?7EGCff9bozt0wHMDt0wI58FAaDeK0o+A3R8/Yaf5/ALzDRHm24AAvDqTTg?=
- =?iso-8859-1?Q?D9OMEZqQQOBXtMtTKLcrxZC/67iSg/6X4wuZiYkB6yUPPIAc+0zw28LO3+?=
- =?iso-8859-1?Q?enx+bbVUb33ji3PL2tw0fFV2bJClb628uumT5+pnKz5MAQBVI+eKoFH4u0?=
- =?iso-8859-1?Q?3MDjIiKnFJ6KYNTiH5WMS0LnP8NG++wxXO9UlDcdiehemlBJ6Ya4sF+ymL?=
- =?iso-8859-1?Q?VYHtVI8ZWOf/An4hJ0iVPMZZ/tAFIIDvLolKVMoZ3wHKVv0NaqPUqY86yn?=
- =?iso-8859-1?Q?yZ3Mma7c0dDOb7TUQ6/aL7FIePSIOACkSb4NmpxVvUr9/Qi1UyYFk8CWJu?=
- =?iso-8859-1?Q?OjE3MoC8u0BHH7lWJSz+K6me52g8CdHdnI27fVl0KSfIoKuU+dPs0w4pRJ?=
- =?iso-8859-1?Q?UD3xjaz3snDms057AcJ9I/muy2oKG8/ESdRwz+m8DDbb4iutWq6S5IdqLp?=
- =?iso-8859-1?Q?wUltLDQBL89Av9zbnx8tReXHsli4jbQKBN98DCEtAjBiKwOAoo6CARW8XS?=
- =?iso-8859-1?Q?tgbvzhhrzFEAQqQbKxUIDMCg1iAsnpLHm97MfotTeUbh2AW7yA4kjaJ8Gw?=
- =?iso-8859-1?Q?qob3sUxZrTnu4381sJWQK2Xy7y3pZ0LMHpafM3DBNEirGiS/6KunOVRO+Y?=
- =?iso-8859-1?Q?KbDStD/2+os4hMTA6G1DS0EhPklUCzhlAReTsYV9jkU4iXf2EYQ4CDKHwd?=
- =?iso-8859-1?Q?cQTBEuKLNGjHPZtNZ44+OzVg7ccY2KdBJlPQVrCFC5dZZIhyObPWDrYPAy?=
- =?iso-8859-1?Q?PF1P3UxdsTIp5hEhFaDk9qiKzsJbIwZSUCTODIfmxaMtMNm5cCsx9CD7aE?=
- =?iso-8859-1?Q?d/HTG4tqAFhBb6AA1NyO/YiGk00iiP2bUbOJGp0INYYv40l/DWKR7HlOGJ?=
- =?iso-8859-1?Q?/eI3SqSW7sZu8DAB1zGmTT9ADx0lr/n7gd3Mhvzb38RrLLvR9wdE2739Qf?=
- =?iso-8859-1?Q?/jbgnYRShE/x9oz/BOqaWhSvuSfrbvemVVZqis30d91j0HSbw+npikQ4d0?=
- =?iso-8859-1?Q?vuxS9Iaz+P7Y9c1yadsbvMqeADxPBerHABOK8T4Zjg4JlhiqknmtgRmfBC?=
- =?iso-8859-1?Q?Uam3LDMasYy+Jd0g9mLLP9F7GjW9zStJ/1F8bvRvQ=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005|921011;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pNf6+PdjKz1hq4Tyf4SAbsZHqxIFkhbELjnIB/eWfdAwJjmV2SbNfvVF8nuy?=
+ =?us-ascii?Q?vAvbA9qns9WptSy/PDL/eDrmzCBVCcoSug3HJOZBMJBzUj0qaFekDxX7bgJQ?=
+ =?us-ascii?Q?fV7SGrdZ6OoKr1SrV1omrdAGMXwmLP/mFgTiy5cYJURZmMSYK+vLp1f/MWIC?=
+ =?us-ascii?Q?bYj+cNUXoqiK1etgUzqHZM1PQ23ZNq3sOCKn5b/H+41XoiW9Zru09dxEE3VW?=
+ =?us-ascii?Q?gD0DSWrRVSMWOT8m/ujuyf/D0c87wkjmmvaKJTB/3h3ELJPmGRuQz7F4o2iX?=
+ =?us-ascii?Q?WGb1qn9O21abLBz91VqYAa8Ns9NKog1+2X0omGgRniyAD4QELqYGO+ES+QQ3?=
+ =?us-ascii?Q?/dtu+iM9d3bx1r6XKEEMIw2pDjcyrEtQ4AZMwwL7WZW8pLPC/3iQWSUH7wn6?=
+ =?us-ascii?Q?jdLQWEFhDJSgzbiNBDH84w0uUz8xsItB5FTQnSenKetRTE4OWu8wvanvmBWJ?=
+ =?us-ascii?Q?sIi8SaKPgvt6QPrI5ddDqUsWJdom168TZhrvYB3M40sGLrYpKMnZAeMS9Cua?=
+ =?us-ascii?Q?HzSChHcJQjSwgKghRTVXviouUNCgmmI1PfmcyJdDCYz1FEqSICViutIZG4pp?=
+ =?us-ascii?Q?k0L3qiqJ9vriouxm+wHvHRw4sa6hIPVd7EHxI4GpNydi/8iiu31r6IW7c1bX?=
+ =?us-ascii?Q?zHF7XsxFXGRwUxtlNUvS9Gkj5gz0fp2eFIq3f6KqSsC7zxUmh7MHT3k6Iy0K?=
+ =?us-ascii?Q?usrWAyRxpUeoidwuo91V/Mz0ZuY0+rVdQviSmWfVpXAIB4lz+HHot8MRRmpk?=
+ =?us-ascii?Q?+IpGeM73dI9x24t13gUOuSuwIBt1RiTmifhH8fnPy91HlBmQm7/MEK7trQUU?=
+ =?us-ascii?Q?LRRxar/UpS5msjlwrHAEESAKMFKakuGdJDZUPH3HiMjIEAtGWgMjKm7VJR9N?=
+ =?us-ascii?Q?0pf++Dhpxa4vrPkm8C57GSxrATE2M4krpnFZBK33zFvbqpbLkPyyUMjDZ2aG?=
+ =?us-ascii?Q?8JK3+4XZ9+elKUV9HfgOY44RqPL1ZUeHu0aZfb6dZtCuv1d0PQYrfrCWup3j?=
+ =?us-ascii?Q?e9qkuEkR5sYnA5nnidyodZhLolAIaIQTmaY0wTwyBci2EKBBc+G+kxU0HqUC?=
+ =?us-ascii?Q?SJfYdM6iI0aLU+wlalxNT+ZmyzBirGoQTB6mPFYV9TFPn0mrqbiuy0XPYHFC?=
+ =?us-ascii?Q?/6gHTlWlT1IJpVapTqJpl1VmbQE5PjjUTQ7rh95YfX/7BUUb66oIfsntegwF?=
+ =?us-ascii?Q?xghneo+guGt5Z6uzgKVPD0ZTu114v/2mesQh8PDP19IbVUMdOgLYNPQMSJpf?=
+ =?us-ascii?Q?1Lv0ra0q7IRMV+HzAMbthGk3S/nlNrcJgcuT7yHHOPkcWue4nw/sKtYArovO?=
+ =?us-ascii?Q?L16viFlYOwIOPYQLmepE34LN?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(921011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?fFtrpTtBa1rq4gakMz2HZ5z7Dx51kIVwfEGcEq9b10ODwlnGqVfDxOgjXz?=
- =?iso-8859-1?Q?KDkgut5Nrqd5PKIA/D/2vg6KdlQLAJNAFjK6Qtlzjwx/6VQ6Ck60qAeDXY?=
- =?iso-8859-1?Q?/dyZGMpgrlPmAcMNpr8t4nkWT7XKxpEIDDsli44hKZbdj7DDVb6FimvTJD?=
- =?iso-8859-1?Q?8PfI61tb2qZgi2oK9G6baQWTZ2ZeYu1mLLTSfDU9miZbJfD2Vtf3NaRXwS?=
- =?iso-8859-1?Q?g+xPd7uT8Aht5huF2RMbJeuPvOfQ4zPuJlvzch5TGTxg+/bupqwedhfJ0L?=
- =?iso-8859-1?Q?/vIk/+5mvXUhGBXkgIodQZ3YwV+QwdKyPGFu4Bnl3liXmOZGAMEWqnm09A?=
- =?iso-8859-1?Q?oZIIBaQxU2r2NKrJmZ5oZKLXZLX6jTOigyz6vpXNiKHPa3yxw1j8VdjNxM?=
- =?iso-8859-1?Q?s4I1odOOswUryMUNxQuYOrUgugxFeBMj67+Jwuo8nxuudvAd9WtLJCxpE2?=
- =?iso-8859-1?Q?AgkRW2ez8co4pnpeyokvgc9BUHQSXb0T3eBK5U4z001aE3XpHZmtJRLko6?=
- =?iso-8859-1?Q?Ae/DEi9j/V22SxjMPofBf/7fq1JC/2DjuhF6mCFjyoSFaOmf/gWyYXRAxE?=
- =?iso-8859-1?Q?I6GmF0vbzGSqai2ozavbSiYm+EINg1HrQarwjk8kLYCLzTJd3uS6OmdVSX?=
- =?iso-8859-1?Q?b6BqfjVBqi/yDBBv8JwTrUeV118evi303hGff4+VOorVByg2WRTFCsRT0m?=
- =?iso-8859-1?Q?jLaIaJZ6Fy2pBk6vYmDmgfOyWNMDy5g84WQ0sekzJxIdIrGFX1JOYtF+iB?=
- =?iso-8859-1?Q?+b3Nbsp92Sd5gGGwl+Eq1AEqtFOp22OGdkTdgu+FR00GwuvFCOGaSZG3kg?=
- =?iso-8859-1?Q?At1uWon4Bmm5PYEu/vVBuEL/I0t/X0Opp85V+fK6L5m1Q3GjooS2IG2gBb?=
- =?iso-8859-1?Q?P1PW6Hy0SLxunhnUnXPpbi3EVQkUT+M9905MEebJGncHOxlxAF8GzOujiC?=
- =?iso-8859-1?Q?m5ikLOKlVieeDQWqHutvWyLsfvW/JS/TFwR+2HPmJWdDP4GvndDcVv1kaN?=
- =?iso-8859-1?Q?hKjljCcG2xyi7173gzTYDoHiyBlyLcSc/4ysio6SVYOVh8zfBis10TMPxj?=
- =?iso-8859-1?Q?wjD+Own6w6wEIz1thcpYssQwj2DCKZ4qVsK2i2v46SKlTOt+wlgE3E5HzH?=
- =?iso-8859-1?Q?IR5qRFA2zVzr405siFiNmvsbVffi3BCGEChsYXgCklNt/YKx/NO5aUIqyl?=
- =?iso-8859-1?Q?H71R4CPyKTQbHDyruBNwb9W5ubouOb6o5Xbg9eNDdS3T1Yp13ROt19rREs?=
- =?iso-8859-1?Q?1cIk2MXdki6n/PzlH4U7torlbUXcaRux92Mqdk9lHDmKaLZ4beyKQHHDrD?=
- =?iso-8859-1?Q?cNq0og78R2cZJBAhBwvuvC7M7lvrLzgEfkArHXEzXqJ5rODhB5B7xQDryw?=
- =?iso-8859-1?Q?0+10QhbGNQlc7eS+WN88bXbLJiYbK32Ig0IsaxDnuC5BVd50sQAlpGs5zF?=
- =?iso-8859-1?Q?O3W6abfVInwKxbOoCpE5cM6QcwWC0AjPYHDbJuX143kwNelv0EQAQOuE7w?=
- =?iso-8859-1?Q?1b4Ie6XVP1K1zqzV49YWXduyBuPXzJvCLTYvGMUYWrl9quQKeJ0DsSCfkJ?=
- =?iso-8859-1?Q?DhjjvZO+Osydd0Ly5QS6LMkgaut/2otbY7D72ZtUEnY83a2Lygs59XJlWJ?=
- =?iso-8859-1?Q?4o8MX68eH0CzjyA6Ae+Ko/2DkQ4e62rXwH/jz01wtUuBNCj5w9VRzAfQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09c70567-b0da-421c-c666-08dc760575aa
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ivMPDXyPqlr4MiPyzK9ZT2BBh5lqR+elnPEXgfOPIMtZtreWexx4oYGMg/sm?=
+ =?us-ascii?Q?zbv0MYakSZJWmZX24y7u5RBDR225nO2GgQzwu0o2sMi9+K5M3ixyHnUFoZVb?=
+ =?us-ascii?Q?ITT+MDqLhVh8sgiaPMRbf1F12tENWopMtTBZmvTIslBIH0sEp66bOB9KcfiN?=
+ =?us-ascii?Q?2fqIXMEjfphI01xJ3UAU0vVz37sPhf1WMXqBF/K2Hzc0O0gKvBYvYLoybWTo?=
+ =?us-ascii?Q?al/eNOx6BlIP2ydLiJyVIGS3sA1Aoo6wdXv5VzY9xhQ/YTRFP70CCS8whVIm?=
+ =?us-ascii?Q?FWuwrp0xdpx9tcLASeqAZeFsQMk+3KJLmP50hXPidn77LY6YCOs/kE+z7ppn?=
+ =?us-ascii?Q?SQwzMArJqfdP4bg8nb/6d3Zth4Pl38I9AWRWdu21GXwIDmnt+m4sFLXI0YsS?=
+ =?us-ascii?Q?dugTyqUDkSfhAB+wH5ihfvI8ZOB86Kyu7Y32l3EM5ETSbUbgatxR+oKgJOGx?=
+ =?us-ascii?Q?8HTBq5h6kTUGGpFwvO9uuESspc2I3nSQfDGBqGXSrzSRwnT9DoD76O6ytYL7?=
+ =?us-ascii?Q?7PvhxZOlcO+8K9jqTBvoilchR2FO7y9SOf/akn3GrF3HHoCWmXf4i842Rc19?=
+ =?us-ascii?Q?dNcZzIAagka4Vgp+V6TsDMq2tkbqX+2jXOm8hItai7CHgvOfhmYNQQGkNGv3?=
+ =?us-ascii?Q?iY1TXFTG+qBy4+fw44zAamU9HARNKKhea5qxrTLX4EnkvhjKFPNRFQgHb6hC?=
+ =?us-ascii?Q?6gZYydBbjW85ndtES4j2Y9V5Jn1JAdFs7Sm0soxDaUTkqcFy6Ag6k2rNOolO?=
+ =?us-ascii?Q?DsNrWctguLC7LKiTi1wVnocng2e8uidVLDexGuMkJMqwiOab7FRnRPOvn30j?=
+ =?us-ascii?Q?rQAS+C2tVQynQL4NBfnWzPB3odPmv70eFgZdHRGC55Pzeb5RQMNPIgZOyOlR?=
+ =?us-ascii?Q?Hdc5lfl1wkOi8UZT5riya9tR0J11Of+gxuWMwG6NxNpDtjppqhO1i/0aTkC0?=
+ =?us-ascii?Q?9RHEslX0GMOaI/mdmfXXgjFd8bqwF1IdjGDlGqxqJGGV7x4E/C+xFVVFX9y7?=
+ =?us-ascii?Q?oSMCpwJH7kPSfvc3RVwQsH76/+bv7zgU21uYL5F77pAx9SO6DWUl7zoRN5V0?=
+ =?us-ascii?Q?rvQB7Qnr0bVRVCCO7hydJq416WDh9KU0uLX8kJeNvG5sg1jBhPOvpT2bpG0v?=
+ =?us-ascii?Q?sVBtRY9DWAf0B6LRBMXKvzWOX13E9JtEmD5YM+9Y6W1hN+Z75XdXsFA1epDi?=
+ =?us-ascii?Q?fCGh2sq7xZiyJSiRM/uH10sTndOmQf4K3iKI9TGD0kWizyuGie8V9OBTxz88?=
+ =?us-ascii?Q?c6UeR0tMNoo48nk6Fpzu2wJZ56YM2lHA0YuFArAX5wKMvbS6e5wBSfp3zkwB?=
+ =?us-ascii?Q?aokxh6omvNwkfZi9dzFxa7hpx1v+sMQ06p3xqlNdwZ6YSIC1hW5u49tIIhUS?=
+ =?us-ascii?Q?hjaHG9/hog2hxDTdXhkn4+paidnP1AoF6vhx+sSt9rI5aSo2jZjGUatcEXWC?=
+ =?us-ascii?Q?aygbiXuj0zQLYIfdIXQ2pCpqWOTrZvIrLTf7DWIOV9wKx/BJVkZ1kCve5kr8?=
+ =?us-ascii?Q?GxvMeutli707WqegBaKdr/yM3Hm7QW3NFhN3jouxEq6CzRjcTXIyWQKdhrvC?=
+ =?us-ascii?Q?KwpdynO4oMtKaP1gIZCk3Jvfz+1kpdl+qPcSd777p50+NqFqizpiuT4pYqbw?=
+ =?us-ascii?Q?Tw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2f1142b-ecd5-4500-f93b-08dc760a62f6
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 00:08:20.2045
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 00:43:36.2942
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6zz6FiKruLP7wvO9K9hGOiqIX2+U1G5vSd8sljpwCewJk2k1vCG8iA1YdEQ/rIqdoK1lLneKaiJYtAxiQW9f6vgRtt7xeFI12WFBC0vtFLw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7639
+X-MS-Exchange-CrossTenant-UserPrincipalName: Olmm1ZDSJpRSy0n2Joob/psRBCB0BFxweHT7/RiuK0DKniqvCnuGXwg09I136NJ9hXy51EJxHDfSsCrbyUz83Vvpmuh2Mp2mmCVOSkcucKI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6694
 X-OriginatorOrg: intel.com
 
-alucerop@ wrote:
-> From: Alejandro Lucero <alejandro.lucero-palau@amd.com>
+Fabio M. De Francesco wrote:
+> cxl_event_common was a poor naming choice and caused confusion with the
+> existing Common Event Record.
+
+I would say "unfortunate" rather than "poor".
+
+> Use cxl_event_media as a common structure to record information about DRAM
+> and General Media events because it simplifies handling the two events.
 > 
-> I need to start this RFC explaining not what the patchset does, but what we
-> expected to obtain and currently is under doubt: to configure a CXL memory
-> range advertised by our CXL network device and to use it "privately".
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Fixes: 6aec00139d3a ("cxl/core: Add region info to cxl_general_media and cxl_dram events")
+
+What is the fix? There is no user visible behavior changes that results from
+this cleanup, right?
+
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> ---
 > 
-> The main reason behind that privacy, but not the only one, is to avoid any
-> arbitrary use by any user-space "client" with enough privileges for using a
-> public interface to map the device memory and use it as regular memory. The
-> reason is obvious: the device expects writes to such a memory in a specific
-> format.
+> Changes for v2:
+> 	- Extend the commit message (Alison);
+> 	- Add a "Fixes" tag (Alison, thanks).
 > 
-> The doubt comes from the fact that after implementing the functionality exposed
-> in this patchset, we realized the current expectation seems to be a BIOS/UEFI
-> configuring HDM decoders or HPA ranges and passing memory ranges to the kernel,
-> and with the kernel having a default action on that memory range based on the
-> flag EFI_MEMORY_SP being set or not.
+>  drivers/cxl/core/mbox.c      |  6 ++--
+>  drivers/cxl/core/trace.h     |  4 +--
+>  include/linux/cxl-event.h    | 70 +++++++++++++++---------------------
+>  tools/testing/cxl/test/mem.c |  4 +--
+>  4 files changed, 36 insertions(+), 48 deletions(-)
 
-Lets clear up this confusion first.
-
-My expectation for CXL accelerator provided memory is that it is marked "EFI
-Reserved" in the memory map (or CDAT), not "EFI Conventional + Special Purpose
-Attribute". Recall that the EFI_MEMORY_SP attribute is just a *hint* that OS may
-*not* want to consider a memory range as part of the general purpose memory
-pool. CXL Accelerator Memory is far from that definition. If a driver needs to
-be loaded to effectively use a memory range that is not a range that can be
-transparently converted to "EFI Conventional Memory".
-
-> If it is not set, the memory range will be part of the kernel memory
-> management, what we do not want for sure. If the flag is set, a DAX device
-> will be created which allows an user-space client to map such a memory through
-> the DAX device API, what we also prefer to avoid. I know this is likely going
-> to face opposition, but we see this RFC as the opportunity for discussing the
-> matter and, if it turns out to be the case, to be guided towards the proper
-> solution accepted by the maintainers/community. This patchset does not tackle
-> this default kernel behaviour although we already have some ideas and
-> workarounds for the short term. We'll be happy to discuss this openly.
-
-It may have been subtle, but even in my initial RFC [1]. I was explicitly
-skipping exposing accelerator memory via device-dax:
-
-@@ -3085,6 +3183,15 @@ static int cxl_region_probe(struct device *dev)
- 					p->res->start, p->res->end, cxlr,
- 					is_system_ram) > 0)
- 			return 0;
-+
-+		/*
-+		 * HDM-D[B] (device-memory) regions have accelerator
-+		 * specific usage, skip device-dax registration.
-+		 */
-+		if (cxlr->type == CXL_DECODER_DEVMEM)
-+			return 0;
-+
-+		/* HDM-H routes to device-dax */
- 		return devm_cxl_add_dax_region(cxlr);
- 	default:
- 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
-
-[1] https://lore.kernel.org/r/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com
-
-> So, this patchset assumes a BIOS/UEFI not programming the HDM decoder or HPA
-> ranges for a CXL Type2 device.
-
-At least for Linux it should not care whether BIOS maps it or not. The
-expectation is that whichever agent maps it, BIOS or Linux CXL core, that agent
-honors the memory type specified in the device CDAT. I.e. the "Device Scoped EFI
-Memory Type Structure (DSEMTS)" in the accelerator CDAT should pass "2" in the
-"EFI Memory Type and Attribute" field, where "2" indicates "EFI Reserved" memory
-type for any HPA that maps this device's DPA.
-
-> above, a Type2 device added after boot, that is hotplugged, will likely need the
-> changes added here. Exporting some of the CXL core for vendor drivers is also
-> required for avoiding code duplication when reading DVSEC or decoder registers.
-> Finally if there is no such HPA range assigned, whatever the reason, this patchset
-> offers some way of obtaining one and/or finding out what is the problem behind the
-> lack of such HPA range.
-
-Yes, that was the whole point of the "Device Memory Setup" thread [2] to show a
-plausible way to reuse the common core infrastructure for accelerators with
-CXL.mem capability.
-
-[2] https://lore.kernel.org/all/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
-
-It would help me if you can summarize what you did and did not adopt from that
-proposal, i.e. where it helped and where it missed the mark for your use case.
-
-[..]
-> Keeping with kernel rules of having a client using any new functionality added,
-> a CXL type2 driver is increasingly added. This is not a driver supporting a real
-> device but an emulated one in QEMU, with the QEMU patch following this patchset.
-
-Lets start with the deltas compared to [2], the observation there is that much
-of the CXL core is reusable for this type-2 use case, and even improves the
-organization of the core. The consumer of the refactoring just ends up being a
-few new helpers around the core.
-
-> The reason for adding such a Type2 driver instead of changes to a current kernel
-> driver or a new driver is threefold:
-> 
-> 1) the expected kernel driver to use the functionality added is a netdev one.
->    Current internal CXL support is a codesign effort, therefore software and
->    hardware evolving in lockstep. Adding changes to a netdev driver requires the
->    full functionality and doing things following the netdev standard which is
->    not the best option for this development stage.
-
-Not sure what "netdev standard" means, and not sure it matters for a discussion
-that is constrained to how the CXL core should evolve to accommodate
-accelerator-local memory.
-
-> 2) Waiting for completing the development will delay the required Type2 support,
->    and most of the required changes are unrelated to specific CXL usage by any
->    vendor driver.
-
-Again, [2] already path cleared the idea that early plumbing of the CXL core for
-type-2 is in scope. Just need to make sure this effort is focused on general CXL
-specification use cases.
+Oh, nice, net reduction in code I was not expecting.
 
 > 
-> 3) Type2 support will need some testing infrastructure, unit tests for ensuring
->    Type2 devices are working, and module tests for ensuring CXL core changes do
->    not affect Type2 support.
-> 
-> I hope these reasons are convincing enough.
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 2626f3fff201..ad4d7b0f7f4d 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -875,16 +875,16 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  		guard(rwsem_read)(&cxl_region_rwsem);
+>  		guard(rwsem_read)(&cxl_dpa_rwsem);
+>  
+> -		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
+> +		dpa = le64_to_cpu(evt->media_common.phys_addr) & CXL_DPA_MASK;
 
-I am happy to have general specification discussions about core functionality
-that all CXL accelerators need and plumbing those ABIs to be exercised via
-something like cxl_test.
+I was hoping at the end of this to get rid of the word "common" to avoid any
+more "common event record confusion".
 
-I expect that cxl_test only covers coarse grained inter-module ABIs and that the
-fine details will need to wait until the accelerator specifics are closer to
-being disclosed and the real driver patches can start flowing. In other words, I
-am not keen to see QEMU used as a way to proxy features into the kernel without
-disclosing what the real world consumer actually needs.
+>  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+>  		if (cxlr)
+>  			hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
+>  
+>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+> -						&evt->gen_media);
+> +						&evt->media_general);
+>  		else if (event_type == CXL_CPER_EVENT_DRAM)
+> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
+> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->media_dram);
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 07a0394b1d99..2c7293761bb2 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -316,7 +316,7 @@ TRACE_EVENT(cxl_generic_event,
+>  TRACE_EVENT(cxl_general_media,
+>  
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_gen_media *rec),
+> +		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_media *rec),
+>  
+>  	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+>  
+> @@ -413,7 +413,7 @@ TRACE_EVENT(cxl_general_media,
+>  TRACE_EVENT(cxl_dram,
+>  
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_dram *rec),
+> +		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_media *rec),
+>  
+>  	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+>  
+> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> index 60b25020281f..e417556cc120 100644
+> --- a/include/linux/cxl-event.h
+> +++ b/include/linux/cxl-event.h
+> @@ -32,41 +32,38 @@ struct cxl_event_generic {
+>   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+>   */
+>  #define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
+> -struct cxl_event_gen_media {
+> -	struct cxl_event_record_hdr hdr;
+> -	__le64 phys_addr;
+> -	u8 descriptor;
+> -	u8 type;
+> -	u8 transaction_type;
+> -	u8 validity_flags[2];
+> -	u8 channel;
+> -	u8 rank;
+> -	u8 device[3];
+> -	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+> -	u8 reserved[46];
+> -} __packed;
+> -
+>  /*
+>   * DRAM Event Record - DER
+>   * CXL rev 3.0 section 8.2.9.2.1.2; Table 3-44
+>   */
+>  #define CXL_EVENT_DER_CORRECTION_MASK_SIZE	0x20
+> -struct cxl_event_dram {
+> +struct cxl_event_media {
+>  	struct cxl_event_record_hdr hdr;
+> -	__le64 phys_addr;
+> -	u8 descriptor;
+> -	u8 type;
+> -	u8 transaction_type;
+> -	u8 validity_flags[2];
+> -	u8 channel;
+> -	u8 rank;
+> -	u8 nibble_mask[3];
+> -	u8 bank_group;
+> -	u8 bank;
+> -	u8 row[3];
+> -	u8 column[2];
+> -	u8 correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
+> -	u8 reserved[0x17];
+> +	struct_group_tagged(cxl_event_media_hdr, media_hdr,
+> +		__le64 phys_addr;
+> +		u8 descriptor;
+> +		u8 type;
+> +		u8 transaction_type;
+> +		u8 validity_flags[2];
+> +		u8 channel;
+> +		u8 rank;
+> +	);
 
-Now, that said, there may also be opportunity for targeted extensions of the
-QEMU CXL memory-expander device, like DPA capacity that is mapped as "EFI
-Reserved" device-memory, but lets talk about the specifics here.
+Oh nice you went for the full 'struct_group_tagged' proposal. However, given
+that Jonathan is already asking questions about "__packed", lets do the simpler
+change, something like this, what do you think? This also preserves type-safety.
 
-Also recall that the current CXL driver does not yet support parsing CXL PMEM
-region labels. Support for that ends up looking quite similar to an accelerator
-asking for a specific DPA range to be dynamically mapped by the CXL core. So I
-think we can get quite far along the path to enabling type-2-CXL.mem just by
-flushing out some of the generic type-3-CXL.mem use cases.
-
-> I have decided to follow a gradual approach for adding such a driver using the
-> exported CXL functions and structs. I think it is easier to review the driver
-> when the new funcionality is added than to add the driver at the end, but not a
-> big deal if my approach is not liked.
-> 
-> The patches are based on a patchset sent by Dan Williams [1] which was just
-> partially integrated, most related to making things ready for Type2 but none
-> related to specific Type2 support. Those patches based on Dan´s work have Dan´s
-> signing, so Dan, tell me if you do not want me to add you.
-
-It is fine to reuse those patches, but please do include:
-
-Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-Link: <lore-link for copied code>
-
-...so I can try to remember if I still think the source patch was a good idea or
-not. Again, a summary analysis of what did and did not work for you from that
-posting would help me get a running start at reviewing this.
-
-> Type2 implies, I think, only the related driver to manage the CXL specifics.
-> This means no user space intervention and therefore no sysfs files. This makes
-> easy to avoid the current problem of most of the sysfs related code expecting
-> Type3 devices. If I´m wrong in this regard, such a code will need further
-> changes.
-
-Not sure what you mean here, I am hoping that sysfs ABI for enumerating objects
-like memdevs, decoders, and regions "just works" and is hidden from the
-accelerator vendor driver.
-
-> A final note about CXL.cache is needed. This patchset does not cover it at all,
-> although the emulated Type2 device advertises it. From the kernel point of view
-> supporting CXL.cache will imply to be sure the CXL path supports what the Type2
-> device needs. A device accelerator will likely be connected to a Root Switch,
-> but other configurations can not be discarded. Therefore the kernel will need to
-> check not just HPA, DPA, interleave and granularity, but also the available
-> CXL.cache support and resources in each switch in the CXL path to the Type2
-> device. I expect to contribute to this support in the following months, and
-> it would be good to discuss about it when possible.
-
-Yup, especially CXL 3.x Cache ID management. Lets talk about some ways to plumb
-that, because it is also a general CXL specification capability. Another topic
-is what is needed for CXL Protocol and Component error handling, I expect some
-of that to be CXL core common and some of that to be accelertor driver
-augmented.
-
-If you think we will still be talking about this driver enabling in September
-I would invite you to submit this as a topic for the CXL uConf.
-
-https://lpc.events/event/18/contributions/1673/
+diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+index 60b25020281f..f48b59943977 100644
+--- a/include/linux/cxl-event.h
++++ b/include/linux/cxl-event.h
+@@ -33,14 +33,16 @@ struct cxl_event_generic {
+  */
+ #define CXL_EVENT_GEN_MED_COMP_ID_SIZE 0x10
+ struct cxl_event_gen_media {
+-       struct cxl_event_record_hdr hdr;
+-       __le64 phys_addr;
+-       u8 descriptor;
+-       u8 type;
+-       u8 transaction_type;
+-       u8 validity_flags[2];
+-       u8 channel;
+-       u8 rank;
++       struct cxl_event_media_hdr {
++               struct cxl_event_record_hdr hdr;
++               __le64 phys_addr;
++               u8 descriptor;
++               u8 type;
++               u8 transaction_type;
++               u8 validity_flags[2];
++               u8 channel;
++               u8 rank;
++       } hdr;
+        u8 device[3];
+        u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+        u8 reserved[46];
+@@ -52,14 +54,7 @@ struct cxl_event_gen_media {
+  */
+ #define CXL_EVENT_DER_CORRECTION_MASK_SIZE     0x20
+ struct cxl_event_dram {
+-       struct cxl_event_record_hdr hdr;
+-       __le64 phys_addr;
+-       u8 descriptor;
+-       u8 type;
+-       u8 transaction_type;
+-       u8 validity_flags[2];
+-       u8 channel;
+-       u8 rank;
++       struct cxl_event_media_hdr hdr;
+        u8 nibble_mask[3];
+        u8 bank_group;
+        u8 bank;
+@@ -109,7 +104,7 @@ union cxl_event {
+        struct cxl_event_gen_media gen_media;
+        struct cxl_event_dram dram;
+        struct cxl_event_mem_module mem_module;
+-       struct cxl_event_common common;
++       struct cxl_event_media_hdr media_hdr;
+ } __packed;
+ 
+ /*
