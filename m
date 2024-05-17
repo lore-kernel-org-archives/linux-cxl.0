@@ -1,206 +1,341 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949F441C68
-	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 12:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05224F1E4;
+	Fri, 17 May 2024 13:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715948339; cv=none; b=YG7ZLbQN4CWLkmKjcR6TyGdaEs9IqNomXI3F1eozCMxqfpigdpkXUR9AggX6jvrpym3in4qVdNmQKnG4dnHxUgmvmqErXWOlK6T4KExsFqrWAJ2U6H7OtKqv0DFL4JWsdHiJA7KJWnpVXO3bpaCfzhSjPqrAblzD+uWHNX8qlhc=
+	t=1715951231; cv=none; b=LgfnG3sRFA6m+l795XzNl16Djq7nGnbl+K0ekzwHHxFeNqmsnVMe2l3wpPSVwZQWqWR5bssZTYxT62IpFjIub/GjCNeLQmf1sxe7mgByswCQlg9qMUanbjOCasCcKzs2xHkRJRhazFRZOe2q2Wo7zMiBouuuhD5LDyWARzlSjxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715948339; c=relaxed/simple;
-	bh=b1gqSCA6MvMbSUAZWJJFVMPjeoS34fAzq2t0MGIq87Q=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BMmaRgbBbJqkSShkIEI+JcuWmK4xk2HkoZzMYORETnM9Rd3p1g5uOsjrxP6P6TDJB4GPpuUGURvIZCGSwUanvl54m/HszCwOIN38o4AENZRu65EkBp2BNG0t8v0uTWUXUk3ok6W/jNcWNVVHhjrQsZff336QF/BjAKDFX75j+YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VgmBG4FByz6K7Dw;
-	Fri, 17 May 2024 20:15:18 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6DEEE140B2A;
-	Fri, 17 May 2024 20:18:53 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 17 May
- 2024 13:18:52 +0100
-Date: Fri, 17 May 2024 13:18:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: fan <nifan.cxl@gmail.com>
-CC: Gregory Price <gregory.price@memverge.com>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
-	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
-	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, <fan.ni@samsung.com>
-Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
-Message-ID: <20240517131852.00006bc7@Huawei.com>
-In-Reply-To: <ZkY83c9PXoop_r1A@debian>
-References: <20240418232902.583744-1-fan.ni@samsung.com>
-	<ZiK25Log7LmtBffa@memverge.com>
-	<ZkY83c9PXoop_r1A@debian>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1715951231; c=relaxed/simple;
+	bh=E8NIBmhuXkQWY9tdw0NTb9s7Ylgh7bn9fuNNOGVJNic=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rSQ/xjI/yZETQFG1N8V8r24v/ADgHFDpir9zWIyeaz7jrOxjVeYPod2OqegwuK1z0togVsimBbzEJeZUtF+UUNYgUMrhld8ww8E+BKh0Czd6Lyuq/jCRkv6fyno/MJX9R509UTPPM9oxRszGzsq2juYNVJOn+V49WhEEwoc2f5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KlU2OuBo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KlU2OuBo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715951230; x=1747487230;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=E8NIBmhuXkQWY9tdw0NTb9s7Ylgh7bn9fuNNOGVJNic=;
+  b=KlU2OuBouO9TmBila2MRLVTaNBVPuDvos4Mp5tvCUGkEGB0Qi2+wfoQx
+   Zx0aFmYmUZrhE8a08MzNsdo44p0SeutP8sqNmb3cfKlCZdWKbvjvj33z5
+   QMfjCwuNtOOZomrIlhgLUH9cvGgqJ5q3toNQbG0pSGkQm4w+Ag/onvKbP
+   X+6aiOaFeBi2ZEXk6ip49FcfLyykrR9+Suwzvr2gsUUrXrvg3RjffC08y
+   s2YZDZBbcI+4hHE8TodaAR8wqqr6FV75l2QU/Pup9T5wJpdVH8a2P39dc
+   Q0JsA8lWUpEpb+adg8389IIrsf+ZEKns89iGjVh2ovg78dm1xIr9tpzU5
+   Q==;
+X-CSE-ConnectionGUID: 5S/0eS+VRjOBj7mNU0lCLQ==
+X-CSE-MsgGUID: Yp+zmC1uRUqbpl0Fl4hsig==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23527149"
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="23527149"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 06:07:09 -0700
+X-CSE-ConnectionGUID: xtTZ3099SYu2icluC7wbcg==
+X-CSE-MsgGUID: X+CWfPMdS3S1PjrlrEneAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="32333302"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.21])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 06:07:06 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Ira Weiny <ira.weiny@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH] cxl/events: Use a common struct for DRAM and General Media events
+Date: Fri, 17 May 2024 15:07:02 +0200
+Message-ID: <5789047.t9SDvczpPo@fdefranc-mobl3>
+In-Reply-To: <66467b8b47170_8c79294b3@iweiny-mobl.notmuch>
+References:
+ <20240515190512.3480817-1-fabio.m.de.francesco@linux.intel.com>
+ <66467b8b47170_8c79294b3@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, 16 May 2024 10:05:33 -0700
-fan <nifan.cxl@gmail.com> wrote:
-
-> On Fri, Apr 19, 2024 at 02:24:36PM -0400, Gregory Price wrote:
-> > On Thu, Apr 18, 2024 at 04:10:51PM -0700, nifan.cxl@gmail.com wrote: =20
-> > > A git tree of this series can be found here (with one extra commit on=
- top
-> > > for printing out accepted/pending extent list):=20
-> > > https://github.com/moking/qemu/tree/dcd-v7
-> > >=20
-> > > v6->v7:
-> > >=20
-> > > 1. Fixed the dvsec range register issue mentioned in the the cover le=
-tter in v6.
-> > >    Only relevant bits are set to mark the device ready (Patch 6). (Jo=
-nathan)
-> > > 2. Moved the if statement in cxl_setup_memory from Patch 6 to Patch 4=
-. (Jonathan)
-> > > 3. Used MIN instead of if statement to get record_count in Patch 7. (=
-Jonathan)
-> > > 4. Added "Reviewed-by" tag to Patch 7.
-> > > 5. Modified cxl_dc_extent_release_dry_run so the updated extent list =
-can be
-> > >    reused in cmd_dcd_release_dyn_cap to simplify the process in Patch=
- 8. (J=F8rgen)=20
-> > > 6. Added comments to indicate further "TODO" items in cmd_dcd_add_dyn=
-_cap_rsp.
-> > >     (Jonathan)
-> > > 7. Avoided irrelevant code reformat in Patch 8. (Jonathan)
-> > > 8. Modified QMP interfaces for adding/releasing DC extents to allow p=
-assing
-> > >    tags, selection policy, flags in the interface. (Jonathan, Gregory)
-> > > 9. Redesigned the pending list so extents in the same requests are gr=
-ouped
-> > >     together. A new data structure is introduced to represent "extent=
- group"
-> > >     in pending list.  (Jonathan)
-> > > 10. Added support in QMP interface for "More" flag.=20
-> > > 11. Check "Forced removal" flag for release request and not let it pa=
-ss through.
-> > > 12. Removed the dynamic capacity log type from CxlEventLog definition=
- in cxl.json
-> > >    to avoid the side effect it may introduce to inject error to DC ev=
-ent log.
-> > >    (Jonathan)
-> > > 13. Hard coded the event log type to dynamic capacity event log in QMP
-> > >     interfaces. (Jonathan)
-> > > 14. Adding space in between "-1]". (Jonathan)
-> > > 15. Some minor comment fixes.
-> > >=20
-> > > The code is tested with similar setup and has passed similar tests as=
- listed
-> > > in the cover letter of v5[1] and v6[2].
-> > > Also, the code is tested with the latest DCD kernel patchset[3].
-> > >=20
-> > > [1] Qemu DCD patchset v5: https://lore.kernel.org/linux-cxl/202403041=
-94331.1586191-1-nifan.cxl@gmail.com/T/#t
-> > > [2] Qemu DCD patchset v6: https://lore.kernel.org/linux-cxl/202403251=
-90339.696686-1-nifan.cxl@gmail.com/T/#t
-> > > [3] DCD kernel patches: https://lore.kernel.org/linux-cxl/20240324-dc=
-d-type2-upstream-v1-0-b7b00d623625@intel.com/T/#m11c571e21c4fe17c7d04ec5c2c=
-7bc7cbf2cd07e3
-> > > =20
+On Thursday, May 16, 2024 11:32:59=E2=80=AFPM GMT+2 Ira Weiny wrote:
+> Fabio M. De Francesco wrote:
+> > Use cxl_event_media as a common structure to record information about D=
+RAM
+> > and General Media events because it simplifies handling the two events.
 > >=20
-> > added review to all patches, will hopefully be able to add a Tested-by
-> > tag early next week, along with a v1 RFC for MHD bit-tracking.
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Fabio M. De Francesco
+> > <fabio.m.de.francesco@linux.intel.com>
+> > ---
 > >=20
-> > We've been testing v5/v6 for a bit, so I expect as soon as we get the
-> > MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
-> >=20
-> > The super-set release will complicate a few things but this doesn't
-> > look like a blocker on our end, just a change to how we track bits in a
-> > shared bit/bytemap.
-> >  =20
+> >  drivers/cxl/core/mbox.c      |  6 ++--
+> >  drivers/cxl/core/trace.h     |  4 +--
+> >  include/linux/cxl-event.h    | 70 +++++++++++++++---------------------
+> >  tools/testing/cxl/test/mem.c |  4 +--
+> >  4 files changed, 36 insertions(+), 48 deletions(-)
 >=20
-> Hi Gregory,
-> I am planning to address all the concerns in this series and send out v8
-> next week. Jonathan mentioned you have few related patches built on top
-> of this series, can you point me to the latest version so I can look
-> into it? Also, would you like me to carry them over to send together
-> with my series in next version? It could be easier for you to avoid the
-> potential rebase needed for your patches?
+> Other than saving 12 lines of code what are we saving with this change?
+>
+> The addition of media_common implies an additional event type which is not
+> in the specification.  (perhaps confusing future contributors?)  And the
+> code is more complex to follow.  The decode of the phys_addr field is not
+> simplified (which IIRC was the point of this idea.)
+>
+> I'm probably being dense but I just don't see the need for the
+> struct_group complexity here.
+>=20
+> Ira
 
-I wasn't clear - I meant other way around.
-This series is built on a couple of Gregory's patches.  Gregory can suffer
-the pain of rebasing his stuff ;) (or I'll do it depending on when things
-land).
+Ira,
 
-hw/cxl/mailbox: change CCI cmd set structure to be a member, not a referenc=
-e=20
-https://gitlab.com/jic23/qemu/-/commit/f44ebc5a455ccdd6535879b0c5824e0d76b0=
-4da5
-hw/cxl/mailbox: interface to add CCI commands to an existing CCI=20
-https://gitlab.com/jic23/qemu/-/commit/00a4dd8b388add03c588298f665ee9186262=
-96a5
+I think you are right, there is no need for struct_group here and this code=
+ is=20
+unnecessarily complex.
 
-I was suggesting your next posting should just include those two with
-your sign-off added. That way if everyone is happy with v8 Michael Tsirkin
-can pick it up directly, saving a step.
-
-Make sure to add Michael to the to list as well for next version.
+Anyway, for the next version, I'll use the simpler solution showed by Dan i=
+n=20
+his comment on v2.
 
 Thanks,
 
-Jonathan
+=46abio
+=20
+>=20
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 2626f3fff201..ad4d7b0f7f4d 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -875,16 +875,16 @@ void cxl_event_trace_record(const struct cxl_memd=
+ev
+> > *cxlmd,>=20
+> >  		guard(rwsem_read)(&cxl_region_rwsem);
+> >  		guard(rwsem_read)(&cxl_dpa_rwsem);
+> >=20
+> > -		dpa =3D le64_to_cpu(evt->common.phys_addr) &=20
+CXL_DPA_MASK;
+> > +		dpa =3D le64_to_cpu(evt->media_common.phys_addr) &=20
+CXL_DPA_MASK;
+> >=20
+> >  		cxlr =3D cxl_dpa_to_region(cxlmd, dpa);
+> >  		if (cxlr)
+> >  	=09
+> >  			hpa =3D cxl_trace_hpa(cxlr, cxlmd, dpa);
+> >  	=09
+> >  		if (event_type =3D=3D CXL_CPER_EVENT_GEN_MEDIA)
+> >  	=09
+> >  			trace_cxl_general_media(cxlmd, type, cxlr,=20
+hpa,
+> >=20
+> > -						&evt-
+>gen_media);
+> > +						&evt-
+>media_general);
+> >=20
+> >  		else if (event_type =3D=3D CXL_CPER_EVENT_DRAM)
+> >=20
+> > -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt-
+>dram);
+> > +			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt-
+>media_dram);
+> >=20
+> >  	}
+> > =20
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
+> >=20
+> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> > index 07a0394b1d99..2c7293761bb2 100644
+> > --- a/drivers/cxl/core/trace.h
+> > +++ b/drivers/cxl/core/trace.h
+> > @@ -316,7 +316,7 @@ TRACE_EVENT(cxl_generic_event,
+> >=20
+> >  TRACE_EVENT(cxl_general_media,
+> > =20
+> >  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type=20
+log,
+> >=20
+> > -		 struct cxl_region *cxlr, u64 hpa, struct=20
+cxl_event_gen_media *rec),
+> > +		 struct cxl_region *cxlr, u64 hpa, struct=20
+cxl_event_media *rec),
+> >=20
+> >  	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+> >=20
+> > @@ -413,7 +413,7 @@ TRACE_EVENT(cxl_general_media,
+> >=20
+> >  TRACE_EVENT(cxl_dram,
+> > =20
+> >  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type=20
+log,
+> >=20
+> > -		 struct cxl_region *cxlr, u64 hpa, struct=20
+cxl_event_dram *rec),
+> > +		 struct cxl_region *cxlr, u64 hpa, struct=20
+cxl_event_media *rec),
+> >=20
+> >  	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+> >=20
+> > diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> > index 60b25020281f..e417556cc120 100644
+> > --- a/include/linux/cxl-event.h
+> > +++ b/include/linux/cxl-event.h
+> > @@ -32,41 +32,38 @@ struct cxl_event_generic {
+> >=20
+> >   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> >   */
+> > =20
+> >  #define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
+> >=20
+> > -struct cxl_event_gen_media {
+> > -	struct cxl_event_record_hdr hdr;
+> > -	__le64 phys_addr;
+> > -	u8 descriptor;
+> > -	u8 type;
+> > -	u8 transaction_type;
+> > -	u8 validity_flags[2];
+> > -	u8 channel;
+> > -	u8 rank;
+> > -	u8 device[3];
+> > -	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+> > -	u8 reserved[46];
+> > -} __packed;
+> > -
+> >=20
+> >  /*
+> > =20
+> >   * DRAM Event Record - DER
+> >   * CXL rev 3.0 section 8.2.9.2.1.2; Table 3-44
+> >   */
+> > =20
+> >  #define CXL_EVENT_DER_CORRECTION_MASK_SIZE	0x20
+> >=20
+> > -struct cxl_event_dram {
+> > +struct cxl_event_media {
+> >=20
+> >  	struct cxl_event_record_hdr hdr;
+> >=20
+> > -	__le64 phys_addr;
+> > -	u8 descriptor;
+> > -	u8 type;
+> > -	u8 transaction_type;
+> > -	u8 validity_flags[2];
+> > -	u8 channel;
+> > -	u8 rank;
+> > -	u8 nibble_mask[3];
+> > -	u8 bank_group;
+> > -	u8 bank;
+> > -	u8 row[3];
+> > -	u8 column[2];
+> > -	u8 correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
+> > -	u8 reserved[0x17];
+> > +	struct_group_tagged(cxl_event_media_hdr, media_hdr,
+> > +		__le64 phys_addr;
+> > +		u8 descriptor;
+> > +		u8 type;
+> > +		u8 transaction_type;
+> > +		u8 validity_flags[2];
+> > +		u8 channel;
+> > +		u8 rank;
+> > +	);
+> > +	union {
+> > +		struct_group(general,
+> > +			u8 device[3];
+> > +			u8=20
+component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+> > +			u8 gen_reserved[46];
+> > +		);
+> > +		struct_group(dram,
+> > +			u8 nibble_mask[3];
+> > +			u8 bank_group;
+> > +			u8 bank;
+> > +			u8 row[3];
+> > +			u8 column[2];
+> > +			u8=20
+correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
+> > +			u8 dram_reserved[0x17];
+> > +		);
+> > +	};
+> >=20
+> >  } __packed;
+> > =20
+> >  /*
+> >=20
+> > @@ -95,21 +92,12 @@ struct cxl_event_mem_module {
+> >=20
+> >  	u8 reserved[0x3d];
+> > =20
+> >  } __packed;
+> >=20
+> > -/*
+> > - * General Media or DRAM Event Common Fields
+> > - * - provides common access to phys_addr
+> > - */
+> > -struct cxl_event_common {
+> > -	struct cxl_event_record_hdr hdr;
+> > -	__le64 phys_addr;
+> > -} __packed;
+> > -
+> >=20
+> >  union cxl_event {
+> > =20
+> >  	struct cxl_event_generic generic;
+> >=20
+> > -	struct cxl_event_gen_media gen_media;
+> > -	struct cxl_event_dram dram;
+> > +	struct cxl_event_media media_general;
+> > +	struct cxl_event_media media_dram;
+> >=20
+> >  	struct cxl_event_mem_module mem_module;
+> >=20
+> > -	struct cxl_event_common common;
+> > +	struct cxl_event_media media_common;
+> >=20
+> >  } __packed;
+> > =20
+> >  /*
+> >=20
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index 6584443144de..0a8fd145c391 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -378,7 +378,7 @@ struct cxl_event_record_raw hardware_replace =3D {
+> >=20
+> >  struct cxl_test_gen_media {
+> > =20
+> >  	uuid_t id;
+> >=20
+> > -	struct cxl_event_gen_media rec;
+> > +	struct cxl_event_media rec;
+> >=20
+> >  } __packed;
+> > =20
+> >  struct cxl_test_gen_media gen_media =3D {
+> >=20
+> > @@ -402,7 +402,7 @@ struct cxl_test_gen_media gen_media =3D {
+> >=20
+> >  struct cxl_test_dram {
+> > =20
+> >  	uuid_t id;
+> >=20
+> > -	struct cxl_event_dram rec;
+> > +	struct cxl_event_media rec;
+> >=20
+> >  } __packed;
+> > =20
+> >  struct cxl_test_dram dram =3D {
 
->=20
-> Let me know.
->=20
-> Thanks,
-> Fan
->=20
-> > >=20
-> > > Fan Ni (12):
-> > >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-> > >     payload of identify memory device command
-> > >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-> > >     and mailbox command support
-> > >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
-> > >     type3 memory devices
-> > >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
-> > >     devices
-> > >   hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
-> > >     size instead of mr as argument
-> > >   hw/mem/cxl_type3: Add host backend and address space handling for DC
-> > >     regions
-> > >   hw/mem/cxl_type3: Add DC extent list representative and get DC exte=
-nt
-> > >     list mailbox support
-> > >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/relea=
-se
-> > >     dynamic capacity response
-> > >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
-> > >     extents
-> > >   hw/mem/cxl_type3: Add DPA range validation for accesses to DC regio=
-ns
-> > >   hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox suppo=
-rt
-> > >   hw/mem/cxl_type3: Allow to release extent superset in QMP interface
-> > >=20
-> > >  hw/cxl/cxl-mailbox-utils.c  | 620 ++++++++++++++++++++++++++++++++++-
-> > >  hw/mem/cxl_type3.c          | 633 +++++++++++++++++++++++++++++++++-=
---
-> > >  hw/mem/cxl_type3_stubs.c    |  20 ++
-> > >  include/hw/cxl/cxl_device.h |  81 ++++-
-> > >  include/hw/cxl/cxl_events.h |  18 +
-> > >  qapi/cxl.json               |  69 ++++
-> > >  6 files changed, 1396 insertions(+), 45 deletions(-)
-> > >=20
-> > > --=20
-> > > 2.43.0
-> > >  =20
+
+
 
