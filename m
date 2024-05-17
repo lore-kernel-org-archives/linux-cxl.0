@@ -1,160 +1,214 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F72654273
-	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 14:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8283D9E
+	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 16:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715956838; cv=none; b=mkromwspH4cIWET9X8PtMe6YM0pS/5EQxWfo4B5pS20jiE9BE4xukOGM3V1UQJdUf6P+91q+E8YVk9pZY2112Yw+ToX7ayFIcu0m+qXSnuvXiL3CbzFsN9wDOcHpjAaxbFBTs+X7YicGtodwJiWoloLMV42RdqYHqbdudqo455o=
+	t=1715961826; cv=none; b=SV2CdZ8Q3fDNqxClQfsNuOYcwNJwb105TPtSM8nf2LTVV3w+bwvVlY3wdZvRVR9bryOeiBdKCrV2Nx+uAQYvBE7gCj4MX7FPaawjpCdZqUyemVpYyvQ265sBQYCW2djROWcUR2VURZ1bn0YZI3IhyEyYQ1qzwFawgbYGxeGb2Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715956838; c=relaxed/simple;
-	bh=44EfypqGTIRb7W/3B2tc5em9ODR9PGCZ3gBfB0/S26M=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JKZD/QvLuO9LQqJ4rN+4Ko/4Qu2JrMHB+K6NiTqIPrbYdi5+gDU3syso9J3jR/7+dFLEVGN5mKqSl7IoQQt1vMUFYHuZZmEVsWBAmFYDLBWjYqiR7aL+fUFBxI9jHqIn0/b1Y5mMmWXM6VudECanASMYVODEbSucRPiK7WoxTIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VgqKv3FNkz6D8W5;
-	Fri, 17 May 2024 22:37:07 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 522FE140B39;
-	Fri, 17 May 2024 22:40:33 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 17 May
- 2024 15:40:32 +0100
-Date: Fri, 17 May 2024 15:40:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <alucerop@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<pieter.jansen-van-vuuren@amd.com>, <richard.hughes@amd.com>,
-	<dinan.gunawardena@amd.com>
-Subject: Re: [RFC PATCH 05/13] cxl: fix check about pmem resource
-Message-ID: <20240517154031.00007e35@Huawei.com>
-In-Reply-To: <20240516081202.27023-6-alucerop@amd.com>
-References: <20240516081202.27023-1-alucerop@amd.com>
-	<20240516081202.27023-6-alucerop@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1715961826; c=relaxed/simple;
+	bh=jFv/vvkvOlMEKIy2LHIB/tX9ynpW1uzzGJuX1d6DWgM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PrdxH7Fqad5CLbiKjVha/YPdMDwucaycJV/YjXIyOpDzZG9V4udzSBy1Cvna2yHWvrMoozW9WK76w6Ou3s+LVbS6LcfJrQeIxCbDauoNmcsvHOApVOSWufAWbh9Rfhc/Z1IAll5TKL13dmi02kBs2hwUb4e0wQ4xOiDYt9Vwt/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dK3wuwR7; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dK3wuwR7"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ecddf96313so14051955ad.2
+        for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 09:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715961824; x=1716566624; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Nip+K6lz0QcnDcnFAf1QroLYXPqFj24Z42qKu2dyrSA=;
+        b=dK3wuwR78rlSRRUEG/sTksiY2IvRQOgb5daGGdm0vmggXP9d7v99t11b4Q0mwxAht5
+         8w2lQP4W6aawVXLAq69OROjjJEMKUVLHbc0zUCFsJaFiciS7h7JDTcv6J+W09Blu/7qT
+         mX30+DCyFKyBbiNB6dQnXnywZWZzjn969YtzxnSGQMsf38YYqOfMDIwh8h2o58yS5BfD
+         ws/CquyP8z56s2EK5WqyrkNpZAqlQ85MQXDoiH1miNxam3KvW9CglfWddW8aIcfTdHbD
+         o/+2QRwv7VSREnVred46O/fFCTC55AZ2rpjnPu0gEvyUTXDb+54vQr9hqQA8clRi7dgX
+         hw1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715961824; x=1716566624;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nip+K6lz0QcnDcnFAf1QroLYXPqFj24Z42qKu2dyrSA=;
+        b=gZEJGRnP4/uFmSfdL5e3oG8BZ0VOpytSAtCtCt/kLLiK7Lc37N0oi6FhOnaloGlbWr
+         P7MUgrwKttj9tD1U619dYHx8n3NmDfoNYT1zPIhnIsVCpEK/GrOxWGXdS5J4nDfETWjG
+         XfusfHrtdP0+OxhmCIAMV8bFuF/vrefZQQ9SZEreY25eEfwzhJ6dkghyRVZnScW2SzRZ
+         iSC6GhNPZ891V7u4ZAn6xTpzg5nhM+P2rha+rLvw3GYUP9woA/XoUQ6iuQT9x1nrq5pJ
+         OYleRp1s3SYI2gaUthBBkE60AEucGVHpjADn1q2e1yHGuuVjPkeoZyjLrsNyt8hCKYl3
+         vhog==
+X-Forwarded-Encrypted: i=1; AJvYcCVuSJACaBxos0lFj82mi8ngTOnlezOIYvNtcMPa82v2ns1hMGO33DvjEO7PUfWrlNao7ulD1uLHSjlcsNGEyxBo/4Xe71qK2SVx
+X-Gm-Message-State: AOJu0YwsfTLGpH6S1NpiDGp3MTo4IY4kaPiM5NtzdA/TlEsSR0t21PZk
+	sE2jZLktKYtzNtYgzyPb7ArZwBUgZwK38AVhHXBSQCZLTLZ2sykOiaLjDQ==
+X-Google-Smtp-Source: AGHT+IHfUAZrjImGHWziYopFxbD1rKq0mIN2zT6jOVxG7sCEBDjWvov0GunKKtG9JYS2cLf2c17+Kg==
+X-Received: by 2002:a05:6a20:438d:b0:1af:f497:8225 with SMTP id adf61e73a8af0-1aff497887amr24846273637.31.1715961822814;
+        Fri, 17 May 2024 09:03:42 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:4ede:fa51:f54a:fe25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f676b08e4esm5114885b3a.79.2024.05.17.09.03.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 09:03:42 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Fri, 17 May 2024 09:03:34 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: fan <nifan.cxl@gmail.com>, Gregory Price <gregory.price@memverge.com>,
+	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	nmtadam.samsung@gmail.com, jim.harris@samsung.com,
+	Jorgen.Hansen@wdc.com, wj28.lee@gmail.com, fan.ni@samsung.com
+Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
+Message-ID: <Zkd_tgVITi7awu3p@debian>
+References: <20240418232902.583744-1-fan.ni@samsung.com>
+ <ZiK25Log7LmtBffa@memverge.com>
+ <ZkY83c9PXoop_r1A@debian>
+ <20240517131852.00006bc7@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240517131852.00006bc7@Huawei.com>
 
-On Thu, 16 May 2024 09:11:54 +0100
-<alucerop@amd.com> wrote:
+On Fri, May 17, 2024 at 01:18:52PM +0100, Jonathan Cameron wrote:
+> On Thu, 16 May 2024 10:05:33 -0700
+> fan <nifan.cxl@gmail.com> wrote:
+> 
+> > On Fri, Apr 19, 2024 at 02:24:36PM -0400, Gregory Price wrote:
+> > > On Thu, Apr 18, 2024 at 04:10:51PM -0700, nifan.cxl@gmail.com wrote:  
+> > > > A git tree of this series can be found here (with one extra commit on top
+> > > > for printing out accepted/pending extent list): 
+> > > > https://github.com/moking/qemu/tree/dcd-v7
+> > > > 
+> > > > v6->v7:
+> > > > 
+> > > > 1. Fixed the dvsec range register issue mentioned in the the cover letter in v6.
+> > > >    Only relevant bits are set to mark the device ready (Patch 6). (Jonathan)
+> > > > 2. Moved the if statement in cxl_setup_memory from Patch 6 to Patch 4. (Jonathan)
+> > > > 3. Used MIN instead of if statement to get record_count in Patch 7. (Jonathan)
+> > > > 4. Added "Reviewed-by" tag to Patch 7.
+> > > > 5. Modified cxl_dc_extent_release_dry_run so the updated extent list can be
+> > > >    reused in cmd_dcd_release_dyn_cap to simplify the process in Patch 8. (Jørgen) 
+> > > > 6. Added comments to indicate further "TODO" items in cmd_dcd_add_dyn_cap_rsp.
+> > > >     (Jonathan)
+> > > > 7. Avoided irrelevant code reformat in Patch 8. (Jonathan)
+> > > > 8. Modified QMP interfaces for adding/releasing DC extents to allow passing
+> > > >    tags, selection policy, flags in the interface. (Jonathan, Gregory)
+> > > > 9. Redesigned the pending list so extents in the same requests are grouped
+> > > >     together. A new data structure is introduced to represent "extent group"
+> > > >     in pending list.  (Jonathan)
+> > > > 10. Added support in QMP interface for "More" flag. 
+> > > > 11. Check "Forced removal" flag for release request and not let it pass through.
+> > > > 12. Removed the dynamic capacity log type from CxlEventLog definition in cxl.json
+> > > >    to avoid the side effect it may introduce to inject error to DC event log.
+> > > >    (Jonathan)
+> > > > 13. Hard coded the event log type to dynamic capacity event log in QMP
+> > > >     interfaces. (Jonathan)
+> > > > 14. Adding space in between "-1]". (Jonathan)
+> > > > 15. Some minor comment fixes.
+> > > > 
+> > > > The code is tested with similar setup and has passed similar tests as listed
+> > > > in the cover letter of v5[1] and v6[2].
+> > > > Also, the code is tested with the latest DCD kernel patchset[3].
+> > > > 
+> > > > [1] Qemu DCD patchset v5: https://lore.kernel.org/linux-cxl/20240304194331.1586191-1-nifan.cxl@gmail.com/T/#t
+> > > > [2] Qemu DCD patchset v6: https://lore.kernel.org/linux-cxl/20240325190339.696686-1-nifan.cxl@gmail.com/T/#t
+> > > > [3] DCD kernel patches: https://lore.kernel.org/linux-cxl/20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com/T/#m11c571e21c4fe17c7d04ec5c2c7bc7cbf2cd07e3
+> > > >  
+> > > 
+> > > added review to all patches, will hopefully be able to add a Tested-by
+> > > tag early next week, along with a v1 RFC for MHD bit-tracking.
+> > > 
+> > > We've been testing v5/v6 for a bit, so I expect as soon as we get the
+> > > MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
+> > > 
+> > > The super-set release will complicate a few things but this doesn't
+> > > look like a blocker on our end, just a change to how we track bits in a
+> > > shared bit/bytemap.
+> > >   
+> > 
+> > Hi Gregory,
+> > I am planning to address all the concerns in this series and send out v8
+> > next week. Jonathan mentioned you have few related patches built on top
+> > of this series, can you point me to the latest version so I can look
+> > into it? Also, would you like me to carry them over to send together
+> > with my series in next version? It could be easier for you to avoid the
+> > potential rebase needed for your patches?
+> 
+> I wasn't clear - I meant other way around.
+> This series is built on a couple of Gregory's patches.  Gregory can suffer
+> the pain of rebasing his stuff ;) (or I'll do it depending on when things
+> land).
+> 
+> hw/cxl/mailbox: change CCI cmd set structure to be a member, not a reference 
+> https://gitlab.com/jic23/qemu/-/commit/f44ebc5a455ccdd6535879b0c5824e0d76b04da5
+> hw/cxl/mailbox: interface to add CCI commands to an existing CCI 
+> https://gitlab.com/jic23/qemu/-/commit/00a4dd8b388add03c588298f665ee918626296a5
+> 
+> I was suggesting your next posting should just include those two with
+> your sign-off added. That way if everyone is happy with v8 Michael Tsirkin
+> can pick it up directly, saving a step.
+> 
+> Make sure to add Michael to the to list as well for next version.
+> 
+> Thanks,
+> 
+> Jonathan
 
-> From: Alejandro Lucero <alucerop@amd.com>
->=20
-> Current check is using resource_size which counts on a range bigger than
-> 0. For a resource with start and end being 0, resource_size returns 1
-> and implying a false positive. Use the end not being zero as the new chec=
-k.
->=20
-> Note: If I=B4m not missing anything here, this should be extended to the
-> whole linux kernel where resource_size is being used in conditionals,
-> and where the likely right fix is to modify resource_size itself
-> checking for the range not being 0.
+Oh, I totally mis-understood.
 
-The start and end being 0 is a valid resource of length 1 so that
-should not need fixing.
+Sure. I will add the two patches with my sign-off to my next post.
 
-These should have been initialized with DEFINE_RES_MEM()
-/ DEFINE_RES_NAMED()
-That will happily set the .end to -1 resulting in a wrap around
-so that you get all bits set.
-
-Sometimes this gives slightly confusing range prints but otherwise
-I think it is fine.
-
->=20
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/hdm.c    | 4 ++--
->  drivers/cxl/core/memdev.c | 8 ++++----
->  drivers/cxl/mem.c         | 2 +-
->  3 files changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 47d9faf5897f..c5f70741d70a 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -432,12 +432,12 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *c=
-xled,
->  	 * Only allow modes that are supported by the current partition
->  	 * configuration
->  	 */
-> -	if (mode =3D=3D CXL_DECODER_PMEM && !resource_size(&cxlds->pmem_res)) {
-> +	if (mode =3D=3D CXL_DECODER_PMEM && !cxlds->pmem_res.end) {
->  		dev_dbg(dev, "no available pmem capacity\n");
->  		rc =3D -ENXIO;
->  		goto out;
->  	}
-> -	if (mode =3D=3D CXL_DECODER_RAM && !resource_size(&cxlds->ram_res)) {
-> +	if (mode =3D=3D CXL_DECODER_RAM && !cxlds->ram_res.end) {
->  		dev_dbg(dev, "no available ram capacity\n");
->  		rc =3D -ENXIO;
->  		goto out;
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 0336b3f14f4a..b61d57d0d4f4 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -197,14 +197,14 @@ static int cxl_get_poison_by_memdev(struct cxl_memd=
-ev *cxlmd)
->  	int rc =3D 0;
-> =20
->  	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
-> -	if (resource_size(&cxlds->pmem_res)) {
-> +	if (cxlds->pmem_res.end) {
->  		offset =3D cxlds->pmem_res.start;
->  		length =3D resource_size(&cxlds->pmem_res);
->  		rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
->  		if (rc)
->  			return rc;
->  	}
-> -	if (resource_size(&cxlds->ram_res)) {
-> +	if (cxlds->ram_res.end) {
->  		offset =3D cxlds->ram_res.start;
->  		length =3D resource_size(&cxlds->ram_res);
->  		rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> @@ -266,7 +266,7 @@ static int __cxl_dpa_to_region(struct device *dev, vo=
-id *arg)
->  		return 0;
-> =20
->  	cxled =3D to_cxl_endpoint_decoder(dev);
-> -	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-> +	if (!cxled->dpa_res || !cxled->dpa_res->end)
->  		return 0;
-> =20
->  	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-> @@ -302,7 +302,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev =
-*cxlmd, u64 dpa)
->  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->  		return 0;
-> =20
-> -	if (!resource_size(&cxlds->dpa_res)) {
-> +	if (!cxlds->dpa_res.end) {
->  		dev_dbg(cxlds->dev, "device has no dpa resource\n");
->  		return -EINVAL;
->  	}
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 6dc2bf1e2b1a..a168343d2d4d 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -174,7 +174,7 @@ static int cxl_mem_probe(struct device *dev)
->  	if (rc)
->  		return rc;
-> =20
-> -	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-> +	if (cxlds->pmem_res.end && IS_ENABLED(CONFIG_CXL_PMEM)) {
->  		rc =3D devm_cxl_add_nvdimm(cxlmd);
->  		if (rc =3D=3D -ENODEV)
->  			dev_info(dev, "PMEM disabled by platform\n");
-
+Fan
+> 
+> > 
+> > Let me know.
+> > 
+> > Thanks,
+> > Fan
+> > 
+> > > > 
+> > > > Fan Ni (12):
+> > > >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
+> > > >     payload of identify memory device command
+> > > >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
+> > > >     and mailbox command support
+> > > >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
+> > > >     type3 memory devices
+> > > >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
+> > > >     devices
+> > > >   hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
+> > > >     size instead of mr as argument
+> > > >   hw/mem/cxl_type3: Add host backend and address space handling for DC
+> > > >     regions
+> > > >   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
+> > > >     list mailbox support
+> > > >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
+> > > >     dynamic capacity response
+> > > >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
+> > > >     extents
+> > > >   hw/mem/cxl_type3: Add DPA range validation for accesses to DC regions
+> > > >   hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox support
+> > > >   hw/mem/cxl_type3: Allow to release extent superset in QMP interface
+> > > > 
+> > > >  hw/cxl/cxl-mailbox-utils.c  | 620 ++++++++++++++++++++++++++++++++++-
+> > > >  hw/mem/cxl_type3.c          | 633 +++++++++++++++++++++++++++++++++---
+> > > >  hw/mem/cxl_type3_stubs.c    |  20 ++
+> > > >  include/hw/cxl/cxl_device.h |  81 ++++-
+> > > >  include/hw/cxl/cxl_events.h |  18 +
+> > > >  qapi/cxl.json               |  69 ++++
+> > > >  6 files changed, 1396 insertions(+), 45 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.43.0
+> > > >   
+> 
