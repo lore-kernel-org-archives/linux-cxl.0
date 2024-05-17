@@ -1,81 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E133D3C068;
-	Fri, 17 May 2024 11:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949F441C68
+	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 12:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715946268; cv=none; b=jp/Q+tfWDnPcCm5jeCRDeI6rrv6xs3ZMj9aywKPkFVdJMaGmkjeOqkkdpwBG+1cJ7AQztZM4yR3VstWLK79WmgAmRW6e9KwfFnRwwnbhYz+a0XO2FdS6KSef9mX8slSqhWR7Fp7bXVn8ClXvl7C8LwyFBzUw58zfNKtB5zb6Oh8=
+	t=1715948339; cv=none; b=YG7ZLbQN4CWLkmKjcR6TyGdaEs9IqNomXI3F1eozCMxqfpigdpkXUR9AggX6jvrpym3in4qVdNmQKnG4dnHxUgmvmqErXWOlK6T4KExsFqrWAJ2U6H7OtKqv0DFL4JWsdHiJA7KJWnpVXO3bpaCfzhSjPqrAblzD+uWHNX8qlhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715946268; c=relaxed/simple;
-	bh=oe2uN6/FMJd8agEcFyxu+AWXUbAd2SNUJYKEVSDGkuM=;
+	s=arc-20240116; t=1715948339; c=relaxed/simple;
+	bh=b1gqSCA6MvMbSUAZWJJFVMPjeoS34fAzq2t0MGIq87Q=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UwKwGIKygrZQIhpQ8HlnRE7tO0vpoqouR73RiI5f9VFJ4FV54ITX0Oh08DvBFQy81voumlBLMOT0Eob3RlIQcghK9XNqiEIOsJOR6AEbSjDU5WfiVauqvusDBeQ0nAJ+/6QQ6l1mFHbyp7Ew7vEIHU06fotypkXkmPz5DmO4q0A=
+	 MIME-Version:Content-Type; b=BMmaRgbBbJqkSShkIEI+JcuWmK4xk2HkoZzMYORETnM9Rd3p1g5uOsjrxP6P6TDJB4GPpuUGURvIZCGSwUanvl54m/HszCwOIN38o4AENZRu65EkBp2BNG0t8v0uTWUXUk3ok6W/jNcWNVVHhjrQsZff336QF/BjAKDFX75j+YA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VglQP6tvSz6K6yd;
-	Fri, 17 May 2024 19:40:45 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VgmBG4FByz6K7Dw;
+	Fri, 17 May 2024 20:15:18 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B32FF140B54;
-	Fri, 17 May 2024 19:44:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6DEEE140B2A;
+	Fri, 17 May 2024 20:18:53 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 17 May
- 2024 12:44:19 +0100
-Date: Fri, 17 May 2024 12:44:18 +0100
+ 2024 13:18:52 +0100
+Date: Fri, 17 May 2024 13:18:52 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
-	<shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov
-	<dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240517124418.00000b48@Huawei.com>
-In-Reply-To: <20240517121554.000031d4@Huawei.com>
-References: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
-	<20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
-	<20240509101939.0000263a@Huawei.com>
-	<D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
-	<20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
-	<663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
-	<663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
-	<663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
-	<20240517121554.000031d4@Huawei.com>
+To: fan <nifan.cxl@gmail.com>
+CC: Gregory Price <gregory.price@memverge.com>, <qemu-devel@nongnu.org>,
+	<linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<nmtadam.samsung@gmail.com>, <jim.harris@samsung.com>,
+	<Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>, <fan.ni@samsung.com>
+Subject: Re: [PATCH v7 00/12] Enabling DCD emulation support in Qemu
+Message-ID: <20240517131852.00006bc7@Huawei.com>
+In-Reply-To: <ZkY83c9PXoop_r1A@debian>
+References: <20240418232902.583744-1-fan.ni@samsung.com>
+	<ZiK25Log7LmtBffa@memverge.com>
+	<ZkY83c9PXoop_r1A@debian>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -84,148 +46,161 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 17 May 2024 12:15:54 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Thu, 16 May 2024 10:05:33 -0700
+fan <nifan.cxl@gmail.com> wrote:
 
-> Focusing on just one bit.
-> 
-> > > Now, the question of how many legacy scrub interfaces should be
-> > > considered in this design out of the gate is a worthwhile discussion. I
-> > > am encouraged that this ABI is at least trying to handle more than 1
-> > > backend, which makes me feel better that adding a 3rd and 4th might not
-> > > be prohibitive.    
-> > 
-> > See above.
-> > 
-> > I'm perfectly fine with: "hey, we have a new scrub API interfacing to
-> > RAS scrub capability and it is *the* thing to use and all other hw scrub
-> > functionality should be shoehorned into it.
-> > 
-> > So this thing's design should at least try to anticipate supporting
-> > other scrub hw.
-> > 
-> > Because there's EDAC too. Why isn't this scrub thing part of EDAC? Why
-> > isn't this scrub API part of edac_core? I mean, this is all RAS so why
-> > design a whole new thing when the required glue is already there?
-> > 
-> > We can just as well have a
-> > 
-> > 	/sys/devices/system/edac/scrub/
-> > 
-> > node hierarchy and have everything there.  
+> On Fri, Apr 19, 2024 at 02:24:36PM -0400, Gregory Price wrote:
+> > On Thu, Apr 18, 2024 at 04:10:51PM -0700, nifan.cxl@gmail.com wrote: =20
+> > > A git tree of this series can be found here (with one extra commit on=
+ top
+> > > for printing out accepted/pending extent list):=20
+> > > https://github.com/moking/qemu/tree/dcd-v7
+> > >=20
+> > > v6->v7:
+> > >=20
+> > > 1. Fixed the dvsec range register issue mentioned in the the cover le=
+tter in v6.
+> > >    Only relevant bits are set to mark the device ready (Patch 6). (Jo=
+nathan)
+> > > 2. Moved the if statement in cxl_setup_memory from Patch 6 to Patch 4=
+. (Jonathan)
+> > > 3. Used MIN instead of if statement to get record_count in Patch 7. (=
+Jonathan)
+> > > 4. Added "Reviewed-by" tag to Patch 7.
+> > > 5. Modified cxl_dc_extent_release_dry_run so the updated extent list =
+can be
+> > >    reused in cmd_dcd_release_dyn_cap to simplify the process in Patch=
+ 8. (J=F8rgen)=20
+> > > 6. Added comments to indicate further "TODO" items in cmd_dcd_add_dyn=
+_cap_rsp.
+> > >     (Jonathan)
+> > > 7. Avoided irrelevant code reformat in Patch 8. (Jonathan)
+> > > 8. Modified QMP interfaces for adding/releasing DC extents to allow p=
+assing
+> > >    tags, selection policy, flags in the interface. (Jonathan, Gregory)
+> > > 9. Redesigned the pending list so extents in the same requests are gr=
+ouped
+> > >     together. A new data structure is introduced to represent "extent=
+ group"
+> > >     in pending list.  (Jonathan)
+> > > 10. Added support in QMP interface for "More" flag.=20
+> > > 11. Check "Forced removal" flag for release request and not let it pa=
+ss through.
+> > > 12. Removed the dynamic capacity log type from CxlEventLog definition=
+ in cxl.json
+> > >    to avoid the side effect it may introduce to inject error to DC ev=
+ent log.
+> > >    (Jonathan)
+> > > 13. Hard coded the event log type to dynamic capacity event log in QMP
+> > >     interfaces. (Jonathan)
+> > > 14. Adding space in between "-1]". (Jonathan)
+> > > 15. Some minor comment fixes.
+> > >=20
+> > > The code is tested with similar setup and has passed similar tests as=
+ listed
+> > > in the cover letter of v5[1] and v6[2].
+> > > Also, the code is tested with the latest DCD kernel patchset[3].
+> > >=20
+> > > [1] Qemu DCD patchset v5: https://lore.kernel.org/linux-cxl/202403041=
+94331.1586191-1-nifan.cxl@gmail.com/T/#t
+> > > [2] Qemu DCD patchset v6: https://lore.kernel.org/linux-cxl/202403251=
+90339.696686-1-nifan.cxl@gmail.com/T/#t
+> > > [3] DCD kernel patches: https://lore.kernel.org/linux-cxl/20240324-dc=
+d-type2-upstream-v1-0-b7b00d623625@intel.com/T/#m11c571e21c4fe17c7d04ec5c2c=
+7bc7cbf2cd07e3
+> > > =20
+> >=20
+> > added review to all patches, will hopefully be able to add a Tested-by
+> > tag early next week, along with a v1 RFC for MHD bit-tracking.
+> >=20
+> > We've been testing v5/v6 for a bit, so I expect as soon as we get the
+> > MHD code ported over to v7 i'll ship a tested-by tag pretty quick.
+> >=20
+> > The super-set release will complicate a few things but this doesn't
+> > look like a blocker on our end, just a change to how we track bits in a
+> > shared bit/bytemap.
+> >  =20
+>=20
+> Hi Gregory,
+> I am planning to address all the concerns in this series and send out v8
+> next week. Jonathan mentioned you have few related patches built on top
+> of this series, can you point me to the latest version so I can look
+> into it? Also, would you like me to carry them over to send together
+> with my series in next version? It could be easier for you to avoid the
+> potential rebase needed for your patches?
 
-Sorry - finger fumble, wasn't meant to send yet :( 
+I wasn't clear - I meant other way around.
+This series is built on a couple of Gregory's patches.  Gregory can suffer
+the pain of rebasing his stuff ;) (or I'll do it depending on when things
+land).
 
-> 
-> A few questions about this. It seems an unusual use of fake devices and a bus
-> so I'm trying to understand how we might do something that looks more standard
-> but perhaps also fit within the existing scheme.  I appreciate this stuff
-> has evolved over a long time, so lots of backwards compatibility concerns.
-> 
-> If I follow this right the current situation is:
-> 
-> /sys/devices/system/edac is the 'virtual' device registered on the edac bus.
+hw/cxl/mailbox: change CCI cmd set structure to be a member, not a referenc=
+e=20
+https://gitlab.com/jic23/qemu/-/commit/f44ebc5a455ccdd6535879b0c5824e0d76b0=
+4da5
+hw/cxl/mailbox: interface to add CCI commands to an existing CCI=20
+https://gitlab.com/jic23/qemu/-/commit/00a4dd8b388add03c588298f665ee9186262=
+96a5
 
-Actually that's wrong it's not on the edac bus as that is the bus registered
-via subsys_system_register() (which does create a fake device as per the docs
-telling us not to use it any more - fair enough, legacy).
+I was suggesting your next posting should just include those two with
+your sign-off added. That way if everyone is happy with v8 Michael Tsirkin
+can pick it up directly, saving a step.
 
-The mc below it is a bare device - I think just to provide a directory?
-The comment on the release function seems to say that. This gives.
+Make sure to add Michael to the to list as well for next version.
 
-/sys/devices/system/edac/mc
-/sys/bus/edac/devices/mc
-
-Under that we have individual mc0/mc1 etc for the instances of that
-accessible via
-/sys/devices/system/edac/mc/mc0
-/sys/bus/edac/device/mc/mc0
-Those are registered a children of mc. I'd have expected them to be
-children of the device that registered them - so for our case, a CXL mc0
-node would be child of the CXL device rather than here but again
-I'm guessing legacy that had to be maintained.
-
-In general this nesting seems unusual, as I'd have expected the
-registration directly on the edac bus with
-/sys/bus/edac/device/mc0
-/sys/bus/edac/device/pci0
-
-Given we are talking about something new, maybe this is an opportunity
-to not perpetuate this?
-
-If we add scrub in here I'd prefer to just use the normal bus registration
-handling rather than creating a nest of additional nodes.  So perhaps we
-could consider
-/sys/bus/edac/device/scrub0 (or whatever name makes sense, as per the
-earlier discussion of cxl_scrub0 or similar).
-Could consider moving the bus location of mc0 etc in future to there with
-symlinks to /sys/bus/edac/device/mc/* for backwards compatibility either
-via setting their parents or more explicit link creation.
-
-These scrub0 would have their dev->parent set to who ever actually registered
-them providing that reference cleanly and letting all the normal device
-model stuff work more simply.
-
-If we did that with the scrub nodes, the only substantial change from
-a separate subsystem as seen in this patch set would be to register
-them on the edac bus rather than a separate class.
-
-As you pointed out, there is a simple scrub interface in the existing
-edac memory controller code. How would you suggest handling that?
-Have them all register an additional device on the bus (as a child
-of the mcX devices) perhaps?  Seems an easy step forwards and should
-be no backwards compatibility concerns.
-
-> 
-> > 
-> > Why does it have to be yet another thing?
-
-It absolutely doesn't as long as we can do it fairly cleanly within
-existing code. I wasn't sure that was possible, but you know edac
-a lot better than me and so I'll defer to you on that!
-
-> > 
-> > And if it needs to be separate, who's going to maintain it?
-
-Several options for that, but fair question - bringing (at least some of)
-the RAS mess together will focus reviewer bandwidth etc better.
-
-> >   
-> > > Which matches what I reacted to on the last posting:
-> > > 
-> > >    "Maybe it is self evident to others, but for me there is little in these
-> > >     changelogs besides 'mechanism exists, enable it'"
-> > > 
-> > > ...and to me that feedback was taken to heart with much improved
-> > > changelogs in this new posting.    
-> > 
-> > Ok.
-> >   
-> > > This init time feature probing discussion feels like it was born from a
-> > > micommunication / misunderstanding.    
-> > 
-> > Yes, it seems so, thanks for clarifying things.
-> > 
-> > I still am unclear on the usecases and how this is supposed to be used
-> > and also, as mentioned above, we have a *lot* of RAS functionality
-> > spread around the kernel. Perhaps we should start unifying it instead of
-> > adding more...
-
-I'm definitely keen on unifying things as I agree, this mixture of different
-RAS functionality is a ever worsening mess.
+Thanks,
 
 Jonathan
 
-
-> > 
-> > So the big picture and where we're headed to, needs to be clarified first.
-> > 
-> > Thx.
-> >   
-> 
+>=20
+> Let me know.
+>=20
+> Thanks,
+> Fan
+>=20
+> > >=20
+> > > Fan Ni (12):
+> > >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
+> > >     payload of identify memory device command
+> > >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
+> > >     and mailbox command support
+> > >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
+> > >     type3 memory devices
+> > >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
+> > >     devices
+> > >   hw/mem/cxl-type3: Refactor ct3_build_cdat_entries_for_mr to take mr
+> > >     size instead of mr as argument
+> > >   hw/mem/cxl_type3: Add host backend and address space handling for DC
+> > >     regions
+> > >   hw/mem/cxl_type3: Add DC extent list representative and get DC exte=
+nt
+> > >     list mailbox support
+> > >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/relea=
+se
+> > >     dynamic capacity response
+> > >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
+> > >     extents
+> > >   hw/mem/cxl_type3: Add DPA range validation for accesses to DC regio=
+ns
+> > >   hw/cxl/cxl-mailbox-utils: Add superset extent release mailbox suppo=
+rt
+> > >   hw/mem/cxl_type3: Allow to release extent superset in QMP interface
+> > >=20
+> > >  hw/cxl/cxl-mailbox-utils.c  | 620 ++++++++++++++++++++++++++++++++++-
+> > >  hw/mem/cxl_type3.c          | 633 +++++++++++++++++++++++++++++++++-=
+--
+> > >  hw/mem/cxl_type3_stubs.c    |  20 ++
+> > >  include/hw/cxl/cxl_device.h |  81 ++++-
+> > >  include/hw/cxl/cxl_events.h |  18 +
+> > >  qapi/cxl.json               |  69 ++++
+> > >  6 files changed, 1396 insertions(+), 45 deletions(-)
+> > >=20
+> > > --=20
+> > > 2.43.0
+> > >  =20
 
