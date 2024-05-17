@@ -1,158 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD6A2C69C;
-	Fri, 17 May 2024 10:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A239932C8B
+	for <linux-cxl@vger.kernel.org>; Fri, 17 May 2024 10:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715940533; cv=none; b=lG/3f37AsMJQUbl5o+PeDa6Dot/uQ42K3/bFH6XQ2ANwF37/ska9BC8/ZZzCVu2lUC6Lfq+4zpHbEaTIS/BqAJX6xNMlERsdJKmuqjboESwJzMOCVgQhvhpCVcCqO0DusI2Ho+INV2yQH517mrzF9N2ubnFvgLdPDibZiAFU/og=
+	t=1715940892; cv=none; b=lXRZ71eK3wDNKIWmUKAHPJDaJY12ehjlbCoJTI+lzeyAy/CfQwsGOV3oBPexpWSrtqFZw7UHz2sbFb6mD8zDgbg+VRuk9MVZEqa9uHdhnMkCZQH15d3Y5iNlCS5Mff2r4wl/pS7pDGQ+cfkPl3eddLC4142k39FBVq9okjrFBMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715940533; c=relaxed/simple;
-	bh=pfuCaal2BbH2H2hAduZ+yPJwkOr35rv6GubynynOKNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XEGrk6DO/HtLyDuShdqmfBFNiURuHSKqzF4MyrChUlKEU0l5TnveN0n4FMyml+C2zprg6Up1awkwy6wqWThRYmrHAxWLtYglRPwzyx5qE79jrXxsQnEDFpMRpEHfJB02DEipCu+if5xc25adIoqG1/krImFL33v4klERyM7AggA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pbev1wbq; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pbev1wbq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715940533; x=1747476533;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pfuCaal2BbH2H2hAduZ+yPJwkOr35rv6GubynynOKNs=;
-  b=Pbev1wbqIcHUvtorJeWO6z2sOdpx59AE68pxNIgljVF2amXVEfNBGdqn
-   WFqYMmnzA4fcyYWW+feuV2EwcqV4D8UqlAqGZ1oScQeBdbQKx3iYEKTCi
-   TgwULxDjEXuzEl1WvY+E4QUtnpcvtO11vXjwL2Gt+kg0VGWfiiQbpcKZb
-   J4FqASJe+37Vyb92OMZT4IvVjz5QKF3xU67KKO5ifHVa429vAnQBuQUaI
-   S6u2CoBCy+rbUlEYIB7/qbyIw1ebYjzZ7a3bbqaS1Bw6PqxsdxGBiwkht
-   RZQaHgDUoEf99E+RguMyFbpC6pP2fOl8Dq+a2oDUQBZGpCBrPv2mdSUFb
-   w==;
-X-CSE-ConnectionGUID: BTgj9ey/Tmu/6pWl9wgTTQ==
-X-CSE-MsgGUID: c1HcfxBySPGO0vwKF/dEpA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11950421"
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="11950421"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 03:08:52 -0700
-X-CSE-ConnectionGUID: 0KBlDWPsRzq3yu15syg1rw==
-X-CSE-MsgGUID: 43lF/XZvQ8yTvCWhav0Ytw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="31571973"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.21])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 03:08:49 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v2] cxl/events: Use a common struct for DRAM and General Media
- events
-Date: Fri, 17 May 2024 12:08:45 +0200
-Message-ID: <6226704.vuYhMxLoTh@fdefranc-mobl3>
-In-Reply-To: <20240516173319.00007429@Huawei.com>
-References:
- <20240516102116.3512377-1-fabio.m.de.francesco@linux.intel.com>
- <20240516173319.00007429@Huawei.com>
+	s=arc-20240116; t=1715940892; c=relaxed/simple;
+	bh=G7ouvYE2KGAGYNy6Llvo5bEx0CAkELd/lYwmwbvmSlg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q7ij6ke1ulQpxDkdrz69tCOkJfdEobxwQniT/rycW3NXk2j7H/th5cWycvea15es6kSnMj0CuDYC3WZaTctuNNOihIs30YCOY2flvSI0DooQZwbedQ24qsNxISqZJ3gKA9B9i2FIGvkySTV9hnv6SGvfk0b2f+ChgPOu46GrQTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VgjR40WFJz67NJq;
+	Fri, 17 May 2024 18:11:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A2B85140594;
+	Fri, 17 May 2024 18:14:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 17 May
+ 2024 11:14:46 +0100
+Date: Fri, 17 May 2024 11:14:41 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: CXL numa error on arm64 qemu virt machine
+Message-ID: <20240517111441.00002279@Huawei.com>
+In-Reply-To: <ZkcsS0we4XHPgBIP@phytium.com.cn>
+References: <20240508080051.3756934-1-wangyuquan1236@phytium.com.cn>
+	<20240508130252.00006367@Huawei.com>
+	<ZjyK1tI0TtbAKhmh@phytium.com.cn>
+	<20240510181646.000019a1@Huawei.com>
+	<ZkcsS0we4XHPgBIP@phytium.com.cn>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Jonathan,
+On Fri, 17 May 2024 18:07:07 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-Thanks for your comments.
+> On Fri, May 10, 2024 at 06:16:46PM +0100, Jonathan Cameron wrote:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/jic23/cxl-staging.git/log/?h=arm-numa-fixes
+> >   
+> Thank you :)
+> > I've run out of time to sort out cover letters and things + just before the merge
+> > window is never a good time get anyone to pay attention to potentially controversial
+> > patches.  So for now I've thrown up a branch on kernel.org with Robert's
+> > series of fixes of related code (that's queued in the ACPI tree for the merge window)
+> > and Dan Williams (from several years ago) + my additions that 'work' (lightly tested)
+> > on qemu/arm64 with the generic port patches etc. 
+> > 
+> > I'll send out an RFC in a couple of weeks.  In meantime let me know if you
+> > run into any problems or have suggestions to improve them.
+> > 
+> > Jonathan
+> >  
+> With the latest commit(d077bf9) in the 'arm-numa-fixes', the qemu virt
+> could create a cxl region with a new numa node (node 2) just like x86.
+> At this stage(the first time to create cxl region), everything works
+> fine.
+> 
+> However, if I use below commands to delete the created cxl region:
+> 
+> `daxctl offline-memory dax0.0`
+> `cxl disable-region region0`
+> `cxl destroy-region region0`
+> 
+> and then recreate it by `cxl create-region -d decoder0.0 -t ram`, the
+> kernel could not create the numa node2 again, and the kernel will print:
+> 
+> [  589.458971] Fallback order for Node 0: 0 1
+> [  589.459136] Fallback order for Node 1: 1 0
+> [  589.459175] Fallback order for Node 2: 0 1
+> [  589.459213] Built 2 zonelists, mobility grouping on.  Total pages: 1009890
+> [  589.459284] Policy zone: Normal
 
-On Thursday, May 16, 2024 6:33:19=E2=80=AFPM GMT+2 Jonathan Cameron wrote:
-> On Thu, 16 May 2024 12:19:53 +0200
->=20
-> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
-> > cxl_event_common was a poor naming choice and caused confusion with the
-> > existing Common Event Record.
-> >=20
-> > Use cxl_event_media as a common structure to record information about D=
-RAM
-> > and General Media events because it simplifies handling the two events.
-> >=20
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Fixes: 6aec00139d3a ("cxl/core: Add region info to cxl_general_media and
-> > cxl_dram events") Signed-off-by: Fabio M. De Francesco
-> > <fabio.m.de.francesco@linux.intel.com> ---
->=20
-> Packing question inline.
->
-> > [...]
-> >=20
-> > -struct cxl_event_dram {
-> > +struct cxl_event_media {
-> >=20
-> >  	struct cxl_event_record_hdr hdr;
-> >=20
-> > -	__le64 phys_addr;
-> > -	u8 descriptor;
-> > -	u8 type;
-> > -	u8 transaction_type;
-> > -	u8 validity_flags[2];
-> > -	u8 channel;
-> > -	u8 rank;
-> > -	u8 nibble_mask[3];
-> > -	u8 bank_group;
-> > -	u8 bank;
-> > -	u8 row[3];
-> > -	u8 column[2];
-> > -	u8 correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
-> > -	u8 reserved[0x17];
-> > +	struct_group_tagged(cxl_event_media_hdr, media_hdr,
-> > +		__le64 phys_addr;
-> > +		u8 descriptor;
-> > +		u8 type;
-> > +		u8 transaction_type;
-> > +		u8 validity_flags[2];
-> > +		u8 channel;
-> > +		u8 rank;
-> > +	);
->=20
-> Does the struct that is created end up __packed?
+I'll see if I can figure out what is happening there.
+> 
+> Meanwhile, the qemu reports that: 
+> 
+> "qemu-system-aarch64: virtio: bogus descriptor or out of resources"
 
-No, I should have noticed it.
+That sounds like another TCG issue, or possibly the DMA bounce buffer
+problem resurfacing.  It's not directly related to his NUMA aspect unless
+something very odd is going on.  I'm even more confused because I think
+you are not using kmem with the above commands, so we shouldn't be using
+the CXL memory for virtio.
 
-> Also, why is tagged useful here?
+Just to check, you aren't running with KVM I hope?  That opens a much
+bigger problem set. :(
 
-It is not useful. I'll rework it not tagged.
+Jonathan
 
-Again thanks,
 
-=46abio
 
-> > +	union {
-> > +		struct_group(general,
-> > +			u8 device[3];
-> > +			u8=20
-component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-> > +			u8 gen_reserved[46];
-> > +		);
-> > +		struct_group(dram,
-> > +			u8 nibble_mask[3];
-> > +			u8 bank_group;
-> > +			u8 bank;
-> > +			u8 row[3];
-> > +			u8 column[2];
-> > +			u8=20
-correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
-> > +			u8 dram_reserved[0x17];
-> > +		);
-> > +	};
-> >=20
-> >  } __packed;
-> > =20
-
+> 
+> Many thanks
+> Yuquan
+> 
 
