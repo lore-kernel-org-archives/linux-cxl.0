@@ -1,328 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4266123746;
-	Sat, 18 May 2024 11:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D805FC01;
+	Sun, 19 May 2024 05:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716032015; cv=none; b=mjMorEfiZYwne2EeS9cmC8tZ1Gar80nsKdrxEFEHHPpskW9Rq8ZE2HIqRh319Am/nzqTmQGklG01CN533U6FfhANnDb1vVwYeAXP9lK3zkIMptQH8kd2xczM80Lc9VIXuMeZJWxwCVnHLvI6j2CKri/F4+GOqVVY4KsjN3A85mA=
+	t=1716098370; cv=none; b=DebI9mkb7VbXECcTaOqYeNfBsSN9K9j3qlvpMCUz00X+fI4HTYKvLrLP4mds/1jX5uMfKcUnOzZ9PXGbInJgUHAe/qQkg7W4H93trU6SF5KXysBZE22XM0chhXjnkL333dsz8QirjntOEG1+JV1Tw5WjXcC7pKeMc5l0CyuVVeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716032015; c=relaxed/simple;
-	bh=YhJcXkt/aoind4RF7l7Z4lX9C13WOP11znseZKc37yY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0su6VpZeV65UhyhKoGfdhyQW8VI4dR9bl/Ag6od5QA/U0Fv9b3tLjncyu5qDDw2CIohCBxKneGsGZaxcACd/4N0XvdzzckoMVZyJ+OgZ2Ntvwrm4kdaikN7V1YIaoj83qLh3O9wDoN7TrtMKN93uoUAY9KE5jE4mzUj1aVsarg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0dcKQM/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716098370; c=relaxed/simple;
+	bh=NmN54ee38hsuoKztnpSGK2jQepru5rXH4Gp4EPxGG/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G6qe+lmgLHOuwBTN9KCazQ99nHQSL+rAIKhFsuqRLYoV+SvwOIwb3pPrbRtMt4EyAophut0uFJaB/b2fhfr37FT2T8QNqN9HHEJFaVoNHe+aT9nRI0dixSKGKDXsUx2M9Sn88tTc/qQZDB1AoC4O7c4+GXfpX0gRm6SeoCeUC/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UbFqS1BM; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0dcKQM/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716032013; x=1747568013;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YhJcXkt/aoind4RF7l7Z4lX9C13WOP11znseZKc37yY=;
-  b=B0dcKQM/ZdmbKsDInpiqQ9KEh0YPMjG8Y0xXgF0bANPTbhTpmDjZ7yQH
-   AUQ8pTB76GKBkOmyhqzMbH3+zt6XUJGoRhUD7XPQeF+5+/vOJOtPy6UBA
-   n2oElYUaKx7Lsuynwwuad0aQ2IFnZ3iJO9hGssAMc2wuDcMiUc7mGU5of
-   TA5Y6W2DYY/NEqJZdzTN2hi1AZ5AeXzaGLQh+jTu6ROPnWSetLvgGySob
-   PKSbY3eM/yCwGUrxsjZBy77LzvXp7ZB2HwcdzX/WVQpgfN/qjl+LDI48q
-   8AjX/fEsYO+lT5G44oNqcJYe/zsKFK/8nkN27Y6FFEFRLA3+6HxQVQLlE
-   w==;
-X-CSE-ConnectionGUID: p2x4MP1IS/WyMQMW+VmBUg==
-X-CSE-MsgGUID: UNkwgamVTiGO/j3IL8Dnsw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="11584477"
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="11584477"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 04:33:31 -0700
-X-CSE-ConnectionGUID: m58jY8j0Rbitvm1hY90p/w==
-X-CSE-MsgGUID: RczdRD34R6ad+v21234RUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="55277394"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.51])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 04:33:29 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH v3] cxl/events: Use a common struct for DRAM and General Media events
-Date: Sat, 18 May 2024 13:26:21 +0200
-Message-ID: <20240518113317.3683718-1-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbFqS1BM"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-792ce7a2025so52296385a.0;
+        Sat, 18 May 2024 22:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716098367; x=1716703167; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l9NrPccSk3dxue6yKBry7lygPcaCTpzVb/uwrQLilDQ=;
+        b=UbFqS1BMC7a831CbLauUqd6ER0ywFqSa/ltBqGHB5qhkJdcfvfINXTcK8nJEqppPen
+         Juwjmb2iJ+bbsTrn1irzkU0eISVv84mc+l3E2WekNYVBXeNJdtXhm8RBH75DLB7ATlRH
+         qk3IH2YHNGYddUO2BLMajH5Q24jG2ySvY1q5rUwIJ/vrtK6yzL6qpqFDl41tPBa4IilF
+         60O+9ZrlFzfAAlAlsQSPMqLXS+euTo8NGxIMeSIWu4DSsxaHZu2PaOTU38XDKRSNn6sL
+         +fftRoKwGTXnkXnflldGiFrsVM+Q3eHpk/IGGCI7pgZkqtg3puGhtnyPRPTz0HMP7B3r
+         xKMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716098367; x=1716703167;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l9NrPccSk3dxue6yKBry7lygPcaCTpzVb/uwrQLilDQ=;
+        b=cVcPXKzdQrsBHj0qrzhKlgFxIMJ3sbP1kOKQiYtzxNpTbT3qw/lDgIJ0rZQyhQriXc
+         Ytrnt3xbP5bUo6xD45AqUmWVfkSPeNX1vFrCW0ne6Tp/P1bHg//vyblEFP+wYv7/5Bib
+         xcyL52WDQMoYnDs3VZaP2lFRP5r/IDVqIONYWH8XctabUVbpqBRo9n0JLs25dlxX0hEF
+         yM6uEwqdUZ7QeNp3jE6CQpIX5AXdk8WF6LEl1T0zTFqnNmLttrvYwK/iTRUnlIfDFtfz
+         W7vjeWCS3osRboAphj8utHSfjPifm3GbNtlpkpFvf+mgu+97toGNQFUfmoWsOBRZyr7r
+         1k8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUyTrTurj0C539WqrifVStZ+ga6aJiTYpQpe/I1eH4shRyte8nCmm7Atp/FvO00iPf4D/P55iQXTQShPM+bZBtqh2nnzGZ6/ltWtA57WXxWGx/9ifXO382w1PwkhV5KtW6gCFEYBrYbr6gToJkj2YaP3wqN+YQu8uzgELWB+sTtEKv0bs9HNbVjvCGSCQPJJMqNUy0Ro1+SdshUIbZOxO04QA==
+X-Gm-Message-State: AOJu0YyVO6s8d3F+rx3UN92sjdtOcKAyBEfNH3Z7nzV31/kzJU9COAgk
+	GkwCGPyWme3p67Z0tM3aL62Fp/mR+iPui15nOsCd8iQl4rZll4aBZwi222Oy0djEOJSU8dQN5G4
+	sjtLWP/UIQ4h9I2ycNZjCvpzAGt0=
+X-Google-Smtp-Source: AGHT+IH3KgC5/5RTYZFFyAgi3gGOQGkSBTIG6FnrvcN+/pNJE8X5PHNe6d/ZdqiUCwpFLg5jGKiFsKPx3NTMctwKRHM=
+X-Received: by 2002:a37:c44c:0:b0:793:343:6db5 with SMTP id
+ af79cd13be357-79303437020mr998126385a.11.1716098367007; Sat, 18 May 2024
+ 22:59:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1708709155.git.john@groves.net> <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
+ <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
+In-Reply-To: <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sun, 19 May 2024 08:59:15 +0300
+Message-ID: <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+To: Miklos Szeredi <miklos@szeredi.hu>, John Groves <john@groves.net>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, john@jagalactic.com, 
+	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, 
+	gregory.price@memverge.com, Vivek Goyal <vgoyal@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-cxl_event_common was an unfortunate naming choice and caused confusion with
-the existing Common Event Record. Furthermore, its fields didn't map all
-the common information between DRAM and General Media Events.
+On Fri, May 17, 2024 at 12:55=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu>=
+ wrote:
+>
+> On Thu, 29 Feb 2024 at 07:52, Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> > I'm not virtiofs expert, but I don't think that you are wrong about thi=
+s.
+> > IIUC, virtiofsd could map arbitrary memory region to any fuse file mmap=
+ed
+> > by virtiofs client.
+> >
+> > So what are the gaps between virtiofs and famfs that justify a new file=
+system
+> > driver and new userspace API?
+>
+> Let me try to fill in some gaps.  I've looked at the famfs driver
+> (even tried to set it up in a VM, but got stuck with the EFI stuff).
+>
+> - famfs has an extent list per file that indicates how each page
+> within the file should be mapped onto the dax device, IOW it has the
+> following mapping:
+>
+>   [famfs file, offset] -> [offset, length]
+>
+> - fuse can currently map a fuse file onto a backing file:
+>
+>   [fuse file] -> [backing file]
+>
+> The interface for the latter is
+>
+>    backing_id =3D ioctl(dev_fuse_fd, FUSE_DEV_IOC_BACKING_OPEN, backing_m=
+ap);
+> ...
+>    fuse_open_out.flags |=3D FOPEN_PASSTHROUGH;
+>    fuse_open_out.backing_id =3D backing_id;
 
-Remove cxl_event_common and introduce cxl_event_media_hdr to record common
-information between DRAM and General Media events.
+FYI, library and example code was recently merged to libfuse:
+https://github.com/libfuse/libfuse/pull/919
 
-cxl_event_media_hdr, which is embedded in both cxl_event_gen_media and
-cxl_event_dram, leverages the commonalities between the two events to
-simplify their respective handling.
+>
+> This looks suitable for doing the famfs file - > dax device mapping as
+> well.  I wouldn't extend the ioctl with extent information, since
+> famfs can just use FUSE_DEV_IOC_BACKING_OPEN once to register the dax
+> device.  The flags field could be used to tell the kernel to treat
+> this fd as a dax device instead of a a regular file.
+>
+> Letter, when the file is opened the extent list could be sent in the
+> open reply together with the backing id.  The fuse_ext_header
+> mechanism seems suitable for this.
+>
+> And I think that's it as far as API's are concerned.
+>
+> Note: this is already more generic than the current famfs prototype,
+> since multiple dax devices could be used as backing for famfs files,
+> with the constraint that a single file can only map data from a single
+> dax device.
+>
+> As for implementing dax passthrough, I think that needs a separate
+> source file, the one used by virtiofs (fs/fuse/dax.c) does not appear
+> to have many commonalities with this one.  That could be renamed to
+> virtiofs_dax.c as it's pretty much virtiofs specific, AFAICT.
+>
+> Comments?
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
+Would probably also need to decouple CONFIG_FUSE_DAX
+from CONFIG_FUSE_VIRTIO_DAX.
 
-- Changes for v3 -
+What about fc->dax_mode (i.e. dax=3D mount option)?
 
-	- Rework the layout of cxl_event_dram and cxl_event_gen_media
-	  to make a simpler change (Dan)
-	- Remove a "Fixes" tag (Dan)
-	- Don't use unnecessary struct_group[_tagged] (Jonathan, Ira)
-	- Rewrite end extend the commit message
+What about FUSE_IS_DAX()? does it apply to both dax implementations?
 
-- Link to v2 -
+Sounds like a decent plan.
+John, let us know if you need help understanding the details.
 
-	https://lore.kernel.org/linux-cxl/20240516102116.3512377-1-fabio.m.de.francesco@linux.intel.com/
+> Am I missing something significant?
 
+Would we need to set IS_DAX() on inode init time or can we set it
+later on first file open?
 
- drivers/cxl/core/mbox.c      |  2 +-
- drivers/cxl/core/trace.h     | 32 ++++++++++++++---------------
- include/linux/cxl-event.h    | 40 +++++++++++++-----------------------
- tools/testing/cxl/test/mem.c | 30 +++++++++++++--------------
- 4 files changed, 46 insertions(+), 58 deletions(-)
+Currently, iomodes enforces that all opens are either
+mapped to same backing file or none mapped to backing file:
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 2626f3fff201..a08f050cc1ca 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -875,7 +875,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		guard(rwsem_read)(&cxl_region_rwsem);
- 		guard(rwsem_read)(&cxl_dpa_rwsem);
- 
--		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
-+		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
- 		cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 		if (cxlr)
- 			hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 07a0394b1d99..5a76f94accf4 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -340,23 +340,23 @@ TRACE_EVENT(cxl_general_media,
- 	),
- 
- 	TP_fast_assign(
--		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-+		CXL_EVT_TP_fast_assign(cxlmd, log, rec->media_hdr.hdr);
- 		__entry->hdr_uuid = CXL_EVENT_GEN_MEDIA_UUID;
- 
- 		/* General Media */
--		__entry->dpa = le64_to_cpu(rec->phys_addr);
-+		__entry->dpa = le64_to_cpu(rec->media_hdr.phys_addr);
- 		__entry->dpa_flags = __entry->dpa & CXL_DPA_FLAGS_MASK;
- 		/* Mask after flags have been parsed */
- 		__entry->dpa &= CXL_DPA_MASK;
--		__entry->descriptor = rec->descriptor;
--		__entry->type = rec->type;
--		__entry->transaction_type = rec->transaction_type;
--		__entry->channel = rec->channel;
--		__entry->rank = rec->rank;
-+		__entry->descriptor = rec->media_hdr.descriptor;
-+		__entry->type = rec->media_hdr.type;
-+		__entry->transaction_type = rec->media_hdr.transaction_type;
-+		__entry->channel = rec->media_hdr.channel;
-+		__entry->rank = rec->media_hdr.rank;
- 		__entry->device = get_unaligned_le24(rec->device);
- 		memcpy(__entry->comp_id, &rec->component_id,
- 			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
--		__entry->validity_flags = get_unaligned_le16(&rec->validity_flags);
-+		__entry->validity_flags = get_unaligned_le16(&rec->media_hdr.validity_flags);
- 		__entry->hpa = hpa;
- 		if (cxlr) {
- 			__assign_str(region_name, dev_name(&cxlr->dev));
-@@ -440,19 +440,19 @@ TRACE_EVENT(cxl_dram,
- 	),
- 
- 	TP_fast_assign(
--		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-+		CXL_EVT_TP_fast_assign(cxlmd, log, rec->media_hdr.hdr);
- 		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
- 
- 		/* DRAM */
--		__entry->dpa = le64_to_cpu(rec->phys_addr);
-+		__entry->dpa = le64_to_cpu(rec->media_hdr.phys_addr);
- 		__entry->dpa_flags = __entry->dpa & CXL_DPA_FLAGS_MASK;
- 		__entry->dpa &= CXL_DPA_MASK;
--		__entry->descriptor = rec->descriptor;
--		__entry->type = rec->type;
--		__entry->transaction_type = rec->transaction_type;
--		__entry->validity_flags = get_unaligned_le16(rec->validity_flags);
--		__entry->channel = rec->channel;
--		__entry->rank = rec->rank;
-+		__entry->descriptor = rec->media_hdr.descriptor;
-+		__entry->type = rec->media_hdr.type;
-+		__entry->transaction_type = rec->media_hdr.transaction_type;
-+		__entry->validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
-+		__entry->channel = rec->media_hdr.channel;
-+		__entry->rank = rec->media_hdr.rank;
- 		__entry->nibble_mask = get_unaligned_le24(rec->nibble_mask);
- 		__entry->bank_group = rec->bank_group;
- 		__entry->bank = rec->bank;
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 60b25020281f..6562663a036d 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -21,6 +21,17 @@ struct cxl_event_record_hdr {
- 	u8 reserved[15];
- } __packed;
- 
-+struct cxl_event_media_hdr {
-+	struct cxl_event_record_hdr hdr;
-+	__le64 phys_addr;
-+	u8 descriptor;
-+	u8 type;
-+	u8 transaction_type;
-+	u8 validity_flags[2];
-+	u8 channel;
-+	u8 rank;
-+} __packed;
-+
- #define CXL_EVENT_RECORD_DATA_LENGTH 0x50
- struct cxl_event_generic {
- 	struct cxl_event_record_hdr hdr;
-@@ -33,14 +44,7 @@ struct cxl_event_generic {
-  */
- #define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
- struct cxl_event_gen_media {
--	struct cxl_event_record_hdr hdr;
--	__le64 phys_addr;
--	u8 descriptor;
--	u8 type;
--	u8 transaction_type;
--	u8 validity_flags[2];
--	u8 channel;
--	u8 rank;
-+	struct cxl_event_media_hdr media_hdr;
- 	u8 device[3];
- 	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
- 	u8 reserved[46];
-@@ -52,14 +56,7 @@ struct cxl_event_gen_media {
-  */
- #define CXL_EVENT_DER_CORRECTION_MASK_SIZE	0x20
- struct cxl_event_dram {
--	struct cxl_event_record_hdr hdr;
--	__le64 phys_addr;
--	u8 descriptor;
--	u8 type;
--	u8 transaction_type;
--	u8 validity_flags[2];
--	u8 channel;
--	u8 rank;
-+	struct cxl_event_media_hdr media_hdr;
- 	u8 nibble_mask[3];
- 	u8 bank_group;
- 	u8 bank;
-@@ -95,21 +92,12 @@ struct cxl_event_mem_module {
- 	u8 reserved[0x3d];
- } __packed;
- 
--/*
-- * General Media or DRAM Event Common Fields
-- * - provides common access to phys_addr
-- */
--struct cxl_event_common {
--	struct cxl_event_record_hdr hdr;
--	__le64 phys_addr;
--} __packed;
--
- union cxl_event {
- 	struct cxl_event_generic generic;
- 	struct cxl_event_gen_media gen_media;
- 	struct cxl_event_dram dram;
- 	struct cxl_event_mem_module mem_module;
--	struct cxl_event_common common;
-+	struct cxl_event_media_hdr media_hdr;
- } __packed;
- 
- /*
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 6584443144de..63b71541d399 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -384,19 +384,19 @@ struct cxl_test_gen_media {
- struct cxl_test_gen_media gen_media = {
- 	.id = CXL_EVENT_GEN_MEDIA_UUID,
- 	.rec = {
--		.hdr = {
-+		.media_hdr.hdr = {
- 			.length = sizeof(struct cxl_test_gen_media),
- 			.flags[0] = CXL_EVENT_RECORD_FLAG_PERMANENT,
- 			/* .handle = Set dynamically */
- 			.related_handle = cpu_to_le16(0),
- 		},
--		.phys_addr = cpu_to_le64(0x2000),
--		.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
--		.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
--		.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
-+		.media_hdr.phys_addr = cpu_to_le64(0x2000),
-+		.media_hdr.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
-+		.media_hdr.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
-+		.media_hdr.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
- 		/* .validity_flags = <set below> */
--		.channel = 1,
--		.rank = 30
-+		.media_hdr.channel = 1,
-+		.media_hdr.rank = 30
- 	},
- };
- 
-@@ -408,18 +408,18 @@ struct cxl_test_dram {
- struct cxl_test_dram dram = {
- 	.id = CXL_EVENT_DRAM_UUID,
- 	.rec = {
--		.hdr = {
-+		.media_hdr.hdr = {
- 			.length = sizeof(struct cxl_test_dram),
- 			.flags[0] = CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
- 			/* .handle = Set dynamically */
- 			.related_handle = cpu_to_le16(0),
- 		},
--		.phys_addr = cpu_to_le64(0x8000),
--		.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
--		.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
--		.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
-+		.media_hdr.phys_addr = cpu_to_le64(0x8000),
-+		.media_hdr.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
-+		.media_hdr.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
-+		.media_hdr.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
- 		/* .validity_flags = <set below> */
--		.channel = 1,
-+		.media_hdr.channel = 1,
- 		.bank_group = 5,
- 		.bank = 2,
- 		.column = {0xDE, 0xAD},
-@@ -473,11 +473,11 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
- static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- {
- 	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
--			   &gen_media.rec.validity_flags);
-+			   &gen_media.rec.media_hdr.validity_flags);
- 
- 	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
- 			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
--			   &dram.rec.validity_flags);
-+			   &dram.rec.media_hdr.validity_flags);
- 
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
--- 
-2.45.0
+fuse_inode_uncached_io_start()
+{
+...
+        /* deny conflicting backing files on same fuse inode */
 
+The iomodes rules will need to be amended to verify that:
+- IS_DAX() inode open is always mapped to backing dax device
+- All files of the same fuse inode are mapped to the same range
+  of backing file/dax device.
+
+Thanks,
+Amir.
