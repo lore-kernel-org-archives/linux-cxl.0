@@ -1,261 +1,278 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF3417F3;
-	Wed, 22 May 2024 02:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716343524; cv=none; b=PcWiynqgizTEGUd9tC1i/AXSDqxvv9rr2w2R7R8OV/nsIChmAaJY1uc9Pqp/DOejrwL18/pxcqyUvFAdGoHNPQ8BYJ8/i53+ss7lgTZh5aLvMTF5THZxlpO/IYtyidJejyRhc37h2rQ5Xxfp3fgBryCRtwgcWkFT5XpdNtclbmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716343524; c=relaxed/simple;
-	bh=Zfjved76r4tk/R4F2I6Vyn2ILO/DKgJTa6WddGB4SV8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kb5BBgt3SPtJlT/9c4ElovNweuFbK6UGLSmKa8M5N+k3nQO+EBxjIJeyqZ+Ir3tHBXAMwqZq+23a7+WtO6guD09pPSFzVmOj5EBDYSA4gIHhPuCu/MsNbyflGiiljZxAyWL5Mr7W6+1DKK3FJZmbSiRH4J5/b4q+R7Wrpw7Gg28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jH86NDNm; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E40F5234;
+	Wed, 22 May 2024 02:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716346278; cv=fail; b=XfaLbz+kZY4j3ReQ9u9qxcXi2pM3KzaRQzsNpKEAdKJqP7rTVYVDMTuGuWtP0Le0x68vJj5SR5+KHLPdqIj/8pRRk3STQxaQSD6OymySlSgAcR3EteLS5p8AjoiQlyj91qVJXYfhCezCQ+IctVwUsB5uJ1GaJzpt4gzyZ7ZB3nw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716346278; c=relaxed/simple;
+	bh=oklHi6Y2tDj5S9UBGuuez5gNHidNornASbrS6/G+6NY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NGn5hhiF04Tmv5Po/Li3neYu2YCoHV3clf2YwR+3/12bWhee5y21KJ/jAYNtXOa+KT60N8RyFsO9Yoq+qAxly2ME4UEAytkGt7RGlZxIaCdFe0Oiby3xUg074jEdMdmKahD3sMJRozf1mCI1JBDvumiNudZmzIb0KaI1xNb/OME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ghvXUmbI; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jH86NDNm"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-24544cfbc69so2084895fac.3;
-        Tue, 21 May 2024 19:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716343521; x=1716948321; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pqp9MO7zUvyQGTMo5hIooEPlrzDAs7DVP/rXiNcgUBE=;
-        b=jH86NDNm54Pop3CYtOHvmka7ZpzxbQuMz4wCMDByF+YSd+iQCkLS1jhmNu+UjPtrnB
-         xM526WLMamKSsFXGgE1BMwYP1dNePCRJm5VEk4TYBE+Fzuxy57sRwRdOzntZmHQIj3BU
-         +JsWBJbxA6sqon2Jr9EIV3Mg4JC586Qc/ceqMIiiYbUaSYC+6tLcQ9mYS9LoYEPfhZMq
-         dL2sCMlFBUg9CkRKBq9jkWxBTbWTvW2iu6c/vfMnPgqlv/Z1oMbFaje4qY9Ek0Wlqt7K
-         wrXZwzPGgZXktqM/6DTe7Z35e8WBgM1Qjmh95a7pM3u9pnDGIyuy2zW7nXbJBCPHJnun
-         O0CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716343521; x=1716948321;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pqp9MO7zUvyQGTMo5hIooEPlrzDAs7DVP/rXiNcgUBE=;
-        b=H+0T8Z2zZP94Q/PeaTe65Cqv6BD+ggVjXTXLcB0P5DcnxLcZXkhhlSUasPpInPeStt
-         aY5cOrU4yfqeKCPT6/UZteZw5oDQruXO4MekxsCF/vnDAOXqcNOEtuKdVULSU7rQEsRx
-         eu1AjoaNmxtFpoDT4tmqweXIlsj5dh1tl4FXONYoFhu6xO1FDmG9/xoG0dYhjMHPZCh7
-         XN9DVxe8KP77nR0sbtMpuSsKjYtKczKy/0iM0dYd7p50+V8SnfiqApJ9yU+GRS0BFpzN
-         N+zoYVLFTttf7Uak5q1tDP+6mv5Xf3ueqGjIOkTAQwYamHW+2SHgDF+eSn5mcCy7CRI3
-         haLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTeU+b8vP5/KRW0p7PTCRsbIc1xgkkqLRYLWUGDhF5zLkfGXYKf1IukudJXevfY/ufpuKGWeo4OMAVyJl8VgapjRzaMRuGDCGJnpTm9XJJeFlnJ40w6FU+KVxmvc2jmzcBH63nRJP9k5q+QsdOKg2vktAQoQe0iRUF0fc5HmULJzwZPTXo7IXiN6KDbeNtlbYQfJ91aTOKCicBzGKa4JQwkQ==
-X-Gm-Message-State: AOJu0Yw0m/jEEnbqPTbjccSCTRJfO5C20NFS8IbAvuyA88+33CY3xHnT
-	Hd6Tl/Ipm8kCkUnCr+aQrewZkFh5DLbYNkDCyK/vzuBW4hVhr6bq
-X-Google-Smtp-Source: AGHT+IFHzidK4p7s1OgHfceR76fVxz5S8KRUEVvFbRfhLJxxb+D0+PBsOD+3RlG053Na2+1RqZVrEg==
-X-Received: by 2002:a05:6870:f605:b0:24c:5cd6:6405 with SMTP id 586e51a60fabf-24c68df1961mr831458fac.43.1716343520999;
-        Tue, 21 May 2024 19:05:20 -0700 (PDT)
-Received: from Borg-10.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-24c54d17d08sm598119fac.42.2024.05.21.19.05.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 19:05:20 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-From: John Groves <John@Groves.net>
-X-Google-Original-From: John Groves <john@groves.net>
-Date: Tue, 21 May 2024 21:05:18 -0500
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	john@jagalactic.com, Dave Chinner <david@fromorbit.com>, 
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, gregory.price@memverge.com, 
-	Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
-Message-ID: <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
-References: <cover.1708709155.git.john@groves.net>
- <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
- <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
- <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ghvXUmbI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WvLGU/rpcJB/5mxM2G6X2+O3jbNmf1sQsaunxL80cadui/AT78R0uVT+/VONZ8JBAddIzkgQ+Eijtcjb7EwE79kWlEHPFJBOUDROXCTIKpytX2I+ZLRaTX1b9t/NDempGrR1d+jMMLnPLOnp9SXE/ofSsdtb2FUnpfb7aimoOrvHiyTHUdNl2ai3YYagxCRxkWUbmC5HV9cNyt+qWpEos83eTlflUXKrhRsern/5Vv4hhED33gCV5gBq2SNw/fBAY7ZldQ7lrohXfa0z9YV0Tmsawe04Vtt0aAaeKN8NqTcEpDdGHChRuvaAbYuz42pBwfEynderJDFG76B7ywlRHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oklHi6Y2tDj5S9UBGuuez5gNHidNornASbrS6/G+6NY=;
+ b=finmvzk9gAUveY28zeLpn9rzEhAvegfd0JgCQgZEvFN5Os8uUK3pXfyOS3Om5K7CSE+O9B+4GJxADvSKMSjsDsrC3n9zpD0OowrCRbONnYZ8yjd865sUcJDUlhvWW00UW87n0BJxmsj6/myVIH92zRX5ZsjGX4Xuoft98Mygl0z29nueBQK1CzLMMmoo86648I2RE2GI92jS9aULUn/3lsVLQYODbBcSAETkX1CIz4R4ML+YxDN/jxXh23jtLNpW1tQm0emYHb7ESEkVXyvwSTJb6UoVWXP+oNxijoCu95ByHgVxSaSP7K+4XP6k43AAhvX/4Z35n9KALfpQZKnNcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oklHi6Y2tDj5S9UBGuuez5gNHidNornASbrS6/G+6NY=;
+ b=ghvXUmbI/wKvcnIMMGydbjUrZPbwL5xfoSGsunnipChJVoGOcFNfGA84ib9PGEoa9pCDztvEBBeR6flDmkfpTCTKPMU8Qo2wXFn5ZxWdfQIldHZk0crftNkEPExsQTlL5ajUGoH1AHz5gnHS3zQeI7aWPU2YGhxzvVR/JXhWcrSzOm7Q7esQCfmT/u6+BXBcdSBciROxNvZYoumYminqO0MTvvTV2tsrLs7zHiG8sMB5E89FIICpeTIs2/cAeng8EDHdN/z6wx70cDAOLeOeKOLv2DQJY0hSwJPoxwnYK55OxS4wFphUvJuJya+Y94FblDm/DUw0lDgjVr/X+UxnKw==
+Received: from MN0PR12MB6053.namprd12.prod.outlook.com (2603:10b6:208:3cf::14)
+ by SA3PR12MB9199.namprd12.prod.outlook.com (2603:10b6:806:398::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
+ 2024 02:51:12 +0000
+Received: from MN0PR12MB6053.namprd12.prod.outlook.com
+ ([fe80::3613:eed0:83aa:6997]) by MN0PR12MB6053.namprd12.prod.outlook.com
+ ([fe80::3613:eed0:83aa:6997%4]) with mapi id 15.20.7587.035; Wed, 22 May 2024
+ 02:51:11 +0000
+From: Vikram Sethi <vsethi@nvidia.com>
+To: Dan Williams <dan.j.williams@intel.com>, Vishal Aslot
+	<os.vaslot@gmail.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>
+CC: "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "lukas@wunner.de"
+	<lukas@wunner.de>, "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	Vidya Sagar <vidyas@nvidia.com>
+Subject: RE: [PATCH v2 2/3] PCI: Create new reset method to force SBR for CXL
+Thread-Topic: [PATCH v2 2/3] PCI: Create new reset method to force SBR for CXL
+Thread-Index: AQHaq6U5ct/dCUiEIU6bQKWDlfCL1bGh/WOAgAAo7wCAAAzDAIAAVNFw
+Date: Wed, 22 May 2024 02:51:11 +0000
+Message-ID:
+ <MN0PR12MB6053B7D06D63421382977913BDEB2@MN0PR12MB6053.namprd12.prod.outlook.com>
+References: <E1AAAE3F-E059-4C57-BC23-6B436A39430A@gmail.com>
+ <664ce3e1a25fe_e8be29431@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <CY5PR12MB60607B123B05AF10568ED5EDBDEA2@CY5PR12MB6060.namprd12.prod.outlook.com>
+ <664d10ebeb537_e8be29494@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To:
+ <664d10ebeb537_e8be29494@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB6053:EE_|SA3PR12MB9199:EE_
+x-ms-office365-filtering-correlation-id: 0dfeb51f-056a-444a-257a-08dc7a0a0a34
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|7416005|376005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UjZNbngrdzc3N0lwNFpTZUFqcFVQbzdqTDBWYmg3ZXBvUkJjWTdOMTZCV0FP?=
+ =?utf-8?B?NHg5MFVXMHkvcWdhM3MvQmVacVBCTlZuQjgwYzJZK0l0cFFoZm5HNXNMVlRl?=
+ =?utf-8?B?aWhVczFHSjJhb1VqZldVWVlCMEhJREszRkVHMmY3cUZ4cmptRXd0ZWlTY1Jt?=
+ =?utf-8?B?YzhpSzV6Ynk0a21SS2FIUyszdHJrMXprb3d3VmV0Wk9uQU4zUklhcmkzcElL?=
+ =?utf-8?B?ZW53YU5CUXhMRitiTXBLdmg4TWZ5dVl6U1doL2tiWENPTEs5MlRFOXplY0xR?=
+ =?utf-8?B?c25CU3dqQmEzMGF2KzBXNmtadGIzdUZjZGF3UzZlNnEremVBT3BZSVFJQkJW?=
+ =?utf-8?B?VnI2UlA3QXZXRnd1d3ZkdDhNYUtFVTRFWm00WG14YlFnMXc1TjY5TXVnYi9p?=
+ =?utf-8?B?emJIRHFoTDAzRGxmbm5kckJHWjAyM2YxN2pEUVhHTGdBVmZvSlJMMkhCUUh1?=
+ =?utf-8?B?cUJsL3lrSXQvYmd2eFdyVUhUcFdlalVkQUNJd2ZRRUVtY0FJSSsvVEZIK1BC?=
+ =?utf-8?B?d1BUcWRqZURpak50dUFPNUFpMzJlQy9vYS9rY2JwSjJBZFN6Ylo2Ni9pdnVV?=
+ =?utf-8?B?KzZvS2Z3UXVoMmhUK1NYb3NwdFFwNThBbUdyU2d2S0tlUEtsYkszTU5pOGNP?=
+ =?utf-8?B?eUJITE5pZ1lCOVUxQW5yZmNuNi9jSEJsTDEzRng1K2cvTUI3N2FSNGhhbEtN?=
+ =?utf-8?B?QmFLcmpoS1Nwak5ENXpUcWJveU9vRmtmVThxNnhRSU93NnRSbXc5RWppSHpH?=
+ =?utf-8?B?VTVkQWxqNXZwRmEyeHhhbmRXdUcyblRwQkNBbE1Cc0lEeGVxb0ZKeWxvbXVI?=
+ =?utf-8?B?Y1R2Z052ZHpUT2FKYjZJbHU4anJ1cTJEV0x5Unh0RnJOalZOTUpkT0J3UENE?=
+ =?utf-8?B?SjNQNHplNitOcEdWYVMzY0JrYzVKS1JYbXJ5eDh6MEUyNUZkbkNESk9jeE43?=
+ =?utf-8?B?cFYxN3RsMUtDcE5LanR2Q0ZlY0JCcnJFZUlxSHVsQ3Uvb29ZckQrQjBNQXll?=
+ =?utf-8?B?VnVTR0E3MGF1UnlnaStKQUJndHVKckhCNDR4T1paWTBjOHRHWGJMdnd3TFVn?=
+ =?utf-8?B?Q2NTUWdUNVBSaHBqSWxVNlhLcXZycWFXdS9JM0U2MUc1a0NkbnRoM0ZqVXFp?=
+ =?utf-8?B?NVdVV2ZsS3JkMHZHVDIvSWNtdW9wMngxNmV5K0oveDUwazZkbnU3NUY4Zlhw?=
+ =?utf-8?B?MzFxWmRkcFE4cHdPaEpSZEJqMjV1K1B0LzZ3WnRpNEh6SlArV3l2d2c2Vklp?=
+ =?utf-8?B?UEJtNEhMY3YrNXVoNlBMWW9NVFZMT0MxcGdzSWZubHZicDVvRmE2Q1JQUzQ5?=
+ =?utf-8?B?bkdjVXJPMlZZTTQ0d0hLZzh5d1RDdXdmZWJZaWxpeFAzL3IwbHRhOExMTTU3?=
+ =?utf-8?B?ZEtrMmYwSUJ2UTJqL21NdGd2N0pVdEtqQ0YxQVZobkcxcEJJcGZDRmUvejFG?=
+ =?utf-8?B?NnVkUTVnSHpJNUpjSWZ1dnBBSmRRMW9hMkVBRTNjRS9oM1dmQk9POFJOaVVH?=
+ =?utf-8?B?bjFHWjQxWjMvZHVUeWhJRnpQNndDOGhIcEw4N3U1Vmg1U1V2eDZmeklsUVRS?=
+ =?utf-8?B?RVRGc1M4emE1RDkzUnE1TUxNWUtPYVlscDd6KzdSbUVBRmVYWlFPb1ovdW5w?=
+ =?utf-8?B?MVN4cW9wNy9vaEUyUlZzQTR5THNMOHlYbENNQThnRXVnd0tWcUpmOVhJWitY?=
+ =?utf-8?B?V3ZaYXZsK3JPOXN6MTgwbWZXZ0J0M1BzY2NYMkV5MzF2U2k2ZU4xdXIraFdY?=
+ =?utf-8?B?ZXg2M1FkRU8wNHpsa0g1cHdmSlNyQndMR2lkbGNSYnEwVC8rd3Vyc1FOOHAv?=
+ =?utf-8?B?TUtueWhDUDgyVm5KNElnZz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6053.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?R3VlVkkzOVQzUW83eWNzV2lJOWk2clB2SFNXUlNDVTJuS29RTlNhVnlpdk9v?=
+ =?utf-8?B?R2JlN1RURlY4T0hWWnA3RDV1ZU9yRzQwKzJsdnNMK2RCcjkwZHdwZ1VVbGFz?=
+ =?utf-8?B?UFZOM2c3NTVHSTZ5SjV1RkdFV2FKTGI5RGMvS3RGbjFybFVRNHYvY2JEQXpI?=
+ =?utf-8?B?Ym1nUkFiWFdSKzZmdDk2TWs0c2E0a1labVlUWjVMOElqaGhEaHpYd0piOHJD?=
+ =?utf-8?B?N3VROUdNZnJlVjhaNmZoTEFkVFBGcFlHeWRVcElwVTkvTzVCSlpKRjd4d2h1?=
+ =?utf-8?B?Ymp3MStNSFBFU2FjSHd3QStrYUYzMFdxRjJHZUpseVVwVTV5WFNMMVlkQUZt?=
+ =?utf-8?B?d1BsYUJ5Y0Z0YWxDN3g4d3lMMUZrdjZHaVJvVWpTTzdiR05kaGFKUzgvSEtG?=
+ =?utf-8?B?N2NTMzZ0M1Z3M09EZTVweUFJSGNLWWZTWjVOTWQwM1plZ3E2ZW0xV1F2K2ZW?=
+ =?utf-8?B?VXRvMGFCK3BNcDVxYzBEM3lmUjZLS3ZLM05OWCttM0ZMcE03c3REN0JaNHhv?=
+ =?utf-8?B?dko5U0ZCeUdxY3VnUllWZzQ5TnNTaitLQWYxWHpFRlI1aTZhOEJpdnNHNmww?=
+ =?utf-8?B?cyt2ZXlYazhveVIxaXExL1lNWFFEdTFTOS9lY3ZqN0I1KzFtd3UxaGRtRHRW?=
+ =?utf-8?B?YW96cmRKRUFhWWNFcVJQcG40MkgyeHFTYzlWWVF2cWN1ejhVSEV4V0t5Qm9D?=
+ =?utf-8?B?UmJMekI2VHA0MzRVdVBPbWdQV3d3bUM1NHpDaDZqSE11NVo1RUpxUGk5RTkv?=
+ =?utf-8?B?a0tDamxMTlB4MFJwTVgyT3RLNnBncU9tc01RT2NKMk1CR1Z0TjFrclRLeC9C?=
+ =?utf-8?B?eUU3aXRJczhWcFBBR1NjN2pTZE1pRVFDbEtuWldxbW40UEhaVWhsU3BNd3VR?=
+ =?utf-8?B?OXRxQmk3STBCU2tNRnQ1SnBqc01jT2llbkQvcnNJYVhjWmZaSVNmeUNmZWQ1?=
+ =?utf-8?B?MWpGYTAxR25SK3N6TlpCV2JBUzVWMzdCNGFCdWNOUTN6LytNMCtqK25DdnVC?=
+ =?utf-8?B?cjNBYVFwaHY4SUZXTjA2ZUtsRnp2Uy84QXNTeUZyVkErbVRBYWJRV3JBRys4?=
+ =?utf-8?B?U3U1Wi9CUmRYUGhldjFsQlFaZGx2M0NpRFc0Mzdad0NzQlBQRHNjTllxS1hh?=
+ =?utf-8?B?eTk4QXU1WGFuM1BZMWpHVmE0cy91SkIvZTVLZktZM3ZHcUs5a2lYdlRZRXV3?=
+ =?utf-8?B?bTdaL1NBdkFuUTYxN09acmFoYnB3ZTNoMjcwZkM3dXlEV0E2RzFEYlFWVWxM?=
+ =?utf-8?B?VDJlWjNWb3BXdlI3MmlxcHN4V3l2eGx3S3FObGNqT2JRa0NtdGxFOEJUZEw4?=
+ =?utf-8?B?RjVkZTUvd3p4TUpEaGtkcVBJWDhwR012SmEwSW85SWFnWVJZNVdHT0FYRlNv?=
+ =?utf-8?B?VjZEaEkva0syamkxb1VCaGp0cE8xL1d4aW5Tdlpha1JmeFJUQWlPcC82bGN3?=
+ =?utf-8?B?aTgzT1MzR2JxUGxFYmV0SUlReFdpUVEvdnhHNVByTk9VNDNEc2R1R2wzTGMx?=
+ =?utf-8?B?dlZkWTBDQ1Y5d1ArVk5YdmxOMW5LU2VnakpMbjNBNTdPbDJpbFpvZjIwQVhH?=
+ =?utf-8?B?Vzd6UmE0K1BXMEhtOVFsejcxWk5DT0NZa1NKRmhWUlJoUTNJaldNT1lnakw2?=
+ =?utf-8?B?TW8wWkNLelJLaUc3akgwZHhoTHpKbnR5b2FkR05WZ2NxWTF2bGQwWVV1TWM0?=
+ =?utf-8?B?Vy9aS1hHcGcxOEFYME5DTHBER2t0b0VCLzJPVVFzUndnTGUyK2lHNDJCa2lj?=
+ =?utf-8?B?RDVyVG1NRTZBOXMzMFF0cnR6T3N0dWZsaWQxTjlqazJkMlNaL3hBWG5KMUZT?=
+ =?utf-8?B?Tk9vTU5HUkVGTHlHZFYxeW5ZRHVsS3lubzV0elZpc3A2VXVCT2Fva2JLNDZC?=
+ =?utf-8?B?S3NFY3IvM0xkait3KzFDVGZWakQ2dE8wRHBYQW42b3UvM1hkMWQ1aVU0NWRV?=
+ =?utf-8?B?bzNhOXlmY3doUG51MkkyZHFHc1kwUHczMTZkK0kyRktCRDE2VXlLYWRQVGcx?=
+ =?utf-8?B?VEpORmJzTS84TWJqZXpKM1dBUUM1MGVpdEVaTHpDYTh1MFF1YklpL2ZrTGNu?=
+ =?utf-8?B?RWJ3NjJiMFAxVlZDVUdTdDJxMmlvZnNNNlJFQ2pUN00xWERObEQreHdUVWJ4?=
+ =?utf-8?Q?9oJc=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6053.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dfeb51f-056a-444a-257a-08dc7a0a0a34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2024 02:51:11.8630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vj2E9WgWErZd7EFPRh+Xwb1+vRDxaiHo5oOVWWbfl+gemZlf+LHMU/HYHConVWny4X27f0LA6OeJZSBXm/CmOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9199
 
-Initial reply to both Amir and Miklos. Sorry for the delay - I took a few
-days off after LSFMM and I'm just re-engaging now.
-
-First an observation: these messages are on the famfs v1 patch set thread.
-The v2 patch set is at [1]. That is also the default branch now if you clone
-the famfs kernel from [2].
-
-Among the biggest changes at v2 is dropping /dev/pmem support and only 
-supporting /dev/dax (character) devices as backing devs for famfs.
-
-On 24/05/19 08:59AM, Amir Goldstein wrote:
-> On Fri, May 17, 2024 at 12:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > On Thu, 29 Feb 2024 at 07:52, Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > > I'm not virtiofs expert, but I don't think that you are wrong about this.
-> > > IIUC, virtiofsd could map arbitrary memory region to any fuse file mmaped
-> > > by virtiofs client.
-> > >
-> > > So what are the gaps between virtiofs and famfs that justify a new filesystem
-> > > driver and new userspace API?
-> >
-> > Let me try to fill in some gaps.  I've looked at the famfs driver
-> > (even tried to set it up in a VM, but got stuck with the EFI stuff).
-
-I'm happy to help with that if you care - ping me if so; getting a VM running 
-in EFI mode is not necessary if you reserve the dax memory via memmap=, or
-via libvirt xml.
-
-> >
-> > - famfs has an extent list per file that indicates how each page
-> > within the file should be mapped onto the dax device, IOW it has the
-> > following mapping:
-> >
-> >   [famfs file, offset] -> [offset, length]
-
-More generally, a famfs file extent is [daxdev, offset, len]; there may
-be multiple extents per file, and in the future this definitely needs to
-generalize to multiple daxdev's.
-
-Disclaimer: I'm still coming up to speed on fuse (slowly and ignorantly, 
-I think)...
-
-A single backing device (daxdev) will contain extents of many famfs
-files (plus metadata - currently a superblock and a log). I'm not sure
-it's realistic to have a backing daxdev "open" per famfs file. 
-
-In addition there is:
-
-- struct dax_holder_operations - to allow a notify_failure() upcall
-  from dax. This provides the critical capability to shut down famfs
-  if there are memory errors. This is filesystem- (or technically daxdev-
-  wide)
-
-- The pmem or devdax iomap_ops - to allow the fsdax file system (famfs,
-  and [soon] famfs_fuse) to call dax_iomap_rw() and dax_iomap_fault().
-  I strongly suspect that famfs_fuse can't be correct unless it uses
-  this path rather than just the idea of a single backing file.
-  This interface explicitly supports files that map to disjoint ranges
-  of one or more dax devices.
-
-- the dev_dax_iomap portion of the famfs patchsets adds iomap_ops to
-  character devdax.
-
-- Note that dax devices, unlike files, don't support read/write - only
-  mmap(). I suspect (though I'm still pretty ignorant) that this means
-  we can't just treat the dax device as an extent-based backing file.
-
-
-> >
-> > - fuse can currently map a fuse file onto a backing file:
-> >
-> >   [fuse file] -> [backing file]
-> >
-> > The interface for the latter is
-> >
-> >    backing_id = ioctl(dev_fuse_fd, FUSE_DEV_IOC_BACKING_OPEN, backing_map);
-> > ...
-> >    fuse_open_out.flags |= FOPEN_PASSTHROUGH;
-> >    fuse_open_out.backing_id = backing_id;
-> 
-> FYI, library and example code was recently merged to libfuse:
-> https://github.com/libfuse/libfuse/pull/919
-> 
-> >
-> > This looks suitable for doing the famfs file - > dax device mapping as
-> > well.  I wouldn't extend the ioctl with extent information, since
-> > famfs can just use FUSE_DEV_IOC_BACKING_OPEN once to register the dax
-> > device.  The flags field could be used to tell the kernel to treat
-> > this fd as a dax device instead of a a regular file.
-
-A dax device to famfs is a lot more like a backing device for a "filesystem"
-than a backing file for another file. And, as previously mentioned, there
-is the iomap_ops interface and the holder_ops interface that deal with
-multiple file tenants on a dax device (plus error notification, 
-respectively)
-
-Probably doable, but important distinctions...
-
-> >
-> > Letter, when the file is opened the extent list could be sent in the
-> > open reply together with the backing id.  The fuse_ext_header
-> > mechanism seems suitable for this.
-> >
-> > And I think that's it as far as API's are concerned.
-> >
-> > Note: this is already more generic than the current famfs prototype,
-> > since multiple dax devices could be used as backing for famfs files,
-> > with the constraint that a single file can only map data from a single
-> > dax device.
-> >
-> > As for implementing dax passthrough, I think that needs a separate
-> > source file, the one used by virtiofs (fs/fuse/dax.c) does not appear
-> > to have many commonalities with this one.  That could be renamed to
-> > virtiofs_dax.c as it's pretty much virtiofs specific, AFAICT.
-> >
-> > Comments?
-> 
-> Would probably also need to decouple CONFIG_FUSE_DAX
-> from CONFIG_FUSE_VIRTIO_DAX.
-> 
-> What about fc->dax_mode (i.e. dax= mount option)?
-> 
-> What about FUSE_IS_DAX()? does it apply to both dax implementations?
-> 
-> Sounds like a decent plan.
-> John, let us know if you need help understanding the details.
-
-I'm certain I will need some help, but I'll try to do my part. 
-
-First question: can you suggest an example fuse file pass-through
-file system that I might use as a jumping-off point? Something that
-gets the basic pass-through capability from which to start hacking
-in famfs/dax capabilities?
-
-When I started on famfs, I used ramfs because it got me all the basic
-file system functionality minus a backing store. Then I built the dax
-functionality by referring to xfs. 
-
-> 
-> > Am I missing something significant?
-> 
-> Would we need to set IS_DAX() on inode init time or can we set it
-> later on first file open?
-> 
-> Currently, iomodes enforces that all opens are either
-> mapped to same backing file or none mapped to backing file:
-> 
-> fuse_inode_uncached_io_start()
-> {
-> ...
->         /* deny conflicting backing files on same fuse inode */
-> 
-> The iomodes rules will need to be amended to verify that:
-> - IS_DAX() inode open is always mapped to backing dax device
-> - All files of the same fuse inode are mapped to the same range
->   of backing file/dax device.
-
-I'm confused by the last item. I would think there would be a fuse
-inode per famfs file, and that multiple of those would map to separate
-extent lists of one or more backing dax devices.
-
-Or maybe I misunderstand the meaning of "fuse inode". Feel free to
-assign reading...
-
-> 
-> Thanks,
-> Amir.
-
-Thanks Miklos and Amir,
-John
-
-[1] https://lore.kernel.org/linux-fsdevel/cover.1714409084.git.john@groves.net/T/#m3b11e8d311eca80763c7d6f27d43efd1cdba628b
-[2] https://github.com/cxl-micron-reskit/famfs-linux
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuIFdpbGxpYW1zIDxk
+YW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIE1heSAyMSwgMjAyNCA0
+OjI0IFBNDQo+IFRvOiBWaWtyYW0gU2V0aGkgPHZzZXRoaUBudmlkaWEuY29tPjsgRGFuIFdpbGxp
+YW1zDQo+IDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+OyBWaXNoYWwgQXNsb3QgPG9zLnZhc2xv
+dEBnbWFpbC5jb20+Ow0KPiBkYXZlLmppYW5nQGludGVsLmNvbQ0KPiBDYzogSm9uYXRoYW4uQ2Ft
+ZXJvbkBodWF3ZWkuY29tOyBhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbTsNCj4gYmhlbGdhYXNA
+Z29vZ2xlLmNvbTsgZGF2ZUBzdGdvbGFicy5uZXQ7IGlyYS53ZWlueUBpbnRlbC5jb207IGxpbnV4
+LQ0KPiBjeGxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsdWth
+c0B3dW5uZXIuZGU7DQo+IHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsgVmlrcmFtIFNldGhpIDx2
+aWtyYW1zZXRoaUBnbWFpbC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjIgMi8zXSBQQ0k6
+IENyZWF0ZSBuZXcgcmVzZXQgbWV0aG9kIHRvIGZvcmNlIFNCUiBmb3IgQ1hMDQo+IA0KPiANCj4g
+VmlrcmFtIFNldGhpIHdyb3RlOg0KPiA+IEhpIERhbiwNCj4gPg0KPiA+ID4gVmlzaGFsIEFzbG90
+IHdyb3RlOg0KPiA+ID4gPiBIaSwNCj4gPiA+ID4NCj4gPiA+ID4gRm9yIFQyIGFuZCBUMyBwZXJz
+aXN0ZW50IG1lbW9yeSBkZXZpY2VzLCB3b3VsZG7igJl0IHdlIGFsc28gbmVlZCBhDQo+ID4gPiA+
+IHdheSB0byB0cmlnZ2VyIGRldmljZSBjYWNoZSBmbHVzaCBhbmQgdGhlbiBkaXNhYmxlIG91dCBv
+Zg0KPiA+ID4gPiBjeGxfcmVlc3RfYnVzX2Z1bmN0aW9uKCk/DQo+ID4gPiA+DQo+ID4gPiA+IENY
+TCBTcGVjIDMuMSAoQXVnIOKAmTIzKSwgU2VjdGlvbiA5LjMgd2hpY2ggcmVmZXJzIHRvIHN5c3Rl
+bSByZXNldA0KPiA+ID4gPiBmbG93IGhhcyBSRVNFVFBSRVAgVkRNcyB0byB0cmlnZ2VyIGRldmlj
+ZSBjYWNoZSBmbHVzaCwgcHV0IG1lbW9yeQ0KPiA+ID4gPiBpbiBzYWZlIHN0YXRlLCBldGMuIFRo
+ZXNlIGRldmljZXMgd291bGQgYmVuZWZpdCBmcm9tIHRoaXMgaW4gY2FzZQ0KPiA+ID4gPiBvZiBT
+QlIgYXMgd2VsbCwgYnV0IGl0IGlzIHJvb3QgcG9ydCBzcGVjaWZpYyBzbyBtYXkgYmUgYW4gQUNQ
+SQ0KPiA+ID4gPiBtZXRob2QgY291bGQgYmUgaW52b2x2ZWQgb3V0IG9mIGN4bF9yZXNldF9idXNf
+ZnVuY3Rpb24oKT8NCj4gPiA+DQo+ID4gPiBJbiBzaG9ydCwgbm8sIE9TIGluaXRpYXRlZCBkZXZp
+Y2UtY2FjaGUtZmx1c2ggaXMgbm90IGluZGljYXRlZCwgbm9yDQo+ID4gPiBwb3NzaWJsZSAoR1BG
+IGhhcyBubyBtZWNoYW5pc20gZm9yIHN5c3RlbS1zb2Z0d2FyZSB0cmlnZ2VyKSBmb3IgdGhpcyBj
+YXNlLg0KPiA+ID4NCj4gPiA+IFNwZWNpZmljYWxseSB0aGF0IHNlY3Rpb24gc3RhdGVzOg0KPiA+
+ID4NCj4gPiA+ICIuLi5pdCBpcyBleHBlY3RlZCB0aGF0IHRoZSBDWEwgZGV2aWNlcyBhcmUgYWxy
+ZWFkeSBpbiBhbiBJbmFjdGl2ZQ0KPiA+ID4gU3RhdGUgd2l0aCB0aGVpciBjb250ZXh0cyBmbHVz
+aGVkIHRvIHRoZSBzeXN0ZW0gbWVtb3J5IG9yDQo+ID4gPiBDWEwtYXR0YWNoZWQgbWVtb3J5IGJl
+Zm9yZSB0aGUgcGxhdGZvcm0gcmVzZXQgZmxvdyBpcyB0cmlnZ2VyZWQiDQo+ID4gPg0KPiA+ID4g
+Li4uc28gaWYgcmVzZXQgaXMgdHJpZ2dlcmVkIHdoaWxlIHRoZSBkZXZpY2UgaXMgbWFwcGVkIGFu
+ZCBhY3RpdmUNCj4gPiA+IHRoZW4gdGhlIGFkbWluaXN0cmF0b3IgZ2V0cyB0byBrZWVwIGFsbCB0
+aGUgcGllY2VzLiBUaGlzIFNCUg0KPiA+ID4gZW5hYmxpbmcgaXMgYWxsIGFib3V0IG1ha2luZyBz
+dXJlIHRoZSBrZXJuZWwgbG9nIHJlZmxlY3RzIHdoZW4gdGhlDQo+ID4gPiBhZG1pbmlzdHJhdG9y
+IG1lc3NlZCB1cCBhbmQgdHJpZ2dlcmVkIHJlc2V0IHdoaWxlIHRoZSBkZXZpY2UgaGFkIGFjdGl2
+ZQ0KPiBkZWNvZGVycy4NCj4gPg0KPiA+IEZvciBhIC5jYWNoZSBjYXBhYmxlIGRldmljZSwgc2hv
+dWxkbid0IHRoZSBrZXJuZWwgYmUgd3JpdGluZyB0byB0aGUNCj4gPiBkZXZpY2UgQ1hMIENvbnRy
+b2wyIHJlZ2lzdGVyICIgSW5pdGlhdGUgY2FjaGUgd3JpdGViYWNrIGFuZA0KPiA+IEludmFsaWRh
+dGlvbiIsIGFzIHBhcnQgb2YgdGhlICJPUyBvcmNoZXN0cmF0ZWQgcmVzZXQgZmxvdyI/DQo+IA0K
+PiBGb3IgYSBDWEwuY2FjaGUgY2FwYWJsZSBpbml0aWF0b3IsIHNpbmNlIHRoZXJlIGlzIG5vIGdl
+bmVyaWMgZHJpdmVyIG1vZGVsIGZvcg0KPiB0aGF0IEkgd291bGQgZXhwZWN0IHRoYXQgcmVzcG9u
+c2liaWxpdHkgdG8gZmFsbCB0byBlbmRwb2ludCBkcml2ZXJzIHRvIGltcGxlbWVudA0KPiBpbiB0
+aGVpciByZXNldF9wcmVwYXJlIGNhbGxiYWNrcy4gT3RoZXJ3aXNlIEkgd291bGQgZXhwZWN0IHRo
+ZSBkZXZpY2UgdG8gYmUNCj4gYWxyZWFkeSAiSW5hY3RpdmUiIHByaW9yIHRvIHJlc2V0Lg0KPg0K
+DQpJdCBjb3VsZCBjZXJ0YWlubHkgYmUgZG9uZSB0aGF0IHdheSwgYnV0IGFsc28gc2VlbXMgbGlr
+ZSBjb21tb24gZnVuY3Rpb25hbGl0eSwgc28gd291bGRuJ3QgaXQgYmUgYmV0dGVyIHRvIGhhbmRs
+ZSB0aGF0IGluIHRoZSAiY29yZS9idXMiIGRyaXZlciwgcmF0aGVyIHRoYW4gZWFjaCBlbmRwb2lu
+dCBkcml2ZXIgdG8gYmUgYml0IGJhbmdpbmcgc3RhbmRhcmQgcmVnaXN0ZXJzIGZvciBzdGFuZGFy
+ZGl6ZWQgcmVzZXRzPyBQZXJoYXBzIG1pbmltYWxseSBzb21lIGV4cG9ydGVkIGZ1bmN0aW9ucyB0
+aGF0IGNvdWxkIGJlIGNhbGxlZCBieSBlbmRwb2ludCBkcml2ZXJzLiANCg0KQW5vdGhlciB0aGlu
+ZyBJJ3ZlIGJlZW4gdGhpbmtpbmcgYWJvdXQgcmVjZW50bHkgaXMgd2hhdCB0aGUgcmVzcG9uc2li
+aWxpdGllcyBvZiB0aGUgQ1hMIGNvcmUvYnVzIGRyaXZlciBhcmUgYXJvdW5kIHRoZSBlcXVpdmFs
+ZW50IG9mIFBDSWUgQnVzIG1hc3RlcmluZyBlbmFibGUgKEJNRSkgYW5kIHNodXRkb3duL2tleGVj
+IHBhdGhzIGZvciBDWEwuY2FjaGUuIEl0J3MgYmVlbiBhIHdoaWxlIHNpbmNlIEkgbG9va2VkIGF0
+IHRoYXQgY29kZSwgYnV0IElJUkMgZm9yIFBDSWUsIFJvb3QgUG9ydCBCTUUgZ2V0cyBjbGVhcmVk
+IGFzIHBhcnQgb2Ygc2h1dGRvd24va2V4ZWMgcGF0aHMuIFRoaXMgY2FuIHByZXZlbnQgY3Jhc2hl
+cyBkdWUgdG8gZXJyYW50IERNQSBpbiBzaHV0ZG93bi9rZXhlYyBmbG93cywgZXZlbiBpZiB0aGUg
+ZW5kcG9pbnQgZHJpdmVyIGRpZG4ndCBkaXNhYmxlIGl0cyBvd24gQk1FIGluIGl0cyBzaHV0ZG93
+biBjYWxsYmFjay4gQSBDWEwgaG9zdCBicmlkZ2Ugd291bGQgbmVlZCB0byBkaXNhYmxlIGJvdGgg
+Qk1FIGZvciBDWEwuSU8sIGFuZCBhbHNvIENYTC5jYWNoZSBmb3IgLmNhY2hlIGNhcGFibGUgZGV2
+aWNlcy4gVW5mb3J0dW5hdGVseSwgdGhlIG5hbWluZyBhbmQgY29udHJvbCBvZiB0aGUgIi5jYWNo
+ZSBkaXNhYmxlIiBpcyBhIGJpdCBjb252b2x1dGVkIG9uIHRoZSBDWEwgaG9zdCBicmlkZ2Ugc2lk
+ZSBhbmQgZG9lc24ndCBtYXRjaCB0aGUgZW5kcG9pbnQgcmVnaXN0ZXIgbmFtaW5nLiBUaGUgQ1hM
+ICJSb290IFBvcnQgbiBzZWN1cml0eSBwb2xpY3kiIHJlZ2lzdGVyIGluIHRoZSBDWEwgRXh0ZW5k
+ZWQgU2VjdXJpdHkgY2FwYWJpbGl0eSBzdHJ1Y3R1cmUgYWxsb3dzIGZvciBzZXR0aW5nIHRoZSBE
+ZXZpY2UgdHJ1c3QgTGV2ZWwgPTIgd2hpY2ggcmVzdWx0cyBpbiBDWEwuY2FjaGUgcmVxdWVzdHMg
+YmVpbmcgYWJvcnRlZCBieSB0aGUgaG9zdCwgd2hpY2ggaXMgcm91Z2hseSBlcXVpdmFsZW50IHRv
+IFJQIEJNRSBkaXNhYmxlIG9uIHRoZSBQQ0llL0NYTC5JTyBzaWRlLg0KRG8geW91IGFncmVlIHRo
+aXMgaXMgc29tZXRoaW5nIHRoZSBjb3JlL2J1cyBkcml2ZXIgbXVzdCBkbyBzaW5jZSBpdCBpcyBj
+b250cm9sbGluZyB0aGUgaG9zdCBicmlkZ2UvUlAgcmVnaXN0ZXJzIGFuZCB0aGUgaG9zdCBtdXN0
+IHByb3RlY3QgaXRzZWxmIGFnYWluc3QgZXJyYW50IERNQSBmcm9tIGRldmljZXM/DQpUaGVyZSBt
+YXkgYmUgb3RoZXIgc2ltaWxhciB1c2VjYXNlcy4gSnVzdCB0aG91Z2h0IEknZCBicmluZyBpdCB1
+cCwgdGhhdCBvbmUgY2FuJ3QgcHVyZWx5IHRoaW5rIG9mIC5jYWNoZSBhcyBhbiBlbmRwb2ludCBk
+cml2ZXIgdGhpbmcgd2l0aCBubyBzZXJ2aWNlcyBwcm92aWRlZCBieSB0aGUgY29yZS4gSSBjYW4g
+Y2VydGFpbmx5IHNlZSB0aGUgcG9pbnQgdGhhdCBlbmRwb2ludCBkcml2ZXJzIG11c3Qgb3JjaGVz
+dHJhdGUgdGhlaXIgb3duIHN0YW5kYXJkIGNvbnRyb2xzIGJ5IGNhbGxpbmcgY29tbW9uIGV4cG9y
+dGVkIHNlcnZpY2VzIHByb3ZpZGVkIGJ5IGEgY29tbW9uIGxheWVyIGluIHRoZWlyIG93biBjYWxs
+YmFja3MsIHdoaWNoIGNvdWxkIGluY2x1ZGUgZGV2aWNlIHNpZGUgLmNhY2hlIGRpc2FibGUgYW5k
+IEJNRSBkaXNhYmxlIGFzIHBhcnQgb2YgYm90aCBzaHV0ZG93biBhbmQgcmVzZXRfcHJlcGFyZSBj
+YWxsYmFja3MuDQoNCj4gPiBDWEwgcmVzZXQsIHRoZSBsaW5rIGlzIGdvaW5nIGRvd24gaW4gU0JS
+IGNhc2UsIHNvIHRoZSBkZXZpY2UgaGFzIG5vDQo+ID4gY2hhbmNlIG9mIGRvaW5nIHRoZSB3cml0
+ZWJhY2sgb2YgZGlydHkgc3lzdGVtIG1lbW9yeSBsaW5lcyBpdCBob2xkcy4NCj4gDQo+IEZvciBz
+dXByaXNlIHJlc2V0LCBzdXJlLCBidXQgZHJpdmVycyBjYW4gYWx3YXlzIHRyYXAgcmVzZXRfcHJl
+cGFyZS4NCj4gDQo+ID4gSGVuY2UgT1MgbXVzdCBkbyBpdCBwcmlvciB0byB0aGUgU0JSIGlzc3Vh
+bmNlLg0KPiANCj4gIk9TIiBpcyBvbmUgb2YgdXNlcnNwYWNlIGRldmljZSBpZGxpbmcsIGFjY2Vs
+ZXJhdG9yIGRyaXZlciwgb3IgUENJIGNvcmUuDQo+IEkgdGhpbmsgaWYgdXNlcnNwYWNlIGZhaWxz
+IHRvIGlkbGUgdGhlIGRldmljZSwgdGhlbiBpdCBpcyB1cCB0byB0aGUgYWNjZWxlcmF0b3INCj4g
+ZHJpdmVyIHRvIGhhbmRsZSByZXNldCB3aGlsZSB0aGUgZGV2aWNlIGlzIG5vdCBpZGxlLCB0aGUg
+UENJIGNvcmUgc2hvdWxkIGxpa2VseQ0KPiBub3QgYmUgYnVyZGVuZGVkIHdpdGggdGhpcyBwZXIt
+ZGV2aWNlIC8gb3B0aW9uYWwgQ1hMLWlzbSBhcm91bmQgcmVzZXQuDQo+IA0KPiA+IHRoYXQgdGhl
+IG9ubHkgJ3N1cHBvcnRlZCcvd29ya2FibGUgU0JSIGZvciBzdWNoIGEgZGV2aWNlIHdvdWxkIGlu
+Y2x1ZGUNCj4gPiBwcmV2aW91c2x5IG9mZmxpbmluZyBpdHMgbWVtb3J5IGFuZCB1bmxvYWRpbmcg
+aXRzIGRyaXZlciwgYW5kIHBhcnQgb2YNCj4gPiB0aGF0IHN0ZXAgd291bGQgYmUgZHJpdmVyIGNv
+ZGUgZG9pbmcgdGhlIGRldmljZSBjYWNoZSBXQitpbnZhbGlkYXRlPw0KPiANCj4gVGhhdCBjZXJ0
+YWlubHkgaXMgdGhlIGV4cGVjdGF0aW9uIGZvciBDWEwtbWVtb3J5LWV4cGFuZGVycywgc28gd2hl
+bg0KPiBhY2NlbGVyYXRvciBkcml2ZXJzIGFycml2ZSB0aGV5IG5lZWQgdG8gY29uc2lkZXIgdGhh
+dCB0aGlzIHdpbGwgbm90IGJlIGRvbmUNCj4gYXV0b21hdGljYWxseSBvbiB0aGVpciBiZWhhbGYu
+DQo+IA0KPiA+IEkgdGhpbmsgdGhhdCBhZGRpdGlvbmFsbHksIGtlcm5lbCBzaG91bGQgYWxzbyBi
+ZSBkb2luZyBhIGhvc3QgY2FjaGUNCj4gPiBmbHVzaCBoZXJlIHRvIFdCK2ludmFsaWRhdGUgZGly
+dHkgRGV2aWNlIG93bmVkL2hvbWVkIGxpbmVzIGNhY2hlZCBpbg0KPiA+IHRoZSBob3N0IENQVSwg
+dG8gaGFuZGxlIHRoZSBwcmV2aW91c2x5IGRpc2N1c3NlZCBzY2VuYXJpbyBvZiBkZXZpY2UNCj4g
+PiBzbm9vcCBmaWx0ZXIgYmVpbmcgcmVzZXQgYXMgcGFydCBvZiByZXNldCwgYnV0IG5vdCBleHBl
+Y3RpbmcgZnV0dXJlDQo+ID4gV0JzIGZyb20gaG9zdCwgYW5kIHJhaXNpbmcgZXJyb3JzIGlmIHRo
+YXQgd2VyZSB0byBoYXBwZW4uDQo+IA0KPiBBZ2FpbiB0aGF0IGlzIGFuIGFjY2VsZXJhdG9yIHNw
+ZWNpZmljIHJlc3BvbnNpYmlsaXR5IGluIG15IG1pbmQsIGFuZCBpZGVhbGx5IHRoZQ0KPiBkZXZp
+Y2UgaGFuZGxlcyB0aGlzIHdpdGggaXRzIG93biBiYWNrLWludmFsaWRhdGUgZ2l2ZW4gdGhlIGRp
+ZmZpY3VsdGllcyBvZg0KPiB3aWVsZGluZyBpbnN0cnVjdGlvbnMgbGlrZSB3YmludmQgKG9uIHg4
+NiBhdCBsZWFzdCkuDQo=
