@@ -1,190 +1,109 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m17224.xmail.ntesmail.com (mail-m17224.xmail.ntesmail.com [45.195.17.224])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF0B7E583
-	for <linux-cxl@vger.kernel.org>; Wed, 22 May 2024 08:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87082D047;
+	Wed, 22 May 2024 09:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716368297; cv=none; b=Ar9+maaD6QJi9h6h6y0oCgV8KT1ZUP0fbh5cpOOe4o4arfvpMC2PWCx+csbEuh1NcNS5voD89SGRnOHnOlJXANteksqxVbui4lRaDJz5mA9ZZuy3W0K6XbRDOgehSdJCGmyaXLtQZbYFdivdrdTSy7P/xzpiLS3v0XCBzLWnzN8=
+	t=1716369776; cv=none; b=Avy070/wz7rrgsgmrKH6GA+dPUVb3jgRlVdAeFROf8appbmk38iYb+5Fy5qPcpKZTochADR2GbTU5FDh5OVGotjXaUtuTi2373Shyf/3K/lpb/9iIoCqb3c5IZ6sT0DaM3uUhEfeWjHrewRKo2We+NPTL2loZ5K/eEXwRaC2/18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716368297; c=relaxed/simple;
-	bh=5drciXMGAdYELysmjzz3Rf4LK6AJOqcEGCFERe2XB+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNfw7broXyUvNJj+xWgTreANkMOJvz7Fsp2OfhIkdIZrbivmT5e1vJq87F3VIB1DXmIi+J8jSb9Ai+bkhF99zOy2NHv8Riiksmixwo00a994TuVawMofJyYQi2efYQ/BFrBh0VdZxeivrzNBH/IRmJVo+RG+1myH74w597ODGko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=LwjrOOpI; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="LwjrOOpI"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a5a5c930cf6so971273166b.0
-        for <linux-cxl@vger.kernel.org>; Wed, 22 May 2024 01:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1716368293; x=1716973093; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LjTE4WfHhoeXUwUqEwrecuarcFt+4f9tVsycy9v4ZlE=;
-        b=LwjrOOpIS/usGDwNKQHzZp/tdFO4on8C5ttwUFgWhkhf2WArpAyDZ+ySx9oUZrKaVr
-         IOK4R3OkLXjV9f8cqsJOAb71/NaDCnFAs4teLXQNmEvbEAKFLTA6HD7HCguEI5K89aKe
-         tKUY3GCsPBSXLDpqEHXztADX+whM8oTbx9kjg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716368293; x=1716973093;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LjTE4WfHhoeXUwUqEwrecuarcFt+4f9tVsycy9v4ZlE=;
-        b=OIxt2aDtezgVhbvwV5MyAbTAeYPH3g3WiHVBFxKbOb9baI7Pw1F0VdpE6c8KKbom+V
-         FsbrUK90kYvVOcjPvWu7fD2zTZbLr26JaaxVFO81aluwnwA8NLmk7CIk2MbN5Dd584vo
-         eM2257/GkynOz9Zuy58L9spRBxUIFj74euwrpD/gOgxxpiNKZ0sIS+NGi54U5JS7139m
-         1zLrZKVJPbG8XnqlHWj0c22I8oy1W9U0UnacQJC+kDxdXDaymQ0rSeHxU9omtFsRp1CB
-         gl8xNw1isvB4kvQAjgzVjy42T9eroCufYdTg7Tcxan72upf66CtTcvWoxpxEYadh5dc5
-         IeiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCdLzylfH+2y5LVKCVIVCpPYVQ2HYlz+hYQbKHex9N00xcBl2oyiHv+yAT3Xsm4d35jU3YylTH6z3w7sXfwdhtYgYOhNSjiNDi
-X-Gm-Message-State: AOJu0YxmkAT0ShqxI8wjljV69gIExLdm7W51XgK95kvet3uZ7gUfBJVe
-	HwalVQB8TtYRDZq2FoArd544NzgTEzvUXnvSlccGNSB/RmI8SDAZZXHlrIrTTXf5UtTYu/+5ALi
-	OD2qhWooIj2jA8XSKFPgBs+Ne1K2bx9udLCwioQ==
-X-Google-Smtp-Source: AGHT+IGgLmVa8nGFRuH2lLvEoDTQ6Rj2QgnH8O/MrBxes++zUajUrC9MH9ZOGLxZV91yfG+FjV6yMUJtua3Xpybi24I=
-X-Received: by 2002:a17:906:4086:b0:a5a:6367:7186 with SMTP id
- a640c23a62f3a-a62281910e7mr77367066b.70.1716368293170; Wed, 22 May 2024
- 01:58:13 -0700 (PDT)
+	s=arc-20240116; t=1716369776; c=relaxed/simple;
+	bh=WmJQo640ZQb8OrummdMPWB3IkXWYN23+eVltn+PnS9g=;
+	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Fj8dfTYuyzo2fI+xLdzn1BCv+8isZSUbf6s5DkHsKzPqiQOWpUg67shEHI9YGlUH8o6F+yi3m/SP5hq813IfuZm9X+OmNywcq2I/3ZqQ0BgybbduAzLm9RfUQolxPJJLFyetnQXCIul7vqAhdqPGtc7Rjn22/FrZRSSRToWNm/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 536F18602E0;
+	Wed, 22 May 2024 14:17:39 +0800 (CST)
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+To: Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: John Groves <John@groves.net>, Gregory Price
+ <gregory.price@memverge.com>, axboe@kernel.dk, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev
+References: <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
+ <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
+ <20240503105245.00003676@Huawei.com>
+ <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
+ <20240508131125.00003d2b@Huawei.com>
+ <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
+ <20240508164417.00006c69@Huawei.com>
+ <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
+ <20240509132134.00000ae9@Huawei.com>
+ <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
+ <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Message-ID: <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
+Date: Wed, 22 May 2024 14:17:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1708709155.git.john@groves.net> <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
- <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
- <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com> <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
-In-Reply-To: <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 22 May 2024 10:58:01 +0200
-Message-ID: <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
-To: John Groves <John@groves.net>
-Cc: Amir Goldstein <amir73il@gmail.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, 
-	gregory.price@memverge.com, Vivek Goyal <vgoyal@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-
-On Wed, 22 May 2024 at 04:05, John Groves <John@groves.net> wrote:
-> I'm happy to help with that if you care - ping me if so; getting a VM running
-> in EFI mode is not necessary if you reserve the dax memory via memmap=, or
-> via libvirt xml.
-
-Could you please give an example?
-
-I use a raw qemu command line with a -kernel option and a root fs
-image (not a disk image with a bootloader).
+In-Reply-To: <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGkoYVk5ITE1ITR5MSEJPHlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8f9ef2be66023ckunm536f18602e0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OS46PRw6GDctHDMrDRoLDBoQ
+	OTMKC0JVSlVKTEpNSE5DTU1LS0hPVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JPSjcG
 
 
-> More generally, a famfs file extent is [daxdev, offset, len]; there may
-> be multiple extents per file, and in the future this definitely needs to
-> generalize to multiple daxdev's.
->
-> Disclaimer: I'm still coming up to speed on fuse (slowly and ignorantly,
-> I think)...
->
-> A single backing device (daxdev) will contain extents of many famfs
-> files (plus metadata - currently a superblock and a log). I'm not sure
-> it's realistic to have a backing daxdev "open" per famfs file.
 
-That's exactly what I was saying.
+在 2024/5/22 星期三 上午 2:41, Dan Williams 写道:
+> Dongsheng Yang wrote:
+>> 在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
+> [..]
+>>>> If we check and find that the "No clean writeback" bit in both CSDS and
+>>>> DVSEC is set, can we then assume that software cache-coherency is
+>>>> feasible, as outlined below:
+>>>>
+>>>> (1) Both the writer and reader ensure cache flushes. Since there are no
+>>>> clean writebacks, there will be no background data writes.
+>>>>
+>>>> (2) The writer writes data to shared memory and then executes a cache
+>>>> flush. If we trust the "No clean writeback" bit, we can assume that the
+>>>> data in shared memory is coherent.
+>>>>
+>>>> (3) Before reading the data, the reader performs cache invalidation.
+>>>> Since there are no clean writebacks, this invalidation operation will
+>>>> not destroy the data written by the writer. Therefore, the data read by
+>>>> the reader should be the data written by the writer, and since the
+>>>> writer's cache is clean, it will not write data to shared memory during
+>>>> the reader's reading process. Additionally, data integrity can be ensured.
+> 
+> What guarantees this property? How does the reader know that its local
+> cache invalidation is sufficient for reading data that has only reached
+> global visibility on the remote peer? As far as I can see, there is
+> nothing that guarantees that local global visibility translates to
+> remote visibility. In fact, the GPF feature is counter-evidence of the
+> fact that writes can be pending in buffers that are only flushed on a
+> GPF event.
 
-The passthrough interface was deliberately done in a way to separate
-the mapping into two steps:
+Sounds correct. From what I learned from GPF, ADR, and eADR, there would 
+still be data in WPQ even though we perform a CPU cache line flush in 
+the OS.
 
- 1) registering the backing file (which could be a device)
+This means we don't have a explicit method to make data puncture all 
+caches and land in the media after writing. also it seems there isn't a 
+explicit method to invalidate all caches along the entire path.
 
- 2) mapping from a fuse file to a registered backing file
+> 
+> I remain skeptical that a software managed inter-host cache-coherency
+> scheme can be made reliable with current CXL defined mechanisms.
 
-Step 1 can happen at any time, while step 2 currently happens at open,
-but for various other purposes like metadata passthrough it makes
-sense to allow the mapping to happen at lookup time and be cached for
-the lifetime of the inode.
 
-> In addition there is:
->
-> - struct dax_holder_operations - to allow a notify_failure() upcall
->   from dax. This provides the critical capability to shut down famfs
->   if there are memory errors. This is filesystem- (or technically daxdev-
->   wide)
-
-This can be hooked into fuse_is_bad().
-
-> - The pmem or devdax iomap_ops - to allow the fsdax file system (famfs,
->   and [soon] famfs_fuse) to call dax_iomap_rw() and dax_iomap_fault().
->   I strongly suspect that famfs_fuse can't be correct unless it uses
->   this path rather than just the idea of a single backing file.
-
-Agreed.
-
-> - the dev_dax_iomap portion of the famfs patchsets adds iomap_ops to
->   character devdax.
-
-You'll need to channel those patches through the respective
-maintainers, preferably before the fuse parts are merged.
-
-> - Note that dax devices, unlike files, don't support read/write - only
->   mmap(). I suspect (though I'm still pretty ignorant) that this means
->   we can't just treat the dax device as an extent-based backing file.
-
-Doesn't matter, it'll use the iomap infrastructure instead of the
-passthrough infrastructure.
-
-But the interfaces for regular passthrough and fsdax could be shared.
-Conceptually they are very similar:  there's a backing store indexable
-with byte offsets.
-
-What's currently missing from the API is an extent list in
-fuse_open_out.   The format could be:
-
-  [ {backing_id, offset, length}, ... ]
-
-allowing each extent to map to a different backing device.
-
-> A dax device to famfs is a lot more like a backing device for a "filesystem"
-> than a backing file for another file. And, as previously mentioned, there
-> is the iomap_ops interface and the holder_ops interface that deal with
-> multiple file tenants on a dax device (plus error notification,
-> respectively)
->
-> Probably doable, but important distinctions...
-
-Yeah, that's why I suggested to create a new source file for this
-within fs/fuse.  Alternatively we could try splitting up fuse into
-modules (core, virtiofs, cuse, fsdax) but I think that can be left as
-a cleanup step.
-
-> First question: can you suggest an example fuse file pass-through
-> file system that I might use as a jumping-off point? Something that
-> gets the basic pass-through capability from which to start hacking
-> in famfs/dax capabilities?
-
-An example is in Amir's libfuse repo at
-
-   https://github.com/libfuse/libfuse
-
-> I'm confused by the last item. I would think there would be a fuse
-> inode per famfs file, and that multiple of those would map to separate
-> extent lists of one or more backing dax devices.
-
-Yeah.
-
-> Or maybe I misunderstand the meaning of "fuse inode". Feel free to
-> assign reading...
-
-I think Amir meant that each open file could in theory have a
-different mapping.  This is allowed by the fuse interface, but is
-disallowed in practice.
-
-I'm in favor of caching the extent map so it only has to be given on
-the first open (or lookup).
-
-Thanks,
-Miklos
+I got your point now, acorrding current CXL Spec, it seems software 
+managed cache-coherency for inter-host shared memory is not working. 
+Will the next version of CXL spec consider it?
+> 
