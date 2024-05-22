@@ -1,55 +1,51 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD087C097;
-	Wed, 22 May 2024 10:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD02D824AF
+	for <linux-cxl@vger.kernel.org>; Wed, 22 May 2024 11:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716372981; cv=none; b=fWBL98WJfrZ9f3hmViD29PkUOA4htLzpX1y7mQh2hy4EbRLtm9h95vkVHnYWpQz6FOH6JJhlGkzus+JpFjJmXt8z34a5F1MWE+tu5hjuNLzbfdl1OmbbT3gez+DAMRzn9Cw9tQHlehyUFCFLoWs56EABWC7wCuPZOFSXYIxjkrQ=
+	t=1716377337; cv=none; b=dWta5eNk2joB8PIPwuUW8b9SVpdh85Dx/iyq6tWiiw7T2O0YqhEjs07/roCtcYydJgKolRoogu/SWNdrm1EKD1olrw8Stx1vlBhbPLFNKUSLrRXxKSlqxtkVsMiq5OzinATb2PIWWOm/lHJUo5hERO5LXyOG/f0Dm916gBVEdos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716372981; c=relaxed/simple;
-	bh=FAVUAWEuXJC3xocw/jVzmYDvy/HjG5VjlA6XGaROGto=;
+	s=arc-20240116; t=1716377337; c=relaxed/simple;
+	bh=3bJdJ8HW1Na5LLk+AGH4z17x+8X++BBtE11tCH2eQoc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i5DwVReDC3RYoznOCaZGjfRzfV3Ngbm+J0xLC9o5Txm5RfvEscCHEaXljxR6rlsCmF3/xiYGLfS/kfX1hImLgpTld2Ltdb1XCaoTkgIalnQU+HedB6+oTLGCnWtqtzxphUlp0zqVbw6dQK1vkSJwsps37diHYTPhCaRNY0DOgRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cc/S/X5g; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Y0vSd0rrHsoMypJuPQozIHIestbcST8i92/gDOX359TKgoaCwPLeHGJi7c9bqmQrHr19niQC2hN76A1AGWHf98HLyoQLFxQ4/dh9n/utPC+ue7BrCez2hMnXM0efE/9Je6BYfGs2qwbyC2M/tY6vB8qe/KZEmNrcDxCs/TyxBfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=eN/G7J8C; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc/S/X5g"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-61bb219737dso50794377b3.2;
-        Wed, 22 May 2024 03:16:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="eN/G7J8C"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59b58fe083so704302666b.0
+        for <linux-cxl@vger.kernel.org>; Wed, 22 May 2024 04:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716372978; x=1716977778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RFE7goOcsig+5kjm4mwdw1ou6tsRmyL7x364k4UdXRM=;
-        b=cc/S/X5gGXOzgSkt1to9TcKLa2GQXBZWYL7ruQNuxvzPJrK27r/+VZGTKY3P+IWsmy
-         d5pL+W6atx6IbAGmNrl0NE1OPpD4o2F2YpMriMhplBI92pQj3EtGFpbuIUAZAPQnOd9H
-         D8qJYOrJeoMI9E6hY03oqsTKUhg4pgLWAJ6EMuGPVX5iu3PZgIyq/qP+XO1SsEGWNXgm
-         hI73xXwJYq5gFTe6n9EKStyb86GV0ZrGZi2ko7AVA8BbTcSey/hEq2KmKDEU5caldpxa
-         1ba6iRLdpv2bn0Ff5J9MtOo5Sxaz496P/WyqcSJLL2GGwat1o2H4BJa7Hp/b17VxVq7M
-         gplw==
+        d=szeredi.hu; s=google; t=1716377334; x=1716982134; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KNstTbNFBCd+HhKurLCnuPWR0z0UVPvAuThP/LhWOd0=;
+        b=eN/G7J8C84raWniw310y1EpLoZrKwLRk8mgg2G7az7jscCt1S0EKldbn0KOnIM0Wig
+         FckEbk4wH6bxTI7stUKHNpy1VZ90169MBrB3fc/d0orV8/chSi6s1MkQCehitRS8qO95
+         M49TXOAMAZwn+PCAl7RfhPgx4AH39pdgIndIg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716372978; x=1716977778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RFE7goOcsig+5kjm4mwdw1ou6tsRmyL7x364k4UdXRM=;
-        b=q8JGb7HxwlFDPEyEWMCUuYndVBib3m9gXoS1N9hL1s7XtWDLxDJvazS5JIruoL9cqs
-         v3IcnixVeEJurfMsUrapqhuqNBSr8xoTPtpvbofkUVAJOdTwQTrGuHCqImKqJitkLNhN
-         Y9aRU7g2s11cj1t4+3F1htTzGOZODY42FufIYUi6OTZCXJ3kjJCt/ldWnyHHH91eLwtl
-         UPXxW5zuvbVB05rau2g02ANxhAUanIfgVw4sh+Wmk3GxasBbLb+TF25S5bF1YTwOUEDH
-         oH9xfxMfim3GlXSmA6DZYhF1N/eeUZEWIzzGrmzlKxEPLEy0sSqew4oPIzFMe1HkYy2N
-         wLtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVMnLdC9PcQRIUx3vqB7Q14owQgAQ6tpIOGua1qgtkcX5to94V4Eu2k1thwEkN34Js4NgI2CUQSq+mHopOYHwVWhz5buhv0KmQoyHoUcoRIoHe+8wcuz2FVp/o9nVnvfDSxGsWNIh/oEZztCrSV+uuV5ePxLYTzucRPk0Jj/IXTU/GGOjvbbuuFsZpFxTCLNBidxMBA2jut9z8N5dFiFcPyA==
-X-Gm-Message-State: AOJu0YyQEsGGV7Sc3V10IhI70ve+3rDDK9OEF8iomMiX92ksCXsa2Ye1
-	RTIJD2IYbYcFgoIEWwjG+6u0y616MiUMUilmh80PtVVXxVuQ6S9VVkrtj3M+q/RTFcuZjLWgWiZ
-	1GtsqEpLr20JopxKrYud19iBqENg=
-X-Google-Smtp-Source: AGHT+IFb0cboVknNIZArzascsjeUHM9Scu1/6qu9TqK3yO+W2ybG/6rcbYuLHaNQn4TLwhwvpCdke7PAkk/m/Zekwfw=
-X-Received: by 2002:a81:498e:0:b0:627:88fc:61c5 with SMTP id
- 00721157ae682-627e46a4c40mr16091627b3.14.1716372977599; Wed, 22 May 2024
- 03:16:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716377334; x=1716982134;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KNstTbNFBCd+HhKurLCnuPWR0z0UVPvAuThP/LhWOd0=;
+        b=ZKQs4YNgL1/t9wXur0Fni3g8vVKzZ7/5XaaoAHRetZ7cO4Yhcq4/pu6cuAG931Nnls
+         7lqzQiVM5c+UGoQUIi//cqI0gy+uWwWb73F0Jw1R2BHFiSJZPO5t67VkYgbcb8MXi03U
+         jWd8AvXCqSmdWzYiCL7ikey9LhJa2R9t3ebM/a6+cnYwHtIEwUazBpc4IakpYw/i6qCf
+         UbXNI1rEa6eFFFpnarVLy48yt5rsBPuqI5lz8iAgl7iUESEqil1g3/Ftuj7tA7U29hg9
+         KYfZWcVERLyUqtEZT5neZnXyU1tD0uApjhN0MQ+VWdjBx+6lNeVge78h8xaqjVNbzrsJ
+         egKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzUl8m1DjUMM8a/iH3J5l6Alm7157CPlOGQUnlySrMVzrc1p4OOIt5w6AQ62SFX44Ma1qqYnx2ogG9d8i55w88qDUPbSIfz8Hu
+X-Gm-Message-State: AOJu0Ywha17sJG8ti6VeVoRoCTdLLmgObOwkgSgKin9jABtf3EaGX5bU
+	acDc2eeqmGRlaZbGNiG/zwkrEQ+qvx3TNtwXB4IyoiOiMLYHlrJZ/G4A3wSBHoi1bKI3Wrg8Wpa
+	j5E0/FDWDXPLmzfxaLR2Ka+II+jIP8gg+bTnDSA==
+X-Google-Smtp-Source: AGHT+IE5WaF87K/wVsaT0a6gSy0rGBzZLsdh108SeEf5aQ3zolCWJBW1NV7c9ET+Od7JRp7Fevvf53iJJIu4qKo7s5M=
+X-Received: by 2002:a17:906:1589:b0:a59:c52b:993c with SMTP id
+ a640c23a62f3a-a62281fc3b7mr84214066b.77.1716377334095; Wed, 22 May 2024
+ 04:28:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,13 +55,14 @@ MIME-Version: 1.0
 References: <cover.1708709155.git.john@groves.net> <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
  <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
  <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
- <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v> <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
-In-Reply-To: <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 22 May 2024 13:16:03 +0300
-Message-ID: <CAOQ4uxiY-qHSssaX82_LmFdjp5=mqgAhGgbkjAPSXcZ+yRecKw@mail.gmail.com>
+ <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
+ <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com> <CAOQ4uxiY-qHSssaX82_LmFdjp5=mqgAhGgbkjAPSXcZ+yRecKw@mail.gmail.com>
+In-Reply-To: <CAOQ4uxiY-qHSssaX82_LmFdjp5=mqgAhGgbkjAPSXcZ+yRecKw@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 22 May 2024 13:28:42 +0200
+Message-ID: <CAJfpegvAuPtKzR1A4GdaZTB_EDqPu53wUf97D1QOUo9VKkTV9Q@mail.gmail.com>
 Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
-To: Miklos Szeredi <miklos@szeredi.hu>
+To: Amir Goldstein <amir73il@gmail.com>
 Cc: John Groves <John@groves.net>, John Groves <jgroves@micron.com>, 
 	Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
 	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
@@ -77,154 +74,20 @@ Cc: John Groves <John@groves.net>, John Groves <jgroves@micron.com>,
 	gregory.price@memverge.com, Vivek Goyal <vgoyal@redhat.com>, 
 	Bernd Schubert <bernd.schubert@fastmail.fm>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 11:58=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu>=
- wrote:
->
-> On Wed, 22 May 2024 at 04:05, John Groves <John@groves.net> wrote:
-> > I'm happy to help with that if you care - ping me if so; getting a VM r=
-unning
-> > in EFI mode is not necessary if you reserve the dax memory via memmap=
-=3D, or
-> > via libvirt xml.
->
-> Could you please give an example?
->
-> I use a raw qemu command line with a -kernel option and a root fs
-> image (not a disk image with a bootloader).
->
->
-> > More generally, a famfs file extent is [daxdev, offset, len]; there may
-> > be multiple extents per file, and in the future this definitely needs t=
-o
-> > generalize to multiple daxdev's.
-> >
-> > Disclaimer: I'm still coming up to speed on fuse (slowly and ignorantly=
-,
-> > I think)...
-> >
-> > A single backing device (daxdev) will contain extents of many famfs
-> > files (plus metadata - currently a superblock and a log). I'm not sure
-> > it's realistic to have a backing daxdev "open" per famfs file.
->
-> That's exactly what I was saying.
->
-> The passthrough interface was deliberately done in a way to separate
-> the mapping into two steps:
->
->  1) registering the backing file (which could be a device)
->
->  2) mapping from a fuse file to a registered backing file
->
-> Step 1 can happen at any time, while step 2 currently happens at open,
-> but for various other purposes like metadata passthrough it makes
-> sense to allow the mapping to happen at lookup time and be cached for
-> the lifetime of the inode.
->
-> > In addition there is:
-> >
-> > - struct dax_holder_operations - to allow a notify_failure() upcall
-> >   from dax. This provides the critical capability to shut down famfs
-> >   if there are memory errors. This is filesystem- (or technically daxde=
-v-
-> >   wide)
->
-> This can be hooked into fuse_is_bad().
->
-> > - The pmem or devdax iomap_ops - to allow the fsdax file system (famfs,
-> >   and [soon] famfs_fuse) to call dax_iomap_rw() and dax_iomap_fault().
-> >   I strongly suspect that famfs_fuse can't be correct unless it uses
-> >   this path rather than just the idea of a single backing file.
->
-> Agreed.
->
-> > - the dev_dax_iomap portion of the famfs patchsets adds iomap_ops to
-> >   character devdax.
->
-> You'll need to channel those patches through the respective
-> maintainers, preferably before the fuse parts are merged.
->
-> > - Note that dax devices, unlike files, don't support read/write - only
-> >   mmap(). I suspect (though I'm still pretty ignorant) that this means
-> >   we can't just treat the dax device as an extent-based backing file.
->
-> Doesn't matter, it'll use the iomap infrastructure instead of the
-> passthrough infrastructure.
->
-> But the interfaces for regular passthrough and fsdax could be shared.
-> Conceptually they are very similar:  there's a backing store indexable
-> with byte offsets.
->
-> What's currently missing from the API is an extent list in
-> fuse_open_out.   The format could be:
->
->   [ {backing_id, offset, length}, ... ]
->
-> allowing each extent to map to a different backing device.
->
-> > A dax device to famfs is a lot more like a backing device for a "filesy=
-stem"
-> > than a backing file for another file. And, as previously mentioned, the=
-re
-> > is the iomap_ops interface and the holder_ops interface that deal with
-> > multiple file tenants on a dax device (plus error notification,
-> > respectively)
-> >
-> > Probably doable, but important distinctions...
->
-> Yeah, that's why I suggested to create a new source file for this
-> within fs/fuse.  Alternatively we could try splitting up fuse into
-> modules (core, virtiofs, cuse, fsdax) but I think that can be left as
-> a cleanup step.
->
-> > First question: can you suggest an example fuse file pass-through
-> > file system that I might use as a jumping-off point? Something that
-> > gets the basic pass-through capability from which to start hacking
-> > in famfs/dax capabilities?
->
-> An example is in Amir's libfuse repo at
->
->    https://github.com/libfuse/libfuse
->
+On Wed, 22 May 2024 at 12:16, Amir Goldstein <amir73il@gmail.com> wrote:
 
-That's not my repo, it's the official one ;-)
-but yeh, my passthrough example got merged last week:
-https://github.com/libfuse/libfuse/pull/919
-
-> > I'm confused by the last item. I would think there would be a fuse
-> > inode per famfs file, and that multiple of those would map to separate
-> > extent lists of one or more backing dax devices.
+> The first open would cache the extent list in fuse_inode and
+> second open would verify that the extent list matches.
 >
-> Yeah.
->
-> > Or maybe I misunderstand the meaning of "fuse inode". Feel free to
-> > assign reading...
->
-> I think Amir meant that each open file could in theory have a
-> different mapping.  This is allowed by the fuse interface, but is
-> disallowed in practice.
->
-> I'm in favor of caching the extent map so it only has to be given on
-> the first open (or lookup).
+> Last file close could clean the cache extent list or not - that
+> is an API decision.
 
-Yeh, sorry, that was a bit confusing.
-The statement is that because the simples plan as Miklos
-suggested is to pass the extent list in reply to open
-two different opens of the same inode are not allowed to
-pass in different extent lists.
-
-The new iomode.c code does something similar.
-Currently fuse_inode has a reference to fuse_backing which
-stores the backing file (that can be the dax device) and it also
-has a reference to fuse_inode_dax with an rbtree of fuse_dax_mapping
-Can we reuse fuse_inode_dax for the needs of famfs?
-
-The first open would cache the extent list in fuse_inode and
-second open would verify that the extent list matches.
-
-Last file close could clean the cache extent list or not - that
-is an API decision.
+Well, current API clears the mapping, and I would treat the fi->fb as
+a just a special case of the extent list.  So by default I'd keep this
+behavior, but perhaps it would make sense to optionally allow the
+mapping to remain after the last close.  For now this is probably not
+relevant...
 
 Thanks,
-Amir.
+Miklos
