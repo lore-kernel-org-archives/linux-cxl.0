@@ -1,109 +1,217 @@
-Received: from mail-m17224.xmail.ntesmail.com (mail-m17224.xmail.ntesmail.com [45.195.17.224])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87082D047;
-	Wed, 22 May 2024 09:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2FC54720;
+	Wed, 22 May 2024 09:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716369776; cv=none; b=Avy070/wz7rrgsgmrKH6GA+dPUVb3jgRlVdAeFROf8appbmk38iYb+5Fy5qPcpKZTochADR2GbTU5FDh5OVGotjXaUtuTi2373Shyf/3K/lpb/9iIoCqb3c5IZ6sT0DaM3uUhEfeWjHrewRKo2We+NPTL2loZ5K/eEXwRaC2/18=
+	t=1716370830; cv=none; b=ZIuzrVm9Eu3I4KswqAR+ExWxeinukhk3B8HrTkbF9LBHh5sR0GFy5eZNhdD2dtS83ZXAxS3wuX25unLEb+vgVHmM8C3HBQGf5qwQYxqpDemexUXVoR9M2qqgGamDO8OEgu2JMmgfe+QASz9bUdi/Pa+aYtvzYqKWElyA8hUTlnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716369776; c=relaxed/simple;
-	bh=WmJQo640ZQb8OrummdMPWB3IkXWYN23+eVltn+PnS9g=;
-	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Fj8dfTYuyzo2fI+xLdzn1BCv+8isZSUbf6s5DkHsKzPqiQOWpUg67shEHI9YGlUH8o6F+yi3m/SP5hq813IfuZm9X+OmNywcq2I/3ZqQ0BgybbduAzLm9RfUQolxPJJLFyetnQXCIul7vqAhdqPGtc7Rjn22/FrZRSSRToWNm/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 536F18602E0;
-	Wed, 22 May 2024 14:17:39 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <John@groves.net>, Gregory Price
- <gregory.price@memverge.com>, axboe@kernel.dk, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
- <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
- <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
- <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
- <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Message-ID: <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
-Date: Wed, 22 May 2024 14:17:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1716370830; c=relaxed/simple;
+	bh=dI4/Xlum3q54/48w5qXC2mpJ/wMnduDUMS+A4zFT9kU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A97shix0rZ8Ctogn+HDCuokrPgwtMEXnVsHSa73SymeXyCuRFEbkEJqkqmq6UEVNCMbRguaSSpPiRHygioyfyTFVrwjX3M6WahGkmxsHiCauc8+PwrAarHcstKndEp7qQHxelKN5D2DGbpafDVMAJoqj3zlrrgAA96utBcRFZII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VkmQw2rK4z6J9Sj;
+	Wed, 22 May 2024 17:36:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 44E6D140A70;
+	Wed, 22 May 2024 17:40:19 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 22 May
+ 2024 10:40:18 +0100
+Date: Wed, 22 May 2024 10:40:17 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
+	<shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Jean Delvare
+	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240522104017.00003904@Huawei.com>
+In-Reply-To: <20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
+References: <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
+	<20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
+	<663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
+	<663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
+	<663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
+	<20240517121554.000031d4@Huawei.com>
+	<20240517124418.00000b48@Huawei.com>
+	<20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGkoYVk5ITE1ITR5MSEJPHlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f9ef2be66023ckunm536f18602e0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OS46PRw6GDctHDMrDRoLDBoQ
-	OTMKC0JVSlVKTEpNSE5DTU1LS0hPVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JPSjcG
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 21 May 2024 10:06:21 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-
-在 2024/5/22 星期三 上午 2:41, Dan Williams 写道:
-> Dongsheng Yang wrote:
->> 在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
-> [..]
->>>> If we check and find that the "No clean writeback" bit in both CSDS and
->>>> DVSEC is set, can we then assume that software cache-coherency is
->>>> feasible, as outlined below:
->>>>
->>>> (1) Both the writer and reader ensure cache flushes. Since there are no
->>>> clean writebacks, there will be no background data writes.
->>>>
->>>> (2) The writer writes data to shared memory and then executes a cache
->>>> flush. If we trust the "No clean writeback" bit, we can assume that the
->>>> data in shared memory is coherent.
->>>>
->>>> (3) Before reading the data, the reader performs cache invalidation.
->>>> Since there are no clean writebacks, this invalidation operation will
->>>> not destroy the data written by the writer. Therefore, the data read by
->>>> the reader should be the data written by the writer, and since the
->>>> writer's cache is clean, it will not write data to shared memory during
->>>> the reader's reading process. Additionally, data integrity can be ensured.
+> On Fri, May 17, 2024 at 12:44:18PM +0100, Jonathan Cameron wrote:
+> > Given we are talking about something new, maybe this is an opportunity
+> > to not perpetuate this?
+> > 
+> > If we add scrub in here I'd prefer to just use the normal bus registration
+> > handling rather than creating a nest of additional nodes.  So perhaps we
+> > could consider
+> > /sys/bus/edac/device/scrub0 (or whatever name makes sense, as per the
+> > earlier discussion of cxl_scrub0 or similar).  
 > 
-> What guarantees this property? How does the reader know that its local
-> cache invalidation is sufficient for reading data that has only reached
-> global visibility on the remote peer? As far as I can see, there is
-> nothing that guarantees that local global visibility translates to
-> remote visibility. In fact, the GPF feature is counter-evidence of the
-> fact that writes can be pending in buffers that are only flushed on a
-> GPF event.
+> Yes, my main worry is how this RAS functionality is going to be all
+> organized in the tree. Yes, EDAC legacy methods can die but the
+> user-visible part can't so we might as well use it to concentrate stuff
+> there.
 
-Sounds correct. From what I learned from GPF, ADR, and eADR, there would 
-still be data in WPQ even though we perform a CPU cache line flush in 
-the OS.
-
-This means we don't have a explicit method to make data puncture all 
-caches and land in the media after writing. also it seems there isn't a 
-explicit method to invalidate all caches along the entire path.
+Understood.
 
 > 
-> I remain skeptical that a software managed inter-host cache-coherency
-> scheme can be made reliable with current CXL defined mechanisms.
-
-
-I got your point now, acorrding current CXL Spec, it seems software 
-managed cache-coherency for inter-host shared memory is not working. 
-Will the next version of CXL spec consider it?
+> > Could consider moving the bus location of mc0 etc in future to there with
+> > symlinks to /sys/bus/edac/device/mc/* for backwards compatibility either
+> > via setting their parents or more explicit link creation.  
 > 
+> You can ignore the mc - that's the memory controller representation EDAC
+> does and that's also kind of semi-legacy considering how heterogeneous
+> devices are becoming. Nowadays, scrubbing functionality can be on
+> anything that has memory and that's not only a memory controller.
+> 
+> So it would actually be the better thing to abstract that differently
+> and use .../edac/device/ for the different RAS functionalities. I.e.,
+> have the "device" organize it all.
+
+I'm not sure I follow this. Definitely worth ensuring we are thinking
+the same thing wrt to layout before we go further,
+
+Do you mean keep it similar to the existing device/mc device/pci
+structure so /sys/bus/edac/devices/scrub/cxl_mem0_scrub etc?
+This would rely on symlinks to paper over the dev->parent not being
+the normal parent. Hence would be similar to /sys/bus/edac/devices/pci in
+edac_pci_create_sysfs() or equivalent in edac_device_create_sysfs().
+
+Or is the ../edac/device bit about putting an extra device under edac/devices/?
+e.g.
+/sys/bus/edac/devices/cxl_memX/scrub
+/sys/bus/edac/devices/cxl_memX/other_ras_thing
+which would be fairly standard driver model stuff.
+
+This would sit alongside 'legacy'
+/sys/bus/edac/devices/mc/mcX
+/sys/bus/edac/devices/pci/pciX etc
+
+I'd prefer this second model as it's very standard and but grouping is per
+providing parent device, rather than functionality. However, it is rather
+different from the existing edac structure.
+
+Where I've used the symlink approach in the past, it has always
+been about keeping a legacy interface in place, not where I'd start
+with something new.   Hence I think this is a question of how far
+we 'breakaway' from existing edac structure.
+
+
+
+> 
+> > These scrub0 would have their dev->parent set to who ever actually
+> > registered them providing that reference cleanly and letting all the
+> > normal device model stuff work more simply.  
+> 
+> Ack.
+
+This suggests the second option above, but I wanted to confirm as Shiju
+and I read this differently.
+
+> 
+> > If we did that with the scrub nodes, the only substantial change from
+> > a separate subsystem as seen in this patch set would be to register
+> > them on the edac bus rather than a separate class.
+> > 
+> > As you pointed out, there is a simple scrub interface in the existing
+> > edac memory controller code. How would you suggest handling that?
+> > Have them all register an additional device on the bus (as a child
+> > of the mcX devices) perhaps?  Seems an easy step forwards and should
+> > be no backwards compatibility concerns.  
+> 
+> Well, you guys want to control that scrubbing from userspace and those
+> old things probably do not fit that model? We could just not convert
+> them for now and add them later if really needed. I.e., leave sleeping
+> dogs lie.
+
+Ok. There is an existing is the minimal sysfs existing interface but I'm
+fine with ignoring it for now.
+ 
+> 
+> > It absolutely doesn't as long as we can do it fairly cleanly within
+> > existing code. I wasn't sure that was possible, but you know edac
+> > a lot better than me and so I'll defer to you on that!  
+> 
+> Meh, I'm simply maintaining it because no one else wants to. :)
+
+*much sympathy!*  As we ramp up more on this stuff, we'll try and
+help out where we can.
+
+> 
+> > Several options for that, but fair question - bringing (at least some of)
+> > the RAS mess together will focus reviewer bandwidth etc better.  
+> 
+> Review is more than appreciated, as always.
+> 
+> > I'm definitely keen on unifying things as I agree, this mixture of different
+> > RAS functionality is a ever worsening mess.  
+> 
+> Yap, it needs to be unified and reigned into something more
+> user-friendly and manageable.
+
+Hopefully we all agree on a unified solution being the target.
+
+Feels like we are converging. Now we are down to the details :)
+
+Thanks,
+
+Jonathan
+
+> 
+> Thx.
+> 
+
