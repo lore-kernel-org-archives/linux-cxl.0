@@ -1,217 +1,230 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2FC54720;
-	Wed, 22 May 2024 09:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD087C097;
+	Wed, 22 May 2024 10:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716370830; cv=none; b=ZIuzrVm9Eu3I4KswqAR+ExWxeinukhk3B8HrTkbF9LBHh5sR0GFy5eZNhdD2dtS83ZXAxS3wuX25unLEb+vgVHmM8C3HBQGf5qwQYxqpDemexUXVoR9M2qqgGamDO8OEgu2JMmgfe+QASz9bUdi/Pa+aYtvzYqKWElyA8hUTlnI=
+	t=1716372981; cv=none; b=fWBL98WJfrZ9f3hmViD29PkUOA4htLzpX1y7mQh2hy4EbRLtm9h95vkVHnYWpQz6FOH6JJhlGkzus+JpFjJmXt8z34a5F1MWE+tu5hjuNLzbfdl1OmbbT3gez+DAMRzn9Cw9tQHlehyUFCFLoWs56EABWC7wCuPZOFSXYIxjkrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716370830; c=relaxed/simple;
-	bh=dI4/Xlum3q54/48w5qXC2mpJ/wMnduDUMS+A4zFT9kU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A97shix0rZ8Ctogn+HDCuokrPgwtMEXnVsHSa73SymeXyCuRFEbkEJqkqmq6UEVNCMbRguaSSpPiRHygioyfyTFVrwjX3M6WahGkmxsHiCauc8+PwrAarHcstKndEp7qQHxelKN5D2DGbpafDVMAJoqj3zlrrgAA96utBcRFZII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VkmQw2rK4z6J9Sj;
-	Wed, 22 May 2024 17:36:40 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 44E6D140A70;
-	Wed, 22 May 2024 17:40:19 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 22 May
- 2024 10:40:18 +0100
-Date: Wed, 22 May 2024 10:40:17 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
-	<shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov
-	<dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Message-ID: <20240522104017.00003904@Huawei.com>
-In-Reply-To: <20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
-References: <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
-	<20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
-	<663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
-	<663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
-	<663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
-	<20240517121554.000031d4@Huawei.com>
-	<20240517124418.00000b48@Huawei.com>
-	<20240521080621.GBZkxV_ZWnbbrq-yV_@fat_crate.local>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1716372981; c=relaxed/simple;
+	bh=FAVUAWEuXJC3xocw/jVzmYDvy/HjG5VjlA6XGaROGto=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i5DwVReDC3RYoznOCaZGjfRzfV3Ngbm+J0xLC9o5Txm5RfvEscCHEaXljxR6rlsCmF3/xiYGLfS/kfX1hImLgpTld2Ltdb1XCaoTkgIalnQU+HedB6+oTLGCnWtqtzxphUlp0zqVbw6dQK1vkSJwsps37diHYTPhCaRNY0DOgRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cc/S/X5g; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc/S/X5g"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-61bb219737dso50794377b3.2;
+        Wed, 22 May 2024 03:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716372978; x=1716977778; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RFE7goOcsig+5kjm4mwdw1ou6tsRmyL7x364k4UdXRM=;
+        b=cc/S/X5gGXOzgSkt1to9TcKLa2GQXBZWYL7ruQNuxvzPJrK27r/+VZGTKY3P+IWsmy
+         d5pL+W6atx6IbAGmNrl0NE1OPpD4o2F2YpMriMhplBI92pQj3EtGFpbuIUAZAPQnOd9H
+         D8qJYOrJeoMI9E6hY03oqsTKUhg4pgLWAJ6EMuGPVX5iu3PZgIyq/qP+XO1SsEGWNXgm
+         hI73xXwJYq5gFTe6n9EKStyb86GV0ZrGZi2ko7AVA8BbTcSey/hEq2KmKDEU5caldpxa
+         1ba6iRLdpv2bn0Ff5J9MtOo5Sxaz496P/WyqcSJLL2GGwat1o2H4BJa7Hp/b17VxVq7M
+         gplw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716372978; x=1716977778;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RFE7goOcsig+5kjm4mwdw1ou6tsRmyL7x364k4UdXRM=;
+        b=q8JGb7HxwlFDPEyEWMCUuYndVBib3m9gXoS1N9hL1s7XtWDLxDJvazS5JIruoL9cqs
+         v3IcnixVeEJurfMsUrapqhuqNBSr8xoTPtpvbofkUVAJOdTwQTrGuHCqImKqJitkLNhN
+         Y9aRU7g2s11cj1t4+3F1htTzGOZODY42FufIYUi6OTZCXJ3kjJCt/ldWnyHHH91eLwtl
+         UPXxW5zuvbVB05rau2g02ANxhAUanIfgVw4sh+Wmk3GxasBbLb+TF25S5bF1YTwOUEDH
+         oH9xfxMfim3GlXSmA6DZYhF1N/eeUZEWIzzGrmzlKxEPLEy0sSqew4oPIzFMe1HkYy2N
+         wLtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVMnLdC9PcQRIUx3vqB7Q14owQgAQ6tpIOGua1qgtkcX5to94V4Eu2k1thwEkN34Js4NgI2CUQSq+mHopOYHwVWhz5buhv0KmQoyHoUcoRIoHe+8wcuz2FVp/o9nVnvfDSxGsWNIh/oEZztCrSV+uuV5ePxLYTzucRPk0Jj/IXTU/GGOjvbbuuFsZpFxTCLNBidxMBA2jut9z8N5dFiFcPyA==
+X-Gm-Message-State: AOJu0YyQEsGGV7Sc3V10IhI70ve+3rDDK9OEF8iomMiX92ksCXsa2Ye1
+	RTIJD2IYbYcFgoIEWwjG+6u0y616MiUMUilmh80PtVVXxVuQ6S9VVkrtj3M+q/RTFcuZjLWgWiZ
+	1GtsqEpLr20JopxKrYud19iBqENg=
+X-Google-Smtp-Source: AGHT+IFb0cboVknNIZArzascsjeUHM9Scu1/6qu9TqK3yO+W2ybG/6rcbYuLHaNQn4TLwhwvpCdke7PAkk/m/Zekwfw=
+X-Received: by 2002:a81:498e:0:b0:627:88fc:61c5 with SMTP id
+ 00721157ae682-627e46a4c40mr16091627b3.14.1716372977599; Wed, 22 May 2024
+ 03:16:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <cover.1708709155.git.john@groves.net> <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
+ <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
+ <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
+ <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v> <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
+In-Reply-To: <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 22 May 2024 13:16:03 +0300
+Message-ID: <CAOQ4uxiY-qHSssaX82_LmFdjp5=mqgAhGgbkjAPSXcZ+yRecKw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: John Groves <John@groves.net>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
+	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, 
+	gregory.price@memverge.com, Vivek Goyal <vgoyal@redhat.com>, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 May 2024 10:06:21 +0200
-Borislav Petkov <bp@alien8.de> wrote:
+On Wed, May 22, 2024 at 11:58=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu>=
+ wrote:
+>
+> On Wed, 22 May 2024 at 04:05, John Groves <John@groves.net> wrote:
+> > I'm happy to help with that if you care - ping me if so; getting a VM r=
+unning
+> > in EFI mode is not necessary if you reserve the dax memory via memmap=
+=3D, or
+> > via libvirt xml.
+>
+> Could you please give an example?
+>
+> I use a raw qemu command line with a -kernel option and a root fs
+> image (not a disk image with a bootloader).
+>
+>
+> > More generally, a famfs file extent is [daxdev, offset, len]; there may
+> > be multiple extents per file, and in the future this definitely needs t=
+o
+> > generalize to multiple daxdev's.
+> >
+> > Disclaimer: I'm still coming up to speed on fuse (slowly and ignorantly=
+,
+> > I think)...
+> >
+> > A single backing device (daxdev) will contain extents of many famfs
+> > files (plus metadata - currently a superblock and a log). I'm not sure
+> > it's realistic to have a backing daxdev "open" per famfs file.
+>
+> That's exactly what I was saying.
+>
+> The passthrough interface was deliberately done in a way to separate
+> the mapping into two steps:
+>
+>  1) registering the backing file (which could be a device)
+>
+>  2) mapping from a fuse file to a registered backing file
+>
+> Step 1 can happen at any time, while step 2 currently happens at open,
+> but for various other purposes like metadata passthrough it makes
+> sense to allow the mapping to happen at lookup time and be cached for
+> the lifetime of the inode.
+>
+> > In addition there is:
+> >
+> > - struct dax_holder_operations - to allow a notify_failure() upcall
+> >   from dax. This provides the critical capability to shut down famfs
+> >   if there are memory errors. This is filesystem- (or technically daxde=
+v-
+> >   wide)
+>
+> This can be hooked into fuse_is_bad().
+>
+> > - The pmem or devdax iomap_ops - to allow the fsdax file system (famfs,
+> >   and [soon] famfs_fuse) to call dax_iomap_rw() and dax_iomap_fault().
+> >   I strongly suspect that famfs_fuse can't be correct unless it uses
+> >   this path rather than just the idea of a single backing file.
+>
+> Agreed.
+>
+> > - the dev_dax_iomap portion of the famfs patchsets adds iomap_ops to
+> >   character devdax.
+>
+> You'll need to channel those patches through the respective
+> maintainers, preferably before the fuse parts are merged.
+>
+> > - Note that dax devices, unlike files, don't support read/write - only
+> >   mmap(). I suspect (though I'm still pretty ignorant) that this means
+> >   we can't just treat the dax device as an extent-based backing file.
+>
+> Doesn't matter, it'll use the iomap infrastructure instead of the
+> passthrough infrastructure.
+>
+> But the interfaces for regular passthrough and fsdax could be shared.
+> Conceptually they are very similar:  there's a backing store indexable
+> with byte offsets.
+>
+> What's currently missing from the API is an extent list in
+> fuse_open_out.   The format could be:
+>
+>   [ {backing_id, offset, length}, ... ]
+>
+> allowing each extent to map to a different backing device.
+>
+> > A dax device to famfs is a lot more like a backing device for a "filesy=
+stem"
+> > than a backing file for another file. And, as previously mentioned, the=
+re
+> > is the iomap_ops interface and the holder_ops interface that deal with
+> > multiple file tenants on a dax device (plus error notification,
+> > respectively)
+> >
+> > Probably doable, but important distinctions...
+>
+> Yeah, that's why I suggested to create a new source file for this
+> within fs/fuse.  Alternatively we could try splitting up fuse into
+> modules (core, virtiofs, cuse, fsdax) but I think that can be left as
+> a cleanup step.
+>
+> > First question: can you suggest an example fuse file pass-through
+> > file system that I might use as a jumping-off point? Something that
+> > gets the basic pass-through capability from which to start hacking
+> > in famfs/dax capabilities?
+>
+> An example is in Amir's libfuse repo at
+>
+>    https://github.com/libfuse/libfuse
+>
 
-> On Fri, May 17, 2024 at 12:44:18PM +0100, Jonathan Cameron wrote:
-> > Given we are talking about something new, maybe this is an opportunity
-> > to not perpetuate this?
-> > 
-> > If we add scrub in here I'd prefer to just use the normal bus registration
-> > handling rather than creating a nest of additional nodes.  So perhaps we
-> > could consider
-> > /sys/bus/edac/device/scrub0 (or whatever name makes sense, as per the
-> > earlier discussion of cxl_scrub0 or similar).  
-> 
-> Yes, my main worry is how this RAS functionality is going to be all
-> organized in the tree. Yes, EDAC legacy methods can die but the
-> user-visible part can't so we might as well use it to concentrate stuff
-> there.
+That's not my repo, it's the official one ;-)
+but yeh, my passthrough example got merged last week:
+https://github.com/libfuse/libfuse/pull/919
 
-Understood.
+> > I'm confused by the last item. I would think there would be a fuse
+> > inode per famfs file, and that multiple of those would map to separate
+> > extent lists of one or more backing dax devices.
+>
+> Yeah.
+>
+> > Or maybe I misunderstand the meaning of "fuse inode". Feel free to
+> > assign reading...
+>
+> I think Amir meant that each open file could in theory have a
+> different mapping.  This is allowed by the fuse interface, but is
+> disallowed in practice.
+>
+> I'm in favor of caching the extent map so it only has to be given on
+> the first open (or lookup).
 
-> 
-> > Could consider moving the bus location of mc0 etc in future to there with
-> > symlinks to /sys/bus/edac/device/mc/* for backwards compatibility either
-> > via setting their parents or more explicit link creation.  
-> 
-> You can ignore the mc - that's the memory controller representation EDAC
-> does and that's also kind of semi-legacy considering how heterogeneous
-> devices are becoming. Nowadays, scrubbing functionality can be on
-> anything that has memory and that's not only a memory controller.
-> 
-> So it would actually be the better thing to abstract that differently
-> and use .../edac/device/ for the different RAS functionalities. I.e.,
-> have the "device" organize it all.
+Yeh, sorry, that was a bit confusing.
+The statement is that because the simples plan as Miklos
+suggested is to pass the extent list in reply to open
+two different opens of the same inode are not allowed to
+pass in different extent lists.
 
-I'm not sure I follow this. Definitely worth ensuring we are thinking
-the same thing wrt to layout before we go further,
+The new iomode.c code does something similar.
+Currently fuse_inode has a reference to fuse_backing which
+stores the backing file (that can be the dax device) and it also
+has a reference to fuse_inode_dax with an rbtree of fuse_dax_mapping
+Can we reuse fuse_inode_dax for the needs of famfs?
 
-Do you mean keep it similar to the existing device/mc device/pci
-structure so /sys/bus/edac/devices/scrub/cxl_mem0_scrub etc?
-This would rely on symlinks to paper over the dev->parent not being
-the normal parent. Hence would be similar to /sys/bus/edac/devices/pci in
-edac_pci_create_sysfs() or equivalent in edac_device_create_sysfs().
+The first open would cache the extent list in fuse_inode and
+second open would verify that the extent list matches.
 
-Or is the ../edac/device bit about putting an extra device under edac/devices/?
-e.g.
-/sys/bus/edac/devices/cxl_memX/scrub
-/sys/bus/edac/devices/cxl_memX/other_ras_thing
-which would be fairly standard driver model stuff.
-
-This would sit alongside 'legacy'
-/sys/bus/edac/devices/mc/mcX
-/sys/bus/edac/devices/pci/pciX etc
-
-I'd prefer this second model as it's very standard and but grouping is per
-providing parent device, rather than functionality. However, it is rather
-different from the existing edac structure.
-
-Where I've used the symlink approach in the past, it has always
-been about keeping a legacy interface in place, not where I'd start
-with something new.   Hence I think this is a question of how far
-we 'breakaway' from existing edac structure.
-
-
-
-> 
-> > These scrub0 would have their dev->parent set to who ever actually
-> > registered them providing that reference cleanly and letting all the
-> > normal device model stuff work more simply.  
-> 
-> Ack.
-
-This suggests the second option above, but I wanted to confirm as Shiju
-and I read this differently.
-
-> 
-> > If we did that with the scrub nodes, the only substantial change from
-> > a separate subsystem as seen in this patch set would be to register
-> > them on the edac bus rather than a separate class.
-> > 
-> > As you pointed out, there is a simple scrub interface in the existing
-> > edac memory controller code. How would you suggest handling that?
-> > Have them all register an additional device on the bus (as a child
-> > of the mcX devices) perhaps?  Seems an easy step forwards and should
-> > be no backwards compatibility concerns.  
-> 
-> Well, you guys want to control that scrubbing from userspace and those
-> old things probably do not fit that model? We could just not convert
-> them for now and add them later if really needed. I.e., leave sleeping
-> dogs lie.
-
-Ok. There is an existing is the minimal sysfs existing interface but I'm
-fine with ignoring it for now.
- 
-> 
-> > It absolutely doesn't as long as we can do it fairly cleanly within
-> > existing code. I wasn't sure that was possible, but you know edac
-> > a lot better than me and so I'll defer to you on that!  
-> 
-> Meh, I'm simply maintaining it because no one else wants to. :)
-
-*much sympathy!*  As we ramp up more on this stuff, we'll try and
-help out where we can.
-
-> 
-> > Several options for that, but fair question - bringing (at least some of)
-> > the RAS mess together will focus reviewer bandwidth etc better.  
-> 
-> Review is more than appreciated, as always.
-> 
-> > I'm definitely keen on unifying things as I agree, this mixture of different
-> > RAS functionality is a ever worsening mess.  
-> 
-> Yap, it needs to be unified and reigned into something more
-> user-friendly and manageable.
-
-Hopefully we all agree on a unified solution being the target.
-
-Feels like we are converging. Now we are down to the details :)
+Last file close could clean the cache extent list or not - that
+is an API decision.
 
 Thanks,
-
-Jonathan
-
-> 
-> Thx.
-> 
-
+Amir.
