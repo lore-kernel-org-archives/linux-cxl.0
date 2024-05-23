@@ -1,274 +1,194 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A498101E2;
-	Thu, 23 May 2024 21:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716500258; cv=fail; b=O1p28aGUgK4yHCW1oRIOxGFz0ZbT/RRNDgpptB48s2EZ3aNa7lltuKo8OADHDBxeWimfZ+12cUpPTcP2wKQuwd7xEfyvAIYU3GBDPixjyS52el1uq0J5jdRpiLxZSl4EHi+T3IQqcfE7eKZhwIj/sEoha+uTNOZ8zygL8gQloxw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716500258; c=relaxed/simple;
-	bh=fxQp7p/RbdCLgjOnobzikWMeZCzGaYAl5Civ9tzWI9k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:In-Reply-To:
-	 Content-Type:MIME-Version; b=ov2z8Bro1p2uo5MQD2KVuO+5/ebaBEh0JyyNTk8Oop6SSWdKDoRHvu58HOPlor5oPYY4ZTF69s8GztRe5d0cztuVrJ8RxEPgihQ1ITVTvKlmMQJo7v/r0i2RYXtEGUyqyknWdEpKr9bv/r1wq3Zc2+rezufUMy2hRh0EwvdelR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HHBby78g; arc=fail smtp.client-ip=40.107.93.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AC6128368
+	for <linux-cxl@vger.kernel.org>; Thu, 23 May 2024 21:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716500327; cv=none; b=FqXLLhbJR5I114fiTopepFOQq4IzWv80tXMTbnxR6f5Phyefmv3ctrVLrdqkmsuxs1NYrJ2CFVGJ2rayNCNXQGq1Do52sdZ//ggJqF19LGYmVjeqeiHDVJMHLTv6L+XAMo9+0e4qOABXkanujai64RhRv0fm7Oorrs171IBLEmk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716500327; c=relaxed/simple;
+	bh=Q+c2YMjmO8vdN8QLrUTZXTqHR1EGai+s5B4KneGQlB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GPYQ/Kh0SDFCc/U62loshVvwsD5roqTn6fDyQqYH6/R6lR5J6hfXlYqlaAV8GLrS7dlcWS51GfkEFtqHFOtGClgj1vWd/Rd0w49y9h/JmVXKSKFrJW9mrYp28GWTg5cUOY/NG9C4M5IHP7Vz8e/1jRWBWHe5RTu4+xmPM83UJIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W7sKBiYa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HHBby78g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UZFvWQ/l1vDUNDUA3D8OAlccSPHIGmNNabSAx0lWezLGLWivJAOZ2DzPiqqCHICCSJSjPKm+K4VTCih/NMnQs6htnYed0HRS1L6O5abzzt+7hOMgMj0M3NxuqbzBhOq778QpgTL3UFKDB3x+moHHwxty5dmYk3OXI7hTTF9NYdOKUp/+uy+ZQwzmAJLga7TVaF3TfIWXwZr01L8duc9jRyYWdPlyk7pzdTFbs+y3j4WBnamdeKaS0v57dqTRb3H84mH2jZB9AtQphJnY+fHEqsMpKsZAIHoqWu2eyOB/gbRZmyf5YztdJgy959y4u6vkjDtKsZPP3LSCgZyPYkpyJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l3Wpz2x+I3ruAFjJDpFZiccr9mBzXhB6Dhf8OOivAus=;
- b=oH0mplo9j57l89R1dH7RGfE8gulvKtq3FRntXQ2JcMk9kWWmNVBuUAGa2ncBkivOJFMluMalbghUiHJf/R/DElKLwdWR3LzPqgj7x+4a6EKynsZaBJUWR9wPKXKW5D696/uMe7x7WLUid8rOVEnKbUxyDtcj8UejZmPH05M7vbwlVZrlRTyfzbvvNVeMSod5cTG2LnT4I2TZskVjTQhEwBdkyUQQrcG53I4LaAuB63Y/2g6j0fzjoObev1iwB+18cZmkTXvkH+ygS3fiFkS/a2a5KK0joR16gq9fz4T7/Zx3UV00sFo8K184xbSIvTsJZOz4cVhEhug9xfIpou5lCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l3Wpz2x+I3ruAFjJDpFZiccr9mBzXhB6Dhf8OOivAus=;
- b=HHBby78gTnq7w6U+wC0upprPh/QL1b1ekdFtwSBD6/QSPQgczwS3aeASf9VD7fxSvquHmcmqXp62WJ8xv+IDgsW1ztgZsNwcdTf9fXPnxRKaEfgL3fe7IQdJGLYGCGrg6/mF6C5xynZOo1iBvYnv1SCwt4RRfpPPJD1ATJSpgYE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by SJ0PR12MB6856.namprd12.prod.outlook.com (2603:10b6:a03:47f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Thu, 23 May
- 2024 21:37:34 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::56a2:cd83:43e4:fad0]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::56a2:cd83:43e4:fad0%6]) with mapi id 15.20.7611.016; Thu, 23 May 2024
- 21:37:34 +0000
-Subject: Re: [PATCH 4/4] cxl/pci: Define a common function get_cxl_dev()
-To: Dave Jiang <dave.jiang@intel.com>, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
-References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
- <20240522150839.27578-5-Smita.KoralahalliChannabasappa@amd.com>
- <dd0f3183-e10b-4a3d-98b6-c6963dc86512@intel.com>
-From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Message-ID: <07d6242c-b6fd-f651-3c72-e3fe26eddbe5@amd.com>
-Date: Thu, 23 May 2024 14:37:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
-In-Reply-To: <dd0f3183-e10b-4a3d-98b6-c6963dc86512@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0141.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::26) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7sKBiYa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716500324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
+	b=W7sKBiYajFbEUcmU1p/qJx2wtp7zK3PuuBORU7naEul6Q3eYoh9FBt7RdfHWNXc3vowB75
+	MNq/Hf61Y1kO4/iDXvEg4f7n7jSZGNvk/FiVv34y6Cx67CZ7q/M6UuOKiEn4vFMX2LCLoZ
+	rfkOWcLZZxodjwJAAhDtzt3l2wOytp0=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-4Jb_Su0AOyiCsTJ7vI_1-g-1; Thu, 23 May 2024 17:38:43 -0400
+X-MC-Unique: 4Jb_Su0AOyiCsTJ7vI_1-g-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e1de4c052aso220539439f.0
+        for <linux-cxl@vger.kernel.org>; Thu, 23 May 2024 14:38:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716500323; x=1717105123;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
+        b=Xif1fPE95toXnhBwWizZpZzV7hx/6gbfU5iDcDcdWzXWbeXsJhO3Q1fL6tycJVvP14
+         28GKGTu5lwRawqNcYyQeQ20Dm1hKmS4eIKvbXifzxx8dBUdlxSztcoHtekmoduxlTCbt
+         IfUDbVRbX+GaL0m7nBW4j4Bh5u7uE0sfbfgD7+PFSooQrMR58lIQ3w9GOLwiLsrHLExp
+         7tD2+8xDpqmF2uW6MTWkRkwG2edJtZr68DQzdeBO8JvEZG73nq0if1/EqdNeyr13CyJ1
+         EErqZw5rK5L4VXYeLPOQIuo4qo6DkHVrWmVodLx07lsTBx0eMfTzGqJ5ELqR03Fbk3Pm
+         vJBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwJ7P5tUNcW3HnkCo/ZhE59Zw0LKyFF8vDwwCJM5rh9b6YLaSDBTG+aqjgkipM5zCzuWhpx8LUAxWHJ8oG+TE4H+KYyPdyTPak
+X-Gm-Message-State: AOJu0YzaRaWMFz0ogIuc7sjqz2S4sY9bBIBe5n1k8hscnJ06ASPo8yKj
+	QCs1uY37uh0C/Eef4MNWKaaniV6Pmj3YFd4uc8rismT7e+gQLMEsUaW5lBlEIBYBV/uNTk6oFLt
+	HqgZFSAYgAbrllhSKGKFyX/MEFYvuL1ByEzNldfoEZI6UXxN4LA6IWBh3Kw==
+X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76820239f.17.1716500322703;
+        Thu, 23 May 2024 14:38:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGifk9d+MfD2AFHnMnI801S7v/LhgxyOOXqYOMCa4unB24dBRc47U2Lkk9AateT6dg+Xjo3Eg==
+X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76817639f.17.1716500322062;
+        Thu, 23 May 2024 14:38:42 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b03e8281b1sm66737173.13.2024.05.23.14.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 14:38:41 -0700 (PDT)
+Date: Thu, 23 May 2024 15:38:39 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
+ <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+ <Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
+ <lukas@wunner.de>
+Subject: Re: [PATCH v6 2/5] PCI: Add locking of upstream bridge for
+ pci_reset_function()
+Message-ID: <20240523153839.16102e26.alex.williamson@redhat.com>
+In-Reply-To: <664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240502165851.1948523-1-dave.jiang@intel.com>
+	<20240502165851.1948523-3-dave.jiang@intel.com>
+	<20240523131005.5578e3de.alex.williamson@redhat.com>
+	<664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|SJ0PR12MB6856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c75da61-b282-4c72-5d89-08dc7b708ee8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UzVETTJHWFpKSUwxY1VrYkw1MVFKNmpMbFVNbk1MbGlxQmgyTWpYbGhyNVgz?=
- =?utf-8?B?N3RYK3VqeGdGdHMvbWZieCtyNlgvN2RBc09RcVZVek04dDB5dkFwWjExaTZI?=
- =?utf-8?B?N2tzRy9LOTk5bWFOQUpCaG1kWnp2cm5pZ2hQYWJKeTd4anhESTNIeTBBNTk0?=
- =?utf-8?B?Ynp1MEs2aU5tY3hSL3FDdmJsbyswdEZpck9LSTY3c0lKVEhrWklVeVpKaVVl?=
- =?utf-8?B?SmdxcTZWek5MUm5SOFMzSll0bk9wMG5wTndEVFYyRVp5dFNFWVRITnNlK240?=
- =?utf-8?B?cVJwT3oyRE5CK3VXcTVibCtlTWFJTzJDejAyTmRWb0FxK1ZIUVhFVXNGNmcy?=
- =?utf-8?B?OSsxZVdBNG11VG44WHFBMTRvVG9lZGFBNGNDN08rNWxXTUVreGt3Uko5RGl6?=
- =?utf-8?B?cm5jQ09uUDRiOXNvRkwzTFVwTTdSUnp2eHMrak1ObmtKZzNWYUY3WHJLZUw5?=
- =?utf-8?B?ZXNkMG8zeXRUKzQxNGRCREJDMTNaeUtxMEk0dFIrenNlVkpTdWY4YU1tTDk3?=
- =?utf-8?B?ODNzNFp5NnNOMDVTOTB0L1VtK0dIYm4xcDlKK1dhbE9xTFhLZmJ6YXhjSitQ?=
- =?utf-8?B?aEZlNC9RNjlhTHpwWGkxeFNRMzY2anRSZ2xOYzFxUTJ6RmFKNE1hWGdyS0s0?=
- =?utf-8?B?M04vYnRIdnpYM0FFTW5malB3dWFhZVpWNE9qL2s1aHZrUzhSUmF6ZExwWFQ0?=
- =?utf-8?B?RmRhTElmNXhZRDVXZ0RiUDRWN3N4UDA0UTlRemNBRlp6VEQ1eEIyd2ptRVZZ?=
- =?utf-8?B?cVRvNmEweVZFdlZZKzkyRXpyTk9JQnlpQlpkczFWZFRKc1hrdWFSZlNGVmRh?=
- =?utf-8?B?eTQvOGQweWJRbGs3Zm80ZWJJenBSYWlCb245a21LOWFTR3R3aGxhdFFSaHJ4?=
- =?utf-8?B?NWcwM2twbnY5emxRcVppKy9nMzZ1M0g1cldWTm41OEhNaTM4amxxeGoySk5N?=
- =?utf-8?B?ZDhLUG10NnFSNHdmUC8wN1lrODZrbGY2K0plam1DS25LdElFMnRTM3E0b1RW?=
- =?utf-8?B?em1HVGZKcFlOQlV4dHVrck1nSUZMblB6UWRzYndKbzArYzlxZFoxSTZOcmR3?=
- =?utf-8?B?YnRYenFKV2tQeTUrYlJzL1phVXJZbEpsOUdMNnhPVjhMZ01iSHRORDNFcTVy?=
- =?utf-8?B?bTdJL29ubVBYakZhN0x1TTlCVWlMbEVzUWkvTWxSRkZrZWZtazVkRnJzTjlZ?=
- =?utf-8?B?TEpwcGczcE5YY0hhMElWWlNqQlVFV2hKN3RxWWN6U3NrSkRLSUY5WjBRTjll?=
- =?utf-8?B?dCtMQnJKMDZ4Nm80OU01WHhuQzVhalBjanpORCtlMGZISGlKVjEyT3A0eVl3?=
- =?utf-8?B?Rmw3ZTRXN250c3p0WVdlZk42bEhKTkpTRTVQZ2VZa2hRZnN3ZG05QU1ZS1d1?=
- =?utf-8?B?MW9ZV2h6dUJFdStiRkJHU1N0SzcvLzVHYVF5K3BwRHdCN1NFL2dCUHM1d2l0?=
- =?utf-8?B?aUZZS0xCdDVDaU9PNnBaNDdCNnlFOGoxTGlqTDdoc2JHazI0SlpjcHNLTHJo?=
- =?utf-8?B?N3BYVDVmRXMvazA1UE9tb3Z5RFg3ZDNlaGZmRkRVUi9BenM0RVk2RjkweUNv?=
- =?utf-8?B?VStsRUp3RHVYMVUrU2plRnJNSVBVTnpDWEd5U0NCMWNTaFlXT0EycEhleldt?=
- =?utf-8?B?Y2pGenI2VnZpVkRjSEF3aE9OSlZ0QUtneDB2MXFTYnFFMG1mVm56aVRzMGZS?=
- =?utf-8?B?c3RpeEhwUjBUckFQZFB0aXNWdGlzU01KRWs2bnZlMDJhUnpmWTQzUThnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M0J4ZFhjTFN6WEVGekdRNk1jdXpwc1c1VEptN2VOR1dRTjFuUzNRaFd4ZXpE?=
- =?utf-8?B?bG01N0F0QlJXR2ZmNStUTCtyZGgzd25MeHg2bjlnTUtCMjlpZmFUNXZMSFV3?=
- =?utf-8?B?c0Z4UjZLZkcycEpMdk5LWE5BdTVzNnozK1JpM3FqTGdYVUtFUHJWbHQ3TVNr?=
- =?utf-8?B?OTVXZ1JoWjhqVlQ3aFUwbmQxdUxkTGppR3RBZ2t1WFp4SDRkcEVEL0NQajRD?=
- =?utf-8?B?bFdSUzBDNS9waEV0YTFWSStzSS8vL1pCcVVmMG9CME8wU2JWaUh1UUZmc3RR?=
- =?utf-8?B?MC9ZaWxMU2JEZlZrUFZibE1hRzNpNmprWnhIV2pmT24zQnJPaEs3UmNFNmdj?=
- =?utf-8?B?dzBQazB2VkJiRzZVOGpuUWhkSC9DZnRYcElYK1dHbjdmUFVPSGx4WjNtRVR6?=
- =?utf-8?B?ejNnVHV1cGg5VXlKZ1pFM0pEYTJOd2I1V2wreEVCMXUyTU5DZU5DYXdRcEYx?=
- =?utf-8?B?clJKTlBLSHVtNkttcnJEOFFQZFlNVU1HYVNtakt4THBURWhTdGw5VjNDVlo0?=
- =?utf-8?B?eldFSmV1ZHJaUzdBMVJLMERCVnBhVUVrRVNKbG94R1Y1eFNhcmMza0pETnFS?=
- =?utf-8?B?eWJwMkJaSzV2bXA1ZmRwdjVxOG5GTWNtdkh6V1ZoSXkrSUkxL3ppTzN3WEVG?=
- =?utf-8?B?MlYwUzMxaWh4ZVpjc0ZBVWlQWFlOOW9qSWNQejQ2OUxiWERjOHcwT3h6Uk55?=
- =?utf-8?B?aFhEYy9wUm1WOW5kQ01VcHR1SFlIK2h5ajFEeC81NlE1ekxlSU5VdVpReFl3?=
- =?utf-8?B?YU9kdURVZGxvaEdSODA5S3Iwb2h0OFlSWU5FT3puRGFPNUM2OE05cTJqaS9r?=
- =?utf-8?B?ekxiTzE5Q0lXUGY0R3NmVXNqVWpKRDNrY2d2SlBINGNtOGtpS21ld1VncGRP?=
- =?utf-8?B?aU5qNGR6VDJRb3k3akMxUDNTZUhWQk5sZzgxZEZPWWlHbU9PNGU1ZlRDak4v?=
- =?utf-8?B?Tmkzd0NZOW1WaUxKanVVcW01SW54L0tGNHBIYXlQTTBoQmlJNkJlVFFxNW9x?=
- =?utf-8?B?VHAwNGNZZEJzZXF6ZWhsOWlNSjhvVHh5M0N2RVBKRVppeWJvRFF0eE5wVHVW?=
- =?utf-8?B?UjlPMFhFMDRZRzFlRXVnZmFzSTZFeCtRUFlrdS9MR05vNmZmUkw0Vm9Cd1Ns?=
- =?utf-8?B?WkFaZFZENTgyMFdnYWdBODl5Q2V4eDYvSVdUc2tWc0dVSHNjVGRnTVR5Z2Ry?=
- =?utf-8?B?L1Zuc0tBYTdiT0dhZXRyV21jbGRkV1RCaHR0MHQ3aEZNNFJUSmN5NFIyQVdm?=
- =?utf-8?B?K3hKRDVjdG52QnVTUzFSRXNYb1F5U2MwVFNYWDM0YWpubVk1Tnk4dStjUC8y?=
- =?utf-8?B?dURkeU5lMmhvMzg4bFlYUm8yOXJ0Uk1qd2hWZ21WVlAvd1JaOGl1aTZ0SnJJ?=
- =?utf-8?B?UUpUaG9NYTJXVnd2R2Y4MGhoem1KaHRqaDZUcGxqQkZoYjdqRytCNEdlWU9o?=
- =?utf-8?B?WHRJOTIyNVkxRnpOTlMvN3pnS2FIdStQaHo3ZzhZamwvaE0xSFo3TG1rcVFU?=
- =?utf-8?B?cXI1U0gycTdETGp6SkdKNCtSN1RaVDVsWFkrOVlWZE1ia1AyTklaNFhRb2FG?=
- =?utf-8?B?UTdhYndsSDZ5TDRpcXpjdWxPTHRPNi9ESzE5WjhSWUs4S1ZDVkRIWnZSQXpH?=
- =?utf-8?B?SlF5clBwNDFTYTVkdzZRa0xEWXBUNEZzYWlrWnJqcTgxSG9GeXRNU1JYU1hl?=
- =?utf-8?B?VjErZmZER0F1Mm9WQXllMG5sbG9vSzFkaHpEeGUwRjhrckhkbXJJTVRDQ2NC?=
- =?utf-8?B?WXpycW5haFBmVHZSbUhMNDhTOUxyV1RJeUhyNllkdkpEd3pOUXQvRklYcmlM?=
- =?utf-8?B?cGxwSUlNVzFWUGlvdjJvSngxMkd3QmR6bWZ6cllUUEl1MmZTamlhaVFrZk1Y?=
- =?utf-8?B?VkJqRUFzZlVQNzhld3JpaEpPVVAxMUo0UTdZejI3YVdnbUc3cTltMjY3M0pt?=
- =?utf-8?B?am5TUDZJL21iWjR4RDdVRVl3V0h0SG51WmprRGE3UU9Bcll5SFp3NE5JdHVq?=
- =?utf-8?B?Y3VtV2FGUFRCZHVIVWI2UVg4WlVkd3lucWhiVGVwTzdlc1ROd05YSGNmQ0Rz?=
- =?utf-8?B?N1NXNkRuWXlkMytpRGh2TkVSeHNXM1pNL2FTdHNSOXBYdHROcjJpWU1nTHJO?=
- =?utf-8?Q?peIB45FfiZ3ME4ozccBjIy4Uo?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c75da61-b282-4c72-5d89-08dc7b708ee8
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 21:37:34.5107
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fKVFE3v0j62y+7zhjMKIL7w14O3P0HdBft6G6tlmscUFHPqXNJtBjZvQ80Kb8NpO8Nmh08XOyQdpNda4oWtP0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6856
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 5/22/2024 12:42 PM, Dave Jiang wrote:
-> 
-> 
-> On 5/22/24 8:08 AM, Smita Koralahalli wrote:
->> Refactor computation of cxlds to a common function get_cxl_dev() and reuse
->> the function in both cxl_handle_cper_event() and cxl_handle_prot_err().
-> 
-> I think just introduce the function where you open coded it instead of adding code and then deleting them in the same series.
+On Thu, 23 May 2024 14:17:58 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Okay refactor first, then add trace support. Will change.
-
->>
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->>   drivers/cxl/pci.c | 52 +++++++++++++++++++++++------------------------
->>   1 file changed, 26 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index 3e3c36983686..26e65e5b68cb 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -974,32 +974,43 @@ static struct pci_driver cxl_pci_driver = {
->>   	},
->>   };
->>   
->> +static struct cxl_dev_state *get_cxl_dev(u16 segment, u8 bus, u8 device,
->> +					 u8 function)
+> Alex Williamson wrote:
+> > On Thu,  2 May 2024 09:57:31 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> > > Fix a long standing locking gap for missing pci_cfg_access_lock() while
+> > > manipulating bridge reset registers and configuration during
+> > > pci_reset_bus_function(). Add calling of pci_dev_lock() against the
+> > > bridge device before locking the device. The locking is conditional
+> > > depending on whether the trigger device has an upstream bridge. If
+> > > the device is a root port then there would be no upstream bridge and
+> > > thus the locking of the bridge is unnecessary. As part of calling
+> > > pci_dev_lock(), pci_cfg_access_lock() happens and blocks the writing
+> > > of PCI config space by user space.
+> > > 
+> > > Add lockdep assertion via pci_dev->cfg_access_lock in order to verify
+> > > pci_dev->block_cfg_access is set.
+> > > 
+> > > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > > ---  
+> [..]
+> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > index 6449056b57dd..36f10c7f9ef5 100644
+> > > --- a/drivers/pci/access.c
+> > > +++ b/drivers/pci/access.c
+> > > @@ -275,6 +275,8 @@ void pci_cfg_access_lock(struct pci_dev *dev)
+> > >  {
+> > >  	might_sleep();
+> > >  
+> > > +	lock_map_acquire(&dev->cfg_access_lock);
+> > > +
+> > >  	raw_spin_lock_irq(&pci_lock);
+> > >  	if (dev->block_cfg_access)
+> > >  		pci_wait_cfg(dev);
+> > > @@ -329,6 +331,8 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
+> > >  	raw_spin_unlock_irqrestore(&pci_lock, flags);
+> > >  
+> > >  	wake_up_all(&pci_cfg_wait);
+> > > +
+> > > +	lock_map_release(&dev->cfg_access_lock);  
+> > 
+> > 
+> > This doesn't account for config access locks acquired via
+> > pci_cfg_access_trylock(), such as the pci_dev_trylock() through
+> > pci_try_reset_function() resulting in a new lockdep warning for
+> > vfio-pci when we try to release a lock that was never acquired.
+> > Thanks,  
 > 
-> get_cxlds() or get_cxl_device_state() would be better.
+> Hey Alex, sorry about that, does this fix it up for you? Note I move the
+> lock_map_acquire() relative to the global pci_lock just for symmetry
+> purposes.
 
-Okay will change
-> 
-> DJ
+Thanks, Dan!  Yes, this fixes it.  Please feel free to add
+Reported/Tested-by tags when you post it.  Thanks!
+
+Alex
+
+> -- >8 --  
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 30f031de9cfe..3595130ff719 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -289,11 +289,10 @@ void pci_cfg_access_lock(struct pci_dev *dev)
+>  {
+>  	might_sleep();
+>  
+> -	lock_map_acquire(&dev->cfg_access_lock);
+> -
+>  	raw_spin_lock_irq(&pci_lock);
+>  	if (dev->block_cfg_access)
+>  		pci_wait_cfg(dev);
+> +	lock_map_acquire(&dev->cfg_access_lock);
+>  	dev->block_cfg_access = 1;
+>  	raw_spin_unlock_irq(&pci_lock);
+>  }
+> @@ -315,8 +314,10 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
+>  	raw_spin_lock_irqsave(&pci_lock, flags);
+>  	if (dev->block_cfg_access)
+>  		locked = false;
+> -	else
+> +	else {
+> +		lock_map_acquire(&dev->cfg_access_lock);
+>  		dev->block_cfg_access = 1;
+> +	}
+>  	raw_spin_unlock_irqrestore(&pci_lock, flags);
+>  
+>  	return locked;
+> @@ -342,11 +343,10 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
+>  	WARN_ON(!dev->block_cfg_access);
+>  
+>  	dev->block_cfg_access = 0;
+> +	lock_map_release(&dev->cfg_access_lock);
+>  	raw_spin_unlock_irqrestore(&pci_lock, flags);
+>  
+>  	wake_up_all(&pci_cfg_wait);
+> -
+> -	lock_map_release(&dev->cfg_access_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_cfg_access_unlock);
+>  
 > 
 
-Thanks
-Smita
-
->> +{
->> +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
->> +	struct cxl_dev_state *cxlds;
->> +	unsigned int devfn;
->> +
->> +	devfn = PCI_DEVFN(device, function);
->> +	pdev = pci_get_domain_bus_and_slot(segment, bus, devfn);
->> +
->> +	if (!pdev)
->> +		return NULL;
->> +
->> +	guard(device)(&pdev->dev);
->> +	if (pdev->driver != &cxl_pci_driver)
->> +		return NULL;
->> +
->> +	cxlds = pci_get_drvdata(pdev);
->> +
->> +	return cxlds;
->> +}
->> +
->>   #define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
->>   static void cxl_handle_cper_event(enum cxl_event_type ev_type,
->>   				  struct cxl_cper_event_rec *rec)
->>   {
->>   	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
->> -	struct pci_dev *pdev __free(pci_dev_put) = NULL;
->>   	enum cxl_event_log_type log_type;
->>   	struct cxl_dev_state *cxlds;
->> -	unsigned int devfn;
->>   	u32 hdr_flags;
->>   
->>   	pr_debug("CPER event %d for device %u:%u:%u.%u\n", ev_type,
->>   		 device_id->segment_num, device_id->bus_num,
->>   		 device_id->device_num, device_id->func_num);
->>   
->> -	devfn = PCI_DEVFN(device_id->device_num, device_id->func_num);
->> -	pdev = pci_get_domain_bus_and_slot(device_id->segment_num,
->> -					   device_id->bus_num, devfn);
->> -	if (!pdev)
->> -		return;
->> -
->> -	guard(device)(&pdev->dev);
->> -	if (pdev->driver != &cxl_pci_driver)
->> -		return;
->> -
->> -	cxlds = pci_get_drvdata(pdev);
->> +	cxlds = get_cxl_dev(device_id->segment_num, device_id->bus_num,
->> +			    device_id->device_num, device_id->func_num);
->>   	if (!cxlds)
->>   		return;
->>   
->> @@ -1013,21 +1024,10 @@ static void cxl_handle_cper_event(enum cxl_event_type ev_type,
->>   
->>   static void cxl_handle_prot_err(struct cxl_cper_prot_err *p_err)
->>   {
->> -	struct pci_dev *pdev __free(pci_dev_put) = NULL;
->>   	struct cxl_dev_state *cxlds;
->> -	unsigned int devfn;
->>   
->> -	devfn = PCI_DEVFN(p_err->device, p_err->function);
->> -	pdev = pci_get_domain_bus_and_slot(p_err->segment,
->> -					   p_err->bus, devfn);
->> -	if (!pdev)
->> -		return;
->> -
->> -	guard(device)(&pdev->dev);
->> -	if (pdev->driver != &cxl_pci_driver)
->> -		return;
->> -
->> -	cxlds = pci_get_drvdata(pdev);
->> +	cxlds = get_cxl_dev(p_err->segment, p_err->bus,
->> +			    p_err->device, p_err->function);
->>   	if (!cxlds)
->>   		return;
->>   
