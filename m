@@ -1,194 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AC6128368
-	for <linux-cxl@vger.kernel.org>; Thu, 23 May 2024 21:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566DAAD2C;
+	Thu, 23 May 2024 22:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716500327; cv=none; b=FqXLLhbJR5I114fiTopepFOQq4IzWv80tXMTbnxR6f5Phyefmv3ctrVLrdqkmsuxs1NYrJ2CFVGJ2rayNCNXQGq1Do52sdZ//ggJqF19LGYmVjeqeiHDVJMHLTv6L+XAMo9+0e4qOABXkanujai64RhRv0fm7Oorrs171IBLEmk=
+	t=1716504706; cv=none; b=pL7xzFLyMeULKZ4FU248Kxog3spPSvW0mxWUc0Zyb2kON6gLSKB07PRZm87mKqEQOwZGhnGjgzkpLV/Zeyw9neQZIQwBkZtu15A8NYYjdCqwC6yELt+KkUIW5WezAMvr20P3jKuF06kbbUwW38qf3nNF+QYreRZtlXAGVHCXOQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716500327; c=relaxed/simple;
-	bh=Q+c2YMjmO8vdN8QLrUTZXTqHR1EGai+s5B4KneGQlB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GPYQ/Kh0SDFCc/U62loshVvwsD5roqTn6fDyQqYH6/R6lR5J6hfXlYqlaAV8GLrS7dlcWS51GfkEFtqHFOtGClgj1vWd/Rd0w49y9h/JmVXKSKFrJW9mrYp28GWTg5cUOY/NG9C4M5IHP7Vz8e/1jRWBWHe5RTu4+xmPM83UJIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W7sKBiYa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716504706; c=relaxed/simple;
+	bh=giJ5QDjLDfVV2cOpY+mASzmzACsrekg/cRgM9xcuAUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s875IIgMmcg/5K8mxIQjsynrRjc6VLmNnacNwUoBeJVFzOXTod7oo2PDLI4J/R2CZ5lDLzjegbNal7SCB1eNS7lyYjM4BD6c6knxjwDslYlZI6dn4bACYjs1CSMGEbk0FtZgsTmzW9z66JNUN6a2QMrT8HLNsSHH363EHgh/5aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HFmoZeEb; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7sKBiYa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716500324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
-	b=W7sKBiYajFbEUcmU1p/qJx2wtp7zK3PuuBORU7naEul6Q3eYoh9FBt7RdfHWNXc3vowB75
-	MNq/Hf61Y1kO4/iDXvEg4f7n7jSZGNvk/FiVv34y6Cx67CZ7q/M6UuOKiEn4vFMX2LCLoZ
-	rfkOWcLZZxodjwJAAhDtzt3l2wOytp0=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-4Jb_Su0AOyiCsTJ7vI_1-g-1; Thu, 23 May 2024 17:38:43 -0400
-X-MC-Unique: 4Jb_Su0AOyiCsTJ7vI_1-g-1
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e1de4c052aso220539439f.0
-        for <linux-cxl@vger.kernel.org>; Thu, 23 May 2024 14:38:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716500323; x=1717105123;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
-        b=Xif1fPE95toXnhBwWizZpZzV7hx/6gbfU5iDcDcdWzXWbeXsJhO3Q1fL6tycJVvP14
-         28GKGTu5lwRawqNcYyQeQ20Dm1hKmS4eIKvbXifzxx8dBUdlxSztcoHtekmoduxlTCbt
-         IfUDbVRbX+GaL0m7nBW4j4Bh5u7uE0sfbfgD7+PFSooQrMR58lIQ3w9GOLwiLsrHLExp
-         7tD2+8xDpqmF2uW6MTWkRkwG2edJtZr68DQzdeBO8JvEZG73nq0if1/EqdNeyr13CyJ1
-         EErqZw5rK5L4VXYeLPOQIuo4qo6DkHVrWmVodLx07lsTBx0eMfTzGqJ5ELqR03Fbk3Pm
-         vJBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwJ7P5tUNcW3HnkCo/ZhE59Zw0LKyFF8vDwwCJM5rh9b6YLaSDBTG+aqjgkipM5zCzuWhpx8LUAxWHJ8oG+TE4H+KYyPdyTPak
-X-Gm-Message-State: AOJu0YzaRaWMFz0ogIuc7sjqz2S4sY9bBIBe5n1k8hscnJ06ASPo8yKj
-	QCs1uY37uh0C/Eef4MNWKaaniV6Pmj3YFd4uc8rismT7e+gQLMEsUaW5lBlEIBYBV/uNTk6oFLt
-	HqgZFSAYgAbrllhSKGKFyX/MEFYvuL1ByEzNldfoEZI6UXxN4LA6IWBh3Kw==
-X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76820239f.17.1716500322703;
-        Thu, 23 May 2024 14:38:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGifk9d+MfD2AFHnMnI801S7v/LhgxyOOXqYOMCa4unB24dBRc47U2Lkk9AateT6dg+Xjo3Eg==
-X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76817639f.17.1716500322062;
-        Thu, 23 May 2024 14:38:42 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b03e8281b1sm66737173.13.2024.05.23.14.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 14:38:41 -0700 (PDT)
-Date: Thu, 23 May 2024 15:38:39 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
- <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
- <Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
- <lukas@wunner.de>
-Subject: Re: [PATCH v6 2/5] PCI: Add locking of upstream bridge for
- pci_reset_function()
-Message-ID: <20240523153839.16102e26.alex.williamson@redhat.com>
-In-Reply-To: <664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240502165851.1948523-1-dave.jiang@intel.com>
-	<20240502165851.1948523-3-dave.jiang@intel.com>
-	<20240523131005.5578e3de.alex.williamson@redhat.com>
-	<664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HFmoZeEb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716504704; x=1748040704;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=giJ5QDjLDfVV2cOpY+mASzmzACsrekg/cRgM9xcuAUA=;
+  b=HFmoZeEbrIhUg8N0qANhk4Q6TubfFJYTHeiUTPCqS8cyx0YT+qW/IrSr
+   1nKs2ITWCGvBnmfDvobYm3Jh553JukeuSI4y1j9nm/y/cU/jMUXRreUAQ
+   7NzEZERyQA19G7Fh2plPVDGxFoFzB13n3bUYF1zesQgJSwwmAgiKpeZ/r
+   E3HjDmYlZZcWAhpRWx43OGzDdkla/vzXCf85JcPcCgeQjr+GWaHiNTCK4
+   OO+iL6dOSeUQtHNMyDOAGM4Jy4gVb2TRdOZf9PrYH+8bH1xjGcY/2ZsfK
+   dU8SDa9susHFKUO/cMzbsUS7UItEvMc1N+vVnjHWdhyxqFuGxwgTtNGQk
+   w==;
+X-CSE-ConnectionGUID: UV9q8AZKTDqzX/2IK1ROww==
+X-CSE-MsgGUID: KgyOc1PuS4yDlpNjizx38w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="30392880"
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="30392880"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:51:44 -0700
+X-CSE-ConnectionGUID: A1AX1DW8RWiVfriUcdUDTw==
+X-CSE-MsgGUID: 60l+yT6OQdit+dQ4JACT5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="38231893"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.61]) ([10.125.110.61])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:51:42 -0700
+Message-ID: <cf799922-d5f5-4f8d-96ef-5a526d5ae643@intel.com>
+Date: Thu, 23 May 2024 15:51:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] acpi/ghes, efi/cper: Recognize and process CXL
+ Protocol Errors.
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20240522150839.27578-3-Smita.KoralahalliChannabasappa@amd.com>
+ <8470dcc5-fbd4-4977-b8e8-5f7bfbf4b220@intel.com>
+ <08dc0027-371c-5783-fd65-ad6f8b228fee@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <08dc0027-371c-5783-fd65-ad6f8b228fee@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 23 May 2024 14:17:58 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Alex Williamson wrote:
-> > On Thu,  2 May 2024 09:57:31 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> > > Fix a long standing locking gap for missing pci_cfg_access_lock() while
-> > > manipulating bridge reset registers and configuration during
-> > > pci_reset_bus_function(). Add calling of pci_dev_lock() against the
-> > > bridge device before locking the device. The locking is conditional
-> > > depending on whether the trigger device has an upstream bridge. If
-> > > the device is a root port then there would be no upstream bridge and
-> > > thus the locking of the bridge is unnecessary. As part of calling
-> > > pci_dev_lock(), pci_cfg_access_lock() happens and blocks the writing
-> > > of PCI config space by user space.
-> > > 
-> > > Add lockdep assertion via pci_dev->cfg_access_lock in order to verify
-> > > pci_dev->block_cfg_access is set.
-> > > 
-> > > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---  
-> [..]
-> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> > > index 6449056b57dd..36f10c7f9ef5 100644
-> > > --- a/drivers/pci/access.c
-> > > +++ b/drivers/pci/access.c
-> > > @@ -275,6 +275,8 @@ void pci_cfg_access_lock(struct pci_dev *dev)
-> > >  {
-> > >  	might_sleep();
-> > >  
-> > > +	lock_map_acquire(&dev->cfg_access_lock);
-> > > +
-> > >  	raw_spin_lock_irq(&pci_lock);
-> > >  	if (dev->block_cfg_access)
-> > >  		pci_wait_cfg(dev);
-> > > @@ -329,6 +331,8 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
-> > >  	raw_spin_unlock_irqrestore(&pci_lock, flags);
-> > >  
-> > >  	wake_up_all(&pci_cfg_wait);
-> > > +
-> > > +	lock_map_release(&dev->cfg_access_lock);  
-> > 
-> > 
-> > This doesn't account for config access locks acquired via
-> > pci_cfg_access_trylock(), such as the pci_dev_trylock() through
-> > pci_try_reset_function() resulting in a new lockdep warning for
-> > vfio-pci when we try to release a lock that was never acquired.
-> > Thanks,  
+
+On 5/23/24 2:19 PM, Smita Koralahalli wrote:
+> Hi Dave,
 > 
-> Hey Alex, sorry about that, does this fix it up for you? Note I move the
-> lock_map_acquire() relative to the global pci_lock just for symmetry
-> purposes.
-
-Thanks, Dan!  Yes, this fixes it.  Please feel free to add
-Reported/Tested-by tags when you post it.  Thanks!
-
-Alex
-
-> -- >8 --  
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 30f031de9cfe..3595130ff719 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -289,11 +289,10 @@ void pci_cfg_access_lock(struct pci_dev *dev)
->  {
->  	might_sleep();
->  
-> -	lock_map_acquire(&dev->cfg_access_lock);
-> -
->  	raw_spin_lock_irq(&pci_lock);
->  	if (dev->block_cfg_access)
->  		pci_wait_cfg(dev);
-> +	lock_map_acquire(&dev->cfg_access_lock);
->  	dev->block_cfg_access = 1;
->  	raw_spin_unlock_irq(&pci_lock);
->  }
-> @@ -315,8 +314,10 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
->  	raw_spin_lock_irqsave(&pci_lock, flags);
->  	if (dev->block_cfg_access)
->  		locked = false;
-> -	else
-> +	else {
-> +		lock_map_acquire(&dev->cfg_access_lock);
->  		dev->block_cfg_access = 1;
-> +	}
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
->  
->  	return locked;
-> @@ -342,11 +343,10 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
->  	WARN_ON(!dev->block_cfg_access);
->  
->  	dev->block_cfg_access = 0;
-> +	lock_map_release(&dev->cfg_access_lock);
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
->  
->  	wake_up_all(&pci_cfg_wait);
-> -
-> -	lock_map_release(&dev->cfg_access_lock);
->  }
->  EXPORT_SYMBOL_GPL(pci_cfg_access_unlock);
->  
+> On 5/22/2024 10:59 AM, Dave Jiang wrote:
+>>
+>>
+>> On 5/22/24 8:08 AM, Smita Koralahalli wrote:
+>>> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
+>>>
+>>> Add GHES support to detect CXL CPER Protocol Error Record and Cache Error
+>>> Severity, Device ID, Device Serial number and CXL RAS capability struct in
+>>> struct cxl_cper_prot_err. Include this struct as a member of struct
+>>> cxl_cper_work_data.
+>>>
+>>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>>> ---
+>>>   drivers/acpi/apei/ghes.c        | 10 +++++
+>>>   drivers/firmware/efi/cper_cxl.c | 66 +++++++++++++++++++++++++++++++++
+>>>   include/linux/cxl-event.h       | 26 +++++++++++++
+>>>   3 files changed, 102 insertions(+)
+>>>
 > 
+> [snip]
+> 
+> 
+>>> +     * The device ID or agent address is required for CXL RCD, CXL
+>>> +     * SLD, CXL LD, CXL Fabric Manager Managed LD, CXL Root Port,
+>>> +     * CXL Downstream Switch Port and CXL Upstream Switch Port.
+>>> +     */
+>>> +    if (prot_err->agent_type <= 0x7 && prot_err->agent_type != RCH_DP) {
+>>
+>> Perhaps define an enum CXL_AGENT_TYPE_MAX instead of 0x7 magic number? Otherwise if a new type is introduced, it would break this code.
+> 
+> Agreed. I will define a boolean array indexed by agent type as suggested by Alison. That would avoid all these comparisons and not worry about breaking code in future.
+> 
+>>  
+>>> +        p_err->segment = prot_err->agent_addr.segment;
+>>> +        p_err->bus = prot_err->agent_addr.bus;
+>>> +        p_err->device = prot_err->agent_addr.device;
+>>> +        p_err->function = prot_err->agent_addr.function;
+>>> +    } else {
+>>> +        pr_err(FW_WARN "Invalid agent type\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>
+>> Up to you if you want to do this or not, but maybe:
+>>
+>>     if (prot_err->agent_type >= CXL_AGENT_TYPE_MAX || prot_err->agent_type == RCH_DP) {
+>>         pr_warn(...);
+>>         return -EINVAL;
+>>     }
+>>
+>>     p_err->segment = ...;
+>>     p_err->bus = ...;
+> 
+> Noted.
+> 
+>>     ...
+>>
+>> Although perhaps a helper function cxl_cper_valid_agent_type() that checks invalid agent type by checking the valid_bits, the agent_type boundary, and if agent_type != RCH_DP?
+> 
+> Okay.
+> 
+>>> +
+>>> +    if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+>>> +        pr_err(FW_WARN "Invalid Protocol Error log\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>> +
+>>> +    dvsec_start = (u8 *)(prot_err + 1);
+>>> +    cap_start = dvsec_start + prot_err->dvsec_len;
+>>> +    p_err->cxl_ras = *(struct cxl_ras_capability_regs *)cap_start;
+>>> +
+>>> +    /*
+>>> +     * Set device serial number unconditionally.
+>>> +     *
+>>> +     * Print a warning message if it is not valid. The device serial
+>>> +     * number is required for CXL RCD, CXL SLD, CXL LD and CXL Fabric
+>>> +     * Manager Managed LD.
+>>> +     */
+>>> +    if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
+>>> +          prot_err->agent_type > 0x4 || prot_err->agent_type == RCH_DP)
+>>
+>> prot_err->agent_type > FM_LD? Although maybe it would be a clearer read if a helper function is defined to identify the agent types such as cxl_cper_prot_err_serial_needed() or cxl_cper_prot_agent_type_device() and with it a switch statement to explicitly identify all the agent types that require serial number. If a future device is defined, the > 0x4 logic may break.
+> 
+> Probably helper function is not required if boolean array is defined? What do you think?
 
+That works for me. My main concern is to clarify the code and remove possibility of breakage from future changes.
+> 
+> Thanks,
+> Smita
+> 
+> [snip]
