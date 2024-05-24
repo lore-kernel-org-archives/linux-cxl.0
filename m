@@ -1,170 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566DAAD2C;
-	Thu, 23 May 2024 22:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DB2EDF;
+	Fri, 24 May 2024 00:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716504706; cv=none; b=pL7xzFLyMeULKZ4FU248Kxog3spPSvW0mxWUc0Zyb2kON6gLSKB07PRZm87mKqEQOwZGhnGjgzkpLV/Zeyw9neQZIQwBkZtu15A8NYYjdCqwC6yELt+KkUIW5WezAMvr20P3jKuF06kbbUwW38qf3nNF+QYreRZtlXAGVHCXOQc=
+	t=1716511633; cv=none; b=bY6Azhazi5zIiXBsN/qdXPTpJEXkz/3IbWiO9lL/mnMng4ZPlokqzbNZZNUWtfFIIRIDkCcgYwGPE81oqcCyW994Lb+pXUVMFL4tfsg3HulgoTOzOgQPc2Xk1HKhBCVm3LwXzq0QDFlUokTWIof9VK3QxC7JBiJVaVOH5RJaIqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716504706; c=relaxed/simple;
-	bh=giJ5QDjLDfVV2cOpY+mASzmzACsrekg/cRgM9xcuAUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s875IIgMmcg/5K8mxIQjsynrRjc6VLmNnacNwUoBeJVFzOXTod7oo2PDLI4J/R2CZ5lDLzjegbNal7SCB1eNS7lyYjM4BD6c6knxjwDslYlZI6dn4bACYjs1CSMGEbk0FtZgsTmzW9z66JNUN6a2QMrT8HLNsSHH363EHgh/5aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HFmoZeEb; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716511633; c=relaxed/simple;
+	bh=KLMnBc+W7brKUXqt0eZU0uMPzeOY+z6lS4AmDmnWoLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LG3dE2i9zPXQSmnqlfao1p6pH5Jz2HyE0pSD2WCiN0gtHYSrFHvgeiMPh50clqqNp73wEikXidFYi1tL4YLYKY6RaFFEidiRQFcaSTotLHjpEBmW4qOEBjt1+PiBw4OeIHZBEBl4qIkEMeH3P1G6tTXCRxyGtkz6UHc+eAAVOBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZZpTA8t; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HFmoZeEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716504704; x=1748040704;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=giJ5QDjLDfVV2cOpY+mASzmzACsrekg/cRgM9xcuAUA=;
-  b=HFmoZeEbrIhUg8N0qANhk4Q6TubfFJYTHeiUTPCqS8cyx0YT+qW/IrSr
-   1nKs2ITWCGvBnmfDvobYm3Jh553JukeuSI4y1j9nm/y/cU/jMUXRreUAQ
-   7NzEZERyQA19G7Fh2plPVDGxFoFzB13n3bUYF1zesQgJSwwmAgiKpeZ/r
-   E3HjDmYlZZcWAhpRWx43OGzDdkla/vzXCf85JcPcCgeQjr+GWaHiNTCK4
-   OO+iL6dOSeUQtHNMyDOAGM4Jy4gVb2TRdOZf9PrYH+8bH1xjGcY/2ZsfK
-   dU8SDa9susHFKUO/cMzbsUS7UItEvMc1N+vVnjHWdhyxqFuGxwgTtNGQk
-   w==;
-X-CSE-ConnectionGUID: UV9q8AZKTDqzX/2IK1ROww==
-X-CSE-MsgGUID: KgyOc1PuS4yDlpNjizx38w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="30392880"
-X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
-   d="scan'208";a="30392880"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:51:44 -0700
-X-CSE-ConnectionGUID: A1AX1DW8RWiVfriUcdUDTw==
-X-CSE-MsgGUID: 60l+yT6OQdit+dQ4JACT5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
-   d="scan'208";a="38231893"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.61]) ([10.125.110.61])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 15:51:42 -0700
-Message-ID: <cf799922-d5f5-4f8d-96ef-5a526d5ae643@intel.com>
-Date: Thu, 23 May 2024 15:51:41 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZZpTA8t"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6f12171523eso3725349a34.1;
+        Thu, 23 May 2024 17:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716511630; x=1717116430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xhHs76QOp2MGGcphbew3t/rK2bfPPoj+eZPq3AAV6vg=;
+        b=UZZpTA8tGkooj7W/X1zLm/t/2aATszHLo7mIqQhbObnPLa5c0Xt8UlSZTh+UDvyG5A
+         USk9azCux1IF+JXBNgB1yAkJ8eX1oZwdvFC85nnxLSpuSZJYJmaaB+leWaLPRhf2Oa1k
+         pMgZLaA+qeQuFyIWQVZvniNWmYbRCRdaDXrT5aIQ79BOTxkyK1oeZCZsQA5/BWw0XbM1
+         xv63NfTQuSs6C5JCyd0CqJouyNaEAPQ/eNN+qTIx8D9kcpsFrXA3n1PlWhG1SrEDWlMv
+         GzxNLC3QA10hkvJKizsjS/ZJBTSBRnEkc76BbnHEvZzDWiQMfW189PHqibSAMyrr43Uw
+         cVpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716511630; x=1717116430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xhHs76QOp2MGGcphbew3t/rK2bfPPoj+eZPq3AAV6vg=;
+        b=SuBukYzLzHCK74qGAHH9rpnkkg/HR+LaTQLW+y+toffgcsxvaQoEAByZnw6XAcSs10
+         PzSGLsAjjFIAdlGMvT7x6yBF6oQV/UEaAdHI70BpT1YEDaCRodKso/xwLTnSPqtnkA9V
+         IlU6ATGwE70KCptrCjbZ0viCSzsiHkTEO34v1NOR9//ZgV0BEpDGWe3jtjUNr2DpEqlo
+         s9eSmfzMsSahf5VAjDIPAj9axygxGNdjdmTWG3EDOTPWHy55C9WtJwcxr0k4IzUASxDL
+         pKSA2+KxjgiARmk16Op/MIWMWPRypIVLU4l0wbFR9qTGAFGJYLlMM85jepaMr3kF6Bne
+         gtTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfHk8kZ/cEaFJGToW48XL7k/m5XI3thQw0oxbD9kvaY4vCIveyWaRkXEIZ2p4eANrFgbd0aI78wbB6iN/ZDND0iwUieLZH3wW75H+g+hhKe08SmjoPG++vUehwQmfl3tcdc94CAfTCgJocJw==
+X-Gm-Message-State: AOJu0Yw2ZuRt6rfyfsdQ4Ql7U6+PFiUSegqR6evca+8beX5dTkb3p84X
+	fuPKBu8AR211Xdy1nWkCGmTzRVxE9LJ4zIltPEnc8Nqz9rEheq/98l83J14l
+X-Google-Smtp-Source: AGHT+IFfirIf8OFRPb3WySkQ+KDQray5kCg1lM30f03akhL+f1lZdNnquwHvOD0fvvHmBd3Df7O8bw==
+X-Received: by 2002:a05:6830:121a:b0:6f0:9b4c:9aea with SMTP id 46e09a7af769-6f8d0a99ea4mr931418a34.16.1716511630224;
+        Thu, 23 May 2024 17:47:10 -0700 (PDT)
+Received: from Borg-10.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d0daf4a4sm119022a34.28.2024.05.23.17.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 17:47:09 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 23 May 2024 19:47:08 -0500
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+Message-ID: <sq6fbx5jpzkjw43wyr7zmfnvcw45ah5f4vtz6wtanjai3t4cvk@awxlk72xzzkm>
+References: <cover.1708709155.git.john@groves.net>
+ <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
+ <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
+ <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
+ <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
+ <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
+ <l2zbsuyxzwcozrozzk2ywem7beafmidzp545knnrnkxlqxd73u@itmqyy4ao43i>
+ <CAJfpegsr-5MU-S4obTsu89=SazuG8zXmO6ymrjn5_BLofSRXdg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] acpi/ghes, efi/cper: Recognize and process CXL
- Protocol Errors.
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
-References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
- <20240522150839.27578-3-Smita.KoralahalliChannabasappa@amd.com>
- <8470dcc5-fbd4-4977-b8e8-5f7bfbf4b220@intel.com>
- <08dc0027-371c-5783-fd65-ad6f8b228fee@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <08dc0027-371c-5783-fd65-ad6f8b228fee@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegsr-5MU-S4obTsu89=SazuG8zXmO6ymrjn5_BLofSRXdg@mail.gmail.com>
 
-
-
-On 5/23/24 2:19 PM, Smita Koralahalli wrote:
-> Hi Dave,
+On 24/05/23 03:57PM, Miklos Szeredi wrote:
+> [trimming CC list]
 > 
-> On 5/22/2024 10:59 AM, Dave Jiang wrote:
->>
->>
->> On 5/22/24 8:08 AM, Smita Koralahalli wrote:
->>> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
->>>
->>> Add GHES support to detect CXL CPER Protocol Error Record and Cache Error
->>> Severity, Device ID, Device Serial number and CXL RAS capability struct in
->>> struct cxl_cper_prot_err. Include this struct as a member of struct
->>> cxl_cper_work_data.
->>>
->>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->>> ---
->>>   drivers/acpi/apei/ghes.c        | 10 +++++
->>>   drivers/firmware/efi/cper_cxl.c | 66 +++++++++++++++++++++++++++++++++
->>>   include/linux/cxl-event.h       | 26 +++++++++++++
->>>   3 files changed, 102 insertions(+)
->>>
+> On Thu, 23 May 2024 at 04:49, John Groves <John@groves.net> wrote:
 > 
-> [snip]
+> > - memmap=<size>!<hpa_offset> will reserve a pretend pmem device at <hpa_offset>
+> > - memmap=<size>$<hpa_offset> will reserve a pretend dax device at <hpa_offset>
 > 
+> Doesn't get me a /dev/dax or /dev/pmem
 > 
->>> +     * The device ID or agent address is required for CXL RCD, CXL
->>> +     * SLD, CXL LD, CXL Fabric Manager Managed LD, CXL Root Port,
->>> +     * CXL Downstream Switch Port and CXL Upstream Switch Port.
->>> +     */
->>> +    if (prot_err->agent_type <= 0x7 && prot_err->agent_type != RCH_DP) {
->>
->> Perhaps define an enum CXL_AGENT_TYPE_MAX instead of 0x7 magic number? Otherwise if a new type is introduced, it would break this code.
+> Complete qemu command line:
 > 
-> Agreed. I will define a boolean array indexed by agent type as suggested by Alison. That would avoid all these comparisons and not worry about breaking code in future.
+> qemu-kvm -s -serial none -parallel none -kernel
+> /home/mszeredi/git/linux/arch/x86/boot/bzImage -drive
+> format=raw,file=/home/mszeredi/root_fs,index=0,if=virtio -drive
+> format=raw,file=/home/mszeredi/images/ubd1,index=1,if=virtio -chardev
+> stdio,id=virtiocon0,signal=off -device virtio-serial -device
+> virtconsole,chardev=virtiocon0 -cpu host -m 8G -net user -net
+> nic,model=virtio -fsdev local,security_model=none,id=fsdev0,path=/home
+> -device virtio-9p-pci,fsdev=fsdev0,mount_tag=hostshare -device
+> virtio-rng-pci -smp 4 -append 'root=/dev/vda console=hvc0
+> memmap=4G$4G'
 > 
->>  
->>> +        p_err->segment = prot_err->agent_addr.segment;
->>> +        p_err->bus = prot_err->agent_addr.bus;
->>> +        p_err->device = prot_err->agent_addr.device;
->>> +        p_err->function = prot_err->agent_addr.function;
->>> +    } else {
->>> +        pr_err(FW_WARN "Invalid agent type\n");
->>> +        return -EINVAL;
->>> +    }
->>
->> Up to you if you want to do this or not, but maybe:
->>
->>     if (prot_err->agent_type >= CXL_AGENT_TYPE_MAX || prot_err->agent_type == RCH_DP) {
->>         pr_warn(...);
->>         return -EINVAL;
->>     }
->>
->>     p_err->segment = ...;
->>     p_err->bus = ...;
-> 
-> Noted.
-> 
->>     ...
->>
->> Although perhaps a helper function cxl_cper_valid_agent_type() that checks invalid agent type by checking the valid_bits, the agent_type boundary, and if agent_type != RCH_DP?
-> 
-> Okay.
-> 
->>> +
->>> +    if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
->>> +        pr_err(FW_WARN "Invalid Protocol Error log\n");
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    dvsec_start = (u8 *)(prot_err + 1);
->>> +    cap_start = dvsec_start + prot_err->dvsec_len;
->>> +    p_err->cxl_ras = *(struct cxl_ras_capability_regs *)cap_start;
->>> +
->>> +    /*
->>> +     * Set device serial number unconditionally.
->>> +     *
->>> +     * Print a warning message if it is not valid. The device serial
->>> +     * number is required for CXL RCD, CXL SLD, CXL LD and CXL Fabric
->>> +     * Manager Managed LD.
->>> +     */
->>> +    if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
->>> +          prot_err->agent_type > 0x4 || prot_err->agent_type == RCH_DP)
->>
->> prot_err->agent_type > FM_LD? Although maybe it would be a clearer read if a helper function is defined to identify the agent types such as cxl_cper_prot_err_serial_needed() or cxl_cper_prot_agent_type_device() and with it a switch statement to explicitly identify all the agent types that require serial number. If a future device is defined, the > 0x4 logic may break.
-> 
-> Probably helper function is not required if boolean array is defined? What do you think?
-
-That works for me. My main concern is to clarify the code and remove possibility of breakage from future changes.
+> root@kvm:~/famfs# scripts/chk_efi.sh
+> This system is neither Ubuntu nor Fedora. It is identified as debian.
+> /sys/firmware/efi not found; probably not efi
+>  not found; probably nof efi
+> /boot/efi/EFI not found; probably not efi
+> /boot/efi/EFI/BOOT not found; probably not efi
+> /boot/efi/EFI/ not found; probably not efi
+> /boot/efi/EFI//grub.cfg not found; probably nof efi
+> Probably not efi; errs=6
 > 
 > Thanks,
-> Smita
-> 
-> [snip]
+> Miklos
+
+
+Apologies, but I'm short on time at the moment - going into a long holiday
+weekend in the US with family plans. I should be focused again by middle of
+next week.
+
+But can you check /proc/cmdline to see of the memmap arg got through without
+getting mangled? The '$' tends to get fubar'd. You might need \$, or I've seen
+the need for \\\$. If it's un-mangled, there should be a dax device.
+
+If that doesn't work, it's worth trying '!' instead, which I think would give
+you a pmem device - if the arg gets through (but ! is less likely to get
+horked). That pmem device can be converted to devdax...
+
+Regards,
+John
+
