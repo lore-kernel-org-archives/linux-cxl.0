@@ -1,181 +1,156 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5607884FA7;
-	Fri, 24 May 2024 11:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B28EC7
+	for <linux-cxl@vger.kernel.org>; Fri, 24 May 2024 15:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716550322; cv=none; b=qqyaQSlOH0/fr3Ovy5kuNVXl57+2Sh080cYEExcAhtAnXi/T8wXEjXoWkKbFVLmqIdXiD1A5IKWtrbgNRZJ1RdlIrFpwbljm620iYHXOeENtR6xhNcDaTdZ8dXDW7BFSlUyJC5gFQT3R3mOZyVlqiL+xGj0c6eD5qvRrrd/lDTw=
+	t=1716563786; cv=none; b=qaqWUHvkfUmzu+fNTNEkOxq1mR5oEafVE+tC8TTRlzuSVylmFmJJVj8OzgRbXqQBVA96HQ37Guz2QkT0/HFzeuM7mSUKz1oPuGBNlSpi30g44vFF+EKzTYn4uaJddhb9QU4Jm6almfi2c1cJ6MDOjbT6HtzbbIvGbb8VgPu+23g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716550322; c=relaxed/simple;
-	bh=TOMv4HGNG/iu1oe6JyE5qhb7UCcWecdYavBK8qV99wQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R8vyXclYOhR20/JFNWWy/sf3h23yvvb/F7FoTEnIfnnbjUC31OkhQja5CG6bm6kgCfDerp4pbLJykaQWx1qn3qdMnJXnkRCVXRoiF3dxAdxqI+Rnbljkii98gMr9eOXqX7YcqE2IZEjAM2fWv6JB1Pg0xGlqwuV6qOHrSt54bOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vm2pg5rFXz6JBX1;
-	Fri, 24 May 2024 19:28:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A811140B2F;
-	Fri, 24 May 2024 19:31:56 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 24 May
- 2024 12:31:56 +0100
-Date: Fri, 24 May 2024 12:31:55 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<mahesh.natu@intel.com>, <rafael@kernel.org>
-Subject: Re: [ACPI Code First ECN] Enumerate "Inclusive Linear Address Mode"
- memory-side caches
-Message-ID: <20240524123155.00005b0a@Huawei.com>
-In-Reply-To: <664f707125537_18c429438@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <663ea70884cfd_db82d29414@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240517174550.0000242a@Huawei.com>
-	<6647bbf6c88e3_2c2629451@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240520125333.00007a47@Huawei.com>
-	<664cc3a76e7d_2c2629462@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240523124947.000034df@Huawei.com>
-	<664f707125537_18c429438@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1716563786; c=relaxed/simple;
+	bh=xoZ003bwIPu31/pbCrkVADY8cXcgI7OucFW47GX4d4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uofYXI36Lcnknu/GxbrEYLAEpQaYrwHQ+tvBmfFHjyHclVWwQ3BLEpz/cNzRXgir/dwX7AkHYS4QurNLzjQtI6pnX2xVrisQr/xklbGmhUuBCZn7jgtZjEerhLxsyyaD1IpR2F1aiboJidiOfTT3s/8hoeyBLWMqo7C+VAuZ7OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=DkKWGXg4; arc=none smtp.client-ip=68.232.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="DkKWGXg4"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1716563783; x=1748099783;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xoZ003bwIPu31/pbCrkVADY8cXcgI7OucFW47GX4d4U=;
+  b=DkKWGXg423g2xqrvNoqW3gIOn72P9F2x0YQYrA4xFbCaE0WaghUBTfGN
+   +6DNojbvwORBImjGQItIFuO6E98vymAwbAFBbJJvaX0UI5RM0xbJgrhrD
+   wpyzvFpH3x0sTwE8UHSrkyN27zXofl0qs+DqQ1B45ynQR8dW9zD5ss8zD
+   RTmSszdF6jZNiX0oMRDjI43PxXB9upFvkBfMdgdHhx7BfEE2hr1fsW71i
+   /p3UVpv8Ky1OmcC3FrhbhDx79K4qjqmov36XMy56xGQUfclzl3OL9jRfa
+   VP5i1IbBmwaYoMKKycwKS9xvWat+ZYi4ctpcqe2qGiOeCUsTHGTRxpx+x
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="160016404"
+X-IronPort-AV: E=Sophos;i="6.08,185,1712588400"; 
+   d="scan'208";a="160016404"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2024 00:15:12 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id A1032E8523
+	for <linux-cxl@vger.kernel.org>; Sat, 25 May 2024 00:15:10 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id DB590D3F13
+	for <linux-cxl@vger.kernel.org>; Sat, 25 May 2024 00:15:09 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 63EA0202DB1A9
+	for <linux-cxl@vger.kernel.org>; Sat, 25 May 2024 00:15:09 +0900 (JST)
+Received: from [10.193.128.195] (unknown [10.193.128.195])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 58ABB1A000B;
+	Fri, 24 May 2024 23:15:08 +0800 (CST)
+Message-ID: <28c92491-a892-4c9a-8c92-5d039681f817@fujitsu.com>
+Date: Fri, 24 May 2024 23:15:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] cxl/core: add poison creation event handler
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, ira.weiny@intel.com,
+ alison.schofield@intel.com
+References: <20240417075053.3273543-1-ruansy.fnst@fujitsu.com>
+ <20240417075053.3273543-3-ruansy.fnst@fujitsu.com>
+ <6628008c39e80_a96f29415@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <b5eb1017-5f0a-4d68-bb63-41e628706a78@fujitsu.com>
+ <b14ed74c-7fc5-461a-9c5f-fbb94df50e7d@fujitsu.com>
+ <664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+In-Reply-To: <664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28408.000
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28408.000
+X-TMASE-Result: 10--25.799500-10.000000
+X-TMASE-MatchedRID: xnGAJ48IopiPvrMjLFD6eJTQgFTHgkhZw5PXDQWptSnHr4PSWTXSLMWl
+	hj9iHeVppQJHQvYIR1VvedD3CYSjHdgW4k6aveo4TbFVCYPBTqYimo23ixY4DgUcMWdRj2fqZVh
+	gLjSOksa18VsV6lgC4J+qZRE5XDC8dvvbftTsJScLwUwfdPoXvoiuaoNXJrK/rSPg4ph0OILDwJ
+	S0XWHAkDLFcdqm3RNLokHVVVZ21OIuRdmDWOweyvwCyINrEjhruoYFb0nRiqPJxEA95JnWHmJo6
+	KW+BOMMJK3weEsceTpJ9iwir5XT1WsV28ESZOe8DstQFfLVA/ATzLWUAQyt6P2Pg1z7MRXYtE9h
+	falO+MqEju6+OLyeK+8j2/Qpcz48hpgZAljFgxOVOwZbcOalS26Pap1MPdtHMZJ6fLab4266PD0
+	Fdea44H3NbsWb+gRT7qiScGBNfGZ3q5Rm8/DlxaoXHZz/dXlxEq8VpxNVVIliJsO4rdorwcygAl
+	+yObROEq9A6JF9rFlftuJwrFEhTbew1twePJJB2KDPNsqphTL6C0ePs7A07QKmARN5PTKc
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Thu, 23 May 2024 09:36:01 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > >   
-> > > > > > Whilst the CXL side of things (and I assume your hardware migration engine)
-> > > > > > don't provide a way to recover this, it would be possible to build
-> > > > > > a system that otherwise looked like you describe that did provide access
-> > > > > > to the tag bits and so wouldn't present the aliasing problem.      
-> > > > > 
-> > > > > Aliasing problem? All direct-mapped caches have aliases, it just happens that
-> > > > > this address mode allows direct-addressability of at least one alias.    
-> > > > 
-> > > > As I understand this the problem is you get address A in the error record,
-> > > > but that actually means any of A, A + N, A + 2N etc and the issue is you
-> > > > have no way of recovering which alias you have. 
-> > > > 
-> > > > Another implementation might have the same aliasing in the cache, but allow
-> > > > for establishing which one you have (the hardware inherently has to know that
-> > > > but I presume in this case doesn't provide a way to look it up - or if it
-> > > > does, then issue here is that the OS querying of the CXL device doesn't know
-> > > > about that interface?).  So I think the critical here is that information is
-> > > > not available, not that aliasing occurs.    
-> > > 
-> > > The critical information is that the address range is extended by the cache
-> > > capacity compared to the typical case. Maybe "extended-linear" is the term I was
-> > > searching for last Friday when I could not think of a better bikeshed color?
-> > > 
-> > > The reason an "extended-linear" indicator is important is for the driver to
-> > > recognize that the CXL address range programmed into the decoders is only a
-> > > subset of the system-physical address ranges that may route traffic to CXL. So
-> > > when the memory-side-cache is in this "extended" mode there are more addresses
-> > > that may route to CXL.  
-> > 
-> > I think we need to be careful with decoders here because the extra translation in the
-> > path means they aren't in HPA space as such.  They are in a new HPA+ space.
-> > In your case I think the translation is such that addresses are the bottom of the
-> > HPA window, but they could just as easily be the top of the HPA window or not
-> > within it at all...  
-> 
-> No need for an HPA+ concept. This is just an HPA vs SPA distinction,
-> similar to what we dealt with here:
-> 
-> 0cab68720598 cxl/pci: Fix disabling memory if DVSEC CXL Range does not match a CFMWS window
 
-Sure, if we can avoid a reference to 'subset' then I think this is
-fine - or avoid relating this to decoders at all.
-
-> 
-> Typically HPA and SPA are a 1:1 relationship, but in this case there is
-> a memory-side cache that sometimes translates the SRAT SPA to CXL HPA vs
-> DDR HPA. For any given SPA in the SRAT range there is no way to know
-> whether it is currently dynamically mapped to CXL or DDR.
-> 
-> > |     HPA window 1 - Length = Cache + CXL                 |
-> > |   HPA+ window 1 - Length = CXL only |  
-> 
-> HPA windows are never impacted by this memory side cache addressing.
-> 
-> 
-> > 
-> > or
-> > |     HPA window 1 - Length = Cache + CXL                |
-> >                    |   HPA+ window 1 - Length = CXL only |
-> > 
-> > or for giggles
-> > 
-> > |     HPA window 1 - Length = Cache + CXL                |
-> >                                                    |   HPA+ window - Length = CXL only |
-> > 
-> > last one might seem odd but if you are packing multiple of these you might get
-> > |     HPA window 1 - Length = Cache + CXL      |   HPA window 2 Ln = Cache + CXL           |
-> > |   HPA+ window 1 - Length = CXL only |  HPA+ window 2  Len = CXL only|
-> > 
-> > To reduce decoder costs in the fabric (yeah we don't do this today but the
-> > bios might :)  
-> 
-> No, BIOS should have no opporunity to confuse "HPA" layout. Let me see
-> if I can cutoff this line of confusion in the next rev and explicitly
-> call out SPA vs HPA expectations.
-> 
-> > So should the text say anything about decoder address vs (SRAT / HMAT addressing)
-> > Maybe reasonable to say it's contained and aligned so modulo maths works?
-> > This is a bit odd as HMAT wouldn't typically provide this info, but this addressing
-> > mode already incorporates it sort of...  
-> 
-> SRAT portrays capacity, HMAT portrays cache and address organization.
-> There is no need for bringing CXL decoder concepts into the HMAT.
-
-Absolutely - avoid any reference to decoders and we are fine.
-
-> 
+在 2024/5/22 14:45, Dan Williams 写道:
+> Shiyang Ruan wrote:
 > [..]
-> > > > > I still disagree with the implication that "inclusion" is a property of the
-> > > > > cache and not the address layout for this ECN.    
-> > > > 
-> > > > It's an ECN about caches - the chance of misunderstanding is high.
-> > > > Maybe there isn't a better option, but it definitely makes me feel uncomfortable.    
-> > > [..]  
-> > > > Maybe hyphen will help? Inclusive-linear Address mode?
-> > > > to avoid reading this as separate adjectives as in that this is an
-> > > > 'inclusive' cache that has a 'linear address' mode?    
-> > > 
-> > > Try this on for size:
-> > > 
-> > > * "When Address Mode is 1 'Extended-Linear' it indicates that the associated
-> > >    address range (SRAT.MemoryAffinityStructure.Length) is comprised of the
-> > >    backing store capacity extended by the cache capacity. It is arranged such
-> > >    that there are N directly addressable aliases of a given cacheline where N is
-> > >    the ratio of target memory proximity domain size and the memory side cache
-> > >    size. Where the N aliased addresses for a given cacheline all share the same
-> > >    result for the operation 'address modulo cache size'. This setting is only
-> > >    allowed when 'Cache Associativity' is 'Direct Map'."  
-> > > 
-> > >   
-> > I don't promise not to change my mind, but today LGTM.  
+>>>> My expectation is MF_ACTION_REQUIRED is not appropriate for CXL event
+>>>> reported errors since action is only required for direct consumption
+>>>> events and those need not be reported through the device event queue.
+>>> Got it.
+>>
+>> I'm not very sure about 'Host write/read' type.  In my opinion, these
+>> two types of event should be sent from device when CPU is accessing a
+>> bad memory address, they could be thought of a sync event which needs
 > 
-> This sounds very similar to the voice that is always in my mind when
-> reviewing code, reminds me of one of my favorite Star Wars quotes, "I am
-> altering the deal, pray I do not alter it any further."
+> Hmm, no that's not my understanding of a sync event. I expect when error
+> notifications are synchronous the CPU is guaranteed not to make forward
+> progress past the point of encountering the error. MSI-signaled
+> component-events are always asynchronous by that definition because the
+> CPU is free running while the interrupt is in-flight.
 
-:)
+Understood.  In OS-First path, it couldn't be a sync event.
 
-Jonathan
+> 
+>> the 'MF_ACTION_REQUIRED' flag.  Then, we can determine the flag by the
+>> types like this:
+>> - CXL_EVENT_TRANSACTION_READ | CXL_EVENT_TRANSACTION_WRITE
+>>                                                 => MF_ACTION_REQUIRED
+>> - CXL_EVENT_TRANSACTION_INJECT_POISON         => MF_SW_SIMULATED
+>> - others                                      => 0
+> 
+> I doubt any reasonable policy can be inferred from the transaction type.
+> Consider that the CPU itself does not take a sychronous exception when
+> writes encounter poison. At most those are flagged via CMCI
+> (corrected machine check interrupt). The only events that cause
+> exceptions are CPU reads that consume poison. The device has no idea
+> whether read events are coming from a CPU or a DMA event.
+> 
+> MF_SW_SIMULATED is purely for software simulated poison events as
+> injected poison can stil cause system fatal damage if the poison is
+> ingested in an unrecoverable path.
+> 
+> So, I think all CXL poison notification events should trigger an action
+> optional memory_failure(). I expect this needs to make sure that
+> duplicates re not a problem. I.e. in the case of CPU consumption of CXL
+> poison, that causes a synchronous MF_ACTION_REQUIRED event via the MCE
+> path *and* it may trigger the device to send an error record for the
+> same page. As far as I can see, duplicate reports (MCE + CXL device) are
+> unavoidable.
 
+I think my previous understanding about MCE was wrong.  Here is my 
+current understanding after some research:
 
+Since CXL device is a memory device, while CPU consumes a poison page of 
+CXL device, it always triggers a MCE by interrupt (INT18), no matter 
+which-First path is configured.  This is the first report.  Then 
+currently, in FW-First path, the poison event is transferred according 
+to the following process: CXL device -> firmware -> OS:ACPI->APEI->GHES 
+-> MCE.  This is the second one.  These two MCEs represent the same 
+poisoning page, which is the so-called "duplicate report", right?  Now, 
+the memory_failure() handling I'm trying to add in OS-First path, is 
+also another duplicate report.
+
+So, the primary issue to be solved is the second MCE report.  As you 
+suggested, make it a optional action.
+
+Please correct me if I'm wrong.  Thank you very much!
+
+--
+Ruan.
