@@ -1,231 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DE3145B3D;
-	Tue, 28 May 2024 22:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118E113EFE1
+	for <linux-cxl@vger.kernel.org>; Tue, 28 May 2024 22:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716934834; cv=none; b=J9e1lwjR/ejguT2w9RwIBlG/Psc3wLNUgxXuPtN0n/w96N0csX7dZbRtl2zd3Ah5ynmq0iEOZLtNBJvFBfMFxMusR4RvkIoaWfnwMdAgdFcVNovqj0pWEaQEQUcU3gwTsvCRIZ/cOyEX5KZL5O0g0RHeAskW1MGuf3dRvCeVoM0=
+	t=1716936953; cv=none; b=hqqSslrgf+ZRqRLzPM/zPM1eH932p1Q9ADjsXKPGv8d7rvd8uDExl8UhP6XG2z1H2/SiBOiqfT4v0SrF8sN2UXIPJ3NXLpWwnSV5veUq4kwLU/xu0QXVpopT74bGY5Xx1JNwCx+lhyN32RCMDl83QqANQpDHx3gnrqrZm4Tz/SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716934834; c=relaxed/simple;
-	bh=7nKtEjUjrHgnutoVQNvajnXaBJSu8Ka0MfzltiB0bbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ns+bUbiyiwid39Pph3Vi2M5ZbJ0csxi847o2sKJNDYmEhaVr6CGwWeYSAovTORFUCG74cOQ7zqjHIpmRPPOs7BwZ24RLbkwVNIIwCwVKqRW6tRvmVbGl3Fldp3c4+W8+1xjRPEav4kfnIYqmKNkyN+cb6a+r95RLNjsuGkWRSxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvSWDs9U; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvSWDs9U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716934833; x=1748470833;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7nKtEjUjrHgnutoVQNvajnXaBJSu8Ka0MfzltiB0bbw=;
-  b=IvSWDs9Up45XlWhVdV0APnKP8DY+uU5TVZaVqXjwHkIyLpjvLxcdBpJR
-   KUpc1bgsqJgqBxL0keIIfLd2Ddfq1PRKfxu+WdkJZs3RjXqWlfzRDvDme
-   yT+Qhe4gebF5nj5wjY4NquP+izpDyQX+kJrze8UBHVDzjbJBdT1O64/OR
-   xNHMG7PqSYljxogVpS/7tK24u+xLuTjkCH4F1rgMGtRt6+aCi2uvWH3y3
-   h6gWcWOyBf3kcdtN9d0ebr4MbP7CO+sfTi3d1vdkleEd9bu0drBP7Ua63
-   KoAaC18FzAnBM/EmbqLKug6xGvKdURkmKFs2J4kQi5Giz43Ovbb+G4ux2
-   g==;
-X-CSE-ConnectionGUID: K+hhBmO1T/eEMcYKk1qt4g==
-X-CSE-MsgGUID: 88sY8BDwR129tsXnh2l4lA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="23866748"
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="23866748"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:33 -0700
-X-CSE-ConnectionGUID: y4jGWFoXQ3WGhRijcOHfoA==
-X-CSE-MsgGUID: rleJA2KpTmKEs3fU2loXtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="72658422"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.99.237])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 15:20:31 -0700
-Date: Tue, 28 May 2024 15:20:30 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] cxl/pci: Convert PCIBIOS_* return codes to errnos
-Message-ID: <ZlZYrsPfzAiFzNLM@aschofie-mobl2>
-References: <20240527123403.13098-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1716936953; c=relaxed/simple;
+	bh=sx9VWnbMiamEruhp4h2H8JSVWFcqS+zJAZaye3lpHcg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eCoYhAxnnIVoTlUrNTcS2GhQ8q1ddqK8un7AIGyZwsBc87GVnMytsD/XzVJmgFt8HihMqor+/KYA3GdwIbid4budwMMeUUAuqDrRMTEULL1agDaFO/M+h9fS662/GZOPetplkyo/3AY51SFW0IPNSlGvGcfHgN+rGJpL9SJeynQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63202C3277B;
+	Tue, 28 May 2024 22:55:52 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net
+Subject: [PATCH] cxl/test: Add missing vmalloc.h for tools/testing/cxl/test/mem.c
+Date: Tue, 28 May 2024 15:55:51 -0700
+Message-ID: <20240528225551.1025977-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240527123403.13098-1-ilpo.jarvinen@linux.intel.com>
 
-On Mon, May 27, 2024 at 03:34:02PM +0300, Ilpo J�rvinen wrote:
-> pci_{read,write}_config_*word() and pcie_capability_read_word() return
-> PCIBIOS_* codes, not usual errnos.
-> 
-> Fix return value checks to handle PCIBIOS_* return codes correctly by
-> dropping < 0 from the check and convert the PCIBIOS_* return codes into
-> errnos using pcibios_err_to_errno() before returning them.
+tools/testing/cxl/test/mem.c uses vmalloc() and vfree() but does not
+include linux/vmalloc.h. Kernel v6.10 made changes that causes the
+currently included headers not depend on vmalloc.h and therefore
+mem.c can no longer compile. Add linus/vmalloc.h to fix compile
+issue.
 
+  CC [M]  tools/testing/cxl/test/mem.o
+tools/testing/cxl/test/mem.c: In function ‘label_area_release’:
+tools/testing/cxl/test/mem.c:1428:9: error: implicit declaration of function ‘vfree’; did you mean ‘kvfree’? [-Werror=implicit-function-declaration]
+ 1428 |         vfree(lsa);
+      |         ^~~~~
+      |         kvfree
+tools/testing/cxl/test/mem.c: In function ‘cxl_mock_mem_probe’:
+tools/testing/cxl/test/mem.c:1466:22: error: implicit declaration of function ‘vmalloc’; did you mean ‘kmalloc’? [-Werror=implicit-function-declaration]
+ 1466 |         mdata->lsa = vmalloc(LSA_SIZE);
+      |                      ^~~~~~~
+      |                      kmalloc
 
-Do we ever make a bad decision based on the wrong rc value or is this
-a correction to the emitted dev_*() messaging, or both?
+Fixes: 7d3eb23c4ccf ("tools/testing/cxl: Introduce a mock memory device + driver")
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ tools/testing/cxl/test/mem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- Alison
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 6584443144de..eaf091a3d331 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/vmalloc.h>
+ #include <linux/module.h>
+ #include <linux/delay.h>
+ #include <linux/sizes.h>
+-- 
+2.45.0
 
-> 
-> Fixes: ce17ad0d5498 ("cxl: Wait Memory_Info_Valid before access memory related info")
-> Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating DVSEC Ranges")
-> Fixes: 14d788740774 ("cxl/mem: Consolidate CXL DVSEC Range enumeration in the core")
-> Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com>
-> ---
->  drivers/cxl/core/pci.c | 30 +++++++++++++++---------------
->  drivers/cxl/pci.c      |  2 +-
->  2 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 8567dd11eaac..9ca67d4e0a89 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -121,7 +121,7 @@ static int cxl_dvsec_mem_range_valid(struct cxl_dev_state *cxlds, int id)
->  					   d + CXL_DVSEC_RANGE_SIZE_LOW(id),
->  					   &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		valid = FIELD_GET(CXL_DVSEC_MEM_INFO_VALID, temp);
->  		if (valid)
-> @@ -155,7 +155,7 @@ static int cxl_dvsec_mem_range_active(struct cxl_dev_state *cxlds, int id)
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(id), &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		active = FIELD_GET(CXL_DVSEC_MEM_ACTIVE, temp);
->  		if (active)
-> @@ -188,7 +188,7 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
->  	rc = pci_read_config_word(pdev,
->  				  d + CXL_DVSEC_CAP_OFFSET, &cap);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
->  	for (i = 0; i < hdm_count; i++) {
-> @@ -225,7 +225,7 @@ static int wait_for_valid(struct pci_dev *pdev, int d)
->  	 */
->  	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (val & CXL_DVSEC_MEM_INFO_VALID)
->  		return 0;
-> @@ -234,7 +234,7 @@ static int wait_for_valid(struct pci_dev *pdev, int d)
->  
->  	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (val & CXL_DVSEC_MEM_INFO_VALID)
->  		return 0;
-> @@ -250,8 +250,8 @@ static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  	int rc;
->  
->  	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
-> -	if (rc < 0)
-> -		return rc;
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
->  
->  	if ((ctrl & CXL_DVSEC_MEM_ENABLE) == val)
->  		return 1;
-> @@ -259,8 +259,8 @@ static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  	ctrl |= val;
->  
->  	rc = pci_write_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, ctrl);
-> -	if (rc < 0)
-> -		return rc;
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
->  
->  	return 0;
->  }
-> @@ -336,11 +336,11 @@ int cxl_dvsec_rr_decode(struct device *dev, int d,
->  
->  	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
->  		dev_dbg(dev, "Not MEM Capable\n");
-> @@ -379,14 +379,14 @@ int cxl_dvsec_rr_decode(struct device *dev, int d,
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		size = (u64)temp << 32;
->  
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
->  		if (!size) {
-> @@ -400,14 +400,14 @@ int cxl_dvsec_rr_decode(struct device *dev, int d,
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		base = (u64)temp << 32;
->  
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
->  		if (rc)
-> -			return rc;
-> +			return pcibios_err_to_errno(rc);
->  
->  		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
->  
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index e53646e9f2fb..0ec9cbc64896 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -540,7 +540,7 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->  
->  	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (cap & PCI_EXP_DEVCTL_URRE) {
->  		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-> -- 
-> 2.39.2
-> 
