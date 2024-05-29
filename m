@@ -1,269 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E713B295;
-	Wed, 29 May 2024 12:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716985168; cv=none; b=KNZ34SkFhpGesr2yIobdCUurZATLW1fp6et8Gbbr+Vrc79akhaR34UoUkWTMRxQNqNikPUnklJr+j/VyT2ibwc8mTEIhpAXP8HZeHG87H1DfQil89bBU0xgilDaSjLeCx/RbCTks6hUfcNPgA0NiJGLdfEyWqW8fD29GyHVmqmI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716985168; c=relaxed/simple;
-	bh=Q7XR4d5Lrj5pDQVCv/L1AM1PWA6M5lN2V5ijcKX7tCg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Yg1PEYMnW097DD4bapE9KA/CHsfvQxPR9xv29SwV60Jo+3PPXYOqN3jxtTt1Z1rZL8nW/ycyAEKaYwjCB448oMrcgZIH0bexfrJw++HPwrAJvv7cvTtoi8upmPIXbVVaNtS1Vbac8xKPcTrKEgLitbHji6TyfYrKZjIqzmWlR1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSc2GBZe; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852C34C70;
+	Wed, 29 May 2024 13:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716989447; cv=fail; b=rQf3kq+OaBQ+mbkrcVzBGptMfguXsGbGjx+JvrrB5thpG1N2MS5g/uTejwXl9xbmcDoiVL1n66vbftVPikaew0K0HxOoGuikyoK6KaN0Iq1l8kqC2kH6gPXJfQXICZLnoclj+liC9Sm8PRJsgTa6HY1BUIs77CZhGlHTz0c97YI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716989447; c=relaxed/simple;
+	bh=YN04JHtdlKGY3bT5s1D7vRYp028VFpUCDhUsrzxZnd0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JP11sw+KvxGdi2EP9lNGSVmIcA72mJnHf52bjHKWokqfKmKtIspVFIMdOUf6ZPo5Ahuf9W1UYajK/ZkvFBqUEtzT8J4xu9cT9p49Zc/PcwIVlZk5RbSmbxj0K6mQcDFD6yPWmWArpE6CzvfbNnxnL49AkgiJhRH+aN4VS3LuRnk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGv6baDj; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSc2GBZe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGv6baDj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716985167; x=1748521167;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Q7XR4d5Lrj5pDQVCv/L1AM1PWA6M5lN2V5ijcKX7tCg=;
-  b=SSc2GBZe3tD1ysGSaEZ1++uCG8uh/KlXIBCBhASs1QEGLCkAuc18q89k
-   Nod3sICHTmQcMrkM1K3iWGvRWhZRK3oIGlAAjs83GQc4EpKYS9vUz2jon
-   XtuMvtSOzq5UnODk5OtgzGlJ73kuOqIJh9bxyYQlj27i5FNlipRWCFvyK
-   6OcK/0iBxoWyGpybp3OU4icXewoi2FkgMHlaXLlklyT6+T8upBIfDZmpv
-   1Uc/dhsBa21BE8oR0EjvmCMxzOGNLmvZdBmba3nVLbXT7hUV/eVRohiKS
-   VRFlTI2RMY8cKnMs6tIxaUpiJ5W22ScPNgUC8+qsMNbM7fJj4m2q2sm0I
-   w==;
-X-CSE-ConnectionGUID: urB02GYuTdGJUmFIdw4iRw==
-X-CSE-MsgGUID: 60YbeIiERX2iSYmGBAdpvw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="23992696"
+  t=1716989446; x=1748525446;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=YN04JHtdlKGY3bT5s1D7vRYp028VFpUCDhUsrzxZnd0=;
+  b=fGv6baDj/l+f921Q7ykU/SDTrGWCSxQGnc+xz7A6auorTrzn6nj4g4gI
+   G1lDvqmiCQAC0k2I4FxUr7Pxrfy/entfLp4cR3Mzhwlz+XRZC7S39SMhT
+   atABHqhBrOEv7NQpTRn04iq62v7F1a79IhVffZioaE8Jmhglko9r3ooMp
+   AhGrh3EAxag8xf2aGzHzgrPKhiJp767/rflL4mXMatUgOSiQkczyIXM+C
+   cCUY4ftzyQV0aKmODiztRAz7oOvU+QJwLdVMUIp8WwVgT9/J0j0cDeSNV
+   WJPaZ4KRzAA+zNl6TGC5fukMvWMac4D9WYZDgyS0flBQR95Ib7A+1dkmZ
+   g==;
+X-CSE-ConnectionGUID: 9ByFnFB8TJWXl/CclC7OPg==
+X-CSE-MsgGUID: XH5VXEytQrmrjvmHvu4thA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="30894469"
 X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="23992696"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 05:19:26 -0700
-X-CSE-ConnectionGUID: VfQZ4YO9TU60VMKEsiXpDw==
-X-CSE-MsgGUID: DKFaagwuRCKQRH+/OEknlw==
+   d="scan'208";a="30894469"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 06:30:45 -0700
+X-CSE-ConnectionGUID: 6fnTrPhpTF+Z/us3BLsdlg==
+X-CSE-MsgGUID: 82JZCDugSWyhYJtanBj1rA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="40417159"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.149])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 05:19:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 29 May 2024 15:19:19 +0300 (EEST)
-To: Alison Schofield <alison.schofield@intel.com>
-cc: Davidlohr Bueso <dave@stgolabs.net>, 
-    Jonathan Cameron <jonathan.cameron@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-    Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-    Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+   d="scan'208";a="36053300"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 May 2024 06:30:45 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 29 May 2024 06:30:44 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 29 May 2024 06:30:44 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 29 May 2024 06:30:44 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 06:30:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B1Ym2+C6yTb75EPg17tN0lHv8yzx6b9K3+YruU57ab27nnwcQSiCjSpfLuCbgwfIdU3aBSoJYT5V6q+RqUpAa/W8yb4B3UPAfXpNJO8YdiNkyukg0LgW+LVVcTENSrW9hGvWjd8Ran8cx6pZMjxoTSTCNAN2qkDNs4m3Hx6zjX72VIizOGnbJzBglRjd+bOouVjqVbS5XcFb6KXe/B1FrEn5UWkbHQbTMfdsMMDvzYSvHi1herq8uY5KjhHL2bE63LIoN0L3G1WBXpxStEFzVEBbeZ02JVOR7WWSRd75tJMFkb/Rbyk7ta0H/YDpeaZkN19gSQqYINfXYPJuEqmH0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K/fV2x3brVroKhRIi85Cs7VBpNse/RavfTpsrgDEZ8E=;
+ b=FPk4QZKwBkVNNl2BiYdZeT0VkxvnYS4wEhT6X80vmuR0u+m4vcEsVXG0vEGmJmVu5Fh83uAHi2/78E1++jPG2YXSS4G4u25RCKGS1VVyLAetCFHkdAzztSwNv96q/q3nUnjJQWu0ZZ/pH91G06MiSuFBKUuvv+TWkWcydSwjKJv+PZS+PatZmJLXvgOhSsdtXGEdsttiaU7TGs+vdJTebNDIVLU34Zlo9krDIsL8q+KosXOSQRlKgKfarHLRlRtD1dfbOaYjPPJ53NjuOvpSmMYTvYCbFfsUnoGwtNz286M++f+RsDnByVp2v94lLSxkPMQXDRrWFs2zrSEFzY1pwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by DM6PR11MB4675.namprd11.prod.outlook.com (2603:10b6:5:2ac::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.19; Wed, 29 May
+ 2024 13:30:42 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%6]) with mapi id 15.20.7633.017; Wed, 29 May 2024
+ 13:30:41 +0000
+Date: Wed, 29 May 2024 08:30:34 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Ben Widawsky <bwidawsk@kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	<stable@vger.kernel.org>
 Subject: Re: [PATCH 1/1] cxl/pci: Convert PCIBIOS_* return codes to errnos
-In-Reply-To: <ZlZYrsPfzAiFzNLM@aschofie-mobl2>
-Message-ID: <78e5690b-832f-3da5-3500-141e9b155c09@linux.intel.com>
-References: <20240527123403.13098-1-ilpo.jarvinen@linux.intel.com> <ZlZYrsPfzAiFzNLM@aschofie-mobl2>
+Message-ID: <66572dfaa49c9_86b8f294d2@iweiny-mobl.notmuch>
+References: <20240527123403.13098-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240527123403.13098-1-ilpo.jarvinen@linux.intel.com>
+X-ClientProxiedBy: BY5PR17CA0019.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::32) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1595479625-1716984315=:1108"
-Content-ID: <bd1af136-005a-4183-897f-28bf7f3ddd1b@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM6PR11MB4675:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41676649-2fbf-4212-b357-08dc7fe3894e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007|921011;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?bwSVKxWjBgKu8zlc48HJXOpxCYx0uo7HC+QTCYR26JrQSlhJ6Gk5RM/NLS?=
+ =?iso-8859-1?Q?569kWciDhab2cHUn8vPBkSCB+zRMm4jsX3mhXifzHufm1UPbTQWk+0Yopk?=
+ =?iso-8859-1?Q?Vn33/Co0N1lcJly7K7dZNa3e5FbwUoTaYNuo76Z8kO/AN0ZVBsrr2zHcIQ?=
+ =?iso-8859-1?Q?RF3rQ1TsUvSO64V2ZaVTZBq9+AteP3iCY+fGoLuMpSroVhC1kzR2fTMIyI?=
+ =?iso-8859-1?Q?A35ig7u5V8Jw1dC9CuKrkkOsomGWorkwp1m/5x7A7uJ7AlYkj3wTPq4+U2?=
+ =?iso-8859-1?Q?jMpxad8owcjz+N8Rn/lranQPKTk0DwdFEmNiliAseJkI78R9mA1FK3aEZi?=
+ =?iso-8859-1?Q?L1twIkRhkiPrMpooq8TCzjJTxK3eaWupbwM/RLSkENw+gpSUEkeCwd008G?=
+ =?iso-8859-1?Q?0oQBUUDv0jioivFE/OmRmUJ8DwtUONUZhPBY1Mat1Z0jXunb/WN0tWot7u?=
+ =?iso-8859-1?Q?cgbZF5IYHlTJ462QuY30AQyBz8uU7O1Bi4xqDnsGs/UAEeXsf0lAXPb7G1?=
+ =?iso-8859-1?Q?Ztizqia06J2WP/rb+CAtYiQOASQLSUDRAwFAHMjo+NcGpp+4Xmtmt3chgT?=
+ =?iso-8859-1?Q?OA5QWLQZjrgUVFwzJa/+aqANO1iAyWG+v2OgJkg6OCT6tfQhE4JfDAf/2o?=
+ =?iso-8859-1?Q?/wnIBN3wf2wH1TbFI1hm8r+mXAFHGwwm+0PzJE0uXPGJhIX1/DJntwFxss?=
+ =?iso-8859-1?Q?1+AjEM1QYcxRiS9ZxXTMzEx8ArsBZ8W6q+vxGykF07QkFclOxiuIKQlibE?=
+ =?iso-8859-1?Q?Lxv/FP/NTAuhUfVcX6/iNEU9rLyzDoAU+pKb/ZpgEYRLe4HTpP2VemL5oS?=
+ =?iso-8859-1?Q?bj9T62WzLVCesoM8mH92qaaJPi5fXtgAqLAUFO/YIIG1F5lfckKupZDJOm?=
+ =?iso-8859-1?Q?qhDtNmBg8Dp8XrEVrwQqU7ExlMwYy2x/L3uly0k6OyvIFE+GnyHjYUcKe3?=
+ =?iso-8859-1?Q?s0SiXlkMmpB+VXerqXh/trWX1IyJR/kADee+O2qUP9vyRaF0CnAa3G/qrN?=
+ =?iso-8859-1?Q?JUpr5iv/I57voS0umitnP1P2+05WCWrGZenCVYRcVplX4JuqVTuMU1zAcL?=
+ =?iso-8859-1?Q?UuZ/t73cHfhw2JpZYdQ3DKWqGWW9YuMDDD1ufqP6Ws2l8ZD6OemY5z4qIw?=
+ =?iso-8859-1?Q?Hs63H3e0sxPIOlka7czdWmOXmm6vC/LH41LygjT2xaLi7WAVQS7bCj2IhK?=
+ =?iso-8859-1?Q?x2j6pAGl2k2io1r+F5ipo2CES2+X6lRmL92C+RJI2jG6z685morcBmSeuH?=
+ =?iso-8859-1?Q?fMA7mDVtftq1H2romNAElZJvnVr9bk8YpjKX4JrkWV6L6XyJKF2XfiJ/is?=
+ =?iso-8859-1?Q?A0XfaSoVcCp0KaWVlxYYaMzP11N5/eJJEaMRN9gTyLlgY4W54jOK92Qc0G?=
+ =?iso-8859-1?Q?JQMsZgpZJG?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?XEaHLWmWj9P0vmbK6NYG4rn5c3Wi299lclj0BZS3K8/9MTr/Fedn3gOt12?=
+ =?iso-8859-1?Q?Vv8BF9VN637jZQY8uW1MoiOjFUlcwqiaI47V7HSR87CPgBbePN415gZ389?=
+ =?iso-8859-1?Q?nUY/A1nNzDEy22cbf47hlBIhdjHNCXgh1DEymlc67WMG8nOZeaqJjStcVa?=
+ =?iso-8859-1?Q?OGI4xi9ubCmrsnWcs3f1s3d8CIApXLCGB01rfKXj9JQ5Uf+Xi3Ip3/fe/T?=
+ =?iso-8859-1?Q?3h/Y4CSym+ezBZ45c9Vj0woNZE252YIl4KRGE10QYiVrCnnmjdQ4kltO/a?=
+ =?iso-8859-1?Q?ffjv4rjRLHj0c+PbaR8CmY2qyUaMOellDHUBpBGr0lmCSdgtG2UDjo4bBL?=
+ =?iso-8859-1?Q?+gouxD09caEuB9+gC8s2E9ipAOFjxAK5usKwm5qd9r3nujyoTxWhtEciXI?=
+ =?iso-8859-1?Q?XeZgrmuI2EIH4R4T6e+ONd91GwX0bX5s0gYkEK2SwsoUWNIstNz4nryQZR?=
+ =?iso-8859-1?Q?08ElulltvxhZlw2T/zghVhPt1AUEO1do36BHx9oXry1HmZBQy6eUN9zVI6?=
+ =?iso-8859-1?Q?jrzwStN71XDz1vb2Bpgim5+v7uLvWNdhF0wLJNvMIT1Zvx3yMT1j1/ioeU?=
+ =?iso-8859-1?Q?B3wQphlqBDs29PSudlfbOOoKdfyZwXN9hEhnx2t4zWsIgxSsUDHrxIPu61?=
+ =?iso-8859-1?Q?WzZIhTYERXN1vhwVRBu9hRqFPANwkXSpw0cnqRqz5DIgIjkx7WN9NJHB+1?=
+ =?iso-8859-1?Q?46lRuXkzz2LAekBYAln2M6d9YyXPImeWTO4jknXp0ITnzQxAZnUtafGtLO?=
+ =?iso-8859-1?Q?ifVYBu7r1us1pVZ1dkDmNc6p7e8E4LX4NWNG3fMwTycmYmYlEEjPoaKN76?=
+ =?iso-8859-1?Q?PQDvUyjXf13dh7SpJyyKfihkKhZu4Tp7W3oVTy9aH2hagxbUNZ71e0yRBT?=
+ =?iso-8859-1?Q?ZGsNer3hxTFyfcY4X67I2/9t4fVGbqDY4c5A0fSvUjuB8JWPINwLiZB2UB?=
+ =?iso-8859-1?Q?Z+vzrthXmyXiAv+hB7X9WUfRBijjkgnBGQNoSC1YZLYEi3GusSbJ92PAyb?=
+ =?iso-8859-1?Q?F1WHDP0LV6oU+uGt7z+OgRSJnfiBtAsVUOLXk5jfHoc7c9P2rs/o6soujL?=
+ =?iso-8859-1?Q?7+0ULTAoGH8LmHVzInTXl8yzKc182f56SIPL8mOwlhCi4ZCUvs+4KuUhlY?=
+ =?iso-8859-1?Q?3eofgzoW+AfMfhAutO6/bjh76ea80Dm4YCCLVzZjMrkEfKugvfU8z3QhLK?=
+ =?iso-8859-1?Q?Xfgr4tz60K8/1HatLIu4LKH+PX9C82FnhBziprH+Nn0dFcFuJBowiR6uzh?=
+ =?iso-8859-1?Q?UgpIijWJWmEUfGZIXK1BgwxSDcDuzB8nY2G9iJiN3tz89WrkHdeJIPxNbf?=
+ =?iso-8859-1?Q?rrSlpTgBm9oyMoGEOs8tMyXKsQpO7fhA8QihMkEnzyKCeHN3fvkChLxydd?=
+ =?iso-8859-1?Q?Leye2xGVHf4hQuL4tFD0JWsF2vi778TYexTDsmvQbV/6rZH3fHd4Ct0mhU?=
+ =?iso-8859-1?Q?Tpvls6dUUrkL0ibyNNO9pC1l48DFjPV1Trh7EAC/f9oeB9dbTYerzYOnHE?=
+ =?iso-8859-1?Q?/BlrTO8sKzsM2PWY81MXtX39ofn2OCpxo8TjnD1PxM1Q9wy6KgzTicQrw+?=
+ =?iso-8859-1?Q?WUqz5lHJQA9xJce2HzYD6fuETtHuzL+zxF33ir7Z3aiJUQREKuthN9g+j/?=
+ =?iso-8859-1?Q?Fq5uwq+yMAxFYGxDf2D+ZIBW4rnSIoIzCiiEg3jM/W8KXoQ2J+t3GZHcnP?=
+ =?iso-8859-1?Q?Hl+0ASmeUbELrNW3/9EqR7uc7QEKbz3CK8d81JwF?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41676649-2fbf-4212-b357-08dc7fe3894e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 13:30:41.9327
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OjAIkD0sehJWZ3MHo4nNDH5xUyNJ+hY9VqZ/dU5eUq6Y7IsE3HKlYcMSG0zrz8b6lXg5Azo0mWXpT3zASVXq0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4675
+X-OriginatorOrg: intel.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Ilpo Järvinen wrote:
+> pci_{read,write}_config_*word() and pcie_capability_read_word() return
+> PCIBIOS_* codes, not usual errnos.
+> 
+> Fix return value checks to handle PCIBIOS_* return codes correctly by
+> dropping < 0 from the check and convert the PCIBIOS_* return codes into
+> errnos using pcibios_err_to_errno() before returning them.
+> 
+> Fixes: ce17ad0d5498 ("cxl: Wait Memory_Info_Valid before access memory related info")
+> Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating DVSEC Ranges")
+> Fixes: 14d788740774 ("cxl/mem: Consolidate CXL DVSEC Range enumeration in the core")
+> Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
---8323328-1595479625-1716984315=:1108
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <52392403-976d-88e3-05bc-7ad38cd8884a@linux.intel.com>
 
-On Tue, 28 May 2024, Alison Schofield wrote:
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> On Mon, May 27, 2024 at 03:34:02PM +0300, Ilpo J=E4rvinen wrote:
-> > pci_{read,write}_config_*word() and pcie_capability_read_word() return
-> > PCIBIOS_* codes, not usual errnos.
-> >=20
-> > Fix return value checks to handle PCIBIOS_* return codes correctly by
-> > dropping < 0 from the check and convert the PCIBIOS_* return codes into
-> > errnos using pcibios_err_to_errno() before returning them.
->=20
->=20
-> Do we ever make a bad decision based on the wrong rc value or is this
-> a correction to the emitted dev_*() messaging, or both?
-
-There is potential for bad decision.
-
-Eg. cxl_set_mem_enable() it can return 0, 1 and rc that is currently=20
-returning PCIBIOS_* return codes that are > 0).  devm_cxl_enable_mem()=20
-then tries to check for >0 and <0 but the <0 condition won't match=20
-correctly because PCIBIOS_* is not <0 but >0, devm_cxl_enable_mem() then=20
-return 0 where it should have returned an error.
-
-The positive "error code" from wait_for_valid(), cxl_dvsec_rr_decode(),=20
-and cxl_pci_ras_unmask leaks out of .probe().
-
---=20
- i.
-
-> > Fixes: ce17ad0d5498 ("cxl: Wait Memory_Info_Valid before access memory =
-related info")
-> > Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating =
-DVSEC Ranges")
-> > Fixes: 14d788740774 ("cxl/mem: Consolidate CXL DVSEC Range enumeration =
-in the core")
-> > Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >  drivers/cxl/core/pci.c | 30 +++++++++++++++---------------
-> >  drivers/cxl/pci.c      |  2 +-
-> >  2 files changed, 16 insertions(+), 16 deletions(-)
-> >=20
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index 8567dd11eaac..9ca67d4e0a89 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -121,7 +121,7 @@ static int cxl_dvsec_mem_range_valid(struct cxl_dev=
-_state *cxlds, int id)
-> >  =09=09=09=09=09   d + CXL_DVSEC_RANGE_SIZE_LOW(id),
-> >  =09=09=09=09=09   &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09valid =3D FIELD_GET(CXL_DVSEC_MEM_INFO_VALID, temp);
-> >  =09=09if (valid)
-> > @@ -155,7 +155,7 @@ static int cxl_dvsec_mem_range_active(struct cxl_de=
-v_state *cxlds, int id)
-> >  =09=09rc =3D pci_read_config_dword(
-> >  =09=09=09pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(id), &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09active =3D FIELD_GET(CXL_DVSEC_MEM_ACTIVE, temp);
-> >  =09=09if (active)
-> > @@ -188,7 +188,7 @@ int cxl_await_media_ready(struct cxl_dev_state *cxl=
-ds)
-> >  =09rc =3D pci_read_config_word(pdev,
-> >  =09=09=09=09  d + CXL_DVSEC_CAP_OFFSET, &cap);
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09hdm_count =3D FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
-> >  =09for (i =3D 0; i < hdm_count; i++) {
-> > @@ -225,7 +225,7 @@ static int wait_for_valid(struct pci_dev *pdev, int=
- d)
-> >  =09 */
-> >  =09rc =3D pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0),=
- &val);
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09if (val & CXL_DVSEC_MEM_INFO_VALID)
-> >  =09=09return 0;
-> > @@ -234,7 +234,7 @@ static int wait_for_valid(struct pci_dev *pdev, int=
- d)
-> > =20
-> >  =09rc =3D pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0),=
- &val);
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09if (val & CXL_DVSEC_MEM_INFO_VALID)
-> >  =09=09return 0;
-> > @@ -250,8 +250,8 @@ static int cxl_set_mem_enable(struct cxl_dev_state =
-*cxlds, u16 val)
-> >  =09int rc;
-> > =20
-> >  =09rc =3D pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl)=
-;
-> > -=09if (rc < 0)
-> > -=09=09return rc;
-> > +=09if (rc)
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09if ((ctrl & CXL_DVSEC_MEM_ENABLE) =3D=3D val)
-> >  =09=09return 1;
-> > @@ -259,8 +259,8 @@ static int cxl_set_mem_enable(struct cxl_dev_state =
-*cxlds, u16 val)
-> >  =09ctrl |=3D val;
-> > =20
-> >  =09rc =3D pci_write_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, ctrl)=
-;
-> > -=09if (rc < 0)
-> > -=09=09return rc;
-> > +=09if (rc)
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09return 0;
-> >  }
-> > @@ -336,11 +336,11 @@ int cxl_dvsec_rr_decode(struct device *dev, int d=
-,
-> > =20
-> >  =09rc =3D pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09rc =3D pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl)=
-;
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
-> >  =09=09dev_dbg(dev, "Not MEM Capable\n");
-> > @@ -379,14 +379,14 @@ int cxl_dvsec_rr_decode(struct device *dev, int d=
-,
-> >  =09=09rc =3D pci_read_config_dword(
-> >  =09=09=09pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09size =3D (u64)temp << 32;
-> > =20
-> >  =09=09rc =3D pci_read_config_dword(
-> >  =09=09=09pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09size |=3D temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
-> >  =09=09if (!size) {
-> > @@ -400,14 +400,14 @@ int cxl_dvsec_rr_decode(struct device *dev, int d=
-,
-> >  =09=09rc =3D pci_read_config_dword(
-> >  =09=09=09pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09base =3D (u64)temp << 32;
-> > =20
-> >  =09=09rc =3D pci_read_config_dword(
-> >  =09=09=09pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
-> >  =09=09if (rc)
-> > -=09=09=09return rc;
-> > +=09=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09=09base |=3D temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
-> > =20
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index e53646e9f2fb..0ec9cbc64896 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -540,7 +540,7 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
-> > =20
-> >  =09rc =3D pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
-> >  =09if (rc)
-> > -=09=09return rc;
-> > +=09=09return pcibios_err_to_errno(rc);
-> > =20
-> >  =09if (cap & PCI_EXP_DEVCTL_URRE) {
-> >  =09=09addr =3D cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-> > --=20
-> > 2.39.2
-> >=20
->=20
---8323328-1595479625-1716984315=:1108--
+[snip]
