@@ -1,185 +1,143 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87D917C203;
-	Thu, 30 May 2024 13:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467B218757F;
+	Thu, 30 May 2024 17:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717076300; cv=none; b=toUj4qYCt3TcP64Os3ekaBTJkEVPzMWv7pJ/Oc/Teu+BInjCupy0Y2z0Q68D2MUe8LypFAgjhk7iW5Z+iK2t5WhPU1cJldihe5M6UDR+2fHpxQHfx3tFvl/4K11KvslVWL+IFpXuNK9PAXnpJ/DmU5fszmBQWQ5SNz4yfsnsCWI=
+	t=1717090621; cv=none; b=MGSJ6PoON2U+p0c9A6Q0Tdj0u1tWoe2eLzDZvYyh0V1j6K+GD7wHqlzQt3LRXLXedcRhmzDBFjiSeqVX0lygMbgxM2NzZ+3GZHKtKGleCqndrBGnN8SYwqJ8yr6m2cV8N28Jw+19w/zjLvxTMqjKVC/cjJM6Uajr+b+9ImAXEUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717076300; c=relaxed/simple;
-	bh=S55mCDwB/L5bdVzNJdlQckiADHtrRU057V4YeMUyCks=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mBsm+uY0bq0rwFqLyE5eXJd2LThWuHFmYS2Z9k4PneqpDvtrTfCZETVFkLrPQdl7TJ2/AiqEsDW8Su5vEPpDh4LyMO8p7ykq2+1OvrUKSGKM9VoFc229/G/qGRAGluuCkGjbLND7/NP0nhvz+1i9jicjkKDXm2O8hOlxP+S77G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VqnKK2qwNz6J9yY;
-	Thu, 30 May 2024 21:34:13 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61233140B38;
-	Thu, 30 May 2024 21:38:15 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 May
- 2024 14:38:14 +0100
-Date: Thu, 30 May 2024 14:38:13 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dongsheng Yang <dongsheng.yang@easystack.cn>
-CC: Gregory Price <gregory.price@memverge.com>, Dan Williams
-	<dan.j.williams@intel.com>, John Groves <John@groves.net>, <axboe@kernel.dk>,
-	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>, <james.morse@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-Message-ID: <20240530143813.00006def@Huawei.com>
-In-Reply-To: <5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
-References: <20240503105245.00003676@Huawei.com>
-	<5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
-	<20240508131125.00003d2b@Huawei.com>
-	<ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
-	<20240508164417.00006c69@Huawei.com>
-	<3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
-	<20240509132134.00000ae9@Huawei.com>
-	<a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
-	<664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
-	<ZldIzp0ncsRX5BZE@memverge.com>
-	<5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717090621; c=relaxed/simple;
+	bh=9buMljHg6Qmc+NqPIB9TuVaIWbL9u2s4lr5fjhfPwIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ikApkVKXkbfFb35GbBqqoSnAUz2A5VcD8Ohv4GOK39FmSN142hbQsTWpuStaXcBGxxVr5+btQuLvneNwpWoXNsH/ePzHmtSa28atvDGP30eqcmeuL/FGaSrJApeb7Dx7HLqPglQcYbusWLMM1BL7WhLiEzFnqrgRyPLLIXXmoJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMrUu6vj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMrUu6vj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6CFAC2BBFC;
+	Thu, 30 May 2024 17:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717090620;
+	bh=9buMljHg6Qmc+NqPIB9TuVaIWbL9u2s4lr5fjhfPwIw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dMrUu6vj7i11uoTpdcf6efi9onKMbUwzoy0maDXem35JQdTCIebSRB0VVF53RS9PX
+	 nQiaOC3wziFbw/1hZefwb3pcFvVlBNj9Ne8VFXzqETh762aStsKbRDwDzOql3MNoQx
+	 Rb534YZThaOkVCJDLBZLD3vEWq5SGa2LUAcTi4kcRSL2EG3uY3dgqzpU7RYLobTAsa
+	 0w816ZChwoC4jhf+L9zopmNqmMlGbAdPx5PF5piIP8Rht5/ttd4K7LvkGrWQ2NQAH/
+	 vue4E4LuZlAxTtarMWHLynITp0zynt+pXwb3AgE8V9urrOH/XF1epn3NqObpHJ857L
+	 JEpLK2O1CeWKQ==
+Date: Thu, 30 May 2024 12:36:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: bhelgaas@google.com, Jani Saarinen <jani.saarinen@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Alison Schofield <alison.schofield@intel.com>,
+	Imre Deak <imre.deak@intel.com>, Xinghui Li <korantli@tencent.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH] PCI: Make PCI cfg_access_lock lockdep key a singleton
+Message-ID: <20240530173659.GA553323@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171693842964.1298616.14265420982007939967.stgit@dwillia2-xfh.jf.intel.com>
 
-On Thu, 30 May 2024 14:59:38 +0800
-Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
+[+cc Alison, Imre, et al.  IIUC this patch didn't help the similar
+issue reported by Imre at
+https://lore.kernel.org/r/ZlXP5oTnSApiDbD1@ideak-desk.fi.intel.com,
+but just FYI]
 
-> =E5=9C=A8 2024/5/29 =E6=98=9F=E6=9C=9F=E4=B8=89 =E4=B8=8B=E5=8D=88 11:25,=
- Gregory Price =E5=86=99=E9=81=93:
-> > On Wed, May 22, 2024 at 02:17:38PM +0800, Dongsheng Yang wrote: =20
-> >>
-> >>
-> >> =E5=9C=A8 2024/5/22 =E6=98=9F=E6=9C=9F=E4=B8=89 =E4=B8=8A=E5=8D=88 2:4=
-1, Dan Williams =E5=86=99=E9=81=93: =20
-> >>> Dongsheng Yang wrote:
-> >>>
-> >>> What guarantees this property? How does the reader know that its local
-> >>> cache invalidation is sufficient for reading data that has only reach=
-ed
-> >>> global visibility on the remote peer? As far as I can see, there is
-> >>> nothing that guarantees that local global visibility translates to
-> >>> remote visibility. In fact, the GPF feature is counter-evidence of the
-> >>> fact that writes can be pending in buffers that are only flushed on a
-> >>> GPF event. =20
-> >>
-> >> Sounds correct. From what I learned from GPF, ADR, and eADR, there wou=
-ld
-> >> still be data in WPQ even though we perform a CPU cache line flush in =
-the
-> >> OS.
-> >>
-> >> This means we don't have a explicit method to make data puncture all c=
-aches
-> >> and land in the media after writing. also it seems there isn't a expli=
-cit
-> >> method to invalidate all caches along the entire path.
-> >> =20
-> >>>
-> >>> I remain skeptical that a software managed inter-host cache-coherency
-> >>> scheme can be made reliable with current CXL defined mechanisms. =20
-> >>
-> >>
-> >> I got your point now, acorrding current CXL Spec, it seems software ma=
-naged
-> >> cache-coherency for inter-host shared memory is not working. Will the =
-next
-> >> version of CXL spec consider it? =20
-> >>> =20
-> >=20
-> > Sorry for missing the conversation, have been out of office for a bit.
-> >=20
-> > It's not just a CXL spec issue, though that is part of it. I think the
-> > CXL spec would have to expose some form of puncturing flush, and this
-> > makes the assumption that such a flush doesn't cause some kind of
-> > race/deadlock issue.  Certainly this needs to be discussed.
-> >=20
-> > However, consider that the upstream processor actually has to generate
-> > this flush.  This means adding the flush to existing coherence protocol=
-s,
-> > or at the very least a new instruction to generate the flush explicitly.
-> > The latter seems more likely than the former.
-> >=20
-> > This flush would need to ensure the data is forced out of the local WPQ
-> > AND all WPQs south of the PCIE complex - because what you really want to
-> > know is that the data has actually made it back to a place where remote
-> > viewers are capable of percieving the change.
-> >=20
-> > So this means:
-> > 1) Spec revision with puncturing flush
-> > 2) Buy-in from CPU vendors to generate such a flush
-> > 3) A new instruction added to the architecture.
-> >=20
-> > Call me in a decade or so.
-> >=20
-> >=20
-> > But really, I think it likely we see hardware-coherence well before thi=
-s.
-> > For this reason, I have become skeptical of all but a few memory sharing
-> > use cases that depend on software-controlled cache-coherency. =20
->=20
-> Hi Gregory,
->=20
-> 	From my understanding, we actually has the same idea here. What I am=20
-> saying is that we need SPEC to consider this issue, meaning we need to=20
-> describe how the entire software-coherency mechanism operates, which=20
-> includes the necessary hardware support. Additionally, I agree that if=20
-> software-coherency also requires hardware support, it seems that=20
-> hardware-coherency is the better path.
-> >=20
-> > There are some (FAMFS, for example). The coherence state of these
-> > systems tend to be less volatile (e.g. mappings are read-only), or
-> > they have inherent design limitations (cacheline-sized message passing
-> > via write-ahead logging only). =20
->=20
-> Can you explain more about this? I understand that if the reader in the=20
-> writer-reader model is using a readonly mapping, the interaction will be=
-=20
-> much simpler. However, after the writer writes data, if we don't have a=20
-> mechanism to flush and invalidate puncturing all caches, how can the=20
-> readonly reader access the new data?
+On Tue, May 28, 2024 at 04:22:59PM -0700, Dan Williams wrote:
+> The new lockdep annotation for cfg_access_lock naively registered a new
+> key per device. This is overkill and leads to warnings on hash
+> collisions at dynamic registration time:
+> 
+>  WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:1226 lockdep_register_key+0xb0/0x240
+>  RIP: 0010:lockdep_register_key+0xb0/0x240
+>  [..]
+>  Call Trace:
+>   <TASK>
+>   ? __warn+0x8c/0x190
+>   ? lockdep_register_key+0xb0/0x240
+>   ? report_bug+0x1f8/0x200
+>   ? handle_bug+0x3c/0x70
+>   ? exc_invalid_op+0x18/0x70
+>   ? asm_exc_invalid_op+0x1a/0x20
+>   ? lockdep_register_key+0xb0/0x240
+>   pci_device_add+0x14b/0x560
+>   ? pci_setup_device+0x42e/0x6a0
+>   pci_scan_single_device+0xa7/0xd0
+>   p2sb_scan_and_cache_devfn+0xc/0x90
+>   p2sb_fs_init+0x15f/0x170
+> 
+> Switch to a shared static key for all instances.
+> 
+> Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
+> Reported-by: Jani Saarinen <jani.saarinen@intel.com>
+> Closes: https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_14834/bat-apl-1/boot0.txt
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-There is a mechanism for doing coarse grained flushing that is known to
-work on some architectures. Look at cpu_cache_invalidate_memregion().
-On intel/x86 it's wbinvd_on_all_cpu_cpus()
-on arm64 it's a PSCI firmware call CLEAN_INV_MEMREGION (there is a
-public alpha specification for PSCI 1.3 with that defined but we
-don't yet have kernel code.)
-
-These are very big hammers and so unsuited for anything fine grained.
-In the extreme end of possible implementations they briefly stop all
-CPUs and clean and invalidate all caches of all types.  So not suited
-to anything fine grained, but may be acceptable for a rare setup event,
-particularly if the main job of the writing host is to fill that memory
-for lots of other hosts to use.
-
-At least the ARM one takes a range so allows for a less painful
-implementation.  I'm assuming we'll see new architecture over time
-but this is a different (and potentially easier) problem space
-to what you need.
-
-Jonathan
+Applied with Alison's reviewed-by and Jani's tested-by to for-linus
+for v6.10, thanks!
 
 
 
-> > ~Gregory
-> >  =20
-
+> ---
+> Hi Bjorn,
+> 
+> One more fallout from the cfg_access_lock lockdep annotation. This one
+> still wants a Tested-by from Jani before merging, but wanted to make you
+> aware of it in case similar reports make their way to you in the
+> meantime.
+> 
+>  drivers/pci/probe.c |    7 ++++---
+>  include/linux/pci.h |    1 -
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 8e696e547565..15168881ec94 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2533,6 +2533,8 @@ static void pci_set_msi_domain(struct pci_dev *dev)
+>  	dev_set_msi_domain(&dev->dev, d);
+>  }
+>  
+> +static struct lock_class_key cfg_access_key;
+> +
+>  void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  {
+>  	int ret;
+> @@ -2546,9 +2548,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	dev->dev.dma_mask = &dev->dma_mask;
+>  	dev->dev.dma_parms = &dev->dma_parms;
+>  	dev->dev.coherent_dma_mask = 0xffffffffull;
+> -	lockdep_register_key(&dev->cfg_access_key);
+> -	lockdep_init_map(&dev->cfg_access_lock, dev_name(&dev->dev),
+> -			 &dev->cfg_access_key, 0);
+> +	lockdep_init_map(&dev->cfg_access_lock, "&dev->cfg_access_lock",
+> +			 &cfg_access_key, 0);
+>  
+>  	dma_set_max_seg_size(&dev->dev, 65536);
+>  	dma_set_seg_boundary(&dev->dev, 0xffffffff);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index fb004fd4e889..5bece7fd11f8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -413,7 +413,6 @@ struct pci_dev {
+>  	struct resource driver_exclusive_resource;	 /* driver exclusive resource ranges */
+>  
+>  	bool		match_driver;		/* Skip attaching driver */
+> -	struct lock_class_key cfg_access_key;
+>  	struct lockdep_map cfg_access_lock;
+>  
+>  	unsigned int	transparent:1;		/* Subtractive decode bridge */
+> 
