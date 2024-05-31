@@ -1,62 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD00256D;
-	Fri, 31 May 2024 02:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1F33F8FB
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 06:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717123759; cv=none; b=uVIr0cl0Q8SMJJc5AhF19j9hUMZeWjyQe72NPjE2UIWaoOswZufFL2xTEvZz91kEQHCqHTfd771q26OCFghw7oMKd8iy8jbeJNW8EiNOChnBIWhr3cVX0mBE1tJfguKkeWx3K7inz8M6Zy3+l/sBepn0Ef+/HSs8rnql4KAMQmA=
+	t=1717136033; cv=none; b=byulhVc2Yk5yN9trTxOnzclb3ZQlb4A52C5BAMAZuQo9i5aFGcYlbmKx7efq1AXjh68Tk5zEfRaSH6SGy5TRJC+JgOywnoIBZhJs3J57jAfokMERKCbDheRcLAxRNUUEc697XavEawwvvJorCSXxlgPsnOAaWtNAWlibUFR7bT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717123759; c=relaxed/simple;
-	bh=yJZvW2qrzhlTHgN4Czd0hgGPxDlbm44gS6ttGvjiGKk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aCuGkKajFznyAIEzyfGGVPws4jpoJGaYRw3kw8h1xd4RTnv8OxAg5KTe10gtqB0UIWwuP+T+qqkSvcN/rVHJLUECq3ot8MKgjwyHUMJP0dH9ShuKCuI4xxLVCaetYG49eHbWInn5//Ogm2kFOnlYjBUzGScOpcj8Th9VvvWNzsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/ehFgOT; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717136033; c=relaxed/simple;
+	bh=zOrG5nL7sj8c2PAFPO5ajZsnXzp1fBu9mcV/Tl5hyq0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZoASk3U79qfycQ5+4OPRF2pKJgBehgz8lw6LgKmrk1ygitwYoBtRj5bqaO7qsxxvbA03lrq6TEL7dw95yFTD+Na3CI+7UHl00pSQJ5lsFfmR6EiSa+iZKFd+V54v7d997AKxaBSPPq2IlFMoNFxlm9CTUMnhyXSGVXElK8VJ9Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=CXQKd5sq; arc=none smtp.client-ip=68.232.139.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/ehFgOT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717123758; x=1748659758;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="CXQKd5sq"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1717136031; x=1748672031;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=yJZvW2qrzhlTHgN4Czd0hgGPxDlbm44gS6ttGvjiGKk=;
-  b=S/ehFgOTsyItp43SDYS+E6bszcsz9EO5Qty/xM1vzFGeeSoU7loY59Pe
-   2MgaBVJaNTCE76eb5fiDkOuNyv5Cvu0Es69Cvz7aTmCuB2i3hBXqOrwH0
-   SaeXMbciLZhTWdGgniNfn6w0VaT3w4Y7rB/+dk9yx2qhuuY41uUicHyQB
-   W3Czn6JsTCybwN9nn5R04GsCzeXANBmrtMYwhJH2z2JM/Wc+H2oLWKkf0
-   wOADV4hxqnrNWOFvhBzAsTm9s4rKHIzw7U6HbzBbMkiRw/+uqFFRyG/nN
-   +LnWWaXVO+alHLTszp1rXU26hsGjOQ1kVxgUblPtYDS+KTIq81oPdQorM
-   g==;
-X-CSE-ConnectionGUID: OnfA+sk/Q26nP7JAv9UObA==
-X-CSE-MsgGUID: KLhSyHQKQW+OlPoyXGrnmw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17482896"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="17482896"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 19:49:17 -0700
-X-CSE-ConnectionGUID: PVooy1kcTReRDNmd4m/v9w==
-X-CSE-MsgGUID: FeZz8sAaTrq98CUvqOpLtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="40585981"
-Received: from unknown (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.255.30.35])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 19:49:14 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huang Ying <ying.huang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Bharata B Rao <bharata@amd.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH] cxl/region: Support to calculate memory tier abstract distance
-Date: Fri, 31 May 2024 10:48:52 +0800
-Message-Id: <20240531024852.282767-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
+  bh=zOrG5nL7sj8c2PAFPO5ajZsnXzp1fBu9mcV/Tl5hyq0=;
+  b=CXQKd5sqVMB+reVsl2qjpAi0Z2tDstCyWkhgmXrSB72ZLxjcr3SqKZuu
+   8TPu6aIYMj5SmLLQn45loXdgBy8VnwDX4oclv7moir8ZsYiHTXBS1iMi1
+   YELJK2s60m3x0dq+bVZwgk6iwDF8EXxcsJliZM+exla+wp5RE4q6nvJTn
+   QOT5S+BHp7AakfKn7N1TK2oyz9N5gU2Dvw4bHnvTRZ7fkhoMyFRwTzJ3t
+   +AnpybZexgMiJJojYxitVBDVFg0vqTfAKmCmeFOc1AMCmCibp4nXuF0Qq
+   BykLLw5gUZgQSe+wPFYwDQ9ZOoNGhpRKkV2BEYbR3vFrZkjvtdaJwIu9L
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="162847267"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712588400"; 
+   d="scan'208";a="162847267"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 15:13:41 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id E0CB7D8063
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 15:13:38 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id D872BD7489
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 15:13:37 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 75F6F20094ADD
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 15:13:37 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id A2F1F1A000A;
+	Fri, 31 May 2024 14:13:36 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: qemu-devel@nongnu.org
+Cc: fan.ni@samsung.com,
+	jonathan.cameron@huawei.com,
+	linux-cxl@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [PATCH] cxl: Get rid of unused cfmw_list
+Date: Fri, 31 May 2024 14:13:17 +0800
+Message-Id: <20240531061317.865673-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,124 +62,50 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28420.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28420.005
+X-TMASE-Result: 10-7.221300-10.000000
+X-TMASE-MatchedRID: HyBr+9HIEaxyeiFPOFIChC0UvD/exuSeT5ysQDj6eFmOVdQAiMmbZ87F
+	l0igGfZUSUQWNWP9oCy12HagvbwDji/7QU2czuUNA9lly13c/gE/Ff5CERZ4s3wo4j2I0uMKo8W
+	MkQWv6iV3LAytsQR4e1cppCzPq+1UsjvNV98mpPONH2f4xCl6E7zJzOMWskDwkj0HIfV2979fLF
+	KMGcObee/1WebgI1lXy3hZ3qDjsrMOYyK1rEtv/gMwxaUMm86ivxp/Q03XTWw=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-To place memory nodes backed by CXL regions in the appropriate memory
-tiers.  So that, pages can be promoted/demoted with the existing
-memory tiering mechanism.
+There is no user for this member. All '-M cxl-fmw.N' options have
+been parsed and saved to CXLState.fixed_windows.
 
-The abstract distance is calculated based on the memory access latency
-and bandwidth of CXL regions.  Which in turn comes from the HMAT
-and CDAT, etc.
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Bharata B Rao <bharata@amd.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- drivers/cxl/core/region.c | 40 +++++++++++++++++++++++++++++++++++----
- drivers/cxl/cxl.h         |  1 +
- 2 files changed, 37 insertions(+), 4 deletions(-)
+ hw/cxl/cxl-host.c    | 1 -
+ include/hw/cxl/cxl.h | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 00a9f0eef8dd..1f8f71a034ae 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -9,6 +9,7 @@
- #include <linux/uuid.h>
- #include <linux/sort.h>
- #include <linux/idr.h>
-+#include <linux/memory-tiers.h>
- #include <cxlmem.h>
- #include <cxl.h>
- #include "core.h"
-@@ -2304,14 +2305,20 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
- 	return true;
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index c5f5fcfd64d0..926d3d3da705 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -335,7 +335,6 @@ static void machine_set_cfmw(Object *obj, Visitor *v, const char *name,
+     for (it = cfmw_list; it; it = it->next) {
+         cxl_fixed_memory_window_config(state, it->value, errp);
+     }
+-    state->cfmw_list = cfmw_list;
  }
  
-+static int cxl_region_nid(struct cxl_region *cxlr)
-+{
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_endpoint_decoder *cxled = p->targets[0];
-+	struct cxl_decoder *cxld = &cxled->cxld;
-+
-+	return phys_to_target_node(cxld->hpa_range.start);
-+}
-+
- static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
- 					  unsigned long action, void *arg)
- {
- 	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
- 					       memory_notifier);
--	struct cxl_region_params *p = &cxlr->params;
--	struct cxl_endpoint_decoder *cxled = p->targets[0];
--	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct memory_notify *mnb = arg;
- 	int nid = mnb->status_change_nid;
- 	int region_nid;
-@@ -2319,7 +2326,7 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
- 	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
- 		return NOTIFY_DONE;
+ void cxl_machine_init(Object *obj, CXLState *state)
+diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+index 75e47b686441..e3ecbef03872 100644
+--- a/include/hw/cxl/cxl.h
++++ b/include/hw/cxl/cxl.h
+@@ -43,7 +43,6 @@ typedef struct CXLState {
+     MemoryRegion host_mr;
+     unsigned int next_mr_idx;
+     GList *fixed_windows;
+-    CXLFixedMemoryWindowOptionsList *cfmw_list;
+ } CXLState;
  
--	region_nid = phys_to_target_node(cxld->hpa_range.start);
-+	region_nid = cxl_region_nid(cxlr);
- 	if (nid != region_nid)
- 		return NOTIFY_DONE;
- 
-@@ -2329,6 +2336,27 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+static int cxl_region_calculate_adistance(struct notifier_block *nb,
-+					  unsigned long nid, void *data)
-+{
-+	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-+					       adist_notifier);
-+	int region_nid;
-+	struct access_coordinate *perf;
-+	int *adist = data;
-+
-+	region_nid = cxl_region_nid(cxlr);
-+	if (nid != region_nid)
-+		return NOTIFY_OK;
-+
-+	perf = &cxlr->coord[ACCESS_COORDINATE_CPU];
-+
-+	if (mt_perf_to_adistance(perf, adist))
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_STOP;
-+}
-+
- /**
-  * devm_cxl_add_region - Adds a region to a decoder
-  * @cxlrd: root decoder
-@@ -2380,6 +2408,10 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
- 	register_memory_notifier(&cxlr->memory_notifier);
- 
-+	cxlr->adist_notifier.notifier_call = cxl_region_calculate_adistance;
-+	cxlr->adist_notifier.priority = 100;
-+	register_mt_adistance_algorithm(&cxlr->adist_notifier);
-+
- 	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
- 	if (rc)
- 		return ERR_PTR(rc);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 603c0120cff8..6891f87f8ef7 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -534,6 +534,7 @@ struct cxl_region {
- 	struct cxl_region_params params;
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	struct notifier_block memory_notifier;
-+	struct notifier_block adist_notifier;
- };
- 
- struct cxl_nvdimm_bridge {
+ struct CXLHost {
 -- 
-2.39.2
+2.29.2
 
