@@ -1,215 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284DB81AC8
-	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 07:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675EF54673
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 07:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717138981; cv=none; b=O+o19KP1hdoYJDBRpEnw8wJRt85h+ASAiFVwyYAIp5tvDP8wojX/sE/6tS2Ih9+fMgHhKJBnhIz30gz3AvFz/Sd7lnCeN+QtAxObmT4WdLjyRI2hLKVtHRDaoZKh2ZEkwfX+IN8A+u6Ww0p3METwfRosM7crT80Ynkf/9vhasW8=
+	t=1717141784; cv=none; b=H+2kLoJowOAr1jwzDODZXnyPHgjnFXjO0NY15ribt4NV73UbYtl8m6bfV1CSmoS5MJeVGkujwKXovRa4NRqth0XgqvyVB4hbma3UrvqfLMg7PW+OlSPXibIHHvS367Agdkg2j6YGAZ+XWl98x0ltv5P/1lbX8XboMgv4dE4skF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717138981; c=relaxed/simple;
-	bh=03usN0ICS4NpHsCYxcbn2gLihsVkCekYNUDmy2lKHxU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WOFNYhu2jbKxjeYQiRr285QyuevdqWoofqK+5A3KX8Y5aaDEtqGnvaeBf39PH981M64Pdl/SDrmtQzm5SXG3+vaPFGrMTmY0cvEYqaFegU+xp22fQXVzlVlJix+JFccFZwXQ7sdkuO2suNVYfdVjHFQ5Fmh+SP+V6V3TY9rKHGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxE9bYbv; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717141784; c=relaxed/simple;
+	bh=J8XqW3ukXxW47+D8NWb4HuSXlORbvdWOvk68vyDMp7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FZJu1vsifxmGb/D9obuAn2DAKt623bJutwH8Bw+LsQAS4Hvz//RSkK7dQRCAEGS7gwpfCyDdI5ms3n9W1NCRTBT5PwLUmjPDuyGayND2MQhg4VwLOR8Y9jCwlK8Sau+I6YZj0uowB4t4ztCdsNjCB8F+oDw04a/qvuQB8lxuSFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=buMju75B; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxE9bYbv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717138979; x=1748674979;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=03usN0ICS4NpHsCYxcbn2gLihsVkCekYNUDmy2lKHxU=;
-  b=YxE9bYbvgGOSFGxk5bUWWTwQDDAykG834dbLJVI+EkazvLg4XK0oU5iQ
-   holctzXym3beNOg23ccfaAuE6liG+V40sI92lC5naOsfuOOvQ3D8zTG4b
-   DBDeDbpSg9ONS926GDp4MRLxx1IrEI7gDHoqiFPQLSsT1QUea+sqWxMAw
-   Sdfjv7mldfLedpfAoSPS2EUqvqzOUEQcNsT32iRECLyHAD2t+761Eg6Yc
-   5+b7gmlJSoz7oQHnuNobzuxZBEdDefVxsI2xpoOCleYgimPN3vhe+PxW6
-   8ZkaF6Rz1srBPB8GxW+tJZBjjdZ8QUQqkTcvHnEN/1XCM4CpgrrtVxpg4
-   g==;
-X-CSE-ConnectionGUID: JrYizc01RbWJ9KNRXiI9bw==
-X-CSE-MsgGUID: J5ry/ZrtSgeQPmV6WUbkbA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13836192"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="13836192"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 00:02:56 -0700
-X-CSE-ConnectionGUID: 3YuzdLJ4R5qIkREwl06CKw==
-X-CSE-MsgGUID: xiq9QJ56SOO08QQbmPaZpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36147506"
-Received: from yigan-mobl.ccr.corp.intel.com (HELO ming-ws..) ([10.254.213.6])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 00:02:54 -0700
-From: Li Ming <ming4.li@intel.com>
-To: linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: Li Ming <ming4.li@intel.com>
-Subject: [PATCH 1/1] cxl/mem: Fix no cxl_nvd during pmem region auto-assembing
-Date: Fri, 31 May 2024 15:02:29 +0800
-Message-Id: <20240531070229.1596811-1-ming4.li@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="buMju75B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717141781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E5KOtTrSlSwhhS5Nk0jrn7V64PVkm6byBCg4HjlZYvg=;
+	b=buMju75Bl06Uxz1cejRBcVow7xfILlBalwrIdb+jGabWQgFsycaFgClUOpxpNslQp1CXp7
+	LHYVUfy2TvooMLx27abxBZrUiwajWCd+FMFwBjLJFeAvPyY/4+e6yI7TycT72gdeC3PZBi
+	6WcA18OyRVqh7l87vMrNvM9j3PweRqc=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-175-MHuVMCT7PqOaJ-5T7OBVKA-1; Fri, 31 May 2024 03:49:37 -0400
+X-MC-Unique: MHuVMCT7PqOaJ-5T7OBVKA-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2e95a1eb00eso15267461fa.0
+        for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 00:49:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717141776; x=1717746576;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=E5KOtTrSlSwhhS5Nk0jrn7V64PVkm6byBCg4HjlZYvg=;
+        b=r/bA1wPf6TYOycTGmeeCUYCH3PqE1AUiY9RMvT39lK9btqp8/j3fHY9u7kdR5s6/KQ
+         dOwn92FwfQ6ok2oTMJf6/pTwqZSHxrwEE64kdZrJJF4ps7xvgDJN1uAPqbKpx0iwE1do
+         hLRpxEZwYEc+mbCMeGCtRiTM+SQbPWpql1EKClJno19rUsWxUqJwGIQqUdLxj8fqjNlz
+         POVc86sAATGO+FjQ18vhG5KR2siHALCUy4xFB6l2KGsCSP5/NP1jAC1KaosP6qqBEgT9
+         alQM3Iv11as4plv1dfVWIZ+EFm9uUa+GHR+QDX0Dot7XGSac+GW96wFgXP5qMnheLOco
+         Qnyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWg6nfw8PcsfgyXI4sIaa5TIb7jSlY/rAE6r1mYsPrCuORhaz5w5QdgK7MW+qgw4hpvF7vx0QUkRuXNGfmaD1GAtfStj5L8dYjG
+X-Gm-Message-State: AOJu0Yz8eq5cTspQYIv0KdqcWv+oIEfQgwWJr1icsRShJw9jaK9vaWLV
+	h9qiEGTbKUUv1uprGlQVX57VN3m8QMy7U7lBICA9uvnNCBsQq7y5+Uo6GYKx1vIlCmDTKV1dTdu
+	3JQipRvPIyVZqllfheQw1CwjxqjaldgsBlmzE1XkZTlnuJUysWspcdw8tOg==
+X-Received: by 2002:a2e:874d:0:b0:2e9:8b00:73f0 with SMTP id 38308e7fff4ca-2ea95167021mr8783381fa.28.1717141776336;
+        Fri, 31 May 2024 00:49:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHia723V7h/yOiPB53bvyk5ZO6GR7mJAqyPrMFmdGpYQ5uIoNIonWbpxC8HY0JmyVWMpnKQVA==
+X-Received: by 2002:a2e:874d:0:b0:2e9:8b00:73f0 with SMTP id 38308e7fff4ca-2ea95167021mr8782851fa.28.1717141775745;
+        Fri, 31 May 2024 00:49:35 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c717:a000:d4df:4b8f:37d4:59e4? (p200300cbc717a000d4df4b8f37d459e4.dip0.t-ipconnect.de. [2003:cb:c717:a000:d4df:4b8f:37d4:59e4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b838b55sm16831465e9.5.2024.05.31.00.49.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 00:49:35 -0700 (PDT)
+Message-ID: <b8654dcd-68e1-4823-9588-cfa401104741@redhat.com>
+Date: Fri, 31 May 2024 09:49:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 8/8] HACK: mm: memory_hotplug: Drop
+ memblock_phys_free() call in try_remove_memory()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>,
+ Jia He <justin.he@arm.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ linuxarm@huawei.com, catalin.marinas@arm.com, Anshuman.Khandual@arm.com,
+ Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+ Oscar Salvador <osalvador@suse.de>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, James Morse <james.morse@arm.com>
+References: <20240529171236.32002-1-Jonathan.Cameron@huawei.com>
+ <20240529171236.32002-9-Jonathan.Cameron@huawei.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240529171236.32002-9-Jonathan.Cameron@huawei.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When CXL subsystem is auto-assembling a pmem region during cxl
-endpoint port probing, always output below calltrace.
+On 29.05.24 19:12, Jonathan Cameron wrote:
+> I'm not sure what this is balancing, but it if is necessary then the reserved
+> memblock approach can't be used to stash NUMA node assignments as after the
+> first add / remove cycle the entry is dropped so not available if memory is
+> re-added at the same HPA.
+> 
+> This patch is here to hopefully spur comments on what this is there for!
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   mm/memory_hotplug.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 431b1f6753c0..3d8dd4749dfc 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -2284,7 +2284,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>   	}
+>   
+>   	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> -		memblock_phys_free(start, size);
+> +		//		memblock_phys_free(start, size);
+>   		memblock_remove(start, size);
+>   	}
 
- BUG: kernel NULL pointer dereference, address: 0000000000000078
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- RIP: 0010:cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
- Call Trace:
-  <TASK>
-  ? __die+0x24/0x70
-  ? page_fault_oops+0x82/0x160
-  ? do_user_addr_fault+0x65/0x6b0
-  ? exc_page_fault+0x7d/0x170
-  ? asm_exc_page_fault+0x26/0x30
-  ? cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
-  ? cxl_pmem_region_probe+0x1ac/0x360 [cxl_pmem]
-  cxl_bus_probe+0x1b/0x60 [cxl_core]
-  really_probe+0x173/0x410
-  ? __pfx___device_attach_driver+0x10/0x10
-  __driver_probe_device+0x80/0x170
-  driver_probe_device+0x1e/0x90
-  __device_attach_driver+0x90/0x120
-  bus_for_each_drv+0x84/0xe0
-  __device_attach+0xbc/0x1f0
-  bus_probe_device+0x90/0xa0
-  device_add+0x51c/0x710
-  devm_cxl_add_pmem_region+0x1b5/0x380 [cxl_core]
-  cxl_bus_probe+0x1b/0x60 [cxl_core]
+memblock_phys_free() works on memblock.reserved, memblock_remove() works 
+  on memblock.memory.
 
-Because the cxl_nvd of the memdev is necessary during pmem region
-probing, but the cxl_nvd can be registered only after endpoint port
-probing done, that is a collision dependency, so adjust the sequence
-between cxl_nvd registration and endpoint port registration to guarantee
-there is a cxl_nvd in memdev during the pmem region auto-assembling.
+If you take a look at the doc at the top of memblock.c:
 
-Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
- drivers/cxl/core/pmem.c   | 15 ++++++++++-----
- drivers/cxl/core/region.c |  2 +-
- drivers/cxl/cxl.h         |  4 ++--
- drivers/cxl/mem.c         | 17 +++++++++--------
- 4 files changed, 22 insertions(+), 16 deletions(-)
+memblock.memory: physical memory available to the system
+memblock.reserved: regions that were allocated [during boot]
 
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index e69625a8d6a1..31b398c13be9 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -62,10 +62,14 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
- 	return is_cxl_nvdimm_bridge(dev);
- }
- 
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd)
-+/**
-+ * cxl_nvdimm_bridge() - find a bridge device relative to a port
-+ * @port: any descendant port of an nvdimm-bridge associated
-+ *        root-cxl-port
-+ */
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port)
- {
--	struct cxl_root *cxl_root __free(put_cxl_root) =
--		find_cxl_root(cxlmd->endpoint);
-+	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
- 	struct device *dev;
- 
- 	if (!cxl_root)
-@@ -242,18 +246,19 @@ static void cxlmd_release_nvdimm(void *_cxlmd)
- 
- /**
-  * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
-+ * @port: parent port for the (to be added) @cxlmd endpoint port
-  * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
-  *
-  * Return: 0 on success negative error code on failure.
-  */
--int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
-+int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev *cxlmd)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct cxl_nvdimm *cxl_nvd;
- 	struct device *dev;
- 	int rc;
- 
--	cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-+	cxl_nvb = cxl_find_nvdimm_bridge(port);
- 	if (!cxl_nvb)
- 		return -ENODEV;
- 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3c2b6144be23..f0cafc7ffb45 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2847,7 +2847,7 @@ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 		 * bridge for one device is the same for all.
- 		 */
- 		if (i == 0) {
--			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-+			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd->endpoint);
- 			if (!cxl_nvb)
- 				return -ENODEV;
- 			cxlr->cxl_nvb = cxl_nvb;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 603c0120cff8..e8fca6c6952b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -855,8 +855,8 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm_bridge(struct device *dev);
--int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd);
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd);
-+int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev *cxlmd);
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
- 
- #ifdef CONFIG_CXL_REGION
- bool is_cxl_pmem_region(struct device *dev);
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 0c79d9ce877c..2f1b49bfe162 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -152,6 +152,15 @@ static int cxl_mem_probe(struct device *dev)
- 		return -ENXIO;
- 	}
- 
-+	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-+		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
-+		if (rc) {
-+			if (rc == -ENODEV)
-+				dev_info(dev, "PMEM disabled by platform\n");
-+			return rc;
-+		}
-+	}
-+
- 	if (dport->rch)
- 		endpoint_parent = parent_port->uport_dev;
- 	else
-@@ -174,14 +183,6 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
--		rc = devm_cxl_add_nvdimm(cxlmd);
--		if (rc == -ENODEV)
--			dev_info(dev, "PMEM disabled by platform\n");
--		else
--			return rc;
--	}
--
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
- 	 * there is no spec defined way to determine whether this device
+
+memblock.memory is supposed to be a superset of memblock.reserved. Your 
+"hack" here indicates that you somehow would be relying on the opposite 
+being true, which indicates that you are doing the wrong thing.
+
+
+memblock_remove() indeed balances against memblock_add_node() for 
+hotplugged memory [add_memory_resource()]. There seem to a case where we 
+would succeed in hotunplugging memory that was part of "memblock.reserved".
+
+But how could that happen? I think the following way:
+
+Once the buddy is up and running, memory allocated during early boot is 
+not freed back to memblock, but usually we simply go via something like 
+free_reserved_page(), not memblock_free() [because the buddy took over]. 
+So one could end up unplugging memory that still resides in 
+memblock.reserved set.
+
+So with memblock_phys_free(), we are enforcing the invariant that 
+memblock.memory is a superset of memblock.reserved.
+
+Likely, arm64 should store that node assignment elsewhere from where it 
+can be queried. Or it should be using something like 
+CONFIG_HAVE_MEMBLOCK_PHYS_MAP for these static windows.
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
