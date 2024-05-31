@@ -1,41 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69A63BB48;
-	Fri, 31 May 2024 21:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F6E182B9
+	for <linux-cxl@vger.kernel.org>; Fri, 31 May 2024 21:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191113; cv=none; b=hHBf1gBAeCleLjiCwB5k7e+ByPSPky2wHJ3dYJKrgCd6Q7GA543AjjjhZT3IeGa1cOaRKW/XBSsAO6o6CFhZH+o5kVvTNFN4UwZTmhzNmBc3cbaM2hSrtpszVKshD0rS2VYDGhrcY7awKoldIOqTpYF+Qbgz+RJ4uQtd/GtqEww=
+	t=1717191171; cv=none; b=edatgOTUE7u58vNMrNNW6odq9WQCMHqaTe4UKelwyEMIe4hgiNbXuS5sMgeZIwvv8k2A33dKikLBxstAC8HoCgbQi9XXZ+1YSU7t5+BdkNktTULlKQozE3E/LVKV7IThksVh1ojLhCIrgOIaYFno2tlVLm0wGFddzNhMaD7rlKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717191113; c=relaxed/simple;
-	bh=Y4JTAxkif2RvujwXQwJRcx4QqiSA7BolRpswLRLTKW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fx6rb+BMcnONytEPYsZzCiqAM7s9yelIQORdfW1tt4/BFBxNQaOb2ZgIIzLBTAe7c7LBnmmfDCmnd2JW9oSRahBGXtu5ChJzb9MtagAnygUtXteJf9sGircTLWkPioyenjNuPLj2OgbjmdftSJOGthgcB0/Em+0T2NyNMZTQnrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ot5gG8qO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717191171; c=relaxed/simple;
+	bh=5aKDGy1JNMDswdl6LADEi9NugEGEbk0hhzFjhHONaF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XM/WW/IBVh3Ot4XWB3K7fGXZllbbvsQVX+4MABes/+17y5Ljvh2MWAP48lZUjywJl3SBtrgLC/E240v1fQtn28PYl1ug8HCZHJaKEf4Qq4csFLsg3Jhn+CVkM8PLbTu+nsa4ii5/IgA+T3t+XINWUKAkGlTofjodaXbMkZ9REj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MzZScKZP; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ot5gG8qO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97ECC116B1;
-	Fri, 31 May 2024 21:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717191113;
-	bh=Y4JTAxkif2RvujwXQwJRcx4QqiSA7BolRpswLRLTKW4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Ot5gG8qOznFqV+Wy6MvSDblsFEk4vz/QVhep41+MtoTjjvX5fOffhvQKH/aazQamD
-	 Gl/zsrGcLQ1/1bYhs9BDqjlLsl3JSlpcS9Z44Qt7fUewp1dhcZ/X1twLPYF2or8B/Z
-	 19k0jJgSzuHBQUE2+m3lndrze9NxFtvrr0HOY1PfV8eK0YJkptlGkhN3JQHg0UTJPb
-	 GEiQEiUPEqgimeoN16kEXMDuv1Qf3FVb2B4BxWofzgmWE2bh1J6GELDPwX62ERCDBa
-	 vClSooIUmB7svSQHgadYWalAZlbVIIeXOuqmW0tJ9FLFiD1fiXOK5rPM909/IO7Amp
-	 dZ/YB7xBKfNVA==
-Date: Fri, 31 May 2024 16:31:50 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: bhelgaas@google.com, Dave Jiang <dave.jiang@intel.com>,
-	Imre Deak <imre.deak@intel.com>,
-	Jani Saarinen <jani.saarinen@intel.com>, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] PCI: Revert / replace the cfg_access_lock lockdep
- mechanism
-Message-ID: <20240531213150.GA610983@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzZScKZP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717191169; x=1748727169;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5aKDGy1JNMDswdl6LADEi9NugEGEbk0hhzFjhHONaF4=;
+  b=MzZScKZPxkGqPIfxDKgRMUawNCkWQW/AF1jTeXYVr4RRFYTB5AWolElD
+   2hIgBXMna21qKLyZUEHq563KljxiBoY0jSrBZTFV1v9DJ7eTxb54+COI9
+   qUrsayJbG7LqwFAePpDRmHp9aOGfp0HAJJ9Q8XLHyXAYgr32ejunAjiw6
+   4eVUU8sIZH0gBMJRrBPi3OpABPdWDwMof9gZ9FBMo6N3x9IYNpnJxVqrq
+   wS1Mf5oYhqa/2cB0UFDGGF9Jz5B9GWCdCTkXJ1M0Shixe2d79FOFR+ATl
+   UAHAfkNgFtkFHZywshE5u3uEEOagqmtCz9GTrTaQrFKmUhs+KiBY1azup
+   A==;
+X-CSE-ConnectionGUID: jIxhae9ARCy22ZKfLuU4xA==
+X-CSE-MsgGUID: essR+cpTSUuVLaj6RVl+Xw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="36284768"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="36284768"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 14:32:44 -0700
+X-CSE-ConnectionGUID: Ysq8esKJTH69HQWxxdY5lg==
+X-CSE-MsgGUID: Elj+IaQrS8Sb9rY1Aa/EuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="36388990"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.21.184])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 14:32:43 -0700
+Date: Fri, 31 May 2024 14:32:41 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [ndctl PATCH v2 1/2] daxctl: Fix create-device parameters parsing
+Message-ID: <ZlpB+SYykp2gpAcS@aschofie-mobl2>
+References: <20240531062959.881772-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -44,49 +59,98 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <20240531062959.881772-1-lizhijian@fujitsu.com>
 
-On Thu, May 30, 2024 at 06:04:18PM -0700, Dan Williams wrote:
-> Changes since v1 [1]:
-> - split out the new warning into its own patch (Bjorn)
-> - include the provisional fix to the pci_reset_bus() path
+On Fri, May 31, 2024 at 02:29:58PM +0800, Li Zhijian wrote:
+> Previously, the extra parameters will be ignored quietly, which is a bit
+> weird and confusing.
+
+It's just wrong. There is code to catch extra params, but it's being
+skipped because of the index setting that you mention below. Suggest
+referencing the incorrect index is causing the extra params to be
+ignored.
+
+Suggest commit msg of:
+daxctl: Fail create-device if extra parameters are present
+
+
+> $ daxctl create-device region0
+> [
+>   {
+>     "chardev":"dax0.1",
+>     "size":268435456,
+>     "target_node":1,
+>     "align":2097152,
+>     "mode":"devdax"
+>   }
+> ]
+> created 1 device
 > 
-> [1]: http://lore.kernel.org/r/171709637423.1568751.11773767969980847536.stgit@dwillia2-xfh.jf.intel.com
+> where above user would want to specify '-r region0'.
 > 
-> Hi Bjorn,
+> Check extra parameters starting from index 0 to ensure no extra parameters
+> are specified for create-device.
 > 
-> Here is the targeted revert of the cfg_access_lock lockdep
-> infrastructure, but with the new proposed warning for catching "unlocked
-> pci_bridge_secondary_bus_reset()" events broken out into its own change.
-> I also included the proposed fix for at least one known case where
-> pci_bridge_secondary_bus_reset() is being called without
-> cfg_access_lock.
-> 
-> Given there may be more cases to unwind, and the fact that I am not
-> convinced patch3 will be problem free I would, as you suggested,
-> consider patch2 and patch3 v6.11 material. Patch1 is urgent for v6.10-rc
-> to put out these lockdep false positive reports.
-> 
+> Cc: Fan Ni <fan.ni@samsung.com>
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 > ---
+> V2:
+> Remove the external link[0] in case it get disappeared in the future.
+> [0] https://github.com/moking/moking.github.io/wiki/cxl%E2%80%90test%E2%80%90tool:-A-tool-to-ease-CXL-test-with-QEMU-setup%E2%80%90%E2%80%90Using-DCD-test-as-an-example#convert-dcd-memory-to-system-ram
+> ---
+>  daxctl/device.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Dan Williams (3):
->       PCI: Revert the cfg_access_lock lockdep mechanism
->       PCI: Warn on missing cfg_access_lock during secondary bus reset
->       PCI: Add missing bridge lock to pci_bus_lock()
+> diff --git a/daxctl/device.c b/daxctl/device.c
+> index 839134301409..ffabd6cf5707 100644
+> --- a/daxctl/device.c
+> +++ b/daxctl/device.c
+> @@ -363,7 +363,8 @@ static const char *parse_device_options(int argc, const char **argv,
+>  		NULL
+>  	};
+>  	unsigned long long units = 1;
+> -	int i, rc = 0;
+> +	int rc = 0;
+> +	int i = action == ACTION_CREATE ? 0 : 1;
+
+This confuses me because at this point I don't know what 'i' will be
+used for.  How about moving the setting near the usage below -
+
+>  	char *device = NULL;
+>  
+>  	argc = parse_options(argc, argv, options, u, 0);
+> @@ -402,7 +403,7 @@ static const char *parse_device_options(int argc, const char **argv,
+>  			action_string);
+>  		rc = -EINVAL;
+>  	}
+> -	for (i = 1; i < argc; i++) {
+> +	for (; i < argc; i++) {
+>  		fprintf(stderr, "unknown extra parameter \"%s\"\n", argv[i]);
+>  		rc = -EINVAL;
+>  	}
+
+Something like this:
+
+diff --git a/daxctl/device.c b/daxctl/device.c
+index 14d62148c58a..6c0758101c4a 100644
+--- a/daxctl/device.c
++++ b/daxctl/device.c
+@@ -402,6 +402,8 @@ static const char *parse_device_options(int argc, const char **argv,
+                        action_string);
+                rc = -EINVAL;
+        }
++       /* ACTION_CREATE expects 0 parameters */
++       i = action == ACTION_CREATE ? 0 : 1;
+        for (i = 1; i < argc; i++) {
+                fprintf(stderr, "unknown extra parameter \"%s\"\n", argv[i]);
+                rc = -EINVAL;
+
+
+
+
+
+
+> -- 
+> 2.29.2
 > 
 > 
->  drivers/pci/access.c    |    4 ----
->  drivers/pci/pci.c       |    8 +++++++-
->  drivers/pci/probe.c     |    3 ---
->  include/linux/lockdep.h |    5 -----
->  include/linux/pci.h     |    2 --
->  5 files changed, 7 insertions(+), 15 deletions(-)
-
-Thanks, I applied the first to pci/for-linus for v6.10, and the others
-to pci/reset for v6.11.
-
-There will be a trivial conflict in -next and the v6.11 merge window
-since pci/reset is based on v6.10-rc1 and contains some of the code
-removed by the first patch.
-
-Bjorn
