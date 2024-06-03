@@ -1,102 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DF6132804;
-	Mon,  3 Jun 2024 18:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F781CD38;
+	Mon,  3 Jun 2024 18:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717439393; cv=none; b=gzwqarSgrj82kLq0M690jWVR8HoZdsJOazPJwPkbRfpqk477ReXQi0KcENemIvmnVwwz2Dhd7qRMmuGi3IDHMBN46XDySpbXD5wGvSnFdM3xVphvtUMjOu2lFKjKDFduMobZ6v6T+7qMf7jqEvc8eVDJHbskntfk1n9bwSDjl7I=
+	t=1717440173; cv=none; b=jp5ccXD3ah5LAsXGt3DK/4EdF4RyiOpp8s77ouwq1PE0fWMfuE4XofexgLtbxKM5AzAirf8zeRXw1a0v3DC0xTAi/50HeamwiBXO0JhPdIDN1K/AUKz30QBtWWOdPgvy1xZrEobIAt+Oq16tfI1rNofs4fN8lpqtV68GPGyuQCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717439393; c=relaxed/simple;
-	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=reWDAwotov+xkrZ0wdw74Qk7bMJBlCg8vmnqM7p7YDPxO4z62vJqlGiLOtHTDjIN438CNIbTBLnm8C7n3PEBqssnYBwlQ5Pqil7K/3/YfsSIa9EZHU3FIGzAkVHeH93TjW++S8HPpMsdvKuVi1/bJMgbxnpQzVQubP4iK0ldZ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkZuV1eV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717440173; c=relaxed/simple;
+	bh=nW1jlc/m9thV6uF+r0tV6tWnOtpg0higsRLy7TBagJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cZE7Bxmn0A8c9uURNcHAJ1ouw30dCPKFQhXqbv6mdBop9qphr5F8gepTnwdJVrZuT1tf2Dort8/QCpszLXLCpRoco7ZgpFSN16MmB6KOtyeki5WDOucrZ+1M2JUdxdcDBRZsFm4X1gIuNV+Vuu0njDNhwFuPUWTixnKtBOrTDaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ca7B5HyH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkZuV1eV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECD0C2BD10;
-	Mon,  3 Jun 2024 18:29:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ca7B5HyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC6FFC2BD10;
+	Mon,  3 Jun 2024 18:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717439392;
-	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=OkZuV1eVes1bmZwBJfIiWe1TuYU2eCulaWhDYbIQ6vzMFyaOAD8QPRxLbAyVHL9wa
-	 aOkkSIhSzuJEqQBog1tDRdXeLpG0m/VC1G9Om4eLmdkgUqTbgYBXSXgzzzezGrrF0L
-	 c2htHuvtT5if3G7uXQRjvkAhGsd9+9OwRi6wvWjUhRMoTbUvhi610iohydI++HjNHe
-	 LpcZh2FSschBweqG/H5aKQNvQCEM8ZB9Ic02r9Fb67jykDi82yuxpgetbw8D0rIp/V
-	 GTNZSGBtL1yRhYXTQypgCTgnc+OoLITtnoyQnItFbQw6FK/mcgi80sDmAmWTx7rS0H
-	 9ignmGxUFxgZQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
-  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,
-  linux-pci@vger.kernel.org
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <20240603165342.GA685076@bhelgaas>
-Date: Mon, 03 Jun 2024 21:29:47 +0300
-In-Reply-To: <20240603165342.GA685076@bhelgaas> (Bjorn Helgaas's message of
-	"Mon, 3 Jun 2024 11:53:42 -0500")
-Message-ID: <87wmn5ubfo.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1717440172;
+	bh=nW1jlc/m9thV6uF+r0tV6tWnOtpg0higsRLy7TBagJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ca7B5HyH9cEPGGyTQxh10LS2F4upi3uZuqCrsvjzvbvUBqaHBJf3zgZQ3ve8h5zCx
+	 Yufh4XpPuC78dKOD/g/70o3il1Auw/7LM0gRmoUfq31dG9NLsjQnTp/ITfUYc9d/g+
+	 PvnenDfdBZxHm4w2/N2j3wTfTq+pABCE54hjTLbTJPk+Qha6b2u3E6rK5hU+d/7gk4
+	 20QdFDQJa27PXBGubHm+yvsbakYoAcHaU6uHQV3doq+VJF/7pO4yWqC2CHhWvXxhle
+	 slW9G/u+ConSfHoIjTT0Fw5Rec/VESNCEYsLCDZtBlYsUfurSnbMbwc2Y5LVxK34dA
+	 hbHpP/582vefQ==
+Date: Mon, 3 Jun 2024 11:42:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+ Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org, Paolo Abeni
+ <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan
+ <tariqt@nvidia.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron
+ Silverton <aron.silverton@oracle.com>, Dan Williams
+ <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>, Christoph
+ Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
+ <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-cxl@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH 0/8] Introduce fwctl subystem
+Message-ID: <20240603114250.5325279c@kernel.org>
+In-Reply-To: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+On Mon,  3 Jun 2024 12:53:16 -0300 Jason Gunthorpe wrote:
+> fwctl is a new subsystem intended to bring some common rules and order to
+> the growing pattern of exposing a secure FW interface directly to
+> userspace. Unlike existing places like RDMA/DRM/VFIO/uacce that are
+> exposing a device for datapath operations fwctl is focused on debugging,
+> configuration and provisioning of the device. It will not have the
+> necessary features like interrupt delivery to support a datapath.
 
-> On Sat, Jun 01, 2024 at 11:39:03AM +0300, Kalle Valo wrote:
->
->> Kalle Valo <kvalo@kernel.org> writes:
->> 
->> > Dan Williams <dan.j.williams@intel.com> writes:
->> >
->> >> Kalle Valo wrote:
->> >> [..]
->> >>> >> The proposed fix for that is here:
->> >>> >>
->> >>> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->> >>> >
->> >>> > I get "Not Found" from that link, is there a typo?
->> >>> 
->> >>> I found this fix from for-linus branch:
->> >>> 
->> >>> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
->> >>> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
->> >>> 
->> >>> But at least that doesn't fix my crash.
->> >>
->> >> Sorry for the broken link I mistakenly used a message-id from an
->> >> internal thread with the intel.com reporter. However, it is moot now
->> >> because the new direction is to revert the lockdep infrastructure:
->> >>
->> >> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
->> >>
->> >> (that link works...)
->> >
->> > Thanks, that links works :) I did a quick test with the three patches
->> > and I didn't see any crashes anymore. But to be confident I need to run
->> > overnight tests, I'll provide my Tested-by after that.
->> 
->> Ok, I'm now quite confident that the issues I saw are solved so:
->> 
->> Tested-by: Kalle Valo <kvalo@kernel.org>
->
-> Thanks for reporting the issue and testing the fix!  Can you please
-> respond with your Tested-by to the actual patch(es) you tested?
+If you have debug problems in your subsystem, put the APIs in your
+subsystem. Don't force your choices on all the subsystems your device
+interacts with:
 
-Not easily as I'm not subscribed to linux-pci list and I haven't
-researched how to import mbox files to my mailer :) So feel free to
-ignore my Tested-by tag in this case.
+Nacked-by: Jakub Kicinski <kuba@kernel.org>
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Somewhat related, I saw nVidia sells various interesting features in
+its DOCA stack. Is that Open Source?
