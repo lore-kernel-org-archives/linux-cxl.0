@@ -1,202 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8329925622;
-	Mon,  3 Jun 2024 17:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DF6132804;
+	Mon,  3 Jun 2024 18:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717435740; cv=none; b=OZldw19/ZAPmOerXulL5apL/YAWxcnxoyZ45ATX+JXhZNnmPpqT8mw6H6NmBputhS5MJceh9zTlENLQ/wAE14xnpU28kOinj00TS/UPt3/WwAej27lt5wirY8f74vqwRaOIw7h/tWwBe7jWPWepat1KWAqDnwuSlSyAkm4XskZM=
+	t=1717439393; cv=none; b=gzwqarSgrj82kLq0M690jWVR8HoZdsJOazPJwPkbRfpqk477ReXQi0KcENemIvmnVwwz2Dhd7qRMmuGi3IDHMBN46XDySpbXD5wGvSnFdM3xVphvtUMjOu2lFKjKDFduMobZ6v6T+7qMf7jqEvc8eVDJHbskntfk1n9bwSDjl7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717435740; c=relaxed/simple;
-	bh=+tB52iHPbmCXMHOeWlpQnCHMtEmXi/u7YpuslWqxPqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e5jFvk8FbLlLblVcgrECOFRVqzgUVW0EJpZMxo+Zxa0U3QzQIrrna/h/Bjz5PAskvMTqZkClc+dczPxjWvEKScJ9JXrTvCg7x7LoeJtaZIcyebBVSSCfQoyJ1NwcO6gLNnKcrvZ6U8gXQvSqWFWTHAOBWIfgsK4VKW9/Ymuq8rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1A151042;
-	Mon,  3 Jun 2024 10:29:21 -0700 (PDT)
-Received: from [10.1.196.28] (eglon.cambridge.arm.com [10.1.196.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B2A83F792;
-	Mon,  3 Jun 2024 10:28:56 -0700 (PDT)
-Message-ID: <3c7c9b07-78b2-4b8d-968e-0c395c8f22b3@arm.com>
-Date: Mon, 3 Jun 2024 18:28:51 +0100
+	s=arc-20240116; t=1717439393; c=relaxed/simple;
+	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=reWDAwotov+xkrZ0wdw74Qk7bMJBlCg8vmnqM7p7YDPxO4z62vJqlGiLOtHTDjIN438CNIbTBLnm8C7n3PEBqssnYBwlQ5Pqil7K/3/YfsSIa9EZHU3FIGzAkVHeH93TjW++S8HPpMsdvKuVi1/bJMgbxnpQzVQubP4iK0ldZ68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkZuV1eV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkZuV1eV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECD0C2BD10;
+	Mon,  3 Jun 2024 18:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717439392;
+	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=OkZuV1eVes1bmZwBJfIiWe1TuYU2eCulaWhDYbIQ6vzMFyaOAD8QPRxLbAyVHL9wa
+	 aOkkSIhSzuJEqQBog1tDRdXeLpG0m/VC1G9Om4eLmdkgUqTbgYBXSXgzzzezGrrF0L
+	 c2htHuvtT5if3G7uXQRjvkAhGsd9+9OwRi6wvWjUhRMoTbUvhi610iohydI++HjNHe
+	 LpcZh2FSschBweqG/H5aKQNvQCEM8ZB9Ic02r9Fb67jykDi82yuxpgetbw8D0rIp/V
+	 GTNZSGBtL1yRhYXTQypgCTgnc+OoLITtnoyQnItFbQw6FK/mcgi80sDmAmWTx7rS0H
+	 9ignmGxUFxgZQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
+  linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
+  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
+  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,
+  linux-pci@vger.kernel.org
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+References: <20240603165342.GA685076@bhelgaas>
+Date: Mon, 03 Jun 2024 21:29:47 +0300
+In-Reply-To: <20240603165342.GA685076@bhelgaas> (Bjorn Helgaas's message of
+	"Mon, 3 Jun 2024 11:53:42 -0500")
+Message-ID: <87wmn5ubfo.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-Content-Language: en-GB
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: Dongsheng Yang <dongsheng.yang@easystack.cn>,
- Gregory Price <gregory.price@memverge.com>, John Groves <John@groves.net>,
- axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- Mark Rutland <mark.rutland@arm.com>
-References: <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
- <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
- <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
- <ZldIzp0ncsRX5BZE@memverge.com>
- <5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
- <20240530143813.00006def@Huawei.com>
- <665a9402445ee_166872941d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240603134819.00001c5f@Huawei.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <20240603134819.00001c5f@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi guys,
+Bjorn Helgaas <helgaas@kernel.org> writes:
 
-On 03/06/2024 13:48, Jonathan Cameron wrote:
-> On Fri, 31 May 2024 20:22:42 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->> Jonathan Cameron wrote:
->>> On Thu, 30 May 2024 14:59:38 +0800
->>> Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
->>>> 在 2024/5/29 星期三 下午 11:25, Gregory Price 写道:  
->>>>> It's not just a CXL spec issue, though that is part of it. I think the
->>>>> CXL spec would have to expose some form of puncturing flush, and this
->>>>> makes the assumption that such a flush doesn't cause some kind of
->>>>> race/deadlock issue.  Certainly this needs to be discussed.
->>>>>
->>>>> However, consider that the upstream processor actually has to generate
->>>>> this flush.  This means adding the flush to existing coherence protocols,
->>>>> or at the very least a new instruction to generate the flush explicitly.
->>>>> The latter seems more likely than the former.
->>>>>
->>>>> This flush would need to ensure the data is forced out of the local WPQ
->>>>> AND all WPQs south of the PCIE complex - because what you really want to
->>>>> know is that the data has actually made it back to a place where remote
->>>>> viewers are capable of percieving the change.
->>>>>
->>>>> So this means:
->>>>> 1) Spec revision with puncturing flush
->>>>> 2) Buy-in from CPU vendors to generate such a flush
->>>>> 3) A new instruction added to the architecture.
->>>>>
->>>>> Call me in a decade or so.
->>>>>
->>>>>
->>>>> But really, I think it likely we see hardware-coherence well before this.
->>>>> For this reason, I have become skeptical of all but a few memory sharing
->>>>> use cases that depend on software-controlled cache-coherency.    
->>>>
->>>> Hi Gregory,
->>>>
->>>> 	From my understanding, we actually has the same idea here. What I am 
->>>> saying is that we need SPEC to consider this issue, meaning we need to 
->>>> describe how the entire software-coherency mechanism operates, which 
->>>> includes the necessary hardware support. Additionally, I agree that if 
->>>> software-coherency also requires hardware support, it seems that 
->>>> hardware-coherency is the better path.  
->>>>>
->>>>> There are some (FAMFS, for example). The coherence state of these
->>>>> systems tend to be less volatile (e.g. mappings are read-only), or
->>>>> they have inherent design limitations (cacheline-sized message passing
->>>>> via write-ahead logging only).    
->>>>
->>>> Can you explain more about this? I understand that if the reader in the 
->>>> writer-reader model is using a readonly mapping, the interaction will be 
->>>> much simpler. However, after the writer writes data, if we don't have a 
->>>> mechanism to flush and invalidate puncturing all caches, how can the 
->>>> readonly reader access the new data?  
->>>
->>> There is a mechanism for doing coarse grained flushing that is known to
->>> work on some architectures. Look at cpu_cache_invalidate_memregion().
->>> On intel/x86 it's wbinvd_on_all_cpu_cpus()  
->>
->> There is no guarantee on x86 that after cpu_cache_invalidate_memregion()
->> that a remote shared memory consumer can be assured to see the writes
->> from that event.
-> 
-> I was wondering about that after I wrote this...  I guess it guarantees
-> we won't get a late landing write or is that not even true?
-> 
-> So if we remove memory, then added fresh memory again quickly enough
-> can we get a left over write showing up?  I guess that doesn't matter as
-> the kernel will chase it with a memset(0) anyway and that will be ordered
-> as to the same address.
-> 
-> However we won't be able to elide that zeroing even if we know the device
-> did it which is makes some operations the device might support rather
-> pointless :(
+> On Sat, Jun 01, 2024 at 11:39:03AM +0300, Kalle Valo wrote:
+>
+>> Kalle Valo <kvalo@kernel.org> writes:
+>> 
+>> > Dan Williams <dan.j.williams@intel.com> writes:
+>> >
+>> >> Kalle Valo wrote:
+>> >> [..]
+>> >>> >> The proposed fix for that is here:
+>> >>> >>
+>> >>> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
+>> >>> >
+>> >>> > I get "Not Found" from that link, is there a typo?
+>> >>> 
+>> >>> I found this fix from for-linus branch:
+>> >>> 
+>> >>> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
+>> >>> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
+>> >>> 
+>> >>> But at least that doesn't fix my crash.
+>> >>
+>> >> Sorry for the broken link I mistakenly used a message-id from an
+>> >> internal thread with the intel.com reporter. However, it is moot now
+>> >> because the new direction is to revert the lockdep infrastructure:
+>> >>
+>> >> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
+>> >>
+>> >> (that link works...)
+>> >
+>> > Thanks, that links works :) I did a quick test with the three patches
+>> > and I didn't see any crashes anymore. But to be confident I need to run
+>> > overnight tests, I'll provide my Tested-by after that.
+>> 
+>> Ok, I'm now quite confident that the issues I saw are solved so:
+>> 
+>> Tested-by: Kalle Valo <kvalo@kernel.org>
+>
+> Thanks for reporting the issue and testing the fix!  Can you please
+> respond with your Tested-by to the actual patch(es) you tested?
 
->>> on arm64 it's a PSCI firmware call CLEAN_INV_MEMREGION (there is a
->>> public alpha specification for PSCI 1.3 with that defined but we
->>> don't yet have kernel code.)  
+Not easily as I'm not subscribed to linux-pci list and I haven't
+researched how to import mbox files to my mailer :) So feel free to
+ignore my Tested-by tag in this case.
 
-I have an RFC for that - but I haven't had time to update and re-test it.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-If you need this, and have a platform where it can be implemented, please get in touch
-with the people that look after the specs to move it along from alpha.
-
-
->> That punches visibility through CXL shared memory devices?
-
-> It's a draft spec and Mark + James in +CC can hopefully confirm.
-> It does say
-> "Cleans and invalidates all caches, including system caches".
-> which I'd read as meaning it should but good to confirm.
-
-It's intended to remove any cached entries - including lines in what the arm-arm calls
-"invisible" system caches, which typically only platform firmware can touch. The next
-access should have to go all the way to the media. (I don't know enough about CXL to say
-what a remote shared memory consumer observes)
-
-Without it, all we have are the by-VA operations which are painfully slow for large
-regions, and insufficient for system caches.
-
-As with all those firmware interfaces - its for the platform implementer to wire up
-whatever is necessary to remove cached content for the specified range. Just because there
-is an (alpha!) spec doesn't mean it can be supported efficiently by a particular platform.
-
-
->>> These are very big hammers and so unsuited for anything fine grained.
-
-You forgot really ugly too!
-
-
->>> In the extreme end of possible implementations they briefly stop all
->>> CPUs and clean and invalidate all caches of all types. So not suited
->>> to anything fine grained, but may be acceptable for a rare setup event,
->>> particularly if the main job of the writing host is to fill that memory
->>> for lots of other hosts to use.
->>>
->>> At least the ARM one takes a range so allows for a less painful
->>> implementation. 
-
-That is to allow some ranges to fail. (e.g. you can do this to the CXL windows, but not
-the regular DRAM).
-
-On the less painful implementation, arm's interconnect has a gadget that does "Address
-based flush" which could be used here. I'd hope platforms with that don't need to
-interrupt all CPUs - but it depends on what else needs to be done.
-
-
->>> I'm assuming we'll see new architecture over time
->>> but this is a different (and potentially easier) problem space
->>> to what you need.  
->>
->> cpu_cache_invalidate_memregion() is only about making sure local CPU
->> sees new contents after an DPA:HPA remap event. I hope CPUs are able to
->> get away from that responsibility long term when / if future memory
->> expanders just issue back-invalidate automatically when the HDM decoder
->> configuration changes.
-> 
-> I would love that to be the way things go, but I fear the overheads of
-> doing that on the protocol means people will want the option of the painful
-> approach.
-
-
-
-Thanks,
-
-James
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
