@@ -1,97 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545BA20ED;
-	Mon,  3 Jun 2024 20:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5156FB651
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Jun 2024 20:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717447035; cv=none; b=cISTfVJW2p0+j1VjY/1bTZADb8P5yLu4jWEE3kV85OZT2UuCwKl1G4GSK//KPRQJbj6l8NAN6kIKenbelJBwaxSxsW275wf1JnqUYFIHiN58SJWezsBPvlxlzMNL8T7vbNZEvn90Pveu2CJOZCXzoZbkcMw7A6jsgKiCwKt6HRg=
+	t=1717447992; cv=none; b=oJPo79kWtl2jjjuBG3Hm3eO42klLbcFJCcbv4bH2mU6vdG6QXc1KHrFK2GlsmT9bVJXPuGpv66wUIG7z531E7Qw5DnsKICXhpXra0FIYPcE0AYccFvhD4VK0zWuv0/nDHJfkDAlLzDx6WgkFhnxWJz3g3g25m3uf0YcL3O2gwwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717447035; c=relaxed/simple;
-	bh=Swf7JB3j5W82F8GO7QCzrjcVhRSmIR3+V0DoxX7ppRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=u2Q5qNiF+0dEI0M548z2tMePIwlt+bd5zjaJU5jmHmDlsLIfpKl1kS0wqodO0iM9cvFyaX0FkWc8Zq27NbqdxUiU1HA3pSrV0JAKYKuXhYQLT/DxrvJ2o3pVkMiCWQKWTH57EcAJURtisSSEuJJFdypbeKMHPV5TsPcyN2HOYCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTPrjdyl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717447992; c=relaxed/simple;
+	bh=kI1l72z3NV37g996CdXGp4Tkzrm4hC4/PFwHj/kMghg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cmAxWV9k1pgvVza6IFSbHccj4Y5/S58ST7SuRjLg12+Pq/i98nPGrO/cBwVUp68oOPV8cyewXcG60CpQVwxWu2uyUFMN4agNKGJZylmsoSnwDNxMDBmFN0s1SFIAptnZKiy+dbMbM032PQ11+6WHS3tZ1MitWTWYPcnqrH6SSyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KalA5n0v; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTPrjdyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C77C2BD10;
-	Mon,  3 Jun 2024 20:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717447035;
-	bh=Swf7JB3j5W82F8GO7QCzrjcVhRSmIR3+V0DoxX7ppRA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nTPrjdylwFFyKBXzYysHsPgBEqkiTXixvOzjRc22k5wZfpLMArhKMge2gilFPKjYo
-	 FfI+vVi/qKyNw+I8yBrQdxtilwFoF9g2qJqHDCdQyHIjXQ7PBrrCWgWF0xktufg7KJ
-	 hZlPRxHzFsyl2VyIRhw9Z5a9cWbHQ6ZD8Yx0iEsBJkAzFwTrdLStSNYfaSZmNcC1u4
-	 KawaCQxjZ9H1uzMY9P4F41kE8IEfZBza8Q5mhZVjDLXH0pEyAt9dM5VwSzVwUWqhjt
-	 I6tVXXp82WLDoDP9T6TNXqE/QemFvKoEprHxymYJREtBgRzkJWc7h1/WN9yXk3DmI0
-	 9ks8AjYl08kUQ==
-Date: Mon, 3 Jun 2024 15:37:12 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, bhelgaas@google.com,
-	Dave Jiang <dave.jiang@intel.com>, Imre Deak <imre.deak@intel.com>,
-	Jani Saarinen <jani.saarinen@intel.com>, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] PCI: Revert / replace the cfg_access_lock lockdep
- mechanism
-Message-ID: <20240603203712.GA692178@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KalA5n0v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717447990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kLaQTxDtPj6Jmk6ZIUqf/6NQT1MvCyJjL0xQzp9dvUg=;
+	b=KalA5n0vXvCh2ctro6vsWD1ygTt+YA6uMSPVyCr9CFKncqNBX7H/U0+0Hpv477YI7lfKA1
+	W1Tp6Py/01aHjK6mtXJPLjkz4lMqJMCOejuOkLlxHzexdAtLYnG6PSV3d5D1NUCKX2KdXt
+	3lLh2ciCr1GxiZkU5L9ES2GF33KH/pw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-vOxxBv9UOlSPdqt1f-SoDA-1; Mon, 03 Jun 2024 16:53:07 -0400
+X-MC-Unique: vOxxBv9UOlSPdqt1f-SoDA-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-35dca4a8f2dso2642047f8f.3
+        for <linux-cxl@vger.kernel.org>; Mon, 03 Jun 2024 13:53:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717447986; x=1718052786;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kLaQTxDtPj6Jmk6ZIUqf/6NQT1MvCyJjL0xQzp9dvUg=;
+        b=Qu7HCljHxD1NJKhfJX2BuHrI35ZDXKUcsKhDUYdzeiqEN/27S1p1LWUzQE5J3mEqsc
+         MpoZUt+lrPHhMDmnsRyYQ9Eryhdadq/SNLJgXk/EjPt6yqR6t4NMYw6+sYYnPaRKLPfT
+         3AWw/F2p48LFSe0PL/fRWuE786tftEoLH2yLFMznEX7WWkve72tNk4Vug9PASGCromGw
+         9Qemtu+FAx9B6AkpnfvItZ9hqdKRhWvTHGzmFdo29VEDBPe8rdO6WrSIkHL8B3igAAsH
+         1PH0rOb/fXjWEPts51b14goQeAXbQZDCyiMxzbmekxXpTe3QrqizhcnyejUwEFnTcagW
+         URiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXKSqKBCvoYKYNDvIyd1HgnhGQlLvN7zinwcxS60dr8v6aZIsd0Ll/4cmlOB3d8uzNEMi/idOJ1OFo5mDQpuaxWGTfBY2vwpZg
+X-Gm-Message-State: AOJu0YxHw6PoyFD0Tymix9Ks6qnbqANNT9hrFOsEMhwrblS6cJdBPfRH
+	YwWCcwz4l7MPjlNPfu2wPjJKCRWI6xZIo3WntPd4ExDQFA+RE9WQfK1MM3VjqGVQGMYv7WHXksA
+	DJA/fZCojmiQfnH7DMst/5+7KRWGGIDBXJMY4gAOdzuCUCwmA3GzSKIo5zw==
+X-Received: by 2002:adf:e38a:0:b0:356:5ac3:7d07 with SMTP id ffacd0b85a97d-35e0f27c65fmr7469836f8f.25.1717447985752;
+        Mon, 03 Jun 2024 13:53:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFIOWaXAaQGtB1U6y4Ruapc6kKp2arzxcUu5qj4xUASf5eHV6fEZbYcdSoR5nW0tFI95/2GRg==
+X-Received: by 2002:adf:e38a:0:b0:356:5ac3:7d07 with SMTP id ffacd0b85a97d-35e0f27c65fmr7469817f8f.25.1717447985350;
+        Mon, 03 Jun 2024 13:53:05 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c731:3d00:918f:ce94:4280:80f0? (p200300cbc7313d00918fce94428080f0.dip0.t-ipconnect.de. [2003:cb:c731:3d00:918f:ce94:4280:80f0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e537da921sm5302957f8f.17.2024.06.03.13.53.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 13:53:04 -0700 (PDT)
+Message-ID: <da88fa70-203e-49e6-bf4d-22cd161ef8d1@redhat.com>
+Date: Mon, 3 Jun 2024 22:53:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6daf3a21-6e78-4a82-b03f-af9462fad012@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 8/8] HACK: mm: memory_hotplug: Drop
+ memblock_phys_free() call in try_remove_memory()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>,
+ Jia He <justin.he@arm.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ linuxarm@huawei.com, catalin.marinas@arm.com, Anshuman.Khandual@arm.com,
+ Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+ Oscar Salvador <osalvador@suse.de>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, James Morse <james.morse@arm.com>
+References: <20240529171236.32002-1-Jonathan.Cameron@huawei.com>
+ <20240529171236.32002-9-Jonathan.Cameron@huawei.com>
+ <b8654dcd-68e1-4823-9588-cfa401104741@redhat.com>
+ <Zl13aA2ihYsLPcL6@kernel.org>
+ <92ea53c6-a93b-4ab8-8aec-7f88300576eb@redhat.com>
+ <Zl2eNQF7S9zlUFne@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Zl2eNQF7S9zlUFne@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 03, 2024 at 09:49:39PM +0200, Hans de Goede wrote:
-> Hi,
+On 03.06.24 12:43, Mike Rapoport wrote:
+> On Mon, Jun 03, 2024 at 11:14:00AM +0200, David Hildenbrand wrote:
+>> On 03.06.24 09:57, Mike Rapoport wrote:
+>>> On Fri, May 31, 2024 at 09:49:32AM +0200, David Hildenbrand wrote:
+>>>> On 29.05.24 19:12, Jonathan Cameron wrote:
+>>>>> I'm not sure what this is balancing, but it if is necessary then the reserved
+>>>>> memblock approach can't be used to stash NUMA node assignments as after the
+>>>>> first add / remove cycle the entry is dropped so not available if memory is
+>>>>> re-added at the same HPA.
+>>>>>
+>>>>> This patch is here to hopefully spur comments on what this is there for!
+>>>>>
+>>>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>> ---
+>>>>>     mm/memory_hotplug.c | 2 +-
+>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>>>>> index 431b1f6753c0..3d8dd4749dfc 100644
+>>>>> --- a/mm/memory_hotplug.c
+>>>>> +++ b/mm/memory_hotplug.c
+>>>>> @@ -2284,7 +2284,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>>>>>     	}
+>>>>>     	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+>>>>> -		memblock_phys_free(start, size);
+>>>>> +		//		memblock_phys_free(start, size);
+>>>>>     		memblock_remove(start, size);
+>>>>>     	}
+>>>>
+>>>> memblock_phys_free() works on memblock.reserved, memblock_remove() works  on
+>>>> memblock.memory.
+>>>>
+>>>> If you take a look at the doc at the top of memblock.c:
+>>>>
+>>>> memblock.memory: physical memory available to the system
+>>>> memblock.reserved: regions that were allocated [during boot]
+>>>>
+>>>>
+>>>> memblock.memory is supposed to be a superset of memblock.reserved. Your
+>>>
+>>> No it's not.
+>>> memblock.reserved is more of "if there is memory, don't touch it".
+>>
+>> Then we should certainly clarify that in the comments! :P
 > 
-> On 5/31/24 3:04 AM, Dan Williams wrote:
-> > Changes since v1 [1]:
-> > - split out the new warning into its own patch (Bjorn)
-> > - include the provisional fix to the pci_reset_bus() path
-> > 
-> > [1]: http://lore.kernel.org/r/171709637423.1568751.11773767969980847536.stgit@dwillia2-xfh.jf.intel.com
-> > 
-> > Hi Bjorn,
-> > 
-> > Here is the targeted revert of the cfg_access_lock lockdep
-> > infrastructure, but with the new proposed warning for catching "unlocked
-> > pci_bridge_secondary_bus_reset()" events broken out into its own change.
-> > I also included the proposed fix for at least one known case where
-> > pci_bridge_secondary_bus_reset() is being called without
-> > cfg_access_lock.
-> > 
-> > Given there may be more cases to unwind, and the fact that I am not
-> > convinced patch3 will be problem free I would, as you suggested,
-> > consider patch2 and patch3 v6.11 material. Patch1 is urgent for v6.10-rc
-> > to put out these lockdep false positive reports.
-> 
-> I can confirm that this series fixes the lockdep errors which
-> I was seeing:
-> 
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> You are welcome to send a patch :-P
 
-Added to the three patches in this series, thanks, Hans!
+I'll try once I understood what changed ever since you documented that 
+in 2018 -- or if we missed that detail back then already.
 
-> > ---
-> > 
-> > Dan Williams (3):
-> >       PCI: Revert the cfg_access_lock lockdep mechanism
-> >       PCI: Warn on missing cfg_access_lock during secondary bus reset
-> >       PCI: Add missing bridge lock to pci_bus_lock()
-> > 
-> > 
-> >  drivers/pci/access.c    |    4 ----
-> >  drivers/pci/pci.c       |    8 +++++++-
-> >  drivers/pci/probe.c     |    3 ---
-> >  include/linux/lockdep.h |    5 -----
-> >  include/linux/pci.h     |    2 --
-> >  5 files changed, 7 insertions(+), 15 deletions(-)
-> > 
-> > base-commit: 56fb6f92854f29dcb6c3dc3ba92eeda1b615e88c
-> > 
+>   
+>> But for the memory hotunplug case, that's most likely why that code was
+>> added. And it only deals with ordinary system RAM, not weird reservations
+>> you describe below.
 > 
+> The commit that added memblock_free() at the first place (f9126ab9241f
+> ("memory-hotplug: fix wrong edge when hot add a new node")) does not really
+> describe why that was required :(
+> 
+> But at a quick glance it looks completely spurious.
+
+There are more details [1] but I also did not figure out why the 
+memblock_free() was really required to resolve that issue.
+
+[1] https://marc.info/?l=linux-kernel&m=142961156129456&w=2
+
+-- 
+Cheers,
+
+David / dhildenb
+
