@@ -1,353 +1,202 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5291F25622
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Jun 2024 17:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8329925622;
+	Mon,  3 Jun 2024 17:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717435676; cv=none; b=B6kE78PQlxNvsDySWNWi6aysoWFwe0kitwfx6d7BkAkADqUCPwoiKXw4RKgHFsMWURQSIaE6QwQpBhxlGGus/O9bDkSR5tVCaz1/mNix1KCRXV3d0zZ1LKA0bXoKYetwR18bJghzdD26Y9XPLpq1q5q4DrbZCxti0M4IwrRFsvc=
+	t=1717435740; cv=none; b=OZldw19/ZAPmOerXulL5apL/YAWxcnxoyZ45ATX+JXhZNnmPpqT8mw6H6NmBputhS5MJceh9zTlENLQ/wAE14xnpU28kOinj00TS/UPt3/WwAej27lt5wirY8f74vqwRaOIw7h/tWwBe7jWPWepat1KWAqDnwuSlSyAkm4XskZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717435676; c=relaxed/simple;
-	bh=UES+S+2qUr9inMpZ9sq28nNG00H6/Fq6EzHTFecQgZ4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V+v36zj0PfmEHGo0kzkT0lPtTupg4IxBZdBWCypqj94OhZiJoK/cyB7pkBUz6ectYh7U7xtv6q6h8uA/wbD+vS2dfSjlt4CT+QQ5bj6S4xCNrY9yyKYMBYnnVE+Dl3LMcGIRq2BQLdR4SJLLHOnskZvNTc6+0UTmabibFD6uUic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VtLHh42lBz67DpL;
-	Tue,  4 Jun 2024 01:26:40 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E0A92140684;
-	Tue,  4 Jun 2024 01:27:48 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Jun
- 2024 18:27:48 +0100
-Date: Mon, 3 Jun 2024 18:27:47 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <gregory.price@memverge.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	<jim.harris@samsung.com>, <Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>,
-	<armbru@redhat.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v8 08/14] hw/mem/cxl_type3: Add host backend and address
- space handling for DC regions
-Message-ID: <20240603182747.000002b8@Huawei.com>
-In-Reply-To: <20240603110327-mutt-send-email-mst@kernel.org>
-References: <20240523174651.1089554-1-nifan.cxl@gmail.com>
-	<20240523174651.1089554-9-nifan.cxl@gmail.com>
-	<20240603132759.00005fbf@Huawei.com>
-	<20240603110327-mutt-send-email-mst@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717435740; c=relaxed/simple;
+	bh=+tB52iHPbmCXMHOeWlpQnCHMtEmXi/u7YpuslWqxPqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e5jFvk8FbLlLblVcgrECOFRVqzgUVW0EJpZMxo+Zxa0U3QzQIrrna/h/Bjz5PAskvMTqZkClc+dczPxjWvEKScJ9JXrTvCg7x7LoeJtaZIcyebBVSSCfQoyJ1NwcO6gLNnKcrvZ6U8gXQvSqWFWTHAOBWIfgsK4VKW9/Ymuq8rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1A151042;
+	Mon,  3 Jun 2024 10:29:21 -0700 (PDT)
+Received: from [10.1.196.28] (eglon.cambridge.arm.com [10.1.196.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B2A83F792;
+	Mon,  3 Jun 2024 10:28:56 -0700 (PDT)
+Message-ID: <3c7c9b07-78b2-4b8d-968e-0c395c8f22b3@arm.com>
+Date: Mon, 3 Jun 2024 18:28:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+Content-Language: en-GB
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Dongsheng Yang <dongsheng.yang@easystack.cn>,
+ Gregory Price <gregory.price@memverge.com>, John Groves <John@groves.net>,
+ axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ Mark Rutland <mark.rutland@arm.com>
+References: <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
+ <20240508164417.00006c69@Huawei.com>
+ <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
+ <20240509132134.00000ae9@Huawei.com>
+ <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
+ <664cead8eb0b6_add32947d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <8f161b2d-eacd-ad35-8959-0f44c8d132b3@easystack.cn>
+ <ZldIzp0ncsRX5BZE@memverge.com>
+ <5db870de-ecb3-f127-f31c-b59443b4fbb4@easystack.cn>
+ <20240530143813.00006def@Huawei.com>
+ <665a9402445ee_166872941d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240603134819.00001c5f@Huawei.com>
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <20240603134819.00001c5f@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Jun 2024 11:04:06 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+Hi guys,
 
-> On Mon, Jun 03, 2024 at 01:27:59PM +0100, Jonathan Cameron wrote:
-> > On Thu, 23 May 2024 10:44:48 -0700
-> > nifan.cxl@gmail.com wrote:
-> >   
-> > > From: Fan Ni <fan.ni@samsung.com>
-> > > 
-> > > Add (file/memory backed) host backend for DCD. All the dynamic capacity
-> > > regions will share a single, large enough host backend. Set up address
-> > > space for DC regions to support read/write operations to dynamic capacity
-> > > for DCD.
-> > > 
-> > > With the change, the following support is added:
-> > > 1. Add a new property to type3 device "volatile-dc-memdev" to point to host
-> > >    memory backend for dynamic capacity. Currently, all DC regions share one
-> > >    host backend;
-> > > 2. Add namespace for dynamic capacity for read/write support;
-> > > 3. Create cdat entries for each dynamic capacity region.
-> > > 
-> > > Reviewed-by: Gregory Price <gregory.price@memverge.com>
-> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>  
-> >   
-> > >      dvsec = (uint8_t *)&(CXLDVSECDevice){
-> > > @@ -579,11 +622,28 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> > >  {
-> > >      int i;
-> > >      uint64_t region_base = 0;
-> > > -    uint64_t region_len =  2 * GiB;
-> > > -    uint64_t decode_len = 2 * GiB;
-> > > +    uint64_t region_len;
-> > > +    uint64_t decode_len;
-> > >      uint64_t blk_size = 2 * MiB;
-> > >      CXLDCRegion *region;
-> > >      MemoryRegion *mr;
-> > > +    uint64_t dc_size;
-> > > +
-> > > +    mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> > > +    dc_size = memory_region_size(mr);
-> > > +    region_len = DIV_ROUND_UP(dc_size, ct3d->dc.num_regions);
-> > > +
-> > > +    if (dc_size % (ct3d->dc.num_regions * CXL_CAPACITY_MULTIPLIER) != 0) {
-> > > +        error_setg(errp, "backend size is not multiple of region len: 0x%lx",  
-> > 
-> > Just seen a build error for this in mst's gitlab.
-> > Needs to be the messy PRIx64(not tested) e.g.
-> > 
-> >     error_setg(errp, "backend size is not multiple of region len: " PRIx64,
-> >                region_len);
-> > 
-> > Michael, do you want a new version, or are you happy to fix this up?
-> > 
-> > Thanks,
-> > 
-> > Jonathan  
+On 03/06/2024 13:48, Jonathan Cameron wrote:
+> On Fri, 31 May 2024 20:22:42 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>> Jonathan Cameron wrote:
+>>> On Thu, 30 May 2024 14:59:38 +0800
+>>> Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
+>>>> 在 2024/5/29 星期三 下午 11:25, Gregory Price 写道:  
+>>>>> It's not just a CXL spec issue, though that is part of it. I think the
+>>>>> CXL spec would have to expose some form of puncturing flush, and this
+>>>>> makes the assumption that such a flush doesn't cause some kind of
+>>>>> race/deadlock issue.  Certainly this needs to be discussed.
+>>>>>
+>>>>> However, consider that the upstream processor actually has to generate
+>>>>> this flush.  This means adding the flush to existing coherence protocols,
+>>>>> or at the very least a new instruction to generate the flush explicitly.
+>>>>> The latter seems more likely than the former.
+>>>>>
+>>>>> This flush would need to ensure the data is forced out of the local WPQ
+>>>>> AND all WPQs south of the PCIE complex - because what you really want to
+>>>>> know is that the data has actually made it back to a place where remote
+>>>>> viewers are capable of percieving the change.
+>>>>>
+>>>>> So this means:
+>>>>> 1) Spec revision with puncturing flush
+>>>>> 2) Buy-in from CPU vendors to generate such a flush
+>>>>> 3) A new instruction added to the architecture.
+>>>>>
+>>>>> Call me in a decade or so.
+>>>>>
+>>>>>
+>>>>> But really, I think it likely we see hardware-coherence well before this.
+>>>>> For this reason, I have become skeptical of all but a few memory sharing
+>>>>> use cases that depend on software-controlled cache-coherency.    
+>>>>
+>>>> Hi Gregory,
+>>>>
+>>>> 	From my understanding, we actually has the same idea here. What I am 
+>>>> saying is that we need SPEC to consider this issue, meaning we need to 
+>>>> describe how the entire software-coherency mechanism operates, which 
+>>>> includes the necessary hardware support. Additionally, I agree that if 
+>>>> software-coherency also requires hardware support, it seems that 
+>>>> hardware-coherency is the better path.  
+>>>>>
+>>>>> There are some (FAMFS, for example). The coherence state of these
+>>>>> systems tend to be less volatile (e.g. mappings are read-only), or
+>>>>> they have inherent design limitations (cacheline-sized message passing
+>>>>> via write-ahead logging only).    
+>>>>
+>>>> Can you explain more about this? I understand that if the reader in the 
+>>>> writer-reader model is using a readonly mapping, the interaction will be 
+>>>> much simpler. However, after the writer writes data, if we don't have a 
+>>>> mechanism to flush and invalidate puncturing all caches, how can the 
+>>>> readonly reader access the new data?  
+>>>
+>>> There is a mechanism for doing coarse grained flushing that is known to
+>>> work on some architectures. Look at cpu_cache_invalidate_memregion().
+>>> On intel/x86 it's wbinvd_on_all_cpu_cpus()  
+>>
+>> There is no guarantee on x86 that after cpu_cache_invalidate_memregion()
+>> that a remote shared memory consumer can be assured to see the writes
+>> from that event.
 > 
+> I was wondering about that after I wrote this...  I guess it guarantees
+> we won't get a late landing write or is that not even true?
 > 
-> I did this fixup. If nothing else happens I'll keep it, if more
-> issues creep up I will drop. Thanks!
-
-I failed to mention there are several instances.
-I guess you have seen that in the gitlab run.
-
-There is one in this patch and one in patch 6 concerning
-CXL_CAPACITY_MULTIPLIER 
-which is defines
-as SZ_256M which oddly seems to end up as different sizes on different
-architectures.  Maybe just cast that in the calls?
-
-
-
+> So if we remove memory, then added fresh memory again quickly enough
+> can we get a left over write showing up?  I guess that doesn't matter as
+> the kernel will chase it with a memset(0) anyway and that will be ordered
+> as to the same address.
 > 
-> > > +                   region_len);
-> > > +        return false;
-> > > +    }
-> > > +    if (region_len % CXL_CAPACITY_MULTIPLIER != 0) {
-> > > +        error_setg(errp, "DC region size is unaligned to 0x%lx",
-> > > +                   CXL_CAPACITY_MULTIPLIER);
+> However we won't be able to elide that zeroing even if we know the device
+> did it which is makes some operations the device might support rather
+> pointless :(
 
-> > > +        return false;
-> > > +    }
-> > > +    decode_len = region_len;
-> > >  
-> > >      if (ct3d->hostvmem) {
-> > >          mr = host_memory_backend_get_memory(ct3d->hostvmem);
-> > > @@ -610,6 +670,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> > >              /* dsmad_handle set when creating CDAT table entries */
-> > >              .flags = 0,
-> > >          };
-> > > +        ct3d->dc.total_capacity += region->len;
-> > >      }
-> > >  
-> > >      return true;
-> > > @@ -619,7 +680,8 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-> > >  {
-> > >      DeviceState *ds = DEVICE(ct3d);
-> > >  
-> > > -    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem) {
-> > > +    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem
-> > > +        && !ct3d->dc.num_regions) {
-> > >          error_setg(errp, "at least one memdev property must be set");
-> > >          return false;
-> > >      } else if (ct3d->hostmem && ct3d->hostpmem) {
-> > > @@ -683,7 +745,37 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-> > >          g_free(p_name);
-> > >      }
-> > >  
-> > > +    ct3d->dc.total_capacity = 0;
-> > >      if (ct3d->dc.num_regions > 0) {
-> > > +        MemoryRegion *dc_mr;
-> > > +        char *dc_name;
-> > > +
-> > > +        if (!ct3d->dc.host_dc) {
-> > > +            error_setg(errp, "dynamic capacity must have a backing device");
-> > > +            return false;
-> > > +        }
-> > > +
-> > > +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> > > +        if (!dc_mr) {
-> > > +            error_setg(errp, "dynamic capacity must have a backing device");
-> > > +            return false;
-> > > +        }
-> > > +
-> > > +        /*
-> > > +         * Set DC regions as volatile for now, non-volatile support can
-> > > +         * be added in the future if needed.
-> > > +         */
-> > > +        memory_region_set_nonvolatile(dc_mr, false);
-> > > +        memory_region_set_enabled(dc_mr, true);
-> > > +        host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
-> > > +        if (ds->id) {
-> > > +            dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
-> > > +        } else {
-> > > +            dc_name = g_strdup("cxl-dcd-dpa-dc-space");
-> > > +        }
-> > > +        address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
-> > > +        g_free(dc_name);
-> > > +
-> > >          if (!cxl_create_dc_regions(ct3d, errp)) {
-> > >              error_append_hint(errp, "setup DC regions failed");
-> > >              return false;
-> > > @@ -779,6 +871,9 @@ err_release_cdat:
-> > >  err_free_special_ops:
-> > >      g_free(regs->special_ops);
-> > >  err_address_space_free:
-> > > +    if (ct3d->dc.host_dc) {
-> > > +        address_space_destroy(&ct3d->dc.host_dc_as);
-> > > +    }
-> > >      if (ct3d->hostpmem) {
-> > >          address_space_destroy(&ct3d->hostpmem_as);
-> > >      }
-> > > @@ -797,6 +892,9 @@ static void ct3_exit(PCIDevice *pci_dev)
-> > >      pcie_aer_exit(pci_dev);
-> > >      cxl_doe_cdat_release(cxl_cstate);
-> > >      g_free(regs->special_ops);
-> > > +    if (ct3d->dc.host_dc) {
-> > > +        address_space_destroy(&ct3d->dc.host_dc_as);
-> > > +    }
-> > >      if (ct3d->hostpmem) {
-> > >          address_space_destroy(&ct3d->hostpmem_as);
-> > >      }
-> > > @@ -875,16 +973,23 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
-> > >                                         AddressSpace **as,
-> > >                                         uint64_t *dpa_offset)
-> > >  {
-> > > -    MemoryRegion *vmr = NULL, *pmr = NULL;
-> > > +    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
-> > > +    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
-> > >  
-> > >      if (ct3d->hostvmem) {
-> > >          vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-> > > +        vmr_size = memory_region_size(vmr);
-> > >      }
-> > >      if (ct3d->hostpmem) {
-> > >          pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-> > > +        pmr_size = memory_region_size(pmr);
-> > > +    }
-> > > +    if (ct3d->dc.host_dc) {
-> > > +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> > > +        dc_size = memory_region_size(dc_mr);
-> > >      }
-> > >  
-> > > -    if (!vmr && !pmr) {
-> > > +    if (!vmr && !pmr && !dc_mr) {
-> > >          return -ENODEV;
-> > >      }
-> > >  
-> > > @@ -892,19 +997,18 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
-> > >          return -EINVAL;
-> > >      }
-> > >  
-> > > -    if (*dpa_offset > ct3d->cxl_dstate.static_mem_size) {
-> > > +    if (*dpa_offset >= vmr_size + pmr_size + dc_size) {
-> > >          return -EINVAL;
-> > >      }
-> > >  
-> > > -    if (vmr) {
-> > > -        if (*dpa_offset < memory_region_size(vmr)) {
-> > > -            *as = &ct3d->hostvmem_as;
-> > > -        } else {
-> > > -            *as = &ct3d->hostpmem_as;
-> > > -            *dpa_offset -= memory_region_size(vmr);
-> > > -        }
-> > > -    } else {
-> > > +    if (*dpa_offset < vmr_size) {
-> > > +        *as = &ct3d->hostvmem_as;
-> > > +    } else if (*dpa_offset < vmr_size + pmr_size) {
-> > >          *as = &ct3d->hostpmem_as;
-> > > +        *dpa_offset -= vmr_size;
-> > > +    } else {
-> > > +        *as = &ct3d->dc.host_dc_as;
-> > > +        *dpa_offset -= (vmr_size + pmr_size);
-> > >      }
-> > >  
-> > >      return 0;
-> > > @@ -986,6 +1090,8 @@ static Property ct3_props[] = {
-> > >      DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
-> > >      DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
-> > >      DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
-> > > +    DEFINE_PROP_LINK("volatile-dc-memdev", CXLType3Dev, dc.host_dc,
-> > > +                     TYPE_MEMORY_BACKEND, HostMemoryBackend *),
-> > >      DEFINE_PROP_END_OF_LIST(),
-> > >  };
-> > >  
-> > > @@ -1052,33 +1158,39 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
-> > >  
-> > >  static bool set_cacheline(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data)
-> > >  {
-> > > -    MemoryRegion *vmr = NULL, *pmr = NULL;
-> > > +    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
-> > >      AddressSpace *as;
-> > > +    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
-> > >  
-> > >      if (ct3d->hostvmem) {
-> > >          vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-> > > +        vmr_size = memory_region_size(vmr);
-> > >      }
-> > >      if (ct3d->hostpmem) {
-> > >          pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-> > > +        pmr_size = memory_region_size(pmr);
-> > >      }
-> > > +    if (ct3d->dc.host_dc) {
-> > > +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> > > +        dc_size = memory_region_size(dc_mr);
-> > > +     }
-> > >  
-> > > -    if (!vmr && !pmr) {
-> > > +    if (!vmr && !pmr && !dc_mr) {
-> > >          return false;
-> > >      }
-> > >  
-> > > -    if (dpa_offset + CXL_CACHE_LINE_SIZE > ct3d->cxl_dstate.static_mem_size) {
-> > > +    if (dpa_offset + CXL_CACHE_LINE_SIZE > vmr_size + pmr_size + dc_size) {
-> > >          return false;
-> > >      }
-> > >  
-> > > -    if (vmr) {
-> > > -        if (dpa_offset < memory_region_size(vmr)) {
-> > > -            as = &ct3d->hostvmem_as;
-> > > -        } else {
-> > > -            as = &ct3d->hostpmem_as;
-> > > -            dpa_offset -= memory_region_size(vmr);
-> > > -        }
-> > > -    } else {
-> > > +    if (dpa_offset < vmr_size) {
-> > > +        as = &ct3d->hostvmem_as;
-> > > +    } else if (dpa_offset < vmr_size + pmr_size) {
-> > >          as = &ct3d->hostpmem_as;
-> > > +        dpa_offset -= vmr_size;
-> > > +    } else {
-> > > +        as = &ct3d->dc.host_dc_as;
-> > > +        dpa_offset -= (vmr_size + pmr_size);
-> > >      }
-> > >  
-> > >      address_space_write(as, dpa_offset, MEMTXATTRS_UNSPECIFIED, &data,
-> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > > index f7f56b44e3..c2c3df0d2a 100644
-> > > --- a/include/hw/cxl/cxl_device.h
-> > > +++ b/include/hw/cxl/cxl_device.h
-> > > @@ -467,6 +467,14 @@ struct CXLType3Dev {
-> > >      uint64_t poison_list_overflow_ts;
-> > >  
-> > >      struct dynamic_capacity {
-> > > +        HostMemoryBackend *host_dc;
-> > > +        AddressSpace host_dc_as;
-> > > +        /*
-> > > +         * total_capacity is equivalent to the dynamic capability
-> > > +         * memory region size.
-> > > +         */
-> > > +        uint64_t total_capacity; /* 256M aligned */
-> > > +
-> > >          uint8_t num_regions; /* 0-8 regions */
-> > >          CXLDCRegion regions[DCD_MAX_NUM_REGION];
-> > >      } dc;  
+>>> on arm64 it's a PSCI firmware call CLEAN_INV_MEMREGION (there is a
+>>> public alpha specification for PSCI 1.3 with that defined but we
+>>> don't yet have kernel code.)  
+
+I have an RFC for that - but I haven't had time to update and re-test it.
+
+If you need this, and have a platform where it can be implemented, please get in touch
+with the people that look after the specs to move it along from alpha.
+
+
+>> That punches visibility through CXL shared memory devices?
+
+> It's a draft spec and Mark + James in +CC can hopefully confirm.
+> It does say
+> "Cleans and invalidates all caches, including system caches".
+> which I'd read as meaning it should but good to confirm.
+
+It's intended to remove any cached entries - including lines in what the arm-arm calls
+"invisible" system caches, which typically only platform firmware can touch. The next
+access should have to go all the way to the media. (I don't know enough about CXL to say
+what a remote shared memory consumer observes)
+
+Without it, all we have are the by-VA operations which are painfully slow for large
+regions, and insufficient for system caches.
+
+As with all those firmware interfaces - its for the platform implementer to wire up
+whatever is necessary to remove cached content for the specified range. Just because there
+is an (alpha!) spec doesn't mean it can be supported efficiently by a particular platform.
+
+
+>>> These are very big hammers and so unsuited for anything fine grained.
+
+You forgot really ugly too!
+
+
+>>> In the extreme end of possible implementations they briefly stop all
+>>> CPUs and clean and invalidate all caches of all types. So not suited
+>>> to anything fine grained, but may be acceptable for a rare setup event,
+>>> particularly if the main job of the writing host is to fill that memory
+>>> for lots of other hosts to use.
+>>>
+>>> At least the ARM one takes a range so allows for a less painful
+>>> implementation. 
+
+That is to allow some ranges to fail. (e.g. you can do this to the CXL windows, but not
+the regular DRAM).
+
+On the less painful implementation, arm's interconnect has a gadget that does "Address
+based flush" which could be used here. I'd hope platforms with that don't need to
+interrupt all CPUs - but it depends on what else needs to be done.
+
+
+>>> I'm assuming we'll see new architecture over time
+>>> but this is a different (and potentially easier) problem space
+>>> to what you need.  
+>>
+>> cpu_cache_invalidate_memregion() is only about making sure local CPU
+>> sees new contents after an DPA:HPA remap event. I hope CPUs are able to
+>> get away from that responsibility long term when / if future memory
+>> expanders just issue back-invalidate automatically when the HDM decoder
+>> configuration changes.
 > 
+> I would love that to be the way things go, but I fear the overheads of
+> doing that on the protocol means people will want the option of the painful
+> approach.
 
+
+
+Thanks,
+
+James
