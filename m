@@ -1,47 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24EA446CF;
-	Tue,  4 Jun 2024 08:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DD1142E9C
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Jun 2024 09:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717488571; cv=none; b=u90VSFXbC2w8XD4K5+zCaEm1tRw1txKl8Hko9r4xJit5luxFwjJNZVtbxPxSheid9waEYOV3LVQD7dvtmJUqEh1wzI23IjyvpvIi3t3gIhaDRtobKEqGIkyiGvYMSnp9jIMw1u1u7nSa6Ecdk9rge2hENdsBT8hR6kVTBMHrgY4=
+	t=1717492709; cv=none; b=ineqteFVLCPj54KH6HDbI9FkEA4tYbmXhm88gWeajsYBbdjJYrI5nanu8MkPO0HAVEuiajIWtB1rbHb7wqVX34Bui3uaX7QZgBNZtVufEtkvl/m2ryo5PH2SV1BISM/+DlJejUKXR7V74GslfxPRfoPz5wcm6zR47TuVDRIpHNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717488571; c=relaxed/simple;
-	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=qlddUFXb1BHDdZpwva5vcDXzVGaAeFDJovvGTWBoYeS1E1m9ptc8zZbplWspTF4FIopAntocAtfMDUMHA1sEwA31qwJPeKsoWDNWEDL1FUcjoZWFl3WzjuzTlJuGKgCE8olQA08iu4waJTuwjrO0IWEN4a/XTlhnTX7rs4SKJpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MRxCEM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717492709; c=relaxed/simple;
+	bh=rXF08ziuRzVySAh1ZPW1e1gAzCY852KJ29VoUEXTkU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NZJ7QZuP8hvDSZob4v3jcFEBmWKZW99UURoJPUfeKHF8/0DTQaFYu8+m2TEkOnkh8kBNSuJr1iks0aBu3gYOyLhPd/YvqaFaNoWcB7OnEQrPK+Th79pLPEvrlvuKQevLxF7iv2F4d+5PxGK2gjRUXhGtFXQGNNli2hpYcS7GIPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FLlXCkco; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MRxCEM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6ECC2BBFC;
-	Tue,  4 Jun 2024 08:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717488570;
-	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=o1MRxCEMsm/rvMeAAJBPCYWpYQyAFd8BIGgeQvMSn7f/STx63dNix0p3AdGHdZgHO
-	 VpJz0TOInXj39V5PtD1yEF+NaPIlHvxQyN6RxRjF55oj3yFnPSF6kAdy6xZoSDHHF8
-	 uFmfQLaIUcNUKv1NYmxjir4bIWQYSbjQb2VcekRvPSTuUmUGpobXBYYjpH/pVzZSO8
-	 5mj4vvnZes5pcoFC9qdoLII1gSie8vbQ6FVHKFbBDT3w6IZIgxBPY/CwY/WAR1Th7W
-	 PGtpqFlZXM5ZneNCb8ZcE0Ar/w4EbNdRtAHV6nqSQqZJm6gZrHzagtxpP5PSB2kX/I
-	 mykRDonmv/rmQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,  Dave Jiang <dave.jiang@intel.com>,
-  Bjorn Helgaas <bhelgaas@google.com>,  <linux-wireless@vger.kernel.org>,
-  <ath11k@lists.infradead.org>,  <regressions@lists.linux.dev>,  Jeff
- Johnson <quic_jjohnson@quicinc.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-cxl@vger.kernel.org>,  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <20240603165342.GA685076@bhelgaas> <87wmn5ubfo.fsf@kernel.org>
-	<665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
-Date: Tue, 04 Jun 2024 11:09:26 +0300
-In-Reply-To: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch> (Dan
-	Williams's message of "Mon, 3 Jun 2024 12:14:54 -0700")
-Message-ID: <87cyoxt9hl.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FLlXCkco"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717492707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KJxLCaBaIuRGcA0TH+Rg+hOm7JhuMGzVkNLWQKfNTtc=;
+	b=FLlXCkcoFzmomHUf8zPy8igUY1HvnMBMqXKQjfRYpewpUtpi8b6+yV71hfPyfyUybELOwU
+	zcnAR7obp3rHXeRxVFqzwNMiVt/EcQDlLDL2PsQoiL69lnJfCpYad8hKxGxJuiERz0C3Gl
+	Dna7WyRy4bNQ/QZgwAXt924hBs7wyK4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-fZA_7lFZOYKinfcPFuq64Q-1; Tue,
+ 04 Jun 2024 05:18:21 -0400
+X-MC-Unique: fZA_7lFZOYKinfcPFuq64Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6074E3C025CE;
+	Tue,  4 Jun 2024 09:18:20 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.39.192.93])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5591A4D6D;
+	Tue,  4 Jun 2024 09:18:19 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 61B0321E668A; Tue,  4 Jun 2024 11:18:18 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: fan <nifan.cxl@gmail.com>,  <qemu-devel@nongnu.org>,
+  <linux-cxl@vger.kernel.org>,  <gregory.price@memverge.com>,
+  <ira.weiny@intel.com>,  <dan.j.williams@intel.com>,
+  <a.manzanares@samsung.com>,  <dave@stgolabs.net>,
+  <nmtadam.samsung@gmail.com>,  <jim.harris@samsung.com>,
+  <Jorgen.Hansen@wdc.com>,  <wj28.lee@gmail.com>,  Fan Ni
+ <fan.ni@samsung.com>
+Subject: Re: [PATCH v7 09/12] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+In-Reply-To: <20240501155812.00002ec3@Huawei.com> (Jonathan Cameron's message
+	of "Wed, 1 May 2024 15:58:12 +0100")
+References: <20240418232902.583744-1-fan.ni@samsung.com>
+	<20240418232902.583744-10-fan.ni@samsung.com>
+	<877cgkxzal.fsf@pond.sub.org> <Zivk37xBGPsL_yo5@debian>
+	<87h6fkob0t.fsf@pond.sub.org> <ZjEnwPeoivsW8y5Z@debian>
+	<20240501155812.00002ec3@Huawei.com>
+Date: Tue, 04 Jun 2024 11:18:18 +0200
+Message-ID: <87cyox9icl.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,28 +69,44 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Dan Williams <dan.j.williams@intel.com> writes:
+I finally got around to read this slowly.  Thank you, Fan and Jonathan!
 
-> Kalle Valo wrote:
-> [..]
->> > Thanks for reporting the issue and testing the fix!  Can you please
->> > respond with your Tested-by to the actual patch(es) you tested?
->> 
->> Not easily as I'm not subscribed to linux-pci list and I haven't
->> researched how to import mbox files to my mailer :) So feel free to
->> ignore my Tested-by tag in this case.
->
-> I have had success with "b4 mbox" and importing that into Evolution, but
-> your mileage may vary with your mailer setup.
+I'm getting some "incomplete" vibes: "if we ever implement", "patches
+for this on list", "we aren't emulating this yet at all", and ...
 
-Heh, I'm old school and don't use anything modern like Evolution :) But
-it was actually really easy with Gnus ('G f') and looks like I managed
-to do it succesfully now:
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
-https://lore.kernel.org/all/87h6e9t9qt.fsf@kernel.org/
+[...]
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+> Only thing I'd add is that for now (because we don't need it for testing
+> the kernel flows) is that this does not provide any way for external
+> agents (e.g. our 'fabric manager' to find out what the state is - i.e.
+> if the extents have been accepted by the host etc). That stuff is all
+> defined by the spec, but not yet in the QMP interface.  At somepoint
+> we may want to add that as a state query type interface.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+... this, too.
+
+In review of v5, I asked whether this interface needs to be stable.
+
+"Not stable" doesn't mean we change an interface without thought.  It
+merely means we can change it much, much faster, and with much less
+overhead.
+
+I understand you want it chiefly for CXL development.  Development aids
+commonly don't need to be stable.
+
+If you're aiming for stable, you need to convince us the interface can
+support the foreseeable purposes without incompatible changes.  In
+particular, I'd like to see how you intend to support "finding out what
+the state is".  I suspect that's related to my question in review of v8:
+how to detect completion, and maybe track progress.
+
+There's infrastructure for background jobs: job.json.  We might be
+better off using it, unless completion is trivial and progress tracking
+unnecessary.
+
+[...]
+
