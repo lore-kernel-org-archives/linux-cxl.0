@@ -1,164 +1,89 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEAC14A0A9;
-	Tue,  4 Jun 2024 17:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F108A146D6E;
+	Tue,  4 Jun 2024 17:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520783; cv=none; b=jRJUebQevlIabXkA1tFVNN6UdMMshsvGePvg1w0D/a7CftZ05WE/L8EK27/7K+fxV0Me4VnfoUShEfKe4XWgQk3zOMPqX5AwvmwlDCv9nOzSBN80l+h1iLTdFdl7FNareb8Y0yJhbZHZV5jH6EgfotXNpEcOM77o89aKeR07lpM=
+	t=1717521084; cv=none; b=lVjNHVA2zEDeWQRwvHVRBZ4znhmOopVIeFj2Vej2ScOt1oHFqCNCTqRxAVr0/XBtc2RG+NIsat+jceWuRbcLBd7JomuXQAWo9vDWvKhLRLI4iJ5tqNUwbDp1SY4388FoTqSp3oEf2+pYGRNmkHFxcLrZth5bjyGJC7m+SfWptf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717520783; c=relaxed/simple;
-	bh=nMub7fB/QtlS4oR8KJcOZ9lRXmuFltunoQGGtWqHGuY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fWhlV64WQjjGtyeVAtuhoQ8RFgj+XMYpwcTlGU/ZdvlsVyOu8zSLw76y4292iGQayQpFKrRnOraZfhKPHdoqkvzQoO/fXasyBGPxF3x9TGdB/nfcbj7HdlVEfEfujTfjqqUo1/feQclPhRAZkaG/nM0jLJMCnD/6tD947LNK8lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vtxlz03rpz6K9Sn;
-	Wed,  5 Jun 2024 01:04:47 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C322A140A87;
-	Wed,  5 Jun 2024 01:05:56 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Jun
- 2024 18:05:56 +0100
-Date: Tue, 4 Jun 2024 18:05:55 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Leon Romanovsky <leon@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Itay
- Avraham <itayavr@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<netdev@vger.kernel.org>, Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed
-	<saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>, Andy Gospodarek
-	<andrew.gospodarek@broadcom.com>, Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>, "David Ahern" <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, "Jiri Pirko" <jiri@nvidia.com>, Leonid
- Bloch <lbloch@nvidia.com>, <linux-cxl@vger.kernel.org>,
-	<patches@lists.linux.dev>
-Subject: Re: [PATCH 1/8] fwctl: Add basic structure for a class subsystem
- with a cdev
-Message-ID: <20240604180555.000063c2@Huawei.com>
-In-Reply-To: <20240604155009.GJ19897@nvidia.com>
-References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
-	<1-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
-	<20240604093219.GN3884@unreal>
-	<20240604155009.GJ19897@nvidia.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717521084; c=relaxed/simple;
+	bh=QVWrmiQLsUU0GWwAK+Bb9M4f7QwhTLEcAJ5AgSI4RXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=s1NBUuYVAjWaxxFOOVVppJy4+plghK66aPSQfl4U0V/Emhqf2Mm7HiMdr2dK/TsDH23S8ZwsOkEDnqelBj6Aja6YQJUL3jo+TEojfVE16W95GxOuXx2bmlwBfMgsg9KuBM3r0o5NK0QbUWKMyJXuCK5eid+WKeAu4vQ+MGVVkkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnS+rlV3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnS+rlV3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D18C2BBFC;
+	Tue,  4 Jun 2024 17:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717521083;
+	bh=QVWrmiQLsUU0GWwAK+Bb9M4f7QwhTLEcAJ5AgSI4RXA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HnS+rlV37+gbi2r1Nn6pm/iDG98s5oB8Jx3PNZAUFBszOsUmTBdCwkK4H0sVNW5GQ
+	 I+Z5KS55q9k/OmgZ9vp9R8oyGxkfFuOpqsEXLjjPeLHuPBaYFctSb6n79BqlEIdeqO
+	 4dVCQBcdu24cp5F70jcP8l0DKHJhQH1dX+k0Am2IyobBVgQf66J95ckrd258XEQFRP
+	 TY0f5RrLIS0AP/WOmUxLHYo5fyxJgM5wr/S+yZWxu+Sc51w7UyIakxgb/oei5RS4x5
+	 3cG25VOKav9nFlO4C6R3xBwN6bXWCfCkkDcE8aRFmbzfowtM7DG7w/yGXKY9LIDRNH
+	 X+l8dFSj3cVQw==
+Date: Tue, 4 Jun 2024 12:11:21 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, bhelgaas@google.com,
+	Imre Deak <imre.deak@intel.com>,
+	Jani Saarinen <jani.saarinen@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Revert the cfg_access_lock lockdep mechanism
+Message-ID: <20240604171121.GA730808@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h6e9t9qt.fsf@kernel.org>
 
-On Tue, 4 Jun 2024 12:50:09 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Tue, Jun 04, 2024 at 12:32:19PM +0300, Leon Romanovsky wrote:
-> > > +static struct fwctl_device *
-> > > +_alloc_device(struct device *parent, const struct fwctl_ops *ops, size_t size)
-> > > +{
-> > > +	struct fwctl_device *fwctl __free(kfree) = kzalloc(size, GFP_KERNEL);
-> > > +
-> > > +	if (!fwctl)
-> > > +		return NULL;  
-> > 
-> > <...>
-> >   
-> > > +/* Drivers use the fwctl_alloc_device() wrapper */
-> > > +struct fwctl_device *_fwctl_alloc_device(struct device *parent,
-> > > +					 const struct fwctl_ops *ops,
-> > > +					 size_t size)
-> > > +{
-> > > +	struct fwctl_device *fwctl __free(fwctl) =
-> > > +		_alloc_device(parent, ops, size);  
-> > 
-> > I'm not a big fan of cleanup.h pattern as it hides important to me
-> > information about memory object lifetime and by "solving" one class of
-> > problems it creates another one.  
+On Tue, Jun 04, 2024 at 11:03:54AM +0300, Kalle Valo wrote:
+> Dan Williams <dan.j.williams@intel.com> writes:
 > 
-> I'm trying it here. One of the most common bugs I end up fixing is
-> error unwind and cleanup.h has successfully removed all of it. Let's
-> find out, others thought it was a good idea to add the infrastructure.
+> > While the experiment did reveal that there are additional places that
+> > are missing the lock during secondary bus reset, one of the places that
+> > needs to take cfg_access_lock (pci_bus_lock()) is not prepared for
+> > lockdep annotation.
+> >
+> > Specifically, pci_bus_lock() takes pci_dev_lock() recursively and is
+> > currently dependent on the fact that the device_lock() is marked
+> > lockdep_set_novalidate_class(&dev->mutex). Otherwise, without that
+> > annotation, pci_bus_lock() would need to use something like a new
+> > pci_dev_lock_nested() helper, a scheme to track a PCI device's depth in
+> > the topology, and a hope that the depth of a PCI tree never exceeds the
+> > max value for a lockdep subclass.
+> >
+> > The alternative to ripping out the lockdep coverage would be to deploy a
+> > dynamic lock key for every PCI device. Unfortunately, there is evidence
+> > that increasing the number of keys that lockdep needs to track to be
+> > per-PCI-device is prohibitively expensive for something like the
+> > cfg_access_lock.
+> >
+> > The main motivation for adding the annotation in the first place was to
+> > catch unlocked secondary bus resets, not necessarily catch lock ordering
+> > problems between cfg_access_lock and other locks. Solve that narrower
+> > problem with follow-on patches, and just due to targeted revert for now.
+> >
+> > Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
+> > Reported-by: Imre Deak <imre.deak@intel.com>
+> > Closes: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134186v1/shard-dg2-1/igt@device_reset@unbind-reset-rebind.html
+> > Cc: Jani Saarinen <jani.saarinen@intel.com>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> One thing that seems clear in my work here is that you should not use
-> cleanup.h if you don't have simple memory lifetime, like the above
-> case where the memory is freed if the function fails.
+> In our ath11k test box commit 7e89efc6e9e4 was causing random kernel
+> crashes. I tested patches 1-3 and did not see anymore crashes so:
 > 
-> > You didn't check if fwctl is NULL before using it.  
-> 
-> Oops, yes
-> 
-> > > +	int devnum;
-> > > +
-> > > +	devnum = ida_alloc_max(&fwctl_ida, FWCTL_MAX_DEVICES - 1, GFP_KERNEL);
-> > > +	if (devnum < 0)
-> > > +		return NULL;
-> > > +	fwctl->dev.devt = fwctl_dev + devnum;
-> > > +
-> > > +	cdev_init(&fwctl->cdev, &fwctl_fops);
-> > > +	fwctl->cdev.owner = THIS_MODULE;
-> > > +
-> > > +	if (dev_set_name(&fwctl->dev, "fwctl%d", fwctl->dev.devt - fwctl_dev))  
-> > 
-> > Did you miss ida_free() here?  
-> 
-> No, the put_device() does it in the release function. The __free
-> always calls fwctl_put()/put_device() on failure, and within all
-> functions except _alloc_device() the put_device() is the correct way
-> to free this memory.
+> Tested-by: Kalle Valo <kvalo@kernel.org>
 
-The conditional handling of the ida having been allocated or not is a bit ugly
-as I think it's just papering over this corner case.
-Can fwctl_dev and devnum both be zero? In practice no, but is that guaranteed
-for all time? Maybe...
-
-We got some kick back from Linus a while back in CXL and the outcome was
-a few more helpers rather than too much cleverness in the use of __free.
-
-Trick for this is often to define a small function that allocates both the
-ida and the device. With in that micro function handle the one error path
-or if you only have two things to do, you can use __free() for the allocation.
-
-Something like
-
-static struct fwctl_device *__alloc_device_and_devt(sizet_t size)
-{
-	struct fw_ctl_device *fwctl;
-	int devnum;
-
-	fwctl = ida_alloc_max(&fwct ...);
-	if (!fwctl)
-		return NULL;
-
-	devnum = ida_alloc_max(&fwct ...);
-	if (devnum < 0) {
-		kfree(fwctl);
-		return NULL;
-	}	
-
-	fwctl->dev.devt = fwctl_Ddev + devnum;
-
-	reutrn fwctl;
-}
-
-Then call device_initialize() on the returned structure ->dev as you know
-you ida and the containing structure are both in a state where the put_device()
-call doesn't need conditions on 'how initialized' it is.
-
-Still, maybe the ugly is fine.  
-
-
-> 
-> Thanks,
-> Jason
-> 
-> 
-
+Added to commit logs, thank you!
