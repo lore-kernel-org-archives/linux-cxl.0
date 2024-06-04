@@ -1,181 +1,373 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D6113D638;
-	Tue,  4 Jun 2024 04:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD8D13E8B5
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Jun 2024 07:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717476552; cv=none; b=tCtv8GZKMT8un/UwG/c1Y7HRBQLs8J2ulkjGpRGM1gGMHy+ZRKe9QDr7L/7/16QS6qQYcQvzF5P2ArCqUen4pQia34Ax8h1jydDv0vi7GqirF1VHRowk+CWaKSy7bPSvuQUKrXg55lkS1jk3cLjLGNr4kFnpdC2s1y+q9XZWemA=
+	t=1717485138; cv=none; b=SJDeLqNavHZ1wJIqZFjkmdvW2WRfj47jq7F6ST91uaAJ3TETU8hnClETkDs93ajxhJ89ew01RQhj8H0kRiaDvwn11pZxGS0ebqLn4F4tp/ECkEy/vJevolfDaged2yXBQ8EaevnwebdfMVxrK35jHxNuZnP8n0TErI98gqrl3WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717476552; c=relaxed/simple;
-	bh=kBMweLVpCfM2UzYjIsXunDx3MkgmfdWSqBe5Wqak/p4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=mm0Jc+/LEJCirP2SI9EyxPxfTcTPelh2iIx/orvNbopjO4yE9igrAdK24QcxsrQo48HPsbv6fd/h0oyYCnymKZOFHg2wVGOnuXPtuat3/9knmZS3UK/kXF9hbUNnazwcxeidqMo8WHTdQ2ktyzxriXKu2I0bJJwbWmYCL7/t9Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K7NfBC7l; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717485138; c=relaxed/simple;
+	bh=XM9hIW3XO376iPNqFomgvSAfLVVJ8qQhGHy+yRiE3iw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p5zaqkwqpFXKoCd9aDaRwaos7SVq1kGaSo1cECQr3NS+GOB2rZEnqzEVUAYLTUYamjkJkNZFMKjIIyjZjTgvkmwsB5B5pyii4xTnPF6x6Ez67mE0RQl1ywwnSKOGMLGNmTXEdKcw9oMVpc5lDfRYWwg+i4sNdF6oOsDZpkgKsNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dm+UhslB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K7NfBC7l"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4540t0Jh022462;
-	Tue, 4 Jun 2024 04:48:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=QHdcs9iRHSLkbBbytnbZ2v
-	ItgkiTp6EaHw12hroidTo=; b=K7NfBC7lJK++CtBRySB7XNOHf6d8I3+6ILHB1q
-	HZn/PkbFMxmZF00Py0u81S6FJDfBdEH/3jOovWkk0/XYC7NSMBvqo2dGxUS1sAiw
-	SJK2UmztQIG9RP6Tr2Yh4MzHl0ZL29J0SNiRbksmfdksO3TnwuWXGxUP9v8+4OFG
-	mqPEpQIfTJFClFfXg0PKrCZ8TV56y79cYU0wpIiOU9tp8n8f7WTacXHTDtpM+9jR
-	PdhSG5G+oSgPRv5eWaACx4cxbZu9211kdtNBHnw1YqeRJFUdBsq9i7AaaUNelXO7
-	n08J0eVY4gcM+HItumg2zso9NNqwkQsoRdjbE4lh8GnjBSXw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5t5g3r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 04:48:57 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4544mvka018396
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Jun 2024 04:48:57 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 21:48:56 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 3 Jun 2024 21:48:53 -0700
-Subject: [PATCH] cxl: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dm+UhslB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717485134;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FcB9ETi94T1Sg4UsIahfY5q2MFlrFvPSkqweeCBgCgQ=;
+	b=Dm+UhslBVyRBx21herC8sZHcxwGRauOyK+mKm3n8E2Ix5MXZgcqp+WJy2gL4FlE0R9qhxL
+	Rs5uSBWEzQki5IhJI//0VRi0Qf7WFqFHkMOJuLZXqctodHdEEKb/qEhfUuPbVNxpiZqAPk
+	bKTzDdRZNBqIMZx0ccfqYmfS551cMSI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-194-33QwUMzeMaK69hfFc_53BQ-1; Tue, 04 Jun 2024 03:12:12 -0400
+X-MC-Unique: 33QwUMzeMaK69hfFc_53BQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D00C80027E;
+	Tue,  4 Jun 2024 07:12:11 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.39.192.93])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D16E227EC;
+	Tue,  4 Jun 2024 07:12:10 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id F2FCB21E6757; Tue,  4 Jun 2024 09:12:09 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: nifan.cxl@gmail.com
+Cc: qemu-devel@nongnu.org,  jonathan.cameron@huawei.com,
+  linux-cxl@vger.kernel.org,  gregory.price@memverge.com,
+  ira.weiny@intel.com,  dan.j.williams@intel.com,
+  a.manzanares@samsung.com,  dave@stgolabs.net,  nmtadam.samsung@gmail.com,
+  jim.harris@samsung.com,  Jorgen.Hansen@wdc.com,  wj28.lee@gmail.com,
+  mst@redhat.com,  Fan Ni <fan.ni@samsung.com>,  Svetly Todorov
+ <svetly.todorov@memverge.com>
+Subject: Re: [PATCH v8 11/14] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+In-Reply-To: <20240523174651.1089554-12-nifan.cxl@gmail.com> (nifan cxl's
+	message of "Thu, 23 May 2024 10:44:51 -0700")
+References: <20240523174651.1089554-1-nifan.cxl@gmail.com>
+	<20240523174651.1089554-12-nifan.cxl@gmail.com>
+Date: Tue, 04 Jun 2024 09:12:09 +0200
+Message-ID: <87o78hb2ra.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240603-md-drivers-cxl-v1-1-f2940f5c0836@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIALScXmYC/x3MSw7CMAwA0atUXmMp/VACV0EsnMRQS21ANlSRq
- t6dwPItZjYwVmGDS7OB8iomz1zRHhqIE+UHo6Rq6Fw3uNH1uCRMKiurYSwz+iNF707hPLYeavR
- Svkv5D6+36kDGGJRynH6bWfKn4EL2ZoV9/wL48+ksfwAAAA==
-To: Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron
-	<jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Alison
- Schofield" <alison.schofield@intel.com>,
-        Vishal Verma
-	<vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: I0XTO6e2qVNYZiT88KgZGlwVs3c6VMCr
-X-Proofpoint-GUID: I0XTO6e2qVNYZiT88KgZGlwVs3c6VMCr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1011 malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406040036
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pmem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
+nifan.cxl@gmail.com writes:
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> From: Fan Ni <fan.ni@samsung.com>
+>
+> To simulate FM functionalities for initiating Dynamic Capacity Add
+> (Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL spec
+> r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces to issue
+> add/release dynamic capacity extents requests.
+>
+> With the change, we allow to release an extent only when its DPA range
+> is contained by a single accepted extent in the device. That is to say,
+> extent superset release is not supported yet.
+>
+> 1. Add dynamic capacity extents:
+>
+> For example, the command to add two continuous extents (each 128MiB long)
+> to region 0 (starting at DPA offset 0) looks like below:
+>
+> { "execute": "qmp_capabilities" }
+>
+> { "execute": "cxl-add-dynamic-capacity",
+>   "arguments": {
+>       "path": "/machine/peripheral/cxl-dcd0",
+>       "host-id": 0,
+>       "selection-policy": "prescriptive",
+>       "region": 0,
+>       "extents": [
+>       {
+>           "offset": 0,
+>           "len": 134217728
+>       },
+>       {
+>           "offset": 134217728,
+>           "len": 134217728
+>       }
+>       ]
+>   }
+> }
+>
+> 2. Release dynamic capacity extents:
+>
+> For example, the command to release an extent of size 128MiB from region 0
+> (DPA offset 128MiB) looks like below:
+>
+> { "execute": "cxl-release-dynamic-capacity",
+>   "arguments": {
+>       "path": "/machine/peripheral/cxl-dcd0",
+>       "host-id": 0,
+>       "removal-policy":"prescriptive",
+>       "region": 0,
+>       "extents": [
+>       {
+>           "offset": 134217728,
+>           "len": 134217728
+>       }
+>       ]
+>   }
+> }
+>
+> Tested-by: Svetly Todorov <svetly.todorov@memverge.com>
+> Reviewed-by: Gregory Price <gregory.price@memverge.com>
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/cxl/acpi.c      | 1 +
- drivers/cxl/core/port.c | 1 +
- drivers/cxl/mem.c       | 1 +
- drivers/cxl/pci.c       | 1 +
- drivers/cxl/pmem.c      | 1 +
- drivers/cxl/port.c      | 1 +
- 6 files changed, 6 insertions(+)
+[...]
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 571069863c62..e51315ea4a6a 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -921,6 +921,7 @@ static void __exit cxl_acpi_exit(void)
- /* load before dax_hmem sees 'Soft Reserved' CXL ranges */
- subsys_initcall(cxl_acpi_init);
- module_exit(cxl_acpi_exit);
-+MODULE_DESCRIPTION("CXL ACPI: Platform Support");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
- MODULE_IMPORT_NS(ACPI);
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 887ed6e358fb..ccaa00cd0321 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2356,5 +2356,6 @@ static void cxl_core_exit(void)
- 
- subsys_initcall(cxl_core_init);
- module_exit(cxl_core_exit);
-+MODULE_DESCRIPTION("CXL (Compute Express Link) Devices Support");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 0c79d9ce877c..1afb0e78082b 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -252,6 +252,7 @@ static struct cxl_driver cxl_mem_driver = {
- 
- module_cxl_driver(cxl_mem_driver);
- 
-+MODULE_DESCRIPTION("CXL: Memory Expansion");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
- MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index e53646e9f2fb..2c17fcb1b4ee 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1066,5 +1066,6 @@ static void __exit cxl_pci_driver_exit(void)
- 
- module_init(cxl_pci_driver_init);
- module_exit(cxl_pci_driver_exit);
-+MODULE_DESCRIPTION("CXL PCI manageability");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 2ecdaee63021..4ef93da22335 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -453,6 +453,7 @@ static __exit void cxl_pmem_exit(void)
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
- }
- 
-+MODULE_DESCRIPTION("CXL PMEM: Persistent Memory Support");
- MODULE_LICENSE("GPL v2");
- module_init(cxl_pmem_init);
- module_exit(cxl_pmem_exit);
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 97c21566677a..5ceff1df60db 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -209,6 +209,7 @@ static struct cxl_driver cxl_port_driver = {
- };
- 
- module_cxl_driver(cxl_port_driver);
-+MODULE_DESCRIPTION("CXL Port Support");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
- MODULE_ALIAS_CXL(CXL_DEVICE_PORT);
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index 4281726dec..57d9f82014 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+> @@ -361,3 +361,146 @@
+>  ##
+>  {'command': 'cxl-inject-correctable-error',
+>   'data': {'path': 'str', 'type': 'CxlCorErrorType'}}
+> +
+> +##
+> +# @CXLDynamicCapacityExtent:
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240603-md-drivers-cxl-85ac807b9618
+Three existing type names start with Cxl, and only one starts with CXL.
+Please make your new ones start with Cxl, not CXL:
+CxlDynamicCapacityExtent.
+
+> +#
+> +# A single dynamic capacity extent
+> +#
+> +# @offset: The offset (in bytes) to the start of the region
+> +#     where the extent belongs to.
+> +#
+> +# @len: The length of the extent in bytes.
+
+What is this?  Memory?
+
+> +#
+> +# Since: 9.1
+> +##
+> +{ 'struct': 'CXLDynamicCapacityExtent',
+> +  'data': {
+> +      'offset':'uint64',
+> +      'len': 'uint64'
+> +  }
+> +}
+> +
+> +##
+> +# @CXLExtSelPolicy:
+
+CxlExtentSelectionPolicy
+
+> +#
+> +# The policy to use for selecting which extents comprise the added
+> +# capacity, as defined in cxl spec r3.1 Table 7-70.
+
+Use the official title: "as defined in the CXL Specification 3.1" (I
+think, the actual document is behind a click-through agreement).
+
+> +#
+> +# @free: 0h = Free
+> +#
+> +# @contiguous: 1h = Continuous
+
+What does "1h =" mean?  The numeric encoding?
+
+What exactly is "contiguous" / "continuous"?  I figure it's clear enough
+if you have the CXL spec open in another window.  Can we condense it
+into one phrase for use here?
+
+> +#
+> +# @prescriptive: 2h = Prescriptive
+> +#
+> +# @enable-shared-access: 3h = Enable Shared Access
+
+Similar questions.
+
+> +#
+> +# Since: 9.1
+> +##
+> +{ 'enum': 'CXLExtSelPolicy',
+> +  'data': ['free',
+> +           'contiguous',
+> +           'prescriptive',
+> +           'enable-shared-access']
+> +}
+> +
+> +##
+> +# @cxl-add-dynamic-capacity:
+> +#
+> +# Command to initiate to add dynamic capacity extents to a host.  It
+
+"Initiate adding dynamic capacity extents"
+
+When a command initiates something, we commonly need a way to detect
+completion, and sometimes need a way to track progress.
+
+How can we detect completion, and if we can't, why's that okay?
+
+Can adding capacity fail after the command succeeded?  If yes, how can
+we detect that?
+
+How long until completion after the command succeeded?  Unbounded time?
+
+> +# simulates operations defined in cxl spec r3.1 7.6.7.6.5.
+
+"defined in the CXL Specification 3.1 section 7.6.7.6.5"
+
+More of the same below, not noting it again.
+
+> +#
+> +# @path: CXL DCD canonical QOM path.
+
+Sure the QOM path needs to be canonical?
+
+If not, what about "path to the CXL dynamic capacity device in the QOM
+tree".  Intentionally close to existing descriptions of @qom-path
+elsewhere.
+
+> +#
+> +# @host-id: The "Host ID" field as defined in cxl spec r3.1
+> +#     Table 7-70.
+> +#
+> +# @selection-policy: The "Selection Policy" bits as defined in
+> +#     cxl spec r3.1 Table 7-70.  It specifies the policy to use for
+> +#     selecting which extents comprise the added capacity.
+> +#
+> +# @region: The "Region Number" field as defined in cxl spec r3.1
+> +#     Table 7-70.  The dynamic capacity region where the capacity
+> +#     is being added.  Valid range is from 0-7.
+
+Scratch the second sentence?
+
+> +#
+> +# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-70.
+> +#
+> +# @extents: The "Extent List" field as defined in cxl spec r3.1
+> +#     Table 7-70.
+> +#
+> +# Since : 9.1
+> +##
+> +{ 'command': 'cxl-add-dynamic-capacity',
+> +  'data': { 'path': 'str',
+> +            'host-id': 'uint16',
+> +            'selection-policy': 'CXLExtSelPolicy',
+> +            'region': 'uint8',
+> +            '*tag': 'str',
+> +            'extents': [ 'CXLDynamicCapacityExtent' ]
+> +           }
+> +}
+> +
+> +##
+> +# @CXLExtRemovalPolicy:
+
+CxlExtentRemovalPolicy
+
+> +#
+> +# The policy to use for selecting which extents comprise the released
+> +# capacity, defined in the "Flags" field in cxl spec r3.1 Table 7-71.
+> +#
+> +# @tag-based: value = 0h.  Extents are selected by the device based
+> +#     on tag, with no requirement for contiguous extents.
+> +#
+> +# @prescriptive: value = 1h.  Extent list of capacity to release is
+> +#     included in the request payload.
+
+I guess "value = ..." documents the numeric value.  Sure that's useful
+here?
+
+> +#
+> +# Since: 9.1
+> +##
+> +{ 'enum': 'CXLExtRemovalPolicy',
+> +  'data': ['tag-based',
+> +           'prescriptive']
+> +}
+> +
+> +##
+> +# @cxl-release-dynamic-capacity:
+> +#
+> +# Command to initiate to release dynamic capacity extents from a
+
+"Initiate releasing dynamic capacity extents"
+
+When a command initiates something, we commonly need a way to detect
+completion, and sometimes need a way to track progress.  See
+cxl-add-dynamic-capacity above.
+
+> +# host.  It simulates operations defined in cxl spec r3.1 7.6.7.6.6.
+> +#
+> +# @path: CXL DCD canonical QOM path.
+
+My comment on cxl-add-dynamic-capacity argument @path applies.
+
+> +#
+> +# @host-id: The "Host ID" field as defined in cxl spec r3.1
+> +#     Table 7-71.
+> +#
+> +# @removal-policy: Bit[3:0] of the "Flags" field as defined in cxl
+> +#     spec r3.1 Table 7-71.
+> +#
+> +# @forced-removal: Bit[4] of the "Flags" field in cxl spec r3.1
+> +#     Table 7-71.  When set, device does not wait for a Release
+
+"the device"
+
+> +#     Dynamic Capacity command from the host.  Host immediately
+> +#     loses access to released capacity.
+
+"Instead, the host immediately loses"
+
+> +#
+> +# @sanitize-on-release: Bit[5] of the "Flags" field in cxl spec r3.1
+> +#     Table 7-71.  When set, device should sanitize all released
+
+"the device"
+
+> +#     capacity as a result of this request.
+
+What does it mean "to sanitize capacity"?  Is this about scrubbing the
+memory?
+
+> +#
+> +# @region: The "Region Number" field as defined in cxl spec r3.1
+> +#     Table 7-71.  The dynamic capacity region where the capacity
+> +#     is being added.  Valid range is from 0-7.
+
+My comment on cxl-add-dynamic-capacity argument @region applies.
+
+> +#
+> +# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-71.
+> +#
+> +# @extents: The "Extent List" field as defined in cxl spec r3.1
+> +#     Table 7-71.
+> +#
+> +# Since : 9.1
+> +##
+> +{ 'command': 'cxl-release-dynamic-capacity',
+> +  'data': { 'path': 'str',
+> +            'host-id': 'uint16',
+> +            'removal-policy': 'CXLExtRemovalPolicy',
+> +            '*forced-removal': 'bool',
+> +            '*sanitize-on-release': 'bool',
+> +            'region': 'uint8',
+> +            '*tag': 'str',
+> +            'extents': [ 'CXLDynamicCapacityExtent' ]
+> +           }
+> +}
 
