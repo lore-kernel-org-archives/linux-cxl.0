@@ -1,41 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797B41487E7;
-	Tue,  4 Jun 2024 16:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBDB148FF5
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Jun 2024 16:37:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518768; cv=none; b=lBbPzyuPH9wEs/VkW6VNDL5OX7JzvIz5Iu/v6j2JiE4CZAgDiynLpyJ6qMVXoRdXHvfawdReNE3p+bXMVQU9cSko97PIktdT7vQJy38dzObQ9OsjOxHuOEcc21hTtcBAEEuM7uzoG20HU8Vory+Fxfynle69lCOnQsNIVIqukdA=
+	t=1717519076; cv=none; b=B34WgS2pdAJAY9ZtI1irbOiWQrqK/38itoiGaTSluM2JFO88xZSRMkM50Nnp/EdV72nIVkCAnsjdgHIwDnkRDHB32SBygK5qlKzam7SI6lSaETsXB+t/sJkF87QQBPR7ITi1tO/gsrDglfez3kfo0qpSW2q818EbWtRUMKeXhGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518768; c=relaxed/simple;
-	bh=0C5DqgcCLpjgl3776lhf5AwS+JFkQ8oCgvMpWmt3As8=;
+	s=arc-20240116; t=1717519076; c=relaxed/simple;
+	bh=hXbDUe+YgGhcGu4vpJ70ZgqHlDChCBaM5sojwMnNLpc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YouQEqwiK7Elg84XFM99oznvxuzhWrcxEmxGITMPm1P5jmjM7+zYkj/Kq0jlTqdjobgpKSH57L2SNkkacpGMsTyZ4ZLupongsM985yyxmtSGvOX+lyQcSRwEDxbgEYujBgmLC4TqvecEYuqMOLSg5E2LaS/P7bu/4B/nzkOS10I=
+	 MIME-Version:Content-Type; b=PCVPPStEP0qQ/AX/0TjWx6YxHbogFyCPE6a4yp4UJkhQQp21Vfakn/g23z3bSYmtMWhrT2eP05EdLnLChpN1Br0G1Zb4+B4kpVA7fZsn/UKEThf7AwFgNv5h9pftQwdsAWB8gZwpMCgYcp9TEM6Tk6btnf6I7r28yHDjPfBzm6o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vtwxj2nttz6K5qh;
-	Wed,  5 Jun 2024 00:28:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vtx3y6ryQz6JBWn;
+	Wed,  5 Jun 2024 00:33:34 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B8C6D1400D9;
-	Wed,  5 Jun 2024 00:32:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id EE55F1400D4;
+	Wed,  5 Jun 2024 00:37:50 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Jun
- 2024 17:32:42 +0100
-Date: Tue, 4 Jun 2024 17:32:41 +0100
+ 2024 17:37:50 +0100
+Date: Tue, 4 Jun 2024 17:37:49 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-CC: <kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>,
-	<y-goto@fujitsu.com>, <linux-pci@vger.kernel.org>, <mj@ucw.cz>,
-	<dan.j.williams@intel.com>
-Subject: Re: [PATCH v7 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
- link status
-Message-ID: <20240604173241.000009d9@Huawei.com>
-In-Reply-To: <20240510073710.98953-3-kobayashi.da-06@fujitsu.com>
-References: <20240510073710.98953-1-kobayashi.da-06@fujitsu.com>
-	<20240510073710.98953-3-kobayashi.da-06@fujitsu.com>
+To: <alison.schofield@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/region: Avoid null pointer dereference in region
+ lookup
+Message-ID: <20240604173749.00002451@Huawei.com>
+In-Reply-To: <20240604003609.202682-1-alison.schofield@intel.com>
+References: <20240604003609.202682-1-alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,160 +48,84 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 10 May 2024 16:37:10 +0900
-"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
+On Mon,  3 Jun 2024 17:36:09 -0700
+alison.schofield@intel.com wrote:
 
-> Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> In CXL1.1, the link status of the device is included in the RCRB mapped to
-> the memory mapped register area. Critically, that arrangement makes the
-> link status and control registers invisible to existing PCI user tooling.
+> cxl_dpa_to_region() looks up a region based on a memdev and DPA.
+> It wrongly assumes an endpoint found mapping the DPA is also of
+> a fully assembled region. When not true it leads to a null pointer
+> dereference looking up the region name.
 > 
-> Export those registers via sysfs with the expectation that PCI user
-> tooling will alternatively look for these sysfs files when attempting to
-> access to these CXL 1.1 endpoints registers.
-
-The lspci support raced with this series and has landed.
-
-https://github.com/pciutils/pciutils/commit/49efa87fcce4f7d5b351238668ae1d4491802b88
-
-A few follow up comments on suggestion to cache the offset, not the register value
-(which might change over time)
+> This appears during testing of region lookup after a failure to
+> assemble a BIOS defined region or if the lookup raced with the
+> assembly of the BIOS defined region.
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> Failure to clean up BIOS defined regions that fail assembly is an
+> issue in itself and a fix to that problem will alleviate some of
+> the impact. It will not alleviate the race condition so let's harden
+> this path.
+> 
+> The behavior change is that the kernel oops due to a null pointer
+> dereference is replaced with a dev_dbg() message noting that an
+> endpoint was mapped.
+> 
+> Additional comments are added so that future users of this function
+> can more clearly understand what it provides.
+> 
+> Fixes: 0a105ab28a4d ("cxl/memdev: Warn of poison inject or clear to a mapped region")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Nasty corner case. Fix looks correct to me.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/cxl/pci.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
+>  drivers/cxl/core/region.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 2ff361e756d6..c10797adde2c 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -786,6 +786,106 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  	return 0;
->  }
->  
-> +static ssize_t rcd_link_cap_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +	struct cxl_dport *dport;
-> +	struct cxl_port *port;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
-
-If you follow the suggestion of caching the offset, not the register
-content then, these are all very similar. Define one common
-function which takes a u8 offset and call that from each of the
-functions.
-
-If you stick to separate caches (and ensure they are up to date),
-then you can add a utility function to take the dev here and
-get you to the rcrb structure.  Then you can call that and only
-have the final line in each instances of this code.
-
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_cap);
-> +
-> +static ssize_t rcd_link_ctrl_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +	struct cxl_dport *dport;
-> +	struct cxl_port *port;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_ctrl);
-> +
-> +static ssize_t rcd_link_status_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *endpoint_parent;
-> +	struct cxl_dport *dport;
-> +	struct cxl_port *port;
-> +
-> +	port = cxl_mem_find_port(cxlmd, &dport);
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	endpoint_parent = port->uport_dev;
-> +	if (!endpoint_parent)
-> +		return -ENXIO;
-> +
-> +	guard(device)(endpoint_parent);
-> +	if (!endpoint_parent->driver)
-> +		return -ENXIO;
-> +
-> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
-> +}
-> +static DEVICE_ATTR_RO(rcd_link_status);
-> +
-> +static struct attribute *cxl_rcd_attrs[] = {
-> +		&dev_attr_rcd_link_cap.attr,
-> +		&dev_attr_rcd_link_ctrl.attr,
-> +		&dev_attr_rcd_link_status.attr,
-> +		NULL
-> +};
-> +
-> +static umode_t cxl_rcd_visible(struct kobject *kobj,
-> +					  struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (is_cxl_restricted(pdev))
-> +		return a->mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct attribute_group cxl_rcd_group = {
-> +		.attrs = cxl_rcd_attrs,
-> +		.is_visible = cxl_rcd_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(cxl_rcd);
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3c2b6144be23..88051bb673bf 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2688,22 +2688,33 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
 >  {
->  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> @@ -969,6 +1069,7 @@ static struct pci_driver cxl_pci_driver = {
->  	.id_table		= cxl_mem_pci_tbl,
->  	.probe			= cxl_pci_probe,
->  	.err_handler		= &cxl_error_handlers,
-> +	.dev_groups		= cxl_rcd_groups,
->  	.driver	= {
->  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
->  	},
+>  	struct cxl_dpa_to_region_context *ctx = arg;
+>  	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_region *cxlr;
+>  	u64 dpa = ctx->dpa;
+>  
+>  	if (!is_endpoint_decoder(dev))
+>  		return 0;
+>  
+>  	cxled = to_cxl_endpoint_decoder(dev);
+> -	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+> +	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
+>  		return 0;
+>  
+>  	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
+>  		return 0;
+>  
+> -	dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
+> -		dev_name(&cxled->cxld.region->dev));
+> +	/*
+> +	 * Stop the region search (return 1) when an endpoint mapping is
+> +	 * found. The region may not be fully constructed so offering
+> +	 * the cxlr in the context structure is not guaranteed.
+> +	 */
+> +	cxlr = cxled->cxld.region;
+> +	if (cxlr)
+> +		dev_dbg(dev, "dpa:0x%llx mapped in region:%s\n", dpa,
+> +			dev_name(&cxlr->dev));
+> +	else
+> +		dev_dbg(dev, "dpa:0x%llx mapped in endpoint:%s\n", dpa,
+> +			dev_name(dev));
+>  
+> -	ctx->cxlr = cxled->cxld.region;
+> +	ctx->cxlr = cxlr;
+>  
+>  	return 1;
+>  }
+> 
+> base-commit: 49ba7b515c4c0719b866d16f068e62d16a8a3dd1
 
