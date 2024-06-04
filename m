@@ -1,112 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DD1142E9C
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Jun 2024 09:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0DC23776;
+	Tue,  4 Jun 2024 09:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492709; cv=none; b=ineqteFVLCPj54KH6HDbI9FkEA4tYbmXhm88gWeajsYBbdjJYrI5nanu8MkPO0HAVEuiajIWtB1rbHb7wqVX34Bui3uaX7QZgBNZtVufEtkvl/m2ryo5PH2SV1BISM/+DlJejUKXR7V74GslfxPRfoPz5wcm6zR47TuVDRIpHNg=
+	t=1717493544; cv=none; b=mewwhq6mDYaq71xcCB2zhVU4S2us/NSoc8zSP5F5OIhel2xaHxiDieElWFxYRoTDvJD5NBXjy3FuyNps2rgxoaex/Qq/KVkgCfGbMawlyWZIpfqoa/VW5uIpZw6tGV+FOGMcCIDArTc46bEAU1Xip0w1qRvGAT/aGpuL59n1jdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492709; c=relaxed/simple;
-	bh=rXF08ziuRzVySAh1ZPW1e1gAzCY852KJ29VoUEXTkU8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NZJ7QZuP8hvDSZob4v3jcFEBmWKZW99UURoJPUfeKHF8/0DTQaFYu8+m2TEkOnkh8kBNSuJr1iks0aBu3gYOyLhPd/YvqaFaNoWcB7OnEQrPK+Th79pLPEvrlvuKQevLxF7iv2F4d+5PxGK2gjRUXhGtFXQGNNli2hpYcS7GIPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FLlXCkco; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717493544; c=relaxed/simple;
+	bh=WbnbTofHxkrx5spG4fYxe59Me3aK8kFxL4l5hleeJcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VcXYrPAr1qRiGyEgM+CEmckiHtVsGQXH/FKzDUGNCrWPUwHbVttAWRE7do6gFWHKNVE+ztMlLCo6BiDrSGPEgHtaCYm2g+85vUerU3dGQgf+afNrKVTb4TNTw5iRfAtPn1aD7eaJvid9qiRYmA64Hn3SyAeeqAfAbITtr9bDoLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0jRI4mi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FLlXCkco"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717492707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KJxLCaBaIuRGcA0TH+Rg+hOm7JhuMGzVkNLWQKfNTtc=;
-	b=FLlXCkcoFzmomHUf8zPy8igUY1HvnMBMqXKQjfRYpewpUtpi8b6+yV71hfPyfyUybELOwU
-	zcnAR7obp3rHXeRxVFqzwNMiVt/EcQDlLDL2PsQoiL69lnJfCpYad8hKxGxJuiERz0C3Gl
-	Dna7WyRy4bNQ/QZgwAXt924hBs7wyK4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-fZA_7lFZOYKinfcPFuq64Q-1; Tue,
- 04 Jun 2024 05:18:21 -0400
-X-MC-Unique: fZA_7lFZOYKinfcPFuq64Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6074E3C025CE;
-	Tue,  4 Jun 2024 09:18:20 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.39.192.93])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5591A4D6D;
-	Tue,  4 Jun 2024 09:18:19 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 61B0321E668A; Tue,  4 Jun 2024 11:18:18 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: fan <nifan.cxl@gmail.com>,  <qemu-devel@nongnu.org>,
-  <linux-cxl@vger.kernel.org>,  <gregory.price@memverge.com>,
-  <ira.weiny@intel.com>,  <dan.j.williams@intel.com>,
-  <a.manzanares@samsung.com>,  <dave@stgolabs.net>,
-  <nmtadam.samsung@gmail.com>,  <jim.harris@samsung.com>,
-  <Jorgen.Hansen@wdc.com>,  <wj28.lee@gmail.com>,  Fan Ni
- <fan.ni@samsung.com>
-Subject: Re: [PATCH v7 09/12] hw/cxl/events: Add qmp interfaces to
- add/release dynamic capacity extents
-In-Reply-To: <20240501155812.00002ec3@Huawei.com> (Jonathan Cameron's message
-	of "Wed, 1 May 2024 15:58:12 +0100")
-References: <20240418232902.583744-1-fan.ni@samsung.com>
-	<20240418232902.583744-10-fan.ni@samsung.com>
-	<877cgkxzal.fsf@pond.sub.org> <Zivk37xBGPsL_yo5@debian>
-	<87h6fkob0t.fsf@pond.sub.org> <ZjEnwPeoivsW8y5Z@debian>
-	<20240501155812.00002ec3@Huawei.com>
-Date: Tue, 04 Jun 2024 11:18:18 +0200
-Message-ID: <87cyox9icl.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0jRI4mi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29689C2BBFC;
+	Tue,  4 Jun 2024 09:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717493543;
+	bh=WbnbTofHxkrx5spG4fYxe59Me3aK8kFxL4l5hleeJcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n0jRI4mi3EdRcQYgF9pEa/gRYlCHIf6sBhGXBmPndUxYbrsyeeLEW/8Sfm3a20Fzg
+	 MeLOvwKBiPo1OWfEl2uDOMB5FUbJ/Y4uav2hZeuNO8u9Ps+pw/Bh0cpWp+6jFxLPNp
+	 kRar1fbeX+gaqiEP4V4+r6xUT4FCaufoJKKwj9nfQhyOpJSMBExEQsOUha/7P9jj2f
+	 dYEbWrsjT69gMxDctMlj/JTo7xMp1UY0mbPIfZbbsbhzB5tPMvydaGjC5oGWQQvH+J
+	 6MLj4wLAjtZE2lONLJA49KHrh80nJyX0FPEn0tsw61x5NKwtFtN2opIVtgoN0OkRM7
+	 UPkA2bZvvIjEQ==
+Date: Tue, 4 Jun 2024 12:32:19 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	David Ahern <dsahern@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 1/8] fwctl: Add basic structure for a class subsystem
+ with a cdev
+Message-ID: <20240604093219.GN3884@unreal>
+References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <1-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
 
-I finally got around to read this slowly.  Thank you, Fan and Jonathan!
+On Mon, Jun 03, 2024 at 12:53:17PM -0300, Jason Gunthorpe wrote:
+> Create the class, character device and functions for a fwctl driver to
+> un/register to the subsystem.
+> 
+> A typical fwctl driver has a sysfs presence like:
+> 
+> $ ls -l /dev/fwctl/fwctl0
+> crw------- 1 root root 250, 0 Apr 25 19:16 /dev/fwctl/fwctl0
+> 
+> $ ls /sys/class/fwctl/fwctl0
+> dev  device  power  subsystem  uevent
+> 
+> $ ls /sys/class/fwctl/fwctl0/device/infiniband/
+> ibp0s10f0
+> 
+> $ ls /sys/class/infiniband/ibp0s10f0/device/fwctl/
+> fwctl0/
+> 
+> $ ls /sys/devices/pci0000:00/0000:00:0a.0/fwctl/fwctl0
+> dev  device  power  subsystem  uevent
+> 
+> Which allows userspace to link all the multi-subsystem driver components
+> together and learn the subsystem specific names for the device's
+> components.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  MAINTAINERS            |   8 ++
+>  drivers/Kconfig        |   2 +
+>  drivers/Makefile       |   1 +
+>  drivers/fwctl/Kconfig  |   9 +++
+>  drivers/fwctl/Makefile |   4 +
+>  drivers/fwctl/main.c   | 174 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fwctl.h  |  68 ++++++++++++++++
+>  7 files changed, 266 insertions(+)
+>  create mode 100644 drivers/fwctl/Kconfig
+>  create mode 100644 drivers/fwctl/Makefile
+>  create mode 100644 drivers/fwctl/main.c
+>  create mode 100644 include/linux/fwctl.h
 
-I'm getting some "incomplete" vibes: "if we ever implement", "patches
-for this on list", "we aren't emulating this yet at all", and ...
+<...>
 
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+> +static struct fwctl_device *
+> +_alloc_device(struct device *parent, const struct fwctl_ops *ops, size_t size)
+> +{
+> +	struct fwctl_device *fwctl __free(kfree) = kzalloc(size, GFP_KERNEL);
+> +
+> +	if (!fwctl)
+> +		return NULL;
 
-[...]
+<...>
 
-> Only thing I'd add is that for now (because we don't need it for testing
-> the kernel flows) is that this does not provide any way for external
-> agents (e.g. our 'fabric manager' to find out what the state is - i.e.
-> if the extents have been accepted by the host etc). That stuff is all
-> defined by the spec, but not yet in the QMP interface.  At somepoint
-> we may want to add that as a state query type interface.
+> +/* Drivers use the fwctl_alloc_device() wrapper */
+> +struct fwctl_device *_fwctl_alloc_device(struct device *parent,
+> +					 const struct fwctl_ops *ops,
+> +					 size_t size)
+> +{
+> +	struct fwctl_device *fwctl __free(fwctl) =
+> +		_alloc_device(parent, ops, size);
 
-... this, too.
+I'm not a big fan of cleanup.h pattern as it hides important to me
+information about memory object lifetime and by "solving" one class of
+problems it creates another one.
 
-In review of v5, I asked whether this interface needs to be stable.
+You didn't check if fwctl is NULL before using it.
 
-"Not stable" doesn't mean we change an interface without thought.  It
-merely means we can change it much, much faster, and with much less
-overhead.
+> +	int devnum;
+> +
+> +	devnum = ida_alloc_max(&fwctl_ida, FWCTL_MAX_DEVICES - 1, GFP_KERNEL);
+> +	if (devnum < 0)
+> +		return NULL;
+> +	fwctl->dev.devt = fwctl_dev + devnum;
+> +
+> +	cdev_init(&fwctl->cdev, &fwctl_fops);
+> +	fwctl->cdev.owner = THIS_MODULE;
+> +
+> +	if (dev_set_name(&fwctl->dev, "fwctl%d", fwctl->dev.devt - fwctl_dev))
 
-I understand you want it chiefly for CXL development.  Development aids
-commonly don't need to be stable.
+Did you miss ida_free() here?
 
-If you're aiming for stable, you need to convince us the interface can
-support the foreseeable purposes without incompatible changes.  In
-particular, I'd like to see how you intend to support "finding out what
-the state is".  I suspect that's related to my question in review of v8:
-how to detect completion, and maybe track progress.
+> +		return NULL;
+> +
+> +	fwctl->ops = ops;
+> +	return_ptr(fwctl);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(_fwctl_alloc_device, FWCTL);
 
-There's infrastructure for background jobs: job.json.  We might be
-better off using it, unless completion is trivial and progress tracking
-unnecessary.
-
-[...]
-
+Thanks
