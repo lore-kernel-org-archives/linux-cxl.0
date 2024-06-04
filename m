@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A154C1487DC;
-	Tue,  4 Jun 2024 16:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797B41487E7;
+	Tue,  4 Jun 2024 16:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518342; cv=none; b=WRuE/VfK+vUqzAa5QTKSjEiPqTYg/BmDlD3l/s7tKUuowkQs/su9X2oEqkGycHWARXP8VMJjz1xhb/0nTTrPNQ5/Uk2cT2/hTJbh+f80fk1EBINoUqBFFHDGtxbQmStzUOoKasON6T/XUvEut+1gZwnFUh1g2D29LynJPviIUJg=
+	t=1717518768; cv=none; b=lBbPzyuPH9wEs/VkW6VNDL5OX7JzvIz5Iu/v6j2JiE4CZAgDiynLpyJ6qMVXoRdXHvfawdReNE3p+bXMVQU9cSko97PIktdT7vQJy38dzObQ9OsjOxHuOEcc21hTtcBAEEuM7uzoG20HU8Vory+Fxfynle69lCOnQsNIVIqukdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518342; c=relaxed/simple;
-	bh=FAr7oMFOkWQbWaHObwOrQT09tqfYT7TbKaA8cZ5bUkM=;
+	s=arc-20240116; t=1717518768; c=relaxed/simple;
+	bh=0C5DqgcCLpjgl3776lhf5AwS+JFkQ8oCgvMpWmt3As8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UFQpwcfTZcpYw176eTBIDTSs4L2Hnhd+2YVlG3tfe8oP3U+Bz7cmz1oljSqO/TPERANRF7Pmi/w1BjtDrvWQyof83uVo0PZ0JFw2c3ZUJdZnFtmP3LU6fW/kGPdKJ6QyFQarZwb2OlPiTui++XPFFrsotEZMoftGxrtIgMfwt/k=
+	 MIME-Version:Content-Type; b=YouQEqwiK7Elg84XFM99oznvxuzhWrcxEmxGITMPm1P5jmjM7+zYkj/Kq0jlTqdjobgpKSH57L2SNkkacpGMsTyZ4ZLupongsM985yyxmtSGvOX+lyQcSRwEDxbgEYujBgmLC4TqvecEYuqMOLSg5E2LaS/P7bu/4B/nzkOS10I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VtwnW2rD2z6K6Dx;
-	Wed,  5 Jun 2024 00:21:03 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vtwxj2nttz6K5qh;
+	Wed,  5 Jun 2024 00:28:09 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2E9A31409EA;
-	Wed,  5 Jun 2024 00:25:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B8C6D1400D9;
+	Wed,  5 Jun 2024 00:32:42 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Jun
- 2024 17:25:36 +0100
-Date: Tue, 4 Jun 2024 17:25:35 +0100
+ 2024 17:32:42 +0100
+Date: Tue, 4 Jun 2024 17:32:41 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 CC: <kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>,
 	<y-goto@fujitsu.com>, <linux-pci@vger.kernel.org>, <mj@ucw.cz>,
 	<dan.j.williams@intel.com>
-Subject: Re: [PATCH v7 1/2] cxl/core/regs: Add rcd_regs initialization at
- __rcrb_to_component()
-Message-ID: <20240604172535.00000230@Huawei.com>
-In-Reply-To: <20240510073710.98953-2-kobayashi.da-06@fujitsu.com>
+Subject: Re: [PATCH v7 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
+ link status
+Message-ID: <20240604173241.000009d9@Huawei.com>
+In-Reply-To: <20240510073710.98953-3-kobayashi.da-06@fujitsu.com>
 References: <20240510073710.98953-1-kobayashi.da-06@fujitsu.com>
-	<20240510073710.98953-2-kobayashi.da-06@fujitsu.com>
+	<20240510073710.98953-3-kobayashi.da-06@fujitsu.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,102 +49,160 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 10 May 2024 16:37:09 +0900
+On Fri, 10 May 2024 16:37:10 +0900
 "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
 
-> Add rcd_regs and its initialization at __rcrb_to_component() to cache
+> Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+> 
+> In CXL1.1, the link status of the device is included in the RCRB mapped to
+> the memory mapped register area. Critically, that arrangement makes the
+> link status and control registers invisible to existing PCI user tooling.
+> 
+> Export those registers via sysfs with the expectation that PCI user
+> tooling will alternatively look for these sysfs files when attempting to
+> access to these CXL 1.1 endpoints registers.
 
-This rcd_regs doesn't immediately align with what is in the code. I'd just
-call it out as
+The lspci support raced with this series and has landed.
 
-Add caching of Link Status, Link Control and Link Capability registers for
-a Restricted CXL Device to struct cxl_rcrb_info.
+https://github.com/pciutils/pciutils/commit/49efa87fcce4f7d5b351238668ae1d4491802b88
 
-> the cxl1.1 device link status information. Reduce access to the memory
-> map area where the RCRB is located by caching the cxl1.1 device
-> link status information.
-
-Why do we care about accessing that memory mapped area?
-Avoiding the walk to find the offset might be an alternative as then
-we could directly read these registers when needed.
-So handle these similarly to aer_cap.
-
-That will allow for them changing at runtime without carefully needing
-to update the cached values.
-
+A few follow up comments on suggestion to cache the offset, not the register value
+(which might change over time)
 > 
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-New day, new comments :( 
-
 > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 > ---
->  drivers/cxl/core/core.h |  4 ++++
->  drivers/cxl/core/regs.c | 16 ++++++++++++++++
->  drivers/cxl/cxl.h       |  3 +++
->  3 files changed, 23 insertions(+)
+>  drivers/cxl/pci.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 3b64fb1b9ed0..42e3483b4a14 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -75,6 +75,10 @@ resource_size_t __rcrb_to_component(struct device *dev,
->  				    enum cxl_rcrb which);
->  u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 2ff361e756d6..c10797adde2c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -786,6 +786,106 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	return 0;
+>  }
 >  
-> +#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-> +#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-> +#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
+> +static ssize_t rcd_link_cap_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
+> +	struct cxl_dport *dport;
+> +	struct cxl_port *port;
 > +
->  extern struct rw_semaphore cxl_dpa_rwsem;
->  extern struct rw_semaphore cxl_region_rwsem;
->  
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 372786f80955..1ad58c464488 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	u32 bar0, bar1;
->  	u16 cmd;
->  	u32 id;
-> +	u16 offset;
-> +	u32 cap_hdr;
->  
->  	if (which == CXL_RCRB_UPSTREAM)
->  		rcrb += SZ_4K;
-> @@ -537,6 +539,20 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	cmd = readw(addr + PCI_COMMAND);
->  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
->  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> +	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-> +	cap_hdr = readl(addr + offset);
-> +	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-> +		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-> +		if (offset == 0 || offset > SZ_4K)
-> +			break;
-> +		cap_hdr = readl(addr + offset);
-> +	}
-> +	if (offset) {
-> +		ri->rcd_lnkcap = readl(addr + offset + PCI_EXP_LNKCAP);
-> +		ri->rcd_lnkctrl = readl(addr + offset + PCI_EXP_LNKCTL);
-> +		ri->rcd_lnkstatus = readl(addr + offset + PCI_EXP_LNKSTA);
-> +	}
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
 > +
->  	iounmap(addr);
->  	release_mem_region(rcrb, SZ_4K);
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 003feebab79b..808818ccc255 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -646,6 +646,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
->  
->  struct cxl_rcrb_info {
->  	resource_size_t base;
-> +	u16 rcd_lnkstatus;
-> +	u16 rcd_lnkctrl;
-> +	u32 rcd_lnkcap;
->  	u16 aer_cap;
->  };
->  
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
+
+If you follow the suggestion of caching the offset, not the register
+content then, these are all very similar. Define one common
+function which takes a u8 offset and call that from each of the
+functions.
+
+If you stick to separate caches (and ensure they are up to date),
+then you can add a utility function to take the dev here and
+get you to the rcrb structure.  Then you can call that and only
+have the final line in each instances of this code.
+
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_cap);
+> +
+> +static ssize_t rcd_link_ctrl_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
+> +	struct cxl_dport *dport;
+> +	struct cxl_port *port;
+> +
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_ctrl);
+> +
+> +static ssize_t rcd_link_status_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *endpoint_parent;
+> +	struct cxl_dport *dport;
+> +	struct cxl_port *port;
+> +
+> +	port = cxl_mem_find_port(cxlmd, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	endpoint_parent = port->uport_dev;
+> +	if (!endpoint_parent)
+> +		return -ENXIO;
+> +
+> +	guard(device)(endpoint_parent);
+> +	if (!endpoint_parent->driver)
+> +		return -ENXIO;
+> +
+> +	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_status);
+> +
+> +static struct attribute *cxl_rcd_attrs[] = {
+> +		&dev_attr_rcd_link_cap.attr,
+> +		&dev_attr_rcd_link_ctrl.attr,
+> +		&dev_attr_rcd_link_status.attr,
+> +		NULL
+> +};
+> +
+> +static umode_t cxl_rcd_visible(struct kobject *kobj,
+> +					  struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (is_cxl_restricted(pdev))
+> +		return a->mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group cxl_rcd_group = {
+> +		.attrs = cxl_rcd_attrs,
+> +		.is_visible = cxl_rcd_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(cxl_rcd);
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> @@ -969,6 +1069,7 @@ static struct pci_driver cxl_pci_driver = {
+>  	.id_table		= cxl_mem_pci_tbl,
+>  	.probe			= cxl_pci_probe,
+>  	.err_handler		= &cxl_error_handlers,
+> +	.dev_groups		= cxl_rcd_groups,
+>  	.driver	= {
+>  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+>  	},
 
