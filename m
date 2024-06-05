@@ -1,175 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3C0188CAA;
-	Wed,  5 Jun 2024 17:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886AD15572C;
+	Wed,  5 Jun 2024 18:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717609772; cv=none; b=gaPllh5kZbJ70w9fMqVadp5T1X9zp8zozhTXNNxrcP8ftBaShH89lu1kq1rygydepBjqwbMt2VXNExoXn7rlYOeYzc3ZhmDGl/GmB7nCtQ3jgSbq68Wv8ewl4NYiS6KgjavUc+MUul0F/qFBmDtsjGwzfgp/SOroidTR177VRao=
+	t=1717610651; cv=none; b=FBbPJu/3elS/6lIIOkbkJM6HTBAQyx9tun506yt7032MU+ixycPhIn7iHNMGyw62ZszFbRBFFAJ+tiZaoTUbHAYLVeD0RktWAUilDxElKMN//Yxm97X0wyXnIMahwOykqppQig3KSZov1+quA7Vvu61X1MWWZevpZxtSxTBz9DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717609772; c=relaxed/simple;
-	bh=6+pLjpWz258QiGPov/ARDn7yccoD9CoZe6XpvSTOwX8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=QVQZQXqq7d5r4kikVNPdseEcUyYB2Iev89hY2iSaDJ7S6qaRGNZZvrEXu+JSP5972Bt5W/gEmygiz4Jlf1HhVB7OSKIWH5obKzhR1PBMBAK93I3VJYA6cxyFxixAEzxyIR8ZkuCeu6cbb7qWCUfvQagtWPx0s61JbR6r5HQ6B1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cjgV9GMg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717610651; c=relaxed/simple;
+	bh=rYEy0zN2GwpAksIeMEyKNAQAsNKFJ1o2vMiJlZN6j/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Wm8BYjyMp7LIOBNyF3LR6JxTPOk9KBUvvkoZ6GHT2diRZCJSdvnNY6Ey/5YKzqu584yuAVzuElPdYso2t+hLxo/gqj524rettvx0Yzse1rjIuOfrKCi7sZ+b260Fn0gZkXlf9jEMF4f8xVxn5Fgjw0gXeKyMx1BokQmbK6g8fq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ej0ZsfT+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cjgV9GMg"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455B1MEV031665;
-	Wed, 5 Jun 2024 17:49:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=AXhQBKojD6PKBV7uF/cgH/
-	f6O4FOFdKrLiFVfvtSdWk=; b=cjgV9GMgaquBHhkOl2Aq4x+AOkF8HhzmkujxwE
-	1hJ5sIX/4J5c5OKUS9DQHpjH8pytnRuYYZS+K2fH2lpvRcNgxd0m5tF38oQgiPwM
-	TmQJ/1IQEZ4D+4rJphZfOHuN/Pr34enTrlWdv5ZwoJ/Xb8hN9tX7hlJ5ejjFxCTi
-	Hl95dimhSo+/UsOUHKjM/XALWI9P3BZItDKqrqWxYNe1456W7zVSu6uJvOtgQ5HC
-	xGAnqPOcfX50iv9JpWHSjqwuZXxgdCuGffavJA01b4FH2jYxeXtqKapt59vmpZ2T
-	jR6d/571tBjWDRRqQjmZ6mx6k7eAF+g7JYVVUkCWyrYl1pNg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjk899jdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 17:49:26 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455HnO03001113
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Jun 2024 17:49:24 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
- 10:49:24 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 5 Jun 2024 10:49:24 -0700
-Subject: [PATCH] dax: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ej0ZsfT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54BDC2BD11;
+	Wed,  5 Jun 2024 18:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717610651;
+	bh=rYEy0zN2GwpAksIeMEyKNAQAsNKFJ1o2vMiJlZN6j/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Ej0ZsfT+/YDqfM/ehjuBw86B6/BSHAXVKss7JRAC+kYCGbNb+TN/rWdjbIvjsJruK
+	 rmZuNOTJQHyYN4FkGuJ8MEkuvj8K1EFGfOSeiMfOnCCOXCv26f2MCYaLpxUnNn0xVo
+	 spliaFNDLFmjaZ/j7z984sC8DThlmV741bZK7GH84Idcjh5K8XY0EEuSzOCAZUIzPG
+	 rSZJQfC0ddF541SIY9UI6PRD0YaR0Cg/F/ElA7MAhEPhYZ1ucstToD7fU0/fMzXxA+
+	 /7TQHEzyKQ0VUR8wd0WAH3RNgXH2DHc5zT2qwnq4kEKV00rdaJASmDbKjZavU4WP2+
+	 EYEvWxRj04f1g==
+Date: Wed, 5 Jun 2024 13:04:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, linuxarm@huawei.com,
+	terry.bowman@amd.com,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register CXL
+ PMUs (and aer)
+Message-ID: <20240605180409.GA520888@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240605-md-drivers-dax-v1-1-3d448f3368b4@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIACOlYGYC/x3MQQ6CQAxA0auQrm0ygwLRqxgXhVZoAqNpkUxCu
- Lujy7f4fwcXU3G4VTuYbOr6SgXxVMEwURoFlYuhDvUltKHBhZFNNzFHpowcqYuRr3xuBEr0Nnl
- q/g/vj+KeXLA3SsP028yaPhkX8lUMjuMLfgbFuX8AAAA=
-To: Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma
-	<vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fJoPla1dG5T-u7kKaXEMNt9N01JInV7j
-X-Proofpoint-ORIG-GUID: fJoPla1dG5T-u7kKaXEMNt9N01JInV7j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406050134
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/hmem/dax_hmem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/device_dax.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/kmem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax_pmem.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax_cxl.o
+On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:
+> Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
+> Switch USP and DSPs.
+> 
+> The final patch moving AER to the aux bus is in the category of 'why
+> not try this' rather than something I feel is a particularly good idea.
+> I would like to get opinions on the various ways to avoid the double bus
+> situation introduced here. Some comments on other options for those existing
+> 'pci_express' bus devices at the end of this cover letter.
+> 
+> The primary problem this RFC tries to solve is providing a means to
+> register the CXL PMUs found in devices which will be bound to the
+> PCIe portdrv. The proposed solution is to avoid the limitations of
+> the existing pcie service driver approach by bolting on support
+> for devices registered on the auxiliary_bus.
+> 
+> Background
+> ==========
+> 
+> When the CXL PMU driver was added, only the instances found in CXL type 3
+> memory devices (end points) were supported. These PMUs also occur in CXL
+> root ports, and CXL switch upstream and downstream ports.  Adding
+> support for these was deliberately left for future work because theses
+> ports are all bound to the pcie portdrv via the appropriate PCI class
+> code.  Whilst some CXL support of functionality on RP and Switch Ports
+> is handled by the CXL port driver, that is not bound to the PCIe device,
+> is only instantiated as part of enumerating endpoints, and cannot use
+> interrupts because those are in control of the PCIe portdrv. A PMU with
+> out interrupts would be unfortunate so a different solution is needed.
+> 
+> Requirements
+> ============
+> 
+> - Register multiple CXL PMUs (CPMUs) per portdrv instance.
 
-Add all missing invocations of the MODULE_DESCRIPTION() macro.
+What resources do CPMUs use?  BARs?  Config space registers in PCI
+Capabilities?  Interrupts?  Are any of these resources
+device-specific, or are they all defined by the CXL specs?
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/dax/cxl.c       | 1 +
- drivers/dax/device.c    | 1 +
- drivers/dax/hmem/hmem.c | 1 +
- drivers/dax/kmem.c      | 1 +
- drivers/dax/pmem.c      | 1 +
- drivers/dax/super.c     | 1 +
- 6 files changed, 6 insertions(+)
+The "device" is a nice way to package those up and manage ownership
+since there are often interdependencies.
 
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index c696837ab23c..89abcfe902fc 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -43,6 +43,7 @@ static struct cxl_driver cxl_dax_region_driver = {
- 
- module_cxl_driver(cxl_dax_region_driver);
- MODULE_ALIAS_CXL(CXL_DEVICE_DAX_REGION);
-+MODULE_DESCRIPTION("CXL DAX: direct access to CXL RAM regions");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Intel Corporation");
- MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index eb61598247a9..0ad27bce0d26 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -482,6 +482,7 @@ static void __exit dax_exit(void)
- }
- 
- MODULE_AUTHOR("Intel Corporation");
-+MODULE_DESCRIPTION("Device DAX: direct access mapping device");
- MODULE_LICENSE("GPL v2");
- module_init(dax_init);
- module_exit(dax_exit);
-diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-index b9da69f92697..5e7c53f18491 100644
---- a/drivers/dax/hmem/hmem.c
-+++ b/drivers/dax/hmem/hmem.c
-@@ -168,5 +168,6 @@ MODULE_SOFTDEP("pre: cxl_acpi");
- 
- MODULE_ALIAS("platform:hmem*");
- MODULE_ALIAS("platform:hmem_platform*");
-+MODULE_DESCRIPTION("HMEM DAX: direct access to 'specific purpose' memory");
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Intel Corporation");
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 4fe9d040e375..e97d47f42ee2 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -299,6 +299,7 @@ static void __exit dax_kmem_exit(void)
- }
- 
- MODULE_AUTHOR("Intel Corporation");
-+MODULE_DESCRIPTION("KMEM DAX: map dax-devices as System-RAM");
- MODULE_LICENSE("GPL v2");
- module_init(dax_kmem_init);
- module_exit(dax_kmem_exit);
-diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-index f3c6c67b8412..c8ebf4e281f2 100644
---- a/drivers/dax/pmem.c
-+++ b/drivers/dax/pmem.c
-@@ -94,6 +94,7 @@ static void __exit dax_pmem_exit(void)
- }
- module_exit(dax_pmem_exit);
- 
-+MODULE_DESCRIPTION("PMEM DAX: direct access to persistent memory");
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Intel Corporation");
- MODULE_ALIAS_ND_DEVICE(ND_DEVICE_DAX_PMEM);
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index aca71d7fccc1..e16d1d40d773 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -606,6 +606,7 @@ static void __exit dax_core_exit(void)
- }
- 
- MODULE_AUTHOR("Intel Corporation");
-+MODULE_DESCRIPTION("DAX: direct access to differentiated memory");
- MODULE_LICENSE("GPL v2");
- subsys_initcall(dax_core_init);
- module_exit(dax_core_exit);
+I wish portdrv was directly implemented as part of the PCI core,
+without binding to the device as a "driver".  We handle some other
+pieces of functionality that way, e.g., the PCIe Capability itself,
+PM, VPD, MSI/MSI-X, 
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240605-md-drivers-dax-d1a711d9d35e
+> - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
+>   covers any PCI-Express port.
+> - PCI MSI / MSIX message based interrupts must be registered by one driver -
+>   in this case it's the portdrv.
 
+The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
+is a really annoying part of PCIe because bridges may have a BAR or
+two and are allowed to have device-specific endpoint-like behavior, so
+we may have to figure out how to share those interrupts between the
+PCIe-architected stuff and the device-specific stuff.  I guess that's
+messy no matter whether portdrv is its own separate driver or it's
+integrated into the core.
+
+> Side question.  Does anyone care if /sys/bus/pci_express goes away?
+> - in theory it's ABI, but in practice it provides very little
+>   actual ABI.
+
+I would *love* to get rid of /sys/bus/pci_express, but I don't know
+what, if anything, would break if we removed it.
+
+Bjorn
