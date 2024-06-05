@@ -1,222 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449F618FC98
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Jun 2024 10:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7DC1946D0;
+	Wed,  5 Jun 2024 10:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717582536; cv=none; b=VVyk2dfmAjAR2QzbYKh1GvLqh1+GWxWlU3bzwrvjTMVfHmRSxbYxBkIY3CRlpUrBDZSgIfI9AmDyxU+1mYauD1idvTYe7oD8bO2xD4LxRdd34aNgiPWlr3QhvplI92bfLpnNvX6Mn1JcsL+1Jl6/loZ4IcUEfC98H4N9CBsWb+I=
+	t=1717584701; cv=none; b=KT7RbV+YQs8S44eTv1BqL09+jwXnHlOFh6UQCU2ab7titQ4UCWKFZh4P+BdGDprQiiWj+lYVDSRc5Yqe4Ntl5VjTgwH7kacXMeCbSFxMoEdk4MagMQsbW1fOZvgbH1oiIf3dlyfITcgec+XqmEDXdq2dV0fqw1Kj2wzWY8hRXVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717582536; c=relaxed/simple;
-	bh=tbuZWMATusTeUk5xYS7+qOyiUtAwr37B8otq+KPspmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pRLb8XRZBTOTVILVgTLIh8CYqQR4ch4Hfwr14yirqLAX10Dmp69jM09wpREdosxsjcuPbobnERXzIFhKmjDSCO5Om34dolAyNs0fgiTjILlsbjUkpRoWtkjhhKGeOTnLXM3qWSlnvtRMJ4zMJiAoNeDP7s4BAqnoUEjFyz99gK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ULDVm+pr; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ULDVm+pr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717582533; x=1749118533;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tbuZWMATusTeUk5xYS7+qOyiUtAwr37B8otq+KPspmE=;
-  b=ULDVm+pru82GL/Ps/LVlA/UJdMx9Iu+zrzBi8toffmQfVJmHlh4PewfI
-   RaQ7To7kVNUcifhNV7ggk2CjO+zrYhuO9SL322HbOigx1IAxZ+MRokAhn
-   rG6J6JXvWTYe5tpdP0NCrFdlOqlwkrUDaYNTN3tkCd+MKH8qMzav37sLb
-   yU1E+v8uXOmRnnA3AD5NvwBGFTSIetEf+MVvMroodpbFxQMqdQ1i3LW45
-   t1z80DsiLQqYiaJQ2yfyWHmphd2c1nDX6aYHPrV5zsT76fYYeD2sw5TdA
-   pnuEtfso/rFVxYJHZk0VT3pv0SujhRTaHb1Y3L9lHj/Hsp0Fp0JkroJHk
-   w==;
-X-CSE-ConnectionGUID: tZE16Y/7Seq2+Tz5T4vj0A==
-X-CSE-MsgGUID: 3cTGnvB0Rr2Tq1OvQgJ5pw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="18022582"
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="18022582"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 03:15:33 -0700
-X-CSE-ConnectionGUID: hgkMrcONQ8CLYtDEtAuR6g==
-X-CSE-MsgGUID: 4A+QY6QIQFid364atFOCPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="37482702"
-Received: from liuliu-mobl1.amr.corp.intel.com (HELO ming-ws..) ([10.255.30.91])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 03:15:31 -0700
-From: Li Ming <ming4.li@intel.com>
-To: linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: Li Ming <ming4.li@intel.com>
-Subject: [PATCH v2 1/1] cxl/mem: Fix no cxl_nvd during pmem region auto-assembing
-Date: Wed,  5 Jun 2024 18:15:24 +0800
-Message-Id: <20240605101524.2244180-1-ming4.li@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717584701; c=relaxed/simple;
+	bh=L3m8I7IQcWY1PoPdDIh/Oxym5AXJo9HAnSG3UEZNwt0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A/DY4GxaqpmKqdsabTfSAnQ/Lt7KLLLdJn/YBHPrgHO5Aw06HeL7XddBdUH7GUTahQOPxnXnAIZM4N/o2XLwe+9MUhzHnRzu4aXynRctz6W3Cb0ioKp+u0ylWbtAvouyzO85/oYdEHLI/e+4ONtprW6zYAk8Lv/nXFmI4veZXGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VvPPY0ptXz6K9GS;
+	Wed,  5 Jun 2024 18:50:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B4AE1400D4;
+	Wed,  5 Jun 2024 18:51:36 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 5 Jun
+ 2024 11:51:36 +0100
+Date: Wed, 5 Jun 2024 11:51:34 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<mahesh.natu@intel.com>, <rafael@kernel.org>
+Subject: Re: [ACPI Code First ECN] "Extended-linear" addressing for
+ direct-mapped memory-side caches
+Message-ID: <20240605115134.000027af@Huawei.com>
+In-Reply-To: <20240605101012.000041e4@Huawei.com>
+References: <6650e4f835a0e_195e294a8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240605101012.000041e4@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-When CXL subsystem is auto-assembling a pmem region during cxl
-endpoint port probing, always hit below calltrack.
+On Wed, 5 Jun 2024 10:10:12 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
- BUG: kernel NULL pointer dereference, address: 0000000000000078
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- RIP: 0010:cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
- Call Trace:
-  <TASK>
-  ? __die+0x24/0x70
-  ? page_fault_oops+0x82/0x160
-  ? do_user_addr_fault+0x65/0x6b0
-  ? exc_page_fault+0x7d/0x170
-  ? asm_exc_page_fault+0x26/0x30
-  ? cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
-  ? cxl_pmem_region_probe+0x1ac/0x360 [cxl_pmem]
-  cxl_bus_probe+0x1b/0x60 [cxl_core]
-  really_probe+0x173/0x410
-  ? __pfx___device_attach_driver+0x10/0x10
-  __driver_probe_device+0x80/0x170
-  driver_probe_device+0x1e/0x90
-  __device_attach_driver+0x90/0x120
-  bus_for_each_drv+0x84/0xe0
-  __device_attach+0xbc/0x1f0
-  bus_probe_device+0x90/0xa0
-  device_add+0x51c/0x710
-  devm_cxl_add_pmem_region+0x1b5/0x380 [cxl_core]
-  cxl_bus_probe+0x1b/0x60 [cxl_core]
+> On Fri, 24 May 2024 12:05:28 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+> > # Title: "Extended-linear" addressing for direct-mapped memory-side caches
+> > 
+> > # Status: v3
+> > 
+> > # Document: ACPI Specification 6.6
+> > 
+> > # License
+> > SPDX-License Identifier: CC-BY-4.0
+> > 
+> > # Submitter:
+> > * Sponsor: Dan Williams, Intel
+> > * Creators/Contributors:
+> >     * Andy Rudoff, retired
+> >     * Mahesh Natu, Intel
+> >     * Ishwar Agarwal, Intel
+> > 
+> > # Changelog
+> > * v3: Replace "Inclusive Linear" with "Extended-linear" term, and
+> >   clarify the SPA vs HPA behavior of this cache addressing mode.
+> >   (Jonathan Cameron)
+> > * v2: Clarify the "Inclusive" term as "including the capacity of the cache
+> >   in the SRAT range length"
+> > * v2: Clarify that 0 is an undeclared / transparent Address Mode, and
+> >   that Address Mode values other than 1 are Reserved.
+> > 
+> > # Summary of the Change
+> > Recall that one of the modes available with persistent memory (PMEM) was a
+> > direct-mapped memory-side cache where DDR-memory transparently cached
+> > PMEM. This article has more details:
+> > 
+> > https://thessdguy.com/intels-optane-two-confusing-modes-part-2-memory-mode/
+> > 
+> > ...but the main takeaway of that article that is relevant for this ECN
+> > is:
+> > 
+> >     "[PMEM] is paired with a DRAM that behaves as a cache, and,
+> >      like a cache, it is invisible to the user. [..] A typical system
+> >      might combine a 64GB DRAM DIMM with a 512GB Optane DIMM, but the
+> >      total memory size will appear to the software as only 512GB."
+> > 
+> > Instead, this new "extended-linear" direct-mapped memory-side cache
+> > addressing mode would make the memory-size that appears to software in
+> > the above example as 576GB. The inclusion of the DDR capacity to extend
+> > the capacity visible to software may improve cache utilization.  
+> 
+> I'd skip the cache utilization point as even with 'may' it might just
+> end up rat holing!. Capacity seems enough a justification to me and
+> requires a lot less justification.
+> 
+> Perhaps something like
+> "The inclusion of the DDR increases the available capacity whilst still
+>  providing benefits of a lower latency cache."
+> 
+> Up to you though as I'll not have to explain that utilization point
+> to anyone whereas you might.
+> 
+> > 
+> > A primary motiviation for updating HMAT to explicitly enumerate this
+> > addressing mode is due to the OSPM's increased role for RAS and
+> > address-translation with CXL topologies. With CXL and OS native RAS
+> > flows OSPM is responsible for understanding and navigating the
+> > relationship between System-Physical-Address (SPA) ranges published
+> > ACPI.SRAT.MemoryAffinity, Host-Physical-Address ranges (HPA) published
+> > in the ACPI.CEDT.CFMWS, and HPAs programmed in CXL memory expander
+> > endpoints.
+> > 
+> > Enable an OSPM to enumerate that the capacity for a memory-side cache
+> > extends an SRAT range. Typically the "Memory Side Cache Size" enumerated
+> > in the HMAT is "excluded" from the SRAT range length because it is a
+> > transparent cache of the SRAT capacity. The enumeration of this
+> > addressing mode enables OSPM-memory-RAS (Reliability, Availability, and
+> > Serviceability) flows.
+> > 
+> > # Benefits of the Change
+> > Without this change an OSPM that encounters a memory-side cache
+> > configuration of DDR fronting CXL may not understand that an SRAT range
+> > extended by cache capacity should be maintained as one contiguous SPA
+> > range even though the CXL HPA decode configuration only maps a subset of
+> > the SRAT SPA range. In other words the memory-side-cache dynamically
+> > maps access to that SPA range to either a CXL or DDR HPA.
+> > 
+> > When the OSPM knows about this relationship it can take actions like
+> > quarantine / offline all the impacted aliased pages to prevent further
+> > consumption of poison, or run repair operations on all the affected
+> > targets. Without this change an OSPM may not accurately identify the HPA
+> > associated with a given CXL endpoint DPA event, or it may misunderstand
+> > the SPAs that map to CXL HPAs.  
+> 
+> I'd like something here on impacts on firmware first error reporting.
+> Given we'd like that to work on a non CXL aware system not aware of this
+> feature at all, I'd propose multiple CPER records, one for each alias.
+> That assumes the firmware has no path to establish the alias.
+> 
+> Can certainly conceive of ways to implement a probe-type setup to allow
+> the discovery of which alias has been poisoned etc.
+> 
+> Perhaps needs a note somewhere in 18.3.  Something along lines of
+> "For any error with SPA originating in a range, where a memory-side cache
+>  with address mode extended-linear is present, multiple error records
+>  should be presented to cover any potentially affected aliases."
+> 
+> Maybe an OS could opt out of that multiple reporting via _OSC or similar
+> but I'm not sure why it would bother though. Easier to just allow for
+> multiple events.
+> 
+> > 
+> > # Impact of the Change
+> > The proposed "Address Mode" field consumes the 2 Reserved bytes
+> > following the "Cache Attributes" field in the "Memory Side Cache
+> > Information Structure". The default reserved value of 0 indicates the
+> > status quo of an undeclared addressing mode where the expectation is
+> > that it is safe to assume the cache-capacity is transparent to the SRAT
+> > range capacity. An OSPM that knows about new values can consider SPA to
+> > HPA relationships according to the address-layout definition proposed
+> > below. A legacy OSPM will ignore it as a Reserved field.
+> > 
+> > # References
+> > * Compute Express Link Specification v3.1,
+> > <https://www.computeexpresslink.org/>
+> > 
+> > # Detailed Description of the Change  
+> 
+> Probably need to up rev HMAT as well.
+> 
+> > 
+> > * Section Table 5.149: Memory Side Cache Information Structure redefine
+> >   the 2 Reserved bytes starting at offset 28 as "Address Mode":
+> > 
+> >     * 0 - Reserved (OSPM may assume transparent cache addressing)  
+> 
+> Can we make that assumption?  What are today's firmware's doing for this?
+> I'd drop the 'may assume'  Also after this change it's not reserved.
+> 0 explicitly means transparent cache addressing.
+> 
+> >     * 1 - Extended-linear (N direct-map aliases linearly mapped)
+> >     * 2..65535 - Reserved (Unknown Address Mode)
+> > 
+> > * Extend the implementation note after Table 5.149 to explain how to
+> >   interpret the "Extended-linear" mode.
+> > 
+> >   * When Address Mode is 1 'Extended-Linear' it indicates that the
+> >     associated address range (SRAT.MemoryAffinityStructure.Length) is
+> >     comprised of the backing store capacity extended by the cache
+> >     capacity. It is arranged such that there are N directly addressable
+> >     aliases of a given cacheline where N is the ratio of target memory
+> >     proximity domain size and the memory side cache size. Where the N
+> >     aliased addresses for a given cacheline all share the same result
+> >     for the operation 'address modulo cache size'.  
+> 
+> Probably need more here.  What if someone has two such ranges of size
+> 
+> Address 0, (512G + 64G) , (1024G + 128G)
+> And decides to pack them for some reason.
+> The second one will be aligned to 64G not, 128G so modulo needs to take
+> into account the base address.
 
-Because the cxl_nvd of the memdev is necessary during pmem region
-probing, but the cxl_nvd can be registered only after endpoint port
-probing done, that is a collision dependency, so adjust the sequence
-between cxl_nvd registration and adding endpoint port to guarantee there
-is a cxl_nvd in memdev during the pmem region auto-assembling.
-
-Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
-
-v2:
-- fix wrong function name in the description of
-cxl_find_nvdimm_bridge()(lkp)
+Ignore this one.  The maths works fine as is.
+More coffee needed.
 
 
- drivers/cxl/core/pmem.c   | 15 ++++++++++-----
- drivers/cxl/core/region.c |  2 +-
- drivers/cxl/cxl.h         |  4 ++--
- drivers/cxl/mem.c         | 17 +++++++++--------
- 4 files changed, 22 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index e69625a8d6a1..78c6f4672fcf 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -62,10 +62,14 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
- 	return is_cxl_nvdimm_bridge(dev);
- }
- 
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd)
-+/**
-+ * cxl_find_nvdimm_bridge() - find a bridge device relative to a port
-+ * @port: any descendant port of an nvdimm-bridge associated
-+ *        root-cxl-port
-+ */
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port)
- {
--	struct cxl_root *cxl_root __free(put_cxl_root) =
--		find_cxl_root(cxlmd->endpoint);
-+	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
- 	struct device *dev;
- 
- 	if (!cxl_root)
-@@ -242,18 +246,19 @@ static void cxlmd_release_nvdimm(void *_cxlmd)
- 
- /**
-  * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
-+ * @port: parent port for the (to be added) @cxlmd endpoint port
-  * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
-  *
-  * Return: 0 on success negative error code on failure.
-  */
--int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
-+int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev *cxlmd)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct cxl_nvdimm *cxl_nvd;
- 	struct device *dev;
- 	int rc;
- 
--	cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-+	cxl_nvb = cxl_find_nvdimm_bridge(port);
- 	if (!cxl_nvb)
- 		return -ENODEV;
- 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3c2b6144be23..f0cafc7ffb45 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2847,7 +2847,7 @@ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 		 * bridge for one device is the same for all.
- 		 */
- 		if (i == 0) {
--			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-+			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd->endpoint);
- 			if (!cxl_nvb)
- 				return -ENODEV;
- 			cxlr->cxl_nvb = cxl_nvb;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 603c0120cff8..e8fca6c6952b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -855,8 +855,8 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm_bridge(struct device *dev);
--int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd);
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd);
-+int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev *cxlmd);
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
- 
- #ifdef CONFIG_CXL_REGION
- bool is_cxl_pmem_region(struct device *dev);
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 0c79d9ce877c..2f1b49bfe162 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -152,6 +152,15 @@ static int cxl_mem_probe(struct device *dev)
- 		return -ENXIO;
- 	}
- 
-+	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-+		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
-+		if (rc) {
-+			if (rc == -ENODEV)
-+				dev_info(dev, "PMEM disabled by platform\n");
-+			return rc;
-+		}
-+	}
-+
- 	if (dport->rch)
- 		endpoint_parent = parent_port->uport_dev;
- 	else
-@@ -174,14 +183,6 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
--		rc = devm_cxl_add_nvdimm(cxlmd);
--		if (rc == -ENODEV)
--			dev_info(dev, "PMEM disabled by platform\n");
--		else
--			return rc;
--	}
--
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
- 	 * there is no spec defined way to determine whether this device
--- 
-base-commit: 49ba7b515c4c0719b866d16f068e62d16a8a3dd1
-2.34.1
+> 
+> Do we need explicit statement that N is an integer? Probably works anyway
+> but having 2.5 aliases is an unusual concept.
+> 
+> > This setting is only
+> >     allowed when 'Cache Associativity' is 'Direct Map'."  
+> 
+> Other than these corner cases looks good to me and the new terminology and
+> clarifications help a lot.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> 
+> 
 
