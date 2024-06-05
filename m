@@ -1,91 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3139813A3E8;
-	Wed,  5 Jun 2024 18:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9658261FC0;
+	Wed,  5 Jun 2024 19:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717612721; cv=none; b=T1SZvFGA0h2DSuRhsdfFDIuzOYA960Bh0pyUNdOYgFvJLTmUBL6pTERIsywfbjX23U9YUl9Onvn06n6aRxa6STBNeco7Q6Bb8K/zIKMFgPhOfryploH+/RCly7x3RJ4d3Rw4vgfBlQWg9KRuIo0ZxaeZ8RbXlc6lIgxXFWgOs9k=
+	t=1717616679; cv=none; b=JMPeAur6DjDajAUFk1SdlKypYPBwUWAe3CUgGrn+yb14yKKlFYfJOTO6RZI48K+9652Rn4c7GyQcro83hKuv7gy0oNlLcecrMbMhw9rBK23tuNp8oydVYdfftVQru5EoGJXCMte4m4mGFE7Z6viaADS3Au7z5rvfdAWIjz1iKNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717612721; c=relaxed/simple;
-	bh=RTIMvfyzwpsoVkZWvb/Q4fpb7BhipiPVExizhw2Lj8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Th26N0Hr6RAMO6aUQH52qSEMa8uWAITZSL0mdCJCYggkNfUj0N/sy4I4DUmPhP+b845hPqu2ff7b+j1A0RkDrShJosHSyW56fMjnxZHq5rdpGjM4fZ6IuJ5OnAJDqvczxQ8GE6Rh2cozbYYMYSaJBo5jhuHO2AWzaZZTCrvVeg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHqvd14+; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHqvd14+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717612720; x=1749148720;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RTIMvfyzwpsoVkZWvb/Q4fpb7BhipiPVExizhw2Lj8o=;
-  b=IHqvd14+TEUzAfbt6TlpiyifGm3bBodFY8MWLasVv3f0ukHu2dBt4Y9A
-   slmj4byqKLkcKrohleIJZ7anXz2gb0DJ56RHggEiq7gP42XmPQ0Trk3Kq
-   jNsHM3Xov7725478YHrkAMybIryyNQawjfwL7BtUXPSlO62lwlsK+wIr1
-   JM2ARI2wQ4Vs7PSEmNSdtVPlIRi6bzs5LI190PrdZf6O/WKIp5m7bSdnq
-   pMuXOnOZxlrTq1DntmKZzVhiO58fMQQiU0buIf/5B8R++0ImjWgnt9wXp
-   uGfA89K0HsAGov2QK43i6k/3L6aUqY4tekh+MTWDn1pZ8AKV/DNQM5eoP
-   Q==;
-X-CSE-ConnectionGUID: RPSLwnjBTaahJkiTrrbrzQ==
-X-CSE-MsgGUID: pKnXfe9NTl6AlL6qIGmiEA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14201520"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="14201520"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 11:38:40 -0700
-X-CSE-ConnectionGUID: 32+srnolSw+1eNkW+yVJjQ==
-X-CSE-MsgGUID: hiugKIPsTLCfzwSkwyLw7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="42643909"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.22.89])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 11:38:39 -0700
-Date: Wed, 5 Jun 2024 11:38:38 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net
-Subject: Re: [PATCH v3 0/2] cxl: Region bandwidth calculation for targets
- with shared upstream link
-Message-ID: <ZmCwrk5MGnnHxmKV@aschofie-mobl2>
-References: <20240529214357.1193417-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1717616679; c=relaxed/simple;
+	bh=jerAg1qLkqtoBSg9ZXFcWDMNxuuiwy1hgIupCHOT3fo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pdjmdLmzFsyprVwuLN0ckcPRfRp/r48ZWRGq+hA6teJGiQScLqmBZ3uaKWRWAdv6m1cqvkQHCNmD/6QyGUeu49jpdglfqov3dEbYeWZPc6FhkZaapQrPPh95tYa9nkrxkpNM4l7eCCrhUm7ECwQKOkPvGfms28lYAy7/SBiVoyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vvd8s0vyqz6JBWH;
+	Thu,  6 Jun 2024 03:40:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 53A651400D9;
+	Thu,  6 Jun 2024 03:44:32 +0800 (CST)
+Received: from localhost (10.126.172.226) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 5 Jun
+ 2024 20:44:31 +0100
+Date: Wed, 5 Jun 2024 20:44:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	<linuxarm@huawei.com>, <terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
+ CXL PMUs (and aer)
+Message-ID: <20240605204428.00001cb2@Huawei.com>
+In-Reply-To: <20240605180409.GA520888@bhelgaas>
+References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
+	<20240605180409.GA520888@bhelgaas>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529214357.1193417-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, May 29, 2024 at 02:38:56PM -0700, Dave Jiang wrote:
-> This series provides recalculation of the CXL region bandwidth when the targets have
-> shared upstream link by walking the toplogy from bottom up and clamp the bandwdith
-> as the code trasverses up the tree. An example topology:
+On Wed, 5 Jun 2024 13:04:09 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:
+> > Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
+> > Switch USP and DSPs.
+> > 
+> > The final patch moving AER to the aux bus is in the category of 'why
+> > not try this' rather than something I feel is a particularly good idea.
+> > I would like to get opinions on the various ways to avoid the double bus
+> > situation introduced here. Some comments on other options for those existing
+> > 'pci_express' bus devices at the end of this cover letter.
+> > 
+> > The primary problem this RFC tries to solve is providing a means to
+> > register the CXL PMUs found in devices which will be bound to the
+> > PCIe portdrv. The proposed solution is to avoid the limitations of
+> > the existing pcie service driver approach by bolting on support
+> > for devices registered on the auxiliary_bus.
+> > 
+> > Background
+> > ==========
+> > 
+> > When the CXL PMU driver was added, only the instances found in CXL type 3
+> > memory devices (end points) were supported. These PMUs also occur in CXL
+> > root ports, and CXL switch upstream and downstream ports.  Adding
+> > support for these was deliberately left for future work because theses
+> > ports are all bound to the pcie portdrv via the appropriate PCI class
+> > code.  Whilst some CXL support of functionality on RP and Switch Ports
+> > is handled by the CXL port driver, that is not bound to the PCIe device,
+> > is only instantiated as part of enumerating endpoints, and cannot use
+> > interrupts because those are in control of the PCIe portdrv. A PMU with
+> > out interrupts would be unfortunate so a different solution is needed.
+> > 
+> > Requirements
+> > ============
+> > 
+> > - Register multiple CXL PMUs (CPMUs) per portdrv instance.  
 > 
->  An example topology from Jonathan:
+> What resources do CPMUs use?  BARs?  Config space registers in PCI
+> Capabilities?  Interrupts?  Are any of these resources
+> device-specific, or are they all defined by the CXL specs?
+
+Uses the whole lot (there isn't a toy out there that the CXL
+spec doesn't like to play with :). Discoverable via a CXL defined DVSEC
+in config space. Registers are in a BAR (discovered from the DVSEC).
+MSI/MSIX, number in a register in the BAR.
+
+All the basic infrastructure and some performance event definitions
+are in the CXL spec.  It's all discoverable. 
+
+The events are even tagged with VID so a vendor can implement
+someone else's definitions or those coming from another specification.
+A bunch of CXL VID tagged ones exist for protocol events etc.
+
+It's a really nice general spec.  If I were more of a dreamer and had
+the time I'd try to get PCI-SIG to adopt it and we'd finally have
+something generic for PCI performance counting.
+
 > 
->                  CFMWS 0
->                    |
->           _________|_________
->          |                   |
->    GP0/HB0/ACPI0017-0  GP1/HB1/ACPI0017-1
->      |          |        |           |
->     RP0        RP1      RP2         RP3
->      |          |        |           |
->    SW 0       SW 1     SW 2        SW 3
->    |   |      |   |    |   |       |   |
->   EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
+> The "device" is a nice way to package those up and manage ownership
+> since there are often interdependencies.
+> 
+> I wish portdrv was directly implemented as part of the PCI core,
+> without binding to the device as a "driver".  We handle some other
+> pieces of functionality that way, e.g., the PCIe Capability itself,
+> PM, VPD, MSI/MSI-X, 
 
-Are the ACPI0017 labels a typo?
-Expected host bridges to be labelled as ACPI0016's.
+Understood, though I would guess that even then there needs to
+be a pci_driver binding to the class code to actually query all those
+facilities and get interrupts registered etc.
 
-That's all, just did a drive-by on the art today.
+> 
+> > - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
+> >   covers any PCI-Express port.
+> > - PCI MSI / MSIX message based interrupts must be registered by one driver -
+> >   in this case it's the portdrv.  
+> 
+> The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
+> is a really annoying part of PCIe because bridges may have a BAR or
+> two and are allowed to have device-specific endpoint-like behavior, so
+> we may have to figure out how to share those interrupts between the
+> PCIe-architected stuff and the device-specific stuff.  I guess that's
+> messy no matter whether portdrv is its own separate driver or it's
+> integrated into the core.
 
--- Alison
+Yes, the interrupt stuff is the tricky bit.  I think whatever happens
+we end up with a pci device driver that binds to the class code.
+Maybe we have a way to switch in alternative drivers if that turns
+out to be necessary.
+
+Trying to actually manage the interrupts in the core (without a driver binding)
+is really tricky.  Maybe we'll get there one day, but I don't think
+it is the first target.  We should however make sure not to do anything
+that would make that harder such as adding ABI in the wrong places.
+
+> 
+> > Side question.  Does anyone care if /sys/bus/pci_express goes away?
+> > - in theory it's ABI, but in practice it provides very little
+> >   actual ABI.  
+> 
+> I would *love* to get rid of /sys/bus/pci_express, but I don't know
+> what, if anything, would break if we removed it.
+
+Could try it and see who screams ;) or fake it via symlinks or similar
+(under a suitable 'legacy' config variable that is on by default.)
+
+How about I try the following steps:
+0) An experiment to make sure I can fake /sys/bus/pci_express so it's
+   at least hard to tell there aren't real 'devices' registered on that
+   bus. Even if we decide not to do that long term, we need to know
+   we can if a regressions report comes in.
+   Worst comes to the worse we can register fake devices that fake
+   drivers bind to that don't do anything beyond fill in sysfs.
+1) Replace the bus/pci_express with direct functional calls in
+   portdrv.  
+   I'm thinking we have a few calls for each:
+    bool aer_present(struct pci_dev *pci);
+    aer_query_max_message_num() etc - used so we can do the msi/msix bit.
+    aer_initialize()
+    aer_finalize()
+    aer_runtime_suspend() (where relevant for particular services)
+
+   at the cost of a few less loops and a few more explicit calls
+   that should simplify how things fit together.
+
+2) Fix up anything in all that functionality that really cares
+   that they are part of portdrv.  Not sure yet, but we may need
+   a few additional things in struct pci_dev, or a to pass in some
+   state storage in the ae_initialize() call or similar.
+3) Consider moving that functionality to a more appropriate place.
+   At this point we'll have services that can be used by other
+   drivers - though I'm not yet sure how useful that will be.
+4) End up with a small pci_driver that binds to pci devices with
+   the appropriate class code. Should even be able to make it
+   a module.
+5) (maybe do this first) carry my auxiliary_bus + cpmu stuff
+   and allow adopting other similar cases alongside the other
+   parts.
+
+Of course, no statements on 'when' I'll make progress if this seems
+like a step forwards, but probably sometime this summer. Maybe sooner.
+
+Jonathan
+
+> 
+> Bjorn
+
