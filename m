@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F4E19A2AA;
-	Wed,  5 Jun 2024 11:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF88121C164;
+	Wed,  5 Jun 2024 11:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588221; cv=none; b=chCspjzPfqqrsIuHNXp1w4A7H7ewjMTRrclXjcb+Z+i6VqsDngfi22j7oBak2C3l3anyWk6ct8ygUrO7xOrpo0Mg0tqwb3NRGM13w5NNS62b4+RKp0d52gIPnBx6lgAPlS3CeZ/6qXIQeGB+1Ij3ZU38cdHwavFM66jVk88RBMc=
+	t=1717588312; cv=none; b=S+0ISKlF4C7VYsyvkRQFlEvVsQV4rvHAMEPDBrHhLsRDKTceLJ2uvQaT4Po9pMeMANUiwcchGUfvb0HBFxPdBd3VsOSvAET25jqd9U5JF3Kd7juFDcv2mquThoaBgIjrMteoXiMPNsOSvbqDFFBwzNx0jpRo944qDHQqoSlkJ+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588221; c=relaxed/simple;
-	bh=EkD7i7xpLelwuzalMaOhwP4ENdBzzyH8bjFgJZNq2z8=;
+	s=arc-20240116; t=1717588312; c=relaxed/simple;
+	bh=569H3vxlvOKw0NdF8FLilubAxQEg7X96j20HsGVCBFk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rEhwEJdtB7TEQOV5VkboMOQWd+knGjoBKLWsCipbEdrRn2LB+ex8x402wxbGKUtTQMZ7rtllUrCAN02s9SgZvmRncJL/Y+gl78yxt8GPBqMLGWvQ+nnF9WqGDAF5VXa9nBivFlBLAYkJfDowT0ug1FFN1wYCVdh9yqAse0LH3KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXZKwzaq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rgfS2bAPM68o6uPebye5xwXCmI4X7mZ9C1LkAHpQ6ooxtXklrCbp+lxB4giCEg40AIq2EAj1ZyJYpbZ7nMTJnRbHRWjHXcD2q2V4fqgE8hGm2N0AE/r+/7bsIsTpoLz7gHxPq3klAm98SjV3TrcSmsd725/4LoTa5teXGNkr7dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZB8sRPHq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXZKwzaq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD4CC3277B;
-	Wed,  5 Jun 2024 11:50:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZB8sRPHq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8125C3277B;
+	Wed,  5 Jun 2024 11:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588220;
-	bh=EkD7i7xpLelwuzalMaOhwP4ENdBzzyH8bjFgJZNq2z8=;
+	s=k20201202; t=1717588311;
+	bh=569H3vxlvOKw0NdF8FLilubAxQEg7X96j20HsGVCBFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AXZKwzaqo60L7ty/WCu1xfdCYQFgOz3whacQxOdfctpOczgIW0MEKq72/GYpCO1wF
-	 CeBVe0pkRcEzoMomdNoEboBviQPza2yNHWx8MmbofspC90lhslomu4FOvoP+ZyVlrW
-	 ydlrF1Q8BreI5psI4tlOh5Tm5OOUwJSUoT5rNgxbbk8CLHDf5Slc0gytDtlke2mNkq
-	 WPvqEz6D90XADollaxOYYvgAze4x2aUtEUzh/Edw7UfuJ3aqRyiSsjKBGtkJbYzNaO
-	 2kaC4nzy+VuIgLjdl/XSJxuMq7ije6B6w1ny7obvH1cDo0ODIO0k1y6nf2zifN+BU7
-	 mtcwtr1Xepv8w==
+	b=ZB8sRPHqC9gse9rEryKNTQQRcW7cQ8B8+GxCs04tlP+6Z8TVGU0plOSIi37Tl8TgS
+	 +oNSttSZ4cotPfirKRgGNdtiikdARe0omUlcYqrGV/bvhbP1yc/ECCvhCqSsjMnGTv
+	 NU2RjpCeqcoWocMVZNLS0tWQ4ITg8XC2U6T0SFfhVvCmhssD+3m3zjcBR+wx/TmQtv
+	 wBbXVlGebuyJ2SxuRj1ppaQkPV5WGl65GiwbhxBBMtcJpiJMX3Dz1DM+lB23SbPgGG
+	 xxcRa80O4mk/bSEFw/AaaTjxnAzOzCUgpi5hGJgDF/WbSNq+/BifhJZEUhM+tvUsUj
+	 mr8YzeKW4SbVA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -43,12 +43,12 @@ Cc: Dave Jiang <dave.jiang@intel.com>,
 	terry.bowman@amd.com,
 	ming4.li@intel.com,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 22/28] cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders
-Date: Wed,  5 Jun 2024 07:48:51 -0400
-Message-ID: <20240605114927.2961639-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.8 19/24] cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders
+Date: Wed,  5 Jun 2024 07:50:29 -0400
+Message-ID: <20240605115101.2962372-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
-References: <20240605114927.2961639-1-sashal@kernel.org>
+In-Reply-To: <20240605115101.2962372-1-sashal@kernel.org>
+References: <20240605115101.2962372-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.3
+X-stable-base: Linux 6.8.12
 Content-Transfer-Encoding: 8bit
 
 From: Dave Jiang <dave.jiang@intel.com>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 53 insertions(+)
 
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 0df09bd794088..2773f05adb7d2 100644
+index e9e6c81ce034a..e71cfd490d829 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -1045,3 +1045,32 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
+@@ -1034,3 +1034,32 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
  
  	return cxl_flit_size(pdev) * MEGA / bw;
  }
@@ -131,10 +131,10 @@ index 0df09bd794088..2773f05adb7d2 100644
 +}
 +EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 036d17db68e00..72fa477407689 100644
+index de477eb7f5d54..2624c775c5c93 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -891,6 +891,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+@@ -888,6 +888,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
  			     struct access_coordinate *c1,
  			     struct access_coordinate *c2);
  
