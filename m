@@ -1,668 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CC6155C86;
-	Wed,  5 Jun 2024 18:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610723; cv=none; b=KLqQvtOhhyH9JU6F22tV6+73Nsj1Et3EGcS+vk9cxAYF/obS2bCVVcHoDueGmKFDyOZELlNW/nbnI6utcEJeoRtL8j9F6+GspsMYddLZm1+3zmMBf1uwLXLJ7IZi0Tm+vszhx5frjGOlzDiUb9nmKziOwtQ38USR6Wr3FzyquyA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610723; c=relaxed/simple;
-	bh=AWcj1YlHhNHFOK6gsBMQCpRFlyVqQJ+2SBv+qQ64gdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kJfLiUZF/jtJyjCKs/+0CUYjfvLQZC3beVc2v8FrINtxYen+ovK/PwkvEEgfG5+fxu+z6/MGgY1+oThWvwTXclruNgb3KGqKSv7r/3nJB+m0SRK382wCqPF4J3OqNVPx7pcfbc9xnXU2270uCKXINk1OS8HRyTPhVLk8dke7zTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwpOGxc6; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD01615E90;
+	Wed,  5 Jun 2024 18:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717612053; cv=fail; b=DAeKJAMJULs18+2fuSjcqN0LTi2L3HRDFPXwv8QQMF3FObgY3BWFcsSHUikz+1KJa5A3iyM8GXHSsNxvznG0uxCw7AJY8pdAHW6AdLK6JI+l0oBouatIDdJ4bAZ7+CsZiQphPVJlXM58f8bPx6iKLa8xofzquGlmMS/jhSqw8mE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717612053; c=relaxed/simple;
+	bh=/S9oHSxhfANSP/NtRyI+Am0H/iy9fNcYPUtHhdMrVUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Z3qdevEd2tekNLIFFP90rsS8CV/bLBrCeDc9prq4x5f8OjhbRbIC1idyKAjBOASFJsV/5CCuRk2YDDJ0wmI0kkEF2XCvL0b6tXoeflrOL1qFTMf8LROqvBv+vBC833g0tc/zjzxqueSJJHqWYV5zG/l6Pw9bHXZfKpYmUXHUFA4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rhWnsIQ0; arc=fail smtp.client-ip=40.107.92.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwpOGxc6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717610722; x=1749146722;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AWcj1YlHhNHFOK6gsBMQCpRFlyVqQJ+2SBv+qQ64gdE=;
-  b=SwpOGxc6IQWVC0UD7jdP5/7vR6sGYLWYZ+UNbnFui+X/mZisDDzBE/8P
-   FzC374PnGsfNiZDKw9D0ldNyA3G1NB3FuOQf483esibDa1pCuKKykfkA8
-   zy3rmba1f48OOg55GYtbRxSLMsuSzaKtszDEpNxRnsaKxuesonKZ9ho8q
-   ux+Np/t5KNAg4kJCFFRkLM5Apv5fkXoTDHUfFjiCfcrS9b3dt4LNrIkB4
-   grATNVVWT/UpLCtmC7rF41SDAhoKako4fZDTWBrrjSw9vGn4xQMAaA/Y7
-   9e2fvk9bO7J5J8ybvmxq3X7IQ0P+AW40WnKlp2HFRPS9xbf/73chBqu+U
-   w==;
-X-CSE-ConnectionGUID: B7Q45xILSOyRnpsehU3FzQ==
-X-CSE-MsgGUID: 27WpmIwPRLe3iRc9V/2F2Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="11926063"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="11926063"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 11:05:21 -0700
-X-CSE-ConnectionGUID: 9gt2kcavQ0aUciIlmjhwrA==
-X-CSE-MsgGUID: wF0PavR2S8q/VyhFjh5MAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="37776296"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.83]) ([10.125.109.83])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 11:05:20 -0700
-Message-ID: <14c4176e-e5eb-4383-a407-54e49a50b0b6@intel.com>
-Date: Wed, 5 Jun 2024 11:05:19 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rhWnsIQ0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T0C7ix+E3KrjWJzoJewRCjJhh71iEtYY+Nu+i9Y/hMndTksTgwvESgnfQ5ZmN2sDbiaRPYPmtg6SvJNoRh3kbcMvlv955dbatnHKgEn5VLPpEooNnGRoU7ajKCngVg/HOzJmx0H6ZW+BrmXPThsb3kjgrKF82yn9wo9RrWGuEufU48UDRDKoFIWeGUwVgWOVKaXaMMTjbmPZ3lQbJbU+rDTgKNZMhhyFJiDorCHP9sZKz9Fop4bYK+OhR+I8P1eUkeRf7rHN7Qd6NOo6yoeae1NouD1D3BOh79HpeJfdIalpUMe86Sa+452FxgB/1RcShIOK+uT9TSNs9+6CKKqD3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1NxpiiXF35m1H7lfPCTWPeAGjehdO/naaK4NX7an3Ik=;
+ b=cnUBAq9BGPpZGRSk86B6zKmG338u5gvoX1MMnByYFdAbOd/c8aE4G/42w9KmQr0m+M4Z4/uzB+U+CGuncfiUtsLki1uWVw8XonJqr7aJj88C7QeW/Em2Uvf/gHMrAPNkRAXff9KrJ1FE8jE9At0UX/C4eKAw5LC34szr6HZz91IEa5RZNShCptMTbv29wZ+HmsCexKlmDcJ7H7lRDYekdjrmSIeRlP7BW5XuhgH2GyjA9566BsJtq4eb7gV0Grbz2H6eh64m7/7Ur6Jr5mG2UH42JTDJCARtIuNDB4NpOPpeKj9HjZ7flD1lifiMDlINKi364SXYFANK+yi/TcbJQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1NxpiiXF35m1H7lfPCTWPeAGjehdO/naaK4NX7an3Ik=;
+ b=rhWnsIQ0xTdFbia4hqm9WX1cf+Ry3Gqn1tEcmwTqWVdOZRYEAVTl92v6LL3Jj5wqz/q+PyGkBHiApGippySY88+gHhzIR+Kcvu/fjhoqKWG424Qkuzjz6VUzRjYT0ODhCq/X39yJKYTtwJlcPgXBzJ70FVVXxdbm/C+hnewkwrA6tCbKcgzQmBOsjhEhSuBWBhLuFXsfO1UpzYvBR1wUUfIDRPcl/calE4f0ARZ1sF7nCfZ5kiBPKZdMX+4kJjk9SQwBROGq4CaFiuhkC88hlQ6bc1yZ1zDQAGpkIO9E4nYO3vrdPK53qKdFvTWUYt2HXvhZCNOiJSsyJg8gqiksmg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by IA1PR12MB8494.namprd12.prod.outlook.com (2603:10b6:208:44c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.30; Wed, 5 Jun
+ 2024 18:27:28 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7633.021; Wed, 5 Jun 2024
+ 18:27:28 +0000
+Date: Wed, 5 Jun 2024 15:27:26 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	David Ahern <dsahern@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 2/8] fwctl: Basic ioctl dispatch for the character device
+Message-ID: <20240605182726.GX19897@nvidia.com>
+References: <2-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <6cfe00ce-1860-4aba-bcb8-54f8d365d2dc@linux.dev>
+ <20240604122221.GR3884@unreal>
+ <20240604175023.000004e2@Huawei.com>
+ <20240604165844.GM19897@nvidia.com>
+ <20240605120737.00007472@Huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605120737.00007472@Huawei.com>
+X-ClientProxiedBy: BL1PR13CA0277.namprd13.prod.outlook.com
+ (2603:10b6:208:2bc::12) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, dave@stgolabs.net
-References: <20240529214357.1193417-1-dave.jiang@intel.com>
- <20240529214357.1193417-3-dave.jiang@intel.com>
- <20240605151936.000031df@Huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240605151936.000031df@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|IA1PR12MB8494:EE_
+X-MS-Office365-Filtering-Correlation-Id: 504d825d-11c5-4f66-e4d7-08dc858d2767
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HzN5rD6eJKSysi9Fyfv+4UTN3QemU/0o3LzakDr/HuMAnzWcf89gPttHz2wM?=
+ =?us-ascii?Q?VktMEjK+Y3fAPhw1wJuw2IEl0FThSvsIrQ4mDvQdrTvqsNLJAkzOY6NF1F4G?=
+ =?us-ascii?Q?kzuTz0UhRKeziPMkVxZcgXlafhkFBUh3Q6BjciF5tOSqi4M6tuRI4a9ozPhI?=
+ =?us-ascii?Q?8Ijt+KxxAgkazOOme05eDjrrFhYcVgH5VccY265KnQvO8kmcX8YpPl84HAkc?=
+ =?us-ascii?Q?jfzAJt/ADApxLeaaMbiZG11vnelAP+oh5HBZY17wmT2HLXRy0vAS95ymg6BB?=
+ =?us-ascii?Q?3jocG7CNvZmc10E1qIpTGMnic2GnIOxmccB8YL4thMLr/J9Eo8Xbbcmz+rvE?=
+ =?us-ascii?Q?zEGGxcRfClZ3bYqw7JKPO6CTt//2qajpeLSml522DlwYt89b/2sw+u/F6taI?=
+ =?us-ascii?Q?FC/hPfkklQihFXv6OIqcK8RZR2R7gEGuGzy8eQFqRcqJlyRdDilcv1g3gThq?=
+ =?us-ascii?Q?s7DSMiE5T9xUsAp5yTE32Ds+AMh7glIgp8NRkXrPvQgbMUx9vKHSXHraQj1E?=
+ =?us-ascii?Q?i1AHV/7LMZS5QqW5QlbqmATZbcf0cE0Il/rF3TJfxr+P5HLszintDA8IYMm7?=
+ =?us-ascii?Q?3zuysAK1C8tl1NG9BBr2B19oAldY/qoWkloV2bWY3ue5jIw8UqFKrPGtglJo?=
+ =?us-ascii?Q?HQDWKmVF8Lqj0CvJEIlsoa916cHszyIOzvbkj1mQGgg2E8kKvSSqg/gO9fqd?=
+ =?us-ascii?Q?qNVFauhDEejS6afJP2J8KVgEr/7rRrkSpOCA7WGcnYM40x2dRFU+lik7l+YL?=
+ =?us-ascii?Q?mcowzqYxqsvP4FYmsFcVMxjKuUimcqb4sGyMnBToDmf0Zpsz643tTMCM15Ai?=
+ =?us-ascii?Q?QI2LnOc9dTfNqxsJtrNq4YQLB1mAbierVobsdj2OOH9iSu2C3fsQ5ilTiqAX?=
+ =?us-ascii?Q?I+BRlSJgUBKJnc1jzDq4EbDqQlSPphQpzjpjn9BMgmLmAfxMhWzzY5hlbN+2?=
+ =?us-ascii?Q?puiKgeBXIT0kKgy3gQ1sxGxCbtoCAXr6sSXainpNE+WkX8SqiD3GeKJB2BV8?=
+ =?us-ascii?Q?1IoPUlIdec6bdmyho3I2ZfdIrwAMYyeFAJpjWXYX8wV4yz59d+iATfqHY5eX?=
+ =?us-ascii?Q?utKOEBV2zu7GYcfmDbw6Wtfpu7Ee34D4+7H9MCs30nSvpalFniIuA5Ob3KKV?=
+ =?us-ascii?Q?XVRklvkCwRk0hFEY+lCzmZ2M5NFvbnLnvpOYJMR/ji8Jb5aM031HmmYEjheh?=
+ =?us-ascii?Q?HZi4eUFvphrg9F4PP8PnL1UxIpxRA5P3kwbDZ9KT56WwEAzVZXhebGY6fcSj?=
+ =?us-ascii?Q?C2Rqp+dDmjEzRnGRWnojnPOLVjDGCSDydeOY2qOhqM9KBEAnrcC/FGv/KvON?=
+ =?us-ascii?Q?12W+0q8INfUVWqAuJmh9pE2G?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nJFH7jDvG1Vxx6AjrQV7YMcdGSm1E5D5n5FVQbJH6KQAcMXuoC8vMOop8ny/?=
+ =?us-ascii?Q?Izm6GW6Oux6QrkCbiTwLvnyPH/doWZe3tfECkfdxuQq/5rPFuLlehbmaJC1q?=
+ =?us-ascii?Q?Cke5Rxfp3OfHGM/jjWweGV6gIKV5MOtXEHE3pkYEX+E8OH0sxCiGo2mU4CoL?=
+ =?us-ascii?Q?H1RyltCHu31GWKJFECuYB735KCIRd4/WayN49+3r/TcGoPDfbWIQXOUfSCUU?=
+ =?us-ascii?Q?GIRBtIU9u0xl51B41skgA5SxEceDd3z77HNnrdBY/BR2ocKqMDwkFRMs2LXl?=
+ =?us-ascii?Q?/6DGApeKspTdzBRnDSr7aB+l78xOI1ZU97QOAD2O1dtk8kpSxBbVDmk7uhYJ?=
+ =?us-ascii?Q?vndLA9wf7Zob+KYVknjP3bUEsFCGhrfpLrQetupPjScr7oXfAlgo9s2oNEEE?=
+ =?us-ascii?Q?PUGly/1WQ81zViKvslTUAPGbUL3LKLzTvfdnr52+xdAT8SRqrYyfpKGaHkoT?=
+ =?us-ascii?Q?n8LvJqf5ru2iGrufq1b7QcV06bHJkdq92eOmKjuxXkunhVE2p4AjoxTFIEbt?=
+ =?us-ascii?Q?3el39fo8f/0kG18v6yJeGRSfY0LtEKufuia5f6xT5Otv/pz2zJzqUOAJnhqN?=
+ =?us-ascii?Q?jE99Wf2mbT4Zi8tdvUL/YLLp9drr0RSTYf0l2GKVNGzC1V5VaYwhDESBRdj5?=
+ =?us-ascii?Q?00/BnIvpfESJcG5YjuMWYPUTMRfgJXwk3LoQoP/70MddAy4yizmkThqXcC/t?=
+ =?us-ascii?Q?mOl38difPXOHdu6b4YZwGsknvajLzFkQSTGu45nrPZD4km7L3+x5X+ustMku?=
+ =?us-ascii?Q?twoig1zSrd84RLlWfDx+Xy6TaYSZPcFbO2hUa8nfbtyh9HtesgoX4sDIAQTm?=
+ =?us-ascii?Q?2MT04MmEMCcfeO/OpF80G3kUPlq5GY3ZJpQOF+yqlYrjjTu4x9Iqlq6cDs6Z?=
+ =?us-ascii?Q?BV5DB5n9xEti2MM+ZmIz3AP1/vUOiCTEN7XgU0Jiua52TYxTFMM4epIC1bDi?=
+ =?us-ascii?Q?wBklcE2HM8v9a7Z9qUKtmD6N1flnAwxbKCklog98t9RDldL2QKVTwvFPLtww?=
+ =?us-ascii?Q?2ndx7c/W9j2PWuuPDEzGy6e1M6SaS+tJ9tjSmXqds1gECwA9d95PuHjcmY5I?=
+ =?us-ascii?Q?YZ573nnwHF+UZXofLgVdooVSR5IxgAAgPI9CK4WZgrVazi4PxBO1LyNz+Dbc?=
+ =?us-ascii?Q?g76AMNWM0g2AxOSxFZAb53vhLyoDamnNq5RkF/AbNk7b5uzqUe58fP9Ynr1L?=
+ =?us-ascii?Q?dbB/Dl/y9rwdu/+Zl6eT0bGRhKDvo12Sd4eAfeHHv1W4rVZZI3XqQ5p3686M?=
+ =?us-ascii?Q?f1tPbblqFKcty50Kr+uaK6MJH/HqqnAqaOuQEoadCAPyO0E3aCSRbudcg+fi?=
+ =?us-ascii?Q?vbY5RSfBrqi3zSDrMtMEJ67SgOyZwPlr6tOCSbW+RNCZ7xWzjOQcYwZRWCQv?=
+ =?us-ascii?Q?tZToyRfts4Qm70eaiTbCBTs1NjTICWdaFCvRpSUS2a2AEv8HkiyiBcMcrEYJ?=
+ =?us-ascii?Q?rLwkw9eVYghp4L0KJcP9DI8+u0wxB4Z6mVGdrnCB3FP/Ge+DN/mMpDfFsHsP?=
+ =?us-ascii?Q?UvWw3+YNuwEKUzemEc/cBy/4rHnUBJHCD8EVsil+rRSC+Q5api01cFcBOuFQ?=
+ =?us-ascii?Q?YU6jaIboBYaZssUMyFM/uXseuuv5g13HB7morSp3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 504d825d-11c5-4f66-e4d7-08dc858d2767
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 18:27:27.9047
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WH4HOEFYUDAw9/PVt9i3MpkwlyImXwKxeAyzr5ZtU9NSOjBU7QhOm80ZXmp7dfuE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8494
 
+On Wed, Jun 05, 2024 at 12:07:37PM +0100, Jonathan Cameron wrote:
 
+> > I don't recall that dramatic conclusion in the discussion, but it does
+> > make alot of sense to me.
+> 
+> I'll be less lazy (and today found the search foo to track it down).
+> 
+> https://lore.kernel.org/all/CAHk-=wicfvWPuRVDG5R1mZSxD8Xg=-0nLOiHay2T_UJ0yDX42g@mail.gmail.com/
 
-On 6/5/24 7:19 AM, Jonathan Cameron wrote:
-> On Wed, 29 May 2024 14:38:58 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> The current bandwidth calculation aggregates all the targets. This simple
->> method does not take into account where multiple targets sharing under
->> a switch where the aggregated bandwidth can be less or greater than the
->> upstream link of the switch.
->>
->> To accurately account for the shared upstream uplink cases, a new update
->> function is introduced by walking from the leaves to the root of the
->> hierachy and adjust the bandwidth in the process. This process is done when
->> all the targets for a region is present but before the final values are
-> are present
-> 
->> send to the HMAT handling code cached access_coordinate targets.
->>
->> The original perf calculation path was kept to calculate the configurations
->> without switches and also keep the latency data as that does not require
->> special calculation. The shared upstream link calculation is done as a
->> second pass when all the endpoints have arrived.
->>
->> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
->> ---
->> v3:
->> - Redo calculation based on Jonathan's suggestion. (Jonathan)
->> ---
->>  drivers/cxl/core/cdat.c   | 380 ++++++++++++++++++++++++++++++++++++--
-> 
-> Hi Dave,
-> 
-> The one case I couldn't quite figure out is that of multiple
-> RP on a given RC.
-> 
-> Imagine bw as follows
-> 
->       Host
->         | 3 from GP/HMAT
->    _____|_____
->   RP         RP
->   2|          |2
->  __|__     ___|__
-> |1    |1  1|     |1
-> EP   EP    EP    EP
-> 
-> I'm not sure following through the code that we get
-> 3 (reported aggregate bw to the host bridge) rather than 4 (min elsewhere)
-> 
-> I might be missing why this case works...
+Oh that is a bit different discussion than I was thinking of.. I fixed
+all the cases to follow this advise and checked that all the free
+functions are proper pairs of whatever is being allocated.
 
-I definitely missed this case. The current code exits when no switches are found. I need to go back and think about how to cover this case as well. Thanks for reminding. 
-
-DJ 
-
-> 
-> Various minor comments inline.
-> 
-> Jonathan
-> 
-> 
->>  drivers/cxl/core/core.h   |   4 +-
->>  drivers/cxl/core/pci.c    |  21 +++
->>  drivers/cxl/core/port.c   |  26 +++
->>  drivers/cxl/core/region.c |   4 +
->>  drivers/cxl/cxl.h         |   1 +
->>  6 files changed, 418 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> index fea214340d4b..e77b416b0fe0 100644
->> --- a/drivers/cxl/core/cdat.c
->> +++ b/drivers/cxl/core/cdat.c
->> @@ -548,32 +548,378 @@ void cxl_coordinates_combine(struct access_coordinate *out,
->>  
->>  MODULE_IMPORT_NS(CXL);
->>  
->> -void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
->> -				    struct cxl_endpoint_decoder *cxled)
->> +static void cxl_bandwidth_add(struct access_coordinate *coord,
->> +			      struct access_coordinate *c1,
->> +			      struct access_coordinate *c2)
->>  {
->> -	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->> -	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> -	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> -	struct range dpa = {
->> -			.start = cxled->dpa_res->start,
->> -			.end = cxled->dpa_res->end,
->> -	};
->> -	struct cxl_dpa_perf *perf;
->> +	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
->> +		coord[i].read_bandwidth = c1[i].read_bandwidth +
->> +					  c2[i].read_bandwidth;
->> +		coord[i].write_bandwidth = c1[i].write_bandwidth +
->> +					   c2[i].write_bandwidth;
->> +	}
->> +}
->>  
->> -	switch (cxlr->mode) {
->> +struct cxl_perf_ctx {
->> +	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->> +	struct cxl_port *port;
->> +};
-> 
-> ...
-> 
->> +static bool dpa_perf_contains(struct cxl_dpa_perf *perf,
->> +			      struct resource *dpa_res)
->> +{
->> +	struct range dpa = {
->> +			.start = dpa_res->start,
->> +			.end = dpa_res->end,
-> over indented.
-> 
->> +	};
->>  
->>  	if (!range_contains(&perf->dpa_range, &dpa))
->> +		return false;
->> +
->> +	return true;
->> +}
->> +
-> 
->> +static int cxl_endpoint_gather_coordinates(struct cxl_region *cxlr,
->> +					   struct cxl_endpoint_decoder *cxled,
->> +					   struct xarray *usp_xa)
->> +{
->> +	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
->> +	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
->> +	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
->> +	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
->> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->> +	struct cxl_perf_ctx *c __free(kfree) = NULL;
-> 
-> Linus isn't fond of the fact free ordering is odd in these cases.
-> Doesn't matter here, but it might if we refactor in future.
-> You can reduce the scope anyway to make that a moot point.
-> 
->> +	struct cxl_perf_ctx *perf_ctx;
->> +	struct cxl_port *parent_port;
->> +	struct cxl_dpa_perf *perf;
->> +	unsigned long index;
->> +	void *ptr;
->> +	int rc;
->> +
->> +	if (cxlds->rcd)
->> +		return -ENODEV;
->> +
->> +	parent_port = to_cxl_port(endpoint->dev.parent);
->> +	/* No CXL switch upstream then skip out. */
->> +	if (is_cxl_root(parent_port))
->> +		return -ENODEV;
->> +
->> +	perf = cxl_memdev_get_dpa_perf(mds, cxlr->mode);
->> +	if (IS_ERR(perf))
->> +		return PTR_ERR(perf);
->> +
->> +	if (!dpa_perf_contains(perf, cxled->dpa_res))
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * The index for the xarray is the upstream port device of the upstream
->> +	 * CXL switch.
->> +	 */
->> +	index = (unsigned long)(unsigned long *)parent_port->uport_dev;
-> 
-> Random side note for another day. That seems rather inefficient as xarrays
-> love densely clustered indexes and this will be aligned so bottom bunch
-> of bits are 0. Ah well - improving that would make for messy code or
-> some nice macros.
-> 
-> Why do you need the (unsigned long *) cast?
-> 
-> 
->> +	perf_ctx = xa_load(usp_xa, index);
->> +	if (!perf_ctx) {
->> +		c = kzalloc(sizeof(*perf_ctx), GFP_KERNEL);
-> 
-> scope of c is just in here I think, so drag the definition and destructor down here?
-> 
->> +		if (!c)
->> +			return -ENOMEM;
->> +		ptr = xa_store(usp_xa, index, c, GFP_KERNEL);
->> +		if (xa_is_err(ptr))
->> +			return xa_err(ptr);
->> +		perf_ctx = no_free_ptr(c);
->> +	}
->> +
->> +	/* Upstream link bandwidth */
-> Too may upstreams in here. I'd be more specific.
-> 	/* Direct upstream link from EP bandwidth */
->> +	rc = cxl_pci_get_bandwidth(pdev, pci_coord);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	/* Min of upstream link bandwidth and Endpoint CDAT bandwidth from DSLBIS */
->> +	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
->> +
->> +	/*
->> +	 * Retrieve the switch SSLBIS for switch downstream port associated with
->> +	 * the endpoint bandwidth.
->> +	 */
->> +	rc = cxl_port_get_switch_dport_bandwidth(endpoint, sw_coord);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* Min of the earlier coordinates with the switch SSLBIS bandwidth */
->> +	cxl_coordinates_combine(ep_coord, ep_coord, sw_coord);
->> +
->> +	/*
->> +	 * Aggregate the computed bandwidth with the current aggregated bandwidth
->> +	 * of the endpoints with the same upstream switch port.
-> 
-> "switch upstream port"
-> 
-> Arguable the DSP could be the upstream switch port (from the EP)
-> 
-> 
->> +	 */
->> +	cxl_bandwidth_add(perf_ctx->coord, perf_ctx->coord, ep_coord);
->> +	perf_ctx->port = parent_port;
->> +
->> +	return 0;
->> +}
->> +
->> +static struct xarray *cxl_switch_iterate_coordinates(struct xarray *input_xa)
->> +{
->> +	struct xarray *res_xa __free(kfree) = kzalloc(sizeof(*res_xa), GFP_KERNEL);
->> +	struct access_coordinate coords[ACCESS_COORDINATE_MAX];
->> +	struct cxl_perf_ctx *n __free(kfree) = NULL;
-> 
-> Same comment as below. Reduce the scope of this and you'll have the destructor
-> and constructor nicely paired.
-> 
->> +	struct cxl_perf_ctx *ctx, *us_ctx;
->> +	unsigned long index, key;
->> +	bool is_root = false;
->> +	void *ptr;
->> +	int rc;
->> +
->> +	if (!res_xa)
->> +		return ERR_PTR(-ENOMEM);
->> +	xa_init(res_xa);
->> +
->> +	xa_for_each(input_xa, index, ctx) {
->> +		struct device *dev = (struct device *)(unsigned long *)index;
-> 
-> Why cast via an (unsigned long *) ?
-> 
->> +		struct cxl_port *parent_port, *port;
->> +		struct cxl_dport *dport;
->> +		struct pci_dev *pdev;
->> +
->> +		port = ctx->port;
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +		dport = port->parent_dport;
->> +		/*
->> +		 * If parent port is CXL root port, then take the min of the parent
->> +		 * dport bandwidth, which comes from the generic target via ACPI
->> +		 * tables (SRAT & HMAT), and the bandwidth in the xarray. Then
->> +		 * update the bandwidth in the xarray.
->> +		 */
->> +		if (is_cxl_root(parent_port)) {
->> +			ctx->port = parent_port;
->> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
->> +						dport->coord);
-> 
-> I'm a bit lost in all the levels of iteration so may have missed it.
-> 
-> Do we assume that GP BW (which is the root bridge) is shared across multiple root
-> ports on that host bridge if they are both part of the interleave set?
-> 
->> +			is_root = true;
->> +			continue;
->> +		}
->> +
->> +		/* Below is the calculation for another switch upstream */
->> +
->> +		/*
->> +		 * If the device isn't an upstream PCIe port, there's something
->> +		 * wrong with the topology.
->> +		 */
->> +		if (!dev_is_pci(dev))
->> +			return ERR_PTR(-EINVAL);
->> +
->> +		/* Retrieve the upstream link bandwidth */
->> +		pdev = to_pci_dev(dev);
->> +		rc = cxl_pci_get_bandwidth(pdev, coords);
->> +		if (rc)
->> +			return ERR_PTR(-ENXIO);
->> +
->> +		/*
->> +		 * Take the min of downstream bandwidth and the upstream link
->> +		 * bandwidth.
->> +		 */
->> +		cxl_coordinates_combine(coords, coords, ctx->coord);
->> +		/*
->> +		 * Take the min of the calculated bandwdith and the upstream
->> +		 * switch SSLBIS bandwidth.
->> +		 */
->> +		cxl_coordinates_combine(coords, coords, dport->coord);
->> +
->> +		/*
->> +		 * Create an xarray entry with the key of the upstream
->> +		 * port of the upstream switch.
->> +		 */
->> +		key = (unsigned long)(unsigned long *)parent_port->uport_dev;
->> +		us_ctx = xa_load(res_xa, key);
->> +		if (!us_ctx) {
-> 
-> as above, define n here.
-> 
->> +			n = kzalloc(sizeof(*n), GFP_KERNEL);
->> +			if (!n)
->> +				return ERR_PTR(-ENOMEM);
->> +			ptr = xa_store(res_xa, key, n, GFP_KERNEL);
->> +			if (xa_is_err(ptr))
->> +				return ERR_PTR(xa_err(ptr));
->> +			us_ctx = no_free_ptr(n);
->> +		}
->> +
->> +		/*
->> +		 * Aggregate the bandwidth based on the upstream switch.
->> +		 */
->> +		cxl_bandwidth_add(us_ctx->coord, us_ctx->coord, coords);
->> +		us_ctx->port = parent_port;
->> +	}
->> +
->> +	if (is_root)
->> +		return NULL;
->> +
->> +	return_ptr(res_xa);
->> +}
->> +
->> +static void cxl_region_update_access_coordinate(struct cxl_region *cxlr,
->> +						struct xarray *input_xa)
->> +{
->> +	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->> +	struct cxl_perf_ctx *ctx;
->> +	unsigned long index;
->> +
->> +	memset(coord, 0, sizeof(coord));
->> +	xa_for_each(input_xa, index, ctx)
->> +		cxl_bandwidth_add(coord, coord, ctx->coord);
->> +
->> +	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
->> +		cxlr->coord[i].read_bandwidth = coord[i].read_bandwidth;
->> +		cxlr->coord[i].write_bandwidth = coord[i].write_bandwidth;
->> +	}
->> +}
->> +
->> +static void free_perf_xa(struct xarray *xa)
->> +{
->> +	struct cxl_perf_ctx *ctx;
->> +	unsigned long index;
->> +
->> +	if (!xa)
->> +		return;
->> +
->> +	xa_for_each(xa, index, ctx)
->> +		kfree(ctx);
->> +	xa_destroy(xa);
->> +	kfree(xa);
->> +}
->> +
->> +/*
->> + * cxl_region_shared_upstream_perf_update - Recalculate the access coordinates
->> + * @cxl_region: the cxl region to recalculate
->> + *
->> + * For certain region construction with endpoints behind CXL switches,
->> + * there is the possibility of the total bandwdith for all the endpoints
->> + * behind a switch between less or more than the switch upstream link. The
-> 
-> switch being less or more
-> 
->> + * algorithm assumes the configuration is a symmetric topology that puts
-> 
-> topology as that maximizes performance.
-> 
->> + * max performance into consideration. For a region topology without switch
->> + * involvement, the code exits without doing computation.
->> + *
-> I suspect this restriction might bite us one day, but meh, it's complex enough for
-> now and clearly stated what the limitation is!
-> 
->> + * An example hierachy:
->> + *
->> + *                 CFMWS 0
->> + *                   |
->> + *          _________|_________
->> + *         |                   |
->> + *   GP0/HB0/ACPI0017-0  GP1/HB1/ACPI0017-1
->> + *     |          |        |           |
->> + *    RP0        RP1      RP2         RP3
->> + *     |          |        |           |
->> + *   SW 0       SW 1     SW 2        SW 3
->> + *   |   |      |   |    |   |       |   |
->> + *  EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
->> + *
->> + * Computation for the example hierachy:
->> + *
->> + * Min (GP0 to CPU BW,
->> + *      Min(SW 0 Upstream Link to RP0 BW,
->> + *          Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Link) +
->> + *          Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream link)) +
->> + *      Min(SW 1 Upstream Link to RP1 BW,
->> + *          Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Link) +
->> + *          Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream link))) +
->> + * Min (GP1 to CPU BW,
->> + *      Min(SW 2 Upstream Link to RP2 BW,
->> + *          Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Link) +
->> + *          Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream link)) +
->> + *      Min(SW 3 Upstream Link to RP3 BW,
->> + *          Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Link) +
->> + *          Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream link))))
->> + */
->> +void cxl_region_shared_upstream_perf_update(struct cxl_region *cxlr)
->> +{
->> +	struct xarray *usp_xa, *iter_xa, *working_xa;
->> +	int rc;
->> +
->> +	lockdep_assert_held(&cxl_dpa_rwsem);
->> +
->> +	usp_xa = kzalloc(sizeof(*usp_xa), GFP_KERNEL);
->> +	if (!usp_xa)
->> +		return;
->> +
->> +	xa_init(usp_xa);
->> +
->> +	/*
->> +	 * Collect aggregated endpoint bandwidth and store the bandwidth in
->> +	 * an xarray indexed by the upstream port of the switch. The bandwidth
->> +	 * is aggregated per switch. Each endpoint consists of the minumum of
->> +	 * bandwidth from DSLBIS from the endpoint CDAT, the endpoint upstream
->> +	 * link bandwidth, and the bandwidth from the SSLBIS of the switch
->> +	 * CDAT for the downstream port that's associated with the endpoint.
-> 
-> CDAT for the switch upstream port to the downstream port that's ...
-> 
-> 
-> Should have p2p downstream to downstream numbers in there too I think and we
-> don't yet care about those.
-> 
->> +	 */
->> +	for (int i = 0; i < cxlr->params.nr_targets; i++) {
->> +		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
->> +
->> +		rc = cxl_endpoint_gather_coordinates(cxlr, cxled, usp_xa);
->> +		if (rc) {
->> +			free_perf_xa(usp_xa);
->> +			return;
->> +		}
->> +	}
->> +
->> +	/*
->> +	 * Iterate through the components in the xarray and aggregate any
->> +	 * component that share the same upstream switch. The iteration
-> 
-> Nitpick but worth making it clear this is the VCS of a switch or avoid
-> it by referring to sharing the upstream link from the switch.
-> 
->> +	 * takes consideration of multi-level switch hierachy.
->> +	 *
->> +	 * When cxl_switch_iterate_coordinates() detect the next level
->> +	 * upstream is a root port, it updates the bandwidth in the
->> +	 * xarray by taking the min of the provided bandwidth and
->> +	 * the bandwidth from the generic port. The function
->> +	 * returns NULL to indicate that the input xarray has been
->> +	 * updated.
->> +	 */
->> +	iter_xa = usp_xa;
->> +	usp_xa = NULL;
->> +	do {
->> +		working_xa = cxl_switch_iterate_coordinates(iter_xa);
->> +		if (IS_ERR(working_xa)) {
-> 
-> Maybe worth a traditional end of function cleanup and goto as there
-> is always one of these to free. You could use __free() magic but
-> that becomes less obvious when iterating so up to you.
-> (there are examples in tree such as in property.h that do iteration
-> with __free() magic but I'd not take them as good precedence given
-> the author (me) :) )
-> 
-> err:
-> 	free_perf_xa(iter_xa);
-> 
->> +			free_perf_xa(iter_xa);
->> +			return;
->> +		}
->> +		if (working_xa) {
->> +			free_perf_xa(iter_xa);
->> +			iter_xa = working_xa;
->> +		}
->> +	} while (working_xa);
->> +
->> +	/*
->> +	 * Aggregate the bandwidths in the xarray and update the region
->> +	 * bandwidths with the newly calculated bandwidths.
->> +	 */
->> +	cxl_region_update_access_coordinate(cxlr, iter_xa);
->> +	free_perf_xa(iter_xa);
->> +}
->> +
->> +void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
->> +				    struct cxl_endpoint_decoder *cxled)
->> +{
->> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> 
-> Trivial and obviously this is in original code but you could take opportunity for
-> 
-> 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> 
-> as cxlds isn't accessed in here otherwise.
-> Nor is cxlmd, but folding that in as well feels too far to go.
-> 
-> 
->> +	struct cxl_dpa_perf *perf;
->> +
->> +	perf = cxl_memdev_get_dpa_perf(mds, cxlr->mode);
->> +	if (IS_ERR(perf))
->> +		return;
->> +
->> +	lockdep_assert_held(&cxl_dpa_rwsem);
->> +
->> +	if (!dpa_perf_contains(perf, cxled->dpa_res))
->>  		return;
->>  
->>  	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-> 
-> 
-> 
-> 
-> 
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 887ed6e358fb..2c7509a9a943 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -2259,6 +2259,32 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
->>  
->> +int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->> +					struct access_coordinate *c)
->> +{
->> +	struct cxl_dport *dport;
->> +	struct cxl_port *iter;
-> 
-> The iter naming seems odd as no iterating going on..
-> It's only there I think to check we aren't on a root port?
-> 
-> So
-> 
-> 	struct cxl_dport *dport = port->parent_dport;
-> 	
-> 	/* Check this port is connected to a switch DSP and not an RP */
-> 	if (parent_port_is_cxl_root(to_cxl_port(port->dev.parent))
-> 		return -ENODEV;
-> 
-> 	if (!coord...
-> 
->  as before
-> 
-> 
->> +
->> +	iter = port;
->> +	dport = port->parent_dport;
->> +	iter = to_cxl_port(iter->dev.parent);
->> +
->> +	if (parent_port_is_cxl_root(iter))
->> +		return -ENODEV;
->> +
->> +	if (!coordinates_valid(dport->coord)) {
->> +		dev_warn(dport->dport_dev, "XXX %s invalid coords\n", __func__);
-> 
-> XXX?  I guess a marker you were using to find it during debuging that
-> wants to go away now.
-> 
-> 
->> +		return -EINVAL;
->> +	}
->> +
->> +	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
->> +		c[i].read_bandwidth = dport->coord[i].read_bandwidth;
->> +		c[i].write_bandwidth = dport->coord[i].write_bandwidth;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
-> 
+Thanks,
+Jason
