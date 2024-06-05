@@ -1,291 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18F11494BD
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Jun 2024 15:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717602935; cv=none; b=jjUrC7vqjIiXwPCPtCow81siic9v3gDQrjYVzAm4YejT0ktgdI5M1B7cWfVFTGahnHetX1hV4hLKAW2hVLodhxa9YNztZrRkPFXLg47ue51eGBrq2io+Wpofnl5MGakasD05MdeSrm0ZHh/rqri1AV6L2rzIqAFYTSN+GwHqNoY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717602935; c=relaxed/simple;
-	bh=nNU3YDhDj7yaviSg7iqCa4eK8JgXET0Fj10vDkI/ckg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cDtdbs8OSTBZLJNkw7lgj4YASYP4g8B6XV+0vN24bZQ4ECPAQtt3r2etvdffnyvoWppn1xubKxdEW7ft1vs7l1DMZ8F7qNbC3i0IJrMZifQ5mRldkLeOIfOXgcu+AEyVOd2pynBYOBnk+A/obkQfA9FKh3RttVzKphNk20PWzdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEKhJEqt; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5A9D26D;
+	Wed,  5 Jun 2024 16:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717603872; cv=fail; b=ABXgqJnvF8X+3+QU5bPCW0T2wBaQGGlGG/tO6CxRJukeIJ8/qa7W7SIYMkI+3F+Tx6EMxLYx+CbShfN7Wn5Gv4XwwembAsu62qAaqQyS34RIA/JNXwfNDBOmZ6GqFPYYk/QiXWyuVCTybIf51tXcx/LU6/rZQyefwTuDGK+XmRw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717603872; c=relaxed/simple;
+	bh=1DdXKmoOguad06Zwx8wlMsiAlhQlDgRtXpkakUFiXdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iyDn+pt18XTD0qxziEBVOUAKKKn1mwY4NsV/A3qJr1BRftJUXx+vxc4MmhsMjYH/dGOvA9j0anBsEvuFYnwO8JQ27D2ZYCQNIpvso2BP/FB0MVJU0u6MOrivOANxy+1hNk7GOalQsdzRzy0AxBy2y8ztSsEaxDUfXQa+80hWy0w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oqlYK8FE; arc=fail smtp.client-ip=40.107.237.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEKhJEqt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717602933; x=1749138933;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nNU3YDhDj7yaviSg7iqCa4eK8JgXET0Fj10vDkI/ckg=;
-  b=UEKhJEqtBuYor1+3EDIiNQtIiTmmBwbS9ICzurw/rcSEZijY5axZl4+p
-   C8dL/QKRW6RMmhHYf7HdbNQKWWb3yelSTkDQ48O9BnBhQxls6PBNakq//
-   TKGTZmohNIKBVioGbiFmGqmqi2HHb6LI33EW6GSC11Eh5CwLYbzSnBjMU
-   pM5TtraKIDlM8caiyc976iQabIo8sSBIZPHO8J1tarht+XELJcA167XGm
-   qOiaYFk+/BG+xd7ahn/tZHN8wGeeL4UvQuCIKYDip+TQiNG7TpU9OMcOW
-   WH+sXc+kXbyFME134JOXKXMmfUc8oUDs97Z5ZmASLxzJ2UX3zV+GXqp/k
-   A==;
-X-CSE-ConnectionGUID: 30AactCdQlGuUsX4pTnewQ==
-X-CSE-MsgGUID: ApR4E5+uR/Cb5WlXC8lOKw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14065130"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="14065130"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 08:55:32 -0700
-X-CSE-ConnectionGUID: kzPqYGC0TIiGL+8KRHeS/g==
-X-CSE-MsgGUID: PEFoGAQZT5qTbsarX1nF1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="37742189"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.22.89])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 08:55:31 -0700
-Date: Wed, 5 Jun 2024 08:55:29 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Yao Xingtao <yaoxt.fnst@fujitsu.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, jim.harris@samsung.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5] cxl/region: check interleave capability
-Message-ID: <ZmCKcVZPS/5MztqD@aschofie-mobl2>
-References: <20240524092740.4260-1-yaoxt.fnst@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oqlYK8FE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LfZdHtFqF5lUdAQNZ49ujIav/B4g5jb7TtzbRtInR+QZBLmSjlZfTjXdVXJsKvVeOlfz9g30oRj6VM6RqtKnYliRrpDdv7cwcMv5WOKRhnFjxkkhmkvMhnGg8xdslNY/uxbtxA0BC/OpjwG5GZtAXvvZmCb2yHsS/bSF6/9PKGcud3W9jmDnJodTfyf5MjIxuT0YokDRU7qhewFkEABy0O4U6pJkYwDLArwANjZjx2BlH4V8ikWyLkOb/cETA2WG3HZs0U605jSR55k+hgRhdxR+bRufSTqtoO5QP7Df1T+KLPkfNTz7KKjrpiipQC2LthwgzZZGC2R6qM5pGdwTCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Mk/3+IvVBi/dLDXZCwyNexdSwzfEbcSkEFS4gep09k=;
+ b=j/gV7IjJI1DPbJ5Qk9xgNgpltUeVLqhs0KqJBok2Gj8zqsw7KHsAhN/7Af5M83p1s5L6J384ndwW5bbMmIjkXmG9n9eI1TDt6TTLGnC2KQ0lc8RujNHXVWE83xEON5h8BzHwsx9E2UspxOQu5bRR9oKMcJugtKgs7dqH/1YJnPLSu+erZAbG6gk2Sv51IAwgUqBU8bRrgeng9kX18o9XkNqZJturxMpDIdiELOlJrdimaukzlCY36OsQvOkx3aW4QGQE3FGtymZcydYK3kHm7AqAfqyBQjSQnveQSS/rypq8KVKgTeef64lcnboHI9Kcs0dDNL1704K+ocWRE5gDxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Mk/3+IvVBi/dLDXZCwyNexdSwzfEbcSkEFS4gep09k=;
+ b=oqlYK8FEorXQ9iOJC6KswpSsAr5m4ytLikUNSQ2vbX4V1U5NW3L8lGcmfAGqkDq8gyzAQt0WkOVhwZvtXbM+J7IzhE/8Wkk56hwkvCOTNlXygJsBEdbDV2PN9six7/oDMfU2w4q9evYqYYIpE0lnBjwnrOVld45XpyfKjkhYruL7fUokkY2sbM/F8BvDOYvKhPnBAJQhBFP5SVfmnlCEJ038jZA23pQJAiRjgyeCgg21/YXFWDGodN4p6ZJC45GlNhNyLIrPeuXbpi+Zoy51YXRnTDvpIQi1KpXhYW/8+txXgMpRV29J6JY84vG5t0Ymk9cjWDRy0xE0lWU9wbmBRA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by SA3PR12MB8803.namprd12.prod.outlook.com (2603:10b6:806:317::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Wed, 5 Jun
+ 2024 16:11:07 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7633.021; Wed, 5 Jun 2024
+ 16:11:06 +0000
+Date: Wed, 5 Jun 2024 13:03:36 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	David Ahern <dsahern@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+	Leonid Bloch <lbloch@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 6/8] fwctl: Add documentation
+Message-ID: <20240605160336.GA1760942@nvidia.com>
+References: <6-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <7a28cd2c-b5a8-4c06-b9e2-9b390d8c96e4@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a28cd2c-b5a8-4c06-b9e2-9b390d8c96e4@infradead.org>
+X-ClientProxiedBy: MN2PR16CA0012.namprd16.prod.outlook.com
+ (2603:10b6:208:134::25) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524092740.4260-1-yaoxt.fnst@fujitsu.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SA3PR12MB8803:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22f7a9d2-b246-405a-fd56-08dc857a1b13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TOdmNvEeJ3tZloNwBLt/LspqJWjPVdbu7lUHJJJq6kWA0du7vdoRXMWdi4Dt?=
+ =?us-ascii?Q?2d+Y/ORUD0GQPJHE3NsuwnB1xRU8inVaILMfg+9+H66Sh/B7qRKJks5ZmisX?=
+ =?us-ascii?Q?OiYrA6TvdOaswWtnPIWJqd9n3HJkHZ+g+X4x+w5JVVg3GFH1uu9PpzH4uKET?=
+ =?us-ascii?Q?27XPd56l0/20W/Ks2CT5po+oyYr7St5at0kxS0Pblf2jwYlHv5BXSOe2jeqF?=
+ =?us-ascii?Q?yCR05LYe9d4br7lzcpRRya8UWKbyojo4pKsvRYFz6GVtj3nq2PqAQNjLHktT?=
+ =?us-ascii?Q?YfjEyH0fnvE6Z6O1rEZCqkj74YUZ8NPQQmYMtn4/kPbdkSwMgOvGdpqL4FpP?=
+ =?us-ascii?Q?6GG9v/8Lc0fJi87BwA7e1AnCJaVFD6RsDCJcO13dW65lMtuQFkcNTjqTSD90?=
+ =?us-ascii?Q?EtaDqY1XlZ7yWuPQnu4wlrEgxvAiA+JGmoFGVbmzlTQgdoNk9ViO3O0TLoTC?=
+ =?us-ascii?Q?eavtEsy784GtHgEn/AeiXn6nUe3DL46nIXicii7XQlBJPAtm18I35vhIhbaI?=
+ =?us-ascii?Q?tPsqLENnuG5tKmcVqWA7J4sCUiHsaK6BujK5gTKTvaauxVqJR/UYvpyPUtYX?=
+ =?us-ascii?Q?2e1qL2PqpYav7wQn+OqAMNotLLGxW73qNau+KC1ROBhp/JF33XwkUUxQdp2O?=
+ =?us-ascii?Q?2uxZA1hVGIQy0hKYtyeMMJw1GrOL19iJZeBKKEWAU2pK+7m4sp7BEWzUpmZK?=
+ =?us-ascii?Q?mRu2cK1d2G0dW5lC+HFFMryJcTAnwbv773ilckQbIo6qE6nJztQVH7RnTsis?=
+ =?us-ascii?Q?Pf0PO0YFFpeLs8wOgxg3YgG5Iy24QDgOwDii0chGJVqeRAx4dgtUg0+3mlfI?=
+ =?us-ascii?Q?jt6foX6vGeHDWagufPSTJ0RfA/b+9UwXBD5zOU1BgfcbDXTJwrqyRhYR61gr?=
+ =?us-ascii?Q?q5GKtn6DO9RJBoCE9nt4CUoM142SIYHSy021Ppqq2LBEKwbAEFqcz4WVzO3R?=
+ =?us-ascii?Q?NY99jv8aYhEs4nB+wRKmTT3FgXd3k8PHzoxlQaBRmKsqWzZaL0ktO+ThxYOE?=
+ =?us-ascii?Q?vaGGzpcrxhUucECk/kv1zTl7tvK4MlyDk/9qzMCpMK0pgPtMWe86sNKUQpR/?=
+ =?us-ascii?Q?OUlyhDXrSffhbG/YBKFzl2A/PKsMb0tw4HXRW8zlZZB4kZHt1p95XISh+icQ?=
+ =?us-ascii?Q?CA77FPyuLNWCc5dveEcR3JSdSIFB0hEreSD+85sTQF+ZP/NNri/vaMyaxs2P?=
+ =?us-ascii?Q?CUfHljsaM8uAyqPHDqj/t6BVD363PfquNpNgfWkfUUcUf4lEURA3Mco0FWqB?=
+ =?us-ascii?Q?cwjDdXKcYqJclahxvWxzmrWTQVhR2masKAgs/5qLyUuxEAHwL4U+erqQQOYh?=
+ =?us-ascii?Q?OQJzKqI3isGPbqBjJCrKHbp6?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/QDDqt7PHWdEGCD0glpumvdkNQrWWMDg9HBF/qhI77tp/vTD2FL21LC9NwGv?=
+ =?us-ascii?Q?g868O5v4uqFSdlUiiTUDfoxjZ4nQb67bIxTNpCGoqxo0rtaMQGaPsCrzeprv?=
+ =?us-ascii?Q?HwMAeuINlZUgrcSafug0qAW3ryYDEMxpdLZfpkQ5z3/rRh9yzHhpd2enXrh8?=
+ =?us-ascii?Q?3VgAUBrOu8xoyJ3v0XLRjxri+0MV2sAyMQ4G51aCgvkGUmrMYtR9FBxnYGBq?=
+ =?us-ascii?Q?sNh2W6pj7q8uQ3GmhRBTewBj+IEDvqRn0ophJ5N+rMUna1nSQnAmT2csNk5I?=
+ =?us-ascii?Q?Y0hWQuny3dSLY4A/nKHoyJX33cIFSewdbAKYTMm6jYvCdxqQCAEkF+MZq/QV?=
+ =?us-ascii?Q?sS875i8KWiTWm0SUgmn6xLWbYqnndAmLcgF5mhyG08ew3IVuACMIRls9noay?=
+ =?us-ascii?Q?sJsRkTU7ZrqLGVsGEcnMAo7fkzd6/Qr1GmiVjW7LapQ5bkc49oSVTEc2ReVP?=
+ =?us-ascii?Q?aP6ErsEKYcwg35gr/D3O8dQvK+L+67AigEBsiOetIAnbgG9xC+/ER/IPFNs+?=
+ =?us-ascii?Q?M1PgyZLPeFjaBZADK5gcrxEoydneEsHWwxs+uLpYk0ZDoDtvO3GYxg90+AEG?=
+ =?us-ascii?Q?jtJDf9w0HNihhGDA0nA1tv2l6XwX61hgK45G8qGlhRxnNcXaeDLBdXiqGykL?=
+ =?us-ascii?Q?X4lrdiAk6OChKB39ib3R3KlwyhV0LwiYak4CC7ZEU03r19DZzcwPhlLjNiIK?=
+ =?us-ascii?Q?6e/5m77yZP1BmJrlJZlRnfCTnHtoRurQMSQHgL749zGVUV8W7UN0Ov9+jS6P?=
+ =?us-ascii?Q?JIHWlTls+HaH2W8EZi4X7r6n7Ae6XxQyYoNi4h9nuBRQSvtk2tpfP4CGSQYu?=
+ =?us-ascii?Q?Fvax5Fwr05tBp21m4Xnv4CSJR1VDK52lq8znz9y5YZvwo1kCo1T8n+Agyypg?=
+ =?us-ascii?Q?zFTj0WLNkUN7GY386Y1JH/bJzQFK/goEKZ4wk4szj8ZHchEABziKKn24Fi+D?=
+ =?us-ascii?Q?AqFEIOSMVzxalKgi0w9WgftKRaqJtQcnwGfl7UO88qFdKR6BC2c2V2SXZ39Y?=
+ =?us-ascii?Q?ysFIqIdmTWzz61QEaFtvHBPilAdF1tolju8/iohRX//wVuvj0DqcvuYLbQgs?=
+ =?us-ascii?Q?QLAlZ5yWU4Iyz27AWuN3h7CzDXUvpM7A6btKe2BqWnSvsBwdZ9yYCDovOU1h?=
+ =?us-ascii?Q?KpDn8CYnlmsp3437Zqp7SBz7Qg0ItJAfrESCJC4gHh8GEN4VpmjNo6VQ0KLk?=
+ =?us-ascii?Q?oR3Xj+LAe+AyqpLw90nC8dxi/8ESLUSjMlXHLolLIsVlRJCJr+6dHBaOSgFg?=
+ =?us-ascii?Q?7NyTOa0JsoTAFXK9Jqs4/rER1CZjSw6HKi5nKwnLCQlMwSSF/x8ovuUNeIRu?=
+ =?us-ascii?Q?wqw/0FjISkhboFIZ4f53cuuIXHBJF6LVtOkfPPOmqUTcjaMWsUVXSqEV3ENo?=
+ =?us-ascii?Q?YVq76witrloSYBfvelhEVVkDh9085QgLeB6ydfD6Ll0+0OYzbRsITLdDm/9k?=
+ =?us-ascii?Q?HbeHEas0+klHnxutaKd0UlNKbs3/N4/vjdH+h9RVCMx+brUAja3+8xXBQwy1?=
+ =?us-ascii?Q?PZcSOAOlrBBYidcDQCcnnfVAv+JeC7CqfTaSkWTZcXgD2XYyQY+QTBj+oIcp?=
+ =?us-ascii?Q?rridnUPHeQBSPoWigZ3b9xSxiMHOAm6S72sFmocY?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22f7a9d2-b246-405a-fd56-08dc857a1b13
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 16:11:06.7888
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aBPdOFLQEwvOacr9aQRGetntHKkOfRMZcIyjusKiCuX/KAOcI/8CD83EJeUvL0SP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8803
 
-On Fri, May 24, 2024 at 05:27:40AM -0400, Yao Xingtao wrote:
-> Since interleave capability is not verified, if the interleave
-> capability of a target does not match the region need, committing decoder
-> should have failed at the device end.
-> 
+On Tue, Jun 04, 2024 at 07:31:10PM -0700, Randy Dunlap wrote:
 
-What happens now if the driver tries to program a decoder with capabilities
-it does not support?
+> > +Modern devices contain extensive amounts of FW, and in many cases, are largely
+> > +software defined pieces of hardware. The evolution of this approach is largely a
+> 
+>   software-defined
 
-Can you offer me the changelog here?  Definately in the next revision
-but also right here in reply to remind me of prior discussions.
+Thanks a lot Randy, I picked up all your notes.
 
--- Alison
+> > +While the kernel can always directly parse and restrict RPCs, it is expected
+> > +that the existing kernel pattern of allowing drivers to delegate validation to
+> > +FW to be a useful design.
+> 
+> (and one that can be abused...)
 
+I would really like to write a paragraph about this "abuse", Dan has
+some good thoughts on this as well. Did you have a specific "abuse"
+in your mind?
 
-> In order to checkout this error as quickly as possible, driver needs
-> to check the interleave capability of target during attaching it to
-> region.
-> 
-> According to the CXL specification (section 8.2.4.20 CXL HDM Decoder
-> Capability Structure), bits 11 and 12 within the 'CXL HDM Decoder
-> Capability Register' indicate the capability to establish interleaving
-> in 3, 6, 12, and 16 ways. If these bits are not set, the target cannot
-> be attached to a region utilizing such interleave ways.
-> 
-> Additionally, bits 8 and 9 in the same register represent the capability
-> of the bits used for interleaving in the address, Linux tracks this in the
-> cxl_port interleave_mask.
-> 
-> Regarding 'Decoder Protection':
-> If IW is less than 8 (for interleave ways of 1, 2, 4, 8, 16), the
-> interleave bits start at bit position IG + 8 and end at IG + IW + 8 - 1.
-> 
-> If the IW is greater than or equal to 8 (for interleave ways of 3, 6, 12),
-> the interleave bits start at bit position IG + 8 and end at IG + IW - 1.
-> 
-> If the interleave mask is insufficient to cover the required interleave
-> bits, the target cannot be attached to the region.
-> 
-> Fixes: 384e624bb211 ("cxl/region: Attach endpoint decoders")
-> Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
-> ---
->  drivers/cxl/core/hdm.c    | 10 +++++
->  drivers/cxl/core/region.c | 83 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |  2 +
->  drivers/cxl/cxlmem.h      |  1 +
->  4 files changed, 96 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 7d97790b893d..5b7dff19bbfa 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -52,6 +52,11 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
->  	struct cxl_dport *dport = NULL;
->  	int single_port_map[1];
->  	unsigned long index;
-> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-> +
-> +	/* allow all the interleave capabilities for passthrough decoder */
-> +	cxlhdm->interleave_mask = GENMASK(14, 8);
-> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
->  
->  	cxlsd = cxl_switch_decoder_alloc(port, 1);
->  	if (IS_ERR(cxlsd))
-> @@ -79,6 +84,11 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(11, 8);
->  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
-> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
-> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
-> +		cxlhdm->iw_cap_mask |= BIT(16);
->  }
->  
->  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 5c186e0a39b9..6b7400313cb2 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1054,6 +1054,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  	struct cxl_decoder *cxld;
->  	unsigned long index;
->  	int rc = -EBUSY;
-> +	struct cxl_switch_decoder *cxlsd;
->  
->  	lockdep_assert_held_write(&cxl_region_rwsem);
->  
-> @@ -1101,6 +1102,23 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  	}
->  	cxld = cxl_rr->decoder;
->  
-> +	/*
-> +	 * the number of targets should not exceed the target_count
-> +	 * of the decoder
-> +	 */
-> +	if (is_switch_decoder(&cxld->dev)) {
-> +		cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> +		if (cxl_rr->nr_targets > cxlsd->nr_targets) {
-> +			dev_dbg(&cxlr->dev,
-> +				"%s:%s %s add: %s:%s @ %d overflows targets: %d\n",
-> +				dev_name(port->uport_dev), dev_name(&port->dev),
-> +				dev_name(&cxld->dev), dev_name(&cxlmd->dev),
-> +				dev_name(&cxled->cxld.dev), pos,
-> +				cxlsd->nr_targets);
-> +			goto out_erase;
-> +		}
-> +	}
-> +
->  	rc = cxl_rr_ep_add(cxl_rr, cxled);
->  	if (rc) {
->  		dev_dbg(&cxlr->dev,
-> @@ -1210,6 +1228,53 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  	return 0;
->  }
->  
-> +static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
-> +{
-> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-> +	unsigned int interleave_mask;
-> +	u8 eiw;
-> +	u16 eig;
-> +	int rc, high_pos, low_pos;
-> +
-> +	rc = ways_to_eiw(iw, &eiw);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!test_bit(iw, &cxlhdm->iw_cap_mask))
-> +		return -ENXIO;
-> +
-> +	rc = granularity_to_eig(ig, &eig);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * Per CXL specification (8.2.3.20.13 Decoder Protection in r3.1)
-> +	 * if eiw < 8, the interleave bits start at bit position eig + 8, and
-> +	 * end at eig + eiw + 8 - 1.
-> +	 * if eiw >= 8, the interleave bits start at bit position eig + 8, and
-> +	 * end at eig + eiw - 1.
-> +	 */
-> +	if (eiw >= 8)
-> +		high_pos = eiw + eig - 1;
-> +	else
-> +		high_pos = eiw + eig + 7;
-> +	low_pos = eig + 8;
-> +	/*
-> +	 * when the eiw is 0 or 8 (interlave way is 1 or 3), the num of
-> +	 * interleave bits is 0, there is no interleaving, the following
-> +	 * check is ignored.
-> +	 */
-> +	if (low_pos > high_pos)
-> +		return 0;
-> +
-> +	interleave_mask = GENMASK(high_pos, low_pos);
-> +	if (interleave_mask & ~cxlhdm->interleave_mask)
-> +		return -ENXIO;
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
-> @@ -1360,6 +1425,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  			return -ENXIO;
->  		}
->  	} else {
-> +		rc = check_interleave_cap(cxld, iw, ig);
-> +		if (rc) {
-> +			dev_dbg(&cxlr->dev,
-> +				"%s:%s iw: %d ig: %d is not supported\n",
-> +				dev_name(port->uport_dev),
-> +				dev_name(&port->dev), iw, ig);
-> +			return rc;
-> +		}
-> +
->  		cxld->interleave_ways = iw;
->  		cxld->interleave_granularity = ig;
->  		cxld->hpa_range = (struct range) {
-> @@ -1796,6 +1870,15 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	struct cxl_dport *dport;
->  	int rc = -ENXIO;
->  
-> +	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
-> +				  p->interleave_granularity);
-> +	if (rc) {
-> +		dev_dbg(&cxlr->dev, "%s iw: %d ig: %d is not supported\n",
-> +			dev_name(&cxled->cxld.dev), p->interleave_ways,
-> +			p->interleave_granularity);
-> +		return rc;
-> +	}
-> +
->  	if (cxled->mode != cxlr->mode) {
->  		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
->  			dev_name(&cxled->cxld.dev), cxlr->mode, cxled->mode);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 036d17db68e0..dc8e46a1fe82 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -45,6 +45,8 @@
->  #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
->  #define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
->  #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
->  #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
->  #define   CXL_HDM_DECODER_ENABLE BIT(1)
->  #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 36cee9c30ceb..6b8cf20ff375 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -853,6 +853,7 @@ struct cxl_hdm {
->  	unsigned int decoder_count;
->  	unsigned int target_count;
->  	unsigned int interleave_mask;
-> +	unsigned long iw_cap_mask;
->  	struct cxl_port *port;
->  };
->  
-> -- 
-> 2.37.3
-> 
+Thanks,
+Jason
