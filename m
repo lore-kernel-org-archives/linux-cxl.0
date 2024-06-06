@@ -1,121 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CDA1991BF;
-	Thu,  6 Jun 2024 15:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37A41974EC;
+	Thu,  6 Jun 2024 15:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717686720; cv=none; b=p/CfxL8XEoWyNBATZ2y0n26oLdvACcSf1uaVqh14JLMAExQx1nlZDegf+ulwQKBTmEL7sZt6zqnI/73cP0M5gul0jew9DtjAeNBnzJTxsILpe2FjunaFjkGc+tW+/AwzDZ1lUoG09dICSvOq4oj9lVJxUwVgWsu88kCn3zmcelk=
+	t=1717688280; cv=none; b=tHQHXGrHey7Vk8hevq0dEFxHyCJuiFF1MCimcDwieshm3DjZvdJlZRV2oEa+9vfKzrkKv2r/OpE08IKK1tHNKVSsXgnZvzELQvSPwCZ7fSkCeSQ0q+eQvQbtejZuqgIIU3rRM1GHi+FOhDOFZt5B1Gg3F1EXbm3NVj8f7TjAIcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717686720; c=relaxed/simple;
-	bh=FL7dzVJTWju/vujUHStPMmmvgFpIKHy88JtBSJ8gQe0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dz9YxvWOH84uBIdw5VHNqevAz43OkK7DGLcdyqF13F+9L6zgYWBSHWac6cMqOjh26YQLYukLFORSoT4xVPWNNzqoO7nyr+DzwT27RX+ywJf6smAZrSZZYV01RKZ/ANEpjXtMPN3vnCeSldupF+/cnfjWluI38U4nid3hAgfq1UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vw73S6W3Xz6K5sn;
-	Thu,  6 Jun 2024 23:07:16 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6F1991402C7;
-	Thu,  6 Jun 2024 23:11:56 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
- 2024 16:11:55 +0100
-Date: Thu, 6 Jun 2024 16:11:54 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Zhenzhong Duan <zhenzhong.duan@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-acpi@vger.kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<james.morse@arm.com>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <bhelgaas@google.com>,
-	<helgaas@kernel.org>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<linmiaohe@huawei.com>, <shiju.jose@huawei.com>, <adam.c.preble@intel.com>,
-	<lukas@wunner.de>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<erwin.tsaur@intel.com>, <sathyanarayanan.kuppuswamy@intel.com>,
-	<dan.j.williams@intel.com>, <feiting.wanyan@intel.com>,
-	<yudong.wang@intel.com>, <chao.p.peng@intel.com>,
-	<qingshun.wang@linux.intel.com>
-Subject: Re: [PATCH v4 3/3] PCI/AER: Clear UNCOR_STATUS bits that might be
- ANFE
-Message-ID: <20240606161154.00002605@Huawei.com>
-In-Reply-To: <20240509084833.2147767-4-zhenzhong.duan@intel.com>
-References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
-	<20240509084833.2147767-4-zhenzhong.duan@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717688280; c=relaxed/simple;
+	bh=OO6oYJAW8pC8roD5DJjWf7tOAyCBn4io7jsoyroiUeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DjfMX3fBMAaykgQRKJBKjfTXW9RQQJrFSoWbqWvoRiUqq1Fm4e48yoXE91m+y2N4VGMX9nujKaE6uPCHJkmEKXyl0Eqvqo73kh94YA2jDYqkEBn8eE951fAXb0+Ft8II9BJvAqaH8i7Qn4dkgcMAiJPt03CyjJZmMf1S7oRQXFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EcrJbFlf; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EcrJbFlf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=irDz+4gcio50Pp5r1x+2BPTF9AxJeW0Y2klp54euioc=; b=EcrJbFlfSdYFnCMT6xo0FK5/LT
+	43hnX1GHLeXHHe4yte581ygfmy7e/JIniI0mxEnGAUuCTMfqPcdtd45bR2wqTuN7LO0w7rBlNhO3I
+	mYcQCQO9agXrpT0s/8D0kznCGL7xm86nMtCmaUq7QLOwQZxaCD9u0eMZEVOrKUU5udxRmD7+5sdhF
+	2VFJWlP4Y2WAFUPYIxVMryvcM4mhIel6cDEKw6eOyvKyOgNK5FInhi3zx3SD7/il7CLehKp8jqp6P
+	bPn8+nE1XyyOOUahITpNCTase9sR5Y0T6XUeMXFfsYk/66DJ8Mad6SJnGqq07YZZgDZRBUZXdSIgu
+	y9ZTdHWQ==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sFFBW-0000000AKdn-41tL;
+	Thu, 06 Jun 2024 15:37:51 +0000
+Message-ID: <39bea11b-d28b-408d-ad8d-df8fe942fe4d@infradead.org>
+Date: Thu, 6 Jun 2024 08:37:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] fwctl: Basic ioctl dispatch for the character device
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+ Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Tariq Toukan <tariqt@nvidia.com>,
+ Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+ Aron Silverton <aron.silverton@oracle.com>,
+ Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+ Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+ patches@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+ Julia Lawall <julia.lawall@inria.fr>
+References: <2-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <6cfe00ce-1860-4aba-bcb8-54f8d365d2dc@linux.dev>
+ <20240604122221.GR3884@unreal> <20240604175023.000004e2@Huawei.com>
+ <20240604165844.GM19897@nvidia.com> <20240605120737.00007472@Huawei.com>
+ <20240605182726.GX19897@nvidia.com> <20240606143424.00001fbd@Huawei.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240606143424.00001fbd@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu,  9 May 2024 16:48:33 +0800
-Zhenzhong Duan <zhenzhong.duan@intel.com> wrote:
 
-> When processing an ANFE, ideally both correctable error(CE) status and
-> uncorrectable error(UE) status should be cleared. However, there is no
-> way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
-> Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
-> NFE will bring some issues, i.e., breaking softwore probing; treating
-> NFE as ANFE will make us ignoring some UEs which need active recover
-> operation. To avoid clearing UEs that are not ANFE by accident, the
-> most conservative route is taken here: If any of the NFE Detected bits
-> is set in Device Status, do not touch UE status, they should be cleared
-> later by the UE handler. Otherwise, a specific set of UEs that may be
-> raised as ANFE according to the PCIe specification will be cleared if
-> their corresponding severity is Non-Fatal.
+
+On 6/6/24 6:34 AM, Jonathan Cameron wrote:
+> On Wed, 5 Jun 2024 15:27:26 -0300
+> Jason Gunthorpe <jgg@nvidia.com> wrote:
 > 
-> For instance, previously when kernel receives an ANFE with Poisoned TLP
-> in OS native AER mode, only status of CE will be reported and cleared:
+>> On Wed, Jun 05, 2024 at 12:07:37PM +0100, Jonathan Cameron wrote:
+>>
+>>>> I don't recall that dramatic conclusion in the discussion, but it does
+>>>> make alot of sense to me.  
+>>>
+>>> I'll be less lazy (and today found the search foo to track it down).
+>>>
+>>> https://lore.kernel.org/all/CAHk-=wicfvWPuRVDG5R1mZSxD8Xg=-0nLOiHay2T_UJ0yDX42g@mail.gmail.com/  
+>>
+>> Oh that is a bit different discussion than I was thinking of.. I fixed
+>> all the cases to follow this advise and checked that all the free
+>> functions are proper pairs of whatever is being allocated.
 > 
->   AER: Correctable error message received from 0000:b7:02.0
->   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00002000/00000000
->      [13] NonFatalErr
+> Yes. I think we are approaching the point where maybe we need
+> a 'best practice guide' somewhere. It is sort of coding style, but
+> it is perhaps rather complex perhaps to put in that doc.
 > 
-> If the kernel receives a Malformed TLP after that, two UEs will be
-> reported, which is unexpected. Malformed TLP Header is lost since
-> the previous ANFE gated the TLP header logs:
+> I'm happy to help review such changes, but it would be too far down
+> my todo list if I took on writing one.
 > 
->   PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00041000/00180020
->      [12] TLP                    (First)
->      [18] MalfTLP
-> 
-> Now, for the same scenario, both CE status and related UE status will be
-> reported and cleared after ANFE:
-> 
->   AER: Correctable error message received from 0000:b7:02.0
->   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00002000/00000000
->      [13] NonFatalErr
->     Uncorrectable errors that may cause Advisory Non-Fatal:
->      [18] TLP
-> 
-> Tested-by: Yudong Wang <yudong.wang@intel.com>
-> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-This is nasty enough though that it would benefit from more review
-if possible.  
-
-Thanks for all the detailed explanations in the patch descriptions,
-that made it less painful than it might have been.
-
-Jonathan
+> Maybe there is one I've missed?
 
 
+There is not a published one that I know of, other than one that I pasted into
+an email in Dec-2023, in this post:
+
+https://lore.kernel.org/lkml/34e27c57-fc18-4918-bf44-4f8a53825361@infradead.org/
+
+
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
