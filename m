@@ -1,107 +1,204 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37A41974EC;
-	Thu,  6 Jun 2024 15:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33F5196C7B
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Jun 2024 15:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688280; cv=none; b=tHQHXGrHey7Vk8hevq0dEFxHyCJuiFF1MCimcDwieshm3DjZvdJlZRV2oEa+9vfKzrkKv2r/OpE08IKK1tHNKVSsXgnZvzELQvSPwCZ7fSkCeSQ0q+eQvQbtejZuqgIIU3rRM1GHi+FOhDOFZt5B1Gg3F1EXbm3NVj8f7TjAIcY=
+	t=1717688798; cv=none; b=coU3bT0cz80wmAiwmgw94qObafwRlhn6Oi81i0zZxn1Yqi2yho0wwql+fupTPYMHajyHZXtBztvjskyqmqJ7E7GBAFjI5NW3VAYWVq58mjqNb4P1v7/jlh067uGSWF2j/nHC1Pk+D8EPyQby+COafQqfoXvM2AkgnpVDnsfzY9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688280; c=relaxed/simple;
-	bh=OO6oYJAW8pC8roD5DJjWf7tOAyCBn4io7jsoyroiUeU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DjfMX3fBMAaykgQRKJBKjfTXW9RQQJrFSoWbqWvoRiUqq1Fm4e48yoXE91m+y2N4VGMX9nujKaE6uPCHJkmEKXyl0Eqvqo73kh94YA2jDYqkEBn8eE951fAXb0+Ft8II9BJvAqaH8i7Qn4dkgcMAiJPt03CyjJZmMf1S7oRQXFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EcrJbFlf; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1717688798; c=relaxed/simple;
+	bh=tdUd+sQ+AtIbL6VgvDooNlTuDamPXaS/f7IM4yBS8cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/U3jW/92ibV/NXFyQvdVWeex/gwAZ6nVA2tV97QdltUtgGsMVqWdx+969VAYcWBaX6bKc4DiBrNYE58FdAyKOwy2scoiK2Zct2xsCPVA1cEFg8X86igAI+lEN5AO0FkCc1Ggkj6aQFILQJLOhY36lDmTJ95i4RXOCRnred5ZWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rz9rd/m3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EcrJbFlf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=irDz+4gcio50Pp5r1x+2BPTF9AxJeW0Y2klp54euioc=; b=EcrJbFlfSdYFnCMT6xo0FK5/LT
-	43hnX1GHLeXHHe4yte581ygfmy7e/JIniI0mxEnGAUuCTMfqPcdtd45bR2wqTuN7LO0w7rBlNhO3I
-	mYcQCQO9agXrpT0s/8D0kznCGL7xm86nMtCmaUq7QLOwQZxaCD9u0eMZEVOrKUU5udxRmD7+5sdhF
-	2VFJWlP4Y2WAFUPYIxVMryvcM4mhIel6cDEKw6eOyvKyOgNK5FInhi3zx3SD7/il7CLehKp8jqp6P
-	bPn8+nE1XyyOOUahITpNCTase9sR5Y0T6XUeMXFfsYk/66DJ8Mad6SJnGqq07YZZgDZRBUZXdSIgu
-	y9ZTdHWQ==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFFBW-0000000AKdn-41tL;
-	Thu, 06 Jun 2024 15:37:51 +0000
-Message-ID: <39bea11b-d28b-408d-ad8d-df8fe942fe4d@infradead.org>
-Date: Thu, 6 Jun 2024 08:37:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rz9rd/m3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B04C32782;
+	Thu,  6 Jun 2024 15:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717688798;
+	bh=tdUd+sQ+AtIbL6VgvDooNlTuDamPXaS/f7IM4yBS8cs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rz9rd/m3A83EsyFNY4S7Uz5IqVPDGC/S90AhVZWkdDgQjz7N4ZWrE17BWcYerPQZe
+	 oXrrRIOk0m8KTrOjil4uKjiwnnJ0SJxpysNpZ+UYPxiebkiVYOo4z3yq4YMPTQ9Asi
+	 4Hl4nC+nJUJKL+6GffOKm4PYn877cyf4dcv9Y1gbFFbgROffo0f5pTMIaziPQoWDZc
+	 zVWI+IbWV317z4FOIprj3r7BWzK7GBxo1nXtLhq5wV+GoPT8RcyhDHfzKRQDeZOOUe
+	 bxf/+Z/ySSygIKBLyU2QJ5slYh9ntF3t6nUVga2duJjn+IWDvWVP5rPAD+7UWNeNct
+	 74a3zVqbtLA8A==
+Date: Thu, 6 Jun 2024 18:44:34 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Hildenbrand <david@redhat.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Will Deacon <will@kernel.org>, Jia He <justin.he@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, linuxarm@huawei.com,
+	catalin.marinas@arm.com, Anshuman.Khandual@arm.com,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	Oscar Salvador <osalvador@suse.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	James Morse <james.morse@arm.com>
+Subject: Re: [RFC PATCH 8/8] HACK: mm: memory_hotplug: Drop
+ memblock_phys_free() call in try_remove_memory()
+Message-ID: <ZmHZYkzvyg_h2TRV@kernel.org>
+References: <20240529171236.32002-1-Jonathan.Cameron@huawei.com>
+ <20240529171236.32002-9-Jonathan.Cameron@huawei.com>
+ <b8654dcd-68e1-4823-9588-cfa401104741@redhat.com>
+ <20240531104848.00006a95@Huawei.com>
+ <4f734ec7-6277-4f5e-b291-6186f1eb5ecd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] fwctl: Basic ioctl dispatch for the character device
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
- Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
- patches@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
- Julia Lawall <julia.lawall@inria.fr>
-References: <2-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
- <6cfe00ce-1860-4aba-bcb8-54f8d365d2dc@linux.dev>
- <20240604122221.GR3884@unreal> <20240604175023.000004e2@Huawei.com>
- <20240604165844.GM19897@nvidia.com> <20240605120737.00007472@Huawei.com>
- <20240605182726.GX19897@nvidia.com> <20240606143424.00001fbd@Huawei.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240606143424.00001fbd@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f734ec7-6277-4f5e-b291-6186f1eb5ecd@redhat.com>
 
-
-
-On 6/6/24 6:34 AM, Jonathan Cameron wrote:
-> On Wed, 5 Jun 2024 15:27:26 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Fri, May 31, 2024 at 11:55:08AM +0200, David Hildenbrand wrote:
+> On 31.05.24 11:48, Jonathan Cameron wrote:
+> > On Fri, 31 May 2024 09:49:32 +0200
+> > David Hildenbrand <david@redhat.com> wrote:
+> > 
+> > > On 29.05.24 19:12, Jonathan Cameron wrote:
+> > > > I'm not sure what this is balancing, but it if is necessary then the reserved
+> > > > memblock approach can't be used to stash NUMA node assignments as after the
+> > > > first add / remove cycle the entry is dropped so not available if memory is
+> > > > re-added at the same HPA.
+> > > > 
+> > > > This patch is here to hopefully spur comments on what this is there for!
+> > > > 
+> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > ---
+> > > >    mm/memory_hotplug.c | 2 +-
+> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > > > index 431b1f6753c0..3d8dd4749dfc 100644
+> > > > --- a/mm/memory_hotplug.c
+> > > > +++ b/mm/memory_hotplug.c
+> > > > @@ -2284,7 +2284,7 @@ static int __ref try_remove_memory(u64 start, u64 size)
+> > > >    	}
+> > > >    	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> > > > -		memblock_phys_free(start, size);
+> > > > +		//		memblock_phys_free(start, size);
+> > > >    		memblock_remove(start, size);
+> > > >    	}
+> > > 
+> > > memblock_phys_free() works on memblock.reserved, memblock_remove() works
+> > >    on memblock.memory.
+> > > 
+> > > If you take a look at the doc at the top of memblock.c:
+> > > 
+> > > memblock.memory: physical memory available to the system
+> > > memblock.reserved: regions that were allocated [during boot]
+> > > 
+> > > 
+> > > memblock.memory is supposed to be a superset of memblock.reserved. Your
+> > > "hack" here indicates that you somehow would be relying on the opposite
+> > > being true, which indicates that you are doing the wrong thing.
+> > > 
+> > > 
+> > > memblock_remove() indeed balances against memblock_add_node() for
+> > > hotplugged memory [add_memory_resource()]. There seem to a case where we
+> > > would succeed in hotunplugging memory that was part of "memblock.reserved".
+> > > 
+> > > But how could that happen? I think the following way:
+> > > 
+> > > Once the buddy is up and running, memory allocated during early boot is
+> > > not freed back to memblock, but usually we simply go via something like
+> > > free_reserved_page(), not memblock_free() [because the buddy took over].
+> > > So one could end up unplugging memory that still resides in
+> > > memblock.reserved set.
+> > > 
+> > > So with memblock_phys_free(), we are enforcing the invariant that
+> > > memblock.memory is a superset of memblock.reserved.
+> > > 
+> > > Likely, arm64 should store that node assignment elsewhere from where it
+> > > can be queried. Or it should be using something like
+> > > CONFIG_HAVE_MEMBLOCK_PHYS_MAP for these static windows.
+> > > 
+> > 
+> > Hi David,
+> > 
+> > Thanks for the explanation and pointers.  I'd rather avoid inventing a parallel
+> > infrastructure for this (like x86 has for other reasons, but which is also used
+> > for this purpose).
 > 
->> On Wed, Jun 05, 2024 at 12:07:37PM +0100, Jonathan Cameron wrote:
->>
->>>> I don't recall that dramatic conclusion in the discussion, but it does
->>>> make alot of sense to me.  
->>>
->>> I'll be less lazy (and today found the search foo to track it down).
->>>
->>> https://lore.kernel.org/all/CAHk-=wicfvWPuRVDG5R1mZSxD8Xg=-0nLOiHay2T_UJ0yDX42g@mail.gmail.com/  
->>
->> Oh that is a bit different discussion than I was thinking of.. I fixed
->> all the cases to follow this advise and checked that all the free
->> functions are proper pairs of whatever is being allocated.
+> Yes, although memblock feels a bit wrong, because it is targeted at managing
+> actual present memory, not properties about memory that could become present
+> later.
+
+Right now memblock.reserved can have ranges that are not actually present,
+but I still have doubts about using it to contain memory ranges that could
+be hotplugged and I'm more leaning against it.
+
+In general memblock as an infrastructure for dealing with memory ranges and
+their properties seems to be a good fit, so either memblock.reserved or a
+new memblock_type can be used to implement phys_to_target_node().
+
+memblock.reserved maybe less suitable than a new data structure because
+unlike x86::numa_reserved_meminfo it does manage already present memory for
+the most part while x86::numa_reserved_meminfo contains regions that do not
+overlap with RAM.
+ 
+Now before we continue to bikeshed about the name for the new data
+structure, how about this crazy idea to merge parts of arch/x86/numa.c
+dealing with 'struct numa_meminfo' to arch_numa.c and then remove some of
+the redundancy, e.g by implementing memory_add_physaddr_to_nid() with
+memblock.memory instead of numa_meminfo.
+
+It's an involved project indeed, but it has advantage of shared
+infrastructure for NUMA initialization of ACPI systems.
+AFAIU, x86 has a parallel infrastructure because they were first, but I
+don't see a fundamental reason why it has to remain that way.
+
+There also were several attempts to implement fakenuma on arm64 or riscv
+(sorry, can't find lore links right now), and with numa_meminfo in
+arch_numa.c we get it almost for free.
+
+> >  From a quick look CONFIG_HAVE_MEMBLOCK_PHYS_MAP is documented in a fashion that
+> > makes me think it's not directly appropriate (this isn't actual physical memory
+> > available during boot) but the general approach of just adding another memblock
+> > collection seems like it will work.
 > 
-> Yes. I think we are approaching the point where maybe we need
-> a 'best practice guide' somewhere. It is sort of coding style, but
-> it is perhaps rather complex perhaps to put in that doc.
+> Yes. As an alternative, modify the description of
+> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
+ 
+I wouldn't want to touch physmem, except maybe moving it entirely to
+arch/s390 and leaving it there.
+ 
+> > Hardest problem might be naming it.  physmem_possible perhaps?
+> > Fill that with anything found in SRAT or CEDT should work for ACPI, but I'm not
+> > sure on whether we can fill it when neither of those is present.  Maybe we just
+> > don't bother as for today's usecase CEDT needs to be present.
 > 
-> I'm happy to help review such changes, but it would be too far down
-> my todo list if I took on writing one.
+> You likely only want something for these special windows, with these special
+> semantics. That makes it hard.
 > 
-> Maybe there is one I've missed?
+> "physmem_possible" is a bit too generic for my taste, promising semantics
+> that might not hold true (we don't want all hotpluggable areas to show up
+> there).
+> 
+> > 
+> > Maybe physmem_known_possible is the way to go. I'll give this approach a spin
+> > and see how it goes.
+> 
+> Goes into a better direction, or really "physmem_fixed_windows". Because
+> also "physmem_known_possible" as a wrong smell to it.
 
-
-There is not a published one that I know of, other than one that I pasted into
-an email in Dec-2023, in this post:
-
-https://lore.kernel.org/lkml/34e27c57-fc18-4918-bf44-4f8a53825361@infradead.org/
-
+physmem_potential? ;-)
+ 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
 
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+Sincerely yours,
+Mike.
