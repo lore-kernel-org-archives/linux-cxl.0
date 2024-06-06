@@ -1,110 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAC918EA2;
-	Thu,  6 Jun 2024 02:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C36D502
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Jun 2024 03:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641351; cv=none; b=Y9T12Bye5wWiCSk0j2GJq/0/hoOOta4Jl+RmrQGKa1MJN2qhNwNjMeThcCOnRhDHgbvgy3TVmZBdUy0L7MDKhHwSIECZOLU780wrDXB2irNLIzJ3SkU3gitADfwXeYMk5oYnCQtSlhg+7aRB2aD4NUX7ZWBlW31OBjzFHpgQcH4=
+	t=1717644198; cv=none; b=NgIcoYTXfbAVtX4gXq9R+Ae71mJKfxn5VYfpT89HUKVWcT86H9DA60g0Q7dAk2LrYpalddXH1ThgOPMyWfGZiHDvAwKdcXo66iMtnXb+MzZ7xVABrJvfSmwcYSSZHMHj2FxgxeunehAwomRsvLMsNGLQBHZcgxTqCujWi6VLVKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641351; c=relaxed/simple;
-	bh=TLhBje2geqY1Z9OLXqxjQbB79fh8qlWI440npB953Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KnsdKXaDVFbtcrfzWfT2LlFKVnrn+C8UDNo1mzKt7ftY0ZeeyRCq79wBn0faSHCtqmSahdSPja95floATb/TrETAe9Rcqb10oP7T490IjdNIpaCWUff1d70DET7xu2hKe0nBpibOnd1aZ+RhTNaEPK9oMby/2CV4hYteO61ueCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2TYev22; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717644198; c=relaxed/simple;
+	bh=J0wNgeAdzssJEghoYc2kygycIHNYBGlnszbK/mQqnmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOon6NbLwIMcdhMLPbSqtYmGwRBGBz8Kp+pYw7Tli8pudd2T3DGkMrMLQFN7COtZgg5ZfbB7SXNmF6UjlscKL0N8hmYNIMn8ZWyq250MDu+Fr7XSITac5+buF2Xpco4deJIUJvUcjTGppArPaJCp8uff8ST11NISnRAkNI1nc/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duHQHb0M; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2TYev22"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12F4FC2BD11;
-	Thu,  6 Jun 2024 02:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717641351;
-	bh=TLhBje2geqY1Z9OLXqxjQbB79fh8qlWI440npB953Qk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O2TYev22UFFhALNZ/yVBS5fy59sjZuUeyqcICF0PQY50U5K42Gu0ckJRCMxpRuhy5
-	 YQizc/YjiyJ/8DkUlhuvoXmrCHy9eeq4kzl9kbvlU6ZG9MgDfLKc+TN+wtkd9IcbVW
-	 Vg//DDbpBbg2LnMOU+ABYes+5R6S/PDyevKH0KSC/ScfRBYZLJ9FiEsOxS4QYoaAmP
-	 wDwW4fMnus4TW4hA8I8AT8LwOGZWytuA2NnILi15RRKL8Icb2sdcQXvD7fh1VceoBv
-	 X9XZhvm8FC9Anu9iTuGlPjR/fX3Nu/Aba8uFu4z0BWDl90k0ABnQZKeu11BmGXrYrC
-	 vdyZizUtVKsoA==
-Message-ID: <d97144db-424f-4efd-bf10-513a0b895eca@kernel.org>
-Date: Wed, 5 Jun 2024 20:35:49 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duHQHb0M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717644196; x=1749180196;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J0wNgeAdzssJEghoYc2kygycIHNYBGlnszbK/mQqnmo=;
+  b=duHQHb0MlC6+23Nw6cY/wbsbBL0CWGO/HOjm5yLMWTgd5GpTQJhkPvEg
+   m7LxjuO+R0fwElmlfcFfZpoDKfBBoItctyh2JvCgR/kN0ZhbtHzRIT3tD
+   boPSjQ2qIiE7BbJChGly/UQ7mu3ZHFPSQOoIGZpVM2KXIAt5MPwo9Uq6l
+   Kq+gh8M3QPPBgl33Rtkf3J+uTduQ6bWmhCD4CmJQx4nispME9F8cmEPSL
+   zBMDPavRNjs3djcOQEtofoC7XzO5z2C8zAHWEsCMHGLThr03VqK/MtqSA
+   oqWRFzoKg3feFfpvGOiffYX4Bxhw1EotsFj6tRYI6JEfiw9g+3Zvfx+kf
+   w==;
+X-CSE-ConnectionGUID: eVuxZDJJQWW7fi8pLy/H2g==
+X-CSE-MsgGUID: AR85AQHHT9e5J31AQspm8Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14034034"
+X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
+   d="scan'208";a="14034034"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 20:23:15 -0700
+X-CSE-ConnectionGUID: WC3kcWr2QmSonViUD+feDw==
+X-CSE-MsgGUID: 77zjzUCYSQaVKbcsMRynTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
+   d="scan'208";a="42229172"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.22.89])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 20:23:15 -0700
+Date: Wed, 5 Jun 2024 20:23:13 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave.jiang@intel.com,
+	Jonathan.Cameron@huawei.com, .manzanares@samsung.com
+Subject: Re: [PATCH] Documentation: CXL Maturity Map
+Message-ID: <ZmEroVRLDDLdHIqL@aschofie-mobl2>
+References: <171659842954.843002.8140957498380360424.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Introduce fwctl subystem
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Itay Avraham <itayavr@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- linux-cxl@vger.kernel.org, patches@lists.linux.dev
-References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
- <20240603114250.5325279c@kernel.org>
- <214d7d82-0916-4c29-9012-04590e77df73@kernel.org>
- <20240604070451.79cfb280@kernel.org>
- <665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240605135911.GT19897@nvidia.com>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <20240605135911.GT19897@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171659842954.843002.8140957498380360424.stgit@dwillia2-xfh.jf.intel.com>
 
-On 6/5/24 7:59 AM, Jason Gunthorpe wrote:
-> On Tue, Jun 04, 2024 at 04:56:57PM -0700, Dan Williams wrote:
->> Jakub Kicinski wrote:
->> [..]
->>> I don't begrudge anyone building proprietary options, but leave
->>> upstream out of it.
->>
->> So I am of 2 minds here. In general, how is upstream benefited by
->> requiring every vendor command to be wrapped by a Linux command?
+On Fri, May 24, 2024 at 05:53:49PM -0700, Dan Williams wrote:
+> Provide a survey of the work-in-progress maturity (implementation
+> status) of various aspects of the CXL subsystem.
 > 
-> People actually can use upstream :)
+> Clarify that in addition to ongoing upkeep relative to specification
+> updates, there are some long running themes in the driver that respond
+> to the discovery of new corner cases (bugs) and new use cases (feature
+> extensions).
 > 
-> Amazingly there is inherit benefit to people being able to use the
-> software we produce.
+> The primary audience is distribution maintainers, but it also serves as
+> a guide for kernel developers to understand what aspects of the CXL
+> subsystem need more help. It is a landing page to document ongoing
+> progress, and a guide to discern exposure to work-in-progress features.
 
-There is. There is a clear preference for open source kernels and drivers.
+Hi Dan,
 
-Until a feature is standardized and/or commoditized, it does not make
-sense to create a uapi for every H/W vendor whim. All of them are
-attempting to solve real problems; some of them will stick. We know
-which features are valuable when customers use them, ask for them and
-other vendors copy them. Until then it is a 1-off by a vendor basically
-proposing a solution. Not all ideas are good ideas, and we do not need
-the burden of a uapi or the burden of out of tree drivers.
+I'm wondering if Scan Media can be added to the list. I was within 
+striking distance of posting that set when higher priority work called.
+Since it got pushed aside no one has cared :(  I'd welcome the chance
+to contribute it upstream if there is a justification. Can we add it
+here as a [0] here to keep it on the radar.
+
+-- Alison
 
 > 
->> 3 years on from that recommendation it seems no vendor has even needed
->> that level of distribution help. I.e. checking a few distro kernels
->> (Fedora, openSUSE) shows no uptake for CONFIG_CXL_MEM_RAW_COMMANDS=y in
->> their debug builds. I can only assume that locally compiled custom
->> kernel binaries are filling the need.
+> Help wanted / welcome to expand on the "Details" section.
 > 
-> My strong advice would be to be careful about this. Android-ism where
-> nobody runs the upstream kernel is a real thing. For something
-> emerging like CXL there is a real risk that the hyperscale folks will
-> go off and do their own OOT stuff and in-tree CXL will be something
-> usuable but inferior. I've seen this happen enough times..
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  Documentation/driver-api/cxl/index.rst        |    2 
+>  Documentation/driver-api/cxl/maturity-map.rst |  173 +++++++++++++++++++++++++
+>  MAINTAINERS                                   |    1 
+>  3 files changed, 176 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/maturity-map.rst
 > 
-> If people come and say we need X and the maintainer says no, they
-> don't just give up and stop doing X, the go and do X anyhow out of
-> tree. This has become especially true now that the center of business
-> activity in server-Linux is driven by the hyperscale crowd that don't
-> care much about upstream. Linux maintainer's don't actually have the
-> power to force the industry to do things, though people do keep
-> trying.. Maintainers can only lead, and productive leading is not done
-> with a NO.
+> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+> index 036e49553542..12b82725d322 100644
+> --- a/Documentation/driver-api/cxl/index.rst
+> +++ b/Documentation/driver-api/cxl/index.rst
+> @@ -9,4 +9,6 @@ Compute Express Link
+>  
+>     memory-devices
+>  
+> +   maturity-map
+> +
+>  .. only::  subproject and html
+> diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+> new file mode 100644
+> index 000000000000..9c5bff6484dd
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/maturity-map.rst
+> @@ -0,0 +1,173 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+> +
+> +===========================================
+> +Compute Express Link Subsystem Maturity Map
+> +===========================================
+> +
+> +The Linux CXL subsystem tracks the dynamic `CXL specification
+> +<https://computeexpresslink.org/cxl-specification-landing-page>`_ that
+> +continues to respond to new use cases with new features, capability
+> +updates and fixes. At any given point some aspects of the subsystem are
+> +more mature than others. While the periodic pull requests summarize the
+> +`work being incorporated each merge window
+> +<https://lore.kernel.org/linux-cxl/?q=s%3APULL+s%3ACXL+tc%3Atorvalds+NOT+s%3ARe>`_,
 
-+1
+Thanks for the lore link!
+
+
 
