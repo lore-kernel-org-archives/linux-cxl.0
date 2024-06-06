@@ -1,84 +1,94 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE59193080;
-	Thu,  6 Jun 2024 13:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0055719642D;
+	Thu,  6 Jun 2024 13:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717680403; cv=none; b=tNcKzt+yntsdzzQLC23pPy8glVGEzE5Z5KnL649AZRPo7r9HdXUfuFGSiY1MmCfoCjsA4xJVypDsFvWrPUUojiVefUi2CpU/b0DuxYgXZKxjGglBnYmRRxuXbJmQw3RBnGqCZfgMBAborxdCEnJawEy0GiGD+s0I3j4BVq9/uho=
+	t=1717680871; cv=none; b=Kjh1Za6WjM0XLHSXuV6JtowAz8Xg/wKId++yive1lmWIv23C12mbT/9ESrpywWW4VaZHoLi6PMuaawXET9eK7dIHpS2Gh5v3cpu6hhH49J1h/EDe71VE8lxLr4mz5Quq4yA8OGx7VDfi2jdJmWuOKDnl+QubEAAe8fw+U+lvqbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717680403; c=relaxed/simple;
-	bh=PJay4cZomYriBHZN2gRfCs5VYfX+Qcn2ic4chJUd5Hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amQ99kZ0wsRaZB42xMHEsrRh8cTn5iLsxHq143bh9u5svibFaj1aOfSgVD+b88kg7BAlTRup8zlQurhWF0GhegKKsNSZQpMgCl9ItLCuFWhItooJ7L7gyLVn/hyzYBSWBUUvBoeKx1Zla2y3xhO82Gw8qVzznFbOaRrCWN7T6Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 51618300034CC;
-	Thu,  6 Jun 2024 15:21:02 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3F9A24D387A; Thu,  6 Jun 2024 15:21:02 +0200 (CEST)
-Date: Thu, 6 Jun 2024 15:21:02 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linuxarm@huawei.com,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, terry.bowman@amd.com,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register CXL
- PMUs (and aer)
-Message-ID: <ZmG3vjD2sbCOPrM0@wunner.de>
-References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
- <20240605180409.GA520888@bhelgaas>
- <20240605204428.00001cb2@Huawei.com>
- <20240605213910.00003034@huawei.com>
+	s=arc-20240116; t=1717680871; c=relaxed/simple;
+	bh=wVX5LN5wezgSA3E348Yymtojtevb4mWjLp7y2qc+kQw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gYVBPoV+tcg0p7IEcEIh39hlx62Du1CSjJZwUDW0fuTBjsf/9HkaJWCXMM07FIblJOxTcREGKdyPYFEs8lRm7EEC2nqugdh2DgvrXT/YdfQ0q1tKrfVgefWKUH21dtwGb0LrdG7dzTP8UoyJlsQdNs7X/hWZlAIpXg52hnF3ODc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vw4tz4dFjz6K6Lf;
+	Thu,  6 Jun 2024 21:29:47 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id EECED1400D4;
+	Thu,  6 Jun 2024 21:34:26 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
+ 2024 14:34:26 +0100
+Date: Thu, 6 Jun 2024 14:34:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Leon Romanovsky <leon@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan
+	<tariqt@nvidia.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron
+ Silverton <aron.silverton@oracle.com>, Dan Williams
+	<dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>, "Christoph
+ Hellwig" <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
+	<lbloch@nvidia.com>, <linux-cxl@vger.kernel.org>, <patches@lists.linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>, "Julia Lawall" <julia.lawall@inria.fr>
+Subject: Re: [PATCH 2/8] fwctl: Basic ioctl dispatch for the character
+ device
+Message-ID: <20240606143424.00001fbd@Huawei.com>
+In-Reply-To: <20240605182726.GX19897@nvidia.com>
+References: <2-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+	<6cfe00ce-1860-4aba-bcb8-54f8d365d2dc@linux.dev>
+	<20240604122221.GR3884@unreal>
+	<20240604175023.000004e2@Huawei.com>
+	<20240604165844.GM19897@nvidia.com>
+	<20240605120737.00007472@Huawei.com>
+	<20240605182726.GX19897@nvidia.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605213910.00003034@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Jun 06, 2024 at 01:57:56PM +0100, Jonathan Cameron wrote:
-> Or are you thinking we can make something like the following work
-> (even when we can't do dynamic msix)?
+On Wed, 5 Jun 2024 15:27:26 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Wed, Jun 05, 2024 at 12:07:37PM +0100, Jonathan Cameron wrote:
 > 
-> Core bring up facilities and interrupt etc.  That includes bus master
-> so msi/msix can be issued (which makes me nervous - putting aside other
-> concerns as IIRC there are drivers where you have to be careful to
-> tweak registers to ensure you don't get a storm of traffic when you
-> hit bus master enable.
+> > > I don't recall that dramatic conclusion in the discussion, but it does
+> > > make alot of sense to me.  
+> > 
+> > I'll be less lazy (and today found the search foo to track it down).
+> > 
+> > https://lore.kernel.org/all/CAHk-=wicfvWPuRVDG5R1mZSxD8Xg=-0nLOiHay2T_UJ0yDX42g@mail.gmail.com/  
 > 
-> Specific driver may bind later - everything keeps running until 
-> the specific driver calls pci_alloc_irq_vectors(), then we have to disable all
-> interrupts for core managed services, change the number of vectors and
-> then move them to wherever they end up before starting them again.
-> We have to do the similar in the unwind path.
+> Oh that is a bit different discussion than I was thinking of.. I fixed
+> all the cases to follow this advise and checked that all the free
+> functions are proper pairs of whatever is being allocated.
 
-My recollection is that Thomas Gleixner has brought up dynamic MSI-X
-allocation.  So if both the PCI core services as well as the driver
-use MSI-X, there's no problem.
+Yes. I think we are approaching the point where maybe we need
+a 'best practice guide' somewhere. It is sort of coding style, but
+it is perhaps rather complex perhaps to put in that doc.
 
-For MSI, one approach might be to reserve a certain number of vectors
-in the core for later use by the driver.
+I'm happy to help review such changes, but it would be too far down
+my todo list if I took on writing one.
 
-Thanks,
+Maybe there is one I've missed?
 
-Lukas
+Jonathan
+> 
+> Thanks,
+> Jason
+
