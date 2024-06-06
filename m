@@ -1,40 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5E8197501
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Jun 2024 14:09:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BCA1AD9CD;
+	Thu,  6 Jun 2024 14:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717682951; cv=none; b=H9rfXBBgkgL35s3/gmGzp+R/zQUo36URXp5O2lmAHgscHED5k+Ku0bWVhSkmYzYtU7jFdCt+AsdotI3uI6aN6xvMhDU93KFdr2WDOk8+ix1kqoFPCgXlhBdnawHI15MmaajRhV55FWoIF76g0qXs8DAI4cr4eEXsOHyj7/bv88M=
+	t=1717683338; cv=none; b=XEo82gBpmcHgExr2CQT8gJhVs/3XjPQDQqbfekoP/K1uyyswtZftN/L28qCahPLMnPE7lrblH2lqzkKN2CKeDzdEZWmIScXg2KS+AYyyfMo7SY6Qh9Bo2X9R6nI3XcXyyKIke+KaRF6Vxiou+cL0rueiuFEsuxFRdr4L3nOdvx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717682951; c=relaxed/simple;
-	bh=YsSEwuUYsl1CQ+PIH+IEuN3zmJDmQ1TdYTkRK0xEXIo=;
+	s=arc-20240116; t=1717683338; c=relaxed/simple;
+	bh=BrBTZ77UoeB+OHe4E6Sd25A/0q2z7NYbR6O/Hqx1lPs=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QzdI17kcuc7ntak8mBX1LVfl+tugKNtl9gFm/ywLkvHCHpDVh6j7kKzgj2e8kxJ17v9Vtt/cGS+ZyPiMFBlqwoMXf2Xj4KaBWuBvEdH5Yb2A1t0tSC+Vcvr/wvIUhMEq0x8vvVL4NIk0dwvc1aIrxn1FzbjYiGJKIpHJnyXYLgM=
+	 MIME-Version:Content-Type; b=Vp0KCjxAap5md8NKoZjxYOXOtj1TCyOkKYhOE4R9StJbpA8X1MZiZltitJq6wMH8fFTmcaSY8ut+JQcEEbK7lAwkcCjkFIWCXOKdbxXwcpjz8t9QzGzwqonRVxe55N/DJTzrt8ZfDd2CLPcwrXgWrALIvT3jWsd7BvGl8R6lvxg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vw5fx48sKz6K6RY;
-	Thu,  6 Jun 2024 22:04:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vw5pP4gqMz6K6TJ;
+	Thu,  6 Jun 2024 22:10:53 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 00259140B2F;
-	Thu,  6 Jun 2024 22:09:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B434140DB0;
+	Thu,  6 Jun 2024 22:15:33 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
- 2024 15:09:04 +0100
-Date: Thu, 6 Jun 2024 15:09:03 +0100
+ 2024 15:15:22 +0100
+Date: Thu, 6 Jun 2024 15:15:21 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Li, Ming" <ming4.li@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/1] cxl/mem: Fix no cxl_nvd during pmem region
- auto-assembing
-Message-ID: <20240606150903.00005730@Huawei.com>
-In-Reply-To: <2e4b2584-f1f3-4e4b-a604-b2db4a28b5de@intel.com>
-References: <20240531070229.1596811-1-ming4.li@intel.com>
-	<20240605125707.000064f8@Huawei.com>
-	<2e4b2584-f1f3-4e4b-a604-b2db4a28b5de@intel.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] cxl: add missing MODULE_DESCRIPTION() macros
+Message-ID: <20240606151521.000018fd@Huawei.com>
+In-Reply-To: <362fccea-707f-4430-8da3-8acc6ac5fbe9@quicinc.com>
+References: <20240603-md-drivers-cxl-v1-1-f2940f5c0836@quicinc.com>
+	<20240604170445.00005c67@Huawei.com>
+	<362fccea-707f-4430-8da3-8acc6ac5fbe9@quicinc.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,229 +51,194 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 6 Jun 2024 10:30:01 +0800
-"Li, Ming" <ming4.li@intel.com> wrote:
+On Tue, 4 Jun 2024 13:21:52 -0700
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-> On 6/5/2024 7:57 PM, Jonathan Cameron wrote:
-> > On Fri, 31 May 2024 15:02:29 +0800
-> > Li Ming <ming4.li@intel.com> wrote:
+> On 6/4/2024 9:04 AM, Jonathan Cameron wrote:
+> > On Mon, 3 Jun 2024 21:48:53 -0700
+> > Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 > >   
-> >> When CXL subsystem is auto-assembling a pmem region during cxl
-> >> endpoint port probing, always output below calltrace.
+> >> make allmodconfig && make W=1 C=1 reports:
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pmem.o
+> >> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
 > >>
-> >>  BUG: kernel NULL pointer dereference, address: 0000000000000078
-> >>  #PF: supervisor read access in kernel mode
-> >>  #PF: error_code(0x0000) - not-present page
-> >>  RIP: 0010:cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
-> >>  Call Trace:
-> >>   <TASK>
-> >>   ? __die+0x24/0x70
-> >>   ? page_fault_oops+0x82/0x160
-> >>   ? do_user_addr_fault+0x65/0x6b0
-> >>   ? exc_page_fault+0x7d/0x170
-> >>   ? asm_exc_page_fault+0x26/0x30
-> >>   ? cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
-> >>   ? cxl_pmem_region_probe+0x1ac/0x360 [cxl_pmem]
-> >>   cxl_bus_probe+0x1b/0x60 [cxl_core]
-> >>   really_probe+0x173/0x410
-> >>   ? __pfx___device_attach_driver+0x10/0x10
-> >>   __driver_probe_device+0x80/0x170
-> >>   driver_probe_device+0x1e/0x90
-> >>   __device_attach_driver+0x90/0x120
-> >>   bus_for_each_drv+0x84/0xe0
-> >>   __device_attach+0xbc/0x1f0
-> >>   bus_probe_device+0x90/0xa0
-> >>   device_add+0x51c/0x710
-> >>   devm_cxl_add_pmem_region+0x1b5/0x380 [cxl_core]
-> >>   cxl_bus_probe+0x1b/0x60 [cxl_core]
+> >> Add the missing invocations of the MODULE_DESCRIPTION() macro.
 > >>
-> >> Because the cxl_nvd of the memdev is necessary during pmem region
-> >> probing, but the cxl_nvd can be registered only after endpoint port
-> >> probing done, that is a collision dependency, so adjust the sequence
-> >> between cxl_nvd registration and endpoint port registration to guarantee
-> >> there is a cxl_nvd in memdev during the pmem region auto-assembling.  
+> >> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>  
 > > 
-> > Perhaps call out that the root above a parent port is the same as the root
-> > above the endpoint seeing as I think you are starting the search from
-> > a different location after this change.  
+> > This has been irritating me as well.  Need to do
+> > drivers/perf/cxl_pmu.c at somepoint as well but given that goes through
+> > a different maintainer makes sense to do separately.
+> > 
+> > Only comment I have is that we should probably strive for more consistency
+> > than you currently have.  Always expand CXL or never do, use
+> > colons consistently, use Support everywhere or nowhere.  
 > 
-> Hi Jonathan,
+> I'm going through a bunch of these tree-wide, and usually just copy/paste
+> either from existing comments in the .c file or the description of any
+> associated Kconfig item.
 > 
-> Thanks for your review.
-> what do you think if I change the description as below:
+> >> ---
+> >>  drivers/cxl/acpi.c      | 1 +
+> >>  drivers/cxl/core/port.c | 1 +
+> >>  drivers/cxl/mem.c       | 1 +
+> >>  drivers/cxl/pci.c       | 1 +
+> >>  drivers/cxl/pmem.c      | 1 +
+> >>  drivers/cxl/port.c      | 1 +
+> >>  6 files changed, 6 insertions(+)
+> >>
+> >> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> >> index 571069863c62..e51315ea4a6a 100644
+> >> --- a/drivers/cxl/acpi.c
+> >> +++ b/drivers/cxl/acpi.c
+> >> @@ -921,6 +921,7 @@ static void __exit cxl_acpi_exit(void)
+> >>  /* load before dax_hmem sees 'Soft Reserved' CXL ranges */
+> >>  subsys_initcall(cxl_acpi_init);
+> >>  module_exit(cxl_acpi_exit);
+> >> +MODULE_DESCRIPTION("CXL ACPI: Platform Support");  
 > 
-> "Because the cxl_nvd of the memdev is necessary during pmem region
-> probing, but the cxl_nvd can be registered only after endpoint port
-> probing done, that is a collision dependency, so adjust the sequence
-> between cxl_nvd registration and endpoint port registration to
-> guarantee there is a cxl_nvd in memdev during the pmem region
-> auto-assembling. For that, change cxl_find_nvdimm_bridge() to use a
-> port to query the ancestor root port, it helps to find the root port
-> of an endpoint by using an endpoint's parent port so that cxl_nvd
-> registration can be finished before the endpoint attached to the CXL
-> topology"
+> From Kconfig:
+> config CXL_ACPI
+>         tristate "CXL ACPI: Platform Support"
+OK
+> 
+> >>  MODULE_LICENSE("GPL v2");
+> >>  MODULE_IMPORT_NS(CXL);
+> >>  MODULE_IMPORT_NS(ACPI);
+> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> >> index 887ed6e358fb..ccaa00cd0321 100644
+> >> --- a/drivers/cxl/core/port.c
+> >> +++ b/drivers/cxl/core/port.c
+> >> @@ -2356,5 +2356,6 @@ static void cxl_core_exit(void)
+> >>  
+> >>  subsys_initcall(cxl_core_init);
+> >>  module_exit(cxl_core_exit);
+> >> +MODULE_DESCRIPTION("CXL (Compute Express Link) Devices Support");  
+> > 
+> > Why the expanded version for this one?
+> > 
+> > I'm not sure Devices really makes sense here, particularly as it
+> > likely a range of other driver will make some use of this core
+> > functionality over time.  Maybe "CXL core" is sufficient?
+> >   
+> 
+> From Kconfig:
+> menuconfig CXL_BUS
+>         tristate "CXL (Compute Express Link) Devices Support"
 
-Perhaps this wording is clearer?
+Understood, but that is expanded because it's the first use of
+CXL in the make file. Here we have no ordering as across many
+files and resulting modules.
 
-"The cxl_nvd of the memdev needs to be available during pmem region
- probe. Currently the cxl_nvd is registered after the end port
- probe. The end point prove, in the case of autoassembly of regions,
- can cause a pmem region probe requiring the not yet available
- cxl_nvd.  Adjust the sequence so this dependency is met.
- This requires adding a port parameter to cxl_find_nvdimm_bridge()
- that can be used to query the ancestor root port. The endpoint
- port is not yet available, but will share a common ancestor with
- it's parent, so start the query from there instead."
+"CXL: Core Compute Express Link support"
+
+Would work I think.
 
 > 
-> 
-> > 
-> > Other than that looks correct to me.
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> >   
-> >>
-> >> Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device
-> >> registration, delete the workqueue") Suggested-by: Dan Williams
-> >> <dan.j.williams@intel.com> Signed-off-by: Li Ming
-> >> <ming4.li@intel.com> ---
-> >>  drivers/cxl/core/pmem.c   | 15 ++++++++++-----
-> >>  drivers/cxl/core/region.c |  2 +-
-> >>  drivers/cxl/cxl.h         |  4 ++--
-> >>  drivers/cxl/mem.c         | 17 +++++++++--------
-> >>  4 files changed, 22 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-> >> index e69625a8d6a1..31b398c13be9 100644
-> >> --- a/drivers/cxl/core/pmem.c
-> >> +++ b/drivers/cxl/core/pmem.c
-> >> @@ -62,10 +62,14 @@ static int match_nvdimm_bridge(struct device
-> >> *dev, void *data) return is_cxl_nvdimm_bridge(dev);
-> >>  }
-> >>  
-> >> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct
-> >> cxl_memdev *cxlmd) +/**
-> >> + * cxl_nvdimm_bridge() - find a bridge device relative to a port
-> >> + * @port: any descendant port of an nvdimm-bridge associated
-> >> + *        root-cxl-port
-> >> + */
-> >> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port
-> >> *port) {
-> >> -	struct cxl_root *cxl_root __free(put_cxl_root) =
-> >> -		find_cxl_root(cxlmd->endpoint);
-> >> +	struct cxl_root *cxl_root __free(put_cxl_root) =
-> >> find_cxl_root(port);  
-> > 
-> > This is a different port in the now earlier query (not the other
-> > path you update). As you say any descendant is fine though.
-> > I'd mention this subtle change in the patch description though.
-> > (noted above)
-> >   
-> >>  	struct device *dev;
-> >>  
-> >>  	if (!cxl_root)
-> >> @@ -242,18 +246,19 @@ static void cxlmd_release_nvdimm(void
-> >> *_cxlmd) 
-> >>  /**
-> >>   * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and
-> >> an nvdimm
-> >> + * @port: parent port for the (to be added) @cxlmd endpoint port  
-> > 
-> > Would calling it parent_port make more sense?  
-> 
-> Yes, will change it, thanks.
-> 
-> 
-> >   
-> >>   * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM
-> >> operations *
-> >>   * Return: 0 on success negative error code on failure.
-> >>   */
-> >> -int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
-> >> +int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev
-> >> *cxlmd) {
-> >>  	struct cxl_nvdimm_bridge *cxl_nvb;
-> >>  	struct cxl_nvdimm *cxl_nvd;
-> >>  	struct device *dev;
-> >>  	int rc;
-> >>  
-> >> -	cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-> >> +	cxl_nvb = cxl_find_nvdimm_bridge(port);
-> >>  	if (!cxl_nvb)
-> >>  		return -ENODEV;
-> >>  
-> >> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> >> index 3c2b6144be23..f0cafc7ffb45 100644
-> >> --- a/drivers/cxl/core/region.c
-> >> +++ b/drivers/cxl/core/region.c
-> >> @@ -2847,7 +2847,7 @@ static int cxl_pmem_region_alloc(struct
-> >> cxl_region *cxlr)
-> >>  		 * bridge for one device is the same for all.
-> >>  		 */
-> >>  		if (i == 0) {
-> >> -			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
-> >> +			cxl_nvb =
-> >> cxl_find_nvdimm_bridge(cxlmd->endpoint); if (!cxl_nvb)
-> >>  				return -ENODEV;
-> >>  			cxlr->cxl_nvb = cxl_nvb;
-> >> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> >> index 603c0120cff8..e8fca6c6952b 100644
-> >> --- a/drivers/cxl/cxl.h
-> >> +++ b/drivers/cxl/cxl.h
-> >> @@ -855,8 +855,8 @@ struct cxl_nvdimm_bridge
-> >> *devm_cxl_add_nvdimm_bridge(struct device *host, struct cxl_nvdimm
-> >> *to_cxl_nvdimm(struct device *dev); bool is_cxl_nvdimm(struct
-> >> device *dev); bool is_cxl_nvdimm_bridge(struct device *dev);
-> >> -int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd);
-> >> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct
-> >> cxl_memdev *cxlmd); +int devm_cxl_add_nvdimm(struct cxl_port
-> >> *port, struct cxl_memdev *cxlmd); +struct cxl_nvdimm_bridge
-> >> *cxl_find_nvdimm_bridge(struct cxl_port *port); 
-> >>  #ifdef CONFIG_CXL_REGION
-> >>  bool is_cxl_pmem_region(struct device *dev);
+> >>  MODULE_LICENSE("GPL v2");
+> >>  MODULE_IMPORT_NS(CXL);
 > >> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> >> index 0c79d9ce877c..2f1b49bfe162 100644
+> >> index 0c79d9ce877c..1afb0e78082b 100644
 > >> --- a/drivers/cxl/mem.c
 > >> +++ b/drivers/cxl/mem.c
-> >> @@ -152,6 +152,15 @@ static int cxl_mem_probe(struct device *dev)
-> >>  		return -ENXIO;
-> >>  	}
+> >> @@ -252,6 +252,7 @@ static struct cxl_driver cxl_mem_driver = {
 > >>  
-> >> +	if (resource_size(&cxlds->pmem_res) &&
-> >> IS_ENABLED(CONFIG_CXL_PMEM)) {
-> >> +		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
-> >> +		if (rc) {
-> >> +			if (rc == -ENODEV)
-> >> +				dev_info(dev, "PMEM disabled by
-> >> platform\n");
-> >> +			return rc;
-> >> +		}
-> >> +	}
-> >> +
-> >>  	if (dport->rch)
-> >>  		endpoint_parent = parent_port->uport_dev;
-> >>  	else
-> >> @@ -174,14 +183,6 @@ static int cxl_mem_probe(struct device *dev)
-> >>  	if (rc)
-> >>  		return rc;
+> >>  module_cxl_driver(cxl_mem_driver);
 > >>  
-> >> -	if (resource_size(&cxlds->pmem_res) &&
-> >> IS_ENABLED(CONFIG_CXL_PMEM)) {
-> >> -		rc = devm_cxl_add_nvdimm(cxlmd);
-> >> -		if (rc == -ENODEV)
-> >> -			dev_info(dev, "PMEM disabled by
-> >> platform\n");
-> >> -		else
-> >> -			return rc;
-> >> -	}
-> >> -
-> >>  	/*
-> >>  	 * The kernel may be operating out of CXL memory on this
-> >> device,
-> >>  	 * there is no spec defined way to determine whether this
-> >> device  
-> >   
+> >> +MODULE_DESCRIPTION("CXL: Memory Expansion");  
+> > 
+> > Why does this one get a colon? Also no Support at the end?  
 > 
+> From Kconfig:
+> config CXL_MEM
+>         tristate "CXL: Memory Expansion"
+
+OK.  Could add Support but then all code is supporting something,
+so fine to leave it without.
+
+
+> 
+> >   
+> >>  MODULE_LICENSE("GPL v2");
+> >>  MODULE_IMPORT_NS(CXL);
+> >>  MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
+> >> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> >> index e53646e9f2fb..2c17fcb1b4ee 100644
+> >> --- a/drivers/cxl/pci.c
+> >> +++ b/drivers/cxl/pci.c
+> >> @@ -1066,5 +1066,6 @@ static void __exit cxl_pci_driver_exit(void)
+> >>  
+> >>  module_init(cxl_pci_driver_init);
+> >>  module_exit(cxl_pci_driver_exit);
+> >> +MODULE_DESCRIPTION("CXL PCI manageability");  
+> 
+> Kconfig just has:
+> config CXL_PCI
+>         tristate "PCI manageability"
+> 
+> I added CXL
+
+CXL: PCI manageability
+
+
+> 
+> >>  MODULE_LICENSE("GPL v2");
+> >>  MODULE_IMPORT_NS(CXL);
+> >> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> >> index 2ecdaee63021..4ef93da22335 100644
+> >> --- a/drivers/cxl/pmem.c
+> >> +++ b/drivers/cxl/pmem.c
+> >> @@ -453,6 +453,7 @@ static __exit void cxl_pmem_exit(void)
+> >>  	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
+> >>  }
+> >>  
+> >> +MODULE_DESCRIPTION("CXL PMEM: Persistent Memory Support");  
+> 
+> From Kconfig:
+> config CXL_PMEM
+>         tristate "CXL PMEM: Persistent Memory Support"
+OK
+> 
+> >>  MODULE_LICENSE("GPL v2");
+> >>  module_init(cxl_pmem_init);
+> >>  module_exit(cxl_pmem_exit);
+> >> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> >> index 97c21566677a..5ceff1df60db 100644
+> >> --- a/drivers/cxl/port.c
+> >> +++ b/drivers/cxl/port.c
+> >> @@ -209,6 +209,7 @@ static struct cxl_driver cxl_port_driver = {
+> >>  };
+> >>  
+> >>  module_cxl_driver(cxl_port_driver);
+> >> +MODULE_DESCRIPTION("CXL Port Support");  
+> 
+> This I just made up from the others since config CXL_PORT doesn't have a menu
+> description or help text and the .c file begins with:
+>  * DOC: cxl port
+
+"CXL: Port Support"
+
+Not that informative, but I can't immediately think of better text.
+
+>
+> 
+> >>  MODULE_LICENSE("GPL v2");
+> >>  MODULE_IMPORT_NS(CXL);
+> >>  MODULE_ALIAS_CXL(CXL_DEVICE_PORT);  
+> 
+> If you have specific edits you'd like me to make, I'm happy to make them.
+> I have no opinion on the content -- I just want to get rid of the warnings :)
+
+With the suggestions above it would look more consistent I think.
+
+Jonathan
+
+
+> 
+> /jeff
 > 
 
