@@ -1,94 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1063019B5AF;
-	Thu,  6 Jun 2024 15:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB531974FD;
+	Thu,  6 Jun 2024 15:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717686360; cv=none; b=Dl84akiRejCVwE/PO96SkKJzvsCc01p83e4G6yezPqqLn3pyyfPHb6Hja1vlrAZC5b84oCaDH+Ur3TiI7ov3sFOuR3eOsr+966CpbJMdvc6rKYENDRsJh/qh0Mo5TzXSKtWg5nKnCps2OZ6GTHAbRJ0xYRbx9RRT+n/dkh0E7w4=
+	t=1717686416; cv=none; b=HyE6BbKHLif6+UYGkCaxLeZVDvxZY9/hdETVCuHQfOcxeHwJvC28t2esunQtmm7m0/zr2iCmXdJxONF5+vLkVBvGXP0Zsrzw17kLcyUyGOxKNYYB8G6KGWc8Aq3T9W55SfGf/BKiQ47KZVkl4o9mCRs/4LbT6ixnyW4dgxp1tWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717686360; c=relaxed/simple;
-	bh=Cx1ASgr5Lh9FnhS81vNXx9ifwngxlnqb6mSkxtlQWLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KoZiv1i5U2riKVY3i8WIifRLxOqXqz0iXpDceKtP3TNM3hK8yFXFOCdCjrUBSuxkz9iIT1i3aj+zet4CYsJROnOaznuXkM/hdShPK09tYWFTPct9kf77kHnRaOji54TV6z7oaUrBsgGAVIQDf8qUJy4/BVWrDDMi1SYFkH0unkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJE2V8YE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJE2V8YE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE65C32786;
-	Thu,  6 Jun 2024 15:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717686359;
-	bh=Cx1ASgr5Lh9FnhS81vNXx9ifwngxlnqb6mSkxtlQWLo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LJE2V8YEAvQg7dOKXsKEM5ZXvqkbYqfFpDavrIE6ibwGQcnoFfSGpEp8uH6O2dBXh
-	 ry6vAyt/lvcu4dyXJSiclI99AznFEB4pNXp6HGBksXMOjk30byH8gnCE5AR7SIVNSO
-	 Kg0dl7aWs5jSK0RUeDauQN0Ju+JQ+594Y3sUss5DvrhtJEsIO+8NAKaHnc/qONUpy6
-	 QVyI5Tz4Lqwh7/c3aVSsFsSevkBTGQbRV5t4hOIerNIAtSSu/LDA5j+SLQmBfCxJdI
-	 0p31Li9bp4O9xYsLd+rxa4GxL2m314+VzaGe2Q1k0q23qZ3DaiXKR2PQVg7zZ++SsW
-	 aMc6qVH8HvpOg==
-Date: Thu, 6 Jun 2024 08:05:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: David Ahern <dsahern@kernel.org>, Dan Williams
- <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>, Itay Avraham
- <itayavr@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed
- <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>, Andy Gospodarek
- <andrew.gospodarek@broadcom.com>, Aron Silverton
- <aron.silverton@oracle.com>, Christoph Hellwig <hch@infradead.org>, Jiri
- Pirko <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky
- <leonro@nvidia.com>, linux-cxl@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH 0/8] Introduce fwctl subystem
-Message-ID: <20240606080557.00f3163e@kernel.org>
-In-Reply-To: <20240606144818.GC19897@nvidia.com>
-References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
-	<20240603114250.5325279c@kernel.org>
-	<214d7d82-0916-4c29-9012-04590e77df73@kernel.org>
-	<20240604070451.79cfb280@kernel.org>
-	<665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240605135911.GT19897@nvidia.com>
-	<d97144db-424f-4efd-bf10-513a0b895eca@kernel.org>
-	<20240606071811.34767cce@kernel.org>
-	<20240606144818.GC19897@nvidia.com>
+	s=arc-20240116; t=1717686416; c=relaxed/simple;
+	bh=NVtXbfi1Fxpue1uOXHgT6xQdyJX7ERW4BwtKOGOXE6U=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NbQbje3xWCqNEzefSaTllJB4EYs/cDBPAscB6nz03i93Uxe6ZWybEcduO1nBw/O4Z4c1JAsf5yAxnLU6dVluyeyDW62VggKuMWm+MU8GBur4RXCibHn5eBdpxje1uQvCNyUMVFikEbQXvKHPrYzQedSADl3O+fcR47u2tDaPFNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vw6xw2ZG0z6HJbs;
+	Thu,  6 Jun 2024 23:02:28 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C2658140B63;
+	Thu,  6 Jun 2024 23:06:49 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
+ 2024 16:06:48 +0100
+Date: Thu, 6 Jun 2024 16:06:47 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Zhenzhong Duan <zhenzhong.duan@intel.com>
+CC: <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-acpi@vger.kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<james.morse@arm.com>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <bhelgaas@google.com>,
+	<helgaas@kernel.org>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
+	<linmiaohe@huawei.com>, <shiju.jose@huawei.com>, <adam.c.preble@intel.com>,
+	<lukas@wunner.de>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<erwin.tsaur@intel.com>, <sathyanarayanan.kuppuswamy@intel.com>,
+	<dan.j.williams@intel.com>, <feiting.wanyan@intel.com>,
+	<yudong.wang@intel.com>, <chao.p.peng@intel.com>,
+	<qingshun.wang@linux.intel.com>
+Subject: Re: [PATCH v4 1/3] PCI/AER: Store UNCOR_STATUS bits that might be
+ ANFE in aer_err_info
+Message-ID: <20240606160647.0000644e@Huawei.com>
+In-Reply-To: <20240509084833.2147767-2-zhenzhong.duan@intel.com>
+References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
+	<20240509084833.2147767-2-zhenzhong.duan@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 6 Jun 2024 11:48:18 -0300 Jason Gunthorpe wrote:
-> > An argument can be made that given somewhat mixed switchdev experience
-> > we should just stay out of the way and let that happen. But just make
-> > that argument then, instead of pretending the use of this API will be
-> > limited to custom very vendor specific things.  
+On Thu,  9 May 2024 16:48:31 +0800
+Zhenzhong Duan <zhenzhong.duan@intel.com> wrote:
+
+> In some cases the detector of a Non-Fatal Error(NFE) is not the most
+> appropriate agent to determine the type of the error. For example,
+> when software performs a configuration read from a non-existent
+> device or Function, completer will send an ERR_NONFATAL Message.
+> On some platforms, ERR_NONFATAL results in a System Error, which
+> breaks normal software probing.
 > 
-> Huh?
-
-I'm sorry, David as been working in netdev for a long time.
-I have a tendency to address the person I'm replying to,
-assuming their level of understanding of the problem space.
-Which makes it harder to understand for bystanders.
-
-> At least mlx5 already has a very robust userspace competition to
-> switchdev using RDMA APIs, available in DPDK. This is long since been
-> done and is widely deployed.
-
-Yeah, we had this discussion multiple times
-
-> I have no idea where you get this made up idea that fwctl is somehow
-> about dataplane SDKs. The acclerated networking industry long ago
-> moved pasted netdev in upstream, it is well known to everyone. There
-> is no trick here.
+> Advisory Non-Fatal Error(ANFE) is a special case that can be used
+> in above scenario. It is predominantly determined by the role of the
+> detecting agent (Requester, Completer, or Receiver) and the specific
+> error. In such cases, an agent with AER signals the NFE (if enabled)
+> by sending an ERR_COR Message as an advisory to software, instead of
+> sending ERR_NONFATAL.
 > 
-> fwctl is not some scheme to sneak dataplane SDKs into the kernel, you
-> are just making stuff up.
+> When processing an ANFE, ideally both correctable error(CE) status and
+> uncorrectable error(UE) status should be cleared. However, there is no
+> way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
+> Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
+> NFE will reproduce above mentioned issue, i.e., breaking softwore probing;
+> treating NFE as ANFE will make us ignoring some UEs which need active
+> recover operation. To avoid clearing UEs that are not ANFE by accident,
+> the most conservative route is taken here: If any of the NFE Detected
+> bits is set in Device Status, do not touch UE status, they should be
+> cleared later by the UE handler. Otherwise, a specific set of UEs that
+> may be raised as ANFE according to the PCIe specification will be cleared
+> if their corresponding severity is Non-Fatal.
+> 
+> To achieve above purpose, store UNCOR_STATUS bits that might be ANFE
+> in aer_err_info.anfe_status. So that those bits could be printed and
+> processed later.
+> 
+> Tested-by: Yudong Wang <yudong.wang@intel.com>
+> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
 
-By dataplane SDK you mean DOCA? I don't even want to go there.
-I just meant forwarding offload _which I said_. You didn't understand
-and now you're accusing me of "making stuff up".
+Not my most confident review ever as this is nasty and gives
+me a headache but your description is good and I think the
+implementation looks reasonable.
 
-This whole conversation is such a damn waste of time.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
