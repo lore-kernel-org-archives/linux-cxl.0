@@ -1,41 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C59195F23;
-	Fri,  7 Jun 2024 14:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D57519309E;
+	Fri,  7 Jun 2024 14:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717769459; cv=none; b=nUVe6uhQoI9HsLOdCwIeLr9R+BEGWVXF2Q/6i/VxpExgV6mZJ2V7N0EBMwkkcemCr5xFuUPNGKXiIVhYwDffT/c3YOjVhJxVSujb7X1BrHkGcoY2kIq2TAZVJKpn9dIlaOn92uf8+ZYQNiwaHudk6lq1mDbW3FzPhpOQRKuGkGs=
+	t=1717770649; cv=none; b=O58KT9Yq6CBBm1eWmYx6gIJCt/kWd0R1G078blJAG4uf24ORyKDzDipt3Pcl7CpDJEMBVDkVJ3zmdNlyzuBSan8aDId7oT/QujWcgFtfOzU0ho7dZr0KmC/K8atIWew5EDNK2LLQUVInb8I0YTJ88DsRp30ELxw2L6SMmVVwlYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717769459; c=relaxed/simple;
-	bh=zpmsM2di5bUt5+fQj1SwbCjgl4GOOzpOzyaBxESgmhI=;
+	s=arc-20240116; t=1717770649; c=relaxed/simple;
+	bh=78AzIyycEMf7kUD5+bonTZpKGk3tnSvD7kCpdxroiwA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TR4ZLE6wvg3vwzhl+R35LwmMJAmt6WpnVjZoZco/G5sM4eWLFx0UqNPAOFabsseCzvQmyCkPhTKahchJY8KXGVTcWsGLuROb3QbmAkWL32sO/xk2a93SCcvz3w+h/TVBw1NPd9X1PL+4wSJFlcmc6amA661tbwXRV264eleRlfU=
+	 MIME-Version:Content-Type; b=tYriR9Xx5yTY5i0hAnyvrlWBODBdjcqYurc2gP8kDL6vqYq3J1LNMH69MnQDxMAq3yVesAQZACsWINES6LdUWIkr5kXyyDmhAUBxFrnSxdjzhlWUzyxeTN5uzInTDo8VCwKQV/YhyYRGuf6/GLh1hpfu5VP8Sxq/PzpgnyG2uyc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwjfl42rFz6J9h6;
-	Fri,  7 Jun 2024 22:06:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwk9P35wsz6D8rX;
+	Fri,  7 Jun 2024 22:29:29 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C5F9B140CB9;
-	Fri,  7 Jun 2024 22:10:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 725651402CB;
+	Fri,  7 Jun 2024 22:30:43 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 15:10:47 +0100
-Date: Fri, 7 Jun 2024 15:10:46 +0100
+ 2024 15:30:43 +0100
+Date: Fri, 7 Jun 2024 15:30:42 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl: add missing MODULE_DESCRIPTION() macros
-Message-ID: <20240607151046.00002ae2@Huawei.com>
-In-Reply-To: <20240607-md-drivers-cxl-v2-1-0c61d95ee7a7@quicinc.com>
-References: <20240607-md-drivers-cxl-v2-1-0c61d95ee7a7@quicinc.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+Message-ID: <20240607153042.000046c9@Huawei.com>
+In-Reply-To: <c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
+References: <20240529214357.1193417-1-dave.jiang@intel.com>
+	<20240529214357.1193417-3-dave.jiang@intel.com>
+	<20240605151936.000031df@Huawei.com>
+	<c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -46,24 +48,49 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 7 Jun 2024 06:57:15 -0700
-Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pmem.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
+> >> +		if (is_cxl_root(parent_port)) {
+> >> +			ctx->port = parent_port;
+> >> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
+> >> +						dport->coord);  
+> > 
+> > I'm a bit lost in all the levels of iteration so may have missed it.
+> > 
+> > Do we assume that GP BW (which is the root bridge) is shared across multiple root
+> > ports on that host bridge if they are both part of the interleave set?  
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I'm not 100% sure I understand the question.
 
-Thanks,
+Taking this again and expanding it another level.
+
+
+
+      Host CPU
+______________________________________
+        |                           |
+        |                           |
+        | 3 from GP/HMAT            | 3 from GP/HMAT
+   _____|_____               _______|______
+  RP         RP             RP            RP
+  2|          |2           2|             |2
+ __|__     ___|__         __|___        __|____
+|1    |1  1|     |1      |1     |1     |1      |1
+EP   EP    EP    EP     EP     EP      EP     EP
+
+Then your maths
+
+aggregated RPs BW is 8
+(GP_BW/no of RPS) * affliated RPS in region.
+= (3/2 * 4)
+= 6
+Which is correct. So yes, I think that works if we assume everything is balanced.
+I'm fine with that assumption as that should be the common case.
+
+
+Jonathan
+
