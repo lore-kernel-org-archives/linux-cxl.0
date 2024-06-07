@@ -1,116 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27A19ADAE;
-	Fri,  7 Jun 2024 17:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8331F4DA08
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Jun 2024 18:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717783091; cv=none; b=vCc/tP6qosSQw0W1uMtP15KhHDHwEwil8k5B5t54QipN9v1fIvDtihLV93Rx6qvLwFNjWjRl3QXWqaRHFMMf6ZiL/vPH4mfa3tRDwud+O+NmZPG2R1mvpMITcw9mf4n/8FRiwyUuD7oNnUkKJ8fh2/oOtLumGKBRdzhlucVXYxg=
+	t=1717784429; cv=none; b=DMbzaJGoKBu0PNitl9NTTQx15iK2/oTxIHUJflep+DwLFfnDwqtJuwq+nyFfN6dU/jrscrfCXezzWedSzCsAevprtkkraYBMf8No8u3w8UNfv9jEX+zljtsqY8Bh4O2Co7dshekcAGQ7QY+bYwPoB3TQ9caT56iA35tKyOTwPAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717783091; c=relaxed/simple;
-	bh=djLVwRYADCRsn6mXlpC3+LTYBS/XLkzLolWphDFBK9g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bqU9pZEjz3ZmCqAdPoLaZ7YNPganP42ersAwL2dC+yeijD5njoqb9Kk2fKtg0Cclu9hxaDXTutEUoUjJNJyekTj8rTkA1N4DW/RJd4SH7kDJrajjIkg8PKQUrWGRE4YLW+i6kaDkGafFhR1ExvQkAThk1285CONj0jgXcvAgRbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwpj16yFGz6J9dh;
-	Sat,  8 Jun 2024 01:53:41 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A53A7140A70;
-	Sat,  8 Jun 2024 01:58:06 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 18:58:06 +0100
-Date: Fri, 7 Jun 2024 18:58:05 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240607185805.00007872@Huawei.com>
-In-Reply-To: <92744829-dbb8-4681-914d-c36797518e3c@intel.com>
-References: <20240529214357.1193417-1-dave.jiang@intel.com>
-	<20240529214357.1193417-3-dave.jiang@intel.com>
-	<20240605151936.000031df@Huawei.com>
-	<c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
-	<20240607153042.000046c9@Huawei.com>
-	<92744829-dbb8-4681-914d-c36797518e3c@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717784429; c=relaxed/simple;
+	bh=laQ7vjO3ip3SE9pnFq3RkHd5py36rjDfM4jBd7olzc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaoPQoGwzEiV7It5pS9GEbxsMc+FhhgoIKgZfeKq60e0E3jcStuxFTuqZ+IlxVwqvV9wMKvYUZ+NpbQN4crVL9RI2LB0AY1Fca4ULUav7IYAFp9bLCKFZ6Q8Gmjv7qv/82yJaiBYiXdKFCXQ7bfNXBQjrqMNy4MX/Sdo6remSyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ue2gHIO0; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ue2gHIO0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717784427; x=1749320427;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=laQ7vjO3ip3SE9pnFq3RkHd5py36rjDfM4jBd7olzc0=;
+  b=Ue2gHIO0Vg835K6+wLuxboFoEbWwctuIbNB9PiZmGJX+girqnxWrTR/q
+   aOcTb43skeQ/bXcdimJcOAJcGXhvqox7UtL4Musy9aJinv13RMgjQD0Au
+   bLgJmU77qxgBdLcqtHvNHiuds5RSc70mrxUfmXxy2QckxF6XE7NJex7Z6
+   pJ6KZkDU8ap7qu9nTuaf8StQkNl7aEdG9Ri54unh0Sz3YlKNDPUZRHMN+
+   up8TDo4LHcQKRHX3HILjDA1sO/HN7IqpnxwPyuWxlvMs/bQMwycgmNm5i
+   5YwukT/PWRudmBm+esHyfatD3UZ4rLGsfVBIFPXw8lWPgf16Xs9IFxFDW
+   A==;
+X-CSE-ConnectionGUID: kNrOJZr7RtaKMbb2ewuKug==
+X-CSE-MsgGUID: sXQlK0F4T52QWqmkS7g9VQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="18345783"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="18345783"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 11:20:27 -0700
+X-CSE-ConnectionGUID: 5FsQ2/j1S4qm7xVpihGx9w==
+X-CSE-MsgGUID: EIti3GF3TNq1S7oJUOCmEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="75894515"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.38.179])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 11:20:26 -0700
+Date: Fri, 7 Jun 2024 11:20:25 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] cxl/acpi: Restore XOR'd position bits during
+ address translation
+Message-ID: <ZmNPaXST5ninEBbx@aschofie-mobl2>
+References: <cover.1715192606.git.alison.schofield@intel.com>
+ <77d251960a557f23aa6e6e0465e0e42f1d461514.1715192606.git.alison.schofield@intel.com>
+ <20240607160114.00006e4d@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607160114.00006e4d@Huawei.com>
 
-On Fri, 7 Jun 2024 09:12:31 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 6/7/24 7:30 AM, Jonathan Cameron wrote:
-> >   
-> >>>> +		if (is_cxl_root(parent_port)) {
-> >>>> +			ctx->port = parent_port;
-> >>>> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
-> >>>> +						dport->coord);    
-> >>>
-> >>> I'm a bit lost in all the levels of iteration so may have missed it.
-> >>>
-> >>> Do we assume that GP BW (which is the root bridge) is shared across multiple root
-> >>> ports on that host bridge if they are both part of the interleave set?    
-> >>
-> >> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?  
-> > 
-> > I'm not 100% sure I understand the question.
-> > 
-> > Taking this again and expanding it another level.
-> > 
-> > 
-> > 
-> >       Host CPU
-> > ______________________________________
-> >         |                           |
-> >         |                           |
-> >         | 3 from GP/HMAT            | 3 from GP/HMAT
-> >    _____|_____               _______|______
-> >   RP         RP             RP            RP
-> >   2|          |2           2|             |2
-> >  __|__     ___|__         __|___        __|____
-> > |1    |1  1|     |1      |1     |1     |1      |1
-> > EP   EP    EP    EP     EP     EP      EP     EP
-> > 
-> > Then your maths
-> > 
-> > aggregated RPs BW is 8
-> > (GP_BW/no of RPS) * affliated RPS in region.
-> > = (3/2 * 4)
-> > = 6  
+On Fri, Jun 07, 2024 at 04:01:14PM +0100, Jonathan Cameron wrote:
+> On Wed,  8 May 2024 11:47:51 -0700
+> alison.schofield@intel.com wrote:
 > 
-> While the result is the same, the math would be this below right?
-> min((3/2 * 2), 4) + min((3/2 * 2), 4)
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > When a CXL region is created in a CXL Window (CFMWS) that uses XOR
+> > interleave arithmetic XOR maps are applied during the HPA->DPA
+> > translation. The XOR function changes the interleave selector
+> > bit (aka position bit) in the HPA thereby varying which host bridge
+> > services an HPA. The purpose is to minimize hot spots thereby
+> > improving performance.
+> > 
+> > When a device reports a DPA in events such as poison, general_media,
+> > and dram, the driver translates that DPA back to an HPA. Presently,
+> > the CXL driver translation only considers the modulo position and
+> > will report the wrong HPA for XOR configured CFMWS's.
+> > 
+> > Add a helper function that restores the XOR'd bits during DPA->HPA
+> > address translation. Plumb a root decoder callback to the new helper
+> > when XOR interleave arithmetic is in use. For MODULO arithmetic, just
+> > let the callback be NULL - as in no extra work required.
+> > 
+> > Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Trivial comment inline.   Agree entirely that some tests would be good.
+> I ran through a few trivial cases on a bit of paper and it looks to
+> me like it works but that hardly counts as testing :)
 
-That's better, but I thought your thing above was about RPs in a HB vs
-RPs across the whole thing.  Hence was trying to align with that.
+Thanks for the review and for doing some calcs.
 
-I'm lost and it's end of Friday.  Lets work this out with code.
+I've become very adept at working these out with paper/pencil, that hop
+to C implementation is the challenge ;)
 
-Jonathan
 > 
-> > Which is correct. So yes, I think that works if we assume everything is balanced.
-> > I'm fine with that assumption as that should be the common case.
-> > 
-> > 
-> > Jonathan
-> > 
-> >   
-> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+Hmm...well, let me know if I can keep that after you read below...
+
+> 
+> > ---
+> >  drivers/cxl/acpi.c        | 48 ++++++++++++++++++++++++++++++++++++---
+> >  drivers/cxl/core/port.c   |  5 +++-
+> >  drivers/cxl/core/region.c |  5 ++++
+> >  drivers/cxl/cxl.h         |  6 ++++-
+> >  4 files changed, 59 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 571069863c62..20488e7b09ac 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -74,6 +74,43 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
+> >  	return cxlrd->cxlsd.target[n];
+> >  }
+> >  
+> > +static u64 cxl_xor_translate(struct cxl_root_decoder *cxlrd, u64 hpa)
+> > +{
+> > +	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
+> > +	int hbiw = cxlrd->cxlsd.nr_targets;
+> > +	u64 val;
+> > +	int pos;
+> > +
+> > +	/* No xormaps for host bridge interleave ways of 1 or 3 */
+> > +	if (hbiw == 1 || hbiw == 3)
+> > +		return hpa;
+> > +
+> > +	/*
+> > +	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) restore
+> > +	 * the position bit to its value before the xormap was applied at
+> > +	 * HPA->DPA translation.
+> > +	 *
+> > +	 * pos is the lowest set bit in an XORMAP
+> > +	 * val is the XORALLBITS(HPA & XORMAP)
+> > +	 *
+> > +	 * XORALLBITS: The CXL spec (3.1 Table 9-22) defines XORALLBITS
+> > +	 * as an operation that outputs a single bit by XORing all the
+> > +	 * bits in the input (hpa & xormap). Implement XORALLBITS using
+> > +	 * hweight64(). If the hamming weight is even the XOR of those
+> > +	 * bits results in 0, if odd the XOR result is 1.
+> > +	 */
+> > +
+> > +	for (int i = 0; i < cximsd->nr_maps; i++) {
+> > +		if (!cximsd->xormaps[i])
+> > +			continue;
+> > +		pos = __ffs(cximsd->xormaps[i]);
+> 
+> At the moment the comment on XORALLBITS isn't associated with this
+> code very well. I'd factor it out as cxl_xorallbits() mostly so
+> you can stick the comment next to the bit that does the work.
+> Or maybe a #define XORALLBITS(hpa, xormap)  is good enough if
+> you move it up under the comment.
+> 
+> > +		val = (hweight64(hpa & cximsd->xormaps[i]) & 1);
+> > +		hpa = (hpa & ~(1ULL << pos)) | (val << pos);
+> > +	}
+> > +
+> > +	return hpa;
+> > +}
+> > +
+
+You haven't convinced me that readers will not be able to associate
+the block comment directly above the for-loop with the work inside
+the for-loop. Especially since this is a 25 line function with a
+single focus.
+
+I intentionally didn't insert line-by-line commentary in the
+for loop, but rather told the story in the comment and then
+just did it. 
+
+Maybe repeating 'val' here, wraps up the comment better:
+
+-        * bits results in 0, if odd the XOR result is 1.
++        * bits results in val==0, if odd the XOR results in val==1.
+
+-- Alison
+
+
+
+
+
+
+
+
+
+> 
+> 
