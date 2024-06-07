@@ -1,43 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF819B59B
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Jun 2024 17:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27A19ADAE;
+	Fri,  7 Jun 2024 17:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782910; cv=none; b=Z6KiNDIzMhNCycfQuzEfe/HEcN9wW9TBA72zruGT50b32lVU1rfuesO8Wvxe2agSIuTry1MZONPbVdgC9U6xgxHUjbOXRqLUqrHZAeztnHLweOEkIc4ZnoPXje+qdHND3gz/nJm/8Z1Fw0sC+xaKENzrDb0E2wtO7c7DqSxs6oo=
+	t=1717783091; cv=none; b=vCc/tP6qosSQw0W1uMtP15KhHDHwEwil8k5B5t54QipN9v1fIvDtihLV93Rx6qvLwFNjWjRl3QXWqaRHFMMf6ZiL/vPH4mfa3tRDwud+O+NmZPG2R1mvpMITcw9mf4n/8FRiwyUuD7oNnUkKJ8fh2/oOtLumGKBRdzhlucVXYxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782910; c=relaxed/simple;
-	bh=qKBHzndA0DYoyjGD/HSih19vaq6bMi96QpYfE5nUW38=;
+	s=arc-20240116; t=1717783091; c=relaxed/simple;
+	bh=djLVwRYADCRsn6mXlpC3+LTYBS/XLkzLolWphDFBK9g=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c/WOAS2VD1VKFMqxkSZ+fL9FD3sp5lFYcGGkrqEGKxlaOW0qfQddD10n05nFaUWXkuf/7jOlXuVm2AulReO1Ps/8D9xDyBfjJVCUfcywpJNvEHWWe+Qhy2BbO77YhK/Q4qkjNAhCLMfxq40T1Fv3ER5t0vTbXleBCwNZ0Uv1CsM=
+	 MIME-Version:Content-Type; b=bqU9pZEjz3ZmCqAdPoLaZ7YNPganP42ersAwL2dC+yeijD5njoqb9Kk2fKtg0Cclu9hxaDXTutEUoUjJNJyekTj8rTkA1N4DW/RJd4SH7kDJrajjIkg8PKQUrWGRE4YLW+i6kaDkGafFhR1ExvQkAThk1285CONj0jgXcvAgRbc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwpd94nBCz6K5s9;
-	Sat,  8 Jun 2024 01:50:21 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwpj16yFGz6J9dh;
+	Sat,  8 Jun 2024 01:53:41 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id BD978140A70;
-	Sat,  8 Jun 2024 01:55:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A53A7140A70;
+	Sat,  8 Jun 2024 01:58:06 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 18:55:04 +0100
-Date: Fri, 7 Jun 2024 18:55:03 +0100
+ 2024 18:58:06 +0100
+Date: Fri, 7 Jun 2024 18:58:05 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] cxl/core: Rename cxl_trace_hpa() to
- cxl_translate()
-Message-ID: <20240607185503.00005f3a@Huawei.com>
-In-Reply-To: <ZmNHRrzl2tJvR2SW@aschofie-mobl2>
-References: <cover.1715192606.git.alison.schofield@intel.com>
-	<27686c91cf4f8b09991534708f6ad2dfc2443af1.1715192606.git.alison.schofield@intel.com>
-	<20240607154025.0000786d@Huawei.com>
-	<ZmNHRrzl2tJvR2SW@aschofie-mobl2>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+Message-ID: <20240607185805.00007872@Huawei.com>
+In-Reply-To: <92744829-dbb8-4681-914d-c36797518e3c@intel.com>
+References: <20240529214357.1193417-1-dave.jiang@intel.com>
+	<20240529214357.1193417-3-dave.jiang@intel.com>
+	<20240605151936.000031df@Huawei.com>
+	<c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
+	<20240607153042.000046c9@Huawei.com>
+	<92744829-dbb8-4681-914d-c36797518e3c@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,132 +53,64 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 7 Jun 2024 10:45:42 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Fri, 7 Jun 2024 09:12:31 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> On Fri, Jun 07, 2024 at 03:40:25PM +0100, Jonathan Cameron wrote:
-> > On Wed,  8 May 2024 11:47:50 -0700
-> > alison.schofield@intel.com wrote:
+> On 6/7/24 7:30 AM, Jonathan Cameron wrote:
 > >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > Although cxl_trace_hpa() is used to populate TRACE EVENTs with HPA
-> > > addresses, the work it performs is a translation (dpa->hpa), not a
-> > > trace. Rename it. Since this is the only translate work in CXL,
-> > > drop the _hpa suffix in the rename.
-> > > 
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>  
+> >>>> +		if (is_cxl_root(parent_port)) {
+> >>>> +			ctx->port = parent_port;
+> >>>> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
+> >>>> +						dport->coord);    
+> >>>
+> >>> I'm a bit lost in all the levels of iteration so may have missed it.
+> >>>
+> >>> Do we assume that GP BW (which is the root bridge) is shared across multiple root
+> >>> ports on that host bridge if they are both part of the interleave set?    
+> >>
+> >> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?  
 > > 
-> > Maybe makes some sense to keep the direction in the name?
+> > I'm not 100% sure I understand the question.
 > > 
-> > I can see for things like PPR we may need to go HPA to DPA as
-> > it'll be based on error counts that may be reported in HPA.
+> > Taking this again and expanding it another level.
 > > 
-> > So Friday bikeshedding time. 
-> > cxl_dpa_to_hpa()?  
+> > 
+> > 
+> >       Host CPU
+> > ______________________________________
+> >         |                           |
+> >         |                           |
+> >         | 3 from GP/HMAT            | 3 from GP/HMAT
+> >    _____|_____               _______|______
+> >   RP         RP             RP            RP
+> >   2|          |2           2|             |2
+> >  __|__     ___|__         __|___        __|____
+> > |1    |1  1|     |1      |1     |1     |1      |1
+> > EP   EP    EP    EP     EP     EP      EP     EP
+> > 
+> > Then your maths
+> > 
+> > aggregated RPs BW is 8
+> > (GP_BW/no of RPS) * affliated RPS in region.
+> > = (3/2 * 4)
+> > = 6  
 > 
-> Thanks for the review Jonathan!
-> 
-> Let's sync on the possible dpa->hpa->dpa use cases and then I'll
-> weigh in on your bikeshedding.
-> 
-> Agree we need HPA->DPA support for userspace. User needs ability
-> to find which device maps an HPA.
-> 
-> wrt PPR, do you think that is an in kernel need?
-> If the PPR maintenance was done in response to a CXL event, the DPA
-> is already in the event trace along with the HPA so I wouldn't expect
-> that a lookup is needed, at least not within the kernel.
+> While the result is the same, the math would be this below right?
+> min((3/2 * 2), 4) + min((3/2 * 2), 4)
 
-Might be a synchronous poison event that ends up
-triggering thing. And for that we'll be lucky to get any useful
-info beyond an HPA.
+That's better, but I thought your thing above was about RPs in a HB vs
+RPs across the whole thing.  Hence was trying to align with that.
 
-I've only started thinking about this in the last few days, so
-not 100% sure yet.
-
-Given PPR can I think interrupt data flow we need to be very
-careful to mediate any attempt so to enable it at all will
-need kernel support.  Whether the interface takes a DPA or
-an HPA is an open question.  We'll see!
+I'm lost and it's end of Friday.  Lets work this out with code.
 
 Jonathan
-
 > 
-> Your explicit cxl_dpa_to_hpa() name is good.
-> 
-> --Alison
-> 
-> 
-> 
+> > Which is correct. So yes, I think that works if we assume everything is balanced.
+> > I'm fine with that assumption as that should be the common case.
 > > 
-> >   
-> > > ---
-> > >  drivers/cxl/core/core.h   | 4 ++--
-> > >  drivers/cxl/core/mbox.c   | 2 +-
-> > >  drivers/cxl/core/region.c | 2 +-
-> > >  drivers/cxl/core/trace.h  | 2 +-
-> > >  4 files changed, 5 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > > index 625394486459..8ceebd3b51d2 100644
-> > > --- a/drivers/cxl/core/core.h
-> > > +++ b/drivers/cxl/core/core.h
-> > > @@ -28,12 +28,12 @@ int cxl_region_init(void);
-> > >  void cxl_region_exit(void);
-> > >  int cxl_get_poison_by_endpoint(struct cxl_port *port);
-> > >  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
-> > > -u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> > > +u64 cxl_translate(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> > >  		  u64 dpa);
-> > >  
-> > >  #else
-> > >  static inline u64
-> > > -cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd, u64 dpa)
-> > > +cxl_translate(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd, u64 dpa)
-> > >  {
-> > >  	return ULLONG_MAX;
-> > >  }
-> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > index 2626f3fff201..edc54a1ca298 100644
-> > > --- a/drivers/cxl/core/mbox.c
-> > > +++ b/drivers/cxl/core/mbox.c
-> > > @@ -878,7 +878,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> > >  		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
-> > >  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
-> > >  		if (cxlr)
-> > > -			hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-> > > +			hpa = cxl_translate(cxlr, cxlmd, dpa);
-> > >  
-> > >  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> > >  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
-> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > index 00a9f0eef8dd..245edf748906 100644
-> > > --- a/drivers/cxl/core/region.c
-> > > +++ b/drivers/cxl/core/region.c
-> > > @@ -2797,7 +2797,7 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
-> > >  	return hpa;
-> > >  }
-> > >  
-> > > -u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> > > +u64 cxl_translate(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> > >  		  u64 dpa)
-> > >  {
-> > >  	struct cxl_region_params *p = &cxlr->params;
-> > > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > > index 07a0394b1d99..6925a6a31f01 100644
-> > > --- a/drivers/cxl/core/trace.h
-> > > +++ b/drivers/cxl/core/trace.h
-> > > @@ -704,7 +704,7 @@ TRACE_EVENT(cxl_poison,
-> > >  		if (cxlr) {
-> > >  			__assign_str(region, dev_name(&cxlr->dev));
-> > >  			memcpy(__entry->uuid, &cxlr->params.uuid, 16);
-> > > -			__entry->hpa = cxl_trace_hpa(cxlr, cxlmd,
-> > > +			__entry->hpa = cxl_translate(cxlr, cxlmd,
-> > >  						     __entry->dpa);
-> > >  		} else {
-> > >  			__assign_str(region, "");  
+> > 
+> > Jonathan
+> > 
 > >   
 > 
 
