@@ -1,132 +1,122 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F4C15B97E
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Jun 2024 15:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766EB19A29C;
+	Fri,  7 Jun 2024 16:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717775449; cv=none; b=ZEvKQ8w+I6B42P7fnqw00Me5+TOxyRekmRR5lNaLRjGnwqIm0cN5yRaGaVkSZmZucSBrwfqg4R0dgN2SHGuDwjO9M2bQibU/zUCkMKUEcIGMmCl1CCeiEqVC6g0x/6laiWdYY1Syam37ujCUNaJ8c2VUAvQVxD+iWnS29Wkr/jY=
+	t=1717776755; cv=none; b=XrtssHqR3kJKYGd2SNkKyeWI/hugmpYiK1p38Z3s/5utgWzlZwmhcOLEuI/oZSgr2PnGGkYNKV1V/giXVkVJZiCRVE0zQFJMXg7EQsvOo/0y6RNNniPtloOaIurrM08YGeS4B6idDFDlAz8T5eCOtk9SHi0A8CPRFDV9kHAO4Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717775449; c=relaxed/simple;
-	bh=uZQQT0tWMLKpHLzpjA4+4RgpjpRE41cd6g0mqVVjBlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lA0Z1HZ39QFko/g5I1mBZF6GY4Zpktt+zGYnmn2BqVDQN4wmQ8CZVoKHQ0A0aEioCw9QJgVJoBaDk0RucER+GqbR505TRvCZ8Q2mwdLJYtDVqqEykDaMXsuAlR6J4MxA2ml95/L4v5fek/vYDivKz/RGcHSMhvYlUT/xDNdc7/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=I1XLcZLe; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1717776755; c=relaxed/simple;
+	bh=1apQS5QX6CG41xVsIn6G2GB9QRmPru8LkSC5FPl+x5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NXGBIaDIqpf4975PdWJIYjGTP1+KhHFm67xF2iw0xrYIq6Jmmjr+yQPQC0F44v5nq7viBAS1wWJ+T6JvmB4J7LInxvHSlVOffGgnwlh/PxXB8F9EN02H+BjECnPNHbmyzr8yvLYSc4Udsoxvs9GfWRFHYS6LRKf8CjWn5xGJAU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRBQz89/; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="I1XLcZLe"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42155143cb0so26823775e9.2
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Jun 2024 08:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1717775445; x=1718380245; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8mLYWZnKH+z6ueZhuJkRBxm2z11CPZmpPTaPGv2cuj0=;
-        b=I1XLcZLeVsc6OMmjnn3QqWOxgtjpnis4rLhTWWXsO0wpAwNVCuza3LAeAv54Ln7tiQ
-         +x//nMH0a9fvHdDOfoHj0nMjAW8YahPWgsfBT76DOZHFJJneyfrkklHHsKbw5CaVlaJM
-         mPQO9SwxNlpW0lfy2nTnV7Dk/gwxaFQeT8fWjjIY/iVKPmBqmujoFsbfbsKTuT1TMHBl
-         hVV5glIw2QbN/MA5F/OmoGnFoqBobPxholl2UOsQULEKwqiGQsHKTot1S1JN5CV6aahL
-         Rc+TBVXagqrGgZBdAF5RNOScsYrEajkgo4bzCryBrIM3V8uH+3Bu/BjMsaqgK57hBIvp
-         AIxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717775445; x=1718380245;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8mLYWZnKH+z6ueZhuJkRBxm2z11CPZmpPTaPGv2cuj0=;
-        b=HBWjzLwrngVTQEXlDHlZ9YTxSdlRWQcirCy3+H+e9tPc+iv6CWLEl/j6CdMvqBmpe5
-         SpmKSyp7w0qASXY23cdcS4PSdm9llyhQF6tEs/YP6oIXjtP9eulxa0Bl/aEX3A2N+rxl
-         YozfSxXjLI/7FVwVNaxXmrQpyj2wSBg0kFpcfjSJgcGjw0R5q/UwAjK0oRmbsNnAAarf
-         t9kv+vYfZ3tfrJXHH3SeoPM/hXrowHPAwoDqA98Qrb8ESq1uZHYs/nUZJgwZtMETLSpp
-         uriWlMWXDqsGyQtCg7MTCGWPKT3BmipSG9N5h9wIqAxad1L5xcWVs/lhDYXRkuq3Xa4V
-         P/EA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1/D666e+MCvt2RbyIO/6CiSvrqb/pAU5iD5qTYbUMRG3A3eQAu/TZEhxf717oX7qN/5DEduzLlfSJo71tadPpzl6lJ7s/Kdlp
-X-Gm-Message-State: AOJu0YybC4r6zl61ymIn808rv5BuWq/7eywwsF7B1tNbD74CBME0UuKj
-	+CTKShXKskH7jaeesvsanTcJkRJ3j3mnCmezgCYeegoffVDdq/5orlabO479Sbw=
-X-Google-Smtp-Source: AGHT+IHG8WszpcEWn5y0Ergt20tKhSOz5/rJxXqP/p8U9bIooclfDP/A70icjjOiWOdZ+5jrSUBNHw==
-X-Received: by 2002:a05:600c:3496:b0:421:2429:7e46 with SMTP id 5b1f17b1804b1-421649fbb46mr33986435e9.13.1717775445415;
-        Fri, 07 Jun 2024 08:50:45 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d66cf6sm4237732f8f.49.2024.06.07.08.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 08:50:44 -0700 (PDT)
-Date: Fri, 7 Jun 2024 17:50:41 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH 0/8] Introduce fwctl subystem
-Message-ID: <ZmMsUYFvUOndiX8g@nanopsycho.orion>
-References: <665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240605135911.GT19897@nvidia.com>
- <d97144db-424f-4efd-bf10-513a0b895eca@kernel.org>
- <20240606071811.34767cce@kernel.org>
- <20240606144818.GC19897@nvidia.com>
- <20240606080557.00f3163e@kernel.org>
- <4724e6a1-2da1-4275-8807-b7fe6cd9b6c1@kernel.org>
- <ZmKtUkeKiQMUvWhi@nanopsycho.orion>
- <887d1cb7-e9e9-4b12-aebb-651addc6b01c@kernel.org>
- <20240607151451.GL19897@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRBQz89/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717776753; x=1749312753;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1apQS5QX6CG41xVsIn6G2GB9QRmPru8LkSC5FPl+x5c=;
+  b=kRBQz89/Wf1fMyFvYX69zCv+Stn5nUUNnwuHEboYshD9KzKKgo5CrmUq
+   dn3iiXpPiZxHnhteK0z0oVin+fqBr6Jzm8UxipJ50A6Dlz6OezZ7zdjt+
+   gMtKNRY97y3jD6Dn3mhTSOuVHVpBHOfPuHXzIDaN4rrQXFVarca/gs7+9
+   xSWbSZojTNTDtULEeHGShpBl2MMoGmjCUAfJI7P23PN2xZ9JhEVcnpHmA
+   GTwPK5HLRBrY/+u4PKVgBCBZRDkwR+DDvBtcsnv6VcXU/p7S4sbLb3r1O
+   /hxgrWW0/Np85pHFU0fbKt2giVkbpq6ecK+bfu5RJmGHiuQIQWf0rZVO8
+   g==;
+X-CSE-ConnectionGUID: 8ICpMyD+TYuzVpyPRz+wOQ==
+X-CSE-MsgGUID: b9fXgrBkRtquQyjaqcAdSQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="18359012"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="18359012"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 09:12:33 -0700
+X-CSE-ConnectionGUID: K67IVxukSha2EP0YOKc4tA==
+X-CSE-MsgGUID: KqCD/xPnTQWNEo5cTTBCxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="38297044"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.239]) ([10.125.109.239])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 09:12:32 -0700
+Message-ID: <92744829-dbb8-4681-914d-c36797518e3c@intel.com>
+Date: Fri, 7 Jun 2024 09:12:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607151451.GL19897@nvidia.com>
-
-Fri, Jun 07, 2024 at 05:14:51PM CEST, jgg@nvidia.com wrote:
->On Fri, Jun 07, 2024 at 08:50:17AM -0600, David Ahern wrote:
->
->> Mellanox offers both with the Spectrum line and should have a pretty
->> good understanding of how many customers deploy with the SDK vs
->> switchdev. Why is that? 
->
->We offer lots of options with mlx5 switching too, and switchdev is not
->being selected by customers principally for performance reasons, in my
->view.
->
->The OVS space wants to operate the switch much like a firewall and
->this creates a high rate of database updates and exception
->packets. DPDK can operate all the same offload HW from userspace and
->avoid all the system call and other kernel overhead. It is much more
->purpose built to what OVS wants to do. In the >50Gbps space this
->matters a lot and overall DPDK performance notably wins over switchdev
->for many OVS workloads - even though the high speed path is
->near-identical.
->
->In this role DPDK is effectively a switch SDK, an open source one at
->least.
->
->Sadly I'm seeing signs that proprietary OVS focused SDKs (think
->various P4 offerings and others) are out competing open DPDK on
->merit :(
->
->For whatever reason the market for switching is not strongly motivated
->toward open SDKs, and the available open solutions are struggling a
->bit to compete.
->
->But to repeat again, fwctl is not for dataplane, it is not for
->implementing a switch SDK (go use RDMA if you want to do that). I will
-
-switch sdk is all about control plane.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, dave@stgolabs.net
+References: <20240529214357.1193417-1-dave.jiang@intel.com>
+ <20240529214357.1193417-3-dave.jiang@intel.com>
+ <20240605151936.000031df@Huawei.com>
+ <c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
+ <20240607153042.000046c9@Huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240607153042.000046c9@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
->write here a commitment to accept patches blocking such usages if
->drivers try to abuse the purpose of the subsystem.
->
->Jason
+
+On 6/7/24 7:30 AM, Jonathan Cameron wrote:
+> 
+>>>> +		if (is_cxl_root(parent_port)) {
+>>>> +			ctx->port = parent_port;
+>>>> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
+>>>> +						dport->coord);  
+>>>
+>>> I'm a bit lost in all the levels of iteration so may have missed it.
+>>>
+>>> Do we assume that GP BW (which is the root bridge) is shared across multiple root
+>>> ports on that host bridge if they are both part of the interleave set?  
+>>
+>> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?
+> 
+> I'm not 100% sure I understand the question.
+> 
+> Taking this again and expanding it another level.
+> 
+> 
+> 
+>       Host CPU
+> ______________________________________
+>         |                           |
+>         |                           |
+>         | 3 from GP/HMAT            | 3 from GP/HMAT
+>    _____|_____               _______|______
+>   RP         RP             RP            RP
+>   2|          |2           2|             |2
+>  __|__     ___|__         __|___        __|____
+> |1    |1  1|     |1      |1     |1     |1      |1
+> EP   EP    EP    EP     EP     EP      EP     EP
+> 
+> Then your maths
+> 
+> aggregated RPs BW is 8
+> (GP_BW/no of RPS) * affliated RPS in region.
+> = (3/2 * 4)
+> = 6
+
+While the result is the same, the math would be this below right?
+min((3/2 * 2), 4) + min((3/2 * 2), 4)
+
+> Which is correct. So yes, I think that works if we assume everything is balanced.
+> I'm fine with that assumption as that should be the common case.
+> 
+> 
+> Jonathan
+> 
+> 
