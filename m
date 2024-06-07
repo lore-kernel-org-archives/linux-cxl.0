@@ -1,79 +1,104 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2078.outbound.protection.outlook.com [40.107.220.78])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D8623AD;
-	Fri,  7 Jun 2024 00:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FB133EE
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Jun 2024 01:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717720881; cv=fail; b=HaAL0O43Cd4bhXYGvXXyMv9qbnCd2fuXqa1wXxlvpr5bbNk1xfWibG4K7hdW/ndLUvfM+HK3xLb3IeoWulTxpg3oheaESIe8ywStKJF7qoSssQ5URVrJdcKJlhpywiUNW8QHcddQYXyFxTB/viNHECW5CcrzFNIXKWbyaAUTBFY=
+	t=1717723763; cv=fail; b=SG1gn8eCN4ECcvJgvAwdbG8LIM4a+0nOCdx1a9sHuN04y+yGoF0qqsS909ARV2umZjPTsRjjYMZLLsT0sdp33zROECeijh96kRU+KbEgiWrztGz/tt2sm3joKxhUxZg6JVP1QCoSB61QdwMWwbpHWR6e1mJXvJUZgU3pFHH2kGQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717720881; c=relaxed/simple;
-	bh=9ynxF6BRluCsl2lFYvykTEHbrwP6CFRJWxjUPWkOMow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Zi62cUVGmSpUN7sGrSkzUkW2ZFBqm7WUgezlSouiKxVkKa1r4fE5eLFJESE9T0cIfukZmh46+Vi9VvKLtHzJVNe9hiwie2qppbFt0dL9jRK/VdpREFaIiEE+iriRQuiHvNB68/OiOXp9uuO0wOtIG8tOrtc43wvjUflbHukMvQM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QsKleEFJ; arc=fail smtp.client-ip=40.107.220.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1717723763; c=relaxed/simple;
+	bh=JddUufQ3K3ATCrwDw4+4F3mFdrnqZfKrKG52OLPbmAU=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ugs6H8grCk2iq7YJG2YfxQUpGuzTvfg92q7/h5o89pPuXg/L5yxJagp6SglfMvb3TBP30Y9DfZTOCY58lR9jfmcXlSH3CTFeQWT59/dmryoIlFSHSFRIW56J+dgh+SVNyfvqmzEswiseUBnZi1TZNU+ShKtNpcHHsjCTkgHIW9A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJjHrOyj; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QsKleEFJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJjHrOyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717723761; x=1749259761;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=JddUufQ3K3ATCrwDw4+4F3mFdrnqZfKrKG52OLPbmAU=;
+  b=XJjHrOyjmIroXZLNjhSS34nXenbzrkz8+Cz00mKAcDWphktETrgIGW/o
+   AFYi1bXJ9BoMM3m4bCJgLawtTO4FWsFXOLKdWdXwbhSFAhfLLsPrVqpa+
+   Wd0pfZXX4KuOPRScz9lqpkKFH08VYKOASXaXcJfllpWIOugRFq+CJ5sI4
+   yepTbJt3Ds59MgTEBw5Gvg1uvpduL9uSOtiselV3R+TOxFMYS7F8mIIBL
+   +nO9xVyoYPkToej+oinCfFvhl3iK+9v1J7kBdFRfWYNeTWRRLDzXxL1nI
+   qp2TeV5v3M0EWBn1KC2B/TxuZKnNkxIFLt8ysQgajpM2QhXey1/4R3oPI
+   g==;
+X-CSE-ConnectionGUID: PJclBpAyQxCr7u8DAmBblg==
+X-CSE-MsgGUID: txcY47upS5+/WSX/rsm+IQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14267318"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="14267318"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 18:29:20 -0700
+X-CSE-ConnectionGUID: 0z9F7owzSi+2C8Sl5agJAw==
+X-CSE-MsgGUID: +xDUtuOZTAOmsuhpSMPSEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="61366190"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Jun 2024 18:29:20 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 6 Jun 2024 18:29:19 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 6 Jun 2024 18:29:19 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 6 Jun 2024 18:29:19 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 6 Jun 2024 18:29:19 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TEvfnPCz6YI3TvwUy793RK7vrHb96tf1uu8coO9fTTztDyHfs96n2zPU7Js8iJPoAghWA1foA+ZYQDN0xBoXjJBApidcYPr2m7S8cOE5lrtCtCxAll6CIqn5BdZ9kJxCfdQCtjqCkH9Z74o7C4SI5YfaQvN2CpSHACTBT42SJ6pVvjNLGBUllVRIvG5eCD4w9RfQ5BL4biWBe0BW0toL2UZoThc9UB22ielOYO3CTFiakctL3WikWcuMCoSvp94mMccNk3BoVnT4YCgP6kvWT5qt/OeA/y0kLxqx4Cu+RUvty++pdgjXzl6WE/D5Qmh+rPm7AfaGkeewGlVYKwW0eg==
+ b=WxZSStm9nHXwRstMzi6v6AvLd8MniSRlLf7H3/5RWcFa/8MZOaNabECkJlToIxseP1rjTz0sfzW0tPA6Q6XdAELQzIMtc+YtNfUX+CjbUbFH5QXnwyHbbp+dR5A3vd35GBNS+mbXt7K0RPWTsBMoz/ERXHzt6PXJJI2CtRAQu0jLyDQVZRpXT6x7bKDAsy9UzYfDX1dVKf9HNGLtW1/MlW2ORxB+edLt3q/t463MNofK4EAGJzzzW50P0Mga6+F7gT3aSQIBgkD+hYy/0PJWpytjHfv5H3r/tq7IPBWtz75z9AirRH1tdc9Fyfg1UecvcciSgXns390xIBaABD8uJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AiiD9fsEIHYvREju3gNguDrkPsWHYSkQXegy5Zsh8QA=;
- b=gDhZkiP9xOLUyFZvxBnzDzVcPwrDkHZMlQ1xrLx3A/qiqFxDlRSD1LpyxG3pjtT0e3vIP2WqiqOHc3yfvnth0KhlZ7x5styMOWoNJsWWFMOTZoxxR7SMcvuTYyYRGmoqW62MdhtZV+F96xeFu0n4UvBNecm+Ph//5ARY8VdoL+/hLZMOCJkV2/an+DAPyW95DFaHzF0evXipL7/mvbpWbU2Kl1WwsAuE9+SVC4PnhpVuk4PrX+f1eZCvSXLy17Bl14xt+lXX6rqOgigLeA9Ruce+vJSCO9D+gGCIDWInQ0qZbrx1QFFzWYJA3KdtjzI09ZlJndJQZ0D3lvHrLU16JQ==
+ bh=cB5RpGT4zvdJZoTZnRmQalMdpBJYbQXTsRCMeI0aJLg=;
+ b=FS7a+1uJKfGrqiT8P8hQZpt9WOb+AwuZgwR2NQn6J/KTNhQSxKRtJVep7JqB0CdEmMshe41lO39BPb2X6SZaW8ghWsyKmRjcLxeCLfBJy91co9wSP1B1fTxWGoTXyDnNvFK/81NG5xMIgirGm/ZS500lIB4lnlrKprPz0M79J+WLrAuDsZFZ8WGBjnREcGP08UvZ4SDdczGSFaO5rMPevw82S1UFz6S+zPeS1P8aXQv5XrMv3qJZJsBK/bxG21e+F6vaU+witbZyrWiAsFPTCNzVPMZyqGeJyiP2dmxu6sxoZFgZpdLdOj+k/tZbizn5ativX3D8IqvBgQ/nB25ObA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AiiD9fsEIHYvREju3gNguDrkPsWHYSkQXegy5Zsh8QA=;
- b=QsKleEFJzl5vzu/auOUnGDhKtsshwO46zbogRszQAkN8QxGuXbXTMQMZTsc/8j+7Oadxd1VChImrmvUL3Qy1pAcPJjohXR7C829GvysKcSXmfAUdcDDroB1MHtxBy7Cndo5ZIpRpK3CGgxF20Dbn89oG9P6l/Ziq7P0LQiuNSgqBIsktFSG9lXCOwNvxjSjlsijAVSszTjMAWx/9cXaaFmaahpcq91UXJ8ckqylSUdRz+oeAlG8I/zUwclYKZBBVOe77vEotm1Jv4DRhj7nIspjzSwx9qmxaJI/dav7akJS9a/O1r+Fl2sUpyJVbAvVL1Y7B2Vd4whUCziYAwijtcg==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by SN7PR12MB7912.namprd12.prod.outlook.com (2603:10b6:806:341::9) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7200.namprd11.prod.outlook.com (2603:10b6:208:42f::11)
+ by DM4PR11MB8204.namprd11.prod.outlook.com (2603:10b6:8:17d::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22; Fri, 7 Jun
- 2024 00:41:14 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
- 00:41:11 +0000
-Date: Thu, 6 Jun 2024 21:25:36 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH 0/8] Introduce fwctl subystem
-Message-ID: <20240607002536.GI19897@nvidia.com>
-References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
- <20240603114250.5325279c@kernel.org>
- <214d7d82-0916-4c29-9012-04590e77df73@kernel.org>
- <20240604070451.79cfb280@kernel.org>
- <665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240605135911.GT19897@nvidia.com>
- <6661416ed4334_2d412294a1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240606144102.GB19897@nvidia.com>
- <6661f0dead72_2d412294ec@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6661f0dead72_2d412294ec@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: MN2PR18CA0030.namprd18.prod.outlook.com
- (2603:10b6:208:23c::35) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Fri, 7 Jun
+ 2024 01:29:17 +0000
+Received: from IA1PR11MB7200.namprd11.prod.outlook.com
+ ([fe80::8f47:b4ca:ec7f:d2c0]) by IA1PR11MB7200.namprd11.prod.outlook.com
+ ([fe80::8f47:b4ca:ec7f:d2c0%3]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 01:29:17 +0000
+Message-ID: <56dd0615-b845-4aec-aaaf-05a17807188f@intel.com>
+Date: Fri, 7 Jun 2024 09:29:11 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] cxl/mem: Fix no cxl_nvd during pmem region
+ auto-assembing
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>
+References: <20240531070229.1596811-1-ming4.li@intel.com>
+ <20240605125707.000064f8@Huawei.com>
+ <2e4b2584-f1f3-4e4b-a604-b2db4a28b5de@intel.com>
+ <20240606150903.00005730@Huawei.com>
+Content-Language: en-US
+From: "Li, Ming" <ming4.li@intel.com>
+Organization: Intel
+In-Reply-To: <20240606150903.00005730@Huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2P153CA0023.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::6)
+ To IA1PR11MB7200.namprd11.prod.outlook.com (2603:10b6:208:42f::11)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,160 +106,318 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SN7PR12MB7912:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0d93906-78fb-4939-969b-08dc868a8748
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7200:EE_|DM4PR11MB8204:EE_
+X-MS-Office365-Filtering-Correlation-Id: f014e95d-b40b-4518-0ce4-08dc86913f42
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005|7416005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xtmFRvXg/HbK0UHjYGXrKmSZPSv12FaM8bc2znEUqtVvn6Q4uvXsqMge1V14?=
- =?us-ascii?Q?gl5v0BLpU5KoapBFarD3uu/fGAN+SpmWura78P5eAjDrS7t5NeYzBx5AVnqF?=
- =?us-ascii?Q?2Hme30jw/cLc7BK3BfLPpljUCGUX+BWoykw1VVXyUhvsB7vStsQZnngNrycj?=
- =?us-ascii?Q?pGVJa7QnYpx6cP5///bzUXfopBW2Xbs2CUSaOMiZv0E3ve6DhN4qREqvcEwu?=
- =?us-ascii?Q?x89B/k16CYEbwQO7hHOavXQH/BaStGxiN6Kmi0OsEaN28nerXqOEdMe4/Ot6?=
- =?us-ascii?Q?Xvemh98J88UbyTnaeYW84jUSCbumkPctMYzYwz5/u++rvT1miYGksjfjt7xs?=
- =?us-ascii?Q?CEEux1O3bWr0g6CloDo+8QsIUU+yU2PKWBl7wT7os5nWW3uVKRwcw7BwCUs0?=
- =?us-ascii?Q?MKFjK3sPOaX0UAY9g+CBm0ZXafuladvNF1dbKNVEDuHnVECtRJroDPoWImf0?=
- =?us-ascii?Q?jdvHID0O21TnNRURJlFvOc9l1NIceECL39s1xSM4FyBjutHEf+2MkayvtkXX?=
- =?us-ascii?Q?97X8qHpfBO6ce7uRGLEYlQHQRxTr8XJY2/NaX1P6It4lO5wC8oUrHZEZA0fl?=
- =?us-ascii?Q?DJFY5e2bL3sbEgZiagy7S0ihPtdnQOnO+egKuO/2akgE+mj16U3FS9ku2KYy?=
- =?us-ascii?Q?XWlDA4WUblCvnf6TMJ7ivQUgi3z6JVmBtO/V7PRtk/yca+fpBIqnJVUJQ3Rr?=
- =?us-ascii?Q?R4zY5ZNRgM28Jmo2VxH4XNWyG9MhS67iuashPuhm/z/QN58W4dbRZKDVcuXg?=
- =?us-ascii?Q?Kj4viswIz2WqYF4rDUV//OX1uQ4n1RSLYQwWxavmDnpm+uIcQzLkx7k9vuZr?=
- =?us-ascii?Q?FY5r07G61JMb/qxcjTrJQP2rXohlPoOKMIZYf5rxHb4D5SUJMbka8wBcJsVp?=
- =?us-ascii?Q?PDVias5pCrNbKx+fvnEZTA0mE0mg8i9mLFw8AUdeQl00HrxBb1c5W0fw5BaH?=
- =?us-ascii?Q?Sj7Ten0v6UheRqSjLHV7MgQh9fQrEUD5/EYejNLBJADXHf4Ub5vjpxxDiyCx?=
- =?us-ascii?Q?N5ePbSoGd0Exk4hoccbDtf+FQTjhOc/C+SHsRJKJckmIQlfJ/sq6VIH5aaV0?=
- =?us-ascii?Q?TmitfPTcEYjoOyYvLpO9VjJnCitCNAitZ27z5kmZquj4pj/H1IdbInfUsjjp?=
- =?us-ascii?Q?ga39NJQF6Cl4K4RiKu334AMb4IwogK80hcrNPazDGSMbiS14f/gH1zJCoYbb?=
- =?us-ascii?Q?pB2z17iUc8DfAfNls7NJe4+p+FEr5bIiYSmQjoP3IzJC0SkpAleYQ689/PBT?=
- =?us-ascii?Q?wjefualEti5nFOCWB8eRPxpqD9smg+kfPBp0npi9h3Y0PnYDKlEqXOaxB17+?=
- =?us-ascii?Q?bEr+rPk8nl6Potjblyi6eMmr?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WWw2MHdQYUtKbCt6Ulc0ektGZUFEK2RKdkdrSXVhN3IrdDI4RDNtQmJmV05F?=
+ =?utf-8?B?bk5BYlU5SEZ6YkE5QnFRRXBQdnJZNnFpVitZVitJZ1hqblhCYXgyYWdOdWcr?=
+ =?utf-8?B?YzVYVFpvTENFQmZHUThiZjNNRHFMMkpsWTRKSmJKQlJjRlZBc1Eyd0pkaUhE?=
+ =?utf-8?B?amVpQWFza3dkUFZJRFNteGRxb0tka05KOTR1MDg3YU1NMHI2SDBSK2VtU3c3?=
+ =?utf-8?B?SUFlSHgwQzhFelZLcGN6WDJtc0VMU3E4NkRZQ0QySXZLWGR5Unl0WjVSempM?=
+ =?utf-8?B?VEFwY00yZDVZczNUN0RlZGRMMkdBM00zZkQyemtFUnN5WXdWYkYwTHhlZWxs?=
+ =?utf-8?B?SWEyVzk2ejZ0Z0ovdzdPbnh4YVlIbncrWG1JdWsydlhKSndNUUNVcGFPc0Y4?=
+ =?utf-8?B?RDRQL0kwaHBHN05ubkxoUWoxSmpObFFQUGdTUEszTENjajI0VHcxd3BCMWMv?=
+ =?utf-8?B?Qmw0dkhnYzhPSzhaYklBbkRFeWQ4M2dGMWN1czkwZG1NYlpwRHd1QldVZDFG?=
+ =?utf-8?B?RGllT3E3L1llV2xuemU0Q3RtcDJVVE00RmxTVTc2R09abEJRMXlIb2NFMFBN?=
+ =?utf-8?B?Y1A5bDNLQktDR1VrK2VIWE5UVXE1ZkY1ZHdFOU52S09lYWt5NVdKTlZ6U09F?=
+ =?utf-8?B?MEpoUGh6bkN1aXlVTW1WMEZGTjFqVGxSQURkaEsyaERjMVNxOUhGRUtpL013?=
+ =?utf-8?B?b2NRZFA0b2IzSURFaUJ6UWwzSTRGalgwTE9SeDZ0b0cyYk9LaDBQUXVjNlda?=
+ =?utf-8?B?RVdVV0RhTzNRQVgzTkxlczMzY2FIOWxzTnEzQlhUNEZGRnBDY1U3YzhTY3pT?=
+ =?utf-8?B?Sk1wcjhMd3VHRGFTQ09UOW9JVUE1QlRobWpnNlZSYnEyTTAzTW9iSE9YRzV3?=
+ =?utf-8?B?dzUxQkJ1NjhpUUJkeVp2RTNuOGV6TzdYM2dMcmE2dUNqY2FmRFR1eWZGeFNF?=
+ =?utf-8?B?RlhYZllORTg1SUtYMjFkMzVjVCtMNzZMamx0U0F5Wmc4aHRSbkNwUnlVd1VO?=
+ =?utf-8?B?UDFpUWZibWxlanB0a3VLbUZMWVpSOXVKREp2Ynd2QnVoUElHZzF1R2hySzVp?=
+ =?utf-8?B?WHRLUEY0T0xkU2NNYitwYUFRNEpmK2prbEc4SEgwaXBWWjU0UmVPejJCR28z?=
+ =?utf-8?B?ZW5Nb0RlWkI1SUl3SXJYdVhwVjFJYmpNVWJEMlMyNmFoTWlUZ1FEMjNtRWNX?=
+ =?utf-8?B?YU9qU0JoendubDRDMnFNUEwxaHR4OExrT05pejV2eHoyNXNKeGNzZERUQVQ3?=
+ =?utf-8?B?TnVrTlBDLzdQbGNsU0psK29EL21wbm5QMnprV0tjVkt2T21hN3hQZ2YxTXBK?=
+ =?utf-8?B?RnBleWZTRHhsOWF0OVAvUjd6amJ4UVJubnk0SnZSbGdaeTBOMnJ2WVpuOWsy?=
+ =?utf-8?B?aDN1QStMQktVMUFnZkN4RFBCWDJYRUhjYXN4QmloWjdSVXBHY2dqWVBweXo0?=
+ =?utf-8?B?WE8vQXYrS0F4Z28zYlZ6Mk4yWXRYeWtCcW1KSTZxcU9ydWZNL1JNUi85WWgr?=
+ =?utf-8?B?cG85WVg0eXZBdENJYlgrZXo1cEFUQkd2aGpaa3REUjY4UWw3NW02cDJHeW9q?=
+ =?utf-8?B?UVdOeVBnYmRoNGlrYWxQWjhtZlE4NUI0R0pmSXFSMzh5cmEwanQyRTdBWWxa?=
+ =?utf-8?B?OVJYOEFZYjRkMTl6ZDRhT01HSjhaQzl0RWE0TXFMYUNGN0xvSTJGRno2UkZU?=
+ =?utf-8?B?M3U5ZzFoLzlXWEJ1NzRaQjBMYUlSbnA4VWdPcytRdTdJelJkWmVuRjFLWjVs?=
+ =?utf-8?Q?hakp+rt7GTQcBDlhMnZzel8Hvl1uskIjm3Sno+T?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7200.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xA5Ss3Hi6fDuUUi3eDOKAuVtKcvPXDKfadbZflj2cGBfQy6KLlvUHDw5vXA0?=
- =?us-ascii?Q?HSdGLvc9yzfjZz5JWq6TUnIZQZL/x7NRf2q7DumYFi4NizROLov2DLRUJXFi?=
- =?us-ascii?Q?GzSDGQlpK0MWZm07ryvux6JSdePO+WmdVvUEBSSsdTpAFSefneZOGdP7ZzAJ?=
- =?us-ascii?Q?vXJa5tjeUKlRaGeLF49Y8uZ0PHcb+dipr/23UYUCegdnkFtifm9N7HU9EJZS?=
- =?us-ascii?Q?9fW4KrDWPHykCtTS2BcusZ1mC88qGiJEyKd8YGVtskNZ5AzDm5n/++HNu8w6?=
- =?us-ascii?Q?j5qzUesKeW9xxxbI6jtpnQvGy1iXl5l2lh9dghd9O5DERlDHMwsydaacAoBS?=
- =?us-ascii?Q?L+J+O//NLFxYOTGysg/1PLbNlV9e0wBrIbk09Wqa20QMeCz41FuXehI/Em6G?=
- =?us-ascii?Q?Cnj0/2UNSNzXnct9BuBZ8qb9gCFGQD6/Hls1p5OM/EDedFkZiL1NrfWsWhlE?=
- =?us-ascii?Q?blBbR4eCi1Sk2mzcnkUMD4kaAQkeAYs3qDTEaNzLZPmza8WXD4XtqVEJKxnh?=
- =?us-ascii?Q?ek+pFjQZMkCMQji8p2ddAfDBeWjLCDdJeYjfzYesQ3Cq6tVVYoCZ03YKLtok?=
- =?us-ascii?Q?QXWTRVd3w9Kq5XLWnEwk1ZpU54TaIEf6+YQtwxcfpOVdg8T2T97eWgMVYvHS?=
- =?us-ascii?Q?YjkOK6k8yjvl0i+U3QJSqDpCSvCD0ZrBa8OV3A2FdGU8l0CzpkytGDakLoID?=
- =?us-ascii?Q?9qD4r2ot40rACHw20CudsriNzNfGK1hNgxfzItChg69YGZ5FUnCdHwLKU6VR?=
- =?us-ascii?Q?qB9aIoop/rWKb+fkZXDJzqkLnWy1iJWdKrjtG9GfIf3adxMbH+dgpbeeAgcG?=
- =?us-ascii?Q?gHBuukjLSyrZguUcz45yKbbJZivhaz5Pak9eQI9kmUPCN5nW4iDJ8TS1z2Na?=
- =?us-ascii?Q?LhJbGc55jS9n37ATievejwLG6iFKD29Ng5uXR7HyB3AG1QV8UvEWBTaXFZrV?=
- =?us-ascii?Q?7+QMe1EtNxUSkLVZiTPG892tRDAarCLYm3kZWD9ZFp3HtsfRLMoR0vzLb+9V?=
- =?us-ascii?Q?uBZQcn2+73PrMyXwdrTwZc+7baDm2ttNuN7Sc9ujsqAwQ3fCzZq9/pmXhuzR?=
- =?us-ascii?Q?NLysH++4vWX6L1w/8VmN6QOmoHZiTISfdh+o5hc7w6jKdNwG7H/3E69IVBcx?=
- =?us-ascii?Q?17k8LIfOKI9vUhyv87jDzinq+LBtRCJZ2sANH2AMhEiYhcXa0fTqChDWzxqo?=
- =?us-ascii?Q?swKaKn2bwbAMMPo1mmsN+nqCt55G2GBuf6acoHnu8iqu2Tx280PRt10EbqCH?=
- =?us-ascii?Q?nGV7avKRH4QtBeyy288ea5Giqu/cTajjBwEefcr39FNjS4ymAyuDkN56r1w3?=
- =?us-ascii?Q?N947vS1eL0duhlMxEm0rt31HTXdGpv/jgeqIsBqfTKeqRgugorCnY0/zKA30?=
- =?us-ascii?Q?3sjG7tolLy8lKIvmZRRanlmyslBuvIbPzNQJKRVjgwxG2EZ5Z7WC+zlRW14p?=
- =?us-ascii?Q?BAXxHPwwq8bYDE92iDWO96bI6EP/6uy2SYG4YeBNPQsuzHY6nWY/A0h3IiAx?=
- =?us-ascii?Q?38y0cgvU6grjLeZ6oo7XY2Sjzv9UQXCZsUKCegKKBaY8F1qXH8tovI9mz7ZE?=
- =?us-ascii?Q?EkWlV+OVGnYjrblFoi2mcpIFshmENxPaNUjEz959?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d93906-78fb-4939-969b-08dc868a8748
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K2J0eUdiUmhEaW56WW1LMXhWSHA1RFBkMHJTczFWSjNKYlNUMXBad2hYSFBa?=
+ =?utf-8?B?dWNhYmwyNis4UzlUV01CS2grNkVUSGZ5aTVJSVVFN3BXcW5CZ2pnWkhVc1JC?=
+ =?utf-8?B?ZXN4aFhNMG9zNG5mQ3Ywa3RNS1JKbWJxN01kd1p1MzE1RnpST3M1WkpaVm1U?=
+ =?utf-8?B?aUJ2VFQzN3hKa3pTSko4VUtjZ00vZytCS0UwcGpIdkQ1clBhYTE3aFJkeTdJ?=
+ =?utf-8?B?OW9HU3RpTEE5d2tsQlR3UXVmY2Z3WmlFV2RKaGVqRWx0cUhreHJMcG0xSHhT?=
+ =?utf-8?B?TVQ4ejI4Qk9CM1N1Nm5GT1A5bVd2Z2pTVkxJdk5GT0krYlN2T3JOSlZ0ZERO?=
+ =?utf-8?B?dEk2Zkl3UkgyT3J4Y2dqdDBRU2V1Z2o3NGx6NDEyd3ZyRHJDV0tIam5EeENp?=
+ =?utf-8?B?aEl5anN5RnhUUFgzaWJ3YVo1T0FSR2t5cDBEVXNmTEhPbWhsWXZ5VS81OXZO?=
+ =?utf-8?B?T0MrVlNXcitiNjJ0WXNZSUJaVjN2dlQzTVA3QlBZZUJHUVliTjErS3A0S244?=
+ =?utf-8?B?ZExZWjM4OFpCSFpmQnlNSnFVUHk0SnJZNVRSclpDa0ZtemtnZGgxMXczRjJm?=
+ =?utf-8?B?RUt5bjZ0OHZJdjRCM0EyMDlCaEg4S3BhSjJSdGo4SWxnU29KcHBKVkZDQVlr?=
+ =?utf-8?B?dE4xcm9HcDRpUGhZN1M4UVdja0ljMlNhMi9NbmdXeldXZHdBaWIzVDdWd042?=
+ =?utf-8?B?dmoyZkpwM20rZGFUcjRjNWppQ2xCVUhiQVRUSWRyNVBnU3J1NjgzS0Y1TU1U?=
+ =?utf-8?B?OEE4RGM1eHlNMkowOGFGcmptNkZLSlVwUkVaNTFlWDZGVVBUZHVkSWZSNFpD?=
+ =?utf-8?B?SVpERjFvMWhJQUprenBKUHYzNEdFYWVacnVyWFJKY3Jsa1prMmhlVjNhMitx?=
+ =?utf-8?B?UHVTSkwrOE03YkRoRDFLbkZXNGFDVFdmNU1YRFJXd0Y0NDNQYzk2U0dTbXpQ?=
+ =?utf-8?B?SVFqL0tjLy9qem1Ec2UwbkxIK1BFTU5ud0hDSW94YjExWVdmOVJ1QmhFUVZM?=
+ =?utf-8?B?TUJsNm5QNXRiTVRyUUNQcnY2ZVQ3aXBFSnNZM2wxSWhJQ09XTUlGb0p0QTI5?=
+ =?utf-8?B?RlUvY2NHTzZycTdmUC80cEdQOElManlFclNQV2pteGUzNlFWQ0VQUWQ1ajQw?=
+ =?utf-8?B?WTJ5Y3ZGOE9GMVEyZkcxZjBlOE5rQkMyaThqdzZVYXBRV2wxWkd5aXo5ZGF0?=
+ =?utf-8?B?ZDBsdzFFNHRneEV1ZGF2alhSZWFvMnRyREtEVlJlRG5hYWU3QklYUjV6VjNr?=
+ =?utf-8?B?RU1naWtYd1VOVXRPbUhaVkJEQmR6bmJid0d4dEJkbzhLZ3BVczliOExkV0g1?=
+ =?utf-8?B?MXhPcXFkYkVybnE2Rm9EYyttdkhGMFYvMi93Unl2cUNQYVNxM3p2YTZUeHlh?=
+ =?utf-8?B?dUtsa0VGRmRESUZDa1VYWDdGdURJQm9FM2ZYMFFGY2FKYnRUTEZqczZzTmV1?=
+ =?utf-8?B?RzlaaXh6SmcwRjdab3d5VHZZOUlEcWZKM3ZmR2JUYmxUWDRuU0x3WjBnVUpX?=
+ =?utf-8?B?eEozZkpnNk8wNHlWWEYzVVlPdU5lRThJbXRTT2NwV0lNVDl3ZXdzYzYybW1t?=
+ =?utf-8?B?VnJCMlJud0t0QTRDVDJvdmpKL0FZRWM3MWFVY1l5eVBRK0x0bi9Ua0xTTEtF?=
+ =?utf-8?B?QVk3dExMbkpaQk5pSXFEWnZ2bEU1NGVsVmZQU0RYUWwySERvOUtMbGtVWVpt?=
+ =?utf-8?B?WFNVK29Oa3N2OXNMMEFvdDMyY0NSUC9YcGhRRHRPTm4xVm1rdmtLeVFKQmFS?=
+ =?utf-8?B?MnpUc0VKUjJGbEI5bFFpZ2l4WXh4QmQ4M2tHUHA1anB5TjAwZ0xPS0VPUjBQ?=
+ =?utf-8?B?czJHU09lRURXb1pJRVVVN2RaNmROVkVVY3pzYllwNVg3ZUlaMFRlRVpHYUVv?=
+ =?utf-8?B?dzIxL1RxTVdrbEhYb0krd0xsTVRlclNPV3RSR2ltTWFaS3lzRGtlMjhDOHl6?=
+ =?utf-8?B?YnRMVFk4c3kzSCtNMHM0N0xYbi9QWGhFVkpJZ1Z3Sk9BWmpHc0lWVlN3MnVq?=
+ =?utf-8?B?cldsaTMweTB6NU9tRmxoclVKV0ErY1Y5ZTZaNW1VWWUzSDVMbTVHc2NDMkFv?=
+ =?utf-8?B?VTVqSWxwMEJqaThpd3RNalZUZjdmZkIvaEtBdjV6OWJuRXhGbnZhMEFWYWN3?=
+ =?utf-8?Q?ZUBlXiVPHAd4tmTWLJMKMq1PV?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f014e95d-b40b-4518-0ce4-08dc86913f42
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7200.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 00:41:11.4232
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 01:29:17.2821
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xm5LnAJxYL8izVm9I286cL1FLlLzwR1BfSc4mQAZ8Vt/3iDkD0Ygr99ZyF3/59M7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7912
+X-MS-Exchange-CrossTenant-UserPrincipalName: A3wD9o1MAnLO7jffivFbVIyxwpmuEQ9Kg79FaoLaj5xNzVxFtsQdlbjrkdcAH/1wufrEdVp/uuF1Ex6wfeEXAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8204
+X-OriginatorOrg: intel.com
 
-On Thu, Jun 06, 2024 at 10:24:46AM -0700, Dan Williams wrote:
-> Jason Gunthorpe wrote:
-> [..]
-> > > I am warming to your assertion that there is a wide array of
-> > > vendor-specific configuration and debug that are not an efficient use of
-> > > upstream's time to wrap in a shared Linux ABI. I want to explore fwctl
-> > > for CXL for that use case, I personally don't want to marshal a Linux
-> > > command to each vendor's slightly different backend CXL toggles.
-> > 
-> > Personally I think this idea to marshal/unmarshal everything in the
-> > kernel is often misguided. If it is truely obvious and actually shared
-> > multi-vendor capability then by all means go and do it.
-> > 
-> > But if you are spending weeks/months fighting about uAPI because all
-> > the vendors are so different, it isn't obvious what is "generic" then
-> > you've probably already lost. The very worst outcome is a per-device
-> > uAPI masquerading as an obfuscated "generic" uAPI that wasted ages of
-> > peoples time to argue out.
+On 6/6/2024 10:09 PM, Jonathan Cameron wrote:
+> On Thu, 6 Jun 2024 10:30:01 +0800
+> "Li, Ming" <ming4.li@intel.com> wrote:
 > 
-> Certainly once you have gotten to the "months of arguing" point it begs the
-> question "was there really any generic benefit to reap in the first
-> place?"
-
-Indeed, but I've seen, and participated, in these things many times :)
-
-> That said, *some* grappling, especially when muliple vendors hit the
-> list with the similar feature at the same time, has yielded
-> collaboration in the past. 
-
-Absolutely! But we have also frequently done that retroactively, like
-see three examples and then consolidate the common APIs. The challenge
-is uAPI. Since we can't change uAPI people like to rush to make it
-future proof without examples. Broadly I lean towards waiting until we
-have several examples to build a standard uAPI and let the examples
-evolve on their own.
-
-If there is value in the commonality then people will change over.
-
-> This gets back to the unspoken conceit of the kernel restriction that I
-> mentioned earlier. At some point the kernel restriction begets a cynical
-> in-tree workaround or an out-of-tree workaround which either way means
-> upstream Linux loses.
-
-Right.. The kernel just don't have the power to say no to the
-industry. Things will just go OOT and it is really our community that
-suffers in the long run. As I said, you can't lead with NO.
-
-IHMO there has to be a really high quality reason to keep support for
-HW that people have built out of the kernel. Especially start ups and
-other more vulnerable companies. I don't think Linux maintainers
-should be choosing industry winners and losers. I sometimes feel I
-have a minority opinion here though :(
-
-> > > So, document what each subsystem's stance towards fwctl is,
-> > > like maybe a distro only wants fwctl to front publicly documented vendor
-> > > commands, or maybe private vendor commands ok, but only with a
-> > > constrained set of Command Effects (I potentially see CXL here). 
-> > 
-> > I wouldn't say subsystem here, but techonology. I think it is
-> > reasonable that a CXL fwctl driver have some kconfig tunables like you
-> > already have. This idea works alot better if the underlying thing is
-> > already standards based.
+>> On 6/5/2024 7:57 PM, Jonathan Cameron wrote:
+>>> On Fri, 31 May 2024 15:02:29 +0800
+>>> Li Ming <ming4.li@intel.com> wrote:
+>>>   
+>>>> When CXL subsystem is auto-assembling a pmem region during cxl
+>>>> endpoint port probing, always output below calltrace.
+>>>>
+>>>>  BUG: kernel NULL pointer dereference, address: 0000000000000078
+>>>>  #PF: supervisor read access in kernel mode
+>>>>  #PF: error_code(0x0000) - not-present page
+>>>>  RIP: 0010:cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
+>>>>  Call Trace:
+>>>>   <TASK>
+>>>>   ? __die+0x24/0x70
+>>>>   ? page_fault_oops+0x82/0x160
+>>>>   ? do_user_addr_fault+0x65/0x6b0
+>>>>   ? exc_page_fault+0x7d/0x170
+>>>>   ? asm_exc_page_fault+0x26/0x30
+>>>>   ? cxl_pmem_region_probe+0x22e/0x360 [cxl_pmem]
+>>>>   ? cxl_pmem_region_probe+0x1ac/0x360 [cxl_pmem]
+>>>>   cxl_bus_probe+0x1b/0x60 [cxl_core]
+>>>>   really_probe+0x173/0x410
+>>>>   ? __pfx___device_attach_driver+0x10/0x10
+>>>>   __driver_probe_device+0x80/0x170
+>>>>   driver_probe_device+0x1e/0x90
+>>>>   __device_attach_driver+0x90/0x120
+>>>>   bus_for_each_drv+0x84/0xe0
+>>>>   __device_attach+0xbc/0x1f0
+>>>>   bus_probe_device+0x90/0xa0
+>>>>   device_add+0x51c/0x710
+>>>>   devm_cxl_add_pmem_region+0x1b5/0x380 [cxl_core]
+>>>>   cxl_bus_probe+0x1b/0x60 [cxl_core]
+>>>>
+>>>> Because the cxl_nvd of the memdev is necessary during pmem region
+>>>> probing, but the cxl_nvd can be registered only after endpoint port
+>>>> probing done, that is a collision dependency, so adjust the sequence
+>>>> between cxl_nvd registration and endpoint port registration to guarantee
+>>>> there is a cxl_nvd in memdev during the pmem region auto-assembling.  
+>>>
+>>> Perhaps call out that the root above a parent port is the same as the root
+>>> above the endpoint seeing as I think you are starting the search from
+>>> a different location after this change.  
+>>
+>> Hi Jonathan,
+>>
+>> Thanks for your review.
+>> what do you think if I change the description as below:
+>>
+>> "Because the cxl_nvd of the memdev is necessary during pmem region
+>> probing, but the cxl_nvd can be registered only after endpoint port
+>> probing done, that is a collision dependency, so adjust the sequence
+>> between cxl_nvd registration and endpoint port registration to
+>> guarantee there is a cxl_nvd in memdev during the pmem region
+>> auto-assembling. For that, change cxl_find_nvdimm_bridge() to use a
+>> port to query the ancestor root port, it helps to find the root port
+>> of an endpoint by using an endpoint's parent port so that cxl_nvd
+>> registration can be finished before the endpoint attached to the CXL
+>> topology"
 > 
-> True, I worry about these technologies that cross upstream maintainer
-> boundaries. When you have a composable switch that enables net, block,
-> and/or mem use cases, which upstream maintainer policy applies to the
-> fwctl posture of that thing?
+> Perhaps this wording is clearer?
+> 
+> "The cxl_nvd of the memdev needs to be available during pmem region
+>  probe. Currently the cxl_nvd is registered after the end port
+>  probe. The end point prove, in the case of autoassembly of regions,
+>  can cause a pmem region probe requiring the not yet available
+>  cxl_nvd.  Adjust the sequence so this dependency is met.
+>  This requires adding a port parameter to cxl_find_nvdimm_bridge()
+>  that can be used to query the ancestor root port. The endpoint
+>  port is not yet available, but will share a common ancestor with
+>  it's parent, so start the query from there instead."
+> 
+Sure, will change it in next version, thanks.
 
-fwctl is intended to sit on its own. I think it is even a bad
-architecture direction that Linux has N different ways to flash FW on
-devices, N different ways to read diagnostics, etc all because each
-subsystem went on its own. With fwctl I'd like to see a greater
-consolidation of not re-inventing the low level of fw interaction
-differently in each and every subsystem.
+>>
+>>
+>>>
+>>> Other than that looks correct to me.
+>>>
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>
+>>>   
+>>>>
+>>>> Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device
+>>>> registration, delete the workqueue") Suggested-by: Dan Williams
+>>>> <dan.j.williams@intel.com> Signed-off-by: Li Ming
+>>>> <ming4.li@intel.com> ---
+>>>>  drivers/cxl/core/pmem.c   | 15 ++++++++++-----
+>>>>  drivers/cxl/core/region.c |  2 +-
+>>>>  drivers/cxl/cxl.h         |  4 ++--
+>>>>  drivers/cxl/mem.c         | 17 +++++++++--------
+>>>>  4 files changed, 22 insertions(+), 16 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+>>>> index e69625a8d6a1..31b398c13be9 100644
+>>>> --- a/drivers/cxl/core/pmem.c
+>>>> +++ b/drivers/cxl/core/pmem.c
+>>>> @@ -62,10 +62,14 @@ static int match_nvdimm_bridge(struct device
+>>>> *dev, void *data) return is_cxl_nvdimm_bridge(dev);
+>>>>  }
+>>>>  
+>>>> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct
+>>>> cxl_memdev *cxlmd) +/**
+>>>> + * cxl_nvdimm_bridge() - find a bridge device relative to a port
+>>>> + * @port: any descendant port of an nvdimm-bridge associated
+>>>> + *        root-cxl-port
+>>>> + */
+>>>> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port
+>>>> *port) {
+>>>> -	struct cxl_root *cxl_root __free(put_cxl_root) =
+>>>> -		find_cxl_root(cxlmd->endpoint);
+>>>> +	struct cxl_root *cxl_root __free(put_cxl_root) =
+>>>> find_cxl_root(port);  
+>>>
+>>> This is a different port in the now earlier query (not the other
+>>> path you update). As you say any descendant is fine though.
+>>> I'd mention this subtle change in the patch description though.
+>>> (noted above)
+>>>   
+>>>>  	struct device *dev;
+>>>>  
+>>>>  	if (!cxl_root)
+>>>> @@ -242,18 +246,19 @@ static void cxlmd_release_nvdimm(void
+>>>> *_cxlmd) 
+>>>>  /**
+>>>>   * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and
+>>>> an nvdimm
+>>>> + * @port: parent port for the (to be added) @cxlmd endpoint port  
+>>>
+>>> Would calling it parent_port make more sense?  
+>>
+>> Yes, will change it, thanks.
+>>
+>>
+>>>   
+>>>>   * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM
+>>>> operations *
+>>>>   * Return: 0 on success negative error code on failure.
+>>>>   */
+>>>> -int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
+>>>> +int devm_cxl_add_nvdimm(struct cxl_port *port, struct cxl_memdev
+>>>> *cxlmd) {
+>>>>  	struct cxl_nvdimm_bridge *cxl_nvb;
+>>>>  	struct cxl_nvdimm *cxl_nvd;
+>>>>  	struct device *dev;
+>>>>  	int rc;
+>>>>  
+>>>> -	cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
+>>>> +	cxl_nvb = cxl_find_nvdimm_bridge(port);
+>>>>  	if (!cxl_nvb)
+>>>>  		return -ENODEV;
+>>>>  
+>>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>>> index 3c2b6144be23..f0cafc7ffb45 100644
+>>>> --- a/drivers/cxl/core/region.c
+>>>> +++ b/drivers/cxl/core/region.c
+>>>> @@ -2847,7 +2847,7 @@ static int cxl_pmem_region_alloc(struct
+>>>> cxl_region *cxlr)
+>>>>  		 * bridge for one device is the same for all.
+>>>>  		 */
+>>>>  		if (i == 0) {
+>>>> -			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
+>>>> +			cxl_nvb =
+>>>> cxl_find_nvdimm_bridge(cxlmd->endpoint); if (!cxl_nvb)
+>>>>  				return -ENODEV;
+>>>>  			cxlr->cxl_nvb = cxl_nvb;
+>>>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>>>> index 603c0120cff8..e8fca6c6952b 100644
+>>>> --- a/drivers/cxl/cxl.h
+>>>> +++ b/drivers/cxl/cxl.h
+>>>> @@ -855,8 +855,8 @@ struct cxl_nvdimm_bridge
+>>>> *devm_cxl_add_nvdimm_bridge(struct device *host, struct cxl_nvdimm
+>>>> *to_cxl_nvdimm(struct device *dev); bool is_cxl_nvdimm(struct
+>>>> device *dev); bool is_cxl_nvdimm_bridge(struct device *dev);
+>>>> -int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd);
+>>>> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct
+>>>> cxl_memdev *cxlmd); +int devm_cxl_add_nvdimm(struct cxl_port
+>>>> *port, struct cxl_memdev *cxlmd); +struct cxl_nvdimm_bridge
+>>>> *cxl_find_nvdimm_bridge(struct cxl_port *port); 
+>>>>  #ifdef CONFIG_CXL_REGION
+>>>>  bool is_cxl_pmem_region(struct device *dev);
+>>>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+>>>> index 0c79d9ce877c..2f1b49bfe162 100644
+>>>> --- a/drivers/cxl/mem.c
+>>>> +++ b/drivers/cxl/mem.c
+>>>> @@ -152,6 +152,15 @@ static int cxl_mem_probe(struct device *dev)
+>>>>  		return -ENXIO;
+>>>>  	}
+>>>>  
+>>>> +	if (resource_size(&cxlds->pmem_res) &&
+>>>> IS_ENABLED(CONFIG_CXL_PMEM)) {
+>>>> +		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+>>>> +		if (rc) {
+>>>> +			if (rc == -ENODEV)
+>>>> +				dev_info(dev, "PMEM disabled by
+>>>> platform\n");
+>>>> +			return rc;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>>  	if (dport->rch)
+>>>>  		endpoint_parent = parent_port->uport_dev;
+>>>>  	else
+>>>> @@ -174,14 +183,6 @@ static int cxl_mem_probe(struct device *dev)
+>>>>  	if (rc)
+>>>>  		return rc;
+>>>>  
+>>>> -	if (resource_size(&cxlds->pmem_res) &&
+>>>> IS_ENABLED(CONFIG_CXL_PMEM)) {
+>>>> -		rc = devm_cxl_add_nvdimm(cxlmd);
+>>>> -		if (rc == -ENODEV)
+>>>> -			dev_info(dev, "PMEM disabled by
+>>>> platform\n");
+>>>> -		else
+>>>> -			return rc;
+>>>> -	}
+>>>> -
+>>>>  	/*
+>>>>  	 * The kernel may be operating out of CXL memory on this
+>>>> device,
+>>>>  	 * there is no spec defined way to determine whether this
+>>>> device  
+>>>   
+>>
+>>
+> 
 
-Like you mentioned CXL has its own way to program flash. How many ways
-does Linux have to update device flash now? :(
-
-So, if you have a real multi-function device fwctl should be the
-central place to operate the shared PCI function and the FW
-interface. There may be some duplication in subsystems, but that is a
-side effect of our sub-system siloed development model (software
-architecture tends to follow org chart, after all)
-
-Jason
