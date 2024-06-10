@@ -1,176 +1,190 @@
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEDA4D8BC
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Jun 2024 08:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E009F78B4C
+	for <linux-cxl@vger.kernel.org>; Mon, 10 Jun 2024 10:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718007658; cv=none; b=BR7YI0SzivGAq878+IGWvgvw8QXTwxCIC7c50xorH0XR7fnTgO2RB9woeNffNA5Ng1TsJSsCSpM0NRGqe6fw10ulgDHDWtrUU5mzGIRdoZsd1nOHNstpFN5FlUrzpOnHWgabiJzKELWMr9kun8cwxcm2IaNoOBwJNLLOllncKec=
+	t=1718014839; cv=none; b=f8HDVWJf2cQoFV6TeZPwHDHc9bq5XccPDloulIh2M0V9bAYoRp3VYLrzzHkqdsnA4upITwmsP82QdcRvcxtRRMKph/nF36LdahkyrwwUVD9EUlrT01bALDtRz38FYRqsR4v2CZ0s07enC3e+e7O11CLhHELVqs/6UXs6bOFgltk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718007658; c=relaxed/simple;
-	bh=lIr+tJ3MMDTEMj0DauN9rQj4DOKazzDX0Bjanuz2r8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Od4+LUGoqeCJw9w53GWXOAsIH5BkK0nyml21EomKVzLcZvvCjDAcTtmQrwh/QRocbUTGe2KOY8uGTOLZ+4aaZEheg3ux2I3eythl050JN+KfEAMyY+UPIr4Bd4fhvIEYDQdV4B/hjDHqeTMdcxLU45+FfZJXzvCgTMSuPqi0/VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=G50xYPFY; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="G50xYPFY"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1718007656; x=1749543656;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lIr+tJ3MMDTEMj0DauN9rQj4DOKazzDX0Bjanuz2r8s=;
-  b=G50xYPFYkWb/U6TSy1oQIbuOi9RKCh+uxmDLNkOOjtlkMF1apkSxQg/7
-   zxGQnd/KUYjaPNhTxqbZBFCrJ0CEk2pmd+xmpTXMwX0ii6s5V1YW26nES
-   9MlsJXoyTOEwGDTzAZliujKEcsINq1a95D54PYjp0ZOyUsbsB4edmeYxF
-   K2623yAnSDPL+BZQwoBP+KMMzQIStbEsows0f3N002D35jdoUMrIgSQ0e
-   DN2AnJelXFdjM3eAB1ZR+tp1YZV+hgS1sfbrTRIr5BCu0FSERG+zuTeCH
-   5/Cf3udOdyYH8ak/qOVL/7GTx4+tvQ0eBNneXCuPK6mFnmqr64odD8Y2t
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11098"; a="150821769"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712588400"; 
-   d="scan'208";a="150821769"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 17:19:44 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 59A65D4256
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Jun 2024 17:19:42 +0900 (JST)
-Received: from m3004.s.css.fujitsu.com (m3004.s.css.fujitsu.com [10.128.233.124])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id AA331BF4AB
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Jun 2024 17:19:36 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3004.s.css.fujitsu.com (Postfix) with ESMTP id 6E4A4200543E;
-	Mon, 10 Jun 2024 17:19:36 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: kobayashi.da-06@jp.fujitsu.com,
-	linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	mj@ucw.cz,
-	dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [PATCH v9 1/2] cxl/core/regs: Add rcd_pcie_cap initialization at __rcrb_to_component()
-Date: Mon, 10 Jun 2024 17:22:21 +0900
-Message-ID: <20240610082222.22772-2-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240610082222.22772-1-kobayashi.da-06@fujitsu.com>
-References: <20240610082222.22772-1-kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1718014839; c=relaxed/simple;
+	bh=L6nRb+P9+mx6LVAvz1thgURTTax3BdFBuzLkkHh4rcQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vxvpi61dsFg3Usdzxn31PJUcH0TorqZBzR1zVwJROced3J5RKHS4nUxDmqUCVp+t/DrVIgzWjbzYlVC3qJF966c+hq7T8WayG0gU2tAk2TbnkdyFoth87di+KO2mOiqpRS4/CNfsbLwp6mW/6juYxmZ+nqJ8LbYZFgNay2qdO3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VySP53vzXz6K5qb;
+	Mon, 10 Jun 2024 18:15:37 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 68341140C98;
+	Mon, 10 Jun 2024 18:20:28 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 10 Jun
+ 2024 11:20:27 +0100
+Date: Mon, 10 Jun 2024 11:20:26 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] cxl/acpi: Restore XOR'd position bits during
+ address translation
+Message-ID: <20240610112026.00001b13@Huawei.com>
+In-Reply-To: <ZmNPaXST5ninEBbx@aschofie-mobl2>
+References: <cover.1715192606.git.alison.schofield@intel.com>
+	<77d251960a557f23aa6e6e0465e0e42f1d461514.1715192606.git.alison.schofield@intel.com>
+	<20240607160114.00006e4d@Huawei.com>
+	<ZmNPaXST5ninEBbx@aschofie-mobl2>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add rcd_pcie_cap and its initialization at __rcrb_to_component() to cache
-the offset of cxl1.1 device link status information. By caching it, avoid 
-the walking memory map area to find the offset when output the register value.
+On Fri, 7 Jun 2024 11:20:25 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/core/core.h |  4 ++++
- drivers/cxl/core/regs.c | 26 +++++++++++++++++++++++++-
- drivers/cxl/cxl.h       |  9 +++++++++
- 3 files changed, 38 insertions(+), 1 deletion(-)
+> On Fri, Jun 07, 2024 at 04:01:14PM +0100, Jonathan Cameron wrote:
+> > On Wed,  8 May 2024 11:47:51 -0700
+> > alison.schofield@intel.com wrote:
+> >   
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > > 
+> > > When a CXL region is created in a CXL Window (CFMWS) that uses XOR
+> > > interleave arithmetic XOR maps are applied during the HPA->DPA
+> > > translation. The XOR function changes the interleave selector
+> > > bit (aka position bit) in the HPA thereby varying which host bridge
+> > > services an HPA. The purpose is to minimize hot spots thereby
+> > > improving performance.
+> > > 
+> > > When a device reports a DPA in events such as poison, general_media,
+> > > and dram, the driver translates that DPA back to an HPA. Presently,
+> > > the CXL driver translation only considers the modulo position and
+> > > will report the wrong HPA for XOR configured CFMWS's.
+> > > 
+> > > Add a helper function that restores the XOR'd bits during DPA->HPA
+> > > address translation. Plumb a root decoder callback to the new helper
+> > > when XOR interleave arithmetic is in use. For MODULO arithmetic, just
+> > > let the callback be NULL - as in no extra work required.
+> > > 
+> > > Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>  
+> > Trivial comment inline.   Agree entirely that some tests would be good.
+> > I ran through a few trivial cases on a bit of paper and it looks to
+> > me like it works but that hardly counts as testing :)  
+> 
+> Thanks for the review and for doing some calcs.
+> 
+> I've become very adept at working these out with paper/pencil, that hop
+> to C implementation is the challenge ;)
+> 
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> 
+> Hmm...well, let me know if I can keep that after you read below...
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..42e3483b4a14 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -75,6 +75,10 @@ resource_size_t __rcrb_to_component(struct device *dev,
- 				    enum cxl_rcrb which);
- u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
- 
-+#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-+
- extern struct rw_semaphore cxl_dpa_rwsem;
- extern struct rw_semaphore cxl_region_rwsem;
- 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 372786f80955..cc1ce5e032e2 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	u32 bar0, bar1;
- 	u16 cmd;
- 	u32 id;
-+	u16 offset;
-+	u32 cap_hdr;
- 
- 	if (which == CXL_RCRB_UPSTREAM)
- 		rcrb += SZ_4K;
-@@ -537,6 +539,17 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	cmd = readw(addr + PCI_COMMAND);
- 	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
- 	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-+	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-+	cap_hdr = readl(addr + offset);
-+	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-+		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-+		if (offset == 0 || offset > SZ_4K)
-+			break;
-+		cap_hdr = readl(addr + offset);
-+	}
-+	if (offset)
-+		ri->rcd_pcie_cap = offset;
-+
- 	iounmap(addr);
- 	release_mem_region(rcrb, SZ_4K);
- 
-@@ -572,8 +585,19 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
- 					   struct cxl_dport *dport)
- {
-+	void __iomem *dport_pcie_cap = NULL;
-+	resource_size_t rcd_pcie_offset, ret;
- 	if (!dport->rch)
- 		return CXL_RESOURCE_NONE;
--	return __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
-+
-+	ret = __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
-+	if (dport->rcrb.rcd_pcie_cap) {
-+		rcd_pcie_offset = dport->rcrb.base + dport->rcrb.rcd_pcie_cap;
-+		dport_pcie_cap = devm_cxl_iomap_block(dev, rcd_pcie_offset,
-+											  sizeof(u8) * 0x42);
-+	}
-+	dport->regs.rcd_pcie_cap = dport_pcie_cap;
-+
-+	return ret;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..fc9e0dbd5932 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -230,6 +230,14 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_rch_regs, rch_regs,
- 		void __iomem *dport_aer;
- 	);
-+
-+	/*
-+	 * RCD upstream port specific PCIe cap register
-+	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
-+	 */
-+	struct_group_tagged(cxl_rcd_regs, rcd_regs,
-+		void __iomem *rcd_pcie_cap;
-+	);
- };
- 
- struct cxl_reg_map {
-@@ -646,6 +654,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
- 
- struct cxl_rcrb_info {
- 	resource_size_t base;
-+	u16 rcd_pcie_cap;
- 	u16 aer_cap;
- };
- 
--- 
-2.44.0
+Meh. I don't care that much.  Just made me thing a tiny bit more
+than I like to ;)   Fine with or without the change you suggest.
+
+Jonathan
+
+> 
+> >   
+> > > ---
+> > >  drivers/cxl/acpi.c        | 48 ++++++++++++++++++++++++++++++++++++---
+> > >  drivers/cxl/core/port.c   |  5 +++-
+> > >  drivers/cxl/core/region.c |  5 ++++
+> > >  drivers/cxl/cxl.h         |  6 ++++-
+> > >  4 files changed, 59 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > > index 571069863c62..20488e7b09ac 100644
+> > > --- a/drivers/cxl/acpi.c
+> > > +++ b/drivers/cxl/acpi.c
+> > > @@ -74,6 +74,43 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
+> > >  	return cxlrd->cxlsd.target[n];
+> > >  }
+> > >  
+> > > +static u64 cxl_xor_translate(struct cxl_root_decoder *cxlrd, u64 hpa)
+> > > +{
+> > > +	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
+> > > +	int hbiw = cxlrd->cxlsd.nr_targets;
+> > > +	u64 val;
+> > > +	int pos;
+> > > +
+> > > +	/* No xormaps for host bridge interleave ways of 1 or 3 */
+> > > +	if (hbiw == 1 || hbiw == 3)
+> > > +		return hpa;
+> > > +
+> > > +	/*
+> > > +	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) restore
+> > > +	 * the position bit to its value before the xormap was applied at
+> > > +	 * HPA->DPA translation.
+> > > +	 *
+> > > +	 * pos is the lowest set bit in an XORMAP
+> > > +	 * val is the XORALLBITS(HPA & XORMAP)
+> > > +	 *
+> > > +	 * XORALLBITS: The CXL spec (3.1 Table 9-22) defines XORALLBITS
+> > > +	 * as an operation that outputs a single bit by XORing all the
+> > > +	 * bits in the input (hpa & xormap). Implement XORALLBITS using
+> > > +	 * hweight64(). If the hamming weight is even the XOR of those
+> > > +	 * bits results in 0, if odd the XOR result is 1.
+> > > +	 */
+> > > +
+> > > +	for (int i = 0; i < cximsd->nr_maps; i++) {
+> > > +		if (!cximsd->xormaps[i])
+> > > +			continue;
+> > > +		pos = __ffs(cximsd->xormaps[i]);  
+> > 
+> > At the moment the comment on XORALLBITS isn't associated with this
+> > code very well. I'd factor it out as cxl_xorallbits() mostly so
+> > you can stick the comment next to the bit that does the work.
+> > Or maybe a #define XORALLBITS(hpa, xormap)  is good enough if
+> > you move it up under the comment.
+> >   
+> > > +		val = (hweight64(hpa & cximsd->xormaps[i]) & 1);
+> > > +		hpa = (hpa & ~(1ULL << pos)) | (val << pos);
+> > > +	}
+> > > +
+> > > +	return hpa;
+> > > +}
+> > > +  
+> 
+> You haven't convinced me that readers will not be able to associate
+> the block comment directly above the for-loop with the work inside
+> the for-loop. Especially since this is a 25 line function with a
+> single focus.
+> 
+> I intentionally didn't insert line-by-line commentary in the
+> for loop, but rather told the story in the comment and then
+> just did it. 
+> 
+> Maybe repeating 'val' here, wraps up the comment better:
+> 
+> -        * bits results in 0, if odd the XOR result is 1.
+> +        * bits results in val==0, if odd the XOR results in val==1.
+> 
+> -- Alison
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> > 
+> >   
+> 
 
