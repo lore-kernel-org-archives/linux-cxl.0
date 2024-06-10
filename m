@@ -1,248 +1,178 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94FE147C74
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Jun 2024 17:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718041673; cv=none; b=CoCOpyZ5U1GIiMj8v7EmqyW3U6aaAF+/cvu1Ysu1leQ/K4XCLFQZb/zEKyV1RtSUMLyKl4HC0qqtN3fvbH3kZm+9I+nFyiXwQq3g46OkFq8buUa11tTe+49lI4hmi916TKu0HoM5oviRMG+CCMfDIl/72EG70YeX2RpfUgySFSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718041673; c=relaxed/simple;
-	bh=a5rpvrfkwW9FpwKmeVpauOTdiOGCWHF7Iqt9V9I2FsY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aCN4ZaGJ1+/M7+diAZvU30iPhqOmNEcHPMqAWxo2AW5X2I9Uq/Qq0qxFmJz3V/3VXTpQsHxyg0UXh30CTXr3T/qlNISvw3rpgU6h3sRFZIu4ZbK2os3Hwx0FxDpGNvce2vVQtK1Lb2ael+IZk5h5E6DvDfrsmEOxZtAf2VU4iUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VyfKC0PBNz6K5sk;
-	Tue, 11 Jun 2024 01:42:55 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id EC8F81404F5;
-	Tue, 11 Jun 2024 01:47:46 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 10 Jun
- 2024 18:47:46 +0100
-Date: Mon, 10 Jun 2024 18:47:45 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Igor Mammedov <imammedo@redhat.com>
-CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
-	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <philmd@linaro.org>, "Richard
- Henderson" <richard.henderson@linaro.org>, Dave Jiang <dave.jiang@intel.com>,
-	Huang Ying <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-	Michael Roth <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH qemu ] hw/acpi: Fix big endian host creation of Generic
- Port Affinity Structures
-Message-ID: <20240610184745.00006683@huawei.com>
-In-Reply-To: <20240606184716.00000708@Huawei.com>
-References: <20240605180455.18193-1-Jonathan.Cameron@huawei.com>
-	<20240606160653.27226def@imammedo.users.ipa.redhat.com>
-	<20240606184716.00000708@Huawei.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12A526AF6;
+	Mon, 10 Jun 2024 18:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718044305; cv=fail; b=h4e8ks3S46qu3bzH2MJzyOnx7A0KpPsql6B9OwlQOVebTB+84Nfpt4DBxXDwT7LI/vjV2jcijCu2uOPCRzXCJb+j61KSD+75S98rCoFU3bpzUokZDpTe93IkskyAAhLaX5iTpySfKW+otana+nYku9wwXXuNsIr4LeUdpdGChxU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718044305; c=relaxed/simple;
+	bh=Y0sY16EvmJstbZ5GGyptTSDbGkwCL9zI5CZPUTI595w=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:In-Reply-To:
+	 Content-Type:MIME-Version; b=r8M29GaXuYBNEhQO+/CdEKVnJ+1raestjPWzzADFLQLdoNC491S2BoL+aK3Ts1ikwv1QTRve2Lui/1D0yTX/wV8c/Gh8MJTtR1cvHLlOSZtSDoKImYkBcHggw0QSsEk+tTKyWXm4fFHYIjlYoU1MVr/Afi3p0lOOsTlgST2l50E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5sl1H/xU; arc=fail smtp.client-ip=40.107.243.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5sl1H/xU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nLi5UJ75WkUv4VqJRAf+R37gDzxVCmlXIAFWpPg9KY5KvkY8UEY795WUbDdSx4e/qdivjNoSdXBvfP8/3WjzDErGyArsNDqC1IbSzvKbzV7ha9adP613a/eVV9Wc0oni+fqyiOnViGLscHYYpTpfZ9tJBofABbm5BhbFoHNDK5i9jSqOgd/FaRDGLhvg3MtQh9A3BQmhmkHIYkK3clAc6Ikwf3O85qi/CuidQE8Ml7N01eVVdFOC/pzeHjKOwFzAlmBtFVoE/9/ybLYf+hUFW+nfEUEsKuRtJzQhvqZsN3oLiq9Ov+3AKZg9MB7EFkLxcgRLl63hXt8QZQP94pEMSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yOOPrGle2e+ieDk9ZQ84UpMQIv5lshTY0XQmAYxt+9o=;
+ b=XtWkX8Sk0pbFDUPOcklPldzxaVzSrAuPbyi57a3/cEim81ASdvTArGIDaLs8zt+bmRgwbNEdCwP85YLiyPTjcQQRbljplVrgN/iQ46vDQ6PpDq4I1kMgV5mdCpf4Z7p8Wo0D035VDjNNBHYdf3R2MJQPm1RI8OyDx95TqGhcaIudtVuboUn/EFIb5b13df1YTwVQ4OMfQ/m513foY+1aorch8PUH6sUHnDU2lV16FPYKFAw0Dxr/OP34dCZOnbSaVO05fijWCYgWcVDx7No+0Y1TieVj5lrjTuC2iWg+gNY2AP5z85EA2jwzhxcTBq93I/eU90Es1b/YGtdZCXfuCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yOOPrGle2e+ieDk9ZQ84UpMQIv5lshTY0XQmAYxt+9o=;
+ b=5sl1H/xU/rSYBnqtFS83p1PcrNEIWb3rTA5uH/oQLXmn6AQB4H5cX82EDpXzPMt0D+uxt38J8l13o7iMZ2CwTGH0DdIh5dOm0enJSJ0FhnLX/xlB+2FKX3ZAkT0tDxtuq0tpuUV78b0vj/4xTj/ENcZD1t1JmzeLCXyoHfpmgVU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by LV2PR12MB5797.namprd12.prod.outlook.com (2603:10b6:408:17b::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Mon, 10 Jun
+ 2024 18:31:41 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::56a2:cd83:43e4:fad0]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::56a2:cd83:43e4:fad0%5]) with mapi id 15.20.7633.036; Mon, 10 Jun 2024
+ 18:31:41 +0000
+Subject: Re: [PATCH 1/4] efi/cper, cxl: Make definitions and structures global
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20240522150839.27578-2-Smita.KoralahalliChannabasappa@amd.com>
+ <20240607161439.0000030c@Huawei.com>
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Message-ID: <6ca8d9e8-cbb3-7721-9295-970ffa1a89d5@amd.com>
+Date: Mon, 10 Jun 2024 11:31:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+In-Reply-To: <20240607161439.0000030c@Huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0277.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::12) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|LV2PR12MB5797:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70602582-386c-4622-3f0d-08dc897b9249
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VnZnOE1Ccm15U0k2T2pvZkNXYjhiZmJDUFlGU1ZTMWg0L0hBZmhGbUhHK0lo?=
+ =?utf-8?B?OXp2Y0E3WjBJUDZNaXlWZjdMVGJmVkZKeCtIMlZDaDRoenl3eWxOM0pDRld6?=
+ =?utf-8?B?Rm1sQ0c4WHB5M2N2dzhXSUxNOEl3Wnh5ZjRXdFhPaU1uT1J5dEdBT0R3ZlE1?=
+ =?utf-8?B?akx5N0kxYkRIc2RWMm5leGM3Ky9seUltNWUwT0U5UEwxbU9VOGg5aXA2SktF?=
+ =?utf-8?B?a1BPcEtIRk5uUHR6KzVmeVlWYjhRdTUrR3V5U2MrakM0akEzZVhKZUppQUtN?=
+ =?utf-8?B?eXkrSVJnZEt1QUtzK2dVY2o1Y3hvRzBaNW84cG5PU1pyc01QN3BqZmVpZjF1?=
+ =?utf-8?B?VFFDVzNjMnQwS1BuWE9vRU1TZG1KeFJISGV4TFJhck5XTDdFS3JZQStmc2kv?=
+ =?utf-8?B?RUp6SVJCZTN4SzZQQlhVcHQ1NklnNUxHRHIvM0haOXZmdDEzYVJnRFoxdXM3?=
+ =?utf-8?B?YnRTWjk5SDVNbG8yQ1pnOGNhVy91aFFOYmQwWTJpYmRIQmQvSXhINzloRktE?=
+ =?utf-8?B?V2dEM3R6cWNjTEM3M1F5eXEwcnhyQytLd0FIR3JVb2h3dmtYU2JJYU8vbWt1?=
+ =?utf-8?B?clpmcDBSejd6MGc2dkhSMHdqenhKeTdxVGFTV0JvTXl0eWVESllZcjFPTWZ3?=
+ =?utf-8?B?cktia1kwOXQ2dXVGUTFkK2pkUkY1cTFvWnFaMzBBOElWWEdxbVJsM0M3SkV4?=
+ =?utf-8?B?c091Y29rWUJIb0tMNEtvRVEyYytMSmpkSFpHeFFzNHRpSWtnQi9xMkZiSXda?=
+ =?utf-8?B?b09DdEFjS0R0SzJTRWdYRmVRdWNrREY4M3ZzSXNlZG1sZFJNRzl1SHZtMGJt?=
+ =?utf-8?B?M2kwaXlYTy9Idm9VUkVGbVM4TXJLdWpEeU1ZL0t0enk5Y04wV0w1ajRSdnBJ?=
+ =?utf-8?B?Q3hHZzE3a1l5cU9EQVg2djBPNlg4MVVCYUtrRHVBS0ZqQTJUNFdLRDFpVjhD?=
+ =?utf-8?B?bm1DMlFtZ0wyWGROSXkxMjZOdXk4Q0xRZ1FxUGd2NzlrUDc5RTNXdjIxOXlK?=
+ =?utf-8?B?OFNlVnd2RXk5WXhlK2pPUlRZQkJic3BQckRCbUZwdTJBOUFrUk1ON2hacUlT?=
+ =?utf-8?B?aVdDeWZoVlhMM3FzZnMvZVQ4Q08rZVRYeVhjajd2dXpBclBsY3AxY3paQ3U2?=
+ =?utf-8?B?dmtzN1gxRE1zWUQweFRaY05rMFBkdERGalN5cU9oSzFsMTVkcUdtZ205c0tN?=
+ =?utf-8?B?TFJyampMZ0hQL2dGcGhFdURQb3hXS3A2T2tQZzBwZkNXcnpEWks4YUUzaFpJ?=
+ =?utf-8?B?TzFKMm9ZSjQ1WC84akFDWDdkWTZGV2xTbGtXbGR5VzErci9CRkI5VHF0M2Fy?=
+ =?utf-8?B?OWVqSXZ3dlkwZGN1V0RsWEc2WmpIQlZIbStIbzFJcFNBZjJtNG00L3FZT1I2?=
+ =?utf-8?B?c0VMekhDUldqTkhTekxUQXU1VmlIQWZvZ2tqbDNFWDBPenlzU1RMK1NEWXFh?=
+ =?utf-8?B?Wlg3SUdmL0d2UTJXSTV1UjZ5Q0M5RmZnR3pHdjJiUE50dDVhUWk4bGUxYUdN?=
+ =?utf-8?B?UXA2YlR2Y0xJMll5RmhHREpWQ2UrUk1Id2ZuYWxDdXZKNlhFcFRKYWdFNXJy?=
+ =?utf-8?B?RWY1ZVZ1cTNmaUw3UkpEOWUxTU5KU2VUTGhoc1dMQXZIa29ZTXhlUHVFWjBR?=
+ =?utf-8?B?dm9JNC8weEZ2K1I4bWZaVlB0TEdwc2dwRVVpNnBjdlVCcEkzVlNaeUJaODR1?=
+ =?utf-8?B?V2tvcXQweXM4VGZadnZqNjMvSm9zL3N3N3hnT1Vrc2FVeHRYZStNa24zNUZZ?=
+ =?utf-8?Q?83bfrL0WN4DWpVPYnkrRIzS9QNPSDU/MDVIHE/2?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUhzdHFqYUpITDRVQWhKcThSOGZZYzhFdEwyRlB3RnB5QmtyWWg0N0NXMWdS?=
+ =?utf-8?B?VEpodmg1SDdmalA3YWYvSVpwT3dyd3I0Q0p3ZlM2enNVVkFZTVQ0VWlaM0gy?=
+ =?utf-8?B?bzZOVDgrS0NaRjhrM2ZXWFVQeVA2NkJnUi82akhpK1k3Yi9FVUFMZHVuK0pM?=
+ =?utf-8?B?K1NxNmpjVSs2V01LeEF4ZUpBSnF5M3JoNFgvVXpqZ3BQM1RYTThDWS9BYkh6?=
+ =?utf-8?B?M28zWTBhY0RMV0tsVTgvQzVSRlVKU2QyT281cDNiVWdyWEVDSTJrdHlrYVI3?=
+ =?utf-8?B?TGd4MXhDSGxEMHhHRW1rVnRSbUtUR3pXVjlCSmZzeFFTOUVudVp0TlJjVEpT?=
+ =?utf-8?B?ODUxK2NqYzFrTWZxdkM0c1NZWFJnUmNMNTNWejYwMGQzaUdwV3hIZU53S0ts?=
+ =?utf-8?B?dGtpN3ROeUhUeW1EQnN6dVBTUGxmY21nclRWSHh1Ukt1NUNPcW5NNWV5dDlm?=
+ =?utf-8?B?ME5EQUJadUlQSzNUb2hqbGFta2lQTEVJbEdDRFJ0dGFRQXF5a0dya0NsQmht?=
+ =?utf-8?B?Mk56M1NxRmNsOWM2RjREeHB2YVRMbFNWNnF5ck1DWkptaVhSMS9Yd1ZKYld4?=
+ =?utf-8?B?U2dmVlFKZ3ZSZ2NucEZPSExOM3NkbUpOTnI0Njg1WmZLT2w3NEdwWG9NWERE?=
+ =?utf-8?B?dFpIK2RETEhrNFEweXB6RVp0Y1lBSEdGazNRSWNaK3NqQlZVWklLRU1icjhh?=
+ =?utf-8?B?S3lDTC9XNE11NWRwV1A1U0NlT0NUSDAyeWEyQWxPdjJCYkhVcldIV2RtY2hv?=
+ =?utf-8?B?N0x4TjhRL1VpTUs4TmV1RmYxZWxUVVMwSlFNeloxSUJVWTkreTlNRkNNeW04?=
+ =?utf-8?B?SDh1aTh3QnlYaTR2V2R2MmJWRVZhalFGWjRPb3AvRS93N0MrSithSnMrQm1M?=
+ =?utf-8?B?TklGbkorNkt0ZDdpMThjRWdBckZUVXlxQlZpSWxoY25zUm5ndjRBTjU2anl6?=
+ =?utf-8?B?MXF3aElQZmx6RkwrK1RqOSt6SmZyc3pLV3oxY1hLcjFvT2pLU3l1ZlJ2alNK?=
+ =?utf-8?B?Zzhnck1LVEphbVkwY29lN1pxdSs2bEZ5bmZRVVNOMGRzem1aMjB2ejBuYVk4?=
+ =?utf-8?B?ejdTTlJNajZ4OFQweWYyMHp1M24vWGJmck5qNXBCeEQ4QjN3ajI2a3Bqd2ht?=
+ =?utf-8?B?Z1pDMXFTdlJTYkE0cEVDbE5RL0ZlS2VLOEVLaS9EUXdTTHpWUS9qSEFnTGJ3?=
+ =?utf-8?B?Zi9rTk00K1FhSE40UTV2WnBpOEw5WTRObk1zTHR0bFNpZ1JPRTI1NUpNaHcw?=
+ =?utf-8?B?ZTY2dmd5WkhrZ2N4RitWNzlZOThJUmtTejd2b2tHa1NxdkFUSkNMK0tvS0NX?=
+ =?utf-8?B?OWpqcDEyUEsyVEo2V2E0RXhsVEUvRE01emlWSFRNYjBseWx3OSt4OTA3VGo3?=
+ =?utf-8?B?ZFNndVQ0US9XRmE2MnlCMGEyQUNlWk1HVVBmVmFTQ0QycjE0RCtuM3VyYkNP?=
+ =?utf-8?B?dlg0WGg4Ykh5LytERlh6UERqUFV4OC9ucUxaZ0RpWnFiazk3V1VQUDZHN1Fn?=
+ =?utf-8?B?ZDNuZStHKzB1RFg5THdlaEkwWTAvVjBSNy9FRnRyUzliNTFHdjJFc0lVZG50?=
+ =?utf-8?B?VU14c1RENndtV0p4eXhpQTBtVzgxY2pwM0wzeUpSVlIydWo5N1RYNDhaeUND?=
+ =?utf-8?B?UE5SdS9Wd0ZSU1lpbFoyT2NqSmF1cVl5LzMwYzZIUlN5Zk9oMUdtSVlnbXNQ?=
+ =?utf-8?B?SDB4eUUyMmdneGQ2WUZEcG0wNFN2OWhYK0NpQXdhZUNtbyt6M3JFOTFraFd1?=
+ =?utf-8?B?alR1b1dxR2owbklpWFAzSDJDeFJhMWgvSGNDdTZkZjVxYnlQcldXT2ZsUTBS?=
+ =?utf-8?B?eFk2cGg0cTBudU8vdFFmWVZ6Z1VuMldCUlRIazN4T0hCTXVnRStPVDBDYnMy?=
+ =?utf-8?B?TjhHWDJyOERBVXMxNjZzbzZoSEx6UG5HbGZSY2hLcWprZmYxMDUvS2lDKzhC?=
+ =?utf-8?B?WGRDRlQ3YkJ3SWFyek5KYkV6NmlBZitObkZjeVNzbG0zUlpINk1xNEhGUmpV?=
+ =?utf-8?B?d2RDaDE4R2luVHQya0JpcUkxdHdsOHF6cGdoQ1ZkTGRKejRobVhxWDRZdi96?=
+ =?utf-8?B?OVB0ckQxR1oraVI2VTkvVUo2b3hoNkRTODhPM0VMTStjSE4zc3BkM3NWRXR5?=
+ =?utf-8?Q?sN9K9HzAxiASX7bJiNys0oV8P?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70602582-386c-4622-3f0d-08dc897b9249
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2024 18:31:40.9850
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iZ0SRMOhz/HL/cJfT0MZQUMEW0PAz/p/sJsqWi2yOvkN9roahneFpFmyLq0BiciM+ELn9wHx1vR1ECk9IBbADA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5797
 
-
-Hi Igor,
-
-Some code snippets below to try and see if I'm on the correct track
-for what you had in mind.
-
-> >   
-> > > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-> > > index 78b80dcf08..f064753b67 100644
-> > > --- a/hw/acpi/acpi_generic_initiator.c
-> > > +++ b/hw/acpi/acpi_generic_initiator.c
-> > > @@ -151,7 +151,9 @@ build_srat_generic_node_affinity(GArray *table_data, int node,
-> > >          build_append_int_noprefix(table_data, 0, 12);
-> > >      } else {
-> > >          /* Device Handle - ACPI */
-> > > -        build_append_int_noprefix(table_data, handle->hid, 8);
-> > > +        for (int i = 0; i < sizeof(handle->hid); i++) {
-> > > +            build_append_int_noprefix(table_data, handle->hid[i], 1);
-> > > +        }
-> > >          build_append_int_noprefix(table_data, handle->uid, 4);
-> > >          build_append_int_noprefix(table_data, 0, 4);    
-> > 
-> > instead of open codding structure
-> > 
-> > it might be better to introduce helper in aml_build.c
-> > something like 
-> >   /* proper reference to spec as we do for other ACPI primitives */
-> >   build_append_srat_acpi_device_handle(GArray *table_data, char* hid, unit32_t uid)
-> >       assert(strlen(hid) ...
-> >       for() {
-> >             build_append_byte()
-> >       }          
-> >       ...
-> > 
-> > the same applies to "Device Handle - PCI" structure  
+On 6/7/2024 8:14 AM, Jonathan Cameron wrote:
+> On Wed, 22 May 2024 15:08:36 +0000
+> Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 > 
-> I'll look at moving that stuff and the affinity structure creation
-> code themselves in there. I think they ended up in this file because
-> of the other infrastructure needed to create these nodes and it
-> will have felt natural to keep this together.
-> 
-> Putting it in aml_build.c will put it with similar code though
-> which makes sense to me.
-
-This all works out fine, though there is less reason to keep a
-ACPI_GENERIC_NODE base under GENERIC_PORT and GENERIC_INITIATOR
-so I may drop that and just have a small amount of code duplication.
-
-> 
-> > 
-> > Also get rid of PCI deps in acpi_generic_initiator.c 
-> > move build_all_acpi_generic_initiators/build_srat_generic_pci_initiator into
-> > hw/acpi/pci.c  
-> 
-> Today it's used only for PCI devices, but that's partly an artifact
-> of how we get to the root complex via the bus below it.
-> 
-> Spec wise, it's just as applicable to platform devices etc, but maybe
-> we can move it to pci.c for now and move it out again if it gains other
-> users. Or leave it in acpi_generic_initiator.c but have all the aml
-> stuff in aml_build.c as you suggest. 
-> 
-> > file if it has to access PCI code/structures directly
-> > (which I'm not convinced it should, can we get/expose what it needs as QOM properties?)  
-> 
-> Maybe. I'll see what I can come up with.  This feels involved
-> however so I'm more doubtful about this as a precursor.
-
-This is a little messy and tricky to get the right level of generic.
-For the bdf, were you thinking something along the lines of the following?
-
-diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-index 324c1302d2..75366491b7 100644
---- a/hw/pci/pci.c
-+++ b/hw/pci/pci.c
-@@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
- static void pcibus_reset_hold(Object *obj, ResetType type);
- static bool pcie_has_upstream_port(PCIDevice *dev);
-
-+static void prop_pci_bdf_get(Object *obj, Visitor *v, const char *name,
-+                             void *opaque, Error **errp)
-+{
-+    uint16_t bdf = pci_get_bdf(PCI_DEVICE(obj));
-+
-+    visit_type_uint16(v, name, &bdf, errp);
-+}
-+
-+static const PropertyInfo prop_pci_bdf = {
-+    .name = "bdf",
-+    .get = prop_pci_bdf_get,
-+};
-+
- static Property pci_props[] = {
-     DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
-     DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
-@@ -85,6 +98,7 @@ static Property pci_props[] = {
-                     QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
-     DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
-                     QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
-+    { .name = "bdf", .info = &prop_pci_bdf },
-     DEFINE_PROP_END_OF_LIST()
- };
-
-
-The other case is where I need to get the ACPI UID associate with a
-root complex. Now that has to be matched to the appropriate HID and so
-far the only one of those is ACPI0016 which is the HID for
-TYPE_PXB_CXL_DEV. That happens to the bus number of the
-TYPE_PXB_CXL_BUS but that connection should probably not be explicit
-outside of the PXB specific code.
-
-I can add a property like: 
-
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index f5431443b9..1c51f3f5b6 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -92,6 +92,21 @@ static void pxb_bus_class_init(ObjectClass *class, void *data)
-     pbc->numa_node = pxb_bus_numa_node;
- }
-
-+static void prop_pxb_cxl_uid_get(Object *obj, Visitor *v, const char *name,
-+                             void *opaque, Error **errp)
-+{
-+    uint32_t uid = pci_bus_num(PCI_BUS(obj));
-+
-+    visit_type_uint32(v, name, &uid, errp);
-+}
-+
-+static void pxb_cxl_bus_class_init(ObjectClass *class, void *data)
-+{
-+    pxb_bus_class_init(class, data);
-+    object_class_property_add(class, "acpi_uid", "uint32",
-+                              prop_pxb_cxl_uid_get, NULL, NULL, NULL);
-+}
-+
- static const TypeInfo pxb_bus_info = {
-     .name          = TYPE_PXB_BUS,
-     .parent        = TYPE_PCI_BUS,
-@@ -110,7 +125,7 @@ static const TypeInfo pxb_cxl_bus_info = {
-     .name          = TYPE_PXB_CXL_BUS,
-     .parent        = TYPE_CXL_BUS,
-     .instance_size = sizeof(PXBBus),
--    .class_init    = pxb_bus_class_init,
-+    .class_init    = pxb_cxl_bus_class_init,
- };
-
- static const char *pxb_host_root_bus_path(PCIHostState *host_bridge,
-
-and query it when setting up the generic port with
-
-        const char *hid = "ACPI0016";
-        uint32_t uid;
-
-        if (gn->node >= ms->numa_state->num_nodes) {
-            error_printf("%s: node %d is invalid.\n",
-                         TYPE_ACPI_GENERIC_PORT, gn->node);
-            exit(1);
-        }
-
-        o = object_resolve_path_type(gn->pci_dev, TYPE_PXB_CXL_BUS, NULL);
-        if (!o) {
-            error_printf("%s: device must be a CXL host bridge.\n",
-                         TYPE_ACPI_GENERIC_PORT);
-            exit(1);
-        }
-
-        uid = object_property_get_uint(o, "acpi_uid", &error_fatal);
-        build_srat_acpi_generic_port(table_data, gn->node, hid, uid);
-
-        return 0;
-
-Thanks,
-
-Jonathan
-
-> 
-> > 
-> > btw:
-> > build_all_acpi_generic_initiators() name doesn't match what it's doing.
-> > it composes only one initiator entry.  
-> 
-> I'll look at tidying up all the relevant naming.
-> 
-> Jonathan
-> 
-> >   
-> > >      }    
-> > 
-> >   
-> 
-> 
+>> In preparation to add tracepoint support, move protocol error UUID
+>> definition to a common location and make CXL RAS capability struct
+>> global for use across different modules.
+>>
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> FWIW given already well reviewed.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
 
+Sorry I missed your reviewed by tag. Thanks for reviewing my patches!
+
+Thanks
+Smita
