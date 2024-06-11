@@ -1,188 +1,179 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D876E40856
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 15:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE01381D1
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 15:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718120164; cv=none; b=ek5rS970yX25Zh7Z2FEpQbJ60hdA1UclKDaDkGMYyBTVosVkForJmFcQ3sSFgr/OlTFTR/40rtHSDZFdFbl6H6TRt23aErZKnxvZiCCLpe4JK7actPbmjN/M1lPtIjTj/yLu0aWjWaYM/qjC2RFV0erB4DjbcVdvjfqkZDCjs2g=
+	t=1718120184; cv=none; b=PQxcxqSibgOMvn64oVLkgY2lUIy0/h+EnZJ+eJpfbT8lijkBkEr2vjk/5378LXZtjnbZvJAfSUgRtgKrKD7fwvhsc1RgKaLuwlIt0xcx5FB8y3IIcPol1lPSGPQESE86W80l5l7vDz8m9yNXo5JUh6/BZjiMLfGBKSVypsWmTZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718120164; c=relaxed/simple;
-	bh=pTkJKPTrJxljd9mplZUMx6fDKzR+x1mjVaPqFUwT7U4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XLSUcp3PlaTSjF435GNO7+b2B40cztll9v8EuqnPQm8/Qr1aZASP+xu7EbZ7YL8/9fsBXdKa9AqZYLC3NmQtiu/AUVsTJmRR8SPi064N6uYVyu4cavnCZualb27tHYywdUiVtwKvCV/mx6BycFRAyDFwkLQDg1xzWk8yyeoClak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VzCLr5MxQz6HJZW;
-	Tue, 11 Jun 2024 23:31:16 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6AEB81400CD;
-	Tue, 11 Jun 2024 23:35:52 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Jun
- 2024 16:35:52 +0100
-Date: Tue, 11 Jun 2024 16:35:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-CC: <kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>,
-	<y-goto@fujitsu.com>, <mj@ucw.cz>, <dan.j.williams@intel.com>
-Subject: Re: [PATCH v10 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
- at __rcrb_to_component()
-Message-ID: <20240611163550.00003d6f@Huawei.com>
-In-Reply-To: <20240611055254.61203-2-kobayashi.da-06@fujitsu.com>
-References: <20240611055254.61203-1-kobayashi.da-06@fujitsu.com>
-	<20240611055254.61203-2-kobayashi.da-06@fujitsu.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718120184; c=relaxed/simple;
+	bh=sEvDMhi2LuNyC8HUxfzbzLy5zJ19f9pPX5EayeZseQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TouTivutC0v6d6/rX9++e2gB60KEX/KXrCedsmBmA5HXmMP1MPRqZISgPjt0uwNZAK9zXMwUG4REVPFsHzu4Qn7WT4WOevq9xFIH6WFs5jlhS+j0ZfgXaz5hzOhh2sCGtmf/dudmx5w3WtXkz+6AuHORW9ndFLb83fLE8bZL8uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=VpU2PriE; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VpU2PriE"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c8260a9a9so466746e87.0
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 08:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1718120181; x=1718724981; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zYiOKqOztGolPpdiFV4XN2+aPrwTQCSjwVf5L3ie3JA=;
+        b=VpU2PriEzpgMIFyyyzm+bvOy4kdakkYgKJgVXhD2Scn3XjwpDUJIU+3MT5meZ8HDlB
+         ZUzyin6R1YyFa7o4/K4XlHRgRbzy/9NSTv6mCMJQGebgsQLmKQQuaDinTgRfWNl7sZrK
+         c03Sk97VJc1sHHRd0hOS+yHlA+1UGjhjilErE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718120181; x=1718724981;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zYiOKqOztGolPpdiFV4XN2+aPrwTQCSjwVf5L3ie3JA=;
+        b=tet54prZIXwlHVdMD9dp/NMRXFuKYW04S+qjGP3tj5Mbu02J47Mplg08FpYDq2himn
+         7SYLaH3hWaOdrEOJr1urs6i2Cn3+U4vudqTaQlIscKYWaveZohRzKphq3sdD10noWDDh
+         YXPfph+RNLdRc4YO6HqjUqBxqaLBouJChNPJJxTu7akDjA38rOTnawqpky8303tqX6In
+         Ld78YRnZAA8YaUwIp6BcGf7QR0EyYPoDWb30fPDdgWJRB6ItQnPBD0PH2LbC1fQS7k5z
+         01+O/IS8wACGP+JJijUeIX7TKoxvFNe1c9GYpJwdxrX9h/YaDrVgK/bbErLj4fPuf2S3
+         yq2g==
+X-Forwarded-Encrypted: i=1; AJvYcCV5zbNI7rbCqwpLjDBEbsWRCIpfwsXr4jtzRLgD5UQekYg8w7CbovrIL2K5xr6f39rspki9Ar4Cgui17oSrnfECG4s5JmupEYHb
+X-Gm-Message-State: AOJu0YzDumOqCfb1vZCrCskFDTH/T9C44XpTaT90+Qi77Fl3WUlGotWy
+	ZjBNjIIRp9rgu7n88W1q12glK2xh20aWyLjxSwgHdzlbXmdjNfqj6QotaxcnsMc=
+X-Google-Smtp-Source: AGHT+IEqvd8t7yV4Y08H9toKdWjldXNuJHx8xMhVZIiBly5rz0ehyy1t+vkdmGULc+LniJtZqK7xKQ==
+X-Received: by 2002:a19:9107:0:b0:52b:c06d:70cf with SMTP id 2adb3069b0e04-52bc06d7164mr5715253e87.4.1718120180437;
+        Tue, 11 Jun 2024 08:36:20 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42274379b83sm10409345e9.28.2024.06.11.08.36.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 08:36:19 -0700 (PDT)
+Date: Tue, 11 Jun 2024 17:36:17 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+	Leonid Bloch <lbloch@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 0/8] Introduce fwctl subystem
+Message-ID: <Zmhu8egti-URPFoB@phenom.ffwll.local>
+References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <20240603114250.5325279c@kernel.org>
+ <214d7d82-0916-4c29-9012-04590e77df73@kernel.org>
+ <20240604070451.79cfb280@kernel.org>
+ <665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240605135911.GT19897@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605135911.GT19897@nvidia.com>
+X-Operating-System: Linux phenom 6.8.9-amd64 
 
-On Tue, 11 Jun 2024 14:52:53 +0900
-"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
-
-> Add rcd_pcie_cap and its initialization at __rcrb_to_component() to cache
-> the offset of cxl1.1 device link status information. By caching it, avoid 
-> the walking memory map area to find the offset when output the register 
-> value.
+On Wed, Jun 05, 2024 at 10:59:11AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jun 04, 2024 at 04:56:57PM -0700, Dan Williams wrote:
+> > * Introspection / validation: Subsystem community needs to be able to
+> >   audit behavior after the fact.
+> > 
+> >   To me this means even if the kernel is letting a command through based
+> >   on the stated Command Effect of "Configuration Change after Cold Reset"
+> >   upstream community has a need to be able to read the vendor
+> >   specification for that command. I.e. commands might be vendor-specific,
+> >   but never vendor-private. I see this as similar to the requirement for
+> >   open source userspace for sophisticated accelerators.
 > 
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-
-Hi. The basic functionality now looks good, but I'm not convinced by
-the 'where' of the calls.  Even though it will require an additional
-ioremap/iounmap() pair I don't think you should bury this in code
-doing something largely unrelated.
-
-> ---
->  drivers/cxl/core/core.h |  5 +++++
->  drivers/cxl/core/regs.c | 27 ++++++++++++++++++++++++++-
->  drivers/cxl/cxl.h       |  9 +++++++++
->  3 files changed, 40 insertions(+), 1 deletion(-)
+> I'm less hard on this. As long as reasonable open userspace exists I
+> think it is fine to let other stuff through too. I can appreciate the
+> DRM stance on this, but IMHO, there is meaningfully more value for open
+> source in trying get an open Vulkan implementation vs blocking users
+> from reading their vendor'd diagnostic SI values.
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 3b64fb1b9ed0..66778c3ce3b7 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -75,6 +75,11 @@ resource_size_t __rcrb_to_component(struct device *dev,
->  				    enum cxl_rcrb which);
->  u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
->  
-> +#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-> +#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-> +#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-> +#define RCRB_PCIECAP_LEN			0x3c
-> +
->  extern struct rw_semaphore cxl_dpa_rwsem;
->  extern struct rw_semaphore cxl_region_rwsem;
->  
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 372786f80955..5ce831ca05ca 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	u32 bar0, bar1;
->  	u16 cmd;
->  	u32 id;
-> +	u32 cap_hdr;
-> +	u16 offset;
->  
->  	if (which == CXL_RCRB_UPSTREAM)
->  		rcrb += SZ_4K;
-> @@ -537,6 +539,19 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	cmd = readw(addr + PCI_COMMAND);
->  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
->  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> +	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
+> I don't think we should get into some kind of extremism and insist
+> that every single bit must be documented/standardized or Linux won't
+> support it.
 
-Similarly to below, this is putting unrelated functionality in __rcrb_to_component()
-I think you need to be more smilar to cxl_rcrb_to_aer() which does it's
-own iomap of the rcrb. That allows it to keep to doing just one thing.
+I figured it might be useful to paint what we do in DRM with a bit more
+nuance. In the principles, we're indeed fairly radical in what we require,
+but in practice we aim for a much more pragmatic approach in what we
+merge. There's two major axis here:
 
-So I would have a cxl_rcrb_to_lnkcap() and call that from 
-cxl_pci_setup_regs()
+1. One is ecosystem maturity. One end is 3d, with vulkan as the clear
+industry standard, and an upstream full-featured userspace driver in
+mesa3d is the only technically reasonable choice. And all gpu vendors
+agree and by this year even nvidia started hiring an upstream team. But
+this didn't happen magically overnight, it took 1-2 decades of background
+discussions and tactical push&pulling to get there.
 
+The other end is currently AI accelerators. It's a complete mess, where
+across the platform (client, edge, cloud), customer and vendor dimension
+every point has a different stack. And the problem is so obvious that
+everyone is working to fix this, which means currently
+https://xkcd.com/927/ is happening in parallel. Just to get things going
+we're accepting pretty much anything that's a notch above total garbage
+for userspace and for merging into the kernel.
 
-> +	cap_hdr = readl(addr + offset);
-> +	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-> +		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-> +		if (offset == 0 || offset > SZ_4K) {
-> +			offset = 0;
-> +			break;
-> +		}
-> +		cap_hdr = readl(addr + offset);
-> +	}
-> +	if (offset)
-> +		ri->rcd_pcie_cap = offset;
-> +
->  	iounmap(addr);
->  	release_mem_region(rcrb, SZ_4K);
->  
-> @@ -572,8 +587,18 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport)
+2. The other part is how much it impacts applications. If you can't run
+the same application across different vendors, the case for an upstream
+stack becomes a lot weaker. At the other end is infrastructure enabling
+like device configuration, error handling and recovery, hw debugging and
+reliablity/health reporting. That's a lot more vendor specific in nature
+and needs to be customized anyway per deployement. And only much higher in
+the stack, maybe in k8s, can a technically reasonable unification even
+happen.  So again we're much more lenient about infrastructure enabling
+and uapi than stuff applications will use directly.
 
-This has gone from being a 'find me one of these' function to one
-that does rather more inside.  Doesn't feel like the right place
-to locate this capability.
+Currently that's enough of a mess in drm that I feel like enforcing
+something like fwctl is still too much. But maybe once fwctl is
+established with other subsystems/devices we can start the conversations
+with vendors to get this going a few years down the road.
 
-I would wrap the mapping code up in a function similar to the aer_cap
-code in cxl_dport_map_rch_aer() called something like
-cxl_dport_map_rcd_lnkcap(), and call that directly from cxl_pci_setup_regs()
-under the same check as is use for calling cxl_rcrb_get_comp_regs()
+Both together mean we land a lot of code that's questionable at best,
+clear garbage at worst. But since we've been in the merging garbage
+business just to get things going for decades, we've become pretty good at
+dealing with the kernel internal and uapi fallout, some say too good. But
+personally I don't think there's a path to where we are with 3d/vulkan
+that doesn't go through years of this kind of suck, and very much merged
+into upstream kind of suck.
 
+For all the concerns about trusting vendors/devices to not abuse very broad
+uapi interfaces: Modern accelerator command submission boils down to "run
+this context at this $addr", and the kernel never ever directly sees
+anything more fly by. That's the same interface you need for a no-op job
+as a full blown AI workload, so in theory maximal abuse potential.
 
->  {
-> +	resource_size_t rcd_pcie_offset, ret;
-> +
->  	if (!dport->rch)
->  		return CXL_RESOURCE_NONE;
-> -	return __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
-> +
-> +	ret = __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
-> +	if (dport->rcrb.rcd_pcie_cap) {
-> +		rcd_pcie_offset = dport->rcrb.base + dport->rcrb.rcd_pcie_cap;
-> +		dport->regs.rcd_pcie_cap = devm_cxl_iomap_block(dev, rcd_pcie_offset,
-> +								sizeof(u8) * RCRB_PCIECAP_LEN);
-> +	}
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, CXL);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 003feebab79b..fc9e0dbd5932 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -230,6 +230,14 @@ struct cxl_regs {
->  	struct_group_tagged(cxl_rch_regs, rch_regs,
->  		void __iomem *dport_aer;
->  	);
-> +
-> +	/*
-> +	 * RCD upstream port specific PCIe cap register
-> +	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
-> +	 */
-> +	struct_group_tagged(cxl_rcd_regs, rcd_regs,
-> +		void __iomem *rcd_pcie_cap;
-> +	);
->  };
->  
->  struct cxl_reg_map {
-> @@ -646,6 +654,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
->  
->  struct cxl_rcrb_info {
->  	resource_size_t base;
-> +	u16 rcd_pcie_cap;
->  	u16 aer_cap;
->  };
->  
+In practice, it doesn't seem to be an issue, at least not beyond the
+intentionally pragmatic choices where we merge kernel code with known
+sub-par/incomplete userspace. I'm not sure why, but to my knowledge all
+attempts to break the spirit of our userspace rules while following the
+letter die in vendor-internal discussions, at least for all the
+established upstream driver teams.
 
+And for new ones it takes years of private chats to get them going and
+fully established in upstream anyway.
+
+Maybe one reason we have a bit an extremist reputation is that all the
+public takes are the radical principled requirements, while the actual
+pragmatic discussions mostly happen in private.
+
+tldr; fwctl as I understand it feels like a bridge to far for drm today,
+but I'd very much like someone else to make this happen so we could
+eventually push towards adoption too.
+
+Cheers, Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
