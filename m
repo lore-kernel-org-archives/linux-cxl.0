@@ -1,152 +1,119 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C846F2F0
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 16:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7467E46444
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 17:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124855; cv=none; b=GwghRxz/2f5i8l8QXg/7l2BAddhiNyCiwXMHB3495gnltUlMxnkhYQKzCeGEo4liH2PQOiqR/EK+HyNaaRed0OBlVkCpT+NOF7FAB5Xkac5x2GpqmALw6KLSJOYu9Vg4XEXNcs6nNzzYIw5uqjP8anKEfLCWLuSSg0aSV4H27HA=
+	t=1718126063; cv=none; b=px+L5dfcNuJOwq2MUk/HLDnHWneImzKoDvXCEDug62PmzBCUDN3WEUiEHxTrMUh8DDrdJRsZ0mPaRIa1g5fOMKvZMDvBbcedI9akkpu2I80JOFsouwWsTtdt1zKoqRc3RSyYI21D21eQiUkAMtnL0k9pUXJcnixJJYcZz3Jnywk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718124855; c=relaxed/simple;
-	bh=OrAb1OwSBRL1RD+bjKynk7YcqN0JqRD4WxAvQ9xdhGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKNTP2b3cS8wLg5OXTewLutfTes8/0LjLP/2vqBmH+W4s3J0CbezUK34esvD2A86V9mKFHZnDCqImTYvPURDctay8n8cfc707Bb6YtZFxJm+FDwmst2t5v4hrjk78/hjFqe4frEEPYC2yodKfHWUM03Z0XskCawLqnMHSIk4nJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=YD1h3oEb; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1718126063; c=relaxed/simple;
+	bh=MSJ7Lh9zOOxEjT11gFxAg1C/eKtumhb9xIt2mpPPWWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJQsojxjdcovL/ztslST1wDRea0g4S45sxO7EpZ+uLSx/J1hcl84fVe99dpy5SQSpOC0B18jYmje4Ib1FfmCIP7vkQFsA1LJ1ym0tSDor7LbxtG3P3dHSRMRRzVguPcximB4pfCia34uFeh35lP/lH61vdXu+DCNySWfjpNZDkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nLB3towd; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YD1h3oEb"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-35f04794973so433766f8f.2
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Jun 2024 09:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1718124852; x=1718729652; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hw7drFVos6OlmlZtZxQCwliUjnhCqtU/xBm51s1JLQM=;
-        b=YD1h3oEbO0gZfL7PrJffs7vcTgEtMexS0PIp5d2siPYRO//aBar0WHM6MByme+nXdC
-         D9/xmCy1oYLjvodVkaSjCICDWgeL0arTOtdLv52l+CsKDjWI4r7e8N6lprd3X61KdRrF
-         KL956dkNv1/BDoF4vyrIRFt2OtQ5+cvMQAdF0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718124852; x=1718729652;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hw7drFVos6OlmlZtZxQCwliUjnhCqtU/xBm51s1JLQM=;
-        b=LwcRYhFDPuNdQDLJS7ge5AeGjQtby2GE8PbNpim3319C45TB924lPxk4ilt6GjQsKl
-         NW5GU19bhoeDXTg9vCqXD50KtK26b+MDEr4AqLpajDjO4XmjiwTj82GWc8vyqxYCMOU3
-         F0KtzT2IFSW/hHLF9MpmbFjXw4Y6+UXM6QfGU7lqw3ktctBHTf44t2fw0W2z4qHQtejC
-         UUELsgAO8u/A4TZ+I01saQaU5esQaRaIngBnA9SjofXqTUT+vbLPBwkL0yl7w6nn+5uQ
-         P9H/DDPFMWlZWPsviDtRV5nbFVuSK0kFedg3OAIZHHF9XN+cAL33bKUUEl7PSZVCKacN
-         qWww==
-X-Forwarded-Encrypted: i=1; AJvYcCXUK8RWVZ1VMVCD09zI2uoXiXxPxOdOZigRXmg6crw72PIvISPH8DqArDynSLAqcUYeSDpR7GbKyZxT4uoJOYXkr9yIKREFmHq0
-X-Gm-Message-State: AOJu0YycPZbUAKSJ2B9tArKc056XEuIJR6ymUkr5trUY9N1VsHkv1HnW
-	uRleMu/Orc1VQx5LV2+YBUwTjbV0aGweSp1Cj6hWrPWVyVo57Ddbbf7kiEnWNG0=
-X-Google-Smtp-Source: AGHT+IFqYYsM2rMGUiy4YX7UaTF7NtCBy9ybwdgfBPKd11ZbCqkMYHqVBlUahONglj3MfDEkw3vRUg==
-X-Received: by 2002:a5d:464b:0:b0:35f:247e:fbcb with SMTP id ffacd0b85a97d-35f247efda6mr4003276f8f.2.1718124852018;
-        Tue, 11 Jun 2024 09:54:12 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4217f633f2asm111068895e9.28.2024.06.11.09.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 09:54:11 -0700 (PDT)
-Date: Tue, 11 Jun 2024 18:54:09 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH 0/8] Introduce fwctl subystem
-Message-ID: <ZmiBMYlJ4q2xPOEY@phenom.ffwll.local>
-References: <0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
- <20240603114250.5325279c@kernel.org>
- <214d7d82-0916-4c29-9012-04590e77df73@kernel.org>
- <20240604070451.79cfb280@kernel.org>
- <665fa9c9e69de_4a4e62941e@dwillia2-xfh.jf.intel.com.notmuch>
- <20240605135911.GT19897@nvidia.com>
- <Zmhu8egti-URPFoB@phenom.ffwll.local>
- <20240611161702.GU19897@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nLB3towd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718126061; x=1749662061;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MSJ7Lh9zOOxEjT11gFxAg1C/eKtumhb9xIt2mpPPWWc=;
+  b=nLB3towdHpp+J+SPiNEnMkqsx7JaF6/nI3MJRA/b1P+8shq7LoNUp8sc
+   R59T70FZ5vf/ad3OXxJwjAGJ5qtiLyK2PAoGSCU4L/bpd4flexgyZ2mMD
+   oSVqQ8GA0Qt8SrOIzWDSNJDUZykBDiVr1XpUcPIIGhuJOKasWz8kc5Z6W
+   pJDOfY4KVPCwejkr/zx8Xzioez6ITNHvx4Bx3PxlPVLyUD3vMTLzfLmh8
+   Q6JErZ/QPsT8J8V9J87oNqB3vOf+N5FNS6pkorhKH6r+sUa4Bpq3/oC4W
+   ZoG1QzUQEqn1al4gyU9z1qKmMSWWgzOgpUzC95ehL4babjrQmCSBYSVJN
+   A==;
+X-CSE-ConnectionGUID: eFjjA8GWREKgGy4jofy6sQ==
+X-CSE-MsgGUID: EwMm8EDWRxSSvtUiAAlHjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="12022403"
+X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
+   d="scan'208";a="12022403"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 10:14:20 -0700
+X-CSE-ConnectionGUID: 1mdnt1hFROiBxfNPlUGqOA==
+X-CSE-MsgGUID: KLKPwY5HTA+NS6EEjT4P3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
+   d="scan'208";a="39482420"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.160]) ([10.125.110.160])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 10:14:20 -0700
+Message-ID: <2852ad68-6fa2-4eaa-9024-ca401e57e666@intel.com>
+Date: Tue, 11 Jun 2024 10:14:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611161702.GU19897@nvidia.com>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] cxl/region: check interleave capability
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Yao Xingtao <yaoxt.fnst@fujitsu.com>, dave@stgolabs.net,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, jim.harris@samsung.com, linux-cxl@vger.kernel.org
+References: <20240611021511.35315-1-yaoxt.fnst@fujitsu.com>
+ <d7416f60-28fa-4848-a0cc-61431528db8a@intel.com>
+ <20240611174618.000040ff@Huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240611174618.000040ff@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 01:17:02PM -0300, Jason Gunthorpe wrote:
-> On Tue, Jun 11, 2024 at 05:36:17PM +0200, Daniel Vetter wrote:
-> > reliablity/health reporting. That's a lot more vendor specific in nature
-> > and needs to be customized anyway per deployement. And only much higher in
-> > the stack, maybe in k8s, can a technically reasonable unification even
-> > happen.  So again we're much more lenient about infrastructure enabling
-> > and uapi than stuff applications will use directly.
+
+
+On 6/11/24 9:46 AM, Jonathan Cameron wrote:
 > 
-> To be clear, this is the specific niche fwctl is for. It is not for
-> GPU command submission or something like that, and as I said to Jiri I
-> would agree to agressively block such abuses.
->  
-> > Currently that's enough of a mess in drm that I feel like enforcing
-> > something like fwctl is still too much. But maybe once fwctl is
-> > established with other subsystems/devices we can start the conversations
-> > with vendors to get this going a few years down the road.
+>>>  drivers/cxl/core/hdm.c    | 10 +++++
+>>>  drivers/cxl/core/region.c | 89 +++++++++++++++++++++++++++++++++++++++
+>>>  drivers/cxl/cxl.h         |  2 +
+>>>  drivers/cxl/cxlmem.h      |  1 +
+>>>  4 files changed, 102 insertions(+)
+>>>
+>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>>> index 7d97790b893d..5b7dff19bbfa 100644
+>>> --- a/drivers/cxl/core/hdm.c
+>>> +++ b/drivers/cxl/core/hdm.c
+>>> @@ -52,6 +52,11 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+>>>  	struct cxl_dport *dport = NULL;
+>>>  	int single_port_map[1];
+>>>  	unsigned long index;
+>>> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+>>> +
+>>> +	/* allow all the interleave capabilities for passthrough decoder */
+>>> +	cxlhdm->interleave_mask = GENMASK(14, 8);
+>>> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
+>>>  
+>>>  	cxlsd = cxl_switch_decoder_alloc(port, 1);
+>>>  	if (IS_ERR(cxlsd))
+>>> @@ -79,6 +84,11 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>>>  		cxlhdm->interleave_mask |= GENMASK(11, 8);
+>>>  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
+>>>  		cxlhdm->interleave_mask |= GENMASK(14, 12);
+>>> +	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);  
+>>
+>> Should define a mask for this. Probably should have defined masks for all of the open coded BIT() sets.
 > 
-> I wouldn't say enforcing, but instead of having every GPU driver build
-> their own weird vendor'd way to access their debug/diagnostic stuff
-> steer them into fwctl. These data center GPUs with FW at least have
-> lots of appropriate stuff and all the vendor OOT stuff has tooling to
-> inspect the GPUs far more than DRM has code for (ie
-> rocm-smi/nvidia-smi are have some features that are potentially good
-> candidates for fwctl)
-
-Yeah "enforcing" to the level we do with 3d/vulkan would be years down the
-road, if ever. Very unlikely imo for debug/diagnostics/tuning stuff.
-
-> > In practice, it doesn't seem to be an issue, at least not beyond the
-> > intentionally pragmatic choices where we merge kernel code with known
-> > sub-par/incomplete userspace. I'm not sure why, but to my knowledge all
-> > attempts to break the spirit of our userspace rules while following the
-> > letter die in vendor-internal discussions, at least for all the
-> > established upstream driver teams.
+> I don't agreed.  These bits are logically independent specifying each
+> supported value of interleave ways.
+> Put them under a define and I think you end up with less readable code.
 > 
-> I think the same is broadly true of RDMA as well, except we don't
-> bother with the kernel trying to police the command stream - direct
-> submission from userspace. I can't say it has been much of an issue.
 
-Maybe just a bit confusion, but all modern-ish drm drivers stopped parsing
-the command stream a while ago. We only ever did that to fill security
-gaps, never to enforce any rules about what userspace is allowed to do
-beyond that.
+Seeing the 1,2,4,8 being set twice looks like a common pattern. but I don't have a strong opinion on this.
 
-The rule that the open userspace needs to be complete, for some reasonably
-pragmatic definition of "complete", is entirely a social contract. And I'm
-not aware of any real issues with enforcing that beyond just trusting the
-established vendor teams. So yeah no real issues with uabi that allows
-maximal abuse because it's entirely unchecked by the kernel code.
-
-Or put differently, I think we're trying to make the same point.
-
-> > tldr; fwctl as I understand it feels like a bridge to far for drm today,
-> > but I'd very much like someone else to make this happen so we could
-> > eventually push towards adoption too.
+>>
+>>> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
+>>> +		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
+>>> +	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
+>>> +		cxlhdm->iw_cap_mask |= BIT(16);
+>>>  }
 > 
-> Hahah, okay, well, I'm pushing :)
-
-Thanks :-)
--Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> 
+> 
+> 
