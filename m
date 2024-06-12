@@ -1,266 +1,369 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3214696;
-	Wed, 12 Jun 2024 02:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FBE208CE
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 03:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158270; cv=none; b=PQYAD25T/yfVG08xDL4WOCkPlOXcTHmRoriCbW8Z0b7k1uO+5fPotaUxBi9RmHWByL6kNyUC5+xmunRw/eyWpKjXfO3pXoPe4w5KztvXSoDICcYkEz1MlNOb3tTMs5bToTix3rkmWJjb5sT4n+QtSvXPb9COFX8kxYjrEWpsVlI=
+	t=1718162771; cv=none; b=PFvJOtaX9410te4MuH+FkToSWYryVC7ndAmohgCr+uY/3wCwU8rqqQUhbljy+hG6ni2M1soCpw1p2gRCUcWGICidKzHvmzZYvJNkqO8e9u349T0TZdJ+BAFZNTD0replbqrtqPCi6yHj2LYlQ+8paLyyk7WmS/Zpk+4jXjdvNiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718158270; c=relaxed/simple;
-	bh=LWHVVPsFmew64zqAALVs4eh9lpfQHCEAvVdT/ITQtcc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=W9NYaWRY9DSJ4zPvK1pyW0uf/Mg/5uj9JzbvyxomLZ3S0zdt3wEtr8una0N634MtAF6CjJlCJvzgG0Apf5JVZBclYyQMQsRXyTo9t3xLT1oHjVhG9ykEJlvkFh226bhWmpKRwXFrNqMhuYtqIiZt3cT+CVQvL3w4KzANSp+Orjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSTDtDjT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718162771; c=relaxed/simple;
+	bh=eo9OPF3a8GxBAXk7xVqfbjoJ1Xp+zB64H21o3XP0T5Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LR22XE+GpYdnbV3ihuP+YKcArAfrlSH7SevikQir9nr0Oj4OgYAY8/8vaqzRbOK1ky0MWJq+4ljdP53tVu7bCYSTxfB7/bnwlLq8nRPjSQrew6ukyOfz9ibC2mdrvbpDv3iTGGEMNi1hSBF24VxFdllhnlngUEs6Ciwrl6dlLi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=MeJnkFWP; arc=none smtp.client-ip=207.54.90.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSTDtDjT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718158268; x=1749694268;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=LWHVVPsFmew64zqAALVs4eh9lpfQHCEAvVdT/ITQtcc=;
-  b=PSTDtDjTSAhpTR6upavYBeu6ob1VSFsPaDY9QOel3eHrpYPpXBYP9mXw
-   +achaXyVyDHoq5MpSIiqrUXsYt7GQZqpC7qNtEvZZih49h/ACDB1g6lZ/
-   Bx5m+68IzsQGEf0ppe+gaH8v++yZwnQ2JTvjbhEXY0b16YulVFMuuCWJf
-   iI1usRqTv6fq+roEzFDB+NVMZAH/4l29dmGrrOP62DEL2vViu736xvC1m
-   3nFp5l7jObui4o9K/hEAOQE3mh1rJ96Phg/jZdOTYAVVtpeYRotpp9/Zv
-   akSkPxBPpHzmVxqem1rtCwFJI5sS8tbFSX8uAr3tNzyYnX7ZyVBRC+0Y1
-   w==;
-X-CSE-ConnectionGUID: kxL7B3awT7CnZOlWyattJg==
-X-CSE-MsgGUID: zKWrA120QUegEDTdT9KROA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15072290"
-X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
-   d="scan'208";a="15072290"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 19:11:07 -0700
-X-CSE-ConnectionGUID: yYK2WzgaRi28jJ38dXmMVw==
-X-CSE-MsgGUID: LR+9Bc8VT6W+rqxM5B7A8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
-   d="scan'208";a="44060310"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 19:11:06 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Dave Jiang <dave.jiang@intel.com>,
-  Bharata B Rao <bharata@amd.com>,  Alistair Popple <apopple@nvidia.com>,
-  "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH -V2] cxl/region: Support to calculate memory tier
- abstract distance
-In-Reply-To: <ZmjBfcaosIlOODFR@aschofie-mobl2> (Alison Schofield's message of
-	"Tue, 11 Jun 2024 14:28:29 -0700")
-References: <20240611055423.470574-1-ying.huang@intel.com>
-	<ZmjBfcaosIlOODFR@aschofie-mobl2>
-Date: Wed, 12 Jun 2024 10:09:14 +0800
-Message-ID: <87sexi7vzp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="MeJnkFWP"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1718162769; x=1749698769;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eo9OPF3a8GxBAXk7xVqfbjoJ1Xp+zB64H21o3XP0T5Y=;
+  b=MeJnkFWPLfv9b9sBC3/3SZm0s/iVpgxGIoXYvnaxu8s/iNN/LBSbiNlX
+   DSJHeKjqG82V9+J1uD9Gnx8vgRRcf/YmpU0G2QaExs9AlS09K75D5JDef
+   0sJGqlRz5/v4CkfKKKu+iodsUSn+bjpKhvA111lyCxLX8v4Gvme2kj2Ha
+   3krAJF78Z8WtZ7RLc1WIGKYIhDnqxQGt8xcAa4EV3HiYoVGr95kVeANpC
+   oVV+ML5aAXXGXQ1qbpTn7j8N1YFC6hxki7GakzJO3ZIw0/6r+VeiSYdwF
+   /LgCSi/tTdPgvdzDt7FQwHoQgNZom7GxAifXRshcpLrMZrMI8rxiUgxd9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="162822280"
+X-IronPort-AV: E=Sophos;i="6.08,232,1712588400"; 
+   d="scan'208";a="162822280"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 12:26:01 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6F517D6473
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 12:25:58 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id B1E75D4BF3
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 12:25:57 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 3CA87E291E
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 12:25:57 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.225.88])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4A3A61A0002;
+	Wed, 12 Jun 2024 11:25:56 +0800 (CST)
+From: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	jim.harris@samsung.com
+Cc: linux-cxl@vger.kernel.org,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>
+Subject: [PATCH v7] cxl/region: check interleave capability
+Date: Tue, 11 Jun 2024 23:25:44 -0400
+Message-Id: <20240612032544.39149-1-yaoxt.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28448.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28448.004
+X-TMASE-Result: 10--13.597700-10.000000
+X-TMASE-MatchedRID: m2VH+qPYoSWCKQp76hMfYYvefyp1glN04SkIdSwphgbAcOVi+ckjTQ/g
+	N7zduuYXPwMNHlDj5arO6dmrTEheZQC06P0CvIY5KQxHYsCcxGlpeZ1cXZibx3hh5KUdlgWimmP
+	5c2pTo3u+cKWVQmxRy5eB5wfXFcoX57TKtDvJMR/2TS1YFaI5/17OZ6hrwwnzQAC1c3lmEHAhS0
+	ofkAkz2WO9MDvUzKlaWXmAdclxWQpa6JkWul/UfE7nLUqYrlslFIuBIWrdOePfUZT83lbkEKDpI
+	NQWjbma41vRe3emhWRycV832jJICJV5QOheuUnNAD5jSg1rFtBRMEg8Dnr1IUz5vzLEGq8D6+f8
+	731wcoV3kZBvbhoVTSZ/YrxVACBTise8Q+yJhnrMujzyu+W9gR7+/yRK0gD3Blnw3dG9MzGjxYy
+	RBa/qJbZ20YSJGhw7VymkLM+r7VSQZS2ujCtcuA==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Hi, Alison,
+Since interleave capability is not verified, if the interleave
+capability of a target does not match the region need, committing decoder
+should have failed at the device end.
 
-Thanks for review!
+In order to checkout this error as quickly as possible, driver needs
+to check the interleave capability of target during attaching it to
+region.
 
-Alison Schofield <alison.schofield@intel.com> writes:
+Per CXL specification r3.1(8.2.4.20.1 CXL HDM Decoder Capability Register),
+bits 11 and 12 indicate the capability to establish interleaving in 3, 6,
+12 and 16 ways. If these bits are not set, the target cannot be attached to
+a region utilizing such interleave ways.
 
-> On Tue, Jun 11, 2024 at 01:54:23PM +0800, Ying Huang wrote:
->> To place memory nodes backed by CXL regions in the appropriate memory
->> tiers.  So that, pages can be promoted/demoted with the existing
->> memory tiering mechanism.
->
-> How about more context for the unfamiliar because my first lookup was
-> what's an 'abstract distance'? (not sure I even got it right below ;))
+Additionally, bits 8 and 9 represent the capability of the bits used for
+interleaving in the address, Linux tracks this in the cxl_port
+interleave_mask.
 
-Sorry about this.
+Per CXL specification r3.1(8.2.4.20.13 Decoder Protection):
+  eIW means encoded Interleave Ways.
+  eIG means encoded Interleave Granularity.
 
-> An abstract distance value must be assigned by the driver that makes
-> the memory available to the system. It reflects relative performance
-> and is used to place memory nodes backed by CXL regions in the appropriate
-> memory tiers allowing promotion/demotion within the existing memory tiering
-> mechanism.
+  in HPA:
+  if eIW is 0 or 8 (interleave ways: 1, 3), all the bits of HPA are used,
+  the interleave bits are none, the following check is ignored.
 
-This looks good.  Will use it.  Thanks!
+  if eIW is less than 8 (interleave ways: 2, 4, 8, 16), the interleave bits
+  start at bit position eIG + 8 and end at eIG + eIW + 8 - 1.
 
->> 
->> The abstract distance is calculated based on the memory access latency
->> and bandwidth of CXL regions.  Which in turn comes from the HMAT
->> and CDAT, etc.
->
-> etc ?  
-> I think the latency and bandwidth were already calculated, so you
-> don't need to explain those. Perhaps drop the whole 'While in turn
-> come from..." part.
+  if eIW is greater than 8 (interleave ways: 6, 12), the interleave bits
+  start at bit position eIG + 8 and end at eIG + eIW - 1.
 
-Sure.
+  if the interleave mask is insufficient to cover the required interleave
+  bits, the target cannot be attached to the region.
 
-> a bit below...
->
->> 
->> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Cc: Dave Jiang <dave.jiang@intel.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Bharata B Rao <bharata@amd.com>
->> Cc: Alistair Popple <apopple@nvidia.com>
->> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> ---
->> Changes:
->> 
->> v2:
->> 
->> - Added comments to struct cxl_region and minor fixes (Thanks Jonathan!)
->> - Link to v1: https://lore.kernel.org/linux-cxl/20240531024852.282767-1-ying.huang@intel.com/
->> 
->> ---
->>  drivers/cxl/core/region.c | 40 +++++++++++++++++++++++++++++++++++----
->>  drivers/cxl/cxl.h         |  2 ++
->>  2 files changed, 38 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 3c2b6144be23..81d0910c0a02 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/uuid.h>
->>  #include <linux/sort.h>
->>  #include <linux/idr.h>
->> +#include <linux/memory-tiers.h>
->>  #include <cxlmem.h>
->>  #include <cxl.h>
->>  #include "core.h"
->> @@ -2304,14 +2305,20 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->>  	return true;
->>  }
->>  
->> +static int cxl_region_nid(struct cxl_region *cxlr)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
->> +	struct cxl_decoder *cxld = &cxled->cxld;
->> +
->> +	return phys_to_target_node(cxld->hpa_range.start);
->> +}
->> +
->
-> I believe it's OK to send a resource_size_t to phys_to_target_node()
-> like this:
->
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2308,10 +2308,8 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->  static int cxl_region_nid(struct cxl_region *cxlr)
->  {
->         struct cxl_region_params *p = &cxlr->params;
-> -       struct cxl_endpoint_decoder *cxled = p->targets[0];
-> -       struct cxl_decoder *cxld = &cxled->cxld;
->
-> -       return phys_to_target_node(cxld->hpa_range.start);
-> +       return phys_to_target_node(p->res->start);
->  }
->
+Fixes: 384e624bb211 ("cxl/region: Attach endpoint decoders")
+Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-I believe this works.  But the original implementation is just a
-mechanical code movement from cxl_region_perf_attrs_callback().  So, I
-prefer to keep it stupid. Then, further optimization can be done on top
-of it.  Is it good for you?
+---
+V6[6] -> V7:
+-- update comment.
 
->
->>  static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
->>  					  unsigned long action, void *arg)
->>  {
->>  	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
->>  					       memory_notifier);
->> -	struct cxl_region_params *p = &cxlr->params;
->> -	struct cxl_endpoint_decoder *cxled = p->targets[0];
->> -	struct cxl_decoder *cxld = &cxled->cxld;
->>  	struct memory_notify *mnb = arg;
->>  	int nid = mnb->status_change_nid;
->>  	int region_nid;
->> @@ -2319,7 +2326,7 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
->>  	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
->>  		return NOTIFY_DONE;
->>  
->> -	region_nid = phys_to_target_node(cxld->hpa_range.start);
->> +	region_nid = cxl_region_nid(cxlr);
->>  	if (nid != region_nid)
->>  		return NOTIFY_DONE;
->>  
->> @@ -2329,6 +2336,27 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
->>  	return NOTIFY_OK;
->>  }
->>  
->> +static int cxl_region_calculate_adistance(struct notifier_block *nb,
->> +					  unsigned long nid, void *data)
->> +{
->> +	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
->> +					       adist_notifier);
->> +	struct access_coordinate *perf;
->> +	int *adist = data;
->> +	int region_nid;
->> +
->> +	region_nid = cxl_region_nid(cxlr);
->> +	if (nid != region_nid)
->> +		return NOTIFY_OK;
->> +
->> +	perf = &cxlr->coord[ACCESS_COORDINATE_CPU];
->> +
->> +	if (mt_perf_to_adistance(perf, adist))
->> +		return NOTIFY_OK;
->> +
->> +	return NOTIFY_STOP;
->> +}
->> +
->>  /**
->>   * devm_cxl_add_region - Adds a region to a decoder
->>   * @cxlrd: root decoder
->> @@ -2371,6 +2399,10 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->>  	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
->>  	register_memory_notifier(&cxlr->memory_notifier);
->>  
->> +	cxlr->adist_notifier.notifier_call = cxl_region_calculate_adistance;
->> +	cxlr->adist_notifier.priority = 100;
->> +	register_mt_adistance_algorithm(&cxlr->adist_notifier);
->> +
->>  	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
->>  	if (rc)
->>  		return ERR_PTR(rc);
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 603c0120cff8..f46252373159 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -522,6 +522,7 @@ struct cxl_region_params {
->>   * @params: active + config params for the region
->>   * @coord: QoS access coordinates for the region
->>   * @memory_notifier: notifier for setting the access coordinates to node
->> + * @adist_notifier: notifier for calculating the abstract distance of node
->>   */
->>  struct cxl_region {
->>  	struct device dev;
->> @@ -534,6 +535,7 @@ struct cxl_region {
->>  	struct cxl_region_params params;
->>  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->>  	struct notifier_block memory_notifier;
->> +	struct notifier_block adist_notifier;
->>  };
->>  
->>  struct cxl_nvdimm_bridge {
->> -- 
->> 2.39.2
->> 
->> 
+V5[5] -> V6:
+-- fix some typo.
+-- update comment.
+-- set rc when check faild in cxl_port_attach_region().
 
---
-Best Regards,
-Huang, Ying
+V4[4] -> V5:
+-- update comment.
+-- add nr_targets check while attaching a port to switch.
+-- delete passthrough flag and allow all the capabilities for passthrough
+   decoders.
+
+V3[3] -> V4:
+-- update comment.
+-- optimize the code.
+-- add a passthrough flag to mark the passthrough decoder.
+
+V2[2] -> V3:
+-- revert ig_cap_mask to interleave_mask.
+-- fix the interleave bits check logical.
+
+V1[1] -> V2:
+-- rename interleave_mask to ig_cap_mask.
+-- add a check for interleave granularity.
+-- update commit.
+-- move hdm caps init to parse_hdm_decoder_caps().
+
+[1]
+https://lore.kernel.org/linux-cxl/20240401075635.9333-1-yaoxt.fnst@fujitsu.com
+
+[2]
+https://lore.kernel.org/linux-cxl/20240403021747.17260-1-yaoxt.fnst@fujitsu.com
+
+[3]
+https://lore.kernel.org/linux-cxl/20240409022621.29115-1-yaoxt.fnst@fujitsu.com
+
+[4]
+https://lore.kernel.org/linux-cxl/20240422091350.4701-1-yaoxt.fnst@fujitsu.com
+
+[5]
+https://lore.kernel.org/linux-cxl/20240524092740.4260-1-yaoxt.fnst@fujitsu.com
+
+[6]
+https://lore.kernel.org/linux-cxl/20240611021511.35315-1-yaoxt.fnst@fujitsu.com
+---
+ drivers/cxl/core/hdm.c    | 13 ++++++
+ drivers/cxl/core/region.c | 89 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |  2 +
+ drivers/cxl/cxlmem.h      | 10 +++++
+ 4 files changed, 114 insertions(+)
+
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 7d97790b893d..e01c16fdc757 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -52,6 +52,14 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+ 	struct cxl_dport *dport = NULL;
+ 	int single_port_map[1];
+ 	unsigned long index;
++	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
++
++	/*
++	 * Capability checks are moot for passthrough decoders, support
++	 * any and all possibilities.
++	 */
++	cxlhdm->interleave_mask = ~0U;
++	cxlhdm->iw_cap_mask = ~0UL;
+ 
+ 	cxlsd = cxl_switch_decoder_alloc(port, 1);
+ 	if (IS_ERR(cxlsd))
+@@ -79,6 +87,11 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+ 		cxlhdm->interleave_mask |= GENMASK(11, 8);
+ 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
+ 		cxlhdm->interleave_mask |= GENMASK(14, 12);
++	cxlhdm->iw_cap_mask = BIT(1) | BIT(2) | BIT(4) | BIT(8);
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
++		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
++		cxlhdm->iw_cap_mask |= BIT(16);
+ }
+ 
+ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 5c186e0a39b9..5ba5a5f6923a 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1101,6 +1101,26 @@ static int cxl_port_attach_region(struct cxl_port *port,
+ 	}
+ 	cxld = cxl_rr->decoder;
+ 
++	/*
++	 * the number of targets should not exceed the target_count
++	 * of the decoder
++	 */
++	if (is_switch_decoder(&cxld->dev)) {
++		struct cxl_switch_decoder *cxlsd;
++
++		cxlsd = to_cxl_switch_decoder(&cxld->dev);
++		if (cxl_rr->nr_targets > cxlsd->nr_targets) {
++			dev_dbg(&cxlr->dev,
++				"%s:%s %s add: %s:%s @ %d overflows targets: %d\n",
++				dev_name(port->uport_dev), dev_name(&port->dev),
++				dev_name(&cxld->dev), dev_name(&cxlmd->dev),
++				dev_name(&cxled->cxld.dev), pos,
++				cxlsd->nr_targets);
++			rc = -ENXIO;
++			goto out_erase;
++		}
++	}
++
+ 	rc = cxl_rr_ep_add(cxl_rr, cxled);
+ 	if (rc) {
+ 		dev_dbg(&cxlr->dev,
+@@ -1210,6 +1230,57 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
+ 	return 0;
+ }
+ 
++static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
++{
++	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
++	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
++	unsigned int interleave_mask;
++	u8 eiw;
++	u16 eig;
++	int rc, high_pos, low_pos;
++
++	rc = ways_to_eiw(iw, &eiw);
++	if (rc)
++		return rc;
++
++	if (!test_bit(iw, &cxlhdm->iw_cap_mask))
++		return -ENXIO;
++
++	rc = granularity_to_eig(ig, &eig);
++	if (rc)
++		return rc;
++
++	/*
++	 * Per CXL specification r3.1(8.2.4.20.13 Decoder Protection),
++	 * if eiw < 8:
++	 *   DPAOFFSET[51: eig + 8] = HPAOFFSET[51: eig + 8 + eiw]
++	 *   DPAOFFSET[eig + 7: 0]  = HPAOFFSET[eig + 7: 0]
++	 *
++	 *   when the eiw is 0, all the bits of HPAOFFSET[51: 0] are used, the
++	 *   interleave bits are none.
++	 *
++	 * if eiw >= 8:
++	 *   DPAOFFSET[51: eig + 8] = HPAOFFSET[51: eig + eiw] / 3
++	 *   DPAOFFSET[eig + 7: 0]  = HPAOFFSET[eig + 7: 0]
++	 *
++	 *   when the eiw is 8, all the bits of HPAOFFSET[51: 0] are used, the
++	 *   interleave bits are none.
++	 */
++	if (eiw == 0 || eiw == 8)
++		return 0;
++
++	if (eiw > 8)
++		high_pos = eiw + eig - 1;
++	else
++		high_pos = eiw + eig + 7;
++	low_pos = eig + 8;
++	interleave_mask = GENMASK(high_pos, low_pos);
++	if (interleave_mask & ~cxlhdm->interleave_mask)
++		return -ENXIO;
++
++	return 0;
++}
++
+ static int cxl_port_setup_targets(struct cxl_port *port,
+ 				  struct cxl_region *cxlr,
+ 				  struct cxl_endpoint_decoder *cxled)
+@@ -1360,6 +1431,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 			return -ENXIO;
+ 		}
+ 	} else {
++		rc = check_interleave_cap(cxld, iw, ig);
++		if (rc) {
++			dev_dbg(&cxlr->dev,
++				"%s:%s iw: %d ig: %d is not supported\n",
++				dev_name(port->uport_dev),
++				dev_name(&port->dev), iw, ig);
++			return rc;
++		}
++
+ 		cxld->interleave_ways = iw;
+ 		cxld->interleave_granularity = ig;
+ 		cxld->hpa_range = (struct range) {
+@@ -1796,6 +1876,15 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 	struct cxl_dport *dport;
+ 	int rc = -ENXIO;
+ 
++	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
++				  p->interleave_granularity);
++	if (rc) {
++		dev_dbg(&cxlr->dev, "%s iw: %d ig: %d is not supported\n",
++			dev_name(&cxled->cxld.dev), p->interleave_ways,
++			p->interleave_granularity);
++		return rc;
++	}
++
+ 	if (cxled->mode != cxlr->mode) {
+ 		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
+ 			dev_name(&cxled->cxld.dev), cxlr->mode, cxled->mode);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 036d17db68e0..dc8e46a1fe82 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -45,6 +45,8 @@
+ #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+ #define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
+ #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
++#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
++#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
+ #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
+ #define   CXL_HDM_DECODER_ENABLE BIT(1)
+ #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 36cee9c30ceb..7fe617122d33 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -848,11 +848,21 @@ static inline void cxl_mem_active_dec(void)
+ 
+ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+ 
++/*
++ * struct cxl_hdm - HDM Decoder registers and cached / decoded capabilities
++ * @regs: mapped registers, see devm_cxl_setup_hdm()
++ * @decoder_count: number of decoders for this port
++ * @target_count: for switch decoders, max downstream port targets
++ * @interleave_mask: interleave granularity capability, see check_interleave_cap()
++ * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
++ * @port: mapped cxl_port, see devm_cxl_setup_hdm()
++ */
+ struct cxl_hdm {
+ 	struct cxl_component_regs regs;
+ 	unsigned int decoder_count;
+ 	unsigned int target_count;
+ 	unsigned int interleave_mask;
++	unsigned long iw_cap_mask;
+ 	struct cxl_port *port;
+ };
+ 
+-- 
+2.37.3
+
