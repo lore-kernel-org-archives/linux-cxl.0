@@ -1,63 +1,64 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2081.outbound.protection.outlook.com [40.107.244.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0510167270
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 07:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A4829413
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 07:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718177393; cv=fail; b=shOZSGpLKdoX4RbIIEP1NZq6gVS/yLROU3p6Un3WnTunllaAqjwdashChnJ9zOYvx29n6BodAnJe1rS5ZmbOB+FdetvDqVq5VcjTqI95Wt06PPZZ77XGnWZBGcX04fGOx+HstcKfgElPnuzvnOOL6FfWnxmVgg+zxcRhlOBuk+0=
+	t=1718177539; cv=fail; b=A86Q03ia/VhBtuFDnnbuXpdd0DRU/5TsBNE2J9NaSOcgMBL/JM9vB56UBibKSSiczafPMP87KRtx0OKREwUpK5MFUf6gveL6XT8epV3ZnKUkMyp0AI4FIvt40eoL10FU5jQI5359eojg6xAOmcTvMrpnGxSv+J2m8KFWqzvFgS8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718177393; c=relaxed/simple;
-	bh=skfnU6l7rYchEPxEapvLG/XSgIuU+vFx7PKJqdKT19Q=;
+	s=arc-20240116; t=1718177539; c=relaxed/simple;
+	bh=WVWJrFQSm84bXDTBgwKRJZiEDto1GOTaMqiDm7G5OIY=;
 	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cZoshdfFJ9Z4MGOEq3H6gZ5mf/RO2pMDy7FjJ2ZwBLdNgkV6w53wBywH6KckUrmdj09rdcW36tixFeE5IBt1KTG5wWqBFaANW5G4KJxG7HlVLsIfbezsV9Tf7wdA5sHW4pnfNB60JBwBP22cep+XQXZ5PWxPxXUViXhJhgDokBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ak5mejik; arc=fail smtp.client-ip=40.107.236.84
+	 Content-Type:MIME-Version; b=eces+ZCFVq7X9tgYZ54beJdV+jbtGRFmLvAAbeZUeml/LloDPjZ0P/6AJcJjL/kKFmdlufb1MsuQVJUB4G7Xtwt+Sa0pi9kdQLMPsLAijQxfVd0oJKC+8oKFrC7+Dp2q9zZUkCiB6obGgsPt0r34WoRAzX87k+ijglMLvxy19+Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LUPWlTcG; arc=fail smtp.client-ip=40.107.244.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ak5mejik"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LUPWlTcG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ec1fgMAigPQvk3C5CO+8nWPs9EFhtt6Gc5qpzdcu/v7hGHZF44lVyDt7ruxKuIjfBM56t0Ei1qflnM9UXMwOVWvFzK9lmWGzs9pe5SrTiOTz0wSjb28+79dpg3JoZUp6vDWrJfehQt/dM4eImhKAlyTCL6HJ+6cas3w+91V4LMRBKIlwAuzoRs3B0PKwOl9mQGylTCgKy6ABc1dYysEfiKURLSVgeQN2FtFNQKEh3VadrTXl0xNJfKa9jK3uBNIhLZLBZ2P+ap4SVdO6WAHAC+4zbS4tPRDphKMTIl02CUmiB96KX3zMc2PyVq8qaePe6GAELYth66z5/IXvvr5H2A==
+ b=Xkdu1z3VYrCspDLstifjWZVKLuohWGckaj1Fo/2HItu5dr9ERZiA0RJI7JxzB88/6mhBAxnQw0YXgOb74ChbJiq4ATv0umhXP0FvYbWBGDijO6C3j4lxofcsLGTJYPh5CVziSisH5G9NiF5qlafRS6qpV6/BbqY4lxlxupqUtbG12g6tfMib/g2yycTm0NdB0Oc5LWp3T0UpXin8wi3+vaTTf8Q9D1qltKaDwt2riOGsJ2CEiDRnue/lfLoo+O+dHinBxg69jvwJ3mwZEbwPi3Ccb1iCmkHGGLnQT5wi7qQfNDvMyAqbsQAaXDdNgRIXqz1UbQjRYaAYR1p6ciNXsA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jIAEEWAQQA51UXWnnmxJAVAFkkPUCBa5j3HPVaRzboQ=;
- b=bAKfMk8S9mNKYE/1BvGLBXLplbyIxOOZhbgrT0quyV0G9PrKZutOUsJno1uTem/KXKqJcFEQrjClMPBtRP9FQGyUnI9qNkOPRbhCh+i6QjK7MAukIYv7v+c4xJBpE2NVPfvh1HtvorvuuKqnuMQgq6Nbrw6LMqE+4vxS6QII7RC+dPavc/z+xz7ABxTtQ5iofPU26mFHJA6Hl1RdVMnyPXIYf1E2bxrTYaxz700+l5PghR+h1nq57DS6i/wj4fd3OyXVbbKkazY3gwwklOC7w/nAO7Lvb2dPVXS2yb0b7S6fnJjGGV/4Y5jRquce7dYdIYrdLmlm5DravGGjjNNZ0g==
+ bh=HbpsONiUIGjBoo/To/ruyTQf1mgv5N/sLlu7+vf3Q0E=;
+ b=WI6CQ+RPkczt06guCOu9JHTn4CPtc7SnMIeUopF/HhnaAvhMh29Is2Gn2mmA68zsfj8nNDCNDIkLXCMrvWeVfUqRhcG+MZUim2V1f8yYMDxLPP5K7xRVzkMVab2wB+cK/qMcGWjEixS6vLN9msZ329EIYmvYUxVaMexQI93kiljuNsTAVtEuy/wH1NI2xDGIDkPIt+K1JgZe6UPZ2l3YrHX/4XQAUtWMxqm5GOb/OThwpdwGkciQIgLCDZGX0Ai/WbjZiJFEFJUbQPa8lJ6KfXszgDVPc72py+5eCeHzgTiBFvBqkBGtI4/Pbo5ncrkFGAzXY5YGNCuGlJlqQvSsjQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jIAEEWAQQA51UXWnnmxJAVAFkkPUCBa5j3HPVaRzboQ=;
- b=ak5mejikuZpL1j6iDf1xxGSuYm1lgW9+jtJzUrV4ltNWqNJBV9hL7/4eT637HXrN2bXo7v/9pPlU8Ld3mDLv3uJf6TEeCgu+BnSr44jTXsmIeZI4dT/H9DI8WF1CqA4ofzl+N3e040tyvdoEgE6YoaTS5wBcvLws6Dc0CJR/Ny0=
+ bh=HbpsONiUIGjBoo/To/ruyTQf1mgv5N/sLlu7+vf3Q0E=;
+ b=LUPWlTcGWRv0d/yVM8g9QESjgdDqmHBqWXk11gGr3NG13ZBNnpf2AmshlOCoLJ5/6ffyw+txxyTN8t2BZeXaiQZNhVBQc7hq1xq5Gq+UvjXnvTOM2+JxlYoJzWW5NI+ckrT65ZscqF1Qxif+4oUtcSpdr+93ZrVdtf8+Z2boibM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by PH8PR12MB7446.namprd12.prod.outlook.com (2603:10b6:510:216::13) with
+ by SA0PR12MB4478.namprd12.prod.outlook.com (2603:10b6:806:9c::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Wed, 12 Jun
- 2024 07:29:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21; Wed, 12 Jun
+ 2024 07:32:12 +0000
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.7633.036; Wed, 12 Jun 2024
- 07:29:46 +0000
-Message-ID: <709bd377-6f16-fc1e-4c54-29c196a21213@amd.com>
-Date: Wed, 12 Jun 2024 08:29:43 +0100
+ 07:32:12 +0000
+Message-ID: <8112d79e-d7fe-a13f-df08-bc2a460f264f@amd.com>
+Date: Wed, 12 Jun 2024 08:32:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [RFC PATCH 09/13] cxl: add cxl_request_dpa
+Subject: Re: [RFC PATCH 11/13] cxl: allow automatic region creation by type2
+ drivers
 Content-Language: en-US
 To: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
  pieter.jansen-van-vuuren@amd.com, richard.hughes@amd.com,
  dinan.gunawardena@amd.com
 References: <20240516081202.27023-1-alucerop@amd.com>
- <20240516081202.27023-10-alucerop@amd.com>
+ <20240516081202.27023-12-alucerop@amd.com>
 From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20240516081202.27023-10-alucerop@amd.com>
+In-Reply-To: <20240516081202.27023-12-alucerop@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0432.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::36) To DM6PR12MB4202.namprd12.prod.outlook.com
+X-ClientProxiedBy: LO4P123CA0446.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a9::19) To DM6PR12MB4202.namprd12.prod.outlook.com
  (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -66,390 +67,568 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH8PR12MB7446:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c95be7a-0fd6-45f0-2d2d-08dc8ab16f9b
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SA0PR12MB4478:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76c7a3d5-4e10-41b8-9b9d-08dc8ab1c6b9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230032|1800799016|366008|376006;
+X-Microsoft-Antispam: BCL:0;ARA:13230032|366008|376006|1800799016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?THdmdG0rcUZDZWFkVjBzUXNNYUtyMnJwbExObktCSlBpNmhIWHNQKytERFZt?=
- =?utf-8?B?a0hQN04zdHZ0Y1ZPYmpYQnBuQjRMdHkzVVQ4aTAraVdobkhUYUVaeHFmMkoz?=
- =?utf-8?B?UlpUQ0g1dkNZZlV6S1l3djVKYnhzWjZUMk9DbmVtS1ZQdzBKVVRIb1Q3bHN1?=
- =?utf-8?B?RU9kclFxSnBRblltRW95L2hFSnNTQ0ZVMEQ5LzNXd201VDJRNXVIbC96aThy?=
- =?utf-8?B?MThUUVBrcHRDK0FSckwrd0tWNWZ3eVJHdmhOcTgvZmFVRHVaUGdUWmZ0YVlk?=
- =?utf-8?B?TnNpWTZqY0NmN1J1UjROd29QRWhsb3NHeDVTd0VtRE84NlJQbm5XWFJpaHRt?=
- =?utf-8?B?eG1mQmdYcWRJeTJ4T3pvWW50cTZhSDc4MjZXb0x6RG83NmNRd1A5V3FYTDBm?=
- =?utf-8?B?NFd2dnEzSTIxSEhxbDY2SEdKVGk2RDM1UEVBY3FlOEx6dmVHbUtIYlI2bFhy?=
- =?utf-8?B?QWZNa2hsL0lNYndwNk1Dd2l4Q1BiSjZhUVhxU0t2ckQvTjdMbXBZSFFRaVN6?=
- =?utf-8?B?NFc5UXhncVJIa1UzbVRmUWJUS3BEOG1kQUpZVC8vckpwaDc3cVJ6T1BBaGZh?=
- =?utf-8?B?a1JraFo4Y1dYNkU4b3dCZmdxL1JsekdiTS9jVmcxNTgzUU1IQ0xybThYak4v?=
- =?utf-8?B?TXZEdVNFcVJ4MGxZQkp0UVpERmVXZEZLbHJGYW5CeFVUSFU5a1pZQjdVNi9w?=
- =?utf-8?B?TzhoS2VwQlZVcndCc2RTTWsyZjI0VHZBdzFSUWlHMHN2cVNjOGVycmtMSTNx?=
- =?utf-8?B?eXFabW8xY1ZnWDdwenBDTXVnMjZPTU5zQkQ2VWswWEhuL2FaNE95aW83Y0dz?=
- =?utf-8?B?dkVzVE5tMzB3UWVyQXRFbno3R3VzY2pMK1hoRHdReWp0SnEwdTlrZ3hFSC92?=
- =?utf-8?B?RUJDU1o0TVN6NWIwWmcxM1RqRkg5RHJQVWlNb1loT2llc0ZzdW81bU96d3dX?=
- =?utf-8?B?WHUzbUxnL3k1Z3pPNUF1ekpFZi9hTHVhOEdEZW1udDAyczBLUnRtTG9SbEl5?=
- =?utf-8?B?WGowQ000bDRhbDhBdVJueUtLenpYbG5aVThOTzlGaXJBY05uS1NhRDMrZ3Vk?=
- =?utf-8?B?Umh4S00wMmplY3VpNzA3VCtTQW5GNzMrdFEwaFhna1Uyc2ZJU3Q2Z1BRalc3?=
- =?utf-8?B?MlFnaHpETXJJYmhoNTlycWs1QUxiTGJxaHc3VEJhUGJHN1BCK0ZrKy9WYTZ6?=
- =?utf-8?B?eWd0TW9rMkhMaXpEQm94c1RhTWFya25yWUx1UnNmWXlwYU5Qb2pQanVvSnAr?=
- =?utf-8?B?aHFqbU9aY0xCWWdsdWdtOTJQMVRPQjVmM3RHblVEc2RBUnkvSEdobDQ0Uy9B?=
- =?utf-8?B?ZlZmYUdEcEYrcEdXZGpBQWVqM0crOGtFRjJmdWZHR3NwaFB0Sk50VE42VkFz?=
- =?utf-8?B?a0JySHdWYVlodW1uS1BjNEdhWjd6QmtGK3hnZkZIRWRtV3dKTlo5MGhDd0VY?=
- =?utf-8?B?NUlNU1VJMXg4aFFNK3FiSWRvdU9LV1FEQmdVeGdoY0dab01YRzd5UXIzd0Za?=
- =?utf-8?B?UXc1SVdpOXhHL0RKZVFRNWtSRmRtODBWclcrQ2NISmcvR1hhcWlOQlJObWFP?=
- =?utf-8?B?MFV0d2U3a08rZzNnQ0JaNzVLbXVWcTcxdncyRHUyRXJLb1JRRlpXMnBUbHFF?=
- =?utf-8?B?Q2NHLzVDdG9xNFV5QklSc2JLWkRRdmlDNDJsdnRyMEpWKzFaUWQ2NWppTHNk?=
- =?utf-8?Q?rQPwyl0tL7MqLGWOHV6K?=
+	=?utf-8?B?Y2QrbzhCOG14djJUajF0VTRrRlFYVkJuOFMwYmU2WlkyMUN3bVlQMWRmcEZx?=
+ =?utf-8?B?NFpHeXFZSHovLzBVdnA5UXBaOW9vdk5aS1JOdm82bGV5VnJUdHlQcWJZMU1r?=
+ =?utf-8?B?VjRBRFlHNjlmRlJrMDdhdVM2L0VJeWgvaGd4NFJ0bng0dUZhSHJud0xnV1lI?=
+ =?utf-8?B?Y29UWUhVSXFLbkJhL1R5RktNUXp5Y29JNWpRQyszeUFHOFdKSk9hVHg2ekRi?=
+ =?utf-8?B?cDUrVy9CRlRNdHkwUzMzNGZ6SGNEQjY4andnYjRzcEZseENxWmlKN2pkVDlU?=
+ =?utf-8?B?aVNsazlrT2l6aVR1a3lVNGtpSjdJaEFQOWJ5U2p0bUJUMzg1Z05Sc0JkaGxM?=
+ =?utf-8?B?b01QL21hQ1JvTnJtUWQrWVpBMXJpNk1JV3I4NHdKb09ZWlpNNGdZeWlHa0V1?=
+ =?utf-8?B?VzQ5UGZWQ2o1S0VwMHV0ckxYaUErbjJuWXY4Z1N0bnNwVitCU25lVnBJQmt0?=
+ =?utf-8?B?dFB1eWVWcUcrWVhzTDVsVERNb0xpL1hNSGltamdwangxQ2hKVUZOa1NtdTRZ?=
+ =?utf-8?B?bmUzZW9sWEpZYmZ0MWNZYlhTdXprMUZ0dEtreUVPbmNiY0VYSXVxdmcxTDBJ?=
+ =?utf-8?B?ekFEYnQwVXBXZlVtK1dYS2t0NGhDZnNRQ3V0MDB1ME5LMGFsbi90dFRMaDlh?=
+ =?utf-8?B?RXVWeVo3VzBtQkt0TmxwZGNXdlN0TjkrL2QyV2ROTkVYeTEvcDZWN1B3MmRt?=
+ =?utf-8?B?aHNoazc5ei9abk1aSURueDBJMmpXZDhnaU9Uby9GM3lsc1ZmMVA1QVlJMUF5?=
+ =?utf-8?B?S21iNDZkNEo4bmZBb3RvQVNHSy9MekhUZFJtV0NxZUFSa1Q1Qll0NTAyd0p0?=
+ =?utf-8?B?b3JkaTJxMW1nSXlPWVdoN09jdnh5eFRaczJSS1J1SzFxVk40Y3RpZkVlSVpn?=
+ =?utf-8?B?dE1NOTY2b1kwMy85b2lMQmpLYVVXS1d4bjNzR0cwRXZhbU5VMzZJcjQ0Zkhr?=
+ =?utf-8?B?LzVVZC9yM3JLKzViL25OR095Q3NpQXpOaXlnL2FST0ZueHdXMHBOSDJiK1dK?=
+ =?utf-8?B?czBHU2xEamhLZDNLSzdNcjVVblY3ZWRremRlMUhySER4d0JYT21rbFZ1NVhG?=
+ =?utf-8?B?R0NHeG04MTZvajVOTWI3bXQxYlkvMDl2Y1EwR3hDd3lnem02NUZBSkFrZFdP?=
+ =?utf-8?B?L1NFUDc1Q0R0eHIvOS9CUzVNVzBXcmpEbHhXU0JRd1dKd3RnZUFSNkZaM0lk?=
+ =?utf-8?B?VS9pQXk0dUxGNi8zSnJ4bnZoYlAySXMzNGRhUzRBbG1Ga0JYaDd5dlVxbU1a?=
+ =?utf-8?B?L3lpQU8wcWVLYmdjOE1CTTR3M0o1d29FM3hkeWhmV0lWMW9wdHk4dGJBR1RR?=
+ =?utf-8?B?VWtncFhFdzZXL0VXcStMMDErbFJFbm56MlZHYkpvb3g2YjdtRURtUzhxbGNH?=
+ =?utf-8?B?RVhRclZtT0JVZlgyQ2g2RGFnQWVISnRTUHo0cEY0ZmpHNVA1ZGs3Ujd6V1NB?=
+ =?utf-8?B?NXpVcm5wUDZXbVA3Q2dETlVkSHppSklrbzNSNjY5SFM4dTRhRVplOWxOcUpL?=
+ =?utf-8?B?anJpUDJnN2luV1ROMUhQTllRMW9vdXpQaFNhQTc2RnA1WUFvdnloSzNMQkIy?=
+ =?utf-8?B?eDR3UzZzcWc5Zm1MVkdSN0ZKQldTSnAxZ0MvRjRucUtVa1Z1ZmhNZHlNZmVH?=
+ =?utf-8?B?djNGMXcvZzduYndHcmppUllDTXVpNHZweUZjODAxUElWQVh1d3BYdE5LWUdO?=
+ =?utf-8?Q?f/m3XBZZIyQ4hMXC4xlU?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230032)(1800799016)(366008)(376006);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230032)(366008)(376006)(1800799016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Sy95ZjlPRUN0amZtbjBYc1dvS2RZQzR3TTdudi9ENHAxbzlheUlza1JlYURu?=
- =?utf-8?B?dkM5Q0t5OG1md0ZvTGpnMVp1a1UvaGg2aG9sWWZmMFRqanZ4b1FyUEE1WnMz?=
- =?utf-8?B?dXdOcjdQNU5obllDdjRQQ1R3anc3V1k4L0h4WENvdUY0c2NkOEtxNWNTQi9j?=
- =?utf-8?B?anBua2hnUkJFamI5ckhheGd4cE9jZ2grSit2MlVESFlkZW5JcEdZVzI0YVJX?=
- =?utf-8?B?ZHpwL1lwd0U1QjN0ZTA4TCtEeVFxWndlOVYwekJ1ZDUreVpqbUkyeGZZTnMy?=
- =?utf-8?B?cmI0Qm8rYTZQRzJVUDJnazdXdVpOYkRKWXcvcUhIcEwzOVlJOXcxays1RTR5?=
- =?utf-8?B?N01ubXZ0MDB3dXk4Zm9TMzBxZjNUS3N5cytpcVBZVnZ3bjBaRXl4aDRZNERl?=
- =?utf-8?B?RGJ0WlowRXRiWEpHSTh1eUt0MWxrRUt4S1lvWE5ycFlQZkRSUjFJTm9xdjBo?=
- =?utf-8?B?Nmt0cENJVng2YnNSK3hQV28wQVJsVXhvWm5rQTFRUGEyRy90UktSRFVUNTNJ?=
- =?utf-8?B?NmlCUVpFTmNmZ2VueStLQzJOMzJySTdua3FvUTUySHYzWUJ6TmRMdkJhTHFL?=
- =?utf-8?B?SkJnb0xLOW5JL3ZNUDdqV2l0VzE5VHVNQlE3cFgzL1FhZEdlS2o0NVdjTTBN?=
- =?utf-8?B?WjEzNDZBZy9tN0pvWit0L2xsQTlrOElWejVBb1lyU09kSkplbmRNRWFEclBT?=
- =?utf-8?B?dWx1aXhaOUg4NmxMbUxhRWlWWnhuZXhRc2pLN3pCUEttNkZVQXNNNkMvWlNZ?=
- =?utf-8?B?RVNlUndveHFNVnlvK1kvUFZBUXZxOHdtSTN1NUdJKytpN2NCb2VsNTl6VTdl?=
- =?utf-8?B?elhHVnZ3cy9SWFh4ZmZYTHF4WWg3ZG41QjhqYlFiZ0JPOVhRVUxGbkNYdzds?=
- =?utf-8?B?Uloydmx5VUxITldMcEFKaUY2WTZQdU9rVDNZUTZRdDYvVE9SWG5RN1RzN2lD?=
- =?utf-8?B?a3Q5VmdHQkxkd3l0UVY5QytrUlhzTlA0bElBVjIzY3VIS2RpQzFQaDQvUHJ6?=
- =?utf-8?B?cHRSMTU5N1JiNmxVbnowYXRBOVRGdVNoL1NScll0ejNhd3B3VFNxS2lsY0Rz?=
- =?utf-8?B?cU9iamViemwybjVJcnJlVVNOTXVZRXRtT3RRdFdQRjkwQUZ3aEcrdm1TL2xR?=
- =?utf-8?B?U1hqaW55RkxoUVlYTS9mYW5sWk12NHA1SUNUOXUxdTkyVWROOUJtNWZXQW9L?=
- =?utf-8?B?VnZxWmlMYTYzOG9yZloxZjVKYXhwcVVxLzI0QnpOOUI4dkJiWllFZm1MWTJr?=
- =?utf-8?B?QmI5U0w1elBUWEQySXFhQWJEN1N0akJDbmxxSGFJMjZUVXpYY25obEpMT1FF?=
- =?utf-8?B?Q2cwMGw2NDdsMForNTlIWGN2TXgrcVU2eFVpVEY1QnJiTlVSb3JaeW9SYkNS?=
- =?utf-8?B?L3dIVFZwTk5HTnNPK1g5ZkppZ0lndE5qS0NwSXNqUDlISDZoNEx3d3laVjN4?=
- =?utf-8?B?SWtqZUM5UnM0TjNZZ2Z0dExxNC96WUhqWGhZa0FuZE9LYjlrMllMcFVhbldz?=
- =?utf-8?B?SU5WZWVCZE80ZU5PMk1rVW1uL2RnQVhiTTFlUStxN2Yxa3pTWEYyZEx3YTlQ?=
- =?utf-8?B?WSt0SDBRcXBJbGZKUkxhaVVWYUlTZHhad2c1SjFtSTRtdVVhRk9hMEYybFRJ?=
- =?utf-8?B?U05HTjhCenhRaGhuTldHN3V1V2N0cjNLd2tpYTc5VWE1Q2ZwTjFnY3diVkli?=
- =?utf-8?B?YkdtUENSM1lMcmY3R3JPK2xUNzRYTElBeFV4dkl3aVhDU3NVNlNLdURrNER2?=
- =?utf-8?B?U2hKVkovQ3ZaWGtIMWJheURVL1dNY2orOFBaVUtTbUFIci9aWDdyWTltelNZ?=
- =?utf-8?B?Q0ZHemo2NklzRWVyV3Jwb1RnbktVdVAvTTNVUm1wR0FaUEN5a3FIUVVDeW1p?=
- =?utf-8?B?c252NXMxejZlM3FEbXhTaHhCbGZZVitvVTBKbkdJc29YUHhDMVU3OHlVS1B2?=
- =?utf-8?B?ODlJcGdnazhMaE5wSDZBS2d0a1ZXRDZZR1VOVWUycmNzZjlXT2tMZVNBSW5x?=
- =?utf-8?B?QjBobjBMZFpzYjJRVXBjN3hWR2xGMjh6aXlPbmtKWVNQL01QeTNuVHpXMDhT?=
- =?utf-8?B?NU00Q0JKbk96TjRmeDVDMENWNlRLelVIYnpDMUV6eFFWUzM5MEw0M0ZzaHZM?=
- =?utf-8?Q?Qp65Zo52zNUl1SlNYV46czIYp?=
+	=?utf-8?B?L2NiVEtMcWFSbnZsM21pU3VHQzZTeG1yU1RQMzVhbDFScjAyaG4xWkNZdHM4?=
+ =?utf-8?B?VEVxNzhyK0FnZ3NQUUtac1FtaFM0YVBoa3BLUFpCSDBpUCs4K2xNb3drbVFX?=
+ =?utf-8?B?bElINVgyYVhHYU9DeXFpQjZCdUJTUnNFUXNkUmJFWUU4N0VsZ2xlMlpzQ2JZ?=
+ =?utf-8?B?OW1RSnFkbVo4RUJ3T29GU1lMc2xlOVQ1eUFYZXJzYVZJZVo1c2FucmsvNFdC?=
+ =?utf-8?B?RHIrcU9RVjlkWUZpUE5OZjU3SlFWU0pvU1VVeVhiQVpUdDgwdTh4dFFuLzY4?=
+ =?utf-8?B?Wm1jTmZzYXQ3WW5oMTlQK2hmOTJYZVZyZnFkWmh1YjNUNjIyejA3K0FiSFBo?=
+ =?utf-8?B?WXEwM3o0TnJKSStnSWsyWDdwVVlSMFZsajV0MHNPWjk5cVZFZ3ZNZXh0eUEw?=
+ =?utf-8?B?ZngrUHZvanVPU1A0OFNQQkt1aUJ2bkJYTXJqQzlZUjhMWG5BWjN1cmpPK1dm?=
+ =?utf-8?B?WS9KVXRjTXl4QXNSWG5NYmlhV3NyZ0cyNmV4L2k0VE9iaG1RSEhGSzdBeU5t?=
+ =?utf-8?B?TnJYMUd1Y1FwNWxyZWJmZ3NQMWV4ejFvbDJvUVIrU3k4LzJQN0FvY3RuN1Ey?=
+ =?utf-8?B?N1pZRU9GRUlCUWh2WUJzS3FQMnIxTmpDV2h2Ykp0RlFuYXFVUDdUMEI4aGV2?=
+ =?utf-8?B?c21KNEZJZmtjYVBVYkZwaW5QWUxZdUtwalJoRHljWXdDb0g2UE9UZG5Ja2hN?=
+ =?utf-8?B?SG1WcXJNREg3Z2RKQ3hQN2tHeTBHODhlZUw3KzZScHZzcytXVkplUjIzV0wy?=
+ =?utf-8?B?aVVQZWpmOFJzUm1WUU94bW9aZVJJM0lBMk5YVVIwdkpDSEZpTWxLMVpuR2xx?=
+ =?utf-8?B?RnIreGJ0N0NHTmlOVmFBOXgrTURFYXRUZ3RCRlRFQXZKd3VmUE5FWDBtbWRQ?=
+ =?utf-8?B?ZVVrcEQ2RTRna1J6UnFkN0ZUemdmM1RvNFdKZVdUYmphR1V1aVdqK1hNclU4?=
+ =?utf-8?B?S0RBeG5PeFBqRVIwWFVkSU5CdVIrSlkwN05MZGs0d2RnYXNXOFBSM2lsMzdY?=
+ =?utf-8?B?a3d6Znh1Z1VNU2MzMmFlK3d1U3dMZ2JUeVNDUWpnVGtFRDV4V2dDQ0lKZXA0?=
+ =?utf-8?B?RndVaW51NTRTeGhoZytHUE1UbkhFMm1NM0pBREN2YXRVR0JjdUtwUGxtZ2sy?=
+ =?utf-8?B?WW5OZnVjTER4SGY4dzFpeG11TzVvdGFQVnM5andpZWFHMWVxaUJMQTk0WDdx?=
+ =?utf-8?B?VENvMmYwNnJIeHNndnBuT2llUWJBYktMWlU1dzgrSGxHS1A2SmQrYmltdGJp?=
+ =?utf-8?B?RDdsbFhEMVM2QVdsVlNjYTlzL3E3bnBpY2hzWHl2cldwU3NJMkw0OFNRSTVo?=
+ =?utf-8?B?TFdXMjV0bEJEYlRWVUt1ZXlzTmhqcUN5T01WSWZDUU9mNlBVY2syRFg2TFF0?=
+ =?utf-8?B?NmRqYm45S3IvWjdMNklrc2ZqRFp1S2FoRm4vd3dNWUtPREdjc21ReHlFblBz?=
+ =?utf-8?B?dnZ1MmVWaEdFMk9tUUYzK2w4RTUzUWJPQm1RT3Mwc0NaSk4veEVqUmtYMU8v?=
+ =?utf-8?B?amFubmtlVFZ0UXpjMnIxSHdwNHd4WE56K00zdlVFWkpPbmVlQ01jNjNINzVZ?=
+ =?utf-8?B?Q2kxMVphbEw3WWl0SUkrRDlnbklhTVpTajhmemRYTFptbVJpUUtJNHFYeGhO?=
+ =?utf-8?B?NVRpRFhrYTRGYU42WFlla0NjcW1ucnRLRVRqNHd4dVFRVG9xZUtLZTl5Q2Z4?=
+ =?utf-8?B?ZUpDR1k3Skg4Njd2ZU5FTHN2Kys2bVVQMU9JQnd2WWt3ZlVsK0I5S0FQQ3g2?=
+ =?utf-8?B?ZjhKaDhxWDBYL0lFU3p5ZFNpS1VoamFkK09RR1V5T0oxNG00TVNGMllmSjlJ?=
+ =?utf-8?B?NkdEWllCV2l3dlBXejV6KzRoTUdPWDMwTUw3SEtmQlZSdVYvZzAwL3JzdVl5?=
+ =?utf-8?B?S1JDOWhtbU4zVWRVY0ZVRUQxSjBQVU8xb09hZmg0bXljV0d6VVZOUlhBMTMy?=
+ =?utf-8?B?NG5CVkFCWnQ3NXg2cDNLSmh4TUVoeVhOV043NFJvd0dvVWhnTzI1b3k2cG5V?=
+ =?utf-8?B?aTFOd0sycVRQRFp5ZFhaR1pVeC9SZEdXenp3TU9oQWZsTk5PdVdNUStHOXZw?=
+ =?utf-8?B?Y0FDZkdjQmVRQVpKQkpjcW9aNjFrWkJSL3IrS05HcmtkTyt1WU4yV0h6QWpm?=
+ =?utf-8?Q?qIbwv15Npdk04WJVBTmMCuQUo?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c95be7a-0fd6-45f0-2d2d-08dc8ab16f9b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76c7a3d5-4e10-41b8-9b9d-08dc8ab1c6b9
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 07:29:46.7929
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 07:32:12.8644
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W6+DaALYhs5lmloi/SPu7U1VNbDu9bogg1gI5lokIdsP5BTD1kOxWN4dr99pHwbTVLmSrpUchP8pdW7+/yAHQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7446
+X-MS-Exchange-CrossTenant-UserPrincipalName: m7mimKnio6+MJ8vf5mzElYSmMQis/Yj1GqFMaflq9ZJqS08+2+NTOIeEyPoWkxIlpJQ9WNe8Rq2lHRlbLCACbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4478
 
 From: Alejandro Lucero <alucerop@amd.com>
 
-Search and reserve DPA given input constraints.
+Creating a CXL region requires userspace intervention through the cxl
+sysfs files. Type2 support should allow accelerator drivers to create
+such cxl region from kernel code.
 
+Add that functionality and integrate it with current support for
+memory expanders.
 
-Based on: https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m4271ee49a91615c8af54e3ab20679f8be3099393
+Based on: https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m84598b534cc5664f5bb31521ba6e41c7bc213758
 
 Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 Co-developed-by: Dan Williams <dan.j.williams@intel.com>
 
 
 
-On 5/16/24 09:11, alucerop@amd.com wrote:
+On 5/16/24 09:12, alucerop@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 >
-> Search and reserve DPA given input constraints.
+> Creating a CXL region requires userspace intervention through the cxl
+> sysfs files. Type2 support should allow accelerator drivers to create
+> such cxl region from kernel code.
+>
+> Adding that functionality and integrating it with current support for
+> memory expanders.
 >
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->   drivers/cxl/core/core.h             |   1 -
->   drivers/cxl/core/hdm.c              | 153 +++++++++++++++++++++++-----
->   include/linux/cxlmem.h              |   5 +
->   tools/testing/cxl/type2/pci_type2.c |  12 ++-
->   4 files changed, 145 insertions(+), 26 deletions(-)
+>   drivers/cxl/core/region.c           | 262 ++++++++++++++++++++++------
+>   include/linux/cxlmem.h              |   4 +
+>   tools/testing/cxl/type2/pci_type2.c |  18 ++
+>   3 files changed, 228 insertions(+), 56 deletions(-)
 >
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index bc5a95665aa0..c0a2e2c1ccb3 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -61,7 +61,6 @@ struct dentry *cxl_debugfs_create_dir(const char *dir);
->   int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->   		     enum cxl_decoder_mode mode);
->   int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
-> -int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->   resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
->   resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 8228b7e96d8d..014684ff4343 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -479,22 +479,14 @@ static ssize_t interleave_ways_show(struct device *dev,
 >   
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index c5f70741d70a..6459b6ecde88 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -404,6 +404,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->   	up_write(&cxl_dpa_rwsem);
->   	return rc;
->   }
-> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_free, CXL);
+>   static const struct attribute_group *get_cxl_region_target_group(void);
 >   
->   int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->   		     enum cxl_decoder_mode mode)
-> @@ -451,30 +452,17 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->   	return rc;
->   }
->   
-> -int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-> +static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
-> +					 resource_size_t *start_out,
-> +					 resource_size_t *skip_out)
+> -static ssize_t interleave_ways_store(struct device *dev,
+> -				     struct device_attribute *attr,
+> -				     const char *buf, size_t len)
+> +static int set_interleave_ways(struct cxl_region *cxlr, int val)
 >   {
->   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->   	resource_size_t free_ram_start, free_pmem_start;
-> -	struct cxl_port *port = cxled_to_port(cxled);
->   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> -	struct device *dev = &cxled->cxld.dev;
->   	resource_size_t start, avail, skip;
->   	struct resource *p, *last;
+> -	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>   	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> -	struct cxl_region *cxlr = to_cxl_region(dev);
+>   	struct cxl_region_params *p = &cxlr->params;
+> -	unsigned int val, save;
 > -	int rc;
+> +	int save, rc;
+>   	u8 iw;
+>   
+> -	rc = kstrtouint(buf, 0, &val);
+> -	if (rc)
+> -		return rc;
 > -
-> -	down_write(&cxl_dpa_rwsem);
-> -	if (cxled->cxld.region) {
-> -		dev_dbg(dev, "decoder attached to %s\n",
-> -			dev_name(&cxled->cxld.region->dev));
-> -		rc = -EBUSY;
-> -		goto out;
-> -	}
->   
-> -	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> -		dev_dbg(dev, "decoder enabled\n");
-> -		rc = -EBUSY;
-> -		goto out;
-> -	}
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
->   
->   	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
->   		last = p;
-> @@ -496,7 +484,6 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
->   		skip = 0;
->   	} else if (cxled->mode == CXL_DECODER_PMEM) {
->   		resource_size_t skip_start, skip_end;
-> -
->   		start = free_pmem_start;
->   		avail = cxlds->pmem_res.end - start + 1;
->   		skip_start = free_ram_start;
-> @@ -506,21 +493,50 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
->   		 * already handled the skip.
->   		 */
->   		if (cxlds->pmem_res.child &&
-> -		    skip_start == cxlds->pmem_res.child->start)
-> +				skip_start == cxlds->pmem_res.child->start)
->   			skip_end = skip_start - 1;
->   		else
->   			skip_end = start - 1;
->   		skip = skip_end - skip_start + 1;
->   	} else {
-> -		dev_dbg(dev, "mode not set\n");
-> -		rc = -EINVAL;
-> +		avail = 0;
-> +	}
-> +
-> +	if (!avail)
-> +		return 0;
-> +	if (start_out)
-> +		*start_out = start;
-> +	if (skip_out)
-> +		*skip_out = skip;
-> +	return avail;
-> +}
-> +
-> +int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-> +{
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct device *dev = &cxled->cxld.dev;
-> +	resource_size_t start, avail, skip;
-> +	int rc;
-> +
-> +	down_write(&cxl_dpa_rwsem);
-> +	if (cxled->cxld.region) {
-> +		dev_dbg(dev, "EBUSY, decoder attached to %s\n",
-> +			     dev_name(&cxled->cxld.region->dev));
-> +		rc = -EBUSY;
->   		goto out;
->   	}
->   
-> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> +		dev_dbg(dev, "EBUSY, decoder enabled\n");
-> +		rc = -EBUSY;
-> +		goto out;
-> +	}
-> +
-> +	avail = cxl_dpa_freespace(cxled, &start, &skip);
->   	if (size > avail) {
->   		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
-> -			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> -			&avail);
-> +			     cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> +			     &avail);
->   		rc = -ENOSPC;
->   		goto out;
->   	}
-> @@ -532,9 +548,98 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>   	rc = ways_to_eiw(val, &iw);
 >   	if (rc)
 >   		return rc;
+> @@ -509,25 +501,42 @@ static ssize_t interleave_ways_store(struct device *dev,
+>   		return -EINVAL;
+>   	}
 >   
-> -	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
-> +        return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
->   }
+> -	rc = down_write_killable(&cxl_region_rwsem);
+> -	if (rc)
+> -		return rc;
+> -	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+> +	lockdep_assert_held_write(&cxl_region_rwsem);
+> +	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
+> +		return -EBUSY;
 >   
-> +static int find_free_decoder(struct device *dev, void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_port *port;
+>   	save = p->interleave_ways;
+>   	p->interleave_ways = val;
+>   	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+>   	if (rc)
+>   		p->interleave_ways = save;
+> -out:
 > +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	port = cxled_to_port(cxled);
-> +
-> +	if (cxled->cxld.id != port->hdm_end + 1) {
-> +		return 0;
-> +	}
-> +	return 1;
+> +	return rc;
 > +}
 > +
-> +/**
-> + * cxl_request_dpa - search and reserve DPA given input constraints
-> + * @endpoint: an endpoint port with available decoders
-> + * @mode: DPA operation mode (ram vs pmem)
-> + * @min: the minimum amount of capacity the call needs
-> + * @max: extra capacity to allocate after min is satisfied
-> + *
-> + * Given that a region needs to allocate from limited HPA capacity it
-> + * may be the case that a device has more mappable DPA capacity than
-> + * available HPA. So, the expectation is that @min is a driver known
-> + * value for how much capacity is needed, and @max is based the limit of
-> + * how much HPA space is available for a new region.
-> + *
-> + * Returns a pinned cxl_decoder with at least @min bytes of capacity
-> + * reserved, or an error pointer. The caller is also expected to own the
-> + * lifetime of the memdev registration associated with the endpoint to
-> + * pin the decoder registered as well.
-> + */
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-> +					     enum cxl_decoder_mode mode,
-> +					     resource_size_t min,
-> +					     resource_size_t max)
+> +static ssize_t interleave_ways_store(struct device *dev,
+> +				     struct device_attribute *attr,
+> +				     const char *buf, size_t len)
 > +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct device *cxled_dev;
-> +	resource_size_t alloc;
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	unsigned int val;
 > +	int rc;
 > +
-> +	if (!IS_ALIGNED(min | max, SZ_256M))
+> +	rc = kstrtouint(buf, 0, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = down_write_killable(&cxl_region_rwsem);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = set_interleave_ways(cxlr, val);
+>   	up_write(&cxl_region_rwsem);
+>   	if (rc)
+>   		return rc;
+>   	return len;
+>   }
+> +
+>   static DEVICE_ATTR_RW(interleave_ways);
+>   
+>   static ssize_t interleave_granularity_show(struct device *dev,
+> @@ -547,21 +556,14 @@ static ssize_t interleave_granularity_show(struct device *dev,
+>   	return rc;
+>   }
+>   
+> -static ssize_t interleave_granularity_store(struct device *dev,
+> -					    struct device_attribute *attr,
+> -					    const char *buf, size_t len)
+> +static int set_interleave_granularity(struct cxl_region *cxlr, int val)
+>   {
+> -	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>   	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> -	struct cxl_region *cxlr = to_cxl_region(dev);
+>   	struct cxl_region_params *p = &cxlr->params;
+> -	int rc, val;
+> +	int rc;
+>   	u16 ig;
+>   
+> -	rc = kstrtoint(buf, 0, &val);
+> -	if (rc)
+> -		return rc;
+> -
+>   	rc = granularity_to_eig(val, &ig);
+>   	if (rc)
+>   		return rc;
+> @@ -577,21 +579,36 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>   	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
+>   		return -EINVAL;
+>   
+> +	lockdep_assert_held_write(&cxl_region_rwsem);
+> +	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
+> +		return -EBUSY;
+> +
+> +	p->interleave_granularity = val;
+> +	return 0;
+> +}
+> +
+> +static ssize_t interleave_granularity_store(struct device *dev,
+> +					    struct device_attribute *attr,
+> +					    const char *buf, size_t len)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	int rc, val;
+> +
+> +	rc = kstrtoint(buf, 0, &val);
+> +	if (rc)
+> +		return rc;
+> +
+>   	rc = down_write_killable(&cxl_region_rwsem);
+>   	if (rc)
+>   		return rc;
+> -	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+>   
+> -	p->interleave_granularity = val;
+> -out:
+> +	rc = set_interleave_granularity(cxlr, val);
+>   	up_write(&cxl_region_rwsem);
+>   	if (rc)
+>   		return rc;
+>   	return len;
+>   }
+> +
+>   static DEVICE_ATTR_RW(interleave_granularity);
+>   
+>   static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
+> @@ -2666,6 +2683,14 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
+>   	return to_cxl_region(region_dev);
+>   }
+>   
+> +static void drop_region(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	struct cxl_port *port = cxlrd_to_port(cxlrd);
+> +
+> +	devm_release_action(port->uport_dev, unregister_region, cxlr);
+> +}
+> +
+>   static ssize_t delete_region_store(struct device *dev,
+>   				   struct device_attribute *attr,
+>   				   const char *buf, size_t len)
+> @@ -3135,17 +3160,18 @@ static int match_region_by_range(struct device *dev, void *data)
+>   	return rc;
+>   }
+>   
+> -/* Establish an empty region covering the given HPA range */
+> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> -					   struct cxl_endpoint_decoder *cxled)
+> +static void construct_region_end(void)
+> +{
+> +	up_write(&cxl_region_rwsem);
+> +}
+> +
+> +static struct cxl_region *construct_region_begin(struct cxl_root_decoder *cxlrd,
+> +						 struct cxl_endpoint_decoder *cxled)
+>   {
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_port *port = cxlrd_to_port(cxlrd);
+> -	struct range *hpa = &cxled->cxld.hpa_range;
+>   	struct cxl_region_params *p;
+>   	struct cxl_region *cxlr;
+> -	struct resource *res;
+> -	int rc;
+> +	int err = 0;
+>   
+>   	do {
+>   		cxlr = __create_region(cxlrd, cxled->mode,
+> @@ -3154,8 +3180,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
+>   
+>   	if (IS_ERR(cxlr)) {
+> -		dev_err(cxlmd->dev.parent,
+> -			"%s:%s: %s failed assign region: %ld\n",
+> +		dev_err(cxlmd->dev.parent,"%s:%s: %s failed assign region: %ld\n",
+>   			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+>   			__func__, PTR_ERR(cxlr));
+>   		return cxlr;
+> @@ -3165,23 +3190,47 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   	p = &cxlr->params;
+>   	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
+>   		dev_err(cxlmd->dev.parent,
+> -			"%s:%s: %s autodiscovery interrupted\n",
+> +			"%s:%s: %s region setup interrupted\n",
+>   			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+>   			__func__);
+> -		rc = -EBUSY;
+> -		goto err;
+> +		err = -EBUSY;
+> +	}
+> +
+> +	if (err) {
+> +		construct_region_end();
+> +		drop_region(cxlr);
+> +		return ERR_PTR(err);
+>   	}
+> +	return cxlr;
+> +}
+> +
+> +
+> +/* Establish an empty region covering the given HPA range */
+> +static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> +					   struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct range *hpa = &cxled->cxld.hpa_range;
+> +	struct cxl_region_params *p;
+> +	struct cxl_region *cxlr;
+> +	struct resource *res;
+> +	int rc;
+> +
+> +	cxlr = construct_region_begin(cxlrd, cxled);
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
+>   
+>   	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
+>   
+>   	res = kmalloc(sizeof(*res), GFP_KERNEL);
+>   	if (!res) {
+>   		rc = -ENOMEM;
+> -		goto err;
+> +		goto out;
+>   	}
+>   
+>   	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+>   				    dev_name(&cxlr->dev));
+> +
+>   	rc = insert_resource(cxlrd->res, res);
+>   	if (rc) {
+>   		/*
+> @@ -3194,6 +3243,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   			 __func__, dev_name(&cxlr->dev));
+>   	}
+>   
+> +	p = &cxlr->params;
+>   	p->res = res;
+>   	p->interleave_ways = cxled->cxld.interleave_ways;
+>   	p->interleave_granularity = cxled->cxld.interleave_granularity;
+> @@ -3201,24 +3251,124 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   
+>   	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+>   	if (rc)
+> -		goto err;
+> +		goto out;
+>   
+>   	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
+> -		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
+> -		dev_name(&cxlr->dev), p->res, p->interleave_ways,
+> -		p->interleave_granularity);
+> +				   dev_name(&cxlmd->dev),
+> +				   dev_name(&cxled->cxld.dev), __func__,
+> +				   dev_name(&cxlr->dev), p->res,
+> +				   p->interleave_ways,
+> +				   p->interleave_granularity);
+>   
+>   	/* ...to match put_device() in cxl_add_to_region() */
+>   	get_device(&cxlr->dev);
+>   	up_write(&cxl_region_rwsem);
+> +out:
+> +	construct_region_end();
+> +	if (rc) {
+> +		drop_region(cxlr);
+> +		return ERR_PTR(rc);
+> +	}
+> +	return cxlr;
+> +}
+> +
+> +static struct cxl_region *
+> +__construct_new_region(struct cxl_root_decoder *cxlrd,
+> +		       struct cxl_endpoint_decoder **cxled, int ways)
+> +{
+> +	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> +	struct cxl_region_params *p;
+> +	resource_size_t size = 0;
+> +	struct cxl_region *cxlr;
+> +	int rc, i;
+> +
+> +	/* If interleaving is not supported, why does ways need to be at least 1? */
+> +	if (ways < 1)
 > +		return ERR_PTR(-EINVAL);
 > +
-> +	down_read(&cxl_dpa_rwsem);
+> +	cxlr = construct_region_begin(cxlrd, cxled[0]);
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
 > +
-> +	cxled_dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
-> +	if (!cxled_dev)
-> +		cxled = ERR_PTR(-ENXIO);
-> +	else
-> +		cxled = to_cxl_endpoint_decoder(cxled_dev);
-> +
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	if (IS_ERR(cxled)) {
-> +               return cxled;
-> +	}
-> +
-> +	rc = cxl_dpa_set_mode(cxled, mode);
+> +	rc = set_interleave_ways(cxlr, ways);
 > +	if (rc)
-> +		goto err;
+> +		goto out;
+> +
+> +	rc = set_interleave_granularity(cxlr, cxld->interleave_granularity);
+> +	if (rc)
+> +		goto out;
 > +
 > +	down_read(&cxl_dpa_rwsem);
-> +	alloc = cxl_dpa_freespace(cxled, NULL, NULL);
+> +	for (i = 0; i < ways; i++) {
+> +		if (!cxled[i]->dpa_res)
+> +			break;
+> +		size += resource_size(cxled[i]->dpa_res);
+> +	}
 > +	up_read(&cxl_dpa_rwsem);
 > +
-> +	if (max)
-> +		alloc = min(max, alloc);
-> +	if (alloc < min) {
-> +		rc = -ENOMEM;
-> +		goto err;
-> +	}
+> +	if (i < ways)
+> +		goto out;
 > +
-> +	rc = cxl_dpa_alloc(cxled, alloc);
+> +	rc = alloc_hpa(cxlr, size);
 > +	if (rc)
-> +		goto err;
+> +		goto out;
 > +
-> +	return cxled;
-> +err:
-> +	put_device(cxled_dev);
-> +	return ERR_PTR(rc);
+> +	down_read(&cxl_dpa_rwsem);
+> +	for (i = 0; i < ways; i++) {
+> +		rc = cxl_region_attach(cxlr, cxled[i], i);
+> +		if (rc)
+> +			break;
+> +	}
+> +	up_read(&cxl_dpa_rwsem);
+> +
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = cxl_region_decode_commit(cxlr);
+> +	if (rc)
+> +		goto out;
+>   
+> +	p = &cxlr->params;
+> +	p->state = CXL_CONFIG_COMMIT;
+> +out:
+> +	construct_region_end();
+> +	if (rc) {
+> +		drop_region(cxlr);
+> +		return ERR_PTR(rc);
+> +	}
+>   	return cxlr;
 > +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, CXL);
+>   
+> -err:
+> -	up_write(&cxl_region_rwsem);
+> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
+> -	return ERR_PTR(rc);
+> +/**
+> + * cxl_create_region - Establish a region given an array of endpoint decoders
+> + * @cxlrd: root decoder to allocate HPA
+> + * @cxled: array of endpoint decoders with reserved DPA capacity
+> + * @ways: size of @cxled array
+> + *
+> + * Returns a fully formed region in the commit state and attached to the
+> + * cxl_region driver.
+> + */
+> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+> +				     struct cxl_endpoint_decoder **cxled,
+> +				     int ways)
+> +{
+> +	struct cxl_region *cxlr;
 > +
+> +	mutex_lock(&cxlrd->range_lock);
+> +	cxlr = __construct_new_region(cxlrd, cxled, ways);
+> +	mutex_unlock(&cxlrd->range_lock);
 > +
->   static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
+> +
+> +	if (device_attach(&cxlr->dev) <= 0) {
+> +		dev_err(&cxlr->dev, "failed to create region\n");
+> +		drop_region(cxlr);
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +	return cxlr;
+>   }
+> +EXPORT_SYMBOL_NS_GPL(cxl_create_region, CXL);
+>   
+>   int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
 >   {
->   	u16 eig;
 > diff --git a/include/linux/cxlmem.h b/include/linux/cxlmem.h
-> index 342ccd5486d3..caf1cd86421c 100644
+> index caf1cd86421c..fc963c2c2dc4 100644
 > --- a/include/linux/cxlmem.h
 > +++ b/include/linux/cxlmem.h
-> @@ -870,4 +870,9 @@ struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
->   					   int interleave_ways,
->   					   unsigned long flags,
->   					   resource_size_t *max);
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-> +					     enum cxl_decoder_mode mode,
-> +					     resource_size_t min,
-> +					     resource_size_t max);
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+> @@ -875,4 +875,8 @@ struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
+>   					     resource_size_t min,
+>   					     resource_size_t max);
+>   int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+> +				     struct cxl_endpoint_decoder **cxled,
+> +				     int ways);
+> +
 >   #endif /* __CXL_MEM_H__ */
 > diff --git a/tools/testing/cxl/type2/pci_type2.c b/tools/testing/cxl/type2/pci_type2.c
-> index deb5eeae501b..6499d709f54d 100644
+> index 6499d709f54d..0e7f17c0c920 100644
 > --- a/tools/testing/cxl/type2/pci_type2.c
 > +++ b/tools/testing/cxl/type2/pci_type2.c
-> @@ -4,6 +4,7 @@
+> @@ -4,8 +4,10 @@
 >   #include <linux/cxlpci.h>
 >   #include <linux/cxlmem.h>
 >   
-> +struct cxl_endpoint_decoder *cxled;
+> +struct cxl_region_params *region_params;
+>   struct cxl_endpoint_decoder *cxled;
 >   struct cxl_root_decoder *cxlrd;
+> +struct cxl_region *efx_region;
 >   struct cxl_dev_state *cxlds;
 >   struct cxl_memdev *cxlmd;
-> @@ -99,6 +100,15 @@ static int type2_pci_probe(struct pci_dev *pci_dev,
+>   struct cxl_port *endpoint;
+> @@ -109,6 +111,22 @@ static int type2_pci_probe(struct pci_dev *pci_dev,
 >   		goto out;
 >   	}
 >   
-> +	pci_info(pci_dev, "cxl request_dpa...");
-> +	cxled = cxl_request_dpa(endpoint, CXL_DECODER_RAM, CXL_TYPE2_MEM_SIZE,
-> +				CXL_TYPE2_MEM_SIZE);
-> +	if (IS_ERR(cxled)) {
-> +		dev_dbg(&pci_dev->dev, "cxl_request_dpa error\n");
+> +	pci_info(pci_dev, "cxl create_region...");
+> +	efx_region = cxl_create_region(cxlrd, &cxled, 1);
+> +	if (!efx_region) {
 > +		rc = PTR_ERR(cxled);
-> +		goto out;
+> +		goto out_dpa;
 > +	}
 > +
+> +	region_params = &efx_region->params;
+> +	pci_info(pci_dev, "CXL region: start=%llx, end=%llx\n", region_params->res->start,
+> +			  region_params->res->end);
+> +
+> +	cxl_release_endpoint(cxlmd, endpoint);
+> +	return 0;
+> +
+> +out_dpa:
+> +	cxl_dpa_free(cxled);
 >   out:
 >   	cxl_release_endpoint(cxlmd, endpoint);
 >   
-> @@ -107,7 +117,7 @@ static int type2_pci_probe(struct pci_dev *pci_dev,
->   
->   static void type2_pci_remove(struct pci_dev *pci_dev)
->   {
-> -
-> +	cxl_dpa_free(cxled);
->   }
->   
->   /* PCI device ID table */
