@@ -1,224 +1,115 @@
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB48716B736
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 07:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551CF16E879
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 10:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179091; cv=none; b=iZFnTQeORHTUbuoNvAjJ8njK4jd/c+OFOJoJQAfWADvF2kkrTwb4TcO9Da+U9Cupz2be/XAGw/J1TjBatbkBFKNJaEydaxL4IMhNPIhfHw+9V7Z1yd78kezXt97JtzL+iRrSSVj5sWOrM3oksPNcLLGQeNEkjiy6X2xp5MaTUxE=
+	t=1718186879; cv=none; b=TP2clOAdf/IAjo3jTL9QNubWjwGAQm3/58yjKl5PhICmFOfDSj75GUul0o15uu6kQrX9I0SNvKnJLLgO5DOJUolSaEWCNKL9djIYw8SL4Qhz6ogaKdSPqWKGNOOzeQEy/XicrTRaWBv9bCOM346c1jr5Ozignob/JYvDMFJcJuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179091; c=relaxed/simple;
-	bh=q2wkZD9U5V7xVtTigAAoSk2IJFULhHCdY5TQ6IGN9fA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hl2VXE+sF9S1oAlFgYnxkk6955xG3UDf+vpLpa5rDk+9dYUerabjYgjx68BXVPUk0FsFEXtnsqKRwhwdf13CF/Hy3nBYCS3/XVWxu/BWeGZhfGH6z/SNXVfwkn8fnQbAl77DYp1uirLlVzvOAdOxu/P+6KW0EFroN4kHAIgyaFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=pmmetTPb; arc=none smtp.client-ip=207.54.90.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="pmmetTPb"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1718179089; x=1749715089;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=q2wkZD9U5V7xVtTigAAoSk2IJFULhHCdY5TQ6IGN9fA=;
-  b=pmmetTPbLP2bqM0WhTUUr++TskIdvtBg78wtySykK7s+uj41H3uJqML8
-   TuzYPev5a4a0KoYp9ESKCj4xAbI9GUeB2oeQY04DLYojQcBUVGHYSdipp
-   i4Bn6lXl8Xt3zU77ZNmJCuZDnue2FhTzhg5UbFGqMhkvyEb/+bgyCpsCz
-   sV5vOslz83e0bB+oTeBv+GE26UncO+HK2EtgLAsh28OJl3vbjeZRwzQKp
-   pTE+iL6op5NcLWXZm7s2TtqTSrGmmg/UPm2DHwJlrdU/10Kc7A+7v8qzh
-   Z0JPuMqycYZSihZ0oa0zqFQ/nPR5CkYaTVCK/OaZB7FlZnR+h0rkOaLpF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="162750544"
-X-IronPort-AV: E=Sophos;i="6.08,232,1712588400"; 
-   d="scan'208";a="162750544"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 16:56:58 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 1EAFCD4F58
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 16:56:55 +0900 (JST)
-Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6AE6524E13
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Jun 2024 16:56:54 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 3F7A1200537A;
-	Wed, 12 Jun 2024 16:56:54 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: kobayashi.da-06@jp.fujitsu.com,
-	linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	mj@ucw.cz,
-	dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [PATCH v11 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
-Date: Wed, 12 Jun 2024 16:59:38 +0900
-Message-ID: <20240612075940.92500-2-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240612075940.92500-1-kobayashi.da-06@fujitsu.com>
-References: <20240612075940.92500-1-kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1718186879; c=relaxed/simple;
+	bh=GvC/K7JVuybvDldmsQgxCWCoVtMR1UW6ILi18RGweV8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iMCTqCJxnQb2MxIz54iLd+BxEMbXwxOWBR8u3QveWsmI0g6Fz3jggZyvgwy0luVKn6BTxoSGWngjAl82An4Q5VJQpELX1GcM6Y9nfa6rm6YAtzHsWnLTH4hKN7m3qE+0K968ZZ+gqkl1j42FNrIdeX+8/KfSQQCZya/Kph5hijc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vzh5h2Hzvz6K8wD;
+	Wed, 12 Jun 2024 18:06:32 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C01E140A87;
+	Wed, 12 Jun 2024 18:07:53 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Jun
+ 2024 11:07:53 +0100
+Date: Wed, 12 Jun 2024 11:07:52 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: Christoph Hellwig <hch@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<pieter.jansen-van-vuuren@amd.com>, <richard.hughes@amd.com>,
+	<dinan.gunawardena@amd.com>
+Subject: Re: [RFC PATCH 01/13] cxl: move header files for absolute
+ references
+Message-ID: <20240612110752.00007442@Huawei.com>
+In-Reply-To: <4dadbadf-529d-6f50-b30e-8a428d8c6a19@amd.com>
+References: <20240516081202.27023-1-alucerop@amd.com>
+	<20240516081202.27023-2-alucerop@amd.com>
+	<666923ba32ac7_3101294dc@dwillia2-xfh.jf.intel.com.notmuch>
+	<ZmkkaOTUFuzIr2cG@infradead.org>
+	<4dadbadf-529d-6f50-b30e-8a428d8c6a19@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
-device link status information. By caching it, avoid the walking 
-memory map area to find the offset when output the register value.
+On Wed, 12 Jun 2024 06:54:13 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/core/core.h |  6 ++++
- drivers/cxl/core/regs.c | 62 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       | 10 +++++++
- drivers/cxl/pci.c       |  4 ++-
- 4 files changed, 81 insertions(+), 1 deletion(-)
+> On 6/12/24 05:30, Christoph Hellwig wrote:
+> > On Tue, Jun 11, 2024 at 09:27:38PM -0700, Dan Williams wrote: =20
+> >> alucerop@ wrote: =20
+> >>> From: Alejandro Lucero <alucerop@amd.com>
+> >>>
+> >>> CXL Type 2 devices imply specific vendor drivers binding to those
+> >>> devices instead of generic ones offered by CXL core like the PCI driv=
+er. =20
+> > No, it absolutelt does not.  There is no such thing as a vendor driver
+> > in Linux. =20
+>=20
+>=20
+> Well, yes, I see your point, and it is absolutely correct.
+>=20
+> It was a bad way of explaining the need of a driver supporting a=20
+> specific hardware.
+>=20
+>=20
+> >> So I don't like this approach, there are details that are private to t=
+he
+> >> CXL generic memory-expander use case, and some that are suitable for
+> >> CXL.mem and CXL.cache capabilities in other drivers. That distinct
+> >> subset should move to include/linux/. I.e. I want to see the increment=
+al
+> >> conversion of what 3rd party drivers need compared to the generic
+> >> expander case, and consider when and where new shared infrastructure
+> >> needs to be refactored. =20
+> > And I'd much rather keep all these drivers in drivers/cxl/ anyway so
+> > that we can keep a tight control over them.
+> > =20
+>=20
+> My initial thought was drivers for ethernet, gpus, or any other kind of=20
+> standard device binding to the CXL/PCIe.io and doing the CXL=20
+> initialization. Your comment seems to suggest other approach, which I=20
+> can only relate to using auxbus for the device CXL.mem and CXL.cache,=20
+> and=A0 then being handled by a generic driver inside the CXL core. Is thi=
+s=20
+> what you are suggesting?
+>=20
+> If so, I'm not against it, although it would require to study the=20
+> implications.
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..e71600380a22 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device *dev,
- 				    struct cxl_rcrb_info *ri,
- 				    enum cxl_rcrb which);
- u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
-+resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport);
-+
-+#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-+#define RCRB_PCIECAP_LEN		0x3c
- 
- extern struct rw_semaphore cxl_dpa_rwsem;
- extern struct rw_semaphore cxl_region_rwsem;
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 372786f80955..d86ac9c64e0c 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -505,6 +505,68 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
- 	return offset;
- }
- 
-+resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
-+{
-+	resource_size_t rcrb = dport->rcrb.base;
-+	void __iomem *addr;
-+	u32 cap_hdr;
-+	u16 offset;
-+
-+	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-+		return CXL_RESOURCE_NONE;
-+
-+	addr = ioremap(rcrb, SZ_4K);
-+	if (!addr) {
-+		dev_err(dev, "Failed to map region %pr\n", addr);
-+		release_mem_region(rcrb, SZ_4K);
-+		return CXL_RESOURCE_NONE;
-+	}
-+
-+	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-+	cap_hdr = readl(addr + offset);
-+	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-+		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-+		if (offset == 0 || offset > SZ_4K) {
-+			offset = 0;
-+			break;
-+		}
-+		cap_hdr = readl(addr + offset);
-+	}
-+	if (offset)
-+		dport->rcrb.rcd_pcie_cap = offset;
-+
-+	iounmap(addr);
-+	release_mem_region(rcrb, SZ_4K);
-+
-+	return offset;
-+}
-+
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev)
-+{
-+	void __iomem *dport_pcie_cap = NULL;
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct cxl_rcrb_info *ri;
-+	resource_size_t rcd_pcie_offset;
-+
-+	port = cxl_pci_find_port(pdev, &dport);
-+	if (!port)
-+		return -EPROBE_DEFER;
-+
-+	cxl_rcrb_to_linkcap(&pdev->dev, dport);
-+
-+	ri = &dport->rcrb;
-+	if (dport->rcrb.rcd_pcie_cap) {
-+		rcd_pcie_offset = ri->base + ri->rcd_pcie_cap;
-+		dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev, rcd_pcie_offset,
-+						      sizeof(u8) * RCRB_PCIECAP_LEN);
-+	}
-+
-+	dport->regs.rcd_pcie_cap = dport_pcie_cap;
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
-+
- resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
- 				    enum cxl_rcrb which)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..b1fca98ddf8c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -230,6 +230,14 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_rch_regs, rch_regs,
- 		void __iomem *dport_aer;
- 	);
-+
-+	/*
-+	 * RCD upstream port specific PCIe cap register
-+	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
-+	 */
-+	struct_group_tagged(cxl_rcd_regs, rcd_regs,
-+		void __iomem *rcd_pcie_cap;
-+	);
- };
- 
- struct cxl_reg_map {
-@@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
- struct cxl_dport;
- resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
- 					   struct cxl_dport *dport);
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev);
- 
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
-@@ -646,6 +655,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
- 
- struct cxl_rcrb_info {
- 	resource_size_t base;
-+	u16 rcd_pcie_cap;
- 	u16 aer_cap;
- };
- 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..8e7674c1b8f0 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -512,8 +512,10 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	 * is an RCH and try to extract the Component Registers from
- 	 * an RCRB.
- 	 */
--	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
-+	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
- 		rc = cxl_rcrb_get_comp_regs(pdev, map);
-+		cxl_dport_map_rcd_linkcap(pdev);
-+	}
- 
- 	if (rc)
- 		return rc;
--- 
-2.44.0
+I'd be very careful with that level of complexity.
+So far I'm not seeing it as useful for this case (but I could be wrong)
+
+Maybe just a case of well defined library code with only
+opaque state etc being exposed by the CXL driver framework.
+
+The bulk of any type2 driver needs to be in the appropriate subsystem
+not drivers/cxl/  The non CXL parts will be more important to keep
+aligned with appropriate subsystem than the CXL part.=20
+
+Jonathan
+
+>=20
+>=20
 
